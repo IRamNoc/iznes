@@ -16,6 +16,7 @@ import { Subscription } from 'rxjs/Subscription';
 import { PersistService } from '@setl/core-persist';
 import { userAdminActions } from '@setl/core-store';
 import { LogService } from '@setl/utils';
+import { ClrDatagridStateInterface } from '@clr/angular';
 
 /* Decorator. */
 @Component({
@@ -32,7 +33,9 @@ export class AdminUsersComponent implements OnInit, AfterViewInit, OnDestroy {
     @ViewChild('usersDataGrid') usersDataGrid;
 
     /* User data. */
-    public usersList: any;
+    public usersList: any = [];
+    public paginatedUsersList: any;
+    public myDetail: any;
 
     /* Tabs control */
     public tabsControl: any = [];
@@ -55,24 +58,25 @@ export class AdminUsersComponent implements OnInit, AfterViewInit, OnDestroy {
     public filteredTxGroupsList = [];
     public filteredMenuGroupsList = [];
 
-    @select(['userAdmin', 'chains', 'chainList']) chainListObservable;
+    /* Chain and Wallet Lists  */
     public chainList: { [chainId: number]: { chainId: number | string, chainName: string } } = {};
     public filteredChainList: { id: number | string, text: string }[] = [];
     public selectedChainItem: any = [];
-
-    @select(['userAdmin', 'chain', 'requestedChainList']) requestedChainListOb;
-
-    @select(['user', 'myDetail']) myDetailOb;
-    public myDetail: any;
-
-    @select(['wallet', 'managedWallets', 'walletList']) manageWalletsListOb;
-
-    @select(['userAdmin', 'users', 'openedTabs']) openTabsOb;
-
     private manageWalletList: any;
 
-    /* Rows Per Page datagrid size */
-    public pageSize: number;
+    /* Datagrid and pagination */
+    public totalRecords: number = 0;
+    public dgPageFrom: number = 0;
+    public dgPageSize: number = 10;
+
+    /* Redux observables */
+    @select(['userAdmin', 'chains', 'chainList']) chainListObservable;
+    @select(['userAdmin', 'chain', 'requestedChainList']) requestedChainListOb;
+    @select(['user', 'myDetail']) myDetailOb;
+    @select(['wallet', 'managedWallets', 'walletList']) manageWalletsListOb;
+    @select(['userAdmin', 'users', 'openedTabs']) openTabsOb;
+    @select(['userAdmin', 'users', 'usersList']) usersListOb;
+    @select(['userAdmin', 'users', 'totalRecords']) totalRecordsOb;
 
     /* Constructor. */
     constructor(private userAdminService: UserAdminService,
@@ -130,6 +134,12 @@ export class AdminUsersComponent implements OnInit, AfterViewInit, OnDestroy {
     }
 
     ngOnInit() {
+        /* Get totalRecords to build datagrid pagination */
+        this.subscriptions['totalRecords'] = this.totalRecordsOb.subscribe((totalRecords) => {
+            this.totalRecords = totalRecords;
+            this.requestPaginatedUsersList();
+        });
+
         /* Get Account Types. */
         this.accountTypes = this.userAdminService.getAccountTypes();
 
@@ -137,13 +147,16 @@ export class AdminUsersComponent implements OnInit, AfterViewInit, OnDestroy {
         this.userTypes = this.userAdminService.getUserTypes();
 
         /* Subscribe to the admin user list observable. */
-        this.subscriptions['userListSubscription'] =
-            this.userAdminService.getUserListSubject().subscribe((list) => {
-                this.usersList = this.convertToArray(list);
+        this.subscriptions['userListSubscription'] = this.usersListOb.subscribe((list) => {
+            this.usersList = this.convertToArray(list);
 
-                /* Override the changes. */
-                this.changeDetectorRef.detectChanges();
-            });
+            if (this.usersList.length) {
+                this.setPaginatedUsersList();
+            }
+
+            /* Override the changes. */
+            this.changeDetectorRef.detectChanges();
+        });
 
         /* Subscribe to the admin group list observable. */
         this.subscriptions['allGroupList'] = this.userAdminService.getGroupListSubject().subscribe((list) => {
@@ -261,6 +274,43 @@ export class AdminUsersComponent implements OnInit, AfterViewInit, OnDestroy {
 
         /* Ask for update from the service above. */
         this.userAdminService.updateState();
+    }
+
+    /**
+     * Datagrid Refresh
+     * ----------------
+     * Set the dgPageFrom and dgPageSize variables needed to set the pagninatedUsersList
+     *
+     * @param dataGridState
+     */
+    datagridRefresh(dataGridState: ClrDatagridStateInterface) {
+        this.dgPageFrom = dataGridState.page.from;
+        this.dgPageSize = dataGridState.page.size;
+        this.requestPaginatedUsersList();
+        this.setPaginatedUsersList();
+        this.changeDetectorRef.detectChanges();
+    }
+
+    /**
+     * Get Paginated Users List
+     * ------------------------
+     *  Set the paginatedUsersList based on the current page of the datagrid
+     */
+    setPaginatedUsersList() {
+        this.paginatedUsersList = this.usersList.slice(this.dgPageFrom, this.dgPageFrom + this.dgPageSize);
+    }
+
+    /**
+     * Request Paginated Users List
+     * ----------------------------
+     * Request the next page of user data if we don't already have it
+     */
+    requestPaginatedUsersList() {
+        if (this.usersList.length < this.totalRecords) {
+            if (this.usersList.length < (this.dgPageFrom + this.dgPageSize)) {
+                this.userAdminService.updateUsersStore(this.dgPageFrom, this.dgPageSize);
+            }
+        }
     }
 
     /**
@@ -409,9 +459,9 @@ export class AdminUsersComponent implements OnInit, AfterViewInit, OnDestroy {
                                     );
                                     this.showAlert(
                                         'warning',
-                                        'You changed access to \'' + controls['walletsFull'].value[i].text +
-                                        '\'<br /><br /><b>Read access</b> <i class="fa fa-arrow-right"></i>' +
-                                        '<b>Full access</b>.');
+                                        `You changed access to '${controls['walletsFull'].value[i].text}'
+                                         <br><br><b>Read access</b> <i class="fa fa-arrow-right"></i>
+                                         <b>Full access</b>.`);
                                 } else {
                                     delete controls['walletsFull'].value[i];
                                     controls['walletsFull'].patchValue(
@@ -420,9 +470,8 @@ export class AdminUsersComponent implements OnInit, AfterViewInit, OnDestroy {
 
                                     this.showAlert(
                                         'warning',
-                                        'You changed access to \'' + controls['walletsRead'].value[j].text +
-                                        '\'<br /><br /><b>Full access</b> <i class="fa fa-arrow-right"></i>' +
-                                        '<b>Read access</b>.');
+                                        `You changed access to '${controls['walletsRead'].value[j].text}'<br><br>
+                                        <b>Full access</b> <i class="fa fa-arrow-right"></i> <b>Read access</b>.`);
                                 }
                             }
                         }
@@ -466,9 +515,9 @@ export class AdminUsersComponent implements OnInit, AfterViewInit, OnDestroy {
                                     );
                                     this.showAlert(
                                         'warning',
-                                        'You changed access to \'' + controls['groupWalletsFull'].value[i].text
-                                        + '\'<br /><br /><b>Read access</b> <i class="fa fa-arrow-right"></i>' +
-                                        '<b>Full access</b>.');
+                                        `You changed access to '${controls['groupWalletsFull'].value[i].text}'
+                                        <br><br><b>Read access</b> <i class="fa fa-arrow-right"></i>
+                                        <b>Full access</b>.`);
                                 } else {
                                     delete controls['groupWalletsFull'].value[i];
                                     controls['groupWalletsFull'].patchValue(
@@ -477,9 +526,9 @@ export class AdminUsersComponent implements OnInit, AfterViewInit, OnDestroy {
 
                                     this.showAlert(
                                         'warning',
-                                        'You changed access to \'' + controls['groupWalletsRead'].value[j].text
-                                        + '\'<br /><br /><b>Full access</b> <i class="fa fa-arrow-right"></i>' +
-                                        '<b>Read access</b>.');
+                                        `You changed access to '${controls['groupWalletsRead'].value[j].text}'
+                                        <br><br><b>Full access</b> <i class="fa fa-arrow-right"></i>
+                                        <b>Read access</b>.`);
                                 }
                             }
                         }
@@ -1048,8 +1097,8 @@ export class AdminUsersComponent implements OnInit, AfterViewInit, OnDestroy {
         /* Let's now ask the user if they're sure... */
         this.confirmationService.create(
             '<span>Deleting a User</span>',
-            '<span class="text-warning">Are you sure you want to delete \'' +
-            this.usersList[userIndex].userName + '\'?</span>',
+            `<span class="text-warning">Are you sure you want to delete
+            '${this.usersList[userIndex].userName}'?</span>`,
         ).subscribe((ans) => {
             /* ...if they are... */
             if (ans.resolved) {
@@ -1099,7 +1148,7 @@ export class AdminUsersComponent implements OnInit, AfterViewInit, OnDestroy {
             if (this.tabsControl[i].userId === this.usersList[userIndex].userID) {
                 /* Found the index for that tab, lets activate it... */
                 // this.setTabActive(i);
-                this.router.navigateByUrl('/user-administration/users/' + i);
+                this.router.navigateByUrl(`/user-administration/users/${i}`);
 
                 /* And return. */
                 return;
@@ -1332,7 +1381,7 @@ export class AdminUsersComponent implements OnInit, AfterViewInit, OnDestroy {
 
         /* Activate the new tab. */
         // this.setTabActive(this.tabsControl.length - 1);
-        this.router.navigateByUrl('/user-administration/users/' + newTabId);
+        this.router.navigateByUrl(`/user-administration/users/${newTabId}`);
 
         /* Return. */
         return;
