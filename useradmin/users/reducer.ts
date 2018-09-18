@@ -1,50 +1,64 @@
 import * as UsersActions from './actions';
-import {ADD_TAB, REMOVE_TAB, SET_TAB_ACTIVE, SET_ALL_TABS} from './actions';
-import {UsersState, UsersDetail} from './model';
+import { ADD_TAB, REMOVE_TAB, SET_TAB_ACTIVE, SET_ALL_TABS } from './actions';
+import { UsersState } from './model';
 import * as _ from 'lodash';
-import {List, fromJS, Map} from 'immutable';
-import {immutableHelper} from '@setl/utils';
-import {Action} from 'redux';
+import { immutableHelper } from '@setl/utils';
+import { Action } from 'redux';
 
 const initialState: UsersState = {
     usersList: [],
-    openedTabs: []
+    totalRecords: 0,
+    openedTabs: [],
 };
 
-export const UsersReducer = function (state: UsersState = initialState,
-                                      action: Action) {
+export const usersReducer = function (state: UsersState = initialState, action: Action) {
 
-    /* Local stuff. */
+    /* Set local variables */
     const usersData = _.get(action, 'payload[1].Data', []);
     let newState: UsersState;
+    let usersList;
 
     switch (action.type) {
-        case UsersActions.SET_ADMIN_USERLIST:
-            /* We'll use a function to tidy the data up. */
-            const usersList = formatUserList(usersData);
+    case UsersActions.SET_ADMIN_USERLIST:
+        /* Save totalRecords to Redux if exists... */
+        if (usersData[0].hasOwnProperty('totalRecords')) {
+            newState = Object.assign({}, state, { totalRecords: usersData[0].totalRecords });
+        } else {
+            /* ... it doesn't, so merge the new userList into existing state */
+            usersList = Object.assign({}, state.usersList, formatUserList(usersData));
+            newState = Object.assign({}, state, { usersList });
+        }
+        return newState;
 
-            /* Let's now assign differences to the current state. */
-            newState = Object.assign({}, state, {
-                usersList
-            });
+    case UsersActions.UPDATE_ADMIN_USERLIST:
+        /* Tidy data, merge with existing state and assign to new object */
+        delete usersData[0].Status;
+        delete usersData[0].Message;
+        usersList = Object.assign({}, state.usersList, formatUserList(usersData));
+        /* Assign differences to the current state */
+        newState = Object.assign({}, state, { usersList });
+        return newState;
 
-            /* And finally return the new state. */
-            return newState;
+    case UsersActions.DELETE_FROM_ADMIN_USERLIST:
+        /* Assign state to new object and remove deleted user from usersList */
+        newState = JSON.parse(JSON.stringify(state));
+        delete newState.usersList[usersData[0].userID];
+        return newState;
 
-        case ADD_TAB:
-            return handleAddTab(action, state);
+    case ADD_TAB:
+        return handleAddTab(action, state);
 
-        case REMOVE_TAB:
-            return handleRemoveTab(action, state);
+    case REMOVE_TAB:
+        return handleRemoveTab(action, state);
 
-        case SET_TAB_ACTIVE:
-            return handleSetTabActive(action, state);
+    case SET_TAB_ACTIVE:
+        return handleSetTabActive(action, state);
 
-        case SET_ALL_TABS:
-            return handleSetAllTabs(action, state);
+    case SET_ALL_TABS:
+        return handleSetAllTabs(action, state);
 
-        default:
-            return state;
+    default:
+        return state;
     }
 };
 
@@ -56,7 +70,7 @@ export const UsersReducer = function (state: UsersState = initialState,
  *
  * @return {newStructure} object - The object of users by ID.
  */
-function formatUserList(rawResponse: Array<any>): {} {
+function formatUserList(rawResponse: any[]): {} {
 
     /* Lets define the new structure, an object. */
     const newStructure = {};
@@ -64,14 +78,13 @@ function formatUserList(rawResponse: Array<any>): {} {
     /* We'll loop over the array and make it so each key is a user ID in the new
      object, the value will be the user's data as an object. */
     let i: number;
-    for (i = 0; i < rawResponse.length; i++) {
+    for (i = 0; i < rawResponse.length; i += 1) {
         newStructure[rawResponse[i].userID] = rawResponse[i];
     }
 
     /* Lastly, return. */
     return newStructure;
 }
-
 
 /**
  * Handle add user tab action.
@@ -95,7 +108,7 @@ function handleAddTab(action: Action, state: UsersState): UsersState {
     const newOpenedTabs = immutableHelper.pushToList(currentOpenTabs, newTab);
 
     return Object.assign({}, state, {
-        openTabs: newOpenedTabs
+        openTabs: newOpenedTabs,
     });
 
 }
@@ -122,7 +135,7 @@ function handleRemoveTab(action: Action, state: UsersState): UsersState {
     const newOpenedTabs = immutableHelper.removeFromList(currentOpenTabs, tabId);
 
     return Object.assign({}, state, {
-        openTabs: newOpenedTabs
+        openTabs: newOpenedTabs,
     });
 
 }
@@ -151,7 +164,7 @@ function handleSetTabActive(action: Action, state: UsersState): UsersState {
     });
 
     return Object.assign({}, state, {
-        openTabs: newOpenedTabs
+        openTabs: newOpenedTabs,
     });
 
 }
@@ -166,5 +179,5 @@ function handleSetTabActive(action: Action, state: UsersState): UsersState {
 function handleSetAllTabs(action: Action, state: UsersState): UsersState {
     const tabs = immutableHelper.get(action, 'tabs', []);
 
-    return Object.assign({}, state, {openedTabs: tabs});
+    return Object.assign({}, state, { openedTabs: tabs });
 }

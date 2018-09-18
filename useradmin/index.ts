@@ -1,11 +1,13 @@
 /* Users */
 import {
     UsersState,
-    UsersReducer,
+    usersReducer,
 } from './users';
 
 export {
     SET_ADMIN_USERLIST,
+    UPDATE_ADMIN_USERLIST,
+    DELETE_FROM_ADMIN_USERLIST,
     getUsersList,
     userAdminActions,
 } from './users';
@@ -171,7 +173,7 @@ import { combineReducers, Reducer } from 'redux';
 
 /* Export the comibined reducers of this branch. */
 export const adminUserReducer: Reducer<AdminUsersState> = combineReducers<AdminUsersState>({
-    users: UsersReducer,
+    users: usersReducer,
     permissionGroup: PermissionGroupReducer,
     permAreaList: PermAreasReducer,
     permissions: permissionsReducer,
