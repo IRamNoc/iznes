@@ -96,7 +96,7 @@ export class UsersCreateUpdateComponent
     }
 
     private initTranslations(): void {
-        this.alertCreateNoActiveTitle = this.translate.translate('No Active Teams');
+        this.alertCreateNoActiveTitle = this.translate.translate('Are you sure?');
         this.alertCreateNoActiveMessage =
             this.translate.translate(`You have not selected an active Team to assign this user(s) to.
                 If you continue, this user(s) will not have any permissions.`);
