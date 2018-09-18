@@ -1,10 +1,10 @@
-import {Component, forwardRef, Input, OnChanges} from '@angular/core';
+import { Component, forwardRef, Input, OnChanges } from '@angular/core';
 import {
     FormControl,
     ControlValueAccessor,
     NG_VALUE_ACCESSOR,
     NG_VALIDATORS,
-    Validators
+    Validators,
 } from '@angular/forms';
 import * as _ from 'lodash';
 
@@ -18,39 +18,38 @@ const noop = () => {
     providers: [{
         provide: NG_VALUE_ACCESSOR,
         useExisting: forwardRef(() => VariousAddressSelectComponent),
-        multi: true
-    }]
+        multi: true,
+    }],
 })
 export class VariousAddressSelectComponent implements ControlValueAccessor {
     @Input() ownWalletAddressArray = [
-        {id: 1, text: '2 Connection'},
-        {id: 2, text: 'Owned Address'},
-        {id: 3, text: 'Other Address'},
+        { id: 1, text: '2 Connection' },
+        { id: 2, text: 'Owned Address' },
+        { id: 3, text: 'Other Address' },
     ];
     @Input() relationshipArray = [
-        {id: 1, text: '1 Connection'},
-        {id: 2, text: 'Owned Address'},
-        {id: 3, text: 'Other Address'},
+        { id: 1, text: '1 Connection' },
+        { id: 2, text: 'Owned Address' },
+        { id: 3, text: 'Other Address' },
     ];
     @Input() required: boolean = false;
     addressTypes = [
-        {id: 1, text: 'Connection'},
-        {id: 2, text: 'Owned Address'},
-        {id: 3, text: 'Other Address'},
+        { id: 1, text: 'Connection' },
+        { id: 2, text: 'Owned Address' },
+        { id: 3, text: 'Other Address' },
     ];
 
     selectedAddressType = 1;
 
     addressTypeSelect = new FormControl([{ id: 1, text: 'Connection' }]);
     relationshipSelect = new FormControl('', Validators.required);
-    owndAddressSelect = new FormControl('', Validators.required);
+    ownedAddressSelect = new FormControl('', Validators.required);
     otherAddress = new FormControl('', Validators.required);
 
     // The internal data model
     private innerValue: any = '';
 
-    // Placeholders for the callbacks which are later providesd
-    // by the Control Value Accessor
+    // Placeholders for the callbacks which are later providesd by the Control Value Accessor
     private onTouchedCallback: () => void = noop;
     private onChangeCallback: (_: any) => void = noop;
 
@@ -92,45 +91,45 @@ export class VariousAddressSelectComponent implements ControlValueAccessor {
         let ng2SelectValue;
 
         switch (this.selectedAddressType) {
-            case 1:
-                if (_.get(this.relationshipSelect, 'value[0].id', null) === value) {
-                    return true;
-                }
-                ng2SelectValue = this.relationshipArray.reduce(
-                    (result, currentValue) => {
-                        if (currentValue.id === value) {
-                            result.push(currentValue);
-                        }
-                        return result;
-                    }, []
-                );
+        case 1:
+            if (_.get(this.relationshipSelect, 'value[0].id', null) === value) {
+                return true;
+            }
+            ng2SelectValue = this.relationshipArray.reduce(
+                (result, currentValue) => {
+                    if (currentValue.id === value) {
+                        result.push(currentValue);
+                    }
+                    return result;
+                },
+                [],
+            );
 
-                this.relationshipSelect.setValue(ng2SelectValue);
-                break;
+            this.relationshipSelect.setValue(ng2SelectValue);
+            break;
 
-            case 2:
-                if (_.get(this.owndAddressSelect, 'value[0].id', null) === value) {
-                    return true;
-                }
-                ng2SelectValue = this.ownWalletAddressArray.reduce(
-                    (result, currentValue) => {
-                        if (currentValue.id === value) {
-                            result.push(currentValue);
-                        }
-                        return result;
-                    }, []
-                );
-                this.owndAddressSelect.setValue(ng2SelectValue);
-                break;
+        case 2:
+            if (_.get(this.ownedAddressSelect, 'value[0].id', null) === value) {
+                return true;
+            }
+            ng2SelectValue = this.ownWalletAddressArray.reduce(
+                (result, currentValue) => {
+                    if (currentValue.id === value) {
+                        result.push(currentValue);
+                    }
+                    return result;
+                },
+                [],
+            );
+            this.ownedAddressSelect.setValue(ng2SelectValue);
+            break;
 
-            case 3:
-                if (this.otherAddress.value === value) {
-                    return true;
-                }
-                this.otherAddress.setValue(value);
-                break;
-
+        case 3:
+            if (this.otherAddress.value === value) {
+                return true;
+            }
+            this.otherAddress.setValue(value);
+            break;
         }
     }
-
 }
