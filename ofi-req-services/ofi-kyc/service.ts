@@ -36,7 +36,12 @@ import { createMemberNodeRequest, createMemberNodeSagaRequest } from '@setl/util
 
 import * as _ from 'lodash';
 import { SagaHelper } from '@setl/utils';
-import { SET_AMKYCLIST, SET_REQUESTED } from '@ofi/ofi-main/ofi-store/ofi-kyc/ofi-am-kyc-list';
+import {
+    SET_AMKYCLIST,
+    SET_REQUESTED,
+    setrequested,
+    clearrequested
+} from '@ofi/ofi-main/ofi-store/ofi-kyc/ofi-am-kyc-list';
 import {
     SET_KYC_DETAILS_GENERAL,
     SET_KYC_DETAILS_COMPANY,
@@ -815,6 +820,16 @@ export class OfiKycService {
             this.ngRedux.dispatch(ofiClearRequestedClientReferential());
         } else {
             this.ngRedux.dispatch(ofiSetRequestedClientReferential());
+        }
+    }
+
+    setRequestedAMKycList(boolValue: boolean) {
+        // false = doRequest | true = already requested
+
+        if (!boolValue) {
+            this.ngRedux.dispatch(clearrequested());
+        } else {
+            this.ngRedux.dispatch(setrequested());
         }
     }
 
