@@ -50,7 +50,11 @@ export class OfiProfileMyInformationsComponent implements OnInit {
     passwordConfirm: AbstractControl;
     validation: number = 3;
 
-    public showPasswords = false;
+    public showPasswords = {
+        1: false,
+        2: false,
+        3: false,
+    };
 
     @select(['user', 'myDetail']) myDetail: any;
     @select(['ofi', 'ofiKyc', 'myInformations']) myKyc: any;
@@ -124,8 +128,8 @@ export class OfiProfileMyInformationsComponent implements OnInit {
         return (oldNew) ? oldNew : mismatch;
     }
 
-    toggleShowPasswords() {
-        this.showPasswords = !this.showPasswords;
+    toggleShowPasswords(id) {
+        this.showPasswords[id] = !this.showPasswords[id];
     }
 
     changePass(formValues) {

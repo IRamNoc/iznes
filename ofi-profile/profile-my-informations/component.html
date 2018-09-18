@@ -32,8 +32,8 @@
 
                             </label>
                             <div class="password-container">
-                                <input [type]="(showPasswords === true) ? 'text' : 'password'" id="cpOldPassword" [formControl]="oldPassword" size="45">
-                                <span (click)="toggleShowPasswords()" title="Show/hide passwords"><i class="fa fa-eye-slash" aria-hidden="true"></i></span>
+                                <input [type]="(showPasswords[1] === true) ? 'text' : 'password'" id="cpOldPassword" [formControl]="oldPassword" size="45">
+                                <span (click)="toggleShowPasswords(1)" title="Show/hide passwords"><i class="fa fa-eye-slash" aria-hidden="true"></i></span>
                             </div>
                             <div *ngIf="hasError('oldPassword', 'required')" class="text-danger">{{'Old password is required' | translate}}</div>
                         </div>
@@ -47,8 +47,8 @@
                                 <app-password-tooltip></app-password-tooltip>
                             </label>
                             <div class="password-container">
-                                <input [type]="(showPasswords === true) ? 'text' : 'password'" id="cpPassword" [formControl]="password" size="45" (focus)="validation = 3">
-                                <span (click)="toggleShowPasswords()" title="Show/hide passwords"><i class="fa fa-eye-slash" aria-hidden="true"></i></span>
+                                <input [type]="(showPasswords[2] === true) ? 'text' : 'password'" id="cpPassword" [formControl]="password" size="45" (focus)="validation = 3">
+                                <span (click)="toggleShowPasswords(2)" title="Show/hide passwords"><i class="fa fa-eye-slash" aria-hidden="true"></i></span>
                             </div>
                             <div *ngIf="hasError('password', 'required')" class="text-danger">{{'Password is required' | translate}}</div>
                             <div *ngIf="(hasError('password', 'rules') && isTouched('password'))  || validation < 3" class="text-danger">
@@ -67,8 +67,8 @@
 
                             </label>
                             <div class="password-container">
-                                <input [type]="(showPasswords === true) ? 'text' : 'password'" id="cpPasswordConfirm" [formControl]="passwordConfirm" size="45" (focus)="validation = 3">
-                                <span (click)="toggleShowPasswords()" title="Show/hide passwords"><i class="fa fa-eye-slash" aria-hidden="true"></i></span>
+                                <input [type]="(showPasswords[3] === true) ? 'text' : 'password'" id="cpPasswordConfirm" [formControl]="passwordConfirm" size="45" (focus)="validation = 3">
+                                <span (click)="toggleShowPasswords(3)" title="Show/hide passwords"><i class="fa fa-eye-slash" aria-hidden="true"></i></span>
                             </div>
                             <div *ngIf="hasError('passwordConfirm', 'required')" class="text-danger">{{'Confirmation is required' | translate}}</div>
                             <div *ngIf="!hasError('passwordConfirm', 'required') && hasError('', 'mismatch') && isTouched('password') && isTouched('passwordConfirm')" class="text-danger">{{'Password does not match' | translate}}</div>
