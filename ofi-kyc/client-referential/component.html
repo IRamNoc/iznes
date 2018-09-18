@@ -259,7 +259,7 @@
                             <label for="orders-search-from-date">{{'From date' | translate}}</label>
                             <div class="input-group date-pick-wrapper">
                                 <span class="fa fa-calendar" aria-hidden="true"></span>
-                                <input id="orders-search-from-date" [formControl]="searchForm.controls['searchFrom']" autocomplete="off" [dpDayPicker]="configDate" [placeholder]="_translate.translate('Choose a date')"
+                                <input id="orders-search-from-date" [formControl]="searchForm.controls['searchFrom']" autocomplete="off" [dpDayPicker]="fromConfigDate" [placeholder]="_translate.translate('Choose a date')"
                                        mode="day" theme="dp-material">
                             </div>
                         </div>
@@ -267,7 +267,7 @@
                             <label for="orders-search-to-date">{{'To date' | translate}}</label>
                             <div class="input-group date-pick-wrapper">
                                 <span class="fa fa-calendar" aria-hidden="true"></span>
-                                <input id="orders-search-to-date" [formControl]="searchForm.controls['searchTo']" autocomplete="off" [dpDayPicker]="configDate" [placeholder]="_translate.translate('Choose a date')"
+                                <input id="orders-search-to-date" [formControl]="searchForm.controls['searchTo']" autocomplete="off" [dpDayPicker]="toConfigDate" [placeholder]="_translate.translate('Choose a date')"
                                        mode="day" theme="dp-material">
                             </div>
                         </div>
