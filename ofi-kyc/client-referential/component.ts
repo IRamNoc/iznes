@@ -20,6 +20,7 @@ import { OFI_SET_CLIENT_REFERENTIAL_AUDIT } from "@ofi/ofi-main/ofi-store";
 import { mDateHelper } from "@setl/utils";
 import { combineLatest as observableCombineLatest } from 'rxjs';
 import { Observable } from "rxjs/Rx";
+import { Moment } from 'moment';
 
 @AppObservableHandler
 @Component({
@@ -62,12 +63,34 @@ export class OfiClientReferentialComponent implements OnInit, OnDestroy {
     language = 'en';
 
     // Datepicker config
-    configDate = {
+    fromConfigDate = {
         firstDayOfWeek: 'mo',
         format: 'YYYY-MM-DD',
         closeOnSelect: true,
         disableKeypress: true,
         locale: this.language,
+        isDayDisabledCallback: (thisDate) => {
+            if (!!thisDate && this.searchForm.controls['searchTo'].value != '') {
+                return (thisDate.diff(this.searchForm.controls['searchTo'].value) > 0);
+            } else {
+                return false;
+            }
+        },
+    };
+
+    toConfigDate = {
+        firstDayOfWeek: 'mo',
+        format: 'YYYY-MM-DD',
+        closeOnSelect: true,
+        disableKeypress: true,
+        locale: this.language,
+        isDayDisabledCallback: (thisDate) => {
+            if (!!thisDate && this.searchForm.controls['searchFrom'].value != '') {
+                return (thisDate.diff(this.searchForm.controls['searchFrom'].value) < 0);
+            } else {
+                return false;
+            }
+        },
     };
 
     clientReferentialAudit = [];
