@@ -16,7 +16,7 @@
             <div class="row">
                 <div class="form-group required-field col-md-6 col-xl-3">
                     <label class="control-label" for="activities">{{'Activities' | translate}}</label>
-                    <ng-select class="large-select" id="activities" [items]="companyActivitiesList" [allowClear]="true" [formControl]="form.get('activities')" placeholder="{{'Please select your company activity' | translate}}"></ng-select>
+                    <ng-select class="large-select multiline" id="activities" [items]="companyActivitiesList" [allowClear]="true" [formControl]="form.get('activities')" placeholder="{{'Please select your company activity' | translate}}"></ng-select>
                     <span class="field-error" *ngIf="hasError('activities')">{{'Field is required' | translate}}</span>
                 </div>
 
@@ -278,7 +278,7 @@
             <div class="row">
                 <div class="form-group required-field col-md-6 col-xl-3">
                     <label for="geographicalOrigin1">{{'Geographical origin (specify by area or country)' | translate}}</label>
-                    <ng-select class="large-select" id="geographicalOrigin1" [items]="geographicalOriginTypeList" formControlName="geographicalOrigin1" placeholder="{{'Please select a type of geographical origin' | translate}}"></ng-select>
+                    <ng-select class="large-select multiline" id="geographicalOrigin1" [items]="geographicalOriginTypeList" formControlName="geographicalOrigin1" placeholder="{{'Please select a type of geographical origin' | translate}}"></ng-select>
                 </div>
                 <div class="form-group required-field col-md-6 col-xl-3" *ngIf="geographicalOrigin === 'country'">
                     <label for="geographicalOrigin2">{{'Country' | translate}}</label>

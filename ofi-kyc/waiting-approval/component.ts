@@ -141,7 +141,20 @@ export class OfiWaitingApprovalComponent implements OnInit, OnDestroy {
     }
 
     initStatuses(): void {
-        if (this.initialStatusId == -2) {
+        if (this.alreadyCompleted) {
+            this.statuses = [
+                {
+                    id: 'reject',
+                    label: 'Reject',
+                    value: Statuses.rejected
+                },
+                {
+                    id: 'accept',
+                    label: 'Accept',
+                    value: Statuses.approved
+                },
+            ];
+        } else if (this.initialStatusId == -2) {
             this.statuses = [
                 {
                     id: 'askForMoreInfo',
@@ -152,7 +165,7 @@ export class OfiWaitingApprovalComponent implements OnInit, OnDestroy {
                     id: 'accept',
                     label: 'Accept',
                     value: Statuses.approved
-                }
+                },
             ];
         } else {
             this.statuses = [
@@ -170,7 +183,7 @@ export class OfiWaitingApprovalComponent implements OnInit, OnDestroy {
                     id: 'accept',
                     label: 'Accept',
                     value: Statuses.approved
-                }
+                },
             ];
         }
     }
@@ -210,10 +223,10 @@ export class OfiWaitingApprovalComponent implements OnInit, OnDestroy {
             };
 
             this.initialStatusId = kyc.status;
+            this.alreadyCompleted = kyc.alreadyCompleted;
             this.initStatuses();
             this.statusId = (kyc.status === Statuses.waitingApproval) ? Statuses.approved : kyc.status;
             this.amCompanyName = kyc.companyName;
-            this.alreadyCompleted = kyc.alreadyCompleted;
             this.investorID = kyc.investorUserID;
 
             this.initWaitingApprovalForm();

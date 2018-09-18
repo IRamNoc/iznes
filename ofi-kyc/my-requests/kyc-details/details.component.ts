@@ -218,7 +218,7 @@ export class KycDetailsComponent implements OnInit, OnDestroy {
 
     getRiskObjective() {
         let riskObjectives = {
-            title: 'Investment\'s Ojectives',
+            title: 'Investment\'s Objectives',
             data: ''
         };
 

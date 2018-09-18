@@ -128,10 +128,14 @@ export class NewRequestService {
     getContext(amcs) {
         amcs = map(amcs, 'kycID').sort();
 
-        let context = amcs.reduce((acc, curr) => {
-            return acc + curr;
-        }, '');
-
+        const context = amcs.reduce(
+            (acc, curr) => {
+                const joiner = acc ? '-' : '';
+                return [acc, curr].join(joiner);
+            },
+            '',
+            )
+        ;
 
         this.context = context;
 
