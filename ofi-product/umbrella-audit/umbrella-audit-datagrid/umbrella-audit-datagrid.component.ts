@@ -40,7 +40,6 @@ export class UmbrellaAuditDatagridComponent implements OnInit, OnDestroy, OnChan
         private umbrellaService: OfiUmbrellaFundService,
         private fb: FormBuilder,
         public translate: MultilingualService,
-        @Inject('product-config') productConfig,
     ) {
         this.searchForm = this.fb.group({
             startDate: [
@@ -60,17 +59,17 @@ export class UmbrellaAuditDatagridComponent implements OnInit, OnDestroy, OnChan
         }
 
         this.umbrellaAuditList$
-        .takeUntil(this.unSubscribe)
-        .subscribe((d) => {
-            this.umbrellaAuditList = d;
-            this.updateUmbrellaAuditItems();
-        });
+            .takeUntil(this.unSubscribe)
+            .subscribe((d) => {
+                this.umbrellaAuditList = d;
+                this.updateUmbrellaAuditItems();
+            });
 
         this.searchForm.valueChanges
-        .takeUntil(this.unSubscribe)
-        .subscribe((d) => {
-            this.filterAuditItems(d);
-        });
+            .takeUntil(this.unSubscribe)
+            .subscribe((d) => {
+                this.filterAuditItems(d);
+            });
     }
 
     ngOnChanges(changes) {
@@ -97,7 +96,6 @@ export class UmbrellaAuditDatagridComponent implements OnInit, OnDestroy, OnChan
             this.umbrellaAuditItems = [];
             return;
         }
-
         this.umbrellaAuditItems = this.umbrellaAuditList[this.umbrellaID].map(item => ({
             umbrellaName: item.umbrellaName,
             field: item.field,
@@ -106,6 +104,7 @@ export class UmbrellaAuditDatagridComponent implements OnInit, OnDestroy, OnChan
             modifiedBy: item.modifiedBy,
             dateModified: item.dateModified,
         }));
+        this.filterAuditItems(this.searchForm.value);
         this.changeDetectorRef.markForCheck();
     }
 
