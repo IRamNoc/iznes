@@ -12,7 +12,9 @@ import {
 
 import { UserManagementServiceBase } from './service';
 import * as UserMgmtModel from './model';
-import { AccountAdminErrorResponse, DataGridConfig } from '../../../base/model';
+import { AccountAdminErrorResponse, DataGridConfig, AccountAdminNouns } from '../../../base/model';
+import { AccountAdminUser } from '../../../users/model';
+import { AccountAdminTeam } from '../../../teams/model';
 
 @Component({
     selector: 'app-core-admin-teams-mgmt',
@@ -27,6 +29,7 @@ export class AccountAdminUsersMgmtComponentBase<Type> implements OnInit, OnDestr
     @Input() doUpdate: boolean = true;
     @Input() showOnlyActiveFilter: boolean = true;
     @Output() entitiesFn: EventEmitter<any[]> = new EventEmitter();
+    @Output() noActiveEntitiesFn: EventEmitter<() => boolean> = new EventEmitter();
 
     datagridConfig: DataGridConfig;
 
@@ -62,13 +65,35 @@ export class AccountAdminUsersMgmtComponentBase<Type> implements OnInit, OnDestr
             this.subscriptions.push(this.doUpdateOb.subscribe((entityId: number) => {
                 if (entityId !== undefined) this.entityId = entityId;
 
-                _.forEach(this.entities, (entity: Type) => {
-                    this.updateState(entity);
-                });
+                this.updateEntityStates();
             }));
         }
 
+        this.noActiveEntitiesFn.emit(() => this.hasActiveEntity());
+
         this.initDataGridConfig();
+    }
+
+    private updateEntityStates(): void {
+        _.forEach(this.entities, (entity: Type) => {
+            this.updateState(entity);
+        });
+    }
+
+    private hasActiveEntity(): boolean {
+        if (this.noun === AccountAdminNouns.User) return true;
+
+        let hasActive = false;
+
+        _.forEach(this.entities, (entity: Type) => {
+            if (this.noun === AccountAdminNouns.Team &&
+                (entity as any).isActivated &&
+                (entity as any).status === 1) {
+                hasActive = true;
+            }
+        });
+
+        return hasActive;
     }
 
     protected initDataGridConfig(): void {

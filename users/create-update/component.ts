@@ -32,6 +32,8 @@ import {
 export class UsersCreateUpdateComponent
     extends AccountAdminCreateUpdateBase<Model.AccountAdminUserForm> implements OnInit, OnDestroy {
 
+    alertCreateNoActiveTitle: string;
+    alertCreateNoActiveMessage: string;
     addAdditionalUserTooltip: TooltipConfig;
     createUserTooltip: TooltipConfig;
     createInviteUserTooltip: TooltipConfig;
@@ -45,6 +47,7 @@ export class UsersCreateUpdateComponent
 
     private user: Model.AccountAdminUser;
     private userTeamsSelected: TeamModel.AccountAdminTeam[];
+    private userHasActiveTeam: () => boolean;
 
     @select(['userAdmin', 'userTypes', 'userTypes']) userTypesOb;
     @select(['userAdmin', 'userTypes', 'requested']) userTypesReqOb;
@@ -69,6 +72,7 @@ export class UsersCreateUpdateComponent
 
         this.initUsersSubscriptions();
         this.initTooltips();
+        this.initTranslations();
     }
 
     private initTooltips(): void {
@@ -89,6 +93,13 @@ export class UsersCreateUpdateComponent
                 the permissions outlined in User permissions.`),
             size: 'small',
         };
+    }
+
+    private initTranslations(): void {
+        this.alertCreateNoActiveTitle = this.translate.translate('No Active Teams');
+        this.alertCreateNoActiveMessage =
+            this.translate.translate(`You have not selected an active Team to assign this user(s) to.
+                If you continue, this user(s) will not have any permissions.`);
     }
 
     private initForm(userTypeId: string): void {
@@ -203,6 +214,10 @@ export class UsersCreateUpdateComponent
         this.userTeamsSelected = teams;
     }
 
+    noActiveEntities(fn: () => boolean): void {
+        this.userHasActiveTeam = fn;
+    }
+
     addAdditionalUser(): void {
         this.forms.push(this.generateForm(this.userTypes[0]));
     }
@@ -280,6 +295,19 @@ export class UsersCreateUpdateComponent
     }
 
     private createUsers(invite: boolean): void {
+        if (!this.userHasActiveTeam()) {
+            this.confirmations.create(this.alertCreateNoActiveTitle, this.alertCreateNoActiveMessage)
+                .subscribe((res) => {
+                    if (res.resolved) {
+                        this.doCreateUsers(invite);
+                    }
+                });
+        } else {
+            this.doCreateUsers(invite);
+        }
+    }
+
+    private doCreateUsers(invite: boolean): void {
         this.confirmations.create(this.alertCreateTitle, this.alertCreateMessage)
             .subscribe((res) => {
                 if (res.resolved) {
@@ -293,21 +321,7 @@ export class UsersCreateUpdateComponent
                             form.userType.value()[0].id,
                             form.reference.value(),
                             (data: AccountAdminSuccessResponse) => {
-                                this.doUserManagementUpdateOb.next(data[1].Data[0].userID);
-
-                                this.onSaveSuccess(
-                                    `${form.firstName.value()} ${form.lastName.value()}`,
-                                    data[1].Data[0].userID,
-                                    false,
-                                );
-
-                                _.forEach(this.forms, (form: Model.AccountAdminUserForm) => {
-                                    if (invite) this.inviteUser(data[1].Data[0].userID, form, false);
-                                });
-
-                                if (this.forms.length === index + 1) {
-                                    this.router.navigateByUrl(this.getBackUrl());
-                                }
+                                this.onCreateUserSuccess(data, form, invite, index);
                             },
                             (e: AccountAdminErrorResponse) => this.onSaveError(
                                 `${form.firstName.value()} ${form.lastName.value()}`,
@@ -317,6 +331,27 @@ export class UsersCreateUpdateComponent
                     });
                 }
             });
+    }
+
+    private onCreateUserSuccess(data: AccountAdminSuccessResponse,
+                                form: Model.AccountAdminUserForm,
+                                invite: boolean,
+                                index: number): void {
+        this.doUserManagementUpdateOb.next(data[1].Data[0].userID);
+
+        this.onSaveSuccess(
+            `${form.firstName.value()} ${form.lastName.value()}`,
+            data[1].Data[0].userID,
+            false,
+        );
+
+        _.forEach(this.forms, (form: Model.AccountAdminUserForm) => {
+            if (invite) this.inviteUser(data[1].Data[0].userID, form, false);
+        });
+
+        if (this.forms.length === index + 1) {
+            this.router.navigateByUrl(this.getBackUrl());
+        }
     }
 
     private updateUser(invite: boolean): void {
