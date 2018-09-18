@@ -192,6 +192,8 @@ export class OfiClientReferentialComponent implements OnInit, OnDestroy {
                     if (amKycList[key].kycID == this.kycId) this.currentInvestor = amKycList[key];
                 });
 
+                this.companyName = _.get(this.currentInvestor, 'investorCompanyName', '');
+
                 if (this.kycId != '') {
                     const phoneNumber = (this.currentInvestor.investorPhoneCode && this.currentInvestor.investorPhoneNumber) ? `${this.currentInvestor.investorPhoneCode} ${this.currentInvestor.investorPhoneNumber}` : '';
                     const approvalDateRequestTs = mDateHelper.dateStrToUnixTimestamp(this.currentInvestor.lastUpdated, 'YYYY-MM-DD HH:mm:ss');
