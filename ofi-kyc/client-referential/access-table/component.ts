@@ -196,6 +196,8 @@ export class OfiFundAccessTable {
 
         Object.keys(changedData).forEach((key) => {
             if (changedData[key]['newOverride'] && changedData[key]['override']) {
+                changedData[key]['overrideAmount'] = changedData[key]['overrideAmount'].replace(/\s+/g, '');
+
                 promises.push(new Promise((resolve, reject) => {
 
                     if (_.isEmpty(this.uploadFiles[key])) {
@@ -256,7 +258,7 @@ export class OfiFundAccessTable {
                 this._messagesService.sendMessage(recipientsArr, subjectStr, bodyStr, action as any);
 
                 this.backBtn();
-            },      () => {
+            }, () => {
                 // fail call back
                 // todo
             });
