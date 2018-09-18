@@ -8,7 +8,6 @@ import { HoldingByAsset, MyWalletHoldingState } from '@setl/core-store/wallet/my
 import { isEmpty, isArray, some } from 'lodash';
 import { InitialisationService, WalletNodeRequestService, MyWalletsService } from '@setl/core-req-services';
 import { SagaHelper, WalletTxHelper, LogService } from '@setl/utils';
-import { MemberSocketService } from '@setl/websocket-service';
 import {
     setRequestedWalletHolding,
     setRequestedWalletIssuer,
@@ -21,6 +20,7 @@ import {
 import { WalletIssuerDetail } from '@setl/core-store/assets/my-issuers';
 import { Transaction } from '@setl/core-store/wallet/transactions/model';
 import { TransactionsByAsset } from '@setl/core-store/wallet/transactions';
+import { MemberSocketService } from '@setl/websocket-service';
 import { createMemberNodeSagaRequest } from '@setl/utils/common';
 
 export interface Asset {
@@ -45,6 +45,7 @@ export class ReportingService {
     transactionsByAsset$: Observable<TransactionsByAsset>;
     walletInfo = { walletName: '' };
     addressList = [];
+    addressDirectory = [];
     walletList = {};
     holdingByAddress: {}[] = [];
     requestedWalletIDs: any[] = [];
@@ -131,6 +132,7 @@ export class ReportingService {
             this.walletList = walletList;
             this.myChainAccess = chainAccess[this.connectedChainId];
             this.walletInfo = walletList[this.connectedWalletId];
+            this.addressList = addressList;
 
             initialisedSubject.next(true);
         });
@@ -154,7 +156,7 @@ export class ReportingService {
 
         /* Subscribe to get address labels by wallet ID */
         this.addressDirectory$.subscribe((addresses) => {
-            this.addressList = addresses;
+            this.addressDirectory = addresses;
         });
     }
 
@@ -441,7 +443,7 @@ export class ReportingService {
      */
     private requestAddressLabels(walletId: number, address: string) {
         // Request the address labels if we don't have them
-        if (isEmpty(this.addressList[address]) && !this.requestedWalletIDs.includes(walletId)) {
+        if (isEmpty(this.addressDirectory[address]) && !this.requestedWalletIDs.includes(walletId)) {
             const asyncTaskPipe = this.myWalletService.requestWalletLabel({
                 walletId,
             });
