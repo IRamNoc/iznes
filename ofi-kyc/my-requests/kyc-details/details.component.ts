@@ -175,12 +175,14 @@ export class KycDetailsComponent implements OnInit, OnDestroy {
             takeUntil(this.unsubscribe)
         )
         .subscribe(beneficiaries => {
-            let promises = beneficiaries.map(beneficiary => this.kycDetailsService.getHashes(beneficiary));
+            let promises = beneficiaries.map((beneficiary) => {
+                beneficiary.splice(beneficiary.findIndex((item) => item.id == 'delete'), 1);
+                return this.kycDetailsService.getHashes(beneficiary);
+            });
             Promise.all(promises).then((beneficiaries) => {
                 this.beneficiaries = beneficiaries;
             });
-        })
-        ;
+        });
     }
 
     getRiskProfile() {
