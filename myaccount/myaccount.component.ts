@@ -602,12 +602,12 @@ export class SetlMyAccountComponent implements OnDestroy, OnInit {
         this.ngRedux.dispatch(SagaHelper.runAsyncCallback(
             asyncTaskPipe,
             (data) => {
-                this.alertsService.generate('success', 'User details have been successfully updated');
+                this.alertsService.generate('success', 'User details have been successfully updated.');
 
             },
             (data) => {
                 console.error('error: ', data);
-                this.alertsService.generate('error', 'Failed to update user details');
+                this.alertsService.generate('error', 'Failed to update user details.');
             }),
         );
     }
