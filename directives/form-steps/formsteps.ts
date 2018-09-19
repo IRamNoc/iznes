@@ -307,6 +307,8 @@ export class FormStepsDirective implements OnInit, OnDestroy, AfterViewInit {
                 if (this.isValid()) {
                     setTimeout(() => {
                         if (this.isMultiForm) {
+                            this.clickSubmit(this.btNext);
+
                             // if (this.config[this.currentStep].form !== undefined) {
                             //     this.config[this.currentStep].submitted = true;
                             // }
@@ -330,6 +332,7 @@ export class FormStepsDirective implements OnInit, OnDestroy, AfterViewInit {
             this.divButtons.appendChild(this.btSubmit);
             this.btSubmit.onclick = (event) => {
                 if (this.isValid()) {
+                    this.clickSubmit(this.btSubmit);
                     // check if one step has not been done
                     const missingSteps = this.applyStepToProgressBar();
                     if (missingSteps.length > 0 && this.isMultiForm && this.config[this.nbSteps - 1].form !== undefined) {
@@ -420,7 +423,7 @@ export class FormStepsDirective implements OnInit, OnDestroy, AfterViewInit {
                     if (this.isMultiForm) {
                         if (this.config[this.currentStep].form !== undefined && (this.config[this.currentStep].submitted === undefined || this.config[this.currentStep].submitted === false)) {
                             this.btNext.removeAttribute('type');
-                            this.btNext.setAttribute('form', this.config[this.currentStep].id);
+                            this.btNext.dataset.form = this.config[this.currentStep].id;
                         } else {
                             this.btNext.removeAttribute('form');
                             this.btNext.setAttribute('type', 'button');
@@ -435,7 +438,7 @@ export class FormStepsDirective implements OnInit, OnDestroy, AfterViewInit {
                         // last step
                         if (this.config[this.nbSteps - 1].form !== undefined) {
                             if (this.config[this.nbSteps - 1].form.valid && (this.config[this.nbSteps - 1].submitted === undefined || this.config[this.nbSteps - 1].submitted === false)) {
-                                this.btSubmit.setAttribute('form', this.config[this.nbSteps - 1].id);
+                                this.btSubmit.dataset.form = this.config[this.nbSteps - 1].id;
                                 this.btSubmit.removeAttribute('type');
                             } else {
                                 this.btSubmit.removeAttribute('form');
@@ -447,7 +450,7 @@ export class FormStepsDirective implements OnInit, OnDestroy, AfterViewInit {
                         }
                     } else {
                         if (this.config.form.valid && (this.config.submitted === undefined || this.config.submitted === false)) {
-                            this.btSubmit.setAttribute('form', this.el.id);
+                            this.btSubmit.dataset.form = this.el.id;
                             this.btSubmit.removeAttribute('type');
                         } else {
                             this.btSubmit.removeAttribute('form');
@@ -631,6 +634,16 @@ export class FormStepsDirective implements OnInit, OnDestroy, AfterViewInit {
             }
         } else {
             this.el.style.opacity = '0';
+        }
+    }
+
+    clickSubmit(element){
+        const formID = element.dataset.form;
+        const form = this.divSliderContainer.querySelector('#' + formID);
+        const formInput: HTMLElement = form.querySelector('input[type="submit"]');
+
+        if(formInput){
+            formInput.click();
         }
     }
 
