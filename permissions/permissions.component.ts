@@ -367,10 +367,10 @@ export class AdminPermissionsComponent implements OnInit, AfterViewInit, OnDestr
                         }
 
                         /* Handle success. */
-                        this.alertsService.generate('success', 'Successfully deleted permission group');
+                        this.alertsService.generate('success', 'Successfully deleted permission group.');
                     }).catch((error) => {
                         /* Handle error. */
-                        this.alertsService.generate('error', 'failed to delete permission group');
+                        this.alertsService.generate('error', 'Failed to delete permission group.');
                         this.logService.log('Failed to delete permission group: ', error);
                     });
                 }
@@ -539,7 +539,7 @@ export class AdminPermissionsComponent implements OnInit, AfterViewInit, OnDestr
 
             /* Success message. */
             this.subscriptions['newGroupSuccessAlert'] =
-                this.alertsService.generate('success', 'Successfully created group').subscribe(() => {
+                this.alertsService.generate('success', 'Successfully created group.').subscribe(() => {
                     if (tabid > 1) {
                         this.closeTab(tabid);
                     }
@@ -620,18 +620,18 @@ export class AdminPermissionsComponent implements OnInit, AfterViewInit, OnDestr
                 this.tabsControl[tabid].oldPermissions = newPermissions;
             }).catch((error) => {
                 console.warn('Failed to update the group permissions.', error);
-                this.alertsService.generate('error', 'Failed to update this permission group');
+                this.alertsService.generate('error', 'Failed to update this permission group.');
             });
 
             /* Success message. */
             this.subscriptions['updateGroupSuccessAlert'] =
-                this.alertsService.generate('success', 'Successfully updated this permission group').subscribe(() => {
+                this.alertsService.generate('success', 'Successfully updated this permission group.').subscribe(() => {
                     this.closeTab(tabid);
                 });
         }).catch((response) => {
             /* Implement an error message for failing to update the group. */
             console.warn('Failed to update the group.', response);
-            this.alertsService.generate('error', 'Failed to update this permission group');
+            this.alertsService.generate('error', 'Failed to update this permission group.');
         });
 
         /* Clear the form. */

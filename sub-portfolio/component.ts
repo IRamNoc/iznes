@@ -376,7 +376,7 @@ export class ManageSubPortfolioComponent implements OnInit, OnDestroy {
             },
             (data) => {
                 console.error('Fail', data);
-                this.alertsService.generate('error', 'Failed to create sub-portfolio');
+                this.alertsService.generate('error', 'Failed to create sub-portfolio.');
             }));
     }
 
@@ -413,7 +413,7 @@ export class ManageSubPortfolioComponent implements OnInit, OnDestroy {
             },
             (labelResponse) => {
                 console.error('Fail', labelResponse);
-                this.alertsService.generate('error', 'Failed to update sub-portfolio');
+                this.alertsService.generate('error', 'Failed to update sub-portfolio.');
             }));
 
         /* Update the tab with updated data. */
@@ -431,32 +431,32 @@ export class ManageSubPortfolioComponent implements OnInit, OnDestroy {
         switch (message) {
         case 'All OK':
             this.alertsService.generate('success', '<span mltag="txt_portfolio_created">' +
-                'Sub-portfolio created</span>');
+                'Sub-portfolio created.</span>');
             break;
 
         case 'Updated':
             this.alertsService.generate('success', '<span>' +
-                'Sub-portfolio updated</span>');
+                'Sub-portfolio updated.</span>');
             break;
 
         case 'Duplicate Label':
             this.alertsService.generate('warning', '<span mltag="txt_subportfolioname_is_exist">' +
-                'Sub-portfolio name already exists</span>');
+                'Sub-portfolio name already exists.</span>');
             break;
 
         case 'Duplicate IBAN':
             this.alertsService.generate('warning', '<span mltag="txt_iban_is_exist">' +
-                'IBAN has already exists</span>');
+                'IBAN has already exists.</span>');
             break;
 
         case 'Duplicate Label and IBAN':
             this.alertsService.generate('warning', '<span mltag="txt_subportfolioname_and_iban_is_exist">' +
-                'Sub-portfolio and IBAN already exist</span>');
+                'Sub-portfolio and IBAN already exist.</span>');
             break;
 
         default:
             this.alertsService.generate('success', '<span mltag="txt_portfolio_created">' +
-                'Sub-portfolio created</span>');
+                'Sub-portfolio created.</span>');
             break;
         }
     }
