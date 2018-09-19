@@ -9,6 +9,7 @@ import { debounce } from 'lodash';
 import {
     /* Useradmin. */
     SET_ADMIN_USERLIST,
+    UPDATE_ADMIN_USERLIST,
     SET_ADMINISTRATIVE_PERMISSION_GROUP_LIST,
     SET_TRANSACTIONAL_PERMISSION_GROUP_LIST,
     SET_MENU_PERMISSION_GROUP_LIST,
@@ -89,6 +90,13 @@ export class ChannelService {
         switch (data.Request) {
         case 'nu': // new user
         case 'udu': // update user
+            this.ngRedux.dispatch(
+                {
+                    type: UPDATE_ADMIN_USERLIST,
+                    payload: [null, data, null],
+                },
+            );
+            break;
         case 'du': // delete user
             /* Let's get the new user object. */
             this.logService.log(' | NEW USERS LIST: ', data);
