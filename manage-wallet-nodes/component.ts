@@ -182,21 +182,21 @@ export class ManageWalletNodesComponent implements OnInit, OnDestroy {
      * @param type
      */
     handleChecks(tabId: number, type): void {
-        let check = 1; // pass check flag
+        let check = true; // pass check flag
         let message = '';
         const nodePort = this.tabsControl[tabId]['formControl'].value.nodePort;
         const nodeAddress = this.tabsControl[tabId]['formControl'].value.nodeAddress;
 
         // Check node port is 13535
         if (nodePort !== 13535) {
-            check = 0; // failed check
-            message = message + '<li class="text-warning">In most cases Node Port should be set to 13535</li>';
+            check = false; // failed check
+            message = '<li class="text-warning">In most cases Node Port should be set to 13535</li>';
         }
 
         // If not HTTPS check address is 'localhost'
         if (location.protocol !== 'https:' && nodeAddress !== 'localhost') {
-            check = 0; // failed check
-            message = message + '<li class="text-warning">' +
+            check = false; // failed check
+            message = '<li class="text-warning">' +
                 'As you are on a local server, Node Address should be set to localhost</li>';
         }
 
@@ -259,12 +259,12 @@ export class ManageWalletNodesComponent implements OnInit, OnDestroy {
                 asyncTaskPipe,
                 () => {
                     AdminUsersService.setRequestedWalletNodes(false, this.ngRedux);
-                    this.showAlert('success', 'Wallet Node has successfully been saved');
+                    this.alertsService.generate('success', 'Wallet Node has successfully been saved.');
                     this.setTabActive(0);
                 },
                 (data) => {
                     this.logService.log('Error: ', data);
-                    this.showAlert('error', 'Error saving new Wallet Node. ' +
+                    this.alertsService.generate('error', 'Error saving new Wallet Node. ' +
                         'Please check that a Wallet Node with this name does not already exist.');
                     this.changeDetectorRef.markForCheck();
                 },
@@ -304,12 +304,12 @@ export class ManageWalletNodesComponent implements OnInit, OnDestroy {
                 asyncTaskPipe,
                 () => {
                     AdminUsersService.setRequestedWalletNodes(false, this.ngRedux);
-                    this.showAlert('success', 'Wallet Node has successfully been updated');
+                    this.alertsService.generate('success', 'Wallet Node has successfully been updated.');
                     this.setTabActive(0);
                 },
                 (data) => {
                     this.logService.log('Error: ', data);
-                    this.showAlert('error', 'Failed to update Wallet Node');
+                    this.alertsService.generate('error', 'Failed to update Wallet Node.');
                     this.changeDetectorRef.markForCheck();
                 },
             ));
@@ -325,8 +325,7 @@ export class ManageWalletNodesComponent implements OnInit, OnDestroy {
         /* Ask the user if they're sure... */
         this.confirmationService.create(
             '<span>Deleting a Wallet Node</span>',
-            '<span class="text-warning">Are you sure you want to delete \'' +
-            walletNode.walletNodeName + '\'?</span>',
+            `<span class="text-warning">Are you sure you want to delete '${walletNode.walletNodeName}'?</span>`,
         ).subscribe((ans) => {
             /* ...if they are... */
             if (ans.resolved) {
@@ -344,11 +343,11 @@ export class ManageWalletNodesComponent implements OnInit, OnDestroy {
                     asyncTaskPipe,
                     () => {
                         AdminUsersService.setRequestedWalletNodes(false, this.ngRedux);
-                        this.showAlert('success', 'Wallet Node has been deleted');
+                        this.alertsService.generate('success', 'Wallet Node has been deleted.');
                     },
                     (data) => {
                         this.logService.log('error: ', data);
-                        this.showAlert('error', 'Failed to delete Wallet Node');
+                        this.alertsService.generate('error', 'Failed to delete Wallet Node.');
                     },
                 ));
             }
@@ -374,7 +373,7 @@ export class ManageWalletNodesComponent implements OnInit, OnDestroy {
         const walletNode = this.walletNodesList[index];
 
         this.tabsControl.push({
-            title: '<i class="fa fa-code-fork"></i> ' + walletNode.walletNodeName,
+            title: `<i class="fa fa-code-fork"></i> ${walletNode.walletNodeName}`,
             walletNodeId: walletNode.walletNodeId,
             formControl: new FormGroup(
                 {
@@ -460,29 +459,6 @@ export class ManageWalletNodesComponent implements OnInit, OnDestroy {
                 break;
             }
         }
-    }
-
-    /**
-     * Show An Alert Message
-     * ------------------
-     * Shows a success, warning or error popup.
-     *
-     * @param  {type} string - the type of alert to show.
-     * @param  {message} string - the message to display in the alert.
-     * @return {void}
-     */
-    showAlert(type: any, message: string) {
-        const alertClass = (type === 'error') ? 'danger' : type;
-
-        this.alertsService.create(type, `
-            <table class="table grid">
-                <tbody>
-                    <tr>
-                        <td class="text-center text-${alertClass}">${message}</td>
-                    </tr>
-                </tbody>
-            </table>
-        `);
     }
 
     ngOnDestroy() {

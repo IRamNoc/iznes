@@ -44,7 +44,7 @@ export class ManageChainMembershipComponent implements OnInit, OnDestroy {
 
     membershipForm: FormGroup;
 
-    subscriptionsArry: Subscription[] = [];
+    subscriptions: Subscription[] = [];
 
     @select(['member', 'manageMemberList', 'memberList']) manageMemberListOb;
     @select(['member', 'manageMemberList', 'requestedManagedMemberList']) requestedManagedMemberListOb;
@@ -67,16 +67,16 @@ export class ManageChainMembershipComponent implements OnInit, OnDestroy {
             },
         ];
 
-        this.subscriptionsArry.push(this.manageMemberListOb.subscribe(
+        this.subscriptions.push(this.manageMemberListOb.subscribe(
             memberList => this.updateMemberList(memberList)));
-        this.subscriptionsArry.push(this.requestedManagedMemberListOb.subscribe(
+        this.subscriptions.push(this.requestedManagedMemberListOb.subscribe(
             requestedState => this.requestManagedMemberList(requestedState)));
-        this.subscriptionsArry.push(this.walletNodeListOb.subscribe(
+        this.subscriptions.push(this.walletNodeListOb.subscribe(
             walletNodeList => this.updateWalletNodeList(walletNodeList)));
-        this.subscriptionsArry.push(this.requestedWalletNodeListOb.subscribe(
+        this.subscriptions.push(this.requestedWalletNodeListOb.subscribe(
             requestedState => this.requestWalletNodeList(requestedState)));
-        this.subscriptionsArry.push(this.chainListOb.subscribe(chainList => this.updateChainList(chainList)));
-        this.subscriptionsArry.push(this.requestedChainListOb.subscribe(
+        this.subscriptions.push(this.chainListOb.subscribe(chainList => this.updateChainList(chainList)));
+        this.subscriptions.push(this.requestedChainListOb.subscribe(
             requestedState => this.requestChainList(requestedState)));
 
         // Chain membership items
@@ -91,15 +91,9 @@ export class ManageChainMembershipComponent implements OnInit, OnDestroy {
     ngOnInit() {
     }
 
-    ngOnDestroy() {
-        for (const subscription of this.subscriptionsArry) {
-            subscription.unsubscribe();
-        }
-    }
-
     addMembershipItem(memberValue = [], memberTypeValue = [], nodeValue = []) {
         if (this.membershipForm.value.chain.length === 0) {
-            this.showAlert('error', 'Please choose a chain first');
+            this.alertsService.generate('error', 'Please choose a chain first.');
             return false;
         }
         // Add membership item to form array.
@@ -224,7 +218,7 @@ export class ManageChainMembershipComponent implements OnInit, OnDestroy {
 
         if (currentSelectedMemberIds.includes(selectedId)) {
             this.membershipForm.controls['membershipArr']['at'](index)['patchValue']({ member: [] });
-            this.showAlert('warning', 'Member is selected from other entry');
+            this.alertsService.generate('warning', 'Member is selected from other entry.');
         }
 
     }
@@ -340,10 +334,10 @@ export class ManageChainMembershipComponent implements OnInit, OnDestroy {
             this.ngRedux.dispatch(SagaHelper.runAsyncCallback(
                 asyncTaskPipe,
                 () => {
-                    this.showAlert('success', 'Chain Membership is updated');
+                    this.alertsService.generate('success', 'Chain Membership is updated.');
                 },
                 (data) => {
-                    this.showAlert('error', 'Failed to update Chain Membership');
+                    this.alertsService.generate('error', 'Failed to update Chain Membership.');
                     this.logService.log(data);
                 },
             ));
@@ -431,24 +425,9 @@ export class ManageChainMembershipComponent implements OnInit, OnDestroy {
         return toUpdate;
     }
 
-    /**
-     * Show a success, warning or error alert message
-     *
-     * @param  {type} string - the type of alert to show.
-     * @param  {message} string - the message to display in the alert.
-     * @return {void}
-     */
-    showAlert(type: any, message: string) {
-        const alertClass = (type === 'error') ? 'danger' : type;
-
-        this.alertsService.create(type, `
-            <table class="table grid">
-                <tbody>
-                    <tr>
-                        <td class="text-center text-${alertClass}">${message}</td>
-                    </tr>
-                </tbody>
-            </table>
-        `);
+    ngOnDestroy() {
+        for (const subscription of this.subscriptions) {
+            subscription.unsubscribe();
+        }
     }
 }
