@@ -153,15 +153,8 @@ export class SendAssetComponent implements OnInit, OnDestroy {
                 (data) => {
                     console.error('fail', data);
                     const message = !_.isEmpty(data[1].data.error) ? `Failed to send asset. Reason:<br>
-                        ${data[1].data.error}` : 'Failed to send asset';
-                    this.alertsService.create('error', `
-                      <table class="table grid">
-                          <tbody>
-                              <tr>
-                                  <td class="text-center text-danger">${message}</td>
-                              </tr>
-                          </tbody>
-                      </table>`);
+                        ${data[1].data.error}` : 'Failed to send asset.';
+                    this.alertsService.generate('error', message);
                 },
             ));
         }

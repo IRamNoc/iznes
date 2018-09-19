@@ -133,10 +133,10 @@ export class EncumberAssetsComponent implements OnInit, OnDestroy {
             // Trigger loading alert
             this.alertsService.create('loading');
 
-            const startUTCSecs = new Date(formValues.fromDateUTC + ' ' + formValues.fromTimeUTC).getTime() / 1000;
+            const startUTCSecs = new Date(`${formValues.fromDateUTC} ${formValues.fromTimeUTC}`).getTime() / 1000;
             const endUTCSecs =
                 (formValues.toDateUTC !== '' && formValues.toTimeUTC !== '') ?
-                    new Date(formValues.toDateUTC + ' ' + formValues.toTimeUTC).getTime() / 1000 : 0;
+                    new Date(`${formValues.toDateUTC} ${formValues.toTimeUTC}`).getTime() / 1000 : 0;
 
             const asyncTaskPipe = this.walletnodeTxService.encumber(
                 {
@@ -165,14 +165,14 @@ export class EncumberAssetsComponent implements OnInit, OnDestroy {
                 asyncTaskPipe,
                 {},
                 () => {
-                    this.showAlert('success', 'The asset has been encumbered.');
+                    this.alertsService.generate('success', 'The asset has been encumbered.');
                     this.encumberAssetsForm.reset();
                 },
                 (data) => {
                     console.error('fail', data);
                     const message = !_.isEmpty(data[1].data.error) ? `Failed to encumber asset. Reason:<br>
                             ${data[1].data.error}` : 'Failed to encumber asset.';
-                    this.showAlert('error', message);
+                    this.alertsService.generate('error', message);
                 }),
             );
         }
@@ -274,20 +274,6 @@ export class EncumberAssetsComponent implements OnInit, OnDestroy {
                 break;
             }
         }
-    }
-
-    showAlert(type, message) {
-        const colour = type === 'error' ? 'danger' : type;
-
-        this.alertsService.create(type, `
-              <table class="table grid">
-                  <tbody>
-                      <tr>
-                          <td class="text-center text-${colour}">${message}</td>
-                      </tr>
-                  </tbody>
-              </table>
-          `);
     }
 
     ngOnDestroy() {

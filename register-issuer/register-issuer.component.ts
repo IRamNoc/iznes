@@ -18,7 +18,7 @@ import { Subscription } from 'rxjs/Subscription';
 @Component({
     selector: 'app-register-issuer',
     templateUrl: './register-issuer.component.html',
-    styleUrls: ['./register-issuer.component.css']
+    styleUrls: ['./register-issuer.component.css'],
 })
 export class RegisterIssuerComponent implements OnInit, OnDestroy {
     // Observable subscription array.
@@ -130,14 +130,7 @@ export class RegisterIssuerComponent implements OnInit, OnDestroy {
                 },
                 (data) => {
                     console.error('fail', data);
-                    this.alertsService.create('error', `
-                      <table class="table grid">
-                          <tbody>
-                              <tr>
-                                  <td class="text-center text-danger">Failed to register issuer</td>
-                              </tr>
-                          </tbody>
-                      </table>`);
+                    this.alertsService.generate('error', 'Failed to register issuer');
                 },
             ));
         }
