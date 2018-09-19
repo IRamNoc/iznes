@@ -809,9 +809,6 @@ export class AdminUsersComponent implements OnInit, AfterViewInit, OnDestroy {
                 this.alertsService.generate('error', 'Failed to update this user\'s transactional groups.');
             });
 
-            console.log('TEST - thisTab.oldMenuGroups', thisTab.oldMenuGroups);
-            console.log('TEST - this.arrayToGroups(formData.menuGroups)', this.arrayToGroups(formData.menuGroups));
-
             /* Save menu group access. */
             this.userAdminService.updateUserGroups({
                 userId: thisTab.userId.toString(),

@@ -371,7 +371,7 @@ export class AdminPermissionsComponent implements OnInit, AfterViewInit, OnDestr
                     }).catch((error) => {
                         /* Handle error. */
                         this.alertsService.generate('error', 'failed to delete permission group');
-                        this.logService.log('Failed to delet permission group: ', error);
+                        this.logService.log('Failed to delete permission group: ', error);
                     });
                 }
             });
