@@ -1696,6 +1696,10 @@ dp-date-picker div {
 
 .fs-slider-container {
     transition: margin-left ease-in-out .5s;
+
+    .hidden{
+        display : none;
+    }
 }
 
 .fs-slider-container section {
