@@ -75,7 +75,7 @@ export function KycDetailsReducer(state: KycDetailsState = initialState, action:
             return toggleRequested(state, 'kycDetailsCompanyBeneficiariesRequested', false);
 
         case SET_KYC_DETAILS_BANKING:
-            return handleDetailResponse(state, action, 'kycDetailsBanking');
+            return handleDetailResponseMultiple(state, action, 'kycDetailsBanking');
         case SET_KYC_DETAILS_BANKING_REQUESTED:
             return toggleRequested(state, 'kycDetailsBankingRequested', true);
         case CLEAR_KYC_DETAILS_BANKING_REQUESTED:
@@ -110,7 +110,6 @@ export function KycDetailsReducer(state: KycDetailsState = initialState, action:
             return toggleRequested(state, 'kycDetailsDocumentsRequested', false);
 
         case CLEAR_KYC_DETAILS_ALL:
-            console.log('*** IN REDUCER');
             return initialState;
 
         default:
