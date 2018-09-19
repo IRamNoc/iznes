@@ -5,9 +5,11 @@ import { tap, map, filter } from 'rxjs/operators';
  * The full license information can be found in LICENSE in the root directory of this project.
  */
 import { Component, OnInit, ChangeDetectorRef, OnDestroy } from '@angular/core';
-import { select } from '@angular-redux/store';
+import { NgRedux, select } from '@angular-redux/store';
 import { Observable } from 'rxjs/Observable';
 import { Subscription } from 'rxjs/Subscription';
+import { ConnectionService } from '@setl/core-req-services';
+import { setRequestedFromConnections } from '@setl/core-store';
 import { ReportingService } from '@setl/core-balances';
 import { MultilingualService } from '@setl/multilingual';
 
@@ -21,6 +23,7 @@ interface Asset {
     templateUrl: './home.component.html',
 })
 export class HomeComponent implements OnInit, OnDestroy {
+    connectedWalletId: number;
     connectionCount: number;
     actionCount: number;
     unreadCount: number;
@@ -36,8 +39,10 @@ export class HomeComponent implements OnInit, OnDestroy {
     subscriptions: Subscription[] = [];
 
     // List of redux observable.
+    @select(['user', 'connected', 'connectedWallet']) connectedWallet$: Observable<number>;
     @select(['message', 'myMessages', 'counts', 'action']) actionCount$: Observable<number>;
     @select(['message', 'myMessages', 'counts', 'inboxUnread']) unreadCount$: Observable<number>;
+    @select(['connection', 'myConnections', 'requestedFromConnectionList']) reqFromConnections$: Observable<boolean>;
     @select(['connection', 'myConnections', 'fromConnectionList']) connections$: Observable<any>;
     @select(['user', 'myDetail', 'displayName']) username$: Observable<string>;
     @select(['user', 'myDetail', 'lastLogin']) lastLogin$: Observable<string>;
@@ -46,25 +51,35 @@ export class HomeComponent implements OnInit, OnDestroy {
     public holdingByAsset$: Observable<any[]>;
 
     public constructor(
+        private ngRedux: NgRedux<any>,
         private reportingService: ReportingService,
+        private connectionService: ConnectionService,
         public translate: MultilingualService,
         private changeDetectorRef: ChangeDetectorRef,
     ) {
-    }
-
-    ngOnInit() {
-        this.subscriptions = [
-            this.actionCount$.subscribe(count => this.actionCount = count),
-            this.unreadCount$.subscribe(count => this.unreadCount = count),
-            this.connections$.pipe(map(list => list.length)).subscribe(count => this.connectionCount = count),
-            this.username$.subscribe(username => this.username = username),
-            this.lastLogin$.pipe(filter(lastLogin => !!lastLogin)).subscribe(lastLogin => this.lastLogin = lastLogin),
-        ];
-
         this.assetTiles = [
             { total: 0, asset: '' },
             { total: 0, asset: '' },
         ];
+    }
+
+    ngOnInit() {
+        this.subscriptions.push(this.connectedWallet$.subscribe((connectedWalletId) => {
+            this.connectedWalletId = connectedWalletId;
+            this.subscriptions.push(this.reqFromConnections$.subscribe((requested) => {
+                this.requestFromConnectionList(requested);
+            }));
+        }));
+        this.subscriptions.push(this.connections$.pipe(map(list => list.length)).subscribe((count) => {
+            this.connectionCount = count;
+            this.changeDetectorRef.detectChanges();
+        }));
+        this.subscriptions.push(this.actionCount$.subscribe(count => this.actionCount = count));
+        this.subscriptions.push(this.unreadCount$.subscribe(count => this.unreadCount = count));
+        this.subscriptions.push(this.username$.subscribe(username => this.username = username));
+        this.subscriptions.push(this.lastLogin$.pipe(filter(lastLogin => !!lastLogin)).subscribe((lastLogin) => {
+            this.lastLogin = lastLogin;
+        }));
 
         this.transactions$ = this.reportingService.getTransactions().pipe(map(txs => txs.slice(0, 5)));
 
@@ -79,6 +94,15 @@ export class HomeComponent implements OnInit, OnDestroy {
                 this.changeDetectorRef.detectChanges();
             }
         }));
+    }
+
+    requestFromConnectionList(requestedState: boolean) {
+        if (!requestedState && this.connectedWalletId) {
+            this.ngRedux.dispatch(setRequestedFromConnections());
+
+            ConnectionService.requestFromConnectionList(
+                this.connectionService, this.ngRedux, this.connectedWalletId.toString());
+        }
     }
 
     ngOnDestroy() {
