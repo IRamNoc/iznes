@@ -98,7 +98,8 @@ public class OpenCSDSprint7AcceptanceTest {
         String[] uShareDetails = generateRandomFundsDetails();
         String[] uIsin = generateRandomISIN();
         String[] uFundDetails = generateRandomFundsDetails();
-        String randomLEI = "16614748475934658531";
+        String randomLEI = "" +
+            "123400TGFLH2QZV80T70";
 
         loginAndVerifySuccess("am", "alex01");
         navigateToDropdown("menu-my-products");
@@ -240,7 +241,7 @@ public class OpenCSDSprint7AcceptanceTest {
         String[] uShareDetails = generateRandomFundsDetails();
         String[] uFundDetails = generateRandomUmbrellaFundsDetails();
         String[] uIsin = generateRandomISIN();
-        String randomLEI = "16616758475934857531";
+        String randomLEI = "123400TGFLH2QZV80T70";
 
         loginAndVerifySuccess("am", "alex01");
         waitForHomePageToLoad();
@@ -292,7 +293,7 @@ public class OpenCSDSprint7AcceptanceTest {
         String[] uShareDetails = generateRandomFundsDetails();
         String[] uIsin = generateRandomISIN();
         String[] uFundDetails = generateRandomFundsDetails();
-        String randomLEI = "16614748475934658531";
+        String randomLEI = "123400TGFLH2QZV80T70";
 
         loginAndVerifySuccess("am", "alex01");
         navigateToDropdown("menu-my-products");
@@ -322,7 +323,7 @@ public class OpenCSDSprint7AcceptanceTest {
         navigateToDropdown("menu-my-products");
         navigateToPageByID("menu-product-home");
         fillOutFundDetailsStep1("none");
-        fillOutFundDetailsStep2(uFundDetails[0], "16615748475934658531");
+        fillOutFundDetailsStep2(uFundDetails[0], "123400TGFLH2QZV80T70");
         assertPopupNextFundNo("Share");
         createShare(uFundDetails[0], uShareDetails[0], uIsin[0]);
 

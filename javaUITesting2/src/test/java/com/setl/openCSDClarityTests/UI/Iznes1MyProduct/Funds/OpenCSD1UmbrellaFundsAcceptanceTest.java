@@ -70,14 +70,14 @@ public class OpenCSD1UmbrellaFundsAcceptanceTest {
 
         selectAddUmbrellaFund();
         String[] uFundDetails = generateRandomUmbrellaFundsDetails();
-        fillUmbrellaDetailsNotCountry(uFundDetails[0], "16616758475934857432");
+        fillUmbrellaDetailsNotCountry(uFundDetails[0], "123400TGFLH2QZV80T70");
         searchAndSelectTopDropdownXpath("uf_domicile", "Jordan");
         submitUmbrellaFund();
 
         assertPopupNextFundNo("Fund");
         searchUmbrellaTable(uFundDetails[0]);
 
-        getUmbrellaTableRow(0, uFundDetails[0], "16616758475934857432", "Management Company", "Jordan");
+        getUmbrellaTableRow(0, uFundDetails[0], "123400TGFLH2QZV80T70", "Management Company", "Jordan");
         validateDatabaseUmbrellaFundExists(1, uFundDetails[0]);
     }
 
@@ -93,14 +93,14 @@ public class OpenCSD1UmbrellaFundsAcceptanceTest {
 
         selectAddUmbrellaFund();
         String[] umbFundDetails = generateRandomUmbrellaFundsDetails();
-        fillUmbrellaDetailsNotCountry(umbFundDetails[0], "16616758475934857431");
+        fillUmbrellaDetailsNotCountry(umbFundDetails[0], "123400TGFLH2QZV80T70");
         searchAndSelectTopDropdownXpath("uf_domicile", "Afghanistan");
         submitUmbrellaFund();
 
         assertPopupNextFundNo("Fund");
         searchUmbrellaTable(umbFundDetails[0]);
 
-        getUmbrellaTableRow(0, umbFundDetails[0], "16616758475934857431", "Management Company", "Afghanistan");
+        getUmbrellaTableRow(0, umbFundDetails[0], "123400TGFLH2QZV80T70", "Management Company", "Afghanistan");
         validateDatabaseUmbrellaFundExists(1, umbFundDetails[0]);
 
         driver.findElement(By.id("product-dashboard-link-umbrellaFundID-0")).click();
@@ -110,7 +110,7 @@ public class OpenCSD1UmbrellaFundsAcceptanceTest {
 
         driver.findElement(By.id("uf_umbrellaFundName")).sendKeys(updateChars);
         driver.findElement(By.id("uf_lei")).clear();
-        driver.findElement(By.id("uf_lei")).sendKeys("16616758475934857600");
+        driver.findElement(By.id("uf_lei")).sendKeys("123400TGFLH2QZV80T70");
         driver.findElement(By.id("uf_registerOffice")).sendKeys(updateChars);
         driver.findElement(By.id("uf_registerOfficeAddress")).sendKeys(updateChars);
         driver.findElement(By.id("uf_umbrellaFundCreationDate")).clear();
@@ -126,7 +126,7 @@ public class OpenCSD1UmbrellaFundsAcceptanceTest {
         wait.until(visibilityOfElementLocated(By.id("am-product-home")));
 
         searchUmbrellaTable(umbFundDetails[0]);
-        getUmbrellaTableRow(0, umbFundDetails[0] + updateChars[0], "16616758475934857600", "Management Company", "Albania");
+        getUmbrellaTableRow(0, umbFundDetails[0] + updateChars[0], "123400TGFLH2QZV80T70", "Management Company", "Albania");
         validateDatabaseUmbrellaFundExists(1, umbFundDetails[0] + updateChars[0]);
         validateDatabaseUmbrellaFundExists(0, umbFundDetails[0]);
 
@@ -175,7 +175,7 @@ public class OpenCSD1UmbrellaFundsAcceptanceTest {
         navigateToPageByID("menu-product-home");
         selectAddUmbrellaFund();
         String[] uFundDetails = generateRandomUmbrellaFundsDetails();
-        fillUmbrellaDetailsNotCountry(uFundDetails[0], "16616758475934857433");
+        fillUmbrellaDetailsNotCountry(uFundDetails[0], "123400TGFLH2QZV80T70");
         searchAndSelectTopDropdownXpath("uf_domicile", "Jordan");
         submitUmbrellaFund();
         assertPopupNextFundNo("Fund");
@@ -188,7 +188,7 @@ public class OpenCSD1UmbrellaFundsAcceptanceTest {
             System.out.println(umbFundName + ", " + umbFundLEI + ", " + umbFundManagement + ", " + umbFundCountry);
             System.out.println(uFundDetails[0]);
             assertTrue(umbFundName.equals(uFundDetails[0]));
-            assertTrue(umbFundLEI.equals("16616758475934857433"));
+            assertTrue(umbFundLEI.equals("123400TGFLH2QZV80T70"));
             assertTrue(umbFundManagement.equals("Management Company"));
             assertTrue(umbFundCountry.equals("Jordan"));
         } catch (Exception e) {
@@ -203,7 +203,7 @@ public class OpenCSD1UmbrellaFundsAcceptanceTest {
         navigateToPageByID("menu-product-home");
         selectAddUmbrellaFund();
         String[] uFundDetails = generateRandomUmbrellaFundsDetails();
-        fillUmbrellaDetailsNotCountry(uFundDetails[0], "16616758475934857434");
+        fillUmbrellaDetailsNotCountry(uFundDetails[0], "123400TGFLH2QZV80T70");
         searchAndSelectTopDropdownXpath("uf_domicile", "France");
         assertTrue(driver.findElement(By.id("uf_centralizingAgent")).isDisplayed());
     }
@@ -215,7 +215,7 @@ public class OpenCSD1UmbrellaFundsAcceptanceTest {
         navigateToPageByID("menu-product-home");
         selectAddUmbrellaFund();
         String[] uFundDetails = generateRandomUmbrellaFundsDetails();
-        fillUmbrellaDetailsNotCountry(uFundDetails[0], "16616758475934857435");
+        fillUmbrellaDetailsNotCountry(uFundDetails[0], "123400TGFLH2QZV80T70");
         searchAndSelectTopDropdownXpath("uf_domicile", "Luxembourg");
         assertTrue(driver.findElement(By.id("uf_transferAgent")).isDisplayed());
     }
@@ -227,7 +227,7 @@ public class OpenCSD1UmbrellaFundsAcceptanceTest {
         navigateToPageByID("menu-product-home");
         selectAddUmbrellaFund();
         String[] uFundDetails = generateRandomUmbrellaFundsDetails();
-        fillUmbrellaDetailsNotCountry(uFundDetails[0], "16616758475934857436");
+        fillUmbrellaDetailsNotCountry(uFundDetails[0], "123400TGFLH2QZV80T70");
         searchAndSelectTopDropdownXpath("uf_domicile", "Ireland");
         assertTrue(driver.findElement(By.id("uf_transferAgent")).isDisplayed());
     }
@@ -241,7 +241,7 @@ public class OpenCSD1UmbrellaFundsAcceptanceTest {
         int i = Integer.parseInt(preCreationNo.replaceAll("[\\D]", ""));
         selectAddUmbrellaFund();
         String[] uFundDetails = generateRandomUmbrellaFundsDetails();
-        fillUmbrellaDetailsNotCountry(uFundDetails[0], "16616758475934857437");
+        fillUmbrellaDetailsNotCountry(uFundDetails[0], "123400TGFLH2QZV80T70");
         searchAndSelectTopDropdownXpath("uf_domicile", "Jordan");
         submitUmbrellaFund();
         assertPopupNextFundNo("Fund");
@@ -294,7 +294,7 @@ public class OpenCSD1UmbrellaFundsAcceptanceTest {
         WebDriverWait wait = new WebDriverWait(driver, timeoutInSeconds);
         selectAddUmbrellaFund();
         String[] uFundDetails = generateRandomUmbrellaFundsDetails();
-        fillUmbrellaDetailsNotCountry(uFundDetails[0], "16616758475934857432");
+        fillUmbrellaDetailsNotCountry(uFundDetails[0], "123400TGFLH2QZV80T70");
         searchAndSelectTopDropdownXpath("uf_domicile", "Jordan");
         driver.findElement(By.id("mcBtnSubmitFormDraft")).getAttribute("enabled");
     }
@@ -316,7 +316,7 @@ public class OpenCSD1UmbrellaFundsAcceptanceTest {
         WebDriverWait wait = new WebDriverWait(driver, timeoutInSeconds);
         selectAddUmbrellaFund();
         String[] uFundDetails = generateRandomUmbrellaFundsDetails();
-        fillUmbrellaDetailsNotCountry(uFundDetails[0], "16616758475934857432");
+        fillUmbrellaDetailsNotCountry(uFundDetails[0], "123400TGFLH2QZV80T70");
         searchAndSelectTopDropdownXpath("uf_domicile", "Jordan");
         driver.findElement(By.id("mcBtnSubmitFormDraft")).getAttribute("enabled");
         driver.findElement(By.id("mcBtnSubmitFormDraft")).click();
@@ -339,7 +339,7 @@ public class OpenCSD1UmbrellaFundsAcceptanceTest {
         WebDriverWait wait = new WebDriverWait(driver, timeoutInSeconds);
         selectAddUmbrellaFund();
         String[] uFundDetails = generateRandomUmbrellaFundsDetails();
-        fillUmbrellaDetailsNotCountry(uFundDetails[0], "16616758475934857432");
+        fillUmbrellaDetailsNotCountry(uFundDetails[0], "123400TGFLH2QZV80T70");
         searchAndSelectTopDropdownXpath("uf_domicile", "Jordan");
         driver.findElement(By.id("mcBtnSubmitFormDraft")).getAttribute("enabled");
         driver.findElement(By.id("mcBtnSubmitFormDraft")).click();
@@ -370,7 +370,7 @@ public class OpenCSD1UmbrellaFundsAcceptanceTest {
         WebDriverWait wait = new WebDriverWait(driver, timeoutInSeconds);
         selectAddUmbrellaFund();
         String[] uFundDetails = generateRandomUmbrellaFundsDetails();
-        fillUmbrellaDetailsNotCountry(uFundDetails[0], "16616758475934857432");
+        fillUmbrellaDetailsNotCountry(uFundDetails[0], "123400TGFLH2QZV80T70");
         searchAndSelectTopDropdownXpath("uf_domicile", "Jordan");
         driver.findElement(By.id("mcBtnSubmitFormDraft")).getAttribute("enabled");
         driver.findElement(By.id("mcBtnSubmitFormDraft")).click();
@@ -392,7 +392,7 @@ public class OpenCSD1UmbrellaFundsAcceptanceTest {
         searchUmbrellaTable(uFundDetails[0]);
         wait.until(refreshed(visibilityOfElementLocated(By.className("toast-title"))));
         wait.until(invisibilityOfElementLocated(By.className("toast-title")));
-        getUmbrellaTableRow(0, uFundDetails[0], "16616758475934857432", "Management Company", "Jordan");
+        getUmbrellaTableRow(0, uFundDetails[0], "123400TGFLH2QZV80T70", "Management Company", "Jordan");
         validateDatabaseUmbrellaFundExists(1, uFundDetails[0]);
     }
     @Test
@@ -404,7 +404,7 @@ public class OpenCSD1UmbrellaFundsAcceptanceTest {
         selectAddUmbrellaFund();
         String[] uFundDetails = generateRandomUmbrellaFundsDetails();
         String[] dupFundDetails = generateRandomDuplicateDetails();
-        fillUmbrellaDetailsNotCountry(uFundDetails[0], "16616758475934857432");
+        fillUmbrellaDetailsNotCountry(uFundDetails[0], "123400TGFLH2QZV80T70");
         searchAndSelectTopDropdownXpath("uf_domicile", "Jordan");
 
         String registeredOffice = driver.findElement(By.id("uf_registerOffice")).getAttribute("value");
@@ -419,7 +419,7 @@ public class OpenCSD1UmbrellaFundsAcceptanceTest {
         submitUmbrellaFund();
         assertPopupNextFundNo("Fund");
         searchUmbrellaTable(uFundDetails[0]);
-        getUmbrellaTableRow(0, uFundDetails[0], "16616758475934857432", "Management Company", "Jordan");
+        getUmbrellaTableRow(0, uFundDetails[0], "123400TGFLH2QZV80T70", "Management Company", "Jordan");
         validateDatabaseUmbrellaFundExists(1, uFundDetails[0]);
 
         driver.findElement(By.id("product-dashboard-link-umbrellaFundID-0")).click();
@@ -460,7 +460,7 @@ public class OpenCSD1UmbrellaFundsAcceptanceTest {
         selectAddUmbrellaFund();
         String[] dupFundDetails = generateRandomDuplicateDetails();
         String[] uFundDetails = generateRandomUmbrellaFundsDetails();
-        fillUmbrellaDetailsNotCountry(uFundDetails[0], "16616758475934857432");
+        fillUmbrellaDetailsNotCountry(uFundDetails[0], "123400TGFLH2QZV80T70");
         searchAndSelectTopDropdownXpath("uf_domicile", "Jordan");
         String registeredOffice = driver.findElement(By.id("uf_registerOffice")).getAttribute("value");
         String LEI = driver.findElement(By.id("uf_lei")).getAttribute("value");
@@ -473,13 +473,13 @@ public class OpenCSD1UmbrellaFundsAcceptanceTest {
         submitUmbrellaFund();
         assertPopupNextFundNo("Fund");
         searchUmbrellaTable(uFundDetails[0]);
-        getUmbrellaTableRow(0, uFundDetails[0], "16616758475934857432", "Management Company", "Jordan");
+        getUmbrellaTableRow(0, uFundDetails[0], "123400TGFLH2QZV80T70", "Management Company", "Jordan");
         validateDatabaseUmbrellaFundExists(1, uFundDetails[0]);
         scrollElementIntoViewById("new-umbrella-fund-btn");
         selectAddUmbrellaFund();
         selectAndSearchDuplicateFrom(uFundDetails[0]);
         assertTrue(registeredOffice.contains(uFundDetails[0] + "testOffice"));
-        assertTrue(LEI.contains("16616758475934857432"));
+        assertTrue(LEI.contains("123400TGFLH2QZV80T70"));
         assertTrue(address.contains("testAddress"));
         assertTrue(custodianBank.contains("Custodian Bank 1"));
         assertTrue(managementCompany.contains("Management Company"));
@@ -509,7 +509,7 @@ public class OpenCSD1UmbrellaFundsAcceptanceTest {
         selectAddUmbrellaFund();
         String[] dupFundDetails = generateRandomDuplicateDetails();
         String[] uFundDetails = generateRandomUmbrellaFundsDetails();
-        fillUmbrellaDetailsNotCountry(uFundDetails[0], "16616758475934857432");
+        fillUmbrellaDetailsNotCountry(uFundDetails[0], "123400TGFLH2QZV80T70");
         searchAndSelectTopDropdownXpath("uf_domicile", "Jordan");
         fillInOptionalDetailsUmbrellaFund();
         String payingAgent = driver.findElement(By.xpath("/html/body/app-root/app-basic-layout/div/ng-sidebar-container/div/div/div/main/div[1]/div/app-ofi-am-product-umbrella-fund/clr-tabs/clr-tab/clr-tab-content/form/section/div[1]/div[2]/div[11]/ng-select/div/span/span/span/span")).getText();
@@ -525,7 +525,7 @@ public class OpenCSD1UmbrellaFundsAcceptanceTest {
         submitUmbrellaFund();
         assertPopupNextFundNo("Fund");
         searchUmbrellaTable(uFundDetails[0]);
-        getUmbrellaTableRow(0, uFundDetails[0], "16616758475934857432", "Management Company", "Jordan");
+        getUmbrellaTableRow(0, uFundDetails[0], "123400TGFLH2QZV80T70", "Management Company", "Jordan");
         validateDatabaseUmbrellaFundExists(1, uFundDetails[0]);
         scrollElementIntoViewById("new-umbrella-fund-btn");
         selectAddUmbrellaFund();
