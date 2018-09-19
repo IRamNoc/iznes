@@ -130,7 +130,7 @@ export class RegisterIssuerComponent implements OnInit, OnDestroy {
                 },
                 (data) => {
                     console.error('fail', data);
-                    this.alertsService.generate('error', 'Failed to register issuer');
+                    this.alertsService.generate('error', 'Failed to register issuer.');
                 },
             ));
         }

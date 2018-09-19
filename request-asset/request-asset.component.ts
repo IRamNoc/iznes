@@ -171,9 +171,9 @@ export class RequestAssetComponent implements OnInit, OnDestroy {
             null,
             actionConfig,
         ).then((data) => {
-            this.alertsService.generate('success', 'Transfer Request successfully sent');
+            this.alertsService.generate('success', 'Transfer Request successfully sent.');
         }).catch((e) => {
-            this.alertsService.generate('error', 'Transfer Request could not be sent');
+            this.alertsService.generate('error', 'Transfer Request could not be sent.');
         });
     }
 
