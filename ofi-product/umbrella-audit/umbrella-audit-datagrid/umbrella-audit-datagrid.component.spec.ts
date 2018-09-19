@@ -68,6 +68,8 @@ describe('UmbrellaAuditDatagridComponent', () => {
 
     const resetTestingModule = TestBed.resetTestingModule;
 
+    let filterAuditItemsSpy;
+
     beforeAll(done => (async () => {
         TestBed.resetTestingModule();
         TestBed.configureTestingModule({
@@ -107,15 +109,14 @@ describe('UmbrellaAuditDatagridComponent', () => {
 
         de = fixture.debugElement.query(By.css('div'));
         el = de.nativeElement;
+
+        filterAuditItemsSpy = spyOn(comp, 'filterAuditItems')
+                .and.callThrough();
     }));
 
     afterEach(() => {
         fetchUmbrellaAuditByUmbrellaID.calls.reset();
-    });
-
-    it('should render', () => {
-        const datagridEl = fixture.debugElement.query(By.css('clr-datagrid')).nativeElement;
-        expect(datagridEl.innerText).toContain('Umbrella Name');
+        filterAuditItemsSpy.calls.reset();
     });
 
     it('should call the fetchUmbrellaAuditByUmbrellaID method of ofiUmbrellaFundService', () => {
@@ -123,25 +124,28 @@ describe('UmbrellaAuditDatagridComponent', () => {
         expect(fetchUmbrellaAuditByUmbrellaID).toHaveBeenCalledWith(fakeUmbrellaID);
     });
 
-    it('should render the audit data from redux', fakeAsync(() => {
-        const umbrellaAuditListStub = MockNgRedux.getSelectorStub([
-            'ofi',
-            'ofiProduct',
-            'ofiUmbrellaFund',
-            'umbrellaFundList',
-            'audit',
-        ]);
-        umbrellaAuditListStub.next(fakeUmbrellaAuditList);
-        umbrellaAuditListStub.complete();
+    describe('updateUmbrellaAuditItems', () => {
+        it('should call filterAuditItems method', fakeAsync(() => {
+            const umbrellaAuditListStub = MockNgRedux.getSelectorStub([
+                'ofi',
+                'ofiProduct',
+                'ofiUmbrellaFund',
+                'umbrellaFundList',
+                'audit',
+            ]);
+            umbrellaAuditListStub.next(fakeUmbrellaAuditList);
+            umbrellaAuditListStub.complete();
 
-        tick();
-        fixture.detectChanges();
+            const expectedFormValue = {
+                startDate: '',
+                endDate: '',
+            };
 
-        const rowsEls = fixture.debugElement.queryAll(By.css('clr-dg-row')).map(el => el.nativeElement);
-        fakeUmbrellaAudit.map((audit, idx) => {
-            Object.keys(audit).map((field) => {
-                expect(rowsEls[idx].innerText).toContain(audit[field]);
-            });
-        });
-    }));
+            tick();
+            fixture.detectChanges();
+
+            expect(filterAuditItemsSpy).toHaveBeenCalledTimes(1);
+            expect(filterAuditItemsSpy).toHaveBeenCalledWith(expectedFormValue);
+        }));
+    });
 });
