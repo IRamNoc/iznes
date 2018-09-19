@@ -90,7 +90,7 @@ public class OpenCSDSprint4AcceptanceTest {
 
         selectAddUmbrellaFund();
         String [] umbFundDetails = generateRandomUmbrellaFundsDetails();
-        fillUmbrellaDetailsNotCountry(umbFundDetails[0], "16616758475934859531");
+        fillUmbrellaDetailsNotCountry(umbFundDetails[0], "123400TGFLH2QZV80T70");
         searchAndSelectTopDropdownXpath("uf_domicile", "Jordan");
 
         //Store title number count for Funds
