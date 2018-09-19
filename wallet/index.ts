@@ -1,4 +1,12 @@
 import {
+    SET_ADDRESS_DIRECTORY,
+    addressDirectoryReducer,
+    AddressDirectoryState,
+    getAddressDirectory,
+    getAddressDirectoryList,
+} from './address-directory';
+
+import {
     MyWalletAddressState,
     MyWalletAddressReducer,
     SET_WALLET_ADDRESSES,
@@ -76,7 +84,15 @@ import {
     Transactions
 } from './transactions';
 
-import {combineReducers, Reducer} from 'redux';
+import { combineReducers, Reducer } from 'redux';
+
+export {
+    SET_ADDRESS_DIRECTORY,
+    addressDirectoryReducer,
+    AddressDirectoryState,
+    getAddressDirectory,
+    getAddressDirectoryList,
+};
 
 export {
     SET_WALLET_ADDRESSES,
@@ -141,6 +157,7 @@ export {
 };
 
 export interface WalletState {
+    addressDirectory: AddressDirectoryState,
     myWalletAddress: MyWalletAddressState;
     myWallets: MyWalletsState;
     myWalletHolding: MyWalletHoldingState;
@@ -151,7 +168,9 @@ export interface WalletState {
     transactions: Transactions;
 }
 
-export const walletReducer: Reducer<WalletState> = combineReducers<WalletState>({
+export const walletReducer: Reducer<WalletState> = combineReducers<WalletState>(
+    {
+        addressDirectory: addressDirectoryReducer,
         myWalletAddress: MyWalletAddressReducer,
         myWallets: MyWalletsReducer,
         myWalletHolding: MyWalletHoldingReducer,
@@ -160,5 +179,5 @@ export const walletReducer: Reducer<WalletState> = combineReducers<WalletState>(
         walletRelationship: WalletRelationshipReducer,
         myWalletContract: MyWalletContractReducer,
         transactions: TransactionsReducer,
-    }
+    },
 );
