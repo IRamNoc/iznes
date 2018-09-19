@@ -58,6 +58,7 @@ export class SetlMessagesComponent implements OnDestroy, OnInit {
 
     public unreadMessages;
     public selectAll: boolean = false;
+    private checkedMessages: any[] = [];
 
     public items: string[] = [];
 
@@ -268,7 +269,7 @@ export class SetlMessagesComponent implements OnDestroy, OnInit {
                     }
                 }
 
-                message.isChecked = false;
+                message.isChecked = this.checkedMessages.includes(message.mailId) ? true : false;
                 return message;
             }
         });
@@ -301,6 +302,7 @@ export class SetlMessagesComponent implements OnDestroy, OnInit {
      */
     refreshMailbox(page = 0) {
         this.currentPage = page;
+        this.checkedMessages = [];
         const categoryType = this.categories[this.currentCategory].type;
         this.requestMailboxByCategory(categoryType, page);
     }
@@ -460,6 +462,15 @@ export class SetlMessagesComponent implements OnDestroy, OnInit {
         if (reset) {
             this.messageView = false;
         }
+
+        // Save any checked messages so we can restore them once new data comes in
+        this.checkedMessages = [];
+        this.messages.forEach((message) => {
+            if (message.isChecked) {
+                this.checkedMessages.push(message.mailId);
+            }
+        });
+
         this.resetMessages(reset);
         this.uncheckAll();
         this.clearSearch();
