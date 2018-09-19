@@ -530,7 +530,7 @@ export class SetlMyAccountComponent implements OnDestroy, OnInit {
                 {},
                 (data) => {
                     this.changePassForm.reset();
-                    this.showAlert('success', `
+                    this.alertsService.generate('success', `
                         Your password has been successfully changed!
                     `);
                     const token = _.get(data, '[1].Data[0].Token', '');
@@ -538,7 +538,7 @@ export class SetlMyAccountComponent implements OnDestroy, OnInit {
                 },
                 (data) => {
                     console.error('error: ', data);
-                    this.showAlert('error', `
+                    this.alertsService.generate('error', `
                         Password could not be changed. Please check and try again.
                     `);
                 }, // fail
@@ -602,12 +602,12 @@ export class SetlMyAccountComponent implements OnDestroy, OnInit {
         this.ngRedux.dispatch(SagaHelper.runAsyncCallback(
             asyncTaskPipe,
             (data) => {
-                this.showAlert('success', `User details have been successfully updated`);
+                this.alertsService.generate('success', 'User details have been successfully updated');
 
             },
             (data) => {
                 console.error('error: ', data);
-                this.showAlert('error', 'Failed to update user details');
+                this.alertsService.generate('error', 'Failed to update user details');
             }),
         );
     }
@@ -647,19 +647,5 @@ export class SetlMyAccountComponent implements OnDestroy, OnInit {
         const formControl: AbstractControl = this.changePassForm.get(path);
 
         return formControl.touched;
-    }
-
-    showAlert(type, message) {
-        const colour = type === 'error' ? 'danger' : type;
-
-        this.alertsService.create(type, `
-              <table class="table grid">
-                  <tbody>
-                      <tr>
-                          <td class="text-center text-${colour}">${message}</td>
-                      </tr>
-                  </tbody>
-              </table>
-          `);
     }
 }
