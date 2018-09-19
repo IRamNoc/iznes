@@ -242,16 +242,12 @@ export class ContractsDvpComponent implements OnInit, OnDestroy {
         this.createContractForm.controls[partyB].get('amount').updateValueAndValidity();
     }
 
-    private isFormValid(): boolean {
-        return this.createContractForm.valid;
-    }
-
     /**
      * Create Contract
      */
     createContract(): void {
         if (this.createContractForm.invalid) {
-            this.showErrorModal('Please complete all details on the form correctly');
+            this.alertsService.generate('error', 'Please complete all details on the form correctly.');
             return;
         }
 
@@ -262,7 +258,7 @@ export class ContractsDvpComponent implements OnInit, OnDestroy {
             res => this.showResponseModal(res),
             (res) => {
                 console.error('Fail', res);
-                this.showErrorModal('Failed to create contract');
+                this.alertsService.generate('error', 'Failed to create contract.');
             },
         );
     }
@@ -292,17 +288,6 @@ export class ContractsDvpComponent implements OnInit, OnDestroy {
                 </tbody>
             </table>
         `);
-    }
-
-    showErrorModal(message): void {
-        this.alertsService.create('error', `
-        <table class="table grid">
-                <tbody>
-                    <tr>
-                        <td class="text-center text-danger">${message}</td>
-                    </tr>
-                </tbody>
-            </table>`);
     }
 
     ngOnDestroy() {

@@ -8,13 +8,13 @@ import {
 } from '@angular/core';
 import { NgRedux, select } from '@angular-redux/store';
 import { SagaHelper } from '@setl/utils';
-import { AlertsService, AlertType } from '@setl/jaspero-ng2-alerts';
+import { AlertsService } from '@setl/jaspero-ng2-alerts';
 import { MemberSocketService } from '@setl/websocket-service';
 import { APP_CONFIG, AppConfig } from '@setl/utils';
 import { ContractService } from '@setl/core-contracts/services';
 import { MyWalletsService, WalletNodeRequestService } from '@setl/core-req-services';
 import { TabControl, Tab } from '@setl/core-balances/tabs';
-import { Observable, Subscription } from 'rxjs';
+import { Observable } from 'rxjs/Observable';
 import * as _ from 'lodash';
 import { ContractModel, PartyModel, PayListItemModel, ReceiveListItemModel } from '@setl/core-contracts/models';
 import {
@@ -104,7 +104,7 @@ export class ContractsComponent implements OnInit, OnDestroy {
             this.getUser.pipe(takeUntil(this.unsubscribe)).subscribe(data => this.userId = data);
         }
 
-        //this.subscribe<number>(this.getConnectedWallet, id => this.walletId = id);
+        // this.subscribe<number>(this.getConnectedWallet, id => this.walletId = id);
 
         this.getConnectedWallet.pipe(takeUntil(this.unsubscribe)).subscribe((data) => {
             this.walletId = data;
@@ -220,7 +220,7 @@ export class ContractsComponent implements OnInit, OnDestroy {
             .then((data) => {
                 this.committing = [...this.committing, party.partyIdentifier];
                 this.changeDetectorRef.markForCheck();
-                this.showAlert('Committing to Contract', 'success');
+                this.alertsService.generate('success', 'Committing to Contract.');
             })
             .catch(data => console.log('Bad commit', data));
     }
@@ -285,25 +285,5 @@ export class ContractsComponent implements OnInit, OnDestroy {
      */
     closeTab(index: number) {
         this.tabControl.close(index);
-    }
-
-    /**
-     * Show Alert
-     *
-     * @param {string} message
-     * @param {string} level
-     *
-     * @return {void}
-     */
-    public showAlert(message, level = 'error') {
-        this.alertsService.create(level as AlertType, `
-              <table class="table grid">
-                  <tbody>
-                      <tr>
-                          <td class="text-center text-${level}">${message}</td>
-                      </tr>
-                  </tbody>
-              </table>
-          `);
     }
 }
