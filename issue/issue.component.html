@@ -11,14 +11,14 @@
                 <!-- User list tab. -->
                 <ng-container *ngIf="id === 0">
                     <ng-container
-                            *ngTemplateOutlet="staticBalanceList"
+                        *ngTemplateOutlet="staticBalanceList"
                     ></ng-container>
                 </ng-container>
 
                 <!-- User edit tabs. -->
                 <ng-container *ngIf="id >= 1">
                     <ng-container
-                            *ngTemplateOutlet="dynamicViewTab; context: {'formControl': tab.formControl, 'id': id, 'asset': tab.assetObject, 'holdings': tab.data.holdings}"
+                        *ngTemplateOutlet="dynamicViewTab; context: {'formControl': tab.formControl, 'id': id, 'asset': tab.assetObject, 'holdings': tab.data.holdings}"
                     ></ng-container>
                 </ng-container>
             </clr-tab-content>
@@ -28,14 +28,30 @@
     <ng-template #staticBalanceList>
         <div class="panel-body">
             <clr-datagrid #myDataGrid>
-                <clr-dg-column mltag="txt_identifier">Identifier</clr-dg-column>
-                <clr-dg-column mltag="txt_asset">Asset</clr-dg-column>
-                <clr-dg-column class="right" mltag="txt_total">Total</clr-dg-column>
-                <clr-dg-column class="right" mltag="txt_actions">Actions</clr-dg-column>
+                <clr-dg-column [clrDgField]="'asset'" clrDgSortIcon>
+                    <span mltag="txt_asset">Asset</span>
+                    <span class="column-label"></span>
+                </clr-dg-column>
+                <clr-dg-column [clrDgField]="'addressLabel'" clrDgSortIcon>
+                    <span mltag="txt_issuer_address_label">Issuer Address Label</span>
+                    <span class="column-label"></span>
+                </clr-dg-column>
+                <clr-dg-column [clrDgField]="'address'" clrDgSortIcon>
+                    <span mltag="txt_issuer_address">Issuer Address</span>
+                    <span class="column-label"></span>
+                </clr-dg-column>
+                <clr-dg-column [clrDgField]="'total'" clrDgSortIcon>
+                    <span mltag="txt_total">Total</span>
+                    <span class="column-label"></span>
+                </clr-dg-column>
+                <clr-dg-column class="right">
+                    <span mltag="txt_actions">Actions</span>
+                </clr-dg-column>
 
                 <clr-dg-row *clrDgItems="let issuer of issuers$ | async">
-                    <clr-dg-cell></clr-dg-cell>
                     <clr-dg-cell>{{issuer.asset | truncate:10}}</clr-dg-cell>
+                    <clr-dg-cell>{{issuer.addressLabel}}</clr-dg-cell>
+                    <clr-dg-cell>{{issuer.address}}</clr-dg-cell>
                     <clr-dg-cell class="right">{{issuer.total | moneyValue}}</clr-dg-cell>
                     <clr-dg-cell class="right">
                         <div class="btn-group btn-sm">
@@ -57,19 +73,42 @@
         </div>
     </ng-template>
 
-    <!-- User Edit Form. -->
+    <!-- Asset Detail Report -->
     <ng-template #dynamicViewTab let-formControl="formControl" let-id="id" let-asset="asset" let-holdings="holdings">
         <div class="user-tab-panel-body panel-body">
             <clr-datagrid #myDataGrid>
-                <clr-dg-column mltag="txt_wallet">Wallet</clr-dg-column>
-                <clr-dg-column mltag="txt_address">Address</clr-dg-column>
-                <clr-dg-column mltag="txt_percentageofholding" class="right">Percentage of Holding</clr-dg-column>
-                <clr-dg-column mltag="txt_total" class="right">Total</clr-dg-column>
-                <clr-dg-column mltag="txt_encumbered" class="right">Encumbered</clr-dg-column>
-                <clr-dg-column mltag="txt_free" class="right">Free</clr-dg-column>
+                <clr-dg-column [clrDgField]="'walletName'" clrDgSortIcon>
+                    <span mltag="txt_wallet">Wallet</span>
+                    <span class="column-label"></span>
+                </clr-dg-column>
+                <clr-dg-column [clrDgField]="'addrLabel'" clrDgSortIcon>
+                    <span mltag="txt_address_label">Address Label</span>
+                    <span class="column-label"></span>
+                </clr-dg-column>
+                <clr-dg-column [clrDgField]="'addr'" clrDgSortIcon>
+                    <span mltag="txt_address">Address</span>
+                    <span class="column-label"></span>
+                </clr-dg-column>
+                <clr-dg-column [clrDgField]="'percentage'" clrDgSortIcon>
+                    <span mltag="txt_percentageofholding">Percentage of Holding</span>
+                    <span class="column-label"></span>
+                </clr-dg-column>
+                <clr-dg-column [clrDgField]="'balance'" clrDgSortIcon>
+                    <span mltag="txt_total">Total</span>
+                    <span class="column-label"></span>
+                </clr-dg-column>
+                <clr-dg-column [clrDgField]="'encumbered'" clrDgSortIcon>
+                    <span mltag="txt_encumbered">Encumbered</span>
+                    <span class="column-label"></span>
+                </clr-dg-column>
+                <clr-dg-column [clrDgField]="'free'" clrDgSortIcon>
+                    <span mltag="txt_free">Free</span>
+                    <span class="column-label"></span>
+                </clr-dg-column>
 
                 <clr-dg-row *clrDgItems="let holder of holdings">
                     <clr-dg-cell>{{holder.walletName}}</clr-dg-cell>
+                    <clr-dg-cell>{{holder.addrLabel}}</clr-dg-cell>
                     <clr-dg-cell>{{holder.addr}}</clr-dg-cell>
                     <clr-dg-cell class="right">{{holder.percentage | percentage}}</clr-dg-cell>
                     <clr-dg-cell class="right">{{holder.balance | moneyValue}}</clr-dg-cell>

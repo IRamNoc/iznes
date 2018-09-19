@@ -5,6 +5,7 @@ import { Observable } from 'rxjs/Observable';
 import { Subscription } from 'rxjs/Subscription';
 import { TabControl, Tab } from '../tabs';
 import { select } from '@angular-redux/store';
+import { isEmpty } from 'lodash';
 
 @Component({
     selector: 'setl-issue',
@@ -15,6 +16,7 @@ export class SetlIssueComponent implements OnInit, OnDestroy, AfterViewInit {
 
     @ViewChild('myDataGrid') myDataGrid;
     @select(['user', 'connected', 'connectedWallet']) getConnectedWallet;
+    @select(['wallet', 'addressDirectory']) addressDirectory;
 
     private issuers$: Observable<any>;
     private tabControl: TabControl;
@@ -31,9 +33,9 @@ export class SetlIssueComponent implements OnInit, OnDestroy, AfterViewInit {
                 private reportingService: ReportingService) {
 
         this.subscriptions.push(this.getConnectedWallet.subscribe((connectedWalletId) => {
-            this.connectedWalletId = connectedWalletId;
-            this.closeTabs();
-        },
+                this.connectedWalletId = connectedWalletId;
+                this.closeTabs();
+            },
         ));
     }
 
@@ -79,6 +81,15 @@ export class SetlIssueComponent implements OnInit, OnDestroy, AfterViewInit {
                     holdings,
                 },
             });
+
+            /* Subscribe to get holdings wallet details and then map the holding */
+            this.subscriptions.push(this.addressDirectory.subscribe((addresses) => {
+                if (!isEmpty(addresses)) {
+                    this.tabControl.tabs[1].data.holdings =
+                        this.reportingService.mapHolding(this.tabControl.tabs[1].data.holdings, addresses);
+                    this.changeDetector.detectChanges();
+                }
+            }));
         });
     }
 
