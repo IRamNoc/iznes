@@ -333,12 +333,12 @@ export class ConnectionComponent implements OnInit, OnDestroy {
                 if (!isUpdateConnection) {
                     this.onSendConnectionMessage(response[1].Data[0]);
                 } else {
-                    this.showSuccessResponse('The connection has been updated');
+                    this.alertsService.generate('success', 'The connection has been updated.');
                     this.isEditTabDisplayed = false;
                 }
             },
             () => {
-                this.showErrorMessage('This connection already exists');
+                this.alertsService.generate('error', 'This connection already exists.');
             }),
         );
 
@@ -380,7 +380,7 @@ export class ConnectionComponent implements OnInit, OnDestroy {
                     () => {
                         ConnectionService.setRequestedFromConnections(false, this.ngRedux);
                         ConnectionService.setRequestedToConnections(false, this.ngRedux);
-                        this.showSuccessResponse('The connection has been deleted');
+                        this.alertsService.generate('success', 'The connection has been deleted.');
                     },
                     (error) => {
                         console.error('error: ', error);
@@ -410,7 +410,7 @@ export class ConnectionComponent implements OnInit, OnDestroy {
             () => {
                 ConnectionService.setRequestedFromConnections(false, this.ngRedux);
                 ConnectionService.setRequestedToConnections(false, this.ngRedux);
-                this.showSuccessResponse(message);
+                this.alertsService.generate('success', message);
             },
             (error) => {
                 console.error('error on reject connection: ', error);
@@ -450,7 +450,7 @@ export class ConnectionComponent implements OnInit, OnDestroy {
             this.ngRedux.dispatch(SagaHelper.runAsyncCallback(
                 asyncTaskPipe,
                 () => {
-                    this.showSuccessResponse('The connection request has been accepted');
+                    this.alertsService.generate('success', 'The connection request has been accepted');
                     ConnectionService.setRequestedFromConnections(false, this.ngRedux);
                     ConnectionService.setRequestedToConnections(false, this.ngRedux);
                 },
@@ -509,7 +509,7 @@ export class ConnectionComponent implements OnInit, OnDestroy {
             messageBody,
             actionConfig,
         ).then(() => {
-            this.showSuccessResponse('A connection request has been sent');
+            this.alertsService.generate('success', 'A connection request has been sent');
         }).catch((e) => {
             console.log('connection request email fail: ', e);
         });
@@ -526,29 +526,5 @@ export class ConnectionComponent implements OnInit, OnDestroy {
         this.formGroup.controls['connection'].setValue(['']);
         this.formGroup.controls['sub-portfolio'].setValue(['']);
         this.formGroup.reset();
-    }
-
-    showErrorMessage(message) {
-        this.alertsService.create('error', `
-            <table class="table grid">
-                <tbody>
-                    <tr>
-                        <td class="text-center text-danger">${message}</td>
-                    </tr>
-                </tbody>
-            </table>
-        `);
-    }
-
-    showSuccessResponse(message) {
-        this.alertsService.create('success', `
-            <table class="table grid">
-                <tbody>
-                    <tr>
-                        <td class="text-center text-success">${message}</td>
-                    </tr>
-                </tbody>
-            </table>
-        `);
     }
 }
