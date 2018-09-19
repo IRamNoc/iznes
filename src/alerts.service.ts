@@ -24,7 +24,7 @@ export class AlertsService {
     /**
      * Generate
      * --------
-     * Format the message with HTML to meet UI standards before passing to create the alert
+     * Format the message with HTML to meet UI standards before creating the alert
      *
      * @param type
      * @param message
@@ -42,7 +42,14 @@ export class AlertsService {
                     </tr>
                 </tbody>
             </table>`;
-        this.create(type, message, settingsOverrides, titleMessage);
+        const create$ = new Subject();
+        this.alert$.next({ type, message, titleMessage, override: settingsOverrides });
+        this.alert$.subscribe((d) => {
+            if (d.close) {
+                create$.next();
+            }
+        });
+        return create$;
     }
 
     close() {
