@@ -1,7 +1,7 @@
 <h3 class="pt-1 pl-1">
     <b>{{'Welcome @username@' | translate: {'username': username} }} </b>
     <span *ngIf="lastLogin">
-        <small>&nbsp;{{'Last login:' | translate}} {{lastLogin | datex: 'MMMM DD YYYY hh:mm'}}</small>
+        <small>&nbsp;{{'Last login:' | translate}} {{lastLogin | datex: 'MMMM DD YYYY HH:mm'}}</small>
     </span>
 </h3>
 
@@ -31,7 +31,7 @@
                 <app-basic-tile name="asset2" color="orange">
                     <ng-container *ngTemplateOutlet="assetTile; context: {'asset': assetTiles[1]}"></ng-container>
                 </app-basic-tile>
-                
+
                 <app-basic-tile name="search" color="blue" data-span="2">
                     <h1 class="tile-heading">{{'Search' | translate}}</h1>
                     <div class="input-group">
