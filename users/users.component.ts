@@ -457,7 +457,7 @@ export class AdminUsersComponent implements OnInit, AfterViewInit, OnDestroy {
                                     controls['walletsRead'].patchValue(
                                         controls['walletsRead'].value.filter(thing => !!thing),
                                     );
-                                    this.showAlert(
+                                    this.alertsService.generate(
                                         'warning',
                                         `You changed access to '${controls['walletsFull'].value[i].text}'
                                          <br><br><b>Read access</b> <i class="fa fa-arrow-right"></i>
@@ -468,7 +468,7 @@ export class AdminUsersComponent implements OnInit, AfterViewInit, OnDestroy {
                                         controls['walletsFull'].value.filter(thing => !!thing),
                                     );
 
-                                    this.showAlert(
+                                    this.alertsService.generate(
                                         'warning',
                                         `You changed access to '${controls['walletsRead'].value[j].text}'<br><br>
                                         <b>Full access</b> <i class="fa fa-arrow-right"></i> <b>Read access</b>.`);
@@ -513,7 +513,7 @@ export class AdminUsersComponent implements OnInit, AfterViewInit, OnDestroy {
                                     controls['groupWalletsRead'].patchValue(
                                         controls['groupWalletsRead'].value.filter(thing => !!thing),
                                     );
-                                    this.showAlert(
+                                    this.alertsService.generate(
                                         'warning',
                                         `You changed access to '${controls['groupWalletsFull'].value[i].text}'
                                         <br><br><b>Read access</b> <i class="fa fa-arrow-right"></i>
@@ -524,7 +524,7 @@ export class AdminUsersComponent implements OnInit, AfterViewInit, OnDestroy {
                                         controls['groupWalletsFull'].value.filter(thing => !!thing),
                                     );
 
-                                    this.showAlert(
+                                    this.alertsService.generate(
                                         'warning',
                                         `You changed access to '${controls['groupWalletsRead'].value[j].text}'
                                         <br><br><b>Full access</b> <i class="fa fa-arrow-right"></i>
@@ -665,7 +665,7 @@ export class AdminUsersComponent implements OnInit, AfterViewInit, OnDestroy {
                 /* Stub. */
             }).catch((error) => {
                 /* Handle Error. */
-                this.showAlert('error', 'Failed to save this user\'s administrative groups.');
+                this.alertsService.generate('error', 'Failed to save this user\'s administrative groups.');
             });
 
             /* Save tx group access. */
@@ -678,7 +678,7 @@ export class AdminUsersComponent implements OnInit, AfterViewInit, OnDestroy {
                 /* Stub. */
             }).catch((error) => {
                 /* Handle Error. */
-                this.showAlert('error', 'Failed to save this user\'s transactional groups.');
+                this.alertsService.generate('error', 'Failed to save this user\'s transactional groups.');
             });
 
             /* Save admin group access. */
@@ -691,7 +691,7 @@ export class AdminUsersComponent implements OnInit, AfterViewInit, OnDestroy {
                 /* Stub. */
             }).catch((error) => {
                 /* Handle Error. */
-                this.showAlert('error', 'Failed to save this user\'s menu groups.');
+                this.alertsService.generate('error', 'Failed to save this user\'s menu groups.');
             });
 
             /* Save wallet access. */
@@ -702,7 +702,7 @@ export class AdminUsersComponent implements OnInit, AfterViewInit, OnDestroy {
                 /* Stub. */
             }).catch((error) => {
                 /* Handle Error. */
-                this.showAlert('error', 'Failed to save this user\'s wallet permissions.');
+                this.alertsService.generate('error', 'Failed to save this user\'s wallet permissions.');
             });
 
             /* Save wallet access. */
@@ -715,7 +715,7 @@ export class AdminUsersComponent implements OnInit, AfterViewInit, OnDestroy {
                 /* Stub. */
             }).catch((error) => {
                 /* Handle Error. */
-                this.showAlert('error', 'Failed to save this user\'s group wallet permissions.');
+                this.alertsService.generate('error', 'Failed to save this user\'s group wallet permissions.');
             });
 
             /* Save the chain access. */
@@ -727,7 +727,7 @@ export class AdminUsersComponent implements OnInit, AfterViewInit, OnDestroy {
                 /* Stub. */
             }).catch((error) => {
                 /* Handle Error. */
-                this.showAlert('error', 'Failed to save this user\'s chain access.');
+                this.alertsService.generate('error', 'Failed to save this user\'s chain access.');
             });
 
             /* Clear the form. */
@@ -737,11 +737,11 @@ export class AdminUsersComponent implements OnInit, AfterViewInit, OnDestroy {
             this.updateUserList(() => {
                 /* Handle success message & update users list */
                 this.logService.log('Successfully created user.', response);
-                this.showAlert('success', 'Successfully created user.');
+                this.alertsService.generate('success', 'Successfully created user.');
             });
         }).catch((error) => {
             /* Handle error. */
-            this.showAlert('error', 'Failed to save this user.');
+            this.alertsService.generate('error', 'Failed to save this user.');
             console.warn('Failed to save this user: ', error);
         });
 
@@ -793,7 +793,7 @@ export class AdminUsersComponent implements OnInit, AfterViewInit, OnDestroy {
                 this.logService.log('updated user admin groups.', response);
             }).catch((error) => {
                 this.logService.log('error updating user admin groups.', error);
-                this.showAlert('error', 'Failed to update this user\'s administrative groups.');
+                this.alertsService.generate('error', 'Failed to update this user\'s administrative groups.');
             });
 
             /* Save tx group access. */
@@ -806,7 +806,7 @@ export class AdminUsersComponent implements OnInit, AfterViewInit, OnDestroy {
                 this.logService.log('updated user tx groups.', response);
             }).catch((error) => {
                 this.logService.log('error updating user tx groups.', error);
-                this.showAlert('error', 'Failed to update this user\'s transactional groups.');
+                this.alertsService.generate('error', 'Failed to update this user\'s transactional groups.');
             });
 
             console.log('TEST - thisTab.oldMenuGroups', thisTab.oldMenuGroups);
@@ -822,7 +822,7 @@ export class AdminUsersComponent implements OnInit, AfterViewInit, OnDestroy {
                 this.logService.log('updated user menu groups.', response);
             }).catch((error) => {
                 this.logService.log('error updating user menu groups.', error);
-                this.showAlert('error', 'Failed to update this user\'s menu groups.');
+                this.alertsService.generate('error', 'Failed to update this user\'s menu groups.');
             });
 
             /* Save wallet access, first diff, then set the new ones to the old ones. */
@@ -842,7 +842,7 @@ export class AdminUsersComponent implements OnInit, AfterViewInit, OnDestroy {
                 thisTab['oldWalletAccess'] = newWalletAccess;
             }).catch((error) => {
                 this.logService.log('error updating user wallet permissions.', error);
-                this.showAlert('error', 'Failed to update this user\'s wallet permissions.');
+                this.alertsService.generate('error', 'Failed to update this user\'s wallet permissions.');
             });
 
             /* Save group wallet access, first diff, then set the new ones to the old ones. */
@@ -862,7 +862,7 @@ export class AdminUsersComponent implements OnInit, AfterViewInit, OnDestroy {
                 thisTab['oldGroupWalletAccess'] = newGroupWalletAccess;
             }).catch((error) => {
                 this.logService.log('error updating user group wallet permissions.', error);
-                this.showAlert('error', 'Failed to update this user\'s group wallet permissions.');
+                this.alertsService.generate('error', 'Failed to update this user\'s group wallet permissions.');
             });
 
             /* Now we'll save chain access, first get the diffs. */
@@ -886,18 +886,18 @@ export class AdminUsersComponent implements OnInit, AfterViewInit, OnDestroy {
                 this.logService.log('updated user chain access: ', response);
             }).catch((error) => {
                 this.logService.log('error updating user wallet permissions.', error);
-                this.showAlert('error', 'Failed to update this user\'s wallet permissions.');
+                this.alertsService.generate('error', 'Failed to update this user\'s wallet permissions.');
             });
 
             this.updateUserList(() => {
                 /* Handle success message & update users list */
                 this.logService.log('Successfully edited user.', response);
-                this.showAlert('success', 'Successfully updated user details.');
+                this.alertsService.generate('success', 'Successfully updated user details.');
             });
         }).catch((error) => {
             /* Handle error message. */
             this.logService.log('Failed to edit user.', error);
-            this.showAlert('error', 'Failed to update user details.');
+            this.alertsService.generate('error', 'Failed to update user details.');
         });
 
         /* Return */
@@ -1115,11 +1115,11 @@ export class AdminUsersComponent implements OnInit, AfterViewInit, OnDestroy {
                     /* Handle success message. */
                     this.updateUserList(() => {
                         /* Handle success message & update users list */
-                        this.showAlert('success', 'Successfully deleted user.');
+                        this.alertsService.generate('success', 'Successfully deleted user.');
                     });
                 }).catch((error) => {
                     /* Handle error message. */
-                    this.showAlert('error', 'Failed to delete user.');
+                    this.alertsService.generate('error', 'Failed to delete user.');
                     console.warn(error);
                 });
             }
@@ -1207,7 +1207,7 @@ export class AdminUsersComponent implements OnInit, AfterViewInit, OnDestroy {
         }).catch((error) => {
             /* handle the error message */
             this.logService.log('Editing user, admin permissions error: ', error);
-            this.showAlert('error', 'Failed to fetch this user\'s administrative permissions.');
+            this.alertsService.generate('error', 'Failed to fetch this user\'s administrative permissions.');
         });
 
         /* Get Tx permissions. */
@@ -1225,7 +1225,7 @@ export class AdminUsersComponent implements OnInit, AfterViewInit, OnDestroy {
         }).catch((error) => {
             /* Handle the error message */
             this.logService.log('Editing user, tx permissions error: ', error);
-            this.showAlert('error', 'Failed to fetch this user\'s transactional permissions.');
+            this.alertsService.generate('error', 'Failed to fetch this user\'s transactional permissions.');
         });
 
         /* Get Menu permissions. */
@@ -1243,7 +1243,7 @@ export class AdminUsersComponent implements OnInit, AfterViewInit, OnDestroy {
         }).catch((error) => {
             /* handle the error message */
             this.logService.log('Editing user, menu permissions error: ', error);
-            this.showAlert('error', 'Failed to fetch this user\'s menu permissions.');
+            this.alertsService.generate('error', 'Failed to fetch this user\'s menu permissions.');
         });
 
         this.userAdminService.requestUserWalletPermissions({
@@ -1295,7 +1295,7 @@ export class AdminUsersComponent implements OnInit, AfterViewInit, OnDestroy {
         }).catch((error) => {
             /* Handle the error message */
             this.logService.log('Editing user, wallet permission error: ', error);
-            this.showAlert('error', 'Failed to fetch this user\'s wallet permissions.');
+            this.alertsService.generate('error', 'Failed to fetch this user\'s wallet permissions.');
         });
 
         /* Get user's group wallet permission */
@@ -1342,7 +1342,7 @@ export class AdminUsersComponent implements OnInit, AfterViewInit, OnDestroy {
         }).catch((error) => {
             /* Handle the error message */
             this.logService.log('Editing user, group wallet permission error: ', error);
-            this.showAlert('error', 'Failed to fetch this user\'s group wallet permissions.');
+            this.alertsService.generate('error', 'Failed to fetch this user\'s group wallet permissions.');
         });
 
         /* Now we need to get the user's wallet access. */
@@ -1376,7 +1376,7 @@ export class AdminUsersComponent implements OnInit, AfterViewInit, OnDestroy {
         }).catch((error) => {
             /* Handle the error message */
             this.logService.log('Failed to fetch user\'s chain access: ', error);
-            this.showAlert('error', 'Failed to fetch this user\'s chain access.');
+            this.alertsService.generate('error', 'Failed to fetch this user\'s chain access.');
         });
 
         /* Activate the new tab. */
@@ -1540,29 +1540,6 @@ export class AdminUsersComponent implements OnInit, AfterViewInit, OnDestroy {
             g.controls.passwordConfirm.setErrors(password === passwordConfirm ? null : { mismatch: true });
         }
         return null;
-    }
-
-    /**
-     * Show An Alert Message
-     * ---------------------
-     * Shows a success, warning or error popup.
-     *
-     * @param  {type} string - the type of alert to show.
-     * @param  {message} string - the message to display in the alert.
-     * @return {void}
-     */
-    showAlert(type: any, message: string) {
-        const alertClass = (type === 'error') ? 'danger' : type;
-
-        this.alertsService.create(type, `
-            <table class="table grid">
-                <tbody>
-                    <tr>
-                        <td class="text-center text-${alertClass}">${message}</td>
-                    </tr>
-                </tbody>
-            </table>
-        `);
     }
 
     ngOnDestroy(): void {

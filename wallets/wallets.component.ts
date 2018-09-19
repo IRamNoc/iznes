@@ -179,7 +179,7 @@ export class AdminWalletsComponent implements OnInit, AfterViewInit, OnDestroy {
 
         /* If the form is not valid, don't submit. */
         if (!thisTab.formControl.valid) {
-            this.showError('Please complete this form before submitting it.');
+            this.alertsService.generate('error', 'Please complete this form before submitting it.');
             return;
         }
 
@@ -254,11 +254,11 @@ export class AdminWalletsComponent implements OnInit, AfterViewInit, OnDestroy {
         this.userAdminService.createNewWallet(newWallet)
         .then(() => {
             /* Handle response. */
-            this.showSuccess('Successfully created the new wallet.');
+            this.alertsService.generate('success', 'Successfully created the new wallet.');
         })
         .catch(() => {
             /* Show error if we failed to create the wallet. */
-            this.showError('Failed to create the new wallet.');
+            this.alertsService.generate('error', 'Failed to create the new wallet.');
         });
 
         /* Clear new wallet form. */
@@ -283,7 +283,7 @@ export class AdminWalletsComponent implements OnInit, AfterViewInit, OnDestroy {
 
         /* If the form is not valid, don't submit. */
         if (!thisTab.formControl.valid) {
-            this.showError('Please complete this form before submitting it.');
+            this.alertsService.generate('error', 'Please complete this form before submitting it.');
             return;
         }
 
@@ -360,10 +360,10 @@ export class AdminWalletsComponent implements OnInit, AfterViewInit, OnDestroy {
             }
             // TODO Update Wallet Locked status
             /* Handle Success. */
-            this.showSuccess('Successfully updated this wallet.');
+            this.alertsService.generate('success', 'Successfully updated this wallet.');
         }).catch((error) => {
             /* Handle error. */
-            this.showError('Failed to update this wallet.');
+            this.alertsService.generate('error', 'Failed to update this wallet.');
             console.warn(error);
         });
 
@@ -409,8 +409,7 @@ export class AdminWalletsComponent implements OnInit, AfterViewInit, OnDestroy {
         /* Let's now ask the user if they're sure... */
         this.confirmationService.create(
             '<span>Deleting a Wallet</span>',
-            '<span class="text-warning">Are you sure you want to delete \'' +
-            this.walletList[index].walletName + '\'?</span>',
+            `<span class="text-warning">Are you sure you want to delete '${this.walletList[index].walletName}'?</span>`,
         ).subscribe((ans) => {
             /* ...if they are... */
             if (ans.resolved) {
@@ -425,10 +424,10 @@ export class AdminWalletsComponent implements OnInit, AfterViewInit, OnDestroy {
                     }
 
                     /* Handle success message. */
-                    this.showSuccess('Successfully deleted wallet.');
+                    this.alertsService.generate('success', 'Successfully deleted wallet.');
                 }).catch((error) => {
                     /* Handle error message. */
-                    this.showError('Failed to delete wallet.');
+                    this.alertsService.generate('error', 'Failed to delete wallet.');
                     console.warn(error);
                 });
             }
@@ -451,7 +450,7 @@ export class AdminWalletsComponent implements OnInit, AfterViewInit, OnDestroy {
             if (this.tabsControl[i].walletId === this.walletList[index].walletId) {
                 /* Found the index for that tab, lets activate it... */
                 // this.setTabActive(i);
-                this.router.navigateByUrl('/user-administration/wallets/' + i);
+                this.router.navigateByUrl(`/user-administration/wallets/${i}`);
 
                 return;
             }
@@ -561,7 +560,7 @@ export class AdminWalletsComponent implements OnInit, AfterViewInit, OnDestroy {
         /* Lastly, activate the new tab. */
         // this.setTabActive(this.tabsControl.length - 1);
         const newTabId = this.tabsControl.length - 1;
-        this.router.navigateByUrl('/user-administration/wallets/' + newTabId);
+        this.router.navigateByUrl(`/user-administration/wallets/${newTabId}`);
 
         /* Clear the new wallet form */
         this.clearNewWallet(1, false);
@@ -610,8 +609,7 @@ export class AdminWalletsComponent implements OnInit, AfterViewInit, OnDestroy {
             /* Now let's check if the date object holds a valid date. */
             if (!isNaN(dateo.getTime())) {
                 /* If all is good, return a nice string. */
-                return dateo.getFullYear() + '-'
-                    + this.numberPad(dateo.getMonth()) + '-' + this.numberPad(dateo.getDate());
+                return `${dateo.getFullYear()}-${this.numberPad(dateo.getMonth())}-${this.numberPad(dateo.getDate())}`;
             }
 
             /* Not valid. */
@@ -634,7 +632,7 @@ export class AdminWalletsComponent implements OnInit, AfterViewInit, OnDestroy {
          * 5 -> "05"
          * 12 -> "12"
          */
-        return num < 10 ? '0' + num : num.toString();
+        return num < 10 ? `0${num}` : num.toString();
     }
 
     /**
@@ -751,45 +749,5 @@ export class AdminWalletsComponent implements OnInit, AfterViewInit, OnDestroy {
         }
 
         return group;
-    }
-
-    /**
-     * Shows an success popup.
-     *
-     * @param {string} message - The string to be shown in the message.
-     *
-     * @return {void}
-     */
-    showSuccess(message) {
-        /* Show the message. */
-        this.alertsService.create('success', `
-              <table class="table grid">
-                  <tbody>
-                      <tr>
-                          <td class="text-center text-success">${message}</td>
-                      </tr>
-                  </tbody>
-              </table>
-          `);
-    }
-
-    /**
-     * Shows an error popup.
-     *
-     * @param {string} message - The string to be shown in the message.
-     *
-     * @return {void}
-     */
-    private showError(message) {
-        /* Show the error. */
-        this.alertsService.create('error', `
-              <table class="table grid">
-                  <tbody>
-                      <tr>
-                          <td class="text-center text-danger">${message}</td>
-                      </tr>
-                  </tbody>
-              </table>
-          `);
     }
 }
