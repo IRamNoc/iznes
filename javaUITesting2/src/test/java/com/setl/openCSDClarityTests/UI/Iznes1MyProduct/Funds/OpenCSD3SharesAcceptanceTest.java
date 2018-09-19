@@ -67,7 +67,7 @@ public class OpenCSD3SharesAcceptanceTest {
         String[] uShareDetails = generateRandomFundsDetails();
         String[] uIsin = generateRandomISIN();
         String[] uFundDetails = generateRandomFundsDetails();
-        String randomLEI = "123400TGFLH2QZV80T70";
+        String randomLEI = generateRandomLEI();
 
         validateDatabaseShareExists(0, uShareDetails[0]);
 
@@ -91,7 +91,7 @@ public class OpenCSD3SharesAcceptanceTest {
         String[] uShareDetails = generateRandomFundsDetails();
         String[] uIsin = generateRandomISIN();
         String[] uFundDetails = generateRandomFundsDetails();
-        String randomLEI = "123400TGFLH2QZV80T70";
+        String randomLEI = generateRandomLEI();
 
         loginAndVerifySuccess("am", "alex01");
         navigateToDropdown("menu-my-products");

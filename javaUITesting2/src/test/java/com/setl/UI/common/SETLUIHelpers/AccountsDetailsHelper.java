@@ -11,7 +11,7 @@ import org.openqa.selenium.support.ui.WebDriverWait;
 
 import static com.setl.UI.common.SETLUIHelpers.SetUp.*;
 
-public class AccountsDetailsHelper extends LoginAndNavigationHelper {
+public class AccountsDetailsHelper extends com.setl.UI.common.SETLUIHelpers.LoginAndNavigationHelper {
 
     public static void myAccountSendKeys(String field, String text) {
         driver.findElement(By.id("ud" + field)).sendKeys(text);

@@ -69,7 +69,7 @@ public class OpenCSD2FundsAcceptanceTest {
         String [] umbFundDetails = generateRandomUmbrellaFundsDetails();
         String [] uFundDetails = generateRandomFundsDetails();
         String [] updateChars = generateRandomDetails();
-        String randomLei = "123400TGFLH2QZV80T70";
+        String randomLei = generateRandomLEI();
 
         loginAndVerifySuccess("am", "alex01");
         waitForHomePageToLoad();
@@ -143,7 +143,8 @@ public class OpenCSD2FundsAcceptanceTest {
         driver.findElement(By.id("isFundStructure1")).isDisplayed();
 
         String[] uFundDetails = generateRandomFundsDetails();
-        fillOutFundDetailsStep2(uFundDetails[0], "123400TGFLH2QZV80T70");
+        String lei = generateRandomLEI();
+        fillOutFundDetailsStep2(uFundDetails[0], lei);
 
         assertPopupNextFundNo("Share");
 
@@ -158,7 +159,7 @@ public class OpenCSD2FundsAcceptanceTest {
         }
 
         searchFundsTable(uFundDetails[0]);
-        getFundTableRow(0, uFundDetails[0], "123400TGFLH2QZV80T70", "EUR", "Management Company", "Afghanistan", "Contractual Fund", "");
+        getFundTableRow(0, uFundDetails[0], lei, "EUR", "Management Company", "Afghanistan", "Contractual Fund", "");
         validateDatabaseFundExists(1, uFundDetails[0]);
     }
 
@@ -236,7 +237,7 @@ public class OpenCSD2FundsAcceptanceTest {
     public void shouldNotDisplayUmbrellaFundWhenNoUmbrellaFundIsSelectedTG445() throws InterruptedException, IOException {
         WebDriverWait wait = new WebDriverWait(driver, timeoutInSeconds);
         String[] uFundDetails = generateRandomUmbrellaFundsDetails();
-        String randomLei = "123400TGFLH2QZV80T70";
+        String randomLei = generateRandomLEI();
 
         loginAndVerifySuccess("am", "alex01");
         waitForHomePageToLoad();
@@ -371,9 +372,10 @@ public class OpenCSD2FundsAcceptanceTest {
         String fundCounts = driver.findElement(By.xpath("//*[@id=\"iznes\"]/app-root/app-basic-layout/div/ng-sidebar-container/div/div/div/main/div/div/app-ofi-am-product-home/div[3]/div[1]/div[1]/a/h2")).getText();
         int fundCounter = Integer.parseInt(fundCounts.replaceAll("[\\D]", ""));
         String [] uFundDetails = generateRandomFundsDetails();
+        String lei = generateRandomLEI();
         int fundCount = fundCounter - 1;
         fillOutFundDetailsStep1("none");
-        fillOutFundDetailsStep2(uFundDetails[0], "123400TGFLH2QZV80T70");
+        fillOutFundDetailsStep2(uFundDetails[0], generateRandomLEI());
         wait.until(visibilityOfElementLocated(By.id("product-dashboard-fundID-" + "0" + "-umbrellaFundName")));
         driver.findElement(By.id("product-dashboard-link-fundID-0")).click();
         wait.until(visibilityOfElementLocated(By.xpath("//*[@id=\"clr-tab-content-1\"]/form/div[1]/div[1]/div/a/h2")));
@@ -429,7 +431,8 @@ public class OpenCSD2FundsAcceptanceTest {
             driver.findElement(By.id("isFundStructure1")).isDisplayed();
 
             String[] uFundDetails = generateRandomFundsDetails();
-            fillOutFundDetailsStep2(uFundDetails[0], "123400TGFLH2QZV80T70");
+            String lei = generateRandomLEI();
+            fillOutFundDetailsStep2(uFundDetails[0], lei);
             assertPopupNextFundNo("Share");
             searchFundsTable(uFundDetails[0]);
 
@@ -443,7 +446,7 @@ public class OpenCSD2FundsAcceptanceTest {
                 fail(e.getMessage());
             }
             wait.until(invisibilityOfElementLocated(By.className("toast-title")));
-            getFundTableRow(0, uFundDetails[0], "123400TGFLH2QZV80T70", "EUR", "Management Company", "Afghanistan", "Contractual Fund", "");
+            getFundTableRow(0, uFundDetails[0], lei, "EUR", "Management Company", "Afghanistan", "Contractual Fund", "");
 
 
         }

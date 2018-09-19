@@ -77,7 +77,7 @@ public class OpenCSDNAVAcceptanceTest {
         navigateToDropdown("menu-my-products");
         navigateToPageByID("menu-product-home");
         fillOutFundDetailsStep1("none");
-        fillOutFundDetailsStep2(uFundDetails[0], "123400TGFLH2QZV80T70");
+        fillOutFundDetailsStep2(uFundDetails[0], generateRandomLEI());
         assertPopupNextFundNo("Share");
         createShare(uFundDetails[0], uShareDetails[0], uIsin[0]);
 
@@ -121,12 +121,12 @@ public class OpenCSDNAVAcceptanceTest {
         navigateToPageByID("menu-product-home");
         selectAddUmbrellaFund();
         String[] umbFundDetails = generateRandomUmbrellaFundsDetails();
-        fillUmbrellaDetailsNotCountry(umbFundDetails[0], "123400TGFLH2QZV80T70");
+        fillUmbrellaDetailsNotCountry(umbFundDetails[0], generateRandomLEI());
         searchAndSelectTopDropdownXpath("uf_domicile", "Jordan");
         submitUmbrellaFund();
         assertPopupNextFundNo("Fund");
         fillOutFundDetailsStep1(umbFundDetails[0]);
-        fillOutFundDetailsStep2(uFundDetails[0], "123400TGFLH2QZV80T70");
+        fillOutFundDetailsStep2(uFundDetails[0], generateRandomLEI());
         assertPopupNextFundNo("Share");
         createShare(uFundDetails[0], uShareDetails[0], uIsin[0]);
 
@@ -157,7 +157,7 @@ public class OpenCSDNAVAcceptanceTest {
         navigateToDropdown("menu-my-products");
         navigateToPageByID("menu-product-home");
         fillOutFundDetailsStep1("none");
-        fillOutFundDetailsStep2(uFundDetails[0], "123400TGFLH2QZV80T70");
+        fillOutFundDetailsStep2(uFundDetails[0], generateRandomLEI());
         assertPopupNextFundNo("Share");
         createShare(uFundDetails[0], uShareDetails[0], uIsin[0]);
         navigateToNAVPageFromFunds();
@@ -185,7 +185,7 @@ public class OpenCSDNAVAcceptanceTest {
         navigateToDropdown("menu-my-products");
         navigateToPageByID("menu-product-home");
         fillOutFundDetailsStep1("none");
-        fillOutFundDetailsStep2(uFundDetails[0], "123400TGFLH2QZV80T70");
+        fillOutFundDetailsStep2(uFundDetails[0], generateRandomLEI());
         assertPopupNextFundNo("Share");
         createShare(uFundDetails[0], uShareDetails[0], uIsin[0]);
 
@@ -213,7 +213,7 @@ public class OpenCSDNAVAcceptanceTest {
         navigateToDropdown("menu-my-products");
         navigateToPageByID("menu-product-home");
         fillOutFundDetailsStep1("none");
-        fillOutFundDetailsStep2(uFundDetails[0], "123400TGFLH2QZV80T70");
+        fillOutFundDetailsStep2(uFundDetails[0], generateRandomLEI());
         assertPopupNextFundNo("Share");
         createShare(uFundDetails[0], uShareDetails[0], uIsin[0]);
         navigateToNAVPageFromFunds();
@@ -256,7 +256,7 @@ public class OpenCSDNAVAcceptanceTest {
         navigateToDropdown("menu-my-products");
         navigateToPageByID("menu-product-home");
         fillOutFundDetailsStep1("none");
-        fillOutFundDetailsStep2(uFundDetails[0], "123400TGFLH2QZV80T70");
+        fillOutFundDetailsStep2(uFundDetails[0], generateRandomLEI());
         assertPopupNextFundNo("Share");
         createShare(uFundDetails[0], uShareDetails[0], uIsin[0]);
         navigateToNAVPageFromFunds();
