@@ -205,8 +205,6 @@ export class VoidAssetComponent implements OnInit, OnDestroy {
                             voidAssetAsyncTaskPipe,
                             {},
                             (data) => {
-                                console.log('void asset success:', data);
-
                                 if (this.deleteAsset) {
                                     setTimeout(
                                         () => {
@@ -224,9 +222,7 @@ export class VoidAssetComponent implements OnInit, OnDestroy {
                                                 deleteAssetAsyncTaskPipe,
                                                 {},
                                                 (data) => {
-                                                    console.log('+++ deleteAsset response: ', data);
-
-                                                    /* Check instruments. */
+                                                /* Check instruments. */
                                                     // setTimeout(
                                                     //     () => {
                                                     //         const requestData = {
@@ -254,30 +250,29 @@ export class VoidAssetComponent implements OnInit, OnDestroy {
                                                     //     },
                                                     //     5000);
 
-                                                    this.showAlert('success', 'Asset issuance has been successfully voided and deleted.');
+                                                    this.alertsService.generate('success', 'Asset issuance has been successfully voided and deleted.');
                                                     this.voidAssetForm.reset();
                                                 },
                                                 (data) => {
-                                                    console.log('fail', data);
-                                                    this.showAlert('error', data[1].data.status);
+                                                    this.alertsService.generate('error', data[1].data.status);
                                                 },
                                             ));
                                         },
                                         10000);
                                 } else {
                                     /* Show success modal. */
-                                    this.showAlert('success', 'Asset issuance has been successfully voided.');
+                                    this.alertsService.generate('success', 'Asset issuance has been successfully voided.');
                                     this.voidAssetForm.reset();
                                 }
 
                             },
                             (data) => {
                                 console.log('fail', data);
-                                this.showAlert('error', data[1].data.status);
+                                this.alertsService.generate('error', data[1].data.status);
                             },
                         ));
                     } else {
-                        this.showAlert('error', 'There are no holders of this asset.');
+                        this.alertsService.generate('error', 'There are no holders of this asset.');
                     }
                 },
                 (data) => {
@@ -285,20 +280,6 @@ export class VoidAssetComponent implements OnInit, OnDestroy {
                 },
             ));
         }
-    }
-
-    showAlert(type, message) {
-        const colour = type === 'error' ? 'danger' : type;
-
-        this.alertsService.create(type, `
-              <table class="table grid">
-                  <tbody>
-                      <tr>
-                          <td class="text-center text-${colour}">${message}</td>
-                      </tr>
-                  </tbody>
-              </table>
-          `);
     }
 
     ngOnDestroy() {

@@ -138,14 +138,7 @@ export class IssueAssetComponent implements OnInit, OnDestroy {
                 },
                 (data) => {
                     console.error('fail', data);
-                    this.alertsService.create('error', `
-                      <table class="table grid">
-                          <tbody>
-                              <tr>
-                                  <td class="text-center text-danger">Failed to issue asset</td>
-                              </tr>
-                          </tbody>
-                      </table>`);
+                    this.alertsService.generate('error', 'Failed to issue asset.');
                 },
             ));
         }

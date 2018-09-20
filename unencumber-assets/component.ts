@@ -150,14 +150,14 @@ export class UnencumberAssetsComponent implements OnInit, OnDestroy {
                 asyncTaskPipe,
                 {},
                 () => {
-                    this.showAlert('success', 'The asset has been unencumbered.');
+                    this.alertsService.generate('success', 'The asset has been unencumbered.');
                     this.unencumberAssetsForm.reset();
                 },
                 (data) => {
                     console.error('fail', data);
                     const message = !_.isEmpty(data[1].data.error) ? `Failed to unencumber asset. Reason:<br>
                         ${data[1].data.error}` : 'Failed to unencumber asset.';
-                    this.showAlert('error', message);
+                    this.alertsService.generate('error', message);
                 }),
             );
         }
@@ -236,20 +236,6 @@ export class UnencumberAssetsComponent implements OnInit, OnDestroy {
                 break;
             }
         }
-    }
-
-    showAlert(type, message) {
-        const colour = type === 'error' ? 'danger' : type;
-
-        this.alertsService.create(type, `
-              <table class="table grid">
-                  <tbody>
-                      <tr>
-                          <td class="text-center text-${colour}">${message}</td>
-                      </tr>
-                  </tbody>
-              </table>
-          `);
     }
 
     ngOnDestroy() {

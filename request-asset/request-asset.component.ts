@@ -171,22 +171,9 @@ export class RequestAssetComponent implements OnInit, OnDestroy {
             null,
             actionConfig,
         ).then((data) => {
-            this.alertsService.create('success', `<table class="table grid">
-                <tbody>
-                    <tr>
-                        <td class="text-center text-success">Transfer Request successfully sent</td>
-                    </tr>
-                </tbody>
-            </table>`);
+            this.alertsService.generate('success', 'Transfer Request successfully sent.');
         }).catch((e) => {
-            this.alertsService.create('error', `<table class="table grid">
-                <tbody>
-                    <tr>
-                        <td class="text-center text-danger">Transfer Request could not be sent</td>
-                    </tr>
-                </tbody>
-            </table>`);
-            console.log('transfer request email failed', e);
+            this.alertsService.generate('error', 'Transfer Request could not be sent.');
         });
     }
 
