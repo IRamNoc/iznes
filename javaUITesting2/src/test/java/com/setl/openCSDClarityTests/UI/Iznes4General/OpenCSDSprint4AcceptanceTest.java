@@ -10,7 +10,7 @@ import org.junit.Rule;
 import org.junit.Test;
 import org.junit.rules.Timeout;
 import org.junit.runner.RunWith;
-import org.openqa.selenium.*;
+import org.openqa.selenium.By;
 import org.openqa.selenium.support.ui.WebDriverWait;
 
 
@@ -23,8 +23,9 @@ import static com.setl.UI.common.SETLUIHelpers.MemberDetailsHelper.scrollElement
 import static com.setl.UI.common.SETLUIHelpers.PageHelper.verifyFundOptInfoPageContents;
 import static com.setl.UI.common.SETLUIHelpers.PageHelper.verifyOptInfoPageContents;
 import static com.setl.UI.common.SETLUIHelpers.SetUp.*;
-
-import static org.openqa.selenium.support.ui.ExpectedConditions.*;
+import static org.openqa.selenium.support.ui.ExpectedConditions.elementToBeClickable;
+import static org.openqa.selenium.support.ui.ExpectedConditions.invisibilityOfElementLocated;
+import static org.openqa.selenium.support.ui.ExpectedConditions.visibilityOfElementLocated;
 
 
 @RunWith(OrderedJUnit4ClassRunner.class)
@@ -90,7 +91,7 @@ public class OpenCSDSprint4AcceptanceTest {
 
         selectAddUmbrellaFund();
         String [] umbFundDetails = generateRandomUmbrellaFundsDetails();
-        fillUmbrellaDetailsNotCountry(umbFundDetails[0], "123400TGFLH2QZV80T70");
+        fillUmbrellaDetailsNotCountry(umbFundDetails[0], generateRandomLEI());
         searchAndSelectTopDropdownXpath("uf_domicile", "Jordan");
 
         //Store title number count for Funds

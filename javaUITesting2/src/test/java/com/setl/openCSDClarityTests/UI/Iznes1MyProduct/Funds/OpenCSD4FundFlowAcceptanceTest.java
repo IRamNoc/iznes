@@ -61,7 +61,7 @@ public class OpenCSD4FundFlowAcceptanceTest {
         String[] uShareDetails = generateRandomFundsDetails();
         String[] uIsin = generateRandomISIN();
         String[] uFundDetails = generateRandomFundsDetails();
-        String randomLEI = "123400TGFLH2QZV80T70";
+        String randomLEI = generateRandomLEI();
 
         loginAndVerifySuccess("am", "alex01");
         waitForHomePageToLoad();

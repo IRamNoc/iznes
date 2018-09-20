@@ -21,6 +21,7 @@ import java.util.Date;
 
 import static SETLAPIHelpers.DatabaseHelper.setDBToProdOff;
 import static SETLAPIHelpers.DatabaseHelper.setDBToProdOn;
+import static com.setl.UI.common.SETLUIHelpers.FundsDetailsHelper.generateRandomLEI;
 import static com.setl.UI.common.SETLUIHelpers.FundsDetailsHelper.openDropdownAndSelectOption;
 import static com.setl.UI.common.SETLUIHelpers.KYCDetailsHelper.*;
 import static com.setl.UI.common.SETLUIHelpers.LoginAndNavigationHelper.*;
@@ -410,7 +411,8 @@ public class OpenCSDKYCModuleAcceptanceTest {
         driver.findElement(By.xpath("//*[@id=\"step-identification\"]/general-information/div/div[2]/div/div[4]/div[2]/input")).sendKeys("Ipswich");
         String percent4 = driver.findElement(By.xpath("//*[@id=\"step-identification\"]/general-information/div/div[1]/div[2]/div/div[1]/div/div/div/span")).getText();
         assertTrue(percent4.equals("50%"));
-        driver.findElement(By.xpath("//*[@id=\"leiCode\"]")).sendKeys("16612312312312312312");
+        String lei = generateRandomLEI();
+        driver.findElement(By.xpath("//*[@id=\"leiCode\"]")).sendKeys(lei);
         String percent5 = driver.findElement(By.xpath("//*[@id=\"step-identification\"]/general-information/div/div[1]/div[2]/div/div[1]/div/div/div/span")).getText();
         assertTrue(percent5.equals("60%"));
         searchSelectTopOptionXpath("Jordan", "//*[@id=\"step-identification\"]/general-information/div/div[2]/div/div[4]/div[3]/ng-select/div", "//*[@id=\"step-identification\"]/general-information/div/div[2]/div/div[4]/div[3]/ng-select/div/div[3]/div/input", "//*[@id=\"step-identification\"]/general-information/div/div[2]/div/div[4]/div[3]/ng-select/div/div[3]/ul/li[1]/div/a");

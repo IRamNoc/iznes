@@ -96,8 +96,8 @@ public class OpenCSDEntireFlowAcceptanceTest {
         String[] uShareDetails = generateRandomFundsDetails();
         String[] umbFundDetails = generateRandomUmbrellaFundsDetails();
         String[] uIsin = generateRandomISIN();
-        String umbLei = "16616758475934857598";
-        String fundLei = "16616758475934857522";
+        String umbLei = generateRandomLEI();
+        String fundLei = generateRandomLEI();
         String shareCurrency = "EUR";
         int latestNav = 14;
 
