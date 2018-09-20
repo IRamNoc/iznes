@@ -74,7 +74,7 @@ export class OfiAmDocumentsComponent implements OnDestroy, OnInit {
                 dataSource: 'investorCompanyName',
                 sortable: true,
                 hasLink: true,
-                kycDocLink: '/kyc-documents/client/:kycID',
+                kycDocLink: '/on-boarding/management/:kycID',
                 kycFundAccessLink: '/fund-access/:kycID',
             },
             3: {
@@ -89,7 +89,7 @@ export class OfiAmDocumentsComponent implements OnDestroy, OnInit {
                 dataSource: 'dateEntered',
                 sortable: true,
                 hasLink: true,
-                kycDocLink: '/kyc-documents/client/:kycID',
+                kycDocLink: '/on-boarding/management/:kycID',
                 kycFundAccessLink: '/fund-access/:kycID',
             },
             5: {
@@ -116,7 +116,7 @@ export class OfiAmDocumentsComponent implements OnDestroy, OnInit {
                 dataSource: 'amFirstName',
                 sortable: true,
                 hasLink: true,
-                kycDocLink: '/kyc-documents/client/:kycID',
+                kycDocLink: '/on-boarding/management/:kycID',
                 kycFundAccessLink: '/fund-access/:kycID',
             },
             9: {
@@ -137,7 +137,7 @@ export class OfiAmDocumentsComponent implements OnDestroy, OnInit {
                 dataSource: 'lastUpdated',
                 sortable: true,
                 hasLink: true,
-                kycDocLink: '/kyc-documents/client/:kycID',
+                kycDocLink: '/on-boarding/management/:kycID',
                 kycFundAccessLink: '/fund-access/:kycID',
             }
         };
@@ -242,8 +242,8 @@ export class OfiAmDocumentsComponent implements OnDestroy, OnInit {
             !event.target.classList.contains('datagrid-expandable-caret-button') &&
             !event.target.classList.contains('datagrid-expandable-caret-icon')
         ) {
-            let ret = row.status === 'Accepted' ? '/client-referential/:kycID' : '/kyc-documents/client/:kycID';
-            const link = row.status === -1 ? '/client-referential/:kycID' : '/kyc-documents/client/:kycID';
+            let ret = row.status === 'Accepted' ? '/client-referential/:kycID' : '/on-boarding/management/:kycID';
+            const link = row.status === -1 ? '/client-referential/:kycID' : '/on-boarding/management/:kycID';
             link.match(/:\w+/g).forEach((match) => {
                 const key = match.substring(1);
                 const regex = new RegExp(match);
