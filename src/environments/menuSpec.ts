@@ -338,7 +338,7 @@ const kycDocuments = {
             label_txt: 'txt_client_referential',
             icon_class: 'fa fa-users',
             element_id: 'top-menu-client-referential',
-            router_link: '/client-referential/list',
+            router_link: '/client-referential',
             dynamic_link: '/client-referential/[^\/]*',
         },
         // {
