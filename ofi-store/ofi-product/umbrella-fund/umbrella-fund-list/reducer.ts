@@ -1,4 +1,5 @@
 import { Action } from 'redux';
+import * as moment from 'moment';
 import * as UmbrellaFundActions from './actions';
 import { UmbrellaFundDetail, UmbrellaFundListState } from './model';
 import * as _ from 'lodash';
@@ -13,26 +14,26 @@ const initialState: UmbrellaFundListState = {
 export const umbrellaFundListReducer = function (state: UmbrellaFundListState = initialState, action: Action) {
 
     switch (action.type) {
-    case UmbrellaFundActions.SET_UMBRELLA_FUND_LIST:
+        case UmbrellaFundActions.SET_UMBRELLA_FUND_LIST:
 
-        const ufdata = _.get(action, 'payload[1].Data', []);    // use [] not {} for list and Data not Data[0]
+            const ufdata = _.get(action, 'payload[1].Data', []);    // use [] not {} for list and Data not Data[0]
 
-        const umbrellaFundList = formatUmbrellaFundDataResponse(ufdata);
-        return Object.assign({}, state, {
-            umbrellaFundList,
-        });
+            const umbrellaFundList = formatUmbrellaFundDataResponse(ufdata);
+            return Object.assign({}, state, {
+                umbrellaFundList,
+            });
 
-    case UmbrellaFundActions.SET_REQUESTED_UMBRELLA_FUND:
-        return handleSetRequested(state, action);
+        case UmbrellaFundActions.SET_REQUESTED_UMBRELLA_FUND:
+            return handleSetRequested(state, action);
 
-    case UmbrellaFundActions.CLEAR_REQUESTED_UMBRELLA_FUND:
-        return handleClearRequested(state, action);
+        case UmbrellaFundActions.CLEAR_REQUESTED_UMBRELLA_FUND:
+            return handleClearRequested(state, action);
 
-    case UmbrellaFundActions.SET_UMBRELLA_AUDIT:
-        return handleSetUmbrellaAudit(state, action);
+        case UmbrellaFundActions.SET_UMBRELLA_AUDIT:
+            return handleSetUmbrellaAudit(state, action);
 
-    default:
-        return state;
+        default:
+            return state;
     }
 };
 
@@ -115,11 +116,21 @@ function handleSetUmbrellaAudit(state: UmbrellaFundListState, action): UmbrellaF
     if (!data.length) {
         return state;
     }
+
+    const offset = new Date().getTimezoneOffset();
+
     return {
         ...state,
         audit: {
             ...state.audit,
-            [data[0].umbrellaID]: data,
+            [data[0].umbrellaID]: data.map((audit) => {
+                return {
+                    ...audit,
+                    dateModified: moment(audit.dateModified)
+                        .subtract(offset, 'minutes')
+                        .format('YYYY-MM-DD HH:mm:ss'),
+                };
+            }),
         },
     };
 }
