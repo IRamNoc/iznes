@@ -21,6 +21,37 @@ export class AlertsService {
         return create$;
     }
 
+    /**
+     * Generate
+     * --------
+     * Format the message with HTML to meet UI standards before creating the alert
+     *
+     * @param type
+     * @param message
+     * @param settingsOverrides
+     * @param titleMessage
+     */
+    generate(type: AlertType, message: string = null, settingsOverrides: AlertSettings = {},
+             titleMessage: string | boolean = false) {
+        const alertClass = (type === 'error') ? 'danger' : type;
+        message = `
+            <table class="table grid">
+                <tbody>
+                    <tr>
+                        <td class="text-center text-${alertClass}">${message}</td>
+                    </tr>
+                </tbody>
+            </table>`;
+        const create$ = new Subject();
+        this.alert$.next({ type, message, titleMessage, override: settingsOverrides });
+        this.alert$.subscribe((d) => {
+            if (d.close) {
+                create$.next();
+            }
+        });
+        return create$;
+    }
+
     close() {
         this.alert$.next({ close: true });
     }
