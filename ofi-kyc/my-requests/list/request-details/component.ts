@@ -21,6 +21,7 @@ import { NewRequestService } from '../../request/new-request.service';
 import { Router } from '@angular/router';
 
 import { MultilingualService } from '@setl/multilingual';
+import { convertUtcStrToLocalStr } from '@setl/utils/helper/m-date-wrapper/index';
 import { KycStatus as statusList } from '@ofi/ofi-main/ofi-kyc/my-requests/requests.service';
 
 @Component({
@@ -90,7 +91,7 @@ export class MyRequestsDetailsComponent implements OnInit, AfterViewInit, OnDest
                     email: kyc.emailAddress,
                     phone: kyc.phoneNumber
                 });
-                this.lastUpdate = kyc.lastUpdated;
+                this.lastUpdate = convertUtcStrToLocalStr(kyc.lastUpdated, 'YYYY-MM-DD HH:mm:SS');
                 this._ofiKycService.fetchStatusAuditByKycID(this.kycID);
             }
         })
