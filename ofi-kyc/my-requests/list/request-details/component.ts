@@ -159,7 +159,8 @@ export class MyRequestsDetailsComponent implements OnInit, AfterViewInit, OnDest
             kycIDs.push({
                 kycID: kyc.kycID,
                 amcID: kyc.amManagementCompanyID,
-                completedStep: completedStep
+                context: kyc.context,
+                completedStep,
             });
         });
 

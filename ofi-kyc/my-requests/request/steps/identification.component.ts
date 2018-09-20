@@ -57,12 +57,19 @@ export class NewKycIdentificationComponent implements OnInit {
                 map(kycs => kycs[0]),
                 rxFilter((kyc: any) => (kyc && kyc.amcID))
             )
-            .subscribe(kyc => {
-                if(!kyc.completedStep || (steps[kyc.completedStep] < steps.identification)){
+            .subscribe((kyc) => {
+                if (this.shouldPersist(kyc)) {
                     this.prePersistForm();
                 }
             })
         ;
+    }
+
+    shouldPersist(kyc) {
+        if (kyc.context === 'done') {
+            return false;
+        }
+        return !kyc.completedStep || (steps[kyc.completedStep] < steps.identification);
     }
 
     prePersistForm() {
