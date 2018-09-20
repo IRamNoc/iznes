@@ -18,6 +18,7 @@ import static com.setl.UI.common.SETLUIHelpers.SetUp.driver;
 import static com.setl.UI.common.SETLUIHelpers.SetUp.timeoutInSeconds;
 import static org.apache.commons.lang3.RandomStringUtils.randomAlphabetic;
 import static org.apache.commons.lang3.RandomStringUtils.randomNumeric;
+import static org.apache.commons.lang3.RandomStringUtils.randomAlphanumeric;
 import static org.junit.Assert.*;
 import static org.openqa.selenium.support.ui.ExpectedConditions.*;
 
@@ -40,6 +41,16 @@ public class FundsDetailsHelper extends LoginAndNavigationHelper {
         String b = "JM";
         String randomISIN = b + n;
         return new String[]{randomISIN};
+    }
+
+    public static String generateRandomLEI() {
+        //https://en.wikipedia.org/wiki/Legal_Entity_Identifier
+        String louCode = randomNumeric(4);
+        String reserved = "00";
+        String entityId = randomAlphanumeric(12).toUpperCase();
+        String checksum = randomNumeric(2); // if possible, could investigate making this a valid checksum
+
+        return louCode + reserved + entityId + checksum;
     }
 
     public static String[] generateRandomSubPortfolioName() {
@@ -236,12 +247,12 @@ public class FundsDetailsHelper extends LoginAndNavigationHelper {
         searchAndSelectTopDropdown("uf_fundAdministrator", fundAdmin);
     }
 
-    private static String generateRandomLEI() {
-        String str = randomAlphabetic(2);
-        String num = randomNumeric(18);
-        String LEI = str + num;
-        return LEI;
-    }
+//    private static String generateRandomLEI() {
+//        String str = randomAlphabetic(2);
+//        String num = randomNumeric(18);
+//        String LEI = str + num;
+//        return LEI;
+//    }
 
     public static void submitUmbrellaFund() throws InterruptedException {
         try {

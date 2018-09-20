@@ -224,6 +224,6 @@ public class OpenCSDNavigationAcceptanceTest {
         navigateToDropdown("menu-administration");
         navigateToDropdown("menu-administration-teams");
         String teamsTitle = driver.findElement(By.xpath("//*[@id=\"iznes\"]/app-root/app-basic-layout/div/ng-sidebar-container/div/div/div/main/div/div/app-core-admin-teams-list/div")).getText();
-        assertTrue(teamsTitle.contains("Team(s)"));
+        assertTrue(teamsTitle.contains("Teams"));
     }
 }

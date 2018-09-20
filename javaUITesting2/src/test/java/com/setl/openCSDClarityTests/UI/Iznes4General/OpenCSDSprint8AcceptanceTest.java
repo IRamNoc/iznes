@@ -81,7 +81,7 @@ public class OpenCSDSprint8AcceptanceTest {
         String[] uShareDetails = generateRandomFundsDetails();
         String[] uIsin = generateRandomISIN();
         String[] uFundDetails = generateRandomFundsDetails();
-        String randomLEI = "16614748475934658531";
+        String randomLEI = generateRandomLEI();
         loginAndVerifySuccess("am", "alex01");
         navigateToDropdown("menu-my-products");
         navigateToPageByID("menu-product-home");
