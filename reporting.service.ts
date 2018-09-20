@@ -209,6 +209,9 @@ export class ReportingService {
     }
 
     private getBreakdownData(wallets, addresses) {
+        // Clear observable if user does not have a connected wallet ID
+        if (this.connectedWalletId === 0) this.holdingsByAssetSubject.next([]);
+
         this.holdingByAddress = wallets.holdingByAddress;
         if (wallets.holdingByAsset.hasOwnProperty(this.connectedWalletId)) {
             const next = Object
