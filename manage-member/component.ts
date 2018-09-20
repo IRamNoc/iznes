@@ -183,7 +183,7 @@ export class ManageMemberComponent implements OnInit, OnDestroy {
                 (data) => {
                     /* Handle error message. */
                     const message = _.get(data, '[1].Data[0].Message', '');
-                    this.showAlert('error', message);
+                    this.alertsService.generate('error', message);
                 },
             ));
         }
@@ -220,11 +220,11 @@ export class ManageMemberComponent implements OnInit, OnDestroy {
             this.ngRedux.dispatch(SagaHelper.runAsyncCallback(
                 asyncTaskPipe,
                 () => {
-                    this.showAlert('success', 'Member is updated');
+                    this.alertsService.generate('success', 'Member is updated.');
                 },
                 (data) => {
                     const message = _.get(data, '[1].Data[0].Message', '');
-                    this.showAlert('error', message);
+                    this.alertsService.generate('error', message);
                 },
             ));
         }
@@ -249,7 +249,7 @@ export class ManageMemberComponent implements OnInit, OnDestroy {
         const member = this.manageMembersList[index];
 
         this.tabsControl.push({
-            title: '<i class="fa fa-user"></i> ' + member.memberName,
+            title: `<i class="fa fa-user"></i> ${member.memberName}`,
             memberId: member.memberId,
             formControl: new FormGroup(
                 {
@@ -307,11 +307,11 @@ export class ManageMemberComponent implements OnInit, OnDestroy {
                 this.ngRedux.dispatch(SagaHelper.runAsyncCallback(
                     asyncTaskPipe,
                     () => {
-                        this.showAlert('success', 'Member is deleted');
+                        this.alertsService.generate('success', 'Member is deleted.');
                     },
                     (data) => {
                         const message = _.get(data, '[1].Data[0].Message', '');
-                        this.showAlert('error', message);
+                        this.alertsService.generate('error', message);
                     },
                 ));
             }
@@ -366,7 +366,7 @@ export class ManageMemberComponent implements OnInit, OnDestroy {
         const patt = new RegExp('^[a-zA-Z0-9àáâäãåąčćęèéêëėįìíîïłńòóôöõøùúûüųūÿýżź' +
             'ñçčšžÀÁÂÄÃÅĄĆČĖĘÈÉÊËÌÍÎÏĮŁŃÒÓÔÖÕØÙÚÛÜŲŪŸÝŻŹÑßÇŒÆČŠŽ∂ð ,.\'-]+$');
         if (!patt.test(str)) {
-            this.showAlert('error', 'Invalid characters in Member name.');
+            this.alertsService.generate('error', 'Invalid characters in Member name.');
             return false;
         }
 
@@ -377,7 +377,7 @@ export class ManageMemberComponent implements OnInit, OnDestroy {
      * Success alert after creating new Member User
      */
     showNewMemberUser() {
-        this.showAlert('success', `
+        this.alertsService.create('success', `
         <table class="table grid large">
             <tr>
                 <td class="left">Member Name</td>
@@ -397,27 +397,6 @@ export class ManageMemberComponent implements OnInit, OnDestroy {
             </tr>
         </table>
        `);
-    }
-
-    /**
-     * Show a success, warning or error alert message
-     *
-     * @param  {type} string - the type of alert to show.
-     * @param  {message} string - the message to display in the alert.
-     * @return {void}
-     */
-    showAlert(type: any, message: string) {
-        const alertClass = (type === 'error') ? 'danger' : type;
-
-        this.alertsService.create(type, `
-            <table class="table grid">
-                <tbody>
-                    <tr>
-                        <td class="text-center text-${alertClass}">${message}</td>
-                    </tr>
-                </tbody>
-            </table>
-        `);
     }
 
     ngOnDestroy() {

@@ -189,7 +189,6 @@ export class ManageAccountComponent implements OnInit, OnDestroy {
                 asyncTaskPipe,
                 {},
             ));
-
         }
     }
 
@@ -250,11 +249,11 @@ export class ManageAccountComponent implements OnInit, OnDestroy {
             this.ngRedux.dispatch(SagaHelper.runAsyncCallback(
                 asyncTaskPipe,
                 () => {
-                    this.showAlert('success', 'Account has been created successfully');
+                    this.alertsService.generate('success', 'Account has been created successfully.');
                 },
                 (data) => {
                     console.error('fail', data);
-                    this.showAlert('error', 'Failed to create account');
+                    this.alertsService.generate('error', 'Failed to create account.');
                 },
             ));
         }
@@ -293,11 +292,11 @@ export class ManageAccountComponent implements OnInit, OnDestroy {
             this.ngRedux.dispatch(SagaHelper.runAsyncCallback(
                 asyncTaskPipe,
                 (data) => {
-                    this.showAlert('success', 'Account has been updated successfully');
+                    this.alertsService.generate('success', 'Account has been updated successfully.');
                     this.logService.log(data);
                 },
                 (data) => {
-                    this.showAlert('error', 'Failed to update account');
+                    this.alertsService.generate('error', 'Failed to update account.');
                     this.logService.log(data);
                 },
             ));
@@ -325,7 +324,7 @@ export class ManageAccountComponent implements OnInit, OnDestroy {
         const accountMemberName = this.managedMemberListObject[account.parent].memberName;
 
         this.tabsControl.push({
-            title: '<i class="fa fa-user"></i> ' + account.accountName,
+            title: `<i class="fa fa-user"></i> ${account.accountName}`,
             accountId: account.accountId,
             formControl: new FormGroup(
                 {
@@ -380,11 +379,11 @@ export class ManageAccountComponent implements OnInit, OnDestroy {
                 this.ngRedux.dispatch(SagaHelper.runAsyncCallback(
                     asyncTaskPipe,
                     (data) => {
-                        this.showAlert('success', 'Account has been deleted successfully');
+                        this.alertsService.generate('success', 'Account has been deleted successfully.');
                         this.logService.log(data);
                     },
                     (data) => {
-                        this.showAlert('error', 'Failed to delete to account');
+                        this.alertsService.generate('error', 'Failed to delete to account.');
                         this.logService.log(data);
                     },
                 ));
@@ -434,27 +433,6 @@ export class ManageAccountComponent implements OnInit, OnDestroy {
 
         /* Yes, we have to call this again to get it to work, trust me... */
         this.changeDetectorRef.detectChanges();
-    }
-
-    /**
-     * Show a success, warning or error alert message
-     *
-     * @param  {type} string - the type of alert to show.
-     * @param  {message} string - the message to display in the alert.
-     * @return {void}
-     */
-    showAlert(type: any, message: string) {
-        const alertClass = (type === 'error') ? 'danger' : type;
-
-        this.alertsService.create(type, `
-            <table class="table grid">
-                <tbody>
-                    <tr>
-                        <td class="text-center text-${alertClass}">${message}</td>
-                    </tr>
-                </tbody>
-            </table>
-        `);
     }
 
     ngOnDestroy() {
