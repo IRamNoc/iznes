@@ -164,9 +164,11 @@ export class FormPercentDirective implements OnInit, OnDestroy, AfterViewInit {
 
         if (this.config.color === undefined) {
             if (percent === 100) {
-                this.divProgressBarColor.classList.replace(this.colorBar, 'cssProgress-success');
+                this.divProgressBarColor.classList.remove(this.colorBar);
+                this.divProgressBarColor.classList.add('cssProgress-success');
             } else {
-                this.divProgressBarColor.classList.replace('cssProgress-success', this.colorBar);
+                this.divProgressBarColor.classList.remove('cssProgress-success');
+                this.divProgressBarColor.classList.add(this.colorBar);
             }
         }
     }
