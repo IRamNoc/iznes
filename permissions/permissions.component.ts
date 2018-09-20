@@ -354,8 +354,8 @@ export class AdminPermissionsComponent implements OnInit, AfterViewInit, OnDestr
             /* Let's now ask the user if they're sure... */
             this.confirmationService.create(
                 '<span>Deleting a permission group</span>',
-                '<span class="text-warning">Are you sure you want to delete \'' +
-                this.allGroupList[index].groupName + '\'?</span>',
+                `<span class="text-warning">Are you sure you want to delete
+                '${this.allGroupList[index].groupName}'?</span>`,
             ).subscribe((ans) => {
                 /* ...if they are... */
                 if (ans.resolved) {
@@ -367,11 +367,11 @@ export class AdminPermissionsComponent implements OnInit, AfterViewInit, OnDestr
                         }
 
                         /* Handle success. */
-                        this.showSuccess('Successfully deleted permission group');
+                        this.alertsService.generate('success', 'Successfully deleted permission group.');
                     }).catch((error) => {
                         /* Handle error. */
-                        this.showError('failed to delete permission group');
-                        this.logService.log('Failed to delet permission group: ', error);
+                        this.alertsService.generate('error', 'Failed to delete permission group.');
+                        this.logService.log('Failed to delete permission group: ', error);
                     });
                 }
             });
@@ -469,7 +469,7 @@ export class AdminPermissionsComponent implements OnInit, AfterViewInit, OnDestr
         });
 
         /* Activate the new tab. */
-        this.router.navigateByUrl('/user-administration/permissions/' + newTabId);
+        this.router.navigateByUrl(`/user-administration/permissions/${newTabId}`);
 
         return;
     }
@@ -530,7 +530,7 @@ export class AdminPermissionsComponent implements OnInit, AfterViewInit, OnDestr
             this.userAdminService[functionCall](permissionsData).then((response) => {
                 this.logService.log('Set new group permissions.', response);
             }).catch((error) => {
-                this.showError('Failed to create this permission group.');
+                this.alertsService.generate('error', 'Failed to create this permission group.');
                 this.logService.log('Failed to set new group permissions.', error);
             });
 
@@ -538,14 +538,15 @@ export class AdminPermissionsComponent implements OnInit, AfterViewInit, OnDestr
             this.clearNewGroup(1, false); // send false in to disable the preventDefault.
 
             /* Success message. */
-            this.showSuccess('Successfully created group', () => {
-                if (tabid > 1) {
-                    this.closeTab(tabid);
-                }
-            });
+            this.subscriptions['newGroupSuccessAlert'] =
+                this.alertsService.generate('success', 'Successfully created group.').subscribe(() => {
+                    if (tabid > 1) {
+                        this.closeTab(tabid);
+                    }
+                });
         }).catch((error) => {
             /* Implement an error message for failing to create the group. */
-            this.showError('Failed to create this permission group.');
+            this.alertsService.generate('error', 'Failed to create this permission group.');
             this.logService.log('Failed to create new group.', error);
         });
 
@@ -619,17 +620,18 @@ export class AdminPermissionsComponent implements OnInit, AfterViewInit, OnDestr
                 this.tabsControl[tabid].oldPermissions = newPermissions;
             }).catch((error) => {
                 console.warn('Failed to update the group permissions.', error);
-                this.showError('Failed to update this permission group');
+                this.alertsService.generate('error', 'Failed to update this permission group.');
             });
 
             /* Success message. */
-            this.showSuccess('Successfully updated this permission group', () => {
-                this.closeTab(tabid);
-            });
+            this.subscriptions['updateGroupSuccessAlert'] =
+                this.alertsService.generate('success', 'Successfully updated this permission group.').subscribe(() => {
+                    this.closeTab(tabid);
+                });
         }).catch((response) => {
             /* Implement an error message for failing to update the group. */
             console.warn('Failed to update the group.', response);
-            this.showError('Failed to update this permission group');
+            this.alertsService.generate('error', 'Failed to update this permission group.');
         });
 
         /* Clear the form. */
@@ -711,8 +713,13 @@ export class AdminPermissionsComponent implements OnInit, AfterViewInit, OnDestr
             ...this.tabsControl.slice(index + 1, this.tabsControl.length),
         ];
 
-        /* Reset tabs. */
-        this.router.navigateByUrl('/user-administration/permissions/0');
+        /* Reset tabs. SetTimeout needed to make navigateByUrl work after closing an alert */
+        setTimeout(
+            () => {
+                this.router.navigateByUrl('/user-administration/permissions/0');
+            },
+            0,
+        );
 
         return;
     }
@@ -728,56 +735,6 @@ export class AdminPermissionsComponent implements OnInit, AfterViewInit, OnDestr
         this.tabsControl = immutableHelper.map(this.tabsControl, (item, thisIndex) => {
             return item.set('active', thisIndex === Number(index));
         });
-    }
-
-    /**
-     * Shows an error popup.
-     *
-     * @param  {string} message - the string to be shown in the message.
-     *
-     * @return {void}
-     */
-    showError(message) {
-        /* Show the error. */
-        this.alertsService.create('error', `
-              <table class="table grid">
-                  <tbody>
-                      <tr>
-                          <td class="text-center text-danger">${message}</td>
-                      </tr>
-                  </tbody>
-              </table>
-          `);
-    }
-
-    /**
-     * Shows an success popup.
-     *
-     * @param  {string} message - The string to be shown in the message.
-     *
-     * @return {void}
-     */
-    showSuccess(message, callback: () => void = () => {
-    }) {
-        /* Show the message. */
-        this.subscriptions['successAlert'] = this.alertsService.create('success', `
-              <table class="table grid">
-                  <tbody>
-                      <tr>
-                          <td class="text-center text-success">${message}</td>
-                      </tr>
-                  </tbody>
-              </table>
-          `).subscribe(
-            () => {
-                setTimeout(
-                    () => {
-                        callback();
-                    },
-                    50,
-                );
-            },
-        );
     }
 
     ngOnDestroy(): void {

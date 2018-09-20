@@ -229,7 +229,7 @@ export class ManageSubPortfolioComponent implements OnInit, OnDestroy {
         this.tabsControl.push({
             title: {
                 icon: 'fa-pencil',
-                text: 'Edit ' + name,
+                text: `Edit ${name}`,
             },
             formControl: this.createSubPortfolioFormGroup(name, iban),
             active: true,
@@ -305,7 +305,7 @@ export class ManageSubPortfolioComponent implements OnInit, OnDestroy {
         /* If a tab is already open for this sub-portfolio, navigate to it. */
         for (let i = 0; i < this.tabsControl.length; i += 1) {
             if (this.tabsControl[i].address === address) {
-                this.router.navigateByUrl('/user-administration/subportfolio/' + i);
+                this.router.navigateByUrl(`/user-administration/subportfolio/${i}`);
 
                 return;
             }
@@ -315,7 +315,7 @@ export class ManageSubPortfolioComponent implements OnInit, OnDestroy {
         this.tabsControl.push({
             title: {
                 icon: 'fa-pencil',
-                text: 'Edit ' + name,
+                text: `Edit ${name}`,
             },
             formControl: this.createSubPortfolioFormGroup(name, iban),
             active: false,
@@ -325,7 +325,7 @@ export class ManageSubPortfolioComponent implements OnInit, OnDestroy {
         const newTabId = this.tabsControl.length - 1;
 
         /* Navigate to the new tab. */
-        this.router.navigateByUrl('/user-administration/subportfolio/' + newTabId);
+        this.router.navigateByUrl(`/user-administration/subportfolio/${newTabId}`);
 
         return;
     }
@@ -371,12 +371,12 @@ export class ManageSubPortfolioComponent implements OnInit, OnDestroy {
                         const message = '<span mltag="txt_address_created_sub_fail">' +
                             'Portfolio address was created in the blockchain, but sub-portfolio was not created.' +
                             '</span>';
-                        this.showMessage('error', message);
+                        this.alertsService.generate('error', message);
                     }));
             },
             (data) => {
                 console.error('Fail', data);
-                this.showMessage('error', 'Failed to create sub-portfolio');
+                this.alertsService.generate('error', 'Failed to create sub-portfolio.');
             }));
     }
 
@@ -413,7 +413,7 @@ export class ManageSubPortfolioComponent implements OnInit, OnDestroy {
             },
             (labelResponse) => {
                 console.error('Fail', labelResponse);
-                this.showMessage('error', 'Failed to update sub-portfolio');
+                this.alertsService.generate('error', 'Failed to update sub-portfolio.');
             }));
 
         /* Update the tab with updated data. */
@@ -430,57 +430,35 @@ export class ManageSubPortfolioComponent implements OnInit, OnDestroy {
     handleLabelResponse(message: string) {
         switch (message) {
         case 'All OK':
-            this.showMessage('success', '<span mltag="txt_portfolio_created">' +
-                'Sub-portfolio created</span>');
+            this.alertsService.generate('success', '<span mltag="txt_portfolio_created">' +
+                'Sub-portfolio created.</span>');
             break;
 
         case 'Updated':
-            this.showMessage('success', '<span>' +
-                'Sub-portfolio updated</span>');
+            this.alertsService.generate('success', '<span>' +
+                'Sub-portfolio updated.</span>');
             break;
 
         case 'Duplicate Label':
-            this.showMessage('warning', '<span mltag="txt_subportfolioname_is_exist">' +
-                'Sub-portfolio name already exists</span>');
+            this.alertsService.generate('warning', '<span mltag="txt_subportfolioname_is_exist">' +
+                'Sub-portfolio name already exists.</span>');
             break;
 
         case 'Duplicate IBAN':
-            this.showMessage('warning', '<span mltag="txt_iban_is_exist">' +
-                'IBAN has already exists</span>');
+            this.alertsService.generate('warning', '<span mltag="txt_iban_is_exist">' +
+                'IBAN has already exists.</span>');
             break;
 
         case 'Duplicate Label and IBAN':
-            this.showMessage('warning', '<span mltag="txt_subportfolioname_and_iban_is_exist">' +
-                'Sub-portfolio and IBAN already exist</span>');
+            this.alertsService.generate('warning', '<span mltag="txt_subportfolioname_and_iban_is_exist">' +
+                'Sub-portfolio and IBAN already exist.</span>');
             break;
 
         default:
-            this.showMessage('success', '<span mltag="txt_portfolio_created">' +
-                'Sub-portfolio created</span>');
+            this.alertsService.generate('success', '<span mltag="txt_portfolio_created">' +
+                'Sub-portfolio created.</span>');
             break;
         }
-    }
-
-    /**
-     * Shows an alert message.
-     *
-     * @param {any} type - The type of alert.
-     * @param {string} message - The message to show.
-     *
-     * @return {void}
-     */
-    showMessage(type: any, message: string) {
-        const alertClass = (type === 'error') ? 'danger' : type;
-
-        this.alertsService.create(type, `
-            <table class="table grid">
-                <tbody>
-                    <tr>
-                        <td class="text-center text-${alertClass}">${message}</td>
-                    </tr>
-                </tbody>
-            </table>
-        `);
     }
 
     ngOnDestroy() {
