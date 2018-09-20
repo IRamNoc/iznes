@@ -229,11 +229,6 @@ export const ROUTES: Routes = [
                 canActivate: [LoginGuardService],
             },
             {
-                path: 'kyc-am-documents',
-                component: OfiAmDocumentsComponent,
-                canActivate: [LoginGuardService],
-            },
-            {
                 path: 'kyc-audit-trail/:kycID',
                 component: KycAuditTrailComponent,
                 canActivate: [LoginGuardService],
@@ -667,11 +662,15 @@ export const ROUTES: Routes = [
                 ],
             },
             {
-                path: 'kyc-documents',
+                path: 'on-boarding',
                 canActivate: [LoginGuardService],
                 children: [
                     {
-                        path: 'client/:kycId',
+                        path: 'management',
+                        component: OfiAmDocumentsComponent,
+                    },
+                    {
+                        path: 'management/:kycId',
                         component: OfiWaitingApprovalComponent,
                     },
                 ],

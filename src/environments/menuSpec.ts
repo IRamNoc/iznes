@@ -330,8 +330,8 @@ const kycDocuments = {
             label_txt: 'txt_on_boarding_management',
             icon_class: 'fa fa-align-left',
             element_id: 'top-menu-onboarding-management',
-            router_link: '/kyc-am-documents',
-            dynamic_link: '/kyc-am-documents/[^\/]*',
+            router_link: '/on-boarding/management',
+            dynamic_link: '/on-boarding/[^\/]*',
         },
         {
             label: 'Client Referential',
