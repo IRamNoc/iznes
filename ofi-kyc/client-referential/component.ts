@@ -191,7 +191,7 @@ export class OfiClientReferentialComponent implements OnInit, OnDestroy {
                 this._route.params
             )
             .subscribe(([clientReferential, amKycList, params]) => {
-                this.kycId = (params.kycId == 'list' ? '' : params.kycId);
+                this.kycId = (!params.kycId ? '' : params.kycId);
 
                 this.clientReferential = clientReferential;
 
@@ -248,7 +248,7 @@ export class OfiClientReferentialComponent implements OnInit, OnDestroy {
     }
 
     viewClient(id) {
-        this.router.navigateByUrl('/client-referential/' + id);
+        this.router.navigateByUrl((id == 'list' ? '/client-referential' : '/client-referential/' + id));
     }
 
     loadTab(tab) {
