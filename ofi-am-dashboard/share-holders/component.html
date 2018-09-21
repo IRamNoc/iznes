@@ -5,7 +5,7 @@
 <section class="wrapper wrapper-content">
     <clr-tabs *ngIf="tabsControl.length">
         <clr-tab *ngFor="let tabdata of tabsControl">
-            <button clrTabLink id="{{tabdata.id}}" [routerLink]="[tabdata.link, (tabdata.id === 0) ? 'list' :  tabdata.id]">
+            <button clrTabLink id="{{tabdata.id}}" [routerLink]="[(tabdata.id === 0) ? tabdata.link : tabdata.link + '/' + tabdata.id]">
                 <i class="fa {{tabdata.title.icon}}"></i> {{tabdata.title.text}}
                 <span *ngIf="tabTitle !== '' && tabdata.type !== 'list'"> - {{tabTitle}}</span>
             </button>
@@ -22,8 +22,8 @@
 
                                 <div class="input-button-group">
                                     <ng-select id="holders-list-funds-search-field" [items]="fundList" [allowClear]="true"
-                                        [placeholder]="_translate.translate('Type a Fund name or a LEI code')"
-                                        [formControl]="listSearchForm.controls['searchFunds']">
+                                               [placeholder]="_translate.translate('Type a Fund name or a LEI code')"
+                                               [formControl]="listSearchForm.controls['searchFunds']">
                                     </ng-select>
                                 </div>
                             </div>
@@ -34,8 +34,8 @@
 
                                 <div class="input-button-group">
                                     <ng-select id="holders-list-shares-search-field" [items]="sharesList" [allowClear]="true"
-                                        [placeholder]="_translate.translate('Type a Share name or an ISIN code')"
-                                        [formControl]="listSearchForm.controls['searchShares']">
+                                               [placeholder]="_translate.translate('Type a Share name or an ISIN code')"
+                                               [formControl]="listSearchForm.controls['searchShares']">
                                     </ng-select>
                                 </div>
                             </div>
@@ -63,14 +63,14 @@
 
                                 <div class="input-button-group">
                                     <ng-select id="holders-funds-search-field" [items]="fundList" [allowClear]="true"
-                                        [placeholder]="_translate.translate('Type a Fund Name')" [formControl]="searchForm.controls['search']">
+                                               [placeholder]="_translate.translate('Type a Fund Name')" [formControl]="searchForm.controls['search']">
                                     </ng-select>
                                 </div>
                             </div>
 
                             <div class="col-lg-4 text-right">
                                 <button id="holders-funds-all-export-btn" type="button" class="btn btn-success" style="max-width: none !important"
-                                    (click)="exportFile('funds', 0)">
+                                        (click)="exportFile('funds', 0)">
                                     {{'Export Recordkeeping for all funds' | translate}}
                                 </button>
                             </div>
@@ -92,15 +92,15 @@
 
                                 <div class="input-button-group">
                                     <ng-select id="holders-shares-search-field" [items]="sharesList" [allowClear]="true"
-                                        [placeholder]="_translate.translate('Type a Share Name or an ISIN code')"
-                                        [formControl]="searchForm.controls['search']">
+                                               [placeholder]="_translate.translate('Type a Share Name or an ISIN code')"
+                                               [formControl]="searchForm.controls['search']">
                                     </ng-select>
                                 </div>
                             </div>
 
                             <div class="col-lg-4 text-right">
                                 <button id="holders-shares-all-export-btn" type="button" class="btn btn-success" style="max-width: none !important"
-                                    (click)="exportFile('shares', 0)">
+                                        (click)="exportFile('shares', 0)">
                                     {{'Export Recordkeeping for all shares' | translate}}
                                 </button>
                             </div>
@@ -141,12 +141,12 @@
 
                 <div class="col-lg-4 text-right">
                     <button id="holders-export-list-btn1" type="button" class="btn btn-success" style="max-width: none !important"
-                        (click)="exportFile('funds', 0)">
+                            (click)="exportFile('funds', 0)">
                         {{'Export recordkeeping for all Funds' | translate}}
                     </button>
                     <br>
                     <button id="holders-export-list-btn2" type="button" class="btn btn-success" style="max-width: none !important"
-                        (click)="exportFile('shares', 0)">
+                            (click)="exportFile('shares', 0)">
                         {{'Exportrecordkeeping for all Shares' | translate}}
                     </button>
                 </div>
@@ -245,7 +245,7 @@
                             </label>
                             <div class="input-button-group">
                                 <ng-select id="holders-fund-filter-top" [items]="holderFilters" [allowClear]="true"
-                                    [placeholder]="_translate.translate('Top holders of this fund')" [formControl]="filtersForm.controls['topholders']">
+                                           [placeholder]="_translate.translate('Top holders of this fund')" [formControl]="filtersForm.controls['topholders']">
                                 </ng-select>
                             </div>
                         </div>
@@ -287,9 +287,10 @@
                         </div>
                         <div class="col-lg-4 text-right">
                             <button *ngIf="holdersFundData.length > 0" id="holders-funds-export-btn" type="button"
-                                class="mt-1 btn btn-success" style="max-width: none !important" (click)="exportFile('funds', 1)">{{'Export
+                                    class="mt-1 btn btn-success" style="max-width: none !important" (click)="exportFile('funds', 1)">{{'Export
                                 @tabTitle@ Recordkeeping'
-                                | translate: {'tabTitle': tabTitle} }}</button>
+                                | translate: {'tabTitle': tabTitle} }}
+                            </button>
                         </div>
                     </div>
                 </div>
@@ -331,7 +332,7 @@
                             </label>
                             <div class="input-button-group">
                                 <ng-select id="holders-shares-filter-top" [items]="holderFilters" [allowClear]="true"
-                                    [placeholder]="_translate.translate('Top holders of this share')" [formControl]="filtersForm.controls['topholders']">
+                                           [placeholder]="_translate.translate('Top holders of this share')" [formControl]="filtersForm.controls['topholders']">
                                 </ng-select>
                             </div>
                         </div>
@@ -346,8 +347,9 @@
                         <!--</div>-->
                         <div class="col-lg-4 text-right">
                             <button id="holders-shares-export-btn" type="button" class="mt-1 btn btn-success" style="max-width: none !important"
-                                (click)="exportFile('shares', 1)">{{'Export
-                                @tabTitle@ Recordkeeping' | translate: {'tabTitle': tabTitle} }}</button>
+                                    (click)="exportFile('shares', 1)">{{'Export
+                                @tabTitle@ Recordkeeping' | translate: {'tabTitle': tabTitle} }}
+                            </button>
                         </div>
                     </div>
                     <div class="row mt-1">

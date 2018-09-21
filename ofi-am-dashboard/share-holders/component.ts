@@ -146,9 +146,9 @@ export class ShareHoldersComponent implements OnInit, OnDestroy {
     ) {
         this.loadingDatagrid = false;
 
-        this.isListLevel = this.router.url.indexOf('/holders-list/list') !== -1;
         this.isFundLevel = this.router.url.indexOf('/funds/') !== -1;
         this.isShareLevel = this.router.url.indexOf('/shares/') !== -1;
+        this.isListLevel = !this.isFundLevel && !this.isShareLevel;
 
         this.subscriptions.push(this.requestLanguageObj.subscribe((requested) => this.getLanguage(requested)));
         this.subscriptions.push(this.myDetailOb.subscribe((myDetails) => this.getUserDetails(myDetails)));
@@ -194,6 +194,7 @@ export class ShareHoldersComponent implements OnInit, OnDestroy {
 
         this.subscriptions.push(this.route.params.subscribe(params => {
             const tabId = Number(params['tabid']);
+
             if (typeof tabId !== 'undefined' && tabId > 0) {
                 // reset tabs
                 this.tabsControl = [
@@ -202,7 +203,7 @@ export class ShareHoldersComponent implements OnInit, OnDestroy {
                             'icon': 'fa fa-th-list',
                             'text': 'List'
                         },
-                        'link': '/reports/holders-list/',
+                        'link': '/reports/holders-list',
                         'id': 0,
                         'type': 'list',
                         'active': this.isListLevel,
@@ -219,7 +220,7 @@ export class ShareHoldersComponent implements OnInit, OnDestroy {
                             'icon': 'fa fa-th-list',
                             'text': 'Funds Level'
                         },
-                        'link': '/reports/holders-list/funds/',
+                        'link': '/reports/holders-list/funds',
                         'type': 'funds',
                         'id': this.selectedFundId,
                         'active': this.isFundLevel,
@@ -247,7 +248,7 @@ export class ShareHoldersComponent implements OnInit, OnDestroy {
                             'icon': 'fa fa-th-list',
                             'text': 'Shares Level'
                         },
-                        'link': '/reports/holders-list/shares/',
+                        'link': '/reports/holders-list/shares',
                         'type': 'shares',
                         'id': this.selectedShareId,
                         'active': this.isShareLevel,
@@ -269,7 +270,7 @@ export class ShareHoldersComponent implements OnInit, OnDestroy {
 
         // handle showing data grid loading
         this.activatedRoute.url.subscribe((url) => {
-            if (url && url[0].path == 'list') {
+            if (url && this.isListLevel) {
                 this.setLoadingDatagrid = false;
             } else {
                 this.setLoadingDatagrid = true;
@@ -458,7 +459,7 @@ export class ShareHoldersComponent implements OnInit, OnDestroy {
                         'icon': 'fa fa-th-list',
                         'text': 'List'
                     },
-                    'link': '/reports/holders-list/',
+                    'link': '/reports/holders-list',
                     'id': 0,
                     'type': 'list',
                     'active': this.isListLevel,
@@ -507,7 +508,7 @@ export class ShareHoldersComponent implements OnInit, OnDestroy {
                 this.fundsAUM = 0;
                 this.fundsCCY = 'EUR';
                 this.fundSettlementDate = '';
-                this.router.navigateByUrl('/reports/holders-list/list');
+                this.router.navigateByUrl('/reports/holders-list');
             }
         }
 
@@ -532,7 +533,7 @@ export class ShareHoldersComponent implements OnInit, OnDestroy {
                 this.shareSettlementDate = '';
                 this.sharesAUM = 0;
                 this.sharesCCY = '';
-                this.router.navigateByUrl('/reports/holders-list/list');
+                this.router.navigateByUrl('/reports/holders-list');
             }
         }
     }
