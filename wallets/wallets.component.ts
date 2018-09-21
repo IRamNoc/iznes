@@ -364,8 +364,6 @@ export class AdminWalletsComponent implements OnInit, AfterViewInit, OnDestroy {
             editWalletData.bdAddrPostcode = formData.bdAddrPostcode;
         }
 
-        console.log('+++ editWalletData', editWalletData);
-
         /* Send the Update request. */
         this.userAdminService.updateWallet(editWalletData).then((response) => {
             let updatedWallet = '';
