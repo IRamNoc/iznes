@@ -15,6 +15,7 @@ import {
     SET_MENU_PERMISSION_GROUP_LIST,
     SET_MANAGED_WALLETS,
     SET_OWN_WALLETS,
+    SET_WALLET_LABEL_UPDATED,
 
     /* My details. */
     SET_USER_DETAILS,
@@ -39,12 +40,13 @@ export class ChannelService {
 
     @select(['user', 'authentication', 'changedPassword']) checkChangedPassword;
 
-    constructor(private alertsService: AlertsService,
-                private ngRedux: NgRedux<any>,
-                private toasterService: ToasterService,
-                private myWalletsService: MyWalletsService,
-                private logService: LogService,
-                private chainService: ChainService) {
+    constructor(
+        private alertsService: AlertsService,
+        private ngRedux: NgRedux<any>,
+        private toasterService: ToasterService,
+        private myWalletsService: MyWalletsService,
+        private logService: LogService,
+        private chainService: ChainService) {
     }
 
     checkIfPasswordChanged() {
@@ -68,7 +70,7 @@ export class ChannelService {
                     }
                 },
             )
-        ;
+            ;
     }
 
     /**
@@ -87,6 +89,7 @@ export class ChannelService {
         this.logService.log(' |--- Resolving Core channel broadcast.');
         this.logService.log(' | name: ', data.Request);
         this.logService.log(' | data: ', data);
+
         switch (data.Request) {
         case 'nu': // new user
         case 'udu': // update user
@@ -257,6 +260,15 @@ export class ChannelService {
             this.ngRedux.dispatch(
                 {
                     type: SET_OWN_WALLETS,
+                    payload: [null, data, null],
+                },
+            );
+            break;
+
+        case 'updatewalletlabels':
+            this.ngRedux.dispatch(
+                {
+                    type: SET_WALLET_LABEL_UPDATED,
                     payload: [null, data, null],
                 },
             );
