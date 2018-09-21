@@ -306,6 +306,7 @@
                                         <input type="text" id="new-wallet-incdate" autocomplete="off"
                                                [formControl]="formControl.controls['walletIncDate']"
                                                [dpDayPicker]="configFiltersDate"
+                                               placeholder="Incorporation Date"
                                                mode="day"
                                                theme="dp-material"/>
                                         <div *ngIf="formControl.controls.walletIncDate.hasError('pattern') && formControl.controls.walletIncDate.touched"
@@ -316,8 +317,6 @@
                                         </div>
                                     </div>
                                 </div>
-
-
                             </div>
                         </div>
                     </div>
