@@ -640,10 +640,13 @@ export class FormStepsDirective implements OnInit, OnDestroy, AfterViewInit {
     clickSubmit(element){
         const formID = element.dataset.form;
         const form = this.divSliderContainer.querySelector('#' + formID);
-        const formInput: HTMLElement = form.querySelector('input[type="submit"]');
 
-        if(formInput){
-            formInput.click();
+        if(form){
+            const formInput: HTMLElement = form.querySelector('input[type="submit"]');
+
+            if(formInput){
+                formInput.click();
+            }
         }
     }
 
