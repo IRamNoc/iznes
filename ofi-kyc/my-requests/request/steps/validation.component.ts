@@ -60,15 +60,22 @@ export class NewKycValidationComponent implements OnInit, OnDestroy {
                 takeUntil(this.unsubscribe),
                 map(kycs => kycs[0]),
                 rxFilter((kyc: any) => {
-                return kyc && kyc.amcID;
-            }),
-        )
-        .subscribe((kyc) => {
-            if (!kyc.completedStep || (steps[kyc.completedStep] < steps.validation)) {
+                    return kyc && kyc.amcID;
+                }),
+            )
+            .subscribe((kyc) => {
+                if (this.shouldPersist(kyc)) {
                     this.persistForm();
                 }
             })
-        ;
+            ;
+    }
+
+    shouldPersist(kyc) {
+        if (kyc.context === 'done') {
+            return false;
+        }
+        return !kyc.completedStep || (steps[kyc.completedStep] < steps.validation);
     }
 
     persistForm() {

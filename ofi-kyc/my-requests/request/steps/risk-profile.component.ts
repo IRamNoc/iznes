@@ -42,12 +42,19 @@ export class NewKycRiskProfileComponent implements OnInit, OnDestroy {
                 }),
                 take(1),
             )
-            .subscribe(kyc => {
-                if (!kyc.completedStep || (steps[kyc.completedStep] < steps.riskProfile)) {
+            .subscribe((kyc) => {
+                if (this.shouldPersist(kyc)) {
                     this.persistForm();
                 }
             })
         ;
+    }
+
+    shouldPersist(kyc) {
+        if (kyc.context === 'done') {
+            return false;
+        }
+        return !kyc.completedStep || (steps[kyc.completedStep] < steps.riskProfile);
     }
 
     getCurrentFormData() {
