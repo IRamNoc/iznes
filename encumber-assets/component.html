@@ -57,7 +57,7 @@
                             <label for="fromTimeUTC" class="control-label required-field">Start Time UTC</label>
                             <div class="input-group">
                                 <span class="fa fa-clock-o" aria-hidden="true"></span>
-                                <input type="text" id="fromTimeUTC" formControlName="fromTimeUTC" [dpDayPicker]="configFiltersTime" mode="time" theme="dp-material"/>
+                                <input type="text" autocomplete="off" id="fromTimeUTC" formControlName="fromTimeUTC" [dpDayPicker]="configFiltersTime" mode="time" theme="dp-material"/>
                                 <span *ngIf="encumberAssetsForm.controls.fromTimeUTC.hasError('required') && encumberAssetsForm.controls.fromTimeUTC.touched"
                                       class="field-error" mltag="txt_fieldisrequired">Field is required</span>
                             </div>
@@ -102,7 +102,7 @@
                                 <label for="toTimeUTC" class="control-label required-field">End Time UTC</label>
                                 <div class="input-group">
                                     <span class="fa fa-clock-o" aria-hidden="true"></span>
-                                    <input id="toTimeUTC" formControlName="toTimeUTC" [dpDayPicker]="configFiltersTime" mode="time" theme="dp-material"/>
+                                    <input id="toTimeUTC" autocomplete="off" formControlName="toTimeUTC" [dpDayPicker]="configFiltersTime" mode="time" theme="dp-material"/>
                                     <span *ngIf="encumberAssetsForm.controls.toTimeUTC.hasError('required') && encumberAssetsForm.controls.toTimeUTC.touched"
                                           class="field-error" mltag="txt_fieldisrequired">Field is required</span>
                                 </div>
