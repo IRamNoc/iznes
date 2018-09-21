@@ -15,15 +15,32 @@ export interface Transaction {
     sig: string;
 }
 
-export interface TransactionList {
-    [index: number]: Transaction;
+interface TransactionListMarker {
+    timestamp?: number;
+    address?: string;
+    nonce?: number;
 }
 
-export interface TransactionsByAsset {
-    [asset: string]: Transaction[];
+interface TransactionListPage {
+    page: number;
+    before: TransactionListMarker;
+    after: TransactionListMarker;
+    next: TransactionListMarker;
+    transactions: Transaction[];
+}
+
+export interface TransactionList {
+    currentPage: number;
+    requestedPage: number;
+    loading: boolean;
+    pages: TransactionListPage[];
+}
+
+export interface TransactionListByAsset {
+    [asset: string]: TransactionList;
 }
 
 export interface Transactions {
     all: TransactionList;
-    byAsset: TransactionsByAsset;
+    byAsset: TransactionListByAsset;
 }
