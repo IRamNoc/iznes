@@ -51,9 +51,11 @@ export class SignupComponent implements OnDestroy, OnInit {
             this.signupForm.controls.username.patchValue(config.username);
         }
     }
+
     get configuration(): Model.ISignupConfiguration {
         return this.config;
     }
+
     @Output() signupDataEmit: EventEmitter<() => Model.ISignupData> = new EventEmitter();
 
     @select(['user', 'authentication']) authenticationOb;
@@ -117,7 +119,7 @@ export class SignupComponent implements OnDestroy, OnInit {
                     Validators.required,
                 ]),
             ),
-        },                              this.mismatchValidator);
+        }, this.mismatchValidator);
     }
 
     private getQueryParams() {
@@ -233,23 +235,23 @@ export class SignupComponent implements OnDestroy, OnInit {
         switch (responseStatus) {
         case 'fail':
             this.showLoginErrorMessage(
-                    'warning',
-                    '<span mltag="txt_loginerror" class="text-warning">Invalid email address or password!</span>',
-                );
+                'warning',
+                '<span mltag="txt_loginerror" class="text-warning">Invalid email address or password!</span>',
+            );
             break;
         case 'locked':
             this.showLoginErrorMessage(
-                    'info',
-                    '<span mltag="txt_accountlocked" class="text-warning">Sorry, your account has been locked. ' +
-                    'Please contact Setl support.</span>',
-                );
+                'info',
+                '<span mltag="txt_accountlocked" class="text-warning">Sorry, your account has been locked. ' +
+                'Please Contact your Administrator.</span>',
+            );
             break;
         default:
             this.showLoginErrorMessage(
-                    'error',
-                    '<span mltag="txt_loginproblem" class="text-warning">Sorry, there was a problem logging in, ' +
-                    'please try again.</span>',
-                );
+                'error',
+                '<span mltag="txt_loginproblem" class="text-warning">Sorry, there was a problem logging in, ' +
+                'please try again.</span>',
+            );
             break;
         }
     }

@@ -41,6 +41,7 @@ import { LoginGuardService } from './login-guard.service';
 import { MenuSpecService } from '@setl/utils/services/menuSpec/service';
 
 import { MultilingualService } from '@setl/multilingual';
+
 const MultilingualServiceSpy = jasmine.createSpyObj('MultilingualService', ['translate']);
 
 const environment = {
@@ -63,7 +64,8 @@ const ActivatedRouteStub = {
     selector: 'app-password-tooltip',
     template: '<p>Mock Password tooltip</p>',
 })
-class MockPasswordTooltip {}
+class MockPasswordTooltip {
+}
 
 // Stub for translate
 @Pipe({ name: 'translate' })
@@ -120,7 +122,7 @@ describe('SetlLoginComComponent', () => {
                 MenuSpecService,
             ],
         })
-            .compileComponents();
+        .compileComponents();
 
         MockNgRedux.reset();
     }));
@@ -137,12 +139,12 @@ describe('SetlLoginComComponent', () => {
     });
 
     it('should has the correct input fields', async(() => {
-        fixture.whenStable().then(() => {
-            expect(element.querySelector('#username-field')).toBeTruthy();
-            expect(element.querySelector('#password-field')).toBeTruthy();
-            expect(element.querySelector('#login-submit')).toBeTruthy();
-        });
-    }),
+            fixture.whenStable().then(() => {
+                expect(element.querySelector('#username-field')).toBeTruthy();
+                expect(element.querySelector('#password-field')).toBeTruthy();
+                expect(element.querySelector('#login-submit')).toBeTruthy();
+            });
+        }),
     );
 
     it('update method should be called, when authentication changed', async(() => {
@@ -204,43 +206,43 @@ describe('SetlLoginComComponent', () => {
     }));
 
     it('handleLoginFailMessage should handle response correctly',
-       async(() => {
+        async(() => {
 
             // status: fail
-           let response = [
-               '', { Data: [{ Status: 'fail' }] },
-           ];
+            let response = [
+                '', { Data: [{ Status: 'fail' }] },
+            ];
 
-           spyOn(component, 'showLoginErrorMessage');
-           component.handleLoginFailMessage(response);
-           expect(component.showLoginErrorMessage).toHaveBeenCalledWith(
+            spyOn(component, 'showLoginErrorMessage');
+            component.handleLoginFailMessage(response);
+            expect(component.showLoginErrorMessage).toHaveBeenCalledWith(
                 'warning',
                 '<span mltag="txt_loginerror" class="text-warning">Invalid email address or password!</span>',
             );
 
             // status: locked
-           response = [
-               '', { Data: [{ Status: 'locked' }] },
-           ];
+            response = [
+                '', { Data: [{ Status: 'locked' }] },
+            ];
 
-           component.handleLoginFailMessage(response);
-           expect(component.showLoginErrorMessage).toHaveBeenCalledWith(
+            component.handleLoginFailMessage(response);
+            expect(component.showLoginErrorMessage).toHaveBeenCalledWith(
                 'info',
                 '<span mltag="txt_accountlocked" class="text-warning">Sorry, your account has been locked. ' +
-                'Please contact Setl support.</span>',
+                'Please Contact your Administrator.</span>',
             );
 
             // status:
-           response = [
-               '', { Data: [{ Status: 'random' }] },
-           ];
+            response = [
+                '', { Data: [{ Status: 'random' }] },
+            ];
 
-           component.handleLoginFailMessage(response);
-           expect(component.showLoginErrorMessage).toHaveBeenCalledWith(
+            component.handleLoginFailMessage(response);
+            expect(component.showLoginErrorMessage).toHaveBeenCalledWith(
                 'error',
                 '<span mltag="txt_loginproblem" class="text-warning">Sorry, there was a problem logging in, please try again.</span>',
             );
-       }),
+        }),
     );
 
     it('AlertsService should called with error type', () => {

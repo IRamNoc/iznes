@@ -271,7 +271,7 @@ export class SetlLoginComponent implements OnDestroy, OnInit, AfterViewInit {
         if (!this.loginForm.valid) {
             return false;
         }
-        
+
         // if the alert popup exists.
         // if (document.getElementsByClassName('jaspero__dialog-icon').length > 0) {
         //     // remove the popup and return false.
@@ -580,7 +580,7 @@ export class SetlLoginComponent implements OnDestroy, OnInit, AfterViewInit {
         case 'locked':
             this.showLoginErrorMessage('info',
                 '<span mltag="txt_accountlocked" class="text-warning">Sorry, your account has been locked. ' +
-                'Please contact Setl support.</span>'
+                'Please Contact your Administrator.</span>'
             );
             break;
         default:
