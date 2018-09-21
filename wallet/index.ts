@@ -69,7 +69,6 @@ import {
 import {
     MyWalletContractState,
     MyWalletContractReducer,
-
     updateContract,
     setContractList,
     setUpdatedContractList,
