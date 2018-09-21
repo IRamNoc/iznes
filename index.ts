@@ -21,3 +21,4 @@ export {CoreWorkflowEngineService} from './workflow-engine/service';
 export {PersistRequestService} from './persist/persist.service';
 export {NodeAlertsService} from './node-alerts/node-alerts.service';
 export {UserTourService} from './usertour/service';
+export { ReportingService } from './reporting/reporting.service';
