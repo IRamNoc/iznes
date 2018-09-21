@@ -14,15 +14,16 @@ import {
     clearRequestedWalletAddresses,
     setRequestedWalletAddresses,
     SET_WALLET_LABEL,
+    SET_WALLET_LABEL_UPDATED,
     setRequestedWalletLabel,
-    clearRequestedWalletLabel
+    clearRequestedWalletLabel,
 } from './my-wallet-address';
 
 import {
     MyWalletsState,
     MyWalletsReducer,
     SET_OWN_WALLETS,
-    getMyWalletList
+    getMyWalletList,
 } from './my-wallets';
 
 import {
@@ -33,7 +34,7 @@ import {
     getWalletHoldingByAddress,
     SET_ISSUE_HOLDING,
     setRequestedWalletHolding,
-    clearRequestedWalletHolding
+    clearRequestedWalletHolding,
 } from './my-wallet-holding';
 
 import {
@@ -41,7 +42,7 @@ import {
     WalletDirectoryReducer,
     WalletDirectoryState,
     getWalletDirectory,
-    getWalletDirectoryList
+    getWalletDirectoryList,
 } from './wallet-directory';
 
 import {
@@ -50,7 +51,7 @@ import {
     SET_MANAGED_WALLETS,
     getManagedWallets,
     getManageWalletList,
-    managedWalletsActions
+    managedWalletsActions,
 } from './managed-wallets';
 
 import {
@@ -62,7 +63,7 @@ import {
 
     getWalletRelationship,
     getWalletToRelationshipList,
-    getRequestWalletToRelationshipState
+    getRequestWalletToRelationshipState,
 } from './wallet-relationship';
 
 import {
@@ -74,14 +75,14 @@ import {
     setUpdatedContractList,
     setLastCreatedContractDetail,
     updateLastCreatedContractDetail,
-    clearContractNeedHandle
+    clearContractNeedHandle,
 } from './my-wallet-contract';
 
 import {
     SET_ASSET_TRANSACTIONS,
     SET_ALL_TRANSACTIONS,
     TransactionsReducer,
-    Transactions
+    Transactions,
 } from './transactions';
 
 import { combineReducers, Reducer } from 'redux';
@@ -100,20 +101,21 @@ export {
     clearRequestedWalletAddresses,
     setRequestedWalletAddresses,
     SET_WALLET_LABEL,
+    SET_WALLET_LABEL_UPDATED,
     setRequestedWalletLabel,
-    clearRequestedWalletLabel
+    clearRequestedWalletLabel,
 };
 
 // Transactions
 export {
     SET_ALL_TRANSACTIONS,
     SET_ASSET_TRANSACTIONS,
-    TransactionsReducer
+    TransactionsReducer,
 };
 
 export {
     SET_OWN_WALLETS,
-    getMyWalletList
+    getMyWalletList,
 };
 
 export {
@@ -122,7 +124,7 @@ export {
     getWalletHoldingByAsset,
     SET_ISSUE_HOLDING,
     setRequestedWalletHolding,
-    clearRequestedWalletHolding
+    clearRequestedWalletHolding,
 };
 
 export {
@@ -135,7 +137,7 @@ export {
     SET_MANAGED_WALLETS,
     getManagedWallets,
     getManageWalletList,
-    managedWalletsActions
+    managedWalletsActions,
 };
 
 export {
@@ -144,7 +146,7 @@ export {
     clearRequestedWalletToRelationship,
     getWalletRelationship,
     getWalletToRelationshipList,
-    getRequestWalletToRelationshipState
+    getRequestWalletToRelationshipState,
 };
 
 export {
@@ -153,11 +155,11 @@ export {
     setUpdatedContractList,
     setLastCreatedContractDetail,
     updateLastCreatedContractDetail,
-    clearContractNeedHandle
+    clearContractNeedHandle,
 };
 
 export interface WalletState {
-    addressDirectory: AddressDirectoryState,
+    addressDirectory: AddressDirectoryState;
     myWalletAddress: MyWalletAddressState;
     myWallets: MyWalletsState;
     myWalletHolding: MyWalletHoldingState;

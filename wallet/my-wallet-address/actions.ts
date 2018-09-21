@@ -26,6 +26,11 @@ export const clearRequestedWalletAddresses = kAction(CLEAR_REQUESTED_WALLET_ADDR
 export const SET_WALLET_LABEL = `${name}/SET_WALLET_LABEL`;
 
 /**
+ * Set wallet label updated.
+ */
+export const SET_WALLET_LABEL_UPDATED = `${name}/SET_WALLET_LABEL_UPDATED`;
+
+/**
  * Set (Set to true) request wallet label state
  * Flag that to indicate we do not need to request it again.
  */

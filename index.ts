@@ -46,6 +46,7 @@ export {
     setRequestedWalletAddresses,
     getWalletAddressList,
     SET_WALLET_LABEL,
+    SET_WALLET_LABEL_UPDATED,
     setRequestedWalletLabel,
     clearRequestedWalletLabel,
     SET_OWN_WALLETS,
