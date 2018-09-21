@@ -8,7 +8,7 @@ import { NgRedux, select } from '@angular-redux/store';
 import * as json2csv from 'json2csv';
 import * as SagaHelper from '@setl/utils/sagaHelper/index';
 import { FileService } from '@setl/core-req-services';
-import { isEqual, filter, each } from 'lodash';
+import { filter, each } from 'lodash';
 import { first, map } from 'rxjs/operators';
 import { Observable } from 'rxjs/Observable';
 import { Subscription } from 'rxjs/Subscription';
@@ -16,7 +16,7 @@ import { Subscription } from 'rxjs/Subscription';
 @Component({
     selector: 'setl-balances',
     templateUrl: './balances.component.html',
-    styleUrls: ['./balances.component.css'],
+    styleUrls: ['./balances.component.scss'],
 })
 export class SetlBalancesComponent implements AfterViewInit, OnInit, OnDestroy {
     balances$: Observable<HoldingByAsset>;
@@ -47,7 +47,7 @@ export class SetlBalancesComponent implements AfterViewInit, OnInit, OnDestroy {
      * @param {NgRedux<any>} ngRedux
      * @param {FileService} fileService
      */
-    public constructor(private reportingService: ReportingService,
+    public constructor(public reportingService: ReportingService,
                        private route: ActivatedRoute,
                        private changeDetector: ChangeDetectorRef,
                        private ngRedux: NgRedux<any>,
@@ -200,6 +200,7 @@ export class SetlBalancesComponent implements AfterViewInit, OnInit, OnDestroy {
                 transactions: this.reportingService.getTransactionsForAsset(asset.asset),
                 hash: asset.hash,
                 template: 'history',
+                assetObject: asset,
             },
         });
     }
@@ -226,6 +227,11 @@ export class SetlBalancesComponent implements AfterViewInit, OnInit, OnDestroy {
                 template: 'transaction',
             },
         });
+    }
+
+    handleClose(id, asset) {
+        this.tabControl.close(id);
+        this.reportingService.historyResetByAsset(asset.asset);
     }
 
     /**
