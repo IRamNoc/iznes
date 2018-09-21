@@ -186,7 +186,7 @@ export class ManageOrdersComponent implements OnInit, AfterViewInit, OnDestroy {
                 private manageOrdersService: ManageOrdersService,
                 private location: Location,
                 private searchFilters: SearchFilters,
-            ) {
+    ) {
 
         this.isAmConfirmModalDisplayed = false;
         this.cancelModalMessage = '';
@@ -202,7 +202,8 @@ export class ManageOrdersComponent implements OnInit, AfterViewInit, OnDestroy {
         next?: (value: T) => void,
         error?: (error: any) => void,
         complete?: () => void,
-    ) {}
+    ) {
+    }
 
     ngOnInit() {
         this.searchFilters.filtersApplied.subscribe(() => {
@@ -229,8 +230,8 @@ export class ManageOrdersComponent implements OnInit, AfterViewInit, OnDestroy {
             this.connectedWalletId = walletId;
             this.connectedWalletName = get(
                 Object.keys(myWallets)
-                    .map(k => myWallets[k])
-                    .find(w => +w.walletId === +walletId),
+                .map(k => myWallets[k])
+                .find(w => +w.walletId === +walletId),
                 'walletName',
                 '',
             );
@@ -258,10 +259,10 @@ export class ManageOrdersComponent implements OnInit, AfterViewInit, OnDestroy {
         });
         this.appSubscribe(
             bufferedOrders$
-                .pipe(
-                    filter(orders => !isEmpty(orders)),
-                    switchMap(() => this.route.params),
-                ),
+            .pipe(
+                filter(orders => !isEmpty(orders)),
+                switchMap(() => this.route.params),
+            ),
             params => this.routeUpdate(params));
         this.appSubscribe(this.route.queryParams, (queryParams) => {
             if (queryParams.orderID) {
@@ -275,7 +276,7 @@ export class ManageOrdersComponent implements OnInit, AfterViewInit, OnDestroy {
         });
         this.appSubscribe(
             this.searchForm.valueChanges
-                .pipe(debounceTime(500)),
+            .pipe(debounceTime(500)),
             _ => this.manageOrdersService.setFilters(this.searchFilters.get()),
         );
         this.appSubscribe(this.currencies$, c => this.getCurrencyList(c));
@@ -543,9 +544,8 @@ export class ManageOrdersComponent implements OnInit, AfterViewInit, OnDestroy {
             const orderId = this.ordersList[index].orderID;
             this.ofiOrdersService.markOrderSettle({ orderId }).then((data) => {
                 // const orderId = _.get(data, ['1', 'Data', '0', 'orderID'], 0);
-                // const orderRef = commonHelper.pad(orderId, 11, '0');
-                // this._toaster.pop('success', `Your order ${orderRef}
-                // has been successfully placed and is now initiated.`);
+                const orderRef = commonHelper.pad(orderId, 11, '0');
+                this.toasterService.pop('success', 'Order ' + orderRef + ' has been successfully settled.');
                 // this.handleClose();
                 // this._router.navigateByUrl('/order-book/my-orders/list');
                 this.logService.log(data);
@@ -832,9 +832,9 @@ export class ManageOrdersComponent implements OnInit, AfterViewInit, OnDestroy {
      * @param {{orderId: number | string; sellBuyLinkOrderID: number | string}} orderData
      * @return {string | boolean}
      */
-    getOrderTypeString(orderData: {orderType: number | string; sellBuyLinkOrderID: number | string;}): string | boolean {
-       const orderString = getOrderTypeString(orderData);
-       return this.translation.getTranslationByString(orderString);
+    getOrderTypeString(orderData: { orderType: number | string; sellBuyLinkOrderID: number | string; }): string | boolean {
+        const orderString = getOrderTypeString(orderData);
+        return this.translation.getTranslationByString(orderString);
     }
 
     /**
@@ -843,7 +843,7 @@ export class ManageOrdersComponent implements OnInit, AfterViewInit, OnDestroy {
      * @param {{sellBuyLinkOrderID}} orderData
      * @return {boolean}
      */
-    isSellBuyOrder(orderData: {sellBuyLinkOrderID}): boolean {
+    isSellBuyOrder(orderData: { sellBuyLinkOrderID }): boolean {
         return orderData.sellBuyLinkOrderID;
     }
 
@@ -853,7 +853,7 @@ export class ManageOrdersComponent implements OnInit, AfterViewInit, OnDestroy {
      * @param {{knownNav: boolean}} order
      * @return {"text-warning" | "text-success"}
      */
-    getPriceStatusCss(order: {knownNav: boolean}): 'text-warning' | 'text-success' {
+    getPriceStatusCss(order: { knownNav: boolean }): 'text-warning' | 'text-success' {
         return order.knownNav ? 'text-success' : 'text-warning';
     }
 }
