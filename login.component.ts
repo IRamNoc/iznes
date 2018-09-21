@@ -529,18 +529,18 @@ export class SetlLoginComponent implements OnDestroy, OnInit, AfterViewInit {
             asyncTaskPipe,
             {},
             () => {
+                const platformName = this.getPlatformName();
+
                 this.resetPassword = false;
                 this.confirmationService.create(
                     'Success!',
                     'Your password has been reset<br><br>A confirmation email will be sent to you.',
-                    { confirmText: 'Continue to IZNES', declineText: '', btnClass: 'success' }
+                    { confirmText: `Continue to ${platformName}`, declineText: '', btnClass: 'success' }
                 ).subscribe((ans) => {
                     if (ans.resolved) {
                         this.loginForm.get('password').patchValue(values.password);
                         this.resetPasswordForm.reset();
                         this.login(this.loginForm.value);
-
-                        this.changeDetectorRef.detectChanges();
                     }
                 });
             },
@@ -605,5 +605,17 @@ export class SetlLoginComponent implements OnDestroy, OnInit, AfterViewInit {
 
     getLabel(lang: string): string {
         return this.langLabels[lang];
+    }
+
+    /**
+     * Get platform name string for rendering some message.
+     */
+    getPlatformName() {
+        if (typeof this.appConfig.platform === 'undefined') {
+            return 'SETL OpenCSD';
+        }
+
+        return this.appConfig.platform;
+
     }
 }
