@@ -35,6 +35,8 @@ export class DVPContractService {
         model.issuingaddress = values.creator[0].id;
         model.protocol = 'dvp';
 
+        console.log('+++ expiry', model.expiry);
+
         const isExchangeContract = parties[1].toggleAssetReturn &&
             values[parties[1].id].return_asset;
 
