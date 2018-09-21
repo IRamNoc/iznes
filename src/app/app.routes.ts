@@ -401,53 +401,48 @@ export const ROUTES: Routes = [
                     },
                     {
                         path: 'holders-list',
-                        children: [
-                            {
-                                path: 'list',
-                                component: ShareHoldersComponent,
-                                canActivate: [LoginGuardService],
-                            },
-                            {
-                                path: 'funds/:tabid',
-                                component: ShareHoldersComponent,
-                                canActivate: [LoginGuardService],
-                            },
-                            {
-                                path: 'shares/:tabid',
-                                component: ShareHoldersComponent,
-                                canActivate: [LoginGuardService],
-                            },
-                        ],
+                        component: ShareHoldersComponent,
+                        canActivate: [LoginGuardService],
+                    },
+                    {
+                        path: 'holders-list/funds/:tabid',
+                        component: ShareHoldersComponent,
+                        canActivate: [LoginGuardService],
+                    },
+                    {
+                        path: 'holders-list/shares/:tabid',
+                        component: ShareHoldersComponent,
+                        canActivate: [LoginGuardService],
                     },
                     {
                         path: 'precentralisation',
-                        children: [
-                            {
-                                path: 'funds',
-                                component: PrecentralisationReportComponent,
-                                canActivate: [LoginGuardService],
-                            },
-                            {
-                                path: 'shares',
-                                component: PrecentralisationReportComponent,
-                                canActivate: [LoginGuardService],
-                            },
-                        ],
+                        component: PrecentralisationReportComponent,
+                        canActivate: [LoginGuardService],
+                    },
+                    {
+                        path: 'precentralisation/funds',
+                        component: PrecentralisationReportComponent,
+                        canActivate: [LoginGuardService],
+                    },
+                    {
+                        path: 'precentralisation/shares',
+                        component: PrecentralisationReportComponent,
+                        canActivate: [LoginGuardService],
                     },
                     {
                         path: 'centralisation',
-                        children: [
-                            {
-                                path: 'funds',
-                                component: CentralisationReportComponent,
-                                canActivate: [LoginGuardService],
-                            },
-                            {
-                                path: 'shares',
-                                component: CentralisationReportComponent,
-                                canActivate: [LoginGuardService],
-                            },
-                        ],
+                        component: CentralisationReportComponent,
+                        canActivate: [LoginGuardService],
+                    },
+                    {
+                        path: 'centralisation/funds',
+                        component: CentralisationReportComponent,
+                        canActivate: [LoginGuardService],
+                    },
+                    {
+                        path: 'centralisation/shares',
+                        component: CentralisationReportComponent,
+                        canActivate: [LoginGuardService],
                     },
                 ],
                 data: { state: 'reports' },
