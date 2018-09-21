@@ -183,7 +183,6 @@ import { animate, state, style, transition, trigger } from '@angular/animations'
 
         .jaspero__dialog-content {
             padding: 0 20px 30px;
-            -ms-flex: 1;
             position: relative;
             text-align: center;
             line-height: 20px;
