@@ -26,7 +26,7 @@ import { MultilingualModule } from '@setl/multilingual';
 /* Persist Module. */
 import { PersistModule } from '@setl/core-persist';
 /* directive Module. */
-import { SetlDirectivesModule } from '@setl/utils';
+import { SetlDirectivesModule, DatePickerExtendedModule, DpDatePickerModule } from '@setl/utils';
 import { UserAdminService } from '@setl/core-useradmin/useradmin.service';
 
 /* User admin service. */
@@ -74,6 +74,8 @@ import { UserAdminService } from '@setl/core-useradmin/useradmin.service';
         PersistModule,
         RouterModule,
         SetlDirectivesModule,
+        DatePickerExtendedModule,
+        DpDatePickerModule,
     ],
     providers: [AdminUsersService, UserAdminService],
 })

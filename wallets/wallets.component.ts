@@ -11,6 +11,7 @@ import { PersistService } from '@setl/core-persist/';
 import { UserAdminService } from '../useradmin.service';
 import { ActivatedRoute, Params, Router } from '@angular/router';
 import * as _ from 'lodash';
+import * as moment from 'moment';
 import { managedWalletsActions } from '@setl/core-store';
 
 /* Decorator. */
@@ -42,6 +43,17 @@ export class AdminWalletsComponent implements OnInit, AfterViewInit, OnDestroy {
 
     /* Subscriptions from service observables. */
     private subscriptions: { [key: string]: any } = {};
+
+    /* Setup datepicker */
+    public configFiltersDate = {
+        firstDayOfWeek: 'mo',
+        format: 'YYYY-MM-DD',
+        closeOnSelect: true,
+        disableKeypress: true,
+        locale: null,
+    };
+
+    private exisitingIncDate: string = moment().format('YYYY-MM-DD');
 
     /* Constructor. */
     constructor(
@@ -191,8 +203,7 @@ export class AdminWalletsComponent implements OnInit, AfterViewInit, OnDestroy {
         /* Add other fields depending on walletType. */
         if (newWallet.walletType === '1') {
             const walletAddrCountry = (formData.walletAddrCountry.length > 0) ? formData.walletAddrCountry[0].text : '';
-            const currentDate = new Date();
-            const formattedDate = `${currentDate.getFullYear()}-${currentDate.getMonth() + 1}-${currentDate.getDate()}`;
+            const formattedDate = moment().format('YYYY-MM-DD');
 
             /* Legal basic fields. */
             newWallet.walletUid = formData.walletUid;
@@ -210,7 +221,7 @@ export class AdminWalletsComponent implements OnInit, AfterViewInit, OnDestroy {
             newWallet.walletAddrPostcode = formData.walletAddrPostcode;
         } else if (newWallet.walletType === '2') {
             /* Individual basic fields. */
-            newWallet.aliases = (formData.aliases.length > 0) ? formData.aliases : '';
+            newWallet.aliases = formData.aliases;
             newWallet.formerName = formData.formerName;
             newWallet.idCardNum = formData.idCardNum;
 
@@ -300,10 +311,11 @@ export class AdminWalletsComponent implements OnInit, AfterViewInit, OnDestroy {
             editWalletData.walletUid = formData.walletUid;
             editWalletData.walletLei = formData.walletLei;
             editWalletData.walletWebUrl = formData.walletWebUrl;
-            editWalletData.walletIncDate = formData.walletIncDate;
+            editWalletData.walletIncDate = formData.walletIncDate || this.exisitingIncDate;
 
             /* Legal corresondence. */
-            editWalletData.walletAddrCountry = formData.walletAddrCountry[0].text;
+            editWalletData.walletAddrCountry = formData.walletAddrCountry.length > 0
+                ? formData.walletAddrCountry[0].text : null;
             editWalletData.walletAddrPrefix = formData.walletAddrPrefix;
             editWalletData.walletAddr1 = formData.walletAddr1;
             editWalletData.walletAddr2 = formData.walletAddr2;
@@ -318,7 +330,7 @@ export class AdminWalletsComponent implements OnInit, AfterViewInit, OnDestroy {
             editWalletData.idCardNum = formData.idCardNum;
 
             /* Individual residential address. */
-            editWalletData.rdaAddrCountry = formData.rdaAddrCountry[0].text;
+            editWalletData.rdaAddrCountry = formData.rdaAddrCountry.length > 0 ? formData.rdaAddrCountry[0].text : null;
             editWalletData.rdaAddrPrefix = formData.rdaAddrPrefix;
             editWalletData.rdaAddr1 = formData.rdaAddr1;
             editWalletData.rdaAddr2 = formData.rdaAddr2;
@@ -327,7 +339,7 @@ export class AdminWalletsComponent implements OnInit, AfterViewInit, OnDestroy {
             editWalletData.rdaAddrPostcode = formData.rdaAddrPostcode;
 
             /* Individual corresondence address. */
-            editWalletData.caAddrCountry = formData.caAddrCountry[0].text;
+            editWalletData.caAddrCountry = formData.caAddrCountry.length > 0 ? formData.caAddrCountry[0].text : null;
             editWalletData.caAddrPrefix = formData.caAddrPrefix;
             editWalletData.caAddr1 = formData.caAddr1;
             editWalletData.caAddr2 = formData.caAddr2;
@@ -336,14 +348,14 @@ export class AdminWalletsComponent implements OnInit, AfterViewInit, OnDestroy {
             editWalletData.caAddrPostcode = formData.caAddrPostcode;
 
             /* Individual settlement detail. */
-            editWalletData.bankWalletId = formData.bankWalletId[0].id;
+            editWalletData.bankWalletId = formData.bankWalletId.length > 0 ? formData.bankWalletId[0].id : null;
             editWalletData.bankName = formData.bankName;
             editWalletData.bankIBAN = formData.bankIBAN;
             editWalletData.bankBICcode = formData.bankBICcode;
             editWalletData.bankAccountName = formData.bankAccountName;
             editWalletData.bankAccountNum = formData.bankAccountNum;
             /* settlement address */
-            editWalletData.bdAddrCountry = formData.bdAddrCountry[0].text;
+            editWalletData.bdAddrCountry = formData.bdAddrCountry.length > 0 ? formData.bdAddrCountry[0].text : null;
             editWalletData.bdAddrPrefix = formData.bdAddrPrefix;
             editWalletData.bdAddr1 = formData.bdAddr1;
             editWalletData.bdAddr2 = formData.bdAddr2;
@@ -351,6 +363,8 @@ export class AdminWalletsComponent implements OnInit, AfterViewInit, OnDestroy {
             editWalletData.bdAddr4 = formData.bdAddr4;
             editWalletData.bdAddrPostcode = formData.bdAddrPostcode;
         }
+
+        console.log('+++ editWalletData', editWalletData);
 
         /* Send the Update request. */
         this.userAdminService.updateWallet(editWalletData).then((response) => {
@@ -473,7 +487,7 @@ export class AdminWalletsComponent implements OnInit, AfterViewInit, OnDestroy {
         /* Variables and thisTab reference. */
         const thisTab = this.tabsControl[this.tabsControl.length - 1];
         const walletAccount = [{ id: wallet.accountId, text: wallet.accountName }];
-        const walletType = [{ id: wallet.walletType, text: wallet.walletTypeName }];
+        const walletType = [{ id: String(wallet.walletType), text: wallet.walletTypeName }];
         let resolvedCountry;
         let selectWallet;
 
@@ -491,8 +505,9 @@ export class AdminWalletsComponent implements OnInit, AfterViewInit, OnDestroy {
             thisTab.formControl.controls['walletLei'].patchValue(wallet.Glei || '');
             thisTab.formControl.controls['walletUid'].patchValue(wallet.uid || '');
             thisTab.formControl.controls['walletWebUrl'].patchValue(wallet.websiteUrl || '');
-            const incDate = this.formatDate(wallet.incorporationData);
-            thisTab.formControl.controls['walletIncDate'].patchValue(incDate || '');
+            this.exisitingIncDate = wallet.incorporationData ?
+                moment(wallet.incorporationData).format('YYYY-MM-DD') : moment().format('YYYY-MM-DD');
+            thisTab.formControl.controls['walletIncDate'].patchValue(this.exisitingIncDate);
 
             /* Patch the legal correspondence address into the form. */
             resolvedCountry = this.userAdminService.resolveCountries([{ text: wallet.country }]);
@@ -503,6 +518,18 @@ export class AdminWalletsComponent implements OnInit, AfterViewInit, OnDestroy {
             thisTab.formControl.controls['walletAddr3'].patchValue(wallet.address3);
             thisTab.formControl.controls['walletAddr4'].patchValue(wallet.address4);
             thisTab.formControl.controls['walletAddrPostcode'].patchValue(wallet.postalCode);
+
+            /* Set incorporation date to required and clear any errors if user switches wallet type */
+            thisTab.formControl.controls['walletIncDate'].setValidators([
+                Validators.required,
+                Validators.pattern('^[0-9]{4}-(0[1-9]|1[012])-(0[1-9]|[12][0-9]|3[01])$'),
+            ]);
+            thisTab.formControl.controls['walletType'].valueChanges.subscribe((type) => {
+                if (type[0].id !== '1') {
+                    thisTab.formControl.controls['walletIncDate'].setErrors(null);
+                }
+            });
+
             /* Wallet type individual */
         } else if (wallet.walletType === 2) {
             /* Patch the individual basic information into the form. */
@@ -594,48 +621,6 @@ export class AdminWalletsComponent implements OnInit, AfterViewInit, OnDestroy {
     }
 
     /**
-     * Formats a date into a nice string.
-     *
-     * @param {string} date - A date string.
-     *
-     * @return {string|Boolean} - A nicely formatted string if valid, otherwise false.
-     */
-    public formatDate(date: any) {
-        /* Variables. */
-        const dateo = new Date(date);
-
-        /* Let's check if the date object was instantiated correctly. */
-        if (Object.prototype.toString.call(dateo) === '[object Date]') {
-            /* Now let's check if the date object holds a valid date. */
-            if (!isNaN(dateo.getTime())) {
-                /* If all is good, return a nice string. */
-                return `${dateo.getFullYear()}-${this.numberPad(dateo.getMonth())}-${this.numberPad(dateo.getDate())}`;
-            }
-
-            /* Not valid. */
-            return false;
-        }
-
-        /* Not valid. */
-        return false;
-    }
-
-    /**
-     * Returns a padded number.
-     *
-     * @param {number} num - The number that needs padding.
-     *
-     * @return {string} A padded number (if necessary).
-     */
-    public numberPad(num) {
-        /* examples:
-         * 5 -> "05"
-         * 12 -> "12"
-         */
-        return num < 10 ? `0${num}` : num.toString();
-    }
-
-    /**
      * Sets all tabs to inactive other than the given index.
      * This means the view is switched to the wanted tab.
      *
@@ -694,7 +679,10 @@ export class AdminWalletsComponent implements OnInit, AfterViewInit, OnDestroy {
                 walletLei: new FormControl(''),
                 walletUid: new FormControl(''),
                 walletWebUrl: new FormControl(''),
-                walletIncDate: new FormControl(''),
+                walletIncDate: new FormControl('', [
+                    // Check for valid ISO format date string
+                    Validators.pattern('^[0-9]{4}-(0[1-9]|1[012])-(0[1-9]|[12][0-9]|3[01])$'),
+                ]),
 
                 walletAddrCountry: new FormControl(''),
                 walletAddrPrefix: new FormControl(''),
@@ -705,7 +693,7 @@ export class AdminWalletsComponent implements OnInit, AfterViewInit, OnDestroy {
                 walletAddrPostcode: new FormControl(''),
 
                 /* Individual type Fields. */
-                aliases: new FormControl([]),
+                aliases: new FormControl(''),
                 formerName: new FormControl(''),
                 idCardNum: new FormControl(''),
 
