@@ -67,7 +67,6 @@ export class KycDetailsService {
                 'constraintsSameInvestmentCrossAm',
                 'companyBeneficiariesID',
                 'custodianID',
-                'custodianHolderAccount'
             ])
             .omitBy(isNil)
             .toPairs()

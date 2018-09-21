@@ -6,4 +6,6 @@
     <company-information [form]="form.get('companyInformation')"></company-information>
     <banking-information [form]="form.get('bankingInformation')"></banking-information>
     <classification-information *ngIf="form.get('generalInformation.legalStatus').value" [form]="form.get('classificationInformation')" [investorType]="investorType"></classification-information>
+
+    <input type="submit" class="hidden" />
 </form>
