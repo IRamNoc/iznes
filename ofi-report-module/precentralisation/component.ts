@@ -193,6 +193,10 @@ export class PrecentralisationReportComponent implements OnInit, OnDestroy {
         this.isFundLevel = (this.router.url.indexOf('/precentralisation/funds') !== -1) ? true : false;
         this.isShareLevel = (this.router.url.indexOf('/precentralisation/shares') !== -1) ? true : false;
 
+        if (!this.isFundLevel && !this.isShareLevel) {
+            this.router.navigateByUrl('/reports/precentralisation/funds');
+        }
+
         this.fundSpecificDates = [
             { id: 0, text: _translate.translate('Specific NAV Date') },
             { id: 1, text: _translate.translate('Specific Settlement Date') },
@@ -588,9 +592,9 @@ export class PrecentralisationReportComponent implements OnInit, OnDestroy {
             searchDate = get(this.sharesDetails, ['shares', id, searchDateType], '');
         }
         // fund level
-        else  {
-           fundname = get(this.fundsDetails, ['funds', id, 'fundName'], '');
-           searchDate = get(this.fundsDetails, ['funds', id, searchDateType], '');
+        else {
+            fundname = get(this.fundsDetails, ['funds', id, 'fundName'], '');
+            searchDate = get(this.fundsDetails, ['funds', id, searchDateType], '');
         }
 
         const orderFilters = {
@@ -646,7 +650,7 @@ export class PrecentralisationReportComponent implements OnInit, OnDestroy {
         const curDateFilterVal = get(this.filtersForm.controls['specificDate'].value, '[0].id');
         // 0 or 2 is navDate
         if (curDateFilterVal === 0 || curDateFilterVal === 2) {
-           return 'navDate';
+            return 'navDate';
         }
 
         return 'settlementDate';

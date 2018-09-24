@@ -194,6 +194,10 @@ export class CentralisationReportComponent implements OnInit, OnDestroy {
         this.isFundLevel = (this.router.url.indexOf('/centralisation/funds') !== -1) ? true : false;
         this.isShareLevel = (this.router.url.indexOf('/centralisation/shares') !== -1) ? true : false;
 
+        if (!this.isFundLevel && !this.isShareLevel) {
+            this.router.navigateByUrl('/reports/centralisation/funds');
+        }
+
         this.fundSpecificDates = [
             { id: 0, text: _translate.translate('Specific NAV Date') },
             { id: 1, text: _translate.translate('Specific Settlement Date') },
