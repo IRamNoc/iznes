@@ -620,6 +620,11 @@ export const ROUTES: Routes = [
                 canActivate: [LoginGuardService],
                 children: [
                     {
+                        path: 'my-orders',
+                        canActivate: [LoginGuardService],
+                        component: ManageOrdersComponent,
+                    },
+                    {
                         path: 'my-orders/:tabid',
                         canActivate: [LoginGuardService],
                         component: ManageOrdersComponent,
