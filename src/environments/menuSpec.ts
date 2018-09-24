@@ -81,21 +81,24 @@ const reportsCollectsArchives = {
     label_txt: 'txt_recordkeeping',
     icon_class: 'fa fa-book',
     element_id: 'holders-list',
-    router_link: '/reports/holders-list/list',
+    router_link: '/reports/holders-list',
+    dynamic_link: '/reports/holders-list/[^\/]*',
 };
 const reportsPrecentralisation = {
     label: 'Precentralisation',
     label_txt: 'txt_precentralisation',
     icon_class: 'fa fa-book',
     element_id: 'menu-report-centralisation',
-    router_link: '/reports/precentralisation/funds',
+    router_link: '/reports/precentralisation',
+    dynamic_link: '/reports/precentralisation/[^/]*',
 };
 const reportsCentralisation = {
     label: 'Centralisation',
     label_txt: 'txt_centralisation',
     icon_class: 'fa fa-book',
     element_id: 'menu-report-centralisation-select',
-    router_link: '/reports/centralisation/funds',
+    router_link: '/reports/centralisation',
+    dynamic_link: '/reports/centralisation/[^/]*',
 };
 // const reportsHistoricalOrders = {
 //     label: 'Holders Lists',
