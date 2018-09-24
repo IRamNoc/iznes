@@ -1,24 +1,23 @@
-
-import {debounceTime} from 'rxjs/operators';
-import {Component, ChangeDetectionStrategy, ChangeDetectorRef, OnInit, OnDestroy, ViewChild} from '@angular/core';
-import {FormGroup, FormControl} from '@angular/forms';
-import {ActivatedRoute, Router} from '@angular/router';
-import {NgRedux, select} from '@angular-redux/store';
+import { debounceTime } from 'rxjs/operators';
+import { Component, ChangeDetectionStrategy, ChangeDetectorRef, OnInit, OnDestroy, ViewChild } from '@angular/core';
+import { FormGroup, FormControl } from '@angular/forms';
+import { ActivatedRoute, Router } from '@angular/router';
+import { NgRedux, select } from '@angular-redux/store';
 import * as _ from 'lodash';
 import * as moment from 'moment';
-import {fromJS} from 'immutable';
-import {Observable, Subscription} from 'rxjs';
-import {NumberConverterService, MoneyValuePipe, NavHelperService} from '@setl/utils';
-import {Datagrid} from '@clr/angular';
+import { fromJS } from 'immutable';
+import { Observable, Subscription } from 'rxjs';
+import { NumberConverterService, MoneyValuePipe, NavHelperService } from '@setl/utils';
+import { Datagrid } from '@clr/angular';
 
-import {OfiNavAuditService} from './service';
-import {OfiNavService} from '@ofi/ofi-main/ofi-req-services/ofi-product/nav/service';
+import { OfiNavAuditService } from './service';
+import { OfiNavService } from '@ofi/ofi-main/ofi-req-services/ofi-product/nav/service';
 import {
     NavAuditDetail,
     clearRequestedNavAudit,
     setRequestedNavAudit
 } from '@ofi/ofi-main/ofi-store/ofi-product/nav-audit';
-import {MultilingualService} from '@setl/multilingual';
+import { MultilingualService } from '@setl/multilingual';
 
 @Component({
     styleUrls: ['./component.scss'],
@@ -161,7 +160,7 @@ export class OfiNavAuditComponent implements OnInit, OnDestroy {
     }
 
     returnToNav(): void {
-        this.router.navigateByUrl(`product-module/nav-fund-view`);
+        this.router.navigateByUrl(`product-module/net-asset-value/fund-view`);
     }
 
     isLogTypeInsert(item: NavAuditDetail): boolean {
