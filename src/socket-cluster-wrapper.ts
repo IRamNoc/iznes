@@ -124,7 +124,7 @@ export class SocketClusterWrapper {
                         };
 
                         // Initial handshake request.
-                        const initialRequest = Object.assign({}, initialRequestTemplate, {MessageBody: requestBody});
+                        const initialRequest = Object.assign({}, initialRequestTemplate, { MessageBody: requestBody });
                         const initialRequestText = JSON.stringify(initialRequest);
 
                         this.webSocketConn.emit('onMessage', initialRequestText, (errorCode, data) => {
@@ -235,11 +235,11 @@ export class SocketClusterWrapper {
                 }
 
                 this.webSocketConn.emit('onMessage', requestText, (error, responseData) => {
-                    const decoded = GibberishAES.dec(responseData, this.encryption.shareKey);
-
-                    const message = JSON.parse(decoded);
-
-                    callback(error, message);
+                    if (!error) {
+                        const decoded = GibberishAES.dec(responseData, this.encryption.shareKey);
+                        const message = JSON.parse(decoded);
+                        callback(error, message);
+                    }
                 });
             }
         });
