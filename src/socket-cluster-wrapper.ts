@@ -235,7 +235,9 @@ export class SocketClusterWrapper {
                 }
 
                 this.webSocketConn.emit('onMessage', requestText, (error, responseData) => {
-                    if (!error) {
+                    if (error) {
+                        console.warn(error);
+                    } else {
                         const decoded = GibberishAES.dec(responseData, this.encryption.shareKey);
                         const message = JSON.parse(decoded);
                         callback(error, message);
