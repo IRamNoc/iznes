@@ -184,13 +184,13 @@ export const ROUTES: Routes = [
                 data: { state: 'home' },
             },
             {
-                path: 'invite-investors',
-                component: OfiInviteInvestorsComponent,
+                path: 'client-referential',
+                component: OfiClientReferentialComponent,
                 canActivate: [LoginGuardService],
             },
             {
-                path: 'client-referential',
-                component: OfiClientReferentialComponent,
+                path: 'client-referential/invite-investors',
+                component: OfiInviteInvestorsComponent,
                 canActivate: [LoginGuardService],
             },
             {
@@ -231,11 +231,6 @@ export const ROUTES: Routes = [
             {
                 path: 'kyc',
                 component: OfiDocumentsComponent,
-                canActivate: [LoginGuardService],
-            },
-            {
-                path: 'kyc-audit-trail/:kycID',
-                component: KycAuditTrailComponent,
                 canActivate: [LoginGuardService],
             },
             {
@@ -342,13 +337,13 @@ export const ROUTES: Routes = [
                         canActivate: [LoginGuardService],
                     },
                     {
-                        path: 'nav-fund-view/:shareId/audit',
-                        component: OfiNavAuditComponent,
+                        path: 'net-asset-value/fund-view',
+                        component: OfiNavFundView,
                         canActivate: [LoginGuardService],
                     },
                     {
-                        path: 'nav-fund-view',
-                        component: OfiNavFundView,
+                        path: 'net-asset-value/fund-view/:shareId/audit',
+                        component: OfiNavAuditComponent,
                         canActivate: [LoginGuardService],
                     },
                     {
@@ -678,6 +673,11 @@ export const ROUTES: Routes = [
             {
                 path: 'my-requests',
                 children: requestsRoute,
+            },
+            {
+                path: 'my-requests/list/kyc-audit-trail/:kycID',
+                component: KycAuditTrailComponent,
+                canActivate: [LoginGuardService],
             },
             {
                 path: 'account-admin',
