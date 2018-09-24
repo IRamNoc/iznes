@@ -18,7 +18,7 @@
         </tr>
         <tr style="background-color: transparent">
             <td colspan="2" class="text-right">
-                <button type="button" class="btn btn-primary" style="margin: 0;" [routerLink]="['/kyc-audit-trail', kycID]">{{'View previous updates' | translate}}</button>
+                <button type="button" class="btn btn-primary" style="margin: 0;" [routerLink]="['/my-requests/list/kyc-audit-trail', kycID]">{{'View previous updates' | translate}}</button>
                 <br *ngIf="requestDetailStatus === 'WaitingForMoreInfo'">
                 <button type="button" class="btn btn-success" (click)="redirectToRelatedKycs(kycID)" *ngIf="requestDetailStatus === 'WaitingForMoreInfo'" style="margin-right: 4px;">{{'Update your request' | translate}}</button>
             </td>

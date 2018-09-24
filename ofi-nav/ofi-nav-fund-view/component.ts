@@ -169,7 +169,7 @@ export class OfiNavFundView implements OnInit, OnDestroy {
     }
 
     goToAuditTrail(): void {
-        this.router.navigateByUrl(`product-module/nav-fund-view/${this.navFund.shareId}/audit`);
+        this.router.navigateByUrl(`product-module/net-asset-value/fund-view/${this.navFund.shareId}/audit`);
     }
 
     editNav(nav: model.NavInfoModel): void {
