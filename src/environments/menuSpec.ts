@@ -312,6 +312,7 @@ const productsNav = {
     icon_class: 'fa fa-ellipsis-h',
     element_id: 'menu-nav',
     router_link: '/product-module/net-asset-value',
+    dynamic_link: '/product-module/net-asset-value/[^/]*',
 };
 
 const profileMyInfo = {
@@ -344,13 +345,6 @@ const kycDocuments = {
             router_link: '/client-referential',
             dynamic_link: '/client-referential/[^\/]*',
         },
-        // {
-        //     label: 'Invite Investors',
-        //     label_txt: 'txt_invite_investors',
-        //     icon_class: 'fa fa-align-left',
-        //     element_id: 'top-menu-invite-investor',
-        //     router_link: '/invite-investors',
-        // },
     ],
 };
 
