@@ -48,7 +48,7 @@ const orderBook = {
             label_txt: 'txt_myorders',
             icon_class: 'fa fa-book',
             element_id: 'menu-my-orders',
-            router_link: '/order-book/my-orders/list',
+            router_link: '/order-book/my-orders',
             dynamic_link: '/order-book/my-orders/[^\/]*',
         },
     ],
