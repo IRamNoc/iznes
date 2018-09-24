@@ -42,7 +42,8 @@ export class OfiSignUpComponent implements OnInit, OnDestroy {
         this.initConfiguration();
     }
 
-    ngOnInit() { }
+    ngOnInit() {
+    }
 
     private initConfiguration(): void {
         const title = this.translate.translate(
@@ -50,8 +51,7 @@ export class OfiSignUpComponent implements OnInit, OnDestroy {
             { 'appConfig.platform': this.appConfig.platform });
 
         const description = this.translate.translate(
-            'Your @appConfig.platform@ account will be created with this email address,' +
-            'provided by the Asset Management company.',
+            `Your @appConfig.platform@ account will be created with this email address, provided by the Asset Management company.`,
             { 'appConfig.platform': this.appConfig.platform });
 
         const buttonText = this.translate.translate('Create an account');
