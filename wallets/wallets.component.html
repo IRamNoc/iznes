@@ -7,7 +7,7 @@
     <clr-tabs *ngIf="tabsControl.length">
         <clr-tab *ngFor="let tabdata of tabsControl; let id = index">
             <button clrTabLink id="wallet-tab-{{id}}" [routerLink]="['/user-administration/wallets', id]"><i
-                    class="fa {{tabdata.title.icon}}"></i> {{tabdata.title.text}}
+                class="fa {{tabdata.title.icon}}"></i> {{tabdata.title.text}}
             </button>
             <clr-tab-content *clrIfActive="tabdata.active">
                 <!-- Wallet list tab. -->
@@ -94,12 +94,12 @@
                         <div class="form-group col-sm-6">
                             <label class="control-label required-field">Account</label>
                             <ng-select
-                                    id="new-wallet-account-select"
-                                    [items]="accountTypes"
-                                    [allowClear]="true"
-                                    placeholder="Select Type"
-                                    [formControl]="formControl.controls['walletAccount']"
-                                    mltag="txt_selecttype">
+                                id="new-wallet-account-select"
+                                [items]="accountTypes"
+                                [allowClear]="true"
+                                placeholder="Select Type"
+                                [formControl]="formControl.controls['walletAccount']"
+                                mltag="txt_selecttype">
                             </ng-select>
                             <div *ngIf="formControl.controls.walletAccount.hasError('required') && formControl.controls.walletAccount.touched"
                                  class="field-error" mltag="txt_thisfieldisrequired">This field is required
@@ -111,12 +111,12 @@
                         <div class="form-group col-sm-6">
                             <label class="control-label required-field" mltag="txt_accounttype">Account type</label>
                             <ng-select
-                                    id="new-wallet-usertype-select"
-                                    [items]="walletTypes"
-                                    [allowClear]="true"
-                                    placeholder="Select Type"
-                                    [formControl]="formControl.controls['walletType']"
-                                    mltag="txt_selecttype">
+                                id="new-wallet-usertype-select"
+                                [items]="walletTypes"
+                                [allowClear]="true"
+                                placeholder="Select Type"
+                                [formControl]="formControl.controls['walletType']"
+                                mltag="txt_selecttype">
                             </ng-select>
                             <div *ngIf="formControl.controls.walletType.hasError('required') && formControl.controls.walletType.touched"
                                  class="field-error" mltag="txt_thisfieldisrequired">This field is required
@@ -128,24 +128,22 @@
                             <div [ngSwitch]="formControl.value.walletType[0].id">
                                 <ng-container *ngSwitchCase="'1'">
                                     <ng-container
-                                            *ngTemplateOutlet="walletMetaLegal; context: {'formControl': formControl, 'tabid': tabid}"></ng-container>
+                                        *ngTemplateOutlet="walletMetaLegal; context: {'formControl': formControl, 'tabid': tabid}"></ng-container>
                                 </ng-container>
 
                                 <ng-container *ngSwitchCase="'2'">
                                     <ng-container
-                                            *ngTemplateOutlet="walletMetaIndividual; context: {'formControl': formControl, 'tabid': tabid}"></ng-container>
+                                        *ngTemplateOutlet="walletMetaIndividual; context: {'formControl': formControl, 'tabid': tabid}"></ng-container>
                                 </ng-container>
                             </div>
                         </div>
                     </div>
 
                     <div class="form-group button-group">
-                        <div class="col-sm-12">
-                            <button id="new-wallet-submit" type="submit" class="btn btn-primary"
-                                    [disabled]="!formControl.valid">
-                                <i class="fa fa-save"></i> <span mltag="txt_save">Save</span>
-                            </button>
-                        </div>
+                        <button id="new-wallet-submit" type="submit" class="btn btn-primary"
+                                [disabled]="!formControl.valid">
+                            <i class="fa fa-save"></i> <span mltag="txt_save">Save</span>
+                        </button>
                     </div>
                 </div>
             </form>
@@ -172,12 +170,12 @@
                         <div class="form-group col-sm-6">
                             <label class="control-label required-field" mltag="txt_account">Account</label>
                             <ng-select
-                                    id="new-wallet-account-select"
-                                    [items]="accountTypes"
-                                    [allowClear]="true"
-                                    placeholder="Select Type"
-                                    [formControl]="formControl.controls['walletAccount']"
-                                    mltag="txt_selecttype">
+                                id="new-wallet-account-select"
+                                [items]="accountTypes"
+                                [allowClear]="true"
+                                placeholder="Select Type"
+                                [formControl]="formControl.controls['walletAccount']"
+                                mltag="txt_selecttype">
                             </ng-select>
                             <div *ngIf="formControl.controls.walletAccount.hasError('required') && formControl.controls.walletAccount.touched"
                                  class="field-error" mltag="txt_thisfieldisrequired">This field is required
@@ -212,12 +210,12 @@
                         <div class="form-group col-sm-6">
                             <label class="control-label required-field" mltag="txt_wallettype">Wallet Type</label>
                             <ng-select
-                                    id="new-wallet-usertype-select"
-                                    [items]="walletTypes"
-                                    [allowClear]="true"
-                                    placeholder="Select Type"
-                                    [formControl]="formControl.controls['walletType']"
-                                    mltag="txt_selecttype">
+                                id="new-wallet-usertype-select"
+                                [items]="walletTypes"
+                                [allowClear]="true"
+                                placeholder="Select Type"
+                                [formControl]="formControl.controls['walletType']"
+                                mltag="txt_selecttype">
                             </ng-select>
                             <div *ngIf="formControl.controls.walletType.hasError('required') && formControl.controls.walletType.touched"
                                  class="field-error" mltag="txt_thisfieldisrequired">This field is required
@@ -228,28 +226,26 @@
                             <div [ngSwitch]="formControl.value.walletType[0].id">
                                 <ng-container *ngSwitchCase="'1'">
                                     <ng-container
-                                            *ngTemplateOutlet="walletMetaLegal; context: {'formControl': formControl, 'tabid': tabid}"></ng-container>
+                                        *ngTemplateOutlet="walletMetaLegal; context: {'formControl': formControl, 'tabid': tabid}"></ng-container>
                                 </ng-container>
 
                                 <ng-container *ngSwitchCase="'2'">
                                     <ng-container
-                                            *ngTemplateOutlet="walletMetaIndividual; context: {'formControl': formControl, 'tabid': tabid}"></ng-container>
+                                        *ngTemplateOutlet="walletMetaIndividual; context: {'formControl': formControl, 'tabid': tabid}"></ng-container>
                                 </ng-container>
                             </div>
                         </div>
                     </div>
 
                     <div class="form-group button-group">
-                        <div class="col-sm-12">
-                            <button id="new-wallet-submit" type="submit" class="btn btn-primary"
-                                    [disabled]="!formControl.valid">
-                                <i class="fa fa-save"></i> <span mltag="txt_save">Save</span>
-                            </button>
+                        <button id="new-wallet-submit" type="submit" class="btn btn-primary"
+                                [disabled]="!formControl.valid">
+                            <i class="fa fa-save"></i> <span mltag="txt_save">Save</span>
+                        </button>
 
-                            <a (click)="closeTab(tabid)" class="btn btn-secondary" mltag="txt_close">
-                                Close
-                            </a>
-                        </div>
+                        <a (click)="closeTab(tabid)" class="btn btn-secondary" mltag="txt_close">
+                            Close
+                        </a>
                     </div>
                 </div>
             </form>
@@ -271,9 +267,9 @@
                                     </label>
                                     <div>
                                         <input id="new-wallet-lei" type="text"
-                                               [formControl]="formControl.controls['walletLei']" 
+                                               [formControl]="formControl.controls['walletLei']"
                                                placeholder="LEI"
-                                               class="form-control wallet-lei" 
+                                               class="form-control wallet-lei"
                                                mltag="txt_lei">
                                     </div>
                                 </div>
@@ -283,9 +279,9 @@
                                     </label>
                                     <div>
                                         <input id="new-wallet-uid" type="text"
-                                               [formControl]="formControl.controls['walletUid']" 
+                                               [formControl]="formControl.controls['walletUid']"
                                                placeholder="UID"
-                                               class="form-control wallet-uid" 
+                                               class="form-control wallet-uid"
                                                mltag="txt_uid">
                                     </div>
                                 </div>
@@ -296,7 +292,7 @@
                                     <div>
                                         <input id="new-wallet-weburl" type="text"
                                                [formControl]="formControl.controls['walletWebUrl']"
-                                               placeholder="Website Url" 
+                                               placeholder="Website Url"
                                                class="form-control wallet-weburl"
                                                mltag="txt_websiteurl">
                                     </div>
@@ -305,12 +301,20 @@
                                     <label class="control-label">
                                         <span mltag="txt_incorporationdate">Incorporation Date</span>
                                     </label>
-                                    <div>
-                                        <input id="new-wallet-incdate" type="date"
+                                    <div class="input-group">
+                                        <span class="fa fa-calendar" aria-hidden="true"></span>
+                                        <input type="text" id="new-wallet-incdate" autocomplete="off"
                                                [formControl]="formControl.controls['walletIncDate']"
-                                               placeholder="Incoporation Date" 
-                                               class="form-control wallet-incdate"
-                                               mltag="txt_incoporationdate">
+                                               [dpDayPicker]="configFiltersDate"
+                                               placeholder="Incorporation Date"
+                                               mode="day"
+                                               theme="dp-material"/>
+                                        <div *ngIf="formControl.controls.walletIncDate.hasError('pattern') && formControl.controls.walletIncDate.touched"
+                                             class="field-error">Invalid date. Format must be YYYY-MM-DD.
+                                        </div>
+                                        <div *ngIf="formControl.controls.walletIncDate.hasError('required') && formControl.controls.walletIncDate.touched"
+                                             class="field-error" mltag="txt_thisfieldisrequired">This field is required
+                                        </div>
                                     </div>
                                 </div>
                             </div>
@@ -332,9 +336,9 @@
                                     </label>
                                     <div>
                                         <ng-select
-                                                [items]="countriesList"
-                                                [allowClear]="true"
-                                                [formControl]="formControl.controls['walletAddrCountry']">
+                                            [items]="countriesList"
+                                            [allowClear]="true"
+                                            [formControl]="formControl.controls['walletAddrCountry']">
                                         </ng-select>
                                     </div>
                                 </div>
@@ -346,7 +350,7 @@
                                     <div>
                                         <input id="new-wallet-address-prefix" type="text"
                                                [formControl]="formControl.controls['walletAddrPrefix']"
-                                               placeholder="Address Prefix" 
+                                               placeholder="Address Prefix"
                                                class="form-control wallet-addr-prefix"
                                                mltag="txt_addressprefix">
                                     </div>
@@ -358,16 +362,16 @@
                                     </label>
                                     <div>
                                         <input id="new-wallet-address1" type="text"
-                                               [formControl]="formControl.controls['walletAddr1']" 
+                                               [formControl]="formControl.controls['walletAddr1']"
                                                placeholder="Line 1"
-                                               class="form-control wallet-addr1" 
+                                               class="form-control wallet-addr1"
                                                mltag="txt_line1">
                                     </div>
                                     <div>
                                         <input id="new-wallet-address2" type="text"
-                                               [formControl]="formControl.controls['walletAddr2']" 
+                                               [formControl]="formControl.controls['walletAddr2']"
                                                placeholder="Line 2"
-                                               class="form-control wallet-addr2" 
+                                               class="form-control wallet-addr2"
                                                mltag="txt_line2">
                                     </div>
                                 </div>
@@ -379,7 +383,7 @@
                                     <div>
                                         <input id="new-wallet-address3" type="text"
                                                [formControl]="formControl.controls['walletAddr3']"
-                                               placeholder="City or Town" 
+                                               placeholder="City or Town"
                                                class="form-control wallet-addr3"
                                                mltag="txt_cityortown">
                                     </div>
@@ -392,7 +396,7 @@
                                     <div>
                                         <input id="new-wallet-address4" type="text"
                                                [formControl]="formControl.controls['walletAddr4']"
-                                               placeholder="State or Area" 
+                                               placeholder="State or Area"
                                                class="form-control wallet-addr4"
                                                mltag="txt_stateorarea">
                                     </div>
@@ -405,7 +409,7 @@
                                     <div>
                                         <input id="new-wallet-postcode" type="text"
                                                [formControl]="formControl.controls['walletAddrPostcode']"
-                                               placeholder="Post code" 
+                                               placeholder="Post code"
                                                class="form-control wallet-postcode"
                                                mltag="txt_postcode">
                                     </div>
@@ -431,9 +435,9 @@
                             </label>
                             <div>
                                 <input id="new-wallet-aliases" type="text"
-                                       [formControl]="formControl.controls['aliases']" 
+                                       [formControl]="formControl.controls['aliases']"
                                        placeholder="Aliases"
-                                       class="form-control wallet-aliases" 
+                                       class="form-control wallet-aliases"
                                        mltag="txt_aliases">
                             </div>
                         </div>
@@ -444,9 +448,9 @@
                             </label>
                             <div>
                                 <input id="new-wallet-formerName" type="text"
-                                       [formControl]="formControl.controls['formerName']" 
+                                       [formControl]="formControl.controls['formerName']"
                                        placeholder="Former Name"
-                                       class="form-control wallet-formername" 
+                                       class="form-control wallet-formername"
                                        mltag="txt_formername">
                             </div>
                         </div>
@@ -457,9 +461,9 @@
                             </label>
                             <div>
                                 <input id="new-wallet-idCardNum" type="text"
-                                       [formControl]="formControl.controls['idCardNum']" 
+                                       [formControl]="formControl.controls['idCardNum']"
                                        placeholder="ID Card Number"
-                                       class="form-control wallet-idcardnum" 
+                                       class="form-control wallet-idcardnum"
                                        mltag="txt_idcardnumber">
                             </div>
                         </div>
@@ -480,9 +484,9 @@
                                     </label>
                                     <div>
                                         <ng-select
-                                                [items]="countriesList"
-                                                [allowClear]="true"
-                                                [formControl]="formControl.controls['rdaAddrCountry']">
+                                            [items]="countriesList"
+                                            [allowClear]="true"
+                                            [formControl]="formControl.controls['rdaAddrCountry']">
                                         </ng-select>
                                     </div>
                                 </div>
@@ -494,7 +498,7 @@
                                     <div>
                                         <input id="new-wallet-rda-address-prefix" type="text"
                                                [formControl]="formControl.controls['rdaAddrPrefix']"
-                                               placeholder="Address Prefix" 
+                                               placeholder="Address Prefix"
                                                class="form-control rda-addr-prefix"
                                                mltag="txt_addressprefix">
                                     </div>
@@ -506,16 +510,16 @@
                                     </label>
                                     <div>
                                         <input id="new-wallet-rda-address1" type="text"
-                                               [formControl]="formControl.controls['rdaAddr1']" 
+                                               [formControl]="formControl.controls['rdaAddr1']"
                                                placeholder="Line 1"
-                                               class="form-control rda-addr1" 
+                                               class="form-control rda-addr1"
                                                mltag="txt_line1">
                                     </div>
                                     <div>
                                         <input id="new-wallet-rda-address2" type="text"
-                                               [formControl]="formControl.controls['rdaAddr2']" 
+                                               [formControl]="formControl.controls['rdaAddr2']"
                                                placeholder="Line 2"
-                                               class="form-control rda-addr2" 
+                                               class="form-control rda-addr2"
                                                mltag="txt_line2">
                                     </div>
                                 </div>
@@ -527,7 +531,7 @@
                                     <div>
                                         <input id="new-wallet-rda-address3" type="text"
                                                [formControl]="formControl.controls['rdaAddr3']"
-                                               placeholder="City or Town" 
+                                               placeholder="City or Town"
                                                class="form-control rda-addr3"
                                                mltag="txt_cityortown">
                                     </div>
@@ -540,7 +544,7 @@
                                     <div>
                                         <input id="new-wallet-rda-address4" type="text"
                                                [formControl]="formControl.controls['rdaAddr4']"
-                                               placeholder="State or Area" 
+                                               placeholder="State or Area"
                                                class="form-control rda-addr4"
                                                mltag="txt_stateorarea">
                                     </div>
@@ -553,7 +557,7 @@
                                     <div>
                                         <input id="new-wallet-rda-postcode" type="text"
                                                [formControl]="formControl.controls['rdaAddrPostcode']"
-                                               placeholder="Post code" 
+                                               placeholder="Post code"
                                                class="form-control rda-addr-postcode"
                                                mltag="txt_postcode">
                                     </div>
@@ -585,9 +589,9 @@
                                     </label>
                                     <div>
                                         <ng-select
-                                                [items]="countriesList"
-                                                [allowClear]="true"
-                                                [formControl]="formControl.controls['caAddrCountry']">
+                                            [items]="countriesList"
+                                            [allowClear]="true"
+                                            [formControl]="formControl.controls['caAddrCountry']">
                                         </ng-select>
                                     </div>
                                 </div>
@@ -599,7 +603,7 @@
                                     <div>
                                         <input id="new-wallet-ca-address-prefix" type="text"
                                                [formControl]="formControl.controls['caAddrPrefix']"
-                                               placeholder="Address Prefix" 
+                                               placeholder="Address Prefix"
                                                class="form-control ca-addr-prefix"
                                                mltag="txt_addressprefix">
                                     </div>
@@ -611,16 +615,16 @@
                                     </label>
                                     <div>
                                         <input id="new-wallet-ca-address1" type="text"
-                                               [formControl]="formControl.controls['caAddr1']" 
+                                               [formControl]="formControl.controls['caAddr1']"
                                                placeholder="Line 1"
-                                               class="form-control ca-addr1" 
+                                               class="form-control ca-addr1"
                                                mltag="txt_line1">
                                     </div>
                                     <div>
                                         <input id="new-wallet-ca-address2" type="text"
-                                               [formControl]="formControl.controls['caAddr2']" 
+                                               [formControl]="formControl.controls['caAddr2']"
                                                placeholder="Line 2"
-                                               class="form-control ca-addr2" 
+                                               class="form-control ca-addr2"
                                                mltag="txt_line2">
                                     </div>
                                 </div>
@@ -632,7 +636,7 @@
                                     <div>
                                         <input id="new-wallet-ca-address3" type="text"
                                                [formControl]="formControl.controls['caAddr3']"
-                                               placeholder="City or Town" 
+                                               placeholder="City or Town"
                                                class="form-control ca-addr3"
                                                mltag="txt_cityortown">
                                     </div>
@@ -645,7 +649,7 @@
                                     <div>
                                         <input id="new-wallet-ca-address4" type="text"
                                                [formControl]="formControl.controls['caAddr4']"
-                                               placeholder="State or Area" 
+                                               placeholder="State or Area"
                                                class="form-control ca-addr4"
                                                mltag="txt_stateorarea">
                                     </div>
@@ -658,7 +662,7 @@
                                     <div>
                                         <input id="new-wallet-ca-postcode" type="text"
                                                [formControl]="formControl.controls['caAddrPostcode']"
-                                               placeholder="Post code" 
+                                               placeholder="Post code"
                                                class="form-control ca-addr-postcode"
                                                mltag="txt_postcode">
                                     </div>
@@ -682,9 +686,9 @@
                                     </label>
                                     <div>
                                         <ng-select
-                                                [items]="filteredWalletList"
-                                                [allowClear]="true"
-                                                [formControl]="formControl.controls['bankWalletId']">
+                                            [items]="filteredWalletList"
+                                            [allowClear]="true"
+                                            [formControl]="formControl.controls['bankWalletId']">
                                         </ng-select>
                                         <!-- <input id="new-wallet-bank-wallet-id" type="text" [formControl]="formControl.controls['bankWalletId']" placeholder="Bank wallet" class="form-control wallet-bank-wallet-id" mltag="txt_bankwallet"> -->
                                     </div>
@@ -696,9 +700,9 @@
                                     </label>
                                     <div>
                                         <input id="new-wallet-bank-name" type="text"
-                                               [formControl]="formControl.controls['bankName']" 
+                                               [formControl]="formControl.controls['bankName']"
                                                placeholder="Bank name"
-                                               class="form-control wallet-bank-name" 
+                                               class="form-control wallet-bank-name"
                                                mltag="txt_bankname">
                                     </div>
                                 </div>
@@ -709,9 +713,9 @@
                                     </label>
                                     <div>
                                         <input id="new-wallet-bank-iban" type="text"
-                                               [formControl]="formControl.controls['bankIBAN']" 
+                                               [formControl]="formControl.controls['bankIBAN']"
                                                placeholder="IBAN"
-                                               class="form-control wallet-bank-iban" 
+                                               class="form-control wallet-bank-iban"
                                                mltag="txt_iban">
                                     </div>
                                 </div>
@@ -723,7 +727,7 @@
                                     <div>
                                         <input id="new-wallet-bank-bic-code" type="text"
                                                [formControl]="formControl.controls['bankBICcode']"
-                                               placeholder="BIC code" 
+                                               placeholder="BIC code"
                                                class="form-control wallet-bank-bic-code"
                                                mltag="txt_biccode">
                                     </div>
@@ -761,9 +765,9 @@
                                     </label>
                                     <div>
                                         <ng-select
-                                                [items]="countriesList"
-                                                [allowClear]="true"
-                                                [formControl]="formControl.controls['bdAddrCountry']">
+                                            [items]="countriesList"
+                                            [allowClear]="true"
+                                            [formControl]="formControl.controls['bdAddrCountry']">
                                         </ng-select>
                                     </div>
                                 </div>
@@ -775,7 +779,7 @@
                                     <div>
                                         <input id="new-wallet-bd-address-prefix" type="text"
                                                [formControl]="formControl.controls['bdAddrPrefix']"
-                                               placeholder="Address Prefix" 
+                                               placeholder="Address Prefix"
                                                class="form-control bd-addr-prefix"
                                                mltag="txt_addressprefix">
                                     </div>
@@ -787,16 +791,16 @@
                                     </label>
                                     <div>
                                         <input id="new-wallet-bd-address1" type="text"
-                                               [formControl]="formControl.controls['bdAddr1']" 
+                                               [formControl]="formControl.controls['bdAddr1']"
                                                placeholder="Line 1"
-                                               class="form-control bd-addr1" 
+                                               class="form-control bd-addr1"
                                                mltag="txt_line1">
                                     </div>
                                     <div>
                                         <input id="new-wallet-bd-address2" type="text"
-                                               [formControl]="formControl.controls['bdAddr2']" 
+                                               [formControl]="formControl.controls['bdAddr2']"
                                                placeholder="Line 2"
-                                               class="form-control bd-addr2" 
+                                               class="form-control bd-addr2"
                                                mltag="txt_line2">
                                     </div>
                                 </div>
@@ -808,7 +812,7 @@
                                     <div>
                                         <input id="new-wallet-bd-address3" type="text"
                                                [formControl]="formControl.controls['bdAddr3']"
-                                               placeholder="City or Town" 
+                                               placeholder="City or Town"
                                                class="form-control bd-addr3"
                                                mltag="txt_cityortown">
                                     </div>
@@ -821,7 +825,7 @@
                                     <div>
                                         <input id="new-wallet-bd-address4" type="text"
                                                [formControl]="formControl.controls['bdAddr4']"
-                                               placeholder="State or Area" 
+                                               placeholder="State or Area"
                                                class="form-control bd-addr4"
                                                mltag="txt_stateorarea">
                                     </div>
@@ -834,7 +838,7 @@
                                     <div>
                                         <input id="new-wallet-bd-postcode" type="text"
                                                [formControl]="formControl.controls['bdAddrPostcode']"
-                                               placeholder="Post code" 
+                                               placeholder="Post code"
                                                class="form-control bd-addr-postcode"
                                                mltag="txt_postcode">
                                     </div>
