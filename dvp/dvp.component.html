@@ -36,8 +36,14 @@
                             <span class="ml_translated" mltag="txt_contract_expiry_date">Expiry Date</span>
                         </label>
 
-                        <input type="date" formControlName="expireDate" name="contract_expiry_date" id="contract_expiry_date" placeholder="DD-MM-YYYY" required/>
-
+                        <input type="text" id="contract_expiry_date" autocomplete="off"
+                               [formControl]="createContractForm.controls['expireDate']"
+                               [dpDayPicker]="configDatePicker"
+                               placeholder="Expiry Date"
+                               mode="day"
+                               theme="dp-material"/>
+                        <span *ngIf="createContractForm.controls['expireDate'].hasError('pattern') && createContractForm.controls['expireDate'].touched"
+                              class="field-error">Invalid date. Format must be YYYY-MM-DD.</span>
                         <span *ngIf="createContractForm.controls['expireDate'].hasError('required') && createContractForm.controls['expireDate'].touched"
                               class="field-error" mltag="txt_fieldisrequired">Field is required</span>
                     </div>

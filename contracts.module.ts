@@ -1,9 +1,12 @@
 import { NgModule } from '@angular/core';
 import { CommonModule } from '@angular/common';
-import { ContractsComponent } from '@setl/core-contracts/contracts.component';
-import { ContractsDvpComponent } from '@setl/core-contracts/dvp/dvp.component';
+import { ContractsComponent } from './contracts.component';
+import { ContractsDvpComponent } from './dvp/dvp.component';
 import { ClarityModule } from '@clr/angular';
-import { SelectModule, SetlPipesModule, SetlComponentsModule, SetlDirectivesModule } from '@setl/utils';
+import {
+    SelectModule, SetlPipesModule, SetlComponentsModule, SetlDirectivesModule, DatePickerExtendedModule,
+    DpDatePickerModule,
+} from '@setl/utils';
 import {
     FormsModule,
     ReactiveFormsModule,
@@ -21,6 +24,8 @@ import { DVPContractService } from './dvp/dvp.service';
         SetlPipesModule,
         SetlComponentsModule,
         SetlDirectivesModule,
+        DatePickerExtendedModule,
+        DpDatePickerModule,
     ],
     declarations: [
         ContractsComponent,

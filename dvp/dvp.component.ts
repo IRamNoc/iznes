@@ -14,9 +14,8 @@ import {
     InitialisationService,
     MyWalletsService,
 } from '@setl/core-req-services';
-import { DvpParty, DvpForm, DvpFormParty, partyA, partyB } from './dvp.model';
+import { DvpParty, partyA, partyB } from './dvp.model';
 import { DVPContractService } from './dvp.service';
-import { ContractService } from '../services';
 
 @Component({
     selector: 'setl-contracts-dvp',
@@ -36,6 +35,16 @@ export class ContractsDvpComponent implements OnInit, OnDestroy {
     walletDirectoryListRaw: any[];
     walletRelationships: any[];
 
+    /* Setup datepicker */
+    public configDatePicker = {
+        firstDayOfWeek: 'mo',
+        format: 'YYYY-MM-DD',
+        closeOnSelect: true,
+        disableKeypress: true,
+        min: moment(),
+        locale: null,
+    };
+
     @select(['user', 'connected', 'connectedWallet']) connectedWalletOb;
     @select(['asset', 'allInstruments', 'requested']) requestedAllInstrumentOb;
     @select(['asset', 'allInstruments', 'instrumentList']) allInstrumentOb;
@@ -43,7 +52,7 @@ export class ContractsDvpComponent implements OnInit, OnDestroy {
     @select(['wallet', 'myWalletAddress', 'requestedAddressList']) requestedAddressListOb;
     @select(['wallet', 'myWalletAddress', 'requestedLabel']) requestedLabelListOb;
     @select(['wallet', 'walletRelationship', 'requestedToRelationship']) requestedWalletRelationshipListOb;
-    @select(['wallet', 'walletRelationship', 'toRelationshipList']) walletRelationshipListOb; 
+    @select(['wallet', 'walletRelationship', 'toRelationshipList']) walletRelationshipListOb;
     @select(['wallet', 'walletDirectory', 'walletList']) walletDirectoryListOb;
 
     constructor(private ngRedux: NgRedux<any>,
@@ -51,8 +60,7 @@ export class ContractsDvpComponent implements OnInit, OnDestroy {
                 private walletNodeRequestService: WalletNodeRequestService,
                 private myWalletService: MyWalletsService,
                 private alertsService: AlertsService,
-                private dvpService: DVPContractService,
-                private contractService: ContractService) {
+                private dvpService: DVPContractService) {
     }
 
     ngOnInit() {
@@ -186,7 +194,8 @@ export class ContractsDvpComponent implements OnInit, OnDestroy {
             creator: new FormControl('', Validators.required),
             expireDate: new FormControl(
                 currentDate.add(1, 'days').format('YYYY-MM-DD'),
-                Validators.required,
+                [Validators.pattern('^[0-9]{4}-(0[1-9]|1[012])-(0[1-9]|[12][0-9]|3[01])$'),
+                    Validators.required],
             ),
             expireTime: new FormControl(
                 currentDate.format('HH:mm'),
