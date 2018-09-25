@@ -147,7 +147,6 @@ import { ResolveEmit } from './interfaces/resolve-emit';
             background: #f8fafb;
             min-height: 60px;
             padding: 0;
-            /* display: -ms-flexbox;*/
             -ms-flex-align: center;
             align-items: center;
             -ms-flex-pack: end;
