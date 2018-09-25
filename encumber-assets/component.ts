@@ -149,10 +149,10 @@ export class EncumberAssetsComponent implements OnInit, OnDestroy {
                     instrument: formValues.asset[0].id.split('|')[1],
                     amount: formValues.amount,
                     beneficiaries: [
-                        [formValues.toAddress, startUTCSecs, endUTCSecs],
+                        [formValues.recipient, startUTCSecs, endUTCSecs],
                     ],
                     administrators: [
-                        [formValues.toAddress, startUTCSecs, endUTCSecs],
+                        [formValues.recipient, startUTCSecs, endUTCSecs],
                     ],
                     protocol: '',
                     metadata: '',
@@ -179,10 +179,10 @@ export class EncumberAssetsComponent implements OnInit, OnDestroy {
     }
 
     /**
-    * Creates an encumberAssetsForm.
-    *
-    * @return {void}
-    */
+     * Creates an encumberAssetsForm.
+     *
+     * @return {void}
+     */
     setFormGroup(): void {
         this.encumberAssetsForm = new FormGroup({
             asset: new FormControl('', Validators.required),
@@ -190,10 +190,11 @@ export class EncumberAssetsComponent implements OnInit, OnDestroy {
             recipient: new FormControl('', Validators.required),
             amount: new FormControl('', [Validators.required, Validators.pattern('^((?!(0))[0-9]+)$')]),
             reference: new FormControl(''),
-            fromDateUTC: new FormControl('', Validators.required),
+            fromDateUTC: new FormControl('', [Validators.required,
+                Validators.pattern('^[0-9]{4}-(0[1-9]|1[012])-(0[1-9]|[12][0-9]|3[01])$')]),
             fromTimeUTC: new FormControl('', Validators.required),
             includeToDate: new FormControl(false),
-            toDateUTC: new FormControl(''),
+            toDateUTC: new FormControl('', Validators.pattern('^[0-9]{4}-(0[1-9]|1[012])-(0[1-9]|[12][0-9]|3[01])$')),
             toTimeUTC: new FormControl(''),
         });
     }
