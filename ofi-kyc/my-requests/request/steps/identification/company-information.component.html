@@ -36,7 +36,7 @@
             <div class="row">
                 <div class="form-group required-field col-sm-3">
                     <label class="control-label" for="geographicalAreaOfActivity">{{'Geographical area of the activity' | translate}}</label>
-                    <ng-select id="geographicalAreaOfActivity" [items]="geographicalAreaList" [allowClear]="true" [formControl]="form.get('geographicalAreaOfActivity')" placeholder="{{'Please select your company area of activity' | translate}}"></ng-select>
+                    <ng-select class="large-select multiline" id="geographicalAreaOfActivity" [items]="geographicalAreaList" [allowClear]="true" [formControl]="form.get('geographicalAreaOfActivity')" placeholder="{{'Please select your company area of activity' | translate}}"></ng-select>
                     <span class="field-error" *ngIf="hasError('geographicalAreaOfActivity')">{{'Field is required' | translate}}</span>
                 </div>
 
@@ -124,87 +124,31 @@
                 </div>
             </div>
 
+            <!-- Beneficiaries-->
             <h4>{{'Actual beneficiaries' | translate}}</h4>
             <div class="beneficiaries mb-2">
+
+                <div class="my-1">
+                    <clr-alert [clrAlertClosable]="false" [clrAlertSizeSmall]="true">
+                        <div class="alert-item">
+                            <span class="alert-text">
+                                {{'The first beneficiary you will add will be a direct beneficiary. You can then add other direct or indirect beneficiaries by clicking on the "Add another beneficiary" button.' | translate}}
+                            </span>
+                        </div>
+                    </clr-alert>
+                    <clr-alert [clrAlertSizeSmall]="true" [clrAlertType]="'alert-warning'" [clrAlertClosable]="false">
+                        <div class="alert-item">
+                            <span class="alert-text">
+                                {{'Please fill information for all beneficiaries that hold more than 10% of the company.' | translate}}
+                            </span>
+                        </div>
+                    </clr-alert>
+                </div>
+
                 <div class="my-1 pl-1 beneficiary" *ngFor="let beneficiary of beneficiaries; let i = index" formArrayName="beneficiaries">
                     <a *ngIf="i > 0" class="close text-warning" (click)="removeBeneficiary(i)"><i class="fa fa-times-circle"></i></a>
 
-                    <div [formGroupName]="i">
-                        <div class="row">
-                            <div class="form-group required-field col-sm-6">
-                                <label class="control-label" for="firstName">{{'First name' | translate}}</label>
-                                <input type="text" id="firstName" formControlName="firstName">
-                                <span class="field-error" *ngIf="hasError(['beneficiaries', i, 'firstName'], ['required'])">{{'Field is required' | translate}}</span>
-                                <span class="field-error" *ngIf="hasError(['beneficiaries', i, 'firstName'], ['maxlength'])">{{'Field is too long' | translate}}</span>
-                            </div>
-                            <div class="form-group required-field col-sm-6">
-                                <label class="control-label" for="lastName">{{'Last name' | translate}}</label>
-                                <input type="text" id="lastName" formControlName="lastName">
-                                <span class="field-error" *ngIf="hasError(['beneficiaries', i, 'lastName'], ['required'])">{{'Field is required' | translate}}</span>
-                                <span class="field-error" *ngIf="hasError(['beneficiaries', i, 'lastName'], ['maxlength'])">{{'Field is too long' | translate}}</span>
-                            </div>
-                        </div>
-
-                        <div class="row">
-                            <div class="form-group required-field col-sm-6">
-                                <label class="control-label" for="address">{{'Address' | translate}}</label>
-                                <input type="text" id="address" formControlName="address">
-                                <span class="field-error" *ngIf="hasError(['beneficiaries', i, 'address'])">{{'Field is required' | translate}}</span>
-                            </div>
-                            <div class="form-group required-field col-sm-6">
-                                <label class="control-label" for="nationality">{{'Nationality' | translate}}</label>
-                                <ng-select id="nationality" [items]="countries" formControlName="nationality" placeholder="{{'Select a country' | translate}}"></ng-select>
-                                <span class="field-error" *ngIf="hasError(['beneficiaries', i, 'nationality'])">{{'Field is required' | translate}}</span>
-                            </div>
-                        </div>
-
-                        <div class="row">
-                            <div class="form-group required-field col-sm-6">
-                                <label for="dateOfBirth-{{i}}" class="control-label">{{'Date of birth' | translate}}</label>
-
-                                <div class="input-group date-pick-wrapper">
-                                    <span class="fa fa-calendar" aria-hidden="true"></span>
-                                    <input autocomplete="off" [dpDayPicker]="configDate" id="dateOfBirth-{{i}}" formControlName="dateOfBirth" placeholder="{{configDate.format}}" mode="day" theme="dp-material">
-                                </div>
-                                <span class="field-error" *ngIf="hasError(['beneficiaries', i, 'dateOfBirth'])">{{'Field is required' | translate}}</span>
-                            </div>
-
-                            <div class="form-group required-field col-sm-6">
-                                <label class="control-label" for="cityOfBirth-{{i}}">{{'City of birth' | translate}}</label>
-                                <input type="text" id="cityOfBirth-{{i}}" formControlName="cityOfBirth">
-                                <span class="field-error" *ngIf="hasError(['beneficiaries', i, 'cityOfBirth'], ['required'])">{{'Field is required' | translate}}</span>
-                                <span class="field-error" *ngIf="hasError(['beneficiaries', i, 'cityOfBirth'], ['maxlength'])">{{'Field is too long' | translate}}</span>
-                            </div>
-                        </div>
-
-                        <div class="row">
-                            <div class="form-group required-field col-sm-6">
-                                <label class="control-label" for="countryOfBirth-{{i}}">{{'Country of birth' | translate}}</label>
-                                <ng-select id="countryOfBirth-{{i}}" [items]="countries" formControlName="countryOfBirth" placeholder="{{'Select a country' | translate}}"></ng-select>
-                                <span class="field-error" *ngIf="hasError(['beneficiaries', i, 'countryOfBirth'])">{{'Field is required' | translate}}</span>
-                            </div>
-
-                            <div class="form-group required-field col-sm-6">
-                                <label for="beneficiary-document-{{i}}" class="control-label">{{'Identity proof document' | translate}}</label>
-                                <div class="filedrop-wrapper">
-                                    <setl-file-drop filePermission="0" class="form-control" id="beneficiary-document-{{i}}"
-                                                    (onDrop)="uploadFile($event, i)"
-                                                    [preset]="form.get(['beneficiaries', i, 'document']).value"
-                                                    ngDefaultControl
-                                    ></setl-file-drop>
-                                </div>
-                            </div>
-                        </div>
-
-                        <div class="row">
-                            <div class="form-group required-field col-sm-6">
-                                <label for="holdingPercentage">{{'Holding percentage' | translate}}</label>
-                                <input id="holdingPercentage" type="number" formControlName="holdingPercentage" placeholder="%">
-                                <span class="field-error" *ngIf="hasError(['beneficiaries', i, 'holdingPercentage'], ['required'])">{{'Field is required' | translate}}</span>
-                                <span class="field-error" *ngIf="hasError(['beneficiaries', i, 'holdingPercentage'], ['min', 'max'])">{{'Value must be between 0 and 100' | translate}}</span>
-                            </div>
-                        </div>
-                    </div>
+                    <beneficiary [form]="beneficiary" [index]="i" (ready)="handleReady()"></beneficiary>
                 </div>
 
                 <div class="form-group col-xs-12">
@@ -213,6 +157,8 @@
                     </button>
                 </div>
             </div>
+            <!-- End beneficiaries -->
+
 
             <div class="mb-1" formGroupName="capitalNature">
 
