@@ -193,8 +193,6 @@ import { animate, state, style, transition, trigger } from '@angular/animations'
             background: #f8fafb;
             min-height: 60px;
             padding: 0;
-            display: -ms-flexbox;
-            /*display: flex;*/
             -ms-flex-align: center;
             align-items: center;
             -ms-flex-pack: end;
@@ -214,6 +212,7 @@ import { animate, state, style, transition, trigger } from '@angular/animations'
             padding-left: 35px;
             padding-right: 35px;
             cursor: pointer;
+            background: #ffffff;
         }
 
         .jaspero__dialog-actions button.default {
