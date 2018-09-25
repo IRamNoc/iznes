@@ -22,7 +22,7 @@ export interface OfiAmOrdersRequestBody extends OfiMemberNodeBody {
     status?: any;
     orderType?: any;
     isin?: any;
-    orderID?: any;
+    orderId?: any;
     currency?: any;
     quantity?: any;
     amountWithCost?: any;
@@ -30,7 +30,7 @@ export interface OfiAmOrdersRequestBody extends OfiMemberNodeBody {
     fromDate?: any;
     toDate?: any;
     pageSize?: any;
-    rowOffSet?: any;
+    rowOffset?: any;
     sortByField?: any;
     sortOrder?: any;
 }
