@@ -87,12 +87,19 @@
                 <div class="form-horizontal">
                     <div class="row">
                         <div class="form-group col-sm-6">
-                            <label class="control-label required-field" mltag="txt_username">Username</label>
+                            <div class="tooltip left tooltip-md">
+                                <i class="fa fa-info-circle"></i>
+                                <span class="tooltip-content">Username cannot exceed 45 characters, cannot contain spaces and can only contain letters, numbers and the following characters: . - _ @</span>
+                                <label class="control-label required-field tooltip-wrapped" mltag="txt_username">Username</label>
+                            </div>
                             <input id="new-user-username" type="text" formControlName="username"
                                    placeholder="Username" class="form-control username mlp_translated"
                                    mltag="txt_username">
                             <div *ngIf="formControl.controls.username.hasError('required') && formControl.controls.username.touched"
                                  class="field-error" mltag="txt_thisfieldisrequired">This field is required
+                            </div>
+                            <div *ngIf="formControl.controls.username.hasError('pattern') && !formControl.controls.username.hasError('required') && formControl.controls.username.touched"
+                                 class="field-error">Invalid username format
                             </div>
                         </div>
 

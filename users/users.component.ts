@@ -1497,7 +1497,7 @@ export class AdminUsersComponent implements OnInit, AfterViewInit, OnDestroy {
         /* Declare the group. */
         const group = new FormGroup(
             {
-                username: new FormControl('', [Validators.required]),
+                username: new FormControl('', [Validators.required, Validators.pattern('^[A-Za-z0-9-_@.]{1,45}$')]),
                 email: new FormControl('', [Validators.required, Validators.email]),
                 accountType: new FormControl('', [Validators.required]),
                 userType: new FormControl('', [Validators.required]),
