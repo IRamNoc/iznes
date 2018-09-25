@@ -20,7 +20,7 @@ node {
 
             sh '''
                             ssh root@139.162.213.130 rsync -avzhm --stats /var/phpapps/daemon-node /var/ofi_backups/daemon-node &&
-                            php /var/lib/jenkins/build/tools/deploy-code.php staging.iznes.io daemonnode master
+                            php /var/lib/jenkins/build/tools/deploy-code.php uk-lon-li-006.opencsd.io daemonnode master
                             '''
         }
 
