@@ -8,7 +8,8 @@ import { DomSanitizer } from '@angular/platform-browser';
 })
 export class BasicTileComponent implements OnInit {
 
-    @HostBinding('style') style: any = '';
+    @HostBinding('style.backgroundColor') backgroundColor: any = '';
+    @HostBinding('style.gridArea') gridArea: any = '';
     @HostBinding('class') class = '';
 
     @Input() public color: string;
@@ -25,19 +26,8 @@ export class BasicTileComponent implements OnInit {
     }
 
     ngOnInit() {
-        this.style = this.sanitizer.bypassSecurityTrustStyle(this.getStyle());
+        this.backgroundColor = this.sanitizer.bypassSecurityTrustStyle(this.colors[this.color]);
+        this.gridArea = this.sanitizer.bypassSecurityTrustStyle(this.name);
         this.class = 'blocs';
-    }
-
-    getStyle(): string {
-        const styles = {
-            'grid-area': this.name,
-            'background-color': this.colors[this.color],
-        };
-
-        return Object.keys(styles).reduce(
-            (acc, key) => `${acc} ${key}: ${styles[key]};`,
-            '',
-        );
     }
 }
