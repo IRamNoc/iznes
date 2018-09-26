@@ -236,8 +236,8 @@ export class SelectComponent implements OnInit, ControlValueAccessor {
         const target = e.target || e.srcElement;
         if (target && target.value) {
             this.inputValue = target.value;
-            // Only filter results if input is larger than 2 characters
-            if (this.inputValue.length >= 2) {
+            // Only filter results if input is larger than 2 characters or there are less than 1000 items total.
+            if (this.inputValue.length >= 2 || this.itemObjects.length < 1000) {
                 this.behavior.filter(new RegExp(escapeRegexp(this.inputValue), 'ig'));
                 this.doEvent('typed', this.inputValue);
             }
