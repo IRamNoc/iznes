@@ -54,15 +54,14 @@ export class IdentificationService {
             let formGroupBanking = form.get('bankingInformation');
             formGroupBanking.get('kycID').setValue(kycID);
 
-            let formGroupBankingCustom = formGroupBanking.get('custodianHolderCustom');
-            let formGroupBankingCustomValue = formGroupBankingCustom.value;
-            let formGroupBankingValue = omit(formGroupBanking.value, 'custodianHolderCustom');
-            formGroupBankingCustomValue.forEach((singleCustomValue, key) => {
-                let data = merge({}, singleCustomValue, formGroupBankingValue);
-                data = pickBy(data);
+            let formGroupBankingHolders = formGroupBanking.get('custodianHolders');
+            let formGroupBankingHoldersValue = formGroupBankingHolders.value;
+            formGroupBankingHoldersValue.forEach((singleHolderValue, key) => {
+                let data = pickBy(singleHolderValue);
+                data = Object.assign({}, data, { kycID });
 
                 let bankingPromise = this.sendRequestBanking(data).then(data => {
-                    (formGroupBankingCustom as FormArray).at(key).get('custodianID').patchValue(data.custodianID);
+                    (formGroupBankingHolders as FormArray).at(key).get('custodianID').patchValue(data.custodianID);
                 });
                 promises.push(bankingPromise);
             });
@@ -166,7 +165,7 @@ export class IdentificationService {
 
         const messageBody = {
             RequestName: 'updatekycbanking',
-            ...extracted
+            ...extracted,
         };
 
         return this.requestsService.sendRequest(messageBody).then(response => getValue(response, [1, 'Data', 0]));

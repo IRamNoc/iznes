@@ -46,7 +46,7 @@ import {
     clientNeedsList,
     investmentHorizonList,
     riskProfileList,
-    riskAcceptanceList
+    riskAcceptanceList,
 } from '../requests.config';
 
 @Injectable()
@@ -168,7 +168,7 @@ export class NewRequestService {
             identification,
             riskProfile,
             documents,
-            validation
+            validation,
         });
     }
 
@@ -302,8 +302,7 @@ export class NewRequestService {
         });
         const bankingInformation = fb.group({
             kycID: '',
-            custodianHolderAccount: ['', Validators.required],
-            custodianHolderCustom: fb.array([this.createHolderCustom()])
+            custodianHolders: fb.array([this.createHolder()])
         });
         const classificationInformation = fb.group({
             kycID: '',
@@ -328,8 +327,8 @@ export class NewRequestService {
                 activitiesBenefitFromExperience: '',
                 activitiesBenefitFromExperienceSpecification: [
                     { value: '', disabled: true },
-                    Validators.required
-                ]
+                    Validators.required,
+                ],
             })
         });
 
@@ -337,7 +336,7 @@ export class NewRequestService {
             generalInformation,
             companyInformation,
             bankingInformation,
-            classificationInformation
+            classificationInformation,
         });
     }
 
@@ -564,17 +563,17 @@ export class NewRequestService {
         });
     }
 
-    createHolderCustom() {
+    createHolder() {
         return this.formBuilder.group({
             custodianID: '',
-            custodianHolderAccount: '',
-            custodianName: ['', this.getLengthValidator()],
-            custodianIban: ['', this.getLengthValidator().concat([CustomValidators.ibanValidator])],
-            custodianAddressLine1: ['', this.getLengthValidator(255)],
-            custodianAddressLine2: ['', Validators.maxLength(255)],
-            custodianZipCode: ['', this.getLengthValidator(10)],
-            custodianCity: ['', this.getLengthValidator()],
-            custodianCountry: ['', Validators.required]
+            establishmentName: ['', this.getLengthValidator()],
+            iban: ['', this.getLengthValidator().concat([CustomValidators.ibanValidator])],
+            bic: ['', this.getLengthValidator().concat([CustomValidators.bicValidator])],
+            addressLine1: ['', this.getLengthValidator(255)],
+            addressLine2: ['', Validators.maxLength(255)],
+            zipCode: ['', this.getLengthValidator(10)],
+            city: ['', this.getLengthValidator()],
+            country: ['', Validators.required],
         });
     }
 

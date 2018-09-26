@@ -113,7 +113,7 @@ export class NewKycIdentificationComponent implements OnInit {
         if (holders.length > 1) {
             holdersControl.controls.splice(0);
             for (let i = 0; i < holders.length; i += 1) {
-                holdersControl.push(this.newRequestService.createHolderCustom());
+                holdersControl.push(this.newRequestService.createHolder());
             }
         }
     }
