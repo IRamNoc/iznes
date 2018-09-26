@@ -204,7 +204,6 @@ export class EncumberAssetsComponent implements OnInit, OnDestroy {
      * @param {boolean} value
      */
     toggleEndDate(value: boolean): void {
-        console.log('+++ value', value);
         this.isEncumberEnd = value;
         if (value) {
             this.encumberAssetsForm.controls.toDateUTC.setValidators([
