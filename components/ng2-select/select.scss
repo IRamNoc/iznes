@@ -211,7 +211,8 @@
 }
 
 .dropdown-menu ul {
-    overflow-y: scroll;
+    overflow-y: auto;
+    max-height: 145px;
 }
 
 .ui-select-container:hover {
@@ -280,13 +281,13 @@
 
 :host(.multiline) {
     .ui-select-placeholder,
-    .ui-select-match-text{
+    .ui-select-match-text {
         overflow: hidden;
         text-overflow: ellipsis;
     }
 
     .ui-select-choices-row,
-    .ui-select-choices-row > a{
+    .ui-select-choices-row > a {
         white-space: normal;
     }
 

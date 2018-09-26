@@ -1,6 +1,6 @@
-import {Component, Injector, NgZone} from '@angular/core';
-import {animate, state, style, transition, trigger} from '@angular/animations';
-import {ResolveEmit} from './interfaces/resolve-emit';
+import { Component, Injector, NgZone } from '@angular/core';
+import { animate, state, style, transition, trigger } from '@angular/animations';
+import { ResolveEmit } from './interfaces/resolve-emit';
 
 @Component({
     selector: 'jaspero-confirmation',
@@ -9,7 +9,7 @@ import {ResolveEmit} from './interfaces/resolve-emit';
         <div class="jaspero__dialog" [@wrapperAn]="animationState">
             <div class="jaspero__dialog-title" [innerHtml]="incomingData.title">
             </div>
-            
+
             <div class="jaspero__dialog-icon" *ngIf="incomingData.btnClass != 'success' && incomingData.btnClass != 'error'">
                 <div class="f-modal-alert">
                     <div class="f-modal-icon f-modal-warning scaleWarning">
@@ -147,7 +147,6 @@ import {ResolveEmit} from './interfaces/resolve-emit';
             background: #f8fafb;
             min-height: 60px;
             padding: 0;
-            display: -ms-flexbox;
             -ms-flex-align: center;
             align-items: center;
             -ms-flex-pack: end;
@@ -169,6 +168,7 @@ import {ResolveEmit} from './interfaces/resolve-emit';
             margin-left: 5px;
             margin-right: 5px;
             margin-top: 12px;
+            background: #ffffff;
         }
 
         .jaspero__dialog-actions button.default {
@@ -234,16 +234,16 @@ import {ResolveEmit} from './interfaces/resolve-emit';
     `],
     animations: [
         trigger('overlayAn', [
-            state('void', style({opacity: 0})),
-            state('leave', style({opacity: 0})),
-            state('enter', style({opacity: 1})),
+            state('void', style({ opacity: 0 })),
+            state('leave', style({ opacity: 0 })),
+            state('enter', style({ opacity: 1 })),
             transition('void => enter', animate('400ms cubic-bezier(.25,.8,.25,1)')),
             transition('enter => leave', animate('400ms cubic-bezier(.25,.8,.25,1)'))
         ]),
         trigger('wrapperAn', [
-            state('void', style({opacity: 0, transform: 'scale(0.75, 0.75) translate(0, 0)'})),
-            state('leave', style({opacity: 0, transform: 'scale(0.75, 0.75) translate(0, 0)'})),
-            state('enter', style({opacity: 1, transform: 'scale(1, 1) translate(0, 0)'})),
+            state('void', style({ opacity: 0, transform: 'scale(0.75, 0.75) translate(0, 0)' })),
+            state('leave', style({ opacity: 0, transform: 'scale(0.75, 0.75) translate(0, 0)' })),
+            state('enter', style({ opacity: 1, transform: 'scale(1, 1) translate(0, 0)' })),
             transition('void => enter', animate('450ms cubic-bezier(.5, 1.4, .5, 1)')),
             transition('enter => leave', animate('450ms cubic-bezier(.5, 1.4, .5, 1)'))
         ])
