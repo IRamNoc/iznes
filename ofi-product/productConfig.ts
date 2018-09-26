@@ -635,50 +635,6 @@ export const fundItems = {
             { id : 18, text: 'Restricted authorised CIS' },
         ],
     },
-    fundCurrencyItems: [
-        {
-            id: '0', text: 'EUR Euro',
-        },
-        {
-            id: '1', text: 'USD US Dollar',
-        },
-        {
-            id: '2', text: 'GBP Pound Sterling',
-        },
-        {
-            id: '3', text: 'CHF Swiss Franc',
-        },
-        {
-            id: '4', text: 'JPY Yen',
-        },
-        {
-            id: '5', text: 'AUD Australian Dollar',
-        },
-        {
-            id: '6', text: 'NOK Norwegian Krone',
-        },
-        {
-            id: '7', text: 'SEK Swedish Krona',
-        },
-        {
-            id: '8', text: 'ZAR Rand',
-        },
-        {
-            id: '9', text: 'RUB Russian Ruble',
-        },
-        {
-            id: '10', text: 'SGD Singapore Dollar',
-        },
-        {
-            id: '11', text: 'AED United Arab Emirates Dirham',
-        },
-        {
-            id: '12', text: 'CNY Yuan Renminbi',
-        },
-        {
-            id: '13', text: 'PLN Zloty',
-        },
-    ],
     portfolioCurrencyHedgeItems: [
         { id : 1, text: 'No Hedge' },
         { id : 2, text: 'Full Portfolio Hedge' },

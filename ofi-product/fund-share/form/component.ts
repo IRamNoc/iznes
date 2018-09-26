@@ -530,19 +530,23 @@ export class FundShareComponent implements OnInit, OnDestroy {
     }
 
     private getCurrencyList(data): void {
-        if (data) {
-            const currencies = data.toJS();
-
-            // Key facts
-            this.model.keyFacts.mandatory.shareClassCurrency.listItems = currencies;
-            this.model.keyFacts.optional.indexCurrency.listItems = currencies;
-
-            // Characteristics
-            this.model.characteristic.mandatory.subscriptionCurrency.listItems = currencies;
-            this.model.characteristic.mandatory.redemptionCurrency.listItems = currencies;
-
-            this.changeDetectorRef.markForCheck();
+        if (!data) {
+            return;
         }
+
+        const currencies = data.toJS();
+
+        this.model.fund.currency.listItems = currencies;
+
+        // Key facts
+        this.model.keyFacts.mandatory.shareClassCurrency.listItems = currencies;
+        this.model.keyFacts.optional.indexCurrency.listItems = currencies;
+
+        // Characteristics
+        this.model.characteristic.mandatory.subscriptionCurrency.listItems = currencies;
+        this.model.characteristic.mandatory.redemptionCurrency.listItems = currencies;
+
+        this.changeDetectorRef.markForCheck();
     }
 
     private generateListItems(fundShareList): any[] {
