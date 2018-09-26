@@ -349,7 +349,7 @@ Here is the message that will be sent to the investor:<br />
         this.kycService.askMoreInfo(payload).then(() => {
             this.toast.pop('success', 'An email has been sent to ' + this.investor.companyName.value + ' in order to ask for more information.');
             this.setAmKycListRequested(true);
-            this._router.navigateByUrl('/kyc-am-documents');
+            this._router.navigateByUrl('/on-boarding/management');
         }).catch((error) => {
             const data = error[1].Data[0];
 
@@ -411,7 +411,7 @@ Here is the message that will be sent to the investor:<br />
             this.redux.dispatch({
                 type: CLEAR_REQUESTED
             });
-            this._router.navigateByUrl('kyc-am-documents');
+            this._router.navigateByUrl('/on-boarding/management');
         });
     }
 
@@ -481,7 +481,7 @@ Here is the message that will be sent to the investor:<br />
         this.kycService.reject(payload).then(() => {
             this.toast.pop('success', 'The KYC request has been successfully rejected.');
             this.setAmKycListRequested(true);
-            this._router.navigateByUrl('/kyc-am-documents');
+            this._router.navigateByUrl('/on-boarding/management');
         }).catch((error) => {
             const data = error[1].Data[0];
 
