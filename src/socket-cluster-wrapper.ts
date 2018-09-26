@@ -8,7 +8,6 @@ import * as _ from 'lodash';
 import * as sha256 from 'sha256';
 import * as SocketCluster from 'socketcluster-client';
 import * as _sodium from 'libsodium-wrappers';
-import { P } from "../../../node_modules/@angular/core/src/render3";
 
 const initialRequestTemplate = {
     EndPoint: 'member',
