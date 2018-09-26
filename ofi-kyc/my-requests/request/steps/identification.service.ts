@@ -163,7 +163,7 @@ export class IdentificationService {
         };
         return this.requestsService.sendRequest(messageBody).then((data) => {
             const companyBeneficiariesID = getValue(data, [1, 'Data', 0, 'companyBeneficiariesID']);
-            console.log('********** companyBeneficiariesID', companyBeneficiariesID, data);
+
             if (companyBeneficiariesID) {
                 formGroupBeneficiary.controls['companyBeneficiariesID'].setValue(companyBeneficiariesID);
             }

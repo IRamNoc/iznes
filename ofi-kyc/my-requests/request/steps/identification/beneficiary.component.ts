@@ -1,9 +1,10 @@
 import { Component, Input, Output, EventEmitter, OnInit, OnDestroy } from '@angular/core';
-import { FormControl } from '@angular/forms';
+import { AbstractControl, FormControl } from '@angular/forms';
 import { Subject } from 'rxjs';
 import { takeUntil } from 'rxjs/operators';
 import { get as getValue } from 'lodash';
 
+import {sirenValidator, siretValidator} from '@setl/utils/helper/validators';
 import { RequestsService } from '../../../requests.service';
 import { NewRequestService, configDate } from '../../new-request.service';
 import { countries } from '../../../requests.config';
@@ -65,7 +66,6 @@ export class BeneficiaryComponent implements OnInit, OnDestroy {
         .pipe(takeUntil(this.unsubscribe))
         .subscribe((data) => {
             const nationalIdNumberValue = getValue(data, [0, 'id']);
-            console.log('***** blegh value', nationalIdNumberValue);
 
             this.formCheckNationalIdNumber(nationalIdNumberValue);
         })
@@ -73,28 +73,37 @@ export class BeneficiaryComponent implements OnInit, OnDestroy {
     }
 
     formCheckNationalIdNumber(value) {
-        const nationalIdNumberTextControl = this.form.get('legalPerson.nationalIdNumberText');
+        const nationalIdNumberTextControl: AbstractControl = this.form.get('legalPerson.nationalIdNumberText');
 
-        if (value === 'other') {
+        if (value) {
             nationalIdNumberTextControl.enable();
+
+            if (value === 'siren') {
+                nationalIdNumberTextControl.setValidators([sirenValidator]);
+            } else if (value === 'siret') {
+                nationalIdNumberTextControl.setValidators([siretValidator]);
+            } else {
+                nationalIdNumberTextControl.clearValidators();
+            }
         } else {
             nationalIdNumberTextControl.disable();
         }
+
+        nationalIdNumberTextControl.updateValueAndValidity();
     }
 
     formCheckBeneficiaryType(value) {
-        const legalPersonControl = this.form.get('legalPerson');
-        const naturalPersonControl = this.form.get('naturalPerson');
+        const legalPersonControl: AbstractControl = this.form.get('legalPerson');
+        const naturalPersonControl: AbstractControl = this.form.get('naturalPerson');
 
         if (value === 'legalPerson') {
             legalPersonControl.enable();
             naturalPersonControl.disable();
+            (this.form.get('legalPerson.nationalIdNumber') as FormControl).updateValueAndValidity();
         } else if (value === 'naturalPerson') {
             naturalPersonControl.enable();
-            legalPersonControl.disable();
+            legalPersonControl.disable({ emitEvent: false });
         }
-
-        (this.form.get('legalPerson.nationalIdNumber') as FormControl).updateValueAndValidity();
     }
 
     uploadFile($event) {
