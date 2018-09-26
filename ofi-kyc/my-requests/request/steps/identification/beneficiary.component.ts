@@ -1,5 +1,5 @@
 import { Component, Input, Output, EventEmitter, OnInit, OnDestroy } from '@angular/core';
-import { AbstractControl, FormControl } from '@angular/forms';
+import { AbstractControl, FormControl, Validators } from '@angular/forms';
 import { Subject } from 'rxjs';
 import { takeUntil } from 'rxjs/operators';
 import { get as getValue } from 'lodash';
@@ -79,12 +79,14 @@ export class BeneficiaryComponent implements OnInit, OnDestroy {
             nationalIdNumberTextControl.enable();
 
             if (value === 'siren') {
-                nationalIdNumberTextControl.setValidators([sirenValidator]);
+                nationalIdNumberTextControl.setValidators([sirenValidator, Validators.required]);
             } else if (value === 'siret') {
-                nationalIdNumberTextControl.setValidators([siretValidator]);
+                nationalIdNumberTextControl.setValidators([siretValidator, Validators.required]);
             } else {
-                nationalIdNumberTextControl.clearValidators();
+                nationalIdNumberTextControl.setValidators([Validators.required]);
             }
+
+            this.ready.emit();
         } else {
             nationalIdNumberTextControl.disable();
         }
