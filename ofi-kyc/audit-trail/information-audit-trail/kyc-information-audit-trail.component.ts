@@ -113,7 +113,7 @@ export class KycInformationAuditTrailComponent implements OnInit, OnDestroy, OnC
     ngOnInit() {
 
         if (this.kycID) {
-            this.kycService.getInformationAuditByKycID(this.kycID);
+            this.kycService.fetchInformationAuditByKycID(this.kycID);
         }
 
         this.informationAuditTrail$
@@ -147,7 +147,7 @@ export class KycInformationAuditTrailComponent implements OnInit, OnDestroy, OnC
 
     ngOnChanges(changes) {
         if (changes.kycID.currentValue !== changes.kycID.previousValue && changes.kycID.currentValue) {
-            this.kycService.getInformationAuditByKycID(changes.kycID.currentValue);
+            this.kycService.fetchInformationAuditByKycID(changes.kycID.currentValue);
         }
     }
 

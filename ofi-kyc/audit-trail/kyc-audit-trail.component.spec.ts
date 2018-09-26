@@ -1,7 +1,8 @@
 import { ComponentFixture, TestBed, fakeAsync, tick } from '@angular/core/testing';
-import { DebugElement, Pipe, PipeTransform } from '@angular/core';
-import { By } from '@angular/platform-browser';
+import { Pipe, PipeTransform } from '@angular/core';
 import { of } from 'rxjs/observable/of';
+import { NgRedux } from '@angular-redux/store';
+import { MockNgRedux } from '@angular-redux/store/testing';
 
 import { KycAuditTrailComponent } from './kyc-audit-trail.component';
 import { KycStatusAuditTrailComponent } from './status-audit-trail/kyc-status-audit-trail.component';
@@ -23,7 +24,7 @@ const getStatusAuditByKycID = jasmine.createSpy('getStatusAuditByKycID')
             resolve();
         }),
 );
-const getInformationAuditByKycID = jasmine.createSpy('getInformationAuditByKycID')
+const fetchInformationAuditByKycID = jasmine.createSpy('fetchInformationAuditByKycID')
     .and.returnValue(
         new Promise((resolve, reject) => {
             resolve();
@@ -31,7 +32,7 @@ const getInformationAuditByKycID = jasmine.createSpy('getInformationAuditByKycID
 );
 const ofiKycServiceSpy = {
     getStatusAuditByKycID,
-    getInformationAuditByKycID,
+    fetchInformationAuditByKycID,
 };
 
 const fileDownloaderStub = {
@@ -63,8 +64,6 @@ describe('KycAuditTrailComponent', () => {
 
     let comp: KycAuditTrailComponent;
     let fixture: ComponentFixture<KycAuditTrailComponent>;
-    let de: DebugElement;
-    let el: HTMLElement;
 
     const resetTestingModule = TestBed.resetTestingModule;
 
@@ -91,6 +90,7 @@ describe('KycAuditTrailComponent', () => {
                 { provide: MemberSocketService, useValue: memberSocketServiceStub },
                 { provide: MultilingualService, useValue: multilingualServiceStub },
                 { provide: 'kycEnums', useValue: kycEnums },
+                { provide: NgRedux, useFactory: MockNgRedux.getInstance },
             ],
         }).compileComponents();
         TestBed.resetTestingModule = () => TestBed;
@@ -105,17 +105,21 @@ describe('KycAuditTrailComponent', () => {
 
         comp = fixture.componentInstance;
 
-        comp.kycListOb.next([
+        const kycListStub = MockNgRedux.getSelectorStub([
+            'ofi',
+            'ofiKyc',
+            'myKycList',
+            'kycList',
+        ]);
+        kycListStub.next([
             {
                 kycID: fakeKycID,
             },
         ]);
+        kycListStub.complete();
 
         tick();
         fixture.detectChanges();
-
-        de = fixture.debugElement.query(By.css('div'));
-        el = de.nativeElement;
     }));
 
     afterEach(() => {
@@ -123,32 +127,8 @@ describe('KycAuditTrailComponent', () => {
     });
 
     describe('structure', () => {
-        it('should have a header with wording: "My Request Audit Trail:"', () => {
-            expect(el.innerText).toContain('My Request Audit Trail:');
-        });
-
-        it('should have an status audit trail component', () => {
-            const statusEl = fixture.debugElement.queryAll(By.css('kyc-information-audit-trail'));
-            expect(statusEl.length).toEqual(1);
-        });
-
-        it('should have an information audit trail component', () => {
-            const informationEl = fixture.debugElement.queryAll(By.css('kyc-information-audit-trail'));
-            expect(informationEl.length).toEqual(1);
-        });
-
         it('should retrieve the kycID from the route', () => {
             expect(comp.kycID).toEqual(fakeKycID);
-        });
-
-        it('should pass the kycID value to the status audit trail component', () => {
-            const statusEl = fixture.debugElement.query(By.css('kyc-status-audit-trail'));
-            expect(statusEl.componentInstance.kycID).toEqual(comp.kycID);
-        });
-
-        it('should pass the kycID value to the information audit trail component', () => {
-            const informationEl = fixture.debugElement.query(By.css('kyc-information-audit-trail'));
-            expect(informationEl.componentInstance.kycID).toEqual(comp.kycID);
         });
     });
 
