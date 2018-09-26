@@ -1298,14 +1298,14 @@ export const controlToName = {
     documentID: 'Document',
     holdingPercentage: 'Holding percentage',
 
-    custodianHolderAccount: 'Custodian holder account',
-    custodianName: "Custodian's name",
-    custodianIban: "Custodian's IBAN",
-    custodianAddressLine1: 'Address line 1',
-    custodianAddressLine2: 'Address line 2',
-    custodianZipCode: 'ZIP code',
-    custodianCity: 'City',
-    custodianCountry: 'Country',
+    establishmentName: "Establishment Name",
+    iban: "IBAN",
+    bic: 'BIC',
+    addressLine1: 'Establishement address',
+    addressLine2: 'Address line 2',
+    zipCode: 'Zip Code',
+    city: 'City',
+    country: 'Country',
 
     // Classification
     investorStatus: 'Investor status',
