@@ -235,13 +235,15 @@ export class SocketClusterWrapper {
                 }
 
                 this.webSocketConn.emit('onMessage', requestText, (error, responseData) => {
+                    let message;
                     if (error) {
-                        console.warn(error);
+                        const errorMsg = _.get(error, 'message', 'Server error detected');
+                        message = { Status: 'Fail', Message: errorMsg };
                     } else {
                         const decoded = GibberishAES.dec(responseData, this.encryption.shareKey);
-                        const message = JSON.parse(decoded);
-                        callback(error, message);
+                        message = JSON.parse(decoded);
                     }
+                    callback(error, message);
                 });
             }
         });
