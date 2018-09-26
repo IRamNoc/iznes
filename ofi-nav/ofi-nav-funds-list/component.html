@@ -100,7 +100,7 @@
                     <clr-dg-cell id="{{'NAV-Pub-Date-'+idx}}" class="col-date" (click)="navigateToShare(item.shareId)">{{item.navPubDate}}</clr-dg-cell>
                     <clr-dg-cell id="{{'NAV-Val-Date'+idx}}" class="col-date" (click)="navigateToShare(item.shareId)" class="{{getNextValuationClass(item.nextValuationDate)}}">{{item.nextValuationDate}}</clr-dg-cell>
                     <clr-dg-cell id="{{'NAV-CCY-'+ (item.currency==0?'EURO-':(item.currency==1?'USD-':'GBP-')) +idx}}" class="col-currency" (click)="navigateToShare(item.shareId)">
-                        {{'@getCurrencyString(item.currency)@ (@getCurrencySymbol(item.currency)@)' | translate: {'getCurrencyString(item.currency)': getCurrencyString(item.currency),'getCurrencySymbol(item.currency)': getCurrencySymbol(item.currency)} }}
+                        {{'@getCurrencyString(item.currency)@' | translate: {'getCurrencyString(item.currency)': getCurrencyString(item.currency)} }}
                     </clr-dg-cell>
                     <clr-dg-cell (click)="navigateToShare(item.shareId)">
                         <span id="{{'NAV-Value-'+idx}}" [hidden]="isNavNull(item.nav)">{{ navToFrontEndString(item.nav)}}</span>
