@@ -4,4 +4,5 @@ export interface ValidateFileMessageBody extends MemberNodeMessageBody {
     token: string;
     walletId: string;
     fileHash: string;
+    fileId: string;
 }

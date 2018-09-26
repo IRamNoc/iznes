@@ -32,6 +32,7 @@ enum ViewType {
 
 export class FileViewerComponent implements OnInit, OnChanges {
     @Input() fileHash: string = null;
+    @Input() fileId: string = null;
     @Input() pdfId: string = null;
     @Input() viewType: ViewType = ViewType.Button;
     @Input() secure: boolean = false;
@@ -118,6 +119,7 @@ export class FileViewerComponent implements OnInit, OnChanges {
             token: this.memberSocketService.token,
             walletId: this.walletId,
             fileHash: this.fileHash,
+            fileId: this.fileId,
             secure: this.secure,
             path: this.securePath,
         };
@@ -163,6 +165,7 @@ export class FileViewerComponent implements OnInit, OnChanges {
             token: this.memberSocketService.token,
             walletId: this.walletId,
             fileHash: this.fileHash,
+            fileId: this.fileId,
         };
 
         createMemberNodeRequest(this.memberSocketService, messageBody).then((result) => {
