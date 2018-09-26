@@ -75,52 +75,54 @@ export class MyHoldingsComponent implements OnInit, OnDestroy {
 
     initSubscriptions() {
         this.currencyList$
-            .pipe(
-                switchMap(() => this.loaded$),
-                filter((loaded) => !loaded),
-                takeUntil(this.unSubscribe),
-            )
-            .subscribe(() => this.currenciesService.getCurrencyList());
+        .pipe(
+            switchMap(() => this.loaded$),
+            filter((loaded) => !loaded),
+            takeUntil(this.unSubscribe),
+        )
+        .subscribe(() => this.currenciesService.getCurrencyList());
 
         this.currencyList$
-            .pipe(filter((v: List<any>) => v && v.size > 0), takeUntil(this.unSubscribe))
-            .subscribe((d) => this.currencyList = d.toJS());
+        .pipe(filter((v: List<any>) => v && v.size > 0), takeUntil(this.unSubscribe))
+        .subscribe((d) => this.currencyList = d.toJS());
 
         this.accountId$
-            .pipe(
-                filter(accountId => accountId && accountId !== 0),
-                takeUntil(this.unSubscribe),
-            )
-            .subscribe(accountId => this.managementCompanyService.setAccountId(accountId));
+        .pipe(
+            filter(accountId => accountId && accountId !== 0),
+            takeUntil(this.unSubscribe),
+        )
+        .subscribe(accountId => this.managementCompanyService.setAccountId(accountId));
 
         combineLatest(
+            this.accountId$,
             this.connectedWallet$,
             this.searchForm.valueChanges,
         ).pipe(
-            filter(([walletId, selectedItem]) => walletId && selectedItem.search.length),
+            filter(([accountId, walletId, selectedItem]) => accountId && accountId !== 0 && walletId && selectedItem.search.length),
             takeUntil(this.unSubscribe),
         )
-        .subscribe(([selectedWalletId, selectedItem]) => {
+        .subscribe(([accountId, selectedWalletId, selectedItem]) => {
+
             const payload: InvestorHoldingRequestData = {
                 amCompanyID: selectedItem.search[0].id,
                 walletID: Number(selectedWalletId),
+                accountID: Number(accountId),
             };
 
             this.ofiReportsService.fetchInvestorHoldingList(payload);
         });
 
         this.investorManagementCompany$
-            .pipe(
-                filter((v: List<any>) => v && v.size > 0),
-                takeUntil(this.unSubscribe),
-            )
-            .subscribe(d => this.formatManagementCompanyList(d));
+        .pipe(
+            filter((v: List<any>) => v && v.size > 0),
+            takeUntil(this.unSubscribe),
+        )
+        .subscribe(d => this.formatManagementCompanyList(d));
 
         combineLatest(
             this.investorHoldingRequested,
             this.investorHoldingList$,
         ).pipe(
-            filter(([requested, v]) => requested && v && v.size > 0),
             takeUntil(this.unSubscribe),
         )
         .subscribe(([requested, d]) => this.formatInvestorHoldingList(d));
@@ -135,10 +137,17 @@ export class MyHoldingsComponent implements OnInit, OnDestroy {
     formatManagementCompanyList(d) {
         const data = d.toJS();
 
-        this.investorManagementCompanyList = data.map(it => ({
+        let allComp = [{
+            id: -1,
+            text: 'All Asset Management Companies',
+        }];
+
+        this.investorManagementCompanyList = allComp.concat(data.map(it => ({
             id: it.companyID,
             text: it.companyName,
-        }));
+        })));
+
+        this.searchForm.controls['search'].setValue(allComp);
 
         this.changeDetectorRef.markForCheck();
     }
@@ -152,24 +161,22 @@ export class MyHoldingsComponent implements OnInit, OnDestroy {
     formatInvestorHoldingList(d) {
         const data = d.toJS();
 
-        if (data && data.length > 0) {
-            this.holdingList = data.map(it => ({
-                amManagementCompanyID: it.amManagementCompanyID,
-                companyName: it.companyName,
-                shareID: it.shareID,
-                fundShareName: it.fundShareName,
-                isin: it.isin,
-                shareClassCurrency: this.getCurrencyString(it.shareClassCurrency),
-                latestNav: it.latestNav,
-                portfolioAddr: it.portfolioAddr,
-                portfolioLabel: it.portfolioLabel,
-                quantity: it.quantity,
-                amount: it.amount,
-                ratio: it.ratio,
-            }));
+        this.holdingList = data.map(it => ({
+            amManagementCompanyID: it.amManagementCompanyID,
+            companyName: it.companyName,
+            shareID: it.shareID,
+            fundShareName: it.fundShareName,
+            isin: it.isin,
+            shareClassCurrency: this.getCurrencyString(it.shareClassCurrency),
+            latestNav: it.latestNav,
+            portfolioAddr: it.portfolioAddr,
+            portfolioLabel: it.portfolioLabel,
+            quantity: it.quantity,
+            amount: it.amount,
+            ratio: it.ratio,
+        }));
 
-            this.changeDetectorRef.markForCheck();
-        }
+        this.changeDetectorRef.markForCheck();
     }
 
     /**
