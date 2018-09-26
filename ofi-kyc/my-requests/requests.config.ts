@@ -1331,6 +1331,7 @@ export const controlToName = {
     firstName: 'First name',
     lastName: 'Last name',
     address: 'Beneficiary address',
+    address2: 'Address line 2',
     nationality: 'Nationality',
     dateOfBirth: 'Date of birth',
     cityOfBirth: 'City of birth',
@@ -1343,8 +1344,8 @@ export const controlToName = {
     legalName: 'Legal name',
 
     // Custodian
-    establishmentName: "Establishment Name",
-    iban: "IBAN",
+    establishmentName: 'Establishment Name',
+    iban: 'IBAN',
     bic: 'BIC',
     addressLine1: 'Establishement address',
     addressLine2: 'Address line 2',
