@@ -15,14 +15,14 @@ import { FileDownloader } from '@setl/utils';
 import { MemberSocketService } from '@setl/websocket-service';
 import { MultilingualService } from '@setl/multilingual';
 
-const getInformationAuditByKycID = jasmine.createSpy('getInformationAuditByKycID')
+const fetchInformationAuditByKycID = jasmine.createSpy('fetchInformationAuditByKycID')
 .and.returnValue(
     new Promise((resolve, reject) => {
         resolve();
     }),
 );
 const ofiKycServiceSpy = {
-    getInformationAuditByKycID,
+    fetchInformationAuditByKycID,
 };
 
 const fileDownloaderStub = {
@@ -105,55 +105,17 @@ describe('KycInformationAuditTrailComponent', () => {
     }));
 
     afterEach(() => {
-        ofiKycServiceSpy.getInformationAuditByKycID.calls.reset();
+        ofiKycServiceSpy.fetchInformationAuditByKycID.calls.reset();
     });
 
-    describe('structure', () => {
-        it('should have a header with wording: "Request Information Audit Trail"', () => {
-            const headerEl = fixture.debugElement.query(By.css('h2')).nativeElement;
-            expect(headerEl.innerText).toContain('Request Information Audit Trail');
+    describe('service calls', () => {
+        it('should call the fetchInformationAuditByKycID method of OfiKycService on init', () => {
+            expect(ofiKycServiceSpy.fetchInformationAuditByKycID).toHaveBeenCalledTimes(1);
+            expect(ofiKycServiceSpy.fetchInformationAuditByKycID).toHaveBeenCalledWith(comp.kycID);
         });
 
-        it('should have a searchField "Search a section or subsection"', () => {
-            const inputEl = fixture.debugElement.query(By.css('#searchForm > div > div:nth-child(1)')).nativeElement;
-            expect(inputEl.innerText).toContain('Search a section or subsection');
-        });
-
-        it('should have a searchField "Date From"', () => {
-            const inputEl = fixture.debugElement.query(By.css('#searchForm > div > div:nth-child(2)')).nativeElement;
-            expect(inputEl.innerText).toContain('Date From');
-        });
-
-        it('should have a searchField "Date To"', () => {
-            const inputEl = fixture.debugElement.query(By.css('#searchForm > div > div:nth-child(3)')).nativeElement;
-            expect(inputEl.innerText).toContain('Date To');
-        });
-
-        it('should have a datagrid with the columns: Section, Subsection, Information, Old Value, New Value, Modified By, Date', () => {
-            const datagridEl = fixture.debugElement.queryAll(By.css('clr-datagrid'));
-            expect(datagridEl.length).toEqual(1);
-
-            const columnEls = fixture.debugElement.queryAll(By.css('clr-dg-column'));
-            expect(columnEls.length).toEqual(7);
-
-            expect(columnEls[0].nativeElement.innerText).toContain('Section');
-            expect(columnEls[1].nativeElement.innerText).toContain('Subsection');
-            expect(columnEls[2].nativeElement.innerText).toContain('Information');
-            expect(columnEls[3].nativeElement.innerText).toContain('Old Value');
-            expect(columnEls[4].nativeElement.innerText).toContain('New Value');
-            expect(columnEls[5].nativeElement.innerText).toContain('Modified By');
-            expect(columnEls[6].nativeElement.innerText).toContain('Date');
-        });
-    });
-
-    describe('behaviour', () => {
-        it('should call the getInformationAuditByKycID method of OfiKycService on init', () => {
-            expect(ofiKycServiceSpy.getInformationAuditByKycID).toHaveBeenCalledTimes(1);
-            expect(ofiKycServiceSpy.getInformationAuditByKycID).toHaveBeenCalledWith(comp.kycID);
-        });
-
-        it('should call the getInformationAuditByKycID method of OfiKycService on input change', () => {
-            ofiKycServiceSpy.getInformationAuditByKycID.calls.reset();
+        it('should call the fetchInformationAuditByKycID method of OfiKycService on input change', () => {
+            ofiKycServiceSpy.fetchInformationAuditByKycID.calls.reset();
 
             const newKycID = 2;
             comp.ngOnChanges({
@@ -161,19 +123,19 @@ describe('KycInformationAuditTrailComponent', () => {
             });
             fixture.detectChanges();
 
-            expect(ofiKycServiceSpy.getInformationAuditByKycID).toHaveBeenCalledTimes(1);
-            expect(ofiKycServiceSpy.getInformationAuditByKycID).toHaveBeenCalledWith(newKycID);
+            expect(ofiKycServiceSpy.fetchInformationAuditByKycID).toHaveBeenCalledTimes(1);
+            expect(ofiKycServiceSpy.fetchInformationAuditByKycID).toHaveBeenCalledWith(newKycID);
         });
 
-        it('should not call the getInformationAuditByKycID method of OfiKycService', () => {
-            ofiKycServiceSpy.getInformationAuditByKycID.calls.reset();
+        it('should not call the fetchInformationAuditByKycID method of OfiKycService', () => {
+            ofiKycServiceSpy.fetchInformationAuditByKycID.calls.reset();
 
             comp.ngOnChanges({
                 kycID: new SimpleChange(1, 1, null),
             });
             fixture.detectChanges();
 
-            expect(ofiKycServiceSpy.getInformationAuditByKycID).toHaveBeenCalledTimes(0);
+            expect(ofiKycServiceSpy.fetchInformationAuditByKycID).toHaveBeenCalledTimes(0);
         });
 
         it('should call the downLoaderFile method of FileDownloader with the kycId and filters', () => {
