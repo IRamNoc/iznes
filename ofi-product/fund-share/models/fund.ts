@@ -97,7 +97,7 @@ export class ShareFund extends DynamicFormsValidator {
         label: 'Fund Currency',
         required: false,
         disabled: true,
-        listItems: PC.fundItems.fundCurrencyItems,
+        listItems: [],
         mltag: 'txt_fundshare_fund_currency',
     };
     openOrCloseEnded: FormItem = {

@@ -588,11 +588,11 @@ export class FundShare {
         this.fund.fiscalYearEnd.control.setValue(fund.fiscalYearEnd);
         this.fund.isFundOfFunds.control.setValue(fund.isFundOfFund);
         this.setListItemValue(this.fund.managementCompany, fund.managementCompanyID);
-        this.setListItemValue(this.fund.fundAdministrator, fund.fundAdministrator);
-        this.setListItemValue(this.fund.custodianBank, fund.custodianBank);
-        this.setListItemValue(this.fund.investmentManager, fund.investmentManager);
-        this.setListItemValueMultiple(this.fund.principalPromoter, fund.principalPromoter);
-        this.setListItemValueMultiple(this.fund.payingAgent, fund.payingAgent);
+        this.setListItemValue(this.fund.fundAdministrator, fund.fundAdministratorID);
+        this.setListItemValue(this.fund.custodianBank, fund.custodianBankID);
+        this.setListItemValue(this.fund.investmentManager, fund.investmentManagerID);
+        this.setListItemValueMultiple(this.fund.principalPromoter, fund.principlePromoterID);
+        this.setListItemValueMultiple(this.fund.payingAgent, fund.payingAgentID);
         this.setListItemValue(this.fund.fundManagers, fund.fundManagers);
         this.fund.isDedicatedFund.control.setValue(fund.isDedicatedFund);
         this.setListItemValue(this.fund.portfolioCurrencyHedge, fund.portfolioCurrencyHedge);
@@ -602,10 +602,10 @@ export class FundShare {
 
         this.fundOptionnal.globalItermediaryIdentification.control.setValue(fund.globalItermediaryIdentification);
         this.setListItemValue(this.fundOptionnal.delegatedManagementCompany, fund.delegatedManagementCompany);
-        this.setListItemValueMultiple(this.fundOptionnal.investmentAdvisor, fund.investmentAdvisor);
-        this.setListItemValue(this.fundOptionnal.auditor, fund.auditor);
-        this.setListItemValue(this.fundOptionnal.taxAuditor, fund.taxAuditor);
-        this.setListItemValue(this.fundOptionnal.legalAdvisor, fund.legalAdvisor);
+        this.setListItemValueMultiple(this.fundOptionnal.investmentAdvisor, fund.investmentAdvisorID);
+        this.setListItemValue(this.fundOptionnal.auditor, fund.auditorID);
+        this.setListItemValue(this.fundOptionnal.taxAuditor, fund.taxAuditorID);
+        this.setListItemValue(this.fundOptionnal.legalAdvisor, fund.legalAdvisorID);
         this.fundOptionnal.directors.control.setValue(fund.directors);
         this.fundOptionnal.hasEmbeddedDirective.control.setValue(fund.hasEmbeddedDirective);
         this.fundOptionnal.hasCapitalPreservation.control.setValue(fund.hasCapitalPreservation);

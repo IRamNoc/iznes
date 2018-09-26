@@ -40,7 +40,6 @@ export class FundAuditDatagridComponent implements OnInit, OnDestroy, OnChanges 
         private fundService: OfiFundService,
         private fb: FormBuilder,
         public translate: MultilingualService,
-        @Inject('product-config') productConfig,
     ) {
         this.searchForm = this.fb.group({
             startDate: [
@@ -59,14 +58,18 @@ export class FundAuditDatagridComponent implements OnInit, OnDestroy, OnChanges 
         }
 
         this.fundAuditList$
-            .takeUntil(this.unSubscribe)
+            .pipe(
+                takeUntil(this.unSubscribe),
+            )
             .subscribe((d) => {
                 this.fundAuditList = d;
                 this.updateFundAuditItems();
             });
 
         this.searchForm.valueChanges
-            .takeUntil(this.unSubscribe)
+            .pipe(
+                takeUntil(this.unSubscribe),
+            )
             .subscribe((d) => {
                 this.filterAuditItems(d);
             });
