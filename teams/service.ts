@@ -1,5 +1,6 @@
 import { Injectable } from '@angular/core';
 import { NgRedux } from '@angular-redux/store';
+import * as moment from 'moment-timezone';
 
 import {
     SET_ACCOUNT_ADMIN_TEAMS,
@@ -206,6 +207,7 @@ export class UserTeamsService extends AccountAdminBaseService {
             dateFrom,
             dateTo,
             isCSVRequest: false,
+            timezone: moment.tz.guess(),
         };
 
         const asyncTaskPipe = createMemberNodeSagaRequest(this.memberSocketService, request);

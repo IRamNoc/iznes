@@ -121,21 +121,20 @@ export class UserTeamsAuditComponent
                     dataIndex: 'userName',
                     styleClass: 'modifiedby',
                     title: 'Modified by',
-                    valueDecorator: function (entity) {
-                        if (!entity._originalDateModified) {
-                            entity._originalDateModified = entity.dateModified;
-                            const utcDate = moment.utc(entity.dateModified).toDate();
-                            entity.dateModified = moment(utcDate).format('YYYY-MM-DD HH:mm:ss');
-                        }
-
-                        return entity;
-                    },
                 },
                 {
                     id: 'Date',
                     dataIndex: 'dateModified',
                     styleClass: 'date',
                     title: 'Date',
+                    valueDecorator: function (entity) {
+                        if (!entity._originalDateModified) {
+                            entity._originalDateModified = entity.dateModified;
+                            entity.dateModified = moment(entity._originalDateModified).format('YYYY-MM-DD HH:mm:ss');
+                        }
+
+                        return entity;
+                    },
                 },
             ],
         };

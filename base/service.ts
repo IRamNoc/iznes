@@ -1,5 +1,6 @@
 import { Injectable } from '@angular/core';
 import { NgRedux } from '@angular-redux/store';
+import * as moment from 'moment-timezone';
 
 import { SagaHelper, FileDownloader } from '@setl/utils';
 
@@ -60,6 +61,7 @@ export class AccountAdminBaseService {
             userId,
             userName,
             type,
+            timezone: moment.tz.guess(),
         });
     }
 
