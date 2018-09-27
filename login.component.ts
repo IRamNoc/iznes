@@ -96,7 +96,6 @@ export class SetlLoginComponent implements OnDestroy, OnInit, AfterViewInit {
     resetToken = '';
     isTokenExpired = false;
     changePassword = false;
-    validation = 3;
 
     private queryParams: any;
 
@@ -476,44 +475,31 @@ export class SetlLoginComponent implements OnDestroy, OnInit, AfterViewInit {
     }
 
     saveNewPassword(formValues) {
+        const asyncTaskPipe = this.myUserService.setNewPasswordFromToken(
+            {
+                token: this.resetToken,
+                password: formValues.password,
+                lang: this.language
+            });
 
-        this.validation = 0;
-
-        if (formValues.password.length > 7) {
-            this.validation += (formValues.password.match(/[A-Z]/) ? 1 : 0);
-            this.validation += (formValues.password.match(/[a-z]/) ? 1 : 0);
-            this.validation += (formValues.password.match(/[0-9]/) ? 1 : 0);
-            this.validation += (formValues.password.match(/[\u0020-\u002F|\u003A-\u0040|\u005B-\u0060|\u007B-\u007F]/) ? 1 : 0);
-            this.validation += (formValues.password.match(/[\u00A0-\uFFFF]/) ? 1 : 0);
-        }
-
-        if (this.validation > 2) {
-            const asyncTaskPipe = this.myUserService.setNewPasswordFromToken(
-                {
-                    token: this.resetToken,
-                    password: formValues.password,
-                    lang: this.language
-                });
-
-            this.ngRedux.dispatch(SagaHelper.runAsyncCallback(
-                asyncTaskPipe,
-                (data) => {
-                    if (data && data[1] && data[1].Data && data[1].Data[0].Status && data[1].Data[0].Status === 'OK') {
-                        this.changedPassword = true;
-                        this.closeFPModal();
-
-                        this.toasterService.pop('success', 'Your password has been changed!');
-                    } else {
-                        this.alertsService.create('error', '<span class="text-warning">' + data[1].Data[0].Message + '</span>');
-                        this.closeFPModal();
-                    }
-                },
-                (data) => {
-                    this.alertsService.create('error', '<span class="text-warning">Sorry, something went wrong.<br>Please try again later!</span>');
+        this.ngRedux.dispatch(SagaHelper.runAsyncCallback(
+            asyncTaskPipe,
+            (data) => {
+                if (data && data[1] && data[1].Data && data[1].Data[0].Status && data[1].Data[0].Status === 'OK') {
+                    this.changedPassword = true;
                     this.closeFPModal();
-                })
-            );
-        }
+
+                    this.toasterService.pop('success', 'Your password has been changed!');
+                } else {
+                    this.alertsService.create('error', '<span class="text-warning">' + data[1].Data[0].Message + '</span>');
+                    this.closeFPModal();
+                }
+            },
+            (data) => {
+                this.alertsService.create('error', '<span class="text-warning">Sorry, something went wrong.<br>Please try again later!</span>');
+                this.closeFPModal();
+            })
+        );
     }
 
     resetUserPassword(values, $event: Event) {
