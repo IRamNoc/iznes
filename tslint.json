@@ -4,6 +4,11 @@
     ],
     "extends": "tslint-config-setl",
     "rules": {
-        "max-line-length": [true, 200]
+        "max-line-length": [true, 200],
+        "import-blacklist": [false, "rxjs"],
+        "prefer-array-literal": [false],
+        "variable-name": [true, "allow-leading-underscore", "allow-pascal-case"],
+        "prefer-template": [false],
+        "no-increment-decrement": [false]
     }
 }

@@ -41,7 +41,7 @@ import { OfiOrdersModule } from '@ofi/ofi-main/ofi-orders/ofi-orders.module';
         OfiFundInvestModule,
         OfiOrdersModule,
     ],
-    providers: []
+    providers: [],
 })
 
 /* Class. */

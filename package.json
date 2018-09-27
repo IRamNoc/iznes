@@ -8,7 +8,8 @@
   "scripts": {
     "test": "jest --env=node --verbose",
     "test:watch": "jest --watch --env=node --verbose",
-    "lint": "tslint **/*.ts"
+    "lint": "tslint **/*.ts",
+    "lint-fix": "tslint **/*.ts --fix"
   },
   "jest": {
     "moduleFileExtensions": [
@@ -32,6 +33,8 @@
     "@angular/forms": "^6.1.3",
     "@angular/platform-browser": "^6.1.3",
     "@angular/cli": "^6.0.8",
+    "@angular/compiler": "^6.0.7",
+    "@angular/compiler-cli": "^6.0.7",
     "@setl/utils": "git+ssh://git@si-nexus01.dev.setl.io:SETL_Modules/Generic_modules/utils.git",
     "@types/jest": "23.3.1",
     "immutable": "^3.8.2",
