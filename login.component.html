@@ -168,7 +168,6 @@
                                    formControlName="password"
                                    size="45"
                                    [placeholder]="_translate.translate('New password')"
-                                   (focus)="validation = 3"
                             >
                             <span class="toggle-password" (click)="toggleShowPasswords('change1')" [title]="_translate.translate('Show/hide passwords')">
                                 <i class="fa fa-eye-slash" aria-hidden="true"></i>
@@ -179,7 +178,7 @@
                         <div *ngIf="hasError(changePasswordForm.get('password'), 'required')" class="text-danger">
                             {{'Password is required' | translate}}
                         </div>
-                        <div *ngIf="hasError(changePasswordForm.get('password'), 'rules') || validation < 3" class="text-danger">
+                        <div *ngIf="hasError(changePasswordForm.get('password'), 'rules')" class="text-danger">
                             {{'Your password doesn\'t meet the security criteria' | translate}}
                         </div>
                     </div>
@@ -197,7 +196,6 @@
                                    class="form-control"
                                    formControlName="passwordConfirm"
                                    [placeholder]="_translate.translate('Password confirmation')"
-                                   (focus)="validation = 3"
                             >
                             <span class="toggle-password" (click)="toggleShowPasswords('change2')" [title]="_translate.translate('Show/hide passwords')">
                                 <i class="fa fa-eye-slash" aria-hidden="true"></i>
