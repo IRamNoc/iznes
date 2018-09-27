@@ -613,18 +613,25 @@ export class NewRequestService {
         return [Validators.required, Validators.maxLength(maxLength)];
     }
 
-    hasError(form, control: string, error: Array<string> = []) {
-        let formControl = form.get(control);
-        let invalid = formControl.touched && !formControl.valid;
+    hasError(form, control: string, error: string[] = []) {
+        const formControl = form.get(control);
+        const invalid = formControl.touched && !formControl.valid;
 
         if (invalid) {
             if (!error.length) {
                 return invalid;
-            } else {
-                return error.reduce((accumulator, error) => {
-                    return accumulator || formControl.hasError(error);
-                }, false);
             }
+            if (error.indexOf('required') === -1 && formControl.hasError('required')) {
+                return false;
+            }
+
+            return error.reduce(
+                (accumulator, error) => {
+                    return accumulator || formControl.hasError(error);
+                },
+                false,
+            );
+
         }
 
         return false;
