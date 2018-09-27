@@ -46,7 +46,10 @@ import {
     clientNeedsList,
     investmentHorizonList,
     riskProfileList,
-    riskAcceptanceList
+    riskAcceptanceList,
+    beneficiaryTypesList,
+    holdingTypesList,
+    nationalIdNumberList
 } from '../requests.config';
 
 @Injectable()
@@ -75,6 +78,9 @@ export class NewRequestService {
     investmentHorizonList;
     riskProfileList;
     riskAcceptanceList;
+    beneficiaryTypesList;
+    holdingTypesList;
+    nationalIdNumberList;
     saveContext = '';
 
     /* Private Properties. */
@@ -115,6 +121,9 @@ export class NewRequestService {
         this.investmentHorizonList = investmentHorizonList;
         this.riskProfileList = riskProfileList;
         this.riskAcceptanceList = riskAcceptanceList;
+        this.beneficiaryTypesList = beneficiaryTypesList;
+        this.holdingTypesList = holdingTypesList;
+        this.nationalIdNumberList = nationalIdNumberList;
     }
 
     set context(value) {
@@ -168,7 +177,7 @@ export class NewRequestService {
             identification,
             riskProfile,
             documents,
-            validation
+            validation,
         });
     }
 
@@ -302,8 +311,7 @@ export class NewRequestService {
         });
         const bankingInformation = fb.group({
             kycID: '',
-            custodianHolderAccount: ['', Validators.required],
-            custodianHolderCustom: fb.array([this.createHolderCustom()])
+            custodianHolders: fb.array([this.createHolder()])
         });
         const classificationInformation = fb.group({
             kycID: '',
@@ -328,8 +336,8 @@ export class NewRequestService {
                 activitiesBenefitFromExperience: '',
                 activitiesBenefitFromExperienceSpecification: [
                     { value: '', disabled: true },
-                    Validators.required
-                ]
+                    Validators.required,
+                ],
             })
         });
 
@@ -337,7 +345,7 @@ export class NewRequestService {
             generalInformation,
             companyInformation,
             bankingInformation,
-            classificationInformation
+            classificationInformation,
         });
     }
 
@@ -546,35 +554,58 @@ export class NewRequestService {
         return this.formBuilder.group({
             kycID: '',
             companyBeneficiariesID: '',
-            firstName: ['', this.getLengthValidator()],
-            lastName: ['', this.getLengthValidator()],
-            address: ['', Validators.required],
-            nationality: ['', Validators.required],
-            dateOfBirth: ['', Validators.required],
-            cityOfBirth: ['', this.getLengthValidator()],
-            countryOfBirth: ['', Validators.required],
-            document: this.createDocumentFormGroup('kycbeneficiarydoc', !this.isProduction),
-            holdingPercentage: ['', [
-                Validators.required,
-                Validators.min(0),
-                Validators.max(100)
-            ]
-            ],
+            beneficiaryType: ['', Validators.required],
+
+            common: this.formBuilder.group({
+                address: ['', Validators.required],
+                address2: '',
+                zipCode: ['', this.getLengthValidator(10)],
+                city: ['', this.getLengthValidator(255)],
+                country: ['', Validators.required],
+                holdingPercentage: [
+                    '',
+                    [
+                        Validators.required,
+                        Validators.min(0),
+                        Validators.max(100),
+                    ],
+                ],
+                holdingType: ['', Validators.required],
+            }),
+            legalPerson: this.formBuilder.group({
+                legalName: ['', Validators.required],
+                leiCode: ['', [
+                    Validators.required,
+                    Validators.pattern(/^\w{18}\d{2}$|n\/a/i),
+                ]],
+
+                nationalIdNumber: ['', Validators.required],
+                nationalIdNumberText: [{value: '', disabled: true}, Validators.required],
+            }),
+            naturalPerson: this.formBuilder.group({
+                firstName: ['', this.getLengthValidator()],
+                lastName: ['', this.getLengthValidator()],
+                nationality: ['', Validators.required],
+                dateOfBirth: ['', Validators.required],
+                cityOfBirth: ['', this.getLengthValidator()],
+                countryOfBirth: ['', Validators.required],
+                document: this.createDocumentFormGroup('kycbeneficiarydoc', !this.isProduction),
+            }),
             delete: 0,
         });
     }
 
-    createHolderCustom() {
+    createHolder() {
         return this.formBuilder.group({
             custodianID: '',
-            custodianHolderAccount: '',
-            custodianName: ['', this.getLengthValidator()],
-            custodianIban: ['', this.getLengthValidator().concat([CustomValidators.ibanValidator])],
-            custodianAddressLine1: ['', this.getLengthValidator(255)],
-            custodianAddressLine2: ['', Validators.maxLength(255)],
-            custodianZipCode: ['', this.getLengthValidator(10)],
-            custodianCity: ['', this.getLengthValidator()],
-            custodianCountry: ['', Validators.required]
+            establishmentName: ['', this.getLengthValidator()],
+            iban: ['', this.getLengthValidator().concat([CustomValidators.ibanValidator])],
+            bic: ['', this.getLengthValidator().concat([CustomValidators.bicValidator])],
+            addressLine1: ['', this.getLengthValidator(255)],
+            addressLine2: ['', Validators.maxLength(255)],
+            zipCode: ['', this.getLengthValidator(10)],
+            city: ['', this.getLengthValidator()],
+            country: ['', Validators.required],
         });
     }
 
@@ -582,18 +613,25 @@ export class NewRequestService {
         return [Validators.required, Validators.maxLength(maxLength)];
     }
 
-    hasError(form, control: string, error: Array<string> = []) {
-        let formControl = form.get(control);
-        let invalid = formControl.touched && !formControl.valid;
+    hasError(form, control: string, error: string[] = []) {
+        const formControl = form.get(control);
+        const invalid = formControl.touched && !formControl.valid;
 
         if (invalid) {
             if (!error.length) {
                 return invalid;
-            } else {
-                return error.reduce((accumulator, error) => {
-                    return accumulator || formControl.hasError(error);
-                }, false);
             }
+            if (error.indexOf('required') === -1 && formControl.hasError('required')) {
+                return false;
+            }
+
+            return error.reduce(
+                (accumulator, error) => {
+                    return accumulator || formControl.hasError(error);
+                },
+                false,
+            );
+
         }
 
         return false;

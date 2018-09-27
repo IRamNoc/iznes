@@ -286,6 +286,7 @@ export class ManageOrdersComponent implements OnInit, AfterViewInit, OnDestroy {
     routeUpdate(params) {
         const order = this.getOrder(params);
         if (!order) {
+            this.setTabActive(0);
             return;
         }
         this.fundShareID = order.fundShareID;

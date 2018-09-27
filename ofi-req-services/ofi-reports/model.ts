@@ -5,7 +5,7 @@ export interface MemberNodeMessageBody extends MemberNodeMessageBody {
 }
 
 export interface OfiBaseCentralisationHistoryRequestBody
-  extends MemberNodeMessageBody {
+    extends MemberNodeMessageBody {
     token: string;
     fundShareID: any;
 }
@@ -36,12 +36,14 @@ export interface OfiHolderDetailRequestBody extends MemberNodeMessageBody {
 export interface InvestorHoldingRequestData {
     walletID: number;
     amCompanyID: number;
+    accountID: number;
 }
 
 export interface InvestorHoldingRequestBody extends MemberNodeMessageBody {
     token: string;
     walletID: number;
     amCompanyID: number;
+    accountID: number;
 }
 
 /* PRECENTRALISATION */

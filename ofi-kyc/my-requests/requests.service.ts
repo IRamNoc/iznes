@@ -164,7 +164,7 @@ export class RequestsService {
         return this.sendRequest(messageBody).then(response => {
             let data = _.get(response, [1, 'Data']);
 
-            return data;
+            return data.map(beneficiary => this.shapeServerData(beneficiary));
         });
     }
 

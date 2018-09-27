@@ -170,349 +170,349 @@ export class FundShareComponent implements OnInit, OnDestroy {
     private initSubscriptions(): void {
 
         this.userDetailOb
-            .pipe(
-                takeUntil(this.unSubscribe),
-            )
-            .subscribe((userDetail) => {
-                this.model.accountId = userDetail.accountId;
-                this.userType = userDetail.userType;
+        .pipe(
+            takeUntil(this.unSubscribe),
+        )
+        .subscribe((userDetail) => {
+            this.model.accountId = userDetail.accountId;
+            this.userType = userDetail.userType;
 
-                if (this.userType === userTypeEnum.INVESTOR) {
-                    this.mode = FundShareMode.Read;
-                    this.model.disableAllShareFields();
-                    this.ofiManagementCompanyService.fetchInvestorManagementCompanyList();
-                } else {
-                    this.ofiManagementCompanyService.getManagementCompanyList();
-                    this.ofiFundService.getFundList();
-                }
-            });
+            if (this.userType === userTypeEnum.INVESTOR) {
+                this.mode = FundShareMode.Read;
+                this.model.disableAllShareFields();
+                this.ofiManagementCompanyService.fetchInvestorManagementCompanyList();
+            } else {
+                this.ofiManagementCompanyService.getManagementCompanyList();
+                this.ofiFundService.getFundList();
+            }
+        });
 
         this.route.queryParams
-            .pipe(
-                filter(v => v.prefill || v.fund),
-                takeUntil(this.unSubscribe),
-            )
-            .subscribe((params) => {
-                this.mode = FundShareMode.Create;
-                if (params.prefill) {
-                    this.prefill = Number(params.prefill);
-                    this.fundShareId = this.prefill;
-                } else if (params.fund) {
-                    this.fundID = Number(params.fund);
-                    this.model.fundID = this.fundID;
-                }
-            });
+        .pipe(
+            filter(v => v.prefill || v.fund),
+            takeUntil(this.unSubscribe),
+        )
+        .subscribe((params) => {
+            this.mode = FundShareMode.Create;
+            if (params.prefill) {
+                this.prefill = Number(params.prefill);
+                this.fundShareId = this.prefill;
+            } else if (params.fund) {
+                this.fundID = Number(params.fund);
+                this.model.fundID = this.fundID;
+            }
+        });
 
         this.route.paramMap
-            .pipe(
-                filter(v => !!v.get('shareId') as any),
-                takeUntil(this.unSubscribe),
-            )
-            .subscribe((params) => {
-                const fundShareId = params.get('shareId') as any;
-                this.fundShareId = fundShareId ? parseInt(fundShareId) : fundShareId;
-                this.prefill = null;
+        .pipe(
+            filter(v => !!v.get('shareId') as any),
+            takeUntil(this.unSubscribe),
+        )
+        .subscribe((params) => {
+            const fundShareId = params.get('shareId') as any;
+            this.fundShareId = fundShareId ? parseInt(fundShareId) : fundShareId;
+            this.prefill = null;
 
-                if (this.userType === userTypeEnum.AM && this.fundShareId) {
-                    this.model.fundShareId = parseInt(fundShareId);
-                    this.mode = FundShareMode.Update;
-                    if (this.currDraft !== 1) {
-                        this.model.keyFacts.mandatory.fundShareName.disabled = true;
-                        this.model.keyFacts.mandatory.isin.disabled = true;
-                    }
+            if (this.userType === userTypeEnum.AM && this.fundShareId) {
+                this.model.fundShareId = parseInt(fundShareId);
+                this.mode = FundShareMode.Update;
+                if (this.currDraft !== 1) {
+                    this.model.keyFacts.mandatory.fundShareName.disabled = true;
+                    this.model.keyFacts.mandatory.isin.disabled = true;
                 }
+            }
 
-                // if (this.mode === FundShareMode.Create) {
-                //     this.model = FundShareTestData.generate(new FundShare());
-                // }
+            // if (this.mode === FundShareMode.Create) {
+            //     this.model = FundShareTestData.generate(new FundShare());
+            // }
 
-            });
+        });
 
         // Hydrates the duplicate share select
         this.route.queryParams
-            .pipe(
-                filter(v => !!v.prefill),
-                switchMap(() => this.shareListObs),
-                filter(v => Object.keys(v).length !== 0),
-                takeUntil(this.unSubscribe),
-            )
-            .subscribe((shareList) => {
-                if (!shareList || !this.shareListItems) {
-                    return;
-                }
+        .pipe(
+            filter(v => !!v.prefill),
+            switchMap(() => this.shareListObs),
+            filter(v => Object.keys(v).length !== 0),
+            takeUntil(this.unSubscribe),
+        )
+        .subscribe((shareList) => {
+            if (!shareList || !this.shareListItems) {
+                return;
+            }
 
-                this.shareControl.setValue(
-                    [_.find(this.shareListItems, { id: this.prefill.toString() })],
-                    { emitEvent: false },
-                );
-            });
+            this.shareControl.setValue(
+                [_.find(this.shareListItems, { id: this.prefill.toString() })],
+                { emitEvent: false },
+            );
+        });
 
         this.selectFundForm.controls.fund.valueChanges
-            .pipe(
-                takeUntil(this.unSubscribe),
-            )
-            .subscribe((d) => {
-                const id = _.get(d, [0, 'id'], false);
-                if (!id) {
-                    return;
-                }
-                const newFund = this.fundList[id];
-                const newUmbrella = newFund.umbrellaFundID ? this.umbrellaFundList[newFund.umbrellaFundID] : null;
-                this.model.updateFund(newFund, newUmbrella);
+        .pipe(
+            takeUntil(this.unSubscribe),
+        )
+        .subscribe((d) => {
+            const id = _.get(d, [0, 'id'], false);
+            if (!id) {
+                return;
+            }
+            const newFund = this.fundList[id];
+            const newUmbrella = newFund.umbrellaFundID ? this.umbrellaFundList[newFund.umbrellaFundID] : null;
+            this.model.updateFund(newFund, newUmbrella);
 
-                this.selectFundForm.controls.lei.setValue(
-                    this.model.fund.LEI.value() || 'N/A',
-                );
-                this.selectFundForm.controls.domicile.setValue(
-                    _.get(this.model.fund.domicile.value(), [0, 'text'], ''),
-                );
+            this.selectFundForm.controls.lei.setValue(
+                this.model.fund.LEI.value() || 'N/A',
+            );
+            this.selectFundForm.controls.domicile.setValue(
+                _.get(this.model.fund.domicile.value(), [0, 'text'], ''),
+            );
 
-                this.fundHolidayInput.markForCheck();
-                this.changeDetectorRef.markForCheck();
-                this.changeDetectorRef.detectChanges();
-            });
+            this.fundHolidayInput.markForCheck();
+            this.changeDetectorRef.markForCheck();
+            this.changeDetectorRef.detectChanges();
+        });
 
         this.shareControl.valueChanges
-            .pipe(
-                takeUntil(this.unSubscribe),
-            )
-            .subscribe((v) => {
-                if (!v || !v.length) {
-                    this.model.resetFundShare();
-                } else {
-                    const id = Number(v[0].id);
-                    const newShare = this.iznShareList[id];
-                    this.model.updateFundShare(newShare, true);
+        .pipe(
+            takeUntil(this.unSubscribe),
+        )
+        .subscribe((v) => {
+            if (!v || !v.length) {
+                this.model.resetFundShare();
+            } else {
+                const id = Number(v[0].id);
+                const newShare = this.iznShareList[id];
+                this.model.updateFundShare(newShare, true);
 
-                    this.selectFundForm.controls.fund.setValue(
-                        [_.find(this.fundListItems, { id: newShare.fundID.toString() })],
-                    );
+                this.selectFundForm.controls.fund.setValue(
+                    [_.find(this.fundListItems, { id: newShare.fundID.toString() })],
+                );
 
-                    const newFund = this.fundList[newShare.fundID];
-                    const newUmbrella = newFund.umbrellaFundID
-                        ? this.umbrellaFundList[newFund.umbrellaFundID]
-                        : null;
+                const newFund = this.fundList[newShare.fundID];
+                const newUmbrella = newFund.umbrellaFundID
+                    ? this.umbrellaFundList[newFund.umbrellaFundID]
+                    : null;
 
-                    this.model.updateFund(newFund);
-                    this.model.updateUmbrella(newUmbrella);
-                }
+                this.model.updateFund(newFund);
+                this.model.updateUmbrella(newUmbrella);
+            }
 
-                this.fundHolidayInput.markForCheck();
-                this.tradeCycleSubscription.markForCheck();
-                this.tradeCycleRedemption.markForCheck();
-                this.changeDetectorRef.markForCheck();
-                this.changeDetectorRef.detectChanges();
-            });
+            this.fundHolidayInput.markForCheck();
+            this.tradeCycleSubscription.markForCheck();
+            this.tradeCycleRedemption.markForCheck();
+            this.changeDetectorRef.markForCheck();
+            this.changeDetectorRef.detectChanges();
+        });
 
         this.currenciesObs
-            .pipe(
-                takeUntil(this.unSubscribe),
-            )
-            .subscribe(c => this.getCurrencyList(c));
+        .pipe(
+            takeUntil(this.unSubscribe),
+        )
+        .subscribe(c => this.getCurrencyList(c));
 
         this.managementCompanyListOb
-            .pipe(
-                map((v: ManagementCompanyState) => {
-                    return {
-                        ...v.managementCompanyList.managementCompanyList,
-                        ..._.keyBy(v.investorManagementCompanyList.investorManagementCompanyList.toJS(), 'companyID'),
-                    };
-                }),
-                takeUntil(this.unSubscribe),
-            )
-            .subscribe((list) => {
-                this.getManagementCompanyList(list);
+        .pipe(
+            map((v: ManagementCompanyState) => {
+                return {
+                    ...v.managementCompanyList.managementCompanyList,
+                    ..._.keyBy(v.investorManagementCompanyList.investorManagementCompanyList.toJS(), 'companyID'),
+                };
+            }),
+            takeUntil(this.unSubscribe),
+        )
+        .subscribe((list) => {
+            this.getManagementCompanyList(list);
 
-                this.model.fund.managementCompany.listItems = this.managementCompanyList;
-                this.model.umbrella.managementCompanyID.listItems = this.managementCompanyList;
-            });
-
-        this.userDetailOb
-            .pipe(
-                filter(v => !!v),
-                switchMap(() => this.fundShareRequestedOb),
-                filter(requested => !requested),
-                takeUntil(this.unSubscribe),
-            )
-            .subscribe(() => {
-                if (this.userType === userTypeEnum.AM) {
-                    this.ofiFundShareService.fetchIznesShareList();
-                } else if (this.userType === userTypeEnum.INVESTOR) {
-                    this.ofiFundShareService.fetchInvestorShareByID(this.fundShareId);
-                }
-            });
+            this.model.fund.managementCompany.listItems = this.managementCompanyList;
+            this.model.umbrella.managementCompanyID.listItems = this.managementCompanyList;
+        });
 
         this.userDetailOb
-            .pipe(
-                take(2),
-                filter(v => !!v),
-                switchMap(() => this.fundShareOb),
-                filter(v => Object.keys(v).length !== 0),
-                takeUntil(this.unSubscribe),
-            )
-            .subscribe((fundShares) => {
-                const fundShare = fundShares[this.fundShareId];
-                if (!fundShare) {
-                    return;
-                }
-
-                this.updateFundShare(fundShare);
-                this.model.setFundShare(fundShare, !!this.prefill);
-
-                if (this.isCreate() && !this.prefill || !this.model.isReady()) {
-                    return;
-                }
-
-                this.model.updateFundShare(fundShare, !!this.prefill);
-                if (this.isRead()) {
-                    this.ofiFundService.fetchFundByID(fundShare.fundID);
-                }
-
-            });
+        .pipe(
+            filter(v => !!v),
+            switchMap(() => this.fundShareRequestedOb),
+            filter(requested => !requested),
+            takeUntil(this.unSubscribe),
+        )
+        .subscribe(() => {
+            if (this.userType === userTypeEnum.AM) {
+                this.ofiFundShareService.fetchIznesShareList();
+            } else if (this.userType === userTypeEnum.INVESTOR) {
+                this.ofiFundShareService.fetchInvestorShareByID(this.fundShareId);
+            }
+        });
 
         this.userDetailOb
-            .pipe(
-                filter(v => !!v),
-                switchMap(() => this.fundShareDocsRequestedOb),
-                filter(requested => !requested),
-                takeUntil(this.unSubscribe),
-            )
-            .subscribe(() => {
-                if (!this.isCreate() || this.prefill) {
-                    this.ofiFundShareService.fetchFundShareDocs(this.fundShareId);
-                }
-            });
+        .pipe(
+            take(2),
+            filter(v => !!v),
+            switchMap(() => this.fundShareOb),
+            filter(v => Object.keys(v).length !== 0),
+            takeUntil(this.unSubscribe),
+        )
+        .subscribe((fundShares) => {
+            const fundShare = fundShares[this.fundShareId];
+            if (!fundShare) {
+                return;
+            }
+
+            this.updateFundShare(fundShare);
+            this.model.setFundShare(fundShare, !!this.prefill);
+
+            if (this.isCreate() && !this.prefill || !this.model.isReady()) {
+                return;
+            }
+
+            this.model.updateFundShare(fundShare, !!this.prefill);
+            if (this.isRead()) {
+                this.ofiFundService.fetchFundByID(fundShare.fundID);
+            }
+
+        });
+
+        this.userDetailOb
+        .pipe(
+            filter(v => !!v),
+            switchMap(() => this.fundShareDocsRequestedOb),
+            filter(requested => !requested),
+            takeUntil(this.unSubscribe),
+        )
+        .subscribe(() => {
+            if (!this.isCreate() || this.prefill) {
+                this.ofiFundShareService.fetchFundShareDocs(this.fundShareId);
+            }
+        });
 
         this.fundShareDocsOb
-            .pipe(
-                takeUntil(this.unSubscribe),
-            )
-            .subscribe((fundShareDocs) => {
-                if (this.fundShareId === fundShareDocs.fundShareID || this.prefill) {
-                    this.updateFundShareDocs(fundShareDocs);
-                }
-            });
+        .pipe(
+            takeUntil(this.unSubscribe),
+        )
+        .subscribe((fundShareDocs) => {
+            if (this.fundShareId === fundShareDocs.fundShareID || this.prefill) {
+                this.updateFundShareDocs(fundShareDocs);
+            }
+        });
 
         this.shareListObs
-            .pipe(
-                takeUntil(this.unSubscribe),
-            )
-            .subscribe((fundShareList) => {
-                this.model.keyFacts.mandatory.feeder.listItems = this.generateListItems(fundShareList);
+        .pipe(
+            takeUntil(this.unSubscribe),
+        )
+        .subscribe((fundShareList) => {
+            this.model.keyFacts.mandatory.feeder.listItems = this.generateListItems(fundShareList);
 
-                /**
-                 * if no fund shares exist we remove the master and feeder options
-                 */
-                if ((!fundShareList) || Object.keys(fundShareList).length === 0) {
-                    _.remove(this.model.keyFacts.mandatory.status.listItems, (item) => {
-                        return item.id === Enum.StatusEnum.Feeder;
-                    });
+            /**
+             * if no fund shares exist we remove the master and feeder options
+             */
+            if ((!fundShareList) || Object.keys(fundShareList).length === 0) {
+                _.remove(this.model.keyFacts.mandatory.status.listItems, (item) => {
+                    return item.id === Enum.StatusEnum.Feeder;
+                });
 
-                } else {
-                    this.shareListItems = Object.keys(fundShareList).map((key) => {
-                        return {
-                            id: key,
-                            text: fundShareList[key].fundShareName,
-                        };
-                    });
-                }
+            } else {
+                this.shareListItems = Object.keys(fundShareList).map((key) => {
+                    return {
+                        id: key,
+                        text: fundShareList[key].fundShareName,
+                    };
+                });
+            }
 
-                this.iznShareList = fundShareList;
-            });
+            this.iznShareList = fundShareList;
+        });
 
         this.userDetailOb
-            .pipe(
-                filter(v => !!v),
-                switchMap(() => this.fundShareOb),
-                filter(v => Object.keys(v).length !== 0),
-                switchMap(() => this.fundListOb),
-                filter(v => Object.keys(v).length !== 0),
-                takeUntil(this.unSubscribe),
-            )
-            .subscribe((fund) => {
-                this.updateFundList(fund);
+        .pipe(
+            filter(v => !!v),
+            switchMap(() => this.fundShareOb),
+            filter(v => Object.keys(v).length !== 0),
+            switchMap(() => this.fundListOb),
+            filter(v => Object.keys(v).length !== 0),
+            takeUntil(this.unSubscribe),
+        )
+        .subscribe((fund) => {
+            this.updateFundList(fund);
 
-                this.selectFundForm.setValue(
-                    {
-                        fund: [{
-                            id: this.model.fundID,
-                            text: this.fund.fundName,
-                        }],
-                        domicile: _.find(this.countriesEnum, { id: this.fund.domicile }).text,
-                        lei: this.model.fund.LEI.preset || 'N/A',
-                    },
-                    { emitEvent: false },
-                );
+            this.selectFundForm.setValue(
+                {
+                    fund: [{
+                        id: this.model.fundID,
+                        text: this.fund.fundName,
+                    }],
+                    domicile: _.find(this.countriesEnum, { id: this.fund.domicile }).text,
+                    lei: this.model.fund.LEI.preset || 'N/A',
+                },
+                { emitEvent: false },
+            );
 
-                this.isCreate() && !this.prefill || !this.model.isReady()
-                    ? this.model.setFund(this.fund)
-                    : this.model.updateFund(fund[this.model.fundID], null);
+            this.isCreate() && !this.prefill || !this.model.isReady()
+                ? this.model.setFund(this.fund)
+                : this.model.updateFund(fund[this.model.fundID], null);
 
-                if (!this.fund.umbrellaFundID) {
-                    return;
-                }
+            if (!this.fund.umbrellaFundID) {
+                return;
+            }
 
-                this.isRead()
-                    ? this.ofiUmbrellaFundService.fetchUmbrellaByID(fund[this.model.fundID].umbrellaFundID)
-                    : this.ofiUmbrellaFundService.fetchUmbrellaList();
-            });
+            this.isRead()
+                ? this.ofiUmbrellaFundService.fetchUmbrellaByID(fund[this.model.fundID].umbrellaFundID)
+                : this.ofiUmbrellaFundService.fetchUmbrellaList();
+        });
 
         this.route.queryParams
-            .pipe(
-                filter(v => v.fund),
-                switchMap(() => this.userDetailOb),
-                filter(v => !!v),
-                switchMap(() => this.fundListOb),
-                filter(v => Object.keys(v).length !== 0),
-                takeUntil(this.unSubscribe),
-            )
-            .subscribe((fund) => {
-                const currentFund = fund[this.model.fundID];
-                this.model.setFund(currentFund);
-                this.selectFundForm.setValue(
-                    {
-                        fund: [{
-                            id: this.model.fundID,
-                            text: currentFund.fundName,
-                        }],
-                        domicile: _.find(this.countriesEnum, { id: currentFund.domicile }).text,
-                        lei: currentFund.LEI || 'N/A',
-                    },
-                    { emitEvent: false },
-                );
-                this.ofiUmbrellaFundService.fetchUmbrellaList();
-            });
+        .pipe(
+            filter(v => v.fund),
+            switchMap(() => this.userDetailOb),
+            filter(v => !!v),
+            switchMap(() => this.fundListOb),
+            filter(v => Object.keys(v).length !== 0),
+            takeUntil(this.unSubscribe),
+        )
+        .subscribe((fund) => {
+            const currentFund = fund[this.model.fundID];
+            this.model.setFund(currentFund);
+            this.selectFundForm.setValue(
+                {
+                    fund: [{
+                        id: this.model.fundID,
+                        text: currentFund.fundName,
+                    }],
+                    domicile: _.find(this.countriesEnum, { id: currentFund.domicile }).text,
+                    lei: currentFund.LEI || 'N/A',
+                },
+                { emitEvent: false },
+            );
+            this.ofiUmbrellaFundService.fetchUmbrellaList();
+        });
 
         this.userDetailOb
-            .pipe(
-                filter(v => !!v),
-                switchMap(() => this.fundListOb),
-                filter(v => Object.keys(v).length !== 0),
-                switchMap(() => this.umbrellaFundListOb),
-                filter(v => Object.keys(v).length !== 0),
-                takeUntil(this.unSubscribe),
-            )
-            .subscribe((umbrella) => {
-                this.updateUmbrellaFundList(umbrella);
-                if (this.hasUmbrellaFund()) {
-                    this.isCreate() && !this.prefill || !this.model.isReady()
-                        ? this.model.setUmbrellaFund(umbrella[this.model.umbrellaFundID])
-                        : this.model.updateUmbrella(umbrella[this.model.umbrellaFundID]);
-                }
-            });
+        .pipe(
+            filter(v => !!v),
+            switchMap(() => this.fundListOb),
+            filter(v => Object.keys(v).length !== 0),
+            switchMap(() => this.umbrellaFundListOb),
+            filter(v => Object.keys(v).length !== 0),
+            takeUntil(this.unSubscribe),
+        )
+        .subscribe((umbrella) => {
+            this.updateUmbrellaFundList(umbrella);
+            if (this.hasUmbrellaFund()) {
+                this.isCreate() && !this.prefill || !this.model.isReady()
+                    ? this.model.setUmbrellaFund(umbrella[this.model.umbrellaFundID])
+                    : this.model.updateUmbrella(umbrella[this.model.umbrellaFundID]);
+            }
+        });
 
         this.productionOb
-            .pipe(
-                takeUntil(this.unSubscribe),
-            )
-            .subscribe((production) => {
-                this.model.isProduction = production;
+        .pipe(
+            takeUntil(this.unSubscribe),
+        )
+        .subscribe((production) => {
+            this.model.isProduction = production;
 
-                if (!this.model.isProduction) {
-                    this.model.documents.mandatory.kiid.required = false;
-                    this.model.documents.mandatory.prospectus.required = false;
-                }
-            });
+            if (!this.model.isProduction) {
+                this.model.documents.mandatory.kiid.required = false;
+                this.model.documents.mandatory.prospectus.required = false;
+            }
+        });
 
         this.ofiFundShareFormService.subscribeToSteps((step) => {
             const stepObj = (this.errorHelper.steps(step.Step) as ShareCreationStep);
@@ -530,19 +530,23 @@ export class FundShareComponent implements OnInit, OnDestroy {
     }
 
     private getCurrencyList(data): void {
-        if (data) {
-            const currencies = data.toJS();
-
-            // Key facts
-            this.model.keyFacts.mandatory.shareClassCurrency.listItems = currencies;
-            this.model.keyFacts.optional.indexCurrency.listItems = currencies;
-
-            // Characteristics
-            this.model.characteristic.mandatory.subscriptionCurrency.listItems = currencies;
-            this.model.characteristic.mandatory.redemptionCurrency.listItems = currencies;
-
-            this.changeDetectorRef.markForCheck();
+        if (!data) {
+            return;
         }
+
+        const currencies = data.toJS();
+
+        this.model.fund.currency.listItems = currencies;
+
+        // Key facts
+        this.model.keyFacts.mandatory.shareClassCurrency.listItems = currencies;
+        this.model.keyFacts.optional.indexCurrency.listItems = currencies;
+
+        // Characteristics
+        this.model.characteristic.mandatory.subscriptionCurrency.listItems = currencies;
+        this.model.characteristic.mandatory.redemptionCurrency.listItems = currencies;
+
+        this.changeDetectorRef.markForCheck();
     }
 
     private generateListItems(fundShareList): any[] {
@@ -705,7 +709,7 @@ export class FundShareComponent implements OnInit, OnDestroy {
         const request = this.model.getRequest(0);
         if (this.isCreate() || this.currDraft == 1) {
 
-            request.fundShareID = null;
+            if (this.isCreate()) request.fundShareID = null;
 
             this.alerts.create('info', this.getSaveShareText('', 0), {
                 showCloseButton: false,
@@ -713,22 +717,22 @@ export class FundShareComponent implements OnInit, OnDestroy {
             });
 
             OfiFundShareService
-                .defaultCreateFundShare(
-                    this.ofiFundShareService,
-                    this.redux,
-                    request,
-                    (data: any) => this.onCreateSuccess(data[1].Data, 0),
-                    (e: any) => this.onCreateError(e[1].Data[0], 0),
-                );
+            .defaultCreateFundShare(
+                this.ofiFundShareService,
+                this.redux,
+                request,
+                (data: any) => (this.isCreate() ? this.onCreateSuccess(data[1].Data, 0) : this.onUpdateSuccess(data[1].Data, 0)),
+                (e: any) => this.onCreateError(e[1].Data[0], 0),
+            );
         } else {
             OfiFundShareService
-                .defaultUpdateFundShare(
-                    this.ofiFundShareService,
-                    this.redux,
-                    request,
-                    (data: any) => this.onUpdateSuccess(data[1].Data, 0),
-                    (e: any) => this.onUpdateError(0),
-                );
+            .defaultUpdateFundShare(
+                this.ofiFundShareService,
+                this.redux,
+                request,
+                (data: any) => this.onUpdateSuccess(data[1].Data, 0),
+                (e: any) => this.onUpdateError(0),
+            );
         }
     }
 
@@ -755,26 +759,27 @@ export class FundShareComponent implements OnInit, OnDestroy {
 
         if (this.mode === FundShareMode.Create) {
             OfiFundShareService
-                .defaultCreateFundShare(
-                    this.ofiFundShareService,
-                    this.redux,
-                    request,
-                    (data: any) => this.onCreateSuccess(data[1].Data, 1),
-                    (e: any) => this.onCreateError(e[1].Data[0], 1),
-                );
+            .defaultCreateFundShare(
+                this.ofiFundShareService,
+                this.redux,
+                request,
+                (data: any) => this.onCreateSuccess(data[1].Data, 1),
+                (e: any) => this.onCreateError(e[1].Data[0], 1),
+            );
         } else {
             OfiFundShareService
-                .defaultUpdateFundShare(
-                    this.ofiFundShareService,
-                    this.redux,
-                    request,
-                    (data: any) => this.onUpdateSuccess(data[1].Data, 1),
-                    (e: any) => this.onUpdateError(1),
-                );
+            .defaultUpdateFundShare(
+                this.ofiFundShareService,
+                this.redux,
+                request,
+                (data: any) => this.onUpdateSuccess(data[1].Data, 1),
+                (e: any) => this.onUpdateError(1),
+            );
         }
     }
 
     private onCreateSuccess(data, draft: number): void {
+
         data = data[0];
         if (data.Status === 'Fail') {
             this.onCreateError(data, draft);
@@ -782,13 +787,13 @@ export class FundShareComponent implements OnInit, OnDestroy {
         }
 
         OfiFundShareService
-            .defaultCreateFundShareDocuments(
-                this.ofiFundShareService,
-                this.redux,
-                this.model.getDocumentsRequest(data.fundShareID),
-                () => this.onCreateDocumentsSuccess(data, draft),
-                (e: any) => this.onCreateError(e[1].Data[0], draft),
-            );
+        .defaultCreateFundShareDocuments(
+            this.ofiFundShareService,
+            this.redux,
+            this.model.getDocumentsRequest(data.fundShareID),
+            () => this.onCreateDocumentsSuccess(data, draft),
+            (e: any) => this.onCreateError(e[1].Data[0], draft),
+        );
     }
 
     private onCreateDocumentsSuccess(data, draft: number): void {
@@ -820,14 +825,17 @@ export class FundShareComponent implements OnInit, OnDestroy {
     }
 
     private onUpdateSuccess(data, draft: number): void {
+
+        data = (!!data[0] ? data[0] : data);
+
         OfiFundShareService
-            .defaultUpdateFundShareDocuments(
-                this.ofiFundShareService,
-                this.redux,
-                this.model.getDocumentsRequest(data.fundShareID),
-                () => this.onUpdateDocumentSuccess(draft),
-                (e: any) => this.onUpdateError(draft),
-            );
+        .defaultUpdateFundShareDocuments(
+            this.ofiFundShareService,
+            this.redux,
+            this.model.getDocumentsRequest(data.fundShareID),
+            () => this.onUpdateDocumentSuccess(draft),
+            (e: any) => this.onUpdateError(draft),
+        );
     }
 
     private onUpdateDocumentSuccess(draft: number): void {
