@@ -178,7 +178,7 @@
                     </clr-dg-cell>
                     <clr-dg-cell class="actions">
                         <div class="btn-group btn-sm">
-                            <button id="{{'Edit-NAV-' + i}}" (click)="editNav(item)" class="btn btn-success btn-sm">
+                            <button id="{{'Edit-NAV-' + i}}" (click)="editNav(item)" class="btn btn-success btn-sm" style="margin-right: 0px;">
                                 <i class="fa fa-edit"></i> {{'Edit NAV' | translate}}
                             </button>
                             <button id="{{'Delete-NAV-' + i}}" [attr.disabled]="item.status == -1 ? '' : null " (click)="cancelNav(item)" class="btn btn-danger btn-sm">
