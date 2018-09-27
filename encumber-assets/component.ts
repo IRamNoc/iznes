@@ -24,7 +24,7 @@ import {
 
 export class EncumberAssetsComponent implements OnInit, OnDestroy {
     language = 'en';
-    connectedWalletId: number;
+    connectedWalletId: number = 0;
     encumberAssetsForm: FormGroup;
     isEncumberEnd = false;
     assetListOption = [];
@@ -71,8 +71,8 @@ export class EncumberAssetsComponent implements OnInit, OnDestroy {
     ) {
         /* Subscribe to the connectedWalletId and setup (or clear) the form group on wallet change */
         this.subscriptionsArray.push(this.connectedWalletOb.subscribe((connectedWalletId) => {
+            this.connectedWalletId ? this.encumberAssetsForm.reset() : this.setFormGroup();
             this.connectedWalletId = connectedWalletId;
-            this.setFormGroup();
         }));
         this.subscriptionsArray.push(this.requestedInstrumentState.subscribe((requestedState) => {
             this.requestWalletInstruments(requestedState);
@@ -116,7 +116,6 @@ export class EncumberAssetsComponent implements OnInit, OnDestroy {
         }));
         this.subscriptionsArray.push(this.encumberAssetsForm.controls.includeToDate.valueChanges.subscribe((value) => {
             this.toggleEndDate(value);
-            this.isEncumberEnd = value;
         }));
     }
 
@@ -194,7 +193,7 @@ export class EncumberAssetsComponent implements OnInit, OnDestroy {
                 Validators.pattern('^[0-9]{4}-(0[1-9]|1[012])-(0[1-9]|[12][0-9]|3[01])$')]),
             fromTimeUTC: new FormControl('', Validators.required),
             includeToDate: new FormControl(false),
-            toDateUTC: new FormControl('', Validators.pattern('^[0-9]{4}-(0[1-9]|1[012])-(0[1-9]|[12][0-9]|3[01])$')),
+            toDateUTC: new FormControl(''),
             toTimeUTC: new FormControl(''),
         });
     }
@@ -205,8 +204,12 @@ export class EncumberAssetsComponent implements OnInit, OnDestroy {
      * @param {boolean} value
      */
     toggleEndDate(value: boolean): void {
+        this.isEncumberEnd = value;
         if (value) {
-            this.encumberAssetsForm.controls.toDateUTC.setValidators(Validators.required);
+            this.encumberAssetsForm.controls.toDateUTC.setValidators([
+                Validators.required,
+                Validators.pattern('^[0-9]{4}-(0[1-9]|1[012])-(0[1-9]|[12][0-9]|3[01])$'),
+            ]);
             this.encumberAssetsForm.controls.toTimeUTC.setValidators(Validators.required);
         } else {
             this.encumberAssetsForm.controls.toDateUTC.clearValidators();
