@@ -2,7 +2,7 @@ export enum NavPopupMode {
     ADD,
     ADD_EXISTING,
     EDIT,
-    DELETE
+    DELETE,
 }
 
 export class ShareModel {
@@ -55,4 +55,4 @@ export enum CurrencySymbols {
     AED = 'د.إ',
     CNY = '¥',
     PLN = 'zł',
-};
+}

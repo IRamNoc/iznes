@@ -1,27 +1,26 @@
 /* Core imports. */
-import {NgModule} from "@angular/core";
-import {CommonModule} from '@angular/common';
-import {BrowserModule} from '@angular/platform-browser';
-import {FormsModule} from '@angular/forms';
-import {ReactiveFormsModule} from '@angular/forms';
-import {RouterModule} from '@angular/router';
+import { NgModule } from '@angular/core';
+import { CommonModule } from '@angular/common';
+import { BrowserModule } from '@angular/platform-browser';
+import { ReactiveFormsModule, FormsModule } from '@angular/forms';
+import { RouterModule } from '@angular/router';
 
 /* Clarity module. */
-import {ClarityModule} from '@clr/angular';
+import { ClarityModule } from '@clr/angular';
 
 /* 3rd party modules. */
-import {SelectModule, DpDatePickerModule, SetlDirectivesModule, SetlPipesModule} from '@setl/utils';
+import { SelectModule, DpDatePickerModule, SetlDirectivesModule, SetlPipesModule } from '@setl/utils';
 
 /* Multilingual coolness. */
-import {MultilingualModule} from '@setl/multilingual';
+import { MultilingualModule } from '@setl/multilingual';
 
 /* Components. */
-import {FundHoldingsComponent} from './fund-holdings/component';
-import {MyDashboardComponent} from './my-dashboard/component';
-import {ShareHoldersComponent} from './share-holders/component';
+import { FundHoldingsComponent } from './fund-holdings/component';
+import { MyDashboardComponent } from './my-dashboard/component';
+import { ShareHoldersComponent } from './share-holders/component';
 
 /* Graphs. */
-import {ChartsModule} from 'ng2-charts';
+import { ChartsModule } from 'ng2-charts';
 
 /* Am Dashboard service. */
 @NgModule({
@@ -49,7 +48,7 @@ import {ChartsModule} from 'ng2-charts';
         ChartsModule,
         RouterModule,
     ],
-    providers: []
+    providers: [],
 })
 
 export class OfiAmDashboardModule {
