@@ -81,6 +81,7 @@ export class ManageOrdersComponent implements OnInit, AfterViewInit, OnDestroy {
     searchForm: FormGroup;
 
     @Input() isImported: boolean;
+    @Input() linkRoute: string;
 
     /* Datagrid server driven */
     total: number;
@@ -816,6 +817,10 @@ export class ManageOrdersComponent implements OnInit, AfterViewInit, OnDestroy {
 
     getDisplay() {
         return (this.isImported) ? 'none' : 'block';
+    }
+
+    getLinkRoute() {
+        return (!!this.linkRoute) ? this.linkRoute : 'order-book/my-orders';
     }
 
     /**

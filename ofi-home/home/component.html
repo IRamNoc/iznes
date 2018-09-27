@@ -24,7 +24,7 @@
 </div>
 
 <div *ngIf="userType == 46">
-    <app-investor-fund-list [isImported]="true"></app-investor-fund-list>
+    <app-investor-fund-list [isImported]="true" [linkRoute]="'home'"></app-investor-fund-list>
 </div>
 
-<app-manage-orders [isImported]="true"></app-manage-orders>
+<app-manage-orders [isImported]="true" [linkRoute]="'home'"></app-manage-orders>
