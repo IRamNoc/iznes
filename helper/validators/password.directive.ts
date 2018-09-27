@@ -8,8 +8,8 @@ export function passwordValidator(formControl) {
     const uppercase = /[A-Z]/;
     const lowercase = /[a-z]/;
     const numbers = /[0-9]/;
-    const symbols = /[$-/:-?{-~!"^_`\[\]]/;
-    const unicode = /\u00A0-\uFFFF/;
+    const symbols = /[\u0020-\u002F|\u003A-\u0040|\u005B-\u0060|\u007B-\u007F]/;
+    const unicode = /[\u00A0-\uFFFF]/;
 
     const hasUppercase = uppercase.test(password);
     const hasLowercase = lowercase.test(password);
