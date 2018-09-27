@@ -1,0 +1,9 @@
+{
+    "rulesDirectory": [
+        "node_modules/codelyzer"
+    ],
+    "extends": "tslint-config-setl",
+    "rules": {
+        "max-line-length": [true, 200]
+    }
+}
