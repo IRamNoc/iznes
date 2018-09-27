@@ -1,19 +1,17 @@
 // vendor imports
-import {NgModule} from '@angular/core';
-import {ClarityModule} from '@clr/angular';
-import {CommonModule} from '@angular/common';
-import {FormsModule, ReactiveFormsModule} from '@angular/forms';
-import {DpDatePickerModule} from '@setl/utils';
-import {RouterModule} from '@angular/router';
+import { NgModule } from '@angular/core';
+import { ClarityModule } from '@clr/angular';
+import { CommonModule } from '@angular/common';
+import { FormsModule, ReactiveFormsModule } from '@angular/forms';
+import { RouterModule } from '@angular/router';
 
 // Local components
-import {OfiInvestorFundListComponent} from './investor-fund-list/component';
-import {InvestFundComponent} from './invest-fund/component';
-import {FundViewComponent} from './fund-view/component';
-import {SelectModule, SetlPipesModule, SetlComponentsModule, SetlDirectivesModule} from '@setl/utils';
-import {CommonService} from './common-service/service';
-import {FileViewerModule} from '@setl/core-fileviewer';
-
+import { OfiInvestorFundListComponent } from './investor-fund-list/component';
+import { InvestFundComponent } from './invest-fund/component';
+import { FundViewComponent } from './fund-view/component';
+import { SelectModule, SetlPipesModule, SetlComponentsModule, SetlDirectivesModule, DpDatePickerModule } from '@setl/utils';
+import { CommonService } from './common-service/service';
+import { FileViewerModule } from '@setl/core-fileviewer';
 
 @NgModule({
     imports: [

@@ -99,13 +99,17 @@ export class ProductCharacteristicComponent implements OnInit, OnDestroy {
             const kiid = d.kiid || '|||';
             const legalForm = _.find(this.legalFormItems, { id: d.legalForm }).text;
             const subscriptionSettlementPeriod = d.subscriptionSettlementPeriod === 0 ? 'D' :
-                `D+${d.subscriptionSettlementPeriod}`;
+                d.subscriptionSettlementPeriod > 0 ? `D+${d.subscriptionSettlementPeriod}` :
+                    `D${d.subscriptionSettlementPeriod}`;
             const navPeriodForSubscription = d.navPeriodForSubscription === 0 ? 'D' :
-                `D+${d.navPeriodForSubscription}`;
+                d.navPeriodForSubscription > 0 ? `D+${d.navPeriodForSubscription}` :
+                    `D${d.navPeriodForSubscription}`;
             const redemptionSettlementPeriod = d.redemptionSettlementPeriod === 0 ? 'D' :
-                `D+${d.redemptionSettlementPeriod}`;
+                d.redemptionSettlementPeriod > 0 ? `D+${d.redemptionSettlementPeriod}` :
+                    `D${d.redemptionSettlementPeriod}`;
             const navPeriodForRedemption = d.navPeriodForRedemption === 0 ? 'D' :
-                `D+${d.navPeriodForRedemption}`;
+                d.navPeriodForRedemption > 0 ? `D+${d.navPeriodForRedemption}` :
+                    `D${d.navPeriodForRedemption}`;
 
             this.currentProduct = {
                 ...d,

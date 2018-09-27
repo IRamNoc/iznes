@@ -1,23 +1,21 @@
 /* Core/Angular imports. */
-import {NgModule} from "@angular/core";
-import {CommonModule} from '@angular/common';
-import {BrowserModule} from '@angular/platform-browser';
-import {FormsModule} from '@angular/forms';
-import {ReactiveFormsModule} from '@angular/forms';
-import {SelectModule} from '@setl/utils';
-import {RouterModule} from '@angular/router';
+import { NgModule } from '@angular/core';
+import { CommonModule } from '@angular/common';
+import { BrowserModule } from '@angular/platform-browser';
+import { ReactiveFormsModule, FormsModule } from '@angular/forms';
+import { RouterModule } from '@angular/router';
 
 /* Pipes. */
-import {SetlPipesModule} from '@setl/utils';
+import { SetlPipesModule, SelectModule } from '@setl/utils';
 
 /* Clarity module. */
-import {ClarityModule} from '@clr/angular';
+import { ClarityModule } from '@clr/angular';
 
 /* Components. */
-import {CouponPaymentComponent} from './coupon-payment/coupon-payment.component';
+import { CouponPaymentComponent } from './coupon-payment/coupon-payment.component';
 
 /* Services. */
-import {OfiCorpActionService} from '../ofi-req-services/ofi-corp-actions/service';
+import { OfiCorpActionService } from '../ofi-req-services/ofi-corp-actions/service';
 
 /* Decorator. */
 @NgModule({
@@ -35,11 +33,11 @@ import {OfiCorpActionService} from '../ofi-req-services/ofi-corp-actions/service
         ClarityModule,
         SelectModule,
         SetlPipesModule,
-        RouterModule
+        RouterModule,
     ],
     providers: [
-        OfiCorpActionService
-    ]
+        OfiCorpActionService,
+    ],
 })
 
 /* Class. */
