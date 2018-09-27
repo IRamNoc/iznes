@@ -42,7 +42,7 @@ export class SetlMessageWorkflowComponent implements OnInit {
 //        txnonce: 275681,
         metadata: '',
         walletid: 0,
-//        "fromchain": 2300,
+        fromchain: 2300,
         namespace: 'IssuerA',
 //        "publickey": "4b5d0378e7a5655e8e07bd2c3f15a328543babf4179cd793de776711a7105813",
 //        "tochainid": 2300,
@@ -119,6 +119,7 @@ console.log(this.transferTemplate)
         this.ngRedux.dispatch(SagaHelper.runAsyncCallback( // Send a saga action.
             asyncTaskPipe,
             (d) => {
+                this.isActed = true;
                 this.showSuccessResponse('Your vote has been registered');
 
                 this.messagesService.markMessageAsActedRequest(this.walletId, this.mailId, '0').then(
