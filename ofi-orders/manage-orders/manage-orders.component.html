@@ -297,7 +297,7 @@
                             <!-- isin -->
                             <button
                                 class="btn btn-link btn-sm"
-                                [routerLink]="['/product-module/product-characteristic', order.isin]"
+                                [routerLink]="['/' + getLinkRoute() + '/product-characteristic', order.isin]"
                             >
                                 {{order.isin}}
                             </button>
@@ -310,7 +310,7 @@
                             <!-- shareName -->
                             <button
                                 class="btn btn-link btn-sm"
-                                [routerLink]="['/product-module/product-characteristic', order.isin]"
+                                [routerLink]="['/' + getLinkRoute() + '/product-characteristic', order.isin]"
                             >
                                 {{order.fundShareName}}
                             </button>

@@ -33,6 +33,8 @@ import { SellBuyCalendar } from '../../ofi-product/fund-share/FundShareEnum';
 
 export class OfiInvestorFundListComponent implements OnInit, OnDestroy {
     @Input() isImported: boolean;
+    @Input() linkRoute: string;
+
 
     tabsControl: Array<any>;
 
@@ -72,6 +74,10 @@ export class OfiInvestorFundListComponent implements OnInit, OnDestroy {
 
     getDisplay() {
         return (this.isImported) ? 'none' : 'block';
+    }
+
+    getLinkRoute() {
+        return (!!this.linkRoute) ? this.linkRoute : 'list-of-funds/0';
     }
 
     ngOnInit() {

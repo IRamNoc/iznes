@@ -82,12 +82,12 @@
 
                     <clr-dg-row *clrDgItems="let fund of fundList; let i = index">
                         <clr-dg-cell>
-                            <button class="btn btn-link btn-sm" [routerLink]="['/product-module/product-characteristic', fund['isin']]">
+                            <button class="btn btn-link btn-sm" [routerLink]="['/' + getLinkRoute() + '/product-characteristic', fund['isin']]">
                                 {{fund['isin']}}
                             </button>
                         </clr-dg-cell>
                         <clr-dg-cell>
-                            <button class="btn btn-link btn-sm" [routerLink]="['/product-module/product-characteristic', fund['isin']]">
+                            <button class="btn btn-link btn-sm" [routerLink]="['/' + getLinkRoute() + '/product-characteristic', fund['isin']]">
                                 {{fund['shareName']}}
                             </button>
                         </clr-dg-cell>
@@ -105,11 +105,14 @@
                         <clr-dg-cell *ngIf="!fund['hasNoNav']" class="actions">
                             <div class="btn-group btn-sm">
                                 <button class="btn btn-success btn-sm" style="margin: 0px;" (click)="handleSubscribe(fund.id)">
-                                    <i class="fa fa-sign-in"></i> {{'Subscribe' | translate}}</button>
+                                    <i class="fa fa-sign-in"></i> {{'Subscribe' | translate}}
+                                </button>
                                 <button class="btn btn-danger btn-sm" style="margin: 0px;" (click)="handleRedeem(fund.id)" [attr.disabled]="disableRedeem((fund.isin + '|' + fund.shareName))">
-                                    <i class="fa fa-sign-out"></i> {{'Redeem' | translate}}</button>
+                                    <i class="fa fa-sign-out"></i> {{'Redeem' | translate}}
+                                </button>
                                 <button class="btn btn-orange btn-sm" style="margin: 0px;" (click)="handleBuySell(fund.id)" [disabled]="!allowSellBuy(fund)">
-                                    <i class="fa fa-circle-o-notch"></i> <span mltag=""> {{'Sell/Buy' | translate}}</span></button>
+                                    <i class="fa fa-circle-o-notch"></i>
+                                    <span mltag=""> {{'Sell/Buy' | translate}}</span></button>
                             </div>
                         </clr-dg-cell>
                     </clr-dg-row>
