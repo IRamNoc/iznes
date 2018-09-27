@@ -825,7 +825,8 @@ export class FundShareComponent implements OnInit, OnDestroy {
     }
 
     private onUpdateSuccess(data, draft: number): void {
-        data = data[0];
+
+        data = (!!data[0] ? data[0] : data);
 
         OfiFundShareService
         .defaultUpdateFundShareDocuments(

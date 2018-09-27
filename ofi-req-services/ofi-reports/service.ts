@@ -359,6 +359,7 @@ export class OfiReportsService {
             token: this.memberSocketService.token,
             walletID: requestData.walletID,
             amCompanyID: requestData.amCompanyID,
+            accountID: requestData.accountID,
         };
 
         return createMemberNodeSagaRequest(this.memberSocketService, messageBody);

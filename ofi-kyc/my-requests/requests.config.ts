@@ -3,7 +3,7 @@ import { fundItems } from '@ofi/ofi-main/ofi-product/productConfig';
 export enum investorStatusList {
     nonPro,
     proByNature,
-    proBySize
+    proBySize,
 }
 
 export const investorStatusTextList = [
@@ -13,24 +13,24 @@ export const investorStatusTextList = [
     },
     {
         id : '1',
-        text : 'Professional by nature'
+        text : 'Professional by nature',
     },
     {
         id : '2',
-        text : 'Professional by size'
-    }
+        text : 'Professional by size',
+    },
 ];
 
 export const booleanControls = [
     'commercialDomiciliation',
     'activitiesBenefitFromExperience',
     'activityRegulated',
-    'companyListed'
+    'companyListed',
 ];
 export const currencyControls = [
     'balanceSheetTotal',
     'netRevenuesNetIncome',
-    'shareholderEquity'
+    'shareholderEquity',
 ];
 
 export const percentageControls = [
@@ -38,12 +38,12 @@ export const percentageControls = [
     'riskAcceptanceLevel2',
     'riskAcceptanceLevel3',
     'riskAcceptanceLevel4',
-    'holdingPercentage'
+    'holdingPercentage',
 ];
 
 export const fileControls = [
     'documentID',
-    'electronicSignatureDocumentID'
+    'electronicSignatureDocumentID',
 ];
 
 export const checkboxControls = [
@@ -55,7 +55,7 @@ export const checkboxControls = [
     'frequencyFinancialTransactions',
     'clientNeeds',
     'investmentHorizonWanted',
-    'performanceProfile'
+    'performanceProfile',
 ];
 
 export const selectControls = [
@@ -79,1164 +79,1203 @@ export const selectControls = [
     'sectorActivity',
     'legalStatus',
     'legalStatusInsurerType',
-    'riskProfile'
+    'riskProfile',
+    'beneficiaryType',
+    'nationalIdNumber',
+    'holdingType',
 ];
 
 export const steps = {
-    'amcSelection': 1,
-    'introduction': 2,
-    'identification': 3,
-    'riskProfile': 4,
-    'documents': 5,
-    'validation': 6
+    amcSelection: 1,
+    introduction: 2,
+    identification: 3,
+    riskProfile: 4,
+    documents: 5,
+    validation: 6,
 };
 
 export const countries = fundItems.domicileItems;
 
 export const legalFormList = [
     {
-        "id": "EARL",
-        "text": "EARL : Entreprise agricole à responsabilité limitée"
+        id: 'EARL',
+        text: 'EARL : Entreprise agricole à responsabilité limitée',
     },
     {
-        "id": "EI",
-        "text": "EI : Entreprise individuelle"
+        id: 'EI',
+        text: 'EI : Entreprise individuelle',
     },
     {
-        "id": "EIRL",
-        "text": "EIRL: Entreprise individuelle à responsabilité limitée"
+        id: 'EIRL',
+        text: 'EIRL: Entreprise individuelle à responsabilité limitée',
     },
     {
-        "id": "EURL",
-        "text": "EURL : Entreprise unipersonnelle à responsabilité limitée"
+        id: 'EURL',
+        text: 'EURL : Entreprise unipersonnelle à responsabilité limitée',
     },
     {
-        "id": "GAEC",
-        "text": "GAEC : Groupement agricole d'exploitation en commun"
+        id: 'GAEC',
+        text: "GAEC : Groupement agricole d'exploitation en commun",
     },
     {
-        "id": "GEIE",
-        "text": "GEIE : Groupement européen d'intérêt économiqueGIE : Groupement d'intérêt économique"
+        id: 'GEIE',
+        text: "GEIE : Groupement européen d'intérêt économiqueGIE : Groupement d'intérêt économique",
     },
     {
-        "id": "SARL",
-        "text": "SARL : Société à responsabilité limitée"
+        id: 'SARL',
+        text: 'SARL : Société à responsabilité limitée',
     },
     {
-        "id": "SA",
-        "text": "SA : Société anonyme"
+        id: 'SA',
+        text: 'SA : Société anonyme',
     },
     {
-        "id": "SAS",
-        "text": "SAS : Société par actions simplifiée"
+        id: 'SAS',
+        text: 'SAS : Société par actions simplifiée',
     },
     {
-        "id": "SASU",
-        "text": "SASU : Société par actions simplifiée unipersonnelle"
+        id: 'SASU',
+        text: 'SASU : Société par actions simplifiée unipersonnelle',
     },
     {
-        "id": "SC",
-        "text": "SC : Société civile"
+        id: 'SC',
+        text: 'SC : Société civile',
     },
     {
-        "id": "SCA",
-        "text": "SCA : Société en commandite par actions"
+        id: 'SCA',
+        text: 'SCA : Société en commandite par actions',
     },
     {
-        "id": "SCI",
-        "text": "SCI : Société civile immobilière"
+        id: 'SCI',
+        text: 'SCI : Société civile immobilière',
     },
     {
-        "id": "SCIC",
-        "text": "SCIC : Société coopérative d'intérêt collectif"
+        id: 'SCIC',
+        text: "SCIC : Société coopérative d'intérêt collectif",
     },
     {
-        "id": "Partnership",
-        "text": "Partnership"
+        id: 'Partnership',
+        text: 'Partnership',
     },
     {
-        "id": "Unincorporatedassociation",
-        "text": "Unincorporated association"
+        id: 'Unincorporatedassociation',
+        text: 'Unincorporated association',
     },
     {
-        "id": "SoleTrader",
-        "text": "Sole Trader"
+        id: 'SoleTrader',
+        text: 'Sole Trader',
     },
     {
-        "id": "LimitedPartnership",
-        "text": "Limited Partnership"
+        id: 'LimitedPartnership',
+        text: 'Limited Partnership',
     },
     {
-        "id": "Trust",
-        "text": "Trust"
+        id: 'Trust',
+        text: 'Trust',
     },
     {
-        "id": "LimitedCompany",
-        "text": "Limited Company"
+        id: 'LimitedCompany',
+        text: 'Limited Company',
     },
     {
-        "id": "LLP",
-        "text": "LLP:Limited Liability Partnership"
+        id: 'LLP',
+        text: 'LLP:Limited Liability Partnership',
     },
     {
-        "id": "CIC",
-        "text": "CIC:Community Interest Company"
+        id: 'CIC',
+        text: 'CIC:Community Interest Company',
     },
     {
-        "id": "CIO",
-        "text": "CIO:Charitable Incorporated Organisation"
+        id: 'CIO',
+        text: 'CIO:Charitable Incorporated Organisation',
     },
     {
-        "id": "Coop",
-        "text": "Co-op:Co-operative Society"
+        id: 'Coop',
+        text: 'Co-op:Co-operative Society',
     },
     {
-        "id": "BenCom",
-        "text": "BenCom: Community Benefit Society"
+        id: 'BenCom',
+        text: 'BenCom: Community Benefit Society',
     },
     {
-        "id": "BuildingSocietyBuilding",
-        "text": "Building Society Building"
+        id: 'BuildingSocietyBuilding',
+        text: 'Building Society Building',
     },
     {
-        "id": "CreditUnion",
-        "text": "Credit Union"
+        id: 'CreditUnion',
+        text: 'Credit Union',
     },
     {
-        "id": "FriendlySociety",
-        "text": "Friendly Society"
-    }
+        id: 'FriendlySociety',
+        text: 'Friendly Society',
+    },
 ];
 
 export const sectorActivityList = [
     {
-        "id": "Cosmetics",
-        "text": "Cosmetics"
+        id: 'Cosmetics',
+        text: 'Cosmetics',
     },
     {
-        "id": "ConsumerElectronics",
-        "text": "Consumer Electronics"
+        id: 'ConsumerElectronics',
+        text: 'Consumer Electronics',
     },
     {
-        "id": "Appliances",
-        "text": "Appliances"
+        id: 'Appliances',
+        text: 'Appliances',
     },
     {
-        "id": "Sportingequipmentmanufacturers",
-        "text": "Sporting equipment manufacturers"
+        id: 'Sportingequipmentmanufacturers',
+        text: 'Sporting equipment manufacturers',
     },
     {
-        "id": "Luxury",
-        "text": "Luxury"
+        id: 'Luxury',
+        text: 'Luxury',
     },
     {
-        "id": "Heavyindustryexcludingenergy",
-        "text": "Heavy industry (excluding energy)"
+        id: 'Heavyindustryexcludingenergy',
+        text: 'Heavy industry (excluding energy)',
     },
     {
-        "id": "Industrialmachinery",
-        "text": "Industrial machinery"
+        id: 'Industrialmachinery',
+        text: 'Industrial machinery',
     },
     {
-        "id": "Electricalequipment",
-        "text": "Electrical equipment"
+        id: 'Electricalequipment',
+        text: 'Electrical equipment',
     },
     {
-        "id": "AeronauticsAerospaceandDefense",
-        "text": "Aeronautics, Aerospace and Defense"
+        id: 'AeronauticsAerospaceandDefense',
+        text: 'Aeronautics, Aerospace and Defense',
     },
     {
-        "id": "Buildingconstructionandpublicworks",
-        "text": "Building, construction and public works"
+        id: 'Buildingconstructionandpublicworks',
+        text: 'Building, construction and public works',
     },
     {
-        "id": "Cement",
-        "text": "Cement"
+        id: 'Cement',
+        text: 'Cement',
     },
     {
-        "id": "Chemistry",
-        "text": "Chemistry"
+        id: 'Chemistry',
+        text: 'Chemistry',
     },
     {
-        "id": "AutomobileManufacturers",
-        "text": "Automobile Manufacturers"
+        id: 'AutomobileManufacturers',
+        text: 'Automobile Manufacturers',
     },
     {
-        "id": "Tires",
-        "text": "Tires"
+        id: 'Tires',
+        text: 'Tires',
     },
     {
-        "id": "InformationandCommunicationTechnologies",
-        "text": "Information and Communication Technologies"
+        id: 'InformationandCommunicationTechnologies',
+        text: 'Information and Communication Technologies',
     },
     {
-        "id": "Telecommunicationsoperators",
-        "text": "Telecommunications operators"
+        id: 'Telecommunicationsoperators',
+        text: 'Telecommunications operators',
     },
     {
-        "id": "Advertising",
-        "text": "Advertising"
+        id: 'Advertising',
+        text: 'Advertising',
     },
     {
-        "id": "TelecommunicationNetworkEquipmentManufacturer",
-        "text": "Telecommunication and Network Equipment Manufacturers"
+        id: 'TelecommunicationNetworkEquipmentManufacturer',
+        text: 'Telecommunication and Network Equipment Manufacturers',
     },
     {
-        "id": "ProgrammingSoftware",
-        "text": "Programming & Software"
+        id: 'ProgrammingSoftware',
+        text: 'Programming & Software',
     },
     {
-        "id": "Mobilephones",
-        "text": "Mobile phones"
+        id: 'Mobilephones',
+        text: 'Mobile phones',
     },
     {
-        "id": "Computerequipment",
-        "text": "Computer equipment"
+        id: 'Computerequipment',
+        text: 'Computer equipment',
     },
     {
-        "id": "ITtechnologiesandservices",
-        "text": "IT technologies and services"
+        id: 'ITtechnologiesandservices',
+        text: 'IT technologies and services',
     },
     {
-        "id": "Transportation",
-        "text": "Transportation"
+        id: 'Transportation',
+        text: 'Transportation',
     },
     {
-        "id": "Airlines",
-        "text": "Airlines"
+        id: 'Airlines',
+        text: 'Airlines',
     },
     {
-        "id": "Railtransport",
-        "text": "Rail transport"
+        id: 'Railtransport',
+        text: 'Rail transport',
     },
     {
-        "id": "Shippingofgoods",
-        "text": "Shipping of goods"
+        id: 'Shippingofgoods',
+        text: 'Shipping of goods',
     },
     {
-        "id": "Cruises",
-        "text": "Cruises"
+        id: 'Cruises',
+        text: 'Cruises',
     },
     {
-        "id": "Postmailanddeliveries",
-        "text": "Post, mail and deliveries"
+        id: 'Postmailanddeliveries',
+        text: 'Post, mail and deliveries',
     },
     {
-        "id": "Health",
-        "text": "Health"
+        id: 'Health',
+        text: 'Health',
     },
     {
-        "id": "Medicalequipmentandhealthproducts",
-        "text": "Medical equipment and health products"
+        id: 'Medicalequipmentandhealthproducts',
+        text: 'Medical equipment and health products',
     },
     {
-        "id": "Pharmacy",
-        "text": "Pharmacy"
+        id: 'Pharmacy',
+        text: 'Pharmacy',
     },
     {
-        "id": "Tobacco",
-        "text": "Tobacco"
+        id: 'Tobacco',
+        text: 'Tobacco',
     },
     {
-        "id": "Catering",
-        "text": "Catering"
+        id: 'Catering',
+        text: 'Catering',
     },
     {
-        "id": "other",
-        "text": "Other"
-    }
+        id: 'other',
+        text: 'Other',
+    },
 ];
 
 export const legalStatusList = [
     {
-        "id": "pensionMutual",
-        "text": "Pension Fund / Mutual Insurance Institution / Paid Holiday Fund and similar "
+        id: 'pensionMutual',
+        text: 'Pension Fund / Mutual Insurance Institution / Paid Holiday Fund and similar ',
     },
     {
-        "id": "creditInstitution",
-        "text": "Credit Institution"
+        id: 'creditInstitution',
+        text: 'Credit Institution',
     },
     {
-        "id": "insurer",
-        "text": "Insurer"
+        id: 'insurer',
+        text: 'Insurer',
     },
     {
-        "id": "listedCompany",
-        "text": "Listed Company"
+        id: 'listedCompany',
+        text: 'Listed Company',
     },
     {
-        "id": "institutionalInvestors",
-        "text": "Approved or regulated institutional investors"
+        id: 'institutionalInvestors',
+        text: 'Approved or regulated institutional investors',
     },
     {
-        "id": "otherInvestors",
-        "text": "Other institutional investors whose main activity is to invest in financial instruments (investment companies, venture capital companies, innovation finance companies)"
+        id: 'otherInvestors',
+        text: 'Other institutional investors whose main activity is to invest in financial instruments (investment companies, venture capital companies, innovation finance companies)',
     },
     {
-        "id": "managementCompany",
-        "text": "Management company (including SICAV) / Financial Investment Advisor"
+        id: 'managementCompany',
+        text: 'Management company (including SICAV) / Financial Investment Advisor',
     },
     {
-        "id": "centralBank",
-        "text": "Central Bank"
+        id: 'centralBank',
+        text: 'Central Bank',
     },
     {
-        "id": "nationalGovService",
-        "text": "National government or service, including public bodies responsible for public debt at national level"
+        id: 'nationalGovService',
+        text: 'National government or service, including public bodies responsible for public debt at national level',
     },
     {
-        "id": "foundationAssoEIG",
-        "text": "Foundation / Association / Economic interest group"
+        id: 'foundationAssoEIG',
+        text: 'Foundation / Association / Economic interest group',
     },
     {
-        "id": "holidayFund",
-        "text": "Paid holiday fund"
+        id: 'holidayFund',
+        text: 'Paid holiday fund',
     },
     {
-        "id": "dealersCommodities",
-        "text": "Dealers for own account in commodities or commodity derivatives"
+        id: 'dealersCommodities',
+        text: 'Dealers for own account in commodities or commodity derivatives',
     },
     {
-        "id": "localCompanies",
-        "text": "Local Companies"
+        id: 'localCompanies',
+        text: 'Local Companies',
     },
     {
-        "id": "internationBodies",
-        "text": "Public international financial bodies to which France or any other OECD Member State adheres (IMF, EIB, World Bank...)"
+        id: 'internationBodies',
+        text: 'Public international financial bodies to which France or any other OECD Member State adheres (IMF, EIB, World Bank...)',
     },
     {
-        "id": "other",
-        "text": "Other"
-    }
+        id: 'other',
+        text: 'Other',
+    },
 ];
 
 export const legalStatusInsurerTypeList = [
     {
-        "id": "Regulatedasset",
-        "text": "Regulated asset"
+        id: 'Regulatedasset',
+        text: 'Regulated asset',
     },
     {
-        "id": "Lifeinsurancecontracts",
-        "text": "Life insurance contracts"
-    }
+        id: 'Lifeinsurancecontracts',
+        text: 'Life insurance contracts',
+    },
 ];
 
 export const publicEstablishmentList = [
     {
-        "id": "Councilhouse",
-        "text": "Council house"
+        id: 'Councilhouse',
+        text: 'Council house',
     },
     {
-        "id": "other",
-        "text": "Others"
-    }
+        id: 'other',
+        text: 'Others',
+    },
 ];
 
 export const companyActivitiesList = [
     {
-        "id": "ownAccount",
-        "text": "Own-account investor"
+        id: 'ownAccount',
+        text: 'Own-account investor',
     },
     {
-        "id": "onBehalfOfThirdParties",
-        "text": "Investor on behalf of third parties"
-    }
+        id: 'onBehalfOfThirdParties',
+        text: 'Investor on behalf of third parties',
+    },
 ];
 
 export const ownAccountInvestorList = [
     {
-        "id": "EmbassiesandConsulates",
-        "text": "Embassies and Consulates"
+        id: 'EmbassiesandConsulates',
+        text: 'Embassies and Consulates',
     },
     {
-        "id": "UnionsPoliticalParties",
-        "text": "Unions/Political Parties"
+        id: 'UnionsPoliticalParties',
+        text: 'Unions/Political Parties',
     },
     {
-        "id": "cultsReligiousAssociations",
-        "text": "Cults and religious associations presenting a specific risk (radical...)"
+        id: 'cultsReligiousAssociations',
+        text: 'Cults and religious associations presenting a specific risk (radical...)',
     },
     {
-        "id": "Nationalsportsassociationsandsportsagents",
-        "text": "National sports associations and sports agents"
+        id: 'Nationalsportsassociationsandsportsagents',
+        text: 'National sports associations and sports agents',
     },
     {
-        "id": "Tradingretailingofpreciousmetals",
-        "text": "Trading & retailing of precious metals"
+        id: 'Tradingretailingofpreciousmetals',
+        text: 'Trading & retailing of precious metals',
     },
     {
-        "id": "Artmarketantiques",
-        "text": "Art market / antiques"
+        id: 'Artmarketantiques',
+        text: 'Art market / antiques',
     },
     {
-        "id": "Building",
-        "text": "Building"
+        id: 'Building',
+        text: 'Building',
     },
     {
-        "id": "Computertelephonytelecommunication",
-        "text": "Computer / telephony / telecommunication"
+        id: 'Computertelephonytelecommunication',
+        text: 'Computer / telephony / telecommunication',
     },
     {
-        "id": "Guardingandsecurity",
-        "text": "Guarding and security"
+        id: 'Guardingandsecurity',
+        text: 'Guarding and security',
     },
     {
-        "id": "Packaging",
-        "text": "Packaging"
+        id: 'Packaging',
+        text: 'Packaging',
     },
     {
-        "id": "Ironworkers",
-        "text": "Ironworkers"
+        id: 'Ironworkers',
+        text: 'Ironworkers',
     },
     {
-        "id": "GoldpannersFrenchGuiana",
-        "text": "Gold panners (French Guiana)"
+        id: 'GoldpannersFrenchGuiana',
+        text: 'Gold panners (French Guiana)',
     },
     {
-        "id": "Wastetreatment",
-        "text": "Waste treatment"
+        id: 'Wastetreatment',
+        text: 'Waste treatment',
     },
     {
-        "id": "Usedvehicletrading",
-        "text": "Used vehicle trading"
+        id: 'Usedvehicletrading',
+        text: 'Used vehicle trading',
     },
     {
-        "id": "Renewableenergies",
-        "text": "Renewable energies"
+        id: 'Renewableenergies',
+        text: 'Renewable energies',
     },
     {
-        "id": "TrainingActivityInterim",
-        "text": "Training Activity / Interim"
+        id: 'TrainingActivityInterim',
+        text: 'Training Activity / Interim',
     },
     {
-        "id": "MedicalParamedical",
-        "text": "Medical / Paramedical"
+        id: 'MedicalParamedical',
+        text: 'Medical / Paramedical',
     },
     {
-        "id": "Restoration",
-        "text": "Restoration"
+        id: 'Restoration',
+        text: 'Restoration',
     },
     {
-        "id": "Vitiviniculture",
-        "text": "Vitiviniculture"
+        id: 'Vitiviniculture',
+        text: 'Vitiviniculture',
     },
     {
-        "id": "Realestateagencies",
-        "text": "Real estate agencies"
+        id: 'Realestateagencies',
+        text: 'Real estate agencies',
     },
     {
-        "id": "Onlinegamingcompanies",
-        "text": "Online gaming companies"
+        id: 'Onlinegamingcompanies',
+        text: 'Online gaming companies',
     },
     {
-        "id": "LogisticsTransport",
-        "text": "Logistics / Transport"
+        id: 'LogisticsTransport',
+        text: 'Logistics / Transport',
     },
     {
-        "id": "Cleaning",
-        "text": "Cleaning"
+        id: 'Cleaning',
+        text: 'Cleaning',
     },
     {
-        "id": "ManagementCompanyInvestmentserviceprovider",
-        "text": "Management Company / Investment service provider"
-    }
+        id: 'ManagementCompanyInvestmentserviceprovider',
+        text: 'Management Company / Investment service provider',
+    },
 ];
 
 export const investorOnBehalfList = [
     {
-        "id": "UCITS",
-        "text": "Management Company / Investment service provider managing a UCITS"
+        id: 'UCITS',
+        text: 'Management Company / Investment service provider managing a UCITS',
     },
     {
-        "id": "mandate",
-        "text": "Management Company / Investment service provider managing a mandate"
-    }
+        id: 'mandate',
+        text: 'Management Company / Investment service provider managing a mandate',
+    },
 ];
 
 export const geographicalAreaList = [
     {
-        "id": "Europeanunion",
-        "text": "European union"
+        id: 'Europeanunion',
+        text: 'European union',
     },
     {
-        "id": "oecd",
-        "text": "OECD outside the European Union"
+        id: 'oecd',
+        text: 'OECD outside the European Union',
     },
     {
-        "id": "outsideOecd",
-        "text": "Outside OECD / Outside European Union"
-    }
+        id: 'outsideOecd',
+        text: 'Outside OECD / Outside European Union',
+    },
 ];
 
 export const geographicalOriginTypeList = [
     {
-        "id": "country",
-        "text": "Country"
+        id: 'country',
+        text: 'Country',
     },
     {
-        "id": "area",
-        "text": "Area"
-    }
+        id: 'area',
+        text: 'Area',
+    },
 ];
 
 export const financialAssetsInvestedList = [
     {
-        "id": "0to50millions",
-        "text": "0 to 50 million €"
+        id: '0to50millions',
+        text: '0 to 50 million €',
     },
     {
-        "id": "50to100millions",
-        "text": "50 to 100 million €"
+        id: '50to100millions',
+        text: '50 to 100 million €',
     },
     {
-        "id": "100to500millions",
-        "text": "100 to 500 million €"
+        id: '100to500millions',
+        text: '100 to 500 million €',
     },
     {
-        "id": "500millionsto1milliard",
-        "text": "500 million to 1 billion €"
+        id: '500millionsto1milliard',
+        text: '500 million to 1 billion €',
     },
     {
-        "id": "Beyond",
-        "text": "Beyond"
-    }
+        id: 'Beyond',
+        text: 'Beyond',
+    },
 ];
 
 export const custodianHolderAccountList = [
     {
-        "id": "BancodeOroUnibank",
-        "text": "Banco de Oro Unibank"
+        id: 'BancodeOroUnibank',
+        text: 'Banco de Oro Unibank',
     },
     {
-        "id": "BankofAmerica",
-        "text": "Bank of America"
+        id: 'BankofAmerica',
+        text: 'Bank of America',
     },
     {
-        "id": "BankofChinaHongKongLimited",
-        "text": "Bank of China (Hong Kong) Limited"
+        id: 'BankofChinaHongKongLimited',
+        text: 'Bank of China (Hong Kong) Limited',
     },
     {
-        "id": "BankofIrelandSecuritiesServices",
-        "text": "Bank of Ireland Securities Services"
+        id: 'BankofIrelandSecuritiesServices',
+        text: 'Bank of Ireland Securities Services',
     },
     {
-        "id": "BankofNewYorkMellon",
-        "text": "Bank of New York Mellon"
+        id: 'BankofNewYorkMellon',
+        text: 'Bank of New York Mellon',
     },
     {
-        "id": "Barclays",
-        "text": "Barclays"
+        id: 'Barclays',
+        text: 'Barclays',
     },
     {
-        "id": "BBVACompass",
-        "text": "BBVA Compass"
+        id: 'BBVACompass',
+        text: 'BBVA Compass',
     },
     {
-        "id": "BNPParibasSecuritiesServices",
-        "text": "BNP Paribas Securities Services"
+        id: 'BNPParibasSecuritiesServices',
+        text: 'BNP Paribas Securities Services',
     },
     {
-        "id": "BrownBrothersHarriman",
-        "text": "Brown Brothers Harriman"
+        id: 'BrownBrothersHarriman',
+        text: 'Brown Brothers Harriman',
     },
     {
-        "id": "CACEIS",
-        "text": "CACEIS"
+        id: 'CACEIS',
+        text: 'CACEIS',
     },
     {
-        "id": "CIBCMellon",
-        "text": "CIBC Mellon"
+        id: 'CIBCMellon',
+        text: 'CIBC Mellon',
     },
     {
-        "id": "Citigroup",
-        "text": "Citigroup"
+        id: 'Citigroup',
+        text: 'Citigroup',
     },
     {
-        "id": "Clearstream",
-        "text": "Clearstream"
+        id: 'Clearstream',
+        text: 'Clearstream',
     },
     {
-        "id": "ComericaBank",
-        "text": "Comerica Bank"
+        id: 'ComericaBank',
+        text: 'Comerica Bank',
     },
     {
-        "id": "CreditSuisse",
-        "text": "Credit Suisse"
+        id: 'CreditSuisse',
+        text: 'Credit Suisse',
     },
     {
-        "id": "DeutscheBank",
-        "text": "Deutsche Bank"
+        id: 'DeutscheBank',
+        text: 'Deutsche Bank',
     },
     {
-        "id": "EstrategiaInvestimentos",
-        "text": "Estrategia Investimentos"
+        id: 'EstrategiaInvestimentos',
+        text: 'Estrategia Investimentos',
     },
     {
-        "id": "ESUNCommercialBank",
-        "text": "E.SUN Commercial Bank"
+        id: 'ESUNCommercialBank',
+        text: 'E.SUN Commercial Bank',
     },
     {
-        "id": "Euroclear",
-        "text": "Euroclear"
+        id: 'Euroclear',
+        text: 'Euroclear',
     },
     {
-        "id": "FifthThirdBank",
-        "text": "Fifth Third Bank"
+        id: 'FifthThirdBank',
+        text: 'Fifth Third Bank',
     },
     {
-        "id": "GoldmanSachs",
-        "text": "Goldman Sachs"
+        id: 'GoldmanSachs',
+        text: 'Goldman Sachs',
     },
     {
-        "id": "HDFCBank",
-        "text": "HDFC Bank"
+        id: 'HDFCBank',
+        text: 'HDFC Bank',
     },
     {
-        "id": "HuntingtonNationalBank",
-        "text": "Huntington National Bank"
+        id: 'HuntingtonNationalBank',
+        text: 'Huntington National Bank',
     },
     {
-        "id": "HSBC",
-        "text": "HSBC"
+        id: 'HSBC',
+        text: 'HSBC',
     },
     {
-        "id": "ICBC",
-        "text": "ICBC"
+        id: 'ICBC',
+        text: 'ICBC',
     },
     {
-        "id": "ICICIBank",
-        "text": "ICICI Bank"
+        id: 'ICICIBank',
+        text: 'ICICI Bank',
     },
     {
-        "id": "JapanTrusteeServicesBank",
-        "text": "Japan Trustee Services Bank"
+        id: 'JapanTrusteeServicesBank',
+        text: 'Japan Trustee Services Bank',
     },
     {
-        "id": "JPMorganChase",
-        "text": "JPMorgan Chase"
+        id: 'JPMorganChase',
+        text: 'JPMorgan Chase',
     },
     {
-        "id": "KasbankNV",
-        "text": "Kasbank N.V."
+        id: 'KasbankNV',
+        text: 'Kasbank N.V.',
     },
     {
-        "id": "KeyBank",
-        "text": "KeyBank"
+        id: 'KeyBank',
+        text: 'KeyBank',
     },
     {
-        "id": "LBBW",
-        "text": "LBBW"
+        id: 'LBBW',
+        text: 'LBBW',
     },
     {
-        "id": "Maybank",
-        "text": "Maybank"
+        id: 'Maybank',
+        text: 'Maybank',
     },
     {
-        "id": "MegaInternationalCommercialBank",
-        "text": "Mega International Commercial Bank"
+        id: 'MegaInternationalCommercialBank',
+        text: 'Mega International Commercial Bank',
     },
     {
-        "id": "MitsubishiUFJTrustandBankingCorporation",
-        "text": "Mitsubishi UFJ Trust and Banking Corporation"
+        id: 'MitsubishiUFJTrustandBankingCorporation',
+        text: 'Mitsubishi UFJ Trust and Banking Corporation',
     },
     {
-        "id": "MorganStanleySmithBarney",
-        "text": "Morgan Stanley Smith Barney"
+        id: 'MorganStanleySmithBarney',
+        text: 'Morgan Stanley Smith Barney',
     },
     {
-        "id": "NAB",
-        "text": "NAB"
+        id: 'NAB',
+        text: 'NAB',
     },
     {
-        "id": "NationalBankofAbuDhabi",
-        "text": "National Bank of Abu Dhabi"
+        id: 'NationalBankofAbuDhabi',
+        text: 'National Bank of Abu Dhabi',
     },
     {
-        "id": "NorthernTrust",
-        "text": "Northern Trust"
+        id: 'NorthernTrust',
+        text: 'Northern Trust',
     },
     {
-        "id": "PTBankCentralAsiaTbk",
-        "text": "PT. Bank Central Asia, Tbk."
+        id: 'PTBankCentralAsiaTbk',
+        text: 'PT. Bank Central Asia, Tbk.',
     },
     {
-        "id": "QatarNationalBank",
-        "text": "Qatar National Bank"
+        id: 'QatarNationalBank',
+        text: 'Qatar National Bank',
     },
     {
-        "id": "RBCInvestorServices",
-        "text": "RBC Investor Services"
+        id: 'RBCInvestorServices',
+        text: 'RBC Investor Services',
     },
     {
-        "id": "SocitGnraleSecuritiesServices",
-        "text": "Société Générale Securities Services"
+        id: 'SocitGnraleSecuritiesServices',
+        text: 'Société Générale Securities Services',
     },
     {
-        "id": "StandardBank",
-        "text": "Standard Bank"
+        id: 'StandardBank',
+        text: 'Standard Bank',
     },
     {
-        "id": "StandardCharteredBank",
-        "text": "Standard Chartered Bank"
+        id: 'StandardCharteredBank',
+        text: 'Standard Chartered Bank',
     },
     {
-        "id": "StateBankofIndia",
-        "text": "State Bank of India"
+        id: 'StateBankofIndia',
+        text: 'State Bank of India',
     },
     {
-        "id": "StateStreetBankTrust",
-        "text": "State Street Bank & Trust"
+        id: 'StateStreetBankTrust',
+        text: 'State Street Bank & Trust',
     },
     {
-        "id": "TheMasterTrustBankofJapan",
-        "text": "The Master Trust Bank of Japan"
+        id: 'TheMasterTrustBankofJapan',
+        text: 'The Master Trust Bank of Japan',
     },
     {
-        "id": "TrustCustodyServicesBank",
-        "text": "Trust & Custody Services Bank"
+        id: 'TrustCustodyServicesBank',
+        text: 'Trust & Custody Services Bank',
     },
     {
-        "id": "MauritiusCommercialBank",
-        "text": "Mauritius Commercial Bank"
+        id: 'MauritiusCommercialBank',
+        text: 'Mauritius Commercial Bank',
     },
     {
-        "id": "USBank",
-        "text": "U.S. Bank"
+        id: 'USBank',
+        text: 'U.S. Bank',
     },
     {
-        "id": "UBS",
-        "text": "UBS"
+        id: 'UBS',
+        text: 'UBS',
     },
     {
-        "id": "UniCredit",
-        "text": "UniCredit"
+        id: 'UniCredit',
+        text: 'UniCredit',
     },
     {
-        "id": "UnionBankNA",
-        "text": "Union Bank N.A."
+        id: 'UnionBankNA',
+        text: 'Union Bank N.A.',
     },
     {
-        "id": "Vontobel",
-        "text": "Vontobel"
+        id: 'Vontobel',
+        text: 'Vontobel',
     },
     {
-        "id": "WellsFargoBank",
-        "text": "Wells Fargo Bank"
+        id: 'WellsFargoBank',
+        text: 'Wells Fargo Bank',
     },
     {
-        "id": "other",
-        "text": "Other"
-    }
+        id: 'other',
+        text: 'Other',
+    },
 ];
 
 export const financialInstrumentsList = [
     {
-        "id": "MoneyMarketSecurities",
-        "text": "Money Market Securities"
+        id: 'MoneyMarketSecurities',
+        text: 'Money Market Securities',
     },
     {
-        "id": "Bonds",
-        "text": "Bonds"
+        id: 'Bonds',
+        text: 'Bonds',
     },
     {
-        "id": "Convertiblebonds",
-        "text": "Convertible Bonds"
+        id: 'Convertiblebonds',
+        text: 'Convertible Bonds',
     },
     {
-        "id": "Listedshares",
-        "text": "Listed shares"
+        id: 'Listedshares',
+        text: 'Listed shares',
     },
     {
-        "id": "Unlistedshares",
-        "text": "Unlisted shares"
+        id: 'Unlistedshares',
+        text: 'Unlisted shares',
     },
     {
-        "id": "UCITS",
-        "text": "UCITS"
+        id: 'UCITS',
+        text: 'UCITS',
     },
     {
-        "id": "FIA",
-        "text": "FIA"
+        id: 'FIA',
+        text: 'FIA',
     },
     {
-        "id": "Foreignexchangemarket",
-        "text": "Foreign exchange market"
+        id: 'Foreignexchangemarket',
+        text: 'Foreign exchange market',
     },
     {
-        "id": "Swaps",
-        "text": "Swaps"
+        id: 'Swaps',
+        text: 'Swaps',
     },
     {
-        "id": "IFT",
-        "text": "IFT"
+        id: 'IFT',
+        text: 'IFT',
     },
     {
-        "id": "Derivativesandcomplexproducts",
-        "text": "Derivatives and complex products (structured products, EMTN, etc.)"
+        id: 'Derivativesandcomplexproducts',
+        text: 'Derivatives and complex products (structured products, EMTN, etc.)',
     },
     {
-        "id": "PierrePapierSCPI",
-        "text": "Pierre Papier (SCPI...)"
+        id: 'PierrePapierSCPI',
+        text: 'Pierre Papier (SCPI...)',
     },
     {
-        "id": "other",
-        "text": "Other"
-    }
+        id: 'other',
+        text: 'Other',
+    },
 ];
 
 export const natureOfTransactionsList = [
     {
-        "id": "0to1000",
-        "text": "0 to 1 000 €"
+        id: '0to1000',
+        text: '0 to 1 000 €',
     },
     {
-        "id": "1000to10000",
-        "text": "1 000 to 10 000 €"
+        id: '1000to10000',
+        text: '1 000 to 10 000 €',
     },
     {
-        "id": "10000to100000",
-        "text": "10 000 to 100 000 €"
+        id: '10000to100000',
+        text: '10 000 to 100 000 €',
     },
     {
-        "id": "100000to1million",
-        "text": "100 000 to 1 million €"
+        id: '100000to1million',
+        text: '100 000 to 1 million €',
     },
     {
-        "id": "Beyond",
-        "text": "Beyond"
-    }
+        id: 'Beyond',
+        text: 'Beyond',
+    },
 ];
 
 export const volumeOfTransactionsList = [
     {
-        "id": "1to10transactions",
-        "text": "1 to 10 transactions"
+        id: '1to10transactions',
+        text: '1 to 10 transactions',
     },
     {
-        "id": "10to50transactions",
-        "text": "10 to 50 transactions"
+        id: '10to50transactions',
+        text: '10 to 50 transactions',
     },
     {
-        "id": "50to100transactions",
-        "text": "50 to 100 transactions"
+        id: '50to100transactions',
+        text: '50 to 100 transactions',
     },
     {
-        "id": "100to500transactions",
-        "text": "100 to 500 transactions"
+        id: '100to500transactions',
+        text: '100 to 500 transactions',
     },
     {
-        "id": "Beyond",
-        "text": "Beyond"
-    }
+        id: 'Beyond',
+        text: 'Beyond',
+    },
 ];
 
 export const investmentVehiclesList = [
     {
-        "id": "MoneymarketsecuritiesTreasury",
-        "text": "Money market securities (Treasury)"
+        id: 'MoneymarketsecuritiesTreasury',
+        text: 'Money market securities (Treasury)',
     },
     {
-        "id": "Bonds",
-        "text": "Bonds"
+        id: 'Bonds',
+        text: 'Bonds',
     },
     {
-        "id": "Convertiblebonds",
-        "text": "Convertible Bonds"
+        id: 'Convertiblebonds',
+        text: 'Convertible Bonds',
     },
     {
-        "id": "Listedshares",
-        "text": "Listed shares"
+        id: 'Listedshares',
+        text: 'Listed shares',
     },
     {
-        "id": "Unlistedshares",
-        "text": "Unlisted shares"
+        id: 'Unlistedshares',
+        text: 'Unlisted shares',
     },
     {
-        "id": "UCITS",
-        "text": "UCITS"
+        id: 'UCITS',
+        text: 'UCITS',
     },
     {
-        "id": "FIA",
-        "text": "FIA"
+        id: 'FIA',
+        text: 'FIA',
     },
     {
-        "id": "Notrated",
-        "text": "Not Rated"
+        id: 'Notrated',
+        text: 'Not Rated',
     },
     {
-        "id": "PierrePapier",
-        "text": "Pierre Papier"
+        id: 'PierrePapier',
+        text: 'Pierre Papier',
     },
     {
-        "id": "Foreignexchangemarket",
-        "text": "Foreign exchange market"
+        id: 'Foreignexchangemarket',
+        text: 'Foreign exchange market',
     },
     {
-        "id": "Swaps",
-        "text": "Swaps"
+        id: 'Swaps',
+        text: 'Swaps',
     },
     {
-        "id": "IFT",
-        "text": "IFT"
+        id: 'IFT',
+        text: 'IFT',
     },
     {
-        "id": "otherderivatives",
-        "text": "Other derivatives and complex products (structured products, EMTN, etc.)"
+        id: 'otherderivatives',
+        text: 'Other derivatives and complex products (structured products, EMTN, etc.)',
     },
     {
-        "id": "other",
-        "text": "Other"
-    }
+        id: 'other',
+        text: 'Other',
+    },
 ];
 
 export const financialAssetManagementMethodList = [
     {
         id: 'internalManagement',
-        text: 'Internal management'
+        text: 'Internal management',
     },
     {
         id: 'withAdviceOfAuthorisedThirdPartyInstitution',
-        text: 'With the advice of an authorised third party institution'
+        text: 'With the advice of an authorised third party institution',
     },
     {
         id: 'mandateEntrustedToManagers',
-        text: 'By mandate(s) entrusted to a manager(s)'
-    }
+        text: 'By mandate(s) entrusted to a manager(s)',
+    },
 ];
 
 export const frequencyList = [
     {
-        "id": "Daily",
-        "text": "Daily"
+        id: 'Daily',
+        text: 'Daily',
     },
     {
-        "id": "Weekly",
-        "text": "Weekly"
+        id: 'Weekly',
+        text: 'Weekly',
     },
     {
-        "id": "Monthly",
-        "text": "Monthly"
+        id: 'Monthly',
+        text: 'Monthly',
     },
     {
-        "id": "Quarterly",
-        "text": "Quarterly"
+        id: 'Quarterly',
+        text: 'Quarterly',
     },
     {
-        "id": "Semiannual",
-        "text": "Semi-annual"
+        id: 'Semiannual',
+        text: 'Semi-annual',
     },
     {
-        "id": "Annual",
-        "text": "Annual"
+        id: 'Annual',
+        text: 'Annual',
     },
     {
-        "id": "Punctual",
-        "text": "Punctual"
-    }
+        id: 'Punctual',
+        text: 'Punctual',
+    },
 ];
 
 export const performanceProfileList = [
     {
-        "id": "Capitalpreservation",
-        "text": "Capital preservation"
+        id: 'Capitalpreservation',
+        text: 'Capital preservation',
     },
     {
-        "id": "Performance",
-        "text": "Performance"
+        id: 'Performance',
+        text: 'Performance',
     },
     {
-        "id": "Income",
-        "text": "Income"
+        id: 'Income',
+        text: 'Income',
     },
     {
-        "id": "Hedge",
-        "text": "Hedge"
+        id: 'Hedge',
+        text: 'Hedge',
     },
     {
-        "id": "Leverageeffect",
-        "text": "Leverage effect"
+        id: 'Leverageeffect',
+        text: 'Leverage effect',
     },
     {
-        "id": "others",
-        "text": "Others (e.g. liability(s) related)"
-    }
+        id: 'others',
+        text: 'Others (e.g. liability(s) related)',
+    },
 ];
 
 export const clientNeedsList = [
     {
-        "id": "Standaloneinvestment",
-        "text": "Standalone investment"
+        id: 'Standaloneinvestment',
+        text: 'Standalone investment',
     },
     {
-        "id": "PortfolioComponentDiversification",
-        "text": "Portfolio Component (Diversification)"
+        id: 'PortfolioComponentDiversification',
+        text: 'Portfolio Component (Diversification)',
     },
     {
-        "id": "Specificinvestmentneed",
-        "text": "Specific investment need"
-    }
+        id: 'Specificinvestmentneed',
+        text: 'Specific investment need',
+    },
 ];
 
 export const investmentHorizonList = [
     {
-        "id": "Notimeconstraints",
-        "text": "No time constraints"
+        id: 'Notimeconstraints',
+        text: 'No time constraints',
     },
     {
-        "id": "Veryshortterm1year",
-        "text": "Very short term (<1 year)"
+        id: 'Veryshortterm1year',
+        text: 'Very short term (<1 year)',
     },
     {
-        "id": "Shortterm1year3years",
-        "text": "Short term (>1 year < 3 years)"
+        id: 'Shortterm1year3years',
+        text: 'Short term (>1 year < 3 years)',
     },
     {
-        "id": "Mediumterm3years5years",
-        "text": "Medium term (>3years <5 years)"
+        id: 'Mediumterm3years5years',
+        text: 'Medium term (>3years <5 years)',
     },
     {
-        "id": "Longterm5years",
-        "text": "Long-term (>5 years)"
+        id: 'Longterm5years',
+        text: 'Long-term (>5 years)',
     },
     {
-        "id": "specific",
-        "text": "Specific timeframe"
-    }
+        id: 'specific',
+        text: 'Specific timeframe',
+    },
 ];
 
 export const riskProfileList = [
     {
-        "id": "GuaranteedCapital",
-        "text": "Guaranteed Capital"
+        id: 'GuaranteedCapital',
+        text: 'Guaranteed Capital',
     },
     {
-        "id": "partiallyProtected",
-        "text": "Partially protected capital"
+        id: 'partiallyProtected',
+        text: 'Partially protected capital',
     },
     {
-        "id": "Nocapitalguarantee",
-        "text": "No capital guarantee (capital loss up to the amount invested)"
+        id: 'Nocapitalguarantee',
+        text: 'No capital guarantee (capital loss up to the amount invested)',
     },
     {
-        "id": "Riskoflossbeyondtheinvestedcapital",
-        "text": "Risk of loss beyond the invested capital"
-    }
+        id: 'Riskoflossbeyondtheinvestedcapital',
+        text: 'Risk of loss beyond the invested capital',
+    },
 ];
 
 export const riskAcceptanceList = [
     {
-        profile: "Level 1: Basic",
-        volatility: "Volatility less than 0.5%",
-        srri: "1",
-        sri: "1"
+        profile: 'Level 1: Basic',
+        volatility: 'Volatility less than 0.5%',
+        srri: '1',
+        sri: '1',
     },
     {
-        profile: "Level 2: Middleman",
-        volatility: "Volatility between 0.5% and 5%",
-        srri: "2 & 3",
-        sri: "2"
+        profile: 'Level 2: Middleman',
+        volatility: 'Volatility between 0.5% and 5%',
+        srri: '2 & 3',
+        sri: '2',
     },
     {
-        profile: "Level 3: Advanced",
-        volatility: "Volatility between 5% and 25%",
-        srri: "4 to 6",
-        sri: "3 to 5"
+        profile: 'Level 3: Advanced',
+        volatility: 'Volatility between 5% and 25%',
+        srri: '4 to 6',
+        sri: '3 to 5',
     },
     {
-        profile: "Level 4: Expert",
-        volatility: "Volatility greater than 25%",
-        srri: "6",
-        sri: "6 & 7"
-    }
+        profile: 'Level 4: Expert',
+        volatility: 'Volatility greater than 25%',
+        srri: '6',
+        sri: '6 & 7',
+    },
 ];
 
 export const capitalNatureList = [
     {
         id: 'equityAndReserves',
-        text: 'Equity & reserves'
+        text: 'Equity & reserves',
     },
     {
         id: 'generalAssets',
-        text: 'General assets (insurance contracts)'
+        text: 'General assets (insurance contracts)',
     },
     {
         id: 'premiumsAndContributions',
-        text: 'Premiums & contributions'
+        text: 'Premiums & contributions',
     },
     {
         id: 'saleGoodsServices',
-        text: 'Sale of goods and services'
+        text: 'Sale of goods and services',
     },
     {
         id: 'exceptionalEvents',
-        text: 'Exceptional Events'
+        text: 'Exceptional Events',
     },
     {
         id: 'treasury',
-        text: 'Treasury'
+        text: 'Treasury',
     },
     {
         id: 'others',
-        text: 'Others'
-    }
+        text: 'Others',
+    },
 ];
 
 export const documentTypesList = [
     {
         id: 'kyclistshareholdersdoc',
-        text: 'Official documents (or equivalent) listing the shareholders with their % of ownership if greater than 25%'
+        text: 'Official documents (or equivalent) listing the shareholders with their % of ownership if greater than 25%',
     },
     {
         id: 'kyclistdirectorsdoc',
-        text: 'Official document (or equivalent) listing the directors'
+        text: 'Official document (or equivalent) listing the directors',
     },
     {
         id: 'kycbeneficialownersdoc',
-        text: 'List of beneficial owners'
+        text: 'List of beneficial owners',
     },
     {
         id: 'kyclistauthoriseddoc',
-        text: 'List of persons authorised to give instructions'
+        text: 'List of persons authorised to give instructions',
     },
     {
         id: 'kyctaxcertificationdoc',
-        text: 'Tax self-certification form '
+        text: 'Tax self-certification form ',
     },
     {
         id: 'kycw8benefatcadoc',
-        text: 'Form W-8BEN-E (FATCA'
+        text: 'Form W-8BEN-E (FATCA',
     },
     {
         id: 'kycstatuscertifieddoc',
-        text: 'Status "certified" (or equivalent) by the duly authorized representative of the client'
+        text: 'Status "certified" (or equivalent) by the duly authorized representative of the client',
     },
     {
         id: 'kyckbisdoc',
-        text: 'Kbis extract (or equivalent) less than 3 months old'
+        text: 'Kbis extract (or equivalent) less than 3 months old',
     },
     {
         id: 'kycannualreportdoc',
-        text: 'Latest audited annual report '
+        text: 'Latest audited annual report ',
     },
     {
         id: 'kycidorpassportdoc',
-        text: 'National identity card or valid passport or residence card of the signatory with photograph'
+        text: 'National identity card or valid passport or residence card of the signatory with photograph',
     },
     {
         id: 'kycproofofapprovaldoc',
-        text: 'Proof of approval or copy of decree'
+        text: 'Proof of approval or copy of decree',
     },
     {
         id: 'kycisincodedoc',
-        text: 'ISIN code of the listed share'
+        text: 'ISIN code of the listed share',
     },
     {
         id: 'kycwolfsbergdoc',
-        text: 'Wolfsberg Questionnaire or equivalentFor'
-    }
+        text: 'Wolfsberg Questionnaire or equivalentFor',
+    },
 
 ];
 
+export const beneficiaryTypesList = [
+    {
+        id: 'legalPerson',
+        text: 'Legal person',
+    },
+    {
+        id: 'naturalPerson',
+        text: 'Natural person',
+    },
+];
+
+export const holdingTypesList = [
+    {
+        id: 'directHolding',
+        text: 'Direct holding',
+    },
+    {
+        id: 'indirectHolding',
+        text: 'Indirect holding',
+    },
+];
+
+export const nationalIdNumberList = [
+    {
+        id: 'siret',
+        text: 'SIRET',
+    },
+    {
+        id: 'siren',
+        text: 'SIREN',
+    },
+    {
+        id: 'other',
+        text: 'Other',
+    },
+];
 
 export const controlToName = {
     // General
@@ -1272,7 +1311,7 @@ export const controlToName = {
     approvalNumber: 'Approval number',
     companyListed: 'Is the company listed?',
     listingMarkets: 'Listing market(s)',
-    bloombergCode: "Bloomberg code",
+    bloombergCode: 'Bloomberg code',
     isinCode: 'ISIN code of the listed share',
     keyFinancialData: 'Key Financial Data',
     balanceSheetTotal: 'Balance Sheet Total (€)',
@@ -1288,18 +1327,25 @@ export const controlToName = {
     geographicalOrigin2: 'Geographical origin precision',
 
     // Beneficiaries
+    beneficiaryType: 'Beneficiary type',
     firstName: 'First name',
     lastName: 'Last name',
-    address: 'Address',
+    address: 'Beneficiary address',
+    address2: 'Address line 2',
     nationality: 'Nationality',
     dateOfBirth: 'Date of birth',
     cityOfBirth: 'City of birth',
     countryOfBirth: 'Country of birth',
     documentID: 'Document',
     holdingPercentage: 'Holding percentage',
+    holdingType: 'Holding type',
+    nationalIdNumber: 'National Identification Number',
+    nationalIdNumberText: 'National ID Number Specification',
+    legalName: 'Legal name',
 
-    establishmentName: "Establishment Name",
-    iban: "IBAN",
+    // Custodian
+    establishmentName: 'Establishment Name',
+    iban: 'IBAN',
     bic: 'BIC',
     addressLine1: 'Establishement address',
     addressLine2: 'Address line 2',
@@ -1373,6 +1419,9 @@ export const controlToList = {
     geographicalOrigin2: 'countries',
     totalFinancialAssetsAlreadyInvested: 'financialAssetsInvestedList',
     countryOfBirth: 'countries',
+    beneficiaryType: 'beneficiaryTypesList',
+    holdingType: 'holdingTypesList',
+    nationalIdNumber: 'nationalIdNumberList',
 
     // Banking
     custodianHolderAccount: 'custodianHolderAccountList',

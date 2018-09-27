@@ -1,5 +1,5 @@
-import {Component, Input, Output, EventEmitter, OnInit} from '@angular/core';
-import {isEmpty, find} from 'lodash';
+import { Component, Input, Output, EventEmitter, OnInit } from '@angular/core';
+import * as _ from 'lodash';
 
 @Component({
     selector: 'kyc-details-beneficiaries',
@@ -12,8 +12,7 @@ export class KycDetailsBeneficiariesComponent implements OnInit {
 
     open = true;
 
-    constructor(
-    ) {
+    constructor() {
     }
 
     ngOnInit() {
@@ -23,11 +22,19 @@ export class KycDetailsBeneficiariesComponent implements OnInit {
         this.close.emit();
     }
 
-    getName(beneficiary){
-        let firstName = find(beneficiary, ['originalId', 'firstName']).value;
-        let lastName = find(beneficiary, ['originalId', 'lastName']).value;
+    getName(beneficiary) {
 
-        return [firstName, lastName].join(' ');
+        let finalName;
+        const firstName = _.chain(beneficiary).find(['originalId', 'firstName']).get('value').value();
+        const lastName = _.chain(beneficiary).find(['originalId', 'lastName']).get('value').value();
+
+        if (!firstName && !lastName) {
+            finalName = _.chain(beneficiary).find(['originalId', 'legalName']).get('value').value();
+        } else {
+            finalName = [firstName, lastName].join(' ');
+        }
+
+        return finalName;
     }
 
 }

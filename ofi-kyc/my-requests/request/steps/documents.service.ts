@@ -62,7 +62,7 @@ export class DocumentsService {
         const messageBody = {
             RequestName: 'updatekycdocument',
             walletID: connectedWallet,
-            ...controlValue
+            ...controlValue,
         };
 
         return this.requestsService.sendRequest(messageBody).then(response => getValue(response, [1, 'Data', 0]));

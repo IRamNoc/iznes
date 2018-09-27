@@ -151,7 +151,7 @@
                 <clr-dg-row *clrDgItems="let item of navFundHistory; let i = index" id="{{'product-nav-history-row' + i}}">
                     <clr-dg-cell id="{{'nav-history-row'+i+'-col-date'}}" class="col-date">{{item.navDate}}</clr-dg-cell>
                     <clr-dg-cell id="{{'nav-history-row'+i+'-col-pub-date'}}" class="col-date">{{item.navPubDate}}</clr-dg-cell>
-                    <clr-dg-cell id="{{'nav-history-row'+i+'-col-currency'}}" class="col-currency">{{'@getCurrencyString(item.currency)@ (@getCurrencySymbol(item.currency)@)' | translate: {'getCurrencyString(item.currency)': getCurrencyString(item.currency),'getCurrencySymbol(item.currency)': getCurrencySymbol(item.currency)} }}</clr-dg-cell>
+                    <clr-dg-cell id="{{'nav-history-row'+i+'-col-currency'}}" class="col-currency">{{'@getCurrencyString(item.currency)@' | translate: {'getCurrencyString(item.currency)': getCurrencyString(item.currency)} }}</clr-dg-cell>
                     <clr-dg-cell>
                         <span [hidden]="isNavNull(item.nav)">{{navToFrontEndString(item.nav)}}</span>
                         <span [hidden]="!isNavNull(item.nav)" class="label label-warning">{{'Pending' | translate}}</span>

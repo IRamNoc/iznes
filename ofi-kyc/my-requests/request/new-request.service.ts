@@ -47,6 +47,9 @@ import {
     investmentHorizonList,
     riskProfileList,
     riskAcceptanceList,
+    beneficiaryTypesList,
+    holdingTypesList,
+    nationalIdNumberList
 } from '../requests.config';
 
 @Injectable()
@@ -75,6 +78,9 @@ export class NewRequestService {
     investmentHorizonList;
     riskProfileList;
     riskAcceptanceList;
+    beneficiaryTypesList;
+    holdingTypesList;
+    nationalIdNumberList;
     saveContext = '';
 
     /* Private Properties. */
@@ -115,6 +121,9 @@ export class NewRequestService {
         this.investmentHorizonList = investmentHorizonList;
         this.riskProfileList = riskProfileList;
         this.riskAcceptanceList = riskAcceptanceList;
+        this.beneficiaryTypesList = beneficiaryTypesList;
+        this.holdingTypesList = holdingTypesList;
+        this.nationalIdNumberList = nationalIdNumberList;
     }
 
     set context(value) {
@@ -545,20 +554,43 @@ export class NewRequestService {
         return this.formBuilder.group({
             kycID: '',
             companyBeneficiariesID: '',
-            firstName: ['', this.getLengthValidator()],
-            lastName: ['', this.getLengthValidator()],
-            address: ['', Validators.required],
-            nationality: ['', Validators.required],
-            dateOfBirth: ['', Validators.required],
-            cityOfBirth: ['', this.getLengthValidator()],
-            countryOfBirth: ['', Validators.required],
-            document: this.createDocumentFormGroup('kycbeneficiarydoc', !this.isProduction),
-            holdingPercentage: ['', [
-                Validators.required,
-                Validators.min(0),
-                Validators.max(100)
-            ]
-            ],
+            beneficiaryType: ['', Validators.required],
+
+            common: this.formBuilder.group({
+                address: ['', Validators.required],
+                address2: '',
+                zipCode: ['', this.getLengthValidator(10)],
+                city: ['', this.getLengthValidator(255)],
+                country: ['', Validators.required],
+                holdingPercentage: [
+                    '',
+                    [
+                        Validators.required,
+                        Validators.min(0),
+                        Validators.max(100),
+                    ],
+                ],
+                holdingType: ['', Validators.required],
+            }),
+            legalPerson: this.formBuilder.group({
+                legalName: ['', Validators.required],
+                leiCode: ['', [
+                    Validators.required,
+                    Validators.pattern(/^\w{18}\d{2}$|n\/a/i),
+                ]],
+
+                nationalIdNumber: ['', Validators.required],
+                nationalIdNumberText: [{value: '', disabled: true}, Validators.required],
+            }),
+            naturalPerson: this.formBuilder.group({
+                firstName: ['', this.getLengthValidator()],
+                lastName: ['', this.getLengthValidator()],
+                nationality: ['', Validators.required],
+                dateOfBirth: ['', Validators.required],
+                cityOfBirth: ['', this.getLengthValidator()],
+                countryOfBirth: ['', Validators.required],
+                document: this.createDocumentFormGroup('kycbeneficiarydoc', !this.isProduction),
+            }),
             delete: 0,
         });
     }
