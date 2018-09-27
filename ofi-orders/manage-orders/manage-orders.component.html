@@ -12,7 +12,7 @@
         <clr-tab *ngFor="let tabdata of tabsControl; let id = index">
             <button [style.display]="getDisplay()" clrTabLink id="-{{id}}" [routerLink]="['/manage-orders', (id === 0) ? 'list' : tabdata.orderData.orderID]">
                 <i class="fa {{tabdata.title.icon}}"></i> {{tabdata.title.text}}
-                <i class="fa fa-times-circle text-warning" *ngIf="id > 0" id="orderCloseTabBtn_{{id}}" (click)="closeTab(id)" [ngStyle]="{'margin-left': '14px', 'font-size':'18px'}"></i>
+                <i class="fa fa-times-circle text-warning" *ngIf="id > 0 && tabdata.active" id="orderCloseTabBtn_{{id}}" (click)="closeTab(id)" [ngStyle]="{'margin-left': '14px', 'font-size':'18px'}"></i>
             </button>
             <clr-tab-content *clrIfActive="tabdata.active">
                 <ng-container *ngIf="id === 0">
@@ -907,6 +907,9 @@
                         </div>
                     </div>
                 </div>
+            </div>
+            <div align="middle">
+                <button class="btn btn-info" (click)="closeTab(tabid)">{{'Close' | translate}}</button>
             </div>
         </div>
     </ng-template>
