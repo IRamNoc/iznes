@@ -97,7 +97,7 @@
                 <div class="row">
                     <div class="form-group required-field col-sm-6">
                         <label for="financialInstruments">
-                            {{'Financial instruments that have already been the subject of transactions by the said natural person in the professional environment: (several possible choices)' | translate}}
+                            {{'Financial instruments that have already been the subject of transactions by the said natural person in the professional environment: (multiple choice)' | translate}}
                         </label>
                         <ng-select class="multiple" placeholder="{{'Select' | translate}}" id="financialInstruments" [items]="financialInstrumentsList" [formControl]="form.get(['nonPro', 'financialInstruments'])" [multiple]="true"></ng-select>
                         <span class="field-error" *ngIf="hasError(['nonPro', 'financialInstruments'])">{{'Field is required' | translate}}</span>
