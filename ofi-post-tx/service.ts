@@ -1,19 +1,19 @@
 // Vender
-import {Injectable, OnDestroy, OnInit} from '@angular/core';
-import {select, NgRedux} from '@angular-redux/store';
+import { Injectable, OnDestroy, OnInit } from '@angular/core';
+import { select, NgRedux } from '@angular-redux/store';
 import * as _ from 'lodash';
-import {Subscription} from 'rxjs';
+import { Subscription } from 'rxjs';
 
 // Internal
-import {MemberSocketService} from '@setl/websocket-service';
-import {OfiFundInvestService} from '../ofi-req-services/ofi-fund-invest/service';
-import {OfiNavService} from '../ofi-req-services/ofi-product/nav/service';
-import {AdminUsersService} from '@setl/core-req-services/useradmin/useradmin.service';
-import {WalletnodeTxService} from '@setl/core-req-services/walletnode-tx/walletnode-tx.service';
-import {AlertsService} from '@setl/jaspero-ng2-alerts';
-import {SagaHelper, commonHelper, LogService} from '@setl/utils';
-import {clearContractNeedHandle, clearRegisterIssuerNeedHandle} from '@setl/core-store';
-import {setLastCreatedRegisterIssuerDetail} from '@setl/core-store/assets/my-issuers/actions';
+import { MemberSocketService } from '@setl/websocket-service';
+import { OfiFundInvestService } from '../ofi-req-services/ofi-fund-invest/service';
+import { OfiNavService } from '../ofi-req-services/ofi-product/nav/service';
+import { AdminUsersService } from '@setl/core-req-services/useradmin/useradmin.service';
+import { WalletnodeTxService } from '@setl/core-req-services/walletnode-tx/walletnode-tx.service';
+import { AlertsService } from '@setl/jaspero-ng2-alerts';
+import { SagaHelper, commonHelper, LogService } from '@setl/utils';
+import { clearContractNeedHandle, clearRegisterIssuerNeedHandle } from '@setl/core-store';
+import { setLastCreatedRegisterIssuerDetail } from '@setl/core-store/assets/my-issuers/actions';
 import * as moment from 'moment';
 
 @Injectable()
@@ -34,7 +34,7 @@ export class OfiPostTxService implements OnDestroy {
                 private _alertsService: AlertsService) {
         this.subscriptionsArray.push(
             this.lastCreatedContractOb.subscribe(lastCreated => this.handleLastCreatedContract(lastCreated)),
-            this.lastCreatedIssuer.subscribe(lastCreated => this.handleLastCreatedIssuer(lastCreated))
+            this.lastCreatedIssuer.subscribe(lastCreated => this.handleLastCreatedIssuer(lastCreated)),
         );
     }
 
@@ -107,7 +107,7 @@ export class OfiPostTxService implements OnDestroy {
                 this._ngRedux.dispatch(clearContractNeedHandle());
 
                 // Update success alert message
-                this.updateArrangeCreateStatus({arrangementId});
+                this.updateArrangeCreateStatus({ arrangementId });
 
                 if (arrangementId === 0) {
                     throw new Error('Create new order fail');
@@ -121,7 +121,7 @@ export class OfiPostTxService implements OnDestroy {
                     walletId,
                     arrangementId,
                     contractAddress,
-                    expiry
+                    expiry,
                 });
 
                 this._ngRedux.dispatch(SagaHelper.runAsyncCallback(
@@ -131,7 +131,7 @@ export class OfiPostTxService implements OnDestroy {
                     },
                     (addMapResponse) => {
                         this.showErrorResponse(addMapResponse);
-                    }
+                    },
                 ));
 
             },
@@ -140,7 +140,6 @@ export class OfiPostTxService implements OnDestroy {
             },
         ));
     }
-
 
     updateArrangeCreateStatus(data) {
         const arrangementId = commonHelper.pad(data.arrangementId, 10, '0');
@@ -174,7 +173,7 @@ export class OfiPostTxService implements OnDestroy {
                 walletName: shareName,
                 walletAccount: requestData.metaData.arrangementData.accountId,
                 walletType: 3,
-            }
+            },
         );
 
         this._ngRedux.dispatch(SagaHelper.runAsyncCallback(
@@ -187,7 +186,7 @@ export class OfiPostTxService implements OnDestroy {
             },
             (data) => {
                 this.logService.log('saveNewWallet Error: ', data);
-            })
+            }),
         );
     }
 
@@ -198,8 +197,8 @@ export class OfiPostTxService implements OnDestroy {
             {
                 walletName: shareName,
                 userId: requestData.metaData.arrangementData.userId,
-                walletAccess: {[requestData.metaData.arrangementData.sharesList[requestData.metaData.arrangementData.currentShare].walletID]: 3},
-            }
+                walletAccess: { [requestData.metaData.arrangementData.sharesList[requestData.metaData.arrangementData.currentShare].walletID]: 3 },
+            },
         );
 
         this._ngRedux.dispatch(SagaHelper.runAsyncCallback(
@@ -208,11 +207,11 @@ export class OfiPostTxService implements OnDestroy {
                 // this.logService.log('2) saveNewWalletPermission : success', data); // success
                 setTimeout(() => {
                     this.saveNewAddress(requestData);
-                }, 2000);
+                },         2000);
             },
             (data) => {
                 this.logService.log('saveNewWalletPermission Error: ', data);
-            })
+            }),
         );
     }
 
@@ -220,7 +219,7 @@ export class OfiPostTxService implements OnDestroy {
         const asyncTaskPipe = this.walletnodeTxService.newAddress(
             {
                 walletId: requestData.metaData.arrangementData.sharesList[requestData.metaData.arrangementData.currentShare].walletID,
-            }
+            },
         );
 
         this._ngRedux.dispatch(SagaHelper.runAsyncCallback(
@@ -233,7 +232,7 @@ export class OfiPostTxService implements OnDestroy {
             },
             (data) => {
                 this.logService.log('saveNewAddress Error: ', data);
-            })
+            }),
         );
     }
 
@@ -244,7 +243,7 @@ export class OfiPostTxService implements OnDestroy {
                 issuerIdentifier: requestData.metaData.arrangementData.sharesList[requestData.metaData.arrangementData.currentShare].isin,
                 issuerAddress: requestData.metaData.arrangementData.sharesList[requestData.metaData.arrangementData.currentShare].address,
                 metaData: {},
-            }
+            },
         );
 
         this._ngRedux.dispatch(SagaHelper.runAsyncCallback(
@@ -258,13 +257,13 @@ export class OfiPostTxService implements OnDestroy {
                         currentStep: 'saveRegisterAsset',
                         accountId: requestData.metaData.arrangementData.accountId,
                         userId: requestData.metaData.arrangementData.userId,
-                        sharesList: requestData.metaData.arrangementData.sharesList
-                    }
+                        sharesList: requestData.metaData.arrangementData.sharesList,
+                    },
                 }));
             },
             (data) => {
                 this.logService.log('saveRegisterIssuer Error: ', data);
-            })
+            }),
         );
     }
 
@@ -278,8 +277,8 @@ export class OfiPostTxService implements OnDestroy {
                 address: requestData.metaData.arrangementData.sharesList[requestData.metaData.arrangementData.currentShare].address,
                 namespace: requestData.metaData.arrangementData.sharesList[requestData.metaData.arrangementData.currentShare].isin,
                 instrument: requestData.metaData.arrangementData.sharesList[requestData.metaData.arrangementData.currentShare].shareName,
-                metaData: {}
-            }
+                metaData: {},
+            },
         );
 
         this._ngRedux.dispatch(SagaHelper.runAsyncCallback(
@@ -290,7 +289,7 @@ export class OfiPostTxService implements OnDestroy {
             },
             (data) => {
                 this.logService.log('saveRegisterAsset Error: ', data);
-            })
+            }),
         );
     }
 
@@ -303,8 +302,8 @@ export class OfiPostTxService implements OnDestroy {
                 address: requestData.metaData.arrangementData.sharesList[requestData.metaData.arrangementData.currentShare].address,
                 namespace: requestData.metaData.arrangementData.sharesList[requestData.metaData.arrangementData.currentShare].isin,
                 instrument: coupon,
-                metaData: {}
-            }
+                metaData: {},
+            },
         );
 
         this._ngRedux.dispatch(SagaHelper.runAsyncCallback(
@@ -315,19 +314,20 @@ export class OfiPostTxService implements OnDestroy {
             },
             (data) => {
                 this.logService.log('saveCoupon Error: ', data);
-            })
+            }),
         );
     }
 
     saveIssueAssetMap(requestData) {
-        const asset = requestData.metaData.arrangementData.sharesList[requestData.metaData.arrangementData.currentShare].isin + '|' + requestData.metaData.arrangementData.sharesList[requestData.metaData.arrangementData.currentShare].shareName;
+        const asset = requestData.metaData.arrangementData.sharesList[requestData.metaData.arrangementData.currentShare].isin +
+            '|' + requestData.metaData.arrangementData.sharesList[requestData.metaData.arrangementData.currentShare].shareName;
         const asyncTaskPipe = this._ofiFundInvestService.insertIssueAssetMap(
             {
                 address: requestData.metaData.arrangementData.sharesList[requestData.metaData.arrangementData.currentShare].address,
                 asset,
                 isin: requestData.metaData.arrangementData.sharesList[requestData.metaData.arrangementData.currentShare].isin,
-                companyId: requestData.metaData.arrangementData.sharesList[requestData.metaData.arrangementData.currentShare].companyID
-            }
+                companyId: requestData.metaData.arrangementData.sharesList[requestData.metaData.arrangementData.currentShare].companyID,
+            },
         );
 
         this._ngRedux.dispatch(SagaHelper.runAsyncCallback(
@@ -350,8 +350,8 @@ export class OfiPostTxService implements OnDestroy {
                             accountId: requestData.metaData.arrangementData.accountId,
                             userId: requestData.metaData.arrangementData.userId,
                             sharesList: requestData.metaData.arrangementData.sharesList,
-                            isFinished: requestData.metaData.arrangementData.isFinished
-                        }
+                            isFinished: requestData.metaData.arrangementData.isFinished,
+                        },
                     }));
                 } else {
                     this.updateSuccessResponse();
@@ -363,14 +363,14 @@ export class OfiPostTxService implements OnDestroy {
                             accountId: requestData.metaData.arrangementData.accountId,
                             userId: requestData.metaData.arrangementData.userId,
                             sharesList: requestData.metaData.arrangementData.sharesList,
-                            isFinished: true
-                        }
+                            isFinished: true,
+                        },
                     }));
                 }
             },
             (data) => {
                 this.logService.log('saveIssueAssetMap Error: ', data);
-            })
+            }),
         );
     }
 
@@ -380,14 +380,14 @@ export class OfiPostTxService implements OnDestroy {
             fundName: fundShare,
             fundDate: moment().format('YYYY-MM-DD'),
             price: estimatedNav,
-            priceStatus: 1
+            priceStatus: 1,
         });
         this._ngRedux.dispatch(SagaHelper.runAsyncCallback(
             asyncTaskPipe,
             (data) => {
             },
             (data) => {
-            }
+            },
         ));
     }
 
@@ -415,7 +415,7 @@ export class OfiPostTxService implements OnDestroy {
                         <td class="text-center text-warning" width="500px">
                             <h3><i class="fa fa-exclamation-triangle text-danger" aria-hidden="true"></i>&nbsp;Do not close your browser window</h3>
                             <p>We are saving your progress. This may take a few moments.</p>
-                        </td>                       
+                        </td>
                     </tr>
                 </tbody>
             </table>
