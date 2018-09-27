@@ -12,12 +12,12 @@ export const investorStatusTextList = [
         text: 'Non professional',
     },
     {
-        id : '1',
-        text : 'Professional by nature',
+        id: '1',
+        text: 'Professional by nature',
     },
     {
-        id : '2',
-        text : 'Professional by size',
+        id: '2',
+        text: 'Professional by size',
     },
 ];
 
@@ -1290,7 +1290,7 @@ export const controlToName = {
     registeredCompanyCountry: 'Country',
     commercialDomiciliation: 'Commercial domiciliation : Does the client have a commercial address (mailbox: P/O BOX)?',
     countryTaxResidence: 'Country of tax residence',
-    sectorActivity: 'Sector of activity',
+    sectorActivity: 'Primary Sector of activity',
     sectorActivityText: 'Sector of activity specification',
     legalStatus: 'Legal status',
     legalStatusListingOther: 'Legal status specification',
