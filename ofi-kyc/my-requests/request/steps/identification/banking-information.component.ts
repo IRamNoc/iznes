@@ -73,11 +73,14 @@ export class BankingInformationComponent implements OnInit, OnDestroy {
                 this.identificationService.getCurrentFormBankingData(request.kycID).then(formData => {
                     if (formData) {
                         if (formData.length) {
-                            let bankingAccounts = (this.form.get('custodianHolders') as FormArray).controls;
-                            bankingAccounts.splice(0);
+                            const bankingAccounts = this.form.get('custodianHolders') as FormArray;
 
-                            formData.forEach(controlValue => {
-                                let control = this.newRequestService.createHolder();
+                            while (bankingAccounts.length) {
+                                bankingAccounts.removeAt(0);
+                            }
+
+                            formData.forEach((controlValue) => {
+                                const control = this.newRequestService.createHolder();
 
                                 control.patchValue(controlValue);
                                 bankingAccounts.push(control);

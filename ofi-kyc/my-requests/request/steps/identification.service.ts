@@ -1,6 +1,5 @@
 import { Injectable } from '@angular/core';
 import { FormArray } from '@angular/forms';
-import { MemberSocketService } from '@setl/websocket-service';
 
 import {
     mapValues,
@@ -9,11 +8,13 @@ import {
     reduce,
     pickBy,
     get as getValue,
+    set as setValue,
     merge,
     omit,
     flatten,
     pick,
-    isNil
+    isNil,
+    forEach,
 } from 'lodash';
 
 import { NewRequestService } from '../new-request.service';
@@ -26,32 +27,32 @@ export class IdentificationService {
     constructor(
         private newRequestService: NewRequestService,
         private requestsService: RequestsService,
-        private documentsService: DocumentsService
+        private documentsService: DocumentsService,
     ) {
     }
 
     sendRequest(form, requests, connectedWallet) {
 
-        let promises = [];
-        let context = this.newRequestService.context;
+        const promises = [];
+        const context = this.newRequestService.context;
 
-        requests.forEach(request => {
-            let kycID = request.kycID;
+        requests.forEach((request) => {
+            const kycID = request.kycID;
 
-            let formGroupGeneral = form.get('generalInformation');
+            const formGroupGeneral = form.get('generalInformation');
             formGroupGeneral.get('kycID').setValue(kycID);
-            let generalPromise = this.sendRequestGeneral(formGroupGeneral);
+            const generalPromise = this.sendRequestGeneral(formGroupGeneral);
             promises.push(generalPromise);
 
-            let formGroupCompany = form.get('companyInformation');
-            let formGroupBeneficiaries = formGroupCompany.get('beneficiaries');
+            const formGroupCompany = form.get('companyInformation');
+            const formGroupBeneficiaries = formGroupCompany.get('beneficiaries');
             promises.concat(this.handleBeneficiaries(formGroupBeneficiaries, kycID, connectedWallet));
 
             formGroupCompany.get('kycID').setValue(kycID);
-            let companyPromise = this.sendRequestCompany(formGroupCompany);
+            const companyPromise = this.sendRequestCompany(formGroupCompany);
             promises.push(companyPromise);
 
-            let formGroupBanking = form.get('bankingInformation');
+            const formGroupBanking = form.get('bankingInformation');
             formGroupBanking.get('kycID').setValue(kycID);
 
             let formGroupBankingHolders = formGroupBanking.get('custodianHolders');
@@ -66,13 +67,12 @@ export class IdentificationService {
                 promises.push(bankingPromise);
             });
 
-
-            let formGroupClassification = form.get('classificationInformation');
+            const formGroupClassification = form.get('classificationInformation');
             formGroupClassification.get('kycID').setValue(kycID);
-            let classificationPromise = this.sendRequestClassification(formGroupClassification);
+            const classificationPromise = this.sendRequestClassification(formGroupClassification);
             promises.push(classificationPromise);
 
-            let updateStepPromise = this.sendRequestUpdateCurrentStep(kycID, context);
+            const updateStepPromise = this.sendRequestUpdateCurrentStep(kycID, context);
             promises.push(updateStepPromise);
         });
 
@@ -80,21 +80,26 @@ export class IdentificationService {
     }
 
     handleBeneficiaries(formGroupBeneficiaries, kycID, connectedWallet) {
-        let promises = [];
+        const promises = [];
 
-        formGroupBeneficiaries.controls.forEach(formGroupBeneficiary => {
+        formGroupBeneficiaries.controls.forEach((formGroupBeneficiary) => {
+            const value = formGroupBeneficiary.value;
+            const kycDocument = getValue(value, ['naturalPerson', 'document']);
+            const kycDocumentID = getValue(kycDocument, 'kycDocumentID');
+            const hash = getValue(kycDocument, 'hash');
 
-            let kycDocumentID = formGroupBeneficiary.get('document.kycDocumentID').value;
+            formGroupBeneficiary.get('kycID').setValue(kycID);
+
             let beneficiaryDocumentPromise;
             if (kycDocumentID) {
-                formGroupBeneficiary.get('kycID').setValue(kycID);
-                this.sendRequestBeneficiary(formGroupBeneficiary, kycDocumentID)
-            } else {
-                beneficiaryDocumentPromise = this.documentsService.sendRequestDocumentControl(formGroupBeneficiary.get('document').value, connectedWallet).then(data => {
-                    formGroupBeneficiary.get('kycID').setValue(kycID);
-                    let kycDocumentID = getValue(data, 'kycDocumentID');
+                this.sendRequestBeneficiary(formGroupBeneficiary, kycDocumentID);
+            } else if (hash) {
+                beneficiaryDocumentPromise = this.documentsService.sendRequestDocumentControl(kycDocument, connectedWallet).then((data) => {
+                    const kycDocumentID = getValue(data, 'kycDocumentID');
                     this.sendRequestBeneficiary(formGroupBeneficiary, kycDocumentID);
                 });
+            } else {
+                this.sendRequestBeneficiary(formGroupBeneficiary, null);
             }
             promises.push(beneficiaryDocumentPromise);
 
@@ -105,8 +110,8 @@ export class IdentificationService {
     deleteBeneficiary(kycID, id) {
         const messageBody = {
             RequestName: 'deletekyccompanybeneficiaries',
-            kycID: kycID,
-            id: id,
+            kycID,
+            id,
         };
 
         return this.requestsService.sendRequest(messageBody);
@@ -115,53 +120,58 @@ export class IdentificationService {
     sendRequestUpdateCurrentStep(kycID, context) {
         const messageBody = {
             RequestName: 'iznesupdatecurrentstep',
-            kycID: kycID,
+            kycID,
             completedStep: 'identification',
-            currentGroup: context
+            currentGroup: context,
         };
 
         return this.requestsService.sendRequest(messageBody);
     }
 
     sendRequestGeneral(formGroupGeneral) {
-        let extracted = this.newRequestService.getValues(formGroupGeneral.value);
+        const extracted = this.newRequestService.getValues(formGroupGeneral.value);
 
         const messageBody = {
             RequestName: 'updatekycgeneral',
-            ...extracted
+            ...extracted,
         };
         return this.requestsService.sendRequest(messageBody);
     }
 
     sendRequestCompany(formGroupCompany) {
-        let formGroupCompanyValue = omit(formGroupCompany.value, ['beneficiaries']);
-        let extracted = this.newRequestService.getValues(formGroupCompanyValue);
+        const formGroupCompanyValue = omit(formGroupCompany.value, ['beneficiaries']);
+        const extracted = this.newRequestService.getValues(formGroupCompanyValue);
 
         const messageBody = {
             RequestName: 'updatekyccompany',
-            ...extracted
+            ...extracted,
         };
         return this.requestsService.sendRequest(messageBody);
     }
 
     sendRequestBeneficiary(formGroupBeneficiary, documentID) {
-        let extracted = this.newRequestService.getValues(formGroupBeneficiary.value);
+        const value = formGroupBeneficiary.value;
+        const firstLevel = omit(value, ['common', 'legalPerson', 'naturalPerson']);
+        const values = merge(firstLevel, value.common, value.legalPerson, value.naturalPerson);
+        const extracted = this.newRequestService.getValues(values);
         delete extracted.document;
         extracted.documentID = documentID;
 
         const messageBody = {
             RequestName: 'updatekyccompanybeneficiaries',
-            ...extracted
+            ...extracted,
         };
         return this.requestsService.sendRequest(messageBody).then((data) => {
-            if (!!data[1].Data[0].companyBeneficiariesID) {
-                formGroupBeneficiary.controls['companyBeneficiariesID'].setValue(data[1].Data[0].companyBeneficiariesID);
+            const companyBeneficiariesID = getValue(data, [1, 'Data', 0, 'companyBeneficiariesID']);
+
+            if (companyBeneficiariesID) {
+                formGroupBeneficiary.controls['companyBeneficiariesID'].setValue(companyBeneficiariesID);
             }
         });
     }
 
     sendRequestBanking(formGroupBankingValue) {
-        let extracted = this.newRequestService.getValues(formGroupBankingValue);
+        const extracted = this.newRequestService.getValues(formGroupBankingValue);
 
         const messageBody = {
             RequestName: 'updatekycbanking',
@@ -174,7 +184,7 @@ export class IdentificationService {
     deleteHolder(custodianID) {
         const messageBody = {
             RequestName: 'deletekycbanking',
-            custodianID: custodianID
+            custodianID,
         };
 
         return this.requestsService.sendRequest(messageBody);
@@ -185,10 +195,10 @@ export class IdentificationService {
         formGroupClassificationValue = merge(
             formGroupClassificationValue,
             formGroupClassification.value.nonPro,
-            formGroupClassification.value.pro
+            formGroupClassification.value.pro,
         );
 
-        let extracted = this.newRequestService.getValues(formGroupClassificationValue);
+        const extracted = this.newRequestService.getValues(formGroupClassificationValue);
         if (!isNil(extracted.activitiesBenefitFromExperience)) {
             extracted.activitiesBenefitFromExperience = Number(extracted.activitiesBenefitFromExperience);
         }
@@ -198,7 +208,7 @@ export class IdentificationService {
 
         const messageBody = {
             RequestName: 'updatekycclassification',
-            ...extracted
+            ...extracted,
         };
 
         return this.requestsService.sendRequest(messageBody);
@@ -224,4 +234,40 @@ export class IdentificationService {
         return this.requestsService.getKycBeneficiaries(kycID);
     }
 
+}
+
+const beneficiaryFormPaths = {
+    address: 'common',
+    address2: 'common',
+    zipCode: 'common',
+    city: 'common',
+    country: 'common',
+    holdingPercentage: 'common',
+    holdingType: 'common',
+
+    firstName : 'naturalPerson',
+    lastName : 'naturalPerson',
+    nationality : 'naturalPerson',
+    dateOfBirth : 'naturalPerson',
+    cityOfBirth : 'naturalPerson',
+    countryOfBirth : 'naturalPerson',
+
+    legalName : 'legalPerson',
+    nationalIdNumber : 'legalPerson',
+    nationalIdNumberText : 'legalPerson',
+    leiCode : 'legalPerson',
+};
+
+export function buildBeneficiaryObject(data) {
+    const beneficiary = {};
+
+    data = pickBy(data);
+    forEach(data, (value, key) => {
+        let path = getValue(beneficiaryFormPaths, key, '');
+        path = path ? [path, key].join('.') : key;
+
+        setValue(beneficiary, path, value);
+    });
+
+    return beneficiary;
 }

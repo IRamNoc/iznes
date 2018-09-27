@@ -1,21 +1,21 @@
-import {Component, OnInit, Input} from '@angular/core';
-import {get as getValue, remove} from 'lodash';
-import {select} from '@angular-redux/store';
-import {PersistService} from '@setl/core-persist';
+import { Component, OnInit, Input } from '@angular/core';
+import { get as getValue, remove } from 'lodash';
+import { select } from '@angular-redux/store';
+import { PersistService } from '@setl/core-persist';
 
-import {Subject} from 'rxjs';
-import {map, take, takeUntil, filter as rxFilter} from 'rxjs/operators';
+import { Subject } from 'rxjs';
+import { map, take, takeUntil, filter as rxFilter } from 'rxjs/operators';
 
-import {PersistRequestService} from '@setl/core-req-services';
+import { PersistRequestService } from '@setl/core-req-services';
 
-import {NewRequestService} from '../new-request.service';
-import {IdentificationService} from './identification.service';
+import { NewRequestService } from '../new-request.service';
+import { IdentificationService } from './identification.service';
 
-import {steps} from '../../requests.config';
+import { steps } from '../../requests.config';
 
 @Component({
     selector: 'kyc-step-identification',
-    templateUrl: './identification.component.html'
+    templateUrl: './identification.component.html',
 })
 export class NewKycIdentificationComponent implements OnInit {
 
@@ -32,7 +32,7 @@ export class NewKycIdentificationComponent implements OnInit {
         private newRequestService: NewRequestService,
         private identificationService: IdentificationService,
         private persistService: PersistService,
-        private persistRequestService: PersistRequestService
+        private persistRequestService: PersistRequestService,
     ) {
     }
 
@@ -40,14 +40,13 @@ export class NewKycIdentificationComponent implements OnInit {
         this.initSubscriptions();
     }
 
-
-    initSubscriptions(){
+    initSubscriptions() {
         this.connectedWallet$
             .pipe(
-                takeUntil(this.unsubscribe)
+                takeUntil(this.unsubscribe),
             )
-            .subscribe(connectedWallet => {
-                this.connectedWallet = connectedWallet
+            .subscribe((connectedWallet) => {
+                this.connectedWallet = connectedWallet;
             })
         ;
 
@@ -55,7 +54,7 @@ export class NewKycIdentificationComponent implements OnInit {
             .pipe(
                 takeUntil(this.unsubscribe),
                 map(kycs => kycs[0]),
-                rxFilter((kyc: any) => (kyc && kyc.amcID))
+                rxFilter((kyc: any) => (kyc && kyc.amcID)),
             )
             .subscribe((kyc) => {
                 if (this.shouldPersist(kyc)) {
@@ -122,7 +121,7 @@ export class NewKycIdentificationComponent implements OnInit {
         this.persistService.watchForm(
             'newkycrequest/identification',
             this.form,
-            this.newRequestService.context
+            this.newRequestService.context,
         );
     }
 
@@ -130,8 +129,8 @@ export class NewKycIdentificationComponent implements OnInit {
         this.persistService.refreshState(
             'newkycrequest/identification',
             this.newRequestService.createIdentificationFormGroup(),
-            this.newRequestService.context
-        )
+            this.newRequestService.context,
+        );
     }
 
     handleSubmit(e) {
@@ -143,9 +142,9 @@ export class NewKycIdentificationComponent implements OnInit {
 
         this.requests$
             .pipe(
-                take(1)
+                take(1),
             )
-            .subscribe(requests => {
+            .subscribe((requests) => {
                 this.identificationService.sendRequest(this.form, requests, this.connectedWallet).then(() => {
                     this.clearPersistForm();
                 });
@@ -153,7 +152,7 @@ export class NewKycIdentificationComponent implements OnInit {
         ;
     }
 
-    ngOnDestroy(){
+    ngOnDestroy() {
         this.unsubscribe.next();
         this.unsubscribe.complete();
     }
