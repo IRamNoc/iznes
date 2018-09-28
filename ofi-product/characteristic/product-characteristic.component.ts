@@ -162,7 +162,16 @@ export class ProductCharacteristicComponent implements OnInit, OnDestroy {
     }
 
     onClickMoreDetails() {
-        const url = `product-module/product/fund-share/${this.currentProduct['fundShareID']}`;
-        this.router.navigateByUrl(url);
+        switch (this.route.url['value'][0].path) {
+        case 'home':
+            this.router.navigateByUrl(`home/fund-share/${this.currentProduct['fundShareID']}`);
+            break;
+        case 'list-of-funds':
+            this.router.navigateByUrl(`list-of-funds/0/fund-share/${this.currentProduct['fundShareID']}`);
+            break;
+        case 'my-orders':
+            this.router.navigateByUrl(`order-book/my-orders/fund-share/${this.currentProduct['fundShareID']}`);
+            break;
+        }
     }
 }

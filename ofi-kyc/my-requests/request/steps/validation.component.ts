@@ -1,24 +1,24 @@
-import {Component, Input, OnInit, OnDestroy} from '@angular/core';
-import {NgRedux, select} from '@angular-redux/store';
-import {Router} from '@angular/router';
-import {Subject, combineLatest} from 'rxjs';
-import {filter as rxFilter, map, take, takeUntil} from 'rxjs/operators';
-import {isEmpty, find, get as getValue, castArray} from 'lodash';
-import {AlertsService} from '@setl/jaspero-ng2-alerts';
+import { Component, Input, OnInit, OnDestroy } from '@angular/core';
+import { NgRedux, select } from '@angular-redux/store';
+import { Router } from '@angular/router';
+import { Subject, combineLatest } from 'rxjs';
+import { filter as rxFilter, map, take, takeUntil } from 'rxjs/operators';
+import { isEmpty, find, get as getValue, castArray } from 'lodash';
+import { AlertsService } from '@setl/jaspero-ng2-alerts';
 import * as moment from 'moment';
 
-import {PersistService} from '@setl/core-persist';
-import {RequestsService} from '../../requests.service';
-import {NewRequestService, configDate} from '../new-request.service';
-import {ValidationService} from './validation.service';
-import {DocumentsService} from './documents.service';
-import {steps} from "../../requests.config";
+import { PersistService } from '@setl/core-persist';
+import { RequestsService } from '../../requests.service';
+import { NewRequestService, configDate } from '../new-request.service';
+import { ValidationService } from './validation.service';
+import { DocumentsService } from './documents.service';
+import { steps } from '../../requests.config';
 import { ClearMyKycListRequested } from '@ofi/ofi-main/ofi-store/ofi-kyc';
 
 @Component({
     selector: 'kyc-step-validation',
     templateUrl: './validation.component.html',
-    styleUrls: ['./validation.component.scss']
+    styleUrls: ['./validation.component.scss'],
 })
 export class NewKycValidationComponent implements OnInit, OnDestroy {
 
@@ -41,7 +41,7 @@ export class NewKycValidationComponent implements OnInit, OnDestroy {
         private router: Router,
         private persistService: PersistService,
         private documentsService: DocumentsService,
-        private ngRedux: NgRedux<any>
+        private ngRedux: NgRedux<any>,
     ) {
     }
 
@@ -54,7 +54,7 @@ export class NewKycValidationComponent implements OnInit, OnDestroy {
         this.form.get('doneDate').patchValue(moment().format(this.configDate.format));
     }
 
-    initSubscriptions(){
+    initSubscriptions() {
         this.requests$
             .pipe(
                 takeUntil(this.unsubscribe),
@@ -84,8 +84,8 @@ export class NewKycValidationComponent implements OnInit, OnDestroy {
             this.form,
             this.newRequestService.context,
             {
-                reset: false
-            }
+                reset: false,
+            },
         );
     }
 
@@ -93,14 +93,14 @@ export class NewKycValidationComponent implements OnInit, OnDestroy {
         this.persistService.refreshState(
             'newkycrequest/validation',
             this.newRequestService.createValidationFormGroup(),
-            this.newRequestService.context
-        )
+            this.newRequestService.context,
+        );
     }
 
     initData() {
         combineLatest(
             this.requests$,
-            this.managementCompanyList$
+            this.managementCompanyList$,
         )
             .pipe(
                 takeUntil(this.unsubscribe),
@@ -116,7 +116,7 @@ export class NewKycValidationComponent implements OnInit, OnDestroy {
 
         this.connectedWallet$
             .pipe(
-                takeUntil(this.unsubscribe)
+                takeUntil(this.unsubscribe),
             )
             .subscribe(connectedWallet => {
                 this.connectedWallet = connectedWallet;
@@ -127,13 +127,13 @@ export class NewKycValidationComponent implements OnInit, OnDestroy {
     getCompanyNames(requests, managementCompanyList) {
         this.amcs = [];
         requests.forEach(request => {
-            let company = find(managementCompanyList, ['companyID', request.amcID]);
-            let companyName = getValue(company, 'companyName');
+            const company = find(managementCompanyList, ['companyID', request.amcID]);
+            const companyName = getValue(company, 'companyName');
 
             if (companyName) {
                 this.amcs.push({
                     amcID: request.amcID,
-                    companyName: companyName
+                    companyName,
                 });
             }
         });
@@ -143,13 +143,13 @@ export class NewKycValidationComponent implements OnInit, OnDestroy {
         let bodyMessage;
 
         if (this.amcs.length == 1) {
-            let companyName = getValue(this.amcs, ['0', 'companyName']);
+            const companyName = getValue(this.amcs, ['0', 'companyName']);
             bodyMessage = `<p>Your request has been successfully sent to ${companyName}. Once they will have validated your request, you will be able to start trading on IZNES on ${companyName}'s products.</p>`;
         }
         else {
-            let companies = ['<ul>'];
+            const companies = ['<ul>'];
             this.amcs.forEach(amc => {
-                let companyText = `<li>${amc.companyName}</li>`;
+                const companyText = `<li>${amc.companyName}</li>`;
                 companies.push(companyText);
             });
             companies.push('</ul>');
@@ -166,7 +166,7 @@ export class NewKycValidationComponent implements OnInit, OnDestroy {
                 </tbody>
             </table>
         `).pipe(
-            take(1)
+            take(1),
         ).subscribe(() => {
             this.router.navigate(['my-requests', 'list']).then(() => {
                 this.ngRedux.dispatch(ClearMyKycListRequested());
@@ -183,7 +183,7 @@ export class NewKycValidationComponent implements OnInit, OnDestroy {
 
         this.requests$
             .pipe(
-                take(1)
+                take(1),
             )
             .subscribe(requests => {
                 this.validationService.sendRequest(this.form, requests, this.connectedWallet).then(() => {
@@ -197,7 +197,7 @@ export class NewKycValidationComponent implements OnInit, OnDestroy {
     }
 
     isDisabled(path) {
-        let control = this.form.get(path);
+        const control = this.form.get(path);
 
         return control.disabled;
     }
@@ -215,18 +215,19 @@ export class NewKycValidationComponent implements OnInit, OnDestroy {
             .pipe(
                 rxFilter(requests => !isEmpty(requests)),
                 map(requests => castArray(requests[0])),
-                takeUntil(this.unsubscribe)
+                takeUntil(this.unsubscribe),
             )
-            .subscribe(requests => {
-                requests.forEach(request => {
-                    this.validationService.getCurrentFormValidationData(request.kycID).then(formData => {
-                        if(formData){
+            .subscribe((requests) => {
+                requests.forEach((request) => {
+                    this.validationService.getCurrentFormValidationData(request.kycID).then((formData) => {
+                        if (formData) {
                             this.form.patchValue(formData);
 
-                            if(formData.electronicSignatureDocumentID){
-                                this.documentsService.getDocument(formData.electronicSignatureDocumentID).then(document => {
-                                    let control = this.form.get('electronicSignatureDocument');
-                                    if(document){
+                            if (formData.electronicSignatureDocumentID) {
+                                this.documentsService.getDocument(formData.electronicSignatureDocumentID).then((document) => {
+                                    const control = this.form.get('electronicSignatureDocument');
+
+                                    if (document) {
                                         control.patchValue(document);
                                     }
                                 });

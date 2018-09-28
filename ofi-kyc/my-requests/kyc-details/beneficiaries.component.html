@@ -1,6 +1,6 @@
 <clr-modal [clrModalOpen]="open" [clrModalSize]="'lg'" (clrModalOpenChange)="modalOpenChange()">
     <h3 class="modal-title">{{'Beneficiaries details' | translate}}</h3>
-    <div class="modal-body modal-scroll">
+    <div class="modal-body">
 
         <div *ngFor="let beneficiary of beneficiaries; let i = index" class="mb-2">
             <h4 class="mb-1">
