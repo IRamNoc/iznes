@@ -1,4 +1,4 @@
-import {FormControl} from '@angular/forms';
+import { FormControl } from '@angular/forms';
 
 export interface WalletDetail {
     walletId: number;
@@ -64,7 +64,7 @@ export interface WalletTab {
 
 export interface ManagedWalletsState {
     walletList: {
-        [key: number]: WalletDetail
+        [key: number]: WalletDetail,
     };
     openedTabs: Array<WalletTab>;
 }

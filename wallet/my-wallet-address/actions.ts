@@ -1,5 +1,5 @@
-import {name} from './__init__';
-import {kAction} from '@setl/utils/common';
+import { name } from './__init__';
+import { kAction } from '@setl/utils/common';
 
 /**
  * Set wallet list

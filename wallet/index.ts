@@ -49,6 +49,9 @@ import {
     ManagedWalletsState,
     ManagedWalletsReducer,
     SET_MANAGED_WALLETS,
+    SET_WALLET_ADDED,
+    SET_WALLET_UPDATED,
+    SET_WALLET_DELETED,
     getManagedWallets,
     getManageWalletList,
     managedWalletsActions,
@@ -137,6 +140,9 @@ export {
     getManagedWallets,
     getManageWalletList,
     managedWalletsActions,
+    SET_WALLET_ADDED,
+    SET_WALLET_UPDATED,
+    SET_WALLET_DELETED,
 };
 
 export {
