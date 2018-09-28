@@ -14,6 +14,9 @@ import {
     SET_TRANSACTIONAL_PERMISSION_GROUP_LIST,
     SET_MENU_PERMISSION_GROUP_LIST,
     SET_MANAGED_WALLETS,
+    SET_WALLET_ADDED,
+    SET_WALLET_UPDATED,
+    SET_WALLET_DELETED,
     SET_OWN_WALLETS,
     SET_WALLET_LABEL_UPDATED,
 
@@ -164,14 +167,32 @@ export class ChannelService {
             break;
 
         case 'nw': // new wallet
-        case 'udw': // update wallet
-        case 'dw': // delete wallet
-            this.logService.log(' | UPDATE MANAGE WALLET LIST: ', data);
+            this.logService.log(' | NEW WALLET ADDED: ', data);
 
-            /* ...and dispatch the update action. */
             this.ngRedux.dispatch(
                 {
-                    type: SET_MANAGED_WALLETS,
+                    type: SET_WALLET_ADDED,
+                    payload: [null, data, null],
+                },
+            );
+            break;
+        case 'udw': // update wallet
+            this.logService.log(' | UPDATED WALLET: ', data);
+
+            this.ngRedux.dispatch(
+                {
+                    type: SET_WALLET_UPDATED,
+                    payload: [null, data, null],
+                },
+            );
+            break;
+
+        case 'dw': // delete wallet
+            this.logService.log(' | DELETED WALLET: ', data);
+
+            this.ngRedux.dispatch(
+                {
+                    type: SET_WALLET_DELETED,
                     payload: [null, data, null],
                 },
             );
