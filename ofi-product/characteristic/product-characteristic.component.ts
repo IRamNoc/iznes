@@ -162,7 +162,7 @@ export class ProductCharacteristicComponent implements OnInit, OnDestroy {
     }
 
     onClickMoreDetails() {
-        switch (this.route.url.value[0].path) {
+        switch (this.route.url['value'][0].path) {
         case 'home':
             this.router.navigateByUrl(`home/fund-share/${this.currentProduct['fundShareID']}`);
             break;
