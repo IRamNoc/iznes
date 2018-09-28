@@ -36,13 +36,13 @@
                                 <div class="col-md-6">
                                     <div class="input-group date-pick-wrapper">
                                         <span class="fa fa-calendar" aria-hidden="true"></span>
-                                        <input id="centra-funds-date-from" formControlName="dateFrom" [dpDayPicker]="configDate" [placeholder]="(!isPeriod) ? _translate.translate('Choose a date') : _translate.translate('Date From')" mode="day" theme="dp-material">
+                                        <input id="centra-funds-date-from" formControlName="dateFrom" [dpDayPicker]="fromConfigDate" [placeholder]="(!isPeriod) ? _translate.translate('Choose a date') : _translate.translate('Date From')" mode="day" theme="dp-material">
                                     </div>
                                 </div>
                                 <div class="col-md-6">
                                     <div class="input-group date-pick-wrapper" *ngIf="isPeriod">
                                         <span class="fa fa-calendar" aria-hidden="true"></span>
-                                        <input id="centra-funds-date-to" formControlName="dateTo" [dpDayPicker]="configDate" [placeholder]="_translate.translate('Date To')" mode="day" theme="dp-material">
+                                        <input id="centra-funds-date-to" formControlName="dateTo" [dpDayPicker]="toConfigDate" [placeholder]="_translate.translate('Date To')" mode="day" theme="dp-material">
                                     </div>
                                 </div>
                             </div>
@@ -202,13 +202,13 @@
                                 <div class="col-md-6">
                                     <div class="input-group date-pick-wrapper">
                                         <span class="fa fa-calendar" aria-hidden="true"></span>
-                                        <input id="centra-shares-date-from" formControlName="dateFrom" [dpDayPicker]="configDate" [placeholder]="(!isPeriod) ? _translate.translate('Choose a date') : _translate.translate('Date From')" mode="day" theme="dp-material">
+                                        <input id="centra-shares-date-from" formControlName="dateFrom" [dpDayPicker]="fromConfigDate" [placeholder]="(!isPeriod) ? _translate.translate('Choose a date') : _translate.translate('Date From')" mode="day" theme="dp-material">
                                     </div>
                                 </div>
                                 <div class="col-md-6">
                                     <div class="input-group date-pick-wrapper" *ngIf="isPeriod">
                                         <span class="fa fa-calendar" aria-hidden="true"></span>
-                                        <input id="centra-shares-date-to" formControlName="dateTo" [dpDayPicker]="configDate" [placeholder]="_translate.translate('Date To')" mode="day" theme="dp-material">
+                                        <input id="centra-shares-date-to" formControlName="dateTo" [dpDayPicker]="toConfigDate" [placeholder]="_translate.translate('Date To')" mode="day" theme="dp-material">
                                     </div>
                                 </div>
                             </div>
