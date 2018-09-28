@@ -241,6 +241,30 @@
         </clr-tab>
         <clr-tab>
             <button clrTabLink clrTabLinkId="link3">
+                <i class="fa fa-lock"></i>
+                <span mltag="txt_tfa">Two-Factor Authentication</span>
+            </button>
+            <clr-tab-content *clrIfActive="tabStates.tfa">
+                <section class="form-block">                    
+                    <div class="form-group col-sm-6">                            
+                        <form [formGroup]="enableTFAForm" (ngSubmit)="enableTwoFactorAuthentication(enableTFAForm.value)">  
+                            <div class="row">
+                                <label class="control-label">
+                                    <input type="checkbox" formControlName="enableTFA"> Enable Two-Factor Authentication?
+                                </label>
+                            </div>
+                            <div class="row">
+                                <button id="tfaSubmit" type="submit" class="btn btn-primary">
+                                    <i class="fa fa-save"></i> <span mltag="txt_update">Update</span>
+                                </button>  
+                            </div>    
+                        </form>
+                    </div>  
+                </section>
+            </clr-tab-content>
+        </clr-tab>
+        <clr-tab>
+            <button clrTabLink clrTabLinkId="link4">
                 <i class="fa fa-terminal"></i>
                 <span mltag="txt_api">API</span></button>
             <clr-tab-content *clrIfActive="tabStates.api">
@@ -296,4 +320,5 @@
             </clr-tab-content>
         </clr-tab>
     </clr-tabs>
+
 </div>

@@ -29,6 +29,7 @@ import { MemberSocketService } from '@setl/websocket-service';
 interface TabState {
     detail: boolean;
     password: boolean;
+    tfa: boolean;
     api: boolean;
 }
 
@@ -38,7 +39,6 @@ interface TabState {
 })
 
 export class SetlMyAccountComponent implements OnDestroy, OnInit {
-
     language = 'en';
 
     countries = [
@@ -291,6 +291,7 @@ export class SetlMyAccountComponent implements OnDestroy, OnInit {
 
     userDetailsForm: FormGroup;
     changePassForm: FormGroup;
+    enableTFAForm: FormGroup;
 
     displayName: AbstractControl;
     firstName: AbstractControl;
@@ -309,6 +310,7 @@ export class SetlMyAccountComponent implements OnDestroy, OnInit {
 
     userId: number;
     connectedWalletId: number;
+    useTwoFactor: number;
     apiKey: string;
     copied = false;
 
@@ -343,7 +345,6 @@ export class SetlMyAccountComponent implements OnDestroy, OnInit {
         ngRedux.subscribe(() => this.updateState());
 
         // changeUserDetails form
-
         this.userDetailsForm = new FormGroup({
             displayName: new FormControl(
                 '',
@@ -427,6 +428,7 @@ export class SetlMyAccountComponent implements OnDestroy, OnInit {
         this.tabStates = {
             detail: true,
             password: false,
+            tfa: false,
             api: false,
         };
 
@@ -436,8 +438,8 @@ export class SetlMyAccountComponent implements OnDestroy, OnInit {
         }));
 
         this.subscriptionsArray.push(this.authentication$.subscribe((auth) => {
+            this.useTwoFactor = auth.useTwoFactor;
             this.apiKey = auth.apiKey;
-
         }));
 
         this.subscriptionsArray.push(this.connectedWalletId$.subscribe((id) => {
@@ -471,6 +473,13 @@ export class SetlMyAccountComponent implements OnDestroy, OnInit {
         this.oldPassword = this.changePassForm.controls['oldPassword'];
         this.password = this.changePassForm.controls['password'];
         this.passwordConfirm = this.changePassForm.controls['passwordConfirm'];
+
+        // Set Enable Two-Factor Authentication Form
+        this.enableTFAForm = new FormGroup(
+            {
+                enableTFA: new FormControl(Number(this.useTwoFactor)),
+            },
+        );
     }
 
     setTabActive(tabId: string) {
@@ -486,7 +495,7 @@ export class SetlMyAccountComponent implements OnDestroy, OnInit {
     }
 
     getLanguage(requested): void {
-        console.log('Language changed from ' + this.language + ' to ' + requested);
+        console.log(`Language changed from ${this.language} to ${requested}`);
         if (requested) {
             switch (requested) {
             case 'fra':
@@ -546,10 +555,33 @@ export class SetlMyAccountComponent implements OnDestroy, OnInit {
         );
     }
 
+    enableTwoFactorAuthentication(formValues) {
+        // Show loading alert
+        this.alertsService.create('loading');
+
+        const twoFactorAuthentication = String(Number(formValues.enableTFA));
+
+        const asyncTaskPipe = this.myUserService.saveTwoFactorAuthentication({
+            twoFactorAuthentication,
+        });
+
+        // Get response from set active wallet
+        this.ngRedux.dispatch(SagaHelper.runAsyncCallback(
+            asyncTaskPipe,
+            (data) => {
+                this.alertsService.generate('success', 'Two-Factor Authentication preference has been saved.');
+
+            },
+            (data) => {
+                console.error('error: ', data);
+                this.alertsService.generate('error', 'Two-Factor Authentication preference could not be saved.');
+            }),
+        );
+    }
+
     updateState() {
         const newState = this.ngRedux.getState();
         const newWalletId = getConnectedWallet(newState);
-
         const myDetails = getMyDetail(newState);
     }
 
