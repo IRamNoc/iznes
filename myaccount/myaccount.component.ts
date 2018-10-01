@@ -5,7 +5,7 @@
  */
 
 import { Component, OnInit, ChangeDetectorRef, OnDestroy, Inject } from '@angular/core';
-import { SagaHelper } from '@setl/utils';
+import { ConfirmationService, SagaHelper } from '@setl/utils';
 import { NgRedux, select } from '@angular-redux/store';
 import * as _ from 'lodash';
 import { AlertsService } from '@setl/jaspero-ng2-alerts';
@@ -311,6 +311,7 @@ export class SetlMyAccountComponent implements OnDestroy, OnInit {
     userId: number;
     connectedWalletId: number;
     useTwoFactor: number;
+    twoFactorSecret: string = '';
     apiKey: string;
     copied = false;
 
@@ -339,6 +340,7 @@ export class SetlMyAccountComponent implements OnDestroy, OnInit {
                 private memberSocketService: MemberSocketService,
                 private changeDetectorRef: ChangeDetectorRef,
                 private myUserService: MyUserService,
+                private confirmationService: ConfirmationService,
                 @Inject(APP_CONFIG) appConfig: AppConfig,
     ) {
         this.appConfig = appConfig;
@@ -439,6 +441,7 @@ export class SetlMyAccountComponent implements OnDestroy, OnInit {
 
         this.subscriptionsArray.push(this.authentication$.subscribe((auth) => {
             this.useTwoFactor = auth.useTwoFactor;
+            this.twoFactorSecret = auth.twoFactorSecret;
             this.apiKey = auth.apiKey;
         }));
 
@@ -565,18 +568,30 @@ export class SetlMyAccountComponent implements OnDestroy, OnInit {
             twoFactorAuthentication,
         });
 
-        // Get response from set active wallet
-        this.ngRedux.dispatch(SagaHelper.runAsyncCallback(
-            asyncTaskPipe,
-            (data) => {
-                this.alertsService.generate('success', 'Two-Factor Authentication preference has been saved.');
+        /* Ask the user if they're sure... */
+        this.confirmationService.create(
+            '<span>Enable Two-Factor Authentication</span>',
+            '<span class="text-warning">Are you sure you want to enable Two-Factor Authentication?</span>',
+        ).subscribe((ans) => {
+            /* ...if they are... */
+            if (ans.resolved) {
+                console.log('+++ Enable 2FA');
+                console.log('+++ this.twoFactorSecret: ', this.twoFactorSecret);
+            }
+        });
 
-            },
-            (data) => {
-                console.error('error: ', data);
-                this.alertsService.generate('error', 'Two-Factor Authentication preference could not be saved.');
-            }),
-        );
+        // // Get response from set active wallet
+        // this.ngRedux.dispatch(SagaHelper.runAsyncCallback(
+        //     asyncTaskPipe,
+        //     (data) => {
+        //         this.alertsService.generate('success', 'Two-Factor Authentication preference has been saved.');
+
+        //     },
+        //     (data) => {
+        //         console.error('error: ', data);
+        //         this.alertsService.generate('error', 'Two-Factor Authentication preference could not be saved.');
+        //     }),
+        // );
     }
 
     updateState() {
