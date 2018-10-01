@@ -59,7 +59,6 @@ import {
     AdminPermissionsComponent,
     AdminUsersComponent,
     AdminWalletsComponent,
-    AdminWizardComponent,
 } from '@setl/core-useradmin';
 /* Account Admin Module. */
 import {
@@ -512,11 +511,6 @@ export const ROUTES: Routes = [
                     {
                         path: 'permissions/:permissionid',
                         component: AdminPermissionsComponent,
-                        canActivate: [LoginGuardService],
-                    },
-                    {
-                        path: 'wizard',
-                        component: AdminWizardComponent,
                         canActivate: [LoginGuardService],
                     },
                     {
