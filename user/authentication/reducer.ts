@@ -7,6 +7,7 @@ const initialState: AuthenticationState = {
     token: '',
     apiKey: '',
     useTwoFactor: 0,
+    twoFactorSecret: '',
     isLogin: false,
     defaultHomePage: '/home',
     mustChangePassword: false,
@@ -17,9 +18,13 @@ export const AuthenticationReducer = function (state: AuthenticationState = init
     switch (action.type) {
     case AuthenticationAction.SET_AUTH_LOGIN_DETAIL:
         const loginedData = _.get(action, 'payload[1].Data[0]', {});
+
+        console.log('+++ loginedData', loginedData);
+
         const token = _.get(loginedData, 'Token', '');
         const apiKey = _.get(loginedData, 'apiKey', '');
         const useTwoFactor = _.get(loginedData, 'useTwoFactor', '');
+        const twoFactorSecret = _.get(loginedData, 'twoFactorSecret', '');
         const defaultHomePage = _.get(loginedData, 'defaultHomePage', '');
         let mustChangePassword = _.get(loginedData, 'mustChangePassword', false);
         if (mustChangePassword === 0 || mustChangePassword === 1) {
@@ -30,6 +35,7 @@ export const AuthenticationReducer = function (state: AuthenticationState = init
             token,
             apiKey,
             useTwoFactor,
+            twoFactorSecret,
             isLogin: true,
             defaultHomePage,
             mustChangePassword,
