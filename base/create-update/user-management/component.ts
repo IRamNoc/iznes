@@ -87,8 +87,7 @@ export class AccountAdminUsersMgmtComponentBase<Type> implements OnInit, OnDestr
 
         _.forEach(this.entities, (entity: Type) => {
             if (this.noun === AccountAdminNouns.Team &&
-                (entity as any).isActivated &&
-                (entity as any).status === 1) {
+                (entity as any).isActivated) {
                 hasActive = true;
             }
         });
