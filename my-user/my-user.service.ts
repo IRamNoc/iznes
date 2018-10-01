@@ -1,13 +1,14 @@
 
-import {timer as observableTimer, Observable, Subscription} from 'rxjs';
-import {Injectable, OnDestroy, OnInit} from '@angular/core';
-import {MemberSocketService} from '@setl/websocket-service';
-import {SagaHelper, Common} from '@setl/utils';
+import { timer as observableTimer, Observable, Subscription } from 'rxjs';
+import { Injectable, OnDestroy, OnInit } from '@angular/core';
+import { MemberSocketService } from '@setl/websocket-service';
+import { SagaHelper, Common } from '@setl/utils';
 import { createMemberNodeRequest, createMemberNodeSagaRequest } from '@setl/utils/common';
 import {
     LoginRequestMessageBody,
     UserDetailsRequestMessageBody,
     SaveUserDetailsRequestBody,
+    SaveTwoFactorAuthenticationBody,
     SaveNewPasswordRequestBody,
     RefreshTokenRequestBody,
     ForgotPasswordRequestBody,
@@ -15,12 +16,12 @@ import {
     SetNewPasswordFromTokenRequestBody,
     SetLanguageRequestBody,
     GetLanguageRequestBody,
-    GetSiteMenuRequestBody
+    GetSiteMenuRequestBody,
 } from './my-user.service.model';
-import {NgRedux} from '@angular-redux/store';
+import { NgRedux } from '@angular-redux/store';
 import {
     setMembernodeSessionManager,
-    resetMembernodeSessionManager
+    resetMembernodeSessionManager,
 } from '@setl/core-store';
 
 interface LoginRequestData {
@@ -48,6 +49,10 @@ interface UserDetailsData {
     memorableQuestion?: string;
     memorableAnswer?: string;
     profileText?: string;
+}
+
+interface TwoFactorAuthenticationData {
+    twoFactorAuthentication: string;
 }
 
 interface NewPasswordData {
@@ -82,7 +87,7 @@ const TIMEOUT = 14 * 60 * 1000;
 
 @Injectable()
 export class MyUserService implements OnDestroy {
-    subscriptionsArray: Array<Subscription>;
+    subscriptionsArray: Subscription[];
 
     constructor(private memberSocketService: MemberSocketService) {
         this.subscriptionsArray = [];
@@ -131,7 +136,7 @@ export class MyUserService implements OnDestroy {
             RequestName: 'Login',
             UserName: loginData.username,
             Password: loginData.password,
-            CFCountry: '.'
+            CFCountry: '.',
         };
 
         return createMemberNodeSagaRequest(this.memberSocketService, messageBody);
@@ -140,7 +145,7 @@ export class MyUserService implements OnDestroy {
     requestMyUserDetails(): any {
         const messageBody: UserDetailsRequestMessageBody = {
             RequestName: 'gud',
-            token: this.memberSocketService.token
+            token: this.memberSocketService.token,
         };
 
         return createMemberNodeSagaRequest(this.memberSocketService, messageBody);
@@ -151,7 +156,18 @@ export class MyUserService implements OnDestroy {
             ...{
                 RequestName: 'ud',
                 token: this.memberSocketService.token,
-            }, ...userData
+            }, ...userData,
+        };
+
+        return createMemberNodeSagaRequest(this.memberSocketService, messageBody);
+    }
+
+    saveTwoFactorAuthentication(userData: TwoFactorAuthenticationData): any {
+        const messageBody: SaveTwoFactorAuthenticationBody = {
+            RequestName: 'twofactorenroll',
+            token: this.memberSocketService.token,
+            twoFactorAuthentication: userData.twoFactorAuthentication,
+            type: 'GoogleAuth',
         };
 
         return createMemberNodeSagaRequest(this.memberSocketService, messageBody);
@@ -162,7 +178,7 @@ export class MyUserService implements OnDestroy {
             RequestName: 'setpassword',
             token: this.memberSocketService.token,
             oldPassword: userData.oldPassword,
-            newPassword: userData.newPassword
+            newPassword: userData.newPassword,
         };
 
         return createMemberNodeSagaRequest(this.memberSocketService, messageBody);
@@ -175,7 +191,7 @@ export class MyUserService implements OnDestroy {
 
         const messageBody: RefreshTokenRequestBody = {
             RequestName: 'extendsession',
-            token: this.memberSocketService.token
+            token: this.memberSocketService.token,
         };
 
         return createMemberNodeSagaRequest(this.memberSocketService, messageBody);
@@ -185,7 +201,7 @@ export class MyUserService implements OnDestroy {
         const messageBody: ForgotPasswordRequestBody = {
             RequestName: 'forgotpassword',
             username: data.username,
-            lang: data.lang
+            lang: data.lang,
         };
 
         return createMemberNodeSagaRequest(this.memberSocketService, messageBody);
@@ -194,7 +210,7 @@ export class MyUserService implements OnDestroy {
     validToken(data: ValidTokenData): any {
         const messageBody: ValidTokenRequestBody = {
             RequestName: 'validresettoken',
-            resetToken: data.token
+            resetToken: data.token,
         };
 
         return createMemberNodeSagaRequest(this.memberSocketService, messageBody);
@@ -205,7 +221,7 @@ export class MyUserService implements OnDestroy {
             RequestName: 'setnewpasswordfromtoken',
             resetToken: data.token,
             newPassword: data.password,
-            lang: data.lang
+            lang: data.lang,
         };
 
         return createMemberNodeSagaRequest(this.memberSocketService, messageBody);
@@ -215,7 +231,7 @@ export class MyUserService implements OnDestroy {
         const messageBody: SetLanguageRequestBody = {
             RequestName: 'setlanguage',
             token: this.memberSocketService.token,
-            lang: data.lang
+            lang: data.lang,
         };
 
         return createMemberNodeSagaRequest(this.memberSocketService, messageBody);
@@ -225,7 +241,7 @@ export class MyUserService implements OnDestroy {
         const messageBody: GetLanguageRequestBody = {
             RequestName: 'getlanguage',
             token: this.memberSocketService.token,
-            userID: data.userID
+            userID: data.userID,
         };
 
         return createMemberNodeSagaRequest(this.memberSocketService, messageBody);
@@ -247,13 +263,12 @@ export class MyUserService implements OnDestroy {
      */
     updateHomePage(homepage: string): any {
         const messageBody: SaveUserDetailsRequestBody =
-            {
-                RequestName: 'ud',
-                token: this.memberSocketService.token,
-                defaultHomePage: homepage,
-            };
+        {
+            RequestName: 'ud',
+            token: this.memberSocketService.token,
+            defaultHomePage: homepage,
+        };
 
         return createMemberNodeRequest(this.memberSocketService, messageBody);
     }
-
 }
