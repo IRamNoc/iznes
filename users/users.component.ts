@@ -13,7 +13,6 @@ import { ConfirmationService, immutableHelper } from '@setl/utils';
 /* User Admin Service. */
 import { UserAdminService } from '../useradmin.service';
 import { Subscription } from 'rxjs/Subscription';
-import { PersistService } from '@setl/core-persist';
 import { userAdminActions } from '@setl/core-store';
 import { LogService } from '@setl/utils';
 import { ClrDatagridStateInterface } from '@clr/angular';
@@ -85,7 +84,6 @@ export class AdminUsersComponent implements OnInit, AfterViewInit, OnDestroy {
                 private alertsService: AlertsService,
                 private route: ActivatedRoute,
                 private router: Router,
-                private persistService: PersistService,
                 private logService: LogService,
                 private confirmationService: ConfirmationService) {
         /* Stub. */
@@ -128,9 +126,6 @@ export class AdminUsersComponent implements OnInit, AfterViewInit, OnDestroy {
 
         /* Recover tabs, and then re-init persist. */
         this.tabsControl = openedTabs;
-
-        this.tabsControl[1].formControl =
-            this.persistService.watchForm('useradmin/newUser', this.tabsControl[1].formControl);
     }
 
     ngOnInit() {
@@ -1476,10 +1471,6 @@ export class AdminUsersComponent implements OnInit, AfterViewInit, OnDestroy {
         /* Prevent submit. */
         if (event) event.preventDefault();
 
-        /* Let's set all the values in the form controls. */
-        this.tabsControl[tabid].formControl =
-            this.persistService.refreshState('useradmin/newUser', this.getNewUserFormGroup('clear'));
-
         /* Override the changes. */
         this.changeDetectorRef.detectChanges();
 
@@ -1514,10 +1505,6 @@ export class AdminUsersComponent implements OnInit, AfterViewInit, OnDestroy {
             },
             this.passwordValidator);
 
-        /* Return the form group and watch it using the persistService. */
-        if (type === 'new') {
-            return this.persistService.watchForm('useradmin/newUser', group);
-        }
         return group;
     }
 
