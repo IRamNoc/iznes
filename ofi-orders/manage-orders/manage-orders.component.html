@@ -115,16 +115,16 @@
                                 <!-- Panel header -->
                                 <div class="row panel-header">
                                     <div class="col-xs-6">
-                                        <a href="#" (click)="isOptionalFilters = !isOptionalFilters; $event.preventDefault();">
+                                        <a href="#" (click)="isOptionalFiltersVisible = !isOptionalFiltersVisible; $event.preventDefault();">
 
-                                            <i class="fa fa-chevron-right" [class.rotate]="isOptionalFilters"></i>
+                                            <i class="fa fa-chevron-right" [class.rotate]="isOptionalFiltersVisible"></i>
                                             <h2>{{'Optional filters' | translate}}</h2>
                                         </a>
                                     </div>
                                 </div>
 
                                 <!-- Panel body -->
-                                <div class="row panel-body" [class.hidden]="!isOptionalFilters">
+                                <div class="row panel-body" [class.hidden]="!isOptionalFiltersVisible">
                                     <div>
                                         <div class="form-group col-sm-4">
                                             <label>{{'Order REF' | translate}}
