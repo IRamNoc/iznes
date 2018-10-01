@@ -56,13 +56,35 @@ export class PrecentralisationReportComponent implements OnInit, OnDestroy {
     isShareLevel = false;
 
     // Datepicker config
-    configDate = {
+    fromConfigDate = {
         firstDayOfWeek: 'mo',
         format: 'YYYY-MM-DD',
         closeOnSelect: true,
         disableKeypress: true,
-        locale: this.language
+        locale: this.language,
+        isDayDisabledCallback: (thisDate) => {
+            if (!!thisDate && this.filtersForm.controls['dateTo'].value != '') {
+                return (thisDate.diff(this.filtersForm.controls['dateTo'].value) > 0);
+            } else {
+                return false;
+            }
+        },
     };
+    toConfigDate = {
+        firstDayOfWeek: 'mo',
+        format: 'YYYY-MM-DD',
+        closeOnSelect: true,
+        disableKeypress: true,
+        locale: this.language,
+        isDayDisabledCallback: (thisDate) => {
+            if (!!thisDate && this.filtersForm.controls['dateFrom'].value != '') {
+                return (thisDate.diff(this.filtersForm.controls['dateFrom'].value) < 0);
+            } else {
+                return false;
+            }
+        },
+    };
+
 
     currencyList = [
         { id: 0, text: 'EUR' },
@@ -511,8 +533,8 @@ export class PrecentralisationReportComponent implements OnInit, OnDestroy {
             this.selectedShare = 0;
         }
 
-        this.dateFrom = (this.filtersForm.controls['dateFrom'].value === '' || this.filtersForm.controls['dateFrom'].value === null) ? '' : this.filtersForm.controls['dateFrom'].value;
-        this.dateTo = ((this.filtersForm.controls['dateTo'].value === '' || this.filtersForm.controls['dateTo'].value === null) || !this.isPeriod) ? '' : this.filtersForm.controls['dateTo'].value;
+        this.dateFrom = (this.filtersForm.controls['dateFrom'].value === '' || this.filtersForm.controls['dateFrom'].value === null) ? '2000-01-01' : this.filtersForm.controls['dateFrom'].value;
+        this.dateTo = ((this.filtersForm.controls['dateTo'].value === '' || this.filtersForm.controls['dateTo'].value === null) || !this.isPeriod) ? '2100-01-01' : this.filtersForm.controls['dateTo'].value;
 
         if (this.isFundLevel) {
             this.isFundsPayloadOK = true;
