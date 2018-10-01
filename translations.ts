@@ -1,7 +1,6 @@
 export const Translations = {
     core: {
       'en-Latn': {
-        txt_: '%',
         txt_0to50millions: '0 to 50 millions €',
         txt_1000to10000: '1000to10000',
         txt_100to500millions: '100 to 500 millions €',
@@ -3408,7 +3407,6 @@ export const Translations = {
         txt_zipcode: 'ZIP Code',
     },
       'ar-Arab': {
-        txt_: '',
         txt_0to50millions: null,
         txt_1000to10000: '',
         txt_100to500millions: null,
@@ -6424,7 +6422,6 @@ export const Translations = {
         txt_zipcode: '',
     },
       'fr-Latn': {
-        txt_: '%',
         txt_0to50millions: '0 à 50 millions €',
         txt_1000to10000: '1000 à 10 000 €',
         txt_100to500millions: '100 à 500 millions €',
@@ -9899,7 +9896,6 @@ export const Translations = {
         txt_zipcode: 'Code postal',
     },
       'it-Latn': {
-        txt_: '',
         txt_0to50millions: null,
         txt_1000to10000: '',
         txt_100to500millions: null,
@@ -12923,7 +12919,6 @@ export const Translations = {
         txt_zipcode: '',
     },
       'jp-Jpan': {
-        txt_: '',
         txt_0to50millions: null,
         txt_1000to10000: '',
         txt_100to500millions: null,
@@ -15946,7 +15941,6 @@ export const Translations = {
         txt_zipcode: '',
     },
       'zh-Hans': {
-        txt_: '',
         txt_0to50millions: null,
         txt_1000to10000: '',
         txt_100to500millions: null,
@@ -18946,7 +18940,6 @@ export const Translations = {
         txt_zipcode: '',
     },
       'zh-Hant': {
-        txt_: '',
         txt_0to50millions: null,
         txt_1000to10000: '',
         txt_100to500millions: null,
