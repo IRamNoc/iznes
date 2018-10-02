@@ -83,9 +83,18 @@ function handleSetDeleteddWallet(action: Action, state: ManagedWalletsState): Ma
     const deletedWalletData = _.get(action, 'payload[1].Data', []);
     const deletedWalletId = deletedWalletData.walletID;
 
-    console.log('+++ deletedWalletData: ', deletedWalletData);
+    /* Clone the wallet list. */
+    const newWalletList = JSON.parse(JSON.stringify(state.walletList));
 
-    return state;
+    if (newWalletList[deletedWalletId].walletId === deletedWalletId) {
+        /* Delete the deleted wallet from the wallet list. */
+        delete newWalletList[deletedWalletId];
+
+        /* Create a newState with the updated wallet list. */
+        const newState = Object.assign({}, state, { walletList: newWalletList });
+
+        return newState;
+    }
 }
 
 function formatToWalletList(rawWalletList: any[]): {
