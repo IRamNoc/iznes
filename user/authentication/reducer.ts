@@ -72,7 +72,7 @@ export const AuthenticationReducer = function (state: AuthenticationState = init
         });
 
     case AuthenticationAction.UPDATE_TWO_FACTOR:
-        useTwoFactor = _.get(action, 'payload[1].Data.useTwoFactor', 0);
+        useTwoFactor = Number(_.get(action, 'payload[1].Data.useTwoFactor', 0));
         return Object.assign({}, state, { useTwoFactor });
 
     default:
