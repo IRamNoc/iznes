@@ -39,6 +39,12 @@ export interface SaveTwoFactorAuthenticationBody extends MemberNodeMessageBody {
     type: string;
 }
 
+export interface AuthenticateTwoFactorBody extends MemberNodeMessageBody {
+    token: string;
+    twoFactorCode: string;
+    secret: string;
+}
+
 export interface SaveNewPasswordRequestBody extends MemberNodeMessageBody {
     token: string;
     oldPassword: string;

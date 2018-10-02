@@ -9,10 +9,10 @@ import {
     UserDetailsRequestMessageBody,
     SaveUserDetailsRequestBody,
     SaveTwoFactorAuthenticationBody,
+    AuthenticateTwoFactorBody,
     SaveNewPasswordRequestBody,
     RefreshTokenRequestBody,
-    ForgotPasswordRequestBody,
-    ValidTokenRequestBody,
+    ForgotPasswordRequestBody, ValidTokenRequestBody,
     SetNewPasswordFromTokenRequestBody,
     SetLanguageRequestBody,
     GetLanguageRequestBody,
@@ -53,6 +53,11 @@ interface UserDetailsData {
 
 interface TwoFactorAuthenticationData {
     twoFactorAuthentication: string;
+}
+
+interface AuthenticateTwoFactorData {
+    twoFactorCode: string;
+    secret: string;
 }
 
 interface NewPasswordData {
@@ -168,6 +173,17 @@ export class MyUserService implements OnDestroy {
             token: this.memberSocketService.token,
             twoFactorAuthentication: userData.twoFactorAuthentication,
             type: 'GoogleAuth',
+        };
+
+        return createMemberNodeSagaRequest(this.memberSocketService, messageBody);
+    }
+
+    authenticateTwoFactor(userData: AuthenticateTwoFactorData): any {
+        const messageBody: AuthenticateTwoFactorBody = {
+            RequestName: 'twofactorauthenticate',
+            token: this.memberSocketService.token,
+            twoFactorCode: userData.twoFactorCode,
+            secret: userData.secret,
         };
 
         return createMemberNodeSagaRequest(this.memberSocketService, messageBody);
