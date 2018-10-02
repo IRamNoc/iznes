@@ -33,16 +33,21 @@ export interface SaveUserDetailsRequestBody extends MemberNodeMessageBody {
     profileText?: string;
 }
 
-export interface SaveTwoFactorAuthenticationBody extends MemberNodeMessageBody {
+export interface SetTwoFactorAuthenticationBody extends MemberNodeMessageBody {
     token: string;
     twoFactorAuthentication: string;
+    twoFactorVerified: string;
     type: string;
+    userID: string;
 }
 
-export interface AuthenticateTwoFactorBody extends MemberNodeMessageBody {
+export interface AuthenticateTwoFactorAuthenticationBody extends MemberNodeMessageBody {
     token: string;
-    twoFactorCode: string;
     secret: string;
+    twoFactorCode: string;
+    userID: string;
+    type: string;
+    sessionTimeout: number;
 }
 
 export interface SaveNewPasswordRequestBody extends MemberNodeMessageBody {

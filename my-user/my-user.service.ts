@@ -8,8 +8,8 @@ import {
     LoginRequestMessageBody,
     UserDetailsRequestMessageBody,
     SaveUserDetailsRequestBody,
-    SaveTwoFactorAuthenticationBody,
-    AuthenticateTwoFactorBody,
+    SetTwoFactorAuthenticationBody,
+    AuthenticateTwoFactorAuthenticationBody,
     SaveNewPasswordRequestBody,
     RefreshTokenRequestBody,
     ForgotPasswordRequestBody, ValidTokenRequestBody,
@@ -51,13 +51,19 @@ interface UserDetailsData {
     profileText?: string;
 }
 
-interface TwoFactorAuthenticationData {
+interface SetTwoFactorAuthenticationData {
     twoFactorAuthentication: string;
+    twoFactorVerified: string;
+    type: string;
+    userID: string;
 }
 
 interface AuthenticateTwoFactorData {
-    twoFactorCode: string;
     secret: string;
+    twoFactorCode: string;
+    userID: string;
+    type: string;
+    sessionTimeout: number;
 }
 
 interface NewPasswordData {
@@ -167,23 +173,28 @@ export class MyUserService implements OnDestroy {
         return createMemberNodeSagaRequest(this.memberSocketService, messageBody);
     }
 
-    saveTwoFactorAuthentication(userData: TwoFactorAuthenticationData): any {
-        const messageBody: SaveTwoFactorAuthenticationBody = {
-            RequestName: 'twofactorenroll',
+    setTwoFactorAuthentication(userData: SetTwoFactorAuthenticationData): any {
+        const messageBody: SetTwoFactorAuthenticationBody = {
+            RequestName: 'settwofactor',
             token: this.memberSocketService.token,
             twoFactorAuthentication: userData.twoFactorAuthentication,
-            type: 'GoogleAuth',
+            twoFactorVerified: userData.twoFactorAuthentication,
+            type: userData.type || 'GoogleAuth',
+            userID: userData.userID,
         };
 
         return createMemberNodeSagaRequest(this.memberSocketService, messageBody);
     }
 
-    authenticateTwoFactor(userData: AuthenticateTwoFactorData): any {
-        const messageBody: AuthenticateTwoFactorBody = {
-            RequestName: 'twofactorauthenticate',
+    authenticateTwoFactorAuthentication(userData: AuthenticateTwoFactorData): any {
+        const messageBody: AuthenticateTwoFactorAuthenticationBody = {
+            RequestName: 'authenticatetwofactor',
             token: this.memberSocketService.token,
-            twoFactorCode: userData.twoFactorCode,
             secret: userData.secret,
+            twoFactorCode: userData.twoFactorCode,
+            userID: userData.userID,
+            type: userData.type || 'GoogleAuth',
+            sessionTimeout: userData.sessionTimeout,
         };
 
         return createMemberNodeSagaRequest(this.memberSocketService, messageBody);
