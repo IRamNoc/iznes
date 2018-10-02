@@ -10,6 +10,7 @@ import {
     /* Useradmin. */
     SET_ADMIN_USERLIST,
     UPDATE_ADMIN_USERLIST,
+    DELETE_FROM_ADMIN_USERLIST,
     SET_ADMINISTRATIVE_PERMISSION_GROUP_LIST,
     SET_TRANSACTIONAL_PERMISSION_GROUP_LIST,
     SET_MENU_PERMISSION_GROUP_LIST,
@@ -54,25 +55,25 @@ export class ChannelService {
 
     checkIfPasswordChanged() {
         this.checkChangedPassword
-            .pipe(
-                take(1),
-            )
-            .subscribe(
-                (changedPassword) => {
-                    this.logService.log(changedPassword);
+        .pipe(
+            take(1),
+        )
+        .subscribe(
+            (changedPassword) => {
+                this.logService.log(changedPassword);
 
-                    if (!changedPassword) {
-                        this.alertsService.create('warning', `
+                if (!changedPassword) {
+                    this.alertsService.create('warning', `
                             The password for this account has been changed! Logging out in 5 seconds.`);
-                        setTimeout(
-                            () => {
-                                document.location.reload(true);
-                            },
-                            5000,
-                        );
-                    }
-                },
-            );
+                    setTimeout(
+                        () => {
+                            document.location.reload(true);
+                        },
+                        5000,
+                    );
+                }
+            },
+        );
     }
 
     /**
@@ -103,17 +104,12 @@ export class ChannelService {
             );
             break;
         case 'du': // delete user
-            /* Let's get the new user object. */
-            this.logService.log(' | NEW USERS LIST: ', data);
-
-            /* Let's now dispatch the append action. */
             this.ngRedux.dispatch(
                 {
-                    type: SET_ADMIN_USERLIST,
+                    type: DELETE_FROM_ADMIN_USERLIST,
                     payload: [null, data, null],
                 },
             );
-
             break;
 
         case 'ud': // update details
