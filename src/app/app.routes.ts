@@ -178,6 +178,16 @@ export const ROUTES: Routes = [
                 canActivate: [LoginGuardService],
             },
             {
+                path: 'home/product-characteristic/:isin',
+                component: ProductCharacteristicComponent,
+                canActivate: [LoginGuardService],
+            },
+            {
+                path: 'home/fund-share/:shareId',
+                component: FundShareComponent,
+                canActivate: [LoginGuardService],
+            },
+            {
                 path: 'core-home',
                 component: HomeComponent,
                 canActivate: [LoginGuardService],
@@ -349,11 +359,6 @@ export const ROUTES: Routes = [
                     {
                         path: 'configuration',
                         component: ProductConfigurationComponent,
-                        canActivate: [LoginGuardService],
-                    },
-                    {
-                        path: 'product-characteristic/:isin',
-                        component: ProductCharacteristicComponent,
                         canActivate: [LoginGuardService],
                     },
                 ],
@@ -611,6 +616,16 @@ export const ROUTES: Routes = [
                 canActivate: [LoginGuardService],
             },
             {
+                path: 'list-of-funds/0/product-characteristic/:isin',
+                component: ProductCharacteristicComponent,
+                canActivate: [LoginGuardService],
+            },
+            {
+                path: 'list-of-funds/0/fund-share/:shareId',
+                component: FundShareComponent,
+                canActivate: [LoginGuardService],
+            },
+            {
                 path: 'manage-orders/:tabid',
                 component: ManageOrdersComponent,
                 canActivate: [LoginGuardService],
@@ -623,6 +638,16 @@ export const ROUTES: Routes = [
                         path: 'my-orders',
                         canActivate: [LoginGuardService],
                         component: ManageOrdersComponent,
+                    },
+                    {
+                        path: 'my-orders/product-characteristic/:isin',
+                        component: ProductCharacteristicComponent,
+                        canActivate: [LoginGuardService],
+                    },
+                    {
+                        path: 'my-orders/fund-share/:shareId',
+                        component: FundShareComponent,
+                        canActivate: [LoginGuardService],
                     },
                     {
                         path: 'my-orders/:tabid',
