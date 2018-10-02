@@ -12,7 +12,7 @@
                         <p>1. Scan the above QR code using your Google Authenticator App (iPhone or Android).</p>
                         <p>2. Enter below the six digit code Google Authenticator gives you then press "Submit".</p>
                         <label class="control-label"></label>
-                        <input type="text" id="qrCodeNumber" formControlName="qrCodeNumber" maxlength="6" minlength="6" size="45" placeholder="Enter the Two-Factor code here">
+                        <input type="text" id="qrCodeNumber" formControlName="qrCodeNumber" maxlength="6" minlength="6" size="45" placeholder="Enter the code here">
                         <div *ngIf="qrCodeChallengeForm.controls.qrCodeNumber.hasError('required') && qrCodeChallengeForm.controls.qrCodeNumber.touched" 
                             class="field-error"
                             mltag="txt_qrcoderequired">Field is required

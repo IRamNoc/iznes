@@ -83,6 +83,7 @@ export class EnrollComponent implements OnDestroy, OnInit {
                             this.alertsService.generate('error', 'Two-Factor Authentication could not be disabled.');
                         }),
                     );
+                    this.showQRCodeChallenge = false;
                 }
 
                 this.changeDetectorRef.markForCheck();

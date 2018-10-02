@@ -96,7 +96,6 @@ export class AuthenticateComponent implements OnDestroy, OnInit {
                 (data) => {
                     this.alertsService.generate('success', data[1].Data[0].Message);
                     this.showModal = false;
-                    this.changeDetectorRef.markForCheck();
                 },
                 (data) => {
                     this.showModal = true;
@@ -104,6 +103,8 @@ export class AuthenticateComponent implements OnDestroy, OnInit {
                     this.alertsService.generate('error', data[1].Data.Message);
                 }),
             );
+
+            this.changeDetectorRef.markForCheck();
             this.alertsService.create('clear');
         }
     }
