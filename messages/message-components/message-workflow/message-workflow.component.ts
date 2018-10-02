@@ -8,6 +8,7 @@ import { MessagesService } from '../../../messages.service';
 import { createWalletNodeSagaRequest } from '@setl/utils/common';
 import * as walletHelper from '@setl/utils/helper/wallet/index';
 import { setRequestedWalletAddresses } from '@setl/core-store/wallet/my-wallet-address/actions';
+import { ReportingService } from '@setl/core-balances/reporting.service';
 
 /**
  * SETL Message Body Component
@@ -32,6 +33,8 @@ export class SetlMessageWorkflowComponent implements OnInit {
     public label = '';
     public subscriptionsArray = [];
     public walletAddresses = [];
+    public wallet;
+    public balances;
 
     public transferTemplate = {
 //        "poa": "WFLXB.UnitQueue.275681",
@@ -58,7 +61,8 @@ export class SetlMessageWorkflowComponent implements OnInit {
                  private ngRedux: NgRedux<any>,
                  private alertsService: AlertsService,
                  private walletNodeRequestService: WalletNodeRequestService,
-                 private coreWorkflowService: CoreWorkflowEngineService) {
+                 private coreWorkflowService: CoreWorkflowEngineService,
+                 private reportingService: ReportingService) {
     }
 
     updateWalletAddresses (addresses) {
@@ -74,7 +78,6 @@ export class SetlMessageWorkflowComponent implements OnInit {
     }
 
     ngOnInit () {
-console.log("DATA", this.data)
         if (this.data && this.data['Data']) {
             try {
                 this.decodedData = JSON.parse(this.data['Data']);
@@ -97,6 +100,17 @@ console.log("DATA", this.data)
         this.subscriptionsArray.push(this.addressListRequestedStateOb.subscribe((requestedState) => {
             this.requestWalletAddressList(requestedState);
         }));
+
+        this.wallet = this.reportingService.getBalances();
+        this.wallet.subscribe((balances) => {
+            this.balances = balances;
+            for (let i = 0; i < balances.length; i += 1) {
+                const bal = balances[i];
+                if (bal['asset'] === this.decodedData['asset']) {
+                    this.transferTemplate['amount'] = bal['free'];
+                }
+            }
+        });
     }
 
     doTransfer (toAddress) {
