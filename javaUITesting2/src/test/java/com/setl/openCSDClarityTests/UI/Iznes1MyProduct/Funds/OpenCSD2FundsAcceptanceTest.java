@@ -82,7 +82,7 @@ public class OpenCSD2FundsAcceptanceTest {
         submitUmbrellaFund();
         assertPopupNextFundNo("Fund");
 
-        fillOutFundDetailsStep1(umbFundDetails[0]);
+        fillOutFundDetailsStep1("yes", umbFundDetails[0]);
         fillOutFundDetailsStep2(uFundDetails[0], randomLei);
 
         assertPopupNextFundNo("Share");
@@ -374,8 +374,10 @@ public class OpenCSD2FundsAcceptanceTest {
         String [] uFundDetails = generateRandomFundsDetails();
         String lei = generateRandomLEI();
         int fundCount = fundCounter - 1;
-        fillOutFundDetailsStep1("none");
+
+        fillOutFundDetailsStep1("no","none");
         fillOutFundDetailsStep2(uFundDetails[0], generateRandomLEI());
+
         wait.until(visibilityOfElementLocated(By.id("product-dashboard-fundID-" + "0" + "-umbrellaFundName")));
         driver.findElement(By.id("product-dashboard-link-fundID-0")).click();
         wait.until(visibilityOfElementLocated(By.xpath("//*[@id=\"clr-tab-content-1\"]/form/div[1]/div[1]/div/a/h2")));

@@ -29,18 +29,18 @@ import static org.openqa.selenium.support.ui.ExpectedConditions.*;
 
 public class KYCDetailsHelper extends LoginAndNavigationHelper {
 
-    public static void KYCProcessWelcomeToIZNES(String testUserNo, String companyName, String phoneNumber) throws SQLException, InterruptedException {
+    public static void KYCProcessWelcomeToIZNES(String testUserNo, String companyName, String phoneNumber, String managementCompany) throws SQLException, InterruptedException {
         String kycEmail = driver.findElement(By.id("kyc_additionnal_email")).getAttribute("value");
-        assertTrue(kycEmail.equals("testops" + testUserNo + "@setl.io"));
+        //assertTrue(kycEmail.equals("testops" + testUserNo + "@setl.io"));
 
         String kycInvitedBy = driver.findElement(By.id("kyc_additionnal_invitedBy")).getAttribute("value");
-        assertTrue(kycInvitedBy.equals("Management Company"));
+        assertTrue(kycInvitedBy.equals(managementCompany));
 
         String kycFirstName = driver.findElement(By.id("kyc_additionnal_firstName")).getAttribute("value");
-        assertTrue(kycFirstName.equals("Jordan" + testUserNo));
+        //assertTrue(kycFirstName.equals("Jordan" + testUserNo));
 
         String kycLastName = driver.findElement(By.id("kyc_additionnal_lastName")).getAttribute("value");
-        assertTrue(kycLastName.equals("Miller" + testUserNo));
+        //assertTrue(kycLastName.equals("Miller" + testUserNo));
 
         if(companyName.equals("")){
             driver.findElement(By.id("btnKycSubmit")).click();
@@ -107,6 +107,7 @@ public class KYCDetailsHelper extends LoginAndNavigationHelper {
             wait.until(visibilityOfElementLocated(By.xpath("//*[@id=\"iznes\"]/app-root/app-basic-layout/div/ng-sidebar-container/div/div/div/main/div/div/ng-component/ng-component/div[3]/div[1]/div/div[1]")));
             String warning = driver.findElement(By.xpath("//*[@id=\"step-selection\"]/div[2]/div/div/span[2]")).getText();
             assertTrue(warning.equals("Warning: if you select Yes in the following table, you will not be able to benefit from all the KYC features of IZNES."));
+
         }
 
         try {
@@ -115,6 +116,7 @@ public class KYCDetailsHelper extends LoginAndNavigationHelper {
         }catch (Exception e){fail(e.getMessage());}
         Thread.sleep(750);
         driver.findElement(By.xpath("//*[@id=\"iznes\"]/app-root/app-basic-layout/div/ng-sidebar-container/div/div/div/main/div/div/ng-component/ng-component/div[3]/div[3]/button[3]")).click();
+        System.out.println("Status : KYC Step 1 completed");
     }
 
     public static void KYCProcessStep2() throws SQLException, InterruptedException {
@@ -127,6 +129,8 @@ public class KYCDetailsHelper extends LoginAndNavigationHelper {
             String introductionStepKYC = driver.findElement(By.xpath("//*[@id=\"iznes\"]/app-root/app-basic-layout/div/ng-sidebar-container/div/div/div/main/div/div/ng-component/ng-component/div[3]/div[1]/div/div[2]")).getAttribute("class");
             assertTrue(introductionStepKYC.equals("fs-active"));
         }catch (Exception e){fail(e.getMessage());}
+        System.out.println("Status : KYC Step 2 completed");
+
     }
 
     public static void KYCProcessStep4() throws SQLException, InterruptedException, IOException {
@@ -143,7 +147,7 @@ public class KYCDetailsHelper extends LoginAndNavigationHelper {
         String subHeadingStep4 = driver.findElement(By.xpath("//*[@id=\"iznes\"]/app-root/app-basic-layout/div/ng-sidebar-container/div/div/div/main/div/div/ng-component/ng-component/div[3]/div[2]/div/section[4]/kyc-step-risk-profile/h3")).getText();
         assertTrue(subHeadingStep4.equals("RISK PROFILE DEFINITION"));
         Thread.sleep(750);
-        System.out.println("Step 4");
+        System.out.println("Status : KYC Step 4 completed");
         driver.findElement(By.xpath("//*[@id=\"step-risk-profile\"]/investment-nature/div/div[1]/div[1]/a/h2")).click();
         Thread.sleep(1000);
         String investmentsNaturePercent = driver.findElement(By.xpath("//*[@id=\"step-risk-profile\"]/investment-nature/div/div[1]/div[2]/div/div[1]/div/div/div/span")).getText();
@@ -153,7 +157,6 @@ public class KYCDetailsHelper extends LoginAndNavigationHelper {
         js.executeScript("document.getElementById('internalManagement').click();");
         js.executeScript("document.getElementById('Bonds').click();");
         String investmentsNaturePercentPost = driver.findElement(By.xpath("//*[@id=\"step-risk-profile\"]/investment-nature/div/div[1]/div[2]/div/div[1]/div/div/div/span")).getText();
-        System.out.println("Investments' Nature : " + investmentsNaturePercentPost);
         assertTrue(investmentsNaturePercentPost.equals("100%"));
         Thread.sleep(1000);
         try {
@@ -173,12 +176,10 @@ public class KYCDetailsHelper extends LoginAndNavigationHelper {
         driver.findElement(By.xpath("//*[@id=\"step-risk-profile\"]/investment-objective/div/div[2]/div/div/investment-objective-form/div/div[5]/table/tbody/tr[3]/td[1]/input")).sendKeys("25");
         driver.findElement(By.xpath("//*[@id=\"step-risk-profile\"]/investment-objective/div/div[2]/div/div/investment-objective-form/div/div[5]/table/tbody/tr[4]/td[1]/input")).sendKeys("25");
         String investmentsObjectivesPercentPost = driver.findElement(By.xpath("//*[@id=\"step-risk-profile\"]/investment-objective/div/div[1]/div[2]/div/div[1]/div/div/div/span")).getText();
-        System.out.println("Investments' Objectives : " + investmentsObjectivesPercentPost);
         assertTrue(investmentsObjectivesPercentPost.equals("100%"));
         Thread.sleep(750);
         driver.findElement(By.xpath("//*[@id=\"step-risk-profile\"]/investment-objective/div/div[1]/div[1]/a/h2")).click();
         String investmentsConstraintsPercentPost = driver.findElement(By.xpath("//*[@id=\"step-risk-profile\"]/investment-constraint/div/div[1]/div[2]/div/div[1]/div/div/div/span")).getText();
-        System.out.println("Investments' Constraints : " + investmentsConstraintsPercentPost);
         assertTrue(investmentsConstraintsPercentPost.equals("100%"));
         try {
             String introductionStepKYC = driver.findElement(By.xpath("//*[@id=\"iznes\"]/app-root/app-basic-layout/div/ng-sidebar-container/div/div/div/main/div/div/ng-component/ng-component/div[3]/div[1]/div/div[4]")).getAttribute("class");
@@ -191,9 +192,8 @@ public class KYCDetailsHelper extends LoginAndNavigationHelper {
     }
     public static void KYCProcessStep5() throws SQLException, InterruptedException, IOException {
         Thread.sleep(750);
-        System.out.println("Step 5");
+        System.out.println("Status : KYC Step 5 completed");
         String documentsPercentPost = driver.findElement(By.xpath("//*[@id=\"iznes\"]/app-root/app-basic-layout/div/ng-sidebar-container/div/div/div/main/div/div/ng-component/ng-component/div[3]/div[2]/div/section[5]/kyc-step-documents/div/div[1]/div[2]/div/div[1]/div/div/div/span")).getText();
-        System.out.println("Documents : " + documentsPercentPost);
         assertTrue(documentsPercentPost.equals("100%"));
         Thread.sleep(750);
         try {
@@ -212,7 +212,6 @@ public class KYCDetailsHelper extends LoginAndNavigationHelper {
         driver.findElement(By.id("doneAt")).sendKeys(cityName);
         driver.findElement(By.id("positionRepresentative")).sendKeys(repTitle);
         String validationPercentPost = driver.findElement(By.xpath("//*[@id=\"iznes\"]/app-root/app-basic-layout/div/ng-sidebar-container/div/div/div/main/div[1]/div/ng-component/ng-component/div[3]/div[2]/div/section[6]/kyc-step-validation/div/div[1]/div[2]/div/div[1]/div/div/div/span")).getText();
-        System.out.println("Validation : " + validationPercentPost);
         assertTrue(validationPercentPost.equals("100%"));
         try {
             String introductionStepKYC = driver.findElement(By.xpath("//*[@id=\"iznes\"]/app-root/app-basic-layout/div/ng-sidebar-container/div/div/div/main/div/div/ng-component/ng-component/div[3]/div[1]/div/div[6]")).getAttribute("class");
@@ -222,6 +221,9 @@ public class KYCDetailsHelper extends LoginAndNavigationHelper {
             driver.findElement(By.xpath("//*[@id=\"iznes\"]/app-root/app-basic-layout/div/ng-sidebar-container/div/div/div/main/div[1]/div/ng-component/ng-component/div[3]/div[3]/button[4]")).click();
         }catch (Exception e){
             fail(e.getMessage());}
+        System.out.println("Status : KYC Step 6 completed");
+        System.out.println("Status : Successfully created a KYC request");
+
     }
 
     public static void KYCProcessRequestListValidation(String modalPresent, String modalTitles, String managementCompanyEntered, String expectedStatus, String multipleAMs, String managementCompany2Entered, String expectedStatus2) throws SQLException, InterruptedException, IOException {
@@ -241,16 +243,12 @@ public class KYCDetailsHelper extends LoginAndNavigationHelper {
         String managementComp = driver.findElement(By.cssSelector("my-requests-list > clr-datagrid > div > div > div > clr-dg-table-wrapper > div.datagrid-body > clr-dg-row:nth-child(1) > div > clr-dg-cell:nth-child(1)")).getText();
         assertTrue(managementComp.equals(managementCompanyEntered));
         String kycStatus = driver.findElement(By.cssSelector("my-requests-list > clr-datagrid > div > div > div > clr-dg-table-wrapper > div.datagrid-body > clr-dg-row > div > clr-dg-cell:nth-child(2) > span")).getText();
-        System.out.println("Expected " + expectedStatus + ", Resulted in " + kycStatus);
         assertTrue(kycStatus.equals(expectedStatus));
-        System.out.println("AM1 name and status matched");
         if (multipleAMs.equals("Yes")){
             String managementComp2 = driver.findElement(By.xpath("//*[@id=\"companyName_cell_1\"]")).getText();
             assertTrue(managementComp2.equals(managementCompany2Entered));
             String kycStatus2 = driver.findElement(By.cssSelector("#status_cell_1 > span")).getText();
             assertTrue(kycStatus2.equals(expectedStatus2));
-            System.out.println("Expected " + expectedStatus2 + ", Resulted in " + kycStatus2);
-            System.out.println("AM2 name and status matched");
         }
     }
 
@@ -265,29 +263,26 @@ public class KYCDetailsHelper extends LoginAndNavigationHelper {
         assertTrue(pageHeading.equals("My requests"));
     }
 
-    public static void KYCAcceptMostRecentRequest(String companyName, String No, String firstName, String lastName, String userNo, String phoneNo) throws SQLException, InterruptedException, IOException {
+    public static void KYCAcceptMostRecentRequest(String amUsername, String amPassword, String companyName, String No, String firstName, String lastName, String userNo, String phoneNo) throws SQLException, InterruptedException, IOException {
         WebDriverWait wait = new WebDriverWait(driver, timeoutInSeconds);
         DateFormat dateFormat = new SimpleDateFormat("dd / MM / yyyy");
         Date date = new Date();
 
-        logout();
-        loginAndVerifySuccess("am", "alex01");
+        System.out.println("Status : Logged in as '" + amUsername + "'");
+
+        loginAndVerifySuccess(amUsername, amPassword);
         navigateToDropdown("top-menu-my-clients");
         navigateToPageByID("top-menu-onboarding-management");
         verifyCorrectPage("On-boarding Management");
         String waitingCompanyName = driver.findElement(By.xpath("//*[@id=\"KYC-grid-CompName-0 \"]/span")).getText();
         assertTrue(waitingCompanyName.equals(companyName));
-        System.out.println("Company name matches");
         driver.findElement(By.xpath("//*[@id=\"KYC-grid-CompName-0 \"]/span")).click();
         wait.until(visibilityOfElementLocated(By.id("waitingApprovalTab")));
         String KYCheading = driver.findElement(By.xpath("//*[@id=\"iznes\"]/app-root/app-basic-layout/div/ng-sidebar-container/div/div/div/main/div/div/app-waiting-approval/div/h1/span")).getText();
         assertTrue(KYCheading.contains(companyName));
-        System.out.println("KYC Heading contains the company name");
         String generalInfoCompanyName = driver.findElement(By.id("companyName")).getAttribute("value");
         assertTrue(generalInfoCompanyName.equals(companyName));
         String generalInfoReference = driver.findElement(By.id("clientReference")).getAttribute("value");
-        System.out.println(generalInfoReference);
-        System.out.println(No);
         assertTrue(generalInfoReference.equals(No));
         String generalInfoFirstName = driver.findElement(By.id("firstName")).getAttribute("value");
         assertTrue(generalInfoFirstName.equals(firstName + userNo));

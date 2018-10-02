@@ -62,6 +62,7 @@ public class LoginAndNavigationHelper {
            wait.until(ExpectedConditions.refreshed(ExpectedConditions.visibilityOfElementLocated(By.id(pageID))));
            wait.until(ExpectedConditions.refreshed(ExpectedConditions.elementToBeClickable(By.id(pageID))));
            driver.findElement(By.id(pageID)).click();
+           System.out.println("Status : Navigated to " + pageID);
        }catch (WebDriverException wde) {
            fail(wde.getMessage()); }
     }
@@ -189,6 +190,7 @@ public class LoginAndNavigationHelper {
         enterLoginCredentialsPassword(password);
         clickLoginButton();
         waitForHomePageToLoad();
+        System.out.println("Status : Successfully logged in as '" + username + "'");
     }
 
     public static void loginAndVerifyFailure(String username, String password) throws InterruptedException {
@@ -256,6 +258,9 @@ public class LoginAndNavigationHelper {
 
             wait.until(visibilityOf(homePage));
         } catch (Exception e) {
+            System.out.println("=========================================================");
+            System.out.println("FAILED : user " + username + " already used");
+            System.out.println("Try a different user");
             fail("Page heading was not present " + e.getMessage());
         }
         assertTrue(driver.findElement(By.id("ofi-welcome-" + headingID)).getText().contentEquals("Welcome to IZNES"));
@@ -299,6 +304,8 @@ public class LoginAndNavigationHelper {
         } catch (Exception e) {
             fail("Settings dropdown not available " + e.getMessage());
         }
+        System.out.println("Status : Logged out");
+        System.out.println("=======================================================");
     }
 
 

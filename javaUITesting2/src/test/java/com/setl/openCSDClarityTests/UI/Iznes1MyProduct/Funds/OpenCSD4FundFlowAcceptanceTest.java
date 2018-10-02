@@ -74,7 +74,7 @@ public class OpenCSD4FundFlowAcceptanceTest {
         assertPopupNextFundNo("Fund");
         searchUmbrellaTable(umbFundDetails[0]);
         getUmbrellaTableRow(0, umbFundDetails[0], randomLEI, "Management Company", "Jordan");
-        fillOutFundDetailsStep1(umbFundDetails[0]);
+        fillOutFundDetailsStep1("yes", umbFundDetails[0]);
         fillOutFundDetailsStep2(uFundDetails[0], randomLEI);
         assertPopupNextFundNo("Share");
         searchFundsTable(uFundDetails[0]);

@@ -177,7 +177,7 @@ public class SetUp {
             options.addArguments("enable-automation");
             options.addArguments("test-type=browser");
             options.addArguments("disable-plugins");
-            options.addArguments("--headless");
+            //options.addArguments("--headless");
             options.addArguments("--disable-gpu");
             prefs.put("credentials_enable_service", false);
             prefs.put("profile.default_content_settings.popups", 0);

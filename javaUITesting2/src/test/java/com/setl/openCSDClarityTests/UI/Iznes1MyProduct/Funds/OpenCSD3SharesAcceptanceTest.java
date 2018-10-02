@@ -74,7 +74,7 @@ public class OpenCSD3SharesAcceptanceTest {
         loginAndVerifySuccess("am", "alex01");
         navigateToDropdown("menu-my-products");
         navigateToPageByID("menu-product-home");
-        fillOutFundDetailsStep1("none");
+        fillOutFundDetailsStep1("no", "none");
         fillOutFundDetailsStep2(uFundDetails[0], randomLEI);
         assertPopupNextFundNo("Share");
         searchFundsTable(uFundDetails[0]);
@@ -96,7 +96,7 @@ public class OpenCSD3SharesAcceptanceTest {
         loginAndVerifySuccess("am", "alex01");
         navigateToDropdown("menu-my-products");
         navigateToPageByID("menu-product-home");
-        fillOutFundDetailsStep1("none");
+        fillOutFundDetailsStep1("no", "none");
         fillOutFundDetailsStep2(uFundDetails[0], randomLEI);
         assertPopupNextFundYes("Share");
         createShareFromYesPopup(uFundDetails[0], uShareDetails[0], uIsin[0]);

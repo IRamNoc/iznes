@@ -6,14 +6,19 @@ import org.openqa.selenium.Keys;
 import org.openqa.selenium.WebElement;
 import org.openqa.selenium.support.ui.ExpectedConditions;
 import org.openqa.selenium.support.ui.WebDriverWait;
+
+import java.io.IOException;
 import java.sql.SQLException;
 
+import java.text.DateFormat;
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.Random;
 
 import static com.setl.UI.common.SETLUIHelpers.MemberDetailsHelper.*;
+import static com.setl.UI.common.SETLUIHelpers.PageHelper.verifyCorrectPage;
+import static com.setl.UI.common.SETLUIHelpers.PageHelper.verifyCorrectPageContains;
 import static com.setl.UI.common.SETLUIHelpers.SetUp.driver;
 import static com.setl.UI.common.SETLUIHelpers.SetUp.timeoutInSeconds;
 import static org.apache.commons.lang3.RandomStringUtils.randomAlphabetic;
@@ -26,13 +31,18 @@ public class FundsDetailsHelper extends LoginAndNavigationHelper {
 
     public static String[] generateRandomUmbrellaFundsDetails() {
         String str = randomAlphabetic(7);
-        String umbrellaFundName = "Test_Umbrella_Fund_" + str;
+        String umbrellaFundName = "Umbrella_" + str;
         return new String[]{umbrellaFundName};
     }
 
     public static String[] generateRandomFundsDetails() {
         String str = randomAlphabetic(7);
-        String umbrellaFundName = "Test_Fund_" + str;
+        String umbrellaFundName = "Fund_" + str;
+        return new String[]{umbrellaFundName};
+    }
+    public static String[] generateRandomShareDetails() {
+        String str = randomAlphabetic(7);
+        String umbrellaFundName = "Share_" + str;
         return new String[]{umbrellaFundName};
     }
 
@@ -194,7 +204,6 @@ public class FundsDetailsHelper extends LoginAndNavigationHelper {
         scrollElementIntoViewById("new-umbrella-fund-btn");
         Thread.sleep(1000);
         driver.findElement(By.id("new-umbrella-fund-btn")).click();
-       // wait.until(invisibilityOfElementLocated(By.id("new-umbrella-fund-btn")));
         try {
             wait.until(visibilityOfElementLocated(By.id("add-fund-title")));
             String pageHeading = driver.findElement(By.id("add-fund-title")).getText();
@@ -504,8 +513,6 @@ public class FundsDetailsHelper extends LoginAndNavigationHelper {
 
         wait.until(visibilityOfElementLocated(By.id("product-dashboard-fundID-" + rowNo + "-legalEntityIdentifier")));
         String leiName = driver.findElement(By.id("product-dashboard-fundID-" + rowNo + "-legalEntityIdentifier")).getText();
-        System.out.println(leiExpected);
-        System.out.println(leiName);
         assertTrue(leiName.equals(leiExpected));
 
         wait.until(visibilityOfElementLocated(By.id("product-dashboard-fundID-" + rowNo + "-fundCurrency")));
@@ -527,6 +534,8 @@ public class FundsDetailsHelper extends LoginAndNavigationHelper {
         wait.until(visibilityOfElementLocated(By.id("product-dashboard-fundID-" + rowNo + "-umbrellaFundName")));
         String umbFund = driver.findElement(By.id("product-dashboard-fundID-" + shareNameNo + "-umbrellaFundName")).getText();
         assertTrue(umbFund.equals(umbFundExpected));
+
+        System.out.println("Status : Successfully created fund : " + fundName);
     }
 
     public static void getShareTableRow(int rowNo, String shareNameExpected, String isinExpected, String fundNameExpected, String shareCurrencyExpected, String managementCompExpected, String umbFundExpected, String shareClassExpected, String statusExpected) {
@@ -562,6 +571,8 @@ public class FundsDetailsHelper extends LoginAndNavigationHelper {
         wait.until(visibilityOfElementLocated(By.id("product-dashboard-fundShareID-" + rowNo + "-status")));
         String status = driver.findElement(By.id("product-dashboard-fundShareID-" + rowNo + "-status")).getText();
         assertTrue(status.equals(statusExpected));
+
+        System.out.println("Status : Successfully created a share : " + shareName);
     }
 
     public static void getUmbrellaTableRow(int rowNo, String umbFundNameExpected, String leiExpected, String managementCompExpected, String domicileExpected) {
@@ -572,8 +583,6 @@ public class FundsDetailsHelper extends LoginAndNavigationHelper {
         int shareNameNo = Integer.parseInt(shareNameID.replaceAll("[\\D]", ""));
 
         String umbFundName = driver.findElement(By.id("product-dashboard-link-umbrellaFundID-" + shareNameNo)).getText();
-        System.out.println(umbFundName);
-        System.out.println(umbFundNameExpected);
         assertTrue(umbFundName.equals(umbFundNameExpected));
 
         String leiName = driver.findElement(By.id("product-dashboard-umbrellaFundID-" + shareNameNo + "-legalEntityIdentifier")).getText();
@@ -584,6 +593,8 @@ public class FundsDetailsHelper extends LoginAndNavigationHelper {
 
         String domicile = driver.findElement(By.id("product-dashboard-umbrellaFundID-" + shareNameNo + "-domicile")).getText();
         assertTrue(domicile.equals(domicileExpected));
+
+        System.out.println("Status : Successfully created umbrella fund : " + umbFundName);
     }
 
     public static void selectUmbrellaFund() {
@@ -732,7 +743,7 @@ public class FundsDetailsHelper extends LoginAndNavigationHelper {
         wait.until(invisibilityOfElementLocated(By.id("investmentObjective")));
     }
 
-    public static void fillOutFundDetailsStep1(String umbFundName) {
+    public static void fillOutFundDetailsStep1(String usingUmbFund, String umbFundName) {
         WebDriverWait wait = new WebDriverWait(driver, timeoutInSeconds);
 
         scrollElementIntoViewById("new-fund-btn");
@@ -740,9 +751,15 @@ public class FundsDetailsHelper extends LoginAndNavigationHelper {
         wait.until(visibilityOfElementLocated(By.id("new-fund-btn")));
         driver.findElement(By.id("new-fund-btn")).click();
 
-        driver.findElement(By.xpath("//*[@id=\"fund-umbrellaControl-select-1\"]/div")).click();
-        driver.findElement(By.xpath("//*[@id=\"fund-umbrellaControl-select-1\"]/div/div[3]/div/input")).sendKeys(umbFundName);
-        driver.findElement(By.xpath("//*[@id=\"fund-umbrellaControl-select-1\"]/div/div[3]/div/input")).sendKeys(Keys.ENTER);
+        if (usingUmbFund.equals("yes")){
+            driver.findElement(By.xpath("//*[@id=\"fund-umbrellaControl-select-1\"]/div")).click();
+            driver.findElement(By.xpath("//*[@id=\"fund-umbrellaControl-select-1\"]/div/div[3]/div/input")).sendKeys(umbFundName);
+            driver.findElement(By.xpath("//*[@id=\"fund-umbrellaControl-select-1\"]/div/div[3]/div/input")).sendKeys(Keys.ENTER);
+        }else {
+            driver.findElement(By.xpath("//*[@id=\"fund-umbrellaControl-select-1\"]/div")).click();
+            driver.findElement(By.xpath("//*[@id=\"fund-umbrellaControl-select-1\"]/div/div[3]/div/input")).sendKeys(umbFundName);
+            driver.findElement(By.xpath("//*[@id=\"fund-umbrellaControl-select-1\"]/div/div[3]/div/input")).sendKeys(Keys.ENTER);
+        }
 
         driver.findElement(By.id("fund-submitUmbrella-btn")).click();
         try {
@@ -878,5 +895,133 @@ public class FundsDetailsHelper extends LoginAndNavigationHelper {
         SimpleDateFormat formatter = new SimpleDateFormat("yyyy-MM-dd");
         String todayString = formatter.format(todayDate);
         return todayString;
+    }
+
+    public static void placeOrder(String isin, String shareName, String managementCompany, String currency, int nav, String amount) throws IOException, InterruptedException{
+        verifyCorrectPage("Place an Order");
+        Thread.sleep(1000);
+
+        String orderGridISIN = driver.findElement(By.cssSelector("div > div > clr-datagrid > div > div > div > clr-dg-table-wrapper > div.datagrid-body > clr-dg-row > div > clr-dg-cell:nth-child(1) > button")).getText();
+        assertTrue(orderGridISIN.equals(isin));
+        String orderGridShareName = driver.findElement(By.cssSelector("div > div > clr-datagrid > div > div > div > clr-dg-table-wrapper > div.datagrid-body > clr-dg-row > div > clr-dg-cell:nth-child(2) > button")).getText();
+        assertTrue(orderGridShareName.equals(shareName));
+        String orderGridAssetManager = driver.findElement(By.cssSelector("div > div > clr-datagrid > div > div > div > clr-dg-table-wrapper > div.datagrid-body > clr-dg-row > div > clr-dg-cell:nth-child(4)")).getText();
+        assertTrue(orderGridAssetManager.equals(managementCompany));
+        String orderGridShareCurrency = driver.findElement(By.cssSelector("div > div > clr-datagrid > div > div > div > clr-dg-table-wrapper > div.datagrid-body > clr-dg-row > div > clr-dg-cell:nth-child(7)")).getText();
+        assertTrue(orderGridShareCurrency.equals(currency));
+        String orderGridNAV = driver.findElement(By.cssSelector("div > div > clr-datagrid > div > div > div > clr-dg-table-wrapper > div.datagrid-body > clr-dg-row > div > clr-dg-cell:nth-child(8)")).getText();
+        assertTrue(orderGridNAV.equals(nav + ".00"));
+
+        driver.findElement(By.cssSelector("div > div > clr-datagrid > div > div > div > clr-dg-table-wrapper > div.datagrid-body > clr-dg-row > div > clr-dg-cell.actions.datagrid-cell.ng-star-inserted > div > button.btn.btn-success.btn-sm")).click();
+        System.out.println("Status : Order details matched");
+        Thread.sleep(5000);
+
+        driver.findElement(By.xpath("//*[@id=\"subportfolio\"]/div")).click();
+        Thread.sleep(750);
+        try {
+            driver.findElement(By.xpath("//*[@id=\"subportfolio\"]/div/div[3]/ul/li/div/a")).click();
+        }catch (Exception e){
+            System.out.println("=======================================================");
+            System.out.println("FAILED : Sub-portfolio not selected while placing an order.");
+            fail(e.getMessage());}
+
+        System.out.println("Status : Sub portfolio was selected");
+        DateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd");
+        Date date = new Date();
+        String date1= dateFormat.format(date);
+        String orderDate = date1 + " " + "00:00";
+
+        Thread.sleep(750);
+        driver.findElement(By.id("cutoffdate")).sendKeys(orderDate);
+        Thread.sleep(750);
+        driver.findElement(By.id("valuationdate")).sendKeys(orderDate);
+        Thread.sleep(750);
+        driver.findElement(By.id("settlementdate")).sendKeys(orderDate);
+        Thread.sleep(750);
+        driver.findElement(By.id("cutoffdate")).clear();
+        driver.findElement(By.id("cutoffdate")).sendKeys(orderDate);
+        Thread.sleep(750);
+        driver.findElement(By.id("valuationdate")).clear();
+        driver.findElement(By.id("valuationdate")).sendKeys(orderDate);
+        driver.findElement(By.id("quantity")).clear();
+        driver.findElement(By.id("quantity")).sendKeys(amount);
+
+        scrollElementIntoViewByCss("app-invest-fund > form > div > div.row > div > div > button.btn.btn-primary.ng-star-inserted");
+        Thread.sleep(750);
+        driver.findElement(By.id("checkbox")).click();
+        driver.findElement(By.cssSelector("app-invest-fund > form > div > div.row > div > div > button.btn.btn-primary.ng-star-inserted")).click();
+        Thread.sleep(1000);
+        String modalTitle = driver.findElement(By.xpath("//*[@id=\"iznes\"]/app-root/jaspero-confirmations/jaspero-confirmation/div[2]/div[1]/span")).getText();
+        assertTrue(modalTitle.equals("Order Confirmation"));
+        driver.findElement(By.xpath("//*[@id=\"iznes\"]/app-root/jaspero-confirmations/jaspero-confirmation/div[2]/div[4]/button[2]")).click();
+
+        Thread.sleep(5000);
+        System.out.println("=======================================================");
+        System.out.println("Status : Successfully placed an order");
+        System.out.println("=======================================================");
+    }
+
+    public static void createSubPortfolio(String subName, String subIBAN) throws IOException, InterruptedException{
+        WebDriverWait wait = new WebDriverWait(driver, timeoutInSeconds);
+
+        navigateToPageByID("menu-sub-portfolio");
+        verifyCorrectPageContains("Sub-portfolio");
+
+        driver.findElement(By.id("btn-add-new-subportfolio")).click();
+        wait.until(visibilityOfElementLocated(By.xpath("//*[@id=\"iznes\"]/app-root/app-basic-layout/div/ng-sidebar-container/div/div/div/main/div/div/ofi-sub-portfolio/clr-modal[1]/div/div[1]/div/div[1]/div")));
+        String modalTitleSubPortfolio = driver.findElement(By.id("override_header")).getText();
+        Thread.sleep(750);
+        assertTrue(modalTitleSubPortfolio.equals("Create A New Sub-portfolio"));
+        String disabledCreateBtn = driver.findElement(By.xpath("//*[@id=\"override_save\"]")).getAttribute("disabled");
+        assertTrue(disabledCreateBtn.equals("true"));
+        driver.findElement(By.xpath("//*[@id=\"iznes\"]/app-root/app-basic-layout/div/ng-sidebar-container/div/div/div/main/div/div/ofi-sub-portfolio/clr-modal[1]/div/div[1]/div/div[1]/div/div[2]/form/div[1]/div/input")).sendKeys(subName);
+        String disabledCreateBtn2 = driver.findElement(By.xpath("//*[@id=\"override_save\"]")).getAttribute("disabled");
+        assertTrue(disabledCreateBtn2.equals("true"));
+        driver.findElement(By.xpath("//*[@id=\"iznes\"]/app-root/app-basic-layout/div/ng-sidebar-container/div/div/div/main/div/div/ofi-sub-portfolio/clr-modal[1]/div/div[1]/div/div[1]/div/div[2]/form/div[2]/div/input")).sendKeys(subIBAN);
+        driver.findElement(By.xpath("//*[@id=\"override_save\"]")).click();
+        Thread.sleep(2500);
+
+        String subPortfolioNameDataGrid = driver.findElement(By.cssSelector("clr-dg-row > div > clr-dg-cell:nth-child(1) > span")).getText();
+        assertTrue(subPortfolioNameDataGrid.equals(subName));
+        String subPortfolioIBANDataGrid = driver.findElement(By.cssSelector("div > clr-datagrid > div > div > div > clr-dg-table-wrapper > div.datagrid-body > clr-dg-row > div > clr-dg-cell:nth-child(2) > span")).getText();
+        assertTrue(subPortfolioIBANDataGrid.equals(subIBAN));
+
+        System.out.println("Status : Successfully created Sub-portfolio : " + subName);
+    }
+
+    public static void setSharesNAVandValidate(String shareName, int navValue) throws IOException, InterruptedException{
+        WebDriverWait wait = new WebDriverWait(driver, timeoutInSeconds);
+        navigateToNAVPageFromFunds();
+        driver.findElement(By.id("Search-field")).sendKeys(shareName);
+        wait.until(visibilityOfElementLocated(By.id("Btn-AddNewNAV-0")));
+        wait.until(elementToBeClickable(By.id("Btn-AddNewNAV-0")));
+        driver.findElement(By.id("Btn-AddNewNAV-0")).click();
+
+        wait.until(visibilityOfElementLocated(By.xpath("//*[@id=\"iznes\"]/app-root/app-basic-layout/div/ng-sidebar-container/div/div/div/main/div/div/app-nav-manage-list/app-nav-add/clr-modal/div/div[1]/div/div[1]/div/div[1]/h3/span")));
+        String NAVpopupTitle = driver.findElement(By.xpath("//*[@id=\"iznes\"]/app-root/app-basic-layout/div/ng-sidebar-container/div/div/div/main/div/div/app-nav-manage-list/app-nav-add/clr-modal/div/div[1]/div/div[1]/div/div[1]/h3/span")).getText();
+        assertTrue(NAVpopupTitle.equals("Add New NAV"));
+        driver.findElement(By.xpath("//*[@id=\"iznes\"]/app-root/app-basic-layout/div/ng-sidebar-container/div/div/div/main/div/div/app-nav-manage-list/app-nav-add/clr-modal/div/div[1]/div/div[1]/div/div[2]/form/div/div[4]/input")).click();
+        driver.findElement(By.xpath("//*[@id=\"iznes\"]/app-root/app-basic-layout/div/ng-sidebar-container/div/div/div/main/div/div/app-nav-manage-list/app-nav-add/clr-modal/div/div[1]/div/div[1]/div/div[2]/form/div/div[4]/input")).clear();
+        driver.findElement(By.xpath("//*[@id=\"iznes\"]/app-root/app-basic-layout/div/ng-sidebar-container/div/div/div/main/div/div/app-nav-manage-list/app-nav-add/clr-modal/div/div[1]/div/div[1]/div/div[2]/form/div/div[4]/input")).sendKeys("" + navValue);
+        searchAndSelectTopDropdown("Status-nav-btn", "Validated");
+        driver.findElement(By.xpath("//*[@id=\"iznes\"]/app-root/app-basic-layout/div/ng-sidebar-container/div/div/div/main/div/div/app-nav-manage-list/app-nav-add/clr-modal/div/div[1]/div/div[1]/div/div[3]/button[2]")).click();
+
+        wait.until(visibilityOfElementLocated(By.className("jaspero__dialog-title")));
+
+        String successSubText = driver.findElement(By.xpath("//*[@id=\"iznes\"]/app-root/jaspero-alerts/jaspero-alert/div[2]/div[3]/table/tbody/tr/td")).getText();
+        assertTrue(successSubText.equals("Successfully Updated NAV"));
+
+        driver.findElement(By.xpath("//*[@id=\"iznes\"]/app-root/jaspero-alerts/jaspero-alert/div[2]/div[4]/button")).click();
+        wait.until(invisibilityOfElementLocated(By.xpath("//*[@id=\"iznes\"]/app-root/jaspero-alerts/jaspero-alert/div[2]/div[4]/button")));
+
+        try {
+            String TableNav = driver.findElement(By.id("NAV-Value-0")).getText();
+            assertTrue(TableNav.equals(navValue + ".00"));
+        } catch (Error e) {
+            fail(e.getMessage());
+        }
+        System.out.println("Status : Validated NAV at " + navValue + ".00");
+
+        logout();
     }
 }

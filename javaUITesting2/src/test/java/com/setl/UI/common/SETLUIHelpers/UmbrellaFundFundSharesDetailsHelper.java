@@ -18,6 +18,7 @@ import static com.setl.UI.common.SETLUIHelpers.FundsDetailsHelper.openDropdownAn
 import static com.setl.UI.common.SETLUIHelpers.MemberDetailsHelper.*;
 import static com.setl.UI.common.SETLUIHelpers.PageHelper.setTime;
 import static com.setl.UI.common.SETLUIHelpers.PageHelper.waitForNewShareButton;
+import static com.setl.UI.common.SETLUIHelpers.SetUp.Screen;
 import static com.setl.UI.common.SETLUIHelpers.SetUp.driver;
 import static com.setl.UI.common.SETLUIHelpers.SetUp.timeoutInSeconds;
 import static org.junit.Assert.*;
@@ -275,8 +276,15 @@ public class UmbrellaFundFundSharesDetailsHelper {
         wait.until(visibilityOfElementLocated(By.xpath("//*[@id=\"iznes\"]/app-root/jaspero-alerts/jaspero-alert/div[2]/div[1]")));
         String popupSubheading = driver.findElement(By.className("jaspero__dialog-title")).getText();
         assertTrue(popupSubheading.equals("Info!"));
-        Thread.sleep(17500);
-        wait.until(invisibilityOfElementLocated(By.xpath("//*[@id=\"iznes\"]/app-root/jaspero-alerts/jaspero-alert/div[2]/div[1]")));
+        Thread.sleep(19500);
+        try {
+            wait.until(invisibilityOfElementLocated(By.xpath("//*[@id=\"iznes\"]/app-root/jaspero-alerts/jaspero-alert/div[2]/div[1]")));
+        }catch (Exception e){
+            String createShareSubHeading = driver.findElement(By.xpath("//*[@id=\"iznes\"]/app-root/jaspero-alerts/jaspero-alert/div[2]/div[3]/table/tbody/tr/td/i")).getText();
+            System.out.println("======================================================================");
+            System.out.println("FAILED : Share created modal stuck on '" + createShareSubHeading + "'");
+            fail(e.getMessage());
+        }
     }
 
     public static void assertPopupNextFundYes(String fundType) {
@@ -319,7 +327,6 @@ public class UmbrellaFundFundSharesDetailsHelper {
 
     public static void searchSharesTable(String shareName) throws InterruptedException {
         WebDriverWait wait = new WebDriverWait(driver, timeoutInSeconds);
-        wait.until(visibilityOfElementLocated(By.className("toast-title")));
         wait.until(invisibilityOfElementLocated(By.className("toast-title")));
         WebElement targetShare = (driver.findElement(By.xpath("//*[@id=\"iznes\"]/app-root/app-basic-layout/div/ng-sidebar-container/div/div/div/main/div[1]/div/app-ofi-am-product-home/div[4]/div[2]/div/clr-datagrid/div/div/div/clr-dg-table-wrapper/div[1]/div/clr-dg-column[1]/div/clr-dg-string-filter/clr-dg-filter/button")));
         try {

@@ -85,7 +85,7 @@ public class OpenCSDSprint8AcceptanceTest {
         loginAndVerifySuccess("am", "alex01");
         navigateToDropdown("menu-my-products");
         navigateToPageByID("menu-product-home");
-        fillOutFundDetailsStep1("none");
+        fillOutFundDetailsStep1("no","none");
         fillOutFundDetailsStep2(uFundDetails[0], randomLEI);
         assertPopupNextFundNo("Share");
         searchFundsTable(uFundDetails[0]);
