@@ -1,0 +1,25 @@
+<section class="form-block">
+    <div class="form-group col-sm-6">
+        <form>
+            <div *ngIf="!useTwoFactor">
+                <p *ngIf="!useTwoFactor">Two Factor Authentication is currently <strong>disabled</strong>.</p>
+                <div class="row">
+                    <button *ngIf="!useTwoFactor" id="enable" class="btn btn-primary" (click)="setTwoFactorAuthentication(true)">
+                        <i class="fa fa-save"></i> <span mltag="txt_enable">Enable</span>
+                    </button>
+                </div>
+            </div>
+
+            <div *ngIf="useTwoFactor">
+                <p *ngIf="useTwoFactor">Two Factor Authentication is currently <strong>enabled</strong>.</p>
+                <div class="row">
+                    <button *ngIf="useTwoFactor" id="disable" class="btn btn-primary" (click)="setTwoFactorAuthentication(false)">
+                        <i class="fa fa-save"></i> <span mltag="txt_disable">Disable</span>
+                    </button>
+                </div>
+            </div>
+        </form>
+    </div>
+</section>
+
+<app-authenticate *ngIf="showQRCodeChallenge"></app-authenticate>

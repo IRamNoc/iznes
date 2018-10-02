@@ -17,12 +17,16 @@ import { ToasterModule, ToasterService } from 'angular2-toaster';
 import { ClarityModule } from '@clr/angular';
 import { MultilingualModule } from '@setl/multilingual';
 import { SetlDirectivesModule, SetlPipesModule, SetlComponentsModule } from '@setl/utils';
+import { EnrollComponent } from './two-factor/enroll/enroll.component';
+import { AuthenticateComponent } from './two-factor/authenticate/authenticate.component';
 
 @NgModule({
     declarations: [
         SetlLoginComponent,
         SetlLogoutComponent,
         SignupComponent,
+        EnrollComponent,
+        AuthenticateComponent,
     ],
     imports: [
         ToasterModule,
@@ -33,11 +37,12 @@ import { SetlDirectivesModule, SetlPipesModule, SetlComponentsModule } from '@se
         MultilingualModule,
         SetlDirectivesModule,
         SetlPipesModule,
-        SetlComponentsModule
+        SetlComponentsModule,
     ],
     exports: [
         SetlLoginComponent,
         SignupComponent,
+        EnrollComponent,
     ],
     providers: [
         ToasterService,
@@ -45,5 +50,4 @@ import { SetlDirectivesModule, SetlPipesModule, SetlComponentsModule } from '@se
 })
 
 export class SetlLoginModule {
-
 }
