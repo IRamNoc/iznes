@@ -701,7 +701,7 @@ export class ManageOrdersComponent implements OnInit, AfterViewInit, OnDestroy {
         ];
 
         /* Reset tabs. */
-        this.location.back();
+        // this.location.back();
 
         this.tabsControl[0].active = true;
 
