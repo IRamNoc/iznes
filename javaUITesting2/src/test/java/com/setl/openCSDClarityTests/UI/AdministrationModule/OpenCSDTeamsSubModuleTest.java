@@ -5,14 +5,11 @@ import com.setl.UI.common.SETLUtils.ScreenshotRule;
 import com.setl.UI.common.SETLUtils.TestMethodPrinterRule;
 import custom.junit.runners.OrderedJUnit4ClassRunner;
 import org.junit.Before;
-import org.junit.Ignore;
 import org.junit.Rule;
 import org.junit.Test;
 import org.junit.rules.Timeout;
 import org.junit.runner.RunWith;
 import org.openqa.selenium.JavascriptExecutor;
-
-import java.io.IOException;
 
 import static com.setl.UI.common.SETLUIHelpers.AdministrationModuleHelper.*;
 import static com.setl.UI.common.SETLUIHelpers.LoginAndNavigationHelper.*;
@@ -60,9 +57,10 @@ public class OpenCSDTeamsSubModuleTest {
         navigateToDropdown("menu-administration-teams");
         selectAddNewTeam();
         fillInTeamsDetails(teamName[0], teamReference[0], teamDescription[0]);
-        SelectCreateNewTeam();
-        searchTeam(teamReference[0],teamName[0],teamDescription[0]);
+        selectCreateNewTeam();
+        searchTeam(teamReference[0],teamName[0],teamDescription[0], "Pending");
     }
+
     @Test
     public void shouldUpdateTeam() throws InterruptedException {
         String[] teamName = generateRandomTeamName();
@@ -74,14 +72,15 @@ public class OpenCSDTeamsSubModuleTest {
         navigateToDropdown("menu-administration-teams");
         selectAddNewTeam();
         fillInTeamsDetails(teamName[0], teamReference[0], teamDescription[0]);
-        SelectCreateNewTeam();
-        searchTeam(teamReference[0], teamName[0], teamDescription[0]);
+        selectCreateNewTeam();
+        searchTeam(teamReference[0], teamName[0], teamDescription[0], "Pending");
         selectTeamRow0();
         assertTeamName(teamName[0]);
         editTeamName(updateName[0]);
         selectUpdateTeam();
-        searchTeam(teamReference[0], updateName[0], teamDescription[0]);
+        searchTeam(teamReference[0], updateName[0], teamDescription[0], "Pending");
     }
+
     @Test
     public void shouldDeleteTeamIfNo() throws InterruptedException {
         String[] teamName = generateRandomTeamName();
@@ -92,13 +91,14 @@ public class OpenCSDTeamsSubModuleTest {
         navigateToDropdown("menu-administration-teams");
         selectAddNewTeam();
         fillInTeamsDetails(teamName[0], teamReference[0], teamDescription[0]);
-        SelectCreateNewTeam();
-        searchTeam(teamReference[0], teamName[0], teamDescription[0]);
+        selectCreateNewTeam();
+        searchTeam(teamReference[0], teamName[0], teamDescription[0], "Pending");
         selectTeamRow0();
         assertTeamName(teamName[0]);
         selectDeleteTeam("No",teamName[0]);
-        searchTeam(teamReference[0], teamName[0], teamDescription[0]);
+        searchTeam(teamReference[0], teamName[0], teamDescription[0], "Pending");
     }
+
     @Test
     public void shouldDeleteTeamIfYes() throws InterruptedException {
         String[] teamName = generateRandomTeamName();
@@ -109,8 +109,8 @@ public class OpenCSDTeamsSubModuleTest {
         navigateToDropdown("menu-administration-teams");
         selectAddNewTeam();
         fillInTeamsDetails(teamName[0], teamReference[0], teamDescription[0]);
-        SelectCreateNewTeam();
-        searchTeam(teamReference[0], teamName[0], teamDescription[0]);
+        selectCreateNewTeam();
+        searchTeam(teamReference[0], teamName[0], teamDescription[0], "Pending");
         selectTeamRow0();
         assertTeamName(teamName[0]);
         selectDeleteTeam("Yes",teamName[0]);
