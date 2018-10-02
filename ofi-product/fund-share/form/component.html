@@ -20,7 +20,7 @@
                         <button class="btn btn-default" (click)="goToAuditTrail()" *ngIf="!isCreate()">{{'Share Audit Trail' | translate}}</button>
                         <button class="btn btn-default" (click)="duplicateShare()" *ngIf="!isCreate()">{{'Duplicate a share' | translate}}</button>
                         <ng-select *ngIf="isCreate()" id="share-prefill-select" [items]="shareListItems" [allowClear]="true" [placeholder]="_translate.translate('Duplicate from an existing Share')"
-                            [formControl]="shareControl">
+                                   [formControl]="shareControl">
                         </ng-select>
                     </div>
                 </div>
@@ -110,7 +110,7 @@
 
                                             </label>
                                             <ng-select class="form-control" id="selectFund" [items]="fundListItems" placeholder="" [formControl]="selectFundForm.controls['fund']"
-                                                [required]="true">
+                                                       [required]="true">
                                             </ng-select>
                                         </div>
                                     </div>
@@ -517,7 +517,7 @@
 
                     <button *ngIf="!isRead()" type="button" class="btn btn-primary action-button save" id="saveFundShareBottom" (click)="saveFundShare()" [disabled]="!model.isValid()">
                         <i class="fa fa-save"></i>
-                        {{(isCreate() || currDraft == 1 ? 'Add new Share' : 'Update Share') | translate}}
+                        {{(isCreate() || currDraft == 1 ? 'Create Share' : 'Update Share') | translate}}
                     </button>
                 </div>
             </div>
