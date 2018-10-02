@@ -71,11 +71,11 @@ public class AdministrationModuleHelper {
 
     public static void selectAddNewTeam() {
         final WebDriverWait wait = new WebDriverWait(driver, timeoutInSeconds);
-        wait.until(visibilityOfElementLocated(By.xpath("/html/body/app-root/app-basic-layout/div/ng-sidebar-container/div/div/div/main/div/div/app-core-admin-teams-list/clr-tabs/clr-tab/clr-tab-content/div/div[3]/a")));
-        wait.until(elementToBeClickable(By.xpath("/html/body/app-root/app-basic-layout/div/ng-sidebar-container/div/div/div/main/div/div/app-core-admin-teams-list/clr-tabs/clr-tab/clr-tab-content/div/div[3]/a")));
+        wait.until(refreshed(visibilityOfElementLocated(By.xpath("/html/body/app-root/app-basic-layout/div/ng-sidebar-container/div/div/div/main/div/div/app-core-admin-teams-list/clr-tabs/clr-tab/clr-tab-content/div/div[3]/a"))));
+        wait.until(refreshed(elementToBeClickable(By.xpath("/html/body/app-root/app-basic-layout/div/ng-sidebar-container/div/div/div/main/div/div/app-core-admin-teams-list/clr-tabs/clr-tab/clr-tab-content/div/div[3]/a"))));
         driver.findElement(By.xpath("/html/body/app-root/app-basic-layout/div/ng-sidebar-container/div/div/div/main/div/div/app-core-admin-teams-list/clr-tabs/clr-tab/clr-tab-content/div/div[3]/a")).click();
         try {
-            wait.until(visibilityOfElementLocated(By.xpath("/html/body/app-root/app-basic-layout/div/ng-sidebar-container/div/div/div/main/div/div/app-core-admin-teams-crud/div")));
+            wait.until(refreshed(visibilityOfElementLocated(By.xpath("/html/body/app-root/app-basic-layout/div/ng-sidebar-container/div/div/div/main/div/div/app-core-admin-teams-crud/div"))));
             String header = driver.findElement(By.xpath("/html/body/app-root/app-basic-layout/div/ng-sidebar-container/div/div/div/main/div/div/app-core-admin-teams-crud/div")).getText();
             assertTrue(header.contains("Create a New Team"));
         } catch (Exception e) {
@@ -83,22 +83,31 @@ public class AdministrationModuleHelper {
         }
     }
 
-    public static void SelectCreateNewTeam() throws InterruptedException {
+    public static void selectCreateNewTeam() throws InterruptedException {
         final WebDriverWait wait = new WebDriverWait(driver, timeoutInSeconds);
         scrollElementIntoViewByXpath("/html/body/app-root/app-basic-layout/div/ng-sidebar-container/div/div/div/main/div/div/app-core-admin-teams-crud/clr-tabs/clr-tab/clr-tab-content/div[5]/div[2]/button");
-        Thread.sleep(1000);
-        wait.until(visibilityOfElementLocated(By.xpath("/html/body/app-root/app-basic-layout/div/ng-sidebar-container/div/div/div/main/div/div/app-core-admin-teams-crud/clr-tabs/clr-tab/clr-tab-content/div[5]/div[2]/button")));
-        wait.until(elementToBeClickable(By.xpath("/html/body/app-root/app-basic-layout/div/ng-sidebar-container/div/div/div/main/div/div/app-core-admin-teams-crud/clr-tabs/clr-tab/clr-tab-content/div[5]/div[2]/button")));
+        wait.until(refreshed(visibilityOfElementLocated(By.xpath("/html/body/app-root/app-basic-layout/div/ng-sidebar-container/div/div/div/main/div/div/app-core-admin-teams-crud/clr-tabs/clr-tab/clr-tab-content/div[5]/div[2]/button"))));
+        wait.until(refreshed(elementToBeClickable(By.xpath("/html/body/app-root/app-basic-layout/div/ng-sidebar-container/div/div/div/main/div/div/app-core-admin-teams-crud/clr-tabs/clr-tab/clr-tab-content/div[5]/div[2]/button"))));
         String create = driver.findElement(By.xpath("/html/body/app-root/app-basic-layout/div/ng-sidebar-container/div/div/div/main/div/div/app-core-admin-teams-crud/clr-tabs/clr-tab/clr-tab-content/div[5]/div[2]/button")).getText();
         assertTrue(create.contains("Create Team"));
         driver.findElement(By.xpath("/html/body/app-root/app-basic-layout/div/ng-sidebar-container/div/div/div/main/div/div/app-core-admin-teams-crud/clr-tabs/clr-tab/clr-tab-content/div[5]/div[2]/button")).click();
-        wait.until(visibilityOfElementLocated(By.className("jaspero__dialog-title")));
-        wait.until(elementToBeClickable(By.xpath("/html/body/app-root/jaspero-confirmations/jaspero-confirmation/div[2]/div[4]/button[2]")));
-        driver.findElement(By.xpath("/html/body/app-root/jaspero-confirmations/jaspero-confirmation/div[2]/div[4]/button[2]")).click();
-        wait.until(visibilityOfElementLocated(By.xpath("/html/body/app-root/app-basic-layout/div/ng-sidebar-container/div/div/div/main/div/div/app-core-admin-teams-list/div/h1")));
+        wait.until(refreshed(visibilityOfElementLocated(By.className("jaspero__dialog-title"))));
+        wait.until(refreshed(elementToBeClickable(By.xpath("/html/body/app-root/jaspero-confirmations/jaspero-confirmation/div[2]/div[4]/button[2]"))));
+        assertTrue(driver.findElement(By.xpath("//*[@id=\"iznes\"]/app-root/jaspero-confirmations/jaspero-confirmation/div[2]/div[3]")).getText().equals("You have selected no permissions for this team. Any users, soley assigned to this team, will no longer hold any permissions on the system."));
+        driver.findElement(By.xpath("//*[@id=\"iznes\"]/app-root/jaspero-confirmations/jaspero-confirmation/div[2]/div[4]/button[2]")).click();
+        Thread.sleep(1000);
+        wait.until(refreshed(visibilityOfElementLocated(By.className("jaspero__dialog-title"))));
+        assertTrue(driver.findElement(By.xpath("//*[@id=\"iznes\"]/app-root/jaspero-confirmations/jaspero-confirmation/div[2]/div[3]")).getText().equals("Are you sure you wish to create this Team?"));
+        driver.findElement(By.xpath("//*[@id=\"iznes\"]/app-root/jaspero-confirmations/jaspero-confirmation/div[2]/div[4]/button[2]")).click();
+        wait.until(refreshed(invisibilityOfElementLocated(By.className("jaspero__dialog-title"))));
+        wait.until(refreshed(visibilityOfElementLocated(By.xpath("/html/body/app-root/app-basic-layout/div/ng-sidebar-container/div/div/div/main/div/div/app-core-admin-teams-list/div/h1"))));
+
+
     }
 
-    public static void searchTeam(String ref, String Name, String Description) throws InterruptedException {
+    public static void searchTeam(String ref, String teamName,
+                                  String teamDescription,
+                                  String teamStatus) throws InterruptedException {
         final WebDriverWait wait = new WebDriverWait(driver, timeoutInSeconds);
         wait.until(visibilityOfElementLocated(By.xpath("/html/body/app-root/app-basic-layout/div/ng-sidebar-container/div/div/div/main/div/div/app-core-admin-teams-list/clr-tabs/clr-tab/clr-tab-content/div/div[3]/a")));
         if (driver.findElement(By.xpath("/html/body/app-root/app-basic-layout/div/ng-sidebar-container/div/div/div/main/div/div/app-core-admin-teams-list/clr-tabs/clr-tab/clr-tab-content/clr-datagrid/div/div/div/clr-dg-table-wrapper/div[1]/div/clr-dg-column[2]/div/clr-dg-string-filter/clr-dg-filter/button")).isDisplayed())
@@ -110,18 +119,18 @@ public class AdministrationModuleHelper {
         }
         if (driver.findElement(By.xpath("/html/body/app-root/app-basic-layout/div/ng-sidebar-container/div/div/div/main/div/div/app-core-admin-teams-list/clr-tabs/clr-tab/clr-tab-content/clr-datagrid/div/div/div/clr-dg-table-wrapper/div[1]/div/clr-dg-column[2]/div/clr-dg-string-filter/clr-dg-filter/div/input")).isDisplayed())
         {
-            driver.findElement(By.xpath("/html/body/app-root/app-basic-layout/div/ng-sidebar-container/div/div/div/main/div/div/app-core-admin-teams-list/clr-tabs/clr-tab/clr-tab-content/clr-datagrid/div/div/div/clr-dg-table-wrapper/div[1]/div/clr-dg-column[2]/div/clr-dg-string-filter/clr-dg-filter/div/input")).sendKeys(Name);
+            driver.findElement(By.xpath("/html/body/app-root/app-basic-layout/div/ng-sidebar-container/div/div/div/main/div/div/app-core-admin-teams-list/clr-tabs/clr-tab/clr-tab-content/clr-datagrid/div/div/div/clr-dg-table-wrapper/div[1]/div/clr-dg-column[2]/div/clr-dg-string-filter/clr-dg-filter/div/input")).sendKeys(teamName);
         } else {
-            driver.findElement(By.xpath("/html/body/app-root/app-basic-layout/div/ng-sidebar-container/div/div/div/main/div[1]/div/app-core-admin-teams-list/clr-tabs/clr-tab/clr-tab-content/clr-datagrid/div/div/div/clr-dg-table-wrapper/div[1]/div/clr-dg-column[2]/div/clr-dg-string-filter/clr-dg-filter/div/input")).sendKeys(Name);
+            driver.findElement(By.xpath("/html/body/app-root/app-basic-layout/div/ng-sidebar-container/div/div/div/main/div[1]/div/app-core-admin-teams-list/clr-tabs/clr-tab/clr-tab-content/clr-datagrid/div/div/div/clr-dg-table-wrapper/div[1]/div/clr-dg-column[2]/div/clr-dg-string-filter/clr-dg-filter/div/input")).sendKeys(teamName);
         }
         String columnRef = driver.findElement(By.id("accountAdminTeamCellRef0")).getText();
         assertTrue(columnRef.equals(ref));
         String columnName = driver.findElement(By.id("accountAdminTeamCellName0")).getText();
-        assertTrue(columnName.equals(Name));
+        assertTrue(columnName.equals(teamName));
         String columnDescription = driver.findElement(By.id("accountAdminTeamCellDescription0")).getText();
-        assertTrue(columnDescription.equals(Description));
+        assertTrue(columnDescription.equals(teamDescription));
         String status = driver.findElement(By.xpath("/html/body/app-root/app-basic-layout/div/ng-sidebar-container/div/div/div/main/div/div/app-core-admin-teams-list/clr-tabs/clr-tab/clr-tab-content/clr-datagrid/div/div/div/clr-dg-table-wrapper/div[2]/clr-dg-row/div/clr-dg-cell[4]/span/span/span")).getText();
-        assertTrue(status.equals("Active"));
+        assertTrue(status.equals(teamStatus));
     }
     public static void fillInUserDetails(String Email, String firstName, String lastName, String Reference, String phoneNumber) {
         driver.findElement(By.id("emailAddress")).sendKeys(Email);
@@ -184,13 +193,19 @@ public class AdministrationModuleHelper {
     public static void selectUpdateTeam() throws InterruptedException {
         final WebDriverWait wait = new WebDriverWait(driver, timeoutInSeconds);
         scrollElementIntoViewByXpath("/html/body/app-root/app-basic-layout/div/ng-sidebar-container/div/div/div/main/div[1]/div/app-core-admin-teams-crud/clr-tabs/clr-tab/clr-tab-content/div[5]/div[2]/button");
-        Thread.sleep(2000);
-        wait.until(visibilityOfElementLocated(By.xpath("/html/body/app-root/app-basic-layout/div/ng-sidebar-container/div/div/div/main/div[1]/div/app-core-admin-teams-crud/clr-tabs/clr-tab/clr-tab-content/div[5]/div[2]/button")));
-        wait.until(elementToBeClickable(By.xpath("/html/body/app-root/app-basic-layout/div/ng-sidebar-container/div/div/div/main/div[1]/div/app-core-admin-teams-crud/clr-tabs/clr-tab/clr-tab-content/div[5]/div[2]/button")));
+        wait.until(refreshed(visibilityOfElementLocated(By.xpath("/html/body/app-root/app-basic-layout/div/ng-sidebar-container/div/div/div/main/div[1]/div/app-core-admin-teams-crud/clr-tabs/clr-tab/clr-tab-content/div[5]/div[2]/button"))));
+        wait.until(refreshed(elementToBeClickable(By.xpath("/html/body/app-root/app-basic-layout/div/ng-sidebar-container/div/div/div/main/div[1]/div/app-core-admin-teams-crud/clr-tabs/clr-tab/clr-tab-content/div[5]/div[2]/button"))));
         driver.findElement(By.xpath("/html/body/app-root/app-basic-layout/div/ng-sidebar-container/div/div/div/main/div[1]/div/app-core-admin-teams-crud/clr-tabs/clr-tab/clr-tab-content/div[5]/div[2]/button")).click();
-        wait.until(visibilityOfElementLocated(By.className("jaspero__dialog-title")));
-        driver.findElement((By.xpath("//*[@id=\"iznes\"]/app-root/jaspero-confirmations/jaspero-confirmation/div[2]/div[4]/button[2]"))).click();
-        wait.until(visibilityOfElementLocated(By.id("tabAccountAdminTeamsButton")));
+        wait.until(refreshed(visibilityOfElementLocated(By.className("jaspero__dialog-title"))));
+        assertTrue(driver.findElement(By.xpath("//*[@id=\"iznes\"]/app-root/jaspero-confirmations/jaspero-confirmation/div[2]/div[3]")).getText().equals("You have selected no permissions for this team. Any users, soley assigned to this team, will no longer hold any permissions on the system."));
+        driver.findElement(By.xpath("//*[@id=\"iznes\"]/app-root/jaspero-confirmations/jaspero-confirmation/div[2]/div[4]/button[2]")).click();
+        wait.until(refreshed(invisibilityOfElementLocated(By.className("jaspero__dialog-title"))));
+        wait.until(refreshed(visibilityOfElementLocated(By.className("jaspero__dialog-title"))));
+        assertTrue(driver.findElement(By.xpath("//*[@id=\"iznes\"]/app-root/jaspero-confirmations/jaspero-confirmation/div[2]/div[3]")).getText().equals("Are you sure you wish to update this Team?"));
+        driver.findElement(By.xpath("//*[@id=\"iznes\"]/app-root/jaspero-confirmations/jaspero-confirmation/div[2]/div[4]/button[2]")).click();
+        wait.until(refreshed(invisibilityOfElementLocated(By.className("jaspero__dialog-title"))));
+
+        wait.until(refreshed(visibilityOfElementLocated(By.id("tabAccountAdminTeamsButton"))));
     }
     public static void assertTeamName (String reName) {
         final WebDriverWait wait = new WebDriverWait(driver, timeoutInSeconds);
@@ -202,25 +217,23 @@ public class AdministrationModuleHelper {
     public static void selectDeleteTeam (String Answer, String teamName) throws InterruptedException {
         final WebDriverWait wait = new WebDriverWait(driver, timeoutInSeconds);
         scrollElementIntoViewByXpath("/html/body/app-root/app-basic-layout/div/ng-sidebar-container/div/div/div/main/div[1]/div/app-core-admin-teams-crud/clr-tabs/clr-tab/clr-tab-content/div[5]/div[3]/button");
-        Thread.sleep(2000);
         driver.findElement(By.xpath("/html/body/app-root/app-basic-layout/div/ng-sidebar-container/div/div/div/main/div[1]/div/app-core-admin-teams-crud/clr-tabs/clr-tab/clr-tab-content/div[5]/div[3]/button")).click();
-        wait.until(visibilityOfElementLocated(By.xpath("/html/body/app-root/jaspero-confirmations/jaspero-confirmation/div[2]/div[1]")));
+        wait.until(refreshed(visibilityOfElementLocated(By.xpath("/html/body/app-root/jaspero-confirmations/jaspero-confirmation/div[2]/div[1]"))));
         if (Answer == "Yes") {
             driver.findElement(By.xpath("/html/body/app-root/jaspero-confirmations/jaspero-confirmation/div[2]/div[4]/button[2]")).click();
             //Directs to overview page
             wait.until(refreshed(visibilityOfElementLocated(By.id("tabAccountAdminTeamsButton"))));
-            Thread.sleep(2000);
-            driver.findElement(By.cssSelector(".col-name > div:nth-child(1) > clr-dg-string-filter:nth-child(1) > clr-dg-filter:nth-child(1) > button:nth-child(1)")).click();
+             driver.findElement(By.cssSelector(".col-name > div:nth-child(1) > clr-dg-string-filter:nth-child(1) > clr-dg-filter:nth-child(1) > button:nth-child(1)")).click();
             driver.findElement(By.cssSelector("input.ng-pristine")).sendKeys(teamName);
-            wait.until(invisibilityOfElementLocated(By.id("accountAdminTeamRow0")));
+            wait.until(refreshed(invisibilityOfElementLocated(By.id("accountAdminTeamRow0"))));
 
         }
         if (Answer == "No") {
             driver.findElement(By.xpath("/html/body/app-root/jaspero-confirmations/jaspero-confirmation/div[2]/div[4]/button[1]")).click();
-            wait.until(visibilityOfElementLocated(By.id("name")));
+            wait.until(refreshed(visibilityOfElementLocated(By.id("name"))));
             scrollElementIntoViewByXpath("/html/body/app-root/app-basic-layout/div/ng-sidebar-container/div/div/div/main/div[1]/div/app-core-admin-teams-crud/clr-tabs/clr-tab/clr-tab-content/div[5]/div[1]/a");
             driver.findElement(By.xpath("/html/body/app-root/app-basic-layout/div/ng-sidebar-container/div/div/div/main/div[1]/div/app-core-admin-teams-crud/clr-tabs/clr-tab/clr-tab-content/div[5]/div[1]/a")).click();
-            wait.until(visibilityOfElementLocated(By.xpath("/html/body/app-root/app-basic-layout/div/ng-sidebar-container/div/div/div/main/div[1]/div/app-core-admin-teams-list/clr-tabs/clr-tab/clr-tab-content/div/div[3]/a")));
+            wait.until(refreshed(visibilityOfElementLocated(By.xpath("/html/body/app-root/app-basic-layout/div/ng-sidebar-container/div/div/div/main/div[1]/div/app-core-admin-teams-list/clr-tabs/clr-tab/clr-tab-content/div/div[3]/a"))));
         }
     }
 }
