@@ -255,23 +255,23 @@ export class FundComponent implements OnInit, OnDestroy {
             legalEntityIdentifier: [null, this.validators.lei],
             registerOffice: [null, Validators.compose([this.validators.alphanumeric])],
             registerOfficeAddress: [null],
-            domicile: [[], Validators.required],
+            domicile: [[], this.validators.ngSelectRequired],
             tradingAccount: [],
             isEuDirective: [null, Validators.required],
             typeOfEuDirective: [[]],
             UcitsVersion: [[]],
-            legalForm: [[], Validators.required],
-            nationalNomenclatureOfLegalForm: [[], Validators.required],
+            legalForm: [[], this.validators.ngSelectRequired],
+            nationalNomenclatureOfLegalForm: [[], this.validators.ngSelectRequired],
             homeCountryLegalType: [[]],
             fundCreationDate: [null, this.validators.date.day],
             fundLaunchate: [null, this.validators.date.day],
-            fundCurrency: [[], Validators.required],
+            fundCurrency: [[], this.validators.ngSelectRequired],
             openOrCloseEnded: [null, Validators.required],
             fiscalYearEnd: [null, Validators.compose([Validators.required, this.validators.date.month])],
             isFundOfFund: [null, Validators.required],
-            managementCompanyID: [[], Validators.required],
-            fundAdministratorID: [[], Validators.required],
-            custodianBankID: [[], Validators.required],
+            managementCompanyID: [[], this.validators.ngSelectRequired],
+            fundAdministratorID: [[], this.validators.ngSelectRequired],
+            custodianBankID: [[], this.validators.ngSelectRequired],
             investmentManagerID: [[]],
             principlePromoterID: [[]],
             payingAgentID: [[]],
@@ -279,7 +279,7 @@ export class FundComponent implements OnInit, OnDestroy {
             transferAgentID: [[]],
             centralizingAgentID: [[]],
             isDedicatedFund: [null, Validators.required],
-            portfolioCurrencyHedge: [[], Validators.required],
+            portfolioCurrencyHedge: [[], this.validators.ngSelectRequired],
 
             globalItermediaryIdentification: [null, this.validators.giin],
             delegatedManagementCompany: [[]],
@@ -956,6 +956,10 @@ export class FundComponent implements OnInit, OnDestroy {
     }
 
     submitFundForm() {
+        if (!this.fundForm.valid) {
+            return;
+        }
+
         const payload: Fund = {
             draft: 0,
             ...this.fundFormValue(),
