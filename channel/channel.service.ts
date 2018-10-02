@@ -18,6 +18,7 @@ import {
 
     /* My details. */
     SET_USER_DETAILS,
+    UPDATE_TWO_FACTOR,
 
     /* Manage members. */
     SET_MANAGE_MEMBER_LIST,
@@ -49,25 +50,25 @@ export class ChannelService {
 
     checkIfPasswordChanged() {
         this.checkChangedPassword
-            .pipe(
-                take(1),
-            )
-            .subscribe(
-                (changedPassword) => {
-                    this.logService.log(changedPassword);
+        .pipe(
+            take(1),
+        )
+        .subscribe(
+            (changedPassword) => {
+                this.logService.log(changedPassword);
 
-                    if (!changedPassword) {
-                        this.alertsService.create('warning', `
+                if (!changedPassword) {
+                    this.alertsService.create('warning', `
                             The password for this account has been changed! Logging out in 5 seconds.`);
-                        setTimeout(
-                            () => {
-                                document.location.reload(true);
-                            },
-                            5000,
-                        );
-                    }
-                },
-            )
+                    setTimeout(
+                        () => {
+                            document.location.reload(true);
+                        },
+                        5000,
+                    );
+                }
+            },
+        )
         ;
     }
 
@@ -128,6 +129,15 @@ export class ChannelService {
 
             this.checkIfPasswordChanged();
 
+            break;
+
+        case 'updatetwofactor':
+            this.ngRedux.dispatch(
+                {
+                    type: UPDATE_TWO_FACTOR,
+                    payload: [null, data, null],
+                },
+            );
             break;
 
         case 'ng': // new group
