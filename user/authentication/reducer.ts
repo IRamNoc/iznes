@@ -20,11 +20,9 @@ export const AuthenticationReducer = function (state: AuthenticationState = init
     case AuthenticationAction.SET_AUTH_LOGIN_DETAIL:
         const loginedData = _.get(action, 'payload[1].Data[0]', {});
 
-        console.log('+++ loginedData', loginedData);
-
         const token = _.get(loginedData, 'Token', '');
         const apiKey = _.get(loginedData, 'apiKey', '');
-        const useTwoFactor = _.get(loginedData, 'useTwoFactor', '');
+        let useTwoFactor = _.get(loginedData, 'useTwoFactor', '');
         const twoFactorSecret = _.get(loginedData, 'twoFactorSecret', '');
         const sessionTimeoutSecs = _.get(loginedData, 'sessionTimeoutSecs', '');
         const defaultHomePage = _.get(loginedData, 'defaultHomePage', '');
@@ -72,6 +70,10 @@ export const AuthenticationReducer = function (state: AuthenticationState = init
         return Object.assign({}, state, {
             defaultHomePage: '/user-administration/subportfolio'
         });
+
+    case AuthenticationAction.UPDATE_TWO_FACTOR:
+        useTwoFactor = _.get(action, 'payload[1].Data.useTwoFactor', 0);
+        return Object.assign({}, state, { useTwoFactor });
 
     default:
         return state;

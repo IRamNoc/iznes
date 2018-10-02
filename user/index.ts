@@ -26,6 +26,7 @@ import {
     SET_NEW_PASSWORD,
     CLEAR_MUST_CHANGE_PASSWORD,
     resetHomepage,
+    UPDATE_TWO_FACTOR,
 } from './authentication';
 
 export {
@@ -35,6 +36,7 @@ export {
     SET_NEW_PASSWORD,
     CLEAR_MUST_CHANGE_PASSWORD,
     resetHomepage,
+    UPDATE_TWO_FACTOR,
 };
 
 // connected

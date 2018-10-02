@@ -1,10 +1,10 @@
 import {
     ActionCreator
 } from 'redux';
-import {kAction} from '@setl/utils/common';
+import { kAction } from '@setl/utils/common';
 
-import {name} from './__init__';
-import {AsyncTaskResponseAction} from '@setl/utils/sagaHelper/actions';
+import { name } from './__init__';
+import { AsyncTaskResponseAction } from '@setl/utils/sagaHelper/actions';
 
 /**
  * Set login authentication
@@ -35,3 +35,8 @@ export const CLEAR_MUST_CHANGE_PASSWORD = `${name}/CLEAR_MUST_CHANGE_PASSWORD`;
 export const RESET_HOMEPAGE = `${name}/RESET_HOMEPAGE`;
 export const resetHomepage = kAction(RESET_HOMEPAGE);
 
+/**
+ * Update the two factor authentication flag.
+ * @type {string}
+ */
+export const UPDATE_TWO_FACTOR = `${name}/UPDATE_TWO_FACTOR`;
