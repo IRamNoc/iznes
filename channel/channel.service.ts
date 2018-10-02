@@ -72,8 +72,7 @@ export class ChannelService {
                         );
                     }
                 },
-            )
-            ;
+            );
     }
 
     /**
