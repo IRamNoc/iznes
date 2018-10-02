@@ -245,22 +245,7 @@
                 <span mltag="txt_tfa">Two-Factor Authentication</span>
             </button>
             <clr-tab-content *clrIfActive="tabStates.tfa">
-                <section class="form-block">                    
-                    <div class="form-group col-sm-6">                            
-                        <form [formGroup]="enableTFAForm" (ngSubmit)="enableTwoFactorAuthentication(enableTFAForm.value)">  
-                            <div class="row">
-                                <label class="control-label">
-                                    <input type="checkbox" formControlName="enableTFA"> Enable Two-Factor Authentication?
-                                </label>
-                            </div>
-                            <div class="row">
-                                <button id="tfaSubmit" type="submit" class="btn btn-primary">
-                                    <i class="fa fa-save"></i> <span mltag="txt_update">Update</span>
-                                </button>  
-                            </div>    
-                        </form>
-                    </div>  
-                </section>
+                <app-enroll></app-enroll>
             </clr-tab-content>
         </clr-tab>
         <clr-tab>

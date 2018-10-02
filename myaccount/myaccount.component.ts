@@ -558,42 +558,6 @@ export class SetlMyAccountComponent implements OnDestroy, OnInit {
         );
     }
 
-    enableTwoFactorAuthentication(formValues) {
-        // Show loading alert
-        this.alertsService.create('loading');
-
-        const twoFactorAuthentication = String(Number(formValues.enableTFA));
-
-        const asyncTaskPipe = this.myUserService.saveTwoFactorAuthentication({
-            twoFactorAuthentication,
-        });
-
-        /* Ask the user if they're sure... */
-        this.confirmationService.create(
-            '<span>Enable Two-Factor Authentication</span>',
-            '<span class="text-warning">Are you sure you want to enable Two-Factor Authentication?</span>',
-        ).subscribe((ans) => {
-            /* ...if they are... */
-            if (ans.resolved) {
-                console.log('+++ Enable 2FA');
-                console.log('+++ this.twoFactorSecret: ', this.twoFactorSecret);
-            }
-        });
-
-        // // Get response from set active wallet
-        // this.ngRedux.dispatch(SagaHelper.runAsyncCallback(
-        //     asyncTaskPipe,
-        //     (data) => {
-        //         this.alertsService.generate('success', 'Two-Factor Authentication preference has been saved.');
-
-        //     },
-        //     (data) => {
-        //         console.error('error: ', data);
-        //         this.alertsService.generate('error', 'Two-Factor Authentication preference could not be saved.');
-        //     }),
-        // );
-    }
-
     updateState() {
         const newState = this.ngRedux.getState();
         const newWalletId = getConnectedWallet(newState);
