@@ -22,4 +22,7 @@
     </div>
 </section>
 
-<app-authenticate *ngIf="showQRCodeChallenge"></app-authenticate>
+<app-authenticate 
+    *ngIf="showQRCodeChallenge"
+    (modalCancelled)="showQRCodeChallenge=!$event">
+</app-authenticate>

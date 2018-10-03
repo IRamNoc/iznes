@@ -7,12 +7,12 @@ import {
     OnInit,
     ElementRef,
     ViewChild,
-    ChangeDetectorRef
+    ChangeDetectorRef,
 } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
 import { AbstractControl, FormControl, FormGroup, Validators } from '@angular/forms';
 import { NgRedux, select } from '@angular-redux/store';
-import { LoginGuardService } from "./login-guard.service";
+import { LoginGuardService } from './login-guard.service';
 import * as _ from 'lodash';
 // Internals
 import { APP_CONFIG, AppConfig, SagaHelper, LogService } from '@setl/utils';
@@ -88,6 +88,9 @@ export class SetlLoginComponent implements OnDestroy, OnInit, AfterViewInit {
 
     // List of observable subscription
     subscriptionsArray: Array<Subscription> = [];
+
+    showTwoFactorModal = false;
+    authenticationData: any;
 
     showModal = false;
     emailUser = '';
@@ -242,14 +245,18 @@ export class SetlLoginComponent implements OnDestroy, OnInit, AfterViewInit {
 
         this.subscriptionsArray.push(subscription);
 
-
         // Reduce observable subscription
         // Observable.combineLatest(this.authenticationOb, this.siteMenuOb).subscribe(([authentication, siteMenu]) => {
         //     if (Object.keys(siteMenu).length > 0) this.updateState(authentication);
         // });
 
         this.authenticationOb.subscribe((authentication) => {
-            this.updateState(authentication);
+            if (_.get(authentication, 'useTwoFactor', 0)) {
+                this.showTwoFactorModal = true;
+                this.authenticationData = authentication;
+            } else {
+                this.updateState(authentication);
+            }
         });
 
         window.onbeforeunload = null;
@@ -266,7 +273,6 @@ export class SetlLoginComponent implements OnDestroy, OnInit, AfterViewInit {
     }
 
     login(value) {
-
         if (!this.loginForm.valid) {
             return false;
         }
@@ -289,7 +295,7 @@ export class SetlLoginComponent implements OnDestroy, OnInit, AfterViewInit {
         // Create a saga pipe.
         const asyncTaskPipe = this.myUserService.loginRequest({
             username: value.username,
-            password: value.password
+            password: value.password,
         });
 
         // Send a saga action.
@@ -306,13 +312,13 @@ export class SetlLoginComponent implements OnDestroy, OnInit, AfterViewInit {
                 this.ngRedux.dispatch(SagaHelper.runAsync(
                     [SET_SITE_MENU],
                     [],
-                    asyncTaskPipes, {}
+                    asyncTaskPipes, {},
                 ));
             },
             // Fail to login
             (data) => {
                 this.handleLoginFailMessage(data);
-            }
+            },
         ));
 
         return false;
@@ -368,7 +374,7 @@ export class SetlLoginComponent implements OnDestroy, OnInit, AfterViewInit {
                 this.myUserService,
                 this.permissionGroupService,
                 this.chainService,
-                this.initialisationService
+                this.initialisationService,
             );
             window.onbeforeunload = function (e) {
                 const leaveMessage = 'Changes that you made may not be saved if you leave this page.';
@@ -376,11 +382,16 @@ export class SetlLoginComponent implements OnDestroy, OnInit, AfterViewInit {
                 return leaveMessage;
             };
         }
+    }
 
+    authenicatedConfirm(authenticated) {
+        if (authenticated) {
+            this.updateState(this.authenticationData);
+        }
     }
 
     getQueryParams() {
-        this._activatedRoute.queryParams.subscribe(params => {
+        this._activatedRoute.queryParams.subscribe((params) => {
             this.queryParams = params;
 
             if (params.email) {
@@ -393,9 +404,11 @@ export class SetlLoginComponent implements OnDestroy, OnInit, AfterViewInit {
     }
 
     displayError() {
-        setTimeout(() => {
-            this.toasterService.pop('error', 'This link is no longer valid. Please try to login again.');
-        }, 0);
+        setTimeout(
+            () => {
+                this.toasterService.pop('error', 'This link is no longer valid. Please try to login again.');
+            },
+            0);
     }
 
     passwordValidator(g: FormGroup) {

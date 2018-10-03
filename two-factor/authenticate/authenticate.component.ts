@@ -1,4 +1,4 @@
-import { Component, OnInit, ChangeDetectorRef, OnDestroy } from '@angular/core';
+import { Component, OnInit, ChangeDetectorRef, OnDestroy, Input, EventEmitter, Output } from '@angular/core';
 import { ConfirmationService, SagaHelper } from '@setl/utils';
 import { NgRedux, select } from '@angular-redux/store';
 import { AlertsService } from '@setl/jaspero-ng2-alerts';
@@ -13,6 +13,10 @@ import { MemberSocketService } from '@setl/websocket-service';
     styleUrls: ['./authenticate.component.scss'],
 })
 export class AuthenticateComponent implements OnDestroy, OnInit {
+    @Input() showQRCode: boolean = true;
+    @Output() authenticated: EventEmitter<any> = new EventEmitter();
+    @Output() modalCancelled: EventEmitter<any> = new EventEmitter();
+
     connectedWalletId: number;
     username: string;
     userId: number;
@@ -96,6 +100,8 @@ export class AuthenticateComponent implements OnDestroy, OnInit {
                 (data) => {
                     this.alertsService.generate('success', data[1].Data[0].Message);
                     this.showModal = false;
+
+                    this.authenticated.emit(true);
                 },
                 (data) => {
                     this.showModal = true;

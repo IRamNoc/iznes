@@ -327,3 +327,10 @@
 
     </div>
 </clr-modal>
+
+<app-authenticate 
+    *ngIf="showTwoFactorModal" 
+    [showQRCode]="false" 
+    (authenticated)="authenicatedConfirm($event)"
+    (modalCancelled)="showTwoFactorModal=!$event">
+</app-authenticate>
