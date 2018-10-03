@@ -176,7 +176,7 @@ export class MyUserService implements OnDestroy {
     setTwoFactorAuthentication(userData: SetTwoFactorAuthenticationData): any {
         const messageBody: SetTwoFactorAuthenticationBody = {
             RequestName: 'settwofactor',
-            token: this.memberSocketService.token,
+            token: String(this.memberSocketService.token),
             twoFactorAuthentication: userData.twoFactorAuthentication,
             twoFactorVerified: userData.twoFactorAuthentication,
             type: userData.type || 'GoogleAuth',
@@ -189,7 +189,7 @@ export class MyUserService implements OnDestroy {
     authenticateTwoFactorAuthentication(userData: AuthenticateTwoFactorData): any {
         const messageBody: AuthenticateTwoFactorAuthenticationBody = {
             RequestName: 'authenticatetwofactor',
-            token: this.memberSocketService.token,
+            token: String(this.memberSocketService.token),
             secret: userData.secret,
             twoFactorCode: userData.twoFactorCode,
             userID: userData.userID,
