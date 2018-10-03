@@ -105,9 +105,7 @@ public class AdministrationModuleHelper {
 
     }
 
-    public static void searchTeam(String ref, String teamName,
-                                  String teamDescription,
-                                  String teamStatus) throws InterruptedException {
+    public static void searchTeam(String ref, String teamName, String teamDescription, String teamStatus) throws InterruptedException {
         final WebDriverWait wait = new WebDriverWait(driver, timeoutInSeconds);
         wait.until(visibilityOfElementLocated(By.xpath("/html/body/app-root/app-basic-layout/div/ng-sidebar-container/div/div/div/main/div/div/app-core-admin-teams-list/clr-tabs/clr-tab/clr-tab-content/div/div[3]/a")));
         if (driver.findElement(By.xpath("/html/body/app-root/app-basic-layout/div/ng-sidebar-container/div/div/div/main/div/div/app-core-admin-teams-list/clr-tabs/clr-tab/clr-tab-content/clr-datagrid/div/div/div/clr-dg-table-wrapper/div[1]/div/clr-dg-column[2]/div/clr-dg-string-filter/clr-dg-filter/button")).isDisplayed())
@@ -145,6 +143,13 @@ public class AdministrationModuleHelper {
         wait.until(elementToBeClickable(By.xpath("/html/body/app-root/app-basic-layout/div/ng-sidebar-container/div/div/div/main/div/div/app-core-admin-users-list/clr-tabs/clr-tab/clr-tab-content/div/div[3]")));
         driver.findElement(By.xpath("/html/body/app-root/app-basic-layout/div/ng-sidebar-container/div/div/div/main/div/div/app-core-admin-users-list/clr-tabs/clr-tab/clr-tab-content/div/div[3]")).click();
     }
+    public static void createUserDisabled() throws InterruptedException {
+        scrollElementIntoViewByXpath("/html/body/app-root/app-basic-layout/div/ng-sidebar-container/div/div/div/main/div[1]/div/app-core-admin-users-crud/clr-tabs/clr-tab/clr-tab-content/div[5]/div[2]/button[1]");
+        Thread.sleep(1000);
+        assertFalse(driver.findElement(By.xpath("/html/body/app-root/app-basic-layout/div/ng-sidebar-container/div/div/div/main/div/div/app-core-admin-users-crud/clr-tabs/clr-tab/clr-tab-content/div[5]/div[2]/button[2]")).isEnabled());
+
+    }
+
     public static void selectCreateUser()throws InterruptedException {
         final WebDriverWait wait = new WebDriverWait(driver, timeoutInSeconds);
         scrollElementIntoViewByXpath("/html/body/app-root/app-basic-layout/div/ng-sidebar-container/div/div/div/main/div[1]/div/app-core-admin-users-crud/clr-tabs/clr-tab/clr-tab-content/div[5]/div[2]/button[1]");
@@ -159,8 +164,31 @@ public class AdministrationModuleHelper {
     }
     public static void selectUserType() {
         driver.findElement(By.cssSelector("#userType > div > div.ui-select-match.dropdown > span > i.pull-right.special.caret")).click();
-        driver.findElement(By.cssSelector("#userType > div > div.option-wrapper.ui-select-choices.dropdown-menu.ng-star-inserted > div > input")).sendKeys("Standard user");
+        driver.findElement(By.cssSelector("#userType > div > div.option-wrapper.ui-select-choices.dropdown-menu.ng-star-inserted > div > input")).sendKeys("Asset manager");
         driver.findElement(By.cssSelector("#userType > div > div.option-wrapper.ui-select-choices.dropdown-menu.ng-star-inserted > ul > li > div")).click();
+    }
+    public static void searchUser(String reference, String firstName, String lastName, String emailAddress, String phoneNumber) throws InterruptedException {
+        final WebDriverWait wait = new WebDriverWait(driver, timeoutInSeconds);
+        wait.until(visibilityOfElementLocated(By.id("tabAccountAdminUsersButton"))).isDisplayed();
+        scrollElementIntoViewByXpath("/html/body/app-root/app-basic-layout/div/ng-sidebar-container/div/div/div/main/div/div/app-core-admin-users-list/clr-tabs/clr-tab/clr-tab-content/clr-datagrid/div/div/div/clr-dg-table-wrapper/div[1]/div/clr-dg-column[1]/div/clr-dg-string-filter/clr-dg-filter/button");
+        driver.findElement(By.xpath("/html/body/app-root/app-basic-layout/div/ng-sidebar-container/div/div/div/main/div/div/app-core-admin-users-list/clr-tabs/clr-tab/clr-tab-content/clr-datagrid/div/div/div/clr-dg-table-wrapper/div[1]/div/clr-dg-column[1]/div/clr-dg-string-filter/clr-dg-filter/button")).click();
+        driver.findElement(By.xpath("/html/body/app-root/app-basic-layout/div/ng-sidebar-container/div/div/div/main/div/div/app-core-admin-users-list/clr-tabs/clr-tab/clr-tab-content/clr-datagrid/div/div/div/clr-dg-table-wrapper/div[1]/div/clr-dg-column[1]/div/clr-dg-string-filter/clr-dg-filter/div/input")).sendKeys(reference);
+
+        String columnReference = driver.findElement(By.id("accountAdminTeamCellRef0")).getText();
+        assertTrue(columnReference.equals(reference));
+        String columnFirstName = driver.findElement(By.id("accountAdminTeamCellFirstName0")).getText();
+        assertTrue(columnFirstName.equals(firstName));
+        String columnLastName = driver.findElement(By.id("accountAdminTeamCellLastName0")).getText();
+        assertTrue(columnLastName.equals(lastName));
+        String columnEmail = driver.findElement(By.id("accountAdminTeamCellEmail0")).getText();
+        assertTrue(columnEmail.equals(emailAddress));
+        String columnPhone = driver.findElement(By.id("accountAdminTeamCellPhone0")).getText();
+        assertTrue(columnPhone.equals(phoneNumber));
+        String columnType = driver.findElement(By.id("accountAdminTeamCellType0")).getText();
+        assertTrue(columnType.equals("Asset manager"));
+        assertTrue(driver.findElement(By.xpath("/html/body/app-root/app-basic-layout/div/ng-sidebar-container/div/div/div/main/div/div/app-core-admin-users-list/clr-tabs/clr-tab/clr-tab-content/clr-datagrid/div/div/div/clr-dg-table-wrapper/div[2]/clr-dg-row/div/clr-dg-cell[7]/span")).getText().equals("1"));
+        assertTrue(driver.findElement(By.xpath("/html/body/app-root/app-basic-layout/div/ng-sidebar-container/div/div/div/main/div/div/app-core-admin-users-list/clr-tabs/clr-tab/clr-tab-content/clr-datagrid/div/div/div/clr-dg-table-wrapper/div[2]/clr-dg-row/div/clr-dg-cell[8]/span")).getText().equals("Pending"));
+
     }
 
     public static void selectCreateUserWithBadDetails() {
@@ -177,6 +205,11 @@ public class AdministrationModuleHelper {
         String errorMessage = driver.findElement(By.xpath("//*[@id=\"iznes\"]/app-root/jaspero-alerts/jaspero-alert/div[2]/div[3]")).getText();
         assertTrue(errorMessage.contains("Invalid User Name / Email Address."));
         driver.findElement(By.xpath("//*[@id=\"iznes\"]/app-root/jaspero-alerts/jaspero-alert/div[2]/div[4]/button")).click();
+    }
+    public static void selectStaticTeam() {
+        scrollElementIntoViewByXpath("/html/body/app-root/app-basic-layout/div/ng-sidebar-container/div/div/div/main/div/div/app-core-admin-users-crud/clr-tabs/clr-tab/clr-tab-content/div[4]/div/app-core-admin-users-team-mgmt/clr-datagrid/div/div/div/clr-dg-table-wrapper/div[2]/clr-dg-row[1]/div/clr-dg-cell[5]/label/span");
+        assertTrue(driver.findElement(By.id("userMgmtCellDescription0")).getText().equals("This Team was created for the backup taken on 18/09/2018 for Users +1 to +5"));
+        driver.findElement(By.xpath("/html/body/app-root/app-basic-layout/div/ng-sidebar-container/div/div/div/main/div/div/app-core-admin-users-crud/clr-tabs/clr-tab/clr-tab-content/div[4]/div/app-core-admin-users-team-mgmt/clr-datagrid/div/div/div/clr-dg-table-wrapper/div[2]/clr-dg-row[1]/div/clr-dg-cell[5]/label/span")).click();
     }
     public static void selectTeamRow0() {
         final WebDriverWait wait = new WebDriverWait(driver, timeoutInSeconds);
@@ -200,12 +233,12 @@ public class AdministrationModuleHelper {
         wait.until(refreshed(visibilityOfElementLocated(By.className("jaspero__dialog-title"))));
         assertTrue(driver.findElement(By.xpath("//*[@id=\"iznes\"]/app-root/jaspero-confirmations/jaspero-confirmation/div[2]/div[3]")).getText().equals("You have selected no permissions for this team. Any users, soley assigned to this team, will no longer hold any permissions on the system."));
         driver.findElement(By.xpath("//*[@id=\"iznes\"]/app-root/jaspero-confirmations/jaspero-confirmation/div[2]/div[4]/button[2]")).click();
-        Thread.sleep(500);
-        wait.until(refreshed(visibilityOfElementLocated(By.className("jaspero__dialog-title"))));
+        Thread.sleep(1000);
+        wait.until(visibilityOfElementLocated(By.xpath("//*[@id=\"iznes\"]/app-root/jaspero-confirmations/jaspero-confirmation/div[2]"))).isDisplayed();
+        wait.until(elementToBeClickable(By.xpath("//*[@id=\"iznes\"]/app-root/jaspero-confirmations/jaspero-confirmation/div[2]/div[4]/button[2]"))).isDisplayed();
+        assertTrue(driver.findElement(By.xpath("//*[@id=\"iznes\"]/app-root/jaspero-confirmations/jaspero-confirmation/div[2]/div[1]")).getText().equals("Update Team"));
         assertTrue(driver.findElement(By.xpath("//*[@id=\"iznes\"]/app-root/jaspero-confirmations/jaspero-confirmation/div[2]/div[3]")).getText().equals("Are you sure you wish to update this Team?"));
         driver.findElement(By.xpath("//*[@id=\"iznes\"]/app-root/jaspero-confirmations/jaspero-confirmation/div[2]/div[4]/button[2]")).click();
-        wait.until(refreshed(invisibilityOfElementLocated(By.className("jaspero__dialog-title"))));
-
         wait.until(refreshed(visibilityOfElementLocated(By.id("tabAccountAdminTeamsButton"))));
     }
     public static void assertTeamName (String reName) {
