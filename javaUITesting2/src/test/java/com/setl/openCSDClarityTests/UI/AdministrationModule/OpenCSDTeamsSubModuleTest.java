@@ -50,7 +50,7 @@ public class OpenCSDTeamsSubModuleTest {
         navigateToDropdown("menu-administration-teams");
         selectAddNewTeam();
         fillInTeamsDetails(teamName[0], teamReference[0], teamDescription[0]);
-        selectCreateNewTeam();
+        selectCreateNewTeamNoPermissions();
         searchTeam(teamReference[0],teamName[0],teamDescription[0], "Pending");
         validateTeamsCreated(1, teamName[0], teamReference[0], teamDescription[0]);
     }
@@ -66,7 +66,7 @@ public class OpenCSDTeamsSubModuleTest {
         navigateToDropdown("menu-administration-teams");
         selectAddNewTeam();
         fillInTeamsDetails(teamName[0], teamReference[0], teamDescription[0]);
-        selectCreateNewTeam();
+        selectCreateNewTeamNoPermissions();
         validateTeamsCreated(1, teamName[0], teamReference[0], teamDescription[0]);
         searchTeam(teamReference[0], teamName[0], teamDescription[0], "Pending");
         selectTeamRow0();
@@ -88,7 +88,7 @@ public class OpenCSDTeamsSubModuleTest {
         navigateToDropdown("menu-administration-teams");
         selectAddNewTeam();
         fillInTeamsDetails(teamName[0], teamReference[0], teamDescription[0]);
-        selectCreateNewTeam();
+        selectCreateNewTeamNoPermissions();
         searchTeam(teamReference[0], teamName[0], teamDescription[0], "Pending");
         selectTeamRow0();
         assertTeamName(teamName[0]);
@@ -107,12 +107,28 @@ public class OpenCSDTeamsSubModuleTest {
         navigateToDropdown("menu-administration-teams");
         selectAddNewTeam();
         fillInTeamsDetails(teamName[0], teamReference[0], teamDescription[0]);
-        selectCreateNewTeam();
+        selectCreateNewTeamNoPermissions();
         searchTeam(teamReference[0], teamName[0], teamDescription[0], "Pending");
         validateTeamsCreated(1, teamReference[0], teamName[0], teamDescription[0]);
         selectTeamRow0();
         assertTeamName(teamName[0]);
         selectDeleteTeam("Yes",teamName[0]);
         validateTeamsDeleted(0, teamReference[0], teamName[0], teamDescription[0]);
+    }
+
+    @Test
+    public void shouldCreateTeamWithPermissions() throws InterruptedException, SQLException {
+        String [] teamName = generateRandomTeamName();
+        String [] teamReference = generateRandomTeamReference();
+        String [] teamDescription = fillInDescription();
+        loginAndVerifySuccess("am", "alex01");
+        navigateToDropdown("menu-administration");
+        navigateToDropdown("menu-administration-teams");
+        selectAddNewTeam();
+        fillInTeamsDetails(teamName[0], teamReference[0], teamDescription[0]);
+        selectAccountAdminPermissions();
+        selectCreateNewTeam();
+        validateTeamsCreated(1, teamReference[0], teamName[0], teamDescription[0]);
+        validateAdminTeamPermissions(teamName[0]);
     }
 }
