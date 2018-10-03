@@ -76,8 +76,10 @@ public class OpenCSDNAVAcceptanceTest {
         waitForHomePageToLoad();
         navigateToDropdown("menu-my-products");
         navigateToPageByID("menu-product-home");
-        fillOutFundDetailsStep1("none");
+
+        fillOutFundDetailsStep1("no","none");
         fillOutFundDetailsStep2(uFundDetails[0], generateRandomLEI());
+
         assertPopupNextFundNo("Share");
         createShare(uFundDetails[0], uShareDetails[0], uIsin[0]);
 
@@ -125,8 +127,10 @@ public class OpenCSDNAVAcceptanceTest {
         searchAndSelectTopDropdownXpath("uf_domicile", "Jordan");
         submitUmbrellaFund();
         assertPopupNextFundNo("Fund");
-        fillOutFundDetailsStep1(umbFundDetails[0]);
+
+        fillOutFundDetailsStep1("yes", umbFundDetails[0]);
         fillOutFundDetailsStep2(uFundDetails[0], generateRandomLEI());
+
         assertPopupNextFundNo("Share");
         createShare(uFundDetails[0], uShareDetails[0], uIsin[0]);
 
@@ -156,8 +160,10 @@ public class OpenCSDNAVAcceptanceTest {
         waitForHomePageToLoad();
         navigateToDropdown("menu-my-products");
         navigateToPageByID("menu-product-home");
-        fillOutFundDetailsStep1("none");
+
+        fillOutFundDetailsStep1("no","none");
         fillOutFundDetailsStep2(uFundDetails[0], generateRandomLEI());
+
         assertPopupNextFundNo("Share");
         createShare(uFundDetails[0], uShareDetails[0], uIsin[0]);
         navigateToNAVPageFromFunds();
@@ -184,8 +190,10 @@ public class OpenCSDNAVAcceptanceTest {
         waitForHomePageToLoad();
         navigateToDropdown("menu-my-products");
         navigateToPageByID("menu-product-home");
-        fillOutFundDetailsStep1("none");
+
+        fillOutFundDetailsStep1("no","none");
         fillOutFundDetailsStep2(uFundDetails[0], generateRandomLEI());
+
         assertPopupNextFundNo("Share");
         createShare(uFundDetails[0], uShareDetails[0], uIsin[0]);
 
@@ -212,8 +220,10 @@ public class OpenCSDNAVAcceptanceTest {
         waitForHomePageToLoad();
         navigateToDropdown("menu-my-products");
         navigateToPageByID("menu-product-home");
-        fillOutFundDetailsStep1("none");
+
+        fillOutFundDetailsStep1("no","none");
         fillOutFundDetailsStep2(uFundDetails[0], generateRandomLEI());
+
         assertPopupNextFundNo("Share");
         createShare(uFundDetails[0], uShareDetails[0], uIsin[0]);
         navigateToNAVPageFromFunds();
@@ -255,8 +265,10 @@ public class OpenCSDNAVAcceptanceTest {
         waitForHomePageToLoad();
         navigateToDropdown("menu-my-products");
         navigateToPageByID("menu-product-home");
-        fillOutFundDetailsStep1("none");
+
+        fillOutFundDetailsStep1("no","none");
         fillOutFundDetailsStep2(uFundDetails[0], generateRandomLEI());
+
         assertPopupNextFundNo("Share");
         createShare(uFundDetails[0], uShareDetails[0], uIsin[0]);
         navigateToNAVPageFromFunds();
