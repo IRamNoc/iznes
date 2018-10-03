@@ -10,11 +10,16 @@ import {
     /* Useradmin. */
     SET_ADMIN_USERLIST,
     UPDATE_ADMIN_USERLIST,
+    DELETE_FROM_ADMIN_USERLIST,
     SET_ADMINISTRATIVE_PERMISSION_GROUP_LIST,
     SET_TRANSACTIONAL_PERMISSION_GROUP_LIST,
     SET_MENU_PERMISSION_GROUP_LIST,
     SET_MANAGED_WALLETS,
+    SET_WALLET_ADDED,
+    SET_WALLET_UPDATED,
+    SET_WALLET_DELETED,
     SET_OWN_WALLETS,
+    SET_WALLET_LABEL_UPDATED,
 
     /* My details. */
     SET_USER_DETAILS,
@@ -40,12 +45,13 @@ export class ChannelService {
 
     @select(['user', 'authentication', 'changedPassword']) checkChangedPassword;
 
-    constructor(private alertsService: AlertsService,
-                private ngRedux: NgRedux<any>,
-                private toasterService: ToasterService,
-                private myWalletsService: MyWalletsService,
-                private logService: LogService,
-                private chainService: ChainService) {
+    constructor(
+        private alertsService: AlertsService,
+        private ngRedux: NgRedux<any>,
+        private toasterService: ToasterService,
+        private myWalletsService: MyWalletsService,
+        private logService: LogService,
+        private chainService: ChainService) {
     }
 
     checkIfPasswordChanged() {
@@ -68,8 +74,12 @@ export class ChannelService {
                     );
                 }
             },
+<<<<<<< HEAD
         )
         ;
+=======
+        );
+>>>>>>> 6d56e2e6919cb71f71be9bf733bc00912a51cac2
     }
 
     /**
@@ -88,6 +98,7 @@ export class ChannelService {
         this.logService.log(' |--- Resolving Core channel broadcast.');
         this.logService.log(' | name: ', data.Request);
         this.logService.log(' | data: ', data);
+
         switch (data.Request) {
         case 'nu': // new user
         case 'udu': // update user
@@ -99,17 +110,12 @@ export class ChannelService {
             );
             break;
         case 'du': // delete user
-            /* Let's get the new user object. */
-            this.logService.log(' | NEW USERS LIST: ', data);
-
-            /* Let's now dispatch the append action. */
             this.ngRedux.dispatch(
                 {
-                    type: SET_ADMIN_USERLIST,
+                    type: DELETE_FROM_ADMIN_USERLIST,
                     payload: [null, data, null],
                 },
             );
-
             break;
 
         case 'ud': // update details
@@ -171,14 +177,32 @@ export class ChannelService {
             break;
 
         case 'nw': // new wallet
-        case 'udw': // update wallet
-        case 'dw': // delete wallet
-            this.logService.log(' | UPDATE MANAGE WALLET LIST: ', data);
+            this.logService.log(' | NEW WALLET ADDED: ', data);
 
-            /* ...and dispatch the update action. */
             this.ngRedux.dispatch(
                 {
-                    type: SET_MANAGED_WALLETS,
+                    type: SET_WALLET_ADDED,
+                    payload: [null, data, null],
+                },
+            );
+            break;
+        case 'udw': // update wallet
+            this.logService.log(' | UPDATED WALLET: ', data);
+
+            this.ngRedux.dispatch(
+                {
+                    type: SET_WALLET_UPDATED,
+                    payload: [null, data, null],
+                },
+            );
+            break;
+
+        case 'dw': // delete wallet
+            this.logService.log(' | DELETED WALLET: ', data);
+
+            this.ngRedux.dispatch(
+                {
+                    type: SET_WALLET_DELETED,
                     payload: [null, data, null],
                 },
             );
@@ -267,6 +291,15 @@ export class ChannelService {
             this.ngRedux.dispatch(
                 {
                     type: SET_OWN_WALLETS,
+                    payload: [null, data, null],
+                },
+            );
+            break;
+
+        case 'updatewalletlabels':
+            this.ngRedux.dispatch(
+                {
+                    type: SET_WALLET_LABEL_UPDATED,
                     payload: [null, data, null],
                 },
             );
