@@ -53,7 +53,7 @@
     }
 
     .fileviewer-main {
-        padding:0px;
+        padding: 0px;
     }
 }
 
@@ -78,8 +78,13 @@ clr-modal.large .modal-dialog {
     width: 95%;
 }
 
-.modal-footer .btn {
-    margin: 12px 0px 0px 0px;
+.modal-footer {
+    .btn {
+        margin: 12px 5px 0 5px;
+    }
+    .btn:hover {
+        background-color: hsla(0, 0%, 60%, .2);
+    }
 }
 
 .modal-footer button {
