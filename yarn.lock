@@ -254,9 +254,9 @@
     tree-kill "^1.0.0"
     webpack-sources "^1.1.0"
 
-"@ofi/ofi-main@git+ssh://git@si-nexus01.dev.setl.io:OFI_Modules/ofi-main.git#2.0.2":
+"@ofi/ofi-main@git+ssh://git@si-nexus01.dev.setl.io:OFI_Modules/ofi-main.git#2.0.6":
   version "1.0.0"
-  resolved "git+ssh://git@si-nexus01.dev.setl.io:OFI_Modules/ofi-main.git#9b618823d1fd425dd6557893dffe9c34fa28d673"
+  resolved "git+ssh://git@si-nexus01.dev.setl.io:OFI_Modules/ofi-main.git#bda6899ad34e7606709c00f4eb155dcf2021f0ae"
 
 "@schematics/angular@0.8.1":
   version "0.8.1"
