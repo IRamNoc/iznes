@@ -1,31 +1,30 @@
 <form [formGroup]="qrCodeChallengeForm" (ngSubmit)="qrCodeChallenge()">
     <clr-modal [(clrModalOpen)]="showModal" [clrModalSize]="'md'" [clrModalClosable]="false">
-        <h3 class=" modal-title">Two-Factor Authentication</h3>  
-        <div class="modal-body ext-center">       
-            <section class="form-block">                   
+        <h3 class=" modal-title">Two-Factor Authentication</h3>
+        <div class="modal-body ext-center">
+            <section class="form-block">
                 <div class="form-group">
 
-                    <div *ngIf="showQRCode">                    
-                        <section class="form-block" style="width: 100%; text-align: center; padding-bottom: 20px">
-                            <img style="display: inline-block" src="{{ qrCodeURL }}" alt="Open CSD QR Code" height="166" width="166" />
-                        </section>    
-                        
-                        <div class="row">                       
-                            <p>1. Scan the above QR code using your Authenticator App.</p>
-                            <p>2. Enter below the six digit code from your Authenticator App.</p>
-                        </div>                    
+                    <div id="qr-code" *ngIf="showQRCode">
+                        <section class="form-block">
+                            <img src="{{ qrCodeURL }}" alt="Open CSD QR Code">
+                        </section>
+
+                        <div class="row">
+                            <p>Scan the above QR code using your Authenticator App.</p>
+                        </div>
                     </div>
 
-                    <div class="row" style="padding-bottom: 20px">
-                        <div *ngIf="!showQRCode" class="text-center">                            
+                    <div class="row" [style.padding-bottom]="!showQRCode ? '20px' : '0'">
+                        <div *ngIf="!showQRCode" class="text-center">
                             <i class="fa fa-unlock-alt fa-5x my-1 text-muted" aria-hidden="true"></i>
                         </div>
 
-                        <input type="text" id="qrCodeNumber" formControlName="qrCodeNumber" maxlength="6" minlength="6" size="45" placeholder="Enter your six digit authentication code here">
+                        <input type="text" id="qrCodeNumber" formControlName="qrCodeNumber" maxlength="6" minlength="6" size="45" placeholder="Enter your six digit authentication code">
 
-                        <div *ngIf="qrCodeChallengeForm.controls.qrCodeNumber.hasError('required') && qrCodeChallengeForm.controls.qrCodeNumber.touched" 
-                            class="field-error"
-                            mltag="txt_qrcoderequired">Field is required
+                        <div *ngIf="qrCodeChallengeForm.controls.qrCodeNumber.hasError('required') && qrCodeChallengeForm.controls.qrCodeNumber.touched"
+                             class="field-error"
+                             mltag="txt_qrcoderequired">Field is required
                         </div>
                     </div>
 
@@ -33,12 +32,12 @@
             </section>
         </div>
         <div class="modal-footer">
-            <button id="cancel-button" class="btn btn-info" type="button" (click)="modalCancelled.emit(true)">
+            <button id="cancel-button" class="btn" type="button" (click)="modalCancelled.emit(true)">
                 {{'Cancel' | translate}}
             </button>
             <button id="qrCodeChallengeSubmit" type="submit" class="btn btn-primary" [disabled]="!qrCodeChallengeForm.valid">
                 <i class="fa fa-save"></i> <span mltag="txt_submit">Submit</span>
-            </button> 
+            </button>
         </div>
     </clr-modal>
 </form>

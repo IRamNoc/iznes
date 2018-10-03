@@ -99,12 +99,12 @@ export class AuthenticateComponent implements OnDestroy, OnInit {
                 asyncTaskPipe,
                 (data) => {
                     this.alertsService.generate('success', data[1].Data[0].Message);
-                    this.showModal = false;
+                    //this.showModal = false;
 
                     this.authenticated.emit(true);
                 },
                 (data) => {
-                    this.showModal = true;
+                    //this.showModal = true;
                     console.error('error: ', data);
                     this.alertsService.generate('error', data[1].Data.Message);
                 }),
