@@ -7,11 +7,14 @@ import custom.junit.runners.OrderedJUnit4ClassRunner;
 import io.setl.restapi.client.RestApi;
 import io.setl.restapi.client.message.MemberNodeMessageFactory;
 import org.junit.Before;
+import org.junit.Ignore;
 import org.junit.Rule;
 import org.junit.Test;
 import org.junit.rules.Timeout;
 import org.junit.runner.RunWith;
 import org.openqa.selenium.JavascriptExecutor;
+
+import java.sql.SQLException;
 
 import static com.setl.UI.common.SETLUIHelpers.AdministrationModuleHelper.*;
 import static com.setl.UI.common.SETLUIHelpers.LoginAndNavigationHelper.loginAndVerifySuccess;
@@ -55,6 +58,7 @@ public class OpenCSDUsersSubModuleTest {
     }
 
     @Test
+    @Ignore
     public void shouldNotCreateUserNOTeam() throws InterruptedException {
         String[] emailaddress = generateEmail();
         String[] phoneNumber = generatePhoneNumber();
@@ -72,7 +76,7 @@ public class OpenCSDUsersSubModuleTest {
 
 
     @Test
-    public void shouldNotCreateUser() throws InterruptedException {
+    public void shouldNotCreateUser() throws InterruptedException, SQLException {
         String[] emailaddress = generateBadEmail();
         String[] phoneNumber = generatePhoneNumber();
         String[] firstName = generateBadUser();
@@ -85,9 +89,10 @@ public class OpenCSDUsersSubModuleTest {
         fillInUserDetails(emailaddress[0], firstName[0], lastName[0], userRef[0], phoneNumber[0]);
         selectStaticTeam();
         selectCreateUserWithBadDetails();
+        validateUserNOTCreatedOrDeleted(0, emailaddress[0], firstName[0], lastName[0], phoneNumber[0], userRef[0]);
     }
     @Test
-    public void shouldCreateUser()throws InterruptedException {
+    public void shouldCreateUser()throws InterruptedException, SQLException {
         String[] emailaddress = generateEmail();
         String[] phoneNumber = generatePhoneNumber();
         String[] firstName = generateUser();
@@ -102,5 +107,6 @@ public class OpenCSDUsersSubModuleTest {
         selectStaticTeam();
         selectCreateUser();
         searchUser(userRef[0],firstName[0], lastName[0], emailaddress[0], phoneNumber[0]);
+        validateUserCreated(1, emailaddress[0], firstName[0], lastName[0], phoneNumber[0], userRef[0]);
     }
 }
