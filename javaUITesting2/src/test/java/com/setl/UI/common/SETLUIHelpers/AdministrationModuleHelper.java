@@ -1,12 +1,16 @@
 package com.setl.UI.common.SETLUIHelpers;
+import oracle.jrockit.jfr.StringConstantPool;
 import org.openqa.selenium.By;
 import org.openqa.selenium.support.ui.WebDriverWait;
 
 import java.sql.*;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.List;
 
+import static com.setl.UI.common.SETLUIHelpers.MemberDetailsHelper.scrollElementIntoViewById;
 import static com.setl.UI.common.SETLUIHelpers.SetUp.driver;
 import static com.setl.UI.common.SETLUIHelpers.SetUp.timeoutInSeconds;
-import static com.sun.tools.doclint.Entity.and;
 import static org.apache.commons.lang3.RandomStringUtils.randomAlphabetic;
 import static org.apache.commons.lang3.RandomStringUtils.randomNumeric;
 import static org.junit.Assert.*;
@@ -94,7 +98,7 @@ public class AdministrationModuleHelper {
         }
     }
 
-    public static void selectCreateNewTeam() throws InterruptedException {
+    public static void selectCreateNewTeamNoPermissions() throws InterruptedException {
         final WebDriverWait wait = new WebDriverWait(driver, timeoutInSeconds);
         scrollElementIntoViewByXpath("/html/body/app-root/app-basic-layout/div/ng-sidebar-container/div/div/div/main/div/div/app-core-admin-teams-crud/clr-tabs/clr-tab/clr-tab-content/div[5]/div[2]/button");
         wait.until(refreshed(visibilityOfElementLocated(By.xpath("/html/body/app-root/app-basic-layout/div/ng-sidebar-container/div/div/div/main/div/div/app-core-admin-teams-crud/clr-tabs/clr-tab/clr-tab-content/div[5]/div[2]/button"))));
@@ -112,8 +116,21 @@ public class AdministrationModuleHelper {
         driver.findElement(By.xpath("//*[@id=\"iznes\"]/app-root/jaspero-confirmations/jaspero-confirmation/div[2]/div[4]/button[2]")).click();
         wait.until(refreshed(invisibilityOfElementLocated(By.className("jaspero__dialog-title"))));
         wait.until(refreshed(visibilityOfElementLocated(By.xpath("/html/body/app-root/app-basic-layout/div/ng-sidebar-container/div/div/div/main/div/div/app-core-admin-teams-list/div/h1"))));
+    }
 
-
+    public static void selectCreateNewTeam() throws InterruptedException {
+        final WebDriverWait wait = new WebDriverWait(driver, timeoutInSeconds);
+        scrollElementIntoViewByXpath("/html/body/app-root/app-basic-layout/div/ng-sidebar-container/div/div/div/main/div/div/app-core-admin-teams-crud/clr-tabs/clr-tab/clr-tab-content/div[5]/div[2]/button");
+        wait.until(refreshed(visibilityOfElementLocated(By.xpath("/html/body/app-root/app-basic-layout/div/ng-sidebar-container/div/div/div/main/div/div/app-core-admin-teams-crud/clr-tabs/clr-tab/clr-tab-content/div[5]/div[2]/button"))));
+        wait.until(refreshed(elementToBeClickable(By.xpath("/html/body/app-root/app-basic-layout/div/ng-sidebar-container/div/div/div/main/div/div/app-core-admin-teams-crud/clr-tabs/clr-tab/clr-tab-content/div[5]/div[2]/button"))));
+        String create = driver.findElement(By.xpath("/html/body/app-root/app-basic-layout/div/ng-sidebar-container/div/div/div/main/div/div/app-core-admin-teams-crud/clr-tabs/clr-tab/clr-tab-content/div[5]/div[2]/button")).getText();
+        assertTrue(create.contains("Create Team"));
+        driver.findElement(By.xpath("/html/body/app-root/app-basic-layout/div/ng-sidebar-container/div/div/div/main/div/div/app-core-admin-teams-crud/clr-tabs/clr-tab/clr-tab-content/div[5]/div[2]/button")).click();
+        wait.until(refreshed(visibilityOfElementLocated(By.className("jaspero__dialog-title"))));
+        assertTrue(driver.findElement(By.xpath("//*[@id=\"iznes\"]/app-root/jaspero-confirmations/jaspero-confirmation/div[2]/div[3]")).getText().equals("Are you sure you wish to create this Team?"));
+        driver.findElement(By.xpath("//*[@id=\"iznes\"]/app-root/jaspero-confirmations/jaspero-confirmation/div[2]/div[4]/button[2]")).click();
+        wait.until(refreshed(invisibilityOfElementLocated(By.className("jaspero__dialog-title"))));
+        wait.until(refreshed(visibilityOfElementLocated(By.xpath("/html/body/app-root/app-basic-layout/div/ng-sidebar-container/div/div/div/main/div/div/app-core-admin-teams-list/div/h1"))));
     }
 
     public static void searchTeam(String ref, String teamName, String teamDescription, String teamStatus) throws InterruptedException {
@@ -375,4 +392,114 @@ public class AdministrationModuleHelper {
             rs.close();
         }
     }
+    public static void selectAccountAdminPermissions() throws InterruptedException {
+        scrollElementIntoViewById("permissionsCellName0");
+        //Select Account Administration Permissions
+        driver.findElement(By.id("permissionsCellName0")).click();
+        //Assert Account Administration Permissions Category Header
+        String accountAdministration = driver.findElement(By.id("permissionsCellName0")).getText();
+        assertTrue(accountAdministration.equals("Account Administration"));
+        String accountAdministrationDescription = driver.findElement(By.id("permissionsCellDesc0")).getText();
+        assertTrue(accountAdministrationDescription.equals("View and Manage, Users and Teams"));
+        //Assert View Users
+        String viewUsersName = driver.findElement(By.id("permissionsCellName1")).getText();
+        assertTrue(viewUsersName.equals("View Users"));
+        String viewUsersDescription = driver.findElement(By.id("permissionsCellDesc1")).getText();
+        assertTrue(viewUsersDescription.equals("View Users"));
+        //Select Permission
+        driver.findElement(By.cssSelector("#permissionsCellActions1 > label:nth-child(1) > span:nth-child(2)")).click();
+        //Assert Create Users
+        String createUsersName = driver.findElement(By.id("permissionsCellName2")).getText();
+        assertTrue(createUsersName.equals("Create Users"));
+        String createUsersDescription = driver.findElement(By.id("permissionsCellDesc2")).getText();
+        assertTrue(createUsersDescription.equals("Create users"));
+        //Select Permission
+        driver.findElement(By.cssSelector("#permissionsCellActions2 > label:nth-child(1) > span:nth-child(2)")).click();
+        //Assert Update Users
+        String updateUsersName = driver.findElement(By.id("permissionsCellName3")).getText();
+        assertTrue(updateUsersName.equals("Update Users"));
+        String updateUsersDescription = driver.findElement(By.id("permissionsCellDesc3")).getText();
+        assertTrue(updateUsersDescription.equals("Update user profiles"));
+        //Select Permission
+        driver.findElement(By.cssSelector("#permissionsCellActions3 > label:nth-child(1) > span:nth-child(2)")).click();
+        //Assert Delete Users
+        String deleteUsersName = driver.findElement(By.id("permissionsCellName4")).getText();
+        assertTrue(deleteUsersName.equals("Delete Users"));
+        String deleteUsersDescription = driver.findElement(By.id("permissionsCellDesc4")).getText();
+        assertTrue(deleteUsersDescription.equals("Delete users"));
+        //Select Permission
+        driver.findElement(By.cssSelector("#permissionsCellActions4 > label:nth-child(1) > span:nth-child(2)")).click();
+        //Assert View Teams
+        String viewTeamsName = driver.findElement(By.id("permissionsCellName5")).getText();
+        assertTrue(viewTeamsName.equals("View Teams"));
+        String viewTeamsDescription = driver.findElement(By.id("permissionsCellDesc5")).getText();
+        assertTrue(viewTeamsDescription.equals("View teams"));
+        //Select Permission
+        driver.findElement(By.cssSelector("#permissionsCellActions5 > label:nth-child(1) > span:nth-child(2)")).click();
+        //Assert Create Teams
+        String createTeamsName = driver.findElement(By.id("permissionsCellName6")).getText();
+        assertTrue(createTeamsName.equals("Create Teams"));
+        String createTeamsDescription = driver.findElement(By.id("permissionsCellDesc6")).getText();
+        assertTrue(createTeamsDescription.equals("Create teams"));
+        //Select Permission
+        driver.findElement(By.cssSelector("#permissionsCellActions6 > label:nth-child(1) > span:nth-child(2)")).click();
+        //Assert Update Teams
+        String updateTeamsName = driver.findElement(By.id("permissionsCellName7")).getText();
+        assertTrue(updateTeamsName.equals("Update Teams"));
+        String updateTeamsDescription = driver.findElement(By.id("permissionsCellDesc7")).getText();
+        assertTrue(updateTeamsDescription.equals("Update team details"));
+        //Select Permission
+        driver.findElement(By.cssSelector("#permissionsCellActions7 > label:nth-child(1) > span:nth-child(2)")).click();
+        //Assert Delete Teams
+        String deleteTeamsName = driver.findElement(By.id("permissionsCellName8")).getText();
+        assertTrue(deleteTeamsName.equals("Delete Teams"));
+        String deleteTeamsDescription = driver.findElement(By.id("permissionsCellDesc8")).getText();
+        assertTrue(deleteTeamsDescription.equals("Delete teams"));
+        //Select Permission
+        driver.findElement(By.cssSelector("#permissionsCellActions8 > label:nth-child(1) > span:nth-child(2)")).click();
+        //Assert Manage Team Memberships
+        String manageTeamMembershipsName = driver.findElement(By.id("permissionsCellName9")).getText();
+        assertTrue(manageTeamMembershipsName.equals("Manage Team Memberships"));
+        String manageTeamMembershipsDescription = driver.findElement(By.id("permissionsCellDesc9")).getText();
+        assertTrue(manageTeamMembershipsDescription.equals("Manage the adding/removing of users from teams"));
+        //Select Permission
+        driver.findElement(By.cssSelector("#permissionsCellActions9 > label:nth-child(1) > span:nth-child(2)")).click();
+        //Assert Manage Team Permissions
+        String manageTeamPermissionsName = driver.findElement(By.id("permissionsCellName10")).getText();
+        assertTrue(manageTeamPermissionsName.equals("Manage Team Permissions"));
+        String manageTeamPermissionsDescription = driver.findElement(By.id("permissionsCellDesc10")).getText();
+        assertTrue(manageTeamPermissionsDescription.equals("Manage the adding/removing of permissions from teams"));
+        //Select Permission
+        driver.findElement(By.cssSelector("#permissionsCellActions10 > label:nth-child(1) > span:nth-child(2)")).click();
+    }
+
+    public static String validateAdminTeamPermissions(String teamName) throws SQLException {
+        conn = DriverManager.getConnection(connectionString, DBUsername, DBPassword);
+        Statement stmt = conn.createStatement();
+        ResultSet rs = null;
+        String teamID = null;
+        try {
+            String getUserTeamID = "select userTeamID from setlnet.tblUserTeams where name = " + "\"" + teamName + "\"";
+            rs = stmt.executeQuery(getUserTeamID);
+            rs.last();
+            teamID = rs.getString("userTeamID");
+            String getPermissions = "SELECT a.userTeamID, a.reference , a.name as userTeamName, c.name as permissionName FROM setlnet.tblUserTeams a INNER JOIN setlnet.tblUserTeamPermissionAreasMap b on a.userTeamID = b.userTeamID INNER JOIN setlnet.tblUserTeamPermissionAreas c on b.permissionAreaID = c.permissionAreaID where a.userTeamID = " + "\"" + teamID + "\" order by c.name";
+            ResultSet gp = stmt.executeQuery(getPermissions);
+
+            List<String> actualList = new ArrayList<>();
+            while(gp.next()){
+                actualList.add(gp.getString("permissionName"));
+            }
+            List<String> expectedList = Arrays.asList("Create Teams","Create Users","Delete Teams","Delete Users", "Manage Team Memberships", "Manage Team Permissions", "Update Teams", "Update Users", "View Teams", "View Users");
+            assertEquals(expectedList, actualList);
+            }catch (Exception e) {
+            e.printStackTrace();
+            fail();
+        } finally {
+            conn.close();
+            stmt.close();
+            rs.close();
+        } return teamID;
+    }
 }
+
