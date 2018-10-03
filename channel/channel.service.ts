@@ -74,12 +74,7 @@ export class ChannelService {
                     );
                 }
             },
-<<<<<<< HEAD
-        )
-        ;
-=======
         );
->>>>>>> 6d56e2e6919cb71f71be9bf733bc00912a51cac2
     }
 
     /**
