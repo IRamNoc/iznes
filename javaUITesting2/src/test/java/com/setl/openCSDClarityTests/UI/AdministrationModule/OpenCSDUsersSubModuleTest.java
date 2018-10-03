@@ -55,7 +55,7 @@ public class OpenCSDUsersSubModuleTest {
     }
 
     @Test
-    public void shouldCreateUser() throws InterruptedException {
+    public void shouldNotCreateUserNOTeam() throws InterruptedException {
         String[] emailaddress = generateEmail();
         String[] phoneNumber = generatePhoneNumber();
         String[] firstName = generateUser();
@@ -67,7 +67,7 @@ public class OpenCSDUsersSubModuleTest {
         selectAddNewUser();
         fillInUserDetails(emailaddress[0], firstName[0], lastName[0], userRef[0], phoneNumber[0]);
         selectUserType();
-        selectCreateUser();
+        createUserDisabled();
     }
 
 
@@ -83,6 +83,24 @@ public class OpenCSDUsersSubModuleTest {
         navigateToDropdown("menu-administration-users");
         selectAddNewUser();
         fillInUserDetails(emailaddress[0], firstName[0], lastName[0], userRef[0], phoneNumber[0]);
+        selectStaticTeam();
         selectCreateUserWithBadDetails();
+    }
+    @Test
+    public void shouldCreateUser()throws InterruptedException {
+        String[] emailaddress = generateEmail();
+        String[] phoneNumber = generatePhoneNumber();
+        String[] firstName = generateUser();
+        String[] lastName = generateUser();
+        String[] userRef = generateRandomTeamReference();
+        loginAndVerifySuccess("am", "alex01");
+        navigateToDropdown("menu-administration");
+        navigateToDropdown("menu-administration-users");
+        selectAddNewUser();
+        fillInUserDetails(emailaddress[0], firstName[0], lastName[0], userRef[0], phoneNumber[0]);
+        selectUserType();
+        selectStaticTeam();
+        selectCreateUser();
+        searchUser(userRef[0],firstName[0], lastName[0], emailaddress[0], phoneNumber[0]);
     }
 }
