@@ -112,7 +112,7 @@ export class ManageOrdersComponent implements OnInit, AfterViewInit, OnDestroy {
     tabsControl: any[] = [];
 
     /* expandable div */
-    isOptionalFilters = false;
+    isOptionalFiltersVisible = false;
     clientInformation = true;
     clientDetailsInformation = true;
     generalInvestmentInformation = true;
@@ -169,24 +169,24 @@ export class ManageOrdersComponent implements OnInit, AfterViewInit, OnDestroy {
     private connectedWalletId: any = 0;
 
     constructor(private ofiOrdersService: OfiOrdersService,
-                private ngRedux: NgRedux<any>,
-                private changeDetectorRef: ChangeDetectorRef,
-                private route: ActivatedRoute,
-                private router: Router,
-                private memberSocketService: MemberSocketService,
-                private fundShareService: OfiFundShareService,
-                private confirmationService: ConfirmationService,
-                private fundInvestService: OfiFundInvestService,
-                private logService: LogService,
-                private fileDownloader: FileDownloader,
-                public numberConverter: NumberConverterService,
-                private messagesService: MessagesService,
-                private toasterService: ToasterService,
-                public translation: MultilingualService,
-                private ofiCurrenciesService: OfiCurrenciesService,
-                private manageOrdersService: ManageOrdersService,
-                private location: Location,
-                private searchFilters: SearchFilters,
+        private ngRedux: NgRedux<any>,
+        private changeDetectorRef: ChangeDetectorRef,
+        private route: ActivatedRoute,
+        private router: Router,
+        private memberSocketService: MemberSocketService,
+        private fundShareService: OfiFundShareService,
+        private confirmationService: ConfirmationService,
+        private fundInvestService: OfiFundInvestService,
+        private logService: LogService,
+        private fileDownloader: FileDownloader,
+        public numberConverter: NumberConverterService,
+        private messagesService: MessagesService,
+        private toasterService: ToasterService,
+        public translation: MultilingualService,
+        private ofiCurrenciesService: OfiCurrenciesService,
+        private manageOrdersService: ManageOrdersService,
+        private location: Location,
+        private searchFilters: SearchFilters,
     ) {
 
         this.isAmConfirmModalDisplayed = false;
@@ -219,7 +219,8 @@ export class ManageOrdersComponent implements OnInit, AfterViewInit, OnDestroy {
             this.detectChanges();
         });
         this.datagridParams.setSearchFilters(this.searchFilters);
-        this.searchFilters.optionalFilters.subscribe(show => this.isOptionalFilters = show);
+        this.searchFilters.optionalFilters
+            .subscribe(show => this.isOptionalFiltersVisible = show);
         this.searchForm = this.searchFilters.getForm();
         this.setInitialTabs();
 
@@ -231,8 +232,8 @@ export class ManageOrdersComponent implements OnInit, AfterViewInit, OnDestroy {
             this.connectedWalletId = walletId;
             this.connectedWalletName = get(
                 Object.keys(myWallets)
-                .map(k => myWallets[k])
-                .find(w => +w.walletId === +walletId),
+                    .map(k => myWallets[k])
+                    .find(w => +w.walletId === +walletId),
                 'walletName',
                 '',
             );
@@ -260,10 +261,10 @@ export class ManageOrdersComponent implements OnInit, AfterViewInit, OnDestroy {
         });
         this.appSubscribe(
             bufferedOrders$
-            .pipe(
-                filter(orders => !isEmpty(orders)),
-                switchMap(() => this.route.params),
-            ),
+                .pipe(
+                    filter(orders => !isEmpty(orders)),
+                    switchMap(() => this.route.params),
+                ),
             params => this.routeUpdate(params));
         this.appSubscribe(this.route.queryParams, (queryParams) => {
             if (queryParams.orderID) {
@@ -277,7 +278,7 @@ export class ManageOrdersComponent implements OnInit, AfterViewInit, OnDestroy {
         });
         this.appSubscribe(
             this.searchForm.valueChanges
-            .pipe(debounceTime(500)),
+                .pipe(debounceTime(500)),
             _ => this.manageOrdersService.setFilters(this.searchFilters.get()),
         );
         this.appSubscribe(this.currencies$, c => this.getCurrencyList(c));
@@ -780,17 +781,17 @@ export class ManageOrdersComponent implements OnInit, AfterViewInit, OnDestroy {
         };
 
         switch (this.language) {
-        case 'fr-Latn':
-            orderType = (targetedOrder.orderType === 3) ? 'souscription' : 'rachat';
-            subject = `Annulation d'un ordre: votre ordre de ${orderType} avec la référence ${orderRef} a été annulé par ${amCompanyName}`;
-            dateFormat = 'DD/MM/YYYY HH:mm:ss';
-            break;
+            case 'fr-Latn':
+                orderType = (targetedOrder.orderType === 3) ? 'souscription' : 'rachat';
+                subject = `Annulation d'un ordre: votre ordre de ${orderType} avec la référence ${orderRef} a été annulé par ${amCompanyName}`;
+                dateFormat = 'DD/MM/YYYY HH:mm:ss';
+                break;
 
-        default:
-            orderType = (targetedOrder.orderType === 3) ? 'subscription' : 'redemption';
-            subject = `Order cancelled: your ${orderType} order ${orderRef} has been cancelled by ${amCompanyName}`;
-            dateFormat = 'YYYY-MM-DD HH:mm:ss';
-            break;
+            default:
+                orderType = (targetedOrder.orderType === 3) ? 'subscription' : 'redemption';
+                subject = `Order cancelled: your ${orderType} order ${orderRef} has been cancelled by ${amCompanyName}`;
+                dateFormat = 'YYYY-MM-DD HH:mm:ss';
+                break;
         }
 
         const actionConfig = new MessageCancelOrderConfig();
