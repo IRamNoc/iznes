@@ -3,6 +3,7 @@ import { ConfirmationService, SagaHelper } from '@setl/utils';
 import { NgRedux, select } from '@angular-redux/store';
 import { AlertsService } from '@setl/jaspero-ng2-alerts';
 import { Subscription } from 'rxjs/Subscription';
+import { UPDATE_TWO_FACTOR } from '@setl/core-store';
 import { MyUserService } from '@setl/core-req-services';
 import { MemberSocketService } from '@setl/websocket-service';
 
@@ -72,11 +73,13 @@ export class EnrollComponent implements OnDestroy, OnInit {
                 if (setting) {
                     this.showQRCodeChallenge = true;
                 } else {
-                    this.ngRedux.dispatch(SagaHelper.runAsyncCallback(
+                    this.ngRedux.dispatch(SagaHelper.runAsync(
+                        [UPDATE_TWO_FACTOR],
+                        [],
                         asyncTaskPipe,
+                        {},
                         () => {
                             this.alertsService.generate('success', 'Two-Factor Authentication has been disabled.');
-
                         },
                         (data) => {
                             console.error('error: ', data);
