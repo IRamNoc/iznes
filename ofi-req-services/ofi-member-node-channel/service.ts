@@ -27,6 +27,7 @@ import { OfiManagementCompanyService } from '../ofi-product/management-company/m
 import { OfiUmbrellaFundService } from '../ofi-product/umbrella-fund/service';
 import { OfiFundService } from '../ofi-product/fund/fund.service';
 import { OfiFundShareFormService } from '../../ofi-product/fund-share/form/service';
+import { LeiService } from '../ofi-product/lei/lei.service';
 import { LogService, SagaHelper } from '@setl/utils';
 import { MyUserService } from '@setl/core-req-services';
 import { SET_SITE_MENU } from '@setl//core-store';
@@ -49,6 +50,7 @@ export class OfiMemberNodeChannelService {
         private fundService: OfiFundService,
         private fundShareService: OfiFundShareFormService,
         private myUserService: MyUserService,
+        private leiService: LeiService,
     ) {
         this.connectedWallet$
         .subscribe(v => this.connectedWalletID = v);
@@ -144,6 +146,7 @@ export class OfiMemberNodeChannelService {
         case 'izncreateumbrellafund':
         case 'iznupdateumbrellafund':
             this.umbrellaService.fetchUmbrellaList();
+            this.leiService.fetchLEIs();
             break;
 
             // new fund created and fund updated.
@@ -155,6 +158,7 @@ export class OfiMemberNodeChannelService {
         case 'izncreatefund':
         case 'iznupdatefund':
             this.fundService.fetchFundList();
+            this.leiService.fetchLEIs();
             break;
 
             // new fund share created and fund share updated.

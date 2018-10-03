@@ -8,7 +8,7 @@ import {
     AfterViewInit,
     Inject,
 } from '@angular/core';
-import { FormGroup, FormBuilder, Validators, FormControl } from '@angular/forms';
+import { FormGroup, FormBuilder, Validators, FormControl, AbstractControl } from '@angular/forms';
 import { select, NgRedux } from '@angular-redux/store';
 import { ActivatedRoute, Router } from '@angular/router';
 import { Location } from '@angular/common';
@@ -22,6 +22,7 @@ import { Subscription } from 'rxjs';
 
 /* Services */
 import { OfiUmbrellaFundService } from '@ofi/ofi-main/ofi-req-services/ofi-product/umbrella-fund/service';
+import { LeiService } from '@ofi/ofi-main/ofi-req-services/ofi-product/lei/lei.service';
 import {
     OfiManagementCompanyService,
 } from '@ofi/ofi-main/ofi-req-services/ofi-product/management-company/management-company.service';
@@ -34,7 +35,7 @@ import { ToasterService } from 'angular2-toaster';
 import { UmbrellaFundDetail } from '@ofi/ofi-main/ofi-store/ofi-product/umbrella-fund/umbrella-fund-list/model';
 
 /* Utils. */
-import { SagaHelper, NumberConverterService, LogService, ConfirmationService } from '@setl/utils';
+import { SagaHelper, LogService, ConfirmationService } from '@setl/utils';
 import { validators } from '../productConfig';
 import { MultilingualService } from '@setl/multilingual';
 
@@ -90,6 +91,7 @@ export class UmbrellaFundComponent implements OnInit, AfterViewInit, OnDestroy {
     legalAdvisorOptions = [];
     transferAgentOptions = [];
     centralizingAgentOptions = [];
+    leiList: string[] = [];
     currentRoute: {
         fromFund?: boolean,
         fromShare?: boolean,
@@ -107,6 +109,7 @@ export class UmbrellaFundComponent implements OnInit, AfterViewInit, OnDestroy {
     @select(['user', 'siteSettings', 'language']) requestLanguageObj;
     @select(['ofi', 'ofiProduct', 'ofiUmbrellaFund', 'umbrellaFundList', 'umbrellaFundList']) umbrellaFundAccessListOb;
     @select(['ofi', 'ofiProduct', 'ofiManagementCompany', 'managementCompanyList', 'managementCompanyList']) managementCompanyAccessListOb;
+    @select(['ofi', 'ofiProduct', 'lei', 'lei']) leiListOb;
 
     static getListItem(value: string | number, list: any[]): any[] {
         if (value === null || !list.length) {
@@ -128,13 +131,13 @@ export class UmbrellaFundComponent implements OnInit, AfterViewInit, OnDestroy {
         private _router: Router,
         private _location: Location,
         private _activatedRoute: ActivatedRoute,
-        private _numberConverterService: NumberConverterService,
         private _toasterService: ToasterService,
         private _ofiUmbrellaFundService: OfiUmbrellaFundService,
         private managementCompanyService: OfiManagementCompanyService,
         private logService: LogService,
         private confirmationService: ConfirmationService,
         public _translate: MultilingualService,
+        private leiService: LeiService,
         @Inject('product-config') productConfig,
     ) {
 
@@ -151,21 +154,22 @@ export class UmbrellaFundComponent implements OnInit, AfterViewInit, OnDestroy {
 
         this.managementCompanyService.getManagementCompanyList();
         this._ofiUmbrellaFundService.fetchUmbrellaList();
+        this.leiService.fetchLEIs();
 
         // param url
         this._activatedRoute.params
-        .pipe(
-            takeUntil(this.unSubscribe),
-        )
-        .subscribe((params) => {
-            if (params['id']) {
-                this.umbrellaFundID = params['id'];
-                this.isEditMode = true;
-            } else {
-                this.umbrellaFundID = null;
-                this.isEditMode = false;
-            }
-        });
+            .pipe(
+                takeUntil(this.unSubscribe),
+            )
+            .subscribe((params) => {
+                if (params['id']) {
+                    this.umbrellaFundID = params['id'];
+                    this.isEditMode = true;
+                } else {
+                    this.umbrellaFundID = null;
+                    this.isEditMode = false;
+                }
+            });
 
         this.umbrellaFundForm = this._fb.group({
             umbrellaFundID: [
@@ -272,28 +276,28 @@ export class UmbrellaFundComponent implements OnInit, AfterViewInit, OnDestroy {
         });
 
         this.umbrellaFundForm.controls['domicile'].valueChanges
-        .takeUntil(this.unSubscribe)
-        .subscribe(() => {
-            this.umbrellaFundForm.controls['transferAgentID'].setValue([]);
-            this.umbrellaFundForm.controls['centralisingAgentID'].setValue([]);
-        });
+            .takeUntil(this.unSubscribe)
+            .subscribe(() => {
+                this.umbrellaFundForm.controls['transferAgentID'].setValue([]);
+                this.umbrellaFundForm.controls['centralisingAgentID'].setValue([]);
+            });
 
         this.umbrellaFundForm.controls['umbrellaFundName'].valueChanges
-        .takeUntil(this.unSubscribe)
-        .subscribe((name) => {
-            const registerOffice = this.umbrellaFundForm.controls['registerOffice'];
-            if (registerOffice.dirty || this.isEditMode) {
-                return;
-            }
-            this.umbrellaFundForm.controls['registerOffice'].setValue(name);
-        });
+            .takeUntil(this.unSubscribe)
+            .subscribe((name) => {
+                const registerOffice = this.umbrellaFundForm.controls['registerOffice'];
+                if (registerOffice.dirty || this.isEditMode) {
+                    return;
+                }
+                this.umbrellaFundForm.controls['registerOffice'].setValue(name);
+            });
 
         // language
         this.requestLanguageObj
-        .pipe(
-            takeUntil(this.unSubscribe),
-        )
-        .subscribe(d => this.getLanguage(d));
+            .pipe(
+                takeUntil(this.unSubscribe),
+            )
+            .subscribe(d => this.getLanguage(d));
 
         combineLatest(
             this.umbrellaFundAccessListOb,
@@ -301,57 +305,85 @@ export class UmbrellaFundComponent implements OnInit, AfterViewInit, OnDestroy {
             this._activatedRoute.queryParams,
             this._activatedRoute.params,
         )
-        .pipe(
-            takeUntil(this.unSubscribe),
-        )
-        .subscribe(([a, b, queryParams, params]) => {
-            if (!Object.keys(a) || !Object.keys(b)) {
-                return;
-            }
-            this.getManagementCompanyList(b);
-            this.getUmbrellaFundList(a);
-            if (queryParams.prefill) {
-                this.umbrellaControl.setValue(
-                    UmbrellaFundComponent.getListItem(queryParams.prefill, this.umbrellaListItems),
-                );
-            }
-            if (
-                this.managementCompanyList.length > 0
-                && this.managementCompanyList
-                && (this.umbrellaFundID || queryParams.prefill)
-            ) {
-                this.fillFormByUmbrellaID(this.umbrellaFundID || queryParams.prefill);
-                this._changeDetectorRef.markForCheck();
-            }
-        });
+            .pipe(
+                takeUntil(this.unSubscribe),
+            )
+            .subscribe(([a, b, queryParams, params]) => {
+                if (!Object.keys(a) || !Object.keys(b)) {
+                    return;
+                }
+                this.getManagementCompanyList(b);
+                this.getUmbrellaFundList(a);
+                if (queryParams.prefill) {
+                    this.umbrellaControl.setValue(
+                        UmbrellaFundComponent.getListItem(queryParams.prefill, this.umbrellaListItems),
+                    );
+                }
+                if (
+                    this.managementCompanyList.length > 0
+                    && this.managementCompanyList
+                    && (this.umbrellaFundID || queryParams.prefill)
+                ) {
+                    this.fillFormByUmbrellaID(this.umbrellaFundID || queryParams.prefill);
+                    this._changeDetectorRef.markForCheck();
+                }
+            });
 
         this.umbrellaControl.valueChanges
-        .pipe(
-            takeUntil(this.unSubscribe),
-        )
-        .subscribe((item) => {
-            if (!item.length) {
-                this.umbrellaFundForm.reset();
-                return;
-            }
-            this.fillFormByUmbrellaID(item[0].id);
-            this._changeDetectorRef.markForCheck();
-        });
+            .pipe(
+                takeUntil(this.unSubscribe),
+            )
+            .subscribe((item) => {
+                if (!item.length) {
+                    this.umbrellaFundForm.reset();
+                    return;
+                }
+                this.fillFormByUmbrellaID(item[0].id);
+                this._changeDetectorRef.markForCheck();
+            });
     }
 
     ngOnInit() {
         this._activatedRoute.queryParams
-        .pipe(
-            takeUntil(this.unSubscribe),
-        )
-        .subscribe((params) => {
-            if (params.fromFund) {
-                this.currentRoute.fromFund = true;
-            }
-            if (params.fromShare) {
-                this.currentRoute.fromShare = true;
-            }
-        });
+            .pipe(
+                takeUntil(this.unSubscribe),
+            )
+            .subscribe((params) => {
+                if (params.fromFund) {
+                    this.currentRoute.fromFund = true;
+                }
+                if (params.fromShare) {
+                    this.currentRoute.fromShare = true;
+                }
+            });
+
+        this.leiListOb
+            .pipe(
+                takeUntil(this.unSubscribe),
+            )
+            .subscribe((leiList) => {
+                this.leiList = leiList;
+            });
+
+        this.umbrellaFundForm.controls.legalEntityIdentifier.valueChanges
+            .pipe(
+                takeUntil(this.unSubscribe),
+            )
+            .subscribe((val) => {
+                const leiControl = this.umbrellaFundForm.controls.legalEntityIdentifier;
+                if (leiControl.errors) {
+                    return;
+                }
+
+                if (!val || !this.isLeiAlreadyExisting(val)) {
+                    return;
+                } else {
+                    leiControl
+                        .setErrors({
+                            isAlreadyExisting: true,
+                        });
+                }
+            });
     }
 
     ngAfterViewInit() {
@@ -495,7 +527,7 @@ export class UmbrellaFundComponent implements OnInit, AfterViewInit, OnDestroy {
 
     fillFormByUmbrellaID(umbrellaID: string) {
         const requestedUmbrella = this.umbrellaFundList
-        .filter(item => item.umbrellaFundID.toString() === umbrellaID);
+            .filter(item => item.umbrellaFundID.toString() === umbrellaID);
 
         const u = requestedUmbrella[0];
 
@@ -509,6 +541,13 @@ export class UmbrellaFundComponent implements OnInit, AfterViewInit, OnDestroy {
 
         this.toggleLeiSwitch(!!u.legalEntityIdentifier);
         this.umbrellaFundForm.setValue(payload);
+    }
+
+    isLeiAlreadyExisting(currentLei: string): boolean {
+        if (!this.leiList.length || !currentLei) {
+            return false;
+        }
+        return this.leiList.indexOf(currentLei) !== -1;
     }
 
     duplicate(umbrellaID: string) {
@@ -790,14 +829,14 @@ export class UmbrellaFundComponent implements OnInit, AfterViewInit, OnDestroy {
 
         /* Return the formatted string. */
         return formatString
-        .replace('YYYY', dateObj.getFullYear().toString())
-        .replace('YY', dateObj.getFullYear().toString().slice(2, 3))
-        .replace('MM', this.numPad((dateObj.getMonth() + 1).toString()))
-        .replace('DD', this.numPad(dateObj.getDate().toString()))
-        .replace('hh', this.numPad(dateObj.getHours()))
-        .replace('hH', this.numPad(dateObj.getHours() > 12 ? dateObj.getHours() - 12 : dateObj.getHours()))
-        .replace('mm', this.numPad(dateObj.getMinutes()))
-        .replace('ss', this.numPad(dateObj.getSeconds()))
+            .replace('YYYY', dateObj.getFullYear().toString())
+            .replace('YY', dateObj.getFullYear().toString().slice(2, 3))
+            .replace('MM', this.numPad((dateObj.getMonth() + 1).toString()))
+            .replace('DD', this.numPad(dateObj.getDate().toString()))
+            .replace('hh', this.numPad(dateObj.getHours()))
+            .replace('hH', this.numPad(dateObj.getHours() > 12 ? dateObj.getHours() - 12 : dateObj.getHours()))
+            .replace('mm', this.numPad(dateObj.getMinutes()))
+            .replace('ss', this.numPad(dateObj.getSeconds()))
     }
 
     /**
