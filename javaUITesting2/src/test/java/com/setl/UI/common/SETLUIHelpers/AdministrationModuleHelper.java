@@ -2,8 +2,11 @@ package com.setl.UI.common.SETLUIHelpers;
 import org.openqa.selenium.By;
 import org.openqa.selenium.support.ui.WebDriverWait;
 
+import java.sql.*;
+
 import static com.setl.UI.common.SETLUIHelpers.SetUp.driver;
 import static com.setl.UI.common.SETLUIHelpers.SetUp.timeoutInSeconds;
+import static com.sun.tools.doclint.Entity.and;
 import static org.apache.commons.lang3.RandomStringUtils.randomAlphabetic;
 import static org.apache.commons.lang3.RandomStringUtils.randomNumeric;
 import static org.junit.Assert.*;
@@ -11,6 +14,14 @@ import static org.openqa.selenium.support.ui.ExpectedConditions.*;
 import static com.setl.UI.common.SETLUIHelpers.MemberDetailsHelper.scrollElementIntoViewByXpath;
 
 public class AdministrationModuleHelper {
+
+    static Connection conn = null;
+
+    public static String connectionString = "jdbc:mysql://localhost:9998/setlnet?nullNamePatternMatchesAll=true";
+
+    // Defines username and password to connect to database server.
+    static String DBUsername = "root";
+    static String DBPassword = "nahafusi61hucupoju78";
 
     public static String[] generateRandomTeamName() {
         String str = randomAlphabetic(7);
@@ -270,6 +281,98 @@ public class AdministrationModuleHelper {
             wait.until(elementToBeClickable(By.xpath("//*[@id=\"clr-tab-content-4\"]/div[5]/div[1]/a")));
             driver.findElement(By.xpath("//*[@id=\"clr-tab-content-4\"]/div[5]/div[1]/a")).click();
             wait.until(refreshed(visibilityOfElementLocated(By.xpath("/html/body/app-root/app-basic-layout/div/ng-sidebar-container/div/div/div/main/div[1]/div/app-core-admin-teams-list/clr-tabs/clr-tab/clr-tab-content/div/div[3]/a"))));
+        }
+    }
+    public static void validateTeamsCreated(int expectedCount, String teamName, String teamReference, String teamDescription) throws SQLException {
+        conn = DriverManager.getConnection(connectionString, DBUsername, DBPassword);
+        Statement stmt = conn.createStatement();
+        ResultSet rs = null;
+        try {
+            rs = stmt.executeQuery("SELECT * FROM setlnet.tblUserTeams where name = " + "\"" + teamName + "\" AND reference =  " + "\"" + teamReference + "\" AND description = " + "\"" + teamDescription + "\"");
+            int rows = 1;
+
+            if (rs.last()) {
+                rows = rs.getRow();
+
+                rs.beforeFirst();
+            }
+            assertEquals("There should be exactly " + expectedCount + " record(s) matching (ignoring case): ", expectedCount, rows);
+        } catch (Exception e) {
+            e.printStackTrace();
+            fail();
+        } finally {
+            conn.close();
+            stmt.close();
+            rs.close();
+        }
+    }
+    public static void validateTeamsDeleted(int expectedCount, String teamName, String teamReference, String teamDescription) throws SQLException {
+        conn = DriverManager.getConnection(connectionString, DBUsername, DBPassword);
+        Statement stmt = conn.createStatement();
+        ResultSet rs = null;
+        try {
+            rs = stmt.executeQuery("SELECT * FROM setlnet.tblUserTeams where name = " + "\"" + teamName + "\" AND reference =  " + "\"" + teamReference + "\" AND description = " + "\"" + teamDescription + "\"");
+            int rows = 0;
+
+            if (rs.last()) {
+                rows = rs.getRow();
+
+                rs.beforeFirst();
+            }
+            assertEquals("There should be exactly " + expectedCount + " record(s) matching (ignoring case): ", expectedCount, rows);
+        } catch (Exception e) {
+            e.printStackTrace();
+            fail();
+        } finally {
+            conn.close();
+            stmt.close();
+            rs.close();
+        }
+    }
+    public static void validateUserCreated(int expectedCount, String emailAddress, String phoneNumber, String firstName, String lastName, String userReference ) throws SQLException {
+        conn = DriverManager.getConnection(connectionString, DBUsername, DBPassword);
+        Statement stmt = conn.createStatement();
+        ResultSet rs = null;
+        try {
+            rs = stmt.executeQuery("SELECT * FROM setlnet.tblUserDetails where displayName = " + "\"" + emailAddress + "\" AND firstName = " + "\"" + firstName + "\" AND lastName = " + "\"" + lastName + "\" AND phoneNumber = " + "\"" + phoneNumber + "\" AND reference =" + "\"" + userReference + "\"");
+            int rows = 1;
+
+            if (rs.last()) {
+                rows = rs.getRow();
+
+                rs.beforeFirst();
+            }
+            assertEquals("There should be exactly " + expectedCount + " record(s) matching (ignoring case): ", expectedCount, rows);
+        } catch (Exception e) {
+            e.printStackTrace();
+            fail();
+        } finally {
+            conn.close();
+            stmt.close();
+            rs.close();
+        }
+    }
+    public static void validateUserNOTCreatedOrDeleted(int expectedCount, String emailAddress, String phoneNumber, String firstName, String lastName, String userReference ) throws SQLException {
+        conn = DriverManager.getConnection(connectionString, DBUsername, DBPassword);
+        Statement stmt = conn.createStatement();
+        ResultSet rs = null;
+        try {
+            rs = stmt.executeQuery("SELECT * FROM setlnet.tblUserDetails where displayName = " + "\"" + emailAddress + "\" AND firstName = " + "\"" + firstName + "\" AND lastName = " + "\"" + lastName + "\" AND phoneNumber = " + "\"" + phoneNumber + "\" AND reference =" + "\"" + userReference + "\"");
+            int rows = 0;
+
+            if (rs.last()) {
+                rows = rs.getRow();
+
+                rs.beforeFirst();
+            }
+            assertEquals("There should be exactly " + expectedCount + " record(s) matching (ignoring case): ", expectedCount, rows);
+        } catch (Exception e) {
+            e.printStackTrace();
+            fail();
+        } finally {
+            conn.close();
+            stmt.close();
+            rs.close();
         }
     }
 }
