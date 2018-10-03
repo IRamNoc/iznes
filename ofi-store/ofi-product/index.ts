@@ -127,6 +127,8 @@ import {
     OfiProductConfigState,
 } from './configuration';
 
+import { leiReducer, LeiState } from '@ofi/ofi-main/ofi-store/ofi-product/lei';
+
 export {
     ManagementCompanyState,
     ManagementCompanyReducer,
@@ -234,6 +236,7 @@ export interface OfiProductState {
     ofiFundShare: OfiFundShareState;
     ofiFundShareAudit: OfiFundShareAuditState;
     ofiFundShareDocs: OfiFundShareDocsState;
+    lei: LeiState;
     ofiManageNav: OfiManageNavState;
     ofiNavLatest: OfiNavLatestState;
     ofiNavAudit: OfiNavAuditState;
@@ -250,6 +253,7 @@ export const OfiProductReducer: Reducer<OfiProductState> = combineReducers<OfiPr
     ofiFundShare: OfiFundShareReducer,
     ofiFundShareAudit: OfiFundShareAuditReducer,
     ofiFundShareDocs: OfiFundShareDocsReducer,
+    lei: leiReducer,
     ofiManageNav: OfiManageNavReducer,
     ofiNavLatest: OfiNavLatestReducer,
     ofiNavAudit: OfiNavAuditReducer,

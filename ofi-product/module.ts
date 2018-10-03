@@ -51,6 +51,7 @@ import { FileViewerModule } from '@setl/core-fileviewer';
 import {
     ProductCharacteristicsService,
 } from '@ofi/ofi-main/ofi-req-services/ofi-product/product-characteristics/service';
+import { LeiService } from '@ofi/ofi-main/ofi-req-services/ofi-product/lei/lei.service';
 import productConfig from './productConfig';
 
 /* Am Dashboard service. */
@@ -109,6 +110,7 @@ import productConfig from './productConfig';
         FundShareAuditService,
         ProductCharacteristicsService,
         OfiFundShareFormService,
+        LeiService,
         { provide: 'product-config', useValue: productConfig },
     ],
 })

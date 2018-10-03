@@ -1,19 +1,19 @@
 import { ComponentFixture, fakeAsync, TestBed, tick } from '@angular/core/testing';
-import { DebugElement, Directive, Input, Pipe, PipeTransform } from '@angular/core';
-import { By } from '@angular/platform-browser';
+import { Directive, Input, Pipe, PipeTransform } from '@angular/core';
 import { of, Subject } from 'rxjs';
 
 import { ProductHomeComponent } from '@ofi/ofi-main';
 import { FundComponent } from './component';
 
 import { NgRedux } from '@angular-redux/store';
+import { MockNgRedux } from '@angular-redux/store/testing';
 import { ToasterService } from 'angular2-toaster';
 import { RouterTestingModule } from '@angular/router/testing';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { DpDatePickerModule, SelectModule } from '@setl/utils/index';
 import { SetlPipesModule } from '@setl/utils';
 import { ClarityModule } from '@clr/angular';
-import { Router, ActivatedRoute } from '@angular/router';
+import { ActivatedRoute } from '@angular/router';
 import productConfig from '../productConfig';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { Fund } from '@ofi/ofi-main/ofi-req-services/ofi-product/fund/fund.service.model';
@@ -27,11 +27,11 @@ import { ConfirmationService, SetlComponentsModule } from '@setl/utils';
 import { MemberSocketService } from '@setl/websocket-service';
 import { MemberSocketServiceMock } from "@setl/core-test-util/mock/member-socket-service/index";
 import { NumberConverterService, LogService, APP_CONFIG } from '@setl/utils';
+import { LeiService } from '@ofi/ofi-main/ofi-req-services/ofi-product/lei/lei.service';
 
 const OfiUmbrellaFundServiceStub = jasmine.createSpyObj('OfiUmbrellaFundService', ['fetchUmbrellaList']);
 const OfiManagementCompanyServiceStub = jasmine.createSpyObj('OfiManagementCompanyService', ['getManagementCompanyList']);
 const OfiCurrenciesServiceStub = jasmine.createSpyObj('OfiCurrenciesService', ['getCurrencyList']);
-const ngReduxSpy = jasmine.createSpyObj('NgRedux', ['dispatch']);
 const MultilingualServiceSpy = jasmine.createSpyObj('MultilingualService', ['translate']);
 const ConfirmationServiceSpy = jasmine.createSpyObj('ConfirmationService', ['create']);
 const LocationSpy = {
@@ -136,6 +136,10 @@ const fundServiceSpy = {
     fetchFundList,
 };
 
+const leiServiceStub = {
+    fetchLEIs: () => { },
+};
+
 const ActivatedRouteStub = {
     params: of({
         id: null,
@@ -180,17 +184,157 @@ class RouterLinkDirectiveStub {
     }
 }
 
+const testPayload = {
+    fundName: 'FUND BRANCION',
+    legalEntityIdentifier: null,
+    registerOffice: 'lolilol',
+    registerOfficeAddress: null,
+    domicile: [
+        {
+            id: 'FR',
+            text: 'France',
+        },
+    ],
+    isEuDirective: '0',
+    isFundStructure: '0',
+    typeOfEuDirective: [],
+    UcitsVersion: [
+        {
+            id: 4,
+            text: 'UCITS IV',
+        },
+    ],
+    legalForm: [
+        {
+            id: 3,
+            text: 'Open-ended Investment Company (OEIC)'
+        },
+    ],
+    nationalNomenclatureOfLegalForm: [
+        {
+            id: 4,
+            text: 'ID Open-ended investment company (OEIC)'
+        },
+    ],
+    homeCountryLegalType: [],
+    fundCreationDate: null,
+    fundLaunchate: null,
+    fundCurrency: [
+        {
+            id: 0,
+            text: 'EUR',
+        },
+    ],
+    openOrCloseEnded: '0',
+    fiscalYearEnd: '2018-01',
+    isFundOfFund: '0',
+    managementCompanyID: [
+        {
+            id: 1,
+            text: 'Management Company',
+        },
+    ],
+    fundAdministratorID: [
+        {
+            id: 1,
+            text: 'Fund Admin 1',
+        },
+    ],
+    custodianBankID: [
+        {
+            id: 1,
+            text: 'Custodian Bank 1',
+        },
+    ],
+    investmentManagerID: [],
+    principlePromoterID: [
+        {
+            id: 2,
+            text: 'Principal Promoter 2',
+        },
+        {
+            id: 5,
+            text: 'Principal Promoter 5',
+        },
+    ],
+    payingAgentID: [
+        {
+            id: 2,
+            text: 'Paying Agent 2',
+        },
+        {
+            id: 3,
+            text: 'Paying Agent 3',
+        },
+    ],
+    fundManagers: '',
+    transferAgentID: [],
+    centralizingAgentID: [],
+    isDedicatedFund: '0',
+    portfolioCurrencyHedge: [
+        {
+            id: 1,
+            text: 'No Hedge',
+        },
+    ],
+    globalItermediaryIdentification: null,
+    delegatedManagementCompany: [],
+    investmentAdvisorID: [
+        {
+            id: 2,
+            text: 'Investment Advisor 2',
+        },
+        {
+            id: 3,
+            text: 'Investment Advisor 3',
+        },
+    ],
+    auditorID: [
+        {
+            id: 2,
+            text: 'Auditor 2',
+        },
+    ],
+    taxAuditorID: [
+        {
+            id: 1,
+            text: 'Tax Auditor 1',
+        },
+    ],
+    legalAdvisorID: [
+        {
+            id: 2,
+            text: 'Legal Advisor 2',
+        },
+    ],
+    directors: null,
+    hasEmbeddedDirective: '0',
+    hasCapitalPreservation: '0',
+    capitalPreservationLevel: null,
+    capitalPreservationPeriod: [],
+    hasCppi: '1',
+    cppiMultiplier: '6',
+    hasHedgeFundStrategy: '0',
+    isLeveraged: '1',
+    has130Or30Strategy: '1',
+    isFundTargetingEos: '1',
+    isFundTargetingSri: '1',
+    isPassiveFund: '0',
+    hasSecurityiesLending: '0',
+    hasSwap: '1',
+    hasDurationHedge: '0',
+    useDefaultHolidayMgmt: '1',
+    holidayMgmtConfig: [],
+    investmentObjective: null,
+    internalReference: '',
+    additionnalNotes: '',
+    tradingAccount: ''
+};
+
 describe('FundComponent', () => {
 
     let comp: FundComponent;
     let fixture: ComponentFixture<FundComponent>;
-    let de: DebugElement;
-    let el: HTMLElement;
-
-    let router;
-    let linkDes;
-    let routerLinks;
-    let locationSpy;
 
     const resetTestingModule = TestBed.resetTestingModule;
 
@@ -245,7 +389,7 @@ describe('FundComponent', () => {
                 { provide: OfiUmbrellaFundService, useValue: OfiUmbrellaFundServiceStub },
                 { provide: OfiManagementCompanyService, useValue: OfiManagementCompanyServiceStub },
                 { provide: OfiCurrenciesService, useValue: OfiCurrenciesServiceStub },
-                { provide: NgRedux, useValue: ngReduxSpy },
+                { provide: NgRedux, useFactory: MockNgRedux.getInstance },
                 { provide: ToasterService, useValue: toasterServiceMock },
                 { provide: MultilingualService, useValue: MultilingualServiceSpy },
                 { provide: ConfirmationService, useValue: ConfirmationServiceSpy },
@@ -254,6 +398,7 @@ describe('FundComponent', () => {
                 LogService,
                 NumberConverterService,
                 { provide: APP_CONFIG, useValue: { numberDivider: 1 } },
+                { provide: LeiService, useValue: leiServiceStub },
             ],
         }).compileComponents();
         TestBed.resetTestingModule = () => TestBed;
@@ -320,302 +465,136 @@ describe('FundComponent', () => {
 
         tick();
         fixture.detectChanges();
-
-        linkDes = fixture.debugElement
-            .queryAll(By.directive(RouterLinkDirectiveStub));
-
-        // get attached link directive instances
-        // using each DebugElement's injector
-        routerLinks = linkDes.map(de => de.injector.get(RouterLinkDirectiveStub));
-
-        router = TestBed.get(Router);
-        locationSpy = TestBed.get(Location);
-
-        de = fixture.debugElement.query(By.css('form'));
-        el = de.nativeElement;
-
-        router.initialNavigation();
-        router.navigate(['product-module', 'product', 'fund', 'new']);
-
-        tick();
-        fixture.detectChanges();
     }));
 
     afterEach(() => {
-        fundServiceSpy.iznCreateFund.calls.reset();
+        const leiStub = MockNgRedux.getSelectorStub([
+            'ofi',
+            'ofiProduct',
+            'lei',
+            'lei',
+        ]);
+        leiStub.next([]);
+        leiStub.complete();
     });
 
-    // skip the fund selection view
-    beforeEach(fakeAsync(() => {
-        const value = comp.umbrellaItems[1];
-        comp.umbrellaControl.setValue([value]);
+    describe('isLeiAlreadyExisting', () => {
+        it('should return true', () => {
+            const leiStub = MockNgRedux.getSelectorStub([
+                'ofi',
+                'ofiProduct',
+                'lei',
+                'lei',
+            ]);
+            leiStub.next(['lol', 'lul']);
+            leiStub.complete();
 
-        comp.submitUmbrellaForm();
-        tick();
-        fixture.detectChanges();
-
-    }));
-
-    describe('network calls', () => {
-        const testPayload = {
-            fundName: 'FUND BRANCION',
-            legalEntityIdentifier: null,
-            registerOffice: 'lolilol',
-            registerOfficeAddress: null,
-            domicile: [
-                {
-                    id: 'FR',
-                    text: 'France',
-                },
-            ],
-            isEuDirective: '0',
-            isFundStructure: '0',
-            typeOfEuDirective: [],
-            UcitsVersion: [
-                {
-                    id: 4,
-                    text: 'UCITS IV',
-                },
-            ],
-            legalForm: [
-                {
-                    id: 3,
-                    text: 'Open-ended Investment Company (OEIC)'
-                },
-            ],
-            nationalNomenclatureOfLegalForm: [
-                {
-                    id: 4,
-                    text: 'ID Open-ended investment company (OEIC)'
-                },
-            ],
-            homeCountryLegalType: [],
-            fundCreationDate: null,
-            fundLaunchate: null,
-            fundCurrency: [
-                {
-                    id: 0,
-                    text: 'EUR',
-                },
-            ],
-            openOrCloseEnded: '0',
-            fiscalYearEnd: '2018-01',
-            isFundOfFund: '0',
-            managementCompanyID: [
-                {
-                    id: 1,
-                    text: 'Management Company',
-                },
-            ],
-            fundAdministratorID: [
-                {
-                    id: 1,
-                    text: 'Fund Admin 1',
-                },
-            ],
-            custodianBankID: [
-                {
-                    id: 1,
-                    text: 'Custodian Bank 1',
-                },
-            ],
-            investmentManagerID: [],
-            principlePromoterID: [
-                {
-                    id: 2,
-                    text: 'Principal Promoter 2',
-                },
-                {
-                    id: 5,
-                    text: 'Principal Promoter 5',
-                },
-            ],
-            payingAgentID: [
-                {
-                    id: 2,
-                    text: 'Paying Agent 2',
-                },
-                {
-                    id: 3,
-                    text: 'Paying Agent 3',
-                },
-            ],
-            fundManagers: '',
-            transferAgentID: [],
-            centralizingAgentID: [],
-            isDedicatedFund: '0',
-            portfolioCurrencyHedge: [
-                {
-                    id: 1,
-                    text: 'No Hedge',
-                },
-            ],
-            globalItermediaryIdentification: null,
-            delegatedManagementCompany: [],
-            investmentAdvisorID: [
-                {
-                    id: 2,
-                    text: 'Investment Advisor 2',
-                },
-                {
-                    id: 3,
-                    text: 'Investment Advisor 3',
-                },
-            ],
-            auditorID: [
-                {
-                    id: 2,
-                    text: 'Auditor 2',
-                },
-            ],
-            taxAuditorID: [
-                {
-                    id: 1,
-                    text: 'Tax Auditor 1',
-                },
-            ],
-            legalAdvisorID: [
-                {
-                    id: 2,
-                    text: 'Legal Advisor 2',
-                },
-            ],
-            directors: null,
-            hasEmbeddedDirective: '0',
-            hasCapitalPreservation: '0',
-            capitalPreservationLevel: null,
-            capitalPreservationPeriod: [],
-            hasCppi: '1',
-            cppiMultiplier: '6',
-            hasHedgeFundStrategy: '0',
-            isLeveraged: '1',
-            has130Or30Strategy: '1',
-            isFundTargetingEos: '1',
-            isFundTargetingSri: '1',
-            isPassiveFund: '0',
-            hasSecurityiesLending: '0',
-            hasSwap: '1',
-            hasDurationHedge: '0',
-            useDefaultHolidayMgmt: '1',
-            holidayMgmtConfig: [],
-            investmentObjective: null,
-            internalReference: '',
-            additionnalNotes: '',
-            tradingAccount: ''
-        };
-
-        describe('invalid payload', () => {
-            beforeEach(fakeAsync(() => {
-
-                const value = comp.umbrellaItems[0];
-                comp.umbrellaControl.setValue([value]);
-                comp.viewMode = 'FUND';
-                comp.fundForm.setValue({
-                    ...testPayload,
-                    fundName: null,
-                });
-
-                tick();
-                fixture.detectChanges();
-            }));
-
-            it('should not call the iznCreateFund method of fundService', fakeAsync(() => {
-                expect(iznCreateFund).toHaveBeenCalledTimes(0);
-            }));
-
-            it('should not call the updateFund method of fundService', fakeAsync(() => {
-                expect(iznUpdateFund).toHaveBeenCalledTimes(0);
-            }));
+            expect(comp.isLeiAlreadyExisting('lul')).toEqual(true);
         });
 
-        describe('create mode', () => {
-            beforeEach(fakeAsync(() => {
-                const value = comp.umbrellaItems[0];
-                comp.umbrellaControl.setValue([value]);
-                comp.viewMode = 'FUND';
-                comp.fundForm.setValue(testPayload);
+        it('should return false', () => {
+            const leiStub = MockNgRedux.getSelectorStub([
+                'ofi',
+                'ofiProduct',
+                'lei',
+                'lei',
+            ]);
+            leiStub.next(['lol', 'lul']);
+            leiStub.complete();
 
-                tick();
-                fixture.detectChanges();
+            expect(comp.isLeiAlreadyExisting('lel')).toEqual(false);
+        });
 
-            }));
+        it('should return false if leiList is empty', () => {
+            expect(comp.isLeiAlreadyExisting('lul')).toEqual(false);
+        });
 
-            afterEach(() => {
-                iznCreateFund.calls.reset();
-                pop.calls.reset();
+        it('should return false if argument is falsy', () => {
+            const leiStub = MockNgRedux.getSelectorStub([
+                'ofi',
+                'ofiProduct',
+                'lei',
+                'lei',
+            ]);
+            leiStub.next(['lol', 'lul']);
+            leiStub.complete();
+
+            expect(comp.isLeiAlreadyExisting('')).toEqual(false);
+        });
+    });
+
+
+    describe('submitFundForm', () => {
+        beforeEach(() => {
+            comp.fundForm.setValue(testPayload);
+            comp.param = '';
+        });
+
+        afterEach(() => {
+            iznCreateFund.calls.reset();
+            pop.calls.reset();
+        });
+
+        it('should call fundService.createFund', fakeAsync(() => {
+            const expectedResult: Fund = Object({
+                ...comp.fundFormValue(),
+                draft: 0,
             });
+            comp.submitFundForm();
+            tick();
 
-            it('should call fundService.createFund', fakeAsync(() => {
+            expect(iznCreateFund).toHaveBeenCalledTimes(1);
+            expect(iznCreateFund).toHaveBeenCalledWith(expectedResult);
+        }));
 
-                const expectedResult: Fund = Object({
-                    ...comp.fundFormValue(),
-                    draft: 0,
-                });
+        it('should fire the toaster service with a success message', fakeAsync(() => {
+            const expectedResult = [
+                'success',
+                `${testPayload.fundName} has been successfully created.`,
+            ];
+            comp.submitFundForm();
+            tick();
 
-                comp.submitFundForm();
-                tick();
+            expect(pop).toHaveBeenCalledTimes(1);
+            expect(pop).toHaveBeenCalledWith(...expectedResult);
+        }));
+    });
 
-                expect(iznCreateFund).toHaveBeenCalledTimes(1);
-                expect(iznCreateFund).toHaveBeenCalledWith(expectedResult);
-            }));
-
-            it('should fire the toaster service with a success message', fakeAsync(() => {
-                const expectedResult = [
-                    'success',
-                    `${testPayload.fundName} has been successfully created.`,
-                ];
-                comp.submitFundForm();
-                tick();
-
-                expect(pop).toHaveBeenCalledTimes(1);
-                expect(pop).toHaveBeenCalledWith(...expectedResult);
-            }));
+    describe('edit mode', () => {
+        beforeEach(() => {
+            comp.param = '9';
+            comp.fundForm.setValue(testPayload);
         });
 
-        describe('edit mode', () => {
-            beforeEach(fakeAsync(() => {
-                const value = comp.umbrellaItems[0];
-                comp.umbrellaControl.setValue([value]);
-                comp.viewMode = 'FUND';
+        afterEach(() => {
+            iznUpdateFund.calls.reset();
+            pop.calls.reset();
+        });
 
-                comp.param = '9';
-                comp.fundForm.setValue(testPayload);
+        it('should call fundService.updateFund', fakeAsync(() => {
 
-                tick();
-                fixture.detectChanges();
-
-            }));
-
-            afterEach(() => {
-                iznUpdateFund.calls.reset();
-                pop.calls.reset();
+            const expectedResult: Fund = Object({
+                ...comp.fundFormValue(),
+                draft: 0,
             });
+            comp.submitFundForm();
 
-            it('should call fundService.updateFund', fakeAsync(() => {
+            tick();
 
-                const expectedResult: Fund = Object({
-                    ...comp.fundFormValue(),
-                    draft: 0,
-                });
-                comp.submitFundForm();
+            expect(iznUpdateFund).toHaveBeenCalledTimes(1);
+            expect(iznUpdateFund).toHaveBeenCalledWith(comp.param, expectedResult);
+        }));
 
-                tick();
+        it('should fire the toaster service with a success message', fakeAsync(() => {
+            const expectedResult = [
+                'success',
+                `${testPayload.fundName} has been successfully updated.`,
+            ];
+            comp.submitFundForm();
+            tick();
 
-                expect(iznUpdateFund).toHaveBeenCalledTimes(1);
-                expect(iznUpdateFund).toHaveBeenCalledWith(comp.param, expectedResult);
-            }));
-
-            it('should fire the toaster service with a success message', fakeAsync(() => {
-                const expectedResult = [
-                    'success',
-                    `${testPayload.fundName} has been successfully updated.`,
-                ];
-                comp.submitFundForm();
-                tick();
-
-                expect(pop).toHaveBeenCalledTimes(1);
-                expect(pop).toHaveBeenCalledWith(...expectedResult);
-            }));
-        });
+            expect(pop).toHaveBeenCalledTimes(1);
+            expect(pop).toHaveBeenCalledWith(...expectedResult);
+        }));
     });
 });
