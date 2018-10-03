@@ -8,7 +8,7 @@ const initialState: MyWalletAddressState = {
     addressList: {},
     requestedAddressList: false,
     requestedLabel: false,
-    requestedCompleteAddresses: false
+    requestedCompleteAddresses: false,
 };
 
 export const MyWalletAddressReducer = function (state: MyWalletAddressState = initialState,
@@ -26,6 +26,9 @@ export const MyWalletAddressReducer = function (state: MyWalletAddressState = in
     case MyWalletAddressActions.SET_WALLET_LABEL:
         return handleSetWalletLabel(state, action);
 
+    case MyWalletAddressActions.SET_WALLET_LABEL_UPDATED:
+        return handleSetWalletLabelUpdated(state, action);
+
     case MyWalletAddressActions.SET_REQUESTED_WALLET_LABEL:
         return handleSetRequestedWalletLabel(state);
 
@@ -37,12 +40,11 @@ export const MyWalletAddressReducer = function (state: MyWalletAddressState = in
     }
 };
 
-function formatAddressResponse(rawAddressData: Array<any>): AddressDetailList {
+function formatAddressResponse(rawAddressData: any[]): AddressDetailList {
     const rawAddressDataList = fromJS(rawAddressData);
 
     const addressDetailList: AddressDetailList = rawAddressDataList.reduce(
-        function (result, thisAddressDetail) {
-
+        (result, thisAddressDetail) => {
             const formattedDetail = {
                 addr: thisAddressDetail.get(0),
                 pub: thisAddressDetail.get(1),
@@ -51,7 +53,8 @@ function formatAddressResponse(rawAddressData: Array<any>): AddressDetailList {
             result[thisAddressDetail.get(0)] = formattedDetail;
 
             return result;
-        }, {}
+        },
+        {},
     );
 
     return addressDetailList;
@@ -72,14 +75,13 @@ function handleSetWalletAddresses(state, action) {
     const currentAddressListImu = fromJS(currentAddressList);
 
     const newAddressListImu = _.pickBy(addressListDataImu.mergeDeep(currentAddressListImu).toJS(), (value) => {
-        return value.deleted == 0;
+        return value.deleted === 0;
     });
 
     return Object.assign({}, state, {
         requestedCompleteAddresses: true,
-        addressList: newAddressListImu
+        addressList: newAddressListImu,
     });
-
 }
 
 /**
@@ -92,7 +94,7 @@ function handleSetRequestedWalletAddresses(state) {
     const requestedAddressList = true;
 
     return Object.assign({}, state, {
-        requestedAddressList
+        requestedAddressList,
     });
 }
 
@@ -110,7 +112,7 @@ function handleClearRequestedWalletAddresses(state) {
     return Object.assign({}, state, {
         addressList,
         requestedAddressList,
-        requestedCompleteAddresses
+        requestedCompleteAddresses,
     });
 }
 
@@ -123,33 +125,67 @@ function handleClearRequestedWalletAddresses(state) {
  */
 function handleSetWalletLabel(state, action): MyWalletAddressState {
     const labelData = _.get(action, 'payload[1][Data]', []);
-    const formattedLabelData = labelData.reduce((result, item) => {
-        const address = _.get(item, 'option', '');
-        const label = _.get(item, 'label', '');
-        const iban = _.get(item, 'iban', '');
-        const deleted = _.get(item, 'deleted', '');
+    const formattedLabelData = labelData.reduce(
+        (result, item) => {
+            const address = _.get(item, 'option', '');
+            const label = _.get(item, 'label', '');
+            const iban = _.get(item, 'iban', '');
+            const deleted = _.get(item, 'deleted', '');
 
-        result[address] = {
-            addr: address,
-            label,
-            iban,
-            deleted
-        };
+            result[address] = {
+                addr: address,
+                label,
+                iban,
+                deleted,
+            };
 
-        return result;
-    }, {});
+            return result;
+        },
+        {},
+    );
 
     const currentAddressLit = state.addressList;
     const currentAddressListImu = fromJS(currentAddressLit);
     const formattedLabelDataImu = fromJS(formattedLabelData);
 
     const newAddressListImu = _.pickBy(currentAddressListImu.mergeDeep(formattedLabelDataImu).toJS(), (value) => {
-        return value.deleted == 0;
+        return value.deleted === 0;
     });
 
     return Object.assign({}, state, {
-        addressList: newAddressListImu
+        addressList: newAddressListImu,
     });
+}
+
+/**
+ * Handle SET_WALLET_LABEL_UPDATED action
+ *
+ * @param state
+ * @param action
+ * @return {any}
+ */
+function handleSetWalletLabelUpdated(state, action): MyWalletAddressState {
+    /* Get the payload from the JSON object. */
+    const updatedLabel = _.get(action, 'payload[1].Data');
+
+    console.log('+++ updatedLabel: ', updatedLabel);
+
+    /* Clone the wallet labels list. */
+    const newList = JSON.parse(JSON.stringify(state.addressList));
+
+    /* Loop over the wallet labels list and... */
+    Object.keys(newList).find((key) => {
+        if (newList[key].addr === updatedLabel.option) {
+            /* ...if the label is found in the list, update it. */
+            newList[key].label = updatedLabel.label;
+            newList[key].iban = updatedLabel.iban;
+
+            return newList;
+        }
+    });
+
+    /* Return the old state with the updated wallet label list. */
+    return Object.assign({}, state, { addressList: newList });
 }
 
 /**
@@ -162,7 +198,7 @@ function handleSetRequestedWalletLabel(state) {
     const requestedLabel = true;
 
     return Object.assign({}, state, {
-        requestedLabel
+        requestedLabel,
     });
 }
 
@@ -176,6 +212,6 @@ function handleClearRequestedWalletLabel(state) {
     const requestedLabel = false;
 
     return Object.assign({}, state, {
-        requestedLabel
+        requestedLabel,
     });
 }

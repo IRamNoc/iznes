@@ -7,7 +7,7 @@ before_script:
   - chmod 700 ~/.ssh
   - ssh-keyscan si-nexus01.dev.setl.io >> ~/.ssh/known_hosts
   - chmod 644 ~/.ssh/known_hosts
-  - npm install --only=dev
+  - npm install
 
 test:
   script:

@@ -1,51 +1,109 @@
-import {Action} from 'redux';
+import { Action } from 'redux';
 import * as ManageWalletActions from './actions';
-import {ManagedWalletsState, WalletDetail} from './model';
+import { ManagedWalletsState, WalletDetail } from './model';
 import * as _ from 'lodash';
-import {List, fromJS, Map} from 'immutable';
-import {SET_ALL_TABS} from './actions';
-import {immutableHelper} from '@setl/utils';
+import { List, fromJS, Map } from 'immutable';
+import { SET_ALL_TABS } from './actions';
+import { immutableHelper } from '@setl/utils';
 
 const initialState: ManagedWalletsState = {
     walletList: {},
-    openedTabs: []
+    openedTabs: [],
 };
 
 export const ManagedWalletsReducer = function (state: ManagedWalletsState = initialState,
                                                action: Action) {
     let newState: ManagedWalletsState;
-    let walletsData: Array<any>;
+    let walletsData: any[];
     let walletList: {
-        [key: number]: WalletDetail
+        [key: number]: WalletDetail,
     };
 
     switch (action.type) {
-        case ManageWalletActions.SET_MANAGED_WALLETS:
-            walletsData = _.get(action, 'payload[1].Data', []);
+    case ManageWalletActions.SET_MANAGED_WALLETS:
+        walletsData = _.get(action, 'payload[1].Data', []);
 
-            walletList = formatToWalletList(walletsData);
+        walletList = formatToWalletList(walletsData);
 
-            newState = Object.assign({}, state, {
-                walletList
-            });
+        newState = Object.assign({}, state, { walletList });
 
-            return newState;
+        return newState;
 
-        case SET_ALL_TABS:
-            return handleSetAllTabs(action, state);
+    case ManageWalletActions.SET_WALLET_ADDED:
+        return handleSetAddedWallet(action, state);
 
-        default:
-            return state;
+    case ManageWalletActions.SET_WALLET_UPDATED:
+        return handleSetUpdatedWallet(action, state);
+
+    case ManageWalletActions.SET_WALLET_DELETED:
+        return handleSetDeleteddWallet(action, state);
+
+    case SET_ALL_TABS:
+        return handleSetAllTabs(action, state);
+
+    default:
+        return state;
     }
 };
 
-function formatToWalletList(rawWalletList: Array<any>): {
-    [key: number]: WalletDetail
+function handleSetAddedWallet(action: Action, state: ManagedWalletsState): ManagedWalletsState {
+    const addedWalletData = _.get(action, 'payload[1].Data', []);
+    const addedWallet = formatToWalletList([addedWalletData]);
+
+    /* Push the newly-added wallet into the wallet list. */
+    const newWalletList = Object.assign({}, state.walletList, addedWallet);
+
+    /* Create a newState with the updated wallet list. */
+    const newState = Object.assign({}, state, { walletList: newWalletList });
+
+    return newState;
+}
+
+function handleSetUpdatedWallet(action: Action, state: ManagedWalletsState): ManagedWalletsState {
+    const updatedWalletData = _.get(action, 'payload[1].Data', []);
+    const updatedWalletId = updatedWalletData.walletID;
+
+    const updatedWallet = formatToWalletList([updatedWalletData]);
+
+    /* Clone the wallet list. */
+    const newWalletList = JSON.parse(JSON.stringify(state.walletList));
+
+    if (newWalletList[updatedWalletId].walletId === updatedWalletId) {
+        /* Update the updated wallet in the wallet list. */
+        newWalletList[updatedWalletId] = updatedWallet[updatedWalletId];
+
+        /* Create a newState with the updated wallet list. */
+        const newState = Object.assign({}, state, { walletList: newWalletList });
+
+        return newState;
+    }
+}
+
+function handleSetDeleteddWallet(action: Action, state: ManagedWalletsState): ManagedWalletsState {
+    const deletedWalletData = _.get(action, 'payload[1].Data', []);
+    const deletedWalletId = deletedWalletData.walletID;
+
+    /* Clone the wallet list. */
+    const newWalletList = JSON.parse(JSON.stringify(state.walletList));
+
+    if (newWalletList[deletedWalletId].walletId === deletedWalletId) {
+        /* Delete the deleted wallet from the wallet list. */
+        delete newWalletList[deletedWalletId];
+
+        /* Create a newState with the updated wallet list. */
+        const newState = Object.assign({}, state, { walletList: newWalletList });
+
+        return newState;
+    }
+}
+
+function formatToWalletList(rawWalletList: any[]): {
+    [key: number]: WalletDetail,
 } {
     const rawWalletDataList = fromJS(rawWalletList);
 
     const walletsObject = Map(rawWalletDataList.reduce(
-        function (result, item) {
+        (result, item) => {
             result[item.get('walletID')] = {
                 walletId: item.get('walletID'),
                 walletName: item.get('walletName'),
@@ -114,5 +172,5 @@ function formatToWalletList(rawWalletList: Array<any>): {
 function handleSetAllTabs(action: Action, state: ManagedWalletsState): ManagedWalletsState {
     const tabs = immutableHelper.get(action, 'tabs', []);
 
-    return Object.assign({}, state, {openedTabs: tabs});
+    return Object.assign({}, state, { openedTabs: tabs });
 }

@@ -1,5 +1,5 @@
-import {name} from './__init__';
-import {kAction} from '@setl/utils/common';
+import { name } from './__init__';
+import { kAction } from '@setl/utils/common';
 
 /**
  * Set wallet list
@@ -24,6 +24,11 @@ export const clearRequestedWalletAddresses = kAction(CLEAR_REQUESTED_WALLET_ADDR
  * Set wallet label.
  */
 export const SET_WALLET_LABEL = `${name}/SET_WALLET_LABEL`;
+
+/**
+ * Set wallet label updated.
+ */
+export const SET_WALLET_LABEL_UPDATED = `${name}/SET_WALLET_LABEL_UPDATED`;
 
 /**
  * Set (Set to true) request wallet label state
