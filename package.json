@@ -9,6 +9,7 @@
   "author": "",
   "license": "ISC",
   "dependencies": {
+    "ibantools": "^2.0.0",
     "moment-timezone": "^0.5.17",
     "ramda": "^0.24.1",
     "redux-saga": "^0.15.6",
