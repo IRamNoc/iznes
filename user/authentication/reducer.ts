@@ -20,7 +20,7 @@ export const AuthenticationReducer = function (state: AuthenticationState = init
     case AuthenticationAction.SET_AUTH_LOGIN_DETAIL:
         const loginedData = _.get(action, 'payload[1].Data[0]', {});
 
-        const token = _.get(loginedData, 'Token', '');
+        let token = _.get(loginedData, 'Token', '');
         const apiKey = _.get(loginedData, 'apiKey', '');
         let useTwoFactor = _.get(loginedData, 'useTwoFactor', '');
         const twoFactorSecret = _.get(loginedData, 'twoFactorSecret', '');
@@ -73,7 +73,8 @@ export const AuthenticationReducer = function (state: AuthenticationState = init
 
     case AuthenticationAction.UPDATE_TWO_FACTOR:
         useTwoFactor = Number(_.get(action, 'payload[1].Data.useTwoFactor', 0));
-        return Object.assign({}, state, { useTwoFactor });
+        token = _.get(action, 'payload[1].Data.newToken', '');
+        return Object.assign({}, state, { useTwoFactor, token });
 
     default:
         return state;
