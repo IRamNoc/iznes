@@ -19,7 +19,7 @@
                         id="username-field"
                         type="text"
                         name="username"
-                        [placeholder]="_translate.translate('Username')"
+                        [placeholder]="translate.translate('Username')"
                         class="form-control"
                         formControlName="username"
                         [class.error]="!loginForm.controls['username'].valid && loginForm.controls['username'].touched"
@@ -36,7 +36,7 @@
                         name="password"
                         type="password"
                         class="form-control"
-                        [placeholder]="_translate.translate('Password')"
+                        [placeholder]="translate.translate('Password')"
                         formControlName="password"
                         [class.error]="!loginForm.controls['password'].valid && loginForm.controls['password'].touched"
                         #passwordInput
@@ -106,7 +106,7 @@
         <form [formGroup]="forgottenPasswordForm" novalidate (ngSubmit)="sendEmail(forgottenPasswordForm.value)">
             <section class="form-block">
                 <div class="form-group text-center">
-                    <input id="fp-email-field" type="text" class="form-control" formControlName="email" [placeholder]="_translate.translate('Email address')">
+                    <input id="fp-email-field" type="text" class="form-control" formControlName="email" [placeholder]="translate.translate('Email address')">
                     <div>
                         <div *ngIf="forgottenPasswordForm.controls.email.hasError('required') && forgottenPasswordForm.controls.email.dirty" class="text-danger">
                             {{'This field is required' | translate}}
@@ -167,9 +167,9 @@
                                    class="form-control"
                                    formControlName="password"
                                    size="45"
-                                   [placeholder]="_translate.translate('New password')"
+                                   [placeholder]="translate.translate('New password')"
                             >
-                            <span class="toggle-password" (click)="toggleShowPasswords('change1')" [title]="_translate.translate('Show/hide passwords')">
+                            <span class="toggle-password" (click)="toggleShowPasswords('change1')" [title]="translate.translate('Show/hide passwords')">
                                 <i class="fa fa-eye-slash" aria-hidden="true"></i>
                             </span>
                         </div>
@@ -195,9 +195,9 @@
                                    [type]="(showPasswords.change2 === true) ? 'text' : 'password'"
                                    class="form-control"
                                    formControlName="passwordConfirm"
-                                   [placeholder]="_translate.translate('Password confirmation')"
+                                   [placeholder]="translate.translate('Password confirmation')"
                             >
-                            <span class="toggle-password" (click)="toggleShowPasswords('change2')" [title]="_translate.translate('Show/hide passwords')">
+                            <span class="toggle-password" (click)="toggleShowPasswords('change2')" [title]="translate.translate('Show/hide passwords')">
                                 <i class="fa fa-eye-slash" aria-hidden="true"></i>
                             </span>
                         </div>
@@ -250,7 +250,7 @@
                                    size="45"
                                    formControlName="oldPassword"
                             >
-                            <span class="toggle-password" (click)="toggleShowPasswords('resetold')" [title]="_translate.translate('Show/hide passwords')">
+                            <span class="toggle-password" (click)="toggleShowPasswords('resetold')" [title]="translate.translate('Show/hide passwords')">
                                 <i class="fa fa-eye-slash" aria-hidden="true"></i>
                             </span>
                         </div>
@@ -274,7 +274,7 @@
                                    size="45"
                                    formControlName="password"
                             />
-                            <span class="toggle-password" (click)="toggleShowPasswords('reset1')" [title]="_translate.translate('Show/hide passwords')">
+                            <span class="toggle-password" (click)="toggleShowPasswords('reset1')" [title]="translate.translate('Show/hide passwords')">
                                 <i class="fa fa-eye-slash" aria-hidden="true"></i>
                             </span>
                         </div>
@@ -304,7 +304,7 @@
                                    size="45"
                                    formControlName="passwordConfirm"
                             />
-                            <span class="toggle-password" (click)="toggleShowPasswords('reset2')" [title]="_translate.translate('Show/hide passwords')">
+                            <span class="toggle-password" (click)="toggleShowPasswords('reset2')" [title]="translate.translate('Show/hide passwords')">
                                 <i class="fa fa-eye-slash" aria-hidden="true"></i>
                             </span>
                         </div>
