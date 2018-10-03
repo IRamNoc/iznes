@@ -62,7 +62,6 @@ export class InitialisationService {
                      initialisationService: InitialisationService) {
         memberSocketService.subscribeToChannel((data) => {
             channelService.resolveChannelMessage(data);
-
             this.handleChannelUpdateCallbacks(data, initialisationService);
         });
     }
