@@ -1,6 +1,4 @@
-import {
-    ActionCreator
-} from 'redux';
+import { ActionCreator } from 'redux';
 import { kAction } from '@setl/utils/common';
 
 import { name } from './__init__';
