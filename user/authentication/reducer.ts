@@ -55,7 +55,7 @@ export const AuthenticationReducer = function (state: AuthenticationState = init
 
         const newTokenState = Object.assign({}, state, {
             newToken,
-            changedPassword
+            changedPassword,
         });
 
         return newTokenState;
@@ -63,17 +63,18 @@ export const AuthenticationReducer = function (state: AuthenticationState = init
     case AuthenticationAction.CLEAR_MUST_CHANGE_PASSWORD:
         mustChangePassword = false;
         return Object.assign({}, state, {
-            mustChangePassword
+            mustChangePassword,
         });
 
     case AuthenticationAction.RESET_HOMEPAGE:
         return Object.assign({}, state, {
-            defaultHomePage: '/user-administration/subportfolio'
+            defaultHomePage: '/user-administration/subportfolio',
         });
 
     case AuthenticationAction.UPDATE_TWO_FACTOR:
-        useTwoFactor = Number(_.get(action, 'payload[1].Data.useTwoFactor', 0));
-        token = _.get(action, 'payload[1].Data.newToken', '');
+        console.log('+++ AuthenticationAction.UPDATE_TWO_FACTOR: ', action);
+        useTwoFactor = Number(_.get(action, 'payload[1].Data[0].useTwoFactor', 0));
+        token = _.get(action, 'payload[1].Data[0].token', '');
         return Object.assign({}, state, { useTwoFactor, token });
 
     default:
