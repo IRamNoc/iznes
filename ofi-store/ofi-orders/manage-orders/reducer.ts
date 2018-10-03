@@ -27,6 +27,12 @@ const patchOrder = (state, orderId, patch) => {
     if (!existingOrder) {
         return state;
     }
+    
+    if (Object.keys(patch).length == 1 && Object.keys(patch)[0] == 'orderStatus') {
+        if (patch['orderStatus'] > 0 && patch['orderStatus'] < existingOrder['orderStatus']) {
+            return state;
+        }
+    }
 
     const update = {
         orderList: {
@@ -125,39 +131,39 @@ function handleUpdateNav(state: ManageOrders, action: PayloadAction): ManageOrde
     }
 
     Object.keys(state.orderList)
-        .map(k => state.orderList[k])
-        .filter(filter)
-        .forEach(o => state = patchOrderCallback(state, o.orderID, (order) => {
-            const figures = calculateFigures(
-                {
-                    orderBy: order.byAmountOrQuantity,
-                    orderType: order.orderType,
-                    value: (order.byAmountOrQuantity === 1) ? order.quantity : order.amount,
-                    nav: price,
-                    feePercentage: order.feePercentage,
-                },
-                order.maximumNumDecimal,
-                false,
-            );
+    .map(k => state.orderList[k])
+    .filter(filter)
+    .forEach(o => state = patchOrderCallback(state, o.orderID, (order) => {
+        const figures = calculateFigures(
+            {
+                orderBy: order.byAmountOrQuantity,
+                orderType: order.orderType,
+                value: (order.byAmountOrQuantity === 1) ? order.quantity : order.amount,
+                nav: price,
+                feePercentage: order.feePercentage,
+            },
+            order.maximumNumDecimal,
+            false,
+        );
 
-            let patch = <any>{
+        let patch = <any>{
+            latestNav: price,
+            estimatedQuantity: figures.estimatedQuantity,
+        };
+        if (order.byAmountOrQuantity === 1) {
+            // Quantity - Calculate estimated amount
+            patch = {
                 latestNav: price,
-                estimatedQuantity: figures.estimatedQuantity,
+                estimatedAmount: +figures.estimatedAmount,
+                estimatedAmountWithCost: +math
+                .chain(+figures.estimatedAmount)
+                .multiply(1 + (order.feePercentage / 100000))
+                .done(),
             };
-            if (order.byAmountOrQuantity === 1) {
-                // Quantity - Calculate estimated amount
-                patch = {
-                    latestNav: price,
-                    estimatedAmount: +figures.estimatedAmount,
-                    estimatedAmountWithCost: +math
-                        .chain(+figures.estimatedAmount)
-                        .multiply(1 + (order.feePercentage / 100000))
-                        .done(),
-                };
-            }
+        }
 
-            return patch;
-        }));
+        return patch;
+    }));
 
     return state;
 }
@@ -178,9 +184,9 @@ function handleValidatedOrder(state: ManageOrders, action: PayloadAction): Manag
         && o.valuationDate.substring(0, 10) === valuationDate;
 
     Object.keys(state.orderList)
-        .map(k => state.orderList[k])
-        .filter(filter)
-        .forEach(o => state = patchOrder(state, o.orderID, patch));
+    .map(k => state.orderList[k])
+    .filter(filter)
+    .forEach(o => state = patchOrder(state, o.orderID, patch));
 
     return state;
 }
@@ -258,12 +264,12 @@ function formatManageOrderDataResponse(rawData: any[]): ManageOrderDetails[] {
             if (order.byAmountOrQuantity === 1) {
                 // Quantity - Calculate estimated amount
                 order.estimatedAmount = +math
-                    .chain(+figures.estimatedAmount)
-                    .done();
+                .chain(+figures.estimatedAmount)
+                .done();
                 order.estimatedAmountWithCost = +math
-                    .chain(+figures.estimatedAmount)
-                    .multiply(1 + (order.feePercentage / 100000))
-                    .done();
+                .chain(+figures.estimatedAmount)
+                .multiply(1 + (order.feePercentage / 100000))
+                .done();
             } else {
                 // Amount - Calculate quantity
                 order.estimatedQuantity = figures.estimatedQuantity;
