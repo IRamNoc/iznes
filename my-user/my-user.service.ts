@@ -290,11 +290,11 @@ export class MyUserService implements OnDestroy {
      */
     updateHomePage(homepage: string): any {
         const messageBody: SaveUserDetailsRequestBody =
-        {
-            RequestName: 'ud',
-            token: this.memberSocketService.token,
-            defaultHomePage: homepage,
-        };
+            {
+                RequestName: 'ud',
+                token: this.memberSocketService.token,
+                defaultHomePage: homepage,
+            };
 
         return createMemberNodeRequest(this.memberSocketService, messageBody);
     }
