@@ -58,6 +58,7 @@ public class OpenCSDTeamsSubModuleTest {
         selectAddNewTeam();
         fillInTeamsDetails(teamName[0], teamReference[0], teamDescription[0]);
         selectCreateNewTeam();
+        //TODO: assert Team has been created
         searchTeam(teamReference[0],teamName[0],teamDescription[0], "Pending");
     }
 
@@ -79,10 +80,11 @@ public class OpenCSDTeamsSubModuleTest {
         editTeamName(updateName[0]);
         selectUpdateTeam();
         searchTeam(teamReference[0], updateName[0], teamDescription[0], "Pending");
+        //TODO: assert change has happened
     }
 
     @Test
-    public void shouldDeleteTeamIfNo() throws InterruptedException {
+    public void shouldCancelDeleteTeamIfNoIsSelected() throws InterruptedException {
         String[] teamName = generateRandomTeamName();
         String[] teamReference = generateRandomTeamReference();
         String[] teamDescription = fillInDescription();
@@ -97,10 +99,11 @@ public class OpenCSDTeamsSubModuleTest {
         assertTeamName(teamName[0]);
         selectDeleteTeam("No",teamName[0]);
         searchTeam(teamReference[0], teamName[0], teamDescription[0], "Pending");
+        //TODO: assert Team still exists
     }
 
     @Test
-    public void shouldDeleteTeamIfYes() throws InterruptedException {
+    public void shouldDeleteTeamIfYesIsSelected() throws InterruptedException {
         String[] teamName = generateRandomTeamName();
         String[] teamReference = generateRandomTeamReference();
         String[] teamDescription = fillInDescription();
@@ -110,9 +113,11 @@ public class OpenCSDTeamsSubModuleTest {
         selectAddNewTeam();
         fillInTeamsDetails(teamName[0], teamReference[0], teamDescription[0]);
         selectCreateNewTeam();
+        //TODO: assert Team has been created
         searchTeam(teamReference[0], teamName[0], teamDescription[0], "Pending");
         selectTeamRow0();
         assertTeamName(teamName[0]);
         selectDeleteTeam("Yes",teamName[0]);
+        //TODO: assert Team has been deleted
     }
 }

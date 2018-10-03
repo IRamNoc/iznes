@@ -200,7 +200,7 @@ public class AdministrationModuleHelper {
         wait.until(refreshed(visibilityOfElementLocated(By.className("jaspero__dialog-title"))));
         assertTrue(driver.findElement(By.xpath("//*[@id=\"iznes\"]/app-root/jaspero-confirmations/jaspero-confirmation/div[2]/div[3]")).getText().equals("You have selected no permissions for this team. Any users, soley assigned to this team, will no longer hold any permissions on the system."));
         driver.findElement(By.xpath("//*[@id=\"iznes\"]/app-root/jaspero-confirmations/jaspero-confirmation/div[2]/div[4]/button[2]")).click();
-        wait.until(refreshed(invisibilityOfElementLocated(By.className("jaspero__dialog-title"))));
+        Thread.sleep(500);
         wait.until(refreshed(visibilityOfElementLocated(By.className("jaspero__dialog-title"))));
         assertTrue(driver.findElement(By.xpath("//*[@id=\"iznes\"]/app-root/jaspero-confirmations/jaspero-confirmation/div[2]/div[3]")).getText().equals("Are you sure you wish to update this Team?"));
         driver.findElement(By.xpath("//*[@id=\"iznes\"]/app-root/jaspero-confirmations/jaspero-confirmation/div[2]/div[4]/button[2]")).click();
@@ -224,7 +224,8 @@ public class AdministrationModuleHelper {
             driver.findElement(By.xpath("/html/body/app-root/jaspero-confirmations/jaspero-confirmation/div[2]/div[4]/button[2]")).click();
             //Directs to overview page
             wait.until(refreshed(visibilityOfElementLocated(By.id("tabAccountAdminTeamsButton"))));
-             driver.findElement(By.cssSelector(".col-name > div:nth-child(1) > clr-dg-string-filter:nth-child(1) > clr-dg-filter:nth-child(1) > button:nth-child(1)")).click();
+            wait.until(elementToBeClickable(By.cssSelector(".col-name > div:nth-child(1) > clr-dg-string-filter:nth-child(1) > clr-dg-filter:nth-child(1) > button:nth-child(1)")));
+            driver.findElement(By.cssSelector(".col-name > div:nth-child(1) > clr-dg-string-filter:nth-child(1) > clr-dg-filter:nth-child(1) > button:nth-child(1)")).click();
             driver.findElement(By.cssSelector("input.ng-pristine")).sendKeys(teamName);
             wait.until(refreshed(invisibilityOfElementLocated(By.id("accountAdminTeamRow0"))));
 
@@ -232,8 +233,9 @@ public class AdministrationModuleHelper {
         if (Answer == "No") {
             driver.findElement(By.xpath("/html/body/app-root/jaspero-confirmations/jaspero-confirmation/div[2]/div[4]/button[1]")).click();
             wait.until(refreshed(visibilityOfElementLocated(By.id("name"))));
-            scrollElementIntoViewByXpath("/html/body/app-root/app-basic-layout/div/ng-sidebar-container/div/div/div/main/div[1]/div/app-core-admin-teams-crud/clr-tabs/clr-tab/clr-tab-content/div[5]/div[1]/a");
-            driver.findElement(By.xpath("/html/body/app-root/app-basic-layout/div/ng-sidebar-container/div/div/div/main/div[1]/div/app-core-admin-teams-crud/clr-tabs/clr-tab/clr-tab-content/div[5]/div[1]/a")).click();
+            scrollElementIntoViewByXpath("//*[@id=\"clr-tab-content-4\"]/div[5]/div[1]/a");
+            wait.until(elementToBeClickable(By.xpath("//*[@id=\"clr-tab-content-4\"]/div[5]/div[1]/a")));
+            driver.findElement(By.xpath("//*[@id=\"clr-tab-content-4\"]/div[5]/div[1]/a")).click();
             wait.until(refreshed(visibilityOfElementLocated(By.xpath("/html/body/app-root/app-basic-layout/div/ng-sidebar-container/div/div/div/main/div[1]/div/app-core-admin-teams-list/clr-tabs/clr-tab/clr-tab-content/div/div[3]/a"))));
         }
     }
