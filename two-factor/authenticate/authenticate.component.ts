@@ -4,6 +4,7 @@ import { NgRedux, select } from '@angular-redux/store';
 import { AlertsService } from '@setl/jaspero-ng2-alerts';
 import { FormGroup, FormControl, Validators, AbstractControl } from '@angular/forms';
 import { Subscription } from 'rxjs/Subscription';
+import { UPDATE_TWO_FACTOR } from '@setl/core-store';
 import { MyUserService } from '@setl/core-req-services';
 import { MemberSocketService } from '@setl/websocket-service';
 
@@ -14,7 +15,6 @@ import { MemberSocketService } from '@setl/websocket-service';
 })
 export class AuthenticateComponent implements OnDestroy, OnInit {
     @Input() showQRCode: boolean = true;
-    @Output() authenticated: EventEmitter<any> = new EventEmitter();
     @Output() modalCancelled: EventEmitter<any> = new EventEmitter();
 
     connectedWalletId: number;
@@ -68,8 +68,6 @@ export class AuthenticateComponent implements OnDestroy, OnInit {
                 this.twoFactorSecret = auth.twoFactorSecret;
                 this.sessionTimeout = auth.sessionTimeout;
 
-                // Example QR Code URL:
-                // https://chart.googleapis.com/chart?chs=166x166&chld=L|0&cht=qr&chl=otpauth://totp/My%20Awesome%20App:johndoe%3Fsecret=XDQXYCP5AC6FA32FQXDGJSPBIDYNKK5W
                 this.qrCodeURL =
                     `${this.qrCodeURLPartial}${this.qrAppName}:${this.username}?secret=${this.twoFactorSecret}`;
             }));
@@ -95,22 +93,25 @@ export class AuthenticateComponent implements OnDestroy, OnInit {
                 sessionTimeout: this.sessionTimeout,
             });
 
-            this.ngRedux.dispatch(SagaHelper.runAsyncCallback(
+            this.ngRedux.dispatch(SagaHelper.runAsync(
+                [UPDATE_TWO_FACTOR],
+                [],
                 asyncTaskPipe,
+                {},
                 (data) => {
                     this.alertsService.generate('success', data[1].Data[0].Message);
-                    //this.showModal = false;
-
-                    this.authenticated.emit(true);
+                    // this.showModal = false;
+                    this.changeDetectorRef.markForCheck();
                 },
                 (data) => {
-                    //this.showModal = true;
+                    // this.showModal = true;
+                    this.changeDetectorRef.markForCheck();
                     console.error('error: ', data);
                     this.alertsService.generate('error', data[1].Data.Message);
                 }),
             );
 
-            this.changeDetectorRef.markForCheck();
+            // this.changeDetectorRef.markForCheck();
             this.alertsService.create('clear');
         }
     }
