@@ -1,9 +1,15 @@
 import {AbstractControl} from '@angular/forms';
+import {isValidIBAN} from 'ibantools';
+
 
 export function ibanValidator(c: AbstractControl) {
-    const IBAN_REGEXP = new RegExp(/\b^[A-Za-z]{2}[A-Za-z0-9]{12,32}\b/);
+    const value = c.value;
 
-    return IBAN_REGEXP.test(c.value) ? null : {
+    if(value && isValidIBAN(value)){
+        return null;
+    }
+
+    return {
         iban: true
     };
 }
