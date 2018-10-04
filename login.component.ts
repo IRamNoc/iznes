@@ -90,6 +90,8 @@ export class SetlLoginComponent implements OnDestroy, OnInit, AfterViewInit {
     subscriptionsArray: Subscription[] = [];
 
     showTwoFactorModal = false;
+    showQRCode = false;
+    resetTwoFactorToken = '';
 
     showModal = false;
     emailUser = '';
@@ -234,6 +236,11 @@ export class SetlLoginComponent implements OnDestroy, OnInit, AfterViewInit {
         const subscription = combined$.subscribe(([params, data]) => {
             const loggedIn = data['loggedIn'];
             this.resetToken = params['token'];
+
+            if (params['twofactortoken']) {
+                this.resetTwoFactorToken = params['twofactortoken'];
+                this.showTwoFactorModal = true;
+            }
 
             if (this.resetToken) {
                 this.verifyToken(this.resetToken);
@@ -403,7 +410,8 @@ export class SetlLoginComponent implements OnDestroy, OnInit, AfterViewInit {
             () => {
                 this.toasterService.pop('error', 'This link is no longer valid. Please try to login again.');
             },
-            0);
+            0,
+        );
     }
 
     passwordValidator(g: FormGroup) {

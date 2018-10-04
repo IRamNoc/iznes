@@ -59,7 +59,6 @@ export class EnrollComponent implements OnDestroy, OnInit {
 
         const asyncTaskPipe = this.myUserService.setTwoFactorAuthentication({
             twoFactorAuthentication,
-            twoFactorVerified: twoFactorAuthentication,
             type: 'GoogleAuth',
             userID: String(this.userId),
         });

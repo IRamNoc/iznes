@@ -20,7 +20,13 @@
                             <i class="fa fa-unlock-alt fa-5x my-1 text-muted" aria-hidden="true"></i>
                         </div>
 
-                        <input type="text" id="qrCodeNumber" formControlName="qrCodeNumber" maxlength="6" minlength="6" size="45" placeholder="Enter your six digit authentication code">
+                        <input type="text" 
+                                id="qrCodeNumber" 
+                                formControlName="qrCodeNumber" 
+                                maxlength="6" 
+                                minlength="6" 
+                                size="45" 
+                                placeholder="Enter your six digit authentication code">
 
                         <div *ngIf="qrCodeChallengeForm.controls.qrCodeNumber.hasError('required') && qrCodeChallengeForm.controls.qrCodeNumber.touched"
                              class="field-error"
@@ -38,6 +44,104 @@
             <button id="qrCodeChallengeSubmit" type="submit" class="btn btn-primary" [disabled]="!qrCodeChallengeForm.valid">
                 <i class="fa fa-save"></i> <span mltag="txt_submit">Submit</span>
             </button>
+
+            <div *ngIf="!showQRCode" class="text-center">
+                <span class="ml">
+                    <a id="forgotten-two-factor-link" 
+                        [ngStyle]="{'cursor':'pointer'}" 
+                        (click)="showForgottonTwoFactorModal()">
+                        {{'Forgot your Two-Factor code?' | translate}}
+                    </a>
+                </span>
+            </div>
         </div>
     </clr-modal>
 </form>
+
+<form [formGroup]="forgottenTwoFactorForm" novalidate (ngSubmit)="sendEmail(forgottenTwoFactorForm.value)">
+    <clr-modal [(clrModalOpen)]="showForgottenTwoFactorModal" [clrModalSize]="'md'" [clrModalClosable]="false">
+        <h3 class="modal-title" *ngIf="(!emailSent)">
+            {{'Forgotten Two-Factor code?' | translate}}
+        </h3>
+
+        <div class="modal-body text-center" *ngIf="!emailSent">            
+            <i class="fa fa-envelope-o fa-5x text-muted" aria-hidden="true"></i>                
+            <section class="form-block">
+                <div class="form-group text-center">
+                    <input id="fp-email-field" 
+                        type="text" 
+                        class="form-control" 
+                        formControlName="email" 
+                        [placeholder]="translate.translate('Please enter your email address')">
+                    <div>
+                        <div *ngIf="forgottenTwoFactorForm.controls.email.hasError('required') && forgottenTwoFactorForm.controls.email.dirty"
+                            class="text-danger">
+                            {{'This field is required' | translate}}
+                        </div>
+                        <div *ngIf="!forgottenTwoFactorForm.controls.email.valid && !forgottenTwoFactorForm.controls.email.hasError('required')"
+                            class="text-danger">
+                            {{'Email not valid!' | translate}}
+                        </div>
+                    </div>
+                </div>
+                <div class="text-center">
+                    <small>{{'If you click Send, an email will be sent to this address.' | translate}}</small>
+                </div>                   
+            </section>           
+        </div>
+
+        <div class="modal-footer" *ngIf="!emailSent">
+            <button id="cancel-sendemail-button" class="btn btn-info" type="button" (click)="closeTwoFactorModal()">
+                {{'Cancel' | translate}}
+            </button>
+            <button id="submit-sendemail-button" type="submit" class="btn btn-success" [disabled]="!forgottenTwoFactorForm.valid">
+                {{'Send' | translate}}
+            </button>
+        </div>
+        
+        <div class="modal-body text-center" *ngIf="emailSent">
+            <i class="fa fa-envelope-o fa-5x" aria-hidden="true"></i>
+            <p>
+                {{'An email has been sent to' | translate}}: <br />
+                <b [ngStyle]="{'color':'#62a420'}">{{emailUser}}</b>
+            </p>
+            
+            {{'This pop-up will automatically close in @countdown@ seconds.' | translate: {'countdown': countdown} }}
+            <!-- <br><br> -->
+            <!-- <button id="newpassword-close-button" class="btn btn-info" type="button" (click)="closeTwoFactorModal()">
+                {{'Close' | translate}}
+            </button> -->
+            <!-- <br><br> -->
+        </div>
+        <div class="modal-footer" *ngIf="emailSent">
+            <button id="close-button" class="btn btn-info" type="button" (click)="closeTwoFactorModal()">
+                {{'Close' | translate}}
+            </button>
+        </div>
+    </clr-modal>
+    
+ </form>
+
+<clr-modal [(clrModalOpen)]="showResetInstruction" [clrModalSize]="'md'" [clrModalClosable]="false">
+    <h3 class="modal-title">
+        {{'Reset Two-Factor Authentication' | translate}}
+    </h3>
+
+    <div class="modal-body text-center">
+        <i class="fa fa-envelope-o fa-5x text-muted" aria-hidden="true"></i>
+        <section class="form-block">
+            <div class="form-group text-center">
+                <div>
+                    {{'To complete the reset of your Two-Factor Authentication, please login and then re-scan the QR code using your Authenticator App.' | translate}}
+                </div>
+            </div>
+        </section>
+    </div>
+
+    <div class="modal-footer">
+        <button id="close-button" class="btn btn-info" type="button" (click)="showResetInstruction=false; this.modalCancelled.emit(true)">
+            {{'Close' | translate}}
+        </button>        
+    </div>
+</clr-modal>
+

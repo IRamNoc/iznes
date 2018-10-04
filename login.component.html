@@ -81,7 +81,7 @@
 </div>
 
 <!--CUSTOM TEXT MODALS-->
-<clr-modal [(clrModalOpen)]="showModal" [clrModalClosable]="false">
+<clr-modal [(clrModalOpen)]="showModal" [clrModalSize]="'md'" [clrModalClosable]="false">
     <h3 class="modal-title" *ngIf="(!emailSent || isTokenExpired) && !changePassword">
         {{'Forgotten password?' | translate}}
     </h3>
@@ -224,7 +224,7 @@
     </div>
 </clr-modal>
 
-<clr-modal [(clrModalOpen)]="resetPassword" [clrModalClosable]="false">
+<clr-modal [(clrModalOpen)]="resetPassword" [clrModalSize]="'md'" [clrModalClosable]="false">
     <h3 class="modal-title">
         {{'Reset your password' | translate}}
     </h3>
@@ -330,6 +330,9 @@
 
 <app-authenticate 
     *ngIf="showTwoFactorModal" 
-    [showQRCode]="false" 
-    (modalCancelled)="showTwoFactorModal=!$event">
+    [showQRCode]="showQRCode" 
+    (modalCancelled)="showTwoFactorModal=!$event"
+    [resetToken]="resetTwoFactorToken"
+    (verifiedToken)="resetTwoFactorToken=''; showQRCode=true"
+>
 </app-authenticate>
