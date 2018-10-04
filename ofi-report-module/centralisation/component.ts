@@ -510,7 +510,7 @@ export class CentralisationReportComponent implements OnInit, OnDestroy {
         }
 
         this.dateFrom = (this.filtersForm.controls['dateFrom'].value === '' || this.filtersForm.controls['dateFrom'].value === null) ? '2000-01-01' : this.filtersForm.controls['dateFrom'].value;
-        this.dateTo = ((this.filtersForm.controls['dateTo'].value === '' || this.filtersForm.controls['dateTo'].value === null) || !this.isPeriod) ? '2100-01-01' : this.filtersForm.controls['dateTo'].value;
+        this.dateTo = (!this.isPeriod ? '' : (this.filtersForm.controls['dateTo'].value === '' || this.filtersForm.controls['dateTo'].value === null) ? '2100-01-01' : this.filtersForm.controls['dateTo'].value);
 
         if (this.isFundLevel) {
             this.isFundsPayloadOK = true;
