@@ -408,6 +408,10 @@
                     <div class="col-sm-6">
                         <div class="form-group">
                             <textarea class="form-control" formControlName="comment" autocomplete="off"></textarea>
+                            <span *ngIf="comment.hasError('maxlength') && comment.touched" class="text-danger">
+                                {{'Comment must be @commentMaxLength@ characters long' | translate:
+                                { 'commentMaxLength': form.controls['comment'].getError('maxlength').requiredLength } }}
+                            </span>
                         </div>
                     </div>
                 </div>
