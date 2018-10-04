@@ -293,6 +293,7 @@ public class AdministrationModuleHelper {
         }
         if (Answer == "No") {
             driver.findElement(By.xpath("/html/body/app-root/jaspero-confirmations/jaspero-confirmation/div[2]/div[4]/button[1]")).click();
+            wait.until(invisibilityOfElementLocated(By.xpath("//*[@id=\"iznes\"]/app-root/jaspero-confirmations/jaspero-confirmation/div[2]")));
             wait.until(refreshed(visibilityOfElementLocated(By.id("name"))));
             scrollElementIntoViewByXpath("//*[@id=\"clr-tab-content-4\"]/div[5]/div[1]/a");
             wait.until(elementToBeClickable(By.xpath("//*[@id=\"clr-tab-content-4\"]/div[5]/div[1]/a")));
