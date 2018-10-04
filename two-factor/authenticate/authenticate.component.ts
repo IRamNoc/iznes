@@ -18,6 +18,7 @@ export class AuthenticateComponent implements OnDestroy, OnInit {
     @Input() resetToken: string = '';
     @Output() modalCancelled: EventEmitter<any> = new EventEmitter();
     @Output() verifiedToken: EventEmitter<any> = new EventEmitter();
+    @Output() clearToken: EventEmitter<any> = new EventEmitter();
 
     connectedWalletId: number;
     username: string;
@@ -52,6 +53,7 @@ export class AuthenticateComponent implements OnDestroy, OnInit {
         private myUserService: MyUserService,
         public translate: MultilingualService,
     ) {
+        console.log('+++ auth component called');
         this.qrCodeChallengeForm = new FormGroup(
             {
                 qrCodeNumber: new FormControl(
@@ -174,7 +176,7 @@ export class AuthenticateComponent implements OnDestroy, OnInit {
                                 clearInterval(intervalCountdown);
                                 this.closeTwoFactorModal();
                             },
-                            5000,
+                            10000,
                         );
                     } else {
                         this.alertsService.create('clear');
@@ -235,6 +237,8 @@ export class AuthenticateComponent implements OnDestroy, OnInit {
                             'error',
                             'Your Two-Factor reset request could not be completed.',
                         );
+                        this.clearToken.emit(true);
+                        this.closeTwoFactorModal();
                     },
                     1500,
                 );
@@ -247,6 +251,7 @@ export class AuthenticateComponent implements OnDestroy, OnInit {
     }
 
     closeTwoFactorModal() {
+        console.log('+++ close 2fa modal');
         this.modalCancelled.emit(true);
         this.forgottenTwoFactorForm.reset();
         this.countdown = 10;

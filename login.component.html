@@ -114,7 +114,7 @@
                             {{'Email not valid!' | translate}}
                         </div>
                     </div>
-                </div>               
+                </div>
                 <div class="text-center mt-1">
                     <button id="fp-cancel-sendemail-button" class="btn btn-info" type="button" (click)="closeFPModal()">
                         {{'Cancel' | translate}}
@@ -324,11 +324,12 @@
     </div>
 </clr-modal>
 
-<app-authenticate 
-    *ngIf="showTwoFactorModal" 
-    [showQRCode]="showQRCode" 
+<app-authenticate
+    *ngIf="showTwoFactorModal"
+    [showQRCode]="showQRCode"
     (modalCancelled)="showTwoFactorModal=!$event"
     [resetToken]="resetTwoFactorToken"
     (verifiedToken)="resetTwoFactorToken=''; showQRCode=true"
+    (clearToken)="resetTwoFactorToken=''"
 >
 </app-authenticate>

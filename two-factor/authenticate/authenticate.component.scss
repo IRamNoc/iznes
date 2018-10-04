@@ -2,11 +2,39 @@
     section {
         width: 100%;
         text-align: center;
-        padding-bottom: 20px;
     }
     img {
         display: inline-block;
         width: 166px;
         height: 166px;
     }
+    p {
+        margin: 1rem 0 0 0;
+        font-size: .583333rem;
+    }
+}
+
+.two-factor-body {
+    padding-bottom: 20px !important;
+    .fa {
+        color: #96c8f1
+    }
+    input {
+        text-align: center;
+        border: 1px solid #96c8f1;
+        margin: 10px 0 0 0;
+        width: 100%;
+    }
+    .field-error {
+        width: 100%;
+    }
+}
+
+.reset-link {
+    font-size: 12px;
+    margin: 10px 0;
+}
+
+.modal-body {
+    padding-bottom: 0;
 }
