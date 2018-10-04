@@ -158,6 +158,7 @@ export class InvestFundComponent implements OnInit, OnDestroy {
     netAmountSub: FormControl;
     // new amount form control for redemption order.
     netAmountRedeem: FormControl;
+    comment: FormControl;
     address: FormControl;
     disclaimer: FormControl;
     feeControl: FormControl;
@@ -502,6 +503,7 @@ export class InvestFundComponent implements OnInit, OnDestroy {
         this.feeAmount = new FormControl(0);
         this.netAmountSub = new FormControl(0, [Validators.required, numberValidator]);
         this.netAmountRedeem = new FormControl(0, [Validators.required, numberValidator]);
+        this.comment = new FormControl('', Validators.maxLength(100));
         this.address = new FormControl('', [Validators.required, emptyArrayValidator]);
         this.disclaimer = new FormControl('');
 
@@ -514,7 +516,7 @@ export class InvestFundComponent implements OnInit, OnDestroy {
             feeAmount: this.feeAmount,
             netAmountSub: this.netAmountSub,
             netAmountRedeem: this.netAmountRedeem,
-            comment: new FormControl('', Validators.maxLength(100)),
+            comment: this.comment,
             address: this.address,
             cutoffDate: this.cutoffDate,
             valuationDate: this.valuationDate,
