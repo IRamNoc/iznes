@@ -58,10 +58,10 @@
     </clr-modal>
 </form>
 
-<form [formGroup]="forgottenTwoFactorForm" novalidate (ngSubmit)="sendEmail(forgottenTwoFactorForm.value)">
+<form [formGroup]="forgottenTwoFactorForm" novalidate (ngSubmit)="sendEmail()">
     <clr-modal [(clrModalOpen)]="showForgottenTwoFactorModal" [clrModalSize]="'md'" [clrModalClosable]="false">
         <h3 class="modal-title" *ngIf="(!emailSent)">
-            {{'Forgotten Two-Factor code?' | translate}}
+            {{'Forgotten Two-Factor code' | translate}}
         </h3>
 
         <div class="modal-body text-center" *ngIf="!emailSent">            
@@ -89,7 +89,6 @@
                 </div>                   
             </section>           
         </div>
-
         <div class="modal-footer" *ngIf="!emailSent">
             <button id="cancel-sendemail-button" class="btn btn-info" type="button" (click)="closeTwoFactorModal()">
                 {{'Cancel' | translate}}
@@ -105,21 +104,15 @@
                 {{'An email has been sent to' | translate}}: <br />
                 <b [ngStyle]="{'color':'#62a420'}">{{emailUser}}</b>
             </p>
-            
+
             {{'This pop-up will automatically close in @countdown@ seconds.' | translate: {'countdown': countdown} }}
-            <!-- <br><br> -->
-            <!-- <button id="newpassword-close-button" class="btn btn-info" type="button" (click)="closeTwoFactorModal()">
-                {{'Close' | translate}}
-            </button> -->
-            <!-- <br><br> -->
         </div>
         <div class="modal-footer" *ngIf="emailSent">
             <button id="close-button" class="btn btn-info" type="button" (click)="closeTwoFactorModal()">
                 {{'Close' | translate}}
             </button>
         </div>
-    </clr-modal>
-    
+    </clr-modal>    
  </form>
 
 <clr-modal [(clrModalOpen)]="showResetInstruction" [clrModalSize]="'md'" [clrModalClosable]="false">
@@ -137,7 +130,6 @@
             </div>
         </section>
     </div>
-
     <div class="modal-footer">
         <button id="close-button" class="btn btn-info" type="button" (click)="showResetInstruction=false; this.modalCancelled.emit(true)">
             {{'Close' | translate}}
