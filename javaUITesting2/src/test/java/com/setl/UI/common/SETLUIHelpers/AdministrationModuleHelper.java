@@ -1,5 +1,4 @@
 package com.setl.UI.common.SETLUIHelpers;
-import oracle.jrockit.jfr.StringConstantPool;
 import org.openqa.selenium.By;
 import org.openqa.selenium.support.ui.WebDriverWait;
 
@@ -8,6 +7,9 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
+import static com.setl.UI.common.SETLUIHelpers.LoginAndNavigationHelper.loginAndVerifySuccess;
+import static com.setl.UI.common.SETLUIHelpers.LoginAndNavigationHelper.logout;
+import static com.setl.UI.common.SETLUIHelpers.LoginAndNavigationHelper.navigateToDropdown;
 import static com.setl.UI.common.SETLUIHelpers.MemberDetailsHelper.scrollElementIntoViewById;
 import static com.setl.UI.common.SETLUIHelpers.SetUp.driver;
 import static com.setl.UI.common.SETLUIHelpers.SetUp.timeoutInSeconds;
@@ -78,6 +80,15 @@ public class AdministrationModuleHelper {
         return new String[]{userName};
     }
 
+    public static void fillInTeamsNullCharacters() {
+        driver.findElement(By.id("name")).sendKeys("  ");
+        driver.findElement(By.id("reference")).sendKeys("  ");
+        driver.findElement(By.id("description")).sendKeys("  ");
+
+        if (driver.findElement(By.xpath("/html/body/app-root/app-basic-layout/div/ng-sidebar-container/div/div/div/main/div/div/app-core-admin-teams-crud/clr-tabs/clr-tab/clr-tab-content/div[5]/div[2]/button")).isEnabled()) {
+            fail("Team Was Able to Be Created With Null Characters In Team Name, Reference, Description");
+        }
+    }
     public static void fillInTeamsDetails(String Name, String Reference, String Description) {
         driver.findElement(By.id("name")).sendKeys(Name);
         driver.findElement(By.id("reference")).sendKeys(Reference);
@@ -97,6 +108,82 @@ public class AdministrationModuleHelper {
             fail("Page heading test was not correct : " + e.getMessage());
         }
     }
+    public static void assertCantCreateTeamNameAlreadyExists(String teamName) throws InterruptedException {
+        final WebDriverWait wait = new WebDriverWait(driver, timeoutInSeconds);
+        scrollElementIntoViewByXpath("/html/body/app-root/app-basic-layout/div/ng-sidebar-container/div/div/div/main/div/div/app-core-admin-teams-crud/clr-tabs/clr-tab/clr-tab-content/div[5]/div[2]/button");
+        wait.until(refreshed(visibilityOfElementLocated(By.xpath("/html/body/app-root/app-basic-layout/div/ng-sidebar-container/div/div/div/main/div/div/app-core-admin-teams-crud/clr-tabs/clr-tab/clr-tab-content/div[5]/div[2]/button"))));
+        wait.until(refreshed(elementToBeClickable(By.xpath("/html/body/app-root/app-basic-layout/div/ng-sidebar-container/div/div/div/main/div/div/app-core-admin-teams-crud/clr-tabs/clr-tab/clr-tab-content/div[5]/div[2]/button"))));
+        String create = driver.findElement(By.xpath("/html/body/app-root/app-basic-layout/div/ng-sidebar-container/div/div/div/main/div/div/app-core-admin-teams-crud/clr-tabs/clr-tab/clr-tab-content/div[5]/div[2]/button")).getText();
+        assertTrue(create.contains("Create Team"));
+        driver.findElement(By.xpath("/html/body/app-root/app-basic-layout/div/ng-sidebar-container/div/div/div/main/div/div/app-core-admin-teams-crud/clr-tabs/clr-tab/clr-tab-content/div[5]/div[2]/button")).click();
+        wait.until(refreshed(visibilityOfElementLocated(By.className("jaspero__dialog-title"))));
+        wait.until(refreshed(elementToBeClickable(By.xpath("/html/body/app-root/jaspero-confirmations/jaspero-confirmation/div[2]/div[4]/button[2]"))));
+        assertTrue(driver.findElement(By.xpath("//*[@id=\"iznes\"]/app-root/jaspero-confirmations/jaspero-confirmation/div[2]/div[3]")).getText().equals("You have selected no permissions for this team. Any users, soley assigned to this team, will no longer hold any permissions on the system."));
+        driver.findElement(By.xpath("//*[@id=\"iznes\"]/app-root/jaspero-confirmations/jaspero-confirmation/div[2]/div[4]/button[2]")).click();
+        Thread.sleep(1000);
+        wait.until(refreshed(visibilityOfElementLocated(By.className("jaspero__dialog-title"))));
+        assertTrue(driver.findElement(By.xpath("//*[@id=\"iznes\"]/app-root/jaspero-confirmations/jaspero-confirmation/div[2]/div[3]")).getText().equals("Are you sure you wish to create this Team?"));
+        driver.findElement(By.xpath("//*[@id=\"iznes\"]/app-root/jaspero-confirmations/jaspero-confirmation/div[2]/div[4]/button[2]")).click();
+        wait.until(visibilityOfElementLocated(By.xpath("/html/body/app-root/jaspero-alerts/jaspero-alert/div[2]/div[1]")));
+        driver.findElement(By.xpath("/html/body/app-root/jaspero-alerts/jaspero-alert/div[2]/div[1]")).getText().equals("error!");
+        driver.findElement(By.xpath("/html/body/app-root/jaspero-alerts/jaspero-alert/div[2]/div[3]")).getText().equals(teamName + "failed to be created.");
+        driver.findElement(By.xpath("/html/body/app-root/jaspero-alerts/jaspero-alert/div[2]/div[3]/i")).getText().equals("Duplicate Team Reference/Name.");
+        driver.findElement(By.xpath("/html/body/app-root/jaspero-alerts/jaspero-alert/div[2]/div[4]/button")).click();
+    }
+    public static void createTeamFlow() throws InterruptedException, SQLException {
+        String teamName = ("Team America");
+        String [] teamReference = generateRandomTeamReference();
+        String [] teamDescription = fillInDescription();
+        selectAddNewTeam();
+        fillInTeamsDetails(teamName, teamReference[0], teamDescription[0]);
+        selectAccountAdminPermissions();
+        selectCreateNewTeam();
+        searchTeam(teamReference[0], teamName, teamDescription[0], "Pending");
+        validateTeamsCreated(1, teamReference[0], teamName, teamDescription[0]);
+        validateAdminTeamPermissions(teamName);
+
+    }
+    public static void createUserFlow() throws InterruptedException, SQLException {
+        String[] emailaddress = generateEmail();
+        String[] phoneNumber = generatePhoneNumber();
+        String[] firstName = generateUser();
+        String[] lastName = generateUser();
+        String[] userRef = generateRandomTeamReference();
+        loginAndVerifySuccess("am", "alex01");
+        navigateToDropdown("menu-administration");
+        navigateToDropdown("menu-administration-users");
+        selectAddNewUser();
+        fillInUserDetails(emailaddress[0], firstName[0], lastName[0], userRef[0], phoneNumber[0]);
+        selectUserType();
+        selectCreateUser();
+        searchUser(userRef[0],firstName[0], lastName[0], emailaddress[0], phoneNumber[0]);
+        validateUserCreated(1, emailaddress[0], firstName[0], lastName[0], phoneNumber[0], userRef[0]);
+    }
+    public static void selectTeamFromUserCreation(String teamName) throws InterruptedException {
+        final WebDriverWait wait = new WebDriverWait(driver, timeoutInSeconds);
+        scrollElementIntoViewByXpath("/html/body/app-root/app-basic-layout/div/ng-sidebar-container/div/div/div/main/div/div/app-core-admin-users-crud/clr-tabs/clr-tab/clr-tab-content/div[3]/div/h3");
+        String title = driver.findElement(By.xpath("/html/body/app-root/app-basic-layout/div/ng-sidebar-container/div/div/div/main/div/div/app-core-admin-users-crud/clr-tabs/clr-tab/clr-tab-content/div[3]/div/h3")).getText();
+        assertTrue(title.equals("Team Memberships"));
+        driver.findElement(By.id("nameSearch")).sendKeys(teamName);
+        wait.until(invisibilityOfElementLocated(By.id("userMgmtRow1")));
+        String name = driver.findElement(By.id("userMgmtCellName0")).getText();
+        assertTrue(name.equals(teamName));
+        String status = driver.findElement(By.xpath("/html/body/app-root/app-basic-layout/div/ng-sidebar-container/div/div/div/main/div/div/app-core-admin-users-crud/clr-tabs/clr-tab/clr-tab-content/div[4]/div/app-core-admin-users-team-mgmt/clr-datagrid/div/div/div/clr-dg-table-wrapper/div[2]/clr-dg-row/div/clr-dg-cell[4]/span")).getText();
+        assertTrue(status.equals("Pending"));
+        driver.findElement(By.cssSelector("#userMgmtCellActions0 > label:nth-child(1) > span:nth-child(2)")).click();
+    }
+    public static void updateUser() {
+        final WebDriverWait wait = new WebDriverWait(driver, timeoutInSeconds);
+        scrollElementIntoViewByXpath("/html/body/app-root/app-basic-layout/div/ng-sidebar-container/div/div/div/main/div/div/app-core-admin-users-crud/clr-tabs/clr-tab/clr-tab-content/div[5]/div[2]/button[1]");
+        driver.findElement(By.xpath("/html/body/app-root/app-basic-layout/div/ng-sidebar-container/div/div/div/main/div/div/app-core-admin-users-crud/clr-tabs/clr-tab/clr-tab-content/div[5]/div[2]/button[1]")).click();
+        wait.until(visibilityOfElementLocated(By.xpath("/html/body/app-root/jaspero-confirmations/jaspero-confirmation/div[2]/div[1]")));
+        String update = driver.findElement(By.xpath("/html/body/app-root/jaspero-confirmations/jaspero-confirmation/div[2]/div[1]")).getText();
+        assertTrue(update.equals("Update User"));
+        String message = driver.findElement(By.xpath("/html/body/app-root/jaspero-confirmations/jaspero-confirmation/div[2]/div[3]")).getText();
+        assertTrue(message.equals("Are you sure you wish to update this User?"));
+        driver.findElement(By.xpath("/html/body/app-root/jaspero-confirmations/jaspero-confirmation/div[2]/div[4]/button[2]")).click();
+    }
+
 
     public static void selectCreateNewTeamNoPermissions() throws InterruptedException {
         final WebDriverWait wait = new WebDriverWait(driver, timeoutInSeconds);
@@ -243,6 +330,12 @@ public class AdministrationModuleHelper {
         wait.until(visibilityOfElementLocated(By.id("accountAdminTeamRow0")));
         wait.until(elementToBeClickable(By.id("accountAdminTeamRow0")));
         driver.findElement(By.id("accountAdminTeamRow0")).click();
+    }
+    public static void selectUserRow0() {
+        final WebDriverWait wait = new WebDriverWait(driver, timeoutInSeconds);
+        wait.until(visibilityOfElementLocated(By.id("accountAdminTeamCellFirstName0")));
+        wait.until(elementToBeClickable(By.id("accountAdminTeamCellFirstName0")));
+        driver.findElement(By.id("accountAdminTeamCellFirstName0")).click();
     }
     public static void editTeamName(String nameUpdate) {
         final WebDriverWait wait = new WebDriverWait(driver, timeoutInSeconds);
