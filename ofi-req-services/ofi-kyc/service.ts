@@ -69,6 +69,7 @@ import {
 } from '@ofi/ofi-main/ofi-store/ofi-kyc';
 import { Subject } from 'rxjs';
 import { takeUntil } from 'rxjs/operators';
+import { filter, take } from 'rxjs/operators';
 
 import {
     SET_INVESTOR_INVITATIONS_LIST,
@@ -96,12 +97,14 @@ export class OfiKycService {
 
     informationAuditTrailList = [];
     statusAuditTrailList = [];
+    validConnectedWallet$: Subject<number>;
     unSubscribe: Subject<any> = new Subject();
 
     @select(['ofi', 'ofiKyc', 'informationAuditTrail', 'list']) informationAuditTrailList$;
     @select(['ofi', 'ofiKyc', 'statusAuditTrail', 'requested']) statusAuditTrailRequested$;
     @select(['ofi', 'ofiKyc', 'statusAuditTrail', 'list']) statusAuditTrailList$;
     @select(['user', 'authentication', 'isLogin']) isLogin$;
+    @select(['user', 'connected', 'connectedWallet']) connectedWallet$;
 
     constructor(
         private memberSocketService: MemberSocketService,
@@ -136,6 +139,12 @@ export class OfiKycService {
                 });
             }
         });
+
+        this.validConnectedWallet$ = this.connectedWallet$
+        .pipe(
+           filter(( walletId: number ) => (walletId !== 0 && !!walletId)),
+        )
+        .takeUntil(this.unSubscribe);
     }
 
     /**
@@ -465,18 +474,24 @@ export class OfiKycService {
     }
 
     getMyKycList() {
-        const messageBody: GetMyKycListRequestBody = {
-            RequestName: 'iznesgetmykyclist',
-            token: this.memberSocketService.token,
-            walletid: 0
-        };
+        // this method returned a promise before, now it does not return anything. The change to try to pass in the walletId
+        // instead of always passing in '0'. But the caller of the method did not use the returned promised anyway.
+        this.validConnectedWallet$.pipe(take(1)).subscribe(
+            (walletId) => {
+                const messageBody: GetMyKycListRequestBody = {
+                    RequestName: 'iznesgetmykyclist',
+                    token: this.memberSocketService.token,
+                    walletid: walletId,
+                };
 
-        const asyncTaskPipe = createMemberNodeSagaRequest(this.memberSocketService, messageBody);
+                const asyncTaskPipe = createMemberNodeSagaRequest(this.memberSocketService, messageBody);
 
-        return this.buildRequest({
-            'taskPipe': asyncTaskPipe,
-            'successActions': [SET_MY_KYC_LIST, SET_MY_KYC_LIST_REQUESTED],
-        });
+                return this.buildRequest({
+                    'taskPipe': asyncTaskPipe,
+                    'successActions': [SET_MY_KYC_LIST, SET_MY_KYC_LIST_REQUESTED],
+                });
+            }
+        );
     }
 
     fetchInvitationsByUserAmCompany() {
