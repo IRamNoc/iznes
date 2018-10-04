@@ -688,6 +688,16 @@ export class OfiKycService {
         return createMemberNodeSagaRequest(this.memberSocketService, messageBody);
     }
 
+    deleteKycDocument(kycDocumentID: number) {
+        const messageBody = {
+            RequestName: 'deletekycdocument',
+            token: this.memberSocketService.token,
+            kycDocumentID,
+        };
+
+        return createMemberNodeRequest(this.memberSocketService, messageBody);
+    }
+
 
     createKYCDraftOrWaitingApproval(requestData: createKYCDraftRequestData) {
 

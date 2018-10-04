@@ -6,15 +6,14 @@ import {
     OnDestroy,
     Inject,
     OnInit,
-    ViewChild,
     AfterViewInit,
-    ElementRef,
 } from '@angular/core';
 /* Redux */
 import { NgRedux, select } from '@angular-redux/store';
 import { fromJS } from 'immutable';
-import { Observable } from 'rxjs/Observable';
-import { FormBuilder, FormControl, FormGroup, Validators } from '@angular/forms';
+import { FormControl, FormGroup } from '@angular/forms';
+import { Subject } from 'rxjs/Subject';
+import { takeUntil } from 'rxjs/operators'
 import { MultilingualService } from '@setl/multilingual';
 
 import * as _ from 'lodash';
@@ -43,6 +42,8 @@ export class OfiInvMyDocumentsComponent implements OnDestroy, OnInit, AfterViewI
     filesFromRedux = [];
 
     kycDocPath: string = '/iznes/kyc-inv-docs';
+
+    unSubscribe: Subject<any> = new Subject();
 
     @select(['user', 'connected', 'connectedWallet']) connectedWalletOb;
     @select(['ofi', 'ofiKyc', 'invMyDocuments', 'requested']) requestedOfiInvMyDocsOb;
@@ -107,15 +108,133 @@ export class OfiInvMyDocumentsComponent implements OnDestroy, OnInit, AfterViewI
             upload13: new FormControl([]),
             shareUpload13: new FormControl(false),
         });
+
     }
 
     ngOnInit() {
-        this.subscriptions.push(this.connectedWalletOb.subscribe(connected => {
-            this.connectedWalletId = connected;
+        this.connectedWalletOb
+            .pipe(
+                takeUntil(this.unSubscribe),
+            )
+            .subscribe(connected => {
+                this.connectedWalletId = connected;
 
-            this.subscriptions.push(this.requestedOfiInvMyDocsOb.subscribe((requested) => this.requestedOfiInvMyDocs(requested)));
-            this.subscriptions.push(this.OfiInvMyDocsListOb.subscribe((list) => this.getMyDocumentsFromRedux(list)));
-        }));
+                this.requestedOfiInvMyDocsOb
+                    .pipe(
+                        takeUntil(this.unSubscribe),
+                    )
+                    .subscribe((requested) => this.requestedOfiInvMyDocs(requested));
+
+                this.OfiInvMyDocsListOb
+                    .pipe(
+                        takeUntil(this.unSubscribe),
+                    )
+                    .subscribe((list) => this.getMyDocumentsFromRedux(list));
+            });
+
+        this.uploadMyDocumentsForm.controls.upload1.valueChanges
+            .pipe(
+                takeUntil(this.unSubscribe),
+            )
+            .subscribe(() => {
+                this.deleteDocument(this.allUploadsFiles[this.kycEnums.kycproofofapprovaldoc].fileID);
+            });
+
+        this.uploadMyDocumentsForm.controls.upload2.valueChanges
+            .pipe(
+                takeUntil(this.unSubscribe),
+            )
+            .subscribe(() => {
+                this.deleteDocument(this.allUploadsFiles[this.kycEnums.kycisincodedoc].fileID);
+            });
+
+        this.uploadMyDocumentsForm.controls.upload3.valueChanges
+            .pipe(
+                takeUntil(this.unSubscribe),
+            )
+            .subscribe(() => {
+                this.deleteDocument(this.allUploadsFiles[this.kycEnums.kycwolfsbergdoc].fileID);
+            });
+
+        this.uploadMyDocumentsForm.controls.upload4.valueChanges
+            .pipe(
+                takeUntil(this.unSubscribe),
+            )
+            .subscribe(() => {
+                this.deleteDocument(this.allUploadsFiles[this.kycEnums.kycstatuscertifieddoc].fileID);
+            });
+
+        this.uploadMyDocumentsForm.controls.upload5.valueChanges
+            .pipe(
+                takeUntil(this.unSubscribe),
+            )
+            .subscribe(() => {
+                this.deleteDocument(this.allUploadsFiles[this.kycEnums.kyckbisdoc].fileID);
+            });
+
+        this.uploadMyDocumentsForm.controls.upload6.valueChanges
+            .pipe(
+                takeUntil(this.unSubscribe),
+            )
+            .subscribe(() => {
+                this.deleteDocument(this.allUploadsFiles[this.kycEnums.kycannualreportdoc].fileID);
+            });
+
+        this.uploadMyDocumentsForm.controls.upload7.valueChanges
+            .pipe(
+                takeUntil(this.unSubscribe),
+            )
+            .subscribe(() => {
+                this.deleteDocument(this.allUploadsFiles[this.kycEnums.kycidorpassportdoc].fileID);
+            });
+
+        this.uploadMyDocumentsForm.controls.upload8.valueChanges
+            .pipe(
+                takeUntil(this.unSubscribe),
+            )
+            .subscribe(() => {
+                this.deleteDocument(this.allUploadsFiles[this.kycEnums.kyclistshareholdersdoc].fileID);
+            });
+
+        this.uploadMyDocumentsForm.controls.upload9.valueChanges
+            .pipe(
+                takeUntil(this.unSubscribe),
+            )
+            .subscribe(() => {
+                this.deleteDocument(this.allUploadsFiles[this.kycEnums.kyclistdirectorsdoc].fileID);
+            });
+
+        this.uploadMyDocumentsForm.controls.upload10.valueChanges
+            .pipe(
+                takeUntil(this.unSubscribe),
+            )
+            .subscribe(() => {
+                this.deleteDocument(this.allUploadsFiles[this.kycEnums.kyclistauthoriseddoc].fileID);
+            });
+
+        this.uploadMyDocumentsForm.controls.upload11.valueChanges
+            .pipe(
+                takeUntil(this.unSubscribe),
+            )
+            .subscribe(() => {
+                this.deleteDocument(this.allUploadsFiles[this.kycEnums.kycbeneficialownersdoc].fileID);
+            });
+
+        this.uploadMyDocumentsForm.controls.upload12.valueChanges
+            .pipe(
+                takeUntil(this.unSubscribe),
+            )
+            .subscribe(() => {
+                this.deleteDocument(this.allUploadsFiles[this.kycEnums.kyctaxcertificationdoc].fileID);
+            });
+
+        this.uploadMyDocumentsForm.controls.upload13.valueChanges
+            .pipe(
+                takeUntil(this.unSubscribe),
+            )
+            .subscribe(() => {
+                this.deleteDocument(this.allUploadsFiles[this.kycEnums.kycw8benefatcadoc].fileID);
+            });
     }
 
     ngAfterViewInit() {
@@ -153,7 +272,7 @@ export class OfiInvMyDocumentsComponent implements OnDestroy, OnInit, AfterViewI
                 isDefault: item.get('default'),
             });
             return result;
-        },                                   []);
+        }, []);
 
         let allChecked = true;
         for (const i in this.allUploadsFiles) {
@@ -342,12 +461,24 @@ export class OfiInvMyDocumentsComponent implements OnDestroy, OnInit, AfterViewI
         );
     }
 
+    deleteDocument(documentID) {
+        this._ofiKycService.deleteKycDocument(documentID)
+            .then(() => {
+                OfiKycService.defaultRequestGetInvKycDocuments(this._ofiKycService, this.ngRedux, {
+                    walletID: this.connectedWalletId,
+                    kycID: 0,
+                });
+            });
+    }
+
     /* On Destroy. */
     ngOnDestroy(): void {
         /* Unsunscribe Observables. */
         for (const key of this.subscriptions) {
             key.unsubscribe();
         }
+        this.unSubscribe.next();
+        this.unSubscribe.complete();
 
         /* Detach the change detector on destroy. */
         this._changeDetectorRef.detach();
