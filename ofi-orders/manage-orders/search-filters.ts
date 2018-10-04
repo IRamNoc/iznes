@@ -85,7 +85,7 @@ export class SearchFilters implements ISearchFilters {
             this.setChoiceFormFilter('type', orderTypes);
             this.setChoiceFormFilter('dateType', dateTypes);
 
-            this.optionalFiltersValue = false;
+            this.optionalFiltersValue = !!get(this.filterStore, ['dateType', 'length'], false);
             this.setOptionalFormFilter('fromDate');
             this.setOptionalFormFilter('toDate');
             this.setOptionalFormFilter('orderID', get(this.filterStore, 'orderID'));

@@ -2,7 +2,7 @@ import { Subject } from 'rxjs/Subject';
 import { takeUntil, take, filter } from 'rxjs/operators';
 import { combineLatest } from 'rxjs/observable/combineLatest';
 import { Component, Inject, OnDestroy, OnInit, ViewEncapsulation, ChangeDetectorRef } from '@angular/core';
-import { FormBuilder, FormControl, FormGroup, Validators } from '@angular/forms';
+import { FormBuilder, FormControl, FormGroup, Validators, AbstractControl } from '@angular/forms';
 import { ActivatedRoute, Router } from '@angular/router';
 import { Location } from '@angular/common';
 
@@ -21,6 +21,7 @@ import {
 } from '@ofi/ofi-main/ofi-req-services/ofi-product/management-company/management-company.service';
 import { OfiCurrenciesService } from '@ofi/ofi-main/ofi-req-services/ofi-currencies/service';
 import { MultilingualService } from '@setl/multilingual';
+import { LeiService } from '@ofi/ofi-main/ofi-req-services/ofi-product/lei/lei.service';
 
 interface UmbrellaList {
     [key: string]: UmbrellaFundDetail;
@@ -79,6 +80,7 @@ export class FundComponent implements OnInit, OnDestroy {
     umbrellaList: UmbrellaList;
     fundList: FundList;
     fundListItems = [];
+    leiList: string[] = [];
 
     // select items
     domicileItems = [];
@@ -143,6 +145,7 @@ export class FundComponent implements OnInit, OnDestroy {
     @select(['ofi', 'ofiCurrencies', 'currencies']) currencyList$;
     @select(['ofi', 'ofiProduct', 'ofiProductConfiguration', 'requested']) reqConfig$;
     @select(['ofi', 'ofiProduct', 'ofiProductConfiguration', 'configuration']) config$;
+    @select(['ofi', 'ofiProduct', 'lei', 'lei']) leiListOb;
 
     unSubscribe: Subject<any> = new Subject();
 
@@ -167,6 +170,7 @@ export class FundComponent implements OnInit, OnDestroy {
         private changeDetectorRef: ChangeDetectorRef,
         private confirmationService: ConfirmationService,
         public _translate: MultilingualService,
+        private leiService: LeiService,
         @Inject('product-config') productConfig,
     ) {
 
@@ -174,6 +178,7 @@ export class FundComponent implements OnInit, OnDestroy {
         this.ofiManagementCompanyService.getManagementCompanyList();
         this.ofiCurrenciesService.getCurrencyList();
         this.fundService.getFundList();
+        this.leiService.fetchLEIs();
 
         this.fundItems = productConfig.fundItems;
         this.enums = productConfig.enums;
@@ -199,20 +204,20 @@ export class FundComponent implements OnInit, OnDestroy {
         this.centralizingAgentItems = this.fundItems.centralizingAgentItems;
 
         this.language$
-        .pipe(
-            takeUntil(this.unSubscribe),
-        )
-        .subscribe((d) => {
-            this.language = d.substr(0, 2);
-            this.configDate = {
-                ...this.configDate,
-                locale: this.language,
-            };
-            this.configMonth = {
-                ...this.configMonth,
-                locale: this.language,
-            };
-        });
+            .pipe(
+                takeUntil(this.unSubscribe),
+            )
+            .subscribe((d) => {
+                this.language = d.substr(0, 2);
+                this.configDate = {
+                    ...this.configDate,
+                    locale: this.language,
+                };
+                this.configMonth = {
+                    ...this.configMonth,
+                    locale: this.language,
+                };
+            });
 
         this.umbrellaForm = fb.group({
             umbrellaFundName: { value: '', disabled: true },
@@ -318,218 +323,218 @@ export class FundComponent implements OnInit, OnDestroy {
         this.umbrellaForm.addControl('umbrellaFundID', this.umbrellaControl);
 
         this.umbrellaControl.valueChanges
-        .pipe(
-            takeUntil(this.unSubscribe),
-        )
-        .subscribe((d) => {
-            if (!d || !d.length) {
-                this.selectedUmbrella = null;
+            .pipe(
+                takeUntil(this.unSubscribe),
+            )
+            .subscribe((d) => {
+                if (!d || !d.length) {
+                    this.selectedUmbrella = null;
+                    return;
+                }
+
+                if (d[0].id === '0') {
+                    this.umbrellaForm.controls['umbrellaFundName'].setValue('');
+                    this.umbrellaForm.controls['umbrellaLei'].setValue('');
+                    this.umbrellaForm.controls['umbrellaFundDomicile'].setValue('');
+
+                    this.umbrellaEditForm.controls['umbrellaEditLei'].setValue('');
+                    this.umbrellaEditForm.controls['umbrellaEditFundDomicile'].setValue('');
+
+                    this.fundForm.controls['isFundStructure'].setValue(this.enums.isFundStructure.FUND.toString());
+                } else {
+                    const newUmbrella = this.umbrellaList[d[0].id];
+                    this.umbrellaForm.controls['umbrellaFundName'].setValue(newUmbrella.umbrellaFundName);
+                    this.umbrellaForm.controls['umbrellaLei'].setValue(newUmbrella.legalEntityIdentifier);
+                    this.umbrellaForm.controls['umbrellaFundDomicile']
+                        .setValue(FundComponent.getListItemText(newUmbrella.domicile, this.domicileItems));
+
+                    this.umbrellaEditForm.controls['umbrellaEditLei']
+                        .setValue(newUmbrella.legalEntityIdentifier);
+                    this.umbrellaEditForm.controls['umbrellaEditFundDomicile']
+                        .setValue(FundComponent.getListItemText(newUmbrella.domicile, this.domicileItems));
+                    this.umbrellaEditForm.controls['auditorID']
+                        .setValue(FundComponent.getListItemText(newUmbrella.auditorID, this.auditorItems));
+                    this.umbrellaEditForm.controls['centralisingAgentID']
+                        .setValue(FundComponent.getListItemText(newUmbrella.centralisingAgentID, this.centralizingAgentItems));
+                    this.umbrellaEditForm.controls['custodianBankID']
+                        .setValue(FundComponent.getListItemText(newUmbrella.custodianBankID, this.custodianBankItems));
+                    this.umbrellaEditForm.controls['delegatedManagementCompanyID']
+                        .setValue(FundComponent.getListItemText(newUmbrella.delegatedManagementCompanyID, this.managementCompanyItems));
+                    this.umbrellaEditForm.controls['directors']
+                        .setValue(newUmbrella.directors);
+                    this.umbrellaEditForm.controls['domicile']
+                        .setValue(FundComponent.getListItemText(newUmbrella.domicile, this.domicileItems));
+                    this.umbrellaEditForm.controls['fundAdministratorID']
+                        .setValue(FundComponent.getListItemText(newUmbrella.fundAdministratorID, this.fundAdministratorItems));
+                    this.umbrellaEditForm.controls['giin']
+                        .setValue(newUmbrella.giin);
+                    this.umbrellaEditForm.controls['investmentAdvisorID']
+                        .setValue(newUmbrella.investmentAdvisorID);
+                    this.umbrellaEditForm.controls['legalAdvisorID']
+                        .setValue(FundComponent.getListItemText(newUmbrella.legalAdvisorID, this.legalAdvisorItems));
+                    this.umbrellaEditForm.controls['legalEntityIdentifier']
+                        .setValue(newUmbrella.legalEntityIdentifier);
+                    this.umbrellaEditForm.controls['managementCompanyID']
+                        .setValue(FundComponent.getListItemText(newUmbrella.managementCompanyID, this.managementCompanyItems));
+                    this.umbrellaEditForm.controls['payingAgentID']
+                        .setValue(this.getListItems(newUmbrella.payingAgentID, this.payingAgentItems));
+                    this.umbrellaEditForm.controls['principlePromoterID']
+                        .setValue(this.getListItems(newUmbrella.principlePromoterID, this.principalPromoterItems));
+                    this.umbrellaEditForm.controls['registerOffice']
+                        .setValue(newUmbrella.registerOffice);
+                    this.umbrellaEditForm.controls['registerOfficeAddress']
+                        .setValue(newUmbrella.registerOfficeAddress);
+                    this.umbrellaEditForm.controls['taxAuditorID']
+                        .setValue(FundComponent.getListItemText(newUmbrella.taxAuditorID, this.taxAuditorItems));
+                    this.umbrellaEditForm.controls['transferAgentID']
+                        .setValue(FundComponent.getListItemText(newUmbrella.transferAgentID, this.transferAgentItems));
+                    this.umbrellaEditForm.controls['umbrellaFundCreationDate']
+                        .setValue(newUmbrella.umbrellaFundCreationDate.split(' ', 1)[0]);
+                    this.umbrellaEditForm.controls['umbrellaFundID']
+                        .setValue(newUmbrella.umbrellaFundID);
+                    this.umbrellaEditForm.controls['umbrellaFundName']
+                        .setValue(newUmbrella.umbrellaFundName);
+                    this.umbrellaEditForm.controls['internalReference']
+                        .setValue(newUmbrella.internalReference);
+                    this.umbrellaEditForm.controls['additionnalNotes']
+                        .setValue(newUmbrella.additionnalNotes);
+
+                    this.fundForm.controls['isFundStructure'].setValue(this.enums.isFundStructure.UMBRELLA.toString());
+
+                    this.fundForm.controls['domicile']
+                        .setValue(FundComponent.getListItem(newUmbrella.domicile, this.domicileItems));
+                    this.fundForm.controls['managementCompanyID']
+                        .setValue(FundComponent.getListItem(newUmbrella.managementCompanyID, this.managementCompanyItems));
+                    this.fundForm.controls['fundAdministratorID']
+                        .setValue(FundComponent.getListItem(newUmbrella.fundAdministratorID, this.fundAdministratorItems));
+                    this.fundForm.controls['custodianBankID']
+                        .setValue(FundComponent.getListItem(newUmbrella.custodianBankID, this.custodianBankItems));
+                    this.fundForm.controls['investmentAdvisorID']
+                        .setValue(newUmbrella.investmentAdvisorID);
+                    this.fundForm.controls['payingAgentID']
+                        .setValue(this.getListItems(newUmbrella.payingAgentID, this.payingAgentItems));
+                    this.fundForm.controls['delegatedManagementCompany']
+                        .setValue(FundComponent.getListItem(newUmbrella.delegatedManagementCompanyID, this.managementCompanyItems));
+                    this.fundForm.controls['auditorID']
+                        .setValue(FundComponent.getListItem(newUmbrella.auditorID, this.auditorItems));
+                    this.fundForm.controls['taxAuditorID']
+                        .setValue(FundComponent.getListItem(newUmbrella.taxAuditorID, this.taxAuditorItems));
+                    this.fundForm.controls['principlePromoterID']
+                        .setValue(this.getListItems(newUmbrella.principlePromoterID, this.principalPromoterItems));
+                    this.fundForm.controls['legalAdvisorID']
+                        .setValue(FundComponent.getListItem(newUmbrella.legalAdvisorID, this.legalAdvisorItems));
+                    this.fundForm.controls['directors'].setValue(newUmbrella.directors);
+                }
+                this.selectedUmbrella = d[0].id;
                 return;
-            }
-
-            if (d[0].id === '0') {
-                this.umbrellaForm.controls['umbrellaFundName'].setValue('');
-                this.umbrellaForm.controls['umbrellaLei'].setValue('');
-                this.umbrellaForm.controls['umbrellaFundDomicile'].setValue('');
-
-                this.umbrellaEditForm.controls['umbrellaEditLei'].setValue('');
-                this.umbrellaEditForm.controls['umbrellaEditFundDomicile'].setValue('');
-
-                this.fundForm.controls['isFundStructure'].setValue(this.enums.isFundStructure.FUND.toString());
-            } else {
-                const newUmbrella = this.umbrellaList[d[0].id];
-                this.umbrellaForm.controls['umbrellaFundName'].setValue(newUmbrella.umbrellaFundName);
-                this.umbrellaForm.controls['umbrellaLei'].setValue(newUmbrella.legalEntityIdentifier);
-                this.umbrellaForm.controls['umbrellaFundDomicile']
-                .setValue(FundComponent.getListItemText(newUmbrella.domicile, this.domicileItems));
-
-                this.umbrellaEditForm.controls['umbrellaEditLei']
-                .setValue(newUmbrella.legalEntityIdentifier);
-                this.umbrellaEditForm.controls['umbrellaEditFundDomicile']
-                .setValue(FundComponent.getListItemText(newUmbrella.domicile, this.domicileItems));
-                this.umbrellaEditForm.controls['auditorID']
-                .setValue(FundComponent.getListItemText(newUmbrella.auditorID, this.auditorItems));
-                this.umbrellaEditForm.controls['centralisingAgentID']
-                .setValue(FundComponent.getListItemText(newUmbrella.centralisingAgentID, this.centralizingAgentItems));
-                this.umbrellaEditForm.controls['custodianBankID']
-                .setValue(FundComponent.getListItemText(newUmbrella.custodianBankID, this.custodianBankItems));
-                this.umbrellaEditForm.controls['delegatedManagementCompanyID']
-                .setValue(FundComponent.getListItemText(newUmbrella.delegatedManagementCompanyID, this.managementCompanyItems));
-                this.umbrellaEditForm.controls['directors']
-                .setValue(newUmbrella.directors);
-                this.umbrellaEditForm.controls['domicile']
-                .setValue(FundComponent.getListItemText(newUmbrella.domicile, this.domicileItems));
-                this.umbrellaEditForm.controls['fundAdministratorID']
-                .setValue(FundComponent.getListItemText(newUmbrella.fundAdministratorID, this.fundAdministratorItems));
-                this.umbrellaEditForm.controls['giin']
-                .setValue(newUmbrella.giin);
-                this.umbrellaEditForm.controls['investmentAdvisorID']
-                .setValue(newUmbrella.investmentAdvisorID);
-                this.umbrellaEditForm.controls['legalAdvisorID']
-                .setValue(FundComponent.getListItemText(newUmbrella.legalAdvisorID, this.legalAdvisorItems));
-                this.umbrellaEditForm.controls['legalEntityIdentifier']
-                .setValue(newUmbrella.legalEntityIdentifier);
-                this.umbrellaEditForm.controls['managementCompanyID']
-                .setValue(FundComponent.getListItemText(newUmbrella.managementCompanyID, this.managementCompanyItems));
-                this.umbrellaEditForm.controls['payingAgentID']
-                .setValue(this.getListItems(newUmbrella.payingAgentID, this.payingAgentItems));
-                this.umbrellaEditForm.controls['principlePromoterID']
-                .setValue(this.getListItems(newUmbrella.principlePromoterID, this.principalPromoterItems));
-                this.umbrellaEditForm.controls['registerOffice']
-                .setValue(newUmbrella.registerOffice);
-                this.umbrellaEditForm.controls['registerOfficeAddress']
-                .setValue(newUmbrella.registerOfficeAddress);
-                this.umbrellaEditForm.controls['taxAuditorID']
-                .setValue(FundComponent.getListItemText(newUmbrella.taxAuditorID, this.taxAuditorItems));
-                this.umbrellaEditForm.controls['transferAgentID']
-                .setValue(FundComponent.getListItemText(newUmbrella.transferAgentID, this.transferAgentItems));
-                this.umbrellaEditForm.controls['umbrellaFundCreationDate']
-                .setValue(newUmbrella.umbrellaFundCreationDate.split(' ', 1)[0]);
-                this.umbrellaEditForm.controls['umbrellaFundID']
-                .setValue(newUmbrella.umbrellaFundID);
-                this.umbrellaEditForm.controls['umbrellaFundName']
-                .setValue(newUmbrella.umbrellaFundName);
-                this.umbrellaEditForm.controls['internalReference']
-                .setValue(newUmbrella.internalReference);
-                this.umbrellaEditForm.controls['additionnalNotes']
-                .setValue(newUmbrella.additionnalNotes);
-
-                this.fundForm.controls['isFundStructure'].setValue(this.enums.isFundStructure.UMBRELLA.toString());
-
-                this.fundForm.controls['domicile']
-                .setValue(FundComponent.getListItem(newUmbrella.domicile, this.domicileItems));
-                this.fundForm.controls['managementCompanyID']
-                .setValue(FundComponent.getListItem(newUmbrella.managementCompanyID, this.managementCompanyItems));
-                this.fundForm.controls['fundAdministratorID']
-                .setValue(FundComponent.getListItem(newUmbrella.fundAdministratorID, this.fundAdministratorItems));
-                this.fundForm.controls['custodianBankID']
-                .setValue(FundComponent.getListItem(newUmbrella.custodianBankID, this.custodianBankItems));
-                this.fundForm.controls['investmentAdvisorID']
-                .setValue(newUmbrella.investmentAdvisorID);
-                this.fundForm.controls['payingAgentID']
-                .setValue(this.getListItems(newUmbrella.payingAgentID, this.payingAgentItems));
-                this.fundForm.controls['delegatedManagementCompany']
-                .setValue(FundComponent.getListItem(newUmbrella.delegatedManagementCompanyID, this.managementCompanyItems));
-                this.fundForm.controls['auditorID']
-                .setValue(FundComponent.getListItem(newUmbrella.auditorID, this.auditorItems));
-                this.fundForm.controls['taxAuditorID']
-                .setValue(FundComponent.getListItem(newUmbrella.taxAuditorID, this.taxAuditorItems));
-                this.fundForm.controls['principlePromoterID']
-                .setValue(this.getListItems(newUmbrella.principlePromoterID, this.principalPromoterItems));
-                this.fundForm.controls['legalAdvisorID']
-                .setValue(FundComponent.getListItem(newUmbrella.legalAdvisorID, this.legalAdvisorItems));
-                this.fundForm.controls['directors'].setValue(newUmbrella.directors);
-            }
-            this.selectedUmbrella = d[0].id;
-            return;
-        });
-
-        this.fundForm.controls['domicile'].valueChanges
-        .pipe(
-            takeUntil(this.unSubscribe),
-        )
-        .subscribe((d) => {
-            this.fundForm.controls['transferAgentID'].setValue([]);
-            this.fundForm.controls['centralizingAgentID'].setValue([]);
-            this.fundForm.controls['homeCountryLegalType'].setValue([]);
-
-            if (d && this.isHomeCountryLegalTypeVisible()) {
-                this.homeCountryLegalTypeItems = this.fundItems.homeCountryLegalTypeItems[d[0].id] || [];
-                this.fundForm.controls['homeCountryLegalType'].setValidators(Validators.required);
-            } else {
-                this.homeCountryLegalTypeItems = [];
-                this.fundForm.controls['homeCountryLegalType'].clearValidators();
-                this.fundForm.controls['homeCountryLegalType'].updateValueAndValidity();
-            }
-        });
-
-        this.fundForm.controls['isEuDirective'].valueChanges
-        .pipe(
-            takeUntil(this.unSubscribe),
-        )
-        .subscribe((d) => {
-            if (d === this.enums.isEuDirective.NO.toString()) {
-                this.fundForm.controls['typeOfEuDirective'].setValue([]);
-                this.fundForm.controls['typeOfEuDirective'].clearValidators();
-                this.fundForm.controls['typeOfEuDirective'].updateValueAndValidity();
-            } else {
-                this.fundForm.controls['typeOfEuDirective'].setValidators(Validators.required);
-            }
-        });
-
-        this.fundForm.controls['typeOfEuDirective'].valueChanges
-        .pipe(
-            takeUntil(this.unSubscribe),
-        )
-        .subscribe((d) => {
-            if (_.get(d, ['0', 'id'], false) !== this.enums.typeOfEuDirective.UCITS.toString()) {
-                this.fundForm.controls['UcitsVersion'].setValue([]);
-                this.fundForm.controls['UcitsVersion'].clearValidators();
-                this.fundForm.controls['UcitsVersion'].updateValueAndValidity();
-            } else {
-                this.fundForm.controls['UcitsVersion'].setValidators(Validators.required);
-            }
-        });
-
-        this.fundForm.controls['legalForm'].valueChanges
-        .pipe(
-            takeUntil(this.unSubscribe),
-        )
-        .subscribe((d) => {
-            this.fundForm.controls['nationalNomenclatureOfLegalForm'].setValue([]);
-            if (!d || !d[0]) {
-                this.nationalNomenclatureOfLegalFormItems = [];
-                return;
-            }
-            this.nationalNomenclatureOfLegalFormItems = this.fundItems.nationalNomenclatureOfLegalFormItems[d[0].id] || [];
-            if (this.nationalNomenclatureOfLegalFormItems.length === 1) {
-                this.fundForm.controls['nationalNomenclatureOfLegalForm'].setValue([this.nationalNomenclatureOfLegalFormItems[0]]);
-            }
-        });
-
-        this.fundForm.controls['hasCapitalPreservation'].valueChanges
-        .pipe(
-            takeUntil(this.unSubscribe),
-        )
-        .subscribe((d) => {
-            if (d === this.enums.hasCapitalPreservation.NO.toString()) {
-                this.fundForm.controls['capitalPreservationLevel'].setValue(null);
-                this.fundForm.controls['capitalPreservationPeriod'].setValue(null);
-            }
-        });
-
-        this.fundForm.controls['hasCppi'].valueChanges
-        .pipe(
-            takeUntil(this.unSubscribe),
-        )
-        .subscribe((d) => {
-            if (d === this.enums.hasCppi.NO.toString()) {
-                this.fundForm.controls['cppiMultiplier'].setValue(null);
-            }
-        });
-
-        this.umbrellaFundList$
-        .pipe(
-            takeUntil(this.unSubscribe),
-        )
-        .subscribe((d) => {
-            const values = _.values(d);
-            if (!values.length) {
-                return [];
-            }
-            const newItems = values.map((item) => {
-                return {
-                    id: item.umbrellaFundID,
-                    text: item.umbrellaFundName,
-                };
             });
 
-            this.umbrellaList = d;
-            this.umbrellaItems = _.uniq([
-                ...this.fundItems.umbrellaItems,
-                ...newItems,
-            ]);
-        });
+        this.fundForm.controls['domicile'].valueChanges
+            .pipe(
+                takeUntil(this.unSubscribe),
+            )
+            .subscribe((d) => {
+                this.fundForm.controls['transferAgentID'].setValue([]);
+                this.fundForm.controls['centralizingAgentID'].setValue([]);
+                this.fundForm.controls['homeCountryLegalType'].setValue([]);
+
+                if (d && this.isHomeCountryLegalTypeVisible()) {
+                    this.homeCountryLegalTypeItems = this.fundItems.homeCountryLegalTypeItems[d[0].id] || [];
+                    this.fundForm.controls['homeCountryLegalType'].setValidators(Validators.required);
+                } else {
+                    this.homeCountryLegalTypeItems = [];
+                    this.fundForm.controls['homeCountryLegalType'].clearValidators();
+                    this.fundForm.controls['homeCountryLegalType'].updateValueAndValidity();
+                }
+            });
+
+        this.fundForm.controls['isEuDirective'].valueChanges
+            .pipe(
+                takeUntil(this.unSubscribe),
+            )
+            .subscribe((d) => {
+                if (d === this.enums.isEuDirective.NO.toString()) {
+                    this.fundForm.controls['typeOfEuDirective'].setValue([]);
+                    this.fundForm.controls['typeOfEuDirective'].clearValidators();
+                    this.fundForm.controls['typeOfEuDirective'].updateValueAndValidity();
+                } else {
+                    this.fundForm.controls['typeOfEuDirective'].setValidators(Validators.required);
+                }
+            });
+
+        this.fundForm.controls['typeOfEuDirective'].valueChanges
+            .pipe(
+                takeUntil(this.unSubscribe),
+            )
+            .subscribe((d) => {
+                if (_.get(d, ['0', 'id'], false) !== this.enums.typeOfEuDirective.UCITS.toString()) {
+                    this.fundForm.controls['UcitsVersion'].setValue([]);
+                    this.fundForm.controls['UcitsVersion'].clearValidators();
+                    this.fundForm.controls['UcitsVersion'].updateValueAndValidity();
+                } else {
+                    this.fundForm.controls['UcitsVersion'].setValidators(Validators.required);
+                }
+            });
+
+        this.fundForm.controls['legalForm'].valueChanges
+            .pipe(
+                takeUntil(this.unSubscribe),
+            )
+            .subscribe((d) => {
+                this.fundForm.controls['nationalNomenclatureOfLegalForm'].setValue([]);
+                if (!d || !d[0]) {
+                    this.nationalNomenclatureOfLegalFormItems = [];
+                    return;
+                }
+                this.nationalNomenclatureOfLegalFormItems = this.fundItems.nationalNomenclatureOfLegalFormItems[d[0].id] || [];
+                if (this.nationalNomenclatureOfLegalFormItems.length === 1) {
+                    this.fundForm.controls['nationalNomenclatureOfLegalForm'].setValue([this.nationalNomenclatureOfLegalFormItems[0]]);
+                }
+            });
+
+        this.fundForm.controls['hasCapitalPreservation'].valueChanges
+            .pipe(
+                takeUntil(this.unSubscribe),
+            )
+            .subscribe((d) => {
+                if (d === this.enums.hasCapitalPreservation.NO.toString()) {
+                    this.fundForm.controls['capitalPreservationLevel'].setValue(null);
+                    this.fundForm.controls['capitalPreservationPeriod'].setValue(null);
+                }
+            });
+
+        this.fundForm.controls['hasCppi'].valueChanges
+            .pipe(
+                takeUntil(this.unSubscribe),
+            )
+            .subscribe((d) => {
+                if (d === this.enums.hasCppi.NO.toString()) {
+                    this.fundForm.controls['cppiMultiplier'].setValue(null);
+                }
+            });
+
+        this.umbrellaFundList$
+            .pipe(
+                takeUntil(this.unSubscribe),
+            )
+            .subscribe((d) => {
+                const values = _.values(d);
+                if (!values.length) {
+                    return [];
+                }
+                const newItems = values.map((item) => {
+                    return {
+                        id: item.umbrellaFundID,
+                        text: item.umbrellaFundName,
+                    };
+                });
+
+                this.umbrellaList = d;
+                this.umbrellaItems = _.uniq([
+                    ...this.fundItems.umbrellaItems,
+                    ...newItems,
+                ]);
+            });
 
         combineLatest(
             this.fundList$,
@@ -538,58 +543,58 @@ export class FundComponent implements OnInit, OnDestroy {
             this.route.params,
             this.route.queryParams,
         )
-        .pipe(
-            takeUntil(this.unSubscribe),
-        )
-        .subscribe(([funds, m, u, params, queryParams]) => {
-            if (!Object.keys(funds) || !Object.keys(m) || !Object.keys(u)) {
-                return;
-            }
-            this.setManagementCompanyItems(m);
-            this.setFundList(funds);
-            this.param = params.id;
-            this.prefill = queryParams.prefill;
-            if (queryParams.prefill) {
-                this.fundControl.setValue(
-                    FundComponent.getListItem(queryParams.prefill, this.fundListItems),
-                );
-            }
-            if (
-                this.managementCompanyItems.length > 0
-                && this.fundList.length > 0
-                && (this.param || this.prefill)
-            ) {
-                this.fillFormByFundID(this.param || this.prefill);
-                this.viewMode = 'FUND';
-                return;
-            }
-        });
+            .pipe(
+                takeUntil(this.unSubscribe),
+            )
+            .subscribe(([funds, m, u, params, queryParams]) => {
+                if (!Object.keys(funds) || !Object.keys(m) || !Object.keys(u)) {
+                    return;
+                }
+                this.setManagementCompanyItems(m);
+                this.setFundList(funds);
+                this.param = params.id;
+                this.prefill = queryParams.prefill;
+                if (queryParams.prefill) {
+                    this.fundControl.setValue(
+                        FundComponent.getListItem(queryParams.prefill, this.fundListItems),
+                    );
+                }
+                if (
+                    this.managementCompanyItems.length > 0
+                    && this.fundList.length > 0
+                    && (this.param || this.prefill)
+                ) {
+                    this.fillFormByFundID(this.param || this.prefill);
+                    this.viewMode = 'FUND';
+                    return;
+                }
+            });
 
         this.reqConfig$.pipe(
             takeUntil(this.unSubscribe))
-        .subscribe((requested) => {
-            this.requestConfig(requested);
-        });
+            .subscribe((requested) => {
+                this.requestConfig(requested);
+            });
 
         this.config$.pipe(
             takeUntil(this.unSubscribe))
-        .subscribe((config) => {
-            this.productConfig = config;
-        });
+            .subscribe((config) => {
+                this.productConfig = config;
+            });
 
         this.currencyList$
-        .pipe(
-            takeUntil(this.unSubscribe),
-        )
-        .subscribe((d) => {
-            const data = d.toJS();
+            .pipe(
+                takeUntil(this.unSubscribe),
+            )
+            .subscribe((d) => {
+                const data = d.toJS();
 
-            if (!data.length) {
-                return [];
-            }
+                if (!data.length) {
+                    return [];
+                }
 
-            this.fundCurrencyItems = data;
-        });
+                this.fundCurrencyItems = data;
+            });
     }
 
     fundFormValue() {
@@ -752,6 +757,13 @@ export class FundComponent implements OnInit, OnDestroy {
         return id === 'FR';
     }
 
+    isLeiAlreadyExisting(currentLei: string): boolean {
+        if (!this.leiList.length || !currentLei) {
+            return false;
+        }
+        return this.leiList.indexOf(currentLei) !== -1;
+    }
+
     ngOnInit() {
         this.route.queryParams.subscribe((params) => {
             if (params.fromShare) {
@@ -763,19 +775,52 @@ export class FundComponent implements OnInit, OnDestroy {
         });
 
         this.fundControl.valueChanges
-        .pipe(
-            takeUntil(this.unSubscribe),
-        )
-        .subscribe((item) => {
-            if (!item || !item.length) {
-                this.umbrellaControl.reset();
-                this.umbrellaEditForm.reset();
-                this.fundForm.reset();
-                return;
-            }
-            this.fillFormByFundID(item[0].id);
-            this.changeDetectorRef.markForCheck();
-        });
+            .pipe(
+                takeUntil(this.unSubscribe),
+            )
+            .subscribe((item) => {
+                if (!item || !item.length) {
+                    this.umbrellaControl.reset();
+                    this.umbrellaEditForm.reset();
+                    this.fundForm.reset();
+                    return;
+                }
+                this.fillFormByFundID(item[0].id);
+                this.changeDetectorRef.markForCheck();
+            });
+
+        this.leiListOb
+            .pipe(
+                takeUntil(this.unSubscribe),
+            )
+            .subscribe((leiList) => {
+                this.leiList = leiList;
+            });
+
+        this.fundForm.controls['legalEntityIdentifier'].valueChanges
+            .pipe(
+                takeUntil(this.unSubscribe),
+            )
+            .subscribe((val) => {
+                if (!this.isLeiVisible) {
+                    return;
+                }
+
+                const leiControl = this.fundForm.controls.legalEntityIdentifier;
+
+                if (leiControl.errors) {
+                    return;
+                }
+
+                if (!val || !this.isLeiAlreadyExisting(val)) {
+                    return;
+                } else {
+                    leiControl
+                        .setErrors({
+                            isAlreadyExisting: true,
+                        });
+                }
+            });
     }
 
     setManagementCompanyItems(d) {
@@ -927,13 +972,13 @@ export class FundComponent implements OnInit, OnDestroy {
 
     waitForCurrentUmbrella(umbrellaID) {
         this.umbrellaFundList$
-        .pipe(
-            filter(umbrellas => umbrellas[umbrellaID]),
-            take(1),
-        )
-        .subscribe((umbrellas) => {
-            this.setCurrentUmbrella(umbrellas[umbrellaID]);
-        });
+            .pipe(
+                filter(umbrellas => umbrellas[umbrellaID]),
+                take(1),
+            )
+            .subscribe((umbrellas) => {
+                this.setCurrentUmbrella(umbrellas[umbrellaID]);
+            });
     }
 
     setCurrentUmbrella(umbrella) {
@@ -968,43 +1013,43 @@ export class FundComponent implements OnInit, OnDestroy {
         if (!this.param) {
 
             this.fundService.iznCreateFund(payload)
-            .then(fund => {
-                const fundID = _.get(fund, ['1', 'Data', '0', 'fundID']);
-                const fundName = _.get(fund, ['1', 'Data', '0', 'fundName']);
+                .then(fund => {
+                    const fundID = _.get(fund, ['1', 'Data', '0', 'fundID']);
+                    const fundName = _.get(fund, ['1', 'Data', '0', 'fundName']);
 
-                if (!_.isUndefined(fundID)) {
-                    if (this.currentRoute.fromShare) {
-                        this.redirectToShare(fundID);
+                    if (!_.isUndefined(fundID)) {
+                        if (this.currentRoute.fromShare) {
+                            this.redirectToShare(fundID);
+                        } else {
+                            this.displaySharePopup(fundName, fundID);
+                        }
                     } else {
-                        this.displaySharePopup(fundName, fundID);
+                        this.creationSuccess(fundName);
                     }
-                } else {
-                    this.creationSuccess(fundName);
-                }
-                this.fundService.fetchFundList();
-                return;
-            })
-            .catch((err) => {
-                const errMsg = _.get(err, '[1].Data[0].Message', '');
-                this.toasterService.pop('error', 'Failed to create the fund. ' + errMsg);
-                return;
-            });
+                    this.fundService.fetchFundList();
+                    return;
+                })
+                .catch((err) => {
+                    const errMsg = _.get(err, '[1].Data[0].Message', '');
+                    this.toasterService.pop('error', 'Failed to create the fund. ' + errMsg);
+                    return;
+                });
         } else {
             this.fundService.iznUpdateFund(this.param, payload)
-            .then(() => {
-                this.toasterService.pop(
-                    'success',
-                    `${this.fundForm.controls['fundName'].value} has been successfully updated.`,
-                );
-                this.fundService.fetchFundList();
-                this.location.back();
-                return;
-            })
-            .catch((err) => {
-                const errMsg = _.get(err, '[1].Data[0].Message', '');
-                this.toasterService.pop('error', 'Failed to update the fund. ' + errMsg);
-                return;
-            });
+                .then(() => {
+                    this.toasterService.pop(
+                        'success',
+                        `${this.fundForm.controls['fundName'].value} has been successfully updated.`,
+                    );
+                    this.fundService.fetchFundList();
+                    this.location.back();
+                    return;
+                })
+                .catch((err) => {
+                    const errMsg = _.get(err, '[1].Data[0].Message', '');
+                    this.toasterService.pop('error', 'Failed to update the fund. ' + errMsg);
+                    return;
+                });
         }
     }
 
@@ -1017,36 +1062,36 @@ export class FundComponent implements OnInit, OnDestroy {
         if (!this.param) {
 
             this.fundService.iznCreateFund(payload)
-            .then(() => {
-                this.toasterService.pop(
-                    'success',
-                    `${this.fundForm.controls['fundName'].value} draft has been successfully saved.`,
-                );
-                this.fundService.fetchFundList();
-                this.location.back();
-                return;
-            })
-            .catch((err) => {
-                const errMsg = _.get(err, '[1].Data[0].Message', '');
-                this.toasterService.pop('error', 'Failed to create the draft fund. ' + errMsg);
-                return;
-            });
+                .then(() => {
+                    this.toasterService.pop(
+                        'success',
+                        `${this.fundForm.controls['fundName'].value} draft has been successfully saved.`,
+                    );
+                    this.fundService.fetchFundList();
+                    this.location.back();
+                    return;
+                })
+                .catch((err) => {
+                    const errMsg = _.get(err, '[1].Data[0].Message', '');
+                    this.toasterService.pop('error', 'Failed to create the draft fund. ' + errMsg);
+                    return;
+                });
         } else {
             this.fundService.iznUpdateFund(this.param, payload)
-            .then(() => {
-                this.toasterService.pop(
-                    'success',
-                    `${this.fundForm.controls['fundName'].value} draft has been successfully updated.`,
-                );
-                this.fundService.fetchFundList();
-                this.location.back();
-                return;
-            })
-            .catch((err) => {
-                const errMsg = _.get(err, '[1].Data[0].Message', '');
-                this.toasterService.pop('error', 'Failed to update the draft fund. ' + errMsg);
-                return;
-            });
+                .then(() => {
+                    this.toasterService.pop(
+                        'success',
+                        `${this.fundForm.controls['fundName'].value} draft has been successfully updated.`,
+                    );
+                    this.fundService.fetchFundList();
+                    this.location.back();
+                    return;
+                })
+                .catch((err) => {
+                    const errMsg = _.get(err, '[1].Data[0].Message', '');
+                    this.toasterService.pop('error', 'Failed to update the draft fund. ' + errMsg);
+                    return;
+                });
         }
     }
 
