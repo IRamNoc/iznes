@@ -72,7 +72,6 @@ export const AuthenticationReducer = function (state: AuthenticationState = init
         });
 
     case AuthenticationAction.UPDATE_TWO_FACTOR:
-        console.log('+++ AuthenticationAction.UPDATE_TWO_FACTOR: ', action);
         useTwoFactor = Number(_.get(action, 'payload[1].Data[0].useTwoFactor', 0));
         token = _.get(action, 'payload[1].Data[0].token', '');
         return Object.assign({}, state, { useTwoFactor, token });

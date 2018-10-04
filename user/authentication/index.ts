@@ -7,6 +7,6 @@ export {
     SET_NEW_PASSWORD,
     CLEAR_MUST_CHANGE_PASSWORD,
     resetHomepage,
-    UPDATE_TWO_FACTOR
+    UPDATE_TWO_FACTOR,
 } from './actions';
 export { getAuthentication } from './selectors';

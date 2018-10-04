@@ -17,7 +17,7 @@ export {
     CLEAR_MUST_CHANGE_PASSWORD,
     resetHomepage,
     UPDATE_TWO_FACTOR,
-
+ 
     // connected
     setConnectedWallet,
     setConnectedChain,
@@ -36,7 +36,6 @@ export {
     SET_VERSION,
     SET_LANGUAGE,
     SET_SITE_MENU,
-
 } from './user';
 
 export {
@@ -279,7 +278,6 @@ export {
 
     // Combine reducer.
     ChainReducer,
-
 } from './chain';
 
 /* Connections */
