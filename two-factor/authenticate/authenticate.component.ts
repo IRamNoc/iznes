@@ -126,7 +126,16 @@ export class AuthenticateComponent implements OnDestroy, OnInit {
                 (data) => {
                     this.changeDetectorRef.markForCheck();
                     console.error('error: ', data);
-                    this.alertsService.generate('error', data[1].Data.Message);
+                    this.alertsService.generate('error', data[1].Data[0].Message);
+
+                    if (data[1].Data[0].hasOwnProperty('AccountLocked') && data[1].Data[0].AccountLocked) {
+                        const lockedMessage = 'Sorry, your account has been locked. ' +
+                            'Please contact your Administrator.</span>';
+                        this.alertsService.generate(
+                            'info',
+                            lockedMessage,
+                            { buttonMessage: 'Close' });
+                    }
                 }),
             );
 
@@ -169,19 +178,19 @@ export class AuthenticateComponent implements OnDestroy, OnInit {
                         );
                     } else {
                         this.alertsService.create('clear');
-                        this.alertsService.create(
+                        this.alertsService.generate(
                             'error',
-                            `<span class="text-warning"> ${data[1].Data[0].Message}</span>`,
+                            data[1].Data[0].Message,
                         );
                         this.closeTwoFactorModal();
                     }
                 },
                 () => {
                     this.alertsService.create('clear');
-                    this.alertsService.create(
+                    this.alertsService.generate(
                         'error',
-                        '<span class="text-warning">Sorry, your Two-Factor reset request could not be completed.' +
-                        '<br>Please try again later!</span>');
+                        'Sorry, your Two-Factor reset request could not be completed.' +
+                        'Please try again later!');
                     this.closeTwoFactorModal();
                 }),
             );
@@ -212,18 +221,20 @@ export class AuthenticateComponent implements OnDestroy, OnInit {
                         1500,
                     );
                 } else {
-                    this.alertsService.create(
+                    this.alertsService.generate(
                         'error',
-                        `<span class="text-warning">${data[1].Data[0].Message}</span>`);
+                        data[1].Data[0].Message,
+                    );
                 }
             },
             () => {
                 // add a delay to prevent the appearance of effect side effects
                 setTimeout(
                     () => {
-                        this.alertsService.create(
+                        this.alertsService.generate(
                             'error',
-                            '<span class="text-warning">Your Two-Factor reset request could not be completed.</span>');
+                            'Your Two-Factor reset request could not be completed.',
+                        );
                     },
                     1500,
                 );

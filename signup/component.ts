@@ -243,7 +243,7 @@ export class SignupComponent implements OnDestroy, OnInit {
             this.showLoginErrorMessage(
                 'info',
                 '<span mltag="txt_accountlocked" class="text-warning">Sorry, your account has been locked. ' +
-                'Please Contact your Administrator.</span>',
+                'Please contact your Administrator.</span>',
             );
             break;
         default:

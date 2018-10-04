@@ -456,17 +456,17 @@ export class SetlLoginComponent implements OnDestroy, OnInit, AfterViewInit {
                         5000,
                     );
                 } else {
-                    this.alertsService.create(
+                    this.alertsService.generate(
                         'error',
-                        `<span class="text-warning"> ${data[1].Data[0].Message}</span>`,
+                        data[1].Data[0].Message,
                     );
                     this.closeFPModal();
                 }
             },
             (data) => {
-                this.alertsService.create(
+                this.alertsService.generate(
                     'error',
-                    '<span class="text-warning">Sorry, something went wrong.<br>Please try again later!</span>');
+                    'Sorry, something went wrong.<br>Please try again later!');
                 this.closeFPModal();
             }),
         );
@@ -491,9 +491,10 @@ export class SetlLoginComponent implements OnDestroy, OnInit, AfterViewInit {
                         1500,
                     );
                 } else {
-                    this.alertsService.create(
+                    this.alertsService.generate(
                         'error',
-                        `<span class="text-warning">${data[1].Data[0].Message}</span>`);
+                        data[1].Data[0].Message,
+                    );
                 }
             },
             () => {
@@ -526,16 +527,16 @@ export class SetlLoginComponent implements OnDestroy, OnInit, AfterViewInit {
 
                     this.toasterService.pop('success', 'Your password has been changed!');
                 } else {
-                    this.alertsService.create(
+                    this.alertsService.generate(
                         'error',
-                        `<span class="text-warning">${data[1].Data[0].Message}</span>`);
+                        data[1].Data[0].Message);
                     this.closeFPModal();
                 }
             },
             (data) => {
-                this.alertsService.create(
+                this.alertsService.generate(
                     'error',
-                    '<span class="text-warning">Sorry, something went wrong.<br>Please try again later!</span>');
+                    'Sorry, something went wrong.<br>Please try again later!');
                 this.closeFPModal();
             }),
         );
@@ -572,7 +573,7 @@ export class SetlLoginComponent implements OnDestroy, OnInit, AfterViewInit {
             () => {
                 const message = this.translate.translate(
                     'An error has occurred, please make sure the data you entered is correct.');
-                this.alertsService.create('error', `<span class="text-warning">${message}</span>`);
+                this.alertsService.generate('error', message);
             },
         );
 
@@ -601,21 +602,21 @@ export class SetlLoginComponent implements OnDestroy, OnInit, AfterViewInit {
         case 'fail':
             this.showLoginErrorMessage(
                 'warning',
-                '<span mltag="txt_loginerror" class="text-warning">Invalid email address or password!</span>',
+                '<span mltag="txt_loginerror">Invalid email address or password!</span>',
             );
             break;
         case 'locked':
             this.showLoginErrorMessage(
                 'info',
-                '<span mltag="txt_accountlocked" class="text-warning">' +
+                '<span mltag="txt_accountlocked">' +
                 'Sorry, your account has been locked. ' +
-                'Please Contact your Administrator.</span>',
+                'Please contact your Administrator.</span>',
             );
             break;
         default:
             this.showLoginErrorMessage(
                 'error',
-                '<span mltag="txt_loginproblem" class="text-warning">' +
+                '<span mltag="txt_loginproblem">' +
                 'Sorry, there was a problem logging in, please try again.</span>',
             );
             break;
@@ -623,7 +624,7 @@ export class SetlLoginComponent implements OnDestroy, OnInit, AfterViewInit {
     }
 
     showLoginErrorMessage(type, msg) {
-        this.alertsService.create(type, msg, { buttonMessage: 'Please try again to log in' });
+        this.alertsService.generate(type, msg, { buttonMessage: 'Close' });
     }
 
     updateLang(lang: string) {
