@@ -10,9 +10,11 @@ import {
     SaveUserDetailsRequestBody,
     SetTwoFactorAuthenticationBody,
     AuthenticateTwoFactorAuthenticationBody,
+    ForgotTwoFactorRequestBody,
     SaveNewPasswordRequestBody,
     RefreshTokenRequestBody,
-    ForgotPasswordRequestBody, ValidTokenRequestBody,
+    ForgotPasswordRequestBody,
+    ValidTokenRequestBody,
     SetNewPasswordFromTokenRequestBody,
     SetLanguageRequestBody,
     GetLanguageRequestBody,
@@ -53,7 +55,6 @@ interface UserDetailsData {
 
 interface SetTwoFactorAuthenticationData {
     twoFactorAuthentication: string;
-    twoFactorVerified: string;
     type: string;
     userID: string;
 }
@@ -64,6 +65,10 @@ interface AuthenticateTwoFactorData {
     userID: string;
     type: string;
     sessionTimeout: number;
+}
+
+interface ForgotTwoFactorData {
+    email: string;
 }
 
 interface NewPasswordData {
@@ -178,7 +183,6 @@ export class MyUserService implements OnDestroy {
             RequestName: 'settwofactor',
             token: String(this.memberSocketService.token),
             twoFactorAuthentication: userData.twoFactorAuthentication,
-            twoFactorVerified: userData.twoFactorAuthentication,
             type: userData.type || 'GoogleAuth',
             userID: userData.userID,
         };
@@ -195,6 +199,15 @@ export class MyUserService implements OnDestroy {
             userID: userData.userID,
             type: userData.type || 'GoogleAuth',
             sessionTimeout: userData.sessionTimeout,
+        };
+
+        return createMemberNodeSagaRequest(this.memberSocketService, messageBody);
+    }
+
+    forgotTwoFactor(data: ForgotTwoFactorData): any {
+        const messageBody: ForgotTwoFactorRequestBody = {
+            RequestName: 'forgottwofactor',
+            email: data.email,
         };
 
         return createMemberNodeSagaRequest(this.memberSocketService, messageBody);

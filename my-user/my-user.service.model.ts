@@ -36,7 +36,6 @@ export interface SaveUserDetailsRequestBody extends MemberNodeMessageBody {
 export interface SetTwoFactorAuthenticationBody extends MemberNodeMessageBody {
     token: string;
     twoFactorAuthentication: string;
-    twoFactorVerified: string;
     type: string;
     userID: string;
 }
@@ -48,6 +47,10 @@ export interface AuthenticateTwoFactorAuthenticationBody extends MemberNodeMessa
     userID: string;
     type: string;
     sessionTimeout: number;
+}
+
+export interface ForgotTwoFactorRequestBody extends MemberNodeMessageBody {
+    email: string;
 }
 
 export interface SaveNewPasswordRequestBody extends MemberNodeMessageBody {
