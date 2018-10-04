@@ -191,6 +191,7 @@ public class LoginAndNavigationHelper {
         clickLoginButton();
         waitForHomePageToLoad();
         System.out.println("Status : Successfully logged in as '" + username + "'");
+        System.out.println("=======================================================");
     }
 
     public static void loginAndVerifyFailure(String username, String password) throws InterruptedException {
@@ -304,7 +305,7 @@ public class LoginAndNavigationHelper {
         } catch (Exception e) {
             fail("Settings dropdown not available " + e.getMessage());
         }
-        System.out.println("Status : Logged out");
+        System.out.println("Status : Successfully Logged out");
         System.out.println("=======================================================");
     }
 
