@@ -501,4 +501,166 @@ public class AdministrationModuleHelper {
             rs.close();
         } return teamID;
     }
+
+    public static void selectOrderBookPermissions() {
+        scrollElementIntoViewById("permissionsCellName11");
+        driver.findElement(By.id("permissionsCellName11")).click();
+        String permissionCataName = driver.findElement(By.id("permissionsCellName11")).getText();
+        assertTrue(permissionCataName.equals("Order Book"));
+        String permissionsCataDesc = driver.findElement(By.id("permissionsCellDesc11")).getText();
+        assertTrue(permissionsCataDesc.equals("View, Manage and Cancel orders placed by investors on shares"));
+        String permissionName1 = driver.findElement(By.id("permissionsCellName12")).getText();
+        assertTrue(permissionName1.equals("View Orders"));
+        String permissionsDesc1 = driver.findElement(By.id("permissionsCellDesc12")).getText();
+        assertTrue(permissionsDesc1.equals("View orders and order history"));
+        driver.findElement(By.cssSelector("#permissionsCellActions12 > label:nth-child(1) > span:nth-child(2)")).click();
+        driver.findElement(By.cssSelector("#permissionsCellActions13 > label:nth-child(1) > span:nth-child(2)")).click();
+    }
+
+    public static String validateOrderBookTeamPermissions(String teamName) throws SQLException {
+        conn = DriverManager.getConnection(connectionString, DBUsername, DBPassword);
+        Statement stmt = conn.createStatement();
+        ResultSet rs = null;
+        String teamID = null;
+        try {
+            String getUserTeamID = "select userTeamID from setlnet.tblUserTeams where name = " + "\"" + teamName + "\"";
+            rs = stmt.executeQuery(getUserTeamID);
+            rs.last();
+            teamID = rs.getString("userTeamID");
+            String getPermissions = "SELECT a.userTeamID, a.reference , a.name as userTeamName, c.name as permissionName FROM setlnet.tblUserTeams a INNER JOIN setlnet.tblUserTeamPermissionAreasMap b on a.userTeamID = b.userTeamID INNER JOIN setlnet.tblUserTeamPermissionAreas c on b.permissionAreaID = c.permissionAreaID where a.userTeamID = " + "\"" + teamID + "\" order by c.name";
+            ResultSet gp = stmt.executeQuery(getPermissions);
+
+            List<String> actualList = new ArrayList<>();
+            while(gp.next()){
+                actualList.add(gp.getString("permissionName"));
+            }
+            List<String> expectedList = Arrays.asList("Cancel Orders", "View Orders");
+            assertEquals(expectedList, actualList);
+        }catch (Exception e) {
+            e.printStackTrace();
+            fail();
+        } finally {
+            conn.close();
+            stmt.close();
+            rs.close();
+        } return teamID;
+
+    }
+
+    public static void selectMyReportsPermissions() {
+        scrollElementIntoViewById("permissionsCellName14");
+        driver.findElement(By.id("permissionsCellName14")).click();
+        String permissionCataName = driver.findElement(By.id("permissionsCellName14")).getText();
+        assertTrue(permissionCataName.equals("My Reports"));
+        String permissionsCataDesc = driver.findElement(By.id("permissionsCellDesc14")).getText();
+        assertTrue(permissionsCataDesc.equals("View registers, precentralisation and centralisation reports"));
+        String permissionsName1 = driver.findElement(By.id("permissionsCellName15")).getText();
+        assertTrue(permissionsName1.equals("View Recordkeeping"));
+        String permissionsDesc1 = driver.findElement(By.id("permissionsCellDesc15")).getText();
+        assertTrue(permissionsDesc1.equals("View register of all the holders of shares"));
+        String permissionsName2 = driver.findElement(By.id("permissionsCellName16")).getText();
+        assertTrue(permissionsName2.equals("View Precentralisation"));
+        String permissionsDesc2 = driver.findElement(By.id("permissionsCellDesc16")).getText();
+        assertTrue(permissionsDesc2.equals("View precentralisation reports of shares"));
+        String permissionsName3 = driver.findElement(By.id("permissionsCellName17")).getText();
+        assertTrue(permissionsName3.equals("View Centralisation"));
+        String permissionDesc3 = driver.findElement(By.id("permissionsCellDesc17")).getText();
+        assertTrue(permissionDesc3.equals("View centralisation reports of shares"));
+        driver.findElement(By.cssSelector("#permissionsCellActions15 > label:nth-child(1) > span:nth-child(2)")).click();
+        driver.findElement(By.cssSelector("#permissionsCellActions16 > label:nth-child(1) > span:nth-child(2)")).click();
+        driver.findElement(By.cssSelector("#permissionsCellActions17 > label:nth-child(1) > span:nth-child(2)")).click();
+    }
+
+    public static String validateMyReportsTeamPermissions(String teamName) throws SQLException {
+        conn = DriverManager.getConnection(connectionString, DBUsername, DBPassword);
+        Statement stmt = conn.createStatement();
+        ResultSet rs = null;
+        String teamID = null;
+        try {
+            String getUserTeamID = "select userTeamID from setlnet.tblUserTeams where name = " + "\"" + teamName + "\"";
+            rs = stmt.executeQuery(getUserTeamID);
+            rs.last();
+            teamID = rs.getString("userTeamID");
+            String getPermissions = "SELECT a.userTeamID, a.reference , a.name as userTeamName, c.name as permissionName FROM setlnet.tblUserTeams a INNER JOIN setlnet.tblUserTeamPermissionAreasMap b on a.userTeamID = b.userTeamID INNER JOIN setlnet.tblUserTeamPermissionAreas c on b.permissionAreaID = c.permissionAreaID where a.userTeamID = " + "\"" + teamID + "\" order by c.name";
+            ResultSet gp = stmt.executeQuery(getPermissions);
+
+            List<String> actualList = new ArrayList<>();
+            while(gp.next()){
+                actualList.add(gp.getString("permissionName"));
+            }
+            List<String> expectedList = Arrays.asList("View Centralisation", "View Precentralisation", "View Recordkeeping");
+            assertEquals(expectedList, actualList);
+        }catch (Exception e) {
+            e.printStackTrace();
+            fail();
+        } finally {
+            conn.close();
+            stmt.close();
+            rs.close();
+        } return teamID;
+    }
+
+    public static void selectMyClientsPermissions() {
+        scrollElementIntoViewById("permissionsCellName18");
+        driver.findElement(By.id("permissionsCellName18")).click();
+        String permissionsCataName = driver.findElement(By.id("permissionsCellName18")).getText();
+        assertTrue(permissionsCataName.equals("My Clients"));
+        String permissionsCataDesc = driver.findElement(By.id("permissionsCellDesc18")).getText();
+        assertTrue(permissionsCataDesc.equals("Manage and view the KYC process of potential investors"));
+        String permissionName1 = driver.findElement(By.id("permissionsCellName19")).getText();
+        assertTrue(permissionName1.equals("View KYC Requests"));
+        String permissionsDesc1 = driver.findElement(By.id("permissionsCellDesc19")).getText();
+        assertTrue(permissionsDesc1.equals("View KYC requests of potential investors"));
+        String permissionName2 = driver.findElement(By.id("permissionsCellName20")).getText();
+        assertTrue(permissionName2.equals("Update KYC Requests"));
+        String permissionsDesc2 = driver.findElement(By.id("permissionsCellDesc20")).getText();
+        assertTrue(permissionsDesc2.equals("Validate, reject or ask more information regarding the KYC request of potential investors"));
+        String permissionName3 = driver.findElement(By.id("permissionsCellName21")).getText();
+        assertTrue(permissionName3.equals("View Client Referentials"));
+        String permissionsDesc3 = driver.findElement(By.id("permissionsCellDesc21")).getText();
+        assertTrue(permissionsDesc3.equals("Get information about clients KYC information, positions information and shares autorisation"));
+        String permissionName4 = driver.findElement(By.id("permissionsCellName22")).getText();
+        assertTrue(permissionName4.equals("Update Client Referentials"));
+        String permissionDesc4 = driver.findElement(By.id("permissionsCellDesc22")).getText();
+        assertTrue(permissionDesc4.equals("Modify clients KYC information, positions information and shares autorisation"));
+        String permissionsName5 = driver.findElement(By.id("permissionsCellName23")).getText();
+        assertTrue(permissionsName5.equals("Invite Investors"));
+        String permissionsDesc5 = driver.findElement(By.id("permissionsCellDesc23")).getText();
+        assertTrue(permissionsDesc5.equals("Invite investors to make a KYC application"));
+        driver.findElement(By.cssSelector("#permissionsCellActions19 > label:nth-child(1) > span:nth-child(2)")).click();
+        driver.findElement(By.cssSelector("#permissionsCellActions20 > label:nth-child(1) > span:nth-child(2)")).click();
+        driver.findElement(By.cssSelector("#permissionsCellActions21 > label:nth-child(1) > span:nth-child(2)")).click();
+        driver.findElement(By.cssSelector("#permissionsCellActions22 > label:nth-child(1) > span:nth-child(2)")).click();
+        driver.findElement(By.cssSelector("#permissionsCellActions23 > label:nth-child(1) > span:nth-child(2)")).click();
+    }
+
+    public static String validateMyClientsTeamPermissions(String teamName) throws SQLException {
+        conn = DriverManager.getConnection(connectionString, DBUsername, DBPassword);
+        Statement stmt = conn.createStatement();
+        ResultSet rs = null;
+        String teamID = null;
+        try {
+            String getUserTeamID = "select userTeamID from setlnet.tblUserTeams where name = " + "\"" + teamName + "\"";
+            rs = stmt.executeQuery(getUserTeamID);
+            rs.last();
+            teamID = rs.getString("userTeamID");
+            String getPermissions = "SELECT a.userTeamID, a.reference , a.name as userTeamName, c.name as permissionName FROM setlnet.tblUserTeams a INNER JOIN setlnet.tblUserTeamPermissionAreasMap b on a.userTeamID = b.userTeamID INNER JOIN setlnet.tblUserTeamPermissionAreas c on b.permissionAreaID = c.permissionAreaID where a.userTeamID = " + "\"" + teamID + "\" order by c.name";
+            ResultSet gp = stmt.executeQuery(getPermissions);
+
+            List<String> actualList = new ArrayList<>();
+            while(gp.next()){
+                actualList.add(gp.getString("permissionName"));
+            }
+            List<String> expectedList = Arrays.asList("Invite Investors", "Update Client Referentials", "Update KYC Requests", "View Client Referentials", "View KYC Requests");
+            assertEquals(expectedList, actualList);
+        }catch (Exception e) {
+            e.printStackTrace();
+            fail();
+        } finally {
+            conn.close();
+            stmt.close();
+            rs.close();
+        } return teamID;
+    }
 }
+

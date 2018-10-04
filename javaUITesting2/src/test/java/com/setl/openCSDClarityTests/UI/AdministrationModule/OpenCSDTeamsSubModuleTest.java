@@ -52,6 +52,7 @@ public class OpenCSDTeamsSubModuleTest {
         fillInTeamsDetails(teamName[0], teamReference[0], teamDescription[0]);
         selectCreateNewTeamNoPermissions();
         searchTeam(teamReference[0],teamName[0],teamDescription[0], "Pending");
+        logout();
         validateTeamsCreated(1, teamName[0], teamReference[0], teamDescription[0]);
     }
 
@@ -74,6 +75,7 @@ public class OpenCSDTeamsSubModuleTest {
         editTeamName(updateName[0]);
         selectUpdateTeam();
         searchTeam(teamReference[0], updateName[0], teamDescription[0], "Pending");
+        logout();
         validateTeamsCreated(1, updateName[0], teamReference[0], teamDescription[0]);
 
     }
@@ -94,6 +96,7 @@ public class OpenCSDTeamsSubModuleTest {
         assertTeamName(teamName[0]);
         selectDeleteTeam("No",teamName[0]);
         searchTeam(teamReference[0], teamName[0], teamDescription[0], "Pending");
+        logout();
         validateTeamsCreated(1, teamReference[0], teamName[0], teamDescription[0]);
     }
 
@@ -113,11 +116,12 @@ public class OpenCSDTeamsSubModuleTest {
         selectTeamRow0();
         assertTeamName(teamName[0]);
         selectDeleteTeam("Yes",teamName[0]);
+        logout();
         validateTeamsDeleted(0, teamReference[0], teamName[0], teamDescription[0]);
     }
 
     @Test
-    public void shouldCreateTeamWithPermissions() throws InterruptedException, SQLException {
+    public void shouldCreateTeamWithPermissionsAdministration() throws InterruptedException, SQLException {
         String [] teamName = generateRandomTeamName();
         String [] teamReference = generateRandomTeamReference();
         String [] teamDescription = fillInDescription();
@@ -128,7 +132,60 @@ public class OpenCSDTeamsSubModuleTest {
         fillInTeamsDetails(teamName[0], teamReference[0], teamDescription[0]);
         selectAccountAdminPermissions();
         selectCreateNewTeam();
+        searchTeam(teamReference[0], teamName[0], teamDescription[0], "Pending");
+        logout();
         validateTeamsCreated(1, teamReference[0], teamName[0], teamDescription[0]);
         validateAdminTeamPermissions(teamName[0]);
+    }
+    @Test
+    public void shouldCreateTeamWithPermissionsOrderBook() throws InterruptedException, SQLException {
+        String [] teamName = generateRandomTeamName();
+        String [] teamReference = generateRandomTeamReference();
+        String [] teamDescription = fillInDescription();
+        loginAndVerifySuccess("am", "alex01");
+        navigateToDropdown("menu-administration");
+        navigateToDropdown("menu-administration-teams");
+        selectAddNewTeam();
+        fillInTeamsDetails(teamName[0], teamReference[0], teamDescription[0]);
+        selectOrderBookPermissions();
+        selectCreateNewTeam();
+        searchTeam(teamReference[0], teamName[0], teamDescription[0], "Pending");
+        logout();
+        validateTeamsCreated(1, teamReference[0], teamName[0], teamDescription[0]);
+        validateOrderBookTeamPermissions(teamName[0]);
+    }
+    @Test
+    public void shouldCreateTeamWithPermissionsMyReports() throws InterruptedException, SQLException {
+        String [] teamName = generateRandomTeamName();
+        String [] teamReference = generateRandomTeamReference();
+        String [] teamDescription = fillInDescription();
+        loginAndVerifySuccess("am", "alex01");
+        navigateToDropdown("menu-administration");
+        navigateToDropdown("menu-administration-teams");
+        selectAddNewTeam();
+        fillInTeamsDetails(teamName[0], teamReference[0], teamDescription[0]);
+        selectMyReportsPermissions();
+        selectCreateNewTeam();
+        searchTeam(teamReference[0], teamName[0], teamDescription[0], "Pending");
+        logout();
+        validateTeamsCreated(1, teamReference[0], teamName[0], teamDescription[0]);
+        validateMyReportsTeamPermissions(teamName[0]);
+    }
+    @Test
+    public void shouldCreateTeamWithPermissionsMyClients() throws InterruptedException, SQLException {
+        String [] teamName = generateRandomTeamName();
+        String [] teamReference = generateRandomTeamReference();
+        String [] teamDescription = fillInDescription();
+        loginAndVerifySuccess("am", "alex01");
+        navigateToDropdown("menu-administration");
+        navigateToDropdown("menu-administration-teams");
+        selectAddNewTeam();
+        fillInTeamsDetails(teamName[0], teamReference[0], teamDescription[0]);
+        selectMyClientsPermissions();
+        selectCreateNewTeam();
+        searchTeam(teamReference[0], teamName[0], teamDescription[0], "Pending");
+        logout();
+        validateTeamsCreated(1, teamReference[0], teamName[0], teamDescription[0]);
+        validateMyClientsTeamPermissions(teamName[0]);
     }
 }
