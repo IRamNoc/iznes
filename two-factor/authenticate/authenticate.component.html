@@ -1,4 +1,4 @@
-<form [formGroup]="qrCodeChallengeForm" (ngSubmit)="qrCodeChallenge()">
+<form [formGroup]="authenticateQRForm" (ngSubmit)="authenticateQRCode()">
     <clr-modal [(clrModalOpen)]="showModal" [clrModalSize]="'sm'" [clrModalClosable]="false">
         <h3 class=" modal-title">Two-Factor Authentication</h3>
         <div class="modal-body ext-center">
@@ -7,7 +7,7 @@
 
                     <div id="qr-code" *ngIf="showQRCode">
                         <section class="form-block">
-                            <img src="{{ qrCodeURL }}" alt="Open CSD QR Code">
+                            <img src="{{ qrCodeURL }}" alt="Two-Factor Authentication Code">
                         </section>
 
                         <div class="row text-center">
@@ -28,7 +28,7 @@
                                size="45"
                                placeholder="Enter your six digit authentication code">
 
-                        <div *ngIf="qrCodeChallengeForm.controls.qrCodeNumber.hasError('required') && qrCodeChallengeForm.controls.qrCodeNumber.touched"
+                        <div *ngIf="authenticateQRForm.controls.qrCodeNumber.hasError('required') && authenticateQRForm.controls.qrCodeNumber.touched"
                              class="field-error"
                              mltag="txt_qrcoderequired">Field is required
                         </div>
@@ -41,7 +41,7 @@
             <button id="cancel-button" class="btn" type="button" (click)="modalCancelled.emit(true)">
                 {{'Cancel' | translate}}
             </button>
-            <button id="qrCodeChallengeSubmit" type="submit" class="btn btn-primary" [disabled]="!qrCodeChallengeForm.valid">
+            <button id="authenticate-qr-submit" type="submit" class="btn btn-primary" [disabled]="!authenticateQRForm.valid">
                 <i class="fa fa-save"></i> <span mltag="txt_submit">Submit</span>
             </button>
 
@@ -58,7 +58,7 @@
     </clr-modal>
 </form>
 
-<form [formGroup]="forgottenTwoFactorForm" novalidate (ngSubmit)="sendEmail()">
+<form [formGroup]="forgottenTwoFactorForm" novalidate (ngSubmit)="sendForgottonTwoFactorEmail()">
     <clr-modal [(clrModalOpen)]="showForgottenTwoFactorModal" [clrModalSize]="'md'" [clrModalClosable]="false">
         <h3 class="modal-title" *ngIf="(!emailSent)">
             {{'Reset Two-Factor' | translate}}

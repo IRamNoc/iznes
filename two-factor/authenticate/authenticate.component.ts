@@ -2,7 +2,7 @@ import { Component, OnInit, ChangeDetectorRef, OnDestroy, Inject, Input, EventEm
 import { APP_CONFIG, AppConfig, SagaHelper } from '@setl/utils';
 import { NgRedux, select } from '@angular-redux/store';
 import { AlertsService } from '@setl/jaspero-ng2-alerts';
-import { FormGroup, FormControl, Validators, AbstractControl } from '@angular/forms';
+import { FormGroup, FormControl, Validators } from '@angular/forms';
 import { Subscription } from 'rxjs/Subscription';
 import { UPDATE_TWO_FACTOR } from '@setl/core-store';
 import { MyUserService } from '@setl/core-req-services';
@@ -35,10 +35,9 @@ export class AuthenticateComponent implements OnDestroy, OnInit {
     forgottenTwoFactorForm: FormGroup;
     emailSent = false;
     countdown = 10;
-    qrCodeChallengeForm: FormGroup;
+    authenticateQRForm: FormGroup;
     qrCodeURL: string = '';
     qrCodeURLPartial: string = 'https://chart.googleapis.com/chart?chs=166x166&chld=L|0&cht=qr&chl=otpauth://totp/';
-    qrAppName: string = 'OpenCSD';
 
     @select(['user', 'myDetail']) getUserDetails$;
     @select(['user', 'authentication']) authentication$;
@@ -58,7 +57,7 @@ export class AuthenticateComponent implements OnDestroy, OnInit {
 
         this.appConfig = appConfig;
 
-        this.qrCodeChallengeForm = new FormGroup(
+        this.authenticateQRForm = new FormGroup(
             {
                 qrCodeNumber: new FormControl(
                     '',
@@ -95,7 +94,7 @@ export class AuthenticateComponent implements OnDestroy, OnInit {
                 this.sessionTimeout = auth.sessionTimeout;
 
                 this.qrCodeURL =
-                    `${this.qrCodeURLPartial}${this.qrAppName}:${this.username}?secret=${this.twoFactorSecret}`;
+                    `${this.qrCodeURLPartial}${this.appConfig.platform}:${this.username}?secret=${this.twoFactorSecret}`;
             }));
         }));
 
@@ -104,15 +103,20 @@ export class AuthenticateComponent implements OnDestroy, OnInit {
         }));
     }
 
-    qrCodeChallenge() {
-        if (this.qrCodeChallengeForm.valid) {
+    /**
+     * Authenticates the QR code given by the user
+     *
+     * @return {void}
+     */
+    authenticateQRCode() {
+        if (this.authenticateQRForm.valid) {
             // Show loading alert
             this.alertsService.create('loading');
 
-            const qrCodeChallengeResponse = this.qrCodeChallengeForm.controls.qrCodeNumber.value;
+            const qrCode = this.authenticateQRForm.controls.qrCodeNumber.value;
 
             const asyncTaskPipe = this.myUserService.authenticateTwoFactorAuthentication({
-                twoFactorCode: qrCodeChallengeResponse,
+                twoFactorCode: qrCode,
                 secret: String(this.twoFactorSecret),
                 userID: String(this.userId),
                 type: 'GoogleAuth',
@@ -152,7 +156,12 @@ export class AuthenticateComponent implements OnDestroy, OnInit {
         }
     }
 
-    sendEmail() {
+    /**
+     * Sends an email to the user with a link to reset their Two-Factor Authentication code
+     *
+     * @return {void}
+     */
+    sendForgottonTwoFactorEmail() {
         if (this.forgottenTwoFactorForm.valid) {
             // Show loading alert
             this.alertsService.create('loading');
@@ -209,6 +218,11 @@ export class AuthenticateComponent implements OnDestroy, OnInit {
         }
     }
 
+    /**
+     * Validates the reset token sent to the user following a request to reset their Two-Factor Authentication code
+     *
+     * @return {void}
+     */
     verifyTwoFactorToken() {
         const asyncTaskPipe = this.myUserService.validToken(
             {
@@ -259,7 +273,6 @@ export class AuthenticateComponent implements OnDestroy, OnInit {
     }
 
     closeTwoFactorModal() {
-        console.log('+++ close 2fa modal');
         this.modalCancelled.emit(true);
         this.forgottenTwoFactorForm.reset();
         this.countdown = 10;
