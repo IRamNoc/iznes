@@ -262,7 +262,6 @@ export class SetlLoginComponent implements OnDestroy, OnInit, AfterViewInit {
         this.authenticationOb.subscribe((authentication) => {
             this.userAuthenticationState = authentication;
             const useTwoFactor = _.get(authentication, 'useTwoFactor', 0);
-            // const mustChangePassword = _.get(authentication, 'mustChangePassword', false);
 
             if (useTwoFactor) {
                 this.showTwoFactorModal = true;
@@ -553,14 +552,13 @@ export class SetlLoginComponent implements OnDestroy, OnInit, AfterViewInit {
         }
     }
 
-    resetUserPassword(values, $event: Event) {
+    resetUserPassword($event: Event) {
         if (this.resetPasswordForm.valid) {
-            // TODO: take values directly
             $event.preventDefault();
 
             const asyncTaskPipe = this.myUserService.saveNewPassword({
-                oldPassword: values.oldPassword,
-                newPassword: values.password,
+                oldPassword: this.resetPasswordForm.controls.oldPassword.value,
+                newPassword: this.resetPasswordForm.controls.password.value,
             });
             const saga = SagaHelper.runAsync(
                 [SET_NEW_PASSWORD],
@@ -592,7 +590,7 @@ export class SetlLoginComponent implements OnDestroy, OnInit, AfterViewInit {
                 },
                 () => {
                     const message = this.translate.translate(
-                        'An error has occurred, please make sure the data you entered is correct.');
+                        'Please make sure you have entered your current password correctly.');
                     this.alertsService.generate('error', message);
                 },
             );

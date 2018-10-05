@@ -139,7 +139,7 @@
 
     <div class="modal-body modal-form-body text-center" *ngIf="emailSent && !changePassword">
         <i class="fa fa-envelope fa-5x" aria-hidden="true"></i>        
-        <p>{{'An email has been sent to the email address' | translate}}:
+        <p>{{'An email has been sent to' | translate}}:
             <b class="text-warning">{{emailUser}}</b>
         </p>
         <p>
@@ -243,7 +243,7 @@
         
         <p>{{'Your password has expired and must be changed' | translate}}</p>        
 
-        <form [formGroup]="resetPasswordForm" novalidate (ngSubmit)="resetUserPassword(resetPasswordForm.value, $event)">
+        <form [formGroup]="resetPasswordForm" novalidate (ngSubmit)="resetUserPassword($event)">
             <section class="form-block">
                 <!-- Reset old password -->
                 <div class="form-group">
@@ -334,7 +334,7 @@
         <button type="submit" 
                 class="btn btn-primary" 
                 [disabled]="!resetPasswordForm.valid"
-                (click)="resetUserPassword(resetPasswordForm.value, $event)">
+                (click)="resetUserPassword($event)">
             {{'Reset password' | translate}}
         </button>
     </div>
