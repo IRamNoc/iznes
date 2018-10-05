@@ -69,6 +69,7 @@ interface AuthenticateTwoFactorData {
 
 interface ForgotTwoFactorData {
     email: string;
+    project: string;
 }
 
 interface NewPasswordData {
@@ -208,6 +209,7 @@ export class MyUserService implements OnDestroy {
         const messageBody: ForgotTwoFactorRequestBody = {
             RequestName: 'forgottwofactor',
             email: data.email,
+            project: data.project,
         };
 
         return createMemberNodeSagaRequest(this.memberSocketService, messageBody);

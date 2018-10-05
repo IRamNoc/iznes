@@ -51,6 +51,7 @@ export interface AuthenticateTwoFactorAuthenticationBody extends MemberNodeMessa
 
 export interface ForgotTwoFactorRequestBody extends MemberNodeMessageBody {
     email: string;
+    project: string;
 }
 
 export interface SaveNewPasswordRequestBody extends MemberNodeMessageBody {
