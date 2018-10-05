@@ -2,11 +2,11 @@
 import { Action } from 'redux';
 
 /* Local types. */
-import { OfiClientReferentialAuditState, ClientReferentialAuditDetails } from './model';
+import { OfiClientReferentialAuditState } from './model';
 import * as ofiClientReferentialAuditActions from './actions';
 import { immutableHelper } from '@setl/utils';
-import { fromJS, Map } from 'immutable';
 import * as _ from 'lodash';
+import { convertToLocal } from '@setl/utils/helper/m-date-wrapper';
 
 /* Initial state. */
 const initialState: OfiClientReferentialAuditState = {
@@ -41,7 +41,7 @@ function ofiSetList(state: OfiClientReferentialAuditState, action: Action) {
                 oldValue: item.get('oldValue'),
                 newValue: item.get('newValue'),
                 modifiedBy: item.get('modifiedBy'),
-                date: item.get('date'),
+                date: convertToLocal(item.get('date'), 'YYYY-MM-DD HH:mm:ss'),
             });
 
             return result;
