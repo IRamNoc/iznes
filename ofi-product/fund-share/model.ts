@@ -636,6 +636,10 @@ export class FundShare {
         this.umbrella.legalEntityIdentifier.preset = umbrellaFund.legalEntityIdentifier;
         this.umbrella.registerOffice.preset = umbrellaFund.registerOffice;
         this.umbrella.registerOfficeAddress.preset = umbrellaFund.registerOfficeAddress;
+        this.umbrella.registerOfficeAddressLine2.preset = umbrellaFund.registerOfficeAddressLine2;
+        this.umbrella.registerOfficeAddressZipCode.preset = umbrellaFund.registerOfficeAddressZipCode;
+        this.umbrella.registerOfficeAddressCity.preset = umbrellaFund.registerOfficeAddressCity;
+        this.setListItemPreset(this.umbrella.registerOfficeAddressCountry, umbrellaFund.domicile);
         this.setListItemPreset(this.umbrella.domicile, umbrellaFund.domicile);
         this.umbrella.umbrellaFundCreationDate.preset = umbrellaFund.umbrellaFundCreationDate;
         this.setListItemPreset(this.umbrella.managementCompanyID, umbrellaFund.managementCompanyID);
@@ -673,6 +677,10 @@ export class FundShare {
         this.umbrella.legalEntityIdentifier.control.setValue(umbrellaFund.legalEntityIdentifier);
         this.umbrella.registerOffice.control.setValue(umbrellaFund.registerOffice);
         this.umbrella.registerOfficeAddress.control.setValue(umbrellaFund.registerOfficeAddress);
+        this.umbrella.registerOfficeAddressLine2.control.setValue(umbrellaFund.registerOfficeAddressLine2);
+        this.umbrella.registerOfficeAddressZipCode.control.setValue(umbrellaFund.registerOfficeAddressZipCode);
+        this.umbrella.registerOfficeAddressCity.control.setValue(umbrellaFund.registerOfficeAddressCity);
+        this.setListItemValue(this.umbrella.registerOfficeAddressCountry, umbrellaFund.domicile);
         this.setListItemValue(this.umbrella.domicile, umbrellaFund.domicile);
         this.umbrella.umbrellaFundCreationDate.control.setValue(umbrellaFund.umbrellaFundCreationDate);
         this.setListItemValue(this.umbrella.managementCompanyID, umbrellaFund.managementCompanyID);

@@ -244,6 +244,10 @@ export class FundComponent implements OnInit, OnDestroy {
             principlePromoterID: { value: '', disabled: true },
             registerOffice: { value: '', disabled: true },
             registerOfficeAddress: { value: '', disabled: true },
+            registerOfficeAddressLine2: { value: '', disabled: true },
+            registerOfficeAddressZipCode: { value: '', disabled: true },
+            registerOfficeAddressCity: { value: '', disabled: true },
+            registerOfficeAddressCountry: { value: '', disabled: true },
             taxAuditorID: { value: '', disabled: true },
             transferAgentID: { value: '', disabled: true },
             umbrellaFundCreationDate: { value: '', disabled: true },
@@ -384,6 +388,14 @@ export class FundComponent implements OnInit, OnDestroy {
                         .setValue(newUmbrella.registerOffice);
                     this.umbrellaEditForm.controls['registerOfficeAddress']
                         .setValue(newUmbrella.registerOfficeAddress);
+                    this.umbrellaEditForm.controls['registerOfficeAddressLine2']
+                        .setValue(newUmbrella.registerOfficeAddressLine2);
+                    this.umbrellaEditForm.controls['registerOfficeAddressZipCode']
+                        .setValue(newUmbrella.registerOfficeAddressZipCode);
+                    this.umbrellaEditForm.controls['registerOfficeAddressCity']
+                        .setValue(newUmbrella.registerOfficeAddressCity);
+                    this.umbrellaEditForm.controls['registerOfficeAddressCountry']
+                        .setValue(FundComponent.getListItemText(newUmbrella.registerOfficeAddressCountry, this.domicileItems));
                     this.umbrellaEditForm.controls['taxAuditorID']
                         .setValue(FundComponent.getListItemText(newUmbrella.taxAuditorID, this.taxAuditorItems));
                     this.umbrellaEditForm.controls['transferAgentID']

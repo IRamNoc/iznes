@@ -6,6 +6,10 @@ export interface UmbrellaFundDetail {
     umbrellaFundName: string;
     registerOffice: string;
     registerOfficeAddress: string;
+    registerOfficeAddressLine2: string;
+    registerOfficeAddressZipCode: string;
+    registerOfficeAddressCity: string;
+    registerOfficeAddressCountry: string;
     legalEntityIdentifier: string;
     domicile: string;
     umbrellaFundCreationDate: string;

@@ -435,6 +435,7 @@ export class ProductHomeComponent implements OnInit, OnDestroy {
                         umbrellaFundName: item.get('umbrellaFundName', ''),
                         registerOffice: item.get('registerOffice', ''),
                         registerOfficeAddress: item.get('registerOfficeAddress', ''),
+                        registerOfficeAddress2: item.get('registerOfficeAddress2', ''),
                         legalEntityIdentifier: item.get('legalEntityIdentifier', 0) || 'N/A',
                         domicile: domicile.text,
                         umbrellaFundCreationDate: item.get('umbrellaFundCreationDate', ''),

@@ -28,7 +28,40 @@ export class ShareUmbrellaFund extends DynamicFormsValidator {
         label: 'Address of the Registered Office of the Umbrella Fund',
         required: false,
         disabled: true,
+        style: [FormItemStyle.BreakOnBefore],
         mltag: 'txt_fundshare_umb_regofficeaddr',
+    };
+    registerOfficeAddressLine2: FormItem = {
+        type: FormItemType.text,
+        label: 'Address line 2',
+        required: false,
+        disabled: true,
+        mltag: 'txt_fundshare_umb_regofficeaddr2',
+    };
+    registerOfficeAddressZipCode: FormItem = {
+        type: FormItemType.text,
+        label: 'ZIP Code',
+        required: false,
+        disabled: true,
+        style: [FormItemStyle.WidthThird],
+        mltag: 'txt_fundshare_umb_regofficezipcode',
+    };
+    registerOfficeAddressCity: FormItem = {
+        type: FormItemType.text,
+        label: 'City',
+        required: false,
+        disabled: true,
+        style: [FormItemStyle.WidthThird],
+        mltag: 'txt_fundshare_umb_regofficecity',
+    };
+    registerOfficeAddressCountry: FormItem = {
+        type: FormItemType.list,
+        label: 'Country',
+        required: false,
+        disabled: true,
+        listItems: PC.fundItems.domicileItems,
+        style: [FormItemStyle.WidthThird],
+        mltag: 'txt_fundshare_umb_regofficecountry',
     };
     domicile: FormItem = {
         type: FormItemType.list,
