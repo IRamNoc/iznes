@@ -260,9 +260,9 @@ export class FundComponent implements OnInit, OnDestroy {
 
         this.fundForm = fb.group({
             isFundStructure: { value: '', disabled: true },
-            fundName: ['', Validators.compose([Validators.required, this.validators.alphanumeric])],
+            fundName: ['', Validators.compose([Validators.required])],
             legalEntityIdentifier: [null, this.validators.lei],
-            registerOffice: [null, Validators.compose([this.validators.alphanumeric])],
+            registerOffice: [null],
             registerOfficeAddress: [null],
             domicile: [[], this.validators.ngSelectRequired],
             tradingAccount: [],
