@@ -285,7 +285,7 @@ public class AdministrationModuleHelper {
     public static void searchUser(String reference, String firstName, String lastName, String emailAddress, String phoneNumber) throws InterruptedException {
         final WebDriverWait wait = new WebDriverWait(driver, timeoutInSeconds);
         wait.until(visibilityOfElementLocated(By.id("tabAccountAdminUsersButton"))).isDisplayed();
-        driver.findElement(By.xpath("/html/body/app-root/app-basic-layout/div/ng-sidebar-container/div/div/div/main/div/div/app-core-admin-users-list/clr-tabs/clr-tab/clr-tab-content/clr-datagrid/div/div/div/clr-dg-table-wrapper/div[1]/div/clr-dg-column[1]/div/clr-dg-string-filter/clr-dg-filter/button")).click();
+        driver.findElement(By.cssSelector("clr-dg-column.col-ref > div:nth-child(1) > clr-dg-string-filter:nth-child(1) > clr-dg-filter:nth-child(1) > button:nth-child(1)")).click();
         driver.findElement(By.xpath("/html/body/app-root/app-basic-layout/div/ng-sidebar-container/div/div/div/main/div/div/app-core-admin-users-list/clr-tabs/clr-tab/clr-tab-content/clr-datagrid/div/div/div/clr-dg-table-wrapper/div[1]/div/clr-dg-column[1]/div/clr-dg-string-filter/clr-dg-filter/div/input")).sendKeys(reference);
 
         String columnReference = driver.findElement(By.id("accountAdminTeamCellRef0")).getText();

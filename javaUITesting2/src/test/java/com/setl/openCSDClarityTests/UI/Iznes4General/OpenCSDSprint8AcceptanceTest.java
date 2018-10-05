@@ -141,10 +141,10 @@ public class OpenCSDSprint8AcceptanceTest {
         String myProducts = driver.findElement(By.xpath("//*[@id=\"iznes\"]/app-root/app-basic-layout/div/ng-sidebar-container/div/div/div/main/div/div/ng-component/div/app-dashboard/div/app-counter-tile[1]/div/a/div/div[1]/span")).getText();
         System.out.println(myProducts);
         assertTrue(myProducts.contains("My Products"));
-        validateColourOfElementByCSS("app-counter-tile.blocs:nth-child(1)", "rgba(206, 85, 61, 1)");
-        validateColourOfElementByCSS("app-counter-tile.blocs:nth-child(2)", "rgba(73, 164, 95, 1)");
-        validateColourOfElementByCSS("app-counter-tile.blocs:nth-child(3)", "rgba(232, 160, 46, 1)");
-        validateColourOfElementByCSS("app-counter-tile.blocs:nth-child(4)", "rgba(45, 113, 180, 1)");
+        validateColourOfElementByCSS(".dash-grid > app-counter-tile:nth-child(1)", "rgba(206, 85, 61, 1)");
+        validateColourOfElementByCSS(".dash-grid > app-counter-tile:nth-child(2)", "rgba(73, 164, 95, 1)");
+        validateColourOfElementByCSS(".dash-grid > app-counter-tile:nth-child(3)", "rgba(232, 160, 46, 1)");
+        validateColourOfElementByCSS(".dash-grid > app-counter-tile:nth-child(4)", "rgba(45, 113, 180, 1)");
     }
 
     @Test
