@@ -175,3 +175,19 @@ clr-modal.large .modal-dialog {
 .modal-body .form-group.col-sm-6:nth-of-type(2) {
     padding-left: 10px;
 }
+
+.modal-form-body {
+    padding-bottom: 20px !important;
+    .fa {
+        color: #96c8f1
+    }
+    input {
+        text-align: center;
+        border: 1px solid #96c8f1;
+        margin: 10px 0 0 0;
+        width: 100%;
+    }
+    .field-error {
+        width: 100%;
+    }
+}
