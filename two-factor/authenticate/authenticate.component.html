@@ -15,7 +15,7 @@
                         </div>
                     </div>
 
-                    <div class="row two-factor-body">
+                    <div class="row modal-form-body">
                         <div *ngIf="!showQRCode" class="text-center">
                             <i class="fa fa-unlock-alt fa-5x" aria-hidden="true"></i>
                         </div>
@@ -50,7 +50,7 @@
                     <a id="forgotten-two-factor-link"
                        [ngStyle]="{'cursor':'pointer'}"
                        (click)="showForgottonTwoFactorModal()">
-                        {{'Forgot your Two-Factor code?' | translate}}
+                        {{'Lost access to your code?' | translate}}
                     </a>
                 </span>
             </div>
@@ -61,10 +61,10 @@
 <form [formGroup]="forgottenTwoFactorForm" novalidate (ngSubmit)="sendEmail()">
     <clr-modal [(clrModalOpen)]="showForgottenTwoFactorModal" [clrModalSize]="'md'" [clrModalClosable]="false">
         <h3 class="modal-title" *ngIf="(!emailSent)">
-            {{'Forgotten Two-Factor code' | translate}}
+            {{'Reset Two-Factor' | translate}}
         </h3>
 
-        <div class="modal-body two-factor-body" *ngIf="!emailSent">
+        <div class="modal-body modal-form-body" *ngIf="!emailSent">
             <section class="form-block">
                 <div class="form-group text-center">
                     <div class="text-center">
@@ -96,7 +96,7 @@
             </button>
         </div>
 
-        <div class="modal-body text-center two-factor-body" *ngIf="emailSent">
+        <div class="modal-body text-center modal-form-body" *ngIf="emailSent">
             <i class="fa fa-envelope fa-5x" aria-hidden="true"></i>
             <p>
                 {{'An email has been sent to' | translate}}: <br/>
@@ -118,7 +118,7 @@
         {{'Reset Two-Factor Authentication' | translate}}
     </h3>
 
-    <div class="modal-body text-center two-factor-body">
+    <div class="modal-body text-center modal-form-body">
         <i class="fa fa-envelope fa-5x" aria-hidden="true"></i>
         <section class="form-block">
             <div class="form-group text-center">

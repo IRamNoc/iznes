@@ -53,7 +53,6 @@ export class AuthenticateComponent implements OnDestroy, OnInit {
         private myUserService: MyUserService,
         public translate: MultilingualService,
     ) {
-        console.log('+++ auth component called');
         this.qrCodeChallengeForm = new FormGroup(
             {
                 qrCodeNumber: new FormControl(
