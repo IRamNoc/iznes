@@ -176,12 +176,12 @@ clr-modal.large .modal-dialog {
     padding-left: 10px;
 }
 
-.modal-form-body {
+clr-modal .modal-form-body {
     padding-bottom: 20px !important;
     .fa {
         color: #96c8f1
     }
-    input {
+    input[type=text] {
         text-align: center;
         border: 1px solid #96c8f1;
         margin: 10px 0 0 0;
