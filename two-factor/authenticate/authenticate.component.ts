@@ -1,5 +1,5 @@
-import { Component, OnInit, ChangeDetectorRef, OnDestroy, Input, EventEmitter, Output } from '@angular/core';
-import { SagaHelper } from '@setl/utils';
+import { Component, OnInit, ChangeDetectorRef, OnDestroy, Inject, Input, EventEmitter, Output } from '@angular/core';
+import { APP_CONFIG, AppConfig, SagaHelper } from '@setl/utils';
 import { NgRedux, select } from '@angular-redux/store';
 import { AlertsService } from '@setl/jaspero-ng2-alerts';
 import { FormGroup, FormControl, Validators, AbstractControl } from '@angular/forms';
@@ -19,6 +19,8 @@ export class AuthenticateComponent implements OnDestroy, OnInit {
     @Output() modalCancelled: EventEmitter<any> = new EventEmitter();
     @Output() verifiedToken: EventEmitter<any> = new EventEmitter();
     @Output() clearToken: EventEmitter<any> = new EventEmitter();
+
+    appConfig: AppConfig;
 
     connectedWalletId: number;
     username: string;
@@ -52,7 +54,10 @@ export class AuthenticateComponent implements OnDestroy, OnInit {
         private changeDetectorRef: ChangeDetectorRef,
         private myUserService: MyUserService,
         public translate: MultilingualService,
-    ) {
+        @Inject(APP_CONFIG) appConfig: AppConfig) {
+
+        this.appConfig = appConfig;
+
         this.qrCodeChallengeForm = new FormGroup(
             {
                 qrCodeNumber: new FormControl(
@@ -157,6 +162,7 @@ export class AuthenticateComponent implements OnDestroy, OnInit {
             const asyncTaskPipe = this.myUserService.forgotTwoFactor(
                 {
                     email: this.emailUser,
+                    project: this.appConfig.platform,
                 });
 
             this.ngRedux.dispatch(SagaHelper.runAsyncCallback(

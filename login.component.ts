@@ -15,7 +15,7 @@ import { NgRedux, select } from '@angular-redux/store';
 import { LoginGuardService } from './login-guard.service';
 import * as _ from 'lodash';
 // Internals
-import { APP_CONFIG, AppConfig, SagaHelper, LogService } from '@setl/utils';
+import { APP_CONFIG, AppConfig, SagaHelper, LogService, ConfirmationService } from '@setl/utils';
 import {
     AccountsService,
     ChainService,
@@ -43,7 +43,6 @@ import { combineLatest } from 'rxjs/observable/combineLatest';
 import { Subscription } from 'rxjs/Subscription';
 import { MultilingualService } from '@setl/multilingual';
 import { passwordValidator } from '@setl/utils/helper/validators/password.directive';
-import { ConfirmationService } from '@setl/utils';
 
 /* Dectorator. */
 @Component({
