@@ -120,7 +120,10 @@ export class AuthenticateComponent implements OnDestroy, OnInit {
                 asyncTaskPipe,
                 {},
                 (data) => {
-                    this.alertsService.generate('success', data[1].Data[0].Message);
+                    if (this.showQRCode) {
+                        this.alertsService.generate('success', data[1].Data[0].Message);
+                    }
+
                     this.modalCancelled.emit(true);
                     this.changeDetectorRef.markForCheck();
                 },

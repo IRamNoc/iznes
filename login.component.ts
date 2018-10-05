@@ -85,6 +85,7 @@ export class SetlLoginComponent implements OnDestroy, OnInit, AfterViewInit {
     resetPassword: boolean = false;
 
     changedPassword = false;
+    changedPasswordContinue: boolean = false;
 
     // List of observable subscription
     subscriptionsArray: Subscription[] = [];
@@ -96,10 +97,12 @@ export class SetlLoginComponent implements OnDestroy, OnInit, AfterViewInit {
     showModal = false;
     emailUser = '';
     emailSent = false;
-    countdown = 5;
+    countdown = 10;
     resetToken = '';
     isTokenExpired = false;
     changePassword = false;
+
+    private userAuthenticationState: any;
 
     private queryParams: any;
 
@@ -257,7 +260,11 @@ export class SetlLoginComponent implements OnDestroy, OnInit, AfterViewInit {
         // });
 
         this.authenticationOb.subscribe((authentication) => {
-            if (_.get(authentication, 'useTwoFactor', 0)) {
+            this.userAuthenticationState = authentication;
+            const useTwoFactor = _.get(authentication, 'useTwoFactor', 0);
+            // const mustChangePassword = _.get(authentication, 'mustChangePassword', false);
+
+            if (useTwoFactor) {
                 this.showTwoFactorModal = true;
                 if (authentication.token && authentication.token !== 'twoFactorRequired') {
                     this.updateState(authentication);
@@ -427,49 +434,51 @@ export class SetlLoginComponent implements OnDestroy, OnInit, AfterViewInit {
         this.showModal = true;
     }
 
-    sendEmail(formValues) {
-        this.emailUser = formValues.email;
+    sendEmail() {
+        if (this.forgottenPasswordForm.valid) {
+            this.emailUser = this.forgottenPasswordForm.controls.email.value;
 
-        const asyncTaskPipe = this.myUserService.forgotPassword(
-            {
-                username: this.emailUser,
-                lang: this.language,
-            });
+            const asyncTaskPipe = this.myUserService.forgotPassword(
+                {
+                    username: this.emailUser,
+                    lang: this.language,
+                });
 
-        this.ngRedux.dispatch(SagaHelper.runAsyncCallback(
-            asyncTaskPipe,
-            (data) => {
-                if (data && data[1] && data[1].Data && data[1].Data[0].Status && data[1].Data[0].Status === 'OK') {
-                    this.emailSent = true;
-                    const intervalCountdown = setInterval(
-                        () => {
-                            this.countdown -= 1;
-                        },
-                        1000,
-                    );
+            this.ngRedux.dispatch(SagaHelper.runAsyncCallback(
+                asyncTaskPipe,
+                (data) => {
+                    if (data && data[1] && data[1].Data && data[1].Data[0].Status && data[1].Data[0].Status === 'OK') {
+                        this.emailSent = true;
+                        const intervalCountdown = setInterval(
+                            () => {
+                                this.countdown -= 1;
+                            },
+                            1000,
+                        );
 
-                    setTimeout(
-                        () => {
-                            clearInterval(intervalCountdown);
-                            this.closeFPModal();
-                        },
-                        5000,
-                    );
-                } else {
+                        setTimeout(
+                            () => {
+                                clearInterval(intervalCountdown);
+                                this.closeFPModal();
+                            },
+                            10000,
+                        );
+                    } else {
+                        this.alertsService.generate(
+                            'error',
+                            data[1].Data[0].Message,
+                        );
+                        this.closeFPModal();
+                    }
+                },
+                (data) => {
                     this.alertsService.generate(
                         'error',
-                        data[1].Data[0].Message,
-                    );
+                        'Sorry, something went wrong.<br>Please try again later!');
                     this.closeFPModal();
-                }
-            },
-            (data) => {
-                this.alertsService.generate(
-                    'error',
-                    'Sorry, something went wrong.<br>Please try again later!');
-                this.closeFPModal();
-            }),
-        );
+                }),
+            );
+        }
     }
 
     verifyToken(token) {
@@ -510,80 +519,92 @@ export class SetlLoginComponent implements OnDestroy, OnInit, AfterViewInit {
         );
     }
 
-    saveNewPassword(formValues) {
-        const asyncTaskPipe = this.myUserService.setNewPasswordFromToken(
-            {
-                token: this.resetToken,
-                password: formValues.password,
-                lang: this.language,
-            });
+    saveNewPassword() {
+        if (this.changePasswordForm.valid) {
+            const asyncTaskPipe = this.myUserService.setNewPasswordFromToken(
+                {
+                    token: this.resetToken,
+                    password: this.changePasswordForm.controls.password.value,
+                    lang: this.language,
+                });
 
-        this.ngRedux.dispatch(SagaHelper.runAsyncCallback(
-            asyncTaskPipe,
-            (data) => {
-                if (data && data[1] && data[1].Data && data[1].Data[0].Status && data[1].Data[0].Status === 'OK') {
-                    this.changedPassword = true;
-                    this.closeFPModal();
+            this.ngRedux.dispatch(SagaHelper.runAsyncCallback(
+                asyncTaskPipe,
+                (data) => {
+                    if (data && data[1] && data[1].Data && data[1].Data[0].Status && data[1].Data[0].Status === 'OK') {
+                        this.changedPassword = true;
+                        this.closeFPModal();
 
-                    this.toasterService.pop('success', 'Your password has been changed!');
-                } else {
+                        this.toasterService.pop('success', 'Your password has been changed!');
+                    } else {
+                        this.alertsService.generate(
+                            'error',
+                            data[1].Data[0].Message);
+                        this.closeFPModal();
+                    }
+                },
+                (data) => {
                     this.alertsService.generate(
                         'error',
-                        data[1].Data[0].Message);
+                        'Sorry, something went wrong.<br>Please try again later!');
                     this.closeFPModal();
-                }
-            },
-            (data) => {
-                this.alertsService.generate(
-                    'error',
-                    'Sorry, something went wrong.<br>Please try again later!');
-                this.closeFPModal();
-            }),
-        );
+                }),
+            );
+        }
     }
 
     resetUserPassword(values, $event: Event) {
-        $event.preventDefault();
+        if (this.resetPasswordForm.valid) {
+            // TODO: take values directly
+            $event.preventDefault();
 
-        const asyncTaskPipe = this.myUserService.saveNewPassword({
-            oldPassword: values.oldPassword,
-            newPassword: values.password,
-        });
-        const saga = SagaHelper.runAsync(
-            [SET_NEW_PASSWORD],
-            [],
-            asyncTaskPipe,
-            {},
-            () => {
-                const platformName = this.getPlatformName();
+            const asyncTaskPipe = this.myUserService.saveNewPassword({
+                oldPassword: values.oldPassword,
+                newPassword: values.password,
+            });
+            const saga = SagaHelper.runAsync(
+                [SET_NEW_PASSWORD],
+                [],
+                asyncTaskPipe,
+                {},
+                (data) => {
+                    const platformName = this.getPlatformName();
 
-                this.resetPassword = false;
-                this.confirmationService.create(
-                    'Success!',
-                    'Your password has been reset<br><br>A confirmation email will be sent to you.',
-                    { confirmText: `Continue to ${platformName}`, declineText: '', btnClass: 'success' },
-                ).subscribe((ans) => {
-                    if (ans.resolved) {
-                        this.loginForm.get('password').patchValue(values.password);
-                        this.resetPasswordForm.reset();
-                        this.login(this.loginForm.value);
-                    }
-                });
-            },
-            () => {
-                const message = this.translate.translate(
-                    'An error has occurred, please make sure the data you entered is correct.');
-                this.alertsService.generate('error', message);
-            },
-        );
+                    this.resetPassword = false;
+                    this.subscriptionsArray.push(
+                            this.alertsService.generate(
+                            'success',
+                            'Your password has been reset<br><br>A confirmation email will be sent to you.',
+                            { buttonMessage: `Continue to ${platformName}` },
+                        ).subscribe(() => {
+                            if (!this.changedPasswordContinue) {
+                                this.changedPasswordContinue = true;
+                                this.resetPasswordForm.reset();
+                                // Update the state with the new token
+                                this.userAuthenticationState.token = data[1].Data[0].Token;
+                                // The user has completed mustChangePassword so set to false and...
+                                this.userAuthenticationState.mustChangePassword = false;
+                                // ...call updateState which will route the user to the homepage
+                                this.updateState(this.userAuthenticationState);
+                            }
+                        }),
+                    );
+                },
+                () => {
+                    const message = this.translate.translate(
+                        'An error has occurred, please make sure the data you entered is correct.');
+                    this.alertsService.generate('error', message);
+                },
+            );
 
-        this.ngRedux.dispatch(saga);
+            this.ngRedux.dispatch(saga);
+        }
     }
 
     closeFPModal() {
         this.forgottenPasswordForm.reset();
         this.emailUser = '';
-        this.countdown = 5;
+        this.countdown = 10;
         this.showModal = false;
         this.emailSent = false;
         this.changePassword = false;
