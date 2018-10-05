@@ -1,11 +1,20 @@
-import {Component, Inject, OnDestroy, OnInit, ChangeDetectionStrategy, ChangeDetectorRef, QueryList, ViewChildren} from '@angular/core';
-import {FormBuilder, FormGroup, FormControl, Validators} from '@angular/forms';
-import {NgRedux, select} from '@angular-redux/store';
+import {
+    Component,
+    Inject,
+    OnDestroy,
+    OnInit,
+    ChangeDetectionStrategy,
+    ChangeDetectorRef,
+    QueryList,
+    ViewChildren
+} from '@angular/core';
+import { FormBuilder, FormGroup, FormControl, Validators } from '@angular/forms';
+import { NgRedux, select } from '@angular-redux/store';
 
-import {Subject} from 'rxjs';
-import {MultilingualService} from '@setl/multilingual';
+import { Subject } from 'rxjs';
+import { MultilingualService } from '@setl/multilingual';
 
-import {FormStepsDirective} from "@setl/utils/directives/form-steps/formsteps";
+import { FormStepsDirective } from "@setl/utils/directives/form-steps/formsteps";
 
 @Component({
     selector: 'app-ui-layouts-formsteps',
@@ -14,9 +23,11 @@ import {FormStepsDirective} from "@setl/utils/directives/form-steps/formsteps";
         .red {
             color: red;
         }
+
         input[type=checkbox] {
             visibility: hidden;
         }
+
         .customCheckbox {
             width: 50px;
             margin: -10px 0;
@@ -31,9 +42,9 @@ import {FormStepsDirective} from "@setl/utils/directives/form-steps/formsteps";
             top: 0;
             border-radius: 4px;
 
-            -webkit-box-shadow: inset 0px 1px 1px white, 0px 1px 3px rgba(0,0,0,0.5);
-            -moz-box-shadow: inset 0px 1px 1px white, 0px 1px 3px rgba(0,0,0,0.5);
-            box-shadow: inset 0px 1px 1px white, 0px 1px 3px rgba(0,0,0,0.5);
+            -webkit-box-shadow: inset 0px 1px 1px white, 0px 1px 3px rgba(0, 0, 0, 0.5);
+            -moz-box-shadow: inset 0px 1px 1px white, 0px 1px 3px rgba(0, 0, 0, 0.5);
+            box-shadow: inset 0px 1px 1px white, 0px 1px 3px rgba(0, 0, 0, 0.5);
             background: #fcfff4;
 
             background: -webkit-linear-gradient(top, #fcfff4 0%, #dfe5d7 40%, #b3bead 100%);
@@ -41,7 +52,7 @@ import {FormStepsDirective} from "@setl/utils/directives/form-steps/formsteps";
             background: -o-linear-gradient(top, #fcfff4 0%, #dfe5d7 40%, #b3bead 100%);
             background: -ms-linear-gradient(top, #fcfff4 0%, #dfe5d7 40%, #b3bead 100%);
             background: linear-gradient(top, #fcfff4 0%, #dfe5d7 40%, #b3bead 100%);
-            filter: progid:DXImageTransform.Microsoft.gradient( startColorstr='#fcfff4', endColorstr='#b3bead',GradientType=0 );
+            filter: progid:DXImageTransform.Microsoft.gradient(startColorstr='#fcfff4', endColorstr='#b3bead', GradientType=0);
         }
 
         .customCheckbox label:after {
@@ -116,10 +127,15 @@ export class UiFormStepsComponent implements OnInit {
         this.language$.takeUntil(this.unsubscribe).subscribe((language) => this.lang = language);
         this.createFormSteps();
 
-        this.dynamicConfig = [{title: 'Introduction'}, {form: this.myFormSteps4, id: 'myFormSteps4', title: 'Form'}];
+        this.dynamicConfig = [{ title: 'Introduction' }, {
+            form: this.myFormSteps4,
+            id: 'myFormSteps4',
+            title: 'Form'
+        }];
     }
 
-    ngOnInit() {}
+    ngOnInit() {
+    }
 
     createFormSteps() {
         this.myFormSteps1 = this._fb.group({
@@ -225,7 +241,7 @@ export class UiFormStepsComponent implements OnInit {
                     '',
                     Validators.compose([
                         Validators.required,
-                        Validators.pattern(/^(([^<>()\[\]\\.,;:\s@"]+(\.[^<>()\[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/),
+                        Validators.pattern(/^(((\([A-z0-9]+\))?[^<>()\[\]\\.,;:\s@"]+(\.[^<>()\[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/),
                     ]),
                 ],
             }),
@@ -303,14 +319,22 @@ export class UiFormStepsComponent implements OnInit {
 
     formChanges(form) {
         if (this.myFormSteps4.controls['isFull'].value) {
-            this.dynamicConfig = [{title: 'Introduction'}, {form: this.myFormSteps4, id: 'myFormSteps4', title: 'Form'}, {title: 'Outro'}, {form: this.myFormSteps3, id: 'myFormSteps3', title: 'Form again'}];
-            setTimeout(()=>{
+            this.dynamicConfig = [{ title: 'Introduction' }, {
+                form: this.myFormSteps4,
+                id: 'myFormSteps4',
+                title: 'Form'
+            }, { title: 'Outro' }, { form: this.myFormSteps3, id: 'myFormSteps3', title: 'Form again' }];
+            setTimeout(() => {
                 this.isFullForm = true;
                 this._changeDetectorRef.markForCheck();
             }, 180);
         } else {
-            this.dynamicConfig = [{title: 'Introduction'}, {form: this.myFormSteps4, id: 'myFormSteps4', title: 'Form'}];
-            setTimeout(()=>{
+            this.dynamicConfig = [{ title: 'Introduction' }, {
+                form: this.myFormSteps4,
+                id: 'myFormSteps4',
+                title: 'Form'
+            }];
+            setTimeout(() => {
                 this.isFullForm = false;
                 this._changeDetectorRef.markForCheck();
             }, 180);
