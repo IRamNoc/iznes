@@ -93,6 +93,7 @@
                 <div class="form-group required-field col-sm-4">
                     <input type="text" id="isinCode" formControlName="isinCode" placeholder="{{'Please fill in the ISIN code of the listed share' | translate }}">
                     <span class="field-error" *ngIf="hasError('isinCode', ['required'])">{{'Field is required' | translate}}</span>
+                    <span class="field-error" *ngIf="hasError('isinCode', ['pattern'])">{{'ISIN must have two letters and ten digits' | translate}}</span>
                     <span class="field-error" *ngIf="hasError('isinCode', ['maxlength'])">{{'Field is too long' | translate}}</span>
                 </div>
             </div>

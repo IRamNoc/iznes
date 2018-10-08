@@ -122,6 +122,9 @@ export class NewKycIdentificationComponent implements OnInit {
             'newkycrequest/identification',
             this.form,
             this.newRequestService.context,
+            {
+                reset : false,
+            },
         );
     }
 

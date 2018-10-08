@@ -212,7 +212,7 @@ export class NewRequestService {
             registeredCompanyZipCode: ['', this.getLengthValidator(10)],
             registeredCompanyCity: ['', this.getLengthValidator()],
             registeredCompanyCountry: ['', Validators.required],
-            commercialDomiciliation: false,
+            commercialDomiciliation: 0,
             countryTaxResidence: ['', Validators.required],
             sectorActivity: ['', Validators.required],
             sectorActivityText: [
@@ -251,7 +251,7 @@ export class NewRequestService {
                 this.getLengthValidator(255)
             ],
 
-            activityRegulated: false,
+            activityRegulated: 0,
             regulator: [
                 { value: '', disabled: true },
                 this.getLengthValidator(255)
@@ -261,7 +261,7 @@ export class NewRequestService {
                 this.getLengthValidator()
             ],
 
-            companyListed: false,
+            companyListed: 0,
             listingMarkets: [
                 { value: '', disabled: true },
                 Validators.required
@@ -272,7 +272,7 @@ export class NewRequestService {
             ],
             isinCode: [
                 { value: '', disabled: true },
-                this.getLengthValidator()
+                [Validators.required, Validators.pattern(/^[a-zA-Z]{2}[A-Z0-9]{9}\d$/)],
             ],
 
             keyFinancialData: '',
@@ -333,7 +333,7 @@ export class NewRequestService {
                 marketArea: ['', Validators.required],
                 natureTransactionPerYear: ['', Validators.required],
                 volumeTransactionPerYear: ['', Validators.required],
-                activitiesBenefitFromExperience: '',
+                activitiesBenefitFromExperience: 0,
                 activitiesBenefitFromExperienceSpecification: [
                     { value: '', disabled: true },
                     Validators.required,
@@ -381,12 +381,12 @@ export class NewRequestService {
         });
         const investmentObjective = fb.group({
             kycID: '',
-            objectivesSameInvestmentCrossAm: false,
+            objectivesSameInvestmentCrossAm: 0,
             objectives: fb.array([])
         });
         const investmentConstraint = fb.group({
             kycID: '',
-            constraintsSameInvestmentCrossAm: false,
+            constraintsSameInvestmentCrossAm: 0,
             constraints: fb.array([])
         });
 
