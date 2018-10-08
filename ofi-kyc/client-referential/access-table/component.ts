@@ -14,7 +14,7 @@ import { ToasterService } from 'angular2-toaster';
 import { OfiKycService } from '@ofi/ofi-main/ofi-req-services/ofi-kyc/service';
 import { MessagesService } from '@setl/core-messages/index';
 
-/* Redux */
+const DIVIDER_NUMBER = 100000;
 
 @Component({
     selector: 'access-table',
@@ -89,7 +89,7 @@ export class OfiFundAccessTable {
         const index = this.tableData.findIndex((i) => i.id == id);
 
         if (isNaN(parseFloat(this.tableData[index][type])) || !isFinite(this.tableData[index][type])) this.tableData[index][type] = 0;
-        this.tableData[index][type] = Math.round((this.tableData[index][type]) * 10000) / 10000;
+        this.tableData[index][type] = Math.round((this.tableData[index][type]) * DIVIDER_NUMBER) / DIVIDER_NUMBER;
         if (this.tableData[index][type] < 0) this.tableData[index][type] = 0;
         if (this.tableData[index][type] > this.tableData[index]['max']) this.tableData[index][type] = this.tableData[index]['max'];
         this.updateChanges('fees');
