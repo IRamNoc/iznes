@@ -56,7 +56,7 @@ export class DatagridParams {
         this.data.shareName = get(searchValues, 'sharename', null);
         this.data.isin = get(searchValues, 'isin', null);
 
-        this.data.status = get(searchValues, ['status', '0', 'id'], null);
+        this.data.status = get(searchValues, ['status', '0', 'id'], -3);
         const orderType = get(searchValues, ['type', '0', 'id'], null);
         this.data.orderType = orderType === 0 ? null : orderType;
 
