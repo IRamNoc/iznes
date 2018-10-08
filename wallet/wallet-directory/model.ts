@@ -7,6 +7,6 @@ export interface WalletDirectoryDetail {
 
 export interface WalletDirectoryState {
     walletList: {
-        [key: string]: WalletDirectoryDetail
+        [key: string]: WalletDirectoryDetail,
     };
 }

@@ -39,6 +39,9 @@ import {
 
 import {
     SET_WALLET_DIRECTORY,
+    SET_WALLET_DIRECTORY_WALLET_ADDED,
+    SET_WALLET_DIRECTORY_WALLET_UPDATED,
+    SET_WALLET_DIRECTORY_WALLET_DELETED,
     WalletDirectoryReducer,
     WalletDirectoryState,
     getWalletDirectory,
@@ -131,6 +134,9 @@ export {
 
 export {
     SET_WALLET_DIRECTORY,
+    SET_WALLET_DIRECTORY_WALLET_ADDED,
+    SET_WALLET_DIRECTORY_WALLET_UPDATED,
+    SET_WALLET_DIRECTORY_WALLET_DELETED,
     getWalletDirectory,
     getWalletDirectoryList,
 };
