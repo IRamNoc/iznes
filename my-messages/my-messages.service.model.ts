@@ -1,4 +1,4 @@
-import {MemberNodeRequest, MemberNodeMessageBody} from '@setl/utils/common';
+import { MemberNodeRequest, MemberNodeMessageBody } from '@setl/utils/common';
 
 export interface RequestOwnMessagesBody extends MemberNodeMessageBody {
     token: string;
@@ -18,8 +18,8 @@ export interface RequestOwnMessagesBody extends MemberNodeMessageBody {
 
 export interface DecryptMessagesBody extends MemberNodeMessageBody {
     token: string;
-    walletId: string;
-    bobPub: string;
+    bobWalletId: string;
+    aliceWalletId: string;
     encryptedMessage: string;
 }
 
