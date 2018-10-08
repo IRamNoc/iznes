@@ -4,18 +4,15 @@
         <h2>{{getOrderTypeTitle()}}</h2>
         {{getOrderTypeSubTitle()}}
 
-        <br>
-        <br>
-
         <button type="button" class="btn resetButton" (click)="resetForm(form)">{{'Reset Order Information' | translate}}</button>
 
         <div class="well">
             <!-- Panel header -->
             <div class="row panel-header">
-                <div class="col-sm-12">
+                <div class="col-xs-6" style="margin-bottom:15px;">
                     <a href="#" (click)="panels[1] = !panels[1]; $event.preventDefault();">
                         <i class="fa fa-chevron-right" [class.rotate]="panels[1]"></i>
-                        <h2>{{'General Investment Information' | translate}}</h2>
+                        <h2>{{'Date Information' | translate}}</h2>
                     </a>
                 </div>
             </div>
@@ -26,13 +23,93 @@
                     <div class="col-sm-6">
                         <div class="form-group">
                             <label class="control-label">
-                                <span class="">{{'Asset Management Company' | translate}}</span>
+                                <span class="">{{'Order Date' | translate}}</span>
                             </label>
-                            <div>
-                                <input type="text" class="form-control" [value]="shareData.companyName" [readonly]="true">
+                            <div class="input-group date-pick-wrapper">
+                                <span class="fa fa-calendar" aria-hidden="true"></span>
+
+                                <input [value]="today" [placeholder]="_translate.translate('Choose a date')" mode="day" theme="dp-material" [ngStyle]="{'width':'100%'}"
+                                       disabled>
                             </div>
                         </div>
                     </div>
+                    <div class="col-sm-6">
+                        <div class="form-group">
+                            <label class="control-label required-field">
+                                <span class="">{{'Cut-off Date' | translate}}</span>
+                            </label>
+
+                            <div class="input-group date-pick-wrapper">
+                                <span class="fa fa-calendar" aria-hidden="true"></span>
+
+                                <input id="cutoffdate" formControlName="cutoffDate" autocomplete="off" [dpDayPicker]="configDateCutoff" [placeholder]="_translate.translate('Choose a date')"
+                                       mode="day" theme="dp-material" [ngStyle]="{'width':'100%'}" [readonly]="doValidate" autocomplete="off"
+                                       (dateChange)="subscribeForChangeDate('cutoff', $event)">
+
+
+                            </div>
+                            <span *ngIf="cutoffDate.hasError('required') && cutoffDate.touched" class="text-danger">{{'Field is required' | translate}}</span>
+                            <span *ngIf="cutoffDate.hasError('tooLate')" class="text-danger">{{'Cut-off has been reached' | translate}}</span>
+                        </div>
+
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col-sm-6">
+                        <div class="form-group">
+                            <label class="control-label required-field">
+                                <span class="">{{'NAV Date' | translate}}</span>
+                            </label>
+
+                            <div class="input-group date-pick-wrapper">
+                                <span class="fa fa-calendar" aria-hidden="true"></span>
+
+                                <input id="valuationdate" formControlName="valuationDate" autocomplete="off" [dpDayPicker]="configDateValuation" [placeholder]="_translate.translate('Choose a date')"
+                                       mode="day" theme="dp-material" [ngStyle]="{'width':'100%'}" [readonly]="doValidate" autocomplete="off"
+                                       (dateChange)="subscribeForChangeDate('valuation', $event)">
+
+
+                            </div>
+                            <span *ngIf="valuationDate.hasError('required') && valuationDate.touched" class="text-danger">{{'Field is required' | translate}}</span>
+                        </div>
+                    </div>
+                    <div class="col-sm-6">
+                        <div class="form-group">
+                            <label class="control-label required-field">
+                                <span class="">{{'Settlement Date' | translate}}</span>
+                            </label>
+                            <div>
+                                <div class="input-group date-pick-wrapper">
+                                    <span class="fa fa-calendar" aria-hidden="true"></span>
+
+                                    <input id="settlementdate" formControlName="settlementDate" autocomplete="off" [dpDayPicker]="configDateSettlement" [placeholder]="_translate.translate('Choose a date')"
+                                           mode="day" theme="dp-material" [ngStyle]="{'width':'100%'}" [readonly]="doValidate" autocomplete="off"
+                                           (dateChange)="subscribeForChangeDate('settlement', $event)">
+
+
+                                </div>
+                                <span *ngIf="settlementDate.hasError('required') && settlementDate.touched" class="text-danger">{{'Field is required' | translate}}</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="well">
+            <!-- Panel header -->
+            <div class="row panel-header">
+                <div class="col-xs-6" style="margin-bottom:15px;">
+                    <a href="#" (click)="panels[2] = !panels[2]; $event.preventDefault();">
+                        <i class="fa fa-chevron-right" [class.rotate]="panels[2]"></i>
+                        <h2>{{'Order Information' | translate}}</h2>
+                    </a>
+                </div>
+            </div>
+
+            <!-- Panel body -->
+            <div class="panel-body" [class.hidden]="!panels[2]">
+                <div class="row">
                     <div class="col-sm-6" #subportfolio>
                         <div class="form-group">
                             <label class="control-label required-field" for="subportfolio">
@@ -50,19 +127,103 @@
                 </div>
 
                 <div class="row">
+                    <div class="col-sm-6">
+                        <div class="form-group">
+                            <label class="control-label">
+                                <span class="">{{'Order Type' | translate}}</span>
+                            </label>
+                            <div>
+                                <input type="text" class="form-control" [value]="orderTypeLabel" [readonly]="true">
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="col-sm-6 choice" *ngIf="allowAmountAndQuantity">
+                        <label>
+                            <clr-icon shape="exclamation-circle" class="is-info"></clr-icon>
+                            {{'You can either subscribe by amount or unit for this asset' | translate}}
+                        </label>
+
+                        <div class="btn-group">
+                            <div class="radio btn">
+                                <input type="radio" id="btn-radio-quantity" (click)="actionBy = 'q'" [checked]="actionBy === 'q'">
+                                <label for="btn-radio-quantity">{{'Quantity' | translate}}</label>
+                            </div>
+                            <div class="radio btn">
+                                <input type="radio" id="btn-radio-amount" (click)="actionBy = 'a'" [checked]="actionBy === 'a'">
+                                <label for="btn-radio-amount">{{'Amount' | translate}}</label>
+                            </div>
+                        </div>
+                    </div>
+
+                </div>
+
+                <ng-container *ngIf=" type !== 'sellbuy' ">
+                    <ng-container *ngTemplateOutlet="orderValueInputs; context: {orderType: type}"></ng-container>
+                </ng-container>
+
+                <ng-container *ngIf=" type === 'sellbuy' ">
+                    <ng-container *ngTemplateOutlet="orderValueInputs; context: {orderType: 'redeem'}"></ng-container>
+                    <ng-container *ngTemplateOutlet="orderValueInputs; context: {orderType: 'subscribe'}"></ng-container>
+                </ng-container>
+
+
+                <div class="row">{{'Comment:' | translate}}</div>
+                <div class="row">
+                    <div class="col-sm-6">
+                        <div class="form-group">
+                            <textarea class="form-control" formControlName="comment" autocomplete="off"></textarea>
+                            <span *ngIf="comment.hasError('maxlength') && comment.touched" class="text-danger">
+                                {{'Comment must be @commentMaxLength@ characters long' | translate:
+                                { 'commentMaxLength': form.controls['comment'].getError('maxlength').requiredLength } }}
+                            </span>
+                        </div>
+                    </div>
+                </div>
+
+            </div>
+        </div>
+
+        <div class="well">
+            <!-- Panel header -->
+            <div class="row panel-header">
+                <div class="col-sm-12">
+                    <a href="#" (click)="panels[3] = !panels[3]; $event.preventDefault();">
+                        <i class="fa fa-chevron-right" [class.rotate]="panels[3]"></i>
+                        <h2>{{'General Investment Information' | translate}}</h2>
+                    </a>
+                </div>
+            </div>
+
+            <!-- Panel body -->
+            <div class="panel-body" [class.hidden]="!panels[3]">
+                <div class="row">
+                    <div class="col-sm-6">
+                        <div class="form-group">
+                            <label class="control-label">
+                                <span class="">{{'Asset Management Company' | translate}}</span>
+                            </label>
+                            <div>
+                                <input type="text" class="form-control" [value]="shareData.companyName" [readonly]="true">
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="row">
                     <div class="well">
                         <!-- Panel header -->
                         <div class="row panel-header">
                             <div class="col-sm-12" style="margin-bottom:15px;">
-                                <a href="#" (click)="panels[2] = !panels[2]; $event.preventDefault();">
-                                    <i class="fa fa-chevron-right" [class.rotate]="panels[2]"></i>
+                                <a href="#" (click)="panels[4] = !panels[4]; $event.preventDefault();">
+                                    <i class="fa fa-chevron-right" [class.rotate]="panels[4]"></i>
                                     <h2>{{'Costs & Charges' | translate}}</h2>
                                 </a>
                             </div>
                         </div>
 
                         <!-- Panel body -->
-                        <div class="panel-body" [class.hidden]="!panels[2]">
+                        <div class="panel-body" [class.hidden]="!panels[4]">
                             <div class="row">
                                 <div class="col-sm-6">
                                     <div class="form-group">
@@ -145,15 +306,15 @@
             <!-- Panel header -->
             <div class="row panel-header">
                 <div class="col-sm-12" style="margin-bottom:15px;">
-                    <a href="#" (click)="panels[3] = !panels[3]; $event.preventDefault();">
-                        <i class="fa fa-chevron-right" [class.rotate]="panels[3]"></i>
+                    <a href="#" (click)="panels[5] = !panels[5]; $event.preventDefault();">
+                        <i class="fa fa-chevron-right" [class.rotate]="panels[5]"></i>
                         <h2>{{'Product Information' | translate}}</h2>
                     </a>
                 </div>
             </div>
 
             <!-- Panel body -->
-            <div class="panel-body" [class.hidden]="!panels[3]">
+            <div class="panel-body" [class.hidden]="!panels[5]">
                 <div class="row">
                     <div class="col-sm-6">
                         <div class="form-group">
@@ -255,167 +416,6 @@
                         </div>
                     </div>
                 </div>
-            </div>
-        </div>
-
-        <div class="well">
-            <!-- Panel header -->
-            <div class="row panel-header">
-                <div class="col-xs-6" style="margin-bottom:15px;">
-                    <a href="#" (click)="panels[4] = !panels[4]; $event.preventDefault();">
-                        <i class="fa fa-chevron-right" [class.rotate]="panels[4]"></i>
-                        <h2>{{'Date Information' | translate}}</h2>
-                    </a>
-                </div>
-            </div>
-
-            <!-- Panel body -->
-            <div class="panel-body" [class.hidden]="!panels[4]">
-                <div class="row">
-                    <div class="col-sm-6">
-                        <div class="form-group">
-                            <label class="control-label">
-                                <span class="">{{'Order Date' | translate}}</span>
-                            </label>
-                            <div class="input-group date-pick-wrapper">
-                                <span class="fa fa-calendar" aria-hidden="true"></span>
-
-                                <input [value]="today" [placeholder]="_translate.translate('Choose a date')" mode="day" theme="dp-material" [ngStyle]="{'width':'100%'}"
-                                       disabled>
-                            </div>
-                        </div>
-                    </div>
-                    <div class="col-sm-6">
-                        <div class="form-group">
-                            <label class="control-label required-field">
-                                <span class="">{{'Cut-off Date' | translate}}</span>
-                            </label>
-
-                            <div class="input-group date-pick-wrapper">
-                                <span class="fa fa-calendar" aria-hidden="true"></span>
-
-                                <input id="cutoffdate" formControlName="cutoffDate" autocomplete="off" [dpDayPicker]="configDateCutoff" [placeholder]="_translate.translate('Choose a date')"
-                                       mode="day" theme="dp-material" [ngStyle]="{'width':'100%'}" [readonly]="doValidate" autocomplete="off"
-                                       (dateChange)="subscribeForChangeDate('cutoff', $event)">
-
-
-                            </div>
-                            <span *ngIf="cutoffDate.hasError('required') && cutoffDate.touched" class="text-danger">{{'Field is required' | translate}}</span>
-                            <span *ngIf="cutoffDate.hasError('tooLate')" class="text-danger">{{'Cut-off has been reached' | translate}}</span>
-                        </div>
-
-                    </div>
-                </div>
-                <div class="row">
-                    <div class="col-sm-6">
-                        <div class="form-group">
-                            <label class="control-label required-field">
-                                <span class="">{{'NAV Date' | translate}}</span>
-                            </label>
-
-                            <div class="input-group date-pick-wrapper">
-                                <span class="fa fa-calendar" aria-hidden="true"></span>
-
-                                <input id="valuationdate" formControlName="valuationDate" autocomplete="off" [dpDayPicker]="configDateValuation" [placeholder]="_translate.translate('Choose a date')"
-                                       mode="day" theme="dp-material" [ngStyle]="{'width':'100%'}" [readonly]="doValidate" autocomplete="off"
-                                       (dateChange)="subscribeForChangeDate('valuation', $event)">
-
-
-                            </div>
-                            <span *ngIf="valuationDate.hasError('required') && valuationDate.touched" class="text-danger">{{'Field is required' | translate}}</span>
-                        </div>
-                    </div>
-                    <div class="col-sm-6">
-                        <div class="form-group">
-                            <label class="control-label required-field">
-                                <span class="">{{'Settlement Date' | translate}}</span>
-                            </label>
-                            <div>
-                                <div class="input-group date-pick-wrapper">
-                                    <span class="fa fa-calendar" aria-hidden="true"></span>
-
-                                    <input id="settlementdate" formControlName="settlementDate" autocomplete="off" [dpDayPicker]="configDateSettlement" [placeholder]="_translate.translate('Choose a date')"
-                                           mode="day" theme="dp-material" [ngStyle]="{'width':'100%'}" [readonly]="doValidate" autocomplete="off"
-                                           (dateChange)="subscribeForChangeDate('settlement', $event)">
-
-
-                                </div>
-                                <span *ngIf="settlementDate.hasError('required') && settlementDate.touched" class="text-danger">{{'Field is required' | translate}}</span>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-            </div>
-        </div>
-
-        <div class="well">
-            <!-- Panel header -->
-            <div class="row panel-header">
-                <div class="col-xs-6" style="margin-bottom:15px;">
-                    <a href="#" (click)="panels[5] = !panels[5]; $event.preventDefault();">
-                        <i class="fa fa-chevron-right" [class.rotate]="panels[5]"></i>
-                        <h2>{{'Order Information' | translate}}</h2>
-                    </a>
-                </div>
-            </div>
-
-            <!-- Panel body -->
-            <div class="panel-body" [class.hidden]="!panels[5]">
-                <div class="row">
-                    <div class="col-sm-6">
-                        <div class="form-group">
-                            <label class="control-label">
-                                <span class="">{{'Order Type' | translate}}</span>
-                            </label>
-                            <div>
-                                <input type="text" class="form-control" [value]="orderTypeLabel" [readonly]="true">
-                            </div>
-                        </div>
-                    </div>
-
-                    <div class="col-sm-6 choice" *ngIf="allowAmountAndQuantity">
-                        <label>
-                            <clr-icon shape="exclamation-circle" class="is-info"></clr-icon>
-                            {{'You can either subscribe by amount or unit for this asset' | translate}}
-                        </label>
-
-                        <div class="btn-group">
-                            <div class="radio btn">
-                                <input type="radio" id="btn-radio-quantity" (click)="actionBy = 'q'" [checked]="actionBy === 'q'">
-                                <label for="btn-radio-quantity">{{'Quantity' | translate}}</label>
-                            </div>
-                            <div class="radio btn">
-                                <input type="radio" id="btn-radio-amount" (click)="actionBy = 'a'" [checked]="actionBy === 'a'">
-                                <label for="btn-radio-amount">{{'Amount' | translate}}</label>
-                            </div>
-                        </div>
-                    </div>
-
-                </div>
-
-                <ng-container *ngIf=" type !== 'sellbuy' ">
-                    <ng-container *ngTemplateOutlet="orderValueInputs; context: {orderType: type}"></ng-container>
-                </ng-container>
-
-                <ng-container *ngIf=" type === 'sellbuy' ">
-                    <ng-container *ngTemplateOutlet="orderValueInputs; context: {orderType: 'redeem'}"></ng-container>
-                    <ng-container *ngTemplateOutlet="orderValueInputs; context: {orderType: 'subscribe'}"></ng-container>
-                </ng-container>
-
-
-                <div class="row">{{'Comment:' | translate}}</div>
-                <div class="row">
-                    <div class="col-sm-6">
-                        <div class="form-group">
-                            <textarea class="form-control" formControlName="comment" autocomplete="off"></textarea>
-                            <span *ngIf="comment.hasError('maxlength') && comment.touched" class="text-danger">
-                                {{'Comment must be @commentMaxLength@ characters long' | translate:
-                                { 'commentMaxLength': form.controls['comment'].getError('maxlength').requiredLength } }}
-                            </span>
-                        </div>
-                    </div>
-                </div>
-
             </div>
         </div>
 

@@ -179,9 +179,9 @@ export class InvestFundComponent implements OnInit, OnDestroy {
     panels = {
         1: true,
         2: true,
-        3: true,
-        4: true,
-        5: true,
+        3: false,
+        4: false,
+        5: false,
         6: true,
     };
 
