@@ -10,7 +10,7 @@ import { Injectable } from '@angular/core';
 @Injectable()
 export class MailHelper {
     public constructor(
-        private ngRedux: NgRedux <any>,
+        private ngRedux: NgRedux<any>,
         private myMessageService: MyMessagesService,
     ) {
     }
@@ -80,16 +80,16 @@ export class MailHelper {
      * @return {Promise}
      */
     public decryptMessage(message, type = 'inbox') {
-        let walletId = message.recipientId;
-        let publicKey = message.senderPub;
+        let bobWalletId = message.recipientId;
+        let aliceWalletId = message.senderId;
         if (type === 'sent') {
-            walletId = message.senderId;
-            publicKey = message.recipientPub;
+            bobWalletId = message.senderId;
+            aliceWalletId = message.recipientId;
         }
         return new Promise((resolve, reject) => {
             const asyncTaskPipe = this.myMessageService.decryptMessage(
-                walletId,
-                publicKey,
+                bobWalletId,
+                aliceWalletId,
                 message.content,
             );
             this.ngRedux.dispatch(
@@ -97,8 +97,8 @@ export class MailHelper {
                     asyncTaskPipe,
                     (response) => {
                         this.ngRedux.dispatch(setDecryptedContent(message.mailId, response));
-                        if (response.length === 3 && response[1].Data) {
-                            let decoded = JSON.parse(response[1].Data);
+                        if (response.length === 3 && response[1].Data.decryptedMessage) {
+                            let decoded = JSON.parse(response[1].Data.decryptedMessage);
                             message.action = decoded.action;
                             message.content = window.atob(decoded.general);
                             if (message.content.substring(0, 11) === '{"general":') {
@@ -107,6 +107,7 @@ export class MailHelper {
                                 message.content = window.atob(decoded.general);
                             }
                             message.isDecrypted = true;
+
                             resolve(message);
                         }
                         reject();
