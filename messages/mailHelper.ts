@@ -107,7 +107,6 @@ export class MailHelper {
                                 message.content = window.atob(decoded.general);
                             }
                             message.isDecrypted = true;
-
                             resolve(message);
                         }
                         reject();
