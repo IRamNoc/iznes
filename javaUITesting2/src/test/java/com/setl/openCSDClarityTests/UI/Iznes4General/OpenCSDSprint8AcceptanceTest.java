@@ -130,6 +130,7 @@ public class OpenCSDSprint8AcceptanceTest {
         driver.findElement(By.xpath("//*[@id=\"iznes\"]/app-root/app-basic-layout/div/ng-sidebar-container/div/div/app-navigation-topbar/header/div[2]/div[2]/div/ng-select/div/div[3]/ul/li[1]")).click();
         String headerHome = driver.findElement(By.xpath("/html/body/app-root/app-basic-layout/div/ng-sidebar-container/div/div/div/main/div/div/ng-component/div/h1")).getText();
         assertTrue(headerHome.contains("AssetManagerWallet"));
+        wait.until(visibilityOfElementLocated(By.xpath("//*[@id=\"manage-orders\"]")));
         String orderBookWalletID = driver.findElement(By.xpath("//*[@id=\"manage-orders\"]")).getText();
         assertTrue(orderBookWalletID.contains("AssetManagerWallet"));
         validateHeadersOnHomePageTableTG1376();
