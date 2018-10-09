@@ -51,6 +51,7 @@ public class OpenCSDGeneralAcceptanceTest {
     public void setUp() throws Exception {
         testSetUp();
         screenshotRule.setDriver(driver);
+        deleteFormdataFromDatabase("8", "1");
     }
 
     @Test
