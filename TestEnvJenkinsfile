@@ -33,7 +33,7 @@ node {
 
 
         stage('Check node server is running') {
-            sh 'ssh -tt root@139.162.213.130 \'cd /var/membership-db/deploy/ && ./cleanblockchain iznes \''
+            sh 'ssh -tt root@139.162.213.130 \'cd /var/membership-db/deploy/ && ./cleanblockchain iznes && ./updatedb iznes\''
             sh 'ssh -t root@139.162.213.130 \'cd /var/phpapps/backend/ ; bash && node checkServer.js\''
 
             }
