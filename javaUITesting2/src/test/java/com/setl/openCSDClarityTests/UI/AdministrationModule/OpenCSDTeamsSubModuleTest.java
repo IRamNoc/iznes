@@ -181,7 +181,6 @@ public class OpenCSDTeamsSubModuleTest {
         searchTeam(teamReference[0], teamName[0], teamDescription[0], "Pending");
         validateTeamsCreated(1, teamReference[0], teamName[0], teamDescription[0]);
         validateAdminTeamPermissions(teamName[0]);
-        navigateToDropdown("menu-administration");
         navigateToDropdown("menu-administration-users");
         selectAddNewUser();
         fillInUserDetails(emailaddress[0], firstName[0], lastName[0], userRef[0], phoneNumber[0]);
@@ -189,7 +188,6 @@ public class OpenCSDTeamsSubModuleTest {
         selectCreateUser();
         searchUser(userRef[0],firstName[0], lastName[0], emailaddress[0], phoneNumber[0]);
         validateUserCreated(1, emailaddress[0], firstName[0], lastName[0], phoneNumber[0], userRef[0]);
-        navigateToDropdown("menu-administration");
         navigateToDropdown("menu-administration-teams");
         searchTeam(teamReference[0], teamName[0], teamDescription[0], "Active");
         logout();
