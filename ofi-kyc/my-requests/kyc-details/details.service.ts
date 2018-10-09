@@ -42,7 +42,7 @@ export class KycDetailsService {
     toArray(data) {
         let booleans = chain(data)
             .pickBy((val, key) => requestsConfig.booleanControls.indexOf(key) !== -1)
-            .mapValues(value => value ? 1 : 0)
+            .mapValues(value => parseInt(value, 10) ? 1 : 0)
             .value()
         ;
 
