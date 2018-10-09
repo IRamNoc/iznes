@@ -983,7 +983,7 @@ The IZNES Team.</p>`;
             data: {
                 links: [
                     {
-                        link: '/#/manage-orders/list?orderID=${params.orderID}"',
+                        link: `/#/manage-orders/list?orderID=${params.orderID}`,
                         anchorCss: 'btn btn-secondary',
                         anchorText: 'Go to this order',
                     },
