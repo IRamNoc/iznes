@@ -244,6 +244,8 @@ export class ManageOrdersComponent implements OnInit, AfterViewInit, OnDestroy {
                 this.appSubscribe(this.requestedShareList$, requested => this.requestShareList(requested));
                 this.appSubscribe(this.shareList$, shares => this.fundShareList = shares);
             }
+
+            this.changeDetectorRef.markForCheck();
         });
         const bufferedOrders$ = this.orderList$.pipe(bufferTime(2000, 2000, 50));
         const bufferedAndZippedOrders$ = zip(this.orderList$, this.listOrder$).pipe(bufferTime(2000, 2000, 50));
