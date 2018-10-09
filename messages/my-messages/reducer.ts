@@ -1,11 +1,11 @@
-import {AsyncTaskResponseAction} from '@setl/utils/sagaHelper/actions';
+import { AsyncTaskResponseAction } from '@setl/utils/sagaHelper/actions';
 import * as MyMessageActions from './actions';
-import {MyMessagesState, MessageDetail} from './model';
-import {SagaHelper, Common} from '@setl/utils';
+import { MyMessagesState, MessageDetail } from './model';
+import { SagaHelper, Common } from '@setl/utils';
 import * as _ from 'lodash';
-import {List, fromJS, Map} from 'immutable';
-import {setDecryptedContent} from './actions';
-import {commonHelper} from '@setl/utils';
+import { List, fromJS, Map } from 'immutable';
+import { setDecryptedContent } from './actions';
+import { commonHelper } from '@setl/utils';
 import * as moment from 'moment-timezone';
 
 const initialState: MyMessagesState = {
@@ -20,33 +20,33 @@ export const MyMessagesReducer = function (state: MyMessagesState = initialState
 
 
     switch (action.type) {
-        case MyMessageActions.SET_MESSAGE_LIST:
-            return setMessageList(MyMessageActions.SET_MESSAGE_LIST, action, state);
+    case MyMessageActions.SET_MESSAGE_LIST:
+        return setMessageList(MyMessageActions.SET_MESSAGE_LIST, action, state);
 
-        case MyMessageActions.DONE_RUN_DECRYPT:
-            return decryptMessage(MyMessageActions.DONE_RUN_DECRYPT, action, state);
+    case MyMessageActions.DONE_RUN_DECRYPT:
+        return decryptMessage(MyMessageActions.DONE_RUN_DECRYPT, action, state);
 
-        case MyMessageActions.SET_DECRYPTED_CONTENT:
-            return handleSetDecryptedContent(MyMessageActions.DONE_RUN_DECRYPT, action, state);
+    case MyMessageActions.SET_DECRYPTED_CONTENT:
+        return handleSetDecryptedContent(MyMessageActions.DONE_RUN_DECRYPT, action, state);
 
-        case MyMessageActions.SET_MESSAGE_COUNTS:
+    case MyMessageActions.SET_MESSAGE_COUNTS:
 
-            return handleMessageCounts(MyMessageActions.SET_MESSAGE_COUNTS, action, state);
+        return handleMessageCounts(MyMessageActions.SET_MESSAGE_COUNTS, action, state);
 
-        case MyMessageActions.SET_REQUEST_MAIL_INIT:
-            return toggleRequestMailInit(MyMessageActions.SET_REQUEST_MAIL_INIT, action, state, true);
+    case MyMessageActions.SET_REQUEST_MAIL_INIT:
+        return toggleRequestMailInit(MyMessageActions.SET_REQUEST_MAIL_INIT, action, state, true);
 
-        case MyMessageActions.CLEAR_REQUEST_MAIL_INIT:
-            return toggleRequestMailInit(MyMessageActions.CLEAR_REQUEST_MAIL_INIT, action, state, false);
+    case MyMessageActions.CLEAR_REQUEST_MAIL_INIT:
+        return toggleRequestMailInit(MyMessageActions.CLEAR_REQUEST_MAIL_INIT, action, state, false);
 
-        case MyMessageActions.SET_REQUEST_MAIL_LIST:
-            return toggleRequestMailList(MyMessageActions.SET_REQUEST_MAIL_LIST, action, state, true);
+    case MyMessageActions.SET_REQUEST_MAIL_LIST:
+        return toggleRequestMailList(MyMessageActions.SET_REQUEST_MAIL_LIST, action, state, true);
 
-        case MyMessageActions.CLEAR_REQUEST_MAIL_LIST:
-            return toggleRequestMailList(MyMessageActions.CLEAR_REQUEST_MAIL_LIST, action, state, false);
+    case MyMessageActions.CLEAR_REQUEST_MAIL_LIST:
+        return toggleRequestMailList(MyMessageActions.CLEAR_REQUEST_MAIL_LIST, action, state, false);
 
-        default:
-            return state;
+    default:
+        return state;
     }
 };
 
@@ -172,7 +172,7 @@ function handleSetDecryptedContent(actionType, action, state) {
     const currentMessageList = state.messageList;
     const thisMailId = action['mailId'];
 
-    const newContent = action['decrypted'][1]['Data'];
+    const newContent = action['decrypted'][1]['Data'].decryptedMessage;
     messageList = updateDecryptedMessage(currentMessageList, thisMailId, newContent);
 
     newState = Object.assign({}, state, {
@@ -205,8 +205,8 @@ function formatMessagesDataResponse(rawMessagesData: Array<any>): Array<MessageD
                 'YYYY-MM-DD HH:mm:ss ZZ',
                 'utc',
             )
-                .tz(moment.tz.guess())
-                .format('YYYY-MM-DD HH:mm:ss');
+            .tz(moment.tz.guess())
+            .format('YYYY-MM-DD HH:mm:ss');
 
             return {
                 mailId: thisMessageDetail.get('mailID'),
@@ -251,7 +251,7 @@ function updateDecryptedMessage(rawMessagesData: Array<any>, mailId, newContent)
                     action = decryptedObject.action;
                 }
 
-                if (action == 'null') action = {type: null};
+                if (action == 'null') action = { type: null };
 
                 return Object.assign({}, thisMessageDetail, {
                     content, action, isDecrypted
