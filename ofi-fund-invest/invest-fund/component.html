@@ -141,7 +141,7 @@
                     <div class="col-sm-6 choice" *ngIf="allowAmountAndQuantity">
                         <label>
                             <clr-icon shape="exclamation-circle" class="is-info"></clr-icon>
-                            {{'You can either subscribe by amount or unit for this asset' | translate}}
+                            {{'You can either @action@ by amount or unit for this asset' | translate: {'action': getOrderTypeTitle(false).toLowerCase() } }}
                         </label>
 
                         <div class="btn-group">
