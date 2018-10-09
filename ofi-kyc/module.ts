@@ -35,7 +35,6 @@ import { KycAuditTrailComponent } from './audit-trail/kyc-audit-trail.component'
 import { KycStatusAuditTrailComponent } from './audit-trail/status-audit-trail/kyc-status-audit-trail.component';
 import { KycInformationAuditTrailComponent } from './audit-trail/information-audit-trail/kyc-information-audit-trail.component';
 import { OfiRedirectTokenComponent } from './invitation-token/redirect-token.component';
-import { OfiConsumeTokenComponent } from './invitation-token/consume-token.component';
 import { OfiClientReferentialComponent } from './client-referential/component';
 import { OfiFundAccessTable } from './client-referential/access-table/component';
 
@@ -44,6 +43,8 @@ import { KycRequestsModule } from './my-requests/requests.module';
 import { FileDropModule } from '@setl/core-filedrop';
 import { FileViewerModule } from '@setl/core-fileviewer';
 import { OfiInvMyDocumentsComponent } from './inv-my-documents/component';
+
+import { ConsumeTokenService } from './invitation-token/consume-token.service';
 
 /* Constants */
 import config, { kycEnums } from './config';
@@ -61,7 +62,6 @@ import config, { kycEnums } from './config';
         TextInputListComponent,
         OfiInvMyDocumentsComponent,
         OfiRedirectTokenComponent,
-        OfiConsumeTokenComponent,
         KycAuditTrailComponent,
         KycStatusAuditTrailComponent,
         KycInformationAuditTrailComponent,
@@ -79,7 +79,6 @@ import config, { kycEnums } from './config';
         TextInputListComponent,
         OfiInvMyDocumentsComponent,
         OfiRedirectTokenComponent,
-        OfiConsumeTokenComponent,
         KycAuditTrailComponent,
         OfiClientReferentialComponent,
         OfiFundAccessTable,
@@ -107,6 +106,7 @@ import config, { kycEnums } from './config';
     providers: [
         MockKYCDocumentsService,
         ToasterService,
+        ConsumeTokenService,
         { provide: 'endpoints', useValue: config },
         { provide: 'kycEnums', useValue: kycEnums },
     ],
