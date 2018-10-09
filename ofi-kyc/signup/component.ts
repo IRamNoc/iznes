@@ -2,19 +2,17 @@ import { Component, OnDestroy, Inject, OnInit } from '@angular/core';
 import { Router } from '@angular/router';
 import { AlertsService } from '@setl/jaspero-ng2-alerts';
 import { select } from '@angular-redux/store';
-import { Observable, Subscription } from 'rxjs';
+
+import { Observable, Subscription, Subject } from 'rxjs';
+import { takeUntil } from 'rxjs/operators';
 
 import { MultilingualService } from '@setl/multilingual';
 import { APP_CONFIG, AppConfig, ConfirmationService } from '@setl/utils';
 import { ISignupConfiguration, ISignupData } from '@setl/core-login';
 
-import {
-    SET_LOGIN_DETAIL, RESET_LOGIN_DETAIL, loginRequestAC,
-    SET_AUTH_LOGIN_DETAIL, RESET_AUTH_LOGIN_DETAIL,
-    SET_PRODUCTION,
-} from '@setl/core-store';
-
 import { OfiKycService } from '../../ofi-req-services/ofi-kyc/service';
+
+import { ConsumeTokenService } from '../invitation-token/consume-token.service';
 
 @Component({
     selector: 'app-ofi-kyc-signup',
@@ -24,8 +22,8 @@ export class OfiSignUpComponent implements OnInit, OnDestroy {
 
     configuration: ISignupConfiguration;
 
+    private unsubscribe: Subject<any> = new Subject<any>();
     private appConfig;
-    private authSub: Subscription;
     private signupData: () => ISignupData;
 
     @select(['user', 'authentication']) authenticationOb: Observable<any>;
@@ -35,7 +33,8 @@ export class OfiSignUpComponent implements OnInit, OnDestroy {
                 private alertsService: AlertsService,
                 private confirmationService: ConfirmationService,
                 private ofiKycService: OfiKycService,
-                private router: Router) {
+                private router: Router,
+                private consumeTokenService: ConsumeTokenService) {
 
         this.appConfig = appConfig;
 
@@ -76,6 +75,10 @@ export class OfiSignUpComponent implements OnInit, OnDestroy {
                 password: signupData.password,
                 lang: signupData.language,
             }).then(() => {
+                // Resolve so user gets logged in and has a token
+                resolve();
+                this.consumeToken();
+
                 this.confirmationService.create(
                     'Success',
                     '<p><b>Your account was created</b></p><p>A confirmation email was sent to you.</p>',
@@ -85,11 +88,16 @@ export class OfiSignUpComponent implements OnInit, OnDestroy {
                         btnClass: 'success',
                     },
                 ).subscribe(() => {
-                    this.authSub = this.authenticationOb.subscribe((authentication) => {
-                        this.updateState(authentication);
-                    });
+                    this
+                        .authenticationOb
+                        .pipe(
+                            takeUntil(this.unsubscribe),
+                        )
+                        .subscribe((authentication) => {
+                            this.updateState(authentication);
+                        })
+                    ;
 
-                    resolve();
                 });
             }).catch((e) => {
                 this.alertsService.create(
@@ -100,21 +108,30 @@ export class OfiSignUpComponent implements OnInit, OnDestroy {
         });
     }
 
+    private consumeToken() {
+        this
+            .authenticationOb
+            .pipe(
+                takeUntil(this.unsubscribe),
+            )
+            .subscribe((authentication) => {
+                if (this.signupData().invitationToken && authentication.isLogin) {
+                    this.consumeTokenService.consumeToken(this.signupData().invitationToken);
+                }
+            })
+        ;
+    }
+
     private updateState(myAuthenData) {
         if (myAuthenData.isLogin) {
             const redirect = myAuthenData.defaultHomePage ? myAuthenData.defaultHomePage : '/home';
 
-            if (this.signupData().invitationToken) {
-                const extras = {
-                    queryParams: {
-                        invitationToken: this.signupData().invitationToken,
-                        redirect,
-                    },
-                };
-                this.router.navigate(['consume'], extras);
-            } else {
-                this.router.navigateByUrl(redirect);
-            }
+            const params = {
+                invitationToken: this.signupData().invitationToken,
+                redirect,
+            };
+
+            this.consumeTokenService.redirect(params);
         }
     }
 
@@ -123,6 +140,7 @@ export class OfiSignUpComponent implements OnInit, OnDestroy {
     }
 
     ngOnDestroy() {
-        this.authSub.unsubscribe();
+        this.unsubscribe.next();
+        this.unsubscribe.complete();
     }
 }

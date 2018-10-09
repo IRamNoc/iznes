@@ -21,7 +21,6 @@ export { OfiAmDocumentsComponent } from './ofi-kyc/am-documents/component';
 export { OfiKycHomeComponent } from './ofi-kyc/home/component';
 export { OfiKycAlreadyDoneComponent } from './ofi-kyc/already-done/component';
 export { OfiRedirectTokenComponent } from './ofi-kyc/invitation-token/redirect-token.component';
-export { OfiConsumeTokenComponent } from './ofi-kyc/invitation-token/consume-token.component';
 export { MyRequestsComponent } from './ofi-kyc/my-requests/list/my-requests.component';
 export { NewKycRequestComponent } from './ofi-kyc/my-requests/request/new-request.component';
 export { MyRequestsContainerComponent } from './ofi-kyc/my-requests/my-requests-container.component';
