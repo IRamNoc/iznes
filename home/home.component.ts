@@ -29,6 +29,7 @@ export class HomeComponent implements OnInit, OnDestroy {
     connectionCount: number;
     actionCount: number;
     unreadCount: number;
+    contractsCount: number;
     username: string;
     lastLogin: string;
     holdingByAsset: any;
@@ -48,6 +49,7 @@ export class HomeComponent implements OnInit, OnDestroy {
     @select(['connection', 'myConnections', 'fromConnectionList']) connections$: Observable<any>;
     @select(['user', 'myDetail', 'displayName']) username$: Observable<string>;
     @select(['user', 'myDetail', 'lastLogin']) lastLogin$: Observable<string>;
+    @select(['wallet', 'myWalletContract', 'contractList']) contracts$: Observable<any>;
 
     public assetTiles: Asset[];
     public holdingByAsset$: Observable<any[]>;
@@ -78,6 +80,7 @@ export class HomeComponent implements OnInit, OnDestroy {
         }));
         this.subscriptions.push(this.actionCount$.subscribe(count => this.actionCount = count));
         this.subscriptions.push(this.unreadCount$.subscribe(count => this.unreadCount = count));
+        this.subscriptions.push(this.contracts$.subscribe(contracts => this.contractsCount = contracts.count || 0));
         this.subscriptions.push(this.username$.subscribe(username => this.username = username));
         this.subscriptions.push(this.lastLogin$.pipe(filter(lastLogin => !!lastLogin)).subscribe((lastLogin) => {
             this.lastLogin = lastLogin;
