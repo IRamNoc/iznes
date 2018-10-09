@@ -8,7 +8,7 @@ import { LogService } from '@setl/utils';
     selector: 'setl-message-kyc',
     templateUrl: './message-kyc.component.html',
     styles: [
-        `.padding {
+            `.padding {
             padding: 5px 0;
         }`,
     ],
@@ -60,9 +60,9 @@ export class SetlMessageKycComponent implements OnInit {
         this.logService.log('messageBody: ', this.messageBody);
     }
 
-    isFrench(){
+    isFrench() {
         const lang = this.config.lang;
-        if(!lang){
+        if (!lang) {
             return false;
         }
 
@@ -76,11 +76,11 @@ export class SetlMessageKycComponent implements OnInit {
         for (let i = 0; i < count; i += 1) {
             const key = Object.keys(data)[i];
             const value = data[key].replace('{{amFirstName}}', this.config.amFirstName)
-                                   .replace('{{amCompanyName}}', this.config.amCompanyName)
-                                   .replace('{{investorCompanyName}}', this.config.investorCompanyName)
-                                   .replace('{{investorFirstName}}', this.config.investorFirstName)
-                                   .replace('{{investorEmail}}', this.config.investorEmail)
-                                   .replace('{{investorPhoneNumber}}', this.config.investorPhoneNumber);
+            .replace('{{amCompanyName}}', this.config.amCompanyName)
+            .replace('{{investorCompanyName}}', this.config.investorCompanyName)
+            .replace('{{investorFirstName}}', this.config.investorFirstName)
+            .replace('{{investorEmail}}', this.config.investorEmail)
+            .replace('{{investorPhoneNumber}}', this.config.investorPhoneNumber);
 
             message[key] = value;
         }
@@ -89,6 +89,6 @@ export class SetlMessageKycComponent implements OnInit {
     }
 
     handleRedirectButtonClick() {
-        this.router.navigate(['kyc-am-documents']);
+        this.router.navigate(['on-boarding', 'management']);
     }
 }

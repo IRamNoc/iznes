@@ -103,7 +103,7 @@
         </div>
 
         <div class="message_view_body">
-            <p *ngIf="currentMessage.content && currentMessage.isDecrypted && (!currentMessage.action || (currentMessage.action && currentMessage.action.type !== 'formAction'))">
+            <p *ngIf="currentMessage.content && currentMessage.isDecrypted && (!currentMessage.action || (currentMessage.action && currentMessage.action.type !== 'formAction' && currentMessage.action.type !== 'messageWithLink'))">
                 <setl-message-body [messageBody]="currentMessage.content"></setl-message-body>
             </p>
             <p *ngIf="currentMessage.action && currentMessage.action.type === 'sendPdf'">
@@ -148,6 +148,8 @@
                                    [walletId]="walletId"
                                    [mailId]="currentMessage.mailId">
             </setl-message-workflow>
+
+            <setl-message-with-links *ngIf="currentMessage.action && currentMessage.action.type === 'messageWithLink'" [data]="currentMessage.action.data" [content]="currentMessage.content"></setl-message-with-links>
 
         </div>
 
