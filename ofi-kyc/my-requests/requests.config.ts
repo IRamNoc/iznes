@@ -1301,7 +1301,6 @@ export const controlToName = {
     activities: 'Activities',
     ownAccountinvestor: 'Own-account investor',
     investorOnBehalfThirdParties: 'Managed third parties',
-    investorOnBehalfList: 'Investor on behalf of third parties',
     geographicalAreaOfActivity: 'Geographical area of the activity',
     geographicalAreaOfActivitySpecification: 'Geographical area of the activity specification',
     totalFinancialAssetsAlreadyInvested: 'Total Financial assets already invested',
