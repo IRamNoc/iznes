@@ -1,4 +1,3 @@
-::ng-deep
 setl-permission-grid {
     width: 100%;
 }
@@ -7,12 +6,30 @@ setl-permission-grid {
     margin-bottom: 15px;
 }
 
+:host /deep/ .permission-grid .datagrid-column .datagrid-column-title,
+.permission-grid clr-dg-cell {
+    text-align: center;
+}
+
 .permission-grid .option-box .fa {
     margin: 0;
 }
 
-.permission-grid td.left:first-child, .permission-grid th.left:first-child {
+:host /deep/ .permission-grid .left.datagrid-cell,
+:host /deep/ .permission-grid .left .datagrid-column-title {
+    text-align: left;
     padding-left: 10px;
+}
+
+:host /deep/ .permission-grid .datagrid-column:first-child,
+:host /deep/ .permission-grid .datagrid-cell:first-child {
+    width: 40% !important;
+}
+
+:host /deep/ .datagrid .datagrid-body .datagrid-row .datagrid-cell,
+:host /deep/ .datagrid-overlay-wrapper,
+:host /deep/ .datagrid .datagrid-body {
+    overflow: visible;
 }
 
 .permission-grid tr:hover {
@@ -58,11 +75,12 @@ ul.option-list.open {
 }
 
 ul.option-list li {
-    display: inline-block;
+    display: block;
     width: 100%;
     margin: 2.5px 0;
     padding: 4px;
     cursor: pointer;
+    line-height: 10px;
 }
 
 ul.option-list li:hover {

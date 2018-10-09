@@ -1,20 +1,13 @@
 <div class="permission-grid">
-    <table class="table">
-        <thead *ngIf="permissionLevels.length">
-        <th class="left">Permission Area</th>
-        <!-- Permission Levels Headers. -->
-        <th *ngFor="let level of permissionLevels">
+    <clr-datagrid>
+        <clr-dg-column class="left">Permission Area</clr-dg-column>
+        <clr-dg-column *ngFor="let level of permissionLevels">
             {{level.text}}
-        </th>
-        </thead>
+        </clr-dg-column>
 
-        <tbody *ngIf="permissionAreas.length">
-        <!-- Each Permission Row. -->
-        <tr *ngFor="let area of permissionAreas; let areaIndex = index">
-            <td class="v-middle left">
-                <span>{{area.text}}</span>
-            </td>
-            <td *ngFor="let level of permissionLevels; let levelIndex = index">
+        <clr-dg-row *ngFor="let area of permissionAreas; let areaIndex = index">
+            <clr-dg-cell class="left">{{area.text}}</clr-dg-cell>
+            <clr-dg-cell *ngFor="let level of permissionLevels; let levelIndex = index">
 
                 <!-- Option List, defaults to this grid. -->
                 <div class="option-wrap" (click)="setOpen(areaIndex, levelIndex)">
@@ -49,9 +42,7 @@
                         </li>
                     </ul>
                 </div>
-
-            </td>
-        </tr>
-        </tbody>
-    </table>
+            </clr-dg-cell>
+        </clr-dg-row>
+    </clr-datagrid>
 </div>
