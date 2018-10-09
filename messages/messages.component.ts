@@ -254,7 +254,7 @@ export class SetlMessagesComponent implements OnDestroy, OnInit {
      */
     messagesList(messages) {
         this.selectAll = false;
-        if (messages) {
+        if (messages.length) {
             this.messages = messages.map((message) => {
                 if (message.senderId) {
                     if (typeof this.walletDirectoryList[message.senderId] !== 'undefined') {
