@@ -22,7 +22,7 @@
                 <app-counter-tile name="messages" icon="envelope" [count]="unreadCount" color="orange" route="messages">{{'New messages' | translate}}
                 </app-counter-tile>
 
-                <app-counter-tile name="contracts" icon="plug" count="0" color="blue">{{'Contracts' | translate}}</app-counter-tile>
+                <app-counter-tile name="contracts" icon="plug" [count]="contractsCount" color="blue" route="contracts/manage">{{'Contracts' | translate}}</app-counter-tile>
 
                 <app-basic-tile name="asset1" color="green">
                     <ng-container *ngTemplateOutlet="assetTile; context: {'asset': assetTiles[0]}"></ng-container>
