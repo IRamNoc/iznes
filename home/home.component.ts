@@ -80,7 +80,7 @@ export class HomeComponent implements OnInit, OnDestroy {
         }));
         this.subscriptions.push(this.actionCount$.subscribe(count => this.actionCount = count));
         this.subscriptions.push(this.unreadCount$.subscribe(count => this.unreadCount = count));
-        this.subscriptions.push(this.contracts$.subscribe(contracts => this.contractsCount = contracts.count || 0));
+        this.subscriptions.push(this.contracts$.subscribe(contracts => this.contractsCount = contracts.length));
         this.subscriptions.push(this.username$.subscribe(username => this.username = username));
         this.subscriptions.push(this.lastLogin$.pipe(filter(lastLogin => !!lastLogin)).subscribe((lastLogin) => {
             this.lastLogin = lastLogin;
