@@ -253,25 +253,29 @@ export class SetlMessagesComponent implements OnDestroy, OnInit {
      */
     messagesList(messages) {
         this.selectAll = false;
-        this.messages = messages.map((message) => {
-            if (message.senderId) {
-                if (typeof this.walletDirectoryList[message.senderId] !== 'undefined') {
-                    message.senderWalletName = this.walletDirectoryList[message.senderId].walletName;
-                } else {
-                    if (message.senderId = -1) {
-                        message.senderWalletName = 'System message';
+        if (messages) {
+            this.messages = messages.map((message) => {
+                if (message.senderId) {
+                    if (typeof this.walletDirectoryList[message.senderId] !== 'undefined') {
+                        message.senderWalletName = this.walletDirectoryList[message.senderId].walletName;
+                    } else {
+                        if (message.senderId === -1) {
+                            message.senderWalletName = 'System message';
+                        } else {
+                            message.senderWalletName = 'Deleted wallet';
+                        }
                     }
-                }
-                if (message.recipientId) {
-                    if (typeof this.walletDirectoryList[message.recipientId] !== 'undefined') {
-                        message.recipientWalletName = this.walletDirectoryList[message.recipientId].walletName;
+                    if (message.recipientId) {
+                        if (typeof this.walletDirectoryList[message.recipientId] !== 'undefined') {
+                            message.recipientWalletName = this.walletDirectoryList[message.recipientId].walletName;
+                        }
                     }
-                }
 
-                message.isChecked = false;
-                return message;
-            }
-        });
+                    message.isChecked = false;
+                    return message;
+                }
+            });
+        }
 
         if (this.mailCounts && this.currentCategory !== 999) {
             this.currentBox = this.categories[this.currentCategory];
