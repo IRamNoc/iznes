@@ -1282,7 +1282,7 @@ export const controlToName = {
     registeredCompanyName: 'Registered Company Name or Legal Name',
     legalForm: 'Legal form',
     leiCode: 'LEI Code',
-    otherIdentificationNumber: 'Other indentification number',
+    otherIdentificationNumber: 'Other identification number',
     registeredCompanyAddressLine1: "Registered company's headquarters address (including country)",
     registeredCompanyAddressLine2: 'Address line 2',
     registeredCompanyZipCode: 'ZIP Code',
