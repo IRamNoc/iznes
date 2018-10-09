@@ -43,7 +43,6 @@ import {
     ProductConfigurationComponent,
     OfiInvMyDocumentsComponent,
     OfiRedirectTokenComponent,
-    OfiConsumeTokenComponent,
     MyHoldingsComponent,
     OfiSubPortfolioComponent,
     OfiClientReferentialComponent,
@@ -143,10 +142,6 @@ export const ROUTES: Routes = [
     {
         path: 'redirect/:lang/:invitationToken',
         component: OfiRedirectTokenComponent,
-    },
-    {
-        path: 'consume',
-        component: OfiConsumeTokenComponent,
     },
     {
         path: 'signup',
