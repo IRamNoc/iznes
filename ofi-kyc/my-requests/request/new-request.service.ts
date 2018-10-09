@@ -25,6 +25,7 @@ import { MyKycSetRequestedKycs } from '@ofi/ofi-main/ofi-store/ofi-kyc';
 import { RequestsService } from '../requests.service';
 
 import {
+    booleanControls,
     legalFormList,
     sectorActivityList,
     legalStatusList,
@@ -689,16 +690,25 @@ export class NewRequestService {
      * @returns String
      */
     getValues(group) {
-        return mapValues(group, single => {
+        return mapValues(group, (single, key) => {
             if (isArray(single)) {
-                return reduce(single, (acc, curr) => {
-                    let val = curr.id ? curr.id : curr;
+                return reduce(
+                    single,
+                    (acc, curr) => {
+                        const val = curr.id ? curr.id : curr;
 
-                    return acc ? [acc, val].join(' ') : val;
-                }, '')
-            } else if (isObject(single)) {
-                let filtered = pickBy(single);
+                        return acc ? [acc, val].join(' ') : val;
+                    },
+                    '');
+            }
+
+            if (isObject(single)) {
+                const filtered = pickBy(single);
                 return Object.keys(filtered).join(' ');
+            }
+
+            if (booleanControls.indexOf(key) !== -1) {
+                return Number(single);
             }
 
             return single;
