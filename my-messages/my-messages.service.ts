@@ -40,13 +40,13 @@ export class MyMessagesService {
         return createMemberNodeSagaRequest(this.memberSocketService, messageBody);
     }
 
-    decryptMessage(bobWalletId: string, aliceWalletId: string, encryptedMessage: string): any {
+    decryptMessage(bobWalletId: string, alicePublicKey: string, encryptedMessage: string): any {
 
         const messageBody: DecryptMessagesBody = {
             RequestName: 'email_decrypt',
             token: this.memberSocketService.token,
             bobWalletId,
-            aliceWalletId,
+            alicePublicKey,
             encryptedMessage,
         };
 

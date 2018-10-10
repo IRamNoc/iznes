@@ -19,7 +19,7 @@ export interface RequestOwnMessagesBody extends MemberNodeMessageBody {
 export interface DecryptMessagesBody extends MemberNodeMessageBody {
     token: string;
     bobWalletId: string;
-    aliceWalletId: string;
+    alicePublicKey: string;
     encryptedMessage: string;
 }
 
