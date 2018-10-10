@@ -41,7 +41,7 @@ export class PersistService {
      *
      * @return {FormGroup} - The FormGroup originally passed in.
      */
-    public watchForm(name: string, group: FormGroup, context: string = null, options: object = {}): FormGroup {
+    public watchForm(name: string, group: FormGroup, context: string = null, options: object = {}): any {
         console.log(' |-- Persist - watchForm: ', name);
 
         /* Check if the form is wallet sensitive. */
@@ -57,7 +57,7 @@ export class PersistService {
         }
 
         /* Check if we have a state for this form. */
-        this.persistRequestService.loadFormState(name, context).then((data) => {
+        const promise = this.persistRequestService.loadFormState(name, context).then((data) => {
             /* Get recovered data. */
             const recoveredData = JSON.parse(_.get(data, '[1].Data[0].data', false));
 
@@ -86,6 +86,10 @@ export class PersistService {
         this.subscribeToChanges(name, group, context);
 
         /* Return. */
+        if(options['returnPromise']){
+            return promise;
+        }
+
         console.log(' | returning group.');
         return group;
     }
