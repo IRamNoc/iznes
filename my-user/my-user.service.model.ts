@@ -46,6 +46,10 @@ export interface AuthenticateTwoFactorAuthenticationBody extends MemberNodeMessa
     type: string;
 }
 
+export interface GetTwoFactorQrCodeBody extends MemberNodeMessageBody {
+    token: string;
+}
+
 export interface ForgotTwoFactorRequestBody extends MemberNodeMessageBody {
     email: string;
 }

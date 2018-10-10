@@ -10,6 +10,7 @@ import {
     SaveUserDetailsRequestBody,
     SetTwoFactorAuthenticationBody,
     AuthenticateTwoFactorAuthenticationBody,
+    GetTwoFactorQrCodeBody,
     ForgotTwoFactorRequestBody,
     ResetTwoFactorRequestBody,
     SaveNewPasswordRequestBody,
@@ -198,6 +199,15 @@ export class MyUserService implements OnDestroy {
             twoFactorCode: userData.twoFactorCode,
             userID: userData.userID,
             type: userData.type || 'GoogleAuth',
+        };
+
+        return createMemberNodeSagaRequest(this.memberSocketService, messageBody);
+    }
+
+    getTwoFactorQrCode(): any {
+        const messageBody: GetTwoFactorQrCodeBody = {
+            RequestName: 'gettwofactorqrcode',
+            token: String(this.memberSocketService.token),
         };
 
         return createMemberNodeSagaRequest(this.memberSocketService, messageBody);
