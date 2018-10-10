@@ -81,15 +81,15 @@ export class MailHelper {
      */
     public decryptMessage(message, type = 'inbox') {
         let bobWalletId = message.recipientId;
-        let aliceWalletId = message.senderId;
+        let alicePublicKey = message.senderPub;
         if (type === 'sent') {
             bobWalletId = message.senderId;
-            aliceWalletId = message.recipientId;
+            alicePublicKey = message.recipientPub;
         }
         return new Promise((resolve, reject) => {
             const asyncTaskPipe = this.myMessageService.decryptMessage(
                 bobWalletId,
-                aliceWalletId,
+                alicePublicKey,
                 message.content,
             );
             this.ngRedux.dispatch(
