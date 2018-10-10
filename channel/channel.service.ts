@@ -18,6 +18,9 @@ import {
     SET_WALLET_ADDED,
     SET_WALLET_UPDATED,
     SET_WALLET_DELETED,
+    SET_WALLET_DIRECTORY_WALLET_ADDED,
+    SET_WALLET_DIRECTORY_WALLET_UPDATED,
+    SET_WALLET_DIRECTORY_WALLET_DELETED,
     SET_OWN_WALLETS,
     SET_WALLET_LABEL_UPDATED,
 
@@ -170,6 +173,13 @@ export class ChannelService {
                     payload: [null, data, null],
                 },
             );
+
+            this.ngRedux.dispatch(
+                {
+                    type: SET_WALLET_DIRECTORY_WALLET_ADDED,
+                    payload: [null, data, null],
+                },
+            );
             break;
         case 'udw': // update wallet
             this.logService.log(' | UPDATED WALLET: ', data);
@@ -177,6 +187,13 @@ export class ChannelService {
             this.ngRedux.dispatch(
                 {
                     type: SET_WALLET_UPDATED,
+                    payload: [null, data, null],
+                },
+            );
+
+            this.ngRedux.dispatch(
+                {
+                    type: SET_WALLET_DIRECTORY_WALLET_UPDATED,
                     payload: [null, data, null],
                 },
             );
@@ -188,6 +205,13 @@ export class ChannelService {
             this.ngRedux.dispatch(
                 {
                     type: SET_WALLET_DELETED,
+                    payload: [null, data, null],
+                },
+            );
+
+            this.ngRedux.dispatch(
+                {
+                    type: SET_WALLET_DIRECTORY_WALLET_DELETED,
                     payload: [null, data, null],
                 },
             );
