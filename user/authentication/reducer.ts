@@ -7,8 +7,6 @@ const initialState: AuthenticationState = {
     token: '',
     apiKey: '',
     useTwoFactor: false,
-    twoFactorSecret: '',
-    sessionTimeoutSecs: 0,
     isLogin: false,
     defaultHomePage: '/home',
     mustChangePassword: false,
@@ -23,8 +21,6 @@ export const AuthenticationReducer = function (state: AuthenticationState = init
         let token = _.get(loginedData, 'Token', '');
         const apiKey = _.get(loginedData, 'apiKey', '');
         let useTwoFactor = Boolean(_.get(loginedData, 'useTwoFactor', 0));
-        const twoFactorSecret = _.get(loginedData, 'twoFactorSecret', '');
-        const sessionTimeoutSecs = _.get(loginedData, 'sessionTimeoutSecs', '');
         const defaultHomePage = _.get(loginedData, 'defaultHomePage', '');
         let mustChangePassword = _.get(loginedData, 'mustChangePassword', false);
         if (mustChangePassword === 0 || mustChangePassword === 1) {
@@ -35,8 +31,6 @@ export const AuthenticationReducer = function (state: AuthenticationState = init
             token,
             apiKey,
             useTwoFactor,
-            twoFactorSecret,
-            sessionTimeoutSecs,
             isLogin: true,
             defaultHomePage,
             mustChangePassword,
