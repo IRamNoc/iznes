@@ -37,21 +37,21 @@ export interface SetTwoFactorAuthenticationBody extends MemberNodeMessageBody {
     token: string;
     twoFactorAuthentication: string;
     type: string;
-    userID: string;
 }
 
 export interface AuthenticateTwoFactorAuthenticationBody extends MemberNodeMessageBody {
     token: string;
-    secret: string;
     twoFactorCode: string;
     userID: string;
     type: string;
-    sessionTimeout: number;
 }
 
 export interface ForgotTwoFactorRequestBody extends MemberNodeMessageBody {
     email: string;
-    project: string;
+}
+
+export interface ResetTwoFactorRequestBody extends MemberNodeMessageBody {
+    resetToken: string;
 }
 
 export interface SaveNewPasswordRequestBody extends MemberNodeMessageBody {

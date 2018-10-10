@@ -11,6 +11,7 @@ import {
     SetTwoFactorAuthenticationBody,
     AuthenticateTwoFactorAuthenticationBody,
     ForgotTwoFactorRequestBody,
+    ResetTwoFactorRequestBody,
     SaveNewPasswordRequestBody,
     RefreshTokenRequestBody,
     ForgotPasswordRequestBody,
@@ -56,20 +57,20 @@ interface UserDetailsData {
 interface SetTwoFactorAuthenticationData {
     twoFactorAuthentication: string;
     type: string;
-    userID: string;
 }
 
 interface AuthenticateTwoFactorData {
-    secret: string;
     twoFactorCode: string;
     userID: string;
     type: string;
-    sessionTimeout: number;
 }
 
 interface ForgotTwoFactorData {
     email: string;
-    project: string;
+}
+
+interface ResetTwoFactorData {
+    resetToken: string;
 }
 
 interface NewPasswordData {
@@ -185,7 +186,6 @@ export class MyUserService implements OnDestroy {
             token: String(this.memberSocketService.token),
             twoFactorAuthentication: userData.twoFactorAuthentication,
             type: userData.type || 'GoogleAuth',
-            userID: userData.userID,
         };
 
         return createMemberNodeSagaRequest(this.memberSocketService, messageBody);
@@ -195,11 +195,9 @@ export class MyUserService implements OnDestroy {
         const messageBody: AuthenticateTwoFactorAuthenticationBody = {
             RequestName: 'authenticatetwofactor',
             token: String(this.memberSocketService.token),
-            secret: userData.secret,
             twoFactorCode: userData.twoFactorCode,
             userID: userData.userID,
             type: userData.type || 'GoogleAuth',
-            sessionTimeout: userData.sessionTimeout,
         };
 
         return createMemberNodeSagaRequest(this.memberSocketService, messageBody);
@@ -209,7 +207,15 @@ export class MyUserService implements OnDestroy {
         const messageBody: ForgotTwoFactorRequestBody = {
             RequestName: 'forgottwofactor',
             email: data.email,
-            project: data.project,
+        };
+
+        return createMemberNodeSagaRequest(this.memberSocketService, messageBody);
+    }
+
+    resetTwoFactor(data: ResetTwoFactorData): any {
+        const messageBody: ResetTwoFactorRequestBody = {
+            RequestName: 'resettwofactor',
+            resetToken: data.resetToken,
         };
 
         return createMemberNodeSagaRequest(this.memberSocketService, messageBody);
