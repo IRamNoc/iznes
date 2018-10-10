@@ -718,51 +718,48 @@ export class UmbrellaFundComponent implements OnInit, AfterViewInit, OnDestroy {
                 additionnalNotes: formValues.additionnalNotes,
             };
 
+            let asyncTaskPipe = null;
+
             if (!!formValues.umbrellaFundID && formValues.umbrellaFundID !== '' && this.isEditMode) {
                 // UPDATE
-                const asyncTaskPipe = this._ofiUmbrellaFundService.updateUmbrellaFund(
+                asyncTaskPipe = this._ofiUmbrellaFundService.updateUmbrellaFund(
                     {
                         ...payload,
                         umbrellaFundID: formValues.umbrellaFundID,
                     },
                     this.ngRedux);
-
-                this.ngRedux.dispatch(SagaHelper.runAsyncCallback(
-                    asyncTaskPipe,
-                    (data) => {
-                        // this.logService.log('save success new fund', data); // success
-                        OfiUmbrellaFundService.setRequested(false, this.ngRedux);
-                        this._toasterService.pop('success', formValues.umbrellaFundName + ' draft has been successfully updated!');
-                        this._location.back();
-                    },
-                    (data) => {
-                        this.logService.log('Error: ', data);
-                        const errMsg = _.get(data, '[1].Data[0].Message', '');
-                        this._toasterService.pop('error', 'Failed to update the draft umbrella fund. ' + errMsg);
-                        this._changeDetectorRef.markForCheck();
-                    })
-                );
             } else {
                 // INSERT
-                const asyncTaskPipe = this._ofiUmbrellaFundService.saveUmbrellaFund(
+                asyncTaskPipe = this._ofiUmbrellaFundService.saveUmbrellaFund(
                     payload,
                     this.ngRedux);
-
-                this.ngRedux.dispatch(SagaHelper.runAsyncCallback(
-                    asyncTaskPipe,
-                    (data) => {
-                        OfiUmbrellaFundService.setRequested(false, this.ngRedux);
-                        this._toasterService.pop('success', formValues.umbrellaFundName + ' draft has been successfully saved!');
-                        this._location.back();
-                    },
-                    (data) => {
-                        this.logService.log('Error: ', data);
-                        this._toasterService.pop('error', 'Failed to create the draft umbrella fund.');
-                        this._changeDetectorRef.markForCheck();
-                    })
-                );
             }
+
+            this.dispatchAction(asyncTaskPipe, formValues.umbrellaFundName);
         }
+    }
+
+    dispatchAction(asyncTaskPipe, umbrellaFundName) {
+        const successMessage = this.isEditMode
+            ? `${umbrellaFundName} draft has been successfully updated!`
+            : `${umbrellaFundName} draft has been successfully saved!`;
+
+        const errorMessage = this.isEditMode ? 'Failed to update the draft umbrella fund.' : 'Failed to create the draft umbrella fund.'
+
+        this.ngRedux.dispatch(SagaHelper.runAsyncCallback(
+            asyncTaskPipe,
+            () => {
+                OfiUmbrellaFundService.setRequested(false, this.ngRedux);
+                this._toasterService.pop('success', successMessage);
+                this._location.back();
+            },
+            (err) => {
+                this.logService.log('Error: ', err);
+                const error = _.get(err, '[1].Data[0].Message', '');
+                this._toasterService.pop('error', `${errorMessage} (${error})`);
+                this._changeDetectorRef.markForCheck();
+            })
+        );
     }
 
     redirectToFund(umbrellaID?) {
