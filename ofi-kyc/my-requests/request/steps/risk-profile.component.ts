@@ -19,6 +19,7 @@ export class NewKycRiskProfileComponent implements OnInit, OnDestroy {
     @select(['ofi', 'ofiKyc', 'myKycRequested', 'kycs']) requests$;
 
     unsubscribe: Subject<any> = new Subject();
+    formWatch: Subject<boolean> = new Subject<boolean>();
 
     constructor(
         private newRequestService: NewRequestService,
@@ -77,9 +78,12 @@ export class NewKycRiskProfileComponent implements OnInit, OnDestroy {
             this.form,
             this.newRequestService.context,
             {
-                reset: false
+                reset: false,
+                returnPromise: true,
             }
-        );
+        ).then(() => {
+            this.formWatch.next(true);
+        });
     }
 
     clearPersistForm() {
