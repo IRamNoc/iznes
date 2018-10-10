@@ -261,7 +261,7 @@ export class SetlMessagesComponent implements OnDestroy, OnInit {
                         message.senderWalletName = this.walletDirectoryList[message.senderId].walletName;
                     } else {
                         if (message.senderId === -1) {
-                            message.senderWalletName = 'System message';
+                            message.senderWalletName = this.appConfig.internalMessageSender || 'System message';
                         } else {
                             message.senderWalletName = 'Deleted wallet';
                         }
