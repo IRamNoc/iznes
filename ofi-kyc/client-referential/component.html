@@ -191,7 +191,7 @@
                     <clr-dg-column [clrDgField]="'quantity'">{{'Quantity' | translate}}</clr-dg-column>
                     <clr-dg-column [clrDgField]="'latestNav'">{{'Latest NAV' | translate}}</clr-dg-column>
                     <clr-dg-column [clrDgField]="'amount'">{{'AUI (Settled)' | translate}}</clr-dg-column>
-                    <clr-dg-column [clrDgField]="'ratio'">{{'Ratio (% AM)' | translate}}</clr-dg-column>
+                    <clr-dg-column [clrDgField]="'*'">{{'Ratio (% AM)' | translate}}</clr-dg-column>
 
                     <clr-dg-row *clrDgItems="let item of holdingsTable">
                         <ng-container *ngIf="!item.shareName">
@@ -202,7 +202,7 @@
                             <clr-dg-cell></clr-dg-cell>
                             <clr-dg-cell></clr-dg-cell>
                             <clr-dg-cell>{{item.amount.toFixed(2)}}</clr-dg-cell>
-                            <clr-dg-cell>{{item.ratio.toFixed(2) + '%'}}</clr-dg-cell>
+                            <clr-dg-cell></clr-dg-cell>
                         </ng-container>
                         <ng-container *ngIf="!!item.shareName">
                             <clr-dg-cell></clr-dg-cell>
