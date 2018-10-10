@@ -1,5 +1,6 @@
 package com.setl.UI.common.SETLUIHelpers;
 import org.openqa.selenium.By;
+import org.openqa.selenium.WebElement;
 import org.openqa.selenium.support.ui.WebDriverWait;
 
 import java.sql.*;
@@ -282,12 +283,17 @@ public class AdministrationModuleHelper {
         driver.findElement(By.cssSelector("#userType > div > div.option-wrapper.ui-select-choices.dropdown-menu.ng-star-inserted > div > input")).sendKeys("Asset manager");
         driver.findElement(By.cssSelector("#userType > div > div.option-wrapper.ui-select-choices.dropdown-menu.ng-star-inserted > ul > li > div")).click();
     }
+
     public static void searchUser(String reference, String firstName, String lastName, String emailAddress, String phoneNumber) throws InterruptedException {
         final WebDriverWait wait = new WebDriverWait(driver, timeoutInSeconds);
         wait.until(visibilityOfElementLocated(By.id("tabAccountAdminUsersButton"))).isDisplayed();
-        driver.findElement(By.cssSelector("clr-dg-column.col-ref > div:nth-child(1) > clr-dg-string-filter:nth-child(1) > clr-dg-filter:nth-child(1) > button:nth-child(1)")).click();
-        driver.findElement(By.xpath("/html/body/app-root/app-basic-layout/div/ng-sidebar-container/div/div/div/main/div/div/app-core-admin-users-list/clr-tabs/clr-tab/clr-tab-content/clr-datagrid/div/div/div/clr-dg-table-wrapper/div[1]/div/clr-dg-column[1]/div/clr-dg-string-filter/clr-dg-filter/div/input")).sendKeys(reference);
-
+        WebElement refSearch = driver.findElement(By.cssSelector("clr-dg-column.col-ref > div:nth-child(1) > clr-dg-string-filter:nth-child(1) > clr-dg-filter:nth-child(1) > button:nth-child(1)"));
+        wait.until(visibilityOf(refSearch));
+        wait.until(elementToBeClickable(refSearch));
+        refSearch.click();
+        WebElement refField =driver.findElement(By.xpath("/html/body/app-root/app-basic-layout/div/ng-sidebar-container/div/div/div/main/div/div/app-core-admin-users-list/clr-tabs/clr-tab/clr-tab-content/clr-datagrid/div/div/div/clr-dg-table-wrapper/div[1]/div/clr-dg-column[1]/div/clr-dg-string-filter/clr-dg-filter/div/input"));
+        wait.until(elementToBeClickable(refField));
+        refField.sendKeys(reference);
         String columnReference = driver.findElement(By.id("accountAdminTeamCellRef0")).getText();
         assertTrue(columnReference.equals(reference));
         String columnFirstName = driver.findElement(By.id("accountAdminTeamCellFirstName0")).getText();

@@ -91,6 +91,7 @@ public class OpenCSDUsersSubModuleTest {
         selectCreateUserWithBadDetails();
         validateUserNOTCreatedOrDeleted(0, emailaddress[0], firstName[0], lastName[0], phoneNumber[0], userRef[0]);
     }
+
     @Test
     public void shouldCreateUser()throws InterruptedException, SQLException {
         String[] emailaddress = generateEmail();
