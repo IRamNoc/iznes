@@ -45,6 +45,7 @@ export interface AppConfig {
     platformLegal?: string;
     topbarLogoUrl: string;
     applyRestrictUrl?: boolean;
+    internalMessageSender?: string;
 }
 
 export interface MessagesMenuItem {
