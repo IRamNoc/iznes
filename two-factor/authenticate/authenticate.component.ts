@@ -25,8 +25,6 @@ export class AuthenticateComponent implements OnDestroy, OnInit {
     userId: number;
     emailUser: string = '';
 
-    twoFactorSecret: string = '';
-    sessionTimeout: number = 600;
     showModal: boolean = true;
     showForgottenTwoFactorModal: boolean = false;
     showResetInstruction: boolean = false;
@@ -36,7 +34,6 @@ export class AuthenticateComponent implements OnDestroy, OnInit {
     authenticateQRForm: FormGroup;
 
     @select(['user', 'myDetail']) getUserDetails$;
-    @select(['user', 'authentication']) authentication$;
     @select(['user', 'siteSettings', 'language']) requestLanguageObj;
     @select(['user', 'connected', 'connectedWallet']) connectedWalletId$;
 
@@ -82,11 +79,6 @@ export class AuthenticateComponent implements OnDestroy, OnInit {
         this.subscriptionsArray.push(this.getUserDetails$.subscribe((userDetails) => {
             this.username = userDetails.username;
             this.userId = userDetails.userId;
-
-            this.subscriptionsArray.push(this.authentication$.subscribe((auth) => {
-                this.twoFactorSecret = auth.twoFactorSecret;
-                this.sessionTimeout = auth.sessionTimeout;
-            }));
         }));
 
         this.subscriptionsArray.push(this.connectedWalletId$.subscribe((id) => {
