@@ -1,6 +1,6 @@
 import { Injectable } from '@angular/core';
 import { NgRedux, select } from '@angular-redux/store';
-import { Observable } from 'rxjs';
+import { Observable } from 'rxjs/Observable';
 import { AlertsService } from '@setl/jaspero-ng2-alerts';
 import { Common, SagaHelper, LogService } from '@setl/utils';
 import { WalletNodeSocketService } from '@setl/websocket-service';
@@ -48,6 +48,7 @@ export class SetlMessageFormActionService {
                 action.messageType,
                 action.payload,
             );
+
             this.ngRedux.dispatch(SagaHelper.runAsync(
                 action.successType,
                 action.failureType,
@@ -66,7 +67,6 @@ export class SetlMessageFormActionService {
             ));
             break;
         }
-
     }
 
     private onMemberNodeActionSuccess(data: any, walletId: number, mailId: number): void {
@@ -93,7 +93,6 @@ export class SetlMessageFormActionService {
     }
 
     private onActionError(data): void {
-        this.alertsService.create('error',
-                                  `${data[1].status}`);
+        this.alertsService.create('error', `${data[1].data.error}`);
     }
 }

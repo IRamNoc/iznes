@@ -1,4 +1,4 @@
-import {ChangeDetectorRef, Component, Input, Output, EventEmitter, OnInit} from "@angular/core";
+import { ChangeDetectorRef, Component, Input, Output, EventEmitter, OnInit } from '@angular/core';
 import { SetlIssueAssetActionService } from './issue-asset-action.service';
 import { IssueAssetActionModel } from './issue-asset-action.model';
 import { WalletNodeSocketService } from '@setl/websocket-service';
@@ -23,14 +23,14 @@ export class SetlIssueAssetActionComponent implements OnInit {
 
     @select(['user', 'connected', 'connectedWallet']) connectedWallet$;
 
-    instruments: Array<any> = [];
-    instrument: Array<any> = [];
+    instruments: any[] = [];
+    instrument: any[] = [];
 
     constructor(
         private service: SetlIssueAssetActionService,
         private walletNodeSocket: WalletNodeSocketService,
         private redux: NgRedux<any>,
-        private changeDetector: ChangeDetectorRef
+        private changeDetector: ChangeDetectorRef,
     ) {}
 
     ngOnInit() {
@@ -41,14 +41,15 @@ export class SetlIssueAssetActionComponent implements OnInit {
                 requestID: 0, // requestID in here will be set later in sendRequest method.
                 messageBody: {
                     topic: 'instruments',
-                    walletid: connectedWalletId
+                    walletid: connectedWalletId,
                 }
             };
             this.walletId = connectedWalletId;
 
             this.walletNodeSocket.sendRequest(request, (errorCpde, message) => {
                 console.log('Got WALLET INSTRUMENTS', message);
-                this.instruments = message.data.map(inst => ({ id: `${inst[1]}|${inst[2]}`, text: `${inst[1]} | ${inst[2]}` }));
+                this.instruments = message.data.map(inst => 
+                    ({ id: `${inst[1]}|${inst[2]}`, text: `${inst[1]} | ${inst[2]}` }));
                 if (this.instruments.length) {
                     this.instrument = [this.instruments[0]];
                 }

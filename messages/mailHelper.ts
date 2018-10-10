@@ -3,15 +3,15 @@ import { MyMessagesService } from '@setl/core-req-services/my-messages/my-messag
 import { SagaHelper } from '@setl/utils';
 import {
     SET_MESSAGE_LIST,
-    setDecryptedContent
+    setDecryptedContent,
 } from '@setl/core-store';
-import {Injectable} from '@angular/core';
+import { Injectable } from '@angular/core';
 
 @Injectable()
 export class MailHelper {
     public constructor(
-        private ngRedux: NgRedux <any>,
-        private myMessageService: MyMessagesService
+        private ngRedux: NgRedux<any>,
+        private myMessageService: MyMessagesService,
     ) {
     }
 
@@ -20,31 +20,31 @@ export class MailHelper {
         let isDeleted: boolean;
         let isSent: boolean;
         switch (type) {
-            case 'inbox':
-                isAction = false;
-                isDeleted = false;
-                isSent = false;
-                break;
-            case 'action':
-                isAction = true;
-                isDeleted = false;
-                isSent = false;
-                break;
-            case 'workflow':
-                isAction = false;
-                isDeleted = false;
-                isSent = false;
-                break;
-            case 'sent':
-                isAction = false;
-                isDeleted = false;
-                isSent = true;
-                break;
-            case 'deleted':
-                isAction = false;
-                isDeleted = true;
-                isSent = false;
-                break;
+        case 'inbox':
+            isAction = false;
+            isDeleted = false;
+            isSent = false;
+            break;
+        case 'action':
+            isAction = true;
+            isDeleted = false;
+            isSent = false;
+            break;
+        case 'workflow':
+            isAction = false;
+            isDeleted = false;
+            isSent = false;
+            break;
+        case 'sent':
+            isAction = false;
+            isDeleted = false;
+            isSent = true;
+            break;
+        case 'deleted':
+            isAction = false;
+            isDeleted = true;
+            isSent = false;
+            break;
         }
         const requestIsAction = isAction === true ? 1 : 0;
         const requestIsDeleted = isDeleted === true ? 1 : 0;
@@ -60,14 +60,14 @@ export class MailHelper {
             0,
             requestIsDeleted,
             requestIsAction,
-            search
+            search,
         );
         this.ngRedux.dispatch(
             SagaHelper.runAsync(
                 [SET_MESSAGE_LIST],
                 [],
-                asyncTaskPipe, {}
-            )
+                asyncTaskPipe, {},
+            ),
         );
     }
 
@@ -80,25 +80,25 @@ export class MailHelper {
      * @return {Promise}
      */
     public decryptMessage(message, type = 'inbox') {
-        let walletId = message.recipientId;
-        let publicKey = message.senderPub;
+        let bobWalletId = message.recipientId;
+        let alicePublicKey = message.senderPub;
         if (type === 'sent') {
-            walletId = message.senderId;
-            publicKey = message.recipientPub;
+            bobWalletId = message.senderId;
+            alicePublicKey = message.recipientPub;
         }
         return new Promise((resolve, reject) => {
             const asyncTaskPipe = this.myMessageService.decryptMessage(
-                walletId,
-                publicKey,
-                message.content
+                bobWalletId,
+                alicePublicKey,
+                message.content,
             );
             this.ngRedux.dispatch(
                 SagaHelper.runAsyncCallback(
                     asyncTaskPipe,
                     (response) => {
                         this.ngRedux.dispatch(setDecryptedContent(message.mailId, response));
-                        if (response.length === 3 && response[1].Data) {
-                            let decoded = JSON.parse(response[1].Data);
+                        if (response.length === 3 && response[1].Data.decryptedMessage) {
+                            let decoded = JSON.parse(response[1].Data.decryptedMessage);
                             message.action = decoded.action;
                             message.content = window.atob(decoded.general);
                             if (message.content.substring(0, 11) === '{"general":') {
@@ -110,8 +110,8 @@ export class MailHelper {
                             resolve(message);
                         }
                         reject();
-                    }
-                )
+                    },
+                ),
             );
         });
     }
@@ -120,7 +120,7 @@ export class MailHelper {
         const asyncTaskPipe = this.myMessageService.deleteMessage(
             walletId,
             [message.mailId],
-            deleteMessages
+            deleteMessages,
         );
         this.ngRedux.dispatch(SagaHelper.runAsyncCallback(asyncTaskPipe, () => {}, () => {}));
     }
@@ -129,7 +129,7 @@ export class MailHelper {
         // Create a saga pipe.
         const asyncTaskPipe = this.myMessageService.markRead(
             walletId,
-            [mailId]
+            [mailId],
         );
         // Send a saga action.
         this.ngRedux.dispatch(SagaHelper.runAsyncCallback(asyncTaskPipe, () => {}, () => {}));

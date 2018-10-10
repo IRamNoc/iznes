@@ -1,19 +1,21 @@
 /* Angular/vendor imports. */
 import { Injectable } from '@angular/core';
 /* Package Imports. */
-import { Observable ,  Subscription } from 'rxjs';
+import { Observable } from 'rxjs/Observable';
+import { Subscription } from 'rxjs/Subscription';
 import * as _ from 'lodash';
 import { NgRedux, select } from '@angular-redux/store';
 import { SagaHelper } from '@setl/utils/index';
 import { MyMessagesService } from '@setl/core-req-services';
 import { commonHelper } from '@setl/utils';
-import {IssueAssetActionModel} from "./messages/message-components/issue-asset-action/issue-asset-action.model";
+import { IssueAssetActionModel } from './messages/message-components/issue-asset-action/issue-asset-action.model';
 import {
     MessageActionsConfig,
     MessageCancelOrderConfig,
     MessageConnectionConfig,
     MessageKycConfig,
 } from '@setl/core-messages';
+import { MessageWithLinksConfig } from "./messages/message-components/message-with-links/message-with-links.model";
 
 /* Service Class. */
 @Injectable()
@@ -23,7 +25,7 @@ export class MessagesService {
     @select(['wallet', 'walletDirectory', 'walletList']) getWalletDirectory: Observable<any>;
 
     language;
-    subscriptionsArray: Array<Subscription> = [];
+    subscriptionsArray: Subscription[] = [];
 
     connectedWallet;
     walletDirectory;
@@ -37,21 +39,20 @@ export class MessagesService {
             this.getConnectedWallet.subscribe(
                 (function (newWalletId) {
                     this.connectedWallet = newWalletId;
-                }).bind(this)
-            )
+                }).bind(this)),
         );
 
         this.subscriptionsArray.push(
             this.getWalletDirectory.subscribe(
                 (function (data) {
                     this.walletDirectory = data;
-                }).bind(this)
-            )
+                }).bind(this),
+            ),
         );
     }
 
     /**
-     * Send Message
+     * Sends Message
      *
      * @param recipientsArr - Array of WalletId'
      * @param subjectStr
@@ -59,7 +60,7 @@ export class MessagesService {
      * @param {string} action
      * @returns {Promise<any>}
      */
-    public sendMessage(recipientsArr, subjectStr, bodyStr, action: MessageActionsConfig | MessageConnectionConfig | MessageKycConfig | IssueAssetActionModel | MessageCancelOrderConfig = null) {
+    public sendMessage(recipientsArr, subjectStr, bodyStr, action: MessageActionsConfig | MessageConnectionConfig | MessageKycConfig | IssueAssetActionModel | MessageCancelOrderConfig | MessageWithLinksConfig = null) {
         const bodyObj = {
             general: commonHelper.b64EncodeUnicode(bodyStr),
             action: JSON.stringify(action),
@@ -110,7 +111,7 @@ export class MessagesService {
                 body,
                 senderId,
                 senderPub,
-                recipients
+                recipients,
             );
 
             // Get response from set active wallet
@@ -121,13 +122,13 @@ export class MessagesService {
                 },
                 (data) => {
                     reject(data);
-                })
+                }),
             );
         });
     }
 
     /**
-     * Mark Message as Acted
+     * Marks Message as Acted
      *
      * @param walletId
      * @param mailsToMark
@@ -138,7 +139,7 @@ export class MessagesService {
     }
 
     /**
-     * Mark Message as Acted Request
+     * Marks Message as Acted Request
      *
      * @param subject
      * @param body
@@ -160,13 +161,13 @@ export class MessagesService {
                 },
                 (data) => {
                     reject(data);
-                })
+                }),
             );
         });
     }
 
     /**
-     * save reply message
+     * Saves reply message
      *
      * @param messageData
      */
@@ -176,12 +177,12 @@ export class MessagesService {
             senderWalletName: messageData['senderWalletName'],
             subject: messageData['subject'],
             body: messageData['content'],
-            date: messageData['date']
+            date: messageData['date'],
         };
     }
 
     /**
-     * load reply message
+     * Loads reply message
      *
      * @returns {Promise<any>}
      */
@@ -192,10 +193,9 @@ export class MessagesService {
     }
 
     /**
-     * clear reply message
+     * Clears reply message
      */
     public clearReply() {
         this.replyData = {};
     }
-
 }

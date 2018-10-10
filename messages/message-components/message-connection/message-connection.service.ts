@@ -1,11 +1,11 @@
-import {Injectable} from '@angular/core';
-import {NgRedux} from '@angular-redux/store';
-import {AlertsService} from '@setl/jaspero-ng2-alerts';
-import {Common, SagaHelper, LogService} from '@setl/utils';
-import {MemberSocketService, WalletNodeSocketService} from '@setl/websocket-service';
+import { Injectable } from '@angular/core';
+import { NgRedux } from '@angular-redux/store';
+import { AlertsService } from '@setl/jaspero-ng2-alerts';
+import { Common, SagaHelper, LogService } from '@setl/utils';
+import { MemberSocketService, WalletNodeSocketService } from '@setl/websocket-service';
 
-import {MessagesService} from '../../../messages.service';
-import {MessageConnection} from './message-connection.model';
+import { MessagesService } from '../../../messages.service';
+import { MessageConnection } from './message-connection.model';
 
 @Injectable()
 export class SetlMessageConnectionService {
@@ -34,19 +34,20 @@ export class SetlMessageConnectionService {
             },
             (data) => {
                 this.onActionError(data);
-            }
+            },
         ));
     }
 
     private onActionSuccess(data, walletId: number, mailId: number): void {
         this.messageService.markMessageAsActed(walletId, mailId, '').then((res) => {
-            this.alertsService.create('success', 'The connection has successfully been accepted');
+            const message = (data[1].Request === 'deleteConnection') ? 'rejected' : 'accepted';
+            this.alertsService.create('success', `The connection request has been ${message}`);
         }).catch((e) => {
             this.logService.log('mark mail as acted error', e);
         });
     }
 
     private onActionError(data): void {
-        this.alertsService.create('error', 'The connection has successfully been rejected');
+        this.alertsService.create('error', 'The connection request has been rejected');
     }
 }

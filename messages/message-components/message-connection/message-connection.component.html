@@ -12,56 +12,57 @@
     <div class="message-actions" *ngIf="config.actions && !isActed">
         <div class="message-action" *ngFor="let action of config.actions">
             <button class="btn {{action.styleClasses}}" type="button" (click)="onActionClick(action)">
-
-
                 {{action.text}}
-
             </button>
         </div>
     </div>
 
-    <div class="message-state" *ngIf="isActed">
-        <i class="fa fa-check"></i>
-        <span>{{config.completeText}}</span>
+    <div class="alert alert-warning" *ngIf="isActed">
+        <div class="alert-items">
+            <div class="alert-item static">
+                <div class="alert-icon-wrapper">
+                    <clr-icon class="alert-icon" shape="exclamation-triangle"></clr-icon>
+                </div>
+                <span class="alert-text">{{config.completeText}}</span>
+            </div>
+        </div>
     </div>
 </ng-container>
 
 <!-- Accept connection modal -->
 <clr-modal [(clrModalOpen)]="isModalDisplayed">
-    <h3 class="modal-title" mltag="txt_selectthesubportfolioaddressyof47ba6704a">Select the subportfolio address you want to bind to this connection</h3>
+    <h3 class="modal-title">Accept connection request</h3>
     <div class="modal-body">
-        <ng-select id="accept-subportfolio-addr-link" [items]="addressList" [allowClear]="true" placeholder="Select a sub-portfolio" [formControl]="formGroup.controls['selectedAddress']" mltag="txt_selectasubportfolio">
 
+        <form>
+            <div class="form-group">
+                <div class="tooltip left tooltip-sm">
+                    <i class="fa fa-info-circle"></i>
+                    <span class="tooltip-content">Select an address to use for this connection</span>
+                    <label class="control-label required-field" mltag="txt_address">Address</label>
+                </div>
+               
+                <ng-select 
+                    id="accept-subportfolio-addr-link" 
+                    [items]="addressList" 
+                    [allowClear]="true" 
+                    placeholder="Select address" 
+                    [formControl]="formGroup.controls['selectedAddress']" 
+                    mltag="txt_selectasubportfolio">
+                </ng-select>
 
+                <div *ngIf="formGroup.controls['selectedAddress'].hasError('required') && formGroup.controls['selectedAddress'].touched" class="text-danger" mltag="txt_thisfieldisrequired">This field is required</div>
+            </div>
+        </form>
 
-
-
-
-        </ng-select>
-        <span class="mandatory-field">*</span>
-        <div *ngIf="formGroup.controls['selectedAddress'].hasError('required') && formGroup.controls['selectedAddress'].touched" class="text-danger" mltag="txt_thisfieldisrequired">This field is required
-
-        </div>
     </div>
 
     <div class="modal-footer">
         <button type="button" id="accept-connection-cancel-btn" class="btn btn-outline" (click)="handleAcceptButtonClick(false)" mltag="txt_cancel">
-
-
-
-
-
             Cancel
-
         </button>
         <button type="button" id="accept-connection-submit-btn" class="btn btn-primary" (click)="handleAcceptButtonClick(true)" mltag="txt_submit">
-
-
-
-
-
             Submit
-
         </button>
     </div>
 </clr-modal>

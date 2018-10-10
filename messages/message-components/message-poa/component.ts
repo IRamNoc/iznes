@@ -4,6 +4,8 @@ import { WalletNodeSocketService } from '@setl/websocket-service';
 import { createWalletNodeSagaRequest } from '@setl/utils/common';
 import { NgRedux } from '@angular-redux/store';
 import { AlertsService } from '@setl/jaspero-ng2-alerts/index';
+import { MessagesService } from '../../../messages.service';
+
 /**
  * SETL Message Body Component
  *
@@ -16,15 +18,20 @@ import { AlertsService } from '@setl/jaspero-ng2-alerts/index';
 })
 export class SetlMessagePOAComponent implements OnInit {
 
+    @Input() walletId: number;
+    @Input() mailId: number;
     @Input() data;
+    @Input() isActed: boolean; // from db
+    canAct = true; // determined from poa data itself.
     messageBody: string = '';
-    canAct = true;
+
     inProgress = false;
     knownPOAs = null;
 
     constructor (private walletNodeSocketService: WalletNodeSocketService,
                  private ngRedux: NgRedux<any>,
-                 private alertsService: AlertsService) {
+                 private alertsService: AlertsService,
+                 private messagesService: MessagesService) {
     }
 
     ngOnInit() {
@@ -64,6 +71,7 @@ export class SetlMessagePOAComponent implements OnInit {
         conew: 'Create Contract',
         conot: 'Notify Contract',
         istra: 'Issuer transfer',
+        istfm: 'Cancel Asset',
         nsreg: 'Register Namespace',
         nstra: 'Transfer Namespace',
         txnul: 'Null transaction',
@@ -86,7 +94,7 @@ export class SetlMessagePOAComponent implements OnInit {
         const d = new Date();
         d.setTime(unixTime);
         return d.toString();
-    };
+    }
 
     prettyNames (txType) {
         return '' + this.txNames[txType] + ' (' + txType + ')';
@@ -100,16 +108,24 @@ export class SetlMessagePOAComponent implements OnInit {
             asyncTaskPipe,
             (d) => {
                 console.log('WalletNode response to PoA', d);
-                this.showSuccessResponse('POA has been signed on the blockchain');
                 this.canAct = false;
                 this.inProgress = false;
                 this.knownPOAs.push(this.data['poareference']);
                 window.localStorage.setItem('activatedPOAs', JSON.stringify(this.knownPOAs)); // use new user storage?
+                this.showSuccessResponse('POA has been signed on the blockchain');
+
+                const req = this.messagesService.markMessageAsActedRequest(this.walletId, this.mailId, '0').then(
+                    (res) => {
+                        console.log('Flag as acted response', res);
+                    }).catch((err) => {
+                        console.error('Could not set acted', err);
+                    });
             },
             (e) => {
                 console.error(e);
                 let base = 'An error occurred';
-                const extra = (e[1] && e[1]['data'] && e[1]['data']['status']) || (e[1] && e[1]['data'] && e[1]['data']['error']) || '';
+                const extra = (e[1] && e[1]['data'] && e[1]['data']['status']) ||
+                    (e[1] && e[1]['data'] && e[1]['data']['error']) || '';
                 if (extra) {
                     base += ':  ';
                 }

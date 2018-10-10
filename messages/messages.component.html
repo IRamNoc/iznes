@@ -47,7 +47,10 @@
         <!-- Header row -->
         <div *ngIf="messages.length">
             <div class="message_list_item">
-                <div class="message_list_item_check"></div>
+                <div class="message_list_item_check">
+                    <i class="fa" [ngClass]="{'fa-check': selectAll === true}" (click)="messageAllChecked(i, $event)">
+                    </i>
+                </div>
                 <div class="message_list_item_sender">{{(this.currentCategory==2?'To':'From')}}</div>
                 <div class="message_list_item_subject" mltag="txt_subject">Subject</div>
                 <div class="message_list_item_date" mltag="txt_date">Date</div>
@@ -100,7 +103,7 @@
         </div>
 
         <div class="message_view_body">
-            <p *ngIf="currentMessage.content && currentMessage.isDecrypted && (!currentMessage.action || (currentMessage.action && currentMessage.action.type !== 'formAction'))">
+            <p *ngIf="currentMessage.content && currentMessage.isDecrypted && (!currentMessage.action || (currentMessage.action && currentMessage.action.type !== 'formAction' && currentMessage.action.type !== 'messageWithLink'))">
                 <setl-message-body [messageBody]="currentMessage.content"></setl-message-body>
             </p>
             <p *ngIf="currentMessage.action && currentMessage.action.type === 'sendPdf'">
@@ -108,22 +111,17 @@
                 </setl-message-attachment>
             </p>
             <p *ngIf="currentMessage.action && currentMessage.action.type === 'formAction'">
-                <setl-message-form-action [config]="currentMessage.action" [isActed]="currentMessage.isActed" [walletId]="currentWalletId" [mailId]="currentMessage.mailId">
-
-
+                <setl-message-form-action [config]="currentMessage.action" [isActed]="currentMessage.isActed" [walletId]="walletId" [mailId]="currentMessage.mailId">
                 </setl-message-form-action>
             </p>
 
             <p *ngIf="currentMessage.action && currentMessage.action.type === 'connection'">
-                <setl-message-connection [config]="currentMessage.action" [isActed]="currentMessage.isActed" [walletId]="currentWalletId" [mailId]="currentMessage.mailId">
-
-
+                <setl-message-connection [config]="currentMessage.action" [isActed]="currentMessage.isActed" [walletId]="walletId" [mailId]="currentMessage.mailId">
                 </setl-message-connection>
             </p>
 
             <p *ngIf="currentMessage.action
-                    && ['kycApproved', 'kycInvestorYes', 'kycInvestorNo', 'kycUserFinished', 'kycInvestorCompletion', 'kycContinuedFromRequest', 'kycContinuedFromAskMoreInfo'].indexOf(currentMessage.action.type) !== -1"
-            >
+                    && ['kycApproved', 'kycInvestorYes', 'kycInvestorNo', 'kycUserFinished', 'kycInvestorCompletion', 'kycContinuedFromRequest', 'kycContinuedFromAskMoreInfo'].indexOf(currentMessage.action.type) !== -1">
                 <setl-message-kyc [config]="currentMessage.action"></setl-message-kyc>
             </p>
 
@@ -132,23 +130,31 @@
             </p>
 
             <p *ngIf="currentMessage.action && currentMessage.action.type === 'sendTxt'">
-                <button class="btn btn-primary" (click)="downloadTxtFile(currentMessage.action.orderID);">Download File</button>
+                <button class="btn btn-primary" (click)="downloadTxtFile(currentMessage.action.orderID, currentMessage.action.MT502ID, currentMessage.action.orderType);">Download File</button>
             </p>
 
             <p *ngIf="currentMessage.action && currentMessage.action.type === 'poaRequest'">
-                <setl-message-poa [data]="currentMessage.action.data"></setl-message-poa>
+                <setl-message-poa [data]="currentMessage.action.data" [isActed]="currentMessage.isActed" [walletId]="walletId" [mailId]="currentMessage.mailId"></setl-message-poa>
             </p>
 
             <p *ngIf="currentMessage.action && currentMessage.action.type === 'alert'">
-                <setl-message-alert [data]="currentMessage.action.data" [userId]="userId"></setl-message-alert>
+                <setl-message-alert [data]="currentMessage.action.data" [userId]="userId" [isActed]="currentMessage.isActed" [mailId]="currentMessage.mailId" [walletId]="walletId"></setl-message-alert>
             </p>
 
-            <setl-message-workflow *ngIf="currentMessage.action && currentMessage.action.type === 'wflMessage'" [data]="currentMessage.action.data" [userId]="userId"></setl-message-workflow>
+            <setl-message-workflow *ngIf="currentMessage.action && currentMessage.action.type === 'wflMessage'"
+                                   [data]="currentMessage.action.data"
+                                   [userId]="userId"
+                                   [isActed]="currentMessage.isActed"
+                                   [walletId]="walletId"
+                                   [mailId]="currentMessage.mailId">
+            </setl-message-workflow>
+
+            <setl-message-with-links *ngIf="currentMessage.action && currentMessage.action.type === 'messageWithLink'" [data]="currentMessage.action.data" [content]="currentMessage.content"></setl-message-with-links>
 
         </div>
 
         <div class="message_view_menu">
-            <button *ngIf="currentMessage.senderId != connectedWalletId && currentMessage.senderId != -1" id="messagesReply" (click)="replyMessage()">
+            <button *ngIf="currentMessage.senderId != walletId && currentMessage.senderId != -1" id="messagesReply" (click)="replyMessage()">
                 <i class="fa fa-reply"></i> <span mltag="txt_reply">Reply</span></button>
             <button id="messagesClose" (click)="closeMessage()"><i class="fa fa-times"></i>
                 <span mltag="txt_close">Close</span></button>

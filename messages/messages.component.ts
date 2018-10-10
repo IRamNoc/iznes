@@ -1,4 +1,5 @@
-import { combineLatest as observableCombineLatest, Subscription, Observable } from 'rxjs';
+import { combineLatest as observableCombineLatest } from 'rxjs/observable/combineLatest';
+import { Subscription } from 'rxjs/Subscription';
 import { distinctUntilChanged, filter } from 'rxjs/operators';
 import { ChangeDetectorRef, Component, Inject, OnDestroy, OnInit } from '@angular/core';
 import { FormControl, FormGroup, Validators } from '@angular/forms';
@@ -25,7 +26,7 @@ import { MyWalletsService } from '@setl/core-req-services/index';
 export class SetlMessagesComponent implements OnDestroy, OnInit {
     public messageComposeForm: FormGroup;
     public editor;
-    private _appConfig: AppConfig;
+    private appConfig: AppConfig;
 
     @select(['message', 'myMessages', 'messageList']) getMessageList;
     @select(['user', 'connected', 'connectedWallet']) getConnectedWallet;
@@ -43,7 +44,7 @@ export class SetlMessagesComponent implements OnDestroy, OnInit {
     public currentCategory;
     public composeSelected;
     public messageView;
-    public connectedWalletId;
+    public walletId;
     public walletDirectoryList;
     public walletWithCommuPub;
 
@@ -56,8 +57,10 @@ export class SetlMessagesComponent implements OnDestroy, OnInit {
     public showDeleteModal: boolean = false;
 
     public unreadMessages;
+    public selectAll: boolean = false;
+    private checkedMessages: any[] = [];
 
-    public items: Array<string> = [];
+    public items: string[] = [];
 
     private value: any = ['Athens'];
     private _disabledV = '0';
@@ -68,28 +71,28 @@ export class SetlMessagesComponent implements OnDestroy, OnInit {
     socketToken: string;
     userId: string;
 
-    subscriptionsArray: Array<Subscription> = [];
+    subscriptionsArray: Subscription[] = [];
 
     public toolbarOptions = [
-        ['bold', 'italic', 'underline', 'strike'],        // toggled buttons
+        ['bold', 'italic', 'underline', 'strike'], // toggled buttons
         ['blockquote'],
 
         [{ list: 'ordered' }, { list: 'bullet' }],
-        [{ direction: 'rtl' }],                         // text direction
+        // [{ direction: 'rtl' }], // text direction
+        //
+        // [{ size: ['small', false, 'large', 'huge'] }], // custom dropdown
+        // [{ header: [1, 2, 3, 4, 5, 6, false] }],
+        //
+        // [{ color: [] }, { background: [] }], // dropdown with defaults from theme
+        // [{ font: [] }],
+        // [{ align: [] }],
 
-        [{ size: ['small', false, 'large', 'huge'] }],  // custom dropdown
-        [{ header: [1, 2, 3, 4, 5, 6, false] }],
-
-        [{ color: [] }, { background: [] }],          // dropdown with defaults from theme
-        [{ font: [] }],
-        [{ align: [] }],
-
-        ['clean'],                                         // remove formatting button
+        ['clean'], // remove formatting button
     ];
 
     public editorOptions = {
         modules: {
-            toolbar: this.toolbarOptions,    // Snow includes toolbar by default
+            toolbar: this.toolbarOptions, // Snow includes toolbar by default
         },
         placeholder: '',
         bold: false,
@@ -104,12 +107,13 @@ export class SetlMessagesComponent implements OnDestroy, OnInit {
                 private router: Router,
                 private toaster: ToasterService,
                 private logService: LogService,
-                private _fileDownloader: FileDownloader,
+                private fileDownloader: FileDownloader,
                 private myWalletsService: MyWalletsService,
-                @Inject(APP_CONFIG) _appConfig: AppConfig) {
+                @Inject(APP_CONFIG) appConfig: AppConfig) {
         this.mailHelper = new MailHelper(ngRedux, myMessageService);
         this.messageService = new MessagesService(this.ngRedux, this.myMessageService);
-        this._appConfig = _appConfig;
+
+        this.appConfig = appConfig;
     }
 
     ngOnInit() {
@@ -118,7 +122,7 @@ export class SetlMessagesComponent implements OnDestroy, OnInit {
         this.unreadMessages = 0;
 
         // these are the categories that appear along the left hand side as buttons
-        this.categories = this._appConfig.messagesMenu;
+        this.categories = this.appConfig.messagesMenu;
 
         this.currentBox = this.categories[0];
 
@@ -131,20 +135,23 @@ export class SetlMessagesComponent implements OnDestroy, OnInit {
                 const walletId = subs[0];
                 const walletDirectoryList = subs[1];
 
-                this.connectedWalletId = walletId;
+                this.walletId = walletId;
                 this.mailHelper.retrieveMessages(walletId, this.currentBox.type || 'inbox', 0, 15, this.search);
 
                 this.walletDirectoryList = walletDirectoryList;
                 this.walletWithCommuPub = this.walletListToSelectItem(walletDirectoryList);
-                this.items = this.walletWithCommuPub.filter(wallet => wallet.id.walletId !== this.connectedWalletId);
+                this.items = this.walletWithCommuPub.filter(wallet => wallet.id.walletId !== this.walletId);
+
+                /* Close message when the wallet is switched. */
+                if (this.messageView) this.closeMessage();
             }),
         );
 
         this.subscriptionsArray.push(
             this.getDefaultWalletId.subscribe((data) => {
                 if (data != null) {
-                    this.connectedWalletId = data;
-                    this.setWallet(this.connectedWalletId);
+                    this.walletId = data;
+                    this.setWallet(this.walletId);
                 }
             }),
         );
@@ -157,11 +164,11 @@ export class SetlMessagesComponent implements OnDestroy, OnInit {
             this.requestMailList.subscribe(requestedState => this.reRequestMailList(requestedState)),
         );
 
-        this.subscriptionsArray.push(this.tokenOb.subscribe(token => {
+        this.subscriptionsArray.push(this.tokenOb.subscribe((token) => {
             this.socketToken = token;
         }));
 
-        this.subscriptionsArray.push(this.userIdOb.subscribe(userId => {
+        this.subscriptionsArray.push(this.userIdOb.subscribe((userId) => {
             this.userId = userId;
         }));
 
@@ -193,7 +200,10 @@ export class SetlMessagesComponent implements OnDestroy, OnInit {
                             this.messageComposeForm.setValue({
                                 subject: 'Re: ' + reply.subject,
                                 recipients: [{ id: { walletId: reply.senderId }, text: reply.senderWalletName }],
-                                body: '<br><p>&nbsp;&nbsp;&nbsp;<s>' + '&nbsp;'.repeat(200) + '</s></p><p>&nbsp;&nbsp;&nbsp;<b>' + reply.senderWalletName + '</b> ' + reply.date + ':</p>' + reply.body.replace(/<p>/g, '<p>&nbsp;&nbsp;&nbsp;'),
+                                body: '<br><p>&nbsp;&nbsp;&nbsp;<s>' +
+                                '&nbsp;'.repeat(200) + '</s></p><p>&nbsp;&nbsp;&nbsp;<b>' +
+                                reply.senderWalletName + '</b> ' + reply.date + ':</p>' +
+                                reply.body.replace(/<p>/g, '<p>&nbsp;&nbsp;&nbsp;'),
                             });
                         }
                     });
@@ -227,7 +237,7 @@ export class SetlMessagesComponent implements OnDestroy, OnInit {
 
     handleSearch(value) {
         this.search = value;
-        this.mailHelper.retrieveMessages(this.connectedWalletId, this.currentBox.type, 0, 15, value);
+        this.mailHelper.retrieveMessages(this.walletId, this.currentBox.type, 0, 15, value);
     }
 
     clearSearch(event?: any) {
@@ -243,35 +253,39 @@ export class SetlMessagesComponent implements OnDestroy, OnInit {
      * @param messages
      */
     messagesList(messages) {
-        this.messages = messages.map((message) => {
-            if (message.senderId) {
-                if (typeof this.walletDirectoryList[message.senderId] !== 'undefined') {
-                    message.senderWalletName = this.walletDirectoryList[message.senderId].walletName;
-                } else {
-                    if (message.senderId = -1) {
-                        message.senderWalletName = this._appConfig.internalMessageSender || 'System message';
+        this.selectAll = false;
+        if (messages.length) {
+            this.messages = messages.map((message) => {
+                if (message.senderId) {
+                    if (typeof this.walletDirectoryList[message.senderId] !== 'undefined') {
+                        message.senderWalletName = this.walletDirectoryList[message.senderId].walletName;
+                    } else {
+                        if (message.senderId === -1) {
+                            message.senderWalletName = this.appConfig.internalMessageSender || 'System message';
+                        } else {
+                            message.senderWalletName = 'Deleted wallet';
+                        }
                     }
-                }
-                if (message.recipientId) {
-                    if (typeof this.walletDirectoryList[message.recipientId] !== 'undefined') {
-                        message.recipientWalletName = this.walletDirectoryList[message.recipientId].walletName;
+                    if (message.recipientId) {
+                        if (typeof this.walletDirectoryList[message.recipientId] !== 'undefined') {
+                            message.recipientWalletName = this.walletDirectoryList[message.recipientId].walletName;
+                        }
                     }
-                }
 
-                message.isChecked = false;
-                return message;
-            }
-        });
+                    message.isChecked = false;
+                    return message;
+                }
+            });
+        }
 
         if (this.mailCounts && this.currentCategory !== 999) {
             this.currentBox = this.categories[this.currentCategory];
 
             this.currentBoxCount = this.mailCounts[this.currentBox.type];
             if (this.currentBox.type === 'inbox') {
-                //this.currentBoxCount = this.mailCounts['inboxUnread'];
+                // this.currentBoxCount = this.mailCounts['inboxUnread'];
                 this.unreadMessages = this.mailCounts['inboxUnread'];
             }
-
         }
         this.changeDetectorRef.markForCheck();
     }
@@ -292,11 +306,12 @@ export class SetlMessagesComponent implements OnDestroy, OnInit {
      */
     refreshMailbox(page = 0) {
         this.currentPage = page;
+        this.checkedMessages = [];
         const categoryType = this.categories[this.currentCategory].type;
         this.requestMailboxByCategory(categoryType, page);
     }
 
-    get checked(): Array<any> {
+    get checked(): any[] {
         return this.messages.filter(message => message.isChecked);
     }
 
@@ -311,7 +326,7 @@ export class SetlMessagesComponent implements OnDestroy, OnInit {
      */
     deleteMessage() {
         this.closeMessage();
-        this.mailHelper.deleteMessage(this.connectedWalletId, this.currentMessage, 1);
+        this.mailHelper.deleteMessage(this.walletId, this.currentMessage, 1);
         this.refreshMailbox(this.currentPage);
     }
 
@@ -327,12 +342,12 @@ export class SetlMessagesComponent implements OnDestroy, OnInit {
      * Checked Deleted - Multiselect
      */
     checkedDeleted() {
-        this.checked.forEach(message => this.mailHelper.deleteMessage(this.connectedWalletId, message, 1));
+        this.checked.forEach(message => this.mailHelper.deleteMessage(this.walletId, message, 1));
         this.refreshMailbox();
     }
 
     checkedPutBack() {
-        this.checked.forEach(message => this.mailHelper.deleteMessage(this.connectedWalletId, message, 0));
+        this.checked.forEach(message => this.mailHelper.deleteMessage(this.walletId, message, 0));
         this.refreshMailbox();
     }
 
@@ -356,6 +371,19 @@ export class SetlMessagesComponent implements OnDestroy, OnInit {
             return;
         }
         this.messages[index].isChecked = true;
+    }
+
+    /**
+     * Checks All Messages
+     *
+     * @param index
+     */
+    messageAllChecked(index, event) {
+        this.selectAll = this.selectAll ? false : true;
+
+        this.messages = this.messages.map((message) => {
+            return { ...message, isChecked: this.selectAll };
+        });
     }
 
     /**
@@ -396,7 +424,11 @@ export class SetlMessagesComponent implements OnDestroy, OnInit {
             }
 
             // Mark message as read (if necessary)
-            if (!messages[index].isRead && messages[index].senderId != this.connectedWalletId) {
+            // comment out the senderId and connectedWalletId checkout to avoid could not able to mark
+            // message send from himself to read. But commented out might cause marking outgoing email to read,
+            // however, after a bit testing, it seem work ok.
+            // if (!messages[index].isRead && messages[index].senderId != this.walletId) {
+            if (!messages[index].isRead) {
                 this.mailHelper.markMessageAsRead(messages[index].recipientId, messages[index].mailId);
                 messages[index].isRead = true;
             }
@@ -434,6 +466,15 @@ export class SetlMessagesComponent implements OnDestroy, OnInit {
         if (reset) {
             this.messageView = false;
         }
+
+        // Save any checked messages so we can restore them once new data comes in
+        this.checkedMessages = [];
+        this.messages.forEach((message) => {
+            if (message.isChecked) {
+                this.checkedMessages.push(message.mailId);
+            }
+        });
+
         this.resetMessages(reset);
         this.uncheckAll();
         this.clearSearch();
@@ -472,7 +513,7 @@ export class SetlMessagesComponent implements OnDestroy, OnInit {
     }
 
     requestMailboxByCategory(type, page) {
-        this.mailHelper.retrieveMessages(this.connectedWalletId, type, page, 15, this.search);
+        this.mailHelper.retrieveMessages(this.walletId, type, page, 15, this.search);
     }
 
     closeAndResetComposed() {
@@ -481,7 +522,7 @@ export class SetlMessagesComponent implements OnDestroy, OnInit {
         this.messageComposeForm.reset();
     }
 
-    walletListToSelectItem(walletsList: Array<any>): Array<any> {
+    walletListToSelectItem(walletsList: any[]): any[] {
         return Object.keys(walletsList).map((walletId) => {
             return {
                 id: {
@@ -578,7 +619,7 @@ export class SetlMessagesComponent implements OnDestroy, OnInit {
         this.value = value;
     }
 
-    public itemsToString(value: Array<any> = []): string {
+    public itemsToString(value: any[] = []): string {
         return value
         .map((item: any) => {
             return item.text;
@@ -590,11 +631,13 @@ export class SetlMessagesComponent implements OnDestroy, OnInit {
         this.router.navigateByUrl('/messages/compose');
     }
 
-    downloadTxtFile(id) {
-        this._fileDownloader.downLoaderFile({
+    downloadTxtFile(id, MT502ID, type) {
+        this.fileDownloader.downLoaderFile({
             method: 'getIznMT502',
             token: this.socketToken,
             orderId: id,
+            MT502ID,
+            type,
             userId: this.userId,
         });
     }
