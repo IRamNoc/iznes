@@ -1,37 +1,36 @@
-import {AsyncTaskResponseAction} from '@setl/utils/sagaHelper/actions';
+import { AsyncTaskResponseAction } from '@setl/utils/sagaHelper/actions';
 import * as MyWalletActions from './actions';
-import {MyWalletsState, WalletDetail} from './model';
+import { MyWalletsState, WalletDetail } from './model';
 import * as _ from 'lodash';
-import {List, fromJS, Map} from 'immutable';
+import { List, fromJS, Map } from 'immutable';
 
 const initialState: MyWalletsState = {
-    walletList: {}
+    walletList: {},
 };
 
 export const MyWalletsReducer = function (state: MyWalletsState = initialState,
                                           action: AsyncTaskResponseAction) {
     switch (action.type) {
-        case MyWalletActions.SET_OWN_WALLETS:
-            const walletsData = _.get(action, 'payload[1].Data', []);
+    case MyWalletActions.SET_OWN_WALLETS:
+        const walletsData = _.get(action, 'payload[1].Data', []);
 
-            const walletList = formatWalletsDataResponse(walletsData);
+        const walletList = formatWalletsDataResponse(walletsData);
 
-            const newState = Object.assign({}, state, {
-                walletList
-            });
+        const newState = Object.assign({}, state, {
+            walletList,
+        });
 
-            return newState;
-        default:
-            return state;
+        return newState;
+    default:
+        return state;
     }
 };
 
-function formatWalletsDataResponse(rawWalletsData: Array<any>): Array<WalletDetail> {
-
+function formatWalletsDataResponse(rawWalletsData: any[]): WalletDetail[] {
     const rawWalletsDataList = fromJS(rawWalletsData);
 
     const walletDetailList = Map(rawWalletsDataList.reduce(
-        function (result, item) {
+        (result, item) => {
             result[item.get('walletID')] = {
                 correspondenceAddress: item.get('CorrespondenceAddress'),
                 GLEI: item.get('GLEI'),
