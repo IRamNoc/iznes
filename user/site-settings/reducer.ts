@@ -1,5 +1,12 @@
 import { Action } from 'redux';
-import { SET_VERSION, SET_LANGUAGE, SET_MENU_SHOWN, SET_PRODUCTION, SET_SITE_MENU } from './actions';
+import {
+    SET_VERSION,
+    SET_LANGUAGE,
+    SET_MENU_SHOWN,
+    SET_PRODUCTION,
+    SET_SITE_MENU,
+    SET_FORCE_TWO_FACTOR,
+} from './actions';
 import { SiteSettingsState } from './model';
 import * as _ from 'lodash';
 
@@ -24,6 +31,7 @@ const initialState: SiteSettingsState = {
     siteMenu: {
         fetched: false,
     },
+    forceTwoFactor: false,
 };
 
 export const SiteSettingsReducer = function (state: SiteSettingsState = initialState, action: Action) {
@@ -36,6 +44,8 @@ export const SiteSettingsReducer = function (state: SiteSettingsState = initialS
         return setMenuShown(SET_MENU_SHOWN, action, state);
     case SET_PRODUCTION:
         return setProduction(state, action);
+    case SET_FORCE_TWO_FACTOR:
+        return setTwoFactor(state, action);
     case SET_SITE_MENU:
         return setSiteMenu(SET_SITE_MENU, action, state);
     default:
@@ -52,7 +62,6 @@ export const SiteSettingsReducer = function (state: SiteSettingsState = initialS
  * @returns {any}
  */
 function setVersion(actionType, action, state) {
-
     const versionData = _.get(action, 'payload[1].Data[0]', '') === '' ? action : _.get(action, 'payload[1].Data[0]');
     const version = _.get(versionData, 'version', '');
     const newState = Object.assign({}, state, { version });
@@ -99,10 +108,18 @@ function setMenuShown(actionType, action, state) {
  */
 function setProduction(state: SiteSettingsState, action: any): SiteSettingsState {
     const loginData = _.get(action, 'payload[1].Data[0]');
-    const isProduction = _.get(loginData, 'setting', '1');
+    const isProduction = _.get(loginData, 'isProduction', '1');
 
     const production = isProduction === '1';
     return Object.assign({}, state, { production });
+}
+
+function setTwoFactor(state: SiteSettingsState, action: any): SiteSettingsState {
+    const loginData = _.get(action, 'payload[1].Data[0]');
+    const forceTwoFactorData = _.get(loginData, 'forceTwoFactor', '1');
+
+    const forceTwoFactor = forceTwoFactorData === '1';
+    return Object.assign({}, state, { forceTwoFactor });
 }
 
 function setSiteMenu(actionType, action, state) {

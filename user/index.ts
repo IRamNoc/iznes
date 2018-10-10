@@ -74,6 +74,7 @@ import {
     SET_VERSION,
     SET_LANGUAGE,
     SET_SITE_MENU,
+    SET_FORCE_TWO_FACTOR,
 } from './site-settings';
 
 export {
@@ -85,6 +86,7 @@ export {
     SET_VERSION,
     SET_LANGUAGE,
     SET_SITE_MENU,
+    SET_FORCE_TWO_FACTOR,
 };
 
 export interface UserState {

@@ -6,7 +6,7 @@ import * as _ from 'lodash';
 const initialState: AuthenticationState = {
     token: '',
     apiKey: '',
-    useTwoFactor: 0,
+    useTwoFactor: false,
     twoFactorSecret: '',
     sessionTimeoutSecs: 0,
     isLogin: false,
@@ -22,7 +22,7 @@ export const AuthenticationReducer = function (state: AuthenticationState = init
 
         let token = _.get(loginedData, 'Token', '');
         const apiKey = _.get(loginedData, 'apiKey', '');
-        let useTwoFactor = _.get(loginedData, 'useTwoFactor', '');
+        let useTwoFactor = Boolean(_.get(loginedData, 'useTwoFactor', 0));
         const twoFactorSecret = _.get(loginedData, 'twoFactorSecret', '');
         const sessionTimeoutSecs = _.get(loginedData, 'sessionTimeoutSecs', '');
         const defaultHomePage = _.get(loginedData, 'defaultHomePage', '');
@@ -48,7 +48,6 @@ export const AuthenticationReducer = function (state: AuthenticationState = init
         return initialState;
 
     case AuthenticationAction.SET_NEW_PASSWORD:
-
         const tokenData = _.get(action, 'payload[1].Data[0]', {});
         const newToken = _.get(tokenData, 'Token', '');
         const changedPassword = true;
@@ -72,8 +71,8 @@ export const AuthenticationReducer = function (state: AuthenticationState = init
         });
 
     case AuthenticationAction.UPDATE_TWO_FACTOR:
-        useTwoFactor = Number(_.get(action, 'payload[1].Data[0].useTwoFactor', 0));
-        token = _.get(action, 'payload[1].Data[0].token', '');
+        useTwoFactor = Boolean(_.get(action, 'payload[1].Data[0].useTwoFactor', 0));
+        token = _.get(action, 'payload[1].Data[0].Token', '');
         return Object.assign({}, state, { useTwoFactor, token });
 
     default:

@@ -17,7 +17,7 @@ export {
     CLEAR_MUST_CHANGE_PASSWORD,
     resetHomepage,
     UPDATE_TWO_FACTOR,
- 
+
     // connected
     setConnectedWallet,
     setConnectedChain,
@@ -36,6 +36,7 @@ export {
     SET_VERSION,
     SET_LANGUAGE,
     SET_SITE_MENU,
+    SET_FORCE_TWO_FACTOR,
 } from './user';
 
 export {

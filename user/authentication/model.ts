@@ -1,7 +1,7 @@
 export interface AuthenticationState {
     token: string;
     apiKey: string;
-    useTwoFactor: number;
+    useTwoFactor: boolean;
     twoFactorSecret: string;
     sessionTimeoutSecs: number;
     mustChangePassword: boolean;

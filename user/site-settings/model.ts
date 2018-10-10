@@ -4,4 +4,5 @@ export interface SiteSettingsState {
     menuShown: boolean;
     production: boolean;
     siteMenu: object;
+    forceTwoFactor: boolean;
 }
