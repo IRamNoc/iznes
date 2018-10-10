@@ -32,6 +32,7 @@ import {
     SET_AUTH_LOGIN_DETAIL,
     SET_LOGIN_DETAIL,
     SET_PRODUCTION,
+    SET_FORCE_TWO_FACTOR,
     SET_SITE_MENU,
     SET_NEW_PASSWORD,
     setLanguage,
@@ -90,7 +91,7 @@ export class SetlLoginComponent implements OnDestroy, OnInit, AfterViewInit {
     subscriptionsArray: Subscription[] = [];
 
     showTwoFactorModal = false;
-    showQRCode = false;
+    qrCode: string = '';
     resetTwoFactorToken = '';
 
     showModal = false;
@@ -111,6 +112,7 @@ export class SetlLoginComponent implements OnDestroy, OnInit, AfterViewInit {
     // List of redux observable.
     @select(['user', 'siteSettings', 'language']) requestLanguageObj;
     @select(['user', 'authentication']) authenticationOb;
+    @select(['user', 'siteSettings', 'forceTwoFactor']) forceTwoFactorOb;
     @select(['user', 'siteSettings', 'siteMenu']) siteMenuOb;
 
     set loginValue(email) {
@@ -258,11 +260,13 @@ export class SetlLoginComponent implements OnDestroy, OnInit, AfterViewInit {
         //     if (Object.keys(siteMenu).length > 0) this.updateState(authentication);
         // });
 
-        this.authenticationOb.subscribe((authentication) => {
+        const combinedTwoFactor$ = combineLatest(this.authenticationOb, this.forceTwoFactorOb);
+
+        this.subscriptionsArray.push(combinedTwoFactor$.subscribe(([authentication, forceTwoFactor]) => {
             this.userAuthenticationState = authentication;
             const useTwoFactor = _.get(authentication, 'useTwoFactor', 0);
 
-            if (useTwoFactor) {
+            if (useTwoFactor || forceTwoFactor) {
                 this.showTwoFactorModal = true;
                 if (authentication.token && authentication.token !== 'twoFactorRequired') {
                     this.updateState(authentication);
@@ -270,7 +274,7 @@ export class SetlLoginComponent implements OnDestroy, OnInit, AfterViewInit {
             } else {
                 this.updateState(authentication);
             }
-        });
+        }));
 
         window.onbeforeunload = null;
 
@@ -316,11 +320,14 @@ export class SetlLoginComponent implements OnDestroy, OnInit, AfterViewInit {
         // Actions to dispatch, when request fail:  RESET_LOGIN_DETAIL.
         // saga pipe function descriptor.
         this.ngRedux.dispatch(SagaHelper.runAsync(
-            [SET_LOGIN_DETAIL, SET_AUTH_LOGIN_DETAIL, SET_PRODUCTION],
+            [SET_FORCE_TWO_FACTOR, SET_LOGIN_DETAIL, SET_AUTH_LOGIN_DETAIL, SET_PRODUCTION],
             [RESET_LOGIN_DETAIL, RESET_AUTH_LOGIN_DETAIL],
             asyncTaskPipe,
             {},
-            () => {
+            (data) => {
+                if (_.get(data, '[1].Data[0].qrCode', false)) {
+                    this.qrCode = data[1].Data[0].qrCode;
+                }
                 const asyncTaskPipes = this.myUserService.getSiteMenu(this.ngRedux);
                 this.ngRedux.dispatch(SagaHelper.runAsync(
                     [SET_SITE_MENU],

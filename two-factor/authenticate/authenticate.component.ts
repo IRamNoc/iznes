@@ -1,5 +1,5 @@
 import { Component, OnInit, ChangeDetectorRef, OnDestroy, Inject, Input, EventEmitter, Output } from '@angular/core';
-import { APP_CONFIG, AppConfig, SagaHelper } from '@setl/utils';
+import { SagaHelper } from '@setl/utils';
 import { NgRedux, select } from '@angular-redux/store';
 import { AlertsService } from '@setl/jaspero-ng2-alerts';
 import { FormGroup, FormControl, Validators } from '@angular/forms';
@@ -14,13 +14,11 @@ import { MultilingualService } from '@setl/multilingual';
     styleUrls: ['./authenticate.component.scss'],
 })
 export class AuthenticateComponent implements OnDestroy, OnInit {
-    @Input() showQRCode: boolean = true;
+    @Input() qrCode: string = '';
     @Input() resetToken: string = '';
     @Output() modalCancelled: EventEmitter<any> = new EventEmitter();
     @Output() verifiedToken: EventEmitter<any> = new EventEmitter();
     @Output() clearToken: EventEmitter<any> = new EventEmitter();
-
-    appConfig: AppConfig;
 
     connectedWalletId: number;
     username: string;
@@ -36,8 +34,6 @@ export class AuthenticateComponent implements OnDestroy, OnInit {
     emailSent = false;
     countdown = 10;
     authenticateQRForm: FormGroup;
-    qrCodeURL: string = '';
-    qrCodeURLPartial: string = 'https://chart.googleapis.com/chart?chs=166x166&chld=L|0&cht=qr&chl=otpauth://totp/';
 
     @select(['user', 'myDetail']) getUserDetails$;
     @select(['user', 'authentication']) authentication$;
@@ -53,9 +49,7 @@ export class AuthenticateComponent implements OnDestroy, OnInit {
         private changeDetectorRef: ChangeDetectorRef,
         private myUserService: MyUserService,
         public translate: MultilingualService,
-        @Inject(APP_CONFIG) appConfig: AppConfig) {
-
-        this.appConfig = appConfig;
+    ) {
 
         this.authenticateQRForm = new FormGroup(
             {
@@ -92,9 +86,6 @@ export class AuthenticateComponent implements OnDestroy, OnInit {
             this.subscriptionsArray.push(this.authentication$.subscribe((auth) => {
                 this.twoFactorSecret = auth.twoFactorSecret;
                 this.sessionTimeout = auth.sessionTimeout;
-
-                this.qrCodeURL =
-                    `${this.qrCodeURLPartial}${this.appConfig.platform}:${this.username}?secret=${this.twoFactorSecret}`;
             }));
         }));
 
@@ -113,14 +104,12 @@ export class AuthenticateComponent implements OnDestroy, OnInit {
             // Show loading alert
             this.alertsService.create('loading');
 
-            const qrCode = this.authenticateQRForm.controls.qrCodeNumber.value;
+            const qrCodeNumber = this.authenticateQRForm.controls.qrCodeNumber.value;
 
             const asyncTaskPipe = this.myUserService.authenticateTwoFactorAuthentication({
-                twoFactorCode: qrCode,
-                secret: String(this.twoFactorSecret),
+                twoFactorCode: qrCodeNumber,
                 userID: String(this.userId),
                 type: 'GoogleAuth',
-                sessionTimeout: this.sessionTimeout,
             });
 
             this.ngRedux.dispatch(SagaHelper.runAsync(
@@ -129,7 +118,7 @@ export class AuthenticateComponent implements OnDestroy, OnInit {
                 asyncTaskPipe,
                 {},
                 (data) => {
-                    if (this.showQRCode) {
+                    if (this.qrCode) {
                         this.alertsService.generate('success', data[1].Data[0].Message);
                     }
 
@@ -171,7 +160,6 @@ export class AuthenticateComponent implements OnDestroy, OnInit {
             const asyncTaskPipe = this.myUserService.forgotTwoFactor(
                 {
                     email: this.emailUser,
-                    project: this.appConfig.platform,
                 });
 
             this.ngRedux.dispatch(SagaHelper.runAsyncCallback(
@@ -224,9 +212,9 @@ export class AuthenticateComponent implements OnDestroy, OnInit {
      * @return {void}
      */
     verifyTwoFactorToken() {
-        const asyncTaskPipe = this.myUserService.validToken(
+        const asyncTaskPipe = this.myUserService.resetTwoFactor(
             {
-                token: this.resetToken,
+                resetToken: this.resetToken,
             });
 
         this.ngRedux.dispatch(SagaHelper.runAsync(

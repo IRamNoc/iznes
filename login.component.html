@@ -342,10 +342,10 @@
 
 <app-authenticate
     *ngIf="showTwoFactorModal"
-    [showQRCode]="showQRCode"
+    [qrCode]="qrCode"
     (modalCancelled)="showTwoFactorModal=!$event"
     [resetToken]="resetTwoFactorToken"
-    (verifiedToken)="resetTwoFactorToken=''; showQRCode=true"
+    (verifiedToken)="resetTwoFactorToken=''"
     (clearToken)="resetTwoFactorToken=''"
 >
 </app-authenticate>
