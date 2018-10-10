@@ -17,6 +17,7 @@ export class InvestmentConstraintComponent implements OnInit, OnDestroy {
 
     @ViewChild(FormPercentDirective) formPercent: FormPercentDirective;
     @Input() form;
+    @Input() formWatch: Subject<boolean>;
     @select(['ofi', 'ofiKyc', 'myKycRequested', 'kycs']) currentlyRequestedKycs$;
 
     open: boolean = false;
@@ -68,6 +69,15 @@ export class InvestmentConstraintComponent implements OnInit, OnDestroy {
                 this.updateCrossAM();
             })
         ;
+
+        this.formWatch
+            .pipe(
+                takeUntil(this.unsubscribe),
+            )
+            .subscribe(() => {
+                this.refreshForm();
+            })
+        ;
     }
 
     updateCrossAM(){
@@ -90,7 +100,7 @@ export class InvestmentConstraintComponent implements OnInit, OnDestroy {
             this.generateConstraints(map(this.amcs, 'amcID'));
         }
 
-        this.formPercent.refreshFormPercent();
+        this.refreshForm();
     }
 
     generateConstraints(amcs = []) {
