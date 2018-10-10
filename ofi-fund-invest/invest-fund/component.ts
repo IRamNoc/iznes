@@ -924,7 +924,7 @@ export class InvestFundComponent implements OnInit, OnDestroy {
                 const orderRedeemId = _.get(data, ['1', 'Data', '0', 'linkedRedemptionOrderId'], 0);
                 const orderRedemRef = commonHelper.pad(orderRedeemId, 8, '0');
 
-                orderSuccessMsg = `Your order ${orderRedemRef} & ${orderSubRef} has been successfully placed and is now initiated.`;
+                orderSuccessMsg = `Your order ${orderRedemRef} & ${orderSubRef} have been successfully placed and are now initiated.`;
 
                 if (this.amountTooBig) {
                     this.sendMessageToAM({
@@ -1437,14 +1437,24 @@ The IZNES Team.</p>`;
 
     /**
      * Get Order type title rendered in the order form.
+     * @param isNoun {boolean}
      * @return {string}
      */
-    getOrderTypeTitle(): string {
+    getOrderTypeTitle( isNoun: boolean = true ): string {
+        if (isNoun) {
+            return {
+                subscribe: this._translate.getTranslationByString('Subscription'),
+                redeem: this._translate.getTranslationByString('Redemption'),
+                sellbuy: this._translate.getTranslationByString('Sell / Buy'),
+            }[this.type];
+        }
+
         return {
-            subscribe: this._translate.getTranslationByString('Subscription'),
-            redeem: this._translate.getTranslationByString('Redemption'),
+            subscribe: this._translate.getTranslationByString('Subscribe'),
+            redeem: this._translate.getTranslationByString('Redeem'),
             sellbuy: this._translate.getTranslationByString('Sell / Buy'),
         }[this.type];
+
     }
 
     /**
