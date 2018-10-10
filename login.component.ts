@@ -337,6 +337,8 @@ export class SetlLoginComponent implements OnDestroy, OnInit, AfterViewInit {
             },
             // Fail to login
             (data) => {
+                this.showTwoFactorModal = false;
+                this.changeDetectorRef.detectChanges();
                 this.handleLoginFailMessage(data);
             },
         ));
