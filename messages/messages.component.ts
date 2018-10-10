@@ -109,7 +109,6 @@ export class SetlMessagesComponent implements OnDestroy, OnInit {
                 @Inject(APP_CONFIG) _appConfig: AppConfig) {
         this.mailHelper = new MailHelper(ngRedux, myMessageService);
         this.messageService = new MessagesService(this.ngRedux, this.myMessageService);
-
         this._appConfig = _appConfig;
     }
 
@@ -250,7 +249,7 @@ export class SetlMessagesComponent implements OnDestroy, OnInit {
                     message.senderWalletName = this.walletDirectoryList[message.senderId].walletName;
                 } else {
                     if (message.senderId = -1) {
-                        message.senderWalletName = 'System message';
+                        message.senderWalletName = this._appConfig.internalMessageSender || 'System message';
                     }
                 }
                 if (message.recipientId) {
