@@ -137,6 +137,10 @@ export const ROUTES: Routes = [
                 path: 'reset/:token',
                 component: SetlLoginComponent,
             },
+            {
+                path: 'reset-two-factor/:twofactortoken',
+                component: SetlLoginComponent,
+            },
         ],
     },
     {
