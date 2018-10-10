@@ -6,6 +6,7 @@ import { Subscription } from 'rxjs/Subscription';
 import { UPDATE_TWO_FACTOR } from '@setl/core-store';
 import { MyUserService } from '@setl/core-req-services';
 import { MemberSocketService } from '@setl/websocket-service';
+import * as _ from 'lodash';
 
 @Component({
     selector: 'app-enroll',
@@ -15,6 +16,7 @@ import { MemberSocketService } from '@setl/websocket-service';
 export class EnrollComponent implements OnDestroy, OnInit {
     userId: number;
     useTwoFactor: number;
+    qrCode: string = '';
     showQRCodeChallenge: boolean = false;
 
     @select(['user', 'myDetail']) getUserDetails$;
@@ -69,7 +71,22 @@ export class EnrollComponent implements OnDestroy, OnInit {
         ).subscribe((ans) => {
             if (ans.resolved) {
                 if (setting) {
-                    this.showQRCodeChallenge = true;
+                    const asyncTaskPipe = this.myUserService.getTwoFactorQrCode();
+
+                    this.ngRedux.dispatch(SagaHelper.runAsync(
+                        [],
+                        [],
+                        asyncTaskPipe,
+                        {},
+                        (data) => {
+                            if (_.get(data, '[1].Data[0].qrCode', '')) {
+                                this.qrCode = data[1].Data[0].qrCode;
+                                this.showQRCodeChallenge = true;
+                            }
+                        },
+                        () => {
+                        }),
+                    );
                 } else {
                     this.ngRedux.dispatch(SagaHelper.runAsync(
                         [UPDATE_TWO_FACTOR],
