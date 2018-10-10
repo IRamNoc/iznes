@@ -24,5 +24,7 @@
 
 <app-authenticate 
     *ngIf="showQRCodeChallenge"
-    (modalCancelled)="showQRCodeChallenge=!$event">
+    (modalCancelled)="showQRCodeChallenge=!$event"
+    (showSuccessAlert)="true"
+    >
 </app-authenticate>

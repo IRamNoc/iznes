@@ -15,6 +15,7 @@ import { MultilingualService } from '@setl/multilingual';
 })
 export class AuthenticateComponent implements OnDestroy, OnInit {
     @Input() qrCode: string = '';
+    @Input() showSuccessAlert: boolean = false;
     @Input() resetToken: string = '';
     @Output() modalCancelled: EventEmitter<any> = new EventEmitter();
     @Output() verifiedToken: EventEmitter<any> = new EventEmitter();
@@ -110,7 +111,7 @@ export class AuthenticateComponent implements OnDestroy, OnInit {
                 asyncTaskPipe,
                 {},
                 (data) => {
-                    if (this.qrCode) {
+                    if (this.showSuccessAlert) {
                         this.alertsService.generate('success', data[1].Data[0].Message);
                     }
 
