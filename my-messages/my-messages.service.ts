@@ -1,7 +1,7 @@
-import {Injectable} from '@angular/core';
-import {MemberSocketService} from '@setl/websocket-service';
-import {SagaHelper, Common} from '@setl/utils';
-import {createMemberNodeSagaRequest} from '@setl/utils/common';
+import { Injectable } from '@angular/core';
+import { MemberSocketService } from '@setl/websocket-service';
+import { SagaHelper, Common } from '@setl/utils';
+import { createMemberNodeSagaRequest } from '@setl/utils/common';
 import {
     DecryptMessagesBody,
     RequestOwnMessagesBody,
@@ -40,19 +40,18 @@ export class MyMessagesService {
         return createMemberNodeSagaRequest(this.memberSocketService, messageBody);
     }
 
-    decryptMessage(walletId: string, bobPub: string, encryptedMessage: string): any {
+    decryptMessage(bobWalletId: string, aliceWalletId: string, encryptedMessage: string): any {
 
         const messageBody: DecryptMessagesBody = {
             RequestName: 'email_decrypt',
             token: this.memberSocketService.token,
-            walletId: walletId,
-            bobPub: bobPub,
-            encryptedMessage: encryptedMessage,
+            bobWalletId,
+            aliceWalletId,
+            encryptedMessage,
         };
 
         return createMemberNodeSagaRequest(this.memberSocketService, messageBody);
     }
-
 
     sendMessage(subject, body, senderId, senderPub, recipients, parentId = 0, arrangementId = 0, arrangementStatus = 0, attachment = 0, hasAction = 0, isDraft = 0): any {
         const messageBody: SendMessageBody = {
