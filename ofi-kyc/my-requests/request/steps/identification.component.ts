@@ -98,7 +98,7 @@ export class NewKycIdentificationComponent implements OnInit {
 
     prepareArrayControls(parsed) {
         const beneficiaries = getValue(parsed, ['companyInformation', 'beneficiaries']);
-        const holders = getValue(parsed, ['bankingInformation', 'custodianHolderCustom']);
+        const holders = getValue(parsed, ['bankingInformation', 'custodianHolders']);
 
         const beneficiariesControl = this.form.get(['companyInformation', 'beneficiaries']);
         if (beneficiaries.length > 1) {
@@ -108,7 +108,7 @@ export class NewKycIdentificationComponent implements OnInit {
             }
         }
 
-        const holdersControl = this.form.get(['bankingInformation', 'custodianHolderCustom']);
+        const holdersControl = this.form.get(['bankingInformation', 'custodianHolders']);
         if (holders.length > 1) {
             holdersControl.controls.splice(0);
             for (let i = 0; i < holders.length; i += 1) {

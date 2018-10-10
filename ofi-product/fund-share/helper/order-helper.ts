@@ -160,9 +160,9 @@ export class OrderHelper {
         this.setEncumberReference(randomHex);
         this.setPoaReference();
 
-        this.fakeCuoff = moment().add(5, 'minutes');
+        this.fakeCuoff = moment().add(30, 'seconds');
         this.fakeValuation = this.fakeCuoff.clone().utc().set({ hour: 0, minute: 0, second: 1 });
-        this.fakeSettlement = moment().add(15, 'minutes');
+        this.fakeSettlement = moment().add(45, 'seconds');
 
     }
 

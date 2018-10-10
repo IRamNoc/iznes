@@ -110,13 +110,6 @@ export class OfiKycService {
         private memberSocketService: MemberSocketService,
         private ngRedux: NgRedux<any>,
     ) {
-        this.isLogin$.subscribe((isLogin) => {
-            if (isLogin) {
-                return;
-            }
-            this.unSubscribe.next();
-            this.unSubscribe.complete();
-        });
 
         this.informationAuditTrailList$
         .takeUntil(this.unSubscribe)
