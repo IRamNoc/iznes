@@ -140,7 +140,7 @@
     <div class="modal-body modal-form-body text-center" *ngIf="emailSent && !changePassword">
         <i class="fa fa-envelope fa-5x" aria-hidden="true"></i>        
         <p>{{'An email has been sent to' | translate}}:
-            <b class="text-warning">{{emailUser}}</b>
+            <b [ngStyle]="{'color':'#37a5e4'}">{{emailUser}}</b>
         </p>
         <p>
             {{'This pop-up will automatically close in @countdown@ seconds.' | translate: {'countdown': countdown} }}
