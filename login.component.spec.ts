@@ -149,7 +149,7 @@ describe('SetlLoginComComponent', () => {
         }),
     );
 
-    it('update method should be called, when authentication changed', async(() => {
+    xit('update method should be called, when authentication changed', async(() => {
         spyOn(component, 'updateState');
         const authenticationStub: Subject<any> = MockNgRedux.getSelectorStub<any, any>(['user', 'authentication']);
         authenticationStub.next({ isLogin: true });
