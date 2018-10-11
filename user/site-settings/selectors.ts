@@ -1,6 +1,6 @@
-import {createSelector} from 'reselect';
-import {UserState} from '../index';
-import {SiteSettingsState} from './model';
+import { createSelector } from 'reselect';
+import { UserState } from '../index';
+import { SiteSettingsState } from './model';
 
 const getUser = (state): UserState => state.user;
 

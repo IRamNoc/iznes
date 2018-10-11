@@ -6,20 +6,21 @@ import * as _ from 'lodash';
 const initialState: AuthenticationState = {
     token: '',
     apiKey: '',
-    useTwoFactor: 0,
+    useTwoFactor: false,
     isLogin: false,
     defaultHomePage: '/home',
     mustChangePassword: false,
-    changedPassword: false
+    changedPassword: false,
 };
 
 export const AuthenticationReducer = function (state: AuthenticationState = initialState, action: Action) {
     switch (action.type) {
     case AuthenticationAction.SET_AUTH_LOGIN_DETAIL:
         const loginedData = _.get(action, 'payload[1].Data[0]', {});
-        const token = _.get(loginedData, 'Token', '');
+
+        let token = _.get(loginedData, 'Token', '');
         const apiKey = _.get(loginedData, 'apiKey', '');
-        const useTwoFactor = _.get(loginedData, 'useTwoFactor', '');
+        let useTwoFactor = Boolean(_.get(loginedData, 'useTwoFactor', 0));
         const defaultHomePage = _.get(loginedData, 'defaultHomePage', '');
         let mustChangePassword = _.get(loginedData, 'mustChangePassword', false);
         if (mustChangePassword === 0 || mustChangePassword === 1) {
@@ -41,14 +42,13 @@ export const AuthenticationReducer = function (state: AuthenticationState = init
         return initialState;
 
     case AuthenticationAction.SET_NEW_PASSWORD:
-
         const tokenData = _.get(action, 'payload[1].Data[0]', {});
         const newToken = _.get(tokenData, 'Token', '');
         const changedPassword = true;
 
         const newTokenState = Object.assign({}, state, {
             newToken,
-            changedPassword
+            changedPassword,
         });
 
         return newTokenState;
@@ -56,13 +56,18 @@ export const AuthenticationReducer = function (state: AuthenticationState = init
     case AuthenticationAction.CLEAR_MUST_CHANGE_PASSWORD:
         mustChangePassword = false;
         return Object.assign({}, state, {
-            mustChangePassword
+            mustChangePassword,
         });
 
     case AuthenticationAction.RESET_HOMEPAGE:
         return Object.assign({}, state, {
-            defaultHomePage: '/user-administration/subportfolio'
+            defaultHomePage: '/user-administration/subportfolio',
         });
+
+    case AuthenticationAction.UPDATE_TWO_FACTOR:
+        useTwoFactor = Boolean(_.get(action, 'payload[1].Data[0].useTwoFactor', 0));
+        token = _.get(action, 'payload[1].Data[0].Token', '');
+        return Object.assign({}, state, { useTwoFactor, token });
 
     default:
         return state;

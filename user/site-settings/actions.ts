@@ -10,6 +10,7 @@ export const SET_LANGUAGE = `${name}/SET_LANGUAGE`;
 export const SET_MENU_SHOWN = `${name}/SET_MENU_SHOWN`;
 export const SET_PRODUCTION = `${name}/SET_PRODUCTION`;
 export const SET_SITE_MENU = `${name}/SET_SITE_MENU`;
+export const SET_FORCE_TWO_FACTOR = `${name}/SET_FORCE_TWO_FACTOR`;
 
 export interface SetVersionAction extends Action {
     version: string;
