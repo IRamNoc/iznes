@@ -1,4 +1,4 @@
-import {MemberNodeRequest, MemberNodeMessageBody} from '@setl/utils/common';
+import { MemberNodeRequest, MemberNodeMessageBody } from '@setl/utils/common';
 
 export interface LoginRequestMessageBody extends MemberNodeMessageBody {
     UserName: string;
@@ -31,6 +31,30 @@ export interface SaveUserDetailsRequestBody extends MemberNodeMessageBody {
     memorableQuestion?: string;
     memorableAnswer?: string;
     profileText?: string;
+}
+
+export interface SetTwoFactorAuthenticationBody extends MemberNodeMessageBody {
+    token: string;
+    twoFactorAuthentication: string;
+    type: string;
+}
+
+export interface AuthenticateTwoFactorAuthenticationBody extends MemberNodeMessageBody {
+    twoFactorCode: string;
+    userID: string;
+    type: string;
+}
+
+export interface GetTwoFactorQrCodeBody extends MemberNodeMessageBody {
+    token: string;
+}
+
+export interface ForgotTwoFactorRequestBody extends MemberNodeMessageBody {
+    email: string;
+}
+
+export interface ResetTwoFactorRequestBody extends MemberNodeMessageBody {
+    resetToken: string;
 }
 
 export interface SaveNewPasswordRequestBody extends MemberNodeMessageBody {
@@ -75,4 +99,3 @@ export interface GetLanguageRequestBody extends MemberNodeMessageBody {
 export interface GetSiteMenuRequestBody extends MemberNodeMessageBody {
     token: string;
 }
-
