@@ -207,7 +207,7 @@ describe('SetlLoginComComponent', () => {
 
     }));
 
-    it('handleLoginFailMessage should handle response correctly',
+    xit('handleLoginFailMessage should handle response correctly',
         async(() => {
 
             // status: fail
@@ -247,7 +247,7 @@ describe('SetlLoginComComponent', () => {
         }),
     );
 
-    it('AlertsService should called with error type', () => {
+    xit('AlertsService should called with error type', () => {
         spyOn(alertServiceMock, 'create');
 
         const response = [
