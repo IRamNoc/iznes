@@ -53,7 +53,7 @@
     }
 
     .fileviewer-main {
-        padding:0px;
+        padding: 0px;
     }
 }
 
@@ -78,8 +78,13 @@ clr-modal.large .modal-dialog {
     width: 95%;
 }
 
-.modal-footer .btn {
-    margin: 12px 0px 0px 0px;
+.modal-footer {
+    .btn {
+        margin: 12px 5px 0 5px;
+    }
+    .btn:hover {
+        background-color: hsla(0, 0%, 60%, .2);
+    }
 }
 
 .modal-footer button {
@@ -169,4 +174,20 @@ clr-modal.large .modal-dialog {
 
 .modal-body .form-group.col-sm-6:nth-of-type(2) {
     padding-left: 10px;
+}
+
+clr-modal .modal-form-body {
+    padding-bottom: 20px !important;
+    .fa {
+        color: #cccccc
+    }
+    input[type=text] {
+        text-align: center;
+        border: 1px solid #96c8f1;
+        margin: 10px 0 0 0;
+        width: 100%;
+    }
+    .field-error {
+        width: 100%;
+    }
 }
