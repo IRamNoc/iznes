@@ -1,0 +1,24 @@
+#qr-code {
+    section {
+        width: 100%;
+        text-align: center;
+    }
+    img {
+        display: inline-block;
+        width: 166px;
+        height: 166px;
+    }
+    p {
+        margin: 1rem 0 0 0;
+        font-size: .583333rem;
+    }
+}
+
+.reset-link {
+    font-size: 12px;
+    margin: 10px 0;
+}
+
+.modal-body {
+    padding-bottom: 0;
+}

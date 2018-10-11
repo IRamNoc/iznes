@@ -229,7 +229,7 @@ describe('SetlLoginComComponent', () => {
             expect(component.showLoginErrorMessage).toHaveBeenCalledWith(
                 'info',
                 '<span mltag="txt_accountlocked" class="text-warning">Sorry, your account has been locked. ' +
-                'Please Contact your Administrator.</span>',
+                'Please contact your Administrator.</span>',
             );
 
             // status:

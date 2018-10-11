@@ -7,15 +7,15 @@ import {
     OnInit,
     ElementRef,
     ViewChild,
-    ChangeDetectorRef
+    ChangeDetectorRef,
 } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
 import { AbstractControl, FormControl, FormGroup, Validators } from '@angular/forms';
 import { NgRedux, select } from '@angular-redux/store';
-import { LoginGuardService } from "./login-guard.service";
+import { LoginGuardService } from './login-guard.service';
 import * as _ from 'lodash';
 // Internals
-import { APP_CONFIG, AppConfig, SagaHelper, LogService } from '@setl/utils';
+import { APP_CONFIG, AppConfig, SagaHelper, LogService, ConfirmationService } from '@setl/utils';
 import {
     AccountsService,
     ChainService,
@@ -32,6 +32,7 @@ import {
     SET_AUTH_LOGIN_DETAIL,
     SET_LOGIN_DETAIL,
     SET_PRODUCTION,
+    SET_FORCE_TWO_FACTOR,
     SET_SITE_MENU,
     SET_NEW_PASSWORD,
     setLanguage,
@@ -39,11 +40,10 @@ import {
 import { MemberSocketService } from '@setl/websocket-service';
 import { ToasterService } from 'angular2-toaster';
 import { AlertsService } from '@setl/jaspero-ng2-alerts';
-import { combineLatest } from 'rxjs';
+import { combineLatest } from 'rxjs/observable/combineLatest';
 import { Subscription } from 'rxjs/Subscription';
 import { MultilingualService } from '@setl/multilingual';
 import { passwordValidator } from '@setl/utils/helper/validators/password.directive';
-import { ConfirmationService } from "@setl/utils";
 
 /* Dectorator. */
 @Component({
@@ -78,24 +78,31 @@ export class SetlLoginComponent implements OnDestroy, OnInit, AfterViewInit {
         change2: false,
         resetold: false,
         reset1: false,
-        reset2: false
+        reset2: false,
     };
 
     resetPasswordForm: FormGroup;
     resetPassword: boolean = false;
 
     changedPassword = false;
+    changedPasswordContinue: boolean = false;
 
     // List of observable subscription
-    subscriptionsArray: Array<Subscription> = [];
+    subscriptionsArray: Subscription[] = [];
+
+    showTwoFactorModal = false;
+    qrCode: string = '';
+    resetTwoFactorToken = '';
 
     showModal = false;
     emailUser = '';
     emailSent = false;
-    countdown = 5;
+    countdown = 10;
     resetToken = '';
     isTokenExpired = false;
     changePassword = false;
+
+    private userAuthenticationState: any;
 
     private queryParams: any;
 
@@ -105,6 +112,7 @@ export class SetlLoginComponent implements OnDestroy, OnInit, AfterViewInit {
     // List of redux observable.
     @select(['user', 'siteSettings', 'language']) requestLanguageObj;
     @select(['user', 'authentication']) authenticationOb;
+    @select(['user', 'siteSettings', 'forceTwoFactor']) forceTwoFactorOb;
     @select(['user', 'siteSettings', 'siteMenu']) siteMenuOb;
 
     set loginValue(email) {
@@ -120,14 +128,14 @@ export class SetlLoginComponent implements OnDestroy, OnInit, AfterViewInit {
                 private accountsService: AccountsService,
                 private permissionGroupService: PermissionGroupService,
                 private router: Router,
-                private _activatedRoute: ActivatedRoute,
+                private activatedRoute: ActivatedRoute,
                 private alertsService: AlertsService,
                 private chainService: ChainService,
                 private initialisationService: InitialisationService,
                 private toasterService: ToasterService,
                 private loginGuardService: LoginGuardService,
                 private logService: LogService,
-                public _translate: MultilingualService,
+                public translate: MultilingualService,
                 private changeDetectorRef: ChangeDetectorRef,
                 private confirmationService: ConfirmationService,
                 @Inject(APP_CONFIG) appConfig: AppConfig) {
@@ -141,7 +149,7 @@ export class SetlLoginComponent implements OnDestroy, OnInit, AfterViewInit {
         }
 
         // language
-        this.subscriptionsArray.push(this.requestLanguageObj.subscribe((requested) => this.getLanguage(requested)));
+        this.subscriptionsArray.push(this.requestLanguageObj.subscribe(requested => this.getLanguage(requested)));
 
         this.setupForms();
     }
@@ -152,7 +160,7 @@ export class SetlLoginComponent implements OnDestroy, OnInit, AfterViewInit {
                 '',
                 Validators.required,
             ),
-            password: new FormControl('', Validators.required)
+            password: new FormControl('', Validators.required),
         });
 
         this.forgottenPasswordForm = new FormGroup({
@@ -166,38 +174,38 @@ export class SetlLoginComponent implements OnDestroy, OnInit, AfterViewInit {
 
         this.changePasswordForm = new FormGroup(this.getPasswordControls(), this.passwordValidator);
 
-        let controls = Object.assign(
+        const controls = Object.assign(
             this.getPasswordControls(),
             {
-                oldPassword: new FormControl('', Validators.required)
-            }
+                oldPassword: new FormControl('', Validators.required),
+            },
         );
         this.resetPasswordForm = new FormGroup(controls, [
-            formGroup => {
+            (formGroup) => {
                 return formGroup.get('oldPassword').value !== formGroup.get('password').value ? null : {
-                    same: true
-                }
+                    same: true,
+                };
             },
-            this.passwordValidator
+            this.passwordValidator,
         ]);
     }
 
     getPasswordControls() {
-        let validator = this.appConfig.production ? passwordValidator : null;
+        const validator = this.appConfig.production ? passwordValidator : null;
         return {
             password: new FormControl(
                 '',
                 Validators.compose([
                     Validators.required,
-                    validator
-                ])
+                    validator,
+                ]),
             ),
             passwordConfirm: new FormControl(
                 '',
                 Validators.compose([
-                    Validators.required
-                ])
-            )
+                    Validators.required,
+                ]),
+            ),
         };
     }
 
@@ -209,7 +217,7 @@ export class SetlLoginComponent implements OnDestroy, OnInit, AfterViewInit {
     }
 
     isTouched(path) {
-        let formControl: AbstractControl = this.resetPasswordForm.get(path);
+        const formControl: AbstractControl = this.resetPasswordForm.get(path);
 
         return formControl.touched;
     }
@@ -225,13 +233,18 @@ export class SetlLoginComponent implements OnDestroy, OnInit, AfterViewInit {
 
         this.getQueryParams();
 
-        let params$ = this._activatedRoute.params;
-        let data$ = this._activatedRoute.data;
-        let combined$ = combineLatest(params$, data$);
+        const params$ = this.activatedRoute.params;
+        const data$ = this.activatedRoute.data;
+        const combined$ = combineLatest(params$, data$);
 
-        let subscription = combined$.subscribe(([params, data]) => {
-            let loggedIn = data['loggedIn'];
+        const subscription = combined$.subscribe(([params, data]) => {
+            const loggedIn = data['loggedIn'];
             this.resetToken = params['token'];
+
+            if (params['twofactortoken']) {
+                this.resetTwoFactorToken = params['twofactortoken'];
+                this.showTwoFactorModal = true;
+            }
 
             if (this.resetToken) {
                 this.verifyToken(this.resetToken);
@@ -242,15 +255,26 @@ export class SetlLoginComponent implements OnDestroy, OnInit, AfterViewInit {
 
         this.subscriptionsArray.push(subscription);
 
-
         // Reduce observable subscription
         // Observable.combineLatest(this.authenticationOb, this.siteMenuOb).subscribe(([authentication, siteMenu]) => {
         //     if (Object.keys(siteMenu).length > 0) this.updateState(authentication);
         // });
 
-        this.authenticationOb.subscribe((authentication) => {
-            this.updateState(authentication);
-        });
+        const combinedTwoFactor$ = combineLatest(this.authenticationOb, this.forceTwoFactorOb);
+
+        this.subscriptionsArray.push(combinedTwoFactor$.subscribe(([authentication, forceTwoFactor]) => {
+            this.userAuthenticationState = authentication;
+            const useTwoFactor = _.get(authentication, 'useTwoFactor', 0);
+
+            if (useTwoFactor || forceTwoFactor) {
+                this.showTwoFactorModal = true;
+                if (authentication.token && authentication.token !== 'twoFactorRequired') {
+                    this.updateState(authentication);
+                }
+            } else {
+                this.updateState(authentication);
+            }
+        }));
 
         window.onbeforeunload = null;
 
@@ -266,7 +290,6 @@ export class SetlLoginComponent implements OnDestroy, OnInit, AfterViewInit {
     }
 
     login(value) {
-
         if (!this.loginForm.valid) {
             return false;
         }
@@ -289,7 +312,7 @@ export class SetlLoginComponent implements OnDestroy, OnInit, AfterViewInit {
         // Create a saga pipe.
         const asyncTaskPipe = this.myUserService.loginRequest({
             username: value.username,
-            password: value.password
+            password: value.password,
         });
 
         // Send a saga action.
@@ -297,22 +320,27 @@ export class SetlLoginComponent implements OnDestroy, OnInit, AfterViewInit {
         // Actions to dispatch, when request fail:  RESET_LOGIN_DETAIL.
         // saga pipe function descriptor.
         this.ngRedux.dispatch(SagaHelper.runAsync(
-            [SET_LOGIN_DETAIL, SET_AUTH_LOGIN_DETAIL, SET_PRODUCTION],
+            [SET_FORCE_TWO_FACTOR, SET_LOGIN_DETAIL, SET_AUTH_LOGIN_DETAIL, SET_PRODUCTION],
             [RESET_LOGIN_DETAIL, RESET_AUTH_LOGIN_DETAIL],
             asyncTaskPipe,
             {},
-            () => {
+            (data) => {
+                if (_.get(data, '[1].Data[0].qrCode', false)) {
+                    this.qrCode = data[1].Data[0].qrCode;
+                }
                 const asyncTaskPipes = this.myUserService.getSiteMenu(this.ngRedux);
                 this.ngRedux.dispatch(SagaHelper.runAsync(
                     [SET_SITE_MENU],
                     [],
-                    asyncTaskPipes, {}
+                    asyncTaskPipes, {},
                 ));
             },
             // Fail to login
             (data) => {
+                this.showTwoFactorModal = false;
+                this.changeDetectorRef.detectChanges();
                 this.handleLoginFailMessage(data);
-            }
+            },
         ));
 
         return false;
@@ -344,11 +372,11 @@ export class SetlLoginComponent implements OnDestroy, OnInit, AfterViewInit {
             const redirect: any = myAuthenData.defaultHomePage ? myAuthenData.defaultHomePage : '/home';
 
             if (this.queryParams.invitationToken) {
-                let extras = {
+                const extras = {
                     queryParams: {
                         invitationToken: this.queryParams.invitationToken,
-                        redirect: redirect
-                    }
+                        redirect,
+                    },
                 };
 
                 this.router.navigate(['consume'], extras);
@@ -368,19 +396,18 @@ export class SetlLoginComponent implements OnDestroy, OnInit, AfterViewInit {
                 this.myUserService,
                 this.permissionGroupService,
                 this.chainService,
-                this.initialisationService
+                this.initialisationService,
             );
-            window.onbeforeunload = function (e) {
+            window.onbeforeunload = (e) => {
                 const leaveMessage = 'Changes that you made may not be saved if you leave this page.';
                 e.returnValue = leaveMessage;
                 return leaveMessage;
             };
         }
-
     }
 
     getQueryParams() {
-        this._activatedRoute.queryParams.subscribe(params => {
+        this.activatedRoute.queryParams.subscribe((params) => {
             this.queryParams = params;
 
             if (params.email) {
@@ -393,13 +420,16 @@ export class SetlLoginComponent implements OnDestroy, OnInit, AfterViewInit {
     }
 
     displayError() {
-        setTimeout(() => {
-            this.toasterService.pop('error', 'This link is no longer valid. Please try to login again.');
-        }, 0);
+        setTimeout(
+            () => {
+                this.toasterService.pop('error', 'This link is no longer valid. Please try to login again.');
+            },
+            0,
+        );
     }
 
     passwordValidator(g: FormGroup) {
-        return (g.get('password').value === g.get('passwordConfirm').value) ? null : { 'mismatch': true };
+        return (g.get('password').value === g.get('passwordConfirm').value) ? null : { mismatch: true };
     }
 
     toggleShowPasswords(key) {
@@ -411,44 +441,57 @@ export class SetlLoginComponent implements OnDestroy, OnInit, AfterViewInit {
         this.showModal = true;
     }
 
-    sendEmail(formValues) {
-        this.emailUser = formValues.email;
+    sendEmail() {
+        if (this.forgottenPasswordForm.valid) {
+            this.emailUser = this.forgottenPasswordForm.controls.email.value;
 
-        const asyncTaskPipe = this.myUserService.forgotPassword(
-            {
-                username: this.emailUser,
-                lang: this.language,
-            });
+            const asyncTaskPipe = this.myUserService.forgotPassword(
+                {
+                    username: this.emailUser,
+                    lang: this.language,
+                });
 
-        this.ngRedux.dispatch(SagaHelper.runAsyncCallback(
-            asyncTaskPipe,
-            (data) => {
-                if (data && data[1] && data[1].Data && data[1].Data[0].Status && data[1].Data[0].Status === 'OK') {
-                    this.emailSent = true;
-                    let intervalCountdown = setInterval(() => {
-                        this.countdown--;
-                    }, 1000);
+            this.ngRedux.dispatch(SagaHelper.runAsyncCallback(
+                asyncTaskPipe,
+                (data) => {
+                    if (data && data[1] && data[1].Data && data[1].Data[0].Status && data[1].Data[0].Status === 'OK') {
+                        this.emailSent = true;
+                        const intervalCountdown = setInterval(
+                            () => {
+                                this.countdown -= 1;
+                            },
+                            1000,
+                        );
 
-                    setTimeout(() => {
-                        clearInterval(intervalCountdown);
+                        setTimeout(
+                            () => {
+                                clearInterval(intervalCountdown);
+                                this.closeFPModal();
+                            },
+                            10000,
+                        );
+                    } else {
+                        this.alertsService.generate(
+                            'error',
+                            data[1].Data[0].Message,
+                        );
                         this.closeFPModal();
-                    }, 5000);
-                } else {
-                    this.alertsService.create('error', '<span class="text-warning">' + data[1].Data[0].Message + '</span>');
+                    }
+                },
+                (data) => {
+                    this.alertsService.generate(
+                        'error',
+                        'Sorry, something went wrong.<br>Please try again later!');
                     this.closeFPModal();
-                }
-            },
-            (data) => {
-                this.alertsService.create('error', '<span class="text-warning">Sorry, something went wrong.<br>Please try again later!</span>');
-                this.closeFPModal();
-            })
-        );
+                }),
+            );
+        }
     }
 
     verifyToken(token) {
         const asyncTaskPipe = this.myUserService.validToken(
             {
-                token: token
+                token,
             });
 
         this.ngRedux.dispatch(SagaHelper.runAsyncCallback(
@@ -456,93 +499,118 @@ export class SetlLoginComponent implements OnDestroy, OnInit, AfterViewInit {
             (data) => {
                 if (data && data[1] && data[1].Data && data[1].Data[0].Status && data[1].Data[0].Status === 'OK') {
                     // add a delay to prevent appear effect side effects
-                    setTimeout(() => {
-                        this.changePassword = true;
-                        this.showModal = true;
-                    }, 1500);
+                    setTimeout(
+                        () => {
+                            this.changePassword = true;
+                            this.showModal = true;
+                        },
+                        1500,
+                    );
                 } else {
-                    this.alertsService.create('error', '<span class="text-warning">' + data[1].Data[0].Message + '</span>');
+                    this.alertsService.generate(
+                        'error',
+                        data[1].Data[0].Message,
+                    );
                 }
             },
-            (data) => {
+            () => {
                 // add a delay to prevent appear effect side effects
-                setTimeout(() => {
-                    this.isTokenExpired = true;
-                    this.showModal = true;
-                }, 1500);
-            })
+                setTimeout(
+                    () => {
+                        this.isTokenExpired = true;
+                        this.showModal = true;
+                    },
+                    1500,
+                );
+            }),
         );
     }
 
-    saveNewPassword(formValues) {
-        const asyncTaskPipe = this.myUserService.setNewPasswordFromToken(
-            {
-                token: this.resetToken,
-                password: formValues.password,
-                lang: this.language
-            });
-
-        this.ngRedux.dispatch(SagaHelper.runAsyncCallback(
-            asyncTaskPipe,
-            (data) => {
-                if (data && data[1] && data[1].Data && data[1].Data[0].Status && data[1].Data[0].Status === 'OK') {
-                    this.changedPassword = true;
-                    this.closeFPModal();
-
-                    this.toasterService.pop('success', 'Your password has been changed!');
-                } else {
-                    this.alertsService.create('error', '<span class="text-warning">' + data[1].Data[0].Message + '</span>');
-                    this.closeFPModal();
-                }
-            },
-            (data) => {
-                this.alertsService.create('error', '<span class="text-warning">Sorry, something went wrong.<br>Please try again later!</span>');
-                this.closeFPModal();
-            })
-        );
-    }
-
-    resetUserPassword(values, $event: Event) {
-        $event.preventDefault();
-
-        const asyncTaskPipe = this.myUserService.saveNewPassword({
-            oldPassword: values.oldPassword,
-            newPassword: values.password,
-        });
-        const saga = SagaHelper.runAsync(
-            [SET_NEW_PASSWORD],
-            [],
-            asyncTaskPipe,
-            {},
-            () => {
-                const platformName = this.getPlatformName();
-
-                this.resetPassword = false;
-                this.confirmationService.create(
-                    'Success!',
-                    'Your password has been reset<br><br>A confirmation email will be sent to you.',
-                    { confirmText: `Continue to ${platformName}`, declineText: '', btnClass: 'success' }
-                ).subscribe((ans) => {
-                    if (ans.resolved) {
-                        this.loginForm.get('password').patchValue(values.password);
-                        this.resetPasswordForm.reset();
-                        this.login(this.loginForm.value);
-                    }
+    saveNewPassword() {
+        if (this.changePasswordForm.valid) {
+            const asyncTaskPipe = this.myUserService.setNewPasswordFromToken(
+                {
+                    token: this.resetToken,
+                    password: this.changePasswordForm.controls.password.value,
+                    lang: this.language,
                 });
-            },
-            () => {
-                let message = this._translate.translate('An error has occurred, please make sure the data you entered is correct.');
-                this.alertsService.create('error', `<span class="text-warning">${message}</span>`);
-            }
-        );
 
-        this.ngRedux.dispatch(saga);
+            this.ngRedux.dispatch(SagaHelper.runAsyncCallback(
+                asyncTaskPipe,
+                (data) => {
+                    if (data && data[1] && data[1].Data && data[1].Data[0].Status && data[1].Data[0].Status === 'OK') {
+                        this.changedPassword = true;
+                        this.closeFPModal();
+
+                        this.toasterService.pop('success', 'Your password has been changed!');
+                    } else {
+                        this.alertsService.generate(
+                            'error',
+                            data[1].Data[0].Message);
+                        this.closeFPModal();
+                    }
+                },
+                (data) => {
+                    this.alertsService.generate(
+                        'error',
+                        'Sorry, something went wrong.<br>Please try again later!');
+                    this.closeFPModal();
+                }),
+            );
+        }
+    }
+
+    resetUserPassword($event: Event) {
+        if (this.resetPasswordForm.valid) {
+            $event.preventDefault();
+
+            const asyncTaskPipe = this.myUserService.saveNewPassword({
+                oldPassword: this.resetPasswordForm.controls.oldPassword.value,
+                newPassword: this.resetPasswordForm.controls.password.value,
+            });
+            const saga = SagaHelper.runAsync(
+                [SET_NEW_PASSWORD],
+                [],
+                asyncTaskPipe,
+                {},
+                (data) => {
+                    const platformName = this.getPlatformName();
+
+                    this.resetPassword = false;
+                    this.subscriptionsArray.push(
+                            this.alertsService.generate(
+                            'success',
+                            'Your password has been reset<br><br>A confirmation email will be sent to you.',
+                            { buttonMessage: `Continue to ${platformName}` },
+                        ).subscribe(() => {
+                            if (!this.changedPasswordContinue) {
+                                this.changedPasswordContinue = true;
+                                this.resetPasswordForm.reset();
+                                // Update the state with the new token
+                                this.userAuthenticationState.token = data[1].Data[0].Token;
+                                // The user has completed mustChangePassword so set to false and...
+                                this.userAuthenticationState.mustChangePassword = false;
+                                // ...call updateState which will route the user to the homepage
+                                this.updateState(this.userAuthenticationState);
+                            }
+                        }),
+                    );
+                },
+                () => {
+                    const message = this.translate.translate(
+                        'Please make sure you have entered your current password correctly.');
+                    this.alertsService.generate('error', message);
+                },
+            );
+
+            this.ngRedux.dispatch(saga);
+        }
     }
 
     closeFPModal() {
         this.forgottenPasswordForm.reset();
         this.emailUser = '';
-        this.countdown = 5;
+        this.countdown = 10;
         this.showModal = false;
         this.emailSent = false;
         this.changePassword = false;
@@ -559,26 +627,31 @@ export class SetlLoginComponent implements OnDestroy, OnInit, AfterViewInit {
 
         switch (responseStatus) {
         case 'fail':
-            this.showLoginErrorMessage('warning',
-                '<span mltag="txt_loginerror" class="text-warning">Invalid email address or password!</span>'
+            this.showLoginErrorMessage(
+                'warning',
+                '<span mltag="txt_loginerror">Invalid email address or password!</span>',
             );
             break;
         case 'locked':
-            this.showLoginErrorMessage('info',
-                '<span mltag="txt_accountlocked" class="text-warning">Sorry, your account has been locked. ' +
-                'Please Contact your Administrator.</span>'
+            this.showLoginErrorMessage(
+                'info',
+                '<span mltag="txt_accountlocked">' +
+                'Sorry, your account has been locked. ' +
+                'Please contact your Administrator.</span>',
             );
             break;
         default:
-            this.showLoginErrorMessage('error',
-                '<span mltag="txt_loginproblem" class="text-warning">Sorry, there was a problem logging in, please try again.</span>'
+            this.showLoginErrorMessage(
+                'error',
+                '<span mltag="txt_loginproblem">' +
+                'Sorry, there was a problem logging in, please try again.</span>',
             );
             break;
         }
     }
 
     showLoginErrorMessage(type, msg) {
-        this.alertsService.create(type, msg, { buttonMessage: 'Please try again to log in' });
+        this.alertsService.generate(type, msg, { buttonMessage: 'Close' });
     }
 
     updateLang(lang: string) {
@@ -602,6 +675,5 @@ export class SetlLoginComponent implements OnDestroy, OnInit, AfterViewInit {
         }
 
         return this.appConfig.platform;
-
     }
 }
