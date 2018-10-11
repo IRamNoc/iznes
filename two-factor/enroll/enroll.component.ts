@@ -82,6 +82,7 @@ export class EnrollComponent implements OnDestroy, OnInit {
                             if (_.get(data, '[1].Data[0].qrCode', '')) {
                                 this.qrCode = data[1].Data[0].qrCode;
                                 this.showQRCodeChallenge = true;
+                                this.changeDetectorRef.markForCheck();
                             }
                         },
                         () => {
