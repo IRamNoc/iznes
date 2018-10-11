@@ -78,27 +78,29 @@ interface GetLanguageTokenData {
     userID: string;
 }
 
-const TIMEOUT = 14 * 60 * 1000;
+/* TIMEOUT + TIMEOUT_COUNTDOWN must be =< session timeout */
+const TIMEOUT = 9 * 60 * 1000;
+const TIMEOUT_COUNTDOWN = 60;
 
 @Injectable()
 export class MyUserService implements OnDestroy {
-    subscriptionsArray: Array<Subscription>;
+    subscriptionsArray: Subscription[];
 
     constructor(private memberSocketService: MemberSocketService) {
         this.subscriptionsArray = [];
     }
 
     defaultRefreshToken(ngRedux: NgRedux<any>): any {
-        let asynTask;
+        let asyncTask;
 
         try {
-            asynTask = this.refreshToken();
+            asyncTask = this.refreshToken();
         } catch (e) {
             return false;
         }
 
         ngRedux.dispatch(SagaHelper.runAsyncCallback(
-            asynTask,
+            asyncTask,
             (data) => {
                 // clear timer
                 this.ngOnDestroy();
@@ -106,9 +108,9 @@ export class MyUserService implements OnDestroy {
                 ngRedux.dispatch(resetMembernodeSessionManager());
 
                 const timer = observableTimer(TIMEOUT, 1000);
-                // // subscribing to a observable returns a subscription object
+                // subscribing to a observable returns a subscription object
                 this.subscriptionsArray.push(timer.subscribe((t) => {
-                    if (t > 60) {
+                    if (t > TIMEOUT_COUNTDOWN) {
                         this.ngOnDestroy();
                     } else {
                         ngRedux.dispatch(setMembernodeSessionManager(t));
