@@ -241,6 +241,15 @@
         </clr-tab>
         <clr-tab>
             <button clrTabLink clrTabLinkId="link3">
+                <i class="fa fa-lock"></i>
+                <span mltag="txt_tfa">Two-Factor Authentication</span>
+            </button>
+            <clr-tab-content *clrIfActive="tabStates.tfa">
+                <app-enroll></app-enroll>
+            </clr-tab-content>
+        </clr-tab>
+        <clr-tab>
+            <button clrTabLink clrTabLinkId="link4">
                 <i class="fa fa-terminal"></i>
                 <span mltag="txt_api">API</span></button>
             <clr-tab-content *clrIfActive="tabStates.api">
@@ -296,4 +305,5 @@
             </clr-tab-content>
         </clr-tab>
     </clr-tabs>
+
 </div>
