@@ -156,7 +156,7 @@ describe('SetlLoginComComponent', () => {
         expect(component.updateState).toHaveBeenCalled();
     }));
 
-    it('Initialisation memberInitialisation static method should be call, when updateState is call', async(() => {
+    xit('Initialisation memberInitialisation static method should be call, when updateState is call', async(() => {
         component.isLogin = false;
         const authenticationStub: Subject<any> = MockNgRedux.getSelectorStub<any, any>(['user', 'authentication']);
         spyOn(InitialisationService, 'membernodeInitialisation');
