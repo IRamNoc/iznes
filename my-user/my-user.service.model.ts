@@ -40,7 +40,6 @@ export interface SetTwoFactorAuthenticationBody extends MemberNodeMessageBody {
 }
 
 export interface AuthenticateTwoFactorAuthenticationBody extends MemberNodeMessageBody {
-    token: string;
     twoFactorCode: string;
     userID: string;
     type: string;
