@@ -6,6 +6,7 @@ import { ToasterModule, ToasterService } from 'angular2-toaster';
 import { AlertsService } from '@setl/jaspero-ng2-alerts';
 
 import { SetlLoginComponent } from './login.component';
+import { AuthenticateComponent } from './two-factor/authenticate/authenticate.component';
 import {
     CoreTestUtilModule,
     MyUserServiceMock,
@@ -96,6 +97,7 @@ describe('SetlLoginComComponent', () => {
                 SetlLoginComponent,
                 TranslatePipe,
                 MockPasswordTooltip,
+                AuthenticateComponent,
             ],
             providers: [
                 { provide: MyUserService, useValue: myUserServiceMock },
