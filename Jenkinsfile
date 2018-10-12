@@ -33,8 +33,7 @@ node {
             }
 
             stage('Copy code to deployment folder') {
-                sh '''rsync -avzh /var/lib/jenkins/Deploy/* /var/lib/jenkins/Deploy_old/ &&
-                        rm -rf /var/lib/jenkins/Deploy/dist &&
+                sh '''  rm -rf /var/lib/jenkins/Deploy/dist &&
                         cp VERSION ./dist &&
                         rsync -a ./dist /var/lib/jenkins/Deploy/'''
 
