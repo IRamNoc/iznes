@@ -166,7 +166,9 @@ export class AdminWalletsComponent implements OnInit, AfterViewInit, OnDestroy {
             ];
 
             this.tabsControl[1].formControl.controls['walletType'].valueChanges.subscribe((type) => {
-                if (type && type[0].id === '1') {
+                const walletType = _.get(type, '[0].id', 0);
+
+                if (walletType === '1') {
                     /* Set incorporation date to required and clear any errors if user switches wallet type */
                     this.tabsControl[1].formControl.controls['walletIncDate'].setValidators([
                         Validators.required,
@@ -535,7 +537,9 @@ export class AdminWalletsComponent implements OnInit, AfterViewInit, OnDestroy {
                 Validators.pattern('^[0-9]{4}-(0[1-9]|1[012])-(0[1-9]|[12][0-9]|3[01])$'),
             ]);
             thisTab.formControl.controls['walletType'].valueChanges.subscribe((type) => {
-                if (type && type[0].id !== '1') {
+                const walletType = _.get(type, '[0].id', 0);
+
+                if (walletType !== '1') {
                     thisTab.formControl.controls['walletIncDate'].setErrors(null);
                 }
             });
