@@ -139,6 +139,10 @@ export class OfiInviteInvestorsComponent implements OnInit, OnDestroy {
         });
     }
 
+    getControls(frmGrp: FormGroup, key: string) {
+        return (<FormArray>frmGrp.controls[key]).controls;
+    }
+
     duplicateValidator(control: FormControl) {
         if (!this.invitationForm.controls['investors'].value.length || !control.value.length) {
             return;

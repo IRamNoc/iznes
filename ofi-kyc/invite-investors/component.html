@@ -20,7 +20,7 @@
 
     <form [formGroup]="invitationForm" novalidate (ngSubmit)="save(invitationForm.value)">
         <section class="form-block" formArrayName="investors">
-            <div class="investorBlock" *ngFor="let investor of invitationForm.controls['investors'].controls; let i = index">
+            <div class="investorBlock" *ngFor="let investor of getControls(invitationForm, 'investors'); let i = index">
                 <div [formGroup]="investor">
                     <div class="row">
                         <div class="form-group col-sm-6">
