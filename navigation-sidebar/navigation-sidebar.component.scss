@@ -1,3 +1,8 @@
+:host {
+    display: block;
+    width: 100%;
+}
+
 label[menu-dropdown] + ul.nav-list {
     opacity: 0;
     -webkit-transition: height 0.3s, opacity 0.5s;
