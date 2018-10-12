@@ -20,7 +20,7 @@
 
     <form [formGroup]="invitationForm" novalidate (ngSubmit)="save(invitationForm.value)">
         <section class="form-block" formArrayName="investors">
-            <div class="investorBlock" *ngFor="let investor of getControls(invitationForm, 'investors'); let i = index">
+            <div class="investorBlock" *ngFor="let investor of invitationForm.controls['investors'].controls; let i = index">
                 <div [formGroup]="investor">
                     <div class="row">
                         <div class="form-group col-sm-6">
@@ -38,8 +38,10 @@
                                 {{'Email already used for invitation!' | translate}}
                             </div>
                         </div>
+
                         <div class="form-group col-sm-6">
                             <label class="required-field" for="kyc_language_{{i}}">{{'Language:' | translate}}</label>
+
                             <div>
                                 <ng-select
                                     id="kyc_language_{{i}}"
@@ -51,10 +53,12 @@
                                     [ngStyle]="{'padding':'6px 0'}"
                                     [containerWidth]="'95%'">
                                 </ng-select>
+
                                 <div *ngIf="investor.controls['language'].hasError('required') && investor.controls['language'].touched" class="text-danger">
                                     {{'This field is required' | translate}}
                                 </div>
                             </div>
+
                             <i
                                 class="fa fa-times-circle text-warning"
                                 *ngIf="i > 0" id="btnKycRemoveInvestor_{{i}}"
@@ -64,19 +68,21 @@
                             </i>
                         </div>
                     </div>
+
                     <div class="row">
                         <div class="form-group col-sm-6">
-                            <label for="kyc_clientReference_{{i}}">{{'Client Reference (optional):' | translate}}
+                            <label for="kyc_clientReference_{{i}}">{{'Client Reference (optional):' | translate}}</label>
 
-                            </label>
                             <div>
                                 <input type="text" id="kyc_clientReference_{{i}}" class="form-control" formControlName="clientReference">
                             </div>
                         </div>
-                        <div class="form-group col-sm-6">
-                            <label for="kyc_investorType_{{i}}">{{'Investor Type:' | translate}}
 
+                        <div class="form-group col-sm-6">
+                            <label class='required-field' for="kyc_investorType_{{i}}">
+                                {{'Investor Type:' | translate}}
                             </label>
+
                             <div>
                                 <ng-select
                                     id="kyc_investorType_{{i}}"
@@ -88,12 +94,18 @@
                                     [ngStyle]="{'padding':'6px 0'}"
                                     [containerWidth]="'95%'">
                                 </ng-select>
+
+                                <div *ngIf="investor.controls['investorType'].hasError('required') && investor.controls['investorType'].touched" class="text-danger">
+                                    {{'This field is required.' | translate}}
+                                </div>
+
                                 <div *ngIf="isRetailInvestor(investor.controls['investorType']) && investor.controls['investorType'].touched" class="text-danger">
                                     {{'IZNES is not supporting retail investors for now.' | translate}}
                                 </div>
                             </div>
                         </div>
                     </div>
+
                     <div class="row">
                         <div class="form-group col-sm-6">
                             <label for="kyc_firstName_{{i}}">{{'First name (optional):' | translate}}
@@ -103,6 +115,7 @@
                                 <input type="text" id="kyc_firstName_{{i}}" class="form-control" formControlName="firstName">
                             </div>
                         </div>
+
                         <div class="form-group col-sm-6">
                             <label for="kyc_lastName_{{i}}">{{'Last name (optional):' | translate}}
 
@@ -112,6 +125,7 @@
                             </div>
                         </div>
                     </div>
+
                     <div class="row">
                         <div class="form-group col-sm-12">
                             <label for="kyc_message_{{i}}">{{'Message (optional):' | translate}}
@@ -124,6 +138,7 @@
                     </div>
                 </div>
             </div>
+
             <div class="row">
                 <div class="form-group col-sm-12">
                     <button id="btnKycAddInvestor" type="button" class="btn btn-success" (click)="addInvestor(invitationForm)">
@@ -135,6 +150,7 @@
                 <button id="btnKycClose" type="button" class="btn btn-info" (click)="goBack()">{{'Close' | translate}}
 
                 </button>
+
                 <button id="btnKycSubmit" type="submit" class="btn btn-primary" [disabled]="!invitationForm.valid">
                     <i class="fa fa-save"></i>
                     <span *ngIf="!hasMultipleInvites">{{'Send email invitation' | translate}}</span>
