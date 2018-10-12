@@ -823,6 +823,7 @@ export class AdminUsersComponent implements OnInit, AfterViewInit, OnDestroy {
                 thisTab['oldWalletAccess'],
                 newWalletAccess,
             );
+
             this.userAdminService.updateUserWalletPermissions({
                 userId: thisTab.userId.toString(),
                 toAdd: diffWalletAccess.toAdd,
