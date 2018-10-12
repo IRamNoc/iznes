@@ -77,7 +77,7 @@ export class ManageAccountComponent implements OnInit, OnDestroy {
                     {
                         accountName: new FormControl('', Validators.required),
                         accountDescription: new FormControl('', Validators.required),
-                        member: new FormControl([]),
+                        member: new FormControl([], Validators.required),
                     },
                 )),
                 active: false,
@@ -142,7 +142,7 @@ export class ManageAccountComponent implements OnInit, OnDestroy {
         const addAccountForm = this.tabsControl[1].formControl;
 
         // Set default value
-        if (this.managedMemberList.length > 0 && !_.isEmpty(addAccountForm.value.member)) {
+        if (this.managedMemberList.length > 0 && _.isEmpty(addAccountForm.value.member)) {
             addAccountForm.controls.member.setValue([this.managedMemberList[0]]);
         }
     }

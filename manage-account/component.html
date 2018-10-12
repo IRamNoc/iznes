@@ -97,7 +97,7 @@
 
                     <div class="row">
                         <div class="form-group col-sm-6">
-                            <label class="control-label">
+                            <label class="control-label required-field">
                                 <span class="ml_translated" mltag="txt_accountmember">Account Member</span>
                             </label>
                             <ng-select
@@ -109,6 +109,8 @@
                                 mltag="txt_selectmember"
                             >
                             </ng-select>
+                            <span *ngIf="formControl.controls.member.hasError('required') && formControl.controls.member.touched"
+                                  class="field-error" mltag="txt_fieldisrequired">Field is required</span>
                         </div>
                     </div>
 
