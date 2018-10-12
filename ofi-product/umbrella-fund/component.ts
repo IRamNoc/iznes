@@ -672,7 +672,7 @@ export class UmbrellaFundComponent implements OnInit, AfterViewInit, OnDestroy {
                     let userErrMsg = `Failed to create the umbrella fund. (${errMsg})`;
 
                     if (errMsg === 'Umbrella Fund is already exist with the same umbrella fund name.') {
-                        userErrMsg = 'Umbrella fund is already exist.';
+                        userErrMsg = 'This name is already being used by another umbrella fund.';
                     }
 
                     this._toasterService.pop('error', userErrMsg);
