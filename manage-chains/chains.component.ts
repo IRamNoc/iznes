@@ -8,7 +8,6 @@ import * as _ from 'lodash';
 
 import { AlertsService } from '@setl/jaspero-ng2-alerts';
 import { ChainService } from '@setl/core-req-services/chain/service';
-import { PersistService } from '@setl/core-persist';
 
 @Component({
     selector: 'app-manage-chains',
@@ -38,8 +37,7 @@ export class ManageChainsComponent implements OnInit, AfterViewInit, OnDestroy {
                 private changeDetectorRef: ChangeDetectorRef,
                 private alertsService: AlertsService,
                 private chainService: ChainService,
-                private confirmationService: ConfirmationService,
-                private persistService: PersistService) {
+                private confirmationService: ConfirmationService) {
 
         this.tabsControl = [
             {
@@ -50,12 +48,12 @@ export class ManageChainsComponent implements OnInit, AfterViewInit, OnDestroy {
             {
                 title: '<i class="fa fa-plus"></i> Add New Chain',
                 chainId: -1,
-                formControl: this.persistService.watchForm('manageMember/manageChains', new FormGroup(
+                formControl: new FormGroup(
                     {
                         chainId: new FormControl('', Validators.compose([Validators.required, this.isInteger])),
                         chainName: new FormControl('', Validators.required),
                     },
-                )),
+                ),
                 active: false,
             },
         ];
@@ -272,7 +270,7 @@ export class ManageChainsComponent implements OnInit, AfterViewInit, OnDestroy {
                     (data) => {
                         const reason = !_.isEmpty(data[1].Data[0].Message) ?
                             `. Reason:<br> ${data[1].Data[0].Message}` : '';
-                        this.alertsService.generate('error', `Failed to delete chain ${reason}`);
+                        this.alertsService.generate('error', `Failed to delete chain${reason}`);
                     },
                 ));
             }
