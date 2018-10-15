@@ -135,6 +135,15 @@ public class DatabaseHelper {
         conn.close();
         stmt.close();
     }
+    public static void setDBTwoFAOff() throws SQLException {
+        conn = DriverManager.getConnection(connectionString, DBUsername, DBPassword);
+        Statement stmt = conn.createStatement();
+
+        stmt.executeUpdate("UPDATE setlnet.tblSiteSetting SET value = 0 WHERE settingID = '5'");
+
+        conn.close();
+        stmt.close();
+    }
 
     public static void setDBToProdOn() throws SQLException {
         conn = DriverManager.getConnection(connectionString, DBUsername, DBPassword);
@@ -145,6 +154,17 @@ public class DatabaseHelper {
         conn.close();
         stmt.close();
     }
+
+    public static void setDBTwoFAOn() throws SQLException {
+        conn = DriverManager.getConnection(connectionString, DBUsername, DBPassword);
+        Statement stmt = conn.createStatement();
+
+        stmt.executeUpdate("UPDATE setlnet.tblSiteSetting SET value = 1 WHERE settingID = '5'");
+
+        conn.close();
+        stmt.close();
+    }
+
 
     public static void validatePopulatedDatabaseUsersFormdataTable(String formId, String userId, String userName, String email) throws SQLException, InterruptedException {
             conn = DriverManager.getConnection(connectionString, DBUsername, DBPassword);
