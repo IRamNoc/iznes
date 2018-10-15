@@ -1348,7 +1348,7 @@ export class AdminUsersComponent implements OnInit, AfterViewInit, OnDestroy {
             let resolution;
 
             /* Update the chain ID. */
-            this.setFormChainId(newTabId, { id: userChainAccess[0].chainID });
+            if (this.selectedChainItem.length) this.setFormChainId(newTabId, this.selectedChainItem[0]);
 
             /* Let's tidy it up for the ng2-select and patch the value... */
             userChainAccess = userChainAccess.map((chain) => {
