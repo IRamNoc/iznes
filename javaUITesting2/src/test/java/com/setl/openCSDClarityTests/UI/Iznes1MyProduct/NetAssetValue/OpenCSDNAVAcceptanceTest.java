@@ -17,6 +17,7 @@ import java.sql.SQLException;
 
 import static SETLAPIHelpers.DatabaseHelper.setDBToProdOff;
 import static SETLAPIHelpers.DatabaseHelper.setDBToProdOn;
+import static SETLAPIHelpers.DatabaseHelper.setDBTwoFAOff;
 import static com.setl.UI.common.SETLUIHelpers.FundsDetailsHelper.*;
 import static com.setl.UI.common.SETLUIHelpers.MemberDetailsHelper.scrollElementIntoViewByClassName;
 import static com.setl.UI.common.SETLUIHelpers.MemberDetailsHelper.scrollElementIntoViewByXpath;
@@ -47,6 +48,7 @@ public class OpenCSDNAVAcceptanceTest {
         testSetUp();
         screenshotRule.setDriver(driver);
         setDBToProdOff();
+        setDBTwoFAOff();
     }
 
     @After
@@ -62,6 +64,7 @@ public class OpenCSDNAVAcceptanceTest {
         validateNAVPageLayout();
         validateNAVDataGridHeadings(NAVHeadings);
     }
+
 
     @Test
     public void shouldCreateNav() throws InterruptedException, SQLException {
