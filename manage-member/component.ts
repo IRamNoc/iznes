@@ -10,7 +10,6 @@ import { MemberService } from '@setl/core-req-services';
 import { AlertsService } from '@setl/jaspero-ng2-alerts';
 import { clearRequestedManageMemberList, SET_MANAGE_MEMBER_LIST, setRequestedManageMemberList } from '@setl/core-store';
 import { ConfirmationService, SagaHelper } from '@setl/utils';
-import { PersistService } from '@setl/core-persist';
 
 interface NewMemberUserDetail {
     memberName: string;
@@ -49,8 +48,7 @@ export class ManageMemberComponent implements OnInit, OnDestroy {
                 private alertsService: AlertsService,
                 private memberService: MemberService,
                 private confirmationService: ConfirmationService,
-                private changeDetectorRef: ChangeDetectorRef,
-                private persistService: PersistService) {
+                private changeDetectorRef: ChangeDetectorRef) {
         this.allowedToSave = [];
         /* Default tabs. */
         this.tabsControl = [
@@ -62,12 +60,12 @@ export class ManageMemberComponent implements OnInit, OnDestroy {
             {
                 title: '<i class="fa fa-plus"></i> Add New Member',
                 memberId: -1,
-                formControl: this.persistService.watchForm('manageMember/manageMember', new FormGroup(
+                formControl: new FormGroup(
                     {
                         memberName: new FormControl('', Validators.required),
                         email: new FormControl('', Validators.required),
                     },
-                )),
+                ),
                 active: false,
             },
         ];

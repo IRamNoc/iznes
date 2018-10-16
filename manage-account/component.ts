@@ -11,7 +11,6 @@ import { SET_ACCOUNT_LIST, SET_MANAGE_MEMBER_LIST, setRequestedAccountList, setR
 import { AlertsService } from '@setl/jaspero-ng2-alerts';
 import { SagaHelper, LogService, ConfirmationService } from '@setl/utils';
 import * as _ from 'lodash';
-import { PersistService } from '@setl/core-persist';
 
 export function getManageMember(state) {
     const myMemberId = state.user.myDetail.memberId;
@@ -61,8 +60,7 @@ export class ManageAccountComponent implements OnInit, OnDestroy {
                 private accountService: AccountsService,
                 private memberService: MemberService,
                 private changeDetectorRef: ChangeDetectorRef,
-                private logService: LogService,
-                private persistService: PersistService) {
+                private logService: LogService) {
         /* Default tabs. */
         this.tabsControl = [
             {
@@ -73,13 +71,13 @@ export class ManageAccountComponent implements OnInit, OnDestroy {
             {
                 title: '<i class="fa fa-plus"></i> Add New Account',
                 accountId: -1,
-                formControl: this.persistService.watchForm('manageMember/manageAccount', new FormGroup(
+                formControl: new FormGroup(
                     {
                         accountName: new FormControl('', Validators.required),
                         accountDescription: new FormControl('', Validators.required),
                         member: new FormControl([], Validators.required),
                     },
-                )),
+                ),
                 active: false,
             },
         ];
