@@ -639,6 +639,8 @@ export class UmbrellaFundComponent implements OnInit, AfterViewInit, OnDestroy {
                         } else {
                             this.creationSuccess(umbrellaFundName);
                         }
+
+                        this.currentLei = payload.legalEntityIdentifier;
                     } else {
                         this._toasterService.pop('success', formValues.umbrellaFundName + ' has been successfully updated!');
                         this._router.navigateByUrl('/product-module/product');
