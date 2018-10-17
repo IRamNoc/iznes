@@ -67,6 +67,7 @@ export class AdminUsersComponent implements OnInit, AfterViewInit, OnDestroy {
     public totalRecords: number = 0;
     public dgPageFrom: number = 0;
     public dgPageSize: number = 10;
+    public currentPage: number = 1;
 
     /* Redux observables */
     @select(['userAdmin', 'chains', 'chainList']) chainListObservable;
@@ -302,8 +303,14 @@ export class AdminUsersComponent implements OnInit, AfterViewInit, OnDestroy {
      */
     requestPaginatedUsersList() {
         if (this.usersList.length < this.totalRecords) {
-            if (this.usersList.length < (this.dgPageFrom + this.dgPageSize)) {
-                this.userAdminService.updateUsersStore(this.dgPageFrom, this.dgPageSize);
+            const currentPage = (this.dgPageFrom + this.dgPageSize) / this.dgPageSize;
+            const pagesGot = Math.floor((this.usersList.length / this.dgPageSize));
+
+            if (currentPage > pagesGot) {
+                this.userAdminService.updateUsersStore(
+                    pagesGot * this.dgPageSize,
+                    (currentPage - pagesGot) * this.dgPageSize,
+                );
             }
         }
     }
