@@ -131,8 +131,7 @@ export class BasicLayoutComponent implements OnInit, OnDestroy, AfterViewInit {
     ngAfterViewInit() {
         // Check height of sidebar and if greater than window height remove fixed class
         this.sidebarHeight = this.sidebarEl.nativeElement.clientHeight;
-        if (this.sidebarHeight > window.innerHeight) this.fixSidebar = false;
-
+        if (this.sidebarHeight > (window.innerHeight - this.topBarHeight)) this.fixSidebar = false;
     }
 
     @HostListener('window:resize', ['$event'])
