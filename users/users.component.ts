@@ -302,8 +302,14 @@ export class AdminUsersComponent implements OnInit, AfterViewInit, OnDestroy {
      */
     requestPaginatedUsersList() {
         if (this.usersList.length < this.totalRecords) {
-            if (this.usersList.length < (this.dgPageFrom + this.dgPageSize)) {
-                this.userAdminService.updateUsersStore(this.dgPageFrom, this.dgPageSize);
+            const currentPage = (this.dgPageFrom + this.dgPageSize) / this.dgPageSize;
+            const pagesGot = this.usersList.length / this.dgPageSize;
+
+            if (currentPage > pagesGot) {
+                this.userAdminService.updateUsersStore(
+                    pagesGot * this.dgPageSize,
+                    (currentPage - pagesGot) * this.dgPageSize,
+                );
             }
         }
     }
