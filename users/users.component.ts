@@ -1347,8 +1347,9 @@ export class AdminUsersComponent implements OnInit, AfterViewInit, OnDestroy {
             let userChainAccess = this.usersChainAccess[user.userID] || [];
             let resolution;
 
-            /* Update the chain ID. */
-            if (this.selectedChainItem.length) this.setFormChainId(newTabId, this.selectedChainItem[0]);
+            /* Update the chain ID. Fallback to selectedChainItem if user has no chain assigned to them */
+            if (userChainAccess.length) this.setFormChainId(newTabId, { id: userChainAccess[0].chainID });
+            else if (this.selectedChainItem.length) this.setFormChainId(newTabId, this.selectedChainItem[0]);
 
             /* Let's tidy it up for the ng2-select and patch the value... */
             userChainAccess = userChainAccess.map((chain) => {
