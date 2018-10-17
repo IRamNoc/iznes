@@ -306,6 +306,24 @@ public class UmbrellaFundFundSharesDetailsHelper {
         wait.until(invisibilityOfElementLocated(By.xpath("//*[@id=\"iznes\"]/app-root/jaspero-confirmations/jaspero-confirmation/div[2]")));
     }
 
+    public static void assertToastContainsText(String text)
+    {
+        WebDriverWait wait = new WebDriverWait(driver, timeoutInSeconds);
+        try
+        {
+            wait.until(refreshed(visibilityOfElementLocated(By.className("toast-title"))));
+            WebElement toast = driver.findElement(By.className("toast-title"));
+
+            String s = toast.getText();
+
+            assert s.contains(text) : "Toast text is incorrect";
+        }
+        catch (Exception e)
+        {
+            fail("Couldn't find any toast");
+        }
+    }
+
     public static void searchUmbrellaTable(String fundName) {
         WebDriverWait wait = new WebDriverWait(driver, timeoutInSeconds);
         scrollElementIntoViewByXpath("//*[@id=\"iznes\"]/app-root/app-basic-layout/div/ng-sidebar-container/div/div/div/main/div/div/app-ofi-am-product-home/div[2]/div[2]/div/clr-datagrid/div/div/div/clr-dg-table-wrapper/div[1]/div/clr-dg-column[1]/div/clr-dg-string-filter/clr-dg-filter/button");
@@ -346,6 +364,35 @@ public class UmbrellaFundFundSharesDetailsHelper {
             wait.until(invisibilityOfElementLocated(By.xpath("//*[@id=\"iznes\"]/app-root/app-basic-layout/div/ng-sidebar-container/div/div/div/main/div[1]/div/app-ofi-am-product-home/div[4]/div[2]/div/clr-datagrid/div/div/div/clr-dg-table-wrapper/div[1]/div/clr-dg-column[1]/div/clr-dg-string-filter/clr-dg-filter/div/input")));
         } catch (Exception e) {
             e.printStackTrace();}
+    }
+
+    public static void searchDraftsTableByProductName(String searchText) {
+
+        try
+        {
+            WebElement parentColumn = driver.findElements(By.className("datagrid-column-flex"))
+                .stream()
+                .filter(WebElement -> WebElement.findElement(By.className("datagrid-column-title")).getText().equals("Product Name"))
+                .findFirst()
+                .orElse(null);
+
+            assert parentColumn != null : "couldnt find the draft products column";
+
+            //click magnifying glasss
+            parentColumn.findElements(By.className("datagrid-filter-toggle")).get(0).click();
+
+            WebDriverWait wait = new WebDriverWait(driver, 1);
+            wait.until(visibilityOf(parentColumn.findElement(By.name("search"))));
+
+            WebElement search = parentColumn.findElement(By.name("search"));
+            search.sendKeys(searchText);
+            search.sendKeys(Keys.ENTER);
+        }
+        catch (Exception e)
+        {
+            fail("something went wrong in searching the draft table");
+        }
+
     }
 
     private static void scrollElementIntoViewByWebElement(WebElement targetShare) {

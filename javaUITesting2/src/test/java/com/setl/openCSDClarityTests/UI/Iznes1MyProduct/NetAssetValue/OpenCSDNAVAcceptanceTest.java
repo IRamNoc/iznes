@@ -114,7 +114,8 @@ public class OpenCSDNAVAcceptanceTest {
     }
 
     @Test
-    public void shouldReceiveShareDataInNAVTableTG205() throws InterruptedException, SQLException, IOException {
+    public void shouldReceiveShareDataInNAVTableTG205() throws InterruptedException, SQLException, IOException
+    {
         WebDriverWait wait = new WebDriverWait(driver, timeoutInSeconds);
 
         String[] uFundDetails = generateRandomFundsDetails();

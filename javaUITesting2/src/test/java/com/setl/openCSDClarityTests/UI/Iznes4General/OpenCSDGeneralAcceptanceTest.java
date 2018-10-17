@@ -380,7 +380,7 @@ public class OpenCSDGeneralAcceptanceTest {
             fail("success message did not match : " + e.getMessage());
         }
         try {
-            driver.findElement(By.xpath("/html/body/app-root/jaspero-alerts/jaspero-alert/div[2]/div[4]/button")).click();
+            driver.findElement(By.xpath("//*[@id=\"iznes\"]/app-root/jaspero-alerts/jaspero-alert/div[3]/div[4]/button")).click();
         } catch (Exception e) {
             fail("Could not close alert : " + e.getMessage());
         }
