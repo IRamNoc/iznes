@@ -157,9 +157,10 @@
                                                [class.error]="hasError('oldPassword')"
                                                size="45">
 
-                                        <div *ngIf="hasError('oldPassword', 'required')" class="text-danger">
+                                        <div *ngIf="hasError('oldPassword', 'required')" class="field-error">
                                             {{'Field is required' | translate}}
                                         </div>
+
                                     </div>
                                     <div class="col-xs-1 no-gutter">
                                         <div class="show-hide" (click)="toggleShowPasswords()"
@@ -181,15 +182,15 @@
 
 
                                         <div *ngIf="hasError('', 'oldNew') && isTouched('oldPassword') && isTouched('password') && !hasError('password', 'required')"
-                                             class="text-danger">
+                                             class="field-error">
                                             {{'The new password should not be the same as the old' | translate}}
                                         </div>
                                         <div *ngIf="hasError('password', 'required')"
-                                             class="text-danger">
+                                             class="field-error">
                                             {{'Field is required' | translate}}
                                         </div>
                                         <div *ngIf="hasError('password', 'rules') && !hasError('', 'oldNew')"
-                                             class="text-danger">
+                                             class="field-error">
                                             {{'Your password doesn\'t meet the security criteria' | translate}}
                                         </div>
 
@@ -214,11 +215,11 @@
                                                [class.error]="hasError('passwordConfirm')"
                                                [formControl]="passwordConfirm" size="45">
 
-                                        <div *ngIf="hasError('passwordConfirm', 'required')" class="text-danger">
+                                        <div *ngIf="hasError('passwordConfirm', 'required')" class="field-error">
                                             {{'Field is required' | translate}}
                                         </div>
                                         <div *ngIf="hasError('', 'mismatch') && !hasError('passwordConfirm', 'required') && isTouched('passwordConfirm')"
-                                             class="text-danger">
+                                             class="field-error">
                                             {{'Password does not match' | translate}}
                                         </div>
                                     </div>
