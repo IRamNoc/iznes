@@ -13,6 +13,7 @@ import org.openqa.selenium.By;
 import org.openqa.selenium.WebElement;
 import org.openqa.selenium.support.ui.WebDriverWait;
 
+import java.io.IOException;
 import java.sql.SQLException;
 
 import static SETLAPIHelpers.DatabaseHelper.setDBToProdOff;
@@ -113,7 +114,7 @@ public class OpenCSDNAVAcceptanceTest {
     }
 
     @Test
-    public void shouldReceiveShareDataInNAVTableTG205() throws InterruptedException, SQLException {
+    public void shouldReceiveShareDataInNAVTableTG205() throws InterruptedException, SQLException, IOException {
         WebDriverWait wait = new WebDriverWait(driver, timeoutInSeconds);
 
         String[] uFundDetails = generateRandomFundsDetails();

@@ -236,6 +236,7 @@ public class OpenCSDKYCModuleAcceptanceTest {
         KYCProcessRequestListValidation("Yes","Success!", companyName, "Waiting approval", "Yes", "am2", "Waiting approval");
     }
 
+    @Ignore
     @Test
     public void shouldSetKYCStatusToDraftIfClosed() throws IOException, InterruptedException, SQLException {
         String managementCompEntered = "Management Company";
