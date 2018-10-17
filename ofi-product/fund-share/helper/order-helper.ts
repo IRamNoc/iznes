@@ -604,6 +604,7 @@ export class OrderHelper {
         const contractStartTs = orderTimeStamps.settleTimeStamp;
 
         const uniqueRef = this.encumberRef;
+        const isKnownNav = this.isKnownNav() ? 1 : 0;
 
         return {
             investorAddress,
@@ -631,6 +632,7 @@ export class OrderHelper {
             contractExpiryTs,
             contractStartTs,
             uniqueRef,
+            isKnownNav,
         };
     }
 
@@ -960,7 +962,7 @@ export class OrderHelper {
             // by amount
             const decimalDivider = Math.pow(10, Number(this.fundShare.maximumNumDecimal));
             // the formula before apply maximum number decimal.
-            let amountStr = '(' + orderFigures.amount + ' / nav' + ') * ' + NumberMultiplier;
+            let amountStr = '(' + this.orderValue + ' / nav' + ') * ' + NumberMultiplier;
             // apply maximum number decimal.
             amountStr = 'floor((' + amountStr + '/' + NumberMultiplier + ' * ' + decimalDivider + ')) / ' + decimalDivider + ' * ' + NumberMultiplier;
 
@@ -1075,7 +1077,7 @@ export class OrderHelper {
             // by amount
             const decimalDivider = Math.pow(10, Number(this.fundShare.maximumNumDecimal)) ;
             // the formula before apply maximum number decimal.
-            let amountStr = `(${orderFigures.amount} / nav) * ${NumberMultiplier}`;
+            let amountStr = `(${this.orderValue} / nav) * ${NumberMultiplier}`;
             // apply maximum number decimal.
             // tslint:disable-next-line:max-line-length
             amountStr = `floor(${amountStr}/${NumberMultiplier} * ${decimalDivider}) / ${decimalDivider} * ${NumberMultiplier}`;

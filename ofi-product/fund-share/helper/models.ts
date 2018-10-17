@@ -97,6 +97,7 @@ export interface OrderRequestBody {
     contractExpiryTs: number;
     contractStartTs: number;
     uniqueRef: string;
+    isKnownNav: number; // 1 is known, 0 is unknown
 }
 
 export interface UpdateOrderResponse {
