@@ -72,9 +72,9 @@
                 </clr-dg-row>
 
                 <clr-dg-footer>
-                    <div rowsPerPage="10" (rowsUpdate)="dgPageSize = $event; dgPageFrom = 0; setPaginatedUsersList(); requestPaginatedUsersList()"></div>
+                    <div rowsPerPage="10" (rowsUpdate)="dgPageSize = $event; dgPageFrom = 0; setPaginatedUsersList(); requestPaginatedUsersList(); currentPage = 1;"></div>
                     {{pagination.firstItem + 1}} - {{pagination.lastItem + 1}}
-                    <clr-dg-pagination #pagination [clrDgPageSize]="dgPageSize" [clrDgTotalItems]="totalRecords"></clr-dg-pagination>
+                    <clr-dg-pagination #pagination [clrDgPageSize]="dgPageSize" [(clrDgPage)]="currentPage" [clrDgTotalItems]="totalRecords"></clr-dg-pagination>
                 </clr-dg-footer>
             </clr-datagrid>
         </div>

@@ -67,6 +67,7 @@ export class AdminUsersComponent implements OnInit, AfterViewInit, OnDestroy {
     public totalRecords: number = 0;
     public dgPageFrom: number = 0;
     public dgPageSize: number = 10;
+    public currentPage: number = 1;
 
     /* Redux observables */
     @select(['userAdmin', 'chains', 'chainList']) chainListObservable;
@@ -279,6 +280,7 @@ export class AdminUsersComponent implements OnInit, AfterViewInit, OnDestroy {
      * @param dataGridState
      */
     datagridRefresh(dataGridState: ClrDatagridStateInterface) {
+        console.log('+++ dataGridState', dataGridState);
         this.dgPageFrom = dataGridState.page.from;
         this.dgPageSize = dataGridState.page.size;
         this.requestPaginatedUsersList();
@@ -303,7 +305,10 @@ export class AdminUsersComponent implements OnInit, AfterViewInit, OnDestroy {
     requestPaginatedUsersList() {
         if (this.usersList.length < this.totalRecords) {
             const currentPage = (this.dgPageFrom + this.dgPageSize) / this.dgPageSize;
-            const pagesGot = this.usersList.length / this.dgPageSize;
+            const pagesGot = Math.floor((this.usersList.length / this.dgPageSize));
+
+            console.log('+++ currentPage', currentPage);
+            console.log('+++ pagesGot', pagesGot);
 
             if (currentPage > pagesGot) {
                 this.userAdminService.updateUsersStore(
