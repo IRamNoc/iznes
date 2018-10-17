@@ -21,6 +21,7 @@ import static com.setl.UI.common.SETLUIHelpers.PageHelper.verifyCorrectPage;
 import static com.setl.UI.common.SETLUIHelpers.PageHelper.verifyCorrectPageContains;
 import static com.setl.UI.common.SETLUIHelpers.SetUp.driver;
 import static com.setl.UI.common.SETLUIHelpers.SetUp.timeoutInSeconds;
+import static com.setl.openCSDClarityTests.UI.Iznes2KYCModule.OpenCSDKYCModuleAcceptanceTest.searchSelectTopOptionXpath;
 import static org.apache.commons.lang3.RandomStringUtils.randomAlphabetic;
 import static org.apache.commons.lang3.RandomStringUtils.randomNumeric;
 import static org.apache.commons.lang3.RandomStringUtils.randomAlphanumeric;
@@ -53,6 +54,13 @@ public class FundsDetailsHelper extends LoginAndNavigationHelper {
         return new String[]{randomISIN};
     }
 
+    public static String[] generateRandomEmail() {
+        String n = randomNumeric(10);
+        String b = "JM";
+        String randomISIN = b + n + "@setl.io";
+        return new String[]{randomISIN};
+    }
+
     public static String generateRandomLEI() {
         //https://en.wikipedia.org/wiki/Legal_Entity_Identifier
         String louCode = randomNumeric(4);
@@ -78,7 +86,8 @@ public class FundsDetailsHelper extends LoginAndNavigationHelper {
     public static String[] generateRandomSubPortfolioIBAN() {
         String n = randomNumeric(14);
         String b = "JM";
-        String randomISIN = b + n;
+        //String randomISIN = b + " " + n;
+        String randomISIN = "FR7630006000011234567890189";
         return new String[]{randomISIN};
     }
 
@@ -217,16 +226,23 @@ public class FundsDetailsHelper extends LoginAndNavigationHelper {
         driver.findElement(By.id(IDname)).sendKeys(fundNameDuplicate);
     }
 
-    public static void fillUmbrellaDetailsNotCountry(String fundName, String lei) throws InterruptedException {
+    public static void fillUmbrellaDetailsNotCountry(String fundName, String lei) throws InterruptedException, IOException {
         WebDriverWait wait = new WebDriverWait(driver, timeoutInSeconds);
         JavascriptExecutor js = (JavascriptExecutor) driver;
 
         driver.findElement(By.id("uf_umbrellaFundName")).sendKeys(fundName);
         driver.findElement(By.id("uf_registerOffice")).sendKeys("testOffice");
         driver.findElement(By.id("uf_registerOfficeAddress")).sendKeys("testAddress");
+        driver.findElement(By.id("uf_registerOfficeAddressLine2")).sendKeys("testAddress");
         driver.findElement(By.id("uf_umbrellaFundCreationDate")).sendKeys("2019-10-20");
         driver.findElement(By.id("uf_umbrellaFundCreationDate")).sendKeys(Keys.ENTER);
         js.executeScript("document.getElementById(\"switchActiveShares\").click();");
+
+        driver.findElement(By.id("uf_registerOfficeAddressZipCode")).sendKeys("IP11QJ");
+
+        driver.findElement(By.id("uf_registerOfficeAddressCity")).sendKeys("Ipswich");
+        searchSelectTopOptionXpath("Jordan", "//*[@id=\"uf_registerOfficeAddressCountry\"]/div", "//*[@id=\"uf_registerOfficeAddressCountry\"]/div/div[3]/div/input", "//*[@id=\"uf_registerOfficeAddressCountry\"]/div/div[3]/ul/li[1]/div/a");
+
 
         wait.until(visibilityOfElementLocated(By.id("uf_lei")));
         driver.findElement(By.id("uf_lei")).sendKeys(lei);
@@ -974,6 +990,7 @@ public class FundsDetailsHelper extends LoginAndNavigationHelper {
         assertTrue(modalTitleSubPortfolio.equals("Create A New Sub-portfolio"));
         String disabledCreateBtn = driver.findElement(By.xpath("//*[@id=\"override_save\"]")).getAttribute("disabled");
         assertTrue(disabledCreateBtn.equals("true"));
+        Thread.sleep(2000);
         driver.findElement(By.xpath("//*[@id=\"iznes\"]/app-root/app-basic-layout/div/ng-sidebar-container/div/div/div/main/div/div/ofi-sub-portfolio/clr-modal[1]/div/div[1]/div/div[1]/div/div[2]/form/div[1]/div/input")).sendKeys(subName);
         String disabledCreateBtn2 = driver.findElement(By.xpath("//*[@id=\"override_save\"]")).getAttribute("disabled");
         assertTrue(disabledCreateBtn2.equals("true"));

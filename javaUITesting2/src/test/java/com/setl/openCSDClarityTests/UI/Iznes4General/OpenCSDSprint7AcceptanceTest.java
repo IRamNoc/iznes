@@ -142,7 +142,7 @@ public class OpenCSDSprint7AcceptanceTest {
     }
 
     @Test
-    public void shouldPopupAfterUmbrellaCreationTG1027() throws InterruptedException, SQLException {
+    public void shouldPopupAfterUmbrellaCreationTG1027() throws InterruptedException, SQLException, IOException {
         loginAndVerifySuccess("am", "alex01");
         waitForHomePageToLoad();
         navigateToDropdown("menu-my-products");
@@ -158,7 +158,7 @@ public class OpenCSDSprint7AcceptanceTest {
     }
 
     @Test
-    public void shouldPopupAfterFundCreationTG1028() throws InterruptedException, SQLException {
+    public void shouldPopupAfterFundCreationTG1028() throws InterruptedException, SQLException, IOException {
         loginAndVerifySuccess("am", "alex01");
         waitForHomePageToLoad();
         navigateToDropdown("menu-my-products");
@@ -235,7 +235,7 @@ public class OpenCSDSprint7AcceptanceTest {
 
     @Test
     @Ignore("centralisation being changed")
-    public void AssertPageDataForCentralisationHistoryTG1080() throws InterruptedException, SQLException {
+    public void AssertPageDataForCentralisationHistoryTG1080() throws InterruptedException, SQLException, IOException {
         WebDriverWait wait = new WebDriverWait(driver, timeoutInSeconds);
 
         String[] umbFundDetails = generateRandomUmbrellaFundsDetails();

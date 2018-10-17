@@ -1,6 +1,5 @@
 package com.setl.openCSDClarityTests.UI.Iznes1SanityTests;
 
-import com.setl.UI.common.SETLUtils.Repeat;
 import com.setl.UI.common.SETLUtils.RepeatRule;
 import com.setl.UI.common.SETLUtils.ScreenshotRule;
 import com.setl.UI.common.SETLUtils.TestMethodPrinterRule;
@@ -10,42 +9,30 @@ import org.junit.rules.Timeout;
 import org.junit.runner.RunWith;
 import org.openqa.selenium.By;
 import org.openqa.selenium.JavascriptExecutor;
-import org.openqa.selenium.Keys;
-import org.openqa.selenium.WebElement;
-import org.openqa.selenium.support.ui.WebDriverWait;
 
 import java.io.IOException;
-import java.security.Key;
 import java.sql.SQLException;
-import java.text.DateFormat;
-import java.text.SimpleDateFormat;
-import java.util.Date;
 
 import static SETLAPIHelpers.DatabaseHelper.setDBToProdOff;
 import static SETLAPIHelpers.DatabaseHelper.setDBToProdOn;
 import static com.setl.UI.common.SETLUIHelpers.FundsDetailsHelper.*;
 import static com.setl.UI.common.SETLUIHelpers.FundsDetailsHelper.generateRandomISIN;
-import static com.setl.UI.common.SETLUIHelpers.KYCDetailsHelper.KYCProcessWelcomeToIZNES;
-import static com.setl.UI.common.SETLUIHelpers.KYCDetailsHelper.KYCProcessMakeNewRequest;
-import static com.setl.UI.common.SETLUIHelpers.KYCDetailsHelper.KYCProcessStep1;
+
+
+import static com.setl.UI.common.SETLUIHelpers.KYCDetailsHelper.KYCProcessStep1Alternate;
+import static com.setl.UI.common.SETLUIHelpers.KYCDetailsHelper.KYCProcessWelcomeToIZNES2;
 import static com.setl.UI.common.SETLUIHelpers.KYCDetailsHelper.KYCProcessStep2;
 import static com.setl.UI.common.SETLUIHelpers.KYCDetailsHelper.KYCProcessStep4;
 import static com.setl.UI.common.SETLUIHelpers.KYCDetailsHelper.KYCProcessStep5;
 import static com.setl.UI.common.SETLUIHelpers.KYCDetailsHelper.KYCProcessStep6;
+import static com.setl.UI.common.SETLUIHelpers.KYCDetailsHelper.KYCAcceptMostRecentRequest2;
 import static com.setl.UI.common.SETLUIHelpers.KYCDetailsHelper.KYCProcessRequestListValidation;
-import static com.setl.UI.common.SETLUIHelpers.KYCDetailsHelper.KYCAcceptMostRecentRequest;
-import static com.setl.UI.common.SETLUIHelpers.MemberDetailsHelper.scrollElementIntoViewByCss;
-import static com.setl.UI.common.SETLUIHelpers.MemberDetailsHelper.scrollElementIntoViewById;
-import static com.setl.UI.common.SETLUIHelpers.MemberDetailsHelper.scrollElementIntoViewByXpath;
-import static com.setl.UI.common.SETLUIHelpers.PageHelper.verifyCorrectPage;
-import static com.setl.UI.common.SETLUIHelpers.PageHelper.verifyCorrectPageContains;
 import static com.setl.UI.common.SETLUIHelpers.SetUp.*;
 import static com.setl.UI.common.SETLUIHelpers.UmbrellaFundFundSharesDetailsHelper.*;
 import static com.setl.openCSDClarityTests.UI.Iznes2KYCModule.OpenCSDKYCModuleAcceptanceTest.*;
-import static org.junit.Assert.assertFalse;
+import static com.setl.openCSDClarityTests.UI.Iznes4General.OpenCSDGeneralAcceptanceTest.inviteAnInvestor;
+import static com.setl.openCSDClarityTests.UI.Iznes4General.OpenCSDGeneralAcceptanceTest.navigateToInviteInvestorPage;
 import static org.junit.Assert.assertTrue;
-import static org.junit.Assert.fail;
-import static org.openqa.selenium.support.ui.ExpectedConditions.*;
 
 
 @RunWith(OrderedJUnit4ClassRunner.class)
@@ -88,13 +75,15 @@ public class OpenCSDEntireFlowAcceptanceTest {
     }
 
     @Test
-    public void shouldTestEntireIZNESPlatform() throws InterruptedException, SQLException, IOException {
+    public void shouldTest_EntireIZNESPlatform() throws InterruptedException, SQLException, IOException {
 
         String No = "11"; String userNo = "0" + No;
 
+        String[] email = generateRandomEmail();
+
         String AMUsername = "am"; String AMPassword = "alex01";
 
-        String InvUsername = "testops" + userNo + "@setl.io"; String InvPassword = "asdasd";
+        String InvUsername = email[0]; String InvPassword = "asdASD123";
         //String InvUsername = "therealjordanmiller@gmail.com"; String InvPassword = "asdASD123";
 
         String managementCompEntered = "Management Company"; String managementCompExpected = "Management Company";
@@ -112,8 +101,10 @@ public class OpenCSDEntireFlowAcceptanceTest {
         String firstName = "Jordan"; String lastName = "Miller";
         String phoneNo = "07956701992";
         String[] uSubNameDetails = generateRandomSubPortfolioName();
-        String[] uSubIBANDetails = generateRandomSubPortfolioIBAN();
+        //String[] uSubIBANDetails = generateRandomSubPortfolioIBAN();
         String[] uAmount = generateRandomAmount();
+
+        String uSubIBANDetails = "FR7630006000011234567890189";
 
         System.out.println("=======================================================");
         System.out.println("IZNES Entire Flow Test Now Starting...");
@@ -142,28 +133,33 @@ public class OpenCSDEntireFlowAcceptanceTest {
 
         setSharesNAVandValidate(uShareDetails[0], latestNav);
 
-        loginAndVerifySuccessKYC(InvUsername, InvPassword, "additionnal");
-        KYCProcessWelcomeToIZNES(userNo, companyName, phoneNo, managementCompEntered);
-        KYCProcessMakeNewRequest();
-        KYCProcessStep1(managementCompEntered, "No", "False", "");
+        loginAndVerifySuccess(AMUsername, AMPassword);
+        waitForHomePageToLoad();
+        navigateToInviteInvestorPage();
+        inviteAnInvestor(email[0], firstName, lastName, "Success!");
+        newInvestorSignUp(email[0], InvPassword);
+        KYCProcessWelcomeToIZNES2(email[0], companyName, phoneNo, firstName, lastName, managementCompEntered);
+
+        KYCProcessStep1Alternate(managementCompEntered, "No", "False", "");
         KYCProcessStep2();
         KYCProcessStep3GeneralInfoComplete(companyName);
         KYCProcessStep3CompanyInfoComplete();
-        KYCProcessStep3BankingInfoComplete(companyName, uSubIBANDetails[0]);
+        KYCProcessStep3BankingInfoComplete(companyName, uSubIBANDetails);
         KYCProcessStep4();
         KYCProcessStep5();
         KYCProcessStep6(firstName + " " + lastName, "SETL Developments LTD", "Ipswich", "Head");
         KYCProcessRequestListValidation("Yes","Success!", managementCompEntered, "Waiting approval", "No", "", "");
         logout();
 
-        KYCAcceptMostRecentRequest(AMUsername, AMPassword, companyName, No, firstName, lastName, userNo, phoneNo);
+        KYCAcceptMostRecentRequest2(AMUsername, AMPassword, companyName, firstName, lastName, phoneNo, "accept");
 
         validateClientReferentialAndGrantFundAccess(companyName, No, uIsin[0]);
         System.out.println("Status : Granted access to " + uShareDetails[0] + " for investor : " + InvUsername);
+
         logout();
 
         loginAndVerifySuccess(InvUsername, InvPassword);
-        createSubPortfolio(uSubNameDetails[0], uSubIBANDetails[0]);
+        createSubPortfolio(uSubNameDetails[0], uSubIBANDetails);
 
         navigateToDropdown("menu-order-module");
         navigateToPageByID("menu-list-of-fund");

@@ -14,6 +14,7 @@ import org.openqa.selenium.By;
 import org.openqa.selenium.WebElement;
 import org.openqa.selenium.support.ui.WebDriverWait;
 
+import java.io.IOException;
 import java.sql.SQLException;
 
 import static SETLAPIHelpers.DatabaseHelper.setDBToProdOff;
@@ -55,7 +56,7 @@ public class OpenCSD4FundFlowAcceptanceTest {
     }
 
     @Test
-    public void shouldTestEntireFundFlow() throws InterruptedException, SQLException {
+    public void shouldTestEntireFundFlow() throws InterruptedException, SQLException, IOException {
 
         String[] umbFundDetails = generateRandomUmbrellaFundsDetails();
         String[] uShareDetails = generateRandomFundsDetails();
