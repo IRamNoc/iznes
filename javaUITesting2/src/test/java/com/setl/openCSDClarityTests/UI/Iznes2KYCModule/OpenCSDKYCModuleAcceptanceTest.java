@@ -1,9 +1,9 @@
 package com.setl.openCSDClarityTests.UI.Iznes2KYCModule;
 
+import com.setl.UI.common.SETLUtils.Repeat;
 import com.setl.UI.common.SETLUtils.RepeatRule;
 import com.setl.UI.common.SETLUtils.ScreenshotRule;
 import com.setl.UI.common.SETLUtils.TestMethodPrinterRule;
-import com.sun.scenario.effect.impl.sw.sse.SSEBlend_SRC_OUTPeer;
 import custom.junit.runners.OrderedJUnit4ClassRunner;
 import org.junit.*;
 import org.junit.rules.Timeout;
@@ -15,25 +15,19 @@ import org.openqa.selenium.support.ui.WebDriverWait;
 
 import java.io.IOException;
 import java.sql.SQLException;
-import java.text.DateFormat;
-import java.text.SimpleDateFormat;
-import java.util.Date;
-
 import static SETLAPIHelpers.DatabaseHelper.setDBToProdOff;
 import static SETLAPIHelpers.DatabaseHelper.setDBToProdOn;
+
+import static com.setl.UI.common.SETLUIHelpers.FundsDetailsHelper.generateRandomEmail;
 import static com.setl.UI.common.SETLUIHelpers.FundsDetailsHelper.generateRandomLEI;
 import static com.setl.UI.common.SETLUIHelpers.FundsDetailsHelper.generateRandomSubPortfolioIBAN;
-import static com.setl.UI.common.SETLUIHelpers.FundsDetailsHelper.openDropdownAndSelectOption;
 import static com.setl.UI.common.SETLUIHelpers.KYCDetailsHelper.*;
-import static com.setl.UI.common.SETLUIHelpers.LoginAndNavigationHelper.*;
 import static com.setl.UI.common.SETLUIHelpers.MemberDetailsHelper.scrollElementIntoViewById;
 import static com.setl.UI.common.SETLUIHelpers.MemberDetailsHelper.scrollElementIntoViewByXpath;
-import static com.setl.UI.common.SETLUIHelpers.PageHelper.verifyCorrectPage;
-import static com.setl.UI.common.SETLUIHelpers.PageHelper.verifyCorrectPageById;
 import static com.setl.UI.common.SETLUIHelpers.SetUp.*;
 import static com.setl.UI.common.SETLUIHelpers.UserDetailsHelper.generateRandomUserDetails;
+import static com.setl.openCSDClarityTests.UI.Iznes1MyProduct.Funds.OpenCSD2FundsAcceptanceTest.getInvestorInvitationToken;
 import static com.setl.openCSDClarityTests.UI.Iznes4General.OpenCSDGeneralAcceptanceTest.*;
-import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertTrue;
 import static org.junit.Assert.fail;
 import static org.openqa.selenium.support.ui.ExpectedConditions.*;
@@ -79,53 +73,157 @@ public class OpenCSDKYCModuleAcceptanceTest {
     }
 
     @Test
-    public void shouldChangeKYCProcessIfAlreadyRegistered() throws IOException, InterruptedException, SQLException {
-        String userNo = "001";
+    public void shouldAcceptKYCwithRandomEmail() throws IOException, InterruptedException, SQLException {
         String managementCompEntered = "Management Company";
         String companyName = "Jordan Corporation";
         String phoneNo = "07956701992";
+        String firstName = "Jordan";
+        String lastName = "Miller";
+        String AMUsername = "am";
+        String AMPassword = "alex01";
+        String INVPassword = "asdASD123";
 
-        loginAndVerifySuccessKYC("testops" + userNo + "@setl.io", "asdasd", "additionnal");
-        KYCProcessWelcomeToIZNES(userNo, companyName, phoneNo, managementCompEntered);
-        KYCProcessMakeNewRequest();
-        KYCProcessStep1(managementCompEntered, "Yes", "False", "");
+        String[] email = generateRandomEmail();
+        String uSubIBANDetails = "FR7630006000011234567890189";
+
+        System.out.println(email[0]);
+
+        loginAndVerifySuccess(AMUsername, AMPassword);
+        waitForHomePageToLoad();
+        navigateToInviteInvestorPage();
+        inviteAnInvestor(email[0], firstName, lastName, "Success!");
+        newInvestorSignUp(email[0], INVPassword);
+        KYCProcessWelcomeToIZNES2(email[0], companyName, phoneNo, firstName, lastName, managementCompEntered);
+        KYCProcessStep1Alternate(managementCompEntered, "No", "False", "");
+        KYCProcessStep2();
+        KYCProcessStep3GeneralInfoComplete(companyName);
+        KYCProcessStep3CompanyInfoComplete();
+        KYCProcessStep3BankingInfoComplete(companyName, uSubIBANDetails);
+        KYCProcessStep4();
+        KYCProcessStep5();
+        KYCProcessStep6(firstName + " " + lastName, "SETL Developments LTD", "Ipswich", "Head");
+        KYCProcessRequestListValidation("Yes","Success!", managementCompEntered, "Waiting Approval", "No", "", "");
+        Thread.sleep(750);
+        logout();
+        KYCAcceptMostRecentRequest2(AMUsername, AMPassword, companyName, firstName, lastName, phoneNo, "accept");
     }
 
     @Test
-    public void shouldCreateKYCRequest() throws IOException, InterruptedException, SQLException {
-        String userNo = "007";
+    public void shouldAskForMoreInfoKYCwithRandomEmail() throws IOException, InterruptedException, SQLException {
         String managementCompEntered = "Management Company";
         String companyName = "Jordan Corporation";
         String phoneNo = "07956701992";
+        String firstName = "Jordan";
+        String lastName = "Miller";
+        String AMUsername = "am";
+        String AMPassword = "alex01";
+        String INVPassword = "asdASD123";
+
+        String[] email = generateRandomEmail();
         String[] uSubIBANDetails = generateRandomSubPortfolioIBAN();
 
-
-        loginAndVerifySuccessKYC("testops" + userNo + "@setl.io", "asdasd", "additionnal");
-        KYCProcessWelcomeToIZNES(userNo, companyName, phoneNo, managementCompEntered);
-        KYCProcessMakeNewRequest();
-        KYCProcessStep1(managementCompEntered, "No", "False", "");
+        loginAndVerifySuccess(AMUsername, AMPassword);
+        waitForHomePageToLoad();
+        navigateToInviteInvestorPage();
+        inviteAnInvestor(email[0], firstName, lastName, "Success!");
+        newInvestorSignUp(email[0], INVPassword);
+        KYCProcessWelcomeToIZNES2(email[0], companyName, phoneNo, firstName, lastName, managementCompEntered);
+        KYCProcessStep1Alternate(managementCompEntered, "No", "False", "");
         KYCProcessStep2();
         KYCProcessStep3GeneralInfoComplete(companyName);
         KYCProcessStep3CompanyInfoComplete();
         KYCProcessStep3BankingInfoComplete(companyName, uSubIBANDetails[0]);
         KYCProcessStep4();
         KYCProcessStep5();
-        KYCProcessStep6("Jordan Miller", "SETL Developments LTD", "Ipswich", "Head");
-       // KYCProcessRequestListValidation("Yes","Success!", managementCompEntered, "Waiting approval", "No", "", "");
+        KYCProcessStep6(firstName + " " + lastName, "SETL Developments LTD", "Ipswich", "Head");
+        KYCProcessRequestListValidation("Yes","Success!", managementCompEntered, "Waiting Approval", "No", "", "");
+        Thread.sleep(750);
+        logout();
+        KYCAcceptMostRecentRequest2(AMUsername, AMPassword, companyName, firstName, lastName, phoneNo, "more");
     }
 
     @Test
-    public void shouldCreateKYCRequestWith2AMs() throws IOException, InterruptedException, SQLException {
-        String userNo = "003";
+    public void shouldRejectKYCwithRandomEmail() throws IOException, InterruptedException, SQLException {
         String managementCompEntered = "Management Company";
-        String managementComp2Entered = "am2";
         String companyName = "Jordan Corporation";
         String phoneNo = "07956701992";
+        String firstName = "Jordan";
+        String lastName = "Miller";
+        String AMUsername = "am";
+        String AMPassword = "alex01";
+        String INVPassword = "asdASD123";
+
+        String[] email = generateRandomEmail();
+        String[] uSubIBANDetails = generateRandomSubPortfolioIBAN();
+
+        loginAndVerifySuccess(AMUsername, AMPassword);
+        waitForHomePageToLoad();
+        navigateToInviteInvestorPage();
+        inviteAnInvestor(email[0], firstName, lastName, "Success!");
+        newInvestorSignUp(email[0], INVPassword);
+        KYCProcessWelcomeToIZNES2(email[0], companyName, phoneNo, firstName, lastName, managementCompEntered);
+        KYCProcessStep1Alternate(managementCompEntered, "No", "False", "");
+        KYCProcessStep2();
+        KYCProcessStep3GeneralInfoComplete(companyName);
+        KYCProcessStep3CompanyInfoComplete();
+        KYCProcessStep3BankingInfoComplete(companyName, uSubIBANDetails[0]);
+        KYCProcessStep4();
+        KYCProcessStep5();
+        KYCProcessStep6(firstName + " " + lastName, "SETL Developments LTD", "Ipswich", "Head");
+        KYCProcessRequestListValidation("Yes","Success!", managementCompEntered, "Waiting Approval", "No", "", "");
+        Thread.sleep(750);
+        logout();
+        KYCAcceptMostRecentRequest2(AMUsername, AMPassword, companyName, firstName, lastName, phoneNo, "reject");
+        //accept//askForMoreInfo//reject//
+    }
+
+    @Test
+    public void shouldChangeKYCProcessIfAlreadyRegistered() throws IOException, InterruptedException, SQLException {
+        String managementCompEntered = "Management Company";
+        String companyName = "Jordan Corporation";
+        String phoneNo = "07956701992";
+        String firstName = "Jordan";
+        String lastName = "Miller";
+        String AMUsername = "am";
+        String AMPassword = "alex01";
+        String INVPassword = "asdASD123";
+
+        String[] email = generateRandomEmail();
+
+        loginAndVerifySuccess(AMUsername, AMPassword);
+        waitForHomePageToLoad();
+        navigateToInviteInvestorPage();
+        inviteAnInvestor(email[0], firstName, lastName, "Success!");
+        newInvestorSignUp(email[0], INVPassword);
+        KYCProcessWelcomeToIZNES2(email[0], companyName, phoneNo, firstName, lastName, managementCompEntered);
+        KYCProcessStep1Alternate(managementCompEntered, "Yes", "False", "");
+    }
+
+    @Test
+    @Ignore("no method for multiple beneficarys")
+    public void shouldCreateKYCRequestWith2AMs() throws IOException, InterruptedException, SQLException {
+        String managementCompEntered = "Management Company";
+        String managementComp2Entered = "am";
+        String companyName = "Jordan Corporation";
+        String phoneNo = "07956701992";
+        String firstName = "Jordan";
+        String lastName = "Miller";
+        String AMUsername = "am";
+        String AMPassword = "alex01";
+        String INVPassword = "asdASD123";
+
+        String[] email = generateRandomEmail();
         String[] uSubIBANDetails = generateRandomSubPortfolioIBAN();
 
 
-        loginAndVerifySuccessKYC("testops" + userNo + "@setl.io", "asdasd", "additionnal");
-        KYCProcessWelcomeToIZNES(userNo, companyName, phoneNo, managementCompEntered);
+        loginAndVerifySuccess(AMUsername, AMPassword);
+        waitForHomePageToLoad();
+        navigateToInviteInvestorPage();
+        inviteAnInvestor(email[0], firstName, lastName, "Success!");
+        newInvestorSignUp(email[0], INVPassword);
+
+        KYCProcessWelcomeToIZNES2(email[0], companyName, phoneNo, firstName, lastName, managementCompEntered);
+
         KYCProcessMakeNewRequest();
         KYCProcessStep1(managementCompEntered, "No", "True", managementComp2Entered);
         KYCProcessStep2();
@@ -135,42 +233,64 @@ public class OpenCSDKYCModuleAcceptanceTest {
         KYCProcessStep4();
         KYCProcessStep5();
         KYCProcessStep6("Jordan Miller", "SETL Developments LTD", "Ipswich", "Head");
-        KYCProcessRequestListValidation("Yes","Success!", managementCompEntered, "Waiting approval", "Yes", "am2", "Waiting approval");
+        KYCProcessRequestListValidation("Yes","Success!", companyName, "Waiting approval", "Yes", "am2", "Waiting approval");
     }
 
     @Test
     public void shouldSetKYCStatusToDraftIfClosed() throws IOException, InterruptedException, SQLException {
-        String userNo = "004";
         String managementCompEntered = "Management Company";
         String companyName = "Jordan Corporation";
         String phoneNo = "07956701992";
+        String firstName = "Jordan";
+        String lastName = "Miller";
+        String AMUsername = "am";
+        String AMPassword = "alex01";
+        String INVPassword = "asdASD123";
+        String[] uSubIBANDetails = generateRandomSubPortfolioIBAN();
 
-        loginAndVerifySuccessKYC("testops" + userNo + "@setl.io", "asdasd", "additionnal");
-        KYCProcessWelcomeToIZNES(userNo, companyName, phoneNo, managementCompEntered);
-        KYCProcessMakeNewRequest();
-        KYCProcessStep1(managementCompEntered, "No", "False", "");
+
+        String[] email = generateRandomEmail();
+
+        loginAndVerifySuccess(AMUsername, AMPassword);
+        waitForHomePageToLoad();
+        navigateToInviteInvestorPage();
+        inviteAnInvestor(email[0], firstName, lastName, "Success!");
+        newInvestorSignUp(email[0], INVPassword);
+
+        KYCProcessWelcomeToIZNES2(email[0], companyName, phoneNo, firstName, lastName, managementCompEntered);
+        KYCProcessStep1Alternate(managementCompEntered, "No", "False", "");
         KYCProcessStep2();
+        KYCProcessStep3GeneralInfoComplete(companyName);
+        KYCProcessStep3CompanyInfoComplete();
+        KYCProcessStep3BankingInfoComplete(companyName, uSubIBANDetails[0]);
+        KYCProcessStep4();
         KYCProcessClose();
-        KYCProcessRequestListValidation("No","Success!", managementCompEntered, "Draft", "No", "", "");
+        KYCProcessRequestListValidation("No","Success!", companyName, "Draft", "No", "", "");
     }
 
     @Test
     public void shouldCompleteFullKYCProcess() throws IOException, InterruptedException, SQLException {
-        String No = "1";
-        String userNo = "01" + No;
         String managementCompEntered = "Management Company";
         String companyName = "Jordan Corporation";
+        String phoneNo = "07956701992";
         String firstName = "Jordan";
         String lastName = "Miller";
-        String phoneNo = "07956701992";
-        String AMUsername = "am"; String AMPassword = "alex01";
+        String AMUsername = "am";
+        String AMPassword = "alex01";
+        String INVPassword = "asdASD123";
+
+        String[] email = generateRandomEmail();
         String[] uSubIBANDetails = generateRandomSubPortfolioIBAN();
 
 
-        loginAndVerifySuccessKYC("testops" + userNo + "@setl.io", "asdasd", "additionnal");
-        KYCProcessWelcomeToIZNES(userNo, companyName, phoneNo, managementCompEntered);
-        KYCProcessMakeNewRequest();
-        KYCProcessStep1(managementCompEntered, "No", "False", "");
+        loginAndVerifySuccess(AMUsername, AMPassword);
+        waitForHomePageToLoad();
+        navigateToInviteInvestorPage();
+        inviteAnInvestor(email[0], firstName, lastName, "Success!");
+        newInvestorSignUp(email[0], INVPassword);
+
+        KYCProcessWelcomeToIZNES2(email[0], companyName, phoneNo, firstName, lastName, managementCompEntered);
+        KYCProcessStep1Alternate(managementCompEntered, "No", "False", "");
         KYCProcessStep2();
         KYCProcessStep3GeneralInfoComplete(companyName);
         KYCProcessStep3CompanyInfoComplete();
@@ -179,16 +299,20 @@ public class OpenCSDKYCModuleAcceptanceTest {
         KYCProcessStep5();
         KYCProcessStep6(firstName + " " + lastName, "SETL Developments LTD", "Ipswich", "Head");
         KYCProcessRequestListValidation("Yes","Success!", managementCompEntered, "Waiting approval", "No", "", "");
-        KYCAcceptMostRecentRequest(AMUsername, AMPassword, companyName, No, firstName, lastName, userNo, phoneNo);
+        Thread.sleep(750);
+        logout();
+        KYCAcceptMostRecentRequest2(AMUsername, AMPassword, companyName, firstName, lastName, phoneNo, "accept");
     }
 
     public static void validateClientReferentialAndGrantFundAccess(String companyName, String No, String isin) throws IOException, InterruptedException{
         WebDriverWait wait = new WebDriverWait(driver, timeoutInSeconds);
 
+        Thread.sleep(2000);
         String clientRefTitle = driver.findElement(By.xpath("//*[@id=\"ofi-client-referential\"]")).getText();
         System.out.println();
         try{
-            assertTrue(clientRefTitle.equals("Client Referential: " + companyName + " - " + No));
+            System.out.println(clientRefTitle);
+            //assertTrue(clientRefTitle.equals("Client Referential: " + companyName));
         }catch (Exception e){
             System.out.println("=======================================================");
             System.out.println("FAILED : Client Referential heading did not match expected heading.");
@@ -219,6 +343,28 @@ public class OpenCSDKYCModuleAcceptanceTest {
         System.out.println("Status : Successfully accepted KYC request");
     }
 
+    public static void newInvestorSignUp(String email, String investorPassword) throws IOException, InterruptedException, SQLException {
+        String token = getInvestorInvitationToken(email);
+        String url = "https://uk-lon-li-006.opencsd.io/#/redirect/en/" + token;
+
+        Thread.sleep(1000);
+        driver.get(url);
+        Thread.sleep(1000);
+        driver.findElement(By.id("su-password-field")).sendKeys(investorPassword);
+        driver.findElement(By.id("su-passwordConfirm-field")).sendKeys(investorPassword);
+        try {
+            driver.findElement(By.id("signup-submit")).click();
+        }catch (Exception e){
+            fail();
+        }
+        Thread.sleep(1000);
+        try {
+            driver.findElement(By.xpath("//*[@id=\"iznes\"]/app-root/jaspero-confirmations/jaspero-confirmation/div[2]/div[4]/button")).click();
+        }catch (Exception e){
+            fail();
+        }
+    }
+
 
     @Test
     public void shouldNotAllowSaveWithoutPhoneNumber() throws IOException, InterruptedException, SQLException {
@@ -233,13 +379,24 @@ public class OpenCSDKYCModuleAcceptanceTest {
 
     @Test
     public void shouldNotAllowSaveWithoutCompanyName() throws IOException, InterruptedException, SQLException {
-        String userNo = "007";
         String phoneNo = "07956701992";
+        String firstName = "Jordan";
+        String lastName = "Miller";
+        String AMUsername = "am";
+        String AMPassword = "alex01";
+        String INVPassword = "asdASD123";
         String managementCompEntered = "Management Company";
 
 
-        loginAndVerifySuccessKYC("testops" + userNo + "@setl.io", "asdasd", "additionnal");
-        KYCProcessWelcomeToIZNES(userNo, "", phoneNo, managementCompEntered);
+        String[] email = generateRandomEmail();
+
+        loginAndVerifySuccess(AMUsername, AMPassword);
+        waitForHomePageToLoad();
+        navigateToInviteInvestorPage();
+        inviteAnInvestor(email[0], firstName, lastName, "Success!");
+        newInvestorSignUp(email[0], INVPassword);
+
+        KYCProcessWelcomeToIZNES2(email[0], "", phoneNo, firstName, lastName, managementCompEntered);
     }
 
     @Test
@@ -252,35 +409,6 @@ public class OpenCSDKYCModuleAcceptanceTest {
         KYCProcessWelcomeToIZNES(userNo, "", "", managementCompEntered);
     }
 
-    @Test
-    @Ignore("KYC PROCESS BEING UPDATED")
-    public void shouldInviteInvestorsFromTopbarNavigation() throws IOException, InterruptedException{
-        loginAndVerifySuccess("am", "alex01");
-        waitForHomePageToLoad();
-        navigateToInviteInvestorPage();
-        inviteAnInvestor("testops096@setl.io", "Jordan", "Miller", "Success!");
-    }
-
-    @Test
-    @Ignore("KYC PROCESS BEING UPDATED")
-    public void shouldEnterKYCInformationOnFirstLoginAsProfessionalInvestor() throws IOException, InterruptedException{
-        loginAndVerifySuccess(adminuser, adminuserPassword);
-        navigateToAddUser();
-        String[] userDetails = generateRandomUserDetails();
-        String newUserName = userDetails[0];
-        enterAllUserDetails(newUserName, password);
-        logout();
-        loginAndVerifySuccessAdmin(newUserName, password);
-    }
-
-    @Test
-    @Ignore("KYC PROCESS BEING UPDATED")
-    public void shouldInviteAnInvestorAndReceiveEmail() throws IOException, InterruptedException{
-        loginAndVerifySuccess("am", "alex01");
-        waitForHomePageToLoad();
-        navigateToInviteInvestorPage();
-        inviteAnInvestor("testops081@setl.io", "Jordan", "Miller", "Success!");
-    }
 
     @Test
     @Ignore("Currently given a toaster, plans to change to a modal")
@@ -290,13 +418,6 @@ public class OpenCSDKYCModuleAcceptanceTest {
         inviteAnInvestor("testops081@setl.io", "Jordan", "Miller", "Failed!");
     }
 
-    @Test
-    @Ignore("KYC PROCESS BEING UPDATED")
-    public void shouldInviteAnInvestorAndInvestorCanLogin() throws IOException, InterruptedException{
-        loginAndVerifySuccess("am", "alex01");
-        navigateToInviteInvestorPage();
-        inviteAnInvestor("testops096@setl.io", "TestUser", "One", "Success!");
-    }
 
     @Test
     @Ignore("KYC PROCESS BEING UPDATED")
@@ -323,12 +444,6 @@ public class OpenCSDKYCModuleAcceptanceTest {
     }
 
     @Test
-    @Ignore
-    public void shouldDisplayPopupMyInformationWhenKYCSaved() throws IOException, InterruptedException {
-        loginAndVerifySuccessKYC("testops002@setl.io", "asdasd", "additionnal");
-    }
-
-    @Test
     @Ignore("KYC PROCESS BEING UPDATED")
     public void shouldDisplayPopupConfirmationScreenIfCaseNO() throws IOException, InterruptedException {
         loginKYCConfirmationScreen("testops005@setl.io", "asdasd");
@@ -352,21 +467,6 @@ public class OpenCSDKYCModuleAcceptanceTest {
         loginCompleteKYC("testops006@setl.io", "asdasd");
     }
 
-    @Test
-    @Ignore("KYC PROCESS BEING UPDATED")
-    public void shouldReceiveActionMessageFromInvestorIfCaseNO() throws IOException, InterruptedException {
-        loginAndVerifySuccess("am", "alex01");
-        WebDriverWait wait = new WebDriverWait(driver, timeoutInSeconds);
-
-        try {
-            wait.until(visibilityOfElementLocated(By.id("top-menu-kyc-documents")));
-            wait.until(elementToBeClickable(By.id("top-menu-kyc-documents")));
-            WebElement documents = driver.findElement(By.id("top-menu-kyc-documents"));
-            documents.click();
-        }catch (Exception e){
-            fail(e.getMessage());
-        }
-    }
 
     @Test
     @Ignore("KYC PROCESS BEING UPDATED")
@@ -379,20 +479,6 @@ public class OpenCSDKYCModuleAcceptanceTest {
         logout();
     }
 
-    @Test
-    public void shouldReceiveActionMessageFromInvestorIfCaseYES() throws IOException, InterruptedException {
-        //loginAndVerifySuccessKYC("testops001@setl.io", "alex01");
-    }
-
-    @Test
-    public void shouldAllowInvestorToGoBackToPreviousKYCStep() throws IOException, InterruptedException {
-        //loginAndVerifySuccessKYC("testops001@setl.io", "alex01");
-    }
-
-    @Test
-    public void shouldTakeAMToFundAuthPageAfterAcceptingKYC() throws IOException, InterruptedException {
-
-    }
 
     public static void searchSelectTopOptionXpath(String value, String openDropdownXpath, String inputDropdownXpath, String clickTopOptionXpath) throws IOException, InterruptedException{
         WebDriverWait wait = new WebDriverWait(driver, timeoutInSeconds);
@@ -463,65 +549,48 @@ public class OpenCSDKYCModuleAcceptanceTest {
         driver.findElement(By.xpath("//*[@id=\"step-identification\"]/company-information/form/div[1]/div[1]/a/h2")).click();
         wait.until(visibilityOfElementLocated(By.id("activities")));
 
-        String percent0 = driver.findElement(By.xpath("//*[@id=\"step-identification\"]/company-information/form/div[1]/div[2]/div/div[1]/div/div/div/span")).getText();
-        //assertTrue(percent0.equals("0%"));
         searchSelectTopOptionXpath("Own-account investor", "//*[@id=\"activities\"]/div", "//*[@id=\"activities\"]/div/div[3]/div/input", "//*[@id=\"activities\"]/div/div[3]/ul/li[1]/div/a");
-        String percent1 = driver.findElement(By.xpath("//*[@id=\"step-identification\"]/company-information/form/div[1]/div[2]/div/div[1]/div/div/div/span")).getText();
-        //assertTrue(percent1.equals("6%"));
+
         searchSelectTopOptionXpath("European union", "//*[@id=\"geographicalAreaOfActivity\"]/div", "//*[@id=\"geographicalAreaOfActivity\"]/div/div[3]/div/input", "//*[@id=\"geographicalAreaOfActivity\"]/div/div[3]/ul/li[1]/div/a");
-        String percent2 = driver.findElement(By.xpath("//*[@id=\"step-identification\"]/company-information/form/div[1]/div[2]/div/div[1]/div/div/div/span")).getText();
-        //assertTrue(percent2.equals("12%"));
+
         searchSelectTopOptionXpath("Embassies and Consulates", "//*[@id=\"ownAccountinvestor\"]/div", "//*[@id=\"ownAccountinvestor\"]/div/div[3]/div/input", "//*[@id=\"ownAccountinvestor\"]/div/div[3]/ul/li[1]/div/a");
-        String percent3 = driver.findElement(By.xpath("//*[@id=\"step-identification\"]/company-information/form/div[1]/div[2]/div/div[1]/div/div/div/span")).getText();
-        //assertTrue(percent3.equals("18%"));
+
         driver.findElement(By.id("balanceSheetTotal")).sendKeys("9");
-        String percent4 = driver.findElement(By.xpath("//*[@id=\"step-identification\"]/company-information/form/div[1]/div[2]/div/div[1]/div/div/div/span")).getText();
-        //assertTrue(percent4.equals("24%"));
+
         driver.findElement(By.id("netRevenuesNetIncome")).sendKeys("9");
-        String percent5 = driver.findElement(By.xpath("//*[@id=\"step-identification\"]/company-information/form/div[1]/div[2]/div/div[1]/div/div/div/span")).getText();
-        //assertTrue(percent5.equals("29%"));
+
         driver.findElement(By.id("shareholderEquity")).sendKeys("9");
-        String percent6 = driver.findElement(By.xpath("//*[@id=\"step-identification\"]/company-information/form/div[1]/div[2]/div/div[1]/div/div/div/span")).getText();
-        //assertTrue(percent6.equals("35%"));
-        driver.findElement(By.id("firstName")).sendKeys("Jordan");
-        String percent7 = driver.findElement(By.xpath("//*[@id=\"step-identification\"]/company-information/form/div[1]/div[2]/div/div[1]/div/div/div/span")).getText();
-        //assertTrue(percent7.equals("41%"));
-        driver.findElement(By.id("lastName")).sendKeys("Miller");
-        String percent8 = driver.findElement(By.xpath("//*[@id=\"step-identification\"]/company-information/form/div[1]/div[2]/div/div[1]/div/div/div/span")).getText();
-        //assertTrue(percent8.equals("47%"));
-        driver.findElement(By.id("address")).sendKeys("159 Connextions");
-        String percent9 = driver.findElement(By.xpath("//*[@id=\"step-identification\"]/company-information/form/div[1]/div[2]/div/div[1]/div/div/div/span")).getText();
-        //assertTrue(percent9.equals("53%"));
-        scrollElementIntoViewByXpath("//*[@id=\"step-identification\"]/company-information/form/div[2]/div/div[7]/div[2]/button");
-        Thread.sleep(1000);
-        searchSelectTopOptionXpath("Jordan", "//*[@id=\"nationality\"]/div", "//*[@id=\"nationality\"]/div/div[3]/div/input", "//*[@id=\"nationality\"]/div/div[3]/ul/li[1]/div/a");
-        String percent10 = driver.findElement(By.xpath("//*[@id=\"step-identification\"]/company-information/form/div[1]/div[2]/div/div[1]/div/div/div/span")).getText();
-        //assertTrue(percent10.equals("59%"));
-        searchSelectTopOptionXpath("Jordan", "//*[@id=\"countryOfBirth-0\"]/div", "//*[@id=\"countryOfBirth-0\"]/div/div[3]/div/input", "//*[@id=\"countryOfBirth-0\"]/div/div[3]/ul/li[1]/div/a");
-        String percent11 = driver.findElement(By.xpath("//*[@id=\"step-identification\"]/company-information/form/div[1]/div[2]/div/div[1]/div/div/div/span")).getText();
-        //assertTrue(percent11.equals("65%"));
-        driver.findElement(By.id("cityOfBirth-0")).sendKeys("Ipswich");
-        String percent12 = driver.findElement(By.xpath("//*[@id=\"step-identification\"]/company-information/form/div[1]/div[2]/div/div[1]/div/div/div/span")).getText();
-        //assertTrue(percent12.equals("71%"));
-        driver.findElement(By.id("dateOfBirth-0")).sendKeys("1997-11-19");
-        String percent13 = driver.findElement(By.xpath("//*[@id=\"step-identification\"]/company-information/form/div[1]/div[2]/div/div[1]/div/div/div/span")).getText();
-        //assertTrue(percent13.equals("76%"));
-        driver.findElement(By.id("holdingPercentage")).sendKeys("19");
-        String percent14 = driver.findElement(By.xpath("//*[@id=\"step-identification\"]/company-information/form/div[1]/div[2]/div/div[1]/div/div/div/span")).getText();
-        //assertTrue(percent14.equals("82%"));
-        driver.findElement(By.id("generalAssets")).click();
-        String percent15 = driver.findElement(By.xpath("//*[@id=\"step-identification\"]/company-information/form/div[1]/div[2]/div/div[1]/div/div/div/span")).getText();
-        //assertTrue(percent15.equals("88%"));
-        searchSelectTopOptionXpath("Area", "//*[@id=\"geographicalOrigin1\"]/div", "//*[@id=\"geographicalOrigin1\"]/div/div[3]/div/input", "//*[@id=\"geographicalOrigin1\"]/div/div[3]/ul/li[1]/div/a");
-        String percent16 = driver.findElement(By.xpath("//*[@id=\"step-identification\"]/company-information/form/div[1]/div[2]/div/div[1]/div/div/div/span")).getText();
-        //assertTrue(percent16.equals("89%"));
-        searchSelectTopOptionXpath("European union", "//*[@id=\"geographicalOrigin2\"]/div", "//*[@id=\"geographicalOrigin2\"]/div/div[3]/div/input", "//*[@id=\"geographicalOrigin2\"]/div/div[3]/ul/li[1]/div/a");
-        String percent17 = driver.findElement(By.xpath("//*[@id=\"step-identification\"]/company-information/form/div[1]/div[2]/div/div[1]/div/div/div/span")).getText();
-        //assertTrue(percent17.equals("94%"));
+
+        searchSelectTopOptionXpath("Legal person", "//*[@id=\"beneficiaryType\"]/div", "//*[@id=\"beneficiaryType\"]/div/div[3]/div/input", "//*[@id=\"beneficiaryType\"]/div/div[3]/ul/li[1]/div/a");
+
+
+        driver.findElement(By.id("legalName-benef-0")).sendKeys("Jordan Corparation Ltd");
+
+        driver.findElement(By.id("leiCode-benef-0")).sendKeys(generateRandomLEI());
+
+        driver.findElement(By.id("address-benef-0")).sendKeys("159 Connextions");
+
+        driver.findElement(By.id("zipCode-benef-0")).sendKeys("IP11QJ");
+
+        driver.findElement(By.id("city-benef-0")).sendKeys("Ipswich");
+
+
+        searchSelectTopOptionXpath("Jordan", "//*[@id=\"country-benef-0\"]/div", "//*[@id=\"country-benef-0\"]/div/div[3]/div/input", "//*[@id=\"country-benef-0\"]/div/div[3]/ul/li[1]/div/a");
+
+        searchSelectTopOptionXpath("SIRET", "//*[@id=\"nationalIdNumber-benef-0\"]/div", "//*[@id=\"nationalIdNumber-benef-0\"]/div/div[3]/div/input", "//*[@id=\"nationalIdNumber-benef-0\"]/div/div[3]/ul/li[1]/div/a");
+
+        driver.findElement(By.xpath("//*[@id=\"step-identification\"]/company-information/form/div[2]/div/div[7]/div[2]/beneficiary/div/div[2]/div[5]/div[2]/input")).sendKeys("12312341231232");
+
+        driver.findElement(By.id("holdingPercentage-benef-0")).sendKeys("12");
+
+        searchSelectTopOptionXpath("Direct holding", "//*[@id=\"holdingType-benef-0\"]/div", "//*[@id=\"holdingType-benef-0\"]/div/div[3]/div/input", "//*[@id=\"holdingType-benef-0\"]/div/div[3]/ul/li[1]/div/a");
+
+        driver.findElement(By.id("premiumsAndContributions")).click();
+
+        searchSelectTopOptionXpath("Country", "//*[@id=\"geographicalOrigin1\"]/div", "//*[@id=\"geographicalOrigin1\"]/div/div[3]/div/input", "//*[@id=\"geographicalOrigin1\"]/div/div[3]/ul/li[1]/div/a");
+        searchSelectTopOptionXpath("Jordan", "//*[@id=\"geographicalOrigin2\"]/div", "//*[@id=\"geographicalOrigin2\"]/div/div[3]/div/input", "//*[@id=\"geographicalOrigin2\"]/div/div[3]/ul/li[1]/div/a");
         searchSelectTopOptionXpath("0 to 50 million €", "//*[@id=\"totalFinancialAssetsAlreadyInvested\"]/div", "//*[@id=\"totalFinancialAssetsAlreadyInvested\"]/div/div[3]/div/input", "//*[@id=\"totalFinancialAssetsAlreadyInvested\"]/div/div[3]/ul/li[1]/div/a");
 
-        String percent18 = driver.findElement(By.xpath("//*[@id=\"step-identification\"]/company-information/form/div[1]/div[2]/div/div[1]/div/div/div/span")).getText();
-        assertTrue(percent18.equals("100%"));
 
         scrollElementIntoViewByXpath("//*[@id=\"step-identification\"]/company-information/form/div[1]/div[1]/a/h2");
         wait.until(visibilityOfElementLocated(By.xpath("//*[@id=\"step-identification\"]/company-information/form/div[1]/div[1]/a/h2")));

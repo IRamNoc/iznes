@@ -62,7 +62,7 @@ public class OpenCSD1UmbrellaFundsAcceptanceTest {
     }
 
     @Test
-    public void shouldCreateUmbrellaFund() throws InterruptedException, SQLException {
+    public void shouldCreateUmbrellaFund() throws InterruptedException, SQLException, IOException {
         loginAndVerifySuccess("am", "alex01");
         waitForHomePageToLoad();
         navigateToDropdown("menu-my-products");
@@ -86,7 +86,7 @@ public class OpenCSD1UmbrellaFundsAcceptanceTest {
     }
 
     @Test
-    public void shouldUpdateUmbrellaFund() throws InterruptedException, SQLException {
+    public void shouldUpdateUmbrellaFund() throws InterruptedException, SQLException, IOException {
         loginAndVerifySuccess("am", "alex01");
         waitForHomePageToLoad();
         navigateToDropdown("menu-my-products");
@@ -176,7 +176,7 @@ public class OpenCSD1UmbrellaFundsAcceptanceTest {
 
     @Test
     @Ignore("need to ensure that we have the correct Umbrella fund details")
-    public void shouldCreateAnUmbrellaFundAndCheckDataBase() throws InterruptedException, SQLException {
+    public void shouldCreateAnUmbrellaFundAndCheckDataBase() throws InterruptedException, SQLException, IOException {
         loginAndVerifySuccess("am", "alex01");
         navigateToDropdown("menu-my-products");
         navigateToPageByID("menu-product-home");
@@ -376,7 +376,7 @@ public class OpenCSD1UmbrellaFundsAcceptanceTest {
     }
 
     @Test
-    public void shouldEditAndSaveDraft() throws InterruptedException, SQLException {
+    public void shouldEditAndSaveDraft() throws InterruptedException, SQLException, IOException {
         loginAndVerifySuccess("am", "alex01");
         navigateToDropdown("menu-my-products");
         navigateToPageByID("menu-product-home");
@@ -410,7 +410,7 @@ public class OpenCSD1UmbrellaFundsAcceptanceTest {
         validateDatabaseUmbrellaFundExists(1, uFundDetails[0]);
     }
     @Test
-    public void shouldDuplicateUmbrellaFund() throws InterruptedException, SQLException {
+    public void shouldDuplicateUmbrellaFund() throws InterruptedException, SQLException, IOException {
         loginAndVerifySuccess("am", "alex01");
         navigateToDropdown("menu-my-products");
         navigateToPageByID("menu-product-home");
@@ -467,7 +467,7 @@ public class OpenCSD1UmbrellaFundsAcceptanceTest {
 
     }
     @Test
-    public void shouldDuplicateFromExisting() throws SQLException, InterruptedException {
+    public void shouldDuplicateFromExisting() throws SQLException, InterruptedException, IOException {
         loginAndVerifySuccess("am", "alex01");
         navigateToDropdown("menu-my-products");
         navigateToPageByID("menu-product-home");
@@ -517,7 +517,7 @@ public class OpenCSD1UmbrellaFundsAcceptanceTest {
         assertTrue(duplicateUFName.equals(dupFundDetails[0] + uFundDetails[0]));
     }
     @Test
-    public void shouldFillAllDetailsAndDuplicateAndAssertDetails() throws SQLException, InterruptedException {
+    public void shouldFillAllDetailsAndDuplicateAndAssertDetails() throws SQLException, InterruptedException, IOException {
         loginAndVerifySuccess("am", "alex01");
         navigateToDropdown("menu-my-products");
         navigateToPageByID("menu-product-home");

@@ -14,6 +14,8 @@ import org.openqa.selenium.By;
 import org.openqa.selenium.support.ui.WebDriverWait;
 
 
+import java.io.IOException;
+
 import static com.setl.UI.common.SETLUIHelpers.AccountsDetailsHelper.loginAndVerifySuccess;
 
 import static com.setl.UI.common.SETLUIHelpers.AccountsDetailsHelper.navigateToDropdown;
@@ -69,7 +71,7 @@ public class OpenCSDSprint4AcceptanceTest {
 
     @Test
     @Ignore("Plans to revisit")
-    public void shouldAssertThatFundsHas2ExpandableFields() throws InterruptedException {
+    public void shouldAssertThatFundsHas2ExpandableFields() throws InterruptedException, IOException {
         WebDriverWait wait = new WebDriverWait(driver,timeoutInSeconds);
         loginAndVerifySuccess("am", "alex01");
         waitForHomePageToLoad();
@@ -87,7 +89,7 @@ public class OpenCSDSprint4AcceptanceTest {
         verifyFundOptInfoPageContents();
     }
 
-    private int createFund() throws InterruptedException {
+    private int createFund() throws InterruptedException, IOException {
 
         selectAddUmbrellaFund();
         String [] umbFundDetails = generateRandomUmbrellaFundsDetails();
