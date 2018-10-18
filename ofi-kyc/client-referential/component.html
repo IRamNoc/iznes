@@ -2,9 +2,9 @@
     <!-- Breadcrumbs. -->
     <div class="header-breadcrumbs">
         <h1 id="ofi-client-referential"><i class="fa fa-users"></i>
-            {{'Client Referential: ' | translate}}
-            <span *ngIf="kycId == ''">{{'All Clients' | translate}}</span>
-            <span *ngIf="kycId != '' && !!clients[kycId]">{{clients[kycId].companyName}} - {{clients[kycId].clientReference}}</span>
+            {{'Client Referential' | translate}}
+            <span *ngIf="kycId == ''">: {{'All Clients' | translate}}</span>
+            <span *ngIf="kycId != '' && !!clients[kycId]">: {{clients[kycId].companyName}} - {{clients[kycId].clientReference}}</span>
         </h1>
     </div>
 
