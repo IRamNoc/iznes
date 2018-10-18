@@ -13,6 +13,7 @@ import org.openqa.selenium.JavascriptExecutor;
 
 import java.io.IOException;
 
+import static SETLAPIHelpers.DatabaseHelper.setDBTwoFAOff;
 import static com.setl.UI.common.SETLUIHelpers.LoginAndNavigationHelper.loginAndVerifySuccess;
 import static com.setl.UI.common.SETLUIHelpers.LoginAndNavigationHelper.logout;
 import static com.setl.UI.common.SETLUIHelpers.SetUp.driver;
@@ -54,6 +55,7 @@ public class OpenCSDMessageModuleAcceptanceTest {
     public void setUp() throws Exception {
         testSetUp();
         screenshotRule.setDriver(driver);
+        setDBTwoFAOff();
     }
 
     @Test

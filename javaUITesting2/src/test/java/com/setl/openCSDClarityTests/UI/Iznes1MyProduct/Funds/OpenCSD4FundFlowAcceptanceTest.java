@@ -19,6 +19,7 @@ import java.sql.SQLException;
 
 import static SETLAPIHelpers.DatabaseHelper.setDBToProdOff;
 import static SETLAPIHelpers.DatabaseHelper.setDBToProdOn;
+import static SETLAPIHelpers.DatabaseHelper.setDBTwoFAOff;
 import static com.setl.UI.common.SETLUIHelpers.FundsDetailsHelper.*;
 import static com.setl.UI.common.SETLUIHelpers.PageHelper.waitForNewShareButton;
 import static com.setl.UI.common.SETLUIHelpers.SetUp.*;
@@ -48,6 +49,7 @@ public class OpenCSD4FundFlowAcceptanceTest {
         testSetUp();
         screenshotRule.setDriver(driver);
         setDBToProdOff();
+        setDBTwoFAOff();
     }
 
     @After

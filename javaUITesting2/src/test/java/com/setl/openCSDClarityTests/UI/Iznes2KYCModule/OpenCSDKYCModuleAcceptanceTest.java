@@ -18,6 +18,7 @@ import java.sql.SQLException;
 import static SETLAPIHelpers.DatabaseHelper.setDBToProdOff;
 import static SETLAPIHelpers.DatabaseHelper.setDBToProdOn;
 
+import static SETLAPIHelpers.DatabaseHelper.setDBTwoFAOff;
 import static com.setl.UI.common.SETLUIHelpers.FundsDetailsHelper.generateRandomEmail;
 import static com.setl.UI.common.SETLUIHelpers.FundsDetailsHelper.generateRandomLEI;
 import static com.setl.UI.common.SETLUIHelpers.FundsDetailsHelper.generateRandomSubPortfolioIBAN;
@@ -65,6 +66,7 @@ public class OpenCSDKYCModuleAcceptanceTest {
         testSetUp();
         screenshotRule.setDriver(driver);
         setDBToProdOff();
+        setDBTwoFAOff();
     }
 
     @After

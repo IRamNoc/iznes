@@ -16,6 +16,7 @@ import org.openqa.selenium.JavascriptExecutor;
 
 import java.sql.SQLException;
 
+import static SETLAPIHelpers.DatabaseHelper.setDBTwoFAOff;
 import static com.setl.UI.common.SETLUIHelpers.AdministrationModuleHelper.*;
 import static com.setl.UI.common.SETLUIHelpers.LoginAndNavigationHelper.loginAndVerifySuccess;
 import static com.setl.UI.common.SETLUIHelpers.LoginAndNavigationHelper.navigateToDropdown;
@@ -55,6 +56,7 @@ public class OpenCSDUsersSubModuleTest {
     public void setUp() throws Exception {
         testSetUp();
         screenshotRule.setDriver(driver);
+        setDBTwoFAOff();
     }
 
     @Test

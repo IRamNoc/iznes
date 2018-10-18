@@ -19,6 +19,7 @@ import org.openqa.selenium.support.ui.WebDriverWait;
 import java.io.IOException;
 import java.sql.*;
 
+import static SETLAPIHelpers.DatabaseHelper.setDBTwoFAOff;
 import static SETLAPIHelpers.DatabaseHelper.validateDatabaseUmbrellaFundExists;
 import static com.setl.UI.common.SETLUIHelpers.FundsDetailsHelper.*;
 
@@ -59,6 +60,7 @@ public class OpenCSD1UmbrellaFundsAcceptanceTest {
     public void setUp() throws Exception {
         testSetUp();
         screenshotRule.setDriver(driver);
+        setDBTwoFAOff();
     }
 
     @Test
