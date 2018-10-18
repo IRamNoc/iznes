@@ -32,10 +32,6 @@ setl-permission-grid {
     overflow: visible;
 }
 
-.permission-grid tr:hover {
-    background-color: #eee;
-}
-
 div.option-wrap {
     position: relative;
     display: inline-block;
