@@ -22,6 +22,14 @@
                 text-align: right;
             }
         }
+        &.fixed {
+            position: fixed;
+            top: 75px;
+            z-index: 1;
+            border-right: solid 1px #ccc;
+            border-left: solid 1px #ccc;
+            margin-left: -1px;
+        }
     }
 
     .datagrid-body {
@@ -107,7 +115,7 @@ app-wfe .datagrid .datagrid-body .datagrid-row .datagrid-cell {
 }
 
 .datagrid .datagrid-column .datagrid-column-title {
-    font-weight: normal;
+    font-weight: 600;
 }
 
 .additionalInfos {
