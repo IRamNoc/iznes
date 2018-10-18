@@ -71,6 +71,16 @@ public class FundsDetailsHelper extends LoginAndNavigationHelper {
         return louCode + reserved + entityId + checksum;
     }
 
+    public static String generateRandomGIIN()
+    {
+        String p1 = randomAlphanumeric(6).toUpperCase();
+        String p2 = randomAlphanumeric(5).toUpperCase();
+        String p3 = randomAlphabetic(2).toUpperCase();
+        String p4 = randomNumeric(3);
+
+        return p1 + "." + p2 + "." + p3 + "." + p4;
+    }
+
     public static String[] generateRandomSubPortfolioName() {
         String str = randomAlphabetic(7);
         String b = "JM Portfolio | ";
@@ -115,26 +125,36 @@ public class FundsDetailsHelper extends LoginAndNavigationHelper {
         //Investment Manager Selection
         wait.until(visibilityOfElementLocated(By.id("uf_investmentAdvisor")));
         wait.until(elementToBeClickable(By.id("uf_investmentAdvisor")));
-        driver.findElement(By.id("uf_investmentAdvisor")).click();
-        //Selecting from DropDown
-        wait.until(visibilityOfElementLocated(By.xpath("/html/body/app-root/app-basic-layout/div/ng-sidebar-container/div/div/div/main/div[1]/div/app-ofi-am-product-umbrella-fund/clr-tabs/clr-tab/clr-tab-content/form/section/div[1]/div[2]/div[10]/ng-select/div/div[2]/ul/li[1]")));
-        wait.until(elementToBeClickable(By.xpath("/html/body/app-root/app-basic-layout/div/ng-sidebar-container/div/div/div/main/div[1]/div/app-ofi-am-product-umbrella-fund/clr-tabs/clr-tab/clr-tab-content/form/section/div[1]/div[2]/div[10]/ng-select/div/div[2]/ul/li[1]")));
-        driver.findElement(By.xpath("/html/body/app-root/app-basic-layout/div/ng-sidebar-container/div/div/div/main/div[1]/div/app-ofi-am-product-umbrella-fund/clr-tabs/clr-tab/clr-tab-content/form/section/div[1]/div[2]/div[10]/ng-select/div/div[2]/ul/li[1]")).click();
+        driver.findElement(By.id("uf_investmentAdvisor")).sendKeys("Test Investment Advisor");
+
         //Paying Agent
         scrollElementIntoViewById("uf_payingAgent");
         wait.until(visibilityOfElementLocated(By.id("uf_payingAgent")));
         wait.until(elementToBeClickable(By.id("uf_payingAgent")));
         driver.findElement(By.id("uf_payingAgent")).click();
-        //Selecting from DropDown
-        wait.until(visibilityOfElementLocated(By.xpath("/html/body/app-root/app-basic-layout/div/ng-sidebar-container/div/div/div/main/div[1]/div/app-ofi-am-product-umbrella-fund/clr-tabs/clr-tab/clr-tab-content/form/section/div[1]/div[2]/div[11]/ng-select/div/div[2]/ul/li[1]")));
-        wait.until(elementToBeClickable(By.xpath("/html/body/app-root/app-basic-layout/div/ng-sidebar-container/div/div/div/main/div[1]/div/app-ofi-am-product-umbrella-fund/clr-tabs/clr-tab/clr-tab-content/form/section/div[1]/div[2]/div[11]/ng-select/div/div[2]/ul/li[1]")));
-        driver.findElement(By.xpath("/html/body/app-root/app-basic-layout/div/ng-sidebar-container/div/div/div/main/div[1]/div/app-ofi-am-product-umbrella-fund/clr-tabs/clr-tab/clr-tab-content/form/section/div[1]/div[2]/div[11]/ng-select/div/div[2]/ul/li[1]")).click();
+
+        wait.until(visibilityOfElementLocated(By.xpath("//*[@id=\"uf_payingAgent\"]/div/div[2]/ul/li[1]/div/a/div")));
+        wait.until(elementToBeClickable(By.xpath("//*[@id=\"uf_payingAgent\"]/div/div[2]/ul/li[1]/div/a/div")));
+        driver.findElement(By.xpath("//*[@id=\"uf_payingAgent\"]/div/div[2]/ul/li[1]/div/a/div")).click();
+
         //Selecting Optional Information Header
-        scrollElementIntoViewByCss("div.well:nth-child(2) > div:nth-child(1) > div:nth-child(1) > a:nth-child(1) > h2:nth-child(2)");
-        wait.until(visibilityOfElementLocated(By.cssSelector("div.well:nth-child(2) > div:nth-child(1) > div:nth-child(1) > a:nth-child(1) > h2:nth-child(2)")));
-        wait.until(elementToBeClickable(By.cssSelector("div.well:nth-child(2) > div:nth-child(1) > div:nth-child(1) > a:nth-child(1) > h2:nth-child(2)")));
-        driver.findElement(By.cssSelector("div.well:nth-child(2) > div:nth-child(1) > div:nth-child(1) > a:nth-child(1) > h2:nth-child(2)")).click();
+        String optionalInfoCss = "#clr-tab-content-3 > form > section > div:nth-child(2) > div.row.panel-header > div > a > h2";
+        String optionalInfoXpath = "//*[@id=\"clr-tab-content-1\"]/form/section/div[2]/div[1]/div/a/i";
+        //scrollElementIntoViewByXpath(optionalInfoXpath);
+        wait.until(visibilityOfElementLocated(By.xpath(optionalInfoXpath)));
+        wait.until(elementToBeClickable(By.xpath(optionalInfoXpath)));
+        driver.findElement(By.xpath(optionalInfoXpath)).click();
+
+        //GIIN
+        String giinId = "uf_giin";
+        wait.until(visibilityOfElementLocated(By.id(giinId)));
+        wait.until(elementToBeClickable(By.id(giinId)));
+        WebElement giin = driver.findElement(By.id(giinId));
+        giin.clear();
+        giin.sendKeys(generateRandomGIIN());
+
         //Delegated Management Company
+        String delegatedMgtCompanyXpath = "//*[@id=\"uf_delegatedManagementCompany\"]/div/div[2]/span";
         scrollElementIntoViewByXpath("/html/body/app-root/app-basic-layout/div/ng-sidebar-container/div/div/div/main/div/div/app-ofi-am-product-umbrella-fund/clr-tabs/clr-tab/clr-tab-content/form/section/div[2]/div[2]/div[2]/ng-select/div");
         wait.until(visibilityOfElementLocated(By.xpath("/html/body/app-root/app-basic-layout/div/ng-sidebar-container/div/div/div/main/div/div/app-ofi-am-product-umbrella-fund/clr-tabs/clr-tab/clr-tab-content/form/section/div[2]/div[2]/div[2]/ng-select/div")));
         wait.until(elementToBeClickable(By.xpath("/html/body/app-root/app-basic-layout/div/ng-sidebar-container/div/div/div/main/div/div/app-ofi-am-product-umbrella-fund/clr-tabs/clr-tab/clr-tab-content/form/section/div[2]/div[2]/div[2]/ng-select/div")));
@@ -247,6 +267,9 @@ public class FundsDetailsHelper extends LoginAndNavigationHelper {
         wait.until(visibilityOfElementLocated(By.id("uf_lei")));
         driver.findElement(By.id("uf_lei")).sendKeys(lei);
 
+        driver.findElement(By.id("uf_registerOfficeAddressZipCode")).sendKeys("ZIP");
+        driver.findElement(By.id("uf_registerOfficeAddressCity")).sendKeys("City");
+
         selectTopDropdown("uf_managementCompany");
         selectTopDropdown("uf_custodian");
         selectTopDropdown("uf_fundAdministrator");
@@ -288,6 +311,15 @@ public class FundsDetailsHelper extends LoginAndNavigationHelper {
         }
     }
 
+    public static void updateDraftUmbrellaFund() throws InterruptedException {
+        try {
+            scrollElementIntoViewById("mcBtnSubmitFormDraft");
+            driver.findElement(By.id("mcBtnSubmitFormDraft")).click();
+        } catch (Exception e) {
+            fail("Update Draft button was not clicked. " + e.getMessage());
+        }
+    }
+
     public static void selectTopDropdown(String dropdownID) throws InterruptedException {
         try {
             driver.findElement(By.xpath("//*[@id='" + dropdownID + "']/div")).click();
@@ -322,7 +354,8 @@ public class FundsDetailsHelper extends LoginAndNavigationHelper {
         wait.until(visibilityOfElementLocated(By.xpath("//*[@id=\'" + dropdownID + "\']/div")));
         wait.until(elementToBeClickable(driver.findElement(By.xpath("//*[@id=\'" + dropdownID + "\']/div"))));
 
-        driver.findElement(By.xpath("//*[@id=\"uf_domicile\"]/div/div[3]/div/input")).sendKeys(search);
+        //driver.findElement(By.xpath("//*[@id=\"uf_domicile\"]/div/div[3]/div/input")).sendKeys(search);
+        driver.findElement(By.xpath("//*[@id=\"" +dropdownID + "\"]/div/div[3]/div/input")).sendKeys(search);
         try {
             driver.findElement(By.xpath("//*[@id=\'" + dropdownID + "\']/div/div[3]/ul/li[1]/div/a")).click();
         } catch (Exception e) {
