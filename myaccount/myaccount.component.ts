@@ -16,7 +16,6 @@ import { passwordValidator } from '@setl/utils/helper/validators/password.direct
 
 // Internal
 import { Subscription } from 'rxjs/Subscription';
-
 import { MyUserService } from '@setl/core-req-services';
 
 import {
@@ -451,6 +450,7 @@ export class SetlMyAccountComponent implements OnDestroy, OnInit {
 
         // Set changePassword form
         const validator = this.appConfig.production ? passwordValidator : null;
+
         this.changePassForm = new FormGroup(
             {
                 oldPassword: new FormControl(
@@ -471,7 +471,7 @@ export class SetlMyAccountComponent implements OnDestroy, OnInit {
                     ]),
                 ),
             },
-            this.passwordValidator);
+            this.passwordCheck);
 
         this.oldPassword = this.changePassForm.controls['oldPassword'];
         this.password = this.changePassForm.controls['password'];
@@ -514,10 +514,22 @@ export class SetlMyAccountComponent implements OnDestroy, OnInit {
         }
     }
 
-    passwordValidator(g: FormGroup) {
-        const oldNew = g.get('oldPassword').value !== g.get('password').value ? null : { oldNew: true };
-        const mismatch = g.get('password').value === g.get('passwordConfirm').value ? null : { mismatch: true };
-        return (oldNew) ? oldNew : mismatch;
+    passwordCheck(g: FormGroup) {
+        const oldPasswordValue = g.get('oldPassword').value;
+        const passwordValue = g.get('password').value;
+        const passwordConfirmValue = g.get('passwordConfirm').value;
+
+        if (oldPasswordValue && passwordValue) {
+            const errors = g.controls.password.errors;
+            g.controls.password.setErrors(
+                oldPasswordValue !== passwordValue ? errors : Object.assign({}, errors, { oldNew: true }));
+        }
+
+        if (passwordValue && passwordConfirmValue) {
+            g.controls.passwordConfirm.setErrors(passwordValue === passwordConfirmValue ? null : { mismatch: true });
+        }
+
+        return null;
     }
 
     toggleShowPasswords() {
@@ -639,24 +651,5 @@ export class SetlMyAccountComponent implements OnDestroy, OnInit {
             },
             500,
         );
-    }
-
-    hasError(path, error?) {
-        const formControl: AbstractControl = path ? this.changePassForm.get(path) : this.changePassForm;
-
-        if (!error) {
-            return formControl.errors;
-        }
-        if (error !== 'required' && formControl.hasError('required')) {
-            return false;
-        }
-
-        return formControl.touched && (error ? formControl.hasError(error) : formControl.errors);
-    }
-
-    isTouched(path) {
-        const formControl: AbstractControl = this.changePassForm.get(path);
-
-        return formControl.touched;
     }
 }

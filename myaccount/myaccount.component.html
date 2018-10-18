@@ -153,11 +153,11 @@
                                             Password
                                         </label>
                                         <input [type]="(showPasswords === true) ? 'text' : 'password'"
-                                               id="cpOldPassword" [formControl]="oldPassword"
-                                               [class.error]="hasError('oldPassword')"
+                                               id="cpOldPassword" 
+                                               [formControl]="oldPassword"
                                                size="45">
 
-                                        <div *ngIf="hasError('oldPassword', 'required')" class="field-error">
+                                        <div *ngIf="oldPassword.hasError('required')" class="field-error">
                                             {{'Field is required' | translate}}
                                         </div>
 
@@ -173,24 +173,26 @@
 
                                 <!-- New password -->
                                 <div class="form-group">
-                                    <div class="col-xs-11 no-gutter">
-                                        <label for="cpPassword" class="required-field" mltag="txt_password">Password
-                                        </label>
+                                    <div class="col-xs-11 no-gutter">                                       
+                                        <label for="cpPassword" class="required-field"><app-password-tooltip *ngIf="appConfig.production"></app-password-tooltip>{{'Password' | translate}}
+                                        </label>                                    
+
                                         <input [type]="(showPasswords === true) ? 'text' : 'password'"
-                                               [class.error]="hasError('password')"
-                                               id="cpPassword" [formControl]="password" size="45">
+                                               id="cpPassword" 
+                                               [formControl]="password" 
+                                               size="45">
 
-
-                                        <div *ngIf="hasError('', 'oldNew') && isTouched('oldPassword') && isTouched('password') && !hasError('password', 'required')"
-                                             class="field-error">
+                                        <div *ngIf="password.hasError('oldNew') && password.touched && changePassForm.controls.oldPassword.touched && !password.hasError('required')"
+                                            class="field-error">
                                             {{'The new password should not be the same as the old' | translate}}
                                         </div>
-                                        <div *ngIf="hasError('password', 'required')"
+                                
+                                        <div *ngIf="password.hasError('required')"
                                              class="field-error">
                                             {{'Field is required' | translate}}
                                         </div>
-                                        <div *ngIf="hasError('password', 'rules') && !hasError('', 'oldNew')"
-                                             class="field-error">
+
+                                        <div *ngIf="password.hasError('rules') && !password.hasError('oldNew') && !password.hasError('mismatch') && !password.hasError('required')" class="field-error">
                                             {{'Your password doesn\'t meet the security criteria' | translate}}
                                         </div>
 
@@ -212,16 +214,17 @@
                                         </label>
                                         <input [type]="(showPasswords === true) ? 'text' : 'password'"
                                                id="cpPasswordConfirm"
-                                               [class.error]="hasError('passwordConfirm')"
                                                [formControl]="passwordConfirm" size="45">
 
-                                        <div *ngIf="hasError('passwordConfirm', 'required')" class="field-error">
+                                        <div *ngIf="passwordConfirm.hasError('required')" class="field-error">
                                             {{'Field is required' | translate}}
                                         </div>
-                                        <div *ngIf="hasError('', 'mismatch') && !hasError('passwordConfirm', 'required') && isTouched('passwordConfirm')"
-                                             class="field-error">
-                                            {{'Password does not match' | translate}}
+
+                                        <div *ngIf="passwordConfirm.hasError('mismatch') &&
+                                        !passwordConfirm.hasError('required') && !passwordConfirm.pristine"
+                                        class="field-error" mltag="txt_passworddoesnotmatch">Password does not match
                                         </div>
+    
                                     </div>
                                     <div class="col-xs-1 no-gutter">
                                         <div class="show-hide"

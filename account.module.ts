@@ -8,8 +8,7 @@ import { SetlLoginModule } from '@setl/core-login';
 
 /* Clarity module. */
 import { ClarityModule } from '@clr/angular';
-import { SetlPipesModule } from '@setl/utils';
-import { SelectModule } from '@setl/utils';
+import { SelectModule, SetlPipesModule, SetlComponentsModule } from '@setl/utils';
 
 @NgModule({
     imports: [
@@ -22,6 +21,7 @@ import { SelectModule } from '@setl/utils';
         MultilingualModule,
         RouterModule,
         SetlLoginModule,
+        SetlComponentsModule,
     ],
     declarations: [
         SetlMyAccountComponent,
