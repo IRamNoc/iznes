@@ -17,6 +17,7 @@ import java.sql.SQLException;
 
 import static SETLAPIHelpers.DatabaseHelper.setDBToProdOff;
 import static SETLAPIHelpers.DatabaseHelper.setDBToProdOn;
+import static SETLAPIHelpers.DatabaseHelper.setDBTwoFAOff;
 import static com.setl.UI.common.SETLUIHelpers.FundsDetailsHelper.*;
 import static com.setl.UI.common.SETLUIHelpers.MemberDetailsHelper.scrollElementIntoViewById;
 import static com.setl.UI.common.SETLUIHelpers.MemberDetailsHelper.scrollElementIntoViewByXpath;
@@ -55,6 +56,7 @@ public class OpenCSD3SharesAcceptanceTest {
         testSetUp();
         screenshotRule.setDriver(driver);
         setDBToProdOff();
+        setDBTwoFAOff();
     }
 
     @After

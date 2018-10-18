@@ -15,6 +15,7 @@ import java.sql.SQLException;
 
 import static SETLAPIHelpers.DatabaseHelper.setDBToProdOff;
 import static SETLAPIHelpers.DatabaseHelper.setDBToProdOn;
+import static SETLAPIHelpers.DatabaseHelper.setDBTwoFAOff;
 import static com.setl.UI.common.SETLUIHelpers.FundsDetailsHelper.*;
 import static com.setl.UI.common.SETLUIHelpers.FundsDetailsHelper.generateRandomISIN;
 
@@ -67,6 +68,7 @@ public class OpenCSDEntireFlowAcceptanceTest {
         testSetUp();
         screenshotRule.setDriver(driver);
         setDBToProdOff();
+        setDBTwoFAOff();
     }
 
     @After

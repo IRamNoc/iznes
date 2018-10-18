@@ -16,6 +16,7 @@ import org.openqa.selenium.support.ui.WebDriverWait;
 
 import java.io.IOException;
 
+import static SETLAPIHelpers.DatabaseHelper.setDBTwoFAOff;
 import static com.setl.UI.common.SETLUIHelpers.AccountsDetailsHelper.loginAndVerifySuccess;
 
 import static com.setl.UI.common.SETLUIHelpers.AccountsDetailsHelper.navigateToDropdown;
@@ -47,6 +48,7 @@ public class OpenCSDSprint4AcceptanceTest {
     public void setUp() throws Exception {
         testSetUp();
         screenshotRule.setDriver(driver);
+        setDBTwoFAOff();
     }
 
     @Test

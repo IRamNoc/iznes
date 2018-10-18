@@ -52,6 +52,7 @@ public class OpenCSDGeneralAcceptanceTest {
         testSetUp();
         screenshotRule.setDriver(driver);
         deleteFormdataFromDatabase("8", "1");
+        setDBTwoFAOff();
     }
 
     @Test

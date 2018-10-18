@@ -14,9 +14,7 @@ import org.openqa.selenium.support.ui.WebDriverWait;
 import java.io.IOException;
 import java.sql.*;
 
-import static SETLAPIHelpers.DatabaseHelper.setDBToProdOff;
-import static SETLAPIHelpers.DatabaseHelper.setDBToProdOn;
-import static SETLAPIHelpers.DatabaseHelper.validateTimeZoneUpdate;
+import static SETLAPIHelpers.DatabaseHelper.*;
 import static com.setl.UI.common.SETLUIHelpers.AccountsDetailsHelper.loginAndVerifySuccess;
 import static com.setl.UI.common.SETLUIHelpers.AccountsDetailsHelper.navigateToDropdown;
 import static com.setl.UI.common.SETLUIHelpers.FundsDetailsHelper.*;
@@ -59,6 +57,7 @@ public class OpenCSDSprint8AcceptanceTest {
         testSetUp();
         screenshotRule.setDriver(driver);
         setDBToProdOff();
+        setDBTwoFAOff();
     }
 
     @After

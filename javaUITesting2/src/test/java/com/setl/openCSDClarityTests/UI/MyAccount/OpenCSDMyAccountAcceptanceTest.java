@@ -15,6 +15,7 @@ import org.openqa.selenium.JavascriptExecutor;
 import java.io.IOException;
 import java.sql.*;
 
+import static SETLAPIHelpers.DatabaseHelper.setDBTwoFAOff;
 import static com.setl.UI.common.SETLUIHelpers.LoginAndNavigationHelper.*;
 import static com.setl.UI.common.SETLUIHelpers.MemberDetailsHelper.isElementPresent;
 import static com.setl.UI.common.SETLUIHelpers.SetUp.*;
@@ -57,6 +58,7 @@ public class OpenCSDMyAccountAcceptanceTest {
     public void setUp() throws Exception {
         testSetUp();
         screenshotRule.setDriver(driver);
+        setDBTwoFAOff();
     }
 
 
