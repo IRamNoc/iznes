@@ -19,6 +19,7 @@ import java.sql.SQLException;
 import static SETLAPIHelpers.DatabaseHelper.setDBTwoFAOff;
 import static com.setl.UI.common.SETLUIHelpers.AdministrationModuleHelper.*;
 import static com.setl.UI.common.SETLUIHelpers.LoginAndNavigationHelper.loginAndVerifySuccess;
+import static com.setl.UI.common.SETLUIHelpers.LoginAndNavigationHelper.logout;
 import static com.setl.UI.common.SETLUIHelpers.LoginAndNavigationHelper.navigateToDropdown;
 import static com.setl.UI.common.SETLUIHelpers.SetUp.driver;
 import static com.setl.UI.common.SETLUIHelpers.SetUp.testSetUp;
@@ -113,5 +114,38 @@ public class OpenCSDUsersSubModuleTest {
         selectCreateUser();
         searchUser(userRef[0],firstName[0], lastName[0], emailaddress[0], phoneNumber[0]);
         validateUserCreated(1, emailaddress[0], firstName[0], lastName[0], phoneNumber[0], userRef[0]);
+    }
+
+    @Test
+    public void shouldInviteUser()throws InterruptedException, SQLException {
+        String [] emailaddress = generateEmail();
+        String [] phoneNumber = generatePhoneNumber();
+        String [] firstName = generateUser();
+        String [] lastName = generateUser();
+        String [] userRef = generateRandomTeamReference();
+        String [] teamName = generateRandomTeamName();
+        String [] teamReference = generateRandomTeamReference();
+        String [] teamDescription = fillInDescription();
+        loginAndVerifySuccess("am", "alex01");
+        navigateToDropdown("menu-administration");
+        navigateToDropdown("menu-administration-teams");
+        selectAddNewTeam();
+        fillInTeamsDetails(teamName[0], teamReference[0], teamDescription[0]);
+        selectAccountAdminPermissions();
+        selectCreateNewTeam();
+        searchTeam(teamReference[0], teamName[0], teamDescription[0], "Pending");
+        validateTeamsCreated(1, teamReference[0], teamName[0], teamDescription[0]);
+        validateAdminTeamPermissions(teamName[0]);
+        navigateToDropdown("menu-administration-users");
+        selectAddNewUser();
+        fillInUserDetails(emailaddress[0], firstName[0], lastName[0], userRef[0], phoneNumber[0]);
+        selectTeamFromUserCreation(teamName[0]);
+        selectCreateAndInviteUser();
+        Thread.sleep(2000);
+        String invitation = getUserTokenByEmailFromDBInvitation(emailaddress[0]);
+        logout();
+        userInvitationSignUp(invitation);
+        shouldValidateSignUpProcess(firstName[0], lastName[0], emailaddress[0], phoneNumber[0]);
+        shouldAssertAdminPermissions();
     }
 }

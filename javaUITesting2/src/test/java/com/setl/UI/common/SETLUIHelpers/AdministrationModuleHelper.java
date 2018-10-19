@@ -1,4 +1,5 @@
 package com.setl.UI.common.SETLUIHelpers;
+import org.junit.Test;
 import org.openqa.selenium.By;
 import org.openqa.selenium.WebElement;
 import org.openqa.selenium.support.ui.WebDriverWait;
@@ -272,12 +273,26 @@ public class AdministrationModuleHelper {
         Thread.sleep(1000);
         wait.until(visibilityOfElementLocated(By.xpath("/html/body/app-root/app-basic-layout/div/ng-sidebar-container/div/div/div/main/div[1]/div/app-core-admin-users-crud/clr-tabs/clr-tab/clr-tab-content/div[5]/div[2]/button[1]")));
         wait.until(elementToBeClickable(By.xpath("/html/body/app-root/app-basic-layout/div/ng-sidebar-container/div/div/div/main/div[1]/div/app-core-admin-users-crud/clr-tabs/clr-tab/clr-tab-content/div[5]/div[2]/button[1]")));
-        driver.findElement(By.xpath("/html/body/app-root/app-basic-layout/div/ng-sidebar-container/div/div/div/main/div[1]/div/app-core-admin-users-crud/clr-tabs/clr-tab/clr-tab-content/div[5]/div[2]/button[1]")).click();
+        driver.findElement(By.xpath("/html/body/app-root/app-basic-layout/div/ng-sidebar-container/div/div/div/main/div/div/app-core-admin-users-crud/clr-tabs/clr-tab/clr-tab-content/div[5]/div[2]/button[2]")).click();
         wait.until(visibilityOfElementLocated(By.className("jaspero__dialog-title")));
         driver.findElement(By.xpath("//*[@id=\"iznes\"]/app-root/jaspero-confirmations/jaspero-confirmation/div[2]/div[4]/button[2]")).click();
         wait.until(visibilityOfElementLocated(By.id("tabAccountAdminUsersButton")));
 
     }
+
+    public static void selectCreateAndInviteUser()throws InterruptedException {
+        final WebDriverWait wait = new WebDriverWait(driver, timeoutInSeconds);
+        scrollElementIntoViewByXpath("/html/body/app-root/app-basic-layout/div/ng-sidebar-container/div/div/div/main/div[1]/div/app-core-admin-users-crud/clr-tabs/clr-tab/clr-tab-content/div[5]/div[2]/button[1]");
+        Thread.sleep(1000);
+        wait.until(visibilityOfElementLocated(By.xpath("/html/body/app-root/app-basic-layout/div/ng-sidebar-container/div/div/div/main/div[1]/div/app-core-admin-users-crud/clr-tabs/clr-tab/clr-tab-content/div[5]/div[2]/button[1]")));
+        wait.until(elementToBeClickable(By.xpath("/html/body/app-root/app-basic-layout/div/ng-sidebar-container/div/div/div/main/div[1]/div/app-core-admin-users-crud/clr-tabs/clr-tab/clr-tab-content/div[5]/div[2]/button[1]")));
+        driver.findElement(By.cssSelector("button.btn:nth-child(2)")).click();
+        wait.until(visibilityOfElementLocated(By.className("jaspero__dialog-title")));
+        driver.findElement(By.xpath("/html/body/app-root/jaspero-confirmations/jaspero-confirmation/div[2]/div[4]/button[2]")).click();
+        wait.until(visibilityOfElementLocated(By.id("tabAccountAdminUsersButton")));
+
+    }
+
     public static void selectUserType() {
         driver.findElement(By.cssSelector("#userType > div > div.ui-select-match.dropdown > span > i.pull-right.special.caret")).click();
         driver.findElement(By.cssSelector("#userType > div > div.option-wrapper.ui-select-choices.dropdown-menu.ng-star-inserted > div > input")).sendKeys("Asset manager");
@@ -761,6 +776,75 @@ public class AdministrationModuleHelper {
             stmt.close();
             rs.close();
         } return teamID;
+    }
+
+
+
+    public static String getUserTokenByEmailFromDBInvitation(String userEmail) throws SQLException {
+        conn = DriverManager.getConnection(connectionString, DBUsername, DBPassword);
+        Statement stmt = conn.createStatement();
+        ResultSet rs = null;
+        String token = null;
+        try {
+            String getUserToken = "SELECT token FROM setlnet.tblUserInvitations where email = " + "\"" + userEmail + "\"";
+            rs = stmt.executeQuery(getUserToken);
+            rs.last();
+            token = rs.getString("token");
+            String invitation = "https://uk-lon-li-006.opencsd.io/#/account-signup?invitationToken=" + token;
+            System.out.println(invitation);
+            return invitation;
+            } catch (Exception e) {
+            e.printStackTrace();
+            fail();
+        } finally {
+            conn.close();
+            stmt.close();
+            rs.close();
+        }
+        return token;
+    }
+
+    public static void userInvitationSignUp (String invitation ) {
+        driver.navigate().to(invitation);
+    }
+
+    public static void shouldValidateSignUpProcess(String firstName, String lastName, String Email, String phoneNumber) throws InterruptedException {
+        final WebDriverWait wait = new WebDriverWait(driver, timeoutInSeconds);
+        wait.until(visibilityOfElementLocated(By.id("su-username-field")));
+        String emailField = driver.findElement(By.id("su-username-field")).getAttribute("value");
+        assertEquals(emailField, Email);
+        driver.findElement(By.id("su-password-field")).sendKeys("asdASD123");
+        driver.findElement(By.id("su-passwordConfirm-field")).sendKeys("asdASD123");
+        wait.until(elementToBeClickable(By.id("signup-submit")));
+        driver.findElement(By.id("signup-submit")).click();
+        wait.until(visibilityOfElementLocated(By.xpath("//*[@id=\"iznes\"]/app-root/jaspero-confirmations/jaspero-confirmation/div[2]/div[4]/button")));
+        wait.until(elementToBeClickable(By.xpath("//*[@id=\"iznes\"]/app-root/jaspero-confirmations/jaspero-confirmation/div[2]/div[4]/button")));
+        String confirmation = driver.findElement(By.xpath("//*[@id=\"iznes\"]/app-root/jaspero-confirmations/jaspero-confirmation/div[2]/div[3]/p/b")).getText();
+        assertEquals("Account successfully activated.", confirmation);
+        driver.findElement(By.xpath("//*[@id=\"iznes\"]/app-root/jaspero-confirmations/jaspero-confirmation/div[2]/div[4]/button")).click();
+        wait.until(visibilityOfElementLocated(By.id("topBarMenu")));
+        driver.findElement(By.id("dropdown-user")).click();
+        driver.findElement(By.id("top-menu-my-info")).click();
+        String informationEmail = driver.findElement(By.id("kyc_additionnal_email")).getAttribute("value");
+        assertEquals(informationEmail, Email);
+        String informationFirstName = driver.findElement(By.id("kyc_additionnal_firstName")).getAttribute("value");
+        assertEquals(informationFirstName, firstName);
+        System.out.println(informationFirstName);
+        String informationLastName = driver.findElement(By.id("kyc_additionnal_lastName")).getAttribute("value");
+        assertEquals(informationLastName, lastName);
+        String informationPhoneNumber = driver.findElement(By.id("kyc_additionnal_phoneNumber")).getAttribute("value");
+        assertEquals(informationPhoneNumber, phoneNumber);
+    }
+
+    public static void shouldAssertAdminPermissions ()throws InterruptedException, SQLException {
+        driver.findElement(By.id("menu-home")).click();
+        String administrationTab = driver.findElement(By.id("menu-admin")).getText();
+        assertEquals("Administration", administrationTab);
+        driver.findElement(By.id("menu-admin")).click();
+        String usersTab = driver.findElement(By.id("menu-admin-users")).getText();
+        assertEquals("Users", usersTab);
+        String teamsTab = driver.findElement(By.id("menu-admin-teams")).getText();
+        assertEquals("Teams", teamsTab);
     }
 }
 

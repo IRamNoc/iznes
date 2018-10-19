@@ -106,4 +106,29 @@ public class OpenCSD3SharesAcceptanceTest {
         getShareTableRow(0, uShareDetails[0], uIsin[0], uFundDetails[0], "EUR", "Management Company", "", "share class", "Open" );
     }
 
+    @Test
+    //TODO Sprint 14
+    public void shouldAssertThatAFundSharesTabIsPresent(){
+        System.out.println("Not Yet Implemented");
+    }
+
+    @Test
+    //TODO Sprint 14
+    public void shouldAssertThatFundSharesHas2ExpandableFields(){
+        System.out.println("Not Yet Implemented");
+    }
+
+    @Test
+    //TODO Sprint 14
+    public void shouldCreateFundShareAndCheckDatabase(){
+        System.out.println("Not Yet Implemented");
+    }
+
+    @Test
+    //TODO Sprint 14
+    public void shouldUpdateFundShareAndCheckDatabase(){
+        System.out.println("Not Yet Implemented");
+    }
+
+
 }

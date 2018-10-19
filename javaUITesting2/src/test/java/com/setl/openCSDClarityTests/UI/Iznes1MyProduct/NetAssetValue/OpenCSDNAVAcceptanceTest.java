@@ -308,4 +308,113 @@ public class OpenCSDNAVAcceptanceTest {
         driver.findElement(By.id("navDateTo")).sendKeys("2018-05-24");
         wait.until(invisibilityOfElementLocated(By.xpath("//*[@id=\"nav-history-row0-btn-edit\"]/span")));
     }
+
+    @Test
+    //TODO Sprint 14
+    public void TG3127_ShouldChangeNAVStatusToCancelledFrontend()throws InterruptedException, SQLException {
+        System.out.println("Not Yet Implemented");
+    }
+
+    @Test
+    //TODO Sprint 14
+    public void TG3127_ShouldChangeNAVStatusToCancelledDatabase()throws InterruptedException, SQLException {
+        System.out.println("Not Yet Implemented");
+    }
+
+    @Test
+    //TODO Sprint 14
+    public void TG3127_ShouldBeAbleToCancelNAVIfNoOrdersAreSettled()throws InterruptedException, SQLException {
+        System.out.println("Not Yet Implemented");
+    }
+
+    @Test
+    //TODO Sprint 14
+    public void TG3127_ShouldUpdateToPreviousNAVWhenCurrentNAVCancelled()throws InterruptedException, SQLException {
+        System.out.println("Not Yet Implemented");
+    }
+
+    @Test
+    //TODO Sprint 14
+    public void TG3127_ShouldNotifyEachInvestorWithAuthorisationOnTheShare()throws InterruptedException, SQLException {
+        System.out.println("Not Yet Implemented");
+    }
+
+    @Test
+    //TODO Sprint 14
+    public void TG3129_ShouldChangeNAVStatusToCancelledWhenModifiedFrontend()throws InterruptedException, SQLException {
+        System.out.println("Not Yet Implemented");
+    }
+
+    @Test
+    //TODO Sprint 14
+    public void TG3129_ShouldChangeNAVStatusToCancelledWhenModifiedDatabase()throws InterruptedException, SQLException {
+        System.out.println("Not Yet Implemented");
+    }
+
+    @Test
+    //TODO Sprint 14
+    public void TG3129_ShouldNotBeAbleToModifyNAVIfNoOrdersIsSettled()throws InterruptedException, SQLException {
+        System.out.println("Not Yet Implemented");
+    }
+
+    @Test
+    //TODO Sprint 14
+    public void TG3129_ShouldAddNewValidatedNAVWhenExistingNAVisModified()throws InterruptedException, SQLException {
+        System.out.println("Not Yet Implemented");
+    }
+
+    @Test
+    //TODO Sprint 14
+    public void TG3129_ShouldNotifyInvestorWithAccessToTheNAVModule()throws InterruptedException, SQLException {
+        System.out.println("Not Yet Implemented");
+    }
+
+    @Test
+    //TODO Sprint 14
+    public void TG3129_ShouldNotNotifyInvestorWithoutAccessToTheNAVModule()throws InterruptedException, SQLException {
+        System.out.println("Not Yet Implemented");
+    }
+
+    @Test
+    //TODO Sprint 14
+    public void TG3125_ShouldBeAbleToDeleteNAVIfNoOrdersArePlaced()throws InterruptedException, SQLException {
+        System.out.println("Not Yet Implemented");
+    }
+
+    @Test
+    //TODO Sprint 14
+    public void TG3125_ShouldNotBeAbleToDeleteNAVIfOrdersArePlaced()throws InterruptedException, SQLException {
+        System.out.println("Not Yet Implemented");
+    }
+
+    @Test
+    //TODO Sprint 14
+    public void TG3125_ShouldEraseNAVFromTableDatabseWhenDeleted()throws InterruptedException, SQLException {
+        System.out.println("Not Yet Implemented");
+    }
+
+    @Test
+    //TODO Sprint 14
+    public void TG3125_ShouldEraseNAVFromTableFrontendWhenDeleted()throws InterruptedException, SQLException {
+        System.out.println("Not Yet Implemented");
+    }
+
+    @Test
+    //TODO Sprint 14
+    public void TG3125_ShouldUpdateToPreviousNAVWhenCurrentNAVDeleted()throws InterruptedException, SQLException {
+        System.out.println("Not Yet Implemented");
+    }
+
+    @Test
+    //TODO Sprint 14
+    public void TG3125_ShouldNotifyEachInvestorWithAuthorisationOnTheShare()throws InterruptedException, SQLException {
+        System.out.println("Not Yet Implemented");
+    }
+
+    @Test
+    //TODO Sprint 14
+    public void TG3125_ShouldNotNotifyInvestorWithoutAuthorisationOnTheShare()throws InterruptedException, SQLException {
+        System.out.println("Not Yet Implemented");
+    }
+
 }
