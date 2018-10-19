@@ -45,7 +45,7 @@ public class OpenCSD2FundsAcceptanceTest {
     @Rule
     public RepeatRule repeatRule = new RepeatRule();
     @Rule
-    public Timeout globalTimeout = new Timeout(45000);
+    public Timeout globalTimeout = new Timeout(75000);
     @Rule
     public TestMethodPrinterRule pr = new TestMethodPrinterRule(System.out);
 
@@ -72,6 +72,8 @@ public class OpenCSD2FundsAcceptanceTest {
         String[] uFundDetails = generateRandomFundsDetails();
         String[] updateChars = generateRandomDetails();
         String randomLei = generateRandomLEI();
+        String Lei = generateRandomLEI();
+        String updatedLei = generateRandomLEI();
 
         loginAndVerifySuccess("am", "alex01");
         waitForHomePageToLoad();
@@ -85,11 +87,11 @@ public class OpenCSD2FundsAcceptanceTest {
         assertPopupNextFundNo("Fund");
 
         fillOutFundDetailsStep1("yes", umbFundDetails[0]);
-        fillOutFundDetailsStep2(uFundDetails[0], randomLei);
+        fillOutFundDetailsStep2(uFundDetails[0], Lei);
 
         assertPopupNextFundNo("Share");
         searchFundsTable(uFundDetails[0]);
-        getFundTableRow(0, uFundDetails[0], randomLei, "EUR", "Management Company", "Afghanistan", "Contractual Fund", umbFundDetails[0]);
+        getFundTableRow(0, uFundDetails[0], Lei, "EUR", "Management Company", "Afghanistan", "Contractual Fund", umbFundDetails[0]);
 
         WebDriverWait wait = new WebDriverWait(driver, timeoutInSeconds);
         scrollElementIntoViewByXpath("//*[@id=\"iznes\"]/app-root/app-basic-layout/div/ng-sidebar-container/div/div/div/main/div[1]/div/app-ofi-am-product-home/div[5]/div[2]/div/clr-datagrid/div/div/div/clr-dg-table-wrapper/div[1]/div/clr-dg-column[4]/div/button");
@@ -102,7 +104,7 @@ public class OpenCSD2FundsAcceptanceTest {
 
         driver.findElement(By.id("fundName")).sendKeys(updateChars[0]);
         driver.findElement(By.id("legalEntityIdentifier")).clear();
-        driver.findElement(By.id("legalEntityIdentifier")).sendKeys(randomLei);
+        driver.findElement(By.id("legalEntityIdentifier")).sendKeys(updatedLei);
         driver.findElement(By.xpath("//*[@id=\"domicile\"]/div/div[2]/span/a")).click();
 
         searchAndSelectFundDropdown("domicile", "Albania");
@@ -121,7 +123,7 @@ public class OpenCSD2FundsAcceptanceTest {
         searchFundsTable(uFundDetails[0]);
 
         //Assert that table displays the fund details with random chars at the end.
-        getFundTableRow(0, uFundDetails[0] + updateChars[0], randomLei, "USD", "Management Company", "Albania", "Unit Trust", umbFundDetails[0]);
+        getFundTableRow(0, uFundDetails[0] + updateChars[0], updatedLei, "USD", "Management Company", "Albania", "Unit Trust", umbFundDetails[0]);
         validateDatabaseFundExists(0, uFundDetails[0]);
         validateDatabaseFundExists(1, uFundDetails[0] + updateChars[0]);
 
@@ -250,6 +252,13 @@ public class OpenCSD2FundsAcceptanceTest {
         selectAddUmbrellaFund();
         fillCertainUmbrellaDetails(uFundDetails[0] + "TG445", randomLei, "TestOffice1661", "TestAddress1661", "Management Company", "2019-10-20", "Custodian Bank 1", "Fund Admin 1");
         searchAndSelectTopDropdownXpath("uf_domicile", "Jordan");
+        selectTopDropdown("uf_custodian");
+        selectTopDropdown("uf_fundAdministrator");
+        driver.findElement(By.id("uf_registerOfficeAddressZipCode")).sendKeys("ZIP");
+        driver.findElement(By.id("uf_registerOfficeAddressCity")).sendKeys("City");
+        searchAndSelectTopDropdownXpath("uf_registerOfficeAddressCountry", "Jordan");
+
+        Thread.sleep(5000);
         submitUmbrellaFund();
         assertPopupNextFundNo("Fund");
 
