@@ -66,7 +66,7 @@ public class OpenCSDSprint7AcceptanceTest {
     }
 
     @Test
-    public void shouldInviteInvestorAndCheckDBTG659() throws InterruptedException, SQLException {
+    public void shouldInviteInvestorAndCheckDBTG659() throws InterruptedException, SQLException, IOException {
         String investorEmail = "jordan.miller1@setl.io";
 
         //validateDatabaseInvestorInvited(0, investorEmail);
@@ -79,7 +79,7 @@ public class OpenCSDSprint7AcceptanceTest {
 
     }
     @Test
-    public void shouldAssertTrueInvitesRecapTG658() throws InterruptedException {
+    public void shouldAssertTrueInvitesRecapTG658() throws InterruptedException, IOException {
         String investorEmail = "michael.bindley@setl.io";
 
         loginAndVerifySuccess("am", "alex01");

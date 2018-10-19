@@ -29,6 +29,7 @@ import static com.setl.UI.common.SETLUIHelpers.AccountsDetailsHelper.navigateToP
 import static com.setl.UI.common.SETLUIHelpers.MemberDetailsHelper.navigateToAddNewMemberTab;
 import static com.setl.UI.common.SETLUIHelpers.SetUp.*;
 import static com.setl.UI.common.SETLUIHelpers.UserDetailsHelper.*;
+import static com.setl.openCSDClarityTests.UI.Iznes2KYCModule.OpenCSDKYCModuleAcceptanceTest.searchSelectTopOptionXpath;
 import static org.junit.Assert.*;
 import static org.openqa.selenium.support.ui.ExpectedConditions.elementToBeClickable;
 import static org.openqa.selenium.support.ui.ExpectedConditions.visibilityOf;
@@ -326,7 +327,7 @@ public class OpenCSDGeneralAcceptanceTest {
         }
     }
 
-    public static void inviteAnInvestor(String email, String firstname, String lastname, String expectedResult) throws InterruptedException {
+    public static void inviteAnInvestor(String email, String firstname, String lastname, String expectedResult) throws InterruptedException, IOException {
         WebDriverWait wait = new WebDriverWait(driver, timeoutInSeconds);
         wait.until(visibilityOfElementLocated(By.id("invite-investors-btn")));
         wait.until(elementToBeClickable(By.id("invite-investors-btn")));
@@ -339,6 +340,8 @@ public class OpenCSDGeneralAcceptanceTest {
 
         driver.findElement(By.id("kyc_firstName_0")).sendKeys(firstname);
         driver.findElement(By.id("kyc_lastName_0")).sendKeys(lastname);
+        searchSelectTopOptionXpath("Institutional Investor", "//*[@id=\"kyc_investorType_0\"]/div", "//*[@id=\"kyc_investorType_0\"]/div/div[3]/div/input", "//*[@id=\"kyc_investorType_0\"]/div/div[3]/ul/li[1]/div/a");
+
 
         driver.findElement(By.id("btnKycSubmit")).click();
 
