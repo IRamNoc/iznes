@@ -113,32 +113,4 @@ public class OpenCSDSprint4AcceptanceTest {
         fillOutFundDetails(uFundDetails[0], umbFundDetails[0]);
         return fundCount;
     }
-
-    @Test
-    public void shouldAssertThatAnUmbrellaFundTabIsPresent(){
-    }
-
-    @Test
-    public void shouldAssertThatAFundsTabIsPresent(){
-    }
-
-    @Test
-    public void shouldAssertThatAFundSharesTabIsPresent(){
-    }
-
-    @Test
-    public void shouldAssertThatFundSharesHas2ExpandableFields(){
-    }
-
-    @Test
-    public void shouldCreateAndSetWalletWhenFundIsCreated(){
-    }
-
-    @Test
-    public void shouldCreateFundShareAndCheckDatabase(){
-    }
-
-    @Test
-    public void shouldUpdateFundShareAndCheckDatabase(){
-    }
 }

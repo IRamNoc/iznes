@@ -15,6 +15,7 @@ import org.openqa.selenium.JavascriptExecutor;
 import org.openqa.selenium.support.ui.WebDriverWait;
 
 import java.io.IOException;
+import java.sql.SQLException;
 
 import static SETLAPIHelpers.DatabaseHelper.setDBTwoFAOff;
 import static com.setl.UI.common.SETLUIHelpers.LoginAndNavigationHelper.*;
@@ -227,5 +228,15 @@ public class OpenCSDNavigationAcceptanceTest {
         navigateToDropdown("menu-administration-teams");
         String teamsTitle = driver.findElement(By.xpath("//*[@id=\"iznes\"]/app-root/app-basic-layout/div/ng-sidebar-container/div/div/div/main/div/div/app-core-admin-teams-list/div")).getText();
         assertTrue(teamsTitle.contains("Teams"));
+    }
+    @Test
+    //TODO Sprint 14
+    public void TG2635_shouldNavigateToActivities()throws InterruptedException, SQLException {
+        System.out.println("Not Yet Implemented");
+    }
+    @Test
+    //TODO Sprint 14
+    public void TG2676_shouldNavigateToManagementCompany()throws InterruptedException, SQLException {
+        System.out.println("Not Yet Implemented");
     }
 }
