@@ -498,6 +498,7 @@ public class FundsDetailsHelper extends LoginAndNavigationHelper {
         js.executeScript("document.getElementById('isDedicatedFund1').click();");
 
         scrollElementIntoViewById("fund-submitfund-btn");
+        Thread.sleep(5000);
         wait.until(visibilityOfElementLocated(By.id("fund-submitfund-btn")));
         wait.until(elementToBeClickable(By.id("fund-submitfund-btn")));
 
