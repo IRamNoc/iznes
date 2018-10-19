@@ -682,9 +682,7 @@ export class AdminWalletsComponent implements OnInit, AfterViewInit, OnDestroy {
                 walletAccount: new FormControl([], [
                     Validators.required,
                 ]),
-                walletLocked: new FormControl(false, [
-                    Validators.required,
-                ]),
+                walletLocked: new FormControl(false),
                 walletType: new FormControl([], [
                     Validators.required,
                 ]),
