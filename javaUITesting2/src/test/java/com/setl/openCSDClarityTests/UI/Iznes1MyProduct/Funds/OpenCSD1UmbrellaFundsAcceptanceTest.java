@@ -461,11 +461,11 @@ public class OpenCSD1UmbrellaFundsAcceptanceTest {
         String[] uFundDetails = generateRandomUmbrellaFundsDetails();
         String[] dupFundDetails = generateRandomDuplicateDetails();
         String lei = generateRandomLEI();
+        String duplei = generateRandomLEI();
         fillUmbrellaDetailsNotCountry(uFundDetails[0], lei);
         searchAndSelectTopDropdownXpath("uf_domicile", "Jordan");
         searchAndSelectTopDropdownXpath("uf_registerOfficeAddressCountry", "Jordan");
 
-        if (true) { driver.findElement(By.id("uf_registerOfficeAddressLine2")).sendKeys("Address Line 2 Shoud be optional"); }
 
         String registeredOffice = driver.findElement(By.id("uf_registerOffice")).getAttribute("value");
         String LEI = driver.findElement(By.id("uf_lei")).getAttribute("value");
@@ -501,14 +501,18 @@ public class OpenCSD1UmbrellaFundsAcceptanceTest {
         assertTrue(fundAdmin.contains("Société Générale Securities Services France"));
         assertTrue(date.equals("2019-10-20"));
 
-        fillFundNameRandom(dupFundDetails[0] + uFundDetails[0], "uf_umbrellaFundName");
+        driver.findElement(By.id("uf_umbrellaFundName")).sendKeys(dupFundDetails[0]);
+        driver.findElement(By.id("uf_lei")).clear();
+
+        driver.findElement(By.id("uf_lei")).sendKeys(duplei);
         String duplicateUFName = driver.findElement(By.id("uf_umbrellaFundName")).getAttribute("value");
         submitUmbrellaFund();
+
         assertPopupNextFundNo("Fund");
         searchUmbrellaTable(dupFundDetails[0]);
         wait.until(elementToBeClickable(By.id("product-dashboard-link-umbrellaFundID-0")));
         driver.findElement(By.id("product-dashboard-link-umbrellaFundID-0")).click();
-        assertTrue(duplicateUFName.equals(dupFundDetails[0] + uFundDetails[0]));
+        assertTrue(duplicateUFName.equals(dupFundDetails[0]));
 
     }
     @Test
@@ -521,6 +525,7 @@ public class OpenCSD1UmbrellaFundsAcceptanceTest {
         String[] dupFundDetails = generateRandomDuplicateDetails();
         String[] uFundDetails = generateRandomUmbrellaFundsDetails();
         String lei = generateRandomLEI();
+        String duplei = generateRandomLEI();
         fillUmbrellaDetailsNotCountry(uFundDetails[0], lei);
         searchAndSelectTopDropdownXpath("uf_domicile", "Jordan");
         searchAndSelectTopDropdownXpath("uf_registerOfficeAddressCountry", "Jordan");
@@ -556,16 +561,19 @@ public class OpenCSD1UmbrellaFundsAcceptanceTest {
         else {
             fail("Duplicate UF Contain's Fund Name");
         }
-        fillFundNameRandom(dupFundDetails[0] + uFundDetails[0], "uf_umbrellaFundName");
+        driver.findElement(By.id("uf_umbrellaFundName")).sendKeys(dupFundDetails[0]);
+        driver.findElement(By.id("uf_lei")).clear();
+        driver.findElement(By.id("uf_lei")).sendKeys(duplei);
         String duplicateUFName = driver.findElement(By.id("uf_umbrellaFundName")).getAttribute("value");
         submitUmbrellaFund();
         assertPopupNextFundNo("Fund");
         searchUmbrellaTable(dupFundDetails[0]);
         wait.until(refreshed(elementToBeClickable(By.id("product-dashboard-link-umbrellaFundID-0"))));
         driver.findElement(By.id("product-dashboard-link-umbrellaFundID-0")).click();
-        assertTrue(duplicateUFName.equals(dupFundDetails[0] + uFundDetails[0]));
+        assertTrue(duplicateUFName.equals(dupFundDetails[0]));
     }
     @Test
+    @Ignore
     public void shouldFillAllDetailsAndDuplicateAndAssertDetails() throws SQLException, InterruptedException, IOException {
         loginAndVerifySuccess("am", "alex01");
         navigateToDropdown("menu-my-products");
