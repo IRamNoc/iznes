@@ -182,9 +182,12 @@ export class SetlLoginComponent implements OnDestroy, OnInit, AfterViewInit {
         );
         this.resetPasswordForm = new FormGroup(controls, [
             (formGroup) => {
-                return formGroup.get('oldPassword').value !== formGroup.get('password').value ? null : {
-                    same: true,
-                };
+                if (formGroup.get('oldPassword').value && formGroup.get('password').value) {
+                    formGroup.get('oldPassword').value !== formGroup.get('password').value ?
+                        formGroup.get('password').setErrors(null) :
+                        formGroup.get('password').setErrors({ same: true });
+                }
+                return null;
             },
             this.passwordValidator,
         ]);
@@ -429,7 +432,12 @@ export class SetlLoginComponent implements OnDestroy, OnInit, AfterViewInit {
     }
 
     passwordValidator(g: FormGroup) {
-        return (g.get('password').value === g.get('passwordConfirm').value) ? null : { mismatch: true };
+        if (g.get('password').value && g.get('passwordConfirm').value) {
+            g.get('password').value === g.get('passwordConfirm').value ?
+                g.get('passwordConfirm').setErrors(null) :
+                g.get('passwordConfirm').setErrors({ mismatch: true });
+        }
+        return null;
     }
 
     toggleShowPasswords(key) {
@@ -578,7 +586,7 @@ export class SetlLoginComponent implements OnDestroy, OnInit, AfterViewInit {
 
                     this.resetPassword = false;
                     this.subscriptionsArray.push(
-                            this.alertsService.generate(
+                        this.alertsService.generate(
                             'success',
                             'Your password has been reset<br><br>A confirmation email will be sent to you.',
                             { buttonMessage: `Continue to ${platformName}` },
