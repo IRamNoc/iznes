@@ -96,4 +96,29 @@ public class OpenCSDPortfolioManagerOnboarding {
     public void TG3071_shouldAssertInvitationOnFundListUpdateToPM()throws InterruptedException, SQLException {
         System.out.println("Not Yet Implemented");
     }
+    @Test
+    //TODO Sprint 14
+    public void TG3063_shouldAssertNewInvestorTypeOnInviteScreenPortfolioManager()throws InterruptedException, SQLException {
+        System.out.println("Not Yet Implemented");
+    }
+    @Test
+    //TODO Sprint 14
+    public void TG3063_shouldAllowAMToInvitePMTypeWIthNewType()throws InterruptedException, SQLException {
+        System.out.println("Not Yet Implemented");
+    }
+    @Test
+    //TODO Sprint 14
+    public void TG3064_shouldAssertListOfFundsAppearOnSeletingPMType()throws InterruptedException, SQLException {
+        System.out.println("Not Yet Implemented");
+    }
+    @Test
+    //TODO Sprint 14
+    public void TG3064_shouldAssertInformationInNewFields()throws InterruptedException, SQLException {
+        System.out.println("Not Yet Implemented");
+    }
+    @Test
+    //TODO Sprint 14
+    public void TG3064_shouldAssertAMMustSelectOneFundFromField()throws InterruptedException, SQLException {
+        System.out.println("Not Yet Implemented");
+    }
 }
