@@ -694,5 +694,61 @@ public class OpenCSDKYCModuleAcceptanceTest {
             fail("FAILED : " + e.getMessage());
         }
     }
+    @Test
+    //TODO Sprint 14
+    public void TG3099_shouldAssertKYCButtonEqualsCancel()throws InterruptedException, SQLException {
+        System.out.println("Not Yet Implemented");
+    }
+    @Test
+    //TODO Sprint 14
+    public void TG3099_shouldAssertKYCButtonDoesNotEqualClose()throws InterruptedException, SQLException {
+        System.out.println("Not Yet Implemented");
+    }
+    @Test
+    //TODO Sprint 14
+    public void TG3099_shouldAssertCancelButtonRedirectToCorrectPage()throws InterruptedException, SQLException {
+        System.out.println("Not Yet Implemented");
+    }
+    @Test
+    //TODO Sprint 14
+    public void TG2987_shouldKYCInDraftStausHasDeleteButton()throws InterruptedException, SQLException {
+        System.out.println("Not Yet Implemented");
+    }
+    @Test
+    //TODO Sprint 14
+    public void TG2987_shouldAssertKYCIsRemovedFromListWhenDeleted()throws InterruptedException, SQLException {
+        System.out.println("Not Yet Implemented");
+    }
+    @Test
+    //TODO Sprint 14
+    public void TG2987_shouldAssertPopUpAppearsAfterSelectingDeleteKYC()throws InterruptedException, SQLException {
+        System.out.println("Not Yet Implemented");
+    }
+    @Test
+    //TODO Sprint 14
+    public void TG2987_shouldCheckDBForKYCDeletionFlag()throws InterruptedException, SQLException {
+        System.out.println("Not Yet Implemented");
+    }
+    @Test
+    //TODO Sprint 14
+    public void TG2988_shouldAssertDeletePopUpAppearsWhenSelecingDelete()throws InterruptedException, SQLException {
+        System.out.println("Not Yet Implemented");
+    }
+    @Test
+    //TODO Sprint 14
+    public void TG2988_shouldAssertPopUpContentIsCorrect()throws InterruptedException, SQLException {
+        System.out.println("Not Yet Implemented");
+    }
+    @Test
+    //TODO Sprint 14
+    public void TG2988_shouldAssertKYCIsNotDeleteIfCancelIsSelected()throws InterruptedException, SQLException {
+        System.out.println("Not Yet Implemented");
+    }
+    @Test
+    //TODO Sprint 14
+    public void TG2988_shouldAssertSuccessToasterOnKYCDeletionSuccess ()throws InterruptedException, SQLException {
+        System.out.println("Not Yet Implemented");
+    }
+
 }
 
