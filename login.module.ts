@@ -19,6 +19,7 @@ import { MultilingualModule } from '@setl/multilingual';
 import { SetlDirectivesModule, SetlPipesModule, SetlComponentsModule } from '@setl/utils';
 import { EnrollComponent } from './two-factor/enroll/enroll.component';
 import { AuthenticateComponent } from './two-factor/authenticate/authenticate.component';
+import { LoginService } from './login.service';
 
 @NgModule({
     declarations: [
@@ -46,6 +47,7 @@ import { AuthenticateComponent } from './two-factor/authenticate/authenticate.co
     ],
     providers: [
         ToasterService,
+        LoginService,
     ],
 })
 
