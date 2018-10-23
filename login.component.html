@@ -153,7 +153,6 @@
     </div>
 
     <div class="modal-body modal-form-body text-center" *ngIf="changePassword">
-        <p>{{'Please type a password' | translate}}</p>
         <i class="fa fa-unlock-alt fa-5x" aria-hidden="true"></i>
 
         <form [formGroup]="changePasswordForm" novalidate (ngSubmit)="saveNewPassword()">
@@ -168,6 +167,7 @@
                             <input id="fp-password-field"
                                    [type]="(showPasswords.change1 === true) ? 'text' : 'password'"
                                    class="form-control"
+                                   [class.error]="changePasswordForm.controls.passwordConfirm.hasError('mismatch')"
                                    formControlName="password"
                                    size="45"
                                    [placeholder]="translate.translate('New password')"
@@ -178,8 +178,8 @@
                             <div *ngIf="hasError(changePasswordForm.get('password'), 'rules') || hasError(changePasswordForm.get('password'), 'length')" class="field-error">
                                 {{'Password does not satisfy security criteria' | translate}}
                             </div>
-                            <div *ngIf="changePasswordForm.controls.password.hasError('mismatch') && !changePasswordForm.controls.password.hasError('minlength') && !changePasswordForm.controls.passwordConfirm.hasError('required') && !hasError(changePasswordForm.get('password'), 'rules') && !hasError(changePasswordForm.get('password'), 'length')"
-                                 class="field-error">
+                            <div *ngIf="changePasswordForm.controls.passwordConfirm.hasError('mismatch') && !changePasswordForm.controls.password.hasError('minlength') && !changePasswordForm.controls.passwordConfirm.hasError('required') && !hasError(changePasswordForm.get('password'), 'rules') && !hasError(changePasswordForm.get('password'), 'length')"
+                                 class="field-error force-display-error">
                                 {{'Passwords do not match' | translate}}
                             </div>
                             <span class="toggle-password" (click)="toggleShowPasswords('change1')" [title]="translate.translate('Show/hide passwords')">
@@ -280,6 +280,7 @@
                         </label>
                         <div class="toggle-parent">
                             <input class="form-control"
+                                   [class.error]="resetPasswordForm.controls.passwordConfirm.hasError('mismatch')"
                                    [type]="(showPasswords.reset1 === true) ? 'text' : 'password'"
                                    size="45"
                                    formControlName="password"
@@ -294,7 +295,7 @@
                             <div *ngIf="hasError(resetPasswordForm.get('password'), 'same') && !hasError(resetPasswordForm.get('password'), 'required') && !hasError(resetPasswordForm.get('password'), 'rules') && !hasError(resetPasswordForm.get('password'), 'length')" class="field-error">
                                 {{'Password must be new' | translate}}
                             </div>
-                            <div *ngIf="hasError(resetPasswordForm.get('password'), 'mismatch') && !hasError(resetPasswordForm.get('password'), 'required') && !hasError(resetPasswordForm.get('password'), 'rules') && !hasError(resetPasswordForm.get('password'), 'length') && !hasError(resetPasswordForm.get('password'), 'same')" class="field-error">
+                            <div *ngIf="hasError(resetPasswordForm.get('passwordConfirm'), 'mismatch') && !hasError(resetPasswordForm.get('password'), 'required') && !hasError(resetPasswordForm.get('password'), 'rules') && !hasError(resetPasswordForm.get('password'), 'length') && !hasError(resetPasswordForm.get('password'), 'same')" class="field-error force-display-error">
                                 {{'Passwords do not match' | translate}}
                             </div>
                             <span class="toggle-password" (click)="toggleShowPasswords('reset1')" [title]="translate.translate('Show/hide passwords')">

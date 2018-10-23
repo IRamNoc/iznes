@@ -168,7 +168,7 @@ export class SetlLoginComponent implements OnDestroy, OnInit, AfterViewInit {
                 '',
                 [
                     Validators.required,
-                    Validators.pattern(/^(((\([A-z0-9]+\))?[^<>()\[\]\\.,;:\s@"]+(\.[^<>()\[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/)
+                    Validators.pattern(/^(((\([A-z0-9]+\))?[^<>()\[\]\\.,;:\s@"]+(\.[^<>()\[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/),
                 ]),
         });
 
@@ -185,9 +185,10 @@ export class SetlLoginComponent implements OnDestroy, OnInit, AfterViewInit {
                 const passwordErrors = formGroup.get('password').errors;
                 if (_.isObject(passwordErrors)) delete passwordErrors.same;
                 if (formGroup.get('oldPassword').value && formGroup.get('password').value) {
-                    formGroup.get('oldPassword').value !== formGroup.get('password').value ?
-                        formGroup.get('password').setErrors(_.isEmpty(passwordErrors) ? null : passwordErrors) :
-                        formGroup.get('password').setErrors(Object.assign({}, passwordErrors, { same: true }));
+                    formGroup.get('password').setErrors(
+                        formGroup.get('oldPassword').value !== formGroup.get('password').value ?
+                            (_.isEmpty(passwordErrors) ? null : passwordErrors) :
+                            { same: true });
                 }
                 return null;
             },
@@ -435,18 +436,8 @@ export class SetlLoginComponent implements OnDestroy, OnInit, AfterViewInit {
 
     passwordValidator(g: FormGroup) {
         if (!g.get('password').value || !g.get('passwordConfirm').value) return null;
-
-        const errorsPassword = g.get('password').errors;
-        const errorsPasswordConfirm = g.get('passwordConfirm').errors;
-        if (g.get('password').value === g.get('passwordConfirm').value) {
-            if (_.isObject(errorsPassword)) delete errorsPassword.mismatch;
-            if (_.isObject(errorsPasswordConfirm)) delete errorsPasswordConfirm.mismatch;
-            g.get('passwordConfirm').setErrors(_.isEmpty(errorsPasswordConfirm) ? null : errorsPasswordConfirm);
-            g.get('password').setErrors(_.isEmpty(errorsPassword) ? null : errorsPassword);
-        } else {
-            g.get('passwordConfirm').setErrors(Object.assign({}, errorsPasswordConfirm, { mismatch: true }));
-            g.get('password').setErrors(Object.assign({}, errorsPassword, { mismatch: true }));
-        }
+        g.get('passwordConfirm').setErrors(g.get('password').value === g.get('passwordConfirm').value ?
+            null : { mismatch: true });
     }
 
     toggleShowPasswords(key) {
@@ -679,7 +670,8 @@ export class SetlLoginComponent implements OnDestroy, OnInit, AfterViewInit {
         return Object.keys(this.langLabels);
     }
 
-    getLabel(lang: string): string {
+    getLabel(lang: string):
+        string {
         return this.langLabels[lang];
     }
 
