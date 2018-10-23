@@ -387,6 +387,12 @@ export class FormStepsDirective implements OnInit, OnDestroy, AfterViewInit {
     }
 
     move() {
+        if(this.currentStep === 0){
+            this.btClose.innerHTML = 'Cancel';
+        } else{
+            this.btClose.innerHTML = 'Close';
+        }
+
         this.divSliderContainer.style.marginLeft = ((this.currentStep * this.divSliderSize) * -1) + 'px';
         if (this.currentStep < this.nbSteps) {
             if (this.isMultiForm) {
