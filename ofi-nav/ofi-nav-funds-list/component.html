@@ -126,16 +126,22 @@
                         </span>
                     </clr-dg-cell>
                     <clr-dg-cell class="actions">
-                        <div class="btn-group btn-sm" [hidden]="!isNavNull(item.nav)">
-                            <button id="{{'Btn-AddNewNAV-'+idx}}" (click)="addNav(item)" class="btn btn-success btn-sm">
-                                <i class="fa fa-plus"></i> {{'Add new NAV' | translate}}
+                        <div class="btn-group btn-sm">
+                            <button id="{{'Btn-AddNewNAV-'+idx}}" class="btn btn-success btn-sm"
+                                (click)="addNav(item)"
+                                [disabled]="!isNavNull(item.nav)">
+                                <i class="fa fa-plus"></i> {{'Add NAV' | translate}}
+                            </button>
+                            <button id="{{'Btn-CancelNewNAV-'+idx}}" class="btn btn-danger btn-sm"
+                                (click)="cancelNav(item)">
+                                {{'Cancel NAV' | translate}}
                             </button>
                         </div>
                     </clr-dg-cell>
                 </clr-dg-row>
 
-                <clr-dg-footer>{{pagination.firstItem + 1}} - {{pagination.lastItem + 1}}
-
+                <clr-dg-footer>
+                    {{pagination.firstItem + 1}} - {{pagination.lastItem + 1}}
                     <clr-dg-pagination #pagination [clrDgPageSize]="10"></clr-dg-pagination>
                 </clr-dg-footer>
             </clr-datagrid>

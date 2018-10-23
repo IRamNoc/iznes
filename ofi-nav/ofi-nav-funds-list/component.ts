@@ -10,7 +10,6 @@ import * as _ from 'lodash';
 import * as model from '../OfiNav';
 import { OfiManageNavPopupService } from '../ofi-manage-nav-popup/service';
 
-import { OfiCorpActionService } from '../../ofi-req-services/ofi-corp-actions/service';
 import { OfiNavService } from '../../ofi-req-services/ofi-product/nav/service';
 import {
     clearRequestedNavFundsList,
@@ -21,6 +20,7 @@ import {
 import { APP_CONFIG, AppConfig, FileDownloader, MoneyValuePipe, NumberConverterService } from '@setl/utils';
 
 import { MultilingualService } from '@setl/multilingual';
+import { ConfirmationService } from '@setl/utils';
 import { AlertsService } from '@setl/jaspero-ng2-alerts/src/alerts.service';
 import { OfiCurrenciesService } from '@ofi/ofi-main/ofi-req-services/ofi-currencies/service';
 
@@ -57,6 +57,9 @@ export class OfiNavFundsList implements OnInit, OnDestroy {
     appConfig: AppConfig;
     currencyList: any[];
 
+    private cancelNavTitle: string;
+    private cancelNavMessage: string;
+
     @select(['ofi', 'ofiProduct', 'ofiManageNav', 'ofiNavFundsList', 'requested']) navRequestedOb: Observable<any>;
     @select(['ofi', 'ofiProduct', 'ofiManageNav', 'ofiNavFundsList', 'navFundsList']) navListOb: Observable<any>;
     @select(['ofi', 'ofiCurrencies', 'currencies']) currenciesObs;
@@ -68,12 +71,12 @@ export class OfiNavFundsList implements OnInit, OnDestroy {
     constructor(private router: Router,
                 private redux: NgRedux<any>,
                 private changeDetectorRef: ChangeDetectorRef,
-                private ofiCorpActionService: OfiCorpActionService,
                 private ofiNavService: OfiNavService,
                 private numberConverterService: NumberConverterService,
                 private moneyPipe: MoneyValuePipe,
                 private popupService: OfiManageNavPopupService,
                 private alertService: AlertsService,
+                private confirmationService: ConfirmationService,
                 private ofiCurrenciesService: OfiCurrenciesService,
                 private _fileDownloader: FileDownloader,
                 public _translate: MultilingualService,
@@ -89,6 +92,11 @@ export class OfiNavFundsList implements OnInit, OnDestroy {
         this.initDataTypes();
         this.initSearchForm();
         this.initSubscriptions();
+        this.initTranslations();
+    }
+
+    private initTranslations(): void {
+        this.cancelNavTitle = this._translate.translate('Cancel NAV');
     }
 
     /**
@@ -145,6 +153,22 @@ export class OfiNavFundsList implements OnInit, OnDestroy {
 
     addNav(share: model.NavInfoModel): void {
         this.popupService.open(share, model.NavPopupMode.ADD_EXISTING);
+    }
+
+    cancelNav(share: model.NavInfoModel): void {
+        this.cancelNavMessage = this._translate.translate(
+            `Are you sure you wish to cancel the NAV for<br /><strong>'@shareName@'</strong>`,
+            {
+                shareName: share.fundShareName
+            }
+        );
+
+        this.confirmationService.create(this.cancelNavTitle, this.cancelNavMessage)
+            .subscribe((resolved) => {
+                if(resolved) {
+                    //
+                }
+            });
     }
 
     navigateToShare(shareId: number): void {

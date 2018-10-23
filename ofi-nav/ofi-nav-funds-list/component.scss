@@ -50,4 +50,10 @@
     .no-label {
         margin-top: 20px;
     }
+
+    .actions {
+        button { margin: 0; }
+
+        .btn[disabled] + .btn { border-left: 1px solid; }
+    }
 }
