@@ -214,6 +214,9 @@ form, .form {
             display: none;
             border: none;
             padding: 0;
+            &.force-display-error {
+                display: block;
+            }
         }
 
     }
