@@ -87,17 +87,11 @@ export class RequestsService {
             kycID,
         }).then(
             (response) => {
-                const status = _.get(response, [1, 'Data', 0, 'Status']);
-
-                if (status !== 'OK') {
-                    this.toasterService.pop('error', this.translateService.translate('Couldn\'t delete KYC request, please try again later.'));
-
-                    return;
-                }
-
                 this.toasterService.pop('success', this.translateService.translate('The request has been successfully deleted'));
             },
-        );
+        ).catch(() => {
+            this.toasterService.pop('error', this.translateService.translate('Couldn\'t delete KYC request, please try again later.'));
+        });
     }
 
     getKycGeneral(kycID) {
