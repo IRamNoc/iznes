@@ -75,8 +75,6 @@ export class OfiSignUpComponent implements OnInit, OnDestroy {
                 password: signupData.password,
                 lang: signupData.language,
             }).then(() => {
-                // Resolve so user gets logged in and has a token
-                resolve();
                 this.consumeToken();
 
                 this.confirmationService.create(
@@ -88,6 +86,10 @@ export class OfiSignUpComponent implements OnInit, OnDestroy {
                         btnClass: 'success',
                     },
                 ).subscribe(() => {
+
+                    // Resolve so user gets logged in and has a token
+                    resolve();
+
                     this
                         .authenticationOb
                         .pipe(
@@ -109,17 +111,9 @@ export class OfiSignUpComponent implements OnInit, OnDestroy {
     }
 
     private consumeToken() {
-        this
-            .authenticationOb
-            .pipe(
-                takeUntil(this.unsubscribe),
-            )
-            .subscribe((authentication) => {
-                if (this.signupData().invitationToken && authentication.isLogin) {
-                    this.consumeTokenService.consumeToken(this.signupData().invitationToken);
-                }
-            })
-        ;
+        if (this.signupData().invitationToken) {
+            this.consumeTokenService.consumeToken(this.signupData().invitationToken);
+        }
     }
 
     private updateState(myAuthenData) {

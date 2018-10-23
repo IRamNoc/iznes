@@ -32,9 +32,10 @@ export class ConsumeTokenService {
             (response) => {
                 const amcID = getValue(response, [1, 'Data', 0, 'amcID']);
 
-                // If it was the first signup, we also have granted chain access to the user
-                InitialisationService.requestMyOwnWallets(this.ngRedux, this.myWalletsService);
-                InitialisationService.requestMyChainAccess(this.ngRedux, this.chainService);
+                // remove on 23/10/2018, because it is now call in either the signup or login
+                // // If it was the first signup, we also have granted chain access to the user
+                // InitialisationService.requestMyOwnWallets(this.ngRedux, this.myWalletsService);
+                // InitialisationService.requestMyChainAccess(this.ngRedux, this.chainService);
 
                 this.amcID = amcID;
             },
