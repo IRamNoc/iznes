@@ -27,9 +27,11 @@ import static com.setl.UI.common.SETLUIHelpers.PageHelper.verifyCorrectPageConta
 import static com.setl.UI.common.SETLUIHelpers.SetUp.*;
 import static com.setl.UI.common.SETLUIHelpers.SetUp.adminuser;
 import static com.setl.UI.common.SETLUIHelpers.SetUp.adminuserPassword;
+import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertTrue;
 import static org.junit.Assert.fail;
 import static org.openqa.selenium.support.ui.ExpectedConditions.elementToBeClickable;
+import static org.openqa.selenium.support.ui.ExpectedConditions.javaScriptThrowsNoExceptions;
 import static org.openqa.selenium.support.ui.ExpectedConditions.visibilityOfElementLocated;
 
 
@@ -142,7 +144,7 @@ public class OpenCSDNavigationAcceptanceTest {
         loginAndVerifySuccess("am", "alex01");
         navigateToDropdown("top-menu-my-clients");
         navigateToPageByID("top-menu-client-referential");
-        verifyCorrectPage("Client Referential: All Clients");
+        verifyCorrectPage("Client Referential : All Clients");
     }
 
     @Test
@@ -232,11 +234,27 @@ public class OpenCSDNavigationAcceptanceTest {
     @Test
     //TODO Sprint 14
     public void TG2635_shouldNavigateToActivities()throws InterruptedException, SQLException {
-        System.out.println("Not Yet Implemented");
+        loginAndVerifySuccess("am", "alex01");
+        try {
+        navigateToDropdown("menu-activities");
+        navigateToDropdown("menu-orderbook");
+        String orderBookHeader = driver.findElement(By.id("insert ID or Xpath")).getText();
+        assertEquals("Order Book", orderBookHeader);
+        } catch (Exception e) {
+        fail("Not yet Implemented");
+        }
     }
+
     @Test
     //TODO Sprint 14
     public void TG2676_shouldNavigateToManagementCompany()throws InterruptedException, SQLException {
-        System.out.println("Not Yet Implemented");
+        loginAndVerifySuccess("am", "alex01");
+        try {
+            navigateToDropdown("menu-management");
+            String header = driver.findElement(By.id("insert ID or Xpath")).getText();
+            assertEquals("Management Company", header);
+        }catch (Exception e){
+            fail("Not yet Implemented");
+        }
     }
 }
