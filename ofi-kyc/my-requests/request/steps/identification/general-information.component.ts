@@ -1,10 +1,11 @@
 import {Component, Input, OnInit, OnDestroy, ViewChild} from '@angular/core';
-import {FormGroup} from '@angular/forms';
+import { FormGroup, AbstractControl, Validators } from '@angular/forms';
 import {get as getValue, isEmpty, castArray} from 'lodash';
 import {select} from '@angular-redux/store';
 import {Subject} from 'rxjs';
 import {filter, map, takeUntil} from 'rxjs/operators';
 
+import {sirenValidator, siretValidator} from '@setl/utils/helper/validators';
 import {FormPercentDirective} from '@setl/utils/directives/form-percent/formpercent';
 import {countries} from '../../../requests.config';
 import {NewRequestService} from '../../new-request.service';
@@ -28,6 +29,7 @@ export class GeneralInformationComponent implements OnInit, OnDestroy {
     legalStatusList;
     legalStatusInsurerTypeList;
     publicEstablishmentList;
+    identificationNumberList;
     associations;
 
     constructor(
@@ -42,6 +44,7 @@ export class GeneralInformationComponent implements OnInit, OnDestroy {
         this.legalStatusList = this.newRequestService.legalStatusList;
         this.legalStatusInsurerTypeList = this.newRequestService.legalStatusInsurerTypeList;
         this.publicEstablishmentList = this.newRequestService.publicEstablishmentList;
+        this.identificationNumberList = this.newRequestService.identificationNumberList;
 
         this.initFormCheck();
         this.getCurrentFormData();
@@ -69,6 +72,35 @@ export class GeneralInformationComponent implements OnInit, OnDestroy {
                 this.formCheckSectorActivity(sectorActivityValue);
             })
         ;
+
+        this.form.get('otherIdentificationNumber').valueChanges
+            .pipe(takeUntil(this.unsubscribe))
+            .subscribe((data) => {
+                const otherIdentificationNumberValue = getValue(data, [0, 'id']);
+
+                this.formCheckOtherIdentificationNumber(otherIdentificationNumberValue);
+            })
+        ;
+    }
+
+    formCheckOtherIdentificationNumber(value) {
+        const otherIdentificationNumberTextControl: AbstractControl = this.form.get('otherIdentificationNumberText');
+
+        if (value) {
+            otherIdentificationNumberTextControl.enable();
+
+            if (value === 'siren') {
+                otherIdentificationNumberTextControl.setValidators([sirenValidator, Validators.required]);
+            } else if (value === 'siret') {
+                otherIdentificationNumberTextControl.setValidators([siretValidator, Validators.required]);
+            } else {
+                otherIdentificationNumberTextControl.setValidators([Validators.required]);
+            }
+        } else {
+            otherIdentificationNumberTextControl.disable();
+        }
+
+        otherIdentificationNumberTextControl.updateValueAndValidity();
     }
 
     formCheckSectorActivity(value) {

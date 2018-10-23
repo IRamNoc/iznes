@@ -50,7 +50,7 @@ import {
     riskAcceptanceList,
     beneficiaryTypesList,
     holdingTypesList,
-    nationalIdNumberList
+    identificationNumberList
 } from '../requests.config';
 
 @Injectable()
@@ -81,7 +81,7 @@ export class NewRequestService {
     riskAcceptanceList;
     beneficiaryTypesList;
     holdingTypesList;
-    nationalIdNumberList;
+    identificationNumberList;
     saveContext = '';
 
     /* Private Properties. */
@@ -124,7 +124,7 @@ export class NewRequestService {
         this.riskAcceptanceList = riskAcceptanceList;
         this.beneficiaryTypesList = beneficiaryTypesList;
         this.holdingTypesList = holdingTypesList;
-        this.nationalIdNumberList = nationalIdNumberList;
+        this.identificationNumberList = identificationNumberList;
     }
 
     set context(value) {
@@ -205,9 +205,10 @@ export class NewRequestService {
             legalForm: ['', Validators.required],
             leiCode: ['', [
                 Validators.required,
-                Validators.pattern(/^\w{18}\d{2}$|n\/a/i)
+                Validators.pattern(/^\w{18}\d{2}$|n\/a/i),
             ]],
-            otherIdentificationNumber: [null, Validators.maxLength(255)],
+            otherIdentificationNumber: ['', Validators.maxLength(255)],
+            otherIdentificationNumberText: [{ value: '', disabled: true }, Validators.required],
             registeredCompanyAddressLine1: ['', this.getLengthValidator(255)],
             registeredCompanyAddressLine2: ['', Validators.maxLength(255)],
             registeredCompanyZipCode: ['', this.getLengthValidator(10)],

@@ -36,11 +36,21 @@
                     <span class="field-error" *ngIf="hasError('leiCode', ['required'])">{{'Field is required' | translate}}</span>
                     <span class="field-error" *ngIf="hasError('leiCode', ['pattern'])">{{'Incorrect LEI, should be 20 characters long' | translate}}</span>
                 </div>
+            </div>
 
+            <div class="row">
                 <div class="form-group col-sm-6">
                     <label class="control-label" for="otherIdentificationNumber">{{'Other identification number' | translate}}</label>
-                    <input type="text" id="otherIdentificationNumber" formControlName="otherIdentificationNumber" placeholder="{{'If non applicable please fill in the value &quot;N/A&quot; here' | translate}}">
-                    <span class="field-error" *ngIf="hasError('otherIdentificationNumber', ['maxlength'])">{{'Incorrect LEI, should be 20 characters long' | translate}}</span>
+                    <ng-select allowClear="true" id="otherIdentificationNumber" [items]="identificationNumberList" formControlName="otherIdentificationNumber" placeholder="{{'Please select a value' | translate}}"></ng-select>
+                    <span class="field-error" *ngIf="hasError(['otherIdentificationNumber'], ['required'])">{{'Field is required' | translate}}</span>
+                </div>
+
+                <div *ngIf="!isDisabled(['otherIdentificationNumberText'])" class="form-group col-sm-6">
+                    <label class="control-label" for="otherIdentificationNumberText">{{'Fill in your identification number'}}</label>
+                    <input type="text" formControlName="otherIdentificationNumberText" placeholder="{{'National Identification Number' | translate}}">
+                    <span class="field-error" *ngIf="hasError(['otherIdentificationNumberText'], ['required'])">{{'Field is required' | translate}}</span>
+                    <span class="field-error" *ngIf="hasError(['otherIdentificationNumberText'], ['validSiren'])">{{'SIREN must be 9 digits long' | translate}}</span>
+                    <span class="field-error" *ngIf="hasError(['otherIdentificationNumberText'], ['validSiret'])">{{'SIRET must be 14 digits long' | translate}}</span>
                 </div>
             </div>
 

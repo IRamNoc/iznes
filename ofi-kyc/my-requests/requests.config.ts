@@ -67,6 +67,7 @@ export const selectControls = [
     'volumeTransactionPerYear',
     'activities',
     'ownAccountinvestor',
+    'otherIdentificationNumber',
     'investorOnBehalfThirdParties',
     'geographicalAreaOfActivity',
     'nationality',
@@ -1262,7 +1263,7 @@ export const holdingTypesList = [
     },
 ];
 
-export const nationalIdNumberList = [
+export const identificationNumberList = [
     {
         id: 'siret',
         text: 'SIRET',
@@ -1283,6 +1284,7 @@ export const controlToName = {
     legalForm: 'Legal form',
     leiCode: 'LEI Code',
     otherIdentificationNumber: 'Other identification number',
+    otherIdentificationNumberText: 'Other identification number value',
     registeredCompanyAddressLine1: "Registered company's headquarters address (including country)",
     registeredCompanyAddressLine2: 'Address line 2',
     registeredCompanyZipCode: 'ZIP Code',
@@ -1407,6 +1409,7 @@ export const controlToList = {
     sectorActivity: 'sectorActivityList',
     legalStatus: 'legalStatusList',
     legalStatusInsurerType: 'legalStatusInsurerTypeList',
+    otherIdentificationNumber: 'identificationNumberList',
 
     // Company
     activities: 'companyActivitiesList',
@@ -1420,7 +1423,7 @@ export const controlToList = {
     countryOfBirth: 'countries',
     beneficiaryType: 'beneficiaryTypesList',
     holdingType: 'holdingTypesList',
-    nationalIdNumber: 'nationalIdNumberList',
+    nationalIdNumber: 'identificationNumberList',
 
     // Banking
     custodianHolderAccount: 'custodianHolderAccountList',
