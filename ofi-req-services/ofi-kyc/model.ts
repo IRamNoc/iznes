@@ -181,6 +181,15 @@ export interface createKYCDraftMessageBody extends MemberNodeMessageBody {
     kycStatus: number;
 }
 
+export interface DeleteKycRequestData{
+    kycID: number;
+}
+
+export interface DeleteKycRequestMessageBody extends MemberNodeMessageBody{
+    token: string;
+    kycID: number;
+}
+
 export interface SaveFundAccessRequestData {
     access: object;
 }

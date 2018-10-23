@@ -1,12 +1,15 @@
-import {Injectable} from '@angular/core';
+import { Injectable } from '@angular/core';
 import * as _ from 'lodash';
+import { ToasterService } from 'angular2-toaster';
 
-import {MemberSocketService} from '@setl/websocket-service';
-import {FileService} from '@setl/core-req-services/file/file.service';
-import {NgRedux} from '@angular-redux/store';
+import { MultilingualService } from '@setl/multilingual';
+import { MemberSocketService } from '@setl/websocket-service';
+import { FileService } from '@setl/core-req-services/file/file.service';
+import { OfiKycService } from '@ofi/ofi-main/ofi-req-services/ofi-kyc/service';
+import { NgRedux } from '@angular-redux/store';
 import * as SagaHelper from '@setl/utils/sagaHelper';
-import {createMemberNodeSagaRequest} from '@setl/utils/common';
-import {checkboxControls, selectControls} from './requests.config';
+import { createMemberNodeSagaRequest } from '@setl/utils/common';
+import { checkboxControls, selectControls } from './requests.config';
 
 export enum KycStatus {
     Rejected = -2,
@@ -20,9 +23,12 @@ export enum KycStatus {
 export class RequestsService {
 
     constructor(
-        private ngRedux : NgRedux<any>,
-        private memberSocketService : MemberSocketService,
-        private fileService : FileService
+        private ngRedux: NgRedux<any>,
+        private memberSocketService: MemberSocketService,
+        private fileService: FileService,
+        private kycService: OfiKycService,
+        private toasterService: ToasterService,
+        private translateService: MultilingualService,
     ) {
     }
 
@@ -35,12 +41,12 @@ export class RequestsService {
         }
 
         return _.chain(companies)
-            .map(company => ({
-                id: company.companyID,
-                text: company.companyName
-            }))
-            .values()
-            .value()
+        .map(company => ({
+            id: company.companyID,
+            text: company.companyName
+        }))
+        .values()
+        .value()
             ;
     }
 
@@ -53,18 +59,18 @@ export class RequestsService {
 
     shapeServerData(data) {
         return _.mapValues(data, (value: string, key) => {
-            if(!value){
+            if (!value) {
                 return value;
             }
 
-            if(selectControls.indexOf(key) !== -1){
+            if (selectControls.indexOf(key) !== -1) {
                 let split = value.split(' ');
 
                 return split.map(value => {
-                    return {id : value};
+                    return { id: value };
                 });
             }
-            if(checkboxControls.indexOf(key) !== -1){
+            if (checkboxControls.indexOf(key) !== -1) {
                 let split = value.split(' ');
                 let trueArray = new Array(split.length).fill(true);
                 let zip = _.zip(split, trueArray);
@@ -76,11 +82,28 @@ export class RequestsService {
         });
     }
 
+    deleteKyc(kycID) {
+        return this.kycService.deleteKycRequest({
+            kycID,
+        }).then(
+            (response) => {
+                const status = _.get(response, [1, 'Data', 0, 'Status']);
 
-    getKycGeneral(kycID){
+                if (status !== 'OK') {
+                    this.toasterService.pop('error', this.translateService.translate('Couldn\'t delete KYC request, please try again later.'));
+
+                    return;
+                }
+
+                this.toasterService.pop('success', this.translateService.translate('The request has been successfully deleted'));
+            },
+        );
+    }
+
+    getKycGeneral(kycID) {
         const messageBody = {
-            RequestName : 'getkycgeneral',
-            kycID : kycID
+            RequestName: 'getkycgeneral',
+            kycID: kycID
         };
 
         return this.sendRequest(messageBody).then(response => {
@@ -90,10 +113,10 @@ export class RequestsService {
         });
     }
 
-    getKycCompany(kycID){
+    getKycCompany(kycID) {
         const messageBody = {
-            RequestName : 'getkyccompany',
-            kycID : kycID
+            RequestName: 'getkyccompany',
+            kycID: kycID
         };
 
         return this.sendRequest(messageBody).then(response => {
@@ -103,10 +126,10 @@ export class RequestsService {
         });
     }
 
-    getKycBanking(kycID){
+    getKycBanking(kycID) {
         const messageBody = {
-            RequestName : 'getkycbanking',
-            kycID : kycID
+            RequestName: 'getkycbanking',
+            kycID: kycID
         };
 
         return this.sendRequest(messageBody).then(response => {
@@ -116,10 +139,10 @@ export class RequestsService {
         });
     }
 
-    getKycClassification(kycID){
+    getKycClassification(kycID) {
         const messageBody = {
-            RequestName : 'getkycclassification',
-            kycID : kycID
+            RequestName: 'getkycclassification',
+            kycID: kycID
         };
 
         return this.sendRequest(messageBody).then(response => {
@@ -129,10 +152,10 @@ export class RequestsService {
         });
     }
 
-    getKycNature(kycID){
+    getKycNature(kycID) {
         const messageBody = {
-            RequestName : 'getkycrisknature',
-            kycID : kycID
+            RequestName: 'getkycrisknature',
+            kycID: kycID
         };
 
         return this.sendRequest(messageBody).then(response => {
@@ -142,10 +165,10 @@ export class RequestsService {
         });
     }
 
-    getKycObjective(kycID){
+    getKycObjective(kycID) {
         const messageBody = {
-            RequestName : 'getkycriskobjective',
-            kycID : kycID
+            RequestName: 'getkycriskobjective',
+            kycID: kycID
         };
 
         return this.sendRequest(messageBody).then(response => {
@@ -155,10 +178,10 @@ export class RequestsService {
         });
     }
 
-    getKycBeneficiaries(kycID){
+    getKycBeneficiaries(kycID) {
         const messageBody = {
-            RequestName : 'getkyccompanybeneficiaries',
-            kycID : kycID
+            RequestName: 'getkyccompanybeneficiaries',
+            kycID: kycID
         };
 
         return this.sendRequest(messageBody).then(response => {
@@ -168,11 +191,11 @@ export class RequestsService {
         });
     }
 
-    getKycDocuments(kycID, connectedWallet){
+    getKycDocuments(kycID, connectedWallet) {
         const messageBody = {
-            RequestName : 'getkycdocument',
-            kycID : kycID,
-            walletID : connectedWallet
+            RequestName: 'getkycdocument',
+            kycID: kycID,
+            walletID: connectedWallet
         };
 
         return this.sendRequest(messageBody).then(response => {
@@ -180,10 +203,10 @@ export class RequestsService {
         });
     }
 
-    getKycDocument(kycDocumentID){
+    getKycDocument(kycDocumentID) {
         const messageBody = {
-            RequestName : 'getkycdocument',
-            kycDocumentID : kycDocumentID
+            RequestName: 'getkycdocument',
+            kycDocumentID: kycDocumentID
         };
 
         return this.sendRequest(messageBody).then(response => {
@@ -191,10 +214,10 @@ export class RequestsService {
         });
     }
 
-    getKycValidation(kycID){
+    getKycValidation(kycID) {
         const messageBody = {
-            RequestName : 'getkycvalidation',
-            kycID : kycID
+            RequestName: 'getkycvalidation',
+            kycID: kycID
         };
 
         return this.sendRequest(messageBody).then(response => {
@@ -252,11 +275,11 @@ export class RequestsService {
         });
     }
 
-    getContext(){
+    getContext() {
 
     }
 
-    getText(){
+    getText() {
 
     }
 
