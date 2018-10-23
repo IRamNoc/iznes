@@ -435,9 +435,11 @@ export class SetlLoginComponent implements OnDestroy, OnInit, AfterViewInit {
     }
 
     passwordValidator(g: FormGroup) {
-        if (!g.get('password').value || !g.get('passwordConfirm').value) return null;
-        g.get('passwordConfirm').setErrors(g.get('password').value === g.get('passwordConfirm').value ?
-            null : { mismatch: true });
+        if (g.get('password').value && g.get('passwordConfirm').value) {
+            g.get('passwordConfirm').setErrors(g.get('password').value === g.get('passwordConfirm').value ? null :
+                { mismatch: true });
+        }
+        return null;
     }
 
     toggleShowPasswords(key) {
@@ -670,8 +672,7 @@ export class SetlLoginComponent implements OnDestroy, OnInit, AfterViewInit {
         return Object.keys(this.langLabels);
     }
 
-    getLabel(lang: string):
-        string {
+    getLabel(lang: string): string {
         return this.langLabels[lang];
     }
 
