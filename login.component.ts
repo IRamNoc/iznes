@@ -188,7 +188,7 @@ export class SetlLoginComponent implements OnDestroy, OnInit, AfterViewInit {
                     formGroup.get('password').setErrors(
                         formGroup.get('oldPassword').value !== formGroup.get('password').value ?
                             (_.isEmpty(passwordErrors) ? null : passwordErrors) :
-                            { same: true });
+                            Object.assign({}, passwordErrors, { same: true }));
                 }
                 return null;
             },
@@ -436,8 +436,8 @@ export class SetlLoginComponent implements OnDestroy, OnInit, AfterViewInit {
 
     passwordValidator(g: FormGroup) {
         if (g.get('password').value && g.get('passwordConfirm').value) {
-            g.get('passwordConfirm').setErrors(g.get('password').value === g.get('passwordConfirm').value ? null :
-                { mismatch: true });
+            g.get('passwordConfirm').setErrors(g.get('password').value === g.get('passwordConfirm').value ?
+                null : { mismatch: true });
         }
         return null;
     }
