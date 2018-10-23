@@ -434,20 +434,19 @@ export class SetlLoginComponent implements OnDestroy, OnInit, AfterViewInit {
     }
 
     passwordValidator(g: FormGroup) {
-        if (g.get('password').value && g.get('passwordConfirm').value) {
-            const errorsPassword = g.get('password').errors;
-            const errorsPasswordConfirm = g.get('passwordConfirm').errors;
-            if (g.get('password').value === g.get('passwordConfirm').value) {
-                if (_.isObject(errorsPassword)) delete errorsPassword.mismatch;
-                if (_.isObject(errorsPasswordConfirm)) delete errorsPasswordConfirm.mismatch;
-                g.get('passwordConfirm').setErrors(_.isEmpty(errorsPasswordConfirm) ? null : errorsPasswordConfirm);
-                g.get('password').setErrors(_.isEmpty(errorsPassword) ? null : errorsPassword);
-            } else {
-                g.get('passwordConfirm').setErrors(Object.assign({}, errorsPasswordConfirm, { mismatch: true }));
-                g.get('password').setErrors(Object.assign({}, errorsPassword, { mismatch: true }));
-            }
+        if (!g.get('password').value || !g.get('passwordConfirm').value) return null;
+
+        const errorsPassword = g.get('password').errors;
+        const errorsPasswordConfirm = g.get('passwordConfirm').errors;
+        if (g.get('password').value === g.get('passwordConfirm').value) {
+            if (_.isObject(errorsPassword)) delete errorsPassword.mismatch;
+            if (_.isObject(errorsPasswordConfirm)) delete errorsPasswordConfirm.mismatch;
+            g.get('passwordConfirm').setErrors(_.isEmpty(errorsPasswordConfirm) ? null : errorsPasswordConfirm);
+            g.get('password').setErrors(_.isEmpty(errorsPassword) ? null : errorsPassword);
+        } else {
+            g.get('passwordConfirm').setErrors(Object.assign({}, errorsPasswordConfirm, { mismatch: true }));
+            g.get('password').setErrors(Object.assign({}, errorsPassword, { mismatch: true }));
         }
-        return null;
     }
 
     toggleShowPasswords(key) {
