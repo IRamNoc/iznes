@@ -94,9 +94,9 @@
 
     <div class="modal-body modal-form-body text-center" *ngIf="!emailSent && !changePassword">
         <div *ngIf="isTokenExpired; else notExpired">
-            <div class="field-error">
+            <span class="field-error">
                 {{'This link has expired!' | translate}}
-            </div>
+            </span>
             <p><i class="fa fa-exclamation fa-5x field-error" aria-hidden="true"></i></p>
             <p>{{'Please retype your email address to change your password.' | translate}}</p>
         </div>
