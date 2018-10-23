@@ -521,6 +521,8 @@ export class SetlMyAccountComponent implements OnDestroy, OnInit {
 
         if (oldPasswordValue && passwordValue) {
             const errors = g.controls.password.errors;
+            if (_.isObject(errors)) delete errors.oldNew;
+
             g.controls.password.setErrors(
                 oldPasswordValue !== passwordValue ? errors : Object.assign({}, errors, { oldNew: true }));
         }
@@ -533,7 +535,7 @@ export class SetlMyAccountComponent implements OnDestroy, OnInit {
     }
 
     toggleShowPasswords() {
-        this.showPasswords = (this.showPasswords === false) ? true : false;
+        this.showPasswords = !this.showPasswords;
     }
 
     changePass(formValues) {
