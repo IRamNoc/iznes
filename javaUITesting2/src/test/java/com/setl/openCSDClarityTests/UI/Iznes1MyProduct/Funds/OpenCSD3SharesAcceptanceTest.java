@@ -107,25 +107,21 @@ public class OpenCSD3SharesAcceptanceTest {
     }
 
     @Test
-    //TODO Sprint 14
     public void shouldAssertThatAFundSharesTabIsPresent(){
         System.out.println("Not Yet Implemented");
     }
 
     @Test
-    //TODO Sprint 14
     public void shouldAssertThatFundSharesHas2ExpandableFields(){
         System.out.println("Not Yet Implemented");
     }
 
     @Test
-    //TODO Sprint 14
     public void shouldCreateFundShareAndCheckDatabase(){
         System.out.println("Not Yet Implemented");
     }
 
     @Test
-    //TODO Sprint 14
     public void shouldUpdateFundShareAndCheckDatabase(){
         System.out.println("Not Yet Implemented");
     }

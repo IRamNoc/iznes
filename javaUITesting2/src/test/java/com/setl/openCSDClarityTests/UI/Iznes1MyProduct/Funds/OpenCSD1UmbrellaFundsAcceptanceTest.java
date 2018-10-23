@@ -647,7 +647,6 @@ public class OpenCSD1UmbrellaFundsAcceptanceTest {
         assertTrue(additionalNotes.equals("This test was created to allow the optional information to be filled in automatically"));
     }
     @Test
-    //TODO Sprint 14
     public void shouldAssertThatAnUmbrellaFundTabIsPresent(){
         System.out.println("Not Yet Implemented");
     }

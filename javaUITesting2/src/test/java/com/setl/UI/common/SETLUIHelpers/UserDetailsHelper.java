@@ -108,7 +108,11 @@ public class UserDetailsHelper extends LoginAndNavigationHelper {
         String str = randomAlphabetic(10);
         String userName = "Test_User_" + str;
         String emailAddress = userName + "@" + str + ".com";
-        return new String[] {userName, emailAddress};
+        String firstName = "John" + str;
+        String lastName = "Smith" + str;
+        String userReference = randomNumeric(10);
+        String phoneNumber = "+44" + str;
+        return new String[] {userName, emailAddress, firstName, lastName, userReference, phoneNumber};
     }
 
     private static boolean isElementPresent(By by) {

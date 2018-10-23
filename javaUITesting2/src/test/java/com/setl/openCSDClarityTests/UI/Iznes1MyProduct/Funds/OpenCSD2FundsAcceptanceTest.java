@@ -553,13 +553,11 @@ public class OpenCSD2FundsAcceptanceTest {
     }
 
     @Test
-    //TODO Sprint 14
     public void shouldAssertThatAFundsTabIsPresent(){
         System.out.println("Not Yet Implemented");
     }
 
     @Test
-    //TODO Sprint 14
     public void shouldCreateAndSetWalletWhenFundIsCreated(){
         System.out.println("Not Yet Implemented");
     }

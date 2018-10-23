@@ -1,5 +1,6 @@
 package com.setl.openCSDClarityTests.UI.PortfolioManagerOnboarding;
 
+import com.setl.UI.common.SETLUIHelpers.LoginAndNavigationHelper;
 import com.setl.UI.common.SETLUtils.RepeatRule;
 import com.setl.UI.common.SETLUtils.ScreenshotRule;
 import com.setl.UI.common.SETLUtils.TestMethodPrinterRule;
@@ -14,8 +15,14 @@ import org.openqa.selenium.JavascriptExecutor;
 import java.sql.SQLException;
 
 import static SETLAPIHelpers.DatabaseHelper.setDBTwoFAOff;
+import static com.setl.UI.common.SETLUIHelpers.AdministrationModuleHelper.generateEmail;
+import static com.setl.UI.common.SETLUIHelpers.AdministrationModuleHelper.generateRandomTeamReference;
+import static com.setl.UI.common.SETLUIHelpers.AdministrationModuleHelper.generateUser;
+import static com.setl.UI.common.SETLUIHelpers.LoginAndNavigationHelper.*;
 import static com.setl.UI.common.SETLUIHelpers.SetUp.driver;
 import static com.setl.UI.common.SETLUIHelpers.SetUp.testSetUp;
+import static com.setl.UI.common.SETLUIHelpers.UserDetailsHelper.generateRandomUserDetails;
+import static org.junit.Assert.fail;
 
 @RunWith(OrderedJUnit4ClassRunner.class)
 
@@ -52,9 +59,16 @@ public class OpenCSDPortfolioManagerOnboarding {
     @Test
     //TODO Sprint 14
     public void TG3065_shouldInviteUserWithPortfolioManagerType()throws InterruptedException, SQLException {
-        System.out.println("Not Yet Implemented");
+        String[] userDetails = generateRandomUserDetails();
+            loginAndVerifySuccess("am", "alex01");
+        try {
+            navigateToDropdown("top-menu-my-clients");
+            navigateToDropdown("top-menu-client-referential");
+            investorInviteOption(userDetails[1], userDetails[2], userDetails[3], userDetails[4], "Portfolio Manager");
+        }catch (Exception e){
+            fail("Not Yet Implemented");
+        }
     }
-
     @Test
     //TODO Sprint 14
     public void TG3067_shouldAssertCompanyNameEqualsNameOfAssociatedFund()throws InterruptedException, SQLException {

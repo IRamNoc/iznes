@@ -194,6 +194,31 @@ public class LoginAndNavigationHelper {
         System.out.println("=======================================================");
     }
 
+    public static void investorInviteOption(String email, String name, String surname, String reference, String investorType)throws InterruptedException {
+        WebDriverWait wait = new WebDriverWait(driver, timeoutInSeconds);
+        driver.findElement(By.id("invite-investors-btn")).click();
+        wait.until(visibilityOfElementLocated(By.id("ofi-kyc-invite-investors")));
+        driver.findElement(By.id("kyc_email_0")).sendKeys(email);
+        driver.findElement(By.id("kyc_clientReference_0")).sendKeys(reference);
+        driver.findElement(By.id("kyc_firstName_0")).sendKeys(name);
+        driver.findElement(By.cssSelector("#kyc_language_0 > div:nth-child(1) > div:nth-child(2) > span:nth-child(1) > i:nth-child(3)")).click();
+        wait.until(elementToBeClickable(By.cssSelector(".ui-select-search")));
+        driver.findElement(By.cssSelector("#kyc_language_0 > div > div.option-wrapper.ui-select-choices.dropdown-menu.ng-star-inserted > ul > li:nth-child(2) > div > a > div")).click();
+        driver.findElement(By.cssSelector("#kyc_investorType_0 > div > div.ui-select-match.dropdown > span")).click();
+        driver.findElement(By.cssSelector("#kyc_investorType_0 > div > div.option-wrapper.ui-select-choices.dropdown-menu.ng-star-inserted > div > input")).click();
+        driver.findElement(By.cssSelector("#kyc_investorType_0 > div > div.option-wrapper.ui-select-choices.dropdown-menu.ng-star-inserted > div > input")).clear();
+        driver.findElement(By.cssSelector("#kyc_investorType_0 > div > div.option-wrapper.ui-select-choices.dropdown-menu.ng-star-inserted > div > input")).sendKeys(investorType);
+        driver.findElement(By.cssSelector(".ui-select-choices-row")).click();
+        driver.findElement(By.id("kyc_lastName_0")).sendKeys(surname);
+        String investorTypes = driver.findElement(By.cssSelector("#kyc_investorType_0 > div:nth-child(1) > div:nth-child(2) > span:nth-child(1) > span:nth-child(1)")).getText();
+        assertEquals(investorType, investorTypes);
+        driver.findElement(By.id("btnKycSubmit")).click();
+        String successHeader = driver.findElement(By.xpath("/html/body/app-root/jaspero-alerts/jaspero-alert/div[2]/div[1]")).getText();
+        assertEquals("Success!", successHeader);
+        String emailInvite = driver.findElement(By.xpath("/html/body/app-root/jaspero-alerts/jaspero-alert/div[2]/div[3]/table/tbody/tr/td")).getText();
+        assertEquals(email, emailInvite);
+    }
+
     public static void loginAndVerifyFailure(String username, String password) throws InterruptedException {
         navigateToLoginPage();
         enterLoginCredentialsUserName(username);
