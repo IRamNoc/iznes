@@ -165,46 +165,10 @@
                 </div>
             </div>
 
-            <!-- Beneficiaries-->
-            <h4>{{'Actual beneficiaries' | translate}}</h4>
-            <div class="beneficiaries mb-2">
-
-                <div class="my-1">
-                    <clr-alert [clrAlertClosable]="false" [clrAlertSizeSmall]="true">
-                        <div class="alert-item">
-                            <span class="alert-text">
-                                {{'The first beneficiary you will add will be a direct beneficiary. You can then add other direct or indirect beneficiaries by clicking on the "Add another beneficiary" button.' | translate}}
-                            </span>
-                        </div>
-                    </clr-alert>
-                    <clr-alert [clrAlertSizeSmall]="true" [clrAlertType]="'alert-warning'" [clrAlertClosable]="false">
-                        <div class="alert-item">
-                            <span class="alert-text">
-                                {{'Please fill information for all beneficiaries that hold more than 10% of the company.' | translate}}
-                            </span>
-                        </div>
-                    </clr-alert>
-                </div>
-
-                <div class="my-1 pl-1 beneficiary" *ngFor="let beneficiary of beneficiaries; let i = index" formArrayName="beneficiaries">
-                    <a *ngIf="i > 0" class="close text-warning" (click)="removeBeneficiary(i)"><i class="fa fa-times-circle"></i></a>
-
-                    <beneficiary [form]="beneficiary" [index]="i" (ready)="handleReady()"></beneficiary>
-                </div>
-
-                <div class="form-group col-xs-12">
-                    <button class="btn btn-primary" (click)="addBeneficiary()">
-                        {{'Add another beneficiary' | translate}}
-                    </button>
-                </div>
-            </div>
-            <!-- End beneficiaries -->
-
-
-            <div class="mb-1" formGroupName="capitalNature">
+            <div class="mb-2" formGroupName="capitalNature">
 
                 <div>
-                    <label class="required-field">{{'Nature and origin of the capital invested by the legal entity: (multiple choice)' | translate}}</label>
+                    <label class="required-field">{{'Nature and origin of the capital invested by the legal entity: (several possible choices)' | translate}}</label>
                 </div>
 
                 <span class="checkbox-inline pr-1 pt-1">
@@ -261,6 +225,41 @@
                 <p class="txtRed" *ngIf="hasError('capitalNature')">{{'Select at least one' | translate}}</p>
 
             </div>
+
+            <!-- Beneficiaries-->
+            <h4>{{'Actual beneficiaries' | translate}}</h4>
+            <div class="beneficiaries mb-2">
+
+                <div class="my-1">
+                    <clr-alert [clrAlertClosable]="false" [clrAlertSizeSmall]="true">
+                        <div class="alert-item">
+                            <span class="alert-text">
+                                {{'The first beneficiary you will add will be a direct beneficiary. You can then add other direct or indirect beneficiaries by clicking on the "Add another beneficiary" button.' | translate}}
+                            </span>
+                        </div>
+                    </clr-alert>
+                    <clr-alert [clrAlertSizeSmall]="true" [clrAlertType]="'alert-warning'" [clrAlertClosable]="false">
+                        <div class="alert-item">
+                            <span class="alert-text">
+                                {{'Please fill information for all beneficiaries that hold more than 10% of the company.' | translate}}
+                            </span>
+                        </div>
+                    </clr-alert>
+                </div>
+
+                <div class="my-1 pl-1 beneficiary" *ngFor="let beneficiary of beneficiaries; let i = index" formArrayName="beneficiaries">
+                    <a *ngIf="i > 0" class="close text-warning" (click)="removeBeneficiary(i)"><i class="fa fa-times-circle"></i></a>
+
+                    <beneficiary [form]="beneficiary" [index]="i" (ready)="handleReady()"></beneficiary>
+                </div>
+
+                <div class="form-group col-xs-12">
+                    <button class="btn btn-primary" (click)="addBeneficiary()">
+                        {{'Add another beneficiary' | translate}}
+                    </button>
+                </div>
+            </div>
+            <!-- End beneficiaries -->
 
             <div class="row">
                 <div class="form-group required-field col-md-6 col-xl-3">
