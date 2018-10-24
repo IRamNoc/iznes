@@ -226,6 +226,14 @@
 
             </div>
 
+            <div class="row">
+                <div class="form-group required-field col-sm-6">
+                    <label for="totalFinancialAssetsAlreadyInvested">{{'Total Financial assets already invested' | translate}}</label>
+                    <ng-select [items]="financialAssetsInvestedList" id="totalFinancialAssetsAlreadyInvested" formControlName="totalFinancialAssetsAlreadyInvested" placeholder="{{'Please select a range' | translate}}"></ng-select>
+                    <span class="field-error" *ngIf="hasError('totalFinancialAssetsAlreadyInvested')">{{'Field is required' | translate}}</span>
+                </div>
+            </div>
+
             <!-- Beneficiaries-->
             <h4>{{'Actual beneficiaries' | translate}}</h4>
             <div class="beneficiaries mb-2">
@@ -273,14 +281,6 @@
                 <div class="form-group required-field col-md-6 col-xl-3" *ngIf="geographicalOrigin === 'area'">
                     <label for="geographicalOrigin2">{{'Area' | translate}}</label>
                     <ng-select class="large-select" id="geographicalOrigin2" [items]="geographicalAreaList" formControlName="geographicalOrigin2" placeholder="{{'Please select an area(s)' | translate}}"></ng-select>
-                </div>
-            </div>
-
-            <div class="row">
-                <div class="form-group required-field col-sm-6">
-                    <label for="totalFinancialAssetsAlreadyInvested">{{'Total Financial assets already invested' | translate}}</label>
-                    <ng-select [items]="financialAssetsInvestedList" id="totalFinancialAssetsAlreadyInvested" formControlName="totalFinancialAssetsAlreadyInvested" placeholder="{{'Please select a range' | translate}}"></ng-select>
-                    <span class="field-error" *ngIf="hasError('totalFinancialAssetsAlreadyInvested')">{{'Field is required' | translate}}</span>
                 </div>
             </div>
         </div>
