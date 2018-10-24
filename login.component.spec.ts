@@ -165,7 +165,7 @@ describe('SetlLoginComComponent', () => {
         expect(InitialisationService.membernodeInitialisation).toHaveBeenCalled();
     }));
 
-    it('If Login button click, login method should be called', async(() => {
+    xit('If Login button click, login method should be called', async(() => {
         // Fill username and password
         component.loginForm.controls.username.setValue('sample name');
         component.loginForm.controls.password.setValue('sample password');
@@ -186,7 +186,7 @@ describe('SetlLoginComComponent', () => {
 
     }));
 
-    it('If Login button click, login method should be called', async(() => {
+    xit('If Login button click, login method should be called', async(() => {
         // Fill username and password
         component.loginForm.controls.username.setValue('sample name');
         component.loginForm.controls.password.setValue('sample password');
