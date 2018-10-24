@@ -149,20 +149,6 @@
             </div>
 
             <div class="row">
-                <div class="form-group required-field col-sm-6">
-                    <label class="control-label" for="sectorActivity">{{'Primary Sector of activity' | translate}}</label>
-                    <ng-select class="multiline" [items]="sectorActivityList" id="sectorActivity" formControlName="sectorActivity" placeholder="{{'Please fill in your primary activity sector' | translate}}"></ng-select>
-                    <span class="field-error" *ngIf="hasError('sectorActivity')">{{'Field is required' | translate}}</span>
-                </div>
-                <div class="form-group required-field col-sm-6" *ngIf="!isDisabled('sectorActivityText')">
-                    <label class="control-label" for="sectorActivityText">{{'Please specify' | translate}}</label>
-                    <input type="text" id="sectorActivityText" formControlName="sectorActivityText" placeholder="{{'Primary Sector of activity' | translate}}">
-                    <span class="field-error" *ngIf="hasError('sectorActivityText', ['required'])">{{'Field is required' | translate}}</span>
-                    <span class="field-error" *ngIf="hasError('sectorActivityText', ['maxlength'])">{{'Field is too long' | translate}}</span>
-                </div>
-            </div>
-
-            <div class="row">
                 <div class="form-group required-field col-md-4">
                     <label class="control-label" for="legalStatus">{{'Legal status' | translate}}</label>
                     <ng-select class="large-select multiline" [items]="legalStatusList" id="legalStatusList" [formControl]="form.get('legalStatus')" placeholder="{{'Please fill in your company legal status' | translate}}"></ng-select>

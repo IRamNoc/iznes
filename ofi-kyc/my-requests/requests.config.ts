@@ -1297,14 +1297,14 @@ export const controlToName = {
     commercialCity: 'Commercial city',
     commercialCountry: 'Commercial country',
     countryTaxResidence: 'Country of tax residence',
-    sectorActivity: 'Primary Sector of activity',
-    sectorActivityText: 'Sector of activity specification',
     legalStatus: 'Legal status',
     legalStatusListingOther: 'Legal status specification',
     legalStatusInsurerType: 'Insurer type',
     legalStatusListingMarkets: 'Listing market(s)',
 
     // Company
+    sectorActivity: 'Primary Sector of activity',
+    sectorActivityText: 'Sector of activity specification',
     activities: 'Activities',
     ownAccountinvestor: 'Own-account investor',
     investorOnBehalfThirdParties: 'Managed third parties',

@@ -221,11 +221,6 @@ export class NewRequestService {
             commercialCity: [{ value: '', disabled: true }, Validators.required],
             commercialCountry: [{ value: '', disabled: true }, Validators.required],
             countryTaxResidence: ['', Validators.required],
-            sectorActivity: ['', Validators.required],
-            sectorActivityText: [
-                { value: '', disabled: true },
-                this.getLengthValidator(255)
-            ],
             legalStatus: ['', Validators.required],
             legalStatusInsurerType: [
                 { value: '', disabled: true },
@@ -242,6 +237,11 @@ export class NewRequestService {
         });
         const companyInformation = fb.group({
             kycID: '',
+            sectorActivity: ['', Validators.required],
+            sectorActivityText: [
+                { value: '', disabled: true },
+                this.getLengthValidator(255),
+            ],
             activities: ['', Validators.required],
             ownAccountinvestor: [
                 { value: '', disabled: true },

@@ -26,6 +26,7 @@ export class CompanyInformationComponent implements OnInit, OnDestroy {
     unsubscribe: Subject<any> = new Subject();
     open: boolean = false;
     countries = countries;
+    sectorActivityList;
     companyActivitiesList;
     ownAccountInvestorList;
     investorOnBehalfList;
@@ -42,6 +43,7 @@ export class CompanyInformationComponent implements OnInit, OnDestroy {
     }
 
     ngOnInit() {
+        this.sectorActivityList = this.newRequestService.sectorActivityList;
         this.companyActivitiesList = this.newRequestService.companyActivitiesList;
         this.ownAccountInvestorList = this.newRequestService.ownAccountInvestorList;
         this.investorOnBehalfList = this.newRequestService.investorOnBehalfList;
@@ -55,6 +57,16 @@ export class CompanyInformationComponent implements OnInit, OnDestroy {
     }
 
     initFormCheck() {
+
+        this.form.get('sectorActivity').valueChanges
+        .pipe(takeUntil(this.unsubscribe))
+        .subscribe((data) => {
+            const sectorActivityValue = getValue(data, [0, 'id']);
+
+            this.formCheckSectorActivity(sectorActivityValue);
+        })
+        ;
+
         this.form.get('activities').valueChanges
         .pipe(takeUntil(this.unsubscribe))
         .subscribe((data) => {
@@ -110,6 +122,19 @@ export class CompanyInformationComponent implements OnInit, OnDestroy {
 
     get geographicalOrigin() {
         return getValue(this.form.get('geographicalOrigin1').value, [0, 'id']);
+    }
+
+    formCheckSectorActivity(value) {
+        const form = this.form;
+        const sectorActivityTextControl = form.get('sectorActivityText');
+
+        if (value === 'other') {
+            sectorActivityTextControl.enable();
+        } else {
+            sectorActivityTextControl.disable();
+        }
+
+        this.formPercent.refreshFormPercent();
     }
 
     formCheckActivity(value) {
