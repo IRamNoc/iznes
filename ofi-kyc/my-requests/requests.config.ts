@@ -1313,7 +1313,6 @@ export const controlToName = {
     listingMarkets: 'Listing market(s)',
     bloombergCode: 'Bloomberg code',
     isinCode: 'ISIN code of the listed share',
-    keyFinancialData: 'Key Financial Data',
     balanceSheetTotal: 'Balance Sheet Total (€)',
     netRevenuesNetIncome: 'Net Revenues or Net Income (€)',
     shareholderEquity: "Shareholder's Equity (€)",

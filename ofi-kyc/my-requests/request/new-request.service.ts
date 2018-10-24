@@ -293,7 +293,6 @@ export class NewRequestService {
                 ],
             ],
 
-            keyFinancialData: '',
             balanceSheetTotal: ['', Validators.required],
 
             netRevenuesNetIncome: ['', [
