@@ -251,15 +251,18 @@ export class CompanyInformationComponent implements OnInit, OnDestroy {
         const companyListingMarketsControl = this.form.get('listingMarkets');
         const bloombergCodesControl = this.form.get('bloombergCode');
         const listedShareISINControl = this.form.get('isinCode');
+        const floatableSharesControl = this.form.get('floatableShares');
 
         if (value) {
             companyListingMarketsControl.enable();
             listedShareISINControl.enable();
             bloombergCodesControl.enable();
+            floatableSharesControl.enable();
         } else {
             companyListingMarketsControl.disable();
             listedShareISINControl.disable();
             bloombergCodesControl.disable();
+            floatableSharesControl.disable();
         }
 
         this.formPercent.refreshFormPercent();

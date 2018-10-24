@@ -284,6 +284,14 @@ export class NewRequestService {
                 { value: '', disabled: true },
                 [Validators.required, Validators.pattern(/^[a-zA-Z]{2}[A-Z0-9]{9}\d$/)],
             ],
+            floatableShares: [
+                '',
+                [
+                    Validators.required,
+                    Validators.min(0),
+                    Validators.max(100),
+                ],
+            ],
 
             keyFinancialData: '',
             balanceSheetTotal: ['', Validators.required],

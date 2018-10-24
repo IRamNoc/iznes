@@ -115,6 +115,11 @@
                     <span class="field-error" *ngIf="hasError('isinCode', ['pattern'])">{{'ISIN must have two letters and ten digits' | translate}}</span>
                     <span class="field-error" *ngIf="hasError('isinCode', ['maxlength'])">{{'Field is too long' | translate}}</span>
                 </div>
+                <div class="form-group required-field col-sm-4">
+                    <input type="number" id="floatableShares" formControlName="floatableShares" placeholder="{{'Fill in a percentage of floatable shares' | translate }}">
+                    <span class="field-error" *ngIf="hasError('floatableShares', ['required'])">{{'Field is required' | translate}}</span>
+                    <span class="field-error" *ngIf="hasError('floatableShares', ['min', 'max'])">{{'Value must be between 0 and 100' | translate}}</span>
+                </div>
             </div>
 
             <div class="row">
