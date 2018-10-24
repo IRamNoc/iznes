@@ -24,8 +24,7 @@ export interface SendInvestInvitationRequestBody extends MemberNodeMessageBody {
 }
 
 export interface UseTokenRequestBody extends MemberNodeMessageBody {
-    token: string,
-    invitationToken: string
+    invitationToken: string;
 }
 
 export interface VerifyInvitationTokenRequestBody extends MemberNodeMessageBody {

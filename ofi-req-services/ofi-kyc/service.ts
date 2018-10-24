@@ -353,8 +353,7 @@ export class OfiKycService {
 
         const messageBody: UseTokenRequestBody = {
             RequestName: 'izneskycusetoken',
-            token: this.memberSocketService.token,
-            invitationToken: invitationToken,
+            invitationToken,
         };
 
         return createMemberNodeRequest(this.memberSocketService, messageBody);
