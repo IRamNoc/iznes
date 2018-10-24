@@ -50,7 +50,8 @@ import {
     riskAcceptanceList,
     beneficiaryTypesList,
     holdingTypesList,
-    identificationNumberList
+    identificationNumberList,
+    listingMarketsList,
 } from '../requests.config';
 
 @Injectable()
@@ -82,6 +83,7 @@ export class NewRequestService {
     beneficiaryTypesList;
     holdingTypesList;
     identificationNumberList;
+    listingMarketsList;
     saveContext = '';
 
     /* Private Properties. */
@@ -125,6 +127,7 @@ export class NewRequestService {
         this.beneficiaryTypesList = beneficiaryTypesList;
         this.holdingTypesList = holdingTypesList;
         this.identificationNumberList = identificationNumberList;
+        this.listingMarketsList = listingMarketsList;
     }
 
     set context(value) {

@@ -68,6 +68,7 @@ export const selectControls = [
     'activities',
     'ownAccountinvestor',
     'otherIdentificationNumber',
+    'listingMarkets',
     'investorOnBehalfThirdParties',
     'geographicalAreaOfActivity',
     'nationality',
@@ -349,6 +350,19 @@ export const sectorActivityList = [
         id: 'other',
         text: 'Other',
     },
+];
+
+export const listingMarketsList = [
+    { id: 'londonstockexchange', text: 'London Stock Exchange' },
+    { id: 'borsefrankfurter', text: 'Börse Frankfurter' },
+    { id: 'nyse', text: 'NYSE' },
+    { id: 'euronext', text: 'Euronext' },
+    { id: 'deutscheborse', text: 'Deutsche Börse' },
+    { id: 'borseberlin', text: 'Börse Berlin' },
+    { id: 'batseurope', text: 'Bats Europe' },
+    { id: 'chix', text: 'Chi-X' },
+    { id: 'turquoise', text: 'Turquoise' },
+    { id: 'tradegate', text: 'Tradegate' },
 ];
 
 export const regulatoryStatusList = [
@@ -1401,6 +1415,7 @@ export const controlToList = {
     activities: 'companyActivitiesList',
     ownAccountinvestor: 'ownAccountInvestorList',
     investorOnBehalfThirdParties: 'investorOnBehalfList',
+    listingMarkets: 'listingMarketsList',
     geographicalAreaOfActivity: 'geographicalAreaList',
     geographicalOrigin1: 'geographicalOriginTypeList',
     capitalNature: 'capitalNatureList',

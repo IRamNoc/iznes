@@ -36,6 +36,7 @@ export class CompanyInformationComponent implements OnInit, OnDestroy {
     financialAssetsInvestedList;
     geographicalAreaList;
     custodianHolderAccountList;
+    listingMarketsList;
 
     constructor(
         private newRequestService: NewRequestService,
@@ -55,6 +56,7 @@ export class CompanyInformationComponent implements OnInit, OnDestroy {
         this.financialAssetsInvestedList = this.newRequestService.financialAssetsInvestedList;
         this.geographicalAreaList = this.newRequestService.geographicalAreaList;
         this.custodianHolderAccountList = this.newRequestService.custodianHolderAccountList;
+        this.listingMarketsList = this.newRequestService.listingMarketsList;
 
         this.initFormCheck();
         this.getCurrentFormData();
