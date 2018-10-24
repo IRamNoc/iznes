@@ -187,9 +187,9 @@ public class OpenCSDSprint7AcceptanceTest {
         navigateToPageByID("menu-product-home");
 
         String navlinkactive = driver.findElement(By.id("menu-product-home")).getAttribute("class");
-        assertTrue(navlinkactive.equals("nav-link active"));
+        assertEquals("nav-link ng-star-inserted active", navlinkactive);
         driver.findElement(By.id("menu-nav")).click();
-        assertTrue(driver.findElement(By.id("menu-product-home")).getAttribute("class").equals("nav-link"));
+        assertEquals("nav-link ng-star-inserted active", driver.findElement(By.id("menu-nav")).getAttribute("class"));
     }
 
     @Test
