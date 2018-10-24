@@ -56,6 +56,8 @@
                                                 [class.error]="!sendAssetForm.controls['recipient'].valid && sendAssetForm.controls['recipient'].touched"></various-address-select>
 
                         <span *ngIf="sendAssetForm.controls['recipient'].hasError('required') && !sendAssetForm.controls['recipient'].pristine" class="field-error" mltag="txt_fieldisrequired">Field is required</span>
+
+                        <span *ngIf="sendAssetForm.controls['recipient'].hasError('pattern') && !sendAssetForm.controls['recipient'].pristine" class="field-error">Invalid address format</span>
                     </div>
 
                     <div class="form-group col-sm-6">
