@@ -7,6 +7,7 @@ import { Subscription } from 'rxjs/Subscription';
 import { UPDATE_TWO_FACTOR } from '@setl/core-store';
 import { MyUserService } from '@setl/core-req-services';
 import { MultilingualService } from '@setl/multilingual';
+import { LoginService } from "../../login.service";
 
 @Component({
     selector: 'app-authenticate',
@@ -47,6 +48,7 @@ export class AuthenticateComponent implements OnDestroy, OnInit {
         private changeDetectorRef: ChangeDetectorRef,
         private myUserService: MyUserService,
         public translate: MultilingualService,
+        private loginService: LoginService,
     ) {
 
         this.authenticateQRForm = new FormGroup(
@@ -114,6 +116,8 @@ export class AuthenticateComponent implements OnDestroy, OnInit {
                     if (this.showSuccessAlert) {
                         this.alertsService.generate('success', data[1].Data[0].Message);
                     }
+
+                    this.loginService.postLoginRequests();
 
                     this.modalCancelled.emit(true);
                     this.changeDetectorRef.markForCheck();

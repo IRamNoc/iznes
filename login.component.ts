@@ -44,6 +44,7 @@ import { combineLatest } from 'rxjs/observable/combineLatest';
 import { Subscription } from 'rxjs/Subscription';
 import { MultilingualService } from '@setl/multilingual';
 import { passwordValidator } from '@setl/utils/helper/validators/password.directive';
+import { LoginService } from "./login.service";
 
 /* Dectorator. */
 @Component({
@@ -138,6 +139,7 @@ export class SetlLoginComponent implements OnDestroy, OnInit, AfterViewInit {
                 public translate: MultilingualService,
                 private changeDetectorRef: ChangeDetectorRef,
                 private confirmationService: ConfirmationService,
+                private loginService: LoginService,
                 @Inject(APP_CONFIG) appConfig: AppConfig) {
 
         this.appConfig = appConfig;
@@ -328,12 +330,8 @@ export class SetlLoginComponent implements OnDestroy, OnInit, AfterViewInit {
                 if (_.get(data, '[1].Data[0].qrCode', false)) {
                     this.qrCode = data[1].Data[0].qrCode;
                 }
-                const asyncTaskPipes = this.myUserService.getSiteMenu(this.ngRedux);
-                this.ngRedux.dispatch(SagaHelper.runAsync(
-                    [SET_SITE_MENU],
-                    [],
-                    asyncTaskPipes, {},
-                ));
+
+                this.loginService.postLoginRequests();
             },
             // Fail to login
             (data) => {

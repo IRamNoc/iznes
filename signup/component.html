@@ -94,3 +94,10 @@
         </small>
     </p>
 </div>
+
+<app-authenticate
+    *ngIf="showTwoFactorModal"
+    [qrCode]="qrCode"
+    (modalCancelled)="showTwoFactorModal=!$event"
+>
+</app-authenticate>
