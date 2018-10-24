@@ -439,11 +439,11 @@ export const publicEstablishmentList = [
 export const companyActivitiesList = [
     {
         id: 'ownAccount',
-        text: 'Own-account investor',
+        text: 'Own-account',
     },
     {
         id: 'onBehalfOfThirdParties',
-        text: 'Investor on behalf of third parties',
+        text: 'Third parties',
     },
 ];
 
@@ -1306,8 +1306,8 @@ export const controlToName = {
     sectorActivity: 'Primary Sector of activity',
     sectorActivityText: 'Sector of activity specification',
     activities: 'Activities',
-    ownAccountinvestor: 'Own-account investor',
-    investorOnBehalfThirdParties: 'Managed third parties',
+    ownAccountinvestor: 'Own-account',
+    investorOnBehalfThirdParties: 'Third parties',
     geographicalAreaOfActivity: 'Geographical area of the activity',
     geographicalAreaOfActivitySpecification: 'Geographical area of the activity specification',
     totalFinancialAssetsAlreadyInvested: 'Total Financial assets already invested',

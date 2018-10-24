@@ -29,26 +29,6 @@
             </div>
 
             <div class="row">
-                <div class="form-group required-field col-md-6 col-xl-3">
-                    <label class="control-label" for="activities">{{'Activities' | translate}}</label>
-                    <ng-select class="large-select multiline" id="activities" [items]="companyActivitiesList" [allowClear]="true" [formControl]="form.get('activities')" placeholder="{{'Please select your company activity' | translate}}"></ng-select>
-                    <span class="field-error" *ngIf="hasError('activities')">{{'Field is required' | translate}}</span>
-                </div>
-
-                <div class="form-group required-field col-md-6 col-xl-3" *ngIf="!isDisabled('ownAccountinvestor')">
-                    <label class="control-label" for="ownAccountinvestor">{{'Own-account investor' | translate}}</label>
-                    <ng-select class="large-select multiline" id="ownAccountinvestor" [items]="ownAccountInvestorList" [allowClear]="true" [formControl]="form.get('ownAccountinvestor')" placeholder="{{'Please select an own-account investor type' | translate}}"></ng-select>
-                    <span class="field-error" *ngIf="hasError('ownAccountinvestor')">{{'Field is required' | translate}}</span>
-                </div>
-
-                <div class="form-group required-field col-md-6 col-xl-3" *ngIf="!isDisabled('investorOnBehalfThirdParties')">
-                    <label class="control-label" for="investorOnBehalfList">{{'Investor on behalf of third parties' | translate}}</label>
-                    <ng-select class="large-select multiline" id="investorOnBehalfList" [items]="investorOnBehalfList" [allowClear]="true" [formControl]="form.get('investorOnBehalfThirdParties')" placeholder="{{'Please select the type of third parties your company manages' | translate}}"></ng-select>
-                    <span class="field-error" *ngIf="hasError('investorOnBehalfThirdParties')">{{'Field is required' | translate}}</span>
-                </div>
-            </div>
-
-            <div class="row">
                 <div class="form-group required-field col-sm-3">
                     <label class="control-label" for="geographicalAreaOfActivity">{{'Geographical area of the activity' | translate}}</label>
                     <ng-select class="large-select multiline" id="geographicalAreaOfActivity" [items]="geographicalAreaList" [allowClear]="true" [formControl]="form.get('geographicalAreaOfActivity')" placeholder="{{'Please select your company area of activity' | translate}}"></ng-select>
@@ -92,6 +72,26 @@
                         <input type="checkbox" id="companyListed" formControlName="companyListed">
                         <label for="companyListed"></label>
                     </div>
+                </div>
+            </div>
+
+            <div class="row">
+                <div class="form-group required-field col-md-6 col-xl-3">
+                    <label class="control-label" for="activities">{{'Management in behalf of' | translate}}</label>
+                    <ng-select class="large-select multiline" id="activities" [items]="companyActivitiesList" [allowClear]="true" [formControl]="form.get('activities')" placeholder="{{'Select the type of account you manage' | translate}}"></ng-select>
+                    <span class="field-error" *ngIf="hasError('activities')">{{'Field is required' | translate}}</span>
+                </div>
+
+                <div class="form-group required-field col-md-6 col-xl-3" *ngIf="!isDisabled('ownAccountinvestor')">
+                    <label class="control-label" for="ownAccountinvestor">{{'Own-account' | translate}}</label>
+                    <ng-select class="large-select multiline" id="ownAccountinvestor" [items]="ownAccountInvestorList" [allowClear]="true" [formControl]="form.get('ownAccountinvestor')" placeholder="{{'Select an own-account investor type' | translate}}"></ng-select>
+                    <span class="field-error" *ngIf="hasError('ownAccountinvestor')">{{'Field is required' | translate}}</span>
+                </div>
+
+                <div class="form-group required-field col-md-6 col-xl-3" *ngIf="!isDisabled('investorOnBehalfThirdParties')">
+                    <label class="control-label" for="investorOnBehalfList">{{'Third parties' | translate}}</label>
+                    <ng-select class="large-select multiline" id="investorOnBehalfList" [items]="investorOnBehalfList" [allowClear]="true" [formControl]="form.get('investorOnBehalfThirdParties')" placeholder="{{'Select a third party type' | translate}}"></ng-select>
+                    <span class="field-error" *ngIf="hasError('investorOnBehalfThirdParties')">{{'Field is required' | translate}}</span>
                 </div>
             </div>
 
