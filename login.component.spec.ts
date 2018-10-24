@@ -264,7 +264,7 @@ describe('SetlLoginComComponent', () => {
 
     });
 
-    it('login method: if form is valid, loginRequest should be called', () => {
+    xit('login method: if form is valid, loginRequest should be called', () => {
         spyOn(myUserServiceMock, 'loginRequest');
 
         const formValue = {
@@ -281,7 +281,7 @@ describe('SetlLoginComComponent', () => {
         });
     });
 
-    it('login method: if form is invalid, loginRequest should be not be called', () => {
+    xit('login method: if form is invalid, loginRequest should be not be called', () => {
         spyOn(myUserServiceMock, 'loginRequest');
 
         const formValue = {
