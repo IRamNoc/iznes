@@ -255,7 +255,6 @@ export class SetlMessagesComponent implements OnDestroy, OnInit {
     messagesList(messages) {
         this.selectAll = false;
 
-        console.log('messages:', messages);
         if (messages.length) {
             this.messages = messages.map((message) => {
                 if (message.senderId) {
@@ -292,7 +291,6 @@ export class SetlMessagesComponent implements OnDestroy, OnInit {
             }
         }
 
-        console.log('messages(this):', this.messages);
         this.changeDetectorRef.markForCheck();
     }
 
