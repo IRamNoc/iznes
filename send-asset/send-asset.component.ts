@@ -25,11 +25,11 @@ export class SendAssetComponent implements OnInit, OnDestroy {
     connectedWalletId: number;
     allInstrumentList: any[];
     noInstrumentsAlert: boolean = false;
-    walletInstrumentsSelectItems: any[];
     walletAddressSelectItems: any;
     walletDirectoryList = {};
     walletDirectoryListRaw: any[];
     walletRelationships: any[];
+    addressHoldings: {} = {};
 
     @select(['user', 'connected', 'connectedWallet']) connectedWalletOb;
     @select(['wallet', 'myWalletHolding', 'holdingByAsset']) holdingByAssetOb;
@@ -56,10 +56,10 @@ export class SendAssetComponent implements OnInit, OnDestroy {
 
         /* Filter the instrument list to only those the current wallet has positive balance of */
         this.subscriptionsArray.push(this.holdingByAssetOb.subscribe((holdings) => {
+            const positiveHoldings = {};
+            this.allInstrumentList = [];
+            this.noInstrumentsAlert = false;
             if (!_.isEmpty(holdings) && holdings.hasOwnProperty(this.connectedWalletId) && this.connectedWalletId) {
-                const positiveHoldings = {};
-                this.allInstrumentList = [];
-                this.noInstrumentsAlert = false;
                 for (const holding in holdings[this.connectedWalletId]) {
                     /* Add to instrument list if free holdings is greater than 0 */
                     if (holdings[this.connectedWalletId][holding].free > 0) {
@@ -67,8 +67,17 @@ export class SendAssetComponent implements OnInit, OnDestroy {
                     }
                     this.allInstrumentList = walletHelper.walletInstrumentListToSelectItem(positiveHoldings);
                     this.changeDetectorRef.markForCheck();
+
+                    /* Save holdings by address for validation checks */
+                    for (const breakdown in holdings[this.connectedWalletId][holding].breakdown) {
+                        const address = holdings[this.connectedWalletId][holding].breakdown[breakdown];
+                        if (_.isEmpty(this.addressHoldings[holding])) this.addressHoldings[holding] = {};
+                        this.addressHoldings[holding][address.addr] = address.free;
+                    }
                 }
             }
+            console.log('+++ this.addressHoldings', this.addressHoldings);
+
             /* Display alert if there are no instruments in the list */
             if (!this.allInstrumentList.length) {
                 this.noInstrumentsAlert = true;
@@ -166,12 +175,52 @@ export class SendAssetComponent implements OnInit, OnDestroy {
      * @return {void}
      */
     setFormGroup(): void {
-        this.sendAssetForm = new FormGroup({
-            asset: new FormControl('', Validators.required),
-            assetAddress: new FormControl('', Validators.required),
-            recipient: new FormControl('', Validators.required),
-            amount: new FormControl('', [Validators.required, Validators.pattern('^((?!(0))[0-9]+)$')]),
-        });
+        this.sendAssetForm = new FormGroup(
+            {
+                asset: new FormControl('', Validators.required),
+                assetAddress: new FormControl('', Validators.required),
+                recipient: new FormControl('', Validators.required),
+                amount: new FormControl('', [Validators.required, Validators.pattern('^((?!(0))[0-9]+)$')]),
+            },
+            [
+                (g: FormGroup) => {
+                    const asset = g.get('asset').value;
+                    const assetAddress = g.get('assetAddress').value;
+                    const amount = g.get('amount').value;
+
+                    if (asset && assetAddress && amount) {
+                        console.log('+++ this', this);
+
+                        if (this.addressHoldings[asset[0].id].hasOwnProperty(assetAddress[0].id)) {
+                            this.addressHoldings[asset[0].id][assetAddress[0].id] < amount ?
+                                g.get('amount').setErrors({ insufficientFunds: true }) : g.get('amount').setErrors(null);
+                        }
+                    }
+                    return null;
+                },
+            ],
+        );
+    }
+
+    /**
+     * Validate Address Holdings
+     *
+     * @return null
+     */
+    validateAddressHoldings(g: FormGroup) {
+        const asset = g.get('asset').value;
+        const assetAddress = g.get('assetAddress').value;
+        const amount = g.get('amount').value;
+
+        if (asset && assetAddress && amount) {
+            console.log('+++ this', this);
+
+            if (this.addressHoldings[asset[0].id].hasOwnProperty(assetAddress[0].id)) {
+                this.addressHoldings[asset[0].id][assetAddress[0].id] < amount ?
+                    g.get('amount').setErrors({ insufficientFunds: true }) : g.get('amount').setErrors(null);
+            }
+        }
+        return null;
     }
 
     /**
