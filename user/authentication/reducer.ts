@@ -27,11 +27,13 @@ export const AuthenticationReducer = function (state: AuthenticationState = init
             mustChangePassword = (mustChangePassword === 1);
         }
 
+        const isLogin = token !== 'twoFactorRequired';
+
         const newState = Object.assign({}, state, {
             token,
             apiKey,
             useTwoFactor,
-            isLogin: true,
+            isLogin,
             defaultHomePage,
             mustChangePassword,
         });
@@ -67,7 +69,7 @@ export const AuthenticationReducer = function (state: AuthenticationState = init
     case AuthenticationAction.UPDATE_TWO_FACTOR:
         useTwoFactor = Boolean(_.get(action, 'payload[1].Data[0].useTwoFactor', 0));
         token = _.get(action, 'payload[1].Data[0].Token', '');
-        return Object.assign({}, state, { useTwoFactor, token });
+        return Object.assign({}, state, { useTwoFactor, token, isLogin: true });
 
     default:
         return state;
