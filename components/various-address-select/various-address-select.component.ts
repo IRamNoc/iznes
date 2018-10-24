@@ -6,6 +6,7 @@ import {
     NG_VALIDATORS,
     Validators,
 } from '@angular/forms';
+import { MultilingualService } from '@setl/multilingual';
 import * as _ from 'lodash';
 
 const noop = () => {
@@ -46,10 +47,31 @@ export class VariousAddressSelectComponent implements ControlValueAccessor {
     ownedAddressSelect = new FormControl('', Validators.required);
     otherAddress = new FormControl('', Validators.required);
 
+    otherAddressValidationTooltipText;
+
+    constructor(private translate: MultilingualService) {
+        this.otherAddressValidationTooltipText =
+        `${this.translate.translate('Address must be 34 characters and must satisfy the following rules')}:
+            <ul class="mt-1">
+                <li>${this.translate.translate('Start with an')} 'A'</li>
+                <li>${this.translate.translate('End with either an')} 
+                'A' 'Q', 'g', ${this.translate.translate('or')} 'w'</li>
+                <li>${this.translate.translate('Be comprised of only')}:
+                    <ul>
+                        <li>'A–Z'</li>
+                        <li>'a–z'</li>
+                        <li>'0–9'</li>
+                        <li>${this.translate.translate('\'–\' (hyphen/dash)')}</li>
+                        <li>${this.translate.translate('\'_\' (underscore)')}</li>
+                    </ul>
+                </li>
+            </ul>`;
+    }
+
     // The internal data model
     private innerValue: any = '';
 
-    // Placeholders for the callbacks which are later providesd by the Control Value Accessor
+    // Placeholders for the callbacks which are later provided by the Control Value Accessor
     private onTouchedCallback: () => void = noop;
     private onChangeCallback: (_: any) => void = noop;
 
