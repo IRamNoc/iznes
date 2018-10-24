@@ -176,6 +176,10 @@ export const legalFormList = [
         text: 'Trust',
     },
     {
+        id: 'foundationAssociationEIG',
+        text: 'Foundation / Association / EIG',
+    },
+    {
         id: 'LimitedCompany',
         text: 'Limited Company',
     },
