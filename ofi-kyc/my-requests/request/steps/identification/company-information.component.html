@@ -234,6 +234,21 @@
                 </div>
             </div>
 
+            <div class="row">
+                <div class="form-group required-field col-md-6 col-xl-3">
+                    <label for="geographicalOrigin1">{{'Geographical origin (specify by area or country)' | translate}}</label>
+                    <ng-select class="large-select multiline" id="geographicalOrigin1" [items]="geographicalOriginTypeList" formControlName="geographicalOrigin1" placeholder="{{'Please select a type of geographical origin' | translate}}"></ng-select>
+                </div>
+                <div class="form-group required-field col-md-6 col-xl-3" *ngIf="geographicalOrigin === 'country'">
+                    <label for="geographicalOrigin2">{{'Country' | translate}}</label>
+                    <ng-select class="large-select" id="geographicalOrigin2" [items]="countries" formControlName="geographicalOrigin2" placeholder="{{'Please select a country(ies)' | translate}}"></ng-select>
+                </div>
+                <div class="form-group required-field col-md-6 col-xl-3" *ngIf="geographicalOrigin === 'area'">
+                    <label for="geographicalOrigin2">{{'Area' | translate}}</label>
+                    <ng-select class="large-select" id="geographicalOrigin2" [items]="geographicalAreaList" formControlName="geographicalOrigin2" placeholder="{{'Please select an area(s)' | translate}}"></ng-select>
+                </div>
+            </div>
+
             <!-- Beneficiaries-->
             <h4>{{'Actual beneficiaries' | translate}}</h4>
             <div class="beneficiaries mb-2">
@@ -268,21 +283,6 @@
                 </div>
             </div>
             <!-- End beneficiaries -->
-
-            <div class="row">
-                <div class="form-group required-field col-md-6 col-xl-3">
-                    <label for="geographicalOrigin1">{{'Geographical origin (specify by area or country)' | translate}}</label>
-                    <ng-select class="large-select multiline" id="geographicalOrigin1" [items]="geographicalOriginTypeList" formControlName="geographicalOrigin1" placeholder="{{'Please select a type of geographical origin' | translate}}"></ng-select>
-                </div>
-                <div class="form-group required-field col-md-6 col-xl-3" *ngIf="geographicalOrigin === 'country'">
-                    <label for="geographicalOrigin2">{{'Country' | translate}}</label>
-                    <ng-select class="large-select" id="geographicalOrigin2" [items]="countries" formControlName="geographicalOrigin2" placeholder="{{'Please select a country(ies)' | translate}}"></ng-select>
-                </div>
-                <div class="form-group required-field col-md-6 col-xl-3" *ngIf="geographicalOrigin === 'area'">
-                    <label for="geographicalOrigin2">{{'Area' | translate}}</label>
-                    <ng-select class="large-select" id="geographicalOrigin2" [items]="geographicalAreaList" formControlName="geographicalOrigin2" placeholder="{{'Please select an area(s)' | translate}}"></ng-select>
-                </div>
-            </div>
         </div>
     </div>
 </form>
