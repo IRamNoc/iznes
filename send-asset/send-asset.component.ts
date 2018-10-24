@@ -30,6 +30,7 @@ export class SendAssetComponent implements OnInit, OnDestroy {
     walletDirectoryListRaw: any[];
     walletRelationships: any[];
     addressHoldings: {} = {};
+    addressHoldingAmount: number = 0;
 
     @select(['user', 'connected', 'connectedWallet']) connectedWalletOb;
     @select(['wallet', 'myWalletHolding', 'holdingByAsset']) holdingByAssetOb;
@@ -74,6 +75,8 @@ export class SendAssetComponent implements OnInit, OnDestroy {
                         if (_.isEmpty(this.addressHoldings[holding])) this.addressHoldings[holding] = {};
                         this.addressHoldings[holding][address.addr] = address.free;
                     }
+                    //if (!_.isEmpty(this.sendAssetForm)) this.sendAssetForm.get('amount').updateValueAndValidity();
+                    this.sendAssetForm.get('amount').updateValueAndValidity();
                 }
             }
             console.log('+++ this.addressHoldings', this.addressHoldings);
@@ -184,43 +187,27 @@ export class SendAssetComponent implements OnInit, OnDestroy {
             },
             [
                 (g: FormGroup) => {
-                    const asset = g.get('asset').value;
-                    const assetAddress = g.get('assetAddress').value;
+                    const asset = _.get(g.get('asset'), 'value[0].id', '');
+                    const assetAddress = _.get(g.get('assetAddress'), 'value[0].id', '');
                     const amount = g.get('amount').value;
+                    this.addressHoldingAmount = 0;
+                    const amountErrors = g.get('amount').errors;
+                    if (_.isObject(amountErrors)) delete amountErrors.insufficientFunds;
 
                     if (asset && assetAddress && amount) {
-                        console.log('+++ this', this);
-
-                        if (this.addressHoldings[asset[0].id].hasOwnProperty(assetAddress[0].id)) {
-                            this.addressHoldings[asset[0].id][assetAddress[0].id] < amount ?
-                                g.get('amount').setErrors({ insufficientFunds: true }) : g.get('amount').setErrors(null);
+                        if (this.addressHoldings[asset].hasOwnProperty(assetAddress)) {
+                            this.addressHoldingAmount = this.addressHoldings[asset][assetAddress];
+                            this.addressHoldingAmount < amount ?
+                                g.get('amount').setErrors(Object.assign({}, amountErrors, { insufficientFunds: true }))
+                                : g.get('amount').setErrors(_.isEmpty(amountErrors) ? null : amountErrors);
+                        } else {
+                            g.get('amount').setErrors(Object.assign({}, amountErrors, { insufficientFunds: true }));
                         }
                     }
                     return null;
                 },
             ],
         );
-    }
-
-    /**
-     * Validate Address Holdings
-     *
-     * @return null
-     */
-    validateAddressHoldings(g: FormGroup) {
-        const asset = g.get('asset').value;
-        const assetAddress = g.get('assetAddress').value;
-        const amount = g.get('amount').value;
-
-        if (asset && assetAddress && amount) {
-            console.log('+++ this', this);
-
-            if (this.addressHoldings[asset[0].id].hasOwnProperty(assetAddress[0].id)) {
-                this.addressHoldings[asset[0].id][assetAddress[0].id] < amount ?
-                    g.get('amount').setErrors({ insufficientFunds: true }) : g.get('amount').setErrors(null);
-            }
-        }
-        return null;
     }
 
     /**
