@@ -201,9 +201,9 @@ export class SetlMessagesComponent implements OnDestroy, OnInit {
                                 subject: 'Re: ' + reply.subject,
                                 recipients: [{ id: { walletId: reply.senderId }, text: reply.senderWalletName }],
                                 body: '<br><p>&nbsp;&nbsp;&nbsp;<s>' +
-                                '&nbsp;'.repeat(200) + '</s></p><p>&nbsp;&nbsp;&nbsp;<b>' +
-                                reply.senderWalletName + '</b> ' + reply.date + ':</p>' +
-                                reply.body.replace(/<p>/g, '<p>&nbsp;&nbsp;&nbsp;'),
+                                    '&nbsp;'.repeat(200) + '</s></p><p>&nbsp;&nbsp;&nbsp;<b>' +
+                                    reply.senderWalletName + '</b> ' + reply.date + ':</p>' +
+                                    reply.body.replace(/<p>/g, '<p>&nbsp;&nbsp;&nbsp;'),
                             });
                         }
                     });
@@ -254,6 +254,7 @@ export class SetlMessagesComponent implements OnDestroy, OnInit {
      */
     messagesList(messages) {
         this.selectAll = false;
+
         if (messages.length) {
             this.messages = messages.map((message) => {
                 if (message.senderId) {
@@ -276,6 +277,8 @@ export class SetlMessagesComponent implements OnDestroy, OnInit {
                     return message;
                 }
             });
+        } else {
+            this.messages = [];
         }
 
         if (this.mailCounts && this.currentCategory !== 999) {
@@ -287,6 +290,7 @@ export class SetlMessagesComponent implements OnDestroy, OnInit {
                 this.unreadMessages = this.mailCounts['inboxUnread'];
             }
         }
+
         this.changeDetectorRef.markForCheck();
     }
 
