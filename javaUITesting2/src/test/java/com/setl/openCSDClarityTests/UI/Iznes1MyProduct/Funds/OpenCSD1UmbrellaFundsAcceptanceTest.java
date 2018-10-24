@@ -80,7 +80,7 @@ public class OpenCSD1UmbrellaFundsAcceptanceTest {
         searchAndSelectTopDropdownXpath("uf_domicile", "Jordan");
         searchAndSelectTopDropdownXpath("uf_registerOfficeAddressCountry", "Jordan");
 
-        if (true) { driver.findElement(By.id("uf_registerOfficeAddressLine2")).sendKeys("Address Line 2 Shoud be optional"); }
+        if (true) { driver.findElement(By.id("uf_registerOfficeAddressLine2")).sendKeys("Address Line 2 Should be optional"); }
         submitUmbrellaFund();
 
         assertPopupNextFundNo("Fund");
@@ -280,6 +280,8 @@ public class OpenCSD1UmbrellaFundsAcceptanceTest {
     }
 
     @Test
+    @Ignore
+    //TODO This test is not independent, needs to be rewritten
     public void shouldUpdateUmbrellaFunds() throws IOException, InterruptedException {
         loginAndVerifySuccess("am", "alex01");
         navigateToDropdown("menu-my-products");
