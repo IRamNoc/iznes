@@ -1291,6 +1291,11 @@ export const controlToName = {
     registeredCompanyCity: 'City',
     registeredCompanyCountry: 'Country',
     commercialDomiciliation: 'Commercial domiciliation : Does the client have a commercial address (mailbox: P/O BOX)?',
+    commercialAddressLine1: 'Registered company\'s headquarters address ',
+    commercialAddressLine2: 'Commercial address line 2',
+    commercialZipCode: 'Commercial zip code',
+    commercialCity: 'Commercial city',
+    commercialCountry: 'Commercial country',
     countryTaxResidence: 'Country of tax residence',
     sectorActivity: 'Primary Sector of activity',
     sectorActivityText: 'Sector of activity specification',
@@ -1410,6 +1415,7 @@ export const controlToList = {
     legalStatus: 'legalStatusList',
     legalStatusInsurerType: 'legalStatusInsurerTypeList',
     otherIdentificationNumber: 'identificationNumberList',
+    commercialCountry: 'countries',
 
     // Company
     activities: 'companyActivitiesList',

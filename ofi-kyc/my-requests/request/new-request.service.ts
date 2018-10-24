@@ -215,6 +215,11 @@ export class NewRequestService {
             registeredCompanyCity: ['', this.getLengthValidator()],
             registeredCompanyCountry: ['', Validators.required],
             commercialDomiciliation: 0,
+            commercialAddressLine1: [{ value: '', disabled: true }, Validators.required],
+            commercialAddressLine2: [{ value: '', disabled: true }],
+            commercialZipCode: [{ value: '', disabled: true }, Validators.required],
+            commercialCity: [{ value: '', disabled: true }, Validators.required],
+            commercialCountry: [{ value: '', disabled: true }, Validators.required],
             countryTaxResidence: ['', Validators.required],
             sectorActivity: ['', Validators.required],
             sectorActivityText: [

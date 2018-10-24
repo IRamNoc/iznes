@@ -81,6 +81,33 @@ export class GeneralInformationComponent implements OnInit, OnDestroy {
                 this.formCheckOtherIdentificationNumber(otherIdentificationNumberValue);
             })
         ;
+
+        this.form.get('commercialDomiciliation').valueChanges
+            .pipe(takeUntil(this.unsubscribe))
+            .subscribe((value) => {
+                this.formCheckCommercialDomiciliation(value);
+            })
+        ;
+    }
+
+    formCheckCommercialDomiciliation(value) {
+        const commercialDomiciliationControls: AbstractControl[] = [
+            this.form.get('commercialAddressLine1'),
+            this.form.get('commercialAddressLine2'),
+            this.form.get('commercialZipCode'),
+            this.form.get('commercialCity'),
+            this.form.get('commercialCountry'),
+        ];
+
+        if (value) {
+            commercialDomiciliationControls.forEach((control) => {
+                control.enable();
+            });
+        } else {
+            commercialDomiciliationControls.forEach((control) => {
+                control.disable();
+            });
+        }
     }
 
     formCheckOtherIdentificationNumber(value) {
