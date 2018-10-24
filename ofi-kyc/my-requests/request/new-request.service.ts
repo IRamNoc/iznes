@@ -28,8 +28,8 @@ import {
     booleanControls,
     legalFormList,
     sectorActivityList,
-    legalStatusList,
-    legalStatusInsurerTypeList,
+    regulatoryStatusList,
+    regulatoryStatusInsurerTypeList,
     publicEstablishmentList,
     companyActivitiesList,
     ownAccountInvestorList,
@@ -59,8 +59,8 @@ export class NewRequestService {
 
     legalFormList;
     sectorActivityList;
-    legalStatusList;
-    legalStatusInsurerTypeList;
+    regulatoryStatusList;
+    regulatoryStatusInsurerTypeList;
     publicEstablishmentList;
     geographicalAreaList;
     companyActivitiesList;
@@ -102,8 +102,8 @@ export class NewRequestService {
 
         this.legalFormList = legalFormList;
         this.sectorActivityList = sectorActivityList;
-        this.legalStatusList = legalStatusList;
-        this.legalStatusInsurerTypeList = legalStatusInsurerTypeList;
+        this.regulatoryStatusList = regulatoryStatusList;
+        this.regulatoryStatusInsurerTypeList = regulatoryStatusInsurerTypeList;
         this.publicEstablishmentList = publicEstablishmentList;
         this.geographicalAreaList = geographicalAreaList;
         this.companyActivitiesList = companyActivitiesList;
@@ -221,19 +221,6 @@ export class NewRequestService {
             commercialCity: [{ value: '', disabled: true }, Validators.required],
             commercialCountry: [{ value: '', disabled: true }, Validators.required],
             countryTaxResidence: ['', Validators.required],
-            legalStatus: ['', Validators.required],
-            legalStatusInsurerType: [
-                { value: '', disabled: true },
-                Validators.required
-            ],
-            legalStatusListingMarkets: [
-                { value: '', disabled: true },
-                Validators.required
-            ],
-            legalStatusListingOther: [
-                { value: '', disabled: true },
-                Validators.required
-            ]
         });
         const companyInformation = fb.group({
             kycID: '',
@@ -259,6 +246,19 @@ export class NewRequestService {
             ],
 
             activityRegulated: 0,
+            regulatoryStatus: ['', Validators.required],
+            regulatoryStatusInsurerType: [
+                { value: '', disabled: true },
+                Validators.required,
+            ],
+            regulatoryStatusListingMarkets: [
+                { value: '', disabled: true },
+                Validators.required,
+            ],
+            regulatoryStatusListingOther: [
+                { value: '', disabled: true },
+                Validators.required,
+            ],
             regulator: [
                 { value: '', disabled: true },
                 this.getLengthValidator(255)

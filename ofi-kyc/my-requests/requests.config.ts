@@ -78,8 +78,8 @@ export const selectControls = [
     'registeredCompanyCountry',
     'countryTaxResidence',
     'sectorActivity',
-    'legalStatus',
-    'legalStatusInsurerType',
+    'regulatoryStatus',
+    'regulatoryStatusInsurerType',
     'riskProfile',
     'beneficiaryType',
     'nationalIdNumber',
@@ -351,7 +351,7 @@ export const sectorActivityList = [
     },
 ];
 
-export const legalStatusList = [
+export const regulatoryStatusList = [
     {
         id: 'pensionMutual',
         text: 'Pension Fund / Mutual Insurance Institution / Paid Holiday Fund and similar ',
@@ -363,10 +363,6 @@ export const legalStatusList = [
     {
         id: 'insurer',
         text: 'Insurer',
-    },
-    {
-        id: 'listedCompany',
-        text: 'Listed Company',
     },
     {
         id: 'institutionalInvestors',
@@ -389,22 +385,6 @@ export const legalStatusList = [
         text: 'National government or service, including public bodies responsible for public debt at national level',
     },
     {
-        id: 'foundationAssoEIG',
-        text: 'Foundation / Association / Economic interest group',
-    },
-    {
-        id: 'holidayFund',
-        text: 'Paid holiday fund',
-    },
-    {
-        id: 'dealersCommodities',
-        text: 'Dealers for own account in commodities or commodity derivatives',
-    },
-    {
-        id: 'localCompanies',
-        text: 'Local Companies',
-    },
-    {
         id: 'internationBodies',
         text: 'Public international financial bodies to which France or any other OECD Member State adheres (IMF, EIB, World Bank...)',
     },
@@ -414,7 +394,7 @@ export const legalStatusList = [
     },
 ];
 
-export const legalStatusInsurerTypeList = [
+export const regulatoryStatusInsurerTypeList = [
     {
         id: 'Regulatedasset',
         text: 'Regulated asset',
@@ -1297,10 +1277,10 @@ export const controlToName = {
     commercialCity: 'Commercial city',
     commercialCountry: 'Commercial country',
     countryTaxResidence: 'Country of tax residence',
-    legalStatus: 'Legal status',
-    legalStatusListingOther: 'Legal status specification',
-    legalStatusInsurerType: 'Insurer type',
-    legalStatusListingMarkets: 'Listing market(s)',
+    regulatoryStatus: 'Regulatory status',
+    regulatoryStatusListingOther: 'Regulatory status specification',
+    regulatoryStatusInsurerType: 'Insurer type',
+    regulatoryStatusListingMarkets: 'Listing market(s)',
 
     // Company
     sectorActivity: 'Primary Sector of activity',
@@ -1412,8 +1392,8 @@ export const controlToList = {
     legalForm: 'legalFormList',
     registeredCompanyCountry: 'countries',
     sectorActivity: 'sectorActivityList',
-    legalStatus: 'legalStatusList',
-    legalStatusInsurerType: 'legalStatusInsurerTypeList',
+    regulatoryStatus: 'regulatoryStatusList',
+    regulatoryStatusInsurerType: 'regulatoryStatusInsurerTypeList',
     otherIdentificationNumber: 'identificationNumberList',
     commercialCountry: 'countries',
 

@@ -25,8 +25,6 @@ export class GeneralInformationComponent implements OnInit, OnDestroy {
     open: boolean = false;
     countries = countries;
     legalFormList;
-    legalStatusList;
-    legalStatusInsurerTypeList;
     publicEstablishmentList;
     identificationNumberList;
     associations;
@@ -39,8 +37,6 @@ export class GeneralInformationComponent implements OnInit, OnDestroy {
 
     ngOnInit() {
         this.legalFormList = this.newRequestService.legalFormList;
-        this.legalStatusList = this.newRequestService.legalStatusList;
-        this.legalStatusInsurerTypeList = this.newRequestService.legalStatusInsurerTypeList;
         this.publicEstablishmentList = this.newRequestService.publicEstablishmentList;
         this.identificationNumberList = this.newRequestService.identificationNumberList;
 
@@ -49,17 +45,6 @@ export class GeneralInformationComponent implements OnInit, OnDestroy {
     }
 
     initFormCheck() {
-        this.form.get('legalStatus').valueChanges
-            .pipe(
-                takeUntil(this.unsubscribe)
-            )
-            .subscribe(data => {
-                let legalStatusValue = getValue(data, [0, 'id']);
-
-                this.formCheckLegalStatus(legalStatusValue);
-            })
-        ;
-
         this.form.get('otherIdentificationNumber').valueChanges
             .pipe(takeUntil(this.unsubscribe))
             .subscribe((data) => {
@@ -115,29 +100,6 @@ export class GeneralInformationComponent implements OnInit, OnDestroy {
         }
 
         otherIdentificationNumberTextControl.updateValueAndValidity();
-    }
-
-    formCheckLegalStatus(value) {
-        let form = this.form;
-        let controls = ['legalStatusListingMarkets', 'legalStatusInsurerType', 'legalStatusListingOther'];
-
-        for (const control of controls) {
-            form.get(control).disable();
-        }
-
-        switch (value) {
-            case 'listedCompany':
-                form.get('legalStatusListingMarkets').enable();
-                break;
-            case 'insurer':
-                form.get('legalStatusInsurerType').enable();
-                break;
-            case 'other' :
-                form.get('legalStatusListingOther').enable();
-                break;
-        }
-
-        this.formPercent.refreshFormPercent();
     }
 
     hasError(control, error = []) {

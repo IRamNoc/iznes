@@ -38,9 +38,9 @@ export class NewKycRequestComponent implements OnInit {
     }
 
     get investorType() {
-        let legalStatusControl = this.forms.get('identification.generalInformation.legalStatus').value;
-        let legalStatusValue = getValue(legalStatusControl, [0, 'id']);
-        let possibleLegalStatusValues = [
+        let regulatoryStatusControl = this.forms.get('identification.companyInformation.regulatoryStatus').value;
+        let regulatoryStatusValue = getValue(regulatoryStatusControl, [0, 'id']);
+        let possibleRegulatoryStatusValues = [
             'pensionMutual',
             'creditInstitution',
             'insurer',
@@ -57,7 +57,7 @@ export class NewKycRequestComponent implements OnInit {
         let netRevenuesNetIncomeValue = this.forms.get('identification.companyInformation.netRevenuesNetIncome').value;
         let shareholderEquityValue = this.forms.get('identification.companyInformation.shareholderEquity').value;
 
-        if (possibleLegalStatusValues.indexOf(legalStatusValue) !== -1) {
+        if (possibleRegulatoryStatusValues.indexOf(regulatoryStatusValue) !== -1) {
             return "proByNature";
         }
 

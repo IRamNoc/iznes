@@ -26,6 +26,8 @@ export class CompanyInformationComponent implements OnInit, OnDestroy {
     unsubscribe: Subject<any> = new Subject();
     open: boolean = false;
     countries = countries;
+    regulatoryStatusList;
+    regulatoryStatusInsurerTypeList;
     sectorActivityList;
     companyActivitiesList;
     ownAccountInvestorList;
@@ -43,6 +45,8 @@ export class CompanyInformationComponent implements OnInit, OnDestroy {
     }
 
     ngOnInit() {
+        this.regulatoryStatusList = this.newRequestService.regulatoryStatusList;
+        this.regulatoryStatusInsurerTypeList = this.newRequestService.regulatoryStatusInsurerTypeList;
         this.sectorActivityList = this.newRequestService.sectorActivityList;
         this.companyActivitiesList = this.newRequestService.companyActivitiesList;
         this.ownAccountInvestorList = this.newRequestService.ownAccountInvestorList;
@@ -112,6 +116,15 @@ export class CompanyInformationComponent implements OnInit, OnDestroy {
             const geographicalOriginTypeValue = getValue(data, [0, 'id']);
 
             this.formCheckGeographicalOrigin(geographicalOriginTypeValue);
+        })
+        ;
+
+        this.form.get('regulatoryStatus').valueChanges
+        .pipe(takeUntil(this.unsubscribe))
+        .subscribe((data) => {
+            const regulatoryStatusValue = getValue(data, [0, 'id']);
+
+            this.formCheckRegulatoryStatus(regulatoryStatusValue);
         })
         ;
     }
@@ -196,13 +209,37 @@ export class CompanyInformationComponent implements OnInit, OnDestroy {
     formCheckActivityRegulated(value) {
         const activityAuthorityControl = this.form.get('regulator');
         const activityApprovalNumberControl = this.form.get('approvalNumber');
+        const regulatoryStatusControl = this.form.get('regulatoryStatus');
 
         if (value) {
             activityAuthorityControl.enable();
             activityApprovalNumberControl.enable();
+            regulatoryStatusControl.enable();
         } else {
             activityAuthorityControl.disable();
             activityApprovalNumberControl.disable();
+            regulatoryStatusControl.disable();
+        }
+
+        regulatoryStatusControl.updateValueAndValidity();
+        this.formPercent.refreshFormPercent();
+    }
+
+    formCheckRegulatoryStatus(value) {
+        const form = this.form;
+        const controls = ['regulatoryStatusInsurerType', 'regulatoryStatusListingOther'];
+
+        for (const control of controls) {
+            form.get(control).disable();
+        }
+
+        switch (value) {
+        case 'insurer':
+            form.get('regulatoryStatusInsurerType').enable();
+            break;
+        case 'other' :
+            form.get('regulatoryStatusListingOther').enable();
+            break;
         }
 
         this.formPercent.refreshFormPercent();

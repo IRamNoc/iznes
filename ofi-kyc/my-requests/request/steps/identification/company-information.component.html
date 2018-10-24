@@ -53,16 +53,40 @@
                 </div>
             </div>
 
-            <div class="row" *ngIf="!isDisabled('regulator')">
-                <div class="form-group required-field col-sm-6">
-                    <input type="text" id="regulator" formControlName="regulator" placeholder="{{'Please fill in a regulator or a supervisory authority' | translate }}">
-                    <span class="field-error" *ngIf="hasError('regulator')">{{'Field is required' | translate}}</span>
+            <div *ngIf="!isDisabled('regulator')">
+
+                <div class="row">
+                    <div class="form-group required-field col-sm-4">
+                        <input type="text" id="regulator" formControlName="regulator" placeholder="{{'Please fill in a regulator or a supervisory authority' | translate }}">
+                        <span class="field-error" *ngIf="hasError('regulator')">{{'Field is required' | translate}}</span>
+                    </div>
+                    <div class="form-group required-field col-sm-4">
+                        <input type="text" id="approvalNumber" formControlName="approvalNumber" placeholder="{{'Please fill in the approval number' | translate }}">
+                        <span class="field-error" *ngIf="hasError('approvalNumber', ['required'])">{{'Field is required' | translate}}</span>
+                        <span class="field-error" *ngIf="hasError('approvalNumber', ['maxlength'])">{{'Field is too long' | translate}}</span>
+                    </div>
                 </div>
-                <div class="form-group required-field col-sm-6">
-                    <input type="text" id="approvalNumber" formControlName="approvalNumber" placeholder="{{'Please fill in the approval number' | translate }}">
-                    <span class="field-error" *ngIf="hasError('approvalNumber', ['required'])">{{'Field is required' | translate}}</span>
-                    <span class="field-error" *ngIf="hasError('approvalNumber', ['maxlength'])">{{'Field is too long' | translate}}</span>
+
+                <div class="row">
+                    <div class="form-group required-field col-md-4">
+                        <label class="control-label" for="regulatoryStatus">{{'Regulatory status' | translate}}</label>
+                        <ng-select class="large-select multiline" [items]="regulatoryStatusList" id="regulatoryStatusList" [formControl]="form.get('regulatoryStatus')" placeholder="{{'Please fill in your company legal status' | translate}}"></ng-select>
+                        <span class="field-error" *ngIf="hasError('regulatoryStatus')">{{'Field is required' | translate}}</span>
+                    </div>
+
+                    <div *ngIf="!isDisabled('regulatoryStatusInsurerType')" class="form-group required-field col-md-4">
+                        <label class="control-label" for="regulatoryStatusInsurerType">{{'Insurer type' | translate}}</label>
+                        <ng-select class="large-select" [items]="regulatoryStatusInsurerTypeList" id="regulatoryStatusInsurerType" formControlName="regulatoryStatusInsurerType" placeholder="{{'Please select an insurer type' | translate}}"></ng-select>
+                        <span class="field-error" *ngIf="hasError('regulatoryStatusInsurerType')">{{'Field is required' | translate}}</span>
+                    </div>
+
+                    <div *ngIf="!isDisabled('regulatoryStatusListingOther')" class="form-group required-field col-md-4">
+                        <label class="control-label" for="regulatoryStatusListingOther">{{'Please fill in the regulatory status of your company' | translate}}</label>
+                        <input type="text" id="regulatoryStatusListingOther" formControlName="regulatoryStatusListingOther" placeholder="{{'Regulatory status' | translate}}">
+                        <span class="field-error" *ngIf="hasError('regulatoryStatusListingOther')">{{'Field is required' | translate}}</span>
+                    </div>
                 </div>
+
             </div>
 
             <div class="row">
