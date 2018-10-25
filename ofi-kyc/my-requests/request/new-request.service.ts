@@ -254,10 +254,6 @@ export class NewRequestService {
                 { value: '', disabled: true },
                 Validators.required,
             ],
-            regulatoryStatusListingMarkets: [
-                { value: '', disabled: true },
-                Validators.required,
-            ],
             regulatoryStatusListingOther: [
                 { value: '', disabled: true },
                 Validators.required,
