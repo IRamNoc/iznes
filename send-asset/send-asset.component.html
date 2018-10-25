@@ -71,7 +71,7 @@
 
                         <span *ngIf="sendAssetForm.controls['amount'].hasError('required')" class="field-error" mltag="txt_fieldisrequired">Field is required</span>
                         <span *ngIf="sendAssetForm.controls['amount'].hasError('pattern')" class="field-error">Amount must be a number</span>
-                        <span *ngIf="sendAssetForm.controls['amount'].hasError('insufficientFunds') && !sendAssetForm.controls['amount'].hasError('pattern')" class="field-error">Sender holds {{addressHoldingAmount}} of this asset</span>
+                        <span *ngIf="sendAssetForm.controls['amount'].hasError('insufficientFunds') && !sendAssetForm.controls['amount'].hasError('pattern')" class="field-error">Sender has {{addressHoldingAmount}}<ng-container *ngIf="addressHoldingAmount > 0"> free</ng-container> of this asset</span>
                     </div>
 
                     <button type="submit" class="btn btn-primary" mltag="txt_sendasset" [disabled]="sendAssetForm.invalid">Send Asset</button>

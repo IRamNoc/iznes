@@ -59,7 +59,6 @@ export class SendAssetComponent implements OnInit, OnDestroy {
         /* Filter the instrument list to only those the current wallet has positive balance of */
         this.subscriptionsArray.push(this.holdingByAssetOb.subscribe((holdings) => {
             const positiveHoldings = {};
-            this.addressHoldings = {};
             this.allInstrumentList = [];
             this.noInstrumentsAlert = false;
             if (!_.isEmpty(holdings) && holdings.hasOwnProperty(this.connectedWalletId) && this.connectedWalletId) {
@@ -75,7 +74,6 @@ export class SendAssetComponent implements OnInit, OnDestroy {
                     this.setAddressHoldings(holdings, holding);
                 }
             }
-
             /* Display alert if there are no instruments in the list */
             if (!this.allInstrumentList.length) {
                 this.noInstrumentsAlert = true;
@@ -290,6 +288,8 @@ export class SendAssetComponent implements OnInit, OnDestroy {
      * @param holding
      */
     setAddressHoldings(holdings, holding) {
+        this.addressHoldings = {};
+
         for (const breakdown in holdings[this.connectedWalletId][holding].breakdown) {
             const address = holdings[this.connectedWalletId][holding].breakdown[breakdown];
             if (_.isEmpty(this.addressHoldings[holding])) this.addressHoldings[holding] = {};
