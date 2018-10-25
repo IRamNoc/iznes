@@ -128,7 +128,6 @@ export class SetlMessageWorkflowComponent implements OnInit {
                 this.transferTemplate.fromaddress = this.walletAddresses[this.walletAddresses.indexOf(r)];
             }
         }
-console.log(this.transferTemplate)
         const asyncTaskPipe = createWalletNodeSagaRequest(this.walletNodeSocketService, 'tx', this.transferTemplate);
         this.ngRedux.dispatch(SagaHelper.runAsyncCallback( // Send a saga action.
             asyncTaskPipe,
@@ -150,7 +149,7 @@ console.log(this.transferTemplate)
                 if (extra) {
                     base += ':  ';
                 }
-                console.log(base + extra);
+                this.showErrorResponse(base + extra);
             },
         ));
     }
