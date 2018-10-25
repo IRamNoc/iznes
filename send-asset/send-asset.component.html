@@ -47,7 +47,7 @@
                         </ng-select>
 
                         <span *ngIf="sendAssetForm.controls['assetAddress'].hasError('required') && sendAssetForm.controls['assetAddress'].touched" class="field-error" mltag="txt_fieldisrequired">Field is required</span>
-                        <span *ngIf="sendAssetForm.controls['amount'].hasError('insufficientFunds')" class="field-error force-display-error">Sender holds {{addressHoldingAmount}} of this asset</span>
+                        <span *ngIf="showAddressHolding" class="field-error force-display-error" [ngClass]="{'text-success': addressHoldingAmount > 0 && !sendAssetForm.controls['amount'].hasError('insufficientFunds'), 'text-warning': addressHoldingAmount <= 0 && !sendAssetForm.controls['amount'].hasError('insufficientFunds')}">Sender holds {{addressHoldingAmount}} of this asset</span>
                     </div>
 
                     <div class="form-group">

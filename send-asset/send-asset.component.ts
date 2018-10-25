@@ -31,6 +31,7 @@ export class SendAssetComponent implements OnInit, OnDestroy {
     walletRelationships: any[];
     addressHoldings: {} = {};
     addressHoldingAmount: number = 0;
+    showAddressHolding: boolean = false;
 
     @select(['user', 'connected', 'connectedWallet']) connectedWalletOb;
     @select(['wallet', 'myWalletHolding', 'holdingByAsset']) holdingByAssetOb;
@@ -58,6 +59,7 @@ export class SendAssetComponent implements OnInit, OnDestroy {
         /* Filter the instrument list to only those the current wallet has positive balance of */
         this.subscriptionsArray.push(this.holdingByAssetOb.subscribe((holdings) => {
             const positiveHoldings = {};
+            this.addressHoldings = {};
             this.allInstrumentList = [];
             this.noInstrumentsAlert = false;
             if (!_.isEmpty(holdings) && holdings.hasOwnProperty(this.connectedWalletId) && this.connectedWalletId) {
@@ -75,11 +77,10 @@ export class SendAssetComponent implements OnInit, OnDestroy {
                         if (_.isEmpty(this.addressHoldings[holding])) this.addressHoldings[holding] = {};
                         this.addressHoldings[holding][address.addr] = address.free;
                     }
-                    //if (!_.isEmpty(this.sendAssetForm)) this.sendAssetForm.get('amount').updateValueAndValidity();
+                    /* Update the formGroup validation in case holdings have changed */
                     this.sendAssetForm.get('amount').updateValueAndValidity();
                 }
             }
-            console.log('+++ this.addressHoldings', this.addressHoldings);
 
             /* Display alert if there are no instruments in the list */
             if (!this.allInstrumentList.length) {
@@ -187,22 +188,23 @@ export class SendAssetComponent implements OnInit, OnDestroy {
             },
             [
                 (g: FormGroup) => {
+                    /* Validate address holdings and trigger displaying the holding amount on the view */
                     const asset = _.get(g.get('asset'), 'value[0].id', '');
                     const assetAddress = _.get(g.get('assetAddress'), 'value[0].id', '');
                     const amount = g.get('amount').value;
-                    this.addressHoldingAmount = 0;
                     const amountErrors = g.get('amount').errors;
                     if (_.isObject(amountErrors)) delete amountErrors.insufficientFunds;
 
-                    if (asset && assetAddress && amount) {
-                        if (this.addressHoldings[asset].hasOwnProperty(assetAddress)) {
-                            this.addressHoldingAmount = this.addressHoldings[asset][assetAddress];
+                    if (asset && assetAddress) {
+                        this.addressHoldingAmount = this.addressHoldings[asset][assetAddress] || 0;
+                        this.showAddressHolding = true;
+                        if (amount) {
                             this.addressHoldingAmount < amount ?
                                 g.get('amount').setErrors(Object.assign({}, amountErrors, { insufficientFunds: true }))
                                 : g.get('amount').setErrors(_.isEmpty(amountErrors) ? null : amountErrors);
-                        } else {
-                            g.get('amount').setErrors(Object.assign({}, amountErrors, { insufficientFunds: true }));
                         }
+                    } else {
+                        this.showAddressHolding = false;
                     }
                     return null;
                 },
