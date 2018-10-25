@@ -38,6 +38,7 @@ export class OfiInviteInvestorsComponent implements OnInit, OnDestroy {
 
     investorTypes = [
         { id: 45, text: 'Institutional Investor' },
+        { id: 65, text: 'Portfolio Manager' },
         { id: 55, text: 'Retail Investor' },
     ];
 
@@ -120,7 +121,7 @@ export class OfiInviteInvestorsComponent implements OnInit, OnDestroy {
 
     ngOnInit(): void {
 
-        (<any>this).appSubscribe(this._ofiKycObservablesService.investorInvitationsSub(), (d: investorInvitation[]) => {
+        (<any>this).appSubscribe(this._ofiKycObservablesService.getInvitationData(), (d: investorInvitation[]) => {
             this.inviteItems = d;
             if (this.inviteItems.length) {
                 this.inviteItems = this.inviteItems.map((invite) => {
@@ -179,6 +180,9 @@ export class OfiInviteInvestorsComponent implements OnInit, OnDestroy {
             investorType: [
                 '',
                 Validators.required
+            ],
+            pmFunds: [
+                [],
             ],
             firstName: [
                 '',
@@ -293,6 +297,21 @@ export class OfiInviteInvestorsComponent implements OnInit, OnDestroy {
         const userType = _.get(val, '[0].id');
         if (userType === 55) {
             investorType.setErrors({ investorType: true });
+            return true;
+        }
+
+        return false;
+    }
+
+    /**
+     * Whether investor is Portfolio manager
+     * @param {FormControl} investorType
+     * @return {boolean}
+     */
+    isPortfolioManager(investorType: FormControl): boolean {
+        const val = investorType.value;
+        const userType = _.get(val, '[0].id');
+        if (userType === 65) {
             return true;
         }
 
