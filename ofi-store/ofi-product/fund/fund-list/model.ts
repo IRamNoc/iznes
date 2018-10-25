@@ -1,7 +1,5 @@
 export interface FundListState {
-    iznFundList: {
-        [key: string]: IznesFundDetail,
-    };
+    iznFundList: IznesFundDetails;
     requestedIznesFund: boolean;
     audit: {
         [key: number]: any[],
@@ -11,6 +9,10 @@ export interface FundListState {
 export interface FundSharesToProcess {
     current: number;
     shares: object;
+}
+
+export interface IznesFundDetails {
+    [key: string]: IznesFundDetail;
 }
 
 /* Iznes fund */

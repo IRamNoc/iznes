@@ -15,6 +15,7 @@ import * as _ from 'lodash';
 import { investorInvitation } from '@ofi/ofi-main/ofi-store/ofi-kyc/invitationsByUserAmCompany';
 import { MultilingualService } from '@setl/multilingual';
 import { AppObservableHandler } from '@setl/utils/decorators/app-observable-handler';
+import { OfiFundDataService } from '../../ofi-data-service/product/fund/ofi-fund-data-service';
 
 const emailRegex = /^(((\([A-z0-9]+\))?[^<>()\[\]\\.,;:\s@"]+(\.[^<>()\[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/;
 
@@ -50,6 +51,8 @@ export class OfiInviteInvestorsComponent implements OnInit, OnDestroy {
 
     inviteItems: investorInvitation[];
 
+    fundSelectList: {id: string, text: string}[];
+
     unSubscribe: Subject<any> = new Subject();
 
     /* Constructor. */
@@ -62,6 +65,7 @@ export class OfiInviteInvestorsComponent implements OnInit, OnDestroy {
                 public _translate: MultilingualService,
                 private _ofiKycObservablesService: OfiKycObservablesService,
                 @Inject('kycEnums') kycEnums,
+                private _ofiFundDataService: OfiFundDataService,
                 private redux: NgRedux<any>) {
 
         this.enums.status = kycEnums.status;
@@ -88,6 +92,9 @@ export class OfiInviteInvestorsComponent implements OnInit, OnDestroy {
                     investorType: [
                         '',
                         Validators.required
+                    ],
+                    fundList: [
+                        [],
                     ],
                     firstName: [
                         '',
@@ -138,6 +145,8 @@ export class OfiInviteInvestorsComponent implements OnInit, OnDestroy {
             }
             this.markForCheck();
         });
+
+        (<any>this).appSubscribe(this._ofiFundDataService.getFundSelectList(), fundSelectList => this.fundSelectList = fundSelectList);
     }
 
     getControls(frmGrp: FormGroup, key: string) {

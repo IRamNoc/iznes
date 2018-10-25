@@ -115,15 +115,15 @@
                                 <ng-select
                                     id="pm_funds_{{i}}"
                                     class="form-control"
-                                    [items]="investorTypes"
+                                    [items]="fundSelectList"
                                     [multiple]="true"
                                     [placeholder]="_translate.translate('Select funds')"
-                                    formControlName="investorType"
+                                    formControlName="fundList"
                                     [ngStyle]="{'padding':'6px 0'}"
                                     [containerWidth]="'95%'">
                                 </ng-select>
 
-                                <div *ngIf="investor.controls['investorType'].hasError('required') && investor.controls['investorType'].touched" class="text-danger">
+                                <div *ngIf="investor.controls['fundList'].hasError('required') && investor.controls['fundList'].touched" class="text-danger">
                                     {{'This field is required.' | translate}}
                                 </div>
                             </div>
