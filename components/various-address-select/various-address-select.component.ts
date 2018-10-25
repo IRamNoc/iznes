@@ -61,7 +61,7 @@ export class VariousAddressSelectComponent implements ControlValueAccessor {
                         <li>A–Z</li>
                         <li>a–z</li>
                         <li>0–9</li>
-                        <li>- (${this.translate.translate('hyphen/dash')})</li>
+                        <li>- (${this.translate.translate('hyphen')})</li>
                         <li>_ (${this.translate.translate('underscore')})</li>
                     </ul>
                 </li>
