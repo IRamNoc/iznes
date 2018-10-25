@@ -51,11 +51,11 @@ export class VariousAddressSelectComponent implements ControlValueAccessor {
 
     constructor(private translate: MultilingualService) {
         this.otherAddressValidationTooltipText =
-        `${this.translate.translate('Address must be 34 characters and must satisfy the following rules')}:
+        `${this.translate.translate('Address must be 34 characters and satisfy the following rules')}:
             <ul class="mt-1">
                 <li>${this.translate.translate('Start with an')} 'A'</li>
                 <li>${this.translate.translate('End with either an')} 
-                'A' 'Q', 'g', ${this.translate.translate('or')} 'w'</li>
+                'A', 'Q', 'g' ${this.translate.translate('or')} 'w'</li>
                 <li>${this.translate.translate('Be comprised of only')}:
                     <ul>
                         <li>A–Z</li>
