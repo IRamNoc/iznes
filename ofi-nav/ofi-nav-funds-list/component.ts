@@ -59,6 +59,8 @@ export class OfiNavFundsList implements OnInit, OnDestroy {
 
     private cancelNavTitle: string;
     private cancelNavMessage: string;
+    private cancelNavSuccessMessage: string;
+    private cancelNavErrorMessage: string;
 
     @select(['ofi', 'ofiProduct', 'ofiManageNav', 'ofiNavFundsList', 'requested']) navRequestedOb: Observable<any>;
     @select(['ofi', 'ofiProduct', 'ofiManageNav', 'ofiNavFundsList', 'navFundsList']) navListOb: Observable<any>;
@@ -97,6 +99,8 @@ export class OfiNavFundsList implements OnInit, OnDestroy {
 
     private initTranslations(): void {
         this.cancelNavTitle = this._translate.translate('Cancel NAV');
+        this.cancelNavErrorMessage = this._translate.translate('Could not cancel NAV. Open orders may exist.');
+        this.cancelNavSuccessMessage = this._translate.translate('NAV successfully cancelled.');
     }
 
     /**
@@ -151,13 +155,19 @@ export class OfiNavFundsList implements OnInit, OnDestroy {
         return nav === null;
     }
 
+    isAddNavDisabled(share: model.NavInfoModel): boolean {
+        if(share.status as any == 3) return false;
+
+        return !this.isNavNull(share.nav);
+    }
+
     addNav(share: model.NavInfoModel): void {
         this.popupService.open(share, model.NavPopupMode.ADD_EXISTING);
     }
 
     cancelNav(share: model.NavInfoModel): void {
         this.cancelNavMessage = this._translate.translate(
-            `Are you sure you wish to cancel the NAV for<br /><strong>'@shareName@'</strong>`,
+            `Are you sure you wish to cancel the NAV for<br /><strong>@shareName@</strong>`,
             {
                 shareName: share.fundShareName
             }
@@ -166,9 +176,36 @@ export class OfiNavFundsList implements OnInit, OnDestroy {
         this.confirmationService.create(this.cancelNavTitle, this.cancelNavMessage)
             .subscribe((resolved) => {
                 if(resolved) {
-                    //
+                    OfiNavService.defaultCancelNav(
+                        this.ofiNavService,
+                        this.redux,
+                        {
+                            token: this.socketToken,
+                            shareId: share.shareId,
+                            navDate: share.navDate,
+                        },
+                        (res) => this.onCancelNavSuccess(res),
+                        () => this.onCancelNavError());
                 }
             });
+    }
+
+    resetNavStatus(share: model.NavInfoModel): void {
+        console.log('WiP');
+    }
+
+    private onCancelNavSuccess(res): void {
+        if((res[1]) && res[1].Data[0]) {
+            console.log(res);
+
+            if(res[1].Data[0].Status === 'Fail') return this.onCancelNavError();
+
+            this.alertService.create('success', this.cancelNavSuccessMessage);
+        }
+    }
+
+    private onCancelNavError(): void {
+        this.alertService.create('error', this.cancelNavErrorMessage);
     }
 
     navigateToShare(shareId: number): void {

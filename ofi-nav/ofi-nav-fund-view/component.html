@@ -170,18 +170,24 @@
                             <span *ngSwitchCase="1">
                                 <span class="label label-warning" id="{{'NAV-Estimated-' + i}}">{{'Estimated' | translate}}</span>
                             </span>
-
                             <span *ngSwitchCase="2">
                                 <span class="label label-warning" id="{{'NAV-Technical-' + i}}">{{'Technical' | translate}}</span>
+                            </span>
+                            <span *ngSwitchCase="3">
+                                <span class="label label-danger" id="{{'NAV-Cancelled-' + i}}">{{'Cancelled' | translate}}</span>
                             </span>
                         </span>
                     </clr-dg-cell>
                     <clr-dg-cell class="actions">
                         <div class="btn-group btn-sm">
-                            <button id="{{'Edit-NAV-' + i}}" (click)="editNav(item)" class="btn btn-success btn-sm" style="margin-right: 0px;">
+                            <button id="{{'Edit-NAV-' + i}}" class="btn btn-success btn-sm" style="margin-right: 0px;"
+                                (click)="editNav(item)"
+                                [disabled]="item.status == 3">
                                 <i class="fa fa-edit"></i> {{'Edit NAV' | translate}}
                             </button>
-                            <button id="{{'Delete-NAV-' + i}}" [attr.disabled]="item.status == -1 ? '' : null " (click)="cancelNav(item)" class="btn btn-danger btn-sm">
+                            <button id="{{'Delete-NAV-' + i}}" class="btn btn-danger btn-sm"
+                                (click)="cancelNav(item)"
+                                [disabled]="item.status == -1 || item.status == 3">
                                 <i class="fa fa-remove"></i> {{'Delete NAV' | translate}}
                             </button>
                         </div>

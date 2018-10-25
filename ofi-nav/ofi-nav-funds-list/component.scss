@@ -55,5 +55,7 @@
         button { margin: 0; }
 
         .btn[disabled] + .btn { border-left: 1px solid; }
+
+        .btn-reset { width: 100%; }
     }
 }

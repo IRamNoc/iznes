@@ -123,18 +123,22 @@
                             <span *ngSwitchCase="2">
                                 <span id="{{'NAV-Status-Technical'+idx}}" class="label label-warning">{{'Technical' | translate}}</span>
                             </span>
+                            <span *ngSwitchCase="3">
+                                <span id="{{'NAV-Status-Cancelled'+idx}}" class="label label-danger">{{'Cancelled' | translate}}</span>
+                            </span>
                         </span>
                     </clr-dg-cell>
                     <clr-dg-cell class="actions">
                         <div class="btn-group btn-sm">
                             <button id="{{'Btn-AddNewNAV-'+idx}}" class="btn btn-success btn-sm"
                                 (click)="addNav(item)"
-                                [disabled]="!isNavNull(item.nav)">
-                                <i class="fa fa-plus"></i> {{'Add NAV' | translate}}
+                                [disabled]="isAddNavDisabled(item)">
+                                <i class="fa fa-plus"></i> {{'Add' | translate}}
                             </button>
-                            <button id="{{'Btn-CancelNewNAV-'+idx}}" class="btn btn-danger btn-sm"
-                                (click)="cancelNav(item)">
-                                {{'Cancel NAV' | translate}}
+                            <button id="{{'Btn-CancelNAV-'+idx}}" class="btn btn-danger btn-sm"
+                                (click)="cancelNav(item)"
+                                [disabled]="item.status != -1">
+                                {{'Cancel' | translate}}
                             </button>
                         </div>
                     </clr-dg-cell>
