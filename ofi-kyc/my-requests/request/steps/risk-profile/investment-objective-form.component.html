@@ -95,12 +95,12 @@
     <div class="row mb-1">
         <div class="form-group required-field col-sm-6">
             <label for="riskProfile-{{index}}">{{'Risk profile: ability to incur losses' | translate}}</label>
-            <ng-select class="large-select" id="riskProfile-{{index}}" [items]="riskProfileList" formControlName="riskProfile"></ng-select>
+            <ng-select class="large-select" id="riskProfile-{{index}}" [items]="riskProfileList" formControlName="riskProfile" placeholder="{{'Select a profile' | translate}}"></ng-select>
             <span class="field-error" *ngIf="hasError('riskProfile')">{{'Field is required' | translate}}</span>
         </div>
         <div class="col-sm-6"></div>
         <div *ngIf="!isDisabled('riskProfileCapital')" class="form-group required-field col-sm-6">
-            <label for="capitalLoss-{{index}}">{{'Capital loss limited to' | translate}}</label>
+            <label for="capitalLoss-{{index}}">{{'Capital loss limited to:' | translate}}</label>
             <input type="text" id="capitalLoss-{{index}}" placeholder="{{'Capital loss' | translate}}" formControlName="riskProfileCapital">
             <span class="field-error" *ngIf="hasError('riskProfileCapital')">{{'Field is required' | translate}}</span>
         </div>

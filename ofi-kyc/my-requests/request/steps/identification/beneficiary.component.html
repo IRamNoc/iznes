@@ -2,8 +2,8 @@
 
     <div class="row">
         <div class="form-group Acol-sm-4">
-            <label for="beneficiaryType">{{'Beneficiary type' | translate}}</label>
-            <ng-select class="large-select" id="beneficiaryType" [items]="beneficiaryTypesList" formControlName="beneficiaryType" placeholder="{{'Please fill in beneficiary\'s type' | translate}}"></ng-select>
+            <label for="beneficiaryType">{{'Stakeholder type' | translate}}</label>
+            <ng-select class="large-select" id="beneficiaryType" [items]="beneficiaryTypesList" formControlName="beneficiaryType" placeholder="{{'Select stakeholder type' | translate}}"></ng-select>
         </div>
     </div>
 
@@ -12,13 +12,13 @@
         <div class="row">
             <div class="form-group required-field col-sm-6">
                 <label class="control-label" for="firstName-benef-{{index}}">{{'Registered company name or legal name' | translate}}</label>
-                <input type="text" id="legalName-benef-{{index}}" formControlName="legalName" placeholder="Please fill in beneficiary's company name or legal name">
+                <input type="text" id="legalName-benef-{{index}}" formControlName="legalName" placeholder="Fill in a company name or legal name">
                 <span class="field-error" *ngIf="hasError(['legalPerson', 'legalName'], ['required'])">{{'Field is required' | translate}}</span>
                 <span class="field-error" *ngIf="hasError(['legalPerson', 'legalName'], ['maxlength'])">{{'Field is too long' | translate}}</span>
             </div>
             <div class="form-group required-field col-sm-6">
                 <label class="control-label" for="leiCode-benef-{{index}}">{{'LEI Code' | translate}}</label>
-                <input type="text" id="leiCode-benef-{{index}}" formControlName="leiCode" placeholder="{{'Please fill in beneficiary\'s company LEI code'}}">
+                <input type="text" id="leiCode-benef-{{index}}" formControlName="leiCode" placeholder="{{'Fill in a company LEI code'}}">
                 <span class="field-error" *ngIf="hasError(['legalPerson', 'leiCode'], ['required'])">{{'Field is required' | translate}}</span>
                 <span class="field-error" *ngIf="hasError(['legalPerson', 'leiCode'], ['pattern'])">{{'Incorrect LEI, should be 20 characters long' | translate}}</span>
             </div>
@@ -26,8 +26,8 @@
 
         <div class="row">
             <div class="form-group required-field col-sm-6">
-                <label class="control-label" for="address-benef-{{index}}">{{'Beneficiary address' | translate}}</label>
-                <input type="text" id="address-benef-{{index}}" [formControl]="form.get('common.address')" placeholder="{{'Please fill in beneficiary\'s address'}}">
+                <label class="control-label" for="address-benef-{{index}}">{{'Stakeholder Address' | translate}}</label>
+                <input type="text" id="address-benef-{{index}}" [formControl]="form.get('common.address')" placeholder="{{'Fill in an address'}}">
                 <span class="field-error" *ngIf="hasError(['common', 'address'], ['required'])">{{'Field is required' | translate}}</span>
                 <span class="field-error" *ngIf="hasError(['common', 'address'], ['maxlength'])">{{'Field is too long' | translate}}</span>
             </div>
@@ -42,13 +42,13 @@
         <div class="row">
             <div class="form-group required-field col-sm-6">
                 <label class="control-label" for="zipCode-benef-{{index}}">{{'ZIP Code' | translate}}</label>
-                <input type="text" id="zipCode-benef-{{index}}" [formControl]="form.get('common.zipCode')" placeholder="{{'Please fill in a ZIP Code'}}">
+                <input type="text" id="zipCode-benef-{{index}}" [formControl]="form.get('common.zipCode')" placeholder="{{'Fill in a ZIP Code'}}">
                 <span class="field-error" *ngIf="hasError(['common', 'zipCode'], ['required'])">{{'Field is required' | translate}}</span>
                 <span class="field-error" *ngIf="hasError(['common', 'zipCode'], ['maxlength'])">{{'Field is too long' | translate}}</span>
             </div>
             <div class="form-group required-field col-sm-6">
                 <label class="control-label" for="city-benef-{{index}}">{{'City' | translate}}</label>
-                <input type="text" id="city-benef-{{index}}" [formControl]="form.get('common.city')" placeholder="{{'Please fill in a city'}}">
+                <input type="text" id="city-benef-{{index}}" [formControl]="form.get('common.city')" placeholder="{{'Fill in a city'}}">
                 <span class="field-error" *ngIf="hasError(['common', 'city'], ['required'])">{{'Field is required' | translate}}</span>
                 <span class="field-error" *ngIf="hasError(['common', 'city'], ['maxlength'])">{{'Field is too long' | translate}}</span>
             </div>
@@ -65,13 +65,13 @@
         <div class="row">
             <div class="form-group required-field col-sm-6">
                 <label class="control-label" for="nationalIdNumber-benef-{{index}}">{{'National Identification Number' | translate}}</label>
-                <ng-select id="nationalIdNumber-benef-{{index}}" [items]="identificationNumberList" formControlName="nationalIdNumber" placeholder="{{'Please select a value' | translate}}"></ng-select>
+                <ng-select id="nationalIdNumber-benef-{{index}}" [items]="identificationNumberList" formControlName="nationalIdNumber" placeholder="{{'Type' | translate}}"></ng-select>
                 <span class="field-error" *ngIf="hasError(['legalPerson', 'nationalIdNumber'], ['required'])">{{'Field is required' | translate}}</span>
             </div>
 
             <div *ngIf="!isDisabled(['legalPerson', 'nationalIdNumberText'])" class="form-group required-field col-sm-6">
-                <label class="control-label" for="nationalIdNumberText-benef-{{index}}">{{'Please specify your National Identification Number'}}</label>
-                <input type="text" formControlName="nationalIdNumberText" placeholder="{{'National Identification Number' | translate}}">
+                <label class="control-label" for="nationalIdNumberText-benef-{{index}}">&nbsp;</label>
+                <input type="text" formControlName="nationalIdNumberText" placeholder="{{'Fill in an identification number' | translate}}">
                 <span class="field-error" *ngIf="hasError(['legalPerson', 'nationalIdNumberText'], ['required'])">{{'Field is required' | translate}}</span>
                 <span class="field-error" *ngIf="hasError(['legalPerson', 'nationalIdNumberText'], ['validSiren'])">{{'SIREN must be 9 digits long' | translate}}</span>
                 <span class="field-error" *ngIf="hasError(['legalPerson', 'nationalIdNumberText'], ['validSiret'])">{{'SIRET must be 14 digits long' | translate}}</span>
@@ -81,14 +81,14 @@
         <div class="row">
             <div class="form-group required-field col-sm-6">
                 <label for="holdingPercentage-benef-{{index}}">{{'Holding percentage' | translate}}</label>
-                <input id="holdingPercentage-benef-{{index}}" type="number" [formControl]="form.get('common.holdingPercentage')" placeholder="%">
+                <input id="holdingPercentage-benef-{{index}}" type="number" [formControl]="form.get('common.holdingPercentage')" placeholder="{{'Define a value (%)' | translate}}">
                 <span class="field-error" *ngIf="hasError(['common', 'holdingPercentage'], ['required'])">{{'Field is required' | translate}}</span>
                 <span class="field-error" *ngIf="hasError(['common', 'holdingPercentage'], ['min', 'max'])">{{'Value must be between 0 and 100' | translate}}</span>
             </div>
 
             <div class="form-group required-field col-sm-6">
                 <label class="control-label" for="holdingType-benef-{{index}}">{{'Holding type' | translate}}</label>
-                <ng-select id="holdingType-benef-{{index}}" [items]="holdingTypesList" [formControl]="form.get('common.holdingType')" placeholder="{{'Please select beneficiary\'s holding type' | translate}}"></ng-select>
+                <ng-select id="holdingType-benef-{{index}}" [items]="holdingTypesList" [formControl]="form.get('common.holdingType')" placeholder="{{'Type' | translate}}"></ng-select>
                 <span class="field-error" *ngIf="hasError(['common', 'holdingType'], ['required'])">{{'Field is required' | translate}}</span>
             </div>
         </div>
@@ -100,13 +100,13 @@
         <div class="row">
             <div class="form-group required-field col-sm-6">
                 <label class="control-label" for="firstName-benef-{{index}}">{{'First name' | translate}}</label>
-                <input type="text" id="firstName-benef-{{index}}" formControlName="firstName" placeholder="{{'Please specify beneficiary\'s first name' | translate}}">
+                <input type="text" id="firstName-benef-{{index}}" formControlName="firstName" placeholder="{{'Fill in first name' | translate}}">
                 <span class="field-error" *ngIf="hasError(['naturalPerson', 'firstName'], ['required'])">{{'Field is required' | translate}}</span>
                 <span class="field-error" *ngIf="hasError(['naturalPerson', 'firstName'], ['maxlength'])">{{'Field is too long' | translate}}</span>
             </div>
             <div class="form-group required-field col-sm-6">
                 <label class="control-label" for="lastName-benef-{{index}}">{{'Last name' | translate}}</label>
-                <input type="text" id="lastName-benef-{{index}}" formControlName="lastName" placeholder="{{'Please specify beneficiary\'s last name' | translate}}">
+                <input type="text" id="lastName-benef-{{index}}" formControlName="lastName" placeholder="{{'Fill in last name' | translate}}">
                 <span class="field-error" *ngIf="hasError(['naturalPerson', 'lastName'], ['required'])">{{'Field is required' | translate}}</span>
                 <span class="field-error" *ngIf="hasError(['naturalPerson', 'lastName'], ['maxlength'])">{{'Field is too long' | translate}}</span>
             </div>
@@ -114,14 +114,14 @@
 
         <div class="row">
             <div class="form-group required-field col-sm-6">
-                <label class="control-label" for="address-benef-{{index}}">{{'Beneficiary\'s Address' | translate}}</label>
-                <input type="text" id="address-benef-{{index}}" [formControl]="form.get('common.address')" placeholder="{{'Please fill in beneficiary\'s address'}}">
+                <label class="control-label" for="address-benef-{{index}}">{{'Stakeholder Address' | translate}}</label>
+                <input type="text" id="address-benef-{{index}}" [formControl]="form.get('common.address')" placeholder="{{'Fill in an address' | translate}}">
                 <span class="field-error" *ngIf="hasError(['common', 'address'])">{{'Field is required' | translate}}</span>
             </div>
 
             <div class="form-group col-sm-6">
                 <label class="control-label" for="address2-benef-{{index}}">&nbsp;</label>
-                <input type="text" id="address2-benef-{{index}}" [formControl]="form.get('common.address2')" placeholder="{{'Address line 2'}}">
+                <input type="text" id="address2-benef-{{index}}" [formControl]="form.get('common.address2')" placeholder="{{'Address line 2' | translate}}">
                 <span class="field-error" *ngIf="hasError(['common', 'address2'], ['required'])">{{'Field is required' | translate}}</span>
                 <span class="field-error" *ngIf="hasError(['common', 'address2'], ['maxlength'])">{{'Field is too long' | translate}}</span>
             </div>
@@ -130,13 +130,13 @@
         <div class="row">
             <div class="form-group required-field col-sm-6">
                 <label class="control-label" for="zipCode-benef-{{index}}">{{'ZIP Code' | translate}}</label>
-                <input type="text" id="zipCode-benef-{{index}}" [formControl]="form.get('common.zipCode')" placeholder="{{'Please fill in a ZIP Code'}}">
+                <input type="text" id="zipCode-benef-{{index}}" [formControl]="form.get('common.zipCode')" placeholder="{{'Fill in a ZIP Code' | translate}}">
                 <span class="field-error" *ngIf="hasError(['common', 'zipCode'], ['required'])">{{'Field is required' | translate}}</span>
                 <span class="field-error" *ngIf="hasError(['common', 'zipCode'], ['maxlength'])">{{'Field is too long' | translate}}</span>
             </div>
             <div class="form-group required-field col-sm-6">
                 <label class="control-label" for="city-benef-{{index}}">{{'City' | translate}}</label>
-                <input type="text" id="city-benef-{{index}}" [formControl]="form.get('common.city')" placeholder="{{'Please fill in a city'}}">
+                <input type="text" id="city-benef-{{index}}" [formControl]="form.get('common.city')" placeholder="{{'Fill in a city' | translate}}">
                 <span class="field-error" *ngIf="hasError(['common', 'city'], ['required'])">{{'Field is required' | translate}}</span>
                 <span class="field-error" *ngIf="hasError(['common', 'city'], ['maxlength'])">{{'Field is too long' | translate}}</span>
             </div>
@@ -196,14 +196,14 @@
         <div class="row">
             <div class="form-group required-field col-sm-6">
                 <label for="holdingPercentage-benef-{{index}}">{{'Holding percentage' | translate}}</label>
-                <input id="holdingPercentage-benef-{{index}}" type="number" [formControl]="form.get('common.holdingPercentage')" placeholder="%">
+                <input id="holdingPercentage-benef-{{index}}" type="number" [formControl]="form.get('common.holdingPercentage')" placeholder="{{'Define a value (%)' | translate}}">
                 <span class="field-error" *ngIf="hasError(['common', 'holdingPercentage'], ['required'])">{{'Field is required' | translate}}</span>
                 <span class="field-error" *ngIf="hasError(['common', 'holdingPercentage'], ['min', 'max'])">{{'Value must be between 0 and 100' | translate}}</span>
             </div>
 
             <div class="form-group required-field col-sm-6">
                 <label class="control-label" for="holdingType-benef-{{index}}">{{'Holding type' | translate}}</label>
-                <ng-select id="holdingType-benef-{{index}}" [items]="holdingTypesList" [formControl]="form.get('common.holdingType')" placeholder="{{'Please select beneficiary\'s holding type' | translate}}"></ng-select>
+                <ng-select id="holdingType-benef-{{index}}" [items]="holdingTypesList" [formControl]="form.get('common.holdingType')" placeholder="{{'Type' | translate}}"></ng-select>
                 <span class="field-error" *ngIf="hasError(['common', 'holdingType'], ['required'])">{{'Field is required' | translate}}</span>
             </div>
         </div>

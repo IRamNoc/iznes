@@ -3,7 +3,7 @@
         <div class="col-sm-9">
             <a href="#" (click)="open = !open; $event.preventDefault();">
                 <i class="fa fa-chevron-right" [class.rotate]="open"></i>
-                <h2>Company information</h2>
+                <h2>{{'Company information' | translate}}</h2>
             </a>
         </div>
         <div class="col-sm-3 text-right">
@@ -17,12 +17,12 @@
             <div class="row">
                 <div class="form-group required-field col-sm-6">
                     <label class="control-label" for="sectorActivity">{{'Primary Sector of activity' | translate}}</label>
-                    <ng-select class="multiline" [items]="sectorActivityList" id="sectorActivity" formControlName="sectorActivity" placeholder="{{'Please fill in your primary activity sector' | translate}}"></ng-select>
+                    <ng-select class="multiline" [items]="sectorActivityList" id="sectorActivity" formControlName="sectorActivity" placeholder="{{'Select a sector of activity' | translate}}"></ng-select>
                     <span class="field-error" *ngIf="hasError('sectorActivity')">{{'Field is required' | translate}}</span>
                 </div>
                 <div class="form-group required-field col-sm-6" *ngIf="!isDisabled('sectorActivityText')">
-                    <label class="control-label" for="sectorActivityText">{{'Please specify' | translate}}</label>
-                    <input type="text" id="sectorActivityText" formControlName="sectorActivityText" placeholder="{{'Primary Sector of activity' | translate}}">
+                    <label class="control-label" for="sectorActivityText">&nbsp;</label>
+                    <input type="text" id="sectorActivityText" formControlName="sectorActivityText" placeholder="{{'Please specify' | translate}}">
                     <span class="field-error" *ngIf="hasError('sectorActivityText', ['required'])">{{'Field is required' | translate}}</span>
                     <span class="field-error" *ngIf="hasError('sectorActivityText', ['maxlength'])">{{'Field is too long' | translate}}</span>
                 </div>
@@ -31,7 +31,7 @@
             <div class="row">
                 <div class="form-group required-field col-sm-3">
                     <label class="control-label" for="geographicalAreaOfActivity">{{'Geographical area of the activity' | translate}}</label>
-                    <ng-select class="large-select multiline" id="geographicalAreaOfActivity" [items]="geographicalAreaList" [allowClear]="true" [formControl]="form.get('geographicalAreaOfActivity')" placeholder="{{'Please select your company area of activity' | translate}}"></ng-select>
+                    <ng-select class="large-select multiline" id="geographicalAreaOfActivity" [items]="geographicalAreaList" [allowClear]="true" [formControl]="form.get('geographicalAreaOfActivity')" placeholder="{{'Select an area of activity' | translate}}"></ng-select>
                     <span class="field-error" *ngIf="hasError('geographicalAreaOfActivity')">{{'Field is required' | translate}}</span>
                 </div>
 
@@ -61,7 +61,7 @@
                         <span class="field-error" *ngIf="hasError('regulator')">{{'Field is required' | translate}}</span>
                     </div>
                     <div class="form-group required-field col-sm-4">
-                        <input type="text" id="approvalNumber" formControlName="approvalNumber" placeholder="{{'Fill in the approval number' | translate }}">
+                        <input type="text" id="approvalNumber" formControlName="approvalNumber" placeholder="{{'Fill in an approval number' | translate }}">
                         <span class="field-error" *ngIf="hasError('approvalNumber', ['required'])">{{'Field is required' | translate}}</span>
                         <span class="field-error" *ngIf="hasError('approvalNumber', ['maxlength'])">{{'Field is too long' | translate}}</span>
                     </div>
@@ -81,7 +81,7 @@
                     </div>
 
                     <div *ngIf="!isDisabled('regulatoryStatusListingOther')" class="form-group required-field col-md-4">
-                        <label class="control-label" for="regulatoryStatusListingOther">&nbsp;</label>
+                        <label class="control-label" for="regulatoryStatusListingOther">{{'Please fill in the regulatory status of your company' | translate}}</label>
                         <input type="text" id="regulatoryStatusListingOther" formControlName="regulatoryStatusListingOther" placeholder="{{'Please specify' | translate}}">
                         <span class="field-error" *ngIf="hasError('regulatoryStatusListingOther')">{{'Field is required' | translate}}</span>
                     </div>
@@ -105,12 +105,12 @@
                     <span class="field-error" *ngIf="hasError('listingMarkets')">{{'Field is required' | translate}}</span>
                 </div>
                 <div class="form-group required-field col-sm-4">
-                    <input type="text" id="bloombergCode" formControlName="bloombergCode" placeholder="{{'Please fill in the Bloomberg\'s code' | translate }}">
+                    <input type="text" id="bloombergCode" formControlName="bloombergCode" placeholder="{{'Fill in a Bloomberg\'s code' | translate }}">
                     <span class="field-error" *ngIf="hasError('bloombergCode', ['required'])">{{'Field is required' | translate}}</span>
                     <span class="field-error" *ngIf="hasError('bloombergCode', ['maxlength'])">{{'Field is too long' | translate}}</span>
                 </div>
                 <div class="form-group required-field col-sm-4">
-                    <input type="text" id="isinCode" formControlName="isinCode" placeholder="{{'Please fill in the ISIN code of the listed share' | translate }}">
+                    <input type="text" id="isinCode" formControlName="isinCode" placeholder="{{'Fill in an ISIN code' | translate }}">
                     <span class="field-error" *ngIf="hasError('isinCode', ['required'])">{{'Field is required' | translate}}</span>
                     <span class="field-error" *ngIf="hasError('isinCode', ['pattern'])">{{'ISIN must have two letters and ten digits' | translate}}</span>
                     <span class="field-error" *ngIf="hasError('isinCode', ['maxlength'])">{{'Field is too long' | translate}}</span>
@@ -124,7 +124,7 @@
 
             <div class="row">
                 <div class="form-group required-field col-md-6 col-xl-3">
-                    <label class="control-label" for="activities">{{'Management in behalf of' | translate}}</label>
+                    <label class="control-label" for="activities">{{'Management on behalf of' | translate}}</label>
                     <ng-select class="large-select multiline" id="activities" [items]="companyActivitiesList" [allowClear]="true" [formControl]="form.get('activities')" placeholder="{{'Select the type of account you manage' | translate}}"></ng-select>
                     <span class="field-error" *ngIf="hasError('activities')">{{'Field is required' | translate}}</span>
                 </div>
@@ -145,7 +145,7 @@
             <div class="row">
                 <div class="form-group required-field col-sm-6">
                     <label class="control-label" for="balanceSheetTotal">{{'Balance Sheet Total' | translate}}</label>
-                    <input type="number" id="balanceSheetTotal" formControlName="balanceSheetTotal" placeholder="€">
+                    <input type="number" id="balanceSheetTotal" formControlName="balanceSheetTotal" placeholder="{{'Define a value (€)' | translate}}">
                     <span class="field-error" *ngIf="hasError('balanceSheetTotal')">{{'Field is required' | translate}}</span>
                 </div>
             </div>
@@ -153,13 +153,13 @@
             <div class="row">
                 <div class="form-group required-field col-sm-6">
                     <label class="control-label" for="netRevenuesNetIncome">{{'Net Revenues or Net Income' | translate}}</label>
-                    <input type="number" id="netRevenuesNetIncome" formControlName="netRevenuesNetIncome" placeholder="€">
+                    <input type="number" id="netRevenuesNetIncome" formControlName="netRevenuesNetIncome" placeholder="{{'Define a value (€)' | translate}}">
                     <span class="field-error" *ngIf="hasError('netRevenuesNetIncome', ['required'])">{{'Field is required' | translate}}</span>
                     <span class="field-error" *ngIf="hasError('netRevenuesNetIncome', ['min'])">{{'Number should not be negative' | translate}}</span>
                 </div>
                 <div class="form-group required-field col-sm-6">
-                    <label class="control-label" for="shareholderEquity">{{'Shareholder\'s Equity' | translate}}</label>
-                    <input type="number" id="shareholderEquity" formControlName="shareholderEquity" placeholder="€">
+                    <label class="control-label" for="shareholderEquity">{{'Shareholders\' Equity' | translate}}</label>
+                    <input type="number" id="shareholderEquity" formControlName="shareholderEquity" placeholder="{{'Define a value (€)' | translate}}">
                     <span class="field-error" *ngIf="hasError('shareholderEquity', ['required'])">{{'Field is required' | translate}}</span>
                     <span class="field-error" *ngIf="hasError('shareholderEquity', ['min'])">{{'Number should not be negative' | translate}}</span>
                 </div>
