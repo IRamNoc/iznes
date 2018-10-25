@@ -58,11 +58,11 @@ export class VariousAddressSelectComponent implements ControlValueAccessor {
                 'A' 'Q', 'g', ${this.translate.translate('or')} 'w'</li>
                 <li>${this.translate.translate('Be comprised of only')}:
                     <ul>
-                        <li>'A–Z'</li>
-                        <li>'a–z'</li>
-                        <li>'0–9'</li>
-                        <li>${this.translate.translate('\'–\' (hyphen/dash)')}</li>
-                        <li>${this.translate.translate('\'_\' (underscore)')}</li>
+                        <li>A–Z</li>
+                        <li>a–z</li>
+                        <li>0–9</li>
+                        <li>- (${this.translate.translate('hyphen/dash')})</li>
+                        <li>_ (${this.translate.translate('underscore')})</li>
                     </ul>
                 </li>
             </ul>`;
