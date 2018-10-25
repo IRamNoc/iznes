@@ -71,14 +71,8 @@ export class SendAssetComponent implements OnInit, OnDestroy {
                     this.allInstrumentList = walletHelper.walletInstrumentListToSelectItem(positiveHoldings);
                     this.changeDetectorRef.markForCheck();
 
-                    /* Save holdings by address for validation checks */
-                    for (const breakdown in holdings[this.connectedWalletId][holding].breakdown) {
-                        const address = holdings[this.connectedWalletId][holding].breakdown[breakdown];
-                        if (_.isEmpty(this.addressHoldings[holding])) this.addressHoldings[holding] = {};
-                        this.addressHoldings[holding][address.addr] = address.free;
-                    }
-                    /* Update the formGroup validation in case holdings have changed */
-                    this.sendAssetForm.get('amount').updateValueAndValidity();
+                    /* Set the addressHoldings object for validation */
+                    this.setAddressHoldings(holdings, holding);
                 }
             }
 
@@ -162,6 +156,8 @@ export class SendAssetComponent implements OnInit, OnDestroy {
                 {},
                 (data) => {
                     console.log('send asset:', data);
+
+                    this.updateAddressHoldings(data);
                 },
                 (data) => {
                     console.error('fail', data);
@@ -187,30 +183,36 @@ export class SendAssetComponent implements OnInit, OnDestroy {
                 amount: new FormControl('', [Validators.required, Validators.pattern('^((?!(0))[0-9]+)$')]),
             },
             [
-                (g: FormGroup) => {
-                    /* Validate address holdings and trigger displaying the holding amount on the view */
-                    const asset = _.get(g.get('asset'), 'value[0].id', '');
-                    const assetAddress = _.get(g.get('assetAddress'), 'value[0].id', '');
-                    const amount = g.get('amount').value;
-                    const amountErrors = g.get('amount').errors;
-                    if (_.isObject(amountErrors)) delete amountErrors.insufficientFunds;
-
-                    if (asset && assetAddress) {
-                        this.addressHoldingAmount = this.addressHoldings[asset][assetAddress] || 0;
-                        this.showAddressHolding = true;
-                        if (amount) {
-                            this.addressHoldingAmount < amount ?
-                                g.get('amount').setErrors(Object.assign({}, amountErrors, { insufficientFunds: true }))
-                                : g.get('amount').setErrors(_.isEmpty(amountErrors) ? null : amountErrors);
-                        }
-                    } else {
-                        this.showAddressHolding = false;
-                    }
-                    return null;
-                },
+                this.holdingsValidator,
             ],
         );
     }
+
+    /**
+     * Validate address holdings and trigger displaying the holding amount on the view
+     *
+     * @param {FormGroup} g
+     */
+    holdingsValidator = ((g: FormGroup) => {
+        const asset = _.get(g.get('asset'), 'value[0].id', '');
+        const assetAddress = _.get(g.get('assetAddress'), 'value[0].id', '');
+        const amount = g.get('amount').value;
+        const amountErrors = g.get('amount').errors;
+        if (_.isObject(amountErrors)) delete amountErrors.insufficientFunds;
+
+        if (asset && assetAddress) {
+            this.addressHoldingAmount = this.addressHoldings[asset][assetAddress] || 0;
+            this.showAddressHolding = true;
+            if (amount) {
+                this.addressHoldingAmount < amount ?
+                    g.get('amount').setErrors(Object.assign({}, amountErrors, { insufficientFunds: true }))
+                    : g.get('amount').setErrors(_.isEmpty(amountErrors) ? null : amountErrors);
+            }
+        } else {
+            this.showAddressHolding = false;
+        }
+        return null;
+    });
 
     /**
      * Requests wallet address list.
@@ -279,6 +281,44 @@ export class SendAssetComponent implements OnInit, OnDestroy {
 
             this.ngRedux.dispatch(finishSendAssetNotification());
         }
+    }
+
+    /**
+     * Set holdings by address for validation checks
+     *
+     * @param holdings
+     * @param holding
+     */
+    setAddressHoldings(holdings, holding) {
+        for (const breakdown in holdings[this.connectedWalletId][holding].breakdown) {
+            const address = holdings[this.connectedWalletId][holding].breakdown[breakdown];
+            if (_.isEmpty(this.addressHoldings[holding])) this.addressHoldings[holding] = {};
+            this.addressHoldings[holding][address.addr] = address.free;
+        }
+
+        /* Refresh form validation */
+        this.sendAssetForm.get('amount').updateValueAndValidity();
+    }
+
+    /**
+     * Update addressHoldings object and form validation until block update comes in
+     *
+     * @param response
+     */
+    updateAddressHoldings(response) {
+        const fromAddress = _.get(response, '[1].data.fromaddr', '');
+        const toAddress = _.get(response, '[1].data.toaddr', '');
+        const amount = _.get(response, '[1].data.amount', '');
+        const asset = `${_.get(response, '[1].data.namespace', '')}|${_.get(response, '[1].data.classid', '')}`;
+        const fromHolding = _.get(this.addressHoldings, `[${asset}][${fromAddress}]`, 0);
+        const toHolding = _.get(this.addressHoldings, `[${asset}][${toAddress}]`, 0);
+
+        /* Update addressHoldings object */
+        if (fromHolding) this.addressHoldings[asset][fromAddress] = fromHolding - amount;
+        if (toHolding) this.addressHoldings[asset][toAddress] = toHolding + amount;
+
+        /* Refresh form validation */
+        this.sendAssetForm.get('amount').updateValueAndValidity();
     }
 
     ngOnDestroy() {
