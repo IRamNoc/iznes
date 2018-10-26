@@ -3,7 +3,7 @@ Multilingual is an angular 4 SETL module that houses key components for the tran
 
 Features:
 * A service that can be imported anywhere and used to retrieve translations.
-* A module that can be imported into any other module that gives you access to the service and the `mltag` directive.
+* A module that can be imported into any other module that gives you access to the service.
 * Direct access to the translations object.
 
 # Usage:
