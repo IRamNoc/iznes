@@ -1,13 +1,25 @@
 package com.setl.UI.common.SETLUIHelpers;
 
+import SETLAPIHelpers.DatabaseHelper;
+import com.google.zxing.BinaryBitmap;
+import com.google.zxing.LuminanceSource;
+import com.google.zxing.MultiFormatReader;
+import com.google.zxing.Result;
+import com.google.zxing.client.j2se.BufferedImageLuminanceSource;
+import com.google.zxing.common.HybridBinarizer;
+import org.jboss.aerogear.security.otp.Totp;
 import org.openqa.selenium.*;
 import org.openqa.selenium.support.ui.ExpectedConditions;
 import org.openqa.selenium.support.ui.WebDriverWait;
 
+import javax.imageio.ImageIO;
+import java.awt.image.BufferedImage;
 import java.io.IOException;
+import java.net.URL;
+import java.sql.SQLException;
+import java.util.List;
 
 import static com.setl.UI.common.SETLUIHelpers.MemberDetailsHelper.isElementPresent;
-import static com.setl.UI.common.SETLUIHelpers.PageHelper.verifyCorrectPageById;
 import static com.setl.UI.common.SETLUIHelpers.SetUp.*;
 import static org.junit.Assert.*;
 import static org.openqa.selenium.support.ui.ExpectedConditions.*;
@@ -189,6 +201,10 @@ public class LoginAndNavigationHelper {
         enterLoginCredentialsUserName(username);
         enterLoginCredentialsPassword(password);
         clickLoginButton();
+
+        //Handle 2FA if needed
+        processSuccessful2FaIfRequired(username);
+
         waitForHomePageToLoad();
         System.out.println("Status : Successfully logged in as '" + username + "'");
         System.out.println("=======================================================");
@@ -225,6 +241,77 @@ public class LoginAndNavigationHelper {
         enterLoginCredentialsPassword(password);
         clickLoginButton();
         waitForLoginFailPopup();
+    }
+
+
+    public static void processSuccessful2FaIfRequired(String userName)
+    {
+        List<WebElement> twoFaId = driver.findElements(By.id("qrCodeNumber"));
+        List<WebElement> alreadyHave2FA = driver.findElements(By.id("forgotten-two-factor-link"));
+        if (twoFaId.size() > 0 || alreadyHave2FA.size() > 0)
+        {
+            System.out.println("Encountered 2FA...");
+
+            List<WebElement> QrCodes = driver.findElements(By.xpath("//*[@id=\"qr-code\"]/section/img"));
+            if (QrCodes.size() > 0)
+            {
+                System.out.println("Processing new 2FA challenge from QR code");
+
+                WebElement QrCode = QrCodes.get(0);
+                //get image
+                String src = QrCode.getAttribute("src");
+                try
+                {
+                    BufferedImage img = ImageIO.read(new URL(src));
+                    LuminanceSource source = new BufferedImageLuminanceSource(img);
+                    BinaryBitmap bitmap = new BinaryBitmap(new HybridBinarizer(source));
+
+                    Result result = new MultiFormatReader().decode(bitmap);
+                    String text = result.getText();
+
+                    //the decoded link looks like: 'otpauth://totp/SETL:am?secret=I3IEX7ZXCNDT2IAD'
+
+                    String user = text.split(":")[2];
+                    user = user.split("\\?")[0];
+                    String secret = text.split("=")[1]; // can either store this or get from the DB for next time
+
+
+                    //use the Aerogear library to generate the code from the shared secret
+                    Totp generator = new Totp(secret);
+                    String otp = generator.now();
+
+                    driver.findElement(By.id("qrCodeNumber")).sendKeys(otp);
+                    driver.findElement(By.id("authenticate-qr-submit"));
+                }
+                catch (Exception e)
+                {
+                    System.out.println("Error trying to establish 2FA");
+                    e.printStackTrace();
+                }
+            }
+            else if (alreadyHave2FA.size() > 0)
+            {
+                //we already have 2FA secret in the database, so lets fetch it
+                String secret = "NONE";
+
+                try
+                {
+                    secret = DatabaseHelper.getDb2FaSharedSecret(userName);
+                }
+                catch (SQLException e)
+                {
+                    e.printStackTrace();
+                }
+
+                Totp generator = new Totp(secret);
+                String otp = generator.now();
+
+                driver.findElement(By.id("qrCodeNumber")).sendKeys(otp);
+                driver.findElement(By.id("authenticate-qr-submit")).click();
+
+            }
+
+        }
     }
 
     public static void waitForHomePageToLoad() {
