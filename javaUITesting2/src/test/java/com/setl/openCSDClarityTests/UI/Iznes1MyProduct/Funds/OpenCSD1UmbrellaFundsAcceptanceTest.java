@@ -651,5 +651,8 @@ public class OpenCSD1UmbrellaFundsAcceptanceTest {
     @Test
     public void shouldAssertThatAnUmbrellaFundTabIsPresent(){
         System.out.println("Not Yet Implemented");
+        /*
+        This test to to check whether the tab for the umbrella fund appears under fund creation if linked.
+         */
     }
 }

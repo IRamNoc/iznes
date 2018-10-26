@@ -3,10 +3,7 @@ import com.setl.UI.common.SETLUtils.RepeatRule;
 import com.setl.UI.common.SETLUtils.ScreenshotRule;
 import com.setl.UI.common.SETLUtils.TestMethodPrinterRule;
 import custom.junit.runners.OrderedJUnit4ClassRunner;
-import org.junit.After;
-import org.junit.Before;
-import org.junit.Rule;
-import org.junit.Test;
+import org.junit.*;
 import org.junit.rules.Timeout;
 import org.junit.runner.RunWith;
 import org.openqa.selenium.By;
@@ -308,53 +305,220 @@ public class OpenCSDNAVAcceptanceTest {
         driver.findElement(By.id("navDateTo")).sendKeys("2018-05-24");
         wait.until(invisibilityOfElementLocated(By.xpath("//*[@id=\"nav-history-row0-btn-edit\"]/span")));
     }
-
     @Test
     //TODO Sprint 14
-    public void TG3127_ShouldChangeNAVStatusToCancelledFrontend()throws InterruptedException, SQLException {
-        System.out.println("Not Yet Implemented");
+    public void TG3127_ShouldChangeNAVStatusToCancelledNoOrders()throws InterruptedException, SQLException {
+       try {
+           loginAndVerifySuccess("am", "alex01");
+           navigateToDropdown("");
+           navigateToDropdown("");
+           selectCreateFund("", "");
+           selectCreateShare("", "");
+           navigateToNAVPage();
+           selectSearchNAV("");
+           selectShare("");
+           assertNAVDetails("", "");
+           selectAddNewNAV(0, "");
+           selectDeleteNAV(0,"Yes");
+       }catch (Exception e) {
+           fail("Not yet implemented");
+       }
+    }
+    private void assertNAVDetails(String shareName, String isin) {
     }
 
+    private void selectAddNewNAV(int amount, String status) {
+    }
+
+    private void selectShare(String shareName) {
+    }
+
+    private void selectSearchNAV(String shareName) {
+    }
+
+    private void selectDeleteNAV(int i, String answer) {
+        if (answer.equals("Yes"))
+        {
+
+        }
+        if (answer.equals("No"))
+        {
+
+        }
+    }
+
+    private void selectCreateShare(String shareName, String iban) {
+    }
+
+    private void selectCreateFund(String fundName, String isin) {
+    }
+    @Test
+    //TODO Sprint 14
+    public void TG3127_ShouldChangeNAVStatusToCancelledNoCorporateAction()throws InterruptedException, SQLException {
+        System.out.println("Not Yet Implemented");
+        /*
+        There is no corporate action module yet
+         */
+    }
     @Test
     //TODO Sprint 14
     public void TG3127_ShouldChangeNAVStatusToCancelledDatabase()throws InterruptedException, SQLException {
-        System.out.println("Not Yet Implemented");
+        try {
+            loginAndVerifySuccess("am", "alex01");
+            navigateToDropdown("");
+            navigateToDropdown("");
+            selectCreateFund("", "");
+            selectCreateShare("", "");
+            navigateToNAVPage();
+            selectSearchNAV("");
+            selectShare("");
+            assertNAVDetails("", "");
+            selectAddNewNAV(100, "");
+            selectDeleteNAV(0,"");
+            validateNAVCancelledDB(100, "");
+        }catch (Exception e) {
+            fail("Not yet implemented");
+        }
     }
-
-    @Test
-    //TODO Sprint 14
-    public void TG3127_ShouldBeAbleToCancelNAVIfNoOrdersAreSettled()throws InterruptedException, SQLException {
-        System.out.println("Not Yet Implemented");
+    private void validateNAVCancelledDB(int amount, String status) {
+        /*
+        Make the status ambiguous, pass through the status from the test itself so it can be reused
+         */
     }
-
     @Test
     //TODO Sprint 14
     public void TG3127_ShouldUpdateToPreviousNAVWhenCurrentNAVCancelled()throws InterruptedException, SQLException {
-        System.out.println("Not Yet Implemented");
+        try {
+            loginAndVerifySuccess("am", "alex01");
+            navigateToDropdown("");
+            navigateToDropdown("");
+            selectCreateFund("", "");
+            selectCreateShare("", "");
+            navigateToNAVPage();
+            selectSearchNAV("");
+            selectShare("");
+            assertNAVDetails("", "");
+            selectAddNewNAV(50, "");
+            selectAddNewNAV(100, "");
+            selectDeleteNAV(0, "");
+            validateNAVCancelledDB(100, "");
+            assertNAVPageAmount(50, "");
+        }catch (Exception e) {
+            fail("Not yet implemented");
+        }
     }
+    private void assertNAVPageAmount(int amount, String shareName) {
 
+    }
     @Test
     //TODO Sprint 14
     public void TG3127_ShouldNotifyEachInvestorWithAuthorisationOnTheShare()throws InterruptedException, SQLException {
         System.out.println("Not Yet Implemented");
     }
-
-    @Test
-    //TODO Sprint 14
-    public void TG3129_ShouldChangeNAVStatusToCancelledWhenModifiedFrontend()throws InterruptedException, SQLException {
-        System.out.println("Not Yet Implemented");
-    }
-
-    @Test
-    //TODO Sprint 14
-    public void TG3129_ShouldChangeNAVStatusToCancelledWhenModifiedDatabase()throws InterruptedException, SQLException {
-        System.out.println("Not Yet Implemented");
-    }
-
     @Test
     //TODO Sprint 14
     public void TG3129_ShouldNotBeAbleToModifyNAVIfNoOrdersIsSettled()throws InterruptedException, SQLException {
-        System.out.println("Not Yet Implemented");
+        try {
+            loginAndVerifySuccess("am", "alex01");
+            navigateToDropdown("KYP");
+            navigateToDropdown("Product");
+            selectCreateFund("name", "isin");
+            selectCreateShare("name", "iban");
+            navigateToNAVPage();
+            selectSearchNAV("shareName");
+            selectShare("shareName");
+            selectAddNewNAV(100, "Verified");
+            navigateToDropdown("My-Clients");
+            navigateToDropdown("Client-Referential");
+            selectInviteInvestor();
+            investorInviteOption("email", "firstName", "lastName", "ref", "Type");
+            logout();
+            investorAccountCreation("investorEmail", "PWD");
+            companyDetails("companyName", "phoneNumber");
+            completeKYC();
+            logout();
+            loginAndVerifySuccess("am", "alex01");
+            navigateToDropdown("My-Client");
+            navigateToDropdown("Onboarding-Management");
+            selectInvestor("companyName");
+            acceptKYCRequest("Accepted");
+            authoriseShareAccess("shareName");
+            logout();
+            loginAndVerifySuccess("investorEmail", "PWD");
+            assertPage("Sub-Portfolio");
+            selectAddNewSubPortfolio("ibanName", "ibanNumber");
+            navigateToDropdown("OrderBook");
+            navigateToDropdown("Place-Order");
+            selectSubscribe("shareName");
+            placeOrderDetails("date", "subportfolio", 100, "tick", "OrderID");
+            logout();
+            loginAndVerifySuccess("am", "alex01");
+            navigateToDropdown("OrderBook");
+            searchOrderBook("shareName", "OrderID");
+            waitUntilOrderStatus("AwaitingSettlement");
+            selectSettle("Settle");
+            navigateToNAVPage();
+            selectSearchNAV("shareName");
+            selectShare("shareName");
+            selectNAVandAssertStatus("delete/cancel", "Status");
+            validateNAVCancelledDB(100, "Validated");
+        }catch (Exception e){
+            fail("Not yet implemented");
+        }
+    }
+
+    private void selectNAVandAssertStatus(String action, String status) {
+
+    }
+
+    private void selectSettle(String action) {
+
+    }
+
+    private void waitUntilOrderStatus(String orderStatus) {
+
+    }
+
+    private void searchOrderBook(String shareName, String orderID) {
+
+    }
+
+    private void placeOrderDetails(String date, String subportfolio, int amount, String tick, String orderID) {
+
+    }
+
+    private void selectSubscribe(String shareName) {
+
+    }
+
+    private void selectAddNewSubPortfolio(String ibanName, String ibanNumber) {
+
+    }
+
+    private void assertPage(String pageName) {
+    }
+
+    private void authoriseShareAccess(String shareName) {
+
+    }
+
+    private void acceptKYCRequest(String accepted) {
+
+    }
+
+    private void selectInvestor(String companyName) {
+    }
+
+    private void completeKYC() {
+    }
+
+    private void companyDetails(String companyName, String phoneNumber) {
+    }
+
+    private void investorAccountCreation(String investorEmail, String pwd) {
+    }
+
+    private void selectInviteInvestor() {
     }
 
     @Test
@@ -374,19 +538,6 @@ public class OpenCSDNAVAcceptanceTest {
     public void TG3129_ShouldNotNotifyInvestorWithoutAccessToTheNAVModule()throws InterruptedException, SQLException {
         System.out.println("Not Yet Implemented");
     }
-
-    @Test
-    //TODO Sprint 14
-    public void TG3125_ShouldBeAbleToDeleteNAVIfNoOrdersArePlaced()throws InterruptedException, SQLException {
-        System.out.println("Not Yet Implemented");
-    }
-
-    @Test
-    //TODO Sprint 14
-    public void TG3125_ShouldNotBeAbleToDeleteNAVIfOrdersArePlaced()throws InterruptedException, SQLException {
-        System.out.println("Not Yet Implemented");
-    }
-
     @Test
     //TODO Sprint 14
     public void TG3125_ShouldEraseNAVFromTableDatabseWhenDeleted()throws InterruptedException, SQLException {
@@ -396,25 +547,90 @@ public class OpenCSDNAVAcceptanceTest {
     @Test
     //TODO Sprint 14
     public void TG3125_ShouldEraseNAVFromTableFrontendWhenDeleted()throws InterruptedException, SQLException {
-        System.out.println("Not Yet Implemented");
+        try {
+            loginAndVerifySuccess("am", "alex01");
+            navigateToDropdown("");
+            navigateToDropdown("");
+            selectCreateFund("", "");
+            selectCreateShare("", "");
+            navigateToNAVPage();
+            selectSearchNAV("");
+            selectShare("");
+            assertNAVDetails("", "");
+            selectAddNewNAV(100, "");
+            selectDeleteNAV(0,"");
+            validateNAVCancelledDB(100, "");
+            navigateToNAVPage();
+            selectSearchNAV("shareName");
+            assertRowReturn(0);
+        }catch (Exception e) {
+            fail("no yet implemented");
+        }
     }
+    private void assertRowReturn(int rowCount) {
 
-    @Test
-    //TODO Sprint 14
-    public void TG3125_ShouldUpdateToPreviousNAVWhenCurrentNAVDeleted()throws InterruptedException, SQLException {
-        System.out.println("Not Yet Implemented");
     }
-
     @Test
     //TODO Sprint 14
     public void TG3125_ShouldNotifyEachInvestorWithAuthorisationOnTheShare()throws InterruptedException, SQLException {
-        System.out.println("Not Yet Implemented");
+       try {
+           loginAndVerifySuccess("am", "alex01");
+           navigateToDropdown("");
+           navigateToDropdown("");
+           selectCreateFund("", "");
+           selectCreateShare("", "");
+           navigateToNAVPage();
+           selectSearchNAV("");
+           selectShare("");
+           assertNAVDetails("", "");
+           selectAddNewNAV(100, "");
+           navigateToDropdown("My-Clients");
+           navigateToDropdown("Client-Referential");
+           selectInviteInvestor();
+           investorInviteOption("email", "firstName", "lastName", "ref", "type");
+           logout();
+           investorAccountCreation("email", "PWD");
+           companyDetails("companyName", "phoneNumber");
+           completeKYC();
+           logout();
+           loginAndVerifySuccess("am", "alex01");
+           navigateToDropdown("My-Clients");
+           navigateToDropdown("Onboarding-Management");
+           selectInvestor("companyName");
+           authoriseShareAccess("shareName");
+           navigateToNAVPage();
+           selectSearchNAV("shareName");
+           selectShare("share");
+           selectDeleteNAV(100, "yes");
+           logout();
+           loginAndVerifySuccess("investorEmail", "PWD");
+           selectMessages();
+           selectTopMessage("subject");
+           assertContentOfMessage("AM has deleted NAV for share 'shareName'");
+           selectDeleteNAV(0, "");
+       }catch (Exception e) {
+           fail("not yet implemented");
+       }
+    }
+    private void assertContentOfMessage(String messageBody) {
+
+    }
+
+    private void selectTopMessage(String subject) {
+
+    }
+
+    private void selectMessages() {
+
     }
 
     @Test
     //TODO Sprint 14
     public void TG3125_ShouldNotNotifyInvestorWithoutAuthorisationOnTheShare()throws InterruptedException, SQLException {
-        System.out.println("Not Yet Implemented");
+        /*
+        This is a negative test not if we want to implement it as its a long test, its a duplicate of the above however create 2x shares and assign share B to investor not share A
+        Update share A with NAV and check investor for the message. Not sure yet if it will be a message or a popup or whatever.
+         */
     }
 
 }

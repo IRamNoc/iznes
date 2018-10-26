@@ -697,57 +697,254 @@ public class OpenCSDKYCModuleAcceptanceTest {
     @Test
     //TODO Sprint 14
     public void TG3099_shouldAssertKYCButtonEqualsCancel()throws InterruptedException, SQLException {
-        System.out.println("Not Yet Implemented");
+        try {
+            loginAndVerifySuccess("am", "alex01");
+            navigateToDropdown("My-Clients");
+            navigateToDropdown("Client-Referential");
+            selectInviteInvestor();
+            investorInviteOption("", "", "" ,"", "");
+            logout();
+            investorAccountCreation("investorEmail", "PWD");
+            companyDetails("companyName", "phoneNumber");
+            assertKYCButtonChange("Cancel");
+        }catch (Exception e) {
+            fail("Not yet implemented");
+        }
     }
+
+    private void assertKYCButtonChange(String buttonName) {
+        /*
+        Button was Close should now be cancel
+         */
+    }
+
+    private void companyDetails(String companyName, String phoneNumber) {
+
+    }
+
+    private void investorAccountCreation(String investorEmail, String pwd) {
+
+    }
+
+    private void selectInviteInvestor() {
+
+    }
+
     @Test
     //TODO Sprint 14
     public void TG3099_shouldAssertKYCButtonDoesNotEqualClose()throws InterruptedException, SQLException {
-        System.out.println("Not Yet Implemented");
+        /*
+        Negative Testing Case
+         */
+        try {
+            loginAndVerifySuccess("am", "alex01");
+            navigateToDropdown("My-Clients");
+            navigateToDropdown("Client-Referential");
+            selectInviteInvestor();
+            investorInviteOption("", "", "" ,"", "");
+            logout();
+            investorAccountCreation("investorEmail", "PWD");
+            companyDetails("companyName", "phoneNumber");
+            assertKYCButtonDoesNotEqual("close");
+        }catch (Exception e) {
+            fail("Not yet implemented");
+        }
     }
+    private void assertKYCButtonDoesNotEqual(String buttonName) {
+        /*
+        This should be a negative test method to assert somethings is not what it is
+         */
+    }
+
     @Test
     //TODO Sprint 14
     public void TG3099_shouldAssertCancelButtonRedirectToCorrectPage()throws InterruptedException, SQLException {
-        System.out.println("Not Yet Implemented");
+        try {
+            loginAndVerifySuccess("am", "alex01");
+            navigateToDropdown("My-Clients");
+            navigateToDropdown("Client-Referential");
+            selectInviteInvestor();
+            investorInviteOption("", "", "", "", "");
+            logout();
+            investorAccountCreation("investorEmail", "PWD");
+            companyDetails("companyName", "phoneNumber");
+            selectCancelOnKYC();
+            assertKYCCancelPageRedirect("Page-Heading");
+        } catch (Exception e) {
+            fail("Not yet implemented");
+        }
+    }
+    private void assertKYCCancelPageRedirect(String pageTitle) {
+    }
+    private void selectCancelOnKYC() {
     }
     @Test
     //TODO Sprint 14
-    public void TG2987_shouldKYCInDraftStausHasDeleteButton()throws InterruptedException, SQLException {
-        System.out.println("Not Yet Implemented");
+    public void TG2987_shouldKYCInDraftStatusHasDeleteButton()throws InterruptedException, SQLException {
+        try {
+            loginAndVerifySuccess("am", "alex01");
+            navigateToDropdown("My-Clients");
+            navigateToDropdown("Client-Referential");
+            selectInviteInvestor();
+            investorInviteOption("", "", "", "", "");
+            logout();
+            investorAccountCreation("investorEmail", "PWD");
+            companyDetails("companyName", "phoneNumber");
+            startKYCOnlyStep1();
+            navigateToDropdown("MyRequests");
+            assertKYCStatus("Draft");
+            assertKYCStatusHasDeleteButton("Draft");
+
+        } catch (Exception e) {
+            fail("Not yet implemented");
+        }
+    }
+
+    private void assertKYCStatusHasDeleteButton(String statusKYC) {
+        /*
+        Make ambiguous for reuse on other KYC status, pass the status on the test.
+         */
+    }
+
+    private void assertKYCStatus(String statusKYC) {
+    }
+
+    private void startKYCOnlyStep1() {
+        /*
+        Only partial KYC needs to be filled in to label the status as DRAFT
+         */
     }
     @Test
     //TODO Sprint 14
     public void TG2987_shouldAssertKYCIsRemovedFromListWhenDeleted()throws InterruptedException, SQLException {
-        System.out.println("Not Yet Implemented");
+        try {
+            loginAndVerifySuccess("am", "alex01");
+            navigateToDropdown("My-Clients");
+            navigateToDropdown("Client-Referential");
+            selectInviteInvestor();
+            investorInviteOption("", "", "", "", "");
+            logout();
+            investorAccountCreation("investorEmail", "PWD");
+            companyDetails("companyName", "phoneNumber");
+            startKYCOnlyStep1();
+            navigateToDropdown("MyRequests");
+            assertKYCStatus("Draft");
+            assertKYCStatusHasDeleteButton("Draft");
+            selectKYCDelete();
+            verifyKYCDeletedInUI("Management-Company");
+            verifyKYCDeletedDB(0);
+        } catch (Exception e) {
+            fail("Not yet implemented");
+        }
+
     }
+
+    private void verifyKYCDeletedInUI(String kycManagementCompany) {
+
+    }
+
+    private void selectKYCDelete() {
+
+    }
+
+    private void verifyKYCDeletedDB(int rowCountExpected) {
+
+    }
+
     @Test
     //TODO Sprint 14
     public void TG2987_shouldAssertPopUpAppearsAfterSelectingDeleteKYC()throws InterruptedException, SQLException {
-        System.out.println("Not Yet Implemented");
+        try {
+            loginAndVerifySuccess("am", "alex01");
+            navigateToDropdown("My-Clients");
+            navigateToDropdown("Client-Referential");
+            selectInviteInvestor();
+            investorInviteOption("", "", "", "", "");
+            logout();
+            investorAccountCreation("investorEmail", "PWD");
+            companyDetails("companyName", "phoneNumber");
+            startKYCOnlyStep1();
+            navigateToDropdown("MyRequests");
+            assertKYCStatus("Draft");
+            assertKYCStatusHasDeleteButton("Draft");
+            selectKYCDelete();
+            assertKYCDeletePopUp("Heading");
+        }catch (Exception e){
+            fail("Not yet implemented");
+        }
     }
-    @Test
-    //TODO Sprint 14
-    public void TG2987_shouldCheckDBForKYCDeletionFlag()throws InterruptedException, SQLException {
-        System.out.println("Not Yet Implemented");
-    }
-    @Test
-    //TODO Sprint 14
-    public void TG2988_shouldAssertDeletePopUpAppearsWhenSelecingDelete()throws InterruptedException, SQLException {
-        System.out.println("Not Yet Implemented");
-    }
-    @Test
-    //TODO Sprint 14
-    public void TG2988_shouldAssertPopUpContentIsCorrect()throws InterruptedException, SQLException {
-        System.out.println("Not Yet Implemented");
+    private void assertKYCDeletePopUp(String popupHeading) {
+        /*
+        There is a popup notification in the KYC delete that need to be asserted, assert the header, the content and the options
+         */
     }
     @Test
     //TODO Sprint 14
     public void TG2988_shouldAssertKYCIsNotDeleteIfCancelIsSelected()throws InterruptedException, SQLException {
-        System.out.println("Not Yet Implemented");
+        try {
+            loginAndVerifySuccess("am", "alex01");
+            navigateToDropdown("My-Clients");
+            navigateToDropdown("Client-Referential");
+            selectInviteInvestor();
+            investorInviteOption("", "", "", "", "");
+            logout();
+            investorAccountCreation("investorEmail", "PWD");
+            companyDetails("companyName", "phoneNumber");
+            startKYCOnlyStep1();
+            navigateToDropdown("MyRequests");
+            assertKYCStatus("Draft");
+            assertKYCStatusHasDeleteButton("Draft");
+            selectKYCDelete();
+            assertKYCDeletePopUp("Heading");
+            kycDeletePopUpOption("Yes");
+        }catch (Exception e){
+            fail("Not yet implemented");
+        }
+
     }
+
+    private void kycDeletePopUpOption(String answer) {
+        if(answer.equals("Yes")){
+            /*
+            If selecting Yes for Delete then check UI Row for KYC being removed (KYC is being HARD DELETED in the DB
+             */
+        }
+        if (answer.equals("No/Cancel")){
+            /*
+            If no or cancel is selected, assert in the UI that the KYC still exists
+             */
+        }
+    }
+
     @Test
     //TODO Sprint 14
     public void TG2988_shouldAssertSuccessToasterOnKYCDeletionSuccess ()throws InterruptedException, SQLException {
-        System.out.println("Not Yet Implemented");
+        try {
+            loginAndVerifySuccess("am", "alex01");
+            navigateToDropdown("My-Clients");
+            navigateToDropdown("Client-Referential");
+            selectInviteInvestor();
+            investorInviteOption("", "", "", "", "");
+            logout();
+            investorAccountCreation("investorEmail", "PWD");
+            companyDetails("companyName", "phoneNumber");
+            startKYCOnlyStep1();
+            navigateToDropdown("MyRequests");
+            assertKYCStatus("Draft");
+            assertKYCStatusHasDeleteButton("Draft");
+            selectKYCDelete();
+            assertKYCDeletePopUp("Heading");
+            kycDeletePopUpOption("Yes");
+            assertToasterForSuccessfulDeletion();
+        }catch (Exception e){
+            fail("Not yet implemented");
+        }
+    }
+
+    private void assertToasterForSuccessfulDeletion() {
+        /*
+        Once a KYC has been deleted (Only in Draft status) and Yes is selected then after the KYC popup disappears then a toaster should appear noting the success of the deletion.
+         */
     }
 
 }
