@@ -367,46 +367,24 @@ export class NewRequestService {
 
         const investmentNature = fb.group({
             kycID: '',
-            financialAssetManagementMethod: fb.group({
-                internalManagement: '',
-                withAdviceOfAuthorisedThirdPartyInstitution: '',
-                mandateEntrustedToManagers: ''
-            }, {
-                validator: (formGroup) => {
-                    return CustomValidators.multipleCheckboxValidator(formGroup);
-                }
-            }),
-            frequencyFinancialTransactions: fb.group(this.transformToForm(this.frequencyList), {
-                validator: (formGroup) => {
-                    return CustomValidators.multipleCheckboxValidator(formGroup);
-                }
-            }),
-            investmentvehiclesAlreadyUsed: fb.group(this.transformToForm(this.investmentVehiclesList), {
-                validator: (formGroup) => {
-                    return CustomValidators.multipleCheckboxValidator(formGroup);
-                }
-            }),
-            investmentvehiclesAlreadyUsedSpecification: [
-                {
-                    value: '', disabled: true
-                }, Validators.required
-            ]
+            naturesSameInvestmentCrossAm: 0,
+            natures: fb.array([]),
         });
         const investmentObjective = fb.group({
             kycID: '',
             objectivesSameInvestmentCrossAm: 0,
-            objectives: fb.array([])
+            objectives: fb.array([]),
         });
         const investmentConstraint = fb.group({
             kycID: '',
             constraintsSameInvestmentCrossAm: 0,
-            constraints: fb.array([])
+            constraints: fb.array([]),
         });
 
         return fb.group({
             investmentNature,
             investmentObjective,
-            investmentConstraint
+            investmentConstraint,
         });
     }
 
@@ -452,6 +430,53 @@ export class NewRequestService {
             group.hash = ['', Validators.required];
         }
         return this.formBuilder.group(group);
+    }
+
+    createInvestmentNature(id): FormGroup {
+        const fb = this.formBuilder;
+
+        return fb.group({
+            assetManagementCompanyID: id ? id : null,
+            financialAssetManagementMethod: fb.group(
+                {
+                    internalManagement: '',
+                    withAdviceOfAuthorisedThirdPartyInstitution: '',
+                    mandateEntrustedToManagers: '',
+                },
+                {
+                    validator: (formGroup) => {
+                        return CustomValidators.multipleCheckboxValidator(formGroup);
+                    },
+                },
+            ),
+            frequencyFinancialTransactions: fb.group(this.transformToForm(this.frequencyList), {
+                validator: (formGroup) => {
+                    return CustomValidators.multipleCheckboxValidator(formGroup);
+                },
+            }),
+            investmentvehiclesAlreadyUsed: fb.group(this.transformToForm(this.investmentVehiclesList), {
+                validator: (formGroup) => {
+                    return CustomValidators.multipleCheckboxValidator(formGroup);
+                },
+            }),
+            investmentvehiclesAlreadyUsedSpecification: [
+                {
+                    value: '', disabled: true
+                }, Validators.required,
+            ],
+        });
+    }
+
+    createInvestmentNatures(amcs) {
+        const natures = [];
+        const length = amcs.length || 1;
+
+        for (let i = 0; i < length; i++) {
+            const id = amcs[i];
+            natures.push(this.createInvestmentNature(id));
+        }
+
+        return natures;
     }
 
     createInvestmentObjective(id): FormGroup {

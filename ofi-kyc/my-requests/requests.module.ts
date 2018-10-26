@@ -40,6 +40,7 @@ import { ClassificationInformationComponent } from './request/steps/identificati
 
 import { NewKycRiskProfileComponent } from './request/steps/risk-profile.component';
 import { InvestmentNatureComponent } from './request/steps/risk-profile/investment-nature.component';
+import { InvestmentNatureFormComponent } from './request/steps/risk-profile/investment-nature-form.component';
 import { InvestmentObjectiveComponent } from './request/steps/risk-profile/investment-objective.component';
 import { InvestmentObjectiveFormComponent } from './request/steps/risk-profile/investment-objective-form.component';
 import { InvestmentConstraintComponent } from './request/steps/risk-profile/investment-constraint.component';
@@ -78,6 +79,7 @@ import { ValidationService } from './request/steps/validation.service';
 
         NewKycRiskProfileComponent,
         InvestmentNatureComponent,
+        InvestmentNatureFormComponent,
         InvestmentObjectiveComponent,
         InvestmentObjectiveFormComponent,
         InvestmentConstraintComponent,

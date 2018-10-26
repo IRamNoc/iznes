@@ -26,6 +26,9 @@ export const booleanControls = [
     'activitiesBenefitFromExperience',
     'activityRegulated',
     'companyListed',
+    'naturesSameInvestmentCrossAm',
+    'objectivesSameInvestmentCrossAm',
+    'constraintsSameInvestmentCrossAm',
 ];
 export const currencyControls = [
     'balanceSheetTotal',

@@ -10,7 +10,7 @@
 </div>
 
 
-<div class="panel-body" [class.hidden]="!open" [formGroup]="form">
+<div class="panel-body" [class.hidden]="!open" [ngClass]="{'objective pl-1': multiple}" [formGroup]="form">
 
     <div class="row">
         <div class="col-sm-6 p-0">
