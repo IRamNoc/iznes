@@ -32,7 +32,7 @@ export class FixedHeaderDirective implements AfterViewInit, OnDestroy {
                 // Work out the datagrid distance from the top of the page
                 const scrollPosition = e.srcElement.scrollTop;
                 const dgHeight = this.el.nativeElement.offsetTop;
-                this.distanceFromTop = (dgHeight - scrollPosition) + 12;
+                this.distanceFromTop = (dgHeight - scrollPosition) + 12; // +12px to account for padding on datagrid
 
                 // Toggle the 'fixing' of the datagrid header
                 this.fixDatagridHeader();
