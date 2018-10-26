@@ -524,7 +524,8 @@ export class SetlMyAccountComponent implements OnDestroy, OnInit {
             if (_.isObject(errors)) delete errors.oldNew;
 
             g.controls.password.setErrors(
-                oldPasswordValue !== passwordValue ? errors : Object.assign({}, errors, { oldNew: true }));
+                oldPasswordValue !== passwordValue ?
+                    (_.isEmpty(errors) ? null : errors) : Object.assign({}, errors, { oldNew: true }));
         }
 
         if (passwordValue && passwordConfirmValue) {
