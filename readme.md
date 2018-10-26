@@ -21,7 +21,7 @@ import {MultilingualModule} from '@setl/multilingual';
 })
 ```
 
-## 2. Using the `MulitlingualService`.
+## 2. Using the `MulitlingualService` to retrieve an existing translation.
 
 An example component using the getTranslation method:
 
@@ -39,9 +39,38 @@ class MyComponent {
 }
 ```
 
-## 3. Using the `mltag` directive.
+## 3. Using the `MulitlingualService` to create a new translation.
 
-**Note: you'll have to import the `MultilingualModule` into the module that your component is declared in.**
+**Note: See the `Translations System` document for guidance on how to enter new translations into the translations database and how to use `updateTranslations.sh` to update the `translations.ts` file withe new translations.**
+
+Translate a string using the following methods:
+
+
+### Static string: 
+
+```javascript
+{{ Username is required | translate }}
+```
+
+### Dynamic string: 
+
+```javascript
+{{'Log in to @appConfig.platform@' | translate: {'appConfig.platform': appConfig.platform} }}
+```
+
+### MultilingualService translate method:
+
+```html
+<input type="text" [placeholder]="multilingualService.translate('Enter your username')">
+```
+
+## 4. Using the `mltag` directive.
+
+**Note: Use of the `mltag` directive has been depreciated in favour of the pipe methods (see point #3) above.**
+
+**Note: Please replace instances of `mltag` with the pipe methods (see point #3) as you encounter them in the codebase.**
+
+**Note: You'll have to import the `MultilingualModule` into the module that your component is declared in.**
 
 An example of HTML in a component using the directive.
 
