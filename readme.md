@@ -7,7 +7,7 @@ Features:
 * Direct access to the translations object.
 
 # Usage:
-## 1. Import the `MulitlingualModule`
+## 1. Import the `MultilingualModule`
 
 Import the `MultilingualModule` into your module by using an import statement and adding it to the imports array.
 
@@ -21,7 +21,7 @@ import {MultilingualModule} from '@setl/multilingual';
 })
 ```
 
-## 2. Using the `MulitlingualService` to retrieve an existing translation.
+## 2. Using the `MultilingualService` to retrieve an existing translation.
 
 An example component using the getTranslation method:
 
@@ -39,7 +39,7 @@ class MyComponent {
 }
 ```
 
-## 3. Using the `MulitlingualService` to create a new translation.
+## 3. Using the `MultilingualService` to create a new translation.
 
 **Note: See the `Translations System` document for guidance on how to enter new translations into the translations database via the translations generator.**
 
