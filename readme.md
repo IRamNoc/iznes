@@ -41,7 +41,8 @@ class MyComponent {
 
 ## 3. Using the `MulitlingualService` to create a new translation.
 
-**Note: See the `Translations System` document for guidance on how to enter new translations into the translations database and how to use `updateTranslations.sh` to update the `translations.ts` file withe new translations.**
+**Note: See the `Translations System` document for guidance on how to enter new translations into the translations database via the translations generator.**
+**Note: See the `Translations System` document for guidance on how to use `updateTranslations.sh` to update the `translations.ts` file with new translations.**
 
 Translate a string using the following methods:
 
