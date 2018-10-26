@@ -156,7 +156,7 @@ export class IssueAssetComponent implements OnInit, OnDestroy {
             {
                 asset: new FormControl('', Validators.required),
                 recipient: new FormControl('', Validators.required),
-                amount: new FormControl('', Validators.required),
+                amount: new FormControl('', [Validators.required, Validators.pattern('^((?!(0))[0-9]+)$')]),
             },
             [
                 this.validateAddress,

@@ -18,7 +18,7 @@
                                    mltag="txt_selectissueraddress">
                         </ng-select>
 
-                        <span *ngIf="issueAssetForm.controls['asset'].hasError('required') && issueAssetForm.controls['asset'].touched" class="field-error" mltag="txt_fieldisrequired">Field is required</span>
+                        <span *ngIf="issueAssetForm.controls['asset'].hasError('required')" class="field-error" mltag="txt_fieldisrequired">Field is required</span>
                     </div>
 
                     <div class="form-group">
@@ -38,9 +38,10 @@
                                placeholder="Amount"
                                size="45"
                                [formControl]="issueAssetForm.controls['amount']"
-                               mltag="txt_amount"/>
+                               mltag="txt_amount">
 
-                        <span *ngIf="issueAssetForm.controls['amount'].hasError('required') && issueAssetForm.controls['amount'].touched" class="field-error" mltag="txt_fieldisrequired">Field is required</span>
+                        <span *ngIf="issueAssetForm.controls['amount'].hasError('required')" class="field-error" mltag="txt_fieldisrequired">Field is required</span>
+                        <span *ngIf="issueAssetForm.controls['amount'].hasError('pattern')" class="field-error">Amount must be a number</span>
                     </div>
 
                     <button type="submit" class="btn btn-primary" mltag="txt_issueasset" [disabled]="issueAssetForm.invalid">Issue Asset</button>
