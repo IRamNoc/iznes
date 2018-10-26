@@ -100,20 +100,28 @@ public class DatabaseHelper {
         try {
            rs =  stmt.executeQuery("select data from setlnet.tblUsersFormdata where formId = " + "\"" + formId + "\" AND userId =  " + "\"" + userId + "\"");
             int rows = 0;
-            rs.next();
+            while (rs.next()) //rs.next returns true while there is a result, so should return false if there are no rows
+            {
+                rows = rs.getRow(); //returns the row number
+            }
+
             assertEquals("There should be exactly " + expectedCount + " record(s) matching: ", expectedCount, rows);
-            String result = rs.getString("data");
-            JsonParser parser = new JsonParser();
-            // we hve the json object
-            JsonObject jsonResult = (JsonObject) parser.parse(result);
 
-            // need to store the  set as an set of strings
-            Set<String> names = jsonResult.keySet();
+            if (expectedCount > 0) // only needed if we expected data
+            {
+                String result = rs.getString("data");
+                JsonParser parser = new JsonParser();
+                // we hve the json object
+                JsonObject jsonResult = (JsonObject) parser.parse(result);
 
-            for (String name : names) {
+                // need to store the  set as an set of strings
+                Set<String> names = jsonResult.keySet();
 
-                assertTrue(jsonResult.get(name).toString().equals("\"\"") || jsonResult.get(name).toString().equals("[]"));
+                for (String name : names) {
 
+                    assertTrue(jsonResult.get(name).toString().equals("\"\"") || jsonResult.get(name).toString().equals("[]"));
+
+                }
             }
 
         } catch (Exception e) {
@@ -163,6 +171,30 @@ public class DatabaseHelper {
 
         conn.close();
         stmt.close();
+    }
+
+    public static String getDb2FaSharedSecret(String userName) throws SQLException {
+        conn = DriverManager.getConnection(connectionString, DBUsername, DBPassword);
+        Statement stmt = conn.createStatement();
+        ResultSet rs = null;
+        try
+        {
+            rs =  stmt.executeQuery("select twoFactorSecret from setlnet.tblUsers where userName = " + "\"" + userName + "\"");
+            rs.last();
+
+            String secret = rs.getString("twoFactorSecret");
+            return secret;
+        }
+        catch (Exception e)
+        {
+            System.out.println("Error trying to get 2FA secret");
+            return "BUG";
+        }
+        finally
+        {
+            conn.close();
+            stmt.close();
+        }
     }
 
 
