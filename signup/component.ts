@@ -17,7 +17,7 @@ import {
 import {
     SET_LOGIN_DETAIL, RESET_LOGIN_DETAIL, loginRequestAC,
     SET_AUTH_LOGIN_DETAIL, RESET_AUTH_LOGIN_DETAIL,
-    SET_PRODUCTION, setLanguage, SET_SITE_MENU,
+    SET_PRODUCTION, setLanguage, SET_SITE_MENU, SET_FORCE_TWO_FACTOR
 } from '@setl/core-store';
 import { MultilingualService } from '@setl/multilingual';
 import { SagaHelper, APP_CONFIG, AppConfig } from '@setl/utils';
@@ -26,6 +26,8 @@ import { passwordValidator } from '@setl/utils/helper/validators/password.direct
 
 import * as Model from './model';
 import { MemberSocketService } from '@setl/websocket-service';
+import { LoginService } from "../login.service";
+import { combineLatest } from "rxjs/observable/combineLatest";
 
 @Component({
     selector: 'app-signup',
@@ -40,6 +42,9 @@ export class SignupComponent implements OnDestroy, OnInit {
     signupForm: FormGroup;
     showPassword: boolean = false;
     showConfirmPassword: boolean = false;
+
+    showTwoFactorModal = false;
+    qrCode: string = '';
 
     private subscriptions: Subscription[] = [];
     private config: Model.ISignupConfiguration;
@@ -59,6 +64,7 @@ export class SignupComponent implements OnDestroy, OnInit {
     @Output() signupDataEmit: EventEmitter<() => Model.ISignupData> = new EventEmitter();
 
     @select(['user', 'authentication']) authenticationOb;
+    @select(['user', 'siteSettings', 'forceTwoFactor']) forceTwoFactorOb;
 
     constructor(private redux: NgRedux<any>,
                 private activatedRoute: ActivatedRoute,
@@ -73,6 +79,7 @@ export class SignupComponent implements OnDestroy, OnInit {
                 private permissionGroupService: PermissionGroupService,
                 private chainService: ChainService,
                 private initialisationService: InitialisationService,
+                private loginService: LoginService,
                 @Inject(APP_CONFIG) appConfig: AppConfig) {
 
         this.appConfig = appConfig;
@@ -93,6 +100,21 @@ export class SignupComponent implements OnDestroy, OnInit {
 
         this.subscriptions.push(this.authenticationOb.subscribe((auth) => {
             this.updateState(auth);
+        }));
+
+        const combinedTwoFactor$ = combineLatest(this.authenticationOb, this.forceTwoFactorOb);
+
+        this.subscriptions.push(combinedTwoFactor$.subscribe(([authentication, forceTwoFactor]) => {
+            const useTwoFactor = _.get(authentication, 'useTwoFactor', 0);
+
+            if (useTwoFactor || forceTwoFactor) {
+                this.showTwoFactorModal = true;
+                if (authentication.token && authentication.token !== 'twoFactorRequired') {
+                    this.updateState(authentication);
+                }
+            } else {
+                this.updateState(authentication);
+            }
         }));
 
         window.onbeforeunload = null;
@@ -211,17 +233,17 @@ export class SignupComponent implements OnDestroy, OnInit {
         });
 
         this.redux.dispatch(SagaHelper.runAsync(
-            [SET_LOGIN_DETAIL, SET_AUTH_LOGIN_DETAIL, SET_PRODUCTION],
+            [SET_FORCE_TWO_FACTOR, SET_LOGIN_DETAIL, SET_AUTH_LOGIN_DETAIL, SET_PRODUCTION],
             [RESET_LOGIN_DETAIL, RESET_AUTH_LOGIN_DETAIL],
             asyncTaskPipe,
             {},
-            () => {
-                const asyncTaskPipes = this.myUserService.getSiteMenu(this.redux);
-                this.redux.dispatch(SagaHelper.runAsync(
-                    [SET_SITE_MENU],
-                    [],
-                    asyncTaskPipes, {},
-                ));
+            (data) => {
+
+                if (_.get(data, '[1].Data[0].qrCode', false)) {
+                    this.qrCode = data[1].Data[0].qrCode;
+                }
+
+                this.loginService.postLoginRequests();
             },
             (data) => {
                 this.handleLoginFailMessage(data);
