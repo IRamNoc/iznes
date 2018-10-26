@@ -253,7 +253,7 @@ form, .form {
                 display: block;
             }
         }
-        &.error .ui-select-toggle.btn-secondary, .ui-select-choices {
+        &.error .ui-select-toggle.btn-secondary, &.error .ui-select-choices {
             border-color: rgba(255, 0, 0, 0.5) !important;
         }
     }
