@@ -65,6 +65,7 @@ public class OpenCSD4FundFlowAcceptanceTest {
         String[] uIsin = generateRandomISIN();
         String[] uFundDetails = generateRandomFundsDetails();
         String randomLEI = generateRandomLEI();
+        String randomLEI2 = generateRandomLEI();
 
         loginAndVerifySuccess("am", "alex01");
         waitForHomePageToLoad();
@@ -78,10 +79,10 @@ public class OpenCSD4FundFlowAcceptanceTest {
         searchUmbrellaTable(umbFundDetails[0]);
         getUmbrellaTableRow(0, umbFundDetails[0], randomLEI, "Management Company", "Jordan");
         fillOutFundDetailsStep1("yes", umbFundDetails[0]);
-        fillOutFundDetailsStep2(uFundDetails[0], randomLEI);
+        fillOutFundDetailsStep2(uFundDetails[0], randomLEI2);
         assertPopupNextFundNo("Share");
         searchFundsTable(uFundDetails[0]);
-        getFundTableRow(0, uFundDetails[0], randomLEI, "EUR", "Management Company", "Afghanistan","Contractual Fund", umbFundDetails[0]);
+        getFundTableRow(0, uFundDetails[0], randomLEI2, "EUR", "Management Company", "Afghanistan","Contractual Fund", umbFundDetails[0]);
         createShare(uFundDetails[0], uShareDetails[0], uIsin[0]);
         searchSharesTable(uShareDetails[0]);
         getShareTableRow(0, uShareDetails[0], uIsin[0], uFundDetails[0], "EUR", "Management Company", "", "share class", "Open" );

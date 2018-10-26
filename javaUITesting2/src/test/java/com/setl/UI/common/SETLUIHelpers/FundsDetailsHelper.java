@@ -453,6 +453,7 @@ public class FundsDetailsHelper extends LoginAndNavigationHelper {
         js.executeScript("document.getElementById(\"switchActiveShares\").click();");
 
         wait.until(visibilityOfElementLocated(By.id("legalEntityIdentifier")));
+        driver.findElement(By.id("legalEntityIdentifier")).click();
         driver.findElement(By.id("legalEntityIdentifier")).sendKeys(lei);
 
         js.executeScript("document.getElementById('isEuDirective2').click();");
@@ -552,7 +553,7 @@ public class FundsDetailsHelper extends LoginAndNavigationHelper {
     }
 
     public static void getFundTableRow(int rowNo, String fundNameExpected, String leiExpected, String fundCurrencyExpected, String managementCompExpected, String domicileExpected, String legalFormExpected, String umbFundExpected) {
-        scrollElementIntoViewById("new-share-btn");
+        scrollElementIntoViewById("new-fund-btn");
 
         final WebDriverWait wait = new WebDriverWait(driver, timeoutInSeconds);
         wait.until(visibilityOfElementLocated(By.id("product-dashboard-fundID-" + rowNo + "-fundName")));
@@ -561,8 +562,10 @@ public class FundsDetailsHelper extends LoginAndNavigationHelper {
         String fundName = driver.findElement(By.id("product-dashboard-fundID-" + rowNo + "-fundName")).getText();
         assertTrue(fundName.equals(fundNameExpected));
 
-        wait.until(visibilityOfElementLocated(By.id("product-dashboard-fundID-" + rowNo + "-legalEntityIdentifier")));
-        String leiName = driver.findElement(By.id("product-dashboard-fundID-" + rowNo + "-legalEntityIdentifier")).getText();
+        WebElement leiObject = driver.findElement(By.id("product-dashboard-fundID-" + rowNo + "-legalEntityIdentifier"));
+        //wait.until(visibilityOfElementLocated(leiObject)); //don't know why this didnt work...
+        wait.until(ExpectedConditions.visibilityOf(leiObject));
+        String leiName = leiObject.getText();
         assertTrue(leiName.equals(leiExpected));
 
         wait.until(visibilityOfElementLocated(By.id("product-dashboard-fundID-" + rowNo + "-fundCurrency")));
