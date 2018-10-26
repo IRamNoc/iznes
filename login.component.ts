@@ -156,10 +156,7 @@ export class SetlLoginComponent implements OnDestroy, OnInit, AfterViewInit {
 
     setupForms() {
         this.loginForm = new FormGroup({
-            username: new FormControl(
-                '',
-                Validators.required,
-            ),
+            username: new FormControl(''),
             password: new FormControl('', Validators.required),
         });
 
@@ -220,12 +217,6 @@ export class SetlLoginComponent implements OnDestroy, OnInit, AfterViewInit {
             return false;
         }
         return formControl.touched && (error ? formControl.hasError(error) : formControl.errors);
-    }
-
-    isTouched(path) {
-        const formControl: AbstractControl = this.resetPasswordForm.get(path);
-
-        return formControl.touched;
     }
 
     getLanguage(requested): void {
@@ -440,6 +431,16 @@ export class SetlLoginComponent implements OnDestroy, OnInit, AfterViewInit {
                 null : { mismatch: true });
         }
         return null;
+    }
+
+    /**
+     * Sets required validator on username
+     * Done outside of FormGroup setup as Chrome autofill triggers the required validator until the DOM is clicked
+     */
+    setUsernameRequired() {
+        this.loginForm.controls.username.setValidators(Validators.required);
+        if (!this.loginForm.get('username').value) this.loginForm.controls.username.setErrors({ required: true });
+        this.changeDetectorRef.detectChanges();
     }
 
     toggleShowPasswords(key) {
