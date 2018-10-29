@@ -158,10 +158,7 @@ export class SetlLoginComponent implements OnDestroy, OnInit, AfterViewInit {
 
     setupForms() {
         this.loginForm = new FormGroup({
-            username: new FormControl(
-                '',
-                Validators.required,
-            ),
+            username: new FormControl(''),
             password: new FormControl('', Validators.required),
         });
 
@@ -170,7 +167,7 @@ export class SetlLoginComponent implements OnDestroy, OnInit, AfterViewInit {
                 '',
                 [
                     Validators.required,
-                    Validators.pattern(/^(((\([A-z0-9]+\))?[^<>()\[\]\\.,;:\s@"]+(\.[^<>()\[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/)
+                    Validators.pattern(/^(((\([A-z0-9]+\))?[^<>()\[\]\\.,;:\s@"]+(\.[^<>()\[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/),
                 ]),
         });
 
@@ -184,9 +181,15 @@ export class SetlLoginComponent implements OnDestroy, OnInit, AfterViewInit {
         );
         this.resetPasswordForm = new FormGroup(controls, [
             (formGroup) => {
-                return formGroup.get('oldPassword').value !== formGroup.get('password').value ? null : {
-                    same: true,
-                };
+                const passwordErrors = formGroup.get('password').errors;
+                if (_.isObject(passwordErrors)) delete passwordErrors.same;
+                if (formGroup.get('oldPassword').value && formGroup.get('password').value) {
+                    formGroup.get('password').setErrors(
+                        formGroup.get('oldPassword').value !== formGroup.get('password').value ?
+                            (_.isEmpty(passwordErrors) ? null : passwordErrors) :
+                            Object.assign({}, passwordErrors, { same: true }));
+                }
+                return null;
             },
             this.passwordValidator,
         ]);
@@ -216,12 +219,6 @@ export class SetlLoginComponent implements OnDestroy, OnInit, AfterViewInit {
             return false;
         }
         return formControl.touched && (error ? formControl.hasError(error) : formControl.errors);
-    }
-
-    isTouched(path) {
-        const formControl: AbstractControl = this.resetPasswordForm.get(path);
-
-        return formControl.touched;
     }
 
     getLanguage(requested): void {
@@ -427,7 +424,21 @@ export class SetlLoginComponent implements OnDestroy, OnInit, AfterViewInit {
     }
 
     passwordValidator(g: FormGroup) {
-        return (g.get('password').value === g.get('passwordConfirm').value) ? null : { mismatch: true };
+        if (g.get('password').value && g.get('passwordConfirm').value) {
+            g.get('passwordConfirm').setErrors(g.get('password').value === g.get('passwordConfirm').value ?
+                null : { mismatch: true });
+        }
+        return null;
+    }
+
+    /**
+     * Sets required validator on username
+     * Done outside of FormGroup setup as Chrome autofill triggers the required validator until the DOM is clicked
+     */
+    setUsernameRequired() {
+        this.loginForm.controls.username.setValidators(Validators.required);
+        if (!this.loginForm.get('username').value) this.loginForm.controls.username.setErrors({ required: true });
+        this.changeDetectorRef.detectChanges();
     }
 
     toggleShowPasswords(key) {
@@ -576,7 +587,7 @@ export class SetlLoginComponent implements OnDestroy, OnInit, AfterViewInit {
 
                     this.resetPassword = false;
                     this.subscriptionsArray.push(
-                            this.alertsService.generate(
+                        this.alertsService.generate(
                             'success',
                             'Your password has been reset<br><br>A confirmation email will be sent to you.',
                             { buttonMessage: `Continue to ${platformName}` },
