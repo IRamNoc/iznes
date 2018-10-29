@@ -47,6 +47,12 @@ export interface DeleteNavMessageBody extends MemberNodeMessageBody {
     navStatus: string;
 }
 
+export interface CancelNavMessageBody extends MemberNodeMessageBody {
+    token: string;
+    shareId: number;
+    navDate: string;
+}
+
 export interface RequestNavAuditTrailMessageBody extends MemberNodeMessageBody {
     token: string;
     fundShareId: number;
