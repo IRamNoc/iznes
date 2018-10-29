@@ -1039,10 +1039,9 @@ dp-date-picker div {
     z-index: 1100; // ads rules - top layers
     left: -1000px;
     top: -1000px;
-    background-color: #286F8A;
+    background-color: #373a49;
     font-size: 16px;
     line-height: 24px;
-    background-color: #286F8A;
     cursor: text;
     color: white;
     opacity: 0;
@@ -1101,7 +1100,7 @@ dp-date-picker div {
     bottom: -5px;
     left: 50%;
     margin-left: -5px;
-    background-color: #286F8A;
+    background-color: #373a49;
 }
 
 .tooltips-bottom0:after {
@@ -1204,7 +1203,7 @@ dp-date-picker div {
     left: -5px;
     top: 50%;
     margin-top: -5px;
-    background-color: #286F8A;
+    background-color: #373a49;
 }
 
 .tooltips-left0:after {
@@ -1307,7 +1306,7 @@ dp-date-picker div {
     right: -5px;
     top: 50%;
     margin-top: -5px;
-    background-color: #286F8A;
+    background-color: #373a49;
 }
 
 .tooltips-right0:after {
@@ -1494,7 +1493,7 @@ dp-date-picker div {
 }
 
 .tooltips-top-text:after {
-    background-color: #286F8A;
+    background-color: #373a49;
 }
 
 .tooltipTimer {
@@ -1508,8 +1507,8 @@ dp-date-picker div {
     display: block;
     background: #fff;
     font-weight: 900;
-    font-size: 120%;
-    color: #286F8A;
+    font-size: 120%; 
+    color: #373a49;
     padding: 11px 40px 11px 17px;
     line-height: 16px;
     position: relative;
@@ -1555,7 +1554,7 @@ dp-date-picker div {
 .tooltipCloseBtnText {
     cursor: pointer;
     color: white;
-    background-color: #286F8A;
+    background-color: #373a49;
     border-radius: 20px;
     font-size: 120%;
     line-height: 19px;
@@ -1584,10 +1583,21 @@ dp-date-picker div {
 
 .tooltip .tooltip-content {
     background: #363a49;
+    visibility: hidden;
+    opacity: 0;
+    transition: opacity .3s linear;
+    white-space: normal;
+    z-index: 1070;
     &::before {
         border-left: .25rem solid #363a49;
         border-top: .208333rem solid #363a49;
     }
+}
+
+.tooltip:focus .tooltip-content,
+.tooltip:hover .tooltip-content {
+    visibility: visible;
+    opacity: 1;
 }
 
 .btnTourContainer {
