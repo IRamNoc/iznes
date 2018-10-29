@@ -317,6 +317,14 @@ export class SetlMyAccountComponent implements OnDestroy, OnInit {
     externalNotificationsStatus: {} = {};
     externalNotificationsEnabled: boolean;
     statusInterval: any;
+    statusUpdated: {} = {
+        state: false,
+        consumers: false,
+        messages_ready: false,
+        messages_unacknowledged: false,
+    };
+
+    rabbitMQEndpoint = `${window.location.protocol}//${window.location.hostname}:5672`;
 
     oldPassword: AbstractControl;
     password: AbstractControl;
@@ -497,12 +505,6 @@ export class SetlMyAccountComponent implements OnDestroy, OnInit {
         this.tabStates = immutableHelper.map(this.tabStates, (value, key) => {
             return key === tabId;
         });
-    }
-
-    ngOnDestroy() {
-        for (const subscription of this.subscriptionsArray) {
-            subscription.unsubscribe();
-        }
     }
 
     getLanguage(requested): void {
@@ -744,8 +746,13 @@ export class SetlMyAccountComponent implements OnDestroy, OnInit {
             asyncTaskPipe,
             {},
             (response) => {
+                const previousStatus = this.externalNotificationsStatus;
                 this.externalNotificationsStatus = _.get(response, '[1].Data', {});
-                this.externalNotificationsEnabled = Boolean(_.get(status, 'code', 1) !== '404');
+                Object.keys(this.externalNotificationsStatus).forEach((status) => {
+                    this.statusUpdated[status] = this.externalNotificationsStatus[status] !== previousStatus[status] &&
+                        !_.isEmpty(previousStatus);
+                });
+                this.externalNotificationsEnabled = _.get(status, 'code', 1) !== '404';
                 if (this.externalNotificationsEnabled) this.setStatusInterval();
                 this.changeDetectorRef.detectChanges();
             },
@@ -765,12 +772,42 @@ export class SetlMyAccountComponent implements OnDestroy, OnInit {
             {},
             () => {
                 this.alertsService.generate('success', 'Test message successfully sent.');
+                this.getExternalNotificationsStatus();
             },
             (response) => {
                 console.error('error: ', response);
                 this.alertsService.generate('error', 'Failed to send test message.');
             },
         ));
+    }
+
+    /**
+     * Removes all messages from RabbitMQ
+     */
+    truncateQueue() {
+        const asyncTaskPipe = this.myUserService.truncateNotifications();
+
+        this.confirmationService.create(
+            '<span>Delete Messages</span>',
+            '<span class="text-warning">Are you sure you want to delete all messages?</span>',
+        ).subscribe((ans) => {
+            if (ans.resolved) {
+                this.ngRedux.dispatch(SagaHelper.runAsync(
+                    [],
+                    [],
+                    asyncTaskPipe,
+                    {},
+                    () => {
+                        this.alertsService.generate('success', 'Messages successfully deleted.');
+                        this.getExternalNotificationsStatus();
+                    },
+                    (response) => {
+                        console.error('error: ', response);
+                        this.alertsService.generate('error', 'Failed to delete messages.');
+                    },
+                ));
+            }
+        });
     }
 
     /**
@@ -784,5 +821,15 @@ export class SetlMyAccountComponent implements OnDestroy, OnInit {
             },
             10000,
         );
+    }
+
+    ngOnDestroy() {
+        for (const subscription of this.subscriptionsArray) {
+            subscription.unsubscribe();
+        }
+
+        this.changeDetectorRef.detach();
+
+        clearInterval(this.statusInterval);
     }
 }

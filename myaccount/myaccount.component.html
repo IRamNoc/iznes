@@ -150,7 +150,7 @@
                                             Password
                                         </label>
                                         <input [type]="(showPasswords === true) ? 'text' : 'password'"
-                                               id="cpOldPassword" 
+                                               id="cpOldPassword"
                                                [formControl]="oldPassword"
                                                size="45"
                                                placeholder="Enter your current password">
@@ -171,13 +171,15 @@
 
                                 <!-- New password -->
                                 <div class="form-group">
-                                    <div class="col-xs-11 no-gutter">                                       
-                                        <label for="cpPassword" class="required-field"><app-password-tooltip *ngIf="appConfig.production"></app-password-tooltip>{{'New Password' | translate}}
-                                        </label>                
+                                    <div class="col-xs-11 no-gutter">
+                                        <label for="cpPassword" class="required-field">
+                                            <app-password-tooltip *ngIf="appConfig.production"></app-password-tooltip>
+                                            {{'New Password' | translate}}
+                                        </label>
 
                                         <input [type]="(showPasswords === true) ? 'text' : 'password'"
-                                               id="cpPassword" 
-                                               [formControl]="password" 
+                                               id="cpPassword"
+                                               [formControl]="password"
                                                size="45"
                                                placeholder="`Enter your new password"
                                                [class.error]="changePassForm.controls.passwordConfirm.hasError('mismatch')">
@@ -185,7 +187,7 @@
                                         <div *ngIf="password.hasError('oldNew')" class="field-error">
                                             {{'Password is not new' | translate}}
                                         </div>
-                                
+
                                         <div *ngIf="password.hasError('required')"
                                              class="field-error">
                                             {{'Field is required' | translate}}
@@ -196,7 +198,7 @@
                                         </div>
 
                                         <div *ngIf="changePassForm.controls.passwordConfirm.hasError('mismatch') && !password.hasError('rules') && !password.hasError('length') && !password.hasError('oldNew')"
-                                            class="field-error force-display-error" mltag="txt_passwordsdonotmatch">Passwords do not match
+                                             class="field-error force-display-error" mltag="txt_passwordsdonotmatch">Passwords do not match
                                         </div>
 
                                     </div>
@@ -204,8 +206,8 @@
                                         <div class="show-hide"
                                              (click)="toggleShowPasswords()" mltag="txt_showhidepassword"
                                              title="Show/hide passwords"><i
-                                             [class]="(showPasswords === true) ? 'fa fa-eye' : 'fa fa-eye-slash'"
-                                             aria-hidden="true"></i></div>
+                                            [class]="(showPasswords === true) ? 'fa fa-eye' : 'fa fa-eye-slash'"
+                                            aria-hidden="true"></i></div>
                                     </div>
                                 </div>
 
@@ -224,9 +226,9 @@
                                             {{'Field is required' | translate}}
                                         </div>
 
-                                        <div *ngIf="passwordConfirm.hasError('mismatch')"                                       class="field-error" mltag="txt_passwordsdonotmatch">Passwords do not match
+                                        <div *ngIf="passwordConfirm.hasError('mismatch')" class="field-error" mltag="txt_passwordsdonotmatch">Passwords do not match
                                         </div>
-    
+
                                     </div>
                                     <div class="col-xs-1 no-gutter">
                                         <div class="show-hide"
@@ -303,7 +305,7 @@
                 <!-- External Notifications Enable/Disable Form-->
                 <section class="form-block">
                     <div class="row">
-                        <div class="form-group col-sm-6">
+                        <div class="form-group col-sm-12">
                             <form>
                                 <div *ngIf="!externalNotificationsEnabled">
                                     <p>External Notifications are <strong>disabled</strong>.</p>
@@ -319,6 +321,14 @@
                                     <div class="row">
                                         <button id="exNotiDisable" class="btn btn-primary" (click)="setExternalNotifications(false)">
                                             <i class="fa fa-save"></i> <span mltag="txt_disable">Disable</span>
+                                        </button>
+
+                                        <button id="sendTestMessage" class="btn btn-outline" (click)="sendTestMessage()">
+                                            <i class="fa fa-envelope-o"></i>Send Test Message
+                                        </button>
+
+                                        <button id="truncateQueue" class="btn btn-danger-outline" (click)="truncateQueue()">
+                                            <i class="fa fa-trash-o"></i>Delete All Messages
                                         </button>
                                     </div>
                                 </div>
@@ -349,22 +359,8 @@
                             <div class="row">
                                 <div class="col-xs-6">
                                     <div class="form-group">
-                                        <label>Messages Ready</label>
-                                        <input type="text" class="form-control" [value]="externalNotificationsStatus.messages_ready || 0" readonly>
-                                    </div>
-                                </div>
-                                <div class="col-xs-6">
-                                    <div class="form-group">
-                                        <label>State</label>
-                                        <input type="text" class="form-control" [value]="externalNotificationsStatus.state || 'pending'" readonly>
-                                    </div>
-                                </div>
-                            </div>
-                            <div class="row">
-                                <div class="col-xs-6">
-                                    <div class="form-group">
-                                        <label>Consumers</label>
-                                        <input type="text" class="form-control" [value]="externalNotificationsStatus.consumers || 0" readonly>
+                                        <label>Endpoint URL</label>
+                                        <input type="text" class="form-control" [value]="rabbitMQEndpoint" readonly>
                                     </div>
                                 </div>
                                 <div class="col-xs-6">
@@ -377,29 +373,32 @@
                             <div class="row">
                                 <div class="col-xs-6">
                                     <div class="form-group">
+                                        <label>State</label>
+                                        <input type="text" class="form-control" [class.flash]="statusUpdated.state" [value]="externalNotificationsStatus.state || 'pending'" readonly>
+                                    </div>
+                                </div>
+                                <div class="col-xs-6">
+                                    <div class="form-group">
+                                        <label>Consumers</label>
+                                        <input type="text" class="form-control" [class.flash]="statusUpdated.consumers" [value]="externalNotificationsStatus.consumers || 0" readonly>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="row">
+                                <div class="col-xs-6">
+                                    <div class="form-group">
+                                        <label>Messages Ready</label>
+                                        <input type="text" class="form-control" [class.flash]="statusUpdated.messages_ready" [value]="externalNotificationsStatus.messages_ready || 0" readonly>
+                                    </div>
+                                </div>
+                                <div class="col-xs-6">
+                                    <div class="form-group">
                                         <label>Messages Unacknowledged</label>
-                                        <input type="text" class="form-control" [value]="externalNotificationsStatus.messages_unacknowledged || 0" readonly>
+                                        <input type="text" class="form-control" [class.flash]="statusUpdated.messages_unacknowledged" [value]="externalNotificationsStatus.messages_unacknowledged || 0" readonly>
                                     </div>
                                 </div>
                             </div>
                         </form>
-                    </section>
-
-                    <!-- External Notifications Test Message-->
-                    <div class="hr-line-dashed"></div>
-                    <section class="form-block">
-                        <div class="row">
-                            <div class="form-group col-sm-6">
-                                <form>
-                                    <p>Send a <strong>test message</strong>.</p>
-                                    <div class="row">
-                                        <button id="sendTestMessage" class="btn btn-primary" (click)="sendTestMessage()">
-                                            <i class="fa fa-save"></i> Send Test
-                                        </button>
-                                    </div>
-                                </form>
-                            </div>
-                        </div>
                     </section>
                 </ng-container>
             </clr-tab-content>
