@@ -31,6 +31,7 @@ interface TabState {
     password: boolean;
     tfa: boolean;
     api: boolean;
+    externalNotifications: boolean;
 }
 
 @Component({
@@ -314,6 +315,9 @@ export class SetlMyAccountComponent implements OnDestroy, OnInit {
     twoFactorSecret: string = '';
     apiKey: string;
     copied = false;
+    externalNotificationsStatus: {} = {};
+    externalNotificationsEnabled: boolean;
+    statusInterval: any;
 
     oldPassword: AbstractControl;
     password: AbstractControl;
@@ -432,6 +436,7 @@ export class SetlMyAccountComponent implements OnDestroy, OnInit {
             password: false,
             tfa: false,
             api: false,
+            externalNotifications: false,
         };
 
         this.subscriptionsArray.push(this.route.params.subscribe((params: Params) => {
@@ -483,6 +488,9 @@ export class SetlMyAccountComponent implements OnDestroy, OnInit {
                 enableTFA: new FormControl(Number(this.useTwoFactor)),
             },
         );
+
+        // Get External Notification Status
+        this.getExternalNotificationsStatus();
     }
 
     setTabActive(tabId: string) {
@@ -638,6 +646,128 @@ export class SetlMyAccountComponent implements OnDestroy, OnInit {
                 this.changeDetectorRef.markForCheck();
             },
             500,
+        );
+    }
+
+    /**
+     * Enables/disables a user's External Notification setting
+     *
+     * @param {boolean} setting
+     * @return {void}
+     */
+    setExternalNotifications(setting: boolean) {
+        this.alertsService.create('loading');
+
+        const asyncTaskPipe = setting ?
+            this.myUserService.registerNotifications() : this.myUserService.removeNotifications();
+
+        this.confirmationService.create(
+            `<span>${setting ? 'Enable' : 'Disable'} External Notifications</span>`,
+            `<span class="text-warning">Are you sure you want to
+                 ${setting ? 'enable' : 'disable'} External Notifications?</span>`,
+        ).subscribe((ans) => {
+            if (ans.resolved) {
+                this.ngRedux.dispatch(SagaHelper.runAsync(
+                    [],
+                    [],
+                    asyncTaskPipe,
+                    {},
+                    (data) => {
+                        if (setting) {
+                            const response = data[1].Data;
+                            if (response.hasOwnProperty('user') && response.hasOwnProperty('password')) {
+                                this.alertsService.create('success', `
+                                    <table class="table grid">
+                                        <tbody>
+                                            <tr>
+                                                <td class="left"><b>Status:</b></td>
+                                                <td>${response.status}</td>
+                                            </tr>
+                                            <tr>
+                                                <td class="left"><b>Username:</b></td>
+                                                <td>${response.user}</td>
+                                            </tr>
+                                            <tr>
+                                                <td class="left"><b>Password:</b></td>
+                                                <td>${response.password}</td>
+                                            </tr>
+                                        </tbody>
+                                    </table>
+                                `);
+                                this.externalNotificationsEnabled = true;
+                                this.getExternalNotificationsStatus();
+                            } else {
+                                this.alertsService.generate('error', 'Something has gone wrong. Please try again.');
+                            }
+                        } else {
+                            this.externalNotificationsEnabled = false;
+                            clearInterval(this.statusInterval);
+                            this.alertsService.generate('success', 'External Notifications have been disabled.');
+                        }
+                        this.changeDetectorRef.detectChanges();
+                    },
+                    (data) => {
+                        console.error('error: ', data);
+                        this.alertsService.generate('error', 'External Notifications settings could not be changed.');
+                    }),
+                );
+            }
+        });
+    }
+
+    /**
+     * Checks if the user is enrolled with RabbitMQ and provides the status
+     *
+     * @return {object} status
+     */
+    getExternalNotificationsStatus(): any {
+        const asyncTaskPipe = this.myUserService.statusNotifications();
+
+        this.ngRedux.dispatch(SagaHelper.runAsync(
+            [],
+            [],
+            asyncTaskPipe,
+            {},
+            (response) => {
+                this.externalNotificationsStatus = _.get(response, '[1].Data', {});
+                this.externalNotificationsEnabled = Boolean(_.get(status, 'code', 1) !== '404');
+                if (this.externalNotificationsEnabled) this.setStatusInterval();
+                this.changeDetectorRef.detectChanges();
+            },
+        ));
+    }
+
+    /**
+     * Sends a test message to RabbitMQ
+     */
+    sendTestMessage() {
+        const asyncTaskPipe = this.myUserService.testNotifications();
+
+        this.ngRedux.dispatch(SagaHelper.runAsync(
+            [],
+            [],
+            asyncTaskPipe,
+            {},
+            () => {
+                this.alertsService.generate('success', 'Test message successfully sent.');
+            },
+            (response) => {
+                console.error('error: ', response);
+                this.alertsService.generate('error', 'Failed to send test message.');
+            },
+        ));
+    }
+
+    /**
+     * Set 10 second interval to get RabbitMQ status
+     */
+    setStatusInterval() {
+        clearInterval(this.statusInterval);
+        this.statusInterval = setInterval(
+            () => {
+                this.getExternalNotificationsStatus();
+            },
+            10000,
         );
     }
 

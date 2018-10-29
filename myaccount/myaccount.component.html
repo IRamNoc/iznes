@@ -283,28 +283,139 @@
                                         </div>
                                     </div>
                                 </div>
-                                <ng-template #apiInput>
-                                    <input *ngIf="showApiKey" type="text" class="form-control mono" [value]="apiKey"
-                                           readonly>
-                                    <input *ngIf="!showApiKey" type="text" class="form-control mono"
-                                           [value]="apiKey.substr(0, 4) + '•'.repeat(apiKey.length - 8) + apiKey.substr(apiKey.length - 4, 4)"
-                                           readonly>
-                                    <span *ngIf="!showApiKey" (click)="showApiKey = true" class="click"><i
-                                        class="fa fa-eye"></i> show</span>
-                                    <span *ngIf="showApiKey" (click)="showApiKey = false" class="click"><i
-                                        class="fa fa-eye-slash"></i> hide</span>
-                                    &nbsp;
-                                    <span (click)="handleCopyApiKey($event)" class="click"><i
-                                        class="fa fa-files-o"></i> <span *ngIf="copied"
-                                                                         class="text-success">copied!</span><span
-                                        *ngIf="!copied">copy</span></span>
-                                </ng-template>
                             </div>
                         </div>
                     </div>
                 </form>
             </clr-tab-content>
         </clr-tab>
+        <clr-tab>
+            <button clrTabLink clrTabLinkId="link4">
+                <i class="fa fa-commenting"></i>
+                <span mltag="txt_tfa">External Notifications</span>
+            </button>
+            <clr-tab-content *clrIfActive="tabStates.externalNotifications">
+                <!-- External Notifications Enable/Disable Form-->
+                <section class="form-block">
+                    <div class="row">
+                        <div class="form-group col-sm-6">
+                            <form>
+                                <div *ngIf="!externalNotificationsEnabled">
+                                    <p>External Notifications are <strong>disabled</strong>.</p>
+                                    <div class="row">
+                                        <button id="exNotiEnable" class="btn btn-primary" (click)="setExternalNotifications(true)">
+                                            <i class="fa fa-save"></i> <span mltag="txt_enable">Enable</span>
+                                        </button>
+                                    </div>
+                                </div>
+
+                                <div *ngIf="externalNotificationsEnabled">
+                                    <p>External Notifications are <strong>enabled</strong>.</p>
+                                    <div class="row">
+                                        <button id="exNotiDisable" class="btn btn-primary" (click)="setExternalNotifications(false)">
+                                            <i class="fa fa-save"></i> <span mltag="txt_disable">Disable</span>
+                                        </button>
+                                    </div>
+                                </div>
+                            </form>
+                        </div>
+                    </div>
+                </section>
+
+                <ng-container *ngIf="externalNotificationsEnabled">
+                    <!-- External Notifications Status Info -->
+                    <div class="hr-line-dashed"></div>
+                    <section class="form-block">
+                        <form class="form-vertical">
+                            <div class="row">
+                                <div class="col-xs-6">
+                                    <div class="form-group">
+                                        <label>Username</label>
+                                        <input type="text" class="form-control" [value]="'opencsd_' + userId" readonly>
+                                    </div>
+                                </div>
+                                <div class="col-xs-6">
+                                    <div class="form-group">
+                                        <label>Password</label>
+                                        <ng-container *ngTemplateOutlet="apiInput"></ng-container>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="row">
+                                <div class="col-xs-6">
+                                    <div class="form-group">
+                                        <label>Messages Ready</label>
+                                        <input type="text" class="form-control" [value]="externalNotificationsStatus.messages_ready || 0" readonly>
+                                    </div>
+                                </div>
+                                <div class="col-xs-6">
+                                    <div class="form-group">
+                                        <label>State</label>
+                                        <input type="text" class="form-control" [value]="externalNotificationsStatus.state || 'pending'" readonly>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="row">
+                                <div class="col-xs-6">
+                                    <div class="form-group">
+                                        <label>Consumers</label>
+                                        <input type="text" class="form-control" [value]="externalNotificationsStatus.consumers || 0" readonly>
+                                    </div>
+                                </div>
+                                <div class="col-xs-6">
+                                    <div class="form-group">
+                                        <label>Queue Name</label>
+                                        <input type="text" class="form-control" [value]="externalNotificationsStatus.name" readonly>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="row">
+                                <div class="col-xs-6">
+                                    <div class="form-group">
+                                        <label>Messages Unacknowledged</label>
+                                        <input type="text" class="form-control" [value]="externalNotificationsStatus.messages_unacknowledged || 0" readonly>
+                                    </div>
+                                </div>
+                            </div>
+                        </form>
+                    </section>
+
+                    <!-- External Notifications Test Message-->
+                    <div class="hr-line-dashed"></div>
+                    <section class="form-block">
+                        <div class="row">
+                            <div class="form-group col-sm-6">
+                                <form>
+                                    <p>Send a <strong>test message</strong>.</p>
+                                    <div class="row">
+                                        <button id="sendTestMessage" class="btn btn-primary" (click)="sendTestMessage()">
+                                            <i class="fa fa-save"></i> Send Test
+                                        </button>
+                                    </div>
+                                </form>
+                            </div>
+                        </div>
+                    </section>
+                </ng-container>
+            </clr-tab-content>
+        </clr-tab>
     </clr-tabs>
 
 </div>
+
+<ng-template #apiInput>
+    <input *ngIf="showApiKey" type="text" class="form-control mono" [value]="apiKey"
+           readonly>
+    <input *ngIf="!showApiKey" type="text" class="form-control mono"
+           [value]="apiKey.substr(0, 4) + '•'.repeat(apiKey.length - 8) + apiKey.substr(apiKey.length - 4, 4)"
+           readonly>
+    <span *ngIf="!showApiKey" (click)="showApiKey = true" class="click"><i
+        class="fa fa-eye"></i> show</span>
+    <span *ngIf="showApiKey" (click)="showApiKey = false" class="click"><i
+        class="fa fa-eye-slash"></i> hide</span>
+    &nbsp;
+    <span (click)="handleCopyApiKey($event)" class="click"><i
+        class="fa fa-files-o"></i> <span *ngIf="copied"
+                                         class="text-success">copied!</span><span
+        *ngIf="!copied">copy</span></span>
+</ng-template>
