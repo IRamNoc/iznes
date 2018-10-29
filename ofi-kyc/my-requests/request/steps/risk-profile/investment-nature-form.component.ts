@@ -93,13 +93,11 @@ export class InvestmentNatureFormComponent implements OnInit {
                 const currentAMCId = this.form.get('assetManagementCompanyID').value;
                 const dataAMCId = data.assetManagementCompanyID;
 
-                console.log('dataAMCId', dataAMCId, 'currentAMCId', currentAMCId);
                 return !this.multiple || (dataAMCId === currentAMCId);
             }),
             take(1),
         )
         .subscribe((data: any) => {
-            console.log('************* GOT DATA');
             this.form.patchValue(data);
         })
         ;

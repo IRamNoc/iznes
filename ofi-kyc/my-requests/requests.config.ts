@@ -1455,6 +1455,14 @@ export const controlToName = {
     investmentDecisionsAdHocCommittee: 'Are investment decisions validated by an ad hoc committee?',
     investmentDecisionsAdHocCommitteeSpecification: 'Ad hoc committee specification',
     otherPersonsAuthorised: 'Other persons authorised to take investment decisions and give instructions',
+
+    // Validation
+    undersigned: 'Identity',
+    actingOnBehalfOf: 'On behalf of',
+    doneAt: 'Done at',
+    doneDate: 'Date',
+    positionRepresentative: 'Position of the representative of the legal person',
+    electronicSignatureDocumentID: 'National identification card',
 };
 
 export const controlToList = {

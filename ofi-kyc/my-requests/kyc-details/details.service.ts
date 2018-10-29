@@ -31,6 +31,7 @@ export class KycDetailsService {
         OfiKycService.defaultRequestKycDetailsRiskNature(this.ofiKycService, this.ngRedux, kycID);
         OfiKycService.defaultRequestKycDetailsRiskObjectives(this.ofiKycService, this.ngRedux, kycID);
         OfiKycService.defaultRequestKycDetailsDocuments(this.ofiKycService, this.ngRedux, kycID);
+        OfiKycService.defaultRequestKycDetailsValidation(this.ofiKycService, this.ngRedux, kycID);
     }
 
     getFileByID(fileID) {
@@ -82,7 +83,6 @@ export class KycDetailsService {
 
     order(data){
         return sortBy(data, (val) => {
-            console.log(val.originalId, requestsConfig.controlOrder.indexOf(val.originalId));
             return requestsConfig.controlOrder.indexOf(val.originalId);
         });
     }
