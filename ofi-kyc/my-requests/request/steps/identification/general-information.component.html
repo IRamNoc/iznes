@@ -45,7 +45,7 @@
                     <span class="field-error" *ngIf="hasError(['otherIdentificationNumber'], ['required'])">{{'Field is required' | translate}}</span>
                 </div>
 
-                <div *ngIf="!isDisabled(['otherIdentificationNumberText'])" class="form-group col-sm-6">
+                <div *ngIf="!isDisabled(['otherIdentificationNumberText'])" class="form-group required-field col-sm-6">
                     <label class="control-label" for="otherIdentificationNumberText">&nbsp;</label>
                     <input type="text" formControlName="otherIdentificationNumberText" placeholder="{{'Fill in your identification number' | translate}}">
                     <span class="field-error" *ngIf="hasError(['otherIdentificationNumberText'], ['required'])">{{'Field is required' | translate}}</span>

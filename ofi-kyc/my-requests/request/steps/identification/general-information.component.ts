@@ -100,6 +100,7 @@ export class GeneralInformationComponent implements OnInit, OnDestroy {
         }
 
         otherIdentificationNumberTextControl.updateValueAndValidity();
+        this.formPercent.refreshFormPercent();
     }
 
     hasError(control, error = []) {
