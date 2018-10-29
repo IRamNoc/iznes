@@ -104,8 +104,13 @@ export class KycDetailsService {
                 await this.getFileByID(row.value).then(
                     (response) => {
                         const document = getValue(response, [1, 'Data', 0]);
-                        row.hash = document.hash;
-                        row.name = document.name;
+
+                        if (document) {
+                            row.hash = document.hash;
+                            row.name = document.name;
+                        } else{
+                            row.hash = 'na';
+                        }
                     },
                     () => {
                         return;

@@ -249,7 +249,7 @@ export class NewRequestService {
             ],
 
             activityRegulated: 0,
-            regulatoryStatus: ['', Validators.required],
+            regulatoryStatus: [{value: '', disabled: true}, Validators.required],
             regulatoryStatusInsurerType: [
                 { value: '', disabled: true },
                 Validators.required,
@@ -281,7 +281,7 @@ export class NewRequestService {
                 [Validators.required, Validators.pattern(/^[a-zA-Z]{2}[A-Z0-9]{9}\d$/)],
             ],
             floatableShares: [
-                '',
+                { value: '', disabled: true},
                 [
                     Validators.required,
                     Validators.min(0),
