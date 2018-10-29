@@ -180,8 +180,8 @@ export class ManageMemberComponent implements OnInit, OnDestroy {
                 },
                 (data) => {
                     /* Handle error message. */
-                    const message = _.get(data, '[1].Data[0].Message', '');
-                    this.alertsService.generate('error', message);
+                    console.warn('Failed to add member', data);
+                    this.alertsService.generate('error', 'Failed to add new member');
                 },
             ));
         }
