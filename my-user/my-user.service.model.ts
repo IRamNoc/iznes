@@ -99,3 +99,23 @@ export interface GetLanguageRequestBody extends MemberNodeMessageBody {
 export interface GetSiteMenuRequestBody extends MemberNodeMessageBody {
     token: string;
 }
+
+export interface StatusNotificationsMessageBody extends MemberNodeMessageBody {
+    token: string;
+}
+
+export interface RegisterNotificationsMessageBody extends MemberNodeMessageBody {
+    token: string;
+}
+
+export interface TruncateNotificationsMessageBody extends MemberNodeMessageBody {
+    token: string;
+}
+
+export interface RemoveNotificationsMessageBody extends MemberNodeMessageBody {
+    token: string;
+}
+
+export interface TestNotificationsMessageBody extends MemberNodeMessageBody {
+    token: string;
+}

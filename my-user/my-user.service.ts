@@ -21,6 +21,11 @@ import {
     SetLanguageRequestBody,
     GetLanguageRequestBody,
     GetSiteMenuRequestBody,
+    StatusNotificationsMessageBody,
+    RegisterNotificationsMessageBody,
+    TruncateNotificationsMessageBody,
+    RemoveNotificationsMessageBody,
+    TestNotificationsMessageBody,
 } from './my-user.service.model';
 import { NgRedux } from '@angular-redux/store';
 import {
@@ -329,5 +334,50 @@ export class MyUserService implements OnDestroy {
             };
 
         return createMemberNodeRequest(this.memberSocketService, messageBody);
+    }
+
+    statusNotifications(): any {
+        const messageBody: StatusNotificationsMessageBody = {
+            RequestName: 'queue/status',
+            token: this.memberSocketService.token,
+        };
+
+        return createMemberNodeSagaRequest(this.memberSocketService, messageBody);
+    }
+
+    registerNotifications(): any {
+        const messageBody: RegisterNotificationsMessageBody = {
+            RequestName: 'queue/register',
+            token: this.memberSocketService.token,
+        };
+
+        return createMemberNodeSagaRequest(this.memberSocketService, messageBody);
+    }
+
+    truncateNotifications(): any {
+        const messageBody: TruncateNotificationsMessageBody = {
+            RequestName: 'queue/truncate',
+            token: this.memberSocketService.token,
+        };
+
+        return createMemberNodeSagaRequest(this.memberSocketService, messageBody);
+    }
+
+    removeNotifications(): any {
+        const messageBody: RemoveNotificationsMessageBody = {
+            RequestName: 'queue/remove',
+            token: this.memberSocketService.token,
+        };
+
+        return createMemberNodeSagaRequest(this.memberSocketService, messageBody);
+    }
+
+    testNotifications(): any {
+        const messageBody: TestNotificationsMessageBody = {
+            RequestName: 'queue/test',
+            token: this.memberSocketService.token,
+        };
+
+        return createMemberNodeSagaRequest(this.memberSocketService, messageBody);
     }
 }
