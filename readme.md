@@ -3,11 +3,11 @@ Multilingual is an angular 4 SETL module that houses key components for the tran
 
 Features:
 * A service that can be imported anywhere and used to retrieve translations.
-* A module that can be imported into any other module that gives you access to the service and the `mltag` directive.
+* A module that can be imported into any other module that gives you access to the service.
 * Direct access to the translations object.
 
 # Usage:
-## 1. Import the `MulitlingualModule`
+## 1. Import the `MultilingualModule`
 
 Import the `MultilingualModule` into your module by using an import statement and adding it to the imports array.
 
@@ -21,7 +21,7 @@ import {MultilingualModule} from '@setl/multilingual';
 })
 ```
 
-## 2. Using the `MulitlingualService`.
+## 2. Using the `MultilingualService` to retrieve an existing translation.
 
 An example component using the getTranslation method:
 
@@ -39,9 +39,40 @@ class MyComponent {
 }
 ```
 
-## 3. Using the `mltag` directive.
+## 3. Using the `MultilingualService` to create a new translation.
 
-**Note: you'll have to import the `MultilingualModule` into the module that your component is declared in.**
+**Note: See the `Translations System` document for guidance on how to enter new translations into the translations database via the translations generator.**
+
+**Note: See the `Translations System` document for guidance on how to use `updateTranslations.sh` to update the `translations.ts` file with new translations.**
+
+Translate a string using the following methods:
+
+
+### Static string: 
+
+```javascript
+{{ Username is required | translate }}
+```
+
+### Dynamic string: 
+
+```javascript
+{{'Log in to @appConfig.platform@' | translate: {'appConfig.platform': appConfig.platform} }}
+```
+
+### MultilingualService translate method:
+
+```html
+<input type="text" [placeholder]="multilingualService.translate('Enter your username')">
+```
+
+## 4. Using the `mltag` directive.
+
+**Note: Use of the `mltag` directive has been depreciated in favour of the pipe methods (see point #3) above.**
+
+**Note: Please replace instances of `mltag` with the pipe methods (see point #3) as you encounter them in the codebase.**
+
+**Note: You'll have to import the `MultilingualModule` into the module that your component is declared in.**
 
 An example of HTML in a component using the directive.
 
