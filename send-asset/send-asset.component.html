@@ -31,7 +31,7 @@
                                    mltag="txt_selectissuer">
                         </ng-select>
 
-                        <span *ngIf="sendAssetForm.controls['asset'].hasError('required') && sendAssetForm.controls['asset'].touched"
+                        <span *ngIf="sendAssetForm.controls['asset'].hasError('required')"
                               class="field-error" mltag="txt_fieldisrequired">Field is required</span>
                     </div>
 
@@ -42,18 +42,21 @@
                                    [allowClear]="true"
                                    placeholder="Asset Address"
                                    [formControl]="sendAssetForm.controls['assetAddress']"
+                                   [class.error]="sendAssetForm.controls['amount'].hasError('insufficientFunds')"
                                    mltag="txt_assetaddress">
                         </ng-select>
 
-                        <span *ngIf="sendAssetForm.controls['assetAddress'].hasError('required') && sendAssetForm.controls['assetAddress'].touched" class="field-error" mltag="txt_fieldisrequired">Field is required</span>
+                        <span *ngIf="sendAssetForm.controls['assetAddress'].hasError('required')" class="field-error" mltag="txt_fieldisrequired">Field is required</span>
+                        <span *ngIf="showAddressHolding" class="field-error force-display-error" [ngClass]="{'text-success': addressHoldingAmount > 0 && !sendAssetForm.controls['amount'].hasError('insufficientFunds'), 'text-warning': addressHoldingAmount <= 0 && !sendAssetForm.controls['amount'].hasError('insufficientFunds')}">
+                            Sender has {{addressHoldingAmount}}<ng-container *ngIf="addressHoldingAmount > 0"> free</ng-container> of this asset</span>
                     </div>
 
                     <div class="form-group">
-                        <various-address-select [formControl]="sendAssetForm.controls['recipient']" 
+                        <various-address-select [formControl]="sendAssetForm.controls['recipient']"
                                                 [relationshipArray]="walletRelationships"
-                                                [ownWalletAddressArray]="walletAddressSelectItems" 
+                                                [ownWalletAddressArray]="walletAddressSelectItems"
                                                 [required]="true"
-                                                [class.error]="!sendAssetForm.controls['recipient'].valid && sendAssetForm.controls['recipient'].touched"></various-address-select>
+                        ></various-address-select>
 
                         <span *ngIf="sendAssetForm.controls['recipient'].hasError('required') && !sendAssetForm.controls['recipient'].pristine" class="field-error" mltag="txt_fieldisrequired">Field is required</span>
 
@@ -66,11 +69,11 @@
                                id="amount"
                                placeholder="Amount" size="45"
                                [formControl]="sendAssetForm.controls['amount']"
-                               [class.error]="!sendAssetForm.controls['amount'].valid && sendAssetForm.controls['amount'].touched"
                                mltag="txt_amount"/>
 
-                        <span *ngIf="sendAssetForm.controls['amount'].hasError('required') && sendAssetForm.controls['amount'].touched" class="field-error" mltag="txt_fieldisrequired">Field is required</span>
-                        <span *ngIf="sendAssetForm.controls['amount'].hasError('pattern') && sendAssetForm.controls['amount'].touched" class="field-error" mltag="txt_fieldisrequired">Amount must be a number</span>
+                        <span *ngIf="sendAssetForm.controls['amount'].hasError('required')" class="field-error" mltag="txt_fieldisrequired">Field is required</span>
+                        <span *ngIf="sendAssetForm.controls['amount'].hasError('pattern')" class="field-error">Amount must be a number</span>
+                        <span *ngIf="sendAssetForm.controls['amount'].hasError('insufficientFunds') && !sendAssetForm.controls['amount'].hasError('pattern')" class="field-error">Sender has {{addressHoldingAmount}}<ng-container *ngIf="addressHoldingAmount > 0"> free</ng-container> of this asset</span>
                     </div>
 
                     <button type="submit" class="btn btn-primary" mltag="txt_sendasset" [disabled]="sendAssetForm.invalid">Send Asset</button>
