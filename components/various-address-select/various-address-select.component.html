@@ -2,7 +2,7 @@
     <label class="control-label required-field">Recipient Type</label>
     <ng-select
         [items]="addressTypes"
-        [allowClear]="true" 
+        [allowClear]="true"
         placeholder="Select Address Type"
         [formControl]="addressTypeSelect"
         (selected)="setSelectedAddressType($event)">
@@ -16,8 +16,7 @@
             [items]="relationshipArray"
             [allowClear]="true"
             placeholder="Select Connection"
-            (selected)="writeValue($event.id)"
-            (blur)="onBlur()"
+            (selected)="writeValue($event.id); onBlur()"
             (removed)="onClearValue()"
             [formControl]="relationshipSelect">
         </ng-select>
@@ -29,11 +28,9 @@
             [items]="ownWalletAddressArray"
             [allowClear]="true"
             placeholder="Select Owned Address"
-            (selected)="writeValue($event.id)"
-            (blur)="onBlur()"
+            (selected)="writeValue($event.id); onBlur()"
             (removed)="onClearValue()"
             (change)="writeValue($event.target.value)"
-            (blur)="onBlur()"
             [formControl]="ownedAddressSelect">
         </ng-select>
     </div>
