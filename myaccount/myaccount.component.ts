@@ -497,7 +497,6 @@ export class SetlMyAccountComponent implements OnDestroy, OnInit {
             },
         );
 
-        // Get External Notification Status
         this.getExternalNotificationsStatus();
     }
 
@@ -752,8 +751,12 @@ export class SetlMyAccountComponent implements OnDestroy, OnInit {
                     this.statusUpdated[status] = this.externalNotificationsStatus[status] !== previousStatus[status] &&
                         !_.isEmpty(previousStatus);
                 });
-                this.externalNotificationsEnabled = _.get(status, 'code', 1) !== '404';
-                if (this.externalNotificationsEnabled) this.setStatusInterval();
+                this.externalNotificationsEnabled = true;
+                this.setStatusInterval();
+                this.changeDetectorRef.detectChanges();
+            },
+            () => {
+                this.externalNotificationsEnabled = false;
                 this.changeDetectorRef.detectChanges();
             },
         ));
