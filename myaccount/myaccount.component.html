@@ -17,7 +17,7 @@
                                     name</label>
                                 <input type="text" id="udDisplayName" [formControl]="displayName" size="45"
                                        class="udDisplayName">
-                                <div *ngIf="displayName.hasError('required') && displayName.touched" class="field-error"
+                                <div *ngIf="displayName.hasError('required')" class="field-error"
                                      mltag="txt_displaynamerequired">Field is required
                                 </div>
                             </div>
@@ -28,7 +28,7 @@
                                 <label for="udFirstName" class="control-label required-field" mltag="txt_firstname">First
                                     name</label>
                                 <input type="text" id="udFirstName" [formControl]="firstName" size="45">
-                                <div *ngIf="firstName.hasError('required') && firstName.touched" class="field-error"
+                                <div *ngIf="firstName.hasError('required')" class="field-error"
                                      mltag="txt_firstnamerequired">Field is required
                                 </div>
                             </div>
@@ -36,7 +36,7 @@
                                 <label for="udLastName" class="control-label required-field" mltag="txt_lastname">Last
                                     name</label>
                                 <input type="text" id="udLastName" [formControl]="lastName" size="45">
-                                <div *ngIf="lastName.hasError('required') && lastName.touched" class="field-error"
+                                <div *ngIf="lastName.hasError('required')" class="field-error"
                                      mltag="txt_lastnamerequired">Field is required
                                 </div>
                             </div>
@@ -46,7 +46,7 @@
                                 <label for="udMobilePhone" class="control-label required-field" mltag="txt_mobilephone">Mobile
                                     phone</label>
                                 <input type="text" id="udMobilePhone" [formControl]="mobilePhone" size="45">
-                                <div *ngIf="mobilePhone.hasError('required') && mobilePhone.touched" class="field-error"
+                                <div *ngIf="mobilePhone.hasError('required')" class="field-error"
                                      mltag="txt_mobilephonerequired">Field is required
                                 </div>
                             </div>
@@ -61,7 +61,7 @@
                                 <label for="udAddress1" class="control-label required-field" mltag="txt_postaladdress">Postal
                                     Address</label>
                                 <input type="text" id="udAddress1" [formControl]="address1" size="45">
-                                <div *ngIf="address1.hasError('required') && address1.touched" class="field-error"
+                                <div *ngIf="address1.hasError('required')" class="field-error"
                                      mltag="txt_addressrequired">Field is required
                                 </div>
                             </div>
@@ -75,7 +75,7 @@
                                 <label for="udAddress3" class="control-label required-field" mltag="txt_cityortown">City
                                     or Town</label>
                                 <input type="text" id="udAddress3" [formControl]="address3" size="45">
-                                <div *ngIf="address3.hasError('required') && address3.touched" class="field-error"
+                                <div *ngIf="address3.hasError('required')" class="field-error"
                                      mltag="txt_cityortownrequired">Field is required
                                 </div>
                             </div>
@@ -89,11 +89,8 @@
                                 <label for="udPostalCode" class="control-label required-field" mltag="txt_postalcode">Postal
                                     Code</label>
                                 <input type="text" id="udPostalCode" [formControl]="postalCode" size="45">
-                                <div *ngIf="postalCode.hasError('required') && postalCode.touched" class="field-error"
+                                <div *ngIf="postalCode.hasError('required')" class="field-error"
                                      mltag="txt_postalcoderequired">Field is required
-                                </div>
-                                <div *ngIf="!postalCode.valid && postalCode.touched && !postalCode.hasError('required')"
-                                     class="field-error" mltag="txt_postalcodeinvalid">Postal Code is not valid
                                 </div>
                             </div>
                             <div class="form-group col-sm-6">
@@ -102,7 +99,7 @@
                                     <ng-select id="country-select" [items]="countries" [allowClear]="true"
                                                mltag="txt_selectCountry"
                                                placeholder="Select a country" [formControl]="country"></ng-select>
-                                    <div *ngIf="country.hasError('required') && country.touched" class="field-error"
+                                    <div *ngIf="country.hasError('required')" class="field-error"
                                          mltag="txt_countryrequired">Field is required
                                     </div>
                                 </div>
@@ -149,15 +146,16 @@
 
                                     <!-- Old password -->
                                     <div class="col-xs-11 no-gutter">
-                                        <label for="cpOldPassword" class="required-field" mltag="txt_oldpassword">Old
+                                        <label for="cpOldPassword" class="required-field" mltag="txt_currentpassword">Current
                                             Password
                                         </label>
                                         <input [type]="(showPasswords === true) ? 'text' : 'password'"
-                                               id="cpOldPassword" [formControl]="oldPassword"
-                                               [class.error]="hasError('oldPassword')"
-                                               size="45">
+                                               id="cpOldPassword" 
+                                               [formControl]="oldPassword"
+                                               size="45"
+                                               placeholder="Enter your current password">
 
-                                        <div *ngIf="hasError('oldPassword', 'required')" class="field-error">
+                                        <div *ngIf="oldPassword.hasError('required')" class="field-error">
                                             {{'Field is required' | translate}}
                                         </div>
 
@@ -166,32 +164,39 @@
                                         <div class="show-hide" (click)="toggleShowPasswords()"
                                              mltag="txt_showhidepassword"
                                              title="Show/hide passwords"><i
-                                            [class]="(showPasswords === true) ? 'fa fa-eye-slash' : 'fa fa-eye'"
+                                            [class]="(showPasswords === true) ? 'fa fa-eye' : 'fa fa-eye-slash'"
                                             aria-hidden="true"></i></div>
                                     </div>
                                 </div>
 
                                 <!-- New password -->
                                 <div class="form-group">
-                                    <div class="col-xs-11 no-gutter">
-                                        <label for="cpPassword" class="required-field" mltag="txt_password">Password
-                                        </label>
+                                    <div class="col-xs-11 no-gutter">                                       
+                                        <label for="cpPassword" class="required-field"><app-password-tooltip *ngIf="appConfig.production"></app-password-tooltip>{{'New Password' | translate}}
+                                        </label>                
+
                                         <input [type]="(showPasswords === true) ? 'text' : 'password'"
-                                               [class.error]="hasError('password')"
-                                               id="cpPassword" [formControl]="password" size="45">
+                                               id="cpPassword" 
+                                               [formControl]="password" 
+                                               size="45"
+                                               placeholder="`Enter your new password"
+                                               [class.error]="changePassForm.controls.passwordConfirm.hasError('mismatch')">
 
-
-                                        <div *ngIf="hasError('', 'oldNew') && isTouched('oldPassword') && isTouched('password') && !hasError('password', 'required')"
-                                             class="field-error">
-                                            {{'The new password should not be the same as the old' | translate}}
+                                        <div *ngIf="password.hasError('oldNew')" class="field-error">
+                                            {{'Password is not new' | translate}}
                                         </div>
-                                        <div *ngIf="hasError('password', 'required')"
+                                
+                                        <div *ngIf="password.hasError('required')"
                                              class="field-error">
                                             {{'Field is required' | translate}}
                                         </div>
-                                        <div *ngIf="hasError('password', 'rules') && !hasError('', 'oldNew')"
-                                             class="field-error">
-                                            {{'Your password doesn\'t meet the security criteria' | translate}}
+
+                                        <div *ngIf="(password.hasError('rules') || password.hasError('length')) && !password.hasError('oldNew')" class="field-error">
+                                            {{'Password does not satisfy security criteria' | translate}}
+                                        </div>
+
+                                        <div *ngIf="changePassForm.controls.passwordConfirm.hasError('mismatch') && !password.hasError('rules') && !password.hasError('length') && !password.hasError('oldNew')"
+                                            class="field-error force-display-error" mltag="txt_passwordsdonotmatch">Passwords do not match
                                         </div>
 
                                     </div>
@@ -199,8 +204,8 @@
                                         <div class="show-hide"
                                              (click)="toggleShowPasswords()" mltag="txt_showhidepassword"
                                              title="Show/hide passwords"><i
-                                            [class]="(showPasswords === true) ? 'fa fa-eye-slash' : 'fa fa-eye'"
-                                            aria-hidden="true"></i></div>
+                                             [class]="(showPasswords === true) ? 'fa fa-eye' : 'fa fa-eye-slash'"
+                                             aria-hidden="true"></i></div>
                                     </div>
                                 </div>
 
@@ -208,26 +213,26 @@
                                 <div class="form-group">
                                     <div class="col-xs-11 no-gutter">
                                         <label for="cpPasswordConfirm" class="required-field"
-                                               mltag="txt_passwordconfirm">Password confirmation
+                                               mltag="txt_passwordconfirm">Confirm Password
                                         </label>
                                         <input [type]="(showPasswords === true) ? 'text' : 'password'"
                                                id="cpPasswordConfirm"
-                                               [class.error]="hasError('passwordConfirm')"
-                                               [formControl]="passwordConfirm" size="45">
+                                               [formControl]="passwordConfirm" size="45"
+                                               placeholder="`Enter your new password">
 
-                                        <div *ngIf="hasError('passwordConfirm', 'required')" class="field-error">
+                                        <div *ngIf="passwordConfirm.hasError('required')" class="field-error">
                                             {{'Field is required' | translate}}
                                         </div>
-                                        <div *ngIf="hasError('', 'mismatch') && !hasError('passwordConfirm', 'required') && isTouched('passwordConfirm')"
-                                             class="field-error">
-                                            {{'Password does not match' | translate}}
+
+                                        <div *ngIf="passwordConfirm.hasError('mismatch')"                                       class="field-error" mltag="txt_passwordsdonotmatch">Passwords do not match
                                         </div>
+    
                                     </div>
                                     <div class="col-xs-1 no-gutter">
                                         <div class="show-hide"
                                              (click)="toggleShowPasswords()" mltag="txt_showhidepassword"
                                              title="Show/hide passwords"><i
-                                            [class]="(showPasswords === true) ? 'fa fa-eye-slash' : 'fa fa-eye'"
+                                            [class]="(showPasswords === true) ? 'fa fa-eye' : 'fa fa-eye-slash'"
                                             aria-hidden="true"></i></div>
                                     </div>
                                 </div>
