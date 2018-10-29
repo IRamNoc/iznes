@@ -123,7 +123,6 @@
                             </div>
                         </div>
 
-
                         <div class="form-group col-sm-12" *ngIf="formControl.controls.walletType.value && formControl.controls.walletType.value.length">
                             <div [ngSwitch]="formControl.value.walletType[0].id">
                                 <ng-container *ngSwitchCase="'1'">
@@ -185,7 +184,7 @@
 
                     <div class="row">
                         <div class="form-group col-sm-6">
-                            <label class="control-label required-field" mltag="txt_walletstatus">Wallet Status</label>
+                            <label class="control-label" mltag="txt_walletstatus">Wallet Status</label>
                             <div class="wallet-status">
                                 <span *ngIf="formControl.value.walletLocked == 0">
                                     <i class="fa fa-unlock"></i>
@@ -198,9 +197,6 @@
                                     <input [formControl]="formControl.controls['walletLocked']"
                                            id="edit-wallet-status-toggle" type="checkbox">
                                     <label for="edit-wallet-status-toggle"></label>
-                                    <div *ngIf="formControl.controls.walletLocked.hasError('required') && formControl.controls.walletLocked.touched"
-                                         class="field-error" mltag="txt_thisfieldisrequired">This field is required
-                                    </div>
                                 </div>
                             </div>
                         </div>
