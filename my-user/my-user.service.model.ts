@@ -119,4 +119,3 @@ export interface RemoveNotificationsMessageBody extends MemberNodeMessageBody {
 export interface TestNotificationsMessageBody extends MemberNodeMessageBody {
     token: string;
 }
-

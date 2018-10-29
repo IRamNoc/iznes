@@ -374,7 +374,7 @@ export class MyUserService implements OnDestroy {
 
     testNotifications(): any {
         const messageBody: TestNotificationsMessageBody = {
-            RequestName: 'queue/remove',
+            RequestName: 'queue/test',
             token: this.memberSocketService.token,
         };
 
