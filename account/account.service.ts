@@ -1,12 +1,17 @@
-import {Injectable} from '@angular/core';
-import {MemberSocketService} from '@setl/websocket-service';
-import {SagaHelper, Common} from '@setl/utils';
-import {createMemberNodeSagaRequest} from '@setl/utils/common';
+import { Injectable } from '@angular/core';
+import { MemberSocketService } from '@setl/websocket-service';
+import { SagaHelper, Common } from '@setl/utils';
+import { createMemberNodeSagaRequest } from '@setl/utils/common';
 import {
     RequestAccountListMessageBody,
     AddAccountMessageBody,
     EditAccountMessageBody,
-    DeleteAccountMessageBody
+    DeleteAccountMessageBody,
+    StatusNotificationsMessageBody,
+    RegisterNotificationsMessageBody,
+    TruncateNotificationsMessageBody,
+    RemoveNotificationsMessageBody,
+    TestNotificationsMessageBody,
 } from './account.service.model';
 import * as _ from 'lodash';
 
@@ -36,7 +41,7 @@ export class AccountsService {
     requestAccountList(): any {
         const messageBody: RequestAccountListMessageBody = {
             RequestName: 'gal',
-            token: this.memberSocketService.token
+            token: this.memberSocketService.token,
         };
 
         return createMemberNodeSagaRequest(this.memberSocketService, messageBody);
@@ -48,7 +53,7 @@ export class AccountsService {
             token: this.memberSocketService.token,
             accountName: _.get(requestData, 'accountName', ''),
             accountDescription: _.get(requestData, 'accountDescription', ''),
-            accountMember: _.get(requestData, 'memberId', 0)
+            accountMember: _.get(requestData, 'memberId', 0),
         };
 
         return createMemberNodeSagaRequest(this.memberSocketService, messageBody);
@@ -61,7 +66,7 @@ export class AccountsService {
             accountId: _.get(requestData, 'accountId', 0),
             accountName: _.get(requestData, 'accountName', ''),
             description: _.get(requestData, 'description', ''),
-            wallet: _.get(requestData, 'walletId', 0)
+            wallet: _.get(requestData, 'walletId', 0),
         };
 
         return createMemberNodeSagaRequest(this.memberSocketService, messageBody);
@@ -71,7 +76,52 @@ export class AccountsService {
         const messageBody: DeleteAccountMessageBody = {
             RequestName: 'da',
             token: this.memberSocketService.token,
-            accountId: _.get(requestData, 'accountId', 0)
+            accountId: _.get(requestData, 'accountId', 0),
+        };
+
+        return createMemberNodeSagaRequest(this.memberSocketService, messageBody);
+    }
+
+    statusNotifications(): any {
+        const messageBody: StatusNotificationsMessageBody = {
+            RequestName: 'queue/status',
+            token: this.memberSocketService.token,
+        };
+
+        return createMemberNodeSagaRequest(this.memberSocketService, messageBody);
+    }
+
+    registerNotifications(): any {
+        const messageBody: RegisterNotificationsMessageBody = {
+            RequestName: 'queue/register',
+            token: this.memberSocketService.token,
+        };
+
+        return createMemberNodeSagaRequest(this.memberSocketService, messageBody);
+    }
+
+    truncateNotifications(): any {
+        const messageBody: TruncateNotificationsMessageBody = {
+            RequestName: 'queue/truncate',
+            token: this.memberSocketService.token,
+        };
+
+        return createMemberNodeSagaRequest(this.memberSocketService, messageBody);
+    }
+
+    removeNotifications(): any {
+        const messageBody: RemoveNotificationsMessageBody = {
+            RequestName: 'queue/remove',
+            token: this.memberSocketService.token,
+        };
+
+        return createMemberNodeSagaRequest(this.memberSocketService, messageBody);
+    }
+
+    testNotifications(): any {
+        const messageBody: TestNotificationsMessageBody = {
+            RequestName: 'queue/remove',
+            token: this.memberSocketService.token,
         };
 
         return createMemberNodeSagaRequest(this.memberSocketService, messageBody);
