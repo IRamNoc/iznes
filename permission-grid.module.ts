@@ -16,6 +16,9 @@ import { MenuOptionListComponent } from './menu-option-list/menu-option-list.com
 /* Services. */
 import { MenuOptionListService } from './menu-option-list/menu-option-list.service';
 
+/* Directives. */
+import { SetlDirectivesModule } from '@setl/utils/directives';
+
 /* User admin service. */
 @NgModule({
     declarations: [
@@ -34,6 +37,7 @@ import { MenuOptionListService } from './menu-option-list/menu-option-list.servi
         BrowserModule,
         FormsModule,
         ClarityModule,
+        SetlDirectivesModule,
     ],
     providers: [
         MenuOptionListService,
