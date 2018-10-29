@@ -15,37 +15,36 @@
                                    [allowClear]="true"
                                    placeholder="Select an asset"
                                    [formControl]="issueAssetForm.controls['asset']"
-                                    mltag="txt_selectissueraddress">
+                                   mltag="txt_selectissueraddress">
                         </ng-select>
 
-                        <span *ngIf="issueAssetForm.controls['asset'].hasError('required') && issueAssetForm.controls['asset'].touched" class="field-error" mltag="txt_fieldisrequired">Field is required</span>
+                        <span *ngIf="issueAssetForm.controls['asset'].hasError('required')" class="field-error" mltag="txt_fieldisrequired">Field is required</span>
                     </div>
 
                     <div class="form-group">
                         <various-address-select [formControl]="issueAssetForm.controls['recipient']"
                                                 [relationshipArray]="walletRelationships"
                                                 [ownWalletAddressArray]="walletAddressSelectItems"
-                                                [required]="true"
-                                                [class.error]="!issueAssetForm.controls['recipient'].valid && issueAssetForm.controls['recipient'].touched"></various-address-select>
-                        
-                        <span *ngIf="issueAssetForm.controls['recipient'].hasError('required') && !issueAssetForm.controls['recipient'].pristine"
-                            class="field-error" mltag="txt_fieldisrequired">Field is required</span>
+                                                [required]="true"></various-address-select>
+
+                        <span *ngIf="issueAssetForm.controls['recipient'].hasError('required')" class="field-error" mltag="txt_fieldisrequired">Field is required</span>
+                        <span *ngIf="issueAssetForm.controls['recipient'].hasError('isIssuer')" class="field-error">Recipient address is the issuer</span>
                     </div>
 
                     <div class="form-group col-sm-6">
                         <label class="control-label required-field" for="amount" mltag="txt_amount">Amount</label>
-                        <input type="text" 
-                                id="amount" 
-                                placeholder="Amount" 
-                                size="45"
-                                [formControl]="issueAssetForm.controls['amount']"
-                                [class.error]="!issueAssetForm.controls['amount'].valid && issueAssetForm.controls['amount'].touched" 
-                                mltag="txt_amount"/>
-                        
-                        <span *ngIf="issueAssetForm.controls['amount'].hasError('required') && issueAssetForm.controls['amount'].touched" class="field-error" mltag="txt_fieldisrequired">Field is required</span>
+                        <input type="text"
+                               id="amount"
+                               placeholder="Amount"
+                               size="45"
+                               [formControl]="issueAssetForm.controls['amount']"
+                               mltag="txt_amount">
+
+                        <span *ngIf="issueAssetForm.controls['amount'].hasError('required')" class="field-error" mltag="txt_fieldisrequired">Field is required</span>
+                        <span *ngIf="issueAssetForm.controls['amount'].hasError('pattern')" class="field-error">Amount must be a number</span>
                     </div>
 
-                    <button type="submit" class="btn btn-primary" mltag="txt_issueasset" [disabled]="issueAssetForm.invalid">Issue Asset</button> 
+                    <button type="submit" class="btn btn-primary" mltag="txt_issueasset" [disabled]="issueAssetForm.invalid">Issue Asset</button>
                 </section>
             </form>
         </clr-tab-content>

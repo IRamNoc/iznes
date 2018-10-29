@@ -32,6 +32,7 @@ export class IssueAssetComponent implements OnInit, OnDestroy {
     walletDirectoryList = {};
     walletDirectoryListRaw: any[];
     walletRelationships: any[];
+    instrumentList: {};
 
     @select(['user', 'connected', 'connectedWallet']) connectedWalletOb;
     @select(['asset', 'myInstruments', 'requestedWalletInstrument']) requestedInstrumentState;
@@ -60,6 +61,7 @@ export class IssueAssetComponent implements OnInit, OnDestroy {
             this.requestWalletInstruments(requestedState);
         }));
         this.subscriptionsArray.push(this.instrumentListOb.subscribe((instrumentList) => {
+            this.instrumentList = instrumentList;
             this.walletInstrumentsSelectItems = walletHelper.walletInstrumentListToSelectItem(instrumentList);
             this.changeDetectorRef.markForCheck();
         }));
@@ -150,12 +152,35 @@ export class IssueAssetComponent implements OnInit, OnDestroy {
      * @return {void}
      */
     setFormGroup(): void {
-        this.issueAssetForm = new FormGroup({
-            asset: new FormControl('', Validators.required),
-            recipient: new FormControl('', Validators.required),
-            amount: new FormControl('', Validators.required),
-        });
+        this.issueAssetForm = new FormGroup(
+            {
+                asset: new FormControl('', Validators.required),
+                recipient: new FormControl('', Validators.required),
+                amount: new FormControl('', [Validators.required, Validators.pattern('^((?!(0))[0-9]+)$')]),
+            },
+            [
+                this.validateAddress,
+            ],
+        );
     }
+
+    /**
+     * Validator that triggers an error if the recipient address is the issuer
+     *
+     * @param {FormGroup} g
+     */
+    validateAddress = ((g: FormGroup) => {
+        const asset = _.get(g.get('asset'), 'value[0].id', '');
+        const recipient = g.get('recipient').value;
+
+        if (asset && recipient) {
+            const issuerAddress = _.get(this.instrumentList, `[${asset}].issuerAddress`, '');
+
+            issuerAddress === recipient ?
+                g.get('recipient').setErrors({ isIssuer: true }) : g.get('recipient').setErrors(null);
+        }
+        return null;
+    });
 
     /**
      * Requests wallet instruments.
