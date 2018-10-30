@@ -5,7 +5,9 @@ import {NavHelperService} from './nav/service';
 import {LogService} from './log/service';
 import {FileDownloader} from './file-downloader/service';
 import {HttpClientModule} from '@angular/common/http';
-import {MenuSpecService} from "./menuSpec/service";
+import {MenuSpecService} from './menuSpec/service';
+import { PermissionsService } from './permissions';
+import { PermissionsRequestService } from '@setl/core-req-services/permissions/permissions-request.service';
 
 @NgModule({
     declarations: [],
@@ -19,9 +21,10 @@ import {MenuSpecService} from "./menuSpec/service";
         LogService,
         FileDownloader,
         MenuSpecService,
-    ]
+        PermissionsService,
+        PermissionsRequestService,
+    ],
 })
 
 export class SetlServicesModule {
 }
-
