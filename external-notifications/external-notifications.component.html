@@ -1,0 +1,128 @@
+<!-- External Notifications Enable/Disable Form-->
+<section class="form-block">
+    <div class="row">
+        <div class="form-group col-sm-12">
+            <form>
+                <div *ngIf="!externalNotificationsEnabled">
+                    <p>{{ 'External Notifications are' | translate }} <strong>{{ 'disabled' | translate }}</strong>.</p>
+                    <div class="row">
+                        <button id="exNotiEnable" class="btn btn-primary" (click)="setExternalNotifications(true)">
+                            <i class="fa fa-save"></i>{{ 'Enable' | translate }}</button>
+                    </div>
+                </div>
+
+                <div *ngIf="externalNotificationsEnabled">
+                    <p>{{ 'External Notifications are' | translate }} <strong>{{ 'enabled' | translate }}</strong>.</p>
+                    <div class="row">
+                        <button id="exNotiDisable" class="btn btn-primary" (click)="setExternalNotifications(false)">
+                            <i class="fa fa-save"></i> {{ 'Disable' | translate }}</button>
+
+                        <button id="sendTestMessage" class="btn btn-outline" (click)="sendTestMessage()">
+                            <i class="fa fa-envelope-o"></i>{{ 'Send Test Message' | translate }}
+                        </button>
+
+                        <button id="truncateQueue" class="btn btn-danger-outline" (click)="truncateQueue()">
+                            <i class="fa fa-trash-o"></i>{{ 'Delete All Messages' | translate }}
+                        </button>
+                    </div>
+                </div>
+            </form>
+        </div>
+    </div>
+</section>
+
+<ng-container *ngIf="externalNotificationsEnabled">    
+    <!-- External Notifications Status Info -->
+    <div class="hr-line-dashed"></div>
+    <section class="form-block">
+        <form class="form-vertical">
+            <div class="row">
+                <div class="col-xs-6">
+                    <div class="form-group">
+                        <label>{{ 'Username' | translate }}</label>
+                        <input type="text" class="form-control" [value]="'opencsd_' + userId" readonly>
+                    </div>
+                </div>
+                <div class="col-xs-6">
+                    <div class="form-group">
+                        <label>{{ 'Password' | translate }}</label>
+                        <ng-container *ngTemplateOutlet="apiInput"></ng-container>
+                    </div>
+                </div>
+            </div>
+            <div class="row">
+                <div class="col-xs-6">
+                    <div class="form-group">
+                        <label>{{ 'Endpoint URL' | translate }}</label>
+                        <input type="text" class="form-control" [value]="rabbitMQEndpoint" readonly>
+                    </div>
+                </div>
+                <div class="col-xs-6">
+                    <div class="form-group">
+                        <label>{{ 'Queue Name' | translate }}</label>
+                        <input type="text" class="form-control" [value]="externalNotificationsStatus.name" readonly>
+                    </div>
+                </div>
+            </div>
+            <div class="row">
+                <div class="col-xs-6">
+                    <div class="form-group">
+                        <label>{{ 'State' | translate }}</label>
+                        <input type="text" 
+                               class="form-control" 
+                               [class.flash]="statusUpdated.state" 
+                               [value]="externalNotificationsStatus.state || 'pending'"
+                               readonly>
+                    </div>
+                </div>
+                <div class="col-xs-6">
+                    <div class="form-group">
+                        <label>{{ 'Consumers' | translate }}</label>
+                        <input type="text" 
+                               class="form-control"
+                               [class.flash]="statusUpdated.consumers" 
+                               [value]="externalNotificationsStatus.consumers || 0"
+                               readonly>
+                    </div>
+                </div>
+            </div>
+            <div class="row">
+                <div class="col-xs-6">
+                    <div class="form-group">
+                        <label>{{ 'Messages Ready' | translate }}</label>
+                        <input type="text" 
+                               class="form-control" 
+                               [class.flash]="statusUpdated.messages_ready" 
+                               [value]="externalNotificationsStatus.messages_ready || 0"
+                               readonly>
+                    </div>
+                </div>
+                <div class="col-xs-6">
+                    <div class="form-group">
+                        <label>{{ 'Messages Unacknowledged' | translate }}</label>
+                        <input type="text" 
+                               class="form-control" 
+                               [class.flash]="statusUpdated.messages_unacknowledged" 
+                               [value]="externalNotificationsStatus.messages_unacknowledged || 0"
+                               readonly>
+                    </div>
+                </div>
+            </div>
+        </form>
+    </section>
+</ng-container>
+
+<ng-template #apiInput>
+    <input *ngIf="showApiKey" type="text" class="form-control mono" [value]="apiKey" readonly>
+    <input *ngIf="!showApiKey" type="text" class="form-control mono" [value]="apiKey.substr(0, 4) + '•'.repeat(apiKey.length - 8) + apiKey.substr(apiKey.length - 4, 4)"
+        readonly>
+    <span *ngIf="!showApiKey" (click)="showApiKey = true" class="click">
+        <i class="fa fa-eye"></i> {{ 'show' | translate }}</span>    
+    <span *ngIf="showApiKey" (click)="showApiKey = false" class="click">
+        <i class="fa fa-eye-slash"></i> {{ 'hide' | translate }}</span> &nbsp;
+    <span (click)="handleCopyApiKey($event)" class="click">
+        <i class="fa fa-files-o"></i> 
+        <span *ngIf="copied" class="text-success">{{ 'copied' | translate }}!</span>
+        <span *ngIf="!copied">{{ 'copy' | translate }}</span>
+    </span>
+</ng-template>

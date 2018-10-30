@@ -1,68 +1,60 @@
 <div class="header-breadcrumbs">
-    <h1><i class="fa fa-user"></i><span mltag="txt_myaccount">My Account</span></h1>
+    <h1><i class="fa fa-user"></i>{{ 'My Account' | translate }}</h1>
 </div>
 
 <div class="wrapper wrapper-content">
     <clr-tabs>
         <clr-tab>
             <button clrTabLink clrTabLinkId="link1" [routerLink]="['/account/my-account/detail']">
-                <i class="fa fa-user"></i>
-                <span mltag="txt_userdetails">User details</span></button>
+                <i class="fa fa-user"></i>{{ 'User details' | translate }}</button>
             <clr-tab-content *clrIfActive="tabStates.detail">
                 <section class="form-block">
                     <form [formGroup]="userDetailsForm" (ngSubmit)="submitDetails(userDetailsForm.value)">
                         <div class="row">
                             <div class="col-sm-6 form-group">
-                                <label for="udDisplayName" class="control-label required-field" mltag="txt_displayname">Display
-                                    name</label>
-                                <input type="text" id="udDisplayName" [formControl]="displayName" size="45"
-                                       class="udDisplayName">
-                                <div *ngIf="displayName.hasError('required')" class="field-error"
-                                     mltag="txt_displaynamerequired">Field is required
-                                </div>
+                                <label for="udDisplayName" class="control-label required-field">{{ 'Display name' | translate }}</label>
+                                <input type="text" id="udDisplayName" 
+                                        [formControl]="displayName" 
+                                        size="45"
+                                        class="udDisplayName">
+                                <div *ngIf="displayName.hasError('required')" class="field-error">{{ 'Field is required' | translate }}</div>
                             </div>
                             <div class="col-sm-6 form-group"></div>
                         </div>
                         <div class="row">
                             <div class="form-group col-sm-6">
-                                <label for="udFirstName" class="control-label required-field" mltag="txt_firstname">First
-                                    name</label>
+                                <label for="udFirstName" class="control-label required-field">{{ 'First name' | translate }}</label>
                                 <input type="text" id="udFirstName" [formControl]="firstName" size="45">
-                                <div *ngIf="firstName.hasError('required')" class="field-error"
-                                     mltag="txt_firstnamerequired">Field is required
+                                <div *ngIf="firstName.hasError('required')" class="field-error">{{ 'Field is required' | translate }}
                                 </div>
                             </div>
                             <div class="form-group col-sm-6">
-                                <label for="udLastName" class="control-label required-field" mltag="txt_lastname">Last
-                                    name</label>
+                                <label for="udLastName" class="control-label required-field">{{ 'Last name' | translate}}</label>
                                 <input type="text" id="udLastName" [formControl]="lastName" size="45">
-                                <div *ngIf="lastName.hasError('required')" class="field-error"
-                                     mltag="txt_lastnamerequired">Field is required
+                                <div *ngIf="lastName.hasError('required')" class="field-error">{{ 'Field is required' | translate }}
                                 </div>
                             </div>
                         </div>
                         <div class="row">
                             <div class="form-group col-sm-6">
-                                <label for="udMobilePhone" class="control-label required-field" mltag="txt_mobilephone">Mobile
-                                    phone</label>
+                                <label for="udMobilePhone" class="control-label required-field">{{ 'Mobile phone' | translate }}</label>
                                 <input type="text" id="udMobilePhone" [formControl]="mobilePhone" size="45">
-                                <div *ngIf="mobilePhone.hasError('required')" class="field-error"
-                                     mltag="txt_mobilephonerequired">Field is required
-                                </div>
+                                <div *ngIf="mobilePhone.hasError('required')" class="field-error"> {{ 'Field is required' | translate }}</div>
                             </div>
                             <div class="form-group col-sm-6">
-                                <label for="udAddressPrefix" mltag="txt_addressprefix">Address prefix</label>
-                                <input type="text" id="udAddressPrefix" mltag="txt_apartmentorhouse"
-                                       placeholder="Apartment or house" [formControl]="addressPrefix" size="45">
-                            </div>
+                                <label for="udAddressPrefix"> {{ 'Address prefix' | translate }}</label>
+                                <input type="text" 
+                                        id="udAddressPrefix"                                        
+                                        placeholder="{{ 'Apartment or house' | translate }}"  
+                                        [formControl]="addressPrefix" 
+                                        size="45">
+                            </div>                            
                         </div>
                         <div class="row">
                             <div class="form-group col-sm-6">
-                                <label for="udAddress1" class="control-label required-field" mltag="txt_postaladdress">Postal
-                                    Address</label>
+                                <label for="udAddress1" class="control-label required-field">{{ 'Postal Address' | translate }}</label>
                                 <input type="text" id="udAddress1" [formControl]="address1" size="45">
-                                <div *ngIf="address1.hasError('required')" class="field-error"
-                                     mltag="txt_addressrequired">Field is required
+                                <div *ngIf="address1.hasError('required')" class="field-error">{{ 'Field is required' | translate }}
                                 </div>
                             </div>
                             <div class="form-group col-sm-6">
@@ -72,71 +64,66 @@
                         </div>
                         <div class="row">
                             <div class="form-group col-sm-6">
-                                <label for="udAddress3" class="control-label required-field" mltag="txt_cityortown">City
-                                    or Town</label>
+                                <label for="udAddress3" class="control-label required-field">
+                                    {{ 'City or Town' | translate }}</label>
                                 <input type="text" id="udAddress3" [formControl]="address3" size="45">
-                                <div *ngIf="address3.hasError('required')" class="field-error"
-                                     mltag="txt_cityortownrequired">Field is required
-                                </div>
+                                <div *ngIf="address3.hasError('required')" class="field-error">{{ 'Field is required' | translate }}</div>
                             </div>
                             <div class="form-group col-sm-6">
-                                <label for="udAddress4" mltag="txt_stateorarea">State or Area</label>
+                                <label for="udAddress4">{{ 'State or Area' | translate }}</label>
                                 <input type="text" id="udAddress4" [formControl]="address4" size="45">
                             </div>
                         </div>
                         <div class="row">
                             <div class="form-group col-sm-6">
-                                <label for="udPostalCode" class="control-label required-field" mltag="txt_postalcode">Postal
-                                    Code</label>
+                                <label for="udPostalCode" class="control-label required-field">{{ 'Postal
+                                    Code' | translate }}</label>
                                 <input type="text" id="udPostalCode" [formControl]="postalCode" size="45">
-                                <div *ngIf="postalCode.hasError('required')" class="field-error"
-                                     mltag="txt_postalcoderequired">Field is required
+                                <div *ngIf="postalCode.hasError('required')" class="field-error">{{ 'Field is required' | translate }}
                                 </div>
                             </div>
                             <div class="form-group col-sm-6">
-                                <label class="control-label required-field" for="country-select" mltag="txt_country">Country</label>
+                                <label class="control-label required-field" for="country-select">{{ 'Country' | translate }}</label>
                                 <div id="country">
-                                    <ng-select id="country-select" [items]="countries" [allowClear]="true"
-                                               mltag="txt_selectCountry"
-                                               placeholder="Select a country" [formControl]="country"></ng-select>
-                                    <div *ngIf="country.hasError('required')" class="field-error"
-                                         mltag="txt_countryrequired">Field is required
-                                    </div>
+                                    <ng-select id="country-select" 
+                                               [items]="countries" 
+                                               [allowClear]="true"
+                                               placeholder="{{ 'Select a country' | translate }}" 
+                                               [formControl]="country"></ng-select>
+                                    <div *ngIf="country.hasError('required')" class="field-error">{{ 'Field is required' | translate }}</div>
                                 </div>
                             </div>
                         </div>
                         <div class="row">
                             <div class="form-group col-sm-6">
-                                <label for="udMemorableQuestion" mltag="txt_memorablequestion">Memorable
-                                    question</label>
+                                <label for="udMemorableQuestion">{{ 'Memorable question' | translate }}</label>
                                 <input type="text" id="udMemorableQuestion" [formControl]="memorableQuestion"
                                        size="45">
                             </div>
                             <div class="col-sm-6 form-group">
-                                <label for="udMemorableAnswer" mltag="txt_memorableanswer">Memorable answer</label>
+                                <label for="udMemorableAnswer">{{ 'Memorable answer' | translate }}</label>
                                 <input type="text" id="udMemorableAnswer" [formControl]="memorableAnswer" size="45">
                             </div>
                         </div>
 
                         <div class="row">
                             <div class="form-group col-sm-6">
-                                <label for="udProfileText" mltag="txt_profiletext">Profile text</label>
+                                <label for="udProfileText">{{ 'Profile text' | translate }}</label>
                                 <textarea id="udProfileText" [formControl]="profileText" rows="5"
                                           style="width:95%"></textarea>
                             </div>
                             <div class="col-sm-6 form-group"></div>
                         </div>
                         <button id="udSubmit" type="submit" class="btn btn-primary" [disabled]="!userDetailsForm.valid">
-                            <i class="fa fa-save"></i> <span mltag="txt_update">Update</span></button>
-                        <button id="udReset" type="reset" class="btn btn-info" mltag="txt_reset">Reset</button>
+                            <i class="fa fa-save"></i> {{ 'Update' | translate }}</button>
+                        <button id="udReset" type="reset" class="btn btn-info">{{ 'Reset' | translate }}</button>
                     </form>
                 </section>
             </clr-tab-content>
         </clr-tab>
         <clr-tab>
             <button clrTabLink clrTabLinkId="link2" [routerLink]="['/account/my-account/password']">
-                <i class="fa fa-lock"></i>
-                <span mltag="txt_changepassword">Change password</span></button>
+                <i class="fa fa-lock"></i>{{ 'Change password' | translate }}</button>
             <clr-tab-content *clrIfActive="tabStates.password">
                 <section class="form-block">
                     <div class="row">
@@ -146,26 +133,24 @@
 
                                     <!-- Old password -->
                                     <div class="col-xs-11 no-gutter">
-                                        <label for="cpOldPassword" class="required-field" mltag="txt_currentpassword">Current
-                                            Password
-                                        </label>
+                                        <label for="cpOldPassword" class="required-field">{{ 'Current Password' | translate }}</label>
                                         <input [type]="(showPasswords === true) ? 'text' : 'password'"
                                                id="cpOldPassword"
                                                [formControl]="oldPassword"
                                                size="45"
-                                               placeholder="Enter your current password">
+                                               placeholder="{{ 'Enter your current password' | translate }}">
 
                                         <div *ngIf="oldPassword.hasError('required')" class="field-error">
-                                            {{'Field is required' | translate}}
+                                            {{ 'Field is required' | translate}}
                                         </div>
 
                                     </div>
                                     <div class="col-xs-1 no-gutter">
                                         <div class="show-hide" (click)="toggleShowPasswords()"
-                                             mltag="txt_showhidepassword"
-                                             title="Show/hide passwords"><i
-                                            [class]="(showPasswords === true) ? 'fa fa-eye' : 'fa fa-eye-slash'"
-                                            aria-hidden="true"></i></div>
+                                             title="{{ 'Show/hide passwords' | translate }}">
+                                             <i [class]="(showPasswords === true) ? 'fa fa-eye' : 'fa fa-eye-slash'"
+                                            aria-hidden="true"></i>
+                                        </div>
                                     </div>
                                 </div>
 
@@ -174,72 +159,71 @@
                                     <div class="col-xs-11 no-gutter">
                                         <label for="cpPassword" class="required-field">
                                             <app-password-tooltip *ngIf="appConfig.production"></app-password-tooltip>
-                                            {{'New Password' | translate}}
+                                            {{ 'New Password' | translate}}
                                         </label>
 
                                         <input [type]="(showPasswords === true) ? 'text' : 'password'"
                                                id="cpPassword"
                                                [formControl]="password"
                                                size="45"
-                                               placeholder="`Enter your new password"
+                                               placeholder="{{ 'Enter your new password' | translate }}"
                                                [class.error]="changePassForm.controls.passwordConfirm.hasError('mismatch')">
 
                                         <div *ngIf="password.hasError('oldNew')" class="field-error">
-                                            {{'Password is not new' | translate}}
+                                            {{ 'Password is not new' | translate}}
                                         </div>
 
                                         <div *ngIf="password.hasError('required')"
                                              class="field-error">
-                                            {{'Field is required' | translate}}
+                                            {{ 'Field is required' | translate}}
                                         </div>
 
                                         <div *ngIf="(password.hasError('rules') || password.hasError('length')) && !password.hasError('oldNew')" class="field-error">
-                                            {{'Password does not satisfy security criteria' | translate}}
+                                            {{ 'Password does not satisfy security criteria' | translate}}
                                         </div>
 
                                         <div *ngIf="changePassForm.controls.passwordConfirm.hasError('mismatch') && !password.hasError('rules') && !password.hasError('length') && !password.hasError('oldNew')"
-                                             class="field-error force-display-error" mltag="txt_passwordsdonotmatch">Passwords do not match
+                                             class="field-error force-display-error">
+                                             {{ 'Passwords do not match' | translate }}
                                         </div>
 
                                     </div>
                                     <div class="col-xs-1 no-gutter">
                                         <div class="show-hide"
-                                             (click)="toggleShowPasswords()" mltag="txt_showhidepassword"
-                                             title="Show/hide passwords"><i
-                                            [class]="(showPasswords === true) ? 'fa fa-eye' : 'fa fa-eye-slash'"
-                                            aria-hidden="true"></i></div>
+                                             (click)="toggleShowPasswords()"
+                                             title="{{ 'Show/hide passwords' | translate }}"><i
+                                             [class]="(showPasswords === true) ? 'fa fa-eye' : 'fa fa-eye-slash'"
+                                             aria-hidden="true"></i></div>
                                     </div>
                                 </div>
 
                                 <!-- New password confirm -->
                                 <div class="form-group">
                                     <div class="col-xs-11 no-gutter">
-                                        <label for="cpPasswordConfirm" class="required-field"
-                                               mltag="txt_passwordconfirm">Confirm Password
-                                        </label>
+                                        <label for="cpPasswordConfirm" class="required-field">{{ 'Confirm Password' | translate }}</label>
                                         <input [type]="(showPasswords === true) ? 'text' : 'password'"
                                                id="cpPasswordConfirm"
                                                [formControl]="passwordConfirm" size="45"
-                                               placeholder="`Enter your new password">
+                                               placeholder="{{ 'Enter your new password' | translate }}">
 
                                         <div *ngIf="passwordConfirm.hasError('required')" class="field-error">
-                                            {{'Field is required' | translate}}
+                                            {{ 'Field is required' | translate}}
                                         </div>
 
-                                        <div *ngIf="passwordConfirm.hasError('mismatch')" class="field-error" mltag="txt_passwordsdonotmatch">Passwords do not match
+                                        <div *ngIf="passwordConfirm.hasError('mismatch')" class="field-error">{{ 'Passwords do not match' | translate }}
                                         </div>
 
                                     </div>
                                     <div class="col-xs-1 no-gutter">
                                         <div class="show-hide"
-                                             (click)="toggleShowPasswords()" mltag="txt_showhidepassword"
-                                             title="Show/hide passwords"><i
-                                            [class]="(showPasswords === true) ? 'fa fa-eye' : 'fa fa-eye-slash'"
-                                            aria-hidden="true"></i></div>
+                                             (click)="toggleShowPasswords()"
+                                             title="{{ 'Show/hide passwords' | translate }}"><i
+                                             [class]="(showPasswords === true) ? 'fa fa-eye' : 'fa fa-eye-slash'"
+                                             aria-hidden="true"></i></div>
                                     </div>
                                 </div>
                                 <button id="pwSubmit" type="submit" class="btn btn-primary" [disabled]="!changePassForm.valid">
-                                    <i class="fa fa-save"></i> <span mltag="txt_update">Update</span></button>
+                                    <i class="fa fa-save"></i> {{ 'Update' | translate }}</button>
                             </form>
                         </div>
                         <div class="form-group col-sm-6"></div>
@@ -249,8 +233,7 @@
         </clr-tab>
         <clr-tab>
             <button clrTabLink clrTabLinkId="link3">
-                <i class="fa fa-lock"></i>
-                <span mltag="txt_tfa">Two-Factor Authentication</span>
+                <i class="fa fa-lock"></i> {{ 'Two-Factor Authentication' | translate }}
             </button>
             <clr-tab-content *clrIfActive="tabStates.tfa">
                 <app-enroll></app-enroll>
@@ -258,20 +241,20 @@
         </clr-tab>
         <clr-tab>
             <button clrTabLink clrTabLinkId="link4">
-                <i class="fa fa-terminal"></i>
-                <span mltag="txt_api">API</span></button>
+                <i class="fa fa-terminal"></i> {{ 'API' | translate }}</button>
             <clr-tab-content *clrIfActive="tabStates.api">
                 <form class="form-vertical">
                     <div class="row">
                         <div class="col-xs-6">
                             <div class="form-group">
-                                <label>User ID</label>
+                                <label>{{ 'User ID' | translate }}
+                                </label>
                                 <input type="text" class="form-control" [value]="userId" readonly>
                             </div>
                         </div>
                         <div class="col-xs-6">
                             <div class="form-group">
-                                <label>Wallet ID</label>
+                                <label>{{ 'Wallet ID' | translate }}</label>
                                 <input type="text" class="form-control" [value]="connectedWalletId" readonly>
                             </div>
                         </div>
@@ -279,14 +262,14 @@
                     <div class="row">
                         <div class="col-xs-6">
                             <div class="form-group">
-                                <label>API Key</label>
+                                <label>{{ 'API Key' | translate }}</label>
                                 <div class="alert alert-warning api-alert" *ngIf="!apiKey; else apiInput">
                                     <div class="alert-items">
                                         <div class="alert-item static">
                                             <div class="alert-icon-wrapper">
                                                 <clr-icon class="alert-icon" shape="exclamation-triangle"></clr-icon>
                                             </div>
-                                            <span class="alert-text">There is no API key available for this user</span>
+                                            <span class="alert-text">{{ 'There is no API key available for this user' | translate}}</span>
                                         </div>
                                     </div>
                                 </div>
@@ -298,110 +281,11 @@
         </clr-tab>
         <clr-tab>
             <button clrTabLink clrTabLinkId="link4">
-                <i class="fa fa-commenting"></i>
-                <span mltag="txt_tfa">External Notifications</span>
+                <i class="fa fa-commenting"></i> {{ 'External Notifications' | translate }}
             </button>
             <clr-tab-content *clrIfActive="tabStates.externalNotifications">
-                <!-- External Notifications Enable/Disable Form-->
-                <section class="form-block">
-                    <div class="row">
-                        <div class="form-group col-sm-12">
-                            <form>
-                                <div *ngIf="!externalNotificationsEnabled">
-                                    <p>External Notifications are <strong>disabled</strong>.</p>
-                                    <div class="row">
-                                        <button id="exNotiEnable" class="btn btn-primary" (click)="setExternalNotifications(true)">
-                                            <i class="fa fa-save"></i> <span mltag="txt_enable">Enable</span>
-                                        </button>
-                                    </div>
-                                </div>
-
-                                <div *ngIf="externalNotificationsEnabled">
-                                    <p>External Notifications are <strong>enabled</strong>.</p>
-                                    <div class="row">
-                                        <button id="exNotiDisable" class="btn btn-primary" (click)="setExternalNotifications(false)">
-                                            <i class="fa fa-save"></i> <span mltag="txt_disable">Disable</span>
-                                        </button>
-
-                                        <button id="sendTestMessage" class="btn btn-outline" (click)="sendTestMessage()">
-                                            <i class="fa fa-envelope-o"></i>Send Test Message
-                                        </button>
-
-                                        <button id="truncateQueue" class="btn btn-danger-outline" (click)="truncateQueue()">
-                                            <i class="fa fa-trash-o"></i>Delete All Messages
-                                        </button>
-                                    </div>
-                                </div>
-                            </form>
-                        </div>
-                    </div>
-                </section>
-
-                <ng-container *ngIf="externalNotificationsEnabled">
-                    <!-- External Notifications Status Info -->
-                    <div class="hr-line-dashed"></div>
-                    <section class="form-block">
-                        <form class="form-vertical">
-                            <div class="row">
-                                <div class="col-xs-6">
-                                    <div class="form-group">
-                                        <label>Username</label>
-                                        <input type="text" class="form-control" [value]="'opencsd_' + userId" readonly>
-                                    </div>
-                                </div>
-                                <div class="col-xs-6">
-                                    <div class="form-group">
-                                        <label>Password</label>
-                                        <ng-container *ngTemplateOutlet="apiInput"></ng-container>
-                                    </div>
-                                </div>
-                            </div>
-                            <div class="row">
-                                <div class="col-xs-6">
-                                    <div class="form-group">
-                                        <label>Endpoint URL</label>
-                                        <input type="text" class="form-control" [value]="rabbitMQEndpoint" readonly>
-                                    </div>
-                                </div>
-                                <div class="col-xs-6">
-                                    <div class="form-group">
-                                        <label>Queue Name</label>
-                                        <input type="text" class="form-control" [value]="externalNotificationsStatus.name" readonly>
-                                    </div>
-                                </div>
-                            </div>
-                            <div class="row">
-                                <div class="col-xs-6">
-                                    <div class="form-group">
-                                        <label>State</label>
-                                        <input type="text" class="form-control" [class.flash]="statusUpdated.state" [value]="externalNotificationsStatus.state || 'pending'" readonly>
-                                    </div>
-                                </div>
-                                <div class="col-xs-6">
-                                    <div class="form-group">
-                                        <label>Consumers</label>
-                                        <input type="text" class="form-control" [class.flash]="statusUpdated.consumers" [value]="externalNotificationsStatus.consumers || 0" readonly>
-                                    </div>
-                                </div>
-                            </div>
-                            <div class="row">
-                                <div class="col-xs-6">
-                                    <div class="form-group">
-                                        <label>Messages Ready</label>
-                                        <input type="text" class="form-control" [class.flash]="statusUpdated.messages_ready" [value]="externalNotificationsStatus.messages_ready || 0" readonly>
-                                    </div>
-                                </div>
-                                <div class="col-xs-6">
-                                    <div class="form-group">
-                                        <label>Messages Unacknowledged</label>
-                                        <input type="text" class="form-control" [class.flash]="statusUpdated.messages_unacknowledged" [value]="externalNotificationsStatus.messages_unacknowledged || 0" readonly>
-                                    </div>
-                                </div>
-                            </div>
-                        </form>
-                    </section>
-                </ng-container>
-            </clr-tab-content>
+                <app-external-notifications [userId]="userId" [apiKey]="apiKey"></app-external-notifications>
+            </clr-tab-content>            
         </clr-tab>
     </clr-tabs>
 
@@ -414,12 +298,12 @@
            [value]="apiKey.substr(0, 4) + '•'.repeat(apiKey.length - 8) + apiKey.substr(apiKey.length - 4, 4)"
            readonly>
     <span *ngIf="!showApiKey" (click)="showApiKey = true" class="click"><i
-        class="fa fa-eye"></i> show</span>
+        class="fa fa-eye"></i> {{ 'show' | translate }}</span>
     <span *ngIf="showApiKey" (click)="showApiKey = false" class="click"><i
-        class="fa fa-eye-slash"></i> hide</span>
+        class="fa fa-eye-slash"></i> {{ 'hide' | translate }}</span>
     &nbsp;
     <span (click)="handleCopyApiKey($event)" class="click"><i
         class="fa fa-files-o"></i> <span *ngIf="copied"
-                                         class="text-success">copied!</span><span
-        *ngIf="!copied">copy</span></span>
+                                         class="text-success">{{ 'copied' | translate }}!</span><span
+        *ngIf="!copied">{{ 'copy' | translate }}</span></span>
 </ng-template>
