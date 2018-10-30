@@ -37,6 +37,12 @@ export {
     SET_LANGUAGE,
     SET_SITE_MENU,
     SET_FORCE_TWO_FACTOR,
+
+    PermissionsState,
+    permissionsReducer,
+    SET_PERMISSIONS_LIST,
+    SET_PERMISSIONS_REQUESTED,
+    RESET_PERMISSIONS_REQUESTED,
 } from './user';
 
 export {

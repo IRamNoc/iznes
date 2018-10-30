@@ -4,7 +4,7 @@ import {
 } from 'redux';
 
 import {name} from './__init__';
-import {Common, SagaHelper} from '@setl/utils';
+import * as Common from '@setl/utils/common';
 import {AsyncTaskResponseAction} from '@setl/utils/sagaHelper/actions';
 
 /**
