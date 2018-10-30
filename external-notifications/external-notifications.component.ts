@@ -4,7 +4,6 @@ import { NgRedux } from '@angular-redux/store';
 import { AlertsService } from '@setl/jaspero-ng2-alerts';
 import { MyUserService } from '@setl/core-req-services';
 import { MemberSocketService } from '@setl/websocket-service';
-import { MultilingualService } from '@setl/multilingual';
 import * as _ from 'lodash';
 
 @Component({
@@ -35,8 +34,7 @@ export class ExternalNotificationsComponent implements OnInit, OnDestroy {
         private ngRedux: NgRedux<any>,
         private memberSocketService: MemberSocketService,
         private myUserService: MyUserService,
-        private confirmationService: ConfirmationService,
-        private multilingualService: MultilingualService) {
+        private confirmationService: ConfirmationService) {
     }
 
     ngOnInit() {

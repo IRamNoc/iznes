@@ -341,8 +341,8 @@ export class SetlMyAccountComponent implements OnDestroy, OnInit {
                 private changeDetectorRef: ChangeDetectorRef,
                 private myUserService: MyUserService,
                 private confirmationService: ConfirmationService,
-                @Inject(APP_CONFIG) appConfig: AppConfig,
-    ) {
+                @Inject(APP_CONFIG) appConfig: AppConfig) {
+
         this.appConfig = appConfig;
         ngRedux.subscribe(() => this.updateState());
 
