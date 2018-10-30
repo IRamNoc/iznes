@@ -279,7 +279,7 @@
                 </form>
             </clr-tab-content>
         </clr-tab>
-        <clr-tab>
+        <clr-tab *ngIf="externalNotificationsAvailable">
             <button clrTabLink clrTabLinkId="link4">
                 <i class="fa fa-commenting"></i> {{ 'External Notifications' | translate }}
             </button>

@@ -315,6 +315,8 @@ export class SetlMyAccountComponent implements OnDestroy, OnInit {
     apiKey: string;
     copied = false;
 
+    externalNotificationsAvailable: boolean = false;
+
     oldPassword: AbstractControl;
     password: AbstractControl;
     passwordConfirm: AbstractControl;
@@ -427,6 +429,8 @@ export class SetlMyAccountComponent implements OnDestroy, OnInit {
     }
 
     ngOnInit() {
+        this.getExternalNotificationsAvailable();
+
         this.tabStates = {
             detail: true,
             password: false,
@@ -491,6 +495,32 @@ export class SetlMyAccountComponent implements OnDestroy, OnInit {
         this.tabStates = immutableHelper.map(this.tabStates, (value, key) => {
             return key === tabId;
         });
+    }
+
+    /**
+     * Checks if RabbitMQ is available for this system
+     *
+     * @return {object} status
+     */
+    getExternalNotificationsAvailable(): any {
+        const asyncTaskPipe = this.myUserService.statusNotifications();
+
+        this.ngRedux.dispatch(SagaHelper.runAsync(
+            [],
+            [],
+            asyncTaskPipe,
+            {},
+            (response) => {
+                const responseData = _.get(response, '[1].Data', {});
+                if (responseData.Status === 'OK') this.externalNotificationsAvailable = true;
+                this.changeDetectorRef.detectChanges();
+            },
+            (response) => {
+                const responseData = _.get(response, '[1].Data.message.code', 0);
+                if (responseData === 503) this.externalNotificationsAvailable = false;
+                this.changeDetectorRef.detectChanges();
+            },
+        ));
     }
 
     getLanguage(requested): void {
