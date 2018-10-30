@@ -8,7 +8,7 @@ import * as moment from 'moment';
 import * as _ from 'lodash';
 
 import * as model from '../OfiNav';
-import { OfiManageNavPopupService } from '../ofi-manage-nav-popup/service';
+import { OfiManageNavPopupService, ManageNavCloseEvent } from '../ofi-manage-nav-popup/service';
 
 import { OfiNavService } from '../../ofi-req-services/ofi-product/nav/service';
 import {
@@ -158,7 +158,8 @@ export class OfiNavFundsList implements OnInit, OnDestroy {
     isAddNavDisabled(share: model.NavInfoModel): boolean {
         if(share.status as any == 3) return false;
 
-        return !this.isNavNull(share.nav);
+        return share.status as any == -1;
+        // return !this.isNavNull(share.nav);
     }
 
     addNav(share: model.NavInfoModel): void {
@@ -175,7 +176,7 @@ export class OfiNavFundsList implements OnInit, OnDestroy {
 
         this.confirmationService.create(this.cancelNavTitle, this.cancelNavMessage)
             .subscribe((resolved) => {
-                if(resolved) {
+                if(resolved.resolved) {
                     OfiNavService.defaultCancelNav(
                         this.ofiNavService,
                         this.redux,
@@ -190,10 +191,6 @@ export class OfiNavFundsList implements OnInit, OnDestroy {
             });
     }
 
-    resetNavStatus(share: model.NavInfoModel): void {
-        console.log('WiP');
-    }
-
     private onCancelNavSuccess(res): void {
         if((res[1]) && res[1].Data[0]) {
             console.log(res);
@@ -206,6 +203,10 @@ export class OfiNavFundsList implements OnInit, OnDestroy {
 
     private onCancelNavError(): void {
         this.alertService.create('error', this.cancelNavErrorMessage);
+    }
+
+    modifyNav(share: model.NavInfoModel): void {
+        this.popupService.open(share, model.NavPopupMode.EDIT);
     }
 
     navigateToShare(shareId: number): void {
