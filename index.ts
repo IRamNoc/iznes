@@ -27,6 +27,7 @@ export { SetlServicesModule } from './services';
 export { LogService } from './services/log/service';
 export { LogServiceMock } from './services/log/service-mock';
 export { MemberNodeService } from './services/membernode.service';
+export { PermissionsService } from './services/permissions';
 
 export {
     walletHelper,
