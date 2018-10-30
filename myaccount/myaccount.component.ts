@@ -518,6 +518,7 @@ export class SetlMyAccountComponent implements OnDestroy, OnInit {
             (response) => {
                 const responseData = _.get(response, '[1].Data.message.code', 0);
                 if (responseData === 503) this.externalNotificationsAvailable = false;
+                if (responseData === 404) this.externalNotificationsAvailable = true;
                 this.changeDetectorRef.detectChanges();
             },
         ));
