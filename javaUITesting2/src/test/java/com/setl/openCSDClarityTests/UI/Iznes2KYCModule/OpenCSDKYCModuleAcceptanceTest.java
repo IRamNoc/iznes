@@ -745,15 +745,23 @@ public class OpenCSDKYCModuleAcceptanceTest {
     }
 
     private void companyDetails(String companyName, String phoneNumber) {
+        /*
+        Generic method to fill in the info post login page when the investor first logs in
+         */
 
     }
 
     private void investorAccountCreation(String investorEmail, String pwd) {
+        /*
+        Here we need to assert the email that is in read only is correct and that a password is entered 2x (asdASD123)
+         */
 
     }
 
     private void selectInviteInvestor() {
-
+        /*
+        Simple select the investor invite button on the client referential page and assert some data for the page
+         */
     }
 
     @Test
@@ -801,8 +809,14 @@ public class OpenCSDKYCModuleAcceptanceTest {
         }
     }
     private void assertKYCCancelPageRedirect(String pageTitle) {
+        /*
+        when the KYC has been cancelled the user should be redirected correctly to the my requests page
+         */
     }
     private void selectCancelOnKYC() {
+        /*
+        assert the cancel KYC button is available then select cancel
+         */
     }
     @Test
     //TODO Sprint 14
@@ -833,6 +847,7 @@ public class OpenCSDKYCModuleAcceptanceTest {
     }
 
     private void assertKYCStatus(String statusKYC) {
+
     }
 
     private void startKYCOnlyStep1() {
