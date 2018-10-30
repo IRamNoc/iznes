@@ -6,13 +6,13 @@
     <clr-tabs>
         <clr-tab>
             <button clrTabLink clrTabLinkId="link1" [routerLink]="['/account/my-account/detail']">
-                <i class="fa fa-user"></i>{{ 'User details' | translate }}</button>
+                <i class="fa fa-user"></i>{{ 'User Details' | translate }}</button>
             <clr-tab-content *clrIfActive="tabStates.detail">
                 <section class="form-block">
                     <form [formGroup]="userDetailsForm" (ngSubmit)="submitDetails(userDetailsForm.value)">
                         <div class="row">
                             <div class="col-sm-6 form-group">
-                                <label for="udDisplayName" class="control-label required-field">{{ 'Display name' | translate }}</label>
+                                <label for="udDisplayName" class="control-label required-field">{{ 'Display Name' | translate }}</label>
                                 <input type="text" id="udDisplayName" 
                                         [formControl]="displayName" 
                                         size="45"
@@ -23,13 +23,13 @@
                         </div>
                         <div class="row">
                             <div class="form-group col-sm-6">
-                                <label for="udFirstName" class="control-label required-field">{{ 'First name' | translate }}</label>
+                                <label for="udFirstName" class="control-label required-field">{{ 'First Name' | translate }}</label>
                                 <input type="text" id="udFirstName" [formControl]="firstName" size="45">
                                 <div *ngIf="firstName.hasError('required')" class="field-error">{{ 'Field is required' | translate }}
                                 </div>
                             </div>
                             <div class="form-group col-sm-6">
-                                <label for="udLastName" class="control-label required-field">{{ 'Last name' | translate}}</label>
+                                <label for="udLastName" class="control-label required-field">{{ 'Last Name' | translate}}</label>
                                 <input type="text" id="udLastName" [formControl]="lastName" size="45">
                                 <div *ngIf="lastName.hasError('required')" class="field-error">{{ 'Field is required' | translate }}
                                 </div>
@@ -37,12 +37,12 @@
                         </div>
                         <div class="row">
                             <div class="form-group col-sm-6">
-                                <label for="udMobilePhone" class="control-label required-field">{{ 'Mobile phone' | translate }}</label>
+                                <label for="udMobilePhone" class="control-label required-field">{{ 'Mobile Phone' | translate }}</label>
                                 <input type="text" id="udMobilePhone" [formControl]="mobilePhone" size="45">
                                 <div *ngIf="mobilePhone.hasError('required')" class="field-error"> {{ 'Field is required' | translate }}</div>
                             </div>
                             <div class="form-group col-sm-6">
-                                <label for="udAddressPrefix"> {{ 'Address prefix' | translate }}</label>
+                                <label for="udAddressPrefix"> {{ 'Address Prefix' | translate }}</label>
                                 <input type="text" 
                                         id="udAddressPrefix"                                        
                                         placeholder="{{ 'Apartment or house' | translate }}"  
@@ -96,26 +96,26 @@
                         </div>
                         <div class="row">
                             <div class="form-group col-sm-6">
-                                <label for="udMemorableQuestion">{{ 'Memorable question' | translate }}</label>
+                                <label for="udMemorableQuestion">{{ 'Memorable Question' | translate }}</label>
                                 <input type="text" id="udMemorableQuestion" [formControl]="memorableQuestion"
                                        size="45">
                             </div>
                             <div class="col-sm-6 form-group">
-                                <label for="udMemorableAnswer">{{ 'Memorable answer' | translate }}</label>
+                                <label for="udMemorableAnswer">{{ 'Memorable Answer' | translate }}</label>
                                 <input type="text" id="udMemorableAnswer" [formControl]="memorableAnswer" size="45">
                             </div>
                         </div>
 
                         <div class="row">
                             <div class="form-group col-sm-6">
-                                <label for="udProfileText">{{ 'Profile text' | translate }}</label>
+                                <label for="udProfileText">{{ 'Profile Text' | translate }}</label>
                                 <textarea id="udProfileText" [formControl]="profileText" rows="5"
                                           style="width:95%"></textarea>
                             </div>
                             <div class="col-sm-6 form-group"></div>
                         </div>
                         <button id="udSubmit" type="submit" class="btn btn-primary" [disabled]="!userDetailsForm.valid">
-                            <i class="fa fa-save"></i> {{ 'Update' | translate }}</button>
+                            <i class="fa fa-save"></i> {{ 'Save' | translate }}</button>
                         <button id="udReset" type="reset" class="btn btn-info">{{ 'Reset' | translate }}</button>
                     </form>
                 </section>
@@ -123,7 +123,7 @@
         </clr-tab>
         <clr-tab>
             <button clrTabLink clrTabLinkId="link2" [routerLink]="['/account/my-account/password']">
-                <i class="fa fa-lock"></i>{{ 'Change password' | translate }}</button>
+                <i class="fa fa-lock"></i>{{ 'Change Password' | translate }}</button>
             <clr-tab-content *clrIfActive="tabStates.password">
                 <section class="form-block">
                     <div class="row">
@@ -223,7 +223,7 @@
                                     </div>
                                 </div>
                                 <button id="pwSubmit" type="submit" class="btn btn-primary" [disabled]="!changePassForm.valid">
-                                    <i class="fa fa-save"></i> {{ 'Update' | translate }}</button>
+                                    <i class="fa fa-save"></i> {{ 'Save' | translate }}</button>
                             </form>
                         </div>
                         <div class="form-group col-sm-6"></div>
