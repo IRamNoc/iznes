@@ -1,10 +1,11 @@
 import { Component, Input, OnInit, ChangeDetectorRef, OnDestroy } from '@angular/core';
 import { ConfirmationService, SagaHelper } from '@setl/utils';
-import { NgRedux } from '@angular-redux/store';
+import { NgRedux, select } from '@angular-redux/store';
 import { AlertsService } from '@setl/jaspero-ng2-alerts';
 import { MyUserService } from '@setl/core-req-services';
 import { MemberSocketService } from '@setl/websocket-service';
 import * as _ from 'lodash';
+import { Subscription } from 'rxjs/Subscription';
 
 @Component({
     selector: 'app-external-notifications',
@@ -12,8 +13,8 @@ import * as _ from 'lodash';
     styleUrls: ['./external-notifications.component.scss'],
 })
 export class ExternalNotificationsComponent implements OnInit, OnDestroy {
-    @Input() userId: number;
-    @Input() apiKey: string;
+    userId: number;
+    apiKey: string;
 
     copied = false;
     externalNotificationsStatus: {} = {};
@@ -28,6 +29,12 @@ export class ExternalNotificationsComponent implements OnInit, OnDestroy {
 
     rabbitMQEndpoint = `${window.location.protocol}//${window.location.hostname}:5672`;
 
+    @select(['user', 'myDetail']) getUserDetails$;
+    @select(['user', 'authentication']) authentication$;
+
+    // List of observable subscription
+    subscriptionsArray: Subscription[] = [];
+
     constructor(
         private changeDetectorRef: ChangeDetectorRef,
         private alertsService: AlertsService,
@@ -39,6 +46,14 @@ export class ExternalNotificationsComponent implements OnInit, OnDestroy {
 
     ngOnInit() {
         this.getExternalNotificationsStatus();
+
+        this.subscriptionsArray.push(this.getUserDetails$.subscribe((details) => {
+            this.userId = details.userId;
+        }));
+
+        this.subscriptionsArray.push(this.authentication$.subscribe((auth) => {
+            this.apiKey = auth.apiKey;
+        }));
     }
 
     handleCopyApiKey(event) {
@@ -222,6 +237,11 @@ export class ExternalNotificationsComponent implements OnInit, OnDestroy {
 
     ngOnDestroy() {
         clearInterval(this.statusInterval);
+
+        for (const subscription of this.subscriptionsArray) {
+            subscription.unsubscribe();
+        }
+
         this.changeDetectorRef.detach();
     }
 }
