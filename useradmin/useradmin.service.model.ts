@@ -350,3 +350,8 @@ export interface UpdateUserAccountWalletPermissions extends MemberNodeMessageBod
 export interface RequestUserTypes extends MemberNodeMessageBody {
     token: string;
 }
+
+export interface GetUserAdminPermissionsBody extends MemberNodeMessageBody {
+    userId: number;
+    permissionName: string;
+}
