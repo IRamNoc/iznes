@@ -26,6 +26,7 @@ import {
 
     /* My details. */
     SET_USER_DETAILS,
+    UPDATE_TWO_FACTOR,
 
     /* Manage members. */
     SET_MANAGE_MEMBER_LIST,
@@ -132,6 +133,15 @@ export class ChannelService {
 
             this.checkIfPasswordChanged();
 
+            break;
+
+        case 'updatetwofactor':
+            this.ngRedux.dispatch(
+                {
+                    type: UPDATE_TWO_FACTOR,
+                    payload: [null, data, null],
+                },
+            );
             break;
 
         case 'ng': // new group

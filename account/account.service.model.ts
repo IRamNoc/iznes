@@ -1,4 +1,4 @@
-import {MemberNodeMessageBody} from '@setl/utils/common';
+import { MemberNodeMessageBody } from '@setl/utils/common';
 
 export interface RequestAccountListMessageBody extends MemberNodeMessageBody {
     token: string;
@@ -23,4 +23,3 @@ export interface DeleteAccountMessageBody extends MemberNodeMessageBody {
     token: string;
     accountId: number;
 }
-
