@@ -27,6 +27,8 @@ import {
     GetMyKycListRequestBody,
     createKYCDraftMessageBody,
     createKYCDraftRequestData,
+    DeleteKycRequestData,
+    DeleteKycRequestMessageBody,
     GetClientReferentialMessageBody,
     AuditSearchRequestBody,
     AuditSearchRequestData
@@ -135,7 +137,7 @@ export class OfiKycService {
 
         this.validConnectedWallet$ = this.connectedWallet$
         .pipe(
-           filter(( walletId: number ) => (walletId !== 0 && !!walletId)),
+            filter((walletId: number) => (walletId !== 0 && !!walletId)),
         )
         .takeUntil(this.unSubscribe);
     }
@@ -353,8 +355,7 @@ export class OfiKycService {
 
         const messageBody: UseTokenRequestBody = {
             RequestName: 'izneskycusetoken',
-            token: this.memberSocketService.token,
-            invitationToken: invitationToken,
+            invitationToken,
         };
 
         return createMemberNodeRequest(this.memberSocketService, messageBody);
@@ -717,6 +718,18 @@ export class OfiKycService {
             investorWalletID: _.get(requestData, 'investorWalletID', ''),
             kycStatus: _.get(requestData, 'kycStatus', ''),
             alreadyCompleted: _.get(requestData, 'alreadyCompleted', '')
+        };
+
+        return createMemberNodeRequest(this.memberSocketService, messageBody);
+
+    }
+
+    deleteKycRequest(requestData: DeleteKycRequestData) {
+
+        const messageBody: DeleteKycRequestMessageBody = {
+            RequestName: 'izndeletekycrequest',
+            token: this.memberSocketService.token,
+            kycID: _.get(requestData, 'kycID'),
         };
 
         return createMemberNodeRequest(this.memberSocketService, messageBody);

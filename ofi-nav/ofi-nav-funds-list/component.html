@@ -135,10 +135,15 @@
                                 [disabled]="isAddNavDisabled(item)">
                                 <i class="fa fa-plus"></i> {{'Add' | translate}}
                             </button>
+                            <button id="{{'Btn-ModifyNAV-'+idx}}" class="btn btn-info btn-sm"
+                                (click)="modifyNav(item)"
+                                [disabled]="item.status != -1">
+                                <i class="fa fa-edit"></i> {{'Edit' | translate}}
+                            </button>
                             <button id="{{'Btn-CancelNAV-'+idx}}" class="btn btn-danger btn-sm"
                                 (click)="cancelNav(item)"
                                 [disabled]="item.status != -1">
-                                {{'Cancel' | translate}}
+                                <i class="fa fa-close"></i> {{'Cancel' | translate}}
                             </button>
                         </div>
                     </clr-dg-cell>

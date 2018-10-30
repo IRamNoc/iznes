@@ -110,11 +110,11 @@ export class OfiManageNavPopup implements OnInit {
     }
 
     set isOpen(bool: boolean) {
-        if (!bool) this.popupService.close();
+        if (!bool) this.popupService.close(false);
     }
 
     close(): void {
-        this.popupService.close();
+        this.popupService.close(false);
     }
 
     isAddMode(): boolean {
@@ -218,7 +218,7 @@ export class OfiManageNavPopup implements OnInit {
      * @param requested boolean
      * @return void
      */
-    private updateNav(): void {
+    updateNav(): void {
         if (!this.share) return;
 
         const requestData = {
@@ -239,7 +239,7 @@ export class OfiManageNavPopup implements OnInit {
     private updateNavSuccessCallback(res: any): void {
         this.redux.dispatch(clearRequestedNavFundView());
 
-        this.popupService.close();
+        this.popupService.close(true);
 
         this.showUpdateResponseModal(res[1].Data[0]);
     }
@@ -254,7 +254,7 @@ export class OfiManageNavPopup implements OnInit {
      * @param requested boolean
      * @return void
      */
-    private deleteNav(): void {
+    deleteNav(): void {
         if (!this.share) return;
 
         const requestData = {
@@ -271,7 +271,7 @@ export class OfiManageNavPopup implements OnInit {
     }
 
     private deleteNavSuccessCallback(res: any): void {
-        this.popupService.close();
+        this.popupService.close(false);
 
         this.showDeleteResponseModal(res[1]);
     }
@@ -355,7 +355,7 @@ export class OfiManageNavPopup implements OnInit {
 
     private showErrorModal(data): void {
         const result = data[1].Data[0].Message;
-        const errorMessage = result && result.length === 1
+        const errorMessage = result && result.length > 0
             ? result
             : this._translate.translate('Please ensure that all inputs are in the right format');
 

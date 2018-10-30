@@ -30,6 +30,9 @@
                 <button id="draft_toComplete_btn_{{i}}" class="btn btn-orange btn-sm" (click)="redirectToRelatedKycs(kyc.kycID)">
                     {{'To complete' | translate}}
                 </button>
+                <button id="draft_delete_btn_{{i}}" class="btn btn-sm" (click)="confirmDeletion(kyc.kycID)">
+                    {{'Delete' | translate}}
+                </button>
             </div>
         </clr-dg-cell>
     </clr-dg-row>

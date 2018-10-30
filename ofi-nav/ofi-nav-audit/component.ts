@@ -163,16 +163,20 @@ export class OfiNavAuditComponent implements OnInit, OnDestroy {
         this.router.navigateByUrl(`product-module/net-asset-value/fund-view`);
     }
 
+    isLogTypeCancel(item: NavAuditDetail): boolean {
+        return item.logType === 'Update' && item.navStatus === 3;
+    }
+
     isLogTypeInsert(item: NavAuditDetail): boolean {
-        return item.logType === 'Insert';
+        return item.logType === 'Insert' && item.navStatus !== 3;
     }
 
     isLogTypeUpdate(item: NavAuditDetail): boolean {
-        return item.logType === 'Update';
+        return item.logType === 'Update' && item.navStatus !== 3;
     }
 
     isLogTypeRemove(item: NavAuditDetail): boolean {
-        return item.logType === 'Delete';
+        return item.logType === 'Delete' && item.navStatus !== 3;
     }
 
     ngOnDestroy() {

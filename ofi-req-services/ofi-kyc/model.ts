@@ -24,8 +24,7 @@ export interface SendInvestInvitationRequestBody extends MemberNodeMessageBody {
 }
 
 export interface UseTokenRequestBody extends MemberNodeMessageBody {
-    token: string,
-    invitationToken: string
+    invitationToken: string;
 }
 
 export interface VerifyInvitationTokenRequestBody extends MemberNodeMessageBody {
@@ -179,6 +178,15 @@ export interface createKYCDraftMessageBody extends MemberNodeMessageBody {
     managementCompanyID: number;
     investorWalletID: number;
     kycStatus: number;
+}
+
+export interface DeleteKycRequestData{
+    kycID: number;
+}
+
+export interface DeleteKycRequestMessageBody extends MemberNodeMessageBody{
+    token: string;
+    kycID: number;
 }
 
 export interface SaveFundAccessRequestData {
