@@ -349,7 +349,12 @@ public class OpenCSDGeneralAcceptanceTest {
 
         try {
             String success = driver.findElement(By.className("jaspero__dialog-title")).getText();
-            assertTrue(success.equals(expectedResult));
+            assertTrue("Popup text, expected: " + expectedResult + " but was: " + success, success.equals(expectedResult));
+
+            //click the close button
+            driver.findElement(By.xpath("//*[@id=\"iznes\"]/app-root/jaspero-alerts/jaspero-alert/div[2]/div[4]/button")).click();
+
+
         } catch (Exception e) {
             fail("success message did not match : " + e.getMessage());
         }
