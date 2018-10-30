@@ -408,11 +408,14 @@ public class LoginAndNavigationHelper {
     public static void logout() throws InterruptedException {
 
         WebDriverWait wait = new WebDriverWait(driver, timeoutInSeconds);
-        wait.until(visibilityOfElementLocated(By.xpath("//*[@id=\"iznes\"]/app-root/app-basic-layout/div/ng-sidebar-container/div/div/app-navigation-topbar/header/div[2]/div[3]/div[2]/a")));
-        wait.until(elementToBeClickable(By.xpath("//*[@id=\"iznes\"]/app-root/app-basic-layout/div/ng-sidebar-container/div/div/app-navigation-topbar/header/div[2]/div[3]/div[2]/a")));
+        WebElement logout = driver.findElement(By.id("logout"));
+        wait.until(ExpectedConditions.visibilityOf(logout));
+        wait.until(elementToBeClickable(logout));
+
         Thread.sleep(750);
         try {
-            driver.findElement(By.xpath("//*[@id=\"iznes\"]/app-root/app-basic-layout/div/ng-sidebar-container/div/div/app-navigation-topbar/header/div[2]/div[3]/div[2]/a")).click();
+
+            logout.click();
 
         } catch (Exception e) {
             fail("Settings dropdown not available " + e.getMessage());

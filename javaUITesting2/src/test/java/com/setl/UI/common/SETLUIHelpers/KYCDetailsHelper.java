@@ -12,6 +12,7 @@ import java.sql.SQLException;
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
 import java.util.Date;
+import java.util.List;
 
 import static com.setl.UI.common.SETLUIHelpers.FundsDetailsHelper.openDropdownAndSelectOption;
 import static com.setl.UI.common.SETLUIHelpers.MemberDetailsHelper.scrollElementIntoViewById;
@@ -215,6 +216,7 @@ public class KYCDetailsHelper extends LoginAndNavigationHelper {
         }catch (Exception e){
             fail(e.getMessage()); }
         Thread.sleep(750);
+
         driver.findElement(By.xpath("//*[@id=\"step-risk-profile\"]/investment-objective/div/div[1]/div[1]/a/h2")).click();
         Thread.sleep(750);
         js.executeScript("document.getElementById('Capitalpreservation-0').click();");
@@ -229,17 +231,30 @@ public class KYCDetailsHelper extends LoginAndNavigationHelper {
         String investmentsObjectivesPercentPost = driver.findElement(By.xpath("//*[@id=\"step-risk-profile\"]/investment-objective/div/div[1]/div[2]/div/div[1]/div/div/div/span")).getText();
         assertTrue(investmentsObjectivesPercentPost.equals("100%"));
         Thread.sleep(750);
+
         driver.findElement(By.xpath("//*[@id=\"step-risk-profile\"]/investment-objective/div/div[1]/div[1]/a/h2")).click();
+        Thread.sleep(750);
+        driver.findElement(By.xpath("//*[@id=\"step-risk-profile\"]/investment-constraint/div/div[1]/div[1]/a/h2")).click();
+        Thread.sleep(750);
+        driver.findElement(By.id("statutoryConstraints-0")).sendKeys("optional field should not be mandatory"); //TODO - Bug TG3251 - comment out this line if/when fixed
+
         String investmentsConstraintsPercentPost = driver.findElement(By.xpath("//*[@id=\"step-risk-profile\"]/investment-constraint/div/div[1]/div[2]/div/div[1]/div/div/div/span")).getText();
-        assertTrue(investmentsConstraintsPercentPost.equals("100%"));
+        assertTrue("Was not 100%, but was" + investmentsConstraintsPercentPost,investmentsConstraintsPercentPost.equals("100%"));
+
         try {
             String introductionStepKYC = driver.findElement(By.xpath("//*[@id=\"iznes\"]/app-root/app-basic-layout/div/ng-sidebar-container/div/div/div/main/div/div/ng-component/ng-component/div[3]/div[1]/div/div[4]")).getAttribute("class");
             assertTrue(introductionStepKYC.equals("fs-active"));
-        }catch (Exception e){fail(e.getMessage());}
-        try {
-            driver.findElement(By.xpath("//*[@id=\"iznes\"]/app-root/app-basic-layout/div/ng-sidebar-container/div/div/div/main/div/div/ng-component/ng-component/div[3]/div[3]/button[3]")).click();
         }catch (Exception e){
-            fail(e.getMessage());}
+            fail(e.getMessage());
+        }
+        try {
+            WebElement button = driver.findElement(By.cssSelector("button.btn.btn-success.btNext"));
+            button.click(); // click next button
+
+        }catch (Exception e){
+            System.out.println("Failed to click the next button");
+            fail(e.getMessage());
+        }
     }
     public static void KYCProcessStep5() throws SQLException, InterruptedException, IOException {
         Thread.sleep(750);

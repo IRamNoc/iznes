@@ -1,5 +1,6 @@
 package com.setl.openCSDClarityTests.UI.Iznes2KYCModule;
 
+import com.setl.UI.common.SETLUIHelpers.SetUp;
 import com.setl.UI.common.SETLUtils.Repeat;
 import com.setl.UI.common.SETLUtils.RepeatRule;
 import com.setl.UI.common.SETLUtils.ScreenshotRule;
@@ -75,7 +76,8 @@ public class OpenCSDKYCModuleAcceptanceTest {
     }
 
     @Test
-    public void shouldAcceptKYCwithRandomEmail() throws IOException, InterruptedException, SQLException {
+    public void shouldAcceptKYCwithRandomEmail() throws Exception
+    {
         String managementCompEntered = "Management Company";
         String companyName = "Jordan Corporation";
         String phoneNo = "07956701992";
@@ -94,6 +96,7 @@ public class OpenCSDKYCModuleAcceptanceTest {
         waitForHomePageToLoad();
         navigateToInviteInvestorPage();
         inviteAnInvestor(email[0], firstName, lastName, "Success!");
+        logout();
         newInvestorSignUp(email[0], INVPassword);
         KYCProcessWelcomeToIZNES2(email[0], companyName, phoneNo, firstName, lastName, managementCompEntered);
         KYCProcessStep1Alternate(managementCompEntered, "No", "False", "");
@@ -111,7 +114,8 @@ public class OpenCSDKYCModuleAcceptanceTest {
     }
 
     @Test
-    public void shouldAskForMoreInfoKYCwithRandomEmail() throws IOException, InterruptedException, SQLException {
+    public void shouldAskForMoreInfoKYCwithRandomEmail() throws Exception
+    {
         String managementCompEntered = "Management Company";
         String companyName = "Jordan Corporation";
         String phoneNo = "07956701992";
@@ -128,6 +132,7 @@ public class OpenCSDKYCModuleAcceptanceTest {
         waitForHomePageToLoad();
         navigateToInviteInvestorPage();
         inviteAnInvestor(email[0], firstName, lastName, "Success!");
+        logout();
         newInvestorSignUp(email[0], INVPassword);
         KYCProcessWelcomeToIZNES2(email[0], companyName, phoneNo, firstName, lastName, managementCompEntered);
         KYCProcessStep1Alternate(managementCompEntered, "No", "False", "");
@@ -145,7 +150,8 @@ public class OpenCSDKYCModuleAcceptanceTest {
     }
 
     @Test
-    public void shouldRejectKYCwithRandomEmail() throws IOException, InterruptedException, SQLException {
+    public void shouldRejectKYCwithRandomEmail() throws Exception
+    {
         String managementCompEntered = "Management Company";
         String companyName = "Jordan Corporation";
         String phoneNo = "07956701992";
@@ -162,6 +168,7 @@ public class OpenCSDKYCModuleAcceptanceTest {
         waitForHomePageToLoad();
         navigateToInviteInvestorPage();
         inviteAnInvestor(email[0], firstName, lastName, "Success!");
+        logout();
         newInvestorSignUp(email[0], INVPassword);
         KYCProcessWelcomeToIZNES2(email[0], companyName, phoneNo, firstName, lastName, managementCompEntered);
         KYCProcessStep1Alternate(managementCompEntered, "No", "False", "");
@@ -180,7 +187,8 @@ public class OpenCSDKYCModuleAcceptanceTest {
     }
 
     @Test
-    public void shouldChangeKYCProcessIfAlreadyRegistered() throws IOException, InterruptedException, SQLException {
+    public void shouldChangeKYCProcessIfAlreadyRegistered() throws Exception
+    {
         String managementCompEntered = "Management Company";
         String companyName = "Jordan Corporation";
         String phoneNo = "07956701992";
@@ -196,6 +204,7 @@ public class OpenCSDKYCModuleAcceptanceTest {
         waitForHomePageToLoad();
         navigateToInviteInvestorPage();
         inviteAnInvestor(email[0], firstName, lastName, "Success!");
+        logout();
         newInvestorSignUp(email[0], INVPassword);
         KYCProcessWelcomeToIZNES2(email[0], companyName, phoneNo, firstName, lastName, managementCompEntered);
         KYCProcessStep1Alternate(managementCompEntered, "Yes", "False", "");
@@ -203,7 +212,8 @@ public class OpenCSDKYCModuleAcceptanceTest {
 
     @Test
     @Ignore("no method for multiple beneficarys")
-    public void shouldCreateKYCRequestWith2AMs() throws IOException, InterruptedException, SQLException {
+    public void shouldCreateKYCRequestWith2AMs() throws Exception
+    {
         String managementCompEntered = "Management Company";
         String managementComp2Entered = "am";
         String companyName = "Jordan Corporation";
@@ -222,6 +232,7 @@ public class OpenCSDKYCModuleAcceptanceTest {
         waitForHomePageToLoad();
         navigateToInviteInvestorPage();
         inviteAnInvestor(email[0], firstName, lastName, "Success!");
+        logout();
         newInvestorSignUp(email[0], INVPassword);
 
         KYCProcessWelcomeToIZNES2(email[0], companyName, phoneNo, firstName, lastName, managementCompEntered);
@@ -240,7 +251,8 @@ public class OpenCSDKYCModuleAcceptanceTest {
 
     @Ignore
     @Test
-    public void shouldSetKYCStatusToDraftIfClosed() throws IOException, InterruptedException, SQLException {
+    public void shouldSetKYCStatusToDraftIfClosed() throws Exception
+    {
         String managementCompEntered = "Management Company";
         String companyName = "Jordan Corporation";
         String phoneNo = "07956701992";
@@ -258,6 +270,7 @@ public class OpenCSDKYCModuleAcceptanceTest {
         waitForHomePageToLoad();
         navigateToInviteInvestorPage();
         inviteAnInvestor(email[0], firstName, lastName, "Success!");
+        logout();
         newInvestorSignUp(email[0], INVPassword);
 
         KYCProcessWelcomeToIZNES2(email[0], companyName, phoneNo, firstName, lastName, managementCompEntered);
@@ -272,7 +285,8 @@ public class OpenCSDKYCModuleAcceptanceTest {
     }
 
     @Test
-    public void shouldCompleteFullKYCProcess() throws IOException, InterruptedException, SQLException {
+    public void shouldCompleteFullKYCProcess() throws Exception
+    {
         String managementCompEntered = "Management Company";
         String companyName = "Jordan Corporation";
         String phoneNo = "07956701992";
@@ -290,6 +304,7 @@ public class OpenCSDKYCModuleAcceptanceTest {
         waitForHomePageToLoad();
         navigateToInviteInvestorPage();
         inviteAnInvestor(email[0], firstName, lastName, "Success!");
+        logout();
         newInvestorSignUp(email[0], INVPassword);
 
         KYCProcessWelcomeToIZNES2(email[0], companyName, phoneNo, firstName, lastName, managementCompEntered);
@@ -346,11 +361,18 @@ public class OpenCSDKYCModuleAcceptanceTest {
         System.out.println("Status : Successfully accepted KYC request");
     }
 
-    public static void newInvestorSignUp(String email, String investorPassword) throws IOException, InterruptedException, SQLException {
+    public static void newInvestorSignUp(String email, String investorPassword) throws Exception
+    {
         String token = getInvestorInvitationToken(email);
         String url = "https://uk-lon-li-006.opencsd.io/#/redirect/en/" + token;
 
         Thread.sleep(1000);
+
+        //i think this may be required because we need a new browser to avoid any cache from the previous session
+//        driver.quit();
+//        testSetUp();
+
+
         driver.get(url);
         Thread.sleep(1000);
         driver.findElement(By.id("su-password-field")).sendKeys(investorPassword);
@@ -381,7 +403,8 @@ public class OpenCSDKYCModuleAcceptanceTest {
     }
 
     @Test
-    public void shouldNotAllowSaveWithoutCompanyName() throws IOException, InterruptedException, SQLException {
+    public void shouldNotAllowSaveWithoutCompanyName() throws Exception
+    {
         String phoneNo = "07956701992";
         String firstName = "Jordan";
         String lastName = "Miller";
@@ -397,6 +420,7 @@ public class OpenCSDKYCModuleAcceptanceTest {
         waitForHomePageToLoad();
         navigateToInviteInvestorPage();
         inviteAnInvestor(email[0], firstName, lastName, "Success!");
+        logout();
         newInvestorSignUp(email[0], INVPassword);
 
         KYCProcessWelcomeToIZNES2(email[0], "", phoneNo, firstName, lastName, managementCompEntered);
@@ -604,6 +628,8 @@ public class OpenCSDKYCModuleAcceptanceTest {
 
     public static void KYCProcessStep3BankingInfoComplete(String companyName, String iBan) throws IOException, InterruptedException{
         WebDriverWait wait = new WebDriverWait(driver, timeoutInSeconds);
+
+        Thread.sleep(500);
 
         driver.findElement(By.xpath("//*[@id=\"step-identification\"]/banking-information/div/div[1]/div[1]/a/h2")).click();
         Thread.sleep(1500);
