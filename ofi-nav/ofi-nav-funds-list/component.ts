@@ -198,6 +198,8 @@ export class OfiNavFundsList implements OnInit, OnDestroy {
             if(res[1].Data[0].Status === 'Fail') return this.onCancelNavError();
 
             this.alertService.create('success', this.cancelNavSuccessMessage);
+
+            this.clearRequestedList();
         }
     }
 
