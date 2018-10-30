@@ -77,6 +77,16 @@ import {
     SET_FORCE_TWO_FACTOR,
 } from './site-settings';
 
+import { permissionsReducer, PermissionsState } from './permissions';
+
+export {
+    PermissionsState,
+    permissionsReducer,
+    SET_PERMISSIONS_LIST,
+    SET_PERMISSIONS_REQUESTED,
+    RESET_PERMISSIONS_REQUESTED,
+} from './permissions';
+
 export {
     setVersion,
     setLanguage,
@@ -94,6 +104,7 @@ export interface UserState {
     authentication: AuthenticationState;
     connected: ConnectedState;
     siteSettings: SiteSettingsState;
+    permissions: PermissionsState;
 }
 
 export const userReducer: Reducer<UserState> = combineReducers<UserState>({
@@ -101,4 +112,5 @@ export const userReducer: Reducer<UserState> = combineReducers<UserState>({
     authentication: AuthenticationReducer,
     connected: ConnectedReducer,
     siteSettings: SiteSettingsReducer,
+    permissions: permissionsReducer,
 });
