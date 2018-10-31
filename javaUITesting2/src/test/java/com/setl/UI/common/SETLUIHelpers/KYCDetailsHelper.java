@@ -116,6 +116,34 @@ public class KYCDetailsHelper extends LoginAndNavigationHelper {
         assertTrue(newRequests.equals("Make a new request"));
         wait.until(visibilityOfElementLocated(By.xpath("//*[@id=\"step-selection\"]/div[1]/div/ng-select")));
     }
+
+    public static void assertKYCCancelButtonName(String expectedName) {
+        /* TG3099
+        Button was Close should now be cancel
+        <div class="fs-buttons">
+        <button class="btn btn-info btPrev" type="button" style="display: inline-block;">Previous</button>
+        <button class="btn btn-warning btPrev" type="button">Cancel</button>  <<< this one
+        <button class="btn btn-success btNext" data-form="step-risk-profile" style="display: inline-block;">Next</button>
+        <button class="btn btn-success btSubmit" style="display: none;">Finish</button></div>
+
+         */
+
+        WebElement button = getKYCCancelButton();
+        String actual = button.getText();
+        assert actual.equals(expectedName) : "Cancel button name is incorrect, expected (" + expectedName + ") but was (" + actual +")";
+
+        System.out.println("TG 3099 - KYC Cancel button name check - passed");
+    }
+
+    public static WebElement getKYCCancelButton()
+    {
+        WebDriverWait wait = new WebDriverWait(driver, timeoutInSeconds);
+        wait.until(visibilityOf(driver.findElement(By.cssSelector("button.btn.btn-warning.btPrev"))));
+        WebElement button = driver.findElement(By.cssSelector("button.btn.btn-warning.btPrev"));
+        return button;
+    }
+
+
     public static void KYCProcessMakeNewRequest2() throws SQLException, InterruptedException {
         String myRequests = driver.findElement(By.id("new-request-title")).getText();
         assertTrue(myRequests.equals("Make a new request"));
