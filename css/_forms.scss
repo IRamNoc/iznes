@@ -511,6 +511,41 @@ label.required-field, .form-group.required-field label { /* new version of manda
     display: none !important;
 }
 
+/* Locked/Unlocked Toggle */
+.locked-toggle {
+    .toggle-switch, > span {
+        display: inline-block;
+        width: auto;
+        vertical-align: middle;
+        margin-top: 10px;
+    }
+    > span {
+        margin-top: 5px;
+        margin-left: 0;
+        border: 1px solid #C0C0C0;
+        border-radius: 4px;
+        width: 38px;
+        height: 38px;
+        text-align: center;
+        line-height: 39px;
+        cursor: pointer;
+        i {
+            font-size: 18px;
+            margin: 0;
+            &.fa-unlock {
+                color: #62a420;
+            }
+            &.fa-lock {
+                color: #747474;
+            }
+        }
+    }
+    input[type='checkbox'] {
+        width: 0;
+        height: 0;
+    }
+}
+
 /* The slider */
 .slider {
     position: absolute;
