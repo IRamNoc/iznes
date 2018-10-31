@@ -10,14 +10,17 @@ import { OfiMyInformationsModule } from '../ofi-my-informations/module';
 
 /* Components. */
 import { OfiProfileMyInformationsComponent } from './profile-my-informations/component';
+import { ExternalNotificationsComponent } from '@setl/core-account/external-notifications/external-notifications.component';
 
 /* Decorator. */
 @NgModule({
     declarations: [
         OfiProfileMyInformationsComponent,
+        ExternalNotificationsComponent,
     ],
     exports: [
         OfiProfileMyInformationsComponent,
+        ExternalNotificationsComponent,
     ],
     imports: [
         CommonModule,
