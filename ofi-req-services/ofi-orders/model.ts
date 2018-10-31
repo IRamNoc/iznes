@@ -1,4 +1,4 @@
-import {MemberNodeMessageBody} from '@setl/utils/common';
+import { MemberNodeMessageBody } from '@setl/utils/common';
 
 export interface OfiMemberNodeBody extends MemberNodeMessageBody {
     token: string;
@@ -16,7 +16,6 @@ export interface OfiRequestArrangements extends OfiMemberNodeBody {
 }
 
 export interface OfiAmOrdersRequestBody extends OfiMemberNodeBody {
-    token: string;
     fundName?: any;
     shareName?: any;
     status?: any;
@@ -35,8 +34,29 @@ export interface OfiAmOrdersRequestBody extends OfiMemberNodeBody {
     sortOrder?: any;
 }
 
+export interface OfiIznAdminOrdersRequestBody extends OfiMemberNodeBody {
+    fundName?: any;
+    shareName?: any;
+    status?: any;
+    orderType?: any;
+    isin?: any;
+    orderId?: any;
+    currency?: any;
+    quantity?: any;
+    amountWithCost?: any;
+    dateSearchField?: any;
+    fromDate?: any;
+    toDate?: any;
+    pageSize?: any;
+    rowOffset?: any;
+    sortByField?: any;
+    sortOrder?: any;
+    assetManagementCompany?: any;
+    investorCompanyName?: any;
+    portfolioLabel?: any;
+}
+
 export interface OfiAmExportOrdersRequestBody extends OfiMemberNodeBody {
-    token: string;
     filters: any;
 }
 
@@ -45,7 +65,6 @@ export interface CancelOrderRequestData {
 }
 
 export interface OfiCancelOrderRequestBody extends OfiMemberNodeBody {
-    token: string;
     orderID: any;
 }
 
@@ -97,4 +116,7 @@ export interface ManageOrdersRequestData {
     rowOffSet?: number;
     sortByField?: string;
     sortOrder?: string;
+    assetManagementCompany?: string;
+    investorCompanyName?: string;
+    portfolioLabel?: string;
 }
