@@ -21,7 +21,7 @@ import {
 
 import { CustomValidators } from '@setl/utils/helper';
 import { OfiKycService } from '@ofi/ofi-main/ofi-req-services/ofi-kyc/service';
-import { MyKycSetRequestedKycs } from '@ofi/ofi-main/ofi-store/ofi-kyc';
+import { setMyKycRequestedKycs } from '@ofi/ofi-main/ofi-store/ofi-kyc';
 import { RequestsService } from '../requests.service';
 
 import {
@@ -209,7 +209,7 @@ export class NewRequestService {
                 Validators.required,
                 Validators.pattern(/^\w{18}\d{2}$|n\/a/i),
             ]],
-            otherIdentificationNumber: ['', Validators.maxLength(255)],
+            otherIdentificationNumber: [null, Validators.maxLength(255)],
             otherIdentificationNumberText: [{ value: '', disabled: true }, Validators.required],
             registeredCompanyAddressLine1: ['', this.getLengthValidator(255)],
             registeredCompanyAddressLine2: ['', Validators.maxLength(255)],
@@ -327,11 +327,11 @@ export class NewRequestService {
         });
         const classificationInformation = fb.group({
             kycID: '',
-            investorStatus: '',
-            pro: fb.group({
-                excludeProducts: ['', Validators.maxLength(255)],
-                changeProfessionalStatus: 0
-            }),
+            investorStatus: 0,
+            optFor: 0,
+            optForValues: fb.array([]),
+            excludeProducts: ['', Validators.maxLength(255)],
+
             nonPro: fb.group({
                 firstName: ['', this.getLengthValidator()],
                 lastName: ['', this.getLengthValidator()],
@@ -350,7 +350,7 @@ export class NewRequestService {
                     { value: '', disabled: true },
                     Validators.required,
                 ],
-            })
+            }),
         });
 
         return fb.group({
@@ -359,6 +359,27 @@ export class NewRequestService {
             bankingInformation,
             classificationInformation,
         });
+    }
+
+    createOptFor(id) {
+        const fb = this.formBuilder;
+
+        return fb.group({
+            id,
+            opted: 0,
+        });
+    }
+
+    createOptFors(amcs) {
+        const optfors = [];
+        const length = amcs.length || 1;
+
+        for (let i = 0; i < length; i += 1) {
+            const id = amcs[i];
+            optfors.push(this.createOptFor(id));
+        }
+
+        return optfors;
     }
 
     createRiskProfileFormGroup() {
@@ -684,7 +705,7 @@ export class NewRequestService {
     }
 
     storeCurrentKycs(ids) {
-        let requestedKycs = MyKycSetRequestedKycs(ids);
+        let requestedKycs = setMyKycRequestedKycs(ids);
         this.ngRedux.dispatch(requestedKycs);
     }
 

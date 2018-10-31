@@ -15,6 +15,8 @@ import {
     pick,
     isNil,
     forEach,
+    clone,
+    find,
 } from 'lodash';
 
 import { NewRequestService } from '../new-request.service';
@@ -54,13 +56,13 @@ export class IdentificationService {
             const formGroupBanking = form.get('bankingInformation');
             formGroupBanking.get('kycID').setValue(kycID);
 
-            let formGroupBankingHolders = formGroupBanking.get('custodianHolders');
-            let formGroupBankingHoldersValue = formGroupBankingHolders.value;
+            const formGroupBankingHolders = formGroupBanking.get('custodianHolders');
+            const formGroupBankingHoldersValue = formGroupBankingHolders.value;
             formGroupBankingHoldersValue.forEach((singleHolderValue, key) => {
                 let data = pickBy(singleHolderValue);
                 data = Object.assign({}, data, { kycID });
 
-                let bankingPromise = this.sendRequestBanking(data).then(data => {
+                const bankingPromise = this.sendRequestBanking(data).then(data => {
                     (formGroupBankingHolders as FormArray).at(key).get('custodianID').patchValue(data.custodianID);
                 });
                 promises.push(bankingPromise);
@@ -68,8 +70,8 @@ export class IdentificationService {
 
             const formGroupClassification = form.get('classificationInformation');
             formGroupClassification.get('kycID').setValue(kycID);
-            const classificationPromise = this.sendRequestClassification(formGroupClassification);
-            promises.push(classificationPromise);
+            const classificationPromises = this.prepareRequestClassification(formGroupClassification);
+            promises.concat(classificationPromises);
 
             const updateStepPromise = this.sendRequestUpdateCurrentStep(kycID, context);
             promises.push(updateStepPromise);
@@ -189,20 +191,40 @@ export class IdentificationService {
         return this.requestsService.sendRequest(messageBody);
     }
 
+    prepareRequestClassification(formGroupClassification) {
+        const promises = [];
+        const formGroupClassificationValue = formGroupClassification.value;
+        const kycID = formGroupClassificationValue.kycID;
+        const optFor = formGroupClassificationValue.optFor;
+        const optForValues = formGroupClassificationValue.optForValues;
+
+        if (optFor && optForValues) {
+            const formValue = clone(formGroupClassificationValue);
+            const optForValue = find(optForValues, ['id', kycID]);
+
+            formValue.optFor = optForValue.opted;
+
+            const promise = this.sendRequestClassification(formValue);
+            promises.push(promise);
+        } else {
+            const promise = this.sendRequestClassification(formGroupClassificationValue);
+            promises.push(promise);
+        }
+
+        return promises;
+    }
+
     sendRequestClassification(formGroupClassification) {
-        let formGroupClassificationValue = omit(formGroupClassification.value, ['nonPro', 'pro']);
+        let formGroupClassificationValue = omit(formGroupClassification, ['nonPro', 'optForValues']);
+
         formGroupClassificationValue = merge(
             formGroupClassificationValue,
-            formGroupClassification.value.nonPro,
-            formGroupClassification.value.pro,
+            formGroupClassification.nonPro,
         );
 
         const extracted = this.newRequestService.getValues(formGroupClassificationValue);
         if (!isNil(extracted.activitiesBenefitFromExperience)) {
             extracted.activitiesBenefitFromExperience = Number(extracted.activitiesBenefitFromExperience);
-        }
-        if (!isNil(extracted.changeProfessionalStatus)) {
-            extracted.changeProfessionalStatus = Number(extracted.changeProfessionalStatus);
         }
 
         const messageBody = {

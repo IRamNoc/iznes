@@ -1,6 +1,7 @@
 import { Injectable } from '@angular/core';
 import { NgRedux } from '@angular-redux/store';
-import { get as getValue, toPairs, map, chain, value, omit, pickBy, pick, find, parseInt, isNil, toString, sortBy } from 'lodash';
+import { get as getValue, toPairs, map, chain, value, omit, pickBy, pick, find, parseInt, isNil, toString, sortBy, isEmpty } from 'lodash';
+
 import { OfiKycService } from '@ofi/ofi-main/ofi-req-services/ofi-kyc/service';
 import * as requestsConfig from '../requests.config';
 
@@ -13,7 +14,7 @@ export class KycDetailsService {
 
     constructor(
         private ofiKycService: OfiKycService,
-        private ngRedux: NgRedux<any>
+        private ngRedux: NgRedux<any>,
     ) {
     }
 
@@ -38,17 +39,30 @@ export class KycDetailsService {
     }
 
     toArray(data) {
+        if (!isNil(data.optFor)) {
+            if (data.investorStatus === requestsConfig.investorStatusList.nonPro) {
+                data.optForPro = data.optFor;
+            } else if (data.investorStatus !== requestsConfig.investorStatusList.nonPro) {
+                data.optForNonPro = data.optFor;
+            }
+
+            delete data.optFor;
+        }
+
         const booleans = chain(data)
+            .omitBy(isNil)
             .pickBy((val, key) => requestsConfig.booleanControls.indexOf(key) !== -1)
             .mapValues(value => parseInt(value, 10) ? 1 : 0)
             .value();
 
         const currencies = chain(data)
+            .omitBy(isNil)
             .pickBy((val, key) => requestsConfig.currencyControls.indexOf(key) !== -1)
             .mapValues(value => `${value} €`)
             .value();
 
         const percentage = chain(data)
+            .omitBy(isNil)
             .pickBy((val, key) => requestsConfig.percentageControls.indexOf(key) !== -1)
             .mapValues(value => `${value} %`)
             .value();

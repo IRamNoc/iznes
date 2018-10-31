@@ -29,6 +29,9 @@ export const booleanControls = [
     'naturesSameInvestmentCrossAm',
     'objectivesSameInvestmentCrossAm',
     'constraintsSameInvestmentCrossAm',
+    'optFor',
+    'optForPro',
+    'optForNonPro',
 ];
 
 export const currencyControls = [
@@ -1412,9 +1415,10 @@ export const controlToName = {
     country: 'Country',
 
     // Classification
+    optForPro: 'Asked for professional classification',
+    optForNonPro: 'Opted for non professional classification',
     investorStatus: 'Investor status',
     excludeProducts: 'Excluded category of products/services',
-    changeProfessionalStatus: 'Opted for non professional status',
     jobPosition: 'Job position',
     numberYearsExperienceRelatedFunction: 'Number of years of experience in a function related to financial markets',
     numberYearsCurrentPosition: 'Number of years of experience in current position',

@@ -1,31 +1,54 @@
-import {MyKycRequestedState} from './model';
+import { MyKycRequestedState } from './model';
 import {
     MyKycRequestedAction,
     SET_MY_KYC_REQUESTED_IDS,
-    CLEAR_MY_KYC_REQUESTED_IDS
+    CLEAR_MY_KYC_REQUESTED_IDS,
+
+    SET_MY_KYC_REQUESTED_PERSIST,
+    CLEAR_MY_KYC_REQUESTED_PERSIST,
 } from './actions';
 
-import {get as getValue} from 'lodash';
+import { get as getValue, clone } from 'lodash';
 
 const initialState: MyKycRequestedState = {
-     kycs : []
+    kycs: [],
+    formPersist: {},
 };
 
-export function MyKycRequestedReducer(
+export function myKycRequestedReducer(
     state: MyKycRequestedState = initialState,
-    action: MyKycRequestedAction
+    action: MyKycRequestedAction,
 ): MyKycRequestedState {
-    let payload = getValue(action, ['payload']);
+    let formPersist;
+    const payload = getValue(action, ['payload']);
+
     switch (action.type) {
-        case SET_MY_KYC_REQUESTED_IDS:
-            return {
-                kycs : payload
-            };
-        case CLEAR_MY_KYC_REQUESTED_IDS:
-            return {
-                kycs : []
-            };
-        default:
-            return state;
+    case SET_MY_KYC_REQUESTED_IDS:
+        return {
+            ...state,
+            kycs: payload,
+        };
+    case CLEAR_MY_KYC_REQUESTED_IDS:
+        return {
+            ...state,
+            kycs: [],
+        };
+    case SET_MY_KYC_REQUESTED_PERSIST:
+        formPersist = clone(state.formPersist);
+        formPersist[payload] = true;
+
+        return {
+            ...state,
+            formPersist,
+        };
+    case CLEAR_MY_KYC_REQUESTED_PERSIST:
+        formPersist = clone(initialState.formPersist);
+
+        return {
+            ...state,
+            formPersist,
+        };
+    default:
+        return state;
     }
 }

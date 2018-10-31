@@ -1,14 +1,15 @@
-import { Component, OnInit, ViewChild } from '@angular/core';
-import { FormBuilder } from '@angular/forms';
-import { ActivatedRoute } from '@angular/router';
-import { select } from '@angular-redux/store';
-import { get as getValue, map, sort, remove } from 'lodash';
-import { Subject, combineLatest } from 'rxjs';
-import { takeUntil } from 'rxjs/operators';
+import {Component, OnInit, ViewChild} from '@angular/core';
+import {FormBuilder} from '@angular/forms';
+import {ActivatedRoute} from '@angular/router';
+import {select, NgRedux} from '@angular-redux/store';
+import {get as getValue, map, sort, remove} from 'lodash';
+import {Subject, combineLatest} from 'rxjs';
+import {takeUntil} from 'rxjs/operators';
+
+import { clearMyKycRequestedPersist } from '@ofi/ofi-main/ofi-store/ofi-kyc';
 import { MultilingualService } from '@setl/multilingual';
-import { FormStepsDirective } from '@setl/utils/directives/form-steps/formsteps';
-import { NewRequestService } from './new-request.service';
-import { steps } from '../requests.config';
+import {FormStepsDirective} from '@setl/utils/directives/form-steps/formsteps';
+import {NewRequestService} from './new-request.service';
 
 @Component({
     templateUrl: './new-request.component.html',
@@ -30,6 +31,7 @@ export class NewKycRequestComponent implements OnInit {
         private route: ActivatedRoute,
         private newRequestService: NewRequestService,
         public translate: MultilingualService,
+        private ngRedux: NgRedux<any>,
     ) {
     }
 
@@ -62,6 +64,8 @@ export class NewKycRequestComponent implements OnInit {
     }
 
     ngOnInit() {
+        this.ngRedux.dispatch(clearMyKycRequestedPersist());
+
         this.initForm();
         this.initSubscriptions();
     }

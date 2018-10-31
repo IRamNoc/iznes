@@ -1,10 +1,10 @@
-import { Component, OnInit, OnDestroy } from '@angular/core';
-import { Subscription, Subject } from 'rxjs';
-import { takeUntil } from 'rxjs/operators';
-import { NgRedux, select } from '@angular-redux/store';
-import { findIndex } from 'lodash';
-import { ClearMyKycRequestedIds } from '@ofi/ofi-main/ofi-store/ofi-kyc/kyc-request/actions';
-import { ClearMyKycListRequested, SetMyKycOpenTab, ClearMyKycOpenTab, SetMyKycOpenTabActive } from '@ofi/ofi-main/ofi-store/ofi-kyc/kyc-list/actions';
+import {Component, OnInit, OnDestroy} from '@angular/core';
+import {Subscription, Subject} from 'rxjs';
+import {takeUntil} from 'rxjs/operators';
+import {NgRedux, select} from '@angular-redux/store';
+import {findIndex} from 'lodash';
+import {clearMyKycRequestedIds} from '@ofi/ofi-main/ofi-store/ofi-kyc/kyc-request/actions';
+import {ClearMyKycListRequested, SetMyKycOpenTab, ClearMyKycOpenTab, SetMyKycOpenTabActive} from '@ofi/ofi-main/ofi-store/ofi-kyc/kyc-list/actions';
 
 @Component({
     styleUrls: ['./my-requests.component.scss'],
@@ -26,7 +26,7 @@ export class MyRequestsComponent implements OnInit, OnDestroy {
 
     ngOnInit() {
         this.initSubscriptions();
-        this.ngRedux.dispatch(ClearMyKycRequestedIds());
+        this.ngRedux.dispatch(clearMyKycRequestedIds());
         this.ngRedux.dispatch(ClearMyKycListRequested());
     }
 
