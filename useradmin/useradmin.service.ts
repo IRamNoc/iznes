@@ -153,13 +153,14 @@ export class AdminUsersService {
      User Functions.
      ===============
      */
-    public requestMyUsersList(pageFrom: number = 0, pageSize: number = 0) {
+    public requestMyUsersList(pageFrom: number = 0, pageSize: number = 0, search: string = '') {
         /* Setup the message body. */
         const messageBody: RequestAdminUsersMessageBody = {
             RequestName: 'um_lu',
             token: this.memberSocketService.token,
             pageFrom,
             pageSize,
+            search,
         };
 
         /* Return the new member node saga request. */
