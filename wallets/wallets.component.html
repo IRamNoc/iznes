@@ -184,19 +184,9 @@
 
                     <div class="row">
                         <div class="form-group col-sm-6">
-<<<<<<< HEAD
-<<<<<<< Updated upstream
-                            <label class="control-label required-field" mltag="txt_walletstatus">Wallet Status</label>
-=======
-                            <label class="control-label" mltag="txt_walletstatus">Wallet Status</label>
->>>>>>> f7c932cc0bbca62b72b1a1e03c5b99a60de07b9b
-                            <div class="wallet-status">
-                                <span *ngIf="formControl.value.walletLocked == 0">
-=======
                             <label class="control-label" mltag="txt_walletstatus">Wallet Status</label>
                             <div class="locked-toggle">
                                 <span *ngIf="!formControl.value.walletLocked" (click)="formControl.value.walletLocked = 1">
->>>>>>> Stashed changes
                                     <i class="fa fa-unlock"></i>
                                 </span>
                                 <span *ngIf="formControl.value.walletLocked" (click)="formControl.value.walletLocked = 0">
