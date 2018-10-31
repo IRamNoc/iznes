@@ -8,7 +8,7 @@ import { ActivatedRoute, Params, Router } from '@angular/router';
 
 /* Alerts and confirms. */
 import { AlertsService } from '@setl/jaspero-ng2-alerts';
-import { ConfirmationService, immutableHelper } from '@setl/utils';
+import { ConfirmationService, immutableHelper, SagaHelper } from '@setl/utils';
 
 /* User Admin Service. */
 import { UserAdminService } from '../useradmin.service';
@@ -16,6 +16,7 @@ import { Subscription } from 'rxjs/Subscription';
 import { userAdminActions } from '@setl/core-store';
 import { LogService } from '@setl/utils';
 import { ClrDatagridStateInterface } from '@clr/angular';
+import { MyUserService } from '@setl/core-req-services';
 
 /* Decorator. */
 @Component({
@@ -35,6 +36,7 @@ export class AdminUsersComponent implements OnInit, AfterViewInit, OnDestroy {
     public usersList: any = [];
     public paginatedUsersList: any;
     public myDetail: any;
+    private language: string;
 
     /* Tabs control */
     public tabsControl: any = [];
@@ -77,6 +79,7 @@ export class AdminUsersComponent implements OnInit, AfterViewInit, OnDestroy {
     @select(['userAdmin', 'users', 'openedTabs']) openTabsOb;
     @select(['userAdmin', 'users', 'usersList']) usersListOb;
     @select(['userAdmin', 'users', 'totalRecords']) totalRecordsOb;
+    @select(['user', 'siteSettings', 'language']) requestLanguageOb;
 
     /* Constructor. */
     constructor(private userAdminService: UserAdminService,
@@ -86,8 +89,12 @@ export class AdminUsersComponent implements OnInit, AfterViewInit, OnDestroy {
                 private route: ActivatedRoute,
                 private router: Router,
                 private logService: LogService,
-                private confirmationService: ConfirmationService) {
-        /* Stub. */
+                private confirmationService: ConfirmationService,
+                private myUserService: MyUserService,
+    ) {
+        this.subscriptions['language'] = this.requestLanguageOb.subscribe((lang) => {
+            if (lang) this.language = lang;
+        });
     }
 
     setInitialTabs() {
@@ -1536,6 +1543,88 @@ export class AdminUsersComponent implements OnInit, AfterViewInit, OnDestroy {
             g.controls.passwordConfirm.setErrors(password === passwordConfirm ? null : { mismatch: true });
         }
         return null;
+    }
+
+    /**
+     * Send Reset Password Email
+     * -------------------------
+     * Sends the user being edited a Reset Password Email
+     */
+    sendResetPassword(tabID: string, event: any) {
+        event.preventDefault();
+        const emailControl = _.get(this.tabsControl, `[${tabID}].formControl.controls.email`, {});
+
+        if (emailControl.valid && emailControl.value) {
+            this.confirmationService.create(
+                '<span>Reset Password</span>',
+                `<span class="text-warning">Are you sure you want to send a reset password email to
+            '${emailControl.value}'?</span>`,
+            ).subscribe((ans) => {
+                if (ans.resolved) {
+                    const asyncTaskPipe = this.myUserService.forgotPassword({
+                        username: emailControl.value,
+                        lang: this.language,
+                    });
+
+                    this.ngRedux.dispatch(SagaHelper.runAsyncCallback(
+                        asyncTaskPipe,
+                        () => {
+                            this.alertsService.generate('success', 'Reset password email successfully sent.');
+                        },
+                        () => {
+                            this.alertsService.generate(
+                                'error',
+                                'Sorry, something went wrong.<br>Please try again later.'
+                            );
+                        }),
+                    );
+                }
+            });
+        } else {
+            this.alertsService.generate(
+                'error',
+                'Users email address is invalid. Please check and try again.');
+        }
+    }
+
+    /**
+     * Send Reset Two-Factor Email
+     * -------------------------
+     * Sends the user being edited a Reset Two-Factor Authentication Email
+     */
+    sendResetTwoFactor(tabID: number, event: any) {
+        event.preventDefault();
+        const emailControl = _.get(this.tabsControl, `[${tabID}].formControl.controls.email`, {});
+
+        if (emailControl.valid && emailControl.value) {
+            this.confirmationService.create(
+                '<span>Reset Two-Factor</span>',
+                `<span class="text-warning">Are you sure you want to send a reset Two-Factor email to
+            '${emailControl.value}'?</span>`,
+            ).subscribe((ans) => {
+                if (ans.resolved) {
+                    const asyncTaskPipe = this.myUserService.forgotTwoFactor({ email: emailControl.value });
+
+                    this.ngRedux.dispatch(SagaHelper.runAsyncCallback(
+                        asyncTaskPipe,
+                        () => {
+                            this.alertsService.generate(
+                                'success',
+                                'Reset Two-Factor email successfully sent.');
+                        },
+                        () => {
+                            this.alertsService.generate(
+                                'error',
+                                'Sorry, something went wrong.<br>Please try again later!');
+                        }),
+                    );
+                }
+            });
+        } else {
+            this.alertsService.generate(
+                'error',
+                'Users email address is invalid. Please check and try again.');
+        }
     }
 
     ngOnDestroy(): void {

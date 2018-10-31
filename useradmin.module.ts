@@ -8,7 +8,7 @@ import { ClarityModule } from '@clr/angular';
 
 import { AdminUsersService } from '@setl/core-req-services';
 /* 3rd party modules. */
-import { SelectModule } from '@setl/utils';
+import { SelectModule, SetlPipesModule } from '@setl/utils';
 /* Import core components. */
 import { AdminWizardComponent } from './wizard/wizard.component';
 /* Users components. */
@@ -76,6 +76,7 @@ import { UserAdminService } from '@setl/core-useradmin/useradmin.service';
         SetlDirectivesModule,
         DatePickerExtendedModule,
         DpDatePickerModule,
+        SetlPipesModule,
     ],
     providers: [AdminUsersService, UserAdminService],
 })

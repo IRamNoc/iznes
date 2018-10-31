@@ -485,6 +485,22 @@
                     </div>
                 </clr-tab-content>
             </clr-tab>
+
+            <clr-tab>
+                <a clrTabLink><i class="fa fa-lock"></i> Reset Access</a>
+                <clr-tab-content *clrIfActive>
+                    <div class="panel-body">
+                        <div>Send reset emails</div>
+                        <button id="sendResetPasswordEmail" class="btn btn-outline" (click)="sendResetPassword(tabid, $event);">
+                            <i class="fa fa-envelope-o"></i>{{ 'Reset Password' | translate }}
+                        </button>
+
+                        <button id="sendResetTwoFactorEmail" class="btn btn-outline" (click)="sendResetTwoFactor(tabid, $event);">
+                            <i class="fa fa-envelope-o"></i>{{ 'Reset Two-Factor' | translate }}
+                        </button>
+                    </div>
+                </clr-tab-content>
+            </clr-tab>
         </clr-tabs>
     </ng-template>
 </div>
