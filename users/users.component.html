@@ -1,5 +1,5 @@
 <div class="header-breadcrumbs">
-    <h1 id="manage-users"><i class="fa fa-users"></i> <span mltag="txt_manageuser">Manage User</span></h1>
+    <h1 id="manage-users"><i class="fa fa-users"></i> {{ 'Manage User' | translate }}</h1>
 </div>
 
 <div class="wrapper wrapper-content">
@@ -41,32 +41,30 @@
         <div class="panel-body">
 
             <clr-datagrid #usersDataGrid (clrDgRefresh)="datagridRefresh($event)">
-                <clr-dg-column mltag="txt_username">Username</clr-dg-column>
-                <clr-dg-column mltag="txt_email">Email</clr-dg-column>
-                <clr-dg-column mltag="txt_account">Account</clr-dg-column>
-                <clr-dg-column mltag="txt_status">Status</clr-dg-column>
-                <clr-dg-column class="right" mltag="txt_actions">Actions</clr-dg-column>
+                <clr-dg-column>{{ 'Username' | translate }}</clr-dg-column>
+                <clr-dg-column>{{ 'Email' | translate }}</clr-dg-column>
+                <clr-dg-column>{{ 'Account' | translate }}</clr-dg-column>
+                <clr-dg-column>{{ 'Status' | translate }}</clr-dg-column>
+                <clr-dg-column class="right">{{ 'Actions' | translate }}</clr-dg-column>
 
                 <clr-dg-row *ngFor="let user of paginatedUsersList; let i = index">
                     <clr-dg-cell><span id="username-{{user.index}}">{{user.userName}}</span></clr-dg-cell>
                     <clr-dg-cell>{{user.emailAddress}}</clr-dg-cell>
                     <clr-dg-cell>{{user.accountName}}</clr-dg-cell>
                     <clr-dg-cell>
-                        <span *ngIf="user.accountLocked == 0" class="label label-success"
-                              mltag="txt_enabled">Enabled</span>
-                        <span *ngIf="user.accountLocked != 0" class="label label-warning"
-                              mltag="txt_disabled">Disabled</span>
+                        <span *ngIf="user.accountLocked == 0" class="label label-success">{{ 'Enabled' | translate }}</span>
+                        <span *ngIf="user.accountLocked != 0" class="label label-warning">{{ 'Disabled' | translate }}</span>
                     </clr-dg-cell>
                     <clr-dg-cell class="right">
                         <button id="edit-{{user.userID}}" (click)="handleEdit(user.userID)"
                                 class="btn btn-success btn-sm">
                             <i class="fa fa-pencil-square-o"></i>
-                            <span mltag="txt_edit">Edit</span>
+                            {{ 'Edit' | translate }}
                         </button>
                         <button id="delete-{{user.userID}}" (click)="handleDelete(user.userID)"
                                 class="btn btn-danger btn-sm">
                             <i class="fa fa-trash-o"></i>
-                            <span mltag="txt_delete">Delete</span>
+                            {{ 'Delete' | translate }}
                         </button>
                     </clr-dg-cell>
                 </clr-dg-row>
@@ -89,55 +87,51 @@
                         <div class="form-group col-sm-6">
                             <div class="tooltip left tooltip-md">
                                 <i class="fa fa-info-circle"></i>
-                                <span class="tooltip-content">Username cannot exceed 45 characters, cannot contain spaces and can only contain letters, numbers and the following characters: . - _ @</span>
-                                <label class="control-label required-field tooltip-wrapped" mltag="txt_username">Username</label>
+                                <span class="tooltip-content">{{ 'Username cannot exceed 45 characters, cannot contain spaces and can only contain letters, numbers and the following characters: . - _ @' | translate }}</span>
+                                <label class="control-label required-field tooltip-wrapped">{{ 'Username' | translate }}</label>
                             </div>
                             <input id="new-user-username" type="text" formControlName="username"
-                                   placeholder="Username" class="form-control username mlp_translated"
-                                   mltag="txt_username">
+                                   placeholder="{{ 'Username' | translate }}" class="form-control username mlp_translated">
                             <div *ngIf="formControl.controls.username.hasError('required') && formControl.controls.username.touched"
-                                 class="field-error" mltag="txt_thisfieldisrequired">This field is required
+                                 class="field-error">{{ 'This field is required' | translate }}
                             </div>
                             <div *ngIf="formControl.controls.username.hasError('pattern') && !formControl.controls.username.hasError('required') && formControl.controls.username.touched"
-                                 class="field-error">Invalid username format
+                                 class="field-error">{{ 'Invalid username format' | translate }}
                             </div>
                         </div>
 
                         <div class="form-group col-sm-6">
-                            <label class="control-label required-field"
-                                   mltag="txt_email">Email</label>
+                            <label class="control-label required-field">{{ 'Email' | translate }}</label>
                             <input id="new-user-email" type="email" formControlName="email" name="email"
-                                   placeholder="Enter email..."
-                                   class="form-control email mlp_translated"
-                                   mltag="txt_enteremail">
+                                   placeholder="{{ 'Enter email...' | translate }}"
+                                   class="form-control email mlp_translated">
                             <div *ngIf="formControl.controls.email.hasError('required') && formControl.controls.email.touched"
-                                 class="field-error" mltag="txt_thisfieldisrequired">This field is required
+                                 class="field-error">{{ 'This field is required' | translate }}
                             </div>
                             <div *ngIf="!formControl.controls.email.valid && formControl.controls.email.touched && !formControl.controls.email.hasError('required')"
-                                 class="field-error">Invalid email format
+                                 class="field-error">{{ 'Invalid email format' | translate }}
                             </div>
                         </div>
                     </div>
 
                     <div class="row">
                         <div class="form-group col-sm-6">
-                            <label class="control-label required-field" mltag="txt_account">Account</label>
+                            <label class="control-label required-field">{{ 'Account' | translate }}</label>
                             <ng-select
                                 id="new-user-account-select"
                                 [items]="accountTypes"
                                 [allowClear]="true"
-                                placeholder="Select Type"
+                                placeholder="{{ 'Select Type' | translate }}"
                                 [formControl]="formControl.controls['accountType']"
                                 (selected)="setFormAccountId( tabid, $event )"
-                                mltag="txt_selecttype"
                             ></ng-select>
                             <div *ngIf="formControl.controls.accountType.hasError('required') && formControl.controls.accountType.touched"
-                                 class="field-error" mltag="txt_thisfieldisrequired">This field is required
+                                 class="field-error">{{ 'This field is required' | translate }}
                             </div>
                         </div>
 
                         <div class="form-group col-sm-6">
-                            <label class="control-label">Lock / Unlock User</label>
+                            <label class="control-label">{{ 'Lock / Unlock User' | translate }}</label>
                             <div class="locked-toggle">
                                 <span *ngIf="!formControl.value.userLocked" (click)="formControl.controls.userLocked.setValue(1);">
                                     <i class="fa fa-unlock"></i>
@@ -159,46 +153,44 @@
 
                     <div class="row">
                         <div class="form-group col-sm-6">
-                            <label class="control-label required-field" mltag="txt_usertype">User Type</label>
+                            <label class="control-label required-field">{{ 'User Type' | translate }}</label>
                             <ng-select
                                 id="new-user-usertype-select"
                                 [items]="userTypes"
                                 [allowClear]="true"
-                                placeholder="Select Type"
+                                placeholder="{{ 'Select Type' | translate }}"
                                 [formControl]="formControl.controls['userType']"
-                                mltag="txt_selecttype"
                             ></ng-select>
                             <div *ngIf="formControl.controls.userType.hasError('required') && formControl.controls.userType.touched"
-                                 class="field-error" mltag="txt_thisfieldisrequired">This field is required
+                                 class="field-error">{{ 'This field is required' | translate }}
                             </div>
                         </div>
                     </div>
 
                     <div class="row">
                         <div class="form-group col-sm-6">
-                            <label class="control-label required-field" mltag="txt_password">Password</label>
+                            <label class="control-label required-field">{{ 'Password' | translate }}</label>
                             <input id="new-user-password" type="password" formControlName="password" name="password"
-                                   autocomplete="off" placeholder="Password"
-                                   class="form-control password1 mlp_translated" mltag="txt_password">
+                                   autocomplete="off" placeholder="{{ 'Password' | translate }}"
+                                   class="form-control password1 mlp_translated">
                             <div *ngIf="formControl.controls.password.hasError('required') && formControl.controls.password.touched"
-                                 class="field-error" mltag="txt_thisfieldisrequired">This field is required
+                                 class="field-error">{{ 'This field is required' | translate }}
                             </div>
                             <div *ngIf="formControl.controls.password.hasError('mismatch') && !formControl.controls.password.hasError('required') && !formControl.controls.passwordConfirm.pristine"
-                                 class="field-error" mltag="txt_passworddoesnotmatch">Password does not match
+                                 class="field-error">{{ 'Password does not match' | translate }}
                             </div>
                         </div>
 
                         <div class="form-group col-sm-6">
-                            <label class="control-label required-field" mltag="txt_repeatpassword">Repeat
-                                Password</label>
+                            <label class="control-label required-field">{{ 'Repeat Password' | translate }}</label>
                             <input id="new-user-password-repeat" type="password" formControlName="passwordConfirm"
-                                   autocomplete="off" placeholder="Repeat Password"
-                                   class="form-control password2 mlp_translated" mltag="txt_repeatpassword">
+                                   autocomplete="off" placeholder="{{ 'Repeat Password' | translate }}"
+                                   class="form-control password2 mlp_translated">
                             <div *ngIf="formControl.controls.passwordConfirm.hasError('required') && formControl.controls.passwordConfirm.touched"
-                                 class="field-error" mltag="txt_thisfieldisrequired">This field is required
+                                 class="field-error">{{ 'This field is required' | translate }}
                             </div>
                             <div *ngIf="formControl.controls.passwordConfirm.hasError('mismatch') && !formControl.controls.passwordConfirm.hasError('required') && !formControl.controls.passwordConfirm.pristine"
-                                 class="field-error" mltag="txt_passworddoesnotmatch">Password does not match
+                                 class="field-error">{{ 'Password does not match' | translate }}
                             </div>
                         </div>
                     </div>
@@ -206,7 +198,7 @@
                     <div class="row">
                         <div class="form-group col-sm-12">
                             <label class="control-label">
-                                <span class="ml" mltag="txt_accs">Access</span>
+                                <span class="ml">{{ 'Access' | translate }}</span>
                             </label>
                             <div>
                                 <ng-container
@@ -219,7 +211,7 @@
                         <div class="col-sm-12">
                             <button id="new-user-submit" type="submit" class="btn btn-primary"
                                     [disabled]="!formControl.valid">
-                                <i class="fa fa-save"></i> <span class="ml_translated" mltag="txt_save">Save</span>
+                                <i class="fa fa-save"></i> <span class="ml_translated">{{ 'Save' | translate }}</span>
                             </button>
                         </div>
                     </div>
@@ -235,48 +227,46 @@
                 <div class="form-horizontal">
                     <div class="row">
                         <div class="form-group col-sm-6">
-                            <label class="control-label required-field" mltag="txt_username">Username</label>
+                            <label class="control-label required-field">{{ 'Username' | translate }}</label>
                             <input id="edit-user{{tabid}}-username" type="text" formControlName="username"
-                                   placeholder="Username" class="form-control username mlp_translated"
-                                   readonly="readonly" mltag="txt_username">
+                                   placeholder="{{ 'Username' | translate }}" class="form-control username mlp_translated"
+                                   readonly="readonly">
                             <div *ngIf="formControl.controls.username.hasError('required') && formControl.controls.username.touched"
-                                 class="field-error" mltag="txt_thisfieldisrequired">This field is required
+                                 class="field-error">{{ 'This field is required' | translate }}
                             </div>
                         </div>
 
                         <div class="form-group col-sm-6">
-                            <label class="control-label required-field" mltag="txt_email">Email</label>
+                            <label class="control-label required-field">{{ 'Email' | translate }}</label>
                             <input id="edit-user{{tabid}}-email" type="email" formControlName="email" name="email"
-                                   placeholder="Enter email..." class="form-control email mlp_translated"
-                                   mltag="txt_enteremail">
+                                   placeholder="Enter email..." class="form-control email mlp_translated">
                             <div *ngIf="formControl.controls.email.hasError('required') && formControl.controls.email.touched"
-                                 class="field-error" mltag="txt_thisfieldisrequired">This field is required
+                                 class="field-error">{{ 'This field is required' | translate }}
                             </div>
                             <div *ngIf="!formControl.controls.email.valid && formControl.controls.email.touched && !formControl.controls.email.hasError('required')"
-                                 class="field-error">Invalid email format
+                                 class="field-error">{{ 'Invalid email format' | translate }}
                             </div>
                         </div>
                     </div>
 
                     <div class="row">
                         <div class="form-group col-sm-6">
-                            <label class="control-label required-field" mltag="txt_account">Account</label>
+                            <label class="control-label required-field">{{ 'Account' | translate }}</label>
                             <ng-select
                                 id="edit-user{{tabid}}-account-select"
                                 [items]="accountTypes"
                                 [allowClear]="true"
-                                placeholder="Select Type"
+                                placeholder="{{ 'Select Type' | translate }}"
                                 [formControl]="formControl.controls['accountType']"
                                 (selected)="setFormAccountId( tabid, $event )"
-                                mltag="txt_selecttype"
                             ></ng-select>
                             <div *ngIf="formControl.controls.accountType.hasError('required') && formControl.controls.accountType.touched"
-                                 class="field-error" mltag="txt_thisfieldisrequired">This field is required
+                                 class="field-error">{{ 'This field is required' | translate }}
                             </div>
                         </div>
 
                         <div class="form-group col-sm-6">
-                            <label class="control-label">Lock / Unlock User</label>
+                            <label class="control-label">{{ 'Lock / Unlock User' | translate }}</label>
                             <div class="locked-toggle">
                                 <span *ngIf="!formControl.value.userLocked" (click)="formControl.controls.userLocked.setValue(1)">
                                     <i class="fa fa-unlock"></i>
@@ -298,14 +288,13 @@
 
                     <div class="row">
                         <div class="form-group col-sm-6">
-                            <label class="control-label required-field" mltag="txt_usertype">User Type</label>
+                            <label class="control-label required-field">{{ 'User Type' | translate }}</label>
                             <ng-select
                                 id="edit-user{{tabid}}-usertype-select"
                                 [items]="userTypes"
                                 [allowClear]="true"
-                                placeholder="Select Type"
+                                placeholder="{{ 'Select Type' | translate }}"
                                 [formControl]="formControl.controls['userType']"
-                                mltag="txt_selecttype"
                             ></ng-select>
                         </div>
                     </div>
@@ -313,7 +302,7 @@
                     <div class="row">
                         <div class="form-group col-sm-12">
                             <label class="control-label">
-                                <span class="ml" mltag="txt_accs">Access</span>
+                                <span class="ml">{{ 'Access' | translate }}</span>
                             </label>
                             <div>
                                 <ng-container
@@ -326,10 +315,10 @@
                         <div class="col-sm-12">
                             <button type="submit" class="btn btn-primary"
                                     [disabled]="!formControl.controls.username.valid || !formControl.controls.email.valid || !formControl.controls.accountType.valid || !formControl.controls.userType.valid">
-                                <i class="fa fa-save"></i> <span class="ml_translated" mltag="txt_save">Save</span>
+                                <i class="fa fa-save"></i> <span class="ml_translated">{{ 'Save' | translate }}</span>
                             </button>
-                            <button (click)="closeTab(tabid)" class="btn btn-secondary" mltag="txt_close">
-                                Close
+                            <button (click)="closeTab(tabid)" class="btn btn-secondary">
+                                {{ 'Close' | translate }}
                             </button>
                         </div>
                     </div>
@@ -342,108 +331,101 @@
     <ng-template #accessAdminTabs let-formControl="formControl" let-tabid="tabid">
         <clr-tabs>
             <clr-tab>
-                <a clrTabLink><i class="fa fa-users"></i> <span mltag="txt_administrative">Administrative</span></a>
+                <a clrTabLink><i class="fa fa-users"></i> {{ 'Administrative' | translate }}</a>
                 <clr-tab-content *clrIfActive="true">
-                    <div class="panel-body"><span mltag="txt_administrativegroups">Administrative Groups</span>
+                    <div class="panel-body">{{ 'Administrative Groups' | translate }}
 
                         <ng-select
                             [items]="filteredAdminGroupsList"
                             [multiple]="true"
                             [allowClear]="true"
-                            placeholder="Select Type"
+                            placeholder="{{ 'Select Type' | translate }}"
                             [containerWidth]="'100%'"
                             [formControl]="formControl.controls['adminGroups']"
-                            mltag="txt_selecttype"
                         ></ng-select>
                     </div>
                 </clr-tab-content>
             </clr-tab>
 
             <clr-tab>
-                <a clrTabLink><i class="fa fa-user"></i> <span mltag="txt_transactional">Transactional</span></a>
+                <a clrTabLink><i class="fa fa-user"></i> {{ 'Transactional' | translate }}</a>
                 <clr-tab-content *clrIfActive>
-                    <div class="panel-body"><span mltag="txt_groupinchain">Group in Chain</span>
+                    <div class="panel-body">{{ 'Group in Chain' | translate }}
 
                         <ng-select
                             [items]="filteredChainList"
                             [allowClear]="true"
-                            placeholder="Select Chain"
+                            placeholder="{{ 'Select Chain' | translate }}"
                             [active]="selectedChainItem"
                             (selected)="setFormChainId(tabid, $event)"
-                            mltag="txt_selectchain"
                         ></ng-select>
-                        <span mltag="txt_transactionalgroups">Transactional Groups</span>
+                        {{ 'Transactional Groups' | translate }}
 
                         <ng-select
                             [items]="tabsControl[tabid].filteredTxList"
                             [multiple]="true"
                             [allowClear]="true"
-                            placeholder="Select Type"
+                            placeholder="{{ 'Select Type' | translate }}"
                             [containerWidth]="'100%'"
                             [formControl]="formControl.controls['txGroups']"
-                            mltag="txt_selecttype"
                         ></ng-select>
                     </div>
                 </clr-tab-content>
             </clr-tab>
 
             <clr-tab>
-                <a clrTabLink><i class="fa fa-briefcase"></i> <span mltag="txt_wallets">Wallets</span></a>
+                <a clrTabLink><i class="fa fa-briefcase"></i> Wallets</a>
                 <clr-tab-content *clrIfActive>
                     <div class="panel-body">
                         <div class="m-b-10">
-                            <span mltag="txt_fullaccesswallets">Full access wallets</span>
+                            {{ 'Full access wallets' | translate }}
                             <ng-select
                                 [items]="tabsControl[tabid].filteredWalletsByAccount"
                                 (selected)="addedWalletSelection(1, tabid, $event)"
                                 [multiple]="true"
                                 [allowClear]="true"
-                                placeholder="Choose Wallets"
+                                placeholder="{{ 'Choose Wallets' | translate }}"
                                 [containerWidth]="'100%'"
                                 [formControl]="formControl.controls['walletsFull']"
-                                mltag="txt_choosewallets"
                             ></ng-select>
                         </div>
 
                         <div class="m-b-10">
-                            <span mltag="txt_readonlywallets">Read Only Wallets</span>
+                            {{ 'Read Only Wallets' | translate }}
                             <ng-select
                                 [items]="tabsControl[tabid].filteredWalletsByAccount"
                                 (selected)="addedWalletSelection(0, tabid, $event)"
                                 [multiple]="true"
                                 [allowClear]="true"
-                                placeholder="Choose Wallets"
+                                placeholder="{{ 'Choose Wallets' | translate }}"
                                 [containerWidth]="'100%'"
                                 [formControl]="formControl.controls['walletsRead']"
-                                mltag="txt_choosewallets"
                             ></ng-select>
                         </div>
 
                         <div class="m-b-10">
-                            <span mltag="txt_groupwalletpermissionfullaccesb031c8a683">Group Wallet Permission (Full Access)</span>
+                            {{ 'Group Wallet Permission (Full Access)' | translate }}
                             <ng-select
                                 [items]="accountTypes"
                                 (selected)="addedGroupWalletSelection(1, tabid, $event)"
                                 [multiple]="true"
                                 [allowClear]="true"
-                                placeholder="Choose Accounts"
+                                placeholder="{{ 'Choose Accounts' | translate }}"
                                 [containerWidth]="'100%'"
                                 [formControl]="formControl.controls['groupWalletsFull']"
-                                mltag="txt_chooseaccounts"
                             ></ng-select>
                         </div>
 
                         <div>
-                            <span mltag="txt_groupwalletpermissionreadonly">Group Wallet Permission (Read only)</span>
+                            {{ 'Group Wallet Permission (Read only)' | translate }}
                             <ng-select
                                 [items]="accountTypes"
                                 (selected)="addedGroupWalletSelection(0, tabid, $event)"
                                 [multiple]="true"
                                 [allowClear]="true"
-                                placeholder="Choose Accounts"
+                                placeholder="{{ 'Choose Accounts' | translate }}"
                                 [containerWidth]="'100%'"
                                 [formControl]="formControl.controls['groupWalletsRead']"
-                                mltag="txt_chooseaccounts"
                             ></ng-select>
                         </div>
                     </div>
@@ -451,46 +433,44 @@
             </clr-tab>
 
             <clr-tab>
-                <a clrTabLink><i class="fa fa-chain"></i> <span mltag="txt_chains">Chains</span></a>
+                <a clrTabLink><i class="fa fa-chain"></i> {{ 'Chains' | translate }}</a>
                 <clr-tab-content *clrIfActive>
                     <div class="panel-body">
-                        <span mltag="txt_chains">Chains</span>
+                        {{ 'Chains' | translate }}
                         <ng-select
                             [items]="filteredChainList"
                             [multiple]="true"
                             [allowClear]="true"
-                            placeholder="Choose Chains..."
+                            placeholder="{{ 'Choose Chains...' | translate }}"
                             [containerWidth]="'100%'"
                             [formControl]="formControl.controls['chainAccess']"
-                            mltag="txt_choosechains"
                         ></ng-select>
                     </div>
                 </clr-tab-content>
             </clr-tab>
 
             <clr-tab>
-                <a clrTabLink><i class="fa fa-bars"></i> <span mltag="txt_menu">Menu</span></a>
+                <a clrTabLink><i class="fa fa-bars"></i> {{ 'Menu' | translate }}</a>
                 <clr-tab-content *clrIfActive>
                     <div class="panel-body">
-                        <span mltag="txt_menu">Menu</span>
+                        {{ 'Menu' | translate }}
                         <ng-select
                             [items]="filteredMenuGroupsList"
                             [multiple]="false"
                             [allowClear]="true"
-                            placeholder="Choose Menu..."
+                            placeholder="{{ 'Choose Menu...' | translate }}"
                             [containerWidth]="'100%'"
                             [formControl]="formControl.controls['menuGroups']"
-                            mltag="txt_choosemenu"
                         ></ng-select>
                     </div>
                 </clr-tab-content>
             </clr-tab>
 
             <clr-tab>
-                <a clrTabLink><i class="fa fa-lock"></i> Reset Access</a>
+                <a clrTabLink><i class="fa fa-lock"></i> {{ 'Reset Access' | translate }}</a>
                 <clr-tab-content *clrIfActive>
                     <div class="panel-body">
-                        <div>Send reset emails</div>
+                        <div>{{ 'Send reset emails' | translate }}</div>
                         <button id="sendResetPasswordEmail" class="btn btn-outline" (click)="sendResetPassword(tabid, $event);">
                             <i class="fa fa-envelope-o"></i>{{ 'Reset Password' | translate }}
                         </button>
