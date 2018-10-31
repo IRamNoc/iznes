@@ -205,7 +205,6 @@ export class AdminUsersComponent implements OnInit, AfterViewInit, OnDestroy {
 
         this.setInitialTabs();
 
-
         this.subscriptions['routeParam'] = this.route.params.subscribe((params: Params) => {
             const tabId = _.get(params, 'tabid', 0);
             this.setTabActive(tabId);
@@ -1583,7 +1582,7 @@ export class AdminUsersComponent implements OnInit, AfterViewInit, OnDestroy {
         } else {
             this.alertsService.generate(
                 'error',
-                'Users email address is invalid. Please check and try again.');
+                'User\'s email address is invalid. Please check and try again.');
         }
     }
 
@@ -1623,7 +1622,7 @@ export class AdminUsersComponent implements OnInit, AfterViewInit, OnDestroy {
         } else {
             this.alertsService.generate(
                 'error',
-                'Users email address is invalid. Please check and try again.');
+                'User\'s email address is invalid. Please check and try again.');
         }
     }
 
