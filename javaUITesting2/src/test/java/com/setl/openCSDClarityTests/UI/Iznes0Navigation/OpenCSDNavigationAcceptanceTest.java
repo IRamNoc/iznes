@@ -232,6 +232,7 @@ public class OpenCSDNavigationAcceptanceTest {
         assertTrue(teamsTitle.contains("Teams"));
     }
     @Test
+    @Ignore
     //TODO Sprint 14
     public void TG2635_shouldNavigateToActivities()throws InterruptedException, SQLException {
         loginAndVerifySuccess("am", "alex01");
@@ -246,6 +247,7 @@ public class OpenCSDNavigationAcceptanceTest {
     }
 
     @Test
+    @Ignore
     //TODO Sprint 14
     public void TG2676_shouldNavigateToManagementCompany()throws InterruptedException, SQLException {
         loginAndVerifySuccess("am", "alex01");

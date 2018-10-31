@@ -7,6 +7,7 @@ import custom.junit.runners.OrderedJUnit4ClassRunner;
 
 import org.apache.xpath.SourceTree;
 import org.junit.Before;
+import org.junit.Ignore;
 import org.junit.Rule;
 import org.junit.Test;
 import org.junit.rules.Timeout;
@@ -64,6 +65,7 @@ public class OpenCSDManagementCompanyOnboarding {
     }
 
     @Test
+    @Ignore
     //TODO Sprint 14
     public void TG3113_shouldNavigateManagementCompanyAndViewFormStructure()throws InterruptedException, SQLException {
         try{
@@ -75,7 +77,7 @@ public class OpenCSDManagementCompanyOnboarding {
             fail("Not yet implemented");
         }
     }
-    
+
     private void assertPageFrom() {
         /*
         Email Address - Test Field - email
@@ -108,6 +110,7 @@ public class OpenCSDManagementCompanyOnboarding {
     }
 
     @Test
+    @Ignore
     //TODO Sprint 14
     public void TG2676_shouldFillInManagementCompanyFormData()throws InterruptedException, SQLException {
         try{
@@ -147,6 +150,7 @@ public class OpenCSDManagementCompanyOnboarding {
     }
 
     @Test
+    @Ignore
     //TODO Sprint 14
     public void TG2680_shouldSendInvitationToSuperAdminUser()throws InterruptedException, SQLException {
         try{
@@ -182,6 +186,7 @@ public class OpenCSDManagementCompanyOnboarding {
          */
     }
     @Test
+    @Ignore
     //TODO Sprint 14
     public void TG2684_shouldValidatePasswordAndSignupRedirect()throws InterruptedException, SQLException {
         try{
