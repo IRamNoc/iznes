@@ -229,8 +229,12 @@ public class LoginAndNavigationHelper {
         String investorTypes = driver.findElement(By.cssSelector("#kyc_investorType_0 > div:nth-child(1) > div:nth-child(2) > span:nth-child(1) > span:nth-child(1)")).getText();
         assertEquals(investorType, investorTypes);
         driver.findElement(By.id("btnKycSubmit")).click();
+
+        wait.until(ExpectedConditions.visibilityOfElementLocated(By.xpath("/html/body/app-root/jaspero-alerts/jaspero-alert/div[2]/div[1]")));
         String successHeader = driver.findElement(By.xpath("/html/body/app-root/jaspero-alerts/jaspero-alert/div[2]/div[1]")).getText();
         assertEquals("Success!", successHeader);
+        //click the close button
+        driver.findElement(By.xpath("//*[@id=\"iznes\"]/app-root/jaspero-alerts/jaspero-alert/div[2]/div[4]/button")).click();
         String emailInvite = driver.findElement(By.xpath("/html/body/app-root/jaspero-alerts/jaspero-alert/div[2]/div[3]/table/tbody/tr/td")).getText();
         assertEquals(email, emailInvite);
     }
