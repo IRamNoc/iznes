@@ -8,12 +8,13 @@ import { ActivatedRoute, Params, Router } from '@angular/router';
 
 /* Alerts and confirms. */
 import { AlertsService } from '@setl/jaspero-ng2-alerts';
-import { ConfirmationService, immutableHelper } from '@setl/utils';
+import { ConfirmationService, immutableHelper, SagaHelper } from '@setl/utils';
 
 /* User Admin Service. */
 import { UserAdminService } from '../useradmin.service';
 import { Subscription } from 'rxjs/Subscription';
 import { userAdminActions } from '@setl/core-store';
+import { AdminUsersService } from '@setl/core-req-services';
 import { LogService } from '@setl/utils';
 import { ClrDatagridStateInterface } from '@clr/angular';
 
@@ -64,10 +65,17 @@ export class AdminUsersComponent implements OnInit, AfterViewInit, OnDestroy {
     private manageWalletList: any;
 
     /* Datagrid and pagination */
-    public totalRecords: number = 0;
+    public dgTotalItems: number = 0;
     public dgPageFrom: number = 0;
     public dgPageSize: number = 10;
     public currentPage: number = 1;
+
+    /* User list cache */
+    private totalRecords: number = 0;
+
+    /* Search user */
+    public search: string = '';
+    private searchedUsersList: any = [];
 
     /* Redux observables */
     @select(['userAdmin', 'chains', 'chainList']) chainListObservable;
@@ -80,6 +88,7 @@ export class AdminUsersComponent implements OnInit, AfterViewInit, OnDestroy {
 
     /* Constructor. */
     constructor(private userAdminService: UserAdminService,
+                private adminUserService: AdminUsersService,
                 private ngRedux: NgRedux<any>,
                 private changeDetectorRef: ChangeDetectorRef,
                 private alertsService: AlertsService,
@@ -133,6 +142,7 @@ export class AdminUsersComponent implements OnInit, AfterViewInit, OnDestroy {
         /* Get totalRecords to build datagrid pagination */
         this.subscriptions['totalRecords'] = this.totalRecordsOb.subscribe((totalRecords) => {
             this.totalRecords = totalRecords;
+            this.dgTotalItems = totalRecords;
             this.requestPaginatedUsersList();
         });
 
@@ -146,9 +156,7 @@ export class AdminUsersComponent implements OnInit, AfterViewInit, OnDestroy {
         this.subscriptions['userListSubscription'] = this.usersListOb.subscribe((list) => {
             this.usersList = this.convertToArray(list);
 
-            if (this.usersList.length) {
-                this.setPaginatedUsersList();
-            }
+            this.setPaginatedUsersList();
 
             /* Override the changes. */
             this.changeDetectorRef.detectChanges();
@@ -284,7 +292,6 @@ export class AdminUsersComponent implements OnInit, AfterViewInit, OnDestroy {
         this.dgPageSize = dataGridState.page.size;
         this.requestPaginatedUsersList();
         this.setPaginatedUsersList();
-        this.changeDetectorRef.detectChanges();
     }
 
     /**
@@ -293,7 +300,15 @@ export class AdminUsersComponent implements OnInit, AfterViewInit, OnDestroy {
      *  Set the paginatedUsersList based on the current page of the datagrid
      */
     setPaginatedUsersList() {
-        this.paginatedUsersList = this.usersList.slice(this.dgPageFrom, this.dgPageFrom + this.dgPageSize);
+        if (this.search && !this.searchedUsersList.length) return;
+
+        if (this.searchedUsersList.length) {
+            this.paginatedUsersList =
+            this.searchedUsersList.slice(this.dgPageFrom, this.dgPageFrom + this.dgPageSize);
+        } else {
+            this.paginatedUsersList = this.usersList.slice(this.dgPageFrom, this.dgPageFrom + this.dgPageSize);
+        }
+        this.changeDetectorRef.detectChanges();
     }
 
     /**
@@ -1533,6 +1548,53 @@ export class AdminUsersComponent implements OnInit, AfterViewInit, OnDestroy {
             g.controls.passwordConfirm.setErrors(password === passwordConfirm ? null : { mismatch: true });
         }
         return null;
+    }
+
+    handleSearch(value) {
+        this.search = value;
+
+        if (this.search) {
+            const asyncTaskPipe = this.adminUserService.requestMyUsersList(0, 0, this.search);
+
+            this.ngRedux.dispatch(SagaHelper.runAsync(
+                [],
+                [],
+                asyncTaskPipe,
+                {},
+                (data) => {
+                    if (_.get(data, '[1].Data[0].userID', 0)) {
+                        this.searchedUsersList = data[1].Data;
+
+                        if (this.searchedUsersList.length) {
+                            this.dgTotalItems = this.searchedUsersList.length;
+                            this.currentPage = 1;
+                            this.setPaginatedUsersList();
+                        }
+                    } else {
+                        this.dgTotalItems = 0;
+                        this.searchedUsersList = [];
+                        this.paginatedUsersList = [];
+                        this.currentPage = 1;
+                        this.changeDetectorRef.detectChanges();
+                    }
+                },
+                () => {
+                }),
+            );
+        } else {
+            this.clearSearch();
+        }
+    }
+
+    clearSearch(event?: any) {
+        if (event) {
+            event.preventDefault();
+        }
+
+        this.search = '';
+        this.searchedUsersList = [];
+        this.dgTotalItems = this.totalRecords;
+        this.setPaginatedUsersList();
     }
 
     ngOnDestroy(): void {

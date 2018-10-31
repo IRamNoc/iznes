@@ -10,6 +10,34 @@
                 <i class="fa {{tabdata.title.icon}}"></i> {{tabdata.title.text}}
             </button>
             <clr-tab-content *clrIfActive="tabdata.active">
+                
+                <!-- Search Users -->
+                <div class="row">
+                    <div class="col-sm-12"> 
+                        <div class="custom-search left" *ngIf="id === 0">                    
+                            
+                            <input type="form-control text" 
+                                    placeholder="Enter username or email" 
+                                    #searchBox (keyup.enter)="handleSearch(searchBox.value); searchBox.value = '';"
+                                    (keyup)="showCross = (searchBox.value != '' ? true : false);" 
+                                    id="messagesSearch" 
+                                    mltag="txt_searchcurrentboxname">
+                                        
+                            <button (click)="handleSearch(searchBox.value); searchBox.value = ''; showCross = false;" class="" id="messagesSearchBtn">
+                                <i class="fa fa-search"></i>
+                            </button>
+                            
+                            <i *ngIf="showCross" class="fa fa-times searchCross" (click)="showCross = false; searchBox.value = ''"></i>
+
+                            <span *ngIf="search" class="search-filter" [class.show]="search"><a href="#" (click)="clearSearch($event); searchBox.value='' ">
+                                <i class="fa fa-search">
+                                </i> {{search}} <i class="fa fa-times"></i></a>
+                            </span>
+
+                        </div>
+                    </div>
+                </div>    
+
                 <!-- User list tab. -->
                 <ng-container *ngIf="id === 0">
                     <ng-container *ngTemplateOutlet="staticUserListTab">
@@ -74,7 +102,7 @@
                 <clr-dg-footer>
                     <div rowsPerPage="10" (rowsUpdate)="dgPageSize = $event; dgPageFrom = 0; setPaginatedUsersList(); requestPaginatedUsersList(); currentPage = 1;"></div>
                     {{pagination.firstItem + 1}} - {{pagination.lastItem + 1}}
-                    <clr-dg-pagination #pagination [clrDgPageSize]="dgPageSize" [(clrDgPage)]="currentPage" [clrDgTotalItems]="totalRecords"></clr-dg-pagination>
+                    <clr-dg-pagination #pagination [clrDgPageSize]="dgPageSize" [(clrDgPage)]="currentPage" [clrDgTotalItems]="dgTotalItems"></clr-dg-pagination>
                 </clr-dg-footer>
             </clr-datagrid>
         </div>
