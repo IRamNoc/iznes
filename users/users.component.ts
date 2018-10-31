@@ -198,6 +198,7 @@ export class AdminUsersComponent implements OnInit, AfterViewInit, OnDestroy {
 
         this.setInitialTabs();
 
+
         this.subscriptions['routeParam'] = this.route.params.subscribe((params: Params) => {
             const tabId = _.get(params, 'tabid', 0);
             this.setTabActive(tabId);
@@ -773,7 +774,7 @@ export class AdminUsersComponent implements OnInit, AfterViewInit, OnDestroy {
             email: formData.email,
             userType: formData.userType.length ? formData.userType[0].id : 0,
             account: formData.accountType.length ? formData.accountType[0].id : 0,
-            status: 0,
+            status: formData.userLocked,
         };
 
         /* Let's send the edit request. */
@@ -1191,6 +1192,7 @@ export class AdminUsersComponent implements OnInit, AfterViewInit, OnDestroy {
         this.tabsControl[newTabId].formControl.controls['email'].patchValue(user.emailAddress);
         this.tabsControl[newTabId].formControl.controls['accountType'].patchValue(accountType);
         this.tabsControl[newTabId].formControl.controls['userType'].patchValue(userType);
+        this.tabsControl[newTabId].formControl.controls['userLocked'].patchValue(user.accountLocked);
 
         /* Get Admin permissions. */
         this.userAdminService.requestUserPermissions({
@@ -1501,6 +1503,7 @@ export class AdminUsersComponent implements OnInit, AfterViewInit, OnDestroy {
                 email: new FormControl('', [Validators.required, Validators.email]),
                 accountType: new FormControl('', [Validators.required]),
                 userType: new FormControl('', [Validators.required]),
+                userLocked: new FormControl(0),
                 password: new FormControl('', [Validators.required]),
                 passwordConfirm: new FormControl('', [Validators.required]),
                 adminGroups: new FormControl([]),

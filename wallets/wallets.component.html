@@ -185,18 +185,26 @@
 
                     <div class="row">
                         <div class="form-group col-sm-6">
+<<<<<<< Updated upstream
                             <label class="control-label required-field" mltag="txt_walletstatus">Wallet Status</label>
                             <div class="wallet-status">
                                 <span *ngIf="formControl.value.walletLocked == 0">
+=======
+                            <label class="control-label" mltag="txt_walletstatus">Wallet Status</label>
+                            <div class="locked-toggle">
+                                <span *ngIf="!formControl.value.walletLocked" (click)="formControl.value.walletLocked = 1">
+>>>>>>> Stashed changes
                                     <i class="fa fa-unlock"></i>
                                 </span>
-                                <span *ngIf="formControl.value.walletLocked == 1">
+                                <span *ngIf="formControl.value.walletLocked" (click)="formControl.value.walletLocked = 0">
                                     <i class="fa fa-lock"></i>
                                 </span>
 
                                 <div class="toggle-switch">
                                     <input [formControl]="formControl.controls['walletLocked']"
-                                           id="edit-wallet-status-toggle" type="checkbox">
+                                           id="edit-wallet-status-toggle"
+                                           type="checkbox"
+                                           [checked]="formControl.value.walletLocked">
                                     <label for="edit-wallet-status-toggle"></label>
                                     <div *ngIf="formControl.controls.walletLocked.hasError('required') && formControl.controls.walletLocked.touched"
                                          class="field-error" mltag="txt_thisfieldisrequired">This field is required

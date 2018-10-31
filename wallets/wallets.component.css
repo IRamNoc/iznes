@@ -1,4 +1,4 @@
-.wallet-status .toggle-switch,
+/*.wallet-status .toggle-switch,
 .wallet-status > span {
     display: inline-block;
     width: auto;
@@ -32,7 +32,7 @@
 
 .wallet-status > span i.fa-lock {
     color: #747474;
-}
+}*/
 
 .disabled-row {
     -webkit-user-select: none;
