@@ -1,6 +1,6 @@
 import { Injectable } from '@angular/core';
 import { MemberSocketService } from '@setl/websocket-service';
-import { SagaHelper, Common, LogService } from '@setl/utils';
+import { SagaHelper, LogService } from '@setl/utils';
 import { createMemberNodeSagaRequest } from '@setl/utils/common';
 import {
     RequestAdminUsersMessageBody,
@@ -20,6 +20,7 @@ import {
     UpdateAdminPermissionsBody,
     UpdateTxPermissionsBody,
     UpdateMenuPermissionsBody,
+    GetUserAdminPermissionsBody,
 
     /* Groups. */
     CreateNewGroupBody,
@@ -61,6 +62,7 @@ import {
     clearRequestedWalletNodeList,
     setRequestedChainList,
     SET_CHAIN_LIST,
+    SET_ADMIN_PERMISSIONS,
 } from '@setl/core-store';
 import { NgRedux } from '@angular-redux/store';
 import * as _ from 'lodash';
@@ -488,6 +490,10 @@ export class AdminUsersService {
         /* Return the new member node saga request. */
         return createMemberNodeSagaRequest(this.memberSocketService, messageBody);
     }
+
+    /*
+     *
+     */
 
     static setRequestedWalletNodes(boolValue: boolean, ngRedux: NgRedux<any>) {
         // false = doRequest | true = already requested
