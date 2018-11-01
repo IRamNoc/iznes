@@ -15,6 +15,8 @@ import { OfiInviteInvestorsComponent } from './component';
 import { OfiKycService } from '../../ofi-req-services/ofi-kyc/service';
 import { MultilingualService } from '@setl/multilingual';
 import { kycEnums } from '../config';
+import { OfiFundDataService } from '../../ofi-data-service/product/fund/ofi-fund-data-service';
+import { Observable } from "rxjs/Rx";
 
 const locationSpy = jasmine.createSpyObj('Location', ['back']);
 const ofiKycServiceSpy = jasmine.createSpyObj(
@@ -23,6 +25,13 @@ const ofiKycServiceSpy = jasmine.createSpyObj(
 );
 const ngReduxSpy = jasmine.createSpyObj('NgRedux', ['dispatch']);
 const multilingualServiceSpy = jasmine.createSpyObj('MultilingualService', ['translate']);
+
+export class OfiFundDataServiceStub {
+
+    public getFundSelectList(): Observable<any[]> {
+        return Observable.of([]);
+    }
+}
 
 // Stub for translate
 @Pipe({ name: 'translate' })
@@ -58,6 +67,7 @@ describe('OfiInviteInvestorsComponent', () => {
                 ToasterService,
                 { provide: Location, useValue: locationSpy },
                 { provide: OfiKycService, useValue: ofiKycServiceSpy },
+                { provide: OfiFundDataService, useClass: OfiFundDataServiceStub },
                 { provide: NgRedux, useValue: ngReduxSpy },
                 { provide: MultilingualService, useValue: multilingualServiceSpy },
                 { provide: 'kycEnums', useValue: kycEnums },
