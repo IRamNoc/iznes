@@ -9,6 +9,7 @@ import { SetlLoginModule } from '@setl/core-login';
 /* Clarity module. */
 import { ClarityModule } from '@clr/angular';
 import { SelectModule, SetlPipesModule, SetlComponentsModule } from '@setl/utils';
+import { ExternalNotificationsComponent } from './external-notifications/external-notifications.component';
 
 @NgModule({
     imports: [
@@ -25,9 +26,11 @@ import { SelectModule, SetlPipesModule, SetlComponentsModule } from '@setl/utils
     ],
     declarations: [
         SetlMyAccountComponent,
+        ExternalNotificationsComponent,
     ],
     exports: [
         SetlMyAccountComponent,
+        ExternalNotificationsComponent,
     ],
 })
 export class SetlAccountModule {

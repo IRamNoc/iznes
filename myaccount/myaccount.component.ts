@@ -30,6 +30,7 @@ interface TabState {
     password: boolean;
     tfa: boolean;
     api: boolean;
+    externalNotifications: boolean;
 }
 
 @Component({
@@ -314,6 +315,8 @@ export class SetlMyAccountComponent implements OnDestroy, OnInit {
     apiKey: string;
     copied = false;
 
+    externalNotificationsAvailable: boolean = false;
+
     oldPassword: AbstractControl;
     password: AbstractControl;
     passwordConfirm: AbstractControl;
@@ -340,8 +343,8 @@ export class SetlMyAccountComponent implements OnDestroy, OnInit {
                 private changeDetectorRef: ChangeDetectorRef,
                 private myUserService: MyUserService,
                 private confirmationService: ConfirmationService,
-                @Inject(APP_CONFIG) appConfig: AppConfig,
-    ) {
+                @Inject(APP_CONFIG) appConfig: AppConfig) {
+
         this.appConfig = appConfig;
         ngRedux.subscribe(() => this.updateState());
 
@@ -426,11 +429,14 @@ export class SetlMyAccountComponent implements OnDestroy, OnInit {
     }
 
     ngOnInit() {
+        this.getExternalNotificationsAvailable();
+
         this.tabStates = {
             detail: true,
             password: false,
             tfa: false,
             api: false,
+            externalNotifications: false,
         };
 
         this.subscriptionsArray.push(this.route.params.subscribe((params: Params) => {
@@ -491,10 +497,31 @@ export class SetlMyAccountComponent implements OnDestroy, OnInit {
         });
     }
 
-    ngOnDestroy() {
-        for (const subscription of this.subscriptionsArray) {
-            subscription.unsubscribe();
-        }
+    /**
+     * Checks if RabbitMQ is available for this system
+     *
+     * @return {object} status
+     */
+    getExternalNotificationsAvailable(): any {
+        const asyncTaskPipe = this.myUserService.statusNotifications();
+
+        this.ngRedux.dispatch(SagaHelper.runAsync(
+            [],
+            [],
+            asyncTaskPipe,
+            {},
+            (response) => {
+                const responseData = _.get(response, '[1].Data', {});
+                if (responseData.hasOwnProperty('state')) this.externalNotificationsAvailable = true;
+                this.changeDetectorRef.detectChanges();
+            },
+            (response) => {
+                const responseData = _.get(response, '[1].Data.message.code', 0);
+                if (responseData === 503) this.externalNotificationsAvailable = false;
+                if (responseData === 404) this.externalNotificationsAvailable = true;
+                this.changeDetectorRef.detectChanges();
+            },
+        ));
     }
 
     getLanguage(requested): void {
@@ -654,5 +681,13 @@ export class SetlMyAccountComponent implements OnDestroy, OnInit {
             },
             500,
         );
+    }
+
+    ngOnDestroy() {
+        for (const subscription of this.subscriptionsArray) {
+            subscription.unsubscribe();
+        }
+
+        this.changeDetectorRef.detach();
     }
 }
