@@ -95,7 +95,7 @@ public class OpenCSDKYCModuleAcceptanceTest {
         loginAndVerifySuccess(AMUsername, AMPassword);
         waitForHomePageToLoad();
         navigateToInviteInvestorPage();
-        inviteAnInvestor(email[0], firstName, lastName, "Success!");
+        inviteAnInvestor(email[0], firstName, lastName, "Success!", "Institutional Investor");
         logout();
         newInvestorSignUp(email[0], INVPassword);
         KYCProcessWelcomeToIZNES2(email[0], companyName, phoneNo, firstName, lastName, managementCompEntered);
@@ -131,7 +131,7 @@ public class OpenCSDKYCModuleAcceptanceTest {
         loginAndVerifySuccess(AMUsername, AMPassword);
         waitForHomePageToLoad();
         navigateToInviteInvestorPage();
-        inviteAnInvestor(email[0], firstName, lastName, "Success!");
+        inviteAnInvestor(email[0], firstName, lastName, "Success!", "Institutional Investor");
         logout();
         newInvestorSignUp(email[0], INVPassword);
         KYCProcessWelcomeToIZNES2(email[0], companyName, phoneNo, firstName, lastName, managementCompEntered);
@@ -167,7 +167,7 @@ public class OpenCSDKYCModuleAcceptanceTest {
         loginAndVerifySuccess(AMUsername, AMPassword);
         waitForHomePageToLoad();
         navigateToInviteInvestorPage();
-        inviteAnInvestor(email[0], firstName, lastName, "Success!");
+        inviteAnInvestor(email[0], firstName, lastName, "Success!", "Institutional Investor");
         logout();
         newInvestorSignUp(email[0], INVPassword);
         KYCProcessWelcomeToIZNES2(email[0], companyName, phoneNo, firstName, lastName, managementCompEntered);
@@ -203,7 +203,7 @@ public class OpenCSDKYCModuleAcceptanceTest {
         loginAndVerifySuccess(AMUsername, AMPassword);
         waitForHomePageToLoad();
         navigateToInviteInvestorPage();
-        inviteAnInvestor(email[0], firstName, lastName, "Success!");
+        inviteAnInvestor(email[0], firstName, lastName, "Success!", "Institutional Investor");
         logout();
         newInvestorSignUp(email[0], INVPassword);
         KYCProcessWelcomeToIZNES2(email[0], companyName, phoneNo, firstName, lastName, managementCompEntered);
@@ -231,7 +231,7 @@ public class OpenCSDKYCModuleAcceptanceTest {
         loginAndVerifySuccess(AMUsername, AMPassword);
         waitForHomePageToLoad();
         navigateToInviteInvestorPage();
-        inviteAnInvestor(email[0], firstName, lastName, "Success!");
+        inviteAnInvestor(email[0], firstName, lastName, "Success!", "Institutional Investor");
         logout();
         newInvestorSignUp(email[0], INVPassword);
 
@@ -269,7 +269,7 @@ public class OpenCSDKYCModuleAcceptanceTest {
         loginAndVerifySuccess(AMUsername, AMPassword);
         waitForHomePageToLoad();
         navigateToInviteInvestorPage();
-        inviteAnInvestor(email[0], firstName, lastName, "Success!");
+        inviteAnInvestor(email[0], firstName, lastName, "Success!", "Institutional Investor");
         logout();
         newInvestorSignUp(email[0], INVPassword);
 
@@ -303,7 +303,7 @@ public class OpenCSDKYCModuleAcceptanceTest {
         loginAndVerifySuccess(AMUsername, AMPassword);
         waitForHomePageToLoad();
         navigateToInviteInvestorPage();
-        inviteAnInvestor(email[0], firstName, lastName, "Success!");
+        inviteAnInvestor(email[0], firstName, lastName, "Success!", "Institutional Investor");
         logout();
         newInvestorSignUp(email[0], INVPassword);
 
@@ -412,7 +412,7 @@ public class OpenCSDKYCModuleAcceptanceTest {
         loginAndVerifySuccess(AMUsername, AMPassword);
         waitForHomePageToLoad();
         navigateToInviteInvestorPage();
-        inviteAnInvestor(email[0], firstName, lastName, "Success!");
+        inviteAnInvestor(email[0], firstName, lastName, "Success!", "Institutional Investor");
         logout();
         newInvestorSignUp(email[0], INVPassword);
 
@@ -435,7 +435,7 @@ public class OpenCSDKYCModuleAcceptanceTest {
     public void shouldNotInviteAnInvestorIfUsedEmail() throws IOException, InterruptedException{
         loginAndVerifySuccess("am", "alex01");
         navigateToInviteInvestorPage();
-        inviteAnInvestor("testops081@setl.io", "Jordan", "Miller", "Failed!");
+        inviteAnInvestor("testops081@setl.io", "Jordan", "Miller", "Failed!", "Institutional Investor");
     }
 
 
@@ -444,7 +444,7 @@ public class OpenCSDKYCModuleAcceptanceTest {
     public void shouldInviteAnInvestorWithoutFirstname() throws IOException, InterruptedException{
         loginAndVerifySuccess("am", "alex01");
         navigateToInviteInvestorPage();
-        inviteAnInvestor("testops081@setl.io", "", "Miller", "Success!");
+        inviteAnInvestor("testops081@setl.io", "", "Miller", "Success!", "Institutional Investor");
     }
 
     @Test
@@ -452,7 +452,7 @@ public class OpenCSDKYCModuleAcceptanceTest {
     public void shouldInviteAnInvestorWithoutLastname() throws IOException, InterruptedException{
         loginAndVerifySuccess("am", "alex01");
         navigateToInviteInvestorPage();
-        inviteAnInvestor("testops083@setl.io", "Jordan", "", "Success!");
+        inviteAnInvestor("testops083@setl.io", "Jordan", "", "Success!", "Institutional Investor");
     }
 
     @Test

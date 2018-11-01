@@ -327,7 +327,7 @@ public class OpenCSDGeneralAcceptanceTest {
         }
     }
 
-    public static void inviteAnInvestor(String email, String firstname, String lastname, String expectedResult) throws InterruptedException, IOException {
+    public static void inviteAnInvestor(String email, String firstname, String lastname, String expectedResult, String investorType) throws InterruptedException, IOException {
         WebDriverWait wait = new WebDriverWait(driver, timeoutInSeconds);
         wait.until(visibilityOfElementLocated(By.id("invite-investors-btn")));
         wait.until(elementToBeClickable(By.id("invite-investors-btn")));
@@ -340,8 +340,11 @@ public class OpenCSDGeneralAcceptanceTest {
 
         driver.findElement(By.id("kyc_firstName_0")).sendKeys(firstname);
         driver.findElement(By.id("kyc_lastName_0")).sendKeys(lastname);
-        searchSelectTopOptionXpath("Institutional Investor", "//*[@id=\"kyc_investorType_0\"]/div", "//*[@id=\"kyc_investorType_0\"]/div/div[3]/div/input", "//*[@id=\"kyc_investorType_0\"]/div/div[3]/ul/li[1]/div/a");
+        searchSelectTopOptionXpath(investorType, "//*[@id=\"kyc_investorType_0\"]/div", "//*[@id=\"kyc_investorType_0\"]/div/div[3]/div/input", "//*[@id=\"kyc_investorType_0\"]/div/div[3]/ul/li[1]/div/a");
 
+        if (investorType.equals("Portfolio Manager")){
+            searchSelectTopOptionXpath("Fund", "//*[@id=\"pm_funds_0\"]/div", "//*[@id=\"pm_funds_0\"]/div/div[2]/div/input", "//*[@id=\"pm_funds_0\"]/div/div[2]/ul/li[1]/div/a");
+        }
 
         driver.findElement(By.id("btnKycSubmit")).click();
 
