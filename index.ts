@@ -23,3 +23,4 @@ export { NodeAlertsService } from './node-alerts/node-alerts.service';
 export { UserTourService } from './usertour/service';
 export { ReportingService } from './reporting/reporting.service';
 export { PermissionsRequestService } from './permissions/permissions-request.service';
+export { BaseDataService } from './data-services/base-data-service/base-data.service';
