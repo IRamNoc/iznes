@@ -73,7 +73,7 @@ const manageOrders = {
     label_txt: 'txt_orderbook',
     icon_class: 'fa fa-list-ul',
     element_id: 'menu-manage-orders',
-    router_link: '/manage-orders/list',
+    router_link: '/manage-orders',
     dynamic_link: '\/manage-orders\/[^\/]*',
 };
 const reportsCollectsArchives = {
