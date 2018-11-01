@@ -630,7 +630,7 @@ export class PrecentralisationReportComponent implements OnInit, OnDestroy {
         };
 
         this.ngRedux.dispatch({ type: ofiManageOrderActions.OFI_SET_ORDERS_FILTERS, filters: orderFilters });
-        this.router.navigateByUrl('manage-orders/list');
+        this.router.navigateByUrl('manage-orders');
     }
 
     exportPrecentralisationReport() {

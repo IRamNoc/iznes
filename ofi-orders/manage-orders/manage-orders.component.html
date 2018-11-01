@@ -10,7 +10,7 @@
 
     <clr-tabs *ngIf="tabsControl.length">
         <clr-tab *ngFor="let tabdata of tabsControl; let id = index">
-            <button [style.display]="getDisplay()" clrTabLink id="-{{id}}" [routerLink]="['/manage-orders', (id === 0) ? 'list' : tabdata.orderData.orderID]">
+            <button [style.display]="getDisplay()" clrTabLink id="-{{id}}" [routerLink]="(id === 0 ? ['/manage-orders'] : ['/manage-orders', tabdata.orderData.orderID])">
                 <i class="fa {{tabdata.title.icon}}"></i> {{tabdata.title.text}}
                 <i class="fa fa-times-circle text-warning" *ngIf="id > 0 && tabdata.active" id="orderCloseTabBtn_{{id}}" (click)="closeTab(id)" [ngStyle]="{'margin-left': '14px', 'font-size':'18px'}"></i>
             </button>
