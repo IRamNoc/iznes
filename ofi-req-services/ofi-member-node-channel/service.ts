@@ -31,6 +31,7 @@ import { LeiService } from '../ofi-product/lei/lei.service';
 import { LogService, SagaHelper } from '@setl/utils';
 import { MyUserService } from '@setl/core-req-services';
 import { SET_SITE_MENU } from '@setl//core-store';
+import { ofiUpdatePmDetail } from '../../ofi-store/ofi-portfolio-manager/portfolio-manage-list/actions';
 
 /* Service class. */
 @Injectable()
@@ -174,6 +175,11 @@ export class OfiMemberNodeChannelService {
 
         case 'scsu':
             this.fundShareService.publishStep(data.Data);
+            break;
+
+        // handle pm fund access update
+        case 'iznupdatepmfundaccess':
+            this.ngRedux.dispatch(ofiUpdatePmDetail(data.Data));
             break;
         }
     }
