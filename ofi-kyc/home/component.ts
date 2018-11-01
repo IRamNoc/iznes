@@ -55,6 +55,7 @@ export class OfiKycHomeComponent implements AfterViewInit, OnDestroy {
         phoneNumber: '',
         amManagementCompanyID: 0,
         invitationToken: '',
+        investorType: 0,
     };
 
     unSubscribe: Subject<any> = new Subject();
