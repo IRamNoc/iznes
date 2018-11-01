@@ -45,8 +45,7 @@
 
                         <div *ngIf="sendAssetForm.controls['assetAddress'].hasError('required')" class="field-error">{{ 'Field is required' | translate }}</div>
 
-                        <span *ngIf="showAddressHolding" class="field-error force-display-error" [ngClass]="{'text-success': addressHoldingAmount > 0 && !sendAssetForm.controls['amount'].hasError('insufficientFunds'), 'text-warning': addressHoldingAmount <= 0 && !sendAssetForm.controls['amount'].hasError('insufficientFunds')}">
-                            {{ 'Sender has' | translate }} {{addressHoldingAmount}}<ng-container *ngIf="addressHoldingAmount > 0"> {{ 'free' | translate }}</ng-container> {{ 'of this asset' | translate }}</span>
+                        <span *ngIf="showAddressHolding" class="field-error force-display-error" [ngClass]="{'text-success': addressHoldingAmount > 0 && !sendAssetForm.controls['amount'].hasError('insufficientFunds'), 'text-warning': addressHoldingAmount <= 0 && !sendAssetForm.controls['amount'].hasError('insufficientFunds')}">{{ 'Sender's available balance:' | translate }} {{addressHoldingAmount}}</span>
                     </div>
 
                     <div class="form-group">
@@ -73,7 +72,7 @@
 
                         <div *ngIf="sendAssetForm.controls['amount'].hasError('pattern')" class="field-error">{{ 'Amount must be a number' | translate }}</div>
 
-                        <span *ngIf="sendAssetForm.controls['amount'].hasError('insufficientFunds') && !sendAssetForm.controls['amount'].hasError('pattern')" class="field-error">{{ 'Sender has' | translate }} {{addressHoldingAmount}}<ng-container *ngIf="addressHoldingAmount > 0"> {{ 'free' | translate }}</ng-container> {{ 'of this asset' | translate }}</span>
+                        <span *ngIf="sendAssetForm.controls['amount'].hasError('insufficientFunds') && !sendAssetForm.controls['amount'].hasError('pattern')" class="field-error">{{ 'Sender's available balance:' | translate }} {{addressHoldingAmount}}</span>
                     </div>
 
                     <button type="submit" class="btn btn-primary" [disabled]="sendAssetForm.invalid"><i class="fa fa-save"></i> {{ 'Send Asset' | translate }}</button>
