@@ -669,7 +669,7 @@ export class InvestFundComponent implements OnInit, OnDestroy {
                 this.showAlertCutOffError();
                 clearInterval(this.toastTimer);
             }
-        },                 1000);
+        }, 1000);
     }
 
     getFormattedUnixTime(value: number): string {
@@ -774,7 +774,7 @@ export class InvestFundComponent implements OnInit, OnDestroy {
             }
 
             return result;
-        },                                        []);
+        }, []);
 
         // Set default or selected address.
         const hasSelectedAddressInList = immutableHelper.filter(this.addressList, (thisItem) => {
@@ -865,7 +865,7 @@ export class InvestFundComponent implements OnInit, OnDestroy {
         // check if this is a redemption order or if it is a sell buy order
         if ((this.type === 'sellbuy' || this.type === 'redeem') && (this.actionBy === 'a')) {
             const checkResponse = OrderHelper.isRedeemOver80Percent(this.orderValue, this.subPortfolioTotalBalance,
-                                                                    this.subPortfolioEncumberedBalance, this.subPortfolioRedemptionEncumBalance, this.shareData.price);
+                this.subPortfolioEncumberedBalance, this.subPortfolioRedemptionEncumBalance, this.shareData.price);
 
             if (!OrderHelper.isResponseGood(checkResponse)) {
                 // redeem over 80%
@@ -911,7 +911,7 @@ export class InvestFundComponent implements OnInit, OnDestroy {
                         </tr>
                     </tbody>
                 </table>
-        `,                         { showCloseButton: false, overlayClickToClose: false });
+        `, { showCloseButton: false, overlayClickToClose: false });
 
         this._ofiOrdersService.addNewOrder(request).then((data) => {
 
@@ -983,7 +983,7 @@ The IZNES Team.</p>`;
             data: {
                 links: [
                     {
-                        link: `/#/manage-orders/list?orderID=${params.orderID}`,
+                        link: `/#/manage-orders?orderID=${params.orderID}`,
                         anchorCss: 'btn btn-secondary',
                         anchorText: 'Go to this order',
                     },
@@ -1440,7 +1440,7 @@ The IZNES Team.</p>`;
      * @param isNoun {boolean}
      * @return {string}
      */
-    getOrderTypeTitle( isNoun: boolean = true ): string {
+    getOrderTypeTitle(isNoun: boolean = true): string {
         if (isNoun) {
             return {
                 subscribe: this._translate.getTranslationByString('Subscription'),
@@ -1573,7 +1573,7 @@ The IZNES Team.</p>`;
                         </tr>
                     </tbody>
                 </table>
-            `,  {}, this._translate.getTranslationByString('Order above 80% of your position'));
+            `, {}, this._translate.getTranslationByString('Order above 80% of your position'));
     }
 
     /**
@@ -1596,7 +1596,7 @@ The IZNES Team.</p>`;
                         </tr>
                     </tbody>
                 </table>
-            `,  {}, this._translate.getTranslationByString('Order above 80% of your position'));
+            `, {}, this._translate.getTranslationByString('Order above 80% of your position'));
     }
 
     validateKiid() {

@@ -720,7 +720,7 @@ export class ManageOrdersComponent implements OnInit, AfterViewInit, OnDestroy {
             } else {
                 dest = 'manage-orders/' + order[orderIdKey];
                 if (orderIdKey === 'sellBuyLinkOrderID') {
-                    this.location.replaceState('manage-orders/list');
+                    this.location.replaceState('manage-orders');
                 }
             }
 
