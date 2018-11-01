@@ -1,6 +1,7 @@
 <clr-tabs style="margin-top: -25px!important;">
     <clr-tab>
-        <button clrTabLink style="display: none!important;"><i class="fa fa-bars"></i> {{'Documentation' | translate }}</button>
+        <button clrTabLink style="display: none!important;"><i class="fa fa-bars"></i> {{'Documentation' | translate }}
+        </button>
 
         <clr-tab-content *clrIfActive>
 
@@ -17,11 +18,19 @@
                 <hr>
                 <p>{{'The new translation system works following these steps:' | translate}}</p>
                 <ol>
-                    <li>{{'Clean your old HTML page with mltag attributes by using ' | translate}} <a href="http://si-nexus01.dev.setl.io/common-components/mltag-auto" target="_blank">mltag_remove.py</a>.</li>
-                    <li>{{'Add new translation system by using' | translate}} <a href="http://si-nexus01.dev.setl.io/common-components/mltag-auto" target="_blank">translate.py</a>.</li>
+                    <li>{{'Clean your old HTML page with mltag attributes by using ' | translate}}
+                        <a href="http://si-nexus01.dev.setl.io/common-components/mltag-auto" target="_blank">mltag_remove.py</a>.
+                    </li>
+                    <li>{{'Add new translation system by using' | translate}}
+                        <a href="http://si-nexus01.dev.setl.io/common-components/mltag-auto" target="_blank">translate.py</a>.
+                    </li>
                     <li>{{'Show & Generate all missing translations in database via generator.' | translate}}</li>
-                    <li>{{'Translate missing translations on' | translate}} <a href="http://si-babel01:8080/#/login" target="_blank">{{'Translations back-office' | translate}}</a>.</li>
-                    <li>{{'Generate new translations file with' | translate}} <a href="http://si-nexus01.dev.setl.io/SETL_Modules/multilingual" target="_blank">updateTranslations.sh</a>.</li>
+                    <li>{{'Translate missing translations on' | translate}}
+                        <a href="http://si-babel01:8080/#/login" target="_blank">{{'Translations back-office' | translate}}</a>.
+                    </li>
+                    <li>{{'Generate new translations file with' | translate}}
+                        <a href="http://si-nexus01.dev.setl.io/SETL_Modules/multilingual" target="_blank">updateTranslations.sh</a>.
+                    </li>
                     <li>{{'Test all pages in your local environment.' | translate}}</li>
                 </ol>
                 <br>
@@ -90,7 +99,8 @@
                 <h2>{{'4. Translate new translations' | translate}}</h2>
                 <hr>
                 <p>
-                    {{'Go directly to the back-office:' | translate}} <a href="http://si-babel01:8080/#/login" target="_blank">{{'Translations back-office' | translate}}</a>.
+                    {{'Go directly to the back-office:' | translate}}
+                    <a href="http://si-babel01:8080/#/login" target="_blank">{{'Translations back-office' | translate}}</a>.
                     <br>
                     {{'You need an account to access this back-office. If you don\'t have one, ask to a developer.' | translate}}
                 </p>
@@ -98,7 +108,9 @@
                 <h2>{{'5. Generate new translations file' | translate}}</h2>
                 <hr>
                 <p>{{'When all new translations has been translated via the back-office, you can generate the new translations file for front-end application.' | translate}}</p>
-                <p>{{'Generate file with:' | translate}} <a href="http://si-nexus01.dev.setl.io/SETL_Modules/multilingual" target="_blank">updateTranslations.sh</a></p>
+                <p>{{'Generate file with:' | translate}}
+                    <a href="http://si-nexus01.dev.setl.io/SETL_Modules/multilingual" target="_blank">updateTranslations.sh</a>
+                </p>
                 <p>{{'To use it, go to your multilingual folder via the terminal and launch the following command:' | translate}}</p>
                 <pre><code>./updateTranslations.sh</code></pre>
                 <br>
@@ -113,7 +125,9 @@
                 </p>
             </div>
 
-            <br><hr><br>
+            <br>
+            <hr>
+            <br>
 
             <div class="text-center">
                 <h1>{{'Codes & Examples:' | translate}}</h1>
@@ -172,7 +186,7 @@
             <div>
                 <h1>{{'Sub-components' | translate}}</h1>
                 <app-dashboard [rows]="2" [columns]="4">
-                    <app-counter-tile name="actions" icon="list-ul" [count]="" color="red" route="manage-orders/list">{{'Order Book' | translate}}</app-counter-tile>
+                    <app-counter-tile name="actions" icon="list-ul" [count]="" color="red" route="manage-orders">{{'Order Book' | translate}}</app-counter-tile>
                     <app-counter-tile name="connections" icon="sitemap" [count]="" color="green" route="reports/holders-list/list">{{'Holders List' | translate}}</app-counter-tile>
 
                     <app-counter-tile name="messages" icon="book" [count]="" color="orange" route="reports/centralisation">{{'Centralisation Report' | translate}}</app-counter-tile>
