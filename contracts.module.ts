@@ -2,6 +2,7 @@ import { NgModule } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { ContractsComponent } from './contracts.component';
 import { ContractsDvpComponent } from './dvp/dvp.component';
+import { BilateralTransferComponent } from './bilateral-transfer/bilateral-transfer.component';
 import { ClarityModule } from '@clr/angular';
 import {
     SelectModule, SetlPipesModule, SetlComponentsModule, SetlDirectivesModule, DatePickerExtendedModule,
@@ -30,6 +31,7 @@ import { DVPContractService } from './dvp/dvp.service';
     declarations: [
         ContractsComponent,
         ContractsDvpComponent,
+        BilateralTransferComponent,
     ],
     exports: [
         ContractsComponent,

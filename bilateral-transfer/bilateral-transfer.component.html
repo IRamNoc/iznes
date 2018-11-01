@@ -1,0 +1,124 @@
+<div class="header-breadcrumbs">
+    <h1><i class="fa fa-cubes"></i>Bilateral Transfer</h1>
+</div>
+
+<clr-tabs>
+    <clr-tab>
+        <button clrTabLink clrTabLinkId="link1"><i class="fa fa-cubes"></i>Bilateral Transfer</button>
+
+        <clr-tab-content *clrIfActive>
+            <form [formGroup]="bilateralTransferForm" (ngSubmit)="createContract()">
+                <section class="form-block">
+                    <div class="row">
+                        <div class="form-group col-sm-6">
+                            <label class="control-label required-field" for="asset">Asset</label>
+                            <ng-select id="asset"
+                                       [items]="allInstrumentList"
+                                       [allowClear]="true"
+                                       placeholder="Select Issuer"
+                                       [formControl]="bilateralTransferForm.controls['asset']">
+                            </ng-select>
+
+                            <span *ngIf="bilateralTransferForm.controls.asset.hasError('required')" class="field-error">
+                            Field is required
+                        </span>
+                        </div>
+
+                        <div class="form-group col-sm-6">
+                            <label class="control-label">Offer Type</label>
+                            <div class="type-select">
+                            <span class="btn"
+                                  [ngClass]="{
+                                    'btn-outline': bilateralTransferForm.get('offerType').value !== 'buy',
+                                    'btn-success': bilateralTransferForm.get('offerType').value === 'buy'
+                                  }"
+                                  (click)="bilateralTransferForm.get('offerType').setValue('buy')">Buy</span>
+                                <span class="btn"
+                                      [ngClass]="{
+                                    'btn-outline': bilateralTransferForm.get('offerType').value !== 'sell',
+                                    'btn-danger': bilateralTransferForm.get('offerType').value === 'sell'
+                                  }"
+                                      (click)="bilateralTransferForm.get('offerType').setValue('sell')">Sell</span>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="hr-line-dashed"></div>
+
+                    <div class="row">
+                        <div class="form-group col-sm-6">
+                            <div class="row">
+                                <label class="control-label required-field" for="asset">Send From Address</label>
+                                <ng-select id="assetAddress"
+                                           [items]="walletAddressSelectItems"
+                                           [allowClear]="true"
+                                           placeholder="Asset Address"
+                                           [formControl]="bilateralTransferForm.controls['assetAddress']"
+                                           mltag="txt_assetaddress">
+                                </ng-select>
+
+                                <span *ngIf="bilateralTransferForm.controls['assetAddress'].hasError('required')" class="field-error">Field is required</span>
+                            </div>
+
+                            <div class="row">
+                                <div class="width360">
+                                    <label class="control-label required-field" for="amount">Amount</label>
+                                    <input type="text"
+                                           id="amount"
+                                           placeholder="Amount" size="45"
+                                           [formControl]="bilateralTransferForm.controls['amount']">
+
+                                    <span *ngIf="bilateralTransferForm.controls['amount'].hasError('required')" class="field-error" mltag="txt_fieldisrequired">Field is required</span>
+                                    <span *ngIf="bilateralTransferForm.controls['amount'].hasError('pattern')" class="field-error">Amount must be a number</span>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="form-group col-sm-6">
+                            <various-address-select
+                                [formControl]="bilateralTransferForm.controls['recipient']"
+                                [relationshipArray]="walletRelationships"
+                                [ownWalletAddressArray]="walletAddressSelectItems"
+                                [required]="true"></various-address-select>
+
+                            <span *ngIf="bilateralTransferForm.controls['recipient'].hasError('required') && !bilateralTransferForm.controls['recipient'].pristine" class="field-error">Field is required</span>
+                            <span *ngIf="bilateralTransferForm.controls['recipient'].hasError('pattern') && !bilateralTransferForm.controls['recipient'].pristine" class="field-error">Invalid address format</span>
+                        </div>
+                    </div>
+
+                    <div class="row">
+                        <div class="form-group col-sm-6">
+                            <label class="control-label required-field" for="witness1">Witness 1</label>
+                            <ng-select id="witness1"
+                                       [items]="walletAddressSelectItems"
+                                       [allowClear]="true"
+                                       placeholder="Witness 1"
+                                       [formControl]="bilateralTransferForm.controls['witness1']">
+                            </ng-select>
+
+                            <span *ngIf="bilateralTransferForm.controls['witness2'].hasError('required')" class="field-error">Field is required</span>
+                        </div>
+
+                        <div class="form-group col-sm-6">
+                            <label class="control-label required-field" for="witness2">Witness 2</label>
+                            <ng-select id="witness2"
+                                       [items]="walletAddressSelectItems"
+                                       [allowClear]="true"
+                                       placeholder="Asset Address"
+                                       [formControl]="bilateralTransferForm.controls['witness2']">
+                            </ng-select>
+
+                            <span *ngIf="bilateralTransferForm.controls['witness2'].hasError('required')" class="field-error">Field is required</span>
+                        </div>
+                    </div>
+
+                </section>
+
+                <button type="submit" class="btn btn-primary" [disabled]="bilateralTransferForm.invalid">
+                    Create Contract
+                </button>
+
+            </form>
+        </clr-tab-content>
+    </clr-tab>
+</clr-tabs>
