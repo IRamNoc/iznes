@@ -21,7 +21,7 @@ describe('SearchFilters:', () => {
         const form = fixture.getForm();
 
         expect(form instanceof FormGroup).toBeTruthy();
-        expect(Object.keys(form.controls).length).toBe(9);
+        expect(Object.keys(form.controls).length).toBe(12);
     });
     it('Returns the same form instance on subsequent gets', () => {
         const form = fixture.getForm();

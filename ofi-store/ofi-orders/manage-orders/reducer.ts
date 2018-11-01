@@ -27,7 +27,7 @@ const patchOrder = (state, orderId, patch) => {
     if (!existingOrder) {
         return state;
     }
-    
+
     if (Object.keys(patch).length == 1 && Object.keys(patch)[0] == 'orderStatus') {
         if (patch['orderStatus'] > 0 && patch['orderStatus'] < existingOrder['orderStatus']) {
             return state;

@@ -20,6 +20,9 @@ abstract class DatagridParamsData {
     dateSearchField: string;
     fromDate: string;
     toDate: string;
+    assetManagementCompany: string;
+    investorCompanyName: string;
+    portfolioLabel: string;
 }
 
 export class DatagridParams {
@@ -44,6 +47,9 @@ export class DatagridParams {
             dateSearchField: null,
             fromDate: null,
             toDate: null,
+            assetManagementCompany: null,
+            investorCompanyName: null,
+            portfolioLabel: null,
         };
         this.data = this.defaults;
     }
@@ -73,6 +79,10 @@ export class DatagridParams {
             this.data.toDate = null;
         }
 
+        this.data.assetManagementCompany = get(searchValues, 'assetManagementCompany', null);
+        this.data.investorCompanyName = get(searchValues, 'investorCompanyName', null);
+        this.data.portfolioLabel = get(searchValues, 'portfolioLabel', null);
+
         if (!isEqual(tmpData, this.data)) {
             this.changedSubject.next();
         }
@@ -83,6 +93,7 @@ export class DatagridParams {
         const fieldMap = {
             orderRef: 'orderId',
             investor: 'investorWalletID',
+            portfolioLabel: 'label',
             orderType: 'orderType',
             isin: 'isin',
             fundName: 'fundName',
@@ -104,8 +115,8 @@ export class DatagridParams {
             this.changedSubject.next();
 
             // if done first load. set it to false.
-            if( this.isFirstLoad ) {
-               this.isFirstLoad = false;
+            if (this.isFirstLoad) {
+                this.isFirstLoad = false;
             }
         }
     }

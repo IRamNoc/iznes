@@ -110,7 +110,7 @@
                         </table>
                     </div>
                     <div class="row">
-                        <div class="form-group col-sm-9">
+                        <div class="form-group col-sm-12">
                             <div class="well mb-1">
                                 <!-- Panel header -->
                                 <div class="row panel-header">
@@ -121,12 +121,22 @@
                                             <h2>{{'Optional filters' | translate}}</h2>
                                         </a>
                                     </div>
+                                    <div class="col-xs-6">
+                                        <div class="text-right">
+                                            <button class="btn" style="margin-right: 10px;" (click)="searchFilters.clear()">
+                                                <i class="fa fa-trash"></i> {{'Clear filters' | translate}}
+                                            </button>
+                                            <button class="btn btn-success nomargin" (click)="exportOrders()">
+                                                <i class="fa fa-download"></i> {{'Export Orders CSV' | translate}}
+                                            </button>
+                                        </div>
+                                    </div>
                                 </div>
 
                                 <!-- Panel body -->
-                                <div class="row panel-body" [class.hidden]="!isOptionalFiltersVisible">
-                                    <div>
-                                        <div class="form-group col-sm-4">
+                                <div class="panel-body" [class.hidden]="!isOptionalFiltersVisible">
+                                    <div class="row">
+                                        <div class="form-group col-sm-3">
                                             <label>{{'Order REF' | translate}}
 
                                             </label>
@@ -135,50 +145,71 @@
                                                        [placeholder]="translation.translate('Order ID')" style="width: 100% !important">
                                             </div>
                                         </div>
-                                    </div>
-                                    <div class="form-group col-sm-4">
-                                        <label>{{'Date Type' | translate}}
+                                        <ng-container *ngIf="isIznesAdmin">
+                                            <div class="form-group col-sm-3">
+                                                <label>{{'Asset Management Company' | translate}}
 
-                                        </label>
-                                        <div>
-                                            <ng-select id="orders-search-date-types" class="fluid-width" [active]="[dateTypes[2]]" [items]="dateTypes" [allowClear]="false"
-                                                       [formControl]="tabsControl[0].searchForm.controls['dateType']" [placeholder]="translation.translate('Type')">
-                                            </ng-select>
+                                                </label>
+                                                <div class="input-button-group">
+                                                    <input id="orders-search-amcomp" [formControl]="tabsControl[0].searchForm.controls['assetManagementCompany']" name="search-amComp" type="text"
+                                                           [placeholder]="translation.translate('Asset Management Company')" style="width: 100% !important">
+                                                </div>
+                                            </div>
+                                            <div class="form-group col-sm-3">
+                                                <label>{{'Investor' | translate}}
+
+                                                </label>
+                                                <div class="input-button-group">
+                                                    <input id="orders-search-investor" [formControl]="tabsControl[0].searchForm.controls['investorCompanyName']" name="search-investor" type="text"
+                                                           [placeholder]="translation.translate('Investor')" style="width: 100% !important">
+                                                </div>
+                                            </div>
+                                            <div class="form-group col-sm-3">
+                                                <label>{{'Portfolio' | translate}}
+
+                                                </label>
+                                                <div class="input-button-group">
+                                                    <input id="orders-search-portfolio" [formControl]="tabsControl[0].searchForm.controls['portfolioLabel']" name="search-portfolio" type="text"
+                                                           [placeholder]="translation.translate('Portfolio')" style="width: 100% !important">
+                                                </div>
+                                            </div>
+                                        </ng-container>
+                                    </div>
+                                    <div class="row">
+                                        <div class="form-group col-sm-3">
+                                            <label>{{'Date Type' | translate}}
+
+                                            </label>
+                                            <div>
+                                                <ng-select id="orders-search-date-types" class="fluid-width" [active]="[dateTypes[2]]" [items]="dateTypes" [allowClear]="false"
+                                                           [formControl]="tabsControl[0].searchForm.controls['dateType']" [placeholder]="translation.translate('Type')">
+                                                </ng-select>
+                                            </div>
                                         </div>
-                                    </div>
-                                    <div class="form-group col-sm-4">
-                                        <label for="orders-search-from-date">{{'From date' | translate}}
+                                        <div class="form-group col-sm-3">
+                                            <label for="orders-search-from-date">{{'From date' | translate}}
 
-                                        </label>
-                                        <div class="input-group date-pick-wrapper">
-                                            <span class="fa fa-calendar" aria-hidden="true"></span>
-                                            <input id="orders-search-from-date" formControlName="fromDate" autocomplete="off" [dpDayPicker]="configDate" [placeholder]="translation.translate('Choose a date')"
-                                                   mode="day" theme="dp-material">
+                                            </label>
+                                            <div class="input-group date-pick-wrapper">
+                                                <span class="fa fa-calendar" aria-hidden="true"></span>
+                                                <input id="orders-search-from-date" formControlName="fromDate" autocomplete="off" [dpDayPicker]="fromConfigDate" [placeholder]="translation.translate('Choose a date')"
+                                                       mode="day" theme="dp-material">
 
+                                            </div>
                                         </div>
-                                    </div>
-                                    <div class="form-group col-sm-4">
-                                        <label for="orders-search-to-date">{{'To date' | translate}}
+                                        <div class="form-group col-sm-3">
+                                            <label for="orders-search-to-date">{{'To date' | translate}}
 
-                                        </label>
-                                        <div class="input-group date-pick-wrapper">
-                                            <span class="fa fa-calendar" aria-hidden="true"></span>
-                                            <input id="orders-search-to-date" formControlName="toDate" autocomplete="off" [dpDayPicker]="configDate" [placeholder]="translation.translate('Choose a date')"
-                                                   mode="day" theme="dp-material">
+                                            </label>
+                                            <div class="input-group date-pick-wrapper">
+                                                <span class="fa fa-calendar" aria-hidden="true"></span>
+                                                <input id="orders-search-to-date" formControlName="toDate" autocomplete="off" [dpDayPicker]="toConfigDate" [placeholder]="translation.translate('Choose a date')"
+                                                       mode="day" theme="dp-material">
 
+                                            </div>
                                         </div>
                                     </div>
                                 </div>
-                            </div>
-                        </div>
-                        <div class="form-group col-sm-3">
-                            <div class="text-right">
-                                <button class="btn" (click)="searchFilters.clear()">
-                                    <i class="fa fa-trash"></i> {{'Clear filters' | translate}}
-                                </button>
-                                <button class="btn btn-success nomargin" (click)="exportOrders()">
-                                    <i class="fa fa-download"></i> {{'Export Orders CSV' | translate}}
-                                </button>
                             </div>
                         </div>
                     </div>
@@ -197,6 +228,11 @@
                     </clr-dg-column>
                     <clr-dg-column [clrDgField]="'investor'" clrDgSortIcon clrDgSortNoSearch id="Order-Investor">
                         <ng-container *clrDgHideableColumn="{hidden: false}">{{'Investor' | translate}}
+                            <span class="column-label"></span>
+                        </ng-container>
+                    </clr-dg-column>
+                    <clr-dg-column *ngIf="isIznesAdmin" [clrDgField]="'portfolio'" clrDgSortIcon clrDgSortNoSearch id="Order-Portfolio">
+                        <ng-container *clrDgHideableColumn="{hidden: false}">{{'Portfolio' | translate}}
                             <span class="column-label"></span>
                         </ng-container>
                     </clr-dg-column>
@@ -275,7 +311,7 @@
                         </ng-container>
                     </clr-dg-column>
                     <!-- ACTIONS -->
-                    <clr-dg-column id="Order-Action">
+                    <clr-dg-column *ngIf="!isIznesAdmin" id="Order-Action">
                         <span class="text-center">{{'Actions' | translate}}</span>
                     </clr-dg-column>
 
@@ -292,6 +328,9 @@
                             <!-- investor {{showInvestor(order)}} -->{{order.investorCompanyName}}
 
 
+                        </clr-dg-cell>
+                        <clr-dg-cell *ngIf="isIznesAdmin" (click)="buildLink(order, $event)">
+                            {{order.label}}
                         </clr-dg-cell>
                         <clr-dg-cell *ngIf="isInvestorUser">
                             <!-- isin -->
@@ -392,7 +431,7 @@
 
                             </span>
                         </clr-dg-cell>
-                        <clr-dg-cell [ngSwitch]="order.orderStatus">
+                        <clr-dg-cell *ngIf="!isIznesAdmin" [ngSwitch]="order.orderStatus">
                             <!--&lt;!&ndash; Actions &ndash;&gt;-->
                             <!--<button type="button" *ngIf="order.orderStatus == 1; else cancelDisabled" (click)="cancelOrder(i)" class="btn btn-sm btn-danger" mltag="txt_cancel">Cancel</button>-->
                             <!--<ng-template #cancelDisabled>-->
