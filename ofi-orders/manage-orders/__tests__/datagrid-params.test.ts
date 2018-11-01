@@ -14,24 +14,31 @@ const mockFilters = {
     status: [{ id: 3, text: 'Subscription' }],
     type: [{ id: 3, text: 'Waiting Settlement' }],
     dateType: [{ id: 'cutOffDate', text: 'Cut-off Date' }],
+    assetManagementCompany: 'amComp',
+    investorCompanyName: 'investor',
+    portfolioLabel: 'portfolio',
 };
+
 class MockSearchFilters implements ISearchFilters {
     filters: {};
+
     constructor(filters = {}) {
         this.filters = { ...mockFilters, ...filters };
     }
+
     get() {
         return this.filters;
     }
+
     getForm() {
         const form = Object.keys(this.filters)
-            .reduce(
-                (a, k) => {
-                    a[k] = [this.filters[k]];
-                    return a;
-                },
-                {},
-            );
+        .reduce(
+            (a, k) => {
+                a[k] = [this.filters[k]];
+                return a;
+            },
+            {},
+        );
         return (new FormBuilder()).group(form);
     }
 }
@@ -56,6 +63,9 @@ describe('DatagridParams', () => {
             dateSearchField: null,
             fromDate: null,
             toDate: null,
+            assetManagementCompany: null,
+            investorCompanyName: null,
+            portfolioLabel: null,
         });
     });
     it('Sets the params from search filters', () => {
@@ -78,6 +88,9 @@ describe('DatagridParams', () => {
             sortOrder: 'desc',
             fromDate: '2018-08-20 00:00',
             toDate: '2018-08-21 23:59',
+            assetManagementCompany: 'amComp',
+            investorCompanyName: 'investor',
+            portfolioLabel: 'portfolio',
         });
     });
     it('An invalid date blanks out all date related fields', () => {
