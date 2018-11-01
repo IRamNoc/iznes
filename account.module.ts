@@ -30,6 +30,7 @@ import { ExternalNotificationsComponent } from './external-notifications/externa
     ],
     exports: [
         SetlMyAccountComponent,
+        ExternalNotificationsComponent,
     ],
 })
 export class SetlAccountModule {
