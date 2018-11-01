@@ -266,6 +266,7 @@ public class OpenCSDNAVAcceptanceTest {
         driver.findElement(By.id("Search-field")).sendKeys(uShareDetails[0]);
         wait.until(visibilityOfElementLocated(By.id("Btn-CancelNAV-0")));
         driver.findElement(By.id("Btn-CancelNAV-0")).click();
+        Thread.sleep(1000);
         wait.until(visibilityOfElementLocated(By.className("jaspero__dialog-title")));
         String jasperoTitle = driver.findElement(By.className("jaspero__dialog-title")).getText();
         assertTrue(jasperoTitle.equals("Cancel NAV"));
@@ -289,14 +290,10 @@ public class OpenCSDNAVAcceptanceTest {
     @Test
     public void TG3127_ShouldChangeNAVStatusToCancelledDatabase() throws InterruptedException, SQLException, IOException {
         String AMUsername = "am"; String AMPassword = "alex01";
-        String managementCompExpected = "Management Company";
         String[] uFundDetails = generateRandomFundsDetails();
         String[] uShareDetails = generateRandomShareDetails();
-        String[] umbFundDetails = generateRandomUmbrellaFundsDetails();
         String[] uIsin = generateRandomISIN();
-        String umbLei = generateRandomLEI();
         String fundLei = generateRandomLEI();
-        String shareCurrency = "EUR";
         int latestNav = 14;
         final WebDriverWait wait = new WebDriverWait(driver, timeoutInSeconds);
 
@@ -321,6 +318,7 @@ public class OpenCSDNAVAcceptanceTest {
         driver.findElement(By.id("Search-field")).sendKeys(uShareDetails[0]);
         wait.until(visibilityOfElementLocated(By.id("Btn-CancelNAV-0")));
         driver.findElement(By.id("Btn-CancelNAV-0")).click();
+        Thread.sleep(1000);
         wait.until(visibilityOfElementLocated(By.className("jaspero__dialog-title")));
         driver.findElement(By.xpath("//*[@id=\"iznes\"]/app-root/jaspero-confirmations/jaspero-confirmation/div[2]/div[4]/button[2]")).click();
 
@@ -331,14 +329,10 @@ public class OpenCSDNAVAcceptanceTest {
     @Test
     public void TG3127_ShouldUpdateToPreviousNAVWhenCurrentNAVCancelled() throws InterruptedException, SQLException, IOException {
         String AMUsername = "am"; String AMPassword = "alex01";
-        String managementCompExpected = "Management Company";
         String[] uFundDetails = generateRandomFundsDetails();
         String[] uShareDetails = generateRandomShareDetails();
-        String[] umbFundDetails = generateRandomUmbrellaFundsDetails();
         String[] uIsin = generateRandomISIN();
-        String umbLei = generateRandomLEI();
         String fundLei = generateRandomLEI();
-        String shareCurrency = "EUR";
         int latestNav = 14;
         final WebDriverWait wait = new WebDriverWait(driver, timeoutInSeconds);
 
@@ -353,7 +347,6 @@ public class OpenCSDNAVAcceptanceTest {
         searchFundsTable(uFundDetails[0]);
 
         createShare(uFundDetails[0], uShareDetails[0], uIsin[0]);
-        searchSharesTable(uShareDetails[0]);
         setSharesNAVandValidate(uShareDetails[0], latestNav);
 
         loginAndVerifySuccess(AMUsername, AMPassword);
@@ -384,15 +377,11 @@ public class OpenCSDNAVAcceptanceTest {
     @Test
     public void TG3129_ShouldNotBeAbleToModifyNAVIfNoOrdersIsSettled() throws InterruptedException, SQLException, IOException {
         String AMUsername = "am"; String AMPassword = "alex01";
-        String managementCompExpected = "Management Company";
 
         String[] uFundDetails = generateRandomFundsDetails();
         String[] uShareDetails = generateRandomShareDetails();
-        String[] umbFundDetails = generateRandomUmbrellaFundsDetails();
         String[] uIsin = generateRandomISIN();
-        String umbLei = generateRandomLEI();
         String fundLei = generateRandomLEI();
-        String shareCurrency = "EUR";
         int latestNav = 14;
 
         final WebDriverWait wait = new WebDriverWait(driver, timeoutInSeconds);
@@ -416,6 +405,9 @@ public class OpenCSDNAVAcceptanceTest {
         navigateToPageByID("menu-product-home");
         navigateToNAVPageFromFunds();
         driver.findElement(By.id("Search-field")).sendKeys(uShareDetails[0]);
+
+        Thread.sleep(1000);
+
         wait.until(visibilityOfElementLocated(By.id("Btn-ModifyNAV-0")));
         driver.findElement(By.id("Btn-ModifyNAV-0")).click();
         wait.until(visibilityOfElementLocated(By.id("edit-nav-title")));
@@ -435,6 +427,50 @@ public class OpenCSDNAVAcceptanceTest {
         String NAVPre = driver.findElement(By.id("NAV-Val-Value-0")).getText();
         assertTrue(NAVPre.equals("23.00"));
 
+    }
+
+    public static void navModifyOrCancel(String shares, String modifyOrCancel, int modNav) throws InterruptedException {
+
+        final WebDriverWait wait = new WebDriverWait(driver, timeoutInSeconds);
+        driver.findElement(By.id("Search-field")).sendKeys(shares);
+        Thread.sleep(1000);
+
+        if (modifyOrCancel.equals("modify")) {
+
+            wait.until(visibilityOfElementLocated(By.id("Btn-ModifyNAV-0")));
+            driver.findElement(By.id("Btn-ModifyNAV-0")).click();
+            wait.until(visibilityOfElementLocated(By.id("edit-nav-title")));
+            Thread.sleep(1000);
+            driver.findElement(By.id("Set-nav-field")).clear();
+            driver.findElement(By.id("Set-nav-field")).sendKeys(modNav + ".00");
+            driver.findElement(By.id("Validate-nav-btn")).click();
+            wait.until(visibilityOfElementLocated(By.className("jaspero__dialog-title")));
+            String jasperoTitle = driver.findElement(By.className("jaspero__dialog-title")).getText();
+            assertTrue(jasperoTitle.equals("Success!"));
+            String jasperoContent = driver.findElement(By.className("jaspero__dialog-content")).getText();
+            assertTrue(jasperoContent.contains("Successfully Updated NAV"));
+            driver.findElement(By.xpath("//*[@id=\"iznes\"]/app-root/jaspero-alerts/jaspero-alert/div[2]/div[4]/button")).click();
+            String NAVPre = driver.findElement(By.id("NAV-Val-Value-0")).getText();
+            assertTrue(NAVPre.equals(modNav + ".00"));
+
+        }if (modifyOrCancel.equals("cancel")){
+
+            wait.until(visibilityOfElementLocated(By.id("Btn-CancelNAV-0")));
+            driver.findElement(By.id("Btn-CancelNAV-0")).click();
+            Thread.sleep(1000);
+            wait.until(visibilityOfElementLocated(By.className("jaspero__dialog-title")));
+            String jasperoTitle = driver.findElement(By.className("jaspero__dialog-title")).getText();
+            assertTrue(jasperoTitle.equals("Cancel NAV"));
+            String jasperoContent = driver.findElement(By.className("jaspero__dialog-content")).getText();
+            assertTrue(jasperoContent.contains("Are you sure you wish to cancel the NAV for"));
+            assertTrue(jasperoContent.contains(shares));
+            driver.findElement(By.xpath("//*[@id=\"iznes\"]/app-root/jaspero-confirmations/jaspero-confirmation/div[2]/div[4]/button[2]")).click();
+            Thread.sleep(1000);
+            String jasperoTitle2 = driver.findElement(By.className("jaspero__dialog-title")).getText();
+            assertTrue(jasperoTitle2.equals("Success!"));
+            String jasperoContent2 = driver.findElement(By.className("jaspero__dialog-content")).getText();
+            assertTrue(jasperoContent2.contains("NAV successfully cancelled."));
+        }
     }
 
     @Test

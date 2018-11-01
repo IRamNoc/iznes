@@ -104,7 +104,6 @@ public class OpenCSDEntireFlowAcceptanceTest {
         String firstName = "Jordan"; String lastName = "Miller";
         String phoneNo = "07956701992";
         String[] uSubNameDetails = generateRandomSubPortfolioName();
-        //String[] uSubIBANDetails = generateRandomSubPortfolioIBAN();
         String[] uAmount = generateRandomAmount();
 
         String uSubIBANDetails = "FR7630006000011234567890189";
