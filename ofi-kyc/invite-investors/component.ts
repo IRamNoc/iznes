@@ -38,9 +38,9 @@ export class OfiInviteInvestorsComponent implements OnInit, OnDestroy {
     ];
 
     investorTypes = [
-        { id: 45, text: 'Institutional Investor' },
-        { id: 65, text: 'Portfolio Manager' },
-        { id: 55, text: 'Retail Investor' },
+        { id: 10, text: 'Institutional Investor' },
+        { id: 20, text: 'Portfolio Manager' },
+        { id: 30, text: 'Retail Investor' },
     ];
 
     enums = {
@@ -190,6 +190,7 @@ export class OfiInviteInvestorsComponent implements OnInit, OnDestroy {
                 '',
                 Validators.required
             ],
+            fundList: [[]],
             pmFunds: [
                 [],
             ],
@@ -304,7 +305,7 @@ export class OfiInviteInvestorsComponent implements OnInit, OnDestroy {
     isRetailInvestor(investorType: FormControl): boolean {
         const val = investorType.value;
         const userType = _.get(val, '[0].id');
-        if (userType === 55) {
+        if (userType === 30) {
             investorType.setErrors({ investorType: true });
             return true;
         }
@@ -315,14 +316,18 @@ export class OfiInviteInvestorsComponent implements OnInit, OnDestroy {
     /**
      * Whether investor is Portfolio manager
      * @param {FormControl} investorType
+     * @param {FormControl} fundList
      * @return {boolean}
      */
-    isPortfolioManager(investorType: FormControl): boolean {
+    isPortfolioManager(investorType: FormControl, fundList: FormControl): boolean {
         const val = investorType.value;
         const userType = _.get(val, '[0].id');
-        if (userType === 65) {
+        if (userType === 20) {
+            fundList.setValidators([Validators.required]);
             return true;
         }
+
+        fundList.setValidators([]);
 
         return false;
     }
@@ -336,13 +341,28 @@ export class OfiInviteInvestorsComponent implements OnInit, OnDestroy {
  */
 function constructInvitationRequest(formValue) {
     const investors = immutableHelper.reduce(formValue.investors, (result, item) => {
+        const investorType = item.getIn(['investorType', 0], {}).id;
+        // check the investor type
+        if (investorType !== 10 && investorType !== 20) {
+            throw new Error('We should only allow investor type 10 or 20');
+        }
+
+        // get the fundList in array of fundId
+        const fundList = item.get('fundList', []).toJS();
+        const fundIdList = fundList.reduce((acc, fund) => {
+            acc.push(fund.id);
+            return acc;
+        }, []);
+
         result.push({
+            investorType,
             email: item.get('email', ''),
             firstname: item.get('firstName', ''),
             lastname: item.get('lastName', ''),
             lang: item.get('language', 'fr'),
             clientreference: item.get('clientReference', ''),
             message: item.get('message', ''),
+            fundList: fundIdList,
         });
         return result;
     }, []);

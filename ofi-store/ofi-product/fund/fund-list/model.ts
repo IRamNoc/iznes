@@ -17,6 +17,7 @@ export interface IznesFundDetails {
 
 /* Iznes fund */
 export interface IznesFundDetail {
+    fundID: number;
     fundName: string;
     draft: string;
     draftUser?: string;

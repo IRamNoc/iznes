@@ -22,6 +22,7 @@ import { OrderType } from '../../ofi-orders/order.model';
 import { HoldingByAsset } from '@setl/core-store/wallet/my-wallet-holding';
 import { ReportingService } from '@setl/core-balances/reporting.service';
 import { SellBuyCalendar } from '../../ofi-product/fund-share/FundShareEnum';
+import { setRequestedFundAccessMy } from "../../ofi-store/ofi-fund-invest";
 
 
 @Component({
@@ -86,6 +87,7 @@ export class OfiInvestorFundListComponent implements OnInit, OnDestroy {
 
         this.subscriptionsArray.push(this.connectedWalletOb.subscribe(connected => {
             this.connectedWalletId = connected;
+            this._ngRedux.dispatch(clearRequestedFundAccessMy());
             if (this.connectedWalletId !== 0) {
                 this.subscriptionsArray.push(this.requestedOfiInvestorFundListOb.subscribe(
                     (requested) => this.requestMyFundAccess(requested)));

@@ -106,7 +106,7 @@
                         </div>
                     </div>
 
-                    <div class="row" *ngIf="isPortfolioManager(investor.controls['investorType'])">
+                    <div class="row" *ngIf="isPortfolioManager(investor.controls['investorType'], investor.controls['fundList'])">
                         <div class="form-group col-sm-6">
                             <label class="required-field" for="pm_funds_{{i}}">{{'List of funds managed by the Portfolio Manager:' | translate}}
 

@@ -85,7 +85,7 @@
     </clr-tabs>
 
     <clr-tabs *ngIf="kycId != ''">
-        <clr-tab>
+        <clr-tab *ngIf="!isPortfolioManager()">
             <button clrTabLink>{{'KYC Information' | translate}}</button>
             <clr-tab-content *clrIfActive="true">
 
@@ -160,7 +160,7 @@
         </clr-tab>
         <clr-tab>
             <button clrTabLink (click)="loadTab(2);">{{'Shares Authorisation' | translate}}</button>
-            <clr-tab-content *clrIfActive="false">
+            <clr-tab-content *clrIfActive="isPortfolioManager() ? true : false">
                 <div class="row">
                     <div class="col-sm-6" style="margin-top: 0.5rem">
                         <p>{{'Please find below the authorisation of @companyName@ regarding your shares.' | translate: {'companyName': companyName} }}</p>

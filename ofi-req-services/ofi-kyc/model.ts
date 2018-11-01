@@ -2,12 +2,14 @@ import { MemberNodeMessageBody } from '@setl/utils/common';
 
 // Invitation
 interface Invitation {
+    investorType: number; // investor type, 10: Institutional Investor, 20: Portfolio Manager, 30: Retail Investor
     email: string;
     firstname?: string;
     lastname?: string;
     lang: any;
     clientreference?: string;
     message?: string;
+    fundList?: number[]; // array of fundId.
 }
 
 export interface SendInvitationRequestData {

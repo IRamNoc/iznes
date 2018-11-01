@@ -32,6 +32,23 @@ export class OfiFundDataService extends BaseDataService<OfiFundService> {
     }
 
     /**
+     * Get fund list in array format
+     * @return {Observable<IznesFundDetail[]>}
+     */
+    getFundArrayList(): Observable<IznesFundDetail[]> {
+        return super.getData<IznesFundDetails>('fundList')
+        .pipe(
+            map((funds: IznesFundDetails) => {
+                const fundList = [];
+                for (const key in funds) {
+                    fundList.push(funds[key]);
+                }
+                return fundList;
+            }),
+        );
+    }
+
+    /**
      * Get fund list in ng2-select format.
      * @return {Observable<{id: string; text: string}[]>}
      */

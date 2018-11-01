@@ -42,6 +42,7 @@ import { KycReducer, KycState } from './ofi-kyc';
 
 /* Currencies */
 import { CurrencyState, CurrencyReducer } from './ofi-currencies';
+import { OfiPortfolioManagerState, OfiPortfolioMangerReducer } from './ofi-portfolio-manager';
 
 export {
     SET_FUND_ACCESS_MY,
@@ -193,6 +194,7 @@ export interface OfiState {
     ofiKyc: KycState;
     ofiReports: OfiReportsState;
     ofiAmDashboard: OfiAmDashboardsState;
+    ofiPortfolioManager: OfiPortfolioManagerState;
 }
 
 export const OfiReducer: Reducer<OfiState> = combineReducers<OfiState>({
@@ -205,4 +207,5 @@ export const OfiReducer: Reducer<OfiState> = combineReducers<OfiState>({
     ofiKyc: KycReducer,
     ofiReports: OfiReportsReducer,
     ofiAmDashboard: OfiAmDashboardsReducer,
+    ofiPortfolioManager: OfiPortfolioMangerReducer,
 });
