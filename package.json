@@ -4,7 +4,7 @@
   "version": "1.0.0",
   "author": "SETL",
   "dependencies": {
-    "tslint-config-airbnb": "^5.9.2"
+    "tslint-config-airbnb": "~5.9.2"
   },
   "main": "tslint.js",
   "repository": "git@si-nexus01.dev.setl.io:common-components/tslint-config-setl.git"
