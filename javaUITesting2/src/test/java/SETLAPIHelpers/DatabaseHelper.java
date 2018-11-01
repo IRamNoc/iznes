@@ -408,5 +408,37 @@ public class DatabaseHelper {
         }
     }
 
+    public static boolean isUserInKYCTable(String emailAddress) throws Exception
+    {
+        conn = DriverManager.getConnection(connectionString, DBUsername, DBPassword);
+        //for the query
+        Statement stmt = conn.createStatement();
+        ResultSet rs = null;
+        String query = "SELECT setlnet.tblIznKyc.*, setlnet.tblUsers.emailAddress ";
+        query += "FROM setlnet.tblIznKyc ";
+        query += "INNER JOIN setlnet.tblUsers ON setlnet.tblUsers.userID=setlnet.tblIznKyc.investorUserID ";
+        query += "WHERE emailAddress = \""+  emailAddress + "\";";
+
+        boolean result = false;
+
+        try
+        {
+            rs = stmt.executeQuery(query);
+            result = rs.last();
+        }
+        catch (SQLException e)
+        {
+            e.printStackTrace();
+            fail("Failed to execute KYC DB query");
+        }
+        finally
+        {
+            conn.close();
+            stmt.close();
+            rs.close();
+        }
+        return result;
+    }
+
 }
 

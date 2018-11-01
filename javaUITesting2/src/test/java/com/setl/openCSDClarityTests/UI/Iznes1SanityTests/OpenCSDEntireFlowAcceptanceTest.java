@@ -77,7 +77,8 @@ public class OpenCSDEntireFlowAcceptanceTest {
     }
 
     @Test
-    public void shouldTest_EntireIZNESPlatform() throws InterruptedException, SQLException, IOException {
+    public void shouldTest_EntireIZNESPlatform() throws Exception
+    {
 
         String No = "11"; String userNo = "0" + No;
 
@@ -139,6 +140,7 @@ public class OpenCSDEntireFlowAcceptanceTest {
         waitForHomePageToLoad();
         navigateToInviteInvestorPage();
         inviteAnInvestor(email[0], firstName, lastName, "Success!");
+        logout();
         newInvestorSignUp(email[0], InvPassword);
         KYCProcessWelcomeToIZNES2(email[0], companyName, phoneNo, firstName, lastName, managementCompEntered);
 

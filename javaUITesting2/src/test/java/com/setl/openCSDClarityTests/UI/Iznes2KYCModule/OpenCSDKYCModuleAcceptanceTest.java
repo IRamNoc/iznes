@@ -1,6 +1,6 @@
 package com.setl.openCSDClarityTests.UI.Iznes2KYCModule;
 
-import com.setl.UI.common.SETLUtils.Repeat;
+import SETLAPIHelpers.DatabaseHelper;
 import com.setl.UI.common.SETLUtils.RepeatRule;
 import com.setl.UI.common.SETLUtils.ScreenshotRule;
 import com.setl.UI.common.SETLUtils.TestMethodPrinterRule;
@@ -15,6 +15,8 @@ import org.openqa.selenium.support.ui.WebDriverWait;
 
 import java.io.IOException;
 import java.sql.SQLException;
+import java.util.List;
+
 import static SETLAPIHelpers.DatabaseHelper.setDBToProdOff;
 import static SETLAPIHelpers.DatabaseHelper.setDBToProdOn;
 
@@ -26,7 +28,6 @@ import static com.setl.UI.common.SETLUIHelpers.KYCDetailsHelper.*;
 import static com.setl.UI.common.SETLUIHelpers.MemberDetailsHelper.scrollElementIntoViewById;
 import static com.setl.UI.common.SETLUIHelpers.MemberDetailsHelper.scrollElementIntoViewByXpath;
 import static com.setl.UI.common.SETLUIHelpers.SetUp.*;
-import static com.setl.UI.common.SETLUIHelpers.UserDetailsHelper.generateRandomUserDetails;
 import static com.setl.openCSDClarityTests.UI.Iznes1MyProduct.Funds.OpenCSD2FundsAcceptanceTest.getInvestorInvitationToken;
 import static com.setl.openCSDClarityTests.UI.Iznes4General.OpenCSDGeneralAcceptanceTest.*;
 import static org.junit.Assert.assertTrue;
@@ -75,7 +76,8 @@ public class OpenCSDKYCModuleAcceptanceTest {
     }
 
     @Test
-    public void shouldAcceptKYCwithRandomEmail() throws IOException, InterruptedException, SQLException {
+    public void shouldAcceptKYCwithRandomEmail() throws Exception
+    {
         String managementCompEntered = "Management Company";
         String companyName = "Jordan Corporation";
         String phoneNo = "07956701992";
@@ -94,6 +96,7 @@ public class OpenCSDKYCModuleAcceptanceTest {
         waitForHomePageToLoad();
         navigateToInviteInvestorPage();
         inviteAnInvestor(email[0], firstName, lastName, "Success!");
+        logout();
         newInvestorSignUp(email[0], INVPassword);
         KYCProcessWelcomeToIZNES2(email[0], companyName, phoneNo, firstName, lastName, managementCompEntered);
         KYCProcessStep1Alternate(managementCompEntered, "No", "False", "");
@@ -111,7 +114,8 @@ public class OpenCSDKYCModuleAcceptanceTest {
     }
 
     @Test
-    public void shouldAskForMoreInfoKYCwithRandomEmail() throws IOException, InterruptedException, SQLException {
+    public void shouldAskForMoreInfoKYCwithRandomEmail() throws Exception
+    {
         String managementCompEntered = "Management Company";
         String companyName = "Jordan Corporation";
         String phoneNo = "07956701992";
@@ -128,6 +132,7 @@ public class OpenCSDKYCModuleAcceptanceTest {
         waitForHomePageToLoad();
         navigateToInviteInvestorPage();
         inviteAnInvestor(email[0], firstName, lastName, "Success!");
+        logout();
         newInvestorSignUp(email[0], INVPassword);
         KYCProcessWelcomeToIZNES2(email[0], companyName, phoneNo, firstName, lastName, managementCompEntered);
         KYCProcessStep1Alternate(managementCompEntered, "No", "False", "");
@@ -145,7 +150,8 @@ public class OpenCSDKYCModuleAcceptanceTest {
     }
 
     @Test
-    public void shouldRejectKYCwithRandomEmail() throws IOException, InterruptedException, SQLException {
+    public void shouldRejectKYCwithRandomEmail() throws Exception
+    {
         String managementCompEntered = "Management Company";
         String companyName = "Jordan Corporation";
         String phoneNo = "07956701992";
@@ -162,6 +168,7 @@ public class OpenCSDKYCModuleAcceptanceTest {
         waitForHomePageToLoad();
         navigateToInviteInvestorPage();
         inviteAnInvestor(email[0], firstName, lastName, "Success!");
+        logout();
         newInvestorSignUp(email[0], INVPassword);
         KYCProcessWelcomeToIZNES2(email[0], companyName, phoneNo, firstName, lastName, managementCompEntered);
         KYCProcessStep1Alternate(managementCompEntered, "No", "False", "");
@@ -180,7 +187,8 @@ public class OpenCSDKYCModuleAcceptanceTest {
     }
 
     @Test
-    public void shouldChangeKYCProcessIfAlreadyRegistered() throws IOException, InterruptedException, SQLException {
+    public void shouldChangeKYCProcessIfAlreadyRegistered() throws Exception
+    {
         String managementCompEntered = "Management Company";
         String companyName = "Jordan Corporation";
         String phoneNo = "07956701992";
@@ -196,6 +204,7 @@ public class OpenCSDKYCModuleAcceptanceTest {
         waitForHomePageToLoad();
         navigateToInviteInvestorPage();
         inviteAnInvestor(email[0], firstName, lastName, "Success!");
+        logout();
         newInvestorSignUp(email[0], INVPassword);
         KYCProcessWelcomeToIZNES2(email[0], companyName, phoneNo, firstName, lastName, managementCompEntered);
         KYCProcessStep1Alternate(managementCompEntered, "Yes", "False", "");
@@ -203,7 +212,8 @@ public class OpenCSDKYCModuleAcceptanceTest {
 
     @Test
     @Ignore("no method for multiple beneficarys")
-    public void shouldCreateKYCRequestWith2AMs() throws IOException, InterruptedException, SQLException {
+    public void shouldCreateKYCRequestWith2AMs() throws Exception
+    {
         String managementCompEntered = "Management Company";
         String managementComp2Entered = "am";
         String companyName = "Jordan Corporation";
@@ -222,6 +232,7 @@ public class OpenCSDKYCModuleAcceptanceTest {
         waitForHomePageToLoad();
         navigateToInviteInvestorPage();
         inviteAnInvestor(email[0], firstName, lastName, "Success!");
+        logout();
         newInvestorSignUp(email[0], INVPassword);
 
         KYCProcessWelcomeToIZNES2(email[0], companyName, phoneNo, firstName, lastName, managementCompEntered);
@@ -240,7 +251,8 @@ public class OpenCSDKYCModuleAcceptanceTest {
 
     @Ignore
     @Test
-    public void shouldSetKYCStatusToDraftIfClosed() throws IOException, InterruptedException, SQLException {
+    public void shouldSetKYCStatusToDraftIfClosed() throws Exception
+    {
         String managementCompEntered = "Management Company";
         String companyName = "Jordan Corporation";
         String phoneNo = "07956701992";
@@ -258,6 +270,7 @@ public class OpenCSDKYCModuleAcceptanceTest {
         waitForHomePageToLoad();
         navigateToInviteInvestorPage();
         inviteAnInvestor(email[0], firstName, lastName, "Success!");
+        logout();
         newInvestorSignUp(email[0], INVPassword);
 
         KYCProcessWelcomeToIZNES2(email[0], companyName, phoneNo, firstName, lastName, managementCompEntered);
@@ -272,7 +285,8 @@ public class OpenCSDKYCModuleAcceptanceTest {
     }
 
     @Test
-    public void shouldCompleteFullKYCProcess() throws IOException, InterruptedException, SQLException {
+    public void shouldCompleteFullKYCProcess() throws Exception
+    {
         String managementCompEntered = "Management Company";
         String companyName = "Jordan Corporation";
         String phoneNo = "07956701992";
@@ -290,6 +304,7 @@ public class OpenCSDKYCModuleAcceptanceTest {
         waitForHomePageToLoad();
         navigateToInviteInvestorPage();
         inviteAnInvestor(email[0], firstName, lastName, "Success!");
+        logout();
         newInvestorSignUp(email[0], INVPassword);
 
         KYCProcessWelcomeToIZNES2(email[0], companyName, phoneNo, firstName, lastName, managementCompEntered);
@@ -346,11 +361,11 @@ public class OpenCSDKYCModuleAcceptanceTest {
         System.out.println("Status : Successfully accepted KYC request");
     }
 
-    public static void newInvestorSignUp(String email, String investorPassword) throws IOException, InterruptedException, SQLException {
+    public static void newInvestorSignUp(String email, String investorPassword) throws Exception
+    {
         String token = getInvestorInvitationToken(email);
         String url = "https://uk-lon-li-006.opencsd.io/#/redirect/en/" + token;
 
-        Thread.sleep(1000);
         driver.get(url);
         Thread.sleep(1000);
         driver.findElement(By.id("su-password-field")).sendKeys(investorPassword);
@@ -381,7 +396,8 @@ public class OpenCSDKYCModuleAcceptanceTest {
     }
 
     @Test
-    public void shouldNotAllowSaveWithoutCompanyName() throws IOException, InterruptedException, SQLException {
+    public void shouldNotAllowSaveWithoutCompanyName() throws Exception
+    {
         String phoneNo = "07956701992";
         String firstName = "Jordan";
         String lastName = "Miller";
@@ -397,6 +413,7 @@ public class OpenCSDKYCModuleAcceptanceTest {
         waitForHomePageToLoad();
         navigateToInviteInvestorPage();
         inviteAnInvestor(email[0], firstName, lastName, "Success!");
+        logout();
         newInvestorSignUp(email[0], INVPassword);
 
         KYCProcessWelcomeToIZNES2(email[0], "", phoneNo, firstName, lastName, managementCompEntered);
@@ -605,6 +622,8 @@ public class OpenCSDKYCModuleAcceptanceTest {
     public static void KYCProcessStep3BankingInfoComplete(String companyName, String iBan) throws IOException, InterruptedException{
         WebDriverWait wait = new WebDriverWait(driver, timeoutInSeconds);
 
+        Thread.sleep(500);
+
         driver.findElement(By.xpath("//*[@id=\"step-identification\"]/banking-information/div/div[1]/div[1]/a/h2")).click();
         Thread.sleep(1500);
 
@@ -695,272 +714,229 @@ public class OpenCSDKYCModuleAcceptanceTest {
         }
     }
     @Test
-    //TODO Sprint 14
-    public void TG3099_shouldAssertKYCButtonEqualsCancel()throws InterruptedException, SQLException {
-        try {
-            loginAndVerifySuccess("am", "alex01");
-            navigateToDropdown("My-Clients");
-            navigateToDropdown("Client-Referential");
-            selectInviteInvestor();
-            investorInviteOption("", "", "" ,"", "");
+    public void TG3099_shouldAssertKYCButtonEqualsCancel() throws Exception
+    {
+            String managementCompEntered = "Management Company";
+            String companyName = "Jordan Corporation";
+            String phoneNo = "07956701992";
+            String firstName = "Jordan";
+            String lastName = "Miller";
+            String AMUsername = "am";
+            String AMPassword = "alex01";
+            String INVPassword = "asdASD123";
+
+            String[] email = generateRandomEmail();
+
+            loginAndVerifySuccess(AMUsername, AMPassword);
+            waitForHomePageToLoad();
+            navigateToInviteInvestorPage();
+            investorInviteOption(email[0], firstName, lastName ,"ClientRef", "Institutional Investor");
             logout();
-            investorAccountCreation("investorEmail", "PWD");
-            companyDetails("companyName", "phoneNumber");
-            assertKYCButtonChange("Cancel");
-        }catch (Exception e) {
-            fail("Not yet implemented");
-        }
-    }
-
-    private void assertKYCButtonChange(String buttonName) {
-        /*
-        Button was Close should now be cancel
-         */
-    }
-
-    private void companyDetails(String companyName, String phoneNumber) {
-        /*
-        Generic method to fill in the info post login page when the investor first logs in
-         */
-
-    }
-
-    private void investorAccountCreation(String investorEmail, String pwd) {
-        /*
-        Here we need to assert the email that is in read only is correct and that a password is entered 2x (asdASD123)
-         */
-
-    }
-
-    private void selectInviteInvestor() {
-        /*
-        Simple select the investor invite button on the client referential page and assert some data for the page
-         */
+            newInvestorSignUp(email[0], INVPassword);
+            KYCProcessWelcomeToIZNES2(email[0], companyName, phoneNo, firstName, lastName, managementCompEntered);
+            Thread.sleep(500);
+            assert getKYCCancelButton().getText().equals("Cancel") : "TG3099 failed, button name is incorrect";
     }
 
     @Test
-    //TODO Sprint 14
-    public void TG3099_shouldAssertKYCButtonDoesNotEqualClose()throws InterruptedException, SQLException {
-        /*
-        Negative Testing Case
-         */
-        try {
-            loginAndVerifySuccess("am", "alex01");
-            navigateToDropdown("My-Clients");
-            navigateToDropdown("Client-Referential");
-            selectInviteInvestor();
-            investorInviteOption("", "", "" ,"", "");
-            logout();
-            investorAccountCreation("investorEmail", "PWD");
-            companyDetails("companyName", "phoneNumber");
-            assertKYCButtonDoesNotEqual("close");
-        }catch (Exception e) {
-            fail("Not yet implemented");
-        }
-    }
-    private void assertKYCButtonDoesNotEqual(String buttonName) {
-        /*
-        This should be a negative test method to assert somethings is not what it is
-         */
-    }
-
-    @Test
-    //TODO Sprint 14
     public void TG3099_shouldAssertCancelButtonRedirectToCorrectPage()throws InterruptedException, SQLException {
         try {
-            loginAndVerifySuccess("am", "alex01");
-            navigateToDropdown("My-Clients");
-            navigateToDropdown("Client-Referential");
-            selectInviteInvestor();
-            investorInviteOption("", "", "", "", "");
+            String managementCompEntered = "Management Company";
+            String companyName = "Jordan Corporation";
+            String phoneNo = "07956701992";
+            String firstName = "Jordan";
+            String lastName = "Miller";
+            String AMUsername = "am";
+            String AMPassword = "alex01";
+            String INVPassword = "asdASD123";
+
+            String[] email = generateRandomEmail();
+
+            loginAndVerifySuccess(AMUsername, AMPassword);
+            waitForHomePageToLoad();
+            navigateToInviteInvestorPage();
+            investorInviteOption(email[0], firstName, lastName ,"ClientRef", "Institutional Investor");
             logout();
-            investorAccountCreation("investorEmail", "PWD");
-            companyDetails("companyName", "phoneNumber");
-            selectCancelOnKYC();
-            assertKYCCancelPageRedirect("Page-Heading");
+            newInvestorSignUp(email[0], INVPassword);
+            KYCProcessWelcomeToIZNES2(email[0], companyName, phoneNo, firstName, lastName, managementCompEntered);
+            Thread.sleep(250);
+            getKYCCancelButton().click();
+
+            Thread.sleep(250);
+            assert driver.findElement(By.id("kyc-newRequestBtn")).isDisplayed() : "did not got back to the my requests page";
+
         } catch (Exception e) {
             fail("Not yet implemented");
         }
     }
-    private void assertKYCCancelPageRedirect(String pageTitle) {
-        /*
-        when the KYC has been cancelled the user should be redirected correctly to the my requests page
-         */
-    }
-    private void selectCancelOnKYC() {
-        /*
-        assert the cancel KYC button is available then select cancel
-         */
-    }
+
     @Test
-    //TODO Sprint 14
     public void TG2987_shouldKYCInDraftStatusHasDeleteButton()throws InterruptedException, SQLException {
         try {
-            loginAndVerifySuccess("am", "alex01");
-            navigateToDropdown("My-Clients");
-            navigateToDropdown("Client-Referential");
-            selectInviteInvestor();
-            investorInviteOption("", "", "", "", "");
+            String managementCompEntered = "Management Company";
+            String companyName = "Jordan Corporation";
+            String phoneNo = "07956701992";
+            String firstName = "Jordan";
+            String lastName = "Miller";
+            String AMUsername = "am";
+            String AMPassword = "alex01";
+            String INVPassword = "asdASD123";
+
+            String[] email = generateRandomEmail();
+
+            loginAndVerifySuccess(AMUsername, AMPassword);
+            waitForHomePageToLoad();
+            navigateToInviteInvestorPage();
+            investorInviteOption(email[0], firstName, lastName ,"ClientRef", "Institutional Investor");
             logout();
-            investorAccountCreation("investorEmail", "PWD");
-            companyDetails("companyName", "phoneNumber");
-            startKYCOnlyStep1();
-            navigateToDropdown("MyRequests");
-            assertKYCStatus("Draft");
-            assertKYCStatusHasDeleteButton("Draft");
+            newInvestorSignUp(email[0], INVPassword);
+            KYCProcessWelcomeToIZNES2(email[0], companyName, phoneNo, firstName, lastName, managementCompEntered);
+            KYCProcessStep1Alternate(managementCompEntered, "No", "False", "");
+
+            System.out.println("Cancelling KYC");
+            getKYCCancelButton().click();
+
+            Thread.sleep(500);
+
+            assert driver.findElement(By.cssSelector("#status_cell_0 > span")).getText().equals("Draft") : "Draft KYC not found";
+            assert driver.findElement(By.cssSelector("#draft_delete_btn_0")).isEnabled() : "Delete button not present";
+
 
         } catch (Exception e) {
             fail("Not yet implemented");
         }
     }
 
-    private void assertKYCStatusHasDeleteButton(String statusKYC) {
-        /*
-        Make ambiguous for reuse on other KYC status, pass the status on the test.
-         */
-    }
-
-    private void assertKYCStatus(String statusKYC) {
-
-    }
-
-    private void startKYCOnlyStep1() {
-        /*
-        Only partial KYC needs to be filled in to label the status as DRAFT
-         */
-    }
     @Test
-    //TODO Sprint 14
-    public void TG2987_shouldAssertKYCIsRemovedFromListWhenDeleted()throws InterruptedException, SQLException {
-        try {
-            loginAndVerifySuccess("am", "alex01");
-            navigateToDropdown("My-Clients");
-            navigateToDropdown("Client-Referential");
-            selectInviteInvestor();
-            investorInviteOption("", "", "", "", "");
-            logout();
-            investorAccountCreation("investorEmail", "PWD");
-            companyDetails("companyName", "phoneNumber");
-            startKYCOnlyStep1();
-            navigateToDropdown("MyRequests");
-            assertKYCStatus("Draft");
-            assertKYCStatusHasDeleteButton("Draft");
-            selectKYCDelete();
-            verifyKYCDeletedInUI("Management-Company");
-            verifyKYCDeletedDB(0);
-        } catch (Exception e) {
-            fail("Not yet implemented");
-        }
+    public void TG2987_shouldAssertKYCIsRemovedFromListWhenDeleted() throws Exception
+    {
+        String managementCompEntered = "Management Company";
+        String companyName = "Jordan Corporation";
+        String phoneNo = "07956701992";
+        String firstName = "Jordan";
+        String lastName = "Miller";
+        String AMUsername = "am";
+        String AMPassword = "alex01";
+        String INVPassword = "asdASD123";
 
+        String[] email = generateRandomEmail();
+
+        loginAndVerifySuccess(AMUsername, AMPassword);
+        waitForHomePageToLoad();
+        navigateToInviteInvestorPage();
+        investorInviteOption(email[0], firstName, lastName, "ClientRef", "Institutional Investor");
+        logout();
+        newInvestorSignUp(email[0], INVPassword);
+        KYCProcessWelcomeToIZNES2(email[0], companyName, phoneNo, firstName, lastName, managementCompEntered);
+        KYCProcessStep1Alternate(managementCompEntered, "No", "False", "");
+
+        System.out.println("Cancelling KYC");
+        getKYCCancelButton().click();
+
+        Thread.sleep(250);
+        assert driver.findElement(By.cssSelector("#status_cell_0 > span")).getText().equals("Draft") : "Draft KYC not found";
+        assert driver.findElement(By.cssSelector("#draft_delete_btn_0")).isEnabled() : "Delete button not present";
+
+        assert DatabaseHelper.isUserInKYCTable(email[0]) == true : "Investor should be in the DB";
+        System.out.println("User is in KYC DB");
+
+        driver.findElement(By.cssSelector("#draft_delete_btn_0")).click();
+
+        Thread.sleep(500);
+        assert driver.findElement(By.className("jaspero__dialog-title")).getText().equals("Delete Request");
+        System.out.println("Delete popup presented");
+
+        WebElement deleteButton = driver.findElement(By.className("primary"));
+        assert deleteButton.getText().equals("Delete") : "delete button text incorrect";
+        deleteButton.click();
+        System.out.println("Delete clicked");
+
+        Thread.sleep(500);
+        List<WebElement> toasts = driver.findElements(By.className("toast-title"));
+        assert toasts.size() > 0 : "There was no toast :(";
+        assert toasts.get(0).getText().equals("The request has been successfully deleted");
+        System.out.println("Toast was raised");
+
+        Thread.sleep(500);
+        assert driver.findElement(By.className("datagrid-placeholder-image")).isDisplayed() : "KYC was not deleted.  Test expected table to be empty";
+        System.out.println("Delete confirmed");
+
+        Thread.sleep(500);
+        assert DatabaseHelper.isUserInKYCTable(email[0]) == false : "Investor should have been deleted from the DB";
+        System.out.println("User not now in KYC DB");
     }
 
-    private void verifyKYCDeletedInUI(String kycManagementCompany) {
-
-    }
-
-    private void selectKYCDelete() {
-
-    }
-
-    private void verifyKYCDeletedDB(int rowCountExpected) {
-
-    }
 
     @Test
-    //TODO Sprint 14
+    @Ignore
     public void TG2987_shouldAssertPopUpAppearsAfterSelectingDeleteKYC()throws InterruptedException, SQLException {
-        try {
-            loginAndVerifySuccess("am", "alex01");
-            navigateToDropdown("My-Clients");
-            navigateToDropdown("Client-Referential");
-            selectInviteInvestor();
-            investorInviteOption("", "", "", "", "");
-            logout();
-            investorAccountCreation("investorEmail", "PWD");
-            companyDetails("companyName", "phoneNumber");
-            startKYCOnlyStep1();
-            navigateToDropdown("MyRequests");
-            assertKYCStatus("Draft");
-            assertKYCStatusHasDeleteButton("Draft");
-            selectKYCDelete();
-            assertKYCDeletePopUp("Heading");
-        }catch (Exception e){
-            fail("Not yet implemented");
-        }
-    }
-    private void assertKYCDeletePopUp(String popupHeading) {
-        /*
-        There is a popup notification in the KYC delete that need to be asserted, assert the header, the content and the options
-         */
-    }
-    @Test
-    //TODO Sprint 14
-    public void TG2988_shouldAssertKYCIsNotDeleteIfCancelIsSelected()throws InterruptedException, SQLException {
-        try {
-            loginAndVerifySuccess("am", "alex01");
-            navigateToDropdown("My-Clients");
-            navigateToDropdown("Client-Referential");
-            selectInviteInvestor();
-            investorInviteOption("", "", "", "", "");
-            logout();
-            investorAccountCreation("investorEmail", "PWD");
-            companyDetails("companyName", "phoneNumber");
-            startKYCOnlyStep1();
-            navigateToDropdown("MyRequests");
-            assertKYCStatus("Draft");
-            assertKYCStatusHasDeleteButton("Draft");
-            selectKYCDelete();
-            assertKYCDeletePopUp("Heading");
-            kycDeletePopUpOption("Yes");
-        }catch (Exception e){
-            fail("Not yet implemented");
-        }
-
-    }
-
-    private void kycDeletePopUpOption(String answer) {
-        if(answer.equals("Yes")){
-            /*
-            If selecting Yes for Delete then check UI Row for KYC being removed (KYC is being HARD DELETED in the DB
-             */
-        }
-        if (answer.equals("No/Cancel")){
-            /*
-            If no or cancel is selected, assert in the UI that the KYC still exists
-             */
-        }
+        System.out.println("done as part of TG2987_shouldAssertKYCIsRemovedFromListWhenDeleted");
     }
 
     @Test
-    //TODO Sprint 14
+    public void TG2988_shouldAssertKYCIsNotDeletedIfCancelIsSelected()throws InterruptedException, SQLException {
+        try {
+            String managementCompEntered = "Management Company";
+            String companyName = "Jordan Corporation";
+            String phoneNo = "07956701992";
+            String firstName = "Jordan";
+            String lastName = "Miller";
+            String AMUsername = "am";
+            String AMPassword = "alex01";
+            String INVPassword = "asdASD123";
+
+            String[] email = generateRandomEmail();
+
+            loginAndVerifySuccess(AMUsername, AMPassword);
+            waitForHomePageToLoad();
+            navigateToInviteInvestorPage();
+            investorInviteOption(email[0], firstName, lastName, "ClientRef", "Institutional Investor");
+            logout();
+            newInvestorSignUp(email[0], INVPassword);
+            KYCProcessWelcomeToIZNES2(email[0], companyName, phoneNo, firstName, lastName, managementCompEntered);
+            KYCProcessStep1Alternate(managementCompEntered, "No", "False", "");
+
+            System.out.println("Cancelling KYC");
+            getKYCCancelButton().click();
+
+            Thread.sleep(250);
+            assert driver.findElement(By.cssSelector("#status_cell_0 > span")).getText().equals("Draft") : "Draft KYC not found";
+            assert driver.findElement(By.cssSelector("#draft_delete_btn_0")).isEnabled() : "Delete button not present";
+
+            assert DatabaseHelper.isUserInKYCTable(email[0]) == true : "Investor should be in the DB";
+            System.out.println("User is in KYC DB");
+
+            driver.findElement(By.cssSelector("#draft_delete_btn_0")).click();
+
+            Thread.sleep(500);
+            assert driver.findElement(By.className("jaspero__dialog-title")).getText().equals("Delete Request");
+            System.out.println("Delete popup presented");
+
+            WebElement cancelButton = driver.findElement(By.xpath("//*[@id=\"iznes\"]/app-root/jaspero-confirmations/jaspero-confirmation/div[2]/div[4]/button[1]"));
+            assert cancelButton.getText().equals("Cancel") : "Cancel button text incorrect";
+            cancelButton.click();
+            System.out.println("Delete clicked");
+
+            Thread.sleep(500);
+            assert driver.findElement(By.cssSelector("#draft_delete_btn_0")).isEnabled() : "Delete button not present";
+            System.out.println("Draft was not deleted");
+
+            Thread.sleep(500);
+            assert DatabaseHelper.isUserInKYCTable(email[0]) == true : "Investor should be in the DB";
+            System.out.println("User is still in KYC DB");
+
+        }catch (Exception e){
+            fail("Not yet implemented");
+        }
+
+    }
+
+    @Test
+    @Ignore
     public void TG2988_shouldAssertSuccessToasterOnKYCDeletionSuccess ()throws InterruptedException, SQLException {
-        try {
-            loginAndVerifySuccess("am", "alex01");
-            navigateToDropdown("My-Clients");
-            navigateToDropdown("Client-Referential");
-            selectInviteInvestor();
-            investorInviteOption("", "", "", "", "");
-            logout();
-            investorAccountCreation("investorEmail", "PWD");
-            companyDetails("companyName", "phoneNumber");
-            startKYCOnlyStep1();
-            navigateToDropdown("MyRequests");
-            assertKYCStatus("Draft");
-            assertKYCStatusHasDeleteButton("Draft");
-            selectKYCDelete();
-            assertKYCDeletePopUp("Heading");
-            kycDeletePopUpOption("Yes");
-            assertToasterForSuccessfulDeletion();
-        }catch (Exception e){
-            fail("Not yet implemented");
-        }
+        System.out.println("done in TG2987_shouldAssertKYCIsRemovedFromListWhenDeleted");
     }
 
-    private void assertToasterForSuccessfulDeletion() {
-        /*
-        Once a KYC has been deleted (Only in Draft status) and Yes is selected then after the KYC popup disappears then a toaster should appear noting the success of the deletion.
-         */
-    }
 
 }
 

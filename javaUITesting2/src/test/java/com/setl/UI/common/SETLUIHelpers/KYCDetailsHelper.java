@@ -12,6 +12,7 @@ import java.sql.SQLException;
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
 import java.util.Date;
+import java.util.List;
 
 import static com.setl.UI.common.SETLUIHelpers.FundsDetailsHelper.openDropdownAndSelectOption;
 import static com.setl.UI.common.SETLUIHelpers.MemberDetailsHelper.scrollElementIntoViewById;
@@ -115,6 +116,34 @@ public class KYCDetailsHelper extends LoginAndNavigationHelper {
         assertTrue(newRequests.equals("Make a new request"));
         wait.until(visibilityOfElementLocated(By.xpath("//*[@id=\"step-selection\"]/div[1]/div/ng-select")));
     }
+
+    public static void assertKYCCancelButtonName(String expectedName) {
+        /* TG3099
+        Button was Close should now be cancel
+        <div class="fs-buttons">
+        <button class="btn btn-info btPrev" type="button" style="display: inline-block;">Previous</button>
+        <button class="btn btn-warning btPrev" type="button">Cancel</button>  <<< this one
+        <button class="btn btn-success btNext" data-form="step-risk-profile" style="display: inline-block;">Next</button>
+        <button class="btn btn-success btSubmit" style="display: none;">Finish</button></div>
+
+         */
+
+        WebElement button = getKYCCancelButton();
+        String actual = button.getText();
+        assert actual.equals(expectedName) : "Cancel button name is incorrect, expected (" + expectedName + ") but was (" + actual +")";
+
+        System.out.println("TG 3099 - KYC Cancel button name check - passed");
+    }
+
+    public static WebElement getKYCCancelButton()
+    {
+        WebDriverWait wait = new WebDriverWait(driver, timeoutInSeconds);
+        wait.until(visibilityOf(driver.findElement(By.cssSelector("button.btn.btn-warning.btPrev"))));
+        WebElement button = driver.findElement(By.cssSelector("button.btn.btn-warning.btPrev"));
+        return button;
+    }
+
+
     public static void KYCProcessMakeNewRequest2() throws SQLException, InterruptedException {
         String myRequests = driver.findElement(By.id("new-request-title")).getText();
         assertTrue(myRequests.equals("Make a new request"));
@@ -215,6 +244,7 @@ public class KYCDetailsHelper extends LoginAndNavigationHelper {
         }catch (Exception e){
             fail(e.getMessage()); }
         Thread.sleep(750);
+
         driver.findElement(By.xpath("//*[@id=\"step-risk-profile\"]/investment-objective/div/div[1]/div[1]/a/h2")).click();
         Thread.sleep(750);
         js.executeScript("document.getElementById('Capitalpreservation-0').click();");
@@ -229,17 +259,30 @@ public class KYCDetailsHelper extends LoginAndNavigationHelper {
         String investmentsObjectivesPercentPost = driver.findElement(By.xpath("//*[@id=\"step-risk-profile\"]/investment-objective/div/div[1]/div[2]/div/div[1]/div/div/div/span")).getText();
         assertTrue(investmentsObjectivesPercentPost.equals("100%"));
         Thread.sleep(750);
+
         driver.findElement(By.xpath("//*[@id=\"step-risk-profile\"]/investment-objective/div/div[1]/div[1]/a/h2")).click();
+        Thread.sleep(750);
+        driver.findElement(By.xpath("//*[@id=\"step-risk-profile\"]/investment-constraint/div/div[1]/div[1]/a/h2")).click();
+        Thread.sleep(750);
+        driver.findElement(By.id("statutoryConstraints-0")).sendKeys("optional field should not be mandatory"); //TODO - Bug TG3251 - comment out this line if/when fixed
+
         String investmentsConstraintsPercentPost = driver.findElement(By.xpath("//*[@id=\"step-risk-profile\"]/investment-constraint/div/div[1]/div[2]/div/div[1]/div/div/div/span")).getText();
-        assertTrue(investmentsConstraintsPercentPost.equals("100%"));
+        assertTrue("Was not 100%, but was" + investmentsConstraintsPercentPost,investmentsConstraintsPercentPost.equals("100%"));
+
         try {
             String introductionStepKYC = driver.findElement(By.xpath("//*[@id=\"iznes\"]/app-root/app-basic-layout/div/ng-sidebar-container/div/div/div/main/div/div/ng-component/ng-component/div[3]/div[1]/div/div[4]")).getAttribute("class");
             assertTrue(introductionStepKYC.equals("fs-active"));
-        }catch (Exception e){fail(e.getMessage());}
-        try {
-            driver.findElement(By.xpath("//*[@id=\"iznes\"]/app-root/app-basic-layout/div/ng-sidebar-container/div/div/div/main/div/div/ng-component/ng-component/div[3]/div[3]/button[3]")).click();
         }catch (Exception e){
-            fail(e.getMessage());}
+            fail(e.getMessage());
+        }
+        try {
+            WebElement button = driver.findElement(By.cssSelector("button.btn.btn-success.btNext"));
+            button.click(); // click next button
+
+        }catch (Exception e){
+            System.out.println("Failed to click the next button");
+            fail(e.getMessage());
+        }
     }
     public static void KYCProcessStep5() throws SQLException, InterruptedException, IOException {
         Thread.sleep(750);
