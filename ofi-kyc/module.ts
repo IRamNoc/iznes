@@ -48,6 +48,7 @@ import { ConsumeTokenService } from './invitation-token/consume-token.service';
 
 /* Constants */
 import config, { kycEnums } from './config';
+import { OfiFundDataService } from '../ofi-data-service/product/fund/ofi-fund-data-service';
 
 /* Decorator. */
 @NgModule({
@@ -107,6 +108,7 @@ import config, { kycEnums } from './config';
         MockKYCDocumentsService,
         ToasterService,
         ConsumeTokenService,
+        OfiFundDataService,
         { provide: 'endpoints', useValue: config },
         { provide: 'kycEnums', useValue: kycEnums },
     ],

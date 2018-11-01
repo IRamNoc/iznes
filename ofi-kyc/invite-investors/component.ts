@@ -15,6 +15,7 @@ import * as _ from 'lodash';
 import { investorInvitation } from '@ofi/ofi-main/ofi-store/ofi-kyc/invitationsByUserAmCompany';
 import { MultilingualService } from '@setl/multilingual';
 import { AppObservableHandler } from '@setl/utils/decorators/app-observable-handler';
+import { OfiFundDataService } from '../../ofi-data-service/product/fund/ofi-fund-data-service';
 
 const emailRegex = /^(((\([A-z0-9]+\))?[^<>()\[\]\\.,;:\s@"]+(\.[^<>()\[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/;
 
@@ -37,8 +38,9 @@ export class OfiInviteInvestorsComponent implements OnInit, OnDestroy {
     ];
 
     investorTypes = [
-        { id: 45, text: 'Institutional Investor' },
-        { id: 55, text: 'Retail Investor' },
+        { id: 10, text: 'Institutional Investor' },
+        { id: 20, text: 'Portfolio Manager' },
+        { id: 30, text: 'Retail Investor' },
     ];
 
     enums = {
@@ -48,6 +50,8 @@ export class OfiInviteInvestorsComponent implements OnInit, OnDestroy {
     panel: any;
 
     inviteItems: investorInvitation[];
+
+    fundSelectList: {id: string, text: string}[];
 
     unSubscribe: Subject<any> = new Subject();
 
@@ -61,6 +65,7 @@ export class OfiInviteInvestorsComponent implements OnInit, OnDestroy {
                 public _translate: MultilingualService,
                 private _ofiKycObservablesService: OfiKycObservablesService,
                 @Inject('kycEnums') kycEnums,
+                private _ofiFundDataService: OfiFundDataService,
                 private redux: NgRedux<any>) {
 
         this.enums.status = kycEnums.status;
@@ -87,6 +92,9 @@ export class OfiInviteInvestorsComponent implements OnInit, OnDestroy {
                     investorType: [
                         '',
                         Validators.required
+                    ],
+                    fundList: [
+                        [],
                     ],
                     firstName: [
                         '',
@@ -120,7 +128,7 @@ export class OfiInviteInvestorsComponent implements OnInit, OnDestroy {
 
     ngOnInit(): void {
 
-        (<any>this).appSubscribe(this._ofiKycObservablesService.investorInvitationsSub(), (d: investorInvitation[]) => {
+        (<any>this).appSubscribe(this._ofiKycObservablesService.getInvitationData(), (d: investorInvitation[]) => {
             this.inviteItems = d;
             if (this.inviteItems.length) {
                 this.inviteItems = this.inviteItems.map((invite) => {
@@ -137,6 +145,8 @@ export class OfiInviteInvestorsComponent implements OnInit, OnDestroy {
             }
             this.markForCheck();
         });
+
+        (<any>this).appSubscribe(this._ofiFundDataService.getFundSelectList(), fundSelectList => this.fundSelectList = fundSelectList);
     }
 
     getControls(frmGrp: FormGroup, key: string) {
@@ -179,6 +189,10 @@ export class OfiInviteInvestorsComponent implements OnInit, OnDestroy {
             investorType: [
                 '',
                 Validators.required
+            ],
+            fundList: [[]],
+            pmFunds: [
+                [],
             ],
             firstName: [
                 '',
@@ -291,10 +305,29 @@ export class OfiInviteInvestorsComponent implements OnInit, OnDestroy {
     isRetailInvestor(investorType: FormControl): boolean {
         const val = investorType.value;
         const userType = _.get(val, '[0].id');
-        if (userType === 55) {
+        if (userType === 30) {
             investorType.setErrors({ investorType: true });
             return true;
         }
+
+        return false;
+    }
+
+    /**
+     * Whether investor is Portfolio manager
+     * @param {FormControl} investorType
+     * @param {FormControl} fundList
+     * @return {boolean}
+     */
+    isPortfolioManager(investorType: FormControl, fundList: FormControl): boolean {
+        const val = investorType.value;
+        const userType = _.get(val, '[0].id');
+        if (userType === 20) {
+            fundList.setValidators([Validators.required]);
+            return true;
+        }
+
+        fundList.setValidators([]);
 
         return false;
     }
@@ -308,13 +341,28 @@ export class OfiInviteInvestorsComponent implements OnInit, OnDestroy {
  */
 function constructInvitationRequest(formValue) {
     const investors = immutableHelper.reduce(formValue.investors, (result, item) => {
+        const investorType = item.getIn(['investorType', 0], {}).id;
+        // check the investor type
+        if (investorType !== 10 && investorType !== 20) {
+            throw new Error('We should only allow investor type 10 or 20');
+        }
+
+        // get the fundList in array of fundId
+        const fundList = item.get('fundList', []).toJS();
+        const fundIdList = fundList.reduce((acc, fund) => {
+            acc.push(fund.id);
+            return acc;
+        }, []);
+
         result.push({
+            investorType,
             email: item.get('email', ''),
             firstname: item.get('firstName', ''),
             lastname: item.get('lastName', ''),
             lang: item.get('language', 'fr'),
             clientreference: item.get('clientReference', ''),
             message: item.get('message', ''),
+            fundList: fundIdList,
         });
         return result;
     }, []);
