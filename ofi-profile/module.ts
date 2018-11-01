@@ -5,22 +5,19 @@ import { ClarityModule } from '@clr/angular';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { SetlComponentsModule, SetlDirectivesModule, SetlPipesModule } from '@setl/utils/index';
 
-/* My informations module */
 import { OfiMyInformationsModule } from '../ofi-my-informations/module';
+import { SetlAccountModule } from '@setl/core-account/account.module';
 
 /* Components. */
 import { OfiProfileMyInformationsComponent } from './profile-my-informations/component';
-import { ExternalNotificationsComponent } from '@setl/core-account/external-notifications/external-notifications.component';
 
 /* Decorator. */
 @NgModule({
     declarations: [
         OfiProfileMyInformationsComponent,
-        ExternalNotificationsComponent,
     ],
     exports: [
         OfiProfileMyInformationsComponent,
-        ExternalNotificationsComponent,
     ],
     imports: [
         CommonModule,
@@ -32,13 +29,12 @@ import { ExternalNotificationsComponent } from '@setl/core-account/external-noti
         SetlComponentsModule,
         SetlDirectivesModule,
         SetlPipesModule,
+        SetlAccountModule,
     ],
     providers: [
-
     ],
 })
 
 /* Class. */
 export class OfiProfileModule {
-
 }
