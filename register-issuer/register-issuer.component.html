@@ -1,41 +1,39 @@
 <div class="header-breadcrumbs">
-    <h1><i class="fa fa-user-plus"></i> <span mltag="txt_registerissuer">Register Issuer</span></h1>
+    <h1><i class="fa fa-user-plus"></i> {{ 'Register Issuer' | translate }}</h1>
 </div>
 
 <clr-tabs>
     <clr-tab>
         <button clrTabLink id="testlinkreg">
-            <i class="fa fa-plus-circle"></i> <span mltag="txt_newissuer">New Issuer</span></button>
+            <i class="fa fa-plus-circle"></i> {{ 'New Issuer' | translate }}</button>
         <clr-tab-content *clrIfActive>
             <form [formGroup]="registerIssuerForm" (ngSubmit)="registerIssuer()">
                 <section class="form-block">
                     <div class="form-group col-sm-6">
-                        <label class="control-label required-field" for="issuer-identifier" mltag="txt_issueridentifier">Issuer Identifier</label>
+                        <label class="control-label required-field" for="issuer-identifier">{{ 'Issuer Identifier' | translate }}</label>
                         <input type="text" 
                                 id="issuer-identifier" 
-                                placeholder="Issuer Identifier" 
+                                placeholder="{{ 'Issuer Identifier' | translate }}" 
                                 size="45"
                                 [formControl]="registerIssuerForm.controls['issueIdentifier']" 
-                                [class.error]="!registerIssuerForm.controls['issueIdentifier'].valid && registerIssuerForm.controls['issueIdentifier'].touched"
-                                mltag="txt_issueridentifier" />
+                                [class.error]="!registerIssuerForm.controls['issueIdentifier'].valid && registerIssuerForm.controls['issueIdentifier'].touched"/>
                         
-                        <span *ngIf="registerIssuerForm.controls['issueIdentifier'].hasError('required') && registerIssuerForm.controls['issueIdentifier'].touched" class="field-error" mltag="txt_fieldisrequired">Field is required</span>
+                        <div *ngIf="registerIssuerForm.controls['issueIdentifier'].hasError('required') && registerIssuerForm.controls['issueIdentifier'].touched" class="field-error">{{ 'Field is required' | translate }}</div>
                     </div>
 
                     <div class="form-group">
-                        <label class="control-label required-field" mltag="txt_issueraddress">Issuer Address</label>
+                        <label class="control-label required-field">{{ 'Issuer Address' | translate }}</label>
                         <ng-select
                                 [items]="walletAddressSelectItems"
                                 [allowClear]="true"
-                                placeholder="Select Issuer Address"
-                                [formControl]="registerIssuerForm.controls['issuerAddress']"
-                                mltag="txt_selectissueraddress">
+                                placeholder="{{ 'Select Issuer Address' | translate }}"
+                                [formControl]="registerIssuerForm.controls['issuerAddress']">
                         </ng-select>
 
-                        <span *ngIf="registerIssuerForm.controls['issuerAddress'].hasError('required') && registerIssuerForm.controls['issuerAddress'].touched" class="field-error" mltag="txt_fieldisrequired">Field is required</span>
+                        <div *ngIf="registerIssuerForm.controls['issuerAddress'].hasError('required') && registerIssuerForm.controls['issuerAddress'].touched" class="field-error">{{ 'Field is required' | translate }}</div>
                     </div>
 
-                    <button type="submit" class="btn btn-primary" mltag="txt_registerissuer" [disabled]="registerIssuerForm.invalid">Register Issuer</button>
+                    <button type="submit" class="btn btn-primary" [disabled]="registerIssuerForm.invalid"><i class="fa fa-save"></i> {{ 'Register Issuer' | translate }}</button>
                 </section>
             </form>
         </clr-tab-content>
