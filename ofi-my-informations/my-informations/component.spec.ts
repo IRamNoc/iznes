@@ -90,6 +90,7 @@ describe('OfiMyInformationsComponent', () => {
             phoneNumber: '',
             amManagementCompanyID: 0,
             invitationToken: '',
+            investorType: 0,
         };
 
         comp.userInfo = fakeUser;
