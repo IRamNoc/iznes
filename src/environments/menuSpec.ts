@@ -345,6 +345,14 @@ const kycDocuments = {
             router_link: '/client-referential',
             dynamic_link: '/client-referential/[^\/]*',
         },
+        {
+            label: 'Portfolio Managers',
+            label_txt: 'txt_portfolio_manager',
+            icon_class: 'fa fa-users',
+            element_id: 'side-portfolio-manager',
+            router_link: '/portfolio-manager',
+            dynamic_link: '/portfolio-manager/[^\/]*',
+        },
     ],
 };
 

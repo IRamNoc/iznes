@@ -115,6 +115,16 @@ import { SetlMessagesComponent } from '@setl/core-messages';
 import { OfiWaitingApprovalComponent } from '@ofi/ofi-main/ofi-kyc/waiting-approval/component';
 import { SetlLoginComponent, SetlLogoutComponent } from '@setl/core-login';
 
+/* Portfolio manager */
+import {
+    PortfolioManagerListComponent,
+}
+    from '@ofi/ofi-main/ofi-portfolio-manager/portfolio-manager-list/portfolio-manager-list.component';
+import {
+    PortfolioManagerDetailComponent,
+}
+    from '@ofi/ofi-main/ofi-portfolio-manager/portfolio-manager-detail/portfolio-manager-detail.component';
+
 export const ROUTES: Routes = [
     { path: '', redirectTo: 'login', pathMatch: 'full' },
     { path: 'user-administration', redirectTo: 'user-administration/users', pathMatch: 'full' },
@@ -204,6 +214,16 @@ export const ROUTES: Routes = [
             {
                 path: 'client-referential/:kycId',
                 component: OfiClientReferentialComponent,
+                canActivate: [LoginGuardService],
+            },
+            {
+                path: 'portfolio-manager',
+                component: PortfolioManagerListComponent,
+                canActivate: [LoginGuardService],
+            },
+            {
+                path: 'portfolio-manager/detail',
+                component: PortfolioManagerDetailComponent,
                 canActivate: [LoginGuardService],
             },
             {
