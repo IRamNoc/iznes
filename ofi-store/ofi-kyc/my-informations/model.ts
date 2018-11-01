@@ -12,4 +12,5 @@ export interface KycMyInformations extends KycUser {
     amCompanyName: string;
     amManagementCompanyID: number;
     invitationToken: string;
+    investorType: number;
 }

@@ -245,9 +245,10 @@ export class ManageOrdersComponent implements OnInit, AfterViewInit, OnDestroy {
             this.detectChanges();
         });
         this.datagridParams = new DatagridParams(this.itemPerPage);
-        this.appSubscribe(observableCombineLatest(this.datagridParams.changed, this.menuSpec$), ([change, menuSpec]) => {
+        this.appSubscribe(observableCombineLatest(this.datagridParams.changed, this.menuSpec$, this.myDetail$), ([change, menuSpec, myDetails]) => {
 
             this.menuSpec = menuSpec;
+            this.myDetails = myDetails;
 
             console.log('Datagrid filters changed - re-load data');
             this.loading = true;
@@ -262,9 +263,8 @@ export class ManageOrdersComponent implements OnInit, AfterViewInit, OnDestroy {
 
         this.appSubscribe(this.requestedLanguage$, requested => this.getLanguage(requested));
         this.appSubscribe(this.userType$, type => this.userType = type);
-        this.appSubscribe(this.myDetail$, myDetails => this.myDetails = myDetails);
         this.appSubscribe(this.walletDirectory$, walletDirectory => this.walletDirectory = walletDirectory);
-        this.appSubscribe(observableCombineLatest(this.myWallets$, this.connectedWallet$, this.menuSpec$), ([myWallets, walletId, menuSpec]) => {
+        this.appSubscribe(observableCombineLatest(this.myWallets$, this.connectedWallet$.pipe(filter(id => id !== 0)), this.menuSpec$), ([myWallets, walletId, menuSpec]) => {
             this.connectedWalletId = walletId;
             this.connectedWalletName = get(
                 Object.keys(myWallets)
@@ -276,7 +276,7 @@ export class ManageOrdersComponent implements OnInit, AfterViewInit, OnDestroy {
 
             this.menuSpec = menuSpec;
 
-            if (this.isInvestorUser && this.connectedWalletId) {
+            if (this.isInvestorUser) {
                 this.appSubscribe(this.requestedOfiInvestorFundList$, requested => this.requestMyFundAccess(requested));
                 this.appSubscribe(this.fundShareAccessList$, list => this.fundShareList = list);
             } else if (this.isIznesAdmin) {
