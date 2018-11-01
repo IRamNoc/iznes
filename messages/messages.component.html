@@ -133,6 +133,12 @@
                 <button class="btn btn-primary" (click)="downloadTxtFile(currentMessage.action.orderID, currentMessage.action.MT502ID, currentMessage.action.orderType);">Download File</button>
             </p>
 
+            <p *ngIf="currentMessage.action && currentMessage.action.type === 'sendAssetManagementBookEntryCertification'">
+                <button class="btn btn-primary" (click)="handleDownloadBookEntryCertification(currentMessage.action.assetManagementCompanyId, currentMessage.action.settlementDate);">
+                    Download Certification of Book Entry
+                </button>
+            </p>
+
             <p *ngIf="currentMessage.action && currentMessage.action.type === 'poaRequest'">
                 <setl-message-poa [data]="currentMessage.action.data" [isActed]="currentMessage.isActed" [walletId]="walletId" [mailId]="currentMessage.mailId"></setl-message-poa>
             </p>

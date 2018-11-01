@@ -645,4 +645,14 @@ export class SetlMessagesComponent implements OnDestroy, OnInit {
             userId: this.userId,
         });
     }
+
+    handleDownloadBookEntryCertification(assetManagementCompanyId, settlementDate) {
+        this.fileDownloader.downLoaderFile({
+            method: 'exportAssetManagementBookEntryCertification',
+            token: this.socketToken,
+            userId: this.userId,
+            assetManagementCompanyId,
+            settlementDate
+        });
+    }
 }
