@@ -24,6 +24,7 @@ import {
 } from '@setl/utils';
 import { SetlLayoutModule } from '@setl/core-layout';
 import { OfiSubPortfolio } from './ofi-sub-portfolio/module'
+import { OfiPortfolioManagerModule } from "./ofi-portfolio-manager/portfolio-manager.module";
 
 /* Decorator. */
 @NgModule({
@@ -47,14 +48,15 @@ import { OfiSubPortfolio } from './ofi-sub-portfolio/module'
         SetlLayoutModule,
         SetlDirectivesModule,
         SetlPipesModule,
-        OfiSubPortfolio
+        OfiSubPortfolio,
+        OfiPortfolioManagerModule,
     ],
     exports: [
         OfiFundInvestModule,
         OfiCorpActionsModule,
-        DynamicFormsModule
+        DynamicFormsModule,
     ],
-    providers: [OfiPostTxService]
+    providers: [OfiPostTxService],
 })
 
 /* Class. */

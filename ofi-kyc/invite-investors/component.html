@@ -106,6 +106,30 @@
                         </div>
                     </div>
 
+                    <div class="row" *ngIf="isPortfolioManager(investor.controls['investorType'], investor.controls['fundList'])">
+                        <div class="form-group col-sm-6">
+                            <label class="required-field" for="pm_funds_{{i}}">{{'List of funds managed by the Portfolio Manager:' | translate}}
+
+                            </label>
+                            <div>
+                                <ng-select
+                                    id="pm_funds_{{i}}"
+                                    class="form-control"
+                                    [items]="fundSelectList"
+                                    [multiple]="true"
+                                    [placeholder]="_translate.translate('Select funds')"
+                                    formControlName="fundList"
+                                    [ngStyle]="{'padding':'6px 0'}"
+                                    [containerWidth]="'95%'">
+                                </ng-select>
+
+                                <div *ngIf="investor.controls['fundList'].hasError('required') && investor.controls['fundList'].touched" class="text-danger">
+                                    {{'This field is required.' | translate}}
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
                     <div class="row">
                         <div class="form-group col-sm-6">
                             <label for="kyc_firstName_{{i}}">{{'First name (optional):' | translate}}
