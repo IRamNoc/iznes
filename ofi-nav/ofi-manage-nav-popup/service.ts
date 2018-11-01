@@ -26,7 +26,7 @@ export class OfiManageNavPopupService {
         this.onClose.next({
             isSave: isSave,
             isCancel: !isSave,
-            share: immutableHelper.copy(this._share)
+            share: this._share ? immutableHelper.copy(this._share) : null
         });
 
         this._share = null;
