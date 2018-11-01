@@ -73,7 +73,7 @@ public class OpenCSDSprint7AcceptanceTest {
 
         loginAndVerifySuccess("am", "alex01");
         navigateToInviteInvestorPage();
-        inviteAnInvestor(investorEmail, "Jordan", "Miller", "Success!");
+        inviteAnInvestor(investorEmail, "Jordan", "Miller", "Success!", "Institutional Investor");
 
         //validateDatabaseInvestorInvited(1, investorEmail);
 
@@ -84,7 +84,7 @@ public class OpenCSDSprint7AcceptanceTest {
 
         loginAndVerifySuccess("am", "alex01");
         navigateToInviteInvestorPage();
-        inviteAnInvestor(investorEmail, "Michael", "Bindley", "Success!");
+        inviteAnInvestor(investorEmail, "Michael", "Bindley", "Success!", "Institutional Investor");
 
         String email = driver.findElement(By.xpath("//*[@id=\"iznes\"]/app-root/jaspero-alerts/jaspero-alert/div[2]/div[3]/table")).getText();
         assertTrue(email.equals(investorEmail));

@@ -138,7 +138,7 @@ public class OpenCSDEntireFlowAcceptanceTest {
         loginAndVerifySuccess(AMUsername, AMPassword);
         waitForHomePageToLoad();
         navigateToInviteInvestorPage();
-        inviteAnInvestor(email[0], firstName, lastName, "Success!");
+        inviteAnInvestor(email[0], firstName, lastName, "Success!", "Institutional Investor");
         logout();
         newInvestorSignUp(email[0], InvPassword);
         KYCProcessWelcomeToIZNES2(email[0], companyName, phoneNo, firstName, lastName, managementCompEntered);
