@@ -17,7 +17,6 @@ import { AdminUsersComponent } from './users/users.component';
 import { AdminWalletsComponent } from './wallets/wallets.component';
 /* Permissions components. */
 import { AdminPermissionsComponent } from './permissions/permissions.component';
-
 import { PermissionGridModule } from '@setl/permission-grid';
 /* Manage sub-portfolio */
 import { ManageSubPortfolioComponent } from './sub-portfolio/component';
@@ -26,7 +25,7 @@ import { MultilingualModule } from '@setl/multilingual';
 /* Persist Module. */
 import { PersistModule } from '@setl/core-persist';
 /* directive Module. */
-import { SetlDirectivesModule, DatePickerExtendedModule, DpDatePickerModule } from '@setl/utils';
+import { SetlDirectivesModule, DatePickerExtendedModule, DpDatePickerModule, SetlPipesModule } from '@setl/utils';
 import { UserAdminService } from '@setl/core-useradmin/useradmin.service';
 
 /* User admin service. */
@@ -76,6 +75,7 @@ import { UserAdminService } from '@setl/core-useradmin/useradmin.service';
         SetlDirectivesModule,
         DatePickerExtendedModule,
         DpDatePickerModule,
+        SetlPipesModule,
     ],
     providers: [AdminUsersService, UserAdminService],
 })

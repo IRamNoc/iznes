@@ -1,5 +1,5 @@
 <div class="header-breadcrumbs">
-    <h1 id="sub-portfolio"><i class="fa fa-id-badge"></i> <span mltag="txt_subportfolio">Sub-portfolio</span></h1>
+    <h1 id="sub-portfolio"><i class="fa fa-id-badge"></i> {{ 'Sub-portfolio' | translate }}</h1>
 </div>
 
 <div class="wrapper wrapper-content">
@@ -37,19 +37,19 @@
         <div class="panel-body">
             <clr-datagrid>                
                 <clr-dg-column [clrDgField]="'label'" clrDgSortIcon>
-                    <span mltag="txt_subportfolio">Sub-portfolio</span>
+                    <span>{{ 'Sub-portfolio' | translate }}</span>
                     <span class="column-label"></span>
                 </clr-dg-column>
                 <clr-dg-column [clrDgField]="'iban'" clrDgSortIcon>
-                    <span class="clr-sort-label" mltag="txt_iban">IBAN</span>
+                    <span class="clr-sort-label">{{ 'IBAN' | translate }}</span>
                     <span class="column-label"></span>
                 </clr-dg-column>
                 <clr-dg-column [clrDgField]="'address'" clrDgSortIcon>
-                    <span class="clr-sort-label" mltag="txt_blockchainaddressidentifier">Blockchain address identifier</span>
+                    <span class="clr-sort-label">{{ 'Blockchain Address Identifier' | translate }}</span>
                     <span class="column-label"></span>
                 </clr-dg-column>
                 <clr-dg-column class="right">
-                    <span mltag="txt_actions">Actions</span>
+                    <span>{{ 'Actions' | translate }}</span>
                 </clr-dg-column>
 
                 <clr-dg-row *clrDgItems="let address of addressList;">
@@ -58,8 +58,7 @@
                     <clr-dg-cell>{{address.address}}</clr-dg-cell>
                     <clr-dg-cell class="right">
                         <button (click)="createEditTab(address.label, address.iban, address.address)"
-                                class="btn btn-sm btn-success">
-                            <i class="fa fa-edit"></i><span mltag="txt_edit">Edit</span>
+                                class="btn btn-sm btn-success"><i class="fa fa-edit"></i>{{ 'Edit' | translate }}
                         </button>                       
                     </clr-dg-cell>
                 </clr-dg-row>
@@ -77,45 +76,30 @@
     <ng-template #staticSubPortfolioAddTab let-formControl="formControl" let-tabid="tabid">
         <div class="user-tab-panel-body panel-body">
             <form (submit)="addSubPortfolio(tabid)" [formGroup]="formControl">
-                <div class="form-horizontal">
-                    <div class="row">
-                        <div class="form-group col-sm-6">
-                            <label class="control-label required-field" mltag="txt_subportfolioname">Sub-portfolio Name</label>
-                            <input type="text" #portfolioName placeholder="Sub-portfolio name"
-                                                class="form-control mlp_translated" 
-                                                mltag="txt_subportfolioname"
-                                                formControlName="name">
-                            <div *ngIf="!formControl.controls['name'].valid && formControl.controls['name'].touched"
-                                                class="field-error" 
-                                                mltag="txt_thisfieldisrequired">This field is required
-                            </div>
-                        </div>
-
-                        <div class="form-group col-sm-6">
-                            <label class="control-label required-field" mltag="txt_subportfolioiban">Sub-portfolio IBAN</label>
-                            <input type="text" #portfolioIban 
-                                                placeholder="Sub-portfolio IBAN"
-                                                class="form-control mlp_translated"
-                                                mltag="txt_subportfolioiban"
-                                                formControlName="iban"
-                                                maxlength="34">
-                            <div *ngIf="formControl.controls['iban'].hasError('required') && formControl.controls['iban'].touched"
-                                                class="field-error" mltag="txt_thisfieldisrequired">This field is required
-                            </div>
-                            <div *ngIf="formControl.controls['iban'].hasError('minlength') && formControl.controls['iban'].touched"
-                                                class="field-error">IBAN must be at least 14 characters long</div>
-                        </div>
-
-                        <div class="form-group button-group">
-                            <div class="col-sm-12">
-                                <button type="submit" class="btn btn-primary" mltag="txt_save" [disabled]="!formControl.valid">
-                                   Save
-                                </button>
-                            </div>
-                        </div>
-
+                <section class="form-block">
+                    <div class="form-group col-sm-6">
+                        <label class="control-label required-field">{{ 'Sub-portfolio Name' | translate }}</label>
+                        <input type="text" #portfolioName 
+                                            placeholder="{{ 'Sub-portfolio name' | translate }}"
+                                            class="form-control mlp_translated"
+                                            formControlName="name">
+                        <div *ngIf="!formControl.controls['name'].valid && formControl.controls['name'].touched" class="field-error">{{ 'Field is required' | translate }}</div>
                     </div>
-                </div> 
+
+                    <div class="form-group col-sm-6">
+                        <label class="control-label required-field">{{ 'Sub-portfolio IBAN' | translate }}</label>
+                        <input type="text" #portfolioIban 
+                                            placeholder="{{ 'Sub-portfolio IBAN' | translate }}"
+                                            class="form-control mlp_translated"
+                                            formControlName="iban"
+                                            maxlength="34">
+                        <div *ngIf="formControl.controls['iban'].hasError('required') && formControl.controls['iban'].touched" class="field-error">{{ 'Field is required' | translate }}</div>
+                        <div *ngIf="formControl.controls['iban'].hasError('minlength') && formControl.controls['iban'].touched" class="field-error">{{ 'IBAN must be at least 14 characters long' | translate }}</div>
+                    </div>
+                                            
+                    <button type="submit" class="btn btn-primary" [disabled]="!formControl.valid"><i class="fa fa-save"></i> {{ 'Save' | translate }}</button>                                             
+
+                </section>
             </form>
         </div>    
     </ng-template>
@@ -124,40 +108,38 @@
     <ng-template #dynamicSubPortfolioEditTab let-formControl="formControl" let-tabid="tabid">
         <div class="user-tab-panel-body panel-body">
             <form (ngSubmit)="updateSubPortfolio(tabid)" [formGroup]="formControl">
-                <div class="form-horizontal">
-                    <div class="row">
-                        <div class="form-group col-sm-6">
-                            <label class="control-label required-field" mltag="txt_subportfolioname">Sub-portfolio Name</label>
-                            <input type="text" #portfolioName placeholder="Sub-portfolio name" class="form-control mlp_translated" mltag="txt_subportfolioname"
+                <section class="form-block">
+                    <div class="form-group col-sm-6">
+                        <label class="control-label required-field">{{ 'Sub-portfolio Name' | translate }}</label>
+                        <input type="text" #portfolioName 
+                                placeholder="{{ 'Sub-portfolio Name' | translate }}" 
+                                class="form-control mlp_translated" 
                                 formControlName="name">
-                            <div *ngIf="!formControl.controls['name'].valid && formControl.controls['name'].touched" class="field-error" mltag="txt_thisfieldisrequired">This field is required
-                            </div>
-                        </div>
-
-                        <div class="form-group col-sm-6">
-                            <label class="control-label required-field" mltag="txt_subportfolioiban">Sub-portfolio IBAN</label>
-                            <input type="text" #portfolioIban placeholder="Sub-portfolio IBAN" class="form-control mlp_translated" mltag="txt_subportfolioiban"
-                                formControlName="iban" maxlength="34">
-                            <div *ngIf="formControl.controls['iban'].hasError('required') && formControl.controls['iban'].touched" class="field-error"
-                                mltag="txt_thisfieldisrequired">This field is required
-                            </div>
-                            <div *ngIf="formControl.controls['iban'].hasError('minlength') && formControl.controls['iban'].touched" class="field-error">IBAN must be at least 14 characters long</div>
-                        </div>
-
-                        <div class="form-group button-group">
-                            <div class="col-sm-12">
-                                <button type="submit" class="btn btn-primary" mltag="txt_save" [disabled]="!formControl.valid">
-                                    Save
-                                </button>
-
-                                <button (click)="closeTab(tabid)" class="btn btn-secondary">
-                                    <i class="fa fa-cancel"></i>
-                                    <span class="ml_translated" mltag="txt_cancel">Cancel</span>
-                                </button>
-                            </div>
+                        <div *ngIf="!formControl.controls['name'].valid && formControl.controls['name'].touched" class="field-error">{{ 'Field is required' | translate }}
                         </div>
                     </div>
-                </div>
+
+                    <div class="form-group col-sm-6">
+                        <label class="control-label required-field">{{ 'Sub-portfolio IBAN' | translate }}</label>
+                        <input type="text" #portfolioIban 
+                                placeholder="{{ 'Sub-portfolio IBAN' | translate }}" 
+                                class="form-control mlp_translated"
+                                formControlName="iban" 
+                                maxlength="34">
+                        <div *ngIf="formControl.controls['iban'].hasError('required') && formControl.controls['iban'].touched" class="field-error">{{ 'Field is required' | translate }}
+                        </div>
+                        <div *ngIf="formControl.controls['iban'].hasError('minlength') && formControl.controls['iban'].touched" class="field-error">{{ 'IBAN must be at least 14 characters long' | translate }}</div>
+                    </div>
+                   
+                    <div class="row">
+                        <button type="submit" class="btn btn-primary" [disabled]="!formControl.valid"><i class="fa fa-save"></i> {{ 'Save' | translate }}</button>
+
+                        <button (click)="closeTab(tabid)" class="btn btn-secondary">
+                            <i class="fa fa-cancel"></i> {{ 'Cancel' | translate }}
+                        </button>
+                    </div>
+                    
+                </section>
             </form>              
         </div>
     </ng-template>
