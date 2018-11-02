@@ -1,5 +1,5 @@
 <div class="header-breadcrumbs">
-    <h1 id="manage-member"><i class="fa fa-address-card"></i> <span mltag="txt_managemember">Manage Member</span></h1>
+    <h1 id="manage-member"><i class="fa fa-address-card"></i> {{ 'Manage Member' | translate }}</h1>
 </div>
 
 <div class="wrapper wrapper-content">
@@ -36,17 +36,17 @@
         <div class="panel-body">
 
             <clr-datagrid #membersDataGrid>
-                <clr-dg-column mltag="txt_membername">Member Name</clr-dg-column>
-                <clr-dg-column class="right" *ngIf="isSymAdmin" mltag="txt_actions">Actions</clr-dg-column>
+                <clr-dg-column>{{ 'Member Name' | translate }}</clr-dg-column>
+                <clr-dg-column class="right" *ngIf="isSymAdmin">{{ 'Actions' | translate }}</clr-dg-column>
                 <clr-dg-row *clrDgItems="let member of manageMembersList; let id = index">
                     <clr-dg-cell id="member-name-{{id}}">{{member.memberName}}</clr-dg-cell>
                     <clr-dg-cell class="right" *ngIf="isSymAdmin">
                         <button (click)="handleEdit(member.index)" class="btn btn-sm btn-success"
                                 id="edit-member-{{id}}">
-                            <i class="fa fa-edit"></i> <span mltag="txt_edit">Edit</span></button>
+                            <i class="fa fa-edit"></i> {{ 'Edit' | translate }}</button>
                         <button (click)="handleDelete(member.index)" class="btn btn-sm btn-danger">
-                            <i class="fa fa-trash-o"></i> <span mltag="txt_delete"
-                                                                id="delete-member-{{id}}">Delete</span></button>
+                            <i class="fa fa-trash-o"></i> <span id="delete-member-{{id}}">{{ 'Delete' | translate}}</span>
+                        </button>
                     </clr-dg-cell>
                 </clr-dg-row>
 
@@ -68,15 +68,17 @@
                         <div class="row">
                             <div class="form-group col-sm-6">
                                 <label class="control-label required-field" for="new-member-name">
-                                    <span class="ml_translated" mltag="txt_membername">Member Name</span>
+                                    {{ 'Member Name' | translate }}
                                 </label>
 
-                                <input type="text" formControlName="memberName" placeholder="Member Name"
-                                       id="new-member-name" class="form-control mlp_translated"
-                                       mltag="txt_membername" maxlength="100"/>
+                                <input type="text" 
+                                        formControlName="memberName" 
+                                        placeholder="{{ 'Member Name' | translate }}"
+                                        id="new-member-name" 
+                                        class="form-control"
+                                        maxlength="100"/>
 
-                                <span *ngIf="formControl.controls.memberName.hasError('required') && formControl.controls.memberName.touched" class="field-error"
-                                      mltag="txt_fieldisrequired">Field is required</span>
+                                <div *ngIf="formControl.controls.memberName.hasError('required') && formControl.controls.memberName.touched" class="field-error">{{ 'Field is required' | translate }}</div>
                             </div>
                         </div>
 
@@ -84,19 +86,23 @@
 
                             <div class="form-group col-sm-6">
                                 <label class="control-label required-field" for="new-member-email">
-                                    <span class="ml_translated" mltag="txt_adminemail">Admin Email</span>
+                                    {{ 'Admin Email' | translate }}
                                 </label>
 
-                                <input type="email" formControlName="email" name="email" placeholder="Enter email..." class="form-control email mlp_translated" mltag="txt_enteremail" id="new-member-email"/>
+                                <input type="email" 
+                                        formControlName="email" 
+                                        name="email" 
+                                        placeholder="{{ 'Email' | translate }}" 
+                                        class="form-control email" 
+                                        id="new-member-email"/>
 
-                                <span *ngIf="formControl.controls.email.hasError('required') && formControl.controls.email.touched" class="field-error"
-                                      mltag="txt_fieldisrequired">Field is required</span>
+                                <div *ngIf="formControl.controls.email.hasError('required') && formControl.controls.email.touched" class="field-error">{{ 'Field is required' | translate }}</div>
                             </div>
                         </div>
                         <div class="form-group button-group">
                             <button type="submit" class="btn btn-primary" [disabled]="formControl.invalid">
                                 <i class="fa fa-save"></i>
-                                <span class="ml_translated" mltag="txt_save" id="new-member-save">Save</span>
+                                <span id="new-member-save">{{ 'Save' | translate }}</span>
                             </button>
                         </div>
                     </div>
@@ -113,24 +119,26 @@
                     <div class="row">
                         <div class="form-group col-sm-6">
                             <label class="control-label required-field" for="memberName">
-                                <span class="ml_translated" mltag="txt_membername">Member Name</span>
+                                {{ 'Member Name' | translate }}
                             </label>
                             <div>
-                                <input type="text" formControlName="memberName" placeholder="Username"
-                                       class="form-control username mlp_translated" mltag="txt_username"/>
+                                <input type="text" 
+                                    formControlName="memberName" 
+                                    placeholder="{{ 'Username' | translate }}"
+                                    class="form-control username"/>
                             </div>
                         </div>
                     </div>
-
                 </div>
 
                 <div class="form-horizontal">
                     <div class="row">
                         <div class="form-group button-group">
                             <button type="submit" [disabled]="!canSave(tabid)" class="btn btn-primary">
-                                <i class="fa fa-save"></i> <span class="ml_translated" mltag="txt_save">Save</span>
+                                <i class="fa fa-save"></i> "{{ 'Save' | translate }}
                             </button>
-                            <button (click)="closeTab(tabid)" class="btn btn-secondary" mltag="txt_close">Close
+                            <button (click)="closeTab(tabid)" class="btn btn-secondary">
+                                {{ 'Close' | translate }}
                             </button>
                         </div>
                     </div>

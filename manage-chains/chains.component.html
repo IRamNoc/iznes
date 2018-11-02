@@ -1,8 +1,5 @@
 <div class="header-breadcrumbs">
-    <h1>
-        <i class="fa fa-chain"></i>
-        <span mltag="txt_chains">Chains</span>
-    </h1>
+    <h1><i class="fa fa-chain"></i> {{ 'Chains' | translate }}</h1>
 </div>
 
 <div>
@@ -34,21 +31,20 @@
     <ng-template #chainListTab>
         <div class="panel-body">
             <clr-datagrid>
-                <clr-dg-column [clrDgField]="'chainId'" mltag="txt_chainidentification">Chain Identification
-                </clr-dg-column>
-                <clr-dg-column [clrDgField]="'chainName'" mltag="txt_chainname">Chain Name</clr-dg-column>
-                <clr-dg-column class="right" mltag="txt_action">
-                    Action
-                </clr-dg-column>
+                <clr-dg-column [clrDgField]="'chainId'">{{ 'Chain Identification' | translate }}</clr-dg-column>
+                <clr-dg-column [clrDgField]="'chainName'">{{ 'Chain Name' | translate }}</clr-dg-column>
+                <clr-dg-column class="right">{{ 'Action' | translate }}</clr-dg-column>
 
                 <clr-dg-row *clrDgItems="let chain of chainsList; let id = index">
                     <clr-dg-cell id="chain_id_{{id}}">{{chain.chainId}}</clr-dg-cell>
                     <clr-dg-cell id="chain_name_{{id}}">{{chain.chainName}}</clr-dg-cell>
                     <clr-dg-cell class="right">
                         <button (click)="handleEdit(id)" class="btn btn-success btn-sm" id="edit-chain-{{id}}">
-                            <i class="fa fa-edit"></i> <span mltag="txt_edit">Edit</span></button>
+                            <i class="fa fa-edit"></i> {{ 'Edit' | translate }}
+                        </button>
                         <button (click)="handleDelete(chain)" class="btn btn-danger btn-sm" id="delete-chain-{{id}}">
-                            <i class="fa fa-trash-o"></i> <span mltag="txt_delete">Delete</span></button>
+                            <i class="fa fa-trash-o"></i> {{ 'Delete' | translate }}
+                        </button>
                     </clr-dg-cell>
                 </clr-dg-row>
 
@@ -69,14 +65,16 @@
                     <div class="row">
                         <div class="form-group col-sm-6">
                             <label class="control-label required-field" for="chainId">
-                                <span class="ml_translated" mltag="txt_chainidentification">Chain Identification</span>
+                                {{ 'Chain Identification' | translate }}
                             </label>
 
-                            <input type="number" id="chainId" class="form-control" formControlName="chainId"
-                                   placeholder="Chain Identification" mltag="txt_chainidentification"/>
+                            <input type="number" 
+                                    id="chainId" 
+                                    class="form-control" 
+                                    formControlName="chainId"
+                                    placeholder="{{ 'Chain Identification' | translate }}"/>
 
-                            <span *ngIf="formControl.controls.chainId.hasError('required') && formControl.controls.chainId.touched"
-                                  class="field-error" mltag="txt_fieldisrequired">Field is required</span>
+                            <div *ngIf="formControl.controls.chainId.hasError('required') && formControl.controls.chainId.touched" class="field-error">{{ 'Field is required' | translate }}</div>
                         </div>
                     </div>
                 </div>
@@ -85,21 +83,20 @@
                     <div class="row">
                         <div class="form-group col-sm-6">
                             <label class="control-label required-field" for="chainName">
-                                <span class="ml_translated" mltag="txt_chainname">Chain Name</span>
+                                {{ 'Chain Name' | translate }}
                             </label>
 
                             <input type="text" id="chainName" class="form-control" formControlName="chainName"
                                    maxlength="100"/>
 
-                            <span *ngIf="formControl.controls.chainName.hasError('required') && formControl.controls.chainName.touched"
-                                  class="field-error" mltag="txt_fieldisrequired">Field is required</span>
+                            <div *ngIf="formControl.controls.chainName.hasError('required') && formControl.controls.chainName.touched" class="field-error">{{ 'Field is required' | translate }}</div>
                         </div>
                     </div>
                 </div>
 
                 <div class="form-group button-group">
                     <button type="submit" class="btn btn-primary" [disabled]="!formControl.valid">
-                        <i class="fa fa-save"></i> <span class="ml_translated" mltag="txt_save">Save</span>
+                        <i class="fa fa-save"></i> {{ 'Save' | translate }}
                     </button>
                 </div>
 
@@ -115,25 +112,27 @@
                     <div class="row">
                         <div class="form-group col-sm-6">
                             <label class="control-label" for="chainId">
-                                <span class="ml_translated" mltag="txt_chainidentification">Chain Identification</span>
+                                {{ 'Chain Identification' | translate }}
                             </label>
-                            <input type="number" id="chainId" class="form-control" formControlName="chainId"
-                                   placeholder="Chain Identification" mltag="txt_chainidentification" disabled/>
+                            <input type="number" 
+                                    id="chainId" 
+                                    class="form-control" 
+                                    formControlName="chainId"
+                                    placeholder="{{ 'Chain Identification' | translate }}" 
+                                    disabled/>
                         </div>
                     </div>
 
                     <div class="row">
                         <div class="form-group col-sm-6">
                             <label class="control-label required-field" for="chainName">
-                                <span class="ml_translated" mltag="txt_chainname">Chain Name</span>
+                                {{ 'Chain Name' | translate }}
                             </label>
 
                             <input type="text" id="chainName" class="form-control" formControlName="chainName"
                                    maxlength="100"/>
 
-                            <span *ngIf="formControl.controls.chainName.hasError('required') && formControl.controls.chainName.touched"
-                                  class="field-error"
-                                  mltag="txt_fieldisrequired">Field is required</span>
+                            <div *ngIf="formControl.controls.chainName.hasError('required') && formControl.controls.chainName.touched" class="field-error">{{ 'Field is required' | translate }}</div>
                         </div>
                     </div>
 
@@ -141,11 +140,11 @@
                         <div class="row">
                             <div class="form-group button-group">
                                 <button type="submit" class="btn btn-primary" [disabled]="!formControl.valid">
-                                    <i class="fa fa-save"></i> <span class="ml_translated"
-                                                                     mltag="txt_save">Save</span>
+                                    <i class="fa fa-save"></i> 
+                                    {{ 'Save' | translate }}
                                 </button>
-                                <button (click)="closeTab(tabid)" class="btn btn-secondary" mltag="txt_close">
-                                    Close
+                                <button (click)="closeTab(tabid)" class="btn btn-secondary">
+                                    {{ 'Close' | translate }}
                                 </button>
                             </div>
                         </div>

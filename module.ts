@@ -3,7 +3,7 @@ import { NgModule } from '@angular/core';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { ClarityModule } from '@clr/angular';
 import { CommonModule } from '@angular/common';
-import { SelectModule, SetlDirectivesModule } from '@setl/utils';
+import { SelectModule, SetlDirectivesModule, SetlPipesModule } from '@setl/utils';
 
 // Local components
 import { ManageChainMembershipComponent } from './manage-chain-membership/component';
@@ -11,6 +11,7 @@ import { ManageAccountComponent } from './manage-account/component';
 import { ManageMemberComponent } from './manage-member/component';
 import { ManageChainsComponent } from './manage-chains/chains.component';
 import { ManageWalletNodesComponent } from './manage-wallet-nodes/component';
+import { MultilingualModule } from '@setl/multilingual';
 
 @NgModule({
     imports: [
@@ -20,6 +21,8 @@ import { ManageWalletNodesComponent } from './manage-wallet-nodes/component';
         ClarityModule,
         CommonModule,
         SelectModule,
+        MultilingualModule,
+        SetlPipesModule,
         SetlDirectivesModule,
     ],
     exports: [],
