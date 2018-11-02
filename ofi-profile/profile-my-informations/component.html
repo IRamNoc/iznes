@@ -12,10 +12,7 @@
         <clr-tab-content *clrIfActive>
             <h2>{{'User Details:' | translate}}</h2>
             <p>{{'You can view/edit your profile information below:' | translate}}</p>
-            <app-my-informations [userInfo]="userInfoExtended" [viewMode]="'POPUP'" [type]="userType" (onSubmit)="saveUserInformations($event)" (onClose)="closeUserInformations()">
-
-
-            </app-my-informations>
+            <app-my-informations [userInfo]="userInfoExtended" [viewMode]="'POPUP'" [type]="userType" (onSubmit)="saveUserInformations($event)" (onClose)="closeUserInformations()"></app-my-informations>
 
             <div class="hr-line-dashed"></div>
 
@@ -81,6 +78,13 @@
                     </div>
                 </section>
             </form>
+
+            <div *ngIf="externalNotificationsAvailable"> 
+                <div class="hr-line-dashed"></div>
+
+                <h2>{{'External Notifications' | translate}}</h2>
+                <app-external-notifications></app-external-notifications>
+            </div>    
 
         </clr-tab-content>
     </clr-tab>
