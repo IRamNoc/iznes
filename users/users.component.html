@@ -102,7 +102,7 @@
                         <div class="form-group col-sm-6">
                             <label class="control-label required-field">{{ 'Email' | translate }}</label>
                             <input id="new-user-email" type="email" formControlName="email" name="email"
-                                   placeholder="{{ 'Enter email' | translate }}"
+                                   placeholder="{{ 'Email' | translate }}"
                                    class="form-control email mlp_translated">
                             <div *ngIf="formControl.controls.email.hasError('required') && formControl.controls.email.touched"
                                  class="field-error">{{ 'Field is required' | translate }}
@@ -225,7 +225,7 @@
                             <input id="edit-user{{tabid}}-email" 
                                     type="email" 
                                     formControlName="email" name="email"
-                                    placeholder="{{ 'Enter email' | translate }}" 
+                                    placeholder="{{ 'Email' | translate }}" 
                                     class="form-control email mlp_translated">
                             <div *ngIf="formControl.controls.email.hasError('required') && formControl.controls.email.touched"
                                  class="field-error">{{ 'Field is required' | translate }}
@@ -342,7 +342,7 @@
                     <div class="panel-body">
                         <div class="m-b-10">
 
-                            {{ 'Full access wallets' | translate }}
+                            {{ 'Full Access Wallets' | translate }}
 
                             <ng-select
                                 [items]="tabsControl[tabid].filteredWalletsByAccount"
@@ -383,7 +383,7 @@
 
                         <div>
                             
-                            {{ 'Group Wallet Permission (Read only)' | translate }}
+                            {{ 'Group Wallet Permission (Read Only)' | translate }}
                             
                             <ng-select
                                 [items]="accountTypes"
