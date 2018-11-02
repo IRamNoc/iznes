@@ -410,7 +410,8 @@ public class OpenCSDGeneralAcceptanceTest {
             fail("could not click forgotten password link " + e.getMessage());
         }
         driver.findElement(By.id("fp-email-field")).sendKeys(email);
-        driver.findElement(By.id("fp-submit-sendemail-button")).click();
+
+        driver.findElement(By.id("submit-sendemail-button")).click();
     }
 
     public static void sendMessageToSelectedWallet(String recipient, String subject, String message, String toasterMessage) throws InterruptedException {

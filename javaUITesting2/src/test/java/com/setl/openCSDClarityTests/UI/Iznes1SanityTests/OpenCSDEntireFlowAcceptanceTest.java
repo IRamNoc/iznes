@@ -134,6 +134,7 @@ public class OpenCSDEntireFlowAcceptanceTest {
         getShareTableRow(0, uShareDetails[0], uIsin[0], uFundDetails[0], shareCurrency, managementCompExpected, "", "share class", "Open");
 
         setSharesNAVandValidate(uShareDetails[0], latestNav);
+        logout();
 
         loginAndVerifySuccess(AMUsername, AMPassword);
         waitForHomePageToLoad();
