@@ -1075,7 +1075,5 @@ public class FundsDetailsHelper extends LoginAndNavigationHelper {
             fail(e.getMessage());
         }
         System.out.println("Status : Validated NAV at " + navValue + ".00");
-
-        logout();
     }
 }
