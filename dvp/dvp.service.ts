@@ -57,6 +57,8 @@ export class DVPContractService {
                            successCallback: (res) => void,
                            errorCallback: (res) => void): void {
 
+        console.log('+++ contractData', contractData);
+
         const asyncTaskPipe = this.walletnodeTxService.newContract({
             walletId,
             address,

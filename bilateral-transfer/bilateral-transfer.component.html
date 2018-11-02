@@ -26,7 +26,7 @@
 
                         <div class="form-group col-sm-6">
                             <label class="control-label">Offer Type</label>
-                            <div class="type-select">
+                            <div class="type-select btn-group">
                             <span class="btn"
                                   [ngClass]="{
                                     'btn-outline': bilateralTransferForm.get('offerType').value !== 'buy',
@@ -88,27 +88,23 @@
 
                     <div class="row">
                         <div class="form-group col-sm-6">
-                            <label class="control-label required-field" for="witness1">Witness 1</label>
+                            <label class="control-label" for="witness1">Witness 1</label>
                             <ng-select id="witness1"
                                        [items]="walletAddressSelectItems"
                                        [allowClear]="true"
                                        placeholder="Witness 1"
                                        [formControl]="bilateralTransferForm.controls['witness1']">
                             </ng-select>
-
-                            <span *ngIf="bilateralTransferForm.controls['witness2'].hasError('required')" class="field-error">Field is required</span>
                         </div>
 
                         <div class="form-group col-sm-6">
-                            <label class="control-label required-field" for="witness2">Witness 2</label>
+                            <label class="control-label" for="witness2">Witness 2</label>
                             <ng-select id="witness2"
                                        [items]="walletAddressSelectItems"
                                        [allowClear]="true"
                                        placeholder="Asset Address"
                                        [formControl]="bilateralTransferForm.controls['witness2']">
                             </ng-select>
-
-                            <span *ngIf="bilateralTransferForm.controls['witness2'].hasError('required')" class="field-error">Field is required</span>
                         </div>
                     </div>
 

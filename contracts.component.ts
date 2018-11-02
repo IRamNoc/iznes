@@ -62,7 +62,8 @@ export class ContractsComponent implements OnInit, OnDestroy {
         private changeDetectorRef: ChangeDetectorRef,
         private ngRedux: NgRedux<any>,
         @Inject(APP_CONFIG) private appConfig: AppConfig,
-    ) { }
+    ) {
+    }
 
     public ngOnInit() {
         this.tabControl = new TabControl({
@@ -78,7 +79,7 @@ export class ContractsComponent implements OnInit, OnDestroy {
             this.changeDetectorRef.markForCheck();
         }),
 
-        this.token = this.memberSocketService.token;
+            this.token = this.memberSocketService.token;
         if (this.updateContractList) {
             this.updateContractList.pipe(takeUntil(this.unsubscribe)).subscribe(
                 (data) => {
@@ -177,10 +178,16 @@ export class ContractsComponent implements OnInit, OnDestroy {
         console.log('INDEX:', index);
         let contractJson = JSON.parse(this.contractService.toJSON(contract));
         contractJson = contractJson.contractdata;
-        console.log('CONTRACT JSON:', contractJson);
+        console.log('CONTRACT JSON:', contract);
         const commitment = [];
-        _.each(contractJson.parties[index][2], (payListItem, i) => {
-            commitment[i] = [i, payListItem[1], payListItem[2], payListItem[3], '', ''];
+        _.each(contractJson.authorisations, (payListItem, i) => {
+            console.log('+++ payListItem', payListItem);
+            //commitment[i] = [i, payListItem[1], payListItem[2], payListItem[3], '', ''];
+            const namespace = contract.parties[0].payList[0].namespace;
+            const assetId = contract.parties[0].payList[0].assetId;
+            const quantity = contract.parties[0].payList[0].quantity;
+            const signature = window.btoa(`${namespace}${assetId}${quantity}`);
+            commitment[i] = [i, payListItem[0], signature];
         });
         const receive = [];
         _.each(contractJson.parties[index][3], (recieveListItem, i) => {
@@ -190,11 +197,11 @@ export class ContractsComponent implements OnInit, OnDestroy {
         const asyncTaskPipe = this.walletNodeRequest.walletCommitToContract({
             walletid: this.walletId,
             address: contract.parties[index - 1].sigAddress,
-            function: contract.function + '_commit',
+            function: `${contract.function}_commit`,
             contractdata: {
                 commitment,
                 receive,
-                contractfunction: contract.function + '_commit',
+                contractfunction: `${contract.function}_commit`,
                 issuingaddress: contract.issuingaddress,
                 contractaddress: contract.address,
                 parties: contractJson.parties,
@@ -203,26 +210,47 @@ export class ContractsComponent implements OnInit, OnDestroy {
             contractaddress: contract.address,
         });
 
+        const reqData = {
+            walletid: this.walletId,
+            address: contract.parties[index - 1].sigAddress,
+            function: `${contract.function}_commit`,
+            contractdata: {
+                commitment,
+                receive,
+                contractfunction: `${contract.function}_commit`,
+                issuingaddress: contract.issuingaddress,
+                contractaddress: contract.address,
+                parties: contractJson.parties,
+                authorise: contractJson.authorisations,
+            },
+            contractaddress: contract.address,
+        };
+
+        console.log('+++ commit reqData', reqData);
+
         this.ngRedux.dispatch(SagaHelper.runAsync(
             [],
             [],
             asyncTaskPipe,
             {},
             () => {
+                this.alertsService.generate('success', 'Successfully committed to contract.');
             },
-            () => {
+            (data) => {
+                this.alertsService.generate('error', 'Failed to commit to contract.');
+                console.log('FAILED commit', data);
             },
         ));
     }
 
     public commitParty(party: PartyModel, contract: ContractModel): void {
         this.contractService.commitParty(party, contract)
-            .then((data) => {
-                this.committing = [...this.committing, party.partyIdentifier];
-                this.changeDetectorRef.markForCheck();
-                this.alertsService.generate('success', 'Committing to Contract.');
-            })
-            .catch(data => console.log('Bad commit', data));
+        .then((data) => {
+            this.committing = [...this.committing, party.partyIdentifier];
+            this.changeDetectorRef.markForCheck();
+            this.alertsService.generate('success', 'Committing to Contract.');
+        })
+        .catch(data => console.log('Bad commit', data));
     }
 
     public updateParameter(key, value) {

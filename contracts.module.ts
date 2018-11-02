@@ -14,6 +14,7 @@ import {
 } from '@angular/forms';
 import { ContractService } from './services';
 import { DVPContractService } from './dvp/dvp.service';
+import { BilateralTransferService } from './bilateral-transfer/bilateral-transfer.service';
 
 @NgModule({
     imports: [
@@ -40,6 +41,7 @@ import { DVPContractService } from './dvp/dvp.service';
     providers: [
         ContractService,
         DVPContractService,
+        BilateralTransferService,
     ],
 })
 

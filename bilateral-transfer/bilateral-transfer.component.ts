@@ -3,6 +3,7 @@ import { FormGroup, FormControl, Validators } from '@angular/forms';
 import { NgRedux, select } from '@angular-redux/store';
 import { Subscription } from 'rxjs/Subscription';
 import { AlertsService } from '@setl/jaspero-ng2-alerts';
+import { BilateralTransferService } from './bilateral-transfer.service';
 import { walletHelper, SagaHelper } from '@setl/utils';
 import * as _ from 'lodash';
 import {
@@ -39,6 +40,7 @@ export class BilateralTransferComponent implements OnInit, OnDestroy {
                 private walletNodeRequestService: WalletNodeRequestService,
                 private walletnodeTxService: WalletnodeTxService,
                 private myWalletService: MyWalletsService,
+                private bilateralTransferService: BilateralTransferService,
                 private alertsService: AlertsService) {
     }
 
@@ -54,7 +56,6 @@ export class BilateralTransferComponent implements OnInit, OnDestroy {
         /* Get asset list */
         this.subscriptions.push(this.holdingByAssetOb.subscribe((holdings) => {
             const walletsAssetList = _.get(holdings, `[${this.connectedWalletId}]`, {});
-            console.log('+++ walletsAssetList', walletsAssetList);
 
             this.allInstrumentList = walletHelper.walletInstrumentListToSelectItem(walletsAssetList);
             this.changeDetectorRef.detectChanges();
@@ -92,20 +93,23 @@ export class BilateralTransferComponent implements OnInit, OnDestroy {
             assetAddress: new FormControl('', Validators.required),
             recipient: new FormControl('', [Validators.required, Validators.pattern(addressPattern)]),
             amount: new FormControl('', [Validators.required, Validators.pattern('^((?!(0))[0-9]+)$')]),
-            witness1: new FormControl('', Validators.required),
-            witness2: new FormControl('', Validators.required),
+            witness1: new FormControl(''),
+            witness2: new FormControl(''),
         });
     }
 
     createContract() {
-        console.log('+++ form values', this.bilateralTransferForm.value);
         const data = this.bilateralTransferForm.value;
+        const contractData = this.bilateralTransferService.getContractData(data);
+
         const asyncTaskPipe = this.walletnodeTxService.newContract({
             walletId: this.connectedWalletId,
-            address: data.assetAddress.id || '',
-            contractData: {},
+            address: _.get(data, 'assetAddress[0].id', ''),
+            contractData: contractData.contractdata,
             function: 'dvp_uk',
         });
+
+        console.log('+++ contractData', contractData);
 
         this.ngRedux.dispatch(SagaHelper.runAsync(
             [],
@@ -113,9 +117,12 @@ export class BilateralTransferComponent implements OnInit, OnDestroy {
             asyncTaskPipe,
             {},
             (data) => {
+                console.log('SUCCESS', data);
+                this.alertsService.generate('success', 'Bilateral Transfer successful.');
             },
             (data) => {
-                console.error('error', data);
+                console.log('ERROR', data);
+                this.alertsService.generate('error', 'Bilateral Transfer failed.');
             },
         ));
     }
