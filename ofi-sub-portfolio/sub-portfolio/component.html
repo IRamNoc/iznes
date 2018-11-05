@@ -142,7 +142,7 @@
         <button id="override_cancel" type="button" class="btn btn-warning margin-right-10" (click)="closeAddModal();">
             {{'Cancel' | translate}}
         </button>
-        <button id="override_save" type="button" class="btn btn-success" (click)="saveSubPortfolio(1);" [disabled]="!this.tabDetail[0]['formControl'].valid">
+        <button id="override_save" type="button" class="btn btn-success" (click)="saveSubPortfolio();" [disabled]="!this.tabDetail[0]['formControl'].valid">
             {{'Create' | translate}}
         </button>
     </div>
