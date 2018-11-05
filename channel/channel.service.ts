@@ -4,7 +4,7 @@ import { SagaHelper, LogService } from '@setl/utils';
 import { ToasterService, Toast } from 'angular2-toaster';
 import { AlertsService } from '@setl/jaspero-ng2-alerts';
 import { take } from 'rxjs/operators';
-import { debounce } from 'lodash';
+import { debounce, get } from 'lodash';
 
 import {
     /* Useradmin. */
@@ -42,6 +42,7 @@ import {
 } from '@setl/core-store';
 import { MyWalletsService } from '@setl/core-req-services/my-wallets/my-wallets.service';
 import { ChainService } from '@setl/core-req-services/chain/service';
+import { addToOwnWallets, deleteFromOwnWallets } from '@setl/core-store/wallet/my-wallets/actions';
 
 @Injectable()
 export class ChannelService {
@@ -323,6 +324,15 @@ export class ChannelService {
                 },
             );
             break;
+
+        case 'deletewalletaccess':
+            this.ngRedux.dispatch(deleteFromOwnWallets(get(data, 'Data', [])));
+            break;
+
+        case 'addwalletaccess':
+            this.ngRedux.dispatch(addToOwnWallets(get(data, 'Data', {})));
+            break;
+
         default:
             break;
         }
