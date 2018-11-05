@@ -6,6 +6,7 @@ import { Subscription } from 'rxjs/Subscription';
 import { UPDATE_TWO_FACTOR } from '@setl/core-store';
 import { MyUserService } from '@setl/core-req-services';
 import { MemberSocketService } from '@setl/websocket-service';
+import { MultilingualService } from '@setl/multilingual';
 import * as _ from 'lodash';
 
 @Component({
@@ -34,6 +35,7 @@ export class EnrollComponent implements OnDestroy, OnInit {
         private memberSocketService: MemberSocketService,
         private myUserService: MyUserService,
         private confirmationService: ConfirmationService,
+        public translate: MultilingualService,
     ) {
     }
 
@@ -64,10 +66,24 @@ export class EnrollComponent implements OnDestroy, OnInit {
             type: 'GoogleAuth',
         });
 
+        let confirmationTitle = '';
+        let confirmationMessage = '';
+
+        if (setting) {
+            confirmationTitle = this.translate.translate(
+                'Enable Two-Factor Authentication');
+            confirmationMessage = this.translate.translate(
+                'Are you sure you want to enable Two-Factor Authentication?');
+        } else {
+            confirmationTitle = this.translate.translate(
+                'Disable Two-Factor Authentication');
+            confirmationMessage = this.translate.translate(
+                'Are you sure you want to disable Two-Factor Authentication?');
+        }
+
         this.confirmationService.create(
-            `<span>${setting ? 'Enable' : 'Disable'} Two-Factor Authentication</span>`,
-            `<span class="text-warning">Are you sure you want to
-                 ${setting ? 'enable' : 'disable'} Two-Factor Authentication?</span>`,
+            `<span>${confirmationTitle}</span>`,
+            `<span class="text-warning">${confirmationMessage}</span>`,
         ).subscribe((ans) => {
             if (ans.resolved) {
                 if (setting) {
@@ -95,11 +111,13 @@ export class EnrollComponent implements OnDestroy, OnInit {
                         asyncTaskPipe,
                         {},
                         () => {
-                            this.alertsService.generate('success', 'Two-Factor Authentication has been disabled.');
+                            this.alertsService.generate('success', this.translate.translate(
+                                'Two-Factor Authentication has been disabled.'));
                         },
                         (data) => {
                             console.error('error: ', data);
-                            this.alertsService.generate('error', 'Two-Factor Authentication could not be disabled.');
+                            this.alertsService.generate('error', this.translate.translate(
+                                'Two-Factor Authentication could not be disabled.'));
                         }),
                     );
                     this.showQRCodeChallenge = false;
