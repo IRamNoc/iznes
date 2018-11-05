@@ -121,38 +121,19 @@
         <form class="p-0" [formGroup]="this.tabDetail[0]['formControl']">
             <div class="row">
                 <div class="form-group col-sm-12">
-                    <label class="control-label required-field">
+                    <label class="control-label required-field required-field">
                         {{'Sub-portfolio Name' | translate}}
                     </label>
-                    <input type="text" #portfolioName [placeholder]="_translate.translate('Sub-portfolio name')" class="form-control mlp_translated" formControlName="subPortfolioName" (blur)="saveSubPortfolio(0);">
-                    <div *ngIf="!this.tabDetail[0]['formControl'].controls['subPortfolioName'].valid && this.tabDetail[0]['formControl'].controls['subPortfolioName'].touched" class="field-error">
-                        {{'This field is required' | translate }}
-                    </div>
-                    <div *ngIf="!(!this.tabDetail[0]['formControl'].controls['subPortfolioName'].valid) &&
-                    (createError == 1 || createError == 3)" class="pseudo-field-error">
-                        {{'This subportfolio name is already used. Please choose another one.' | translate }}
-                    </div>
+                    <input type="text" #portfolioName [placeholder]="_translate.translate('Sub-portfolio name')" class="form-control mlp_translated" formControlName="subPortfolioName">
+                    <span class="field-error" *ngIf="getFormError('subPortfolioName')">{{getFormError('subPortfolioName')}}</span>
                 </div>
             </div>
             <div class="row">
-                <div class="form-group col-sm-12">
+                <div class="form-group col-sm-12 required-field">
                     <label class="control-label required-field">{{'Sub-portfolio IBAN' | translate }}</label>
                     <input type="text" #portfolioIban [placeholder]="_translate.translate('Sub-portfolio IBAN')"
-                           class="form-control mlp_translated" formControlName="subPortfolioIban" maxlength="34" (blur)="saveSubPortfolio(0);">
-                    <div *ngIf="this.tabDetail[0]['formControl'].controls['subPortfolioIban'].hasError('required') &&
-                    this.tabDetail[0]['formControl'].controls['subPortfolioIban'].touched" class="field-error">
-                        {{'This field is required.' | translate }}
-                    </div>
-                    <div *ngIf="!this.tabDetail[0]['formControl'].controls['subPortfolioIban'].hasError('required') &&
-                    this.tabDetail[0]['formControl'].controls['subPortfolioIban'].hasError('ibanFail') &&
-                    this.tabDetail[0]['formControl'].controls['subPortfolioIban'].touched" class="field-error">
-                        {{'IBAN must be 14 to 34 characters long with 2 letters at the beginning.' | translate }}
-                    </div>
-                    <div *ngIf="!this.tabDetail[0]['formControl'].controls['subPortfolioIban'].hasError('required') &&
-                    !this.tabDetail[0]['formControl'].controls['subPortfolioIban'].hasError('ibanFail') &&
-                    (createError == 2 || createError == 3)" class="pseudo-field-error">
-                        {{'The subportfolio IBAN is already used. Please choose another one.' | translate }}
-                    </div>
+                           class="form-control mlp_translated" formControlName="subPortfolioIban" maxlength="34">
+                    <span class="field-error" *ngIf="getFormError('subPortfolioIban')">{{getFormError('subPortfolioIban')}}</span>
                 </div>
             </div>
         </form>
