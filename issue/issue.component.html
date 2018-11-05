@@ -1,6 +1,6 @@
 <div class="animated fadeInRight">
     <div class="header-breadcrumbs">
-        <h1><i class="fa fa fa-money"></i><span mltag="txt_issuerreports">Issue Reports</span></h1>
+        <h1><i class="fa fa fa-money"></i> {{ 'Issue Reports' | translate }}</h1>
     </div>
 
     <clr-tabs *ngIf="tabs.length">
@@ -29,23 +29,23 @@
         <div class="panel-body">
             <clr-datagrid #myDataGrid>
                 <clr-dg-column [clrDgField]="'asset'" clrDgSortIcon>
-                    <span mltag="txt_asset">Asset</span>
+                    {{ 'Asset' | translate }}
                     <span class="column-label"></span>
                 </clr-dg-column>
                 <clr-dg-column [clrDgField]="'addressLabel'" clrDgSortIcon>
-                    <span mltag="txt_issuer_address_label">Issuer Address Label</span>
+                    {{ 'Issuer Address Label' | translate }}
                     <span class="column-label"></span>
                 </clr-dg-column>
                 <clr-dg-column [clrDgField]="'address'" clrDgSortIcon>
-                    <span mltag="txt_issuer_address">Issuer Address</span>
+                    {{ 'Issuer Address' | translate }}
                     <span class="column-label"></span>
                 </clr-dg-column>
                 <clr-dg-column [clrDgField]="'total'" clrDgSortIcon>
-                    <span mltag="txt_total">Total</span>
+                    {{ 'Total' | translate }}
                     <span class="column-label"></span>
                 </clr-dg-column>
                 <clr-dg-column class="right">
-                    <span mltag="txt_actions">Actions</span>
+                    {{ 'Actions' | translate }}
                 </clr-dg-column>
 
                 <clr-dg-row *clrDgItems="let issuer of issuers$ | async">
@@ -56,8 +56,7 @@
                     <clr-dg-cell class="right">
                         <div class="btn-group btn-sm">
                             <button (click)="handleViewBreakdown(issuer)" class="btn btn-orange">
-                                <i class="fa fa-search"></i>
-                                <span mltag="txt_view">View</span>
+                                <i class="fa fa-search"></i>{{ 'View' | translate }}
                             </button>
                         </div>
                     </clr-dg-cell>
@@ -78,31 +77,31 @@
         <div class="user-tab-panel-body panel-body">
             <clr-datagrid #myDataGrid>
                 <clr-dg-column [clrDgField]="'walletName'" clrDgSortIcon>
-                    <span mltag="txt_wallet">Wallet</span>
+                    {{ 'Wallet' | translate }}
                     <span class="column-label"></span>
                 </clr-dg-column>
                 <clr-dg-column [clrDgField]="'addrLabel'" clrDgSortIcon>
-                    <span mltag="txt_address_label">Address Label</span>
+                    {{ 'Address Label' | translate }}
                     <span class="column-label"></span>
                 </clr-dg-column>
                 <clr-dg-column [clrDgField]="'addr'" clrDgSortIcon>
-                    <span mltag="txt_address">Address</span>
+                    {{ 'Address' | translate }}
                     <span class="column-label"></span>
                 </clr-dg-column>
                 <clr-dg-column [clrDgField]="'percentage'" clrDgSortIcon>
-                    <span mltag="txt_percentageofholding">Percentage of Holding</span>
+                    {{ 'Percentage of Holding' | translate }}
                     <span class="column-label"></span>
                 </clr-dg-column>
                 <clr-dg-column [clrDgField]="'balance'" clrDgSortIcon>
-                    <span mltag="txt_total">Total</span>
+                    {{ 'Total' | translate }}
                     <span class="column-label"></span>
                 </clr-dg-column>
                 <clr-dg-column [clrDgField]="'encumbered'" clrDgSortIcon>
-                    <span mltag="txt_encumbered">Encumbered</span>
+                    {{ 'Encumbered' | translate }}
                     <span class="column-label"></span>
                 </clr-dg-column>
                 <clr-dg-column [clrDgField]="'free'" clrDgSortIcon>
-                    <span mltag="txt_free">Free</span>
+                    {{ 'Free' | translate }}
                     <span class="column-label"></span>
                 </clr-dg-column>
 
@@ -123,7 +122,7 @@
                 </clr-dg-footer>
             </clr-datagrid>
             <div class="form-group tx-view-header">
-                <button type="button" class="btn btn-primary" (click)="tabControl.close(id)">Close</button>
+                <button type="button" class="btn btn-primary" (click)="tabControl.close(id)">{{ 'Close' | translate }}</button>
             </div>
         </div>
     </ng-template>
