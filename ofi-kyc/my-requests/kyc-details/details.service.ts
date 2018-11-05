@@ -82,7 +82,8 @@ export class KycDetailsService {
             .map(([controlName, controlValue]) => ({
                 originalId: controlName,
                 id: this.getNameFromControl(controlName),
-                value: this.getValueFromControl(controlName, controlValue)
+                originalValue: controlValue,
+                value: this.getValueFromControl(controlName, controlValue),
             }))
             .filter()
             .value();

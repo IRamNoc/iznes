@@ -21,6 +21,17 @@ export const investorStatusTextList = [
     },
 ];
 
+export const minimalInvestorStatusTextList = [
+    {
+        id: '0',
+        text: 'Non professional investor',
+    },
+    {
+        id: '1',
+        text: 'Professional investor',
+    },
+];
+
 export const booleanControls = [
     'commercialDomiciliation',
     'activitiesBenefitFromExperience',
@@ -1417,7 +1428,8 @@ export const controlToName = {
     // Classification
     optForPro: 'Asked for professional classification',
     optForNonPro: 'Opted for non professional classification',
-    investorStatus: 'Investor status',
+    classificationChangeAccepted: 'Classification change accepted',
+    investorStatus: 'Initial investor status',
     excludeProducts: 'Excluded category of products/services',
     jobPosition: 'Job position',
     numberYearsExperienceRelatedFunction: 'Number of years of experience in a function related to financial markets',

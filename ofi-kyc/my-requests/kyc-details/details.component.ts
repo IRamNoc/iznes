@@ -2,9 +2,11 @@ import { Component, OnDestroy, Input, OnInit, ChangeDetectorRef } from '@angular
 import { ActivatedRoute } from '@angular/router';
 import { select } from '@angular-redux/store';
 import { Subject } from 'rxjs';
-import { takeUntil, filter as rxFilter, map, tap } from 'rxjs/operators';
-import { isEmpty } from 'lodash';
+import { takeUntil, filter as rxFilter, map } from 'rxjs/operators';
+import { isEmpty, find, isNil, get as getValue, findIndex } from 'lodash';
+
 import { MultilingualService } from '@setl/multilingual';
+import { minimalInvestorStatusTextList } from '@ofi/ofi-main/ofi-kyc/my-requests/requests.config';
 import { KycDetailsService } from './details.service';
 
 @Component({
@@ -167,7 +169,20 @@ export class KycDetailsComponent implements OnInit, OnDestroy {
             map(data => this.kycDetailsService.toArray(data)),
             takeUntil(this.unsubscribe),
         )
-        .subscribe(data => {
+        .subscribe((data) => {
+            const classificationObject = find(data, ['originalId', 'investorStatus']);
+            const hasBeenAcceptedIndex = findIndex(data, ['originalId', 'classificationChangeAccepted']);
+            let hasBeenAccepted = find(data, ['originalId', 'classificationChangeAccepted']);
+            hasBeenAccepted = getValue(hasBeenAccepted, 'originalValue', null);
+
+            const oldStatus = classificationObject.originalValue ? '1' : '0';
+            const newStatus = classificationObject.originalValue ? '0' : '1';
+            const condition = isNil(hasBeenAccepted) || !hasBeenAccepted;
+            const investorClassification = condition ? find(minimalInvestorStatusTextList, ['id', oldStatus]).text : find(minimalInvestorStatusTextList, ['id', newStatus]).text;
+
+            classification.title = `Classification Confirmation - ${investorClassification}`;
+
+            data.splice(hasBeenAcceptedIndex, 1);
             classification.data = data;
             this.changeDetectorRef.markForCheck();
         })
