@@ -48,6 +48,7 @@ public class UserDetailsHelper extends LoginAndNavigationHelper {
     }
 
     public static void enterEmailAddress(String email) {
+        driver.findElement(By.id("new-user-email")).click();
         driver.findElement(By.id("new-user-email")).clear();
         driver.findElement(By.id("new-user-email")).sendKeys(email);
     }

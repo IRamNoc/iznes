@@ -332,11 +332,11 @@ public class LoginAndNavigationHelper {
     public static void waitForLoginFailPopup(){
         WebDriverWait wait = new WebDriverWait(driver, timeoutInSeconds);
         try {
-            wait.until(visibilityOf(driver.findElement(By.className("jaspero__dialog-title"))));
+            wait.until(visibilityOf(driver.findElement(By.xpath("//*[@id=\"iznes\"]/app-root/jaspero-alerts/jaspero-alert/div[2]/div[1]"))));
 
-            String loginFail = driver.findElement(By.className("jaspero__dialog-title")).getText();
+            String loginFail = driver.findElement(By.xpath("//*[@id=\"iznes\"]/app-root/jaspero-alerts/jaspero-alert/div[2]/div[1]")).getText();
             assertTrue(loginFail.equals("Warning!"));
-            String loginMsg = driver.findElement(By.xpath("//jaspero-alerts/jaspero-alert/div[2]/div[3]/span")).getText();
+            String loginMsg = driver.findElement(By.xpath("//*[@id=\"iznes\"]/app-root/jaspero-alerts/jaspero-alert/div[2]/div[3]/table/tbody/tr/td/span")).getText();
             assertTrue(loginMsg.equals("Invalid email address or password!"));
 
         } catch (Exception e) {

@@ -98,6 +98,7 @@ public class OpenCSDMyAccountAcceptanceTest {
     }
 
     @Test
+    //@Ignore
     public void shouldCreateUserAndResetPassword() throws IOException, InterruptedException {
         String[] email = generateRandomEmail();
 
@@ -107,6 +108,8 @@ public class OpenCSDMyAccountAcceptanceTest {
         navigateToPageByID("menu-user-admin-users");
         String userDetails[] = generateRandomUserDetails();
         createUserAndVerifySuccess(userDetails[0], email[0], "asdasd");
+        //TODO - this next step fails, I believe because "testops034@setl.io" already exists.  not yet possible to user a bracketed '(randomData)test@seetl.io' address
+        createUserAndVerifySuccess(userDetails[0], "testops034@setl.io", "asdasd");
         logout();
         clickForgottenPassword(email[0]);
         //LoginToOutlook("test@setl.io", "Sphericals1057!");

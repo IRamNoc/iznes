@@ -51,7 +51,7 @@ public class OpenCSD2FundsAcceptanceTest {
 
     static Connection conn = null;
 
-    public static String connectionString = "jdbc:mysql://localhost:9998/setlnet?nullNamePatternMatchesAll=true";
+    public static String connectionString = "jdbc:mysql://localhost:9987/setlnet?nullNamePatternMatchesAll=true";
 
     // Defines username and password to connect to database server.
     static String DBUsername = "root";
