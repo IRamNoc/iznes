@@ -1,5 +1,5 @@
 <div class="header-breadcrumbs">
-    <h1><i class="fa fa-th-list"></i><span mltag="txt_balances">Balances</span></h1>
+    <h1><i class="fa fa-th-list"></i> {{ 'Balances' | translate }}</h1>
 </div>
 
 <clr-tabs *ngIf="tabs.length">
@@ -27,15 +27,15 @@
 <clr-modal [(clrModalOpen)]="exportModalDisplay" [clrModalClosable]="false">
     <div class="modal-title">
         <i class="fa fa-check-circle modal-icon text-success"></i>
-        <h4 class="modal-title-text"><span class="mltranslated">Export Complete</span></h4>
+        <h4 class="modal-title-text">{{ 'Export Complete' | translate }}</h4>
     </div>
     <div class="modal-body">
-        <span style="text-align:center">Balances Export CSV file is now ready for download</span>
+        <span style="text-align:center">{{ 'Balances Export CSV file is now ready for download' | translate }}</span>
     </div>
     <div class="modal-footer">
         <setl-file-viewer [fileHash]="exportFileHash" [viewType]="2"></setl-file-viewer>
         <button type="button" class="btn btn-primary">
-            <span class="mltranslated" (click)="hideExportModal()">Cancel</span>
+            <span (click)="hideExportModal()">{{ 'Cancel' | translate }}</span>
         </button>
     </div>
 </clr-modal>
@@ -43,11 +43,11 @@
 <ng-template #staticBalanceList>
     <div class="panel-body">
         <clr-datagrid #myDataGrid>
-            <clr-dg-column mltag="txt_asset" style="min-width: 170px;">Asset</clr-dg-column>
-            <clr-dg-column mltag="txt_total" class="right" style="min-width: 170px;">Total</clr-dg-column>
-            <clr-dg-column mltag="txt_encumbered" class="right">Encumbered</clr-dg-column>
-            <clr-dg-column mltag="txt_free" class="right">Free</clr-dg-column>
-            <clr-dg-column mltag="txt_actions" class="right" style="min-width: 160px;">Actions</clr-dg-column>
+            <clr-dg-column style="min-width: 170px;">{{ 'Asset' | translate }}</clr-dg-column>
+            <clr-dg-column class="right" style="min-width: 170px;">{{ 'Total' | translate }}</clr-dg-column>
+            <clr-dg-column class="right">{{ 'Encumbered' | translate }}</clr-dg-column>
+            <clr-dg-column class="right">{{ 'Free' | translate }}</clr-dg-column>
+            <clr-dg-column class="right" style="min-width: 160px;">{{ 'Actions' | translate }}</clr-dg-column>
 
             <clr-dg-row *clrDgItems="let asset of balances$ | async" [class.flash]="asset.isNew">
                 <clr-dg-cell [innerHtml]="asset.asset | asset"></clr-dg-cell>
@@ -62,19 +62,17 @@
                 </clr-dg-cell>
                 <clr-dg-cell class="right">
                     <button (click)="handleViewBreakdown(asset)" class="btn btn-orange btn-sm">
-                        <i class="fa fa-search"></i>
-                        <span mltag="txt_view">View</span>
+                        <i class="fa fa-search"></i>{{ 'View' | translate }}
                     </button>
                     <button (click)="handleViewHistory(asset)" class="btn btn-primary btn-sm">
-                        <i class="fa fa-history"></i>
-                        <span mltag="txt_history">History</span>
+                        <i class="fa fa-history"></i>{{ 'History' | translate }}
                     </button>
                 </clr-dg-cell>
             </clr-dg-row>
 
             <clr-dg-footer>
                 <div rowsPerPage="10" (rowsUpdate)="pageSize = $event"></div>
-                <button *ngIf="myDataGrid.items['_filtered']" class="btn btn-sm" (click)="exportList()">Export</button>
+                <button *ngIf="myDataGrid.items['_filtered']" class="btn btn-sm" (click)="exportList()">{{ 'Export' | translate }}</button>
                 &nbsp;
                 {{pagination.firstItem + 1}} - {{pagination.lastItem + 1}}
                 <clr-dg-pagination #pagination [clrDgPageSize]="pageSize" [clrDgPage]="pageCurrent"
@@ -92,15 +90,15 @@
         <!-- Breakdown view -->
         <div *ngIf="template === 'breakdown'">
             <div class="form-group tx-view-header">
-                <h2 class="ml" mltag="txt_breakdown">Breakdown</h2>
+                <h2>{{ 'Breakdown' | translate }}</h2>
             </div>
 
             <clr-datagrid #myDataGrid>
-                <clr-dg-column mltag="txt_address_label">Address Label</clr-dg-column>
-                <clr-dg-column mltag="txt_address">Address</clr-dg-column>
-                <clr-dg-column class="right" mltag="txt_total">Total</clr-dg-column>
-                <clr-dg-column class="right" mltag="txt_encumbered">Encumbered</clr-dg-column>
-                <clr-dg-column class="right" mltag="txt_free">Free</clr-dg-column>
+                <clr-dg-column>{{ 'Address Label' | translate }}</clr-dg-column>
+                <clr-dg-column>{{ 'Address' | translate }}</clr-dg-column>
+                <clr-dg-column class="right">{{ 'Total' | translate }}</clr-dg-column>
+                <clr-dg-column class="right">{{ 'Encumbered' | translate }}</clr-dg-column>
+                <clr-dg-column class="right">{{ 'Free' | translate }}</clr-dg-column>
 
 
                 <clr-dg-row *clrDgItems="let breakdown of asset.breakdown">
@@ -121,20 +119,20 @@
 
         <!-- History view -->
         <div *ngIf="template === 'history'">
-            <h2 class="ml" mltag="txt_transactiondetails">Transaction History</h2>
+            <h2>{{ 'Transaction History' | translate }}</h2>
 
             <clr-datagrid #myDataGrid [clrDgLoading]="(transactions | async)?.loading">
-                <clr-dg-column mltag="txt_action">Action</clr-dg-column>
-                <clr-dg-column mltag="txt_tx_id">Tx ID</clr-dg-column>
-                <clr-dg-column mltag="txt_asset">Assset</clr-dg-column>
-                <clr-dg-column class="right" mltag="txt_amount">Amount</clr-dg-column>
-                <clr-dg-column mltag="txt_time">Time (UTC)</clr-dg-column>
-                <clr-dg-column mltag="txt_type">Type</clr-dg-column>
+                <clr-dg-column>{{ 'Action' | translate }}</clr-dg-column>
+                <clr-dg-column>{{ 'Tx ID' | translate }}</clr-dg-column>
+                <clr-dg-column>{{ 'Assset' | translate }}</clr-dg-column>
+                <clr-dg-column class="right">{{ 'Amount' | translate }}</clr-dg-column>
+                <clr-dg-column>{{ 'Time (UTC)' | translate }}</clr-dg-column>
+                <clr-dg-column>{{ 'Type' | translate }}</clr-dg-column>
 
                 <clr-dg-row *clrDgItems="let transaction of (transactions | async)?.pages[(transactions | async)?.currentPage]?.transactions">
                     <clr-dg-cell>
                         <button (click)="handleViewTransaction(transaction)" class="btn btn-sm"><i
-                            class="fa fa-search"></i>View
+                            class="fa fa-search"></i>{{ 'View' | translate }}
                         </button>
                     </clr-dg-cell>
                     <clr-dg-cell class="tooltip tooltip-xs" [title]="transaction.hash">{{transaction.shortHash}}
@@ -192,7 +190,7 @@
                         <div class="form-group tx-view-header">
                             <div class="col-sm-3">&nbsp;</div>
                             <label class="col-sm-4">
-                                <h2 class="ml" mltag="txt_transactiondetails">Transaction Details</h2>
+                                <h2>{{ 'Transaction Details' | translate }}</h2>
                             </label>
                         </div>
 
@@ -213,7 +211,8 @@
         </div>
 
         <div class="form-group tx-view-header">
-            <button type="button" class="btn btn-primary" (click)="handleClose(id, asset)">Close</button>
+            <button type="button" class="btn btn-primary" (click)="handleClose(id, asset)">{{ 'Close' | translate }}
+            </button>
         </div>
     </div>
 </ng-template>

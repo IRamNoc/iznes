@@ -1,5 +1,5 @@
 <div class="header-breadcrumbs">
-    <h1><i class="fa fa-key"></i><span mltag="txt_transactionreports">Transaction Reports</span></h1>
+    <h1><i class="fa fa-key"></i> {{ 'Transaction Reports' | translate}}</h1>
 </div>
 
 <clr-tabs *ngIf="tabs.length > 0">
@@ -27,19 +27,19 @@
 <ng-template #staticTransactionsList>
     <div class="panel-body">
         <clr-datagrid #myDataGrid [clrDgLoading]="dataLoading">
-            <clr-dg-column class="col-actions" mltag="txt_actions">Actions</clr-dg-column>
-            <clr-dg-column class="col-txid" mltag="txt_txid">Tx ID</clr-dg-column>
-            <clr-dg-column class="col-identifier" mltag="txt_identifier">Identifier</clr-dg-column>
-            <clr-dg-column class="col-asset" mltag="txt_asset">Asset</clr-dg-column>
-            <clr-dg-column class="col-utc" mltag="txt_time_utc">Time (UTC)</clr-dg-column>
-            <clr-dg-column class="col-type" mltag="txt_type">Type</clr-dg-column>
+            <clr-dg-column class="col-actions">{{ 'Actions' | translate }}</clr-dg-column>
+            <clr-dg-column class="col-txid">{{ 'Tx ID' | translate }}</clr-dg-column>
+            <clr-dg-column class="col-identifier">{{ 'Identifier' | translate }}</clr-dg-column>
+            <clr-dg-column class="col-asset">{{ 'Asset' | translate }}</clr-dg-column>
+            <clr-dg-column class="col-utc">{{ 'Time (UTC)' | translate }}</clr-dg-column>
+            <clr-dg-column class="col-type">{{ 'Type' | translate }}</clr-dg-column>
 
             <!-- <clr-dg-row *clrDgItems="let transaction of transactions"> -->
             <clr-dg-row *clrDgItems="let transaction of transactions">
                 <clr-dg-cell class="col-actions">
                     <div class="btn-group btn-sm">
                         <button (click)="handleViewTransaction(transaction.hash)" class="btn">
-                            <i class="fa fa-search"></i><span mltag="txt_view">View</span>
+                            <i class="fa fa-search"></i>{{'View' | translate }}
                         </button>
                     </div>
                 </clr-dg-cell>
@@ -84,7 +84,7 @@
                 <div class="form-group tx-view-header">
                     <div class="col-sm-3">&nbsp;</div>
                     <label class="col-sm-4">
-                        <span class="ml" mltag="txt_transactiondetails">Transaction Details</span>
+                        {{ 'Transaction Details' | translate }}
                     </label>
                 </div>
 
@@ -94,7 +94,10 @@
                             <span class="ml" mltag="txt_">{{field.displayName}}</span>
                         </label>
                         <div class="col-sm-9">
-                            <input type="text" class="form-control" readonly="" value="{{transaction[field.field]}}">
+                            <input type="text" 
+                                    class="form-control" 
+                                    readonly="" 
+                                    value="{{transaction[field.field]}}">
                         </div>
                     </div>
                 </ng-container>
@@ -102,7 +105,7 @@
                 <div class="form-group tx-view-header">
                     <div class="col-sm-3">&nbsp;</div>
                     <label class="col-sm-4">
-                        <button type="button" class="btn btn-primary" (click)="closeTab(id)">Close</button>
+                        <button type="button" class="btn btn-primary" (click)="closeTab(id)">{{ 'Close' | translate }}</button>
                     </label>
                 </div>
             </div>
