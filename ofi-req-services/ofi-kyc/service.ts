@@ -422,6 +422,8 @@ export class OfiKycService {
             amCompanyName: _.get(requestData, 'amCompanyName', ''),
             lang: _.get(requestData, 'lang', ''),
             invitedID: _.get(requestData, 'invitedID', ''),
+            changeAccepted: _.get(requestData, 'changeAccepted', null),
+            currentClassification: _.get(requestData, 'currentClassification', ''),
         };
 
         return createMemberNodeRequest(this.memberSocketService, messageBody);
