@@ -1,5 +1,6 @@
 package com.setl.openCSDClarityTests.UI.Iznes4General;
 
+import com.setl.UI.common.SETLUtils.RandomData;
 import com.setl.UI.common.SETLUtils.RepeatRule;
 import com.setl.UI.common.SETLUtils.ScreenshotRule;
 import com.setl.UI.common.SETLUtils.TestMethodPrinterRule;
@@ -16,6 +17,7 @@ import org.openqa.selenium.support.ui.WebDriverWait;
 
 import java.io.IOException;
 import java.sql.SQLException;
+import java.util.List;
 
 import static SETLAPIHelpers.DatabaseHelper.*;
 import static com.setl.UI.common.SETLUIHelpers.AccountsDetailsHelper.loginAndVerifySuccess;
@@ -58,34 +60,101 @@ public class OpenCSDGeneralAcceptanceTest {
 
     @Test
     public void shouldAutosaveInformation() throws IOException, InterruptedException, SQLException {
+        /*
+        2018-11-05 Discussion with Ollie & Dan - Adding a new User has had persist turned off
+        Persist is still turned on for other items, e.g. add new wallet, so let's test that
+         */
+
         String userDetails[] = generateRandomUserDetails();
         String userName = userDetails[0];
         String email = userDetails[1];
+        String valueToPersist = "ValueToPersist";
+
         loginAndVerifySuccessAdmin(adminuser, adminuserPassword);
         navigateToDropdown("menu-user-administration");
-        navigateToPageByID("menu-user-admin-users");
-        enterUsername(userName);
-        enterEmailAddress(email);
-        navigateToDropdown("topBarMenu");
-        navigateToPageByID("menu-user-admin-users");
-        driver.findElement(By.id("user-tab-1")).click();
-        String screenUserName = driver.findElement(By.id("new-user-username")).getAttribute("value");
-        assertTrue(screenUserName.equals(userName));
-        validatePopulatedDatabaseUsersFormdataTable("1", "8", userName, email);
-        deleteFormdataFromDatabase("8", "1");
+        navigateToPageByID("menu-user-admin-wallets");
+
+        WebElement walletTab = driver.findElement(By.id("wallet-tab-1"));
+        walletTab.click();
+
+        //
+        WebElement walletName = driver.findElement(By.id("new-wallet-name"));
+        walletName.click();
+        walletName.clear();
+        walletName.sendKeys(valueToPersist);
+
+        //log out and back in again
+        logout();
+        loginAndVerifySuccessAdmin(adminuser, adminuserPassword);
+
+        navigateToDropdown("menu-user-administration");
+        navigateToPageByID("menu-user-admin-wallets");
+
+        walletTab = driver.findElement(By.id("wallet-tab-1"));
+        walletTab.click();
+
+        String persistedText = driver.findElement(By.id("new-wallet-name")).getAttribute("value");
+        assert persistedText.equals(valueToPersist) :
+            String.format("value wasn't persisted correctly,  expected %s but was %s", valueToPersist, persistedText);
     }
 
     @Test
     public void shouldNotPersistInformationAfterSave() throws IOException, InterruptedException, SQLException {
         loginAndVerifySuccessAdmin(adminuser, adminuserPassword);
-        waitForHomePageToLoad();
-        int persist = databaseCountRows("UsersFormdata");
         navigateToDropdown("menu-user-administration");
-        navigateToPageByID("menu-user-admin-users");
-        String userDetails[] = generateRandomUserDetails();
-        createUserAndVerifySuccess(userDetails[0], userDetails[1], "alex01");
-        validateDatabaseUsersFormdataTable(0, "1", "8");
-        deleteFormdataFromDatabase("8", "1");
+        navigateToPageByID("menu-user-admin-wallets");
+
+        WebElement walletTab = driver.findElement(By.id("wallet-tab-1"));
+        walletTab.click();
+
+        String newWalletName = "NewWallet" + RandomData.getTimeStampWithoutBadCharacters();
+
+        WebElement walletName = driver.findElement(By.id("new-wallet-name"));
+        walletName.click();
+        walletName.clear();
+        walletName.sendKeys(newWalletName);
+
+        //if we already have combo box items slected, lets clear them
+        List<WebElement> crosses = driver.findElements(By.xpath("//i[contains(@class,'glyphicon glyphicon-remove')]"));
+        if (crosses.size() > 0)
+        {
+            for (WebElement cross: crosses)
+            {
+                cross.click();
+            }
+            Thread.sleep(500);
+        }
+
+        WebElement accountDropDown = driver.findElement(By.xpath("(//span[@class='ui-select-placeholder text-muted ng-star-inserted'])[2]"));
+        accountDropDown.click();
+        Thread.sleep(500);
+
+        WebElement searchText1 = driver.findElement(By.xpath("//input[@placeholder='Select Type']"));
+        searchText1.sendKeys("Investors" + Keys.ENTER);
+
+        WebElement accountTypeDropDown = driver.findElement(By.xpath("//*[@id=\"new-wallet-usertype-select\"]/div/div[2]"));
+        accountTypeDropDown.click();
+        Thread.sleep(500);
+
+        WebElement searchText2 = driver.findElement(By.xpath("//*[@id=\"new-wallet-usertype-select\"]/div/div[3]/ul/li[3]"));
+        searchText2.click();
+        Thread.sleep(1000);
+
+        validateDatabaseUsersFormdataTable(1, "2", "8");
+
+        WebElement saveButton = driver.findElement(By.id("new-wallet-submit"));
+        saveButton.click();
+
+        Thread.sleep(1000);
+
+        WebElement successTitle = driver.findElement(By.xpath("//div[contains(@class,'jaspero__dialog-title')]"));
+        assert successTitle.getText().toLowerCase().contains("success");
+
+        driver.findElement(By.xpath("//button[@type='button'][contains(text(),'Close')]")).click();
+
+        System.out.println("2018-11-05 Bug raised - blob doesnt get deleted. http://si-taiga01.dev.setl.io/project/paul-opencsd-reconfiguration-and-factorisation-project/issue/468");
+        validateDatabaseUsersFormdataTable(0, "2", "8");
+
     }
 
 
@@ -473,7 +542,7 @@ public class OpenCSDGeneralAcceptanceTest {
 
         try {
             wait.until(visibilityOf(userTypeCaret));
-            wait.until(elementToBeClickable(userTypeCaret));
+            //wait.until(elementToBeClickable(userTypeCaret));
             userTypeCaret.click();
 
             wait.until(visibilityOfElementLocated(By.xpath("//*[@id=\"new-user-usertype-select\"]/div/div[3]/ul/li[1]/div/a")));

@@ -1,5 +1,6 @@
 package com.setl.UI.common.SETLUIHelpers;
 
+import com.setl.UI.common.SETLUtils.RandomData;
 import org.openqa.selenium.By;
 import org.openqa.selenium.JavascriptExecutor;
 import org.openqa.selenium.Keys;
@@ -14,7 +15,6 @@ import java.text.DateFormat;
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
 import java.util.Date;
-import java.util.Random;
 
 import static com.setl.UI.common.SETLUIHelpers.MemberDetailsHelper.*;
 import static com.setl.UI.common.SETLUIHelpers.PageHelper.verifyCorrectPage;
@@ -31,33 +31,34 @@ import static org.openqa.selenium.support.ui.ExpectedConditions.*;
 public class FundsDetailsHelper extends LoginAndNavigationHelper {
 
     public static String[] generateRandomUmbrellaFundsDetails() {
-        String str = randomAlphabetic(7);
+        String str = RandomData.getDateTimeStamp();
         String umbrellaFundName = "Umbrella_" + str;
         return new String[]{umbrellaFundName};
     }
 
     public static String[] generateRandomFundsDetails() {
-        String str = randomAlphabetic(7);
+        String str = RandomData.getDateTimeStamp();
         String umbrellaFundName = "Fund_" + str;
         return new String[]{umbrellaFundName};
     }
     public static String[] generateRandomShareDetails() {
-        String str = randomAlphabetic(7);
+        String str = RandomData.getDateTimeStamp();
         String umbrellaFundName = "Share_" + str;
         return new String[]{umbrellaFundName};
     }
 
     public static String[] generateRandomISIN() {
-        String n = randomNumeric(10);
-        String b = "JM";
+        //length 12 chars with first 2 being Alphabetic
+        String n = RandomData.getTimeStampWithoutBadCharacters();
+        String b = "JM0";
         String randomISIN = b + n;
         return new String[]{randomISIN};
     }
 
     public static String[] generateRandomEmail() {
-        String n = randomNumeric(10);
+        String n = RandomData.getTimeStampWithoutBadCharacters();
         String b = "JM";
-        String randomISIN = b + n + "@setl.io";
+        String randomISIN = "(" + b + n + ")test@setl.io";
         return new String[]{randomISIN};
     }
 
@@ -66,9 +67,11 @@ public class FundsDetailsHelper extends LoginAndNavigationHelper {
         String louCode = randomNumeric(4);
         String reserved = "00";
         String entityId = randomAlphanumeric(12).toUpperCase();
-        String checksum = randomNumeric(2); // if possible, could investigate making this a valid checksum
+        String checksum = randomNumeric(2);
 
-        return louCode + reserved + entityId + checksum;
+        //return louCode + reserved + entityId + checksum;
+
+        return "999" + RandomData.getDateTimeStampWithoutBadCharacters();
     }
 
     public static String generateRandomGIIN()
@@ -82,7 +85,7 @@ public class FundsDetailsHelper extends LoginAndNavigationHelper {
     }
 
     public static String[] generateRandomSubPortfolioName() {
-        String str = randomAlphabetic(7);
+        String str = RandomData.getTimeStampWithoutBadCharacters();
         String b = "JM Portfolio | ";
         String randomISIN = b + str;
         return new String[]{randomISIN};
@@ -97,7 +100,7 @@ public class FundsDetailsHelper extends LoginAndNavigationHelper {
         String n = randomNumeric(14);
         String b = "JM";
         //String randomISIN = b + " " + n;
-        String randomISIN = "FR7630006000011234567890189";
+        String randomISIN = "FR7630006000011234567890189"; //TODO generateRandomSubPortfolioIBAN is hard coded
         return new String[]{randomISIN};
     }
 
@@ -108,7 +111,7 @@ public class FundsDetailsHelper extends LoginAndNavigationHelper {
     }
 
     public static String[] generateRandomDuplicateDetails(){
-        String str = randomAlphabetic(7);
+        String str = RandomData.getTimeStampWithoutBadCharacters();
         String duplicateFundName = "Duplicated_Umbrella_Fund_" + str;
         return new String[]{duplicateFundName};
     }
