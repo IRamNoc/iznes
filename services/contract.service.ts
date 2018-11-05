@@ -257,7 +257,6 @@ export class ContractService {
                 },
                 contractaddress: contract.address,
             });
-
             this.redux.dispatch(SagaHelper.runAsync(
                 [],
                 [],
