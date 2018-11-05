@@ -2,7 +2,7 @@ import { Injectable } from '@angular/core';
 import { NgRedux } from '@angular-redux/store';
 import { ContractService } from '../services';
 import { WalletnodeTxService } from '@setl/core-req-services';
-import { ContractModel, PartyModel, PayListItemModel, ReceiveListItemModel } from '../models';
+import { ContractModel, PartyModel, AuthorisationModel } from '../models';
 import * as moment from 'moment';
 import * as _ from 'lodash';
 
@@ -25,10 +25,15 @@ export class BilateralTransferService {
         model.issuingaddress = addressAddress;
         model.protocol = 'dvp';
 
-        this.addPartiesToContract(model, bilateralFormValues, bilateralFormValues.offerType === 'buy');
+        this.addPartiesToContract(model, bilateralFormValues);
 
+        console.log('+++ witness 1', bilateralFormValues.witness1[0].id);
+        console.log('+++ witness 2', bilateralFormValues.witness2[0].id);
         this.addWitnesses(model, bilateralFormValues.witness1[0].id);
         this.addWitnesses(model, bilateralFormValues.witness2[0].id);
+
+        console.log('+++ contract DATA MODEL', model);
+        console.log('+++ contract DATA', JSON.parse(this.contractService.toJSON(model)));
 
         return JSON.parse(this.contractService.toJSON(model));
 
@@ -106,44 +111,52 @@ export class BilateralTransferService {
 
     addWitnesses(model, witness) {
         if (witness) {
-            model.authorisations.push({
-                publicKey: witness,
-                authorisationId: '',
-                signature: '',
-                metadata: {},
-                refused: false,
-            });
+            const witnessModel = new AuthorisationModel();
+            witnessModel.publicKey = witness;
+            witnessModel.authorisationId = '';
+            witnessModel.signature = '';
+            witnessModel.metadata = {};
+            witnessModel.refused = false;
+            model.authorisations.push(witnessModel);
         }
     }
 
-    private addPartiesToContract(model: ContractModel, values, isBuying: boolean): void {
+    private addPartiesToContract(model: ContractModel, values): void {
         if (!model.parties) model.parties = [];
 
-        model.parties.push(this.createParty('partyA', values.assetAddress[0].id, values.asset[0].id, values.amount, isBuying));
-        model.parties.push(this.createParty('partyB', values.recipient, values.asset[0].id, values.amount, isBuying));
+        model.parties.push(this.createParty('partyA', values));
+        model.parties.push(this.createParty('partyB', values));
     }
 
-    private createParty(identifier, address, asset, amount, isBuying: boolean): PartyModel {
+    private createParty(identifier, values): PartyModel {
         const party = new PartyModel();
 
         // configure the payee
         party.partyIdentifier = identifier;
-        party.sigAddress = address;
         party.mustSign = false;
 
-        if (isBuying) {
+        let receiver: boolean;
+        if (identifier === 'partyA') {
+            receiver = values.offerType === 'buy';
+            party.sigAddress = values.assetAddress[0].id;
+        } else {
+            receiver = values.offerType === 'sell';
+            party.sigAddress = values.recipient;
+        }
+
+        if (receiver) {
             // configure receive list
             party.receiveList.push(this.createReceiveListItem(
-                address,
-                asset,
-                amount,
+                party.sigAddress,
+                values.asset[0].id,
+                values.amount,
             ));
         } else {
             // configure pay list
             party.payList.push(this.createPayListItem(
-                address,
-                asset,
-                amount,
+                party.sigAddress,
+                values.asset[0].id,
+                values.amount,
             ));
         }
 
@@ -175,5 +188,4 @@ export class BilateralTransferService {
             amount,
         ];
     }
-
 }
