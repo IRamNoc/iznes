@@ -153,6 +153,24 @@ export const controlOrder = [
     'geographicalOrigin1',
     'geographicalOrigin2',
     'totalFinancialAssetsAlreadyInvested',
+
+    // Classification
+    'investorStatus',
+    'optForPro',
+    'optForNonPro',
+    'excludeProducts',
+    'firstName',
+    'lastName',
+    'jobPosition',
+    'numberYearsExperienceRelatedFunction',
+    'numberYearsCurrentPosition',
+    'financialInstruments',
+    'financialInstrumentsSpecification',
+    'marketArea',
+    'natureTransactionPerYear',
+    'volumeTransactionPerYear',
+    'activitiesBenefitFromExperience',
+    'activitiesBenefitFromExperienceSpecification',
 ];
 
 export const steps = {
@@ -1426,7 +1444,7 @@ export const controlToName = {
     country: 'Country',
 
     // Classification
-    optForPro: 'Asked for professional classification',
+    optForPro: 'Asked for professional status',
     optForNonPro: 'Opted for non professional classification',
     classificationChangeAccepted: 'Classification change accepted',
     investorStatus: 'Initial investor status',

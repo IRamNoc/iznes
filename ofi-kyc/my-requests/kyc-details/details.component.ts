@@ -167,6 +167,7 @@ export class KycDetailsComponent implements OnInit, OnDestroy {
         .pipe(
             rxFilter(value => !isEmpty(value)),
             map(data => this.kycDetailsService.toArray(data)),
+            map(data => this.kycDetailsService.order(data)),
             takeUntil(this.unsubscribe),
         )
         .subscribe((data) => {
