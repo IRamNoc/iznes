@@ -19,9 +19,9 @@
                                        [formControl]="bilateralTransferForm.controls['asset']">
                             </ng-select>
 
-                            <span *ngIf="bilateralTransferForm.controls.asset.hasError('required')" class="field-error">
-                            Field is required
-                        </span>
+                            <div *ngIf="bilateralTransferForm.controls.asset.hasError('required')" class="field-error">
+                                Field is required
+                            </div>
                         </div>
 
                         <div class="form-group col-sm-6">
@@ -53,11 +53,10 @@
                                            [items]="walletAddressSelectItems"
                                            [allowClear]="true"
                                            placeholder="Asset Address"
-                                           [formControl]="bilateralTransferForm.controls['assetAddress']"
-                                           mltag="txt_assetaddress">
+                                           [formControl]="bilateralTransferForm.controls['assetAddress']">
                                 </ng-select>
 
-                                <span *ngIf="bilateralTransferForm.controls['assetAddress'].hasError('required')" class="field-error">Field is required</span>
+                                <div *ngIf="bilateralTransferForm.controls['assetAddress'].hasError('required')" class="field-error">Field is required</div>
                             </div>
 
                             <div class="row">
@@ -68,8 +67,8 @@
                                            placeholder="Amount" size="45"
                                            [formControl]="bilateralTransferForm.controls['amount']">
 
-                                    <span *ngIf="bilateralTransferForm.controls['amount'].hasError('required')" class="field-error" mltag="txt_fieldisrequired">Field is required</span>
-                                    <span *ngIf="bilateralTransferForm.controls['amount'].hasError('pattern')" class="field-error">Amount must be a number</span>
+                                    <div *ngIf="bilateralTransferForm.controls['amount'].hasError('required')" class="field-error">Field is required</div>
+                                    <div *ngIf="bilateralTransferForm.controls['amount'].hasError('pattern')" class="field-error">Amount must be a number</div>
                                 </div>
                             </div>
                         </div>
@@ -81,8 +80,9 @@
                                 [ownWalletAddressArray]="walletAddressSelectItems"
                                 [required]="true"></various-address-select>
 
-                            <span *ngIf="bilateralTransferForm.controls['recipient'].hasError('required') && !bilateralTransferForm.controls['recipient'].pristine" class="field-error">Field is required</span>
-                            <span *ngIf="bilateralTransferForm.controls['recipient'].hasError('pattern') && !bilateralTransferForm.controls['recipient'].pristine" class="field-error">Invalid address format</span>
+                            <div *ngIf="bilateralTransferForm.get('recipient').hasError('required')" class="field-error">Field is required</div>
+                            <div *ngIf="bilateralTransferForm.get('recipient').hasError('pattern')" class="field-error">Invalid address format</div>
+                            <div *ngIf="bilateralTransferForm.get('recipient').hasError('matchesAssetAddress')" class="field-error">Matches send from address</div>
                         </div>
                     </div>
 
@@ -95,6 +95,7 @@
                                        placeholder="Witness 1"
                                        [formControl]="bilateralTransferForm.controls['witness1']">
                             </ng-select>
+                            <div *ngIf="bilateralTransferForm.get('witness1').hasError('matchesParty')" class="field-error">Matches another address</div>
                         </div>
 
                         <div class="form-group col-sm-6">
@@ -105,6 +106,8 @@
                                        placeholder="Asset Address"
                                        [formControl]="bilateralTransferForm.controls['witness2']">
                             </ng-select>
+                            <div *ngIf="bilateralTransferForm.get('witness2').hasError('matchesParty')" class="field-error">Matches another address</div>
+                            <div *ngIf="bilateralTransferForm.get('witness2').hasError('matchesWitness')" class="field-error">Matches witness 1</div>
                         </div>
                     </div>
 

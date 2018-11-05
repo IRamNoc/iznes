@@ -47,7 +47,7 @@ export class BilateralTransferComponent implements OnInit, OnDestroy {
     ngOnInit() {
         this.createFormGroup();
 
-        /* Get connectedWalletId */
+        /* Get connected wallet ID */
         this.subscriptions.push(this.connectedWalletOb.subscribe((connectedWalletId) => {
             this.connectedWalletId = connectedWalletId;
             this.bilateralTransferForm.controls.asset.reset();
@@ -67,7 +67,7 @@ export class BilateralTransferComponent implements OnInit, OnDestroy {
             this.changeDetectorRef.detectChanges();
         }));
 
-        /* Get connected addresses array */
+        /* Get connections array */
         this.subscriptions.push(
             this.requestedWalletRelationshipListOb.subscribe((requested) => {
                 if (!requested) {
@@ -84,40 +84,114 @@ export class BilateralTransferComponent implements OnInit, OnDestroy {
         );
     }
 
+    /**
+     * Create FormGroup
+     * -----------------
+     * Sets up the Bilateral Transfer FromGroup
+     */
     createFormGroup() {
         const addressPattern = '^[A]{1}[A-Za-z0-9_-]{32}[AQgw]{1}$';
 
-        this.bilateralTransferForm = new FormGroup({
-            asset: new FormControl('', Validators.required),
-            offerType: new FormControl('buy', Validators.required),
-            assetAddress: new FormControl('', Validators.required),
-            recipient: new FormControl('', [Validators.required, Validators.pattern(addressPattern)]),
-            amount: new FormControl('', [Validators.required, Validators.pattern('^((?!(0))[0-9]+)$')]),
-            witness1: new FormControl(''),
-            witness2: new FormControl(''),
-        });
+        this.bilateralTransferForm = new FormGroup(
+            {
+                asset: new FormControl('', Validators.required),
+                offerType: new FormControl('buy', Validators.required),
+                assetAddress: new FormControl('', Validators.required),
+                recipient: new FormControl('', [Validators.required, Validators.pattern(addressPattern)]),
+                amount: new FormControl('', [Validators.required, Validators.pattern('^((?!(0))[0-9]+)$')]),
+                witness1: new FormControl(''),
+                witness2: new FormControl(''),
+            },
+            [
+                this.addressValidator,
+                this.witnessValidator,
+            ],
+        );
     }
 
+    /**
+     * Address Validator
+     * ----------------
+     * Validates the party addresses to ensure they do not match
+     * @param g: FormGroup
+     * @return null
+     */
+    addressValidator(g: FormGroup) {
+        const assetAddress = _.get(g, 'controls.assetAddress.value[0].id', '');
+        const recipient = _.get(g, 'controls.recipient.value', '');
+        const existingErrors = g.controls.recipient.errors;
+        if (existingErrors !== null) delete existingErrors.matchesAssetAddress;
+
+        if (assetAddress && recipient) {
+            assetAddress === recipient ?
+                g.controls.recipient.setErrors({ matchesAssetAddress: true }) :
+                g.controls.recipient.setErrors(_.isEmpty(existingErrors) ? null : existingErrors);
+        }
+        return null;
+    }
+
+    /**
+     * Witness Validator
+     * ----------------
+     * Validates the witnesses to ensure they do not match another address within the contract
+     * @param g: FormGroup
+     * @return null
+     */
+    witnessValidator(g: FormGroup) {
+        const assetAddress = _.get(g, 'controls.assetAddress.value[0].id', '');
+        const recipient = _.get(g, 'controls.recipient.value', '');
+        const witness1 = _.get(g, 'controls.witness1.value[0].id', '');
+        const witness2 = _.get(g, 'controls.witness2.value[0].id', '');
+        let existingErrors;
+
+        if (assetAddress && recipient) {
+            existingErrors = g.controls.witness2.errors;
+            if (existingErrors !== null) delete existingErrors.matchesParty;
+
+            witness1 === assetAddress || witness1 === recipient ?
+                g.controls.witness1.setErrors({ matchesParty: true }) :
+                g.controls.witness1.setErrors(null);
+
+            witness2 === assetAddress || witness2 === recipient ?
+                g.controls.witness2.setErrors({ matchesParty: true }) :
+                g.controls.witness2.setErrors(_.isEmpty(existingErrors) ? null : existingErrors);
+        }
+
+        if (witness1 && witness2) {
+            existingErrors = g.controls.witness2.errors
+            if (existingErrors !== null) delete existingErrors.matchesWitness;
+            witness1 === witness2 ?
+                g.controls.witness2.setErrors(
+                    _.isEmpty(existingErrors) ?
+                        { matchesWitness: true } :
+                        Object.assign({}, existingErrors, { matchesWitness: true })
+                ) :
+                g.controls.witness2.setErrors(_.isEmpty(existingErrors) ? null : existingErrors);
+        }
+        return null;
+    }
+
+    /**
+     * Create Contract
+     * ---------------
+     * Creates a bilateral contract request from formatted FormGroup values
+     */
     createContract() {
-        const data = this.bilateralTransferForm.value;
-        const contractData = this.bilateralTransferService.getContractData(data);
+        const contractData = this.bilateralTransferService.getContractData(this.bilateralTransferForm.value);
 
         const asyncTaskPipe = this.walletnodeTxService.newContract({
             walletId: this.connectedWalletId,
-            address: _.get(data, 'assetAddress[0].id', ''),
+            address: _.get(this.bilateralTransferForm, 'value.assetAddress[0].id', ''),
             contractData: contractData.contractdata,
             function: 'dvp_uk',
         });
-
-        console.log('+++ contractData', contractData);
 
         this.ngRedux.dispatch(SagaHelper.runAsync(
             [],
             [],
             asyncTaskPipe,
             {},
-            (data) => {
-                console.log('SUCCESS', data);
+            () => {
                 this.alertsService.generate('success', 'Bilateral Transfer successful.');
             },
             (data) => {
