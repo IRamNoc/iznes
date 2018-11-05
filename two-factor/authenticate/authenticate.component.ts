@@ -7,7 +7,7 @@ import { Subscription } from 'rxjs/Subscription';
 import { UPDATE_TWO_FACTOR } from '@setl/core-store';
 import { MyUserService } from '@setl/core-req-services';
 import { MultilingualService } from '@setl/multilingual';
-import { LoginService } from "../../login.service";
+import { LoginService } from '../../login.service';
 
 @Component({
     selector: 'app-authenticate',
@@ -128,12 +128,12 @@ export class AuthenticateComponent implements OnDestroy, OnInit {
                     this.alertsService.generate('error', data[1].Data[0].Message);
 
                     if (data[1].Data[0].hasOwnProperty('AccountLocked') && data[1].Data[0].AccountLocked) {
-                        const lockedMessage = 'Sorry, your account has been locked. ' +
-                            'Please contact your Administrator.</span>';
+                        const lockedMessage = this.translate.translate(
+                            'Sorry, your account has been locked. Please contact your Administrator.');
                         this.alertsService.generate(
                             'info',
                             lockedMessage,
-                            { buttonMessage: 'Close' });
+                            { buttonMessage: this.translate.translate('Close') });
                     }
                 }),
             );
@@ -193,8 +193,9 @@ export class AuthenticateComponent implements OnDestroy, OnInit {
                     this.alertsService.create('clear');
                     this.alertsService.generate(
                         'error',
-                        'Sorry, your Two-Factor reset request could not be completed.' +
-                        'Please try again later!');
+                        this.translate.translate(
+                            'Sorry, your Two-Factor reset request could not be completed. Please try again later'),
+                        );
                     this.closeTwoFactorModal();
                 }),
             );
@@ -242,7 +243,7 @@ export class AuthenticateComponent implements OnDestroy, OnInit {
                     () => {
                         this.alertsService.generate(
                             'error',
-                            'Your Two-Factor reset request could not be completed.',
+                            this.translate.translate('Your Two-Factor reset request could not be completed.'),
                         );
                         this.clearToken.emit(true);
                         this.closeTwoFactorModal();

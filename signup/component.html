@@ -13,7 +13,7 @@
             <!-- Username -->
             <div class="form-group">
                 <label for="su-username-field">
-                    {{'Username' | translate}}
+                    {{ 'Username' | translate }}
                 </label>
                 <input id="su-username-field" class="form-control" type="text" name="username" disabled
                     [placeholder]="translate.translate('User name')"
@@ -25,7 +25,7 @@
             <div class="form-group">
                 <div>
                     <label for="su-password-field">
-                        {{'Password' | translate}}
+                        {{ 'Password' | translate }}
                         <app-password-tooltip></app-password-tooltip>
                     </label>
                     <div class="toggle-parent">
@@ -42,10 +42,10 @@
                 </div>
 
                 <span *ngIf="hasError('password', 'required')" class="text-danger">
-                    {{'Password is required' | translate}}
+                    {{ 'Field is required' | translate }}
                 </span>
                 <span *ngIf="hasError('password', 'rules')" class="text-danger">
-                    {{'Your password doesn\'t meet the security criteria' | translate}}
+                    {{ 'Your password does not meet the security criteria' | translate }}
                 </span>
             </div>
 
@@ -53,7 +53,7 @@
             <div class="form-group">
                 <div>
                     <label for="su-passwordConfirm-field">
-                        {{'Password confirmation' | translate}}
+                        {{' Password confirmation' | translate }}
                     </label>
 
                     <div class="toggle-parent">
@@ -70,7 +70,7 @@
                 </div>
 
                 <span *ngIf="hasError('passwordConfirm', 'required'); else checkMatch" class="text-danger">
-                    {{ 'Confirmation is required' | translate }}
+                    {{ 'Field is required' | translate }}
                 </span>
                 <ng-template #checkMatch>
                     <span *ngIf="hasError('', 'mismatch') && isTouched('password') && isTouched('passwordConfirm')" class="text-danger">
@@ -90,7 +90,7 @@
 
     <p>
         <small>
-            <span class="ml">{{'IZNES is a private environment subject to authorised access only.' | translate}}</span>
+            <span class="ml">{{ 'IZNES is a private environment subject to authorised access only.' | translate}}</span>
         </small>
     </p>
 </div>
@@ -98,6 +98,5 @@
 <app-authenticate
     *ngIf="showTwoFactorModal"
     [qrCode]="qrCode"
-    (modalCancelled)="showTwoFactorModal=!$event"
->
+    (modalCancelled)="showTwoFactorModal=!$event">
 </app-authenticate>

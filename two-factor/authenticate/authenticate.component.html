@@ -1,6 +1,6 @@
 <form [formGroup]="authenticateQRForm" (ngSubmit)="authenticateQRCode()">
     <clr-modal [(clrModalOpen)]="showModal" [clrModalSize]="'sm'" [clrModalClosable]="false">
-        <h3 class=" modal-title">Two-Factor Authentication</h3>
+        <h3 class=" modal-title">{{ 'Two-Factor Authentication' | translate }}</h3>
         <div class="modal-body ext-center">
             <section class="form-block">
                 <div class="form-group">
@@ -11,7 +11,7 @@
                         </section>
 
                         <div class="row text-center">
-                            <p>Scan the above QR code using your Authenticator App.</p>
+                            <p>{{ 'Scan the above QR code using your Authenticator App.' | translate }}</p>
                         </div>
                     </div>
 
@@ -27,11 +27,10 @@
                                maxlength="6"
                                minlength="6"
                                size="45"
-                               placeholder="Enter your six digit authentication code">
+                               placeholder="{{ 'Enter your six digit authentication code' | translate }}">
 
                         <div *ngIf="authenticateQRForm.controls.qrCodeNumber.hasError('required') && authenticateQRForm.controls.qrCodeNumber.touched"
-                             class="field-error"
-                             mltag="txt_qrcoderequired">Field is required
+                             class="field-error">{{ 'Field is required' | translate }}
                         </div>
                     </div>
 
@@ -40,10 +39,10 @@
         </div>
         <div class="modal-footer">
             <button id="cancel-button" class="btn" type="button" (click)="modalCancelled.emit(true)">
-                {{'Cancel' | translate}}
+                {{ 'Cancel' | translate }}
             </button>
             <button id="authenticate-qr-submit" type="submit" class="btn btn-primary" [disabled]="!authenticateQRForm.valid">
-                <i class="fa fa-save"></i> <span mltag="txt_submit">Submit</span>
+                <i class="fa fa-save"></i> {{ 'Submit' | translate}}
             </button>
 
             <div *ngIf="!qrCode" class="text-center ">
@@ -51,7 +50,7 @@
                     <a id="forgotten-two-factor-link"
                        [ngStyle]="{'cursor':'pointer'}"
                        (click)="showForgottonTwoFactorModal()">
-                        {{'Lost access to your code?' | translate}}
+                        {{ 'Lost access to your code?' | translate }}
                     </a>
                 </span>
             </div>
@@ -62,7 +61,7 @@
 <form [formGroup]="forgottenTwoFactorForm" novalidate (ngSubmit)="sendForgottonTwoFactorEmail()">
     <clr-modal [(clrModalOpen)]="showForgottenTwoFactorModal" [clrModalSize]="'md'" [clrModalClosable]="false">
         <h3 class="modal-title" *ngIf="(!emailSent)">
-            {{'Reset Two-Factor' | translate}}
+            {{ 'Reset Two-Factor' | translate }}
         </h3>
 
         <div class="modal-body modal-form-body" *ngIf="!emailSent">
@@ -79,36 +78,36 @@
                            [placeholder]="translate.translate('Please enter your email address')">
                     <div *ngIf="forgottenTwoFactorForm.controls.email.hasError('required')"
                          class="field-error">
-                        {{'This field is required' | translate}}
+                        {{ 'Field is required' | translate }}
                     </div>
                     <div *ngIf="!forgottenTwoFactorForm.controls.email.valid && !forgottenTwoFactorForm.controls.email.hasError('required')"
                          class="field-error">
-                        {{'Email not valid!' | translate}}
+                        {{ 'Email not valid' | translate }}
                     </div>
                 </div>
             </section>
         </div>
         <div class="modal-footer" *ngIf="!emailSent">
             <button id="cancel-sendemail-button" class="btn" type="button" (click)="closeTwoFactorModal()">
-                {{'Cancel' | translate}}
+                {{ 'Cancel' | translate }}
             </button>
             <button id="submit-sendemail-button" type="submit" class="btn btn-primary" [disabled]="!forgottenTwoFactorForm.valid">
-                {{'Send' | translate}}
+                {{ 'Send' | translate }}
             </button>
         </div>
 
         <div class="modal-body text-center modal-form-body" *ngIf="emailSent">
             <i class="fa fa-envelope fa-5x" aria-hidden="true"></i>
             <p>
-                {{'An email has been sent to' | translate}}: <br/>
+                {{ 'An email has been sent to' | translate }}: <br/>
                 <b [ngStyle]="{'color':'#37a5e4'}">{{emailUser}}</b>
             </p>
 
-            <p>{{'This pop-up will automatically close in @countdown@ seconds.' | translate: {'countdown': countdown} }}</p>
+            <p>{{ 'This pop-up will automatically close in @countdown@ seconds.' | translate: {'countdown': countdown} }}</p>
         </div>
         <div class="modal-footer" *ngIf="emailSent">
             <button id="close-button" class="btn" type="button" (click)="closeTwoFactorModal()">
-                {{'Close' | translate}}
+                {{ 'Close' | translate }}
             </button>
         </div>
     </clr-modal>
@@ -116,7 +115,7 @@
 
 <clr-modal [(clrModalOpen)]="showResetInstruction" [clrModalSize]="'md'" [clrModalClosable]="false">
     <h3 class="modal-title">
-        {{'Reset Two-Factor Authentication' | translate}}
+        {{ 'Reset Two-Factor Authentication' | translate}}
     </h3>
 
     <div class="modal-body text-center modal-form-body">
@@ -124,14 +123,14 @@
         <section class="form-block">
             <div class="form-group text-center">
                 <div>
-                    {{'To complete the reset of your Two-Factor Authentication, please login and then re-scan the QR code using your Authenticator App.' | translate}}
+                    {{ 'To complete the reset of your Two-Factor Authentication, please login and then re-scan the QR code using your Authenticator App.' | translate }}
                 </div>
             </div>
         </section>
     </div>
     <div class="modal-footer">
         <button id="close-button" class="btn" type="button" (click)="showResetInstruction=false; this.modalCancelled.emit(true)">
-            {{'Close' | translate}}
+            {{ 'Close' | translate }}
         </button>
     </div>
 </clr-modal>

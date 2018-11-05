@@ -2,7 +2,7 @@ import { Component, OnDestroy, Inject, OnInit, Input, Output, EventEmitter } fro
 import { ActivatedRoute, Router } from '@angular/router';
 import { FormGroup, Validators, FormControl, AbstractControl } from '@angular/forms';
 import { NgRedux, select } from '@angular-redux/store';
-import { Subscription } from 'rxjs';
+import { Subscription } from 'rxjs/Subscription';
 import * as _ from 'lodash';
 
 import {
@@ -17,7 +17,7 @@ import {
 import {
     SET_LOGIN_DETAIL, RESET_LOGIN_DETAIL, loginRequestAC,
     SET_AUTH_LOGIN_DETAIL, RESET_AUTH_LOGIN_DETAIL,
-    SET_PRODUCTION, setLanguage, SET_SITE_MENU, SET_FORCE_TWO_FACTOR
+    SET_PRODUCTION, setLanguage, SET_SITE_MENU, SET_FORCE_TWO_FACTOR,
 } from '@setl/core-store';
 import { MultilingualService } from '@setl/multilingual';
 import { SagaHelper, APP_CONFIG, AppConfig } from '@setl/utils';
@@ -26,8 +26,8 @@ import { passwordValidator } from '@setl/utils/helper/validators/password.direct
 
 import * as Model from './model';
 import { MemberSocketService } from '@setl/websocket-service';
-import { LoginService } from "../login.service";
-import { combineLatest } from "rxjs/observable/combineLatest";
+import { LoginService } from '../login.service';
+import { combineLatest } from 'rxjs/observable/combineLatest';
 
 @Component({
     selector: 'app-signup',
@@ -123,25 +123,28 @@ export class SignupComponent implements OnDestroy, OnInit {
     private initSignupForm(): void {
         const validator = this.appConfig.production ? passwordValidator : null;
 
-        this.signupForm = new FormGroup({
-            username: new FormControl(
-                this.configuration.username ? this.configuration.username : '',
-                Validators.required,
-            ),
-            password: new FormControl(
-                '',
-                Validators.compose([
+        this.signupForm = new FormGroup(
+            {
+                username: new FormControl(
+                    this.configuration.username ? this.configuration.username : '',
                     Validators.required,
-                    validator,
-                ]),
-            ),
-            passwordConfirm: new FormControl(
-                '',
-                Validators.compose([
-                    Validators.required,
-                ]),
-            ),
-        }, this.mismatchValidator);
+                ),
+                password: new FormControl(
+                    '',
+                    Validators.compose([
+                        Validators.required,
+                        validator,
+                    ]),
+                ),
+                passwordConfirm: new FormControl(
+                    '',
+                    Validators.compose([
+                        Validators.required,
+                    ]),
+                ),
+            },
+            this.mismatchValidator,
+        );
     }
 
     private getQueryParams() {
@@ -258,28 +261,29 @@ export class SignupComponent implements OnDestroy, OnInit {
         case 'fail':
             this.showLoginErrorMessage(
                 'warning',
-                '<span mltag="txt_loginerror" class="text-warning">Invalid email address or password!</span>',
+                `<span class="text-warning">${this.translate.translate('Invalid email address or password!')}</span>`,
             );
             break;
         case 'locked':
             this.showLoginErrorMessage(
                 'info',
-                '<span mltag="txt_accountlocked" class="text-warning">Sorry, your account has been locked. ' +
-                'Please contact your Administrator.</span>',
+                `<span class="text-warning">${this.translate.translate(
+                    'Sorry, your account has been locked. Please contact your Administrator.')}</span>`,
             );
             break;
         default:
             this.showLoginErrorMessage(
                 'error',
-                '<span mltag="txt_loginproblem" class="text-warning">Sorry, there was a problem logging in, ' +
-                'please try again.</span>',
+                `<span class="text-warning">${this.translate.translate(
+                    'Sorry, there was a problem logging in. Please try again.')}</span>`,
             );
             break;
         }
     }
 
     private showLoginErrorMessage(type, msg) {
-        this.alertsService.create(type, msg, { buttonMessage: 'Please try logging in again' });
+        this.alertsService.create(type, msg, { buttonMessage: this.translate.translate(
+            'Please try logging in again') });
     }
 
     toggleShowPasswords(isConfirm: boolean = false) {
