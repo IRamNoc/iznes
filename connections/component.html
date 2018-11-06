@@ -7,7 +7,7 @@
     <clr-tab>
         <button id="accepted-connection-tab" clrTabLink>
             <i class="fa fa-check"></i>
-            <span>Accepted</span>
+            <span>{{ 'Accepted' | translate }}</span>
         </button>
 
         <ng-template [(clrIfActive)]="isAcceptedTabDisplayed">
@@ -53,7 +53,7 @@
         <clr-tab-content>
             <section class="form-block">
                 <clr-datagrid>
-                    <clr-dg-column [clrDgField]="'connections'">{[ 'Connection' | translate }}</clr-dg-column>
+                    <clr-dg-column [clrDgField]="'connections'">{{ 'Connection' | translate }}</clr-dg-column>
                     <clr-dg-column [clrDgField]="'info'">{{ 'Status' | translate }}</clr-dg-column>
                     <clr-dg-column class="right">{{ 'Actions' | translate }}</clr-dg-column>
 
@@ -172,7 +172,7 @@
 
                                 <ng-select
                                         id="edit-connection-select"
-                                        placeholder="{[ 'Select a connection' | translate }}"
+                                        placeholder="{{ 'Select a connection' | translate }}"
                                         [items]="walletList"
                                         [allowClear]=true
                                         [formControl]="formGroup.controls['connection']"
@@ -222,9 +222,9 @@
 
 <!-- Accept connection modal -->
 <clr-modal [(clrModalOpen)]="isAcceptModalDisplayed">
-    <h3 class="modal-title">Select a sub-portfolio to use for this connection</h3>
+    <h3 class="modal-title">{{ 'Select a sub-portfolio to use for this connection' | translate }}</h3>
     <div class="modal-body">
-        <label class="control-label required-field" for="accept-subportfolio-addr-link">Sub-portfolio</label>
+        <label class="control-label required-field" for="accept-subportfolio-addr-link">{{ 'Sub-portfolio' | translate }}</label>
         <ng-select
                 id="accept-subportfolio-addr-link"
                 [items]="addressList"
@@ -242,13 +242,13 @@
                 id="accept-connection-cancel-btn"
                 class="btn btn-outline"
                 (click)="onAcceptConnection(false)">
-            Cancel
+            {{ 'Cancel' | translate }}
         </button>
         <button type="button"
                 id="accept-connection-submit-btn"
                 class="btn btn-primary"
                 (click)="onAcceptConnection(true)">
-            Submit
+            {{ 'Submit' | translate }}
         </button>
     </div>
 </clr-modal>
