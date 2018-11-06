@@ -20,7 +20,7 @@
                                     </ng-container>
                                 </ng-container>
                             </ng-container>
-                            
+
                             <ng-container *ngSwitchCase="true">
                                 <ng-container [ngSwitch]="model[item].type">
                                     <ng-container *ngSwitchCase="0">
@@ -85,7 +85,7 @@
                                     <ng-container *ngSwitchCase="5">
                                         <div class="filedrop-wrapper">
                                             <input type="hidden" class="form-control" formControlName="{{item}}">
-                                            <setl-file-drop id="{{item}}" [inline]="true" [formControl]="model[item].control" [preset]="model[item].fileData" [filePermission]="model[item].filePermission" (onDrop)="onDropFiles($event, model[item])" ngDefaultControl></setl-file-drop>
+                                            <setl-file-drop id="{{item}}" [inline]="true" [formControl]="model[item].control" [preset]="model[item].fileData" [filePermission]="model[item].filePermission" [disabled]="model[item].disabled" (onDrop)="onDropFiles($event, model[item])" ngDefaultControl></setl-file-drop>
                                             <setl-file-viewer *ngIf="model[item].fileData" [fileHash]="model[item].fileData.hash"></setl-file-viewer>
                                             <!-- <a *ngIf="model[item].fileData"class="btn btn-primary" href="/mn/file?method=retrieve&fileHash={{model[item].fileData.hash}}&downloadId={{model[item].fileData.fileID}}" target="_blank">View</a> -->
                                         </div>
@@ -152,7 +152,7 @@
                                 </ng-container>
                             </ng-container>
                         </ng-container>
-                        
+
                         <span class="field-error"
                             *ngIf="hasErrorMessage(model[item])">
                             {{(getErrorMessage(model[item]))}}
