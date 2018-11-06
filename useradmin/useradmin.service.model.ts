@@ -18,6 +18,7 @@ export interface CreateUserMessageBody extends MemberNodeMessageBody {
     account: string;
     userType: string;
     password: string;
+    userLocked: number;
 }
 
 export interface EditUserMessageBody extends MemberNodeMessageBody {
