@@ -171,6 +171,7 @@ export class AdminUsersService {
 
     public createNewUser(userData: any): any {
         /* Setup the message body. */
+
         const messageBody: CreateUserMessageBody = {
             RequestName: 'nu',
             token: this.memberSocketService.token,
@@ -179,6 +180,7 @@ export class AdminUsersService {
             account: userData.accountType,
             userType: userData.userType,
             password: userData.password,
+            userLocked: userData.userLocked,
         };
 
         /* Return the new member node saga request. */
