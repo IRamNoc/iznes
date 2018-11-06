@@ -1,5 +1,5 @@
 <div class="header-breadcrumbs">
-    <h1 id="manage-wallets"><i class="fa fa-briefcase"></i> <span mltag="txt_managewallets">Manage Wallets</span></h1>
+    <h1 id="manage-wallets"><i class="fa fa-briefcase"></i> {{ 'Manage Wallets' | translate }}</h1>
 </div>
 
 <div class="wrapper wrapper-content">
@@ -36,31 +36,30 @@
         <div class="panel-body">
 
             <clr-datagrid #walletDataGrid>
-                <clr-dg-column mltag="txt_walletname">Wallet Name</clr-dg-column>
-                <clr-dg-column mltag="txt_account">Account</clr-dg-column>
-                <clr-dg-column mltag="txt_wallettype">Wallet Type</clr-dg-column>
-                <clr-dg-column mltag="txt_walletstatus">Wallet Status</clr-dg-column>
-                <clr-dg-column class="right" mltag="txt_actions">Actions</clr-dg-column>
+                <clr-dg-column>{{ 'Wallet Name' | translate }}</clr-dg-column>
+                <clr-dg-column>{{ 'Account' | translate }}</clr-dg-column>
+                <clr-dg-column>{{ 'Wallet Type' | translate }}</clr-dg-column>
+                <clr-dg-column>{{ 'Wallet Status' | translate }}</clr-dg-column>
+                <clr-dg-column class="right">{{ 'Actions' | translate }}</clr-dg-column>
 
                 <clr-dg-row *clrDgItems="let wallet of walletList">
                     <clr-dg-cell>{{wallet.walletName}}</clr-dg-cell>
                     <clr-dg-cell>{{wallet.accountName}}</clr-dg-cell>
                     <clr-dg-cell>{{wallet.walletTypeName}}</clr-dg-cell>
                     <clr-dg-cell>
-                        <span *ngIf="wallet.walletLocked === 0" class="label label-success" mltag="txt_unlocked">Unlocked</span>
-                        <span *ngIf="wallet.walletLocked === 1" class="label label-danger"
-                              mltag="txt_locked">Locked</span>
+                        <span *ngIf="wallet.walletLocked === 0" class="label label-success">{{ 'Unlocked' | translate }}</span>
+                        <span *ngIf="wallet.walletLocked === 1" class="label label-danger">{{ 'Locked' | translate }}</span>
                     </clr-dg-cell>
                     <clr-dg-cell class="right">
                         <button id="edit-{{wallet.walletId}}" (click)="handleEdit(wallet.index)"
                                 class="btn btn-success btn-sm">
                             <i class="fa fa-pencil-square-o"></i>
-                            <span mltag="txt_edit">Edit</span>
+                            {{ 'Edit' | translate }}
                         </button>
                         <button id="delete-{{wallet.walletId}}" (click)="handleDelete(wallet.index)"
                                 class="btn btn-danger btn-sm">
                             <i class="fa fa-trash-o"></i>
-                            <span mltag="txt_delete">Delete</span>
+                            {{ 'Delete' | translate }}
                         </button>
                     </clr-dg-cell>
                 </clr-dg-row>
@@ -74,52 +73,53 @@
         </div>
     </ng-template>
 
-    <!-- User Add Form. -->
+    <!-- Wallet Add Form. -->
     <ng-template #staticWalletAddTab let-formControl="formControl" let-tabid="tabid">
         <div class="user-tab-panel-body panel-body">
             <form id="new-wallet-form" (ngSubmit)="handleNewWallet(tabid)" [formGroup]="formControl">
                 <div class="form-horizontal">
                     <div class="row">
                         <div class="form-group col-sm-6">
-                            <label class="control-label required-field" mltag="txt_walletname">Wallet Name</label>
-                            <input id="new-wallet-name" type="text" formControlName="walletName"
-                                   placeholder="Wallet name" class="form-control walletname" mltag="txt_walletname">
+                            <label class="control-label required-field">{{ 'Wallet Name' | translate }}</label>
+                            <input id="new-wallet-name" 
+                                    type="text" 
+                                    formControlName="walletName"
+                                    placeholder="{{ 'Wallet Name' | translate }}" 
+                                    class="form-control walletname">
                             <div *ngIf="formControl.controls.walletName.hasError('required') && formControl.controls.walletName.touched"
-                                 class="field-error" mltag="txt_thisfieldisrequired">This field is required
+                                 class="field-error">{{ 'Field is required' | translate }}
                             </div>
                         </div>
                     </div>
 
                     <div class="row">
                         <div class="form-group col-sm-6">
-                            <label class="control-label required-field">Account</label>
+                            <label class="control-label required-field">{{ 'Account' | translate }}</label>
                             <ng-select
                                 id="new-wallet-account-select"
                                 [items]="accountTypes"
                                 [allowClear]="true"
-                                placeholder="Select Type"
-                                [formControl]="formControl.controls['walletAccount']"
-                                mltag="txt_selecttype">
+                                placeholder="{{ 'Select Type' | translate }}"
+                                [formControl]="formControl.controls['walletAccount']">
                             </ng-select>
                             <div *ngIf="formControl.controls.walletAccount.hasError('required') && formControl.controls.walletAccount.touched"
-                                 class="field-error" mltag="txt_thisfieldisrequired">This field is required
+                                 class="field-error">{{ 'Field is required' | translate }}
                             </div>
                         </div>
                     </div>
 
                     <div class="row">
                         <div class="form-group col-sm-6">
-                            <label class="control-label required-field" mltag="txt_accounttype">Account type</label>
+                            <label class="control-label required-field">{{ 'Account Type' | translate }}</label>
                             <ng-select
                                 id="new-wallet-usertype-select"
                                 [items]="walletTypes"
                                 [allowClear]="true"
-                                placeholder="Select Type"
-                                [formControl]="formControl.controls['walletType']"
-                                mltag="txt_selecttype">
+                                placeholder="{{ 'Select Type' | translate }}"
+                                [formControl]="formControl.controls['walletType']">
                             </ng-select>
                             <div *ngIf="formControl.controls.walletType.hasError('required') && formControl.controls.walletType.touched"
-                                 class="field-error" mltag="txt_thisfieldisrequired">This field is required
+                                 class="field-error">{{ 'Field is required' | translate }}
                             </div>
                         </div>
 
@@ -141,7 +141,7 @@
                     <div class="form-group button-group">
                         <button id="new-wallet-submit" type="submit" class="btn btn-primary"
                                 [disabled]="!formControl.valid">
-                            <i class="fa fa-save"></i> <span mltag="txt_save">Save</span>
+                            <i class="fa fa-save"></i> {{ 'Save' | translate }}
                         </button>
                     </div>
                 </div>
@@ -149,42 +149,44 @@
         </div>
     </ng-template>
 
-    <!-- User Edit Form. -->
+    <!-- Wallet Edit Form. -->
     <ng-template #dynamicEditTab let-formControl="formControl" let-tabid="tabid">
         <div class="user-tab-panel-body panel-body">
             <form id="edit-user{{tabid}}-form" (ngSubmit)="handleEditWallet(tabid)" [formGroup]="formControl">
                 <div class="form-horizontal">
                     <div class="row">
                         <div class="form-group col-sm-6">
-                            <label class="control-label required-field" mltag="txt_walletname">Wallet Name</label>
-                            <input id="new-wallet-name" type="text" formControlName="walletName"
-                                   placeholder="Wallet name" class="form-control walletname" mltag="txt_walletname">
+                            <label class="control-label required-field">{{ 'Wallet Name' | translate }}</label>
+                            <input id="new-wallet-name" 
+                                    type="text" 
+                                    formControlName="walletName"
+                                    placeholder="{{ 'Wallet Name' | translate }}" 
+                                    class="form-control walletname">
                             <div *ngIf="formControl.controls.walletName.hasError('required') && formControl.controls.walletName.touched"
-                                 class="field-error" mltag="txt_thisfieldisrequired">This field is required
+                                 class="field-error">{{ 'Field is required' | translate }}
                             </div>
                         </div>
                     </div>
 
                     <div class="row">
                         <div class="form-group col-sm-6">
-                            <label class="control-label required-field" mltag="txt_account">Account</label>
+                            <label class="control-label required-field">{{ 'Account' | translate }}</label>
                             <ng-select
                                 id="new-wallet-account-select"
                                 [items]="accountTypes"
                                 [allowClear]="true"
-                                placeholder="Select Type"
-                                [formControl]="formControl.controls['walletAccount']"
-                                mltag="txt_selecttype">
+                                placeholder="{{ 'Select Type' | translate }}"
+                                [formControl]="formControl.controls['walletAccount']">
                             </ng-select>
                             <div *ngIf="formControl.controls.walletAccount.hasError('required') && formControl.controls.walletAccount.touched"
-                                 class="field-error" mltag="txt_thisfieldisrequired">This field is required
+                                 class="field-error">{{ 'Field is required' | translate }}
                             </div>
                         </div>
                     </div>
 
                     <div class="row">
                         <div class="form-group col-sm-6">
-                            <label class="control-label" mltag="txt_walletstatus">Wallet Status</label>
+                            <label class="control-label">{{ 'Wallet Status' | translate }}</label>
                             <div class="wallet-status">
                                 <span *ngIf="formControl.value.walletLocked == 0">
                                     <i class="fa fa-unlock"></i>
@@ -204,17 +206,16 @@
 
                     <div class="row">
                         <div class="form-group col-sm-6">
-                            <label class="control-label required-field" mltag="txt_wallettype">Wallet Type</label>
+                            <label class="control-label required-field">{{ 'Wallet Type' | translate }}</label>
                             <ng-select
                                 id="new-wallet-usertype-select"
                                 [items]="walletTypes"
                                 [allowClear]="true"
-                                placeholder="Select Type"
-                                [formControl]="formControl.controls['walletType']"
-                                mltag="txt_selecttype">
+                                placeholder="{{ 'Select Type' | translate }"
+                                [formControl]="formControl.controls['walletType']">
                             </ng-select>
                             <div *ngIf="formControl.controls.walletType.hasError('required') && formControl.controls.walletType.touched"
-                                 class="field-error" mltag="txt_thisfieldisrequired">This field is required
+                                 class="field-error">{{ 'Field is required' | translate }}
                             </div>
                         </div>
 
@@ -236,12 +237,10 @@
                     <div class="form-group button-group">
                         <button id="new-wallet-submit" type="submit" class="btn btn-primary"
                                 [disabled]="!formControl.valid">
-                            <i class="fa fa-save"></i> <span mltag="txt_save">Save</span>
+                            <i class="fa fa-save"></i> {{ 'Save' | translate }}
                         </button>
 
-                        <a (click)="closeTab(tabid)" class="btn btn-secondary" mltag="txt_close">
-                            Close
-                        </a>
+                        <a (click)="closeTab(tabid)" class="btn btn-secondary">{{ 'Close' | translate }}       </a>
                     </div>
                 </div>
             </form>
@@ -252,64 +251,61 @@
     <ng-template #walletMetaLegal let-formControl="formControl" let-tabid="tabid">
         <clr-tabs>
             <clr-tab>
-                <a clrTabLink><i class="fa fa-users"></i> <span mltag="txt_basic">Basic</span></a>
+                <a clrTabLink><i class="fa fa-users"></i> {{ 'Basic' | translate }}</a>
                 <clr-tab-content *clrIfActive="true">
                     <div class="panel-body">
                         <div class="form-horizontal">
                             <div class="row">
                                 <div class="form-group col-sm-12">
                                     <label class="control-label">
-                                        <span mltag="txt_lei">LEI</span>
+                                        {{ 'LEI' | translate }}
                                     </label>
                                     <div>
                                         <input id="new-wallet-lei" type="text"
                                                [formControl]="formControl.controls['walletLei']"
-                                               placeholder="LEI"
-                                               class="form-control wallet-lei"
-                                               mltag="txt_lei">
+                                               placeholder="{{ 'LEI' | translate }}"
+                                               class="form-control wallet-lei">
                                     </div>
                                 </div>
                                 <div class="form-group col-sm-12">
                                     <label class="control-label">
-                                        <span mltag="txt_uniqueidentifier">Unique Identifier</span>
+                                        {{ 'Unique Identifier' | translate }}
                                     </label>
                                     <div>
                                         <input id="new-wallet-uid" type="text"
                                                [formControl]="formControl.controls['walletUid']"
-                                               placeholder="UID"
-                                               class="form-control wallet-uid"
-                                               mltag="txt_uid">
+                                               placeholder="{{ 'UID' | translate }}"
+                                               class="form-control wallet-uid">
                                     </div>
                                 </div>
                                 <div class="form-group col-sm-12">
                                     <label class="control-label">
-                                        <span mltag="txt_websiteurl">Website Url</span>
+                                        {{ 'Website URL' | translate }}
                                     </label>
                                     <div>
                                         <input id="new-wallet-weburl" type="text"
                                                [formControl]="formControl.controls['walletWebUrl']"
-                                               placeholder="Website Url"
-                                               class="form-control wallet-weburl"
-                                               mltag="txt_websiteurl">
+                                               placeholder="{{ 'Website URL' | translate }}"
+                                               class="form-control wallet-weburl">
                                     </div>
                                 </div>
                                 <div class="form-group col-sm-12">
                                     <label class="control-label required-field">
-                                        <span mltag="txt_incorporationdate">Incorporation Date</span>
+                                        {{ 'Incorporation Date' | translate }}
                                     </label>
                                     <div class="input-group">
                                         <span class="fa fa-calendar" aria-hidden="true"></span>
                                         <input type="text" id="new-wallet-incdate" autocomplete="off"
                                                [formControl]="formControl.controls['walletIncDate']"
                                                [dpDayPicker]="configFiltersDate"
-                                               placeholder="Incorporation Date"
+                                               placeholder="{{ 'Incorporation Date' | translate }}"
                                                mode="day"
                                                theme="dp-material"/>
                                         <div *ngIf="formControl.controls.walletIncDate.hasError('pattern') && formControl.controls.walletIncDate.touched"
-                                             class="field-error">Invalid date. Format must be YYYY-MM-DD.
+                                             class="field-error">{{ 'Invalid date. Format must be YYYY-MM-DD.' | translate }}
                                         </div>
                                         <div *ngIf="formControl.controls.walletIncDate.hasError('required') && formControl.controls.walletIncDate.touched"
-                                             class="field-error" mltag="txt_thisfieldisrequired">This field is required
+                                             class="field-error">{{ 'Field is required' | translate }}
                                         </div>
                                     </div>
                                 </div>
@@ -321,14 +317,15 @@
 
             <clr-tab>
                 <a clrTabLink><i class="fa fa-users"></i>
-                    <span mltag="txt_correspondenceaddress">Correspondence Address</span></a>
+                    {{ 'Correspondence Address' | translate }}
+                </a>
                 <clr-tab-content *clrIfActive>
                     <div class="panel-body">
                         <div class="form-horizontal">
                             <div class="row">
                                 <div class="form-group col-sm-12">
                                     <label class="control-label">
-                                        <span mltag="txt_country">Country</span>
+                                        {{ 'Country' | translate }}
                                     </label>
                                     <div>
                                         <ng-select
@@ -341,73 +338,67 @@
 
                                 <div class="form-group col-sm-12">
                                     <label class="control-label">
-                                        <span mltag="txt_addressprefix">Address Prefix</span>
+                                        {{ 'Address Prefix' | translate }}
                                     </label>
                                     <div>
                                         <input id="new-wallet-address-prefix" type="text"
                                                [formControl]="formControl.controls['walletAddrPrefix']"
-                                               placeholder="Address Prefix"
-                                               class="form-control wallet-addr-prefix"
-                                               mltag="txt_addressprefix">
+                                               placeholder="{{ 'Address Prefix' | translate }}"
+                                               class="form-control wallet-addr-prefix">
                                     </div>
                                 </div>
 
                                 <div class="form-group col-sm-12">
                                     <label class="control-label">
-                                        <span mltag="txt_postaladdress">Postal Address</span>
+                                        {{ 'Postal Address' | translate }}
                                     </label>
                                     <div>
                                         <input id="new-wallet-address1" type="text"
                                                [formControl]="formControl.controls['walletAddr1']"
-                                               placeholder="Line 1"
-                                               class="form-control wallet-addr1"
-                                               mltag="txt_line1">
+                                               placeholder="{{ 'Line 1' | translate }}"
+                                               class="form-control wallet-addr1">
                                     </div>
                                     <div>
                                         <input id="new-wallet-address2" type="text"
                                                [formControl]="formControl.controls['walletAddr2']"
-                                               placeholder="Line 2"
-                                               class="form-control wallet-addr2"
-                                               mltag="txt_line2">
+                                               placeholder="{{ 'Line 2' | translate }}"
+                                               class="form-control wallet-addr2">
                                     </div>
                                 </div>
 
                                 <div class="form-group col-sm-12">
                                     <label class="control-label">
-                                        <span mltag="txt_cityortown">City or Town</span>
+                                        {{ 'City or Town' | translate }}
                                     </label>
                                     <div>
                                         <input id="new-wallet-address3" type="text"
                                                [formControl]="formControl.controls['walletAddr3']"
-                                               placeholder="City or Town"
-                                               class="form-control wallet-addr3"
-                                               mltag="txt_cityortown">
+                                               placeholder="{{ 'City or Town' | translate }}"
+                                               class="form-control wallet-addr3">
                                     </div>
                                 </div>
 
                                 <div class="form-group col-sm-12">
                                     <label class="control-label">
-                                        <span mltag="txt_stateorarea">State or Area</span>
+                                        {{ 'State or Area' | translate }}
                                     </label>
                                     <div>
                                         <input id="new-wallet-address4" type="text"
                                                [formControl]="formControl.controls['walletAddr4']"
-                                               placeholder="State or Area"
-                                               class="form-control wallet-addr4"
-                                               mltag="txt_stateorarea">
+                                               placeholder="{{ 'State or Area' | translate }}"
+                                               class="form-control wallet-addr4">
                                     </div>
                                 </div>
 
                                 <div class="form-group col-sm-12">
                                     <label class="control-label">
-                                        <span mltag="txt_postcode">Post code</span>
+                                        {{ 'Postcode' | translate }}
                                     </label>
                                     <div>
                                         <input id="new-wallet-postcode" type="text"
                                                [formControl]="formControl.controls['walletAddrPostcode']"
-                                               placeholder="Post code"
-                                               class="form-control wallet-postcode"
-                                               mltag="txt_postcode">
+                                               placeholder="{{ 'Postcode' | translate }}"
+                                               class="form-control wallet-postcode">
                                     </div>
                                 </div>
                             </div>
@@ -422,45 +413,45 @@
     <ng-template #walletMetaIndividual let-formControl="formControl" let-tabid="tabid">
         <clr-tabs>
             <clr-tab>
-                <a clrTabLink><i class="fa fa-users"></i> <span mltag="txt_basic">Basic</span></a>
+                <a clrTabLink>
+                    <i class="fa fa-users"></i> 
+                    {{ 'Basic' | translate }}
+                </a>
                 <clr-tab-content *clrIfActive="true">
                     <div class="panel-body">
                         <div class="form-group col-sm-12">
                             <label class="control-label">
-                                <span mltag="txt_aliases">Aliases</span>
+                                {{ 'Aliases' | translate }}
                             </label>
                             <div>
                                 <input id="new-wallet-aliases" type="text"
                                        [formControl]="formControl.controls['aliases']"
-                                       placeholder="Aliases"
-                                       class="form-control wallet-aliases"
-                                       mltag="txt_aliases">
+                                       placeholder="{{ 'Aliases' | translate }}"
+                                       class="form-control wallet-aliases">
                             </div>
                         </div>
 
                         <div class="form-group col-sm-12">
                             <label class="control-label">
-                                <span mltag="txt_formername">Former Name</span>
+                                {{ 'Former Name' | translate }}
                             </label>
                             <div>
                                 <input id="new-wallet-formerName" type="text"
                                        [formControl]="formControl.controls['formerName']"
-                                       placeholder="Former Name"
-                                       class="form-control wallet-formername"
-                                       mltag="txt_formername">
+                                       placeholder="{{ 'Former Name' | translate }}"
+                                       class="form-control wallet-formername">
                             </div>
                         </div>
 
                         <div class="form-group col-sm-12">
                             <label class="control-label">
-                                <span mltag="txt_idcardnumber">ID Card Number</span>
+                                {{ 'ID Card Number' | translate }}
                             </label>
                             <div>
                                 <input id="new-wallet-idCardNum" type="text"
                                        [formControl]="formControl.controls['idCardNum']"
-                                       placeholder="ID Card Number"
-                                       class="form-control wallet-idcardnum"
-                                       mltag="txt_idcardnumber">
+                                       placeholder="{{ 'ID Card Number' | translate }}"
+                                       class="form-control wallet-idcardnum">
                             </div>
                         </div>
                     </div>
@@ -468,15 +459,17 @@
             </clr-tab>
 
             <clr-tab>
-                <a clrTabLink><i class="fa fa-map-marker"></i>
-                    <span mltag="txt_residentialaddress">Residential Address</span></a>
+                <a clrTabLink>
+                    <i class="fa fa-map-marker"></i>
+                    {{ 'Residential Address' | translate }}
+                </a>
                 <clr-tab-content *clrIfActive>
                     <div class="panel-body">
                         <div class="form-horizontal">
                             <div class="row">
                                 <div class="form-group col-sm-12">
                                     <label class="control-label">
-                                        <span mltag="txt_country">Country</span>
+                                        {{ 'Country' | translate }}
                                     </label>
                                     <div>
                                         <ng-select
@@ -489,73 +482,67 @@
 
                                 <div class="form-group col-sm-12">
                                     <label class="control-label">
-                                        <span mltag="txt_addressprefix">Address Prefix</span>
+                                        {{ 'Address Prefix' | translate }}
                                     </label>
                                     <div>
                                         <input id="new-wallet-rda-address-prefix" type="text"
                                                [formControl]="formControl.controls['rdaAddrPrefix']"
-                                               placeholder="Address Prefix"
-                                               class="form-control rda-addr-prefix"
-                                               mltag="txt_addressprefix">
+                                               placeholder="{{ 'Address Prefix' | translate }}"
+                                               class="form-control rda-addr-prefix">
                                     </div>
                                 </div>
 
                                 <div class="form-group col-sm-12">
                                     <label class="control-label">
-                                        <span mltag="txt_postaladdress">Postal Address</span>
+                                        {{ 'Postal Address' | translate }}
                                     </label>
                                     <div>
                                         <input id="new-wallet-rda-address1" type="text"
                                                [formControl]="formControl.controls['rdaAddr1']"
-                                               placeholder="Line 1"
-                                               class="form-control rda-addr1"
-                                               mltag="txt_line1">
+                                               placeholder="{{ 'Line 1' | translate }}"
+                                               class="form-control rda-addr1">
                                     </div>
                                     <div>
                                         <input id="new-wallet-rda-address2" type="text"
                                                [formControl]="formControl.controls['rdaAddr2']"
-                                               placeholder="Line 2"
-                                               class="form-control rda-addr2"
-                                               mltag="txt_line2">
+                                               placeholder="{{ 'Line 2' | translate }}"
+                                               class="form-control rda-addr2">
                                     </div>
                                 </div>
 
                                 <div class="form-group col-sm-12">
                                     <label class="control-label">
-                                        <span mltag="txt_cityortown">City or Town</span>
+                                        {{ 'City or Town' | translate }}
                                     </label>
                                     <div>
                                         <input id="new-wallet-rda-address3" type="text"
                                                [formControl]="formControl.controls['rdaAddr3']"
-                                               placeholder="City or Town"
-                                               class="form-control rda-addr3"
-                                               mltag="txt_cityortown">
+                                               placeholder="{{ 'City or Town' | translate }}"
+                                               class="form-control rda-addr3">
                                     </div>
                                 </div>
 
                                 <div class="form-group col-sm-12">
                                     <label class="control-label">
-                                        <span mltag="txt_stateorarea">State or Area</span>
+                                        {{ 'State or Area' | translate }}
                                     </label>
                                     <div>
                                         <input id="new-wallet-rda-address4" type="text"
                                                [formControl]="formControl.controls['rdaAddr4']"
-                                               placeholder="State or Area"
-                                               class="form-control rda-addr4"
-                                               mltag="txt_stateorarea">
+                                               placeholder="{{ 'State or Area' | translate }}"
+                                               class="form-control rda-addr4">
                                     </div>
                                 </div>
 
                                 <div class="form-group col-sm-12">
                                     <label class="control-label">
-                                        <span mltag="txt_postcode">Post code</span>
+                                        {{ 'Postcode' | translate }}
                                     </label>
                                     <div>
                                         <input id="new-wallet-rda-postcode" type="text"
                                                [formControl]="formControl.controls['rdaAddrPostcode']"
-                                               placeholder="Post code"
-                                               class="form-control rda-addr-postcode"
-                                               mltag="txt_postcode">
+                                               placeholder="{{ 'Postcode' | translate }}"
+                                               class="form-control rda-addr-postcode">
                                     </div>
                                 </div>
                             </div>
@@ -565,15 +552,17 @@
             </clr-tab>
 
             <clr-tab>
-                <a clrTabLink><i class="fa fa-map-marker"></i>
-                    <span mltag="txt_correspondenceaddress">Correspondence Address</span></a>
+                <a clrTabLink>
+                    <i class="fa fa-map-marker"></i>
+                    {{ 'Correspondence Address' | translate }}
+                </a>
                 <clr-tab-content *clrIfActive>
                     <div class="panel-body">
                         <div class="form-horizontal">
                             <div class="row">
                                 <div *ngIf="tabsControl[tabid].walletId == -1" class="form-group col-sm-12">
                                     <label>
-                                        <span mltag="txt_sameasresidentialaddress">Same as Residential address</span>
+                                        {{ 'Same as Residential Address' | translate }}
                                         <input type="checkbox" [formControl]="formControl.controls['caSame']">
                                     </label>
                                 </div>
@@ -581,7 +570,7 @@
                             <div class="row" [ngClass]="{'disabled-row': formControl.value.caSame}">
                                 <div class="form-group col-sm-12">
                                     <label class="control-label">
-                                        <span mltag="txt_country">Country</span>
+                                        {{ 'Country' | translate }}
                                     </label>
                                     <div>
                                         <ng-select
@@ -594,73 +583,67 @@
 
                                 <div class="form-group col-sm-12">
                                     <label class="control-label">
-                                        <span mltag="txt_addressprefix">Address Prefix</span>
+                                        {{ 'Address Prefix' | translate }}
                                     </label>
                                     <div>
                                         <input id="new-wallet-ca-address-prefix" type="text"
                                                [formControl]="formControl.controls['caAddrPrefix']"
-                                               placeholder="Address Prefix"
-                                               class="form-control ca-addr-prefix"
-                                               mltag="txt_addressprefix">
+                                               placeholder="{{ 'Address Prefix' | translate }}"
+                                               class="form-control ca-addr-prefix">
                                     </div>
                                 </div>
 
                                 <div class="form-group col-sm-12">
                                     <label class="control-label">
-                                        <span mltag="txt_postaladdress">Postal Address</span>
+                                        {{ 'Postal Address' | translate }}
                                     </label>
                                     <div>
                                         <input id="new-wallet-ca-address1" type="text"
                                                [formControl]="formControl.controls['caAddr1']"
-                                               placeholder="Line 1"
-                                               class="form-control ca-addr1"
-                                               mltag="txt_line1">
+                                               placeholder="{{ 'Line 1' | translate }}"
+                                               class="form-control ca-addr1">
                                     </div>
                                     <div>
                                         <input id="new-wallet-ca-address2" type="text"
                                                [formControl]="formControl.controls['caAddr2']"
-                                               placeholder="Line 2"
-                                               class="form-control ca-addr2"
-                                               mltag="txt_line2">
+                                               placeholder="{{ 'Line 2' | translate }}"
+                                               class="form-control ca-addr2">
                                     </div>
                                 </div>
 
                                 <div class="form-group col-sm-12">
                                     <label class="control-label">
-                                        <span mltag="txt_cityortown">City or Town</span>
+                                        {{ 'City or Town' | translate}} 
                                     </label>
                                     <div>
                                         <input id="new-wallet-ca-address3" type="text"
                                                [formControl]="formControl.controls['caAddr3']"
-                                               placeholder="City or Town"
-                                               class="form-control ca-addr3"
-                                               mltag="txt_cityortown">
+                                               placeholder="{{ 'City or Town' | translate }}"
+                                               class="form-control ca-addr3">
                                     </div>
                                 </div>
 
                                 <div class="form-group col-sm-12">
                                     <label class="control-label">
-                                        <span mltag="txt_stateorarea">State or Area</span>
+                                        {{ 'State or Area' | translate }}
                                     </label>
                                     <div>
                                         <input id="new-wallet-ca-address4" type="text"
                                                [formControl]="formControl.controls['caAddr4']"
-                                               placeholder="State or Area"
-                                               class="form-control ca-addr4"
-                                               mltag="txt_stateorarea">
+                                               placeholder="{{ 'State or Area' | translate }}"
+                                               class="form-control ca-addr4">
                                     </div>
                                 </div>
 
                                 <div class="form-group col-sm-12">
                                     <label class="control-label">
-                                        <span mltag="txt_postcode">Post code</span>
+                                        {{ 'Postcode' | translate }}
                                     </label>
                                     <div>
                                         <input id="new-wallet-ca-postcode" type="text"
                                                [formControl]="formControl.controls['caAddrPostcode']"
-                                               placeholder="Post code"
-                                               class="form-control ca-addr-postcode"
-                                               mltag="txt_postcode">
+                                               placeholder="{{ 'Postcode' | translate }}"
+                                               class="form-control ca-addr-postcode">
                                     </div>
                                 </div>
                             </div>
@@ -670,15 +653,16 @@
             </clr-tab>
 
             <clr-tab>
-                <a clrTabLink><i class="fa fa-chain"></i>
-                    <span mltag="txt_settlementdetail">Settlement Detail</span></a>
+                <a clrTabLink>
+                    <i class="fa fa-chain"></i>
+                    {{ 'Settlement Detail' | translate }}</a>
                 <clr-tab-content *clrIfActive>
                     <div class="panel-body">
                         <div class="form-horizontal">
                             <div class="row">
                                 <div class="form-group col-sm-12">
                                     <label class="control-label">
-                                        <span mltag="txt_bankwallet">Bank Wallet</span>
+                                        {{ 'Bank Wallet' | translate }}
                                     </label>
                                     <div>
                                         <ng-select
@@ -686,78 +670,73 @@
                                             [allowClear]="true"
                                             [formControl]="formControl.controls['bankWalletId']">
                                         </ng-select>
-                                        <!-- <input id="new-wallet-bank-wallet-id" type="text" [formControl]="formControl.controls['bankWalletId']" placeholder="Bank wallet" class="form-control wallet-bank-wallet-id" mltag="txt_bankwallet"> -->
+                                        <!-- <input id="new-wallet-bank-wallet-id" type="text" [formControl]="formControl.controls['bankWalletId']" placeholder="{{ 'Bank Wallet' | translate }}" class="form-control wallet-bank-wallet-id"> -->
                                     </div>
                                 </div>
 
                                 <div class="form-group col-sm-12">
                                     <label class="control-label">
-                                        <span mltag="txt_bankname">Bank Name</span>
+                                        {{ 'Bank Name' | translate }}
                                     </label>
                                     <div>
                                         <input id="new-wallet-bank-name" type="text"
                                                [formControl]="formControl.controls['bankName']"
-                                               placeholder="Bank name"
-                                               class="form-control wallet-bank-name"
-                                               mltag="txt_bankname">
+                                               placeholder="{{ 'Bank Name' | translate }}"
+                                               class="form-control wallet-bank-name">
                                     </div>
                                 </div>
 
                                 <div class="form-group col-sm-12">
                                     <label class="control-label">
-                                        <span mltag="txt_iban">IBAN</span>
+                                        {{ 'IBAN' | translate }}
                                     </label>
                                     <div>
                                         <input id="new-wallet-bank-iban" type="text"
                                                [formControl]="formControl.controls['bankIBAN']"
-                                               placeholder="IBAN"
-                                               class="form-control wallet-bank-iban"
-                                               mltag="txt_iban">
+                                               placeholder="{{ 'IBAN' | translate }}"
+                                               class="form-control wallet-bank-iban">
                                     </div>
                                 </div>
 
                                 <div class="form-group col-sm-12">
                                     <label class="control-label">
-                                        <span mltag="txt_bankbiccode">Bank BIC Code</span>
+                                        {{ 'Bank BIC Code' | translate }}
                                     </label>
                                     <div>
                                         <input id="new-wallet-bank-bic-code" type="text"
                                                [formControl]="formControl.controls['bankBICcode']"
-                                               placeholder="BIC code"
-                                               class="form-control wallet-bank-bic-code"
-                                               mltag="txt_biccode">
+                                               placeholder="{{ 'BIC Code' | translate }}"
+                                               class="form-control wallet-bank-bic-code">
                                     </div>
                                 </div>
 
                                 <div class="form-group col-sm-12">
                                     <label class="control-label">
-                                        <span mltag="txt_bankaccountname">Bank Account Name</span>
+                                        {{ 'Bank Account Name' | translate }}
                                     </label>
                                     <div>
                                         <input id="new-wallet-bank-account-name" type="text"
                                                [formControl]="formControl.controls['bankAccountName']"
-                                               placeholder="Bank Account name"
-                                               class="form-control wallet-bank-account-name"
-                                               mltag="txt_bankaccountname">
+                                               placeholder="{{ 'Bank Account Name' | translate }}"
+                                               class="form-control wallet-bank-account-name">
                                     </div>
                                 </div>
 
                                 <div class="form-group col-sm-12">
                                     <label class="control-label">
-                                        <span mltag="txt_bankaccountnumber">Bank Account Number</span>
+                                        {{ 'Bank Account Number' | translate }}
                                     </label>
                                     <div>
                                         <input id="new-wallet-bank-account-num" type="text"
                                                [formControl]="formControl.controls['bankAccountNum']"
-                                               placeholder="Bank Account number"
-                                               class="form-control wallet-bank-account-num"
-                                               mltag="txt_bankaccountnumber">
+                                               placeholder="{{ 'Bank Account Number' | translate }}"
+                                               class="form-control wallet-bank-account-num">
                                     </div>
                                 </div>
 
                                 <div class="form-group col-sm-12">
                                     <label class="control-label">
-                                        <span mltag="txt_country">Country</span>
+                                        {{ 'Country' | translate }}
                                     </label>
                                     <div>
                                         <ng-select
@@ -770,73 +749,67 @@
 
                                 <div class="form-group col-sm-12">
                                     <label class="control-label">
-                                        <span mltag="txt_addressprefix">Address Prefix</span>
+                                        {{ 'Address Prefix' | translate }}
                                     </label>
                                     <div>
                                         <input id="new-wallet-bd-address-prefix" type="text"
                                                [formControl]="formControl.controls['bdAddrPrefix']"
-                                               placeholder="Address Prefix"
-                                               class="form-control bd-addr-prefix"
-                                               mltag="txt_addressprefix">
+                                               placeholder="{{ 'Address Prefix' | translate }}"
+                                               class="form-control bd-addr-prefix">
                                     </div>
                                 </div>
 
                                 <div class="form-group col-sm-12">
                                     <label class="control-label">
-                                        <span mltag="txt_postaladdress">Postal Address</span>
+                                        {{ 'Postal Address' | translate }}
                                     </label>
                                     <div>
                                         <input id="new-wallet-bd-address1" type="text"
                                                [formControl]="formControl.controls['bdAddr1']"
-                                               placeholder="Line 1"
-                                               class="form-control bd-addr1"
-                                               mltag="txt_line1">
+                                               placeholder="{{ 'Line 1' | translate }}"
+                                               class="form-control bd-addr1">
                                     </div>
                                     <div>
                                         <input id="new-wallet-bd-address2" type="text"
                                                [formControl]="formControl.controls['bdAddr2']"
-                                               placeholder="Line 2"
-                                               class="form-control bd-addr2"
-                                               mltag="txt_line2">
+                                               placeholder="{{ 'Line 2' | translate }}"
+                                               class="form-control bd-addr2">
                                     </div>
                                 </div>
 
                                 <div class="form-group col-sm-12">
                                     <label class="control-label">
-                                        <span mltag="txt_cityortown">City or Town</span>
+                                        {{ 'City or Town' | translate }}
                                     </label>
                                     <div>
                                         <input id="new-wallet-bd-address3" type="text"
                                                [formControl]="formControl.controls['bdAddr3']"
-                                               placeholder="City or Town"
-                                               class="form-control bd-addr3"
-                                               mltag="txt_cityortown">
+                                               placeholder="{{ 'City or Town' | translate }}"
+                                               class="form-control bd-addr3">
                                     </div>
                                 </div>
 
                                 <div class="form-group col-sm-12">
                                     <label class="control-label">
-                                        <span mltag="txt_stateorarea">State or Area</span>
+                                        {{ 'State or Area' | translate }}
                                     </label>
                                     <div>
                                         <input id="new-wallet-bd-address4" type="text"
                                                [formControl]="formControl.controls['bdAddr4']"
-                                               placeholder="State or Area"
-                                               class="form-control bd-addr4"
-                                               mltag="txt_stateorarea">
+                                               placeholder="{{ 'State or Area' | translate }}"
+                                               class="form-control bd-addr4">
                                     </div>
                                 </div>
 
                                 <div class="form-group col-sm-12">
                                     <label class="control-label">
-                                        <span mltag="txt_postcode">Post code</span>
+                                        {{ 'Postcode' | translate }}
                                     </label>
                                     <div>
                                         <input id="new-wallet-bd-postcode" type="text"
                                                [formControl]="formControl.controls['bdAddrPostcode']"
-                                               placeholder="Post code"
-                                               class="form-control bd-addr-postcode"
-                                               mltag="txt_postcode">
+                                               placeholder="{{ 'Postcode' | translate }}"
+                                               class="form-control bd-addr-postcode">
                                     </div>
                                 </div>
                             </div>
