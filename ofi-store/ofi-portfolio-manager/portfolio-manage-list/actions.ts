@@ -30,3 +30,26 @@ export function ofiUpdatePmDetail(pmDetail: {pmId: number; fundId: number; walle
         pmDetail,
     };
 }
+
+/**
+ * New pm.
+ */
+export const OFI_ADD_NEW_PM = `${name}/OFI_ADD_NEW_PM`;
+export function ofiAddNewPM(pm: {pmId: number; emailAddress: string; inviteId: number; firstName: string; lastName: string}) {
+    return {
+        type: OFI_ADD_NEW_PM,
+        pm,
+    };
+}
+
+/**
+ * Pm active.
+ */
+export const OFI_PM_ACTIVE = `${name}/OFI_PM_ACTIVE`;
+
+export function ofiPMActive(pm: { pmId: number; userId: number; }) {
+    return {
+        type: OFI_PM_ACTIVE,
+        pm,
+    };
+}

@@ -3,7 +3,10 @@ import { Action } from 'redux';
 
 /* Local types. */
 import { PortfolioManagerList } from './model';
-import { OFI_SET_PM_LIST, OFI_SET_REQUESTED_PM_LIST, OFI_SET_PM_DETAIL, OFI_UPDATE_PM_DETAIL } from './actions';
+import {
+    OFI_SET_PM_LIST, OFI_SET_REQUESTED_PM_LIST, OFI_SET_PM_DETAIL, OFI_UPDATE_PM_DETAIL,
+    OFI_ADD_NEW_PM, OFI_PM_ACTIVE
+} from './actions';
 import { immutableHelper } from '@setl/utils';
 import { get, merge } from 'lodash';
 
@@ -29,6 +32,12 @@ export const OfiPortfolioManagerListReducer = function (state: PortfolioManagerL
 
     case OFI_UPDATE_PM_DETAIL:
         return ofiUpdatePmDetail(state, action);
+
+    case OFI_ADD_NEW_PM:
+        return ofiAddNewPm(state, action);
+
+    case OFI_PM_ACTIVE:
+        return ofiPmActive(state, action);
 
     default:
         return state;
@@ -129,4 +138,49 @@ function ofiUpdatePmDetail(state: PortfolioManagerList, action: Action) {
  */
 function toggleRequestState(state: PortfolioManagerList, requested: boolean): PortfolioManagerList {
     return Object.assign({}, state, { requested });
+}
+
+/**
+ * Add new pm to list
+ * @param {PortfolioManagerList} state
+ * @param {Action} action
+ * @return {PortfolioManagerList}
+ */
+function ofiAddNewPm(state: PortfolioManagerList, action: Action): PortfolioManagerList {
+    const pm = get(action, 'pm', {});
+
+    const portfolioManagerList = immutableHelper.copy(state.portfolioManagerList);
+    portfolioManagerList[pm.pmId] = {
+        pmId: pm.pmId,
+        emailAddress: pm.emailAddress,
+        userId: null,
+        inviteId: pm.inviteId,
+        firstName: pm.firstName,
+        lastName: pm.lastName,
+        pmActive: false,
+        fundAccess: {},
+    };
+
+    return Object.assign({}, state, {
+        portfolioManagerList,
+    });
+}
+
+/**
+ * Set userId for a pm, and set status of the pm to active.
+ * @param {PortfolioManagerList} state
+ * @param {Action} action
+ * @return {PortfolioManagerList}
+ */
+function ofiPmActive(state: PortfolioManagerList, action: Action): PortfolioManagerList {
+    const pm = get(action, 'pm', {});
+
+    const portfolioManagerList = immutableHelper.copy(state.portfolioManagerList);
+    portfolioManagerList[pm.pmId].userId = pm.userId;
+    portfolioManagerList[pm.pmId].pmActive = true;
+
+    return Object.assign({}, state, {
+        portfolioManagerList,
+    });
+
 }
