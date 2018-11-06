@@ -1,8 +1,8 @@
 /* Module. */
-export {MultilingualModule} from './multilingual.module';
+export { MultilingualModule } from './multilingual.module';
 
 /* Service. */
-export {MultilingualService} from './multilingual.service';
+export { MultilingualService } from './multilingual.service';
 
 /* Directive. */
-export {MultilingualDirective} from './multilingual.directive';
+export { MultilingualDirective } from './multilingual.directive';
