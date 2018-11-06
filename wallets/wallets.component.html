@@ -81,11 +81,11 @@
                     <div class="row">
                         <div class="form-group col-sm-6">
                             <label class="control-label required-field">{{ 'Wallet Name' | translate }}</label>
-                            <input id="new-wallet-name" 
-                                    type="text" 
-                                    formControlName="walletName"
-                                    placeholder="{{ 'Wallet Name' | translate }}" 
-                                    class="form-control walletname">
+                            <input id="new-wallet-name"
+                                   type="text"
+                                   formControlName="walletName"
+                                   placeholder="{{ 'Wallet Name' | translate }}"
+                                   class="form-control walletname">
                             <div *ngIf="formControl.controls.walletName.hasError('required') && formControl.controls.walletName.touched"
                                  class="field-error">{{ 'Field is required' | translate }}
                             </div>
@@ -157,11 +157,11 @@
                     <div class="row">
                         <div class="form-group col-sm-6">
                             <label class="control-label required-field">{{ 'Wallet Name' | translate }}</label>
-                            <input id="new-wallet-name" 
-                                    type="text" 
-                                    formControlName="walletName"
-                                    placeholder="{{ 'Wallet Name' | translate }}" 
-                                    class="form-control walletname">
+                            <input id="new-wallet-name"
+                                   type="text"
+                                   formControlName="walletName"
+                                   placeholder="{{ 'Wallet Name' | translate }}"
+                                   class="form-control walletname">
                             <div *ngIf="formControl.controls.walletName.hasError('required') && formControl.controls.walletName.touched"
                                  class="field-error">{{ 'Field is required' | translate }}
                             </div>
@@ -188,10 +188,10 @@
                         <div class="form-group col-sm-6">
                             <label class="control-label">{{ 'Wallet Status' | translate }}</label>
                             <div class="locked-toggle">
-                                <span *ngIf="formControl.value.walletLocked == 0">
+                                <span *ngIf="!formControl.value.walletLocked" (click)="formControl.controls.walletLocked.setValue(1)">
                                     <i class="fa fa-unlock"></i>
                                 </span>
-                                <span *ngIf="formControl.value.walletLocked" (click)="formControl.value.walletLocked = 0">
+                                <span *ngIf="formControl.value.walletLocked" (click)="formControl.controls.walletLocked.setValue(0)">
                                     <i class="fa fa-lock"></i>
                                 </span>
 
@@ -242,7 +242,7 @@
                             <i class="fa fa-save"></i> {{ 'Save' | translate }}
                         </button>
 
-                        <a (click)="closeTab(tabid)" class="btn btn-secondary">{{ 'Close' | translate }}       </a>
+                        <a (click)="closeTab(tabid)" class="btn btn-secondary">{{ 'Close' | translate }} </a>
                     </div>
                 </div>
             </form>
@@ -416,7 +416,7 @@
         <clr-tabs>
             <clr-tab>
                 <a clrTabLink>
-                    <i class="fa fa-users"></i> 
+                    <i class="fa fa-users"></i>
                     {{ 'Basic' | translate }}
                 </a>
                 <clr-tab-content *clrIfActive="true">
@@ -615,7 +615,7 @@
 
                                 <div class="form-group col-sm-12">
                                     <label class="control-label">
-                                        {{ 'City or Town' | translate}} 
+                                        {{ 'City or Town' | translate}}
                                     </label>
                                     <div>
                                         <input id="new-wallet-ca-address3" type="text"
