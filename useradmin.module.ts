@@ -17,7 +17,6 @@ import { AdminUsersComponent } from './users/users.component';
 import { AdminWalletsComponent } from './wallets/wallets.component';
 /* Permissions components. */
 import { AdminPermissionsComponent } from './permissions/permissions.component';
-
 import { PermissionGridModule } from '@setl/permission-grid';
 /* Manage sub-portfolio */
 import { ManageSubPortfolioComponent } from './sub-portfolio/component';

@@ -1,5 +1,5 @@
 <div class="header-breadcrumbs">
-    <h1 id="manage-groups"><i class="fa fa-users"></i> <span mltag="txt_managegroups">Manage Groups</span></h1>
+    <h1 id="manage-groups"><i class="fa fa-users"></i> {{ 'Manage Groups' | translate }}</h1>
 </div>
 
 <div class="wrapper wrapper-content">
@@ -15,20 +15,20 @@
                 {{tabdata.title.text}}
             </button>
             <clr-tab-content *clrIfActive="tabdata.active">
-                <!-- User list tab. -->
+                <!-- Group list tab. -->
                 <ng-container *ngIf="id === 0">
                     <ng-container *ngTemplateOutlet="staticGroupList">
                     </ng-container>
                 </ng-container>
 
-                <!-- User add tab. -->
+                <!-- Group add tab. -->
                 <ng-container *ngIf="id === 1">
                     <ng-container
                         *ngTemplateOutlet="staticGroupAddTab; context: {'formControl': tabdata.formControl, 'tabid': id}">
                     </ng-container>
                 </ng-container>
 
-                <!-- User edit tabs. -->
+                <!-- Group edit tabs. -->
                 <ng-container *ngIf="id >= 2">
                     <ng-container
                         *ngTemplateOutlet="dynamicGroupEditTab; context: {'formControl': tabdata.formControl, 'tabid': id, 'permissionsEmitter': tabdata.permissionsEmitter}">
@@ -43,25 +43,23 @@
         <div class="panel-body">
 
             <clr-datagrid #usersDataGrid>
-                <clr-dg-column mltag="txt_groupname">Group Name</clr-dg-column>
+                <clr-dg-column>{{ 'Group Name' | translate }}</clr-dg-column>
                 <clr-dg-column>
-                    <span mltag="txt_grouptype">Group Type</span>
+                    {{ 'Group Type' | translate }}
                     <clr-dg-string-filter [clrDgStringFilter]="typeFilter">
                     </clr-dg-string-filter>
                 </clr-dg-column>
-                <clr-dg-column class="right" mltag="txt_actions">Actions</clr-dg-column>
+                <clr-dg-column class="right">{{ 'Actions' | translate }}</clr-dg-column>
 
                 <clr-dg-row *clrDgItems="let group of allGroupList">
                     <clr-dg-cell>{{group.groupName}}</clr-dg-cell>
                     <clr-dg-cell>{{group.category[0].text}}</clr-dg-cell>
                     <clr-dg-cell class="right">
                         <button (click)="handleEdit(group.index)" class="btn btn-success btn-sm">
-                            <i class="fa fa-pencil-square-o"></i>
-                            <span mltag="txt_edit">Edit</span>
+                            <i class="fa fa-pencil-square-o"></i> {{ 'Edit' | translate}}
                         </button>
                         <button (click)="handleDelete(group.index)" class="btn btn-danger btn-sm">
-                            <i class="fa fa-trash-o"></i>
-                            <span mltag="txt_delete">Delete</span>
+                            <i class="fa fa-trash-o"></i> {{ 'Delete' | translate}}
                         </button>
                     </clr-dg-cell>
                 </clr-dg-row>
@@ -75,48 +73,50 @@
         </div>
     </ng-template>
 
-    <!-- User Add Form. -->
+    <!-- Group Add Form. -->
     <ng-template #staticGroupAddTab let-formControl="formControl" let-tabid="tabid">
         <div class="user-tab-panel-body panel-body">
             <form (ngSubmit)="handleNewGroup(tabid)" [formGroup]="formControl">
                 <div class="form-horizontal">
                     <div class="row">
                         <div class="form-group col-sm-6">
-                            <label class="control-label required-field" mltag="txt_groupname">Group Name</label>
-                            <input id="group-name" type="text" formControlName="name" placeholder="Group Name"
-                                   class="form-control groupname mlp_translated" mltag="txt_groupname">
+                            <label class="control-label required-field">{{ 'Group Name' | translate }}</label>
+                            <input id="group-name" 
+                                    type="text" 
+                                    formControlName="name" 
+                                    placeholder="{{ 'Group Name' | translate }}"
+                                    class="form-control groupname mlp_translated">
                             <div *ngIf="formControl.controls.name.hasError('required') && formControl.controls.name.touched"
-                                 class="field-error" mltag="txt_thisfieldisrequired">This field is required
+                                 class="field-error">{{ 'Field is required' | translate }}
                             </div>
                         </div>
                     </div>
 
                     <div class="row">
                         <div class="form-group col-sm-6">
-                            <label class="control-label required-field" mltag="txt_groupdescription">Group
-                                Description</label>
-                            <input id="group-description" type="text" formControlName="description" name="description"
-                                   placeholder="Group Description"
-                                   class="form-control groupdescription mlp_translated"
-                                   mltag="txt_groupdescription">
+                            <label class="control-label required-field">{{ 'Group Description' | translate }}</label>
+                            <input id="group-description" type="text" 
+                                    formControlName="description" 
+                                    name="description"
+                                    placeholder="{{ 'Group Description' | translate }}"
+                                    class="form-control groupdescription mlp_translated">
                             <div *ngIf="formControl.controls.description.hasError('required') && formControl.controls.description.touched"
-                                 class="field-error" mltag="txt_thisfieldisrequired">This field is required
+                                 class="field-error">{{ 'Field is required' | translate }}
                             </div>
                         </div>
                     </div>
 
                     <div class="row">
                         <div class="form-group col-sm-6">
-                            <label class="control-label required-field" mltag="txt_grouptype">Group Type</label>
+                            <label class="control-label required-field">{{ 'Group Type' | translate }}</label>
                             <ng-select id="group-type"
                                        [items]="groupTypes"
                                        [allowClear]="true"
-                                       placeholder="Choose Group Tag"
-                                       [formControl]="formControl.controls['type']"
-                                       mltag="txt_choosegrouptag">
+                                       placeholder="{{ 'Choose Group Tag' | translate }}"
+                                       [formControl]="formControl.controls['type']">
                             </ng-select>
                             <div *ngIf="formControl.controls.type.hasError('required') && formControl.controls.type.touched"
-                                 class="field-error" mltag="txt_thisfieldisrequired">This field is required
+                                 class="field-error">{{ 'Field is required' | translate }}
                             </div>
                         </div>
                     </div>
@@ -156,12 +156,12 @@
                     <div class="form-group button-group">
                         <button id="group-submit-btn" type="submit" class="btn btn-primary"
                                 [disabled]="!formControl.valid">
-                            <i class="fa fa-save"></i> <span class="ml_translated" mltag="txt_save">Save</span>
+                            <i class="fa fa-save"></i> {{ 'Save' | translate }}
                         </button>
-                        <button id="group-clear-btn"
-                                (click)="clearNewGroup(tabid, $event)"
-                                class="btn btn-secondary"
-                                mltag="txt_clear">Clear
+                       
+                        <button id="group-clear-btn" 
+                                (click)="clearNewGroup(tabid, $event)" 
+                                class="btn btn-secondary">{{ 'Clear' | translate }}
                         </button>
                     </div>
                 </div>
@@ -177,32 +177,35 @@
                 <div class="form-horizontal">
                     <div class="row">
                         <div class="form-group col-sm-6">
-                            <label class="control-label required-field" mltag="txt_groupname">Group Name</label>
-                            <input id="group-name" type="text" formControlName="name" placeholder="Group Name"
-                                   class="form-control groupname mlp_translated" mltag="txt_groupname">
+                            <label class="control-label required-field">{{ 'Group Name' | translate }}</label>
+                            <input id="group-name" 
+                                    type="text" 
+                                    formControlName="name" 
+                                    placeholder="{{ 'Group Name' | translate }}"
+                                    class="form-control groupname mlp_translated">
                             <div *ngIf="formControl.controls.name.hasError('required') && formControl.controls.name.touched"
-                                 class="field-error" mltag="txt_thisfieldisrequired">This field is required
+                                 class="field-error">{{ 'Field is required' | translate }}
                             </div>
                         </div>
                     </div>
 
                     <div class="row">
                         <div class="form-group col-sm-6">
-                            <label class="control-label required-field" mltag="txt_groupdescription">Group
-                                Description</label>
-                            <input id="group-description" type="text" formControlName="description" name="description"
-                                   placeholder="Group Description"
-                                   class="form-control groupdescription mlp_translated"
-                                   mltag="txt_groupdescription">
-                            <div *ngIf="formControl.controls.description.hasError('required') && formControl.controls.description.touched"
-                                 class="field-error" mltag="txt_thisfieldisrequired">This field is required
+                            <label class="control-label required-field">{{ 'Group Description' | translate }}</label>
+                            <input id="group-description" 
+                                    type="text" 
+                                    formControlName="description" 
+                                    name="description"
+                                    placeholder="{{ 'Group Description' | translate }}"
+                                    class="form-control groupdescription mlp_translated">
+                            <div *ngIf="formControl.controls.description.hasError('required') && formControl.controls.description.touched" class="field-error">{{ 'Field is required' | translate }}
                             </div>
                         </div>
                     </div>
 
                     <div class="row">
                         <div class="form-group col-sm-6">
-                            <label class="control-label" mltag="txt_grouptype">Group Type</label>
+                            <label class="control-label">{{ 'Group Type' | translate }}</label>
                             <!--
                                 Disabled is added to this select by it's form
                                 control in the handleEdit function.
@@ -210,9 +213,9 @@
                             <ng-select id="group-type"
                                        [items]="groupTypes"
                                        [allowClear]="true"
-                                       placeholder="Choose Group Tag..."
-                                       [disabled]="true" [formControl]="formControl.controls['type']"
-                                       mltag="txt_choosegrouptag">
+                                       placeholder="{{ 'Choose Group Tag' | translate }}"
+                                       [disabled]="true" 
+                                       [formControl]="formControl.controls['type']">
                             </ng-select>
                         </div>
                     </div>
@@ -255,11 +258,9 @@
                     <div class="form-group button-group">
                         <button id="group-submit-btn" type="submit" class="btn btn-primary"
                                 [disabled]="!formControl.valid">
-                            <i class="fa fa-save"></i> <span class="ml_translated" mltag="txt_save">Save</span>
+                            <i class="fa fa-save"></i> {{ 'Save' | translate }}
                         </button>
-                        <button id="group-cancel-btn" (click)="closeTab(tabid)" class="btn btn-secondary">
-                            <i class="fa fa-cancel"></i> <span class="ml_translated"
-                                                               mltag="txt_cancel">Cancel</span>
+                        <button id="group-cancel-btn" (click)="closeTab(tabid)" class="btn btn-secondary">{{ 'Cancel' | translate }}
                         </button>
                     </div>
                 </div>
@@ -271,53 +272,44 @@
     <ng-template #accessAdminTabs>
         <clr-tabs>
             <clr-tab>
-                <button clrTabLink><i class="fa fa-users"></i> <span mltag="txt_administrative">Administrative</span>
+                <button clrTabLink><i class="fa fa-users"></i> {{ 'Administrative' | translate }}
                 </button>
                 <clr-tab-content *clrIfActive="true">
-                    <div class="panel-body">
-                        <span mltag="txt_administrative">Administrative</span>
+                    <div class="panel-body">{{ 'Administrative' | translate }}
                         <ng-container *ngTemplateOutlet="accessAdminSubTabs"></ng-container>
                     </div>
                 </clr-tab-content>
             </clr-tab>
 
             <clr-tab>
-                <button clrTabLink><i class="fa fa-user"></i> <span mltag="txt_transactional">Transactional</span>
-                </button>
+                <button clrTabLink><i class="fa fa-user"></i> {{ 'Transactional' | translate }}</button>
                 <clr-tab-content *clrIfActive>
-                    <div class="panel-body">
-                        <span mltag="txt_transactional">Transactional</span>
+                    <div class="panel-body">{{ 'Transactional' | translate }}
                         <ng-container *ngTemplateOutlet="accessTransactionSubTabs"></ng-container>
                     </div>
                 </clr-tab-content>
             </clr-tab>
 
             <clr-tab>
-                <button clrTabLink><i class="fa fa-user"></i> <span mltag="txt_menu">Menu</span>
-                </button>
+                <button clrTabLink><i class="fa fa-user"></i> {{ 'Menu' | translate }}</button>
                 <clr-tab-content *clrIfActive>
-                    <div class="panel-body">
-                        <span mltag="txt_menu">Menu</span>
+                    <div class="panel-body">{{ 'Menu' | translate }}
                         <ng-container *ngTemplateOutlet="accessMenuSubTabs"></ng-container>
                     </div>
                 </clr-tab-content>
             </clr-tab>
 
             <clr-tab>
-                <button clrTabLink><i class="fa fa-briefcase"></i> <span mltag="txt_wallets">Wallets</span></button>
+                <button clrTabLink><i class="fa fa-briefcase"></i> {{ 'Wallets' | translate }}</button>
                 <clr-tab-content *clrIfActive>
-                    <div class="panel-body" mltag="txt_wallets">
-                        Wallets
-                    </div>
+                    <div class="panel-body">{{ 'Wallets' | translate }}</div>
                 </clr-tab-content>
             </clr-tab>
 
             <clr-tab>
-                <button clrTabLink><i class="fa fa-chain"></i> <span mltag="txt_chains">Chains</span></button>
+                <button clrTabLink><i class="fa fa-chain"></i> {{ 'Chains' | translate }}</button>
                 <clr-tab-content *clrIfActive>
-                    <div class="panel-body" mltag="txt_chains">
-                        Chains
-                    </div>
+                    <div class="panel-body">{{ 'Chains' | translate }}</div>
                 </clr-tab-content>
             </clr-tab>
         </clr-tabs>
@@ -327,20 +319,20 @@
     <ng-template #accessAdminSubTabs>
         <clr-tabs>
             <clr-tab>
-                <button clrTabLink><i class="fa fa-users"></i> <span mltag="txt_groups">Groups</span></button>
+                <button clrTabLink><i class="fa fa-users"></i> {{ 'Groups' | translate}}</button>
                 <clr-tab-content *clrIfActive="true">
                     <div class="panel-body">
                         <select>
-                            <option value="" mltag="txt_selectanoption">Select An Option</option>
-                            <option value="1" mltag="txt_group1">Group 1</option>
-                            <option value="2" mltag="txt_group2">Group 2</option>
+                            <option value="">{{ 'Select an option' | translate }}</option>
+                            <option value="1">{{ 'Group 1' | translate }}</option>
+                            <option value="2">{{ 'Group 2' | translate }}</option>
                         </select>
                     </div>
                 </clr-tab-content>
             </clr-tab>
 
             <clr-tab>
-                <button clrTabLink><i class="fa fa-user"></i> <span mltag="txt_individual">Individual</span></button>
+                <button clrTabLink><i class="fa fa-user"></i> {{ 'Individual' | translate }}</button>
                 <clr-tab-content *clrIfActive>
                     <div class="panel-body">
                         <!--big grid thing needs to be here...-->
@@ -354,33 +346,35 @@
     <ng-template #accessTransactionSubTabs>
         <clr-tabs>
             <clr-tab>
-                <button clrTabLink><i class="fa fa-users"></i> <span mltag="txt_groups">Groups</span></button>
+                <button clrTabLink><i class="fa fa-users"></i> {{ 'Groups' | translate }}</button>
                 <clr-tab-content *clrIfActive="true">
-                    <div class="panel-body"><span mltag="txt_1">1</span>
+                    <div class="panel-body">
+                        1
 
                         <select>
-                            <option value="" mltag="txt_selectanoption">Select An Option</option>
-                            <option value="1" mltag="txt_group1">Group 1</option>
-                            <option value="2" mltag="txt_group2">Group 2</option>
-                        </select><span mltag="txt_2">2</span>
+                            <option value="">{{ 'Select an option' | translate }}</option>
+                            <option value="1">{{ 'Group 1' | translate }}</option>
+                            <option value="2">{{ 'Group 2' | translate }}</option>
+                        </select>
+                        2
 
                         <select>
-                            <option value="" mltag="txt_selectanoption">Select An Option</option>
-                            <option value="1" mltag="txt_group1">Group 1</option>
-                            <option value="2" mltag="txt_group2">Group 2</option>
+                            <option value="">{{ 'Select an option' | translate }}</option>
+                            <option value="1">{{ 'Group 1' | translate }}</option>
+                            <option value="2">{{ 'Group 2' | translate }}</option>
                         </select>
                     </div>
                 </clr-tab-content>
             </clr-tab>
 
             <clr-tab>
-                <button clrTabLink><i class="fa fa-user"></i> <span mltag="txt_individual">Individual</span></button>
+                <button clrTabLink><i class="fa fa-user"></i> {{ 'Individual' }} | translate }}</button>
                 <clr-tab-content *clrIfActive>
                     <div class="panel-body">
                         <select>
-                            <option value="" mltag="txt_selectanoption">Select An Option</option>
-                            <option value="1" mltag="txt_group1">Group 1</option>
-                            <option value="2" mltag="txt_group2">Group 2</option>
+                            <option value="">{{ 'Select an option' | translate }}</option>
+                            <option value="1">{{ 'Group 1' | translate }}</option>
+                            <option value="2">{{ 'Group 2' | translate }}</option>
                         </select>
                         <!--big grid thing again...-->
                     </div>
@@ -393,33 +387,34 @@
     <ng-template #accessMenuSubTabs>
         <clr-tabs>
             <clr-tab>
-                <button clrTabLink><i class="fa fa-users"></i> <span mltag="txt_groups">Groups</span></button>
+                <button clrTabLink><i class="fa fa-users"></i> {{ 'Groups' | translate }}</button>
                 <clr-tab-content *clrIfActive="true">
-                    <div class="panel-body"><span mltag="txt_1">1</span>
-
+                    <div class="panel-body">
+                        1
                         <select>
-                            <option value="" mltag="txt_selectanoption">Select An Option</option>
-                            <option value="1" mltag="txt_group1">Group 1</option>
-                            <option value="2" mltag="txt_group2">Group 2</option>
-                        </select><span mltag="txt_2">2</span>
-
+                            <option value="">{{ 'Select an option' | translate }}</option>
+                            <option value="1">{{ 'Group 1' | translate }}</option>
+                            <option value="2">{{ 'Group 2' | translate }}</option>
+                        </select>
+                        
+                        2
                         <select>
-                            <option value="" mltag="txt_selectanoption">Select An Option</option>
-                            <option value="1" mltag="txt_group1">Group 1</option>
-                            <option value="2" mltag="txt_group2">Group 2</option>
+                            <option value="">{{ 'Select an option' | translate }}</option>
+                            <option value="1">{{ 'Group 1' | translate }}</option>
+                            <option value="2">{{ 'Group 2' | translate }}</option>
                         </select>
                     </div>
                 </clr-tab-content>
             </clr-tab>
 
             <clr-tab>
-                <button clrTabLink><i class="fa fa-user"></i> <span mltag="txt_individual">Individual</span></button>
+                <button clrTabLink><i class="fa fa-user"></i> {{ 'Individual' | translate }}</button>
                 <clr-tab-content *clrIfActive>
                     <div class="panel-body">
                         <select>
-                            <option value="" mltag="txt_selectanoption">Select An Option</option>
-                            <option value="1" mltag="txt_group1">Group 1</option>
-                            <option value="2" mltag="txt_group2">Group 2</option>
+                            <option value="">{{ 'Select an option' | translate }}</option>
+                            <option value="1">{{ 'Group 1' | translate }}</option>
+                            <option value="2">{{ 'Group 2' | translate }}</option>
                         </select>
                         <!--big grid thing again...-->
                     </div>
