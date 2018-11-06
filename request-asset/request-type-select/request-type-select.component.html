@@ -1,49 +1,45 @@
 <div class="form-group col-sm-6">
-    <label class="control-label" for="requesttype" mltag="txt_requesttype">Request Type</label>
+    <label class="control-label" for="requesttype">{{ 'Request Type' | translate }}</label>
     <ng-select id="requesttype"
         [items]="requestTypes"
         [allowClear]="true"
-        placeholder="Select Type"
+        placeholder="{{ 'Select Type' | translate }}"
         [formControl]="requestTypeForm.controls['type']"
-        (selected)="onRequestTypeSelect($event)"
-   mltag="txt_selecttype">
+        (selected)="onRequestTypeSelect($event)">
     </ng-select>
 </div>
 
 <div [ngSwitch]="selectedRequestType">
     <div class="form-group col-sm-6" *ngSwitchCase="1">
-        <label class="control-label" for="requestFromRelationship" mltag="txt_requestfromrelationship">Request From Connection</label>
+        <label class="control-label" for="requestFromRelationship">{{ 'Request From Connection' | translate }}</label>
         <ng-select id="requestFromRelationship"
             [items]="walletRelationships"
             [allowClear]="true"
-            placeholder="Select Connection"
+            placeholder="{{ 'Select Connection' | translate }}"
             [formControl]="requestTypeForm.controls['fromRelationship']"
-            (selected)="onRelationshipSelect($event)"
-       mltag="txt_selectrelationship">
+            (selected)="onRelationshipSelect($event)">
         </ng-select>
     </div>
 
     <div *ngSwitchCase="2">
         <div class="form-group col-sm-6">
-            <label class="control-label" for="walletFrom" mltag="txt_requestfromleiindirectory">Request From LEI</label>
+            <label class="control-label" for="walletFrom">{{ 'Request From LEI' | translate }}</label>
             <ng-select id="walletFrom"
                 [items]="walletDirectoryList"
                 [allowClear]="true"
-                placeholder="Select Wallet"
+                placeholder="{{ 'Select Wallet' | translate }}"
                 [formControl]="requestTypeForm.controls['walletFrom']"
-                (selected)="onWalletSelect($event)"
-           mltag="txt_selectwallet">
+                (selected)="onWalletSelect($event)">
             </ng-select>
         </div>
         <div class="form-group col-sm-6">
-            <label class="control-label" for="addressTo" mltag="txt_receivetoaddress">Receive To Address</label>
+            <label class="control-label" for="addressTo">{{ 'Receive To Address' | translate }}</label>
             <ng-select id="addressTo"
                 [items]="walletAddressList"
                 [allowClear]="true"
-                placeholder="Select Address"
+                placeholder="{{ 'Select Address' | translate }}"
                 [formControl]="requestTypeForm.controls['addressTo']"
-                (selected)="onAddressSelect($event)"
-           mltag="txt_selectaddress">
+                (selected)="onAddressSelect($event)">
             </ng-select>
         </div>
     </div>

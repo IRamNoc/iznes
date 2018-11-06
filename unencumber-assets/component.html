@@ -1,42 +1,38 @@
 <div class="header-breadcrumbs">
-    <h1 mltag="txt_unencumberassets">Unencumber Asset</h1>
+    <h1>{{ 'Unencumber Asset' | translate }}</h1>
 </div>
 
 <clr-tabs>
     <clr-tab>
-        <button id="unencumberAssetsTab" clrTabLink><i class="fa fa-plus-circle"></i>
-            <span mltag="txt_form">Unencumber Asset</span>
-        </button>
+        <button id="unencumberAssetsTab" clrTabLink><i class="fa fa-plus-circle"></i> {{ 'Unencumber Asset' | translate }}</button>
 
         <clr-tab-content *clrIfActive="">
             <form [formGroup]="unencumberAssetsForm" novalidate (ngSubmit)="unencumberAsset(unencumberAssetsForm.value)">
                 <section class="form-block">
                     <div class="row">
                         <div class="form-group col-sm-6">
-                            <label class="control-label required-field" for="asset" mltag="txt_asset">Asset</label>
+                            <label class="control-label required-field" for="asset">{{ 'Asset' | translate }}</label>
                             <ng-select id="asset"
                                        [items]="assetListOption"
                                        [allowClear]="true"
                                        formControlName="asset"
-                                       placeholder="Select"
-                                       mltag="txt_select">
+                                       placeholder="{{ 'Select' | translate }}">
                             </ng-select>
-                            <span *ngIf="unencumberAssetsForm.controls.asset.hasError('required') && unencumberAssetsForm.controls.asset.touched"
-                                  class="field-error" mltag="txt_fieldisrequired">Field is required</span>
+                            <div *ngIf="unencumberAssetsForm.controls.asset.hasError('required') && unencumberAssetsForm.controls.asset.touched"
+                                  class="field-error">{{ 'Field is required' | translate }}</div>
                         </div>
                     </div>
 
                     <div class="row">
                         <div class="form-group col-sm-6">
-                            <label class="control-label required-field" for="fromAddress" mltag="txt_asset">From Address</label>
+                            <label class="control-label required-field" for="fromAddress">{{ 'From Address' | translate }}</label>
                             <ng-select id="fromAddress"
                                        [items]="walletAddressSelectItems"
                                        [allowClear]="true"
                                        formControlName="fromAddress"
-                                       placeholder="Select"
-                                       mltag="txt_select">
+                                       placeholder="{{ 'Select' | translate }}">
                             </ng-select>
-                            <span *ngIf="unencumberAssetsForm.controls.fromAddress.hasError('required') && unencumberAssetsForm.controls.fromAddress.touched" class="field-error" mltag="txt_fieldisrequired">Field is required</span>
+                            <div *ngIf="unencumberAssetsForm.controls.fromAddress.hasError('required') && unencumberAssetsForm.controls.fromAddress.touched" class="field-error">{{ 'Field is required' | translate }}</div>
                         </div>
                     </div>
 
@@ -48,39 +44,36 @@
                                                     [class.error]="!unencumberAssetsForm.controls['recipient'].valid && unencumberAssetsForm.controls['recipient'].touched"
                                                     [required]="true">
                             </various-address-select>
-                            <span *ngIf="unencumberAssetsForm.controls.recipient.hasError('required') && !unencumberAssetsForm.controls.recipient.pristine"
-                                  class="field-error" mltag="txt_fieldisrequired">Field is required</span>
+                            <div *ngIf="unencumberAssetsForm.controls.recipient.hasError('required') && !unencumberAssetsForm.controls.recipient.pristine"
+                                  class="field-error">{{ 'Field is required' | translate }}</div>
                         </div>
                     </div>
 
                     <div class="row">
                         <div class="form-group col-sm-6">
-                            <label class="control-label required-field" for="amount">Amount</label>
+                            <label class="control-label required-field" for="amount">{{ 'Amount' | translate }}</label>
                             <input type="number"
                                    id="amount"
                                    class="form-control"
                                    formControlName="amount"
-                                   placeholder="Amount"
-                                   mltag="txt_amount">
-                            <span *ngIf="unencumberAssetsForm.controls.amount.hasError('required') && unencumberAssetsForm.controls.amount.touched"
-                                  class="field-error" mltag="txt_fieldisrequired">Field is required</span>
+                                   placeholder="{{ 'Amount' | translate }}">
+                            <div *ngIf="unencumberAssetsForm.controls.amount.hasError('required') && unencumberAssetsForm.controls.amount.touched" class="field-error">{{ 'Field is required' | translate }}</div>
                         </div>
                     </div>
 
                     <div class="row">
                         <div class="form-group col-sm-6">
-                            <label for="reference">Reference</label>
+                            <label for="reference">{{ 'Reference' | translate }}</label>
                             <input type="text" id="reference"
                                    class="form-control"
                                    formControlName="reference"
-                                   placeholder="Reference" mltag="txt_reference">
+                                   placeholder="{{ 'Reference' | translate }}"/>
                         </div>
                     </div>
 
                     <div class="row">
                         <div class="form-group col-sm-6">
-                            <button id="unencumberAssetsBtnSubmitForm" type="submit" class="btn btn-primary" [disabled]="unencumberAssetsForm.invalid">
-                                <span mltag="txt_unencumberassets">Unencumber Assets</span>
+                            <button id="unencumberAssetsBtnSubmitForm" type="submit" class="btn btn-primary" [disabled]="unencumberAssetsForm.invalid"><i class="fa fa-save"></i> {{ 'Unencumber Assets' | translate }}
                             </button>
                         </div>
                     </div>

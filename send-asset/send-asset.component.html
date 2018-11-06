@@ -1,11 +1,10 @@
 <div class="header-breadcrumbs">
-    <h1><i class="fa fa-share-square-o"></i> <span mltag="txt_sendasset">Send Asset</span></h1>
+    <h1><i class="fa fa-share-square-o"></i> {{ 'Send Asset' | translate }}</h1>
 </div>
 
 <clr-tabs>
     <clr-tab>
-        <button clrTabLink><i class="fa fa-plus-circle"></i> <span mltag="txt_newsendasset">New Send Asset</span>
-        </button>
+        <button clrTabLink><i class="fa fa-plus-circle"></i> {{ 'New Send Asset' | translate }}</button>
         <clr-tab-content *clrIfActive>
             <form [formGroup]="sendAssetForm" (ngSubmit)="sendAsset()">
                 <section class="form-block">
@@ -17,38 +16,36 @@
                                     <div class="alert-icon-wrapper">
                                         <clr-icon class="alert-icon" shape="exclamation-triangle"></clr-icon>
                                     </div>
-                                    <span class="alert-text">There are no assets with available balance in this wallet</span>
+                                    <span class="alert-text">{{ 'There are no assets with available balance in this wallet' | translate }}</span>
                                 </div>
                             </div>
                         </div>
 
-                        <label class="control-label required-field" for="asset" mltag="txt_asset">Asset</label>
+                        <label class="control-label required-field" for="asset">{{ 'Asset' | translate }}</label>
                         <ng-select id="asset"
                                    [items]="allInstrumentList"
                                    [allowClear]="true"
-                                   placeholder="Select Issuer"
-                                   [formControl]="sendAssetForm.controls['asset']"
-                                   mltag="txt_selectissuer">
+                                   placeholder="{{ 'Select Issuer' | translate }}"
+                                   [formControl]="sendAssetForm.controls['asset']">
                         </ng-select>
 
-                        <span *ngIf="sendAssetForm.controls['asset'].hasError('required')"
-                              class="field-error" mltag="txt_fieldisrequired">Field is required</span>
+                        <div *ngIf="sendAssetForm.controls['asset'].hasError('required')"
+                              class="field-error">{{ 'Field is required' | translate }}</div>
                     </div>
 
                     <div class="form-group col-sm-6">
-                        <label class="control-label required-field" for="asset" mltag="txt_sendfromaddress">Send From Address</label>
+                        <label class="control-label required-field" for="asset">{{ 'Send From Address' | translate }}</label>
                         <ng-select id="assetAddress"
                                    [items]="walletAddressSelectItems"
                                    [allowClear]="true"
-                                   placeholder="Asset Address"
+                                   placeholder="{{ 'Asset Address' | translate }}"
                                    [formControl]="sendAssetForm.controls['assetAddress']"
-                                   [class.error]="sendAssetForm.controls['amount'].hasError('insufficientFunds')"
-                                   mltag="txt_assetaddress">
+                                   [class.error]="sendAssetForm.controls['amount'].hasError('insufficientFunds')">
                         </ng-select>
 
-                        <span *ngIf="sendAssetForm.controls['assetAddress'].hasError('required')" class="field-error" mltag="txt_fieldisrequired">Field is required</span>
-                        <span *ngIf="showAddressHolding" class="field-error force-display-error" [ngClass]="{'text-success': addressHoldingAmount > 0 && !sendAssetForm.controls['amount'].hasError('insufficientFunds'), 'text-warning': addressHoldingAmount <= 0 && !sendAssetForm.controls['amount'].hasError('insufficientFunds')}">
-                            Sender has {{addressHoldingAmount}}<ng-container *ngIf="addressHoldingAmount > 0"> free</ng-container> of this asset</span>
+                        <div *ngIf="sendAssetForm.controls['assetAddress'].hasError('required')" class="field-error">{{ 'Field is required' | translate }}</div>
+
+                        <span *ngIf="showAddressHolding" class="field-error force-display-error" [ngClass]="{'text-success': addressHoldingAmount > 0 && !sendAssetForm.controls['amount'].hasError('insufficientFunds'), 'text-warning': addressHoldingAmount <= 0 && !sendAssetForm.controls['amount'].hasError('insufficientFunds')}">{{ 'Sender\'s available balance:' | translate }} {{addressHoldingAmount}}</span>
                     </div>
 
                     <div class="form-group">
@@ -58,25 +55,27 @@
                                                 [required]="true"
                         ></various-address-select>
 
-                        <span *ngIf="sendAssetForm.controls['recipient'].hasError('required') && !sendAssetForm.controls['recipient'].pristine" class="field-error" mltag="txt_fieldisrequired">Field is required</span>
+                        <div *ngIf="sendAssetForm.controls['recipient'].hasError('required') && !sendAssetForm.controls['recipient'].pristine" class="field-error">{{ 'Field is required' | translate }}</div>
 
-                        <span *ngIf="sendAssetForm.controls['recipient'].hasError('pattern') && !sendAssetForm.controls['recipient'].pristine" class="field-error">Invalid address format</span>
+                        <div *ngIf="sendAssetForm.controls['recipient'].hasError('pattern') && !sendAssetForm.controls['recipient'].pristine" class="field-error">{{ 'Invalid address format' | translate }}</div>
                     </div>
 
                     <div class="form-group col-sm-6">
-                        <label class="control-label required-field" for="amount" mltag="txt_amount">Amount</label>
+                        <label class="control-label required-field" for="amount">{{ 'Amount' | translate }}</label>
                         <input type="text"
                                id="amount"
-                               placeholder="Amount" size="45"
-                               [formControl]="sendAssetForm.controls['amount']"
-                               mltag="txt_amount"/>
+                               placeholder="{{ 'Amount' | translate }}" 
+                               size="45"
+                               [formControl]="sendAssetForm.controls['amount']"/>
 
-                        <span *ngIf="sendAssetForm.controls['amount'].hasError('required')" class="field-error" mltag="txt_fieldisrequired">Field is required</span>
-                        <span *ngIf="sendAssetForm.controls['amount'].hasError('pattern')" class="field-error">Amount must be a number</span>
-                        <span *ngIf="sendAssetForm.controls['amount'].hasError('insufficientFunds') && !sendAssetForm.controls['amount'].hasError('pattern')" class="field-error">Sender has {{addressHoldingAmount}}<ng-container *ngIf="addressHoldingAmount > 0"> free</ng-container> of this asset</span>
+                        <div *ngIf="sendAssetForm.controls['amount'].hasError('required')" class="field-error">{{ 'Field is required' | translate }}</div>
+
+                        <div *ngIf="sendAssetForm.controls['amount'].hasError('pattern')" class="field-error">{{ 'Amount must be a number' | translate }}</div>
+
+                        <span *ngIf="sendAssetForm.controls['amount'].hasError('insufficientFunds') && !sendAssetForm.controls['amount'].hasError('pattern')" class="field-error">{{ 'Sender\'s available balance:' | translate }} {{addressHoldingAmount}}</span>
                     </div>
 
-                    <button type="submit" class="btn btn-primary" mltag="txt_sendasset" [disabled]="sendAssetForm.invalid">Send Asset</button>
+                    <button type="submit" class="btn btn-primary" [disabled]="sendAssetForm.invalid"><i class="fa fa-save"></i> {{ 'Send Asset' | translate }}</button>
                 </section>
             </form>
         </clr-tab-content>
