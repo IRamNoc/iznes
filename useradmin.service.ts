@@ -382,11 +382,25 @@ export class UserAdminService {
      *
      * @return {void}
      */
-    public updateUsersStore(pageFrom: number = 0, pageSize: number = 0): void {
+    public updateUsersStore(pageFrom: number = 0, pageSize: number = 0, search: string = ''): void {
         this.adminUsersService.buildRequest({
             ngRedux: this.ngRedux,
-            taskPipe: this.adminUsersService.requestMyUsersList(pageFrom, pageSize),
+            taskPipe: this.adminUsersService.requestMyUsersList(pageFrom, pageSize, search),
             successActions: [SET_ADMIN_USERLIST],
+        });
+    }
+
+    /**
+     * Gets user list filtered by sarch query.
+     *
+     * @param {string} search - Search query
+     *
+     * @return {Promise}
+     */
+    public getFilteredUserList(search: string = ''): Promise<any> {
+        return this.adminUsersService.buildRequest({
+            ngRedux: this.ngRedux,
+            taskPipe: this.adminUsersService.requestMyUsersList(0, 0, search),
         });
     }
 

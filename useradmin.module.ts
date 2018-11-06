@@ -7,8 +7,6 @@ import { RouterModule } from '@angular/router';
 import { ClarityModule } from '@clr/angular';
 
 import { AdminUsersService } from '@setl/core-req-services';
-/* 3rd party modules. */
-import { SelectModule, SetlPipesModule } from '@setl/utils';
 /* Import core components. */
 import { AdminWizardComponent } from './wizard/wizard.component';
 /* Users components. */
@@ -17,7 +15,6 @@ import { AdminUsersComponent } from './users/users.component';
 import { AdminWalletsComponent } from './wallets/wallets.component';
 /* Permissions components. */
 import { AdminPermissionsComponent } from './permissions/permissions.component';
-
 import { PermissionGridModule } from '@setl/permission-grid';
 /* Manage sub-portfolio */
 import { ManageSubPortfolioComponent } from './sub-portfolio/component';
@@ -26,7 +23,13 @@ import { MultilingualModule } from '@setl/multilingual';
 /* Persist Module. */
 import { PersistModule } from '@setl/core-persist';
 /* directive Module. */
-import { SetlDirectivesModule, DatePickerExtendedModule, DpDatePickerModule } from '@setl/utils';
+import {
+    SetlDirectivesModule,
+    DatePickerExtendedModule,
+    DpDatePickerModule,
+    SetlPipesModule,
+    SelectModule,
+} from '@setl/utils';
 import { UserAdminService } from '@setl/core-useradmin/useradmin.service';
 
 /* User admin service. */
