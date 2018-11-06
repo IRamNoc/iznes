@@ -238,7 +238,7 @@ public class OpenCSD2FundsAcceptanceTest {
     }
 
     @Test
-    public void shouldNotDisplayUmbrellaFundWhenNoUmbrellaFundIsSelectedTG445() throws InterruptedException, IOException {
+    public void shouldShowSelectedUmbrellaFundInfoInFundCreationTG445() throws InterruptedException, IOException {
         WebDriverWait wait = new WebDriverWait(driver, timeoutInSeconds);
         String[] uFundDetails = generateRandomUmbrellaFundsDetails();
         String randomLei = generateRandomLEI();
@@ -269,9 +269,10 @@ public class OpenCSD2FundsAcceptanceTest {
         wait.until(visibilityOfElementLocated(By.id("fund-submitUmbrella-btn")));
         wait.until(elementToBeClickable(By.id("fund-submitUmbrella-btn")));
         driver.findElement(By.id("fund-submitUmbrella-btn")).click();
-        String fundNameText = (driver.findElement(By.xpath("//*[@id=\"clr-tab-content-2\"]/form/div[1]/div[1]/div/a/h2")).getText());
-        String fundName = split(fundNameText, " ");
-        assertTrue(fundName.equals(uFundDetails[0] + "TG445"));
+
+        String umbrellaFundHeader = (driver.findElement(By.xpath("//*[@id=\"clr-tab-content-2\"]/form/div[1]/div[1]/div/a/h2")).getText());
+
+        assertTrue(umbrellaFundHeader.equals("Umbrella Fund: " + uFundDetails[0] + "TG445"));
 
         driver.findElement(By.cssSelector(".fundForm > div:nth-child(1) > div:nth-child(1) > div:nth-child(1) > a:nth-child(1) > h2:nth-child(2)")).click();
         wait.until(visibilityOfElementLocated(By.id("umbrellaEditLei")));
@@ -294,7 +295,7 @@ public class OpenCSD2FundsAcceptanceTest {
     }
 
     @Test
-    public void shouldShowSelectedUmbrellaFundInfoInFundCreationTG445() throws InterruptedException, IOException {
+    public void shouldNotDisplayUmbrellaFundWhenNoUmbrellaFundIsSelectedTG445() throws InterruptedException, IOException {
         loginAndVerifySuccess("am", "alex01");
         waitForHomePageToLoad();
         navigateToDropdown("menu-my-products");

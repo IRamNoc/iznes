@@ -33,13 +33,13 @@ public class LoginAndNavigationHelper {
 
     public static void ensureLoginPageIsEnglish()
     {
-        //if (driver.findElement(By.className("login-subheading")).getText().toLowerCase().contains("identification"))
-        //{
+        if (driver.findElement(By.className("login-subheading")).getText().toLowerCase().contains("identification"))
+        {
             WebElement languageButton = driver.findElement(By.className("dropdown"));
             languageButton.click();
             WebElement english = driver.findElement(By.xpath("//clr-dropdown-menu[@class='dropdown-menu ng-star-inserted']//button[@type='button'][contains(text(),'English')]"));
             english.click();
-        //}
+        }
     }
 
     public static void navigateTo365Page() throws InterruptedException {
@@ -270,26 +270,25 @@ public class LoginAndNavigationHelper {
             System.out.println("Encountered 2FA...");
 
             List<WebElement> QrCodes = driver.findElements(By.xpath("//*[@id=\"qr-code\"]/section/img"));
-            if (QrCodes.size() > 0)
+            if (QrCodes.size() > 0) // we found a barcode
             {
                 System.out.println("Processing new 2FA challenge from QR code");
 
-                WebElement QrCode = QrCodes.get(0);
-                //get image
-                String src = QrCode.getAttribute("src");
+                WebElement QrCode = QrCodes.get(0); //get the first barcode
+                String src = QrCode.getAttribute("src"); //get the URL to the image
                 try
                 {
+                    //get the image and turn it into a bitmap
                     BufferedImage img = ImageIO.read(new URL(src));
                     LuminanceSource source = new BufferedImageLuminanceSource(img);
                     BinaryBitmap bitmap = new BinaryBitmap(new HybridBinarizer(source));
 
+                    //use Zxing library to read the barcode
                     Result result = new MultiFormatReader().decode(bitmap);
                     String text = result.getText();
 
                     //the decoded link looks like: 'otpauth://totp/SETL:am?secret=I3IEX7ZXCNDT2IAD'
 
-                    String user = text.split(":")[2];
-                    user = user.split("\\?")[0];
                     String secret = text.split("=")[1]; // can either store this or get from the DB for next time
 
 
@@ -298,12 +297,12 @@ public class LoginAndNavigationHelper {
                     String otp = generator.now();
 
                     driver.findElement(By.id("qrCodeNumber")).sendKeys(otp);
-                    driver.findElement(By.id("authenticate-qr-submit"));
+                    driver.findElement(By.id("authenticate-qr-submit")).click();
                 }
                 catch (Exception e)
                 {
-                    System.out.println("Error trying to establish 2FA");
                     e.printStackTrace();
+                    fail("Error trying to establish 2FA from QR code");
                 }
             }
             else if (alreadyHave2FA.size() > 0)
@@ -318,6 +317,7 @@ public class LoginAndNavigationHelper {
                 catch (SQLException e)
                 {
                     e.printStackTrace();
+                    fail("Encountered 2FA and failed to get secret from database");
                 }
 
                 Totp generator = new Totp(secret);
