@@ -77,7 +77,7 @@ public class OpenCSDSprint8AcceptanceTest {
     @Test
     public void shouldUpdateShareCutOffTimeZoneTG1209() throws InterruptedException, SQLException {
         WebDriverWait wait = new WebDriverWait(driver, timeoutInSeconds);
-        String[] uShareDetails = generateRandomFundsDetails();
+        String[] uShareDetails = generateRandomShareDetails();
         String[] uIsin = generateRandomISIN();
         String[] uFundDetails = generateRandomFundsDetails();
         String randomLEI = generateRandomLEI();

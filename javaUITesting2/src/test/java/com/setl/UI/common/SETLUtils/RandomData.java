@@ -24,7 +24,7 @@ public class RandomData
     {
         randomSleep();
         DateTime dateTime = DateTime.now();
-        return dateTime.toString("yyyy-MM-dd HH:mm:ss.SSS");
+        return dateTime.toString("yyyy-MM-dd_HH:mm:ss.SSS");
     }
 
     public static String getDateTimeStampWithoutBadCharacters()
