@@ -183,8 +183,6 @@ export class AdminUsersService {
             userLocked: userData.userLocked,
         };
 
-        console.log('+++ messageBody', messageBody);
-
         /* Return the new member node saga request. */
         return createMemberNodeSagaRequest(this.memberSocketService, messageBody);
     }
