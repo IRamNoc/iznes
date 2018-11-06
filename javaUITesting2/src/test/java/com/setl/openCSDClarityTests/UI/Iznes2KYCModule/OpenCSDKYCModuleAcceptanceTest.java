@@ -337,7 +337,7 @@ public class OpenCSDKYCModuleAcceptanceTest {
             fail(e.getMessage());
         }
 
-        driver.findElement(By.id("clr-tab-link-3")).click();
+        driver.findElement(By.xpath("//*[@id=\"iznes\"]/app-root/app-basic-layout/div/ng-sidebar-container/div/div/div/main/div/div/app-client-referential/clr-tabs/ul/button[2]")).click();
 
         driver.findElement(By.xpath("//*[@id=\"client_folder_isin_number\"]/div/clr-dg-string-filter/clr-dg-filter/button")).click();
         Thread.sleep(250);
