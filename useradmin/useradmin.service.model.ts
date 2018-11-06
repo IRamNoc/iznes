@@ -9,6 +9,9 @@ export interface RequestOwnWalletsMessage extends MemberNodeRequest {
  */
 export interface RequestAdminUsersMessageBody extends MemberNodeMessageBody {
     token: string;
+    pageFrom: number;
+    pageSize: number;
+    search: string;
 }
 
 export interface CreateUserMessageBody extends MemberNodeMessageBody {
@@ -350,4 +353,9 @@ export interface UpdateUserAccountWalletPermissions extends MemberNodeMessageBod
 
 export interface RequestUserTypes extends MemberNodeMessageBody {
     token: string;
+}
+
+export interface GetUserAdminPermissionsBody extends MemberNodeMessageBody {
+    userId: number;
+    permissionName: string;
 }
