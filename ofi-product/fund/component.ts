@@ -968,6 +968,7 @@ export class FundComponent implements OnInit, OnDestroy {
                 'draftDate',
             ]),
             fundName: this.param ? fund.fundName : '',
+            legalEntityIdentifier: this.param ? fund.legalEntityIdentifier : '',
 
             // formatting for radio inputs
             isFundStructure: fund.isFundStructure.toString(),
@@ -1056,7 +1057,7 @@ export class FundComponent implements OnInit, OnDestroy {
                     return;
                 })
                 .catch((err) => {
-                    const errMsg = _.get(err, '[1].Data[0].Message', '');
+                    const errMsg = _.get(err, '[1].Data.Message', '');
                     this.toasterService.pop('error', 'Failed to create the fund. ' + errMsg);
                     return;
                 });

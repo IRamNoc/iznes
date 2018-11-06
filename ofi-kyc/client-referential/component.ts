@@ -271,7 +271,8 @@ export class OfiClientReferentialComponent implements OnInit, OnDestroy {
                 tempOtherData['investorData'] = {
                     firstName: kyc.investorFirstName,
                     companyName: kyc.investorCompanyName,
-                    investorWalletID: kyc.investorWalletID
+                    investorWalletID: kyc.investorWalletID,
+                    investorWalletName: kyc.walletName,
                 };
 
                 this.otherData = tempOtherData;

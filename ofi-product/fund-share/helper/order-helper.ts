@@ -814,7 +814,7 @@ export class OrderHelper {
         }
 
         try {
-            return calculateFigures(
+            const orderCalc = calculateFigures(
                 {
                     feePercentage: this.feePercentage,
                     nav: this.nav,
@@ -825,6 +825,12 @@ export class OrderHelper {
                 +this.fundShare.maximumNumDecimal,
                 this.isKnownNav(),
             );
+            
+            if(this.orderBy === OrderByType.Amount) {
+                orderCalc.amount = this.orderValue;
+            }
+
+            return orderCalc;
         } catch (e) {
             return {
                 orderValid: false,

@@ -234,12 +234,13 @@ export class OfiFundAccessTable {
             }).then(() => {
 
                 // success call back
-                this.toasterService.pop('success', this.investorData['companyName'] + '\'s shares authorisation has been successfully updated');
+                this.toasterService.pop('success', this.getInvestorCompanyName() + '\'s shares authorisation has been successfully updated');
+                console.error(this.investorData['investorWalletID']);
 
                 const recipientsArr = [this.investorData['investorWalletID']];
                 const subjectStr = this.amCompany + ' has updated your access';
 
-                let bodyStr = 'Hello ' + this.investorData['firstName'] + ',<br><br>' + this.amCompany + ' has made updates on your access list.';
+                let bodyStr = 'Hello ' + this.getInvestorFirstName() + ',<br><br>' + this.amCompany + ' has made updates on your access list.';
                 bodyStr += '<br><br>Click on the button below to go to the Funds shares page to see all changes and begin trading on IZNES<br><br>%@link@%<br><br>Thank you,<br><br>The IZNES team.';
 
                 const action = {
@@ -265,6 +266,34 @@ export class OfiFundAccessTable {
 
         });
 
+    }
+
+    /**
+     * Get investor company name
+     * If portfolio manager, we return wallet.
+     * @return {string}
+     */
+    getInvestorCompanyName() {
+        const investorCompanyName = this.investorData['companyName'];
+        return investorCompanyName ? investorCompanyName : this.getInvestorWalletName();
+    }
+
+    /**
+     * Get investor company name
+     * If portfolio manager, we return wallet.
+     * @return {string}
+     */
+    getInvestorFirstName() {
+        const investorFirstName = this.investorData['firstName'];
+        return investorFirstName ? investorFirstName :  this.getInvestorWalletName();
+    }
+
+    /**
+     * Get investor wallet name.
+     * @return {string}
+     */
+    getInvestorWalletName() {
+        return this.investorData['investorWalletName'];
     }
 
 }

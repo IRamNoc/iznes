@@ -780,6 +780,8 @@ export class ManageOrdersComponent implements OnInit, AfterViewInit, OnDestroy {
 
         this.tabsControl[0].active = true;
 
+        this.router.navigateByUrl('manage-orders');
+
         /* Return */
         return;
     }

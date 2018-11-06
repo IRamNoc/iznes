@@ -16,7 +16,6 @@ interface OfiAddSubPortfolioData {
     walletId: number;
     name: string;
     iban: string;
-    type: string;
 }
 
 interface OfiDeleteSubPortfolioData {
@@ -40,7 +39,6 @@ export class OfiSubPortfolioService {
             walletId: data.walletId,
             name: data.name,
             iban: data.iban,
-            type: data.type,
         };
 
         return createMemberNodeSagaRequest(this.memberSocketService, messageBody);
