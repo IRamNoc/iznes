@@ -10,6 +10,33 @@
                 <i class="fa {{tabdata.title.icon}}"></i> {{tabdata.title.text}}
             </button>
             <clr-tab-content *clrIfActive="tabdata.active">
+                
+                <!-- Search Users -->
+                <div class="row">
+                    <div class="col-sm-12"> 
+                        <div class="custom-search left" *ngIf="id === 0">                    
+                            
+                            <input type="form-control text" 
+                                    placeholder="{{ 'Enter username or email' | translate }}" 
+                                    #searchBox (keyup.enter)="handleSearch(searchBox.value); searchBox.value = '';"
+                                    (keyup)="showCross = (searchBox.value != '' ? true : false);" 
+                                    id="messagesSearch">
+                                        
+                            <button (click)="handleSearch(searchBox.value); searchBox.value = ''; showCross = false;" class="" id="messagesSearchBtn">
+                                <i class="fa fa-search"></i>
+                            </button>
+                            
+                            <i *ngIf="showCross" class="fa fa-times searchCross" (click)="showCross = false; searchBox.value = ''"></i>
+
+                            <span *ngIf="search" class="search-filter" [class.show]="search"><a href="#" (click)="clearSearch($event); searchBox.value='' ">
+                                <i class="fa fa-search">
+                                </i> {{search}} <i class="fa fa-times"></i></a>
+                            </span>
+
+                        </div>
+                    </div>
+                </div>    
+
                 <!-- User list tab. -->
                 <ng-container *ngIf="id === 0">
                     <ng-container *ngTemplateOutlet="staticUserListTab">
@@ -45,7 +72,7 @@
                 <clr-dg-column>{{ 'Email' | translate }}</clr-dg-column>
                 <clr-dg-column>{{ 'Account' | translate }}</clr-dg-column>
                 <clr-dg-column>{{ 'Status' | translate }}</clr-dg-column>
-                <clr-dg-column class="right"> {{ 'Actions' | translate }}</clr-dg-column>
+                <clr-dg-column class="right">{{ 'Actions' | translate }}</clr-dg-column>
 
                 <clr-dg-row *ngFor="let user of paginatedUsersList; let i = index">
                     <clr-dg-cell><span id="username-{{user.index}}">{{user.userName}}</span></clr-dg-cell>
@@ -53,16 +80,18 @@
                     <clr-dg-cell>{{user.accountName}}</clr-dg-cell>
                     <clr-dg-cell>
                         <span *ngIf="user.accountLocked == 0" class="label label-success">{{ 'Enabled' | translate }}</span>
-                        <span *ngIf="user.accountLocked != 0" class="label label-warning">{{ 'Disabled' | translate }</span>
+                        <span *ngIf="user.accountLocked != 0" class="label label-warning">{{ 'Disabled' | translate }}</span>
                     </clr-dg-cell>
                     <clr-dg-cell class="right">
                         <button id="edit-{{user.userID}}" (click)="handleEdit(user.userID)"
                                 class="btn btn-success btn-sm">
-                            <i class="fa fa-pencil-square-o"></i> {{ 'Edit' | translate }}
+                            <i class="fa fa-pencil-square-o"></i>
+                            {{ 'Edit' | translate }}
                         </button>
                         <button id="delete-{{user.userID}}" (click)="handleDelete(user.userID)"
                                 class="btn btn-danger btn-sm">
-                            <i class="fa fa-trash-o"></i> {{ 'Delete' | translate }}
+                            <i class="fa fa-trash-o"></i>
+                            {{ 'Delete' | translate }}
                         </button>
                     </clr-dg-cell>
                 </clr-dg-row>
@@ -70,7 +99,7 @@
                 <clr-dg-footer>
                     <div rowsPerPage="10" (rowsUpdate)="dgPageSize = $event; dgPageFrom = 0; setPaginatedUsersList(); requestPaginatedUsersList(); currentPage = 1;"></div>
                     {{pagination.firstItem + 1}} - {{pagination.lastItem + 1}}
-                    <clr-dg-pagination #pagination [clrDgPageSize]="dgPageSize" [(clrDgPage)]="currentPage" [clrDgTotalItems]="totalRecords"></clr-dg-pagination>
+                    <clr-dg-pagination #pagination [clrDgPageSize]="dgPageSize" [(clrDgPage)]="currentPage" [clrDgTotalItems]="dgTotalItems"></clr-dg-pagination>
                 </clr-dg-footer>
             </clr-datagrid>
         </div>
@@ -85,12 +114,14 @@
                         <div class="form-group col-sm-6">
                             <div class="tooltip left tooltip-md">
                                 <i class="fa fa-info-circle"></i>
-                                <span class="tooltip-content">Username cannot exceed 45 characters, cannot contain spaces and can only contain letters, numbers and the following characters: . - _ @</span>
+                                <span class="tooltip-content">{{ 'Username cannot exceed 45 characters, cannot contain spaces and can only contain letters, numbers and the following characters: . - _ @' | translate }}</span>
                                 <label class="control-label required-field tooltip-wrapped">{{ 'Username' | translate }}</label>
                             </div>
-                            <input id="new-user-username" type="text" formControlName="username"
-                                   placeholder="Username" class="form-control username mlp_translated"
-                                   mltag="txt_username">
+                            <input id="new-user-username" 
+                                    type="text" 
+                                    formControlName="username"
+                                    placeholder="{{ 'Username' | translate }}" 
+                                    class="form-control username">
                             <div *ngIf="formControl.controls.username.hasError('required') && formControl.controls.username.touched"
                                  class="field-error">{{ 'Field is required' | translate }}
                             </div>
@@ -101,13 +132,15 @@
 
                         <div class="form-group col-sm-6">
                             <label class="control-label required-field">{{ 'Email' | translate }}</label>
-                            <input id="new-user-email" type="email" formControlName="email" name="email"
-                                   placeholder="{{ 'Email' | translate }}"
-                                   class="form-control email mlp_translated">
+                            <input id="new-user-email" 
+                                    type="email" formControlName="email" name="email"
+                                    placeholder="{{ 'Enter email' | translate }}"
+                                    class="form-control email">
                             <div *ngIf="formControl.controls.email.hasError('required') && formControl.controls.email.touched"
                                  class="field-error">{{ 'Field is required' | translate }}
                             </div>
-                            <div *ngIf="!formControl.controls.email.valid && formControl.controls.email.touched && !formControl.controls.email.hasError('required')" class="field-error">{{ 'Invalid email format' | translate }}
+                            <div *ngIf="!formControl.controls.email.valid && formControl.controls.email.touched && !formControl.controls.email.hasError('required')"
+                                 class="field-error">{{ 'Invalid email format' | translate }}
                             </div>
                         </div>
                     </div>
@@ -121,7 +154,8 @@
                                 [allowClear]="true"
                                 placeholder="{{ 'Select Type' | translate }}"
                                 [formControl]="formControl.controls['accountType']"
-                                (selected)="setFormAccountId( tabid, $event )"></ng-select>
+                                (selected)="setFormAccountId( tabid, $event )">
+                            </ng-select>
                             <div *ngIf="formControl.controls.accountType.hasError('required') && formControl.controls.accountType.touched"
                                  class="field-error">{{ 'Field is required' | translate }}
                             </div>
@@ -135,10 +169,9 @@
                                 id="new-user-usertype-select"
                                 [items]="userTypes"
                                 [allowClear]="true"
-                                placeholder="Select Type"
-                                [formControl]="formControl.controls['userType']"
-                                mltag="txt_selecttype"
-                            ></ng-select>
+                                placeholder="{{ 'Select Type' | translate }}"
+                                [formControl]="formControl.controls['userType']">
+                        </ng-select>
                             <div *ngIf="formControl.controls.userType.hasError('required') && formControl.controls.userType.touched"
                                  class="field-error">{{ 'Field is required' | translate }}
                             </div>
@@ -148,13 +181,12 @@
                     <div class="row">
                         <div class="form-group col-sm-6">
                             <label class="control-label required-field">{{ 'Password' | translate }}</label>
-                            <input id="new-user-password" 
-                                    type="password" 
+                            <input id="new-user-password" type="password" 
                                     formControlName="password" 
                                     name="password"
                                     autocomplete="off" 
-                                    placeholder="Password"
-                                    class="form-control password1 mlp_translated">
+                                    placeholder="{{ 'Password' | translate }}"
+                                    class="form-control password1">
                             <div *ngIf="formControl.controls.password.hasError('required') && formControl.controls.password.touched"
                                  class="field-error">{{ 'Field is required' | translate }}
                             </div>
@@ -165,9 +197,12 @@
 
                         <div class="form-group col-sm-6">
                             <label class="control-label required-field">{{ 'Repeat Password' | translate }}</label>
-                            <input id="new-user-password-repeat" type="password" formControlName="passwordConfirm"
-                                   autocomplete="off" placeholder="Repeat Password"
-                                   class="form-control password2 mlp_translated">
+                            <input id="new-user-password-repeat" 
+                                    type="password" 
+                                    formControlName="passwordConfirm"
+                                    autocomplete="off" 
+                                    placeholder="{{ 'Repeat Password' | translate }}"
+                                    class="form-control password2">
                             <div *ngIf="formControl.controls.passwordConfirm.hasError('required') && formControl.controls.passwordConfirm.touched"
                                  class="field-error">{{ 'Field is required' | translate }}
                             </div>
@@ -179,7 +214,9 @@
 
                     <div class="row">
                         <div class="form-group col-sm-12">
-                            <label class="control-label">{{ 'Access' | translate }}</label>
+                            <label class="control-label">
+                                {{ 'Access' | translate }}                       
+                            </label>
                             <div>
                                 <ng-container
                                     *ngTemplateOutlet="accessAdminTabs; context: {'formControl': formControl, 'tabid': tabid}"></ng-container>
@@ -192,7 +229,8 @@
                             <button id="new-user-submit" type="submit" 
                                     class="btn btn-primary"
                                     [disabled]="!formControl.valid">
-                                <i class="fa fa-save"></i> {{ 'Save' | translate }}
+                                <i class="fa fa-save"></i>
+                                {{ 'Save' | translate }}
                             </button>
                         </div>
                     </div>
@@ -213,7 +251,7 @@
                                     type="text" 
                                     formControlName="username"
                                     placeholder="{{ 'Username' | translate }}" 
-                                    class="form-control username mlp_translated"
+                                    class="form-control username"
                                     readonly="readonly">
                             <div *ngIf="formControl.controls.username.hasError('required') && formControl.controls.username.touched"
                                  class="field-error">{{ 'Field is required' | translate }}
@@ -224,9 +262,10 @@
                             <label class="control-label required-field">{{ 'Email' | translate }}</label>
                             <input id="edit-user{{tabid}}-email" 
                                     type="email" 
-                                    formControlName="email" name="email"
-                                    placeholder="{{ 'Email' | translate }}" 
-                                    class="form-control email mlp_translated">
+                                    formControlName="email" 
+                                    name="email"
+                                    placeholder="{{ 'Enter email' | translate }}" 
+                                    class="form-control email">
                             <div *ngIf="formControl.controls.email.hasError('required') && formControl.controls.email.touched"
                                  class="field-error">{{ 'Field is required' | translate }}
                             </div>
@@ -245,7 +284,8 @@
                                 [allowClear]="true"
                                 placeholder="{{ 'Select Type' | translate }}"
                                 [formControl]="formControl.controls['accountType']"
-                                (selected)="setFormAccountId( tabid, $event )"></ng-select>
+                                (selected)="setFormAccountId( tabid, $event )">
+                            </ng-select>
                             <div *ngIf="formControl.controls.accountType.hasError('required') && formControl.controls.accountType.touched"
                                  class="field-error">{{ 'Field is required' | translate }}
                             </div>
@@ -259,14 +299,16 @@
                                 id="edit-user{{tabid}}-usertype-select"
                                 [items]="userTypes"
                                 [allowClear]="true"
-                                placeholder="Select Type"
-                                [formControl]="formControl.controls['userType']"></ng-select>
+                                placeholder="{{ 'Select Type' | translate }}"
+                                [formControl]="formControl.controls['userType']">
+                        </ng-select>
                         </div>
                     </div>
 
                     <div class="row">
                         <div class="form-group col-sm-12">
-                            <label class="control-label">{{ 'Access' | translate }}
+                            <label class="control-label">
+                                {{ 'Access' | translate }}
                             </label>
                             <div>
                                 <ng-container
@@ -279,7 +321,11 @@
                         <div class="col-sm-12">
                             <button type="submit" class="btn btn-primary"
                                     [disabled]="!formControl.controls.username.valid || !formControl.controls.email.valid || !formControl.controls.accountType.valid || !formControl.controls.userType.valid">
-                                <i class="fa fa-save"></i> {{ 'Save' | translate }}
+                                <i class="fa fa-save"></i> 
+                                {{ 'Save' | translate }}
+                            </button>
+                            <button (click)="closeTab(tabid)" class="btn btn-secondary">
+                                {{ 'Close' | translate }}
                             </button>
                             <button (click)="closeTab(tabid)" class="btn btn-secondary">{{ 'Close' | translate }}</button>
                         </div>
@@ -293,7 +339,8 @@
     <ng-template #accessAdminTabs let-formControl="formControl" let-tabid="tabid">
         <clr-tabs>
             <clr-tab>
-                <a clrTabLink><i class="fa fa-users"></i> {{ 'Administrative' | translate }}</a>
+                <a clrTabLink><i class="fa fa-users"></i>
+                    {{ 'Administrative' | translate }}</a>
                 <clr-tab-content *clrIfActive="true">
                     <div class="panel-body">{{ 'Administrative Groups' | translate }}
 
@@ -303,26 +350,26 @@
                             [allowClear]="true"
                             placeholder="{{ 'Select Type' | translate }}"
                             [containerWidth]="'100%'"
-                            [formControl]="formControl.controls['adminGroups']"></ng-select>
+                            [formControl]="formControl.controls['adminGroups']">
+                    </ng-select>
                     </div>
                 </clr-tab-content>
             </clr-tab>
 
             <clr-tab>
-                <a clrTabLink><i class="fa fa-user"></i> {{ 'Transactional' | translate }}</a>
+                <a clrTabLink><i class="fa fa-user"></i>
+                    {{ 'Transactional' | translate }}
+                </a>
                 <clr-tab-content *clrIfActive>
-                    <div class="panel-body"><
-                        
-                        {{ 'Group in Chain' | translate }}
+                    <div class="panel-body">{{ 'Group in Chain' | translate }}
 
                         <ng-select
                             [items]="filteredChainList"
                             [allowClear]="true"
                             placeholder="{{ 'Select Chain' | translate }}"
                             [active]="selectedChainItem"
-                            (selected)="setFormChainId(tabid, $event)"></ng-select>
-                        
-                            
+                            (selected)="setFormChainId(tabid, $event)">
+                    </ng-select>
                         {{ 'Transactional Groups' | translate }}
 
                         <ng-select
@@ -331,7 +378,8 @@
                             [allowClear]="true"
                             placeholder="{{ 'Select Type' | translate }}"
                             [containerWidth]="'100%'"
-                            [formControl]="formControl.controls['txGroups']"></ng-select>
+                            [formControl]="formControl.controls['txGroups']">
+                    </ng-select>
                     </div>
                 </clr-tab-content>
             </clr-tab>
@@ -341,9 +389,7 @@
                 <clr-tab-content *clrIfActive>
                     <div class="panel-body">
                         <div class="m-b-10">
-
                             {{ 'Full Access Wallets' | translate }}
-
                             <ng-select
                                 [items]="tabsControl[tabid].filteredWalletsByAccount"
                                 (selected)="addedWalletSelection(1, tabid, $event)"
@@ -351,13 +397,12 @@
                                 [allowClear]="true"
                                 placeholder="{{ 'Choose Wallets' | translate }}"
                                 [containerWidth]="'100%'"
-                                [formControl]="formControl.controls['walletsFull']"></ng-select>
+                                [formControl]="formControl.controls['walletsFull']">
+                            </ng-select>
                         </div>
 
                         <div class="m-b-10">
-                            
                             {{ 'Read Only Wallets' | translate }}
-
                             <ng-select
                                 [items]="tabsControl[tabid].filteredWalletsByAccount"
                                 (selected)="addedWalletSelection(0, tabid, $event)"
@@ -365,11 +410,11 @@
                                 [allowClear]="true"
                                 placeholder="{{ 'Choose Wallets' | translate }}"
                                 [containerWidth]="'100%'"
-                                [formControl]="formControl.controls['walletsRead']"></ng-select>
+                                [formControl]="formControl.controls['walletsRead']">
+                            </ng-select>
                         </div>
 
                         <div class="m-b-10">
-                            
                             {{ 'Group Wallet Permission (Full Access)' | translate }}
                             <ng-select
                                 [items]="accountTypes"
@@ -378,13 +423,12 @@
                                 [allowClear]="true"
                                 placeholder="{{ 'Choose Accounts' | translate }}"
                                 [containerWidth]="'100%'"
-                                [formControl]="formControl.controls['groupWalletsFull']"></ng-select>
+                                [formControl]="formControl.controls['groupWalletsFull']">
+                        </ng-select>
                         </div>
 
                         <div>
-                            
                             {{ 'Group Wallet Permission (Read Only)' | translate }}
-                            
                             <ng-select
                                 [items]="accountTypes"
                                 (selected)="addedGroupWalletSelection(0, tabid, $event)"
@@ -392,26 +436,27 @@
                                 [allowClear]="true"
                                 placeholder="{{ 'Choose Accounts' | translate }}"
                                 [containerWidth]="'100%'"
-                                [formControl]="formControl.controls['groupWalletsRead']"></ng-select>
+                                [formControl]="formControl.controls['groupWalletsRead']">
+                            </ng-select>
                         </div>
                     </div>
                 </clr-tab-content>
             </clr-tab>
 
             <clr-tab>
-                <a clrTabLink><i class="fa fa-chain"></i> {{ 'Chains' | translate }}</a>
+                <a clrTabLink><i class="fa fa-chain"></i>
+                    {{ 'Chains' | translate }}</a>
                 <clr-tab-content *clrIfActive>
                     <div class="panel-body">
-                        
                         {{ 'Chains' | translate }}
-
                         <ng-select
                             [items]="filteredChainList"
                             [multiple]="true"
                             [allowClear]="true"
                             placeholder="{{ 'Choose Chains' | translate }}"
                             [containerWidth]="'100%'"
-                            [formControl]="formControl.controls['chainAccess']"></ng-select>
+                            [formControl]="formControl.controls['chainAccess']">
+                        </ng-select>
                     </div>
                 </clr-tab-content>
             </clr-tab>
@@ -420,16 +465,15 @@
                 <a clrTabLink><i class="fa fa-bars"></i> {{ 'Menu' | translate }}</a>
                 <clr-tab-content *clrIfActive>
                     <div class="panel-body">
-                        
                         {{ 'Menu' | translate }}
-                        
                         <ng-select
                             [items]="filteredMenuGroupsList"
                             [multiple]="false"
                             [allowClear]="true"
                             placeholder="{{ 'Choose Menu' | translate }}"
                             [containerWidth]="'100%'"
-                            [formControl]="formControl.controls['menuGroups']"></ng-select>
+                            [formControl]="formControl.controls['menuGroups']">
+                        </ng-select>
                     </div>
                 </clr-tab-content>
             </clr-tab>
