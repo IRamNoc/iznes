@@ -7,8 +7,6 @@ import { RouterModule } from '@angular/router';
 import { ClarityModule } from '@clr/angular';
 
 import { AdminUsersService } from '@setl/core-req-services';
-/* 3rd party modules. */
-import { SelectModule } from '@setl/utils';
 /* Import core components. */
 import { AdminWizardComponent } from './wizard/wizard.component';
 /* Users components. */
@@ -25,7 +23,13 @@ import { MultilingualModule } from '@setl/multilingual';
 /* Persist Module. */
 import { PersistModule } from '@setl/core-persist';
 /* directive Module. */
-import { SetlDirectivesModule, DatePickerExtendedModule, DpDatePickerModule, SetlPipesModule } from '@setl/utils';
+import {
+    SetlDirectivesModule,
+    DatePickerExtendedModule,
+    DpDatePickerModule,
+    SetlPipesModule,
+    SelectModule,
+} from '@setl/utils';
 import { UserAdminService } from '@setl/core-useradmin/useradmin.service';
 
 /* User admin service. */

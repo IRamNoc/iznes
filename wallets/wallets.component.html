@@ -187,17 +187,19 @@
                     <div class="row">
                         <div class="form-group col-sm-6">
                             <label class="control-label">{{ 'Wallet Status' | translate }}</label>
-                            <div class="wallet-status">
+                            <div class="locked-toggle">
                                 <span *ngIf="formControl.value.walletLocked == 0">
                                     <i class="fa fa-unlock"></i>
                                 </span>
-                                <span *ngIf="formControl.value.walletLocked == 1">
+                                <span *ngIf="formControl.value.walletLocked" (click)="formControl.value.walletLocked = 0">
                                     <i class="fa fa-lock"></i>
                                 </span>
 
                                 <div class="toggle-switch">
                                     <input [formControl]="formControl.controls['walletLocked']"
-                                           id="edit-wallet-status-toggle" type="checkbox">
+                                           id="edit-wallet-status-toggle"
+                                           type="checkbox"
+                                           [checked]="formControl.value.walletLocked">
                                     <label for="edit-wallet-status-toggle"></label>
                                 </div>
                             </div>
