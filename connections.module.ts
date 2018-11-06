@@ -6,7 +6,7 @@ import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 /* Clarity module. */
 import { ClarityModule } from '@clr/angular';
 /* 3rd party modules. */
-import { SelectModule } from '@setl/utils';
+import { SelectModule, SetlPipesModule } from '@setl/utils';
 /* Multilingual coolness. */
 import { MultilingualModule } from '@setl/multilingual';
 /* Connection component */
@@ -28,6 +28,7 @@ import { ConnectionService } from '@setl/core-req-services';
         FormsModule,
         ClarityModule,
         SelectModule,
+        SetlPipesModule,
         MultilingualModule,
     ],
     providers: [

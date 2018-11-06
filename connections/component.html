@@ -1,5 +1,5 @@
 <div class="header-breadcrumbs">
-    <h1><i class="fa fa-users"></i> Connections</h1>
+    <h1><i class="fa fa-users"></i> {{ 'Connections' | translate }}</h1>
 </div>
 
 <clr-tabs>
@@ -14,9 +14,9 @@
             <clr-tab-content>
                 <section class="form-block">
                     <clr-datagrid>
-                        <clr-dg-column [clrDgField]="'connections'">Connection</clr-dg-column>
-                        <clr-dg-column [clrDgField]="'subportfolios'">Address</clr-dg-column>
-                        <clr-dg-column class="right" mltag="txt_actions">Actions</clr-dg-column>
+                        <clr-dg-column [clrDgField]="'connections'">{{ 'Connection' | translate }}</clr-dg-column>
+                        <clr-dg-column [clrDgField]="'subportfolios'">{{ 'Address' | translate }}</clr-dg-column>
+                        <clr-dg-column class="right">{{ 'Actions' | translate }}</clr-dg-column>
 
                         <clr-dg-row *clrDgItems="let acceptedConnection of acceptedConnectionList">
                             <clr-dg-cell>{{acceptedConnection.connection}}</clr-dg-cell>
@@ -24,13 +24,11 @@
                             <clr-dg-cell class="right">
                                 <button id="edit-button" class="btn btn-success btn-sm"
                                         (click)="handleEditButtonClick(acceptedConnection)">
-                                    <i class="fa fa-edit"></i>
-                                    <span mltag="txt_edit">Edit</span>
+                                    <i class="fa fa-edit"></i>{{ 'Edit' | translate }}
                                 </button>
                                 <button id="delete-button" class="btn btn-danger btn-sm"
                                         (click)="handleDeleteButtonClick(acceptedConnection)">
-                                    <i class="fa fa-trash-o"></i>
-                                    <span mltag="txt_delete">Delete</span>
+                                    <i class="fa fa-trash-o"></i>{{ 'Delete' | translate }}
                                 </button>
                             </clr-dg-cell>
                         </clr-dg-row>
@@ -49,16 +47,15 @@
     <!-- Pending connections tab -->
     <clr-tab>
         <button id="pending-connection-tab" clrTabLink>
-            <i class="fa fa-ellipsis-h"></i>
-            <span>Pending</span>
+            <i class="fa fa-ellipsis-h"></i> {{ 'Pending' | translate }}
         </button>
 
         <clr-tab-content>
             <section class="form-block">
                 <clr-datagrid>
-                    <clr-dg-column [clrDgField]="'connections'">Connection</clr-dg-column>
-                    <clr-dg-column [clrDgField]="'info'">Status</clr-dg-column>
-                    <clr-dg-column class="right" mltag="txt_actions">Actions</clr-dg-column>
+                    <clr-dg-column [clrDgField]="'connections'">{[ 'Connection' | translate }}</clr-dg-column>
+                    <clr-dg-column [clrDgField]="'info'">{{ 'Status' | translate }}</clr-dg-column>
+                    <clr-dg-column class="right">{{ 'Actions' | translate }}</clr-dg-column>
 
                     <clr-dg-row *clrDgItems="let pendingConnection of pendingConnectionList">
                         <clr-dg-cell>{{pendingConnection.connection}}</clr-dg-cell>
@@ -67,22 +64,19 @@
                         <clr-dg-cell *ngIf="pendingConnection.info === 'Outgoing'" class="right">
                             <button id="reject-connection-button" class="btn btn-danger btn-sm"
                                     (click)="handleRejectButtonClick(pendingConnection, 'This connection request has been cancelled')">
-                                <i class="fa fa-times"></i>
-                                Cancel
+                                <i class="fa fa-times"></i> {{ 'Cancel' | translate }}
                             </button>
                         </clr-dg-cell>
 
                         <clr-dg-cell *ngIf="pendingConnection.info === 'Incoming'" class="right">
                             <button id="accept-connection-button" class="btn btn-success btn-sm"
                                     (click)="handleAcceptButtonClick(pendingConnection)">
-                                <i class="fa fa-check"></i>
-                                Accept
+                                <i class="fa fa-check"></i> {{ 'Accept' | translate }}
                             </button>
 
                             <button id="reject-connection-button" class="btn btn-danger btn-sm"
                                     (click)="handleRejectButtonClick(pendingConnection)">
-                                <i class="fa fa-ban"></i>
-                                Reject
+                                <i class="fa fa-ban"></i> {{ 'Reject' | translate }}
                             </button>
 
                         </clr-dg-cell>
@@ -100,8 +94,7 @@
     <!-- Add connection tab -->
     <clr-tab>
         <button id="add-connection-tab" clrTabLink (click)="resetForm()">
-            <i class="fa fa-plus"></i>
-            <span>Add Connection</span>
+            <i class="fa fa-plus"></i> {{ 'Add Connection' | translate }}
         </button>
 
         <clr-tab-content>
@@ -112,20 +105,20 @@
 
                             <div class="tooltip left tooltip-sm">
                                 <i class="fa fa-info-circle"></i>
-                                <span class="tooltip-content">Select a wallet to connect to</span>        
-                                <label class="control-label required-field" for="add-connection-select" mltag="txt_connection">Connection</label>
+                                <span class="tooltip-content">{{ 'Select a wallet to connect to' | translate }}</span>        
+                                <label class="control-label required-field" for="add-connection-select">{{ 'Connection' | translate }}</label>
                             </div>
 
                             <ng-select
                                     id="add-connection-select"
-                                    placeholder="Select wallet"
+                                    placeholder="{{ 'Select wallet' | translate }}"
                                     [items]="walletList"
                                     [allowClear]=true
                                     [formControl]="formGroup.controls['connection']">
                             </ng-select>
 
                             <span *ngIf="formGroup.controls['connection'].hasError('required') && formGroup.controls['connection'].touched"
-                                  class="field-error" mltag="txt_fieldisrequired">Field is required</span>
+                                  class="field-error">{{ 'Field is required' | translate }}</span>
                         </div>
                     </div>
 
@@ -134,26 +127,26 @@
 
                             <div class="tooltip left tooltip-sm">
                                 <i class="fa fa-info-circle"></i>
-                                <span class="tooltip-content">Select an address to use for this connection</span>
-                                <label class="control-label required-field" for="add-subportfolio-select" mltag="txt_address">Address</label>
+                                <span class="tooltip-content">{{ 'Select an address to use for this connection' | translate }}</span>
+                                <label class="control-label required-field" for="add-subportfolio-select">{{ 'Address' | translate }}</label>
                             </div>
 
                             <ng-select 
                                 id="add-subportfolio-select" 
                                 [items]="addressList" 
                                 [allowClear]=true 
-                                placeholder="Select address" 
+                                placeholder="{{ 'Select address' | translate }}" 
                                 [formControl]="formGroup.controls['sub-portfolio']">
                             </ng-select>
 
                             <span *ngIf="formGroup.controls['sub-portfolio'].hasError('required') && formGroup.controls['sub-portfolio'].touched"
-                                  class="field-error" mltag="txt_fieldisrequired">Field is required</span>
+                                  class="field-error">{{ 'Field is required' | translate }}</span>
                         </div>
                     </div>
 
                     <div class="row">
                         <button id="add-connection-button" class="btn btn-primary" [disabled]="formGroup.invalid">
-                            <i class="fa fa-save"></i> <span class="ml_translated" mltag="txt_save">Save</span>
+                            <i class="fa fa-save"></i> {{ 'Save' | translate }}
                         </button>
                     </div>
                 </section>
@@ -165,7 +158,7 @@
     <clr-tab *ngIf="!isEditTabClosed">
         <button id="edit-connection-tab" clrTabLink>
             <i class="fa fa-pencil"></i>
-            <span>Edit Connection</span>
+            {{ 'Edit Connection' | translate }}
         </button>
 
         <ng-template [(clrIfActive)]="isEditTabDisplayed">
@@ -175,12 +168,11 @@
                         <div class="row">
                             <div class="form-group col-sm-6">                                
 
-                                <label class="control-label required-field" for="add-connection-select"
-                                       mltag="txt_connection">Connection</label>
+                                <label class="control-label required-field" for="add-connection-select">{{ 'Connection' | translate }}</label>
 
                                 <ng-select
                                         id="edit-connection-select"
-                                        placeholder="Select a connection"
+                                        placeholder="{[ 'Select a connection' | translate }}"
                                         [items]="walletList"
                                         [allowClear]=true
                                         [formControl]="formGroup.controls['connection']"
@@ -188,7 +180,7 @@
                                 </ng-select>
 
                                 <span *ngIf="formGroup.controls['connection'].hasError('required') && formGroup.controls['connection'].touched"
-                                      class="field-error" mltag="txt_fieldisrequired">Field is required</span>
+                                      class="field-error">{{ 'Field is required' | translate }}</span>
                             </div>
                         </div>
 
@@ -196,29 +188,29 @@
                             <div class="form-group col-sm-6">
                                 <div class="tooltip left tooltip-sm">
                                     <i class="fa fa-info-circle"></i>
-                                    <span class="tooltip-content">Select an address to use for this connection</span>
-                                    <label class="control-label required-field" for="add-subportfolio-select" mltag="txt_address">Address</label>
+                                    <span class="tooltip-content">{{ 'Select an address to use for this connection' | translate }}</span>
+                                    <label class="control-label required-field" for="add-subportfolio-select">{{ 'Address' | translate }}</label>
                                 </div>
 
                                 <ng-select
                                         id="edit-subportfolio-select"
                                         [items]="addressList"
                                         [allowClear]=true
-                                        placeholder="Select address"
+                                        placeholder="{{ 'Select address' | translate }}"
                                         [formControl]="formGroup.controls['sub-portfolio']">
                                 </ng-select>
 
                                 <span *ngIf="formGroup.controls['sub-portfolio'].hasError('required') && formGroup.controls['sub-portfolio'].touched"
-                                      class="field-error" mltag="txt_fieldisrequired">Field is required</span>
+                                      class="field-error">{{ 'Field is required' | translate }}</span>
                             </div>
                         </div>
 
                         <div class="row">
                             <button id="edit-connection-button" class="btn btn-primary" [disabled]="formGroup.invalid">
-                                <i class="fa fa-save"></i> <span class="ml_translated" mltag="txt_save">Save</span>
+                                <i class="fa fa-save"></i> {{ 'Save' | translate }}
                             </button>
                             <button class="btn btn-secondary" (click)="handleCloseButtonClick()">
-                                <span class="ml_translated" mltag="txt_close">Close</span>
+                                {{ 'Close' | translate }}
                             </button>
                         </div>
                     </section>
@@ -232,17 +224,17 @@
 <clr-modal [(clrModalOpen)]="isAcceptModalDisplayed">
     <h3 class="modal-title">Select a sub-portfolio to use for this connection</h3>
     <div class="modal-body">
-        <label class="control-label required-field" for="accept-subportfolio-addr-link" mltag="txt_subportfolio">Sub-portfolio</label>
+        <label class="control-label required-field" for="accept-subportfolio-addr-link">Sub-portfolio</label>
         <ng-select
                 id="accept-subportfolio-addr-link"
                 [items]="addressList"
                 [allowClear]=true
-                placeholder="Select a sub-portfolio"
+                placeholder="{{ 'Select a sub-portfolio' | translate }}"
                 [formControl]="formGroup.controls['sub-portfolio']">
         </ng-select>
 
         <span *ngIf="formGroup.controls['sub-portfolio'].hasError('required') && formGroup.controls['sub-portfolio'].touched"
-              class="field-required">Field is required</span>
+              class="field-required">{{ 'Field is required' | translate }}</span>
     </div>
 
     <div class="modal-footer">
