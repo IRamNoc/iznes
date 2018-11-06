@@ -107,8 +107,8 @@ public class OpenCSDMyAccountAcceptanceTest {
         navigateToDropdown("menu-user-administration");
         navigateToPageByID("menu-user-admin-users");
         String userDetails[] = generateRandomUserDetails();
-        createUserAndVerifySuccess(userDetails[0], email[0], "asdasd");
         //TODO - this next step fails, I believe because "testops034@setl.io" already exists.  not yet possible to user a bracketed '(randomData)test@seetl.io' address
+        //Requested for brackets - http://si-taiga01.dev.setl.io/project/paul-opencsd-reconfiguration-and-factorisation-project/issue/469
         createUserAndVerifySuccess(userDetails[0], "testops034@setl.io", "asdasd");
         logout();
         clickForgottenPassword(email[0]);
