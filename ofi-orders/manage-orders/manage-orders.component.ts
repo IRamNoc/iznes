@@ -169,6 +169,8 @@ export class ManageOrdersComponent implements OnInit, AfterViewInit, OnDestroy {
 
     menuSpec = {};
 
+    private isinParam: string;
+
     /* Observables. */
     @select(['user', 'myDetail', 'userType']) readonly userType$: Observable<number>;
     @select(['user', 'siteSettings', 'language']) readonly requestedLanguage$;
@@ -240,6 +242,10 @@ export class ManageOrdersComponent implements OnInit, AfterViewInit, OnDestroy {
     }
 
     ngOnInit() {
+        this.route.queryParams.subscribe((params) => {
+            this.isinParam = params.isin ? params.isin : undefined;
+        });
+
         this.searchFilters.filtersApplied.subscribe(() => {
             this.datagridParams.setSearchFilters(this.searchFilters);
             this.detectChanges();
@@ -258,7 +264,13 @@ export class ManageOrdersComponent implements OnInit, AfterViewInit, OnDestroy {
         this.datagridParams.setSearchFilters(this.searchFilters);
         this.searchFilters.optionalFilters
         .subscribe(show => this.isOptionalFiltersVisible = show);
+        
         this.searchForm = this.searchFilters.getForm();
+        if(this.isinParam) {
+            this.searchForm.patchValue({ isin: this.isinParam }, { emitEvent: true });
+            this.manageOrdersService.setFilters(this.searchFilters.get());
+        }
+
         this.setInitialTabs();
 
         this.appSubscribe(this.requestedLanguage$, requested => this.getLanguage(requested));
