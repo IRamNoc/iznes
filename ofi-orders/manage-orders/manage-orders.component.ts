@@ -768,6 +768,9 @@ export class ManageOrdersComponent implements OnInit, AfterViewInit, OnDestroy {
 
         this.tabsControl[0].active = true;
 
+        this.ngRedux.dispatch(ofiManageOrderActions.setAllTabs(this.tabsControl));
+        this.router.navigateByUrl('manage-orders');
+
         /* Return */
         return;
     }
