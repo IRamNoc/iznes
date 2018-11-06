@@ -31,6 +31,17 @@ public class LoginAndNavigationHelper {
         waitForLoginPageToLoad();
     }
 
+    public static void ensureLoginPageIsEnglish()
+    {
+        //if (driver.findElement(By.className("login-subheading")).getText().toLowerCase().contains("identification"))
+        //{
+            WebElement languageButton = driver.findElement(By.className("dropdown"));
+            languageButton.click();
+            WebElement english = driver.findElement(By.xpath("//clr-dropdown-menu[@class='dropdown-menu ng-star-inserted']//button[@type='button'][contains(text(),'English')]"));
+            english.click();
+        //}
+    }
+
     public static void navigateTo365Page() throws InterruptedException {
         WebDriverWait wait = new WebDriverWait(driver, timeoutInSeconds);
         driver.get("https://www.office.com/");
@@ -198,6 +209,7 @@ public class LoginAndNavigationHelper {
 
     public static void loginAndVerifySuccess(String username, String password) throws InterruptedException {
         navigateToLoginPage();
+        ensureLoginPageIsEnglish();
         enterLoginCredentialsUserName(username);
         enterLoginCredentialsPassword(password);
         clickLoginButton();
@@ -241,6 +253,7 @@ public class LoginAndNavigationHelper {
 
     public static void loginAndVerifyFailure(String username, String password) throws InterruptedException {
         navigateToLoginPage();
+        ensureLoginPageIsEnglish();
         enterLoginCredentialsUserName(username);
         enterLoginCredentialsPassword(password);
         clickLoginButton();
@@ -365,6 +378,7 @@ public class LoginAndNavigationHelper {
 
     public static void loginAndVerifySuccessKYC(String username, String password, String headingID) throws InterruptedException, IOException {
         navigateToLoginPage();
+        ensureLoginPageIsEnglish();
         enterLoginCredentialsUserName(username);
         enterLoginCredentialsPassword(password);
 
@@ -402,6 +416,7 @@ public class LoginAndNavigationHelper {
 
     public static void loginKYCConfirmationScreen(String username, String password) throws InterruptedException, IOException {
         navigateToLoginPage();
+        ensureLoginPageIsEnglish();
         enterLoginCredentialsUserName(username);
         enterLoginCredentialsPassword(password);
 
