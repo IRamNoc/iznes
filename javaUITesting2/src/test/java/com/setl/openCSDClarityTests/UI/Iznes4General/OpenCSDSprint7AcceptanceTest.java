@@ -94,7 +94,7 @@ public class OpenCSDSprint7AcceptanceTest {
     public void shouldHaveNextAndPreviousButtonsTG1090() throws IOException, InterruptedException, SQLException {
         WebDriverWait wait = new WebDriverWait(driver, timeoutInSeconds);
 
-        String[] uShareDetails = generateRandomFundsDetails();
+        String[] uShareDetails = generateRandomShareDetails();
         String[] uIsin = generateRandomISIN();
         String[] uFundDetails = generateRandomFundsDetails();
         String randomLEI = generateRandomLEI();
@@ -238,7 +238,7 @@ public class OpenCSDSprint7AcceptanceTest {
         WebDriverWait wait = new WebDriverWait(driver, timeoutInSeconds);
 
         String[] umbFundDetails = generateRandomUmbrellaFundsDetails();
-        String[] uShareDetails = generateRandomFundsDetails();
+        String[] uShareDetails = generateRandomShareDetails();
         String[] uFundDetails = generateRandomUmbrellaFundsDetails();
         String[] uIsin = generateRandomISIN();
         String randomLEI = generateRandomLEI();
@@ -290,7 +290,7 @@ public class OpenCSDSprint7AcceptanceTest {
     public void ShareAuditTrailHeaderContainsShareNameTG447() throws Exception {
         WebDriverWait wait = new WebDriverWait(driver, timeoutInSeconds);
 
-        String[] uShareDetails = generateRandomFundsDetails();
+        String[] uShareDetails = generateRandomShareDetails();
         String[] uIsin = generateRandomISIN();
         String[] uFundDetails = generateRandomFundsDetails();
         String randomLEI = generateRandomLEI();
@@ -315,7 +315,7 @@ public class OpenCSDSprint7AcceptanceTest {
         WebDriverWait wait = new WebDriverWait(driver, timeoutInSeconds);
 
         String[] uFundDetails = generateRandomFundsDetails();
-        String[] uShareDetails = generateRandomFundsDetails();
+        String[] uShareDetails = generateRandomShareDetails();
         String[] uIsin = generateRandomISIN();
         String lei = generateRandomLEI();
 

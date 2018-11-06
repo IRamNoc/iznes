@@ -61,7 +61,7 @@ public class OpenCSD4FundFlowAcceptanceTest {
     public void shouldTestEntireFundFlow() throws InterruptedException, SQLException, IOException {
 
         String[] umbFundDetails = generateRandomUmbrellaFundsDetails();
-        String[] uShareDetails = generateRandomFundsDetails();
+        String[] uShareDetails = generateRandomShareDetails();
         String[] uIsin = generateRandomISIN();
         String[] uFundDetails = generateRandomFundsDetails();
         String randomLEI = generateRandomLEI();

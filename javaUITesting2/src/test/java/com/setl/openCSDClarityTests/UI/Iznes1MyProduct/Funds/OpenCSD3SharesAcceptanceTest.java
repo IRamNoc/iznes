@@ -66,7 +66,7 @@ public class OpenCSD3SharesAcceptanceTest {
 
     @Test
     public void shouldCreateShareAndAssertTableDataIsCorrectAndDatabaseCheck() throws IOException, InterruptedException, SQLException {
-        String[] uShareDetails = generateRandomFundsDetails();
+        String[] uShareDetails = generateRandomShareDetails();
         String[] uIsin = generateRandomISIN();
         String[] uFundDetails = generateRandomFundsDetails();
         String randomLEI = generateRandomLEI();
@@ -90,7 +90,7 @@ public class OpenCSD3SharesAcceptanceTest {
 
     @Test
     public void shouldCreateShareAndSelectYesOnPopup() throws IOException, InterruptedException, SQLException {
-        String[] uShareDetails = generateRandomFundsDetails();
+        String[] uShareDetails = generateRandomShareDetails();
         String[] uIsin = generateRandomISIN();
         String[] uFundDetails = generateRandomFundsDetails();
         String randomLEI = generateRandomLEI();

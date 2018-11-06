@@ -68,7 +68,7 @@ public class OpenCSDNAVAcceptanceTest {
         WebDriverWait wait = new WebDriverWait(driver, timeoutInSeconds);
 
         String[] uFundDetails = generateRandomFundsDetails();
-        String[] uShareDetails = generateRandomFundsDetails();
+        String[] uShareDetails = generateRandomShareDetails();
         String[] uIsin = generateRandomISIN();
         int rowNo = 0;
 
@@ -114,7 +114,7 @@ public class OpenCSDNAVAcceptanceTest {
         WebDriverWait wait = new WebDriverWait(driver, timeoutInSeconds);
 
         String[] uFundDetails = generateRandomFundsDetails();
-        String[] uShareDetails = generateRandomFundsDetails();
+        String[] uShareDetails = generateRandomShareDetails();
         String[] uIsin = generateRandomISIN();
 
         loginAndVerifySuccess("am", "alex01");
@@ -143,7 +143,7 @@ public class OpenCSDNAVAcceptanceTest {
 
     @Test
     public void TG0206_AccessNAVSubModuleCheckDetails() throws InterruptedException, SQLException {
-        String[] uShareDetails = generateRandomFundsDetails();
+        String[] uShareDetails = generateRandomShareDetails();
         String[] uIsin = generateRandomISIN();
         String[] uFundDetails = generateRandomFundsDetails();
         WebDriverWait wait = new WebDriverWait(driver, timeoutInSeconds);
@@ -188,7 +188,7 @@ public class OpenCSDNAVAcceptanceTest {
 
     @Test
     public void TG0207_CheckNavDetailsForNoneValueDataAndSelectDateField() throws InterruptedException, SQLException {
-        String[] uShareDetails = generateRandomFundsDetails();
+        String[] uShareDetails = generateRandomShareDetails();
         String[] uIsin = generateRandomISIN();
         String[] uFundDetails = generateRandomFundsDetails();
         WebDriverWait wait = new WebDriverWait(driver, timeoutInSeconds);
