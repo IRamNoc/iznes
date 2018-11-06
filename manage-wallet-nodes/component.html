@@ -1,8 +1,5 @@
 <div class="header-breadcrumbs">
-    <h1>
-        <i class="fa fa-code-fork"></i>
-        <span mltag="txt_walletnodes">Wallet Nodes</span>
-    </h1>
+    <h1><i class="fa fa-code-fork"></i> {{ 'Wallet Nodes' | translate }}</h1>
 </div>
 
 <div class="wrapper wrapper-content">
@@ -34,19 +31,19 @@
     <ng-template #walletNodesListTab>
         <div class="panel-body">
             <clr-datagrid>
-                <clr-dg-column [clrDgField]="'walletNodeName'" mltag="txt_nodename">Node Name</clr-dg-column>
-                <clr-dg-column [clrDgField]="'chainName'" mltag="txt_chainname">Chain Name</clr-dg-column>
-                <clr-dg-column class="right" mltag="txt_action">Action</clr-dg-column>
+                <clr-dg-column [clrDgField]="'walletNodeName'">{{ 'Node Name' | translate }}</clr-dg-column>
+                <clr-dg-column [clrDgField]="'chainName'">{{ 'Chain Name' | translate }}</clr-dg-column>
+                <clr-dg-column class="right">{{ 'Action' | translate }}</clr-dg-column>
 
                 <clr-dg-row *clrDgItems="let walletNodes of walletNodesList; let id = index">
                     <clr-dg-cell id="node_names{{id}}">{{walletNodes.walletNodeName}}</clr-dg-cell>
                     <clr-dg-cell id="chain_name_{{id}}">{{walletNodes.chainName}}</clr-dg-cell>
                     <clr-dg-cell class="right">
                         <button (click)="handleEdit(id)" class="btn btn-success btn-sm" id="edit-wallet-nodes-{{id}}">
-                            <i class="fa fa-edit"></i> <span mltag="txt_edit">Edit</span></button>
+                            <i class="fa fa-edit"></i> {{ 'Edit' | translate }}</button>
                         <button (click)="handleDelete(walletNodes)" class="btn btn-danger btn-sm"
                                 id="delete-wallet-nodes-{{id}}">
-                            <i class="fa fa-trash-o"></i> <span mltag="txt_delete">Delete</span></button>
+                            <i class="fa fa-trash-o"></i> {{ 'Delete' | translate}}</button>
                     </clr-dg-cell>
                 </clr-dg-row>
 
@@ -66,65 +63,71 @@
                 <div class="row">
                     <div class="form-group col-sm-6">
                         <label class="control-label required-field" for="walletNodeName">
-                            <span class="ml_translated" mltag="txt_nodename">Node Name</span>
+                            {{ 'Node Name' | translate }}
                         </label>
 
-                        <input type="text" id="walletNodeName" class="form-control" formControlName="walletNodeName"
-                               placeholder="Wallet Node Name" mltag="txt_nodename"/>
+                        <input type="text" id="walletNodeName" 
+                                class="form-control" 
+                                formControlName="walletNodeName"
+                                placeholder="{{ 'Wallet Node Name' | translate }}"/>
                        
-                        <span *ngIf="!formControl.controls['walletNodeName'].valid && formControl.controls['walletNodeName'].touched"
-                             class="field-error" mltag="txt_fieldisrequired">Field is required</span>
-
+                        <div *ngIf="!formControl.controls['walletNodeName'].valid && formControl.controls['walletNodeName'].touched" class="field-error">{{ 'Field is required' | translate }}</div>
                     </div>
 
                     <div class="form-group col-sm-6">
                         <label class="control-label required-field" for="nodeAddress">
-                            <span class="ml_translated" mltag="txt_nodeaddress">Node Address</span>
+                            {{ 'Node Address' | translate }}
                         </label>
 
-                        <input type="text" id="nodeAddress" class="form-control" formControlName="nodeAddress"
-                               placeholder="Wallet Node Address" mltag="txt_nodeaddress"/>
+                        <input type="text" 
+                                id="nodeAddress" 
+                                class="form-control" 
+                                formControlName="nodeAddress"
+                                placeholder="{{ 'Wallet Node Address' | translate }}"/>
 
-                        <span *ngIf="!formControl.controls['nodeAddress'].valid && formControl.controls['nodeAddress'].touched"
-                             class="field-error" mltag="txt_fieldisrequired">Field is required</span>
+                        <div *ngIf="!formControl.controls['nodeAddress'].valid && formControl.controls['nodeAddress'].touched" class="field-error">{{ 'Field is required' | translate}}</div>
                     </div>
                 </div>
 
                 <div class="row">
                     <div class="form-group col-sm-6">
                         <label class="control-label">
-                            <span class="ml_translated" mltag="txt_nodepath">Node Path</span>
+                            {{ 'Node Path' | translate }}
                         </label>
 
-                        <input type="text" id="nodePath" class="form-control" formControlName="nodePath"
-                               placeholder="Wallet Node Path" mltag="txt_nodepath"/>
+                        <input type="text" 
+                                id="nodePath" 
+                                class="form-control" 
+                                formControlName="nodePath"
+                                placeholder="{{ 'Wallet Node Path' | translate }}"/>
                     </div>
 
                     <div class="form-group col-sm-6">
                         <label class="control-label required-field" for="nodePort">
-                            <span class="ml_translated" mltag="txt_nodepath">Node Port</span>
+                           {{ 'Node Port' | translate }}
                         </label>
 
-                        <input type="number" id="nodePort" class="form-control" formControlName="nodePort"
-                               placeholder="Wallet Node Port" mltag="txt_nodeport"/>
+                        <input type="number" 
+                                id="nodePort" 
+                                class="form-control" 
+                                formControlName="nodePort"
+                                placeholder="{{ 'Wallet Node Port' | translate }}"/>
 
-                        <span *ngIf="!formControl.controls['nodePort'].valid && formControl.controls['nodePort'].touched"
-                             class="field-error" mltag="txt_fieldisrequired">Field must be a number of less than 12 digits</span>
+                        <div *ngIf="!formControl.controls['nodePort'].valid && formControl.controls['nodePort'].touched" class="field-error">{{ 'Field must be a number of less than 12 digits' | translate</div>
                     </div>
                 </div>
                 <div class="row">
                     <div class="form-group col-sm-12">
                         <label class="control-label required-field" for="walletNodeChain">
-                            <span class="ml_translated" mltag="txt_chain">Chain</span>
+                            {{ 'Chain' | translate }}
                         </label>
 
                         <div class="ngSelectFix" id="walletNodeChain">
-                            <ng-select [items]="chainsListOptions" placeholder="Select" formControlName="chainId"
-                                       mltag="txt_select"></ng-select>
+                            <ng-select [items]="chainsListOptions" 
+                                        placeholder="{{ 'Select' | translate }}" 
+                                        formControlName="chainId"></ng-select>
                             
-                            <span *ngIf="!formControl.controls['chainId'].valid && formControl.controls['chainId'].touched"
-                                 class="field-error" mltag="txt_fieldisrequired">Field is required</span>
-
+                            <div *ngIf="!formControl.controls['chainId'].valid && formControl.controls['chainId'].touched" class="field-error">{{ 'Field is required' | translate }}</div>
                         </div>
                     </div>
                 </div>
@@ -134,10 +137,10 @@
                         <div class="form-group col-sm-12">
                             <button id="walletNodeBtnSubmitForm" type="submit" class="btn btn-primary"
                                     [disabled]="!formControl.valid && !isDebug"> 
-                                    <i class="fa fa-save"></i> <span mltag="txt_send">Save</span>
+                                    <i class="fa fa-save"></i> {{ 'Save' | translate }}
                             </button>
                             <button id="walletNodeBtnResetForm"
-                                    type="reset" class="btn btn-info" mltag="txt_reset">Reset
+                                    type="reset" class="btn btn-info">{{ 'Clear' | translate }}
                             </button>
                         </div>
                     </div>
@@ -156,62 +159,59 @@
                     <div class="form-group col-sm-6">
 
                         <label class="control-label required-field" for="walletNodeName">
-                            <span class="ml_translated" mltag="txt_nodename">Node Name</span>
+                            {{ 'Node Name' | translate }}
                         </label>
 
-                        <input type="text" id="walletNodeName" class="form-control" formControlName="walletNodeName"
-                               placeholder="Wallet Node Name" mltag="txt_nodename"/>
+                        <input type="text" id="walletNodeName" 
+                                class="form-control" 
+                                formControlName="walletNodeName"
+                                placeholder="{{ 'Wallet Node Name' | translate }}"/>
                        
-                        <span *ngIf="!formControl.controls['walletNodeName'].valid && formControl.controls['walletNodeName'].touched"
-                             class="field-error" mltag="txt_fieldisrequired">Field is required</span>
-
+                        <div *ngIf="!formControl.controls['walletNodeName'].valid && formControl.controls['walletNodeName'].touched" class="field-error">{{ 'Field is required' | translate }}</div>
                     </div>
 
                     <div class="form-group col-sm-6">
                         <label class="control-label required-field" for="nodeAddress">
-                            <span class="ml_translated" mltag="txt_nodeaddress">Node Address</span>
+                           {{ 'Node Address' | translate }}
                         </label>
                        
                         <input type="text" id="nodeAddress" class="form-control" formControlName="nodeAddress"
-                               placeholder="Wallet Node Address" mltag="txt_nodeaddress"/>
+                               placeholder="{{ 'Wallet Node Address' | translate }}"/>
                         
-                        <span *ngIf="!formControl.controls['nodeAddress'].valid && formControl.controls['nodeAddress'].touched"
-                             class="field-error" mltag="txt_fieldisrequired">Field is required</span>
+                        <div *ngIf="!formControl.controls['nodeAddress'].valid && formControl.controls['nodeAddress'].touched" class="field-error">{{ 'Field is required' | translate }}</div>
                     </div>
                 </div>
 
                 <div class="row">
                     <div class="form-group col-sm-6">
                         <label class="control-label">
-                            <span class="ml_translated" mltag="txt_nodepath">Node Path</span>
+                            {{ 'Node Path' | translate }}
                         </label>
                         <input type="text" id="nodePath" class="form-control" formControlName="nodePath"
-                               placeholder="Wallet Node Path" mltag="txt_nodepath"/>
+                               placeholder="{{ 'Wallet Node Path' | translate }}"/>
                     </div>
 
                     <div class="form-group col-sm-6">
                         <label class="control-label required-field" for="nodePort">
-                            <span class="ml_translated" mltag="txt_nodeport">Node Port</span>
+                            {{ 'Node Port' | translate }}
                         </label>
 
                         <input type="number" id="nodePort" class="form-control" formControlName="nodePort"
-                               placeholder="Wallet Node Port" mltag="txt_nodeport"/>
+                               placeholder="{{ 'Wallet Node Port' | translate }}"/>
                        
-                        <span *ngIf="!formControl.controls['nodePort'].valid && formControl.controls['nodePort'].touched"
-                             class="field-error" mltag="txt_fieldisrequired">Field must be a number of less than 12 digits</span>
+                        <div *ngIf="!formControl.controls['nodePort'].valid && formControl.controls['nodePort'].touched" class="field-error">{{ 'Field must be a number of less than 12 digits' | translate }}</div>
                     </div>
                 </div>
 
                 <div class="row">
                     <div class="form-group col-sm-12">
                         <label class="control-label required-field" for="chainId">
-                            <span class="ml_translated" mltag="txt_chain">Chain</span>
+                            {{ 'Chain' | translate }}
                         </label>
 
                         <input type="text" id="chainId" class="form-control" formControlName="chainId" disabled>
                         
-                        <span *ngIf="!formControl.controls['chainId'].valid && formControl.controls['chainId'].touched"
-                             class="error-field" mltag="txt_fieldisrequired">Field is required</span>
+                        <div *ngIf="!formControl.controls['chainId'].valid && formControl.controls['chainId'].touched" class="error-field">{{ 'Field is required' | translate }}</div>
                     </div>
                 </div>
 
@@ -220,9 +220,11 @@
                         <div class="form-group col-sm-12">
                             <button id="walletNodeBtnSubmitForm" type="submit" class="btn btn-primary"
                                     [disabled]="!formControl.valid && !isDebug">
-                                <i class="fa fa-save"></i> <span mltag="txt_send">Update</span>
+                                <i class="fa fa-save"></i> {{ 'Save' | translate }}
                             </button>
-                            <button (click)="closeTab(tabid)" class="btn btn-secondary" mltag="txt_close">Close</button>
+                            <button (click)="closeTab(tabid)" class="btn btn-secondary">
+                                {{ 'Close' | translate }}
+                            </button>
                         </div>
                     </div>
                 </div>

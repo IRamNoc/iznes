@@ -1,5 +1,5 @@
 <div class="header-breadcrumbs">
-    <h1 id="chain-memberships"><i class="fa fa-handshake-o"></i> <span mltag="txt_chainmembership">Chain Membership</span></h1>
+    <h1 id="chain-memberships"><i class="fa fa-handshake-o"></i> {{ 'Chain Membership' | translate }}</h1>
 </div>
 
 <div class="wrapper wrapper-content">
@@ -24,29 +24,26 @@
                 <div class="form-horizontal">
                     <div class="form-group col-sm-6">
                         <label class="control-label required-field" for="chain-list">
-                            <span class="ml_translated" mltag="txt_chains">Chains</span>
+                            {{ 'Chains' | translate }}
                         </label>
 
                         <ng-select
                                 [items]="chainList"
                                 [allowClear]="true"
-                                placeholder="Select Chain"
+                                placeholder="{{ 'Select Chain' | translate }}"
                                 (selected)="selectChain($event)"
                                 formControlName="chain"
-                                mltag="txt_selectchain"
-                                id="chain-list"
-                        >
+                                id="chain-list">
                         </ng-select>
 
-                        <span *ngIf="membershipForm.controls.chain.hasError('required') && membershipForm.controls.chain.touched" class="field-error"
-                            mltag="txt_fieldisrequired">Field is required</span>
+                        <div *ngIf="membershipForm.controls.chain.hasError('required') && membershipForm.controls.chain.touched" class="field-error">{{ 'Field is required' | translate }}</div>
 
                     </div>
 
                     <div class="hr-line-dashed"></div>
 
                     <div class="form-group col-sm-6">
-                        <label class="control-label"><span class="ml" mltag="txt_chainmembers">Chain Members</span></label>
+                        <label class="control-label">{{ 'Chain Members' | translate }}</label>
                     </div>
 
                     <div class="member-chain-access-wrapper">
@@ -54,78 +51,80 @@
                             <div class="row">
 
                                 <div class="form-group col-sm-3">
-                                    <label class="control-label required-field">Select Member</label>
+                                    <label class="control-label required-field">
+                                        {{ 'Select Member' | translate }}
+                                    </label>
 
                                     <ng-select
                                             [items]="memberList"
                                             [allowClear]="true"
-                                            placeholder="Select Member"
+                                            placeholder="{{ 'Select Member' | translate }}"
                                             [formControl]="thisFormGroup.controls['member']"
-                                            (selected)="selectMember($event, i)"
-                                            mltag="txt_selectmember"
-                                            id="membership-member-{{i}}"
-                                    >
+                                            (selected)="selectMember($event, i)" 
+                                            id="membership-member-{{i}}">
                                     </ng-select>                                   
 
-                                    <span *ngIf="thisFormGroup.controls['member'].hasError('required') && thisFormGroup.controls['member'].touched" class="field-error"
-                                        mltag="txt_fieldisrequired">Field is required</span>
+                                    <div *ngIf="thisFormGroup.controls['member'].hasError('required') && thisFormGroup.controls['member'].touched" class="field-error">{{ 'Field is required' | translate }}</div>
                                 </div>
 
                                 <div class="form-group col-sm-3">
-                                    <label class="control-label required-field">Select Membership Type</label>
+                                    <label class="control-label required-field">
+                                        {{ 'Select Membership Type' | translate }}
+                                    </label>
 
                                     <ng-select
                                             [items]="chainMemberShipTypeItems"
                                             [allowClear]="true"
-                                            placeholder="Select Membership Type"
+                                            placeholder="{{ 'Select Membership Type' | translate }}"
                                             [formControl]="thisFormGroup.controls['memberType']"
-                                            mltag="txt_selectmembershiptype"
-                                            id="membership-type-{{i}}"
-                                    >
+                                            id="membership-type-{{i}}">
                                     </ng-select>
 
-                                    <span *ngIf="thisFormGroup.controls['memberType'].hasError('required') && thisFormGroup.controls['memberType'].touched" class="field-error"
-                                        mltag="txt_fieldisrequired">Field is required</span>
+                                    <div *ngIf="thisFormGroup.controls['memberType'].hasError('required') && thisFormGroup.controls['memberType'].touched" class="field-error">{{ 'Field is required' | translate }}</div>
 
                                 </div>
 
                                 <div class="form-group col-sm-3">
-                                    <label class="control-label required-field">Select Wallet Node</label>
+                                    <label class="control-label required-field">{{ 'Select Wallet Node' | translate }}</label>
                                     
                                     <ng-select
                                             [items]="currentChainWalletNodeList"
                                             [allowClear]="true"
-                                            placeholder="Select Wallet Node"
+                                            placeholder="{{ 'Select Wallet Node' | translate }}"
                                             [formControl]="thisFormGroup.controls['node']"
-                                            id="membership-node-{{i}}"
-                                    >
+                                            id="membership-node-{{i}}">
                                     </ng-select>
 
-                                    <span *ngIf="thisFormGroup.controls['node'].hasError('required') && thisFormGroup.controls['node'].touched"
-                                        class="field-error" mltag="txt_fieldisrequired">Field is required</span>
+                                    <div *ngIf="thisFormGroup.controls['node'].hasError('required') && thisFormGroup.controls['node'].touched" class="field-error">{{ 'Field is required' | translate }}</div>
 
                                 </div>
                                 
                                 <div class="form-group col-sm-3">
                                     <div class="delete-btn">
-                                        <button class="btn btn-danger" mltag="txt_delete" (click)="removeMembershipItem(i)" id="membership-delete-{{i}}">Delete</button>
+                                        <button class="btn btn-danger" (click)="removeMembershipItem(i)" id="membership-delete-{{i}}">
+                                            <i class="fa fa-trash-o"></i> {{ 'Delete' | translate }}
+                                        </button>
                                     </div>
                                 </div>
                             </div>
                         </div>
                     </div>
 
+                    <button type="button" class="btn btn-default member_chain_access-add-btn" (click)="addMembershipItem()" id="membership-add-btn">
+                        <i class="fa fa-plus"></i>
+                        {{ 'New Member Access' | translate }}
+                    </button>
+
                     <div class="hr-line-dashed"></div>
 
-                    <div class="form-group">
-                        <button type="button" class="btn btn-default member_chain_access-add-btn" (click)="addMembershipItem()" id="membership-add-btn">
-                            <i class="fa fa-plus"></i>
-                            <span class="ml" mltag="txt_newmemberaccess">New Member Access </span></button>
-                        &nbsp;
-                        <button type="submit" class="btn btn-primary member_chain_access-submit-btn" id="membership-save-btn" 
-                        [disabled]="membershipForm.invalid">
-                            <i class="fa fa-save"></i>
-                            <span class="ml" mltag="txt_save">Save</span></button>
+                    <div class="form-group">                        
+                        <button type="submit" 
+                                class="btn btn-primary member_chain_access-submit-btn" 
+                                id="membership-save-btn" 
+                                [disabled]="membershipForm.invalid">
+                                <i class="fa fa-save"></i>
+                                {{ 'Save' | translate }}
+                        </button>
                     </div>
                 </div>
 
@@ -134,8 +133,6 @@
                 <!--</div>-->
 
                 <!--<div class="member-chain-access-wrapper row">-->
-
-
                 <!--</div>-->
                 <!--</div>-->
                 <!--</div>-->
