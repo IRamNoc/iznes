@@ -33,13 +33,13 @@ public class LoginAndNavigationHelper {
 
     public static void ensureLoginPageIsEnglish()
     {
-        //if (driver.findElement(By.className("login-subheading")).getText().toLowerCase().contains("identification"))
-        //{
+        if (driver.findElement(By.className("login-subheading")).getText().toLowerCase().contains("identification"))
+        {
             WebElement languageButton = driver.findElement(By.className("dropdown"));
             languageButton.click();
             WebElement english = driver.findElement(By.xpath("//clr-dropdown-menu[@class='dropdown-menu ng-star-inserted']//button[@type='button'][contains(text(),'English')]"));
             english.click();
-        //}
+        }
     }
 
     public static void navigateTo365Page() throws InterruptedException {
