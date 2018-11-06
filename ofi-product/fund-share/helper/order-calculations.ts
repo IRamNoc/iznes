@@ -89,7 +89,7 @@ export const calculateFigures = (
 
             // change to 2 decimal place
             estimatedAmount = getAmountTwoDecimal(estimatedAmount);
-
+            
             amount = estimatedAmount;
         }
 
