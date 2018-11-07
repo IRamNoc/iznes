@@ -381,10 +381,6 @@ export class ContractService {
         return jsonArray;
     }
 
-    partyIsCommitted(issuingAddress, party): boolean {
-        return issuingAddress === party.sigAddress && !party.mustSign;
-    }
-
     public getAddressLabel(address: string) {
         if (typeof this.addresses[address] !== 'undefined') {
             return this.addresses[address].label;
