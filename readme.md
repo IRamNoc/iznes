@@ -12,7 +12,7 @@ Features:
 Import the `MultilingualModule` into your module by using an import statement and adding it to the imports array.
 
 ```typescript
-import {MultilingualModule} from '@setl/multilingual';
+import { MultilingualModule } from '@setl/multilingual';
 
 @NgModule({
     imports: [
@@ -21,12 +21,26 @@ import {MultilingualModule} from '@setl/multilingual';
 })
 ```
 
-## 2. Using the `MultilingualService` to retrieve an existing translation.
+## 2. Import the `SetlPipesModule`
+
+Import the `SetlPipesModule` into your module by using an import statement and adding it to the imports array.
+
+```typescript
+import { SetlPipesModule } from '@setl/utils';
+
+@NgModule({
+    imports: [
+        SetlPipesModule
+    ]
+})
+```
+
+## 3. Using the `MultilingualService` to retrieve an existing translation.
 
 An example component using the getTranslation method:
 
 ```typescript
-import {MultilingualService} from '@setl/multilingual';
+import { MultilingualService } from '@setl/multilingual';
 
 class MyComponent {
     // Assign the multilingual service to a private property.
@@ -39,7 +53,7 @@ class MyComponent {
 }
 ```
 
-## 3. Using the `MultilingualService` to create a new translation.
+## 4. Using the `MultilingualService` to create a new translation.
 
 **Note: See the `Translations System` document for guidance on how to enter new translations into the translations database via the translations generator.**
 
@@ -47,32 +61,39 @@ class MyComponent {
 
 Translate a string using the following methods:
 
-
-### Static string: 
+### Pipe - Static string: 
 
 ```javascript
 {{ Username is required | translate }}
 ```
 
-### Dynamic string: 
+### Pipe - Dynamic string: 
 
 ```javascript
 {{'Log in to @appConfig.platform@' | translate: {'appConfig.platform': appConfig.platform} }}
 ```
 
-### MultilingualService translate method:
+### Method - Static string:
 
 ```html
 <input type="text" [placeholder]="multilingualService.translate('Enter your username')">
 ```
 
-## 4. Using the `mltag` directive.
+### Method - Dynamic string:
 
-**Note: Use of the `mltag` directive has been depreciated in favour of the pipe methods (see point #3) above.**
+```javascript
+`${this.translation.translate('Are you sure you want to cancel the @message@?', { 'message': message })}`
+```
 
-**Note: Please replace instances of `mltag` with the pipe methods (see point #3) as you encounter them in the codebase.**
+## 5. Using the `mltag` directive.
 
-**Note: You'll have to import the `MultilingualModule` into the module that your component is declared in.**
+**Note: Use of the `mltag` directive has been depreciated in favour of the pipe and translate method (see point #4) above.**
+
+**Note: Please replace instances of `mltag` with the pipe and translate method (see point #4) as you encounter them in the codebase.**
+
+### Depreciated
+
+**Note: You will have to import the `MultilingualModule` into the module that your component is declared in.**
 
 An example of HTML in a component using the directive.
 
