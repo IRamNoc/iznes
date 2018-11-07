@@ -240,9 +240,7 @@ export class ManageOrdersComponent implements OnInit, AfterViewInit, OnDestroy {
     }
 
     ngOnInit() {
-        this.orderTypes = this.translation.translate(orderTypes);
-        this.orderStatuses = this.translation.translate(orderStatuses);
-        this.dateTypes = this.translation.translate(dateTypes);
+        this.translateSelectMenus();
 
         this.searchFilters.filtersApplied.subscribe(() => {
             this.datagridParams.setSearchFilters(this.searchFilters);
@@ -265,7 +263,10 @@ export class ManageOrdersComponent implements OnInit, AfterViewInit, OnDestroy {
         this.searchForm = this.searchFilters.getForm();
         this.setInitialTabs();
 
-        this.appSubscribe(this.requestedLanguage$, requested => this.getLanguage(requested));
+        this.appSubscribe(this.requestedLanguage$, (requested) => {
+            this.getLanguage(requested);
+            this.translateSelectMenus()
+        }); 
         this.appSubscribe(this.userType$, type => this.userType = type);
         this.appSubscribe(this.walletDirectory$, walletDirectory => this.walletDirectory = walletDirectory);
         this.appSubscribe(observableCombineLatest(this.myWallets$, this.connectedWallet$.pipe(filter(id => id !== 0)), this.menuSpec$), ([myWallets, walletId, menuSpec]) => {
@@ -334,6 +335,11 @@ export class ManageOrdersComponent implements OnInit, AfterViewInit, OnDestroy {
         this.detectChanges();
     }
 
+    ngAfterViewInit() {
+        this.resizeDataGrid();
+        this.isIznesAdmin;
+    }
+
     routeUpdate(params) {
         const order = this.getOrder(params);
         if (!order) {
@@ -376,19 +382,6 @@ export class ManageOrdersComponent implements OnInit, AfterViewInit, OnDestroy {
         return order;
     }
 
-    ngAfterViewInit() {
-        this.resizeDataGrid();
-
-        this.isIznesAdmin;
-    }
-
-    ngOnDestroy(): void {
-        this.searchFilters.clear();
-        this.ngRedux.dispatch(ofiManageOrderActions.setAllTabs(this.tabsControl));
-
-        this.manageOrdersService.resetOrderList();
-    }
-
     resizeDataGrid() {
         if (this.orderDatagrid) {
             this.orderDatagrid.resize();
@@ -401,6 +394,12 @@ export class ManageOrdersComponent implements OnInit, AfterViewInit, OnDestroy {
             this.changeDetectorRef.detectChanges();
         }
         this.resizeDataGrid();
+    }
+
+    translateSelectMenus() {
+        this.orderTypes = this.translation.translate(orderTypes);
+        this.orderStatuses = this.translation.translate(orderStatuses);
+        this.dateTypes = this.translation.translate(dateTypes);
     }
 
     getLanguage(language): void {
@@ -523,7 +522,6 @@ export class ManageOrdersComponent implements OnInit, AfterViewInit, OnDestroy {
         this.fundShare.mifiidIncidentalCosts = this.numberConverter.toFrontEnd(currentFundShare.mifiidIncidentalCosts);
         this.fundShare.shareClassCode = currentFundShare.shareClassCode;
         this.detectChanges();
-
     }
 
     setInitialTabs() {
@@ -926,5 +924,12 @@ export class ManageOrdersComponent implements OnInit, AfterViewInit, OnDestroy {
      */
     getPriceStatusCss(order: { knownNav: boolean }): 'text-warning' | 'text-success' {
         return order.knownNav ? 'text-success' : 'text-warning';
+    }
+
+    ngOnDestroy(): void {
+        this.searchFilters.clear();
+        this.ngRedux.dispatch(ofiManageOrderActions.setAllTabs(this.tabsControl));
+
+        this.manageOrdersService.resetOrderList();
     }
 }
