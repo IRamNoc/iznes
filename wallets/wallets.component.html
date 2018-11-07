@@ -188,10 +188,10 @@
                         <div class="form-group col-sm-6">
                             <label class="control-label">{{ 'Wallet Status' | translate }}</label>
                             <div class="locked-toggle">
-                                <span *ngIf="formControl.value.walletLocked == 0">
+                                <span *ngIf="!formControl.value.walletLocked" (click)="formControl.controls.walletLocked.setValue(1)">
                                     <i class="fa fa-unlock"></i>
                                 </span>
-                                <span *ngIf="formControl.value.walletLocked" (click)="formControl.value.walletLocked = 0">
+                                <span *ngIf="formControl.value.walletLocked" (click)="formControl.controls.walletLocked.setValue(0)">
                                     <i class="fa fa-lock"></i>
                                 </span>
 
