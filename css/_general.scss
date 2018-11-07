@@ -1028,6 +1028,92 @@ dp-date-picker div {
     }
 }
 
+/* CUSTOM SEARCH */
+
+.custom-search {
+    position: relative;
+    float: right;
+    text-align: right;
+    padding: 20px;
+    button {
+        background: transparent;
+        cursor: pointer;
+        border-radius: 0px 3px 3px 0px;
+        height: 34px;
+        border-left: 0;
+        transition: color .5s ease;
+        &:hover {
+            i {
+                color: #333;
+            }
+        }
+        i {
+            color: #777;
+        }
+    }
+    .search-filter {
+        opacity: 0;
+        font-size: 12px;
+        float: left;
+        margin-right: 20px;
+        padding: 3px 10px;
+        background: #57a5e3;
+        color: white;
+        border-radius: 5px;
+        position: relative;
+        top: 2px;
+        transition: opacity .5s ease;
+        &.show {
+            opacity: 1;
+        }
+        &:hover {
+            background: #e3625c;
+        }
+        a {
+            color: white;
+            text-decoration: none;
+            &:hover {
+                text-decoration: none;
+            }
+        }
+        i {
+            color: white;
+        }
+    }
+    input {
+        background: white;
+        border: 1px solid #dadada !important;
+        line-height: 30px;
+        height: 34px !important;
+        border-radius: 3px 0px 0px 3px;
+        font-size: 12px;
+        float: left;
+        display: block;
+        padding: 3px 10px;
+        &:focus {
+            border-color: #2199e8;
+        }
+    }
+    .searchCross{
+        position: absolute;
+        cursor: pointer;
+        right: 55px;
+        top: 31px;
+    }
+    &.left {
+        float: left;
+        padding: 20px 20px 20px 0px;
+        button {
+            float: left;
+        }
+        .search-filter {
+            margin-left: 20px;
+        }
+    }
+}
+
+
+
 /* TOOLTIPS */
 
 .tooltips {
