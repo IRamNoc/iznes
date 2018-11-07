@@ -272,6 +272,44 @@ export class ContractService {
         });
     }
 
+    public commitAuthorisation(index: number, contract: ContractModel): Promise<any> {
+        return new Promise((resolve, reject) => {
+            const contractJson = JSON.parse(this.toJSON(contract)).contractdata;
+            const address = contractJson.authorisations[index][0];
+            const commitment = [];
+            commitment[0] = [index, contractJson.authorisations[index][0]];
+            const authorise = [contractJson.authorisations[index]];
+
+            const asyncTaskPipe = this.walletNodeRequest.walletCommitToContract({
+                walletid: this.walletId,
+                address,
+                function: `${contract.function}_commit`,
+                contractdata: {
+                    commitment,
+                    contractfunction: `${contract.function}_commit`,
+                    issuingaddress: contract.issuingaddress,
+                    contractaddress: contract.address,
+                    parties: contractJson.parties,
+                    authorise,
+                },
+                contractaddress: contract.address,
+            });
+
+            this.redux.dispatch(SagaHelper.runAsync(
+                [],
+                [],
+                asyncTaskPipe,
+                {},
+                (data) => {
+                    resolve(data);
+                },
+                (data) => {
+                    reject(data);
+                },
+            ));
+        });
+    }
+
     public commitParameter(key: string, value: any, contract: ContractModel): Promise<any> {
         return new Promise((resolve, reject) => {
             const contractJson = JSON.parse(this.toJSON(contract)).contractdata;
@@ -341,6 +379,10 @@ export class ContractService {
             }
         });
         return jsonArray;
+    }
+
+    partyIsCommitted(issuingAddress, party): boolean {
+        return issuingAddress === party.sigAddress && !party.mustSign;
     }
 
     public getAddressLabel(address: string) {

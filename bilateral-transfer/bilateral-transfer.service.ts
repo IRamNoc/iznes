@@ -23,8 +23,8 @@ export class BilateralTransferService {
 
         this.addPartiesToContract(model, bilateralFormValues);
 
-        this.addWitnesses(model, bilateralFormValues.witness1[0].id);
-        this.addWitnesses(model, bilateralFormValues.witness2[0].id);
+        this.addWitnesses(model, _.get(bilateralFormValues, 'witness1[0].id', ''));
+        this.addWitnesses(model, _.get(bilateralFormValues, 'witness2[0].id', ''));
 
         return JSON.parse(this.contractService.toJSON(model));
     }
@@ -51,7 +51,7 @@ export class BilateralTransferService {
     private createParty(identifier, values): PartyModel {
         const party = new PartyModel();
         party.partyIdentifier = identifier;
-        party.mustSign = false;
+        party.mustSign = true;
         let isReceiver: boolean;
 
         if (identifier === 'partyA') {
