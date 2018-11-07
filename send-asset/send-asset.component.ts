@@ -175,12 +175,17 @@ export class SendAssetComponent implements OnInit, OnDestroy {
     setFormGroup(): void {
         const addressPattern = '^[A]{1}[A-Za-z0-9_-]{32}[AQgw]{1}$';
 
-        this.sendAssetForm = new FormGroup({
-            asset: new FormControl('', Validators.required),
-            assetAddress: new FormControl('', Validators.required),
-            recipient: new FormControl('', [Validators.required, Validators.pattern(addressPattern)]),
-            amount: new FormControl('', [Validators.required, Validators.pattern('^((?!(0))[0-9]+)$')]),
-        });
+        this.sendAssetForm = new FormGroup(
+            {
+                asset: new FormControl('', Validators.required),
+                assetAddress: new FormControl('', Validators.required),
+                recipient: new FormControl('', [Validators.required, Validators.pattern(addressPattern)]),
+                amount: new FormControl('', [Validators.required, Validators.pattern('^((?!(0))[0-9]+)$')]),
+            },
+            [
+                this.holdingsValidator,
+            ],
+        );
     }
 
     /**
