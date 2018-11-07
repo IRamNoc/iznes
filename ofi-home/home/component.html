@@ -1,26 +1,24 @@
 <div class="home-buttons">
     <h1>
-        <i class="fa fa-home"></i> Home <span *ngIf="connectedWalletName != ''">- {{connectedWalletName}}</span>
+        <i class="fa fa-home"></i> {{ 'Home' | translate }} <span *ngIf="connectedWalletName != ''">- {{connectedWalletName}}</span>
     </h1>
 
     <!--AM-->
     <app-dashboard *ngIf="userType == 36">
-        <app-counter-tile name="actions" icon="sitemap" [count]="" color="red" route="product-module/product">{{'My Products' | translate}}</app-counter-tile>
-        <app-counter-tile name="connections" icon="line-chart" [count]="" color="green" route="product-module/net-asset-value">{{'Net Asset Value' | translate}}</app-counter-tile>
-
-        <app-counter-tile name="messages" icon="list-ul" [count]="" color="orange" route="reports/precentralisation/funds">{{'Precentralisation Report' | translate}}</app-counter-tile>
-        <app-counter-tile name="contracts" icon="book" [count]="" color="blue" route="reports/holders-list">{{'Recordkeeping' | translate}}</app-counter-tile>
+        <app-counter-tile name="actions" icon="sitemap" [count]="" color="red" route="product-module/product">{{ 'My Products' | translate }}</app-counter-tile>
+        <app-counter-tile name="connections" icon="line-chart" [count]="" color="green" route="product-module/net-asset-value">{{ 'Net Asset Value' | translate }}</app-counter-tile>
+        <app-counter-tile name="messages" icon="list-ul" [count]="" color="orange" route="reports/precentralisation/funds">{{ 'Precentralisation Report' | translate }}</app-counter-tile>
+        <app-counter-tile name="contracts" icon="book" [count]="" color="blue" route="reports/holders-list">{{ 'Recordkeeping' | translate }}</app-counter-tile>
     </app-dashboard>
 
     <!--INV-->
     <app-dashboard *ngIf="userType == 46">
-        <app-counter-tile name="actions" icon="list-ul" [count]="" color="red" route="my-holdings">{{'My Holdings' | translate}}</app-counter-tile>
-        <app-counter-tile name="connections" icon="id-badge" [count]="" color="green" route="user-administration/subportfolio">{{'Sub-portfolio' | translate}}</app-counter-tile>
+        <app-counter-tile name="actions" icon="list-ul" [count]="" color="red" route="my-holdings">{{ 'My Holdings' | translate }}</app-counter-tile>
+        <app-counter-tile name="connections" icon="id-badge" [count]="" color="green" route="user-administration/subportfolio">{{ 'Sub-portfolio' | translate }}</app-counter-tile>
 
-        <app-counter-tile name="messages" icon="user" [count]="" color="orange" route="profile/my-information">{{'My Information' | translate}}</app-counter-tile>
-        <app-counter-tile name="contracts" icon="envelope" [count]="nbUnreadMessages" color="blue" route="messages/inbox">{{'My Messages' | translate}}</app-counter-tile>
+        <app-counter-tile name="messages" icon="user" [count]="" color="orange" route="profile/my-information">{{ 'My Information' | translate }}</app-counter-tile>
+        <app-counter-tile name="contracts" icon="envelope" [count]="nbUnreadMessages" color="blue" route="messages/inbox">{{ 'My Messages' | translate }}</app-counter-tile>
     </app-dashboard>
-
 </div>
 
 <div *ngIf="userType == 46">
