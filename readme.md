@@ -87,13 +87,13 @@ Translate a string using the following methods:
 
 ## 5. Using the `mltag` directive.
 
-**Note: Use of the `mltag` directive has been depreciated in favour of the pipe and translate method (see point #4) above.**
+**Note: Use of the `mltag` directive has been depreciated in favour of the pipe or the translate method (see point #4) above.**
 
-**Note: Please replace instances of `mltag` with the pipe and translate method (see point #4) as you encounter them in the codebase.**
+**Note: Please replace instances of `mltag` with the pipe or the translate method (see point #4) as you encounter them in the codebase.**
 
 ### Depreciated
 
-**Note: You will have to import the `MultilingualModule` into the module that your component is declared in.**
+**Note: You'll have to import the `MultilingualModule` into the module that your component is declared in.**
 
 An example of HTML in a component using the directive.
 
