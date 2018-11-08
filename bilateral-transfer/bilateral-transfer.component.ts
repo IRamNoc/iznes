@@ -47,12 +47,10 @@ export class BilateralTransferComponent implements OnInit, OnDestroy {
     }
 
     ngOnInit() {
-        this.createFormGroup();
-
         /* Get connected wallet ID */
         this.subscriptions.push(this.connectedWalletOb.subscribe((connectedWalletId) => {
             this.connectedWalletId = connectedWalletId;
-            this.bilateralTransferForm.controls.asset.reset();
+            this.createFormGroup();
         }));
 
         /* Get asset list */
@@ -195,6 +193,7 @@ export class BilateralTransferComponent implements OnInit, OnDestroy {
             {},
             (response) => {
                 this.showResponseModal(response);
+                this.createFormGroup();
             },
             (data) => {
                 console.log('ERROR', data);
