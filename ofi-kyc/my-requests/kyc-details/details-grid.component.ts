@@ -1,6 +1,5 @@
-import {Component, Input, Output, EventEmitter} from '@angular/core';
-
-import {KycDetailsService} from './details.service';
+import { Component, Input, Output, EventEmitter } from '@angular/core';
+import { KycDetailsService } from './details.service';
 
 @Component({
     selector: 'kyc-details-grid',
@@ -8,7 +7,6 @@ import {KycDetailsService} from './details.service';
     styleUrls : ['./details-grid.component.scss']
 })
 export class KycDetailsGridComponent {
-
     @Input() data;
     @Input() id;
     @Output() open: EventEmitter<string> = new EventEmitter();
@@ -23,11 +21,11 @@ export class KycDetailsGridComponent {
         this.open.emit('beneficiaries');
     }
 
-    isFromForm(id){
+    isFromForm(id) {
         return this.kycDetailsService.isFromForm(id);
     }
 
-    split(value: string){
+    split(value: string) {
         return value.split('|');
     }
 }

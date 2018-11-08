@@ -28,7 +28,7 @@
 
         <clr-tab *ngFor="let tab of tabs; let index = index">
             <button clrTabLink>
-                {{ 'Detail' | translate }} : {{tab.companyName}}
+                {{ 'Detail' | translate }}: {{tab.companyName}}
                 <i class="fa fa-times-circle text-warning" id="MyRequestsCloseBtn_{{index}}" (click)="closeTab(index)" [ngStyle]="{'margin-left': '14px', 'font-size':'18px'}"></i>
             </button>
 

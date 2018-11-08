@@ -36,13 +36,10 @@ export class OfiInvMyDocumentsComponent implements OnDestroy, OnInit, AfterViewI
 
     allUploadsFiles: any = [];
     nbUploads = 13;
-
     filesFromRedux = [];
-
     kycDocPath: string = '/iznes/kyc-inv-docs';
 
     unSubscribe: Subject<any> = new Subject();
-
 
     @select(['user', 'connected', 'connectedWallet']) connectedWalletOb;
     @select(['ofi', 'ofiKyc', 'invMyDocuments', 'requested']) requestedOfiInvMyDocsOb;
@@ -471,7 +468,7 @@ export class OfiInvMyDocumentsComponent implements OnDestroy, OnInit, AfterViewI
 
     /* On Destroy. */
     ngOnDestroy(): void {
-        /* Unsunscribe Observables. */
+        /* Unsubscribe Observables. */
         for (const key of this.subscriptions) {
             key.unsubscribe();
         }

@@ -4,7 +4,7 @@ import { select } from '@angular-redux/store';
 import { Subject } from 'rxjs';
 import { takeUntil, filter as rxFilter, map, tap } from 'rxjs/operators';
 import { isEmpty } from 'lodash';
-
+import { MultilingualService } from '@setl/multilingual';
 import { KycDetailsService } from './details.service';
 
 @Component({
@@ -12,7 +12,6 @@ import { KycDetailsService } from './details.service';
     templateUrl: './details.component.html',
 })
 export class KycDetailsComponent implements OnInit, OnDestroy {
-
     @Input() set kycID(kycID: number) {
         if (kycID) {
             this.getData(kycID);
@@ -39,13 +38,13 @@ export class KycDetailsComponent implements OnInit, OnDestroy {
     constructor(
         private route: ActivatedRoute,
         private kycDetailsService: KycDetailsService,
+        public translate: MultilingualService,
         private changeDetectorRef: ChangeDetectorRef,
     ) {
     }
 
     ngOnInit() {
         this.constructPanels();
-
         this.getBeneficiaries();
     }
 
@@ -70,7 +69,7 @@ export class KycDetailsComponent implements OnInit, OnDestroy {
     getIdentification() {
         return {
             id: 'request-details-identification',
-            title: 'Identification',
+            title: this.translate.translate('Identification'),
             open: true,
             children: [
                 this.getGeneral(),
@@ -82,8 +81,8 @@ export class KycDetailsComponent implements OnInit, OnDestroy {
     }
 
     getGeneral() {
-        const general = {
-            title: 'General Information',
+        let general = {
+            title: this.translate.translate('General Information'),
             data: '',
         };
 
@@ -106,7 +105,7 @@ export class KycDetailsComponent implements OnInit, OnDestroy {
     getCompany() {
         const company = {
             id: 'company',
-            title: 'Company Information',
+            title: this.translate.translate('Company Information'),
             data: '',
         };
 
@@ -129,7 +128,7 @@ export class KycDetailsComponent implements OnInit, OnDestroy {
     getBanking() {
         const banking = {
             id: 'banking',
-            title: 'Banking Information',
+            title: this.translate.translate('Banking Information'),
             data: '',
         };
 
@@ -157,8 +156,8 @@ export class KycDetailsComponent implements OnInit, OnDestroy {
     }
 
     getClassification() {
-        const classification = {
-            title: 'Classification Confirmation',
+        let classification = {
+            title: this.translate.translate('Classification Confirmation'),
             data: '',
         };
 
@@ -200,7 +199,7 @@ export class KycDetailsComponent implements OnInit, OnDestroy {
     getRiskProfile() {
         return {
             id: 'request-details-identification',
-            title: 'Risk Profile',
+            title: this.translate.translate('Risk Profile'),
             open: true,
             children: [
                 this.getRiskNature(),
@@ -211,8 +210,8 @@ export class KycDetailsComponent implements OnInit, OnDestroy {
     }
 
     getRiskNature() {
-        const riskNature = {
-            title: 'Investment\'s Nature',
+        let riskNature = {
+            title: this.translate.translate('Investment\'s Nature'),
             data: '',
         };
 
@@ -231,8 +230,8 @@ export class KycDetailsComponent implements OnInit, OnDestroy {
     }
 
     getRiskObjective() {
-        const riskObjectives = {
-            title: 'Investment\'s Objectives',
+        let riskObjectives = {
+            title: this.translate.translate('Investment\'s Objectives'),
             data: '',
         };
 
@@ -265,8 +264,8 @@ export class KycDetailsComponent implements OnInit, OnDestroy {
     }
 
     getRiskConstraint() {
-        const riskContraints = {
-            title: 'Investment\'s Constraints',
+        let riskContraints = {
+            title: this.translate.translate('Investment\'s Constraints'),
             data: '',
         };
 
@@ -295,8 +294,8 @@ export class KycDetailsComponent implements OnInit, OnDestroy {
     }
 
     getDocuments() {
-        const documents = {
-            title: 'Documents',
+        let documents = {
+            title: this.translate.translate('Documents'),
             data: '',
         };
 

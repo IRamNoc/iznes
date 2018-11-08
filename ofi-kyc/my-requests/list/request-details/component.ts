@@ -1,5 +1,4 @@
 import {
-    ChangeDetectionStrategy,
     ChangeDetectorRef,
     Component,
     OnDestroy,
@@ -27,7 +26,6 @@ import { KycStatus as statusList } from '@ofi/ofi-main/ofi-kyc/my-requests/reque
     selector: 'my-requests-details',
     styleUrls: ['./component.scss'],
     templateUrl: './component.html',
-    changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class MyRequestsDetailsComponent implements OnInit, AfterViewInit, OnDestroy {
     @Input() kycID: number;
@@ -71,6 +69,13 @@ export class MyRequestsDetailsComponent implements OnInit, AfterViewInit, OnDest
         this.initSubscriptions();
     }
 
+    ngAfterViewInit() {
+        setTimeout(() => {
+            document.getElementById('blocStatus').style.opacity = '1';
+            document.getElementById('blocStatus').style.marginTop = '0';
+        }, 200);
+    }
+
     initSubscriptions() {
         this.myKycList$
         .pipe(
@@ -92,8 +97,7 @@ export class MyRequestsDetailsComponent implements OnInit, AfterViewInit, OnDest
                 this.lastUpdate = convertUtcStrToLocalStr(kyc.lastUpdated, 'YYYY-MM-DD HH:mm:SS');
                 this.ofiKycService.fetchStatusAuditByKycID(this.kycID);
             }
-        })
-        ;
+        });
 
         this.statusAuditTrail$
         .takeUntil(this.unSubscribe)
@@ -113,15 +117,7 @@ export class MyRequestsDetailsComponent implements OnInit, AfterViewInit, OnDest
             }
 
             this.changeDetectorRef.markForCheck();
-        })
-        ;
-    }
-
-    ngAfterViewInit() {
-        setTimeout(() => {
-            document.getElementById('blocStatus').style.opacity = '1';
-            document.getElementById('blocStatus').style.marginTop = '0';
-        }, 200);
+        });
     }
 
     constructDisabledForm() {
@@ -133,16 +129,6 @@ export class MyRequestsDetailsComponent implements OnInit, AfterViewInit, OnDest
             rejectionMessage: new FormControl({ value: 'No message', disabled: true }),
             informationMessage: new FormControl({ value: 'No message', disabled: true }),
         });
-    }
-
-    ngOnDestroy(): void {
-        /* Unsunscribe Observables. */
-        for (let key of this.subscriptions) {
-            key.unsubscribe();
-        }
-
-        /* Detach the change detector on destroy. */
-        this.changeDetectorRef.detach();
     }
 
     redirectToRelatedKycs(kycID) {
@@ -175,5 +161,15 @@ export class MyRequestsDetailsComponent implements OnInit, AfterViewInit, OnDest
         this.newRequestService.storeCurrentKycs(kycIDs);
         this.ofiKycService.notifyAMKycContinuedFromAskMoreInfo(kycID);
         this.router.navigate(['my-requests', 'new'], extras);
+    }
+
+    ngOnDestroy(): void {
+        /* Unsunscribe Observables. */
+        for (let key of this.subscriptions) {
+            key.unsubscribe();
+        }
+
+        /* Detach the change detector on destroy. */
+        this.changeDetectorRef.detach();
     }
 }
