@@ -10,7 +10,6 @@ import { MultilingualService } from '@setl/multilingual';
 @Component({
     templateUrl: './place-orders.component.html',
     styleUrls: ['./place-orders.component.scss'],
-    changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class PlaceOrdersComponent implements OnInit, OnDestroy {
     language: string;
