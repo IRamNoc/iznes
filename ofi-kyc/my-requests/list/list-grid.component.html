@@ -1,37 +1,37 @@
 <clr-datagrid>
-    <clr-dg-column id="companyName_column">{{'Asset Management Companies' | translate}}</clr-dg-column>
-    <clr-dg-column id="status_column">{{'Status' | translate}}</clr-dg-column>
-    <clr-dg-column id="lastUpdated_column">{{'Update Date' | translate}}</clr-dg-column>
-    <clr-dg-column id="action_column">{{'Actions' | translate}}</clr-dg-column>
+    <clr-dg-column id="companyName_column">{{ 'Asset Management Companies' | translate }}</clr-dg-column>
+    <clr-dg-column id="status_column">{{ 'Status' | translate }}</clr-dg-column>
+    <clr-dg-column id="lastUpdated_column">{{ 'Update Date' | translate }}</clr-dg-column>
+    <clr-dg-column id="action_column" class="right">{{ 'Actions' | translate }}</clr-dg-column>
 
     <clr-dg-row *clrDgItems="let kyc of kycList; let i = index">
         <clr-dg-cell id="companyName_cell_{{i}}">{{kyc.companyName}}</clr-dg-cell>
         <clr-dg-cell id="status_cell_{{i}}" [ngSwitch]="kyc.status">
-            <span class="label label-danger" *ngSwitchCase="statusList.Rejected">{{'Rejected' | translate}}</span>
-            <span class="label label-success" *ngSwitchCase="statusList.Approved">{{'Accepted' | translate}}</span>
-            <span class="label label-info" *ngSwitchCase="statusList.Draft">{{'Draft' | translate}}</span>
-            <span class="label label-warning" *ngSwitchCase="statusList.WaitingForApproval">{{'Waiting Approval' | translate}}</span>
-            <span class="label label-warning" *ngSwitchCase="statusList.WaitingForMoreInfo">{{'Waiting Information' | translate}}</span>
+            <span class="label label-danger" *ngSwitchCase="statusList.Rejected">{{ 'Rejected' | translate }}</span>
+            <span class="label label-success" *ngSwitchCase="statusList.Approved">{{ 'Accepted' | translate }}</span>
+            <span class="label label-info" *ngSwitchCase="statusList.Draft">{{ 'Draft' | translate }}</span>
+            <span class="label label-warning" *ngSwitchCase="statusList.WaitingForApproval">{{ 'Waiting Approval' | translate }}</span>
+            <span class="label label-warning" *ngSwitchCase="statusList.WaitingForMoreInfo">{{ 'Waiting Information' | translate }}</span>
         </clr-dg-cell>
 
         <clr-dg-cell id="lastUpdated_cell_{{i}}">{{convertDate(kyc.lastUpdated)}}</clr-dg-cell>
-        <clr-dg-cell id="action_cell_{{i}}" class="actions">
+        <clr-dg-cell id="action_cell_{{i}}" class="actions right">
             <div *ngIf="buttonToDisplay(kyc.status) === 'view'">
-                <button id="view_btn_{{i}}" class="btn btn-sm" (click)="viewDetails(kyc)">
-                    {{'View' | translate}}
+                <button id="view_btn_{{i}}" class="btn btn-orange btn-sm" (click)="viewDetails(kyc)">
+                    <i class="fa fa-search"></i> {{ 'View' | translate }}
                 </button>
             </div>
             <div *ngIf="buttonToDisplay(kyc.status) === 'waitingInformation'">
                 <button id="waitingInfo_toComplete_btn_{{i}}" class="btn btn-orange btn-sm" (click)="viewDetails(kyc)">
-                    {{'To complete' | translate}}
+                    <i class="fa fa-pencil-square-o"></i> {{ 'To complete' | translate }}
                 </button>
             </div>
             <div *ngIf="buttonToDisplay(kyc.status) === 'draft'">
                 <button id="draft_toComplete_btn_{{i}}" class="btn btn-orange btn-sm" (click)="redirectToRelatedKycs(kyc.kycID)">
-                    {{'To complete' | translate}}
+                    <i class="fa fa-pencil-square-o"></i> {{ 'To complete' | translate }}
                 </button>
-                <button id="draft_delete_btn_{{i}}" class="btn btn-sm" (click)="confirmDeletion(kyc.kycID)">
-                    {{'Delete' | translate}}
+                <button id="draft_delete_btn_{{i}}" class="btn btn-danger btn-sm" (click)="confirmDeletion(kyc.kycID)">
+                    <i class="fa fa-trash-o"></i> {{ 'Delete' | translate }}
                 </button>
             </div>
         </clr-dg-cell>

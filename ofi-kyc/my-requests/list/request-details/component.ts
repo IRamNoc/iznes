@@ -19,7 +19,6 @@ import { fromJS } from 'immutable';
 import { groupBy, find } from 'lodash';
 import { NewRequestService } from '../../request/new-request.service';
 import { Router } from '@angular/router';
-
 import { MultilingualService } from '@setl/multilingual';
 import { convertUtcStrToLocalStr } from '@setl/utils/helper/m-date-wrapper/index';
 import { KycStatus as statusList } from '@ofi/ofi-main/ofi-kyc/my-requests/requests.service';
@@ -31,7 +30,6 @@ import { KycStatus as statusList } from '@ofi/ofi-main/ofi-kyc/my-requests/reque
     changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class MyRequestsDetailsComponent implements OnInit, AfterViewInit, OnDestroy {
-
     @Input() kycID: number;
 
     kycList: Array<any>;
@@ -55,12 +53,12 @@ export class MyRequestsDetailsComponent implements OnInit, AfterViewInit, OnDest
     @select(['ofi', 'ofiKyc', 'statusAuditTrail', 'data']) statusAuditTrail$;
 
     constructor(
-        private _fb: FormBuilder,
-        private _changeDetectorRef: ChangeDetectorRef,
+        private fb: FormBuilder,
+        private changeDetectorRef: ChangeDetectorRef,
         private alertsService: AlertsService,
-        private _ofiKycService: OfiKycService,
-        private _toasterService: ToasterService,
-        public _translate: MultilingualService,
+        private ofiKycService: OfiKycService,
+        private toasterService: ToasterService,
+        public translate: MultilingualService,
         private ngRedux: NgRedux<any>,
         private newRequestService: NewRequestService,
         private router: Router,
@@ -92,7 +90,7 @@ export class MyRequestsDetailsComponent implements OnInit, AfterViewInit, OnDest
                     phone: kyc.phoneNumber
                 });
                 this.lastUpdate = convertUtcStrToLocalStr(kyc.lastUpdated, 'YYYY-MM-DD HH:mm:SS');
-                this._ofiKycService.fetchStatusAuditByKycID(this.kycID);
+                this.ofiKycService.fetchStatusAuditByKycID(this.kycID);
             }
         })
         ;
@@ -114,7 +112,7 @@ export class MyRequestsDetailsComponent implements OnInit, AfterViewInit, OnDest
                 }
             }
 
-            this._changeDetectorRef.markForCheck();
+            this.changeDetectorRef.markForCheck();
         })
         ;
     }
@@ -127,7 +125,7 @@ export class MyRequestsDetailsComponent implements OnInit, AfterViewInit, OnDest
     }
 
     constructDisabledForm() {
-        this.disabledForm = this._fb.group({
+        this.disabledForm = this.fb.group({
             firstName: new FormControl({ value: 'first name', disabled: true }),
             lastName: new FormControl({ value: 'last name', disabled: true }),
             email: new FormControl({ value: 'email address', disabled: true }),
@@ -144,7 +142,7 @@ export class MyRequestsDetailsComponent implements OnInit, AfterViewInit, OnDest
         }
 
         /* Detach the change detector on destroy. */
-        this._changeDetectorRef.detach();
+        this.changeDetectorRef.detach();
     }
 
     redirectToRelatedKycs(kycID) {
@@ -175,7 +173,7 @@ export class MyRequestsDetailsComponent implements OnInit, AfterViewInit, OnDest
         }
 
         this.newRequestService.storeCurrentKycs(kycIDs);
-        this._ofiKycService.notifyAMKycContinuedFromAskMoreInfo(kycID);
+        this.ofiKycService.notifyAMKycContinuedFromAskMoreInfo(kycID);
         this.router.navigate(['my-requests', 'new'], extras);
     }
 }

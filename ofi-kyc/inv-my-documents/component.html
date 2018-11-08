@@ -1,17 +1,17 @@
 <!-- Breadcrumbs. -->
 <div class="header-breadcrumbs">
-    <h1><i class="fa fa-copy"></i> {{'My Documents' | translate}}</h1>
+    <h1><i class="fa fa-copy"></i> {{ 'My Documents' | translate }}</h1>
 </div>
 
 <div class="well p-1" style="margin-top: 4px;">
     <p>
-        {{'Please find below your identification documents.' | translate }}<br>
-        {{'These documents can be used for your next identification requests to management companies.' | translate }}
+        {{ 'Please find below your identification documents.' | translate }}<br>
+        {{ 'These documents can be used for your next identification requests to management companies.' | translate }}
     </p>
 
     <form [formGroup]="uploadMyDocumentsForm">
 
-        {{'I want to share all these documents to all asset managers' | translate}}
+        {{ 'I want to share all these documents to all asset managers' | translate }}
 
         <div class="switch-container" style="position: relative">
             <label class="switch">
@@ -23,13 +23,13 @@
         <div>
             <div class="hr-line-dashed"></div>
 
-            <h3>{{'If you have an authorisation or are authorised by decree or are a listed company on a European market' | translate}}:</h3>
+            <h3>{{ 'If you have an authorisation or are authorised by decree or are a listed company on a European market' | translate }}:</h3>
 
             <br>
 
             <div class="row">
                 <div class="col-xl-6">
-                    <b>{{'Proof of approval or copy of order (if applicable)' | translate}}</b>
+                    <b>{{ 'Proof of approval or copy of order (if applicable)' | translate }}</b>
                     <table class="tableUpload">
                         <tr>
                             <td>
@@ -38,7 +38,11 @@
                             <td>
                                 <div class="switch-container">
                                     <label class="switch">
-                                        <input type="checkbox" id="shareUpload1" formControlName="shareUpload1" [(ngModel)]="allUploadsFiles[kycEnums.kycproofofapprovaldoc].common" (change)="checkToggles(kycEnums.kycproofofapprovaldoc, uploadMyDocumentsForm.controls['shareUpload1'].value)">
+                                        <input type="checkbox" 
+                                                id="shareUpload1" 
+                                                formControlName="shareUpload1" 
+                                                [(ngModel)]="allUploadsFiles[kycEnums.kycproofofapprovaldoc].common" 
+                                                (change)="checkToggles(kycEnums.kycproofofapprovaldoc, uploadMyDocumentsForm.controls['shareUpload1'].value)">
                                         <span class="slider round"></span>
                                     </label>
                                 </div>
@@ -50,7 +54,7 @@
                     </table>
                 </div>
                 <div class="col-xl-6">
-                    <b>{{'ISIN code of the listed share (if applicable)' | translate}}</b>
+                    <b>{{ 'ISIN code of the listed share (if applicable)' | translate }}</b>
                     <table class="tableUpload">
                         <tr>
                             <td>
@@ -59,7 +63,11 @@
                             <td>
                                 <div class="switch-container">
                                     <label class="switch">
-                                        <input type="checkbox" id="shareUpload2" formControlName="shareUpload2" [(ngModel)]="allUploadsFiles[kycEnums.kycisincodedoc].common" (change)="checkToggles(kycEnums.kycisincodedoc, uploadMyDocumentsForm.controls['shareUpload2'].value)">
+                                        <input type="checkbox" 
+                                                id="shareUpload2" 
+                                                formControlName="shareUpload2" 
+                                                [(ngModel)]="allUploadsFiles[kycEnums.kycisincodedoc].common" 
+                                                (change)="checkToggles(kycEnums.kycisincodedoc, uploadMyDocumentsForm.controls['shareUpload2'].value)">
                                         <span class="slider round"></span>
                                     </label>
                                 </div>
@@ -73,7 +81,7 @@
             </div>
             <div class="row">
                 <div class="col-xl-6">
-                    <b>{{'Wolfsberg questionnaire or equivalent' | translate}}</b>
+                    <b>{{ 'Wolfsberg questionnaire or equivalent' | translate }}</b>
                     <table class="tableUpload">
                         <tr>
                             <td>
@@ -82,7 +90,11 @@
                             <td>
                                 <div class="switch-container">
                                     <label class="switch">
-                                        <input type="checkbox" id="shareUpload3" formControlName="shareUpload3" [(ngModel)]="allUploadsFiles[kycEnums.kycwolfsbergdoc].common" (change)="checkToggles(kycEnums.kycwolfsbergdoc, uploadMyDocumentsForm.controls['shareUpload3'].value)">
+                                        <input type="checkbox" 
+                                                id="shareUpload3" 
+                                                formControlName="shareUpload3" 
+                                                [(ngModel)]="allUploadsFiles[kycEnums.kycwolfsbergdoc].common" 
+                                                (change)="checkToggles(kycEnums.kycwolfsbergdoc, uploadMyDocumentsForm.controls['shareUpload3'].value)">
                                         <span class="slider round"></span>
                                     </label>
                                 </div>
@@ -98,12 +110,12 @@
 
             <div class="hr-line-dashed"></div>
 
-            <h3>{{'If this is not the case' | translate}}:</h3>
+            <h3>{{ 'If this is not the case' | translate }}:</h3>
 
             <br>
             <div class="row">
                 <div class="col-xl-6">
-                    <b>{{'Statuses "certified" by the duly authorized representative of the client' | translate}}</b>
+                    <b>{{ 'Statuses "certified" by the duly authorized representative of the client' | translate }}</b>
                     <table class="tableUpload">
                         <tr>
                             <td>
@@ -112,7 +124,11 @@
                             <td>
                                 <div class="switch-container">
                                     <label class="switch">
-                                        <input type="checkbox" id="shareUpload4" formControlName="shareUpload4" [(ngModel)]="allUploadsFiles[kycEnums.kycstatuscertifieddoc].common" (change)="checkToggles(kycEnums.kycstatuscertifieddoc, uploadMyDocumentsForm.controls['shareUpload4'].value)">
+                                        <input type="checkbox" 
+                                                id="shareUpload4" 
+                                                formControlName="shareUpload4" 
+                                                [(ngModel)]="allUploadsFiles[kycEnums.kycstatuscertifieddoc].common" 
+                                                (change)="checkToggles(kycEnums.kycstatuscertifieddoc, uploadMyDocumentsForm.controls['shareUpload4'].value)">
                                         <span class="slider round"></span>
                                     </label>
                                 </div>
@@ -124,7 +140,7 @@
                     </table>
                 </div>
                 <div class="col-xl-6">
-                    <b>{{'Kbis extract (or equivalent) less than 3 month old' | translate}}</b>
+                    <b>{{ 'Kbis extract (or equivalent) less than 3 month old' | translate }}</b>
                     <table class="tableUpload">
                         <tr>
                             <td>
@@ -133,7 +149,11 @@
                             <td>
                                 <div class="switch-container">
                                     <label class="switch">
-                                        <input type="checkbox" id="shareUpload5" formControlName="shareUpload5" [(ngModel)]="allUploadsFiles[kycEnums.kyckbisdoc].common" (change)="checkToggles(kycEnums.kyckbisdoc, uploadMyDocumentsForm.controls['shareUpload5'].value)">
+                                        <input type="checkbox" 
+                                                id="shareUpload5" 
+                                                formControlName="shareUpload5" 
+                                                [(ngModel)]="allUploadsFiles[kycEnums.kyckbisdoc].common" 
+                                                (change)="checkToggles(kycEnums.kyckbisdoc, uploadMyDocumentsForm.controls['shareUpload5'].value)">
                                         <span class="slider round"></span>
                                     </label>
                                 </div>
@@ -147,7 +167,7 @@
             </div>
             <div class="row">
                 <div class="col-xl-6">
-                    <b>{{'Latest audited annual report' | translate}}</b>
+                    <b>{{ 'Latest audited annual report' | translate }}</b>
                     <table class="tableUpload">
                         <tr>
                             <td>
@@ -156,7 +176,11 @@
                             <td>
                                 <div class="switch-container">
                                     <label class="switch">
-                                        <input type="checkbox" id="shareUpload6" formControlName="shareUpload6" [(ngModel)]="allUploadsFiles[kycEnums.kycannualreportdoc].common" (change)="checkToggles(kycEnums.kycannualreportdoc, uploadMyDocumentsForm.controls['shareUpload6'].value)">
+                                        <input type="checkbox" 
+                                                id="shareUpload6" 
+                                                formControlName="shareUpload6" 
+                                                [(ngModel)]="allUploadsFiles[kycEnums.kycannualreportdoc].common" 
+                                                (change)="checkToggles(kycEnums.kycannualreportdoc, uploadMyDocumentsForm.controls['shareUpload6'].value)">
                                         <span class="slider round"></span>
                                     </label>
                                 </div>
@@ -168,7 +192,7 @@
                     </table>
                 </div>
                 <div class="col-xl-6">
-                    <b>{{'National identity card or valid passport or residence card of the signatory with photograph' | translate}}</b>
+                    <b>{{ 'National identity card or valid passport or residence card of the signatory with photograph' | translate }}</b>
                     <table class="tableUpload">
                         <tr>
                             <td>
@@ -177,7 +201,11 @@
                             <td>
                                 <div class="switch-container">
                                     <label class="switch">
-                                        <input type="checkbox" id="shareUpload7" formControlName="shareUpload7" [(ngModel)]="allUploadsFiles[kycEnums.kycidorpassportdoc].common" (change)="checkToggles(kycEnums.kycidorpassportdoc, uploadMyDocumentsForm.controls['shareUpload7'].value)">
+                                        <input type="checkbox" 
+                                                id="shareUpload7" 
+                                                formControlName="shareUpload7" 
+                                                [(ngModel)]="allUploadsFiles[kycEnums.kycidorpassportdoc].common" 
+                                                (change)="checkToggles(kycEnums.kycidorpassportdoc, uploadMyDocumentsForm.controls['shareUpload7'].value)">
                                         <span class="slider round"></span>
                                     </label>
                                 </div>
@@ -191,12 +219,12 @@
             </div>
             <div class="hr-line-dashed"></div>
 
-            <h3>{{'Document to upload in both cases' | translate}}:</h3>
+            <h3>{{ 'Document to upload in both cases' | translate }}:</h3>
 
             <br>
             <div class="row">
                 <div class="col-xl-6">
-                    <b>{{'Official documents listing the shareholders with their % of ownership if greater than 25%.' | translate}}</b>
+                    <b>{{ 'Official documents listing the shareholders with their % of ownership if greater than 25%.' | translate }}</b>
                     <table class="tableUpload">
                         <tr>
                             <td>
@@ -205,7 +233,10 @@
                             <td>
                                 <div class="switch-container">
                                     <label class="switch">
-                                        <input type="checkbox" id="shareUpload8" formControlName="shareUpload8" [(ngModel)]="allUploadsFiles[kycEnums.kyclistshareholdersdoc].common" (change)="checkToggles(kycEnums.kyclistshareholdersdoc, uploadMyDocumentsForm.controls['shareUpload8'].value)">
+                                        <input type="checkbox" id="shareUpload8" 
+                                                formControlName="shareUpload8" 
+                                                [(ngModel)]="allUploadsFiles[kycEnums.kyclistshareholdersdoc].common" 
+                                                (change)="checkToggles(kycEnums.kyclistshareholdersdoc, uploadMyDocumentsForm.controls['shareUpload8'].value)">
                                         <span class="slider round"></span>
                                     </label>
                                 </div>
@@ -217,7 +248,7 @@
                     </table>
                 </div>
                 <div class="col-xl-6">
-                    <b>{{'Official document (or equivalent) listing the directors' | translate}}</b>
+                    <b>{{ 'Official document (or equivalent) listing the directors' | translate }}</b>
                     <table class="tableUpload">
                         <tr>
                             <td>
@@ -226,7 +257,11 @@
                             <td>
                                 <div class="switch-container">
                                     <label class="switch">
-                                        <input type="checkbox" id="shareUpload9" formControlName="shareUpload9" [(ngModel)]="allUploadsFiles[kycEnums.kyclistdirectorsdoc].common" (change)="checkToggles(kycEnums.kyclistdirectorsdoc, uploadMyDocumentsForm.controls['shareUpload9'].value)">
+                                        <input type="checkbox" 
+                                                id="shareUpload9" 
+                                                formControlName="shareUpload9" 
+                                                [(ngModel)]="allUploadsFiles[kycEnums.kyclistdirectorsdoc].common" 
+                                                (change)="checkToggles(kycEnums.kyclistdirectorsdoc, uploadMyDocumentsForm.controls['shareUpload9'].value)">
                                         <span class="slider round"></span>
                                     </label>
                                 </div>
@@ -241,7 +276,7 @@
             <br>
             <div class="row">
                 <div class="col-xl-6">
-                    <b>{{'List of persons authorised to give instructions' | translate}}</b>
+                    <b>{{ 'List of persons authorised to give instructions' | translate }}</b>
                     <table class="tableUpload">
                         <tr>
                             <td>
@@ -250,7 +285,11 @@
                             <td>
                                 <div class="switch-container">
                                     <label class="switch">
-                                        <input type="checkbox" id="shareUpload10" formControlName="shareUpload10" [(ngModel)]="allUploadsFiles[kycEnums.kyclistauthoriseddoc].common" (change)="checkToggles(kycEnums.kyclistauthoriseddoc, uploadMyDocumentsForm.controls['shareUpload10'].value)">
+                                        <input type="checkbox" 
+                                                id="shareUpload10" 
+                                                formControlName="shareUpload10" 
+                                                [(ngModel)]="allUploadsFiles[kycEnums.kyclistauthoriseddoc].common" 
+                                                (change)="checkToggles(kycEnums.kyclistauthoriseddoc, uploadMyDocumentsForm.controls['shareUpload10'].value)">
                                         <span class="slider round"></span>
                                     </label>
                                 </div>
@@ -262,7 +301,7 @@
                     </table>
                 </div>
                 <div class="col-xl-6">
-                    <b>{{'List of beneficial owners' | translate}}</b>
+                    <b>{{ 'List of beneficial owners' | translate }}</b>
                     <table class="tableUpload">
                         <tr>
                             <td>
@@ -271,7 +310,11 @@
                             <td>
                                 <div class="switch-container">
                                     <label class="switch">
-                                        <input type="checkbox" id="shareUpload11" formControlName="shareUpload11" [(ngModel)]="allUploadsFiles[kycEnums.kycbeneficialownersdoc].common" (change)="checkToggles(kycEnums.kycbeneficialownersdoc, uploadMyDocumentsForm.controls['shareUpload11'].value)">
+                                        <input type="checkbox" 
+                                                id="shareUpload11" 
+                                                formControlName="shareUpload11" 
+                                                [(ngModel)]="allUploadsFiles[kycEnums.kycbeneficialownersdoc].common" 
+                                                (change)="checkToggles(kycEnums.kycbeneficialownersdoc, uploadMyDocumentsForm.controls['shareUpload11'].value)">
                                         <span class="slider round"></span>
                                     </label>
                                 </div>
@@ -286,7 +329,7 @@
             <br>
             <div class="row">
                 <div class="col-xl-6">
-                    <b>{{'Tax self certification form (CRS)' | translate}}</b>
+                    <b>{{ 'Tax self certification form (CRS)' | translate }}</b>
                     <table class="tableUpload">
                         <tr>
                             <td>
@@ -295,7 +338,11 @@
                             <td>
                                 <div class="switch-container">
                                     <label class="switch">
-                                        <input type="checkbox" id="shareUpload12" formControlName="shareUpload12" [(ngModel)]="allUploadsFiles[kycEnums.kyctaxcertificationdoc].common" (change)="checkToggles(kycEnums.kyctaxcertificationdoc, uploadMyDocumentsForm.controls['shareUpload12'].value)">
+                                        <input type="checkbox" 
+                                                id="shareUpload12" 
+                                                formControlName="shareUpload12" 
+                                                [(ngModel)]="allUploadsFiles[kycEnums.kyctaxcertificationdoc].common" 
+                                                (change)="checkToggles(kycEnums.kyctaxcertificationdoc, uploadMyDocumentsForm.controls['shareUpload12'].value)">
                                         <span class="slider round"></span>
                                     </label>
                                 </div>
@@ -307,7 +354,7 @@
                     </table>
                 </div>
                 <div class="col-xl-6">
-                    <b>{{'Form W-8BEN-E (FACTA) if available' | translate}}</b>
+                    <b>{{ 'Form W-8BEN-E (FACTA) if available' | translate }}</b>
                     <table class="tableUpload">
                         <tr>
                             <td>
@@ -316,7 +363,11 @@
                             <td>
                                 <div class="switch-container">
                                     <label class="switch">
-                                        <input type="checkbox" id="shareUpload13" formControlName="shareUpload13" [(ngModel)]="allUploadsFiles[kycEnums.kycw8benefatcadoc].common" (change)="checkToggles(kycEnums.kycw8benefatcadoc, uploadMyDocumentsForm.controls['shareUpload13'].value)">
+                                        <input type="checkbox" 
+                                                id="shareUpload13" 
+                                                formControlName="shareUpload13" 
+                                                [(ngModel)]="allUploadsFiles[kycEnums.kycw8benefatcadoc].common" 
+                                                (change)="checkToggles(kycEnums.kycw8benefatcadoc, uploadMyDocumentsForm.controls['shareUpload13'].value)">
                                         <span class="slider round"></span>
                                     </label>
                                 </div>

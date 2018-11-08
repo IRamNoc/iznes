@@ -1,10 +1,10 @@
-import {Component, OnInit, OnDestroy} from '@angular/core';
-import {Subscription, Subject} from 'rxjs';
-import {takeUntil} from 'rxjs/operators';
-import {NgRedux, select} from '@angular-redux/store';
-import {findIndex} from 'lodash';
-import {ClearMyKycRequestedIds} from '@ofi/ofi-main/ofi-store/ofi-kyc/kyc-request/actions';
-import {ClearMyKycListRequested, SetMyKycOpenTab, ClearMyKycOpenTab, SetMyKycOpenTabActive} from '@ofi/ofi-main/ofi-store/ofi-kyc/kyc-list/actions';
+import { Component, OnInit, OnDestroy } from '@angular/core';
+import { Subscription, Subject } from 'rxjs';
+import { takeUntil } from 'rxjs/operators';
+import { NgRedux, select } from '@angular-redux/store';
+import { findIndex } from 'lodash';
+import { ClearMyKycRequestedIds } from '@ofi/ofi-main/ofi-store/ofi-kyc/kyc-request/actions';
+import { ClearMyKycListRequested, SetMyKycOpenTab, ClearMyKycOpenTab, SetMyKycOpenTabActive } from '@ofi/ofi-main/ofi-store/ofi-kyc/kyc-list/actions';
 
 @Component({
     styleUrls: ['./my-requests.component.scss'],
@@ -16,9 +16,9 @@ export class MyRequestsComponent implements OnInit, OnDestroy {
     @select(['ofi', 'ofiKyc', 'myKycList', 'tabs']) openTabs$;
 
     isListDisplayed;
-    kycList: Array<any>;
-    subscriptions: Array<Subscription> = [];
-    tabs: Array<any> = [];
+    kycList: any[];
+    subscriptions: Subscription[] = [];
+    tabs: any[] = [];
 
     private unsubscribe: Subject<any> = new Subject();
 
@@ -38,8 +38,7 @@ export class MyRequestsComponent implements OnInit, OnDestroy {
             )
             .subscribe(kycList => {
                 this.kycList = kycList;
-            })
-        ;
+            });
 
         this.openTabs$
             .pipe(
@@ -47,8 +46,7 @@ export class MyRequestsComponent implements OnInit, OnDestroy {
             )
             .subscribe(openTabs => {
                 this.tabs = openTabs;
-            })
-        ;
+            });
     }
 
     selectedKyc(kyc) {
@@ -64,7 +62,7 @@ export class MyRequestsComponent implements OnInit, OnDestroy {
                 {
                     kycID: kycID,
                     companyName: kyc.companyName,
-                    displayed: true
+                    displayed: true,
                 }
             );
             this.ngRedux.dispatch(action);
