@@ -40,7 +40,7 @@ dependencies {
     testCompile group: 'joda-time', name: 'joda-time', version: '2.10.1'
 
     compile group: 'org.seleniumhq.selenium', name: 'selenium-chrome-driver', version: '3.4.0'
-    compile group: 'io.setl', name: 'websocket-client',     version: '1.0.14-SNAPSHOT'
+    compile group: 'io.setl', name: 'websocket-client',     version: '1.0.15-SNAPSHOT'
     compile group: 'io.setl', name: 'restapi-client',  version: '1.0.10-SNAPSHOT'
     compile 'com.google.code.gson:gson:2.8.2'
     compile 'org.apache.commons:commons-lang3:3.6'
