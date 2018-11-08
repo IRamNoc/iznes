@@ -416,6 +416,7 @@ export class ManageOrdersComponent implements OnInit, AfterViewInit, OnDestroy {
     getLanguage(language): void {
         if (language) {
             this.language = language;
+            this.detectChanges(true);
 
             this.toConfigDate = {
                 ...this.toConfigDate,
