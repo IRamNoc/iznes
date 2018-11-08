@@ -28,7 +28,6 @@ import { MultilingualService } from '@setl/multilingual';
     selector: 'app-investor-fund-list',
     templateUrl: './component.html',
     styleUrls: ['./component.scss'],
-    changeDetection: ChangeDetectionStrategy.OnPush
 })
 
 export class OfiInvestorFundListComponent implements OnInit, OnDestroy {
@@ -101,6 +100,7 @@ export class OfiInvestorFundListComponent implements OnInit, OnDestroy {
 
         this.subscriptionsArray.push(this.requestedLanguage$.subscribe((language) => {
             this.language = language;
+            this.changeDetectorRef.detectChanges();
         }));
     }
     

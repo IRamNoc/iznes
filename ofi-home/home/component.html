@@ -15,7 +15,6 @@
     <app-dashboard *ngIf="userType == 46">
         <app-counter-tile name="actions" icon="list-ul" [count]="" color="red" route="my-holdings">{{ 'My Holdings' | translate }}</app-counter-tile>
         <app-counter-tile name="connections" icon="id-badge" [count]="" color="green" route="user-administration/subportfolio">{{ 'Sub-portfolio' | translate }}</app-counter-tile>
-
         <app-counter-tile name="messages" icon="user" [count]="" color="orange" route="profile/my-information">{{ 'My Information' | translate }}</app-counter-tile>
         <app-counter-tile name="contracts" icon="envelope" [count]="nbUnreadMessages" color="blue" route="messages/inbox">{{ 'My Messages' | translate }}</app-counter-tile>
     </app-dashboard>

@@ -35,7 +35,6 @@ import {
 @Component({
     styleUrls: ['./component.scss'],
     templateUrl: './component.html',
-    changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class OfiHomeComponent implements AfterViewInit, OnInit, OnDestroy {
 
@@ -108,6 +107,7 @@ export class OfiHomeComponent implements AfterViewInit, OnInit, OnDestroy {
 
         this.subscriptions['language'] = this.requestedLanguage$.subscribe((language) => {
             this.language = language;
+            this.changeDetectorRef.detectChanges();
         });
     }
 
