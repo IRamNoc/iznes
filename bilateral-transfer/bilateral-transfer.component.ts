@@ -12,6 +12,7 @@ import {
     MyWalletsService,
     WalletnodeTxService,
 } from '@setl/core-req-services';
+import { MultilingualService } from '@setl/multilingual';
 
 @Component({
     selector: 'bilateral-transfer',
@@ -41,7 +42,8 @@ export class BilateralTransferComponent implements OnInit, OnDestroy {
                 private walletnodeTxService: WalletnodeTxService,
                 private myWalletService: MyWalletsService,
                 private bilateralTransferService: BilateralTransferService,
-                private alertsService: AlertsService) {
+                private alertsService: AlertsService,
+                private translate: MultilingualService) {
     }
 
     ngOnInit() {
@@ -158,13 +160,13 @@ export class BilateralTransferComponent implements OnInit, OnDestroy {
         }
 
         if (witness1 && witness2) {
-            existingErrors = g.controls.witness2.errors
+            existingErrors = g.controls.witness2.errors;
             if (existingErrors !== null) delete existingErrors.matchesWitness;
             witness1 === witness2 ?
                 g.controls.witness2.setErrors(
                     _.isEmpty(existingErrors) ?
                         { matchesWitness: true } :
-                        Object.assign({}, existingErrors, { matchesWitness: true })
+                        Object.assign({}, existingErrors, { matchesWitness: true }),
                 ) :
                 g.controls.witness2.setErrors(_.isEmpty(existingErrors) ? null : existingErrors);
         }
@@ -191,14 +193,45 @@ export class BilateralTransferComponent implements OnInit, OnDestroy {
             [],
             asyncTaskPipe,
             {},
-            () => {
-                this.alertsService.generate('success', 'Bilateral Transfer successful.');
+            (response) => {
+                this.showResponseModal(response);
             },
             (data) => {
                 console.log('ERROR', data);
-                this.alertsService.generate('error', 'Bilateral Transfer failed.');
+                this.alertsService.generate('error', this.translate.translate('Bilateral Transfer failed.'));
             },
         ));
+    }
+
+    /**
+     * Shows Response Modal
+     * -------------------
+     * Triggers a success alert displaying details of the newly created contract
+     *
+     * @param response
+     */
+    showResponseModal(response) {
+        if (_.get(response, '[1].data.contractaddress', false) && _.get(response, '[1].data.hash', false)) {
+            this.alertsService.create('success', `
+            <table class="table grid">
+                <tbody>
+                    <tr>
+                        <td class="left"><b>${this.translate.translate('Contract')}:</b></td>
+                        <td>${response[1].data.contractaddress}</td>
+                    </tr>
+                    <tr>
+                        <td class="left"><b>${this.translate.translate('Creator Address')}:</b></td>
+                        <td>${this.bilateralTransferForm.controls.assetAddress.value[0].id}</td>
+                    </tr>
+                    <tr>
+                        <td class="left"><b>${this.translate.translate('Tx hash')}:</b></td>
+                        <td>${response[1].data.hash.substring(0, 10)}...</td>
+                    </tr>
+                </tbody>
+            </table>`);
+        } else {
+            this.alertsService.create('success', 'Contract created successfully.');
+        }
     }
 
     ngOnDestroy() {
