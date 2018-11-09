@@ -11,7 +11,6 @@ import org.openqa.selenium.By;
 import org.openqa.selenium.JavascriptExecutor;
 
 import java.io.IOException;
-import java.sql.SQLException;
 
 import static SETLAPIHelpers.DatabaseHelper.setDBToProdOff;
 import static SETLAPIHelpers.DatabaseHelper.setDBToProdOn;
@@ -94,7 +93,7 @@ public class OpenCSDEntireFlowAcceptanceTest {
 
         String[] uFundDetails = generateRandomFundsDetails();
         String[] uShareDetails = generateRandomShareDetails();
-        String[] umbFundDetails = generateRandomUmbrellaFundsDetails();
+        String umbFundDetails = generateRandomUmbrellaFundName();
         String[] uIsin = generateRandomISIN();
         String umbLei = generateRandomLEI();
         String fundLei = generateRandomLEI();
@@ -117,17 +116,17 @@ public class OpenCSDEntireFlowAcceptanceTest {
         navigateToDropdown("menu-my-products");
         navigateToPageByID("menu-product-home");
         selectAddUmbrellaFund();
-        fillUmbrellaDetailsNotCountry(umbFundDetails[0], umbLei);
+        fillUmbrellaDetailsNotCountry(umbFundDetails, umbLei);
         searchAndSelectTopDropdownXpath("uf_domicile", "Jordan");
         submitUmbrellaFund();
         assertPopupNextFundNo("Fund");
-        searchUmbrellaTable(umbFundDetails[0]);
-        getUmbrellaTableRow(0, umbFundDetails[0], umbLei, managementCompExpected, "Jordan");
-        fillOutFundDetailsStep1("yes", umbFundDetails[0]);
+        searchUmbrellaTable(umbFundDetails);
+        getUmbrellaTableRow(0, umbFundDetails, umbLei, managementCompExpected, "Jordan");
+        fillOutFundDetailsStep1("yes", umbFundDetails);
         fillOutFundDetailsStep2(uFundDetails[0], fundLei);
         assertPopupNextFundNo("Share");
         searchFundsTable(uFundDetails[0]);
-        getFundTableRow(0, uFundDetails[0], fundLei, "EUR", managementCompExpected, "Afghanistan", "Contractual Fund", umbFundDetails[0]);
+        getFundTableRow(0, uFundDetails[0], fundLei, "EUR", managementCompExpected, "Afghanistan", "Contractual Fund", umbFundDetails);
 
         createShare(uFundDetails[0], uShareDetails[0], uIsin[0]);
         searchSharesTable(uShareDetails[0]);

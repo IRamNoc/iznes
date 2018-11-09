@@ -5,7 +5,6 @@ import com.setl.UI.common.SETLUtils.ScreenshotRule;
 import com.setl.UI.common.SETLUtils.TestMethodPrinterRule;
 import custom.junit.runners.OrderedJUnit4ClassRunner;
 
-import org.apache.xpath.SourceTree;
 import org.junit.Before;
 import org.junit.Ignore;
 import org.junit.Rule;
@@ -19,31 +18,13 @@ import java.sql.SQLException;
 import static SETLAPIHelpers.DatabaseHelper.setDBTwoFAOff;
 import static com.setl.UI.common.SETLUIHelpers.SetUp.driver;
 import static com.setl.UI.common.SETLUIHelpers.SetUp.testSetUp;
-import static com.setl.UI.common.SETLUIHelpers.FundsDetailsHelper.generateRandomEmail;
-import static com.setl.UI.common.SETLUIHelpers.FundsDetailsHelper.generateRandomLEI;
-import static com.setl.UI.common.SETLUIHelpers.FundsDetailsHelper.generateRandomSubPortfolioIBAN;
 import static com.setl.UI.common.SETLUIHelpers.KYCDetailsHelper.*;
-import static com.setl.UI.common.SETLUIHelpers.MemberDetailsHelper.scrollElementIntoViewById;
-import static com.setl.UI.common.SETLUIHelpers.MemberDetailsHelper.scrollElementIntoViewByXpath;
-import static com.setl.UI.common.SETLUIHelpers.SetUp.*;
-import static com.setl.UI.common.SETLUIHelpers.UserDetailsHelper.generateRandomUserDetails;
-import static com.setl.openCSDClarityTests.UI.Iznes1MyProduct.Funds.OpenCSD2FundsAcceptanceTest.getInvestorInvitationToken;
-import static com.setl.openCSDClarityTests.UI.Iznes4General.OpenCSDGeneralAcceptanceTest.*;
 import static org.junit.Assert.assertTrue;
 import static org.junit.Assert.fail;
 
 @RunWith(OrderedJUnit4ClassRunner.class)
 
 public class OpenCSDManagementCompanyOnboarding {
-
-    public static String connectionString = "jdbc:mysql://localhost:9998/setlnet?nullNamePatternMatchesAll=true";
-
-    // Defines username and password to connect to database server.
-    static String username = "root";
-    static String password = "nahafusi61hucupoju78";
-
-    static String testusername = "TestUserNullInfo";
-    static String testpassword = "Testpass123";
 
     JavascriptExecutor jse = (JavascriptExecutor)driver;
 

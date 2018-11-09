@@ -23,12 +23,12 @@ import static SETLAPIHelpers.DatabaseHelper.setDBToProdOn;
 import static SETLAPIHelpers.DatabaseHelper.setDBTwoFAOff;
 import static com.setl.UI.common.SETLUIHelpers.FundsDetailsHelper.generateRandomEmail;
 import static com.setl.UI.common.SETLUIHelpers.FundsDetailsHelper.generateRandomLEI;
-import static com.setl.UI.common.SETLUIHelpers.FundsDetailsHelper.generateRandomSubPortfolioIBAN;
+import static com.setl.UI.common.SETLUIHelpers.FundsDetailsHelper.generateRandomIBAN;
 import static com.setl.UI.common.SETLUIHelpers.KYCDetailsHelper.*;
 import static com.setl.UI.common.SETLUIHelpers.MemberDetailsHelper.scrollElementIntoViewById;
 import static com.setl.UI.common.SETLUIHelpers.MemberDetailsHelper.scrollElementIntoViewByXpath;
 import static com.setl.UI.common.SETLUIHelpers.SetUp.*;
-import static com.setl.openCSDClarityTests.UI.Iznes1MyProduct.Funds.OpenCSD2FundsAcceptanceTest.getInvestorInvitationToken;
+import static SETLAPIHelpers.DatabaseHelper.*;
 import static com.setl.openCSDClarityTests.UI.Iznes4General.OpenCSDGeneralAcceptanceTest.*;
 import static org.junit.Assert.assertTrue;
 import static org.junit.Assert.fail;
@@ -41,17 +41,7 @@ import static org.openqa.selenium.support.ui.ExpectedConditions.*;
 
 public class OpenCSDKYCModuleAcceptanceTest {
 
-    public static String connectionString = "jdbc:mysql://localhost:9998/setlnet?nullNamePatternMatchesAll=true";
-
-    // Defines username and password to connect to database server.
-    static String username = "root";
-    static String password = "nahafusi61hucupoju78";
-
-    static String testusername = "TestUserNullInfo";
-    static String testpassword = "Testpass123";
-
     JavascriptExecutor jse = (JavascriptExecutor)driver;
-
 
     @Rule
     public ScreenshotRule screenshotRule = new ScreenshotRule();
@@ -126,7 +116,7 @@ public class OpenCSDKYCModuleAcceptanceTest {
         String INVPassword = "asdASD123";
 
         String[] email = generateRandomEmail();
-        String[] uSubIBANDetails = generateRandomSubPortfolioIBAN();
+        String iban = generateRandomIBAN();
 
         loginAndVerifySuccess(AMUsername, AMPassword);
         waitForHomePageToLoad();
@@ -139,7 +129,7 @@ public class OpenCSDKYCModuleAcceptanceTest {
         KYCProcessStep2();
         KYCProcessStep3GeneralInfoComplete(companyName);
         KYCProcessStep3CompanyInfoComplete();
-        KYCProcessStep3BankingInfoComplete(companyName, uSubIBANDetails[0]);
+        KYCProcessStep3BankingInfoComplete(companyName, iban);
         KYCProcessStep4();
         KYCProcessStep5();
         KYCProcessStep6(firstName + " " + lastName, "SETL Developments LTD", "Ipswich", "Head");
@@ -162,7 +152,7 @@ public class OpenCSDKYCModuleAcceptanceTest {
         String INVPassword = "asdASD123";
 
         String[] email = generateRandomEmail();
-        String[] uSubIBANDetails = generateRandomSubPortfolioIBAN();
+        String iban = generateRandomIBAN();
 
         loginAndVerifySuccess(AMUsername, AMPassword);
         waitForHomePageToLoad();
@@ -175,7 +165,7 @@ public class OpenCSDKYCModuleAcceptanceTest {
         KYCProcessStep2();
         KYCProcessStep3GeneralInfoComplete(companyName);
         KYCProcessStep3CompanyInfoComplete();
-        KYCProcessStep3BankingInfoComplete(companyName, uSubIBANDetails[0]);
+        KYCProcessStep3BankingInfoComplete(companyName, iban);
         KYCProcessStep4();
         KYCProcessStep5();
         KYCProcessStep6(firstName + " " + lastName, "SETL Developments LTD", "Ipswich", "Head");
@@ -225,7 +215,7 @@ public class OpenCSDKYCModuleAcceptanceTest {
         String INVPassword = "asdASD123";
 
         String[] email = generateRandomEmail();
-        String[] uSubIBANDetails = generateRandomSubPortfolioIBAN();
+        String iban = generateRandomIBAN();
 
 
         loginAndVerifySuccess(AMUsername, AMPassword);
@@ -242,7 +232,7 @@ public class OpenCSDKYCModuleAcceptanceTest {
         KYCProcessStep2();
         KYCProcessStep3GeneralInfoComplete(companyName);
         KYCProcessStep3CompanyInfoComplete();
-        KYCProcessStep3BankingInfoComplete(companyName, uSubIBANDetails[0]);
+        KYCProcessStep3BankingInfoComplete(companyName, iban);
         KYCProcessStep4();
         KYCProcessStep5();
         KYCProcessStep6("Jordan Miller", "SETL Developments LTD", "Ipswich", "Head");
@@ -261,7 +251,7 @@ public class OpenCSDKYCModuleAcceptanceTest {
         String AMUsername = "am";
         String AMPassword = "alex01";
         String INVPassword = "asdASD123";
-        String[] uSubIBANDetails = generateRandomSubPortfolioIBAN();
+        String iban = generateRandomIBAN();
 
 
         String[] email = generateRandomEmail();
@@ -278,7 +268,7 @@ public class OpenCSDKYCModuleAcceptanceTest {
         KYCProcessStep2();
         KYCProcessStep3GeneralInfoComplete(companyName);
         KYCProcessStep3CompanyInfoComplete();
-        KYCProcessStep3BankingInfoComplete(companyName, uSubIBANDetails[0]);
+        KYCProcessStep3BankingInfoComplete(companyName, iban);
         KYCProcessStep4();
         KYCProcessClose();
         KYCProcessRequestListValidation("No","Success!", companyName, "Draft", "No", "", "");
@@ -297,7 +287,7 @@ public class OpenCSDKYCModuleAcceptanceTest {
         String INVPassword = "asdASD123";
 
         String[] email = generateRandomEmail();
-        String[] uSubIBANDetails = generateRandomSubPortfolioIBAN();
+        String iban = generateRandomIBAN();
 
 
         loginAndVerifySuccess(AMUsername, AMPassword);
@@ -312,7 +302,7 @@ public class OpenCSDKYCModuleAcceptanceTest {
         KYCProcessStep2();
         KYCProcessStep3GeneralInfoComplete(companyName);
         KYCProcessStep3CompanyInfoComplete();
-        KYCProcessStep3BankingInfoComplete(companyName, uSubIBANDetails[0]);
+        KYCProcessStep3BankingInfoComplete(companyName, iban);
         KYCProcessStep4();
         KYCProcessStep5();
         KYCProcessStep6(firstName + " " + lastName, "SETL Developments LTD", "Ipswich", "Head");

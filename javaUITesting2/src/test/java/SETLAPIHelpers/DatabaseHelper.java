@@ -425,5 +425,106 @@ public class DatabaseHelper {
         return result;
     }
 
+    public static void validateDatabaseFundExists(int expectedCount, String UFundName) throws SQLException {
+        conn = DriverManager.getConnection(connectionString, DBUsername, DBPassword);
+        //for the query
+        Statement stmt = conn.createStatement();
+        ResultSet rs = null;
+        try {
+            rs = stmt.executeQuery("select * from setlnet.tblIznFund where fundName =  " + "\"" + UFundName + "\"");
+            int rows = 0;
+
+            if (rs.last()) {
+                rows = rs.getRow();
+                // Move to back to the beginning
+
+                rs.beforeFirst();
+            }
+            assertEquals("There should be exactly " + expectedCount + " record(s) matching (ignoring case): ", expectedCount, rows);
+        } catch (Exception e) {
+            e.printStackTrace();
+            fail();
+        } finally {
+            conn.close();
+            stmt.close();
+            rs.close();
+        }
+    }
+
+    public static void validateDatabaseShareExists(int expectedCount, String UShareName) throws SQLException {
+        conn = DriverManager.getConnection(connectionString, DBUsername, DBPassword);
+        //for the query
+        Statement stmt = conn.createStatement();
+        ResultSet rs = null;
+        try {
+            rs = stmt.executeQuery("select * from setlnet.tblIznFundShare where fundShareName =  " + "\"" + UShareName + "\"");
+            int rows = 0;
+
+            if (rs.last()) {
+                rows = rs.getRow();
+                // Move to back to the beginning
+
+                rs.beforeFirst();
+            }
+            assertEquals("There should be exactly " + expectedCount + " record(s) matching (ignoring case): ", expectedCount, rows);
+        } catch (Exception e) {
+            e.printStackTrace();
+            fail();
+        } finally {
+            conn.close();
+            stmt.close();
+            rs.close();
+        }
+    }
+
+    public static String getInvestorInvitationToken(String investorEmail) throws SQLException {
+        conn = DriverManager.getConnection(connectionString, DBUsername, DBPassword);
+        Statement stmt = conn.createStatement();
+        ResultSet rs = null;
+        String invEmaila = "";
+        try {
+            String getInvEmail = "select invitationToken from setlnet.tblIznInvestorInvitation where email = " + "\"" + investorEmail + "\"";
+            rs = stmt.executeQuery(getInvEmail);
+            rs.last();
+            invEmaila = rs.getString("invitationToken");
+
+
+        } catch (Exception e) {
+            e.printStackTrace();
+            fail();
+        } finally {
+            conn.close();
+            stmt.close();
+            rs.close();
+        }
+        return invEmaila;
+    }
+
+    public static void validateDatabaseInvestorInvited ( int expectedCount, String UInvestorEmail) throws SQLException {
+        conn = DriverManager.getConnection(connectionString, DBUsername, DBPassword);
+        //for the query
+        Statement stmt = conn.createStatement();
+        ResultSet rs = null;
+        try {
+            rs = stmt.executeQuery("select * from setlnet.tblIznInvestorInvitation where email =  " + "\"" + UInvestorEmail + "\"");
+            int rows = 0;
+
+            if (rs.last()) {
+                rows = rs.getRow();
+                // Move to back to the beginning
+
+                rs.beforeFirst();
+            }
+            assertEquals("There should be exactly " + expectedCount + " record(s) matching (ignoring case): ", expectedCount, rows);
+        } catch (Exception e) {
+            e.printStackTrace();
+            fail();
+        } finally {
+            conn.close();
+            stmt.close();
+            rs.close();
+        }
+    }
+
 }
 

@@ -94,8 +94,8 @@ public class OpenCSDSprint4AcceptanceTest {
     private int createFund() throws InterruptedException, IOException {
 
         selectAddUmbrellaFund();
-        String [] umbFundDetails = generateRandomUmbrellaFundsDetails();
-        fillUmbrellaDetailsNotCountry(umbFundDetails[0], generateRandomLEI());
+        String umbFundDetails = generateRandomUmbrellaFundName();
+        fillUmbrellaDetailsNotCountry(umbFundDetails, generateRandomLEI());
         searchAndSelectTopDropdownXpath("uf_domicile", "Jordan");
 
         //Store title number count for Funds
@@ -110,7 +110,7 @@ public class OpenCSDSprint4AcceptanceTest {
         String [] uFundDetails = generateRandomFundsDetails();
 
         //fillOutFundDetailsStep1(umbFundDetails[0]);
-        fillOutFundDetails(uFundDetails[0], umbFundDetails[0]);
+        fillOutFundDetails(uFundDetails[0], umbFundDetails);
         return fundCount;
     }
 }

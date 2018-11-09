@@ -41,7 +41,7 @@ dependencies {
 
     compile group: 'org.seleniumhq.selenium', name: 'selenium-chrome-driver', version: '3.4.0'
     compile group: 'io.setl', name: 'websocket-client',     version: '1.0.15-SNAPSHOT'
-    compile group: 'io.setl', name: 'restapi-client',  version: '1.0.10-SNAPSHOT'
+    compile group: 'io.setl', name: 'restapi-client',  version: '1.0.15-SNAPSHOT'
     compile 'com.google.code.gson:gson:2.8.2'
     compile 'org.apache.commons:commons-lang3:3.6'
     compile group: 'commons-io', name: 'commons-io', version: '2.6'
