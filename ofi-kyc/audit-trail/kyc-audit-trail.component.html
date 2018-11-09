@@ -1,13 +1,13 @@
 <div class="header-breadcrumbs">
     <h1>
-        <i class="fa fa-home"></i> {{'My Request Audit Trail:' | translate}} {{amCompanyName}}
+        <i class="fa fa-home"></i> {{ 'My Request Audit Trail' | translate }}: {{amCompanyName}}
     </h1>
 </div>
 
 <clr-tabs>
     <clr-tab>
         <button id="auditTrailTabBtn" clrTabLink>
-            <i class="fa fa-th-list"></i> {{'Audit Trail' | translate}}
+            <i class="fa fa-th-list"></i> {{ 'Audit Trail' | translate }}
         </button>
         <clr-tab-content *clrIfActive>
 
@@ -18,7 +18,7 @@
             </div>
 
             <div class="text-center mt-1">
-                <button id="client_folder_back" class="btn btn-info" [routerLink]="['/my-requests/list']">{{'Back' | translate}}</button>
+                <button id="client_folder_back" class="btn btn-info" [routerLink]="['/my-requests/list']">{{ 'Back' | translate }}</button>
             </div>
 
         </clr-tab-content>
