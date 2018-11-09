@@ -1,5 +1,5 @@
 <div class="text-input-list">
-    <h2>{{title}}</h2>
+    <h2>{{ title | translate }}</h2>
     <form [formGroup]="contentForm" *ngIf="getContentKeys().length">
         <section class="form-block">
             <div class="row">
@@ -10,5 +10,5 @@
             </div>
         </section>
     </form>
-    <p *ngIf="additionnalText">{{additionnalText}}</p>
+    <p *ngIf="additionnalText">{{ additionnalText | translate }}</p>
 </div>

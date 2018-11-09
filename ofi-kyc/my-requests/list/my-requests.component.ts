@@ -11,7 +11,6 @@ import { ClearMyKycListRequested, SetMyKycOpenTab, ClearMyKycOpenTab, SetMyKycOp
     templateUrl: './my-requests.component.html'
 })
 export class MyRequestsComponent implements OnInit, OnDestroy {
-
     @select(['ofi', 'ofiKyc', 'myKycList', 'kycList']) myKycList$;
     @select(['ofi', 'ofiKyc', 'myKycList', 'tabs']) openTabs$;
 

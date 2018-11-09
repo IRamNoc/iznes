@@ -13,7 +13,6 @@ import { OfiKycService } from '@ofi/ofi-main/ofi-req-services/ofi-kyc/service';
 
 @Injectable()
 export class ConsumeTokenService {
-
     private amcID;
 
     constructor(
@@ -62,5 +61,4 @@ export class ConsumeTokenService {
 
         this.router.navigate(destination, extras);
     }
-
 }
