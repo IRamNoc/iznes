@@ -932,7 +932,7 @@ export const financialInstrumentsList = [
     },
     {
         id: 'PierrePapierSCPI',
-        text: 'Pierre Papier (SCPI)',
+        text: 'Pierre Papier (SCPI, etc.)',
     },
     {
         id: 'other',

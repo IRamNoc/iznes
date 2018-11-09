@@ -18,9 +18,9 @@
         </tr>
         <tr style="background-color: transparent">
             <td colspan="2" class="text-right">
-                <button type="button" class="btn btn-primary" style="margin: 0;" [routerLink]="['/my-requests/list/kyc-audit-trail', kycID]">{{ 'View previous updates' | translate }}</button>
+                <button type="button" class="btn btn-primary" style="margin: 0;" [routerLink]="['/my-requests/list/kyc-audit-trail', kycID]">{{ 'View Previous Updates' | translate }}</button>
                 <br *ngIf="requestDetailStatus === 'WaitingForMoreInfo'">
-                <button type="button" class="btn btn-success" (click)="redirectToRelatedKycs(kycID)" *ngIf="requestDetailStatus === 'WaitingForMoreInfo'" style="margin-right: 4px;">{{ 'Update your request' | translate }}</button>
+                <button type="button" class="btn btn-success" (click)="redirectToRelatedKycs(kycID)" *ngIf="requestDetailStatus === 'WaitingForMoreInfo'" style="margin-right: 4px;">{{ 'Update Your Request' | translate }}</button>
             </td>
         </tr>
     </table>
@@ -35,11 +35,11 @@
             <div class="hr-line-dashed"></div>
         </ng-container>
         <ng-container *ngIf="requestDetailStatus === 'WaitingForMoreInfo'">
-            <h1 class="mt-1">{{ 'Ask for more Information Detail' | translate }}</h1>
+            <h1 class="mt-1">{{ 'Ask For More Information Detail' | translate }}</h1>
             <p>{{ '@companyName@ asked you for more information about your identification request. Here is the message associated:' | translate: { 'companyName': companyName } }}</p>
             <textarea name="informationMessage" id="informationMessage" rows="4" cols="50" formControlName="informationMessage" style="width: 75%"></textarea>
             <p>
-                {{ 'You can update the requested information by clicking on the button "Update your request" or send a message to your asset manager by clicking' | translate }}
+                {{ 'You can update the requested information by clicking on the button "Update Your Request" or send a message to your asset manager by clicking' | translate }}
                 <a [routerLink]="'/messages/inbox'">{{ 'here' | translate }}</a>
             </p>
             <div class="hr-line-dashed"></div>

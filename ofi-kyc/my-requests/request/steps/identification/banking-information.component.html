@@ -32,7 +32,7 @@
                                     formControlName="establishmentName"
                                     placeholder="{{ 'Fill in the name of your bank establishment' | translate }}">
                             <span class="field-error" *ngIf="hasError([i,'establishmentName'], ['required'])">{{ 'Field is required' | translate }}</span>
-                            <span class="field-error" *ngIf="hasError([i,'establishmentName'], ['maxlength'])">{{ 'Field is too long' | translate }}</span>
+                            <span class="field-error" *ngIf="hasError([i,'establishmentName'], ['maxlength'])">{{ 'Name is too long' | translate }}</span>
                         </div>
                         <div class="form-group required-field col-xs-4">
                             <label class="control-label" for="{{'iban-' + i}}">{{ 'IBAN' | translate }}</label>
@@ -78,7 +78,7 @@
                                     formControlName="zipCode"
                                     placeholder="{{ 'Fill in a ZIP code' | translate }}">
                             <span class="field-error" *ngIf="hasError([i,'zipCode'], ['required'])">{{ 'Field is required' | translate }}</span>
-                            <span class="field-error" *ngIf="hasError([i,'zipCode'], ['maxlength'])">{{ 'Field is too long' | translate }}</span>
+                            <span class="field-error" *ngIf="hasError([i,'zipCode'], ['maxlength'])">{{ 'ZIP is too long' | translate }}</span>
                         </div>
                         <div class="form-group required-field col-xs-4">
                             <label class="control-label" for="{{'city-' + i}}">{{ 'City' | translate }}</label>
@@ -87,7 +87,7 @@
                                     formControlName="city"
                                     placeholder="{{ 'Fill in a city' | translate }}">
                             <span class="field-error" *ngIf="hasError([i,'city'], ['required'])">{{ 'Field is required' | translate }}</span>
-                            <span class="field-error" *ngIf="hasError([i,'city'], ['maxlength'])">{{ 'Field is too long' | translate }}</span>
+                            <span class="field-error" *ngIf="hasError([i,'city'], ['maxlength'])">{{ 'City is too long' | translate }}</span>
                         </div>
                         <div class="form-group required-field col-xs-4">
                             <label class="control-label" for="{{'country' + i}}">{{ 'Country' | translate }}</label>

@@ -23,12 +23,12 @@
             </div>
             <div *ngIf="buttonToDisplay(kyc.status) === 'waitingInformation'">
                 <button id="waitingInfo_toComplete_btn_{{i}}" class="btn btn-orange btn-sm" (click)="viewDetails(kyc)">
-                    <i class="fa fa-pencil-square-o"></i> {{ 'To complete' | translate }}
+                    <i class="fa fa-pencil-square-o"></i> {{ 'To Complete' | translate }}
                 </button>
             </div>
             <div *ngIf="buttonToDisplay(kyc.status) === 'draft'">
                 <button id="draft_toComplete_btn_{{i}}" class="btn btn-orange btn-sm" (click)="redirectToRelatedKycs(kyc.kycID)">
-                    <i class="fa fa-pencil-square-o"></i> {{ 'To complete' | translate }}
+                    <i class="fa fa-pencil-square-o"></i> {{ 'To Complete' | translate }}
                 </button>
                 <button id="draft_delete_btn_{{i}}" class="btn btn-danger btn-sm" (click)="confirmDeletion(kyc.kycID)">
                     <i class="fa fa-trash-o"></i> {{ 'Delete' | translate }}

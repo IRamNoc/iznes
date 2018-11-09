@@ -34,7 +34,7 @@
                             {{ 'If you wish to exclude a category of products and/or services from the scope or your status, please specify below:' | translate }}
                         </label>
                         <textarea class="form-control" id="excludeProducts" formControlName="excludeProducts"></textarea>
-                        <span class="field-error" *ngIf="hasError(['pro', 'excludeProducts'], ['maxlength'])">{{ 'Field is too long' | translate }}</span>
+                        <span class="field-error" *ngIf="hasError(['pro', 'excludeProducts'], ['maxlength'])">{{ 'Value is too long' | translate }}</span>
                     </div>
                 </div>
                 <div class="row">
@@ -60,7 +60,7 @@
                         <label for="lastName">{{'Last Name' | translate }}</label>
                         <input type="text" id="lastName" formControlName="lastName">
                         <span class="field-error" *ngIf="hasError(['nonPro', 'lastName'], ['required'])">{{ 'Field is required' | translate }}</span>
-                        <span class="field-error" *ngIf="hasError(['nonPro', 'lastName'], ['maxlength'])">{{' Name is too long' | translate }}</span>
+                        <span class="field-error" *ngIf="hasError(['nonPro', 'lastName'], ['maxlength'])">{{ 'Name is too long' | translate }}</span>
                     </div>
                 </div>
                 <div class="row">
@@ -88,7 +88,7 @@
                         <input type="number"
                                 id="numberYearsCurrentPosition"
                                 formControlName="numberYearsCurrentPosition">
-                        <span class="field-error" *ngIf="hasError(['nonPro', 'numberYearsCurrentPosition'])">{{' Field is required' | translate }}</span>
+                        <span class="field-error" *ngIf="hasError(['nonPro', 'numberYearsCurrentPosition'])">{{ 'Field is required' | translate }}</span>
                     </div>
                 </div>
                 <div class="row">
@@ -168,7 +168,7 @@
                                 formControlName="activitiesBenefitFromExperienceSpecification"
                                 placeholder="{{ 'Provide an explanation regarding the previous answer' | translate }}">
                         <span class="field-error" *ngIf="hasError('nonPro.activitiesBenefitFromExperienceSpecification', ['required'])">{{ 'Field is required' | translate }}</span>
-                        <span class="field-error" *ngIf="hasError('nonPro.activitiesBenefitFromExperienceSpecification', ['maxlength'])">{{ 'Field is too long' | translate }}</span>
+                        <span class="field-error" *ngIf="hasError('nonPro.activitiesBenefitFromExperienceSpecification', ['maxlength'])">{{ 'Value is too long' | translate }}</span>
                     </div>
                 </div>
             </div>
