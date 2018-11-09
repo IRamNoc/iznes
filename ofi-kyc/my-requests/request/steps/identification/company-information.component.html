@@ -20,11 +20,24 @@
                     <ng-select class="multiline" [items]="sectorActivityList" id="sectorActivity" formControlName="sectorActivity" placeholder="{{'Select a sector of activity' | translate}}"></ng-select>
                     <span class="field-error" *ngIf="hasError('sectorActivity')">{{'Field is required' | translate}}</span>
                 </div>
+<<<<<<< HEAD
                 <div class="form-group required-field col-sm-6" *ngIf="!isDisabled('sectorActivityText')">
                     <label class="control-label" for="sectorActivityText">&nbsp;</label>
                     <input type="text" id="sectorActivityText" formControlName="sectorActivityText" placeholder="{{'Please specify' | translate}}">
                     <span class="field-error" *ngIf="hasError('sectorActivityText', ['required'])">{{'Field is required' | translate}}</span>
                     <span class="field-error" *ngIf="hasError('sectorActivityText', ['maxlength'])">{{'Field is too long' | translate}}</span>
+=======
+
+                <div class="form-group required-field col-md-6 col-xl-3" *ngIf="!isDisabled('investorOnBehalfThirdParties')">
+                    <label class="control-label" for="investorOnBehalfList">{{ 'Investor on behalf of third parties' | translate }}</label>
+                    <ng-select class="large-select multiline"
+                                id="investorOnBehalfList"
+                                [items]="investorOnBehalfList"
+                                [allowClear]="true"
+                                [formControl]="form.get('investorOnBehalfThirdParties')"
+                                placeholder="{{ 'Please select the type of third parties your company manages' | translate }}"></ng-select>
+                    <span class="field-error" *ngIf="hasError('investorOnBehalfThirdParties')">{{ 'Field is required' | translate }}</span>
+>>>>>>> TG-3291 fix(translations-my-asset-managers): Add missing translations
                 </div>
             </div>
 
@@ -148,9 +161,28 @@
 
             <div class="row">
                 <div class="form-group required-field col-sm-6">
+<<<<<<< HEAD
                     <label class="control-label" for="balanceSheetTotal">{{'Balance Sheet Total' | translate}}</label>
                     <input type="number" id="balanceSheetTotal" formControlName="balanceSheetTotal" placeholder="{{'Define a value (€)' | translate}}">
                     <span class="field-error" *ngIf="hasError('balanceSheetTotal')">{{'Field is required' | translate}}</span>
+=======
+                    <label class="control-label" for="netRevenuesNetIncome">{{ 'Net Revenues or Net Income' | translate }}</label>
+                    <input type="number"
+                            id="netRevenuesNetIncome"
+                            formControlName="netRevenuesNetIncome"
+                            placeholder="€">
+                    <span class="field-error" *ngIf="hasError('netRevenuesNetIncome', ['required'])">{{ 'Field is required' | translate }}</span>
+                    <span class="field-error" *ngIf="hasError('netRevenuesNetIncome', ['min'])">{{ 'Number should not be negative' | translate }}</span>
+                </div>
+                <div class="form-group required-field col-sm-6">
+                    <label class="control-label" for="shareholderEquity">{{ 'Shareholder\'s Equity' | translate }}</label>
+                    <input type="number"
+                            id="shareholderEquity"
+                            formControlName="shareholderEquity"
+                            placeholder="€">
+                    <span class="field-error" *ngIf="hasError('shareholderEquity', ['required'])">{{ 'Field is required' | translate }}</span>
+                    <span class="field-error" *ngIf="hasError('shareholderEquity', ['min'])">{{ 'Number should not be negative' | translate }}</span>
+>>>>>>> TG-3291 fix(translations-my-asset-managers): Add missing translations
                 </div>
             </div>
 
