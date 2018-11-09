@@ -3,7 +3,7 @@
         <div class="col-sm-9">
             <a href="#" (click)="open = !open; $event.preventDefault();">
                 <i class="fa fa-chevron-right" [class.rotate]="open"></i>
-                <h2>{{'General information' | translate}}</h2>
+                <h2>{{ 'General Information' | translate }}</h2>
             </a>
         </div>
         <div class="col-sm-3 text-right">
@@ -31,10 +31,13 @@
 
             <div class="row">
                 <div class="form-group required-field col-sm-6">
-                    <label class="control-label" for="leiCode">{{'LEI Code' | translate}}</label>
-                    <input type="text" id="leiCode" formControlName="leiCode" placeholder="{{'If non applicable please fill in the value &quot;N/A&quot; here'}}">
-                    <span class="field-error" *ngIf="hasError('leiCode', ['required'])">{{'Field is required' | translate}}</span>
-                    <span class="field-error" *ngIf="hasError('leiCode', ['pattern'])">{{'Incorrect LEI, should be 20 characters long' | translate}}</span>
+                    <label class="control-label" for="leiCode">{{ 'LEI Code' | translate }}</label>
+                    <input type="text"
+                            id="leiCode"
+                            formControlName="leiCode"
+                            placeholder="{{ 'If non applicable please fill in the value &quot;N/A&quot; here' }}">
+                    <span class="field-error" *ngIf="hasError('leiCode', ['required'])">{{ 'Field is required' | translate }}</span>
+                    <span class="field-error" *ngIf="hasError('leiCode', ['pattern'])">{{ 'LEI must be 20 characters long' | translate }}</span>
                 </div>
             </div>
 
@@ -64,8 +67,11 @@
 
                 <div class="form-group col-sm-6">
                     <label>&nbsp;</label>
-                    <input type="text" id="registeredCompanyAddressLine2" formControlName="registeredCompanyAddressLine2" placeholder="{{'Address line 2' | translate}}">
-                    <span class="field-error" *ngIf="hasError('registeredCompanyAddressLine2', ['maxlength'])">{{'Field is too long' | translate}}</span>
+                    <input type="text"
+                            id="registeredCompanyAddressLine2"
+                            formControlName="registeredCompanyAddressLine2"
+                            placeholder="{{ 'Address Line 2' | translate }}">
+                    <span class="field-error" *ngIf="hasError('registeredCompanyAddressLine2', ['maxlength'])">{{ 'Address is too long' | translate }}</span>
                 </div>
             </div>
 
@@ -96,7 +102,7 @@
                     <div class="checkbox-inline">
                         <input type="checkbox" id="commercialDomiciliation" formControlName="commercialDomiciliation">
                         <label for="commercialDomiciliation">
-                            {{'Commercial domiciliation : Does the client have a commercial address (mailbox: P/O BOX)?' | translate}}
+                            {{ 'Commercial domiciliation: Does the client have a commercial address (mailbox: P/O BOX)?' | translate }}
                         </label>
                     </div>
                 </div>

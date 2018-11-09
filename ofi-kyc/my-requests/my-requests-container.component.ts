@@ -15,7 +15,8 @@ export class MyRequestsContainerComponent implements OnInit, OnDestroy{
 
     constructor(
         private ofiKycService : OfiKycService
-    ){}
+    ) {
+    }
 
     ngOnInit(){
         this.initSubscriptions();

@@ -4,11 +4,9 @@ import { get as getValue, set as setValue, filter, isEmpty, castArray } from 'lo
 import { select } from '@angular-redux/store';
 import { Subject } from 'rxjs';
 import { filter as rxFilter, map, take, takeUntil } from 'rxjs/operators';
-
 import { FormPercentDirective } from '@setl/utils/directives/form-percent/formpercent';
 import { IdentificationService, buildBeneficiaryObject } from '../identification.service';
 import { DocumentsService } from '../documents.service';
-
 import { NewRequestService } from '../../new-request.service';
 import { countries } from '../../../requests.config';
 
@@ -18,7 +16,6 @@ import { countries } from '../../../requests.config';
     styleUrls: ['./company-information.component.scss'],
 })
 export class CompanyInformationComponent implements OnInit, OnDestroy {
-
     @ViewChild(FormPercentDirective) formPercent: FormPercentDirective;
     @Input() form: FormGroup;
     @select(['ofi', 'ofiKyc', 'myKycRequested', 'kycs']) requests$;
@@ -79,8 +76,7 @@ export class CompanyInformationComponent implements OnInit, OnDestroy {
             const activitiesValue = getValue(data, [0, 'id']);
 
             this.formCheckActivity(activitiesValue);
-        })
-        ;
+        });
 
         this.form.get('geographicalAreaOfActivity').valueChanges
         .pipe(takeUntil(this.unsubscribe))
@@ -88,29 +84,25 @@ export class CompanyInformationComponent implements OnInit, OnDestroy {
             const activityGeographicalAreaValue = getValue(data, [0, 'id']);
 
             this.formCheckActivityGeographicalArea(activityGeographicalAreaValue);
-        })
-        ;
+        });
 
         this.form.get('activityRegulated').valueChanges
         .pipe(takeUntil(this.unsubscribe))
         .subscribe((isActivityRegulatedValue) => {
             this.formCheckActivityRegulated(isActivityRegulatedValue);
-        })
-        ;
+        });
 
         this.form.get('companyListed').valueChanges
         .pipe(takeUntil(this.unsubscribe))
         .subscribe((isCompanyListedValue) => {
             this.formCheckCompanyListed(isCompanyListedValue);
-        })
-        ;
+        });
 
         this.form.get('capitalNature.others').valueChanges
         .pipe(takeUntil(this.unsubscribe))
         .subscribe((data) => {
             this.formCheckNatureAndOrigin(data);
-        })
-        ;
+        });
 
         this.form.get('geographicalOrigin1').valueChanges
         .pipe(takeUntil(this.unsubscribe))
@@ -118,8 +110,7 @@ export class CompanyInformationComponent implements OnInit, OnDestroy {
             const geographicalOriginTypeValue = getValue(data, [0, 'id']);
 
             this.formCheckGeographicalOrigin(geographicalOriginTypeValue);
-        })
-        ;
+        });
 
         this.form.get('regulatoryStatus').valueChanges
         .pipe(takeUntil(this.unsubscribe))
@@ -127,8 +118,7 @@ export class CompanyInformationComponent implements OnInit, OnDestroy {
             const regulatoryStatusValue = getValue(data, [0, 'id']);
 
             this.formCheckRegulatoryStatus(regulatoryStatusValue);
-        })
-        ;
+        });
     }
 
     get beneficiaries() {
@@ -353,8 +343,7 @@ export class CompanyInformationComponent implements OnInit, OnDestroy {
                     }
                 });
             });
-        })
-        ;
+        });
     }
 
     handleReady() {

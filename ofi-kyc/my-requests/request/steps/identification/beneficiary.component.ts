@@ -7,6 +7,7 @@ import {sirenValidator, siretValidator} from '@setl/utils/helper/validators';
 import { RequestsService } from '../../../requests.service';
 import { NewRequestService, configDate } from '../../new-request.service';
 import { countries } from '../../../requests.config';
+import { MultilingualService } from '@setl/multilingual';
 
 @Component({
     selector: 'beneficiary',
@@ -27,10 +28,15 @@ export class BeneficiaryComponent implements OnInit, OnDestroy {
     constructor(
         private requestsService: RequestsService,
         private newRequestService: NewRequestService,
+        public translate: MultilingualService,
     ) {
         this.configDate = configDate;
+
         this.beneficiaryTypesList = this.newRequestService.beneficiaryTypesList;
+        this.translate.translate(this.beneficiaryTypesList);
+
         this.holdingTypesList = this.newRequestService.holdingTypesList;
+        this.translate.translate(this.holdingTypesList);
         this.identificationNumberList = this.newRequestService.identificationNumberList;
         this.countries = countries;
     }
