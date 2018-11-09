@@ -30,8 +30,8 @@ export class NewKycSelectAmcComponent implements OnInit, OnDestroy {
     alreadyRegistered = false;
 
     @Input() form: FormGroup;
-    @Input() set disabled(isDisabled){
-        if(isDisabled){
+    @Input() set disabled(isDisabled) {
+        if(isDisabled) {
             this.submitted = true;
         }
     }
@@ -73,7 +73,7 @@ export class NewKycSelectAmcComponent implements OnInit, OnDestroy {
         return selected;
     }
 
-    get isTableDisplayed(){
+    get isTableDisplayed() {
         return this.preselectedManagementCompany.id || this.selectedManagementCompanies.length
     }
 
@@ -179,7 +179,6 @@ export class NewKycSelectAmcComponent implements OnInit, OnDestroy {
         }, accumulator);
 
         this.alreadyRegistered = result;
-
         this.registered.emit(result);
     }
 
@@ -195,6 +194,7 @@ export class NewKycSelectAmcComponent implements OnInit, OnDestroy {
         if (this.preselectedManagementCompany.id) {
             values = values.concat([this.preselectedManagementCompany]);
         }
+
         let ids = await this.selectAmcService.createMultipleDrafts(values, this.connectedWallet);
 
         this.newRequestService.storeCurrentKycs(ids);

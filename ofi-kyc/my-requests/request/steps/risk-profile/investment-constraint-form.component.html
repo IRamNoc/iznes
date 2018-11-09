@@ -34,7 +34,7 @@
     <div class="row">
         <div class="form-group col-sm-6">
             <label for="otherConstraints-{{index}}">
-                {{ 'Others (including SRI, ESG, etc. (specify)' | translate }}:
+                {{ 'Others (including SRI, ESG, etc.) (specify)' | translate }}:
             </label>
             <textarea class="form-control" id="otherConstraints-{{index}}" formControlName="otherConstraints"></textarea>
             <span class="field-error" *ngIf="hasError('otherConstraints', ['maxlength'])">{{ 'Value is too long' | translate }}</span>
