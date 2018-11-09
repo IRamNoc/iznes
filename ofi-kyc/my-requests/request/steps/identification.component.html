@@ -1,6 +1,7 @@
 <h3 class="text-center mb-1">
-    {{'CLIENT\'S IDENTIFICATION AS A LEGAL ENTITY' | translate}}
+    {{ 'Clients\'s Identification as a Legal Entity' | translate}}
 </h3>
+
 <form [formGroup]="form" id="step-identification" (ngSubmit)="handleSubmit($event)">
     <general-information [form]="form.get('generalInformation')"></general-information>
     <company-information [form]="form.get('companyInformation')"></company-information>

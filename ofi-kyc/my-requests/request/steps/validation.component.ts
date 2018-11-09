@@ -6,7 +6,6 @@ import { filter as rxFilter, map, take, takeUntil } from 'rxjs/operators';
 import { isEmpty, find, get as getValue, castArray } from 'lodash';
 import { AlertsService } from '@setl/jaspero-ng2-alerts';
 import * as moment from 'moment';
-
 import { PersistService } from '@setl/core-persist';
 import { RequestsService } from '../../requests.service';
 import { NewRequestService, configDate } from '../new-request.service';
@@ -14,6 +13,7 @@ import { ValidationService } from './validation.service';
 import { DocumentsService } from './documents.service';
 import { steps } from '../../requests.config';
 import { ClearMyKycListRequested } from '@ofi/ofi-main/ofi-store/ofi-kyc';
+import { MultilingualService } from '@setl/multilingual';
 
 @Component({
     selector: 'kyc-step-validation',
@@ -21,7 +21,6 @@ import { ClearMyKycListRequested } from '@ofi/ofi-main/ofi-store/ofi-kyc';
     styleUrls: ['./validation.component.scss'],
 })
 export class NewKycValidationComponent implements OnInit, OnDestroy {
-
     @Input() form;
     @select(['ofi', 'ofiKyc', 'myKycRequested', 'kycs']) requests$;
     @select(['ofi', 'ofiProduct', 'ofiManagementCompany', 'investorManagementCompanyList', 'investorManagementCompanyList']) managementCompanyList$;
@@ -42,6 +41,7 @@ export class NewKycValidationComponent implements OnInit, OnDestroy {
         private persistService: PersistService,
         private documentsService: DocumentsService,
         private ngRedux: NgRedux<any>,
+        public translate: MultilingualService,
     ) {
     }
 
@@ -67,8 +67,7 @@ export class NewKycValidationComponent implements OnInit, OnDestroy {
                 if (this.shouldPersist(kyc)) {
                     this.persistForm();
                 }
-            })
-            ;
+            });
     }
 
     shouldPersist(kyc) {
@@ -111,8 +110,7 @@ export class NewKycValidationComponent implements OnInit, OnDestroy {
                 if (!isEmpty(requests) && !isEmpty(managementCompanies)) {
                     this.getCompanyNames(requests, managementCompanies);
                 }
-            })
-        ;
+            });
 
         this.connectedWallet$
             .pipe(
@@ -120,8 +118,7 @@ export class NewKycValidationComponent implements OnInit, OnDestroy {
             )
             .subscribe(connectedWallet => {
                 this.connectedWallet = connectedWallet;
-            })
-        ;
+            });
     }
 
     getCompanyNames(requests, managementCompanyList) {
@@ -144,7 +141,7 @@ export class NewKycValidationComponent implements OnInit, OnDestroy {
 
         if (this.amcs.length == 1) {
             const companyName = getValue(this.amcs, ['0', 'companyName']);
-            bodyMessage = `<p>Your request has been successfully sent to ${companyName}. Once they will have validated your request, you will be able to start trading on IZNES on ${companyName}'s products.</p>`;
+            bodyMessage = `<p>${this.translate.translate('<p>Your request has been successfully sent to @companyName@. Once they have validated your request, you will be able to start trading on IZNES using @companyName@\'s products.', { 'companyName': companyName })}</p>`; 
         }
         else {
             const companies = ['<ul>'];
@@ -154,7 +151,7 @@ export class NewKycValidationComponent implements OnInit, OnDestroy {
             });
             companies.push('</ul>');
 
-            bodyMessage = `<p>Your request has been successfully sent to the following asset management companies:</p> ${companies.join('')} <p>Once they will have validated your request, you will be able to start trading on IZNES these asset management companies' products.</p>`;
+            bodyMessage = `<p>${this.translate.translate('Your request has been successfully sent to the following asset management companies')}:</p> ${companies.join('')} <p>${this.translate.translate('Once they have validated your request, you will be able to start trading on IZNES these asset management companies\' products.')}</p>`;
         }
 
         this.alerts.create('success', `
@@ -235,13 +232,11 @@ export class NewKycValidationComponent implements OnInit, OnDestroy {
                         }
                     });
                 });
-            })
-        ;
+            });
     }
 
     ngOnDestroy() {
         this.unsubscribe.next();
         this.unsubscribe.complete();
     }
-
 }

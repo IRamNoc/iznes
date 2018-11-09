@@ -30,6 +30,7 @@ export const booleanControls = [
     'objectivesSameInvestmentCrossAm',
     'constraintsSameInvestmentCrossAm',
 ];
+
 export const currencyControls = [
     'balanceSheetTotal',
     'netRevenuesNetIncome',

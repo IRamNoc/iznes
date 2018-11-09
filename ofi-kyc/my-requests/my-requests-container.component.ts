@@ -5,7 +5,7 @@ import { Subject } from 'rxjs';
 import { filter, takeUntil } from 'rxjs/operators';
 
 @Component({
-    template : '<router-outlet></router-outlet>'
+    template: '<router-outlet></router-outlet>'
 })
 export class MyRequestsContainerComponent implements OnInit, OnDestroy{
 
@@ -14,7 +14,7 @@ export class MyRequestsContainerComponent implements OnInit, OnDestroy{
     private unsubscribe: Subject<any> = new Subject();
 
     constructor(
-        private ofiKycService : OfiKycService
+        private ofiKycService: OfiKycService
     ) {
     }
 

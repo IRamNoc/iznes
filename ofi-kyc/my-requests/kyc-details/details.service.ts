@@ -41,20 +41,17 @@ export class KycDetailsService {
         const booleans = chain(data)
             .pickBy((val, key) => requestsConfig.booleanControls.indexOf(key) !== -1)
             .mapValues(value => parseInt(value, 10) ? 1 : 0)
-            .value()
-        ;
+            .value();
 
         const currencies = chain(data)
             .pickBy((val, key) => requestsConfig.currencyControls.indexOf(key) !== -1)
             .mapValues(value => `${value} €`)
-            .value()
-        ;
+            .value();
 
         const percentage = chain(data)
             .pickBy((val, key) => requestsConfig.percentageControls.indexOf(key) !== -1)
             .mapValues(value => `${value} %`)
-            .value()
-        ;
+            .value();
 
         const array = chain(data)
             .merge(booleans, currencies, percentage)
@@ -74,8 +71,7 @@ export class KycDetailsService {
                 value: this.getValueFromControl(controlName, controlValue)
             }))
             .filter()
-            .value()
-        ;
+            .value();
 
         return array;
     }
