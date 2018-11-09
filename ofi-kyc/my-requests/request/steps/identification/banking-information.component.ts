@@ -16,7 +16,6 @@ import { countries } from "../../../requests.config";
     styleUrls: ['./banking-information.component.scss'],
 })
 export class BankingInformationComponent implements OnInit, OnDestroy {
-
     @ViewChild(FormPercentDirective) formPercent: FormPercentDirective;
     @Input() form;
     @Input() companyName: string;
@@ -92,7 +91,6 @@ export class BankingInformationComponent implements OnInit, OnDestroy {
                 });
             });
         });
-
     }
 
     ngOnDestroy() {

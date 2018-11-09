@@ -94,46 +94,46 @@ export class NewKycRequestComponent implements OnInit {
         this.currentCompletedStep = completedStep;
         let extraSteps = [];
         if (this.fullForm) {
-            extraSteps = this.translate.translate([
+            extraSteps = [
                 {
-                    title: 'Introduction',
+                    title: this.translate.translate('Introduction'),
                     startHere: completedStep === 'amcSelection',
                 },
                 {
-                    title: 'Identification',
+                    title: this.translate.translate('Identification'),
                     id: 'step-identification',
                     form: this.forms.get('identification'),
                     startHere: completedStep === 'introduction'
                 },
                 {
-                    title: 'Risk profile',
+                    title: this.translate.translate('Risk profile'),
                     id: 'step-risk-profile',
                     form: this.forms.get('riskProfile'),
                     startHere: completedStep === 'identification'
                 },
                 {
-                    title: 'Documents',
+                    title: this.translate.translate('Documents'),
                     id: 'step-documents',
                     form: this.forms.get('documents'),
                     startHere: completedStep === 'riskProfile'
                 }
-            ]);
+            ];
         }
 
-        this.stepsConfig = this.translate.translate([
+        this.stepsConfig = [
             {
-                title: 'Selection',
+                title: this.translate.translate('Selection'),
                 form: this.forms.get('selection'),
                 id: 'step-selection'
             },
             ...extraSteps,
             {
-                title: 'Validation',
+                title: this.translate.translate('Validation'),
                 id: 'step-validation',
                 form: this.forms.get('validation'),
                 startHere: this.fullForm ? completedStep === 'documents' : completedStep === 'amcSelection'
             }
-        ]);
+        ];
     }
 
     registered(isRegistered) {
