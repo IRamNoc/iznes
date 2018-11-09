@@ -11,16 +11,16 @@ import { setRequestedWalletAddresses } from '@setl/core-store/wallet/my-wallet-a
 import { ReportingService } from '@setl/core-balances/reporting.service';
 
 /**
- * Token voting workflow message type
+ * Contract execution type
  *
- * Will transfer all of an unencumbered balance to the address supplied.
+ * Check balances of two assets and give them to a conversion contract.
  */
 @Component({
-    selector: 'setl-message-workflow',
+    selector: 'setl-message-workflow2',
     templateUrl: './message-workflow.component.html',
     styleUrls: ['./message-workflow.component.css'],
 })
-export class SetlMessageWorkflowComponent implements OnInit {
+export class SetlMessageWorkflowComponent2 implements OnInit {
     @Input() data;
     @Input() userId;
     @Input() walletId: number;
@@ -36,21 +36,9 @@ export class SetlMessageWorkflowComponent implements OnInit {
     public wallet;
     public balances;
 
-    public transferTemplate = {
-//        "poa": "WFLXB.UnitQueue.275681",
-        topic: 'sttra',
-        amount: 1,
-        address: '', // target address (gets replaced)
-        tochain: 2300, // TODO: not hardcode
-//        txnonce: 275681,
-        metadata: '',
-        walletid: 0,
-        fromchain: 2300,
-        namespace: 'IssuerA',
-//        "publickey": "4b5d0378e7a5655e8e07bd2c3f15a328543babf4179cd793de776711a7105813",
-//        "tochainid": 2300,
-        instrument: 'M-Shares',
-        fromaddress: '',
+    public contractExecTemplate = {
+        topic: '',
+        address: '',
     };
 
     @select(['wallet', 'myWalletAddress', 'requested']) addressListRequestedStateOb;
@@ -87,11 +75,10 @@ export class SetlMessageWorkflowComponent implements OnInit {
             if (!this.decodedData) {
                 return;
             }
-            // this.transferTemplate.asset = this.decodedData['asset'];
-            this.transferTemplate['namespace'] = this.decodedData['asset'].split('|')[0];
-            this.transferTemplate['instrument'] = this.decodedData['asset'].split('|')[1];
+
+            this.contractExecTemplate['blah'] = this.decodedData['blah']
+            this.contractExecTemplate['walletid'] = this.walletId;
         }
-        this.transferTemplate['walletid'] = this.walletId;
 
         this.subscriptionsArray.push(this.requestedAddressListOb.subscribe((requested) => {
             this.updateWalletAddresses(requested);
@@ -106,8 +93,8 @@ export class SetlMessageWorkflowComponent implements OnInit {
             this.balances = balances;
             for (let i = 0; i < balances.length; i += 1) {
                 const bal = balances[i];
-                if (bal['asset'] === this.decodedData['asset']) {
-                    this.transferTemplate['amount'] = bal['free'];
+                if (bal['asset'] === this.decodedData['asset']) { // TODO: check both assets
+                    this.contractExecTemplate['quantity_x'] = bal['free']; // TODO; check this against the contract itself somehow.  quantity 1,2
                 }
             }
         });
@@ -120,15 +107,15 @@ export class SetlMessageWorkflowComponent implements OnInit {
             this.disableSend = false;
         }, this.coolDown);
 
-        this.transferTemplate.address = toAddress;
+        this.contractExecTemplate['address'] = toAddress;
 
-        for (let i = 0; i < this.data.recipients.length; i += 1) {
+        /*for (let i = 0; i < this.data.recipients.length; i += 1) {
             const r = this.data.recipients[i];
             if (this.walletAddresses.indexOf(r) !== -1) {
-                this.transferTemplate.fromaddress = this.walletAddresses[this.walletAddresses.indexOf(r)];
+                this.contractExecTemplate.fromaddress = this.walletAddresses[this.walletAddresses.indexOf(r)];
             }
-        }
-        const asyncTaskPipe = createWalletNodeSagaRequest(this.walletNodeSocketService, 'tx', this.transferTemplate);
+        }*/
+        const asyncTaskPipe = createWalletNodeSagaRequest(this.walletNodeSocketService, 'tx', this.contractExecTemplate);
         this.ngRedux.dispatch(SagaHelper.runAsyncCallback( // Send a saga action.
             asyncTaskPipe,
             (d) => {
