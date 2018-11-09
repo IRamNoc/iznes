@@ -1,5 +1,6 @@
 package com.setl.UI.common.SETLUIHelpers;
 
+import com.setl.UI.common.SETLBusinessData.IBAN;
 import com.setl.UI.common.SETLUtils.RandomData;
 import org.openqa.selenium.By;
 import org.openqa.selenium.JavascriptExecutor;
@@ -30,12 +31,12 @@ import static org.openqa.selenium.support.ui.ExpectedConditions.*;
 
 public class FundsDetailsHelper extends LoginAndNavigationHelper {
 
-    public static String[] generateRandomUmbrellaFundsDetails() {
+    public static String generateRandomUmbrellaFundName() {
         String str = RandomData.getDateTimeStamp();
         String umbrellaFundName = "Umbrella_" + str;
-        return new String[]{umbrellaFundName};
+        return umbrellaFundName;
     }
-
+    //TODO - get rid of this convention of making unnecessary arrays
     public static String[] generateRandomFundsDetails() {
         String str = RandomData.getDateTimeStamp();
         String umbrellaFundName = "Fund_" + str;
@@ -96,12 +97,10 @@ public class FundsDetailsHelper extends LoginAndNavigationHelper {
         return new String[]{str};
     }
 
-    public static String[] generateRandomSubPortfolioIBAN() {
-        String n = randomNumeric(14);
-        String b = "JM";
-        //String randomISIN = b + " " + n;
-        String randomISIN = "FR7630006000011234567890189"; //TODO generateRandomSubPortfolioIBAN is hard coded
-        return new String[]{randomISIN};
+    public static String generateRandomIBAN() {
+
+        return IBAN.generateRandomIban("FR");
+
     }
 
     public static String[] generateRandomDetails(){
@@ -1027,7 +1026,7 @@ public class FundsDetailsHelper extends LoginAndNavigationHelper {
         wait.until(visibilityOfElementLocated(By.xpath("//*[@id=\"iznes\"]/app-root/app-basic-layout/div/ng-sidebar-container/div/div/div/main/div/div/ofi-sub-portfolio/clr-modal[1]/div/div[1]/div/div[1]/div")));
         String modalTitleSubPortfolio = driver.findElement(By.id("override_header")).getText();
         Thread.sleep(750);
-        assertTrue(modalTitleSubPortfolio.equals("Create A New Sub-portfolio"));
+        assertTrue(modalTitleSubPortfolio.toLowerCase().equals("create a new sub-portfolio"));
         String disabledCreateBtn = driver.findElement(By.xpath("//*[@id=\"override_save\"]")).getAttribute("disabled");
         assertTrue(disabledCreateBtn.equals("true"));
         Thread.sleep(2000);
