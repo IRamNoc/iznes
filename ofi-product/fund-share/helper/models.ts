@@ -1,6 +1,7 @@
 import {
     ContractData,
 } from '@setl/utils/services/blockchain-contract/model';
+// } from '../../../../utils/services/blockchain-contract/model';
 import { IznesShareDetail } from '../../../ofi-store/ofi-product/fund-share-list/model';
 
 export interface OrderRequest {
@@ -141,6 +142,33 @@ export interface UpdateOrderResponse {
     investorAccountID: number;
     clientReference: string;
     subportfolioName: string;
+}
+
+export interface ShareRegistrationCertificateEmailPayload {
+    orderID: number;
+    orderType: number;
+    fundShareName: string;
+    isin: string;
+    investorWalletName: string;
+    subportfolioName: string;
+    clientReference: string;
+    amWalletID: number;
+    amComPub: string;
+    investorAddress: string;
+    amAddress: string;
+    amCompanyLogo: string;
+    amCompanyName: string;
+    amCompanyLegalForm: string;
+    amCompanyShareCapital: string;
+    amCompanyAddressLine1: string;
+    amCompanyAddressLine2: string;
+    amCompanyZipcode: string;
+    amCompanyCity: string;
+    amCompanyCountry: string;
+    amCompanyRcsMatriculation: string;
+    amCompanyWebsiteUrl: string;
+    amCompanyPhoneNumber: string;
+    amCompanySignature: string;
 }
 
 export interface InvestorBalances {
