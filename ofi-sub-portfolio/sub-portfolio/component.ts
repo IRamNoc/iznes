@@ -8,8 +8,6 @@ import * as _ from 'lodash';
 // Internal
 import {
     MyWalletsService,
-    MemberService,
-    WalletnodeTxService,
     WalletNodeRequestService,
     InitialisationService,
 } from '@setl/core-req-services';
@@ -64,23 +62,21 @@ export class OfiSubPortfolioComponent implements OnInit, OnDestroy {
 
     constructor(private ngRedux: NgRedux<any>,
                 private alertsService: AlertsService,
-                private _myWalletService: MyWalletsService,
-                private _memberService: MemberService,
-                private _walletnodeTxService: WalletnodeTxService,
-                private _walletNodeRequestService: WalletNodeRequestService,
-                private _ofiSubPortfolioService: OfiSubPortfolioService,
-                private _confirmationService: ConfirmationService,
-                public _translate: MultilingualService,
+                private myWalletService: MyWalletsService,
+                private walletNodeRequestService: WalletNodeRequestService,
+                private ofiSubPortfolioService: OfiSubPortfolioService,
+                private confirmationService: ConfirmationService,
+                public translate: MultilingualService,
                 private toaster: ToasterService,
                 private logService: LogService,
-                private _userTourService: UserTourService,
-                private _myUserService: MyUserService,
+                private userTourService: UserTourService,
+                private myUserService: MyUserService,
                 private changeDetectorRef: ChangeDetectorRef) {
 
         /* tab meta */
         this.tabDetail = [{
             title: {
-                text: 'Manage sub-portfolio',
+                text: this.translate.translate('Manage Sub-portfolio'),
                 icon: 'fa-id-badge',
             },
         }];
@@ -137,7 +133,6 @@ export class OfiSubPortfolioComponent implements OnInit, OnDestroy {
     updateAddressList(addressList) {
         this.logService.log('addressList: ', addressList);
         this.addressObject = addressList;
-        // const
 
         this.addressList = immutableHelper.reduce(addressList, (result, item) => {
 
@@ -168,24 +163,23 @@ export class OfiSubPortfolioComponent implements OnInit, OnDestroy {
             this.ngRedux.dispatch(setRequestedWalletAddresses());
 
             // Request the list.
-            InitialisationService.requestWalletAddresses(this.ngRedux, this._walletNodeRequestService, this.connectedWalletId);
+            InitialisationService.requestWalletAddresses(this.ngRedux, this.walletNodeRequestService, this.connectedWalletId);
         }
     }
 
     requestWalletLabel(requestedState) {
-
         this.logService.log('checking requested', this.requestedWalletAddress);
         // If the state is false, that means we need to request the list.
         if (!requestedState && this.connectedWalletId !== 0) {
 
-            MyWalletsService.defaultRequestWalletLabel(this.ngRedux, this._myWalletService, this.connectedWalletId);
+            MyWalletsService.defaultRequestWalletLabel(this.ngRedux, this.myWalletService, this.connectedWalletId);
         }
     }
 
     restartUserTour() {
         if (this.connectedWalletId > 0) {
             setTimeout(() => {
-                const asyncTaskPipe = this._userTourService.saveUserTour({
+                const asyncTaskPipe = this.userTourService.saveUserTour({
                     type: userToursEnums.names.utmysubportfolios,
                     value: 0,
                     walletid: this.connectedWalletId,
@@ -215,31 +209,28 @@ export class OfiSubPortfolioComponent implements OnInit, OnDestroy {
         this.tourObject.push(
             {
                 usertourName: userToursEnums.names.utmysubportfolios,
-                title: this._translate.translate('My Sub-portfolios'),
-                text: this._translate.translate('In this module, you will be able to create and manage your sub-porfolios. Sub-portfolios are the bank accounts that you will use to place orders on IZNES. You can create as many sub-portfolios as you want, depending on your investments objectives.'),
+                title: this.translate.translate('My Sub-portfolios'),
+                text: this.translate.translate('In this module, you will be able to create and manage your sub-porfolios. Sub-portfolios are the bank accounts that you will use to place orders on IZNES. You can create as many sub-portfolios as you want, depending on your investments objectives.'),
                 target: 'menu-sub-portfolio',
             },
             {
-                title: this._translate.translate('Add a new sub-portfolio'),
-                text: this._translate.translate('You can add a new sub-portfolio by clicking on this button. You will need to provide a name and an IBAN for the sub-portfolio you want to create.'),
+                title: this.translate.translate('Add a New Sub-portfolio'),
+                text: this.translate.translate('You can add a new sub-portfolio by clicking on this button. You will need to provide a name and an IBAN for the sub-portfolio you want to create.'),
                 target: 'btn-add-new-subportfolio',
             },
             {
-                title: this._translate.translate('Manage your sub-portfolios'),
-                text: this._translate.translate('Once you have created your sub-porfolios, from this column "Actions", you will be able to edit or delete your sub-portfolios.'),
+                title: this.translate.translate('Manage your Sub-portfolios'),
+                text: this.translate.translate('Once you have created your sub-porfolios, from this column "Actions", you will be able to edit or delete your sub-portfolios.'),
                 target: 'subportfolios-col-actions',
             },
         );
         // TODO: disabled as user tour needs additional work in V2.1/2.2
-        //this.showUsertour = true;
+        // this.showUsertour = true;
     }
 
     ngOnInit() {
-
-        //if home = subport then launch tour!
-
-        //on save make home blank.
-
+        // if home = subport then launch tour!
+        // on save make home blank.
     }
 
     /**
@@ -262,7 +253,6 @@ export class OfiSubPortfolioComponent implements OnInit, OnDestroy {
                 return addressEntry.set('editing', true);
             }
             return addressEntry;
-
         });
     }
 
@@ -276,13 +266,11 @@ export class OfiSubPortfolioComponent implements OnInit, OnDestroy {
                 return addressEntry.set('editing', false);
             }
             return addressEntry;
-
         });
     }
 
     handleUpdateLabel(value, address, iban) {
-
-        const asyncTaskPipe = this._myWalletService.updateWalletLabel({
+        const asyncTaskPipe = this.myWalletService.updateWalletLabel({
             walletId: this.connectedWalletId,
             option: address,
             label: value,
@@ -298,17 +286,16 @@ export class OfiSubPortfolioComponent implements OnInit, OnDestroy {
             }, (labelResponse) => {
                 this.showErrorResponse(labelResponse);
             }));
-
     }
 
     handleLabelResponse(message, type) {
         switch (message) {
         case 'Duplicate Label':
-            this.toaster.pop('error', 'Sub-portfolio name already exists');
+            this.toaster.pop('error', this.translate.translate('Sub-portfolio name already exists'));
             break;
 
         default:
-            this.toaster.pop('success', 'Your sub-portfolio ' + this.tabDetail[0]['formControl'].value.subPortfolioName + ' has been successfully ' + type + '. This may take a moment to update.');
+            this.toaster.pop('success', this.translate.translate(`Your sub-portfolio ${this.tabDetail[0]['formControl'].value.subPortfolioName} has been successfully ${type}. This may take a moment to update.`));
             break;
         }
     }
@@ -321,7 +308,7 @@ export class OfiSubPortfolioComponent implements OnInit, OnDestroy {
         const name = this.tabDetail[0]['formControl'].value.subPortfolioName;
         const iban = this.tabDetail[0]['formControl'].value.subPortfolioIban;
 
-        const asyncTaskPipe = this._ofiSubPortfolioService.saveNewSubPortfolio({
+        const asyncTaskPipe = this.ofiSubPortfolioService.saveNewSubPortfolio({
             walletId: this.connectedWalletId,
             name,
             iban,
@@ -338,15 +325,13 @@ export class OfiSubPortfolioComponent implements OnInit, OnDestroy {
 
                     // update the default home page to '/home'
                     if (this.isFirstAddress()) {
-                        this._myUserService.updateHomePage('/home');
+                        this.myUserService.updateHomePage('/home');
                     }
                 }
 
             },
-            (labelResponse) => {
-                this.showErrorMessage('<span mltag="txt_sub_fail">' +
-                    'Error creating subportfolio' +
-                    '</span>');
+            () => {
+                this.showErrorMessage(this.translate.translate('Error creating sub-portfolio'));
             }));
     }
 
@@ -356,48 +341,47 @@ export class OfiSubPortfolioComponent implements OnInit, OnDestroy {
     }
 
     handleDelete(address) {
-
         const index = this.addressList.findIndex(x => x.address === address);
         if (index > -1) {
-            this._confirmationService.create('Delete ' + this.addressList[index].label + ' - ' + this.addressList[index].iban, 'Are you sure you want to delete this sub-portfolio?', {
-                confirmText: 'Delete',
-                declineText: 'Cancel',
-                btnClass: 'error',
-            }).subscribe((ans) => {
-                if (ans.resolved) {
-                    const asyncTaskPipe = this._ofiSubPortfolioService.deleteSubPortfolio({
-                        walletId: this.connectedWalletId,
-                        address,
-                    });
+            this.confirmationService.create(
+                this.translate.translate(`Delete ${this.addressList[index].label} - ${this.addressList[index].iban}`), this.translate.translate('Are you sure you want to delete this sub-portfolio?'), 
+                {
+                    confirmText: this.translate.translate('Delete'),
+                    declineText: this.translate.translate('Cancel'),
+                    btnClass: 'error',
+                },
+            ).subscribe((ans) => {
+            if (ans.resolved) {
+                const asyncTaskPipe = this.ofiSubPortfolioService.deleteSubPortfolio({
+                    walletId: this.connectedWalletId,
+                    address,
+                });
 
-                    this.ngRedux.dispatch(SagaHelper.runAsyncCallback(asyncTaskPipe,
-                        (response) => {
-                            if (response[1].Data == '0') {
-                                this.ngRedux.dispatch(clearRequestedWalletLabel());
-                                this.toaster.pop('success', 'Your sub-portfolio ' + this.addressList[index].label + ' has been successfully deleted.  This may take a moment to update.');
-                            } else {
-                                this.showWarningResponse('You are not able to delete this sub-portfolio because it is not empty. If you want to delete it, you need to redeem all of your shares from this sub-portfolio');
-                            }
-                        },
-                        (labelResponse) => {
-                            this.toaster.pop('error', '<span mltag="txt_sub_fail">' +
-                                'Error deleting subportfolio' +
-                                '</span>');
-                        }));
+                this.ngRedux.dispatch(SagaHelper.runAsyncCallback(asyncTaskPipe,
+                    (response) => {
+                        if (response[1].Data == '0') {
+                            this.ngRedux.dispatch(clearRequestedWalletLabel());
+                            this.toaster.pop('success', this.translate.translate(`Your sub-portfolio ${this.addressList[index].label} has been successfully deleted. This may take a moment to update.`));
+                        } else {
+                            this.showWarningResponse(this.translate.translate('You are not able to delete this sub-portfolio because it is not empty. If you want to delete it, you need to redeem all of your shares from this sub-portfolio'));
+                        }
+                    },
+                    (labelResponse) => {
+                        this.toaster.pop('error', this.translate.translate('Error deleting subportfolio'));
+                    }));
                 }
             });
         }
     }
 
     showErrorResponse(response) {
-
         const message = _.get(response, '[1].Data[0].Message', '');
 
         this.alertsService.create('error', `
                 <table class='table grid'>
                     <tbody>
                         <tr>
-                            <td class='text-center text-danger'>${message}</td>
+                            <td class='text-center text-danger'>${this.translate.translate(message)}</td>
                         </tr>
                     </tbody>
                 </table>
@@ -405,12 +389,11 @@ export class OfiSubPortfolioComponent implements OnInit, OnDestroy {
     }
 
     showErrorMessage(message) {
-
         this.alertsService.create('error', `
                 <table class='table grid'>
                     <tbody>
                         <tr>
-                            <td class='text-center text-danger'>${message}</td>
+                            <td class='text-center text-danger'>${this.translate.translate(message)}</td>
                         </tr>
                     </tbody>
                 </table>
@@ -418,13 +401,12 @@ export class OfiSubPortfolioComponent implements OnInit, OnDestroy {
     }
 
     showSuccessResponse(message) {
-
         this.alertsService.create('success', `
                         <table class='table grid'>
 
                             <tbody>
                                 <tr>
-                                    <td class='text-center text-success'>${message}</td>
+                                    <td class='text-center text-success'>${this.translate.translate(message)}</td>
                                 </tr>
                             </tbody>
                         </table>
@@ -432,12 +414,11 @@ export class OfiSubPortfolioComponent implements OnInit, OnDestroy {
     }
 
     showWarningResponse(message) {
-
         this.alertsService.create('warning', `
                 <table class='table grid'>
                     <tbody>
                         <tr>
-                            <td class='text-center text-warning'>${message}</td>
+                            <td class='text-center text-warning'>${this.translate.translate(message)}</td>
                         </tr>
                     </tbody>
                 </table>
@@ -459,10 +440,8 @@ export class OfiSubPortfolioComponent implements OnInit, OnDestroy {
      * @return {any}
      */
     getFormError(control: string) {
-
         try {
             const formControl = this.tabDetail[0]['formControl'].controls[control];
-
             const invalid = formControl.touched && !formControl.valid;
 
             if (invalid) {
@@ -474,16 +453,15 @@ export class OfiSubPortfolioComponent implements OnInit, OnDestroy {
 
                 switch (firstErrorKey) {
                 case 'required' :
-                    return this._translate.translate('Field is required');
+                    return this.translate.translate('Field is required');
                 case 'ibanFail':
-                    return this._translate.translate('IBAN must be 14 to 34 characters long with 2 letters at the beginning.');
+                    return this.translate.translate('IBAN must be 14 to 34 characters long with 2 letters at the beginning.');
                 case 'duplicatedLabel':
-                    return this._translate.translate('This subportfolio name is already used. Please choose another one.');
+                    return this.translate.translate('This subportfolio name is already used. Please choose another one.');
                 default :
-                    return this._translate.translate('Invalid field');
+                    return this.translate.translate('Invalid field');
                 }
             }
-
             return false;
 
         } catch (e) {
@@ -510,7 +488,6 @@ export class OfiSubPortfolioComponent implements OnInit, OnDestroy {
         }
         return null;
     }
-
 }
 
 function validateIBAN(c: FormControl) {
