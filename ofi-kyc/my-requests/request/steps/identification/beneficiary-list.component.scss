@@ -1,0 +1,14 @@
+[beneficiary-line]{
+    cursor: pointer;
+}
+
+.right{
+    text-align: right;
+}
+
+tbody tr{
+    &:hover{
+        background-color: #555555;
+        color: #9A9A9A;
+    }
+}

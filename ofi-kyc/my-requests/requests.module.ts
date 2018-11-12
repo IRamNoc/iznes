@@ -33,6 +33,8 @@ import { NewKycIntroductionComponent } from './request/steps/introduction.compon
 import { NewKycIdentificationComponent } from './request/steps/identification.component';
 import { GeneralInformationComponent } from './request/steps/identification/general-information.component';
 import { CompanyInformationComponent } from './request/steps/identification/company-information.component';
+import { BeneficiaryListComponent } from './request/steps/identification/beneficiary-list.component';
+import { BeneficiaryLineComponent } from './request/steps/identification/beneficiary-line.component';
 import { BeneficiaryComponent } from './request/steps/identification/beneficiary.component';
 import { BankingInformationComponent } from './request/steps/identification/banking-information.component';
 import { ClassificationInformationComponent } from './request/steps/identification/classification-information.component';
@@ -72,6 +74,8 @@ import { ValidationService } from './request/steps/validation.service';
         NewKycIdentificationComponent,
         GeneralInformationComponent,
         CompanyInformationComponent,
+        BeneficiaryListComponent,
+        BeneficiaryLineComponent,
         BeneficiaryComponent,
         BankingInformationComponent,
         ClassificationInformationComponent,

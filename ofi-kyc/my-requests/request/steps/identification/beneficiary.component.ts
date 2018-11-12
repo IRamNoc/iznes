@@ -8,6 +8,7 @@ import { RequestsService } from '../../../requests.service';
 import { NewRequestService, configDate } from '../../new-request.service';
 import { countries } from '../../../requests.config';
 import { MultilingualService } from '@setl/multilingual';
+import { BeneficiaryService } from './beneficiary.service';
 
 @Component({
     selector: 'beneficiary',
@@ -15,8 +16,16 @@ import { MultilingualService } from '@setl/multilingual';
 })
 export class BeneficiaryComponent implements OnInit, OnDestroy {
     @Input() form;
+    @Input() set parents(parents: any[]) {
+        this.parentsFiltered = parents.filter((parent, i) => i !== this.index);
+    }
+    get parents() {
+        return this.parentsFiltered;
+    }
     @Input() index;
-    @Output() ready: EventEmitter<any> = new EventEmitter<any>();
+    @Input() disabled;
+
+    @Output() refresh: EventEmitter<any> = new EventEmitter<any>();
 
     unsubscribe: Subject<any> = new Subject<any>();
     configDate;
@@ -24,11 +33,13 @@ export class BeneficiaryComponent implements OnInit, OnDestroy {
     holdingTypesList;
     identificationNumberList;
     countries;
+    parentsFiltered;
 
     constructor(
         private requestsService: RequestsService,
         private newRequestService: NewRequestService,
         public translate: MultilingualService,
+        private beneficiaryService: BeneficiaryService,
     ) {
         this.configDate = configDate;
 
@@ -49,7 +60,7 @@ export class BeneficiaryComponent implements OnInit, OnDestroy {
 
         (this.form.get('beneficiaryType') as FormControl).updateValueAndValidity();
         (this.form.get('legalPerson.nationalIdNumber') as FormControl).updateValueAndValidity();
-        this.ready.emit();
+        this.refresh.emit();
     }
 
     initFormCheck() {
@@ -57,9 +68,7 @@ export class BeneficiaryComponent implements OnInit, OnDestroy {
         .get('beneficiaryType')
         .valueChanges
         .pipe(takeUntil(this.unsubscribe))
-        .subscribe((data) => {
-            const beneficiaryTypeValue = getValue(data, [0, 'id']);
-
+        .subscribe((beneficiaryTypeValue) => {
             this.formCheckBeneficiaryType(beneficiaryTypeValue);
         });
 
@@ -75,39 +84,13 @@ export class BeneficiaryComponent implements OnInit, OnDestroy {
     }
 
     formCheckNationalIdNumber(value) {
-        const nationalIdNumberTextControl: AbstractControl = this.form.get('legalPerson.nationalIdNumberText');
+        this.beneficiaryService.formCheckNationalIdNumber(this.form, value);
 
-        if (value) {
-            nationalIdNumberTextControl.enable();
-
-            if (value === 'siren') {
-                nationalIdNumberTextControl.setValidators([sirenValidator, Validators.required]);
-            } else if (value === 'siret') {
-                nationalIdNumberTextControl.setValidators([siretValidator, Validators.required]);
-            } else {
-                nationalIdNumberTextControl.setValidators([Validators.required]);
-            }
-
-            this.ready.emit();
-        } else {
-            nationalIdNumberTextControl.disable();
-        }
-
-        nationalIdNumberTextControl.updateValueAndValidity();
+        this.refresh.emit();
     }
 
     formCheckBeneficiaryType(value) {
-        const legalPersonControl: AbstractControl = this.form.get('legalPerson');
-        const naturalPersonControl: AbstractControl = this.form.get('naturalPerson');
-
-        if (value === 'legalPerson') {
-            legalPersonControl.enable();
-            naturalPersonControl.disable();
-            (this.form.get('legalPerson.nationalIdNumber') as FormControl).updateValueAndValidity();
-        } else if (value === 'naturalPerson') {
-            naturalPersonControl.enable();
-            legalPersonControl.disable({ emitEvent: false });
-        }
+        this.beneficiaryService.formCheckBeneficiaryType(this.form, value);
     }
 
     uploadFile($event) {

@@ -1,6 +1,6 @@
 import { Component, Input, OnInit, OnDestroy, ViewChild } from '@angular/core';
 import { FormGroup, FormArray } from '@angular/forms';
-import { get as getValue, set as setValue, filter, isEmpty, castArray } from 'lodash';
+import { get as getValue, set as setValue, filter, isEmpty, castArray, find } from 'lodash';
 import { select } from '@angular-redux/store';
 import { Subject } from 'rxjs';
 import { filter as rxFilter, map, take, takeUntil } from 'rxjs/operators';
@@ -8,6 +8,7 @@ import { FormPercentDirective } from '@setl/utils/directives/form-percent/formpe
 import { IdentificationService, buildBeneficiaryObject } from '../identification.service';
 import { DocumentsService } from '../documents.service';
 import { NewRequestService } from '../../new-request.service';
+import { BeneficiaryService } from './beneficiary.service';
 import { countries } from '../../../requests.config';
 
 @Component({
@@ -39,6 +40,7 @@ export class CompanyInformationComponent implements OnInit, OnDestroy {
         private newRequestService: NewRequestService,
         private identificationService: IdentificationService,
         private documentsService: DocumentsService,
+        private beneficiaryService: BeneficiaryService,
     ) {
     }
 
@@ -151,12 +153,12 @@ export class CompanyInformationComponent implements OnInit, OnDestroy {
         investorOnBehalfControl.disable();
 
         switch (value) {
-        case 'ownAccount':
-            ownAccountControl.enable();
-            break;
-        case 'onBehalfOfThirdParties':
-            investorOnBehalfControl.enable();
-            break;
+            case 'ownAccount':
+                ownAccountControl.enable();
+                break;
+            case 'onBehalfOfThirdParties':
+                investorOnBehalfControl.enable();
+                break;
         }
 
         this.formPercent.refreshFormPercent();
@@ -262,28 +264,6 @@ export class CompanyInformationComponent implements OnInit, OnDestroy {
         return this.newRequestService.hasError(this.form, control, error);
     }
 
-    addBeneficiary() {
-        const control = this.form.get('beneficiaries') as FormArray;
-        control.push(this.newRequestService.createBeneficiary());
-
-        this.formPercent.refreshFormPercent();
-    }
-
-    removeBeneficiary(i) {
-        const control = this.form.get('beneficiaries') as FormArray;
-
-        if (control.at(i).value.companyBeneficiariesID !== '') {
-            this.identificationService.deleteBeneficiary(
-                control.at(i).value.kycID,
-                control.at(i).value.companyBeneficiariesID,
-            );
-        }
-
-        control.removeAt(i);
-
-        this.formPercent.refreshFormPercent();
-    }
-
     isDisabled(path) {
         const control = this.form.get(path);
 
@@ -338,6 +318,8 @@ export class CompanyInformationComponent implements OnInit, OnDestroy {
                         });
 
                         Promise.all(promises).then(() => {
+                            this.beneficiaryService.fillInStakeholderSelects(this.form.get('beneficiaries'));
+                            this.beneficiaryService.updateStakeholdersValidity(this.form.get('beneficiaries') as FormArray);
                             this.formPercent.refreshFormPercent();
                         });
                     }
@@ -346,7 +328,7 @@ export class CompanyInformationComponent implements OnInit, OnDestroy {
         });
     }
 
-    handleReady() {
+    refresh() {
         this.formPercent.refreshFormPercent();
     }
 

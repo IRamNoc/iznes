@@ -43,6 +43,8 @@ export const booleanControls = [
     'optFor',
     'optForPro',
     'optForNonPro',
+    'exerciseControl',
+    'isLegalRepresentative',
 ];
 
 export const currencyControls = [
@@ -101,9 +103,9 @@ export const selectControls = [
     'regulatoryStatus',
     'regulatoryStatusInsurerType',
     'riskProfile',
-    'beneficiaryType',
     'nationalIdNumber',
     'holdingType',
+    'parent',
 ];
 
 export const controlOrder = [

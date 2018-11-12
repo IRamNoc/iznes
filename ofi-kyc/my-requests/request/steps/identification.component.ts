@@ -35,6 +35,8 @@ export class NewKycIdentificationComponent implements OnInit {
 
     ngOnInit() {
         this.initSubscriptions();
+
+        window['pouetident'] = this.form;
     }
 
     initSubscriptions() {

@@ -1,0 +1,18 @@
+<td>{{beneficiaryType}}</td>
+<td>{{name}}</td>
+<td>{{parent}}</td>
+<td>{{countryTaxResidence}}</td>
+<td>{{nationality}}</td>
+<td>{{holdingPercentage}}</td>
+<td *ngIf="!hovering">{{holdingType}}</td>
+<td *ngIf="!hovering">{{votingPercentage}}</td>
+<td *ngIf="hovering" (click)="handleActionsClick($event)" colspan="2">
+    <div class="actions">
+        <button class="btn btn-primary btn-sm" (click)="addChild($event)"><i class="fa fa-plus"></i> {{'Add child' | translate}}</button>
+        <button class="btn btn-sm" (click)="editStakeholder($event)">{{'Edit' | translate}}</button>
+        <button class="btn btn-sm" (click)="removeStakeholder($event)">
+            <i class="fa fa-trash"></i>
+            {{'Delete' | translate}}
+        </button>
+    </div>
+</td>

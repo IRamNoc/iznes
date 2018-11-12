@@ -22,14 +22,18 @@ import {
 import { NewRequestService } from '../new-request.service';
 import { RequestsService } from '../../requests.service';
 import { DocumentsService } from './documents.service';
+import { BeneficiaryService } from './identification/beneficiary.service';
 
 @Injectable()
 export class IdentificationService {
+
+    stakeholderIdsToUpdate = {};
 
     constructor(
         private newRequestService: NewRequestService,
         private requestsService: RequestsService,
         private documentsService: DocumentsService,
+        private beneficiaryService: BeneficiaryService,
     ) {
     }
 
@@ -81,31 +85,41 @@ export class IdentificationService {
     }
 
     handleBeneficiaries(formGroupBeneficiaries, kycID, connectedWallet) {
-        const promises = [];
+        const promises = this.sendRequestBeneficiaries(formGroupBeneficiaries, kycID, connectedWallet);
 
-        formGroupBeneficiaries.controls.forEach((formGroupBeneficiary) => {
-            const value = formGroupBeneficiary.value;
-            const kycDocument = getValue(value, ['naturalPerson', 'document']);
-            const kycDocumentID = getValue(kycDocument, 'kycDocumentID');
-            const hash = getValue(kycDocument, 'hash');
+        let toResend: any = {
+            controls : [],
+        };
 
-            formGroupBeneficiary.get('kycID').setValue(kycID);
+        // We first need to be sure we have all stakeholder ids before resending them with updated parent ids
+        return Promise.all(promises).then(() => {
+            formGroupBeneficiaries.controls.forEach((stakeholder) => {
+                const parent = stakeholder.get('common.parent');
+                const parentValue = getValue(parent, 'value[0].id');
 
-            let beneficiaryDocumentPromise;
-            if (kycDocumentID) {
-                this.sendRequestBeneficiary(formGroupBeneficiary, kycDocumentID);
-            } else if (hash) {
-                beneficiaryDocumentPromise = this.documentsService.sendRequestDocumentControl(kycDocument, connectedWallet).then((data) => {
-                    const kycDocumentID = getValue(data, 'kycDocumentID');
-                    this.sendRequestBeneficiary(formGroupBeneficiary, kycDocumentID);
-                });
-            } else {
-                this.sendRequestBeneficiary(formGroupBeneficiary, null);
+                if (!parentValue) {
+                    return;
+                }
+                const newValue = this.stakeholderIdsToUpdate[parentValue];
+                const isOld = this.beneficiaryService.isLocalBeneficiaryId(parent);
+
+                console.log('********** isold', isOld, 'newvalue', newValue, 'parent value', parentValue);
+                if (isOld && newValue) {
+                    parent.setValue([{ id: newValue }]);
+                    console.log('****** pushing in toresend', JSON.stringify(stakeholder.value));
+                    toResend.controls.push(stakeholder);
+                }
+            });
+
+            this.beneficiaryService.fillInStakeholderSelects(formGroupBeneficiaries);
+
+            console.log('****** checking to resend', toResend.controls);
+            if (toResend.controls.length) {
+                this.sendRequestBeneficiaries(toResend, kycID, connectedWallet);
+
+                toResend = {};
             }
-            promises.push(beneficiaryDocumentPromise);
-
         });
-        return promises;
     }
 
     deleteBeneficiary(kycID, id) {
@@ -150,11 +164,52 @@ export class IdentificationService {
         return this.requestsService.sendRequest(messageBody);
     }
 
+    sendRequestBeneficiaries(formGroupBeneficiaries, kycID, connectedWallet){
+        const promises = [];
+
+        formGroupBeneficiaries.controls.forEach((formGroupBeneficiary) => {
+            const value = formGroupBeneficiary.value;
+            const kycDocument = getValue(value, ['naturalPerson', 'document']);
+            const kycDocumentID = getValue(kycDocument, 'kycDocumentID');
+            const hash = getValue(kycDocument, 'hash');
+
+            formGroupBeneficiary.get('kycID').setValue(kycID);
+
+            let beneficiaryPromise;
+            if (kycDocumentID) {
+                beneficiaryPromise = this.sendRequestBeneficiary(formGroupBeneficiary, kycDocumentID);
+            } else if (hash) {
+                beneficiaryPromise = this.documentsService.sendRequestDocumentControl(kycDocument, connectedWallet).then((data) => {
+                    const kycDocumentID = getValue(data, 'kycDocumentID');
+
+                    return this.sendRequestBeneficiary(formGroupBeneficiary, kycDocumentID);
+                });
+            } else {
+                beneficiaryPromise = this.sendRequestBeneficiary(formGroupBeneficiary, null);
+            }
+
+            promises.push(beneficiaryPromise);
+        });
+
+        return promises;
+    }
+
     sendRequestBeneficiary(formGroupBeneficiary, documentID) {
         const value = formGroupBeneficiary.value;
         const firstLevel = omit(value, ['common', 'legalPerson', 'naturalPerson']);
         const values = merge(firstLevel, value.common, value.legalPerson, value.naturalPerson);
         const extracted = this.newRequestService.getValues(values);
+
+        const oldCompanyBeneficiariesID = extracted.companyBeneficiariesID;
+        const parent = extracted.parent;
+        console.log('******** old', oldCompanyBeneficiariesID);
+        if (this.beneficiaryService.isLocalBeneficiaryId(oldCompanyBeneficiariesID)) {
+            delete extracted.companyBeneficiariesID;
+        }
+        if (this.beneficiaryService.isLocalBeneficiaryId(parent)) {
+            delete extracted.parent;
+        }
+
         delete extracted.document;
         extracted.documentID = documentID;
 
@@ -164,8 +219,14 @@ export class IdentificationService {
         };
         return this.requestsService.sendRequest(messageBody).then((data) => {
             const companyBeneficiariesID = getValue(data, [1, 'Data', 0, 'companyBeneficiariesID']);
-
+            console.log('****** is there a company id?', companyBeneficiariesID, data);
             if (companyBeneficiariesID) {
+                console.log('***** testing old', oldCompanyBeneficiariesID);
+                if (this.beneficiaryService.isLocalBeneficiaryId(oldCompanyBeneficiariesID)) {
+                    this.stakeholderIdsToUpdate[oldCompanyBeneficiariesID] = Number(companyBeneficiariesID);
+                    console.log('****** stakeholder', this.stakeholderIdsToUpdate);
+                }
+
                 formGroupBeneficiary.controls['companyBeneficiariesID'].setValue(companyBeneficiariesID);
             }
         });
@@ -257,25 +318,28 @@ export class IdentificationService {
 }
 
 const beneficiaryFormPaths = {
+    parent: 'common',
     address: 'common',
     address2: 'common',
     zipCode: 'common',
     city: 'common',
     country: 'common',
+    countryTaxResidence: 'common',
     holdingPercentage: 'common',
     holdingType: 'common',
+    nationality : 'common',
+    votingPercentage : 'common',
 
-    firstName: 'naturalPerson',
-    lastName: 'naturalPerson',
-    nationality: 'naturalPerson',
-    dateOfBirth: 'naturalPerson',
-    cityOfBirth: 'naturalPerson',
-    countryOfBirth: 'naturalPerson',
+    firstName : 'naturalPerson',
+    lastName : 'naturalPerson',
+    dateOfBirth : 'naturalPerson',
+    cityOfBirth : 'naturalPerson',
+    countryOfBirth : 'naturalPerson',
 
-    legalName: 'legalPerson',
-    nationalIdNumber: 'legalPerson',
-    nationalIdNumberText: 'legalPerson',
-    leiCode: 'legalPerson',
+    legalName : 'legalPerson',
+    nationalIdNumber : 'legalPerson',
+    nationalIdNumberText : 'legalPerson',
+    leiCode : 'legalPerson',
 };
 
 export function buildBeneficiaryObject(data) {

@@ -60,10 +60,15 @@ export class RequestsService {
                 return value;
             }
 
-            if (selectControls.indexOf(key) !== -1) {
-                let split = value.split(' ');
+            if(selectControls.indexOf(key) !== -1){
+                let valueArray;
+                if(typeof value === 'string'){
+                    valueArray = value.split(' ');
+                } else{
+                    valueArray = _.castArray(value);
+                }
 
-                return split.map(value => {
+                return valueArray.map((value) => {
                     return { id: value };
                 });
             }

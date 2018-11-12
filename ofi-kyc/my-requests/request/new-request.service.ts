@@ -299,7 +299,7 @@ export class NewRequestService {
                 Validators.min(0)
             ]],
 
-            beneficiaries: fb.array([this.createBeneficiary()]),
+            beneficiaries: fb.array([]),
             capitalNature: fb.group({
                 equityAndReserves: '',
                 generalAssets: '',
@@ -308,7 +308,7 @@ export class NewRequestService {
                 exceptionalEvents: '',
                 treasury: '',
                 others: '',
-                othersText: [{ value: '', disabled: true }, Validators.required]
+                othersText: [{ value: '', disabled: true }, Validators.required],
             }, {
                 validator: (formGroup) => {
                     return CustomValidators.multipleCheckboxValidator(formGroup);
@@ -615,11 +615,13 @@ export class NewRequestService {
             beneficiaryType: ['', Validators.required],
 
             common: this.formBuilder.group({
+                parent: [-1, Validators.required],
                 address: ['', Validators.required],
                 address2: '',
                 zipCode: ['', this.getLengthValidator(10)],
                 city: ['', this.getLengthValidator(255)],
                 country: ['', Validators.required],
+                countryTaxResidence: ['', Validators.required],
                 holdingPercentage: [
                     '',
                     [
@@ -629,6 +631,10 @@ export class NewRequestService {
                     ],
                 ],
                 holdingType: ['', Validators.required],
+                nationality: ['', Validators.required],
+
+                votingPercentage: ['', Validators.required],
+                exerciseControl: [0, Validators.required],
             }),
             legalPerson: this.formBuilder.group({
                 legalName: ['', Validators.required],
@@ -638,16 +644,16 @@ export class NewRequestService {
                 ]],
 
                 nationalIdNumber: ['', Validators.required],
-                nationalIdNumberText: [{value: '', disabled: true}, Validators.required],
+                nationalIdNumberText: [{ value: '', disabled: true }, Validators.required],
             }),
             naturalPerson: this.formBuilder.group({
                 firstName: ['', this.getLengthValidator()],
                 lastName: ['', this.getLengthValidator()],
-                nationality: ['', Validators.required],
                 dateOfBirth: ['', Validators.required],
                 cityOfBirth: ['', this.getLengthValidator()],
                 countryOfBirth: ['', Validators.required],
                 document: this.createDocumentFormGroup('kycbeneficiarydoc', !this.isProduction),
+                isLegalRepresentative: [0, Validators.required],
             }),
             delete: 0,
         });
