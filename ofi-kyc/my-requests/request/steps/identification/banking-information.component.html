@@ -61,7 +61,7 @@
                                     formControlName="addressLine1"
                                     placeholder="{{ 'Fill in your establishment\'s address.' | translate }}">
                             <span class="field-error" *ngIf="hasError([i,'addressLine1'], ['required'])">{{ 'Field is required' | translate }}</span>
-                            <span class="field-error" *ngIf="hasError([i,'addressLine1'], ['maxlength'])">{{ 'Field too long' | translate }}</span>
+                            <span class="field-error" *ngIf="hasError([i,'addressLine1'], ['maxlength'])">{{ 'Address too long' | translate }}</span>
                         </div>
                         <div class="form-group col-xs-4">
                             <input style="margin-top: 20px"
@@ -69,7 +69,7 @@
                                     id="{{'addresssLine2-' + i}}"
                                     formControlName="addressLine2"
                                     placeholder="{{ 'Address Line 2' | translate }}">
-                            <span class="field-error" *ngIf="hasError([i,'addressLine2'], ['maxlength'])">{{ 'Field too long' | translate }}</span>
+                            <span class="field-error" *ngIf="hasError([i,'addressLine2'], ['maxlength'])">{{ 'Address too long' | translate }}</span>
                         </div>
                         <div class="form-group required-field col-xs-4">
                             <label class="control-label" for="{{'zipCode-' + i}}">{{ 'ZIP Code' | translate }}</label>
