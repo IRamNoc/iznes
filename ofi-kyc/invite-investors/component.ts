@@ -328,6 +328,7 @@ export class OfiInviteInvestorsComponent implements OnInit, OnDestroy {
         }
 
         fundList.setValidators([]);
+        fundList.updateValueAndValidity();
 
         return false;
     }
@@ -340,15 +341,15 @@ export class OfiInviteInvestorsComponent implements OnInit, OnDestroy {
  * construct invitation request with form value.
  */
 function constructInvitationRequest(formValue) {
-    const investors = immutableHelper.reduce(formValue.investors, (result, item) => {
-        const investorType = item.getIn(['investorType', 0], {}).id;
+    const investors = formValue.investors.reduce((result, item) => {
+        const investorType = _.get(item, ['investorType', 0], {}).id;
         // check the investor type
         if (investorType !== 10 && investorType !== 20) {
             throw new Error('We should only allow investor type 10 or 20');
         }
 
         // get the fundList in array of fundId
-        const fundList = item.get('fundList', []).toJS();
+        const fundList = _.get(item, 'fundList') || [];
         const fundIdList = fundList.reduce((acc, fund) => {
             acc.push(fund.id);
             return acc;
@@ -356,12 +357,12 @@ function constructInvitationRequest(formValue) {
 
         result.push({
             investorType,
-            email: item.get('email', ''),
-            firstname: item.get('firstName', ''),
-            lastname: item.get('lastName', ''),
-            lang: item.get('language', 'fr'),
-            clientreference: item.get('clientReference', ''),
-            message: item.get('message', ''),
+            email: _.get(item, 'email', ''),
+            firstname: _.get(item, 'firstName', ''),
+            lastname: _.get(item, 'lastName', ''),
+            lang: _.get(item, 'language', 'fr'),
+            clientreference: _.get(item, 'clientReference', ''),
+            message: _.get(item, 'message', ''),
             fundList: fundIdList,
         });
         return result;
