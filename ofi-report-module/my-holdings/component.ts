@@ -191,7 +191,6 @@ export class MyHoldingsComponent implements OnInit, OnDestroy {
             ratio: it.ratio,
         }));
 
-        // this.changeDetectorRef.markForCheck();
         this.changeDetectorRef.detectChanges();
     }
 
