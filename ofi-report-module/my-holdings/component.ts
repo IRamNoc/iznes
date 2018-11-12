@@ -24,7 +24,7 @@ export class MyHoldingsComponent implements OnInit, OnDestroy {
     unSubscribe: Subject<any> = new Subject();
     language = 'en';
     managementCompanyList: any[] = []
-    allCompanies: any[] = [];
+    allCompaniesList: any[] = [];
 
     @select(['user', 'connected', 'connectedWallet']) connectedWallet$;
     @select(['user', 'siteSettings', 'language']) language$;
@@ -69,7 +69,7 @@ export class MyHoldingsComponent implements OnInit, OnDestroy {
     }
 
     initCompanies() {
-        this.allCompanies = [{
+        this.allCompaniesList = [{
             id: -1,
             text: this.translate.translate('All Asset Management Companies'),
         }];
@@ -157,14 +157,14 @@ export class MyHoldingsComponent implements OnInit, OnDestroy {
      * @memberof MyHoldingsComponent
      */
     formatManagementCompanyList() {
-        this.investorManagementCompanyList = this.allCompanies.concat(
+        this.investorManagementCompanyList = this.allCompaniesList.concat(
             this.managementCompanyList.map(it => ({
                 id: it.companyID,
                 text: it.companyName,
             })));
 
         this.changeDetectorRef.detectChanges();
-        this.searchForm.controls['search'].setValue(this.allCompanies);
+        this.searchForm.controls['search'].setValue(this.allCompaniesList);
     }
 
     /**
