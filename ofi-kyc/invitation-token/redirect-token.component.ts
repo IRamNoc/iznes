@@ -1,14 +1,12 @@
-import {Component, OnInit} from '@angular/core';
-import {Router, ActivatedRoute} from '@angular/router';
-import {get as getValue} from 'lodash';
-
-import {OfiKycService} from '@ofi/ofi-main/ofi-req-services/ofi-kyc/service';
+import { Component, OnInit } from '@angular/core';
+import { Router, ActivatedRoute } from '@angular/router';
+import { get as getValue } from 'lodash';
+import { OfiKycService } from '@ofi/ofi-main/ofi-req-services/ofi-kyc/service';
 
 @Component({
     template: ''
 })
 export class OfiRedirectTokenComponent implements OnInit {
-
     private lang;
     private invitationToken;
 

@@ -1,11 +1,12 @@
 <h3 class="text-center mb-1">
-    {{'CLIENT\'S IDENTIFICATION AS A LEGAL ENTITY' | translate}}
+    {{ 'Client\'s Identification as a Legal Entity' | translate }}
 </h3>
+
 <form [formGroup]="form" id="step-identification" (ngSubmit)="handleSubmit($event)">
     <general-information [form]="form.get('generalInformation')"></general-information>
     <company-information [form]="form.get('companyInformation')"></company-information>
     <banking-information [form]="form.get('bankingInformation')" [companyName]="form.get(['generalInformation', 'registeredCompanyName']).value"></banking-information>
-    <classification-information *ngIf="form.get('generalInformation.legalStatus').value" [form]="form.get('classificationInformation')" [investorType]="investorType"></classification-information>
+    <classification-information [form]="form.get('classificationInformation')" [investorType]="investorType"></classification-information>
 
     <input type="submit" class="hidden" />
 </form>

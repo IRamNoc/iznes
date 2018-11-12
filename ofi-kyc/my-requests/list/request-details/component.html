@@ -2,12 +2,12 @@
     <table>
         <tr>
             <td class="text-right" style="line-height: 1.1em;">
-                <span *ngIf="requestDetailStatus === 'Approved'" class="status text-success">{{'ACCEPTED' | translate | uppercase}}</span>
-                <span *ngIf="requestDetailStatus === 'Rejected'" class="status text-red">{{'REJECTED' | translate | uppercase}}</span>
-                <span *ngIf="requestDetailStatus === 'WaitingForApproval'" class="status text-warning">{{'WAITING APPROVAL' | translate | uppercase}}</span>
-                <span *ngIf="requestDetailStatus === 'WaitingForMoreInfo'" class="status text-warning">{{'WAITING INFORMATION' | translate | uppercase}}</span>
+                <span *ngIf="requestDetailStatus === 'Approved'" class="status text-success">{{ 'ACCEPTED' | translate | uppercase }}</span>
+                <span *ngIf="requestDetailStatus === 'Rejected'" class="status text-red">{{ 'REJECTED' | translate | uppercase }}</span>
+                <span *ngIf="requestDetailStatus === 'WaitingForApproval'" class="status text-warning">{{ 'WAITING APPROVAL' | translate | uppercase }}</span>
+                <span *ngIf="requestDetailStatus === 'WaitingForMoreInfo'" class="status text-warning">{{ 'WAITING INFORMATION' | translate | uppercase }}</span>
                 <br>
-                <small>{{'Last Update' | translate}}: {{lastUpdate}}</small>
+                <small>{{ 'Last Update' | translate }}: {{lastUpdate}}</small>
             </td>
             <td class="icon">
                 <i *ngIf="requestDetailStatus === 'Approved'" class="icon fa fa-check-circle text-success"></i>
@@ -18,9 +18,9 @@
         </tr>
         <tr style="background-color: transparent">
             <td colspan="2" class="text-right">
-                <button type="button" class="btn btn-primary" style="margin: 0;" [routerLink]="['/my-requests/list/kyc-audit-trail', kycID]">{{'View previous updates' | translate}}</button>
+                <button type="button" class="btn btn-primary" style="margin: 0;" [routerLink]="['/my-requests/list/kyc-audit-trail', kycID]">{{ 'View Previous Updates' | translate }}</button>
                 <br *ngIf="requestDetailStatus === 'WaitingForMoreInfo'">
-                <button type="button" class="btn btn-success" (click)="redirectToRelatedKycs(kycID)" *ngIf="requestDetailStatus === 'WaitingForMoreInfo'" style="margin-right: 4px;">{{'Update your request' | translate}}</button>
+                <button type="button" class="btn btn-success" (click)="redirectToRelatedKycs(kycID)" *ngIf="requestDetailStatus === 'WaitingForMoreInfo'" style="margin-right: 4px;">{{ 'Update Your Request' | translate }}</button>
             </td>
         </tr>
     </table>
@@ -29,41 +29,41 @@
 <div class="wrapper wrapper-content">
     <form [formGroup]="disabledForm">
         <ng-container *ngIf="requestDetailStatus === 'Rejected'">
-            <h1 class="mt-1">{{'Rejection\'s Cause' | translate}}</h1>
-            <p>{{'Please find below the message attached by @companyName@ regarding your rejection:' | translate: {'companyName': companyName} }}</p>
+            <h1 class="mt-1">{{ 'Rejection\'s Cause' | translate }}</h1>
+            <p>{{ 'Please find below the message attached by @companyName@ regarding your rejection:' | translate: { 'companyName': companyName } }}</p>
             <textarea name="rejectionMessage" id="rejectionMessage" rows="4" cols="50" formControlName="rejectionMessage" style="width: 75%"></textarea>
             <div class="hr-line-dashed"></div>
         </ng-container>
         <ng-container *ngIf="requestDetailStatus === 'WaitingForMoreInfo'">
-            <h1 class="mt-1">{{'Ask for more Information Detail' | translate}}</h1>
-            <p>{{'@companyName@ asked you for more information about your identification request. Here is the message associated:' | translate: {'companyName': companyName} }}</p>
+            <h1 class="mt-1">{{ 'Ask For More Information Detail' | translate }}</h1>
+            <p>{{ '@companyName@ asked you for more information about your identification request. Here is the message associated:' | translate: { 'companyName': companyName } }}</p>
             <textarea name="informationMessage" id="informationMessage" rows="4" cols="50" formControlName="informationMessage" style="width: 75%"></textarea>
             <p>
-                {{'You can update the requested information by clicking on the button "Update your request" or send a message to your asset manager by clicking' | translate: {'companyName': companyName} }}
-                <a [routerLink]="'/messages/inbox'">{{'here' | translate}}</a>
+                {{ 'You can update the requested information by clicking on the button "Update Your Request" or send a message to your asset manager by clicking' | translate }}
+                <a [routerLink]="'/messages/inbox'">{{ 'here' | translate }}</a>
             </p>
             <div class="hr-line-dashed"></div>
         </ng-container>
         <ng-container>
-            <h1 [ngClass]="{'mt-1': (requestDetailStatus === 'Approved' || requestDetailStatus === 'WaitingForApproval')}">{{'@companyName@\'s Contact Details' | translate: {'companyName': companyName} }}</h1>
+            <h1 [ngClass]="{'mt-1': (requestDetailStatus === 'Approved' || requestDetailStatus === 'WaitingForApproval')}">{{ '@companyName@\'s Contact Details' | translate: { 'companyName': companyName } }}</h1>
             <div class="row" [ngClass]="{'mt-1': (requestDetailStatus === 'Approved' || requestDetailStatus === 'WaitingForApproval')}">
-                <div class="col-md-12">
+                <div class="col-md-12"> 
                     <section class="form-block">
                         <div class="row">
                             <div class="form-group col-md-3">
-                                <label class="control-label" for="firstName">{{'First name' | translate}}</label>
+                                <label class="control-label" for="firstName">{{ 'First Name' | translate }}</label>
                                 <input type="text" name="firstName" id="firstName" formControlName="firstName">
                             </div>
                             <div class="form-group col-md-3">
-                                <label class="control-label" for="lastName">{{'Last name' | translate}}</label>
+                                <label class="control-label" for="lastName">{{ 'Last Name' | translate }}</label>
                                 <input type="text" name="lastName" id="lastName" formControlName="lastName">
                             </div>
                             <div class="form-group col-md-3">
-                                <label class="control-label" for="email">{{'Email Address' | translate}}</label>
+                                <label class="control-label" for="email">{{ 'Email Address' | translate }}</label>
                                 <input type="text" name="email" id="email" formControlName="email">
                             </div>
                             <div class="form-group col-md-3">
-                                <label class="control-label" for="phone">{{'Phone number' | translate}}</label>
+                                <label class="control-label" for="phone">{{ 'Phone Number' | translate }}</label>
                                 <input type="text" name="phone" id="phone" formControlName="phone">
                             </div>
                         </div>
@@ -78,7 +78,7 @@
 <ng-container *ngIf="isKYCFull">
     <div class="wrapper wrapper-content">
         <div class="hr-line-dashed"></div>
-        <p>{{'Please find below the information and documents you provided during the application for @companyName@.' | translate: {'companyName': companyName} }}</p>
+        <p>{{ 'Please find below the information and documents you provided during the application for @companyName@.' | translate: { 'companyName': companyName } }}</p>
     </div>
     <kyc-details [kycID]="kycID"></kyc-details>
 </ng-container>

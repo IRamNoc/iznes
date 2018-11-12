@@ -3,7 +3,6 @@ import { select } from '@angular-redux/store';
 import { Subject } from 'rxjs/Subject';
 import 'rxjs/add/operator/takeUntil';
 import { FormBuilder, FormGroup } from '@angular/forms';
-
 import { OfiKycService } from '@ofi/ofi-main/ofi-req-services/ofi-kyc/service';
 import { MultilingualService } from '@setl/multilingual';
 import { FileDownloader } from '@setl/utils';
@@ -15,7 +14,6 @@ import { MemberSocketService } from '@setl/websocket-service';
     styleUrls: ['./kyc-information-audit-trail.component.scss'],
 })
 export class KycInformationAuditTrailComponent implements OnInit, OnDestroy, OnChanges {
-
     informationAuditItems = [];
     filteredInformationAuditItems = [];
     subsectionEnums;
@@ -111,7 +109,6 @@ export class KycInformationAuditTrailComponent implements OnInit, OnDestroy, OnC
     }
 
     ngOnInit() {
-
         if (this.kycID) {
             this.kycService.fetchInformationAuditByKycID(this.kycID);
         }
@@ -172,5 +169,4 @@ export class KycInformationAuditTrailComponent implements OnInit, OnDestroy, OnC
 
         this.fileDownloader.downLoaderFile(config);
     }
-
 }

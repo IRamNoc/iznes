@@ -4,11 +4,9 @@ import { get as getValue, set as setValue, filter, isEmpty, castArray } from 'lo
 import { select } from '@angular-redux/store';
 import { Subject } from 'rxjs';
 import { filter as rxFilter, map, take, takeUntil } from 'rxjs/operators';
-
 import { FormPercentDirective } from '@setl/utils/directives/form-percent/formpercent';
 import { IdentificationService, buildBeneficiaryObject } from '../identification.service';
 import { DocumentsService } from '../documents.service';
-
 import { NewRequestService } from '../../new-request.service';
 import { countries } from '../../../requests.config';
 
@@ -18,7 +16,6 @@ import { countries } from '../../../requests.config';
     styleUrls: ['./company-information.component.scss'],
 })
 export class CompanyInformationComponent implements OnInit, OnDestroy {
-
     @ViewChild(FormPercentDirective) formPercent: FormPercentDirective;
     @Input() form: FormGroup;
     @select(['ofi', 'ofiKyc', 'myKycRequested', 'kycs']) requests$;
@@ -26,6 +23,9 @@ export class CompanyInformationComponent implements OnInit, OnDestroy {
     unsubscribe: Subject<any> = new Subject();
     open: boolean = false;
     countries = countries;
+    regulatoryStatusList;
+    regulatoryStatusInsurerTypeList;
+    sectorActivityList;
     companyActivitiesList;
     ownAccountInvestorList;
     investorOnBehalfList;
@@ -33,6 +33,7 @@ export class CompanyInformationComponent implements OnInit, OnDestroy {
     financialAssetsInvestedList;
     geographicalAreaList;
     custodianHolderAccountList;
+    listingMarketsList;
 
     constructor(
         private newRequestService: NewRequestService,
@@ -42,6 +43,9 @@ export class CompanyInformationComponent implements OnInit, OnDestroy {
     }
 
     ngOnInit() {
+        this.regulatoryStatusList = this.newRequestService.regulatoryStatusList;
+        this.regulatoryStatusInsurerTypeList = this.newRequestService.regulatoryStatusInsurerTypeList;
+        this.sectorActivityList = this.newRequestService.sectorActivityList;
         this.companyActivitiesList = this.newRequestService.companyActivitiesList;
         this.ownAccountInvestorList = this.newRequestService.ownAccountInvestorList;
         this.investorOnBehalfList = this.newRequestService.investorOnBehalfList;
@@ -49,20 +53,30 @@ export class CompanyInformationComponent implements OnInit, OnDestroy {
         this.financialAssetsInvestedList = this.newRequestService.financialAssetsInvestedList;
         this.geographicalAreaList = this.newRequestService.geographicalAreaList;
         this.custodianHolderAccountList = this.newRequestService.custodianHolderAccountList;
+        this.listingMarketsList = this.newRequestService.listingMarketsList;
 
         this.initFormCheck();
         this.getCurrentFormData();
     }
 
     initFormCheck() {
+
+        this.form.get('sectorActivity').valueChanges
+        .pipe(takeUntil(this.unsubscribe))
+        .subscribe((data) => {
+            const sectorActivityValue = getValue(data, [0, 'id']);
+
+            this.formCheckSectorActivity(sectorActivityValue);
+        })
+        ;
+
         this.form.get('activities').valueChanges
         .pipe(takeUntil(this.unsubscribe))
         .subscribe((data) => {
             const activitiesValue = getValue(data, [0, 'id']);
 
             this.formCheckActivity(activitiesValue);
-        })
-        ;
+        });
 
         this.form.get('geographicalAreaOfActivity').valueChanges
         .pipe(takeUntil(this.unsubscribe))
@@ -70,29 +84,25 @@ export class CompanyInformationComponent implements OnInit, OnDestroy {
             const activityGeographicalAreaValue = getValue(data, [0, 'id']);
 
             this.formCheckActivityGeographicalArea(activityGeographicalAreaValue);
-        })
-        ;
+        });
 
         this.form.get('activityRegulated').valueChanges
         .pipe(takeUntil(this.unsubscribe))
         .subscribe((isActivityRegulatedValue) => {
             this.formCheckActivityRegulated(isActivityRegulatedValue);
-        })
-        ;
+        });
 
         this.form.get('companyListed').valueChanges
         .pipe(takeUntil(this.unsubscribe))
         .subscribe((isCompanyListedValue) => {
             this.formCheckCompanyListed(isCompanyListedValue);
-        })
-        ;
+        });
 
         this.form.get('capitalNature.others').valueChanges
         .pipe(takeUntil(this.unsubscribe))
         .subscribe((data) => {
             this.formCheckNatureAndOrigin(data);
-        })
-        ;
+        });
 
         this.form.get('geographicalOrigin1').valueChanges
         .pipe(takeUntil(this.unsubscribe))
@@ -100,8 +110,15 @@ export class CompanyInformationComponent implements OnInit, OnDestroy {
             const geographicalOriginTypeValue = getValue(data, [0, 'id']);
 
             this.formCheckGeographicalOrigin(geographicalOriginTypeValue);
-        })
-        ;
+        });
+
+        this.form.get('regulatoryStatus').valueChanges
+        .pipe(takeUntil(this.unsubscribe))
+        .subscribe((data) => {
+            const regulatoryStatusValue = getValue(data, [0, 'id']);
+
+            this.formCheckRegulatoryStatus(regulatoryStatusValue);
+        });
     }
 
     get beneficiaries() {
@@ -110,6 +127,19 @@ export class CompanyInformationComponent implements OnInit, OnDestroy {
 
     get geographicalOrigin() {
         return getValue(this.form.get('geographicalOrigin1').value, [0, 'id']);
+    }
+
+    formCheckSectorActivity(value) {
+        const form = this.form;
+        const sectorActivityTextControl = form.get('sectorActivityText');
+
+        if (value === 'other') {
+            sectorActivityTextControl.enable();
+        } else {
+            sectorActivityTextControl.disable();
+        }
+
+        this.formPercent.refreshFormPercent();
     }
 
     formCheckActivity(value) {
@@ -171,13 +201,37 @@ export class CompanyInformationComponent implements OnInit, OnDestroy {
     formCheckActivityRegulated(value) {
         const activityAuthorityControl = this.form.get('regulator');
         const activityApprovalNumberControl = this.form.get('approvalNumber');
+        const regulatoryStatusControl = this.form.get('regulatoryStatus');
 
         if (value) {
             activityAuthorityControl.enable();
             activityApprovalNumberControl.enable();
+            regulatoryStatusControl.enable();
         } else {
             activityAuthorityControl.disable();
             activityApprovalNumberControl.disable();
+            regulatoryStatusControl.disable();
+        }
+
+        regulatoryStatusControl.updateValueAndValidity();
+        this.formPercent.refreshFormPercent();
+    }
+
+    formCheckRegulatoryStatus(value) {
+        const form = this.form;
+        const controls = ['regulatoryStatusInsurerType', 'regulatoryStatusListingOther'];
+
+        for (const control of controls) {
+            form.get(control).disable();
+        }
+
+        switch (value) {
+        case 'insurer':
+            form.get('regulatoryStatusInsurerType').enable();
+            break;
+        case 'other' :
+            form.get('regulatoryStatusListingOther').enable();
+            break;
         }
 
         this.formPercent.refreshFormPercent();
@@ -187,15 +241,18 @@ export class CompanyInformationComponent implements OnInit, OnDestroy {
         const companyListingMarketsControl = this.form.get('listingMarkets');
         const bloombergCodesControl = this.form.get('bloombergCode');
         const listedShareISINControl = this.form.get('isinCode');
+        const floatableSharesControl = this.form.get('floatableShares');
 
         if (value) {
             companyListingMarketsControl.enable();
             listedShareISINControl.enable();
             bloombergCodesControl.enable();
+            floatableSharesControl.enable();
         } else {
             companyListingMarketsControl.disable();
             listedShareISINControl.disable();
             bloombergCodesControl.disable();
+            floatableSharesControl.disable();
         }
 
         this.formPercent.refreshFormPercent();
@@ -286,8 +343,7 @@ export class CompanyInformationComponent implements OnInit, OnDestroy {
                     }
                 });
             });
-        })
-        ;
+        });
     }
 
     handleReady() {

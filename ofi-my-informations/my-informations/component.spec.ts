@@ -9,7 +9,7 @@ import { NgRedux } from '@angular-redux/store';
 import { KycMyInformations } from '../../ofi-store/ofi-kyc/my-informations';
 import { OfiManagementCompanyService } from '@ofi/ofi-main/ofi-req-services/ofi-product/management-company/management-company.service';
 import { MultilingualService } from '@setl/multilingual';
-import config from '../config';
+import { phoneCodeList } from '../../shared/phone-codes.values';
 
 const MultilingualServiceSpy = jasmine.createSpyObj('MultilingualService', ['translate']);
 
@@ -54,7 +54,7 @@ describe('OfiMyInformationsComponent', () => {
                 { provide: NgRedux, useValue: ngReduxSpy },
                 { provide: OfiManagementCompanyService, useClass: OfiManagementCompanyServiceMock },
                 { provide: MultilingualService, useValue: MultilingualServiceSpy },
-                { provide: 'my-information-config', useValue: config },
+                { provide: 'phoneCodeList', useValue: phoneCodeList },
             ],
         }).compileComponents();
         TestBed.resetTestingModule = () => TestBed;

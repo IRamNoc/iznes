@@ -1,7 +1,6 @@
 import { Injectable } from '@angular/core';
 import * as _ from 'lodash';
 import { ToasterService } from 'angular2-toaster';
-
 import { MultilingualService } from '@setl/multilingual';
 import { MemberSocketService } from '@setl/websocket-service';
 import { FileService } from '@setl/core-req-services/file/file.service';
@@ -46,8 +45,7 @@ export class RequestsService {
             text: company.companyName
         }))
         .values()
-        .value()
-            ;
+        .value();
     }
 
     filterCompanies(companies, kycList) {
@@ -55,7 +53,6 @@ export class RequestsService {
 
         return _.filter(companies, company => !kycList[company.companyID]);
     }
-
 
     shapeServerData(data) {
         return _.mapValues(data, (value: string, key) => {
@@ -70,6 +67,7 @@ export class RequestsService {
                     return { id: value };
                 });
             }
+
             if (checkboxControls.indexOf(key) !== -1) {
                 let split = value.split(' ');
                 let trueArray = new Array(split.length).fill(true);
@@ -270,11 +268,8 @@ export class RequestsService {
     }
 
     getContext() {
-
     }
 
     getText() {
-
     }
-
 }

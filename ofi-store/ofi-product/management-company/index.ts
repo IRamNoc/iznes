@@ -1,8 +1,8 @@
-import {combineReducers, Reducer} from 'redux';
+import { combineReducers, Reducer } from 'redux';
 
 import {
-    managementCompanyListState,
-    invManagementCompanyListState,
+    ManagementCompanyListState,
+    InvManagementCompanyListState,
     managementCompanyListReducer,
     invManagementCompanyListReducer,
     SET_MANAGEMENT_COMPANY_LIST,
@@ -10,16 +10,16 @@ import {
 } from './management-company-list';
 
 export {
-    managementCompanyListState,
-    invManagementCompanyListState,
+    ManagementCompanyListState,
+    InvManagementCompanyListState,
     managementCompanyListReducer,
     SET_MANAGEMENT_COMPANY_LIST,
     SET_INV_MANAGEMENT_COMPANY_LIST,
 };
 
 export interface ManagementCompanyState {
-    managementCompanyList: managementCompanyListState;
-    investorManagementCompanyList: invManagementCompanyListState;
+    managementCompanyList: ManagementCompanyListState;
+    investorManagementCompanyList: InvManagementCompanyListState;
 }
 
 export const ManagementCompanyReducer: Reducer<ManagementCompanyState> = combineReducers<ManagementCompanyState>({

@@ -1,20 +1,18 @@
-import {Component, OnInit, Input, OnDestroy, ViewChild} from '@angular/core';
-import {select} from '@angular-redux/store';
-import {FormControl} from '@angular/forms';
-import {Subject} from 'rxjs';
-import {filter, take, takeUntil} from 'rxjs/operators';
-import {isEmpty, values, map, toNumber} from 'lodash';
-
-import {FormPercentDirective} from '@setl/utils/directives/form-percent/formpercent';
-import {NewRequestService} from '../../new-request.service';
-import {RiskProfileService} from '../risk-profile.service';
+import { Component, OnInit, Input, OnDestroy, ViewChild } from '@angular/core';
+import { select } from '@angular-redux/store';
+import { FormControl } from '@angular/forms';
+import { Subject } from 'rxjs';
+import { filter, take, takeUntil } from 'rxjs/operators';
+import { isEmpty, values, map, toNumber } from 'lodash';
+import { FormPercentDirective } from '@setl/utils/directives/form-percent/formpercent';
+import { NewRequestService } from '../../new-request.service';
+import { RiskProfileService } from '../risk-profile.service';
 
 @Component({
     selector: 'investment-objective',
     templateUrl: './investment-objective.component.html'
 })
 export class InvestmentObjectiveComponent implements OnInit, OnDestroy {
-
     @ViewChild(FormPercentDirective) formPercent: FormPercentDirective;
     @Input() form;
     @select(['ofi', 'ofiKyc', 'myKycRequested', 'kycs']) currentlyRequestedKycs$;
@@ -37,23 +35,19 @@ export class InvestmentObjectiveComponent implements OnInit, OnDestroy {
         this.initFormCheck();
         this.initData();
         this.getCurrentFormData();
-
         this.updateCrossAM();
     }
 
     getCurrentFormData() {
         this.riskProfileService.currentServerData.riskobjective
-            .pipe(
-                takeUntil(this.unsubscribe)
-            )
+            .pipe(takeUntil(this.unsubscribe))
             .subscribe((data: any) => {
                 const cross = toNumber(data.objectivesSameInvestmentCrossAm);
                 if(cross){
                     this.form.get('objectivesSameInvestmentCrossAm').patchValue(cross, {emitEvent: false});
                     this.formCheckSameInvestmentCrossAm(cross);
                 }
-            })
-        ;
+            });
     }
 
     initData() {
@@ -65,26 +59,22 @@ export class InvestmentObjectiveComponent implements OnInit, OnDestroy {
             .subscribe(requestedKycs => {
                 this.amcs = values(requestedKycs);
                 this.updateCrossAM();
-            })
-        ;
+            });
     }
 
-    updateCrossAM(){
+    updateCrossAM() {
         const value = this.form.get('objectivesSameInvestmentCrossAm').value;
-        
+
         this.formCheckSameInvestmentCrossAm(value);
     }
 
     initFormCheck() {
         this.form.get('objectivesSameInvestmentCrossAm').valueChanges
-            .pipe(
-                takeUntil(this.unsubscribe)
-            )
-            .subscribe(value => {
+            .pipe(takeUntil(this.unsubscribe))
+            .subscribe((value) => {
                 this.riskProfileService.currentServerData.riskobjective.next('');
                 this.formCheckSameInvestmentCrossAm(value);
-            })
-        ;
+            });
     }
 
     formCheckSameInvestmentCrossAm(value) {
@@ -102,8 +92,8 @@ export class InvestmentObjectiveComponent implements OnInit, OnDestroy {
         let objectivesControl = this.form.get('objectives');
         let numberOfControls = objectivesControl.length;
 
-        for (let i = numberOfControls; i >= 0; i--) {
-            objectivesControl.removeAt(i);
+        for (let i = numberOfControls; i > 0; i -= 1) {
+            objectivesControl.removeAt(i - 1);
         }
 
         objectives.forEach(objective => {
@@ -113,16 +103,6 @@ export class InvestmentObjectiveComponent implements OnInit, OnDestroy {
 
     refreshForm(){
         this.formPercent.refreshFormPercent();
-    }
-
-    hasError(control, error = []) {
-        return this.newRequestService.hasError(this.form, control, error);
-    }
-
-    isDisabled(path) {
-        let control = this.form.get(path);
-
-        return control.disabled;
     }
 
     ngOnDestroy() {

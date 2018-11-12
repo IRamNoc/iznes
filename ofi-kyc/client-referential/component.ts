@@ -242,7 +242,6 @@ export class OfiClientReferentialComponent implements OnInit, OnDestroy {
                 this._changeDetectorRef.markForCheck();
             }),
         );
-
     }
 
     requestSearch() {
@@ -508,5 +507,4 @@ export class OfiClientReferentialComponent implements OnInit, OnDestroy {
             key.unsubscribe();
         }
     }
-
 }

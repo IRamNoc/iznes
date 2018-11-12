@@ -13,6 +13,7 @@ import { NgRedux } from '@angular-redux/store';
 import { ToasterService } from 'angular2-toaster';
 import { OfiKycService } from '@ofi/ofi-main/ofi-req-services/ofi-kyc/service';
 import { MessagesService } from '@setl/core-messages/index';
+import { MultilingualService } from '@setl/multilingual';
 
 const DIVIDER_NUMBER = 100000;
 
@@ -23,7 +24,6 @@ const DIVIDER_NUMBER = 100000;
     changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class OfiFundAccessTable {
-
     tableData: any;
     oldTableData: any;
 
@@ -59,15 +59,15 @@ export class OfiFundAccessTable {
     };
 
     /* Constructor. */
-    constructor(private _location: Location,
-                private _confirmationService: ConfirmationService,
-                private _ngRedux: NgRedux<any>,
+    constructor(private location: Location,
+                private confirmationService: ConfirmationService,
+                private ngRedux: NgRedux<any>,
                 private toasterService: ToasterService,
-                private _messagesService: MessagesService,
-                private _ofiKycService: OfiKycService,
-                private _changeDetectorRef: ChangeDetectorRef,
+                private messagesService: MessagesService,
+                private ofiKycService: OfiKycService,
+                private changeDetectorRef: ChangeDetectorRef,
+                private translate: MultilingualService,
                 private fileService: FileService) {
-
     }
 
     onClickAccess(id) {
@@ -101,7 +101,6 @@ export class OfiFundAccessTable {
     }
 
     closeOverrideModal(type) {
-
         if (type == 1) {
             this.tableData[this.currentOverride]['newOverride'] = true;
             this.tableData[this.currentOverride]['override'] = true;
@@ -162,7 +161,7 @@ export class OfiFundAccessTable {
                 });
             }
         });
-        this._changeDetectorRef.markForCheck();
+        this.changeDetectorRef.markForCheck();
     }
 
     backBtn() {
@@ -171,14 +170,14 @@ export class OfiFundAccessTable {
 
     confirmSave() {
         const message = (Object.keys(this.changes).length == 0 ?
-                'No changes have been made to the Investors\' Fund Access permissions.'
-                :
-                'Please confirm the changes made to the Investors\' Fund Access permissions.'
+            this.translate.translate('No changes have been made to the Investors\' Fund Access permissions.')
+            :
+            this.translate.translate('Please confirm the changes made to the Investors\' Fund Access permissions.')
         );
 
-        this._confirmationService.create('Confirm Fund Share Access:', message, {
-            confirmText: 'Confirm Access and Save Changes',
-            declineText: 'Cancel',
+        this.confirmationService.create(this.translate.translate('Confirm Fund Share Access'), message, {
+            confirmText: this.translate.translate('Confirm Access and Save Changes'),
+            declineText: this.translate.translate('Cancel'),
             btnClass: 'primary',
         }).subscribe((ans) => {
             if (ans.resolved) {
@@ -188,9 +187,7 @@ export class OfiFundAccessTable {
     }
 
     saveData() {
-
         const changedData = this.tableData.filter((i) => this.changes.findIndex((j) => j.id == i.id) > -1);
-
         const promises = [];
         const uploadData = {};
 
@@ -199,7 +196,6 @@ export class OfiFundAccessTable {
                 changedData[key]['overrideAmount'] = changedData[key]['overrideAmount'].replace(/\s+/g, '');
 
                 promises.push(new Promise((resolve, reject) => {
-
                     if (_.isEmpty(this.uploadFiles[key])) {
                         resolve();
                         return;
@@ -208,7 +204,7 @@ export class OfiFundAccessTable {
                     const asyncTaskPipe = this.fileService.addFile({
                         files: this.uploadFiles[key],
                     });
-                    this._ngRedux.dispatch(SagaHelper.runAsyncCallback(
+                    this.ngRedux.dispatch(SagaHelper.runAsyncCallback(
                         asyncTaskPipe,
                         (function (data) {
 
@@ -219,7 +215,7 @@ export class OfiFundAccessTable {
                 }));
             }
             if (changedData[key]['newOverride'] && !changedData[key]['override']) {
-                //remove file
+                // remove file
                 changedData[key]['overrideDocument'] = '';
             }
         });
@@ -229,19 +225,20 @@ export class OfiFundAccessTable {
                 changedData[key]['overrideDocument'] = uploadData[key]['fileHash'];
             });
 
-            this._ofiKycService.saveFundAccess({
+            this.ofiKycService.saveFundAccess({
                 access: changedData,
             }).then(() => {
-
                 // success call back
-                this.toasterService.pop('success', this.getInvestorCompanyName() + '\'s shares authorisation has been successfully updated');
+                this.toasterService.pop('success', this.translate.translate('@investorName@\'s shares authorisation has been successfully updated', { 'investorName': this.getInvestorCompanyName() }));
+
                 console.error(this.investorData['investorWalletID']);
 
                 const recipientsArr = [this.investorData['investorWalletID']];
-                const subjectStr = this.amCompany + ' has updated your access';
+                const subjectStr = this.translate.translate('@amCompany@ has updated your access', { 'amCompany': this.amCompany });
 
-                let bodyStr = 'Hello ' + this.getInvestorFirstName() + ',<br><br>' + this.amCompany + ' has made updates on your access list.';
-                bodyStr += '<br><br>Click on the button below to go to the Funds shares page to see all changes and begin trading on IZNES<br><br>%@link@%<br><br>Thank you,<br><br>The IZNES team.';
+                let bodyStr = `${this.translate.translate('Hello @investorFirstName@, @amCompany@ has made updates on your access list', { 'investorFirstName': this.getInvestorFirstName(), 'amCompany': this.amCompany })}.`;
+
+                bodyStr += `<br><br>${this.translate.translate('Click on the button below to go to the Funds shares page to see all changes and begin trading on IZNES')}.<br><br>%@link@%<br><br>${this.translate.translate('Thank you')},<br><br>${this.translate.translate('The IZNES team')}.`;
 
                 const action = {
                     type: 'messageWithLink',
@@ -256,16 +253,14 @@ export class OfiFundAccessTable {
                     },
                 };
 
-                this._messagesService.sendMessage(recipientsArr, subjectStr, bodyStr, action as any);
+                this.messagesService.sendMessage(recipientsArr, subjectStr, bodyStr, action as any);
 
                 this.backBtn();
             }, () => {
                 // fail call back
                 // todo
             });
-
         });
-
     }
 
     /**
@@ -295,5 +290,4 @@ export class OfiFundAccessTable {
     getInvestorWalletName() {
         return this.investorData['investorWalletName'];
     }
-
 }

@@ -2,8 +2,8 @@
     <!-- Breadcrumbs. -->
     <div class="header-breadcrumbs">
         <h1 id="ofi-client-referential"><i class="fa fa-users"></i>
-            {{'Client Referential' | translate}}
-            <span *ngIf="kycId == ''">: {{'All Clients' | translate}}</span>
+            {{ 'Client Referential' | translate }}
+            <span *ngIf="kycId == ''">: {{ 'All Clients' | translate }}</span>
             <span *ngIf="kycId != '' && !!clients[kycId]">: {{clients[kycId].companyName}} - {{clients[kycId].clientReference}}</span>
         </h1>
     </div>
@@ -11,21 +11,21 @@
     <clr-tabs *ngIf="kycId == ''">
         <clr-tab>
             <button clrTabLink>
-                <i class="fa fa-users"></i> {{'All Clients' | translate}}
+                <i class="fa fa-users"></i> {{ 'All Clients' | translate }}
             </button>
             <clr-tab-content>
                 <div class="row">
                     <div class="col-sm-6">
-                        {{'Please find below the list of your clients.' | translate}}
+                        {{ 'Please find below the list of your clients.' | translate }}
                     </div>
                     <div class="col-sm-6" align="right">
-                        {{'From here you will also be able to invite more investors to join IZNES:' | translate}}
-                        <button id="invite-investors-btn" class="btn" style="margin-left: 10px;" (click)="gotoInvite();">{{'Invite Investors' | translate}}</button>
+                        {{ 'From here you will also be able to invite more investors to join IZNES:' | translate }}
+                        <button id="invite-investors-btn" class="btn" style="margin-left: 10px;" (click)="gotoInvite();">{{ 'Invite Investors' | translate }}</button>
                     </div>
                 </div>
                 <div class="row">
                     <div class="col-sm-6">
-                        <p>{{'Investor Type' | translate}}</p>
+                        <p>{{ 'Investor Type' | translate }}</p>
                         <form [formGroup]="investorTypeForm">
                             <ng-select
                                 id="investor-type-select"
@@ -40,13 +40,13 @@
                     <div class="col-sm-6" align="right">
                         <p>&nbsp;</p>
                         <button class="btn btn-primary" (click)="changePage('audit')">
-                            {{'View Shares Authorisation Audit Trail' | translate}}
+                            {{ 'View Shares Authorisation Audit Trail' | translate }}
                         </button>
                         <button class="btn btn-primary" (click)="downloadAllHoldingsCSVFile()">
-                            {{'Export Clients Holdings' | translate}}
+                            {{ 'Export Clients Holdings' | translate }}
                         </button>
                         <button class="btn btn-primary" (click)="downloadReferentialCSVFile()">
-                            {{'Export Clients Referential' | translate}}
+                            {{ 'Export Clients Referential' | translate }}
                         </button>
                     </div>
                 </div>
@@ -54,13 +54,13 @@
                     <div class="col-sm-12">
 
                         <clr-datagrid #dataGrid>
-                            <clr-dg-column [clrDgField]="'clientReference'">{{'Client Reference' | translate}}</clr-dg-column>
-                            <clr-dg-column [clrDgField]="'walletName'">{{'Iznes Reference' | translate}}</clr-dg-column>
-                            <clr-dg-column [clrDgField]="'companyName'">{{'Company' | translate}}</clr-dg-column>
-                            <clr-dg-column [clrDgField]="'leiCode'">{{'LEI' | translate}}</clr-dg-column>
-                            <clr-dg-column [clrDgField]="'legalForm'">{{'Legal Form' | translate}}</clr-dg-column>
-                            <clr-dg-column [clrDgField]="'sectorActivity'">{{'Primary Sector of Activity' | translate}}</clr-dg-column>
-                            <clr-dg-column [clrDgField]="'email'">{{'Email' | translate}}</clr-dg-column>
+                            <clr-dg-column [clrDgField]="'clientReference'">{{ 'Client Reference' | translate }}</clr-dg-column>
+                            <clr-dg-column [clrDgField]="'walletName'">{{ 'IZNES Reference' | translate }}</clr-dg-column>
+                            <clr-dg-column [clrDgField]="'companyName'">{{ 'Company' | translate }}</clr-dg-column>
+                            <clr-dg-column [clrDgField]="'leiCode'">{{ 'LEI' | translate }}</clr-dg-column>
+                            <clr-dg-column [clrDgField]="'legalForm'">{{ 'Legal Form' | translate }}</clr-dg-column>
+                            <clr-dg-column [clrDgField]="'sectorActivity'">{{ 'Primary Sector of Activity' | translate }}</clr-dg-column>
+                            <clr-dg-column [clrDgField]="'email'">{{ 'Email' | translate }}</clr-dg-column>
 
                             <clr-dg-row *clrDgItems="let item of clientReferential" style="cursor: pointer;" (click)="viewClient(item.kycID);">
                                 <clr-dg-cell>{{item.clientReference}}</clr-dg-cell>
@@ -73,7 +73,6 @@
                             </clr-dg-row>
 
                             <clr-dg-footer>{{pagination.firstItem + 1}} - {{pagination.lastItem + 1}}
-
                                 <clr-dg-pagination #pagination [clrDgPageSize]="10"></clr-dg-pagination>
                             </clr-dg-footer>
                         </clr-datagrid>
@@ -86,50 +85,50 @@
 
     <clr-tabs *ngIf="kycId != ''">
         <clr-tab *ngIf="!isPortfolioManager()">
-            <button clrTabLink>{{'KYC Information' | translate}}</button>
+            <button clrTabLink>{{ 'KYC Information' | translate }}</button>
             <clr-tab-content *clrIfActive="true">
 
-                <h2>{{'Professional Investor Details' | translate}}</h2>
+                <h2>{{ 'Professional Investor Details' | translate }}</h2>
                 <form [formGroup]="investorForm" (ngSubmit)="saveClientReference()">
                     <div class="row">
                         <div class="form-group col-sm-6">
-                            <label for="companyName">{{'Company name:' | translate}}</label>
+                            <label for="companyName">{{ 'Company Name:' | translate }}</label>
                             <div>
                                 <input type="text" id="companyName" class="form-control" formControlName="companyName">
                             </div>
                         </div>
                         <div class="form-group col-sm-6">
-                            <label for="clientReference">{{'Client reference:' | translate}}</label>
+                            <label for="clientReference">{{ 'Client Reference:' | translate }}</label>
                             <div>
                                 <input type="text" id="clientReference" class="form-control" formControlName="clientReference">
                             </div>
                         </div>
                         <div class="form-group col-sm-6">
-                            <label for="firstName">{{'First name:' | translate}}</label>
+                            <label for="firstName">{{ 'First Name:' | translate }}</label>
                             <div>
                                 <input type="text" id="firstName" class="form-control" formControlName="firstName">
                             </div>
                         </div>
                         <div class="form-group col-sm-6">
-                            <label for="lastName">{{'Last name:' | translate}}</label>
+                            <label for="lastName">{{ 'Last Name:' | translate }}</label>
                             <div>
                                 <input type="text" id="lastName" class="form-control" formControlName="lastName">
                             </div>
                         </div>
                         <div class="form-group col-sm-6">
-                            <label for="email">{{'Email address:' | translate}}</label>
+                            <label for="email">{{ 'Email Address:' | translate }}</label>
                             <div>
                                 <input type="text" id="email" class="form-control" formControlName="email">
                             </div>
                         </div>
                         <div class="form-group col-sm-6">
-                            <label for="phoneNumber">{{'Phone number:' | translate}}</label>
+                            <label for="phoneNumber">{{ 'Phone Number:' | translate }}</label>
                             <div>
                                 <input type="text" id="phoneNumber" class="form-control" formControlName="phoneNumber">
                             </div>
                         </div>
                         <div class="form-group col-sm-6">
-                            <label for="approvalDateRequest">{{'Date of approval request:' | translate}}</label>
+                            <label for="approvalDateRequest">{{ 'Date of Approval Request:' | translate }}</label>
                             <div>
                                 <input type="text" id="approvalDateRequest" class="form-control" formControlName="approvalDateRequest">
                             </div>
@@ -137,7 +136,7 @@
                     </div>
                     <div class="row">
                         <div class="form-group col-sm-12 submit-container">
-                            <button id="investorForm-btn-submit" type="submit" class="btn btn-primary" [disabled]="!investorForm.dirty">{{'Save' | translate}}</button>
+                            <button id="investorForm-btn-submit" type="submit" class="btn btn-primary" [disabled]="!investorForm.dirty">{{ 'Save' | translate }}</button>
                         </div>
                     </div>
                 </form>
@@ -147,51 +146,51 @@
 
                     <div class="row">
                         <div class="col-sm-12" style="margin-top: 0.5rem">
-                            <p>{{'Please find below the information and documents provided by @companyName@ during the KYC application to your company.' | translate: {'companyName': companyName} }}</p>
+                            <p>{{ 'Please find below the information and documents provided by @companyName@ during the KYC application to your company.' | translate: {'companyName': companyName} }}</p>
                         </div>
                     </div>
                     <kyc-details [kycID]="kycId"></kyc-details>
                 </ng-container>
 
                 <div align="middle" style="margin-top: 20px;">
-                    <button class="btn btn-info" (click)="changePage('list')">{{'Back' | translate}}</button>
+                    <button class="btn btn-info" (click)="changePage('list')">{{ 'Back' | translate }}</button>
                 </div>
             </clr-tab-content>
         </clr-tab>
         <clr-tab>
-            <button clrTabLink (click)="loadTab(2);">{{'Shares Authorisation' | translate}}</button>
+            <button clrTabLink (click)="loadTab(2);">{{ 'Shares Authorisation' | translate }}</button>
             <clr-tab-content *clrIfActive="isPortfolioManager() ? true : false">
                 <div class="row">
                     <div class="col-sm-6" style="margin-top: 0.5rem">
-                        <p>{{'Please find below the authorisation of @companyName@ regarding your shares.' | translate: {'companyName': companyName} }}</p>
+                        <p>{{ 'Please find below the authorisation of @companyName@ regarding your shares.' | translate: {'companyName': companyName} }}</p>
                     </div>
                     <div class="col-sm-6" align="right">
-                        <button class="btn btn-primary" (click)="changePage('audit')">{{'View Previous Updates' | translate}}</button>
+                        <button class="btn btn-primary" (click)="changePage('audit')">{{ 'View Previous Updates' | translate }}</button>
                     </div>
                 </div>
                 <access-table [otherData]="otherData" [tableDataArr]="tableData" (back)="changePage('list')" style="width: 100%"></access-table>
             </clr-tab-content>
         </clr-tab>
         <clr-tab>
-            <button clrTabLink (click)="loadTab(3);">{{'Holdings' | translate}}</button>
+            <button clrTabLink (click)="loadTab(3);">{{ 'Holdings' | translate }}</button>
             <clr-tab-content>
                 <div class="row">
                     <div class="col-sm-6" style="margin-top: 0.5rem">
-                        <p>{{'Please find below @companyName@\'s holding details:' | translate: {'companyName': companyName} }}</p>
+                        <p>{{ 'Please find below @companyName@\'s holding details:' | translate: {'companyName': companyName} }}</p>
                     </div>
                     <div class="col-sm-6" align="right">
-                        <button class="btn btn-primary" (click)="downloadSingleHoldingsCSVFile()">{{'Export Holdings' | translate}}</button>
+                        <button class="btn btn-primary" (click)="downloadSingleHoldingsCSVFile()">{{ 'Export Holdings' | translate }}</button>
                     </div>
                 </div>
                 <clr-datagrid #holdingDataGrid>
-                    <clr-dg-column [clrDgField]="'fundName'">{{'Fund Name' | translate}}</clr-dg-column>
-                    <clr-dg-column [clrDgField]="'shareName'">{{'Share Name' | translate}}</clr-dg-column>
-                    <clr-dg-column [clrDgField]="'fundCurrency'">{{'Currency' | translate}}</clr-dg-column>
-                    <clr-dg-column [clrDgField]="'isin'">{{'ISIN' | translate}}</clr-dg-column>
-                    <clr-dg-column [clrDgField]="'quantity'">{{'Quantity' | translate}}</clr-dg-column>
-                    <clr-dg-column [clrDgField]="'latestNav'">{{'Latest NAV' | translate}}</clr-dg-column>
-                    <clr-dg-column [clrDgField]="'amount'">{{'AUI (Settled)' | translate}}</clr-dg-column>
-                    <clr-dg-column [clrDgField]="'ratio'">{{'Ratio (% AM)' | translate}}</clr-dg-column>
+                    <clr-dg-column [clrDgField]="'fundName'">{{ 'Fund Name' | translate }}</clr-dg-column>
+                    <clr-dg-column [clrDgField]="'shareName'">{{ 'Share Name' | translate }}</clr-dg-column>
+                    <clr-dg-column [clrDgField]="'fundCurrency'">{{ 'Currency' | translate }}</clr-dg-column>
+                    <clr-dg-column [clrDgField]="'isin'">{{ 'ISIN' | translate }}</clr-dg-column>
+                    <clr-dg-column [clrDgField]="'quantity'">{{ 'Quantity' | translate }}</clr-dg-column>
+                    <clr-dg-column [clrDgField]="'latestNav'">{{ 'Latest NAV' | translate }}</clr-dg-column>
+                    <clr-dg-column [clrDgField]="'amount'">{{ 'AUI (Settled)' | translate }}</clr-dg-column>
+                    <clr-dg-column [clrDgField]="'ratio'">{{ 'Ratio (% AM)' | translate }}</clr-dg-column>
 
                     <clr-dg-row *clrDgItems="let item of holdingsTable">
                         <ng-container *ngIf="!item.shareName">
@@ -214,17 +213,15 @@
                             <clr-dg-cell>{{item.amount.toFixed(2)}}</clr-dg-cell>
                             <clr-dg-cell>{{item.ratio.toFixed(2) + '%'}}</clr-dg-cell>
                         </ng-container>
-
                     </clr-dg-row>
 
                     <clr-dg-footer>{{holdingPagination.firstItem + 1}} - {{holdingPagination.lastItem + 1}}
-
                         <clr-dg-pagination #holdingPagination [clrDgPageSize]="20"></clr-dg-pagination>
                     </clr-dg-footer>
                 </clr-datagrid>
 
                 <div align="middle" style="margin-top: 20px;">
-                    <button class="btn btn-info" (click)="changePage('list')">{{'Back' | translate}}</button>
+                    <button class="btn btn-info" (click)="changePage('list')">{{ 'Back' | translate }}</button>
                 </div>
             </clr-tab-content>
         </clr-tab>
@@ -235,7 +232,7 @@
 <ng-container *ngIf="pageType == 'audit'">
     <div class="header-breadcrumbs">
         <h1 id="ofi-client-referential-audit"><i class="fa fa-clock-o"></i>
-            {{'Client Authorisation Audit Trail: ' | translate}}
+            {{ 'Client Authorisation Audit Trail' | translate }}:
             {{(kycId != '' ? clients[kycId].companyName + ' - ' + clients[kycId].clientReference: '')}}
         </h1>
     </div>
@@ -243,49 +240,63 @@
     <clr-tabs *ngIf="pageType == 'audit'">
         <clr-tab>
             <button clrTabLink>
-                <i class="fa fa-clock-o"></i> {{'All Clients' | translate}}
+                <i class="fa fa-clock-o"></i> {{ 'All Clients' | translate }}
             </button>
             <clr-tab-content>
                 <form [formGroup]="searchForm" id="search-audit-form" (keydown.enter)="$event.preventDefault()">
                     <div class="row bordered">
                         <div class="form-group col-sm-3">
-                            <label>{{'Search an investor' | translate}}</label>
+                            <label>{{ 'Search an Investor' | translate }}</label>
                             <div class="input-button-group">
-                                <input id="audit-search-investor" [formControl]="searchForm.controls['searchInvestor']" name="search-sharename" type="text"
-                                       [placeholder]="_translate.translate('Investor name or reference')" style="width: 100% !important">
+                                <input id="audit-search-investor" 
+                                        [formControl]="searchForm.controls['searchInvestor']" 
+                                        name="search-sharename" 
+                                        type="text"
+                                       [placeholder]="_translate.translate('Investor name or reference')" 
+                                       style="width: 100% !important">
                             </div>
                         </div>
                         <div class="form-group col-sm-3">
-                            <label for="orders-search-from-date">{{'From date' | translate}}</label>
+                            <label for="orders-search-from-date">{{ 'From Date' | translate }}</label>
                             <div class="input-group date-pick-wrapper">
                                 <span class="fa fa-calendar" aria-hidden="true"></span>
-                                <input id="orders-search-from-date" [formControl]="searchForm.controls['searchFrom']" autocomplete="off" [dpDayPicker]="fromConfigDate" [placeholder]="_translate.translate('Choose a date')"
-                                       mode="day" theme="dp-material">
+                                <input id="orders-search-from-date" 
+                                        [formControl]="searchForm.controls['searchFrom']" 
+                                        autocomplete="off" 
+                                        [dpDayPicker]="fromConfigDate" 
+                                        [placeholder]="_translate.translate('Choose a date')"
+                                        mode="day" 
+                                        theme="dp-material">
                             </div>
                         </div>
                         <div class="form-group col-sm-3">
-                            <label for="orders-search-to-date">{{'To date' | translate}}</label>
+                            <label for="orders-search-to-date">{{ 'To Date' | translate }}</label>
                             <div class="input-group date-pick-wrapper">
                                 <span class="fa fa-calendar" aria-hidden="true"></span>
-                                <input id="orders-search-to-date" [formControl]="searchForm.controls['searchTo']" autocomplete="off" [dpDayPicker]="toConfigDate" [placeholder]="_translate.translate('Choose a date')"
-                                       mode="day" theme="dp-material">
+                                <input id="orders-search-to-date" 
+                                        [formControl]="searchForm.controls['searchTo']" 
+                                        autocomplete="off" 
+                                        [dpDayPicker]="toConfigDate" 
+                                        [placeholder]="_translate.translate('Choose a date')"
+                                        mode="day" 
+                                        theme="dp-material">
                             </div>
                         </div>
                         <div class="col-sm-3">
-                            <button class="btn btn-primary" align="right" style="margin-top: 20px;" (click)="downloadReferentialAuditCSVFile()">{{'Export Audit Trail' | translate}}</button>
+                            <button class="btn btn-primary" align="right" style="margin-top: 20px;" (click)="downloadReferentialAuditCSVFile()">{{ 'Export Audit Trail' | translate }}</button>
                         </div>
                     </div>
                 </form>
 
                 <clr-datagrid #auditDataGrid>
-                    <clr-dg-column [clrDgField]="'company'">{{'Investor' | translate}}</clr-dg-column>
-                    <clr-dg-column [clrDgField]="'isin'">{{'ISIN' | translate}}</clr-dg-column>
-                    <clr-dg-column [clrDgField]="'shareName'">{{'Share Name' | translate}}</clr-dg-column>
-                    <clr-dg-column [clrDgField]="'info'">{{'Information' | translate}}</clr-dg-column>
-                    <clr-dg-column [clrDgField]="'oldValue'">{{'Old Value' | translate}}</clr-dg-column>
-                    <clr-dg-column [clrDgField]="'newValue'">{{'New Value' | translate}}</clr-dg-column>
-                    <clr-dg-column [clrDgField]="'modifiedBy'">{{'Modify By' | translate}}</clr-dg-column>
-                    <clr-dg-column [clrDgField]="'date'">{{'Date' | translate}}</clr-dg-column>
+                    <clr-dg-column [clrDgField]="'company'">{{ 'Investor' | translate }}</clr-dg-column>
+                    <clr-dg-column [clrDgField]="'isin'">{{ 'ISIN' | translate }}</clr-dg-column>
+                    <clr-dg-column [clrDgField]="'shareName'">{{ 'Share Name' | translate }}</clr-dg-column>
+                    <clr-dg-column [clrDgField]="'info'">{{ 'Information' | translate }}</clr-dg-column>
+                    <clr-dg-column [clrDgField]="'oldValue'">{{ 'Old Value' | translate }}</clr-dg-column>
+                    <clr-dg-column [clrDgField]="'newValue'">{{ 'New Value' | translate }}</clr-dg-column>
+                    <clr-dg-column [clrDgField]="'modifiedBy'">{{ 'Modify By' | translate }}</clr-dg-column>
+                    <clr-dg-column [clrDgField]="'date'">{{ 'Date' | translate }}</clr-dg-column>
 
                     <clr-dg-row *clrDgItems="let item of clientReferentialAudit">
                         <clr-dg-cell>{{item.company}}</clr-dg-cell>
@@ -299,13 +310,12 @@
                     </clr-dg-row>
 
                     <clr-dg-footer>{{auditPagination.firstItem + 1}} - {{auditPagination.lastItem + 1}}
-
                         <clr-dg-pagination #auditPagination [clrDgPageSize]="20"></clr-dg-pagination>
                     </clr-dg-footer>
                 </clr-datagrid>
 
                 <div align="middle" style="margin-top: 20px;">
-                    <button class="btn btn-info" (click)="changePage('list')">{{'Back' | translate}}</button>
+                    <button class="btn btn-info" (click)="changePage('list')">{{ 'Back' | translate }}</button>
                 </div>
             </clr-tab-content>
         </clr-tab>
