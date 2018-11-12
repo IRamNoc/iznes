@@ -295,8 +295,10 @@ export class OfiSubPortfolioComponent implements OnInit, OnDestroy {
             break;
 
         default:
-            this.toaster.pop('success', this.translate.translate(`Your sub-portfolio ${this.tabDetail[0]['formControl'].value.subPortfolioName} has been successfully ${type}. This may take a moment to update.`));
-            break;
+            this.toaster.pop('success', this.translate.translate(
+                'Your sub-portfolio @subPortfolioName@@ has been successfully @actionType@. This may take a moment to update.', 
+                { 'subPortfolioName': this.tabDetail[0]['formControl'].value.subPortfolioName, 'actionType': type })); 
+            break;          
         }
     }
 
@@ -360,14 +362,14 @@ export class OfiSubPortfolioComponent implements OnInit, OnDestroy {
                 this.ngRedux.dispatch(SagaHelper.runAsyncCallback(asyncTaskPipe,
                     (response) => {
                         if (response[1].Data == '0') {
-                            this.ngRedux.dispatch(clearRequestedWalletLabel());
-                            this.toaster.pop('success', this.translate.translate(`Your sub-portfolio ${this.addressList[index].label} has been successfully deleted. This may take a moment to update.`));
+                            this.ngRedux.dispatch(clearRequestedWalletLabel());        
+                            this.toaster.pop('success', this.translate.translate('Your sub-portfolio @addressLabel@ has been successfully deleted. This may take a moment to update.', { 'addressLabel': this.addressList[index].label }));
                         } else {
                             this.showWarningResponse(this.translate.translate('You are not able to delete this sub-portfolio because it is not empty. If you want to delete it, you need to redeem all of your shares from this sub-portfolio'));
                         }
                     },
                     (labelResponse) => {
-                        this.toaster.pop('error', this.translate.translate('Error deleting subportfolio'));
+                        this.toaster.pop('error', this.translate.translate('Error deleting sub-portfolio'));
                     }));
                 }
             });
