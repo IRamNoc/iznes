@@ -51,7 +51,7 @@
                                     class="form-control"
                                     [items]="languages"
                                     [allowClear]="true"
-                                    [placeholder]="_translate.translate('Select')"
+                                    [placeholder]="translate.translate('Select')"
                                     formControlName="language"
                                     [ngStyle]="{'padding':'6px 0'}"
                                     [containerWidth]="'95%'">
@@ -94,7 +94,7 @@
                                     class="form-control"
                                     [items]="investorTypes"
                                     [allowClear]="true"
-                                    [placeholder]="_translate.translate('Select')"
+                                    [placeholder]="translate.translate('Select')"
                                     formControlName="investorType"
                                     [ngStyle]="{'padding':'6px 0'}"
                                     [containerWidth]="'95%'">
@@ -120,7 +120,7 @@
                                     class="form-control"
                                     [items]="fundSelectList"
                                     [multiple]="true"
-                                    [placeholder]="_translate.translate('Select funds')"
+                                    [placeholder]="translate.translate('Select funds')"
                                     formControlName="fundList"
                                     [ngStyle]="{'padding':'6px 0'}"
                                     [containerWidth]="'95%'">
