@@ -60,6 +60,7 @@ export const percentageControls = [
     'riskAcceptanceLevel4',
     'holdingPercentage',
     'floatableShares',
+    'votingPercentage',
 ];
 
 export const fileControls = [
@@ -106,6 +107,7 @@ export const selectControls = [
     'nationalIdNumber',
     'holdingType',
     'parent',
+    'country',
 ];
 
 export const controlOrder = [
@@ -1552,4 +1554,5 @@ export const controlToList = {
 
     nationality: 'countries',
     countryTaxResidence: 'countries',
+    country: 'countries',
 };

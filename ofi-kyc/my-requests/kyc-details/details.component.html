@@ -32,6 +32,10 @@
                 <!--Child Contents-->
                 <ng-container *ngIf="child.id !== 'banking'">
                     <kyc-details-grid *ngIf="child.data" [data]="child.data" [id]="child.id" (open)="open($event)"></kyc-details-grid>
+
+                    <div *ngIf="child.id === 'company' && stakeholders.length">
+                        <kyc-details-stakeholders [stakeholders]="stakeholders"></kyc-details-stakeholders>
+                    </div>
                 </ng-container>
 
                 <ng-container *ngIf="child.id === 'banking'">
@@ -44,5 +48,3 @@
 
     </div>
 </div>
-
-<kyc-details-beneficiaries [beneficiaries]="beneficiaries" *ngIf="modals.beneficiaries" (close)="modals.beneficiaries = !modals.beneficiaries"></kyc-details-beneficiaries>

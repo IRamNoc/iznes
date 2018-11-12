@@ -72,26 +72,7 @@ export class KycDetailsService {
             delete data.optFor;
         }
 
-        const booleans = chain(data)
-            .omitBy(isNil)
-            .pickBy((val, key) => requestsConfig.booleanControls.indexOf(key) !== -1)
-            .mapValues(value => parseInt(value, 10) ? 1 : 0)
-            .value();
-
-        const currencies = chain(data)
-            .omitBy(isNil)
-            .pickBy((val, key) => requestsConfig.currencyControls.indexOf(key) !== -1)
-            .mapValues(value => `${value} €`)
-            .value();
-
-        const percentage = chain(data)
-            .omitBy(isNil)
-            .pickBy((val, key) => requestsConfig.percentageControls.indexOf(key) !== -1)
-            .mapValues(value => `${value} %`)
-            .value();
-
         const array = chain(data)
-            .merge(booleans, currencies, percentage)
             .omit([
                 'kycID',
                 'objectivesSameInvestmentCrossAm',
@@ -106,7 +87,10 @@ export class KycDetailsService {
                 originalId: controlName,
                 id: this.getNameFromControl(controlName),
                 originalValue: controlValue,
-                value: this.getValueFromControl(controlName, controlValue),
+                value: (() => {
+                    controlValue = this.getValueFromControl(controlName, controlValue);
+                    return this.getBooleanValueFromControl(controlName, controlValue);
+                })(),
             }))
             .filter()
             .value();
@@ -160,18 +144,17 @@ export class KycDetailsService {
     }
 
     getValueFromControl(controlName, controlValue) {
-        let listName = requestsConfig.controlToList[controlName];
-        let list = requestsConfig[listName];
+        const listName = requestsConfig.controlToList[controlName];
+        const list = requestsConfig[listName];
 
-        if (requestsConfig.booleanControls.indexOf(controlName) !== -1) {
-            controlValue = parseInt(controlValue);
-
-            if (controlValue === 0) {
-                controlValue = 'No';
-            } else {
-                controlValue = 'Yes';
-            }
+        if (requestsConfig.percentageControls.indexOf(controlName) !== -1) {
+            return `${controlValue} %`;
         }
+
+        if (requestsConfig.currencyControls.indexOf(controlName) !== -1) {
+            return `${controlValue} €`;
+        }
+
         if (list) {
             controlValue = toString(controlValue);
             return (controlValue as string).split(' ').reduce((acc, cur) => {
@@ -179,6 +162,20 @@ export class KycDetailsService {
                 found = found ? found.text : cur;
                 return acc ? [acc, found].join('|') : found;
             }, '');
+        }
+
+        return controlValue;
+    }
+
+    getBooleanValueFromControl(controlName, controlValue){
+        if (requestsConfig.booleanControls.indexOf(controlName) !== -1) {
+            controlValue = parseInt(controlValue, 10);
+
+            if (controlValue === 0) {
+                controlValue = 'No';
+            } else {
+                controlValue = 'Yes';
+            }
         }
 
         return controlValue;

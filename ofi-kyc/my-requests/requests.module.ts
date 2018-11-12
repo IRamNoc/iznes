@@ -18,7 +18,8 @@ import { PersistModule } from '@setl/core-persist';
 
 import { KycDetailsComponent } from './kyc-details/details.component';
 import { KycDetailsGridComponent } from './kyc-details/details-grid.component';
-import { KycDetailsBeneficiariesComponent } from './kyc-details/beneficiaries.component';
+import { KycDetailsStakeholdersComponent } from './kyc-details/beneficiaries.component';
+import { KycDetailsStakeholdersModalComponent } from './kyc-details/beneficiary-modal.component';
 
 import { MyRequestsContainerComponent } from './my-requests-container.component';
 import { MyRequestsComponent } from './list/my-requests.component';
@@ -94,7 +95,8 @@ import { ValidationService } from './request/steps/validation.service';
 
         KycDetailsComponent,
         KycDetailsGridComponent,
-        KycDetailsBeneficiariesComponent,
+        KycDetailsStakeholdersComponent,
+        KycDetailsStakeholdersModalComponent,
     ],
     exports: [
         KycDetailsComponent,

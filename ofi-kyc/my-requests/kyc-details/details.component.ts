@@ -32,10 +32,8 @@ export class KycDetailsComponent implements OnInit, OnDestroy {
 
     unsubscribe: Subject<any> = new Subject();
     panelDefs;
-    beneficiaries;
-    modals = {
-        beneficiaries: false,
-    };
+    stakeholders = [];
+    modals = {};
     alreadyCompleted = null;
 
     constructor(
@@ -213,18 +211,15 @@ export class KycDetailsComponent implements OnInit, OnDestroy {
         this.kycCompanyBeneficiaries$
         .pipe(
             rxFilter(value => !isEmpty(value)),
-            map((data: any[]) => {
-                return data.map(value => this.kycDetailsService.toArray(value));
-            }),
             takeUntil(this.unsubscribe),
         )
         .subscribe((beneficiaries) => {
             const promises = beneficiaries.map((beneficiary) => {
-                beneficiary.splice(beneficiary.findIndex((item) => item.id == 'delete'), 1);
-                return this.kycDetailsService.getHashes(beneficiary);
+                // return this.kycDetailsService.getHashes(beneficiary);
+                return beneficiary;
             });
             Promise.all(promises).then((beneficiaries) => {
-                this.beneficiaries = beneficiaries;
+                this.stakeholders = beneficiaries;
             });
         });
     }
