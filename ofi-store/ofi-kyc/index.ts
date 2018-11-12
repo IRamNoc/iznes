@@ -47,6 +47,7 @@ export {
     SET_KYC_DETAILS_RISKNATURE,
     SET_KYC_DETAILS_RISKOBJECTIVES,
     SET_KYC_DETAILS_DOCUMENTS,
+    SET_KYC_DETAILS_VALIDATION,
 
     setkycdetailsgeneralrequested,
     setkycdetailscompanyrequested,
@@ -56,6 +57,7 @@ export {
     setkycdetailsrisknaturerequested,
     setkycdetailsriskobjectivesrequested,
     setkycdetailsdocumentsrequested,
+    setkycdetailsvalidationrequested,
 
     clearkycdetailsgeneralrequested,
     clearkycdetailscompanyrequested,
@@ -65,6 +67,7 @@ export {
     clearkycdetailsrisknaturerequested,
     clearkycdetailsriskobjectivesrequested,
     clearkycdetailsdocumentsrequested,
+    clearkycdetailsvalidationrequested,
 } from './kyc-details';
 
 export * from './invitationsByUserAmCompany';

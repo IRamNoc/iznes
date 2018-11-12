@@ -38,39 +38,27 @@ export class NewKycRequestComponent implements OnInit {
     }
 
     get investorType() {
-        let legalStatusControl = this.forms.get('identification.generalInformation.legalStatus').value;
-        let legalStatusValue = getValue(legalStatusControl, [0, 'id']);
-        let possibleLegalStatusValues = [
-            'pensionMutual',
-            'creditInstitution',
-            'insurer',
-            'institutionalInvestors',
-            'otherInvestors',
-            'managementCompany',
-            'centralBank',
-            'nationalGovService',
-            'dealersCommodities',
-            'internationBodies'
-        ];
+        let activityRegulated = this.forms.get('identification.companyInformation.activityRegulated').value;
+        activityRegulated = !!Number(activityRegulated);
 
-        let balanceSheetTotalValue = this.forms.get('identification.companyInformation.balanceSheetTotal').value;
-        let netRevenuesNetIncomeValue = this.forms.get('identification.companyInformation.netRevenuesNetIncome').value;
-        let shareholderEquityValue = this.forms.get('identification.companyInformation.shareholderEquity').value;
+        const balanceSheetTotalValue = this.forms.get('identification.companyInformation.balanceSheetTotal').value;
+        const netRevenuesNetIncomeValue = this.forms.get('identification.companyInformation.netRevenuesNetIncome').value;
+        const shareholderEquityValue = this.forms.get('identification.companyInformation.shareholderEquity').value;
 
-        if (possibleLegalStatusValues.indexOf(legalStatusValue) !== -1) {
-            return "proByNature";
+        if (activityRegulated) {
+            return 'proByNature';
         }
 
-        let balanceSheetCondition = balanceSheetTotalValue >= 20000000;
-        let netRevenuesCondition = netRevenuesNetIncomeValue >= 40000000;
-        let equityCondition = shareholderEquityValue >= 2000000;
-        let trues = remove([balanceSheetCondition, netRevenuesCondition, equityCondition]);
+        const balanceSheetCondition = balanceSheetTotalValue >= 20000000;
+        const netRevenuesCondition = netRevenuesNetIncomeValue >= 40000000;
+        const equityCondition = shareholderEquityValue >= 2000000;
+        const trues = remove([balanceSheetCondition, netRevenuesCondition, equityCondition]);
 
         if (trues.length >= 2) {
-            return "proBySize";
+            return 'proBySize';
         }
 
-        return "nonPro";
+        return 'nonPro';
     }
 
     ngOnInit() {

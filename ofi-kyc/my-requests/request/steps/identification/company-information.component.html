@@ -3,7 +3,7 @@
         <div class="col-sm-9">
             <a href="#" (click)="open = !open; $event.preventDefault();">
                 <i class="fa fa-chevron-right" [class.rotate]="open"></i>
-                <h2>Company information</h2>
+                <h2>{{'Company information' | translate}}</h2>
             </a>
         </div>
         <div class="col-sm-3 text-right">
@@ -13,30 +13,25 @@
 
     <div class="row panel-body" [class.hidden]="!open">
         <div class="col-xs-12">
+
             <div class="row">
-                <div class="form-group required-field col-md-6 col-xl-3">
-                    <label class="control-label" for="activities">{{'Activities' | translate}}</label>
-                    <ng-select class="large-select multiline" id="activities" [items]="companyActivitiesList" [allowClear]="true" [formControl]="form.get('activities')" placeholder="{{'Please select your company activity' | translate}}"></ng-select>
-                    <span class="field-error" *ngIf="hasError('activities')">{{'Field is required' | translate}}</span>
+                <div class="form-group required-field col-sm-6">
+                    <label class="control-label" for="sectorActivity">{{'Primary Sector of activity' | translate}}</label>
+                    <ng-select class="multiline" [items]="sectorActivityList" id="sectorActivity" formControlName="sectorActivity" placeholder="{{'Select a sector of activity' | translate}}"></ng-select>
+                    <span class="field-error" *ngIf="hasError('sectorActivity')">{{'Field is required' | translate}}</span>
                 </div>
-
-                <div class="form-group required-field col-md-6 col-xl-3" *ngIf="!isDisabled('ownAccountinvestor')">
-                    <label class="control-label" for="ownAccountinvestor">{{'Own-account investor' | translate}}</label>
-                    <ng-select class="large-select multiline" id="ownAccountinvestor" [items]="ownAccountInvestorList" [allowClear]="true" [formControl]="form.get('ownAccountinvestor')" placeholder="{{'Please select an own-account investor type' | translate}}"></ng-select>
-                    <span class="field-error" *ngIf="hasError('ownAccountinvestor')">{{'Field is required' | translate}}</span>
-                </div>
-
-                <div class="form-group required-field col-md-6 col-xl-3" *ngIf="!isDisabled('investorOnBehalfThirdParties')">
-                    <label class="control-label" for="investorOnBehalfList">{{'Investor on behalf of third parties' | translate}}</label>
-                    <ng-select class="large-select multiline" id="investorOnBehalfList" [items]="investorOnBehalfList" [allowClear]="true" [formControl]="form.get('investorOnBehalfThirdParties')" placeholder="{{'Please select the type of third parties your company manages' | translate}}"></ng-select>
-                    <span class="field-error" *ngIf="hasError('investorOnBehalfThirdParties')">{{'Field is required' | translate}}</span>
+                <div class="form-group required-field col-sm-6" *ngIf="!isDisabled('sectorActivityText')">
+                    <label class="control-label" for="sectorActivityText">&nbsp;</label>
+                    <input type="text" id="sectorActivityText" formControlName="sectorActivityText" placeholder="{{'Please specify' | translate}}">
+                    <span class="field-error" *ngIf="hasError('sectorActivityText', ['required'])">{{'Field is required' | translate}}</span>
+                    <span class="field-error" *ngIf="hasError('sectorActivityText', ['maxlength'])">{{'Field is too long' | translate}}</span>
                 </div>
             </div>
 
             <div class="row">
                 <div class="form-group required-field col-sm-3">
                     <label class="control-label" for="geographicalAreaOfActivity">{{'Geographical area of the activity' | translate}}</label>
-                    <ng-select class="large-select multiline" id="geographicalAreaOfActivity" [items]="geographicalAreaList" [allowClear]="true" [formControl]="form.get('geographicalAreaOfActivity')" placeholder="{{'Please select your company area of activity' | translate}}"></ng-select>
+                    <ng-select class="large-select multiline" id="geographicalAreaOfActivity" [items]="geographicalAreaList" [allowClear]="true" [formControl]="form.get('geographicalAreaOfActivity')" placeholder="{{'Select an area of activity' | translate}}"></ng-select>
                     <span class="field-error" *ngIf="hasError('geographicalAreaOfActivity')">{{'Field is required' | translate}}</span>
                 </div>
 
@@ -58,16 +53,42 @@
                 </div>
             </div>
 
-            <div class="row" *ngIf="!isDisabled('regulator')">
-                <div class="form-group required-field col-sm-6">
-                    <input type="text" id="regulator" formControlName="regulator" placeholder="{{'Please fill in a regulator or a supervisory authority' | translate }}">
-                    <span class="field-error" *ngIf="hasError('regulator')">{{'Field is required' | translate}}</span>
+            <div *ngIf="!isDisabled('regulator')">
+
+                <div class="row">
+                    <div class="form-group required-field col-sm-4">
+                        <label>&nbsp;</label>
+                        <input type="text" id="regulator" formControlName="regulator" placeholder="{{'Fill in a regulator or a supervisory authority' | translate }}">
+                        <span class="field-error" *ngIf="hasError('regulator')">{{'Field is required' | translate}}</span>
+                    </div>
+                    <div class="form-group required-field col-sm-4">
+                        <label>&nbsp;</label>
+                        <input type="text" id="approvalNumber" formControlName="approvalNumber" placeholder="{{'Fill in an approval number' | translate }}">
+                        <span class="field-error" *ngIf="hasError('approvalNumber', ['required'])">{{'Field is required' | translate}}</span>
+                        <span class="field-error" *ngIf="hasError('approvalNumber', ['maxlength'])">{{'Field is too long' | translate}}</span>
+                    </div>
                 </div>
-                <div class="form-group required-field col-sm-6">
-                    <input type="text" id="approvalNumber" formControlName="approvalNumber" placeholder="{{'Please fill in the approval number' | translate }}">
-                    <span class="field-error" *ngIf="hasError('approvalNumber', ['required'])">{{'Field is required' | translate}}</span>
-                    <span class="field-error" *ngIf="hasError('approvalNumber', ['maxlength'])">{{'Field is too long' | translate}}</span>
+
+                <div class="row">
+                    <div class="form-group required-field col-md-4">
+                        <label class="control-label" for="regulatoryStatus">{{'Regulatory status' | translate}}</label>
+                        <ng-select class="large-select multiline" [items]="regulatoryStatusList" id="regulatoryStatusList" [formControl]="form.get('regulatoryStatus')" placeholder="{{'Fill in your company regulatory status' | translate}}"></ng-select>
+                        <span class="field-error" *ngIf="hasError('regulatoryStatus')">{{'Field is required' | translate}}</span>
+                    </div>
+
+                    <div *ngIf="!isDisabled('regulatoryStatusInsurerType')" class="form-group required-field col-md-4">
+                        <label class="control-label" for="regulatoryStatusInsurerType">{{'Insurer type' | translate}}</label>
+                        <ng-select class="large-select" [items]="regulatoryStatusInsurerTypeList" id="regulatoryStatusInsurerType" formControlName="regulatoryStatusInsurerType" placeholder="{{'Select an insurer type' | translate}}"></ng-select>
+                        <span class="field-error" *ngIf="hasError('regulatoryStatusInsurerType')">{{'Field is required' | translate}}</span>
+                    </div>
+
+                    <div *ngIf="!isDisabled('regulatoryStatusListingOther')" class="form-group required-field col-md-4">
+                        <label class="control-label" for="regulatoryStatusListingOther">{{'Please fill in the regulatory status of your company' | translate}}</label>
+                        <input type="text" id="regulatoryStatusListingOther" formControlName="regulatoryStatusListingOther" placeholder="{{'Please specify' | translate}}">
+                        <span class="field-error" *ngIf="hasError('regulatoryStatusListingOther')">{{'Field is required' | translate}}</span>
+                    </div>
                 </div>
+
             </div>
 
             <div class="row">
@@ -82,30 +103,51 @@
 
             <div class="row" *ngIf="!isDisabled('listingMarkets')">
                 <div class="form-group required-field col-sm-4">
-                    <input type="text" id="listingMarkets" formControlName="listingMarkets" placeholder="{{'Please fill in the listing market(s)' | translate }}">
+                    <ng-select class="large-select" [multiple]="true" [items]="listingMarketsList" id="listingMarkets" formControlName="listingMarkets" placeholder="{{'Fill in the listing market(s)' | translate}}"></ng-select>
                     <span class="field-error" *ngIf="hasError('listingMarkets')">{{'Field is required' | translate}}</span>
                 </div>
                 <div class="form-group required-field col-sm-4">
-                    <input type="text" id="bloombergCode" formControlName="bloombergCode" placeholder="{{'Please fill in the Bloomberg\'s code' | translate }}">
+                    <input type="text" id="bloombergCode" formControlName="bloombergCode" placeholder="{{'Fill in a Bloomberg\'s code' | translate }}">
                     <span class="field-error" *ngIf="hasError('bloombergCode', ['required'])">{{'Field is required' | translate}}</span>
                     <span class="field-error" *ngIf="hasError('bloombergCode', ['maxlength'])">{{'Field is too long' | translate}}</span>
                 </div>
                 <div class="form-group required-field col-sm-4">
-                    <input type="text" id="isinCode" formControlName="isinCode" placeholder="{{'Please fill in the ISIN code of the listed share' | translate }}">
+                    <input type="text" id="isinCode" formControlName="isinCode" placeholder="{{'Fill in an ISIN code' | translate }}">
                     <span class="field-error" *ngIf="hasError('isinCode', ['required'])">{{'Field is required' | translate}}</span>
                     <span class="field-error" *ngIf="hasError('isinCode', ['pattern'])">{{'ISIN must have two letters and ten digits' | translate}}</span>
                     <span class="field-error" *ngIf="hasError('isinCode', ['maxlength'])">{{'Field is too long' | translate}}</span>
                 </div>
+                <div class="form-group required-field col-sm-4">
+                    <input type="number" id="floatableShares" formControlName="floatableShares" placeholder="{{'Fill in a percentage of floatable shares' | translate }}">
+                    <span class="field-error" *ngIf="hasError('floatableShares', ['required'])">{{'Field is required' | translate}}</span>
+                    <span class="field-error" *ngIf="hasError('floatableShares', ['min', 'max'])">{{'Value must be between 0 and 100' | translate}}</span>
+                </div>
             </div>
 
             <div class="row">
-                <div class="form-group col-sm-6">
-                    <label class="control-label" for="keyFinancialData">{{'Key Financial Data' | translate}}</label>
-                    <input type="number" id="keyFinancialData" formControlName="keyFinancialData" placeholder="{{'Please fill in your company key financial data' | translate}}">
+                <div class="form-group required-field col-md-6 col-xl-3">
+                    <label class="control-label" for="activities">{{'Management on behalf of' | translate}}</label>
+                    <ng-select class="large-select multiline" id="activities" [items]="companyActivitiesList" [allowClear]="true" [formControl]="form.get('activities')" placeholder="{{'Select the type of account you manage' | translate}}"></ng-select>
+                    <span class="field-error" *ngIf="hasError('activities')">{{'Field is required' | translate}}</span>
                 </div>
+
+                <div class="form-group required-field col-md-6 col-xl-3" *ngIf="!isDisabled('ownAccountinvestor')">
+                    <label class="control-label" for="ownAccountinvestor">{{'Own-account' | translate}}</label>
+                    <ng-select class="large-select multiline" id="ownAccountinvestor" [items]="ownAccountInvestorList" [allowClear]="true" [formControl]="form.get('ownAccountinvestor')" placeholder="{{'Select an own-account investor type' | translate}}"></ng-select>
+                    <span class="field-error" *ngIf="hasError('ownAccountinvestor')">{{'Field is required' | translate}}</span>
+                </div>
+
+                <div class="form-group required-field col-md-6 col-xl-3" *ngIf="!isDisabled('investorOnBehalfThirdParties')">
+                    <label class="control-label" for="investorOnBehalfList">{{'Third parties' | translate}}</label>
+                    <ng-select class="large-select multiline" id="investorOnBehalfList" [items]="investorOnBehalfList" [allowClear]="true" [formControl]="form.get('investorOnBehalfThirdParties')" placeholder="{{'Select a third party type' | translate}}"></ng-select>
+                    <span class="field-error" *ngIf="hasError('investorOnBehalfThirdParties')">{{'Field is required' | translate}}</span>
+                </div>
+            </div>
+
+            <div class="row">
                 <div class="form-group required-field col-sm-6">
                     <label class="control-label" for="balanceSheetTotal">{{'Balance Sheet Total' | translate}}</label>
-                    <input type="number" id="balanceSheetTotal" formControlName="balanceSheetTotal" placeholder="€">
+                    <input type="number" id="balanceSheetTotal" formControlName="balanceSheetTotal" placeholder="{{'Define a value (€)' | translate}}">
                     <span class="field-error" *ngIf="hasError('balanceSheetTotal')">{{'Field is required' | translate}}</span>
                 </div>
             </div>
@@ -113,58 +155,22 @@
             <div class="row">
                 <div class="form-group required-field col-sm-6">
                     <label class="control-label" for="netRevenuesNetIncome">{{'Net Revenues or Net Income' | translate}}</label>
-                    <input type="number" id="netRevenuesNetIncome" formControlName="netRevenuesNetIncome" placeholder="€">
+                    <input type="number" id="netRevenuesNetIncome" formControlName="netRevenuesNetIncome" placeholder="{{'Define a value (€)' | translate}}">
                     <span class="field-error" *ngIf="hasError('netRevenuesNetIncome', ['required'])">{{'Field is required' | translate}}</span>
                     <span class="field-error" *ngIf="hasError('netRevenuesNetIncome', ['min'])">{{'Number should not be negative' | translate}}</span>
                 </div>
                 <div class="form-group required-field col-sm-6">
-                    <label class="control-label" for="shareholderEquity">{{'Shareholder\'s Equity' | translate}}</label>
-                    <input type="number" id="shareholderEquity" formControlName="shareholderEquity" placeholder="€">
+                    <label class="control-label" for="shareholderEquity">{{'Shareholders\' Equity' | translate}}</label>
+                    <input type="number" id="shareholderEquity" formControlName="shareholderEquity" placeholder="{{'Define a value (€)' | translate}}">
                     <span class="field-error" *ngIf="hasError('shareholderEquity', ['required'])">{{'Field is required' | translate}}</span>
                     <span class="field-error" *ngIf="hasError('shareholderEquity', ['min'])">{{'Number should not be negative' | translate}}</span>
                 </div>
             </div>
 
-            <!-- Beneficiaries-->
-            <h4>{{'Actual beneficiaries' | translate}}</h4>
-            <div class="beneficiaries mb-2">
-
-                <div class="my-1">
-                    <clr-alert [clrAlertClosable]="false" [clrAlertSizeSmall]="true">
-                        <div class="alert-item">
-                            <span class="alert-text">
-                                {{'The first beneficiary you will add will be a direct beneficiary. You can then add other direct or indirect beneficiaries by clicking on the "Add another beneficiary" button.' | translate}}
-                            </span>
-                        </div>
-                    </clr-alert>
-                    <clr-alert [clrAlertSizeSmall]="true" [clrAlertType]="'alert-warning'" [clrAlertClosable]="false">
-                        <div class="alert-item">
-                            <span class="alert-text">
-                                {{'Please fill information for all beneficiaries that hold more than 10% of the company.' | translate}}
-                            </span>
-                        </div>
-                    </clr-alert>
-                </div>
-
-                <div class="my-1 pl-1 beneficiary" *ngFor="let beneficiary of beneficiaries; let i = index" formArrayName="beneficiaries">
-                    <a *ngIf="i > 0" class="close text-warning" (click)="removeBeneficiary(i)"><i class="fa fa-times-circle"></i></a>
-
-                    <beneficiary [form]="beneficiary" [index]="i" (ready)="handleReady()"></beneficiary>
-                </div>
-
-                <div class="form-group col-xs-12">
-                    <button class="btn btn-primary" (click)="addBeneficiary()">
-                        {{'Add another beneficiary' | translate}}
-                    </button>
-                </div>
-            </div>
-            <!-- End beneficiaries -->
-
-
-            <div class="mb-1" formGroupName="capitalNature">
+            <div class="mb-2" formGroupName="capitalNature">
 
                 <div>
-                    <label class="required-field">{{'Nature and origin of the capital invested by the legal entity: (multiple choice)' | translate}}</label>
+                    <label class="required-field">{{'Nature and origin of the capital invested by the legal entity: (several possible choices)' | translate}}</label>
                 </div>
 
                 <span class="checkbox-inline pr-1 pt-1">
@@ -244,6 +250,41 @@
                     <span class="field-error" *ngIf="hasError('totalFinancialAssetsAlreadyInvested')">{{'Field is required' | translate}}</span>
                 </div>
             </div>
+
+            <!-- Beneficiaries-->
+            <h4>{{'Actual beneficiaries' | translate}}</h4>
+            <div class="beneficiaries mb-2">
+
+                <div class="my-1">
+                    <clr-alert [clrAlertClosable]="false" [clrAlertSizeSmall]="true">
+                        <div class="alert-item">
+                            <span class="alert-text">
+                                {{'The first beneficiary you will add will be a direct beneficiary. You can then add other direct or indirect beneficiaries by clicking on the "Add another beneficiary" button.' | translate}}
+                            </span>
+                        </div>
+                    </clr-alert>
+                    <clr-alert [clrAlertSizeSmall]="true" [clrAlertType]="'alert-warning'" [clrAlertClosable]="false">
+                        <div class="alert-item">
+                            <span class="alert-text">
+                                {{'Please fill information for all beneficiaries that hold more than 10% of the company.' | translate}}
+                            </span>
+                        </div>
+                    </clr-alert>
+                </div>
+
+                <div class="my-1 pl-1 beneficiary" *ngFor="let beneficiary of beneficiaries; let i = index" formArrayName="beneficiaries">
+                    <a *ngIf="i > 0" class="close text-warning" (click)="removeBeneficiary(i)"><i class="fa fa-times-circle"></i></a>
+
+                    <beneficiary [form]="beneficiary" [index]="i" (ready)="handleReady()"></beneficiary>
+                </div>
+
+                <div class="form-group col-xs-12">
+                    <button class="btn btn-primary" (click)="addBeneficiary()">
+                        {{'Add another beneficiary' | translate}}
+                    </button>
+                </div>
+            </div>
+            <!-- End beneficiaries -->
         </div>
     </div>
 </form>

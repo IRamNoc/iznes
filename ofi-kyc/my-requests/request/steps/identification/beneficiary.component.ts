@@ -23,7 +23,7 @@ export class BeneficiaryComponent implements OnInit, OnDestroy {
     configDate;
     beneficiaryTypesList;
     holdingTypesList;
-    nationalIdNumberList;
+    identificationNumberList;
     countries;
 
     constructor(
@@ -33,7 +33,7 @@ export class BeneficiaryComponent implements OnInit, OnDestroy {
         this.configDate = configDate;
         this.beneficiaryTypesList = this.newRequestService.beneficiaryTypesList;
         this.holdingTypesList = this.newRequestService.holdingTypesList;
-        this.nationalIdNumberList = this.newRequestService.nationalIdNumberList;
+        this.identificationNumberList = this.newRequestService.identificationNumberList;
         this.countries = countries;
     }
 

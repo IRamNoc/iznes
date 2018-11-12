@@ -32,7 +32,7 @@ export class InvestmentObjectiveFormComponent implements OnInit, OnDestroy {
     clientNeeds;
     amc = {
         companyID: '',
-        companyName: ''
+        companyName: '',
     };
 
     constructor(

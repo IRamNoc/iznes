@@ -67,6 +67,7 @@ export class NewKycRiskProfileComponent implements OnInit, OnDestroy {
             .subscribe(requests => {
                 requests.forEach(request => {
                     this.riskProfileService.getCurrentFormObjectiveData(request.kycID);
+                    this.riskProfileService.getCurrentFormNatureData(request.kycID);
                 });
             })
         ;

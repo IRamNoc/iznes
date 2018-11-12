@@ -43,9 +43,7 @@ export class InvestmentObjectiveComponent implements OnInit, OnDestroy {
 
     getCurrentFormData() {
         this.riskProfileService.currentServerData.riskobjective
-            .pipe(
-                takeUntil(this.unsubscribe)
-            )
+            .pipe(takeUntil(this.unsubscribe))
             .subscribe((data: any) => {
                 const cross = toNumber(data.objectivesSameInvestmentCrossAm);
                 if(cross){
@@ -69,18 +67,16 @@ export class InvestmentObjectiveComponent implements OnInit, OnDestroy {
         ;
     }
 
-    updateCrossAM(){
+    updateCrossAM() {
         const value = this.form.get('objectivesSameInvestmentCrossAm').value;
-        
+
         this.formCheckSameInvestmentCrossAm(value);
     }
 
     initFormCheck() {
         this.form.get('objectivesSameInvestmentCrossAm').valueChanges
-            .pipe(
-                takeUntil(this.unsubscribe)
-            )
-            .subscribe(value => {
+            .pipe(takeUntil(this.unsubscribe))
+            .subscribe((value) => {
                 this.riskProfileService.currentServerData.riskobjective.next('');
                 this.formCheckSameInvestmentCrossAm(value);
             })
@@ -102,8 +98,8 @@ export class InvestmentObjectiveComponent implements OnInit, OnDestroy {
         let objectivesControl = this.form.get('objectives');
         let numberOfControls = objectivesControl.length;
 
-        for (let i = numberOfControls; i >= 0; i--) {
-            objectivesControl.removeAt(i);
+        for (let i = numberOfControls; i > 0; i -= 1) {
+            objectivesControl.removeAt(i - 1);
         }
 
         objectives.forEach(objective => {
@@ -113,16 +109,6 @@ export class InvestmentObjectiveComponent implements OnInit, OnDestroy {
 
     refreshForm(){
         this.formPercent.refreshFormPercent();
-    }
-
-    hasError(control, error = []) {
-        return this.newRequestService.hasError(this.form, control, error);
-    }
-
-    isDisabled(path) {
-        let control = this.form.get(path);
-
-        return control.disabled;
     }
 
     ngOnDestroy() {
