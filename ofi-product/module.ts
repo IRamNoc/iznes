@@ -39,6 +39,7 @@ import {
     FundAuditDatagridComponent,
 } from './fund-audit/fund-audit-datagrid/fund-audit-datagrid.component';
 import { OfiManagementCompanyComponent } from './management-company/management-company.component';
+import { ManagagementCompanyService } from './management-company/management-company.service';
 
 /* Graphs. */
 import { ChartsModule } from 'ng2-charts';
@@ -53,6 +54,7 @@ import {
 } from '@ofi/ofi-main/ofi-req-services/ofi-product/product-characteristics/service';
 import { LeiService } from '@ofi/ofi-main/ofi-req-services/ofi-product/lei/lei.service';
 import productConfig from './productConfig';
+import { phoneCodeList } from '../shared/phone-codes.values';
 
 /* Am Dashboard service. */
 @NgModule({
@@ -111,7 +113,9 @@ import productConfig from './productConfig';
         ProductCharacteristicsService,
         OfiFundShareFormService,
         LeiService,
+        ManagagementCompanyService,
         { provide: 'product-config', useValue: productConfig },
+        { provide: 'phoneCodeList', useValue: phoneCodeList },
     ],
 })
 

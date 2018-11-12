@@ -62,10 +62,10 @@ export class OfiMyInformationsComponent implements OnInit, OnDestroy {
         private _ngRedux: NgRedux<any>,
         private _fb: FormBuilder,
         public _translate: MultilingualService,
-        @Inject('my-information-config') config,
+        @Inject('phoneCodeList') phoneCodeList,
     ) {
 
-        this.phoneNumbersCountryCodes = config.enums.phoneNumbersCountryCodes;
+        this.phoneNumbersCountryCodes = phoneCodeList;
 
         this.additionnalForm = this._fb.group({
             email: [
