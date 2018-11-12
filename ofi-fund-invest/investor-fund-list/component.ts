@@ -18,31 +18,25 @@ import * as FundShareValue from '../../ofi-product/fund-share/fundShareValue';
 import { AlertsService } from '@setl/jaspero-ng2-alerts';
 import { CalendarHelper } from '../../ofi-product/fund-share/helper/calendar-helper';
 import { OrderType } from '../../ofi-orders/order.model';
-
 import { HoldingByAsset } from '@setl/core-store/wallet/my-wallet-holding';
 import { ReportingService } from '@setl/core-balances/reporting.service';
 import { SellBuyCalendar } from '../../ofi-product/fund-share/FundShareEnum';
-import { setRequestedFundAccessMy } from "../../ofi-store/ofi-fund-invest";
-
+import { setRequestedFundAccessMy } from '../../ofi-store/ofi-fund-invest';
+import { MultilingualService } from '@setl/multilingual';
 
 @Component({
     selector: 'app-investor-fund-list',
     templateUrl: './component.html',
     styleUrls: ['./component.scss'],
-    changeDetection: ChangeDetectionStrategy.OnPush
 })
 
 export class OfiInvestorFundListComponent implements OnInit, OnDestroy {
     @Input() isImported: boolean;
     @Input() linkRoute: string;
 
-
     tabsControl: Array<any>;
-
     fundListObj: any;
-
     fundList: Array<any>;
-
     connectedWalletId: number;
 
     // production or not
@@ -52,42 +46,37 @@ export class OfiInvestorFundListComponent implements OnInit, OnDestroy {
     subscriptionsArray: Array<Subscription> = [];
 
     allowOrder = true;
-
     walletBalances: any;
+
+    language = 'en';
 
     // List of redux observable.
     @select(['user', 'connected', 'connectedWallet']) connectedWalletOb;
+    @select(['user', 'siteSettings', 'language']) readonly requestedLanguage$;
     @select(['ofi', 'ofiFundInvest', 'ofiInvestorFundList', 'requested']) requestedOfiInvestorFundListOb;
     @select(['ofi', 'ofiFundInvest', 'ofiInvestorFundList', 'fundShareAccessList']) fundShareAccessListOb;
     @select(['user', 'siteSettings', 'production']) productionOb;
     @select(['wallet', 'myWalletHolding', 'holdingByAsset']) balancesOb;
 
-    constructor(private _ngRedux: NgRedux<any>,
-                private _memberService: MemberService,
-                private _changeDetectorRef: ChangeDetectorRef,
-                private _numberConverterService: NumberConverterService,
-                private _route: ActivatedRoute,
-                private _router: Router,
-                private _alerts: AlertsService,
+    constructor(private ngRedux: NgRedux<any>,
+                private memberService: MemberService,
+                private changeDetectorRef: ChangeDetectorRef,
+                private numberConverterService: NumberConverterService,
+                private route: ActivatedRoute,
+                private router: Router,
+                private alerts: AlertsService,
                 private reportingService: ReportingService,
-                private _ofiFundInvestService: OfiFundInvestService) {
-    }
-
-    getDisplay() {
-        return (this.isImported) ? 'none' : 'block';
-    }
-
-    getLinkRoute() {
-        return (!!this.linkRoute) ? this.linkRoute : 'list-of-funds/0';
+                private ofiFundInvestService: OfiFundInvestService,
+                public translate: MultilingualService,
+    ) {
     }
 
     ngOnInit() {
-
         this.setInitialTabs();
 
         this.subscriptionsArray.push(this.connectedWalletOb.subscribe(connected => {
             this.connectedWalletId = connected;
-            this._ngRedux.dispatch(clearRequestedFundAccessMy());
+            this.ngRedux.dispatch(clearRequestedFundAccessMy());
             if (this.connectedWalletId !== 0) {
                 this.subscriptionsArray.push(this.requestedOfiInvestorFundListOb.subscribe(
                     (requested) => this.requestMyFundAccess(requested)));
@@ -99,22 +88,25 @@ export class OfiInvestorFundListComponent implements OnInit, OnDestroy {
         this.subscriptionsArray.push(combinedFundShare$.subscribe(
             ([fundShareAccessList, balances]) => this.updateFundList(fundShareAccessList, balances)));
 
-        this.subscriptionsArray.push(this._route.params.subscribe((params: Params) => {
+        this.subscriptionsArray.push(this.route.params.subscribe((params: Params) => {
             const tabId = _.get(params, 'tabid', 0);
             this.setTabActive(tabId);
         }));
 
         this.subscriptionsArray.push(this.balancesOb.subscribe((walletsbalances) => {
             this.walletBalances = walletsbalances[this.connectedWalletId];
-            this._changeDetectorRef.markForCheck();
+            this.changeDetectorRef.markForCheck();
         }));
 
+        this.subscriptionsArray.push(this.requestedLanguage$.subscribe((language) => {
+            this.language = language;
+            this.changeDetectorRef.detectChanges();
+        }));
     }
-
+    
     setInitialTabs() {
-
         // Get opened tabs from redux store.
-        const openedTabs = immutableHelper.get(this._ngRedux.getState(), ['ofi', 'ofiFundInvest', 'ofiListOfFundsComponent', 'openedTabs']);
+        const openedTabs = immutableHelper.get(this.ngRedux.getState(), ['ofi', 'ofiFundInvest', 'ofiListOfFundsComponent', 'openedTabs']);
 
         if (_.isEmpty(openedTabs)) {
             /**
@@ -124,12 +116,12 @@ export class OfiInvestorFundListComponent implements OnInit, OnDestroy {
                 {
                     title: {
                         icon: 'fa fa-th-list',
-                        text: 'Shares Available'
+                        text: this.translate.translate('Shares Available'),
                     },
                     fundShareId: -1,
                     fundShareData: {},
                     actionType: '',
-                    active: true
+                    active: true,
                 }
             ];
             return true;
@@ -138,13 +130,12 @@ export class OfiInvestorFundListComponent implements OnInit, OnDestroy {
         this.tabsControl = openedTabs;
     }
 
-    ngOnDestroy() {
+    getDisplay() {
+        return (this.isImported) ? 'none' : 'block';
+    }
 
-        for (const subscription of this.subscriptionsArray) {
-            subscription.unsubscribe();
-        }
-
-        this._ngRedux.dispatch(ofiListOfFundsComponentActions.setAllTabs(this.tabsControl));
+    getLinkRoute() {
+        return (!!this.linkRoute) ? this.linkRoute : 'list-of-funds/0';
     }
 
     /**
@@ -154,7 +145,7 @@ export class OfiInvestorFundListComponent implements OnInit, OnDestroy {
      */
     requestMyFundAccess(requested): void {
         if (!requested) {
-            OfiFundInvestService.defaultRequestFunAccessMy(this._ofiFundInvestService, this._ngRedux, this.connectedWalletId);
+            OfiFundInvestService.defaultRequestFunAccessMy(this.ofiFundInvestService, this.ngRedux, this.connectedWalletId);
         }
     }
 
@@ -174,7 +165,7 @@ export class OfiInvestorFundListComponent implements OnInit, OnDestroy {
             // get next redemption cutoff.
             const nextRedCutOff = new CalendarHelper(item.toJS()).getNextCutoffDate(OrderType.Redemption);
 
-            const nav = this._numberConverterService.toFrontEnd(item.get('price', 0));
+            const nav = this.numberConverterService.toFrontEnd(item.get('price', 0));
             const isin = item.get('isin', '');
             const shareName = item.get('fundShareName', '');
 
@@ -182,11 +173,11 @@ export class OfiInvestorFundListComponent implements OnInit, OnDestroy {
             let totalPosition = _.get(balances, [this.connectedWalletId, `${isin}|${shareName}`, 'total'], 'N/A');
 
             if (!isNaN(position)) {
-                position = this._numberConverterService.toFrontEnd(position);
+                position = this.numberConverterService.toFrontEnd(position);
             }
 
             if (!isNaN(totalPosition)) {
-                totalPosition = this._numberConverterService.toFrontEnd(totalPosition);
+                totalPosition = this.numberConverterService.toFrontEnd(totalPosition);
             }
 
             result.push({
@@ -211,12 +202,11 @@ export class OfiInvestorFundListComponent implements OnInit, OnDestroy {
         }, []);
         this.tabsControl = immutableHelper.copy(this.tabsControl);
 
-        this._changeDetectorRef.markForCheck();
+        this.changeDetectorRef.markForCheck();
     }
 
 
     setTabActive(index: number): void {
-
         const tabControlImu = fromJS(this.tabsControl);
 
         const newTabControlImu = tabControlImu.map((item, thisIndex) => {
@@ -224,7 +214,6 @@ export class OfiInvestorFundListComponent implements OnInit, OnDestroy {
         });
 
         this.tabsControl = newTabControlImu.toJS();
-
     }
 
     /**
@@ -234,11 +223,11 @@ export class OfiInvestorFundListComponent implements OnInit, OnDestroy {
     handleSubscribe(shareId: number): any {
 
         if (!this.allowOrder) {
-            this._alerts.create('warning', `
+            this.alerts.create('warning', `
             <table class="table grid">
                 <tbody>
                     <tr>
-                        <td class="text-center text-warning">Subscription is not available in current version.</td>
+                        <td class="text-center text-warning">${this.translate.translate('Subscription is not available in current version.')}</td>
                     </tr>
                 </tbody>
             </table>
@@ -250,7 +239,7 @@ export class OfiInvestorFundListComponent implements OnInit, OnDestroy {
         let i;
         for (i = 0; i < this.tabsControl.length; i += 1) {
             if ((this.tabsControl[i].fundShareId === shareId) && (this.tabsControl[i]['actionType'] === 'subscribe')) {
-                this._router.navigateByUrl(`/list-of-funds/${i}`);
+                this.router.navigateByUrl(`/list-of-funds/${i}`);
 
                 return;
             }
@@ -274,7 +263,7 @@ export class OfiInvestorFundListComponent implements OnInit, OnDestroy {
         });
 
         // Activate the new tab.
-        this._router.navigateByUrl(`/list-of-funds/${this.tabsControl.length - 1}`);
+        this.router.navigateByUrl(`/list-of-funds/${this.tabsControl.length - 1}`);
     }
 
     /**
@@ -283,11 +272,11 @@ export class OfiInvestorFundListComponent implements OnInit, OnDestroy {
      */
     handleRedeem(shareId: number): any {
         if (!this.allowOrder) {
-            this._alerts.create('warning', `
+            this.alerts.create('warning', `
             <table class="table grid">
                 <tbody>
                     <tr>
-                        <td class="text-center text-warning">Redemption is not available in the current version.</td>
+                        <td class="text-center text-warning">${this.translate.translate('Redemption is not available in the current version.')}</td>
                     </tr>
                 </tbody>
             </table>
@@ -299,7 +288,7 @@ export class OfiInvestorFundListComponent implements OnInit, OnDestroy {
         let i;
         for (i = 0; i < this.tabsControl.length; i += 1) {
             if ((this.tabsControl[i].fundShareId === shareId) && (this.tabsControl[i]['actionType'] === 'redeem')) {
-                this._router.navigateByUrl(`/list-of-funds/${i}`);
+                this.router.navigateByUrl(`/list-of-funds/${i}`);
 
                 return;
             }
@@ -323,7 +312,7 @@ export class OfiInvestorFundListComponent implements OnInit, OnDestroy {
         });
 
         // Activate the new tab.
-        this._router.navigateByUrl(`/list-of-funds/${this.tabsControl.length - 1}`);
+        this.router.navigateByUrl(`/list-of-funds/${this.tabsControl.length - 1}`);
     }
 
     /**
@@ -335,7 +324,7 @@ export class OfiInvestorFundListComponent implements OnInit, OnDestroy {
         let i;
         for (i = 0; i < this.tabsControl.length; i += 1) {
             if ((this.tabsControl[i].fundShareId === shareId) && (this.tabsControl[i]['actionType'] === 'sellbuy')) {
-                this._router.navigateByUrl(`/list-of-funds/${i}`);
+                this.router.navigateByUrl(`/list-of-funds/${i}`);
 
                 return;
             }
@@ -356,11 +345,10 @@ export class OfiInvestorFundListComponent implements OnInit, OnDestroy {
             actionType: 'sellbuy',
             active: false,
             formData: {}
-        })
-        ;
+        });
 
         // Activate the new tab.
-        this._router.navigateByUrl(`/list-of-funds/${this.tabsControl.length - 1}`);
+        this.router.navigateByUrl(`/list-of-funds/${this.tabsControl.length - 1}`);
     }
 
     /**
@@ -370,9 +358,9 @@ export class OfiInvestorFundListComponent implements OnInit, OnDestroy {
     handleView(index: number): void {
         /* Check if the tab is already open. */
         let i;
-        for (i = 0; i < this.tabsControl.length; i++) {
+        for (i = 0; i < this.tabsControl.length; i += 1) {
             if ((this.tabsControl[i].fundShareId === this.fundList[index].id) && (this.tabsControl[i]['actionType'] === 'view')) {
-                this._router.navigateByUrl(`/list-of-funds/${i}`);
+                this.router.navigateByUrl(`/list-of-funds/${i}`);
 
                 return;
             }
@@ -397,7 +385,7 @@ export class OfiInvestorFundListComponent implements OnInit, OnDestroy {
         });
 
         // Activate the new tab.
-        this._router.navigateByUrl(`/list-of-funds/${this.tabsControl.length - 1}`);
+        this.router.navigateByUrl(`/list-of-funds/${this.tabsControl.length - 1}`);
     }
 
     /**
@@ -418,7 +406,7 @@ export class OfiInvestorFundListComponent implements OnInit, OnDestroy {
         ];
 
         // Reset Tabs.
-        this._router.navigateByUrl('/list-of-funds/0');
+        this.router.navigateByUrl('/list-of-funds/0');
 
         return;
     }
@@ -448,7 +436,6 @@ export class OfiInvestorFundListComponent implements OnInit, OnDestroy {
         return hasShare ? null : '';
     }
 
-
     /**
      * Check if a is allow to place sell buy order.
      *
@@ -459,4 +446,11 @@ export class OfiInvestorFundListComponent implements OnInit, OnDestroy {
         return (share.allowSellBuy === 1);
     }
 
+    ngOnDestroy() {
+        for (const subscription of this.subscriptionsArray) {
+            subscription.unsubscribe();
+        }
+
+        this.ngRedux.dispatch(ofiListOfFundsComponentActions.setAllTabs(this.tabsControl));
+    }
 }

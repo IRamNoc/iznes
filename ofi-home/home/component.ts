@@ -13,11 +13,10 @@ import { Router } from '@angular/router';
 /* Redux */
 import { NgRedux, select } from '@angular-redux/store';
 import { MultilingualService } from '@setl/multilingual';
-import { APP_CONFIG, AppConfig, immutableHelper, MoneyValuePipe, NumberConverterService } from '@setl/utils';
+import { APP_CONFIG, AppConfig, MoneyValuePipe, NumberConverterService } from '@setl/utils';
 /* Ofi orders request service. */
 import { OfiOrdersService } from '@ofi/ofi-main/ofi-req-services/ofi-orders/service';
-
-import { LogService } from "@setl/utils";
+import { LogService } from '@setl/utils';
 
 // recordkeeping
 import { MemberSocketService } from '@setl/websocket-service';
@@ -36,7 +35,6 @@ import {
 @Component({
     styleUrls: ['./component.scss'],
     templateUrl: './component.html',
-    changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class OfiHomeComponent implements AfterViewInit, OnInit, OnDestroy {
 
@@ -47,29 +45,31 @@ export class OfiHomeComponent implements AfterViewInit, OnInit, OnDestroy {
     public connectedWalletName = '';
 
     /* Private properties. */
-    private subscriptions: Array<any> = [];
+    private subscriptions: any[] = [];
     private myWallets: any = [];
     private connectedWalletId: any = 0;
     userType: number;
 
     nbUnreadMessages = 0;
 
+    language = 'en';
+
     /* Observables. */
     @select(['wallet', 'myWallets', 'walletList']) myWalletsOb: any;
-
+    @select(['user', 'siteSettings', 'language']) readonly requestedLanguage$;
     @select(['user', 'myDetail']) myDetailOb: any;
     @select(['user', 'connected', 'connectedWallet']) connectedWalletOb: any;
     @select(['message', 'myMessages', 'counts', 'inboxUnread']) nbMessagesObj: any;
 
     /* Constructor. */
     constructor(
-        private _changeDetectorRef: ChangeDetectorRef,
+        private changeDetectorRef: ChangeDetectorRef,
         private _numberConverterService: NumberConverterService,
         private _ngRedux: NgRedux<any>,
         private _moneyValuePipe: MoneyValuePipe,
         private _fb: FormBuilder,
         private _router: Router,
-        public _translate: MultilingualService,
+        public translate: MultilingualService,
         private logService: LogService,
         private _myWalletService: MyWalletsService,
         private _memberService: MemberService,
@@ -81,21 +81,19 @@ export class OfiHomeComponent implements AfterViewInit, OnInit, OnDestroy {
         @Inject(APP_CONFIG) appConfig: AppConfig,
     ) {
         this.appConfig = appConfig;
-
     }
 
     ngOnInit() {
         const combined$ = observableCombineLatest(this.connectedWalletOb, this.myDetailOb);
 
         const combinedSubscription = combined$.subscribe(([connectedWalletId, details]) => {
-
             this.connectedWalletId = connectedWalletId;
             this.userType = details.userType;
 
             this.updateWalletConnection();
             this.callServices();
 
-            this._changeDetectorRef.detectChanges();
+            this.changeDetectorRef.detectChanges();
         });
 
         this.subscriptions.push(combinedSubscription);
@@ -103,14 +101,17 @@ export class OfiHomeComponent implements AfterViewInit, OnInit, OnDestroy {
         /* Do observable subscriptions here. */
         this.subscriptions['message'] = this.nbMessagesObj.subscribe((nb) => {
             /* Assign list to a property. */
-
             this.nbUnreadMessages = (nb) ? nb : 0;
-            this._changeDetectorRef.detectChanges();
+            this.changeDetectorRef.detectChanges();
+        });
+
+        this.subscriptions['language'] = this.requestedLanguage$.subscribe((language) => {
+            this.language = language;
+            this.changeDetectorRef.detectChanges();
         });
     }
 
     ngAfterViewInit() {
-
     }
 
     callServices() {
@@ -127,7 +128,6 @@ export class OfiHomeComponent implements AfterViewInit, OnInit, OnDestroy {
             }
         }
     }
-
 
     /**
      * Format Date
@@ -186,7 +186,7 @@ export class OfiHomeComponent implements AfterViewInit, OnInit, OnDestroy {
         }
 
         /* Detect changes. */
-        this._changeDetectorRef.detectChanges();
+        this.changeDetectorRef.detectChanges();
 
         /* Return. */
         return;
@@ -195,7 +195,7 @@ export class OfiHomeComponent implements AfterViewInit, OnInit, OnDestroy {
     /* On Destroy. */
     ngOnDestroy(): void {
         /* Detach the change detector on destroy. */
-        this._changeDetectorRef.detach();
+        this.changeDetectorRef.detach();
 
         /* Unsunscribe Observables. */
         for (let key in this.subscriptions) {
