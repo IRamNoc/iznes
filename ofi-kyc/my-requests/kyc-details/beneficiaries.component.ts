@@ -1,7 +1,8 @@
 import { Component, Input, OnInit } from '@angular/core';
-
+import { select } from '@angular-redux/store';
 import { KycDetailsService } from './details.service';
 import { mapValues, find, get as getValue } from 'lodash';
+import { filter, take } from 'rxjs/operators';
 
 @Component({
     selector: 'kyc-details-stakeholders',
@@ -9,6 +10,9 @@ import { mapValues, find, get as getValue } from 'lodash';
     styleUrls: ['./beneficiaries.component.scss'],
 })
 export class KycDetailsStakeholdersComponent implements OnInit {
+
+    @select(['user', 'myDetail', 'userId']) user$;
+
     @Input() set stakeholders(stakeholders) {
         if (stakeholders) {
             this.stakeholderList = stakeholders;
@@ -25,12 +29,24 @@ export class KycDetailsStakeholdersComponent implements OnInit {
     stakeholderList;
     stakeholderReadableList;
 
+    userID;
+
     constructor(
         private detailsService: KycDetailsService,
     ) {
     }
 
     ngOnInit() {
+        this.getUserID();
+    }
+
+    getUserID(){
+        this.user$.pipe(
+            filter(userID => !!userID),
+            take(1),
+        ).subscribe((userID) => {
+            this.userID = userID;
+        });
     }
 
     selectStakeholder(stakeholder) {
@@ -39,6 +55,14 @@ export class KycDetailsStakeholdersComponent implements OnInit {
 
     deselectStakeholder() {
         this.selectedStakeholder = null;
+    }
+
+    exportStakeholders() {
+        const kycID = getValue(this.stakeholderList, [0, 'kycID']);
+
+        if (kycID) {
+            this.detailsService.exportStakeholders(kycID, this.userID);
+        }
     }
 
     parseStakeholders(stakeholders) {
