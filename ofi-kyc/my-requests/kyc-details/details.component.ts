@@ -36,6 +36,7 @@ export class KycDetailsComponent implements OnInit, OnDestroy {
     modals = {
         beneficiaries: false,
     };
+    alreadyCompleted = null;
 
     constructor(
         private route: ActivatedRoute,
@@ -52,7 +53,23 @@ export class KycDetailsComponent implements OnInit, OnDestroy {
 
     getData(kycID) {
         this.kycDetailsService.clearData();
-        this.kycDetailsService.getData(kycID);
+        this.kycDetailsService.getData(kycID).then((alreadyCompleted) => {
+            if (!isNil(alreadyCompleted)) {
+                this.alreadyCompleted = alreadyCompleted;
+
+                if (this.alreadyCompleted === 0) {
+                    this.constructPanels();
+                } else {
+                    this.constructLightPanels();
+                }
+            }
+        });
+    }
+
+    constructLightPanels() {
+        this.panelDefs = [
+            this.getValidation(),
+        ];
     }
 
     constructPanels() {

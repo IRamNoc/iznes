@@ -23,6 +23,29 @@ export class KycDetailsService {
     }
 
     getData(kycID) {
+        return this.ofiKycService.getKyc(kycID).then((response) => {
+            const alreadyCompleted = getValue(response, [1, 'Data', 0, 'alreadyCompleted']);
+
+            if (isNil(alreadyCompleted)) {
+                return;
+            }
+
+            if (alreadyCompleted === 0) {
+                this.getDetails(kycID);
+            }
+            if (alreadyCompleted === 1) {
+                this.getLightDetails(kycID);
+            }
+
+            return alreadyCompleted;
+        });
+    }
+
+    getLightDetails(kycID) {
+        OfiKycService.defaultRequestKycDetailsValidation(this.ofiKycService, this.ngRedux, kycID);
+    }
+
+    getDetails(kycID) {
         OfiKycService.defaultRequestKycDetailsGeneral(this.ofiKycService, this.ngRedux, kycID);
         OfiKycService.defaultRequestKycDetailsCompany(this.ofiKycService, this.ngRedux, kycID);
         OfiKycService.defaultRequestKycDetailsCompanyBeneficiaries(this.ofiKycService, this.ngRedux, kycID);

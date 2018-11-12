@@ -59,9 +59,11 @@
                         </div>
                     </div>
                 </div>
+            </div>
 
+            <div class="mb-1">
                 <!-- Kyc details block -->
-                <kyc-details *ngIf="!alreadyCompleted" [kycID]="kycId"></kyc-details>
+                <kyc-details [kycID]="kycId"></kyc-details>
             </div>
 
             <!-- Waiting for approval form -->

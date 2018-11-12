@@ -25,6 +25,7 @@ import {
     GetKycDocumentRequestData,
     GetKycDocumentRequestBody,
     GetMyKycListRequestBody,
+    GetKycRequestBody,
     createKYCDraftMessageBody,
     createKYCDraftRequestData,
     DeleteKycRequestData,
@@ -505,6 +506,16 @@ export class OfiKycService {
                 });
             }
         );
+    }
+
+    getKyc(kycID) {
+        const messageBody: GetKycRequestBody = {
+            RequestName: 'iznesgetkyc',
+            token: this.memberSocketService.token,
+            kycID,
+        };
+
+        return createMemberNodeRequest(this.memberSocketService, messageBody);
     }
 
     fetchInvitationsByUserAmCompany() {
