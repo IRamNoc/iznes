@@ -1,4 +1,4 @@
-import { OnInit, ChangeDetectionStrategy, ChangeDetectorRef, Component, OnDestroy } from '@angular/core';
+import { OnInit, ChangeDetectorRef, Component, OnDestroy } from '@angular/core';
 import { FormBuilder, FormGroup } from '@angular/forms';
 import { select } from '@angular-redux/store';
 import { MultilingualService } from '@setl/multilingual';
@@ -15,7 +15,6 @@ import { InvestorHoldingRequestData } from '@ofi/ofi-main/ofi-req-services/ofi-r
 @Component({
     styleUrls: ['./component.scss'],
     templateUrl: './component.html',
-    changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class MyHoldingsComponent implements OnInit, OnDestroy {
     currencyList = [];
@@ -23,8 +22,12 @@ export class MyHoldingsComponent implements OnInit, OnDestroy {
     holdingList: Array<any>;
     searchForm: FormGroup;
     unSubscribe: Subject<any> = new Subject();
+    language = 'en';
+    managementCompanyList: any[] = []
+    allCompanies: any[] = [];
 
     @select(['user', 'connected', 'connectedWallet']) connectedWallet$;
+    @select(['user', 'siteSettings', 'language']) language$;
     @select(['user', 'myDetail', 'accountId']) accountId$;
     @select(['ofi', 'ofiCurrencies', 'loaded']) loaded$;
     @select(['ofi', 'ofiCurrencies', 'currencies']) currencyList$;
@@ -44,11 +47,12 @@ export class MyHoldingsComponent implements OnInit, OnDestroy {
         private currenciesService: OfiCurrenciesService,
         private managementCompanyService: OfiManagementCompanyService,
         private ofiReportsService: OfiReportsService,
-        private _translate: MultilingualService,
+        private translate: MultilingualService,
     ) {
     }
 
     ngOnInit(): void {
+        this.initCompanies();
         this.initForm();
         this.initSubscriptions();
         this.managementCompanyService.fetchInvestorManagementCompanyList();
@@ -64,16 +68,33 @@ export class MyHoldingsComponent implements OnInit, OnDestroy {
         this.changeDetectorRef.detach();
     }
 
+    initCompanies() {
+        this.allCompanies = [{
+            id: -1,
+            text: this.translate.translate('All Asset Management Companies'),
+        }];
+    }
+
     initForm() {
         this.holdingList = [];
         this.searchForm = this.fb.group({
             search: [''],
         });
 
-        this.changeDetectorRef.markForCheck();
+        this.changeDetectorRef.detectChanges();
     }
 
     initSubscriptions() {
+        this.language$
+        .pipe(
+            takeUntil(this.unSubscribe),
+        )
+        .subscribe((language) => {
+            this.language = language;
+            this.initCompanies();
+            this.formatManagementCompanyList();
+        });
+
         this.currencyList$
         .pipe(
             switchMap(() => this.loaded$),
@@ -102,7 +123,6 @@ export class MyHoldingsComponent implements OnInit, OnDestroy {
             takeUntil(this.unSubscribe),
         )
         .subscribe(([accountId, selectedWalletId, selectedItem]) => {
-
             const payload: InvestorHoldingRequestData = {
                 amCompanyID: selectedItem.search[0].id,
                 walletID: Number(selectedWalletId),
@@ -117,7 +137,10 @@ export class MyHoldingsComponent implements OnInit, OnDestroy {
             filter((v: List<any>) => v && v.size > 0),
             takeUntil(this.unSubscribe),
         )
-        .subscribe(d => this.formatManagementCompanyList(d));
+        .subscribe(d => {
+            this.managementCompanyList = d.toJS();
+            this.formatManagementCompanyList();
+        });
 
         combineLatest(
             this.investorHoldingRequested,
@@ -131,25 +154,17 @@ export class MyHoldingsComponent implements OnInit, OnDestroy {
     /**
      * Format the list of management company of the investor
      *
-     * @param {List} d
      * @memberof MyHoldingsComponent
      */
-    formatManagementCompanyList(d) {
-        const data = d.toJS();
+    formatManagementCompanyList() {
+        this.investorManagementCompanyList = this.allCompanies.concat(
+            this.managementCompanyList.map(it => ({
+                id: it.companyID,
+                text: it.companyName,
+            })));
 
-        let allComp = [{
-            id: -1,
-            text: 'All Asset Management Companies',
-        }];
-
-        this.investorManagementCompanyList = allComp.concat(data.map(it => ({
-            id: it.companyID,
-            text: it.companyName,
-        })));
-
-        this.searchForm.controls['search'].setValue(allComp);
-
-        this.changeDetectorRef.markForCheck();
+        this.changeDetectorRef.detectChanges();
+        this.searchForm.controls['search'].setValue(this.allCompanies);
     }
 
     /**
@@ -176,10 +191,11 @@ export class MyHoldingsComponent implements OnInit, OnDestroy {
             ratio: it.ratio,
         }));
 
-        this.changeDetectorRef.markForCheck();
+        // this.changeDetectorRef.markForCheck();
+        this.changeDetectorRef.detectChanges();
     }
 
-    /**
+     /**
      * Get the code of the currency by its id
      *
      * @param {number} currencyId
