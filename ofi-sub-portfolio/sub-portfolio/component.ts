@@ -236,9 +236,9 @@ export class OfiSubPortfolioComponent implements OnInit, OnDestroy {
 
     ngOnInit() {
 
-        //if home = subport then launch tour!
+        //if login = subport then launch tour!
 
-        //on save make home blank.
+        //on save make login blank.
 
     }
 
@@ -336,9 +336,9 @@ export class OfiSubPortfolioComponent implements OnInit, OnDestroy {
                     this.handleLabelResponse(message, 'created');
                     this.closeAddModal();
 
-                    // update the default home page to '/home'
+                    // update the default login page to '/login'
                     if (this.isFirstAddress()) {
-                        this._myUserService.updateHomePage('/home');
+                        this._myUserService.updateHomePage('/login');
                     }
                 }
 
