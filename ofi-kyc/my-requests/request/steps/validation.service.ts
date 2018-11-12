@@ -78,5 +78,4 @@ export class ValidationService {
     getCurrentFormValidationData(kycID) {
         return this.requestsService.getKycValidation(kycID);
     }
-
 }

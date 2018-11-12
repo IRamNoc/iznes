@@ -1,10 +1,8 @@
-import {Injectable} from '@angular/core';
+import { Injectable } from '@angular/core';
 import * as moment from 'moment';
-
-import {RequestsService} from '../../requests.service';
-import {NewRequestService} from '../new-request.service';
-
-import {merge, get as getValue, values, isEmpty, filter} from 'lodash';
+import { RequestsService } from '../../requests.service';
+import { NewRequestService } from '../new-request.service';
+import { merge, get as getValue, values, isEmpty, filter } from 'lodash';
 
 export const documentFormPaths = {
     kyclistshareholdersdoc: 'common',
@@ -34,7 +32,6 @@ export class DocumentsService {
     sendRequest(form, requests, connectedWallet) {
         let promises = [];
         let context = this.newRequestService.context;
-
         let extracted = this.getValues(form.value);
 
         requests.forEach(request => {
@@ -110,5 +107,4 @@ export class DocumentsService {
     getDocument(documentID){
         return this.requestsService.getKycDocument(documentID);
     }
-
 }

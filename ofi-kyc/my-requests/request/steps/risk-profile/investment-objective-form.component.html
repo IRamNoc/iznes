@@ -15,42 +15,50 @@
     <div class="row">
         <div class="col-sm-6 p-0">
             <div>
-                <label class="required-field">{{'Investment objective(s)? Performance profile' | translate}}</label>
+                <label class="required-field">{{ 'Investment Objective(s)? Performance Profile' | translate }}</label>
             </div>
 
             <div class="mt-1">
                 <span class="checkbox-inline pr-1 pb-1" *ngFor="let performanceProfile of performanceProfileList">
-                    <input type="checkbox" id="{{performanceProfile.id}}-{{index}}" [formControl]="form.get(['performanceProfile', performanceProfile.id])">
+                    <input type="checkbox"
+                            id="{{performanceProfile.id}}-{{index}}"
+                            [formControl]="form.get(['performanceProfile', performanceProfile.id])">
                     <label for="{{performanceProfile.id}}-{{index}}">
-                        {{performanceProfile.text | translate}}
+                        {{ performanceProfile.text | translate }}
                     </label>
                 </span>
 
                 <div class="form-group">
-                    <input *ngIf="!isDisabled('performanceProfileSpecification')" id="performanceProfileSpecification" type="text" formControlName="performanceProfileSpecification" placeholder="{{'Please specify' | translate}}">
-                    <span class="field-error" *ngIf="hasError('performanceProfileSpecification')">{{'Field is required' | translate}}</span>
+                    <input *ngIf="!isDisabled('performanceProfileSpecification')"
+                            id="performanceProfileSpecification"
+                            type="text"
+                            formControlName="performanceProfileSpecification"
+                            placeholder="{{ 'Please specify' | translate }}">
+                    <span class="field-error" *ngIf="hasError('performanceProfileSpecification')">{{ 'Field is required' | translate }}</span>
                 </div>
             </div>
 
-            <p class="txtRed" *ngIf="hasError('performanceProfile')">{{'Select at least one' | translate}}</p>
+            <p class="txtRed" *ngIf="hasError('performanceProfile')">{{ 'Select at least one' | translate }}</p>
 
         </div>
 
         <div class="col-sm-6 p-0" formGroupName="clientNeeds">
             <div>
-                <label class="required-field">{{'Client needs (purpose of the investment)' | translate}}</label>
+                <label class="required-field">{{ 'Client Needs (purpose of the investment)' | translate }}</label>
             </div>
 
             <div class="mt-1">
                 <span class="checkbox-inline pr-1 pb-1" *ngFor="let clientNeed of clientNeeds">
-                    <input type="checkbox" id="{{clientNeed.id}}-{{index}}" formControlName="{{clientNeed.id}}">
+                    <input type="checkbox"
+                            id="{{clientNeed.id}}-{{index}}"
+                            formControlName="{{clientNeed.id}}">
                     <label for="{{clientNeed.id}}-{{index}}">
-                        {{clientNeed.text | translate}}
+                        {{ clientNeed.text | translate }}
                     </label>
                 </span>
             </div>
 
-            <p class="txtRed" *ngIf="hasError('clientNeeds')">{{'Select at least one' | translate}}</p>
+            <p class="txtRed" *ngIf="hasError('clientNeeds')">{{ 'Select at least one' | translate }}</p>
 
         </div>
     </div>
@@ -58,37 +66,41 @@
     <div class="row mt-1">
         <div class="form-group col-sm-6">
             <div>
-                <label>{{'Other relevant financial information (optional) including periodic cash flows to be invested in cash management, asset allocation :' | translate}}</label>
+                <label>{{ 'Other relevant financial information (optional) including periodic cash flows to be invested in cash management, asset allocation:' | translate }}</label>
             </div>
 
             <textarea class="form-control" formControlName="otherFinancialInformation"></textarea>
-            <span class="field-error" *ngIf="hasError('otherFinancialInformation', ['maxlength'])">{{'Field is too long' | translate}}</span>
+            <span class="field-error" *ngIf="hasError('otherFinancialInformation', ['maxlength'])">{{ 'Value is too long' | translate }}</span>
         </div>
     </div>
 
     <div class="row">
         <div class="form-group col-sm-12">
-            <label class="required-field">{{'Investment horizons wanted' | translate}}</label>
+            <label class="required-field">{{ 'Investment Horizons Wanted' | translate }}</label>
         </div>
 
         <div class="form-group col-sm-4" *ngFor="let horizon of investmentHorizonList">
             <div class="checkbox-inline">
                 <input type="checkbox" id="{{horizon.id}}-{{index}}" [formControl]="form.get(['investmentHorizonWanted', horizon.id])">
                 <label for="{{horizon.id}}-{{index}}">
-                    {{horizon.text | translate}}
+                    {{ horizon.text | translate }}
                 </label>
             </div>
 
             <div *ngIf="horizon.id === 'specific' && !isDisabled('investmentHorizonWantedSpecificPeriod')">
                 <div class="input-group date-pick-wrapper">
                     <span class="fa fa-calendar" aria-hidden="true"></span>
-                    <input autocomplete="off" [dpDayPicker]="configDate" id="investmentHorizonWantedSpecificPeriod-{{index}}" formControlName="investmentHorizonWantedSpecificPeriod" placeholder="{{configDate.format}}" mode="day" theme="dp-material">
+                    <input autocomplete="off"
+                            [dpDayPicker]="configDate" id="investmentHorizonWantedSpecificPeriod-{{index}}" formControlName="investmentHorizonWantedSpecificPeriod"
+                            placeholder="{{configDate.format}}"
+                            mode="day"
+                            theme="dp-material">
                 </div>
-                <span class="field-error" *ngIf="hasError('investmentHorizonWantedSpecificPeriod')">{{'Field is required' | translate}}</span>
+                <span class="field-error" *ngIf="hasError('investmentHorizonWantedSpecificPeriod')">{{ 'Field is required' | translate }}</span>
             </div>
         </div>
 
-        <p class="txtRed" *ngIf="hasError('investmentHorizonWanted')">{{'Select at least one' | translate}}</p>
+        <p class="txtRed" *ngIf="hasError('investmentHorizonWanted')">{{ 'Select at least one' | translate }}</p>
 
     </div>
 
@@ -109,33 +121,32 @@
     <div class="mb-1">
         <table class="table">
             <thead>
-            <tr>
-                <th class="left">{{'Your preference' | translate}}</th>
-                <th>{{'Risk profile' | translate}}</th>
-                <th>{{'Corresponding volatility' | translate}}</th>
-                <th>{{'SRRI' | translate}}</th>
-                <th>{{'SRI' | translate}}</th>
-            </tr>
+                <tr>
+                    <th class="left">{{ 'Your Preference' | translate }}</th>
+                    <th>{{ 'Risk Profile' | translate }}</th>
+                    <th>{{ 'Corresponding Volatility' | translate }}</th>
+                    <th>{{ 'SRRI' | translate }}</th>
+                    <th>{{ 'SRI' | translate }}</th>
+                </tr>
             </thead>
             <tbody>
-            <tr *ngFor="let riskAcceptance of riskAcceptanceList; let i = index" formGroupName="riskAcceptance">
-                <td class="left">
-                    <input type="number" placeholder="%" formControlName="riskAcceptanceLevel{{i + 1}}">
-                </td>
-                <td>{{riskAcceptance.profile | translate}}</td>
-                <td>{{riskAcceptance.volatility | translate}}</td>
-                <td>{{riskAcceptance.srri}}</td>
-                <td>{{riskAcceptance.sri}}</td>
-            </tr>
+                <tr *ngFor="let riskAcceptance of riskAcceptanceList; let i = index" formGroupName="riskAcceptance">
+                    <td class="left">
+                        <input type="number" placeholder="%" formControlName="riskAcceptanceLevel{{i + 1}}">
+                    </td>
+                    <td>{{ riskAcceptance.profile | translate }}</td>
+                    <td>{{ riskAcceptance.volatility | translate }}</td>
+                    <td>{{ riskAcceptance.srri }}</td>
+                    <td>{{ riskAcceptance.sri }}</td>
+                </tr>
             </tbody>
         </table>
 
         <p class="txtRed" *ngIf="hasError('riskAcceptance', ['total']) && !hasError('riskAcceptance', ['unfilled'])">
-            {{'Total of all risk acceptance fields must be equal to 100' | translate}}
+            {{ 'Total of all risk acceptance fields must be equal to 100' | translate }}
         </p>
         <p class="txtRed" *ngIf="hasError('riskAcceptance', ['required'])">
-            {{'Please fill in all values' | translate}}
+            {{ 'Please fill in all values' | translate }}
         </p>
     </div>
-
 </div>

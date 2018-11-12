@@ -1,22 +1,20 @@
-import {Component, Input, OnInit, OnDestroy, ViewChild} from '@angular/core';
-import { FormGroup, AbstractControl, Validators } from '@angular/forms';
-import {get as getValue, isEmpty, castArray} from 'lodash';
-import {select} from '@angular-redux/store';
-import {Subject} from 'rxjs';
-import {filter, map, takeUntil} from 'rxjs/operators';
-
-import {sirenValidator, siretValidator} from '@setl/utils/helper/validators';
-import {FormPercentDirective} from '@setl/utils/directives/form-percent/formpercent';
-import {countries} from '../../../requests.config';
-import {NewRequestService} from '../../new-request.service';
-import {IdentificationService} from '../identification.service';
+import { Component, Input, OnInit, OnDestroy, ViewChild } from '@angular/core';
+import { FormGroup, AbstractControl, Validators  } from '@angular/forms';
+import { get as getValue, isEmpty, castArray } from 'lodash';
+import { select } from '@angular-redux/store';
+import { Subject } from 'rxjs';
+import { filter, map, takeUntil } from 'rxjs/operators';
+import { sirenValidator, siretValidator } from '@setl/utils/helper/validators';
+import { FormPercentDirective } from '@setl/utils/directives/form-percent/formpercent';
+import { countries } from '../../../requests.config';
+import { NewRequestService } from '../../new-request.service';
+import { IdentificationService } from '../identification.service';
 
 @Component({
     selector: 'general-information',
     templateUrl: './general-information.component.html'
 })
 export class GeneralInformationComponent implements OnInit, OnDestroy {
-
     @ViewChild(FormPercentDirective) formPercent: FormPercentDirective;
     @Input() form: FormGroup;
     @select(['ofi', 'ofiKyc', 'myKycRequested', 'kycs']) requests$;
@@ -51,15 +49,13 @@ export class GeneralInformationComponent implements OnInit, OnDestroy {
                 const otherIdentificationNumberValue = getValue(data, [0, 'id']);
 
                 this.formCheckOtherIdentificationNumber(otherIdentificationNumberValue);
-            })
-        ;
+            });
 
         this.form.get('commercialDomiciliation').valueChanges
             .pipe(takeUntil(this.unsubscribe))
             .subscribe((value) => {
                 this.formCheckCommercialDomiciliation(value);
-            })
-        ;
+            });
     }
 
     formCheckCommercialDomiciliation(value) {
@@ -128,8 +124,7 @@ export class GeneralInformationComponent implements OnInit, OnDestroy {
                         }
                     });
                 });
-            })
-        ;
+            });
     }
 
     ngOnDestroy() {

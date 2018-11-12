@@ -16,9 +16,9 @@ import { setInformations, KycMyInformations } from '../../ofi-store/ofi-kyc/my-i
 import { Observable } from 'rxjs';
 
 import { OfiKycService } from '../../ofi-req-services/ofi-kyc/service';
-
 import { immutableHelper } from '@setl/utils';
 import { Router } from '@angular/router';
+import { MultilingualService } from '@setl/multilingual';
 
 @Component({
     styleUrls: ['./component.scss'],
@@ -26,7 +26,6 @@ import { Router } from '@angular/router';
     changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class OfiAmDocumentsComponent implements OnDestroy, OnInit {
-
     appConfig: AppConfig;
     hasFilledAdditionnalInfos = false;
 
@@ -45,6 +44,7 @@ export class OfiAmDocumentsComponent implements OnDestroy, OnInit {
                 private _ngRedux: NgRedux<any>,
                 private toasterService: ToasterService,
                 private _router: Router,
+                private translate: MultilingualService,
                 @Inject(APP_CONFIG) appConfig: AppConfig) {
         this.appConfig = appConfig;
     }
@@ -63,14 +63,14 @@ export class OfiAmDocumentsComponent implements OnDestroy, OnInit {
         const columns = {
             1: {
                 id: 'Status',
-                label: 'Status',
+                label: this.translate.translate('Status'),
                 dataSource: 'status',
                 sortable: true,
                 hasLink: true,
             },
             2: {
                 id: 'CompName',
-                label: 'Company Name',
+                label: this.translate.translate('Company Name'),
                 dataSource: 'investorCompanyName',
                 sortable: true,
                 hasLink: true,
@@ -79,13 +79,13 @@ export class OfiAmDocumentsComponent implements OnDestroy, OnInit {
             },
             3: {
                 id: 'DateModification',
-                label: 'Date of latest modification by the investor',
+                label: this.translate.translate('Date of latest modification by the Investor'),
                 dataSource: 'lastUpdated',
                 sortable: true,
             },
             4: {
                 id: 'DateStarted',
-                label: 'Date KYC started',
+                label: this.translate.translate('Date KYC Started'),
                 dataSource: 'dateEntered',
                 sortable: true,
                 hasLink: true,
@@ -94,25 +94,25 @@ export class OfiAmDocumentsComponent implements OnDestroy, OnInit {
             },
             5: {
                 id: 'DateApproval',
-                label: 'Date of approval',
+                label: this.translate.translate('Date of Approval'),
                 dataSource: 'lastUpdated',
                 sortable: true,
             },
             6: {
                 id: 'Validated',
-                label: 'Validated by',
+                label: this.translate.translate('Validated By'),
                 dataSource: 'amFirstName',
                 sortable: true,
             },
             7: {
                 id: 'DateModified',
-                label: 'Date of latest modification by the investor',
+                label: this.translate.translate('Date of latest modification by the Investor'),
                 dataSource: 'lastUpdated',
                 sortable: true,
             },
             8: {
                 id: 'Reviewed',
-                label: 'Reviewed by',
+                label: this.translate.translate('Reviewed By'),
                 dataSource: 'amFirstName',
                 sortable: true,
                 hasLink: true,
@@ -121,19 +121,19 @@ export class OfiAmDocumentsComponent implements OnDestroy, OnInit {
             },
             9: {
                 id: 'DateRejection',
-                label: 'Date of rejection',
+                label: this.translate.translate('Date of Rejection'),
                 dataSource: 'lastUpdated',
                 sortable: true,
             },
             10: {
                 id: 'Rejected',
-                label: 'Rejected by',
+                label: this.translate.translate('Rejected By'),
                 dataSource: 'amFirstName',
                 sortable: true,
             },
             11: {
                 id: 'DateLatestModification',
-                label: 'Date of latest modification',
+                label: this.translate.translate('Date of latest modification'),
                 dataSource: 'lastUpdated',
                 sortable: true,
                 hasLink: true,
@@ -152,10 +152,10 @@ export class OfiAmDocumentsComponent implements OnDestroy, OnInit {
         };
 
         const replaceStatus = {
-            '1': 'To Review',
-            '-1': 'Accepted',
-            '2': 'Waiting for more info',
-            '-2': 'Rejected'
+            '1': this.translate.translate('To Review'),
+            '-1': this.translate.translate('Accepted'),
+            '2': this.translate.translate('Waiting For More Info'),
+            '-2': this.translate.translate('Rejected'),
         };
 
         let id = 0;
@@ -180,42 +180,42 @@ export class OfiAmDocumentsComponent implements OnDestroy, OnInit {
         this.panelDefs = [
             {
                 id: 'Waiting',
-                title: 'Waiting for Approval',
+                title: this.translate.translate('Waiting for Approval'),
                 columns: [columns[1], columns[2], columns[3], columns[4]],
                 open: true,
                 data: tables[1]
             },
             {
                 id: 'Accepted',
-                title: 'Accepted - Funds Access Authorizations',
+                title: this.translate.translate('Accepted - Funds Access Authorizations'),
                 columns: [columns[1], columns[2], columns[5], columns[4], columns[6]],
                 open: true,
                 data: tables[-1]
             },
             {
                 id: 'Awaiting',
-                title: 'Awaiting for more information from your client',
+                title: this.translate.translate('Awaiting for more information from your client'),
                 columns: [columns[1], columns[2], columns[7], columns[4], columns[8]],
                 open: true,
                 data: tables[2]
             },
             {
                 id: 'Rejected',
-                title: 'Rejected',
+                title: this.translate.translate('Rejected'),
                 columns: [columns[1], columns[2], columns[9], columns[4], columns[10]],
                 open: true,
                 data: tables[-2]
             },
             {
                 id: 'StartedClients',
-                title: 'Started by your clients',
+                title: this.translate.translate('Started by your clients'),
                 columns: [columns[1], columns[2], columns[7], columns[4], columns[8]],
                 open: true,
                 data: tables['invited']
             },
             {
                 id: 'AllClients',
-                title: 'All your KYC and Client Folders',
+                title: this.translate.translate('All your KYC and Client Folders'),
                 columns: [columns[1], columns[2], columns[11], columns[4], columns[8]],
                 open: true,
                 data: tables['all']
@@ -251,7 +251,6 @@ export class OfiAmDocumentsComponent implements OnDestroy, OnInit {
             });
             this._router.navigateByUrl(ret);
         }
-
     }
 
     /* On Destroy. */

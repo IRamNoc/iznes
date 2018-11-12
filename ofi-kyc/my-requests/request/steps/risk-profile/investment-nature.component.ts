@@ -1,19 +1,17 @@
-import {Component, OnInit, Input, ViewChild} from '@angular/core';
-import {isEmpty, castArray, values, map, toNumber} from 'lodash';
-import {select} from '@angular-redux/store';
-import {Subject} from 'rxjs';
-import {filter, map as rxMap, takeUntil} from 'rxjs/operators';
-
-import {FormPercentDirective} from '@setl/utils/directives/form-percent/formpercent';
-import {RiskProfileService} from '../risk-profile.service';
-import {NewRequestService} from '../../new-request.service';
+import { Component, OnInit, Input, ViewChild } from '@angular/core';
+import { isEmpty, castArray, values, map, toNumber } from 'lodash';
+import { select } from '@angular-redux/store';
+import { Subject } from 'rxjs';
+import { filter, map as rxMap, takeUntil } from 'rxjs/operators';
+import { FormPercentDirective } from '@setl/utils/directives/form-percent/formpercent';
+import { RiskProfileService } from '../risk-profile.service';
+import { NewRequestService } from '../../new-request.service';
 
 @Component({
     selector: 'investment-nature',
     templateUrl: './investment-nature.component.html',
 })
 export class InvestmentNatureComponent implements OnInit {
-
     @ViewChild(FormPercentDirective) formPercent: FormPercentDirective;
     @Input() form;
     @select(['ofi', 'ofiKyc', 'myKycRequested', 'kycs']) currentlyRequestedKycs$;

@@ -1,12 +1,13 @@
-import {Component, Input, OnInit, OnDestroy, Output, EventEmitter} from '@angular/core';
-import {FormControl} from '@angular/forms';
-import {select} from '@angular-redux/store';
-import {NewRequestService, configDate} from "../../new-request.service";
-import {RiskProfileService} from '../risk-profile.service';
-import {get as getValue, find, pick, isEmpty} from 'lodash';
-import {Subject} from 'rxjs';
-import {filter as rxFilter, takeUntil, take} from 'rxjs/operators';
+import { Component, Input, OnInit, OnDestroy, Output, EventEmitter } from '@angular/core';
+import { FormControl } from '@angular/forms';
+import { select } from '@angular-redux/store';
+import { NewRequestService, configDate } from '../../new-request.service';
+import { RiskProfileService } from '../risk-profile.service';
+import { get as getValue, find, pick, isEmpty } from 'lodash';
+import { Subject } from 'rxjs';
+import { filter as rxFilter, takeUntil, take } from 'rxjs/operators';
 import { List } from 'immutable';
+import { MultilingualService } from '@setl/multilingual';
 
 @Component({
     selector: 'investment-objective-form',
@@ -14,7 +15,6 @@ import { List } from 'immutable';
     styleUrls: ['./investment-objective-form.component.scss']
 })
 export class InvestmentObjectiveFormComponent implements OnInit, OnDestroy {
-
     @Output() refreshForm = new EventEmitter<void>();
     @Input() form;
     @Input() multiple;
@@ -37,7 +37,8 @@ export class InvestmentObjectiveFormComponent implements OnInit, OnDestroy {
 
     constructor(
         private newRequestService: NewRequestService,
-        private riskProfileService: RiskProfileService
+        private riskProfileService: RiskProfileService,
+        public translate: MultilingualService,
     ) {
     }
 
@@ -88,6 +89,9 @@ export class InvestmentObjectiveFormComponent implements OnInit, OnDestroy {
 
         this.investmentHorizonList = this.newRequestService.investmentHorizonList;
         this.riskProfileList = this.newRequestService.riskProfileList;
+
+        this.translate.translate(this.riskProfileList);
+
         this.riskAcceptanceList = this.newRequestService.riskAcceptanceList;
         this.performanceProfileList = this.newRequestService.performanceProfileList;
         this.clientNeeds = this.newRequestService.clientNeedsList;
@@ -178,5 +182,4 @@ export class InvestmentObjectiveFormComponent implements OnInit, OnDestroy {
         this.unsubscribe.next();
         this.unsubscribe.complete();
     }
-
 }

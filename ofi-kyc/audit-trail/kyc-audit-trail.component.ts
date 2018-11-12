@@ -10,7 +10,6 @@ import { combineLatest } from 'rxjs';
     styleUrls: ['./kyc-audit-trail.component.scss'],
 })
 export class KycAuditTrailComponent implements OnInit, OnDestroy {
-
     kycID;
     amCompanyName: string = '';
     unSubscribe: Subject<any> = new Subject();
@@ -20,11 +19,9 @@ export class KycAuditTrailComponent implements OnInit, OnDestroy {
     constructor(
         private activatedRoute: ActivatedRoute,
     ) {
-
     }
 
     ngOnInit() {
-
         combineLatest(
             this.activatedRoute.params,
             this.kycListOb,

@@ -30,6 +30,7 @@ export const booleanControls = [
     'objectivesSameInvestmentCrossAm',
     'constraintsSameInvestmentCrossAm',
 ];
+
 export const currencyControls = [
     'balanceSheetTotal',
     'netRevenuesNetIncome',
@@ -154,11 +155,11 @@ export const countries = fundItems.domicileItems;
 export const legalFormList = [
     {
         id: 'EARL',
-        text: 'EARL : Entreprise agricole à responsabilité limitée',
+        text: 'EARL: Entreprise agricole à responsabilité limitée',
     },
     {
         id: 'EI',
-        text: 'EI : Entreprise individuelle',
+        text: 'EI: Entreprise individuelle',
     },
     {
         id: 'EIRL',
@@ -166,47 +167,47 @@ export const legalFormList = [
     },
     {
         id: 'EURL',
-        text: 'EURL : Entreprise unipersonnelle à responsabilité limitée',
+        text: 'EURL: Entreprise unipersonnelle à responsabilité limitée',
     },
     {
         id: 'GAEC',
-        text: "GAEC : Groupement agricole d'exploitation en commun",
+        text: "GAEC: Groupement agricole d'exploitation en commun",
     },
     {
         id: 'GEIE',
-        text: "GEIE : Groupement européen d'intérêt économiqueGIE : Groupement d'intérêt économique",
+        text: "GEIE: Groupement européen d'intérêt économiqueGIE : Groupement d'intérêt économique",
     },
     {
         id: 'SARL',
-        text: 'SARL : Société à responsabilité limitée',
+        text: 'SARL: Société à responsabilité limitée',
     },
     {
         id: 'SA',
-        text: 'SA : Société anonyme',
+        text: 'SA: Société anonyme',
     },
     {
         id: 'SAS',
-        text: 'SAS : Société par actions simplifiée',
+        text: 'SAS: Société par actions simplifiée',
     },
     {
         id: 'SASU',
-        text: 'SASU : Société par actions simplifiée unipersonnelle',
+        text: 'SASU: Société par actions simplifiée unipersonnelle',
     },
     {
         id: 'SC',
-        text: 'SC : Société civile',
+        text: 'SC: Société civile',
     },
     {
         id: 'SCA',
-        text: 'SCA : Société en commandite par actions',
+        text: 'SCA: Société en commandite par actions',
     },
     {
         id: 'SCI',
-        text: 'SCI : Société civile immobilière',
+        text: 'SCI: Société civile immobilière',
     },
     {
         id: 'SCIC',
-        text: "SCIC : Société coopérative d'intérêt collectif",
+        text: "SCIC: Société coopérative d'intérêt collectif",
     },
     {
         id: 'Partnership',
@@ -457,7 +458,7 @@ export const regulatoryStatusList = [
     },
     {
         id: 'internationBodies',
-        text: 'Public international financial bodies to which France or any other OECD Member State adheres (IMF, EIB, World Bank...)',
+        text: 'Public international financial bodies to which France or any other OECD Member State adheres (IMF, EIB, World Bank, etc.)',
     },
     {
         id: 'other',
@@ -509,7 +510,7 @@ export const ownAccountInvestorList = [
     },
     {
         id: 'cultsReligiousAssociations',
-        text: 'Cults and religious associations presenting a specific risk (radical...)',
+        text: 'Cults and religious associations presenting a specific risk (radical, etc.)',
     },
     {
         id: 'Nationalsportsassociationsandsportsagents',
@@ -931,7 +932,7 @@ export const financialInstrumentsList = [
     },
     {
         id: 'PierrePapierSCPI',
-        text: 'Pierre Papier (SCPI...)',
+        text: 'Pierre Papier (SCPI, etc.)',
     },
     {
         id: 'other',
@@ -1255,7 +1256,7 @@ export const documentTypesList = [
     },
     {
         id: 'kyctaxcertificationdoc',
-        text: 'Tax self-certification form ',
+        text: 'Tax self-certification form',
     },
     {
         id: 'kycw8benefatcadoc',
@@ -1271,7 +1272,7 @@ export const documentTypesList = [
     },
     {
         id: 'kycannualreportdoc',
-        text: 'Latest audited annual report ',
+        text: 'Latest audited annual report',
     },
     {
         id: 'kycidorpassportdoc',
@@ -1451,7 +1452,7 @@ export const controlToName = {
     // Risk constraints
     statutoryConstraints: 'Statutory constraints/special rules concerning eligible assets',
     taxConstraints: 'Tax constraints',
-    otherConstraints: 'Others (including SRI, ESG, ...)',
+    otherConstraints: 'Others (including SRI, ESG, etc.)',
     investmentDecisionsAdHocCommittee: 'Are investment decisions validated by an ad hoc committee?',
     investmentDecisionsAdHocCommitteeSpecification: 'Ad hoc committee specification',
     otherPersonsAuthorised: 'Other persons authorised to take investment decisions and give instructions',

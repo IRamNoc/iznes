@@ -1,7 +1,6 @@
 import { Injectable } from '@angular/core';
 import { NgRedux } from '@angular-redux/store';
 import { get as getValue, toPairs, map, chain, value, omit, pickBy, pick, find, parseInt, isNil, toString, sortBy } from 'lodash';
-
 import { OfiKycService } from '@ofi/ofi-main/ofi-req-services/ofi-kyc/service';
 import * as requestsConfig from '../requests.config';
 
@@ -42,20 +41,17 @@ export class KycDetailsService {
         const booleans = chain(data)
             .pickBy((val, key) => requestsConfig.booleanControls.indexOf(key) !== -1)
             .mapValues(value => parseInt(value, 10) ? 1 : 0)
-            .value()
-        ;
+            .value();
 
         const currencies = chain(data)
             .pickBy((val, key) => requestsConfig.currencyControls.indexOf(key) !== -1)
             .mapValues(value => `${value} €`)
-            .value()
-        ;
+            .value();
 
         const percentage = chain(data)
             .pickBy((val, key) => requestsConfig.percentageControls.indexOf(key) !== -1)
             .mapValues(value => `${value} %`)
-            .value()
-        ;
+            .value();
 
         const array = chain(data)
             .merge(booleans, currencies, percentage)
@@ -75,8 +71,7 @@ export class KycDetailsService {
                 value: this.getValueFromControl(controlName, controlValue)
             }))
             .filter()
-            .value()
-        ;
+            .value();
 
         return array;
     }

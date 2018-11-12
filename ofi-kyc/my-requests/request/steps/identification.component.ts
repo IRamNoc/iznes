@@ -2,15 +2,11 @@ import { Component, OnInit, Input } from '@angular/core';
 import { get as getValue, remove } from 'lodash';
 import { select } from '@angular-redux/store';
 import { PersistService } from '@setl/core-persist';
-
 import { Subject } from 'rxjs';
 import { map, take, takeUntil, filter as rxFilter } from 'rxjs/operators';
-
 import { PersistRequestService } from '@setl/core-req-services';
-
 import { NewRequestService } from '../new-request.service';
 import { IdentificationService } from './identification.service';
-
 import { steps } from '../../requests.config';
 
 @Component({
@@ -18,7 +14,6 @@ import { steps } from '../../requests.config';
     templateUrl: './identification.component.html',
 })
 export class NewKycIdentificationComponent implements OnInit {
-
     @Input() form;
     @Input() investorType;
     @select(['ofi', 'ofiKyc', 'myKycRequested', 'kycs']) requests$;
@@ -47,8 +42,7 @@ export class NewKycIdentificationComponent implements OnInit {
             )
             .subscribe((connectedWallet) => {
                 this.connectedWallet = connectedWallet;
-            })
-        ;
+            });
 
         this.requests$
             .pipe(
@@ -60,8 +54,7 @@ export class NewKycIdentificationComponent implements OnInit {
                 if (this.shouldPersist(kyc)) {
                     this.prePersistForm();
                 }
-            })
-        ;
+            });
     }
 
     shouldPersist(kyc) {
@@ -92,8 +85,7 @@ export class NewKycIdentificationComponent implements OnInit {
         })
         .catch((e) => {
             this.persistForm();
-        })
-        ;
+        });
     }
 
     prepareArrayControls(parsed) {
@@ -151,13 +143,11 @@ export class NewKycIdentificationComponent implements OnInit {
                 this.identificationService.sendRequest(this.form, requests, this.connectedWallet).then(() => {
                     this.clearPersistForm();
                 });
-            })
-        ;
+            });
     }
 
     ngOnDestroy() {
         this.unsubscribe.next();
         this.unsubscribe.complete();
     }
-
 }

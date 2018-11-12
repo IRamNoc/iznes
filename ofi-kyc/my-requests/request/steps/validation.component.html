@@ -5,7 +5,7 @@
             <a href="#" (click)="open = !open; $event.preventDefault();">
                 <i class="fa fa-chevron-right" [class.rotate]="open"></i>
                 <h2>
-                    {{'VALIDATION OF THE REQUEST' | translate}}
+                    {{ 'Validation of the Request' | translate }}
                 </h2>
             </a>
         </div>
@@ -14,30 +14,27 @@
         </div>
     </div>
 
-
     <div class="row panel-body" [class.hidden]="!open">
         <form [formGroup]="form" id="step-validation" (ngSubmit)="handleSubmit($event)" class="well p-1">
 
             <div class="row">
                 <div class="col-sm-12">
-
                     <p>
-                        {{'I, the undersigned,' | translate}}
+                        {{ 'I, the undersigned,' | translate }}
                         <input class="inline-input" type="text" formControlName="undersigned"/>
-                        {{'certify on my honour the accuracy of the information and documents provided, declare that I am acting on behalf of' | translate}}
+                        {{ 'certify on my honour the accuracy of the information and documents provided, declare that I am acting on behalf of' | translate }}
                         <input class="inline-input" type="text" formControlName="actingOnBehalfOf"/>
                         <span *ngIf="amcs.length > 1">
-                            {{'the recipient of the services to be provided by the following asset management companies :'}}
+                            {{ 'the recipient of the services to be provided by the following asset management companies' | translate }}:
                         </span>
                         <span *ngIf="amcs.length === 1">
-                            {{'the recipient of the services to be provided by '}}
+                            {{ 'the recipient of the services to be provided by ' | translate }}
                             {{amcs[0].companyName}}.
                         </span>
-
                     </p>
                     <p class="txtRed">
-                        <span class="txtRed" *ngIf="hasError('undersigned', ['required']) || hasError('actingOnBehalfOf', ['required'])">{{'Fields are required' | translate}}</span><br />
-                        <span class="txtRed" *ngIf="hasError('undersigned', ['maxlength']) || hasError('actingOnBehalfOf', ['maxlength'])">{{'Fields are too long' | translate}}</span>
+                        <span class="txtRed" *ngIf="hasError('undersigned', ['required']) || hasError('actingOnBehalfOf', ['required'])">{{ 'Fields are required' | translate }}</span><br />
+                        <span class="txtRed" *ngIf="hasError('undersigned', ['maxlength']) || hasError('actingOnBehalfOf', ['maxlength'])">{{ 'Values are too long' | translate }}</span>
                     </p>
 
                     <ul *ngIf="amcs.length > 1" class="ml-1 mb-1">
@@ -49,51 +46,63 @@
                     <div class="row">
                         <div class="form-group required-field col-sm-6">
                             <label for="doneAt">
-                                {{'Done at' | translate}}:
+                                {{ 'Done at' | translate }}:
                             </label>
-                            <input type="text" id="doneAt" formControlName="doneAt" placeholder="{{'Please fill in a city' | translate}}">
-                            <span class="field-error" *ngIf="hasError('doneAt', ['required'])">{{'Field is required' | translate}}</span>
-                            <span class="field-error" *ngIf="hasError('doneAt', ['maxlength'])">{{'Field is too long' | translate}}</span>
+                            <input type="text" 
+                                    id="doneAt" 
+                                    formControlName="doneAt" 
+                                    placeholder="{{ 'Please fill in a city' | translate }}">
+                            <span class="field-error" *ngIf="hasError('doneAt', ['required'])">{{ 'Field is required' | translate }}</span>
+                            <span class="field-error" *ngIf="hasError('doneAt', ['maxlength'])">{{ 'Value is too long' | translate }}</span>
                         </div>
 
                         <div class="form-group required-field col-sm-6">
                             <label for="doneDate">
-                                {{'Date' | translate}}:
+                                {{ 'Date' | translate }}:
                             </label>
 
                             <div class="input-group date-pick-wrapper">
                                 <span class="fa fa-calendar" aria-hidden="true"></span>
-                                <input disabled="true" autocomplete="off" [dpDayPicker]="configDate" id="doneDate" formControlName="doneDate" placeholder="{{configDate.format}}" mode="day" theme="dp-material">
+                                <input disabled="true" 
+                                        autocomplete="off" 
+                                        [dpDayPicker]="configDate" 
+                                        id="doneDate" 
+                                        formControlName="doneDate" 
+                                        placeholder="{{configDate.format}}" 
+                                        mode="day" 
+                                        theme="dp-material">
                             </div>
 
-                            <span class="field-error" *ngIf="hasError('doneDate')">{{'Field is required' | translate}}</span>
+                            <span class="field-error" *ngIf="hasError('doneDate')">{{ 'Field is required' | translate }}</span>
                         </div>
                     </div>
 
                     <div class="row">
                         <div class="form-group required-field col-sm-6">
                             <label for="positionRepresentative">
-                                {{'Position of the representative of the legal person' | translate}}:
+                                {{ 'Position of the representative of the legal person' | translate }}:
                             </label>
-                            <input type="text" id="positionRepresentative" formControlName="positionRepresentative" placeholder="{{'Please fill in representative\'s position' | translate}}">
-                            <span class="field-error" *ngIf="hasError('positionRepresentative', ['required'])">{{'Field is required' | translate}}</span>
-                            <span class="field-error" *ngIf="hasError('positionRepresentative', ['maxlength'])">{{'Field is too long' | translate}}</span>
+                            <input type="text" 
+                                    id="positionRepresentative" 
+                                    formControlName="positionRepresentative" 
+                                    placeholder="{{ 'Please fill in representative\'s position' | translate }}">
+                            <span class="field-error" *ngIf="hasError('positionRepresentative', ['required'])">{{ 'Field is required' | translate }}</span>
+                            <span class="field-error" *ngIf="hasError('positionRepresentative', ['maxlength'])">{{ 'Value is too long' | translate }}</span>
                         </div>
                         <div class="form-group required-field col-sm-6">
                             <label for="electronicSignatureDocument">
-                                {{'As electronic signature, please upload here representative ID\'s card' | translate}}:
+                                {{ 'As electronic signature, please upload here representative ID\'s card' | translate }}:
                             </label>
                             <div class="filedrop-wrapper">
                                 <setl-file-drop filePermission="0" class="form-control" id="electronicSignatureDocument"
                                                 (onDrop)="uploadFile($event)"
                                                 [preset]="form.get('electronicSignatureDocument').value"
-                                                ngDefaultControl
-                                ></setl-file-drop>
+                                                ngDefaultControl>
+                                </setl-file-drop>
                             </div>
-                            <span class="field-error" *ngIf="hasError('electronicSignatureDocument')">{{'Field is required' | translate}}</span>
+                            <span class="field-error" *ngIf="hasError('electronicSignatureDocument')">{{ 'Field is required' | translate }}</span>
                         </div>
                     </div>
-
                 </div>
             </div>
 
@@ -101,6 +110,4 @@
 
         </form>
     </div>
-
-
 </div>

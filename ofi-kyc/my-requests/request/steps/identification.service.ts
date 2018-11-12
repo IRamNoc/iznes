@@ -32,7 +32,6 @@ export class IdentificationService {
     }
 
     sendRequest(form, requests, connectedWallet) {
-
         const promises = [];
         const context = this.newRequestService.context;
 
@@ -233,7 +232,6 @@ export class IdentificationService {
     getCurrentFormCompanyBeneficiariesData(kycID) {
         return this.requestsService.getKycBeneficiaries(kycID);
     }
-
 }
 
 const beneficiaryFormPaths = {
@@ -245,17 +243,17 @@ const beneficiaryFormPaths = {
     holdingPercentage: 'common',
     holdingType: 'common',
 
-    firstName : 'naturalPerson',
-    lastName : 'naturalPerson',
-    nationality : 'naturalPerson',
-    dateOfBirth : 'naturalPerson',
-    cityOfBirth : 'naturalPerson',
-    countryOfBirth : 'naturalPerson',
+    firstName: 'naturalPerson',
+    lastName: 'naturalPerson',
+    nationality: 'naturalPerson',
+    dateOfBirth: 'naturalPerson',
+    cityOfBirth: 'naturalPerson',
+    countryOfBirth: 'naturalPerson',
 
-    legalName : 'legalPerson',
-    nationalIdNumber : 'legalPerson',
-    nationalIdNumberText : 'legalPerson',
-    leiCode : 'legalPerson',
+    legalName: 'legalPerson',
+    nationalIdNumber: 'legalPerson',
+    nationalIdNumberText: 'legalPerson',
+    leiCode: 'legalPerson',
 };
 
 export function buildBeneficiaryObject(data) {
