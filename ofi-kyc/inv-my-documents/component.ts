@@ -26,10 +26,8 @@ import { ofiClearRequestedMyDocuments } from '@ofi/ofi-main/ofi-store/ofi-kyc/in
 @Component({
     styleUrls: ['./component.scss'],
     templateUrl: './component.html',
-    changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class OfiInvMyDocumentsComponent implements OnDestroy, OnInit, AfterViewInit {
-
     public kycEnums;
 
     public uploadMyDocumentsForm: FormGroup;
@@ -38,9 +36,7 @@ export class OfiInvMyDocumentsComponent implements OnDestroy, OnInit, AfterViewI
 
     allUploadsFiles: any = [];
     nbUploads = 13;
-
     filesFromRedux = [];
-
     kycDocPath: string = '/iznes/kyc-inv-docs';
 
     unSubscribe: Subject<any> = new Subject();
@@ -50,10 +46,10 @@ export class OfiInvMyDocumentsComponent implements OnDestroy, OnInit, AfterViewI
     @select(['ofi', 'ofiKyc', 'invMyDocuments', 'myDocumentsList']) OfiInvMyDocsListOb;
 
     constructor(
-        private _changeDetectorRef: ChangeDetectorRef,
-        private _translate: MultilingualService,
+        private changeDetectorRef: ChangeDetectorRef,
+        private translate: MultilingualService,
         private fileService: FileService,
-        private _ofiKycService: OfiKycService,
+        private ofiKycService: OfiKycService,
         private toaster: ToasterService,
         private ngRedux: NgRedux<any>,
         @Inject('kycEnums') kycEnums,
@@ -108,7 +104,6 @@ export class OfiInvMyDocumentsComponent implements OnDestroy, OnInit, AfterViewI
             upload13: new FormControl([]),
             shareUpload13: new FormControl(false),
         });
-
     }
 
     ngOnInit() {
@@ -251,7 +246,7 @@ export class OfiInvMyDocumentsComponent implements OnDestroy, OnInit, AfterViewI
 
     requestedOfiInvMyDocs(requested): void {
         if (!requested) {
-            OfiKycService.defaultRequestGetInvKycDocuments(this._ofiKycService, this.ngRedux, {
+            OfiKycService.defaultRequestGetInvKycDocuments(this.ofiKycService, this.ngRedux, {
                 walletID: this.connectedWalletId,
                 kycID: 0,
             });
@@ -307,7 +302,7 @@ export class OfiInvMyDocumentsComponent implements OnDestroy, OnInit, AfterViewI
             this.uploadMyDocumentsForm.get('shareAll').patchValue(false, { emitEvent: false });
         }
 
-        this._changeDetectorRef.markForCheck();
+        this.changeDetectorRef.markForCheck();
     }
 
     assignAllToggles() {
@@ -318,7 +313,7 @@ export class OfiInvMyDocumentsComponent implements OnDestroy, OnInit, AfterViewI
             this.allUploadsFiles[i].common = (this.uploadMyDocumentsForm.get('shareAll').value) ? 1 : 0;
             this.saveFileInDatabase(i);
         }
-        this._changeDetectorRef.markForCheck();
+        this.changeDetectorRef.markForCheck();
     }
 
     checkToggles(fileRelated, value) {
@@ -348,12 +343,12 @@ export class OfiInvMyDocumentsComponent implements OnDestroy, OnInit, AfterViewI
             this.allUploadsFiles[fileRelated].common = (value) ? 1 : 0;
             this.saveFileInDatabase(fileRelated);
         }
-        this._changeDetectorRef.markForCheck();
+        this.changeDetectorRef.markForCheck();
     }
 
     getUpload(event, fileRelated) {
         console.log('send', event, fileRelated);
-        this.uploadFile(event, fileRelated, this._changeDetectorRef);
+        this.uploadFile(event, fileRelated, this.changeDetectorRef);
     }
 
     uploadFile(event, fileRelated, changeDetectorRef: ChangeDetectorRef): void {
@@ -394,7 +389,7 @@ export class OfiInvMyDocumentsComponent implements OnDestroy, OnInit, AfterViewI
                     });
 
                     if (errorMessage) {
-                        this.toaster.pop('error', errorMessage);
+                        this.toaster.pop('error', this.translate.translate(errorMessage));
                     }
 
                     if (data[1].Data.length === 0) {
@@ -431,7 +426,7 @@ export class OfiInvMyDocumentsComponent implements OnDestroy, OnInit, AfterViewI
 
                 if (errorMessage) {
                     if (errorMessage) {
-                        this.toaster.pop('error', errorMessage);
+                        this.toaster.pop('error', this.translate.translate(errorMessage));
                     }
                 }
             }),
@@ -439,7 +434,7 @@ export class OfiInvMyDocumentsComponent implements OnDestroy, OnInit, AfterViewI
     }
 
     saveFileInDatabase(fileRelated) {
-        const asyncTaskPipe = this._ofiKycService.saveKycDocument(
+        const asyncTaskPipe = this.ofiKycService.saveKycDocument(
             {
                 walletID: this.connectedWalletId,
                 name: this.allUploadsFiles[fileRelated].name,
@@ -462,9 +457,9 @@ export class OfiInvMyDocumentsComponent implements OnDestroy, OnInit, AfterViewI
     }
 
     deleteDocument(documentID) {
-        this._ofiKycService.deleteKycDocument(documentID)
+        this.ofiKycService.deleteKycDocument(documentID)
             .then(() => {
-                OfiKycService.defaultRequestGetInvKycDocuments(this._ofiKycService, this.ngRedux, {
+                OfiKycService.defaultRequestGetInvKycDocuments(this.ofiKycService, this.ngRedux, {
                     walletID: this.connectedWalletId,
                     kycID: 0,
                 });
@@ -473,7 +468,7 @@ export class OfiInvMyDocumentsComponent implements OnDestroy, OnInit, AfterViewI
 
     /* On Destroy. */
     ngOnDestroy(): void {
-        /* Unsunscribe Observables. */
+        /* Unsubscribe Observables. */
         for (const key of this.subscriptions) {
             key.unsubscribe();
         }
@@ -481,6 +476,6 @@ export class OfiInvMyDocumentsComponent implements OnDestroy, OnInit, AfterViewI
         this.unSubscribe.complete();
 
         /* Detach the change detector on destroy. */
-        this._changeDetectorRef.detach();
+        this.changeDetectorRef.detach();
     }
 }

@@ -1,5 +1,5 @@
 <div class="header-breadcrumbs">
-    <h1><i class="fa fa-list"></i> {{'My requests' | translate}}</h1>
+    <h1><i class="fa fa-list"></i> {{ 'My Requests' | translate }}</h1>
 </div>
 
 <div class="wrapper wrapper-content">
@@ -7,17 +7,17 @@
     <clr-tabs>
         <clr-tab>
             <button clrTabLink>
-                Overview
+                {{ 'Overview' | translate }}
             </button>
 
             <ng-template [(clrIfActive)]="isListDisplayed">
                 <clr-tab-content>
                     <div class="information mb-1">
                         <p class="m-0">
-                            {{'In this submodule, you can select the Asset Management Companies you want to work with and follow the status of your requests' | translate}}
+                            {{ 'In this submodule, you can select the Asset Management Companies you want to work with and follow the status of your requests' | translate }}
                         </p>
                         <button [routerLink]="['../new']" class="btn btn-primary m-0" id="kyc-newRequestBtn">
-                            Make new request
+                            {{ 'Make New Request' | translate }}
                         </button>
                     </div>
 
@@ -27,10 +27,8 @@
         </clr-tab>
 
         <clr-tab *ngFor="let tab of tabs; let index = index">
-
             <button clrTabLink>
-                {{'Detail' | translate}} : {{tab.companyName}}
-
+                {{ 'Detail' | translate }}: {{tab.companyName}}
                 <i class="fa fa-times-circle text-warning" id="MyRequestsCloseBtn_{{index}}" (click)="closeTab(index)" [ngStyle]="{'margin-left': '14px', 'font-size':'18px'}"></i>
             </button>
 
@@ -39,10 +37,7 @@
                     <my-requests-details [kycID]="tab.kycID"></my-requests-details>
                 </clr-tab-content>
             </ng-template>
-
         </clr-tab>
-
-
     </clr-tabs>
 
 </div>

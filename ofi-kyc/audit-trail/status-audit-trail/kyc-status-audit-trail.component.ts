@@ -13,7 +13,6 @@ import { MemberSocketService } from '@setl/websocket-service';
     styleUrls: ['./kyc-status-audit-trail.component.scss'],
 })
 export class KycStatusAuditTrailComponent implements OnInit, OnDestroy, OnChanges {
-
     statusAuditItems = [];
     myDetails;
 
@@ -28,11 +27,9 @@ export class KycStatusAuditTrailComponent implements OnInit, OnDestroy, OnChange
         private fileDownloader: FileDownloader,
         private memberSocketService: MemberSocketService,
     ) {
-
     }
 
     ngOnInit() {
-
         if (this.kycID) {
             this.kycService.getStatusAuditByKycID(this.kycID);
         }

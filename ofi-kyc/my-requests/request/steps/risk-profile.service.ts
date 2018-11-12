@@ -1,15 +1,12 @@
 import { Injectable } from '@angular/core';
 import { Subject, BehaviorSubject } from 'rxjs';
 import * as moment from 'moment';
-
 import { RequestsService } from '../../requests.service';
 import { NewRequestService } from '../new-request.service';
-
 import { mapValues, isArray, isObject, reduce, pickBy, merge, omit, fill, find, get as getValue } from 'lodash';
 
 @Injectable()
 export class RiskProfileService {
-
     requests;
 
     currentServerData = {
@@ -19,7 +16,7 @@ export class RiskProfileService {
 
     constructor(
         private newRequestService: NewRequestService,
-        private requestsService : RequestsService,
+        private requestsService: RequestsService,
     ) {
     }
 

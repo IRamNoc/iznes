@@ -3,18 +3,17 @@ import { AbstractControl, FormControl, Validators } from '@angular/forms';
 import { Subject } from 'rxjs';
 import { takeUntil } from 'rxjs/operators';
 import { get as getValue } from 'lodash';
-
 import {sirenValidator, siretValidator} from '@setl/utils/helper/validators';
 import { RequestsService } from '../../../requests.service';
 import { NewRequestService, configDate } from '../../new-request.service';
 import { countries } from '../../../requests.config';
+import { MultilingualService } from '@setl/multilingual';
 
 @Component({
     selector: 'beneficiary',
     templateUrl: './beneficiary.component.html',
 })
 export class BeneficiaryComponent implements OnInit, OnDestroy {
-
     @Input() form;
     @Input() index;
     @Output() ready: EventEmitter<any> = new EventEmitter<any>();
@@ -29,10 +28,15 @@ export class BeneficiaryComponent implements OnInit, OnDestroy {
     constructor(
         private requestsService: RequestsService,
         private newRequestService: NewRequestService,
+        public translate: MultilingualService,
     ) {
         this.configDate = configDate;
+
         this.beneficiaryTypesList = this.newRequestService.beneficiaryTypesList;
+        this.translate.translate(this.beneficiaryTypesList);
+
         this.holdingTypesList = this.newRequestService.holdingTypesList;
+        this.translate.translate(this.holdingTypesList);
         this.identificationNumberList = this.newRequestService.identificationNumberList;
         this.countries = countries;
     }
@@ -57,8 +61,7 @@ export class BeneficiaryComponent implements OnInit, OnDestroy {
             const beneficiaryTypeValue = getValue(data, [0, 'id']);
 
             this.formCheckBeneficiaryType(beneficiaryTypeValue);
-        })
-        ;
+        });
 
         this.form
         .get('legalPerson.nationalIdNumber')
@@ -68,8 +71,7 @@ export class BeneficiaryComponent implements OnInit, OnDestroy {
             const nationalIdNumberValue = getValue(data, [0, 'id']);
 
             this.formCheckNationalIdNumber(nationalIdNumberValue);
-        })
-        ;
+        });
     }
 
     formCheckNationalIdNumber(value) {

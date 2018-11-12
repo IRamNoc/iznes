@@ -1,15 +1,17 @@
-<h2>Request Information Audit Trail</h2>
-<p>Please find below the audit trail regarding the details of your request:</p>
+<h2>{{ 'Request Information Audit Trail' | translate }}</h2>
+<p>{{ 'Please find below the audit trail regarding the details of your request' | translate }}:</p>
 
 <div>
     <form [formGroup]="searchForm" id="searchForm">
         <div class="row bordered form-group">
             <div class="col-sm-3">
-                <label>{{'Search a section or subsection' | translate}}
-
-                </label>
+                <label>{{ 'Search a section or subsection' | translate }}</label>
                 <div class="input-button-group">
-                    <input id="input-search" formControlName="search" name="input-search" type="text" [placeholder]="translate.translate('Search a section or subsection')">
+                    <input id="input-search" 
+                            formControlName="search" 
+                            name="input-search" 
+                            type="text" 
+                            [placeholder]="translate.translate('Search a section or subsection')">
 
                     <button style="margin-top: 0;">
                         <i class="fa fa-search"></i>
@@ -18,65 +20,67 @@
             </div>
 
             <div class="col-sm-3">
-                <label for="input-startdate">{{'Date From' | translate}}
-
-                </label>
+                <label for="input-startdate">{{ 'Date From' | translate }}</label>
                 <div class="input-group date-pick-wrapper">
                     <span class="fa fa-calendar" aria-hidden="true"></span>
-                    <input id="input-startdate" formControlName="startDate" autocomplete="off" [dpDayPicker]="configDate" [placeholder]="translate.translate('Choose a date')"
-                           mode="day" theme="dp-material">
-
+                    <input id="input-startdate" 
+                            formControlName="startDate" 
+                            autocomplete="off" 
+                            [dpDayPicker]="configDate" 
+                            [placeholder]="translate.translate('Choose a date')"
+                            mode="day" 
+                            theme="dp-material">
                 </div>
             </div>
             <div class="col-sm-3">
-                <label for="input-enddate">{{'Date To' | translate}}
-
-                </label>
+                <label for="input-enddate">{{ 'Date To' | translate }}</label>
                 <div class="input-group date-pick-wrapper">
                     <span class="fa fa-calendar" aria-hidden="true"></span>
-                    <input id="input-enddate" formControlName="endDate" autocomplete="off" [dpDayPicker]="configDate" [placeholder]="translate.translate('Choose a date')"
-                           mode="day" theme="dp-material">
-
+                    <input id="input-enddate" 
+                            formControlName="endDate" 
+                            autocomplete="off" 
+                            [dpDayPicker]="configDate" 
+                            [placeholder]="translate.translate('Choose a date')"
+                            mode="day" 
+                            theme="dp-material">
                 </div>
             </div>
             <div class="col-sm-3 export-btn-container">
-                <button class="btn btn-primary" (click)="exportCsv()">Export Information Audit Trail</button>
+                <button class="btn btn-primary" (click)="exportCsv()">{{ 'Export Information Audit Trail' | translate }}</button>
             </div>
         </div>
-
     </form>
 </div>
 
 <clr-datagrid class="expandable" clrDgSortIcon>
     <clr-dg-column [clrDgField]="'section'" clrDgSortIcon>
-        {{'Section' | translate}}
+        {{ 'Section' | translate }}
         <span class="column-label"></span>
     </clr-dg-column>
     <clr-dg-column [clrDgField]="'subsection'" clrDgSortIcon>
-        {{'Subsection' | translate}}
+        {{ 'Subsection' | translate }}
         <span class="column-label"></span>
     </clr-dg-column>
     <clr-dg-column [clrDgField]="'modifiedField'" clrDgSortIcon>
-        {{'Information' | translate}}
+        {{ 'Information' | translate }}
         <span class="column-label"></span>
     </clr-dg-column>
     <clr-dg-column [clrDgField]="'oldValue'" clrDgSortIcon>
-        {{'Old Value' | translate}}
+        {{ 'Old Value' | translate }}
         <span class="column-label"></span>
     </clr-dg-column>
     <clr-dg-column [clrDgField]="'newValue'" clrDgSortIcon>
-        {{'New Value' | translate}}
+        {{ 'New Value' | translate }}
         <span class="column-label"></span>
     </clr-dg-column>
     <clr-dg-column [clrDgField]="'modifiedBy'" clrDgSortIcon>
-        {{'Modified By' | translate}}
+        {{ 'Modified By' | translate }}
         <span class="column-label"></span>
     </clr-dg-column>
     <clr-dg-column [clrDgField]="'dateModified'" clrDgSortIcon>
-        {{'Date' | translate}}
+        {{ 'Date' | translate }}
         <span class="column-label"></span>
     </clr-dg-column>
-
 
     <clr-dg-row *clrDgItems="let item of filteredInformationAuditItems">
         <clr-dg-cell>{{item.section}}</clr-dg-cell>
@@ -86,7 +90,6 @@
         <clr-dg-cell>{{item.newValue}}</clr-dg-cell>
         <clr-dg-cell>{{item.modifiedBy}}</clr-dg-cell>
         <clr-dg-cell>{{item.dateModified}}</clr-dg-cell>
-
     </clr-dg-row>
 
     <clr-dg-footer>

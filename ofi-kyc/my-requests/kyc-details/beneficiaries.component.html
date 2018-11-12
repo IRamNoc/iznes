@@ -1,19 +1,18 @@
 <clr-modal [clrModalOpen]="open" [clrModalSize]="'lg'" (clrModalOpenChange)="modalOpenChange()">
-    <h3 class="modal-title">{{'Beneficiaries details' | translate}}</h3>
+    <h3 class="modal-title">{{ 'Beneficiaries Details' | translate }}</h3>
     <div class="modal-body">
 
         <div *ngFor="let beneficiary of beneficiaries; let i = index" class="mb-2">
             <h4 class="mb-1">
                 <i class="fa fa-user"></i>
-                {{'Beneficiary ' + (i + 1)}} - {{getName(beneficiary)}}
+                {{ 'Beneficiary' | translate }} {{(i + 1)}} - {{getName(beneficiary)}}
             </h4>
 
             <kyc-details-grid [data]="beneficiary"></kyc-details-grid>
-
         </div>
 
     </div>
     <div class="modal-footer">
-        <button type="button" class="btn btn-primary" (click)="modalOpenChange()">Close</button>
+        <button type="button" class="btn btn-primary" (click)="modalOpenChange()">{{ 'Close' | translate }}</button>
     </div>
 </clr-modal>

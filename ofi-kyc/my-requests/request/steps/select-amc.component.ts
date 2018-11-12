@@ -1,17 +1,16 @@
-import {Component, OnInit, Input, OnDestroy, Output, EventEmitter, ChangeDetectorRef} from '@angular/core';
-import {combineLatest, Subject} from 'rxjs';
-import {takeUntil, filter as rxFilter, tap, map} from 'rxjs/operators';
-import {FormGroup} from '@angular/forms';
-import {select, NgRedux} from '@angular-redux/store';
-import {ActivatedRoute} from '@angular/router';
-import {isEmpty, isNil, keyBy, filter, reduce, find} from 'lodash';
-
-import {ClearMyKycListRequested} from '@ofi/ofi-main/ofi-store/ofi-kyc';
-import {OfiManagementCompanyService} from "@ofi/ofi-main/ofi-req-services/ofi-product/management-company/management-company.service";
-import {OfiKycService} from '@ofi/ofi-main/ofi-req-services/ofi-kyc/service';
-import {RequestsService} from '../../requests.service';
-import {NewRequestService} from '../new-request.service';
-import {SelectAmcService} from './select-amc.service';
+import { Component, OnInit, Input, OnDestroy, Output, EventEmitter, ChangeDetectorRef } from '@angular/core';
+import { combineLatest, Subject } from 'rxjs';
+import { takeUntil, filter as rxFilter, tap, map } from 'rxjs/operators';
+import { FormGroup } from '@angular/forms';
+import { select, NgRedux } from '@angular-redux/store';
+import { ActivatedRoute } from '@angular/router';
+import { isEmpty, isNil, keyBy, filter, reduce, find } from 'lodash';
+import { ClearMyKycListRequested } from '@ofi/ofi-main/ofi-store/ofi-kyc';
+import { OfiManagementCompanyService } from '@ofi/ofi-main/ofi-req-services/ofi-product/management-company/management-company.service';
+import { OfiKycService } from '@ofi/ofi-main/ofi-req-services/ofi-kyc/service';
+import { RequestsService } from '../../requests.service';
+import { NewRequestService } from '../new-request.service';
+import { SelectAmcService } from './select-amc.service';
 
 @Component({
     selector: 'kyc-step-select-amc',
@@ -19,7 +18,6 @@ import {SelectAmcService} from './select-amc.service';
     templateUrl: './select-amc.component.html'
 })
 export class NewKycSelectAmcComponent implements OnInit, OnDestroy {
-
     private unsubscribe: Subject<any> = new Subject();
     private kycList;
     private managementCompaniesExtract;
@@ -32,8 +30,8 @@ export class NewKycSelectAmcComponent implements OnInit, OnDestroy {
     alreadyRegistered = false;
 
     @Input() form: FormGroup;
-    @Input() set disabled(isDisabled){
-        if(isDisabled){
+    @Input() set disabled(isDisabled) {
+        if(isDisabled) {
             this.submitted = true;
         }
     }
@@ -53,7 +51,7 @@ export class NewKycSelectAmcComponent implements OnInit, OnDestroy {
         private ngRedux: NgRedux<any>,
         private route: ActivatedRoute,
         private selectAmcService: SelectAmcService,
-        private changeDetectorRef: ChangeDetectorRef
+        private changeDetectorRef: ChangeDetectorRef,
     ) {
     }
 
@@ -75,7 +73,7 @@ export class NewKycSelectAmcComponent implements OnInit, OnDestroy {
         return selected;
     }
 
-    get isTableDisplayed(){
+    get isTableDisplayed() {
         return this.preselectedManagementCompany.id || this.selectedManagementCompanies.length
     }
 
@@ -105,16 +103,14 @@ export class NewKycSelectAmcComponent implements OnInit, OnDestroy {
                     this.kycList = kycList;
                 }),
                 takeUntil(this.unsubscribe)
-            )
-        ;
+            );
 
         companyCombination$.subscribe(([managementCompanies, kycList]) => {
                 const managementCompanyList = managementCompanies.toJS();
 
                 this.managementCompaniesExtract = this.requestsService
                     .extractManagementCompanyData(managementCompanyList, kycList);
-            })
-        ;
+            });
 
         combineLatest(companyCombination$, this.requestedKycList$)
             .pipe(
@@ -124,8 +120,7 @@ export class NewKycSelectAmcComponent implements OnInit, OnDestroy {
             )
             .subscribe(kycs => {
                 this.populateForm(kycs);
-            })
-        ;
+            });
 
         this.connectedWallet$
             .pipe(
@@ -133,8 +128,7 @@ export class NewKycSelectAmcComponent implements OnInit, OnDestroy {
             )
             .subscribe(connectedWallet => {
                 this.connectedWallet = connectedWallet;
-            })
-        ;
+            });
     }
 
     populateForm(kycs){
@@ -154,7 +148,6 @@ export class NewKycSelectAmcComponent implements OnInit, OnDestroy {
 
     getQueryParams() {
         this.route.queryParams.subscribe(queryParams => {
-
             if (queryParams.invitationToken) {
                 this.preselectedManagementCompany = {
                     id: parseInt(queryParams.amcID, 10),
@@ -163,7 +156,6 @@ export class NewKycSelectAmcComponent implements OnInit, OnDestroy {
                 };
                 this.disableValidators();
             }
-
         });
     }
 
@@ -178,7 +170,8 @@ export class NewKycSelectAmcComponent implements OnInit, OnDestroy {
     }
 
     onRegisteredChange() {
-        let accumulator = !isNil(this.preselectedManagementCompany.registered) ? this.preselectedManagementCompany.registered : true;
+        let accumulator = !isNil(this.preselectedManagementCompany.registered) ? 
+            this.preselectedManagementCompany.registered : true;
         let selectedManagementCompanies = filter(this.selectedManagementCompanies, company => !isEmpty(company));
 
         let result = reduce(selectedManagementCompanies, (result, value) => {
@@ -186,7 +179,6 @@ export class NewKycSelectAmcComponent implements OnInit, OnDestroy {
         }, accumulator);
 
         this.alreadyRegistered = result;
-
         this.registered.emit(result);
     }
 
@@ -202,6 +194,7 @@ export class NewKycSelectAmcComponent implements OnInit, OnDestroy {
         if (this.preselectedManagementCompany.id) {
             values = values.concat([this.preselectedManagementCompany]);
         }
+
         let ids = await this.selectAmcService.createMultipleDrafts(values, this.connectedWallet);
 
         this.newRequestService.storeCurrentKycs(ids);
@@ -216,5 +209,4 @@ export class NewKycSelectAmcComponent implements OnInit, OnDestroy {
         this.unsubscribe.next();
         this.unsubscribe.complete();
     }
-
 }

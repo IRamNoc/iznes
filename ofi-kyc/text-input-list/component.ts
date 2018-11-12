@@ -20,7 +20,6 @@ interface ContentType {
     styleUrls: ['./component.scss'],
 })
 export class TextInputListComponent implements OnInit, OnChanges {
-
     @Input() title: string;
     @Input() content: ContentType;
     @Input() additionnalText: string;
@@ -28,7 +27,6 @@ export class TextInputListComponent implements OnInit, OnChanges {
     contentForm: FormGroup;
 
     constructor(private fb: FormBuilder) {
-
     }
 
     ngOnInit() {
@@ -51,5 +49,4 @@ export class TextInputListComponent implements OnInit, OnChanges {
         }
         return Object.keys(this.content);
     }
-
 }

@@ -1,5 +1,4 @@
 import {
-    ChangeDetectionStrategy,
     ChangeDetectorRef,
     Component,
     OnDestroy,
@@ -19,7 +18,6 @@ import { fromJS } from 'immutable';
 import { groupBy, find } from 'lodash';
 import { NewRequestService } from '../../request/new-request.service';
 import { Router } from '@angular/router';
-
 import { MultilingualService } from '@setl/multilingual';
 import { convertUtcStrToLocalStr } from '@setl/utils/helper/m-date-wrapper/index';
 import { KycStatus as statusList } from '@ofi/ofi-main/ofi-kyc/my-requests/requests.service';
@@ -28,10 +26,8 @@ import { KycStatus as statusList } from '@ofi/ofi-main/ofi-kyc/my-requests/reque
     selector: 'my-requests-details',
     styleUrls: ['./component.scss'],
     templateUrl: './component.html',
-    changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class MyRequestsDetailsComponent implements OnInit, AfterViewInit, OnDestroy {
-
     @Input() kycID: number;
 
     kycList: Array<any>;
@@ -55,12 +51,12 @@ export class MyRequestsDetailsComponent implements OnInit, AfterViewInit, OnDest
     @select(['ofi', 'ofiKyc', 'statusAuditTrail', 'data']) statusAuditTrail$;
 
     constructor(
-        private _fb: FormBuilder,
-        private _changeDetectorRef: ChangeDetectorRef,
+        private fb: FormBuilder,
+        private changeDetectorRef: ChangeDetectorRef,
         private alertsService: AlertsService,
-        private _ofiKycService: OfiKycService,
-        private _toasterService: ToasterService,
-        public _translate: MultilingualService,
+        private ofiKycService: OfiKycService,
+        private toasterService: ToasterService,
+        public translate: MultilingualService,
         private ngRedux: NgRedux<any>,
         private newRequestService: NewRequestService,
         private router: Router,
@@ -71,6 +67,13 @@ export class MyRequestsDetailsComponent implements OnInit, AfterViewInit, OnDest
     ngOnInit() {
         this.constructDisabledForm();
         this.initSubscriptions();
+    }
+
+    ngAfterViewInit() {
+        setTimeout(() => {
+            document.getElementById('blocStatus').style.opacity = '1';
+            document.getElementById('blocStatus').style.marginTop = '0';
+        }, 200);
     }
 
     initSubscriptions() {
@@ -92,10 +95,9 @@ export class MyRequestsDetailsComponent implements OnInit, AfterViewInit, OnDest
                     phone: kyc.phoneNumber
                 });
                 this.lastUpdate = convertUtcStrToLocalStr(kyc.lastUpdated, 'YYYY-MM-DD HH:mm:SS');
-                this._ofiKycService.fetchStatusAuditByKycID(this.kycID);
+                this.ofiKycService.fetchStatusAuditByKycID(this.kycID);
             }
-        })
-        ;
+        });
 
         this.statusAuditTrail$
         .takeUntil(this.unSubscribe)
@@ -114,20 +116,12 @@ export class MyRequestsDetailsComponent implements OnInit, AfterViewInit, OnDest
                 }
             }
 
-            this._changeDetectorRef.markForCheck();
-        })
-        ;
-    }
-
-    ngAfterViewInit() {
-        setTimeout(() => {
-            document.getElementById('blocStatus').style.opacity = '1';
-            document.getElementById('blocStatus').style.marginTop = '0';
-        }, 200);
+            this.changeDetectorRef.markForCheck();
+        });
     }
 
     constructDisabledForm() {
-        this.disabledForm = this._fb.group({
+        this.disabledForm = this.fb.group({
             firstName: new FormControl({ value: 'first name', disabled: true }),
             lastName: new FormControl({ value: 'last name', disabled: true }),
             email: new FormControl({ value: 'email address', disabled: true }),
@@ -135,16 +129,6 @@ export class MyRequestsDetailsComponent implements OnInit, AfterViewInit, OnDest
             rejectionMessage: new FormControl({ value: 'No message', disabled: true }),
             informationMessage: new FormControl({ value: 'No message', disabled: true }),
         });
-    }
-
-    ngOnDestroy(): void {
-        /* Unsunscribe Observables. */
-        for (let key of this.subscriptions) {
-            key.unsubscribe();
-        }
-
-        /* Detach the change detector on destroy. */
-        this._changeDetectorRef.detach();
     }
 
     redirectToRelatedKycs(kycID) {
@@ -175,7 +159,17 @@ export class MyRequestsDetailsComponent implements OnInit, AfterViewInit, OnDest
         }
 
         this.newRequestService.storeCurrentKycs(kycIDs);
-        this._ofiKycService.notifyAMKycContinuedFromAskMoreInfo(kycID);
+        this.ofiKycService.notifyAMKycContinuedFromAskMoreInfo(kycID);
         this.router.navigate(['my-requests', 'new'], extras);
+    }
+
+    ngOnDestroy(): void {
+        /* Unsunscribe Observables. */
+        for (let key of this.subscriptions) {
+            key.unsubscribe();
+        }
+
+        /* Detach the change detector on destroy. */
+        this.changeDetectorRef.detach();
     }
 }

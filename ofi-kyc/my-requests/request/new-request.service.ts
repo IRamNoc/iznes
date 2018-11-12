@@ -16,7 +16,7 @@ import {
     find,
     merge,
     isNil,
-    every
+    every,
 } from 'lodash';
 
 import { CustomValidators } from '@setl/utils/helper';
@@ -147,8 +147,7 @@ export class NewRequestService {
                 return [acc, curr].join(joiner);
             },
             '',
-            )
-        ;
+            );
 
         this.context = context;
 
@@ -411,7 +410,6 @@ export class NewRequestService {
                 kycannualreportdoc: this.createDocumentFormGroup('kycannualreportdoc', !this.isProduction),
                 kycidorpassportdoc: this.createDocumentFormGroup('kycidorpassportdoc', !this.isProduction),
             })
-
         });
     }
 
@@ -421,7 +419,7 @@ export class NewRequestService {
             kycDocumentID: '',
             type: name,
             common: 0,
-            isDefault: 0
+            isDefault: 0,
         };
 
         if (optional) {
@@ -429,6 +427,7 @@ export class NewRequestService {
         } else {
             group.hash = ['', Validators.required];
         }
+
         return this.formBuilder.group(group);
     }
 
@@ -490,7 +489,7 @@ export class NewRequestService {
             performanceProfileSpecification: [
                 {
                     value: '',
-                    disabled: true
+                    disabled: true,
                 },
                 this.getLengthValidator(255)
             ],
@@ -512,7 +511,7 @@ export class NewRequestService {
                     riskAcceptanceLevel1: '',
                     riskAcceptanceLevel2: '',
                     riskAcceptanceLevel3: '',
-                    riskAcceptanceLevel4: ''
+                    riskAcceptanceLevel4: '',
                 },
                 {
                     validator: (formGroup) => {
@@ -669,7 +668,6 @@ export class NewRequestService {
                 },
                 false,
             );
-
         }
 
         return false;

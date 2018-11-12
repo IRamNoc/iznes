@@ -15,7 +15,6 @@ import { ClarityModule } from '@clr/angular';
 import { FileDropModule } from '@setl/core-filedrop';
 import { FileViewerModule } from '@setl/core-fileviewer';
 import { PersistModule } from '@setl/core-persist';
-//
 
 import { KycDetailsComponent } from './kyc-details/details.component';
 import { KycDetailsGridComponent } from './kyc-details/details-grid.component';

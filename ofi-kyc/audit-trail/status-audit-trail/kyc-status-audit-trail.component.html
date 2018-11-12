@@ -1,29 +1,28 @@
 <div class="status-header">
     <div>
-        <h2>Request Status Audit Trail</h2>
-        <p>Please find below the audit trail regarding the status of your request:</p>
+        <h2>{{ 'Request Status Audit Trail' | translate }}</h2>
+        <p>{{ 'Please find below the audit trail regarding the status of your request' | translate }}:</p>
     </div>
-    <button class="btn btn-primary" (click)="exportCsv()">Export Status Audit Trail</button>
+    <button class="btn btn-primary" (click)="exportCsv()">{{ 'Export Status Audit Trail' | translate }}</button>
 </div>
 
 <clr-datagrid class="expandable" clrDgSortIcon>
     <clr-dg-column [clrDgField]="'oldStatus.label'" clrDgSortIcon>
-        {{'Old Status' | translate}}
+        {{ 'Old Status' | translate }}
         <span class="column-label"></span>
     </clr-dg-column>
     <clr-dg-column [clrDgField]="'newStatus.label'" clrDgSortIcon>
-        {{'New Status' | translate}}
+        {{ 'New Status' | translate }}
         <span class="column-label"></span>
     </clr-dg-column>
     <clr-dg-column [clrDgField]="'modifiedBy'" clrDgSortIcon>
-        {{'Modified By' | translate}}
+        {{ 'Modified By' | translate }}
         <span class="column-label"></span>
     </clr-dg-column>
     <clr-dg-column [clrDgField]="'dateEntered'" clrDgSortIcon>
-        {{'Date' | translate}}
+        {{ 'Date' | translate }}
         <span class="column-label"></span>
     </clr-dg-column>
-
 
     <clr-dg-row *clrDgItems="let item of statusAuditItems">
         <clr-dg-cell>
@@ -40,14 +39,13 @@
                 <div class="additionalInfos">
                     <div class="row">
                         <div class="form-group col-sm-12">
-                            <p>Here is the message associated with the status change:</p>
+                            <p>{{ 'Here is the message associated with the status change' | translate }}:</p>
                             <textarea readonly>{{item.message}}</textarea>
                         </div>
                     </div>
                 </div>
             </clr-dg-row-detail>
         </ng-container>
-
     </clr-dg-row>
 
     <clr-dg-footer>

@@ -88,10 +88,10 @@ export class OfiWaitingApprovalComponent implements OnInit, OnDestroy {
                 private alertsService: AlertsService,
                 private confirmationService: ConfirmationService,
                 private toast: ToasterService,
-                private _router: Router,
+                private router: Router,
                 private walletsService: MyWalletsService,
                 private logService: LogService,
-                public _translate: MultilingualService,
+                public translate: MultilingualService,
                 private messagesService: MessagesService,
                 private domSanitizer: DomSanitizer
     ) {
@@ -145,12 +145,12 @@ export class OfiWaitingApprovalComponent implements OnInit, OnDestroy {
             this.statuses = [
                 {
                     id: 'reject',
-                    label: 'Reject',
+                    label: this.translate.translate('Reject'),
                     value: Statuses.rejected
                 },
                 {
                     id: 'accept',
-                    label: 'Accept',
+                    label: this.translate.translate('Accept'),
                     value: Statuses.approved
                 },
             ];
@@ -158,12 +158,12 @@ export class OfiWaitingApprovalComponent implements OnInit, OnDestroy {
             this.statuses = [
                 {
                     id: 'askForMoreInfo',
-                    label: 'Ask for more info',
+                    label: this.translate.translate('Ask For More Info'),
                     value: Statuses.askMoreInfo
                 },
                 {
                     id: 'accept',
-                    label: 'Accept',
+                    label: this.translate.translate('Accept'),
                     value: Statuses.approved
                 },
             ];
@@ -171,17 +171,17 @@ export class OfiWaitingApprovalComponent implements OnInit, OnDestroy {
             this.statuses = [
                 {
                     id: 'reject',
-                    label: 'Reject',
+                    label: this.translate.translate('Reject'),
                     value: Statuses.rejected
                 },
                 {
                     id: 'askForMoreInfo',
-                    label: 'Ask for more info',
+                    label: this.translate.translate('Ask For More Info'),
                     value: Statuses.askMoreInfo
                 },
                 {
                     id: 'accept',
-                    label: 'Accept',
+                    label: this.translate.translate('Accept'),
                     value: Statuses.approved
                 },
             ];
@@ -282,20 +282,18 @@ export class OfiWaitingApprovalComponent implements OnInit, OnDestroy {
         let additionalText = this.waitingApprovalFormGroup.controls['additionalText'].value.trim();
         additionalText = this.domSanitizer.sanitize(SecurityContext.HTML, additionalText);
 
-        let message = `
-Are you sure you want to reject this client's application?<br>
-Here is the message that will be sent to the investor:<br />
-<textarea style="margin-top:15px;" disabled>${additionalText}</textarea><br />
-You can also ask for more information to this client in the previous page.
-`;
+        let message = `${this.translate.translate('Are you sure you want to reject this client\'s application?')}<br>
+        ${this.translate.translate('Here is the message that will be sent to the investor')}:<br /><textarea style="margin-top:15px;" disabled>${this.translate.translate(additionalText)}</textarea><br /> 
+        ${this.translate.translate('You can also ask for more information to this client in the previous page')}.`;
+
         let safeMessage = this.domSanitizer.bypassSecurityTrustHtml(message);
 
         this.confirmationService.create(
-            'Confirm Rejection',
+            this.translate.translate('Confirm Rejection'),
             (safeMessage as string),
             {
-                confirmText: 'Reject the client\'s application',
-                declineText: 'Back to the approval page',
+                confirmText: this.translate.translate('Reject the client\'s application'),
+                declineText: this.translate.translate('Back to the approval page'),
                 btnClass: 'error'
             }).subscribe((ans) => {
             if (ans.resolved) {
@@ -308,18 +306,15 @@ You can also ask for more information to this client in the previous page.
         let additionalText = this.waitingApprovalFormGroup.controls['additionalText'].value.trim();
         additionalText = this.domSanitizer.sanitize(SecurityContext.HTML, additionalText);
 
-        let message = `
-Are you sure you want to ask for more information?<br>
-Here is the message that will be sent to the investor:<br />
-<textarea style="margin-top:15px;" disabled>${additionalText}</textarea>
-`;
+        let message = `${this.translate.translate('Are you sure you want to ask for more information?')}<br>${this.translate.translate('Here is the message that will be sent to the investor')}:<br /><textarea style="margin-top:15px;" disabled>${this.translate.translate(additionalText)}</textarea>`;
+        
         let safeMessage = this.domSanitizer.bypassSecurityTrustHtml(message);
         this.confirmationService.create(
-            'Ask for more information',
+            this.translate.translate('Ask for more information'),
             (safeMessage as string),
             {
-                confirmText: 'Ask for more information',
-                declineText: 'Back to the approval page',
+                confirmText: this.translate.translate('Ask for more information'),
+                declineText: this.translate.translate('Back to the approval page'),
                 btnClass: 'error'
             }).subscribe((ans) => {
             if (ans.resolved) {
@@ -349,7 +344,7 @@ Here is the message that will be sent to the investor:<br />
         this.kycService.askMoreInfo(payload).then(() => {
             this.toast.pop('success', 'An email has been sent to ' + this.investor.companyName.value + ' in order to ask for more information.');
             this.setAmKycListRequested(true);
-            this._router.navigateByUrl('/on-boarding/management');
+            this.router.navigateByUrl('/on-boarding/management');
         }).catch((error) => {
             const data = error[1].Data[0];
 
@@ -375,7 +370,7 @@ Here is the message that will be sent to the investor:<br />
         });
         this.kycService.approve(payload).then((result) => {
             this.waitingApprovalFormGroup.controls['isKycAccepted'].patchValue(false);
-            this.toast.pop('success', 'The KYC request has been successfully approved.');
+            this.toast.pop('success', this.translate.translate('The KYC request has been successfully approved.'));
 
             InitialisationService.requestWalletDirectory(this.redux, this.walletsService);
 
@@ -387,13 +382,13 @@ Here is the message that will be sent to the investor:<br />
 
             setTimeout(() => {
                 /* Redirect to fund access page when the kyc is being approved */
-                this._router.navigate(['client-referential', this.kycId]);
+                this.router.navigate(['client-referential', this.kycId]);
             }, 1000);
         }).catch((error) => {
             const data = error[1].Data[0];
 
             if (data.Status === 'Fail') {
-                this.showErrorAlert('The KYC request has already been updated. The request requires the investor\'s attention now');
+                this.showErrorAlert(this.translate.translate('The KYC request has already been updated. The request requires the investor\'s attention now'));
             }
         });
     }
@@ -404,14 +399,14 @@ Here is the message that will be sent to the investor:<br />
 
     saveCompleteKycModal(message) {
         this.kycService.notifyKycCompletion(this.investorID, message, this.kycId).then(() => {
-            let message = this._translate.translate('The investor has been notified.');
+            let message = this.translate.translate('The investor has been notified.');
             this.toast.pop('success', message);
             this.completeKycModal = false;
             this.cdr.markForCheck();
             this.redux.dispatch({
                 type: CLEAR_REQUESTED
             });
-            this._router.navigateByUrl('/on-boarding/management');
+            this.router.navigateByUrl('/on-boarding/management');
         });
     }
 
@@ -479,14 +474,14 @@ Here is the message that will be sent to the investor:<br />
         });
 
         this.kycService.reject(payload).then(() => {
-            this.toast.pop('success', 'The KYC request has been successfully rejected.');
+            this.toast.pop('success', this.translate.translate('The KYC request has been successfully rejected.'));
             this.setAmKycListRequested(true);
-            this._router.navigateByUrl('/on-boarding/management');
+            this.router.navigateByUrl('/on-boarding/management');
         }).catch((error) => {
             const data = error[1].Data[0];
 
             if (data.Status === 'Fail') {
-                this.showErrorAlert('The KYC request has already been updated. The request requires the investor\'s attention now');
+                this.showErrorAlert(this.translate.translate('The KYC request has already been updated. The request requires the investor\'s attention now'));
             }
         });
     }
@@ -503,7 +498,7 @@ Here is the message that will be sent to the investor:<br />
             <table class="table grid">
                 <tbody>
                     <tr>
-                        <td class="text-center text-danger">${message}</td>
+                        <td class="text-center text-danger">${this.translate.translate(message)}</td>
                     </tr>
                 </tbody>
             </table>

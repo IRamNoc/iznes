@@ -6,7 +6,6 @@ import * as _ from 'lodash';
     templateUrl: './beneficiaries.component.html'
 })
 export class KycDetailsBeneficiariesComponent implements OnInit {
-
     @Input() beneficiaries;
     @Output() close: EventEmitter<void> = new EventEmitter();
 
@@ -23,7 +22,6 @@ export class KycDetailsBeneficiariesComponent implements OnInit {
     }
 
     getName(beneficiary) {
-
         let finalName;
         const firstName = _.chain(beneficiary).find(['originalId', 'firstName']).get('value').value();
         const lastName = _.chain(beneficiary).find(['originalId', 'lastName']).get('value').value();
@@ -36,5 +34,4 @@ export class KycDetailsBeneficiariesComponent implements OnInit {
 
         return finalName;
     }
-
 }

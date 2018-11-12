@@ -1,20 +1,18 @@
-import {Component, OnInit, OnDestroy, Input, ViewChild} from '@angular/core';
-import {Subject} from 'rxjs';
-import {select} from '@angular-redux/store';
-import {FormControl} from '@angular/forms';
-import {isEmpty, values, map, toNumber} from 'lodash';
-import {filter, takeUntil} from 'rxjs/operators';
-
-import {FormPercentDirective} from '@setl/utils/directives/form-percent/formpercent';
-import {NewRequestService} from '../../new-request.service';
-import {RiskProfileService} from '../risk-profile.service';
+import { Component, OnInit, OnDestroy, Input, ViewChild } from '@angular/core';
+import { Subject } from 'rxjs';
+import { select } from '@angular-redux/store';
+import { FormControl } from '@angular/forms';
+import { isEmpty, values, map, toNumber } from 'lodash';
+import { filter, takeUntil } from 'rxjs/operators';
+import { FormPercentDirective } from '@setl/utils/directives/form-percent/formpercent';
+import { NewRequestService } from '../../new-request.service';
+import { RiskProfileService } from '../risk-profile.service';
 
 @Component({
     selector: 'investment-constraint',
     templateUrl: './investment-constraint.component.html'
 })
 export class InvestmentConstraintComponent implements OnInit, OnDestroy {
-
     @ViewChild(FormPercentDirective) formPercent: FormPercentDirective;
     @Input() form;
     @Input() formWatch: Subject<boolean>;
@@ -34,12 +32,10 @@ export class InvestmentConstraintComponent implements OnInit, OnDestroy {
     ) {
     }
 
-
     ngOnInit() {
         this.initFormCheck();
         this.initData();
         this.getCurrentFormData();
-
         this.updateCrossAM();
     }
 
@@ -54,8 +50,7 @@ export class InvestmentConstraintComponent implements OnInit, OnDestroy {
                     this.form.get('constraintsSameInvestmentCrossAm').patchValue(cross, {emitEvent: false});
                     this.formCheckSameInvestmentCrossAm(cross);
                 }
-            })
-        ;
+            });
     }
 
     initData() {
@@ -67,8 +62,7 @@ export class InvestmentConstraintComponent implements OnInit, OnDestroy {
             .subscribe(requestedKycs => {
                 this.amcs = values(requestedKycs);
                 this.updateCrossAM();
-            })
-        ;
+            });
 
         this.formWatch
             .pipe(
