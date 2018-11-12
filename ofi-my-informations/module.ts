@@ -14,7 +14,7 @@ import { MultilingualModule } from '@setl/multilingual';
 /* Components. */
 import { OfiMyInformationsComponent } from './my-informations/component';
 
-import config from './config';
+import { phoneCodeList } from '../shared/phone-codes.values';
 
 /* Decorator. */
 @NgModule({
@@ -38,7 +38,7 @@ import config from './config';
         SetlDirectivesModule,
     ],
     providers: [
-        { provide: 'my-information-config', useValue: config },
+        { provide: 'phoneCodeList', useValue: phoneCodeList },
     ],
 })
 
