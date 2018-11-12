@@ -25,10 +25,10 @@
                         <div class="form-group col-sm-6">
                             <label class="required-field" for="kyc_email_{{i}}">{{ 'Email Address' | translate }}</label>
                             <div>
-                                <input type="text" 
-                                        id="kyc_email_{{i}}" 
-                                        class="form-control" 
-                                        formControlName="email" 
+                                <input type="text"
+                                        id="kyc_email_{{i}}"
+                                        class="form-control"
+                                        formControlName="email"
                                         maxlength="70">
                             </div>
                             <div *ngIf="investor.controls.email.touched && investor.controls.email.hasError('required')" class="field-error">
@@ -76,9 +76,9 @@
                             <label for="kyc_clientReference_{{i}}">{{ 'Client Reference (optional)' | translate }}</label>
 
                             <div>
-                                <input type="text" 
-                                        id="kyc_clientReference_{{i}}" 
-                                        class="form-control" 
+                                <input type="text"
+                                        id="kyc_clientReference_{{i}}"
+                                        class="form-control"
                                         formControlName="clientReference">
                             </div>
                         </div>
@@ -153,10 +153,10 @@
                         <div class="form-group col-sm-12">
                             <label for="kyc_message_{{i}}">{{ 'Message (optional)' | translate }}</label>
                             <div>
-                                <textarea type="text" 
-                                            id="kyc_message_{{i}}" 
-                                            class="form-control" 
-                                            style="width:98%" 
+                                <textarea type="text"
+                                            id="kyc_message_{{i}}"
+                                            class="form-control"
+                                            style="width:98%"
                                             formControlName="message"></textarea>
                             </div>
                         </div>

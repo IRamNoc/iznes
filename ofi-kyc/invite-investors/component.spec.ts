@@ -94,7 +94,7 @@ describe('OfiInviteInvestorsComponent', () => {
                 firstName: 'albert',
                 invitedBy: 'am erica',
                 kycStarted: '2018-05-22',
-                invitationLink: 'link',
+                invitationLink: 'Link',
                 status: 2,
             },
         ];
@@ -120,10 +120,10 @@ describe('OfiInviteInvestorsComponent', () => {
                 expect(headerEl[0].nativeNode.innerText).toEqual('Invites Recap');
             });
 
-            it('should have a subtitle with text: "Please find below invitations that have been sent to investors:"', () => {
+            it('should have a subtitle with text: "Please find below invitations that have been sent to investors"', () => {
                 const subtitleEl = fixture.debugElement.queryAllNodes(By.css('p.subhead'));
                 expect(subtitleEl.length).toBe(1);
-                expect(subtitleEl[0].nativeNode.innerText).toEqual('Please find below invitations that have been sent to investors:');
+                expect(subtitleEl[0].nativeNode.innerText).toEqual('Please find below invitations that have been sent to investors');
             });
 
             it('should have the columns: Date Sent, Invitation Status, Email Address, Company Name, Last Name, First Name, Invitation Sent By, Date KYC Started, Invitation Link, KYC Status', () => {
