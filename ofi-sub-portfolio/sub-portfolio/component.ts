@@ -296,7 +296,7 @@ export class OfiSubPortfolioComponent implements OnInit, OnDestroy {
 
         default:
             this.toaster.pop('success', this.translate.translate(
-                'Your sub-portfolio @subPortfolioName@@ has been successfully @actionType@. This may take a moment to update.', 
+                'Your sub-portfolio @subPortfolioName@ has been successfully @actionType@. This may take a moment to update.',
                 { 'subPortfolioName': this.tabDetail[0]['formControl'].value.subPortfolioName, 'actionType': type })); 
             break;          
         }
