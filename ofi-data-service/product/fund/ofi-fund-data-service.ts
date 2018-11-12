@@ -33,15 +33,24 @@ export class OfiFundDataService extends BaseDataService<OfiFundService> {
 
     /**
      * Get fund list in array format
+     * @param includeDraft {boolean}: include draft status
      * @return {Observable<IznesFundDetail[]>}
      */
-    getFundArrayList(): Observable<IznesFundDetail[]> {
+    getFundArrayList(includeDraft: boolean = false): Observable<IznesFundDetail[]> {
+
         return super.getData<IznesFundDetails>('fundList')
         .pipe(
             map((funds: IznesFundDetails) => {
                 const fundList = [];
                 for (const key in funds) {
-                    fundList.push(funds[key]);
+                    const fund = funds[key];
+                    if (!includeDraft) {
+                        if (Number(fund.draft) === 0) {
+                            fundList.push(fund);
+                        }
+                    } else {
+                        fundList.push(fund);
+                    }
                 }
                 return fundList;
             }),
@@ -50,15 +59,24 @@ export class OfiFundDataService extends BaseDataService<OfiFundService> {
 
     /**
      * Get fund list in ng2-select format.
+     * @param includeDraft {boolean}: include draft status
      * @return {Observable<{id: string; text: string}[]>}
      */
-    getFundSelectList(): Observable<{id: string; text: string}[]> {
+    getFundSelectList(includeDraft: boolean = false): Observable<{id: string; text: string}[]> {
         return super.getData<IznesFundDetails>('fundList')
         .pipe(
             map((funds: IznesFundDetails) => {
                 const fundList = [];
                 for (const key in funds) {
-                    fundList.push({ id: key, text: funds[key].fundName });
+                    const fund = funds[key];
+                    const fundSelectItem = { id: key, text: funds[key].fundName };
+                    if (!includeDraft) {
+                        if (Number(fund.draft) === 0) {
+                            fundList.push(fundSelectItem);
+                        }
+                    } else {
+                        fundList.push(fundSelectItem);
+                    }
                 }
                 return fundList;
             }),
