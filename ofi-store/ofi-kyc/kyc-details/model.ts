@@ -56,6 +56,13 @@ export interface KycDetailsDocuments {
     [index: string]: KycDetailDocuments
 }
 
+export interface KycDetailValidation {
+}
+
+export interface KycDetailsValidation {
+    [index: string]: KycDetailValidation,
+}
+
 
 export interface KycDetailsState {
 
@@ -83,4 +90,6 @@ export interface KycDetailsState {
     kycDetailsDocuments: KycDetailsDocuments,
     kycDetailsDocumentsRequested: boolean,
 
+    kycDetailsValidation: KycDetailsValidation,
+    kycDetailsValidationRequested: boolean,
 }

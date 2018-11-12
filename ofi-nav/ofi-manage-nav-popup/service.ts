@@ -1,6 +1,7 @@
-import {Injectable} from '@angular/core';
-import {Subject} from 'rxjs';
+import { Injectable } from '@angular/core';
+import { Subject } from 'rxjs';
 
+import { immutableHelper } from '@setl/utils';
 import * as model from '../OfiNav';
 
 @Injectable()
@@ -10,7 +11,7 @@ export class OfiManageNavPopupService {
     private _mode: model.NavPopupMode;
 
     onOpen: Subject<{share: model.NavInfoModel, mode: model.NavPopupMode}> = new Subject();
-    onClose: Subject<void> = new Subject();
+    onClose: Subject<ManageNavCloseEvent> = new Subject();
 
     constructor() { }
 
@@ -21,11 +22,15 @@ export class OfiManageNavPopupService {
         this.onOpen.next({ share: share, mode: mode });
     }
     
-    close(): void {
+    close(isSave: boolean): void {
+        this.onClose.next({
+            isSave: isSave,
+            isCancel: !isSave,
+            share: this._share ? immutableHelper.copy(this._share) : null
+        });
+
         this._share = null;
         this._mode = null;
-
-        this.onClose.next();
     }
 
     share(): model.NavInfoModel {
@@ -39,4 +44,10 @@ export class OfiManageNavPopupService {
     isOpen(): boolean {
         return this._share != null && this._mode != null;
     }
+}
+
+export interface ManageNavCloseEvent {
+    isSave: boolean;
+    isCancel: boolean;
+    share: model.NavInfoModel;
 }

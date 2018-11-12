@@ -6,10 +6,9 @@ export interface OfiMemberNodeBody extends MemberNodeMessageBody {
 
 export interface OfiAddSubPortfolioRequestBody extends OfiMemberNodeBody {
     token: string;
-    walletId: number,
-    name: string,
-    iban: string,
-    type: string,
+    walletId: number;
+    name: string;
+    iban: string;
 }
 
 export interface OfiDeleteSubPortfolioRequestBody extends OfiMemberNodeBody {

@@ -6,7 +6,7 @@ import { select } from '@angular-redux/store';
 import { get as getValue, map, sort, remove, partial, invert } from 'lodash';
 import { Subject, combineLatest } from 'rxjs';
 import { takeUntil } from 'rxjs/operators';
-
+import { MultilingualService } from '@setl/multilingual';
 import { steps, formStepsLight, formStepsFull } from '../requests.config';
 import { NewRequestService } from './new-request.service';
 
@@ -28,7 +28,6 @@ import { FormstepsComponent } from '@setl/utils/components/formsteps/formsteps.c
     ],
 })
 export class NewKycRequestComponent implements OnInit, AfterViewInit {
-
     @ViewChild(FormstepsComponent) formSteps;
 
     @select(['ofi', 'ofiKyc', 'myKycRequested', 'kycs']) requests$;
@@ -48,7 +47,8 @@ export class NewKycRequestComponent implements OnInit, AfterViewInit {
         private formBuilder: FormBuilder,
         private route: ActivatedRoute,
         private router: Router,
-        private newRequestService: NewRequestService
+        private newRequestService: NewRequestService,
+        public translate: MultilingualService,
     ) {
     }
 
@@ -57,40 +57,27 @@ export class NewKycRequestComponent implements OnInit, AfterViewInit {
     }
 
     get investorType() {
-        let legalStatusControl = this.forms.get('identification.generalInformation.legalStatus').value;
-        let legalStatusValue = getValue(legalStatusControl, [0, 'id']);
-        let possibleLegalStatusValues = [
-            'pensionMutual',
-            'creditInstitution',
-            'insurer',
-            'institutionalInvestors',
-            'otherInvestors',
-            'managementCompany',
-            'centralBank',
-            'localCompanies',
-            'nationalGovService',
-            'dealersCommodities',
-            'internationBodies'
-        ];
+        let activityRegulated = this.forms.get('identification.companyInformation.activityRegulated').value;
+        activityRegulated = !!Number(activityRegulated);
 
-        let balanceSheetTotalValue = this.forms.get('identification.companyInformation.balanceSheetTotal').value;
-        let netRevenuesNetIncomeValue = this.forms.get('identification.companyInformation.netRevenuesNetIncome').value;
-        let shareholderEquityValue = this.forms.get('identification.companyInformation.shareholderEquity').value;
+        const balanceSheetTotalValue = this.forms.get('identification.companyInformation.balanceSheetTotal').value;
+        const netRevenuesNetIncomeValue = this.forms.get('identification.companyInformation.netRevenuesNetIncome').value;
+        const shareholderEquityValue = this.forms.get('identification.companyInformation.shareholderEquity').value;
 
-        if (possibleLegalStatusValues.indexOf(legalStatusValue) !== -1) {
-            return "proByNature";
+        if (activityRegulated) {
+            return 'proByNature';
         }
 
-        let balanceSheetCondition = balanceSheetTotalValue >= 20000000;
-        let netRevenuesCondition = netRevenuesNetIncomeValue >= 40000000;
-        let equityCondition = shareholderEquityValue >= 2000000;
-        let trues = remove([balanceSheetCondition, netRevenuesCondition, equityCondition]);
+        const balanceSheetCondition = balanceSheetTotalValue >= 20000000;
+        const netRevenuesCondition = netRevenuesNetIncomeValue >= 40000000;
+        const equityCondition = shareholderEquityValue >= 2000000;
+        const trues = remove([balanceSheetCondition, netRevenuesCondition, equityCondition]);
 
         if (trues.length >= 2) {
-            return "proBySize";
+            return 'proBySize';
         }
 
-        return "nonPro";
+        return 'nonPro';
     }
 
     ngOnInit() {
@@ -212,5 +199,4 @@ export class NewKycRequestComponent implements OnInit, AfterViewInit {
         this.unsubscribe.next();
         this.unsubscribe.complete();
     }
-
 }

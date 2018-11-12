@@ -27,7 +27,7 @@ const patchOrder = (state, orderId, patch) => {
     if (!existingOrder) {
         return state;
     }
-    
+
     if (Object.keys(patch).length == 1 && Object.keys(patch)[0] == 'orderStatus') {
         if (patch['orderStatus'] > 0 && patch['orderStatus'] < existingOrder['orderStatus']) {
             return state;
@@ -224,6 +224,7 @@ function formatManageOrderDataResponse(rawData: any[]): ManageOrderDetails[] {
                 investorWalletID: item.get('investorWalletID'),
                 investorCompanyName: item.get('investorCompanyName'),
                 isin: item.get('isin'),
+                isKnownNav: item.get('isKnownNav'), // PHILZ [2018-11-06]
                 label: item.get('label'),
                 lastName: item.get('lastName'),
                 maximumNumDecimal: item.get('maximumNumDecimal'),
@@ -258,8 +259,10 @@ function formatManageOrderDataResponse(rawData: any[]): ManageOrderDetails[] {
                     feePercentage: order.feePercentage,
                 },
                 order.maximumNumDecimal,
-                false,
+                order.isKnownNav, // PHILZ [2018-11-06]
             );
+
+            // order.amount = figures.amount;
 
             if (order.byAmountOrQuantity === 1) {
                 // Quantity - Calculate estimated amount

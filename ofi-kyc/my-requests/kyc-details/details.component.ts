@@ -4,20 +4,19 @@ import { select } from '@angular-redux/store';
 import { Subject } from 'rxjs';
 import { takeUntil, filter as rxFilter, map, tap } from 'rxjs/operators';
 import { isEmpty } from 'lodash';
-
+import { MultilingualService } from '@setl/multilingual';
 import { KycDetailsService } from './details.service';
 
 @Component({
     selector: 'kyc-details',
-    templateUrl: './details.component.html'
+    templateUrl: './details.component.html',
 })
 export class KycDetailsComponent implements OnInit, OnDestroy {
-
     @Input() set kycID(kycID: number) {
         if (kycID) {
             this.getData(kycID);
         }
-    };
+    }
 
     @select(['ofi', 'ofiKyc', 'kycDetails', 'kycDetailsGeneral']) kycGeneral$;
     @select(['ofi', 'ofiKyc', 'kycDetails', 'kycDetailsCompany']) kycCompany$;
@@ -27,25 +26,25 @@ export class KycDetailsComponent implements OnInit, OnDestroy {
     @select(['ofi', 'ofiKyc', 'kycDetails', 'kycDetailsRiskNature']) kycRiskNature$;
     @select(['ofi', 'ofiKyc', 'kycDetails', 'kycDetailsRiskObjective']) kycRiskObjective$;
     @select(['ofi', 'ofiKyc', 'kycDetails', 'kycDetailsDocuments']) kycDocuments$;
-
+    @select(['ofi', 'ofiKyc', 'kycDetails', 'kycDetailsValidation']) kycValidation$;
 
     unsubscribe: Subject<any> = new Subject();
     panelDefs;
     beneficiaries;
     modals = {
-        beneficiaries: false
+        beneficiaries: false,
     };
 
     constructor(
         private route: ActivatedRoute,
         private kycDetailsService: KycDetailsService,
-        private changeDetectorRef: ChangeDetectorRef
+        public translate: MultilingualService,
+        private changeDetectorRef: ChangeDetectorRef,
     ) {
     }
 
     ngOnInit() {
         this.constructPanels();
-
         this.getBeneficiaries();
     }
 
@@ -58,7 +57,8 @@ export class KycDetailsComponent implements OnInit, OnDestroy {
         this.panelDefs = [
             this.getIdentification(),
             this.getRiskProfile(),
-            this.getDocuments()
+            this.getDocuments(),
+            this.getValidation(),
         ];
     }
 
@@ -69,28 +69,29 @@ export class KycDetailsComponent implements OnInit, OnDestroy {
     getIdentification() {
         return {
             id: 'request-details-identification',
-            title: 'Identification',
+            title: this.translate.translate('Identification'),
             open: true,
             children: [
                 this.getGeneral(),
                 this.getCompany(),
                 this.getBanking(),
-                this.getClassification()
-            ]
+                this.getClassification(),
+            ],
         };
     }
 
     getGeneral() {
         let general = {
-            title: 'General Information',
-            data: ''
+            title: this.translate.translate('General Information'),
+            data: '',
         };
 
         this.kycGeneral$
         .pipe(
             rxFilter(value => !isEmpty(value)),
             map(data => this.kycDetailsService.toArray(data)),
-            takeUntil(this.unsubscribe)
+            map(data => this.kycDetailsService.order(data)),
+            takeUntil(this.unsubscribe),
         )
         .subscribe(data => {
             general.data = data;
@@ -102,17 +103,18 @@ export class KycDetailsComponent implements OnInit, OnDestroy {
     }
 
     getCompany() {
-        let company = {
+        const company = {
             id: 'company',
-            title: 'Company Information',
-            data: ''
+            title: this.translate.translate('Company Information'),
+            data: '',
         };
 
         this.kycCompany$
         .pipe(
             rxFilter(value => !isEmpty(value)),
             map(data => this.kycDetailsService.toArray(data)),
-            takeUntil(this.unsubscribe)
+            map(data => this.kycDetailsService.order(data)),
+            takeUntil(this.unsubscribe),
         )
         .subscribe(data => {
             company.data = data;
@@ -124,10 +126,10 @@ export class KycDetailsComponent implements OnInit, OnDestroy {
     }
 
     getBanking() {
-        let banking = {
+        const banking = {
             id: 'banking',
-            title: 'Banking Information',
-            data: ''
+            title: this.translate.translate('Banking Information'),
+            data: '',
         };
 
         this.kycBanking$
@@ -155,15 +157,15 @@ export class KycDetailsComponent implements OnInit, OnDestroy {
 
     getClassification() {
         let classification = {
-            title: 'Classification Confirmation',
-            data: ''
+            title: this.translate.translate('Classification Confirmation'),
+            data: '',
         };
 
         this.kycClassification$
         .pipe(
             rxFilter(value => !isEmpty(value)),
             map(data => this.kycDetailsService.toArray(data)),
-            takeUntil(this.unsubscribe)
+            takeUntil(this.unsubscribe),
         )
         .subscribe(data => {
             classification.data = data;
@@ -178,13 +180,13 @@ export class KycDetailsComponent implements OnInit, OnDestroy {
         this.kycCompanyBeneficiaries$
         .pipe(
             rxFilter(value => !isEmpty(value)),
-            map((data: Array<any>) => {
+            map((data: any[]) => {
                 return data.map(value => this.kycDetailsService.toArray(value));
             }),
-            takeUntil(this.unsubscribe)
+            takeUntil(this.unsubscribe),
         )
-        .subscribe(beneficiaries => {
-            let promises = beneficiaries.map((beneficiary) => {
+        .subscribe((beneficiaries) => {
+            const promises = beneficiaries.map((beneficiary) => {
                 beneficiary.splice(beneficiary.findIndex((item) => item.id == 'delete'), 1);
                 return this.kycDetailsService.getHashes(beneficiary);
             });
@@ -197,29 +199,29 @@ export class KycDetailsComponent implements OnInit, OnDestroy {
     getRiskProfile() {
         return {
             id: 'request-details-identification',
-            title: 'Investments\' Profile',
+            title: this.translate.translate('Risk Profile'),
             open: true,
             children: [
                 this.getRiskNature(),
                 this.getRiskObjective(),
-                this.getRiskConstraint()
-            ]
+                this.getRiskConstraint(),
+            ],
         };
     }
 
     getRiskNature() {
         let riskNature = {
-            title: 'Investments\' Nature',
-            data: ''
+            title: this.translate.translate('Investment\'s Nature'),
+            data: '',
         };
 
         this.kycRiskNature$
         .pipe(
             rxFilter(value => !isEmpty(value)),
             map(data => this.kycDetailsService.toArray(data)),
-            takeUntil(this.unsubscribe)
+            takeUntil(this.unsubscribe),
         )
-        .subscribe(data => {
+        .subscribe((data) => {
             riskNature.data = data;
         })
         ;
@@ -229,29 +231,29 @@ export class KycDetailsComponent implements OnInit, OnDestroy {
 
     getRiskObjective() {
         let riskObjectives = {
-            title: 'Investments\' Objectives',
-            data: ''
+            title: this.translate.translate('Investment\'s Objectives'),
+            data: '',
         };
 
-        let ids = [
-            "performanceProfile",
-            "clientNeeds",
-            "investmentHorizonWanted",
-            "riskProfile",
-            "riskProfileCapital",
-            "riskAcceptanceLevel1",
-            "riskAcceptanceLevel2",
-            "riskAcceptanceLevel3",
-            "riskAcceptanceLevel4"
+        const ids = [
+            'performanceProfile',
+            'clientNeeds',
+            'investmentHorizonWanted',
+            'riskProfile',
+            'riskProfileCapital',
+            'riskAcceptanceLevel1',
+            'riskAcceptanceLevel2',
+            'riskAcceptanceLevel3',
+            'riskAcceptanceLevel4',
         ];
 
         this.kycRiskObjective$
         .pipe(
             rxFilter(value => !isEmpty(value)),
             map(data => this.kycDetailsService.toArray(data)),
-            takeUntil(this.unsubscribe)
+            takeUntil(this.unsubscribe),
         )
-        .subscribe(data => {
+        .subscribe((data) => {
             riskObjectives.data = data.filter((row) => {
                 return ids.indexOf(row.originalId) > -1;
             });
@@ -263,23 +265,23 @@ export class KycDetailsComponent implements OnInit, OnDestroy {
 
     getRiskConstraint() {
         let riskContraints = {
-            title: 'Investments\' Constraints',
-            data: ''
+            title: this.translate.translate('Investment\'s Constraints'),
+            data: '',
         };
 
-        let ids = [
-            "statutoryConstraints",
-            "taxConstraints",
-            "otherConstraints",
-            "investmentDecisionsAdHocCommittee",
-            "otherPersonsAuthorised"
+        const ids = [
+            'statutoryConstraints',
+            'taxConstraints',
+            'otherConstraints',
+            'investmentDecisionsAdHocCommittee',
+            'otherPersonsAuthorised',
         ];
 
         this.kycRiskObjective$
         .pipe(
             rxFilter(value => !isEmpty(value)),
             map(data => this.kycDetailsService.toArray(data)),
-            takeUntil(this.unsubscribe)
+            takeUntil(this.unsubscribe),
         )
         .subscribe(data => {
             riskContraints.data = data.filter((row) => {
@@ -291,18 +293,17 @@ export class KycDetailsComponent implements OnInit, OnDestroy {
         return riskContraints;
     }
 
-
     getDocuments() {
         let documents = {
-            title: 'Documents',
-            data: ''
+            title: this.translate.translate('Documents'),
+            data: '',
         };
 
         this.kycDocuments$
         .pipe(
             rxFilter(value => !isEmpty(value)),
             map(documents => this.kycDetailsService.extractDocuments(documents)),
-            takeUntil(this.unsubscribe)
+            takeUntil(this.unsubscribe),
         )
         .subscribe(data => {
             documents.data = data;
@@ -310,6 +311,28 @@ export class KycDetailsComponent implements OnInit, OnDestroy {
         ;
 
         return documents;
+    }
+
+    getValidation() {
+        const validation = {
+            title: 'Applicant Information',
+            data: '',
+        };
+
+        this.kycValidation$
+        .pipe(
+            rxFilter(value => !isEmpty(value)),
+            map(data => this.kycDetailsService.toArray(data)),
+            takeUntil(this.unsubscribe),
+        )
+        .subscribe(async (data) => {
+            await this.kycDetailsService.getHashes(data);
+            validation.data = data;
+            this.changeDetectorRef.markForCheck();
+        })
+        ;
+
+        return validation;
     }
 
     ngOnDestroy() {

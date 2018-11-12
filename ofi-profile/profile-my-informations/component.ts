@@ -1,10 +1,8 @@
-import { Component, OnInit, Inject } from '@angular/core';
+import { Component, OnInit, Inject, ChangeDetectorRef } from '@angular/core';
 import { NgRedux, select } from '@angular-redux/store';
 import { AbstractControl, FormControl, FormGroup, Validators } from '@angular/forms';
 import { Router } from '@angular/router';
-
 import { ToasterService } from 'angular2-toaster';
-
 import { MemberSocketService } from '@setl/websocket-service';
 import { APP_CONFIG, AppConfig } from '@setl/utils';
 import { SagaHelper } from '@setl/utils/index';
@@ -13,7 +11,6 @@ import { MyUserService } from '@setl/core-req-services/index';
 import { SET_NEW_PASSWORD } from '@setl/core-store/index';
 import { AlertsService } from '@setl/jaspero-ng2-alerts/index';
 import { MultilingualService } from '@setl/multilingual';
-
 import { OfiKycService } from '@ofi/ofi-main/ofi-req-services/ofi-kyc/service';
 
 import { take } from 'rxjs/operators';
@@ -56,12 +53,15 @@ export class OfiProfileMyInformationsComponent implements OnInit {
         3: false,
     };
 
+    externalNotificationsAvailable: boolean = false;
+
     @select(['user', 'myDetail']) myDetail: any;
     @select(['ofi', 'ofiKyc', 'myInformations']) myKyc: any;
 
     constructor(
         private _ngRedux: NgRedux<any>,
         private router: Router,
+        private changeDetectorRef: ChangeDetectorRef,
         private toasterService: ToasterService,
         private myUserService: MyUserService,
         private ofiKycService: OfiKycService,
@@ -99,6 +99,8 @@ export class OfiProfileMyInformationsComponent implements OnInit {
     }
 
     ngOnInit() {
+        this.getExternalNotificationsAvailable();
+
         this.ofiKycService.fetchInvestor();
         this.myDetail.subscribe((d) => {
             this.userInfo = {
@@ -133,7 +135,6 @@ export class OfiProfileMyInformationsComponent implements OnInit {
     }
 
     changePass(formValues) {
-
         this.validation = 0;
 
         if (formValues.password.length > 7) {
@@ -173,7 +174,6 @@ export class OfiProfileMyInformationsComponent implements OnInit {
                 )
             );
         }
-
     }
 
     saveUserInformations(userInformations) {
@@ -217,6 +217,33 @@ export class OfiProfileMyInformationsComponent implements OnInit {
 
     closeUserInformations() {
         this.router.navigate(['home']);
+    }
+
+    /**
+     * Checks if RabbitMQ is available for this system
+     *
+     * @return {object} status
+     */
+    getExternalNotificationsAvailable(): any {
+        const asyncTaskPipe = this.myUserService.statusNotifications();
+
+        this._ngRedux.dispatch(SagaHelper.runAsync(
+            [],
+            [],
+            asyncTaskPipe,
+            {},
+            (response) => {
+                const responseData = getValue(response, '[1].Data', {});
+                if (responseData.hasOwnProperty('state')) this.externalNotificationsAvailable = true;
+                this.changeDetectorRef.detectChanges();
+            },
+            (response) => {
+                const responseData = getValue(response, '[1].Data.message.code', 0);
+                if (responseData === 503) this.externalNotificationsAvailable = false;
+                if (responseData === 404) this.externalNotificationsAvailable = true;
+                this.changeDetectorRef.detectChanges();
+            },
+        ));
     }
 
 }

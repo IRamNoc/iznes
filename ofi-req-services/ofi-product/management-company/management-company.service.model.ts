@@ -9,18 +9,16 @@ export interface ManagementCompanyRequestData {
     companyID: any;
     companyName: any;
     emailAddress: any;
+    legalFormName: string;
     country: any;
-    addressPrefix: any;
     postalAddressLine1: any;
     postalAddressLine2: any;
     city: any;
-    stateArea: any;
     postalCode: any;
     taxResidence: any;
-    registrationNum: any;
+    rcsMatriculation: string;
     supervisoryAuthority: any;
     numSiretOrSiren: any;
-    creationDate: any;
     shareCapital: any;
     commercialContact: any;
     operationalContact: any;
@@ -28,8 +26,13 @@ export interface ManagementCompanyRequestData {
     lei: any;
     bic: any;
     giinCode: any;
-    logoName: any;
-    logoURL: any;
+    websiteUrl: string;
+    phoneNumberPrefix: string;
+    phoneNumber: string;
+    signatureTitle: string;
+    signatureHash: string;
+    logoTitle: any;
+    logoHash: any;
 }
 
 export interface SaveManagementCompanyRequestBody extends MemberNodeMessageBody {
@@ -37,18 +40,16 @@ export interface SaveManagementCompanyRequestBody extends MemberNodeMessageBody 
     entityId: any;
     companyName: any;
     emailAddress: any;
+    legalFormName: string;
     country: any;
-    addressPrefix: any;
     postalAddressLine1: any;
     postalAddressLine2: any;
     city: any;
-    stateArea: any;
     postalCode: any;
     taxResidence: any;
-    registrationNum: any;
+    rcsMatriculation: string;
     supervisoryAuthority: any;
     numSiretOrSiren: any;
-    creationDate: any;
     shareCapital: any;
     commercialContact: any;
     operationalContact: any;
@@ -56,8 +57,13 @@ export interface SaveManagementCompanyRequestBody extends MemberNodeMessageBody 
     lei: any;
     bic: any;
     giinCode: any;
-    logoName: any;
-    logoURL: any;
+    websiteUrl: string;
+    phoneNumberPrefix: string;
+    phoneNumber: string;
+    signatureTitle: string;
+    signatureHash: string;
+    logoTitle: any;
+    logoHash: any;
 }
 
 export interface UpdateManagementCompanyRequestBody extends MemberNodeMessageBody {
@@ -66,18 +72,16 @@ export interface UpdateManagementCompanyRequestBody extends MemberNodeMessageBod
     companyID: any;
     companyName: any;
     emailAddress: any;
+    legalFormName: string;
     country: any;
-    addressPrefix: any;
     postalAddressLine1: any;
     postalAddressLine2: any;
     city: any;
-    stateArea: any;
     postalCode: any;
     taxResidence: any;
-    registrationNum: any;
+    rcsMatriculation: string;
     supervisoryAuthority: any;
     numSiretOrSiren: any;
-    creationDate: any;
     shareCapital: any;
     commercialContact: any;
     operationalContact: any;
@@ -85,8 +89,13 @@ export interface UpdateManagementCompanyRequestBody extends MemberNodeMessageBod
     lei: any;
     bic: any;
     giinCode: any;
-    logoName: any;
-    logoURL: any;
+    websiteUrl: string;
+    phoneNumberPrefix: string;
+    phoneNumber: string;
+    signatureTitle: string;
+    signatureHash: string;
+    logoTitle: any;
+    logoHash: any;
 }
 
 export interface DeleteManagementCompanyRequestData {

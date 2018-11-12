@@ -62,7 +62,11 @@ export const booleanControls = [
     'activitiesBenefitFromExperience',
     'activityRegulated',
     'companyListed',
+    'naturesSameInvestmentCrossAm',
+    'objectivesSameInvestmentCrossAm',
+    'constraintsSameInvestmentCrossAm',
 ];
+
 export const currencyControls = [
     'balanceSheetTotal',
     'netRevenuesNetIncome',
@@ -75,6 +79,7 @@ export const percentageControls = [
     'riskAcceptanceLevel3',
     'riskAcceptanceLevel4',
     'holdingPercentage',
+    'floatableShares',
 ];
 
 export const fileControls = [
@@ -103,6 +108,8 @@ export const selectControls = [
     'volumeTransactionPerYear',
     'activities',
     'ownAccountinvestor',
+    'otherIdentificationNumber',
+    'listingMarkets',
     'investorOnBehalfThirdParties',
     'geographicalAreaOfActivity',
     'nationality',
@@ -113,12 +120,61 @@ export const selectControls = [
     'registeredCompanyCountry',
     'countryTaxResidence',
     'sectorActivity',
-    'legalStatus',
-    'legalStatusInsurerType',
+    'regulatoryStatus',
+    'regulatoryStatusInsurerType',
     'riskProfile',
     'beneficiaryType',
     'nationalIdNumber',
     'holdingType',
+];
+
+export const controlOrder = [
+
+    // General
+    'registeredCompanyName',
+    'legalForm',
+    'leiCode',
+    'otherIdentificationNumber',
+    'otherIdentificationNumberText',
+    'registeredCompanyAddressLine1',
+    'registeredCompanyAddressLine2',
+    'registeredCompanyZipCode',
+    'registeredCompanyCity',
+    'registeredCompanyCountry',
+    'commercialDomiciliation',
+    'commercialAddressLine1',
+    'commercialAddressLine2',
+    'commercialZipCode',
+    'commercialCity',
+    'commercialCountry',
+    'countryTaxResidence',
+
+    // Company
+    'sectorActivity',
+    'sectorActivityText',
+    'geographicalAreaOfActivity',
+    'geographicalAreaOfActivitySpecification',
+    'activityRegulated',
+    'regulator',
+    'approvalNumber',
+    'regulatoryStatus',
+    'regulatoryStatusInsurerType',
+    'regulatoryStatusListingOther',
+    'companyListed',
+    'listingMarkets',
+    'bloombergCode',
+    'isinCode',
+    'floatableShares',
+    'activities',
+    'ownAccountinvestor',
+    'investorOnBehalfThirdParties',
+    'balanceSheetTotal',
+    'netRevenuesNetIncome',
+    'shareholderEquity',
+    'capitalNature',
+    'geographicalOrigin1',
+    'geographicalOrigin2',
+    'totalFinancialAssetsAlreadyInvested',
 ];
 
 export const steps = {
@@ -135,11 +191,11 @@ export const countries = fundItems.domicileItems;
 export const legalFormList = [
     {
         id: 'EARL',
-        text: 'EARL : Entreprise agricole à responsabilité limitée',
+        text: 'EARL: Entreprise agricole à responsabilité limitée',
     },
     {
         id: 'EI',
-        text: 'EI : Entreprise individuelle',
+        text: 'EI: Entreprise individuelle',
     },
     {
         id: 'EIRL',
@@ -147,47 +203,47 @@ export const legalFormList = [
     },
     {
         id: 'EURL',
-        text: 'EURL : Entreprise unipersonnelle à responsabilité limitée',
+        text: 'EURL: Entreprise unipersonnelle à responsabilité limitée',
     },
     {
         id: 'GAEC',
-        text: "GAEC : Groupement agricole d'exploitation en commun",
+        text: "GAEC: Groupement agricole d'exploitation en commun",
     },
     {
         id: 'GEIE',
-        text: "GEIE : Groupement européen d'intérêt économiqueGIE : Groupement d'intérêt économique",
+        text: "GEIE: Groupement européen d'intérêt économiqueGIE : Groupement d'intérêt économique",
     },
     {
         id: 'SARL',
-        text: 'SARL : Société à responsabilité limitée',
+        text: 'SARL: Société à responsabilité limitée',
     },
     {
         id: 'SA',
-        text: 'SA : Société anonyme',
+        text: 'SA: Société anonyme',
     },
     {
         id: 'SAS',
-        text: 'SAS : Société par actions simplifiée',
+        text: 'SAS: Société par actions simplifiée',
     },
     {
         id: 'SASU',
-        text: 'SASU : Société par actions simplifiée unipersonnelle',
+        text: 'SASU: Société par actions simplifiée unipersonnelle',
     },
     {
         id: 'SC',
-        text: 'SC : Société civile',
+        text: 'SC: Société civile',
     },
     {
         id: 'SCA',
-        text: 'SCA : Société en commandite par actions',
+        text: 'SCA: Société en commandite par actions',
     },
     {
         id: 'SCI',
-        text: 'SCI : Société civile immobilière',
+        text: 'SCI: Société civile immobilière',
     },
     {
         id: 'SCIC',
-        text: "SCIC : Société coopérative d'intérêt collectif",
+        text: "SCIC: Société coopérative d'intérêt collectif",
     },
     {
         id: 'Partnership',
@@ -208,6 +264,10 @@ export const legalFormList = [
     {
         id: 'Trust',
         text: 'Trust',
+    },
+    {
+        id: 'foundationAssociationEIG',
+        text: 'Foundation / Association / EIG',
     },
     {
         id: 'LimitedCompany',
@@ -386,7 +446,20 @@ export const sectorActivityList = [
     },
 ];
 
-export const legalStatusList = [
+export const listingMarketsList = [
+    { id: 'londonstockexchange', text: 'London Stock Exchange' },
+    { id: 'borsefrankfurter', text: 'Börse Frankfurter' },
+    { id: 'nyse', text: 'NYSE' },
+    { id: 'euronext', text: 'Euronext' },
+    { id: 'deutscheborse', text: 'Deutsche Börse' },
+    { id: 'borseberlin', text: 'Börse Berlin' },
+    { id: 'batseurope', text: 'Bats Europe' },
+    { id: 'chix', text: 'Chi-X' },
+    { id: 'turquoise', text: 'Turquoise' },
+    { id: 'tradegate', text: 'Tradegate' },
+];
+
+export const regulatoryStatusList = [
     {
         id: 'pensionMutual',
         text: 'Pension Fund / Mutual Insurance Institution / Paid Holiday Fund and similar ',
@@ -398,10 +471,6 @@ export const legalStatusList = [
     {
         id: 'insurer',
         text: 'Insurer',
-    },
-    {
-        id: 'listedCompany',
-        text: 'Listed Company',
     },
     {
         id: 'institutionalInvestors',
@@ -424,24 +493,8 @@ export const legalStatusList = [
         text: 'National government or service, including public bodies responsible for public debt at national level',
     },
     {
-        id: 'foundationAssoEIG',
-        text: 'Foundation / Association / Economic interest group',
-    },
-    {
-        id: 'holidayFund',
-        text: 'Paid holiday fund',
-    },
-    {
-        id: 'dealersCommodities',
-        text: 'Dealers for own account in commodities or commodity derivatives',
-    },
-    {
-        id: 'localCompanies',
-        text: 'Local Companies',
-    },
-    {
         id: 'internationBodies',
-        text: 'Public international financial bodies to which France or any other OECD Member State adheres (IMF, EIB, World Bank...)',
+        text: 'Public international financial bodies to which France or any other OECD Member State adheres (IMF, EIB, World Bank, etc.)',
     },
     {
         id: 'other',
@@ -449,7 +502,7 @@ export const legalStatusList = [
     },
 ];
 
-export const legalStatusInsurerTypeList = [
+export const regulatoryStatusInsurerTypeList = [
     {
         id: 'Regulatedasset',
         text: 'Regulated asset',
@@ -474,11 +527,11 @@ export const publicEstablishmentList = [
 export const companyActivitiesList = [
     {
         id: 'ownAccount',
-        text: 'Own-account investor',
+        text: 'Own-account',
     },
     {
         id: 'onBehalfOfThirdParties',
-        text: 'Investor on behalf of third parties',
+        text: 'Third parties',
     },
 ];
 
@@ -493,7 +546,7 @@ export const ownAccountInvestorList = [
     },
     {
         id: 'cultsReligiousAssociations',
-        text: 'Cults and religious associations presenting a specific risk (radical...)',
+        text: 'Cults and religious associations presenting a specific risk (radical, etc.)',
     },
     {
         id: 'Nationalsportsassociationsandsportsagents',
@@ -915,7 +968,7 @@ export const financialInstrumentsList = [
     },
     {
         id: 'PierrePapierSCPI',
-        text: 'Pierre Papier (SCPI...)',
+        text: 'Pierre Papier (SCPI, etc.)',
     },
     {
         id: 'other',
@@ -1239,7 +1292,7 @@ export const documentTypesList = [
     },
     {
         id: 'kyctaxcertificationdoc',
-        text: 'Tax self-certification form ',
+        text: 'Tax self-certification form',
     },
     {
         id: 'kycw8benefatcadoc',
@@ -1255,7 +1308,7 @@ export const documentTypesList = [
     },
     {
         id: 'kycannualreportdoc',
-        text: 'Latest audited annual report ',
+        text: 'Latest audited annual report',
     },
     {
         id: 'kycidorpassportdoc',
@@ -1298,7 +1351,7 @@ export const holdingTypesList = [
     },
 ];
 
-export const nationalIdNumberList = [
+export const identificationNumberList = [
     {
         id: 'siret',
         text: 'SIRET',
@@ -1318,25 +1371,31 @@ export const controlToName = {
     registeredCompanyName: 'Registered Company Name or Legal Name',
     legalForm: 'Legal form',
     leiCode: 'LEI Code',
-    otherIdentificationNumber: 'Other identification number',
+    otherIdentificationNumber: 'Other identification number type',
+    otherIdentificationNumberText: 'Other identification number',
     registeredCompanyAddressLine1: "Registered company's headquarters address (including country)",
     registeredCompanyAddressLine2: 'Address line 2',
     registeredCompanyZipCode: 'ZIP Code',
     registeredCompanyCity: 'City',
     registeredCompanyCountry: 'Country',
     commercialDomiciliation: 'Commercial domiciliation : Does the client have a commercial address (mailbox: P/O BOX)?',
+    commercialAddressLine1: 'Commercial address',
+    commercialAddressLine2: 'Address line 2',
+    commercialZipCode: 'ZIP Code',
+    commercialCity: 'City',
+    commercialCountry: 'Country',
     countryTaxResidence: 'Country of tax residence',
-    sectorActivity: 'Primary Sector of activity',
-    sectorActivityText: 'Sector of activity specification',
-    legalStatus: 'Legal status',
-    legalStatusListingOther: 'Legal status specification',
-    legalStatusInsurerType: 'Insurer type',
-    legalStatusListingMarkets: 'Listing market(s)',
+    regulatoryStatus: 'Regulatory status',
+    regulatoryStatusListingOther: 'Regulatory status specification',
+    regulatoryStatusInsurerType: 'Insurer type',
+    regulatoryStatusListingMarkets: 'Listing market(s)',
 
     // Company
-    activities: 'Activities',
-    ownAccountinvestor: 'Own-account investor',
-    investorOnBehalfThirdParties: 'Managed third parties',
+    sectorActivity: 'Primary sector of activity',
+    sectorActivityText: 'Sector of activity',
+    activities: 'Management in behalf of',
+    ownAccountinvestor: 'Own-account for',
+    investorOnBehalfThirdParties: 'Third parties type',
     geographicalAreaOfActivity: 'Geographical area of the activity',
     geographicalAreaOfActivitySpecification: 'Geographical area of the activity specification',
     totalFinancialAssetsAlreadyInvested: 'Total Financial assets already invested',
@@ -1348,7 +1407,7 @@ export const controlToName = {
     listingMarkets: 'Listing market(s)',
     bloombergCode: 'Bloomberg code',
     isinCode: 'ISIN code of the listed share',
-    keyFinancialData: 'Key Financial Data',
+    floatableShares: 'Percentage of floatable and tradable company\'s shares',
     balanceSheetTotal: 'Balance Sheet Total (€)',
     netRevenuesNetIncome: 'Net Revenues or Net Income (€)',
     shareholderEquity: "Shareholder's Equity (€)",
@@ -1429,10 +1488,18 @@ export const controlToName = {
     // Risk constraints
     statutoryConstraints: 'Statutory constraints/special rules concerning eligible assets',
     taxConstraints: 'Tax constraints',
-    otherConstraints: 'Others (including SRI, ESG, ...)',
+    otherConstraints: 'Others (including SRI, ESG, etc.)',
     investmentDecisionsAdHocCommittee: 'Are investment decisions validated by an ad hoc committee?',
     investmentDecisionsAdHocCommitteeSpecification: 'Ad hoc committee specification',
     otherPersonsAuthorised: 'Other persons authorised to take investment decisions and give instructions',
+
+    // Validation
+    undersigned: 'Identity',
+    actingOnBehalfOf: 'On behalf of',
+    doneAt: 'Done at',
+    doneDate: 'Date',
+    positionRepresentative: 'Position of the representative of the legal person',
+    electronicSignatureDocumentID: 'National identification card',
 };
 
 export const controlToList = {
@@ -1441,13 +1508,16 @@ export const controlToList = {
     legalForm: 'legalFormList',
     registeredCompanyCountry: 'countries',
     sectorActivity: 'sectorActivityList',
-    legalStatus: 'legalStatusList',
-    legalStatusInsurerType: 'legalStatusInsurerTypeList',
+    regulatoryStatus: 'regulatoryStatusList',
+    regulatoryStatusInsurerType: 'regulatoryStatusInsurerTypeList',
+    otherIdentificationNumber: 'identificationNumberList',
+    commercialCountry: 'countries',
 
     // Company
     activities: 'companyActivitiesList',
     ownAccountinvestor: 'ownAccountInvestorList',
     investorOnBehalfThirdParties: 'investorOnBehalfList',
+    listingMarkets: 'listingMarketsList',
     geographicalAreaOfActivity: 'geographicalAreaList',
     geographicalOrigin1: 'geographicalOriginTypeList',
     capitalNature: 'capitalNatureList',
@@ -1456,7 +1526,7 @@ export const controlToList = {
     countryOfBirth: 'countries',
     beneficiaryType: 'beneficiaryTypesList',
     holdingType: 'holdingTypesList',
-    nationalIdNumber: 'nationalIdNumberList',
+    nationalIdNumber: 'identificationNumberList',
 
     // Banking
     custodianHolderAccount: 'custodianHolderAccountList',

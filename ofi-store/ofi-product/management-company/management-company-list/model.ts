@@ -5,18 +5,16 @@ export interface ManagementCompanyDetail {
     entityID?: string;
     companyName: string;
     emailAddress: string;
+    legalFormName: string;
     country: string;
-    addressPrefix: string;
     postalAddressLine1: string;
     postalAddressLine2: string;
     city: string;
-    stateArea: string;
     postalCode: string;
     taxResidence: string;
-    registrationNum: string;
+    rcsMatriculation: string;
     supervisoryAuthority: string;
     numSiretOrSiren: string;
-    creationDate: string;
     shareCapital: string;
     commercialContact: string;
     operationalContact: string;
@@ -24,18 +22,23 @@ export interface ManagementCompanyDetail {
     lei: string;
     bic: string;
     giinCode: string;
-    logoName: string;
-    logoURL: string;
+    websiteUrl: string;
+    phoneNumberPrefix: string;
+    phoneNumber: string;
+    signatureTitle: string;
+    signatureHash: string;
+    logoTitle: string;
+    logoHash: string;
 }
 
-export interface managementCompanyListState {
+export interface ManagementCompanyListState {
     managementCompanyList: {
         [key: string]: ManagementCompanyDetail;
     };
     requested: boolean;
 }
 
-export interface invManagementCompanyListState {
+export interface InvManagementCompanyListState {
     investorManagementCompanyList: List<ManagementCompanyDetail>,
     invRequested: boolean;
 }

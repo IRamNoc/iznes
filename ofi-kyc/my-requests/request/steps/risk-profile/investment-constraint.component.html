@@ -3,7 +3,7 @@
         <div class="col-sm-9">
             <a href="#" (click)="open = !open; $event.preventDefault();">
                 <i class="fa fa-chevron-right" [class.rotate]="open"></i>
-                <h2>{{'Investments\' Constraints' | translate}}</h2>
+                <h2>{{ 'Investments\' Constraints' | translate }}</h2>
             </a>
         </div>
         <div class="col-sm-3 text-right">
@@ -14,17 +14,18 @@
     <div class="row panel-body" [class.hidden]="!open">
 
         <div class="col-xs-12">
-
             <div class="row" *ngIf="amcs?.length > 1">
                 <div class="form-group col-sm-12">
                     <p>
-                        {{'The following information can be completed for all management companies or for each of them depending on your investment objectives' | translate}}
+                        {{ 'The following information can be completed for all management companies or for each of them depending on your investment objectives' | translate }}
                     </p>
 
                     <div class="checkbox-inline">
-                        <input type="checkbox" id="constraintsSameInvestmentCrossAm" formControlName="constraintsSameInvestmentCrossAm">
+                        <input type="checkbox"
+                                id="constraintsSameInvestmentCrossAm"
+                                formControlName="constraintsSameInvestmentCrossAm">
                         <label for="constraintsSameInvestmentCrossAm">
-                            {{'I would like to have the same investment objectives for all management companies' | translate}}
+                            {{ 'I would like to have the same investment objectives for all management companies' | translate }}
                         </label>
                     </div>
                 </div>

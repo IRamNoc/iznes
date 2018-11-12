@@ -91,6 +91,7 @@ export class UmbrellaFundComponent implements OnInit, AfterViewInit, OnDestroy {
     legalAdvisorOptions = [];
     transferAgentOptions = [];
     centralizingAgentOptions = [];
+    currentLei: string;
     leiList: string[] = [];
     currentRoute: {
         fromFund?: boolean,
@@ -154,7 +155,6 @@ export class UmbrellaFundComponent implements OnInit, AfterViewInit, OnDestroy {
 
         this.managementCompanyService.getManagementCompanyList();
         this._ofiUmbrellaFundService.fetchUmbrellaList();
-        this.leiService.fetchLEIs();
 
         // param url
         this._activatedRoute.params
@@ -365,6 +365,12 @@ export class UmbrellaFundComponent implements OnInit, AfterViewInit, OnDestroy {
             )
             .subscribe((leiList) => {
                 this.leiList = leiList;
+
+                if(this.umbrellaFundForm) {
+                    this.umbrellaFundForm.controls.legalEntityIdentifier.updateValueAndValidity({
+                        emitEvent: true,
+                    });
+                }
             });
 
         this.umbrellaFundForm.controls.legalEntityIdentifier.valueChanges
@@ -386,6 +392,8 @@ export class UmbrellaFundComponent implements OnInit, AfterViewInit, OnDestroy {
                         });
                 }
             });
+
+        this.leiService.fetchLEIs();
     }
 
     ngAfterViewInit() {
@@ -547,12 +555,17 @@ export class UmbrellaFundComponent implements OnInit, AfterViewInit, OnDestroy {
 
         this.toggleLeiSwitch(!!u.legalEntityIdentifier);
         this.umbrellaFundForm.setValue(payload);
+        this.currentLei = payload.legalEntityIdentifier;
     }
 
     isLeiAlreadyExisting(currentLei: string): boolean {
-        if (!this.leiList.length || !currentLei) {
-            return false;
-        }
+        // if undefined the LEI won't exist
+        if (!currentLei) return false;
+
+        // if the LEI is equal to the current LEI for this umbrella fund, that is ok
+        if(currentLei === this.currentLei) return false;
+
+        // otherwise if LEI is a match with the list, then it does exist
         return this.leiList.indexOf(currentLei) !== -1;
     }
 
@@ -626,6 +639,8 @@ export class UmbrellaFundComponent implements OnInit, AfterViewInit, OnDestroy {
                         } else {
                             this.creationSuccess(umbrellaFundName);
                         }
+
+                        this.currentLei = payload.legalEntityIdentifier;
                     } else {
                         this._toasterService.pop('success', formValues.umbrellaFundName + ' has been successfully updated!');
                         this._router.navigateByUrl('/product-module/product');
@@ -672,7 +687,7 @@ export class UmbrellaFundComponent implements OnInit, AfterViewInit, OnDestroy {
                     let userErrMsg = `Failed to create the umbrella fund. (${errMsg})`;
 
                     if (errMsg === 'Umbrella Fund is already exist with the same umbrella fund name.') {
-                        userErrMsg = 'Umbrella fund is already exist.';
+                        userErrMsg = 'This name is already being used by another umbrella fund.';
                     }
 
                     this._toasterService.pop('error', userErrMsg);

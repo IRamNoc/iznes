@@ -16,7 +16,6 @@ import { steps } from '../../requests.config';
     templateUrl: './risk-profile.component.html',
 })
 export class NewKycRiskProfileComponent implements OnInit, OnDestroy {
-
     @Input() form;
     @select(['ofi', 'ofiKyc', 'myKycRequested', 'kycs']) requests$;
     @Output() submitEvent: EventEmitter<any> = new EventEmitter<any>();
@@ -27,7 +26,7 @@ export class NewKycRiskProfileComponent implements OnInit, OnDestroy {
     constructor(
         private newRequestService: NewRequestService,
         private riskProfileService: RiskProfileService,
-        private persistService: PersistService
+        private persistService: PersistService,
     ) {
     }
 
@@ -50,8 +49,7 @@ export class NewKycRiskProfileComponent implements OnInit, OnDestroy {
                 if (this.shouldPersist(kyc)) {
                 this.persistForm();
             }
-        })
-        ;
+            });
     }
 
     shouldPersist(kyc) {
@@ -70,9 +68,9 @@ export class NewKycRiskProfileComponent implements OnInit, OnDestroy {
         .subscribe(requests => {
             requests.forEach(request => {
                 this.riskProfileService.getCurrentFormObjectiveData(request.kycID);
+                    this.riskProfileService.getCurrentFormNatureData(request.kycID);
             });
-        })
-        ;
+            });
     }
 
     persistForm() {

@@ -1,11 +1,11 @@
 /* Core/Angular imports. */
-import {Injectable} from '@angular/core';
-import {NgRedux} from '@angular-redux/store';
+import { Injectable } from '@angular/core';
+import { NgRedux } from '@angular-redux/store';
 
 /* Membersocket and nodeSagaRequest import. */
-import {MemberSocketService} from '@setl/websocket-service';
-import {createMemberNodeRequest, createMemberNodeSagaRequest} from '@setl/utils/common';
-import {SagaHelper} from '@setl/utils';
+import { MemberSocketService } from '@setl/websocket-service';
+import { createMemberNodeRequest, createMemberNodeSagaRequest } from '@setl/utils/common';
+import { SagaHelper } from '@setl/utils';
 
 /* Import actions. */
 import {
@@ -23,6 +23,7 @@ import {
     IznesMarkOrderSettleRequestBody,
     ManageOrdersRequestData,
     CancelOrderRequestData,
+    OfiIznAdminOrdersRequestBody,
 } from './model';
 
 @Injectable()
@@ -180,6 +181,35 @@ export class OfiOrdersService {
             rowOffset: (data.rowOffSet * data.pageSize),
             sortByField: data.sortByField,
             sortOrder: data.sortOrder,
+        };
+
+        return createMemberNodeSagaRequest(this.memberSocketService, messageBody);
+    }
+
+    requestIznesAdminOrdersList(data: ManageOrdersRequestData): any {
+
+        const messageBody: OfiIznAdminOrdersRequestBody = {
+            RequestName: 'iznactivitiesgetorders',
+            token: this.memberSocketService.token,
+            fundName: data.fundName,
+            shareName: data.shareName,
+            status: data.status,
+            orderType: data.orderType,
+            isin: data.isin,
+            orderId: data.orderID,
+            currency: data.currency,
+            quantity: data.quantity,
+            amountWithCost: data.amountWithCost,
+            dateSearchField: data.dateSearchField,
+            fromDate: data.fromDate,
+            toDate: data.toDate,
+            pageSize: data.pageSize,
+            rowOffset: (data.rowOffSet * data.pageSize),
+            sortByField: data.sortByField,
+            sortOrder: data.sortOrder,
+            assetManagementCompany: data.assetManagementCompany,
+            investorCompanyName: data.investorCompanyName,
+            portfolioLabel: data.portfolioLabel,
         };
 
         return createMemberNodeSagaRequest(this.memberSocketService, messageBody);

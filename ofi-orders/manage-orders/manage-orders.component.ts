@@ -99,13 +99,33 @@ export class ManageOrdersComponent implements OnInit, AfterViewInit, OnDestroy {
     // Locale
     language = 'en';
 
-    // Datepicker config
-    configDate = {
+    fromConfigDate = {
         firstDayOfWeek: 'mo',
         format: 'YYYY-MM-DD',
         closeOnSelect: true,
         disableKeypress: true,
         locale: this.language,
+        isDayDisabledCallback: (thisDate) => {
+            if (!!thisDate && this.tabsControl[0].searchForm.controls['toDate'].value != '') {
+                return (thisDate.diff(this.tabsControl[0].searchForm.controls['toDate'].value) > 0);
+            } else {
+                return false;
+            }
+        },
+    };
+    toConfigDate = {
+        firstDayOfWeek: 'mo',
+        format: 'YYYY-MM-DD',
+        closeOnSelect: true,
+        disableKeypress: true,
+        locale: this.language,
+        isDayDisabledCallback: (thisDate) => {
+            if (!!thisDate && this.tabsControl[0].searchForm.controls['fromDate'].value != '') {
+                return (thisDate.diff(this.tabsControl[0].searchForm.controls['fromDate'].value) < 0);
+            } else {
+                return false;
+            }
+        },
     };
 
     /* Tabs Control array */
@@ -147,9 +167,14 @@ export class ManageOrdersComponent implements OnInit, AfterViewInit, OnDestroy {
     amConfirmModal: any = {};
     cancelModalMessage: string;
 
+    menuSpec = {};
+
+    private isinParam: string;
+
     /* Observables. */
     @select(['user', 'myDetail', 'userType']) readonly userType$: Observable<number>;
     @select(['user', 'siteSettings', 'language']) readonly requestedLanguage$;
+    @select(['user', 'siteSettings', 'siteMenu', 'side']) readonly menuSpec$;
     @select(['wallet', 'myWallets', 'walletList']) readonly myWallets$: any;
     @select(['wallet', 'walletDirectory', 'walletList']) readonly walletDirectory$: any;
     @select(['user', 'myDetail']) readonly myDetail$: any;
@@ -169,24 +194,24 @@ export class ManageOrdersComponent implements OnInit, AfterViewInit, OnDestroy {
     private connectedWalletId: any = 0;
 
     constructor(private ofiOrdersService: OfiOrdersService,
-        private ngRedux: NgRedux<any>,
-        private changeDetectorRef: ChangeDetectorRef,
-        private route: ActivatedRoute,
-        private router: Router,
-        private memberSocketService: MemberSocketService,
-        private fundShareService: OfiFundShareService,
-        private confirmationService: ConfirmationService,
-        private fundInvestService: OfiFundInvestService,
-        private logService: LogService,
-        private fileDownloader: FileDownloader,
-        public numberConverter: NumberConverterService,
-        private messagesService: MessagesService,
-        private toasterService: ToasterService,
-        public translation: MultilingualService,
-        private ofiCurrenciesService: OfiCurrenciesService,
-        private manageOrdersService: ManageOrdersService,
-        private location: Location,
-        private searchFilters: SearchFilters,
+                private ngRedux: NgRedux<any>,
+                private changeDetectorRef: ChangeDetectorRef,
+                private route: ActivatedRoute,
+                private router: Router,
+                private memberSocketService: MemberSocketService,
+                private fundShareService: OfiFundShareService,
+                private confirmationService: ConfirmationService,
+                private fundInvestService: OfiFundInvestService,
+                private logService: LogService,
+                private fileDownloader: FileDownloader,
+                public numberConverter: NumberConverterService,
+                private messagesService: MessagesService,
+                private toasterService: ToasterService,
+                public translation: MultilingualService,
+                private ofiCurrenciesService: OfiCurrenciesService,
+                private manageOrdersService: ManageOrdersService,
+                private location: Location,
+                private searchFilters: SearchFilters,
     ) {
 
         this.isAmConfirmModalDisplayed = false;
@@ -198,6 +223,16 @@ export class ManageOrdersComponent implements OnInit, AfterViewInit, OnDestroy {
         return Boolean(this.myDetails && this.myDetails.userType && this.myDetails.userType === 46);
     }
 
+    get isIznesAdmin() {
+        let iznesAdmin = false;
+        if (!!this.menuSpec && Object.keys(this.menuSpec).length > 0) {
+            this.menuSpec[Object.keys(this.menuSpec)[0]].forEach((row) => {
+                if (row['element_id'] == 'order-activity') iznesAdmin = true;
+            });
+        }
+        return iznesAdmin;
+    }
+
     appSubscribe<T>(
         obs: Observable<T>,
         next?: (value: T) => void,
@@ -207,12 +242,20 @@ export class ManageOrdersComponent implements OnInit, AfterViewInit, OnDestroy {
     }
 
     ngOnInit() {
+        this.route.queryParams.subscribe((params) => {
+            this.isinParam = params.isin ? params.isin : undefined;
+        });
+
         this.searchFilters.filtersApplied.subscribe(() => {
             this.datagridParams.setSearchFilters(this.searchFilters);
             this.detectChanges();
         });
         this.datagridParams = new DatagridParams(this.itemPerPage);
-        this.datagridParams.changed.subscribe(() => {
+        this.appSubscribe(observableCombineLatest(this.datagridParams.changed, this.menuSpec$, this.myDetail$), ([change, menuSpec, myDetails]) => {
+
+            this.menuSpec = menuSpec;
+            this.myDetails = myDetails;
+
             console.log('Datagrid filters changed - re-load data');
             this.loading = true;
             this.getOrdersList();
@@ -220,26 +263,37 @@ export class ManageOrdersComponent implements OnInit, AfterViewInit, OnDestroy {
         });
         this.datagridParams.setSearchFilters(this.searchFilters);
         this.searchFilters.optionalFilters
-            .subscribe(show => this.isOptionalFiltersVisible = show);
+        .subscribe(show => this.isOptionalFiltersVisible = show);
+        
         this.searchForm = this.searchFilters.getForm();
+        if(this.isinParam) {
+            this.searchForm.patchValue({ isin: this.isinParam }, { emitEvent: true });
+            this.manageOrdersService.setFilters(this.searchFilters.get());
+        }
+
         this.setInitialTabs();
 
         this.appSubscribe(this.requestedLanguage$, requested => this.getLanguage(requested));
         this.appSubscribe(this.userType$, type => this.userType = type);
-        this.appSubscribe(this.myDetail$, myDetails => this.myDetails = myDetails);
         this.appSubscribe(this.walletDirectory$, walletDirectory => this.walletDirectory = walletDirectory);
-        this.appSubscribe(observableCombineLatest(this.myWallets$, this.connectedWallet$), ([myWallets, walletId]) => {
+        this.appSubscribe(observableCombineLatest(this.myWallets$, this.connectedWallet$.pipe(filter(id => id !== 0)), this.menuSpec$), ([myWallets, walletId, menuSpec]) => {
             this.connectedWalletId = walletId;
             this.connectedWalletName = get(
                 Object.keys(myWallets)
-                    .map(k => myWallets[k])
-                    .find(w => +w.walletId === +walletId),
+                .map(k => myWallets[k])
+                .find(w => +w.walletId === +walletId),
                 'walletName',
                 '',
             );
-            if (this.isInvestorUser && this.connectedWalletId) {
+
+            this.menuSpec = menuSpec;
+
+            if (this.isInvestorUser) {
                 this.appSubscribe(this.requestedOfiInvestorFundList$, requested => this.requestMyFundAccess(requested));
                 this.appSubscribe(this.fundShareAccessList$, list => this.fundShareList = list);
+            } else if (this.isIznesAdmin) {
+                this.appSubscribe(this.requestedShareList$, requested => this.requestAllShareList(requested));
+                this.appSubscribe(this.shareList$, shares => this.fundShareList = shares);
             } else {
                 this.appSubscribe(this.requestedShareList$, requested => this.requestShareList(requested));
                 this.appSubscribe(this.shareList$, shares => this.fundShareList = shares);
@@ -263,10 +317,10 @@ export class ManageOrdersComponent implements OnInit, AfterViewInit, OnDestroy {
         });
         this.appSubscribe(
             bufferedOrders$
-                .pipe(
-                    filter(orders => !isEmpty(orders)),
-                    switchMap(() => this.route.params),
-                ),
+            .pipe(
+                filter(orders => !isEmpty(orders)),
+                switchMap(() => this.route.params),
+            ),
             params => this.routeUpdate(params));
         this.appSubscribe(this.route.queryParams, (queryParams) => {
             if (queryParams.orderID) {
@@ -280,10 +334,11 @@ export class ManageOrdersComponent implements OnInit, AfterViewInit, OnDestroy {
         });
         this.appSubscribe(
             this.searchForm.valueChanges
-                .pipe(debounceTime(500)),
+            .pipe(debounceTime(500)),
             _ => this.manageOrdersService.setFilters(this.searchFilters.get()),
         );
         this.appSubscribe(this.currencies$, c => this.getCurrencyList(c));
+
         this.detectChanges();
     }
 
@@ -331,6 +386,8 @@ export class ManageOrdersComponent implements OnInit, AfterViewInit, OnDestroy {
 
     ngAfterViewInit() {
         this.resizeDataGrid();
+
+        this.isIznesAdmin;
     }
 
     ngOnDestroy(): void {
@@ -358,8 +415,13 @@ export class ManageOrdersComponent implements OnInit, AfterViewInit, OnDestroy {
         if (language) {
             this.language = language;
 
-            this.configDate = {
-                ...this.configDate,
+            this.toConfigDate = {
+                ...this.toConfigDate,
+                locale: this.language.substr(0, 2),
+            };
+
+            this.fromConfigDate = {
+                ...this.fromConfigDate,
                 locale: this.language.substr(0, 2),
             };
         }
@@ -374,6 +436,12 @@ export class ManageOrdersComponent implements OnInit, AfterViewInit, OnDestroy {
     requestShareList(requested): void {
         if (!requested) {
             OfiFundShareService.defaultRequestIznesShareList(this.fundShareService, this.ngRedux);
+        }
+    }
+
+    requestAllShareList(requested): void {
+        if (!requested) {
+            OfiFundShareService.requestIznesAllShareList(this.fundShareService, this.ngRedux);
         }
     }
 
@@ -590,7 +658,9 @@ export class ManageOrdersComponent implements OnInit, AfterViewInit, OnDestroy {
 
     exportOrders(): void {
         let methodName = '';
-        if (this.myDetails && this.myDetails.userType && this.myDetails.userType === 36) {  // AM side
+        if (this.isIznesAdmin) {
+            methodName = 'exportActivitiesOrders';
+        } else if (this.myDetails && this.myDetails.userType && this.myDetails.userType === 36) {  // AM side
             methodName = 'exportAssetManagerOrders';
         } else if (this.myDetails && this.myDetails.userType && this.myDetails.userType === 46) {  // INV side
             methodName = 'exportInvestorOrders';
@@ -613,6 +683,8 @@ export class ManageOrdersComponent implements OnInit, AfterViewInit, OnDestroy {
         let asyncTaskPipe;
         if (this.isInvestorUser) {
             asyncTaskPipe = this.ofiOrdersService.requestInvestorOrdersList(this.datagridParams.get());
+        } else if (this.isIznesAdmin) {
+            asyncTaskPipe = this.ofiOrdersService.requestIznesAdminOrdersList(this.datagridParams.get());
         } else {
             asyncTaskPipe = this.ofiOrdersService.requestManageOrdersList(this.datagridParams.get());
         }
@@ -660,7 +732,7 @@ export class ManageOrdersComponent implements OnInit, AfterViewInit, OnDestroy {
             } else {
                 dest = 'manage-orders/' + order[orderIdKey];
                 if (orderIdKey === 'sellBuyLinkOrderID') {
-                    this.location.replaceState('manage-orders/list');
+                    this.location.replaceState('manage-orders');
                 }
             }
 
@@ -707,6 +779,8 @@ export class ManageOrdersComponent implements OnInit, AfterViewInit, OnDestroy {
         // this.location.back();
 
         this.tabsControl[0].active = true;
+
+        this.router.navigateByUrl('manage-orders');
 
         /* Return */
         return;
@@ -783,17 +857,17 @@ export class ManageOrdersComponent implements OnInit, AfterViewInit, OnDestroy {
         };
 
         switch (this.language) {
-            case 'fr-Latn':
-                orderType = (targetedOrder.orderType === 3) ? 'souscription' : 'rachat';
-                subject = `Annulation d'un ordre: votre ordre de ${orderType} avec la référence ${orderRef} a été annulé par ${amCompanyName}`;
-                dateFormat = 'DD/MM/YYYY HH:mm:ss';
-                break;
+        case 'fr-Latn':
+            orderType = (targetedOrder.orderType === 3) ? 'souscription' : 'rachat';
+            subject = `Annulation d'un ordre: votre ordre de ${orderType} avec la référence ${orderRef} a été annulé par ${amCompanyName}`;
+            dateFormat = 'DD/MM/YYYY HH:mm:ss';
+            break;
 
-            default:
-                orderType = (targetedOrder.orderType === 3) ? 'subscription' : 'redemption';
-                subject = `Order cancelled: your ${orderType} order ${orderRef} has been cancelled by ${amCompanyName}`;
-                dateFormat = 'YYYY-MM-DD HH:mm:ss';
-                break;
+        default:
+            orderType = (targetedOrder.orderType === 3) ? 'subscription' : 'redemption';
+            subject = `Order cancelled: your ${orderType} order ${orderRef} has been cancelled by ${amCompanyName}`;
+            dateFormat = 'YYYY-MM-DD HH:mm:ss';
+            break;
         }
 
         const actionConfig = new MessageCancelOrderConfig();

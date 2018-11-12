@@ -123,19 +123,34 @@
                             <span *ngSwitchCase="2">
                                 <span id="{{'NAV-Status-Technical'+idx}}" class="label label-warning">{{'Technical' | translate}}</span>
                             </span>
+                            <span *ngSwitchCase="3">
+                                <span id="{{'NAV-Status-Cancelled'+idx}}" class="label label-danger">{{'Cancelled' | translate}}</span>
+                            </span>
                         </span>
                     </clr-dg-cell>
                     <clr-dg-cell class="actions">
-                        <div class="btn-group btn-sm" [hidden]="!isNavNull(item.nav)">
-                            <button id="{{'Btn-AddNewNAV-'+idx}}" (click)="addNav(item)" class="btn btn-success btn-sm">
-                                <i class="fa fa-plus"></i> {{'Add new NAV' | translate}}
+                        <div class="btn-group btn-sm">
+                            <button id="{{'Btn-AddNewNAV-'+idx}}" class="btn btn-success btn-sm"
+                                (click)="addNav(item)"
+                                [disabled]="isAddNavDisabled(item)">
+                                <i class="fa fa-plus"></i> {{'Add' | translate}}
+                            </button>
+                            <button id="{{'Btn-ModifyNAV-'+idx}}" class="btn btn-info btn-sm"
+                                (click)="modifyNav(item)"
+                                [disabled]="item.status != -1">
+                                <i class="fa fa-edit"></i> {{'Edit' | translate}}
+                            </button>
+                            <button id="{{'Btn-CancelNAV-'+idx}}" class="btn btn-danger btn-sm"
+                                (click)="cancelNav(item)"
+                                [disabled]="item.status != -1">
+                                <i class="fa fa-close"></i> {{'Cancel' | translate}}
                             </button>
                         </div>
                     </clr-dg-cell>
                 </clr-dg-row>
 
-                <clr-dg-footer>{{pagination.firstItem + 1}} - {{pagination.lastItem + 1}}
-
+                <clr-dg-footer>
+                    {{pagination.firstItem + 1}} - {{pagination.lastItem + 1}}
                     <clr-dg-pagination #pagination [clrDgPageSize]="10"></clr-dg-pagination>
                 </clr-dg-footer>
             </clr-datagrid>

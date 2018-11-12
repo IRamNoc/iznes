@@ -418,7 +418,7 @@ export class CalendarHelper {
         });
 
         if (settlementDate.isSame(moment(), 'day')) {
-            return cutoffDate.clone().add(10, 'seconds');
+            return cutoffDate.clone().add(2, 'minutes');
         }
 
         return settlementDate;

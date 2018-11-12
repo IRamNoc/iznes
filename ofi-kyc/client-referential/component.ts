@@ -215,27 +215,33 @@ export class OfiClientReferentialComponent implements OnInit, OnDestroy {
                     if (amKycList[key].kycID == this.kycId) this.currentInvestor = amKycList[key];
                 });
 
-                this.companyName = _.get(this.currentInvestor, 'investorCompanyName', '');
+                if (!this.isPortfolioManager() && !_.isEmpty(this.currentInvestor)) {
+                    this.companyName = _.get(this.currentInvestor, 'investorCompanyName', '');
 
-                if (this.kycId != '') {
-                    const phoneNumber = (this.currentInvestor.investorPhoneCode && this.currentInvestor.investorPhoneNumber) ? `${this.currentInvestor.investorPhoneCode} ${this.currentInvestor.investorPhoneNumber}` : '';
-                    const approvalDateRequestTs = mDateHelper.dateStrToUnixTimestamp(this.currentInvestor.lastUpdated, 'YYYY-MM-DD HH:mm:ss');
-                    const approvalDateRequest = mDateHelper.unixTimestampToDateStr(approvalDateRequestTs, 'DD / MM / YYYY');
-                    this.investorForm.setValue({
-                        companyName: this.currentInvestor.investorCompanyName,
-                        clientReference: this.currentInvestor.clientReference,
-                        firstName: this.currentInvestor.investorFirstName,
-                        lastName: this.currentInvestor.investorLastName,
-                        email: this.currentInvestor.investorEmail,
-                        phoneNumber: phoneNumber,
-                        approvalDateRequest: approvalDateRequest,
-                    });
+                    if (this.kycId != '') {
+                        const phoneNumber = (this.currentInvestor.investorPhoneCode && this.currentInvestor.investorPhoneNumber) ? `${this.currentInvestor.investorPhoneCode} ${this.currentInvestor.investorPhoneNumber}` : '';
+                        const approvalDateRequestTs = mDateHelper.dateStrToUnixTimestamp(this.currentInvestor.lastUpdated, 'YYYY-MM-DD HH:mm:ss');
+                        const approvalDateRequest = mDateHelper.unixTimestampToDateStr(approvalDateRequestTs, 'DD / MM / YYYY');
+                        this.investorForm.setValue({
+                            companyName: this.currentInvestor.investorCompanyName,
+                            clientReference: this.currentInvestor.clientReference,
+                            firstName: this.currentInvestor.investorFirstName,
+                            lastName: this.currentInvestor.investorLastName,
+                            email: this.currentInvestor.investorEmail,
+                            phoneNumber: phoneNumber,
+                            approvalDateRequest: approvalDateRequest,
+                        });
+                    }
+                } else {
+                   if (this.isPortfolioManager()) {
+                       // force load share access data if portfolio manager.
+                       this.loadTab(2);
+                   }
                 }
 
                 this._changeDetectorRef.markForCheck();
             }),
         );
-
     }
 
     requestSearch() {
@@ -264,7 +270,8 @@ export class OfiClientReferentialComponent implements OnInit, OnDestroy {
                 tempOtherData['investorData'] = {
                     firstName: kyc.investorFirstName,
                     companyName: kyc.investorCompanyName,
-                    investorWalletID: kyc.investorWalletID
+                    investorWalletID: kyc.investorWalletID,
+                    investorWalletName: kyc.walletName,
                 };
 
                 this.otherData = tempOtherData;
@@ -487,10 +494,17 @@ export class OfiClientReferentialComponent implements OnInit, OnDestroy {
         });
     }
 
+    /**
+     * Whether current investor is portfolio manager.
+      * @return boolean
+     */
+    isPortfolioManager(): boolean {
+       return this.currentInvestor.investorUserID === null;
+    }
+
     ngOnDestroy() {
         for (let key of this.subscriptions) {
             key.unsubscribe();
         }
     }
-
 }

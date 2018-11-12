@@ -1,0 +1,23 @@
+.circle {
+    font-size:20px;
+    color:#fff;
+    line-height:100px;
+    margin-right: 5px;
+    vertical-align: middle;
+    display: inline-block;
+}
+
+.error {
+   background: #d9534f;
+}
+
+.success {
+    background: #60b515;
+}
+.warning {
+    background: #f0ad4e;
+}
+
+.default {
+    background: #867e7e;
+}

@@ -20,7 +20,7 @@
                     <clr-dg-row *clrDgItems="let managementCompany of managementCompanyList">
                         <clr-dg-cell>{{managementCompany.companyName}}</clr-dg-cell>
                         <clr-dg-cell>{{managementCompany.lei}}</clr-dg-cell>
-                        <clr-dg-cell>{{managementCompany.country}}</clr-dg-cell>
+                        <clr-dg-cell>{{getCountryName(managementCompany.country)}}</clr-dg-cell>
                         <clr-dg-cell>
                             <div class="btn-group btn-sm">
                                 <button id="mcBtnEditMc" class="btn" (click)="editCompany(managementCompany)">
@@ -53,231 +53,303 @@
         </ng-template>
         <clr-tab-content *clrIfActive="editForm">
             <!-- MANAGEMENT COMPANY FORMS -->
-            <form [formGroup]="managementCompanyForm" novalidate (ngSubmit)="save(managementCompanyForm.value)">
+            <form [formGroup]="managementCompanyForm" novalidate (ngSubmit)="save()">
                 <section class="form-block">
                     <div class="row">
                         <div class="form-group col-sm-6">
-                            <div *ngIf="modelForm.companyID">
-                                <input type="hidden" id="companyID" class="form-control" formControlName="companyID" [(ngModel)]="modelForm.companyID" placeholder="companyID" mltag="txt_companyid">
-                            </div>
-                            <label class="required-field" for="mc_name">
+                            <label class="required-field" for="companyName">
                                 <span mltag="txt_managementcompanyname">Management Company Name</span>
                             </label>
                             <div>
-                                <input type="text" id="mc_name" class="form-control" formControlName="mc_name" [(ngModel)]="modelForm.mc_name" placeholder="Management Company Name" mltag="txt_managementcompanyname">
+                                <input type="text" id="companyName" class="form-control" formControlName="companyName"
+                                    placeholder="Please fill in the company name or legal name">
                             </div>
-                            <div *ngIf="managementCompanyForm.controls.mc_name.hasError('required') && managementCompanyForm.controls.mc_name.touched" class="text-danger" mltag="txt_thisfieldisrequired">This field is required</div>
+                            <div *ngIf="managementCompanyForm.controls.companyName.hasError('required') && managementCompanyForm.controls.companyName.touched"
+                                class="text-danger" mltag="txt_thisfieldisrequired">This field is required</div>
                         </div>
                         <div class="form-group col-sm-6">
-                            <label class="required-field" for="mc_emailAddress">
-                                <span mltag="txt_emailaddress">Email Address</span>
+                            <label class="required-field" for="emailAddress">
+                                <span>Email Address of the Super Admin</span>
                             </label>
                             <div>
-                                <input type="text" id="mc_emailAddress" class="form-control" formControlName="mc_emailAddress" [(ngModel)]="modelForm.mc_emailAddress" placeholder="Email Address" mltag="txt_emailAddress">
+                                <input type="text" id="emailAddress" class="form-control" formControlName="emailAddress"
+                                    placeholder="Please fill in the email address of the super admin of the company ">
                             </div>
-                            <div *ngIf="managementCompanyForm.controls.mc_emailAddress.hasError('required') && managementCompanyForm.controls.mc_emailAddress.touched" class="text-danger" mltag="txt_thisfieldisrequired">This field is required</div>
+                            <div *ngIf="managementCompanyForm.controls.emailAddress.hasError('required') && managementCompanyForm.controls.emailAddress.touched"
+                                class="text-danger" mltag="txt_thisfieldisrequired">This field is required</div>
+                        </div>
+                        <div class="form-group col-sm-6">
+                            <label class="required-field" for="legalFormName">
+                                <span>Legal Form</span>
+                            </label>
+                            <div>
+                                <ng-select [items]="legalFormList" [allowClear]="true" placeholder="Please select"
+                                    [containerWidth]="'95%'" formControlName="legalFormName"></ng-select>
+                            </div>
+                            <div *ngIf="managementCompanyForm.controls.legalFormName.hasError('required') && managementCompanyForm.controls.legalFormName.touched"
+                                class="text-danger" mltag="txt_thisfieldisrequired">This field is required</div>
                         </div>
                     </div>
                     <div class="row">
                         <div class="form-group col-sm-6">
-                            <label class="required-field" for="country">
-                                <span mltag="txt_country">Country</span>
-                            </label>
-                            <div id="country">
-                                <ng-select [items]="mcCountryOptions" [allowClear]="true" mltag="txt_selectCountry" placeholder="Select a country" formControlName="mc_country_select"></ng-select>
-                                <div *ngIf="managementCompanyForm.controls.mc_country_select.hasError('required') && managementCompanyForm.controls.mc_country_select.touched" class="text-danger" mltag="txt_countryrequired">Country is required</div>
-                            </div>
-                        </div>
-                        <div class="form-group col-sm-6">
-                            <label for="mc_addressPrefix">
-                                <span mltag="txt_addressprefix">Address Prefix</span>
+                            <label class="required-field" for="taxResidence">
+                                <span>Country of tax residence</span>
                             </label>
                             <div>
-                                <input type="text" id="mc_addressPrefix" class="form-control" formControlName="mc_addressPrefix" [(ngModel)]="modelForm.mc_addressPrefix" placeholder="Appartment or House" mltag="txt_appartmentorhouse">
+                                <ng-select [items]="countries" [allowClear]="true" [containerWidth]="'95%'" placeholder="Please select"
+                                    formControlName="taxResidence"></ng-select>
                             </div>
-                            <div *ngIf="managementCompanyForm.controls.mc_addressPrefix.hasError('required') && managementCompanyForm.controls.mc_addressPrefix.touched" class="text-danger" mltag="txt_thisfieldisrequired">This field is required</div>
-                        </div>
-                    </div>
-                    <div class="row">
-                        <div class="form-group col-sm-6">
-                            <label class="required-field" for="mc_address1">
-                                <span mltag="txt_postaladdress">Postal Address</span>
-                            </label>
-                            <div>
-                                <input type="text" id="mc_address1" class="form-control" formControlName="mc_address1" [(ngModel)]="modelForm.mc_address1" placeholder="Line 1" mltag="txt_line1">
-                            </div>
-                            <div *ngIf="managementCompanyForm.controls.mc_address1.hasError('required') && managementCompanyForm.controls.mc_address1.touched" class="text-danger" mltag="txt_thisfieldisrequired">This field is required</div>
+                            <div *ngIf="managementCompanyForm.controls.taxResidence.hasError('required') && managementCompanyForm.controls.taxResidence.touched"
+                                class="text-danger" mltag="txt_thisfieldisrequired">This field is required</div>
                         </div>
                         <div class="form-group col-sm-6">
-                            <label for="mc_address1">
-                                <span mltag="mc_address2">Postal Address 2</span>
-                            </label>
-                            <div>
-                                <input type="text" id="mc_address2" class="form-control" formControlName="mc_address2" [(ngModel)]="modelForm.mc_address2" placeholder="Line 2" mltag="txt_line2">
-                            </div>
-                            <div *ngIf="managementCompanyForm.controls.mc_address2.hasError('required') && managementCompanyForm.controls.mc_address2.touched" class="text-danger" mltag="txt_thisfieldisrequired">This field is required</div>
-                        </div>
-                    </div>
-                    <div class="row">
-                        <div class="form-group col-sm-6">
-                            <label class="required-field" for="mc_address3">
-                                <span mltag="txt_cityortown">City or Town</span>
-                            </label>
-                            <div>
-                                <input type="text" id="mc_address3" class="form-control" formControlName="mc_address3" [(ngModel)]="modelForm.mc_address3" placeholder="City or Town" mltag="txt_cityortown">
-                            </div>
-                            <div *ngIf="managementCompanyForm.controls.mc_address3.hasError('required') && managementCompanyForm.controls.mc_address3.touched" class="text-danger" mltag="txt_thisfieldisrequired">This field is required</div>
-                        </div>
-                        <div class="form-group col-sm-6">
-                            <label class="required-field" for="mc_address4">
-                                <span mltag="txt_stateorarea">State or Area</span>
-                            </label>
-                            <div>
-                                <input type="text" id="mc_address4" class="form-control" formControlName="mc_address4" [(ngModel)]="modelForm.mc_address4" placeholder="State or Area" mltag="txt_stateorarea">
-                            </div>
-                            <div *ngIf="managementCompanyForm.controls.mc_address4.hasError('required') && managementCompanyForm.controls.mc_address4.touched" class="text-danger" mltag="txt_thisfieldisrequired">This field is required</div>
-                        </div>
-                    </div>
-                    <div class="row">
-                        <div class="form-group col-sm-6">
-                            <label class="required-field" for="mc_postalCode">
-                                <span mltag="txt_postalcode">Postal Code</span>
-                            </label>
-                            <div>
-                                <input type="text" id="mc_postalCode" class="form-control" formControlName="mc_postalCode" [(ngModel)]="modelForm.mc_postalCode" placeholder="Postal Code" mltag="txt_postalcode">
-                            </div>
-                            <div *ngIf="managementCompanyForm.controls.mc_postalCode.hasError('required') && managementCompanyForm.controls.mc_postalCode.touched" class="text-danger" mltag="txt_thisfieldisrequired">This field is required</div>
-                        </div>
-                        <div class="form-group col-sm-6">
-                            <label class="required-field" for="mc_tax_residence">
-                                <span mltag="txt_taxresidence">Tax Residence</span>
-                            </label>
-                            <div>
-                                <input type="text" id="mc_tax_residence" class="form-control" formControlName="mc_tax_residence" [(ngModel)]="modelForm.mc_tax_residence" placeholder="Tax Residence" mltag="txt_taxresidence">
-                            </div>
-                            <div *ngIf="managementCompanyForm.controls.mc_tax_residence.hasError('required') && managementCompanyForm.controls.mc_tax_residence.touched" class="text-danger" mltag="txt_thisfieldisrequired">This field is required</div>
-                        </div>
-                    </div>
-                    <div class="row">
-                        <div class="form-group col-sm-6">
-                            <label class="required-field" for="mc_registration_number">
-                                <span mltag="txt_taxresidence">Registration Number</span>
-                            </label>
-                            <div>
-                                <input type="text" id="mc_registration_number" class="form-control" formControlName="mc_registration_number" [(ngModel)]="modelForm.mc_registration_number" placeholder="Registration Number" mltag="txt_registrationnumber">
-                            </div>
-                            <div *ngIf="managementCompanyForm.controls.mc_registration_number.hasError('required') && managementCompanyForm.controls.mc_registration_number.touched" class="text-danger" mltag="txt_thisfieldisrequired">This field is required</div>
-                        </div>
-                        <div class="form-group col-sm-6">
-                            <label class="required-field" for="mc_supervisory_authority">
+                            <label class="required-field" for="supervisoryAuthority">
                                 <span mltag="txt_supervisoryauthority">Supervisory Authority</span>
                             </label>
                             <div>
-                                <input type="text" id="mc_supervisory_authority" class="form-control" formControlName="mc_supervisory_authority" [(ngModel)]="modelForm.mc_supervisory_authority" placeholder="Supervisory Authority" mltag="txt_supervisoryauthority">
+                                <input type="text" id="supervisoryAuthority" class="form-control" formControlName="supervisoryAuthority"
+                                    placeholder="If non applicable please fill in the value &#34;N/A&#34; here">
                             </div>
-                            <div *ngIf="managementCompanyForm.controls.mc_supervisory_authority.hasError('required') && managementCompanyForm.controls.mc_supervisory_authority.touched" class="text-danger" mltag="txt_thisfieldisrequired">This field is required</div>
+                            <div *ngIf="managementCompanyForm.controls.supervisoryAuthority.hasError('required') && managementCompanyForm.controls.supervisoryAuthority.touched"
+                                class="text-danger" mltag="txt_thisfieldisrequired">This field is required</div>
                         </div>
                     </div>
                     <div class="row">
                         <div class="form-group col-sm-6">
-                            <label class="required-field" for="mc_siret_siren">
-                                <span mltag="txt_numbersiretsiren">Number SIRET / SIREN</span>
+                            <label class="required-field" for="rcsMatriculation">
+                                <span>RCS matriculation</span>
                             </label>
                             <div>
-                                <input type="text" id="mc_siret_siren" class="form-control" formControlName="mc_siret_siren" [(ngModel)]="modelForm.mc_siret_siren" placeholder="Number SIRET / SIREN" mltag="txt_numbersiretsiren">
+                                <input type="text" id="rcsMatriculation" class="form-control" formControlName="rcsMatriculation"
+                                    placeholder="If non applicable please fill in the value &#34;N/A&#34; here">
                             </div>
-                            <div *ngIf="managementCompanyForm.controls.mc_siret_siren.hasError('required') && managementCompanyForm.controls.mc_siret_siren.touched" class="text-danger" mltag="txt_thisfieldisrequired">This field is required</div>
+                            <div *ngIf="managementCompanyForm.controls.rcsMatriculation.hasError('required') && managementCompanyForm.controls.rcsMatriculation.touched"
+                                class="text-danger" mltag="txt_thisfieldisrequired">This field is required</div>
                         </div>
                         <div class="form-group col-sm-6">
-                            <label class="required-field" for="mc_creation_date">
-                                <span mltag="txt_creationdate">Creation Date</span>
+                            <label class="required-field" for="numSiretOrSiren">
+                                <span>Identification number (SIRET / SIREN)</span>
                             </label>
-                            <div class="customFormGroup">
-                                <div class="input-group date-pick-wrapper">
-                                    <span class="fa fa-calendar" aria-hidden="true"></span>
-                                    <input id="mc_creation_date" formControlName="mc_creation_date" [(ngModel)]="modelForm.mc_creation_date" [dpDayPicker]="configDate" placeholder="Choose a date" mode="day" theme="dp-material" mltag="txt_chooseadate"/>
-                                </div>
+                            <div>
+                                <input type="text" id="numSiretOrSiren" class="form-control" formControlName="numSiretOrSiren"
+                                    placeholder="If non applicable please fill in the value &#34;N/A&#34; here">
                             </div>
-                            <div *ngIf="managementCompanyForm.controls.mc_creation_date.hasError('required') && managementCompanyForm.controls.mc_creation_date.touched" class="text-danger" mltag="txt_thisfieldisrequired">This field is required</div>
-                            <div *ngIf="!managementCompanyForm.controls.mc_creation_date.hasError('required') && !managementCompanyForm.controls.mc_creation_date.valid && managementCompanyForm.controls.mc_creation_date.touched" class="text-danger" mltag="txt_dateformatisinvalid">Date format is invalid!</div>
+                            <div *ngIf="managementCompanyForm.controls.numSiretOrSiren.hasError('required') && managementCompanyForm.controls.numSiretOrSiren.touched"
+                                class="text-danger" mltag="txt_thisfieldisrequired">This field is required</div>
                         </div>
                     </div>
                     <div class="row">
                         <div class="form-group col-sm-6">
-                            <label class="required-field" for="mc_share_capital">
+                            <label class="required-field" for="shareCapital">
                                 <span mltag="txt_sharecapital">Share Capital</span>
                             </label>
                             <div>
-                                <input type="text" id="mc_share_capital" class="form-control" formControlName="mc_share_capital" [(ngModel)]="modelForm.mc_share_capital" placeholder="Share Capital" mltag="txt_sharecapital">
+                                <input type="text" id="shareCapital" class="form-control" formControlName="shareCapital"
+                                    placeholder="&euro;">
                             </div>
-                            <div *ngIf="managementCompanyForm.controls.mc_share_capital.hasError('required') && managementCompanyForm.controls.mc_share_capital.touched" class="text-danger" mltag="txt_thisfieldisrequired">This field is required</div>
-                            <div *ngIf="!managementCompanyForm.controls.mc_share_capital.hasError('required') && managementCompanyForm.controls.mc_share_capital.hasError('invalid') && managementCompanyForm.controls.mc_share_capital.touched" class="text-danger" mltag="txt_thisfieldmustbenumeric">This field must be numeric</div>
+                            <div *ngIf="managementCompanyForm.controls.shareCapital.hasError('required') && managementCompanyForm.controls.shareCapital.touched"
+                                class="text-danger" mltag="txt_thisfieldisrequired">This field is required</div>
+                            <div *ngIf="!managementCompanyForm.controls.shareCapital.hasError('required') && managementCompanyForm.controls.shareCapital.hasError('invalid') && managementCompanyForm.controls.shareCapital.touched"
+                                class="text-danger" mltag="txt_thisfieldmustbenumeric">This field must be numeric</div>
                         </div>
                         <div class="form-group col-sm-6">
-                            <label class="required-field" for="mc_commercial_contact">
-                                <span mltag="txt_commercialcontact">Commercial Contact</span>
+                            <label class="required-field" for="lei">
+                                <span>LEI Code</span>
                             </label>
                             <div>
-                                <input type="text" id="mc_commercial_contact" class="form-control" formControlName="mc_commercial_contact" [(ngModel)]="modelForm.mc_commercial_contact" placeholder="Commercial Contact" mltag="txt_commercialcontact">
+                                <input type="text" id="lei" class="form-control" formControlName="lei" placeholder="Please fill in the LEI code of the management company">
                             </div>
-                            <div *ngIf="managementCompanyForm.controls.mc_commercial_contact.hasError('required') && managementCompanyForm.controls.mc_commercial_contact.touched" class="text-danger" mltag="txt_thisfieldisrequired">This field is required</div>
-                        </div>
-                    </div>
-                    <div class="row">
-                        <div class="form-group col-sm-6">
-                            <label class="required-field" for="mc_operational_contact">
-                                <span mltag="txt_operationalcontact">Operational Contact</span>
-                            </label>
-                            <div>
-                                <input type="text" id="mc_operational_contact" class="form-control" formControlName="mc_operational_contact" [(ngModel)]="modelForm.mc_operational_contact" placeholder="Operational Contact" mltag="txt_operationalcontact">
-                            </div>
-                            <div *ngIf="managementCompanyForm.controls.mc_operational_contact.hasError('required') && managementCompanyForm.controls.mc_operational_contact.touched" class="text-danger" mltag="txt_thisfieldisrequired">This field is required</div>
-                        </div>
-                        <div class="form-group col-sm-6">
-                            <label class="required-field" for="mc_director_contact">
-                                <span mltag="txt_directorcontact">Director Contact</span>
-                            </label>
-                            <div>
-                                <input type="text" id="mc_director_contact" class="form-control" formControlName="mc_director_contact" [(ngModel)]="modelForm.mc_director_contact" placeholder="Director Contact" mltag="txt_directorcontact">
-                            </div>
-                            <div *ngIf="managementCompanyForm.controls.mc_director_contact.hasError('required') && managementCompanyForm.controls.mc_director_contact.touched" class="text-danger" mltag="txt_thisfieldisrequired">This field is required</div>
+                            <div *ngIf="managementCompanyForm.controls.lei.hasError('required') && managementCompanyForm.controls.lei.touched"
+                                class="text-danger" mltag="txt_thisfieldisrequired">This field is required</div>
+                            <div *ngIf="!managementCompanyForm.controls.lei.hasError('required') && managementCompanyForm.controls.lei.hasError('pattern') && managementCompanyForm.controls.lei.touched"
+                                class="text-danger">LEI must be ISO 17442 standard</div>
                         </div>
                     </div>
                     <div class="row">
                         <div class="form-group col-sm-6">
-                            <label for="mc_lei">
-                                <span mltag="txt_lei">LEI</span>
+                            <label class="required-field" for="bic">
+                                <span>BIC Code</span>
                             </label>
                             <div>
-                                <input type="text" id="mc_lei" class="form-control" formControlName="mc_lei" [(ngModel)]="modelForm.mc_lei" placeholder="LEI" mltag="txt_lei">
+                                <input type="text" id="bic" class="form-control" formControlName="bic" placeholder="Please fill in the BIC code of the management company">
                             </div>
-                            <div *ngIf="managementCompanyForm.controls.mc_lei.hasError('required') && managementCompanyForm.controls.mc_lei.touched" class="text-danger" mltag="txt_thisfieldisrequired">This field is required</div>
+                            <div *ngIf="managementCompanyForm.controls.bic.hasError('required') && managementCompanyForm.controls.bic.touched"
+                                class="text-danger" mltag="txt_thisfieldisrequired">This field is required</div>
                         </div>
                         <div class="form-group col-sm-6">
-                            <label for="mc_bic">
-                                <span mltag="txt_bic">BIC</span>
+                            <label for="giin">
+                                <span>GIIN Code</span>
                             </label>
                             <div>
-                                <input type="text" id="mc_bic" class="form-control" formControlName="mc_bic" [(ngModel)]="modelForm.mc_bic" placeholder="BIC" mltag="txt_bic">
+                                <input type="text" id="giin" class="form-control" formControlName="giinCode"
+                                    placeholder="GIIN_code" mltag="txt_giincode">
                             </div>
-                            <div *ngIf="managementCompanyForm.controls.mc_bic.hasError('required') && managementCompanyForm.controls.mc_bic.touched" class="text-danger" mltag="txt_thisfieldisrequired">This field is required</div>
-                        </div>
-                    </div>
-                    <div class="row">
-                        <div class="form-group col-sm-6">
-                            <label for="mc_giin">
-                                <span mltag="txt_giincode">GIIN_code</span>
-                            </label>
-                            <div>
-                                <input type="text" id="mc_giin" class="form-control" formControlName="mc_giin" [(ngModel)]="modelForm.mc_giin" placeholder="GIIN_code" mltag="txt_giincode">
-                            </div>
-                            <div *ngIf="managementCompanyForm.controls.mc_giin.hasError('required') && managementCompanyForm.controls.mc_giin.touched" class="text-danger" mltag="txt_thisfieldisrequired">This field is required</div>
+                            <div *ngIf="managementCompanyForm.controls.giinCode.hasError('pattern') && managementCompanyForm.controls.giinCode.touched"
+                                class="text-danger">Invalid GIIN dode</div>
                         </div>
                         <div class="form-group col-sm-6"></div>
                     </div>
                     <div class="row">
+                        <div class="form-group col-sm-6">
+                            <label class="required-field" for="postalAddressLine1">
+                                <span>Registered Company’s Headquarters address</span>
+                            </label>
+                            <div>
+                                <input type="text" id="postalAddressLine1" class="form-control" formControlName="postalAddressLine1"
+                                    placeholder="Address of the management company headquarters">
+                            </div>
+                            <div *ngIf="managementCompanyForm.controls.postalAddressLine1.hasError('required') && managementCompanyForm.controls.postalAddressLine1.touched"
+                                class="text-danger" mltag="txt_thisfieldisrequired">This field is required</div>
+                        </div>
+                        <div class="form-group col-sm-6">
+                            <label for="postalAddressLine2">
+                                <span>Address line 2</span>
+                            </label>
+                            <div>
+                                <input type="text" id="postalAddressLine2" class="form-control" formControlName="postalAddressLine2">
+                            </div>
+                            <div *ngIf="managementCompanyForm.controls.postalAddressLine2.hasError('required') && managementCompanyForm.controls.postalAddressLine2.touched"
+                                class="text-danger" mltag="txt_thisfieldisrequired">This field is required</div>
+                        </div>
+                        <div class="form-group col-sm-4">
+                            <label class="required-field" for="postalCode">
+                                <span>ZIP Code</span>
+                            </label>
+                            <div>
+                                <input type="text" id="postalCode" class="form-control" formControlName="postalCode"
+                                    placeholder="ZIP Code">
+                            </div>
+                            <div *ngIf="managementCompanyForm.controls.postalCode.hasError('required') && managementCompanyForm.controls.postalCode.touched"
+                                class="text-danger" mltag="txt_thisfieldisrequired">This field is required</div>
+                        </div>
+                        <div class="form-group col-sm-4">
+                            <label class="required-field" for="city">
+                                <span>City</span>
+                            </label>
+                            <div>
+                                <input type="text" id="city" class="form-control" formControlName="city" placeholder="City">
+                            </div>
+                            <div *ngIf="managementCompanyForm.controls.city.hasError('required') && managementCompanyForm.controls.city.touched"
+                                class="text-danger" mltag="txt_thisfieldisrequired">This field is required</div>
+                        </div>
+                        <div class="form-group col-sm-4">
+                            <label class="required-field" for="country">
+                                <span mltag="txt_country">Country</span>
+                            </label>
+                            <div id="country">
+                                <ng-select [items]="countries" [allowClear]="true" placeholder="Please select"
+                                    formControlName="country"></ng-select>
+                                <div *ngIf="managementCompanyForm.controls.country.hasError('required') && managementCompanyForm.controls.country.touched"
+                                    class="text-danger" mltag="txt_countryrequired">Country is required</div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="form-group col-sm-6">
+                            <label class="required-field" for="commercialContact">
+                                <span mltag="txt_commercialcontact">Commercial Contact</span>
+                            </label>
+                            <div>
+                                <input type="text" id="commercialContact" class="form-control" formControlName="commercialContact"
+                                    placeholder="If non applicable please fill in the value &#34;N/A&#34; here">
+                            </div>
+                            <div *ngIf="managementCompanyForm.controls.commercialContact.hasError('required') && managementCompanyForm.controls.commercialContact.touched"
+                                class="text-danger" mltag="txt_thisfieldisrequired">This field is required</div>
+                        </div>
+                        <div class="form-group col-sm-6">
+                            <label class="required-field" for="operationalContact">
+                                <span mltag="txt_operationalcontact">Operational Contact</span>
+                            </label>
+                            <div>
+                                <input type="text" id="operationalContact" class="form-control" formControlName="operationalContact"
+                                    placeholder="If non applicable please fill in the value &#34;N/A&#34; here">
+                            </div>
+                            <div *ngIf="managementCompanyForm.controls.operationalContact.hasError('required') && managementCompanyForm.controls.operationalContact.touched"
+                                class="text-danger" mltag="txt_thisfieldisrequired">This field is required</div>
+                        </div>
+                    </div>
+                    <div class="row">
+
+                        <div class="form-group col-sm-6">
+                            <label class="required-field" for="directorContact">
+                                <span mltag="txt_directorcontact">Director Contact</span>
+                            </label>
+                            <div>
+                                <input type="text" id="directorContact" class="form-control" formControlName="directorContact"
+                                    placeholder="If non applicable please fill in the value &#34;N/A&#34; here">
+                            </div>
+                            <div *ngIf="managementCompanyForm.controls.directorContact.hasError('required') && managementCompanyForm.controls.directorContact.touched"
+                                class="text-danger" mltag="txt_thisfieldisrequired">This field is required</div>
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="form-group col-sm-6">
+                            <label for="mc_websiteurl" class="required-field">
+                                <span mltag="txt_websiteUrl">Management Company Website Address</span>
+                            </label>
+                            <div>
+                                <input type="text" id="mc_websiteUrl" class="form-control" formControlName="websiteUrl"
+                                    placeholder="Please fill in the commercial email address of the management company">
+                            </div>
+                            <div *ngIf="managementCompanyForm.controls['websiteUrl'].hasError('required') && managementCompanyForm.controls['websiteUrl'].touched"
+                                class="text-danger" mltag="txt_thisfieldisrequired">This field is required</div>
+                        </div>
+                        <div class="form-group col-sm-6">
+                            <label for="mc_phoneNumber" class="required-field">
+                                Management Company Phone Number
+                            </label>
+                            <div class="phone-input-container">
+                                <div>
+                                    <ng-select id="kyc_additionnal_phoneCode" [items]="phoneNumbersCountryCodes"
+                                        [formControl]="managementCompanyForm.controls.phoneNumberPrefix" placeholder="Please select"
+                                        [containerWidth]="'100%'"></ng-select>
+                                    <div *ngIf="managementCompanyForm.controls['phoneNumberPrefix'].hasError('required') && managementCompanyForm.controls['phoneNumberPrefix'].touched"
+                                        class="text-danger">{{'This field is required'}}</div>
+                                </div>
+
+                                <div>
+                                    <input type="text" id="kyc_additionnal_phoneNumber" class="form-control"
+                                        placeholder="Please fill in the commercial phone number of the management company"
+                                        [formControl]="managementCompanyForm.controls.phoneNumber">
+                                    <div *ngIf="managementCompanyForm.controls['phoneNumber'].hasError('required') && managementCompanyForm.controls['phoneNumber'].touched"
+                                        class="text-danger">{{'This field is required'}}</div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="form-group col-sm-6">
+                            <label for="mc_signature" class="required-field">
+                                <span>Document Signature to be displayed on the Certification of Book Entry</span>
+                            </label>
+                            <div class="filedrop-wrapper">
+                                <input type="hidden" class="form-control" formControlName="signature">
+                                <setl-file-drop class="form-control" id="mc_signature" [formControl]="managementCompanyForm.controls['signature']"
+                                    (onDrop)="onDropFile($event, 'signature')" [preset]="{ name: fileMetadata.getTitle('signature') }"
+                                    ngDefaultControl></setl-file-drop>
+                                <setl-file-viewer *ngIf="fileMetadata.getHash('signature')" [fileHash]="fileMetadata.getHash('signature')"></setl-file-viewer>
+                            </div>
+                            <div *ngIf="false" class="text-danger" mltag="txt_thisfieldisrequired">This field is
+                                required</div>
+                        </div>
+                        <div class="form-group col-sm-6">
+                            <label for="mc_logo" class="required-field">
+                                <span>Document Logo of the Management Company</span>
+                            </label>
+                            <div class="filedrop-wrapper">
+                                <input type="hidden" class="form-control" formControlName="logo">
+                                <setl-file-drop class="form-control" id="mc_logo" [formControl]="managementCompanyForm.controls['logo']"
+                                    (onDrop)="onDropFile($event, 'logo')" [preset]="{ name: fileMetadata.getTitle('logo') }"
+                                    ngDefaultControl></setl-file-drop>
+                                <setl-file-viewer *ngIf="fileMetadata.getHash('logo')" [fileHash]="fileMetadata.getHash('logo')"></setl-file-viewer>
+                            </div>
+                            <div *ngIf="false" class="text-danger" mltag="txt_thisfieldisrequired">This field is
+                                required</div>
+                        </div>
+                    </div>
+                    <div class="row">
                         <div class="form-group col-sm-12">
-                            <button id="mcBtnSubmitForm" type="submit" class="btn btn-primary" [disabled]="!managementCompanyForm.valid">
+                            <button id="mcBtnSubmitForm" type="submit" class="btn btn-primary" [disabled]="!managementCompanyForm.valid || !fileMetadata.isValid()">
                                 <div *ngIf="!editForm; else editMcFBtSubmit">
                                     <i class="fa fa-save"></i> <span mltag="txt_save">Save</span>
                                 </div>
@@ -309,7 +381,7 @@
 <clr-modal [(clrModalOpen)]="showConfirmModal">
     <h3 class="modal-title" mltag="txt_deletecurrentmanagementcompany">Deleting Management Company</h3>
     <div class="modal-body">
-        <p mltag="txt_areyousure">Are you sure you want to delete:<br/>
+        <p mltag="txt_areyousure">Are you sure you want to delete:<br />
             <strong>{{companyToDelete && companyToDelete.companyName}}</strong>
         </p>
     </div>

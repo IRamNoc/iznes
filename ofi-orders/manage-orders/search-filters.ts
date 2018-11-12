@@ -12,6 +12,7 @@ interface SelectedItem {
 
 export abstract class ISearchFilters {
     abstract getForm(): FormGroup;
+
     abstract get(): any;
 }
 
@@ -32,6 +33,9 @@ export class SearchFilters implements ISearchFilters {
         dateType: [dateTypes[2]],
         fromDate: null,
         toDate: null,
+        assetManagementCompany: null,
+        investorCompanyName: null,
+        portfolioLabel: null,
     };
 
     private form: FormGroup;
@@ -51,13 +55,13 @@ export class SearchFilters implements ISearchFilters {
     getForm(): FormGroup {
         if (!this.form) {
             const formSchema = Object.keys(this.defaultForm)
-                .reduce(
-                    (a, k) => {
-                        a[k] = [this.defaultForm[k]];
-                        return a;
-                    },
-                    {},
-                );
+            .reduce(
+                (a, k) => {
+                    a[k] = [this.defaultForm[k]];
+                    return a;
+                },
+                {},
+            );
             this.form = this.formBuilder.group(formSchema);
         }
 

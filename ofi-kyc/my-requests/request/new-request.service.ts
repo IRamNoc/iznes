@@ -17,7 +17,7 @@ import {
     find,
     merge,
     isNil,
-    every
+    every,
 } from 'lodash';
 import { CustomValidators } from '@setl/utils/helper';
 import { OfiKycService } from '@ofi/ofi-main/ofi-req-services/ofi-kyc/service';
@@ -28,8 +28,8 @@ import {
     booleanControls,
     legalFormList,
     sectorActivityList,
-    legalStatusList,
-    legalStatusInsurerTypeList,
+    regulatoryStatusList,
+    regulatoryStatusInsurerTypeList,
     publicEstablishmentList,
     companyActivitiesList,
     ownAccountInvestorList,
@@ -50,7 +50,8 @@ import {
     riskAcceptanceList,
     beneficiaryTypesList,
     holdingTypesList,
-    nationalIdNumberList
+    identificationNumberList,
+    listingMarketsList,
 } from '../requests.config';
 
 @Injectable()
@@ -59,8 +60,8 @@ export class NewRequestService {
 
     legalFormList;
     sectorActivityList;
-    legalStatusList;
-    legalStatusInsurerTypeList;
+    regulatoryStatusList;
+    regulatoryStatusInsurerTypeList;
     publicEstablishmentList;
     geographicalAreaList;
     companyActivitiesList;
@@ -81,7 +82,8 @@ export class NewRequestService {
     riskAcceptanceList;
     beneficiaryTypesList;
     holdingTypesList;
-    nationalIdNumberList;
+    identificationNumberList;
+    listingMarketsList;
     saveContext = '';
 
     /* Private Properties. */
@@ -103,8 +105,8 @@ export class NewRequestService {
 
         this.legalFormList = legalFormList;
         this.sectorActivityList = sectorActivityList;
-        this.legalStatusList = legalStatusList;
-        this.legalStatusInsurerTypeList = legalStatusInsurerTypeList;
+        this.regulatoryStatusList = regulatoryStatusList;
+        this.regulatoryStatusInsurerTypeList = regulatoryStatusInsurerTypeList;
         this.publicEstablishmentList = publicEstablishmentList;
         this.geographicalAreaList = geographicalAreaList;
         this.companyActivitiesList = companyActivitiesList;
@@ -125,7 +127,8 @@ export class NewRequestService {
         this.riskAcceptanceList = riskAcceptanceList;
         this.beneficiaryTypesList = beneficiaryTypesList;
         this.holdingTypesList = holdingTypesList;
-        this.nationalIdNumberList = nationalIdNumberList;
+        this.identificationNumberList = identificationNumberList;
+        this.listingMarketsList = listingMarketsList;
     }
 
     set context(value) {
@@ -145,8 +148,7 @@ export class NewRequestService {
                 return [acc, curr].join(joiner);
             },
             '',
-            )
-        ;
+            );
 
         this.context = context;
 
@@ -206,37 +208,30 @@ export class NewRequestService {
             legalForm: ['', Validators.required],
             leiCode: ['', [
                 Validators.required,
-                Validators.pattern(/^\w{18}\d{2}$|n\/a/i)
+                Validators.pattern(/^\w{18}\d{2}$|n\/a/i),
             ]],
-            otherIdentificationNumber: [null, Validators.maxLength(255)],
+            otherIdentificationNumber: ['', Validators.maxLength(255)],
+            otherIdentificationNumberText: [{ value: '', disabled: true }, Validators.required],
             registeredCompanyAddressLine1: ['', this.getLengthValidator(255)],
             registeredCompanyAddressLine2: ['', Validators.maxLength(255)],
             registeredCompanyZipCode: ['', this.getLengthValidator(10)],
             registeredCompanyCity: ['', this.getLengthValidator()],
             registeredCompanyCountry: ['', Validators.required],
             commercialDomiciliation: 0,
+            commercialAddressLine1: [{ value: '', disabled: true }, Validators.required],
+            commercialAddressLine2: [{ value: '', disabled: true }],
+            commercialZipCode: [{ value: '', disabled: true }, Validators.required],
+            commercialCity: [{ value: '', disabled: true }, Validators.required],
+            commercialCountry: [{ value: '', disabled: true }, Validators.required],
             countryTaxResidence: ['', Validators.required],
-            sectorActivity: ['', Validators.required],
-            sectorActivityText: [
-                { value: '', disabled: true },
-                this.getLengthValidator(255)
-            ],
-            legalStatus: ['', Validators.required],
-            legalStatusInsurerType: [
-                { value: '', disabled: true },
-                Validators.required
-            ],
-            legalStatusListingMarkets: [
-                { value: '', disabled: true },
-                Validators.required
-            ],
-            legalStatusListingOther: [
-                { value: '', disabled: true },
-                Validators.required
-            ]
         });
         const companyInformation = fb.group({
             kycID: '',
+            sectorActivity: ['', Validators.required],
+            sectorActivityText: [
+                { value: '', disabled: true },
+                this.getLengthValidator(255),
+            ],
             activities: ['', Validators.required],
             ownAccountinvestor: [
                 { value: '', disabled: true },
@@ -254,6 +249,15 @@ export class NewRequestService {
             ],
 
             activityRegulated: 0,
+            regulatoryStatus: [{value: '', disabled: true}, Validators.required],
+            regulatoryStatusInsurerType: [
+                { value: '', disabled: true },
+                Validators.required,
+            ],
+            regulatoryStatusListingOther: [
+                { value: '', disabled: true },
+                Validators.required,
+            ],
             regulator: [
                 { value: '', disabled: true },
                 this.getLengthValidator(255)
@@ -276,8 +280,15 @@ export class NewRequestService {
                 { value: '', disabled: true },
                 [Validators.required, Validators.pattern(/^[a-zA-Z]{2}[A-Z0-9]{9}\d$/)],
             ],
+            floatableShares: [
+                { value: '', disabled: true},
+                [
+                    Validators.required,
+                    Validators.min(0),
+                    Validators.max(100),
+                ],
+            ],
 
-            keyFinancialData: '',
             balanceSheetTotal: ['', Validators.required],
 
             netRevenuesNetIncome: ['', [
@@ -356,46 +367,24 @@ export class NewRequestService {
 
         const investmentNature = fb.group({
             kycID: '',
-            financialAssetManagementMethod: fb.group({
-                internalManagement: '',
-                withAdviceOfAuthorisedThirdPartyInstitution: '',
-                mandateEntrustedToManagers: ''
-            }, {
-                validator: (formGroup) => {
-                    return CustomValidators.multipleCheckboxValidator(formGroup);
-                }
-            }),
-            frequencyFinancialTransactions: fb.group(this.transformToForm(this.frequencyList), {
-                validator: (formGroup) => {
-                    return CustomValidators.multipleCheckboxValidator(formGroup);
-                }
-            }),
-            investmentvehiclesAlreadyUsed: fb.group(this.transformToForm(this.investmentVehiclesList), {
-                validator: (formGroup) => {
-                    return CustomValidators.multipleCheckboxValidator(formGroup);
-                }
-            }),
-            investmentvehiclesAlreadyUsedSpecification: [
-                {
-                    value: '', disabled: true
-                }, Validators.required
-            ]
+            naturesSameInvestmentCrossAm: 0,
+            natures: fb.array([]),
         });
         const investmentObjective = fb.group({
             kycID: '',
             objectivesSameInvestmentCrossAm: 0,
-            objectives: fb.array([])
+            objectives: fb.array([]),
         });
         const investmentConstraint = fb.group({
             kycID: '',
             constraintsSameInvestmentCrossAm: 0,
-            constraints: fb.array([])
+            constraints: fb.array([]),
         });
 
         return fb.group({
             investmentNature,
             investmentObjective,
-            investmentConstraint
+            investmentConstraint,
         });
     }
 
@@ -422,7 +411,6 @@ export class NewRequestService {
                 kycannualreportdoc: this.createDocumentFormGroup('kycannualreportdoc', !this.isProduction),
                 kycidorpassportdoc: this.createDocumentFormGroup('kycidorpassportdoc', !this.isProduction),
             })
-
         });
     }
 
@@ -432,7 +420,7 @@ export class NewRequestService {
             kycDocumentID: '',
             type: name,
             common: 0,
-            isDefault: 0
+            isDefault: 0,
         };
 
         if (optional) {
@@ -440,7 +428,55 @@ export class NewRequestService {
         } else {
             group.hash = ['', Validators.required];
         }
+
         return this.formBuilder.group(group);
+    }
+
+    createInvestmentNature(id): FormGroup {
+        const fb = this.formBuilder;
+
+        return fb.group({
+            assetManagementCompanyID: id ? id : null,
+            financialAssetManagementMethod: fb.group(
+                {
+                    internalManagement: '',
+                    withAdviceOfAuthorisedThirdPartyInstitution: '',
+                    mandateEntrustedToManagers: '',
+                },
+                {
+                    validator: (formGroup) => {
+                        return CustomValidators.multipleCheckboxValidator(formGroup);
+                    },
+                },
+            ),
+            frequencyFinancialTransactions: fb.group(this.transformToForm(this.frequencyList), {
+                validator: (formGroup) => {
+                    return CustomValidators.multipleCheckboxValidator(formGroup);
+                },
+            }),
+            investmentvehiclesAlreadyUsed: fb.group(this.transformToForm(this.investmentVehiclesList), {
+                validator: (formGroup) => {
+                    return CustomValidators.multipleCheckboxValidator(formGroup);
+                },
+            }),
+            investmentvehiclesAlreadyUsedSpecification: [
+                {
+                    value: '', disabled: true
+                }, Validators.required,
+            ],
+        });
+    }
+
+    createInvestmentNatures(amcs) {
+        const natures = [];
+        const length = amcs.length || 1;
+
+        for (let i = 0; i < length; i++) {
+            const id = amcs[i];
+            natures.push(this.createInvestmentNature(id));
+        }
+
+        return natures;
     }
 
     createInvestmentObjective(id): FormGroup {
@@ -454,7 +490,7 @@ export class NewRequestService {
             performanceProfileSpecification: [
                 {
                     value: '',
-                    disabled: true
+                    disabled: true,
                 },
                 this.getLengthValidator(255)
             ],
@@ -476,7 +512,7 @@ export class NewRequestService {
                     riskAcceptanceLevel1: '',
                     riskAcceptanceLevel2: '',
                     riskAcceptanceLevel3: '',
-                    riskAcceptanceLevel4: ''
+                    riskAcceptanceLevel4: '',
                 },
                 {
                     validator: (formGroup) => {
@@ -633,7 +669,6 @@ export class NewRequestService {
                 },
                 false,
             );
-
         }
 
         return false;

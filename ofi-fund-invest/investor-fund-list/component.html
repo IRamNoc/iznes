@@ -1,6 +1,6 @@
 <div class="header-breadcrumbs">
     <h1>
-        <i class="fa fa-list"></i> {{'Place an Order' | translate}}</h1>
+        <i class="fa fa-list"></i> {{ 'Place Order' | translate }}</h1>
 </div>
 
 <div class="wrapper wrapper-content">
@@ -16,24 +16,20 @@
                 </ng-container>
 
                 <ng-container *ngIf="tabdata.actionType === 'subscribe'">
-                    <app-invest-fund [shareId]="tabdata.fundShareId" [initialFormData]="tabdata.formData" (formDataChange)="updateFormData(id, $event)"
-                                     [type]="'subscribe'" (close)="closeTab(id)" [doValidate]="production" [walletBalance]="walletBalances"></app-invest-fund>
+                    <app-invest-fund [shareId]="tabdata.fundShareId" [initialFormData]="tabdata.formData" (formDataChange)="updateFormData(id, $event)" [type]="'subscribe'" (close)="closeTab(id)" [doValidate]="production" [walletBalance]="walletBalances"></app-invest-fund>
                 </ng-container>
 
                 <ng-container *ngIf="tabdata.actionType === 'redeem'">
-                    <app-invest-fund [shareId]="tabdata.fundShareId" [initialFormData]="tabdata.formData" (formDataChange)="updateFormData(id, $event)"
-                                     [type]="'redeem'" (close)="closeTab(id)" [doValidate]="production" [walletBalance]="walletBalances"></app-invest-fund>
+                    <app-invest-fund [shareId]="tabdata.fundShareId" [initialFormData]="tabdata.formData" (formDataChange)="updateFormData(id, $event)" [type]="'redeem'" (close)="closeTab(id)" [doValidate]="production" [walletBalance]="walletBalances"></app-invest-fund>
                 </ng-container>
 
                 <ng-container *ngIf="tabdata.actionType === 'sellbuy'">
-                    <app-invest-fund [shareId]="tabdata.fundShareId" [initialFormData]="tabdata.formData" (formDataChange)="updateFormData(id, $event)"
-                                     [type]="'sellbuy'" (close)="closeTab(id)" [doValidate]="production" [walletBalance]="walletBalances"></app-invest-fund>
+                    <app-invest-fund [shareId]="tabdata.fundShareId" [initialFormData]="tabdata.formData" (formDataChange)="updateFormData(id, $event)" [type]="'sellbuy'" (close)="closeTab(id)" [doValidate]="production" [walletBalance]="walletBalances"></app-invest-fund>
                 </ng-container>
 
                 <ng-container *ngIf="tabdata.actionType === 'view'">
                     <app-fund-view [shareId]="tabdata.fundShareId" (close)="closeTab(id)"></app-fund-view>
                 </ng-container>
-
             </clr-tab-content>
 
         </clr-tab>
@@ -44,41 +40,40 @@
         <div class="panel-body">
             <div>
                 <clr-datagrid>
-                    <clr-dg-column [clrDgField]="'isin'" clrDgSortIcon>{{'ISIN' | translate}}
+                    <clr-dg-column [clrDgField]="'isin'" clrDgSortIcon>{{ 'ISIN' | translate }}
                         <span class="column-label"></span>
                     </clr-dg-column>
-                    <clr-dg-column [clrDgField]="'shareName'" clrDgSortIcon>{{'Share Name' | translate}}
+                    <clr-dg-column [clrDgField]="'shareName'" clrDgSortIcon>{{ 'Share Name' | translate }}
                         <span class="column-label"></span>
                     </clr-dg-column>
-                    <clr-dg-column [clrDgField]="'assetClass'" clrDgSortIcon clrDgSortNoSearch>{{'Asset Class' | translate}}
+                    <clr-dg-column [clrDgField]="'assetClass'" clrDgSortIcon clrDgSortNoSearch>{{ 'Asset Class' | translate }}
                         <span class="column-label"></span>
                     </clr-dg-column>
-                    <clr-dg-column [clrDgField]="'assetManager'" clrDgSortIcon>{{'Asset Manager' | translate}}
+                    <clr-dg-column [clrDgField]="'assetManager'" clrDgSortIcon>{{ 'Asset Manager' | translate }}
                         <span class="column-label"></span>
                     </clr-dg-column>
-                    <clr-dg-column [clrDgField]="'srri'" clrDgSortIcon clrDgSortNoSearch>{{'SRRI' | translate}}
+                    <clr-dg-column [clrDgField]="'srri'" clrDgSortIcon clrDgSortNoSearch>{{ 'SRRI' | translate }}
                         <span class="column-label"></span>
                     </clr-dg-column>
-                    <clr-dg-column [clrDgField]="'sri'" clrDgSortIcon clrDgSortNoSearch>{{'SRI' | translate}}
+                    <clr-dg-column [clrDgField]="'sri'" clrDgSortIcon clrDgSortNoSearch>{{ 'SRI' | translate }}
                         <span class="column-label"></span>
                     </clr-dg-column>
-                    <clr-dg-column [clrDgField]="'currency'" clrDgSortIcon clrDgSortNoSearch>{{'Share Currency' | translate}}
+                    <clr-dg-column [clrDgField]="'currency'" clrDgSortIcon clrDgSortNoSearch>{{ 'Share Currency' | translate }} <span class="column-label"></span>
+                    </clr-dg-column>
+                    <clr-dg-column [clrDgField]="'nav'" clrDgSortIcon class="right">{{ 'Last NAV' | translate }}
                         <span class="column-label"></span>
                     </clr-dg-column>
-                    <clr-dg-column [clrDgField]="'nav'" clrDgSortIcon>{{'Last NAV' | translate}}
+                    <clr-dg-column [clrDgField]="'subscriptionDate'" clrDgSortIcon>{{ 'Subscription Cut-off Date' | translate }}
                         <span class="column-label"></span>
                     </clr-dg-column>
-                    <clr-dg-column [clrDgField]="'subscriptionDate'" clrDgSortIcon>{{'Subscription Cut-off Date' | translate}}
+                    <clr-dg-column [clrDgField]="'redemptionDate'" clrDgSortIcon>{{ 'Redemption Cut-off Date' | translate }}
                         <span class="column-label"></span>
                     </clr-dg-column>
-                    <clr-dg-column [clrDgField]="'redemptionDate'" clrDgSortIcon>{{'Redemption Cut-off Date' | translate}}
-                        <span class="column-label"></span>
+                    <clr-dg-column [clrDgField]="'position'" clrDgSortIcon class="right">{{ 'Available Position' | translate }}
                     </clr-dg-column>
-                    <clr-dg-column [clrDgField]="'position'" clrDgSortIcon>{{'Available Position' | translate}}
+                    <clr-dg-column [clrDgField]="'totalPosition'" clrDgSortIcon class="right">{{ 'Total Position' | translate }}
                     </clr-dg-column>
-                    <clr-dg-column [clrDgField]="'totalPosition'" clrDgSortIcon>{{'Total Position' | translate}}
-                    </clr-dg-column>
-                    <clr-dg-column style="min-width: 190px;">{{'Actions' | translate}}</clr-dg-column>
+                    <clr-dg-column class="right" style="min-width: 190px;">{{ 'Actions' | translate }}</clr-dg-column>
 
                     <clr-dg-row *clrDgItems="let fund of fundList; let i = index">
                         <clr-dg-cell>
@@ -96,34 +91,32 @@
                         <clr-dg-cell>{{fund['srri']}}</clr-dg-cell>
                         <clr-dg-cell>{{fund['sri']}}</clr-dg-cell>
                         <clr-dg-cell>{{fund['currency']}}</clr-dg-cell>
-                        <clr-dg-cell>{{fund['nav'] | moneyValue}}</clr-dg-cell>
+                        <clr-dg-cell class="right">{{fund['nav'] | moneyValue}}</clr-dg-cell>
                         <clr-dg-cell>{{fund['nextSubCutOff']}}</clr-dg-cell>
                         <clr-dg-cell>{{fund['nextRedCutOff']}}</clr-dg-cell>
-                        <clr-dg-cell>{{fund['position']}}</clr-dg-cell>
-                        <clr-dg-cell>{{fund['totalPosition']}}</clr-dg-cell>
-                        <clr-dg-cell *ngIf="fund['hasNoNav']">{{'No NAV Exist' | translate}}</clr-dg-cell>
-                        <clr-dg-cell *ngIf="!fund['hasNoNav']" class="actions">
+                        <clr-dg-cell class="right">{{fund['position']}}</clr-dg-cell>
+                        <clr-dg-cell class="right">{{fund['totalPosition']}}</clr-dg-cell>
+                        <clr-dg-cell *ngIf="fund['hasNoNav']">{{ 'No NAV Exist' | translate }}</clr-dg-cell>
+                        <clr-dg-cell *ngIf="!fund['hasNoNav']" class="actions right">
                             <div class="btn-group btn-sm">
                                 <button class="btn btn-success btn-sm" style="margin: 0px;" (click)="handleSubscribe(fund.id)">
-                                    <i class="fa fa-sign-in"></i> {{'Subscribe' | translate}}
+                                    <i class="fa fa-sign-in"></i> {{ 'Subscribe' | translate }}
                                 </button>
                                 <button class="btn btn-danger btn-sm" style="margin: 0px;" (click)="handleRedeem(fund.id)" [attr.disabled]="disableRedeem((fund.isin + '|' + fund.shareName))">
-                                    <i class="fa fa-sign-out"></i> {{'Redeem' | translate}}
+                                    <i class="fa fa-sign-out"></i> {{ 'Redeem' | translate }}
                                 </button>
-                                <button class="btn btn-orange btn-sm" style="margin: 0px;" (click)="handleBuySell(fund.id)" [disabled]="!allowSellBuy(fund)">
+                                <button class="btn btn-orange btn-sm" style="margin: 0px;" (click)="handleBuySell(fund.id)" [attr.disabled]="disableRedeem((fund.isin + '|' + fund.shareName)) && !allowSellBuy(fund)">
                                     <i class="fa fa-circle-o-notch"></i>
-                                    <span mltag=""> {{'Sell/Buy' | translate}}</span></button>
+                                    <span mltag=""> {{ 'Sell/Buy' | translate }}</span></button>
                             </div>
                         </clr-dg-cell>
                     </clr-dg-row>
 
                     <clr-dg-footer>{{pagination.firstItem + 1}} - {{pagination.lastItem + 1}}
-
                         <clr-dg-pagination #pagination [clrDgPageSize]="10"></clr-dg-pagination>
                     </clr-dg-footer>
                 </clr-datagrid>
             </div>
-
         </div>
     </ng-template>
 </div>

@@ -4,7 +4,6 @@ import { isEmpty, castArray } from 'lodash';
 import { select } from '@angular-redux/store';
 import { Subject } from 'rxjs';
 import { filter as rxFilter, map, take, takeUntil } from 'rxjs/operators';
-
 import { PersistService } from '@setl/core-persist';
 import { formHelper } from '@setl/utils/helper';
 
@@ -19,7 +18,6 @@ import { steps } from '../../requests.config';
     templateUrl: './documents.component.html',
 })
 export class NewKycDocumentsComponent implements OnInit, OnDestroy {
-
     @ViewChild(FormPercentDirective) formPercent: FormPercentDirective;
     @select(['user', 'connected', 'connectedWallet']) connectedWallet$;
     @select(['ofi', 'ofiKyc', 'myKycRequested', 'kycs']) requests$;
@@ -69,8 +67,7 @@ export class NewKycDocumentsComponent implements OnInit, OnDestroy {
                 if (this.shouldPersist(kyc)) {
                 this.persistForm();
             }
-        })
-        ;
+            });
     }
 
     shouldPersist(kyc) {
@@ -87,8 +84,7 @@ export class NewKycDocumentsComponent implements OnInit, OnDestroy {
         )
             .subscribe((connectedWallet) => {
             this.connectedWallet = connectedWallet;
-        })
-        ;
+            });
     }
 
     persistForm() {
@@ -198,8 +194,7 @@ export class NewKycDocumentsComponent implements OnInit, OnDestroy {
                     this.initSubscriptions();
                 });
             });
-        })
-        ;
+            });
     }
 
     ngOnDestroy() {

@@ -1,7 +1,6 @@
-import {Injectable} from '@angular/core';
-import {RequestsService} from '../../requests.service';
-import {NewRequestService} from '../new-request.service';
-
+import { Injectable } from '@angular/core';
+import { RequestsService } from '../../requests.service';
+import { NewRequestService } from '../new-request.service';
 import * as moment from 'moment';
 
 @Injectable()
@@ -9,7 +8,7 @@ export class SelectAmcService {
 
     constructor(
         private newRequestService: NewRequestService,
-        private requestsService: RequestsService
+        private requestsService: RequestsService,
     ) {
     }
 
@@ -34,6 +33,4 @@ export class SelectAmcService {
 
         return this.requestsService.sendRequest(messageBody);
     }
-
-
 }

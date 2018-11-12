@@ -1,19 +1,17 @@
 import { Injectable } from '@angular/core';
-import {Subject, BehaviorSubject} from 'rxjs';
+import { Subject, BehaviorSubject } from 'rxjs';
 import * as moment from 'moment';
-
 import { RequestsService } from '../../requests.service';
 import { NewRequestService } from '../new-request.service';
-
 import { mapValues, isArray, isObject, reduce, pickBy, merge, omit, fill, find, get as getValue } from 'lodash';
 
 @Injectable()
 export class RiskProfileService {
-
     requests;
 
     currentServerData = {
-        'riskobjective' : new BehaviorSubject({})
+        risknature: new BehaviorSubject({}),
+        riskobjective : new BehaviorSubject({}),
     };
 
     constructor(
@@ -22,27 +20,30 @@ export class RiskProfileService {
     ) {
     }
 
-    sendRequest(form, argRequests) {
-        this.requests = argRequests;
+    sendRequest(form, requests) {
+        this.requests = requests;
 
-        const promises = [];
+        let promises = [];
         const context = this.newRequestService.context;
 
         this.requests.forEach((request) => {
             const kycID = request.kycID;
 
+            // Nature
             const formGroupNature = form.get('investmentNature');
             formGroupNature.get('kycID').setValue(kycID);
-            const naturePromise = this.sendRequestNature(formGroupNature);
-            promises.push(naturePromise);
+            const naturePromises = this.sendRequestNature(formGroupNature);
+            promises = promises.concat(naturePromises);
 
+            // Objective
             const formGroupObjective = form.get('investmentObjective');
             const formGroupConstraint = form.get('investmentConstraint');
             formGroupObjective.get('kycID').setValue(kycID);
             formGroupConstraint.get('kycID').setValue(kycID);
-            const objectivePromise = this.sendRequestObjective(formGroupObjective, formGroupConstraint);
-            promises.push(objectivePromise);
+            const objectivePromises = this.sendRequestObjective(formGroupObjective, formGroupConstraint);
+            promises = promises.concat(objectivePromises);
 
+            // Update step
             const updateStepPromise = this.sendRequestUpdateCurrentStep(kycID, context);
             promises.push(updateStepPromise);
         });
@@ -51,14 +52,42 @@ export class RiskProfileService {
     }
 
     sendRequestNature(formGroupNature) {
-        const extracted = this.newRequestService.getValues(formGroupNature.value);
+        const promises = [];
+        let formGroupValue;
+
+        const formGroupNatureValue = omit(formGroupNature.value, ['natures']);
+
+        const kycID = formGroupNature.get('kycID').value;
+        const request = find(this.requests, ['kycID', kycID]);
+        const amcID = getValue(request, 'amcID');
+
+        const naturesValue = formGroupNature.get('natures').value;
+
+
+        let natureForAM;
+
+        if (amcID) {
+            natureForAM = find(naturesValue, ['assetManagementCompanyID', amcID]);
+        }
+
+        if (!natureForAM) {
+            natureForAM = naturesValue[0];
+            natureForAM['assetManagementCompanyID'] = amcID;
+        }
+
+        formGroupValue = merge(
+            this.newRequestService.getValues(formGroupNatureValue),
+            this.newRequestService.getValues(natureForAM),
+        );
 
         const messageBody = {
             RequestName: 'updatekycrisknature',
-            ...extracted,
+            ...formGroupValue,
         };
 
-        return this.requestsService.sendRequest(messageBody);
+        promises.push(this.requestsService.sendRequest(messageBody));
+
+        return promises;
     }
 
     sendRequestUpdateCurrentStep(kycID, context) {
@@ -73,6 +102,7 @@ export class RiskProfileService {
     }
 
     sendRequestObjective(formGroupObjective, formGroupConstraint) {
+        const promises = [];
         let formGroupValue;
 
         const formGroupObjectiveValue = omit(formGroupObjective.value, ['objectives']);
@@ -123,7 +153,9 @@ export class RiskProfileService {
     }
 
     getCurrentFormNatureData(kycID) {
-        return this.requestsService.getKycNature(kycID);
+        return this.requestsService.getKycNature(kycID).then((formData) => {
+            this.currentServerData.risknature.next(formData);
+        });
     }
 
     getCurrentFormObjectiveData(kycID) {

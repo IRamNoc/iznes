@@ -75,3 +75,11 @@ export const clearkycdetailsdocumentsrequested = kAction(CLEAR_KYC_DETAILS_DOCUM
 
 export const CLEAR_KYC_DETAILS_ALL = `${name}/CLEAR_KYC_DETAILS_ALL`;
 export const clearkycdetailsall = kAction(CLEAR_KYC_DETAILS_ALL);
+
+export const SET_KYC_DETAILS_VALIDATION = `${name}/SET_KYC_DETAILS_VALIDATION`;
+
+export const SET_KYC_DETAILS_VALIDATION_REQUESTED = `${name}/SET_KYC_DETAILS_VALIDATION_REQUESTED`;
+export const setkycdetailsvalidationrequested = kAction(SET_KYC_DETAILS_VALIDATION_REQUESTED);
+
+export const CLEAR_KYC_DETAILS_VALIDATION_REQUESTED = `${name}/CLEAR_KYC_DETAILS_VALIDATION_REQUESTED`;
+export const clearkycdetailsvalidationrequested = kAction(CLEAR_KYC_DETAILS_VALIDATION_REQUESTED);

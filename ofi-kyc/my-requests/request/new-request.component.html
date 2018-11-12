@@ -1,9 +1,7 @@
 <div class="header-breadcrumbs">
     <h1 class="text-overflow">
-
         <i class="fa fa-plus"></i>
-
-        <span id="new-request-title">{{'Make a new request' | translate}}</span>
+        <span id="new-request-title">{{ 'Make New Request' | translate }}</span>
     </h1>
 </div>
 
@@ -41,6 +39,6 @@
 <div class="info" *ngIf="isBeginning()">
     <clr-icon shape="info-circle" class="is-info" size="24"></clr-icon>
     <span>
-        {{'Be aware that once you click on "Next", this KYC will be saved as a Draft in the module "My Requests". You will then be able to finalize the request and send it to the Asset Management Company later on.' | translate}}
+        {{ 'Be aware that once you click on "Next", this KYC will be saved as a Draft in the module "My Requests". You will then be able to finalise the request and send it to the Asset Management Company later on.' | translate }}
     </span>
 </div>

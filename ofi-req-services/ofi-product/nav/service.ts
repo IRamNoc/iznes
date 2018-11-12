@@ -9,6 +9,7 @@ import {
     UpdateNavMessageBody,
     UploadNavFileMessageBody,
     UploadNavFileRequestData,
+    CancelNavMessageBody,
 } from './model';
 import { SagaHelper } from '@setl/utils';
 import { createMemberNodeSagaRequest } from '@setl/utils/common';
@@ -186,6 +187,33 @@ export class OfiNavService {
     }
 
     /**
+     * Default static call to cancel nav, and dispatch default actions, and other
+     * default task.
+     *
+     * @param ofiNavService
+     * @param ngRedux
+     * @param requestData
+     */
+    static defaultCancelNav(ofiNavService: OfiNavService,
+        ngRedux: NgRedux<any>,
+        requestData: any,
+        successCallback: (res) => void,
+        errorCallback: (res) => void) {
+
+        // Create the request.
+        const asyncTaskPipe = ofiNavService.cancelNav(requestData);
+
+        ngRedux.dispatch(SagaHelper.runAsync(
+            [],
+            [],
+            asyncTaskPipe,
+            {},
+            (res) => successCallback(res),
+            (res) => errorCallback(res)
+        ));
+    }
+
+    /**
      * Default static call to get nav audit, and dispatch default actions, and other
      * default task.
      *
@@ -269,6 +297,17 @@ export class OfiNavService {
             shareId: _.get(requestData, 'shareId', ''),
             navDate: _.get(requestData, 'navDate', ''),
             navStatus: _.get(requestData, 'navStatus', '')
+        };
+
+        return createMemberNodeSagaRequest(this.memberSocketService, messageBody);
+    }
+
+    cancelNav(requestData: any): any {
+        const messageBody: CancelNavMessageBody = {
+            RequestName: 'izncancelnav',
+            token: this.memberSocketService.token,
+            shareId: _.get(requestData, 'shareId', ''),
+            navDate: _.get(requestData, 'navDate', '')
         };
 
         return createMemberNodeSagaRequest(this.memberSocketService, messageBody);

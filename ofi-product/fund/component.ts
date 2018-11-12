@@ -105,6 +105,8 @@ export class FundComponent implements OnInit, OnDestroy {
     transferAgentItems = [];
     centralizingAgentItems = [];
 
+    currentLei: string;
+
     // Locale
     language = 'en';
 
@@ -178,7 +180,6 @@ export class FundComponent implements OnInit, OnDestroy {
         this.ofiManagementCompanyService.getManagementCompanyList();
         this.ofiCurrenciesService.getCurrencyList();
         this.fundService.getFundList();
-        this.leiService.fetchLEIs();
 
         this.fundItems = productConfig.fundItems;
         this.enums = productConfig.enums;
@@ -770,9 +771,13 @@ export class FundComponent implements OnInit, OnDestroy {
     }
 
     isLeiAlreadyExisting(currentLei: string): boolean {
-        if (!this.leiList.length || !currentLei) {
-            return false;
-        }
+        // if undefined the LEI won't exist
+        if (!currentLei) return false;
+
+        // if the LEI is equal to the current LEI for this umbrella fund, that is ok
+        if(currentLei === this.currentLei) return false;
+
+        // otherwise if LEI is a match with the list, then it does exist
         return this.leiList.indexOf(currentLei) !== -1;
     }
 
@@ -807,6 +812,12 @@ export class FundComponent implements OnInit, OnDestroy {
             )
             .subscribe((leiList) => {
                 this.leiList = leiList;
+
+                if(this.fundForm) {
+                    this.fundForm.controls.legalEntityIdentifier.updateValueAndValidity({
+                        emitEvent: true,
+                    });
+                }
             });
 
         this.fundForm.controls['legalEntityIdentifier'].valueChanges
@@ -833,6 +844,7 @@ export class FundComponent implements OnInit, OnDestroy {
                         });
                 }
             });
+        this.leiService.fetchLEIs();
     }
 
     setManagementCompanyItems(d) {
@@ -956,6 +968,7 @@ export class FundComponent implements OnInit, OnDestroy {
                 'draftDate',
             ]),
             fundName: this.param ? fund.fundName : '',
+            legalEntityIdentifier: this.param ? fund.legalEntityIdentifier : '',
 
             // formatting for radio inputs
             isFundStructure: fund.isFundStructure.toString(),
@@ -978,6 +991,8 @@ export class FundComponent implements OnInit, OnDestroy {
             hasDurationHedge: !_.isNull(fund.hasDurationHedge) ? fund.hasDurationHedge.toString() : null,
         });
         this.toggleLeiSwitch(!!fund.legalEntityIdentifier);
+
+        this.currentLei = fund.legalEntityIdentifier;
 
         return;
     }
@@ -1042,7 +1057,7 @@ export class FundComponent implements OnInit, OnDestroy {
                     return;
                 })
                 .catch((err) => {
-                    const errMsg = _.get(err, '[1].Data[0].Message', '');
+                    const errMsg = _.get(err, '[1].Data.Message', '');
                     this.toasterService.pop('error', 'Failed to create the fund. ' + errMsg);
                     return;
                 });

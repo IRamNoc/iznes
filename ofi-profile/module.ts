@@ -5,8 +5,8 @@ import { ClarityModule } from '@clr/angular';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { SetlComponentsModule, SetlDirectivesModule, SetlPipesModule } from '@setl/utils/index';
 
-/* My informations module */
 import { OfiMyInformationsModule } from '../ofi-my-informations/module';
+import { SetlAccountModule } from '@setl/core-account/account.module';
 
 /* Components. */
 import { OfiProfileMyInformationsComponent } from './profile-my-informations/component';
@@ -29,13 +29,12 @@ import { OfiProfileMyInformationsComponent } from './profile-my-informations/com
         SetlComponentsModule,
         SetlDirectivesModule,
         SetlPipesModule,
+        SetlAccountModule,
     ],
     providers: [
-
     ],
 })
 
 /* Class. */
 export class OfiProfileModule {
-
 }

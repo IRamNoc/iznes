@@ -1,36 +1,29 @@
 <!-- Breadcrumbs. -->
 <div class="header-breadcrumbs">
-    <h1 id="ofi-welcome-additionnal"><i class="fa fa-unlock"></i>{{'Welcome to @appConfig.platform@' | translate: {'appConfig.platform': appConfig.platform} }}</h1>
+    <h1 id="ofi-welcome-additionnal"><i class="fa fa-unlock"></i>{{ 'Welcome to @appConfig.platform@' | translate: {'appConfig.platform': appConfig.platform} }}</h1>
 </div>
 
 <clr-tabs>
     <clr-tab>
         <button clrTabLink id="button">
-            <i class="fa fa-bars"></i> {{'User Informations' | translate}}
+            <i class="fa fa-bars"></i> {{ 'User Information' | translate }}
         </button>
 
         <clr-tab-content *clrIfActive>
-            <h2>{{'Please provide a bit information:' | translate}}</h2>
+            <h2>{{ 'Please provide information:' | translate }}</h2>
             <div *ngIf="!hasFilledAdditionnalInfos">
-                <app-my-informations [viewMode]="'PAGE'" [type]="userType" [userInfo]="userInfo" (onSubmit)="openMyInformationsModal($event)">
-
-
-
-
-                </app-my-informations>
+                <app-my-informations [viewMode]="'PAGE'" [type]="userType" [userInfo]="userInfo" (onSubmit)="openMyInformationsModal($event)"></app-my-informations>
 
                 <!--CUSTOM TEXT MODALS-->
                 <clr-modal [(clrModalOpen)]="showModal" [clrModalClosable]="false">
-                    <h3 class="modal-title">{{'MY INFORMATION' | translate}}</h3>
+                    <h3 class="modal-title">{{ 'My Information' | translate }}</h3>
                     <div class="modal-body text-center">
-                        <p>{{'This information will be saved in' | translate}}
-                            <b>{{'"Profile"' | translate}}</b> {{'(above), in' | translate}} <b>{{'"My information"' | translate}}</b>
-                            <br>{{'It is located at the top right of each page, in the top menu bar.' | translate}}
-
+                        <p>{{ 'This information will be saved in' | translate }}
+                            <b>{{ '"Profile"' | translate }}</b> {{ '(above), in' | translate }} <b>{{ '"My information"' | translate }}</b>
+                            <br>{{ 'It is located at the top right of each page, in the top menu bar.' | translate }}
                         </p>
                         <br>
-                        <button id="addInfo-ok-button" class="btn btn-info" type="button" (click)="closeModal()">{{'OK, I understand' | translate}}
-
+                        <button id="addInfo-ok-button" class="btn btn-info" type="button" (click)="closeModal()">{{ 'OK, I understand' | translate }}
                         </button>
                         <br>
                     </div>

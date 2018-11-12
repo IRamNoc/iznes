@@ -2,16 +2,12 @@ import { Component, OnDestroy, Inject, OnInit } from '@angular/core';
 import { Router } from '@angular/router';
 import { AlertsService } from '@setl/jaspero-ng2-alerts';
 import { select } from '@angular-redux/store';
-
 import { Observable, Subscription, Subject } from 'rxjs';
 import { takeUntil } from 'rxjs/operators';
-
 import { MultilingualService } from '@setl/multilingual';
 import { APP_CONFIG, AppConfig, ConfirmationService } from '@setl/utils';
 import { ISignupConfiguration, ISignupData } from '@setl/core-login';
-
 import { OfiKycService } from '../../ofi-req-services/ofi-kyc/service';
-
 import { ConsumeTokenService } from '../invitation-token/consume-token.service';
 
 @Component({
@@ -19,7 +15,6 @@ import { ConsumeTokenService } from '../invitation-token/consume-token.service';
     template: '<app-signup [configuration]="configuration" (signupDataEmit)="setSignupData($event)"></app-signup>',
 })
 export class OfiSignUpComponent implements OnInit, OnDestroy {
-
     configuration: ISignupConfiguration;
 
     private unsubscribe: Subject<any> = new Subject<any>();
@@ -50,8 +45,7 @@ export class OfiSignUpComponent implements OnInit, OnDestroy {
             { 'appConfig.platform': this.appConfig.platform });
 
         const description = this.translate.translate(
-            `Your @appConfig.platform@ account will be created with this email address, provided by the Asset Management company.`,
-            { 'appConfig.platform': this.appConfig.platform });
+            'Your @appConfig.platform@ account will be created with this email address, provided by the Asset Management company.', { 'appConfig.platform': this.appConfig.platform });
 
         const buttonText = this.translate.translate('Create an account');
 
@@ -75,19 +69,20 @@ export class OfiSignUpComponent implements OnInit, OnDestroy {
                 password: signupData.password,
                 lang: signupData.language,
             }).then(() => {
-                // Resolve so user gets logged in and has a token
-                resolve();
                 this.consumeToken();
 
                 this.confirmationService.create(
                     'Success',
-                    '<p><b>Your account was created</b></p><p>A confirmation email was sent to you.</p>',
+                    `<p><b>${this.translate.translate('Your account was created')}</b></p><p>${this.translate.translate('A confirmation email was sent to you')}.</p>`,
                     {
-                        confirmText: 'Continue to ' + this.appConfig.platform,
+                        confirmText: this.translate.translate('Continue to @platform@', { 'platform': this.appConfig.platform }),
                         declineText: '',
                         btnClass: 'success',
                     },
                 ).subscribe(() => {
+                    // Resolve so user gets logged in and has a token
+                    resolve();
+
                     this
                         .authenticationOb
                         .pipe(
@@ -95,31 +90,21 @@ export class OfiSignUpComponent implements OnInit, OnDestroy {
                         )
                         .subscribe((authentication) => {
                             this.updateState(authentication);
-                        })
-                    ;
-
+                        });
                 });
             }).catch((e) => {
                 this.alertsService.create(
                     'error',
-                    '<span class="text-warning">Sorry, something went wrong.<br>Please try again later!</span>',
+                    `<span class="text-warning">${this.translate.translate('Sorry, something went wrong')}.<br>${this.translate.translate('Please try again later')}.</span>`,
                 );
             });
         });
     }
 
     private consumeToken() {
-        this
-            .authenticationOb
-            .pipe(
-                takeUntil(this.unsubscribe),
-            )
-            .subscribe((authentication) => {
-                if (this.signupData().invitationToken && authentication.isLogin) {
-                    this.consumeTokenService.consumeToken(this.signupData().invitationToken);
-                }
-            })
-        ;
+        if (this.signupData().invitationToken) {
+            this.consumeTokenService.consumeToken(this.signupData().invitationToken);
+        }
     }
 
     private updateState(myAuthenData) {

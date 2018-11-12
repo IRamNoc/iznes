@@ -33,6 +33,7 @@ export class OfiKycHomeComponent implements AfterViewInit, OnDestroy {
     endpointsConfig: Endpoints;
     hasFilledAdditionnalInfos = false;
     userType: number;
+    investorType: number;
 
     /* Public properties. */
     public showModal = false;
@@ -54,6 +55,7 @@ export class OfiKycHomeComponent implements AfterViewInit, OnDestroy {
         phoneNumber: '',
         amManagementCompanyID: 0,
         invitationToken: '',
+        investorType: 0,
     };
 
     unSubscribe: Subject<any> = new Subject();
@@ -89,6 +91,7 @@ export class OfiKycHomeComponent implements AfterViewInit, OnDestroy {
             .subscribe((d) => {
                 /* Assign list to a property. */
                 this.userInfo = d;
+                this.investorType = d.investorType;
                 this._changeDetectorRef.markForCheck();
             });
 
@@ -149,7 +152,7 @@ export class OfiKycHomeComponent implements AfterViewInit, OnDestroy {
             phoneCode: this.userInfo.phoneCode,
             phoneNumber: this.userInfo.phoneNumber,
             companyName: this.userInfo.companyName,
-            defaultHomePage: this.endpointsConfig.myRequests, // @todo When superadmin role is developed, check the role here
+            defaultHomePage: this.getHomePageToSet(),
         };
         const asyncTaskPipe = this.myUserService.saveMyUserDetails(user);
         this._ngRedux.dispatch(SagaHelper.runAsyncCallback(
@@ -167,17 +170,49 @@ export class OfiKycHomeComponent implements AfterViewInit, OnDestroy {
         //this.showModal = false;
 
         this.route.queryParams.subscribe(queryParams => {
-            if (queryParams.invitationToken) {
-                this.router.navigate(['my-requests', 'new'], {
-                    queryParams: {
-                        invitationToken: queryParams.invitationToken,
-                        amcID: queryParams.amcID
-                    }
-                });
-            } else{
-                this.router.navigate(['my-requests', 'list']);
+            if (this.isPortfolioManagerType()) {
+                this.portfolioManagerAction();
+            } else {
+                if (queryParams.invitationToken) {
+                    this.router.navigate(['my-requests', 'new'], {
+                        queryParams: {
+                            invitationToken: queryParams.invitationToken,
+                            amcID: queryParams.amcID,
+                        },
+                    });
+                } else {
+                    this.router.navigate(['my-requests', 'list']);
+                }
             }
+
         });
+    }
+
+    /**
+     * Get default home to set after saving user detail.
+     * @return {string}
+     */
+    getHomePageToSet(): string {
+        if (this.isPortfolioManagerType()) {
+            return '/home';
+        }
+        return this.endpointsConfig.myRequests; // @todo When superadmin role is developed, check the role here
+    }
+
+    /**
+     * Check is investor type is portfolio manager.
+     * @return {boolean}
+     */
+    isPortfolioManagerType(): boolean {
+        return this.investorType === 20;
+    }
+
+    /**
+     * Perform porfolio manager action after saving data.
+     * Navigate to home page.
+     */
+    portfolioManagerAction(): void {
+        this.router.navigate(['home']);
     }
 
     ngOnDestroy(): void {

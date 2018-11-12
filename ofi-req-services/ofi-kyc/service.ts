@@ -27,6 +27,8 @@ import {
     GetMyKycListRequestBody,
     createKYCDraftMessageBody,
     createKYCDraftRequestData,
+    DeleteKycRequestData,
+    DeleteKycRequestMessageBody,
     GetClientReferentialMessageBody,
     AuditSearchRequestBody,
     AuditSearchRequestData
@@ -51,6 +53,7 @@ import {
     SET_KYC_DETAILS_RISKNATURE,
     SET_KYC_DETAILS_RISKOBJECTIVES,
     SET_KYC_DETAILS_DOCUMENTS,
+    SET_KYC_DETAILS_VALIDATION,
 
     setkycdetailsgeneralrequested,
     setkycdetailscompanyrequested,
@@ -60,6 +63,7 @@ import {
     setkycdetailsrisknaturerequested,
     setkycdetailsriskobjectivesrequested,
     setkycdetailsdocumentsrequested,
+    setkycdetailsvalidationrequested,
 } from '../../ofi-store/ofi-kyc/kyc-details';
 import { SET_INFORMATIONS_FROM_API } from '@ofi/ofi-main/ofi-store/ofi-kyc/my-informations';
 import {
@@ -135,7 +139,7 @@ export class OfiKycService {
 
         this.validConnectedWallet$ = this.connectedWallet$
         .pipe(
-           filter(( walletId: number ) => (walletId !== 0 && !!walletId)),
+            filter((walletId: number) => (walletId !== 0 && !!walletId)),
         )
         .takeUntil(this.unSubscribe);
     }
@@ -286,6 +290,21 @@ export class OfiKycService {
         ));
     }
 
+    static defaultRequestKycDetailsValidation(ofiKycService: OfiKycService, ngRedux: NgRedux<any>, kycID) {
+        // Set the state flag to true. so we do not request it again.
+        ngRedux.dispatch(setkycdetailsvalidationrequested());
+
+        // Request the list.
+        const asyncTaskPipe = ofiKycService.getKycValidation(kycID);
+
+        ngRedux.dispatch(SagaHelper.runAsync(
+            [SET_KYC_DETAILS_VALIDATION],
+            [],
+            asyncTaskPipe,
+            {}
+        ));
+    }
+
     /* END My Request Details */
 
     static defaultRequestGetInvKycDocuments(ofiKycService: OfiKycService, ngRedux: NgRedux<any>, getKycDocumentRequestData: GetKycDocumentRequestData) {
@@ -353,8 +372,7 @@ export class OfiKycService {
 
         const messageBody: UseTokenRequestBody = {
             RequestName: 'izneskycusetoken',
-            token: this.memberSocketService.token,
-            invitationToken: invitationToken,
+            invitationToken,
         };
 
         return createMemberNodeRequest(this.memberSocketService, messageBody);
@@ -670,6 +688,17 @@ export class OfiKycService {
         return createMemberNodeSagaRequest(this.memberSocketService, messageBody);
     }
 
+    getKycValidation(kycID: number): any {
+
+        const messageBody: getKycRequestDetailsRequestBody = {
+            RequestName: 'getkycvalidation',
+            token: this.memberSocketService.token,
+            kycID,
+        };
+
+        return createMemberNodeSagaRequest(this.memberSocketService, messageBody);
+    }
+
     saveKycDocument(requestData: SaveKycDocumentRequestData): any {
         const messageBody: SaveKycDocumentRequestBody = {
             RequestName: 'updatekycdocument',
@@ -717,6 +746,18 @@ export class OfiKycService {
             investorWalletID: _.get(requestData, 'investorWalletID', ''),
             kycStatus: _.get(requestData, 'kycStatus', ''),
             alreadyCompleted: _.get(requestData, 'alreadyCompleted', '')
+        };
+
+        return createMemberNodeRequest(this.memberSocketService, messageBody);
+
+    }
+
+    deleteKycRequest(requestData: DeleteKycRequestData) {
+
+        const messageBody: DeleteKycRequestMessageBody = {
+            RequestName: 'izndeletekycrequest',
+            token: this.memberSocketService.token,
+            kycID: _.get(requestData, 'kycID'),
         };
 
         return createMemberNodeRequest(this.memberSocketService, messageBody);
