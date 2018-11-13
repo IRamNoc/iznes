@@ -8,7 +8,7 @@ export interface Endpoints {
 export default {
     alreadyDoneWaitingForApproval: '/new-investor/already-done/waiting-for-validation',
     alreadyDoneConfirmation: '/new-investor/already-done/confirmation',
-    home: '/login',
+    home: '/home',
     myRequests: '/my-requests/list',
 };
 

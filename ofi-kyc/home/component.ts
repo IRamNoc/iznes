@@ -189,12 +189,12 @@ export class OfiKycHomeComponent implements AfterViewInit, OnDestroy {
     }
 
     /**
-     * Get default login to set after saving user detail.
+     * Get default home to set after saving user detail.
      * @return {string}
      */
     getHomePageToSet(): string {
         if (this.isPortfolioManagerType()) {
-            return '/login';
+            return '/home';
         }
         return this.endpointsConfig.myRequests; // @todo When superadmin role is developed, check the role here
     }
@@ -209,7 +209,7 @@ export class OfiKycHomeComponent implements AfterViewInit, OnDestroy {
 
     /**
      * Perform porfolio manager action after saving data.
-     * Navigate to login page.
+     * Navigate to home page.
      */
     portfolioManagerAction(): void {
         this.router.navigate(['home']);

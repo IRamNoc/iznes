@@ -109,7 +109,7 @@ export class OfiSignUpComponent implements OnInit, OnDestroy {
 
     private updateState(myAuthenData) {
         if (myAuthenData.isLogin) {
-            const redirect = myAuthenData.defaultHomePage ? myAuthenData.defaultHomePage : '/login';
+            const redirect = myAuthenData.defaultHomePage ? myAuthenData.defaultHomePage : '/home';
 
             const params = {
                 invitationToken: this.signupData().invitationToken,
