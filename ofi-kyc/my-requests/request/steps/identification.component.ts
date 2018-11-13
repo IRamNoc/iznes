@@ -9,6 +9,7 @@ import { NewRequestService } from '../new-request.service';
 import { IdentificationService } from './identification.service';
 import { setMyKycRequestedPersist } from '@ofi/ofi-main/ofi-store/ofi-kyc';
 import { steps } from '../../requests.config';
+import { BeneficiaryService } from './identification/beneficiary.service';
 
 @Component({
     selector: 'kyc-step-identification',
@@ -30,13 +31,12 @@ export class NewKycIdentificationComponent implements OnInit {
         private persistService: PersistService,
         private persistRequestService: PersistRequestService,
         private ngRedux: NgRedux<any>,
+        private beneficiaryService: BeneficiaryService,
     ) {
     }
 
     ngOnInit() {
         this.initSubscriptions();
-
-        window['pouetident'] = this.form;
     }
 
     initSubscriptions() {
@@ -97,7 +97,7 @@ export class NewKycIdentificationComponent implements OnInit {
         const holders = getValue(parsed, ['bankingInformation', 'custodianHolders']);
 
         const beneficiariesControl = this.form.get(['companyInformation', 'beneficiaries']);
-        if (beneficiaries.length > 1) {
+        if (beneficiaries.length > 0) {
             beneficiariesControl.controls.splice(0);
             for (let i = 0; i < beneficiaries.length; i += 1) {
                 beneficiariesControl.push(this.newRequestService.createBeneficiary());
@@ -123,6 +123,8 @@ export class NewKycIdentificationComponent implements OnInit {
                 returnPromise: true,
             },
         ).then(() => {
+            this.beneficiaryService.updateStakeholdersValidity(this.form.get('companyInformation.beneficiaries'));
+
             this.ngRedux.dispatch(setMyKycRequestedPersist('identification'));
         });
     }

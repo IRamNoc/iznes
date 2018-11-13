@@ -20,6 +20,7 @@ export class CompanyInformationComponent implements OnInit, OnDestroy {
     @ViewChild(FormPercentDirective) formPercent: FormPercentDirective;
     @Input() form: FormGroup;
     @select(['ofi', 'ofiKyc', 'myKycRequested', 'kycs']) requests$;
+    @select(['ofi', 'ofiKyc', 'myKycRequested', 'formPersist']) persistedForms$;
 
     unsubscribe: Subject<any> = new Subject();
     open: boolean = false;
@@ -59,6 +60,15 @@ export class CompanyInformationComponent implements OnInit, OnDestroy {
 
         this.initFormCheck();
         this.getCurrentFormData();
+
+        this.persistedForms$
+        .pipe(takeUntil(this.unsubscribe))
+        .subscribe((forms) => {
+            if (forms.identification) {
+                this.formPercent.refreshFormPercent();
+            }
+        })
+        ;
     }
 
     initFormCheck() {
