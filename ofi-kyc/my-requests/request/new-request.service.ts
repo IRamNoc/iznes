@@ -413,24 +413,22 @@ export class NewRequestService {
 
         return fb.group({
             common: fb.group({
-                kyclistshareholdersdoc: this.createDocumentFormGroup('kyclistshareholdersdoc', true),
-                kyclistdirectorsdoc: this.createDocumentFormGroup('kyclistdirectorsdoc', !this.isProduction),
-                kycbeneficialownersdoc: this.createDocumentFormGroup('kycbeneficialownersdoc', !this.isProduction),
-                kyclistauthoriseddoc: this.createDocumentFormGroup('kyclistauthoriseddoc', !this.isProduction),
-                kyctaxcertificationdoc: this.createDocumentFormGroup('kyctaxcertificationdoc', !this.isProduction),
-                kycw8benefatcadoc: this.createDocumentFormGroup('kycw8benefatcadoc', true),
-            }),
-            pro: fb.group({
-                kycproofofapprovaldoc: this.createDocumentFormGroup('kycproofofapprovaldoc', true),
-                kycisincodedoc: this.createDocumentFormGroup('kycisincodedoc', true),
-                kycwolfsbergdoc: this.createDocumentFormGroup('kycwolfsbergdoc', !this.isProduction),
-            }),
-            other: fb.group({
                 kycstatuscertifieddoc: this.createDocumentFormGroup('kycstatuscertifieddoc', !this.isProduction),
                 kyckbisdoc: this.createDocumentFormGroup('kyckbisdoc', !this.isProduction),
                 kycannualreportdoc: this.createDocumentFormGroup('kycannualreportdoc', !this.isProduction),
                 kycidorpassportdoc: this.createDocumentFormGroup('kycidorpassportdoc', !this.isProduction),
-            })
+                kycwolfsbergdoc: this.createDocumentFormGroup('kycwolfsbergdoc', !this.isProduction),
+                kyctaxcertificationdoc: this.createDocumentFormGroup('kyctaxcertificationdoc', !this.isProduction),
+                kycw8benefatcadoc: this.createDocumentFormGroup('kycw8benefatcadoc', !this.isProduction),
+            }),
+            listed: fb.group({
+                kycisincodedoc: this.createDocumentFormGroup('kycisincodedoc', !this.isProduction),
+                kycevidencefloatable: this.createDocumentFormGroup('kycevidencefloatable', !this.isProduction),
+            }),
+            regulated: fb.group({
+                kycproofofapprovaldoc: this.createDocumentFormGroup('kycproofofapprovaldoc', !this.isProduction),
+                kycproofregulationdoc: this.createDocumentFormGroup('kycproofregulationdoc', !this.isProduction),
+            }),
         });
     }
 

@@ -25,6 +25,11 @@ export class NewKycRequestComponent implements OnInit {
 
     fullForm = true;
     currentCompletedStep;
+    documentRules = {
+        isListed : null,
+        isFloatableHigh: null,
+        isRegulated: null,
+    };
 
     constructor(
         private formBuilder: FormBuilder,
@@ -35,8 +40,34 @@ export class NewKycRequestComponent implements OnInit {
     ) {
     }
 
-    get isPro() {
-        return this.investorType === 'proBySize' || this.investorType === 'proByNature';
+    get documents() {
+        const isListed = this.forms.get('identification.companyInformation.companyListed').value;
+        const isFloatableHigh = this.forms.get('identification.companyInformation.floatableShares').value >= 75;
+        const isRegulated = this.forms.get('identification.companyInformation.activityRegulated').value;
+        let changed = false;
+
+        if (this.documentRules.isListed !== isListed) {
+            this.documentRules.isListed = isListed;
+            changed = true;
+        }
+        if (this.documentRules.isFloatableHigh !== isFloatableHigh) {
+            this.documentRules.isFloatableHigh = isFloatableHigh;
+            changed = true;
+        }
+        if (this.documentRules.isRegulated !== isRegulated) {
+            this.documentRules.isRegulated = isRegulated;
+            changed = true;
+        }
+
+        if (!changed) {
+            return this.documentRules;
+        }
+
+        return {
+            isListed: this.documentRules.isListed,
+            isFloatableHigh: this.documentRules.isFloatableHigh,
+            isRegulated: this.documentRules.isRegulated,
+        };
     }
 
     get investorType() {

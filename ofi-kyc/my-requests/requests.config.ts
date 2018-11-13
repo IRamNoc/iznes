@@ -1275,32 +1275,8 @@ export const capitalNatureList = [
 
 export const documentTypesList = [
     {
-        id: 'kyclistshareholdersdoc',
-        text: 'Official documents (or equivalent) listing the shareholders with their % of ownership if greater than 25%',
-    },
-    {
-        id: 'kyclistdirectorsdoc',
-        text: 'Official document (or equivalent) listing the directors',
-    },
-    {
-        id: 'kycbeneficialownersdoc',
-        text: 'List of beneficial owners',
-    },
-    {
-        id: 'kyclistauthoriseddoc',
-        text: 'List of persons authorised to give instructions',
-    },
-    {
-        id: 'kyctaxcertificationdoc',
-        text: 'Tax self-certification form',
-    },
-    {
-        id: 'kycw8benefatcadoc',
-        text: 'Form W-8BEN-E (FATCA',
-    },
-    {
         id: 'kycstatuscertifieddoc',
-        text: 'Status "certified" (or equivalent) by the duly authorized representative of the client',
+        text: 'Statuses "certified" by the duly authorized representative of the client',
     },
     {
         id: 'kyckbisdoc',
@@ -1315,16 +1291,32 @@ export const documentTypesList = [
         text: 'National identity card or valid passport or residence card of the signatory with photograph',
     },
     {
-        id: 'kycproofofapprovaldoc',
-        text: 'Proof of approval or copy of decree',
+        id: 'kycwolfsbergdoc',
+        text: 'Wolfsberg Questionnaire or equivalent',
+    },
+    {
+        id: 'kyctaxcertificationdoc',
+        text: 'Tax self certification form (CRS)',
+    },
+    {
+        id: 'kycw8benefatcadoc',
+        text: 'Form W-8BEN-E (FACTA) if available',
     },
     {
         id: 'kycisincodedoc',
         text: 'ISIN code of the listed share',
     },
     {
-        id: 'kycwolfsbergdoc',
-        text: 'Wolfsberg Questionnaire or equivalentFor',
+        id: 'kycevidencefloatable',
+        text: 'Evidence of stocklisting and confirmation that 75% of the company\\\'s shares are floatable and tradable on the market',
+    },
+    {
+        id: 'kycproofofapprovaldoc',
+        text: 'Proof of approval or copy of order',
+    },
+    {
+        id: 'kycproofregulationdoc',
+        text: 'Proof of regulation/supervision from the Regulator’s Website',
     },
 
 ];

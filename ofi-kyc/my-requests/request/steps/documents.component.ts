@@ -21,15 +21,26 @@ export class NewKycDocumentsComponent implements OnInit, OnDestroy {
     @select(['ofi', 'ofiKyc', 'myKycRequested', 'kycs']) requests$;
     @Input() form: FormGroup;
 
-    @Input() set isPro(isPro) {
-        if (isPro) {
-            (this.form.get('other') as FormGroup).disable();
-            (this.form.get('pro') as FormGroup).enable();
+    @Input() set documents(documents) {
+        const listedDocuments = this.form.get('listed');
+        const floatableDocument = this.form.get('listed.kycevidencefloatable');
+        const regulatedDocuments = this.form.get('regulated');
+
+        listedDocuments.disable();
+        if (documents.isListed) {
+            listedDocuments.enable();
         }
-        else {
-            (this.form.get('other') as FormGroup).enable();
-            (this.form.get('pro') as FormGroup).disable();
+
+        floatableDocument.disable();
+        if (documents.isFloatableHigh) {
+            floatableDocument.enable();
         }
+
+        regulatedDocuments.disable();
+        if (documents.isRegulated) {
+            regulatedDocuments.enable();
+        }
+
         this.formPercent.refreshFormPercent();
     };
 

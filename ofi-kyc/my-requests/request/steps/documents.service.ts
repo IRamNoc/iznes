@@ -1,23 +1,22 @@
 import { Injectable } from '@angular/core';
-import * as moment from 'moment';
 import { RequestsService } from '../../requests.service';
 import { NewRequestService } from '../new-request.service';
 import { merge, get as getValue, values, isEmpty, filter } from 'lodash';
 
 export const documentFormPaths = {
-    kyclistshareholdersdoc: 'common',
-    kyclistdirectorsdoc: 'common',
-    kycbeneficialownersdoc: 'common',
-    kyclistauthoriseddoc: 'common',
+    kycstatuscertifieddoc: 'common',
+    kyckbisdoc: 'common',
+    kycannualreportdoc: 'common',
+    kycidorpassportdoc: 'common',
+    kycwolfsbergdoc: 'common',
     kyctaxcertificationdoc: 'common',
     kycw8benefatcadoc: 'common',
-    kycproofofapprovaldoc: 'pro',
-    kycisincodedoc: 'pro',
-    kycwolfsbergdoc: 'pro',
-    kycstatuscertifieddoc: 'other',
-    kyckbisdoc: 'other',
-    kycannualreportdoc: 'other',
-    kycidorpassportdoc: 'other',
+
+    kycisincodedoc: 'listed',
+    kycevidencefloatable: 'listed',
+
+    kycproofofapprovaldoc: 'regulated',
+    kycproofregulationdoc: 'regulated',
 };
 
 @Injectable()
@@ -87,10 +86,11 @@ export class DocumentsService {
     }
 
     getValues(formValue) {
-        let merged = merge(
+        let merged = merge(,
+            {},
             getValue(formValue, 'common'),
-            getValue(formValue, 'other', {}),
-            getValue(formValue, 'pro', {})
+            getValue(formValue, 'listed', {}),
+            getValue(formValue, 'regulated', {})
         );
 
         merged = filter(merged, 'hash');
