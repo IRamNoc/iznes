@@ -1,12 +1,11 @@
-import {Component, Input, OnInit, OnDestroy, Output, EventEmitter} from '@angular/core';
-import {select} from '@angular-redux/store';
-import {Subject} from 'rxjs';
-import {takeUntil, filter as rxFilter, take} from 'rxjs/operators';
-import {find, isEmpty} from 'lodash';
+import { Component, Input, OnInit, OnDestroy, Output, EventEmitter } from '@angular/core';
+import { select } from '@angular-redux/store';
+import { Subject } from 'rxjs';
+import { takeUntil, filter as rxFilter, take } from 'rxjs/operators';
+import { find, isEmpty } from 'lodash';
 import { List } from 'immutable';
-
-import {NewRequestService} from "../../new-request.service";
-import {RiskProfileService} from '../risk-profile.service';
+import { NewRequestService } from '../../new-request.service';
+import { RiskProfileService } from '../risk-profile.service';
 
 @Component({
     selector: 'investment-constraint-form',
@@ -14,7 +13,6 @@ import {RiskProfileService} from '../risk-profile.service';
     styleUrls: ['./investment-constraint-form.component.scss']
 })
 export class InvestmentConstraintFormComponent implements OnInit, OnDestroy {
-
     @Output() refreshForm = new EventEmitter<void>();
     @Input() form;
     @Input() multiple;
@@ -25,7 +23,7 @@ export class InvestmentConstraintFormComponent implements OnInit, OnDestroy {
     open: boolean = true;
     amc = {
         companyID: '',
-        companyName: ''
+        companyName: '',
     };
 
     constructor(
@@ -54,8 +52,7 @@ export class InvestmentConstraintFormComponent implements OnInit, OnDestroy {
             )
             .subscribe((data: any) => {
                 this.form.patchValue(data);
-            })
-        ;
+            });
     }
 
     initData() {
@@ -75,8 +72,7 @@ export class InvestmentConstraintFormComponent implements OnInit, OnDestroy {
                         this.amc = found;
                     }
                 }
-            })
-        ;
+            });
     }
 
     initFormCheck() {
@@ -110,5 +106,4 @@ export class InvestmentConstraintFormComponent implements OnInit, OnDestroy {
         this.unsubscribe.next();
         this.unsubscribe.complete();
     }
-
 }

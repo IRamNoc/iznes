@@ -1,16 +1,16 @@
-import {ChangeDetectorRef, Component, Inject, OnDestroy, OnInit} from '@angular/core';
-import {ActivatedRoute, Router} from '@angular/router';
-import {APP_CONFIG, AppConfig, SagaHelper} from '@setl/utils/index';
-import {FormBuilder, FormGroup, Validators} from '@angular/forms';
-import {NgRedux, select} from '@angular-redux/store';
-import {OfiKycService} from '@ofi/ofi-main/ofi-req-services/ofi-kyc/service';
-import {Subject} from 'rxjs';
+import { ChangeDetectorRef, Component, Inject, OnDestroy, OnInit } from '@angular/core';
+import { ActivatedRoute, Router } from '@angular/router';
+import { APP_CONFIG, AppConfig, SagaHelper } from '@setl/utils/index';
+import { FormBuilder, FormGroup, Validators } from '@angular/forms';
+import { NgRedux, select } from '@angular-redux/store';
+import { OfiKycService } from '@ofi/ofi-main/ofi-req-services/ofi-kyc/service';
+import { Subject } from 'rxjs';
 import { takeUntil } from 'rxjs/operators';
-
-import {Endpoints} from '../config';
-import {MyUserService} from '@setl/core-req-services';
-import {ToasterService} from 'angular2-toaster';
-import {immutableHelper} from '@setl/utils';
+import { Endpoints } from '../config';
+import { MyUserService } from '@setl/core-req-services';
+import { ToasterService } from 'angular2-toaster';
+import { immutableHelper } from '@setl/utils';
+import { MultilingualService } from '@setl/multilingual';
 
 @Component({
     selector: 'app-ofi-kyc-already-done',
@@ -18,7 +18,6 @@ import {immutableHelper} from '@setl/utils';
     styleUrls: ['./component.scss']
 })
 export class OfiKycAlreadyDoneComponent implements OnInit, OnDestroy {
-
     appConfig: AppConfig;
     endpointsConfig: Endpoints;
     investorStatus: string;
@@ -26,11 +25,11 @@ export class OfiKycAlreadyDoneComponent implements OnInit, OnDestroy {
     showModal = false;
     investorAnsweredNo = false;
     amDetails = {
-        firstName: {value: '', label: 'First name'},
-        lastName: {value: '', label: 'Last name'},
-        email: {value: '', label: 'Email'},
-        phone: {value: '', label: 'Phone number'},
-        companyName: {value: '', label: 'AM Company name'},
+        firstName: { value: '', label: '' },
+        lastName: { value: '', label: '' },
+        email: { value: '', label: '' },
+        phone: { value: '', label: '' },
+        companyName: { value: '', label: '' },
     };
 
     investorDetails = {
@@ -57,6 +56,7 @@ export class OfiKycAlreadyDoneComponent implements OnInit, OnDestroy {
                 private myUserService: MyUserService,
                 private ngRedux: NgRedux<any>,
                 private changeDetectorRef: ChangeDetectorRef,
+                private translate: MultilingualService,
                 @Inject('endpoints') endpoints,
                 @Inject(APP_CONFIG) appConfig: AppConfig) {
         this.appConfig = appConfig;
@@ -73,6 +73,14 @@ export class OfiKycAlreadyDoneComponent implements OnInit, OnDestroy {
     }
 
     ngOnInit() {
+        this.amDetails = {
+            firstName: { value: '', label: this.translate.translate('First Name') },
+            lastName: { value: '', label: this.translate.translate('Last Name') },
+            email: { value: '', label: this.translate.translate('Email') },
+            phone: { value: '', label: this.translate.translate('Phone Number') },
+            companyName: { value: '', label: this.translate.translate('AM Company Name') },
+        };
+
         this.myInfos$
         // .takeUntil(this.unsubscribe)
             .subscribe((d) => {

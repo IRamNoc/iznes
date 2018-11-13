@@ -15,7 +15,6 @@ import { ClearMyKycListRequested } from '@ofi/ofi-main/ofi-store/ofi-kyc';
     templateUrl: './list-grid.component.html',
 })
 export class MyRequestsGridComponent {
-
     @Input() kycList;
     @Output() selectedKyc = new EventEmitter<number>();
 
@@ -107,5 +106,4 @@ export class MyRequestsGridComponent {
             }
         });
     }
-
 }

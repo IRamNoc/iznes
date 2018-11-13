@@ -1,33 +1,31 @@
 <div class="header-breadcrumbs">
     <h1>
         <i class="fa fa-file-text-o"></i>
-        <span *ngIf="investor">{{'KYC Documents Approval: @investor.companyName.value@' | translate: {'investor.companyName.value': investor.companyName.value} }}</span>
+        <span *ngIf="investor">{{ 'KYC Documents Approval: @investor.companyName.value@' | translate: { 'investor.companyName.value': investor.companyName.value } }}</span>
     </h1>
 </div>
 
 <clr-tabs *ngIf="investor">
     <clr-tab>
         <button clrTabLink id="waitingApprovalTab">
-            <i class="fa fa-bars"></i>{{'KYC documents & client folder' | translate}}
-
+            <i class="fa fa-bars"></i>{{ 'KYC Documents & Client Folder' | translate }}
         </button>
 
         <clr-tab-content *clrIfActive>
 
             <div *ngIf="alreadyCompleted">
                 <p>
-                    {{'@investor.companyName.value@ says that they have already done the KYC process with your company.' | translate: {'investor.companyName.value': investor.companyName.value} }}
+                    {{ '@investor.companyName.value@ says that they have already done the KYC process with your company.' | translate: { 'investor.companyName.value': investor.companyName.value } }}
                 </p>
                 <p>
-                    {{'Please confirm here if these KYC documents have been previously filled up by your client @investor.companyName.value@ and validated.' | translate: {'investor.companyName.value': investor.companyName.value} }}
+                    {{ 'Please confirm here if these KYC documents have been previously filled up by your client @investor.companyName.value@ and validated.' | translate: { 'investor.companyName.value': investor.companyName.value } }}
                 </p>
-
                 <p>
                     <strong>
-                        {{'If this is not the case or you wish to have the KYC information on IZNES regarding this client anyway, then you can ask the investor to fill in his information by clicking on:' | translate}}
+                        {{ 'If this is not the case or you wish to have the KYC information on IZNES regarding this client anyway, then you can ask the investor to fill in his information by clicking on' | translate }}:
                     </strong>
                     <button class="btn btn-primary baseline" style="margin-left: 10px;" (click)="openCompleteKycModal()">
-                        {{'Complete KYC on IZNES' | translate}}
+                        {{ 'Complete KYC on IZNES' | translate }}
                     </button>
                 </p>
 
@@ -37,14 +35,13 @@
                 <div class="hr-line-dashed"></div>
             </div>
 
-
             <div *ngIf="!alreadyCompleted" class="mb-1">
                 <p>
-                    {{'Please find below the information filled in by @companyName@ during his request:' | translate : {'companyName': investor.companyName.value} }}
+                    {{ 'Please find below the information filled in by @companyName@ during his request' | translate : { 'companyName': investor.companyName.value } }}:
                 </p>
 
                 <div class="hr-line-dashed"></div>
-                <h2>{{'Professional Investor Details' | translate}}</h2>
+                <h2>{{ 'Professional Investor Details' | translate }}</h2>
 
                 <!-- Investor informations block -->
                 <div class="well">
@@ -52,7 +49,7 @@
                         <div class="col-xs-12">
                             <a href="#" (click)="isProOpen = !isProOpen; $event.preventDefault();">
                                 <i class="fa fa-chevron-right" [class.rotate]="isProOpen"></i>
-                                <h2>{{'General information' | translate}}</h2>
+                                <h2>{{' General Information' | translate }}</h2>
                             </a>
                         </div>
                     </div>
@@ -69,11 +66,11 @@
 
             <!-- Waiting for approval form -->
             <div>
-                <h2>{{'KYC Documents Confirmation' | translate}}</h2>
+                <h2>{{ 'KYC Documents Confirmation' | translate }}</h2>
                 <form [formGroup]="waitingApprovalFormGroup" (ngSubmit)="handleSubmitButtonClick()">
                     <section class="form-block">
                         <p>
-                            <strong>{{'Please confirm that you validate your client\'s KYC documents:' | translate}}</strong>
+                            <strong>{{ 'Please confirm that you validate your client\'s KYC documents' | translate }} </strong>
                         </p>
 
                         <!-- Radio buttons -->
@@ -94,26 +91,30 @@
                             <div class="form-check" *ngIf="waitingApprovalFormGroup.controls['status'].value === APPROVED_STATUS">
 
                                 <input id="checkbox" class="form-check-input" type="checkbox" formControlName="isKycAccepted" value="false">&nbsp;
-                                <label class="form-check-label" for="checkbox">{{'We hereby validate that this client has fully completed the KYC documents with us, and is authorised to trade with us.' | translate}}</label>
+                                <label class="form-check-label" for="checkbox">{{ 'We hereby validate that this client has fully completed the KYC documents with us, and is authorised to trade with us.' | translate }}</label>
                             </div>
                         </div>
 
                         <!-- Additional text -->
                         <div class="form-group col-sm-12" *ngIf="waitingApprovalFormGroup.controls['status'].value !== APPROVED_STATUS">
                             <!-- Reject -->
-                            <textarea *ngIf="waitingApprovalFormGroup.controls['status'].value === REJECTED_STATUS && initialStatusId != -2" id="rejectText" class="form-control" [placeholder]="_translate.translate('Please indicate here why you would like to reject this application. This will be sent as a message to your client on the IZNES platform.')" formControlName="additionalText">
+                            <textarea *ngIf="waitingApprovalFormGroup.controls['status'].value === REJECTED_STATUS && initialStatusId != -2" 
+                                    id="rejectText" 
+                                    class="form-control" 
+                                    [placeholder]="_translate.translate('Please indicate here why you would like to reject this application. This will be sent as a message to your client on the IZNES platform.')" formControlName="additionalText">
                             </textarea>
                             <!-- Ask for more info -->
-                            <textarea *ngIf="waitingApprovalFormGroup.controls['status'].value === ASK_FOR_MORE_INFO_STATUS" id="askMoreInfoText" class="form-control" [placeholder]="_translate.translate('Please ask for more information here. This will be sent as a message to your client on the IZNES platform.')" formControlName="additionalText">
+                            <textarea *ngIf="waitingApprovalFormGroup.controls['status'].value === ASK_FOR_MORE_INFO_STATUS"                 id="askMoreInfoText" 
+                                        class="form-control" 
+                                        [placeholder]="_translate.translate('Please ask for more information here. This will be sent as a message to your client on the IZNES platform.')" formControlName="additionalText">
                             </textarea>
                         </div>
 
                         <!-- Back and submit buttons -->
                         <div class="form-group col-sm-12">
-                            <button id="backButton" type="button" class="btn btn-light" (click)="handleBackButtonClick()">{{'Back' | translate}}
-                            </button>
+                            <button id="backButton" type="button" class="btn btn-light" (click)="handleBackButtonClick()">{{ 'Back' | translate }}</button>
 
-                            <button id="submitButton" type="submit" class="btn btn-primary" [disabled]="handleSubmitButtonDisabled()">{{'Validate' | translate}}
+                            <button id="submitButton" type="submit" class="btn btn-primary" [disabled]="handleSubmitButtonDisabled()">{{ 'Validate' | translate }}
                             </button>
                         </div>
                     </section>
@@ -123,11 +124,9 @@
     </clr-tab>
 </clr-tabs>
 
-
 <clr-modal [(clrModalOpen)]="completeKycModal">
-    <h3 class="modal-title">{{'Complete KYC on IZNES' | translate}}</h3>
+    <h3 class="modal-title">{{ 'Complete KYC on IZNES' | translate }}</h3>
     <div class="modal-body">
-
         <div class="f-modal-alert">
             <div class="f-modal-icon f-modal-warning scaleWarning">
                 <span class="f-modal-body pulseWarningIns"></span>
@@ -136,17 +135,17 @@
         </div>
 
         <p>
-            {{'By confirming this pop up, a message and an email will be sent to @investor.companyName.value@ in order to let them complete their KYC information on IZNES.' | translate: {'investor.companyName.value': investor.companyName.value} }}
+            {{ 'By confirming this pop up, a message and an email will be sent to @investor.companyName.value@ in order to let them complete their KYC information on IZNES.' | translate: { 'investor.companyName.value': investor.companyName.value } }}
         </p>
 
         <p>
             <strong>
-                {{'Be aware that until @investor.companyName.value@ fill in their information, you won\'t be able to accept this investor\'s request and attribute shares\' authorisation.' | translate: {'investor.companyName.value': investor.companyName.value} }}
+                {{ 'Be aware that until @investor.companyName.value@ fill in their information, you won\'t be able to accept this investor\'s request and attribute shares\' authorisation.' | translate: { 'investor.companyName.value': investor.companyName.value } }}
             </strong>
         </p>
 
         <p>
-            {{'If you want you are able to join a message to this request:' | translate}}
+            {{ 'If you want you are able to join a message to this request:' | translate }}
         </p>
 
         <form>
@@ -159,7 +158,7 @@
 
     </div>
     <div class="modal-footer">
-        <button type="button" class="btn btn-outline mr-1" (click)="completeKycModal = false">{{'Cancel' | translate}}</button>
-        <button type="button" class="btn btn-success" (click)="saveCompleteKycModal(message)">{{'Confirm' | translate}}</button>
+        <button type="button" class="btn btn-outline mr-1" (click)="completeKycModal = false">{{ 'Cancel' | translate }}</button>
+        <button type="button" class="btn btn-success" (click)="saveCompleteKycModal(message)">{{ 'Confirm' | translate }}</button>
     </div>
 </clr-modal>

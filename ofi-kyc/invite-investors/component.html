@@ -1,18 +1,17 @@
 <!-- Breadcrumbs. -->
 <div class="header-breadcrumbs">
     <h1 id="ofi-kyc-invite-investors">
-        <i class="fa fa-user-plus"></i> {{'Client Referential: Invite Investors to IZNES' | translate}}</h1>
+        <i class="fa fa-user-plus"></i> {{ 'Client Referential: Invite Investors to IZNES' | translate }}</h1>
 </div>
 
 <!-- Main content. -->
 <div class="wrapper wrapper-content">
     <div class="row">
         <div class="col-sm-12">
-            <p>{{'Please provide the email address(es) of the Investors you would like to invite to IZNES.' | translate}}
-
+            <p>{{ 'Please provide the email address(es) of the Investors you would like to invite to IZNES.' | translate }}
                 <br>
                 <span class="text-danger">
-                    {{'Please note that the people you add will all be Super Admins within their company.' | translate}}
+                    {{ 'Please note that the people you add will all be Super Admins within their company.' | translate }}
                 </span>
             </p>
         </div>
@@ -24,23 +23,27 @@
                 <div [formGroup]="investor">
                     <div class="row">
                         <div class="form-group col-sm-6">
-                            <label class="required-field" for="kyc_email_{{i}}">{{'Email address:' | translate}}</label>
+                            <label class="required-field" for="kyc_email_{{i}}">{{ 'Email Address' | translate }}</label>
                             <div>
-                                <input type="text" id="kyc_email_{{i}}" class="form-control" formControlName="email" maxlength="70">
+                                <input type="text"
+                                        id="kyc_email_{{i}}"
+                                        class="form-control"
+                                        formControlName="email"
+                                        maxlength="70">
                             </div>
-                            <div *ngIf="investor.controls.email.touched && investor.controls.email.hasError('required')" class="text-danger">
-                                {{'This field is required' | translate}}
+                            <div *ngIf="investor.controls.email.touched && investor.controls.email.hasError('required')" class="field-error">
+                                {{ 'Field is required' | translate }}
                             </div>
-                            <div *ngIf="investor.controls.email.touched && investor.controls.email.hasError('pattern')" class="text-danger">
-                                {{'Email not valid!' | translate}}
+                            <div *ngIf="investor.controls.email.touched && investor.controls.email.hasError('pattern')" class="field-error">
+                                {{ 'Invalid email' | translate }}
                             </div>
-                            <div *ngIf="!investor.controls.email.hasError('pattern') && investor.controls.email.hasError('notUnique')" class="text-danger">
-                                {{'Email already used for invitation!' | translate}}
+                            <div *ngIf="!investor.controls.email.hasError('pattern') && investor.controls.email.hasError('notUnique')" class="field-error">
+                                {{ 'Email already used for invitation' | translate }}
                             </div>
                         </div>
 
                         <div class="form-group col-sm-6">
-                            <label class="required-field" for="kyc_language_{{i}}">{{'Language:' | translate}}</label>
+                            <label class="required-field" for="kyc_language_{{i}}">{{ 'Language' | translate }}</label>
 
                             <div>
                                 <ng-select
@@ -48,14 +51,14 @@
                                     class="form-control"
                                     [items]="languages"
                                     [allowClear]="true"
-                                    [placeholder]="_translate.translate('Select')"
+                                    [placeholder]="translate.translate('Select')"
                                     formControlName="language"
                                     [ngStyle]="{'padding':'6px 0'}"
                                     [containerWidth]="'95%'">
                                 </ng-select>
 
-                                <div *ngIf="investor.controls['language'].hasError('required') && investor.controls['language'].touched" class="text-danger">
-                                    {{'This field is required' | translate}}
+                                <div *ngIf="investor.controls['language'].hasError('required') && investor.controls['language'].touched" class="field-error">
+                                    {{ 'Field is required' | translate }}
                                 </div>
                             </div>
 
@@ -64,23 +67,25 @@
                                 *ngIf="i > 0" id="btnKycRemoveInvestor_{{i}}"
                                 (click)="removeInvestor(invitationForm, i)"
                                 [ngStyle]="{'cursor':'pointer','margin-left':'14px','font-size':'18px','position':'absolute','right':'0'}">
-
                             </i>
                         </div>
                     </div>
 
                     <div class="row">
                         <div class="form-group col-sm-6">
-                            <label for="kyc_clientReference_{{i}}">{{'Client Reference (optional):' | translate}}</label>
+                            <label for="kyc_clientReference_{{i}}">{{ 'Client Reference (optional)' | translate }}</label>
 
                             <div>
-                                <input type="text" id="kyc_clientReference_{{i}}" class="form-control" formControlName="clientReference">
+                                <input type="text"
+                                        id="kyc_clientReference_{{i}}"
+                                        class="form-control"
+                                        formControlName="clientReference">
                             </div>
                         </div>
 
                         <div class="form-group col-sm-6">
                             <label class='required-field' for="kyc_investorType_{{i}}">
-                                {{'Investor Type:' | translate}}
+                                {{ 'Investor Type' | translate }}
                             </label>
 
                             <div>
@@ -89,18 +94,18 @@
                                     class="form-control"
                                     [items]="investorTypes"
                                     [allowClear]="true"
-                                    [placeholder]="_translate.translate('Select')"
+                                    [placeholder]="translate.translate('Select')"
                                     formControlName="investorType"
                                     [ngStyle]="{'padding':'6px 0'}"
                                     [containerWidth]="'95%'">
                                 </ng-select>
 
-                                <div *ngIf="investor.controls['investorType'].hasError('required') && investor.controls['investorType'].touched" class="text-danger">
-                                    {{'This field is required.' | translate}}
+                                <div *ngIf="investor.controls['investorType'].hasError('required') && investor.controls['investorType'].touched" class="field-error">
+                                    {{ 'Field is required' | translate }}
                                 </div>
 
-                                <div *ngIf="isRetailInvestor(investor.controls['investorType']) && investor.controls['investorType'].touched" class="text-danger">
-                                    {{'IZNES is not supporting retail investors for now.' | translate}}
+                                <div *ngIf="isRetailInvestor(investor.controls['investorType']) && investor.controls['investorType'].touched" class="field-error">
+                                    {{ 'IZNES is not supporting retail investors for now' | translate }}
                                 </div>
                             </div>
                         </div>
@@ -108,23 +113,21 @@
 
                     <div class="row" *ngIf="isPortfolioManager(investor.controls['investorType'], investor.controls['fundList'])">
                         <div class="form-group col-sm-6">
-                            <label class="required-field" for="pm_funds_{{i}}">{{'List of funds managed by the Portfolio Manager:' | translate}}
-
-                            </label>
+                            <label class="required-field" for="pm_funds_{{i}}">{{ 'List of funds managed by the Portfolio Manager' | translate }}</label>
                             <div>
                                 <ng-select
                                     id="pm_funds_{{i}}"
                                     class="form-control"
                                     [items]="fundSelectList"
                                     [multiple]="true"
-                                    [placeholder]="_translate.translate('Select funds')"
+                                    [placeholder]="translate.translate('Select funds')"
                                     formControlName="fundList"
                                     [ngStyle]="{'padding':'6px 0'}"
                                     [containerWidth]="'95%'">
                                 </ng-select>
 
-                                <div *ngIf="investor.controls['fundList'].hasError('required') && investor.controls['fundList'].touched" class="text-danger">
-                                    {{'This field is required.' | translate}}
+                                <div *ngIf="investor.controls['fundList'].hasError('required') && investor.controls['fundList'].touched" class="field-error">
+                                    {{ 'Field is required' | translate }}
                                 </div>
                             </div>
                         </div>
@@ -132,18 +135,14 @@
 
                     <div class="row">
                         <div class="form-group col-sm-6">
-                            <label for="kyc_firstName_{{i}}">{{'First name (optional):' | translate}}
-
-                            </label>
+                            <label for="kyc_firstName_{{i}}">{{ 'First Name (optional)' | translate }}</label>
                             <div>
                                 <input type="text" id="kyc_firstName_{{i}}" class="form-control" formControlName="firstName">
                             </div>
                         </div>
 
                         <div class="form-group col-sm-6">
-                            <label for="kyc_lastName_{{i}}">{{'Last name (optional):' | translate}}
-
-                            </label>
+                            <label for="kyc_lastName_{{i}}">{{ 'Last Name (optional)' | translate }}</label>
                             <div>
                                 <input type="text" id="kyc_lastName_{{i}}" class="form-control" formControlName="lastName">
                             </div>
@@ -152,11 +151,13 @@
 
                     <div class="row">
                         <div class="form-group col-sm-12">
-                            <label for="kyc_message_{{i}}">{{'Message (optional):' | translate}}
-
-                            </label>
+                            <label for="kyc_message_{{i}}">{{ 'Message (optional)' | translate }}</label>
                             <div>
-                                <textarea type="text" id="kyc_message_{{i}}" class="form-control" style="width:98%" formControlName="message"></textarea>
+                                <textarea type="text"
+                                            id="kyc_message_{{i}}"
+                                            class="form-control"
+                                            style="width:98%"
+                                            formControlName="message"></textarea>
                             </div>
                         </div>
                     </div>
@@ -166,19 +167,17 @@
             <div class="row">
                 <div class="form-group col-sm-12">
                     <button id="btnKycAddInvestor" type="button" class="btn btn-success" (click)="addInvestor(invitationForm)">
-                        <i class="fa fa-plus"></i> {{'Add another email invitation' | translate}}
+                        <i class="fa fa-plus"></i> {{ 'Add another email invitation' | translate }}
                     </button>
                 </div>
             </div>
             <div class="text-center">
-                <button id="btnKycClose" type="button" class="btn btn-info" (click)="goBack()">{{'Close' | translate}}
-
-                </button>
+                <button id="btnKycClose" type="button" class="btn btn-info" (click)="goBack()">{{ 'Close' | translate }}</button>
 
                 <button id="btnKycSubmit" type="submit" class="btn btn-primary" [disabled]="!invitationForm.valid">
                     <i class="fa fa-save"></i>
-                    <span *ngIf="!hasMultipleInvites">{{'Send email invitation' | translate}}</span>
-                    <span *ngIf="hasMultipleInvites">{{'Send email invitations' | translate}}</span>
+                    <span *ngIf="!hasMultipleInvites">{{ 'Send email invitation' | translate }}</span>
+                    <span *ngIf="hasMultipleInvites">{{' Send email invitations' | translate }}</span>
                 </button>
             </div>
         </section>
@@ -201,29 +200,29 @@
     <!-- Panel body -->
     <div class="row panel-body" [class.hidden]="!panel.open">
         <div class="col-xs-12">
-            <p class="subhead">Please find below invitations that have been sent to investors:</p>
+            <p class="subhead">{{ 'Please find below invitations that have been sent to investors:' | translate }}</p>
 
             <clr-datagrid #dataGrid>
-                <clr-dg-column [clrDgField]="'inviteSent'">{{'Date Sent' | translate}}</clr-dg-column>
-                <clr-dg-column [clrDgField]="'tokenUsedAt'">{{'Invitation Status' | translate}}</clr-dg-column>
-                <clr-dg-column [clrDgField]="'email'">{{'Email Address' | translate}}</clr-dg-column>
-                <clr-dg-column [clrDgField]="'companyName'">{{'Company Name' | translate}}</clr-dg-column>
-                <clr-dg-column [clrDgField]="'lastName'">{{'Last Name' | translate}}</clr-dg-column>
-                <clr-dg-column [clrDgField]="'firstName'">{{'First Name' | translate}}</clr-dg-column>
-                <clr-dg-column [clrDgField]="'invitedBy'">{{'Invitation Sent By' | translate}}</clr-dg-column>
-                <clr-dg-column [clrDgField]="'kycStarted'">{{'Date KYC Started' | translate}}</clr-dg-column>
-                <clr-dg-column [clrDgField]="'initationLink'">{{'Invitation Link' | translate}}</clr-dg-column>
-                <clr-dg-column [clrDgField]="'status'">{{'KYC Status' | translate}}</clr-dg-column>
+                <clr-dg-column [clrDgField]="'inviteSent'">{{ 'Date Sent' | translate }}</clr-dg-column>
+                <clr-dg-column [clrDgField]="'tokenUsedAt'">{{ 'Invitation Status' | translate }}</clr-dg-column>
+                <clr-dg-column [clrDgField]="'email'">{{ 'Email Address' | translate }}</clr-dg-column>
+                <clr-dg-column [clrDgField]="'companyName'">{{ 'Company Name' | translate }}</clr-dg-column>
+                <clr-dg-column [clrDgField]="'lastName'">{{ 'Last Name' | translate }}</clr-dg-column>
+                <clr-dg-column [clrDgField]="'firstName'">{{ 'First Name' | translate }}</clr-dg-column>
+                <clr-dg-column [clrDgField]="'invitedBy'">{{ 'Invitation Sent By' | translate }}</clr-dg-column>
+                <clr-dg-column [clrDgField]="'kycStarted'">{{ 'Date KYC Started' | translate }}</clr-dg-column>
+                <clr-dg-column [clrDgField]="'initationLink'">{{ 'Invitation Link' | translate }}</clr-dg-column>
+                <clr-dg-column [clrDgField]="'status'">{{ 'KYC Status' | translate }}</clr-dg-column>
 
                 <clr-dg-row *clrDgItems="let item of inviteItems">
                     <clr-dg-cell>{{item.inviteSent}}</clr-dg-cell>
                     <clr-dg-cell>
                         <span *ngIf="item.tokenUsedAt">
-                            {{'Invitation used' | translate}} -
+                            {{ 'Invitation used' | translate }} -
                             {{item.tokenUsedAt}}
                         </span>
                         <span *ngIf="!item.tokenUsedAt">
-                            {{'Invitation not used' | translate}}
+                            {{ 'Invitation not used' | translate }}
                         </span>
                     </clr-dg-cell>
                     <clr-dg-cell>{{item.email}}</clr-dg-cell>
@@ -234,7 +233,7 @@
                     <clr-dg-cell>{{item.kycStarted}}</clr-dg-cell>
                     <clr-dg-cell class="action">
                         <button class="btn btn-primary btn-sm" (click)="copyToClipboard(item.invitationLink)">
-                            <i class="fa fa-copy"></i> {{'Copy link' | translate}}
+                            <i class="fa fa-copy"></i> {{ 'Copy Link' | translate }}
                         </button>
                     </clr-dg-cell>
                     <clr-dg-cell>
@@ -243,11 +242,9 @@
                 </clr-dg-row>
 
                 <clr-dg-footer>{{pagination.firstItem + 1}} - {{pagination.lastItem + 1}}
-
                     <clr-dg-pagination #pagination [clrDgPageSize]="10"></clr-dg-pagination>
                 </clr-dg-footer>
             </clr-datagrid>
-
         </div>
     </div>
 </div>

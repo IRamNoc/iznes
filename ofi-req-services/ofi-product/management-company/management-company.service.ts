@@ -54,22 +54,22 @@ export class OfiManagementCompanyService {
 
     initSubscribers() {
         this.getMyAccountId
-        .pipe(
-            takeUntil(this.unSubscribe),
-        )
-        .subscribe(getMyAccountId => this.setAccountId(getMyAccountId));
+            .pipe(
+                takeUntil(this.unSubscribe),
+            )
+            .subscribe(getMyAccountId => this.setAccountId(getMyAccountId));
 
         this.reqManagementCompany$
-        .pipe(
-            takeUntil(this.unSubscribe),
-        )
-        .subscribe(v => this.isManagementCompanyRequested = v);
+            .pipe(
+                takeUntil(this.unSubscribe),
+            )
+            .subscribe(v => this.isManagementCompanyRequested = v);
 
         this.reqInvestorManagementCompany$
-        .pipe(
-            takeUntil(this.unSubscribe),
-        )
-        .subscribe(v => this.isInvestorManagementCompanyRequested = v);
+            .pipe(
+                takeUntil(this.unSubscribe),
+            )
+            .subscribe(v => this.isInvestorManagementCompanyRequested = v);
     }
 
     setAccountId(accountId: number) {
@@ -138,18 +138,16 @@ export class OfiManagementCompanyService {
             entityId: this.accountId,   // entityId = accountID (name just changed)
             companyName: mcData.companyName,
             emailAddress: mcData.emailAddress,
+            legalFormName: mcData.legalFormName,
             country: mcData.country,
-            addressPrefix: mcData.addressPrefix,
             postalAddressLine1: mcData.postalAddressLine1,
             postalAddressLine2: mcData.postalAddressLine2,
             city: mcData.city,
-            stateArea: mcData.stateArea,
             postalCode: mcData.postalCode,
             taxResidence: mcData.taxResidence,
-            registrationNum: mcData.registrationNum,
+            rcsMatriculation: mcData.rcsMatriculation,
             supervisoryAuthority: mcData.supervisoryAuthority,
             numSiretOrSiren: mcData.numSiretOrSiren,
-            creationDate: mcData.creationDate,
             shareCapital: mcData.shareCapital,
             commercialContact: mcData.commercialContact,
             operationalContact: mcData.operationalContact,
@@ -157,8 +155,13 @@ export class OfiManagementCompanyService {
             lei: mcData.lei,
             bic: mcData.bic,
             giinCode: mcData.giinCode,
-            logoName: mcData.logoName,
-            logoURL: mcData.logoURL,
+            websiteUrl: mcData.websiteUrl,
+            phoneNumberPrefix: mcData.phoneNumberPrefix,
+            phoneNumber: mcData.phoneNumber,
+            signatureTitle: mcData.signatureTitle,
+            signatureHash: mcData.signatureHash,
+            logoTitle: mcData.logoTitle,
+            logoHash: mcData.logoHash,
         };
 
         return createMemberNodeSagaRequest(this.memberSocketService, messageBody);
@@ -172,18 +175,16 @@ export class OfiManagementCompanyService {
             companyID: mcData.companyID,
             companyName: mcData.companyName,
             emailAddress: mcData.emailAddress,
+            legalFormName: mcData.legalFormName,
             country: mcData.country,
-            addressPrefix: mcData.addressPrefix,
             postalAddressLine1: mcData.postalAddressLine1,
             postalAddressLine2: mcData.postalAddressLine2,
             city: mcData.city,
-            stateArea: mcData.stateArea,
             postalCode: mcData.postalCode,
             taxResidence: mcData.taxResidence,
-            registrationNum: mcData.registrationNum,
+            rcsMatriculation: mcData.rcsMatriculation,
             supervisoryAuthority: mcData.supervisoryAuthority,
             numSiretOrSiren: mcData.numSiretOrSiren,
-            creationDate: mcData.creationDate,
             shareCapital: mcData.shareCapital,
             commercialContact: mcData.commercialContact,
             operationalContact: mcData.operationalContact,
@@ -191,8 +192,13 @@ export class OfiManagementCompanyService {
             lei: mcData.lei,
             bic: mcData.bic,
             giinCode: mcData.giinCode,
-            logoName: mcData.logoName,
-            logoURL: mcData.logoURL,
+            websiteUrl: mcData.websiteUrl,
+            phoneNumberPrefix: mcData.phoneNumberPrefix,
+            phoneNumber: mcData.phoneNumber,
+            signatureTitle: mcData.signatureTitle,
+            signatureHash: mcData.signatureHash,
+            logoTitle: mcData.logoTitle,
+            logoHash: mcData.logoHash,
         };
 
         return createMemberNodeSagaRequest(this.memberSocketService, messageBody);

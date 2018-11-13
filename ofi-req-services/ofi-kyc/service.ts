@@ -53,6 +53,7 @@ import {
     SET_KYC_DETAILS_RISKNATURE,
     SET_KYC_DETAILS_RISKOBJECTIVES,
     SET_KYC_DETAILS_DOCUMENTS,
+    SET_KYC_DETAILS_VALIDATION,
 
     setkycdetailsgeneralrequested,
     setkycdetailscompanyrequested,
@@ -62,6 +63,7 @@ import {
     setkycdetailsrisknaturerequested,
     setkycdetailsriskobjectivesrequested,
     setkycdetailsdocumentsrequested,
+    setkycdetailsvalidationrequested,
 } from '../../ofi-store/ofi-kyc/kyc-details';
 import { SET_INFORMATIONS_FROM_API } from '@ofi/ofi-main/ofi-store/ofi-kyc/my-informations';
 import {
@@ -282,6 +284,21 @@ export class OfiKycService {
 
         ngRedux.dispatch(SagaHelper.runAsync(
             [SET_KYC_DETAILS_DOCUMENTS],
+            [],
+            asyncTaskPipe,
+            {}
+        ));
+    }
+
+    static defaultRequestKycDetailsValidation(ofiKycService: OfiKycService, ngRedux: NgRedux<any>, kycID) {
+        // Set the state flag to true. so we do not request it again.
+        ngRedux.dispatch(setkycdetailsvalidationrequested());
+
+        // Request the list.
+        const asyncTaskPipe = ofiKycService.getKycValidation(kycID);
+
+        ngRedux.dispatch(SagaHelper.runAsync(
+            [SET_KYC_DETAILS_VALIDATION],
             [],
             asyncTaskPipe,
             {}
@@ -666,6 +683,17 @@ export class OfiKycService {
             RequestName: 'getkycriskobjective',
             token: this.memberSocketService.token,
             kycID: kycID,
+        };
+
+        return createMemberNodeSagaRequest(this.memberSocketService, messageBody);
+    }
+
+    getKycValidation(kycID: number): any {
+
+        const messageBody: getKycRequestDetailsRequestBody = {
+            RequestName: 'getkycvalidation',
+            token: this.memberSocketService.token,
+            kycID,
         };
 
         return createMemberNodeSagaRequest(this.memberSocketService, messageBody);

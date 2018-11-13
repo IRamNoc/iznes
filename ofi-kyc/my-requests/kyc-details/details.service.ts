@@ -1,16 +1,13 @@
 import { Injectable } from '@angular/core';
 import { NgRedux } from '@angular-redux/store';
-import { get as getValue, toPairs, map, chain, value, omit, pickBy, pick, find, parseInt, isNil, toString } from 'lodash';
-
+import { get as getValue, toPairs, map, chain, value, omit, pickBy, pick, find, parseInt, isNil, toString, sortBy } from 'lodash';
 import { OfiKycService } from '@ofi/ofi-main/ofi-req-services/ofi-kyc/service';
 import * as requestsConfig from '../requests.config';
 
-import {
-    clearkycdetailsall
-} from '@ofi/ofi-main/ofi-store/ofi-kyc/kyc-details';
+import { clearkycdetailsall } from '@ofi/ofi-main/ofi-store/ofi-kyc/kyc-details';
 
 @Injectable({
-    providedIn: 'root'
+    providedIn: 'root',
 })
 export class KycDetailsService {
 
@@ -33,6 +30,7 @@ export class KycDetailsService {
         OfiKycService.defaultRequestKycDetailsRiskNature(this.ofiKycService, this.ngRedux, kycID);
         OfiKycService.defaultRequestKycDetailsRiskObjectives(this.ofiKycService, this.ngRedux, kycID);
         OfiKycService.defaultRequestKycDetailsDocuments(this.ofiKycService, this.ngRedux, kycID);
+        OfiKycService.defaultRequestKycDetailsValidation(this.ofiKycService, this.ngRedux, kycID);
     }
 
     getFileByID(fileID) {
@@ -40,25 +38,22 @@ export class KycDetailsService {
     }
 
     toArray(data) {
-        let booleans = chain(data)
+        const booleans = chain(data)
             .pickBy((val, key) => requestsConfig.booleanControls.indexOf(key) !== -1)
             .mapValues(value => parseInt(value, 10) ? 1 : 0)
-            .value()
-        ;
+            .value();
 
-        let currencies = chain(data)
+        const currencies = chain(data)
             .pickBy((val, key) => requestsConfig.currencyControls.indexOf(key) !== -1)
-            .mapValues(value => value + ' €')
-            .value()
-        ;
+            .mapValues(value => `${value} €`)
+            .value();
 
-        let percentage = chain(data)
+        const percentage = chain(data)
             .pickBy((val, key) => requestsConfig.percentageControls.indexOf(key) !== -1)
-            .mapValues(value => value + ' %')
-            .value()
-        ;
+            .mapValues(value => `${value} %`)
+            .value();
 
-        let array = chain(data)
+        const array = chain(data)
             .merge(booleans, currencies, percentage)
             .omit([
                 'kycID',
@@ -76,10 +71,15 @@ export class KycDetailsService {
                 value: this.getValueFromControl(controlName, controlValue)
             }))
             .filter()
-            .value()
-        ;
+            .value();
 
         return array;
+    }
+
+    order(data){
+        return sortBy(data, (val) => {
+            return requestsConfig.controlOrder.indexOf(val.originalId);
+        });
     }
 
     isFromForm(id) {
@@ -94,16 +94,22 @@ export class KycDetailsService {
     }
 
     async getHashes(rows) {
-        for (let row of rows) {
+        for (const row of rows) {
             if (requestsConfig.fileControls.indexOf(row.originalId) !== -1) {
-                await this.getFileByID(row.value).then(response => {
-                        let document = getValue(response, [1, 'Data', 0]);
-                        row.hash = document.hash;
-                        row.name = document.name;
+                await this.getFileByID(row.value).then(
+                    (response) => {
+                        const document = getValue(response, [1, 'Data', 0]);
+
+                        if (document) {
+                            row.hash = document.hash;
+                            row.name = document.name;
+                        } else{
+                            row.hash = 'na';
+                        }
                     },
                     () => {
                         return;
-                    }
+                    },
                 );
             }
         }

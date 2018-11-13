@@ -1,45 +1,45 @@
 <div class="header-breadcrumbs">
     <h1 *ngIf="investorStatus == 'confirmation'"><i class="fa fa-unlock"></i>
-        <span id="ofi-welcome-kyc">{{'Welcome to @appConfig.platform@' | translate: {'appConfig.platform': appConfig.platform} }}</span></h1>
-    <h1 *ngIf="investorStatus == 'waiting-for-validation'"><i class="fa fa-unlock"></i>{{'KYC documents - Awaiting confirmation from: @amDetails.companyName.value@' | translate: {'amDetails.companyName.value': amDetails.companyName.value} }}
+        <span id="ofi-welcome-kyc">{{ 'Welcome to @appConfig.platform@' | translate: {'appConfig.platform': appConfig.platform} }}</span></h1>
+    <h1 *ngIf="investorStatus == 'waiting-for-validation'"><i class="fa fa-unlock"></i>{{ 'KYC documents - Awaiting confirmation from: @amDetails.companyName.value@' | translate: {'amDetails.companyName.value': amDetails.companyName.value} }}
     </h1>
 </div>
 
 <clr-tabs>
     <clr-tab>
         <button clrTabLink id="standardform">
-            <i class="fa fa-bars"></i> {{'KYC Already Done?' | translate}}
+            <i class="fa fa-bars"></i> {{ 'KYC Already Done?' | translate }}
         </button>
 
         <clr-tab-content *clrIfActive>
             <div>
                 <section *ngIf="investorStatus == 'confirmation' || investorStatus == 'waiting-for-more-info' " class="form-block">
-                    <span style="font-weight: 13px;">{{'Let\'s start with the mandatory administrative part: the KYC' | translate}}</span>
-                    <h2>{{'KYC & client folder' | translate}}</h2>
-                    <p>{{'Did you already fill up your KYC documents with @amDetails.companyName.value@?' | translate: {'amDetails.companyName.value': amDetails.companyName.value} }}</p>
+                    <span style="font-weight: 13px;">{{ 'Let\'s start with the mandatory administrative part: the KYC' | translate }}</span>
+                    <h2>{{ 'KYC & Client Folder' | translate }}</h2>
+                    <p>{{ 'Did you already fill up your KYC documents with @amDetails.companyName.value@?' | translate: {'amDetails.companyName.value': amDetails.companyName.value} }}</p>
                     <form [formGroup]="kycDoneForm" (ngSubmit)="onSubmit()">
                         <div class="form-group opt-btn-container">
                             <div class="radio-inline opt-btn-element">
                                 <input type="radio" name="opt" id="opt-yes" value="YES" formControlName="opt" [attr.disabled]="investorAnsweredNo ? '' : null ">
-                                <label for="opt-yes">{{'Yes' | translate}}</label>
+                                <label for="opt-yes">{{ 'Yes' | translate }}</label>
                             </div>
                             <div class="radio-inline opt-btn-element">
                                 <input type="radio" name="opt" id="opt-no" value="NO" formControlName="opt" [checked]="investorAnsweredNo" [attr.disabled]=" investorAnsweredNo ? '' : null ">
-                                <label for="opt-no">{{'No' | translate}}</label>
+                                <label for="opt-no">{{ 'No' | translate }}</label>
                             </div>
                             <div *ngIf="!investorAnsweredNo" class="opt-btn-context">
-                                <p *ngIf="kycDoneForm.controls['opt'].value == 'YES'">{{'We will ask the Asset Management company to confirm this.' | translate}}</p>
-                                <p *ngIf="kycDoneForm.controls['opt'].value == 'NO'">{{'If you click no, you will have to fill up and review KYC documents with them.' | translate}}</p>
+                                <p *ngIf="kycDoneForm.controls['opt'].value == 'YES'">{{ 'We will ask the Asset Management company to confirm this.' | translate }}</p>
+                                <p *ngIf="kycDoneForm.controls['opt'].value == 'NO'">{{ 'If you click no, you will have to fill up and review KYC documents with them.' | translate }}</p>
                             </div>
                             <div *ngIf="investorAnsweredNo">
-                                <p>{{'Fill out your KYC documents, the AM will approve them & you\'ll be able to place orders on IZNES.' | translate}}</p>
+                                <p>{{ 'Fill out your KYC documents, the AM will approve them and you will be able to place orders on IZNES.' | translate }}</p>
                             </div>
                         </div>
                         <div>
-                            <button id="btnKycClose" type="button" class="btn btn-default" (click)="onCancel()" [attr.disabled]="investorAnsweredNo ? '' : null ">{{'Back' | translate}}
+                            <button id="btnKycClose" type="button" class="btn btn-default" (click)="onCancel()" [attr.disabled]="investorAnsweredNo ? '' : null ">{{ 'Back' | translate }}
 
                             </button>
-                            <button id="btnKycSubmit" type="submit" class="btn btn-primary" [disabled]="!kycDoneForm.valid" [attr.disabled]="investorAnsweredNo ? '' : null ">{{'Validate' | translate}}
+                            <button id="btnKycSubmit" type="submit" class="btn btn-primary" [disabled]="!kycDoneForm.valid" [attr.disabled]="investorAnsweredNo ? '' : null ">{{ 'Validate' | translate }}
 
                             </button>
                         </div>
@@ -47,15 +47,9 @@
                 </section>
 
                 <section *ngIf="investorStatus == 'waiting-for-validation'">
-                    <p>{{'Thank you for having notified us that you had already filled your KYC documents with @amDetails.companyName.value@.' | translate: {'amDetails.companyName.value': amDetails.companyName.value} }}
-
-                    </p>
-                    <p>{{'A message was sent to @amDetails.companyName.value@, asking them to confirm this information.' | translate: {'amDetails.companyName.value': amDetails.companyName.value} }}
-
-                    </p>
-                    <p>{{'Once @amDetails.companyName.value@ will have confirmed that you have passed your KYC documents with them, you will be able to start trading on IZNES.' | translate: {'amDetails.companyName.value': amDetails.companyName.value} }}
-
-                    </p>
+                    <p>{{ 'Thank you for having notified us that you had already filled your KYC documents with @amDetails.companyName.value@.' | translate: {'amDetails.companyName.value': amDetails.companyName.value} }}</p>
+                    <p>{{ 'A message was sent to @amDetails.companyName.value@, asking them to confirm this information.' | translate: {'amDetails.companyName.value': amDetails.companyName.value} }}</p>
+                    <p>{{ 'Once @amDetails.companyName.value@ will have confirmed that you have passed your KYC documents with them, you will be able to start trading on IZNES.' | translate: {'amDetails.companyName.value': amDetails.companyName.value} }}</p>
                 </section>
             </div>
 
@@ -63,35 +57,24 @@
 
             <section class="form-block">
                 <!--<div class="text-input-list">-->
-                <app-text-input-list [title]="'Info: Details of your Asset Management company'" [content]="amDetails" [additionnalText]="'You can contact your asset manager directly.'">
-
-
-
-                </app-text-input-list>
+                <app-text-input-list [title]="'Info: Details of your Asset Management company'" [content]="amDetails" [additionnalText]="'You can contact your asset manager directly.'"></app-text-input-list>
                 <!--</div>-->
             </section>
+
         </clr-tab-content>
     </clr-tab>
 </clr-tabs>
 
 <!--CUSTOM TEXT MODALS-->
 <clr-modal [(clrModalOpen)]="showModal" [clrModalClosable]="false">
-    <h3 class="modal-title">{{'CONFIRMATION SCREEN' | translate}}</h3>
+    <h3 class="modal-title">{{ 'Confirmation Screen' | translate }}</h3>
     <div class="modal-body text-center">
-        <p>{{'Please contact @amDetails.companyName.value@, in order to fill up and review the KYC documents with them.' | translate: {'amDetails.companyName.value': amDetails.companyName.value} }}
-
-        </p>
-        <p>{{'Please note that @amDetails.companyName.value@ may require additional information from their clients, on top of the KYC.' | translate: {'amDetails.companyName.value': amDetails.companyName.value} }}
-
-        </p>
+        <p>{{ 'Please contact @amDetails.companyName.value@, in order to fill up and review the KYC documents with them.' | translate: {'amDetails.companyName.value': amDetails.companyName.value} }}</p>
+        <p>{{ 'Please note that @amDetails.companyName.value@ may require additional information from their clients, on top of the KYC.' | translate: {'amDetails.companyName.value': amDetails.companyName.value} }}</p>
         <br>
-        <p class="highlight">{{'You will have full access to the platform menu once they will have reviewed your KYC.' | translate}}
-
-        </p>
+        <p class="highlight">{{ 'You will have full access to the platform menu once they will have reviewed your KYC.' | translate }}</p>
         <br>
-        <button class="btn btn-primary" type="button" (click)="closeModal()">{{'Close' | translate}}
-
-        </button>
+        <button class="btn btn-primary" type="button" (click)="closeModal()">{{ 'Close' | translate }}</button>
         <br>
     </div>
 </clr-modal>

@@ -6,12 +6,10 @@ import { OfiKycObservablesService } from '../../ofi-req-services/ofi-kyc/kyc-obs
 import { immutableHelper } from '@setl/utils';
 import { NgRedux } from '@angular-redux/store';
 import { Subject } from 'rxjs';
-
 import { AlertsService } from '@setl/jaspero-ng2-alerts';
 import { ToasterService } from 'angular2-toaster';
 import * as moment from 'moment';
 import * as _ from 'lodash';
-
 import { investorInvitation } from '@ofi/ofi-main/ofi-store/ofi-kyc/invitationsByUserAmCompany';
 import { MultilingualService } from '@setl/multilingual';
 import { AppObservableHandler } from '@setl/utils/decorators/app-observable-handler';
@@ -37,11 +35,7 @@ export class OfiInviteInvestorsComponent implements OnInit, OnDestroy {
         // {id: 'sch', text: '中文'}
     ];
 
-    investorTypes = [
-        { id: 10, text: 'Institutional Investor' },
-        { id: 20, text: 'Portfolio Manager' },
-        { id: 30, text: 'Retail Investor' },
-    ];
+    investorTypes: any;
 
     enums = {
         status: {},
@@ -56,23 +50,23 @@ export class OfiInviteInvestorsComponent implements OnInit, OnDestroy {
     unSubscribe: Subject<any> = new Subject();
 
     /* Constructor. */
-    constructor(private _fb: FormBuilder,
-                private _changeDetectorRef: ChangeDetectorRef,
-                private _location: Location,
+    constructor(private fb: FormBuilder,
+                private changeDetectorRef: ChangeDetectorRef,
+                private location: Location,
                 private alertsService: AlertsService,
-                private _ofiKycService: OfiKycService,
-                private _toasterService: ToasterService,
-                public _translate: MultilingualService,
-                private _ofiKycObservablesService: OfiKycObservablesService,
+                private ofiKycService: OfiKycService,
+                private toasterService: ToasterService,
+                public translate: MultilingualService,
+                private ofiKycObservablesService: OfiKycObservablesService,
                 @Inject('kycEnums') kycEnums,
-                private _ofiFundDataService: OfiFundDataService,
+                private ofiFundDataService: OfiFundDataService,
                 private redux: NgRedux<any>) {
 
         this.enums.status = kycEnums.status;
 
-        this.invitationForm = this._fb.group({
-            investors: this._fb.array([
-                this._fb.group({
+        this.invitationForm = this.fb.group({
+            investors: this.fb.array([
+                this.fb.group({
                     email: [
                         '',
                         Validators.compose([
@@ -110,9 +104,15 @@ export class OfiInviteInvestorsComponent implements OnInit, OnDestroy {
         });
 
         this.panel = {
-            title: 'Invites Recap',
+            title: this.translate.translate('Invites Recap') || 'Invites Recap',
             open: true
         };
+
+        this.investorTypes = this.translate.translate([
+            { id: 10, text: 'Institutional Investor' },
+            { id: 20, text: 'Portfolio Manager' },
+            { id: 30, text: 'Retail Investor' },
+        ]);
     }
 
     /**
@@ -127,8 +127,7 @@ export class OfiInviteInvestorsComponent implements OnInit, OnDestroy {
     }
 
     ngOnInit(): void {
-
-        (<any>this).appSubscribe(this._ofiKycObservablesService.getInvitationData(), (d: investorInvitation[]) => {
+        (<any>this).appSubscribe(this.ofiKycObservablesService.getInvitationData(), (d: investorInvitation[]) => {
             this.inviteItems = d;
             if (this.inviteItems.length) {
                 this.inviteItems = this.inviteItems.map((invite) => {
@@ -146,7 +145,7 @@ export class OfiInviteInvestorsComponent implements OnInit, OnDestroy {
             this.markForCheck();
         });
 
-        (<any>this).appSubscribe(this._ofiFundDataService.getFundSelectList(), fundSelectList => this.fundSelectList = fundSelectList);
+        (<any>this).appSubscribe(this.ofiFundDataService.getFundSelectList(), fundSelectList => this.fundSelectList = fundSelectList);
     }
 
     getControls(frmGrp: FormGroup, key: string) {
@@ -168,7 +167,7 @@ export class OfiInviteInvestorsComponent implements OnInit, OnDestroy {
 
     addInvestor(formObj) {
         const control = <FormArray>formObj.controls['investors'];
-        const addrCtrl = this._fb.group({
+        const addrCtrl = this.fb.group({
             email: [
                 '',
                 Validators.compose([
@@ -217,11 +216,9 @@ export class OfiInviteInvestorsComponent implements OnInit, OnDestroy {
      * @param formValues
      */
     save(formValues): void {
-
         const requestData = constructInvitationRequest(formValues);
 
-        this._ofiKycService.sendInvestInvitations(requestData).then((response) => {
-
+        this.ofiKycService.sendInvestInvitations(requestData).then((response) => {
             const emailAddressList = response[1].Data[0].existingEmailAddresses;
             const alreadyInitiatedList = response[1].Data[0].alreadyInitiatedEmailAddresses;
             const validEmailList = [];
@@ -250,7 +247,6 @@ export class OfiInviteInvestorsComponent implements OnInit, OnDestroy {
         });
     }
 
-
     displayInvitationSuccessModal(emails: Array<string>): void {
         let message = '<p><b>An invitation email to IZNES was sent to:</b></p><table class="table grid"><tbody>';
 
@@ -264,7 +260,7 @@ export class OfiInviteInvestorsComponent implements OnInit, OnDestroy {
 
     displayExistingEmailAddressToaster(invalidEmailAddressList: Array<string>) {
         invalidEmailAddressList.map((emailAddress) => {
-            this._toasterService.pop(
+            this.toasterService.pop(
                 'warning',
                 `A user has already created an account with this following email address "${emailAddress}".`
             );
@@ -281,11 +277,11 @@ export class OfiInviteInvestorsComponent implements OnInit, OnDestroy {
     }
 
     goBack() {
-        this._location.back();
+        this.location.back();
     }
 
     markForCheck() {
-        this._changeDetectorRef.markForCheck();
+        this.changeDetectorRef.markForCheck();
     }
 
     copyToClipboard(val: string) {

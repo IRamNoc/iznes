@@ -1,21 +1,20 @@
-import {Component, OnInit, ViewChild} from '@angular/core';
-import {FormBuilder} from '@angular/forms';
-import {ActivatedRoute} from '@angular/router';
-import {select} from '@angular-redux/store';
-import {get as getValue, map, sort, remove} from 'lodash';
-import {Subject, combineLatest} from 'rxjs';
-import {takeUntil} from 'rxjs/operators';
-
-import {FormStepsDirective} from '@setl/utils/directives/form-steps/formsteps';
-import {NewRequestService} from './new-request.service';
-import {steps} from '../requests.config';
+import { Component, OnInit, ViewChild } from '@angular/core';
+import { FormBuilder } from '@angular/forms';
+import { ActivatedRoute } from '@angular/router';
+import { select } from '@angular-redux/store';
+import { get as getValue, map, sort, remove } from 'lodash';
+import { Subject, combineLatest } from 'rxjs';
+import { takeUntil } from 'rxjs/operators';
+import { MultilingualService } from '@setl/multilingual';
+import { FormStepsDirective } from '@setl/utils/directives/form-steps/formsteps';
+import { NewRequestService } from './new-request.service';
+import { steps } from '../requests.config';
 
 @Component({
     templateUrl: './new-request.component.html',
     styleUrls : ['./new-request.component.scss']
 })
 export class NewKycRequestComponent implements OnInit {
-
     @ViewChild(FormStepsDirective) formSteps;
     @select(['ofi', 'ofiKyc', 'myKycRequested', 'kycs']) requests$;
 
@@ -29,7 +28,8 @@ export class NewKycRequestComponent implements OnInit {
     constructor(
         private formBuilder: FormBuilder,
         private route: ActivatedRoute,
-        private newRequestService: NewRequestService
+        private newRequestService: NewRequestService,
+        public translate: MultilingualService,
     ) {
     }
 
@@ -38,39 +38,27 @@ export class NewKycRequestComponent implements OnInit {
     }
 
     get investorType() {
-        let legalStatusControl = this.forms.get('identification.generalInformation.legalStatus').value;
-        let legalStatusValue = getValue(legalStatusControl, [0, 'id']);
-        let possibleLegalStatusValues = [
-            'pensionMutual',
-            'creditInstitution',
-            'insurer',
-            'institutionalInvestors',
-            'otherInvestors',
-            'managementCompany',
-            'centralBank',
-            'nationalGovService',
-            'dealersCommodities',
-            'internationBodies'
-        ];
+        let activityRegulated = this.forms.get('identification.companyInformation.activityRegulated').value;
+        activityRegulated = !!Number(activityRegulated);
 
-        let balanceSheetTotalValue = this.forms.get('identification.companyInformation.balanceSheetTotal').value;
-        let netRevenuesNetIncomeValue = this.forms.get('identification.companyInformation.netRevenuesNetIncome').value;
-        let shareholderEquityValue = this.forms.get('identification.companyInformation.shareholderEquity').value;
+        const balanceSheetTotalValue = this.forms.get('identification.companyInformation.balanceSheetTotal').value;
+        const netRevenuesNetIncomeValue = this.forms.get('identification.companyInformation.netRevenuesNetIncome').value;
+        const shareholderEquityValue = this.forms.get('identification.companyInformation.shareholderEquity').value;
 
-        if (possibleLegalStatusValues.indexOf(legalStatusValue) !== -1) {
-            return "proByNature";
+        if (activityRegulated) {
+            return 'proByNature';
         }
 
-        let balanceSheetCondition = balanceSheetTotalValue >= 20000000;
-        let netRevenuesCondition = netRevenuesNetIncomeValue >= 40000000;
-        let equityCondition = shareholderEquityValue >= 2000000;
-        let trues = remove([balanceSheetCondition, netRevenuesCondition, equityCondition]);
+        const balanceSheetCondition = balanceSheetTotalValue >= 20000000;
+        const netRevenuesCondition = netRevenuesNetIncomeValue >= 40000000;
+        const equityCondition = shareholderEquityValue >= 2000000;
+        const trues = remove([balanceSheetCondition, netRevenuesCondition, equityCondition]);
 
         if (trues.length >= 2) {
-            return "proBySize";
+            return 'proBySize';
         }
 
-        return "nonPro";
+        return 'nonPro';
     }
 
     ngOnInit() {
@@ -108,23 +96,23 @@ export class NewKycRequestComponent implements OnInit {
         if (this.fullForm) {
             extraSteps = [
                 {
-                    title: 'Introduction',
+                    title: this.translate.translate('Introduction'),
                     startHere: completedStep === 'amcSelection',
                 },
                 {
-                    title: 'Identification',
+                    title: this.translate.translate('Identification'),
                     id: 'step-identification',
                     form: this.forms.get('identification'),
                     startHere: completedStep === 'introduction'
                 },
                 {
-                    title: 'Risk profile',
+                    title: this.translate.translate('Risk profile'),
                     id: 'step-risk-profile',
                     form: this.forms.get('riskProfile'),
                     startHere: completedStep === 'identification'
                 },
                 {
-                    title: 'Documents',
+                    title: this.translate.translate('Documents'),
                     id: 'step-documents',
                     form: this.forms.get('documents'),
                     startHere: completedStep === 'riskProfile'
@@ -134,13 +122,13 @@ export class NewKycRequestComponent implements OnInit {
 
         this.stepsConfig = [
             {
-                title: 'Selection',
+                title: this.translate.translate('Selection'),
                 form: this.forms.get('selection'),
                 id: 'step-selection'
             },
             ...extraSteps,
             {
-                title: 'Validation',
+                title: this.translate.translate('Validation'),
                 id: 'step-validation',
                 form: this.forms.get('validation'),
                 startHere: this.fullForm ? completedStep === 'documents' : completedStep === 'amcSelection'
@@ -157,5 +145,4 @@ export class NewKycRequestComponent implements OnInit {
         this.unsubscribe.next();
         this.unsubscribe.complete();
     }
-
 }

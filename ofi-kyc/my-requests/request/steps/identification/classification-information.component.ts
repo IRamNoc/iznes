@@ -1,14 +1,14 @@
-import {Component, Input, OnInit, OnDestroy, ViewChild} from '@angular/core';
-import {FormGroup, FormControl} from '@angular/forms';
-import {get as getValue, isEmpty, castArray, find, pick, omit} from 'lodash';
-import {select} from '@angular-redux/store';
-import {Subject} from 'rxjs';
-import {filter, map, takeUntil} from 'rxjs/operators';
-
-import {IdentificationService} from '../identification.service';
-import {NewRequestService} from '../../new-request.service';
-import {countries, investorStatusList} from "../../../requests.config";
-import {FormPercentDirective} from '@setl/utils/directives/form-percent/formpercent';
+import { Component, Input, OnInit, OnDestroy, ViewChild } from '@angular/core';
+import { FormGroup, FormControl } from '@angular/forms';
+import { get as getValue, isEmpty, castArray, find, pick, omit } from 'lodash';
+import { select } from '@angular-redux/store';
+import { Subject } from 'rxjs';
+import { filter, map, takeUntil } from 'rxjs/operators';
+import { IdentificationService } from '../identification.service';
+import { NewRequestService } from '../../new-request.service';
+import { countries, investorStatusList } from '../../../requests.config';
+import { FormPercentDirective } from '@setl/utils/directives/form-percent/formpercent';
+import { MultilingualService } from '@setl/multilingual';
 
 @Component({
     selector: 'classification-information',
@@ -16,7 +16,6 @@ import {FormPercentDirective} from '@setl/utils/directives/form-percent/formperc
     styleUrls: ['./classification-information.component.scss']
 })
 export class ClassificationInformationComponent implements OnInit, OnDestroy {
-
     @ViewChild(FormPercentDirective) formPercent: FormPercentDirective;
     @Input() form;
     @Input() investorType;
@@ -33,7 +32,8 @@ export class ClassificationInformationComponent implements OnInit, OnDestroy {
 
     constructor(
         private newRequestService: NewRequestService,
-        private identificationService: IdentificationService
+        private identificationService: IdentificationService,
+        public translate: MultilingualService,
     ) {
     }
 
@@ -45,7 +45,7 @@ export class ClassificationInformationComponent implements OnInit, OnDestroy {
         }
     }
 
-    investorChanged(investorType){
+    investorChanged(investorType) {
         let investorStatus = investorStatusList[investorType];
 
         this.form.get('investorStatus').patchValue(investorStatus);
@@ -54,8 +54,14 @@ export class ClassificationInformationComponent implements OnInit, OnDestroy {
 
     ngOnInit() {
         this.financialInstrumentsList = this.newRequestService.financialInstrumentsList;
+        this.translate.translate(this.financialInstrumentsList);
+
         this.geographicalAreaList = this.newRequestService.geographicalAreaList;
+        this.translate.translate(this.geographicalAreaList);
+        
         this.natureOfTransactionsList = this.newRequestService.natureOfTransactionsList;
+        this.translate.translate(this.natureOfTransactionsList);
+
         this.volumeOfTransactionsList = this.newRequestService.volumeOfTransactionsList;
 
         this.initCheckForm();
@@ -84,12 +90,11 @@ export class ClassificationInformationComponent implements OnInit, OnDestroy {
     }
 
     toggleNonPro(action) {
-
-        if(action === 'enable'){
+        if(action === 'enable') {
             (this.form.get('nonPro') as FormGroup).enable();
             (this.form.get('nonPro.activitiesBenefitFromExperience') as FormControl).updateValueAndValidity();
             (this.form.get('nonPro.financialInstruments') as FormControl).updateValueAndValidity();
-        } else{
+        } else {
             (this.form.get('nonPro') as FormGroup).disable();
             (this.form.get('nonPro.activitiesBenefitFromExperienceSpecification') as FormControl).disable();
             (this.form.get('nonPro.financialInstrumentsSpecification') as FormControl).disable();
@@ -103,16 +108,15 @@ export class ClassificationInformationComponent implements OnInit, OnDestroy {
             )
             .subscribe(data => {
                 this.formCheckFinancialInstruments(data);
-            })
-        ;
+            });
+
         this.form.get('nonPro.activitiesBenefitFromExperience').valueChanges
             .pipe(
                 takeUntil(this.unsubscribe)
             )
             .subscribe(experienceFinancialFieldValue => {
                 this.formCheckExperienceFinancialField(experienceFinancialFieldValue);
-            })
-        ;
+            });
 
         this.form.get('pro.changeProfessionalStatus').valueChanges
             .pipe(
@@ -120,8 +124,7 @@ export class ClassificationInformationComponent implements OnInit, OnDestroy {
             )
             .subscribe(changeProfessionalStatus => {
                 this.formCheckProToNonProChoice(changeProfessionalStatus);
-            })
-        ;
+            });
     }
 
     formCheckProToNonProChoice(value) {
@@ -186,8 +189,7 @@ export class ClassificationInformationComponent implements OnInit, OnDestroy {
                         }
                     });
                 });
-            })
-        ;
+            });
     }
 
     ngOnDestroy() {
