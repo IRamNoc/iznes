@@ -192,6 +192,10 @@ export class NewKycSelectAmcComponent implements OnInit, OnDestroy {
     async handleSubmit($event) {
         $event.preventDefault();
 
+        if (this.submitted) {
+            this.validSubmit();
+        }
+
         if (!this.form.valid || this.submitted) {
             formHelper.dirty(this.form);
             return;
@@ -212,6 +216,10 @@ export class NewKycSelectAmcComponent implements OnInit, OnDestroy {
         this.submitted = true;
         this.changeDetectorRef.markForCheck();
 
+        this.validSubmit();
+    }
+
+    validSubmit() {
         this.submitEvent.emit({
             completed: true,
         });
