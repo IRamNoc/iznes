@@ -1,4 +1,4 @@
-const phoneNumbersCountryCodes = [
+export const phoneCodeList = [
     {
         id: '+7 840',
         text: 'Abkhazia (+7 840)',
@@ -944,9 +944,3 @@ const phoneNumbersCountryCodes = [
         text: 'Zimbabwe (+263)',
     },
 ];
-
-export default {
-    enums: {
-        phoneNumbersCountryCodes,
-    },
-};

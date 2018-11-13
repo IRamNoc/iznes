@@ -11,8 +11,8 @@
         justify-content: center;
         text-align: center;
         img {
-            width: 32%;
-            margin-bottom: 15px;
+            width: 30%;
+            margin-bottom: 20px;
         }
     }
     .horz-center {
@@ -36,9 +36,178 @@
             font-size: 16px;
             margin-top: 50px;
             border-color: #ffffff;
-            display: inline-block;;
+            display: inline-block;
             border-radius: 30px;
             color: #ffffff;
+            padding: 20px;
+            line-height: 0;
         }
+    }
+    .login-box {
+        background: rgba(255, 255, 255, 0.7);
+        border-radius: 6px;
+        overflow: hidden;
+        .top-bar {
+            background: #4c6e99;
+            overflow: hidden;
+            height: 60px;
+            h2 {
+                color: #ffffff;
+                padding: 30px 35px;
+                font-weight: 500;
+                float: left;
+                font-size: 19px;
+                line-height: 0;
+            }
+            .icon {
+                background: #00457f;
+                float: left;
+                padding: 10px 0 0 0;
+                text-align: right;
+                height: 60px;
+                width: 70px;
+                .fa {
+                    font-size: 38px;
+                    color: #ffffff;
+                    transform: rotate(180deg) scaleX(-1);
+                    background: #004583;
+                }
+            }
+            .icon::after {
+                content: '';
+                width: 0;
+                height: 0;
+                border-top: 0 solid transparent;
+                border-bottom: 60px solid transparent;
+                border-left: 30px solid #00457f;
+                position: absolute;
+                top: 0;
+                left: 82px;
+            }
+        }
+        .form-container {
+            padding: 20px 30px;
+            button[type=submit] {
+                background: #0082f0;
+                width: 100%;
+                max-width: 100%;
+                text-transform: none;
+                letter-spacing: normal;
+                margin: 10px 0 0 0;
+                font-size: 13px;
+            }
+            form .form-group {
+                margin-bottom: 10px;
+                input {
+                    font-size: 13px;
+                }
+            }
+            .field-error {
+                position: absolute;
+                margin-top: 60px;
+            }
+            #show-password {
+                position: absolute;
+                right: 8px;
+                margin-top: 31px;
+                font-size: 16px;
+                cursor: pointer;
+                color: #808080;
+            }
+        }
+    }
+    .forgot-password {
+        text-align: center;
+        margin-top: 10px;
+        #forgotten-password-link {
+            color: #ffffff;
+            text-decoration: underline;
+            font-size: 12px;
+        }
+    }
+    .required-text {
+        margin-top: 10px;
+        .required-field {
+            color: #ffffff;
+            font-size: 12px;
+            text-align: right;
+            margin: 0;
+            &::before {
+                content: '* ';
+                color: red;
+                font-size: 20px;
+                line-height: 0;
+            }
+        }
+    }
+    .language-container {
+        margin-top: 8px;
+        clr-dropdown {
+            width: 100%;
+            button {
+                font-size: 13px;
+                color: #ffffff;
+                text-transform: none;
+                text-align: left;
+            }
+            clr-dropdown-menu {
+                box-shadow: none;
+                border: none;
+                padding-top: 0;
+                transform: none !important;
+                margin: 10px;
+                .dropdown-header {
+                    font-size: 12px;
+                    cursor: default;
+                    border: none;
+                    letter-spacing: normal;
+                    background: #4c6e99;
+                    color: #ffffff;
+                    width: 100%;
+                    padding-left: 30px;
+                    border-bottom-left-radius: 0;
+                    border-bottom-right-radius: 0;
+                    margin-bottom: 10px;
+                    &:hover {
+                        font-weight: 500;
+                        color: #ffffff;
+                    }
+                    &::before {
+                        font-family: 'FontAwesome';
+                        position: absolute;
+                        left: 10px;
+                        content: "\f0ac" !important;
+                        font-weight: 300;
+                        font-size: 20px;
+                    }
+                }
+                button {
+                    color: #808080;
+                    font-weight: 500;
+                    &:hover {
+                        color: #4c6e99;
+                        font-weight: bold;
+                        &::before {
+                            position: absolute;
+                            font-family: 'FontAwesome';
+                            right: 10px;
+                            content: "\f00c";
+                        }
+                    }
+                }
+            }
+        }
+    }
+    /* Change Autocomplete styles in Chrome*/
+    input:-webkit-autofill,
+    input:-webkit-autofill:hover,
+    input:-webkit-autofill:focus
+    textarea:-webkit-autofill,
+    textarea:-webkit-autofill:hover
+    textarea:-webkit-autofill:focus,
+    select:-webkit-autofill,
+    select:-webkit-autofill:hover,
+    select:-webkit-autofill:focus {
+        -webkit-box-shadow: 0 0 0 30px white inset;
     }
 }

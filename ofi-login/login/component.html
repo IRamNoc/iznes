@@ -1,6 +1,6 @@
 <div class="login-container">
     <div class="horz-center row justify-content-center align-self-center">
-        <div class="col-sm-5 offset-sm-1">
+        <div class="col-sm-5">
             <div id="logo-container">
                 <img id="logo-iznes" src="assets/images/logo.png" alt="IZNES">
             </div>
@@ -23,70 +23,92 @@
                 </div>
             </div>
         </div>
-        <div class="col-sm-3 offset-sm-1">
-            <div id="login-box">
-                <form [formGroup]="loginForm" (ngSubmit)="login(loginForm.value)">
-                    <div class="form-group">
-                        <input
-                            id="username-field"
-                            type="text"
-                            name="username"
-                            [placeholder]="translate.translate('Username')"
-                            class="form-control"
-                            formControlName="username"
-                            #usernameInput
-                            (change)="setUsernameRequired()"
-                        >
-                        <div *ngIf="!loginForm.controls['username'].valid" class="field-error">
-                            {{'Field is required' | translate}}
+        <div class="col-sm-3 offset-sm-2">
+            <div class="login-box">
+                <div class="top-bar">
+                    <div class="icon">
+                        <i class="fa fa-key"></i>
+                    </div>
+                    <h2>Login to access IZNES</h2>
+                </div>
+                <div class="form-container">
+                    <form [formGroup]="loginForm" (ngSubmit)="login(loginForm.value)">
+                        <div class="form-group">
+                            <label class="required-field">Username</label>
+                            <input
+                                id="username-field"
+                                type="text"
+                                name="username"
+                                placeholder="{{ 'Enter your username' | translate }}"
+                                class="form-control"
+                                formControlName="username"
+                                #usernameInput
+                                (change)="setUsernameRequired()"
+                            >
+                            <div *ngIf="!loginForm.controls['username'].valid" class="field-error">
+                                {{'Field is required' | translate}}
+                            </div>
                         </div>
-                    </div>
 
-                    <div class="form-group">
-                        <input
-                            id="password-field"
-                            name="password"
-                            type="password"
-                            class="form-control"
-                            [placeholder]="translate.translate('Password')"
-                            formControlName="password"
-                            (focus)="setUsernameRequired()"
-                            #passwordInput>
-                        <div *ngIf="!loginForm.controls['password'].valid" class="field-error">
-                            {{'Field is required' | translate}}
+                        <div class="form-group">
+                            <label class="required-field">Password</label>
+                            <input
+                                id="password-field"
+                                name="password"
+                                [type]="showPassword === true ? 'text' : 'password'"
+                                class="form-control"
+                                placeholder="{{ 'Enter your password' | translate }}"
+                                formControlName="password"
+                                (focus)="setUsernameRequired()"
+                                #passwordInput>
+                            <i id="show-password" [class]="showPassword === true ? 'fa fa-unlock' : 'fa fa-lock'" (click)="showPassword = !showPassword"></i>
+                            <div *ngIf="!loginForm.controls['password'].valid" class="field-error">
+                                {{'Field is required' | translate}}
+                            </div>
                         </div>
-                    </div>
 
-                    <div class="form-group">
-                        <button
-                            id="login-submit"
-                            type="submit"
-                            class="btn btn-primary block full-width m-b"
-                            (click)="setUsernameRequired(); loginForm.get('password').markAsTouched()">
-                            {{'Login' | translate}}
-                        </button>
-                    </div>
-                </form>
+                        <div class="form-group">
+                            <button
+                                id="login-submit"
+                                type="submit"
+                                class="btn btn-primary btn-block"
+                                (click)="setUsernameRequired(); loginForm.get('password').markAsTouched()">
+                                {{'Login to my IZNES account' | translate}}
+                            </button>
+                        </div>
+                    </form>
+                </div>
             </div>
 
-            <p class="mt-1">
-                <span class="ml">
-                    <a id="forgotten-password-link" [ngStyle]="{'cursor':'pointer'}" (click)="showFPModal()">
+            <div class="row">
+                <div class="col-sm-4">
+                    <div class="language-container">
+                        <clr-dropdown>
+                            <button type="button" class="dropdown-toggle btn btn-link btn-sm language-selector" clrDropdownTrigger>
+                                <i class="fa fa-globe"></i> {{getLabel(language)}} <i class="fa fa-chevron-down"></i>
+                            </button>
+                            <clr-dropdown-menu clrPosition="bottom-left" *clrIfOpen>
+                                <button class="dropdown-header" type="button">Choose your language</button>
+                                <button type="button" clrDropdownItem *ngFor="let lang of getLangs()" (click)="updateLang(lang)">
+                                    {{getLabel(lang)}}
+                                </button>
+                            </clr-dropdown-menu>
+                        </clr-dropdown>
+                    </div>
+                </div>
+
+                <div class="forgot-password col-sm-4">
+                    <a id="forgotten-password-link" (click)="showFPModal()">
                         {{'Forgot your password?' | translate}}
                     </a>
-                </span>
-            </p>
-            <div class="language-container">
-                <clr-dropdown>
-                    <button type="button" class="dropdown-toggle btn btn-link btn-sm language-selector" clrDropdownTrigger>
-                        {{getLabel(language)}}
-                    </button>
-                    <clr-dropdown-menu clrPosition="bottom-left" *clrIfOpen>
-                        <button type="button" clrDropdownItem *ngFor="let lang of getLangs()" (click)="updateLang(lang)">{{getLabel(lang)}}</button>
-                    </clr-dropdown-menu>
-                </clr-dropdown>
+                </div>
+
+                <div class="required-text col-sm-4">
+                    <p class="required-field">Required field</p>
+                </div>
             </div>
         </div>
+
     </div>
 
 
