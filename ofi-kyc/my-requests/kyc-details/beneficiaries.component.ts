@@ -3,6 +3,7 @@ import { select } from '@angular-redux/store';
 import { KycDetailsService } from './details.service';
 import { mapValues, find, get as getValue } from 'lodash';
 import { filter, take } from 'rxjs/operators';
+import { MultilingualService } from '@setl/multilingual';
 
 @Component({
     selector: 'kyc-details-stakeholders',
@@ -33,6 +34,7 @@ export class KycDetailsStakeholdersComponent implements OnInit {
 
     constructor(
         private detailsService: KycDetailsService,
+        private translateService: MultilingualService,
     ) {
     }
 
@@ -127,7 +129,7 @@ export class KycDetailsStakeholdersComponent implements OnInit {
             return parentName;
         }
 
-        return -1;
+        return this.translateService.translate('No parent');
     }
 
     getName(stakeholder) {
