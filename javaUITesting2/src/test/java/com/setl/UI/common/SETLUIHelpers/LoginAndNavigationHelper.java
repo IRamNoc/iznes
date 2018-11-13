@@ -360,10 +360,12 @@ public class LoginAndNavigationHelper {
 
     public static void loginAndVerifySuccessAdmin(String username, String password) throws InterruptedException, IOException {
         navigateToLoginPage();
+        ensureLoginPageIsEnglish();
         enterLoginCredentialsUserName(username);
         enterLoginCredentialsPassword(password);
 
         clickLoginButton();
+        processSuccessful2FaIfRequired(username);
             WebDriverWait wait = new WebDriverWait(driver, timeoutInSeconds);
         Thread.sleep(2000);
         try {
@@ -383,6 +385,7 @@ public class LoginAndNavigationHelper {
         enterLoginCredentialsPassword(password);
 
         clickLoginButton();
+        processSuccessful2FaIfRequired(username);
         WebDriverWait wait = new WebDriverWait(driver, timeoutInSeconds);
         try {
         WebElement homePage = driver.findElement(By.id("ofi-welcome-" + headingID));
@@ -399,10 +402,12 @@ public class LoginAndNavigationHelper {
 
     public static void loginCompleteKYC(String username, String password) throws InterruptedException, IOException {
         navigateToLoginPage();
+        ensureLoginPageIsEnglish();
         enterLoginCredentialsUserName(username);
         enterLoginCredentialsPassword(password);
 
         clickLoginButton();
+        processSuccessful2FaIfRequired(username);
         WebDriverWait wait = new WebDriverWait(driver, timeoutInSeconds);
         try {
         WebElement modal = driver.findElement(By.className("modal-title"));
@@ -421,6 +426,7 @@ public class LoginAndNavigationHelper {
         enterLoginCredentialsPassword(password);
 
         clickLoginButton();
+        processSuccessful2FaIfRequired(username);
 
     }
 
