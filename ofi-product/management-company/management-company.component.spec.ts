@@ -5,6 +5,7 @@ import { Directive, Input } from '@angular/core';
 import { NgRedux } from '@angular-redux/store';
 import { MockNgRedux } from '@angular-redux/store/testing';
 import { ToasterService } from 'angular2-toaster';
+import { Location } from '@angular/common';
 
 import { OfiManagementCompanyComponent } from './management-company.component';
 import { ManagagementCompanyService } from './management-company.service';
@@ -33,6 +34,10 @@ const pop = jasmine.createSpy('pop')
     );
 const toasterServiceSpy = {
     pop,
+};
+
+const LocationStub = {
+    back: () => { },
 };
 
 const fakeFileMetadata = {
@@ -97,6 +102,7 @@ describe('OfiManagementCompanyComponent', () => {
                 { provide: 'phoneCodeList', useValue: phoneCodeList },
                 { provide: 'product-config', useValue: productConfig },
                 { provide: FileService, useValue: {} },
+                { provide: Location, useValue: LocationStub },
             ],
         });
         await TestBed.compileComponents();

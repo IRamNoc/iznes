@@ -1,9 +1,10 @@
 import * as _ from 'lodash';
 import { Component, OnInit, ChangeDetectorRef, ChangeDetectionStrategy, OnDestroy, Inject } from '@angular/core';
+import { Location } from '@angular/common';
 import { FormGroup } from '@angular/forms';
 import { NgRedux, select } from '@angular-redux/store';
 import { Subject } from 'rxjs/Subject';
-import { takeUntil } from 'rxjs/operators';
+import { takeUntil, take, switchMap, filter } from 'rxjs/operators';
 import { ToasterService } from 'angular2-toaster';
 
 import { SagaHelper, LogService } from '@setl/utils';
@@ -13,6 +14,8 @@ import { ManagagementCompanyService } from './management-company.service';
 import { ManagementCompanyListState } from '../../ofi-store/ofi-product/management-company';
 import { ManagementCompanyFileMetadata, ManagementCompanyFileMetadataField } from './management-company-file-metadata';
 import { legalFormList } from '../../ofi-kyc/my-requests/requests.config';
+
+const AM_USERTYPE = 36;
 
 @Component({
     selector: 'management-company',
@@ -24,6 +27,7 @@ import { legalFormList } from '../../ofi-kyc/my-requests/requests.config';
 export class OfiManagementCompanyComponent implements OnInit, OnDestroy {
 
     language = 'en';
+    private usertype: number;
 
     managementCompanyForm: FormGroup;
     editForm = false;
@@ -46,6 +50,7 @@ export class OfiManagementCompanyComponent implements OnInit, OnDestroy {
 
     // List of redux observable.
     @select(['user', 'siteSettings', 'language']) language$;
+    @select(['user', 'myDetail', 'userType']) usertype$;
     @select(['ofi', 'ofiProduct', 'ofiManagementCompany', 'managementCompanyList', 'managementCompanyList']) managementCompanyList$;
 
     constructor(
@@ -56,6 +61,7 @@ export class OfiManagementCompanyComponent implements OnInit, OnDestroy {
         private alertsService: AlertsService,
         private toasterSevice: ToasterService,
         private service: ManagagementCompanyService,
+        private location: Location,
         @Inject('phoneCodeList') phoneCodeList,
         @Inject('product-config') productConfig,
     ) {
@@ -74,6 +80,15 @@ export class OfiManagementCompanyComponent implements OnInit, OnDestroy {
             )
             .subscribe(language => this.setLanguage(language));
 
+        this.usertype$
+            .pipe(
+                take(2),
+                takeUntil(this.unSubscribe),
+            )
+            .subscribe((usertype) => {
+                this.usertype = usertype;
+            });
+
         this.managementCompanyList$
             .pipe(
                 takeUntil(this.unSubscribe),
@@ -82,6 +97,22 @@ export class OfiManagementCompanyComponent implements OnInit, OnDestroy {
                 this.managementCompanyList = _.values(managementCompanyList);
                 this.markForCheck();
             });
+
+        this.usertype$
+            .pipe(
+                switchMap(() => this.managementCompanyList$),
+                filter(l => !!Object.keys(l).length),
+                takeUntil(this.unSubscribe),
+            )
+            .subscribe((managementCompanyList) => {
+                if (this.isAssetManager) {
+                    this.editCompany(_.values(managementCompanyList)[0]);
+                }
+            });
+    }
+
+    get isAssetManager(): boolean {
+        return this.usertype === AM_USERTYPE;
     }
 
     public onDropFile(filedropEvent, fieldName: ManagementCompanyFileMetadataField) {
@@ -224,6 +255,9 @@ export class OfiManagementCompanyComponent implements OnInit, OnDestroy {
                     this.resetForm();
                     this.showSearchTab = true;
                     this.showSuccessResponse('Management company has successfully been updated');
+                    if(this.isAssetManager) {
+                        this.location.back();
+                    }
                 },
                 (data) => {
                     this.logService.log('error: ', data);
