@@ -2,13 +2,12 @@ import { Component, OnInit, OnDestroy, EventEmitter } from '@angular/core';
 import { FormGroup, FormControl } from '@angular/forms';
 import { ActivatedRoute, Router } from '@angular/router';
 import { select } from '@angular-redux/store';
-import { Subscription, Subject } from 'rxjs';
-
+import { Subject } from 'rxjs/Subject';
+import { Subscription } from 'rxjs/Subscription';
 import { AlertsService } from '@setl/jaspero-ng2-alerts';
 import { ConfirmationService } from '@setl/utils';
 import { ToasterService } from 'angular2-toaster';
 import { MultilingualService } from '@setl/multilingual';
-
 import { AccountAdminErrorResponse, AccountAdminNouns } from '../model';
 
 @Component({
@@ -16,7 +15,6 @@ import { AccountAdminErrorResponse, AccountAdminNouns } from '../model';
     template: 'component.html',
 })
 export class AccountAdminCreateUpdateBase<Type> implements OnInit, OnDestroy {
-
     alertCreateTitle: string;
     alertUpdateTitle: string;
     alertCreateMessage: string;
@@ -52,22 +50,26 @@ export class AccountAdminCreateUpdateBase<Type> implements OnInit, OnDestroy {
                 protected alerts: AlertsService,
                 protected toaster: ToasterService,
                 protected confirmations: ConfirmationService,
-                protected translate: MultilingualService) {}
+                protected translate: MultilingualService,
+    ) {
+    }
 
     ngOnInit() {
         this.processParams();
         this.initSubscriptions();
         this.initPermissions();
 
-        this.alertCreateTitle = this.translate.translate(`Create ${this.noun}`);
-        this.alertUpdateTitle = this.translate.translate(`Update ${this.noun}`);
-        this.alertCreateMessage = this.translate.translate(`Are you sure you wish to create this ${this.noun}?`);
-        this.alertUpdateMessage = this.translate.translate(`Are you sure you wish to update this ${this.noun}?`);
+        this.alertCreateTitle = this.translate.translate('Create @noun@', { 'noun': this.noun });
+        this.alertUpdateTitle = this.translate.translate('Update @noun@', { 'noun': this.noun });
+        this.alertCreateMessage = this.translate.translate(
+            'Are you sure you want to create this @noun@?', { 'noun': this.noun });
+        this.alertUpdateMessage = this.translate.translate(
+            'Are you sure you want to update this @noun@?', { 'noun': this.noun });
     }
 
     private processParams(): void {
         this.route.paramMap.subscribe((params) => {
-            this.entityId = parseInt(params.get('id'));
+            this.entityId = parseInt(params.get('id'), 10);
 
             if (this.entityId) {
                 this.mode = 1;
@@ -117,12 +119,12 @@ export class AccountAdminCreateUpdateBase<Type> implements OnInit, OnDestroy {
     protected onSaveSuccess(entityName: string, entityId: number, redirect = true): void {
         this.entityId = entityId;
 
-        let message = `${entityName} successfully `;
+        let message = '';
 
         if (this.isCreateMode()) {
-            message += 'created';
+            message = this.translate.translate('@entityName@ successfully created', { 'entityName': entityName });
         } else if (this.isUpdateMode()) {
-            message += 'updated';
+            message = this.translate.translate('@entityName@ successfully updated', { 'entityName': entityName });
         }
 
         this.toaster.pop('success', message);
@@ -134,12 +136,13 @@ export class AccountAdminCreateUpdateBase<Type> implements OnInit, OnDestroy {
         const errorMessage = error[1].Data[0] ?
             error[1].Data[0].Message :
             (error[1].Data as any).Message;
-        let message = `${entityName} failed to be `;
+
+        let message = '';
 
         if (this.isCreateMode()) {
-            message += 'created';
+            message = this.translate.translate('@entityName@ failed to be created', { 'entityName': entityName });
         } else if (this.isUpdateMode()) {
-            message += 'updated';
+            message = this.translate.translate('@entityName@ failed to be updated', { 'entityName': entityName });
         }
 
         message += `.<br /><i>${errorMessage}</i>`;
@@ -149,8 +152,9 @@ export class AccountAdminCreateUpdateBase<Type> implements OnInit, OnDestroy {
 
     delete(title: string): void {
         this.confirmations.create(
-            `${this.translate.translate('Delete')} ${title}`,
-            this.translate.translate(`Are you sure you wish to delete this ${this.noun.toLowerCase()}?`),
+            this.translate.translate('Delete @title@', { 'title': title }),
+            this.translate.translate(
+                'Are you sure you want to delete this @noun@?', { 'noun': this.noun.toLowerCase() }),
         ).subscribe((value) => {
             if (value.resolved) {
                 this.onDeleteConfirm();
@@ -164,22 +168,22 @@ export class AccountAdminCreateUpdateBase<Type> implements OnInit, OnDestroy {
     }
 
     protected onDeleteSuccess(entityName: string): void {
-        const message = `${entityName} successfully deleted`;
-
+        const message = this.translate.translate('@entityName@ successfully deleted', { 'entityName': entityName });
         this.toaster.pop('success', message);
 
         this.router.navigateByUrl(this.getBackUrl());
     }
 
     protected onDeleteError(entityName: string, error: AccountAdminErrorResponse): void {
-        const message = `${entityName} failed to delete` +
-            `.<br /><i>${error[1].Data[0].Message}</i>`;
+        let message = this.translate.translate('Failed to delete @entityName@', { 'entityName': entityName });
+        message += `<br /><i>${error[1].Data[0].Message}</i>`;
 
         this.alerts.create('error', message);
     }
 
     protected onReadEntityError(): void {
-        this.toaster.pop('error', `Failed to read ${this.noun}`);
+        const message = this.translate.translate('Failed to read @noun@', { 'noun': this.noun.toLowerCase() });
+        this.toaster.pop('error', message);
 
         this.router.navigateByUrl(this.getBackUrl());
     }

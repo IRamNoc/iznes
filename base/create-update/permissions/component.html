@@ -1,8 +1,8 @@
 <div class="row teams-dropdown" *ngIf="teamsList && showTeamSelect">
     <div class="col-sm-3">
         <ng-select id="permissionTeamsSelect"
-            [items]="teamsList"
-            [formControl]="teamsControl">
+                    [items]="teamsList"
+                    [formControl]="teamsControl">
         </ng-select>
     </div>
 </div>
@@ -38,10 +38,12 @@
         </clr-dg-cell>
         <clr-dg-cell id="permissionsCellActions{{idx}}" class="col-actions">
             <label class="switch" *ngIf="!isPermissionParent(permission)">
-                <input class="form-control" id="{{'permissionsCellAction' + idx}}" type="checkbox"
-                    [disabled]="isProcessing() || isUser"
-                    [(ngModel)]="permission.state"
-                    (ngModelChange)="updatePermission(permission)">
+                <input class="form-control" 
+                        id="{{'permissionsCellAction' + idx}}" 
+                        type="checkbox"
+                        [disabled]="isProcessing() || isUser"
+                        [(ngModel)]="permission.state"
+                        (ngModelChange)="updatePermission(permission)">
                 <span class="slider round"></span>
             </label>
         </clr-dg-cell>

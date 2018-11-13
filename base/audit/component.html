@@ -1,24 +1,24 @@
 <div class="header-breadcrumbs">
-    <h1><i class="fa fa-address-book-o"></i> {{ noun + 's Audit' | translate }}</h1>
+    <h1><i class="fa fa-address-book-o"></i> {{ '@noun@\'s Audit' | translate: { 'noun': noun} }}</h1>
 </div>
 
 <clr-tabs>
     <clr-tab>
-        <button clrTabLink id="tabAccountAdminTeamsAuditButton">{{'Audit' | translate}}</button>
+        <button clrTabLink id="tabAccountAdminTeamsAuditButton">{{ 'Audit' | translate }}</button>
         <clr-tab-content class="outer">
             <form [formGroup]="searchForm" novalidate>
                 <div class="form-horizontal">
                     <div class="row">
                         <div class="form-group col-sm-3">
-                            <label class="control-label">{{noun | translate}}</label>
+                            <label class="control-label">{{ '@noun@' | translate: { 'noun': noun } }}</label>
                             <input id="auditSearch" name="auditSearch" class="form-control"
                                 type="text"
-                                [placeholder]="translate.translate('Search by ' + noun + ' name or reference')"
+                                [placeholder]="translate.translate('Search by @noun@ name or reference', { 'noun': noun })"
                                 formControlName="entitySearch"/>
                         </div>
 
                         <div class="form-group col-sm-3">
-                            <label class="control-label">{{'Date from' | translate}}</label>
+                            <label class="control-label">{{ 'Date From' | translate }}</label>
                             <div class="input-group date-pick-wrapper">
                                 <span class="fa fa-calendar"></span>
                                 <input id="auditDateFrom" name="auditDateFrom"
@@ -31,7 +31,7 @@
                         </div>
 
                         <div class="form-group col-sm-3">
-                            <label class="control-label">{{'Date to' | translate}}</label>
+                            <label class="control-label">{{ 'Date To' | translate }}</label>
                             <div class="input-group date-pick-wrapper">
                                 <span class="fa fa-calendar"></span>
                                 <input id="auditDateTo" name="auditDateTo"
@@ -45,7 +45,7 @@
 
                         <div class="form-group col-sm-3">
                             <label class="control-label">&nbsp;</label>
-                            <button class="btn" (click)="exportCSV()">{{ 'Export ' + noun + ' Audit as CSV' | translate }}</button>
+                            <button class="btn" (click)="exportCSV()">{{ 'Export @noun@ Audit as CSV' | translate: { 'noun': noun} }}</button>
                         </div>
                     </div>
                 </div>

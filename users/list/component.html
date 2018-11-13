@@ -20,28 +20,28 @@
 
             <clr-datagrid #dataGrid>
                 <clr-dg-column [clrDgField]="'reference'" class="col-ref">
-                    <span id="accountAdminColRef">{{'Reference' | translate}}</span>
+                    <span id="accountAdminColRef">{{ 'Reference' | translate }}</span>
                 </clr-dg-column>
                 <clr-dg-column [clrDgField]="'firstName'" class="col-firstname">
-                    <span id="accountAdminColFirstName">{{'First name' | translate}}</span>
+                    <span id="accountAdminColFirstName">{{ 'First Name' | translate }}</span>
                 </clr-dg-column>
                 <clr-dg-column [clrDgField]="'lastName'" class="col-lastname">
-                    <span id="accountAdminColLastName">{{'Last name' | translate}}</span>
+                    <span id="accountAdminColLastName">{{ 'Last Name' | translate }}</span>
                 </clr-dg-column>
                 <clr-dg-column [clrDgField]="'emailAddress'" class="col-email">
-                    <span id="accountAdminColEmail">{{'Email address' | translate}}</span>
+                    <span id="accountAdminColEmail">{{ 'Email Address' | translate }}</span>
                 </clr-dg-column>
                 <clr-dg-column [clrDgField]="'phoneNumber'" class="col-phone">
-                    <span id="accountAdminColPhone">{{'Phone' | translate}}</span>
+                    <span id="accountAdminColPhone">{{ 'Phone' | translate }}</span>
                 </clr-dg-column>
                 <clr-dg-column [clrDgField]="'userType'" class="col-type">
-                    <span id="accountAdminColType">{{'Type' | translate}}</span>
+                    <span id="accountAdminColType">{{ 'Type' | translate }}</span>
                 </clr-dg-column>
-                <clr-dg-column [clrDgField]="'totalTeams'" class="col-teams">
-                    <span id="accountAdminColTeams">{{'Teams' | translate}}</span>
+                <clr-dg-column [clrDgField]="'totalTeams'" class="col-teams right">
+                    <span id="accountAdminColTeams">{{ 'Teams' | translate }}</span>
                 </clr-dg-column>
                 <clr-dg-column class="col-status">
-                    <span id="accountAdminColStatus">{{'Status' | translate}}</span>
+                    <span id="accountAdminColStatus">{{ 'Status' | translate }}</span>
                 </clr-dg-column>
 
                 <clr-dg-row *clrDgItems="let user of users; let idx = index;" id="{{'accountAdminTeamRow' + idx}}" clrDgRowClickable>
@@ -76,5 +76,4 @@
             </clr-datagrid>
         </clr-tab-content>
     </clr-tab>
-</clr-tabs>
-    
+</clr-tabs>    

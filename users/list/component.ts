@@ -5,6 +5,7 @@ import { NgRedux, select } from '@angular-redux/store';
 import {
     clearRequestedAccountAdminUsers,
 } from '@setl/core-store';
+
 import { FileDownloader } from '@setl/utils';
 import * as Model from '../model';
 import { UsersService } from '../service';
@@ -17,7 +18,6 @@ import { AccountAdminBaseService } from '../../base/service';
     styleUrls: ['component.scss'],
 })
 export class UsersListComponent extends AccountAdminListBase implements OnInit, OnDestroy {
-
     users: Model.AccountAdminUser[];
     accountId: number;
 

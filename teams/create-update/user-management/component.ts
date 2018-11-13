@@ -2,10 +2,12 @@ import { Component, OnInit, OnDestroy, Input, Output, EventEmitter } from '@angu
 import { NgRedux, select } from '@angular-redux/store';
 import { ToasterService } from 'angular2-toaster';
 import * as _ from 'lodash';
+import { MultilingualService } from '@setl/multilingual';
 
 import {
     clearRequestedAccountAdminUsers,
 } from '@setl/core-store';
+
 import { AccountAdminUsersMgmtComponentBase } from '../../../base/create-update/user-management/component';
 import { AccountAdminErrorResponse, AccountAdminResponse } from '../../../base/model';
 import { UsersService } from '../../../users/service';
@@ -29,6 +31,7 @@ export class UserTeamsUsersMgmtTeamsComponent
     constructor(redux: NgRedux<any>,
                 service: UserManagementServiceBase,
                 toaster: ToasterService,
+                private translate: MultilingualService,
                 private usersService: UsersService) {
         super(redux, service, toaster);
     }
@@ -59,43 +62,43 @@ export class UserTeamsUsersMgmtTeamsComponent
                     id: 'Reference',
                     dataIndex: 'reference',
                     styleClass: 'ref',
-                    title: 'Reference',
+                    title: this.translate.translate('Reference'),
                 },
                 {
                     id: 'FirstName',
                     dataIndex: 'firstName',
                     styleClass: 'firstname',
-                    title: 'First name',
+                    title: this.translate.translate('First Name'),
                 },
                 {
                     id: 'LastName',
                     dataIndex: 'lastName',
                     styleClass: 'lastname',
-                    title: 'Last name',
+                    title: this.translate.translate('Last Name'),
                 },
                 {
                     id: 'Email',
                     dataIndex: 'emailAddress',
                     styleClass: 'email',
-                    title: 'Email address',
+                    title: this.translate.translate('Email Address'),
                 },
                 {
                     id: 'PhoneNumber',
                     dataIndex: 'phoneNumber',
                     styleClass: 'phone',
-                    title: 'Phone number',
+                    title: this.translate.translate('Phone Number'),
                 },
                 {
                     id: 'UserType',
                     dataIndex: 'userType',
                     styleClass: 'usertype',
-                    title: 'User Type',
+                    title: this.translate.translate('User Type'),
                 },
                 {
                     id: 'Status',
                     dataIndex: 'status',
                     styleClass: 'status',
-                    title: 'Status',
+                    title: this.translate.translate('Status'),
                 },
             ],
         };

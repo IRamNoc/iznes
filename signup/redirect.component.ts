@@ -1,7 +1,7 @@
 import { Component, OnDestroy, OnInit } from '@angular/core';
 import { Router, ActivatedRoute, UrlSegment } from '@angular/router';
 import * as _ from 'lodash';
-import { Subscription } from 'rxjs';
+import { Subscription } from 'rxjs/Subscription';
 
 @Component({
     selector: 'app-ofi-kyc-signup-redirect',

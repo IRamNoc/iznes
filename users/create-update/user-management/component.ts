@@ -2,10 +2,12 @@ import { Component, OnInit, OnDestroy, Input, Output, EventEmitter } from '@angu
 import { NgRedux, select } from '@angular-redux/store';
 import { ToasterService } from 'angular2-toaster';
 import * as _ from 'lodash';
+import { MultilingualService } from '@setl/multilingual';
 
 import {
     clearRequestedAccountAdminTeams,
 } from '@setl/core-store';
+
 import { AccountAdminUsersMgmtComponentBase } from '../../../base/create-update/user-management/component';
 import { AccountAdminErrorResponse, AccountAdminResponse } from '../../../base/model';
 import { UserTeamsService } from '../../../teams';
@@ -26,6 +28,7 @@ export class UserTeamsUsersMgmtUsersComponent
     constructor(redux: NgRedux<any>,
                 service: UserManagementServiceBase,
                 toaster: ToasterService,
+                private translate: MultilingualService,
                 private teamsService: UserTeamsService) {
         super(redux, service, toaster);
     }
@@ -56,25 +59,25 @@ export class UserTeamsUsersMgmtUsersComponent
                     id: 'Reference',
                     dataIndex: 'reference',
                     styleClass: 'ref',
-                    title: 'Reference',
+                    title: this.translate.translate('Reference'),
                 },
                 {
                     id: 'Name',
                     dataIndex: 'name',
                     styleClass: 'name',
-                    title: 'Name',
+                    title: this.translate.translate('Name'),
                 },
                 {
                     id: 'Description',
                     dataIndex: 'description',
                     styleClass: 'description',
-                    title: 'Description',
+                    title: this.translate.translate('Description'),
                 },
                 {
                     id: 'Status',
                     dataIndex: 'status',
                     styleClass: 'status',
-                    title: 'Status',
+                    title: this.translate.translate('Status'),
                 },
             ],
         };

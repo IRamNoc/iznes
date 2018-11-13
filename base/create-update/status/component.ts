@@ -1,5 +1,4 @@
 import { Component, OnInit, OnDestroy, Input } from '@angular/core';
-
 import { ToasterService } from 'angular2-toaster';
 import { MultilingualService } from '@setl/multilingual';
 import { ConfirmationService } from '@setl/utils';
@@ -11,7 +10,6 @@ import { Router } from '@angular/router';
     styleUrls: ['component.scss'],
 })
 export class AccountAdminStatusComponentBase<Type> implements OnInit, OnDestroy {
-
     @Input() noun: string;
     @Input() entityId: number;
     @Input() status: number = 0;
@@ -99,5 +97,5 @@ export class AccountAdminStatusComponentBase<Type> implements OnInit, OnDestroy 
         return `/account-admin/${this.noun.toLowerCase()}s`;
     }
 
-    ngOnDestroy() { }
+    ngOnDestroy() {}
 }

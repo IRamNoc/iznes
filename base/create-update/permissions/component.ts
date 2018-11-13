@@ -1,15 +1,17 @@
 import { Component, OnInit, OnDestroy, Input, Output, EventEmitter } from '@angular/core';
 import { FormControl } from '@angular/forms';
-import { Subject, Subscription } from 'rxjs';
+import { Subject } from 'rxjs/Subject';
+import { Subscription } from 'rxjs/Subscription';
 import { select, NgRedux } from '@angular-redux/store';
 import * as _ from 'lodash';
-
 import { AlertsService } from '@setl/jaspero-ng2-alerts';
+import { MultilingualService } from '@setl/multilingual';
 
 import {
     clearRequestedAccountAdminPermissionAreas,
     clearRequestedAccountAdminUserPermissionAreas,
 } from '@setl/core-store';
+
 import { AccountAdminPermissionsServiceBase } from './service';
 import * as PermissionsModel from './model';
 import * as TeamsModel from '../../../teams/model';
@@ -21,7 +23,6 @@ import { UserTeamsService } from '../../../teams/service';
     styleUrls: ['component.scss'],
 })
 export class AccountAdminPermissionsComponentBase implements OnInit, OnDestroy {
-
     @Input() doUpdateOb: Subject<number>;
     @Input() entityId: number;
     @Output() entitiesFn: EventEmitter<PermissionsModel.AccountAdminPermission[]> = new EventEmitter();
@@ -44,7 +45,8 @@ export class AccountAdminPermissionsComponentBase implements OnInit, OnDestroy {
     constructor(private service: AccountAdminPermissionsServiceBase,
                 private redux: NgRedux<any>,
                 private alerts: AlertsService,
-                private teamsService: UserTeamsService) { }
+                private teamsService: UserTeamsService,
+                private translate: MultilingualService) {}
 
     ngOnInit() {
         this.initSubscriptions();
@@ -141,7 +143,7 @@ export class AccountAdminPermissionsComponentBase implements OnInit, OnDestroy {
     private processTeams(teams: TeamsModel.AccountAdminTeam[]): void {
         const teamsList = [{
             id: 9999,
-            text: 'All Teams',
+            text: this.translate.translate('All Teams'),
         }];
 
         _.forEach(teams, (team: TeamsModel.AccountAdminTeam) => {
@@ -156,7 +158,7 @@ export class AccountAdminPermissionsComponentBase implements OnInit, OnDestroy {
         if (!this.teamsControl.value) {
             this.teamsControl.patchValue([{
                 id: 9999,
-                text: 'All Teams',
+                text: this.translate.translate('All Teams'),
             }],                          {
                 emitEvent: false,
                 onlySelf: true,
@@ -203,7 +205,8 @@ export class AccountAdminPermissionsComponentBase implements OnInit, OnDestroy {
     private onUpdateStateError(permission: PermissionsModel.AccountAdminPermission): void {
         permission.state = !permission.state;
 
-        this.alerts.create('error', `An error occured when adding ${permission.name} permission`);
+        this.alerts.create('error', this.translate.translate(
+            'An error occured when adding @permissionName@ permission', { 'permissionName': permission.name }));
     }
 
     ngOnDestroy() {
@@ -215,6 +218,5 @@ export class AccountAdminPermissionsComponentBase implements OnInit, OnDestroy {
 
         this.subscriptions = [];
         this.permissions, this.leavePermissionsOpen = undefined;
-
     }
 }

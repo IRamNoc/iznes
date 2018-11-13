@@ -1,6 +1,6 @@
 <div class="row actions">
     <div class="col-sm-12">
-        <h3>{{ noun + ' Status' | translate }}</h3>
+        <h3>{{ '@noun@ Status' | translate: { 'noun': noun } }}</h3>
 
         <p>Current status: <span class="status"
             [class.enabled]="isStatusEnabled()"

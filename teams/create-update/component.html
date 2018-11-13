@@ -1,14 +1,17 @@
 <div class="header-breadcrumbs">
-    <h1><i class="fa fa-address-book-o"></i> {{
-        (isCreateMode()) ?
-        'Create a New ' + noun :
-        'Update ' + noun
-        | translate }}</h1>
+    <h1><i class="fa fa-address-book-o"></i> 
+        <ng-container *ngIf="isCreateMode()">
+            {{ 'Create New @noun@' | translate: { 'noun': noun } }}
+        </ng-container>
+        <ng-container *ngIf="!isCreateMode()">
+            {{ 'Update @noun@' | translate: { 'noun': noun } }}
+        </ng-container>
+    </h1>
 </div>
 
 <clr-tabs>
     <clr-tab>
-        <button clrTabLink id="tabAccountAdmin{{noun}}sButton">{{ noun | translate }}</button>
+        <button clrTabLink id="tabAccountAdmin{{noun}}sButton">{{ '@noun@' | translate: { 'noun': noun } }}</button>
         <clr-tab-content class="outer">
             <app-core-admin-user-teams-status *ngIf="isUpdateMode()"
                 [noun]="noun"
@@ -16,7 +19,7 @@
                 [entityId]="entityId">
             </app-core-admin-user-teams-status>
 
-            <h3>{{ noun + ' Details' | translate }}</h3>
+            <h3>{{ '@noun@ Details' | translate: { 'noun': noun } }}</h3>
 
             <app-dynamic-form [model]="form"></app-dynamic-form>
             
@@ -39,11 +42,7 @@
             
             <div class="row actions bottom">
                 <div class="col-sm-12">
-                    <h3>{{
-                        (isTeamsPage()) ?
-                        'Team Permissions':
-                        'User Permissions'
-                        | translate }}</h3>
+                    <h3>{{ (isTeamsPage()) ? 'Team Permissions' : 'User Permissions' | translate }}</h3>
                 </div>
             </div>
 
@@ -53,7 +52,8 @@
                         [showTeamSelect]="false"
                         [entityId]="entityId"
                         [doUpdateOb]="doPermissionsUpdateOb"
-                        (entitiesFn)="getTeamPermissions($event)"></app-core-admin-permissions>
+                        (entitiesFn)="getTeamPermissions($event)">
+                    </app-core-admin-permissions>
                 </div>
             </div>
 
@@ -63,18 +63,22 @@
                 </div>
                 
                 <div class="col">
-                    <button class="btn btn-primary" (click)="save()" [disabled]="!isValid()">{{
-                        (isCreateMode()) ?
-                        'Create ' + noun :
-                        'Update ' + noun
-                        | translate }}</button>
+                    <button class="btn btn-primary" (click)="save()" [disabled]="!isValid()">
+                        <ng-container *ngIf="isCreateMode()">
+                            {{ 'Create @noun@' | translate: { 'noun': noun } }}
+                        </ng-container>
+                        <ng-container *ngIf="!isCreateMode()">
+                            {{ 'Update @noun@' | translate: { 'noun': noun } }}
+                        </ng-container>
+                    </button>
                 </div>
 
                 <div class="col justify-end" *ngIf="isUpdateMode()">
-                    <button class="btn btn-danger" (click)="doDeleteTeam()">{{ 'Delete ' + noun | translate }}</button>
+                    <button class="btn btn-danger" (click)="doDeleteTeam()">
+                        {{ 'Delete @noun@' | translate: { 'noun': noun } }}
+                    </button>
                 </div>
             </div>
         </clr-tab-content>
     </clr-tab>
-</clr-tabs>
-    
+</clr-tabs>    

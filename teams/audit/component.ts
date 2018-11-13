@@ -11,7 +11,6 @@ import { AccountAdminBaseService } from '../../base/service';
 import * as Model from '../model';
 import { UserTeamsService } from '../service';
 import { AccountAdminAuditBase } from '../../base/audit/component';
-
 import { MultilingualService } from '@setl/multilingual';
 
 @Component({
@@ -70,41 +69,41 @@ export class UserTeamsAuditComponent
                     id: 'Ref',
                     dataIndex: 'reference',
                     styleClass: 'ref',
-                    title: 'Reference',
+                    title: this.translate.translate('Reference'),
                 },
                 {
                     id: 'Team',
                     dataIndex: 'name',
                     styleClass: 'name',
-                    title: 'Team',
+                    title: this.translate.translate('Team'),
                 },
                 {
                     id: 'Field',
                     dataIndex: 'field',
                     styleClass: 'field',
-                    title: 'Information',
+                    title: this.translate.translate('Information'),
                 },
                 {
                     id: 'Previous',
                     dataIndex: 'oldValue',
                     styleClass: 'previous',
-                    title: 'Previous value',
-                    valueDecorator: function (entity) {
+                    title: this.translate.translate('Previous Value'),
+                    valueDecorator: (entity) => {
                         if (entity.field === 'Status') {
-                            if (entity.oldValue === '0') entity.oldValue = 'Disabled';
-                            if (entity.oldValue === '1') entity.oldValue = 'Enabled';
-                            if (entity.newValue === '0') entity.newValue = 'Disabled';
-                            if (entity.newValue === '1') entity.newValue = 'Enabled';
+                            if (entity.oldValue === '0') entity.oldValue = this.translate.translate('Disabled');
+                            if (entity.oldValue === '1') entity.oldValue = this.translate.translate('Enabled');
+                            if (entity.newValue === '0') entity.newValue = this.translate.translate('Disabled');
+                            if (entity.newValue === '1') entity.newValue = this.translate.translate('Enabled');
                         }
 
                         if (entity.field === 'Users') {
-                            if (entity.newValue === '0') entity.newValue = 'Removed from Team';
-                            if (entity.newValue === '1') entity.newValue = 'Added to Team';
+                            if (entity.newValue === '0') entity.newValue = this.translate.translate('Removed from Team');
+                            if (entity.newValue === '1') entity.newValue = this.translate.translate('Added to Team');
                         }
 
                         if (entity.field === 'Permissions') {
-                            if (entity.newValue === '0') entity.newValue = 'Permission Removed';
-                            if (entity.newValue === '1') entity.newValue = 'Permission Added';
+                            if (entity.newValue === '0') entity.newValue = this.translate.translate('Permission Removed');
+                            if (entity.newValue === '1') entity.newValue = this.translate.translate('Permission Added');
                         }
 
                         return entity;
@@ -114,20 +113,20 @@ export class UserTeamsAuditComponent
                     id: 'New',
                     dataIndex: 'newValue',
                     styleClass: 'new',
-                    title: 'New value',
+                    title: this.translate.translate('New Value'),
                 },
                 {
                     id: 'ModifiedBy',
                     dataIndex: 'userName',
                     styleClass: 'modifiedby',
-                    title: 'Modified by',
+                    title: this.translate.translate('Modified By'),
                 },
                 {
                     id: 'Date',
                     dataIndex: 'dateModified',
                     styleClass: 'date',
-                    title: 'Date',
-                    valueDecorator: function (entity) {
+                    title: this.translate.translate('Date'),
+                    valueDecorator: (entity) => {
                         if (!entity._originalDateModified) {
                             entity._originalDateModified = entity.dateModified;
                             entity.dateModified = moment(entity._originalDateModified).format('YYYY-MM-DD HH:mm:ss');

@@ -206,7 +206,8 @@ export class UsersCreateUpdateComponent
 
         if (!this.user.invitationComplete) {
             this.createUserTooltip.text +=
-                `<br /><br />Last invite: ${this.user.invitationDate} (${this.user.invitationEmail})`;
+                `<br /><br />
+                ${this.translate.translate('Last invite')}: ${this.user.invitationDate} (${this.user.invitationEmail})`;
         }
     }
 
@@ -283,7 +284,7 @@ export class UsersCreateUpdateComponent
             this.confirmations.create(
                 this.translate.translate('Are you sure?'),
                 this.translate.translate(`You have assigned no teams to this user.
-                    This user, will no longer hold any permissions on the system.`),
+                    This user will no longer hold any permissions on the system.`),
             ).subscribe((answer) => {
                 if (answer.resolved) {
                     callback();
@@ -405,7 +406,8 @@ export class UsersCreateUpdateComponent
 
     private onInviteSuccess(userName: string, showToaster): void {
         if (showToaster) {
-            const message = `${userName} successfully invited`;
+            const message = this.translate.translate(
+                '@userName@ successfully invited', { 'userName': userName });
 
             this.toaster.pop('success', message);
 
@@ -414,7 +416,8 @@ export class UsersCreateUpdateComponent
     }
 
     private onInviteError(userName: string): void {
-        const message = `An error occured whilst inviting ${userName}`;
+        const message = this.translate.translate(
+            'An error occured whilst inviting @userName@', { 'userName': userName });
 
         this.toaster.pop('error', message);
 

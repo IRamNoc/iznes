@@ -3,10 +3,8 @@ import { FormGroup, FormControl } from '@angular/forms';
 import { select, NgRedux } from '@angular-redux/store';
 import { Subscription } from 'rxjs/Subscription';
 import * as moment from 'moment';
-
 import { MultilingualService } from '@setl/multilingual';
 import { FileDownloader } from '@setl/utils';
-
 import { AccountAdminBaseService } from '../service';
 import { DataGridConfig } from '../../base/model';
 
@@ -15,7 +13,6 @@ import { DataGridConfig } from '../../base/model';
     template: '',
 })
 export class AccountAdminAuditBase<Type> implements OnInit, OnDestroy {
-
     audit: Type[];
     dateConfig = {
         firstDayOfWeek: 'mo',
@@ -47,7 +44,9 @@ export class AccountAdminAuditBase<Type> implements OnInit, OnDestroy {
     constructor(protected redux: NgRedux<any>,
                 public translate: MultilingualService,
                 protected fileDownloader: FileDownloader,
-                protected baseService: AccountAdminBaseService) {}
+                protected baseService: AccountAdminBaseService,
+    ) {
+    }
 
     ngOnInit() {
         this.initForm();
