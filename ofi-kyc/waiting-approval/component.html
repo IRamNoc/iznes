@@ -59,9 +59,11 @@
                         </div>
                     </div>
                 </div>
+            </div>
 
+            <div class="mb-1">
                 <!-- Kyc details block -->
-                <kyc-details *ngIf="!alreadyCompleted" [kycID]="kycId"></kyc-details>
+                <kyc-details [kycID]="kycId"></kyc-details>
             </div>
 
             <!-- Waiting for approval form -->
@@ -98,14 +100,14 @@
                         <!-- Additional text -->
                         <div class="form-group col-sm-12" *ngIf="waitingApprovalFormGroup.controls['status'].value !== APPROVED_STATUS">
                             <!-- Reject -->
-                            <textarea *ngIf="waitingApprovalFormGroup.controls['status'].value === REJECTED_STATUS && initialStatusId != -2" 
-                                    id="rejectText" 
-                                    class="form-control" 
+                            <textarea *ngIf="waitingApprovalFormGroup.controls['status'].value === REJECTED_STATUS && initialStatusId != -2"
+                                    id="rejectText"
+                                    class="form-control"
                                     [placeholder]="_translate.translate('Please indicate here why you would like to reject this application. This will be sent as a message to your client on the IZNES platform.')" formControlName="additionalText">
                             </textarea>
                             <!-- Ask for more info -->
-                            <textarea *ngIf="waitingApprovalFormGroup.controls['status'].value === ASK_FOR_MORE_INFO_STATUS"                 id="askMoreInfoText" 
-                                        class="form-control" 
+                            <textarea *ngIf="waitingApprovalFormGroup.controls['status'].value === ASK_FOR_MORE_INFO_STATUS"                 id="askMoreInfoText"
+                                        class="form-control"
                                         [placeholder]="_translate.translate('Please ask for more information here. This will be sent as a message to your client on the IZNES platform.')" formControlName="additionalText">
                             </textarea>
                         </div>
@@ -160,5 +162,48 @@
     <div class="modal-footer">
         <button type="button" class="btn btn-outline mr-1" (click)="completeKycModal = false">{{ 'Cancel' | translate }}</button>
         <button type="button" class="btn btn-success" (click)="saveCompleteKycModal(message)">{{ 'Confirm' | translate }}</button>
+    </div>
+</clr-modal>
+
+<clr-modal [(clrModalOpen)]="approveKycModal">
+    <h3 class="modal-title">{{'Classification Change Warning' | translate}}</h3>
+
+    <div class="modal-body">
+        <div class="f-modal-alert">
+            <div class="f-modal-icon f-modal-warning scaleWarning">
+                <span class="f-modal-body pulseWarningIns"></span>
+                <span class="f-modal-dot pulseWarningIns"></span>
+            </div>
+        </div>
+
+        <p *ngIf="optOptions.investorStatus !== investorStatusList.nonPro"
+           [innerHTML]="_translate.translate('Please be aware that @company@ was classified as <strong>professional investor</strong> and has opted for a <strong>non professional investor</strong> classification.', {'company': investor.companyName.value})">
+        </p>
+        <p *ngIf="optOptions.investorStatus === investorStatusList.nonPro"
+           [innerHTML]="_translate.translate('Please be aware that @company@ was classified as <strong>non professional investor</strong> and has asked for a <strong>professional investor</strong> classification.', {'company': investor.companyName.value} )">
+        </p>
+
+        <p>
+            {{'Do you wish to accept this request taking into account this classification change?' | translate}}
+        </p>
+
+        <div>
+            <label>
+                <input type="radio" name="accept" [value]="true" [(ngModel)]="optOptions.choice" />&nbsp;
+                <span [innerHTML]="_translate.translate('Yes, I accept this <strong>with</strong> classification change</span>')"></span>
+            </label>
+        </div>
+
+        <div>
+            <label>
+                <input type="radio" name="accept" [value]="false" [(ngModel)]="optOptions.choice" />&nbsp;
+                <span [innerHTML]="_translate.translate('Yes, I accept this <strong>without</strong> classification change</span>')"></span>
+            </label>
+        </div>
+    </div>
+
+    <div class="modal-footer">
+        <button type="button" class="btn btn-outline mr-1" (click)="approveKycModal = false">{{'Cancel' | translate}}</button>
+        <button [disabled]="optOptions.choice === null" type="button" class="btn btn-success" (click)="onApproveKyc(message)">{{'Confirm' | translate}}</button>
     </div>
 </clr-modal>

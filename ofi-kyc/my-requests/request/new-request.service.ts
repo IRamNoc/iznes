@@ -21,7 +21,7 @@ import {
 } from 'lodash';
 import { CustomValidators } from '@setl/utils/helper';
 import { OfiKycService } from '@ofi/ofi-main/ofi-req-services/ofi-kyc/service';
-import { MyKycSetRequestedKycs } from '@ofi/ofi-main/ofi-store/ofi-kyc';
+import { setMyKycRequestedKycs } from '@ofi/ofi-main/ofi-store/ofi-kyc';
 import { RequestsService } from '../requests.service';
 
 import {
@@ -210,7 +210,7 @@ export class NewRequestService {
                 Validators.required,
                 Validators.pattern(/^\w{18}\d{2}$|n\/a/i),
             ]],
-            otherIdentificationNumber: ['', Validators.maxLength(255)],
+            otherIdentificationNumber: [null, Validators.maxLength(255)],
             otherIdentificationNumberText: [{ value: '', disabled: true }, Validators.required],
             registeredCompanyAddressLine1: ['', this.getLengthValidator(255)],
             registeredCompanyAddressLine2: ['', Validators.maxLength(255)],
@@ -300,7 +300,7 @@ export class NewRequestService {
                 Validators.min(0)
             ]],
 
-            beneficiaries: fb.array([this.createBeneficiary()]),
+            beneficiaries: fb.array([]),
             capitalNature: fb.group({
                 equityAndReserves: '',
                 generalAssets: '',
@@ -309,7 +309,7 @@ export class NewRequestService {
                 exceptionalEvents: '',
                 treasury: '',
                 others: '',
-                othersText: [{ value: '', disabled: true }, Validators.required]
+                othersText: [{ value: '', disabled: true }, Validators.required],
             }, {
                 validator: (formGroup) => {
                     return CustomValidators.multipleCheckboxValidator(formGroup);
@@ -328,11 +328,11 @@ export class NewRequestService {
         });
         const classificationInformation = fb.group({
             kycID: '',
-            investorStatus: '',
-            pro: fb.group({
-                excludeProducts: ['', Validators.maxLength(255)],
-                changeProfessionalStatus: 0
-            }),
+            investorStatus: 0,
+            optFor: 0,
+            optForValues: fb.array([]),
+            excludeProducts: ['', Validators.maxLength(255)],
+
             nonPro: fb.group({
                 firstName: ['', this.getLengthValidator()],
                 lastName: ['', this.getLengthValidator()],
@@ -351,7 +351,7 @@ export class NewRequestService {
                     { value: '', disabled: true },
                     Validators.required,
                 ],
-            })
+            }),
         });
 
         return fb.group({
@@ -360,6 +360,27 @@ export class NewRequestService {
             bankingInformation,
             classificationInformation,
         });
+    }
+
+    createOptFor(id) {
+        const fb = this.formBuilder;
+
+        return fb.group({
+            id,
+            opted: 0,
+        });
+    }
+
+    createOptFors(amcs) {
+        const optfors = [];
+        const length = amcs.length || 1;
+
+        for (let i = 0; i < length; i += 1) {
+            const id = amcs[i];
+            optfors.push(this.createOptFor(id));
+        }
+
+        return optfors;
     }
 
     createRiskProfileFormGroup() {
@@ -595,11 +616,13 @@ export class NewRequestService {
             beneficiaryType: ['', Validators.required],
 
             common: this.formBuilder.group({
+                parent: [-1, Validators.required],
                 address: ['', Validators.required],
                 address2: '',
                 zipCode: ['', this.getLengthValidator(10)],
                 city: ['', this.getLengthValidator(255)],
                 country: ['', Validators.required],
+                countryTaxResidence: ['', Validators.required],
                 holdingPercentage: [
                     '',
                     [
@@ -609,6 +632,10 @@ export class NewRequestService {
                     ],
                 ],
                 holdingType: ['', Validators.required],
+                nationality: ['', Validators.required],
+
+                votingPercentage: ['', Validators.required],
+                exerciseControl: [0, Validators.required],
             }),
             legalPerson: this.formBuilder.group({
                 legalName: ['', Validators.required],
@@ -618,16 +645,16 @@ export class NewRequestService {
                 ]],
 
                 nationalIdNumber: ['', Validators.required],
-                nationalIdNumberText: [{value: '', disabled: true}, Validators.required],
+                nationalIdNumberText: [{ value: '', disabled: true }, Validators.required],
             }),
             naturalPerson: this.formBuilder.group({
                 firstName: ['', this.getLengthValidator()],
                 lastName: ['', this.getLengthValidator()],
-                nationality: ['', Validators.required],
                 dateOfBirth: ['', Validators.required],
                 cityOfBirth: ['', this.getLengthValidator()],
                 countryOfBirth: ['', Validators.required],
                 document: this.createDocumentFormGroup('kycbeneficiarydoc', !this.isProduction),
+                isLegalRepresentative: [0, Validators.required],
             }),
             delete: 0,
         });
@@ -685,7 +712,7 @@ export class NewRequestService {
     }
 
     storeCurrentKycs(ids) {
-        let requestedKycs = MyKycSetRequestedKycs(ids);
+        let requestedKycs = setMyKycRequestedKycs(ids);
         this.ngRedux.dispatch(requestedKycs);
     }
 

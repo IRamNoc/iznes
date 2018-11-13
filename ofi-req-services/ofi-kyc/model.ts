@@ -144,6 +144,11 @@ export interface GetMyKycListRequestBody extends MemberNodeMessageBody {
     walletid: number;
 }
 
+export interface GetKycRequestBody extends MemberNodeMessageBody {
+    token: string;
+    kycID: number;
+}
+
 export interface GetInvestorRequestBody extends MemberNodeMessageBody {
     token: string;
 }

@@ -22,6 +22,9 @@ import { InitialisationService, MyWalletsService } from "@setl/core-req-services
 import { CLEAR_REQUESTED } from '@ofi/ofi-main/ofi-store/ofi-kyc/ofi-am-kyc-list';
 import { ConfirmationService, LogService } from '@setl/utils';
 import { MultilingualService } from '@setl/multilingual';
+import { investorStatusList } from '@ofi/ofi-main/ofi-kyc/my-requests/requests.config';
+import { isEmpty } from 'lodash';
+import { filter as rxFilter, take } from 'rxjs/operators';
 
 enum Statuses {
     waitingApproval = 1,
@@ -56,6 +59,14 @@ export class OfiWaitingApprovalComponent implements OnInit, OnDestroy {
     isProOpen = true;
     message;
 
+    approveKycModal;
+    investorStatusList;
+    optOptions = {
+        choice : null,
+        hasOptedFor : false,
+        investorStatus : null,
+    };
+
     /* Public statuses */
     APPROVED_STATUS = Statuses.approved;
     REJECTED_STATUS = Statuses.rejected;
@@ -66,6 +77,7 @@ export class OfiWaitingApprovalComponent implements OnInit, OnDestroy {
     @select(['user', 'myDetail']) userDetailObs;
     @select(['ofi', 'ofiKyc', 'requested']) requestedAmKycListObs;
     @select(['ofi', 'ofiKyc', 'amKycList', 'amKycList']) amKycListObs;
+    @select(['ofi', 'ofiKyc', 'kycDetails', 'kycDetailsClassification']) kycClassification$;
 
     /**
      * Constructor
@@ -113,6 +125,8 @@ export class OfiWaitingApprovalComponent implements OnInit, OnDestroy {
 
         this.initStatuses();
         this.initWaitingApprovalForm();
+
+        this.investorStatusList = investorStatusList;
     }
 
     ngOnInit(): void {
@@ -120,6 +134,8 @@ export class OfiWaitingApprovalComponent implements OnInit, OnDestroy {
         this.subscriptions.push(this.userDetailObs.subscribe((userDetail) => this.getUserDetail(userDetail)));
         this.subscriptions.push(this.requestedAmKycListObs.subscribe((requested) => this.setAmKycListRequested(requested)));
         this.subscriptions.push(this.amKycListObs.subscribe((amKycList) => this.getAmKycList(amKycList)));
+
+        this.getClassification();
     }
 
     ngOnDestroy(): void {
@@ -194,6 +210,17 @@ export class OfiWaitingApprovalComponent implements OnInit, OnDestroy {
 
     getUserDetail(userDetail) {
         this.userDetail = userDetail;
+    }
+
+    getClassification() {
+        this.kycClassification$
+        .pipe(
+            rxFilter(val => !isEmpty(val)),
+            take(1))
+        .subscribe((classification) => {
+            this.optOptions.hasOptedFor = classification.optFor;
+            this.optOptions.investorStatus = classification.investorStatus;
+        });
     }
 
     setAmKycListRequested(requested) {
@@ -273,7 +300,7 @@ export class OfiWaitingApprovalComponent implements OnInit, OnDestroy {
             break;
 
         case Statuses.approved:
-            this.onApproveKyc();
+            this.checkApprove();
             break;
         }
     }
@@ -354,6 +381,14 @@ export class OfiWaitingApprovalComponent implements OnInit, OnDestroy {
         });
     }
 
+    checkApprove() {
+        if (this.optOptions.hasOptedFor) {
+            this.approveKycModal = true;
+        } else {
+            this.onApproveKyc();
+        }
+    }
+
     onApproveKyc() {
         const payload = {
             kycID: this.kycId,
@@ -362,8 +397,13 @@ export class OfiWaitingApprovalComponent implements OnInit, OnDestroy {
             investorCompanyName: this.investor.companyName.value,
             amCompanyName: this.amCompanyName,
             lang: this.language,
-            invitedID: this.invitedID
+            invitedID: this.invitedID,
         };
+
+        if (this.optOptions.hasOptedFor) {
+            payload['changeAccepted'] = this.optOptions.choice;
+            payload['currentClassification'] = this.optOptions.investorStatus;
+        }
 
         this.redux.dispatch({
             type: CLEAR_REQUESTED
@@ -379,6 +419,7 @@ export class OfiWaitingApprovalComponent implements OnInit, OnDestroy {
             /* Send action message to investor */
             // this.sendActionMessageToInvestor(walletId);
             this.setAmKycListRequested(false);
+            this.approveKycModal = false;
 
             setTimeout(() => {
                 /* Redirect to fund access page when the kyc is being approved */

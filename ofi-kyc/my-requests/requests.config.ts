@@ -57,6 +57,17 @@ export const investorStatusTextList = [
     },
 ];
 
+export const minimalInvestorStatusTextList = [
+    {
+        id: '0',
+        text: 'Non professional investor',
+    },
+    {
+        id: '1',
+        text: 'Professional investor',
+    },
+];
+
 export const booleanControls = [
     'commercialDomiciliation',
     'activitiesBenefitFromExperience',
@@ -65,6 +76,11 @@ export const booleanControls = [
     'naturesSameInvestmentCrossAm',
     'objectivesSameInvestmentCrossAm',
     'constraintsSameInvestmentCrossAm',
+    'optFor',
+    'optForPro',
+    'optForNonPro',
+    'exerciseControl',
+    'isLegalRepresentative',
 ];
 
 export const currencyControls = [
@@ -80,6 +96,7 @@ export const percentageControls = [
     'riskAcceptanceLevel4',
     'holdingPercentage',
     'floatableShares',
+    'votingPercentage',
 ];
 
 export const fileControls = [
@@ -123,9 +140,10 @@ export const selectControls = [
     'regulatoryStatus',
     'regulatoryStatusInsurerType',
     'riskProfile',
-    'beneficiaryType',
     'nationalIdNumber',
     'holdingType',
+    'parent',
+    'country',
 ];
 
 export const controlOrder = [
@@ -175,6 +193,24 @@ export const controlOrder = [
     'geographicalOrigin1',
     'geographicalOrigin2',
     'totalFinancialAssetsAlreadyInvested',
+
+    // Classification
+    'investorStatus',
+    'optForPro',
+    'optForNonPro',
+    'excludeProducts',
+    'firstName',
+    'lastName',
+    'jobPosition',
+    'numberYearsExperienceRelatedFunction',
+    'numberYearsCurrentPosition',
+    'financialInstruments',
+    'financialInstrumentsSpecification',
+    'marketArea',
+    'natureTransactionPerYear',
+    'volumeTransactionPerYear',
+    'activitiesBenefitFromExperience',
+    'activitiesBenefitFromExperienceSpecification',
 ];
 
 export const steps = {
@@ -1448,9 +1484,11 @@ export const controlToName = {
     country: 'Country',
 
     // Classification
-    investorStatus: 'Investor status',
+    optForPro: 'Asked for professional status',
+    optForNonPro: 'Opted for non professional classification',
+    classificationChangeAccepted: 'Classification change accepted',
+    investorStatus: 'Initial investor status',
     excludeProducts: 'Excluded category of products/services',
-    changeProfessionalStatus: 'Opted for non professional status',
     jobPosition: 'Job position',
     numberYearsExperienceRelatedFunction: 'Number of years of experience in a function related to financial markets',
     numberYearsCurrentPosition: 'Number of years of experience in current position',
@@ -1552,4 +1590,5 @@ export const controlToList = {
 
     nationality: 'countries',
     countryTaxResidence: 'countries',
+    country: 'countries',
 };

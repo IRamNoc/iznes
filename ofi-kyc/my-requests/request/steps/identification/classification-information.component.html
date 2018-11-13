@@ -1,7 +1,7 @@
 <div [formGroup]="form" class="well">
     <div class="row panel-header clr-align-items-center">
-        <div class="col-sm-9">
-            <a href="#" (click)="open = !open; $event.preventDefault();">
+        <div class="col-sm-9" [class.disabled]="!enabled">
+            <a href="#" (click)="openPanel($event)">
                 <i class="fa fa-chevron-right" [class.rotate]="open"></i>
                 <h2>{{ 'Classification Confirmation' | translate }}</h2>
             </a>
@@ -11,7 +11,7 @@
         </div>
     </div>
 
-    <div class="row panel-body" [class.hidden]="!open">
+    <div class="row panel-body" [class.hidden]="!open || !enabled">
 
         <div class="col-xs-12">
             <div class="mb-1">
@@ -27,28 +27,69 @@
                 </h3>
             </div>
 
-            <div *ngIf="investorType !== 'nonPro'" formGroupName="pro">
-                <div class="row">
-                    <div class="form-group col-sm-6">
-                        <label for="excludeProducts">
-                            {{ 'If you wish to exclude a category of products and/or services from the scope or your status, please specify below:' | translate }}
-                        </label>
-                        <textarea class="form-control" id="excludeProducts" formControlName="excludeProducts"></textarea>
-                        <span class="field-error" *ngIf="hasError(['pro', 'excludeProducts'], ['maxlength'])">{{ 'Value is too long' | translate }}</span>
-                    </div>
+            <div class="row">
+                <div class="form-group col-sm-6">
+                    <label for="excludeProducts">
+                        {{'If you wish to exclude a category of products and/or services from the scope or your status, please specify below:' | translate}}
+                    </label>
+                    <textarea class="form-control" id="excludeProducts" formControlName="excludeProducts"></textarea>
+                    <span class="field-error" *ngIf="hasError('excludeProducts', ['maxlength'])">{{'Field is too long' | translate}}</span>
                 </div>
-                <div class="row">
-                    <div class="form-group col-sm-6">
-                        <div class="checkbox-inline">
-                            <input type="checkbox" id="changeProfessionalStatus" formControlName="changeProfessionalStatus">
-                            <label for="changeProfessionalStatus">
-                                {{ 'As a professional customer, you can opt for non professional status:' | translate }}
-                            </label>
-                        </div>
+            </div>
+
+            <!-- Opt for -->
+            <div class="row">
+                <div class="form-group col-sm-6">
+                    <div class="checkbox-inline">
+                        <input type="checkbox" id="optFor" formControlName="optFor">
+                        <label for="optFor" *ngIf="investorType === 'nonPro'">
+                            {{'As a non professional customer, you can ask for professional status' | translate}}
+                        </label>
+                        <label for="optFor" *ngIf="investorType !== 'nonPro'">
+                            {{'As a professional customer, you can opt for non professional status' | translate}}
+                        </label>
                     </div>
                 </div>
             </div>
-            <div *ngIf="investorType === 'nonPro' || form.get('pro.changeProfessionalStatus').value" formGroupName="nonPro">
+
+            <div *ngIf="!isDisabled('optForValues')" class="row mb-2">
+                <div class="col-xs-12">
+                    <h4 class="mt-0 mb-1">{{'Classification changes' | translate}}</h4>
+
+                    <table class="table">
+                        <thead>
+                        <tr>
+                            <th>{{'Asset Management Company' | translate}}</th>
+                            <th *ngIf="investorType !== 'nonPro'">{{'Opt for non professional classification' | translate}}</th>
+                            <th *ngIf="investorType === 'nonPro'">{{'Ask for professional classification' | translate}}</th>
+                        </tr>
+                        </thead>
+                        <tbody>
+                        <tr *ngFor="let amc of amcs">
+                            <td>{{amc.companyName}}</td>
+                            <td *ngIf="investorType !== 'nonPro'">
+                                <span class="middle" [ngClass]="{bold: !getFormControl(amc.amcID).value}">{{'Professional Investor'}}</span>
+                                <label class="switch">
+                                    <input type="checkbox" class="form-control" [formControl]="getFormControl(amc.amcID)">
+                                    <span class="slider round" data-yes="YES" data-no="NO"></span>
+                                </label>
+                                <span class="middle" [ngClass]="{bold: getFormControl(amc.amcID).value}">{{'Non Professional Investor'}}</span>
+                            </td>
+                            <td *ngIf="investorType === 'nonPro'">
+                                <span class="middle" [ngClass]="{bold: !getFormControl(amc.amcID).value}">{{'Non Professional Investor'}}</span>
+                                <label class="switch">
+                                    <input type="checkbox" class="form-control" [formControl]="getFormControl(amc.amcID)">
+                                    <span class="slider round" data-yes="YES" data-no="NO"></span>
+                                </label>
+                                <span class="middle" [ngClass]="{bold: getFormControl(amc.amcID).value}">{{'Professional Investor'}}</span>
+                            </td>
+                        </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+
+            <div *ngIf="investorType === 'nonPro'" formGroupName="nonPro">
                 <div class="row">
                     <div class="form-group required-field col-sm-6">
                         <label for="firstName">{{ 'First Name' | translate }}</label>

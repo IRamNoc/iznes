@@ -1,14 +1,16 @@
 import { Component, OnInit, ViewChild, AfterViewInit } from '@angular/core';
 import { trigger, state, style, transition, animate } from '@angular/animations';
-import { FormBuilder } from '@angular/forms';
+import {FormBuilder} from '@angular/forms';
 import { ActivatedRoute, Router } from '@angular/router';
-import { select } from '@angular-redux/store';
+import {select, NgRedux} from '@angular-redux/store';
 import { get as getValue, map, sort, remove, partial, invert } from 'lodash';
-import { Subject, combineLatest } from 'rxjs';
-import { takeUntil } from 'rxjs/operators';
+import {Subject, combineLatest} from 'rxjs';
+import {takeUntil} from 'rxjs/operators';
+
+import { clearMyKycRequestedPersist } from '@ofi/ofi-main/ofi-store/ofi-kyc';
 import { MultilingualService } from '@setl/multilingual';
 import { steps, formStepsLight, formStepsFull } from '../requests.config';
-import { NewRequestService } from './new-request.service';
+import {NewRequestService} from './new-request.service';
 
 import { FormstepsComponent } from '@setl/utils/components/formsteps/formsteps.component';
 
@@ -49,6 +51,7 @@ export class NewKycRequestComponent implements OnInit, AfterViewInit {
         private router: Router,
         private newRequestService: NewRequestService,
         public translate: MultilingualService,
+        private ngRedux: NgRedux<any>,
     ) {
     }
 
@@ -81,6 +84,8 @@ export class NewKycRequestComponent implements OnInit, AfterViewInit {
     }
 
     ngOnInit() {
+        this.ngRedux.dispatch(clearMyKycRequestedPersist());
+
         this.initForm();
         this.initSubscriptions();
     }

@@ -25,6 +25,7 @@ import {
     GetKycDocumentRequestData,
     GetKycDocumentRequestBody,
     GetMyKycListRequestBody,
+    GetKycRequestBody,
     createKYCDraftMessageBody,
     createKYCDraftRequestData,
     DeleteKycRequestData,
@@ -422,6 +423,8 @@ export class OfiKycService {
             amCompanyName: _.get(requestData, 'amCompanyName', ''),
             lang: _.get(requestData, 'lang', ''),
             invitedID: _.get(requestData, 'invitedID', ''),
+            changeAccepted: _.get(requestData, 'changeAccepted', null),
+            currentClassification: _.get(requestData, 'currentClassification', ''),
         };
 
         return createMemberNodeRequest(this.memberSocketService, messageBody);
@@ -503,6 +506,16 @@ export class OfiKycService {
                 });
             }
         );
+    }
+
+    getKyc(kycID) {
+        const messageBody: GetKycRequestBody = {
+            RequestName: 'iznesgetkyc',
+            token: this.memberSocketService.token,
+            kycID,
+        };
+
+        return createMemberNodeRequest(this.memberSocketService, messageBody);
     }
 
     fetchInvitationsByUserAmCompany() {

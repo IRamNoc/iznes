@@ -1,6 +1,6 @@
 import { Component, OnInit, Input, Output, EventEmitter } from '@angular/core';
 import { get as getValue, remove } from 'lodash';
-import { select } from '@angular-redux/store';
+import { select, NgRedux } from '@angular-redux/store';
 import { Subject } from 'rxjs';
 import { map, take, takeUntil, filter as rxFilter } from 'rxjs/operators';
 import { PersistRequestService } from '@setl/core-req-services';
@@ -8,6 +8,7 @@ import { PersistService } from '@setl/core-persist';
 import { formHelper } from '@setl/utils/helper';
 import { NewRequestService } from '../new-request.service';
 import { IdentificationService } from './identification.service';
+import { setMyKycRequestedPersist } from '@ofi/ofi-main/ofi-store/ofi-kyc';
 import { steps } from '../../requests.config';
 
 @Component({
@@ -32,11 +33,14 @@ export class NewKycIdentificationComponent implements OnInit {
         private identificationService: IdentificationService,
         private persistService: PersistService,
         private persistRequestService: PersistRequestService,
+        private ngRedux: NgRedux<any>,
     ) {
     }
 
     ngOnInit() {
         this.initSubscriptions();
+
+        window['pouetident'] = this.form;
     }
 
     initSubscriptions() {
@@ -120,8 +124,11 @@ export class NewKycIdentificationComponent implements OnInit {
             this.newRequestService.context,
             {
                 reset : false,
+                returnPromise: true,
             },
-        );
+        ).then(() => {
+            this.ngRedux.dispatch(setMyKycRequestedPersist('identification'));
+        });
     }
 
     clearPersistForm() {
@@ -140,9 +147,7 @@ export class NewKycIdentificationComponent implements OnInit {
         }
 
         this.requests$
-            .pipe(
-                take(1),
-            )
+            .pipe(take(1))
             .subscribe((requests) => {
             this
                 .identificationService
@@ -158,6 +163,14 @@ export class NewKycIdentificationComponent implements OnInit {
                 })
             ;
         });
+    }
+
+    checkCompletion() {
+        const general = this.form.get('generalInformation');
+        const company = this.form.get('companyInformation');
+        const banking = this.form.get('bankingInformation');
+
+        return general.valid && company.valid && banking.valid;
     }
 
     ngOnDestroy() {
