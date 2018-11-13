@@ -438,7 +438,6 @@ export class SetlLoginComponent implements OnDestroy, OnInit, AfterViewInit {
     setUsernameRequired() {
         this.loginForm.controls.username.setValidators(Validators.required);
         if (!this.loginForm.get('username').value) this.loginForm.controls.username.setErrors({ required: true });
-        this.changeDetectorRef.detectChanges();
     }
 
     toggleShowPasswords(key) {
