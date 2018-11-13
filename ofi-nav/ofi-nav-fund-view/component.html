@@ -181,13 +181,13 @@
                     <clr-dg-cell class="actions">
                         <div class="btn-group btn-sm">
                             <button id="{{'Edit-NAV-' + i}}" class="btn btn-success btn-sm" style="margin-right: 0px;"
-                                (click)="editNav(item)"
-                                [disabled]="item.status == 3">
+                                    (click)="editNav(item)"
+                                    [disabled]="item.status == 3">
                                 <i class="fa fa-edit"></i> {{'Edit NAV' | translate}}
                             </button>
                             <button id="{{'Delete-NAV-' + i}}" class="btn btn-danger btn-sm"
-                                (click)="cancelNav(item)"
-                                [disabled]="item.status == -1 || item.status == 3">
+                                    (click)="cancelNav(item)"
+                                    [disabled]="(item.status == -1 && item.navUsed == 1) || item.status == 3">
                                 <i class="fa fa-remove"></i> {{'Delete NAV' | translate}}
                             </button>
                         </div>
