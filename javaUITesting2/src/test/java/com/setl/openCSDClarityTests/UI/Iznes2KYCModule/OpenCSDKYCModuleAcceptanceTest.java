@@ -48,7 +48,7 @@ public class OpenCSDKYCModuleAcceptanceTest {
     @Rule
     public RepeatRule repeatRule = new RepeatRule();
     @Rule
-    public Timeout globalTimeout = new Timeout(105000);
+    public Timeout globalTimeout = new Timeout(120000);
     @Rule
     public TestMethodPrinterRule pr = new TestMethodPrinterRule(System.out);
 
@@ -94,6 +94,7 @@ public class OpenCSDKYCModuleAcceptanceTest {
         KYCProcessStep3GeneralInfoComplete(companyName);
         KYCProcessStep3CompanyInfoComplete();
         KYCProcessStep3BankingInfoComplete(companyName, uSubIBANDetails);
+        KYCProcessStep3ClassificationInfoComplete(companyName, uSubIBANDetails);
         KYCProcessStep4();
         KYCProcessStep5();
         KYCProcessStep6(firstName + " " + lastName, "SETL Developments LTD", "Ipswich", "Head");
@@ -504,42 +505,32 @@ public class OpenCSDKYCModuleAcceptanceTest {
         Thread.sleep(750);
 
         String identificationTitle = driver.findElement(By.xpath("//*[@id=\"iznes\"]/app-root/app-basic-layout/div/ng-sidebar-container/div/div/div/main/div/div/ng-component/ng-component/div[3]/div[2]/div/section[3]/kyc-step-identification/h3")).getText();
-        assertTrue(identificationTitle.equals("CLIENT'S IDENTIFICATION AS A LEGAL ENTITY"));
+        System.out.println(identificationTitle);
+        assertTrue(identificationTitle.equals("Client's Identification as a Legal Entity"));
         String generalInfoPercent = driver.findElement(By.xpath("//*[@id=\"step-identification\"]/general-information/div/div[1]/div[2]/div/div[1]/div/div/div/span")).getText();
         assertTrue(generalInfoPercent.equals("0%"));
         driver.findElement(By.xpath("//*[@id=\"step-identification\"]/general-information/div/div[1]/div[1]/a/h2")).click();
         wait.until(visibilityOfElementLocated(By.id("registeredCompanyName")));
         driver.findElement(By.id("registeredCompanyName")).sendKeys(companyName);
-        String percent0 = driver.findElement(By.xpath("//*[@id=\"step-identification\"]/general-information/div/div[1]/div[2]/div/div[1]/div/div/div/span")).getText();
-        assertTrue(percent0.equals("10%"));
-        searchSelectTopOptionXpath("EARL : Entreprise agricole à responsabilité limitée", "//*[@id=\"legalForm\"]/div", "//*[@id=\"legalForm\"]/div/div[3]/div/input", "//*[@id=\"legalForm\"]/div/div[3]/ul/li[1]/div/a");
-        String percent1 = driver.findElement(By.xpath("//*[@id=\"step-identification\"]/general-information/div/div[1]/div[2]/div/div[1]/div/div/div/span")).getText();
-        assertTrue(percent1.equals("20%"));
-        driver.findElement(By.id("registeredCompanyAddressLine1")).sendKeys("21 Something Street");
-        String percent2 = driver.findElement(By.xpath("//*[@id=\"step-identification\"]/general-information/div/div[1]/div[2]/div/div[1]/div/div/div/span")).getText();
-        assertTrue(percent2.equals("30%"));
-        driver.findElement(By.xpath("//*[@id=\"step-identification\"]/general-information/div/div[2]/div/div[4]/div[1]/input")).sendKeys("IP11EY");
-        String percent3 = driver.findElement(By.xpath("//*[@id=\"step-identification\"]/general-information/div/div[1]/div[2]/div/div[1]/div/div/div/span")).getText();
-        assertTrue(percent3.equals("40%"));
-        driver.findElement(By.xpath("//*[@id=\"step-identification\"]/general-information/div/div[2]/div/div[4]/div[2]/input")).sendKeys("Ipswich");
-        String percent4 = driver.findElement(By.xpath("//*[@id=\"step-identification\"]/general-information/div/div[1]/div[2]/div/div[1]/div/div/div/span")).getText();
-        assertTrue(percent4.equals("50%"));
+
+        searchSelectTopOptionXpath("EARL: Entreprise agricole à responsabilité limitée", "//*[@id=\"legalForm\"]/div", "//*[@id=\"legalForm\"]/div/div[3]/div/input", "//*[@id=\"legalForm\"]/div/div[3]/ul/li[1]/div/a");
+
         String lei = generateRandomLEI();
         driver.findElement(By.xpath("//*[@id=\"leiCode\"]")).sendKeys(lei);
-        String percent5 = driver.findElement(By.xpath("//*[@id=\"step-identification\"]/general-information/div/div[1]/div[2]/div/div[1]/div/div/div/span")).getText();
-        assertTrue(percent5.equals("60%"));
-        searchSelectTopOptionXpath("Jordan", "//*[@id=\"step-identification\"]/general-information/div/div[2]/div/div[4]/div[3]/ng-select/div", "//*[@id=\"step-identification\"]/general-information/div/div[2]/div/div[4]/div[3]/ng-select/div/div[3]/div/input", "//*[@id=\"step-identification\"]/general-information/div/div[2]/div/div[4]/div[3]/ng-select/div/div[3]/ul/li[1]/div/a");
-        String percent6 = driver.findElement(By.xpath("//*[@id=\"step-identification\"]/general-information/div/div[1]/div[2]/div/div[1]/div/div/div/span")).getText();
-        assertTrue(percent6.equals("70%"));
-        searchSelectTopOptionXpath("Cosmetics", "//*[@id=\"sectorActivity\"]/div", "//*[@id=\"sectorActivity\"]/div/div[3]/div/input", "//*[@id=\"sectorActivity\"]/div/div[3]/ul/li[1]/div/a");
-        String percent7 = driver.findElement(By.xpath("//*[@id=\"step-identification\"]/general-information/div/div[1]/div[2]/div/div[1]/div/div/div/span")).getText();
-        assertTrue(percent7.equals("80%"));
-        searchSelectTopOptionXpath("Credit Institution", "//*[@id=\"legalStatusList\"]/div", "//*[@id=\"legalStatusList\"]/div/div[3]/div/input", "//*[@id=\"legalStatusList\"]/div/div[3]/ul/li[1]/div/a");
-        String percent8 = driver.findElement(By.xpath("//*[@id=\"step-identification\"]/general-information/div/div[1]/div[2]/div/div[1]/div/div/div/span")).getText();
-        assertTrue(percent8.equals("90%"));
+
+        driver.findElement(By.id("registeredCompanyAddressLine1")).sendKeys("21 Something Street");
+
+        driver.findElement(By.xpath("//*[@id=\"step-identification\"]/general-information/div/div[2]/div/div[5]/div[1]/input")).sendKeys("IP11EY");
+
+        searchSelectTopOptionXpath("Jordan", "//*[@id=\"countryTaxResidence\"]/div", "//*[@id=\"countryTaxResidence\"]/div/div[3]/div/input", "//*[@id=\"countryTaxResidence\"]/div/div[3]/ul/li[1]/div/a");
+
+        driver.findElement(By.xpath("//*[@id=\"step-identification\"]/general-information/div/div[2]/div/div[5]/div[2]/input")).sendKeys("Ipswich");
+
         String percentBarColourPre = driver.findElement(By.xpath("//*[@id=\"step-identification\"]/general-information/div/div[1]/div[2]/div/div[1]/div/div/div")).getCssValue("background-color");
         assertTrue(percentBarColourPre.equals("rgba(255, 183, 77, 1)"));
-        searchSelectTopOptionXpath("Jordan", "//*[@id=\"countryTaxResidence\"]/div", "//*[@id=\"countryTaxResidence\"]/div/div[3]/div/input", "//*[@id=\"countryTaxResidence\"]/div/div[3]/ul/li[1]/div/a");
+
+        searchSelectTopOptionXpath("Jordan", "//*[@id=\"step-identification\"]/general-information/div/div[2]/div/div[5]/div[3]/ng-select/div", "//*[@id=\"step-identification\"]/general-information/div/div[2]/div/div[5]/div[3]/ng-select/div/div[3]/div/input", "//*[@id=\"step-identification\"]/general-information/div/div[2]/div/div[5]/div[3]/ng-select/div/div[3]/ul/li[1]/div/a");
+
         String percent9 = driver.findElement(By.xpath("//*[@id=\"step-identification\"]/general-information/div/div[1]/div[2]/div/div[1]/div/div/div/span")).getText();
         assertTrue(percent9.equals("100%"));
 
@@ -559,9 +550,11 @@ public class OpenCSDKYCModuleAcceptanceTest {
         driver.findElement(By.xpath("//*[@id=\"step-identification\"]/company-information/form/div[1]/div[1]/a/h2")).click();
         wait.until(visibilityOfElementLocated(By.id("activities")));
 
-        searchSelectTopOptionXpath("Own-account investor", "//*[@id=\"activities\"]/div", "//*[@id=\"activities\"]/div/div[3]/div/input", "//*[@id=\"activities\"]/div/div[3]/ul/li[1]/div/a");
+        searchSelectTopOptionXpath("Consumer Electronics", "//*[@id=\"sectorActivity\"]/div", "//*[@id=\"sectorActivity\"]/div/div[3]/div/input", "//*[@id=\"sectorActivity\"]/div/div[3]/ul/li[1]/div/a");
 
         searchSelectTopOptionXpath("European union", "//*[@id=\"geographicalAreaOfActivity\"]/div", "//*[@id=\"geographicalAreaOfActivity\"]/div/div[3]/div/input", "//*[@id=\"geographicalAreaOfActivity\"]/div/div[3]/ul/li[1]/div/a");
+
+        searchSelectTopOptionXpath("Own-account", "//*[@id=\"activities\"]/div", "//*[@id=\"activities\"]/div/div[3]/div/input", "//*[@id=\"activities\"]/div/div[3]/ul/li[1]/div/a");
 
         searchSelectTopOptionXpath("Embassies and Consulates", "//*[@id=\"ownAccountinvestor\"]/div", "//*[@id=\"ownAccountinvestor\"]/div/div[3]/div/input", "//*[@id=\"ownAccountinvestor\"]/div/div[3]/ul/li[1]/div/a");
 
@@ -570,6 +563,12 @@ public class OpenCSDKYCModuleAcceptanceTest {
         driver.findElement(By.id("netRevenuesNetIncome")).sendKeys("9");
 
         driver.findElement(By.id("shareholderEquity")).sendKeys("9");
+
+        searchSelectTopOptionXpath("Country", "//*[@id=\"geographicalOrigin1\"]/div", "//*[@id=\"geographicalOrigin1\"]/div/div[3]/div/input", "//*[@id=\"geographicalOrigin1\"]/div/div[3]/ul/li[1]/div/a");
+        searchSelectTopOptionXpath("Jordan", "//*[@id=\"geographicalOrigin2\"]/div", "//*[@id=\"geographicalOrigin2\"]/div/div[3]/div/input", "//*[@id=\"geographicalOrigin2\"]/div/div[3]/ul/li[1]/div/a");
+        searchSelectTopOptionXpath("0 to 50 million €", "//*[@id=\"totalFinancialAssetsAlreadyInvested\"]/div", "//*[@id=\"totalFinancialAssetsAlreadyInvested\"]/div/div[3]/div/input", "//*[@id=\"totalFinancialAssetsAlreadyInvested\"]/div/div[3]/ul/li[1]/div/a");
+
+        driver.findElement(By.id("premiumsAndContributions")).click();
 
         searchSelectTopOptionXpath("Legal person", "//*[@id=\"beneficiaryType\"]/div", "//*[@id=\"beneficiaryType\"]/div/div[3]/div/input", "//*[@id=\"beneficiaryType\"]/div/div[3]/ul/li[1]/div/a");
 
@@ -589,18 +588,11 @@ public class OpenCSDKYCModuleAcceptanceTest {
 
         searchSelectTopOptionXpath("SIRET", "//*[@id=\"nationalIdNumber-benef-0\"]/div", "//*[@id=\"nationalIdNumber-benef-0\"]/div/div[3]/div/input", "//*[@id=\"nationalIdNumber-benef-0\"]/div/div[3]/ul/li[1]/div/a");
 
-        driver.findElement(By.xpath("//*[@id=\"step-identification\"]/company-information/form/div[2]/div/div[7]/div[2]/beneficiary/div/div[2]/div[5]/div[2]/input")).sendKeys("12312341231232");
+        driver.findElement(By.xpath("//*[@id=\"step-identification\"]/company-information/form/div[2]/div/div[11]/div[2]/beneficiary/div/div[2]/div[5]/div[2]/input")).sendKeys("12312341231232");
 
         driver.findElement(By.id("holdingPercentage-benef-0")).sendKeys("12");
 
         searchSelectTopOptionXpath("Direct holding", "//*[@id=\"holdingType-benef-0\"]/div", "//*[@id=\"holdingType-benef-0\"]/div/div[3]/div/input", "//*[@id=\"holdingType-benef-0\"]/div/div[3]/ul/li[1]/div/a");
-
-        driver.findElement(By.id("premiumsAndContributions")).click();
-
-        searchSelectTopOptionXpath("Country", "//*[@id=\"geographicalOrigin1\"]/div", "//*[@id=\"geographicalOrigin1\"]/div/div[3]/div/input", "//*[@id=\"geographicalOrigin1\"]/div/div[3]/ul/li[1]/div/a");
-        searchSelectTopOptionXpath("Jordan", "//*[@id=\"geographicalOrigin2\"]/div", "//*[@id=\"geographicalOrigin2\"]/div/div[3]/div/input", "//*[@id=\"geographicalOrigin2\"]/div/div[3]/ul/li[1]/div/a");
-        searchSelectTopOptionXpath("0 to 50 million €", "//*[@id=\"totalFinancialAssetsAlreadyInvested\"]/div", "//*[@id=\"totalFinancialAssetsAlreadyInvested\"]/div/div[3]/div/input", "//*[@id=\"totalFinancialAssetsAlreadyInvested\"]/div/div[3]/ul/li[1]/div/a");
-
 
         scrollElementIntoViewByXpath("//*[@id=\"step-identification\"]/company-information/form/div[1]/div[1]/a/h2");
         wait.until(visibilityOfElementLocated(By.xpath("//*[@id=\"step-identification\"]/company-information/form/div[1]/div[1]/a/h2")));
@@ -635,6 +627,35 @@ public class OpenCSDKYCModuleAcceptanceTest {
         driver.findElement(By.id("city-0")).sendKeys("Ipswich");
 
         searchSelectTopOptionXpath("Jordan", "//*[@id=\"country0\"]/div", "//*[@id=\"country0\"]/div/div[3]/div/input", "//*[@id=\"country0\"]/div/div[3]/ul/li[1]/div/a");
+
+
+        driver.findElement(By.xpath("//*[@id=\"step-identification\"]/banking-information/div/div[1]/div[1]/a/h2")).click();
+        wait.until(invisibilityOfElementLocated(By.id("activities")));
+    }
+
+    public static void KYCProcessStep3ClassificationInfoComplete(String companyName, String iBan) throws IOException, InterruptedException{
+        WebDriverWait wait = new WebDriverWait(driver, timeoutInSeconds);
+
+        Thread.sleep(500);
+        driver.findElement(By.xpath("//*[@id=\"step-identification\"]/classification-information/div/div[1]/div[1]/a/h2")).click();
+        Thread.sleep(1500);
+
+        driver.findElement(By.id("firstName")).sendKeys("Jordan");
+        driver.findElement(By.id("lastName")).sendKeys("Miller");
+
+        driver.findElement(By.id("jobPosition")).sendKeys("Intern");
+
+        driver.findElement(By.id("numberYearsExperienceRelatedFunction")).sendKeys("1");
+
+        driver.findElement(By.id("numberYearsCurrentPosition")).sendKeys("1");
+
+        searchSelectTopOptionXpath("Bonds", "//*[@id=\"financialInstruments\"]/div", "//*[@id=\"financialInstruments\"]/div/div[2]/div/input", "//*[@id=\"financialInstruments\"]/div/div[2]/ul/li[1]/div/a");
+
+        searchSelectTopOptionXpath("European union", "//*[@id=\"marketArea\"]/div", "//*[@id=\"marketArea\"]/div/div[2]/div/input", "//*[@id=\"marketArea\"]/div/div[2]/ul/li[1]/div/a");
+
+        searchSelectTopOptionXpath("0 to 1 000 €", "//*[@id=\"natureTransactionPerYear\"]/div", "//*[@id=\"natureTransactionPerYear\"]/div/div[3]/div/input", "//*[@id=\"natureTransactionPerYear\"]/div/div[3]/ul/li[1]/div/a");
+
+        searchSelectTopOptionXpath("1 to 10 transactions", "//*[@id=\"volumeTransactionPerYear\"]/div", "//*[@id=\"volumeTransactionPerYear\"]/div/div[3]/div/input", "//*[@id=\"volumeTransactionPerYear\"]/div/div[3]/ul/li[1]/div/a");
 
 
         driver.findElement(By.xpath("//*[@id=\"step-identification\"]/banking-information/div/div[1]/div[1]/a/h2")).click();
