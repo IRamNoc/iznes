@@ -1,11 +1,4 @@
-import {
-    ChangeDetectionStrategy,
-    ChangeDetectorRef,
-    Component,
-    OnInit,
-    Inject,
-    OnDestroy,
-} from '@angular/core';
+import { ChangeDetectionStrategy, ChangeDetectorRef, Component, OnInit, Inject, OnDestroy } from '@angular/core';
 import { NgRedux, select } from '@angular-redux/store';
 import { SagaHelper } from '@setl/utils';
 import { AlertsService } from '@setl/jaspero-ng2-alerts';
@@ -16,12 +9,9 @@ import { MyWalletsService, WalletNodeRequestService } from '@setl/core-req-servi
 import { TabControl, Tab } from '@setl/core-balances/tabs';
 import { Observable } from 'rxjs/Observable';
 import * as _ from 'lodash';
-import { ContractModel, PartyModel, PayListItemModel, ReceiveListItemModel } from '@setl/core-contracts/models';
-import {
-    SET_CONTRACT_LIST,
-    UPDATE_CONTRACT,
-} from '@setl/core-store/wallet/my-wallet-contract/actions';
-import { Subject } from 'rxjs';
+import { ContractModel, PartyModel } from '@setl/core-contracts/models';
+import { SET_CONTRACT_LIST } from '@setl/core-store/wallet/my-wallet-contract/actions';
+import { Subject } from 'rxjs/Subject';
 import { takeUntil } from 'rxjs/operators';
 
 @Component({
@@ -37,14 +27,10 @@ export class ContractsComponent implements OnInit, OnDestroy {
     public addresses: string[] = [];
     public contracts: ContractModel[] = [];
     public contract;
-    public contractFields;
     public committing: string[] = [];
     public parameterValues = {};
     private unsubscribe = new Subject();
-
-    // Rows Per Page datagrid size
     public pageSize: number;
-
     public tabControl: TabControl;
     public tabs: Tab[];
 
@@ -62,7 +48,8 @@ export class ContractsComponent implements OnInit, OnDestroy {
         private changeDetectorRef: ChangeDetectorRef,
         private ngRedux: NgRedux<any>,
         @Inject(APP_CONFIG) private appConfig: AppConfig,
-    ) { }
+    ) {
+    }
 
     public ngOnInit() {
         this.tabControl = new TabControl({
@@ -76,7 +63,7 @@ export class ContractsComponent implements OnInit, OnDestroy {
         this.tabControl.getTabs().pipe(takeUntil(this.unsubscribe)).subscribe((tabs) => {
             this.tabs = tabs;
             this.changeDetectorRef.markForCheck();
-        }),
+        });
 
         this.token = this.memberSocketService.token;
         if (this.updateContractList) {
@@ -103,8 +90,6 @@ export class ContractsComponent implements OnInit, OnDestroy {
         if (this.getUser) {
             this.getUser.pipe(takeUntil(this.unsubscribe)).subscribe(data => this.userId = data);
         }
-
-        // this.subscribe<number>(this.getConnectedWallet, id => this.walletId = id);
 
         this.getConnectedWallet.pipe(takeUntil(this.unsubscribe)).subscribe((data) => {
             this.walletId = data;
@@ -167,62 +152,24 @@ export class ContractsComponent implements OnInit, OnDestroy {
         return contract;
     }
 
-    public ngOnDestroy(): void {
-        this.unsubscribe.next();
-        this.unsubscribe.complete();
+    public commitParty(party: PartyModel, contract: ContractModel): void {
+        this.contractService.commitParty(party, contract)
+        .then((data) => {
+            this.committing = [...this.committing, party.partyIdentifier];
+            this.changeDetectorRef.markForCheck();
+            this.alertsService.generate('success', 'Committing to Contract.');
+        })
+        .catch(data => console.log('Bad commit', data));
     }
 
     public commitAuthorisation(index: number, contract: ContractModel): void {
-        index += 1;
-        console.log('INDEX:', index);
-        let contractJson = JSON.parse(this.contractService.toJSON(contract));
-        contractJson = contractJson.contractdata;
-        console.log('CONTRACT JSON:', contractJson);
-        const commitment = [];
-        _.each(contractJson.parties[index][2], (payListItem, i) => {
-            commitment[i] = [i, payListItem[1], payListItem[2], payListItem[3], '', ''];
-        });
-        const receive = [];
-        _.each(contractJson.parties[index][3], (recieveListItem, i) => {
-            receive[i] = [i, contract.parties[index - 1].sigAddress];
-        });
-
-        const asyncTaskPipe = this.walletNodeRequest.walletCommitToContract({
-            walletid: this.walletId,
-            address: contract.parties[index - 1].sigAddress,
-            function: contract.function + '_commit',
-            contractdata: {
-                commitment,
-                receive,
-                contractfunction: contract.function + '_commit',
-                issuingaddress: contract.issuingaddress,
-                contractaddress: contract.address,
-                parties: contractJson.parties,
-                authorise: contractJson.authorisations,
-            },
-            contractaddress: contract.address,
-        });
-
-        this.ngRedux.dispatch(SagaHelper.runAsync(
-            [],
-            [],
-            asyncTaskPipe,
-            {},
-            () => {
-            },
-            () => {
-            },
-        ));
-    }
-
-    public commitParty(party: PartyModel, contract: ContractModel): void {
-        this.contractService.commitParty(party, contract)
-            .then((data) => {
-                this.committing = [...this.committing, party.partyIdentifier];
-                this.changeDetectorRef.markForCheck();
-                this.alertsService.generate('success', 'Committing to Contract.');
-            })
-            .catch(data => console.log('Bad commit', data));
+        this.contractService.commitAuthorisation(index, contract)
+        .then(() => {
+            this.committing = [...this.committing, contract.authorisations[index].publicKey];
+            this.changeDetectorRef.markForCheck();
+            this.alertsService.generate('success', 'Committing to Contract.');
+        })
+        .catch(data => console.log('Bad commit', data));
     }
 
     public updateParameter(key, value) {
@@ -235,6 +182,31 @@ export class ContractsComponent implements OnInit, OnDestroy {
 
         console.log(`Commit ${key} -> ${value}`);
 
+    }
+
+    /**
+     * Takes a commit button type and handles logic of whether to show the button
+     *
+     * @param type
+     * @param contract
+     * @param party
+     * @return {boolean}
+     */
+    showCommitButton(type, contract, party): boolean {
+        switch (type) {
+        case 'committed':
+            return party.signature || (contract.issuingaddress === party.sigAddress && !party.mustSign);
+        case 'notCommitted':
+            return !party.signature && party.sigAddress_label === party.sigAddress;
+        case 'commit':
+            return (!party.signature && party.sigAddress_label !== party.sigAddress &&
+                !this.committing.includes(party.partyIdentifier)) &&
+                ((contract.issuingaddress !== party.sigAddress && !party.mustSign) || party.mustSign);
+        case 'committing':
+            return !party.signature && this.committing.includes(party.partyIdentifier);
+        default:
+            return false;
+        }
     }
 
     /**
@@ -285,5 +257,11 @@ export class ContractsComponent implements OnInit, OnDestroy {
      */
     closeTab(index: number) {
         this.tabControl.close(index);
+        this.committing = [];
+    }
+
+    public ngOnDestroy(): void {
+        this.unsubscribe.next();
+        this.unsubscribe.complete();
     }
 }

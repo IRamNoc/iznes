@@ -4,7 +4,7 @@
 
 <clr-tabs *ngIf="tabs.length">
     <clr-tab *ngFor="let tab of tabs; let id = index">
-        <button clrTabLink id="tablink{{id}}" innerHTML="<i class='fa fa-{{tab.icon}}'></i> {{tab.title}}"></button>
+        <button clrTabLink id="tablink{{id}}" (click)="committing=[]" innerHTML="<i class='fa fa-{{tab.icon}}'></i> {{tab.title}}"></button>
 
         <clr-tab-content *clrIfActive="tab.active">
             <section>
@@ -60,8 +60,8 @@
             </div>
             <div class="col-xs-6">
                 <div class="form-group tx-view-header" style="float:right">
-                    <span *ngIf="contract.__completed == -1" class="label label-success" style="font-size:16px" mltag="txt_enabled">Complete</span>
-                    <span *ngIf="contract.__completed != -1" class="label label-warning" style="font-size:16px" mltag="txt_incomplete">Incomplete</span>
+                    <span *ngIf="contract.__completed === -1" class="label label-success" style="font-size:16px" mltag="txt_enabled">Complete</span>
+                    <span *ngIf="contract.__completed !== -1" class="label label-warning" style="font-size:16px" mltag="txt_incomplete">Incomplete</span>
                 </div>
             </div>
         </div>
@@ -122,14 +122,12 @@
                             </div>
                             <div class="col-sm-6">
                                 <div class="pull-right">
-                                    <span *ngIf="party.signature != ''" class="label label-success"><i class="fa fa-check"></i>&nbsp;Committed</span>
-                                    <span *ngIf="party.signature == '' && party.sigAddress_label == party.sigAddress" class="label label-info"><i class="fa fa-clock-o"></i>&nbsp;Not Committed</span>
-                                    <span *ngIf="party.signature == '' && party.sigAddress_label != party.sigAddress && !committing.includes(party.partyIdentifier)">
-                                        <span id="edit-{{i}}" (click)="commitParty(party, contract)" class="label label-commit">
-                                            <i class="fa fa-check"></i>&nbsp;Commit
+                                    <span *ngIf="showCommitButton('committed', contract, party)" class="label label-success"><i class="fa fa-check"></i>Committed</span>
+                                    <span *ngIf="showCommitButton('notCommitted', contract, party)" class="label label-info"><i class="fa fa-clock-o"></i>Not Committed</span>
+                                    <span *ngIf="showCommitButton('commit', contract, party)" id="edit-{{i}}" (click)="commitParty(party, contract)" class="label label-commit">
+                                            <i class="fa fa-check"></i>Commit
                                         </span>
-                                    </span>
-                                    <span class="label label-committing" *ngIf="party.signature == '' && committing.includes(party.partyIdentifier)"><i class="fa fa-spinner fa-spin"></i> Committing...</span>
+                                    <span *ngIf="showCommitButton('committing', contract, party)" class="label label-committing"><i class="fa fa-spinner fa-spin"></i>Committing...</span>
                                 </div>
                             </div>
                         </div>
@@ -206,17 +204,23 @@
                     <clr-dg-column mltag="txt_status">Status</clr-dg-column>
                     <clr-dg-column class="right" mltag="txt_actions">Actions</clr-dg-column>
                     <clr-dg-row *clrDgItems="let authorisation of contract.authorisations; let i = index">
+                        <clr-dg-cell>{{authorisation.publicKey}}</clr-dg-cell>
                         <clr-dg-cell>
-                            <span><i class="fa fa-clock-o"></i> {{contract.status}}</span>
-                        </clr-dg-cell>
-                        <clr-dg-cell>{{authorisation.sigAddress_label}}</clr-dg-cell>
-                        <clr-dg-cell class="right">
-                            <span *ngIf="authorisation.signature != ''" class="label label-success"><i class="fa fa-check"></i>&nbsp;Committed</span>
-                            <span *ngIf="authorisation.signature == ''">
-                                <button id="edit-{{i}}" (click)="commitAuthorisation(i, contract)" class="btn btn-success btn-sm">
-                                    <i class="fa fa-check"></i>&nbsp;<span mltag="txt_view">Commit</span>
-                                </button>
+                            <span *ngIf="authorisation.signature === ''">
+                                <i class="fa fa-clock-o"></i>Pending
                             </span>
+                            <span *ngIf="authorisation.signature !== ''">
+                                <i class="fa fa-check"></i>Complete
+                            </span>
+                        </clr-dg-cell>
+                        <clr-dg-cell class="right">
+                            <span *ngIf="authorisation.signature !== ''" class="label label-success"><i class="fa fa-check"></i>Committed</span>
+                            <span *ngIf="authorisation.signature === '' && !committing.includes(authorisation.publicKey)">
+                                        <span id="edit-{{i}}" (click)="commitAuthorisation(i, contract)" class="label label-commit">
+                                            <i class="fa fa-check"></i>Commit
+                                        </span>
+                                    </span>
+                            <span class="label label-committing" *ngIf="authorisation.signature == '' && committing.includes(authorisation.publicKey)"><i class="fa fa-spinner fa-spin"></i>Committing...</span>
                         </clr-dg-cell>
                     </clr-dg-row>
                 </clr-datagrid>

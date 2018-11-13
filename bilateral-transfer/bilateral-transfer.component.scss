@@ -1,0 +1,23 @@
+.type-select .btn-outline {
+    color: #565656;
+    background-color: transparent;
+    border-color: #737373;
+    opacity: .6;
+    &:hover {
+        border-color: #737373 !important;
+        opacity: .4;
+        &:last-child {
+            border-left: none !important;
+        }
+    }
+}
+
+.width360 {
+    margin-top: 3px;
+    input {
+        width: 360px;
+    }
+    .field-error {
+        width: 360px;
+    }
+}

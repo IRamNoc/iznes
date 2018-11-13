@@ -1,20 +1,15 @@
 import { Injectable } from '@angular/core';
-import { PartyService } from '../services/party.service';
-import { AuthorisationService } from '../services/authorisation.service';
+import { PartyService, AuthorisationService, ParameterItemService, EncumbranceService } from '../services/';
 import {
     AuthorisationModel,
     ParameterItemModel,
     PayListItemModel,
     ReceiveListItemModel,
     EncumbranceModel,
-    UseEncumbranceModel,
     PartyModel,
-    ContractModel
+    ContractModel,
 } from '../models';
-import { ParameterItemService } from '../services/parameterItem.service';
-import { EncumbranceService } from '../services/encumbrance.service';
 import { SagaHelper } from '@setl/utils';
-import * as moment from 'moment';
 import * as _ from 'lodash';
 import { NgRedux, select } from '@angular-redux/store';
 import { WalletNodeRequestService } from '@setl/core-req-services';
@@ -38,7 +33,6 @@ export class ContractService {
         this.authorisationService = new AuthorisationService();
         this.parameterItemService = new ParameterItemService();
         this.encumbranceService = new EncumbranceService();
-
         this.connectedWalletId$.subscribe(id => this.walletId = id);
     }
 
@@ -51,7 +45,6 @@ export class ContractService {
      * @returns {ContractModel}
      */
     public fromJSON(json, addresses): ContractModel {
-        console.log('Contract JSON', json);
         this.addresses = addresses;
         if (typeof json === 'string') {
             json = JSON.parse(json);
@@ -241,11 +234,11 @@ export class ContractService {
             const asyncTaskPipe = this.walletNodeRequest.walletCommitToContract({
                 walletid: this.walletId,
                 address: party.sigAddress,
-                function: contract.function + '_commit',
+                function: `${contract.function}_commit`,
                 contractdata: {
                     commitment,
                     receive,
-                    contractfunction: contract.function + '_commit',
+                    contractfunction: `${contract.function}_commit`,
                     issuingaddress: contract.issuingaddress,
                     contractaddress: contract.address,
                     party: [
@@ -267,7 +260,45 @@ export class ContractService {
                 },
                 (data) => {
                     reject(data);
-                }
+                },
+            ));
+        });
+    }
+
+    public commitAuthorisation(index: number, contract: ContractModel): Promise<any> {
+        return new Promise((resolve, reject) => {
+            const contractJson = JSON.parse(this.toJSON(contract)).contractdata;
+            const address = contractJson.authorisations[index][0];
+            const commitment = [];
+            commitment[0] = [index, contractJson.authorisations[index][0]];
+            const authorise = [contractJson.authorisations[index]];
+
+            const asyncTaskPipe = this.walletNodeRequest.walletCommitToContract({
+                walletid: this.walletId,
+                address,
+                function: `${contract.function}_commit`,
+                contractdata: {
+                    commitment,
+                    contractfunction: `${contract.function}_commit`,
+                    issuingaddress: contract.issuingaddress,
+                    contractaddress: contract.address,
+                    parties: contractJson.parties,
+                    authorise,
+                },
+                contractaddress: contract.address,
+            });
+
+            this.redux.dispatch(SagaHelper.runAsync(
+                [],
+                [],
+                asyncTaskPipe,
+                {},
+                (data) => {
+                    resolve(data);
+                },
+                (data) => {
+                    reject(data);
+                },
             ));
         });
     }
@@ -322,22 +353,22 @@ export class ContractService {
         let jsonArray: any = [];
         _.each(subModels, (subModel) => {
             switch (subModel.constructor.name) {
-            case 'AuthorisationModel':
-                jsonArray.push(this.authorisationService.toJSON(subModel));
-                break;
-            case 'ParameterItemModel':
-                jsonArray = {};
-                jsonArray[subModel.key] = this.parameterItemService.toJSON(subModel);
-                break;
-            case 'PartyModel':
-                if (jsonArray.length === 0) {
-                    jsonArray.push(subModels.length);
-                }
-                jsonArray.push(this.partyService.toJSON(subModel));
-                break;
-            case 'EncumbranceModel':
-                jsonArray.push(this.encumbranceService.toJSON(subModel));
-                break;
+                case 'AuthorisationModel':
+                    jsonArray.push(this.authorisationService.toJSON(subModel));
+                    break;
+                case 'ParameterItemModel':
+                    jsonArray = {};
+                    jsonArray[subModel.key] = this.parameterItemService.toJSON(subModel);
+                    break;
+                case 'PartyModel':
+                    if (jsonArray.length === 0) {
+                        jsonArray.push(subModels.length);
+                    }
+                    jsonArray.push(this.partyService.toJSON(subModel));
+                    break;
+                case 'EncumbranceModel':
+                    jsonArray.push(this.encumbranceService.toJSON(subModel));
+                    break;
             }
         });
         return jsonArray;
