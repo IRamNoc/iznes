@@ -11,7 +11,7 @@ form-steps{
     .steps-slider {
         width: 100%;
         display: flex;
-        transition: transform 0.5s;
+        transition: margin-left 0.5s;
 
         .steps-slide {
             height: 0;
