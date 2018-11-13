@@ -2,7 +2,7 @@
     <form-steps-progress [config]="progress">
     </form-steps-progress>
 
-    <div class="steps-slider" [style.transform]="transform">
+    <div class="steps-slider" [ngStyle]="{'marginLeft': margin}">
         <ng-content></ng-content>
     </div>
 </div>

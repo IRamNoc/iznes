@@ -36,7 +36,7 @@ export class FormstepsComponent implements AfterContentInit {
 
     @Output() action: EventEmitter<any> = new EventEmitter<any>();
 
-    transform;
+    margin;
     _position;
     _stepsConfig;
     progress = [];
@@ -117,7 +117,8 @@ export class FormstepsComponent implements AfterContentInit {
     }
 
     move() {
-        this.transform = `translateX(-${this.position * 100}%)`;
+        // Not using translate because we can't have modals (using fixed) as child of translate
+        this.margin = `-${this.position * 100}%`;
     }
 
     setSubmittedPrevious(position) {
