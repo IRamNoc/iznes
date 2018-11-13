@@ -39,8 +39,6 @@ export class UserTeamsCreateUpdateComponent
     ngOnInit() {
         super.ngOnInit();
 
-        console.log('+++ this.noun: ', this.noun);
-
         if (this.isUpdateMode()) {
             this.service.readUserTeams(this.entityId,
                                        null,
