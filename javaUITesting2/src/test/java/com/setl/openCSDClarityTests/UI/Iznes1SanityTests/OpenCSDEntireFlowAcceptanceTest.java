@@ -148,6 +148,7 @@ public class OpenCSDEntireFlowAcceptanceTest {
         KYCProcessStep3GeneralInfoComplete(companyName);
         KYCProcessStep3CompanyInfoComplete();
         KYCProcessStep3BankingInfoComplete(companyName, uSubIBANDetails);
+        KYCProcessStep3ClassificationInfoComplete();
         KYCProcessStep4();
         KYCProcessStep5();
         KYCProcessStep6(firstName + " " + lastName, "SETL Developments LTD", "Ipswich", "Head");
