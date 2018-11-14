@@ -348,7 +348,8 @@ public class OpenCSDKYCModuleAcceptanceTest {
 
         wait.until(visibilityOfElementLocated(By.xpath("//*[@id=\"iznes\"]/app-root/jaspero-confirmations/jaspero-confirmation/div[2]")));
         String jaspTitle = driver.findElement(By.className("jaspero__dialog-title")).getText();
-        assertTrue(jaspTitle.equals("Confirm Fund Share Access:"));
+        System.out.println(jaspTitle);
+        assertTrue(jaspTitle.equals("Confirm Fund Share Access"));
 
         driver.findElement(By.xpath("//*[@id=\"iznes\"]/app-root/jaspero-confirmations/jaspero-confirmation/div[2]/div[4]/button[2]")).click();
 
