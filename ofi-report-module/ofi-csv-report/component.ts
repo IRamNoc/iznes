@@ -1,11 +1,10 @@
 // Vendor
-import {ChangeDetectionStrategy, ChangeDetectorRef, Component, OnDestroy, OnInit, ViewChild} from '@angular/core';
-import {FormGroup, FormControl, Validators} from '@angular/forms';
-import {fromJS} from 'immutable';
-import {Subscription} from 'rxjs';
-import {select, NgRedux} from '@angular-redux/store';
-import {FileService} from '@setl/core-req-services';
-
+import { ChangeDetectionStrategy, ChangeDetectorRef, Component, OnDestroy, OnInit, ViewChild } from '@angular/core';
+import { FormGroup, FormControl, Validators } from '@angular/forms';
+import { fromJS } from 'immutable';
+import { Subscription } from 'rxjs';
+import { select, NgRedux } from '@angular-redux/store';
+import { FileService } from '@setl/core-req-services';
 import * as _ from 'lodash';
 
 // Internal
@@ -24,7 +23,7 @@ import {
     setRequestedWalletAddresses,
     clearRequestedWalletAddresses
 } from '@setl/core-store';
-import {AlertsService} from '@setl/jaspero-ng2-alerts';
+import { AlertsService } from '@setl/jaspero-ng2-alerts';
 import {
     SagaHelper,
     immutableHelper,
@@ -34,11 +33,9 @@ import {
     ConfirmationService
 } from '@setl/utils';
 
-
-import {OfiCorpActionService} from '../../ofi-req-services/ofi-corp-actions/service';
-
+import { OfiCorpActionService } from '../../ofi-req-services/ofi-corp-actions/service';
 import * as moment from 'moment';
-import {MultilingualService} from '@setl/multilingual';
+import { MultilingualService } from '@setl/multilingual';
 
 @Component({
     selector: 'app-nav',
@@ -48,7 +45,6 @@ import {MultilingualService} from '@setl/multilingual';
 })
 
 export class OfiManageCsvComponent implements OnInit, OnDestroy {
-
     // Date picker configuration
     configDate = {
         firstDayOfWeek: 'mo',
@@ -89,7 +85,7 @@ export class OfiManageCsvComponent implements OnInit, OnDestroy {
                 private _confirmationService: ConfirmationService,
                 private _numberConverterService: NumberConverterService,
                 private _ofiCorpActionService: OfiCorpActionService,
-                public _translate: MultilingualService,
+                public translate: MultilingualService,
                 private fileService: FileService) {
     }
 
@@ -100,11 +96,10 @@ export class OfiManageCsvComponent implements OnInit, OnDestroy {
     }
 
     ngOnInit() {
-
         /* tab meta */
         this.tabDetail = {
             title: {
-                text: 'Historical Orders',
+                text: this.translate.translate('Historical Orders'),
                 icon: 'fa-history'
             }
         };
@@ -115,7 +110,6 @@ export class OfiManageCsvComponent implements OnInit, OnDestroy {
 
         this.navDateTo = new FormControl(currentDate);
         this.navDateFrom = new FormControl(pastDate);
-
 
         this.searchForm = new FormGroup({
             navDateFrom: this.navDateFrom,
@@ -150,12 +144,8 @@ export class OfiManageCsvComponent implements OnInit, OnDestroy {
         this._changeDetectorRef.markForCheck();
     }
 
-
     getCsvReport() {
-
         let data = this.searchForm.value;
-
-
         let fromSplit = data.navDateFrom.split(/[\/-]/g);
         let toSplit = data.navDateTo.split(/[\/-]/g);
 
@@ -175,12 +165,10 @@ export class OfiManageCsvComponent implements OnInit, OnDestroy {
     }
 
     showErrorResponse(response) {
-
         const message = _.get(response, '[1].Data[0].Message', '');
 
         this.alertsService.create('error', `
                     <table class="table grid">
-
                         <tbody>
                             <tr>
                                 <td class="text-center text-danger">${message}</td>
@@ -191,10 +179,8 @@ export class OfiManageCsvComponent implements OnInit, OnDestroy {
     }
 
     showSuccessResponse(message) {
-
         this.alertsService.create('success', `
                     <table class="table grid">
-
                         <tbody>
                             <tr>
                                 <td class="text-center text-success">${message}</td>
@@ -207,7 +193,6 @@ export class OfiManageCsvComponent implements OnInit, OnDestroy {
     showInvalidForm(message) {
         this.alertsService.create('error', `
                     <table class="table grid">
-
                         <tbody>
                             <tr>
                                 <td class="text-center text-danger">${message}</td>
@@ -248,8 +233,8 @@ export class OfiManageCsvComponent implements OnInit, OnDestroy {
             .replace('mm', this.numPad( dateObj.getMinutes() ))
             .replace('ss', this.numPad( dateObj.getSeconds() ))
     }
+
     private numPad (num) {
         return num < 10 ? "0"+num : num;
     }
-
 }

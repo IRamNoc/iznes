@@ -191,7 +191,7 @@ export class CalendarHelper {
         return false;
     }
 
-    verifyWeeklyTradeDays(dateTimeToCheck: moment): boolean {
+    verifyWeeklyTradeDays(dateTimeToCheck: moment.Moment): boolean {
         const dayOfTheDate = dateTimeToCheck.days();
 
         for (const day of this.tradeDays) {
@@ -234,7 +234,7 @@ export class CalendarHelper {
         return false;
     }
 
-    verifyMonthlyTradeDays(dateTimeToCheck: moment): boolean {
+    verifyMonthlyTradeDays(dateTimeToCheck: moment.Moment): boolean {
         const dayOfTheDate = Number(dateTimeToCheck.days());
         const dateOfTheMonth = Number(dateTimeToCheck.get('date'));
         const businessDayOfTheMonth = Number(this.getMonthBusinessDayIndex(dateTimeToCheck));
@@ -387,12 +387,12 @@ export class CalendarHelper {
         return this.isValidCutoffDateTime(cutoffDate, orderType);
     }
 
-    getCutoffTimeForSpecificDate(dateToCheck: moment, orderType: OrderType) {
+    getCutoffTimeForSpecificDate(dateToCheck: moment.Moment, orderType: OrderType) {
         this.orderType = orderType;
         return this.getSpecificDateCutOff(dateToCheck, this.cutoffTime, this.tradeTimeZoneOffset);
     }
 
-    getValuationDateFromCutoff(cutoffDate: moment, orderType: OrderType) {
+    getValuationDateFromCutoff(cutoffDate: moment.Moment, orderType: OrderType) {
         cutoffDate = this.momentToMomentBusiness(cutoffDate);
         this.orderType = orderType;
 
@@ -405,12 +405,12 @@ export class CalendarHelper {
         });
     }
 
-    getSettlementDateFromCutoff(cutoffDate: moment, orderType: OrderType) {
+    getSettlementDateFromCutoff(cutoffDate: moment.Moment, orderType: OrderType) {
         cutoffDate = this.momentToMomentBusiness(cutoffDate);
         this.orderType = orderType;
 
         const settlementDateStr = cutoffDate.clone().businessAdd(
-            this.settlementOffSet).format('YYYY-MM-DD');
+            this.settlementOffSet as number).format('YYYY-MM-DD');
         const settlementDate = moment.utc(settlementDateStr).set({
             hour: 0,
             minute: 0,
@@ -424,18 +424,18 @@ export class CalendarHelper {
         return settlementDate;
     }
 
-    getCutoffDateFromValuation(valuationDate: moment, orderType: OrderType) {
+    getCutoffDateFromValuation(valuationDate: moment.Moment, orderType: OrderType) {
         valuationDate = this.momentToMomentBusiness(valuationDate);
         this.orderType = orderType;
 
         return valuationDate.clone().businessSubtract(this.valuationOffSet);
     }
 
-    getCutoffDateFromSettlement(settlementDate: moment, orderType: OrderType) {
+    getCutoffDateFromSettlement(settlementDate: moment.Moment, orderType: OrderType) {
         settlementDate = this.momentToMomentBusiness(settlementDate);
         this.orderType = orderType;
 
-        return settlementDate.clone().businessSubtract(this.settlementOffSet);
+        return settlementDate.clone().businessSubtract(this.settlementOffSet as number);
     }
 
     /**
@@ -443,12 +443,12 @@ export class CalendarHelper {
      * @param dateToConvert
      * @return {}
      */
-    momentToMomentBusiness(dateToConvert): moment {
+    momentToMomentBusiness(dateToConvert): moment.Moment {
         return moment(dateToConvert.valueOf());
     }
 
-    getSpecificDateCutOff(dateToCheck: moment, cutoffTime: moment,
-                          tradeTimeZoneOffSet: number): moment {
+    getSpecificDateCutOff(dateToCheck: moment.Moment, cutoffTime: moment.Moment,
+                          tradeTimeZoneOffSet: number): moment.Moment {
         const currentTimeZoneOffsetFromUtc = moment().hours() - momentTz.utc().hours();
         const timeZoneDiff = tradeTimeZoneOffSet - currentTimeZoneOffsetFromUtc;
 

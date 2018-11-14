@@ -47,7 +47,6 @@ import { LogService } from '@setl/utils';
 import { MultilingualService } from '@setl/multilingual';
 import { MessagesService } from '@setl/core-messages';
 import { SellBuyCalendar } from '../../ofi-product/fund-share/FundShareEnum';
-import { Moment } from 'moment';
 
 import { OfiFundShareService } from '@ofi/ofi-main/ofi-req-services/ofi-product/fund-share/service';
 import { DomSanitizer } from '@angular/platform-browser';
@@ -741,17 +740,17 @@ export class InvestFundComponent implements OnInit, OnDestroy {
 
     }
 
-    isCutoffDay(thisDate: moment): boolean {
+    isCutoffDay(thisDate: moment.Moment): boolean {
         const isValidCutOff = (new CalendarHelper(this.shareData)).isValidCutoffDateTime(thisDate, this.getCalendarHelperOrderNumber());
         return isValidCutOff || !this.doValidate;
     }
 
-    isValuationDay(thisDate: moment): boolean {
+    isValuationDay(thisDate: moment.Moment): boolean {
         const isValidValuation = (new CalendarHelper(this.shareData)).isValidValuationDateTime(thisDate, this.getCalendarHelperOrderNumber());
         return isValidValuation || !this.doValidate;
     }
 
-    isSettlementDay(thisDate: moment): boolean {
+    isSettlementDay(thisDate: moment.Moment): boolean {
         const isValidSettlement = (new CalendarHelper(this.shareData)).isValidSettlementDateTime(thisDate, this.getCalendarHelperOrderNumber());
         return isValidSettlement || !this.doValidate;
     }
@@ -1497,9 +1496,9 @@ The IZNES Team.</p>`;
      * Get cutoff date time string for a specific date, depend or the order type.
      *
      * @param momentDateValue
-     * @return {Moment}
+     * @return {moment.Moment}
      */
-    getCutoffTimeForSpecificDate(momentDateValue): Moment {
+    getCutoffTimeForSpecificDate(momentDateValue): moment.Moment {
         const orderNumberType = this.getCalendarHelperOrderNumber();
 
         return this.calenderHelper.getCutoffTimeForSpecificDate(momentDateValue, orderNumberType);
@@ -1509,9 +1508,9 @@ The IZNES Team.</p>`;
      * Get valuation date time for a cutoff date, depend or the order type.
      *
      * @param momentDateValue
-     * @return {Moment}
+     * @return {moment.Moment}
      */
-    getValuationDateFromCutoff(momentDateValue): Moment {
+    getValuationDateFromCutoff(momentDateValue): moment.Moment {
         const orderNumberType = this.getCalendarHelperOrderNumber();
 
         return this.calenderHelper.getValuationDateFromCutoff(momentDateValue, orderNumberType);
@@ -1521,9 +1520,9 @@ The IZNES Team.</p>`;
      * Get settlement date time string for a cutoff date, depend or the order type.
      *
      * @param momentDateValue
-     * @return {Moment}
+     * @return {moment.Moment}
      */
-    getSettlementDateFromCutoff(momentDateValue): Moment {
+    getSettlementDateFromCutoff(momentDateValue): moment.Moment {
         const orderNumberType = this.getCalendarHelperOrderNumber();
 
         return this.calenderHelper.getSettlementDateFromCutoff(momentDateValue, orderNumberType);
@@ -1533,9 +1532,9 @@ The IZNES Team.</p>`;
      * Get cutoff date time string for a valuation date, depend or the order type.
      *
      * @param momentDateValue
-     * @return {Moment}
+     * @return {moment.Moment}
      */
-    getCutoffDateFromValuation(momentDateValue): Moment {
+    getCutoffDateFromValuation(momentDateValue): moment.Moment {
         const orderNumberType = this.getCalendarHelperOrderNumber();
 
         return this.calenderHelper.getCutoffDateFromValuation(momentDateValue, orderNumberType);
@@ -1545,9 +1544,9 @@ The IZNES Team.</p>`;
      * Get cutoff date time string for a settlement date, depend or the order type.
      *
      * @param momentDateValue
-     * @return {Moment}
+     * @return {moment.Moment}
      */
-    getCutoffDateFromSettlement(momentDateValue): Moment {
+    getCutoffDateFromSettlement(momentDateValue): moment.Moment {
         const orderNumberType = this.getCalendarHelperOrderNumber();
 
         return this.calenderHelper.getCutoffDateFromSettlement(momentDateValue, orderNumberType);

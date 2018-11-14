@@ -1,9 +1,8 @@
 <div class="header-breadcrumbs">
-    <h1><i class="fa fa-list-alt"></i> {{'P&L' | translate}}</h1>
+    <h1><i class="fa fa-list-alt"></i> {{ 'P&L' | translate }}</h1>
 </div>
 
 <div class="wrapper wrapper-content">
-
     <clr-tabs *ngIf="tabsControl.length">
         <clr-tab *ngFor="let tabdata of tabsControl; let id = index">
             <button clrTabLink id="link{{id}}">
@@ -15,7 +14,6 @@
                     <ng-container *ngTemplateOutlet="balanceTab"></ng-container>
                 </ng-container>
             </clr-tab-content>
-
         </clr-tab>
     </clr-tabs>
 
@@ -27,33 +25,29 @@
                     <div class="row">
                         <div class="form-group col-sm-4">
                             <label class="control-label">
-                                <span class="ml_translated">{{'Sub-portfolio' | translate}}</span>
+                                <span class="ml_translated">{{ 'Sub-portfolio' | translate }}</span>
                             </label>
                             <div>
-                                <ng-select [items]="addressList" [allowClear]="false" [placeholder]="_translate.translate('Select sub-portfolio')" [formControl]="address" (selected)="handleSelectedAddress($event)">
-
-
-
-
-
-
+                                <ng-select [items]="addressList" 
+                                            [allowClear]="false" 
+                                            [placeholder]="translate.translate('Select Sub-portfolio')" 
+                                            [formControl]="address" 
+                                            (selected)="handleSelectedAddress($event)">
                                 </ng-select>
                             </div>
                         </div>
-
                     </div>
                 </div>
             </form>
             <clr-datagrid #myDataGrid>
-                <clr-dg-column>{{'Action' | translate}}</clr-dg-column>
-                <clr-dg-column>{{'Fund name' | translate}}</clr-dg-column>
-                <clr-dg-column>{{'Active quantity' | translate}}</clr-dg-column>
-                <clr-dg-column>{{'Realise P&L' | translate}}</clr-dg-column>
-                <clr-dg-column>{{'Unrealise P&L' | translate}}</clr-dg-column>
-                <clr-dg-column>{{'Last movement' | translate}}</clr-dg-column>
+                <clr-dg-column>{{ 'Action' | translate }}</clr-dg-column>
+                <clr-dg-column>{{ 'Fund Name' | translate }}</clr-dg-column>
+                <clr-dg-column class="right">{{ 'Active quantity' | translate }}</clr-dg-column>
+                <clr-dg-column class="right">{{ 'Realise P&L' | translate }}</clr-dg-column>
+                <clr-dg-column class="right">{{ 'Unrealise P&L' | translate }}</clr-dg-column>
+                <clr-dg-column>{{ 'Last Movement' | translate }}</clr-dg-column>
 
                 <clr-dg-row *clrDgItems="let tx of activeBalanceList">
-
                     <clr-dg-cell>
                         <div class="btn-group btn-sm">
                             <button class="btn text-primary" (click)="viewRelateTxs(tx.fundName)">
@@ -62,26 +56,11 @@
                         </div>
                     </clr-dg-cell>
 
-                    <clr-dg-cell>{{tx.fundName}}
-
-                    </clr-dg-cell>
-
-                    <clr-dg-cell>{{tx.activeQuantity | moneyValue : 5 }}
-
-                    </clr-dg-cell>
-
-                    <clr-dg-cell>{{tx.realisePnl | moneyValue: 4}}
-
-                    </clr-dg-cell>
-
-                    <clr-dg-cell>{{tx.unRealisePnl | moneyValue: 4}}
-
-                    </clr-dg-cell>
-
-                    <clr-dg-cell>{{tx.lastMovement | date : 'dd/MM/yyyy'}}
-
-                    </clr-dg-cell>
-
+                    <clr-dg-cell>{{tx.fundName}}</clr-dg-cell>
+                    <clr-dg-cell class="right">{{tx.activeQuantity | moneyValue : 5 }}</clr-dg-cell>
+                    <clr-dg-cell class="right">{{tx.realisePnl | moneyValue: 4}}</clr-dg-cell>
+                    <clr-dg-cell class="right">{{tx.unRealisePnl | moneyValue: 4}}</clr-dg-cell>
+                    <clr-dg-cell>{{tx.lastMovement | date : 'dd/MM/yyyy'}}</clr-dg-cell>
                 </clr-dg-row>
 
                 <clr-dg-footer>{{pagination.firstItem + 1}} - {{pagination.lastItem + 1}}
@@ -91,55 +70,34 @@
             </clr-datagrid>
         </div>
     </ng-template>
-
 </div>
 
 <clr-modal [(clrModalOpen)]="showRelatedTxModal" class="large">
     <div class="modal-title">
         <i class="fa fa-bar-chart modal-icon" style="color:#1AB399"></i>
         <h4 class="modal-title-text">
-            <span class="ml_translated">{{'Related Transactions' | translate}}</span></h4>
+            <span class="ml_translated">{{ 'Related Transactions' | translate }}</span>
+        </h4>
     </div>
+
     <div class="modal-body">
         <clr-datagrid #myDataGrid>
-            <clr-dg-column>{{'Fund name' | translate}}</clr-dg-column>
-            <clr-dg-column>{{'Type' | translate}}</clr-dg-column>
-            <clr-dg-column>{{'Ref' | translate}}</clr-dg-column>
-            <clr-dg-column>{{'Price' | translate}}</clr-dg-column>
-            <clr-dg-column>{{'Quantity' | translate}}</clr-dg-column>
-            <clr-dg-column>{{'Gross Amount' | translate}}</clr-dg-column>
-            <clr-dg-column>{{'Delivery Date' | translate}}</clr-dg-column>
+            <clr-dg-column>{{ 'Fund Name' | translate }}</clr-dg-column>
+            <clr-dg-column>{{ 'Type' | translate }}</clr-dg-column>
+            <clr-dg-column>{{ 'Ref' | translate }}</clr-dg-column>
+            <clr-dg-column class="right">{{ 'Price' | translate }}</clr-dg-column>
+            <clr-dg-column class="right">{{ 'Quantity' | translate }}</clr-dg-column>
+            <clr-dg-column class="right">{{ 'Gross Amount' | translate }}</clr-dg-column>
+            <clr-dg-column>{{ 'Delivery Date' | translate }}</clr-dg-column>
 
             <clr-dg-row *clrDgItems="let tx of relatedTxList">
-
-                <clr-dg-cell>{{tx.transactionInstrumentName}}
-
-                </clr-dg-cell>
-
-                <clr-dg-cell>{{tx.transactionType | txType}}
-
-                </clr-dg-cell>
-
-                <clr-dg-cell>{{tx.transactionRefId | padding : 10 }}
-
-                </clr-dg-cell>
-
-                <clr-dg-cell>{{tx.transactionPrice | moneyValue: 4}}
-
-                </clr-dg-cell>
-
-                <clr-dg-cell>{{tx.transactionUnits | moneyValue : 5}}
-
-                </clr-dg-cell>
-
-                <clr-dg-cell>{{tx.transactionSettlement | moneyValue: 4}}
-
-                </clr-dg-cell>
-
-                <clr-dg-cell>{{tx.transactionDate | date : 'dd/MM/yyyy' }}
-
-                </clr-dg-cell>
-
+                <clr-dg-cell>{{tx.transactionInstrumentName}}</clr-dg-cell>
+                <clr-dg-cell>{{tx.transactionType | txType}}</clr-dg-cell>
+                <clr-dg-cell>{{tx.transactionRefId | padding : 10 }}</clr-dg-cell>
+                <clr-dg-cell class="right">{{tx.transactionPrice | moneyValue: 4}}</clr-dg-cell>
+                <clr-dg-cell class="right">{{tx.transactionUnits | moneyValue : 5}}</clr-dg-cell>
+                <clr-dg-cell class="right">{{tx.transactionSettlement | moneyValue: 4}}</clr-dg-cell>
+                <clr-dg-cell>{{tx.transactionDate | date : 'dd/MM/yyyy' }}</clr-dg-cell>
             </clr-dg-row>
 
             <clr-dg-footer>{{pagination.firstItem + 1}} - {{pagination.lastItem + 1}}
@@ -148,7 +106,8 @@
             </clr-dg-footer>
         </clr-datagrid>
     </div>
+
     <div class="modal-footer">
-        <button type="button" class="btn btn-outline" (click)="showRelatedTxModal = false">{{'Close' | translate}}</button>
+        <button type="button" class="btn btn-outline" (click)="showRelatedTxModal = false">{{ 'Close' | translate }}</button>
     </div>
 </clr-modal>
