@@ -2,16 +2,16 @@ import {
     Component, OnInit, ChangeDetectionStrategy, OnDestroy, ChangeDetectorRef, Pipe,
     PipeTransform
 } from '@angular/core';
-import {Subscription} from 'rxjs';
-import {NgRedux, select} from '@angular-redux/store';
-import {OfiClientTxService} from '../../ofi-req-services/ofi-client-tx/service';
-import {setRequestedClientTxList} from '../../ofi-store/ofi-client-txs/ofi-client-tx-list/actions';
-import {immutableHelper, NumberConverterService, mDateHelper, commonHelper, LogService} from '@setl/utils';
-import {PnlHelper, ActionDirection, TradeDetail} from '../pnlHelper/class';
+import { Subscription } from 'rxjs';
+import { NgRedux, select } from '@angular-redux/store';
+import { OfiClientTxService } from '../../ofi-req-services/ofi-client-tx/service';
+import { setRequestedClientTxList } from '../../ofi-store/ofi-client-txs/ofi-client-tx-list/actions';
+import { immutableHelper, NumberConverterService, mDateHelper, commonHelper, LogService } from '@setl/utils';
+import { PnlHelper, ActionDirection, TradeDetail } from '../pnlHelper/class';
 import * as _ from 'lodash';
-import {AlertsService} from '@setl/jaspero-ng2-alerts';
-import {OfiFundInvestService} from '../../ofi-req-services/ofi-fund-invest/service';
-import {FormControl, FormGroup, Validators} from '@angular/forms';
+import { AlertsService } from '@setl/jaspero-ng2-alerts';
+import { OfiFundInvestService } from '../../ofi-req-services/ofi-fund-invest/service';
+import { FormControl, FormGroup, Validators } from '@angular/forms';
 import {
     InitialisationService,
     MyWalletsService,
@@ -21,7 +21,7 @@ import {
     setRequestedWalletAddresses
 } from '@setl/core-store';
 import * as math from 'mathjs';
-import {MultilingualService} from '@setl/multilingual';
+import { MultilingualService } from '@setl/multilingual';
 
 interface ClientTxViewListItem {
     transactionId: number;
@@ -87,7 +87,6 @@ export class OfiTaxReportComponent implements OnInit, OnDestroy {
     relatedRedemptionTxList: Array<any>;
     totalAmountToDeclared: number;
 
-
     // List of redux observable.
     @select(['user', 'connected', 'connectedWallet']) connectedWalletOb;
     @select(['ofi', 'ofiClientTx', 'ofiClientTxList', 'allTxList']) clientTxListOb;
@@ -98,27 +97,25 @@ export class OfiTaxReportComponent implements OnInit, OnDestroy {
     @select(['wallet', 'myWalletAddress', 'requestedAddressList']) requestedAddressListOb;
     @select(['wallet', 'myWalletAddress', 'requestedLabel']) requestedLabelListOb;
 
-    constructor(private _ngRedux: NgRedux<any>,
-                private _ofiClientTxService: OfiClientTxService,
-                private _numberConverterService: NumberConverterService,
-                private _alertsService: AlertsService,
-                private _ofiFundInvestService: OfiFundInvestService,
-                private _myWalletService: MyWalletsService,
-                private _walletNodeRequestService: WalletNodeRequestService,
+    constructor(private ngRedux: NgRedux<any>,
+                private ofiClientTxService: OfiClientTxService,
+                private numberConverterService: NumberConverterService,
+                private alertsService: AlertsService,
+                private ofiFundInvestService: OfiFundInvestService,
+                private myWalletService: MyWalletsService,
+                private walletNodeRequestService: WalletNodeRequestService,
                 private logService: LogService,
-                public _translate: MultilingualService,
-                private _changeDetectorRef: ChangeDetectorRef) {
+                public translate: MultilingualService,
+                private changeDetectorRef: ChangeDetectorRef) {
     }
 
     ngOnDestroy() {
-
         for (const subscription of this.subscriptionsArray) {
             subscription.unsubscribe();
         }
     }
 
     ngOnInit() {
-
         /**
          * Default tabs.
          */
@@ -126,7 +123,7 @@ export class OfiTaxReportComponent implements OnInit, OnDestroy {
             {
                 title: {
                     icon: 'fa fa-th-list',
-                    text: 'List',
+                    text: this.translate.translate('List'),
                     colorClass: ''
                 },
                 active: true
@@ -141,7 +138,6 @@ export class OfiTaxReportComponent implements OnInit, OnDestroy {
             fromDate: new FormControl(this.fromDateValue),
             toDate: new FormControl(this.toDateValue),
         });
-
 
         this.relatedRedemptionTxList = [];
         this.sharePriceList = {};
@@ -169,14 +165,13 @@ export class OfiTaxReportComponent implements OnInit, OnDestroy {
     }
 
     requestClientTx(requestedState: boolean) {
-
         // If the state is false, that means we need to request the list.
         if (!requestedState && this.connectedWalletId !== 0) {
             // Set the state flag to true. so we do not request it again.
-            this._ngRedux.dispatch(setRequestedClientTxList());
+            this.ngRedux.dispatch(setRequestedClientTxList());
 
             // Request the list.
-            OfiClientTxService.defaultRequestWalletClientTxs(this._ofiClientTxService, this._ngRedux,
+            OfiClientTxService.defaultRequestWalletClientTxs(this.ofiClientTxService, this.ngRedux,
                 this.connectedWalletId, '');
         }
     }
@@ -206,7 +201,7 @@ export class OfiTaxReportComponent implements OnInit, OnDestroy {
             const transactionId = item.get('transactionId', 0);
             const transactionRefId = item.get('transactionRefId', 0);
             const grossAmount = math.round(_.get(this.pnlRegister, [fundName, 'tradeList', transactionId, 'pnl']), 2);
-            const quantity = this._numberConverterService.toFrontEnd(item.get('transactionUnits', 0));
+            const quantity = this.numberConverterService.toFrontEnd(item.get('transactionUnits', 0));
             const taxCredit = 0;
             const amountToDeclared = math.round(grossAmount + taxCredit, 2);
             const dateStr = item.get('transactionSettlementDate', '');
@@ -232,7 +227,7 @@ export class OfiTaxReportComponent implements OnInit, OnDestroy {
             return result + item.realisePnl;
         }, 2));
 
-        this._changeDetectorRef.markForCheck();
+        this.changeDetectorRef.markForCheck();
     }
 
     filterTxsWithDate(clientTxListData): any {
@@ -293,13 +288,12 @@ export class OfiTaxReportComponent implements OnInit, OnDestroy {
      * @return {{}}
      */
     processClientTxList(clientTxList) {
-
         const newPnlRegister = {};
 
         for (const shareName of Object.keys(clientTxList)) {
             const price = this.sharePriceList[shareName];
             // creat the pnl register for the fund share.
-            newPnlRegister[shareName] = new PnlHelper(price, this._numberConverterService);
+            newPnlRegister[shareName] = new PnlHelper(price, this.numberConverterService);
 
             // process all the tx for the fund share;
             const txList = clientTxList[shareName];
@@ -320,7 +314,7 @@ export class OfiTaxReportComponent implements OnInit, OnDestroy {
 
             this.relatedRedemptionTxList = immutableHelper.reduce(relatedTxIds, (result, item) => {
                 const tx = this.clientTxListObj[shareName][item];
-                const transactionPrice = this._numberConverterService.toFrontEnd(tx.transactionPrice);
+                const transactionPrice = this.numberConverterService.toFrontEnd(tx.transactionPrice);
                 const transactionDeliveryDate = mDateHelper.dateStrToUnixTimestamp(tx.transactionDate, 'YYYY-MM-DD HH:mm:ss');
 
                 result.push({
@@ -329,8 +323,8 @@ export class OfiTaxReportComponent implements OnInit, OnDestroy {
                     transactionId: tx.transactionId,
                     transactionRefId: tx.transactionRefId,
                     transactionPrice,
-                    transactionUnits: this._numberConverterService.toFrontEnd(tx.transactionUnits),
-                    transactionSettlement: math.round(this._numberConverterService.toFrontEnd(tx.transactionSettlement), 2),
+                    transactionUnits: this.numberConverterService.toFrontEnd(tx.transactionUnits),
+                    transactionSettlement: math.round(this.numberConverterService.toFrontEnd(tx.transactionSettlement), 2),
                     transactionDeliveryDate
                 });
                 return result;
@@ -338,9 +332,7 @@ export class OfiTaxReportComponent implements OnInit, OnDestroy {
 
             // show modal;
             this.showRelatedTxModal = true;
-            this._changeDetectorRef.detectChanges();
-
-
+            this.changeDetectorRef.detectChanges();
         } else {
             this.showWarning('No related txs are found');
         }
@@ -361,7 +353,7 @@ export class OfiTaxReportComponent implements OnInit, OnDestroy {
             const shareName = item.get('shareName', '');
             const fullName = fundName + '|' + shareName;
 
-            result[fullName] = this._numberConverterService.toFrontEnd(item.get('price', 0));
+            result[fullName] = this.numberConverterService.toFrontEnd(item.get('price', 0));
             return result;
         }, {});
     }
@@ -373,7 +365,7 @@ export class OfiTaxReportComponent implements OnInit, OnDestroy {
      */
     requestMyFundAccess(requested): void {
         if (!requested) {
-            OfiFundInvestService.defaultRequestFunAccessMy(this._ofiFundInvestService, this._ngRedux, this.connectedWalletId);
+            OfiFundInvestService.defaultRequestFunAccessMy(this.ofiFundInvestService, this.ngRedux, this.connectedWalletId);
         }
     }
 
@@ -384,27 +376,24 @@ export class OfiTaxReportComponent implements OnInit, OnDestroy {
         // If the state is false, that means we need to request the list.
         if (!requestedState && this.connectedWalletId !== 0) {
             // Set the state flag to true. so we do not request it again.
-            this._ngRedux.dispatch(setRequestedWalletAddresses());
+            this.ngRedux.dispatch(setRequestedWalletAddresses());
 
             // Request the list.
-            InitialisationService.requestWalletAddresses(this._ngRedux, this._walletNodeRequestService, this.connectedWalletId);
+            InitialisationService.requestWalletAddresses(this.ngRedux, this.walletNodeRequestService, this.connectedWalletId);
         }
     }
 
     requestWalletLabel(requestedState) {
-
         this.logService.log('checking requested', this.requestedWalletAddress);
         // If the state is false, that means we need to request the list.
         if (!requestedState && this.connectedWalletId !== 0) {
 
-            MyWalletsService.defaultRequestWalletLabel(this._ngRedux, this._myWalletService, this.connectedWalletId);
+            MyWalletsService.defaultRequestWalletLabel(this.ngRedux, this.myWalletService, this.connectedWalletId);
         }
     }
 
     updateAddressList(addressList) {
-
         this.addressList = immutableHelper.reduce(addressList, (result, item) => {
-
             const addr = item.get('addr', false);
             const label = item.get('label', false);
 
@@ -416,7 +405,6 @@ export class OfiTaxReportComponent implements OnInit, OnDestroy {
 
                 result.push(addressItem);
             }
-
             return result;
         }, []);
 
@@ -424,7 +412,6 @@ export class OfiTaxReportComponent implements OnInit, OnDestroy {
         const hasSelectedAddressInList = immutableHelper.filter(this.addressList, (thisItem) => {
             return thisItem.get('id') === (this.addressSelected && this.addressSelected.id);
         });
-
 
         if (this.addressList.length > 0) {
             if (!this.addressSelected || hasSelectedAddressInList.length === 0) {
@@ -447,17 +434,14 @@ export class OfiTaxReportComponent implements OnInit, OnDestroy {
             }
         }
 
-        this._changeDetectorRef.markForCheck();
-
+        this.changeDetectorRef.markForCheck();
     }
 
     showWarning(response) {
-
         const message = _.get(response, '[1].Data[0].Message', '');
 
-        this._alertsService.create('warning', `
+        this.alertsService.create('warning', `
                     <table class="table grid">
-
                         <tbody>
                             <tr>
                                 <td class="text-center text-danger">${message}</td>
@@ -466,6 +450,4 @@ export class OfiTaxReportComponent implements OnInit, OnDestroy {
                     </table>
                     `);
     }
-
 }
-

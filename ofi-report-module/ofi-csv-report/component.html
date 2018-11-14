@@ -1,5 +1,5 @@
 <div class="header-breadcrumbs">
-    <h1><i class="fa fa-book"></i> {{'Historical Orders' | translate}}</h1>
+    <h1><i class="fa fa-book"></i> {{ 'Historical Orders' | translate }}</h1>
 </div>
 
 <div class="wrapper wrapper-content">
@@ -24,42 +24,44 @@
                     <div class="row">
                         <div class="form-group col-sm-4">
                             <label class="control-label">
-                                <span class="ml_translated">{{'Download:' | translate}}</span>
+                                <span class="ml_translated">{{ 'Download' | translate }}</span>
                             </label>
                             <div>
-                                <button class="btn btn-primary" (click)="getCsvReport()">{{'Historical Orders' | translate}}
-
+                                <button class="btn btn-primary" (click)="getCsvReport()">
+                                    {{ 'Historical Orders' | translate }}
                                 </button>
                             </div>
                         </div>
 
                         <div class="form-group col-sm-4">
                             <label class="control-label">
-                                <span class="ml_translated">{{'Date From:' | translate}}</span>
+                                <span class="ml_translated">{{ 'Date From' | translate }}</span>
                             </label>
                             <div class="input-group date-pick-wrapper">
                                 <span class="fa fa-calendar" aria-hidden="true"></span>
-                                <input formControlName="navDateFrom" [dpDayPicker]="configDate" [placeholder]="_translate.translate('Choose a date from')" mode="day" theme="dp-material" [ngStyle]="{'width':'100%'}" [readonly]="true">
-
-
-
-
-
+                                <input formControlName="navDateFrom" 
+                                        [dpDayPicker]="configDate" 
+                                        [placeholder]="translate.translate('Choose a date from')" 
+                                        mode="day" 
+                                        theme="dp-material" 
+                                        [ngStyle]="{'width':'100%'}" 
+                                        [readonly]="true">
                             </div>
                         </div>
 
                         <div class="form-group col-sm-4">
                             <label class="control-label">
-                                <span class="ml_translated">{{'Date To:' | translate}}</span>
+                                <span class="ml_translated">{{ 'Date To' | translate }}</span>
                             </label>
                             <div class="input-group date-pick-wrapper">
                                 <span class="fa fa-calendar" aria-hidden="true"></span>
-                                <input formControlName="navDateTo" [dpDayPicker]="configDate" [placeholder]="_translate.translate('Choose a date to')" mode="day" theme="dp-material" [ngStyle]="{'width':'100%'}" [readonly]="true">
-
-
-
-
-
+                                <input formControlName="navDateTo" 
+                                        [dpDayPicker]="configDate" 
+                                        [placeholder]="translate.translate('Choose a date to')" 
+                                        mode="day" 
+                                        theme="dp-material" 
+                                        [ngStyle]="{'width':'100%'}" 
+                                        [readonly]="true">
                             </div>
                         </div>
                     </div>
