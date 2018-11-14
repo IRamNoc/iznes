@@ -1,8 +1,6 @@
 import { ChangeDetectionStrategy, ChangeDetectorRef, Component, Inject, OnDestroy, OnInit } from '@angular/core';
 import { FormBuilder, FormGroup } from '@angular/forms';
-
 import { MemberSocketService } from '@setl/websocket-service';
-
 import { NgRedux, select } from '@angular-redux/store';
 import { Unsubscribe } from 'redux';
 import { fromJS } from 'immutable';
@@ -10,9 +8,7 @@ import { fromJS } from 'immutable';
 import { ConfirmationService, NumberConverterService } from '@setl/utils';
 /* Alerts and confirms. */
 import { AlertsService } from '@setl/jaspero-ng2-alerts';
-
 import { Subject } from 'rxjs';
-
 import { ActivatedRoute, Router } from '@angular/router';
 /* Clarity */
 /* services */
@@ -22,7 +18,6 @@ import { ofiManageOrderActions } from '@ofi/ofi-main/ofi-store';
 import { APP_CONFIG, AppConfig, FileDownloader } from "@setl/utils/index";
 import * as moment from 'moment';
 import { MultilingualService } from '@setl/multilingual';
-
 import { mDateHelper } from '@setl/utils';
 import { get } from 'lodash';
 
@@ -38,7 +33,6 @@ interface SelectedItem {
     changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class PrecentralisationReportComponent implements OnInit, OnDestroy {
-
     unknownValue = '???';
 
     filtersForm: FormGroup;
@@ -85,7 +79,6 @@ export class PrecentralisationReportComponent implements OnInit, OnDestroy {
         },
     };
 
-
     currencyList = [
         { id: 0, text: 'EUR' },
         { id: 1, text: 'USD' },
@@ -130,29 +123,11 @@ export class PrecentralisationReportComponent implements OnInit, OnDestroy {
     dateTo = '';
     mode = 2;   // 1 = NAV ; 2 = Settlement
 
+    pieChartDatas: any = {};
+    customColors: any = [];
+
     colorScheme = { domain: ['#51AD5B', '#AF2418'] };
-    pieChartDatas = [
-        {
-            name: 'Subscription (%)',
-            value: 0,
-        },
-        {
-            name: 'Redemption (%)',
-            value: 0,
-        }
-    ];
-
-    customColors = [
-        {
-            name: 'Subscription (%)',
-            value: '#51AD5B'
-        },
-        {
-            name: 'Redemption (%)',
-            value: '#AF2418'
-        }
-    ];
-
+    
     fundsPayload: any;
     isFundsPayloadOK: any;
     sharesPayload: any;
@@ -181,14 +156,14 @@ export class PrecentralisationReportComponent implements OnInit, OnDestroy {
                 private alertsService: AlertsService,
                 private route: ActivatedRoute,
                 private router: Router,
-                private _fb: FormBuilder,
+                private fb: FormBuilder,
                 private memberSocketService: MemberSocketService,
                 private ofiReportsService: OfiReportsService,
                 private alerts: AlertsService,
-                private _confirmationService: ConfirmationService,
-                private _numberConverterService: NumberConverterService,
-                private _fileDownloader: FileDownloader,
-                private _translate: MultilingualService,
+                private confirmationService: ConfirmationService,
+                private numberConverterService: NumberConverterService,
+                private fileDownloader: FileDownloader,
+                private translate: MultilingualService,
                 @Inject(APP_CONFIG) appConfig: AppConfig) {
         // reset datagrid
         this.fundsDetails = [];
@@ -200,15 +175,26 @@ export class PrecentralisationReportComponent implements OnInit, OnDestroy {
         this.sharesTotalRedemptionAmount = 0;
         this.fundsTotalNetAmount = 0;
         this.fundsTotalSubscriptionAmount = 0;
-        this.fundsTotalRedemptionAmount = 0;
+        this.fundsTotalRedemptionAmount = 0;       
         this.pieChartDatas = [
             {
-                name: 'Subscription (%)',
+                name: this.translate.translate('Subscription (%)'),
                 value: 0,
             },
             {
-                name: 'Redemption (%)',
+                name: this.translate.translate('Redemption (%)'),
                 value: 0,
+            }
+        ];
+
+        this.customColors = [
+            {
+                name: this.translate.translate('Subscription (%)'),
+                value: '#51AD5B'
+            },
+            {
+                name: this.translate.translate('Redemption (%)'),
+                value: '#AF2418'
             }
         ];
 
@@ -220,10 +206,10 @@ export class PrecentralisationReportComponent implements OnInit, OnDestroy {
         }
 
         this.fundSpecificDates = [
-            { id: 0, text: _translate.translate('Specific NAV Date') },
-            { id: 1, text: _translate.translate('Specific Settlement Date') },
-            { id: 2, text: _translate.translate('Specific NAV Period') },
-            { id: 3, text: _translate.translate('Specific Settlement Period') },
+            { id: 0, text: translate.translate('Specific NAV Date') },
+            { id: 1, text: translate.translate('Specific Settlement Date') },
+            { id: 2, text: translate.translate('Specific NAV Period') },
+            { id: 3, text: translate.translate('Specific Settlement Period') },
         ];
 
         this.appConfig = appConfig;
@@ -257,11 +243,11 @@ export class PrecentralisationReportComponent implements OnInit, OnDestroy {
                     }
                     this.pieChartDatas = [
                         {
-                            name: 'Subscription (%)',
+                            name: this.translate.translate('Subscription (%)'),
                             value: (this.fundsTotalSubscriptionAmount * 100 / (this.fundsTotalSubscriptionAmount + this.fundsTotalRedemptionAmount)),
                         },
                         {
-                            name: 'Redemption (%)',
+                            name: this.translate.translate('Redemption (%)'),
                             value: (this.fundsTotalRedemptionAmount * 100 / (this.fundsTotalSubscriptionAmount + this.fundsTotalRedemptionAmount)),
                         }
                     ];
@@ -272,11 +258,11 @@ export class PrecentralisationReportComponent implements OnInit, OnDestroy {
                     this.fundsTotalRedemptionAmount = 0;
                     this.pieChartDatas = [
                         {
-                            name: 'Subscription (%)',
+                            name: this.translate.translate('Subscription (%)'),
                             value: 0,
                         },
                         {
-                            name: 'Redemption (%)',
+                            name: this.translate.translate('Redemption (%)'),
                             value: 0,
                         }
                     ];
@@ -305,11 +291,11 @@ export class PrecentralisationReportComponent implements OnInit, OnDestroy {
                     }
                     this.pieChartDatas = [
                         {
-                            name: 'Subscription (%)',
+                            name: this.translate.translate('Subscription (%)'),
                             value: (this.sharesTotalSubscriptionAmount * 100 / (this.sharesTotalSubscriptionAmount + this.sharesTotalRedemptionAmount)),
                         },
                         {
-                            name: 'Redemption (%)',
+                            name: this.translate.translate('Redemption (%)'),
                             value: (this.sharesTotalRedemptionAmount * 100 / (this.sharesTotalSubscriptionAmount + this.sharesTotalRedemptionAmount)),
                         }
                     ];
@@ -320,11 +306,11 @@ export class PrecentralisationReportComponent implements OnInit, OnDestroy {
                     this.sharesTotalRedemptionAmount = 0;
                     this.pieChartDatas = [
                         {
-                            name: 'Subscription (%)',
+                            name: this.translate.translate('Subscription (%)'),
                             value: 0,
                         },
                         {
-                            name: 'Redemption (%)',
+                            name: this.translate.translate('Redemption (%)'),
                             value: 0,
                         }
                     ];
@@ -349,11 +335,11 @@ export class PrecentralisationReportComponent implements OnInit, OnDestroy {
         this.fundsTotalRedemptionAmount = 0;
         this.pieChartDatas = [
             {
-                name: 'Subscription (%)',
+                name: this.translate.translate('Subscription (%)'),
                 value: 0,
             },
             {
-                name: 'Redemption (%)',
+                name: this.translate.translate('Redemption (%)'),
                 value: 0,
             }
         ];
@@ -445,7 +431,7 @@ export class PrecentralisationReportComponent implements OnInit, OnDestroy {
         const nextWeek = moment().add(1, 'week').format('YYYY-MM-DD');
         this.filtersForm.get('specificDate').patchValue([{
             id: 3,
-            text: this._translate.translate('Specific Settlement Period')
+            text: this.translate.translate('Specific Settlement Period')
         }], { emitEvent: false });
         this.filtersForm.get('dateFrom').patchValue(yesterday, { emitEvent: false });
         this.filtersForm.get('dateTo').patchValue(nextWeek, { emitEvent: false });
@@ -459,7 +445,7 @@ export class PrecentralisationReportComponent implements OnInit, OnDestroy {
         const today = new Date();
         const yesterday = new Date(today.setDate(today.getDate() - 1)).toISOString().slice(0, 10);
         const nextWeek = new Date(today.setDate(today.getDate() + 7)).toISOString().slice(0, 10);
-        this.filtersForm = this._fb.group({
+        this.filtersForm = this.fb.group({
             selectList: [
                 '',
             ],
@@ -477,7 +463,7 @@ export class PrecentralisationReportComponent implements OnInit, OnDestroy {
         this.dateTo = nextWeek;
         this.filtersForm.get('specificDate').patchValue([{
             id: 2,
-            text: this._translate.translate('Specific NAV Period')
+            text: this.translate.translate('Specific NAV Period')
         }], { emitEvent: false });
         this.filtersForm.get('dateFrom').patchValue(yesterday, { emitEvent: false });
         this.filtersForm.get('dateTo').patchValue(nextWeek, { emitEvent: false });
@@ -556,11 +542,11 @@ export class PrecentralisationReportComponent implements OnInit, OnDestroy {
                 this.fundsDetails = [];
                 this.pieChartDatas = [
                     {
-                        name: 'Subscription (%)',
+                        name: this.translate.translate('Subscription (%)'),
                         value: 0,
                     },
                     {
-                        name: 'Redemption (%)',
+                        name: this.translate.translate('Redemption (%)'),
                         value: 0,
                     }
                 ];
@@ -586,11 +572,11 @@ export class PrecentralisationReportComponent implements OnInit, OnDestroy {
                 this.sharesDetails = [];
                 this.pieChartDatas = [
                     {
-                        name: 'Subscription (%)',
+                        name: this.translate.translate('Subscription (%)'),
                         value: 0,
                     },
                     {
-                        name: 'Redemption (%)',
+                        name: this.translate.translate('Redemption (%)'),
                         value: 0,
                     }
                 ];
@@ -601,7 +587,6 @@ export class PrecentralisationReportComponent implements OnInit, OnDestroy {
     }
 
     onClickViewCorrespondingOrders(id) {
-
         let fundname;
         let sharename;
         let searchDate;
@@ -637,7 +622,7 @@ export class PrecentralisationReportComponent implements OnInit, OnDestroy {
         if (this.myDetails) {
             if (this.myDetails.userId) {
                 if (this.isFundLevel && this.isFundsPayloadOK) {
-                    this._fileDownloader.downLoaderFile({
+                    this.fileDownloader.downLoaderFile({
                         method: 'exportPrecentralisationFunds',
                         token: this.memberSocketService.token,
                         fundId: this.fundsPayload.fundId,
@@ -648,7 +633,7 @@ export class PrecentralisationReportComponent implements OnInit, OnDestroy {
                     });
                 }
                 if (this.isShareLevel && this.isSharesPayloadOK) {
-                    this._fileDownloader.downLoaderFile({
+                    this.fileDownloader.downLoaderFile({
                         method: 'exportPrecentralisationShares',
                         token: this.memberSocketService.token,
                         shareId: this.sharesPayload.shareId,
@@ -667,7 +652,6 @@ export class PrecentralisationReportComponent implements OnInit, OnDestroy {
      * @return {'navDate' | 'settlementDate'}
      */
     getSearchDateType(): 'navDate' | 'settlementDate' {
-
         // get date filter value
         const curDateFilterVal = get(this.filtersForm.controls['specificDate'].value, '[0].id');
         // 0 or 2 is navDate
