@@ -2,7 +2,6 @@ import { Component, OnInit, OnDestroy } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
 import { NgRedux, select } from '@angular-redux/store';
 import * as _ from 'lodash';
-
 import { AlertsService } from '@setl/jaspero-ng2-alerts';
 import { ConfirmationService } from '@setl/utils';
 import { ToasterService } from 'angular2-toaster';
@@ -12,6 +11,7 @@ import {
     setRequestedUserTypes,
     clearRequestedUserTypes,
 } from '@setl/core-store';
+
 import * as Model from '../model';
 import { UsersService } from '../service';
 import { AccountAdminCreateUpdateBase } from '../../base/create-update/component';
@@ -206,7 +206,11 @@ export class UsersCreateUpdateComponent
 
         if (!this.user.invitationComplete) {
             this.createUserTooltip.text +=
-                `<br /><br />Last invite: ${this.user.invitationDate} (${this.user.invitationEmail})`;
+                '<br /><br />';
+            this.createUserTooltip.text +=
+                this.translate.translate(
+                    'Last invite @invitationDate@ (@invitationEmail@)',
+                    { 'invitationDate': this.user.invitationDate, 'invitationEmail': this.user.invitationEmail });
         }
     }
 
@@ -283,7 +287,7 @@ export class UsersCreateUpdateComponent
             this.confirmations.create(
                 this.translate.translate('Are you sure?'),
                 this.translate.translate(`You have assigned no teams to this user.
-                    This user, will no longer hold any permissions on the system.`),
+                    This user will no longer hold any permissions on the system.`),
             ).subscribe((answer) => {
                 if (answer.resolved) {
                     callback();
@@ -405,7 +409,8 @@ export class UsersCreateUpdateComponent
 
     private onInviteSuccess(userName: string, showToaster): void {
         if (showToaster) {
-            const message = `${userName} successfully invited`;
+            const message = this.translate.translate(
+                '@userName@ successfully invited', { 'userName': userName });
 
             this.toaster.pop('success', message);
 
@@ -414,7 +419,8 @@ export class UsersCreateUpdateComponent
     }
 
     private onInviteError(userName: string): void {
-        const message = `An error occured whilst inviting ${userName}`;
+        const message = this.translate.translate(
+            'An error occured whilst inviting @userName@', { 'userName': userName });
 
         this.toaster.pop('error', message);
 

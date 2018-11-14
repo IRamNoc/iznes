@@ -6,8 +6,8 @@ import { MultilingualService } from '@setl/multilingual';
 import {
     clearRequestedAccountAdminUsersAudit,
 } from '@setl/core-store';
-import { FileDownloader, immutableHelper } from '@setl/utils';
 
+import { FileDownloader, immutableHelper } from '@setl/utils';
 import { AccountAdminBaseService } from '../../base/service';
 import { AccountAdminAuditBase } from '../../base/audit/component';
 import { UsersService } from '../service';
@@ -69,26 +69,26 @@ export class UsersAuditComponent
                     id: 'Ref',
                     dataIndex: 'reference',
                     styleClass: 'ref',
-                    title: 'Reference',
+                    title: this.translate.translate('Reference'),
                 },
                 {
                     id: 'User',
                     dataIndex: 'userName',
                     styleClass: 'name',
-                    title: 'User',
+                    title: this.translate.translate('User'),
                 },
                 {
                     id: 'Field',
                     dataIndex: 'field',
                     styleClass: 'field',
-                    title: 'Information',
+                    title: this.translate.translate('Information'),
                 },
                 {
                     id: 'Previous',
                     dataIndex: 'oldValue',
                     styleClass: 'previous',
-                    title: 'Previous value',
-                    valueDecorator: function (entity) {
+                    title: this.translate.translate('Previous Value'),
+                    valueDecorator: (entity) => {
                         if (entity.field === 'Status') {
                             if (entity.oldValue === '0') entity.oldValue = 'Enabled';
                             if (entity.oldValue === '1') entity.oldValue = 'Disabled';
@@ -108,20 +108,20 @@ export class UsersAuditComponent
                     id: 'New',
                     dataIndex: 'newValue',
                     styleClass: 'new',
-                    title: 'New value',
+                    title: this.translate.translate('New Value'),
                 },
                 {
                     id: 'ModifiedBy',
                     dataIndex: 'modifiedBy',
                     styleClass: 'modifiedby',
-                    title: 'Modified by',
+                    title: this.translate.translate('Modified By'),
                 },
                 {
                     id: 'Date',
                     dataIndex: 'dateModified',
                     styleClass: 'date',
-                    title: 'Date',
-                    valueDecorator: function (entity) {
+                    title: this.translate.translate('Date'),
+                    valueDecorator: (entity) => {
                         if (!entity._originalDateModified) {
                             entity._originalDateModified = entity.dateModified;
                             const utcDate = moment.utc(entity.dateModified).toDate();

@@ -1,9 +1,7 @@
 import { Component, OnInit, OnDestroy, Input } from '@angular/core';
-
 import { ToasterService } from 'angular2-toaster';
 import { MultilingualService } from '@setl/multilingual';
 import { ConfirmationService } from '@setl/utils';
-
 import { AccountAdminStatusComponentBase } from '../../../base/create-update/status/component';
 import { UsersService } from '../../service';
 import { Router } from '@angular/router';

@@ -8,6 +8,7 @@ import {
     SET_ACCOUNT_ADMIN_USER_PERMISSION_AREAS,
     setRequestedAccountAdminUserPermissionAreas,
 } from '@setl/core-store';
+
 import { createMemberNodeSagaRequest } from '@setl/utils/common';
 import { AccountAdminBaseService } from '../../../base/service';
 import { RequestCallback } from '../../../base/model';
@@ -57,7 +58,6 @@ export class AccountAdminPermissionsServiceBase extends AccountAdminBaseService 
      * @param onError
      */
     readUserPermissionAreas(userID: number, userTeamID?: number): void {
-
         const request: ReadUserPermissionAreasRequest = {
             RequestName: 'readuserpermissionareas',
             token: this.memberSocketService.token,

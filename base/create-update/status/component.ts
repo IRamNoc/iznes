@@ -1,5 +1,4 @@
 import { Component, OnInit, OnDestroy, Input } from '@angular/core';
-
 import { ToasterService } from 'angular2-toaster';
 import { MultilingualService } from '@setl/multilingual';
 import { ConfirmationService } from '@setl/utils';
@@ -11,7 +10,6 @@ import { Router } from '@angular/router';
     styleUrls: ['component.scss'],
 })
 export class AccountAdminStatusComponentBase<Type> implements OnInit, OnDestroy {
-
     @Input() noun: string;
     @Input() entityId: number;
     @Input() status: number = 0;
@@ -82,6 +80,9 @@ export class AccountAdminStatusComponentBase<Type> implements OnInit, OnDestroy 
     protected onStatusUpdateSuccess(): void {
         this.toaster.pop('success', this.translate.translate(
             `${this.noun} successfully ${this.status ? 'enabled' : 'disabled'}`,
+            (this.status)
+                ? this.translate.translate('@noun@ successfully enabled@', { 'noun': this.noun })
+                : this.translate.translate('@noun@ successfully disabled@', { 'noun': this.noun }),
         ));
 
         this.router.navigateByUrl(this.getBackURL());
@@ -91,7 +92,9 @@ export class AccountAdminStatusComponentBase<Type> implements OnInit, OnDestroy 
         this.status = this.status === 1 ? 0 : 1; // reset the status to it's previous
 
         this.toaster.pop('error', this.translate.translate(
-            `${this.noun} could not be ${this.status ? 'enabled' : 'disabled'}`,
+            (this.status)
+                ? this.translate.translate('@noun@ could not be enabled', { 'noun': this.noun })
+                : this.translate.translate('@noun@ could not be disabled', { 'noun': this.noun }),
         ));
     }
 
@@ -99,5 +102,5 @@ export class AccountAdminStatusComponentBase<Type> implements OnInit, OnDestroy 
         return `/account-admin/${this.noun.toLowerCase()}s`;
     }
 
-    ngOnDestroy() { }
+    ngOnDestroy() {}
 }

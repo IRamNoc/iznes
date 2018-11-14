@@ -1,12 +1,10 @@
 import { Component, OnInit, OnDestroy } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
-
 import { AlertsService } from '@setl/jaspero-ng2-alerts';
 import { ConfirmationService } from '@setl/utils';
 import { MultilingualService } from '@setl/multilingual';
 import { ToasterService } from 'angular2-toaster';
 import * as _ from 'lodash';
-
 import * as Model from '../model';
 import * as UsersModel from '../../users/model';
 import { AccountAdminPermission } from '../../base/create-update/permissions/model';
@@ -92,7 +90,7 @@ export class UserTeamsCreateUpdateComponent
             this.confirmations.create(
                 this.translate.translate('Are you sure?'),
                 this.translate.translate(`You have selected no permissions for this team.
-                    Any users, soley assigned to this team, will no longer hold any permissions on the system.`),
+                    Any users, solely assigned to this team, will no longer hold any permissions on the system.`),
             ).subscribe((answer) => {
                 if (answer.resolved) {
                     callback();

@@ -1,29 +1,33 @@
 <form>
     <div class="row form-group">
         <div class="col col-sm-4 search-name">
-            <input type="text" name="nameSearch" id="nameSearch"
+            <input type="text" 
+                name="nameSearch" 
+                id="nameSearch"
                 [(ngModel)]="nameSearch"
                 (ngModelChange)="searchByName()"
-                [placeholder]="'Search by first name, last name, or ref' | translate" />
+                [placeholder]="translate.translate('Search by first name, last name, or ref')" />
         </div>
 
         <div class="col col-sm-4 show-active">
             <label class="control-label" *ngIf="showOnlyActiveFilter">
-                {{ 'Show only Active' | translate }}
-                <input type="checkbox" name="showOnlyActivated" id="showOnlyActivated"
-                [(ngModel)]="showOnlyActivated">
+                {{ 'Show Only Active' | translate }}
+                <input type="checkbox" 
+                        name="showOnlyActivated" 
+                        id="showOnlyActivated"
+                        [(ngModel)]="showOnlyActivated">
             </label>
         </div>
 
         <div class="col col-sm-4 justify-end">
-            <a [routerLink]="getCreateNewLink()" class="btn">Create new {{ noun | translate }}</a>
+            <a [routerLink]="getCreateNewLink()" class="btn">{{ 'Create New @noun@ ' | translate: { 'noun': noun } }}</a>
         </div>
     </div>
 </form>
 
 <clr-datagrid #dataGrid>
     <clr-dg-column *ngFor="let col of datagridConfig.columns" class="col-{{col.styleClass}}">
-        <span id="userMgmtCol{{col.id}}">{{ col.title | translate }}</span>
+        <span id="userMgmtCol{{col.id}}">{{ '@col.title@' | translate: { 'col.title': col.title } }}</span>
     </clr-dg-column>
     <clr-dg-column class="col-actions">
         <span id="userMgmtColActions">{{ 'Active' | translate }}</span>
@@ -45,9 +49,11 @@
         </clr-dg-cell>
         <clr-dg-cell id="{{'userMgmtCellActions' + idx}}" class="col-actions">
             <label class="switch">
-                <input class="form-control" id="{{'userMgmtCellAction' + idx}}" type="checkbox"
-                    [disabled]="isProcessing() || disabled"
-                    [(ngModel)]="entity.isActivated">
+                <input class="form-control" 
+                        id="{{'userMgmtCellAction' + idx}}" 
+                        type="checkbox"
+                        [disabled]="isProcessing() || disabled"
+                        [(ngModel)]="entity.isActivated">
                 <span class="slider round"></span>
             </label>
         </clr-dg-cell>

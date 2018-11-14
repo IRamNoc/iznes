@@ -2,7 +2,6 @@ import { Component, OnInit, OnDestroy } from '@angular/core';
 import { Router } from '@angular/router';
 import { NgRedux, select } from '@angular-redux/store';
 import { Subscription } from 'rxjs/Subscription';
-
 import { FileDownloader } from '@setl/utils';
 import { AccountAdminBaseService } from '../service';
 
@@ -11,7 +10,6 @@ import { AccountAdminBaseService } from '../service';
     template: '',
 })
 export class AccountAdminListBase implements OnInit, OnDestroy {
-
     noun: string;
 
     protected token: string; // this is only needed for CSV exports
@@ -33,7 +31,9 @@ export class AccountAdminListBase implements OnInit, OnDestroy {
     constructor(private router: Router,
                 protected redux: NgRedux<any>,
                 protected fileDownloader: FileDownloader,
-                protected baseService: AccountAdminBaseService) {}
+                protected baseService: AccountAdminBaseService,
+    ) {
+    }
 
     ngOnInit() {
         this.initSubscriptions();

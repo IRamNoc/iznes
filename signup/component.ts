@@ -2,11 +2,9 @@ import { Component, OnDestroy, Inject, OnInit } from '@angular/core';
 import { Router } from '@angular/router';
 import { AlertsService } from '@setl/jaspero-ng2-alerts';
 import * as _ from 'lodash';
-
 import { MultilingualService } from '@setl/multilingual';
 import { APP_CONFIG, AppConfig, ConfirmationService, immutableHelper } from '@setl/utils';
 import { ISignupConfiguration, ISignupData } from '@setl/core-login';
-
 import { AccountSignupService } from './service';
 
 @Component({
@@ -14,7 +12,6 @@ import { AccountSignupService } from './service';
     template: '<app-signup [configuration]="configuration" (signupDataEmit)="setSignupData($event)"></app-signup>',
 })
 export class AccountSignUpComponent implements OnInit, OnDestroy {
-
     configuration: ISignupConfiguration;
 
     private appConfig;
@@ -33,7 +30,8 @@ export class AccountSignUpComponent implements OnInit, OnDestroy {
         this.initConfiguration();
     }
 
-    ngOnInit() { }
+    ngOnInit() {
+    }
 
     private initConfiguration(): void {
         const title = this.translate.translate(
@@ -45,7 +43,7 @@ export class AccountSignUpComponent implements OnInit, OnDestroy {
             'provided by the Asset Management company.',
             { 'appConfig.platform': this.appConfig.platform });
 
-        const buttonText = this.translate.translate('Create an account');
+        const buttonText = this.translate.translate('Create Account');
 
         this.configuration = {
             doLoginAfterCallback: true,
@@ -72,9 +70,10 @@ export class AccountSignUpComponent implements OnInit, OnDestroy {
     private onSignupSuccess(resolve): void {
         this.confirmationService.create(
             'Success',
-            '<p><b>Account successfully activated.</b></p>',
+            `<p><b>${this.translate.translate('Account successfully activated.')}</b></p>`,
             {
-                confirmText: 'Continue to ' + this.appConfig.platform,
+                confirmText: this.translate.translate(
+                    'Continue to @appConfig.platform@', { 'appConfig.platform': this.appConfig.platform }),
                 declineText: '',
                 btnClass: 'success',
             },
@@ -86,7 +85,11 @@ export class AccountSignUpComponent implements OnInit, OnDestroy {
     private onSignupError(reject): void {
         this.alertsService.create(
             'error',
-            '<span class="text-warning">Could not process invitation.<br>Please try again later.</span>',
+            `<span class="text-warning">
+            ${this.translate.translate('Could not process invitation.')}
+            <br>
+            ${this.translate.translate('Please try again later.')}
+            </span>`,
         );
 
         reject();
@@ -130,5 +133,6 @@ export class AccountSignUpComponent implements OnInit, OnDestroy {
         this.validateSignupData();
     }
 
-    ngOnDestroy() { }
+    ngOnDestroy() {
+    }
 }

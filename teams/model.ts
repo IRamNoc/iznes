@@ -14,7 +14,7 @@ export class AccountAdminTeam {
 
 export class AccountAdminTeamForm extends DynamicFormsValidator {
     name: FormItem = {
-        label: 'Team name',
+        label: 'Team Name',
         type: FormItemType.text,
         required: true,
     };

@@ -1,14 +1,10 @@
 <div class="header-breadcrumbs">
-    <h1><i class="fa fa-address-book-o"></i> {{
-        (isCreateMode()) ?
-        'Create New User(s)' :
-        'Update User'
-        | translate }}</h1>
+    <h1><i class="fa fa-address-book-o"></i> {{ (isCreateMode()) ? 'Create New User(s)' : 'Update User' | translate }}</h1>
 </div>
 
 <clr-tabs>
     <clr-tab>
-        <button clrTabLink id="tabAccountAdmin{{noun}}sButton">{{ noun | translate }}</button>
+        <button clrTabLink id="tabAccountAdmin{{noun}}sButton">{{ '@noun@' | translate: { 'noun': noun} }}</button>
         <clr-tab-content class="outer">
             <ng-container *ngIf="isCreateMode()">
                 <div class="well">
@@ -26,14 +22,14 @@
                     <div class="col-sm-12">
                         <div class="repeatable-users" *ngFor="let user of forms; let idx = index;">
                             <app-dynamic-form [model]="user"></app-dynamic-form>
-                            <span class="remove-user" (click)="removeUser(idx)">Remove user</span>
+                            <span class="remove-user" (click)="removeUser(idx)">{{ 'Remove User' | translate }}</span>
                         </div>
 
                         <div class="row buttons">
                             <div class="col-sm-12">
                                 <button class="btn btn-primary btn-right" (click)="addAdditionalUser()">
                                     <i class="fa fa-plus"></i>
-                                    {{ 'Add another user' | translate }}
+                                    {{ 'Add Another User' | translate }}
                                 </button>
                                 <i class="tooltip tooltip-right fa fa-question-circle" [tooltip]="addAdditionalUserTooltip"></i>
                             </div>
@@ -75,11 +71,7 @@
             <ng-container *ngIf="isUpdateMode()">
                 <div class="row actions bottom">
                     <div class="col-sm-12">
-                        <h3>{{
-                            (isTeamsPage()) ?
-                            'Team Permissions':
-                            'User Permissions'
-                            | translate }}
+                        <h3>{{ (isTeamsPage()) ? 'Team Permissions' : 'User Permissions' | translate }}
                             <i class="tooltip fa fa-question-circle" [tooltip]="userPermissionsTooltip"></i>
                         </h3>
                     </div>
@@ -102,27 +94,25 @@
                 </div>
                 
                 <div class="col">
-                    <button class="btn btn-primary" (click)="save()" [disabled]="!isValid()">{{
-                        (isCreateMode()) ?
-                        'Create User(s)' :
-                        'Update User Details'
-                        | translate }}
+                    <button class="btn btn-primary" (click)="save()" [disabled]="!isValid()">
+                        {{ (isCreateMode()) ? 'Create User(s)' : 'Update User Details' | translate }}
                     </button>
 
-                    <button [hidden]="isUpdateMode() && isUserInvitationComplete()" class="btn btn-primary" (click)="save(true)" [disabled]="!isValid()">{{
-                        (isCreateMode()) ?
-                        'Create &amp; Send Invitation(s)' :
-                        'Update &amp; Send Invitation'
-                        | translate }}
+                    <button [hidden]="isUpdateMode() && isUserInvitationComplete()" 
+                            class="btn btn-primary" 
+                            (click)="save(true)" 
+                            [disabled]="!isValid()">
+                    {{ (isCreateMode()) ? 'Create &amp; Send Invitation(s)' : 'Update &amp; Send Invitation' | translate }}
                     </button>
 
                     <i class="tooltip fa fa-question-circle" *ngIf="createUserTooltip" [tooltip]="createUserTooltip"></i>      
 
-                    <span class="no-teams" [hidden]="!showNoTeamsMessage()">Please assign user(s) to at least one team in order to continue.</span>
+                    <span class="no-teams" [hidden]="!showNoTeamsMessage()">
+                        {{ 'Please assign user(s) to at least one team in order to continue.' | translate }}</span>
                 </div>
 
                 <div class="col justify-end" *ngIf="isUpdateMode() && isUserStatusPending()">
-                    <button class="btn btn-danger" (click)="doDeleteTeam()">{{ 'Delete user' | translate }}</button>
+                    <button class="btn btn-danger" (click)="doDeleteTeam()">{{ 'Delete User' | translate }}</button>
                 </div>
             </div>
         </clr-tab-content>
