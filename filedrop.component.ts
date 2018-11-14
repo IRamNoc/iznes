@@ -5,8 +5,7 @@ import { Component, Input, Output, EventEmitter, OnInit } from '@angular/core';
 import { FormControl } from '@angular/forms';
 
 /* DropHandler Component */
-import { DropHandler, FilePermission } from './drophandler/drophandler.component';
-import { FileDropItem } from './FileDrop';
+import { FileDropItem, FileDropEvent, FilePermission } from './FileDrop';
 
 @Component({
     selector: 'setl-file-drop',
@@ -16,7 +15,7 @@ import { FileDropItem } from './FileDrop';
 
 export class FileDropComponent implements OnInit {
     /* OnDrop event - emit every file that's dropped or removed. */
-    @Output() onDrop:EventEmitter<{}> = new EventEmitter();
+    @Output() onDrop:EventEmitter<FileDropEvent> = new EventEmitter();
 
     /* Form control, if not passed in, we'll make a headless one. */
     @Input() formControl:FormControl = new FormControl([]);
