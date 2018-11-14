@@ -28,9 +28,9 @@ export class UserTeamsUsersMgmtUsersComponent
     constructor(redux: NgRedux<any>,
                 service: UserManagementServiceBase,
                 toaster: ToasterService,
-                private translate: MultilingualService,
+                public translate: MultilingualService,
                 private teamsService: UserTeamsService) {
-        super(redux, service, toaster);
+        super(redux, service, translate, toaster);
     }
 
     ngOnInit() {
