@@ -2,7 +2,6 @@ import { Component, OnInit, OnDestroy } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
 import { NgRedux, select } from '@angular-redux/store';
 import * as _ from 'lodash';
-
 import { AlertsService } from '@setl/jaspero-ng2-alerts';
 import { ConfirmationService } from '@setl/utils';
 import { ToasterService } from 'angular2-toaster';
@@ -12,6 +11,7 @@ import {
     setRequestedUserTypes,
     clearRequestedUserTypes,
 } from '@setl/core-store';
+
 import * as Model from '../model';
 import { UsersService } from '../service';
 import { AccountAdminCreateUpdateBase } from '../../base/create-update/component';
@@ -206,8 +206,11 @@ export class UsersCreateUpdateComponent
 
         if (!this.user.invitationComplete) {
             this.createUserTooltip.text +=
-                `<br /><br />
-                ${this.translate.translate('Last invite')}: ${this.user.invitationDate} (${this.user.invitationEmail})`;
+                '<br /><br />';
+            this.createUserTooltip.text +=
+                this.translate.translate(
+                    'Last invite @invitationDate@ (@invitationEmail@)',
+                    { 'invitationDate': this.user.invitationDate, 'invitationEmail': this.user.invitationEmail });
         }
     }
 

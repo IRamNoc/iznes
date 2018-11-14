@@ -1,12 +1,12 @@
 import { Component, OnInit, OnDestroy } from '@angular/core';
 import { Router } from '@angular/router';
 import { NgRedux, select } from '@angular-redux/store';
-
 import { FileDownloader } from '@setl/utils';
 
 import {
     clearRequestedAccountAdminTeams,
 } from '@setl/core-store';
+
 import * as Model from '../model';
 import { UserTeamsService } from '../service';
 import { AccountAdminListBase } from '../../base/list/component';
@@ -18,7 +18,6 @@ import { AccountAdminBaseService } from '../../base/service';
     styleUrls: ['component.scss'],
 })
 export class UserTeamsListComponent extends AccountAdminListBase implements OnInit, OnDestroy {
-
     teams: Model.AccountAdminTeam[];
 
     @select(['accountAdmin', 'teams', 'requested']) teamsRequestedOb;

@@ -53,7 +53,7 @@
 
             <clr-datagrid #dataGrid>
                 <clr-dg-column *ngFor="let col of datagridConfig.columns" class="col-{{col.styleClass}}">
-                    <span id="auditCol{{col.id}}">{{ col.title | translate }}</span>
+                    <span id="auditCol{{col.id}}">{{ '@col.title@' | translate: { 'col.title': col.title } }}</span>
                 </clr-dg-column>
             
                 <clr-dg-row *clrDgItems="let entity of audit; let idx = index;" id="{{'auditRow' + idx}}"

@@ -6,7 +6,7 @@
                 id="nameSearch"
                 [(ngModel)]="nameSearch"
                 (ngModelChange)="searchByName()"
-                [placeholder]="'Search by first name, last name, or ref' | translate" />
+                [placeholder]="translate.translate('Search by first name, last name, or ref')" />
         </div>
 
         <div class="col col-sm-4 show-active">
@@ -27,7 +27,7 @@
 
 <clr-datagrid #dataGrid>
     <clr-dg-column *ngFor="let col of datagridConfig.columns" class="col-{{col.styleClass}}">
-        <span id="userMgmtCol{{col.id}}">{{ col.title | translate }}</span>
+        <span id="userMgmtCol{{col.id}}">{{ '@col.title@' | translate: { 'col.title': col.title } }}</span>
     </clr-dg-column>
     <clr-dg-column class="col-actions">
         <span id="userMgmtColActions">{{ 'Active' | translate }}</span>
