@@ -8,5 +8,9 @@ import { SetlLoginComponent, LoginGuardService, LoginService } from '@setl/core-
 export class OfiLoginComponent extends SetlLoginComponent {
 
     public showPassword: boolean = false;
+    public showResetTwoFactor: boolean = false;
 
+    logIt(msg) {
+        console.log('+++', msg);
+    }
 }

@@ -12,6 +12,7 @@ import { ClarityModule } from '@clr/angular';
 import { MultilingualModule } from '@setl/multilingual';
 /* Components. */
 import { OfiLoginComponent } from './login/component';
+import { OfiTwoFactorComponent } from './two-factor/component';
 import { SetlLayoutModule } from '@setl/core-layout';
 import { SetlLoginModule } from '@setl/core-login';
 
@@ -19,9 +20,11 @@ import { SetlLoginModule } from '@setl/core-login';
 @NgModule({
     declarations: [
         OfiLoginComponent,
+        OfiTwoFactorComponent,
     ],
     exports: [
         OfiLoginComponent,
+        OfiTwoFactorComponent,
     ],
     imports: [
         CommonModule,
