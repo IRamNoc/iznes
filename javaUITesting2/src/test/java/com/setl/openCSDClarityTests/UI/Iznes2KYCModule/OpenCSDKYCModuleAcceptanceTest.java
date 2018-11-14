@@ -94,7 +94,7 @@ public class OpenCSDKYCModuleAcceptanceTest {
         KYCProcessStep3GeneralInfoComplete(companyName);
         KYCProcessStep3CompanyInfoComplete();
         KYCProcessStep3BankingInfoComplete(companyName, uSubIBANDetails);
-        KYCProcessStep3ClassificationInfoComplete(companyName, uSubIBANDetails);
+        KYCProcessStep3ClassificationInfoComplete();
         KYCProcessStep4();
         KYCProcessStep5();
         KYCProcessStep6(firstName + " " + lastName, "SETL Developments LTD", "Ipswich", "Head");
@@ -131,6 +131,7 @@ public class OpenCSDKYCModuleAcceptanceTest {
         KYCProcessStep3GeneralInfoComplete(companyName);
         KYCProcessStep3CompanyInfoComplete();
         KYCProcessStep3BankingInfoComplete(companyName, iban);
+        KYCProcessStep3ClassificationInfoComplete();
         KYCProcessStep4();
         KYCProcessStep5();
         KYCProcessStep6(firstName + " " + lastName, "SETL Developments LTD", "Ipswich", "Head");
@@ -167,6 +168,7 @@ public class OpenCSDKYCModuleAcceptanceTest {
         KYCProcessStep3GeneralInfoComplete(companyName);
         KYCProcessStep3CompanyInfoComplete();
         KYCProcessStep3BankingInfoComplete(companyName, iban);
+        KYCProcessStep3ClassificationInfoComplete();
         KYCProcessStep4();
         KYCProcessStep5();
         KYCProcessStep6(firstName + " " + lastName, "SETL Developments LTD", "Ipswich", "Head");
@@ -234,6 +236,7 @@ public class OpenCSDKYCModuleAcceptanceTest {
         KYCProcessStep3GeneralInfoComplete(companyName);
         KYCProcessStep3CompanyInfoComplete();
         KYCProcessStep3BankingInfoComplete(companyName, iban);
+        KYCProcessStep3ClassificationInfoComplete();
         KYCProcessStep4();
         KYCProcessStep5();
         KYCProcessStep6("Jordan Miller", "SETL Developments LTD", "Ipswich", "Head");
@@ -270,6 +273,7 @@ public class OpenCSDKYCModuleAcceptanceTest {
         KYCProcessStep3GeneralInfoComplete(companyName);
         KYCProcessStep3CompanyInfoComplete();
         KYCProcessStep3BankingInfoComplete(companyName, iban);
+        KYCProcessStep3ClassificationInfoComplete();
         KYCProcessStep4();
         KYCProcessClose();
         KYCProcessRequestListValidation("No","Success!", companyName, "Draft", "No", "", "");
@@ -304,6 +308,7 @@ public class OpenCSDKYCModuleAcceptanceTest {
         KYCProcessStep3GeneralInfoComplete(companyName);
         KYCProcessStep3CompanyInfoComplete();
         KYCProcessStep3BankingInfoComplete(companyName, iban);
+        KYCProcessStep3ClassificationInfoComplete();
         KYCProcessStep4();
         KYCProcessStep5();
         KYCProcessStep6(firstName + " " + lastName, "SETL Developments LTD", "Ipswich", "Head");
@@ -633,7 +638,7 @@ public class OpenCSDKYCModuleAcceptanceTest {
         wait.until(invisibilityOfElementLocated(By.id("activities")));
     }
 
-    public static void KYCProcessStep3ClassificationInfoComplete(String companyName, String iBan) throws IOException, InterruptedException{
+    public static void KYCProcessStep3ClassificationInfoComplete() throws IOException, InterruptedException{
         WebDriverWait wait = new WebDriverWait(driver, timeoutInSeconds);
 
         Thread.sleep(500);
