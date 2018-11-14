@@ -1,5 +1,5 @@
 import { FormControl, ValidatorFn } from '@angular/forms';
-import { FilePermission } from '@setl/core-filedrop/drophandler/drophandler.component';
+import { FilePermission } from '@setl/core-filedrop';
 
 export type FormElement = FormItem | FormHeader;
 
