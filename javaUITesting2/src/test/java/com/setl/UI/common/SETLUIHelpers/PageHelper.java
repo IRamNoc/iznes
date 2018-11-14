@@ -38,6 +38,8 @@ public class PageHelper extends LoginAndNavigationHelper {
     }
 
     public static void verifyCorrectPage(String title) {
+        String test = driver.findElement(By.className("header-breadcrumbs")).getText();
+        System.out.println(test);
         assertTrue(driver.findElement(By.className("header-breadcrumbs")).getText().equals(title));
     }
 
