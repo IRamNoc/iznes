@@ -1,33 +1,41 @@
 <div class="header-breadcrumbs">
     <h1>
-        <i class="fa fa-book"></i>{{'Centralisation' | translate}}
+        <i class="fa fa-book"></i>{{ 'Centralisation' | translate }}
     </h1>
 </div>
 
 <clr-tabs>
     <clr-tab>
         <button clrTabLink id="datagridBtnFunds" [routerLink]="[fundsUrl]">
-            {{'Funds Level' | translate}}
+            {{ 'Funds Level' | translate }}
         </button>
         <clr-tab-content *clrIfActive="isFundLevel">
             <section class="form-block">
                 <p>
-                    {{'Please find below the centralisation report at fund level.' | translate}}
+                    {{ 'Please find below the centralisation report at fund level.' | translate }}
                     <br>
-                    {{'If you want you can filter this report by a specific NAV Date / Settlement Date or a range of date and/or by Fund.' | translate}}
+                    {{ 'If you want you can filter this report by a specific NAV Date / Settlement Date or a range of date and/or by Fund.' | translate }}
                 </p>
 
                 <form [formGroup]="filtersForm" id="centra-funds-filters">
                     <div class="row">
                         <div class="col-lg-4">
                             <div class="input-button-group">
-                                <ng-select id="centra-funds-list" [items]="fundsList" [allowClear]="true" [placeholder]="_translate.translate('All Funds')" [formControl]="filtersForm.controls['selectList']">
+                                <ng-select id="centra-funds-list" 
+                                            [items]="fundsList" 
+                                            [allowClear]="true" 
+                                            [placeholder]="_translate.translate('All Funds')" 
+                                            [formControl]="filtersForm.controls['selectList']">
                                 </ng-select>
                             </div>
                         </div>
                         <div class="col-lg-4">
                             <div class="input-button-group">
-                                <ng-select id="centra-funds-date-type" [items]="fundSpecificDates" [allowClear]="true" [placeholder]="_translate.translate('Please select a type of date')" [formControl]="filtersForm.controls['specificDate']">
+                                <ng-select id="centra-funds-date-type" 
+                                            [items]="fundSpecificDates" 
+                                            [allowClear]="true" 
+                                            [placeholder]="_translate.translate('Please select a type of date')" 
+                                            [formControl]="filtersForm.controls['specificDate']">
                                 </ng-select>
                             </div>
                         </div>
@@ -36,13 +44,22 @@
                                 <div class="col-md-6">
                                     <div class="input-group date-pick-wrapper">
                                         <span class="fa fa-calendar" aria-hidden="true"></span>
-                                        <input id="centra-funds-date-from" formControlName="dateFrom" [dpDayPicker]="fromConfigDate" [placeholder]="(!isPeriod) ? _translate.translate('Choose a date') : _translate.translate('Date From')" mode="day" theme="dp-material">
+                                        <input id="centra-funds-date-from" 
+                                                formControlName="dateFrom" 
+                                                [dpDayPicker]="fromConfigDate" 
+                                                [placeholder]="(!isPeriod) ? _translate.translate('Choose a date') : _translate.translate('Date From')" 
+                                                mode="day" 
+                                                theme="dp-material">
                                     </div>
                                 </div>
                                 <div class="col-md-6">
                                     <div class="input-group date-pick-wrapper" *ngIf="isPeriod">
                                         <span class="fa fa-calendar" aria-hidden="true"></span>
-                                        <input id="centra-funds-date-to" formControlName="dateTo" [dpDayPicker]="toConfigDate" [placeholder]="_translate.translate('Date To')" mode="day" theme="dp-material">
+                                        <input id="centra-funds-date-to" 
+                                                formControlName="dateTo" 
+                                                [dpDayPicker]="toConfigDate" 
+                                                [placeholder]="_translate.translate('Date To')" 
+                                                mode="day" theme="dp-material">
                                     </div>
                                 </div>
                             </div>
@@ -55,10 +72,10 @@
                 <form>
                     <div class="row">
                         <div class="col-lg-8">
-                            <h2>{{'Key Data' | translate}}</h2>
+                            <h2>{{ 'Key Data' | translate }}</h2>
                             <div class="row" style="margin-bottom: 10px">
                                 <div class="form-group col-lg-6">
-                                    <div><strong><label>{{'Total Net Amount' | translate}}</label></strong></div>
+                                    <div><strong><label>{{ 'Total Net Amount' | translate }}</label></strong></div>
                                     <span class="readonly-field" style="width: 100%">
                                         {{fundsTotalNetAmount | moneyValue: 2}}€
                                     </span>
@@ -66,13 +83,13 @@
                             </div>
                             <div class="row">
                                 <div class="form-group col-lg-6">
-                                    <div><label>{{'Total Subscription' | translate}}</label></div>
+                                    <div><label>{{ 'Total Subscription' | translate }}</label></div>
                                     <span class="readonly-field" style="width: 100%; background-color: #50ad5a; color: #e1e1e1;">
                                         {{fundsTotalSubscriptionAmount | moneyValue: 2}}€
                                     </span>
                                 </div>
                                 <div class="form-group col-lg-6">
-                                    <div><label>{{'Total Redemptions' | translate}}</label></div>
+                                    <div><label>{{ 'Total Redemptions' | translate }}</label></div>
                                     <span class="readonly-field" style="width: 100%; background-color: #af2519; color: #e1e1e1;">
                                         {{fundsTotalRedemptionAmount | moneyValue: 2}}€
                                     </span>
@@ -90,51 +107,51 @@
                 </form>
 
                 <div class="text-right">
-                    <button *ngIf="isFundsPayloadOK" id="centra-funds-export-btn" type="button" class="btn btn-success" style="max-width: none !important" (click)="exportCentralisationReport()">{{'Export Centralisation' | translate}}</button>
+                    <button *ngIf="isFundsPayloadOK" id="centra-funds-export-btn" type="button" class="btn btn-success" style="max-width: none !important" (click)="exportCentralisationReport()">{{ 'Export Centralisation' | translate }}</button>
                 </div>
 
                 <clr-datagrid class="expandable">
                     <clr-dg-column *ngIf="isSettlementSelected" [clrDgField]="'settlementDate'" clrDgSortIcon>
-                        <ng-container *clrDgHideableColumn="{hidden: false}">{{'Settlement Date' | translate}}
+                        <ng-container *clrDgHideableColumn="{hidden: false}">{{ 'Settlement Date' | translate }}
                         </ng-container>
                     </clr-dg-column>
                     <clr-dg-column *ngIf="!isSettlementSelected" [clrDgField]="'navDate'" clrDgSortIcon>
-                        <ng-container *clrDgHideableColumn="{hidden: false}">{{'NAV Date' | translate}}
+                        <ng-container *clrDgHideableColumn="{hidden: false}">{{ 'NAV Date' | translate }}
                         </ng-container>
                     </clr-dg-column>
                     <clr-dg-column [clrDgField]="'cutoffDate'" clrDgSortIcon>
-                        <ng-container *clrDgHideableColumn="{hidden: false}">{{'Cut-Off' | translate}}
+                        <ng-container *clrDgHideableColumn="{hidden: false}">{{ 'Cut-off' | translate }}
                         </ng-container>
                     </clr-dg-column>
                     <clr-dg-column [clrDgField]="'fundName'" clrDgSortIcon>
-                        <ng-container *clrDgHideableColumn="{hidden: false}">{{'Fund' | translate}}
+                        <ng-container *clrDgHideableColumn="{hidden: false}">{{ 'Fund' | translate }}
                         </ng-container>
                     </clr-dg-column>
                     <clr-dg-column [clrDgField]="'fundCurrency'" clrDgSortIcon>
-                        <ng-container *clrDgHideableColumn="{hidden: false}">{{'CCY' | translate}}
+                        <ng-container *clrDgHideableColumn="{hidden: false}">{{ 'CCY' | translate }}
                         </ng-container>
                     </clr-dg-column>
                     <clr-dg-column [clrDgField]="'fundAum'" clrDgSortIcon clrDgSortNoSearch>
-                        <ng-container *clrDgHideableColumn="{hidden: false}">{{'AUI (Traded)' | translate}}
+                        <ng-container *clrDgHideableColumn="{hidden: false}">{{ 'AUI (Traded)' | translate }}
                         </ng-container>
                     </clr-dg-column>
-                    <clr-dg-column [clrDgField]="'subscriptionAmount'" clrDgSortIcon>
-                        <ng-container *clrDgHideableColumn="{hidden: false}">{{'Total Subscriptions' | translate}}
+                    <clr-dg-column [clrDgField]="'subscriptionAmount'" class="right" clrDgSortIcon>
+                        <ng-container *clrDgHideableColumn="{hidden: false}">{{ 'Total Subscriptions' | translate }}
                         </ng-container>
                     </clr-dg-column>
-                    <clr-dg-column [clrDgField]="'redemptionAmount'" clrDgSortIcon>
-                        <ng-container *clrDgHideableColumn="{hidden: false}">{{'Total Redemptions' | translate}}
+                    <clr-dg-column [clrDgField]="'redemptionAmount'" class="right" clrDgSortIcon >
+                        <ng-container *clrDgHideableColumn="{hidden: false}">{{ 'Total Redemptions' | translate }}
                         </ng-container>
                     </clr-dg-column>
-                    <clr-dg-column [clrDgField]="'netAmount'" clrDgSortIcon>
-                        <ng-container *clrDgHideableColumn="{hidden: false}">{{'Net Amount (CCY)' | translate}}
+                    <clr-dg-column [clrDgField]="'netAmount'" class="right" clrDgSortIcon>
+                        <ng-container *clrDgHideableColumn="{hidden: false}">{{ 'Net Amount (CCY)' | translate }}
                         </ng-container>
                     </clr-dg-column>
-                    <clr-dg-column [clrDgField]="'netAmountRatio'" clrDgSortIcon>
-                        <ng-container *clrDgHideableColumn="{hidden: false}">{{'Net Amount (% AUI)' | translate}}
+                    <clr-dg-column [clrDgField]="'netAmountRatio'" class="right" clrDgSortIcon>
+                        <ng-container *clrDgHideableColumn="{hidden: false}">{{ 'Net Amount (% AUI)' | translate }}
                         </ng-container>
                     </clr-dg-column>
-                    <clr-dg-column>{{'View Orders' | translate}}</clr-dg-column>
+                    <clr-dg-column>{{ 'View Orders' | translate}}</clr-dg-column>
 
                     <clr-dg-row *clrDgItems="let data of fundsDetails.funds; let id = index" [clrDgItem]="data">
                         <clr-dg-cell *ngIf="isSettlementSelected">{{data.settlementDate}}</clr-dg-cell>
@@ -142,20 +159,22 @@
                         <clr-dg-cell>{{data.cutoffDate}}</clr-dg-cell>
                         <clr-dg-cell>{{data.fundName}}</clr-dg-cell>
                         <clr-dg-cell>{{data.fundCurrency}}</clr-dg-cell>
-                        <clr-dg-cell>{{data.fundAum | moneyValue:2}}</clr-dg-cell>
-                        <clr-dg-cell>{{data.subscriptionAmount | moneyValue:2}}</clr-dg-cell>
-                        <clr-dg-cell>{{data.redemptionAmount | moneyValue:2}}</clr-dg-cell>
-                        <clr-dg-cell>{{data.netAmount | moneyValue:2}}</clr-dg-cell>
-                        <clr-dg-cell>{{data.netAmountRatio | moneyValue:2}}</clr-dg-cell>
+                        <clr-dg-cell class="right">{{data.fundAum | moneyValue:2}}</clr-dg-cell>
+                        <clr-dg-cell class="right">{{data.subscriptionAmount | moneyValue:2}}</clr-dg-cell>
+                        <clr-dg-cell class="right">{{data.redemptionAmount | moneyValue:2}}</clr-dg-cell>
+                        <clr-dg-cell class="right">{{data.netAmount | moneyValue:2}}</clr-dg-cell>
+                        <clr-dg-cell class="right">{{data.netAmountRatio | moneyValue:2}}</clr-dg-cell>
                         <clr-dg-cell>
-                            <button (click)="onClickViewCorrespondingOrders(id)" class="btn btn-info btn-sm">View</button>
+                            <button (click)="onClickViewCorrespondingOrders(id)" class="btn btn-info btn-sm">
+                                {{ 'View' | translate }}
+                            </button>
                         </clr-dg-cell>
                     </clr-dg-row>
 
                     <clr-dg-footer>
                         <!-- Optional customization of hide/show columns toggle -->
                         <clr-dg-column-toggle>
-                            <clr-dg-column-toggle-title>{{'Show/hide fields:' | translate}}</clr-dg-column-toggle-title>
+                            <clr-dg-column-toggle-title>{{ 'Show/hide fields:' | translate }}</clr-dg-column-toggle-title>
 
                             <clr-dg-column-toggle-button clrType="ok">
                                 <button type="button" class="btn btn-primary" style="padding:0 20px">
@@ -221,7 +240,7 @@
                 <form>
                     <div class="row">
                         <div class="col-lg-8">
-                            <h2>{{'Key Data' | translate}}</h2>
+                            <h2>{{ 'Key Data' | translate }}</h2>
                             <div class="row" style="margin-bottom: 10px">
                                 <div class="form-group col-lg-6">
                                     <div><strong><label>{{'Total Net Amount' | translate}}</label></strong></div>
