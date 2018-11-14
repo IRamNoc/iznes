@@ -69,7 +69,6 @@ interface SelectedItem {
     selector: 'app-manage-orders',
     styleUrls: ['./manage-orders.component.scss'],
     templateUrl: './manage-orders.component.html',
-    changeDetection: ChangeDetectionStrategy.OnPush,
     providers: [
         SearchFilters,
     ],
@@ -92,9 +91,9 @@ export class ManageOrdersComponent implements OnInit, AfterViewInit, OnDestroy {
     loading = true;
     userType: number;
 
-    public orderTypes = orderTypes;
-    public orderStatuses = orderStatuses;
-    public dateTypes = dateTypes;
+    public orderTypes: any = [];
+    public orderStatuses: any = [];
+    public dateTypes: any = [];
 
     // Locale
     language = 'en';
@@ -242,6 +241,8 @@ export class ManageOrdersComponent implements OnInit, AfterViewInit, OnDestroy {
     }
 
     ngOnInit() {
+        this.translateSelectMenus();
+
         this.route.queryParams.subscribe((params) => {
             this.isinParam = params.isin ? params.isin : undefined;
         });
@@ -273,7 +274,10 @@ export class ManageOrdersComponent implements OnInit, AfterViewInit, OnDestroy {
 
         this.setInitialTabs();
 
-        this.appSubscribe(this.requestedLanguage$, requested => this.getLanguage(requested));
+        this.appSubscribe(this.requestedLanguage$, (requested) => {
+            this.getLanguage(requested);
+            this.translateSelectMenus()
+        }); 
         this.appSubscribe(this.userType$, type => this.userType = type);
         this.appSubscribe(this.walletDirectory$, walletDirectory => this.walletDirectory = walletDirectory);
         this.appSubscribe(observableCombineLatest(this.myWallets$, this.connectedWallet$.pipe(filter(id => id !== 0)), this.menuSpec$), ([myWallets, walletId, menuSpec]) => {
@@ -342,6 +346,11 @@ export class ManageOrdersComponent implements OnInit, AfterViewInit, OnDestroy {
         this.detectChanges();
     }
 
+    ngAfterViewInit() {
+        this.resizeDataGrid();
+        this.isIznesAdmin;
+    }
+
     routeUpdate(params) {
         const order = this.getOrder(params);
         if (!order) {
@@ -384,19 +393,6 @@ export class ManageOrdersComponent implements OnInit, AfterViewInit, OnDestroy {
         return order;
     }
 
-    ngAfterViewInit() {
-        this.resizeDataGrid();
-
-        this.isIznesAdmin;
-    }
-
-    ngOnDestroy(): void {
-        this.searchFilters.clear();
-        this.ngRedux.dispatch(ofiManageOrderActions.setAllTabs(this.tabsControl));
-
-        this.manageOrdersService.resetOrderList();
-    }
-
     resizeDataGrid() {
         if (this.orderDatagrid) {
             this.orderDatagrid.resize();
@@ -411,9 +407,16 @@ export class ManageOrdersComponent implements OnInit, AfterViewInit, OnDestroy {
         this.resizeDataGrid();
     }
 
+    translateSelectMenus() {
+        this.orderTypes = this.translation.translate(orderTypes);
+        this.orderStatuses = this.translation.translate(orderStatuses);
+        this.dateTypes = this.translation.translate(dateTypes);
+    }
+
     getLanguage(language): void {
         if (language) {
             this.language = language;
+            this.detectChanges(true);
 
             this.toConfigDate = {
                 ...this.toConfigDate,
@@ -531,7 +534,6 @@ export class ManageOrdersComponent implements OnInit, AfterViewInit, OnDestroy {
         this.fundShare.mifiidIncidentalCosts = this.numberConverter.toFrontEnd(currentFundShare.mifiidIncidentalCosts);
         this.fundShare.shareClassCode = currentFundShare.shareClassCode;
         this.detectChanges();
-
     }
 
     setInitialTabs() {
@@ -566,7 +568,7 @@ export class ManageOrdersComponent implements OnInit, AfterViewInit, OnDestroy {
 
     cancelOrder(index) {
         const orderId = this.getOrderRef(this.ordersList[index].orderID);
-        const message = (this.ordersList[index].orderType === 3) ? `Subscription ${orderId}` : `Redemption ${orderId}`;
+        const message = (this.ordersList[index].orderType === 3) ? `${this.translation.translate('Subscription')} ${orderId}` : `${this.translation.translate('Redemption')} ${orderId}`;
 
         if (this.isInvestorUser) {
             this.showConfirmationAlert(message, index);
@@ -574,21 +576,20 @@ export class ManageOrdersComponent implements OnInit, AfterViewInit, OnDestroy {
             this.isAmConfirmModalDisplayed = true;
             this.amConfirmModal = {
                 targetedOrder: this.ordersList[index],
-                title: `Cancel - ${message}`,
-                body: `Are you sure you want to cancel the ${message}?`,
-                placeholder: 'Please add a message to justify this cancellation. An internal IZNES message will be sent to the investor to notify them.',
+                title: `${this.translation.translate('Cancel')} - ${message}`,
+                body: `${this.translation.translate('Are you sure you want to cancel the @message@?', { 'message': message })}`,                
+                placeholder: `${this.translation.translate('Please add a message to justify this cancellation. An internal IZNES message will be sent to the investor to notify them.')}`,
             };
-
         }
     }
 
     settleOrder(index) {
         let confMessage = '';
         if (this.ordersList[index].orderType === 3) {
-            confMessage += 'Subscription ';
+            confMessage += `${this.translation.translate('Subscription')} `;
         }
         if (this.ordersList[index].orderType === 4) {
-            confMessage += 'Redemption ';
+            confMessage += `${this.translation.translate('Redemption')} `;
         }
         confMessage += this.getOrderRef(this.ordersList[index].orderID);
         this.showConfirmationSettleAlert(confMessage, index);
@@ -601,9 +602,15 @@ export class ManageOrdersComponent implements OnInit, AfterViewInit, OnDestroy {
 
     showConfirmationSettleAlert(confMessage, index): void {
         this.confirmationService.create(
-            '<span>Are you sure?</span>',
-            '<span>Are you sure you want to settle the ' + confMessage + '?</span>',
-            { confirmText: 'Confirm', declineText: 'Back', btnClass: 'info' },
+            `<span>${this.translation.translate('Are you sure?')}</span>`,
+            `<span>${this.translation.translate(
+                'Are you sure you want to settle the @confMessage@?', 
+                { 'confMessage': confMessage })}</span>`,
+            { 
+                confirmText: this.translation.translate('Confirm'), 
+                declineText: this.translation.translate('Back'), 
+                btnClass: 'info'
+            },
         ).subscribe((ans) => {
             if (ans.resolved) {
                 this.sendSettleOrderRequest(index);
@@ -612,13 +619,12 @@ export class ManageOrdersComponent implements OnInit, AfterViewInit, OnDestroy {
     }
 
     sendSettleOrderRequest(index) {
-
         if (!this.isInvestorUser) {
             const orderId = this.ordersList[index].orderID;
             this.ofiOrdersService.markOrderSettle({ orderId }).then((data) => {
                 // const orderId = _.get(data, ['1', 'Data', '0', 'orderID'], 0);
                 const orderRef = commonHelper.pad(orderId, 11, '0');
-                this.toasterService.pop('success', 'Order ' + orderRef + ' has been successfully settled.');
+                this.toasterService.pop(this.translation.translate('success'), this.translation.translate('Order @orderRef@ has been successfully settled.', { 'orderRef': orderRef }));
                 // this.handleClose();
                 // this._router.navigateByUrl('/order-book/my-orders/list');
                 this.logService.log(data);
@@ -632,9 +638,13 @@ export class ManageOrdersComponent implements OnInit, AfterViewInit, OnDestroy {
 
     showConfirmationAlert(confMessage, index): void {
         this.confirmationService.create(
-            '<span>Are you sure?</span>',
-            '<span>Are you sure you want cancel the ' + confMessage + '?</span>',
-            { confirmText: 'Confirm', declineText: 'Back', btnClass: 'error' },
+            `<span>${this.translation.translate('Are you sure?')}</span>`,
+            `<span>${this.translation.translate('Are you sure you want cancel the @confMessage@?', { 'confMessage': confMessage })}</span>`,
+            { 
+                confirmText: this.translation.translate('Confirm'), 
+                declineText: this.translation.translate('Back'), 
+                btnClass: 'error' 
+            },
         ).subscribe((ans) => {
             if (ans.resolved) {
                 const asyncTaskPipe = this.ofiOrdersService.requestCancelOrderByInvestor({
@@ -845,30 +855,18 @@ export class ManageOrdersComponent implements OnInit, AfterViewInit, OnDestroy {
         let orderType = '';
         let subject = '';
         let dateFormat = '';
+      
         const toasterMessages = {
-            success: {
-                'fr-Latn': `Le message a été envoyé avec succès à ${targetedOrder.firstName} ${targetedOrder.lastName}`,
-                'en-Latn': `The message has been successfully sent to ${targetedOrder.firstName} ${targetedOrder.lastName}`,
-            },
-            fail: {
-                'fr-Latn': `L'envoi du message à ${targetedOrder.firstName} ${targetedOrder.lastName} a échoué`,
-                'en-Latn': `The message has failed to be sent to ${targetedOrder.firstName} ${targetedOrder.lastName}`,
-            },
+            success: 
+                this.translation.translate('The message has been successfully sent to @targetedOrder.firstName@ @targetedOrder.lastName@.', { 'targetedOrder.firstName': targetedOrder.firstName, 'targetedOrder.lastName': targetedOrder.lastName }),
+            fail: 
+                this.translation.translate('The message has failed to be sent to @targetedOrder.firstName@ @targetedOrder.lastName@.', { 'targetedOrder.firstName': targetedOrder.firstName, 'targetedOrder.lastName': targetedOrder.lastName }),
         };
 
-        switch (this.language) {
-        case 'fr-Latn':
-            orderType = (targetedOrder.orderType === 3) ? 'souscription' : 'rachat';
-            subject = `Annulation d'un ordre: votre ordre de ${orderType} avec la référence ${orderRef} a été annulé par ${amCompanyName}`;
-            dateFormat = 'DD/MM/YYYY HH:mm:ss';
-            break;
-
-        default:
-            orderType = (targetedOrder.orderType === 3) ? 'subscription' : 'redemption';
-            subject = `Order cancelled: your ${orderType} order ${orderRef} has been cancelled by ${amCompanyName}`;
-            dateFormat = 'YYYY-MM-DD HH:mm:ss';
-            break;
-        }
+        orderType = (targetedOrder.orderType === 3) ? 
+            this.translation.translate('subscription') : this.translation.translate('redemption');
+        subject = `${orderType} ${orderRef} - ${this.translation.translate('Cancelled')}`;
+        dateFormat = 'YYYY-MM-DD HH:mm:ss';
 
         const actionConfig = new MessageCancelOrderConfig();
         actionConfig.lang = this.language;
@@ -885,10 +883,10 @@ export class ManageOrdersComponent implements OnInit, AfterViewInit, OnDestroy {
             actionConfig,
         ).then((result) => {
             this.logService.log('on message success: ', result);
-            this.toasterService.pop('success', toasterMessages.success[this.language]);
+            this.toasterService.pop('success', toasterMessages.success);
         }).catch((error) => {
             this.logService.log('on message fail: ', error);
-            this.toasterService.pop('error', toasterMessages.fail[this.language]);
+            this.toasterService.pop('error', toasterMessages.fail)
         });
     }
 
@@ -921,7 +919,7 @@ export class ManageOrdersComponent implements OnInit, AfterViewInit, OnDestroy {
     }
 
     /**
-     * check if order is a sell buy order
+     * Check if order is a sell buy order
      *
      * @param {{sellBuyLinkOrderID}} orderData
      * @return {boolean}
@@ -938,5 +936,12 @@ export class ManageOrdersComponent implements OnInit, AfterViewInit, OnDestroy {
      */
     getPriceStatusCss(order: { knownNav: boolean }): 'text-warning' | 'text-success' {
         return order.knownNav ? 'text-success' : 'text-warning';
+    }
+
+    ngOnDestroy(): void {
+        this.searchFilters.clear();
+        this.ngRedux.dispatch(ofiManageOrderActions.setAllTabs(this.tabsControl));
+
+        this.manageOrdersService.resetOrderList();
     }
 }
