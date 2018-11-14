@@ -682,9 +682,9 @@ export class OrderHelper {
         try {
             const [fakeCutoffStr, fakeValuationStr, fakeSettelmentStr] = this.orderRequest.datevalue.split(';');
 
-            const validFakeCutoffStr = moment.utc(fakeCutoffStr, 'YYYY-MM-DD HH:mm')._isValid;
-            const validFakeValuationStr = moment.utc(fakeValuationStr, 'YYYY-MM-DD HH:mm')._isValid;
-            const validFakeSettelmentStr = moment.utc(fakeSettelmentStr, 'YYYY-MM-DD HH:mm')._isValid;
+            const validFakeCutoffStr = moment.utc(fakeCutoffStr, 'YYYY-MM-DD HH:mm').isValid();
+            const validFakeValuationStr = moment.utc(fakeValuationStr, 'YYYY-MM-DD HH:mm').isValid();
+            const validFakeSettelmentStr = moment.utc(fakeSettelmentStr, 'YYYY-MM-DD HH:mm').isValid();
 
             if (validFakeCutoffStr && validFakeValuationStr && validFakeSettelmentStr) {
                 return {
