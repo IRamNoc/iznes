@@ -46,7 +46,7 @@
                                                 [formControl]="tabsControl[0].searchForm.controls['isin']"
                                                 name="search-sharename"
                                                 type="text"
-                                                [placeholder]="translation.translate('ISIN')"
+                                                [placeholder]="translate.translate('ISIN')"
                                                 style="width: 100% !important">
                                         </div>
                                     </div>
@@ -59,7 +59,7 @@
                                                     [formControl]="tabsControl[0].searchForm.controls['fundname']" 
                                                     name="search-fundname"
                                                     type="text" 
-                                                    [placeholder]="translation.translate('Fund Name')" style="width: 100% !important">
+                                                    [placeholder]="translate.translate('Fund Name')" style="width: 100% !important">
                                         </div>
                                     </div>
                                 </td>
@@ -68,7 +68,7 @@
                                         <label>{{ 'Share Name' | translate }}</label>
                                         <div class="input-button-group">
                                             <input id="orders-search-sharename" [formControl]="tabsControl[0].searchForm.controls['sharename']" name="search-sharename"
-                                                   type="text" [placeholder]="translation.translate('Share Name')" style="width: 100% !important">
+                                                   type="text" [placeholder]="translate.translate('Share Name')" style="width: 100% !important">
                                         </div>
                                     </div>
                                 </td>
@@ -82,7 +82,7 @@
                                                 [active]="[orderStatuses[0]]"
                                                 [items]="orderStatuses"
                                                 [formControl]="tabsControl[0].searchForm.controls['status']"
-                                                [placeholder]="translation.translate('Status')">
+                                                [placeholder]="translate.translate('Status')">
                                             </ng-select>
                                         </div>
                                     </div>
@@ -140,7 +140,7 @@
                                                         [formControl]="tabsControl[0].searchForm.controls['orderID']" 
                                                         name="search-sharename" 
                                                         type="number"
-                                                        [placeholder]="translation.translate('Order ID')" style="width: 100% !important">
+                                                        [placeholder]="translate.translate('Order ID')" style="width: 100% !important">
                                             </div>
                                         </div>
                                         <ng-container *ngIf="isIznesAdmin">
@@ -152,7 +152,7 @@
                                                     <input id="orders-search-amcomp" 
                                                             [formControl]="tabsControl[0].searchForm.controls['assetManagementCompany']" 
                                                             name="search-amComp" type="text"
-                                                            [placeholder]="translation.translate('Asset Management Company')" 
+                                                            [placeholder]="translate.translate('Asset Management Company')" 
                                                             style="width: 100% !important">
                                                 </div>
                                             </div>
@@ -165,7 +165,7 @@
                                                             [formControl]="tabsControl[0].searchForm.controls['investorCompanyName']" 
                                                             name="search-investor" 
                                                             type="text"
-                                                            [placeholder]="translation.translate('Investor')" style="width: 100% !important">
+                                                            [placeholder]="translate.translate('Investor')" style="width: 100% !important">
                                                 </div>
                                             </div>
                                             <div class="form-group col-sm-3">
@@ -177,7 +177,7 @@
                                                             [formControl]="tabsControl[0].searchForm.controls['portfolioLabel']" 
                                                             name="search-portfolio" 
                                                             type="text"
-                                                            [placeholder]="translation.translate('Portfolio')" style="width: 100% !important">
+                                                            [placeholder]="translate.translate('Portfolio')" style="width: 100% !important">
                                                 </div>
                                             </div>
                                         </ng-container>
@@ -192,7 +192,7 @@
                                                             [items]="dateTypes" 
                                                             [allowClear]="false"
                                                             [formControl]="tabsControl[0].searchForm.controls['dateType']" 
-                                                            [placeholder]="translation.translate('Type')">
+                                                            [placeholder]="translate.translate('Type')">
                                                 </ng-select>
                                             </div>
                                         </div>
@@ -206,7 +206,7 @@
                                                         formControlName="fromDate" 
                                                         autocomplete="off" 
                                                         [dpDayPicker]="fromConfigDate" 
-                                                        [placeholder]="translation.translate('Choose a date')"
+                                                        [placeholder]="translate.translate('Choose a date')"
                                                         mode="day" 
                                                         theme="dp-material">
                                             </div>
@@ -221,7 +221,7 @@
                                                         formControlName="toDate" 
                                                         autocomplete="off" 
                                                         [dpDayPicker]="toConfigDate" 
-                                                        [placeholder]="translation.translate('Choose a date')"
+                                                        [placeholder]="translate.translate('Choose a date')"
                                                         mode="day" 
                                                         theme="dp-material">
                                             </div>
