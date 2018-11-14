@@ -15,6 +15,7 @@ import * as UserMgmtModel from './model';
 import { AccountAdminErrorResponse, DataGridConfig, AccountAdminNouns } from '../../../base/model';
 import { AccountAdminUser } from '../../../users/model';
 import { AccountAdminTeam } from '../../../teams/model';
+import { MultilingualService } from '@setl/multilingual';
 
 @Component({
     selector: 'app-core-admin-teams-mgmt',
@@ -44,6 +45,7 @@ export class AccountAdminUsersMgmtComponentBase<Type> implements OnInit, OnDestr
 
     constructor(protected redux: NgRedux<any>,
                 protected service: UserManagementServiceBase,
+                public translate: MultilingualService,
                 protected toaster: ToasterService) {
     }
 
