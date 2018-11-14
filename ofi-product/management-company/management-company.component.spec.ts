@@ -21,6 +21,7 @@ import { AlertsService } from '@setl/jaspero-ng2-alerts';
 import { phoneCodeList } from '../../shared/phone-codes.values';
 import productConfig from '../productConfig';
 import { FileService } from '@setl/core-req-services';
+import { File } from '@setl/core-filedrop';
 
 const ofiManagementCompanyServiceStub = {
     getManagementCompanyList: () => { },
@@ -40,19 +41,19 @@ const LocationStub = {
     back: () => { },
 };
 
-const fakeFileMetadata = {
-    fileID: 'fake fileID',
-    hash: 'fake fileHash',
-    name: 'fake fileTitle',
+const fakeFiledropEvent = {
+    files: [{
+        data: 'aGVsbG8gdGhlcmUh',
+        name: 'example.txt',
+        lastModified: 1507563924000,
+        filePermission: 0,
+        id: 1,
+        mimeType: 'text/plain',
+        status: null,
+    }],
+    target: null,
 };
-const uploadFile = jasmine.createSpy('uploadFile')
-    .and.returnValue(
-        new Promise((resolve, reject) => {
-            resolve(fakeFileMetadata);
-        }),
-    );
 class ManagagementCompanyServiceMock extends ManagagementCompanyService { }
-ManagagementCompanyServiceMock.prototype.uploadFile = uploadFile;
 
 @Directive({
     selector: 'setl-file-drop',
@@ -127,7 +128,6 @@ describe('OfiManagementCompanyComponent', () => {
     afterEach(() => {
         markForCheckSpy.calls.reset();
         managementCompanyFormSpy.calls.reset();
-        uploadFile.calls.reset();
         pop.calls.reset();
     });
 
@@ -136,89 +136,28 @@ describe('OfiManagementCompanyComponent', () => {
             markForCheckSpy.calls.reset();
             comp.onDropFile(
                 {
-                    files: [],
+                    files: <File[]>[],
+                    target: null,
                 },
                 'signature',
             );
-            const expectedResult = {
-                name: null,
-                hash: null,
-            };
             expect(comp.fileMetadata.getTitle('signature')).toEqual(null);
             expect(comp.fileMetadata.getHash('signature')).toEqual(null);
             expect(markForCheckSpy).toHaveBeenCalledTimes(1);
         });
 
-        it('should call the upload method of the service companion', () => {
-            comp.onDropFile(
-                {
-                    files: [{
-                        data: 'aGVsbG8gdGhlcmUh',
-                        name: 'example.txt',
-                        lastModified: 1507563924000,
-                    }],
-                },
-                'signature',
-            );
-            expect(uploadFile).toHaveBeenCalledTimes(1);
-        });
-
         it('should update the metadata', fakeAsync(() => {
             comp.onDropFile(
-                {
-                    files: [{
-                        data: 'aGVsbG8gdGhlcmUh',
-                        name: 'example.txt',
-                        lastModified: 1507563924000,
-                    }],
-                },
+                fakeFiledropEvent,
                 'signature',
             );
 
             tick();
 
-            expect(comp.fileMetadata.getTitle('signature')).toEqual(fakeFileMetadata.name);
-            expect(comp.fileMetadata.getHash('signature')).toEqual(fakeFileMetadata.hash);
+            expect(comp.fileMetadata.getTitle('signature')).toEqual(fakeFiledropEvent.files[0].name);
+            expect(comp.fileMetadata.getHash('signature')).toContain(fakeFiledropEvent.files[0].mimeType);
+            expect(comp.fileMetadata.getHash('signature')).toContain(fakeFiledropEvent.files[0].data);
             expect(markForCheckSpy).toHaveBeenCalledTimes(1);
-        }));
-
-        it('should call the pop method of ToasterService with a success message', fakeAsync(() => {
-            comp.onDropFile(
-                {
-                    files: [{
-                        data: 'aGVsbG8gdGhlcmUh',
-                        name: 'example.txt',
-                        lastModified: 1507563924000,
-                    }],
-                },
-                'signature',
-            );
-
-            tick();
-
-            expect(pop).toHaveBeenCalledTimes(1);
-            expect(pop.calls.argsFor(0)[0]).toEqual('success');
-        }));
-
-        it('should call the pop method of ToasterService with an error message', fakeAsync(() => {
-            uploadFile
-                .and.returnValue(new Promise((resolve, reject) => reject()));
-
-            comp.onDropFile(
-                {
-                    files: [{
-                        data: 'aGVsbG8gdGhlcmUh',
-                        name: 'example.txt',
-                        lastModified: 1507563924000,
-                    }],
-                },
-                'signature',
-            );
-
-            tick();
-
-            expect(pop).toHaveBeenCalledTimes(1);
-            expect(pop.calls.argsFor(0)[0]).toEqual('error');
         }));
     });
 
