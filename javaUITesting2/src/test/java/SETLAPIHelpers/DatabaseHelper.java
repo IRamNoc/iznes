@@ -97,41 +97,25 @@ public class DatabaseHelper {
         Statement stmt = conn.createStatement();
         ResultSet rs = null;
 
+        int rows = 0;
+
         try {
-           rs =  stmt.executeQuery("select data from setlnet.tblUsersFormdata where formId = " + "\"" + formId + "\" AND userId =  " + "\"" + userId + "\"");
-            int rows = 0;
+            rs =  stmt.executeQuery("select data from setlnet.tblUsersFormdata where formId = " + "\"" + formId + "\" AND userId =  " + "\"" + userId + "\"");
             while (rs.next()) //rs.next returns true while there is a result, so should return false if there are no rows
             {
                 rows = rs.getRow(); //returns the row number
             }
-
-            assertEquals("There should be exactly " + expectedCount + " record(s) matching: ", expectedCount, rows);
-
-            if (expectedCount > 0) // only needed if we expected data
-            {
-                String result = rs.getString("data");
-                JsonParser parser = new JsonParser();
-                // we hve the json object
-                JsonObject jsonResult = (JsonObject) parser.parse(result);
-
-                // need to store the  set as an set of strings
-                Set<String> names = jsonResult.keySet();
-
-                for (String name : names) {
-
-                    assertTrue(jsonResult.get(name).toString().equals("\"\"") || jsonResult.get(name).toString().equals("[]"));
-
-                }
-            }
-
-        } catch (Exception e) {
+        }
+        catch (Exception e) {
             e.printStackTrace();
-            fail();
+            fail("DB Query failed");
         } finally {
             conn.close();
             stmt.close();
             rs.close();
         }
+
+        assertEquals("There should be exactly " + expectedCount + " record(s) matching: ", expectedCount, rows);
     }
 
     public static void setDBToProdOff() throws SQLException {
@@ -228,7 +212,8 @@ public class DatabaseHelper {
 
             } catch (Exception e) {
                 e.printStackTrace();
-                fail();
+                System.out.println(e.getMessage());
+                fail("DB check failed");
             } finally {
                 conn.close();
                 stmt.close();
@@ -438,6 +423,107 @@ public class DatabaseHelper {
             rs.close();
         }
         return result;
+    }
+
+    public static void validateDatabaseFundExists(int expectedCount, String UFundName) throws SQLException {
+        conn = DriverManager.getConnection(connectionString, DBUsername, DBPassword);
+        //for the query
+        Statement stmt = conn.createStatement();
+        ResultSet rs = null;
+        try {
+            rs = stmt.executeQuery("select * from setlnet.tblIznFund where fundName =  " + "\"" + UFundName + "\"");
+            int rows = 0;
+
+            if (rs.last()) {
+                rows = rs.getRow();
+                // Move to back to the beginning
+
+                rs.beforeFirst();
+            }
+            assertEquals("There should be exactly " + expectedCount + " record(s) matching (ignoring case): ", expectedCount, rows);
+        } catch (Exception e) {
+            e.printStackTrace();
+            fail();
+        } finally {
+            conn.close();
+            stmt.close();
+            rs.close();
+        }
+    }
+
+    public static void validateDatabaseShareExists(int expectedCount, String UShareName) throws SQLException {
+        conn = DriverManager.getConnection(connectionString, DBUsername, DBPassword);
+        //for the query
+        Statement stmt = conn.createStatement();
+        ResultSet rs = null;
+        try {
+            rs = stmt.executeQuery("select * from setlnet.tblIznFundShare where fundShareName =  " + "\"" + UShareName + "\"");
+            int rows = 0;
+
+            if (rs.last()) {
+                rows = rs.getRow();
+                // Move to back to the beginning
+
+                rs.beforeFirst();
+            }
+            assertEquals("There should be exactly " + expectedCount + " record(s) matching (ignoring case): ", expectedCount, rows);
+        } catch (Exception e) {
+            e.printStackTrace();
+            fail();
+        } finally {
+            conn.close();
+            stmt.close();
+            rs.close();
+        }
+    }
+
+    public static String getInvestorInvitationToken(String investorEmail) throws SQLException {
+        conn = DriverManager.getConnection(connectionString, DBUsername, DBPassword);
+        Statement stmt = conn.createStatement();
+        ResultSet rs = null;
+        String invEmaila = "";
+        try {
+            String getInvEmail = "select invitationToken from setlnet.tblIznInvestorInvitation where email = " + "\"" + investorEmail + "\"";
+            rs = stmt.executeQuery(getInvEmail);
+            rs.last();
+            invEmaila = rs.getString("invitationToken");
+
+
+        } catch (Exception e) {
+            e.printStackTrace();
+            fail();
+        } finally {
+            conn.close();
+            stmt.close();
+            rs.close();
+        }
+        return invEmaila;
+    }
+
+    public static void validateDatabaseInvestorInvited ( int expectedCount, String UInvestorEmail) throws SQLException {
+        conn = DriverManager.getConnection(connectionString, DBUsername, DBPassword);
+        //for the query
+        Statement stmt = conn.createStatement();
+        ResultSet rs = null;
+        try {
+            rs = stmt.executeQuery("select * from setlnet.tblIznInvestorInvitation where email =  " + "\"" + UInvestorEmail + "\"");
+            int rows = 0;
+
+            if (rs.last()) {
+                rows = rs.getRow();
+                // Move to back to the beginning
+
+                rs.beforeFirst();
+            }
+            assertEquals("There should be exactly " + expectedCount + " record(s) matching (ignoring case): ", expectedCount, rows);
+        } catch (Exception e) {
+            e.printStackTrace();
+            fail();
+        } finally {
+            conn.close();
+            stmt.close();
+            rs.close();
+        }
     }
 
 }

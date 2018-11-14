@@ -19,11 +19,8 @@ import static com.setl.UI.common.SETLUIHelpers.AccountsDetailsHelper.navigateToD
 import static com.setl.UI.common.SETLUIHelpers.FundsDetailsHelper.*;
 import static com.setl.UI.common.SETLUIHelpers.MemberDetailsHelper.scrollElementIntoViewById;
 import static com.setl.UI.common.SETLUIHelpers.PageHelper.verifyCorrectPage;
-import static com.setl.UI.common.SETLUIHelpers.PageHelper.verifyFundOptInfoPageContents;
-import static com.setl.UI.common.SETLUIHelpers.PageHelper.verifyOptInfoPageContents;
 import static com.setl.UI.common.SETLUIHelpers.SetUp.*;
 import static com.setl.UI.common.SETLUIHelpers.UmbrellaFundFundSharesDetailsHelper.*;
-import static com.setl.openCSDClarityTests.UI.Iznes1MyProduct.Funds.OpenCSD2FundsAcceptanceTest.validateDatabaseShareExists;
 import static com.setl.openCSDClarityTests.UI.Iznes2KYCModule.OpenCSDKYCModuleAcceptanceTest.*;
 import static com.setl.openCSDClarityTests.UI.Iznes4General.OpenCSDGeneralAcceptanceTest.inviteAnInvestor;
 import static com.setl.openCSDClarityTests.UI.Iznes4General.OpenCSDGeneralAcceptanceTest.navigateToInviteInvestorPage;
@@ -44,9 +41,9 @@ public class OpenCSDSprint7AcceptanceTest {
     @Rule
     public TestMethodPrinterRule pr = new TestMethodPrinterRule(System.out);
 
-    static Connection conn = null;
+    //static Connection conn = null;
 
-    public static String connectionString = "jdbc:mysql://localhost:9998/setlnet?nullNamePatternMatchesAll=true";
+    //public static String connectionString = "jdbc:mysql://localhost:9998/setlnet?nullNamePatternMatchesAll=true";
 
     // Defines username and password to connect to database server.
     static String DBUsername = "root";
@@ -73,7 +70,7 @@ public class OpenCSDSprint7AcceptanceTest {
 
         loginAndVerifySuccess("am", "alex01");
         navigateToInviteInvestorPage();
-        inviteAnInvestor(investorEmail, "Jordan", "Miller", "Success!");
+        inviteAnInvestor(investorEmail, "Jordan", "Miller", "Success!", "Institutional Investor");
 
         //validateDatabaseInvestorInvited(1, investorEmail);
 
@@ -84,7 +81,7 @@ public class OpenCSDSprint7AcceptanceTest {
 
         loginAndVerifySuccess("am", "alex01");
         navigateToInviteInvestorPage();
-        inviteAnInvestor(investorEmail, "Michael", "Bindley", "Success!");
+        inviteAnInvestor(investorEmail, "Michael", "Bindley", "Success!", "Institutional Investor");
 
         String email = driver.findElement(By.xpath("//*[@id=\"iznes\"]/app-root/jaspero-alerts/jaspero-alert/div[2]/div[3]/table")).getText();
         assertTrue(email.equals(investorEmail));
@@ -94,7 +91,7 @@ public class OpenCSDSprint7AcceptanceTest {
     public void shouldHaveNextAndPreviousButtonsTG1090() throws IOException, InterruptedException, SQLException {
         WebDriverWait wait = new WebDriverWait(driver, timeoutInSeconds);
 
-        String[] uShareDetails = generateRandomFundsDetails();
+        String[] uShareDetails = generateRandomShareDetails();
         String[] uIsin = generateRandomISIN();
         String[] uFundDetails = generateRandomFundsDetails();
         String randomLEI = generateRandomLEI();
@@ -148,8 +145,8 @@ public class OpenCSDSprint7AcceptanceTest {
         navigateToPageByID("menu-product-home");
 
         selectAddUmbrellaFund();
-        String [] uFundDetails = generateRandomUmbrellaFundsDetails();
-        fillUmbrellaDetailsNotCountry(uFundDetails[0], generateRandomLEI());
+        String uFundDetails = generateRandomUmbrellaFundName();
+        fillUmbrellaDetailsNotCountry(uFundDetails, generateRandomLEI());
         searchAndSelectTopDropdownXpath("uf_domicile", "Jordan");
         submitUmbrellaFund();
 
@@ -164,16 +161,16 @@ public class OpenCSDSprint7AcceptanceTest {
         navigateToPageByID("menu-product-home");
 
         selectAddUmbrellaFund();
-        String [] umbFundDetails = generateRandomUmbrellaFundsDetails();
+        String  umbFundDetails = generateRandomUmbrellaFundName();
         String lei = generateRandomLEI();
-        fillUmbrellaDetailsNotCountry(umbFundDetails[0], lei);
+        fillUmbrellaDetailsNotCountry(umbFundDetails, lei);
         searchAndSelectTopDropdownXpath("uf_domicile", "Jordan");
         submitUmbrellaFund();
         assertPopupNextFundNo("Fund");
 
         String [] uFundDetails = generateRandomFundsDetails();
         String lei2 = generateRandomLEI();
-        fillOutFundDetailsStep1("yes", umbFundDetails[0]);
+        fillOutFundDetailsStep1("yes", umbFundDetails);
         fillOutFundDetailsStep2(uFundDetails[0], lei2);
 
         assertPopupNextFundNo("Share");
@@ -237,9 +234,9 @@ public class OpenCSDSprint7AcceptanceTest {
     public void AssertPageDataForCentralisationHistoryTG1080() throws InterruptedException, SQLException, IOException {
         WebDriverWait wait = new WebDriverWait(driver, timeoutInSeconds);
 
-        String[] umbFundDetails = generateRandomUmbrellaFundsDetails();
-        String[] uShareDetails = generateRandomFundsDetails();
-        String[] uFundDetails = generateRandomUmbrellaFundsDetails();
+        String umbFundDetails = generateRandomUmbrellaFundName();
+        String[] uShareDetails = generateRandomShareDetails();
+        String uFundDetails = generateRandomUmbrellaFundName();
         String[] uIsin = generateRandomISIN();
         String randomLEI = generateRandomLEI();
 
@@ -248,14 +245,14 @@ public class OpenCSDSprint7AcceptanceTest {
         navigateToDropdown("menu-my-products");
         navigateToPageByID("menu-product-home");
         selectAddUmbrellaFund();
-        fillUmbrellaDetailsNotCountry(umbFundDetails[0], randomLEI);
+        fillUmbrellaDetailsNotCountry(umbFundDetails, randomLEI);
         searchAndSelectTopDropdownXpath("uf_domicile", "Jordan");
         submitUmbrellaFund();
         assertPopupNextFundNo("Fund");
-        fillOutFundDetailsStep1("yes",umbFundDetails[0]);
-        fillOutFundDetailsStep2(uFundDetails[0], randomLEI);
+        fillOutFundDetailsStep1("yes",umbFundDetails);
+        fillOutFundDetailsStep2(uFundDetails, randomLEI);
         assertPopupNextFundNo("Share");
-        createShare(uFundDetails[0], uShareDetails[0], uIsin[0]);
+        createShare(uFundDetails, uShareDetails[0], uIsin[0]);
         navigateToDropdown("menu-am-report-section");
         navigateToPageByID("menu-report-centralisation-select");
 
@@ -265,7 +262,7 @@ public class OpenCSDSprint7AcceptanceTest {
         wait.until(elementToBeClickable(By.cssSelector("i.special:nth-child(3)")));
         driver.findElement(By.cssSelector("i.special:nth-child(3)")).click();
         wait.until(elementToBeClickable(By.cssSelector("input.form-control")));
-        driver.findElement(By.cssSelector("input.form-control")).sendKeys(uFundDetails[0]);
+        driver.findElement(By.cssSelector("input.form-control")).sendKeys(uFundDetails);
 
         wait.until(invisibilityOfElementLocated(By.xpath("//*[@id=\"clr-tab-content-15\"]/ng-select/div/div[3]/ul/li[2]")));
 
@@ -276,12 +273,12 @@ public class OpenCSDSprint7AcceptanceTest {
         String ShareName = driver.findElement(By.xpath("/html/body/app-root/app-basic-layout/div/ng-sidebar-container/div/div/div/main/div/div/app-am-centralization-history/div[2]/clr-tabs/clr-tab/clr-tab-content/form/div/div/div/div/ng-select/div/div[2]/span/span")).getText();
         assertTrue(ShareName.equals(uShareDetails[0]));
         String FundName = driver.findElement(By.xpath("/html/body/app-root/app-basic-layout/div/ng-sidebar-container/div/div/div/main/div/div/app-am-centralization-history/div[2]/clr-tabs/clr-tab/clr-tab-content/div[2]/form/table[1]/tbody/tr/td[1]/div/div")).getText();
-        assertTrue(FundName.equals(uFundDetails[0]));
+        assertTrue(FundName.equals(uFundDetails));
 
         String CCY = driver.findElement(By.xpath("/html/body/app-root/app-basic-layout/div/ng-sidebar-container/div/div/div/main/div/div/app-am-centralization-history/div[2]/clr-tabs/clr-tab/clr-tab-content/div[2]/form/table[1]/tbody/tr/td[3]/div/div")).getText();
         assertTrue(CCY.equals("EUR"));
         String Umbrella = driver.findElement(By.xpath("/html/body/app-root/app-basic-layout/div/ng-sidebar-container/div/div/div/main/div/div/app-am-centralization-history/div[2]/clr-tabs/clr-tab/clr-tab-content/div[2]/form/table[1]/tbody/tr/td[2]/div/div")).getText();
-        assertTrue(Umbrella.equals(umbFundDetails[0]));
+        assertTrue(Umbrella.equals(umbFundDetails));
         driver.findElement(By.xpath("//*[@id=\"export-centralization-btn\"]")).isDisplayed();
         driver.findElement(By.xpath("//*[@id=\"holders-btn-back-list\"]")).isDisplayed();
     }
@@ -290,7 +287,7 @@ public class OpenCSDSprint7AcceptanceTest {
     public void ShareAuditTrailHeaderContainsShareNameTG447() throws Exception {
         WebDriverWait wait = new WebDriverWait(driver, timeoutInSeconds);
 
-        String[] uShareDetails = generateRandomFundsDetails();
+        String[] uShareDetails = generateRandomShareDetails();
         String[] uIsin = generateRandomISIN();
         String[] uFundDetails = generateRandomFundsDetails();
         String randomLEI = generateRandomLEI();
@@ -315,7 +312,7 @@ public class OpenCSDSprint7AcceptanceTest {
         WebDriverWait wait = new WebDriverWait(driver, timeoutInSeconds);
 
         String[] uFundDetails = generateRandomFundsDetails();
-        String[] uShareDetails = generateRandomFundsDetails();
+        String[] uShareDetails = generateRandomShareDetails();
         String[] uIsin = generateRandomISIN();
         String lei = generateRandomLEI();
 
@@ -342,30 +339,5 @@ public class OpenCSDSprint7AcceptanceTest {
         assertTrue(NAVAuditTrail.equals("NAV Audit Trail - " + uShareDetails[0]));
     }
 
-    public static void validateDatabaseInvestorInvited ( int expectedCount, String UInvestorEmail) throws SQLException {
-        conn = DriverManager.getConnection(connectionString, DBUsername, DBPassword);
-        //for the query
-        Statement stmt = conn.createStatement();
-        ResultSet rs = null;
-        try {
-            rs = stmt.executeQuery("select * from setlnet.tblIznInvestorInvitation where email =  " + "\"" + UInvestorEmail + "\"");
-            int rows = 0;
-
-            if (rs.last()) {
-                rows = rs.getRow();
-                // Move to back to the beginning
-
-                rs.beforeFirst();
-            }
-            assertEquals("There should be exactly " + expectedCount + " record(s) matching (ignoring case): ", expectedCount, rows);
-        } catch (Exception e) {
-            e.printStackTrace();
-            fail();
-        } finally {
-            conn.close();
-            stmt.close();
-            rs.close();
-        }
-    }
 
 }

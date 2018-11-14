@@ -77,7 +77,7 @@ public class OpenCSDSprint8AcceptanceTest {
     @Test
     public void shouldUpdateShareCutOffTimeZoneTG1209() throws InterruptedException, SQLException {
         WebDriverWait wait = new WebDriverWait(driver, timeoutInSeconds);
-        String[] uShareDetails = generateRandomFundsDetails();
+        String[] uShareDetails = generateRandomShareDetails();
         String[] uIsin = generateRandomISIN();
         String[] uFundDetails = generateRandomFundsDetails();
         String randomLEI = generateRandomLEI();
@@ -151,6 +151,6 @@ public class OpenCSDSprint8AcceptanceTest {
     public void shouldDisplayRecapTable() throws InterruptedException, IOException {
         loginAndVerifySuccess("am", "alex01");
         navigateToInviteInvestorPage();
-        inviteAnInvestor("recapTableTest1@setl.io", "Jordan", "Miller", "Success!");
+        inviteAnInvestor("recapTableTest1@setl.io", "Jordan", "Miller", "Success!", "Institutional Investor");
     }
 }

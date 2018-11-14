@@ -16,6 +16,7 @@ import java.io.IOException;
 import java.sql.*;
 
 import static SETLAPIHelpers.DatabaseHelper.setDBTwoFAOff;
+import static com.setl.UI.common.SETLUIHelpers.FundsDetailsHelper.generateRandomEmail;
 import static com.setl.UI.common.SETLUIHelpers.LoginAndNavigationHelper.*;
 import static com.setl.UI.common.SETLUIHelpers.MemberDetailsHelper.isElementPresent;
 import static com.setl.UI.common.SETLUIHelpers.SetUp.*;
@@ -97,14 +98,20 @@ public class OpenCSDMyAccountAcceptanceTest {
     }
 
     @Test
+    //@Ignore
     public void shouldCreateUserAndResetPassword() throws IOException, InterruptedException {
+        String[] email = generateRandomEmail();
+
+
         loginAndVerifySuccessAdmin(adminuser, adminuserPassword);
         navigateToDropdown("menu-user-administration");
         navigateToPageByID("menu-user-admin-users");
         String userDetails[] = generateRandomUserDetails();
+        //TODO - this next step fails, I believe because "testops034@setl.io" already exists.  not yet possible to user a bracketed '(randomData)test@seetl.io' address
+        //Requested for brackets - http://si-taiga01.dev.setl.io/project/paul-opencsd-reconfiguration-and-factorisation-project/issue/469
         createUserAndVerifySuccess(userDetails[0], "testops034@setl.io", "asdasd");
         logout();
-        clickForgottenPassword("testops082@setl.io");
+        clickForgottenPassword(email[0]);
         //LoginToOutlook("test@setl.io", "Sphericals1057!");
         //Manually assert that email has been received
     }
@@ -118,8 +125,6 @@ public class OpenCSDMyAccountAcceptanceTest {
         createUserAndVerifySuccess(userDetails[0], userDetails[1], "alex01");
         logout();
         loginAndVerifySuccess(userDetails[0], "alex01");
-        logout();
-        loginAndVerifyFailure(userDetails[1], "alex01");
     }
 
     private void populateMyInfoPage(String firstName, String lastName, String email, String phoneCode, String phoneNumber, boolean save) {

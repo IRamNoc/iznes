@@ -68,7 +68,7 @@ public class OpenCSDNAVAcceptanceTest {
         WebDriverWait wait = new WebDriverWait(driver, timeoutInSeconds);
 
         String[] uFundDetails = generateRandomFundsDetails();
-        String[] uShareDetails = generateRandomFundsDetails();
+        String[] uShareDetails = generateRandomShareDetails();
         String[] uIsin = generateRandomISIN();
         int rowNo = 0;
 
@@ -114,7 +114,7 @@ public class OpenCSDNAVAcceptanceTest {
         WebDriverWait wait = new WebDriverWait(driver, timeoutInSeconds);
 
         String[] uFundDetails = generateRandomFundsDetails();
-        String[] uShareDetails = generateRandomFundsDetails();
+        String[] uShareDetails = generateRandomShareDetails();
         String[] uIsin = generateRandomISIN();
 
         loginAndVerifySuccess("am", "alex01");
@@ -143,7 +143,7 @@ public class OpenCSDNAVAcceptanceTest {
 
     @Test
     public void TG0206_AccessNAVSubModuleCheckDetails() throws InterruptedException, SQLException {
-        String[] uShareDetails = generateRandomFundsDetails();
+        String[] uShareDetails = generateRandomShareDetails();
         String[] uIsin = generateRandomISIN();
         String[] uFundDetails = generateRandomFundsDetails();
         WebDriverWait wait = new WebDriverWait(driver, timeoutInSeconds);
@@ -188,7 +188,7 @@ public class OpenCSDNAVAcceptanceTest {
 
     @Test
     public void TG0207_CheckNavDetailsForNoneValueDataAndSelectDateField() throws InterruptedException, SQLException {
-        String[] uShareDetails = generateRandomFundsDetails();
+        String[] uShareDetails = generateRandomShareDetails();
         String[] uIsin = generateRandomISIN();
         String[] uFundDetails = generateRandomFundsDetails();
         WebDriverWait wait = new WebDriverWait(driver, timeoutInSeconds);
@@ -259,11 +259,6 @@ public class OpenCSDNAVAcceptanceTest {
         searchSharesTable(uShareDetails[0]);
         setSharesNAVandValidate(uShareDetails[0], latestNav);
 
-        loginAndVerifySuccess(AMUsername, AMPassword);
-        navigateToDropdown("menu-my-products");
-        navigateToPageByID("menu-product-home");
-        navigateToNAVPageFromFunds();
-        driver.findElement(By.id("Search-field")).sendKeys(uShareDetails[0]);
         wait.until(visibilityOfElementLocated(By.id("Btn-CancelNAV-0")));
         driver.findElement(By.id("Btn-CancelNAV-0")).click();
         Thread.sleep(1000);
@@ -311,11 +306,6 @@ public class OpenCSDNAVAcceptanceTest {
 
         //DB Check nav is validated
 
-        loginAndVerifySuccess(AMUsername, AMPassword);
-        navigateToDropdown("menu-my-products");
-        navigateToPageByID("menu-product-home");
-        navigateToNAVPageFromFunds();
-        driver.findElement(By.id("Search-field")).sendKeys(uShareDetails[0]);
         wait.until(visibilityOfElementLocated(By.id("Btn-CancelNAV-0")));
         driver.findElement(By.id("Btn-CancelNAV-0")).click();
         Thread.sleep(1000);
@@ -348,28 +338,20 @@ public class OpenCSDNAVAcceptanceTest {
 
         createShare(uFundDetails[0], uShareDetails[0], uIsin[0]);
         setSharesNAVandValidate(uShareDetails[0], latestNav);
-
-        loginAndVerifySuccess(AMUsername, AMPassword);
-        navigateToDropdown("menu-my-products");
-        navigateToPageByID("menu-product-home");
-        navigateToNAVPageFromFunds();
-        driver.findElement(By.id("Search-field")).sendKeys(uShareDetails[0]);
-
         Thread.sleep(1000);
-
         String NAVPre = driver.findElement(By.id("NAV-Val-Value-0")).getText();
         assertTrue(NAVPre.equals(latestNav + ".00"));
-
         wait.until(visibilityOfElementLocated(By.id("Btn-CancelNAV-0")));
         driver.findElement(By.id("Btn-CancelNAV-0")).click();
         wait.until(visibilityOfElementLocated(By.className("jaspero__dialog-title")));
         driver.findElement(By.xpath("//*[@id=\"iznes\"]/app-root/jaspero-confirmations/jaspero-confirmation/div[2]/div[4]/button[2]")).click();
-
-        //String NAVPost = driver.findElement(By.id("NAV-Val-Value-0")).getText();
-        //assertTrue(NAVPost.equals("N/A"));
+        Thread.sleep(1000);
+        String NAVPost = driver.findElement(By.id("NAV-Val-Value-0")).getText();
+        assertTrue(NAVPost.equals("N/A"));
     }
 
     @Test
+    @Ignore
     public void TG3127_ShouldNotifyEachInvestorWithAuthorisationOnTheShare()throws InterruptedException, SQLException {
         System.out.println("cannot automated reliably enough yet");
     }
@@ -399,12 +381,6 @@ public class OpenCSDNAVAcceptanceTest {
         searchSharesTable(uShareDetails[0]);
 
         setSharesNAVandValidate(uShareDetails[0], latestNav);
-
-        loginAndVerifySuccess(AMUsername, AMPassword);
-        navigateToDropdown("menu-my-products");
-        navigateToPageByID("menu-product-home");
-        navigateToNAVPageFromFunds();
-        driver.findElement(By.id("Search-field")).sendKeys(uShareDetails[0]);
 
         Thread.sleep(1000);
 

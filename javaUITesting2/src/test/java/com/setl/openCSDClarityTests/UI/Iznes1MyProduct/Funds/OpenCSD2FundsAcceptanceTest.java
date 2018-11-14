@@ -1,10 +1,8 @@
 package com.setl.openCSDClarityTests.UI.Iznes1MyProduct.Funds;
 
-import com.setl.UI.common.SETLUtils.Repeat;
 import com.setl.UI.common.SETLUtils.RepeatRule;
 import com.setl.UI.common.SETLUtils.ScreenshotRule;
 import com.setl.UI.common.SETLUtils.TestMethodPrinterRule;
-import com.sun.scenario.effect.impl.sw.sse.SSEBlend_SRC_OUTPeer;
 import custom.junit.runners.OrderedJUnit4ClassRunner;
 import org.junit.Before;
 import org.junit.Ignore;
@@ -21,6 +19,7 @@ import java.io.IOException;
 import java.sql.*;
 
 import static SETLAPIHelpers.DatabaseHelper.setDBTwoFAOff;
+import static SETLAPIHelpers.DatabaseHelper.validateDatabaseFundExists;
 import static com.setl.UI.common.SETLUIHelpers.FundsDetailsHelper.*;
 import static com.setl.UI.common.SETLUIHelpers.FundsDetailsHelper.submitUmbrellaFund;
 import static com.setl.UI.common.SETLUIHelpers.MemberDetailsHelper.scrollElementIntoViewByClassName;
@@ -29,7 +28,6 @@ import static com.setl.UI.common.SETLUIHelpers.MemberDetailsHelper.scrollElement
 import static com.setl.UI.common.SETLUIHelpers.SetUp.*;
 import static com.setl.UI.common.SETLUIHelpers.UmbrellaFundFundSharesDetailsHelper.assertPopupNextFundNo;
 import static com.setl.UI.common.SETLUIHelpers.UmbrellaFundFundSharesDetailsHelper.searchFundsTable;
-import static com.setl.UI.common.SETLUIHelpers.UmbrellaFundFundSharesDetailsHelper.searchSharesTable;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertTrue;
 import static org.junit.Assert.fail;
@@ -51,13 +49,6 @@ public class OpenCSD2FundsAcceptanceTest {
 
     static Connection conn = null;
 
-    public static String connectionString = "jdbc:mysql://localhost:9998/setlnet?nullNamePatternMatchesAll=true";
-
-    // Defines username and password to connect to database server.
-    static String DBUsername = "root";
-    static String DBPassword = "nahafusi61hucupoju78";
-
-
     @Before
     public void setUp() throws Exception {
         testSetUp();
@@ -68,7 +59,7 @@ public class OpenCSD2FundsAcceptanceTest {
     @Test
     public void shouldCreateFundAndAssertDetailsInTableAreUpdated() throws InterruptedException, SQLException, IOException {
 
-        String[] umbFundDetails = generateRandomUmbrellaFundsDetails();
+        String umbFundDetails = generateRandomUmbrellaFundName();
         String[] uFundDetails = generateRandomFundsDetails();
         String[] updateChars = generateRandomDetails();
         String randomLei = generateRandomLEI();
@@ -81,17 +72,17 @@ public class OpenCSD2FundsAcceptanceTest {
         navigateToPageByID("menu-product-home");
 
         selectAddUmbrellaFund();
-        fillUmbrellaDetailsNotCountry(umbFundDetails[0], randomLei);
+        fillUmbrellaDetailsNotCountry(umbFundDetails, randomLei);
         searchAndSelectTopDropdownXpath("uf_domicile", "Jordan");
         submitUmbrellaFund();
         assertPopupNextFundNo("Fund");
 
-        fillOutFundDetailsStep1("yes", umbFundDetails[0]);
+        fillOutFundDetailsStep1("yes", umbFundDetails);
         fillOutFundDetailsStep2(uFundDetails[0], Lei);
 
         assertPopupNextFundNo("Share");
         searchFundsTable(uFundDetails[0]);
-        getFundTableRow(0, uFundDetails[0], Lei, "EUR", "Management Company", "Afghanistan", "Contractual Fund", umbFundDetails[0]);
+        getFundTableRow(0, uFundDetails[0], Lei, "EUR", "Management Company", "Afghanistan", "Contractual Fund", umbFundDetails);
 
         WebDriverWait wait = new WebDriverWait(driver, timeoutInSeconds);
         scrollElementIntoViewByXpath("//*[@id=\"iznes\"]/app-root/app-basic-layout/div/ng-sidebar-container/div/div/div/main/div[1]/div/app-ofi-am-product-home/div[5]/div[2]/div/clr-datagrid/div/div/div/clr-dg-table-wrapper/div[1]/div/clr-dg-column[4]/div/button");
@@ -123,7 +114,7 @@ public class OpenCSD2FundsAcceptanceTest {
         searchFundsTable(uFundDetails[0]);
 
         //Assert that table displays the fund details with random chars at the end.
-        getFundTableRow(0, uFundDetails[0] + updateChars[0], updatedLei, "USD", "Management Company", "Albania", "Unit Trust", umbFundDetails[0]);
+        getFundTableRow(0, uFundDetails[0] + updateChars[0], updatedLei, "USD", "Management Company", "Albania", "Unit Trust", umbFundDetails);
         validateDatabaseFundExists(0, uFundDetails[0]);
         validateDatabaseFundExists(1, uFundDetails[0] + updateChars[0]);
 
@@ -238,9 +229,9 @@ public class OpenCSD2FundsAcceptanceTest {
     }
 
     @Test
-    public void shouldNotDisplayUmbrellaFundWhenNoUmbrellaFundIsSelectedTG445() throws InterruptedException, IOException {
+    public void shouldShowSelectedUmbrellaFundInfoInFundCreationTG445() throws InterruptedException, IOException {
         WebDriverWait wait = new WebDriverWait(driver, timeoutInSeconds);
-        String[] uFundDetails = generateRandomUmbrellaFundsDetails();
+        String uFundDetails = generateRandomUmbrellaFundName();
         String randomLei = generateRandomLEI();
 
         loginAndVerifySuccess("am", "alex01");
@@ -250,7 +241,7 @@ public class OpenCSD2FundsAcceptanceTest {
 
 
         selectAddUmbrellaFund();
-        fillCertainUmbrellaDetails(uFundDetails[0] + "TG445", randomLei, "TestOffice1661", "TestAddress1661", "Management Company", "2019-10-20", "Custodian Bank 1", "Fund Admin 1");
+        fillCertainUmbrellaDetails(uFundDetails + "TG445", randomLei, "TestOffice1661", "TestAddress1661", "Management Company", "2019-10-20", "Custodian Bank 1", "Fund Admin 1");
         searchAndSelectTopDropdownXpath("uf_domicile", "Jordan");
         selectTopDropdown("uf_custodian");
         selectTopDropdown("uf_fundAdministrator");
@@ -265,13 +256,14 @@ public class OpenCSD2FundsAcceptanceTest {
         wait.until(visibilityOfElementLocated(By.id("new-fund-btn")));
         wait.until(elementToBeClickable(By.id("new-fund-btn")));
         driver.findElement(By.id("new-fund-btn")).click();
-        searchAndSelectTopDropdown("fund-umbrellaControl-select-1", uFundDetails[0]);
+        searchAndSelectTopDropdown("fund-umbrellaControl-select-1", uFundDetails);
         wait.until(visibilityOfElementLocated(By.id("fund-submitUmbrella-btn")));
         wait.until(elementToBeClickable(By.id("fund-submitUmbrella-btn")));
         driver.findElement(By.id("fund-submitUmbrella-btn")).click();
-        String fundNameText = (driver.findElement(By.xpath("//*[@id=\"clr-tab-content-2\"]/form/div[1]/div[1]/div/a/h2")).getText());
-        String fundName = split(fundNameText, " ");
-        assertTrue(fundName.equals(uFundDetails[0] + "TG445"));
+
+        String umbrellaFundHeader = (driver.findElement(By.xpath("//*[@id=\"clr-tab-content-2\"]/form/div[1]/div[1]/div/a/h2")).getText());
+
+        assertTrue(umbrellaFundHeader.equals("Umbrella Fund: " + uFundDetails + "TG445"));
 
         driver.findElement(By.cssSelector(".fundForm > div:nth-child(1) > div:nth-child(1) > div:nth-child(1) > a:nth-child(1) > h2:nth-child(2)")).click();
         wait.until(visibilityOfElementLocated(By.id("umbrellaEditLei")));
@@ -287,14 +279,14 @@ public class OpenCSD2FundsAcceptanceTest {
         wait.until(visibilityOfElementLocated(By.id("payingAgent")));
 
         String UmbNameActual = driver.findElement(By.id("uf_umbrellaFundName")).getAttribute("value");
-        assertTrue(UmbNameActual.equals(uFundDetails[0] + "TG445"));
+        assertTrue(UmbNameActual.equals(uFundDetails + "TG445"));
 
         String regOfficeActual = driver.findElement(By.id("uf_registerOfficeAddress")).getAttribute("value");
         assertTrue(regOfficeActual.equals("TestAddress1661"));
     }
 
     @Test
-    public void shouldShowSelectedUmbrellaFundInfoInFundCreationTG445() throws InterruptedException, IOException {
+    public void shouldNotDisplayUmbrellaFundWhenNoUmbrellaFundIsSelectedTG445() throws InterruptedException, IOException {
         loginAndVerifySuccess("am", "alex01");
         waitForHomePageToLoad();
         navigateToDropdown("menu-my-products");
@@ -477,80 +469,80 @@ public class OpenCSD2FundsAcceptanceTest {
         return value.substring(adjustedPosA);
     }
 
-    public static void validateDatabaseFundExists(int expectedCount, String UFundName) throws SQLException {
-        conn = DriverManager.getConnection(connectionString, DBUsername, DBPassword);
-        //for the query
-        Statement stmt = conn.createStatement();
-        ResultSet rs = null;
-        try {
-            rs = stmt.executeQuery("select * from setlnet.tblIznFund where fundName =  " + "\"" + UFundName + "\"");
-            int rows = 0;
-
-            if (rs.last()) {
-                rows = rs.getRow();
-                // Move to back to the beginning
-
-                rs.beforeFirst();
-            }
-            assertEquals("There should be exactly " + expectedCount + " record(s) matching (ignoring case): ", expectedCount, rows);
-        } catch (Exception e) {
-            e.printStackTrace();
-            fail();
-        } finally {
-            conn.close();
-            stmt.close();
-            rs.close();
-        }
-    }
-
-    public static void validateDatabaseShareExists(int expectedCount, String UShareName) throws SQLException {
-        conn = DriverManager.getConnection(connectionString, DBUsername, DBPassword);
-        //for the query
-        Statement stmt = conn.createStatement();
-        ResultSet rs = null;
-        try {
-            rs = stmt.executeQuery("select * from setlnet.tblIznFundShare where fundShareName =  " + "\"" + UShareName + "\"");
-            int rows = 0;
-
-            if (rs.last()) {
-                rows = rs.getRow();
-                // Move to back to the beginning
-
-                rs.beforeFirst();
-            }
-            assertEquals("There should be exactly " + expectedCount + " record(s) matching (ignoring case): ", expectedCount, rows);
-        } catch (Exception e) {
-            e.printStackTrace();
-            fail();
-        } finally {
-            conn.close();
-            stmt.close();
-            rs.close();
-        }
-    }
-
-    public static String getInvestorInvitationToken(String investorEmail) throws SQLException {
-        conn = DriverManager.getConnection(connectionString, DBUsername, DBPassword);
-        Statement stmt = conn.createStatement();
-        ResultSet rs = null;
-        String invEmaila = "";
-        try {
-            String getInvEmail = "select invitationToken from setlnet.tblIznInvestorInvitation where email = " + "\"" + investorEmail + "\"";
-            rs = stmt.executeQuery(getInvEmail);
-            rs.last();
-            invEmaila = rs.getString("invitationToken");
-
-
-        } catch (Exception e) {
-            e.printStackTrace();
-            fail();
-        } finally {
-            conn.close();
-            stmt.close();
-            rs.close();
-        }
-        return invEmaila;
-    }
+//    public static void validateDatabaseFundExists(int expectedCount, String UFundName) throws SQLException {
+//        conn = DriverManager.getConnection(connectionString, DBUsername, DBPassword);
+//        //for the query
+//        Statement stmt = conn.createStatement();
+//        ResultSet rs = null;
+//        try {
+//            rs = stmt.executeQuery("select * from setlnet.tblIznFund where fundName =  " + "\"" + UFundName + "\"");
+//            int rows = 0;
+//
+//            if (rs.last()) {
+//                rows = rs.getRow();
+//                // Move to back to the beginning
+//
+//                rs.beforeFirst();
+//            }
+//            assertEquals("There should be exactly " + expectedCount + " record(s) matching (ignoring case): ", expectedCount, rows);
+//        } catch (Exception e) {
+//            e.printStackTrace();
+//            fail();
+//        } finally {
+//            conn.close();
+//            stmt.close();
+//            rs.close();
+//        }
+//    }
+//
+//    public static void validateDatabaseShareExists(int expectedCount, String UShareName) throws SQLException {
+//        conn = DriverManager.getConnection(connectionString, DBUsername, DBPassword);
+//        //for the query
+//        Statement stmt = conn.createStatement();
+//        ResultSet rs = null;
+//        try {
+//            rs = stmt.executeQuery("select * from setlnet.tblIznFundShare where fundShareName =  " + "\"" + UShareName + "\"");
+//            int rows = 0;
+//
+//            if (rs.last()) {
+//                rows = rs.getRow();
+//                // Move to back to the beginning
+//
+//                rs.beforeFirst();
+//            }
+//            assertEquals("There should be exactly " + expectedCount + " record(s) matching (ignoring case): ", expectedCount, rows);
+//        } catch (Exception e) {
+//            e.printStackTrace();
+//            fail();
+//        } finally {
+//            conn.close();
+//            stmt.close();
+//            rs.close();
+//        }
+//    }
+//
+//    public static String getInvestorInvitationToken(String investorEmail) throws SQLException {
+//        conn = DriverManager.getConnection(connectionString, DBUsername, DBPassword);
+//        Statement stmt = conn.createStatement();
+//        ResultSet rs = null;
+//        String invEmaila = "";
+//        try {
+//            String getInvEmail = "select invitationToken from setlnet.tblIznInvestorInvitation where email = " + "\"" + investorEmail + "\"";
+//            rs = stmt.executeQuery(getInvEmail);
+//            rs.last();
+//            invEmaila = rs.getString("invitationToken");
+//
+//
+//        } catch (Exception e) {
+//            e.printStackTrace();
+//            fail();
+//        } finally {
+//            conn.close();
+//            stmt.close();
+//            rs.close();
+//        }
+//        return invEmaila;
+//    }
 
     @Test
     public void shouldAssertThatAFundsTabIsPresent(){

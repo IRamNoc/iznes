@@ -1,6 +1,7 @@
 package com.setl.UI.common.SETLUIHelpers;
 import org.junit.Test;
 import org.openqa.selenium.By;
+import org.openqa.selenium.Keys;
 import org.openqa.selenium.WebElement;
 import org.openqa.selenium.support.ui.WebDriverWait;
 
@@ -224,28 +225,32 @@ public class AdministrationModuleHelper {
 
     public static void searchTeam(String ref, String teamName, String teamDescription, String teamStatus) throws InterruptedException {
         final WebDriverWait wait = new WebDriverWait(driver, timeoutInSeconds);
-        wait.until(visibilityOfElementLocated(By.xpath("/html/body/app-root/app-basic-layout/div/ng-sidebar-container/div/div/div/main/div/div/app-core-admin-teams-list/clr-tabs/clr-tab/clr-tab-content/div/div[3]/a")));
-        if (driver.findElement(By.xpath("/html/body/app-root/app-basic-layout/div/ng-sidebar-container/div/div/div/main/div/div/app-core-admin-teams-list/clr-tabs/clr-tab/clr-tab-content/clr-datagrid/div/div/div/clr-dg-table-wrapper/div[1]/div/clr-dg-column[2]/div/clr-dg-string-filter/clr-dg-filter/button")).isDisplayed())
-        {
-            driver.findElement(By.xpath("/html/body/app-root/app-basic-layout/div/ng-sidebar-container/div/div/div/main/div/div/app-core-admin-teams-list/clr-tabs/clr-tab/clr-tab-content/clr-datagrid/div/div/div/clr-dg-table-wrapper/div[1]/div/clr-dg-column[2]/div/clr-dg-string-filter/clr-dg-filter/button")).click();
-        } else {
-            driver.findElement(By.xpath("/html/body/app-root/app-basic-layout/div/ng-sidebar-container/div/div/div/main/div[1]/div/app-core-admin-teams-list/clr-tabs/clr-tab/clr-tab-content/clr-datagrid/div/div/div/clr-dg-table-wrapper/div[1]/div/clr-dg-column[2]/div/clr-dg-string-filter/clr-dg-filter/button")).click();
+        //make sure we're on the page
+        wait.until(visibilityOfElementLocated(By.xpath("//button[@aria-selected='true'][contains(.,'List')]")));
 
-        }
-        if (driver.findElement(By.xpath("/html/body/app-root/app-basic-layout/div/ng-sidebar-container/div/div/div/main/div/div/app-core-admin-teams-list/clr-tabs/clr-tab/clr-tab-content/clr-datagrid/div/div/div/clr-dg-table-wrapper/div[1]/div/clr-dg-column[2]/div/clr-dg-string-filter/clr-dg-filter/div/input")).isDisplayed())
-        {
-            driver.findElement(By.xpath("/html/body/app-root/app-basic-layout/div/ng-sidebar-container/div/div/div/main/div/div/app-core-admin-teams-list/clr-tabs/clr-tab/clr-tab-content/clr-datagrid/div/div/div/clr-dg-table-wrapper/div[1]/div/clr-dg-column[2]/div/clr-dg-string-filter/clr-dg-filter/div/input")).sendKeys(teamName);
-        } else {
-            driver.findElement(By.xpath("/html/body/app-root/app-basic-layout/div/ng-sidebar-container/div/div/div/main/div[1]/div/app-core-admin-teams-list/clr-tabs/clr-tab/clr-tab-content/clr-datagrid/div/div/div/clr-dg-table-wrapper/div[1]/div/clr-dg-column[2]/div/clr-dg-string-filter/clr-dg-filter/div/input")).sendKeys(teamName);
-        }
+        //List<WebElement> columns = driver.findElements(By.className("datagrid-column-flex"));
+
+        //Get the magnifying glass icons
+        WebElement referenceColumnFilter    = driver.findElement(By.xpath("(//button[@class='datagrid-filter-toggle'])[1]"));
+        WebElement teamNameColumnFilter     = driver.findElement(By.xpath("(//button[@class='datagrid-filter-toggle'])[2]"));
+        WebElement descriptionColumnFilter  = driver.findElement(By.xpath("(//button[@class='datagrid-filter-toggle'])[3]"));
+
+        //search for teamName
+        teamNameColumnFilter.click();
+        Thread.sleep(500);
+        teamNameColumnFilter.findElement(By.xpath("//input[contains(@name,'search')]")).sendKeys(teamName + Keys.ENTER);
+
         String columnRef = driver.findElement(By.id("accountAdminTeamCellRef0")).getText();
-        assertTrue(columnRef.equals(ref));
+        assert columnRef.equals(ref) : String.format("Reference column text is incorrect, expected  %s but was %s", ref, columnRef);
+
         String columnName = driver.findElement(By.id("accountAdminTeamCellName0")).getText();
-        assertTrue(columnName.equals(teamName));
+        assert columnName.equals(teamName) : String.format("Team name text is incorrect, expected  %s but was %s", teamName, columnName);
+
         String columnDescription = driver.findElement(By.id("accountAdminTeamCellDescription0")).getText();
-        assertTrue(columnDescription.equals(teamDescription));
-        String status = driver.findElement(By.xpath("/html/body/app-root/app-basic-layout/div/ng-sidebar-container/div/div/div/main/div/div/app-core-admin-teams-list/clr-tabs/clr-tab/clr-tab-content/clr-datagrid/div/div/div/clr-dg-table-wrapper/div[2]/clr-dg-row/div/clr-dg-cell[4]/span/span/span")).getText();
-        assertTrue(status.equals(teamStatus));
+        assert columnDescription.equals(teamDescription) : String.format("Team description is incorrect, expected  %s but was %s", teamDescription, columnDescription);
+
+        String status = driver.findElement(By.xpath("(//span[contains(concat(' ',normalize-space(@class),' '),' label ')])[1]")).getText();
+        assert status.equals(teamStatus) : String.format("Team status is incorrect, expected  %s but was %s", teamStatus, status);
     }
     public static void fillInUserDetails(String Email, String firstName, String lastName, String Reference, String phoneNumber) {
         driver.findElement(By.id("emailAddress")).sendKeys(Email);

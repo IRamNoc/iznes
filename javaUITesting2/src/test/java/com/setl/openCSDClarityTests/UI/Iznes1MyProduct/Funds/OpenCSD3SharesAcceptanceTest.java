@@ -18,6 +18,7 @@ import java.sql.SQLException;
 import static SETLAPIHelpers.DatabaseHelper.setDBToProdOff;
 import static SETLAPIHelpers.DatabaseHelper.setDBToProdOn;
 import static SETLAPIHelpers.DatabaseHelper.setDBTwoFAOff;
+import static SETLAPIHelpers.DatabaseHelper.*;
 import static com.setl.UI.common.SETLUIHelpers.FundsDetailsHelper.*;
 import static com.setl.UI.common.SETLUIHelpers.MemberDetailsHelper.scrollElementIntoViewById;
 import static com.setl.UI.common.SETLUIHelpers.MemberDetailsHelper.scrollElementIntoViewByXpath;
@@ -25,7 +26,6 @@ import static com.setl.UI.common.SETLUIHelpers.PageHelper.waitForNewShareButton;
 import static com.setl.UI.common.SETLUIHelpers.SetUp.*;
 
 import static com.setl.UI.common.SETLUIHelpers.UmbrellaFundFundSharesDetailsHelper.*;
-import static com.setl.openCSDClarityTests.UI.Iznes1MyProduct.Funds.OpenCSD2FundsAcceptanceTest.validateDatabaseShareExists;
 import static org.junit.Assert.assertTrue;
 import static org.junit.Assert.fail;
 import static org.openqa.selenium.support.ui.ExpectedConditions.elementToBeClickable;
@@ -66,7 +66,7 @@ public class OpenCSD3SharesAcceptanceTest {
 
     @Test
     public void shouldCreateShareAndAssertTableDataIsCorrectAndDatabaseCheck() throws IOException, InterruptedException, SQLException {
-        String[] uShareDetails = generateRandomFundsDetails();
+        String[] uShareDetails = generateRandomShareDetails();
         String[] uIsin = generateRandomISIN();
         String[] uFundDetails = generateRandomFundsDetails();
         String randomLEI = generateRandomLEI();
@@ -90,7 +90,7 @@ public class OpenCSD3SharesAcceptanceTest {
 
     @Test
     public void shouldCreateShareAndSelectYesOnPopup() throws IOException, InterruptedException, SQLException {
-        String[] uShareDetails = generateRandomFundsDetails();
+        String[] uShareDetails = generateRandomShareDetails();
         String[] uIsin = generateRandomISIN();
         String[] uFundDetails = generateRandomFundsDetails();
         String randomLEI = generateRandomLEI();
