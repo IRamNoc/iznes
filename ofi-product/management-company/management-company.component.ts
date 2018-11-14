@@ -158,7 +158,12 @@ export class OfiManagementCompanyComponent implements OnInit, OnDestroy {
     }
 
     public getCountryName(countryAbbreviation: string): string {
-        return _.find(this.countries, { id: countryAbbreviation }).text;
+        const thisCountryData = _.find(this.countries, { id: countryAbbreviation });
+
+        if (thisCountryData){
+            return thisCountryData.text;
+        }
+        return '';
     }
 
     ngOnDestroy() {
