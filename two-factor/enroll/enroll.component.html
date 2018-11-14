@@ -14,7 +14,7 @@
                 <p *ngIf="useTwoFactor">{{ 'Two Factor Authentication is enabled.' | translate }}</p>
                 <div class="row">
                     <button *ngIf="useTwoFactor" id="disable" class="btn btn-primary" (click)="setTwoFactorAuthentication(false)">
-                        <i class="fa fa-save"></i> {{ 'Disable' | translate }}</span>
+                        <i class="fa fa-save"></i> {{ 'Disable' | translate }}
                     </button>
                 </div>
             </div>

@@ -300,7 +300,7 @@
                                 {{ 'Password must be new' | translate }}
                             </div>
                             <div *ngIf="hasError(resetPasswordForm.get('passwordConfirm'), 'mismatch') && !hasError(resetPasswordForm.get('password'), 'rules') && !hasError(resetPasswordForm.get('password'), 'length') && !hasError(resetPasswordForm.get('password'), 'same')" class="field-error force-display-error">
-                                {{ Passwords do not match' | translate }}
+                                {{ 'Passwords do not match' | translate }}
                             </div>
                             <span class="toggle-password" (click)="toggleShowPasswords('reset1')" [title]="translate.translate('Show/hide passwords')">
                                 <i class="fa" [class.fa-eye-slash]="!showPasswords.reset1" [class.fa-eye]="showPasswords.reset1" aria-hidden="true"></i>
