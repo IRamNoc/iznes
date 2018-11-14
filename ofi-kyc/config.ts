@@ -34,20 +34,5 @@ export const kycEnums = {
             label: 'Awaiting Information',
             type: 'warning',
         },
-    },
-    documents: {
-        kycproofofapprovaldoc: 'kycproofofapprovaldoc',
-        kycisincodedoc: 'kycisincodedoc',
-        kycwolfsbergdoc: 'kycwolfsbergdoc',
-        kycstatuscertifieddoc: 'kycstatuscertifieddoc',
-        kyckbisdoc: 'kyckbisdoc',
-        kycannualreportdoc: 'kycannualreportdoc',
-        kycidorpassportdoc: 'kycidorpassportdoc',
-        kyclistshareholdersdoc: 'kyclistshareholdersdoc',
-        kyclistdirectorsdoc: 'kyclistdirectorsdoc',
-        kyclistauthoriseddoc: 'kyclistauthoriseddoc',
-        kycbeneficialownersdoc: 'kycbeneficialownersdoc',
-        kyctaxcertificationdoc: 'kyctaxcertificationdoc',
-        kycw8benefatcadoc: 'kycw8benefatcadoc',
-    },
+    }
 };

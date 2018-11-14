@@ -86,7 +86,7 @@ export class DocumentsService {
     }
 
     getValues(formValue) {
-        let merged = merge(,
+        let merged = merge(
             {},
             getValue(formValue, 'common'),
             getValue(formValue, 'listed', {}),

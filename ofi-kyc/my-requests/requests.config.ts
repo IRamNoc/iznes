@@ -1300,7 +1300,7 @@ export const documentTypesList = [
     },
     {
         id: 'kycw8benefatcadoc',
-        text: 'Form W-8BEN-E (FACTA) if available',
+        text: 'Form W-8BEN-E (FACTA)',
     },
     {
         id: 'kycisincodedoc',
@@ -1308,7 +1308,7 @@ export const documentTypesList = [
     },
     {
         id: 'kycevidencefloatable',
-        text: 'Evidence of stocklisting and confirmation that 75% of the company\\\'s shares are floatable and tradable on the market',
+        text: 'Evidence of stocklisting and confirmation that 75% of the company\'s shares are floatable and tradable on the market',
     },
     {
         id: 'kycproofofapprovaldoc',
