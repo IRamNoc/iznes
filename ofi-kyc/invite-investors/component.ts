@@ -104,7 +104,7 @@ export class OfiInviteInvestorsComponent implements OnInit, OnDestroy {
         });
 
         this.panel = {
-            title: this.translate.translate('Invites Recap'),
+            title: this.translate.translate('Invites Recap') || 'Invites Recap',
             open: true
         };
 

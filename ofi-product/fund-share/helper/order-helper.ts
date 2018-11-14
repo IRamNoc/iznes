@@ -23,9 +23,9 @@ import {
     ArrangementActionType,
     ConditionType,
 
-// ** please don't remove this below commented import please,
-// as i use it for building the compiled version
-// } from '../../../../utils/services/blockchain-contract/model';
+    // ** please don't remove this below commented import please,
+    // as i use it for building the compiled version
+    // } from '../../../../utils/services/blockchain-contract/model';
 } from '@setl/utils/services/blockchain-contract/model';
 
 // import { fixToDecimal } from '../../../../utils/helper/common/math-helper';
@@ -55,6 +55,7 @@ import {
     orderTypeToString,
     OrderByNumber,
     InvestorBalances,
+    ShareRegistrationCertificateEmailPayload,
 } from './models';
 
 const AuthoriseRef = 'Confirm payment sent';
@@ -266,7 +267,7 @@ export class OrderHelper {
         );
     }
 
-    static buildOrderSendSharePdfRequestBody(order: UpdateOrderResponse, holding: number) {
+    static buildOrderSendSharePdfRequestBody(order: ShareRegistrationCertificateEmailPayload, holding: number) {
         const decimalPlaces = 5;
         const orderReference = pad(order.orderID, 11, '0');
         const orderType = Number(order.orderType);
@@ -281,6 +282,9 @@ export class OrderHelper {
         const generalBody = subject;
 
         const todayStr = moment().utc().format('YYYY-MM-DD');
+        const amCompanyShareCapital = order.amCompanyShareCapital
+            .toString()
+            .replace(/\B(?=(\d{3})+(?!\d))/g, ' ');
 
         const actionJson = {
             type: 'sendPdf',
@@ -298,6 +302,19 @@ export class OrderHelper {
                     clientReference: order.clientReference,
                     date: todayStr,
                     numberOfShares: toNormalScale(Number(holding), 5),
+                    amCompanyLogo: order.amCompanyLogo,
+                    amCompanyName: order.amCompanyName,
+                    amCompanyLegalForm: order.amCompanyLegalForm,
+                    amCompanyShareCapital,
+                    amCompanyAddressLine1: order.amCompanyAddressLine1,
+                    amCompanyAddressLine2: order.amCompanyAddressLine2,
+                    amCompanyZipcode: order.amCompanyZipcode,
+                    amCompanyCity: order.amCompanyCity,
+                    amCompanyCountry: order.amCompanyCountry,
+                    amCompanyRcsMatriculation: order.amCompanyRcsMatriculation,
+                    amCompanyWebsiteUrl: order.amCompanyWebsiteUrl,
+                    amCompanyPhoneNumber: order.amCompanyPhoneNumber,
+                    amCompanySignature: order.amCompanySignature,
                 },
             },
         };
@@ -310,8 +327,15 @@ export class OrderHelper {
         );
     }
 
-    static buildSendMessage(subject: string, mailGeneralContent: string, mailActionJson: any, senderWalletId: number,
-                            senderPub: string, recipientWalletAddresses: string[], hasAction: boolean) {
+    static buildSendMessage(
+        subject: string,
+        mailGeneralContent: string,
+        mailActionJson: any,
+        senderWalletId: number,
+        senderPub: string,
+        recipientWalletAddresses: string[],
+        hasAction: boolean,
+    ) {
 
         const mailBody = JSON.stringify({
             general: Base64.encode(mailGeneralContent),
@@ -373,7 +397,7 @@ export class OrderHelper {
 
         // As all the redemption encumbrance, would start with the order type 4 (hopefully), so we just get all the
         // encumbrance that with reference start with 4.
-        const redemptionEncuArr = encumbrancesArr.filter( encum => get(encum, 'reference', '')[0] === '4');
+        const redemptionEncuArr = encumbrancesArr.filter(encum => get(encum, 'reference', '')[0] === '4');
 
         // return the sum
         return sumBy(redemptionEncuArr, 'amount');
@@ -445,7 +469,7 @@ export class OrderHelper {
      * @return {boolean}
      */
     static isOnlyActiveRedeem(totalRedemptionEncumber: number): boolean {
-       return Number(totalRedemptionEncumber) === 0;
+        return Number(totalRedemptionEncumber) === 0;
     }
 
     /**
@@ -475,7 +499,7 @@ export class OrderHelper {
      * @return {VerifyResponse}
      *
      */
-    static isRedeemOver80Percent(orderValue: number, totalBalance: number, totalEncumber: number, totalRedemptionEncumber, price: number): VerifyResponse  {
+    static isRedeemOver80Percent(orderValue: number, totalBalance: number, totalEncumber: number, totalRedemptionEncumber, price: number): VerifyResponse {
         // we have two scenarios to check:
         // 1. we don't have any active redemption order, so we just check the order value is <= 80% of total free holding.
         // 2. we got acitve redemption order(s):
@@ -493,21 +517,21 @@ export class OrderHelper {
         if (OrderHelper.isOnlyActiveRedeem(totalRedemptionEncumber)) {
 
             // multiply by price because we look at the money value
-           if ( orderValue <= fixToDecimal(amount80Percent * price / NumberMultiplier, 0, 'floor')){
-               return {
-                   orderValid: true,
-               };
-           } else {
-               return {
-                   orderValid: false,
-                   errorMessage: 'Order value over 80%, try to redeem by quantity',
-               };
-           }
+            if (orderValue <= fixToDecimal(amount80Percent * price / NumberMultiplier, 0, 'floor')) {
+                return {
+                    orderValid: true,
+                };
+            } else {
+                return {
+                    orderValid: false,
+                    errorMessage: 'Order value over 80%, try to redeem by quantity',
+                };
+            }
         } else {
             // the amount remain from the 80%
             // multiply by price because we look at the money value
-           const remaingFrom80Percent = amount80Percent - totalRedemptionEncumber;
-            if ( orderValue <= fixToDecimal(remaingFrom80Percent * price / NumberMultiplier, 0, 'floor' )) {
+            const remaingFrom80Percent = amount80Percent - totalRedemptionEncumber;
+            if (orderValue <= fixToDecimal(remaingFrom80Percent * price / NumberMultiplier, 0, 'floor')) {
                 return {
                     orderValid: true,
                 };
@@ -658,9 +682,9 @@ export class OrderHelper {
         try {
             const [fakeCutoffStr, fakeValuationStr, fakeSettelmentStr] = this.orderRequest.datevalue.split(';');
 
-            const validFakeCutoffStr = moment.utc(fakeCutoffStr, 'YYYY-MM-DD HH:mm')._isValid;
-            const validFakeValuationStr = moment.utc(fakeValuationStr, 'YYYY-MM-DD HH:mm')._isValid;
-            const validFakeSettelmentStr = moment.utc(fakeSettelmentStr, 'YYYY-MM-DD HH:mm')._isValid;
+            const validFakeCutoffStr = moment.utc(fakeCutoffStr, 'YYYY-MM-DD HH:mm').isValid();
+            const validFakeValuationStr = moment.utc(fakeValuationStr, 'YYYY-MM-DD HH:mm').isValid();
+            const validFakeSettelmentStr = moment.utc(fakeSettelmentStr, 'YYYY-MM-DD HH:mm').isValid();
 
             if (validFakeCutoffStr && validFakeValuationStr && validFakeSettelmentStr) {
                 return {
@@ -697,58 +721,58 @@ export class OrderHelper {
         let settlement;
 
         switch (this.orderRequest.dateby) {
-        case 'cutoff':
-            dateValid = this.calendarHelper.isValidCutoffDateTime(this.dateValue, this.orderType);
-            if (!dateValid) {
+            case 'cutoff':
+                dateValid = this.calendarHelper.isValidCutoffDateTime(this.dateValue, this.orderType);
+                if (!dateValid) {
+                    return {
+                        orderValid: false,
+                        errorMessage: 'Invalid date',
+                    };
+                }
+
+                cutoff = this.calendarHelper.getCutoffTimeForSpecificDate(this.dateValue, this.orderType);
+                valuation = this.calendarHelper.getValuationDateFromCutoff(cutoff, this.orderType);
+                settlement = this.calendarHelper.getSettlementDateFromCutoff(cutoff, this.orderType);
+
+                break;
+
+            case 'valuation':
+                dateValid = this.calendarHelper.isValidValuationDateTime(this.dateValue, this.orderType);
+                if (!dateValid) {
+                    return {
+                        orderValid: false,
+                        errorMessage: 'Invalid date',
+                    };
+                }
+
+                cutoff = this.calendarHelper.getCutoffDateFromValuation(this.dateValue, this.orderType);
+                cutoff = this.calendarHelper.getCutoffTimeForSpecificDate(cutoff, this.orderType);
+                valuation = this.calendarHelper.getValuationDateFromCutoff(cutoff, this.orderType);
+                settlement = this.calendarHelper.getSettlementDateFromCutoff(cutoff, this.orderType);
+
+                break;
+
+            case 'settlement':
+                dateValid = this.calendarHelper.isValidSettlementDateTime(this.dateValue, this.orderType);
+                if (!dateValid) {
+                    return {
+                        orderValid: false,
+                        errorMessage: 'Invalid date',
+                    };
+                }
+
+                cutoff = this.calendarHelper.getCutoffDateFromSettlement(this.dateValue, this.orderType);
+                cutoff = this.calendarHelper.getCutoffTimeForSpecificDate(cutoff, this.orderType);
+                valuation = this.calendarHelper.getValuationDateFromCutoff(cutoff, this.orderType);
+                settlement = this.calendarHelper.getSettlementDateFromCutoff(cutoff, this.orderType);
+
+                break;
+
+            default:
                 return {
                     orderValid: false,
                     errorMessage: 'Invalid date',
                 };
-            }
-
-            cutoff = this.calendarHelper.getCutoffTimeForSpecificDate(this.dateValue, this.orderType);
-            valuation = this.calendarHelper.getValuationDateFromCutoff(cutoff, this.orderType);
-            settlement = this.calendarHelper.getSettlementDateFromCutoff(cutoff, this.orderType);
-
-            break;
-
-        case 'valuation':
-            dateValid = this.calendarHelper.isValidValuationDateTime(this.dateValue, this.orderType);
-            if (!dateValid) {
-                return {
-                    orderValid: false,
-                    errorMessage: 'Invalid date',
-                };
-            }
-
-            cutoff = this.calendarHelper.getCutoffDateFromValuation(this.dateValue, this.orderType);
-            cutoff = this.calendarHelper.getCutoffTimeForSpecificDate(cutoff, this.orderType);
-            valuation = this.calendarHelper.getValuationDateFromCutoff(cutoff, this.orderType);
-            settlement = this.calendarHelper.getSettlementDateFromCutoff(cutoff, this.orderType);
-
-            break;
-
-        case 'settlement':
-            dateValid = this.calendarHelper.isValidSettlementDateTime(this.dateValue, this.orderType);
-            if (!dateValid) {
-                return {
-                    orderValid: false,
-                    errorMessage: 'Invalid date',
-                };
-            }
-
-            cutoff = this.calendarHelper.getCutoffDateFromSettlement(this.dateValue, this.orderType);
-            cutoff = this.calendarHelper.getCutoffTimeForSpecificDate(cutoff, this.orderType);
-            valuation = this.calendarHelper.getValuationDateFromCutoff(cutoff, this.orderType);
-            settlement = this.calendarHelper.getSettlementDateFromCutoff(cutoff, this.orderType);
-
-            break;
-
-        default:
-            return {
-                orderValid: false,
-                errorMessage: 'Invalid date',
-            };
         }
 
         if (settlement.diff(moment(), 'days') > orderSettlementThreshold) {
@@ -991,7 +1015,7 @@ export class OrderHelper {
 
             addEncs = [
                 [this.investorAddress, this.orderAsset, this.encumberRef, amountStr,
-                    [], [[this.amIssuingAddress, 0, 0]]]];
+                [], [[this.amIssuingAddress, 0, 0]]]];
         } else {
             return {
                 orderValid: false,
@@ -1081,7 +1105,7 @@ export class OrderHelper {
 
         } else if (this.orderBy === OrderByType.Amount) {
             // by amount
-            const decimalDivider = Math.pow(10, Number(this.fundShare.maximumNumDecimal)) ;
+            const decimalDivider = Math.pow(10, Number(this.fundShare.maximumNumDecimal));
             // the formula before apply maximum number decimal.
             let amountStr = `(${this.orderValue} / nav) * ${NumberMultiplier}`;
             // apply maximum number decimal.

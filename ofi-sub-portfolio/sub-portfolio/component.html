@@ -1,10 +1,9 @@
 <div class="header-breadcrumbs">
-    <!--<i class="userTourBtn fa fa-question-circle" (click)="restartUserTour()" [tooltip]="{text: _translate.translate('Launch User Tour'), size: 'small', transform: false}"></i>-->
-    <h1 id="sub-portfolio"><i class="fa fa-id-badge"></i> {{'Sub-portfolio' | translate }}</h1>
+    <!--<i class="userTourBtn fa fa-question-circle" (click)="restartUserTour()" [tooltip]="{text:_translate.translate('Launch User Tour'), size: 'small', transform: false}"></i>-->
+    <h1 id="sub-portfolio"><i class="fa fa-id-badge"></i> {{ 'Sub-portfolio' | translate }}</h1>
 </div>
 
 <div class="wrapper wrapper-content">
-
     <clr-tabs>
         <clr-tab>
             <button clrTabLink><i class="fa {{ this.tabDetail[0]['title'].icon }}"></i> {{
@@ -27,21 +26,21 @@
 
             <div align="right">
                 <button id="btn-add-new-subportfolio" class="btn btn-success" (click)="toggleAddModal();">
-                    <i class="fa fa-plus"></i> Add a new sub-portfolio
+                    <i class="fa fa-plus"></i> {{ 'Add New Sub-portfolio' | translate }}
                 </button>
             </div>
 
             <clr-datagrid>
                 <clr-dg-column [clrDgField]="'label'" clrDgSortIcon>
-                    <span>{{'Sub-portfolio Name' | translate }}</span>
+                    <span>{{ 'Sub-portfolio Name' | translate }}</span>
                     <span class="column-label"></span>
                 </clr-dg-column>
                 <clr-dg-column [clrDgField]="'iban'" clrDgSortIcon>
-                    <span class="clr-sort-label">{{'IBAN' | translate }}</span>
+                    <span class="clr-sort-label">{{ 'IBAN' | translate }}</span>
                     <span class="column-label"></span>
                 </clr-dg-column>
-                <clr-dg-column id="subportfolios-col-actions">
-                    <span>{{'Actions' | translate }}</span>
+                <clr-dg-column id="subportfolios-col-actions" class="right">
+                    <span>{{ 'Actions' | translate }}</span>
                 </clr-dg-column>
 
                 <clr-dg-row *clrDgItems="let address of addressList;">
@@ -58,19 +57,17 @@
                                     class="fa fa-floppy-o icon-btn"
                                     aria-hidden="true"
                                     type="submit"
-                                    (click)="handleUpdateLabel(subportfolio.value, address.address, address.iban)"
-                                ></i>
+                                    (click)="handleUpdateLabel(subportfolio.value, address.address, address.iban)">
+                                </i>
                             </form>
                         </div>
                     </clr-dg-cell>
 
                     <clr-dg-cell>
-
                         <span *ngIf="!address.editing">
                             {{address.iban}}
                         </span>
                         <div *ngIf="address.editing">
-
                             <form (submit)="handleUpdateLabel(address.label, address.address, iban.value)"
                                   style="padding: 0">
                                 <input type="text" [value]="address.iban" #iban style="width: inherit">
@@ -78,8 +75,8 @@
                                     class="fa fa-floppy-o icon-btn"
                                     aria-hidden="true"
                                     type="submit"
-                                    (click)="handleUpdateLabel(address.label, address.address, iban.value)"
-                                ></i>
+                                    (click)="handleUpdateLabel(address.label, address.address, iban.value)">
+                                </i>
                             </form>
                         </div>
                     </clr-dg-cell>
@@ -88,17 +85,17 @@
                         <div class="btn-group btn-sm">
                             <button *ngIf="!address.editing" (click)="handleEdit(address.address)"
                                     class="btn btn-success">
-                                <i class="fa fa-edit"></i> <span>{{'Edit' | translate }}</span>
+                                <i class="fa fa-edit"></i> <span>{{ 'Edit' | translate }}</span>
                             </button>
 
                             <button *ngIf="address.editing" (click)="handleCancelEdit(address.address)"
                                     class="btn btn-danger">
-                                <i class="fa fa-times"></i> <span>{{'Cancel' | translate }}</span>
+                                <i class="fa fa-times"></i> <span>{{ 'Cancel' | translate }}</span>
                             </button>
 
                             <button *ngIf="!address.editing" (click)="handleDelete(address.address)"
                                     class="btn btn-danger">
-                                <i class="fa fa-trash-o"></i> <span>{{'Delete' | translate }}</span>
+                                <i class="fa fa-trash-o"></i> <span>{{ 'Delete' | translate }}</span>
                             </button>
                         </div>
                     </clr-dg-cell>
@@ -111,28 +108,34 @@
             </clr-datagrid>
         </div>
     </ng-template>
-
 </div>
 
-
 <clr-modal [(clrModalOpen)]="showAddModal">
-    <h3 id="override_header" class="modal-title">{{'Create a new sub-portfolio' | translate}}</h3>
+    <h3 id="override_header" class="modal-title">{{ 'Create New Sub-portfolio' | translate }}</h3>
     <div class="modal-body">
         <form class="p-0" [formGroup]="this.tabDetail[0]['formControl']">
             <div class="row">
                 <div class="form-group col-sm-12">
                     <label class="control-label required-field required-field">
-                        {{'Sub-portfolio Name' | translate}}
+                        {{ 'Sub-portfolio Name' | translate}}
                     </label>
-                    <input type="text" #portfolioName [placeholder]="_translate.translate('Sub-portfolio name')" class="form-control mlp_translated" formControlName="subPortfolioName">
+                    <input type="text" 
+                            #portfolioName 
+                            [placeholder]="translate.translate('Sub-portfolio Name')" 
+                            class="form-control" 
+                            formControlName="subPortfolioName">
                     <span class="field-error" *ngIf="getFormError('subPortfolioName')">{{getFormError('subPortfolioName')}}</span>
                 </div>
             </div>
             <div class="row">
                 <div class="form-group col-sm-12 required-field">
-                    <label class="control-label required-field">{{'Sub-portfolio IBAN' | translate }}</label>
-                    <input type="text" #portfolioIban [placeholder]="_translate.translate('Sub-portfolio IBAN')"
-                           class="form-control mlp_translated" formControlName="subPortfolioIban" maxlength="34">
+                    <label class="control-label required-field">{{ 'Sub-portfolio IBAN' | translate }}</label>
+                    <input type="text" 
+                            #portfolioIban 
+                            [placeholder]="translate.translate('Sub-portfolio IBAN')"
+                            class="form-control" 
+                            formControlName="subPortfolioIban" 
+                            maxlength="34">
                     <span class="field-error" *ngIf="getFormError('subPortfolioIban')">{{getFormError('subPortfolioIban')}}</span>
                 </div>
             </div>
@@ -140,10 +143,10 @@
     </div>
     <div class="modal-footer">
         <button id="override_cancel" type="button" class="btn btn-warning margin-right-10" (click)="closeAddModal();">
-            {{'Cancel' | translate}}
+            {{ 'Cancel' | translate }}
         </button>
         <button id="override_save" type="button" class="btn btn-success" (click)="saveSubPortfolio();" [disabled]="!this.tabDetail[0]['formControl'].valid">
-            {{'Create' | translate}}
+            {{ 'Create' | translate }}
         </button>
     </div>
 </clr-modal>
@@ -153,11 +156,11 @@
 <!--</div>-->
 
 <clr-modal [(clrModalOpen)]="!!showAddress['address']">
-    <h3 id="override_header" class="modal-title">{{'Sub-Portfolio Address' | translate}}</h3>
+    <h3 id="override_header" class="modal-title">{{ 'Sub-Portfolio Address' | translate }}</h3>
     <div class="modal-body">
         <div class="row">
             <div class="col-sm-4">
-                {{'Blockchain Address' | translate}}:
+                {{ 'Blockchain Address' | translate }}:
             </div>
             <div class="col-sm-8">
                 {{showAddress['address']}}
@@ -166,7 +169,7 @@
     </div>
     <div class="modal-footer">
         <button id="override_cancel" type="button" class="btn btn-primary" (click)="showAddress = {}">
-            {{'Close' | translate}}
+            {{ 'Close' | translate }}
         </button>
     </div>
 </clr-modal>
