@@ -15,14 +15,14 @@ import { SelectAmcService } from './select-amc.service';
 @Component({
     selector: 'kyc-step-select-amc',
     styleUrls: ['./select-amc.component.scss'],
-    templateUrl: './select-amc.component.html'
+    templateUrl: './select-amc.component.html',
 })
 export class NewKycSelectAmcComponent implements OnInit, OnDestroy {
     private unsubscribe: Subject<any> = new Subject();
     private kycList;
     private managementCompaniesExtract;
 
-    managementCompanies: Array<any> = [];
+    managementCompanies: any[] = [];
     connectedWallet;
 
     preselectedManagementCompany: any = {};
@@ -30,11 +30,13 @@ export class NewKycSelectAmcComponent implements OnInit, OnDestroy {
     alreadyRegistered = false;
 
     @Input() form: FormGroup;
+
     @Input() set disabled(isDisabled) {
-        if(isDisabled) {
+        if (isDisabled) {
             this.submitted = true;
         }
     }
+
     @Output() registered = new EventEmitter<boolean>();
 
     @select(['ofi', 'ofiKyc', 'myKycList', 'kycList']) myKycList$;
@@ -59,7 +61,7 @@ export class NewKycSelectAmcComponent implements OnInit, OnDestroy {
         const id = this.preselectedManagementCompany.id;
 
         if (id) {
-            return filter(this.managementCompaniesExtract, company => {
+            return filter(this.managementCompaniesExtract, (company) => {
                 return company.id !== id;
             });
         }
@@ -74,7 +76,7 @@ export class NewKycSelectAmcComponent implements OnInit, OnDestroy {
     }
 
     get isTableDisplayed() {
-        return this.preselectedManagementCompany.id || this.selectedManagementCompanies.length
+        return this.preselectedManagementCompany.id || this.selectedManagementCompanies.length;
     }
 
     ngOnInit() {
@@ -85,61 +87,61 @@ export class NewKycSelectAmcComponent implements OnInit, OnDestroy {
 
     initSubscriptions() {
         this.requestedManagementCompanyList$
-            .pipe(
-                rxFilter(requested => !requested),
-                takeUntil(this.unsubscribe),
-            )
-            .subscribe(() => {
-                this.getAssetManagementCompanies();
-            });
+        .pipe(
+            rxFilter(requested => !requested),
+            takeUntil(this.unsubscribe),
+        )
+        .subscribe(() => {
+            this.getAssetManagementCompanies();
+        });
 
-        let companyCombination$ = combineLatest(this.managementCompanyList$, this.myKycList$)
-            .pipe(
-                rxFilter(([managementCompanies, kycList]) => {
-                    return managementCompanies && managementCompanies.size > 0;
-                }),
-                tap(([managementCompanies, kycList]) => {
-                    this.managementCompanies = keyBy(managementCompanies.toJS(), 'companyID');
-                    this.kycList = kycList;
-                }),
-                takeUntil(this.unsubscribe)
-            );
+        const companyCombination$ = combineLatest(this.managementCompanyList$, this.myKycList$)
+        .pipe(
+            rxFilter(([managementCompanies, kycList]) => {
+                return managementCompanies && managementCompanies.size > 0;
+            }),
+            tap(([managementCompanies, kycList]) => {
+                this.managementCompanies = keyBy(managementCompanies.toJS(), 'companyID');
+                this.kycList = kycList;
+            }),
+            takeUntil(this.unsubscribe),
+        );
 
         companyCombination$.subscribe(([managementCompanies, kycList]) => {
-                const managementCompanyList = managementCompanies.toJS();
+            const managementCompanyList = managementCompanies.toJS();
 
-                this.managementCompaniesExtract = this.requestsService
-                    .extractManagementCompanyData(managementCompanyList, kycList);
-            });
+            this.managementCompaniesExtract = this.requestsService
+            .extractManagementCompanyData(managementCompanyList, kycList);
+        });
 
         combineLatest(companyCombination$, this.requestedKycList$)
-            .pipe(
-                map(([company, kycs]) => kycs),
-                rxFilter((kycs : Array<any>) => !!kycs.length),
-                takeUntil(this.unsubscribe)
-            )
-            .subscribe(kycs => {
-                this.populateForm(kycs);
-            });
+        .pipe(
+            map(([company, kycs]) => kycs),
+            rxFilter((kycs: any[]) => !!kycs.length),
+            takeUntil(this.unsubscribe),
+        )
+        .subscribe((kycs) => {
+            this.populateForm(kycs);
+        });
 
         this.connectedWallet$
-            .pipe(
-                takeUntil(this.unsubscribe)
-            )
-            .subscribe(connectedWallet => {
-                this.connectedWallet = connectedWallet;
-            });
+        .pipe(
+            takeUntil(this.unsubscribe),
+        )
+        .subscribe((connectedWallet) => {
+            this.connectedWallet = connectedWallet;
+        });
     }
 
-    populateForm(kycs){
-        let formValue = kycs.map(kyc => {
-            let foundKyc = find(this.kycList, ['kycID', kyc.kycID]);
-            let alreadyCompleted = foundKyc ? foundKyc.alreadyCompleted : false;
+    populateForm(kycs) {
+        const formValue = kycs.map((kyc) => {
+            const foundKyc = find(this.kycList, ['kycID', kyc.kycID]);
+            const alreadyCompleted = foundKyc ? foundKyc.alreadyCompleted : false;
 
             return {
-                id : kyc.amcID,
-                text : this.managementCompanies[kyc.amcID].companyName,
-                registered : alreadyCompleted
+                id: kyc.amcID,
+                text: this.managementCompanies[kyc.amcID].companyName,
+                registered: alreadyCompleted,
             };
         });
 
@@ -147,12 +149,12 @@ export class NewKycSelectAmcComponent implements OnInit, OnDestroy {
     }
 
     getQueryParams() {
-        this.route.queryParams.subscribe(queryParams => {
+        this.route.queryParams.subscribe((queryParams) => {
             if (queryParams.invitationToken) {
                 this.preselectedManagementCompany = {
                     id: parseInt(queryParams.amcID, 10),
                     invitationToken: queryParams.invitationToken,
-                    registered: false
+                    registered: false,
                 };
                 this.disableValidators();
             }
@@ -170,13 +172,17 @@ export class NewKycSelectAmcComponent implements OnInit, OnDestroy {
     }
 
     onRegisteredChange() {
-        let accumulator = !isNil(this.preselectedManagementCompany.registered) ? 
+        const accumulator = !isNil(this.preselectedManagementCompany.registered) ?
             this.preselectedManagementCompany.registered : true;
-        let selectedManagementCompanies = filter(this.selectedManagementCompanies, company => !isEmpty(company));
+        const selectedManagementCompanies = filter(this.selectedManagementCompanies, company => !isEmpty(company));
 
-        let result = reduce(selectedManagementCompanies, (result, value) => {
-            return result && value.registered;
-        }, accumulator);
+        const result = reduce(
+            selectedManagementCompanies,
+            (result, value) => {
+                return result && value.registered;
+            },
+            accumulator,
+        );
 
         this.alreadyRegistered = result;
         this.registered.emit(result);
@@ -195,7 +201,7 @@ export class NewKycSelectAmcComponent implements OnInit, OnDestroy {
             values = values.concat([this.preselectedManagementCompany]);
         }
 
-        let ids = await this.selectAmcService.createMultipleDrafts(values, this.connectedWallet);
+        const ids = await this.selectAmcService.createMultipleDrafts(values, this.connectedWallet);
 
         this.newRequestService.storeCurrentKycs(ids);
 
