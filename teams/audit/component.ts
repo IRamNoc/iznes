@@ -90,20 +90,20 @@ export class UserTeamsAuditComponent
                     title: this.translate.translate('Previous Value'),
                     valueDecorator: (entity) => {
                         if (entity.field === 'Status') {
-                            if (entity.oldValue === '0') entity.oldValue = this.translate.translate('Disabled');
-                            if (entity.oldValue === '1') entity.oldValue = this.translate.translate('Enabled');
-                            if (entity.newValue === '0') entity.newValue = this.translate.translate('Disabled');
-                            if (entity.newValue === '1') entity.newValue = this.translate.translate('Enabled');
+                            if (entity.oldValue === '0') entity.oldValue = 'Disabled';
+                            if (entity.oldValue === '1') entity.oldValue = 'Enabled';
+                            if (entity.newValue === '0') entity.newValue = 'Disabled';
+                            if (entity.newValue === '1') entity.newValue = 'Enabled';
                         }
 
                         if (entity.field === 'Users') {
-                            if (entity.newValue === '0') entity.newValue = this.translate.translate('Removed from Team');
-                            if (entity.newValue === '1') entity.newValue = this.translate.translate('Added to Team');
+                            if (entity.newValue === '0') entity.newValue = 'Removed from Team';
+                            if (entity.newValue === '1') entity.newValue = 'Added to Team';
                         }
 
                         if (entity.field === 'Permissions') {
-                            if (entity.newValue === '0') entity.newValue = this.translate.translate('Permission Removed');
-                            if (entity.newValue === '1') entity.newValue = this.translate.translate('Permission Added');
+                            if (entity.newValue === '0') entity.newValue = 'Permission Removed';
+                            if (entity.newValue === '1') entity.newValue = 'Permission Added';
                         }
 
                         return entity;
