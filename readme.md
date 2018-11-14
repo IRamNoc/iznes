@@ -82,7 +82,7 @@ Translate a string using the following methods:
 ### Method - Dynamic string:
 
 ```javascript
-`${this.translation.translate('Are you sure you want to cancel the @message@?', { 'message': message })}`
+this.translation.translate('Are you sure you want to cancel the @message@?', { 'message': message });
 ```
 
 ## 5. Using the `mltag` directive.
