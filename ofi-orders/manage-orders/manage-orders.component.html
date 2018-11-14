@@ -414,13 +414,13 @@
                             <span *ngIf="order.orderStatus == 2" class="label label-info">{{ 'Waiting NAV' | translate }}
                             </span>
 
-                            <span *ngIf="order.orderStatus == 3" class="label label-info">{{ 'Waiting settlement' | translate }}
+                            <span *ngIf="order.orderStatus == 3" class="label label-info">{{ 'Waiting Settlement' | translate }}
                             </span>
 
                             <span *ngIf="order.orderStatus == 4 && order.orderUnpaid == false" class="label label-error">{{ 'Unpaid' | translate }}
                             </span>
 
-                            <span *ngIf="order.orderStatus == 4 && order.orderUnpaid == true" class="label label-info">{{ 'Waiting settlement' | translate }}
+                            <span *ngIf="order.orderStatus == 4 && order.orderUnpaid == true" class="label label-info">{{ 'Waiting Settlement' | translate }}
                             </span>
 
                             <span *ngIf="order.orderStatus == -1" class="label label-success">{{ 'Settled' | translate }}
@@ -503,8 +503,7 @@
                     <clr-dg-footer>
                         <!-- Optional customization of hide/show columns toggle -->
                         <clr-dg-column-toggle>
-                            <clr-dg-column-toggle-title>{{ 'Show/Hide Fields:' | translate }}
-
+                            <clr-dg-column-toggle-title>{{ 'Show/Hide Fields' | translate }}
                             </clr-dg-column-toggle-title>
                             <!--<clr-dg-column-toggle-button clrType="selectAll">-->
                             <!--<button type="button" class="btn btn-primary">-->
@@ -618,7 +617,7 @@
                         <div class="form-group col-sm-6">
                             <label>{{ '(Entry/Exit) Fees' | translate }}</label>
                             <div>
-                                <span class="readonly-field">{{ orderData.feePercentage | moneyValue : 2 }}{{ '%' | translate }}</span>
+                                <span class="readonly-field">{{ orderData.feePercentage | moneyValue : 2 }}%</span>
                             </div>
                         </div>
                     </div>
@@ -640,13 +639,17 @@
                                     <div class="form-group col-sm-6">
                                         <label>{{' One-off Charges' | translate }}</label>
                                         <div>
-                                            <span class="readonly-field">{{ fundShare.mifiidChargesOneOff | moneyValue: 2 }} {{ '%' | translate }}</span>
+                                            <span class="readonly-field">
+                                                {{ fundShare.mifiidChargesOneOff | moneyValue: 2 }}%
+                                            </span>
                                         </div>
                                     </div>
                                     <div class="form-group col-sm-6">
                                         <label>{{ 'Ongoing Charges' | translate }}</label>
                                         <div>
-                                            <span class="readonly-field">{{ fundShare.mifiidChargesOngoing | moneyValue: 2 }} {{ '%' | translate }}</span>
+                                            <span class="readonly-field">
+                                                {{ fundShare.mifiidChargesOngoing | moneyValue: 2 }}%
+                                            </span>
                                         </div>
                                     </div>
                                 </div>
@@ -654,13 +657,17 @@
                                     <div class="form-group col-sm-6">
                                         <label>{{'Costs related to transactions initiated' | translate}}</label>
                                         <div>
-                                            <span class="readonly-field">{{ fundShare.mifiidTransactionCosts | moneyValue: 2 }} {{ '%' | translate }}</span>
+                                            <span class="readonly-field">
+                                                {{ fundShare.mifiidTransactionCosts | moneyValue: 2 }}%
+                                            </span>
                                         </div>
                                     </div>
                                     <div class="form-group col-sm-6">
                                         <label>{{ 'Charges related to ancillary services' | translate }}</label>
                                         <div>
-                                            <span class="readonly-field">{{ fundShare.mifiidServicesCosts | moneyValue: 2 }} {{ '%' | translate }}</span>
+                                            <span class="readonly-field">
+                                                {{ fundShare.mifiidServicesCosts | moneyValue: 2 }}%
+                                            </span>
                                         </div>
                                     </div>
                                 </div>
@@ -668,7 +675,9 @@
                                     <div class="form-group col-sm-6">
                                         <label>{{ 'Incidental Costs' | translate }}</label>
                                         <div>
-                                            <span class="readonly-field">{{ fundShare.mifiidIncidentalCosts | moneyValue: 2 }} {{ '%' | translate }}</span>
+                                            <span class="readonly-field">
+                                                {{ fundShare.mifiidIncidentalCosts | moneyValue: 2 }}%
+                                            </span>
                                         </div>
                                     </div>
                                 </div>
@@ -888,7 +897,7 @@
 
 <!-- Asset manager order cancel modal -->
 <clr-modal [(clrModalOpen)]="isAmConfirmModalDisplayed" [clrModalClosable]="false">
-    <h3 class="modal-title">{{amConfirmModal.title | translate}}</h3>
+    <h3 class="modal-title">amConfirmModal.title</h3>
 
     <div class="modal-body">
         <div class="jaspero__dialog-icon">
@@ -900,14 +909,17 @@
             </div>
         </div>
 
-        <div class="jaspero__dialog-content" [innerHtml]="translation.translate(amConfirmModal.body)"></div>
+        <div class="jaspero__dialog-content" [innerHtml]="amConfirmModal.body"></div>
 
         <form>
             <section class="form-block">
                 <div class="row">
                     <div class="form-group col-sm-12">
-                        <textarea id="cancelModalTextArea" style="min-height: 80px" [placeholder]="translation.translate(amConfirmModal.placeholder)"
-                                  [(ngModel)]="cancelModalMessage" [ngModelOptions]="{standalone: true}">
+                        <textarea id="cancelModalTextArea" 
+                                    style="min-height: 80px" 
+                                    [placeholder]="amConfirmModal.placeholder"
+                                    [(ngModel)]="cancelModalMessage" 
+                                    [ngModelOptions]="{standalone: true}">
                         </textarea>
                     </div>
                 </div>

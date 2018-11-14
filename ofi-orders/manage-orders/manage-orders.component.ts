@@ -12,12 +12,12 @@ import {
     OnInit,
     ViewChild,
 } from '@angular/core';
+
 import { FormBuilder, FormGroup } from '@angular/forms';
 import { ActivatedRoute, Router } from '@angular/router';
 import { Location } from '@angular/common';
 
 import { MemberSocketService } from '@setl/websocket-service';
-
 import { NgRedux, select } from '@angular-redux/store';
 import { Unsubscribe } from 'redux';
 import {
@@ -206,7 +206,7 @@ export class ManageOrdersComponent implements OnInit, AfterViewInit, OnDestroy {
                 public numberConverter: NumberConverterService,
                 private messagesService: MessagesService,
                 private toasterService: ToasterService,
-                public translation: MultilingualService,
+                public translate: MultilingualService,
                 private ofiCurrenciesService: OfiCurrenciesService,
                 private manageOrdersService: ManageOrdersService,
                 private location: Location,
@@ -408,9 +408,9 @@ export class ManageOrdersComponent implements OnInit, AfterViewInit, OnDestroy {
     }
 
     translateSelectMenus() {
-        this.orderTypes = this.translation.translate(orderTypes);
-        this.orderStatuses = this.translation.translate(orderStatuses);
-        this.dateTypes = this.translation.translate(dateTypes);
+        this.orderTypes = this.translate.translate(orderTypes);
+        this.orderStatuses = this.translate.translate(orderStatuses);
+        this.dateTypes = this.translate.translate(dateTypes);
     }
 
     getLanguage(language): void {
@@ -548,7 +548,7 @@ export class ManageOrdersComponent implements OnInit, AfterViewInit, OnDestroy {
             {
                 title: {
                     icon: 'fa fa-th-list',
-                    text: 'List',
+                    text: this.translate.translate('List'),
                 },
                 orderId: -1,
                 searchForm: this.searchForm,
@@ -568,7 +568,7 @@ export class ManageOrdersComponent implements OnInit, AfterViewInit, OnDestroy {
 
     cancelOrder(index) {
         const orderId = this.getOrderRef(this.ordersList[index].orderID);
-        const message = (this.ordersList[index].orderType === 3) ? `${this.translation.translate('Subscription')} ${orderId}` : `${this.translation.translate('Redemption')} ${orderId}`;
+        const message = (this.ordersList[index].orderType === 3) ? `${this.translate.translate('Subscription')} ${orderId}` : `${this.translate.translate('Redemption')} ${orderId}`;
 
         if (this.isInvestorUser) {
             this.showConfirmationAlert(message, index);
@@ -576,9 +576,8 @@ export class ManageOrdersComponent implements OnInit, AfterViewInit, OnDestroy {
             this.isAmConfirmModalDisplayed = true;
             this.amConfirmModal = {
                 targetedOrder: this.ordersList[index],
-                title: `${this.translation.translate('Cancel')} - ${message}`,
-                body: `${this.translation.translate('Are you sure you want to cancel the @message@?', { 'message': message })}`,                
-                placeholder: `${this.translation.translate('Please add a message to justify this cancellation. An internal IZNES message will be sent to the investor to notify them.')}`,
+                title: `${this.translate.translate('Cancel')} - ${message}`,
+                body: `${this.translate.translate('Are you sure you want to cancel the @message@?', { 'message': message })}`,placeholder: `${this.translate.translate('Please add a message to justify this cancellation. An internal IZNES message will be sent to the investor to notify them.')}`,
             };
         }
     }
@@ -586,10 +585,10 @@ export class ManageOrdersComponent implements OnInit, AfterViewInit, OnDestroy {
     settleOrder(index) {
         let confMessage = '';
         if (this.ordersList[index].orderType === 3) {
-            confMessage += `${this.translation.translate('Subscription')} `;
+            confMessage += `${this.translate.translate('Subscription')} `;
         }
         if (this.ordersList[index].orderType === 4) {
-            confMessage += `${this.translation.translate('Redemption')} `;
+            confMessage += `${this.translate.translate('Redemption')} `;
         }
         confMessage += this.getOrderRef(this.ordersList[index].orderID);
         this.showConfirmationSettleAlert(confMessage, index);
@@ -602,13 +601,13 @@ export class ManageOrdersComponent implements OnInit, AfterViewInit, OnDestroy {
 
     showConfirmationSettleAlert(confMessage, index): void {
         this.confirmationService.create(
-            `<span>${this.translation.translate('Are you sure?')}</span>`,
-            `<span>${this.translation.translate(
+            `<span>${this.translate.translate('Are you sure?')}</span>`,
+            `<span>${this.translate.translate(
                 'Are you sure you want to settle the @confMessage@?', 
                 { 'confMessage': confMessage })}</span>`,
             { 
-                confirmText: this.translation.translate('Confirm'), 
-                declineText: this.translation.translate('Back'), 
+                confirmText: this.translate.translate('Confirm'), 
+                declineText: this.translate.translate('Back'), 
                 btnClass: 'info'
             },
         ).subscribe((ans) => {
@@ -624,7 +623,7 @@ export class ManageOrdersComponent implements OnInit, AfterViewInit, OnDestroy {
             this.ofiOrdersService.markOrderSettle({ orderId }).then((data) => {
                 // const orderId = _.get(data, ['1', 'Data', '0', 'orderID'], 0);
                 const orderRef = commonHelper.pad(orderId, 11, '0');
-                this.toasterService.pop(this.translation.translate('success'), this.translation.translate('Order @orderRef@ has been successfully settled.', { 'orderRef': orderRef }));
+                this.toasterService.pop(this.translate.translate('success'), this.translate.translate('Order @orderRef@ has been successfully settled.', { 'orderRef': orderRef }));
                 // this.handleClose();
                 // this._router.navigateByUrl('/order-book/my-orders/list');
                 this.logService.log(data);
@@ -638,11 +637,11 @@ export class ManageOrdersComponent implements OnInit, AfterViewInit, OnDestroy {
 
     showConfirmationAlert(confMessage, index): void {
         this.confirmationService.create(
-            `<span>${this.translation.translate('Are you sure?')}</span>`,
-            `<span>${this.translation.translate('Are you sure you want cancel the @confMessage@?', { 'confMessage': confMessage })}</span>`,
+            `<span>${this.translate.translate('Are you sure?')}</span>`,
+            `<span>${this.translate.translate('Are you sure you want cancel the @confMessage@?', { 'confMessage': confMessage })}</span>`,
             { 
-                confirmText: this.translation.translate('Confirm'), 
-                declineText: this.translation.translate('Back'), 
+                confirmText: this.translate.translate('Confirm'), 
+                declineText: this.translate.translate('Back'), 
                 btnClass: 'error' 
             },
         ).subscribe((ans) => {
@@ -858,14 +857,14 @@ export class ManageOrdersComponent implements OnInit, AfterViewInit, OnDestroy {
       
         const toasterMessages = {
             success: 
-                this.translation.translate('The message has been successfully sent to @targetedOrder.firstName@ @targetedOrder.lastName@.', { 'targetedOrder.firstName': targetedOrder.firstName, 'targetedOrder.lastName': targetedOrder.lastName }),
+                this.translate.translate('The message has been successfully sent to @targetedOrder.firstName@ @targetedOrder.lastName@.', { 'targetedOrder.firstName': targetedOrder.firstName, 'targetedOrder.lastName': targetedOrder.lastName }),
             fail: 
-                this.translation.translate('The message has failed to be sent to @targetedOrder.firstName@ @targetedOrder.lastName@.', { 'targetedOrder.firstName': targetedOrder.firstName, 'targetedOrder.lastName': targetedOrder.lastName }),
+                this.translate.translate('The message has failed to be sent to @targetedOrder.firstName@ @targetedOrder.lastName@.', { 'targetedOrder.firstName': targetedOrder.firstName, 'targetedOrder.lastName': targetedOrder.lastName }),
         };
 
         orderType = (targetedOrder.orderType === 3) ? 
-            this.translation.translate('subscription') : this.translation.translate('redemption');
-        subject = `${orderType} ${orderRef} - ${this.translation.translate('Cancelled')}`;
+            this.translate.translate('subscription') : this.translate.translate('redemption');
+        subject = `${orderType} ${orderRef} - ${this.translate.translate('Cancelled')}`;
         dateFormat = 'YYYY-MM-DD HH:mm:ss';
 
         const actionConfig = new MessageCancelOrderConfig();
@@ -915,7 +914,7 @@ export class ManageOrdersComponent implements OnInit, AfterViewInit, OnDestroy {
      */
     getOrderTypeString(orderData: { orderType: number | string; sellBuyLinkOrderID: number | string; }): string | boolean {
         const orderString = getOrderTypeString(orderData);
-        return this.translation.getTranslationByString(orderString);
+        return this.translate.getTranslationByString(orderString);
     }
 
     /**

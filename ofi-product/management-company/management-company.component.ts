@@ -30,6 +30,7 @@ export class OfiManagementCompanyComponent implements OnInit, OnDestroy {
     private usertype: number;
 
     managementCompanyForm: FormGroup;
+    isWalletConnected = false;
     editForm = false;
     showSearchTab = false;
     showModal = false;
@@ -52,6 +53,7 @@ export class OfiManagementCompanyComponent implements OnInit, OnDestroy {
     @select(['user', 'siteSettings', 'language']) language$;
     @select(['user', 'myDetail', 'userType']) usertype$;
     @select(['ofi', 'ofiProduct', 'ofiManagementCompany', 'managementCompanyList', 'managementCompanyList']) managementCompanyList$;
+    @select(['user', 'connected', 'connectedWallet']) connectedWallet$;
 
     constructor(
         private ngRedux: NgRedux<any>,
@@ -108,6 +110,15 @@ export class OfiManagementCompanyComponent implements OnInit, OnDestroy {
                 if (this.isAssetManager) {
                     this.editCompany(_.values(managementCompanyList)[0]);
                 }
+            });
+
+        this.connectedWallet$
+            .pipe(
+                takeUntil(this.unSubscribe),
+            )
+            .subscribe((connectedWallet) => {
+                this.isWalletConnected = !!connectedWallet;
+                this.markForCheck();
             });
     }
 
@@ -255,7 +266,7 @@ export class OfiManagementCompanyComponent implements OnInit, OnDestroy {
                     this.resetForm();
                     this.showSearchTab = true;
                     this.showSuccessResponse('Management company has successfully been updated');
-                    if(this.isAssetManager) {
+                    if (this.isAssetManager) {
                         this.location.back();
                     }
                 },
