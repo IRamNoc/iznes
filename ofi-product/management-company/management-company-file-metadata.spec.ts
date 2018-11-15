@@ -10,6 +10,13 @@ describe('ManagementCompanyFileMetadata', () => {
         logoHash: 'logoHash',
     };
 
+    const emptyState = {
+        signatureTitle: '',
+        signatureHash: '',
+        logoTitle: '',
+        logoHash: '',
+    };
+
     beforeEach(() => {
         fileMetaData = new ManagementCompanyFileMetadata();
     });
@@ -30,25 +37,13 @@ describe('ManagementCompanyFileMetadata', () => {
     });
 
     it('should set all the properties', () => {
-        const expectedResult = {
-            signatureTitle: null,
-            signatureHash: null,
-            logoTitle: null,
-            logoHash: null,
-        };
-        expect(fileMetaData.getProperties()).toEqual(expectedResult);
+        expect(fileMetaData.getProperties()).toEqual(emptyState);
         fileMetaData.setProperties(fakeData);
         expect(fileMetaData.getProperties()).toEqual(fakeData);
     });
 
     it('should set properties for one file', () => {
-        const expectedResult = {
-            signatureTitle: null,
-            signatureHash: null,
-            logoTitle: null,
-            logoHash: null,
-        };
-        expect(fileMetaData.getProperties()).toEqual(expectedResult);
+        expect(fileMetaData.getProperties()).toEqual(emptyState);
 
         const fakePayload = {
             title: 'title',
@@ -59,18 +54,12 @@ describe('ManagementCompanyFileMetadata', () => {
         expect(fileMetaData.getHash('logo')).toEqual(fakePayload.hash);
     });
 
-    it('should set all properties to null', () => {
+    it('should set all properties to empty strings', () => {
         fileMetaData.setProperties(fakeData);
         expect(fileMetaData.getProperties()).toEqual(fakeData);
 
-        const expectedResult = {
-            signatureTitle: null,
-            signatureHash: null,
-            logoTitle: null,
-            logoHash: null,
-        };
         fileMetaData.reset();
-        expect(fileMetaData.getProperties()).toEqual(expectedResult);
+        expect(fileMetaData.getProperties()).toEqual(emptyState);
     });
 
     it('should return true when all properties have values', () => {
@@ -81,7 +70,7 @@ describe('ManagementCompanyFileMetadata', () => {
     it('should return false when not all properties have values', () => {
         const fakePayload = {
             ...fakeData,
-            signatureHash: null,
+            signatureHash: '',
         };
         fileMetaData.setProperties(fakePayload);
         expect(fileMetaData.isValid()).toEqual(false);

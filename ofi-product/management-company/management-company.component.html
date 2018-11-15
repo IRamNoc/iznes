@@ -326,10 +326,9 @@
                                 <input type="hidden" class="form-control" formControlName="signature">
                                 <setl-file-drop class="form-control" id="mc_signature" [formControl]="managementCompanyForm.controls['signature']"
                                     (onDrop)="onDropFile($event, 'signature')" [preset]="{ name: fileMetadata.getTitle('signature') }"
-                                    [disabled]="!isWalletConnected" ngDefaultControl></setl-file-drop>
+                                    ngDefaultControl></setl-file-drop>
                                 <setl-file-viewer *ngIf="fileMetadata.getHash('signature')" [fileHash]="fileMetadata.getHash('signature')"></setl-file-viewer>
                             </div>
-                            <div *ngIf="!isWalletConnected" class="text-danger">A wallet connection is required</div>
                         </div>
                         <div class="form-group col-sm-6">
                             <label for="mc_logo" class="required-field">
@@ -339,15 +338,14 @@
                                 <input type="hidden" class="form-control" formControlName="logo">
                                 <setl-file-drop class="form-control" id="mc_logo" [formControl]="managementCompanyForm.controls['logo']"
                                     (onDrop)="onDropFile($event, 'logo')" [preset]="{ name: fileMetadata.getTitle('logo') }"
-                                    [disabled]="!isWalletConnected" ngDefaultControl></setl-file-drop>
+                                    ngDefaultControl></setl-file-drop>
                                 <setl-file-viewer *ngIf="fileMetadata.getHash('logo')" [fileHash]="fileMetadata.getHash('logo')"></setl-file-viewer>
                             </div>
-                            <div *ngIf="!isWalletConnected" class="text-danger">A wallet connection is required</div>
                         </div>
                     </div>
                     <div class="row">
                         <div class="form-group col-sm-12">
-                            <button id="mcBtnSubmitForm" type="submit" class="btn btn-primary" [disabled]="!managementCompanyForm.valid || !fileMetadata.isValid()">
+                            <button id="mcBtnSubmitForm" type="submit" class="btn btn-primary" [disabled]="!isFormValid">
                                 <div *ngIf="!editForm; else editMcFBtSubmit">
                                     <i class="fa fa-save"></i> <span mltag="txt_save">Save</span>
                                 </div>

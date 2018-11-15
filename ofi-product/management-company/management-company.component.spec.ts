@@ -21,6 +21,7 @@ import { AlertsService } from '@setl/jaspero-ng2-alerts';
 import { phoneCodeList } from '../../shared/phone-codes.values';
 import productConfig from '../productConfig';
 import { FileService } from '@setl/core-req-services';
+import { File } from '@setl/core-filedrop';
 
 const ofiManagementCompanyServiceStub = {
     getManagementCompanyList: () => { },
@@ -40,19 +41,19 @@ const LocationStub = {
     back: () => { },
 };
 
-const fakeFileMetadata = {
-    fileID: 'fake fileID',
-    hash: 'fake fileHash',
-    name: 'fake fileTitle',
+const fakeFiledropEvent = {
+    files: [{
+        data: 'aGVsbG8gdGhlcmUh',
+        name: 'example.txt',
+        lastModified: 1507563924000,
+        filePermission: 0,
+        id: 1,
+        mimeType: 'text/plain',
+        status: null,
+    }],
+    target: null,
 };
-const uploadFile = jasmine.createSpy('uploadFile')
-    .and.returnValue(
-        new Promise((resolve, reject) => {
-            resolve(fakeFileMetadata);
-        }),
-    );
 class ManagagementCompanyServiceMock extends ManagagementCompanyService { }
-ManagagementCompanyServiceMock.prototype.uploadFile = uploadFile;
 
 @Directive({
     selector: 'setl-file-drop',
@@ -76,6 +77,36 @@ describe('OfiManagementCompanyComponent', () => {
 
     let markForCheckSpy;
     let managementCompanyFormSpy;
+
+    const fakeCompany = {
+        companyID: 'companyID',
+        companyName: 'companyName',
+        emailAddress: 'emailAddress',
+        legalFormName: 'EURL',
+        country: 'FR',
+        postalAddressLine1: 'postalAddressLine1',
+        postalAddressLine2: 'postalAddressLine2',
+        city: 'city',
+        postalCode: 'postalCode',
+        taxResidence: 'LU',
+        rcsMatriculation: 'rcsMatriculation',
+        supervisoryAuthority: 'supervisoryAuthority',
+        numSiretOrSiren: 'numSiretOrSiren',
+        shareCapital: '1000000',
+        commercialContact: 'commercialContact',
+        operationalContact: 'operationalContact',
+        directorContact: 'directorContact',
+        lei: '12345678901234567890',
+        bic: 'bic',
+        giinCode: '',
+        websiteUrl: 'websiteUrl',
+        phoneNumberPrefix: '+355',
+        phoneNumber: '16589456',
+        signatureTitle: 'signatureTitle',
+        signatureHash: 'signatureHash',
+        logoTitle: 'logoTitle',
+        logoHash: 'logoHash',
+    };
 
     beforeAll(done => (async () => {
         TestBed.resetTestingModule();
@@ -113,7 +144,7 @@ describe('OfiManagementCompanyComponent', () => {
         TestBed.resetTestingModule = resetTestingModule;
     });
 
-    beforeEach(() => {
+    beforeEach(fakeAsync(() => {
         fixture = TestBed.createComponent(OfiManagementCompanyComponent);
 
         comp = fixture.componentInstance;
@@ -122,12 +153,14 @@ describe('OfiManagementCompanyComponent', () => {
             .and.returnValue(null);
         managementCompanyFormSpy = spyOn(comp.managementCompanyForm, 'setValue')
             .and.callThrough();
-    });
+
+        tick();
+        fixture.detectChanges();
+    }));
 
     afterEach(() => {
         markForCheckSpy.calls.reset();
         managementCompanyFormSpy.calls.reset();
-        uploadFile.calls.reset();
         pop.calls.reset();
     });
 
@@ -136,89 +169,28 @@ describe('OfiManagementCompanyComponent', () => {
             markForCheckSpy.calls.reset();
             comp.onDropFile(
                 {
-                    files: [],
+                    files: <File[]>[],
+                    target: null,
                 },
                 'signature',
             );
-            const expectedResult = {
-                name: null,
-                hash: null,
-            };
             expect(comp.fileMetadata.getTitle('signature')).toEqual(null);
             expect(comp.fileMetadata.getHash('signature')).toEqual(null);
             expect(markForCheckSpy).toHaveBeenCalledTimes(1);
         });
 
-        it('should call the upload method of the service companion', () => {
-            comp.onDropFile(
-                {
-                    files: [{
-                        data: 'aGVsbG8gdGhlcmUh',
-                        name: 'example.txt',
-                        lastModified: 1507563924000,
-                    }],
-                },
-                'signature',
-            );
-            expect(uploadFile).toHaveBeenCalledTimes(1);
-        });
-
         it('should update the metadata', fakeAsync(() => {
             comp.onDropFile(
-                {
-                    files: [{
-                        data: 'aGVsbG8gdGhlcmUh',
-                        name: 'example.txt',
-                        lastModified: 1507563924000,
-                    }],
-                },
+                fakeFiledropEvent,
                 'signature',
             );
 
             tick();
 
-            expect(comp.fileMetadata.getTitle('signature')).toEqual(fakeFileMetadata.name);
-            expect(comp.fileMetadata.getHash('signature')).toEqual(fakeFileMetadata.hash);
+            expect(comp.fileMetadata.getTitle('signature')).toEqual(fakeFiledropEvent.files[0].name);
+            expect(comp.fileMetadata.getHash('signature')).toContain(fakeFiledropEvent.files[0].mimeType);
+            expect(comp.fileMetadata.getHash('signature')).toContain(fakeFiledropEvent.files[0].data);
             expect(markForCheckSpy).toHaveBeenCalledTimes(1);
-        }));
-
-        it('should call the pop method of ToasterService with a success message', fakeAsync(() => {
-            comp.onDropFile(
-                {
-                    files: [{
-                        data: 'aGVsbG8gdGhlcmUh',
-                        name: 'example.txt',
-                        lastModified: 1507563924000,
-                    }],
-                },
-                'signature',
-            );
-
-            tick();
-
-            expect(pop).toHaveBeenCalledTimes(1);
-            expect(pop.calls.argsFor(0)[0]).toEqual('success');
-        }));
-
-        it('should call the pop method of ToasterService with an error message', fakeAsync(() => {
-            uploadFile
-                .and.returnValue(new Promise((resolve, reject) => reject()));
-
-            comp.onDropFile(
-                {
-                    files: [{
-                        data: 'aGVsbG8gdGhlcmUh',
-                        name: 'example.txt',
-                        lastModified: 1507563924000,
-                    }],
-                },
-                'signature',
-            );
-
-            tick();
-
-            expect(pop).toHaveBeenCalledTimes(1);
-            expect(pop.calls.argsFor(0)[0]).toEqual('error');
         }));
     });
 
@@ -229,40 +201,6 @@ describe('OfiManagementCompanyComponent', () => {
     });
 
     describe('editCompany', () => {
-
-        let fakeCompany;
-
-        beforeEach(() => {
-            fakeCompany = {
-                companyID: 'companyID',
-                companyName: 'companyName',
-                emailAddress: 'emailAddress',
-                legalFormName: 'legalFormName',
-                country: 'country',
-                postalAddressLine1: 'postalAddressLine1',
-                postalAddressLine2: 'postalAddressLine2',
-                city: 'city',
-                postalCode: 'postalCode',
-                taxResidence: 'taxResidence',
-                rcsMatriculation: 'rcsMatriculation',
-                supervisoryAuthority: 'supervisoryAuthority',
-                numSiretOrSiren: 'numSiretOrSiren',
-                shareCapital: 'shareCapital',
-                commercialContact: 'commercialContact',
-                operationalContact: 'operationalContact',
-                directorContact: 'directorContact',
-                lei: 'lei',
-                bic: 'bic',
-                giinCode: 'giinCode',
-                websiteUrl: 'websiteUrl',
-                phoneNumberPrefix: 'phoneNumberPrefix',
-                phoneNumber: 'phoneNumber',
-                signatureTitle: 'signatureTitle',
-                signatureHash: 'signatureHash',
-                logoTitle: 'logoTitle',
-                logoHash: 'logoHash',
-            };
-        });
 
         it('should set the FormGroup', () => {
             comp.editCompany(fakeCompany);
@@ -283,6 +221,39 @@ describe('OfiManagementCompanyComponent', () => {
             comp.editCompany(fakeCompany);
             expect(spy).toHaveBeenCalledTimes(1);
             expect(comp.fileMetadata.getProperties()).toEqual(expectedPayload);
+        });
+    });
+
+    describe('isFormValid', () => {
+        it('should be valid', () => {
+            comp.editCompany(fakeCompany);
+            expect(comp.isFormValid).toEqual(true);
+        });
+
+        it('should be invalid with no documents in production mode', () => {
+            const noDocCompany = {
+                ...fakeCompany,
+                signatureHash: null,
+            };
+            comp.editCompany(noDocCompany);
+            expect(comp.isFormValid).toEqual(false);
+        });
+
+        it('should be valid with no documents in non-production mode', () => {
+            const isProductionStub = MockNgRedux.getSelectorStub([
+                'user',
+                'siteSettings',
+                'production',
+            ]);
+            isProductionStub.next(false);
+            isProductionStub.complete();
+
+            const noDocCompany = {
+                ...fakeCompany,
+                signatureHash: null,
+            };
+            comp.editCompany(noDocCompany);
+            expect(comp.isFormValid).toEqual(true);
         });
     });
 });
