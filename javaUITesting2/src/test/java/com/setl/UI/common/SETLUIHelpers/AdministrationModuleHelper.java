@@ -74,12 +74,12 @@ public class AdministrationModuleHelper {
     }
     public static String[] generateUser() {
         String str = randomAlphabetic(5);
-        String userName = "Donald" + str;
+        String userName = "iZNESUser" + str;
         return new String[]{userName};
     }
     public static String[] generateBadUser() {
         String str = randomAlphabetic(5);
-        String userName = "_Donald_" + str;
+        String userName = "_iZNESUser_" + str;
         return new String[]{userName};
     }
 
@@ -106,7 +106,7 @@ public class AdministrationModuleHelper {
         try {
             wait.until(refreshed(visibilityOfElementLocated(By.xpath("/html/body/app-root/app-basic-layout/div/ng-sidebar-container/div/div/div/main/div/div/app-core-admin-teams-crud/div"))));
             String header = driver.findElement(By.xpath("/html/body/app-root/app-basic-layout/div/ng-sidebar-container/div/div/div/main/div/div/app-core-admin-teams-crud/div")).getText();
-            assertTrue(header.contains("Create a New Team"));
+            assertTrue(header.contains("Create New Team"));
         } catch (Exception e) {
             fail("Page heading test was not correct : " + e.getMessage());
         }
@@ -125,7 +125,7 @@ public class AdministrationModuleHelper {
         driver.findElement(By.xpath("//*[@id=\"iznes\"]/app-root/jaspero-confirmations/jaspero-confirmation/div[2]/div[4]/button[2]")).click();
         Thread.sleep(1000);
         wait.until(refreshed(visibilityOfElementLocated(By.className("jaspero__dialog-title"))));
-        assertTrue(driver.findElement(By.xpath("//*[@id=\"iznes\"]/app-root/jaspero-confirmations/jaspero-confirmation/div[2]/div[3]")).getText().equals("Are you sure you wish to create this Team?"));
+        assertTrue(driver.findElement(By.xpath("//*[@id=\"iznes\"]/app-root/jaspero-confirmations/jaspero-confirmation/div[2]/div[3]")).getText().equals("Are you sure you want to create this Team?"));
         driver.findElement(By.xpath("//*[@id=\"iznes\"]/app-root/jaspero-confirmations/jaspero-confirmation/div[2]/div[4]/button[2]")).click();
         wait.until(visibilityOfElementLocated(By.xpath("/html/body/app-root/jaspero-alerts/jaspero-alert/div[2]/div[1]")));
         driver.findElement(By.xpath("/html/body/app-root/jaspero-alerts/jaspero-alert/div[2]/div[1]")).getText().equals("error!");
@@ -181,9 +181,9 @@ public class AdministrationModuleHelper {
         driver.findElement(By.xpath("/html/body/app-root/app-basic-layout/div/ng-sidebar-container/div/div/div/main/div/div/app-core-admin-users-crud/clr-tabs/clr-tab/clr-tab-content/div[5]/div[2]/button[1]")).click();
         wait.until(visibilityOfElementLocated(By.xpath("/html/body/app-root/jaspero-confirmations/jaspero-confirmation/div[2]/div[1]")));
         String update = driver.findElement(By.xpath("/html/body/app-root/jaspero-confirmations/jaspero-confirmation/div[2]/div[1]")).getText();
-        assertTrue(update.equals("Update User"));
+        assertEquals("Update User", update);
         String message = driver.findElement(By.xpath("/html/body/app-root/jaspero-confirmations/jaspero-confirmation/div[2]/div[3]")).getText();
-        assertTrue(message.equals("Are you sure you wish to update this User?"));
+        assertEquals("Are you sure you wish to update this User?", message);
         driver.findElement(By.xpath("/html/body/app-root/jaspero-confirmations/jaspero-confirmation/div[2]/div[4]/button[2]")).click();
     }
 
@@ -202,7 +202,7 @@ public class AdministrationModuleHelper {
         driver.findElement(By.xpath("//*[@id=\"iznes\"]/app-root/jaspero-confirmations/jaspero-confirmation/div[2]/div[4]/button[2]")).click();
         Thread.sleep(1000);
         wait.until(refreshed(visibilityOfElementLocated(By.className("jaspero__dialog-title"))));
-        assertTrue(driver.findElement(By.xpath("//*[@id=\"iznes\"]/app-root/jaspero-confirmations/jaspero-confirmation/div[2]/div[3]")).getText().equals("Are you sure you wish to create this Team?"));
+        assertTrue(driver.findElement(By.xpath("//*[@id=\"iznes\"]/app-root/jaspero-confirmations/jaspero-confirmation/div[2]/div[3]")).getText().equals("Are you sure you want to create this Team?"));
         driver.findElement(By.xpath("//*[@id=\"iznes\"]/app-root/jaspero-confirmations/jaspero-confirmation/div[2]/div[4]/button[2]")).click();
         wait.until(refreshed(invisibilityOfElementLocated(By.className("jaspero__dialog-title"))));
         wait.until(refreshed(visibilityOfElementLocated(By.xpath("/html/body/app-root/app-basic-layout/div/ng-sidebar-container/div/div/div/main/div/div/app-core-admin-teams-list/div/h1"))));
@@ -217,7 +217,7 @@ public class AdministrationModuleHelper {
         assertTrue(create.contains("Create Team"));
         driver.findElement(By.xpath("/html/body/app-root/app-basic-layout/div/ng-sidebar-container/div/div/div/main/div/div/app-core-admin-teams-crud/clr-tabs/clr-tab/clr-tab-content/div[5]/div[2]/button")).click();
         wait.until(refreshed(visibilityOfElementLocated(By.className("jaspero__dialog-title"))));
-        assertTrue(driver.findElement(By.xpath("//*[@id=\"iznes\"]/app-root/jaspero-confirmations/jaspero-confirmation/div[2]/div[3]")).getText().equals("Are you sure you wish to create this Team?"));
+        assertTrue(driver.findElement(By.xpath("//*[@id=\"iznes\"]/app-root/jaspero-confirmations/jaspero-confirmation/div[2]/div[3]")).getText().equals("Are you sure you want to create this Team?"));
         driver.findElement(By.xpath("//*[@id=\"iznes\"]/app-root/jaspero-confirmations/jaspero-confirmation/div[2]/div[4]/button[2]")).click();
         wait.until(refreshed(invisibilityOfElementLocated(By.className("jaspero__dialog-title"))));
         wait.until(refreshed(visibilityOfElementLocated(By.xpath("/html/body/app-root/app-basic-layout/div/ng-sidebar-container/div/div/div/main/div/div/app-core-admin-teams-list/div/h1"))));
@@ -383,7 +383,7 @@ public class AdministrationModuleHelper {
         wait.until(visibilityOfElementLocated(By.xpath("//*[@id=\"iznes\"]/app-root/jaspero-confirmations/jaspero-confirmation/div[2]"))).isDisplayed();
         wait.until(elementToBeClickable(By.xpath("//*[@id=\"iznes\"]/app-root/jaspero-confirmations/jaspero-confirmation/div[2]/div[4]/button[2]"))).isDisplayed();
         assertTrue(driver.findElement(By.xpath("//*[@id=\"iznes\"]/app-root/jaspero-confirmations/jaspero-confirmation/div[2]/div[1]")).getText().equals("Update Team"));
-        assertTrue(driver.findElement(By.xpath("//*[@id=\"iznes\"]/app-root/jaspero-confirmations/jaspero-confirmation/div[2]/div[3]")).getText().equals("Are you sure you wish to update this Team?"));
+        assertTrue(driver.findElement(By.xpath("//*[@id=\"iznes\"]/app-root/jaspero-confirmations/jaspero-confirmation/div[2]/div[3]")).getText().equals("Are you sure you want to update this Team?"));
         driver.findElement(By.xpath("//*[@id=\"iznes\"]/app-root/jaspero-confirmations/jaspero-confirmation/div[2]/div[4]/button[2]")).click();
         wait.until(refreshed(visibilityOfElementLocated(By.id("tabAccountAdminTeamsButton"))));
     }
@@ -392,7 +392,7 @@ public class AdministrationModuleHelper {
         wait.until(visibilityOfElementLocated(By.id("name")));
         wait.until(elementToBeClickable(By.id("name")));
         String nameEntry = driver.findElement(By.id("name")).getAttribute("value");
-        assertTrue(nameEntry.equals(reName));
+        assertEquals(nameEntry, reName);
     }
     public static void selectDeleteTeam (String Answer, String teamName) throws InterruptedException {
         final WebDriverWait wait = new WebDriverWait(driver, timeoutInSeconds);

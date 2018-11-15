@@ -76,8 +76,6 @@ public class OpenCSDUsersSubModuleTest {
         selectUserType();
         createUserDisabled();
     }
-
-
     @Test
     @Ignore //Static Team no longer Exists it was removed due to old data
     public void shouldNotCreateUser() throws InterruptedException, SQLException {
