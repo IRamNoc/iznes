@@ -45,7 +45,10 @@ export class NewKycSelectAmcComponent implements OnInit, OnDestroy {
     @select(['ofi', 'ofiProduct', 'ofiManagementCompany', 'investorManagementCompanyList', 'investorManagementCompanyList']) managementCompanyList$;
 
     get selectedManagementCompanies() {
-        return filter(this.managementCompanies, company => company.selected);
+        return filter(this.managementCompanies, company => company.selected).map(company => ({
+            id: company.id,
+            registered: company.registered,
+        }));
     }
 
     constructor(
@@ -88,11 +91,16 @@ export class NewKycSelectAmcComponent implements OnInit, OnDestroy {
             takeUntil(this.unsubscribe),
         );
 
-        companyCombination$.subscribe(([managementCompanies, kycList]) => {
+        combineLatest(companyCombination$, this.requestedKycList$)
+        .pipe(
+            map(([company, requestedKycs]) => [company[0], company[1], requestedKycs]),
+            takeUntil(this.unsubscribe),
+        )
+        .subscribe(([managementCompanies, kycList, requestedKycs]) => {
             const managementCompanyList = managementCompanies.toJS();
 
             this.managementCompanies = this.requestsService
-            .extractManagementCompanyData(managementCompanyList);
+            .extractManagementCompanyData(managementCompanyList, kycList, requestedKycs);
         });
 
         combineLatest(companyCombination$, this.requestedKycList$)

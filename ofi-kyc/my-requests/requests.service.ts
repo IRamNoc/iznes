@@ -31,9 +31,13 @@ export class RequestsService {
     ) {
     }
 
-    extractManagementCompanyData(companies) {
+    extractManagementCompanyData(companies, kycList, requestedKycs) {
         if (_.isEmpty(companies)) {
             return [];
+        }
+
+        if (!_.isEmpty(kycList)) {
+            companies = this.filterCompanies(companies, kycList, requestedKycs);
         }
 
         return _.chain(companies)
@@ -48,10 +52,16 @@ export class RequestsService {
         .value();
     }
 
-    filterCompanies(companies, kycList) {
+    filterCompanies(companies, kycList, requestedKycs) {
         kycList = _.keyBy(kycList, 'amManagementCompanyID');
+        requestedKycs = _.keyBy(requestedKycs, 'amcID');
 
-        return _.filter(companies, company => !kycList[company.companyID]);
+        return _.filter(companies, (company) => {
+            const isInKycList = kycList[company.companyID];
+            const isInRequestedList = requestedKycs[company.companyID];
+
+            return !isInKycList || isInRequestedList;
+        });
     }
 
     shapeServerData(data) {
