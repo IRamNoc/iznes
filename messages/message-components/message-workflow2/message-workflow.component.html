@@ -1,8 +1,9 @@
 <div class="workflow-body">
 
-    <div class="btn-group btn-primary" *ngIf="!isActed && decodedData && decodedData['type'] === 'vote'">
-        <button *ngFor="let choice of decodedData['options']" (click)="doTransfer(choice.address)" class="btn" [disabled]="isActed || disableSend || walletAddresses.length === 0">{{ choice.buttonLabel }}</button>
+    <div class="btn-group btn-primary" *ngIf="!isActed && decodedData && decodedData['type'] === 'exchange2'">
+        <button class="btn" [disabled]="isActed || disableSend || !enoughCash || walletAddresses.length === 0" (click)="doTransfer()">Exercise all options</button> <!-- todo disable when not enough cash -->
+        <button class="btn" [disabled]="true">Exercise some options</button>
     </div>
-    <p *ngIf="isActed">This vote has already been registred.</p>
+    <p *ngIf="isActed">This message has already been acted on.</p>
 
 </div>

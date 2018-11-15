@@ -13,7 +13,8 @@ import { ReportingService } from '@setl/core-balances/reporting.service';
 /**
  * Contract execution type
  *
- * Check balances of two assets and give them to a conversion contract.
+ * Give all of a denominating asset (e.g rights token) and
+ * accompanying cash asset in appropriate qty to an exchange contract.
  */
 @Component({
     selector: 'setl-message-workflow2',
@@ -35,11 +36,32 @@ export class SetlMessageWorkflowComponent2 implements OnInit {
     public walletAddresses = [];
     public wallet;
     public balances;
+    public enoughCash = false;
+    public denominator = '';
+    public assetRatios = {};
+    public assetBalances = {};
 
     public contractExecTemplate = {
-        topic: '',
+        topic: 'cocom',
+        walletid: 0,
         address: '',
-    };
+        contractdata: {
+            assetsin: [
+                /*[
+                    'CompanyX',
+                    'Rights',
+                    40000,
+                ],
+                [
+                    'BankX',
+                    'GBP',
+                    100000,
+                ],*/
+            ],
+            contractfunction: 'exchange_commit',
+        },
+        contractaddress: '3Jssgbuit5348oc3DTb8uamVNVJDjZnzUJ',
+    }
 
     @select(['wallet', 'myWalletAddress', 'requested']) addressListRequestedStateOb;
     @select(['wallet', 'myWalletAddress', 'addressList']) requestedAddressListOb;
@@ -55,7 +77,7 @@ export class SetlMessageWorkflowComponent2 implements OnInit {
 
     updateWalletAddresses (addresses) {
         const addList = walletHelper.walletAddressListToSelectItem(addresses);
-        this.walletAddresses = addList.map((objAdd) => objAdd.text);
+        this.walletAddresses = addList.map(objAdd => objAdd.text);
     }
 
     requestWalletAddressList (requestedState: boolean) {
@@ -75,9 +97,18 @@ export class SetlMessageWorkflowComponent2 implements OnInit {
             if (!this.decodedData) {
                 return;
             }
-
-            this.contractExecTemplate['blah'] = this.decodedData['blah']
             this.contractExecTemplate['walletid'] = this.walletId;
+
+            for (let i = 0; i < this.decodedData['assets'].length; i += 1) {
+                const a = this.decodedData['assets'][i];
+
+                this.assetRatios[a['asset']] = a['quantity']; // NOTE: our cache includes namespace
+                this.setCommitQty(a['asset'], a['quantity']);
+
+                if (i === 0) {
+                    this.denominator = a['asset'];
+                }
+            }
         }
 
         this.subscriptionsArray.push(this.requestedAddressListOb.subscribe((requested) => {
@@ -93,30 +124,73 @@ export class SetlMessageWorkflowComponent2 implements OnInit {
             this.balances = balances;
             for (let i = 0; i < balances.length; i += 1) {
                 const bal = balances[i];
-                if (bal['asset'] === this.decodedData['asset']) { // TODO: check both assets
-                    this.contractExecTemplate['quantity_x'] = bal['free']; // TODO; check this against the contract itself somehow.  quantity 1,2
+                if (bal['asset'] === this.denominator) {
+console.log('setting denominating quantity', bal)
+                    this.setCommitQty(bal['asset'], bal['free']); // set ALL the users denominating asset (typically a token) for use.
+                }
+            }
+            for (let i = 0; i < balances.length; i += 1) {
+                const bal = balances[i];
+                for (const asset in this.assetRatios) { // iterate other assets and use the ratio to set the qty.
+                    if (bal['asset'] === asset && asset !== this.denominator) {
+                        const ratio = this.assetRatios[asset] / this.assetRatios[this.denominator];
+                        const req = this.getCommitQty(this.denominator) * ratio;
+console.log('setting numerating asset', bal, req);
+                        if (bal['free'] > req) {
+                            this.setCommitQty(bal['asset'], req);
+                        } else {
+                            this.setCommitQty(bal['asset'], null); // ask for failure (so we can spaff a warning at the user)
+                        }
+                    }
                 }
             }
         });
     }
 
-    doTransfer (toAddress) {
+    setCommitQty (fqan, qty) { // fqan = fully qualified asset name. eg. BoE|GBP
+        const sn = fqan.split('|');
+        const ns = sn[0];
+        const asset = sn[1];
+        let found = false;
+        for (let i = 0; this.contractExecTemplate['contractdata']['assetsin'].length; i += 1) {
+            const item = this.contractExecTemplate['contractdata']['assetsin'][i];
+            if (item[0] === ns && item[1] === asset) {
+                item[2] = qty;
+                found = true;
+            }
+        }
+        if (!found) {
+            this.contractExecTemplate['contractdata']['assetsin'].push([ns, asset, qty]);
+        }
+    }
+
+    getCommitQty (fqan) {
+        const sn = fqan.split('|');
+        const ns = sn[0];
+        const asset = sn[1];
+        for (let i = 0; this.contractExecTemplate['contractdata']['assetsin'].length; i += 1) {
+            const item = this.contractExecTemplate['contractdata']['assetsin'][i];
+            if (item[0] === ns && item[1] === asset) {
+                return item[2];
+            }
+        }
+    }
+
+    doTransfer () {
 
         this.disableSend = true; // prevent fat-fingered freddy from doubletapping.
         setTimeout(() => {
             this.disableSend = false;
         }, this.coolDown);
 
-        this.contractExecTemplate['address'] = toAddress;
-
-        /*for (let i = 0; i < this.data.recipients.length; i += 1) {
+        for (let i = 0; i < this.data.recipients.length; i += 1) {
             const r = this.data.recipients[i];
             if (this.walletAddresses.indexOf(r) !== -1) {
-                this.contractExecTemplate.fromaddress = this.walletAddresses[this.walletAddresses.indexOf(r)];
+                this.contractExecTemplate.address = this.walletAddresses[this.walletAddresses.indexOf(r)];
             }
-        }*/
+        }
         const asyncTaskPipe = createWalletNodeSagaRequest(this.walletNodeSocketService, 'tx', this.contractExecTemplate);
-        this.ngRedux.dispatch(SagaHelper.runAsyncCallback( // Send a saga action.
+        this.ngRedux.dispatch(SagaHelper.runAsyncCallback(
             asyncTaskPipe,
             (d) => {
                 this.isActed = true;
@@ -129,9 +203,9 @@ export class SetlMessageWorkflowComponent2 implements OnInit {
                         console.warn('Could not set acted', err);
                     });
             },
-            (e) => {
+            (e) => { // TODO: display something for insufficient balance
                 console.error(e);
-                let base = 'A server error occurred';
+                let base = 'An error occurred';
                 const extra = (e[1] && e[1]['data'] && e[1]['data']['status']) || (e[1] && e[1]['data'] && e[1]['data']['error']) || '';
                 if (extra) {
                     base += ':  ';
