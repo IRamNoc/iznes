@@ -31,18 +31,18 @@ export class RequestsService {
     ) {
     }
 
-    extractManagementCompanyData(companies, kycList) {
+    extractManagementCompanyData(companies) {
         if (_.isEmpty(companies)) {
             return [];
-        }
-        if (!_.isEmpty(kycList)) {
-            companies = this.filterCompanies(companies, kycList);
         }
 
         return _.chain(companies)
         .map(company => ({
             id: company.companyID,
-            text: company.companyName
+            text: company.companyName,
+            websiteUrl: company.websiteUrl,
+            image: company.logoHash,
+            registered: false,
         }))
         .values()
         .value();
