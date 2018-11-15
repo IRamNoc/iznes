@@ -76,6 +76,8 @@ export class GeneralInformationComponent implements OnInit, OnDestroy {
                 control.disable();
             });
         }
+
+        this.formPercent.refreshFormPercent();
     }
 
     formCheckOtherIdentificationNumber(value) {

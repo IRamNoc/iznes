@@ -14,6 +14,7 @@ import { ManagagementCompanyService } from './management-company.service';
 import { ManagementCompanyListState } from '../../ofi-store/ofi-product/management-company';
 import { ManagementCompanyFileMetadata, ManagementCompanyFileMetadataField } from './management-company-file-metadata';
 import { legalFormList } from '../../ofi-kyc/my-requests/requests.config';
+import { FileDropEvent } from '@setl/core-filedrop';
 
 const AM_USERTYPE = 36;
 
@@ -30,7 +31,7 @@ export class OfiManagementCompanyComponent implements OnInit, OnDestroy {
     private usertype: number;
 
     managementCompanyForm: FormGroup;
-    isWalletConnected = false;
+    isProduction = true;
     editForm = false;
     showSearchTab = false;
     showModal = false;
@@ -53,7 +54,7 @@ export class OfiManagementCompanyComponent implements OnInit, OnDestroy {
     @select(['user', 'siteSettings', 'language']) language$;
     @select(['user', 'myDetail', 'userType']) usertype$;
     @select(['ofi', 'ofiProduct', 'ofiManagementCompany', 'managementCompanyList', 'managementCompanyList']) managementCompanyList$;
-    @select(['user', 'connected', 'connectedWallet']) connectedWallet$;
+    @select(['user', 'siteSettings', 'production']) isProduction$;
 
     constructor(
         private ngRedux: NgRedux<any>,
@@ -81,6 +82,12 @@ export class OfiManagementCompanyComponent implements OnInit, OnDestroy {
                 takeUntil(this.unSubscribe),
             )
             .subscribe(language => this.setLanguage(language));
+
+        this.isProduction$
+            .pipe(
+                takeUntil(this.unSubscribe),
+            )
+            .subscribe(isProduction => this.isProduction = isProduction);
 
         this.usertype$
             .pipe(
@@ -111,22 +118,17 @@ export class OfiManagementCompanyComponent implements OnInit, OnDestroy {
                     this.editCompany(_.values(managementCompanyList)[0]);
                 }
             });
-
-        this.connectedWallet$
-            .pipe(
-                takeUntil(this.unSubscribe),
-            )
-            .subscribe((connectedWallet) => {
-                this.isWalletConnected = !!connectedWallet;
-                this.markForCheck();
-            });
     }
 
     get isAssetManager(): boolean {
         return this.usertype === AM_USERTYPE;
     }
 
-    public onDropFile(filedropEvent, fieldName: ManagementCompanyFileMetadataField) {
+    get isFormValid(): boolean {
+        return this.managementCompanyForm.valid && (!this.isProduction || this.fileMetadata.isValid());
+    }
+
+    public onDropFile(filedropEvent: FileDropEvent, fieldName: ManagementCompanyFileMetadataField) {
         if (!filedropEvent.files.length) {
             this.fileMetadata.setProperty(
                 fieldName,
@@ -138,27 +140,24 @@ export class OfiManagementCompanyComponent implements OnInit, OnDestroy {
             this.markForCheck();
             return;
         }
-        this.service.uploadFile(filedropEvent, this.managementCompanyForm.controls[fieldName])
-            .then((res) => {
-                if (res) {
-                    this.toasterSevice.pop('success', `${res.name} successfully uploaded`);
-                }
-                this.fileMetadata.setProperty(
-                    fieldName,
-                    {
-                        title: res.name,
-                        hash: res.hash,
-                    },
-                );
-                this.markForCheck();
-            })
-            .catch((err) => {
-                this.toasterSevice.pop('error', `failed to upload file: ${err}`);
-            });
+        this.fileMetadata.setProperty(
+            fieldName,
+            {
+                title: filedropEvent.files[0].name,
+                hash: `data:${filedropEvent.files[0].mimeType};base64,${filedropEvent.files[0].data}`,
+            },
+        );
+
+        this.markForCheck();
     }
 
     public getCountryName(countryAbbreviation: string): string {
-        return _.find(this.countries, { id: countryAbbreviation }).text;
+        const thisCountryData = _.find(this.countries, { id: countryAbbreviation });
+
+        if (thisCountryData) {
+            return thisCountryData.text;
+        }
+        return '';
     }
 
     ngOnDestroy() {
@@ -240,7 +239,7 @@ export class OfiManagementCompanyComponent implements OnInit, OnDestroy {
 
     save() {
 
-        if (!this.managementCompanyForm.valid || !this.fileMetadata.isValid()) {
+        if (!this.isFormValid) {
             return;
         }
 

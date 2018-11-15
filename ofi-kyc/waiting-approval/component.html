@@ -101,12 +101,12 @@
                             <textarea *ngIf="waitingApprovalFormGroup.controls['status'].value === REJECTED_STATUS && initialStatusId != -2" 
                                     id="rejectText" 
                                     class="form-control" 
-                                    [placeholder]="_translate.translate('Please indicate here why you would like to reject this application. This will be sent as a message to your client on the IZNES platform.')" formControlName="additionalText">
+                                    [placeholder]="translate.translate('Please indicate here why you would like to reject this application. This will be sent as a message to your client on the IZNES platform.')" formControlName="additionalText">
                             </textarea>
                             <!-- Ask for more info -->
                             <textarea *ngIf="waitingApprovalFormGroup.controls['status'].value === ASK_FOR_MORE_INFO_STATUS"                 id="askMoreInfoText" 
                                         class="form-control" 
-                                        [placeholder]="_translate.translate('Please ask for more information here. This will be sent as a message to your client on the IZNES platform.')" formControlName="additionalText">
+                                        [placeholder]="translate.translate('Please ask for more information here. This will be sent as a message to your client on the IZNES platform.')" formControlName="additionalText">
                             </textarea>
                         </div>
 
