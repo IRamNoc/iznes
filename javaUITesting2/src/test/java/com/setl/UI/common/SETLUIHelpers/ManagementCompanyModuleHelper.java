@@ -108,8 +108,8 @@ public class ManagementCompanyModuleHelper {
         }catch (Exception e){
             fail("Unable to select from drop down, Phone Number");
         }
-//        driver.findElement(By.id("kyc_additionnal_phoneNumber")).sendKeys("07464575836");
-//        driver.findElement(By.id("mcBtnSubmitForm")).click();
+       driver.findElement(By.id("kyc_additionnal_phoneNumber")).sendKeys("07464575836");
+       driver.findElement(By.id("mcBtnSubmitForm")).click();
     }
     public static void assertEmailBodySentToManagementCompany(String email) {
         /*
