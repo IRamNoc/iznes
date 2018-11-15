@@ -103,17 +103,14 @@ export class IdentificationService {
                 const newValue = this.stakeholderIdsToUpdate[parentValue];
                 const isOld = this.beneficiaryService.isLocalBeneficiaryId(parent);
 
-                console.log('********** isold', isOld, 'newvalue', newValue, 'parent value', parentValue);
                 if (isOld && newValue) {
                     parent.setValue([{ id: newValue }]);
-                    console.log('****** pushing in toresend', JSON.stringify(stakeholder.value));
                     toResend.controls.push(stakeholder);
                 }
             });
 
             this.beneficiaryService.fillInStakeholderSelects(formGroupBeneficiaries);
 
-            console.log('****** checking to resend', toResend.controls);
             if (toResend.controls.length) {
                 this.sendRequestBeneficiaries(toResend, kycID, connectedWallet);
 
@@ -202,7 +199,7 @@ export class IdentificationService {
 
         const oldCompanyBeneficiariesID = extracted.companyBeneficiariesID;
         const parent = extracted.parent;
-        console.log('******** old', oldCompanyBeneficiariesID);
+
         if (this.beneficiaryService.isLocalBeneficiaryId(oldCompanyBeneficiariesID)) {
             delete extracted.companyBeneficiariesID;
         }
@@ -219,12 +216,9 @@ export class IdentificationService {
         };
         return this.requestsService.sendRequest(messageBody).then((data) => {
             const companyBeneficiariesID = getValue(data, [1, 'Data', 0, 'companyBeneficiariesID']);
-            console.log('****** is there a company id?', companyBeneficiariesID, data);
             if (companyBeneficiariesID) {
-                console.log('***** testing old', oldCompanyBeneficiariesID);
                 if (this.beneficiaryService.isLocalBeneficiaryId(oldCompanyBeneficiariesID)) {
                     this.stakeholderIdsToUpdate[oldCompanyBeneficiariesID] = Number(companyBeneficiariesID);
-                    console.log('****** stakeholder', this.stakeholderIdsToUpdate);
                 }
 
                 formGroupBeneficiary.controls['companyBeneficiariesID'].setValue(companyBeneficiariesID);

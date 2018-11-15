@@ -102,7 +102,6 @@ export class NewKycSelectAmcComponent implements OnInit, OnDestroy {
             takeUntil(this.unsubscribe),
         )
         .subscribe((kycs) => {
-            console.log('*-*--*-*-', kycs.length);
             this.populateForm(kycs);
         });
 
