@@ -5,6 +5,7 @@ import com.setl.UI.common.SETLUtils.ScreenshotRule;
 import com.setl.UI.common.SETLUtils.TestMethodPrinterRule;
 import custom.junit.runners.OrderedJUnit4ClassRunner;
 import org.junit.Before;
+import org.junit.Ignore;
 import org.junit.Rule;
 import org.junit.Test;
 import org.junit.rules.Timeout;
@@ -59,6 +60,7 @@ public class OpenCSDTeamsSubModuleTest {
         validateTeamsCreated(1, teamName[0], teamReference[0], teamDescription[0]);
     }
     @Test
+    @Ignore //TG2747
     public void shouldNotAllowNullNameRefDesc() throws InterruptedException {
         loginAndVerifySuccess("am", "alex01");
         navigateToDropdown("menu-administration");
