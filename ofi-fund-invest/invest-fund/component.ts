@@ -50,7 +50,6 @@ import { SellBuyCalendar } from '../../ofi-product/fund-share/FundShareEnum';
 
 import { OfiFundShareService } from '@ofi/ofi-main/ofi-req-services/ofi-product/fund-share/service';
 import { DomSanitizer } from '@angular/platform-browser';
-import { FileViewerPreviewService } from '@setl/core-fileviewer/preview-modal/service';
 import { FileDownloader } from '@setl/utils/services/file-downloader/service';
 import { validateKiid } from '@ofi/ofi-main/ofi-store/ofi-fund-invest/ofi-fund-access-my';
 
