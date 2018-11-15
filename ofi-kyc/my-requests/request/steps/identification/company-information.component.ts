@@ -60,15 +60,13 @@ export class CompanyInformationComponent implements OnInit, OnDestroy {
     }
 
     initFormCheck() {
-
         this.form.get('sectorActivity').valueChanges
         .pipe(takeUntil(this.unsubscribe))
         .subscribe((data) => {
             const sectorActivityValue = getValue(data, [0, 'id']);
 
             this.formCheckSectorActivity(sectorActivityValue);
-        })
-        ;
+        });
 
         this.form.get('activities').valueChanges
         .pipe(takeUntil(this.unsubscribe))

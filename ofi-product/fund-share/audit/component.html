@@ -1,13 +1,13 @@
 <div class="header-breadcrumbs">
     <h1>
-        <i class="fa fa-bars"></i>{{'Share Audit Trail' | translate}}
+        <i class="fa fa-bars"></i>{{ 'Share Audit Trail' | translate }}
         <ng-container *ngIf="fundShare && fundShare.fundShareName"> - {{fundShare.fundShareName}}</ng-container>
     </h1>
 </div>
 
 <clr-tabs>
     <clr-tab>
-        <button clrTabLink id="tabFundShareButton">{{'Audit' | translate}}
+        <button clrTabLink id="tabFundShareButton">{{ 'Audit' | translate }}
 
         </button>
         <clr-tab-content class="outer">
@@ -15,18 +15,30 @@
                 <div class="form-horizontal">
                     <div class="row">
                         <div class="form-group col-sm-4">
-                            <label class="control-label">{{'Date from' | translate}}</label>
+                            <label class="control-label">{{ 'Date From' | translate }}</label>
                             <div class="input-group date-pick-wrapper">
                                 <span class="fa fa-calendar"></span>
-                                <input id="auditDateFrom" name="auditDateFrom" [placeholder]="_translate.translate('Choose a date')" formControlName="dateFrom" [dpDayPicker]="dateConfig" mode="day" theme="dp-material">
+                                <input id="auditDateFrom" 
+                                        name="auditDateFrom" 
+                                        [placeholder]="translate.translate('Choose a date')" 
+                                        formControlName="dateFrom" 
+                                        [dpDayPicker]="dateConfig" 
+                                        mode="day" 
+                                        theme="dp-material">
                             </div>
                         </div>
 
                         <div class="form-group col-sm-4">
-                            <label class="control-label">{{'Date to' | translate}}</label>
+                            <label class="control-label">{{'Date To' | translate}}</label>
                             <div class="input-group date-pick-wrapper">
                                 <span class="fa fa-calendar"></span>
-                                <input id="auditDateTo" name="auditDateTo" [placeholder]="_translate.translate('Choose a date')" formControlName="dateTo" [dpDayPicker]="dateConfig" mode="day" theme="dp-material">
+                                <input id="auditDateTo" 
+                                        name="auditDateTo" 
+                                        [placeholder]="translate.translate('Choose a date')" 
+                                        formControlName="dateTo" 
+                                        [dpDayPicker]="dateConfig" 
+                                        mode="day" 
+                                        theme="dp-material">
                             </div>
                         </div>
                     </div>
@@ -34,27 +46,13 @@
             </form>
 
             <clr-datagrid #dataGrid *ngIf="fundShareAuditData">
-                <clr-dg-column class="col-fundname">{{'Fund name' | translate}}
-
-                </clr-dg-column>
-                <clr-dg-column class="col-fundsharename">{{'Share name' | translate}}
-
-                </clr-dg-column>
-                <clr-dg-column class="col-fundsharefield">{{'Field' | translate}}
-
-                </clr-dg-column>
-                <clr-dg-column class="col-fundshareoldvalue">{{'Old value' | translate}}
-
-                </clr-dg-column>
-                <clr-dg-column class="col-fundsharenewvalue">{{'New value' | translate}}
-
-                </clr-dg-column>
-                <clr-dg-column class="col-fundsharemodifiedby">{{'Modified by' | translate}}
-
-                </clr-dg-column>
-                <clr-dg-column class="col-fundsharemodifieddate">{{'Date' | translate}}
-
-                </clr-dg-column>
+                <clr-dg-column class="col-fundname">{{ 'Fund Name' | translate}}</clr-dg-column>
+                <clr-dg-column class="col-fundsharename">{{ 'Share Name' | translate}}</clr-dg-column>
+                <clr-dg-column class="col-fundsharefield">{{ 'Field' | translate }}</clr-dg-column>
+                <clr-dg-column class="col-fundshareoldvalue">{{ 'Old Value' | translate }}</clr-dg-column>
+                <clr-dg-column class="col-fundsharenewvalue">{{ 'New Value' | translate }}</clr-dg-column>
+                <clr-dg-column class="col-fundsharemodifiedby">{{ 'Modified By' | translate }}</clr-dg-column>
+                <clr-dg-column class="col-fundsharemodifieddate">{{ 'Date' | translate }}</clr-dg-column>
 
                 <clr-dg-row *clrDgItems="let item of fundShareAuditData" id="{{'product-shares-audit-row' + i}}">
                     <clr-dg-cell id="{{'shares-audit-row'+idx+'-col-fund-name'}}" class="col-fundname">{{item.fundName}}</clr-dg-cell>
@@ -74,7 +72,7 @@
 
             <div class="row actions">
                 <div class="col-sm-12">
-                    <button class="btn btn-default" (click)="returnToShare()">{{'Cancel' | translate}}</button>
+                    <button class="btn btn-default" (click)="returnToShare()">{{ 'Cancel' | translate }}</button>
                 </div>
             </div>
         </clr-tab-content>

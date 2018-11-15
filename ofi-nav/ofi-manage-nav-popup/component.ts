@@ -1,14 +1,14 @@
-import {Component, OnInit, Input, ChangeDetectorRef} from '@angular/core';
-import {FormGroup, FormControl, Validators} from '@angular/forms';
-import {select, NgRedux} from '@angular-redux/store';
-import {Observable, Subscription} from 'rxjs';
-import {AlertsService} from '@setl/jaspero-ng2-alerts';
+import { Component, OnInit, Input, ChangeDetectorRef } from '@angular/core';
+import { FormGroup, FormControl, Validators } from '@angular/forms';
+import { select, NgRedux } from '@angular-redux/store';
+import { Observable, Subscription } from 'rxjs';
+import { AlertsService } from '@setl/jaspero-ng2-alerts';
 import * as _ from 'lodash';
 import * as moment from 'moment';
 
 import * as model from '../OfiNav';
-import {OfiManageNavPopupService} from './service';
-import {OfiNavService} from '../../ofi-req-services/ofi-product/nav/service';
+import { OfiManageNavPopupService } from './service';
+import { OfiNavService } from '../../ofi-req-services/ofi-product/nav/service';
 import {
     clearRequestedNavFundView,
     clearRequestedNavFundsList,
@@ -16,9 +16,9 @@ import {
     ofiSetCurrentNavLatestRequest,
     clearRequestedNavLatest
 } from '../../ofi-store/ofi-product/nav';
-import {CurrencyValue} from '../../ofi-product/fund-share/fundShareValue';
-import {NumberConverterService, MoneyValuePipe} from '@setl/utils';
-import {MultilingualService} from '@setl/multilingual';
+import { CurrencyValue } from '../../ofi-product/fund-share/fundShareValue';
+import { NumberConverterService, MoneyValuePipe } from '@setl/utils';
+import { MultilingualService } from '@setl/multilingual';
 
 @Component({
     selector: 'app-nav-add',
@@ -26,7 +26,6 @@ import {MultilingualService} from '@setl/multilingual';
     styleUrls: ['./component.scss']
 })
 export class OfiManageNavPopup implements OnInit {
-
     private mode: model.NavPopupMode;
     private _isOpen: boolean;
     private popupModel: { share: model.NavInfoModel, mode: model.NavPopupMode };
@@ -70,7 +69,7 @@ export class OfiManageNavPopup implements OnInit {
                 private ofiNavService: OfiNavService,
                 private numberConverterService: NumberConverterService,
                 private popupService: OfiManageNavPopupService,
-                public _translate: MultilingualService,
+                public translate: MultilingualService,
                 private moneyValuePipe: MoneyValuePipe
                 ) {
 
@@ -201,7 +200,7 @@ export class OfiManageNavPopup implements OnInit {
     }
 
     private initStatusData(): void {
-        this.statusItems = [{
+        this.statusItems = this.translate.translate([{
             id: 1,
             text: 'Estimated'
         }, {
@@ -210,8 +209,8 @@ export class OfiManageNavPopup implements OnInit {
         }, {
             id: -1,
             text: 'Validated'
-        }]
-    }
+        }]);
+    };
 
     /**
      * add/edit new nav
@@ -248,7 +247,6 @@ export class OfiManageNavPopup implements OnInit {
         this.showErrorModal(res);
     }
 
-
     /**
      * delete nav
      * @param requested boolean
@@ -283,7 +281,6 @@ export class OfiManageNavPopup implements OnInit {
     getCurrencyString(currency: number): string {
         return CurrencyValue[currency];
     }
-
 
     /**
      * request the nav latest
@@ -325,7 +322,7 @@ export class OfiManageNavPopup implements OnInit {
             <table class="table grid">
                 <tbody>
                     <tr>
-                        <td class="text-center text-success">Successfully Updated NAV</td>
+                        <td class="text-center text-success">${this.translate.translate('Successfully Updated NAV')}</td>
                     </tr>
                 </tbody>
             </table>
@@ -339,7 +336,7 @@ export class OfiManageNavPopup implements OnInit {
             <table class="table grid">
                 <tbody>
                     <tr>
-                        <td class="text-center text-success">Successfully Deleted NAV</td>
+                        <td class="text-center text-success">${this.translate.translate('Successfully Deleted NAV')}</td>
                     </tr>
                 </tbody>
             </table>
@@ -357,7 +354,7 @@ export class OfiManageNavPopup implements OnInit {
         const result = data[1].Data[0].Message;
         const errorMessage = result && result.length > 0
             ? result
-            : this._translate.translate('Please ensure that all inputs are in the right format');
+            : this.translate.translate('Please ensure that all inputs are in the right format');
 
         this.alertsService.create('error', `${errorMessage}`);
 
@@ -390,5 +387,4 @@ function numberValidator(control: FormControl): { [s: string]: boolean } {
             invalidNumber: true,
         };
     }
-
 }

@@ -106,7 +106,7 @@ export class NewKycRequestComponent implements OnInit {
                     startHere: completedStep === 'introduction'
                 },
                 {
-                    title: this.translate.translate('Risk profile'),
+                    title: this.translate.translate('Risk Profile'),
                     id: 'step-risk-profile',
                     form: this.forms.get('riskProfile'),
                     startHere: completedStep === 'identification'

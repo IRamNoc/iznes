@@ -39,11 +39,11 @@ export class OfiAmDocumentsComponent implements OnDestroy, OnInit {
     @select(['ofi', 'ofiKyc', 'amKycList', 'amKycList']) kycListOb;
 
     /* Constructor. */
-    constructor(private _changeDetectorRef: ChangeDetectorRef,
-                private _ofiKycService: OfiKycService,
-                private _ngRedux: NgRedux<any>,
+    constructor(private changeDetectorRef: ChangeDetectorRef,
+                private ofiKycService: OfiKycService,
+                private ngRedux: NgRedux<any>,
                 private toasterService: ToasterService,
-                private _router: Router,
+                private router: Router,
                 private translate: MultilingualService,
                 @Inject(APP_CONFIG) appConfig: AppConfig) {
         this.appConfig = appConfig;
@@ -54,7 +54,6 @@ export class OfiAmDocumentsComponent implements OnDestroy, OnInit {
             (requested) => this.requestKycList(requested)));
         this.subscriptions.push(this.kycListOb.subscribe(
             (amKycListData) => this.updateTable(amKycListData)));
-
     }
 
     updateTable(tableData) {
@@ -194,7 +193,7 @@ export class OfiAmDocumentsComponent implements OnDestroy, OnInit {
             },
             {
                 id: 'Awaiting',
-                title: this.translate.translate('Awaiting for more information from your client'),
+                title: this.translate.translate('Awaiting for more information from your Client'),
                 columns: [columns[1], columns[2], columns[7], columns[4], columns[8]],
                 open: true,
                 data: tables[2]
@@ -208,7 +207,7 @@ export class OfiAmDocumentsComponent implements OnDestroy, OnInit {
             },
             {
                 id: 'StartedClients',
-                title: this.translate.translate('Started by your clients'),
+                title: this.translate.translate('Started by your Clients'),
                 columns: [columns[1], columns[2], columns[7], columns[4], columns[8]],
                 open: true,
                 data: tables['invited']
@@ -222,7 +221,7 @@ export class OfiAmDocumentsComponent implements OnDestroy, OnInit {
             }
         ];
 
-        this._changeDetectorRef.markForCheck();
+        this.changeDetectorRef.markForCheck();
     }
 
     /**
@@ -232,7 +231,7 @@ export class OfiAmDocumentsComponent implements OnDestroy, OnInit {
      */
     requestKycList(requested): void {
         if (!requested) {
-            OfiKycService.defaultRequestAmKycList(this._ofiKycService, this._ngRedux);
+            OfiKycService.defaultRequestAmKycList(this.ofiKycService, this.ngRedux);
         }
     }
 
@@ -249,14 +248,14 @@ export class OfiAmDocumentsComponent implements OnDestroy, OnInit {
                 const regex = new RegExp(match);
                 ret = ret.replace(regex, row[key]);
             });
-            this._router.navigateByUrl(ret);
+            this.router.navigateByUrl(ret);
         }
     }
 
     /* On Destroy. */
     ngOnDestroy(): void {
         /* Detach the change detector on destroy. */
-        this._changeDetectorRef.detach();
+        this.changeDetectorRef.detach();
 
         /* Unsunscribe Observables. */
         for (let key of this.subscriptions) {

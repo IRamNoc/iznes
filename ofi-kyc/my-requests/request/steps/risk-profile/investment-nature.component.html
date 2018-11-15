@@ -12,18 +12,19 @@
     </div>
 
     <div class="row panel-body" [class.hidden]="!open">
-
         <div class="col-xs-12">
             <div class="row" *ngIf="amcs?.length > 1">
                 <div class="form-group col-sm-12">
                     <p>
-                        {{'The following information can be completed for all management companies or for each of them depending on your investment objectives' | translate}}
+                        {{ 'The following information can be completed for all management companies or for each of them depending on your investment objectives' | translate }}
                     </p>
 
                     <div class="checkbox-inline">
-                        <input type="checkbox" id="naturesSameInvestmentCrossAm" formControlName="naturesSameInvestmentCrossAm">
+                        <input type="checkbox" 
+                                id="naturesSameInvestmentCrossAm" 
+                                formControlName="naturesSameInvestmentCrossAm">
                         <label for="naturesSameInvestmentCrossAm">
-                            {{'I would like to have the same investment nature for all management companies' | translate}}
+                            {{ 'I would like to have the same investment nature for all management companies' | translate }}
                         </label>
                     </div>
                 </div>
@@ -33,5 +34,4 @@
 
         </div>
     </div>
-
 </div>

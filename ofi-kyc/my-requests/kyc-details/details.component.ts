@@ -315,7 +315,7 @@ export class KycDetailsComponent implements OnInit, OnDestroy {
 
     getValidation() {
         const validation = {
-            title: 'Applicant Information',
+            title: this.translate.translate('Applicant Information'),
             data: '',
         };
 

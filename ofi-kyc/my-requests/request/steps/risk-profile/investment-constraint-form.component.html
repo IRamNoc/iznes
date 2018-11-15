@@ -66,9 +66,9 @@
 
     <div class="row">
         <div class="form-group col-sm-6">
-            <p>
+            <label>
                 {{ 'Other persons authorised to take investment decisions and give instructions' | translate }}
-            </p>
+            </label>
 
             <textarea class="form-control" id="otherPersonsAuthorised-{{index}}" formControlName="otherPersonsAuthorised"></textarea>
             <span class="field-error" *ngIf="hasError('otherPersonsAuthorised', ['maxlength'])">{{ 'Value is too long' | translate }}</span>

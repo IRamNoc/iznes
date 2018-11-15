@@ -4,11 +4,9 @@ import { AfterViewInit, ChangeDetectionStrategy, ChangeDetectorRef, Component, O
 import { NgRedux, select } from '@angular-redux/store';
 import { Subject } from 'rxjs/Subject';
 import 'rxjs/add/operator/takeUntil';
-
 import { fromJS } from 'immutable';
 import { ToasterService } from 'angular2-toaster';
 import { APP_CONFIG, AppConfig } from '@setl/utils';
-
 import { MultilingualService } from '@setl/multilingual';
 
 /* Ofi orders request service. */
@@ -28,7 +26,6 @@ import { ConfirmationService } from '@setl/utils';
     changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class OfiKycHomeComponent implements AfterViewInit, OnDestroy {
-
     appConfig: AppConfig;
     endpointsConfig: Endpoints;
     hasFilledAdditionnalInfos = false;
@@ -66,15 +63,15 @@ export class OfiKycHomeComponent implements AfterViewInit, OnDestroy {
 
     /* Constructor. */
     constructor(
-        private _changeDetectorRef: ChangeDetectorRef,
-        private _ngRedux: NgRedux<any>,
+        private changeDetectorRef: ChangeDetectorRef,
+        private ngRedux: NgRedux<any>,
         private toasterService: ToasterService,
         private router: Router,
         private route: ActivatedRoute,
         private ofiKycService: OfiKycService,
         private confirmationService: ConfirmationService,
         private myUserService: MyUserService,
-        public _translate: MultilingualService,
+        public translate: MultilingualService,
         @Inject('endpoints') endpoints,
         @Inject(APP_CONFIG) appConfig: AppConfig,
     ) {
@@ -92,7 +89,7 @@ export class OfiKycHomeComponent implements AfterViewInit, OnDestroy {
                 /* Assign list to a property. */
                 this.userInfo = d;
                 this.investorType = d.investorType;
-                this._changeDetectorRef.markForCheck();
+                this.changeDetectorRef.markForCheck();
             });
 
         this.userType$
@@ -101,11 +98,9 @@ export class OfiKycHomeComponent implements AfterViewInit, OnDestroy {
 
         /* fetch backend for existing data to pre fill the form */
         this.ofiKycService.fetchInvestor();
-
     }
 
     openMyInformationsModal(userInformations: KycMyInformations) {
-
         this.userInfo = {
             ...this.userInfo,
             email: userInformations.email,
@@ -130,14 +125,14 @@ export class OfiKycHomeComponent implements AfterViewInit, OnDestroy {
             return result;
         }, []);
 
-        this._ngRedux.dispatch({ type: SET_HIGHLIGHT_LIST, data: listToRedux });
-        this._ngRedux.dispatch(setAppliedHighlight());
+        this.ngRedux.dispatch({ type: SET_HIGHLIGHT_LIST, data: listToRedux });
+        this.ngRedux.dispatch(setAppliedHighlight());
         // this.showModal = true;
 
         this.confirmationService.create(
-            'My Information',
-            'My information can be changed later in "Profile" at the top of the page.',
-            { confirmText: 'Ok, I understand', declineText: '' }
+            this.translate.translate('My Information'),
+            this.translate.translate('My information can be changed later in "Profile" at the top of the page.'),
+            { confirmText: this.translate.translate('OK, I understand'), declineText: '' }
         ).subscribe((ans) => {
             if (ans.resolved) {
                 this.closeModal();
@@ -155,19 +150,19 @@ export class OfiKycHomeComponent implements AfterViewInit, OnDestroy {
             defaultHomePage: this.getHomePageToSet(),
         };
         const asyncTaskPipe = this.myUserService.saveMyUserDetails(user);
-        this._ngRedux.dispatch(SagaHelper.runAsyncCallback(
+        this.ngRedux.dispatch(SagaHelper.runAsyncCallback(
             asyncTaskPipe,
             () => {
-                this.toasterService.pop('success', `Your form has been saved successfully!`);
+                this.toasterService.pop('success', this.translate.translate('Your form has been saved successfully!'));
             },
             () => {
-                this.toasterService.pop('error', 'Failed to save your informations.');
+                this.toasterService.pop('error', this.translate.translate('Failed to save your informations.'));
                 return;
             }),
         );
-        this._ngRedux.dispatch({ type: SET_HIGHLIGHT_LIST, data: [{}] });
-        this._ngRedux.dispatch(clearAppliedHighlight());
-        //this.showModal = false;
+        this.ngRedux.dispatch({ type: SET_HIGHLIGHT_LIST, data: [{}] });
+        this.ngRedux.dispatch(clearAppliedHighlight());
+        // this.showModal = false;
 
         this.route.queryParams.subscribe(queryParams => {
             if (this.isPortfolioManagerType()) {
@@ -184,7 +179,6 @@ export class OfiKycHomeComponent implements AfterViewInit, OnDestroy {
                     this.router.navigate(['my-requests', 'list']);
                 }
             }
-
         });
     }
 

@@ -1,10 +1,10 @@
 <div class="header-breadcrumbs">
     <h1 id="pageTitle">
         <i class="fa fa-ellipsis-h"></i>
-        <span id="NAV-Title">{{'Net asset value' | translate}}</span>
+        <span id="NAV-Title">{{ 'Net asset value' | translate }}</span>
     </h1>
 
-    <span>{{'Please select a date type and a date to access to the available NAVs.' | translate}}<br>{{'You will have access to the NAV\'s history of a specific share in clicking on the corresponding row.' | translate}}
+    <span>{{ 'Please select a date type and a date to access to the available NAVs.' | translate }}<br>{{ 'You will have access to the NAV\'s history of a specific share in clicking on the corresponding row.' | translate }}
     </span>
 </div>
 
@@ -12,7 +12,7 @@
     <clr-tab>
         <button id="netAssetValueTab" clrTabLink>
             <i class="fa fa-th-list"></i>
-            <span id="NAV-List">{{'List' | translate}}</span>
+            <span id="NAV-List">{{ 'List' | translate }}</span>
         </button>
 
         <clr-tab-content *clrIfActive="true">
@@ -20,11 +20,11 @@
             <div class="row">
                 <div class="form-group button-container">
                     <button class="btn btn-primary" id="uploadNavFileButton" (click)="isNavUploadModalDisplayed = true">
-                        {{'Upload NAVs' | translate}}
+                        {{ 'Upload NAVs' | translate }}
                     </button>
 
                     <button class="btn btn-primary" id="NAV-Export-CSV" (click)="exportCSV()" [disabled]="(!navListItems) || navListItems.length === 0">
-                        {{'Export List as CSV' | translate}}
+                        {{ 'Export List as CSV' | translate }}
                     </button>
                 </div>
             </div>
@@ -35,20 +35,32 @@
                 <div class="form-horizontal">
                     <div class="row">
                         <div class="form-group col-sm-4">
-                            <label class="control-label" for="Search-field">{{'Search a Share Name or ISIN' | translate}}</label>
-                            <input type="text" id="Search-field" name="navSearch" formControlName="shareName">
+                            <label class="control-label" for="Search-field">{{ 'Search a Share Name or ISIN' | translate }}</label>
+                            <input type="text" 
+                                    id="Search-field" 
+                                    name="navSearch" 
+                                    formControlName="shareName">
                         </div>
                         <div class="form-group col-sm-4" *ngIf="dateTypes && searchForm">
-                            <label class="control-label" for="NAV-Date-Filter">{{'Select a Date' | translate}}</label>
-                            <ng-select id="NAV-Date-Filter" class="fluid-width" [items]="dateTypes" formControlName="dateType" [placeholder]="_translate.translate('Select Date type')" [allowClear]="false">
-
-
+                            <label class="control-label" for="NAV-Date-Filter">{{ 'Select a Date' | translate }}</label>
+                            <ng-select id="NAV-Date-Filter" 
+                                    class="fluid-width" 
+                                    [items]="dateTypes" 
+                                    formControlName="dateType" 
+                                    [placeholder]="translate.translate('Select Date type')" 
+                                    [allowClear]="false">
                             </ng-select>
                         </div>
                         <div class="form-group col-sm-4">
                             <div class="input-group date-pick-wrapper no-label">
                                 <span class="fa fa-calendar"></span>
-                                <input id="Date-filter" name="searchDate" [placeholder]="_translate.translate('Choose a date')" formControlName="date" [dpDayPicker]="dateConfig" mode="day" theme="dp-material">
+                                <input id="Date-filter" 
+                                        name="searchDate" 
+                                        [placeholder]="translate.translate('Choose a date')" 
+                                        formControlName="date" 
+                                        [dpDayPicker]="dateConfig" 
+                                        mode="day" 
+                                        theme="dp-material">
                             </div>
                         </div>
                     </div>
@@ -57,40 +69,40 @@
 
             <clr-datagrid #dataGrid>
                 <clr-dg-column class="col-fundsharename">
-                    <span id="NAV-CN-Share-Name">{{'Share name' | translate}}</span>
+                    <span id="NAV-CN-Share-Name">{{ 'Share Name' | translate }}</span>
                 </clr-dg-column>
                 <clr-dg-column>
-                    <span id="NAV-CN-ISIN">{{'ISIN' | translate}}</span>
+                    <span id="NAV-CN-ISIN">{{ 'ISIN' | translate }}</span>
                 </clr-dg-column>
                 <clr-dg-column class="col-date">
-                    <span id="NAV-CN-NAV-Date">{{'NAV Date' | translate}}</span>
+                    <span id="NAV-CN-NAV-Date">{{ 'NAV Date' | translate }}</span>
                 </clr-dg-column>
                 <clr-dg-column class="col-date">
-                    <span id="NAV-CN-NAV-Pub-Date">{{'NAV' | translate}}<br>{{'Pub Date' | translate}}</span>
+                    <span id="NAV-CN-NAV-Pub-Date">{{ 'NAV' | translate }}<br>{{ 'Pub Date' | translate }}</span>
                 </clr-dg-column>
                 <clr-dg-column class="col-date">
-                    <span id="NAV-CN-Next-Valuation-Date">{{'Next Valuation Date' | translate}}</span>
+                    <span id="NAV-CN-Next-Valuation-Date">{{ 'Next Valuation Date' | translate }}</span>
                 </clr-dg-column>
                 <clr-dg-column class="col-currency">
-                    <span id="NAV-CN-NAV-CCY">{{'NAV CCY' | translate}}</span>
+                    <span id="NAV-CN-NAV-CCY">{{ 'NAV CCY' | translate }}</span>
                 </clr-dg-column>
                 <clr-dg-column>
-                    <span id="NAV-CN-NAV">{{'NAV' | translate}}</span>
+                    <span id="NAV-CN-NAV">{{ 'NAV' | translate }}</span>
                 </clr-dg-column>
                 <clr-dg-column>
-                    <span id="NAV-CN-NAV-Estimated">{{'NAV' | translate}}<br>{{'Estimated' | translate}}</span>
+                    <span id="NAV-CN-NAV-Estimated">{{ 'NAV' | translate }}<br>{{ 'Estimated' | translate }}</span>
                 </clr-dg-column>
                 <clr-dg-column>
-                    <span id="NAV-CN-NAV-Technical">{{'NAV' | translate}}<br>{{'Technical' | translate}}</span>
+                    <span id="NAV-CN-NAV-Technical">{{ 'NAV' | translate }}<br>{{ 'Technical' | translate }}</span>
                 </clr-dg-column>
                 <clr-dg-column>
-                    <span id="NAV-CN-NAV-Validated">{{'NAV' | translate}}<br>{{'Validated' | translate}}</span>
+                    <span id="NAV-CN-NAV-Validated">{{ 'NAV' | translate }}<br>{{ 'Validated' | translate }}</span>
                 </clr-dg-column>
                 <clr-dg-column class="col-status">
-                    <span id="NAV-CN-Status">{{'Status' | translate}}</span>
+                    <span id="NAV-CN-Status">{{ 'Status' | translate }}</span>
                 </clr-dg-column>
                 <clr-dg-column class="actions">
-                    <span id="NAV-CN-Actions">{{'Actions' | translate}}</span>
+                    <span id="NAV-CN-Actions">{{ 'Actions' | translate }}</span>
                 </clr-dg-column>
 
                 <clr-dg-row *clrDgItems="let item of navListItems; let idx = index;" id="{{'product-nav-row' + idx}}" clrDgRowClickable>
@@ -104,7 +116,7 @@
                     </clr-dg-cell>
                     <clr-dg-cell (click)="navigateToShare(item.shareId)">
                         <span id="{{'NAV-Value-'+idx}}" [hidden]="isNavNull(item.nav)">{{ navToFrontEndString(item.nav)}}</span>
-                        <span id="{{'NAV-Status-'+idx}}" [hidden]="!isNavNull(item.nav)" class="label label-warning">{{'Pending' | translate}}</span>
+                        <span id="{{'NAV-Status-'+idx}}" [hidden]="!isNavNull(item.nav)" class="label label-warning">{{ 'Pending' | translate }}</span>
                     </clr-dg-cell>
                     <clr-dg-cell id="{{'NAV-EstValue-'+idx}}" class="nav-status-price" [class.not-set]="!item.navEstimated" (click)="navigateToShare(item.shareId)">{{item.navEstimated ? navToFrontEndString(item.navEstimated) : 'N/A'}}
                     </clr-dg-cell>
@@ -115,16 +127,16 @@
                     <clr-dg-cell class="col-status" (click)="navigateToShare(item.shareId)">
                         <span [ngSwitch]="item.status">
                             <span *ngSwitchCase="-1">
-                                <span id="{{'NAV-Status-Validated-'+idx}}" class="label label-success">{{'Validated' | translate}}</span>
+                                <span id="{{'NAV-Status-Validated-'+idx}}" class="label label-success">{{ 'Validated' | translate }}</span>
                             </span>
                             <span *ngSwitchCase="1">
-                                <span id="{{'NAV-Status-Estimated-'+idx}}" class="label label-warning">{{'Estimated' | translate}}</span>
+                                <span id="{{'NAV-Status-Estimated-'+idx}}" class="label label-warning">{{ 'Estimated' | translate }}</span>
                             </span>
                             <span *ngSwitchCase="2">
-                                <span id="{{'NAV-Status-Technical'+idx}}" class="label label-warning">{{'Technical' | translate}}</span>
+                                <span id="{{'NAV-Status-Technical'+idx}}" class="label label-warning">{{ 'Technical' | translate }}</span>
                             </span>
                             <span *ngSwitchCase="3">
-                                <span id="{{'NAV-Status-Cancelled'+idx}}" class="label label-danger">{{'Cancelled' | translate}}</span>
+                                <span id="{{'NAV-Status-Cancelled'+idx}}" class="label label-danger">{{ 'Cancelled' | translate }}</span>
                             </span>
                         </span>
                     </clr-dg-cell>
@@ -133,17 +145,17 @@
                             <button id="{{'Btn-AddNewNAV-'+idx}}" class="btn btn-success btn-sm"
                                 (click)="addNav(item)"
                                 [disabled]="isAddNavDisabled(item)">
-                                <i class="fa fa-plus"></i> {{'Add' | translate}}
+                                <i class="fa fa-plus"></i> {{ 'Add' | translate }}
                             </button>
                             <button id="{{'Btn-ModifyNAV-'+idx}}" class="btn btn-info btn-sm"
                                 (click)="modifyNav(item)"
                                 [disabled]="item.status != -1">
-                                <i class="fa fa-edit"></i> {{'Edit' | translate}}
+                                <i class="fa fa-edit"></i> {{ 'Edit' | translate }}
                             </button>
                             <button id="{{'Btn-CancelNAV-'+idx}}" class="btn btn-danger btn-sm"
                                 (click)="cancelNav(item)"
                                 [disabled]="item.status != -1">
-                                <i class="fa fa-close"></i> {{'Cancel' | translate}}
+                                <i class="fa fa-close"></i> {{ 'Cancel' | translate }}
                             </button>
                         </div>
                     </clr-dg-cell>
@@ -161,20 +173,19 @@
 <app-nav-add></app-nav-add>
 
 <clr-modal [(clrModalOpen)]="isNavUploadModalDisplayed" [clrModalSize]="'sm'" [clrModalClosable]="false">
-    <h3 class="modal-title">{{'Upload NAVs' | translate}}</h3>
+    <h3 class="modal-title">{{ 'Upload NAVs' | translate }}</h3>
 
     <div class="modal-body">
         <form>
             <section class="form-block">
                 <div class="form-group col-sm-12">
-                    <label class="control-label" for="globalNavCsvFile">{{'File to upload: ' | translate}}</label>
+                    <label class="control-label" for="globalNavCsvFile">{{ 'File to upload: ' | translate }}</label>
                     <input #globalNavCsvFile
                            id="globalNavCsvFile"
                            name="globalNavCsvFile"
                            type="file"
                            accept="text/csv"
-                           (change)="navCsvFile = $event.target.files[0]"
-                    />
+                           (change)="navCsvFile = $event.target.files[0]"/>
                 </div>
             </section>
         </form>
@@ -186,7 +197,7 @@
                 class="btn btn-outline"
                 [disabled]="!hasResult"
                 (click)="resetNavUploadModal()">
-            {{'Cancel' | translate}}
+            {{ 'Cancel' | translate }}
         </button>
 
         <button *ngIf="hasResult"
@@ -195,7 +206,7 @@
                 class="btn btn-success"
                 (click)="handleUploadNavSubmitClick()"
                 [disabled]="!navCsvFile">
-            {{'Upload' | translate}}
+            {{ 'Upload' | translate }}
         </button>
 
         <div *ngIf='!hasResult' class="btn btn-success">

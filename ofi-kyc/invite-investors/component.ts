@@ -28,12 +28,12 @@ const emailRegex = /^(((\([A-z0-9]+\))?[^<>()\[\]\\.,;:\s@"]+(\.[^<>()\[\]\\.,;:
 export class OfiInviteInvestorsComponent implements OnInit, OnDestroy {
     invitationForm: FormGroup;
     investor: any;
-    languages = [
+    languages = this.translate.translate([
         { id: 'fr', text: 'Français' },
         { id: 'en', text: 'English' },
         // {id: 'tch', text: '繁體中文'},
         // {id: 'sch', text: '中文'}
-    ];
+    ]);
 
     investorTypes: any;
 
@@ -42,11 +42,8 @@ export class OfiInviteInvestorsComponent implements OnInit, OnDestroy {
     };
 
     panel: any;
-
     inviteItems: investorInvitation[];
-
     fundSelectList: {id: string, text: string}[];
-
     unSubscribe: Subject<any> = new Subject();
 
     /* Constructor. */
@@ -104,7 +101,7 @@ export class OfiInviteInvestorsComponent implements OnInit, OnDestroy {
         });
 
         this.panel = {
-            title: this.translate.translate('Invites Recap') || 'Invites Recap',
+            title: this.translate.translate('Invites Recap') || this.translate.translate('Invites Recap'),
             open: true
         };
 
@@ -247,8 +244,11 @@ export class OfiInviteInvestorsComponent implements OnInit, OnDestroy {
         });
     }
 
-    displayInvitationSuccessModal(emails: Array<string>): void {
-        let message = '<p><b>An invitation email to IZNES was sent to:</b></p><table class="table grid"><tbody>';
+    displayInvitationSuccessModal(emails: Array<string>): void {      
+        let message = '<p><b>';
+        
+        message += this.translate.translate('An invitation email to IZNES was sent to:');
+        message += '</b></p > <table class="table grid" > <tbody>';
 
         for (const email of emails) {
             message += '<tr><td>' + email + '</td></tr>';
@@ -262,7 +262,7 @@ export class OfiInviteInvestorsComponent implements OnInit, OnDestroy {
         invalidEmailAddressList.map((emailAddress) => {
             this.toasterService.pop(
                 'warning',
-                `A user has already created an account with this following email address "${emailAddress}".`
+                this.translate.translate('A user has already created an account with the following email address: @emailAddress@', { 'emailAddress': emailAddress })
             );
         });
     }

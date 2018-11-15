@@ -5,7 +5,6 @@ import * as moment from 'moment';
 
 @Injectable()
 export class SelectAmcService {
-
     constructor(
         private newRequestService: NewRequestService,
         private requestsService: RequestsService,

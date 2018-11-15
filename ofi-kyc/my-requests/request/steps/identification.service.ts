@@ -23,7 +23,6 @@ import { DocumentsService } from './documents.service';
 
 @Injectable()
 export class IdentificationService {
-
     constructor(
         private newRequestService: NewRequestService,
         private requestsService: RequestsService,

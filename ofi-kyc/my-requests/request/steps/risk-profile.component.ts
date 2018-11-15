@@ -4,7 +4,6 @@ import { PersistService } from '@setl/core-persist';
 import { isEmpty, castArray } from 'lodash';
 import { Subject } from 'rxjs';
 import { filter as rxFilter, map, take, takeUntil, tap } from 'rxjs/operators';
-
 import { NewRequestService } from '../new-request.service';
 import { RiskProfileService } from './risk-profile.service';
 import { steps } from '../../requests.config';

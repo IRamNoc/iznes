@@ -1,8 +1,8 @@
 <clr-modal [(clrModalOpen)]="isOpen">
     <h3 class="modal-title">
-        <span id="add-nav-title" class="ml_translated" *ngIf="isAddMode()">{{'Add New NAV' | translate}}</span>
-        <span id="edit-nav-title" class="ml_translated" *ngIf="isEditMode()">{{'Edit NAV' | translate}}</span>
-        <span id="delete-nav-title" class="ml_translated" *ngIf="isDeleteMode()">{{'Delete NAV' | translate}}</span>
+        <span id="add-nav-title" *ngIf="isAddMode()">{{'Add New NAV' | translate}}</span>
+        <span id="edit-nav-title" *ngIf="isEditMode()">{{'Edit NAV' | translate}}</span>
+        <span id="delete-nav-title" *ngIf="isDeleteMode()">{{'Delete NAV' | translate}}</span>
     </h3>
     <div class="modal-body">
         <form [formGroup]="navForm" *ngIf="isOpen && navForm">
@@ -57,7 +57,7 @@
                     <div class="input-group date-pick-wrapper">
                         <span class="fa fa-calendar" [class.disabled]="isEditMode() || isDeleteMode()"></span>
 
-                        <input type='text' id="Date-nav-btn" name="navDate" [placeholder]="_translate.translate('Select date')" formControlName="navDate"
+                        <input type='text' id="Date-nav-btn" name="navDate" [placeholder]="translate.translate('Select date')" formControlName="navDate"
                                [dpDayPicker]="navDateConfig" mode="day" theme="dp-material" #navDatePicker/>
 
                         <span *ngIf="navForm.controls['navDate'].touched && navForm.controls['navDate'].hasError('pattern')" class='field-error'>
@@ -72,7 +72,7 @@
                     <div class="input-group date-pick-wrapper">
                         <span class="fa fa-calendar" [class.disabled]="isEditMode() || isDeleteMode()"></span>
 
-                        <input type='text' id="PublicationDate-nav-btn" name="navPublishDate" [placeholder]="_translate.translate('Select date')"
+                        <input type='text' id="PublicationDate-nav-btn" name="navPublishDate" [placeholder]="translate.translate('Select date')"
                                formControlName="navPubDate" [dpDayPicker]="navPublishDateConfig" mode="day" theme="dp-material"
                                #navPublishDatePicker/>
 
@@ -85,7 +85,7 @@
                 <div class="form-group col-sm-12">
                     <label class="control-label" for="Status-nav-btn">{{'Status' | translate}}</label>
                     <ng-select id="Status-nav-btn" class="fluid-width" [disabled]="navForm.controls['status'].disabled" [items]="statusItems"
-                               formControlName="status" [allowClear]="false" [placeholder]="_translate.translate('Select status')">
+                               formControlName="status" [allowClear]="false" [placeholder]="translate.translate('Select status')">
                     </ng-select>
                 </div>
 

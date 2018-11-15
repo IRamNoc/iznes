@@ -141,9 +141,8 @@ export class NewKycValidationComponent implements OnInit, OnDestroy {
 
         if (this.amcs.length == 1) {
             const companyName = getValue(this.amcs, ['0', 'companyName']);
-            bodyMessage = `<p>${this.translate.translate('<p>Your request has been successfully sent to @companyName@. Once they have validated your request, you will be able to start trading on IZNES using @companyName@\'s products.', { 'companyName': companyName })}</p>`; 
-        }
-        else {
+            bodyMessage = `<p>${this.translate.translate('Your request has been successfully sent to @companyName@. Once they have validated your request, you will be able to start trading on IZNES using @companyName@\'s products.', { 'companyName': companyName })}</p>`;
+        } else {
             const companies = ['<ul>'];
             this.amcs.forEach(amc => {
                 const companyText = `<li>${amc.companyName}</li>`;

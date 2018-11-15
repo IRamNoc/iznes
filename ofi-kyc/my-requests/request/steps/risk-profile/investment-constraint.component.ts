@@ -70,8 +70,7 @@ export class InvestmentConstraintComponent implements OnInit, OnDestroy {
             )
             .subscribe(() => {
                 this.refreshForm();
-            })
-        ;
+            });
     }
 
     updateCrossAM(){

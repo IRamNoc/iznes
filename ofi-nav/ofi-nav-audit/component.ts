@@ -59,7 +59,7 @@ export class OfiNavAuditComponent implements OnInit, OnDestroy {
                 private service: OfiNavAuditService,
                 private numberConverterService: NumberConverterService,
                 private moneyPipe: MoneyValuePipe,
-                public _translate: MultilingualService,
+                public translate: MultilingualService,
                 private ofiNavService: OfiNavService) {
     }
 
@@ -188,5 +188,4 @@ export class OfiNavAuditComponent implements OnInit, OnDestroy {
     onlyDate(dateTimeString: string): string {
         return dateTimeString.split(' ')[0];
     }
-
 }

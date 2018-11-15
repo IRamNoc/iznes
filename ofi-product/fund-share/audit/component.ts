@@ -8,9 +8,9 @@ import * as _ from 'lodash';
 import * as moment from 'moment';
 import { fromJS } from 'immutable';
 import { Observable, Subscription } from 'rxjs';
-
 import { FundShareAuditService } from './service';
 import { OfiFundShareService } from '@ofi/ofi-main/ofi-req-services/ofi-product/fund-share/service';
+
 import {
     FundShareAuditDetail,
     clearRequestedFundShareAudit,
@@ -27,7 +27,6 @@ import { getOfiFundShareCurrentRequest } from '@ofi/ofi-main/ofi-store/ofi-produ
     changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class FundShareAuditComponent implements OnInit, OnDestroy {
-
     fundShare;
     private fundShareId: number;
     private subscriptionsArray: Subscription[] = [];
@@ -52,7 +51,7 @@ export class FundShareAuditComponent implements OnInit, OnDestroy {
         private router: Router,
         private changeDetectorRef: ChangeDetectorRef,
         private service: FundShareAuditService,
-        public _translate: MultilingualService,
+        public translate: MultilingualService,
         private ofiFundShareService: OfiFundShareService) { }
 
     ngOnInit() {

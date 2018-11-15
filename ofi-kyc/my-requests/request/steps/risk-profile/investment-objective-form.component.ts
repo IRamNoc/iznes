@@ -63,8 +63,7 @@ export class InvestmentObjectiveFormComponent implements OnInit, OnDestroy {
             .subscribe((data: any) => {
                 data.riskAcceptance = pick(data, ['riskAcceptanceLevel1', 'riskAcceptanceLevel2', 'riskAcceptanceLevel3', 'riskAcceptanceLevel4']);
                 this.form.patchValue(data);
-            })
-        ;
+            });
     }
 
     initData() {
@@ -84,8 +83,7 @@ export class InvestmentObjectiveFormComponent implements OnInit, OnDestroy {
                         this.amc = found;
                     }
                 }
-            })
-        ;
+            });
 
         this.investmentHorizonList = this.newRequestService.investmentHorizonList;
         this.riskProfileList = this.newRequestService.riskProfileList;
@@ -104,8 +102,7 @@ export class InvestmentObjectiveFormComponent implements OnInit, OnDestroy {
             )
             .subscribe(data => {
                 this.formCheckPerformanceProfile(data);
-            })
-        ;
+            });
 
         this.form.get('riskProfile').valueChanges
             .pipe(
@@ -115,8 +112,7 @@ export class InvestmentObjectiveFormComponent implements OnInit, OnDestroy {
                 let riskProfileValue = getValue(value, [0, 'id']);
 
                 this.formCheckRiskProfile(riskProfileValue);
-            })
-        ;
+            });
 
         this.form.get('investmentHorizonWanted.specific').valueChanges
             .pipe(
@@ -124,8 +120,7 @@ export class InvestmentObjectiveFormComponent implements OnInit, OnDestroy {
             )
             .subscribe(value => {
                 this.formCheckInvestmentHorizonWanted(value);
-            })
-        ;
+            });
 
         // Form persist patchvalue comes in too early so we have to manually recheck the values
         (this.form.get('performanceProfile') as FormControl).updateValueAndValidity();
@@ -149,7 +144,7 @@ export class InvestmentObjectiveFormComponent implements OnInit, OnDestroy {
         let hasOther = data.others;
         let performanceProfileSpecificationControl = this.form.get('performanceProfileSpecification');
 
-        if(hasOther){
+        if (hasOther) {
             performanceProfileSpecificationControl.enable();
         } else{
             performanceProfileSpecificationControl.disable();

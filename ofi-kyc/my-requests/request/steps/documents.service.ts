@@ -22,7 +22,6 @@ export const documentFormPaths = {
 
 @Injectable()
 export class DocumentsService {
-
     constructor(
         private requestsService: RequestsService,
         private newRequestService:  NewRequestService

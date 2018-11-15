@@ -1,13 +1,11 @@
 import { Injectable } from '@angular/core';
 import { get as getValue, omit } from 'lodash';
-
 import { NewRequestService } from '../new-request.service';
 import { RequestsService } from '../../requests.service';
 import { DocumentsService } from './documents.service';
 
 @Injectable()
 export class ValidationService {
-
     constructor(
         private newRequestService: NewRequestService,
         private requestsService: RequestsService,

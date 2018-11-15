@@ -1,21 +1,21 @@
 /* Core/Angular imports. */
-import {Component, OnInit, AfterViewInit, ChangeDetectorRef, OnDestroy, ChangeDetectionStrategy} from '@angular/core';
-import {select, NgRedux} from '@angular-redux/store';
-import {Unsubscribe} from 'redux';
-import {FormGroup, FormControl, Validators} from '@angular/forms';
+import { Component, OnInit, AfterViewInit, ChangeDetectorRef, OnDestroy, ChangeDetectionStrategy } from '@angular/core';
+import { select, NgRedux } from '@angular-redux/store';
+import { Unsubscribe } from 'redux';
+import { FormGroup, FormControl, Validators } from '@angular/forms';
 
 /* Services. */
-import {WalletNodeRequestService, InitialisationService} from '@setl/core-req-services';
+import { WalletNodeRequestService, InitialisationService } from '@setl/core-req-services';
 
 /* Alerts and confirms. */
-import {AlertsService} from '@setl/jaspero-ng2-alerts';
-import {ConfirmationService} from '@setl/utils';
+import { AlertsService } from '@setl/jaspero-ng2-alerts';
+import { ConfirmationService } from '@setl/utils';
 
 /* Utils. */
-import {MoneyValuePipe} from '@setl/utils/pipes';
+import { MoneyValuePipe } from '@setl/utils/pipes';
 
 /* Ofi Corp Actions request service. */
-import {OfiCorpActionService} from '../../ofi-req-services/ofi-corp-actions/service';
+import { OfiCorpActionService } from '../../ofi-req-services/ofi-corp-actions/service';
 
 /* Core store stuff. */
 import {
@@ -30,11 +30,11 @@ import {
     getOfiUserIssuedAssets
 } from '../../ofi-store';
 
-import {immutableHelper, LogService} from '@setl/utils';
-import {ActivatedRoute, Params, Router} from '@angular/router';
+import { immutableHelper, LogService } from '@setl/utils';
+import { ActivatedRoute, Params, Router } from '@angular/router';
 import * as _ from 'lodash';
-import {ofiCouponActions} from '@ofi/ofi-main/ofi-store';
-import {MultilingualService} from '@setl/multilingual';
+import { ofiCouponActions } from '@ofi/ofi-main/ofi-store';
+import { MultilingualService } from '@setl/multilingual';
 
 /* Decorator. */
 @Component({
@@ -44,7 +44,6 @@ import {MultilingualService} from '@setl/multilingual';
 
 /* Class. */
 export class CouponPaymentComponent implements OnInit, AfterViewInit, OnDestroy {
-
     /* Select the coupon list. */
     @select(['ofi', 'ofiCorpActions', 'ofiCoupon', 'ofiCouponList'])
     couponListOb: any;
@@ -81,12 +80,11 @@ export class CouponPaymentComponent implements OnInit, AfterViewInit, OnDestroy 
                 private router: Router,
                 private walletNodeRequestService: WalletNodeRequestService,
                 private logService: LogService,
-                public _translate: MultilingualService,
-                private _confirmationService: ConfirmationService,) {
+                public translate: MultilingualService,
+                private confirmationService: ConfirmationService,) {
     }
 
     ngOnInit() {
-
         this.setInitialTabs();
 
         /* Subscribe for the coupon payments list. */
@@ -129,11 +127,9 @@ export class CouponPaymentComponent implements OnInit, AfterViewInit, OnDestroy 
             const tabId = _.get(params, 'tabid', 0);
             this.setTabActive(tabId);
         });
-
     }
 
     setInitialTabs() {
-
         // Get opened tabs from redux store.
         const openedTabs = immutableHelper.get(this.ngRedux.getState(), ['ofi', 'ofiCorpActions', 'ofiCoupon', 'openedTabs']);
 
@@ -141,21 +137,21 @@ export class CouponPaymentComponent implements OnInit, AfterViewInit, OnDestroy 
             /* Default tabs. */
             this.tabsControl = [
                 {
-                    "title": {
-                        "icon": "fa fa-th-list",
-                        "text": "List"
+                    title: {
+                        icon: 'fa fa-th-list',
+                        text: this.translate.translate('List'),
                     },
-                    "couponId": -1,
-                    "active": true
+                    couponId: -1,
+                    active: true,
                 },
                 {
-                    "title": {
-                        "icon": "fa-user",
-                        "text": "Create New Coupon"
+                    title: {
+                        icon: 'fa-user',
+                        text: this.translate.translate('Create New Coupon'),
                     },
-                    "couponId": -1,
-                    "formControl": this.newCouponFormGroup(),
-                    "active": false
+                    couponId: -1,
+                    formControl: this.newCouponFormGroup(),
+                    active: false,
                 }
             ];
             return true;
@@ -278,7 +274,6 @@ export class CouponPaymentComponent implements OnInit, AfterViewInit, OnDestroy 
             console.warn(error);
         })
 
-        /* Return. */
         return;
     }
 
@@ -316,11 +311,9 @@ export class CouponPaymentComponent implements OnInit, AfterViewInit, OnDestroy 
                 /* ...set tab active... */
                 this.router.navigateByUrl(`/corporate-actions/coupon-payment/${i}`);
 
-
                 /* ...and gotta call this again. */
                 this.changeDetectorRef.detectChanges();
             }
-
         })
 
         /* If we found an active tab, no need to do anymore... */
@@ -349,12 +342,12 @@ export class CouponPaymentComponent implements OnInit, AfterViewInit, OnDestroy 
 
         /* Push a new tab object into tabsControl. */
         this.tabsControl.push({
-            "title": {
-                "icon": "fa-search",
-                "text": coupon.fund
+            title: {
+                icon: 'fa-search',
+                text: coupon.fund
             },
-            "couponId": coupon.couponID,
-            "formControl": new FormGroup({
+            couponId: coupon.couponID,
+            formControl: new FormGroup({
                 'couponNature': new FormControl({value: 'Coupon Payment', disabled: true}),
                 'couponDrafter': new FormControl({value: this.myDetails.username, disabled: true}),
                 'couponFundShareName': new FormControl({value: [{id: 0, text: coupon.fund}], disabled: true}),
@@ -368,8 +361,8 @@ export class CouponPaymentComponent implements OnInit, AfterViewInit, OnDestroy 
                 'couponSettlementTime': new FormControl({value: couponSettlementTime, disabled: true}),
                 'couponComments': new FormControl({value: coupon.comment, disabled: true})
             }),
-            "couponStatus": coupon.status,
-            "active": false
+            couponStatus: coupon.status,
+            active: false,
         });
 
         /* Now make this tab active. */
@@ -378,7 +371,6 @@ export class CouponPaymentComponent implements OnInit, AfterViewInit, OnDestroy 
         /* Gotta call this again... */
         this.changeDetectorRef.detectChanges();
 
-        /* Return. */
         return;
     }
 
@@ -420,20 +412,20 @@ export class CouponPaymentComponent implements OnInit, AfterViewInit, OnDestroy 
         switch (action) {
             case 'approve':
                 updateCoupon.status = 2;
-                successMessage = "Successfully approved this coupon payment.";
-                errorMessage = "Failed to approve this coupon payment. Try again later.";
+                successMessage = this.translate.translate('Successfully approved this coupon payment.');
+                errorMessage = this.translate.translate('Failed to approve this coupon payment. Try again later.');
                 break;
 
             case 'cancel':
                 updateCoupon.status = 0;
-                successMessage = "Successfully cancelled this coupon payment.";
-                errorMessage = "Failed to cancel this coupon payment. Try again later.";
+                successMessage = this.translate.translate('Successfully cancelled this coupon payment.');
+                errorMessage = this.translate.translate('Failed to cancel this coupon payment. Try again later.');
                 break;
 
             case 'confirm-payment':
                 updateCoupon.status = 6;
-                successMessage = "Successfully confirmed off platform payment for this coupon payment.";
-                errorMessage = "Failed to confirm off platform payement for this coupon payment. Try again later.";
+                successMessage = this.translate.translate('Successfully confirmed off platform payment for this coupon payment.');
+                errorMessage = this.translate.translate('Failed to confirm off platform payement for this coupon payment. Try again later.');
                 break;
         }
 
@@ -449,7 +441,6 @@ export class CouponPaymentComponent implements OnInit, AfterViewInit, OnDestroy 
             this.showError(errorMessage);
         });
 
-        /* Return. */
         return;
     }
 
@@ -499,7 +490,6 @@ export class CouponPaymentComponent implements OnInit, AfterViewInit, OnDestroy 
         /* Detect changes */
         this.changeDetectorRef.detectChanges();
 
-        /* Return */
         return;
     }
 
@@ -554,7 +544,6 @@ export class CouponPaymentComponent implements OnInit, AfterViewInit, OnDestroy 
             coupon = false;
         }
 
-        /* Return. */
         return coupon;
     }
 

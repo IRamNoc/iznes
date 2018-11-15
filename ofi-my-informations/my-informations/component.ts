@@ -36,7 +36,6 @@ export enum ViewMode {
 })
 
 export class OfiMyInformationsComponent implements OnInit, OnDestroy {
-
     // Locale
     language = 'fr-Latn';
 
@@ -61,10 +60,9 @@ export class OfiMyInformationsComponent implements OnInit, OnDestroy {
         private _changeDetectorRef: ChangeDetectorRef,
         private _ngRedux: NgRedux<any>,
         private _fb: FormBuilder,
-        public _translate: MultilingualService,
+        public translate: MultilingualService,
         @Inject('phoneCodeList') phoneCodeList,
     ) {
-
         this.phoneNumbersCountryCodes = phoneCodeList;
 
         this.additionnalForm = this._fb.group({

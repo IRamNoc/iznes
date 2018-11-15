@@ -79,5 +79,4 @@ export class MyRequestsComponent implements OnInit, OnDestroy {
         this.unsubscribe.next();
         this.unsubscribe.complete();
     }
-
 }

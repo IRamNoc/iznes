@@ -92,8 +92,8 @@ export class OfiNavFundView implements OnInit, OnDestroy {
                 private popupService: OfiManageNavPopupService,
                 private alertService: AlertsService,
                 private ofiCurrenciesService: OfiCurrenciesService,
-                private _fileDownloader: FileDownloader,
-                public _translate: MultilingualService,
+                private fileDownloader: FileDownloader,
+                public translate: MultilingualService,
                 @Inject(APP_CONFIG) appConfig: AppConfig) {
         this.appConfig = appConfig;
         this.isNavUploadModalDisplayed = false;
@@ -193,7 +193,7 @@ export class OfiNavFundView implements OnInit, OnDestroy {
     exportCSV(): void {
         const requestData = this.getNavRequestData();
 
-        this._fileDownloader.downLoaderFile({
+        this.fileDownloader.downLoaderFile({
             method: 'exportNavFundHistory',
             token: this.socketToken,
             shareId: requestData.shareId,
@@ -262,24 +262,15 @@ export class OfiNavFundView implements OnInit, OnDestroy {
         if (err) {
             const errorMessage = err[1].Data[0].Message;
 
+            let alertBody = '<table class="table grid"><tbody><tr><td class="text-center text-danger">';
+            alertBody += this.translate.translate('NAVs upload for @fundShareName@ has failed for the following reason:', { 'fundShareName': this.navFund.fundShareName });
+            alertBody += `</td></tr><tr><td class="text-center text-danger">${errorMessage}</td></tr></tbody></table>`;
+
             this.alertService.create(
                 'error',
-                `
-                <table class="table grid">
-                    <tbody>
-                        <tr>
-                            <td class="text-center text-danger">
-                                NAVs upload for ${this.navFund.fundShareName} has failed for the following reason:
-                            </td>
-                        </tr>
-                        <tr>
-                            <td class="text-center text-danger">${errorMessage}</td>
-                        </tr>
-                    </tbody>
-                </table>
-            `,
+                alertBody,
                 {},
-                'NAVs Upload - Error',
+                this.translate.translate('NAVs Upload - Error'),
             );
         }
     }
@@ -346,7 +337,6 @@ export class OfiNavFundView implements OnInit, OnDestroy {
 
             this.navHistoryForm.controls.navDateFrom.setValue(navDateFrom);
             this.navHistoryForm.controls.navDateTo.setValue(navDateTo);
-
         }));
 
         this.subscriptionsArray.push(this.navHistoryForm.valueChanges.subscribe(() => {
@@ -358,7 +348,7 @@ export class OfiNavFundView implements OnInit, OnDestroy {
     }
 
     private initDatePeriodItems(): void {
-        this.datePeriodItems = [{
+        this.datePeriodItems = this.translate.translate([{
             id: this.generateDatePeriod(-30, 'days', 0, 'days'),
             text: 'Last 30 days'
         }, {
@@ -379,7 +369,7 @@ export class OfiNavFundView implements OnInit, OnDestroy {
         }, {
             id: this.generateBeginningOfTimePeriod(),
             text: 'Since the beginning'
-        }]
+        }]);
     }
 
     private generateDatePeriod(fromInt: number, fromStr: string, toInt: number, toStr: string): string {
@@ -507,6 +497,5 @@ export class OfiNavFundView implements OnInit, OnDestroy {
             }
             this.usingDatePeriodToSearch = false;
         }
-
     }
 }

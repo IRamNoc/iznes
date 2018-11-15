@@ -19,7 +19,7 @@
                         {{ 'Please find below the list of your clients.' | translate }}
                     </div>
                     <div class="col-sm-6" align="right">
-                        {{ 'From here you will also be able to invite more investors to join IZNES:' | translate }}
+                        {{ 'From here you will also be able to invite more investors to join IZNES' | translate }}
                         <button id="invite-investors-btn" class="btn" style="margin-left: 10px;" (click)="gotoInvite();">{{ 'Invite Investors' | translate }}</button>
                     </div>
                 </div>
@@ -32,7 +32,7 @@
                                 class="form-control"
                                 [items]="investorTypes"
                                 [allowClear]="true"
-                                [placeholder]="_translate.translate('Select')"
+                                [placeholder]="translate.translate('Select')"
                                 formControlName="investorType">
                             </ng-select>
                         </form>
@@ -92,43 +92,43 @@
                 <form [formGroup]="investorForm" (ngSubmit)="saveClientReference()">
                     <div class="row">
                         <div class="form-group col-sm-6">
-                            <label for="companyName">{{ 'Company Name:' | translate }}</label>
+                            <label for="companyName">{{ 'Company Name' | translate }}</label>
                             <div>
                                 <input type="text" id="companyName" class="form-control" formControlName="companyName">
                             </div>
                         </div>
                         <div class="form-group col-sm-6">
-                            <label for="clientReference">{{ 'Client Reference:' | translate }}</label>
+                            <label for="clientReference">{{ 'Client Reference' | translate }}</label>
                             <div>
                                 <input type="text" id="clientReference" class="form-control" formControlName="clientReference">
                             </div>
                         </div>
                         <div class="form-group col-sm-6">
-                            <label for="firstName">{{ 'First Name:' | translate }}</label>
+                            <label for="firstName">{{ 'First Name' | translate }}</label>
                             <div>
                                 <input type="text" id="firstName" class="form-control" formControlName="firstName">
                             </div>
                         </div>
                         <div class="form-group col-sm-6">
-                            <label for="lastName">{{ 'Last Name:' | translate }}</label>
+                            <label for="lastName">{{ 'Last Name' | translate }}</label>
                             <div>
                                 <input type="text" id="lastName" class="form-control" formControlName="lastName">
                             </div>
                         </div>
                         <div class="form-group col-sm-6">
-                            <label for="email">{{ 'Email Address:' | translate }}</label>
+                            <label for="email">{{ 'Email Address' | translate }}</label>
                             <div>
                                 <input type="text" id="email" class="form-control" formControlName="email">
                             </div>
                         </div>
                         <div class="form-group col-sm-6">
-                            <label for="phoneNumber">{{ 'Phone Number:' | translate }}</label>
+                            <label for="phoneNumber">{{ 'Phone Number' | translate }}</label>
                             <div>
                                 <input type="text" id="phoneNumber" class="form-control" formControlName="phoneNumber">
                             </div>
                         </div>
                         <div class="form-group col-sm-6">
-                            <label for="approvalDateRequest">{{ 'Date of Approval Request:' | translate }}</label>
+                            <label for="approvalDateRequest">{{ 'Date of Approval Request' | translate }}</label>
                             <div>
                                 <input type="text" id="approvalDateRequest" class="form-control" formControlName="approvalDateRequest">
                             </div>
@@ -252,7 +252,7 @@
                                         [formControl]="searchForm.controls['searchInvestor']" 
                                         name="search-sharename" 
                                         type="text"
-                                       [placeholder]="_translate.translate('Investor name or reference')" 
+                                       [placeholder]="translate.translate('Investor name or reference')" 
                                        style="width: 100% !important">
                             </div>
                         </div>
@@ -264,7 +264,7 @@
                                         [formControl]="searchForm.controls['searchFrom']" 
                                         autocomplete="off" 
                                         [dpDayPicker]="fromConfigDate" 
-                                        [placeholder]="_translate.translate('Choose a date')"
+                                        [placeholder]="translate.translate('Choose a date')"
                                         mode="day" 
                                         theme="dp-material">
                             </div>
@@ -277,7 +277,7 @@
                                         [formControl]="searchForm.controls['searchTo']" 
                                         autocomplete="off" 
                                         [dpDayPicker]="toConfigDate" 
-                                        [placeholder]="_translate.translate('Choose a date')"
+                                        [placeholder]="translate.translate('Choose a date')"
                                         mode="day" 
                                         theme="dp-material">
                             </div>

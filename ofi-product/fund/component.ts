@@ -5,20 +5,20 @@ import { Component, Inject, OnDestroy, OnInit, ViewEncapsulation, ChangeDetector
 import { FormBuilder, FormControl, FormGroup, Validators, AbstractControl } from '@angular/forms';
 import { ActivatedRoute, Router } from '@angular/router';
 import { Location } from '@angular/common';
-
 import * as _ from 'lodash';
 import { NgRedux, select } from '@angular-redux/store';
 import { ToasterService } from 'angular2-toaster';
 import { ConfirmationService } from '@setl/utils';
-
 import { OfiFundService } from '@ofi/ofi-main/ofi-req-services/ofi-product/fund/fund.service';
 import { OfiProductConfigService } from '@ofi/ofi-main/ofi-req-services/ofi-product/configuration/service';
 import { OfiUmbrellaFundService } from '@ofi/ofi-main/ofi-req-services/ofi-product/umbrella-fund/service';
 import { Fund } from '@ofi/ofi-main/ofi-req-services/ofi-product/fund/fund.service.model';
 import { UmbrellaFundDetail } from '@ofi/ofi-main/ofi-store/ofi-product/umbrella-fund/umbrella-fund-list/model';
+
 import {
     OfiManagementCompanyService,
 } from '@ofi/ofi-main/ofi-req-services/ofi-product/management-company/management-company.service';
+
 import { OfiCurrenciesService } from '@ofi/ofi-main/ofi-req-services/ofi-currencies/service';
 import { MultilingualService } from '@setl/multilingual';
 import { LeiService } from '@ofi/ofi-main/ofi-req-services/ofi-product/lei/lei.service';
@@ -171,7 +171,7 @@ export class FundComponent implements OnInit, OnDestroy {
         private route: ActivatedRoute,
         private changeDetectorRef: ChangeDetectorRef,
         private confirmationService: ConfirmationService,
-        public _translate: MultilingualService,
+        public translate: MultilingualService,
         private leiService: LeiService,
         @Inject('product-config') productConfig,
     ) {
@@ -256,7 +256,6 @@ export class FundComponent implements OnInit, OnDestroy {
             umbrellaFundName: { value: '', disabled: true },
             internalReference: { value: '', disabled: true },
             additionnalNotes: { value: '', disabled: true },
-
         });
 
         this.fundForm = fb.group({
@@ -1058,7 +1057,10 @@ export class FundComponent implements OnInit, OnDestroy {
                 })
                 .catch((err) => {
                     const errMsg = _.get(err, '[1].Data.Message', '');
-                    this.toasterService.pop('error', 'Failed to create the fund. ' + errMsg);
+                    this.toasterService.pop(
+                        'error', 
+                        this.translate.translate('Failed to create the fund. @errMsg@)', { 'errMsg': errMsg })
+                    );
                     return;
                 });
         } else {
@@ -1066,7 +1068,7 @@ export class FundComponent implements OnInit, OnDestroy {
                 .then(() => {
                     this.toasterService.pop(
                         'success',
-                        `${this.fundForm.controls['fundName'].value} has been successfully updated.`,
+                        this.translate.translate('@fundName@ has been successfully updated.', { 'fundName': this.fundForm.controls['fundName'].value })
                     );
                     this.fundService.fetchFundList();
                     this.location.back();
@@ -1074,7 +1076,10 @@ export class FundComponent implements OnInit, OnDestroy {
                 })
                 .catch((err) => {
                     const errMsg = _.get(err, '[1].Data[0].Message', '');
-                    this.toasterService.pop('error', 'Failed to update the fund. ' + errMsg);
+                    this.toasterService.pop(
+                        'error', 
+                        this.translate.translate('Failed to create the fund. @errMsg@)', { 'errMsg': errMsg })
+                    );
                     return;
                 });
         }
@@ -1092,7 +1097,7 @@ export class FundComponent implements OnInit, OnDestroy {
                 .then(() => {
                     this.toasterService.pop(
                         'success',
-                        `${this.fundForm.controls['fundName'].value} draft has been successfully saved.`,
+                        this.translate.translate('@fundName@ draft has been successfully saved.', { 'fundName': this.fundForm.controls['fundName'].value })
                     );
                     this.fundService.fetchFundList();
                     this.location.back();
@@ -1100,7 +1105,10 @@ export class FundComponent implements OnInit, OnDestroy {
                 })
                 .catch((err) => {
                     const errMsg = _.get(err, '[1].Data[0].Message', '');
-                    this.toasterService.pop('error', 'Failed to create the draft fund. ' + errMsg);
+                    this.toasterService.pop(
+                        'error', 
+                        this.translate.translate('Failed to create the fund. @errMsg@)', { 'errMsg': errMsg })
+                    );
                     return;
                 });
         } else {
@@ -1108,7 +1116,7 @@ export class FundComponent implements OnInit, OnDestroy {
                 .then(() => {
                     this.toasterService.pop(
                         'success',
-                        `${this.fundForm.controls['fundName'].value} draft has been successfully updated.`,
+                        this.translate.translate('@fundName@ draft has been successfully updated.', { 'fundName': this.fundForm.controls['fundName'].value })
                     );
                     this.fundService.fetchFundList();
                     this.location.back();
@@ -1116,7 +1124,10 @@ export class FundComponent implements OnInit, OnDestroy {
                 })
                 .catch((err) => {
                     const errMsg = _.get(err, '[1].Data[0].Message', '');
-                    this.toasterService.pop('error', 'Failed to update the draft fund. ' + errMsg);
+                    this.toasterService.pop(
+                        'error', 
+                        this.translate.translate('Failed to create the fund. @errMsg@)', { 'errMsg': + errMsg })
+                    );
                     return;
                 });
         }
@@ -1139,12 +1150,14 @@ export class FundComponent implements OnInit, OnDestroy {
     }
 
     displaySharePopup(fundName, fundID) {
-        const message = `<span>By clicking "Yes", you will be able to create a share directly linked to ${fundName}.</span>`;
+        let message = '<span>;'
+        message += this.translate.translate('By clicking "Yes", you will be able to create a share directly linked to @fundName@.', { 'fundName': fundName });
+        message += '</span>';
 
         this.confirmationService.create(
-            '<span>Do you want to create a share?</span>',
+            `<span>${this.translate.translate('Do you want to create a share?')}</span>`,
             message,
-            { confirmText: 'Yes', declineText: 'No' },
+            { confirmText: this.translate.translate('Yes'), declineText: this.translate.translate('No') },
         ).subscribe((ans) => {
             if (ans.resolved) {
                 this.redirectToShare(fundID);
@@ -1156,7 +1169,10 @@ export class FundComponent implements OnInit, OnDestroy {
     }
 
     creationSuccess(fundName) {
-        this.toasterService.pop('success', `${fundName} has been successfully created.`);
+        this.toasterService.pop(
+            'success', 
+            this.translate.translate('@fundName has been successfully created.', { 'fundName': fundName })
+        );
         this.router.navigateByUrl('/product-module/product');
     }
 
@@ -1198,5 +1214,4 @@ export class FundComponent implements OnInit, OnDestroy {
         this.unSubscribe.next();
         this.unSubscribe.complete();
     }
-
 }
