@@ -3,12 +3,12 @@ import { NgModule } from '@angular/core';
 import { RouterModule } from '@angular/router';
 import { CommonModule } from '@angular/common';
 import { BrowserModule } from '@angular/platform-browser';
+import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 /* Pipes. */
 import { SelectModule, SetlComponentsModule, SetlDirectivesModule, SetlPipesModule } from '@setl/utils';
 /* Clarity module. */
 import { ClarityModule } from '@clr/angular';
-
 import { MultilingualModule } from '@setl/multilingual';
 /* Components. */
 import { OfiLoginComponent } from './login/component';
@@ -29,6 +29,7 @@ import { SetlLoginModule } from '@setl/core-login';
     imports: [
         CommonModule,
         BrowserModule,
+        BrowserAnimationsModule,
         FormsModule,
         ReactiveFormsModule,
         ClarityModule,
