@@ -345,7 +345,7 @@
                     </div>
                     <div class="row">
                         <div class="form-group col-sm-12">
-                            <button id="mcBtnSubmitForm" type="submit" class="btn btn-primary" [disabled]="!managementCompanyForm.valid || !fileMetadata.isValid()">
+                            <button id="mcBtnSubmitForm" type="submit" class="btn btn-primary" [disabled]="!isFormValid">
                                 <div *ngIf="!editForm; else editMcFBtSubmit">
                                     <i class="fa fa-save"></i> <span mltag="txt_save">Save</span>
                                 </div>
