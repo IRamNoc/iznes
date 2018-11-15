@@ -5,7 +5,6 @@ import com.setl.UI.common.SETLUtils.ScreenshotRule;
 import com.setl.UI.common.SETLUtils.TestMethodPrinterRule;
 import custom.junit.runners.OrderedJUnit4ClassRunner;
 
-import jnr.ffi.annotations.In;
 import org.junit.After;
 import org.junit.Before;
 import org.junit.Rule;
@@ -13,7 +12,6 @@ import org.junit.Test;
 import org.junit.rules.Timeout;
 import org.junit.runner.RunWith;
 import org.openqa.selenium.JavascriptExecutor;
-import sun.jvm.hotspot.oops.InstanceKlass;
 
 
 import static SETLAPIHelpers.DatabaseHelper.setDBToProdOff;
@@ -24,21 +22,18 @@ import static com.setl.UI.common.SETLUIHelpers.SetUp.driver;
 import static com.setl.UI.common.SETLUIHelpers.SetUp.testSetUp;
 import static com.setl.UI.common.SETLUIHelpers.KYCDetailsHelper.*;
 
-
-
 @RunWith(OrderedJUnit4ClassRunner.class)
 
 public class OpenCSDManagementCompanyOnboarding {
 
     JavascriptExecutor jse = (JavascriptExecutor)driver;
 
-
     @Rule
     public ScreenshotRule screenshotRule = new ScreenshotRule();
     @Rule
     public RepeatRule repeatRule = new RepeatRule();
     @Rule
-    public Timeout globalTimeout = new Timeout(300000);
+    public Timeout globalTimeout = new Timeout(60000);
     @Rule
     public TestMethodPrinterRule pr = new TestMethodPrinterRule(System.out);
 
@@ -56,7 +51,7 @@ public class OpenCSDManagementCompanyOnboarding {
     }
 
     @Test
-    public void _shouldCreateManagementCompanyAccount() throws InterruptedException {
+    public void TG2624_shouldCreateManagementCompanyAccount() throws InterruptedException {
         String[] password = generateManagementCompanyUserDetails();
         String[] loginName = generateManagementCompanyUserDetails();
         String[] email = generateManagementCompanyUserDetails();
@@ -65,7 +60,7 @@ public class OpenCSDManagementCompanyOnboarding {
         logout();
     }
     @Test
-    public void _shouldNavigateToManagementCompany() throws InterruptedException {
+    public void TG2624_shouldNavigateToManagementCompany() throws InterruptedException {
         String[] password = generateManagementCompanyUserDetails();
         String[] loginName = generateManagementCompanyUserDetails();
         String[] email = generateManagementCompanyUserDetails();
@@ -77,7 +72,7 @@ public class OpenCSDManagementCompanyOnboarding {
         assertPage("Management Company");
     }
     @Test
-    public void _ShouldAssertLabelsOnForm() throws InterruptedException {
+    public void TG2624_ShouldAssertLabelsOnForm() throws InterruptedException {
         String[] password = generateManagementCompanyUserDetails();
         String[] loginName = generateManagementCompanyUserDetails();
         String[] email = generateManagementCompanyUserDetails();
@@ -90,7 +85,7 @@ public class OpenCSDManagementCompanyOnboarding {
         assertPageFormLabels();
     }
     @Test
-    public void _shouldCheckManagementCompanyList() throws InterruptedException {
+    public void TG2624_shouldCheckManagementCompanyList() throws InterruptedException {
         String[] password = generateManagementCompanyUserDetails();
         String[] loginName = generateManagementCompanyUserDetails();
         String[] email = generateManagementCompanyUserDetails();
@@ -103,7 +98,7 @@ public class OpenCSDManagementCompanyOnboarding {
         checkManagementCompanyList("Management Company", "am2");
     }
     @Test
-    public void _shouldAssertAssetManagerCompanyDetails() throws InterruptedException {
+    public void TG2624_shouldAssertAssetManagerCompanyDetails() throws InterruptedException {
         String[] password = generateManagementCompanyUserDetails();
         String[] loginName = generateManagementCompanyUserDetails();
         String[] email = generateManagementCompanyUserDetails();
@@ -115,7 +110,7 @@ public class OpenCSDManagementCompanyOnboarding {
         assertManagementCompanyDetailsOnEdit();
     }
     @Test
-    public void _shouldFilLInManagementCompanyForm() throws InterruptedException {
+    public void TG2624_shouldFilLInManagementCompanyForm() throws InterruptedException {
         String[] password = generateManagementCompanyUserDetails();
         String[] loginName = generateManagementCompanyUserDetails();
         String[] email = generateManagementCompanyUserDetails();
@@ -137,7 +132,7 @@ public class OpenCSDManagementCompanyOnboarding {
         fillInManagementCompanyFormData(email[1],country[4], SIRET[4], LEI[0], BIC[1], GIIN[2],Address1[0], Address2[1], postCode[2], city[3]);
     }
     @Test
-    public void _shouldAssertRequiredField() throws InterruptedException {
+    public void TG2624_shouldAssertRequiredField() throws InterruptedException {
         String[] password = generateManagementCompanyUserDetails();
         String[] loginName = generateManagementCompanyUserDetails();
         String[] email = generateManagementCompanyUserDetails();
