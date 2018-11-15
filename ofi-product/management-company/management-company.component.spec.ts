@@ -78,6 +78,36 @@ describe('OfiManagementCompanyComponent', () => {
     let markForCheckSpy;
     let managementCompanyFormSpy;
 
+    const fakeCompany = {
+        companyID: 'companyID',
+        companyName: 'companyName',
+        emailAddress: 'emailAddress',
+        legalFormName: 'EURL',
+        country: 'FR',
+        postalAddressLine1: 'postalAddressLine1',
+        postalAddressLine2: 'postalAddressLine2',
+        city: 'city',
+        postalCode: 'postalCode',
+        taxResidence: 'LU',
+        rcsMatriculation: 'rcsMatriculation',
+        supervisoryAuthority: 'supervisoryAuthority',
+        numSiretOrSiren: 'numSiretOrSiren',
+        shareCapital: '1000000',
+        commercialContact: 'commercialContact',
+        operationalContact: 'operationalContact',
+        directorContact: 'directorContact',
+        lei: '12345678901234567890',
+        bic: 'bic',
+        giinCode: '',
+        websiteUrl: 'websiteUrl',
+        phoneNumberPrefix: '+355',
+        phoneNumber: '16589456',
+        signatureTitle: 'signatureTitle',
+        signatureHash: 'signatureHash',
+        logoTitle: 'logoTitle',
+        logoHash: 'logoHash',
+    };
+
     beforeAll(done => (async () => {
         TestBed.resetTestingModule();
         TestBed.configureTestingModule({
@@ -114,7 +144,7 @@ describe('OfiManagementCompanyComponent', () => {
         TestBed.resetTestingModule = resetTestingModule;
     });
 
-    beforeEach(() => {
+    beforeEach(fakeAsync(() => {
         fixture = TestBed.createComponent(OfiManagementCompanyComponent);
 
         comp = fixture.componentInstance;
@@ -123,7 +153,10 @@ describe('OfiManagementCompanyComponent', () => {
             .and.returnValue(null);
         managementCompanyFormSpy = spyOn(comp.managementCompanyForm, 'setValue')
             .and.callThrough();
-    });
+
+        tick();
+        fixture.detectChanges();
+    }));
 
     afterEach(() => {
         markForCheckSpy.calls.reset();
@@ -169,40 +202,6 @@ describe('OfiManagementCompanyComponent', () => {
 
     describe('editCompany', () => {
 
-        let fakeCompany;
-
-        beforeEach(() => {
-            fakeCompany = {
-                companyID: 'companyID',
-                companyName: 'companyName',
-                emailAddress: 'emailAddress',
-                legalFormName: 'legalFormName',
-                country: 'country',
-                postalAddressLine1: 'postalAddressLine1',
-                postalAddressLine2: 'postalAddressLine2',
-                city: 'city',
-                postalCode: 'postalCode',
-                taxResidence: 'taxResidence',
-                rcsMatriculation: 'rcsMatriculation',
-                supervisoryAuthority: 'supervisoryAuthority',
-                numSiretOrSiren: 'numSiretOrSiren',
-                shareCapital: 'shareCapital',
-                commercialContact: 'commercialContact',
-                operationalContact: 'operationalContact',
-                directorContact: 'directorContact',
-                lei: 'lei',
-                bic: 'bic',
-                giinCode: 'giinCode',
-                websiteUrl: 'websiteUrl',
-                phoneNumberPrefix: 'phoneNumberPrefix',
-                phoneNumber: 'phoneNumber',
-                signatureTitle: 'signatureTitle',
-                signatureHash: 'signatureHash',
-                logoTitle: 'logoTitle',
-                logoHash: 'logoHash',
-            };
-        });
-
         it('should set the FormGroup', () => {
             comp.editCompany(fakeCompany);
             expect(managementCompanyFormSpy).toHaveBeenCalledTimes(1);
@@ -222,6 +221,39 @@ describe('OfiManagementCompanyComponent', () => {
             comp.editCompany(fakeCompany);
             expect(spy).toHaveBeenCalledTimes(1);
             expect(comp.fileMetadata.getProperties()).toEqual(expectedPayload);
+        });
+    });
+
+    describe('isFormValid', () => {
+        it('should be valid', () => {
+            comp.editCompany(fakeCompany);
+            expect(comp.isFormValid).toEqual(true);
+        });
+
+        it('should be invalid with no documents in production mode', () => {
+            const noDocCompany = {
+                ...fakeCompany,
+                signatureHash: null,
+            };
+            comp.editCompany(noDocCompany);
+            expect(comp.isFormValid).toEqual(false);
+        });
+
+        it('should be valid with no documents in non-production mode', () => {
+            const isProductionStub = MockNgRedux.getSelectorStub([
+                'user',
+                'siteSettings',
+                'production',
+            ]);
+            isProductionStub.next(false);
+            isProductionStub.complete();
+
+            const noDocCompany = {
+                ...fakeCompany,
+                signatureHash: null,
+            };
+            comp.editCompany(noDocCompany);
+            expect(comp.isFormValid).toEqual(true);
         });
     });
 });

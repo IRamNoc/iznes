@@ -31,6 +31,7 @@ export class OfiManagementCompanyComponent implements OnInit, OnDestroy {
     private usertype: number;
 
     managementCompanyForm: FormGroup;
+    isProduction = true;
     editForm = false;
     showSearchTab = false;
     showModal = false;
@@ -53,6 +54,7 @@ export class OfiManagementCompanyComponent implements OnInit, OnDestroy {
     @select(['user', 'siteSettings', 'language']) language$;
     @select(['user', 'myDetail', 'userType']) usertype$;
     @select(['ofi', 'ofiProduct', 'ofiManagementCompany', 'managementCompanyList', 'managementCompanyList']) managementCompanyList$;
+    @select(['user', 'siteSettings', 'production']) isProduction$;
 
     constructor(
         private ngRedux: NgRedux<any>,
@@ -80,6 +82,12 @@ export class OfiManagementCompanyComponent implements OnInit, OnDestroy {
                 takeUntil(this.unSubscribe),
             )
             .subscribe(language => this.setLanguage(language));
+
+        this.isProduction$
+            .pipe(
+                takeUntil(this.unSubscribe),
+            )
+            .subscribe(isProduction => this.isProduction = isProduction);
 
         this.usertype$
             .pipe(
@@ -116,6 +124,10 @@ export class OfiManagementCompanyComponent implements OnInit, OnDestroy {
         return this.usertype === AM_USERTYPE;
     }
 
+    get isFormValid(): boolean {
+        return this.managementCompanyForm.valid && (!this.isProduction || this.fileMetadata.isValid());
+    }
+
     public onDropFile(filedropEvent: FileDropEvent, fieldName: ManagementCompanyFileMetadataField) {
         if (!filedropEvent.files.length) {
             this.fileMetadata.setProperty(
@@ -142,7 +154,7 @@ export class OfiManagementCompanyComponent implements OnInit, OnDestroy {
     public getCountryName(countryAbbreviation: string): string {
         const thisCountryData = _.find(this.countries, { id: countryAbbreviation });
 
-        if (thisCountryData){
+        if (thisCountryData) {
             return thisCountryData.text;
         }
         return '';
@@ -227,7 +239,7 @@ export class OfiManagementCompanyComponent implements OnInit, OnDestroy {
 
     save() {
 
-        if (!this.managementCompanyForm.valid || !this.fileMetadata.isValid()) {
+        if (!this.isFormValid) {
             return;
         }
 
