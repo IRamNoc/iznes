@@ -236,9 +236,14 @@ export class OfiFundAccessTable {
                 const recipientsArr = [this.investorData['investorWalletID']];
                 const subjectStr = this.translate.translate('@amCompany@ has updated your access', { 'amCompany': this.amCompany });
 
-                let bodyStr = `${this.translate.translate('Hello @investorFirstName@, @amCompany@ has made updates on your access list', { 'investorFirstName': this.getInvestorFirstName(), 'amCompany': this.amCompany })}.`;
-
-                bodyStr += `<br><br>${this.translate.translate('Click on the button below to go to the Funds shares page to see all changes and begin trading on IZNES')}.<br><br>%@link@%<br><br>${this.translate.translate('Thank you')},<br><br>${this.translate.translate('The IZNES team')}.`;
+                let bodyStr = `
+                    ${this.translate.translate('Hello @investorFirstName@, @amCompany@ has made updates on your access list', { 'investorFirstName': this.getInvestorFirstName(), 'amCompany': this.amCompany })}.
+                    <br><br>
+                    ${this.translate.translate('Click on the button below to go to the Funds shares page to see all changes and begin trading on IZNES')}.
+                    <br><br>%@link@%<br><br>
+                    ${this.translate.translate('Thank you')},
+                    <br><br>${this.translate.translate('The IZNES team')}.
+                `;
 
                 const action = {
                     type: 'messageWithLink',
@@ -247,7 +252,7 @@ export class OfiFundAccessTable {
                             {
                                 link: '/#/list-of-funds/0',
                                 anchorCss: 'btn',
-                                anchorText: 'Start Trading',
+                                anchorText: this.translate.translate('Start Trading'),
                             },
                         ],
                     },

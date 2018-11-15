@@ -248,7 +248,7 @@ export class OfiInviteInvestorsComponent implements OnInit, OnDestroy {
         let message = '<p><b>';
         
         message += this.translate.translate('An invitation email to IZNES was sent to:');
-        message += '</b></p > <table class="table grid" > <tbody>';
+        message += '</b></p><table class="table grid" > <tbody>';
 
         for (const email of emails) {
             message += '<tr><td>' + email + '</td></tr>';

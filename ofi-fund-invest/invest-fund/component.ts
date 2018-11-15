@@ -47,7 +47,6 @@ import { LogService } from '@setl/utils';
 import { MultilingualService } from '@setl/multilingual';
 import { MessagesService } from '@setl/core-messages';
 import { SellBuyCalendar } from '../../ofi-product/fund-share/FundShareEnum';
-
 import { OfiFundShareService } from '@ofi/ofi-main/ofi-req-services/ofi-product/fund-share/service';
 import { DomSanitizer } from '@angular/platform-browser';
 import { FileViewerPreviewService } from '@setl/core-fileviewer/preview-modal/service';
@@ -528,16 +527,16 @@ export class InvestFundComponent implements OnInit, OnDestroy {
         this.metadata = {
             subscribe: {
                 actionLabel: 'subscribe',
-                feeLabel: this.translate.getTranslationByString('Entry fee'),
+                feeLabel: this.translate.getTranslationByString('Entry Fee'),
 
             },
             redeem: {
                 actionLabel: 'redeem',
-                feeLabel: this.translate.getTranslationByString('Exit fee'),
+                feeLabel: this.translate.getTranslationByString('Exit Fee'),
             },
             sellbuy: {
                 actionLabel: 'sellbuy',
-                feeLabel: this.translate.getTranslationByString('Entry / Exit fee'),
+                feeLabel: this.translate.getTranslationByString('Entry / Exit Fee'),
             },
         }[this.type];
 
@@ -642,7 +641,10 @@ export class InvestFundComponent implements OnInit, OnDestroy {
         }
         this.timerToast = this.toaster.pop(
             'warning',
-            `${this.translate.translate('Time left before the next cut-off:')} ${this.getFormattedUnixTime(unixtime)}`,
+            this.translate.translate(
+                'Time left before the next cut-off: @time@', 
+                { 'time': this.getFormattedUnixTime(unixtime) }
+            ),
         );
     }
 
@@ -963,13 +965,17 @@ export class InvestFundComponent implements OnInit, OnDestroy {
     sendMessageToAM(params) {
         const amWalletID = params.walletID;
 
-        const subject = this.translate.translate('Warning - Soft Limit amount exceeded on @orderTypeLabel@ order @orderRef@', { 'orderTypeLabel': params.orderTypeLabel, 'orderRef': params.orderRef });
+        const subjectStr = this.translate.translate('Warning - Soft Limit amount exceeded on @orderTypeLabel@ order @orderRef@', { 'orderTypeLabel': params.orderTypeLabel, 'orderRef': params.orderRef });
 
-        let body = '<p>';
-        body += this.translate.translate('Hello');
-        body += ',<br /><br />';
-        body += this.translate.translate('Please be aware that the @orderTypeLabel@ order @orderRef has exceeded the limit of 15 million.', { 'orderTypeLabel': params.orderTypeLabel, 'orderRef': params.orderRef });
-        body += '<br />%@link@%<br /><br />The IZNES Team.</p>';
+        let bodyStr = `
+            <p>
+            ${this.translate.translate('Hello')}
+            <br /><br />
+            ${this.translate.translate('Please be aware that the @orderTypeLabel@ order @orderRef has exceeded the limit of 15 million.', { 'orderTypeLabel': params.orderTypeLabel, 'orderRef': params.orderRef })}
+            <br />%@link@%<br /><br />
+            ${this.translate.translate('The IZNES Team')}
+            .</p>
+        `;
 
         const action = {
             type: 'messageWithLink',
@@ -984,7 +990,7 @@ export class InvestFundComponent implements OnInit, OnDestroy {
             },
         };
 
-        this.messagesService.sendMessage([amWalletID], subject, body, action as any);
+        this.messagesService.sendMessage([amWalletID], subjectStr, bodyStr, action as any);
     }
 
     subscribeForChange(type: string): void {
@@ -1197,7 +1203,6 @@ export class InvestFundComponent implements OnInit, OnDestroy {
         }
 
         return false;
-
     }
 
     handleOrderConfirmation() {
@@ -1292,7 +1297,7 @@ export class InvestFundComponent implements OnInit, OnDestroy {
             `;
 
         this.confirmationService.create(
-            '<span>Order confirmation</span>',
+            `<span>${this.translate.translate('Order Confirmation')}</span>`,
             message,
             {  
                 confirmText: this.translate.translate('Confirm'), 
@@ -1581,7 +1586,7 @@ export class InvestFundComponent implements OnInit, OnDestroy {
                         </tr>
                         <tr>
                             <td class="text-center text-danger">
-                                ${this.translate.getTranslationByString('If you wish to redeem more than 80% of your position, you can cancel previous redeem orders and place an order in quantiy.')}
+                                ${this.translate.getTranslationByString('If you wish to redeem more than 80% of your position, you can cancel previous redeem orders and place an order in quantity.')}
                             </td>
                         </tr>
                     </tbody>
@@ -1598,7 +1603,7 @@ export class InvestFundComponent implements OnInit, OnDestroy {
                     <table class="table grid">
                         <tbody>
                             <tr>
-                                <td class="text-center text-error">Unable to view file</td>
+                                <td class="text-center text-error">${this.translate.translate('Unable to view file')}</td>
                             </tr>
                         </tbody>
                     </table>

@@ -13,16 +13,15 @@ import { select, NgRedux } from '@angular-redux/store';
 import { ActivatedRoute, Router } from '@angular/router';
 import { Location } from '@angular/common';
 import * as _ from 'lodash';
-
 import { Subject } from 'rxjs/Subject';
 import { combineLatest } from 'rxjs/observable/combineLatest';
 import { takeUntil } from 'rxjs/operators';
-
 import { Subscription } from 'rxjs';
 
 /* Services */
 import { OfiUmbrellaFundService } from '@ofi/ofi-main/ofi-req-services/ofi-product/umbrella-fund/service';
 import { LeiService } from '@ofi/ofi-main/ofi-req-services/ofi-product/lei/lei.service';
+
 import {
     OfiManagementCompanyService,
 } from '@ofi/ofi-main/ofi-req-services/ofi-product/management-company/management-company.service';
@@ -47,7 +46,6 @@ import { MultilingualService } from '@setl/multilingual';
 })
 
 export class UmbrellaFundComponent implements OnInit, AfterViewInit, OnDestroy {
-
     /* Public properties. */
     umbrellaFundForm: FormGroup;
     umbrellaFundList = [];
@@ -98,11 +96,10 @@ export class UmbrellaFundComponent implements OnInit, AfterViewInit, OnDestroy {
         fromShare?: boolean,
     } = {};
 
-
     currDraft: number = 0;
 
     /* Private properties. */
-    subscriptionsArray: Array<Subscription> = [];
+    subscriptionsArray: Subscription[] = [];
 
     unSubscribe: Subject<any> = new Subject();
 
@@ -125,23 +122,22 @@ export class UmbrellaFundComponent implements OnInit, AfterViewInit, OnDestroy {
     }
 
     constructor(
-        private _fb: FormBuilder,
+        private fb: FormBuilder,
         private ngRedux: NgRedux<any>,
-        private _changeDetectorRef: ChangeDetectorRef,
+        private changeDetectorRef: ChangeDetectorRef,
         private alertsService: AlertsService,
-        private _router: Router,
-        private _location: Location,
-        private _activatedRoute: ActivatedRoute,
-        private _toasterService: ToasterService,
-        private _ofiUmbrellaFundService: OfiUmbrellaFundService,
+        private router: Router,
+        private location: Location,
+        private activatedRoute: ActivatedRoute,
+        private toasterService: ToasterService,
+        private ofiUmbrellaFundService: OfiUmbrellaFundService,
         private managementCompanyService: OfiManagementCompanyService,
         private logService: LogService,
         private confirmationService: ConfirmationService,
-        public _translate: MultilingualService,
+        public translate: MultilingualService,
         private leiService: LeiService,
         @Inject('product-config') productConfig,
     ) {
-
         this.countries = productConfig.fundItems.domicileItems;
         this.fundAdminOptions = productConfig.fundItems.fundAdministratorItems;
         this.custodianBankOptions = productConfig.fundItems.custodianBankItems;
@@ -154,10 +150,10 @@ export class UmbrellaFundComponent implements OnInit, AfterViewInit, OnDestroy {
         this.centralizingAgentOptions = productConfig.fundItems.centralizingAgentItems;
 
         this.managementCompanyService.getManagementCompanyList();
-        this._ofiUmbrellaFundService.fetchUmbrellaList();
+        this.ofiUmbrellaFundService.fetchUmbrellaList();
 
         // param url
-        this._activatedRoute.params
+        this.activatedRoute.params
             .pipe(
                 takeUntil(this.unSubscribe),
             )
@@ -171,7 +167,7 @@ export class UmbrellaFundComponent implements OnInit, AfterViewInit, OnDestroy {
                 }
             });
 
-        this.umbrellaFundForm = this._fb.group({
+        this.umbrellaFundForm = this.fb.group({
             umbrellaFundID: [
                 '',
             ],
@@ -304,8 +300,8 @@ export class UmbrellaFundComponent implements OnInit, AfterViewInit, OnDestroy {
         combineLatest(
             this.umbrellaFundAccessListOb,
             this.managementCompanyAccessListOb,
-            this._activatedRoute.queryParams,
-            this._activatedRoute.params,
+            this.activatedRoute.queryParams,
+            this.activatedRoute.params,
         )
             .pipe(
                 takeUntil(this.unSubscribe),
@@ -327,7 +323,7 @@ export class UmbrellaFundComponent implements OnInit, AfterViewInit, OnDestroy {
                     && (this.umbrellaFundID || queryParams.prefill)
                 ) {
                     this.fillFormByUmbrellaID(this.umbrellaFundID || queryParams.prefill);
-                    this._changeDetectorRef.markForCheck();
+                    this.changeDetectorRef.markForCheck();
                 }
             });
 
@@ -341,12 +337,12 @@ export class UmbrellaFundComponent implements OnInit, AfterViewInit, OnDestroy {
                     return;
                 }
                 this.fillFormByUmbrellaID(item[0].id);
-                this._changeDetectorRef.markForCheck();
+                this.changeDetectorRef.markForCheck();
             });
     }
 
     ngOnInit() {
-        this._activatedRoute.queryParams
+        this.activatedRoute.queryParams
             .pipe(
                 takeUntil(this.unSubscribe),
             )
@@ -397,14 +393,13 @@ export class UmbrellaFundComponent implements OnInit, AfterViewInit, OnDestroy {
     }
 
     ngAfterViewInit() {
-
     }
 
     ngOnDestroy(): void {
         /* Detach the change detector on destroy. */
-        this._changeDetectorRef.detach();
+        this.changeDetectorRef.detach();
 
-        /* Unsunscribe Observables. */
+        /* Unsubscribe Observables. */
         this.unSubscribe.next();
         this.unSubscribe.complete();
     }
@@ -570,15 +565,15 @@ export class UmbrellaFundComponent implements OnInit, AfterViewInit, OnDestroy {
     }
 
     duplicate(umbrellaID: string) {
-        this._router.navigateByUrl(`/product-module/product/umbrella-fund/new?prefill=${umbrellaID}`);
+        this.router.navigateByUrl(`/product-module/product/umbrella-fund/new?prefill=${umbrellaID}`);
     }
 
     auditTrail(umbrellaID: string) {
-        this._router.navigateByUrl(`/product-module/product/umbrella-fund/${umbrellaID}/audit`);
+        this.router.navigateByUrl(`/product-module/product/umbrella-fund/${umbrellaID}/audit`);
     }
 
     cancel() {
-        this._router.navigateByUrl('/product-module/product');
+        this.router.navigateByUrl('/product-module/product');
     }
 
     save(formValues) {
@@ -614,7 +609,7 @@ export class UmbrellaFundComponent implements OnInit, AfterViewInit, OnDestroy {
 
         if (!!formValues.umbrellaFundID && formValues.umbrellaFundID !== '' && this.isEditMode) {
             // UPDATE
-            const asyncTaskPipe = this._ofiUmbrellaFundService.updateUmbrellaFund(
+            const asyncTaskPipe = this.ofiUmbrellaFundService.updateUmbrellaFund(
                 {
                     ...payload,
                     umbrellaFundID: formValues.umbrellaFundID,
@@ -642,8 +637,14 @@ export class UmbrellaFundComponent implements OnInit, AfterViewInit, OnDestroy {
 
                         this.currentLei = payload.legalEntityIdentifier;
                     } else {
-                        this._toasterService.pop('success', formValues.umbrellaFundName + ' has been successfully updated!');
-                        this._router.navigateByUrl('/product-module/product');
+                        this.toasterService.pop(
+                            'success', 
+                            this.translate.translate(
+                                '@umbrellaFundName@ has been successfully updated', 
+                                { 'umbrellaFundName': formValues.umbrellaFundName }
+                            )
+                        );
+                        this.router.navigateByUrl('/product-module/product');
                     }
                 },
                 (data) => {
@@ -652,13 +653,17 @@ export class UmbrellaFundComponent implements OnInit, AfterViewInit, OnDestroy {
                     // this.modalText = JSON.stringify(data);
                     // this.showTextModal = true;
                     const errMsg = _.get(data, '[1].Data[0].Message', '');
-                    this._toasterService.pop('error', 'Failed to update the umbrella fund. ' + errMsg);
-                    this._changeDetectorRef.markForCheck();
+                    this.toasterService.pop(
+                        'error', 
+                        this.translate.translate('Failed to update the umbrella fund.') + ' ' + errMsg
+                    );
+                    
+                    this.changeDetectorRef.markForCheck();
                 })
             );
         } else {
             // INSERT
-            const asyncTaskPipe = this._ofiUmbrellaFundService.saveUmbrellaFund(
+            const asyncTaskPipe = this.ofiUmbrellaFundService.saveUmbrellaFund(
                 payload,
                 this.ngRedux);
 
@@ -684,14 +689,18 @@ export class UmbrellaFundComponent implements OnInit, AfterViewInit, OnDestroy {
                     this.logService.log('Error: ', data);
 
                     const errMsg = _.get(data, '[1].Data[0].Message', '');
-                    let userErrMsg = `Failed to create the umbrella fund. (${errMsg})`;
+                   
+                    let userErrMsg = this.translate.translate(
+                        'Failed to create the umbrella fund. @errMsg@', 
+                        { 'errMsg': errMsg }
+                    );
 
                     if (errMsg === 'Umbrella Fund is already exist with the same umbrella fund name.') {
-                        userErrMsg = 'This name is already being used by another umbrella fund.';
+                        userErrMsg = this.translate.translate('This name is already being used by another umbrella fund.');
                     }
 
-                    this._toasterService.pop('error', userErrMsg);
-                    this._changeDetectorRef.markForCheck();
+                    this.toasterService.pop('error', userErrMsg);
+                    this.changeDetectorRef.markForCheck();
                 })
             );
         }
@@ -699,8 +708,9 @@ export class UmbrellaFundComponent implements OnInit, AfterViewInit, OnDestroy {
 
     saveDraft(formValues) {
         if (formValues.managementCompanyID.length == 0) {
-
-            this.showWarning('Please fill in at least the management company to be able to save as draft.');
+            this.showWarning(
+                this.translate.translate('Please fill in at least the management company to be able to save as draft.')
+            );
 
         } else {
             const payload: UmbrellaFundDetail = {
@@ -737,7 +747,7 @@ export class UmbrellaFundComponent implements OnInit, AfterViewInit, OnDestroy {
 
             if (!!formValues.umbrellaFundID && formValues.umbrellaFundID !== '' && this.isEditMode) {
                 // UPDATE
-                asyncTaskPipe = this._ofiUmbrellaFundService.updateUmbrellaFund(
+                asyncTaskPipe = this.ofiUmbrellaFundService.updateUmbrellaFund(
                     {
                         ...payload,
                         umbrellaFundID: formValues.umbrellaFundID,
@@ -745,7 +755,7 @@ export class UmbrellaFundComponent implements OnInit, AfterViewInit, OnDestroy {
                     this.ngRedux);
             } else {
                 // INSERT
-                asyncTaskPipe = this._ofiUmbrellaFundService.saveUmbrellaFund(
+                asyncTaskPipe = this.ofiUmbrellaFundService.saveUmbrellaFund(
                     payload,
                     this.ngRedux);
             }
@@ -755,24 +765,31 @@ export class UmbrellaFundComponent implements OnInit, AfterViewInit, OnDestroy {
     }
 
     dispatchAction(asyncTaskPipe, umbrellaFundName) {
-        const successMessage = this.isEditMode
-            ? `${umbrellaFundName} draft has been successfully updated!`
-            : `${umbrellaFundName} draft has been successfully saved!`;
+        let successMessage; 
+        let errorMessage;
+            
+        if (this.isEditMode) {
+            successMessage = this.translate.translate('@umbrellaFundName@ draft has been successfully updated', { 'umbrellaFundName': umbrellaFundName });
+            
+            errorMessage = this.translate.translate('Failed to update the draft umbrella fund');
+        } else {
+            successMessage = this.translate.translate('@umbrellaFundName@ draft has been successfully saved', { 'umbrellaFundName': umbrellaFundName });
 
-        const errorMessage = this.isEditMode ? 'Failed to update the draft umbrella fund.' : 'Failed to create the draft umbrella fund.'
+            errorMessage = this.translate.translate('Failed to create the draft umbrella fund.');
+        }
 
         this.ngRedux.dispatch(SagaHelper.runAsyncCallback(
             asyncTaskPipe,
             () => {
                 OfiUmbrellaFundService.setRequested(false, this.ngRedux);
-                this._toasterService.pop('success', successMessage);
-                this._location.back();
+                this.toasterService.pop('success', successMessage);
+                this.location.back();
             },
             (err) => {
                 this.logService.log('Error: ', err);
                 const error = _.get(err, '[1].Data[0].Message', '');
-                this._toasterService.pop('error', `${errorMessage} (${error})`);
-                this._changeDetectorRef.markForCheck();
+                this.toasterService.pop('error', `${errorMessage} (${error})`);
+                this.changeDetectorRef.markForCheck();
             })
         );
     }
@@ -791,7 +808,7 @@ export class UmbrellaFundComponent implements OnInit, AfterViewInit, OnDestroy {
         }
         ;
 
-        this._router.navigate(['/product-module/product/fund/new'], extras);
+        this.router.navigate(['/product-module/product/fund/new'], extras);
     }
 
     toggleLeiSwitch(nextState: boolean) {
@@ -825,8 +842,8 @@ export class UmbrellaFundComponent implements OnInit, AfterViewInit, OnDestroy {
     }
 
     creationSuccess(umbrellaFundName) {
-        this._toasterService.pop('success', `${umbrellaFundName} has been successfully created!`);
-        this._router.navigateByUrl('/product-module/product');
+        this.toasterService.pop('success', `${umbrellaFundName} has been successfully created!`);
+        this.router.navigateByUrl('/product-module/product');
     }
 
     confirmModal(response) {

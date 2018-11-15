@@ -37,7 +37,7 @@
                         {{'Duplicate Umbrella' | translate}}
                     </button>
                     <ng-select *ngIf="!isEditMode" id="umbrella_select" [items]="umbrellaListItems" [allowClear]="true"
-                        [placeholder]="_translate.translate('Duplicate from an existing Umbrella Fund')" [formControl]="umbrellaControl">
+                        [placeholder]="translate.translate('Duplicate from an existing Umbrella Fund')" [formControl]="umbrellaControl">
                     </ng-select>
                 </div>
             </div>
@@ -146,7 +146,7 @@
 
                                 </label>
                                 <ng-select id="uf_registerOfficeAddressCountry" [items]="countries" [allowClear]="true"
-                                    [placeholder]="_translate.translate('Select a country')" formControlName="registerOfficeAddressCountry">
+                                    [placeholder]="translate.translate('Select a country')" formControlName="registerOfficeAddressCountry">
                                 </ng-select>
 
                                 <div class="field-error">{{'This field is required' | translate}}</div>
@@ -158,7 +158,7 @@
 
                                 </label>
 
-                                <ng-select id="uf_domicile" [items]="countries" [allowClear]="true" [placeholder]="_translate.translate('Select a country')"
+                                <ng-select id="uf_domicile" [items]="countries" [allowClear]="true" [placeholder]="translate.translate('Select a country')"
                                     formControlName="domicile">
 
 
@@ -179,7 +179,7 @@
                                 <div class="input-group date-pick-wrapper">
                                     <span class="fa fa-calendar" aria-hidden="true"></span>
                                     <input id="uf_umbrellaFundCreationDate" formControlName="umbrellaFundCreationDate"
-                                        autocomplete="off" [dpDayPicker]="configDate" [placeholder]="_translate.translate('Choose a date')"
+                                        autocomplete="off" [dpDayPicker]="configDate" [placeholder]="translate.translate('Choose a date')"
                                         mode="day" theme="dp-material">
 
 
@@ -199,7 +199,7 @@
                                 <label for="uf_managementCompany" class="control-label">{{'Management Company' |
                                     translate}}</label>
                                 <ng-select id="uf_managementCompany" [items]="managementCompanyList" [allowClear]="true"
-                                    [placeholder]="_translate.translate('Select')" formControlName="managementCompanyID">
+                                    [placeholder]="translate.translate('Select')" formControlName="managementCompanyID">
 
 
                                 </ng-select>
@@ -214,7 +214,7 @@
                                 <label for="uf_fundAdministrator" class="control-label">{{'Fund Administrator' |
                                     translate}}</label>
                                 <ng-select id="uf_fundAdministrator" [items]="fundAdminOptions" [allowClear]="true"
-                                    [placeholder]="_translate.translate('Select')" formControlName="fundAdministratorID">
+                                    [placeholder]="translate.translate('Select')" formControlName="fundAdministratorID">
 
 
                                 </ng-select>
@@ -228,7 +228,7 @@
                             <div class="form-group required-field col-sm-6">
                                 <label for="uf_custodian" class="control-label">{{'Custodian Bank' | translate}}</label>
                                 <ng-select id="uf_custodian" [items]="custodianBankOptions" [allowClear]="true"
-                                    [placeholder]="_translate.translate('Select')" formControlName="custodianBankID">
+                                    [placeholder]="translate.translate('Select')" formControlName="custodianBankID">
 
 
                                 </ng-select>
@@ -248,7 +248,7 @@
                             <div class="form-group col-sm-6">
                                 <label for="uf_payingAgent" class="control-label">{{'Paying Agent' | translate}}</label>
                                 <ng-select id="uf_payingAgent" [items]="payingagentOptions" [allowClear]="true"
-                                    [multiple]="true" [placeholder]="_translate.translate('Select')" formControlName="payingAgentID">
+                                    [multiple]="true" [placeholder]="translate.translate('Select')" formControlName="payingAgentID">
 
 
                                 </ng-select>
@@ -257,7 +257,7 @@
                             <div *ngIf="isTransferAgentActive()" class="form-group col-sm-6">
                                 <label for="uf_transferAgent" class="control-label">{{'Transfer Agent' | translate}}</label>
                                 <ng-select id="uf_transferAgent" [items]="transferAgentOptions" [allowClear]="true"
-                                    [placeholder]="_translate.translate('Select')" [formControl]="umbrellaFundForm.controls['transferAgentID']">
+                                    [placeholder]="translate.translate('Select')" [formControl]="umbrellaFundForm.controls['transferAgentID']">
 
 
                                 </ng-select>
@@ -267,7 +267,7 @@
                                 <label for="uf_centralizingAgent" class="control-label">{{'Centralising Agent' |
                                     translate}}</label>
                                 <ng-select id="uf_centralizingAgent" [items]="centralizingAgentOptions" [allowClear]="true"
-                                    [placeholder]="_translate.translate('Select')" [formControl]="umbrellaFundForm.controls['centralisingAgentID']">
+                                    [placeholder]="translate.translate('Select')" [formControl]="umbrellaFundForm.controls['centralisingAgentID']">
 
 
                                 </ng-select>
@@ -308,7 +308,7 @@
                                 </label>
 
                                 <ng-select id="uf_delegatedManagementCompany" [items]="managementCompanyList"
-                                    [allowClear]="true" [placeholder]="_translate.translate('Select')" formControlName="delegatedManagementCompanyID">
+                                    [allowClear]="true" [placeholder]="translate.translate('Select')" formControlName="delegatedManagementCompanyID">
 
 
                                 </ng-select>
@@ -316,7 +316,7 @@
 
                             <div class="form-group col-sm-6">
                                 <label for="uf_auditor" class="control-label">{{'Auditor' | translate}}</label>
-                                <ng-select id="uf_auditor" [items]="auditorOptions" [allowClear]="true" [placeholder]="_translate.translate('Select')"
+                                <ng-select id="uf_auditor" [items]="auditorOptions" [allowClear]="true" [placeholder]="translate.translate('Select')"
                                     formControlName="auditorID">
 
 
@@ -326,7 +326,7 @@
                             <div class="form-group col-sm-6">
                                 <label for="uf_taxAuditor" class="control-label">{{'Tax Auditor' | translate}}</label>
                                 <ng-select id="uf_taxAuditor" [items]="taxAuditorOptions" [allowClear]="true"
-                                    [placeholder]="_translate.translate('Select')" formControlName="taxAuditorID">
+                                    [placeholder]="translate.translate('Select')" formControlName="taxAuditorID">
 
 
                                 </ng-select>
@@ -336,7 +336,7 @@
                                 <label for="uf_principalPromoter" class="control-label">{{'Principal Promoter' |
                                     translate}}</label>
                                 <ng-select id="uf_principalPromoter" style="width: 95%" [items]="principalPromoterOptions"
-                                    [allowClear]="true" [multiple]="true" [placeholder]="_translate.translate('Select')"
+                                    [allowClear]="true" [multiple]="true" [placeholder]="translate.translate('Select')"
                                     formControlName="principlePromoterID">
 
 
@@ -346,7 +346,7 @@
                             <div class="form-group col-sm-6">
                                 <label for="uf_legalAdvisor" class="control-label">{{'Legal Advisor' | translate}}</label>
                                 <ng-select id="uf_legalAdvisor" style="margin-bottom: 8px;" [items]="legalAdvisorOptions"
-                                    [allowClear]="true" [placeholder]="_translate.translate('Select')" formControlName="legalAdvisorID">
+                                    [allowClear]="true" [placeholder]="translate.translate('Select')" formControlName="legalAdvisorID">
 
 
                                 </ng-select>

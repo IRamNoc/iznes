@@ -59,14 +59,14 @@ export class OfiProfileMyInformationsComponent implements OnInit {
     @select(['ofi', 'ofiKyc', 'myInformations']) myKyc: any;
 
     constructor(
-        private _ngRedux: NgRedux<any>,
+        private ngRedux: NgRedux<any>,
         private router: Router,
         private changeDetectorRef: ChangeDetectorRef,
         private toasterService: ToasterService,
         private myUserService: MyUserService,
         private ofiKycService: OfiKycService,
         private alertsService: AlertsService,
-        public _translate: MultilingualService,
+        public translate: MultilingualService,
         private memberSocketService: MemberSocketService,
         @Inject(APP_CONFIG) appConfig: AppConfig,
     ) {
@@ -153,7 +153,7 @@ export class OfiProfileMyInformationsComponent implements OnInit {
             });
 
             // Get response
-            this._ngRedux.dispatch(
+            this.ngRedux.dispatch(
                 SagaHelper.runAsync(
                     [SET_NEW_PASSWORD],
                     [],
@@ -186,7 +186,7 @@ export class OfiProfileMyInformationsComponent implements OnInit {
             companyName: userInformations.companyName,
         };
         const asyncTaskPipe = this.myUserService.saveMyUserDetails(user);
-        this._ngRedux.dispatch(SagaHelper.runAsyncCallback(
+        this.ngRedux.dispatch(SagaHelper.runAsyncCallback(
             asyncTaskPipe,
             () => {
                 this.toasterService.pop('success', 'Saved changes');
@@ -227,7 +227,7 @@ export class OfiProfileMyInformationsComponent implements OnInit {
     getExternalNotificationsAvailable(): any {
         const asyncTaskPipe = this.myUserService.statusNotifications();
 
-        this._ngRedux.dispatch(SagaHelper.runAsync(
+        this.ngRedux.dispatch(SagaHelper.runAsync(
             [],
             [],
             asyncTaskPipe,
@@ -245,5 +245,4 @@ export class OfiProfileMyInformationsComponent implements OnInit {
             },
         ));
     }
-
 }
