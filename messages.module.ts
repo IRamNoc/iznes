@@ -21,6 +21,7 @@ import { SetlMessageBodyComponent } from './messages/message-components/message-
 import { SetlMessagePOAComponent } from './messages/message-components/message-poa/component';
 import { SetlMessageAlertComponent } from './messages/message-components/message-alert/component';
 import { SetlMessageWorkflowComponent } from './messages/message-components/message-workflow/message-workflow.component';
+import { SetlMessageWorkflowComponent2 } from './messages/message-components/message-workflow2/message-workflow.component';
 import { SetlMessageConnectionComponent } from './messages/message-components/message-connection/message-connection.component';
 import { SetlMessageConnectionService } from './messages/message-components/message-connection/message-connection.service';
 import { SetlMessageKycComponent } from './messages/message-components/message-kyc/message-kyc.component';
@@ -50,6 +51,7 @@ import { RouterModule } from '@angular/router';
         SetlMessagePOAComponent,
         SetlMessageAlertComponent,
         SetlMessageWorkflowComponent,
+        SetlMessageWorkflowComponent2,
         SetlMessageAttachmentComponent,
         SetlMessageConnectionComponent,
         SetlMessageKycComponent,

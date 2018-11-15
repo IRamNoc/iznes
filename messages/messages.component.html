@@ -155,6 +155,14 @@
                                    [mailId]="currentMessage.mailId">
             </setl-message-workflow>
 
+            <setl-message-workflow2 *ngIf="currentMessage.action && currentMessage.action.type === 'wflMessage2'"
+                                   [data]="currentMessage.action.data"
+                                   [userId]="userId"
+                                   [isActed]="currentMessage.isActed"
+                                   [walletId]="walletId"
+                                   [mailId]="currentMessage.mailId">
+            </setl-message-workflow2>
+
             <setl-message-with-links *ngIf="currentMessage.action && currentMessage.action.type === 'messageWithLink'" [data]="currentMessage.action.data" [content]="currentMessage.content"></setl-message-with-links>
 
         </div>
