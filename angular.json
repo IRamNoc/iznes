@@ -16,6 +16,7 @@
             "main": "src/main.ts",
             "tsConfig": "src/tsconfig.app.json",
             "polyfills": "src/polyfills.ts",
+            "preserveSymlinks": true,
             "assets": [
               "src/assets",
               "src/favicon.ico"
@@ -81,6 +82,7 @@
             "main": "src/test.ts",
             "karmaConfig": "./karma.conf.js",
             "polyfills": "src/polyfills.ts",
+            "preserveSymlinks": true,
             "tsConfig": "src/tsconfig.spec.json",
             "scripts": [
               "node_modules/core-js/client/shim.min.js",
