@@ -1,9 +1,8 @@
 import { Component, Input, Output, EventEmitter, OnInit, OnDestroy } from '@angular/core';
-import { AbstractControl, FormControl, Validators } from '@angular/forms';
+import { FormControl } from '@angular/forms';
 import { Subject } from 'rxjs';
 import { takeUntil } from 'rxjs/operators';
 import { get as getValue } from 'lodash';
-import {sirenValidator, siretValidator} from '@setl/utils/helper/validators';
 import { RequestsService } from '../../../requests.service';
 import { NewRequestService, configDate } from '../../new-request.service';
 import { countries } from '../../../requests.config';

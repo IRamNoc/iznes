@@ -147,7 +147,7 @@ export class NewRequestService {
                 return [acc, curr].join(joiner);
             },
             '',
-            );
+        );
 
         this.context = context;
 
@@ -248,7 +248,7 @@ export class NewRequestService {
             ],
 
             activityRegulated: 0,
-            regulatoryStatus: [{value: '', disabled: true}, Validators.required],
+            regulatoryStatus: [{ value: '', disabled: true }, Validators.required],
             regulatoryStatusInsurerType: [
                 { value: '', disabled: true },
                 Validators.required,
@@ -280,7 +280,7 @@ export class NewRequestService {
                 [Validators.required, Validators.pattern(/^[a-zA-Z]{2}[A-Z0-9]{9}\d$/)],
             ],
             floatableShares: [
-                { value: '', disabled: true},
+                { value: '', disabled: true },
                 [
                     Validators.required,
                     Validators.min(0),
@@ -299,7 +299,7 @@ export class NewRequestService {
                 Validators.min(0)
             ]],
 
-            beneficiaries: fb.array([]),
+            beneficiaries: fb.array([], Validators.required),
             capitalNature: fb.group({
                 equityAndReserves: '',
                 generalAssets: '',
@@ -671,7 +671,7 @@ export class NewRequestService {
         });
     }
 
-    duplicate(selectedCompanies, kycToDuplicate, connectedWallet){
+    duplicate(selectedCompanies, kycToDuplicate, connectedWallet) {
         return this.ofiKycService.duplicate({
             managementCompanies: selectedCompanies,
             kycToDuplicate,

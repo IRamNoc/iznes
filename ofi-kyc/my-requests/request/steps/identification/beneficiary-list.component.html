@@ -41,6 +41,11 @@
     </thead>
     <tbody>
     <tr beneficiary-line *ngFor="let stakeholder of stakeholders.controls; index as i" [stakeholder]="stakeholder" (action)="handleAction($event, i)" (click)="viewStakeholder(i)"></tr>
+    <tr class="empty" *ngIf="!stakeholders.controls.length">
+        <td colspan="8">
+            {{'No data for the moment, please add at least one stakeholder.' | translate}}
+        </td>
+    </tr>
     </tbody>
 </table>
 

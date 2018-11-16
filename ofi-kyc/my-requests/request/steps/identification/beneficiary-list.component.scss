@@ -6,9 +6,19 @@
     text-align: right;
 }
 
-tbody tr{
+table{
+    table-layout: fixed;
+}
+
+tbody tr:not(.empty){
     &:hover{
         background-color: #555555;
         color: #9A9A9A;
+    }
+}
+
+.empty{
+    td{
+        padding: 30px;
     }
 }
