@@ -49,7 +49,7 @@ public class OpenCSDKYCModuleAcceptanceTest {
     @Rule
     public RepeatRule repeatRule = new RepeatRule();
     @Rule
-    public Timeout globalTimeout = new Timeout(130000);
+    public Timeout globalTimeout = new Timeout(145000);
     @Rule
     public TestMethodPrinterRule pr = new TestMethodPrinterRule(System.out);
 

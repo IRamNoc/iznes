@@ -1,5 +1,6 @@
 package com.setl.openCSDClarityTests.UI.Iznes1SanityTests;
 
+import com.setl.UI.common.SETLUtils.Repeat;
 import com.setl.UI.common.SETLUtils.RepeatRule;
 import com.setl.UI.common.SETLUtils.ScreenshotRule;
 import com.setl.UI.common.SETLUtils.TestMethodPrinterRule;
@@ -58,7 +59,7 @@ public class OpenCSDEntireFlowAcceptanceTest {
     @Rule
     public RepeatRule repeatRule = new RepeatRule();
     @Rule
-    public Timeout globalTimeout = new Timeout(250000);
+    public Timeout globalTimeout = new Timeout(300000);
     @Rule
     public TestMethodPrinterRule pr = new TestMethodPrinterRule(System.out);
 
@@ -76,6 +77,7 @@ public class OpenCSDEntireFlowAcceptanceTest {
     }
 
     @Test
+    @Repeat
     public void shouldTest_EntireIZNESPlatform() throws Exception {
         //-----------------------------------------------------------
         String No = "11"; String userNo = "0" + No;
@@ -159,7 +161,7 @@ public class OpenCSDEntireFlowAcceptanceTest {
         placeOrder(uIsin[0], uShareDetails[0], managementCompEntered, shareCurrency, latestNav, uAmount[0]);
         validatePlacedOrder(companyName, uIsin[0], uShareDetails[0], shareCurrency, uAmount[0]);
 
-        alert("Login as " + AMUsername + " to view the order.");
+        alert("Login as '" + AMUsername + "' to view the order.");
     }
 
     public static void validatePlacedOrder(String companyName, String isin, String shareNames, String currency, String amount) throws IOException, InterruptedException{
