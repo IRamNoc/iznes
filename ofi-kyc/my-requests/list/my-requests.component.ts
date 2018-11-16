@@ -6,6 +6,7 @@ import { takeUntil } from 'rxjs/operators';
 import { NgRedux, select } from '@angular-redux/store';
 import { findIndex } from 'lodash';
 import { clearMyKycRequestedIds } from '@ofi/ofi-main/ofi-store/ofi-kyc/kyc-request/actions';
+import { OfiManagementCompanyService } from '@ofi/ofi-main/ofi-req-services/ofi-product/management-company/management-company.service';
 import {
     ClearMyKycListRequested,
     SetMyKycOpenTab,
@@ -37,12 +38,14 @@ export class MyRequestsComponent implements OnInit, OnDestroy {
         private router: Router,
         private fb: FormBuilder,
         private route: ActivatedRoute,
+        private ofiManagementCompanyService: OfiManagementCompanyService,
     ) {
     }
 
     ngOnInit() {
         this.initSubscriptions();
         this.initForm();
+        this.getAssetManagementCompanies();
 
         this.ngRedux.dispatch(clearMyKycRequestedIds());
         this.ngRedux.dispatch(ClearMyKycListRequested());
@@ -76,6 +79,10 @@ export class MyRequestsComponent implements OnInit, OnDestroy {
         .subscribe((openTabs) => {
             this.tabs = openTabs;
         });
+    }
+
+    getAssetManagementCompanies() {
+        this.ofiManagementCompanyService.fetchInvestorManagementCompanyList(true);
     }
 
     selectedKyc(kyc) {

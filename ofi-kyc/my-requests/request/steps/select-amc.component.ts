@@ -42,7 +42,7 @@ export class NewKycSelectAmcComponent implements OnInit, OnDestroy {
     @select(['ofi', 'ofiKyc', 'myKycList', 'kycList']) myKycList$;
     @select(['ofi', 'ofiKyc', 'myKycRequested', 'kycs']) requestedKycList$;
     @select(['user', 'connected', 'connectedWallet']) connectedWallet$;
-    @select(['ofi', 'ofiProduct', 'ofiManagementCompany', 'investorManagementCompanyList', 'requested']) requestedManagementCompanyList$;
+    @select(['ofi', 'ofiProduct', 'ofiManagementCompany', 'investorManagementCompanyList', 'invRequested']) requestedManagementCompanyList$;
     @select(['ofi', 'ofiProduct', 'ofiManagementCompany', 'investorManagementCompanyList', 'investorManagementCompanyList']) managementCompanyList$;
 
     get selectedManagementCompanies() {
@@ -66,7 +66,6 @@ export class NewKycSelectAmcComponent implements OnInit, OnDestroy {
 
     ngOnInit() {
         this.initSubscriptions();
-        this.getAssetManagementCompanies();
         this.getQueryParams();
     }
 
