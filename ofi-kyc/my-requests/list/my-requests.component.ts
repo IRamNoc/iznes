@@ -62,7 +62,8 @@ export class MyRequestsComponent implements OnInit, OnDestroy {
         )
         .subscribe((kycList) => {
             this.kycList = kycList;
-            this.kycListSelect = kycList.map(kyc => ({
+
+            this.kycListSelect = kycList.filter(kyc => kyc.status).map(kyc => ({
                 id: kyc.kycID,
                 text: kyc.companyName,
             }));
