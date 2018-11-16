@@ -77,7 +77,6 @@ public class OpenCSDEntireFlowAcceptanceTest {
     }
 
     @Test
-    @Repeat
     public void shouldTest_EntireIZNESPlatform() throws Exception {
         //-----------------------------------------------------------
         String No = "11"; String userNo = "0" + No;
