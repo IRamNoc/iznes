@@ -24,25 +24,9 @@ import static com.setl.UI.common.SETLUIHelpers.LoginAndNavigationHelper.navigate
 import static com.setl.UI.common.SETLUIHelpers.SetUp.driver;
 import static com.setl.UI.common.SETLUIHelpers.SetUp.testSetUp;
 
-
 @RunWith(OrderedJUnit4ClassRunner.class)
 
 public class OpenCSDUsersSubModuleTest {
-
-    public static String connectionString = "jdbc:mysql://localhost:9998/setlnet?nullNamePatternMatchesAll=true";
-
-    // Defines username and password to connect to database server.
-    static String username = "root";
-    static String password = "nahafusi61hucupoju78";
-
-    static String testusername = "TestUserNullInfo";
-    static String testpassword = "Testpass123";
-
-    static RestApi<MemberNodeMessageFactory> api;
-
-
-    JavascriptExecutor jse = (JavascriptExecutor) driver;
-
 
     @Rule
     public ScreenshotRule screenshotRule = new ScreenshotRule();

@@ -1,5 +1,6 @@
 package com.setl.openCSDClarityTests.UI.Iznes4General;
 
+import com.setl.UI.common.SETLBusinessData.IBAN;
 import com.setl.UI.common.SETLUtils.RepeatRule;
 import com.setl.UI.common.SETLUtils.ScreenshotRule;
 import com.setl.UI.common.SETLUtils.TestMethodPrinterRule;
@@ -252,7 +253,7 @@ public class OpenCSDSprint7AcceptanceTest {
         fillOutFundDetailsStep1("yes",umbFundDetails);
         fillOutFundDetailsStep2(uFundDetails, randomLEI);
         assertPopupNextFundNo("Share");
-        createShare(uFundDetails, uShareDetails[0], uIsin[0]);
+        createShare(uFundDetails, uShareDetails[0], uIsin[0], IBAN.generateRandomIban("FR"));
         navigateToDropdown("menu-am-report-section");
         navigateToPageByID("menu-report-centralisation-select");
 
@@ -299,7 +300,7 @@ public class OpenCSDSprint7AcceptanceTest {
         fillOutFundDetailsStep2(uFundDetails[0], randomLEI);
         assertPopupNextFundNo("Share");
         searchFundsTable(uFundDetails[0]);
-        createShare(uFundDetails[0], uShareDetails[0], uIsin[0]);
+        createShare(uFundDetails[0], uShareDetails[0], uIsin[0], IBAN.generateRandomIban("FR"));
         searchSharesTable(uShareDetails[0]);
 
         wait.until(invisibilityOfElementLocated(By.id("product-dashboard-fundShareID-1-shareName")));
@@ -325,7 +326,7 @@ public class OpenCSDSprint7AcceptanceTest {
         fillOutFundDetailsStep2(uFundDetails[0], lei);
 
         assertPopupNextFundNo("Share");
-        createShare(uFundDetails[0], uShareDetails[0], uIsin[0]);
+        createShare(uFundDetails[0], uShareDetails[0], uIsin[0], IBAN.generateRandomIban("FR"));
 
         navigateToNAVPageFromFunds();
         wait.until(visibilityOfElementLocated(By.id("NAV-Share-Name-0")));

@@ -1,5 +1,6 @@
 package com.setl.openCSDClarityTests.UI.Iznes1MyProduct.Funds;
 
+import com.setl.UI.common.SETLBusinessData.IBAN;
 import com.setl.UI.common.SETLUtils.RepeatRule;
 import com.setl.UI.common.SETLUtils.ScreenshotRule;
 import com.setl.UI.common.SETLUtils.TestMethodPrinterRule;
@@ -81,7 +82,7 @@ public class OpenCSD3SharesAcceptanceTest {
         assertPopupNextFundNo("Share");
         searchFundsTable(uFundDetails[0]);
         getFundTableRow(0, uFundDetails[0], randomLEI, "EUR", "Management Company", "Afghanistan","Contractual Fund", "");
-        createShare(uFundDetails[0], uShareDetails[0], uIsin[0]);
+        createShare(uFundDetails[0], uShareDetails[0], uIsin[0], IBAN.generateRandomIban("FR"));
         searchSharesTable(uShareDetails[0]);
         getShareTableRow(0, uShareDetails[0], uIsin[0], uFundDetails[0], "EUR", "Management Company", "", "share class", "Open" );
 
@@ -101,7 +102,7 @@ public class OpenCSD3SharesAcceptanceTest {
         fillOutFundDetailsStep1("no", "none");
         fillOutFundDetailsStep2(uFundDetails[0], randomLEI);
         assertPopupNextFundYes("Share");
-        createShareFromYesPopup(uFundDetails[0], uShareDetails[0], uIsin[0]);
+        createShareFromYesPopup(uFundDetails[0], uShareDetails[0], uIsin[0], IBAN.generateRandomIban("FR"));
         searchSharesTable(uShareDetails[0]);
         getShareTableRow(0, uShareDetails[0], uIsin[0], uFundDetails[0], "EUR", "Management Company", "", "share class", "Open" );
     }

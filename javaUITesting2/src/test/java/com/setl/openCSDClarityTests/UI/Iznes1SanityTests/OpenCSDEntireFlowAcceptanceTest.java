@@ -1,5 +1,6 @@
 package com.setl.openCSDClarityTests.UI.Iznes1SanityTests;
 
+import com.setl.UI.common.SETLBusinessData.IBAN;
 import com.setl.UI.common.SETLUtils.Repeat;
 import com.setl.UI.common.SETLUtils.RepeatRule;
 import com.setl.UI.common.SETLUtils.ScreenshotRule;
@@ -118,7 +119,7 @@ public class OpenCSDEntireFlowAcceptanceTest {
         searchFundsTable(uFundDetails[0]);
         getFundTableRow(0, uFundDetails[0], fundLei, "EUR", managementCompExpected, "Afghanistan", "Contractual Fund", umbFundDetails);
 
-        createShare(uFundDetails[0], uShareDetails[0], uIsin[0]);
+        createShare(uFundDetails[0], uShareDetails[0], uIsin[0], IBAN.generateRandomIban("FR"));
         searchSharesTable(uShareDetails[0]);
         getShareTableRow(0, uShareDetails[0], uIsin[0], uFundDetails[0], shareCurrency, managementCompExpected, "", "share class", "Open");
 
