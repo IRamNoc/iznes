@@ -136,12 +136,12 @@ export class ShareHoldersComponent implements OnInit, OnDestroy {
                 private changeDetectorRef: ChangeDetectorRef,
                 private route: ActivatedRoute,
                 private router: Router,
-                private _fb: FormBuilder,
+                private fb: FormBuilder,
                 private memberSocketService: MemberSocketService,
                 private ofiReportsService: OfiReportsService,
                 private ofiAmDashboardService: OfiAmDashboardService,
-                private _fileDownloader: FileDownloader,
-                public _translate: MultilingualService,
+                private fileDownloader: FileDownloader,
+                public translate: MultilingualService,
                 private activatedRoute: ActivatedRoute,
     ) {
         this.loadingDatagrid = false;
@@ -153,7 +153,7 @@ export class ShareHoldersComponent implements OnInit, OnDestroy {
         this.subscriptions.push(this.requestLanguageObj.subscribe((requested) => this.getLanguage(requested)));
         this.subscriptions.push(this.myDetailOb.subscribe((myDetails) => this.getUserDetails(myDetails)));
 
-        this.listSearchForm = this._fb.group({
+        this.listSearchForm = this.fb.group({
             searchFunds: [
                 '',
             ],
@@ -162,13 +162,13 @@ export class ShareHoldersComponent implements OnInit, OnDestroy {
             ],
         });
 
-        this.searchForm = this._fb.group({
+        this.searchForm = this.fb.group({
             search: [
                 '',
             ],
         });
 
-        this.filtersForm = this._fb.group({
+        this.filtersForm = this.fb.group({
             topholders: [
                 '',
             ],
@@ -541,7 +541,7 @@ export class ShareHoldersComponent implements OnInit, OnDestroy {
     exportFile(type, isSpecific) {
         if (type === 'funds' && isSpecific === 0) {
             // all fund
-            this._fileDownloader.downLoaderFile({
+            this.fileDownloader.downLoaderFile({
                 method: 'exportRecordKeepingFunds',
                 token: this.memberSocketService.token,
                 userId: this.myDetails.userId,
@@ -550,7 +550,7 @@ export class ShareHoldersComponent implements OnInit, OnDestroy {
 
         if (type === 'funds' && isSpecific === 1) {
             // specific fund
-            this._fileDownloader.downLoaderFile({
+            this.fileDownloader.downLoaderFile({
                 method: 'exportRecordKeepingFund',
                 token: this.memberSocketService.token,
                 userId: this.myDetails.userId,
@@ -561,7 +561,7 @@ export class ShareHoldersComponent implements OnInit, OnDestroy {
 
         if (type === 'shares' && isSpecific === 0) {
             // all shares
-            this._fileDownloader.downLoaderFile({
+            this.fileDownloader.downLoaderFile({
                 method: 'exportRecordKeepingShares',
                 token: this.memberSocketService.token,
                 userId: this.myDetails.userId,
@@ -570,7 +570,7 @@ export class ShareHoldersComponent implements OnInit, OnDestroy {
 
         if (type === 'shares' && isSpecific === 1) {
             // specific share
-            this._fileDownloader.downLoaderFile({
+            this.fileDownloader.downLoaderFile({
                 method: 'exportRecordKeepingShare',
                 token: this.memberSocketService.token,
                 userId: this.myDetails.userId,

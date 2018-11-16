@@ -9,12 +9,12 @@ export type ManagementCompanyFileMetadataField = 'signature' | 'logo';
 
 export class ManagementCompanyFileMetadata {
     signature = {
-        title: <string>null,
-        hash: <string>null,
+        title: <string>'',
+        hash: <string>'',
     };
     logo = {
-        title: <string>null,
-        hash: <string>null,
+        title: <string>'',
+        hash: <string>'',
     };
 
     getProperties(): ManagementCompanyMetaData {
@@ -54,12 +54,12 @@ export class ManagementCompanyFileMetadata {
 
     reset(): void {
         this.signature = {
-            title: null,
-            hash: null,
+            title: '',
+            hash: '',
         };
         this.logo = {
-            title: null,
-            hash: null,
+            title: '',
+            hash: '',
         };
     }
 
