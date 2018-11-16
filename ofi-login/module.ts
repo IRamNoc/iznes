@@ -13,6 +13,8 @@ import { MultilingualModule } from '@setl/multilingual';
 /* Components. */
 import { OfiLoginComponent } from './login/component';
 import { OfiTwoFactorComponent } from './two-factor/component';
+import { OfiCoreSignUpComponent } from './sign-up/core.component';
+import { OfiAccountSignUpComponent } from './sign-up/account.component';
 import { SetlLayoutModule } from '@setl/core-layout';
 import { SetlLoginModule } from '@setl/core-login';
 
@@ -21,10 +23,14 @@ import { SetlLoginModule } from '@setl/core-login';
     declarations: [
         OfiLoginComponent,
         OfiTwoFactorComponent,
+        OfiCoreSignUpComponent,
+        OfiAccountSignUpComponent,
     ],
     exports: [
         OfiLoginComponent,
         OfiTwoFactorComponent,
+        OfiCoreSignUpComponent,
+        OfiAccountSignUpComponent,
     ],
     imports: [
         CommonModule,

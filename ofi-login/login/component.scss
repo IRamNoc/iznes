@@ -5,7 +5,7 @@
         display: flex;
         width: 100%;
         height: 100%;
-        background: url('assets/images/iznes-login-bg.jpg') #546883 no-repeat center center fixed;
+        background: url('/assets/images/iznes-login-bg.jpg') #546883 no-repeat center center fixed;
         -webkit-background-size: cover;
         -moz-background-size: cover;
         -o-background-size: cover;
@@ -13,7 +13,7 @@
         .container {
             width: 100%;
         }
-        #logo-container {
+        .logo-container {
             align-items: center;
             justify-content: center;
             text-align: center;
@@ -45,7 +45,11 @@
         .content-container {
             .inner {
                 max-width: 715px;
-                display: inline-block
+                margin-left: auto;
+                margin-right: auto;
+                @media (max-width: 767.99px) {
+                    width: 100%;
+                }
             }
             @media (max-width: 767.99px) {
                 flex-direction: row;
@@ -56,17 +60,15 @@
         .box-container {
             .inner {
                 max-width: 600px;
-                display: inline-block;
-                @media (max-width: 767.99px) {
-                    width: 100%;
-                }
+                margin-left: auto;
+                margin-right: auto;
             }
             @media (max-width: 767.99px) {
                 flex-direction: row;
                 order: 1;
             }
         }
-        #text-container {
+        .text-container {
             h1 {
                 color: #ffffff;
                 font-size: 40px;
@@ -121,20 +123,19 @@
                 height: 60px;
                 h2 {
                     color: #ffffff;
-                    padding: 30px 35px;
+                    padding: 0 35px;
                     font-weight: 500;
                     float: left;
                     font-size: 19px;
-                    line-height: 0;
+                    line-height: 23px;
+                    width: calc(100% - 82px);
+                    position: relative;
+                    top: 50%;
+                    transform: translateY(-50%);
+                    text-align: left;
                     @media (max-width: 767.99px) {
-                        padding: 0 35px;
                         font-size: 16px;
-                        text-align: left;
-                        width: calc(100% - 82px);
                         line-height: 20px;
-                        position: relative;
-                        top: 50%;
-                        transform: translateY(-50%);
                     }
                 }
                 .icon {
@@ -144,11 +145,9 @@
                     text-align: right;
                     height: 60px;
                     width: 70px;
-                    .fa {
-                        font-size: 38px;
-                        color: #ffffff;
-                        transform: rotate(180deg) scaleX(-1);
-                        background: #004583;
+                    .icon-key {
+                        width: 44px;
+                        height: 38px;
                     }
                 }
                 .icon::after {
@@ -258,13 +257,17 @@
                     &.dropdown-toggle {
                         padding: 0;
                     }
+                    .icon-globe {
+                        width: 18px;
+                        height: 18px;
+                        margin: 0 2px -4px 0;
+                    }
                 }
                 clr-dropdown-menu {
                     box-shadow: none;
                     border: none;
                     padding-top: 0;
-                    // transform: none !important;
-                    margin: 10px;
+                    margin-top: 10px;
                     .dropdown-header {
                         font-size: 12px;
                         cursor: default;
@@ -280,14 +283,20 @@
                         &:hover {
                             font-weight: 500;
                             color: #ffffff;
+                            &::before {
+                                content: '';
+                            }
                         }
                         &::before {
-                            font-family: 'FontAwesome';
                             position: absolute;
                             left: 10px;
-                            content: "\f0ac" !important;
-                            font-weight: 300;
-                            font-size: 18px;
+                            content: '';
+                            width: 18px;
+                            height: 18px;
+                            margin: 0 2px -4px 0;
+                            background: url('/assets/images/icons/globe.svg') no-repeat;
+                            background-size: auto 100%;
+                            display: inline-block;
                         }
                     }
                     button {
@@ -308,10 +317,14 @@
             }
         }
         .icon-key {
-            background: url('assets/images/icons/key.svg') no-repeat;
+            background: url('/assets/images/icons/key.svg') no-repeat;
+            background-size: auto 100%;
+            display: inline-block;
         }
         .icon-globe {
-            background: url('assets/images/icons/globe.svg') no-repeat;
+            background: url('/assets/images/icons/globe.svg') no-repeat;
+            background-size: auto 100%;
+            display: inline-block;
         }
         /* Change Autocomplete styles in Chrome*/
         input:-webkit-autofill,

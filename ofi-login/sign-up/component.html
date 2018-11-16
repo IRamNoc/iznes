@@ -1,0 +1,154 @@
+<div class="login-container content-area" *ngIf="showLogin" [@fadeInOnLoad]>
+    <div class="container">
+        <div class="vertical-center row">
+            <div class="col-md-6 content-container">
+                <div class="inner">
+                    <div class="logo-container">
+                        <img id="logo-iznes" src="assets/images/logo-shadow.png" alt="IZNES">
+                    </div>
+                    <div class="text-container">
+                        <div class="row">
+                            <div class="col-xl-12">
+                                <h1 class="text-center">{{ 'Investing in funds has never been so easy!' | translate }}</h1>
+                            </div>
+                        </div>
+                        <div class="row">
+                            <div class="col-xl-12">
+                                <p class="text-center">{{ 'The pan-European platform for investment in UCITS units and recordkeeping in Blockchain compatible with the various distribution channels' | translate }}</p>
+                            </div>
+                        </div>
+                        <div class="row">
+                            <div class="col-xl-12 text-center">
+                                <a class="btn btn-outline" href="https://www.iznes.io">{{ 'Learn more about' | translate }}
+                                    <strong>IZNES</strong></a>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="col-md-6 text-center box-container">
+                <div class="col-xl-12 inner">
+                    <!--SIGN UP FORM-->
+                    <div class="login-box" *ngIf="!showTwoFactorModal" [@fadeIn]>
+                        <div class="top-bar">
+                            <div class="icon">
+                                <i class="icon-key"></i>
+                            </div>
+                            <h2>{{ title | translate }}</h2>
+                        </div>
+                        <div class="form-container">
+                            <div class="text-block">
+                                <p class="no-margin"><strong>{{ description }}</strong></p>
+                            </div>
+                            <form [formGroup]="signupForm" (ngSubmit)="signup(signupForm.value)">
+                                <!-- Username -->
+                                <div class="form-group">
+                                    <label for="sign-up-username">{{ 'Username' | translate }}</label>
+                                    <input
+                                        id="sign-up-username"
+                                        class="form-control"
+                                        type="text"
+                                        name="username"
+                                        disabled
+                                        placeholder="{{ 'Enter your username' | translate }}"
+                                        formControlName="username">
+                                </div>
+
+                                <!-- Password -->
+                                <div class="form-group">
+                                    <label for="sign-up-password">
+                                        {{ 'Password' | translate }}
+                                        <app-password-tooltip></app-password-tooltip>
+                                    </label>
+                                    <input
+                                        id="sign-up-password"
+                                        class="form-control"
+                                        name="password"
+                                        [type]="(showPassword) ? 'text' : 'password'"
+                                        placeholder="{{ 'Enter your password' | translate }}"
+                                        formControlName="password">
+                                    <i [class]="showPassword ? 'fa fa-unlock toggle-password' : 'fa fa-lock toggle-password'" aria-hidden="true" (click)="toggleShowPasswords()" title="Show/hide passwords"></i>
+                                    <div *ngIf="hasError('password', 'required')" class="field-error">
+                                        {{ 'Field is required' | translate }}
+                                    </div>
+                                    <div *ngIf="hasError('password', 'rules')" class="field-error">
+                                        {{ 'Your password doesn\'t meet the security criteria' | translate }}
+                                    </div>
+                                </div>
+
+                                <!-- Password confirm -->
+                                <div class="form-group">
+                                    <label for="sign-up-password-confirm">
+                                        {{ 'Password confirmation' | translate }}
+                                    </label>
+                                    <input
+                                        id="sign-up-password-confirm"
+                                        class="form-control"
+                                        name="passwordConfirm"
+                                        [type]="(showConfirmPassword) ? 'text' : 'password'"
+                                        placeholder="{{ 'Password confirmation' | translate }}"
+                                        formControlName="passwordConfirm"
+                                        [class.ng-invalid]="hasError('', 'mismatch') && isTouched('password') && isTouched('passwordConfirm')">
+                                    <i [class]="showConfirmPassword ? 'fa fa-unlock toggle-password' : 'fa fa-lock toggle-password'" aria-hidden="true" (click)="toggleShowPasswords(true)" title="Show/hide passwords"></i>
+                                    <div *ngIf="hasError('passwordConfirm', 'required')" class="field-error">
+                                        {{ 'Field is required' | translate }}
+                                    </div>
+                                    <div *ngIf="hasError('', 'mismatch') && isTouched('password') && isTouched('passwordConfirm')" class="field-error force-display-error">
+                                        {{ 'Passwords do not match' | translate }}
+                                    </div>
+                                </div>
+
+                                <div class="form-group">
+                                    <button id="sign-up-submit" type="submit" class="btn btn-primary"
+                                            [disabled]="!signupForm.valid">
+                                        {{ buttonText }}
+                                    </button>
+                                </div>
+                            </form>
+                        </div>
+                    </div>
+                    <!--TWO-FACTOR-->
+                    <ofi-two-factor
+                        *ngIf="showTwoFactorModal"
+                        [qrCode]="qrCode"
+                        (modalCancelled)="showTwoFactorModal=!$event; showResetTwoFactor=!$event"
+                        [resetToken]="resetTwoFactorToken"
+                        [showReset]="showResetTwoFactor"
+                        (verifiedToken)="resetTwoFactorToken=''"
+                        (clearToken)="resetTwoFactorToken=''">
+                    </ofi-two-factor>
+                    <!--BOX FOOTER-->
+                    <div class="row">
+                        <div class="col-xs-4">
+                            <div class="language-container">
+                                <clr-dropdown>
+                                    <button id="language-selector" type="button" class="dropdown-toggle btn btn-link btn-sm language-selector" clrDropdownTrigger>
+                                        <i class="icon-globe"></i> {{ getLabel(language) }}
+                                        <i class="fa fa-chevron-down"></i>
+                                    </button>
+                                    <clr-dropdown-menu clrPosition="bottom-left" *clrIfOpen>
+                                        <button class="dropdown-header" type="button">{{ 'Choose your language' | translate }}</button>
+                                        <button type="button" clrDropdownItem *ngFor="let lang of getLangs()" (click)="updateLang(lang)">
+                                            {{ getLabel(lang) }}
+                                        </button>
+                                    </clr-dropdown-menu>
+                                </clr-dropdown>
+                            </div>
+                        </div>
+
+                        <div class="forgot-password col-xs-4">
+                            <a *ngIf="showTwoFactorModal && !qrCode" id="reset-two-factor-link" class="reset-link" (click)="showResetTwoFactor=true">
+                                {{ 'Lost access to your code?' | translate }}
+                            </a>
+                        </div>
+
+                        <div class="required-text col-xs-4">
+                            <p class="required-field">{{ 'Required field' | translate }}</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+        </div>
+    </div>
+</div>
