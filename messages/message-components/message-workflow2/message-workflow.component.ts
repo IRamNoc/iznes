@@ -60,7 +60,7 @@ export class SetlMessageWorkflowComponent2 implements OnInit {
             ],
             contractfunction: 'exchange_commit',
         },
-        contractaddress: '3Jssgbuit5348oc3DTb8uamVNVJDjZnzUJ',
+        contractaddress: '',
     }
 
     @select(['wallet', 'myWalletAddress', 'requested']) addressListRequestedStateOb;
@@ -98,6 +98,7 @@ export class SetlMessageWorkflowComponent2 implements OnInit {
                 return;
             }
             this.contractExecTemplate['walletid'] = this.walletId;
+            this.contractExecTemplate['contractaddress'] = this.decodedData['contractaddress'];
 
             for (let i = 0; i < this.decodedData['assets'].length; i += 1) {
                 const a = this.decodedData['assets'][i];
@@ -125,8 +126,11 @@ export class SetlMessageWorkflowComponent2 implements OnInit {
             for (let i = 0; i < balances.length; i += 1) {
                 const bal = balances[i];
                 if (bal['asset'] === this.denominator) {
-console.log('setting denominating quantity', bal)
-                    this.setCommitQty(bal['asset'], bal['free']); // set ALL the users denominating asset (typically a token) for use.
+                    const multi = Math.floor(bal['free'] / this.assetRatios[this.denominator]); // if denominator is not 1, set it to the maximum value possible
+                    let dqty = this.assetRatios[this.denominator] * multi;
+                    dqty = dqty > 0 ? dqty : 0;
+console.log('setting denominating quantity', dqty)
+                    this.setCommitQty(bal['asset'], dqty);
                 }
             }
             for (let i = 0; i < balances.length; i += 1) {
@@ -135,9 +139,10 @@ console.log('setting denominating quantity', bal)
                     if (bal['asset'] === asset && asset !== this.denominator) {
                         const ratio = this.assetRatios[asset] / this.assetRatios[this.denominator];
                         const req = this.getCommitQty(this.denominator) * ratio;
-console.log('setting numerating asset', bal, req);
+console.log('setting numerating asset', req);
                         if (bal['free'] > req) {
                             this.setCommitQty(bal['asset'], req);
+                            this.enoughCash = true;
                         } else {
                             this.setCommitQty(bal['asset'], null); // ask for failure (so we can spaff a warning at the user)
                         }
@@ -151,9 +156,11 @@ console.log('setting numerating asset', bal, req);
         const sn = fqan.split('|');
         const ns = sn[0];
         const asset = sn[1];
+        const arr = this.contractExecTemplate['contractdata']['assetsin'];
         let found = false;
-        for (let i = 0; this.contractExecTemplate['contractdata']['assetsin'].length; i += 1) {
-            const item = this.contractExecTemplate['contractdata']['assetsin'][i];
+
+        for (let i = 0; i < arr.length; i += 1) {
+            const item = arr[i];
             if (item[0] === ns && item[1] === asset) {
                 item[2] = qty;
                 found = true;
@@ -189,12 +196,13 @@ console.log('setting numerating asset', bal, req);
                 this.contractExecTemplate.address = this.walletAddresses[this.walletAddresses.indexOf(r)];
             }
         }
+console.log("SENDING", this.contractExecTemplate);
         const asyncTaskPipe = createWalletNodeSagaRequest(this.walletNodeSocketService, 'tx', this.contractExecTemplate);
         this.ngRedux.dispatch(SagaHelper.runAsyncCallback(
             asyncTaskPipe,
             (d) => {
                 this.isActed = true;
-                this.showSuccessResponse('Your vote has been registered');
+                this.showSuccessResponse('Your commitment succeeded.');
 
                 this.messagesService.markMessageAsActedRequest(this.walletId, this.mailId, '0').then(
                     (res) => {

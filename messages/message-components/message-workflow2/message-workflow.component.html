@@ -1,8 +1,8 @@
 <div class="workflow-body">
 
     <div class="btn-group btn-primary" *ngIf="!isActed && decodedData && decodedData['type'] === 'exchange2'">
-        <button class="btn" [disabled]="isActed || disableSend || !enoughCash || walletAddresses.length === 0" (click)="doTransfer()">Exercise all options</button> <!-- todo disable when not enough cash -->
-        <button class="btn" [disabled]="true">Exercise some options</button>
+        <button class="btn" [disabled]="isActed || disableSend || !enoughCash || walletAddresses.length === 0" (click)="doTransfer()">Exercise options</button>
+        <!--<button class="btn" [disabled]="true">Exercise some options</button>-->
     </div>
     <p *ngIf="isActed">This message has already been acted on.</p>
 
