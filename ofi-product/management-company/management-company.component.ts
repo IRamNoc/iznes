@@ -129,22 +129,12 @@ export class OfiManagementCompanyComponent implements OnInit, OnDestroy {
     }
 
     public onDropFile(filedropEvent: FileDropEvent, fieldName: ManagementCompanyFileMetadataField) {
-        if (!filedropEvent.files.length) {
-            this.fileMetadata.setProperty(
-                fieldName,
-                {
-                    title: null,
-                    hash: null,
-                },
-            );
-            this.markForCheck();
-            return;
-        }
+        const hasFiles = filedropEvent.files.length;
         this.fileMetadata.setProperty(
             fieldName,
             {
-                title: filedropEvent.files[0].name,
-                hash: `data:${filedropEvent.files[0].mimeType};base64,${filedropEvent.files[0].data}`,
+                title: hasFiles ? filedropEvent.files[0].name : null,
+                hash: hasFiles ? `data:${filedropEvent.files[0].mimeType};base64,${filedropEvent.files[0].data}` : null,
             },
         );
 
@@ -254,93 +244,42 @@ export class OfiManagementCompanyComponent implements OnInit, OnDestroy {
 
         this.showSearchTab = false; // reset
 
-        // update
-        if (this.editForm) {
-            const asyncTaskPipe = this.mcService.updateManagementCompany(payload);
+        const asyncTaskPipe = this.editForm
+            ? this.mcService.updateManagementCompany(payload)
+            : this.mcService.saveManagementCompany(payload);
 
-            this.ngRedux.dispatch(SagaHelper.runAsyncCallback(
-                asyncTaskPipe,
-                (data) => {
-                    this.mcService.fetchManagementCompanyList();
-                    this.resetForm();
-                    this.showSearchTab = true;
-                    this.showSuccessResponse('Management company has successfully been updated');
-                    if (this.isAssetManager) {
-                        this.location.back();
-                    }
-                },
-                (data) => {
-                    this.logService.log('error: ', data);
-                    this.toasterSevice.pop('error', 'failed to update management company');
-                }),
-            );
-        } else {
-            // insert
-            const asyncTaskPipe = this.mcService.saveManagementCompany(payload);
-
-            this.ngRedux.dispatch(SagaHelper.runAsyncCallback(
-                asyncTaskPipe,
-                (data) => {
-                    this.mcService.fetchManagementCompanyList();
-
-                    const tempPassword = data[1].Data[0].newPasswordString;
-
-                    this.resetForm();
-                    this.showSearchTab = true;
-                    this.showSuccessResponse('Management company has successfully been created.<br><br>Temporary password: ' + tempPassword);
-                },
-                (data) => {
-                    this.logService.log('error: ', data);
-                    this.toasterSevice.pop('error', 'failed to create management company');
-                }),
-            );
-        }
+        this.ngRedux.dispatch(SagaHelper.runAsyncCallback(
+            asyncTaskPipe,
+            () => {
+                this.mcService.fetchManagementCompanyList();
+                this.resetForm();
+                this.showSearchTab = true;
+                this.showSuccessResponse(`Management company has successfully been ${this.editForm ? 'updated' : 'created'}.`);
+                if (this.isAssetManager) {
+                    this.location.back();
+                }
+            },
+            (data) => {
+                this.logService.log('error: ', data);
+                this.toasterSevice.pop('error', `failed to ${this.editForm ? 'update' : 'create'} management company`);
+            }),
+        );
     }
 
     markForCheck() {
         this._changeDetectorRef.markForCheck();
     }
 
-    showErrorResponse(response) {
-
-        const message = _.get(response, '[1].Data[0].Message', '');
-
-        this.alertsService.create('error', `
-                    <table class="table grid">
-
-                        <tbody>
-                            <tr>
-                                <td class="text-center text-danger">${message}</td>
-                            </tr>
-                        </tbody>
-                    </table>
-                    `);
-    }
-
     showSuccessResponse(message) {
-
-        this.alertsService.create('success', `
-                    <table class="table grid">
-
-                        <tbody>
-                            <tr>
-                                <td class="text-center text-success">${message}</td>
-                            </tr>
-                        </tbody>
-                    </table>
-                    `);
-    }
-
-    showInvalidForm(message) {
-        this.alertsService.create('error', `
-                    <table class="table grid">
-
-                        <tbody>
-                            <tr>
-                                <td class="text-center text-danger">${message}</td>
-                            </tr>
-                        </tbody>
-                    </table>
-                    `);
+        this.alertsService.create(
+            'success',
+            `<table class="table grid">
+                <tbody>
+                    <tr>
+                        <td class="text-center text-success">${message}</td>
+                    </tr>
+                </tbody>
+            </table>`
+        );
     }
 }
