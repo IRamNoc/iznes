@@ -19,7 +19,7 @@
                         </div>
                         <div class="row">
                             <div class="col-xl-12 text-center">
-                                <a class="btn btn-outline" href="https://www.iznes.io">{{ 'Learn more about' | translate }}
+                                <a class="btn btn-outline" href="{{ language === 'en-Latn' ? 'https://www.iznes.io/index_EN.html' : 'https://www.iznes.io' }}" target="_blank">{{ 'Learn more about' | translate }}
                                     <strong>IZNES</strong></a>
                             </div>
                         </div>
@@ -43,7 +43,7 @@
                             <form [formGroup]="signupForm" (ngSubmit)="signup(signupForm.value)">
                                 <!-- Username -->
                                 <div class="form-group">
-                                    <label for="sign-up-username">{{ 'Username' | translate }}</label>
+                                    <label class="required-field" for="sign-up-username">{{ 'Username' | translate }}</label>
                                     <input
                                         id="sign-up-username"
                                         class="form-control"
@@ -56,7 +56,7 @@
 
                                 <!-- Password -->
                                 <div class="form-group">
-                                    <label for="sign-up-password">
+                                    <label class="required-field" for="sign-up-password">
                                         {{ 'Password' | translate }}
                                         <app-password-tooltip></app-password-tooltip>
                                     </label>
@@ -78,7 +78,7 @@
 
                                 <!-- Password confirm -->
                                 <div class="form-group">
-                                    <label for="sign-up-password-confirm">
+                                    <label class="required-field" for="sign-up-password-confirm">
                                         {{ 'Password confirmation' | translate }}
                                     </label>
                                     <input
