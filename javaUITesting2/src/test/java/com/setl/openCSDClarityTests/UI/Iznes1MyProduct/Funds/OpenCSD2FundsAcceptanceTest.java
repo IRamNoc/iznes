@@ -427,7 +427,7 @@ public class OpenCSD2FundsAcceptanceTest {
 
     }
 
-    private void createFund() throws InterruptedException {
+    public void createFund() throws InterruptedException {
         WebDriverWait wait = new WebDriverWait(driver, timeoutInSeconds);
         driver.findElement(By.id("new-fund-btn")).click();
         driver.findElement(By.xpath("//*[@id=\"fund-umbrellaControl-select-1\"]/div")).click();
