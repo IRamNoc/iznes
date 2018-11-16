@@ -1,9 +1,10 @@
 import { Component, OnInit, Input, OnDestroy, Output, EventEmitter, ChangeDetectorRef } from '@angular/core';
+import { Location } from '@angular/common';
 import { combineLatest, Subject } from 'rxjs';
 import { takeUntil, filter as rxFilter, tap, map } from 'rxjs/operators';
 import { FormGroup } from '@angular/forms';
 import { select, NgRedux } from '@angular-redux/store';
-import { ActivatedRoute } from '@angular/router';
+import { Router, ActivatedRoute } from '@angular/router';
 import { isEmpty, isNil, keyBy, filter, reduce, find } from 'lodash';
 import { ClearMyKycListRequested } from '@ofi/ofi-main/ofi-store/ofi-kyc';
 import { OfiManagementCompanyService } from '@ofi/ofi-main/ofi-req-services/ofi-product/management-company/management-company.service';
@@ -27,6 +28,7 @@ export class NewKycSelectAmcComponent implements OnInit, OnDestroy {
 
     submitted = false;
     alreadyRegistered = false;
+    duplicate = null;
 
     @Input() form: FormGroup;
 
@@ -60,6 +62,8 @@ export class NewKycSelectAmcComponent implements OnInit, OnDestroy {
         private route: ActivatedRoute,
         private selectAmcService: SelectAmcService,
         private changeDetectorRef: ChangeDetectorRef,
+        private router: Router,
+        private location: Location,
     ) {
     }
 
@@ -157,7 +161,24 @@ export class NewKycSelectAmcComponent implements OnInit, OnDestroy {
 
                 this.selectManagementCompany(amcID);
             }
+
+            if (queryParams.duplicate) {
+                this.duplicate = queryParams.duplicate;
+                this.removeQueryParams();
+            }
         });
+    }
+
+    removeQueryParams() {
+        const newUrl = this.router.createUrlTree([], {
+            queryParams: {
+                invitationToken: null,
+                amcID: null,
+                duplicate: null,
+            },
+            queryParamsHandling: 'merge',
+        });
+        this.location.replaceState(this.router.serializeUrl(newUrl));
     }
 
     getAssetManagementCompanies() {
@@ -198,7 +219,12 @@ export class NewKycSelectAmcComponent implements OnInit, OnDestroy {
             return;
         }
 
-        const ids = await this.selectAmcService.createMultipleDrafts(this.selectedManagementCompanies, this.connectedWallet);
+        let ids;
+        if (this.duplicate) {
+            ids = await this.selectAmcService.duplicate(this.selectedManagementCompanies, 1, this.connectedWallet);
+        } else {
+            ids = await this.selectAmcService.createMultipleDrafts(this.selectedManagementCompanies, this.connectedWallet);
+        }
 
         this.newRequestService.storeCurrentKycs(ids);
 

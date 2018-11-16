@@ -1,14 +1,21 @@
-import {Component, OnInit, OnDestroy} from '@angular/core';
-import {Subscription, Subject} from 'rxjs';
-import {takeUntil} from 'rxjs/operators';
-import {NgRedux, select} from '@angular-redux/store';
-import {findIndex} from 'lodash';
-import {clearMyKycRequestedIds} from '@ofi/ofi-main/ofi-store/ofi-kyc/kyc-request/actions';
-import {ClearMyKycListRequested, SetMyKycOpenTab, ClearMyKycOpenTab, SetMyKycOpenTabActive} from '@ofi/ofi-main/ofi-store/ofi-kyc/kyc-list/actions';
+import { Component, OnInit, OnDestroy } from '@angular/core';
+import { Router, ActivatedRoute } from '@angular/router';
+import { FormBuilder, FormGroup, Validators } from '@angular/forms';
+import { Subscription, Subject } from 'rxjs';
+import { takeUntil } from 'rxjs/operators';
+import { NgRedux, select } from '@angular-redux/store';
+import { findIndex } from 'lodash';
+import { clearMyKycRequestedIds } from '@ofi/ofi-main/ofi-store/ofi-kyc/kyc-request/actions';
+import {
+    ClearMyKycListRequested,
+    SetMyKycOpenTab,
+    ClearMyKycOpenTab,
+    SetMyKycOpenTabActive
+} from '@ofi/ofi-main/ofi-store/ofi-kyc/kyc-list/actions';
 
 @Component({
     styleUrls: ['./my-requests.component.scss'],
-    templateUrl: './my-requests.component.html'
+    templateUrl: './my-requests.component.html',
 })
 export class MyRequestsComponent implements OnInit, OnDestroy {
     @select(['ofi', 'ofiKyc', 'myKycList', 'kycList']) myKycList$;
@@ -19,38 +26,60 @@ export class MyRequestsComponent implements OnInit, OnDestroy {
     subscriptions: Subscription[] = [];
     tabs: any[] = [];
 
+    newRequestModal: boolean = false;
+    kycListSelect: any[] = [];
+    choices: FormGroup;
+
     private unsubscribe: Subject<any> = new Subject();
 
-    constructor(private ngRedux: NgRedux<any>) {
+    constructor(
+        private ngRedux: NgRedux<any>,
+        private router: Router,
+        private fb: FormBuilder,
+        private route: ActivatedRoute,
+    ) {
     }
 
     ngOnInit() {
         this.initSubscriptions();
+        this.initForm();
+
         this.ngRedux.dispatch(clearMyKycRequestedIds());
         this.ngRedux.dispatch(ClearMyKycListRequested());
     }
 
+    initForm() {
+        this.choices = this.fb.group({
+            choice: this.fb.control('duplicate'),
+            selected: this.fb.control(null, Validators.required),
+        });
+    }
+
     initSubscriptions() {
         this.myKycList$
-            .pipe(
-                takeUntil(this.unsubscribe)
-            )
-            .subscribe(kycList => {
-                this.kycList = kycList;
-            });
+        .pipe(
+            takeUntil(this.unsubscribe),
+        )
+        .subscribe((kycList) => {
+            this.kycList = kycList;
+            this.kycListSelect = kycList.map(kyc => ({
+                id: kyc.kycID,
+                text: kyc.companyName,
+            }));
+        });
 
         this.openTabs$
-            .pipe(
-                takeUntil(this.unsubscribe)
-            )
-            .subscribe(openTabs => {
-                this.tabs = openTabs;
-            });
+        .pipe(
+            takeUntil(this.unsubscribe)
+        )
+        .subscribe((openTabs) => {
+            this.tabs = openTabs;
+        });
     }
 
     selectedKyc(kyc) {
-        let kycID = kyc.kycID;
-        let index = findIndex(this.tabs, ['kycID', kycID]);
+        const kycID = kyc.kycID;
+        const index = findIndex(this.tabs, ['kycID', kycID]);
         let action;
 
         if (index !== -1) {
@@ -59,17 +88,50 @@ export class MyRequestsComponent implements OnInit, OnDestroy {
         } else {
             action = SetMyKycOpenTab(
                 {
-                    kycID: kycID,
+                    kycID,
                     companyName: kyc.companyName,
                     displayed: true,
-                }
+                },
             );
             this.ngRedux.dispatch(action);
         }
     }
 
+    handleConfirm() {
+        const choice = this.choices.get('choice').value;
+        const selectedControl = this.choices.get('selected');
+
+        if (choice === 'duplicate' && !this.choices.valid) {
+            selectedControl.markAsTouched();
+            return;
+        }
+
+        const navigationExtras: any = {
+            relativeTo: this.route,
+        };
+
+        if (choice === 'duplicate') {
+            const kycToDuplicate = selectedControl.value[0].id;
+
+            navigationExtras.queryParams = {
+                duplicate: kycToDuplicate,
+            };
+        }
+
+        this.router.navigate(['../', 'new'], navigationExtras);
+    }
+
+    hasError() {
+        const choice = this.choices.get('choice').value;
+        const selectedControl = this.choices.get('selected');
+
+        if (choice === 'duplicate' && selectedControl.touched && !selectedControl.valid) {
+            return true;
+        }
+    }
+
     closeTab(index) {
-        let action = ClearMyKycOpenTab(index);
+        const action = ClearMyKycOpenTab(index);
         this.ngRedux.dispatch(action);
 
         this.isListDisplayed = true;

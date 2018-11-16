@@ -671,6 +671,14 @@ export class NewRequestService {
         });
     }
 
+    duplicate(selectedCompanies, kycToDuplicate, connectedWallet){
+        return this.ofiKycService.duplicate({
+            managementCompanies: selectedCompanies,
+            kycToDuplicate,
+            investorWalletID: connectedWallet,
+        });
+    }
+
     getLengthValidator(maxLength = 45) {
         return [Validators.required, Validators.maxLength(maxLength)];
     }

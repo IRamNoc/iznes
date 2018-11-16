@@ -1,7 +1,7 @@
 import { Injectable } from '@angular/core';
 import { RequestsService } from '../../requests.service';
 import { NewRequestService } from '../new-request.service';
-import * as moment from 'moment';
+import { get as getValue } from 'lodash';
 
 @Injectable()
 export class SelectAmcService {
@@ -12,25 +12,40 @@ export class SelectAmcService {
     ) {
     }
 
-    async createMultipleDrafts(values, connectedWallet) {
-        let ids = await this.newRequestService.createMultipleDrafts(values, connectedWallet);
-        let context = this.newRequestService.getContext(ids);
-        ids.forEach(id => {
-            let kycID = id.kycID;
-            this.sendRequestUpdateCurrentStep(kycID, context);
+    createMultipleDrafts(values, connectedWallet) {
+        return this.newRequestService.createMultipleDrafts(values, connectedWallet).then((ids) => {
+            return this.postDraftCreation(ids);
+        });
+    }
+
+    postDraftCreation(ids) {
+        const promises = [];
+        const context = this.newRequestService.getContext(ids);
+        ids.forEach((id) => {
+            const kycID = id.kycID;
+            const promise = this.sendRequestUpdateCurrentStep(kycID, context);
+
+            promises.push(promise);
         });
 
-        return ids;
+        return Promise.all(promises).then(() => ids);
     }
 
     sendRequestUpdateCurrentStep(kycID, context) {
         const messageBody = {
             RequestName: 'iznesupdatecurrentstep',
-            kycID: kycID,
+            kycID,
             completedStep: 'amcSelection',
-            currentGroup: context
+            currentGroup: context,
         };
 
         return this.requestsService.sendRequest(messageBody);
+    }
+
+    duplicate(selectedCompanies, kycToDuplicate, connectedWallet) {
+        return this.newRequestService.duplicate(selectedCompanies, kycToDuplicate, connectedWallet).then((response) => {
+            const ids = getValue(response, [1, 'Data']);
+            return this.postDraftCreation(ids);
+        });
     }
 }
