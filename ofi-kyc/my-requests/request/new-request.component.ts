@@ -1,23 +1,28 @@
-import {Component, OnInit, ViewChild} from '@angular/core';
-import {FormBuilder} from '@angular/forms';
-import {ActivatedRoute} from '@angular/router';
-import {select, NgRedux} from '@angular-redux/store';
-import {get as getValue, map, sort, remove} from 'lodash';
-import {Subject, combineLatest} from 'rxjs';
-import {takeUntil} from 'rxjs/operators';
+import { Component, OnInit, ViewChild } from '@angular/core';
+import { Location } from '@angular/common';
+import { FormBuilder } from '@angular/forms';
+import { ActivatedRoute, Router } from '@angular/router';
+import { select, NgRedux } from '@angular-redux/store';
+import { map, sort, remove, find } from 'lodash';
+import { Subject, combineLatest } from 'rxjs';
+import { takeUntil, take, filter as rxFilter, map as rxMap } from 'rxjs/operators';
 
 import { clearMyKycRequestedPersist } from '@ofi/ofi-main/ofi-store/ofi-kyc';
 import { MultilingualService } from '@setl/multilingual';
-import {FormStepsDirective} from '@setl/utils/directives/form-steps/formsteps';
-import {NewRequestService} from './new-request.service';
+import { FormStepsDirective } from '@setl/utils/directives/form-steps/formsteps';
+import { NewRequestService } from './new-request.service';
 
 @Component({
     templateUrl: './new-request.component.html',
-    styleUrls : ['./new-request.component.scss']
+    styleUrls: ['./new-request.component.scss'],
 })
 export class NewKycRequestComponent implements OnInit {
+
     @ViewChild(FormStepsDirective) formSteps;
     @select(['ofi', 'ofiKyc', 'myKycRequested', 'kycs']) requests$;
+    @select(['ofi', 'ofiKyc', 'myKycList', 'kycList']) myKycList$;
+    @select(['ofi', 'ofiProduct', 'ofiManagementCompany', 'investorManagementCompanyList', 'investorManagementCompanyList']) managementCompanyList$;
+
 
     unsubscribe: Subject<any> = new Subject();
     stepsConfig: any;
@@ -26,10 +31,12 @@ export class NewKycRequestComponent implements OnInit {
     fullForm = true;
     currentCompletedStep;
     documentRules = {
-        isListed : null,
+        isListed: null,
         isFloatableHigh: null,
         isRegulated: null,
     };
+    duplicate;
+    duplicateCompany = '';
 
     constructor(
         private formBuilder: FormBuilder,
@@ -37,6 +44,8 @@ export class NewKycRequestComponent implements OnInit {
         private newRequestService: NewRequestService,
         public translate: MultilingualService,
         private ngRedux: NgRedux<any>,
+        private router: Router,
+        private location: Location,
     ) {
     }
 
@@ -101,19 +110,35 @@ export class NewKycRequestComponent implements OnInit {
         this.initSubscriptions();
     }
 
+    removeQueryParams() {
+        const newUrl = this.router.createUrlTree([], {
+            queryParams: {
+                duplicate: null,
+            },
+            queryParamsHandling: 'merge',
+        });
+        this.location.replaceState(this.router.serializeUrl(newUrl));
+    }
+
     initSubscriptions() {
         this.requests$
-            .pipe(
-                takeUntil(this.unsubscribe)
-            )
-            .subscribe(amcs => {
-                this.newRequestService.getContext(amcs);
-            })
+        .pipe(
+            takeUntil(this.unsubscribe)
+        )
+        .subscribe(amcs => {
+            this.newRequestService.getContext(amcs);
+        })
         ;
 
-        this.route.queryParamMap.subscribe(params => {
-            let step = params.get('step');
-            let completed = params.get('completed');
+        this.route.queryParamMap.subscribe((params) => {
+            const step = params.get('step');
+            const completed = params.get('completed');
+
+            if (params.get('duplicate')) {
+                this.duplicate = Number(params.get('duplicate'));
+                this.removeQueryParams();
+                this.getDuplicatedCompany();
+            }
 
             this.fullForm = !(completed === 'true');
 
@@ -169,6 +194,21 @@ export class NewKycRequestComponent implements OnInit {
                 startHere: this.fullForm ? completedStep === 'documents' : completedStep === 'amcSelection'
             }
         ];
+    }
+
+    getDuplicatedCompany() {
+        combineLatest(this.myKycList$, this.managementCompanyList$)
+        .pipe(
+            rxMap(([kycs, managementCompanies]) => ([kycs, managementCompanies.toJS()])),
+            rxFilter(([kycs, managementCompanies]) => managementCompanies.length),
+            take(1),
+        )
+        .subscribe(([kycs, managementCompanies]) => {
+            const kyc = find(kycs, ['kycID', this.duplicate]);
+            const managementCompany = find(managementCompanies, ['companyID', kyc.amManagementCompanyID]);
+
+            this.duplicateCompany = managementCompany.companyName;
+        });
     }
 
     registered(isRegistered) {

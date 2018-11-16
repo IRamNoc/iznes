@@ -56,7 +56,7 @@
             </clr-alert>
         </div>
 
-        <form [formGroup]="choices" class="mb-2">
+        <form [formGroup]="choices" class="mb-3">
             <div class="radio-inline opt-btn-element">
                 <input type="radio" id="opt-type-scratch" value="scratch" formControlName="choice">
                 <label for="opt-type-scratch">{{'Make a request from scratch' | translate}}</label>
@@ -76,7 +76,7 @@
 
     </div>
     <div class="modal-footer">
-        <button class="btn">{{'Cancel' | translate}}</button>
+        <button class="btn" (click)="newRequestModal = false">{{'Cancel' | translate}}</button>
         <button class="btn btn-primary" (click)="handleConfirm()">{{'Validate' | translate}}</button>
     </div>
 </clr-modal>

@@ -2,6 +2,7 @@
     <h1 class="text-overflow">
         <i class="fa fa-plus"></i>
         <span id="new-request-title">{{ 'Make New Request' | translate }}</span>
+        <span *ngIf="duplicateCompany"> {{'from already sent request to' | translate}} {{duplicateCompany}}</span>
     </h1>
 </div>
 
@@ -17,7 +18,7 @@
 
 <div [formsteps]="stepsConfig">
     <section order="1">
-        <kyc-step-select-amc [form]="forms.get('selection')" (registered)="registered($event)" [disabled]="currentCompletedStep"></kyc-step-select-amc>
+        <kyc-step-select-amc [form]="forms.get('selection')" (registered)="registered($event)" [disabled]="currentCompletedStep" [duplicate]="duplicate"></kyc-step-select-amc>
     </section>
     <section order="2" *ngIf="fullForm">
         <kyc-step-introduction></kyc-step-introduction>

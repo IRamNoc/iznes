@@ -1,10 +1,9 @@
 import { Component, OnInit, Input, OnDestroy, Output, EventEmitter, ChangeDetectorRef } from '@angular/core';
-import { Location } from '@angular/common';
 import { combineLatest, Subject } from 'rxjs';
 import { takeUntil, filter as rxFilter, tap, map } from 'rxjs/operators';
 import { FormGroup } from '@angular/forms';
 import { select, NgRedux } from '@angular-redux/store';
-import { Router, ActivatedRoute } from '@angular/router';
+import { ActivatedRoute } from '@angular/router';
 import { isEmpty, isNil, keyBy, filter, reduce, find } from 'lodash';
 import { ClearMyKycListRequested } from '@ofi/ofi-main/ofi-store/ofi-kyc';
 import { OfiManagementCompanyService } from '@ofi/ofi-main/ofi-req-services/ofi-product/management-company/management-company.service';
@@ -28,8 +27,8 @@ export class NewKycSelectAmcComponent implements OnInit, OnDestroy {
 
     submitted = false;
     alreadyRegistered = false;
-    duplicate = null;
 
+    @Input() duplicate;
     @Input() form: FormGroup;
 
     @Input() set disabled(isDisabled) {
@@ -62,8 +61,6 @@ export class NewKycSelectAmcComponent implements OnInit, OnDestroy {
         private route: ActivatedRoute,
         private selectAmcService: SelectAmcService,
         private changeDetectorRef: ChangeDetectorRef,
-        private router: Router,
-        private location: Location,
     ) {
     }
 
@@ -161,24 +158,7 @@ export class NewKycSelectAmcComponent implements OnInit, OnDestroy {
 
                 this.selectManagementCompany(amcID);
             }
-
-            if (queryParams.duplicate) {
-                this.duplicate = queryParams.duplicate;
-                this.removeQueryParams();
-            }
         });
-    }
-
-    removeQueryParams() {
-        const newUrl = this.router.createUrlTree([], {
-            queryParams: {
-                invitationToken: null,
-                amcID: null,
-                duplicate: null,
-            },
-            queryParamsHandling: 'merge',
-        });
-        this.location.replaceState(this.router.serializeUrl(newUrl));
     }
 
     getAssetManagementCompanies() {
