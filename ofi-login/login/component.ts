@@ -38,8 +38,4 @@ export class OfiLoginComponent extends SetlLoginComponent {
         );
     }
 
-    ngOnDestroy() {
-        this.showLogin = false;
-    }
-
 }

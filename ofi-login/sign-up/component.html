@@ -41,7 +41,7 @@
                                 <p class="no-margin"><strong>{{ description }}</strong></p>
                             </div>
                             <form [formGroup]="signupForm" (ngSubmit)="signup(signupForm.value)">
-                                <!-- Username -->
+
                                 <div class="form-group">
                                     <label class="required-field" for="sign-up-username">{{ 'Username' | translate }}</label>
                                     <input
@@ -54,7 +54,6 @@
                                         formControlName="username">
                                 </div>
 
-                                <!-- Password -->
                                 <div class="form-group">
                                     <label class="required-field" for="sign-up-password">
                                         {{ 'Password' | translate }}
@@ -76,7 +75,6 @@
                                     </div>
                                 </div>
 
-                                <!-- Password confirm -->
                                 <div class="form-group">
                                     <label class="required-field" for="sign-up-password-confirm">
                                         {{ 'Password confirmation' | translate }}
@@ -117,7 +115,7 @@
                         (verifiedToken)="resetTwoFactorToken=''"
                         (clearToken)="resetTwoFactorToken=''">
                     </ofi-two-factor>
-                    <!--BOX FOOTER-->
+                    <!--SIGN UP BOX FOOTER-->
                     <div class="row">
                         <div class="col-xs-4">
                             <div class="language-container">
@@ -148,7 +146,6 @@
                     </div>
                 </div>
             </div>
-
         </div>
     </div>
 </div>

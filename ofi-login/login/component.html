@@ -42,7 +42,7 @@
                         (verifiedToken)="resetTwoFactorToken=''; twoFactorResetVerified=true"
                         (clearToken)="resetTwoFactorToken=''">
                     </ofi-two-factor>
-                    <!--BOX FOOTER-->
+                    <!--LOGIN BOX FOOTER-->
                     <div class="row">
                         <div class="col-xs-4">
                             <div class="language-container">
@@ -138,7 +138,6 @@
         </div>
     </div>
 </ng-template>
-
 
 <!--RESET PASSWORD REQUEST TEMPLATE-->
 <ng-template #resetPasswordRequestTemplate>
@@ -286,7 +285,6 @@
     </div>
 </ng-template>
 
-
 <!--RESET PASSWORD FORM TEMPLATE-->
 <ng-template #resetPasswordFormTemplate>
     <div class="login-box" [@fadeIn]>
@@ -319,7 +317,6 @@
                     <i [class]="showPasswords.resetold ? 'fa fa-unlock toggle-password' : 'fa fa-lock toggle-password'" aria-hidden="true" (click)="toggleShowPasswords('resetold')" title="{{ 'Show/hide password' | translate }}"></i>
                 </div>
 
-                <!-- Reset new password -->
                 <div class="form-group">
                     <label class="required-field" for="reset-password-new">
                         {{ 'New password' | translate }}
@@ -349,7 +346,6 @@
                     <i [class]="showPasswords.reset1 ? 'fa fa-unlock toggle-password' : 'fa fa-lock toggle-password'" aria-hidden="true" (click)="toggleShowPasswords('reset1')" title="{{ 'Show/hide password' | translate }}"></i>
                 </div>
 
-                <!-- Reset password confirm -->
                 <div class="form-group">
                     <label class="required-field" for="reset-password-confirm">
                         {{ 'Password confirmation' | translate }}
