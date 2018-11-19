@@ -206,14 +206,14 @@ export class ClassificationInformationComponent implements OnInit, OnDestroy {
         }
     }
 
-    getFormControl(amcID) {
-        if (!amcID) {
+    getFormControl(kycID) {
+        if (!kycID) {
             return;
         }
 
         const formControl = this.form.get('optForValues');
         const value = formControl.value;
-        const index = findIndex(value, ['id', amcID]);
+        const index = findIndex(value, ['id', kycID]);
 
         return formControl.at(index).get('opted');
     }
