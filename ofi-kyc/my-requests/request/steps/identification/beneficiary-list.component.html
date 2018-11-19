@@ -49,6 +49,10 @@
     </tbody>
 </table>
 
+<p class="txtRed" *ngIf="hasError()">
+    {{'Please add at least one stakeholder' | translate}}
+</p>
+
 <clr-modal [(clrModalOpen)]="openModal" [clrModalSize]="'xl'" *ngIf="mode && selectedStakeholder">
 
     <h3 class="modal-title fa">

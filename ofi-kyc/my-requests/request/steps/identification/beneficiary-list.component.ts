@@ -280,4 +280,8 @@ export class BeneficiaryListComponent implements OnInit {
             }
         });
     }
+
+    hasError() {
+        return this.stakeholders.dirty && !this.stakeholders.length;
+    }
 }
