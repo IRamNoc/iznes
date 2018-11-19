@@ -160,8 +160,8 @@ export class NewKycValidationComponent implements OnInit, OnDestroy {
                         <td class="text-center text-success">${bodyMessage}</td>
                     </tr>
                 </tbody>
-            </table>
-        `).pipe(
+            </table>`,
+        ).pipe(
             take(1),
         ).subscribe(() => {
             this.router.navigate(['my-requests', 'list']).then(() => {
@@ -181,7 +181,7 @@ export class NewKycValidationComponent implements OnInit, OnDestroy {
             .pipe(
                 take(1),
             )
-            .subscribe(requests => {
+            .subscribe((requests) => {
                 this.validationService.sendRequest(this.form, requests, this.connectedWallet).then(() => {
                     this.handleConfirm();
                 });

@@ -25,9 +25,9 @@ export class SelectAmcService {
     sendRequestUpdateCurrentStep(kycID, context) {
         const messageBody = {
             RequestName: 'iznesupdatecurrentstep',
-            kycID: kycID,
+            kycID,
             completedStep: 'amcSelection',
-            currentGroup: context
+            currentGroup: context,
         };
 
         return this.requestsService.sendRequest(messageBody);

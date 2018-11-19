@@ -50,7 +50,7 @@
 
         <div class="col-sm-6" formGroupName="frequencyFinancialTransactions">
             <div>
-                <label class="required-field">{{ 'Frequency of financial transactions' | translate }}</label>
+                <label class="required-field">{{ 'Frequency of Financial Transactions' | translate }}</label>
             </div>
 
             <div class="mt-1">
@@ -73,7 +73,7 @@
     <div class="row">
         <div class="col-sm-12">
             <div>
-                <label class="required-field">{{ 'Investment vehicles already used' | translate }}</label>
+                <label class="required-field">{{ 'Investment Vehicles Already Used' | translate }}</label>
             </div>
 
             <div class="mt-1">
@@ -86,7 +86,10 @@
                             {{vehicle.text | translate}}
                         </label>
                     </span>
-                    <input formControlName="investmentvehiclesAlreadyUsedSpecification" class="pl-1" type="text" *ngIf="vehicle.id === 'other' && !isDisabled('investmentvehiclesAlreadyUsedSpecification')" placeholder="{{'Please specify' | translate}}">
+                    <input formControlName="investmentvehiclesAlreadyUsedSpecification" 
+                            class="pl-1" 
+                            type="text" 
+                            *ngIf="vehicle.id === 'other' && !isDisabled('investmentvehiclesAlreadyUsedSpecification')" placeholder="{{'Please specify' | translate}}">
                 </span>
 
                 <p class="txtRed" *ngIf="hasError('investmentvehiclesAlreadyUsed')">{{ 'Select at least one' | translate }}</p>

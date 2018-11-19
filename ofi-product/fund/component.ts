@@ -1058,8 +1058,11 @@ export class FundComponent implements OnInit, OnDestroy {
                 .catch((err) => {
                     const errMsg = _.get(err, '[1].Data.Message', '');
                     this.toasterService.pop(
-                        'error', 
-                        this.translate.translate('Failed to create the fund. @errMsg@)', { 'errMsg': errMsg })
+                        'error',
+                        this.translate.translate(
+                            'Failed to create the fund. @errMsg@)',
+                            { 'errMsg': errMsg },
+                        ),
                     );
                     return;
                 });
@@ -1068,7 +1071,10 @@ export class FundComponent implements OnInit, OnDestroy {
                 .then(() => {
                     this.toasterService.pop(
                         'success',
-                        this.translate.translate('@fundName@ has been successfully updated.', { 'fundName': this.fundForm.controls['fundName'].value })
+                        this.translate.translate(
+                            '@fundName@ has been successfully updated.',
+                            { 'fundName': this.fundForm.controls['fundName'].value },
+                        ),
                     );
                     this.fundService.fetchFundList();
                     this.location.back();
@@ -1077,8 +1083,11 @@ export class FundComponent implements OnInit, OnDestroy {
                 .catch((err) => {
                     const errMsg = _.get(err, '[1].Data[0].Message', '');
                     this.toasterService.pop(
-                        'error', 
-                        this.translate.translate('Failed to create the fund. @errMsg@)', { 'errMsg': errMsg })
+                        'error',
+                        this.translate.translate(
+                            'Failed to create the fund. @errMsg@)',
+                            { 'errMsg': errMsg },
+                        ),
                     );
                     return;
                 });
@@ -1097,7 +1106,10 @@ export class FundComponent implements OnInit, OnDestroy {
                 .then(() => {
                     this.toasterService.pop(
                         'success',
-                        this.translate.translate('@fundName@ draft has been successfully saved.', { 'fundName': this.fundForm.controls['fundName'].value })
+                        this.translate.translate(
+                            '@fundName@ draft has been successfully saved.',
+                            { 'fundName': this.fundForm.controls['fundName'].value },
+                        ),
                     );
                     this.fundService.fetchFundList();
                     this.location.back();
@@ -1106,8 +1118,11 @@ export class FundComponent implements OnInit, OnDestroy {
                 .catch((err) => {
                     const errMsg = _.get(err, '[1].Data[0].Message', '');
                     this.toasterService.pop(
-                        'error', 
-                        this.translate.translate('Failed to create the fund. @errMsg@)', { 'errMsg': errMsg })
+                        'error',
+                        this.translate.translate(
+                            'Failed to create the fund. @errMsg@)',
+                            { 'errMsg': errMsg },
+                        ),
                     );
                     return;
                 });
@@ -1116,7 +1131,10 @@ export class FundComponent implements OnInit, OnDestroy {
                 .then(() => {
                     this.toasterService.pop(
                         'success',
-                        this.translate.translate('@fundName@ draft has been successfully updated.', { 'fundName': this.fundForm.controls['fundName'].value })
+                        this.translate.translate(
+                            '@fundName@ draft has been successfully updated.',
+                            { 'fundName': this.fundForm.controls['fundName'].value },
+                        ),
                     );
                     this.fundService.fetchFundList();
                     this.location.back();
@@ -1125,8 +1143,11 @@ export class FundComponent implements OnInit, OnDestroy {
                 .catch((err) => {
                     const errMsg = _.get(err, '[1].Data[0].Message', '');
                     this.toasterService.pop(
-                        'error', 
-                        this.translate.translate('Failed to create the fund. @errMsg@)', { 'errMsg': + errMsg })
+                        'error',
+                        this.translate.translate(
+                            'Failed to create the fund. @errMsg@)',
+                            { 'errMsg': + errMsg },
+                        ),
                     );
                     return;
                 });
@@ -1150,9 +1171,7 @@ export class FundComponent implements OnInit, OnDestroy {
     }
 
     displaySharePopup(fundName, fundID) {
-        let message = '<span>;'
-        message += this.translate.translate('By clicking "Yes", you will be able to create a share directly linked to @fundName@.', { 'fundName': fundName });
-        message += '</span>';
+        const message = `<span>${this.translate.translate('By clicking "Yes", you will be able to create a share directly linked to @fundName@.', { 'fundName': fundName })}</span>`;
 
         this.confirmationService.create(
             `<span>${this.translate.translate('Do you want to create a share?')}</span>`,
@@ -1170,8 +1189,11 @@ export class FundComponent implements OnInit, OnDestroy {
 
     creationSuccess(fundName) {
         this.toasterService.pop(
-            'success', 
-            this.translate.translate('@fundName has been successfully created.', { 'fundName': fundName })
+            'success',
+            this.translate.translate(
+                '@fundName has been successfully created.',
+                { 'fundName': fundName },
+            ),
         );
         this.router.navigateByUrl('/product-module/product');
     }

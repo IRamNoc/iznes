@@ -93,7 +93,6 @@ export const selectControls = [
 ];
 
 export const controlOrder = [
-
     // General
     'registeredCompanyName',
     'legalForm',

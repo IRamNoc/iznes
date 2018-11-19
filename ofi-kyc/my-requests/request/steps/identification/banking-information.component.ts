@@ -4,7 +4,6 @@ import { get as getValue, isEmpty, castArray } from 'lodash';
 import { Subject } from 'rxjs';
 import { filter, map, takeUntil } from 'rxjs/operators';
 import { select } from '@angular-redux/store';
-
 import { FormPercentDirective } from '@setl/utils/directives/form-percent/formpercent';
 import { IdentificationService } from '../identification.service';
 import { NewRequestService } from '../../new-request.service';
@@ -67,9 +66,9 @@ export class BankingInformationComponent implements OnInit, OnDestroy {
             map(requests => castArray(requests[0])),
             takeUntil(this.unsubscribe),
         )
-        .subscribe(requests => {
-            requests.forEach(request => {
-                this.identificationService.getCurrentFormBankingData(request.kycID).then(formData => {
+        .subscribe((requests) => {
+            requests.forEach((request) => {
+                this.identificationService.getCurrentFormBankingData(request.kycID).then((formData) => {
                     if (formData) {
                         if (formData.length) {
                             const bankingAccounts = this.form.get('custodianHolders') as FormArray;

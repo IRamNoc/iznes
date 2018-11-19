@@ -81,7 +81,7 @@ export class KycDetailsComponent implements OnInit, OnDestroy {
     }
 
     getGeneral() {
-        let general = {
+        const general = {
             title: this.translate.translate('General Information'),
             data: '',
         };
@@ -93,11 +93,10 @@ export class KycDetailsComponent implements OnInit, OnDestroy {
             map(data => this.kycDetailsService.order(data)),
             takeUntil(this.unsubscribe),
         )
-        .subscribe(data => {
+        .subscribe((data) => {
             general.data = data;
             this.changeDetectorRef.markForCheck();
-        })
-        ;
+        });
 
         return general;
     }
@@ -116,11 +115,10 @@ export class KycDetailsComponent implements OnInit, OnDestroy {
             map(data => this.kycDetailsService.order(data)),
             takeUntil(this.unsubscribe),
         )
-        .subscribe(data => {
+        .subscribe((data) => {
             company.data = data;
             this.changeDetectorRef.markForCheck();
-        })
-        ;
+        });
 
         return company;
     }
@@ -149,14 +147,13 @@ export class KycDetailsComponent implements OnInit, OnDestroy {
         .subscribe((data) => {
             banking.data = data;
             this.changeDetectorRef.markForCheck();
-        })
-        ;
+        });
 
         return banking;
     }
 
     getClassification() {
-        let classification = {
+        const classification = {
             title: this.translate.translate('Classification Confirmation'),
             data: '',
         };
@@ -167,11 +164,10 @@ export class KycDetailsComponent implements OnInit, OnDestroy {
             map(data => this.kycDetailsService.toArray(data)),
             takeUntil(this.unsubscribe),
         )
-        .subscribe(data => {
+        .subscribe((data) => {
             classification.data = data;
             this.changeDetectorRef.markForCheck();
-        })
-        ;
+        });
 
         return classification;
     }
@@ -187,7 +183,7 @@ export class KycDetailsComponent implements OnInit, OnDestroy {
         )
         .subscribe((beneficiaries) => {
             const promises = beneficiaries.map((beneficiary) => {
-                beneficiary.splice(beneficiary.findIndex((item) => item.id == 'delete'), 1);
+                beneficiary.splice(beneficiary.findIndex(item => item.id == 'delete'), 1);
                 return this.kycDetailsService.getHashes(beneficiary);
             });
             Promise.all(promises).then((beneficiaries) => {
@@ -210,7 +206,7 @@ export class KycDetailsComponent implements OnInit, OnDestroy {
     }
 
     getRiskNature() {
-        let riskNature = {
+        const riskNature = {
             title: this.translate.translate('Investment\'s Nature'),
             data: '',
         };
@@ -223,14 +219,13 @@ export class KycDetailsComponent implements OnInit, OnDestroy {
         )
         .subscribe((data) => {
             riskNature.data = data;
-        })
-        ;
+        });
 
         return riskNature;
     }
 
     getRiskObjective() {
-        let riskObjectives = {
+        const riskObjectives = {
             title: this.translate.translate('Investment\'s Objectives'),
             data: '',
         };
@@ -257,14 +252,13 @@ export class KycDetailsComponent implements OnInit, OnDestroy {
             riskObjectives.data = data.filter((row) => {
                 return ids.indexOf(row.originalId) > -1;
             });
-        })
-        ;
+        });
 
         return riskObjectives;
     }
 
     getRiskConstraint() {
-        let riskContraints = {
+        const riskContraints = {
             title: this.translate.translate('Investment\'s Constraints'),
             data: '',
         };
@@ -283,18 +277,17 @@ export class KycDetailsComponent implements OnInit, OnDestroy {
             map(data => this.kycDetailsService.toArray(data)),
             takeUntil(this.unsubscribe),
         )
-        .subscribe(data => {
+        .subscribe((data) => {
             riskContraints.data = data.filter((row) => {
                 return ids.indexOf(row.originalId) > -1;
             });
-        })
-        ;
+        });
 
         return riskContraints;
     }
 
     getDocuments() {
-        let documents = {
+        const documents = {
             title: this.translate.translate('Documents'),
             data: '',
         };
@@ -305,10 +298,9 @@ export class KycDetailsComponent implements OnInit, OnDestroy {
             map(documents => this.kycDetailsService.extractDocuments(documents)),
             takeUntil(this.unsubscribe),
         )
-        .subscribe(data => {
+        .subscribe((data) => {
             documents.data = data;
-        })
-        ;
+        });
 
         return documents;
     }
@@ -329,8 +321,7 @@ export class KycDetailsComponent implements OnInit, OnDestroy {
             await this.kycDetailsService.getHashes(data);
             validation.data = data;
             this.changeDetectorRef.markForCheck();
-        })
-        ;
+        });
 
         return validation;
     }

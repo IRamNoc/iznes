@@ -34,7 +34,7 @@ enum Statuses {
     selector: 'app-waiting-approval',
     templateUrl: './component.html',
     styleUrls: ['./component.scss'],
-    changeDetection: ChangeDetectionStrategy.OnPush
+    changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class OfiWaitingApprovalComponent implements OnInit, OnDestroy {
     subscriptions: Array<any> = [];
@@ -93,7 +93,7 @@ export class OfiWaitingApprovalComponent implements OnInit, OnDestroy {
                 private logService: LogService,
                 public translate: MultilingualService,
                 private messagesService: MessagesService,
-                private domSanitizer: DomSanitizer
+                private domSanitizer: DomSanitizer,
     ) {
 
         this.isRejectModalDisplayed = false;
@@ -116,10 +116,10 @@ export class OfiWaitingApprovalComponent implements OnInit, OnDestroy {
     }
 
     ngOnInit(): void {
-        this.subscriptions.push(this.requestLanguageObs.subscribe((language) => this.getLanguage(language)));
-        this.subscriptions.push(this.userDetailObs.subscribe((userDetail) => this.getUserDetail(userDetail)));
-        this.subscriptions.push(this.requestedAmKycListObs.subscribe((requested) => this.setAmKycListRequested(requested)));
-        this.subscriptions.push(this.amKycListObs.subscribe((amKycList) => this.getAmKycList(amKycList)));
+        this.subscriptions.push(this.requestLanguageObs.subscribe(language => this.getLanguage(language)));
+        this.subscriptions.push(this.userDetailObs.subscribe(userDetail => this.getUserDetail(userDetail)));
+        this.subscriptions.push(this.requestedAmKycListObs.subscribe(requested => this.setAmKycListRequested(requested)));
+        this.subscriptions.push(this.amKycListObs.subscribe(amKycList => this.getAmKycList(amKycList)));
     }
 
     ngOnDestroy(): void {
@@ -146,25 +146,25 @@ export class OfiWaitingApprovalComponent implements OnInit, OnDestroy {
                 {
                     id: 'reject',
                     label: this.translate.translate('Reject'),
-                    value: Statuses.rejected
+                    value: Statuses.rejected,
                 },
                 {
                     id: 'accept',
                     label: this.translate.translate('Accept'),
-                    value: Statuses.approved
+                    value: Statuses.approved,
                 },
             ];
-        } else if (this.initialStatusId == -2) {
+        } else if (this.initialStatusId === -2) {
             this.statuses = [
                 {
                     id: 'askForMoreInfo',
                     label: this.translate.translate('Ask For More Info'),
-                    value: Statuses.askMoreInfo
+                    value: Statuses.askMoreInfo,
                 },
                 {
                     id: 'accept',
                     label: this.translate.translate('Accept'),
-                    value: Statuses.approved
+                    value: Statuses.approved,
                 },
             ];
         } else {
@@ -172,17 +172,17 @@ export class OfiWaitingApprovalComponent implements OnInit, OnDestroy {
                 {
                     id: 'reject',
                     label: this.translate.translate('Reject'),
-                    value: Statuses.rejected
+                    value: Statuses.rejected,
                 },
                 {
                     id: 'askForMoreInfo',
                     label: this.translate.translate('Ask For More Info'),
-                    value: Statuses.askMoreInfo
+                    value: Statuses.askMoreInfo,
                 },
                 {
                     id: 'accept',
                     label: this.translate.translate('Accept'),
-                    value: Statuses.approved
+                    value: Statuses.approved,
                 },
             ];
         }
@@ -203,7 +203,7 @@ export class OfiWaitingApprovalComponent implements OnInit, OnDestroy {
     }
 
     getAmKycList(amKycList: any) {
-        if (amKycList.length > 0 && amKycList.findIndex((kyc) => kyc.kycID === this.kycId) !== -1) {
+        if (amKycList.length > 0 && amKycList.findIndex(kyc => kyc.kycID === this.kycId) !== -1) {
             const kyc = amKycList.filter(v => v.kycID === this.kycId)[0];
 
             const phoneNumber = (kyc.investorPhoneCode && kyc.investorPhoneNumber)
@@ -213,13 +213,13 @@ export class OfiWaitingApprovalComponent implements OnInit, OnDestroy {
             const approvalDateRequest = mDateHelper.unixTimestampToDateStr(approvalDateRequestTs, 'DD / MM / YYYY');
 
             this.investor = {
-                'companyName': { label: 'Company name:', value: kyc.investorCompanyName },
-                'clientReference': { label: 'Client reference:', value: kyc.clientReference },
-                'firstName': { label: 'First name:', value: kyc.investorFirstName },
-                'lastName': { label: 'Last name:', value: kyc.investorLastName },
-                'email': { label: 'Email address:', value: kyc.investorEmail },
-                'phoneNumber': { label: 'Phone number:', value: phoneNumber },
-                'approvalDateRequest': { label: 'Date of approval request:', value: approvalDateRequest }
+                companyName: { label: 'Company name:', value: kyc.investorCompanyName },
+                clientReference: { label: 'Client reference:', value: kyc.clientReference },
+                firstName: { label: 'First name:', value: kyc.investorFirstName },
+                lastName: { label: 'Last name:', value: kyc.investorLastName },
+                email: { label: 'Email address:', value: kyc.investorEmail },
+                phoneNumber: { label: 'Phone number:', value: phoneNumber },
+                approvalDateRequest: { label: 'Date of approval request:', value: approvalDateRequest },
             };
 
             this.initialStatusId = kyc.status;
@@ -264,7 +264,7 @@ export class OfiWaitingApprovalComponent implements OnInit, OnDestroy {
 
         switch (status) {
         case Statuses.rejected:
-            //this.isRejectModalDisplayed = true;
+            // this.isRejectModalDisplayed = true;
             this.rejectConfirmation();
             break;
 
@@ -282,11 +282,12 @@ export class OfiWaitingApprovalComponent implements OnInit, OnDestroy {
         let additionalText = this.waitingApprovalFormGroup.controls['additionalText'].value.trim();
         additionalText = this.domSanitizer.sanitize(SecurityContext.HTML, additionalText);
 
-        let message = `${this.translate.translate('Are you sure you want to reject this client\'s application?')}<br>
-        ${this.translate.translate('Here is the message that will be sent to the investor')}:<br /><textarea style="margin-top:15px;" disabled>${this.translate.translate(additionalText)}</textarea><br /> 
-        ${this.translate.translate('You can also ask for more information to this client in the previous page')}.`;
+        const translatedAdditionalText = this.translate.translate('@additionalText@', { 'additionalText': additionalText });
 
-        let safeMessage = this.domSanitizer.bypassSecurityTrustHtml(message);
+        const message = `${this.translate.translate('Are you sure you want to reject this client\'s application?')}<br>
+        ${this.translate.translate('Here is the message that will be sent to the investor')}:<br /><textarea style="margin-top:15px;" disabled>${translatedAdditionalText}</textarea><br /> ${this.translate.translate('You can also ask for more information to this client in the previous page')}.`;
+
+        const safeMessage = this.domSanitizer.bypassSecurityTrustHtml(message);
 
         this.confirmationService.create(
             this.translate.translate('Confirm Rejection'),
@@ -294,33 +295,37 @@ export class OfiWaitingApprovalComponent implements OnInit, OnDestroy {
             {
                 confirmText: this.translate.translate('Reject the client\'s application'),
                 declineText: this.translate.translate('Back to the approval page'),
-                btnClass: 'error'
+                btnClass: 'error',
             }).subscribe((ans) => {
-            if (ans.resolved) {
-                this.handleRejectButtonClick();
-            }
-        });
+                if (ans.resolved) {
+                    this.handleRejectButtonClick();
+                }
+            },
+        );
     }
 
     askInfoConfirmation() {
         let additionalText = this.waitingApprovalFormGroup.controls['additionalText'].value.trim();
         additionalText = this.domSanitizer.sanitize(SecurityContext.HTML, additionalText);
 
-        let message = `${this.translate.translate('Are you sure you want to ask for more information?')}<br>${this.translate.translate('Here is the message that will be sent to the investor')}:<br /><textarea style="margin-top:15px;" disabled>${this.translate.translate(additionalText)}</textarea>`;
+        const translatedAdditionalText = this.translate.translate('@additionalText@', { 'additionalText': additionalText });
+
+        const message = `${this.translate.translate('Are you sure you want to ask for more information?')}<br>${this.translate.translate('Here is the message that will be sent to the investor')}:<br /><textarea style="margin-top:15px;" disabled>${translatedAdditionalText}</textarea>`;
         
-        let safeMessage = this.domSanitizer.bypassSecurityTrustHtml(message);
+        const safeMessage = this.domSanitizer.bypassSecurityTrustHtml(message);
         this.confirmationService.create(
             this.translate.translate('Ask for more information'),
             (safeMessage as string),
             {
                 confirmText: this.translate.translate('Ask for more information'),
                 declineText: this.translate.translate('Back to the approval page'),
-                btnClass: 'error'
+                btnClass: 'error',
             }).subscribe((ans) => {
-            if (ans.resolved) {
-                this.onAskMoreInfoKyc();
-            }
-        });
+                if (ans.resolved) {
+                    this.onAskMoreInfoKyc();
+                }
+            },
+        );
     }
 
     onAskMoreInfoKyc() {
@@ -336,20 +341,26 @@ export class OfiWaitingApprovalComponent implements OnInit, OnDestroy {
             amEmail: this.userDetail.emailAddress,
             amPhoneNumber: phoneNumber,
             amInfoText: this.waitingApprovalFormGroup.controls['additionalText'].value,
-            lang: this.language
+            lang: this.language,
         };
         this.redux.dispatch({
-            type: CLEAR_REQUESTED
+            type: CLEAR_REQUESTED,
         });
         this.kycService.askMoreInfo(payload).then(() => {
-            this.toast.pop('success', 'An email has been sent to ' + this.investor.companyName.value + ' in order to ask for more information.');
+            this.toast.pop(
+                'success',
+                this.translate.translate(
+                    'An email has been sent to @companyName@ in order to ask for more information.',
+                    { 'companyName': this.investor.companyName.value },
+                ),
+            );
             this.setAmKycListRequested(true);
             this.router.navigateByUrl('/on-boarding/management');
         }).catch((error) => {
             const data = error[1].Data[0];
 
             if (data.Status === 'Fail') {
-                this.showErrorAlert('The KYC request has already been updated. The request requires the investor\'s attention now');
+                this.showErrorAlert(this.translate.translate('The KYC request has already been updated. The request requires the investor\'s attention now'));
             }
         });
     }
@@ -362,11 +373,11 @@ export class OfiWaitingApprovalComponent implements OnInit, OnDestroy {
             investorCompanyName: this.investor.companyName.value,
             amCompanyName: this.amCompanyName,
             lang: this.language,
-            invitedID: this.invitedID
+            invitedID: this.invitedID,
         };
 
         this.redux.dispatch({
-            type: CLEAR_REQUESTED
+            type: CLEAR_REQUESTED,
         });
         this.kycService.approve(payload).then((result) => {
             this.waitingApprovalFormGroup.controls['isKycAccepted'].patchValue(false);
@@ -380,10 +391,13 @@ export class OfiWaitingApprovalComponent implements OnInit, OnDestroy {
             // this.sendActionMessageToInvestor(walletId);
             this.setAmKycListRequested(false);
 
-            setTimeout(() => {
-                /* Redirect to fund access page when the kyc is being approved */
-                this.router.navigate(['client-referential', this.kycId]);
-            }, 1000);
+            setTimeout(
+                () => {
+                    /* Redirect to fund access page when the kyc is being approved */
+                    this.router.navigate(['client-referential', this.kycId]);
+                },
+                1000,
+            );
         }).catch((error) => {
             const data = error[1].Data[0];
 
@@ -399,12 +413,12 @@ export class OfiWaitingApprovalComponent implements OnInit, OnDestroy {
 
     saveCompleteKycModal(message) {
         this.kycService.notifyKycCompletion(this.investorID, message, this.kycId).then(() => {
-            let message = this.translate.translate('The investor has been notified.');
+            const message = this.translate.translate('The investor has been notified.');
             this.toast.pop('success', message);
             this.completeKycModal = false;
             this.cdr.markForCheck();
             this.redux.dispatch({
-                type: CLEAR_REQUESTED
+                type: CLEAR_REQUESTED,
             });
             this.router.navigateByUrl('/on-boarding/management');
         });
@@ -420,9 +434,9 @@ export class OfiWaitingApprovalComponent implements OnInit, OnDestroy {
                 {},
                 () => {
                     resolve(walletId);
-                }
+                },
             ));
-        })
+        });
     }
 
     sendActionMessageToInvestor(investorWalletId: number) {
@@ -439,7 +453,7 @@ export class OfiWaitingApprovalComponent implements OnInit, OnDestroy {
             [investorWalletId],
             subject,
             '',
-            actionConfig
+            actionConfig,
         ).then((result) => {
             this.logService.log('on message success: ', result);
         }).catch((error) => {
@@ -466,11 +480,11 @@ export class OfiWaitingApprovalComponent implements OnInit, OnDestroy {
             amEmail: this.userDetail.emailAddress,
             amPhoneNumber: phoneNumber,
             amInfoText: this.waitingApprovalFormGroup.controls['additionalText'].value,
-            lang: this.language
+            lang: this.language,
         };
 
         this.redux.dispatch({
-            type: CLEAR_REQUESTED
+            type: CLEAR_REQUESTED,
         });
 
         this.kycService.reject(payload).then(() => {

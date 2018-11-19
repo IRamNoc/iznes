@@ -141,7 +141,8 @@
                                 [items]="listingMarketsList" 
                                 id="listingMarkets" 
                                 formControlName="listingMarkets" 
-                                placeholder="{{ 'Fill in the listing market(s)' | translate }}"></ng-select>
+                                placeholder="{{ 'Fill in the listing market(s)' | translate }}">
+                    </ng-select>
                     <span class="field-error" *ngIf="hasError('listingMarkets')">{{ 'Field is required' | translate }}</span>
                 </div>
                 <div class="form-group required-field col-sm-4">
@@ -310,7 +311,8 @@
                                 id="geographicalOrigin1"
                                 [items]="geographicalOriginTypeList"
                                 formControlName="geographicalOrigin1"
-                                placeholder="{{ 'Please select a type of geographical origin' | translate }}"></ng-select>
+                                placeholder="{{ 'Please select a type of geographical origin' | translate }}">
+                    </ng-select>
                 </div>
                 <div class="form-group required-field col-md-6 col-xl-3" *ngIf="geographicalOrigin === 'country'">
                     <label for="geographicalOrigin2">{{ 'Country' | translate }}</label>
@@ -318,7 +320,8 @@
                                 id="geographicalOrigin2"
                                 [items]="countries"
                                 formControlName="geographicalOrigin2"
-                                placeholder="{{ 'Please select a country(ies)' | translate }}"></ng-select>
+                                placeholder="{{ 'Please select a country(ies)' | translate }}">
+                    </ng-select>
                 </div>
                 <div class="form-group required-field col-md-6 col-xl-3" *ngIf="geographicalOrigin === 'area'">
                     <label for="geographicalOrigin2">{{ 'Area' | translate }}</label>
@@ -326,7 +329,8 @@
                                 id="geographicalOrigin2"
                                 [items]="geographicalAreaList"
                                 formControlName="geographicalOrigin2"
-                                placeholder="{{ 'Please select an area(s)' | translate }}"></ng-select>
+                                placeholder="{{ 'Please select an area(s)' | translate }}">
+                    </ng-select>
                 </div>
             </div>
 
@@ -336,7 +340,8 @@
                     <ng-select [items]="financialAssetsInvestedList"
                                 id="totalFinancialAssetsAlreadyInvested"
                                 formControlName="totalFinancialAssetsAlreadyInvested"
-                                placeholder="{{ 'Please select a range' | translate }}"></ng-select>
+                                placeholder="{{ 'Please select a range' | translate }}">
+                    </ng-select>
                     <span class="field-error" *ngIf="hasError('totalFinancialAssetsAlreadyInvested')">{{ 'Field is required' | translate }}</span>
                 </div>
             </div>

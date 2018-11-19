@@ -31,7 +31,7 @@ export class InvestmentNatureFormComponent implements OnInit {
 
     constructor(
         private newRequestService: NewRequestService,
-        private riskProfileService: RiskProfileService
+        private riskProfileService: RiskProfileService,
     ) {
     }
 

@@ -9,13 +9,13 @@ export class ValidationService {
     constructor(
         private newRequestService: NewRequestService,
         private requestsService: RequestsService,
-        private documentsService: DocumentsService
+        private documentsService: DocumentsService,
     ) {
     }
 
     sendRequest(formGroupValidation, requests, connectedWallet) {
-        let promises = [];
-        let context = this.newRequestService.context;
+        const promises = [];
+        const context = this.newRequestService.context;
 
         requests.forEach((request) => {
             const kycID = request.kycID;
@@ -56,7 +56,7 @@ export class ValidationService {
 
         const messageBody = {
             RequestName: 'updatekycvalidation',
-            ...extracted
+            ...extracted,
         };
 
         return this.requestsService.sendRequest(messageBody);
@@ -65,9 +65,9 @@ export class ValidationService {
     sendRequestUpdateCurrentStep(kycID, context) {
         const messageBody = {
             RequestName: 'iznesupdatecurrentstep',
-            kycID: kycID,
+            kycID,
             completedStep: 'validation',
-            currentGroup: context
+            currentGroup: context,
         };
 
         return this.requestsService.sendRequest(messageBody);
