@@ -1,5 +1,5 @@
 package com.setl.UI.common.SETLUIHelpers;
-import org.junit.Test;
+import com.setl.UI.common.SETLUtils.RandomData;
 import org.openqa.selenium.By;
 import org.openqa.selenium.Keys;
 import org.openqa.selenium.WebElement;
@@ -11,7 +11,6 @@ import java.util.Arrays;
 import java.util.List;
 
 import static com.setl.UI.common.SETLUIHelpers.LoginAndNavigationHelper.loginAndVerifySuccess;
-import static com.setl.UI.common.SETLUIHelpers.LoginAndNavigationHelper.logout;
 import static com.setl.UI.common.SETLUIHelpers.LoginAndNavigationHelper.navigateToDropdown;
 import static com.setl.UI.common.SETLUIHelpers.MemberDetailsHelper.scrollElementIntoViewById;
 import static com.setl.UI.common.SETLUIHelpers.SetUp.driver;
@@ -22,15 +21,9 @@ import static org.junit.Assert.*;
 import static org.openqa.selenium.support.ui.ExpectedConditions.*;
 import static com.setl.UI.common.SETLUIHelpers.MemberDetailsHelper.scrollElementIntoViewByXpath;
 
+import static SETLAPIHelpers.DatabaseHelper.*;
+
 public class AdministrationModuleHelper {
-
-    static Connection conn = null;
-
-    public static String connectionString = "jdbc:mysql://localhost:9998/setlnet?nullNamePatternMatchesAll=true";
-
-    // Defines username and password to connect to database server.
-    static String DBUsername = "root";
-    static String DBPassword = "nahafusi61hucupoju78";
 
     public static String[] generateRandomTeamName() {
         String str = randomAlphabetic(7);
@@ -594,11 +587,12 @@ public class AdministrationModuleHelper {
         driver.findElement(By.cssSelector("#permissionsCellActions10 > label:nth-child(1) > span:nth-child(2)")).click();
     }
 
-    public static String validateAdminTeamPermissions(String teamName) throws SQLException {
+    public static boolean checkTeamHasPermissionsInDatabase(String teamName, List<String> expectedPermissions) throws SQLException {
         conn = DriverManager.getConnection(connectionString, DBUsername, DBPassword);
         Statement stmt = conn.createStatement();
         ResultSet rs = null;
         String teamID = null;
+        boolean result = false;
         try {
             String getUserTeamID = "select userTeamID from setlnet.tblUserTeams where name = " + "\"" + teamName + "\"";
             rs = stmt.executeQuery(getUserTeamID);
@@ -611,16 +605,25 @@ public class AdministrationModuleHelper {
             while(gp.next()){
                 actualList.add(gp.getString("permissionName"));
             }
-            List<String> expectedList = Arrays.asList("Create Teams","Create Users","Delete Teams","Delete Users", "Manage Team Memberships", "Manage Team Permissions", "Update Teams", "Update Users", "View Teams", "View Users");
-            assertEquals(expectedList, actualList);
-            }catch (Exception e) {
+
+            result = actualList.containsAll(expectedPermissions);
+
+        } catch (Exception e) {
             e.printStackTrace();
-            fail();
+            fail("DB connection failure");
         } finally {
             conn.close();
             stmt.close();
             rs.close();
-        } return teamID;
+            return result;
+        }
+
+    }
+
+    public static void validateAdminTeamPermissions(String teamName) throws SQLException {
+
+        List<String> expectedList = Arrays.asList("Create Teams","Create Users","Delete Teams","Delete Users", "Manage Team Memberships", "Manage Team Permissions", "Update Teams", "Update Users", "View Teams", "View Users");
+        assert checkTeamHasPermissionsInDatabase(teamName, expectedList) : "validateAdminTeamPermissions failure";
     }
 
     public static void selectOrderBookPermissions() {
@@ -638,34 +641,10 @@ public class AdministrationModuleHelper {
         driver.findElement(By.cssSelector("#permissionsCellActions13 > label:nth-child(1) > span:nth-child(2)")).click();
     }
 
-    public static String validateOrderBookTeamPermissions(String teamName) throws SQLException {
-        conn = DriverManager.getConnection(connectionString, DBUsername, DBPassword);
-        Statement stmt = conn.createStatement();
-        ResultSet rs = null;
-        String teamID = null;
-        try {
-            String getUserTeamID = "select userTeamID from setlnet.tblUserTeams where name = " + "\"" + teamName + "\"";
-            rs = stmt.executeQuery(getUserTeamID);
-            rs.last();
-            teamID = rs.getString("userTeamID");
-            String getPermissions = "SELECT a.userTeamID, a.reference , a.name as userTeamName, c.name as permissionName FROM setlnet.tblUserTeams a INNER JOIN setlnet.tblUserTeamPermissionAreasMap b on a.userTeamID = b.userTeamID INNER JOIN setlnet.tblUserTeamPermissionAreas c on b.permissionAreaID = c.permissionAreaID where a.userTeamID = " + "\"" + teamID + "\" order by c.name";
-            ResultSet gp = stmt.executeQuery(getPermissions);
+    public static void validateOrderBookTeamPermissions(String teamName) throws SQLException {
 
-            List<String> actualList = new ArrayList<>();
-            while(gp.next()){
-                actualList.add(gp.getString("permissionName"));
-            }
-            List<String> expectedList = Arrays.asList("Cancel Orders", "View Orders");
-            assertEquals(expectedList, actualList);
-        }catch (Exception e) {
-            e.printStackTrace();
-            fail();
-        } finally {
-            conn.close();
-            stmt.close();
-            rs.close();
-        } return teamID;
-
+        List<String> expectedList = Arrays.asList("Cancel Orders", "View Orders");
+        assert checkTeamHasPermissionsInDatabase(teamName, expectedList) : "validateOrderBookTeamPermissions failure";
     }
 
     public static void selectMyReportsPermissions() {
@@ -755,36 +734,36 @@ public class AdministrationModuleHelper {
         driver.findElement(By.cssSelector("#permissionsCellActions23 > label:nth-child(1) > span:nth-child(2)")).click();
     }
 
-    public static String validateMyClientsTeamPermissions(String teamName) throws SQLException {
-        conn = DriverManager.getConnection(connectionString, DBUsername, DBPassword);
-        Statement stmt = conn.createStatement();
-        ResultSet rs = null;
-        String teamID = null;
-        try {
-            String getUserTeamID = "select userTeamID from setlnet.tblUserTeams where name = " + "\"" + teamName + "\"";
-            rs = stmt.executeQuery(getUserTeamID);
-            rs.last();
-            teamID = rs.getString("userTeamID");
-            String getPermissions = "SELECT a.userTeamID, a.reference , a.name as userTeamName, c.name as permissionName FROM setlnet.tblUserTeams a INNER JOIN setlnet.tblUserTeamPermissionAreasMap b on a.userTeamID = b.userTeamID INNER JOIN setlnet.tblUserTeamPermissionAreas c on b.permissionAreaID = c.permissionAreaID where a.userTeamID = " + "\"" + teamID + "\" order by c.name";
-            ResultSet gp = stmt.executeQuery(getPermissions);
+    public static void validateMyClientsTeamPermissions(String teamName) throws SQLException {
 
-            List<String> actualList = new ArrayList<>();
-            while(gp.next()){
-                actualList.add(gp.getString("permissionName"));
-            }
-            List<String> expectedList = Arrays.asList("Invite Investors", "Update Client Referentials", "Update KYC Requests", "View Client Referentials", "View KYC Requests");
-            assertEquals(expectedList, actualList);
-        }catch (Exception e) {
-            e.printStackTrace();
-            fail();
-        } finally {
-            conn.close();
-            stmt.close();
-            rs.close();
-        } return teamID;
+        List<String> permissions = Arrays.asList("Invite Investors", "Update Client Referentials", "Update KYC Requests", "View Client Referentials", "View KYC Requests");
+        assert checkTeamHasPermissionsInDatabase(teamName, permissions) : "validateMyClientsTeamPermissions failure";
     }
 
+    public static void selectPortfolioManagerPermissions()
+    {
+        scrollElementIntoViewById("permissionsCellName18");
+        driver.findElement(By.id("permissionsCellName18")).click();
 
+        //http://si-taiga01.dev.setl.io/project/antoninriggi-iznes-20/task/3286
+        assert driver.findElement(By.id("permissionsCellNameXX")).getText().equals("View Portfolio Manager") : "wording error";
+        assert driver.findElement(By.id("permissionsCellDescXX")).getText().equals("Get information about PM, funds managed and shares authorisation") : "wording error";
+
+        assert driver.findElement(By.id("permissionsCellNameXX")).getText().equals("Update Portfolio Manager") : "wording error";
+        assert driver.findElement(By.id("permissionsCellDescXX")).getText().equals("Modify funds' list linked to a PM and share authorisation") : "wording error";
+
+        assert driver.findElement(By.id("permissionsCellNameXX")).getText().equals("Invite Portfolio Manager") : "wording error";
+        assert driver.findElement(By.id("permissionsCellDescXX")).getText().equals("Invite a new PM into IZNES") : "wording error";
+
+        driver.findElement(By.xpath("//input[@id='permissionsCellActionXX']")).click();
+        driver.findElement(By.xpath("//input[@id='permissionsCellActionXX']")).click();
+        driver.findElement(By.xpath("//input[@id='permissionsCellActionXX']")).click();
+    }
+
+    public static boolean validateMyClientsTeamPortfolioManagerPermissions(String teamName) throws SQLException {
+        List<String> permissions = Arrays.asList("View Portfolio Manager", "Update Portfolio Manager", "Invite Portfolio Manager");
+        return checkTeamHasPermissionsInDatabase(teamName, permissions);
+    }
 
     public static String getUserTokenByEmailFromDBInvitation(String userEmail) throws SQLException {
         conn = DriverManager.getConnection(connectionString, DBUsername, DBPassword);
@@ -847,6 +826,7 @@ public class AdministrationModuleHelper {
         String administrationTab = driver.findElement(By.id("menu-admin")).getText();
         assertEquals("Administration", administrationTab);
         driver.findElement(By.id("menu-admin")).click();
+        Thread.sleep(250);
         String usersTab = driver.findElement(By.id("menu-admin-users")).getText();
         assertEquals("Users", usersTab);
         String teamsTab = driver.findElement(By.id("menu-admin-teams")).getText();

@@ -1,5 +1,6 @@
 package com.setl.UI.common.SETLUtils;
 
+import org.apache.commons.lang3.RandomStringUtils;
 import org.joda.time.DateTime;
 
 import java.util.Random;
@@ -48,6 +49,11 @@ public class RandomData
         return dateTime.toString("HHmmssSSS");
     }
 
-
+    public static String getRandomAlphabetic(int length)
+    {
+        boolean useLetters = true;
+        boolean useNumbers = false;
+        return RandomStringUtils.random(length, useLetters, useNumbers);
+    }
 
 }

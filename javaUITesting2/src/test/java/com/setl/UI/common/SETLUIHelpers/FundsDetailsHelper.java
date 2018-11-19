@@ -38,9 +38,14 @@ public class FundsDetailsHelper extends LoginAndNavigationHelper {
     }
     //TODO - get rid of this convention of making unnecessary arrays
     public static String[] generateRandomFundsDetails() {
-        String str = RandomData.getDateTimeStamp();
-        String umbrellaFundName = "Fund_" + str;
-        return new String[]{umbrellaFundName};
+        //String str = RandomData.getDateTimeStamp();
+
+        String fund = "Fund " + RandomData.getTimeStampWithoutBadCharacters() + " " +
+            RandomData.getRandomAlphabetic(1) + " " +
+            RandomData.getRandomAlphabetic(1) + " " +
+            RandomData.getRandomAlphabetic(1);
+
+        return new String[]{fund};
     }
     public static String[] generateRandomShareDetails() {
         String str = RandomData.getDateTimeStamp();
