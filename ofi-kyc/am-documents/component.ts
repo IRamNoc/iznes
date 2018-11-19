@@ -1,14 +1,14 @@
 /* Core/Angular imports. */
 import {
     AfterViewInit, ChangeDetectionStrategy, ChangeDetectorRef, Component, OnDestroy, Inject,
-    OnInit
+    OnInit,
 } from '@angular/core';
 /* Redux */
 import { NgRedux, select } from '@angular-redux/store';
 import { Subpanel } from './models';
 import { fromJS } from 'immutable';
 import { ToasterService } from 'angular2-toaster';
-import { APP_CONFIG, AppConfig } from '@setl/utils';
+import { APP_CONFIG, AppConfig, immutableHelper } from '@setl/utils';
 
 /* Ofi orders request service. */
 import { clearAppliedHighlight, SET_HIGHLIGHT_LIST, setAppliedHighlight } from '@setl/core-store/index';
@@ -16,14 +16,13 @@ import { setInformations, KycMyInformations } from '../../ofi-store/ofi-kyc/my-i
 import { Observable } from 'rxjs';
 
 import { OfiKycService } from '../../ofi-req-services/ofi-kyc/service';
-import { immutableHelper } from '@setl/utils';
 import { Router } from '@angular/router';
 import { MultilingualService } from '@setl/multilingual';
 
 @Component({
     styleUrls: ['./component.scss'],
     templateUrl: './component.html',
-    changeDetection: ChangeDetectionStrategy.OnPush
+    changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class OfiAmDocumentsComponent implements OnDestroy, OnInit {
     appConfig: AppConfig;
@@ -32,7 +31,7 @@ export class OfiAmDocumentsComponent implements OnDestroy, OnInit {
     /* Private properties. */
     // public panelDefs: Subpanel[];
     public panelDefs = [];
-    private subscriptions: Array<any> = [];
+    private subscriptions: any[] = [];
 
     /* Observables. */
     @select(['ofi', 'ofiKyc', 'amKycList', 'requested']) requestedOfiKycListOb;
@@ -45,15 +44,16 @@ export class OfiAmDocumentsComponent implements OnDestroy, OnInit {
                 private toasterService: ToasterService,
                 private router: Router,
                 private translate: MultilingualService,
-                @Inject(APP_CONFIG) appConfig: AppConfig) {
+                @Inject(APP_CONFIG) appConfig: AppConfig,
+    ) {
         this.appConfig = appConfig;
     }
 
     ngOnInit() {
         this.subscriptions.push(this.requestedOfiKycListOb.subscribe(
-            (requested) => this.requestKycList(requested)));
+            requested => this.requestKycList(requested)));
         this.subscriptions.push(this.kycListOb.subscribe(
-            (amKycListData) => this.updateTable(amKycListData)));
+            amKycListData => this.updateTable(amKycListData)));
     }
 
     updateTable(tableData) {
@@ -138,7 +138,7 @@ export class OfiAmDocumentsComponent implements OnDestroy, OnInit {
                 hasLink: true,
                 kycDocLink: '/on-boarding/management/:kycID',
                 kycFundAccessLink: '/fund-access/:kycID',
-            }
+            },
         };
 
         const tables = {
@@ -182,43 +182,43 @@ export class OfiAmDocumentsComponent implements OnDestroy, OnInit {
                 title: this.translate.translate('Waiting for Approval'),
                 columns: [columns[1], columns[2], columns[3], columns[4]],
                 open: true,
-                data: tables[1]
+                data: tables[1],
             },
             {
                 id: 'Accepted',
                 title: this.translate.translate('Accepted - Funds Access Authorizations'),
                 columns: [columns[1], columns[2], columns[5], columns[4], columns[6]],
                 open: true,
-                data: tables[-1]
+                data: tables[-1],
             },
             {
                 id: 'Awaiting',
                 title: this.translate.translate('Awaiting for more information from your Client'),
                 columns: [columns[1], columns[2], columns[7], columns[4], columns[8]],
                 open: true,
-                data: tables[2]
+                data: tables[2],
             },
             {
                 id: 'Rejected',
                 title: this.translate.translate('Rejected'),
                 columns: [columns[1], columns[2], columns[9], columns[4], columns[10]],
                 open: true,
-                data: tables[-2]
+                data: tables[-2],
             },
             {
                 id: 'StartedClients',
                 title: this.translate.translate('Started by your Clients'),
                 columns: [columns[1], columns[2], columns[7], columns[4], columns[8]],
                 open: true,
-                data: tables['invited']
+                data: tables['invited'],
             },
             {
                 id: 'AllClients',
                 title: this.translate.translate('All your KYC and Client Folders'),
                 columns: [columns[1], columns[2], columns[11], columns[4], columns[8]],
                 open: true,
-                data: tables['all']
-            }
+                data: tables['all'],
+            },
         ];
 
         this.changeDetectorRef.markForCheck();
@@ -258,7 +258,7 @@ export class OfiAmDocumentsComponent implements OnDestroy, OnInit {
         this.changeDetectorRef.detach();
 
         /* Unsunscribe Observables. */
-        for (let key of this.subscriptions) {
+        for (const key of this.subscriptions) {
             key.unsubscribe();
         }
     }

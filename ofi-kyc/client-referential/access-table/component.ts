@@ -67,11 +67,12 @@ export class OfiFundAccessTable {
                 private ofiKycService: OfiKycService,
                 private changeDetectorRef: ChangeDetectorRef,
                 private translate: MultilingualService,
-                private fileService: FileService) {
+                private fileService: FileService,
+    ) {
     }
 
     onClickAccess(id) {
-        const index = this.tableData.findIndex((i) => i.id == id);
+        const index = this.tableData.findIndex(i => i.id === id);
 
         this.tableData[index]['access'] = !this.tableData[index]['access'];
         this.tableData[index]['accessChanged'] = !this.tableData[index]['accessChanged'];
@@ -86,7 +87,7 @@ export class OfiFundAccessTable {
     }
 
     checkFee(id, type) {
-        const index = this.tableData.findIndex((i) => i.id == id);
+        const index = this.tableData.findIndex(i => i.id === id);
 
         if (isNaN(parseFloat(this.tableData[index][type])) || !isFinite(this.tableData[index][type])) this.tableData[index][type] = 0;
         this.tableData[index][type] = Math.round((this.tableData[index][type]) * DIVIDER_NUMBER) / DIVIDER_NUMBER;
@@ -101,19 +102,19 @@ export class OfiFundAccessTable {
     }
 
     closeOverrideModal(type) {
-        if (type == 1) {
+        if (type === 1) {
             this.tableData[this.currentOverride]['newOverride'] = true;
             this.tableData[this.currentOverride]['override'] = true;
             this.tableData[this.currentOverride]['overrideAmount'] = this.newOverride['amount'];
         }
-        if (type == 2) {
+        if (type === 2) {
             this.tableData[this.currentOverride]['newOverride'] = true;
             this.tableData[this.currentOverride]['override'] = false;
             this.tableData[this.currentOverride]['overrideAmount'] = 0;
         }
 
-        if (type != 0) {
-            if (type == 2 || this.newOverride['document'].length == 0) {
+        if (type !== 0) {
+            if (type === 2 || this.newOverride['document'].length === 0) {
                 this.tableData[this.currentOverride]['overrideDocumentTitle'] = '';
                 this.uploadFiles[this.currentOverride] = {};
             } else {
@@ -141,17 +142,17 @@ export class OfiFundAccessTable {
         this.changes = [];
         Object.keys(this.oldTableData).forEach((key) => {
             let change = '';
-            if (this.oldTableData[key]['access'] != this.tableData[key]['access']) {
+            if (this.oldTableData[key]['access'] !== this.tableData[key]['access']) {
                 change = this.changeTypes[(this.tableData[key]['access'] ? 1 : 2)];
             }
-            if (this.oldTableData[key]['entry'] != this.tableData[key]['entry'] ||
-                this.oldTableData[key]['exit'] != this.tableData[key]['exit']) {
-                change += (change != '' ? ', ' : '') + this.changeTypes[3];
+            if (this.oldTableData[key]['entry'] !== this.tableData[key]['entry'] ||
+                this.oldTableData[key]['exit'] !== this.tableData[key]['exit']) {
+                change += (change !== '' ? ', ' : '') + this.changeTypes[3];
             }
-            if (this.oldTableData[key]['newOverride'] != this.tableData[key]['newOverride']) {
-                change += (change != '' ? ', ' : '') + this.changeTypes[4];
+            if (this.oldTableData[key]['newOverride'] !== this.tableData[key]['newOverride']) {
+                change += (change !== '' ? ', ' : '') + this.changeTypes[4];
             }
-            if (change != '') {
+            if (change !== '') {
                 this.changes.push({
                     id: this.oldTableData[key].id,
                     isin: this.oldTableData[key].isin,
@@ -169,10 +170,9 @@ export class OfiFundAccessTable {
     }
 
     confirmSave() {
-        const message = (Object.keys(this.changes).length == 0 ?
-            this.translate.translate('No changes have been made to the Investors\' Fund Access permissions.')
-            :
-            this.translate.translate('Please confirm the changes made to the Investors\' Fund Access permissions.')
+        const message = (Object.keys(this.changes).length === 0
+            ? this.translate.translate('No changes have been made to the Investors\' Fund Access permissions.')
+            : this.translate.translate('Please confirm the changes made to the Investors\' Fund Access permissions.')
         );
 
         this.confirmationService.create(this.translate.translate('Confirm Fund Share Access'), message, {
@@ -187,7 +187,7 @@ export class OfiFundAccessTable {
     }
 
     saveData() {
-        const changedData = this.tableData.filter((i) => this.changes.findIndex((j) => j.id == i.id) > -1);
+        const changedData = this.tableData.filter(i => this.changes.findIndex(j => j.id === i.id) > -1);
         const promises = [];
         const uploadData = {};
 
@@ -206,7 +206,7 @@ export class OfiFundAccessTable {
                     });
                     this.ngRedux.dispatch(SagaHelper.runAsyncCallback(
                         asyncTaskPipe,
-                        (function (data) {
+                        ((data) => {
 
                             uploadData[key] = data[1].Data[0][0];
                             resolve();
@@ -229,20 +229,30 @@ export class OfiFundAccessTable {
                 access: changedData,
             }).then(() => {
                 // success call back
-                this.toasterService.pop('success', this.translate.translate('@investorName@\'s shares authorisation has been successfully updated', { 'investorName': this.getInvestorCompanyName() }));
+                this.toasterService.pop(
+                    'success',
+                    this.translate.translate(
+                        '@investorName@\'s shares authorisation has been successfully updated',
+                        { 'investorName': this.getInvestorCompanyName() },
+                    ),
+                );
 
                 console.error(this.investorData['investorWalletID']);
 
                 const recipientsArr = [this.investorData['investorWalletID']];
-                const subjectStr = this.translate.translate('@amCompany@ has updated your access', { 'amCompany': this.amCompany });
+                const subjectStr = this.translate.translate(
+                    '@amCompany@ has updated your access',
+                    { 'amCompany': this.amCompany },
+                );
 
-                let bodyStr = `
-                    ${this.translate.translate('Hello @investorFirstName@, @amCompany@ has made updates on your access list', { 'investorFirstName': this.getInvestorFirstName(), 'amCompany': this.amCompany })}.
-                    <br><br>
-                    ${this.translate.translate('Click on the button below to go to the Funds shares page to see all changes and begin trading on IZNES')}.
-                    <br><br>%@link@%<br><br>
-                    ${this.translate.translate('Thank you')},
-                    <br><br>${this.translate.translate('The IZNES team')}.
+                const bodyStr = `
+                    ${this.translate.translate(
+                        'Hello @investorFirstName@, @amCompany@ has made updates on your access list', { 'investorFirstName': this.getInvestorFirstName(), 'amCompany': this.amCompany })}.
+                        <br><br>
+                        ${this.translate.translate('Click on the button below to go to the Funds shares page to see all changes and begin trading on IZNES')}.
+                        <br><br>%@link@%<br><br>
+                        ${this.translate.translate('Thank you')},
+                        <br><br>${this.translate.translate('The IZNES team')}.
                 `;
 
                 const action = {
@@ -285,7 +295,7 @@ export class OfiFundAccessTable {
      */
     getInvestorFirstName() {
         const investorFirstName = this.investorData['firstName'];
-        return investorFirstName ? investorFirstName :  this.getInvestorWalletName();
+        return investorFirstName ? investorFirstName : this.getInvestorWalletName();
     }
 
     /**
