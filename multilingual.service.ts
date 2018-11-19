@@ -91,7 +91,7 @@ export class MultilingualService {
             }
         }
 
-        /* ...otherwise return origin string. */
+        /* ...otherwise return original string. */
         return str;
     }
 
