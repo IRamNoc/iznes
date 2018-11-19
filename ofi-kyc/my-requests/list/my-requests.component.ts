@@ -11,7 +11,7 @@ import {
     ClearMyKycListRequested,
     SetMyKycOpenTab,
     ClearMyKycOpenTab,
-    SetMyKycOpenTabActive
+    SetMyKycOpenTabActive,
 } from '@ofi/ofi-main/ofi-store/ofi-kyc/kyc-list/actions';
 
 @Component({
@@ -74,7 +74,7 @@ export class MyRequestsComponent implements OnInit, OnDestroy {
 
         this.openTabs$
         .pipe(
-            takeUntil(this.unsubscribe)
+            takeUntil(this.unsubscribe),
         )
         .subscribe((openTabs) => {
             this.tabs = openTabs;

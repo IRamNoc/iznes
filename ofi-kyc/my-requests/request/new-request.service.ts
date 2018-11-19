@@ -87,7 +87,7 @@ export class NewRequestService {
     saveContext = '';
 
     /* Private Properties. */
-    private subscriptions: Array<any> = [];
+    private subscriptions: any[] = [];
 
     @select(['user', 'siteSettings', 'production']) productionOb;
 
@@ -157,8 +157,8 @@ export class NewRequestService {
     extractConfigData(configValue) {
         return configValue.map((singleValue, index) => {
             return {
-                id: singleValue.id ? singleValue.id : singleValue.text.replace(/[^a-zA-Z0-9]/g, ""),
-                text: this.multilingualService.translate(singleValue.text)
+                id: singleValue.id ? singleValue.id : singleValue.text.replace(/[^a-zA-Z0-9]/g, ''),
+                text: this.multilingualService.translate(singleValue.text),
             };
         });
     }
@@ -167,7 +167,7 @@ export class NewRequestService {
         const fb = this.formBuilder;
 
         const selection = this.formBuilder.group({
-            managementCompanies: [[], Validators.required]
+            managementCompanies: [[], Validators.required],
         });
 
         const identification = this.createIdentificationFormGroup();
@@ -194,7 +194,7 @@ export class NewRequestService {
             doneAt: ['', this.getLengthValidator()],
             doneDate: ['', Validators.required],
             positionRepresentative: ['', this.getLengthValidator()],
-            electronicSignatureDocument: this.createDocumentFormGroup('electronicsignature', !this.isProduction)
+            electronicSignatureDocument: this.createDocumentFormGroup('electronicsignature', !this.isProduction),
         });
     }
 
@@ -234,17 +234,17 @@ export class NewRequestService {
             activities: ['', Validators.required],
             ownAccountinvestor: [
                 { value: '', disabled: true },
-                Validators.required
+                Validators.required,
             ],
             investorOnBehalfThirdParties: [
                 { value: '', disabled: true },
-                Validators.required
+                Validators.required,
             ],
 
             geographicalAreaOfActivity: ['', Validators.required],
             geographicalAreaOfActivitySpecification: [
                 { value: '', disabled: true },
-                this.getLengthValidator(255)
+                this.getLengthValidator(255),
             ],
 
             activityRegulated: 0,
@@ -259,21 +259,21 @@ export class NewRequestService {
             ],
             regulator: [
                 { value: '', disabled: true },
-                this.getLengthValidator(255)
+                this.getLengthValidator(255),
             ],
             approvalNumber: [
                 { value: '', disabled: true },
-                this.getLengthValidator()
+                this.getLengthValidator(),
             ],
 
             companyListed: 0,
             listingMarkets: [
                 { value: '', disabled: true },
-                Validators.required
+                Validators.required,
             ],
             bloombergCode: [
                 { value: '', disabled: true },
-                this.getLengthValidator()
+                this.getLengthValidator(),
             ],
             isinCode: [
                 { value: '', disabled: true },
@@ -292,11 +292,11 @@ export class NewRequestService {
 
             netRevenuesNetIncome: ['', [
                 Validators.required,
-                Validators.min(0)
+                Validators.min(0),
             ]],
             shareholderEquity: ['', [
                 Validators.required,
-                Validators.min(0)
+                Validators.min(0),
             ]],
 
             beneficiaries: fb.array([], Validators.required),
@@ -309,21 +309,21 @@ export class NewRequestService {
                 treasury: '',
                 others: '',
                 othersText: [{ value: '', disabled: true }, Validators.required],
-            }, {
+            },                      {
                 validator: (formGroup) => {
                     return CustomValidators.multipleCheckboxValidator(formGroup);
-                }
+                },
             }),
             geographicalOrigin1: ['', Validators.required],
             geographicalOrigin2: [
                 { value: '', disabled: true },
-                Validators.required
+                Validators.required,
             ],
             totalFinancialAssetsAlreadyInvested: ['', Validators.required],
         });
         const bankingInformation = fb.group({
             kycID: '',
-            custodianHolders: fb.array([this.createHolder()])
+            custodianHolders: fb.array([this.createHolder()]),
         });
         const classificationInformation = fb.group({
             kycID: '',
@@ -340,7 +340,7 @@ export class NewRequestService {
                 numberYearsCurrentPosition: ['', Validators.required],
                 financialInstruments: ['', Validators.required],
                 financialInstrumentsSpecification: [
-                    { value: '', disabled: true }, Validators.required
+                    { value: '', disabled: true }, Validators.required,
                 ],
                 marketArea: ['', Validators.required],
                 natureTransactionPerYear: ['', Validators.required],
@@ -433,7 +433,7 @@ export class NewRequestService {
     }
 
     createDocumentFormGroup(name, optional = false) {
-        let group: any = {
+        const group: any = {
             name: '',
             kycDocumentID: '',
             type: name,
@@ -479,7 +479,7 @@ export class NewRequestService {
             }),
             investmentvehiclesAlreadyUsedSpecification: [
                 {
-                    value: '', disabled: true
+                    value: '', disabled: true,
                 }, Validators.required,
             ],
         });
@@ -489,7 +489,7 @@ export class NewRequestService {
         const natures = [];
         const length = amcs.length || 1;
 
-        for (let i = 0; i < length; i++) {
+        for (let i = 0; i < length; i += 1) {
             const id = amcs[i];
             natures.push(this.createInvestmentNature(id));
         }
@@ -503,30 +503,31 @@ export class NewRequestService {
             performanceProfile: this.formBuilder.group(this.transformToForm(this.performanceProfileList), {
                 validator: (formGroup) => {
                     return CustomValidators.multipleCheckboxValidator(formGroup);
-                }
+                },
             }),
             performanceProfileSpecification: [
                 {
                     value: '',
                     disabled: true,
                 },
-                this.getLengthValidator(255)
+                this.getLengthValidator(255),
             ],
             clientNeeds: this.formBuilder.group(this.transformToForm(this.clientNeedsList), {
                 validator: (formGroup) => {
                     return CustomValidators.multipleCheckboxValidator(formGroup);
-                }
+                },
             }),
             otherFinancialInformation: ['', Validators.maxLength(255)],
             investmentHorizonWanted: this.formBuilder.group(this.transformToForm(this.investmentHorizonList), {
                 validator: (formGroup) => {
                     return CustomValidators.multipleCheckboxValidator(formGroup);
-                }
+                },
             }),
             investmentHorizonWantedSpecificPeriod: [{ value: '', disabled: true }, Validators.required],
             riskProfile: ['', Validators.required],
             riskProfileCapital: [{ value: '', disabled: true }, Validators.required],
-            riskAcceptance: this.formBuilder.group({
+            riskAcceptance: this.formBuilder.group(
+                {
                     riskAcceptanceLevel1: '',
                     riskAcceptanceLevel2: '',
                     riskAcceptanceLevel3: '',
@@ -535,21 +536,21 @@ export class NewRequestService {
                 {
                     validator: (formGroup) => {
                         return ((formGroup) => {
-                            let level1 = formGroup.get('riskAcceptanceLevel1');
-                            let level2 = formGroup.get('riskAcceptanceLevel2');
-                            let level3 = formGroup.get('riskAcceptanceLevel3');
-                            let level4 = formGroup.get('riskAcceptanceLevel4');
+                            const level1 = formGroup.get('riskAcceptanceLevel1');
+                            const level2 = formGroup.get('riskAcceptanceLevel2');
+                            const level3 = formGroup.get('riskAcceptanceLevel3');
+                            const level4 = formGroup.get('riskAcceptanceLevel4');
 
-                            let riskAcceptanceLevel1 = level1.value;
-                            let riskAcceptanceLevel2 = level2.value;
-                            let riskAcceptanceLevel3 = level3.value;
-                            let riskAcceptanceLevel4 = level4.value;
+                            const riskAcceptanceLevel1 = level1.value;
+                            const riskAcceptanceLevel2 = level2.value;
+                            const riskAcceptanceLevel3 = level3.value;
+                            const riskAcceptanceLevel4 = level4.value;
 
-                            let total = riskAcceptanceLevel1 + riskAcceptanceLevel2 + riskAcceptanceLevel3 + riskAcceptanceLevel4;
-                            let valuesFilled = every([riskAcceptanceLevel1, riskAcceptanceLevel2, riskAcceptanceLevel3, riskAcceptanceLevel4], risk => {
-                                return !isNil(risk) && risk !== "";
+                            const total = riskAcceptanceLevel1 + riskAcceptanceLevel2 + riskAcceptanceLevel3 + riskAcceptanceLevel4;
+                            const valuesFilled = every([riskAcceptanceLevel1, riskAcceptanceLevel2, riskAcceptanceLevel3, riskAcceptanceLevel4], (risk) => {
+                                return !isNil(risk) && risk !== '';
                             });
-                            let required = level1.touched && level2.touched && level3.touched && level4.touched && !valuesFilled;
+                            const required = level1.touched && level2.touched && level3.touched && level4.touched && !valuesFilled;
 
                             if (total === 100) {
                                 return null;
@@ -558,21 +559,21 @@ export class NewRequestService {
                             return {
                                 total: true,
                                 required,
-                                unfilled: !valuesFilled
+                                unfilled: !valuesFilled,
                             };
                         })(formGroup);
-                    }
-                }
-            )
+                    },
+                },
+            ),
         });
     }
 
     createInvestmentObjectives(amcs) {
-        let objectives = [];
-        let length = amcs.length || 1;
+        const objectives = [];
+        const length = amcs.length || 1;
 
-        for (let i = 0; i < length; i++) {
-            let id = amcs[i];
+        for (let i = 0; i < length; i += 1) {
+            const id = amcs[i];
             objectives.push(this.createInvestmentObjective(id));
         }
 
@@ -588,18 +589,18 @@ export class NewRequestService {
             investmentDecisionsAdHocCommittee: '',
             investmentDecisionsAdHocCommitteeSpecification: [{
                 value: '',
-                disabled: true
+                disabled: true,
             }, this.getLengthValidator(255)],
-            otherPersonsAuthorised: ['', Validators.maxLength(255)]
+            otherPersonsAuthorised: ['', Validators.maxLength(255)],
         });
     }
 
     createConstraints(amcs) {
-        let constraints = [];
-        let length = amcs.length || 1;
+        const constraints = [];
+        const length = amcs.length || 1;
 
-        for (let i = 0; i < length; i++) {
-            let id = amcs[i];
+        for (let i = 0; i < length; i += 1) {
+            const id = amcs[i];
             constraints.push(this.createConstraint(id));
         }
 
@@ -707,9 +708,9 @@ export class NewRequestService {
     }
 
     transformToForm(list) {
-        let result = {};
+        const result = {};
 
-        list.forEach(element => {
+        list.forEach((element) => {
             result[element.id] = '';
         });
 
@@ -717,21 +718,21 @@ export class NewRequestService {
     }
 
     storeCurrentKycs(ids) {
-        let requestedKycs = setMyKycRequestedKycs(ids);
+        const requestedKycs = setMyKycRequestedKycs(ids);
         this.ngRedux.dispatch(requestedKycs);
     }
 
     async createMultipleDrafts(choices, connectedWallet) {
-        let ids = [];
+        const ids = [];
 
-        for (let choice of choices) {
-            await this.createDraft(choice, connectedWallet).then(response => {
-                let kycID = getValue(response, [1, 'Data', 0, 'kycID']);
-                let amcID = choice.id;
+        for (const choice of choices) {
+            await this.createDraft(choice, connectedWallet).then((response) => {
+                const kycID = getValue(response, [1, 'Data', 0, 'kycID']);
+                const amcID = choice.id;
 
                 ids.push({
                     kycID,
-                    amcID
+                    amcID,
                 });
             });
         }
@@ -745,7 +746,7 @@ export class NewRequestService {
             managementCompanyID: choice.id,
             investorWalletID: connectedWallet || 0,
             kycStatus: 0,
-            alreadyCompleted: choice.registered ? 1 : 0
+            alreadyCompleted: choice.registered ? 1 : 0,
         });
     }
 

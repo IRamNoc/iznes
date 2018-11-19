@@ -66,7 +66,7 @@ export class IdentificationService {
                 let data = pickBy(singleHolderValue);
                 data = Object.assign({}, data, { kycID });
 
-                const bankingPromise = this.sendRequestBanking(data).then(data => {
+                const bankingPromise = this.sendRequestBanking(data).then((data) => {
                     (formGroupBankingHolders as FormArray).at(key).get('custodianID').patchValue(data.custodianID);
                 });
                 promises.push(bankingPromise);
@@ -161,7 +161,7 @@ export class IdentificationService {
         return this.requestsService.sendRequest(messageBody);
     }
 
-    sendRequestBeneficiaries(formGroupBeneficiaries, kycID, connectedWallet){
+    sendRequestBeneficiaries(formGroupBeneficiaries, kycID, connectedWallet) {
         const promises = [];
 
         formGroupBeneficiaries.controls.forEach((formGroupBeneficiary) => {

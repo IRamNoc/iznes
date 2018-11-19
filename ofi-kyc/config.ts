@@ -34,5 +34,5 @@ export const kycEnums = {
             label: 'Awaiting Information',
             type: 'warning',
         },
-    }
+    },
 };

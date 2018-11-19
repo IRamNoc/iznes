@@ -32,7 +32,7 @@ export class BeneficiaryListComponent implements OnInit {
     set openModal(value) {
         this.isModalOpen = value;
 
-        if(value === 'naturalClose'){
+        if (value === 'naturalClose') {
             this.isModalOpen = false;
         }
 

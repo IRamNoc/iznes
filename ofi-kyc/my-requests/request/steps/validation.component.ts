@@ -116,14 +116,14 @@ export class NewKycValidationComponent implements OnInit, OnDestroy {
             .pipe(
                 takeUntil(this.unsubscribe),
             )
-            .subscribe(connectedWallet => {
+            .subscribe((connectedWallet) => {
                 this.connectedWallet = connectedWallet;
             });
     }
 
     getCompanyNames(requests, managementCompanyList) {
         this.amcs = [];
-        requests.forEach(request => {
+        requests.forEach((request) => {
             const company = find(managementCompanyList, ['companyID', request.amcID]);
             const companyName = getValue(company, 'companyName');
 
@@ -139,13 +139,12 @@ export class NewKycValidationComponent implements OnInit, OnDestroy {
     handleConfirm() {
         let bodyMessage;
 
-        if (this.amcs.length == 1) {
+        if (this.amcs.length === 1) {
             const companyName = getValue(this.amcs, ['0', 'companyName']);
-            bodyMessage = `<p>${this.translate.translate('<p>Your request has been successfully sent to @companyName@. Once they have validated your request, you will be able to start trading on IZNES using @companyName@\'s products.', { 'companyName': companyName })}</p>`; 
-        }
-        else {
+            bodyMessage = `<p>${this.translate.translate('<p>Your request has been successfully sent to @companyName@. Once they have validated your request, you will be able to start trading on IZNES using @companyName@\'s products.', { companyName })}</p>`;
+        } else {
             const companies = ['<ul>'];
-            this.amcs.forEach(amc => {
+            this.amcs.forEach((amc) => {
                 const companyText = `<li>${amc.companyName}</li>`;
                 companies.push(companyText);
             });
@@ -182,7 +181,7 @@ export class NewKycValidationComponent implements OnInit, OnDestroy {
             .pipe(
                 take(1),
             )
-            .subscribe(requests => {
+            .subscribe((requests) => {
                 this.validationService.sendRequest(this.form, requests, this.connectedWallet).then(() => {
                     this.handleConfirm();
                 });

@@ -238,12 +238,12 @@ export class CompanyInformationComponent implements OnInit, OnDestroy {
         }
 
         switch (value) {
-        case 'insurer':
-            form.get('regulatoryStatusInsurerType').enable();
-            break;
-        case 'other' :
-            form.get('regulatoryStatusListingOther').enable();
-            break;
+            case 'insurer':
+                form.get('regulatoryStatusInsurerType').enable();
+                break;
+            case 'other' :
+                form.get('regulatoryStatusListingOther').enable();
+                break;
         }
 
         this.formPercent.refreshFormPercent();

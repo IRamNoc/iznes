@@ -10,7 +10,7 @@ import { RiskProfileService } from '../risk-profile.service';
 
 @Component({
     selector: 'investment-constraint',
-    templateUrl: './investment-constraint.component.html'
+    templateUrl: './investment-constraint.component.html',
 })
 export class InvestmentConstraintComponent implements OnInit, OnDestroy {
     @ViewChild(FormPercentDirective) formPercent: FormPercentDirective;
@@ -28,7 +28,7 @@ export class InvestmentConstraintComponent implements OnInit, OnDestroy {
 
     constructor(
         private newRequestService: NewRequestService,
-        private riskProfileService: RiskProfileService
+        private riskProfileService: RiskProfileService,
     ) {
     }
 
@@ -42,12 +42,12 @@ export class InvestmentConstraintComponent implements OnInit, OnDestroy {
     getCurrentFormData() {
         this.riskProfileService.currentServerData.riskobjective
             .pipe(
-                takeUntil(this.unsubscribe)
+                takeUntil(this.unsubscribe),
             )
             .subscribe((data: any) => {
                 const cross = toNumber(data.constraintsSameInvestmentCrossAm);
-                if(cross){
-                    this.form.get('constraintsSameInvestmentCrossAm').patchValue(cross, {emitEvent: false});
+                if (cross) {
+                    this.form.get('constraintsSameInvestmentCrossAm').patchValue(cross, { emitEvent: false });
                     this.formCheckSameInvestmentCrossAm(cross);
                 }
             });
@@ -57,9 +57,9 @@ export class InvestmentConstraintComponent implements OnInit, OnDestroy {
         this.currentlyRequestedKycs$
             .pipe(
                 takeUntil(this.unsubscribe),
-                filter(requestedKycs => !isEmpty(requestedKycs))
+                filter(requestedKycs => !isEmpty(requestedKycs)),
             )
-            .subscribe(requestedKycs => {
+            .subscribe((requestedKycs) => {
                 this.amcs = values(requestedKycs);
                 this.updateCrossAM();
             });
@@ -74,14 +74,14 @@ export class InvestmentConstraintComponent implements OnInit, OnDestroy {
         ;
     }
 
-    updateCrossAM(){
+    updateCrossAM() {
         const value = this.form.get('constraintsSameInvestmentCrossAm').value;
 
         this.formCheckSameInvestmentCrossAm(value);
     }
 
     initFormCheck() {
-        this.form.get('constraintsSameInvestmentCrossAm').valueChanges.takeUntil(this.unsubscribe).subscribe(value => {
+        this.form.get('constraintsSameInvestmentCrossAm').valueChanges.takeUntil(this.unsubscribe).subscribe((value) => {
             this.riskProfileService.currentServerData.riskobjective.next('');
             this.formCheckSameInvestmentCrossAm(value);
         });
@@ -98,14 +98,14 @@ export class InvestmentConstraintComponent implements OnInit, OnDestroy {
     }
 
     generateConstraints(amcs = []) {
-        let constraints = this.newRequestService.createConstraints(amcs);
-        let constraintsControl = this.form.get('constraints');
-        let numberOfControls = constraintsControl.length;
+        const constraints = this.newRequestService.createConstraints(amcs);
+        const constraintsControl = this.form.get('constraints');
+        const numberOfControls = constraintsControl.length;
 
-        for (let i = numberOfControls; i >= 0; i--) {
+        for (let i = numberOfControls; i >= 0; i -= 1) {
             constraintsControl.removeAt(i);
         }
-        constraints.forEach(constraint => {
+        constraints.forEach((constraint) => {
             constraintsControl.push(constraint);
         });
     }
@@ -119,7 +119,7 @@ export class InvestmentConstraintComponent implements OnInit, OnDestroy {
     }
 
     isDisabled(path) {
-        let control = this.form.get(path);
+        const control = this.form.get(path);
 
         return control.disabled;
     }

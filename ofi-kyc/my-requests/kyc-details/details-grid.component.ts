@@ -4,7 +4,7 @@ import { KycDetailsService } from './details.service';
 @Component({
     selector: 'kyc-details-grid',
     templateUrl: './details-grid.component.html',
-    styleUrls : ['./details-grid.component.scss']
+    styleUrls : ['./details-grid.component.scss'],
 })
 export class KycDetailsGridComponent {
     @Input() data;
@@ -12,8 +12,8 @@ export class KycDetailsGridComponent {
     @Output() open: EventEmitter<string> = new EventEmitter();
 
     constructor(
-        private kycDetailsService : KycDetailsService
-    ){}
+        private kycDetailsService : KycDetailsService,
+    ) {}
 
     openBeneficiaries($event) {
         $event.preventDefault();

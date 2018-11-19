@@ -42,7 +42,7 @@ export class KycDetailsStakeholdersComponent implements OnInit {
         this.getUserID();
     }
 
-    getUserID(){
+    getUserID() {
         this.user$.pipe(
             filter(userID => !!userID),
             take(1),

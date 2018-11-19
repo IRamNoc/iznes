@@ -23,7 +23,6 @@ export class NewKycRequestComponent implements OnInit {
     @select(['ofi', 'ofiKyc', 'myKycList', 'kycList']) myKycList$;
     @select(['ofi', 'ofiProduct', 'ofiManagementCompany', 'investorManagementCompanyList', 'investorManagementCompanyList']) managementCompanyList$;
 
-
     unsubscribe: Subject<any> = new Subject();
     stepsConfig: any;
     forms: any = {};
@@ -123,9 +122,9 @@ export class NewKycRequestComponent implements OnInit {
     initSubscriptions() {
         this.requests$
         .pipe(
-            takeUntil(this.unsubscribe)
+            takeUntil(this.unsubscribe),
         )
-        .subscribe(amcs => {
+        .subscribe((amcs) => {
             this.newRequestService.getContext(amcs);
         })
         ;
@@ -163,20 +162,20 @@ export class NewKycRequestComponent implements OnInit {
                     title: this.translate.translate('Identification'),
                     id: 'step-identification',
                     form: this.forms.get('identification'),
-                    startHere: completedStep === 'introduction'
+                    startHere: completedStep === 'introduction',
                 },
                 {
                     title: this.translate.translate('Risk profile'),
                     id: 'step-risk-profile',
                     form: this.forms.get('riskProfile'),
-                    startHere: completedStep === 'identification'
+                    startHere: completedStep === 'identification',
                 },
                 {
                     title: this.translate.translate('Documents'),
                     id: 'step-documents',
                     form: this.forms.get('documents'),
-                    startHere: completedStep === 'riskProfile'
-                }
+                    startHere: completedStep === 'riskProfile',
+                },
             ];
         }
 
@@ -184,15 +183,15 @@ export class NewKycRequestComponent implements OnInit {
             {
                 title: this.translate.translate('Selection'),
                 form: this.forms.get('selection'),
-                id: 'step-selection'
+                id: 'step-selection',
             },
             ...extraSteps,
             {
                 title: this.translate.translate('Validation'),
                 id: 'step-validation',
                 form: this.forms.get('validation'),
-                startHere: this.fullForm ? completedStep === 'documents' : completedStep === 'amcSelection'
-            }
+                startHere: this.fullForm ? completedStep === 'documents' : completedStep === 'amcSelection',
+            },
         ];
     }
 

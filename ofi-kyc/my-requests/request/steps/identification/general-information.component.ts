@@ -12,7 +12,7 @@ import { IdentificationService } from '../identification.service';
 
 @Component({
     selector: 'general-information',
-    templateUrl: './general-information.component.html'
+    templateUrl: './general-information.component.html',
 })
 export class GeneralInformationComponent implements OnInit, OnDestroy {
     @ViewChild(FormPercentDirective) formPercent: FormPercentDirective;
@@ -29,7 +29,7 @@ export class GeneralInformationComponent implements OnInit, OnDestroy {
 
     constructor(
         private newRequestService: NewRequestService,
-        private identificationService: IdentificationService
+        private identificationService: IdentificationService,
     ) {
     }
 
@@ -106,7 +106,7 @@ export class GeneralInformationComponent implements OnInit, OnDestroy {
     }
 
     isDisabled(path) {
-        let control = this.form.get(path);
+        const control = this.form.get(path);
 
         return control.disabled;
     }
@@ -116,11 +116,11 @@ export class GeneralInformationComponent implements OnInit, OnDestroy {
             .pipe(
                 filter(requests => !isEmpty(requests)),
                 map(requests => castArray(requests[0])),
-                takeUntil(this.unsubscribe)
+                takeUntil(this.unsubscribe),
             )
-            .subscribe(requests => {
-                requests.forEach(request => {
-                    this.identificationService.getCurrentFormGeneralData(request.kycID).then(formData => {
+            .subscribe((requests) => {
+                requests.forEach((request) => {
+                    this.identificationService.getCurrentFormGeneralData(request.kycID).then((formData) => {
                         if (formData) {
                             this.form.patchValue(formData);
                         }

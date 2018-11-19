@@ -10,7 +10,7 @@ import { RiskProfileService } from '../risk-profile.service';
 
 @Component({
     selector: 'investment-objective',
-    templateUrl: './investment-objective.component.html'
+    templateUrl: './investment-objective.component.html',
 })
 export class InvestmentObjectiveComponent implements OnInit, OnDestroy {
     @ViewChild(FormPercentDirective) formPercent: FormPercentDirective;
@@ -23,7 +23,7 @@ export class InvestmentObjectiveComponent implements OnInit, OnDestroy {
 
     constructor(
         private newRequestService: NewRequestService,
-        private riskProfileService: RiskProfileService
+        private riskProfileService: RiskProfileService,
     ) {
     }
 
@@ -43,8 +43,8 @@ export class InvestmentObjectiveComponent implements OnInit, OnDestroy {
             .pipe(takeUntil(this.unsubscribe))
             .subscribe((data: any) => {
                 const cross = toNumber(data.objectivesSameInvestmentCrossAm);
-                if(cross){
-                    this.form.get('objectivesSameInvestmentCrossAm').patchValue(cross, {emitEvent: false});
+                if (cross) {
+                    this.form.get('objectivesSameInvestmentCrossAm').patchValue(cross, { emitEvent: false });
                     this.formCheckSameInvestmentCrossAm(cross);
                 }
             });
@@ -54,9 +54,9 @@ export class InvestmentObjectiveComponent implements OnInit, OnDestroy {
         this.currentlyRequestedKycs$
             .pipe(
                 takeUntil(this.unsubscribe),
-                filter(requestedKycs => !isEmpty(requestedKycs))
+                filter(requestedKycs => !isEmpty(requestedKycs)),
             )
-            .subscribe(requestedKycs => {
+            .subscribe((requestedKycs) => {
                 this.amcs = values(requestedKycs);
                 this.updateCrossAM();
             });
@@ -88,20 +88,20 @@ export class InvestmentObjectiveComponent implements OnInit, OnDestroy {
     }
 
     generateObjectives(amcs = []) {
-        let objectives = this.newRequestService.createInvestmentObjectives(amcs);
-        let objectivesControl = this.form.get('objectives');
-        let numberOfControls = objectivesControl.length;
+        const objectives = this.newRequestService.createInvestmentObjectives(amcs);
+        const objectivesControl = this.form.get('objectives');
+        const numberOfControls = objectivesControl.length;
 
         for (let i = numberOfControls; i > 0; i -= 1) {
             objectivesControl.removeAt(i - 1);
         }
 
-        objectives.forEach(objective => {
+        objectives.forEach((objective) => {
             objectivesControl.push(objective);
         });
     }
 
-    refreshForm(){
+    refreshForm() {
         this.formPercent.refreshFormPercent();
     }
 
