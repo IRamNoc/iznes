@@ -46,7 +46,7 @@
     <div class="modal-title">{{'Make a new request' | translate}}</div>
     <div class="modal-body">
 
-        <div class="p-1">
+        <div class="pb-1">
             <clr-alert [clrAlertSizeSmall]="true" [clrAlertType]="'alert-info'" [clrAlertClosable]="false">
                 <div class="alert-item">
                     <span class="alert-text">
@@ -56,7 +56,7 @@
             </clr-alert>
         </div>
 
-        <form [formGroup]="choices" class="mb-3">
+        <form [formGroup]="choices">
             <div class="radio-inline opt-btn-element">
                 <input type="radio" id="opt-type-scratch" value="scratch" formControlName="choice">
                 <label for="opt-type-scratch">{{'Make a request from scratch' | translate}}</label>
