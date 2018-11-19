@@ -28,25 +28,19 @@
             </div>
             <div class="col-md-6 text-center box-container">
                 <div class="col-xl-12 inner">
-                    <!--LOGIN FORM-->
                     <ng-container *ngIf="(!showModal && !resetPassword && !showTwoFactorModal) || resetTwoFactorToken; then loginFormTemplate"></ng-container>
-                    <!--RESET PASSWORD REQUEST-->
                     <ng-container *ngIf="showModal && (!emailSent || isTokenExpired && !emailSent) && !changePassword; then resetPasswordRequestTemplate"></ng-container>
-                    <!--EMAIL SENT-->
                     <ng-container *ngIf="showModal && emailSent && !changePassword; then emailSentTemplate"></ng-container>
-                    <!--CHANGE PASSWORD FORM-->
                     <ng-container *ngIf="showModal && changePassword; then changePasswordFormTemplate"></ng-container>
-                    <!--MUST CHANGE PASSWORD-->
                     <ng-container *ngIf="resetPassword; then resetPasswordFormTemplate"></ng-container>
-                    <!--TWO-FACTOR-->
                     <ofi-two-factor
                         *ngIf="showTwoFactorModal"
                         [qrCode]="qrCode"
                         (modalCancelled)="showTwoFactorModal=!$event; showResetTwoFactor=!$event"
                         [resetToken]="resetTwoFactorToken"
                         [showReset]="showResetTwoFactor"
-                        (verifiedToken)="resetTwoFactorToken=''; logIt('verifiedToken')"
-                        (clearToken)="resetTwoFactorToken='';  logIt('clearToken')">
+                        (verifiedToken)="resetTwoFactorToken=''; twoFactorResetVerified=true"
+                        (clearToken)="resetTwoFactorToken=''">
                     </ofi-two-factor>
                     <!--BOX FOOTER-->
                     <div class="row">
@@ -71,7 +65,7 @@
                             <a *ngIf="!showModal && !resetPassword && !showTwoFactorModal" id="forgotten-password-link" class="reset-link" (click)="showFPModal()">
                                 {{ 'Forgot your password?' | translate }}
                             </a>
-                            <a *ngIf="showTwoFactorModal && !showResetTwoFactor" id="reset-two-factor-link" class="reset-link" (click)="showResetTwoFactor=true">
+                            <a *ngIf="showTwoFactorModal && !showResetTwoFactor && !twoFactorResetVerified && !qrCode" id="reset-two-factor-link" class="reset-link" (click)="showResetTwoFactor=true">
                                 {{ 'Lost access to your code?' | translate }}
                             </a>
                         </div>

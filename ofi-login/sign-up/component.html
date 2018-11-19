@@ -93,7 +93,7 @@
                                     <div *ngIf="hasError('passwordConfirm', 'required')" class="field-error">
                                         {{ 'Field is required' | translate }}
                                     </div>
-                                    <div *ngIf="hasError('', 'mismatch') && isTouched('password') && isTouched('passwordConfirm')" class="field-error force-display-error">
+                                    <div *ngIf="hasError('', 'mismatch') && isTouched('password') && isTouched('passwordConfirm') && !hasError('passwordConfirm', 'required')" class="field-error force-display-error">
                                         {{ 'Passwords do not match' | translate }}
                                     </div>
                                 </div>

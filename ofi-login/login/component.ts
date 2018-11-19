@@ -27,6 +27,7 @@ export class OfiLoginComponent extends SetlLoginComponent {
     public showLogin: boolean = false;
     public showPassword: boolean = false;
     public showResetTwoFactor: boolean = false;
+    public twoFactorResetVerified: boolean = false;
 
     ngAfterViewInit() {
         setTimeout(
