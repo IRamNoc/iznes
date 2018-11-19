@@ -1365,7 +1365,7 @@ export const controlToName = {
     leiCode: 'LEI Code',
     otherIdentificationNumber: 'Other identification number type',
     otherIdentificationNumberText: 'Other identification number',
-    registeredCompanyAddressLine1: "Registered company's headquarters address (including country)",
+    registeredCompanyAddressLine1: "Registered company's headquarters address",
     registeredCompanyAddressLine2: 'Address line 2',
     registeredCompanyZipCode: 'ZIP Code',
     registeredCompanyCity: 'City',
@@ -1384,7 +1384,7 @@ export const controlToName = {
 
     // Company
     sectorActivity: 'Primary sector of activity',
-    sectorActivityText: 'Sector of activity',
+    sectorActivityText: 'Primary sector of activity specification',
     activities: 'Management in behalf of',
     ownAccountinvestor: 'Own-account for',
     investorOnBehalfThirdParties: 'Third parties type',
