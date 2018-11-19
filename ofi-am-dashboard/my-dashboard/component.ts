@@ -1,14 +1,13 @@
 // Vendor
-import {ChangeDetectionStrategy, ChangeDetectorRef, Component, OnDestroy, OnInit, AfterViewInit} from '@angular/core';
-import {FormGroup, FormControl, Validators} from '@angular/forms';
-import {fromJS} from 'immutable';
-import {SagaHelper} from '@setl/utils';
-import {Subscription} from 'rxjs';
-import {select, NgRedux} from '@angular-redux/store';
+import { ChangeDetectionStrategy, ChangeDetectorRef, Component, OnDestroy, OnInit, AfterViewInit } from '@angular/core';
+import { FormGroup, FormControl, Validators } from '@angular/forms';
+import { fromJS } from 'immutable';
+import { Subscription } from 'rxjs';
+import { select, NgRedux } from '@angular-redux/store';
 import * as _ from 'lodash';
 
 /* Selectors */
-import {getOfiUserIssuedAssets} from '@ofi/ofi-main/ofi-store';
+import { getOfiUserIssuedAssets } from '@ofi/ofi-main/ofi-store';
 
 /* Core redux imports. */
 import {
@@ -19,28 +18,27 @@ import {
 } from '@setl/core-store';
 
 /* Ofi corp service. */
-import {OfiCorpActionService} from '../../ofi-req-services/ofi-corp-actions/service';
-import {OfiAmDashboardService} from '../../ofi-req-services/ofi-am-dashboard/service';
-import {OfiNavService} from '../../ofi-req-services/ofi-product/nav/service';
+import { OfiCorpActionService } from '../../ofi-req-services/ofi-corp-actions/service';
+import { OfiAmDashboardService } from '../../ofi-req-services/ofi-am-dashboard/service';
+import { OfiNavService } from '../../ofi-req-services/ofi-product/nav/service';
 
 /* Alert service. */
-import {AlertsService} from '@setl/jaspero-ng2-alerts';
-
-import {WalletNodeRequestService, MyWalletsService, InitialisationService} from '@setl/core-req-services';
+import { AlertsService } from '@setl/jaspero-ng2-alerts';
+import { WalletNodeRequestService, MyWalletsService, InitialisationService } from '@setl/core-req-services';
 
 /* Utils. */
 import {
     NumberConverterService,
     immutableHelper,
     commonHelper,
-    LogService
+    LogService,
 } from '@setl/utils';
 import * as math from 'mathjs';
 
 @Component({
     selector: 'core-am-dashboard',
     templateUrl: './component.html',
-    changeDetection: ChangeDetectionStrategy.OnPush
+    changeDetection: ChangeDetectionStrategy.OnPush,
 })
 
 export class MyDashboardComponent implements OnInit, AfterViewInit, OnDestroy {
@@ -75,22 +73,22 @@ export class MyDashboardComponent implements OnInit, AfterViewInit, OnDestroy {
     @select(['wallet', 'myWalletAddress', 'requestedAddressList']) requestedAddressListOb;
     @select(['wallet', 'myWalletAddress', 'requestedLabel']) requestedLabelListOb;
 
-    constructor(private _ngRedux: NgRedux<any>,
-                private _changeDetectorRef: ChangeDetectorRef,
+    constructor(private ngRedux: NgRedux<any>,
+                private changeDetectorRef: ChangeDetectorRef,
                 private alertsService: AlertsService,
                 private ofiCorpActionService: OfiCorpActionService,
                 private ofiAmDashboardService: OfiAmDashboardService,
                 private walletNodeRequestService: WalletNodeRequestService,
-                private _numberConverterService: NumberConverterService,
+                private numberConverterService: NumberConverterService,
                 private logService: LogService,
-                private _myWalletService: MyWalletsService) {
+                private myWalletService: MyWalletsService) {
         /* Assign the fund share form. */
         this.fundShareForm = new FormGroup({
-            'selectFund': new FormControl(0)
-        })
+            selectFund: new FormControl(0),
+        });
 
         /* Subscribe to wallet holdings. */
-        this.subscriptions['wallet-holdings'] = this.walletHoldingRequestedStateOb.subscribe((requested) => this.requestWalletHolding(requested));
+        this.subscriptions['wallet-holdings'] = this.walletHoldingRequestedStateOb.subscribe(requested => this.requestWalletHolding(requested));
     }
 
     public ngOnInit() {
@@ -134,9 +132,8 @@ export class MyDashboardComponent implements OnInit, AfterViewInit, OnDestroy {
         this.ofiAmDashboardService.getFundManagerAssets().then((response) => {
             /* Ok, let's save and filter the list. */
             this.logService.log(' |--- getFundManagerAssets: ', response);
-            let
-                fundAssetList = response[1].Data,
-                sortedByCompany = {};
+            const fundAssetList = response[1].Data;
+            const sortedByCompany = {};
 
             /* Check it's there.... */
             if (fundAssetList) {
@@ -148,11 +145,11 @@ export class MyDashboardComponent implements OnInit, AfterViewInit, OnDestroy {
 
                     /* Build the new structure. */
                     sortedByCompany[asset.companyName][asset.asset] = {
-                        'price': asset.price,
-                        'navDate': asset.navDate,
-                        'companyId': asset.managementCompanyID,
-                        'companyName': asset.companyName
-                    }
+                        price: asset.price,
+                        navDate: asset.navDate,
+                        companyId: asset.managementCompanyID,
+                        companyName: asset.companyName,
+                    };
                 }
 
                 this.fundAssetList = sortedByCompany;
@@ -160,18 +157,17 @@ export class MyDashboardComponent implements OnInit, AfterViewInit, OnDestroy {
                 /* Default the array with the any selection. */
                 this.filteredFundAssetList = [{
                     id: '0',
-                    text: 'All'
+                    text: 'All',
                 }];
 
                 /* Now let's also push a UI object into the filtered list for each company. */
-                let i = 1;
                 for (const company in sortedByCompany) {
                     /* If the company name isn't null and it has assets... */
-                    if (company !== "null" && Object.keys(sortedByCompany[company]).length > 0) {
+                    if (company !== 'null' && Object.keys(sortedByCompany[company]).length > 0) {
                         /* ...push into the filtered list. */
                         this.filteredFundAssetList.push({
                             id: sortedByCompany[company][Object.keys(sortedByCompany[company])[0]].companyId,
-                            text: company
+                            text: company,
                         });
                     }
                 }
@@ -183,26 +179,26 @@ export class MyDashboardComponent implements OnInit, AfterViewInit, OnDestroy {
             this.logService.log('failed to getFundManagerAssets: ', error);
         });
 
-        this.subscriptions['requested-address-list'] = this.requestedAddressListOb.subscribe(requested => {
+        this.subscriptions['requested-address-list'] = this.requestedAddressListOb.subscribe((requested) => {
             this.requestAddressList(requested);
         });
 
-        this.subscriptions['address-list'] = this.addressListOb.subscribe((addressList) => this.updateAddressList(addressList));
+        this.subscriptions['address-list'] = this.addressListOb.subscribe(addressList => this.updateAddressList(addressList));
 
         this.subscriptions['requested-label-list'] = this.requestedLabelListOb.subscribe(requested => this.requestWalletLabel(requested));
     }
 
     public ngAfterViewInit() {
         /* State. */
-        let state = this._ngRedux.getState();
+        const state = this.ngRedux.getState();
 
         /* Check if we need to request the user issued assets. */
-        let userIssuedAssetsList = getOfiUserIssuedAssets(state);
+        const userIssuedAssetsList = getOfiUserIssuedAssets(state);
         if (!userIssuedAssetsList.length) {
             /* If the list is empty, request it. */
             this.ofiCorpActionService.getUserIssuedAssets().then(() => {
                 /* Redux subscription handles setting the property. */
-                this._changeDetectorRef.detectChanges();
+                this.changeDetectorRef.detectChanges();
             }).catch((error) => {
                 /* Handle error. */
                 this.showError('Failed to get your issued assets.');
@@ -214,18 +210,16 @@ export class MyDashboardComponent implements OnInit, AfterViewInit, OnDestroy {
     }
 
     requestWalletLabel(requestedState) {
-
         this.logService.log('checking requested', this.requestedWalletAddress);
         // If the state is false, that means we need to request the list.
         if (!requestedState && this.connectedWalletId !== 0) {
 
-            MyWalletsService.defaultRequestWalletLabel(this._ngRedux, this._myWalletService, this.connectedWalletId);
+            MyWalletsService.defaultRequestWalletLabel(this.ngRedux, this.myWalletService, this.connectedWalletId);
         }
     }
 
-
     updateAddressList(addressList) {
-        this.logService.log(" | UPDATED ADDRESSES: ", addressList);
+        this.logService.log(' | UPDATED ADDRESSES: ', addressList);
         this.addressList = addressList;
 
         // Update the lable in fundStat in there is any.
@@ -239,10 +233,10 @@ export class MyDashboardComponent implements OnInit, AfterViewInit, OnDestroy {
         // If the state is false, that means we need to request the list.
         if (!requestedState && this.connectedWalletId !== 0) {
             // Set the state flag to true. so we do not request it again.
-            this._ngRedux.dispatch(setRequestedWalletAddresses());
+            this.ngRedux.dispatch(setRequestedWalletAddresses());
 
             // Request the list.
-            InitialisationService.requestWalletAddresses(this._ngRedux, this.walletNodeRequestService, this.connectedWalletId);
+            InitialisationService.requestWalletAddresses(this.ngRedux, this.walletNodeRequestService, this.connectedWalletId);
         }
     }
 
@@ -256,7 +250,7 @@ export class MyDashboardComponent implements OnInit, AfterViewInit, OnDestroy {
     public handleCompanySelection(): void {
         this.logService.log(' |---- Handle Fund Selection');
         /* Ok... get the selected form. */
-        let fundShareFormValue = this.fundShareForm.value;
+        const fundShareFormValue = this.fundShareForm.value;
 
         /* Fail safely if nothing was select. */
         if (!fundShareFormValue.selectFund.length) return;
@@ -276,31 +270,28 @@ export class MyDashboardComponent implements OnInit, AfterViewInit, OnDestroy {
             if (!this.walletHoldingsByAsset[this.connectedWalletId]) {
                 continue;
             }
-
-
             /*  Get holdings. */
             const holdings = this.walletHoldingsByAsset[this.connectedWalletId][asset];
             this.logService.log(' | holdings: ', holdings);
             this.logService.log(' | asset: ', assets[asset]);
 
             if (holdings) {
-                let address, addresses = [];
                 this.logService.log(' | holdings.breakdown: ', holdings.breakdown);
                 this.logService.log(' | this.addressList: ', this.addressList);
-                for (address of Object.keys(holdings.breakdown)) {
+                for (const address of Object.keys(holdings.breakdown)) {
                     const thisAddressBalance = holdings.breakdown[address][0];
 
                     this.fundStats.assets.push({
-                        'asset': asset,
-                        'address': address,
-                        'walletName': '',
-                        'assetManager': assets[asset].companyName,
-                        'estimatedAmount': math.round((this._numberConverterService.toFrontEnd(thisAddressBalance) * this._numberConverterService.toFrontEnd(assets[asset].price)), 2),
-                        'quantity': this._numberConverterService.toFrontEnd(thisAddressBalance),
-                        'ratio': 0, // Get's set just below (total needs to be calculated first).
+                        asset,
+                        address,
+                        walletName: '',
+                        assetManager: assets[asset].companyName,
+                        estimatedAmount: math.round((this.numberConverterService.toFrontEnd(thisAddressBalance) * this.numberConverterService.toFrontEnd(assets[asset].price)), 2),
+                        quantity: this.numberConverterService.toFrontEnd(thisAddressBalance),
+                        ratio: 0, // Get's set just below (total needs to be calculated first).
                     });
 
-                    totalHoldings += this._numberConverterService.toFrontEnd(thisAddressBalance);
+                    totalHoldings += this.numberConverterService.toFrontEnd(thisAddressBalance);
                 }
             }
         }
@@ -315,7 +306,7 @@ export class MyDashboardComponent implements OnInit, AfterViewInit, OnDestroy {
         this.showStats = true;
 
         /* Detect changes. */
-        this._changeDetectorRef.detectChanges();
+        this.changeDetectorRef.detectChanges();
         /* Return. */
         return;
     }
@@ -373,15 +364,15 @@ export class MyDashboardComponent implements OnInit, AfterViewInit, OnDestroy {
      */
     getAssetsByCompanyName(name: string): any {
         /* Variables. */
-        let load = {};
+        const load = {};
 
         /* If no name. */
         if (!name) return load;
 
         /* Check if all. */
-        if (name == "All") {
+        if (name === 'All') {
             for (const cname in this.fundAssetList) {
-                if (cname == "null") continue;
+                if (cname === 'null') continue;
                 for (const asset in this.fundAssetList[cname]) {
                     load[asset] = this.fundAssetList[cname][asset];
                 }
@@ -390,8 +381,8 @@ export class MyDashboardComponent implements OnInit, AfterViewInit, OnDestroy {
         /* ...else individual. */
         else {
             for (const cname in this.fundAssetList) {
-                if (cname == "null") continue;
-                if (cname == name) {
+                if (cname === 'null') continue;
+                if (cname === name) {
                     for (const asset in this.fundAssetList[cname]) {
                         load[asset] = this.fundAssetList[cname][asset];
                     }
@@ -412,15 +403,15 @@ export class MyDashboardComponent implements OnInit, AfterViewInit, OnDestroy {
      */
     private requestWalletIssueHolding(issuer, instrument, walletId = 0) {
         /* Ok, let's build a nice request object. */
-        let request: any = {};
+        const request: any = {};
         request['walletId'] = walletId == 0 ? this.connectedWalletId : walletId;
         request['issuer'] = issuer;
         request['instrument'] = instrument;
 
         /* Send the request and return the promise. */
         return this.ofiAmDashboardService.buildRequest({
-            'taskPipe': this.walletNodeRequestService.requestWalletIssueHolding(request),
-            'successActions': SET_ISSUE_HOLDING,
+            taskPipe: this.walletNodeRequestService.requestWalletIssueHolding(request),
+            successActions: SET_ISSUE_HOLDING,
         });
     }
 
@@ -428,9 +419,9 @@ export class MyDashboardComponent implements OnInit, AfterViewInit, OnDestroy {
         // If the state is false, that means we need to request the list.
         if (!requestedState) {
             // Set the state flag to true. so we do not request it again.
-            this._ngRedux.dispatch(setRequestedWalletHolding());
+            this.ngRedux.dispatch(setRequestedWalletHolding());
             this.logService.log('this.connectedWalletId', this.connectedWalletId);
-            InitialisationService.requestWalletHolding(this._ngRedux, this.walletNodeRequestService, this.connectedWalletId);
+            InitialisationService.requestWalletHolding(this.ngRedux, this.walletNodeRequestService, this.connectedWalletId);
         }
     }
 
@@ -454,7 +445,7 @@ export class MyDashboardComponent implements OnInit, AfterViewInit, OnDestroy {
         }
 
         /* Detect changes. */
-        this._changeDetectorRef.detectChanges();
+        this.changeDetectorRef.detectChanges();
 
         /* Return. */
         return;
@@ -499,15 +490,15 @@ export class MyDashboardComponent implements OnInit, AfterViewInit, OnDestroy {
      * @returns {string}
      */
     private numPad(num) {
-        return num < 10 ? "0" + num : num;
+        return num < 10 ? '0' + num : num;
     }
 
     ngOnDestroy(): void {
         /* Detach the change detector on destroy. */
-        this._changeDetectorRef.detach();
+        this.changeDetectorRef.detach();
 
         /* Unsunscribe Observables. */
-        for (var key in this.subscriptions) {
+        for (const key in this.subscriptions) {
             this.subscriptions[key].unsubscribe();
         }
     }
@@ -580,5 +571,4 @@ export class MyDashboardComponent implements OnInit, AfterViewInit, OnDestroy {
               </table>
           `);
     }
-
 }

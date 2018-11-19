@@ -30,7 +30,10 @@
                                 <clr-dg-cell id="access_slider_row_{{i}}">
                                     <div class="switch-container">
                                         <label class="switch">
-                                            <input type="checkbox" id="access_slider_{{i}}" [formControl]="item.statusFormControl" (change)="handleAccessChange($event)">
+                                            <input type="checkbox" 
+                                                    id="access_slider_{{i}}" 
+                                                    [formControl]="item.statusFormControl" 
+                                                    (change)="handleAccessChange($event)">
                                             <span class="slider round"></span>
                                         </label>
                                     </div>
