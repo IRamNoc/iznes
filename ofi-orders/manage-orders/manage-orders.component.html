@@ -132,7 +132,7 @@
                                 <div class="panel-body" [class.hidden]="!isOptionalFiltersVisible">
                                     <div class="row">
                                         <div class="form-group col-sm-3">
-                                            <label>{{ 'Order Ref' | translate}}
+                                            <label>{{ 'Order Reference' | translate}}
 
                                             </label>
                                             <div class="input-button-group">
@@ -235,7 +235,7 @@
 
                 <clr-datagrid (clrDgRefresh)="refresh($event)" [clrDgLoading]="loading" clrDgSortIcon #ordersDataGrid>
                     <clr-dg-column [clrDgField]="'orderRef'" clrDgSortIcon clrDgSortNoSearch id="Order-REF">
-                        <ng-container *clrDgHideableColumn="{hidden: false}">{{ 'Order Ref' | translate }}
+                        <ng-container *clrDgHideableColumn="{hidden: false}">{{ 'Order Reference' | translate }}
                             <span class="column-label"></span>
                         </ng-container>
                     </clr-dg-column>

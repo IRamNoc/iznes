@@ -2,9 +2,7 @@
     <!-- Breadcrumbs. -->
     <div class="header-breadcrumbs">
         <h1 id="ofi-client-referential"><i class="fa fa-users"></i>
-            {{ 'Client Referential' | translate }}
-            <span *ngIf="kycId == ''">: {{ 'All Clients' | translate }}</span>
-            <span *ngIf="kycId != '' && !!clients[kycId]">: {{clients[kycId].companyName}} - {{clients[kycId].clientReference}}</span>
+            {{ 'Client Referential' | translate }}<span *ngIf="kycId == ''">: {{ 'All Clients' | translate }}</span><span *ngIf="kycId != '' && !!clients[kycId]">: {{clients[kycId].companyName}} - {{clients[kycId].clientReference}}</span>
         </h1>
     </div>
 
@@ -16,7 +14,7 @@
             <clr-tab-content>
                 <div class="row">
                     <div class="col-sm-6">
-                        {{ 'Please find below the list of your clients.' | translate }}
+                        {{ 'Please find below the list of your clients' | translate }}
                     </div>
                     <div class="col-sm-6" align="right">
                         {{ 'From here you will also be able to invite more investors to join IZNES' | translate }}
@@ -25,17 +23,22 @@
                 </div>
                 <div class="row">
                     <div class="col-sm-6">
-                        <p>{{ 'Investor Type' | translate }}</p>
                         <form [formGroup]="investorTypeForm">
-                            <ng-select
-                                id="investor-type-select"
-                                class="form-control"
-                                [items]="investorTypes"
-                                [allowClear]="true"
-                                [placeholder]="translate.translate('Select')"
-                                formControlName="investorType">
-                            </ng-select>
-                        </form>
+                            <div class="form-group col-sm-6">
+                                <label for="investor-type-select" class="control-label">
+                                    {{ 'Investor Type' | translate }}
+                                </label>
+                                
+                                <ng-select
+                                    id="investor-type-select"
+                                    class="form-control"
+                                    [items]="investorTypes"
+                                    [allowClear]="true"
+                                    [placeholder]="translate.translate('Select')"
+                                    formControlName="investorType">
+                                </ng-select>
+                            </div>    
+                         </form>
                     </div>
                     <div class="col-sm-6" align="right">
                         <p>&nbsp;</p>
@@ -146,7 +149,7 @@
 
                     <div class="row">
                         <div class="col-sm-12" style="margin-top: 0.5rem">
-                            <p>{{ 'Please find below the information and documents provided by @companyName@ during the KYC application to your company.' | translate: {'companyName': companyName} }}</p>
+                            <p>{{ 'Please find below the information and documents provided by @companyName@ during the KYC application to your company.' | translate: { 'companyName': companyName} }}</p>
                         </div>
                     </div>
                     <kyc-details [kycID]="kycId"></kyc-details>
@@ -162,7 +165,7 @@
             <clr-tab-content *clrIfActive="isPortfolioManager() ? true : false">
                 <div class="row">
                     <div class="col-sm-6" style="margin-top: 0.5rem">
-                        <p>{{ 'Please find below the authorisation of @companyName@ regarding your shares.' | translate: {'companyName': companyName} }}</p>
+                        <p>{{ 'Please find below the authorisation of @companyName@ regarding your shares.' | translate: { 'companyName': companyName } }}</p>
                     </div>
                     <div class="col-sm-6" align="right">
                         <button class="btn btn-primary" (click)="changePage('audit')">{{ 'View Previous Updates' | translate }}</button>
@@ -176,7 +179,7 @@
             <clr-tab-content>
                 <div class="row">
                     <div class="col-sm-6" style="margin-top: 0.5rem">
-                        <p>{{ 'Please find below @companyName@\'s holding details:' | translate: {'companyName': companyName} }}</p>
+                        <p>{{ 'Please find below @companyName@\'s holding details:' | translate: { 'companyName': companyName} }}</p>
                     </div>
                     <div class="col-sm-6" align="right">
                         <button class="btn btn-primary" (click)="downloadSingleHoldingsCSVFile()">{{ 'Export Holdings' | translate }}</button>
@@ -246,7 +249,7 @@
                 <form [formGroup]="searchForm" id="search-audit-form" (keydown.enter)="$event.preventDefault()">
                     <div class="row bordered">
                         <div class="form-group col-sm-3">
-                            <label>{{ 'Search an Investor' | translate }}</label>
+                            <label for="audit-search-investor">{{ 'Search an Investor' | translate }}</label>
                             <div class="input-button-group">
                                 <input id="audit-search-investor" 
                                         [formControl]="searchForm.controls['searchInvestor']" 

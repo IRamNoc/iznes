@@ -6,7 +6,6 @@ import { combineLatest } from 'rxjs/observable/combineLatest';
 import { select } from '@angular-redux/store';
 import * as _ from 'lodash';
 import { Location } from '@angular/common';
-
 import { OfiFundService } from '@ofi/ofi-main/ofi-req-services/ofi-product/fund/fund.service';
 
 @Component({
@@ -27,7 +26,6 @@ export class FundAuditComponent implements OnInit, OnDestroy {
         private fundService: OfiFundService,
         private location: Location,
     ) {
-
     }
 
     ngOnInit() {
@@ -63,7 +61,6 @@ export class FundAuditComponent implements OnInit, OnDestroy {
 
                 this.fundName = _.get(fundList[params.fundID], ['fundName']);
             });
-
     }
 
     ngOnDestroy() {

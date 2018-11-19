@@ -3,10 +3,12 @@ import { FormArray, FormBuilder, FormControl, FormGroup, Validators } from '@ang
 import { Location } from '@angular/common';
 import { OfiKycService } from '../../ofi-req-services/ofi-kyc/service';
 import { OfiKycObservablesService } from '../../ofi-req-services/ofi-kyc/kyc-observable';
-import { immutableHelper } from '@setl/utils';
+import { FileDownloader, SagaHelper, mDateHelper, immutableHelper } from '@setl/utils';
 import { NgRedux, select } from '@angular-redux/store';
-import { Subject } from 'rxjs';
+import { Observable } from 'rxjs/Rx';
+import { Subject } from 'rxjs/Subject';
 import { debounceTime } from 'rxjs/operators';
+import { combineLatest as observableCombineLatest } from 'rxjs';
 import { Router, ActivatedRoute } from '@angular/router';
 import { AlertsService } from '@setl/jaspero-ng2-alerts';
 import { ToasterService } from 'angular2-toaster';
@@ -15,11 +17,7 @@ import { MultilingualService } from '@setl/multilingual';
 import { AppObservableHandler } from '@setl/utils/decorators/app-observable-handler';
 import { OfiFundShareService } from '../../ofi-req-services/ofi-product/fund-share/service';
 import * as math from 'mathjs';
-import { FileDownloader, SagaHelper } from '@setl/utils';
-import { OFI_SET_CLIENT_REFERENTIAL_AUDIT } from "@ofi/ofi-main/ofi-store";
-import { mDateHelper } from "@setl/utils";
-import { combineLatest as observableCombineLatest } from 'rxjs';
-import { Observable } from "rxjs/Rx";
+import { OFI_SET_CLIENT_REFERENTIAL_AUDIT } from '@ofi/ofi-main/ofi-store';
 import { Moment } from 'moment';
 
 @AppObservableHandler

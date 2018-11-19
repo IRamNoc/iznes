@@ -78,7 +78,7 @@ export class OfiAmDocumentsComponent implements OnDestroy, OnInit {
             },
             3: {
                 id: 'DateModification',
-                label: this.translate.translate('Date of latest modification by the Investor'),
+                label: this.translate.translate('Date of Latest Modification by the Investor'),
                 dataSource: 'lastUpdated',
                 sortable: true,
             },
@@ -105,7 +105,7 @@ export class OfiAmDocumentsComponent implements OnDestroy, OnInit {
             },
             7: {
                 id: 'DateModified',
-                label: this.translate.translate('Date of latest modification by the Investor'),
+                label: this.translate.translate('Date of Latest Modification by the Investor'),
                 dataSource: 'lastUpdated',
                 sortable: true,
             },
@@ -132,7 +132,7 @@ export class OfiAmDocumentsComponent implements OnDestroy, OnInit {
             },
             11: {
                 id: 'DateLatestModification',
-                label: this.translate.translate('Date of latest modification'),
+                label: this.translate.translate('Date of Latest Modification'),
                 dataSource: 'lastUpdated',
                 sortable: true,
                 hasLink: true,

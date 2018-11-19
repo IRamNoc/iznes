@@ -52,5 +52,4 @@ import { OfiPortfolioMangerService } from '../ofi-req-services/ofi-portfolio-man
 
 /* Class. */
 export class OfiPortfolioManagerModule {
-
 }

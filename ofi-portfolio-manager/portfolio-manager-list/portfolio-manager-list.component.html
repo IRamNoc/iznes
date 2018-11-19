@@ -2,19 +2,19 @@
     <!-- Breadcrumbs. -->
     <div class="header-breadcrumbs">
         <h1 id="portfolio-managers"><i class="fa fa-users"></i>
-            {{'Portfolio Managers' | translate}}
+            {{ 'Portfolio Managers' | translate }}
         </h1>
     </div>
 
     <clr-tabs>
         <clr-tab>
             <button clrTabLink>
-                <i class="fa fa-users"></i> {{'All Portfolio Manager' | translate}}
+                <i class="fa fa-users"></i> {{ 'All Portfolio Manager' | translate }}
             </button>
             <clr-tab-content>
                 <div class="row">
                     <div class="col-sm-6">
-                        {{'Please find below the list of your portfolio managers.' | translate}}
+                        {{ 'Please find below the list of your portfolio managers.' | translate }}
                     </div>
                 </div>
 
@@ -22,9 +22,9 @@
                     <div class="col-sm-12">
 
                         <clr-datagrid #dataGrid>
-                            <clr-dg-column [clrDgField]="'emailAddress'">{{'Email Address' | translate}}</clr-dg-column>
-                            <clr-dg-column [clrDgField]="'firstName'">{{'First Name' | translate}}</clr-dg-column>
-                            <clr-dg-column [clrDgField]="'lastName'">{{'LastName' | translate}}</clr-dg-column>
+                            <clr-dg-column [clrDgField]="'emailAddress'">{{ 'Email Address' | translate }}</clr-dg-column>
+                            <clr-dg-column [clrDgField]="'firstName'">{{ 'First Name' | translate }}</clr-dg-column>
+                            <clr-dg-column [clrDgField]="'lastName'">{{ 'LastName' | translate }}</clr-dg-column>
 
                             <clr-dg-row *clrDgItems="let item of portfolioMangerList" style="cursor: pointer;" (click)="handleClick(item)">
                                 <clr-dg-cell><circle-status-indicator [statusClass]="getStatusClass(item.pmActive)" [statusLabel]="'Inactive'"></circle-status-indicator> {{item.emailAddress}}</clr-dg-cell>

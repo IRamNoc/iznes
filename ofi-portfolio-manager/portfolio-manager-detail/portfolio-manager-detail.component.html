@@ -2,7 +2,7 @@
     <!-- Breadcrumbs. -->
     <div class="header-breadcrumbs">
         <h1 id="portfolio-managers-detail"><i class="fa fa-users"></i>
-            {{'Portfolio Manager' | translate}} - {{pm.emailAddress}}
+            {{ 'Portfolio Manager' | translate }} - {{pm.emailAddress}}
         </h1>
     </div>
 
@@ -14,17 +14,16 @@
             <clr-tab-content>
                 <div class="row">
                     <div class="col-sm-6">
-                        {{'Please find below the authorisation of @emailAddress@ regarding your fund.' | translate : {'emailAddress': pm.emailAddress} }}
+                        {{ 'Please find below the authorisation of @emailAddress@ regarding your fund.' | translate: { 'emailAddress': pm.emailAddress } }}
                     </div>
                 </div>
 
                 <div class="row">
                     <div class="col-sm-12">
-
                         <clr-datagrid #dataGrid>
-                            <clr-dg-column [clrDgField]="'fundName'">{{'Fund Name' | translate}}</clr-dg-column>
-                            <clr-dg-column>{{'Grant Access to this fund?' | translate}}</clr-dg-column>
-                            <clr-dg-column>{{'Action' | translate}}</clr-dg-column>
+                            <clr-dg-column [clrDgField]="'fundName'">{{ 'Fund Name' | translate }}</clr-dg-column>
+                            <clr-dg-column>{{ 'Grant access to this fund?' | translate }}</clr-dg-column>
+                            <clr-dg-column>{{ 'Action' | translate }}</clr-dg-column>
 
                             <clr-dg-row *clrDgItems="let item of fundAccessList; let i = index" style="cursor: pointer;">
                                 <clr-dg-cell id="fund_name_row_{{i}}">{{item.fundName}}</clr-dg-cell>
@@ -38,7 +37,7 @@
                                 </clr-dg-cell>
                                 <clr-dg-cell id="action_row_{{i}}">
                                     <button class="btn btn-success btn-sm" style="margin: 0px;" [disabled]="!fundAccessHasKyc(item)" (click)="handleManagerShareAccess(item)">
-                                        <i class="fa fa-align-left"></i> {{'Manage shares authorisation' | translate}}
+                                        <i class="fa fa-align-left"></i> {{ 'Manage Shares Authorisation' | translate }}
                                     </button>
                                 </clr-dg-cell>
                             </clr-dg-row>
@@ -48,27 +47,25 @@
                                 <clr-dg-pagination #pagination [clrDgPageSize]="10"></clr-dg-pagination>
                             </clr-dg-footer>
                         </clr-datagrid>
-
                     </div>
                 </div>
 
                 <div class="row" style="margin-top:20px">
                     <div class="col-sm-6">
-                        {{"Here is a recap of the updates you are making regarding @emailAddress@'s authorisation:" | translate : {'emailAddress': pm.emailAddress} }}
+                        {{ 'Here is a recap of the updates you are making regarding @emailAddress@\'s authorisation:' | translate: { 'emailAddress': pm.emailAddress } }}
                     </div>
                 </div>
 
                 <div class="row">
                     <div class="col-sm-12">
-
                         <clr-datagrid #otherDatagrid>
-                            <clr-dg-column [clrDgField]="'fundName'" id="changed_data_fund_name">{{'Fund Name' | translate}}</clr-dg-column>
-                            <clr-dg-column [clrDgField]="'changes'" id="changed_data_changes">{{'Status' | translate}}</clr-dg-column>
+                            <clr-dg-column [clrDgField]="'fundName'" id="changed_data_fund_name">{{ 'Fund Name' | translate }}</clr-dg-column>
+                            <clr-dg-column [clrDgField]="'changes'" id="changed_data_changes">{{ 'Status' | translate }}</clr-dg-column>
                             <clr-dg-row *clrDgItems="let row of fundAccessChanges">
                                 <clr-dg-cell id="changed_data_fund_name_row_{{i}}">{{row.fundName}}</clr-dg-cell>
                                 <clr-dg-cell id="changed_data_changes_row_{{i}}">
-                                   <span *ngIf="row.status">{{'Permission Granted' | translate }}</span>
-                                   <span *ngIf="!row.status">{{'Permission Removed' | translate }}</span>
+                                   <span *ngIf="row.status">{{' Permission Granted' | translate }}</span>
+                                   <span *ngIf="!row.status">{{ 'Permission Removed' | translate }}</span>
                                 </clr-dg-cell>
                             </clr-dg-row>
                             <clr-dg-footer>{{otherPagination.firstItem + 1}} - {{otherPagination.lastItem + 1}}
@@ -76,10 +73,9 @@
                             </clr-dg-footer>
                         </clr-datagrid><br>
                         <div align="middle">
-                            <button id="btn_back_to_pm_list" class="btn btn-info" (click)="backToPmList();">{{'Back' | translate}}</button>
-                            <button id="btn_validate" class="btn btn-primary" (click)="confirmSave();">{{'Validate' | translate}}</button>
+                            <button id="btn_back_to_pm_list" class="btn btn-info" (click)="backToPmList();">{{ 'Back' | translate }}</button>
+                            <button id="btn_validate" class="btn btn-primary" (click)="confirmSave();">{{ 'Validate' | translate }}</button>
                         </div>
-
                     </div>
                 </div>
             </clr-tab-content>

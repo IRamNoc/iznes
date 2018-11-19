@@ -16,6 +16,7 @@ import {
     setRequestedConfiguration,
     clearRequestedConfiguration,
 } from '@ofi/ofi-main/ofi-store/ofi-product';
+import { MultilingualService } from '@setl/multilingual';
 
 @Component({
     selector: 'app-ofi-product-configuration',
@@ -40,7 +41,10 @@ export class ProductConfigurationComponent implements OnInit, OnDestroy {
     constructor(private service: OfiProductConfigService,
                 private redux: NgRedux<any>,
                 private changeDetectorRef: ChangeDetectorRef,
-                private toaster: ToasterService) {}
+                private toaster: ToasterService,
+                public translate: MultilingualService,
+    ) {
+    }
 
     ngOnInit() {
         this.initSubscriptions();
@@ -100,11 +104,11 @@ export class ProductConfigurationComponent implements OnInit, OnDestroy {
     private onCreateSuccess(): void {
         this.redux.dispatch(clearRequestedConfiguration());
 
-        this.toaster.pop('success', 'Product Configuration saved successfully');
+        this.toaster.pop('success', this.translate.translate('Product Configuration saved successfully'));
     }
 
     private onCreateError(e): void {
-        this.toaster.pop('error', 'ERROR: ' + e.Message);
+        this.toaster.pop('error', this.translate.translate('ERROR') + ': ' + e.Message);
     }
 
     ngOnDestroy() {

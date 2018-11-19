@@ -8,9 +8,12 @@
                 </label>
                 <div class="input-group date-pick-wrapper">
                     <span class="fa fa-calendar" aria-hidden="true"></span>
-                    <input id="input-startdate" formControlName="startDate" [dpDayPicker]="configDate" [placeholder]="translate.translate('Choose a date')"
-                        mode="day" theme="dp-material">
-
+                    <input id="input-startdate" 
+                            formControlName="startDate" 
+                            [dpDayPicker]="configDate" 
+                            [placeholder]="translate.translate('Choose a date')"
+                            mode="day" 
+                            theme="dp-material">
                 </div>
             </div>
             <div class="col-sm-3">
@@ -19,9 +22,12 @@
                 </label>
                 <div class="input-group date-pick-wrapper">
                     <span class="fa fa-calendar" aria-hidden="true"></span>
-                    <input id="input-enddate" formControlName="endDate" [dpDayPicker]="configDate" [placeholder]="translate.translate('Choose a date')"
-                        mode="day" theme="dp-material">
-
+                    <input id="input-enddate" 
+                            formControlName="endDate" 
+                            [dpDayPicker]="configDate" 
+                            [placeholder]="translate.translate('Choose a date')"
+                            mode="day" 
+                            theme="dp-material">
                 </div>
             </div>
         </div>
@@ -31,27 +37,27 @@
 
 <clr-datagrid class="expandable" clrDgSortIcon>
     <clr-dg-column [clrDgField]="'field'" clrDgSortIcon>
-        {{'Fund Name' | translate}}
+        {{ 'Fund Name' | translate }}
         <span class="column-label"></span>
     </clr-dg-column>
     <clr-dg-column [clrDgField]="'field'" clrDgSortIcon>
-        {{'Field' | translate}}
+        {{ 'Field' | translate }}
         <span class="column-label"></span>
     </clr-dg-column>
     <clr-dg-column [clrDgField]="'oldValue.label'" clrDgSortIcon>
-        {{'Old Value' | translate}}
+        {{ 'Old Value' | translate }}
         <span class="column-label"></span>
     </clr-dg-column>
     <clr-dg-column [clrDgField]="'newValue.label'" clrDgSortIcon>
-        {{'New Value' | translate}}
+        {{ 'New Value' | translate }}
         <span class="column-label"></span>
     </clr-dg-column>
     <clr-dg-column [clrDgField]="'modifiedBy'" clrDgSortIcon>
-        {{'Modified By' | translate}}
+        {{ 'Modified By' | translate }}
         <span class="column-label"></span>
     </clr-dg-column>
     <clr-dg-column [clrDgField]="'dateModified'" clrDgSortIcon>
-        {{'Date' | translate}}
+        {{ 'Date' | translate }}
         <span class="column-label"></span>
     </clr-dg-column>
 

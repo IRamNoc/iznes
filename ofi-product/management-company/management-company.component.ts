@@ -6,7 +6,6 @@ import { NgRedux, select } from '@angular-redux/store';
 import { Subject } from 'rxjs/Subject';
 import { takeUntil, take, switchMap, filter } from 'rxjs/operators';
 import { ToasterService } from 'angular2-toaster';
-
 import { SagaHelper, LogService } from '@setl/utils';
 import { AlertsService } from '@setl/jaspero-ng2-alerts';
 import { OfiManagementCompanyService } from '@ofi/ofi-main/ofi-req-services/ofi-product/management-company/management-company.service';
@@ -15,6 +14,7 @@ import { ManagementCompanyListState } from '../../ofi-store/ofi-product/manageme
 import { ManagementCompanyFileMetadata, ManagementCompanyFileMetadataField } from './management-company-file-metadata';
 import { legalFormList } from '../../ofi-kyc/my-requests/requests.config';
 import { FileDropEvent } from '@setl/core-filedrop';
+import { MultilingualService } from '@setl/multilingual';
 
 const AM_USERTYPE = 36;
 
@@ -59,12 +59,13 @@ export class OfiManagementCompanyComponent implements OnInit, OnDestroy {
     constructor(
         private ngRedux: NgRedux<any>,
         private mcService: OfiManagementCompanyService,
-        private _changeDetectorRef: ChangeDetectorRef,
+        private changeDetectorRef: ChangeDetectorRef,
         private logService: LogService,
         private alertsService: AlertsService,
         private toasterSevice: ToasterService,
         private service: ManagagementCompanyService,
         private location: Location,
+        public translate: MultilingualService,
         @Inject('phoneCodeList') phoneCodeList,
         @Inject('product-config') productConfig,
     ) {
@@ -219,7 +220,7 @@ export class OfiManagementCompanyComponent implements OnInit, OnDestroy {
                 // this.modalText = 'Your Management Company has been deleted successfully!';
                 // this.showModal = true;
                 this.showSearchTab = true;
-                this.showSuccessResponse('Your Management Company has been deleted successfully!');
+                this.showSuccessResponse(this.translate.translate('Your Management Company has been deleted successfully'));
             },
             (data) => {
                 this.logService.log('error: ', data);
@@ -254,20 +255,42 @@ export class OfiManagementCompanyComponent implements OnInit, OnDestroy {
                 this.mcService.fetchManagementCompanyList();
                 this.resetForm();
                 this.showSearchTab = true;
-                this.showSuccessResponse(`Management company has successfully been ${this.editForm ? 'updated' : 'created'}.`);
+
+                let message;
+
+                if (this.editForm) {
+                    message = this.translate.translate('Management company has successfully been updated');
+                } else {
+                    message = this.translate.translate('Management company has successfully been created');
+                }
+
+                this.showSuccessResponse(message);
+
                 if (this.isAssetManager) {
                     this.location.back();
                 }
             },
             (data) => {
                 this.logService.log('error: ', data);
-                this.toasterSevice.pop('error', `failed to ${this.editForm ? 'update' : 'create'} management company`);
+
+                let message;
+
+                if (this.editForm) {
+                    message = this.translate.translate('Failed to update management company');
+                } else {
+                    message = this.translate.translate('Failed to create management company');
+                }
+
+                this.toasterSevice.pop(
+                    'error',
+                    message,
+                );
             }),
         );
     }
 
     markForCheck() {
-        this._changeDetectorRef.markForCheck();
+        this.changeDetectorRef.markForCheck();
     }
 
     showSuccessResponse(message) {
@@ -279,7 +302,7 @@ export class OfiManagementCompanyComponent implements OnInit, OnDestroy {
                         <td class="text-center text-success">${message}</td>
                     </tr>
                 </tbody>
-            </table>`
+            </table>`,
         );
     }
 }
