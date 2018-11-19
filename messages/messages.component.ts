@@ -201,9 +201,9 @@ export class SetlMessagesComponent implements OnDestroy, OnInit {
                                 subject: 'Re: ' + reply.subject,
                                 recipients: [{ id: { walletId: reply.senderId }, text: reply.senderWalletName }],
                                 body: '<br><p>&nbsp;&nbsp;&nbsp;<s>' +
-                                    '&nbsp;'.repeat(200) + '</s></p><p>&nbsp;&nbsp;&nbsp;<b>' +
-                                    reply.senderWalletName + '</b> ' + reply.date + ':</p>' +
-                                    reply.body.replace(/<p>/g, '<p>&nbsp;&nbsp;&nbsp;'),
+                                '&nbsp;'.repeat(200) + '</s></p><p>&nbsp;&nbsp;&nbsp;<b>' +
+                                reply.senderWalletName + '</b> ' + reply.date + ':</p>' +
+                                reply.body.replace(/<p>/g, '<p>&nbsp;&nbsp;&nbsp;'),
                             });
                         }
                     });
@@ -635,15 +635,22 @@ export class SetlMessagesComponent implements OnDestroy, OnInit {
         this.router.navigateByUrl('/messages/compose');
     }
 
-    downloadTxtFile(id, MT502ID, type) {
-        this.fileDownloader.downLoaderFile({
-            method: 'getIznMT502',
+    downloadTxtFile(data) {
+        let body = {
+            method: 'getIznMTFile',
+            mtType: data.mtType,
             token: this.socketToken,
-            orderId: id,
-            MT502ID,
-            type,
+            orderId: data.orderID,
             userId: this.userId,
-        });
+        };
+
+        if (data.mtType == 'MT101') body['messageType'] = data.messageType;
+        if (data.mtType == 'MT502') {
+            body['MT502ID'] = data.MT502ID;
+            body['type'] = data.orderType;
+        }
+
+        this.fileDownloader.downLoaderFile(body);
     }
 
     handleDownloadBookEntryCertification(assetManagementCompanyId, settlementDate) {
