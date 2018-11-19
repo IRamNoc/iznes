@@ -7,4 +7,6 @@ export class MessageKycConfig {
     amFirstName: string;
     amCompanyName: string;
     lang: string;
+    changeAccepted?: boolean;
+    currentClassification?: number;
 }

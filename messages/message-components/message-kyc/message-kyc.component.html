@@ -10,15 +10,33 @@
                 </span> {{config.investorCompanyName}}.
             </p>
 
+            <div *ngIf="askedForClassificationChange">
+                <div *ngIf="config.changeAccepted">
+                    <p *ngIf="config.currentClassification">
+                        {{'In addition, your request for a classification change from professional investor to non professional investor has also been accepted' | translate}}
+                    </p>
+                    <p *ngIf="!config.currentClassification">
+                        {{'In addition, your request for a classification change from non professional investor to professional investor has also been accepted' | translate}}
+                    </p>
+                </div>
+                <div *ngIf="!config.changeAccepted">
+                    <p *ngIf="config.currentClassification">
+                        {{'However, your request for a classification change from professional investor to non professional investor has not been accepted.' | translate}}
+                    </p>
+                    <p *ngIf="!config.currentClassification">
+                        {{'However, your request for a classification change from non professional investor to professional investor has not been accepted.' | translate}}
+                    </p>
+                </div>
+            </div>
+
             <p class="padding">{{config.amCompanyName}} 
-                <span mltag="txt_willshortlyenableyoutoaccessfue630933a91">will shortly enable you to access funds’ shares, in order for your company to
-                be able to
-                invest on the IZNES platform.
+                <span mltag="txt_willshortlyenableyoutoaccessfue630933a91">
+                    {{'will shortly enable you to access funds’ shares, in order for your company to be able to invest on the IZNES platform.' | translate}}
                 </span>
             </p>
 
-            <p class="padding" mltag="txt_thankyou">Thank you,</p>
-            <p class="padding" mltag="txt_theiznesteam">The IZNES team.</p>
+            <p class="padding">{{'Thank you' | translate}},</p>
+            <p class="padding">{{'The IZNES team' | translate}}.</p>
         </div>
 
         <!-- KYC investor yes -->

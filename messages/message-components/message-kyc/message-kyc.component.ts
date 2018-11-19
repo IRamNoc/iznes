@@ -3,6 +3,7 @@ import { MessageKycConfig } from './message-kyc.model';
 import { Router } from '@angular/router';
 import { kycMessages } from './message-kyc';
 import { LogService } from '@setl/utils';
+import { isNil } from 'lodash';
 
 @Component({
     selector: 'setl-message-kyc',
@@ -20,6 +21,10 @@ export class SetlMessageKycComponent implements OnInit {
     constructor(private router: Router,
                 private logService: LogService) {
         this.messageBody = null;
+    }
+
+    get askedForClassificationChange(){
+        return !isNil(this.config.changeAccepted);
     }
 
     ngOnInit() {
