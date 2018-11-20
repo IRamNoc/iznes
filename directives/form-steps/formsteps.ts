@@ -554,6 +554,7 @@ export class FormStepsDirective implements OnInit, OnDestroy, AfterViewInit {
             let formControl: FormControl = controls[key];
             if (controls[key].controls) {
                 this.dirty(controls[key].controls);
+                formControl.markAsDirty();
             } else {
                 formControl.markAsDirty();
                 formControl.markAsTouched();
