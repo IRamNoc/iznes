@@ -1,6 +1,5 @@
-import {Inject, Injectable} from '@angular/core';
-
-import {WalletnodeTxService} from '@setl/core-req-services';
+import { Inject, Injectable } from '@angular/core';
+import { WalletnodeTxService } from '@setl/core-req-services';
 import {
     APP_CONFIG,
     AppConfig,
@@ -12,34 +11,34 @@ import {
     mDateHelper,
     MoneyValuePipe,
     NumberConverterService,
-    SagaHelper
+    SagaHelper,
 } from '@setl/utils';
-import {NgRedux} from '@angular-redux/store';
-import {setLastCreatedContractDetail} from '@setl/core-store';
-import {AlertsService} from '@setl/jaspero-ng2-alerts';
-import {OfiFundInvestService} from '../../ofi-req-services/ofi-fund-invest/service';
-import {ArrangementType} from '../../ofi-req-services/ofi-fund-invest/model';
+import { NgRedux } from '@angular-redux/store';
+import { setLastCreatedContractDetail } from '@setl/core-store';
+import { AlertsService } from '@setl/jaspero-ng2-alerts';
+import { OfiFundInvestService } from '../../ofi-req-services/ofi-fund-invest/service';
+import { ArrangementType } from '../../ofi-req-services/ofi-fund-invest/model';
 import * as _ from 'lodash';
 
 @Injectable()
 export class InvestFundFormService {
-    private _appConfig: AppConfig;
+    private appConfig: AppConfig;
     private divider: number;
 
-    constructor(private _ngRedux: NgRedux<any>,
-                private _walletNodeTxService: WalletnodeTxService,
-                public _moneyValuePipe: MoneyValuePipe,
-                private _numberConverterService: NumberConverterService,
-                private _alertsService: AlertsService,
-                private _ofiFundInvestService: OfiFundInvestService,
-                @Inject(APP_CONFIG) _appConfig: AppConfig) {
-        this.divider = _appConfig.numberDivider;
+    constructor(private ngRedux: NgRedux<any>,
+                private walletNodeTxService: WalletnodeTxService,
+                public moneyValuePipe: MoneyValuePipe,
+                private numberConverterService: NumberConverterService,
+                private alertsService: AlertsService,
+                private ofiFundInvestService: OfiFundInvestService,
+                @Inject(APP_CONFIG) appConfig: AppConfig) {
+        this.divider = appConfig.numberDivider;
     }
 
     handleForm(formValue, shareMetaData, actionType): void {
         const decimalisation = immutableHelper.get(shareMetaData, 'decimalisation', 2);
-        const quantity = this._moneyValuePipe.parse(immutableHelper.get(formValue, 'quantity', 0), decimalisation);
-        const grossAmount = this._moneyValuePipe.parse(immutableHelper.get(formValue, 'grossAmount', 0), decimalisation);
+        const quantity = this.moneyValuePipe.parse(immutableHelper.get(formValue, 'quantity', 0), decimalisation);
+        const grossAmount = this.moneyValuePipe.parse(immutableHelper.get(formValue, 'grossAmount', 0), decimalisation);
         const investorAddress = immutableHelper.get(formValue, 'address', '');
         const comment = immutableHelper.get(formValue, 'comment', '');
         const issuer = immutableHelper.get(shareMetaData, 'issuer', '');
@@ -61,10 +60,10 @@ export class InvestFundFormService {
         const platFormFee = immutableHelper.get(shareMetaData, 'platformFee', 0);
 
         // Convert to to blockchain integer number
-        const quantityParse = this._numberConverterService.toBlockchain(quantity);
-        const grossAmountParse = this._numberConverterService.toBlockchain(grossAmount);
-        const platFormFeeParse = this._numberConverterService.toBlockchain(platFormFee);
-        const navParse = this._numberConverterService.toBlockchain(shareMetaData.nav);
+        const quantityParse = this.numberConverterService.toBlockchain(quantity);
+        const grossAmountParse = this.numberConverterService.toBlockchain(grossAmount);
+        const platFormFeeParse = this.numberConverterService.toBlockchain(platFormFee);
+        const navParse = this.numberConverterService.toBlockchain(shareMetaData.nav);
 
         const subPortfolio = immutableHelper.get(formValue, 'subPortfolio', '');
 
@@ -83,23 +82,22 @@ export class InvestFundFormService {
             expiryTimeStamp,
             walletName,
             feePercent,
-            platFormFee: platFormFeeParse
+            platFormFee: platFormFeeParse,
         });
-
 
         const contractData: any = BlockchainContractService.arrangementToContractData(arrangementData);
 
         // create contract in the blockchain
         // Create a saga pipe.
-        const asyncTaskPipes = this._walletNodeTxService.newContract({
-            walletId: walletId,
+        const asyncTaskPipes = this.walletNodeTxService.newContract({
+            walletId,
             address: contractData.creatorAddress,
-            'function': contractData.contractFunction,
-            contractData: contractData.contractData
+            function: contractData.contractFunction,
+            contractData: contractData.contractData,
         });
 
         // Send a saga action.
-        this._ngRedux.dispatch(SagaHelper.runAsyncCallback(
+        this.ngRedux.dispatch(SagaHelper.runAsyncCallback(
             asyncTaskPipes,
             (data) => {
                 // show success walletnode request message
@@ -111,7 +109,7 @@ export class InvestFundFormService {
                 const creatorId = walletId;
                 const type = {
                     subscribe: ArrangementType.SUBSCRIBE,
-                    redeem: ArrangementType.REDEEM
+                    redeem: ArrangementType.REDEEM,
                 }[actionType];
 
                 const metaData = {
@@ -131,7 +129,7 @@ export class InvestFundFormService {
                     investorWalletBankID: 0,
                     investorWalletBankCommuPub: '',
                     investorSubPortfolio: subPortfolio,
-                    iban: _.get(formValue, 'iban', '')
+                    iban: _.get(formValue, 'iban', ''),
                 };
 
                 const parties = {
@@ -139,8 +137,8 @@ export class InvestFundFormService {
                         canRead: 1,
                         canWrite: 1,
                         canDelete: 1,
-                        partyType: 2
-                    }
+                        partyType: 2,
+                    },
                 };
 
                 const cutoffDateTimeStr = formValue.cutoffDate + ' ' + shareMetaData.cutoffTime;
@@ -153,13 +151,13 @@ export class InvestFundFormService {
                 const valuationDateTimeDBFormat = mDateHelper.unixTimestampToDateStr(valuationDateTimeNum, 'YYYY-MM-DD HH:mm');
                 const settlementDateTimeDBFormat = mDateHelper.unixTimestampToDateStr(settleTimeStamp * 1000, 'YYYY-MM-DD HH:mm');
 
-                this._ngRedux.dispatch(setLastCreatedContractDetail(data, {
+                this.ngRedux.dispatch(setLastCreatedContractDetail(data, {
                     actionType: 'ofi-arrangement',
                     arrangementData: {
                         creatorId,
                         type,
                         metaData: JSON.stringify(metaData),
-                        asset: asset,
+                        asset,
                         investBy: byType,
                         quantity: byType === 0 ? quantityParse : 0,
                         amountWithCost: byType === 1 ? grossAmountParse : 0,
@@ -168,16 +166,15 @@ export class InvestFundFormService {
                         parties,
                         cutoff: cutoffDateTimeDBFormat,
                         delivery: settlementDateTimeDBFormat,
-                        valuation: valuationDateTimeDBFormat
-                    }
+                        valuation: valuationDateTimeDBFormat,
+                    },
                 }))
                 ;
             },
             (data) => {
                 this.showWalletNodeErrorResponse(data);
-            }
+            },
         ));
-
     }
 
     private constructArrangementData(formData: {
@@ -210,7 +207,7 @@ export class InvestFundFormService {
             expiryTimeStamp,
             walletName,
             feePercent,
-            platFormFee
+            platFormFee,
         } = formData;
 
         if (actionType === 'subscribe') {
@@ -225,16 +222,16 @@ export class InvestFundFormService {
                         actionData: {
                             amount: quantity,
                             amountType: 'amount',
-                            asset: asset,
+                            asset,
                             dataItem: [],
                             fromAddress: issuerAddress,
                             toAddress: investorAddress,
                             metaData: {
-                                clientTxType: 'subscription'
-                            }
+                                clientTxType: 'subscription',
+                            },
                         },
-                        actionType: ArrangementActionType.ISSUE
-                    }
+                        actionType: ArrangementActionType.ISSUE,
+                    },
                 ];
             } else if (byType === 1) {
                 // by amount
@@ -244,18 +241,17 @@ export class InvestFundFormService {
                             amount: '(((' + grossAmount + ' - ' + platFormFee + ' ) / (1 + ' + feePercent + ' ) ) / nav) * ' +
                             this.divider,
                             amountType: 'amount',
-                            asset: asset,
+                            asset,
                             dataItem: [],
                             fromAddress: issuerAddress,
                             toAddress: investorAddress,
                             metaData: {
-                                clientTxType: 'subscription'
-                            }
+                                clientTxType: 'subscription',
+                            },
                         },
-                        actionType: ArrangementActionType.ISSUE
-                    }
-                ]
-                ;
+                        actionType: ArrangementActionType.ISSUE,
+                    },
+                ];
 
             } else {
                 throw new Error('Invalid action-by type.');
@@ -271,16 +267,16 @@ export class InvestFundFormService {
                         actionData: {
                             amount: quantity,
                             amountType: 'amount',
-                            asset: asset,
+                            asset,
                             dataItem: [],
                             fromAddress: investorAddress,
                             toAddress: issuerAddress,
                             metaData: {
-                                clientTxType: 'redemption'
-                            }
+                                clientTxType: 'redemption',
+                            },
                         },
-                        actionType: ArrangementActionType.SEND
-                    }
+                        actionType: ArrangementActionType.SEND,
+                    },
                 ];
             } else if (byType === 1) {
 
@@ -290,18 +286,17 @@ export class InvestFundFormService {
                         actionData: {
                             amount: '(' + grossAmount + ' / nav ) * ' + this.divider,
                             amountType: 'amount',
-                            asset: asset,
+                            asset,
                             dataItem: [],
                             fromAddress: investorAddress,
                             toAddress: issuerAddress,
                             metaData: {
                                 clientTxType: 'redemption',
-                            }
+                            },
                         },
-                        actionType: ArrangementActionType.SEND
-                    }
-                ]
-                ;
+                        actionType: ArrangementActionType.SEND,
+                    },
+                ];
 
             } else {
                 throw new Error('Invalid action-by type.');
@@ -313,17 +308,17 @@ export class InvestFundFormService {
         const conditions = [
             {
                 conditionData: {
-                    executeTimeStamp: settleTimeStamp
+                    executeTimeStamp: settleTimeStamp,
                 },
-                conditionType: ConditionType.TIME
+                conditionType: ConditionType.TIME,
             },
             {
                 conditionData: {
-                    authoriseRef: authoriseRef,
-                    address: issuerAddress
+                    authoriseRef,
+                    address: issuerAddress,
                 },
-                conditionType: ConditionType.AUTHORISE
-            }
+                conditionType: ConditionType.AUTHORISE,
+            },
         ];
 
         return {
@@ -331,27 +326,25 @@ export class InvestFundFormService {
             conditions,
             datas: [
                 {
-                    'parameter': 'nav',
-                    'address': issuerAddress
-                }
+                    parameter: 'nav',
+                    address: issuerAddress,
+                },
             ],
             expiry: expiryTimeStamp,
             numStep: '1',
             stepTitle: commonHelper.capitalizeFirstLetter(actionType) + ' of ' + asset + ' from ' + walletName,
-            creatorAddress: investorAddress
+            creatorAddress: investorAddress,
         };
     }
 
     showWalletNodeErrorResponse(response) {
-
         let message = _.get(response, '[1].data.status', '');
         if (message === '') {
             message = _.get(response, '[1].status', '');
         }
 
-        this._alertsService.create('error', `
+        this.alertsService.create('error', `
                     <table class="table grid">
-
                         <tbody>
                             <tr>
                                 <td class="text-center text-danger">${message}</td>
@@ -363,7 +356,7 @@ export class InvestFundFormService {
 
     showSuccessResponse() {
 
-        this._alertsService.create('waiting', `
+        this.alertsService.create('waiting', `
                     <table class="table grid">
                         <tbody>
                             <tr>
@@ -377,7 +370,7 @@ export class InvestFundFormService {
     }
 
     showInvalidForm(message) {
-        this._alertsService.create('error', `
+        this.alertsService.create('error', `
                     <table class="table grid">
 
                         <tbody>
@@ -388,6 +381,4 @@ export class InvestFundFormService {
                     </table>
                     `);
     }
-
 }
-

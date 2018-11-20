@@ -8,7 +8,6 @@ import { map } from 'rxjs/operators';
 
 @Injectable()
 export class OfiFundDataService extends BaseDataService<OfiFundService> {
-
     @select(['ofi', 'ofiProduct', 'ofiFund', 'fundList', 'requestedIznesFund']) requestedIznesFund$;
     @select(['ofi', 'ofiProduct', 'ofiFund', 'fundList', 'iznFundList']) fundList$;
 

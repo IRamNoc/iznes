@@ -5,13 +5,12 @@ import { Observable } from 'rxjs/Rx';
 import { OfiPortfolioMangerService } from '../../ofi-req-services/ofi-portfolio-manager/service';
 import {
     PortfolioManagerDetail,
-    PortfolioManagerList
+    PortfolioManagerList,
 } from '../../ofi-store/ofi-portfolio-manager/portfolio-manage-list/model';
 import { map } from 'rxjs/operators';
 
 @Injectable()
 export class OfiPortfolioManagerDataService extends BaseDataService<OfiPortfolioMangerService> {
-
     @select(['ofi', 'ofiPortfolioManager', 'portfolioManagerList', 'portfolioManagerList']) portfolioManagerList$;
     @select(['ofi', 'ofiPortfolioManager', 'portfolioManagerList', 'requested']) portfolioManagerListRequested$;
 
@@ -50,5 +49,4 @@ export class OfiPortfolioManagerDataService extends BaseDataService<OfiPortfolio
             }),
         );
     }
-
 }

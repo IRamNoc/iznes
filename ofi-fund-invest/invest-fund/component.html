@@ -1,6 +1,5 @@
 <form (ngSubmit)="handleOrderConfirmation()" [formGroup]="form" [class.error]="!form.valid && form.touched">
     <div class="form-horizontal">
-
         <h2>{{getOrderTypeTitle()}}</h2>
         {{getOrderTypeSubTitle()}}
 
@@ -58,8 +57,8 @@
                                         autocomplete="off"
                                         (dateChange)="subscribeForChangeDate('cutoff', $event)">
                             </div>
-                            <span *ngIf="cutoffDate.hasError('required') && cutoffDate.touched" class="text-danger">{{ 'Field is required' | translate }}</span>
-                            <span *ngIf="cutoffDate.hasError('tooLate')" class="text-danger">{{ 'Cut-off has been reached' | translate }}</span>
+                            <span *ngIf="cutoffDate.hasError('required') && cutoffDate.touched" class="field-error">{{ 'Field is required' | translate }}</span>
+                            <span *ngIf="cutoffDate.hasError('tooLate')" class="field-error">{{ 'Cut-off has been reached' | translate }}</span>
                         </div>
 
                     </div>
@@ -86,7 +85,7 @@
                                         autocomplete="off"
                                         (dateChange)="subscribeForChangeDate('valuation', $event)">
                             </div>
-                            <span *ngIf="valuationDate.hasError('required') && valuationDate.touched" class="text-danger">{{ 'Field is required' | translate }}</span>
+                            <span *ngIf="valuationDate.hasError('required') && valuationDate.touched" class="field-error">{{ 'Field is required' | translate }}</span>
                         </div>
                     </div>
                     <div class="col-sm-6">
@@ -110,7 +109,7 @@
                                             autocomplete="off"
                                             (dateChange)="subscribeForChangeDate('settlement', $event)">
                                 </div>
-                                <span *ngIf="settlementDate.hasError('required') && settlementDate.touched" class="text-danger">{{ 'Field is required' | translate }}</span>
+                                <span *ngIf="settlementDate.hasError('required') && settlementDate.touched" class="field-error">{{ 'Field is required' | translate }}</span>
                             </div>
                         </div>
                     </div>
@@ -147,7 +146,7 @@
                                             (selected)="handleSelectedAddress($event)">
                                 </ng-select>
                             </div>
-                            <span *ngIf="address.hasError('required') && address.touched" class="text-danger">{{ 'Field is required' | translate }}</span>
+                            <span *ngIf="address.hasError('required') && address.touched" class="field-error">{{ 'Field is required' | translate }}</span>
                         </div>
                     </div>
                 </div>
@@ -203,7 +202,7 @@
                     <div class="col-sm-6">
                         <div class="form-group">
                             <textarea class="form-control" formControlName="comment" autocomplete="off"></textarea>
-                            <span *ngIf="comment.hasError('maxlength') && comment.touched" class="text-danger">
+                            <span *ngIf="comment.hasError('maxlength') && comment.touched" class="field-error">
                                 {{ 'Comment must be @commentMaxLength@ characters long' | translate:
                                 { 'commentMaxLength': form.controls['comment'].getError('maxlength').requiredLength } }}
                             </span>
@@ -270,7 +269,7 @@
                                 <div class="col-sm-6">
                                     <div class="form-group">
                                         <label class="control-label">
-                                            {{ 'One-going Charges' | translate }}
+                                            {{ 'On-going Charges' | translate }}
                                         </label>
                                         <div>
                                             <input type="text" 
@@ -583,11 +582,11 @@
                             {{ 'Redeem All' | translate }}
                         </button>
                     </div>
-                    <span *ngIf="quantity.hasError('required') && quantity.touched" class="text-danger">{{ 'Field is required' | translate }}</span>
-                    <span *ngIf="quantity.hasError('invalidNumber') && !quantity.hasError('required') && quantity.touched" class="text-danger">{{ 'Field is invalid' | translate }}</span>
-                    <span *ngIf="!isValidOrderValue() && quantity.touched" class="text-danger">{{ 'Less than minimum order value' | translate }}</span>
-                    <span *ngIf="orderType === 'redeem' && isRedeemTooMuch && (quantity.touched || amount.touched)" class="text-danger">{{ 'Insufficient balance to redeem' | translate }}</span>
-                    <span *ngIf="redeemedAll && !addressSelected" class="text-danger">{{ 'Please select an Investment Portfolio' | translate }}</span>
+                    <span *ngIf="quantity.hasError('required') && quantity.touched" class="field-error">{{ 'Field is required' | translate }}</span>
+                    <span *ngIf="quantity.hasError('invalidNumber') && !quantity.hasError('required') && quantity.touched" class="field-error">{{ 'Field is invalid' | translate }}</span>
+                    <span *ngIf="!isValidOrderValue() && quantity.touched" class="field-error">{{ 'Less than minimum order value' | translate }}</span>
+                    <span *ngIf="orderType === 'redeem' && isRedeemTooMuch && (quantity.touched || amount.touched)" class="field-error">{{ 'Insufficient balance to redeem' | translate }}</span>
+                    <span *ngIf="redeemedAll && !addressSelected" class="field-error">{{ 'Please select an Investment Portfolio' | translate }}</span>
                 </div>
             </div>
             <div class="col-sm-6">
@@ -607,10 +606,10 @@
                                 [fractionSize]="2" 
                                 autocomplete="off">
                     </div>
-                    <span *ngIf="amountTooBig" class="text-danger">{{ 'Warning: be aware the order amount exceeds 15 million' | translate }}</span>
-                    <span *ngIf="amount.hasError('required') && amount.touched" class="text-danger">{{ 'Field is required' | translate }}</span>
-                    <span *ngIf="amount.hasError('invalidNumber') && !amount.hasError('required') && amount.touched" class="text-danger">{{ 'Field is invalid' | translate }}</span>
-                    <span *ngIf="!isValidOrderValue() && amount.touched" class="text-danger">{{ 'Less than minimum order value' | translate }}</span>
+                    <span *ngIf="amountTooBig" class="field-error">{{ 'Warning: be aware the order amount exceeds 15 million' | translate }}</span>
+                    <span *ngIf="amount.hasError('required') && amount.touched" class="field-error">{{ 'Field is required' | translate }}</span>
+                    <span *ngIf="amount.hasError('invalidNumber') && !amount.hasError('required') && amount.touched" class="field-error">{{ 'Amount must be a number' | translate }}</span>
+                    <span *ngIf="!isValidOrderValue() && amount.touched" class="field-error">{{ 'Amount must not be less than minimum order value' | translate }}</span>
                 </div>
             </div>
         </div>
@@ -632,7 +631,7 @@
             <div class="col-sm-6">
                 <div class="form-group">
                     <label class="control-label">
-                        {{'Net Amount' | translate}}
+                        {{ 'Net Amount' | translate }}
                     </label>
                     <div>
                         <ng-container *ngIf=" orderType === 'subscribe' ">

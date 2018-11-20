@@ -26,6 +26,7 @@ import {
     mDateHelper,
     MoneyValuePipe,
     NumberConverterService,
+    LogService,
 } from '@setl/utils';
 import {
     InitialisationService,
@@ -43,7 +44,6 @@ import { OrderRequest } from '../../ofi-product/fund-share/helper/models';
 import { OrderByType, OrderType } from '../../ofi-orders/order.model';
 import { ToasterService, Toast } from 'angular2-toaster';
 import { Router } from '@angular/router';
-import { LogService } from '@setl/utils';
 import { MultilingualService } from '@setl/multilingual';
 import { MessagesService } from '@setl/core-messages';
 import { SellBuyCalendar } from '../../ofi-product/fund-share/FundShareEnum';
@@ -334,37 +334,37 @@ export class InvestFundComponent implements OnInit, OnDestroy {
     get allowAmount(): any {
         if (typeof this.orderHelper === 'undefined') {
             return '';
-        } else {
-            let isValid = this.orderHelper.checkOrderByIsAllow('a').orderValid;
-            if (this.allowAmountAndQuantity) {
-                isValid = isValid && (this.actionBy === 'a');
-            }
-
-            return isValid ? null : '';
         }
+
+        let isValid = this.orderHelper.checkOrderByIsAllow('a').orderValid;
+        if (this.allowAmountAndQuantity) {
+            isValid = isValid && (this.actionBy === 'a');
+        }
+
+        return isValid ? null : '';
     }
 
     get allowQuantity(): any {
         if (typeof this.orderHelper === 'undefined') {
             return '';
-        } else {
-            let isValid = this.orderHelper.checkOrderByIsAllow('q').orderValid;
-
-            if (this.allowAmountAndQuantity) {
-                isValid = isValid && (this.actionBy === 'q');
-            }
-            return isValid ? null : '';
         }
+
+        let isValid = this.orderHelper.checkOrderByIsAllow('q').orderValid;
+
+        if (this.allowAmountAndQuantity) {
+            isValid = isValid && (this.actionBy === 'q');
+        }
+        return isValid ? null : '';
     }
 
     get allowAmountAndQuantity(): any {
         if (typeof this.orderHelper === 'undefined') {
             return false;
-        } else {
-            const isAllowedAmount = this.orderHelper.checkOrderByIsAllow('a').orderValid;
-            const isAllowedQuantity = this.orderHelper.checkOrderByIsAllow('q').orderValid;
-            return isAllowedAmount && isAllowedQuantity;
         }
+
+        const isAllowedAmount = this.orderHelper.checkOrderByIsAllow('a').orderValid;
+        const isAllowedQuantity = this.orderHelper.checkOrderByIsAllow('q').orderValid;
+        return isAllowedAmount && isAllowedQuantity;
     }
 
     get shareAsset(): string {
@@ -528,7 +528,6 @@ export class InvestFundComponent implements OnInit, OnDestroy {
             subscribe: {
                 actionLabel: 'subscribe',
                 feeLabel: this.translate.getTranslationByString('Entry Fee'),
-
             },
             redeem: {
                 actionLabel: 'redeem',
@@ -563,7 +562,7 @@ export class InvestFundComponent implements OnInit, OnDestroy {
         .pipe(
             takeUntil(this.unSubscribe),
         )
-        .subscribe(connected => {
+        .subscribe((connected) => {
             this.connectedWalletId = connected;
         });
 
@@ -642,34 +641,37 @@ export class InvestFundComponent implements OnInit, OnDestroy {
         this.timerToast = this.toaster.pop(
             'warning',
             this.translate.translate(
-                'Time left before the next cut-off: @time@', 
-                { 'time': this.getFormattedUnixTime(unixtime) }
+                'Time left before the next cut-off: @time@',
+                { 'time': this.getFormattedUnixTime(unixtime) },
             ),
         );
     }
 
     setToastTimer() {
-        return setInterval(() => {
-            const cutOffValue = new Date(
-                this.calenderHelper
-                .getCutoffTimeForSpecificDate(moment(this.cutoffDate.value), this.getCalendarHelperOrderNumber())
-                .format('YYYY-MM-DD HH:mm'),
-            );
+        return setInterval(
+            () => {
+                const cutOffValue = new Date(
+                    this.calenderHelper
+                    .getCutoffTimeForSpecificDate(moment(this.cutoffDate.value), this.getCalendarHelperOrderNumber())
+                    .format('YYYY-MM-DD HH:mm'),
+                );
 
-            const now = new Date();
+                const now = new Date();
 
-            const remainingTime = cutOffValue.getTime() - now.getTime();
-            if (remainingTime > 0) {
-                this.updateToastTimer(remainingTime);
-            } else {
-                if (this.timerToast) {
-                    this.toaster.clear(this.timerToast.toastId);
-                    this.timerToast = null;
+                const remainingTime = cutOffValue.getTime() - now.getTime();
+                if (remainingTime > 0) {
+                    this.updateToastTimer(remainingTime);
+                } else {
+                    if (this.timerToast) {
+                        this.toaster.clear(this.timerToast.toastId);
+                        this.timerToast = null;
+                    }
+                    this.showAlertCutOffError();
+                    clearInterval(this.toastTimer);
                 }
-                this.showAlertCutOffError();
-                clearInterval(this.toastTimer);
-            }
-        }, 1000);
+            },
+            1000,
+        );
     }
 
     getFormattedUnixTime(value: number): string {
@@ -756,22 +758,25 @@ export class InvestFundComponent implements OnInit, OnDestroy {
 
     updateAddressList(addressList) {
         this.addressListObj = addressList;
-        this.addressList = immutableHelper.reduce(addressList, (result, item) => {
+        this.addressList = immutableHelper.reduce(
+            addressList,
+            (result, item) => {
+                const addr = item.get('addr', false);
+                const label = item.get('label', false);
 
-            const addr = item.get('addr', false);
-            const label = item.get('label', false);
+                if (addr && label) {
+                    const addressItem = {
+                        id: item.get('addr', ''),
+                        text: item.get('label', ''),
+                    };
 
-            if (addr && label) {
-                const addressItem = {
-                    id: item.get('addr', ''),
-                    text: item.get('label', ''),
-                };
+                    result.push(addressItem);
+                }
 
-                result.push(addressItem);
-            }
-
-            return result;
-        }, []);
+                return result;
+            },
+            []
+        );
 
         // Set default or selected address.
         const hasSelectedAddressInList = immutableHelper.filter(this.addressList, (thisItem) => {
@@ -917,7 +922,10 @@ export class InvestFundComponent implements OnInit, OnDestroy {
                 const orderRedeemId = _.get(data, ['1', 'Data', '0', 'linkedRedemptionOrderId'], 0);
                 const orderRedemRef = commonHelper.pad(orderRedeemId, 8, '0');
 
-                orderSuccessMsg = this.translate.translate('Your order @orderRedemRef@ & @orderSubRef@ have been successfully placed and are now initiated.', { 'orderRedemRef': orderRedemRef, 'orderSubRef': orderSubRef });
+                orderSuccessMsg = this.translate.translate(
+                    'Your order @orderRedemRef@ & @orderSubRef@ have been successfully placed and are now initiated.',
+                    { 'orderRedemRef': orderRedemRef, 'orderSubRef': orderSubRef },
+                );
 
                 if (this.amountTooBig) {
                     this.sendMessageToAM({
@@ -938,7 +946,10 @@ export class InvestFundComponent implements OnInit, OnDestroy {
                 const orderId = _.get(data, ['1', 'Data', '0', 'orderID'], 0);
                 const orderRef = commonHelper.pad(orderId, 8, '0');
 
-                orderSuccessMsg = this.translate.translate('Your order @orderRef@ has been successfully placed and is now initiated.', { 'orderRef': orderRef });
+                orderSuccessMsg = this.translate.translate(
+                    'Your order @orderRef@ has been successfully placed and is now initiated.',
+                    { 'orderRef': orderRef },
+                );
 
                 if (this.amountTooBig) {
                     this.sendMessageToAM({
@@ -965,13 +976,19 @@ export class InvestFundComponent implements OnInit, OnDestroy {
     sendMessageToAM(params) {
         const amWalletID = params.walletID;
 
-        const subjectStr = this.translate.translate('Warning - Soft Limit amount exceeded on @orderTypeLabel@ order @orderRef@', { 'orderTypeLabel': params.orderTypeLabel, 'orderRef': params.orderRef });
+        const subjectStr = this.translate.translate(
+            'Warning - Soft Limit amount exceeded on @orderTypeLabel@ order @orderRef@',
+            { 'orderTypeLabel': params.orderTypeLabel, 'orderRef': params.orderRef },
+        );
 
-        let bodyStr = `
+        const bodyStr = `
             <p>
             ${this.translate.translate('Hello')}
             <br /><br />
-            ${this.translate.translate('Please be aware that the @orderTypeLabel@ order @orderRef has exceeded the limit of 15 million.', { 'orderTypeLabel': params.orderTypeLabel, 'orderRef': params.orderRef })}
+            ${this.translate.translate(
+                'Please be aware that the @orderTypeLabel@ order @orderRef has exceeded the limit of 15 million.',
+                { 'orderTypeLabel': params.orderTypeLabel, 'orderRef': params.orderRef },
+            )}
             <br />%@link@%<br /><br />
             ${this.translate.translate('The IZNES Team')}
             .</p>
@@ -1007,7 +1024,6 @@ export class InvestFundComponent implements OnInit, OnDestroy {
 
         const callBack = {
             quantity: (value) => {
-
                 /**
                  * amount = unit * nav
                  * Warning: Before changing this logic check with team lead
@@ -1105,8 +1121,8 @@ export class InvestFundComponent implements OnInit, OnDestroy {
      * @returns {number}
      */
     roundDown(number: any, decimals: any) {
-        decimals = decimals || 0;
-        return math.format((Math.floor(number * Math.pow(10, decimals)) / Math.pow(10, decimals)), 14);
+        const decimalsVal = decimals || 0;
+        return math.format((Math.floor(number * Math.pow(10, decimalsVal)) / Math.pow(10, decimalsVal)), 14);
     }
 
     isValidOrderValue() {
@@ -1299,9 +1315,9 @@ export class InvestFundComponent implements OnInit, OnDestroy {
         this.confirmationService.create(
             `<span>${this.translate.translate('Order Confirmation')}</span>`,
             message,
-            {  
-                confirmText: this.translate.translate('Confirm'), 
-                declineText: this.translate.translate('Cancel'), 
+            {
+                confirmText: this.translate.translate('Confirm'),
+                declineText: this.translate.translate('Cancel'),
                 btnClass: 'primary',
             },
         ).subscribe((ans) => {
@@ -1595,7 +1611,6 @@ export class InvestFundComponent implements OnInit, OnDestroy {
     }
 
     validateKiid() {
-
         this.fileService.validateFile(this.shareData.kiid).then((result) => {
             const data = result[1].Data;
             if (data.error) {
@@ -1652,7 +1667,7 @@ function numberValidator(control: FormControl): { [s: string]: boolean } {
     // check if number is none zero as well
 
     const testString = control.value.toString();
-    const numberParsed = Number.parseInt(testString.replace(/[.,\s]/, ''));
+    const numberParsed = Number.parseInt(testString.replace(/[.,\s]/, ''), 10);
 
     if (!/^\d+$|^\d+[\d,. ]+\d$/.test(testString) || numberParsed === 0) {
         return { invalidNumber: true };
@@ -1665,7 +1680,6 @@ function numberValidator(control: FormControl): { [s: string]: boolean } {
  * @return {{[p: string]: boolean}}
  */
 function emptyArrayValidator(control: FormControl): { [s: string]: boolean } {
-
     const formValue = control.value;
     if (formValue instanceof Array && control.value.length === 0) {
         return { required: true };
@@ -1698,9 +1712,9 @@ function closestDay(dayToFind: number): string {
  * @return {number}
  */
 function calFee(amount: number | string, feePercent: number | string): number {
-    amount = Number(amount);
-    feePercent = Number(feePercent);
-    return Number(math.format(math.chain(amount).multiply((feePercent)).done(), 14));
+    const amountVal = Number(amount);
+    const feePercentVal = Number(feePercent);
+    return Number(math.format(math.chain(amountVal).multiply((feePercentVal)).done(), 14));
 }
 
 /**
@@ -1712,10 +1726,10 @@ function calFee(amount: number | string, feePercent: number | string): number {
  * @return {number}
  */
 function calNetAmount(amount: number | string, fee: number | string, orderType: string): number {
-    amount = Number(amount);
-    fee = Number(fee);
+    const amountVal = Number(amount);
+    const feeVal = Number(fee);
     return {
-        s: Number(math.format(math.chain(amount).add(fee).done(), 14)),
-        r: Number(math.format(math.chain(amount).subtract(fee).done(), 14)),
+        s: Number(math.format(math.chain(amountVal).add(feeVal).done(), 14)),
+        r: Number(math.format(math.chain(amountVal).subtract(feeVal).done(), 14)),
     }[orderType];
 }

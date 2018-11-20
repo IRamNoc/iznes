@@ -1,21 +1,20 @@
 import {
     Component, OnInit, ChangeDetectionStrategy, Input, EventEmitter, Output,
-    ChangeDetectorRef, OnDestroy
+    ChangeDetectorRef, OnDestroy,
 } from '@angular/core';
-import {select} from '@angular-redux/store';
-import {Subscription} from 'rxjs';
+import { select } from '@angular-redux/store';
+import { Subscription } from 'rxjs';
 import * as _ from 'lodash';
 
 @Component({
     selector: 'app-fund-view',
     templateUrl: 'component.html',
     styleUrls: ['./component.scss'],
-    changeDetection: ChangeDetectionStrategy.OnPush
+    changeDetection: ChangeDetectionStrategy.OnPush,
 })
 
 export class FundViewComponent implements OnInit, OnDestroy {
     @Input() shareId: number;
-
     @Output() close: EventEmitter<any> = new EventEmitter();
 
     // List of observable subscription.
@@ -30,7 +29,7 @@ export class FundViewComponent implements OnInit, OnDestroy {
 
     activeTabData: any;
 
-    constructor(private _changeDetectorRef: ChangeDetectorRef) {
+    constructor(private changeDetectorRef: ChangeDetectorRef) {
     }
 
     ngOnInit() {
@@ -43,20 +42,18 @@ export class FundViewComponent implements OnInit, OnDestroy {
         this.categories = ['administrative', 'services', 'category', 'legal', 'fees', 'risk', 'profile', 'characteristic', 'calendar', 'documents'];
 
         this.activeTabData = {
-            category: 'administrative'
+            category: 'administrative',
         };
         // fundDocDici fundDocProductSheet fundProspectus fundReport
     }
 
     ngOnDestroy() {
-
         for (const subscription of this.subscriptionsArray) {
             subscription.unsubscribe();
         }
     }
 
     updateShareData(shareData) {
-
     }
 
     handleClose() {
@@ -65,9 +62,9 @@ export class FundViewComponent implements OnInit, OnDestroy {
 
     tabClick(category) {
         this.activeTabData = {
-            category
+            category,
         };
 
-        this._changeDetectorRef.markForCheck();
+        this.changeDetectorRef.markForCheck();
     }
 }
