@@ -93,7 +93,7 @@
                 <ng-select id="nationalIdNumber-benef-{{index}}" 
                             [items]="identificationNumberList" 
                             formControlName="nationalIdNumber" 
-                            placeholder="{{'Type' | translate}}"></ng-select>
+                            placeholder="{{ 'Type' | translate }}"></ng-select>
                 <span class="field-error" *ngIf="hasError(['legalPerson', 'nationalIdNumber'], ['required'])">{{ 'Field is required' | translate }}</span>
             </div>
 
@@ -114,7 +114,7 @@
                 <input id="holdingPercentage-benef-{{index}}" 
                         type="number" 
                         [formControl]="form.get('common.holdingPercentage')" 
-                        placeholder="{{'Define a value (%)' | translate}}">
+                        placeholder="{{ 'Define a value (%)' | translate }}">
                 <span class="field-error" *ngIf="hasError(['common', 'holdingPercentage'], ['required'])">{{ 'Field is required' | translate }}</span>
                 <span class="field-error" *ngIf="hasError(['common', 'holdingPercentage'], ['min', 'max'])">{{ 'Value must be between 0 and 100' | translate }}</span>
             </div>
@@ -124,7 +124,7 @@
                 <ng-select id="holdingType-benef-{{index}}" 
                             [items]="holdingTypesList" 
                             [formControl]="form.get('common.holdingType')" 
-                            placeholder="{{'Type' | translate}}"></ng-select>
+                            placeholder="{{ 'Type' | translate }}"></ng-select>
                 <span class="field-error" *ngIf="hasError(['common', 'holdingType'], ['required'])">{{ 'Field is required' | translate }}</span>
             </div>
         </div>
@@ -139,7 +139,7 @@
                 <input type="text" 
                         id="firstName-benef-{{index}}" 
                         formControlName="firstName" 
-                        placeholder="{{'Fill in first name' | translate}}">
+                        placeholder="{{ 'Fill in first name' | translate }}">
                 <span class="field-error" *ngIf="hasError(['naturalPerson', 'firstName'], ['required'])">{{ 'Field is required' | translate }}</span>
                 <span class="field-error" *ngIf="hasError(['naturalPerson', 'firstName'], ['maxlength'])">{{ 'Field is too long' | translate }}</span>
             </div>
@@ -148,7 +148,7 @@
                 <input type="text" 
                         id="lastName-benef-{{index}}" 
                         formControlName="lastName" 
-                        placeholder="{{'Fill in last name' | translate}}">
+                        placeholder="{{ 'Fill in last name' | translate }}">
                 <span class="field-error" *ngIf="hasError(['naturalPerson', 'lastName'], ['required'])">{{ 'Field is required' | translate }}</span>
                 <span class="field-error" *ngIf="hasError(['naturalPerson', 'lastName'], ['maxlength'])">{{ 'Field is too long' | translate }}</span>
             </div>
@@ -190,7 +190,7 @@
                 <input type="text"
                         id="city-benef-{{index}}" 
                         [formControl]="form.get('common.city')" 
-                        placeholder="{{'Fill in a city'}}">
+                        placeholder="{{ 'Fill in a city' }}">
                 <span class="field-error" *ngIf="hasError(['common', 'city'], ['required'])">{{ 'Field is required' | translate }}</span>
                 <span class="field-error" *ngIf="hasError(['common', 'city'], ['maxlength'])">{{ 'City is too long' | translate }}</span>
             </div>
@@ -236,6 +236,7 @@
                 <label class="control-label" for="cityOfBirth-benef-{{index}}">{{ 'City of Birth' | translate}}</label>
                 <input type="text"
                         id="cityOfBirth-benef-{{index}}"
+                        placeholder="{{ 'Fill in a city of birth' }}">
                         formControlName="cityOfBirth">
                 <span class="field-error" *ngIf="hasError(['naturalPerson', 'cityOfBirth'], ['required'])">{{ 'Field is required' | translate }}</span>
                 <span class="field-error" *ngIf="hasError(['naturalPerson', 'cityOfBirth'], ['maxlength'])">{{ 'City is too long' | translate }}</span>
@@ -272,7 +273,7 @@
                 <input id="holdingPercentage-benef-{{index}}" 
                         type="number" 
                         [formControl]="form.get('common.holdingPercentage')" 
-                        placeholder="{{'Define a value (%)' | translate}}">
+                        placeholder="{{ 'Define a value (%)' | translate }}">
                 <span class="field-error" *ngIf="hasError(['common', 'holdingPercentage'], ['required'])">{{ 'Field is required' | translate }}</span>
                 <span class="field-error" *ngIf="hasError(['common', 'holdingPercentage'], ['min', 'max'])">{{ 'Value must be between 0 and 100' | translate }}</span>
             </div>
@@ -282,7 +283,7 @@
                 <ng-select id="holdingType-benef-{{index}}" 
                             [items]="holdingTypesList" 
                             [formControl]="form.get('common.holdingType')" 
-                            placeholder="{{'Type' | translate}}"></ng-select>
+                            placeholder="{{ 'Select a type' | translate }}"></ng-select>
                 <span class="field-error" *ngIf="hasError(['common', 'holdingType'], ['required'])">{{ 'Field is required' | translate }}</span>
             </div>
         </div>

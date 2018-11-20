@@ -10,7 +10,7 @@ import { RiskProfileService } from '../risk-profile.service';
 
 @Component({
     selector: 'investment-constraint',
-    templateUrl: './investment-constraint.component.html'
+    templateUrl: './investment-constraint.component.html',
 })
 export class InvestmentConstraintComponent implements OnInit, OnDestroy {
     @ViewChild(FormPercentDirective) formPercent: FormPercentDirective;

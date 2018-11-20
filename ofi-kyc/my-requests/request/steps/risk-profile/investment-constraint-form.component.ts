@@ -10,7 +10,7 @@ import { RiskProfileService } from '../risk-profile.service';
 @Component({
     selector: 'investment-constraint-form',
     templateUrl: './investment-constraint-form.component.html',
-    styleUrls: ['./investment-constraint-form.component.scss']
+    styleUrls: ['./investment-constraint-form.component.scss'],
 })
 export class InvestmentConstraintFormComponent implements OnInit, OnDestroy {
     @Output() refreshForm = new EventEmitter<void>();

@@ -147,7 +147,7 @@ export class NewRequestService {
                 return [acc, curr].join(joiner);
             },
             '',
-            );
+        );
 
         this.context = context;
 

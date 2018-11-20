@@ -11,7 +11,7 @@ export class RiskProfileService {
 
     currentServerData = {
         risknature: new BehaviorSubject({}),
-        riskobjective : new BehaviorSubject({}),
+        riskobjective: new BehaviorSubject({}),
     };
 
     constructor(

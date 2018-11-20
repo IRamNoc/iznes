@@ -8,7 +8,7 @@ import { ClearMyKycListRequested, SetMyKycOpenTab, ClearMyKycOpenTab, SetMyKycOp
 
 @Component({
     styleUrls: ['./my-requests.component.scss'],
-    templateUrl: './my-requests.component.html'
+    templateUrl: './my-requests.component.html',
 })
 export class MyRequestsComponent implements OnInit, OnDestroy {
     @select(['ofi', 'ofiKyc', 'myKycList', 'kycList']) myKycList$;
@@ -33,24 +33,24 @@ export class MyRequestsComponent implements OnInit, OnDestroy {
     initSubscriptions() {
         this.myKycList$
             .pipe(
-                takeUntil(this.unsubscribe)
+                takeUntil(this.unsubscribe),
             )
-            .subscribe(kycList => {
+            .subscribe((kycList) => {
                 this.kycList = kycList;
             });
 
         this.openTabs$
             .pipe(
-                takeUntil(this.unsubscribe)
+                takeUntil(this.unsubscribe),
             )
-            .subscribe(openTabs => {
+            .subscribe((openTabs) => {
                 this.tabs = openTabs;
             });
     }
 
     selectedKyc(kyc) {
-        let kycID = kyc.kycID;
-        let index = findIndex(this.tabs, ['kycID', kycID]);
+        const kycID = kyc.kycID;
+        const index = findIndex(this.tabs, ['kycID', kycID]);
         let action;
 
         if (index !== -1) {
@@ -59,17 +59,17 @@ export class MyRequestsComponent implements OnInit, OnDestroy {
         } else {
             action = SetMyKycOpenTab(
                 {
-                    kycID: kycID,
+                    kycID,
                     companyName: kyc.companyName,
                     displayed: true,
-                }
+                },
             );
             this.ngRedux.dispatch(action);
         }
     }
 
     closeTab(index) {
-        let action = ClearMyKycOpenTab(index);
+        const action = ClearMyKycOpenTab(index);
         this.ngRedux.dispatch(action);
 
         this.isListDisplayed = true;

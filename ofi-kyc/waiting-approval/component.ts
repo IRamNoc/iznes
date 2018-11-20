@@ -5,7 +5,7 @@ import {
     OnDestroy,
     OnInit,
     SecurityContext,
-    ViewChild
+    ViewChild,
 } from '@angular/core';
 import { Location } from '@angular/common';
 import { DomSanitizer } from '@angular/platform-browser';
@@ -15,19 +15,18 @@ import { ActivatedRoute, Router } from '@angular/router';
 import { OfiKycService } from '@ofi/ofi-main/ofi-req-services/ofi-kyc/service';
 import { AlertsService } from '@setl/jaspero-ng2-alerts';
 import { MessageKycConfig, MessagesService } from '@setl/core-messages';
-import { mDateHelper, SagaHelper } from '@setl/utils';
+import { mDateHelper, SagaHelper, ConfirmationService, LogService } from '@setl/utils';
 import { InvestorModel } from './model';
 import { ToasterService } from 'angular2-toaster';
-import { InitialisationService, MyWalletsService } from "@setl/core-req-services";
+import { InitialisationService, MyWalletsService } from '@setl/core-req-services';
 import { CLEAR_REQUESTED } from '@ofi/ofi-main/ofi-store/ofi-kyc/ofi-am-kyc-list';
-import { ConfirmationService, LogService } from '@setl/utils';
 import { MultilingualService } from '@setl/multilingual';
 
 enum Statuses {
     waitingApproval = 1,
     askMoreInfo = 2,
     approved = -1,
-    rejected = -2
+    rejected = -2,
 }
 
 @Component({
@@ -136,7 +135,7 @@ export class OfiWaitingApprovalComponent implements OnInit, OnDestroy {
         this.waitingApprovalFormGroup = this.fb.group({
             status: [status, Validators.required],
             additionalText: ['', Validators.required],
-            isKycAccepted: [false, Validators.required]
+            isKycAccepted: [false, Validators.required],
         });
     }
 

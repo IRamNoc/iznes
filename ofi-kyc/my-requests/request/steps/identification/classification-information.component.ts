@@ -13,7 +13,7 @@ import { MultilingualService } from '@setl/multilingual';
 @Component({
     selector: 'classification-information',
     templateUrl: './classification-information.component.html',
-    styleUrls: ['./classification-information.component.scss']
+    styleUrls: ['./classification-information.component.scss'],
 })
 export class ClassificationInformationComponent implements OnInit, OnDestroy {
     @ViewChild(FormPercentDirective) formPercent: FormPercentDirective;
@@ -38,7 +38,7 @@ export class ClassificationInformationComponent implements OnInit, OnDestroy {
     }
 
     ngOnChanges(changes) {
-        let investorType = changes.investorType.currentValue;
+        const investorType = changes.investorType.currentValue;
 
         if (investorType !== changes.investorType.previousValue) {
             this.investorChanged(investorType);
@@ -46,7 +46,7 @@ export class ClassificationInformationComponent implements OnInit, OnDestroy {
     }
 
     investorChanged(investorType) {
-        let investorStatus = investorStatusList[investorType];
+        const investorStatus = investorStatusList[investorType];
 
         this.form.get('investorStatus').patchValue(investorStatus);
         this.toggleForm(investorType);
@@ -58,7 +58,7 @@ export class ClassificationInformationComponent implements OnInit, OnDestroy {
 
         this.geographicalAreaList = this.newRequestService.geographicalAreaList;
         this.translate.translate(this.geographicalAreaList);
-        
+
         this.natureOfTransactionsList = this.newRequestService.natureOfTransactionsList;
         this.translate.translate(this.natureOfTransactionsList);
 
@@ -70,8 +70,8 @@ export class ClassificationInformationComponent implements OnInit, OnDestroy {
     }
 
     toggleForm(investorType) {
-        let pro: FormGroup = this.form.get('pro');
-        let changeProfessionalStatus = this.form.get('pro.changeProfessionalStatus').value;
+        const pro: FormGroup = this.form.get('pro');
+        const changeProfessionalStatus = this.form.get('pro.changeProfessionalStatus').value;
 
         if (investorType === 'nonPro') {
             pro.disable();
@@ -90,7 +90,7 @@ export class ClassificationInformationComponent implements OnInit, OnDestroy {
     }
 
     toggleNonPro(action) {
-        if(action === 'enable') {
+        if (action === 'enable') {
             (this.form.get('nonPro') as FormGroup).enable();
             (this.form.get('nonPro.activitiesBenefitFromExperience') as FormControl).updateValueAndValidity();
             (this.form.get('nonPro.financialInstruments') as FormControl).updateValueAndValidity();
@@ -104,25 +104,25 @@ export class ClassificationInformationComponent implements OnInit, OnDestroy {
     initCheckForm() {
         this.form.get('nonPro.financialInstruments').valueChanges
             .pipe(
-                takeUntil(this.unsubscribe)
+                takeUntil(this.unsubscribe),
             )
-            .subscribe(data => {
+            .subscribe((data) => {
                 this.formCheckFinancialInstruments(data);
             });
 
         this.form.get('nonPro.activitiesBenefitFromExperience').valueChanges
             .pipe(
-                takeUntil(this.unsubscribe)
+                takeUntil(this.unsubscribe),
             )
-            .subscribe(experienceFinancialFieldValue => {
+            .subscribe((experienceFinancialFieldValue) => {
                 this.formCheckExperienceFinancialField(experienceFinancialFieldValue);
             });
 
         this.form.get('pro.changeProfessionalStatus').valueChanges
             .pipe(
-                takeUntil(this.unsubscribe)
+                takeUntil(this.unsubscribe),
             )
-            .subscribe(changeProfessionalStatus => {
+            .subscribe((changeProfessionalStatus) => {
                 this.formCheckProToNonProChoice(changeProfessionalStatus);
             });
     }
@@ -138,7 +138,7 @@ export class ClassificationInformationComponent implements OnInit, OnDestroy {
     }
 
     formCheckExperienceFinancialField(value) {
-        let experienceFinancialFieldTextControl: FormGroup = this.form.get('nonPro.activitiesBenefitFromExperienceSpecification');
+        const experienceFinancialFieldTextControl: FormGroup = this.form.get('nonPro.activitiesBenefitFromExperienceSpecification');
 
         if (value) {
             experienceFinancialFieldTextControl.enable();
@@ -148,9 +148,9 @@ export class ClassificationInformationComponent implements OnInit, OnDestroy {
     }
 
     formCheckFinancialInstruments(value) {
-        let hasOther = find(value, ['id', 'other']);
-        
-        let financialInstrumentsTextControl: FormGroup = this.form.get('nonPro.financialInstrumentsSpecification');
+        const hasOther = find(value, ['id', 'other']);
+
+        const financialInstrumentsTextControl: FormGroup = this.form.get('nonPro.financialInstrumentsSpecification');
 
         if (hasOther) {
             financialInstrumentsTextControl.enable();
@@ -160,7 +160,7 @@ export class ClassificationInformationComponent implements OnInit, OnDestroy {
     }
 
     isDisabled(path) {
-        let control = this.form.get(path);
+        const control = this.form.get(path);
 
         return control.disabled;
     }
@@ -174,15 +174,15 @@ export class ClassificationInformationComponent implements OnInit, OnDestroy {
             .pipe(
                 filter(requests => !isEmpty(requests)),
                 map(requests => castArray(requests[0])),
-                takeUntil(this.unsubscribe)
+                takeUntil(this.unsubscribe),
             )
-            .subscribe(requests => {
-                requests.forEach(request => {
-                    this.identificationService.getCurrentFormClassificationData(request.kycID).then(formData => {
+            .subscribe((requests) => {
+                requests.forEach((request) => {
+                    this.identificationService.getCurrentFormClassificationData(request.kycID).then((formData) => {
                         if (formData) {
-                            let common = pick(formData, ['kycID', 'investorStatus']);
-                            let pro = pick(formData, ['excludeProducts', 'changeProfessionalStatus']);
-                            let nonPro = omit(formData, ['kycID', 'investorStatus', 'excludeProducts', 'changeProfessionalStatus']);
+                            const common = pick(formData, ['kycID', 'investorStatus']);
+                            const pro = pick(formData, ['excludeProducts', 'changeProfessionalStatus']);
+                            const nonPro = omit(formData, ['kycID', 'investorStatus', 'excludeProducts', 'changeProfessionalStatus']);
                             this.form.patchValue(common);
                             this.form.get('pro').patchValue(pro);
                             this.form.get('nonPro').patchValue(nonPro);

@@ -5,7 +5,6 @@
             {{ 'Information' | translate }}
         </th>
         <th class="left px-1">
-
             {{ 'Value' | translate }}
         </th>
     </tr>
@@ -17,21 +16,21 @@
             {{row.id | translate}}
         </td>
         <td class="left px-1">
-        <span *ngIf="!row.hash">
-            <span *ngIf="!isFromForm(row.originalId) && row.value != ''">
-                {{row.value}}
-            </span>
-
-            <span *ngIf="!isFromForm(row.originalId) && row.value == ''" class="empty">
-                [{{'Value not provided' | translate}}]
-            </span>
-
-            <ng-container *ngIf="isFromForm(row.originalId)">
-                <span *ngFor="let value of split(row.value); last as last">
-                    {{value | translate}}<span *ngIf="!last">,</span>
+            <span *ngIf="!row.hash">
+                <span *ngIf="!isFromForm(row.originalId) && row.value != ''">
+                    {{row.value}}
                 </span>
-            </ng-container>
-        </span>
+
+                <span *ngIf="!isFromForm(row.originalId) && row.value == ''" class="empty">
+                    [{{'Value not provided' | translate}}]
+                </span>
+
+                <ng-container *ngIf="isFromForm(row.originalId)">
+                    <span *ngFor="let value of split(row.value); last as last">
+                        {{value | translate}}<span *ngIf="!last">,</span>
+                    </span>
+                </ng-container>
+            </span>
 
             <setl-file-viewer *ngIf="row.hash && row.hash != 'na'" [fileHash]="row.hash" [viewType]="2"></setl-file-viewer>
         </td>

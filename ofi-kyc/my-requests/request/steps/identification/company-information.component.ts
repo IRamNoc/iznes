@@ -311,11 +311,11 @@ export class CompanyInformationComponent implements OnInit, OnDestroy {
                             beneficiaries.removeAt(0);
                         }
 
-                        const promises = formData.map((controlValue) => {
+                        const promises = formData.map((controlVal) => {
                             const control = this.newRequestService.createBeneficiary();
-                            const documentID = controlValue.documentID;
+                            const documentID = controlVal.documentID;
 
-                            controlValue = buildBeneficiaryObject(controlValue);
+                            const controlValue = buildBeneficiaryObject(controlVal);
 
                             if (documentID) {
                                 return this.documentsService.getDocument(documentID).then((document) => {

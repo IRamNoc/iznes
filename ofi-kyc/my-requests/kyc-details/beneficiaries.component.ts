@@ -3,7 +3,7 @@ import * as _ from 'lodash';
 
 @Component({
     selector: 'kyc-details-beneficiaries',
-    templateUrl: './beneficiaries.component.html'
+    templateUrl: './beneficiaries.component.html',
 })
 export class KycDetailsBeneficiariesComponent implements OnInit {
     @Input() beneficiaries;

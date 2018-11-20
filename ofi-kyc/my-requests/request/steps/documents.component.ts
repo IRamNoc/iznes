@@ -25,13 +25,12 @@ export class NewKycDocumentsComponent implements OnInit, OnDestroy {
         if (isPro) {
             (this.form.get('other') as FormGroup).disable();
             (this.form.get('pro') as FormGroup).enable();
-        }
-        else {
+        } else {
             (this.form.get('other') as FormGroup).enable();
             (this.form.get('pro') as FormGroup).disable();
         }
         this.formPercent.refreshFormPercent();
-    };
+    }
 
     open;
     unsubscribe: Subject<any> = new Subject();
@@ -104,16 +103,16 @@ export class NewKycDocumentsComponent implements OnInit, OnDestroy {
     }
 
     uploadFile($event, formControl: AbstractControl) {
-        formControl = <FormControl> formControl;
+        const fControl = <FormControl> formControl;
 
         if (!$event.files.length) {
-            const type = formControl.get('type').value;
+            const type = fControl.get('type').value;
             const newDocumentControl = this.newRequestService.createDocumentFormGroup(type).value;
-            formControl.patchValue(newDocumentControl);
+            fControl.patchValue(newDocumentControl);
         } else {
             this.requestsService.uploadFile($event).then((file: any) => {
-                formControl.get('hash').patchValue(file.fileHash);
-                formControl.get('name').patchValue(file.fileTitle);
+                fControl.get('hash').patchValue(file.fileHash);
+                fControl.get('name').patchValue(file.fileTitle);
             });
         }
     }

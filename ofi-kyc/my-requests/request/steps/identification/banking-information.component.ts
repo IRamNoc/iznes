@@ -7,7 +7,7 @@ import { select } from '@angular-redux/store';
 import { FormPercentDirective } from '@setl/utils/directives/form-percent/formpercent';
 import { IdentificationService } from '../identification.service';
 import { NewRequestService } from '../../new-request.service';
-import { countries } from "../../../requests.config";
+import { countries } from '../../../requests.config';
 
 @Component({
     selector: 'banking-information',

@@ -10,7 +10,7 @@ import { steps } from '../../requests.config';
 
 @Component({
     selector: 'kyc-step-risk-profile',
-    templateUrl: './risk-profile.component.html'
+    templateUrl: './risk-profile.component.html',
 })
 export class NewKycRiskProfileComponent implements OnInit, OnDestroy {
     @Input() form;
@@ -32,7 +32,7 @@ export class NewKycRiskProfileComponent implements OnInit, OnDestroy {
         this.initSubscriptions();
     }
 
-    initSubscriptions(){
+    initSubscriptions() {
         this.requests$
             .pipe(
                 map(kycs => kycs[0]),
@@ -59,10 +59,10 @@ export class NewKycRiskProfileComponent implements OnInit, OnDestroy {
         this.requests$
             .pipe(
                 rxFilter(requests => !isEmpty(requests)),
-                takeUntil(this.unsubscribe)
+                takeUntil(this.unsubscribe),
             )
-            .subscribe(requests => {
-                requests.forEach(request => {
+            .subscribe((requests) => {
+                requests.forEach((request) => {
                     this.riskProfileService.getCurrentFormObjectiveData(request.kycID);
                     this.riskProfileService.getCurrentFormNatureData(request.kycID);
                 });
@@ -77,7 +77,7 @@ export class NewKycRiskProfileComponent implements OnInit, OnDestroy {
             {
                 reset: false,
                 returnPromise: true,
-            }
+            },
         ).then(() => {
             this.formWatch.next(true);
         });
@@ -87,7 +87,7 @@ export class NewKycRiskProfileComponent implements OnInit, OnDestroy {
         this.persistService.refreshState(
             'newkycrequest/riskProfile',
             this.newRequestService.createRiskProfileFormGroup(),
-            this.newRequestService.context
+            this.newRequestService.context,
         );
     }
 
@@ -100,9 +100,9 @@ export class NewKycRiskProfileComponent implements OnInit, OnDestroy {
 
         this.requests$
             .pipe(
-                take(1)
+                take(1),
             )
-            .subscribe(requests => {
+            .subscribe((requests) => {
                 this.riskProfileService.sendRequest(this.form, requests).then(() => {
                     this.clearPersistForm();
                 });

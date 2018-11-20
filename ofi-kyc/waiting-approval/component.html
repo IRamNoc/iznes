@@ -77,7 +77,12 @@
                         <div class="statuses col-sm-12">
                             <div class="status col-sm-2" *ngFor="let status of statuses">
                                 <span class="statusRadio">
-                                    <input id="{{status.id}}" type="radio" formControlName="status" [value]="status.value" [checked]="status.value === statusId" (change)="handleStatusChange()">
+                                    <input id="{{status.id}}" 
+                                            type="radio" 
+                                            formControlName="status" 
+                                            [value]="status.value" 
+                                            [checked]="status.value === statusId" 
+                                            (change)="handleStatusChange()">
                                 </span>
 
                                 <span class="statusLabel">
@@ -90,7 +95,11 @@
                         <div class="form-group col-sm-12">
                             <div class="form-check" *ngIf="waitingApprovalFormGroup.controls['status'].value === APPROVED_STATUS">
 
-                                <input id="checkbox" class="form-check-input" type="checkbox" formControlName="isKycAccepted" value="false">&nbsp;
+                                <input id="checkbox" 
+                                        class="form-check-input" 
+                                        type="checkbox" 
+                                        formControlName="isKycAccepted" 
+                                        value="false">&nbsp;
                                 <label class="form-check-label" for="checkbox">{{ 'We hereby validate that this client has fully completed the KYC documents with us, and is authorised to trade with us.' | translate }}</label>
                             </div>
                         </div>

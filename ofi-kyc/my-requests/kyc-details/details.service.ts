@@ -3,7 +3,6 @@ import { NgRedux } from '@angular-redux/store';
 import { get as getValue, toPairs, map, chain, value, omit, pickBy, pick, find, parseInt, isNil, toString, sortBy } from 'lodash';
 import { OfiKycService } from '@ofi/ofi-main/ofi-req-services/ofi-kyc/service';
 import * as requestsConfig from '../requests.config';
-
 import { clearkycdetailsall } from '@ofi/ofi-main/ofi-store/ofi-kyc/kyc-details';
 
 @Injectable({
@@ -13,11 +12,11 @@ export class KycDetailsService {
 
     constructor(
         private ofiKycService: OfiKycService,
-        private ngRedux: NgRedux<any>
+        private ngRedux: NgRedux<any>,
     ) {
     }
 
-    clearData(){
+    clearData() {
         this.ngRedux.dispatch(clearkycdetailsall());
     }
 
@@ -76,7 +75,7 @@ export class KycDetailsService {
         return array;
     }
 
-    order(data){
+    order(data) {
         return sortBy(data, (val) => {
             return requestsConfig.controlOrder.indexOf(val.originalId);
         });
@@ -89,7 +88,7 @@ export class KycDetailsService {
     extractDocuments(documents) {
         return documents.map(document => ({
             id: this.getDocumentType(document.type),
-            hash: document.hash
+            hash: document.hash,
         }));
     }
 
@@ -103,7 +102,7 @@ export class KycDetailsService {
                         if (document) {
                             row.hash = document.hash;
                             row.name = document.name;
-                        } else{
+                        } else {
                             row.hash = 'na';
                         }
                     },
@@ -122,11 +121,11 @@ export class KycDetailsService {
     }
 
     getValueFromControl(controlName, controlValue) {
-        let listName = requestsConfig.controlToList[controlName];
-        let list = requestsConfig[listName];
+        const listName = requestsConfig.controlToList[controlName];
+        const list = requestsConfig[listName];
 
         if (requestsConfig.booleanControls.indexOf(controlName) !== -1) {
-            controlValue = parseInt(controlValue);
+            controlValue = parseInt(controlValue, 10);
 
             if (controlValue === 0) {
                 controlValue = 'No';
@@ -136,11 +135,14 @@ export class KycDetailsService {
         }
         if (list) {
             controlValue = toString(controlValue);
-            return (controlValue as string).split(' ').reduce((acc, cur) => {
-                let found = find(list, ['id', cur]);
-                found = found ? found.text : cur;
-                return acc ? [acc, found].join('|') : found;
-            }, '');
+            return (controlValue as string).split(' ').reduce(
+                (acc, cur) => {
+                    let found = find(list, ['id', cur]);
+                    found = found ? found.text : cur;
+                    return acc ? [acc, found].join('|') : found;
+                },
+                '',
+            );
         }
 
         return controlValue;
