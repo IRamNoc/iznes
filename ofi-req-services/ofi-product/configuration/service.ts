@@ -20,7 +20,8 @@ export class OfiProductConfigService {
 
     constructor(private memberSocketService: MemberSocketService,
                 private logService: LogService,
-                private numberService: NumberConverterService) {
+                private numberService: NumberConverterService,
+    ) {
     }
 
     static defaultRequestProductConfig(ofiFundService: OfiProductConfigService,

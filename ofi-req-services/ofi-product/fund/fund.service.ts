@@ -24,7 +24,6 @@ import { OfiUmbrellaFundService } from '../umbrella-fund/service';
 
 @Injectable()
 export class OfiFundService {
-
     accountId = 0;
     isFundRequested: boolean;
 
@@ -47,7 +46,6 @@ export class OfiFundService {
             this.unSubscribe.next();
             this.unSubscribe.complete();
         });
-
     }
 
     initSubscribers() {
@@ -78,7 +76,7 @@ export class OfiFundService {
     requestIznesFundList(): any {
         const messageBody: IznesFundRequestMessageBody = {
             RequestName: 'izngetfundlist',
-            token: this.memberSocketService.token
+            token: this.memberSocketService.token,
         };
 
         return createMemberNodeSagaRequest(this.memberSocketService, messageBody);

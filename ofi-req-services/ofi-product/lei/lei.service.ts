@@ -15,7 +15,6 @@ export class LeiService {
         private memberSocketService: MemberSocketService,
         private ngRedux: NgRedux<any>,
     ) {
-
     }
 
     fetchLEIs() {

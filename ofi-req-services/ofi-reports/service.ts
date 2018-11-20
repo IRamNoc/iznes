@@ -1,10 +1,10 @@
 /* Core/Angular imports. */
-import {Injectable} from '@angular/core';
-import {NgRedux} from '@angular-redux/store';
+import { Injectable } from '@angular/core';
+import { NgRedux } from '@angular-redux/store';
 /* Membersocket and nodeSagaRequest import. */
-import {MemberSocketService} from '@setl/websocket-service';
-import {createMemberNodeSagaRequest} from '@setl/utils/common';
-import {SagaHelper} from '@setl/utils';
+import { MemberSocketService } from '@setl/websocket-service';
+import { createMemberNodeSagaRequest } from '@setl/utils/common';
+import { SagaHelper } from '@setl/utils';
 /* Import actions. */
 import {
     OFI_SET_AM_HOLDERS_LIST,
@@ -56,7 +56,10 @@ import {
 export class OfiReportsService {
 
     /* Constructor. */
-    constructor(private memberSocketService: MemberSocketService, private ngRedux: NgRedux<any>) {
+    constructor(
+        private memberSocketService: MemberSocketService,
+        private ngRedux: NgRedux<any>,
+    ) {
     }
 
     static setRequestedAmHoldersList(boolValue: boolean, ngRedux: NgRedux<any>) {
@@ -225,7 +228,6 @@ export class OfiReportsService {
 
     /* CENTRALISATION FUNDS */
     requestCentralisationReportsFundsList(): any {
-
         const messageBody: MemberNodeMessageBody = {
             RequestName: 'izngetsimplefunds',
             token: this.memberSocketService.token,
@@ -255,7 +257,6 @@ export class OfiReportsService {
     /* CENTRALISATION SHARES */
 
     requestCentralisationReportsSharesList(): any {
-
         const messageBody: MemberNodeMessageBody = {
             RequestName: 'izngetsimpleshares',
             token: this.memberSocketService.token,
@@ -285,7 +286,6 @@ export class OfiReportsService {
     /* PRECENTRALISATION FUNDS */
 
     requestPrecentralisationReportsFundsList(): any {
-
         const messageBody: MemberNodeMessageBody = {
             RequestName: 'izngetsimplefunds',
             token: this.memberSocketService.token,
@@ -315,7 +315,6 @@ export class OfiReportsService {
     /* PRECENTRALISATION SHARES */
 
     requestPrecentralisationReportsSharesList(): any {
-
         const messageBody: MemberNodeMessageBody = {
             RequestName: 'izngetsimpleshares',
             token: this.memberSocketService.token,

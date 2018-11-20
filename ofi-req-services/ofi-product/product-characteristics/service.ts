@@ -20,7 +20,6 @@ import * as _ from 'lodash';
 
 @Injectable()
 export class ProductCharacteristicsService implements OnDestroy {
-
     productList = List();
 
     unSubscribe: Subject<any> = new Subject();
@@ -53,7 +52,6 @@ export class ProductCharacteristicsService implements OnDestroy {
             return;
         }
         this.fetchProductCharacteristics(isin);
-
     }
 
     fetchProductCharacteristics(isin: string) {

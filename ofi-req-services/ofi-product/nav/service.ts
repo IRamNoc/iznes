@@ -23,7 +23,7 @@ import {
     SET_NAV_LATEST,
     setRequestedNavFundView,
     setRequestedNavLatest,
-    setRequestedNavFundsList
+    setRequestedNavFundsList,
 } from '../../../ofi-store/ofi-product/nav';
 
 import { SET_NAV_AUDIT } from '../../../ofi-store/ofi-product/nav-audit';
@@ -33,7 +33,8 @@ const DETAIL_UPLOAD_MODE = 'detail';
 
 @Injectable()
 export class OfiNavService {
-    constructor(private memberSocketService: MemberSocketService) {
+    constructor(private memberSocketService: MemberSocketService,
+    ) {
     }
 
     /**
@@ -55,7 +56,7 @@ export class OfiNavService {
             [SET_NAV_FUNDS_LIST],
             [],
             asyncTaskPipe,
-            {}
+            {},
         ));
     }
 
@@ -78,7 +79,7 @@ export class OfiNavService {
             [SET_NAV_FUND_VIEW],
             [],
             asyncTaskPipe,
-            {}
+            {},
         ));
     }
 
@@ -101,7 +102,7 @@ export class OfiNavService {
             [SET_NAV_FUND_HISTORY],
             [],
             asyncTaskPipe,
-            {}
+            {},
         ));
     }
 
@@ -128,7 +129,7 @@ export class OfiNavService {
             [SET_NAV_LATEST],
             [],
             asyncTaskPipe,
-            {}
+            {},
         ));
     }
 
@@ -154,8 +155,8 @@ export class OfiNavService {
             [],
             asyncTaskPipe,
             {},
-            (res) => successCallback(res),
-            (res) => errorCallback(res)
+            res => successCallback(res),
+            res => errorCallback(res),
         ));
     }
 
@@ -181,8 +182,8 @@ export class OfiNavService {
             [],
             asyncTaskPipe,
             {},
-            (res) => successCallback(res),
-            (res) => errorCallback(res)
+            res => successCallback(res),
+            res => errorCallback(res),
         ));
     }
 
@@ -194,7 +195,8 @@ export class OfiNavService {
      * @param ngRedux
      * @param requestData
      */
-    static defaultCancelNav(ofiNavService: OfiNavService,
+    static defaultCancelNav(
+        ofiNavService: OfiNavService,
         ngRedux: NgRedux<any>,
         requestData: any,
         successCallback: (res) => void,
@@ -208,8 +210,8 @@ export class OfiNavService {
             [],
             asyncTaskPipe,
             {},
-            (res) => successCallback(res),
-            (res) => errorCallback(res)
+            res => successCallback(res),
+            res => errorCallback(res),
         ));
     }
 
@@ -235,8 +237,8 @@ export class OfiNavService {
             [],
             asyncTaskPipe,
             {},
-            (res) => successCallback(res),
-            (res) => errorCallback(res)
+            res => successCallback(res),
+            res => errorCallback(res),
         ));
     }
 
@@ -247,7 +249,7 @@ export class OfiNavService {
             shareId: _.get(requestData, 'shareId', undefined),
             fundName: _.get(requestData, 'fundName', ''),
             navDateField: _.get(requestData, 'navDateField', 'navDate'),
-            navDate: _.get(requestData, 'navDate', null)
+            navDate: _.get(requestData, 'navDate', null),
         };
 
         return createMemberNodeSagaRequest(this.memberSocketService, messageBody);
@@ -259,7 +261,7 @@ export class OfiNavService {
             token: this.memberSocketService.token,
             shareId: _.get(requestData, 'shareId', undefined),
             navDateFrom: _.get(requestData, 'navDateFrom', null),
-            navDateTo: _.get(requestData, 'navDateTo', null)
+            navDateTo: _.get(requestData, 'navDateTo', null),
         };
 
         return createMemberNodeSagaRequest(this.memberSocketService, messageBody);
@@ -270,7 +272,7 @@ export class OfiNavService {
             RequestName: 'izngetnavfundlatest',
             token: this.memberSocketService.token,
             fundShareId: _.get(requestData, 'fundShareId', null),
-            navDate: _.get(requestData, 'navDate', null)
+            navDate: _.get(requestData, 'navDate', null),
         };
 
         return createMemberNodeSagaRequest(this.memberSocketService, messageBody);
@@ -284,7 +286,7 @@ export class OfiNavService {
             fundDate: _.get(requestData, 'fundDate', ''),
             navPublicationDate: _.get(requestData, 'navPublicationDate', ''),
             price: _.get(requestData, 'price', 0),
-            priceStatus: _.get(requestData, 'priceStatus', 0)
+            priceStatus: _.get(requestData, 'priceStatus', 0),
         };
 
         return createMemberNodeSagaRequest(this.memberSocketService, messageBody);
@@ -296,7 +298,7 @@ export class OfiNavService {
             token: this.memberSocketService.token,
             shareId: _.get(requestData, 'shareId', ''),
             navDate: _.get(requestData, 'navDate', ''),
-            navStatus: _.get(requestData, 'navStatus', '')
+            navStatus: _.get(requestData, 'navStatus', ''),
         };
 
         return createMemberNodeSagaRequest(this.memberSocketService, messageBody);
@@ -307,7 +309,7 @@ export class OfiNavService {
             RequestName: 'izncancelnav',
             token: this.memberSocketService.token,
             shareId: _.get(requestData, 'shareId', ''),
-            navDate: _.get(requestData, 'navDate', '')
+            navDate: _.get(requestData, 'navDate', ''),
         };
 
         return createMemberNodeSagaRequest(this.memberSocketService, messageBody);
@@ -321,7 +323,7 @@ export class OfiNavService {
             dateFrom: _.get(requestData, 'dateFrom', ''),
             dateTo: _.get(requestData, 'dateTo', ''),
             offset: _.get(requestData, 'offset', ''),
-            limit: _.get(requestData, 'limit', '')
+            limit: _.get(requestData, 'limit', ''),
         };
 
         return createMemberNodeSagaRequest(this.memberSocketService, messageBody);
@@ -344,7 +346,7 @@ export class OfiNavService {
         };
 
         if (mode === DETAIL_UPLOAD_MODE) {
-            messageBody = {...messageBody, shareIsin: requestData.shareIsin};
+            messageBody = { ...messageBody, shareIsin: requestData.shareIsin };
         }
 
         ngRedux.dispatch(

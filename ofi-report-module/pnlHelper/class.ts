@@ -1,16 +1,15 @@
-import {List, Set} from 'immutable';
-import {immutableHelper, NumberConverterService} from '@setl/utils';
+import { List, Set } from 'immutable';
+import { immutableHelper, NumberConverterService } from '@setl/utils';
 import * as _ from 'lodash';
 import * as math from 'mathjs';
 
 export const enum ActionDirection {
     SUBSCRIPTION = 1,
-    REDEMPTION
+    REDEMPTION,
 }
 
 export interface TradeDetail {
     [transactionId: number]: {
-
         direction: ActionDirection;
         price: number;
         quantity: number;
@@ -27,22 +26,28 @@ export class PnlHelper {
     lastMovement: string;
 
     get realisePnl() {
-        return immutableHelper.reduce(this.tradeList, (result, item) => {
-            if (item.get('direction') === ActionDirection.REDEMPTION) {
-                const thisPnl = item.get('pnl', 0);
-                return result + thisPnl;
-            }
-            return result;
-        }, 0);
+        return immutableHelper.reduce(
+            this.tradeList,
+            (result, item) => {
+                if (item.get('direction') === ActionDirection.REDEMPTION) {
+                    const thisPnl = item.get('pnl', 0);
+                    return result + thisPnl;
+                }
+                return result;
+            },
+            0,
+        );
     }
 
     get unRealisePnl() {
-
-        return this.fifoDeque.reduce((result, item) => {
-            const thisRemaining = _.get(item, 'remainingQuantity', 0);
-            const thisPnl = math.format(math.chain((this.currentPrice - _.get(item, 'price', 0))).multiply(thisRemaining), 14);
-            return result + thisPnl;
-        }, 0);
+        return this.fifoDeque.reduce(
+            (result, item) => {
+                const thisRemaining = _.get(item, 'remainingQuantity', 0);
+                const thisPnl = math.format(math.chain((this.currentPrice - _.get(item, 'price', 0))).multiply(thisRemaining), 14);
+                return result + thisPnl;
+            },
+            0,
+        );
     }
 
     get totalPnl() {
@@ -50,13 +55,17 @@ export class PnlHelper {
     }
 
     get activeBalance() {
-        return immutableHelper.reduce(this.fifoDeque, (total, item) => {
-            const itemRemaining = _.get(item, 'remainingQuantity', 0);
-            if (itemRemaining === 0) {
-                throw new Error('Something gone wrong, when calculating active-balance in Pnl helper.');
-            }
-            return total + itemRemaining;
-        }, 0);
+        return immutableHelper.reduce(
+            this.fifoDeque,
+            (total, item) => {
+                const itemRemaining = _.get(item, 'remainingQuantity', 0);
+                if (itemRemaining === 0) {
+                    throw new Error('Something gone wrong, when calculating active-balance in Pnl helper.');
+                }
+                return total + itemRemaining;
+            },
+            0,
+        );
     }
 
     constructor(currentPrice, numberConverter: NumberConverterService) {
@@ -82,13 +91,12 @@ export class PnlHelper {
     }
 
     executeSubscription(direction, quantity: number, price: number, transactionId: number) {
-
         this.tradeList[transactionId] = {
             direction,
             price,
             quantity,
             pnl: 0,
-            relatedSubscription: []
+            relatedSubscription: [],
         };
 
         this.fifoDeque = this.fifoDeque.push({
@@ -100,7 +108,6 @@ export class PnlHelper {
     }
 
     executeRedemption(direction, quantity: number, price: number, transactionId: number) {
-
         let pnl = 0;
         let remainingRedemptionQuantity = quantity;
         let relatedSubscriptionSet = Set();
@@ -144,14 +151,12 @@ export class PnlHelper {
             remainingRedemptionQuantity = newRemainingRedemptionQuantity;
         }
 
-
         this.tradeList[transactionId] = {
             direction,
             price,
             quantity,
             pnl,
-            relatedSubscription: relatedSubscriptionSet.toJS()
+            relatedSubscription: relatedSubscriptionSet.toJS(),
         };
     }
-
 }

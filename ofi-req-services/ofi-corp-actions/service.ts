@@ -1,17 +1,17 @@
 /* Core/Angular imports. */
-import {Injectable} from '@angular/core';
-import {select, NgRedux} from '@angular-redux/store';
+import { Injectable } from '@angular/core';
+import { select, NgRedux } from '@angular-redux/store';
 
 /* Membersocket and nodeSagaRequest import. */
-import {MemberSocketService} from '@setl/websocket-service';
-import {createMemberNodeSagaRequest} from '@setl/utils/common';
-import {SagaHelper, Common} from '@setl/utils';
+import { MemberSocketService } from '@setl/websocket-service';
+import { createMemberNodeSagaRequest } from '@setl/utils/common';
+import { SagaHelper, Common } from '@setl/utils';
 
 /* Import actions. */
 import {
     OFI_SET_COUPON_LIST,
     OFI_SET_USER_ISSUED_ASSETS,
-    ofiSetRequestedUserIssuedAssets
+    ofiSetRequestedUserIssuedAssets,
 } from '../../ofi-store';
 
 /* Import interfaces for message bodies. */
@@ -21,7 +21,7 @@ import {
     /* Coupons */
     OfiRequestCouponsList,
     OfiSetNewCouponBody,
-    OfiUpdateCouponBody
+    OfiUpdateCouponBody,
 } from './model';
 
 @Injectable()
@@ -29,7 +29,8 @@ export class OfiCorpActionService {
 
     /* Constructor. */
     constructor(private memberSocketService: MemberSocketService,
-                private ngRedux: NgRedux<any>,) {
+                private ngRedux: NgRedux<any>,
+    ) {
         /* Stub. */
     }
 
@@ -51,7 +52,7 @@ export class OfiCorpActionService {
             [OFI_SET_USER_ISSUED_ASSETS],
             [],
             asyncTaskPipe,
-            {}
+            {},
         ));
     }
 
@@ -72,8 +73,8 @@ export class OfiCorpActionService {
 
         /* Return the new member node saga request. */
         return this.buildRequest({
-            'taskPipe': createMemberNodeSagaRequest(this.memberSocketService, messageBody),
-            'successActions': [OFI_SET_COUPON_LIST]
+            taskPipe: createMemberNodeSagaRequest(this.memberSocketService, messageBody),
+            successActions: [OFI_SET_COUPON_LIST],
         });
     }
 
@@ -96,8 +97,8 @@ export class OfiCorpActionService {
 
         /* Return the new member node saga request. */
         return this.buildRequest({
-            'taskPipe': createMemberNodeSagaRequest(this.memberSocketService, messageBody),
-            'successActions': [OFI_SET_COUPON_LIST]
+            taskPipe: createMemberNodeSagaRequest(this.memberSocketService, messageBody),
+            successActions: [OFI_SET_COUPON_LIST],
         });
     }
 
@@ -112,20 +113,20 @@ export class OfiCorpActionService {
         /* Setup the message body. */
         const messageBody: OfiMemberNodeBody = {
             RequestName: 'getuserissuedasset',
-            token: this.memberSocketService.token
+            token: this.memberSocketService.token,
         };
 
         /* Return the new member node saga request. */
         return this.buildRequest({
-            'taskPipe': createMemberNodeSagaRequest(this.memberSocketService, messageBody),
-            'successActions': [OFI_SET_USER_ISSUED_ASSETS]
+            taskPipe: createMemberNodeSagaRequest(this.memberSocketService, messageBody),
+            successActions: [OFI_SET_USER_ISSUED_ASSETS],
         });
     }
 
     requestUserIssuedAssets(): any {
         const messageBody: OfiMemberNodeBody = {
             RequestName: 'getuserissuedasset',
-            token: this.memberSocketService.token
+            token: this.memberSocketService.token,
         };
 
         return createMemberNodeSagaRequest(this.memberSocketService, messageBody);
@@ -158,8 +159,8 @@ export class OfiCorpActionService {
 
         /* Return the new member node saga request. */
         return this.buildRequest({
-            'taskPipe': createMemberNodeSagaRequest(this.memberSocketService, messageBody),
-            'successActions': []
+            taskPipe: createMemberNodeSagaRequest(this.memberSocketService, messageBody),
+            successActions: [],
         });
     }
 
@@ -184,8 +185,8 @@ export class OfiCorpActionService {
 
         /* Return the new member node saga request. */
         return this.buildRequest({
-            'taskPipe': createMemberNodeSagaRequest(this.memberSocketService, messageBody),
-            'successActions': []
+            taskPipe: createMemberNodeSagaRequest(this.memberSocketService, messageBody),
+            successActions: [],
         });
     }
 
@@ -213,10 +214,9 @@ export class OfiCorpActionService {
                     },
                     (error) => {
                         reject(error);
-                    }
-                )
+                    },
+                ),
             );
-        })
+        });
     }
-
 }
