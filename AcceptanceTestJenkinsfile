@@ -5,7 +5,7 @@ node {
         stage('Establish Tunnel Connection') {
             try{
                 sh '''
-                ssh -N -L localhost:9999:localhost:3306 root@139.162.213.130 &
+                ssh -N -L localhost:9998:localhost:3306 root@139.162.213.130 &
                 '''
             }catch (err) {
                 throw err
