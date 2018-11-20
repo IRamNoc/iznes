@@ -4,7 +4,6 @@ import { Subject } from 'rxjs/Subject';
 import { takeUntil } from 'rxjs/operators';
 import { combineLatest } from 'rxjs/observable/combineLatest';
 import { FormBuilder, FormGroup } from '@angular/forms';
-
 import { OfiUmbrellaFundService } from '@ofi/ofi-main/ofi-req-services/ofi-product/umbrella-fund/service';
 import { MultilingualService } from '@setl/multilingual';
 
@@ -14,7 +13,6 @@ import { MultilingualService } from '@setl/multilingual';
     styleUrls: ['./umbrella-audit-datagrid.component.scss'],
 })
 export class UmbrellaAuditDatagridComponent implements OnInit, OnDestroy, OnChanges {
-
     umbrellaAuditItems = [];
     umbrellaAuditList = [];
     filteredAuditItems = [];
@@ -49,11 +47,9 @@ export class UmbrellaAuditDatagridComponent implements OnInit, OnDestroy, OnChan
                 '',
             ],
         });
-
     }
 
     ngOnInit() {
-
         if (this.umbrellaID) {
             this.umbrellaService.fetchUmbrellaAuditByUmbrellaID(this.umbrellaID);
         }

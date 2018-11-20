@@ -3,7 +3,7 @@
         <div class="row bordered form-group">
 
             <div class="col-sm-3">
-                <label for="input-startdate">{{'Date From' | translate}}
+                <label for="input-startdate">{{ 'Date From' | translate }}
 
                 </label>
                 <div class="input-group date-pick-wrapper">
@@ -17,7 +17,7 @@
                 </div>
             </div>
             <div class="col-sm-3">
-                <label for="input-enddate">{{'Date To' | translate}}
+                <label for="input-enddate">{{ 'Date To' | translate }}
 
                 </label>
                 <div class="input-group date-pick-wrapper">
@@ -61,7 +61,6 @@
         <span class="column-label"></span>
     </clr-dg-column>
 
-
     <clr-dg-row *clrDgItems="let item of filteredAuditItems">
         <clr-dg-cell>{{item.fundName}}</clr-dg-cell>
         <clr-dg-cell>{{item.field}}</clr-dg-cell>
@@ -69,7 +68,6 @@
         <clr-dg-cell>{{item.newValue}}</clr-dg-cell>
         <clr-dg-cell>{{item.modifiedBy}}</clr-dg-cell>
         <clr-dg-cell>{{item.dateModified}}</clr-dg-cell>
-
     </clr-dg-row>
 
     <clr-dg-footer>

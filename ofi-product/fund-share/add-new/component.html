@@ -1,35 +1,35 @@
 <div class="header-breadcrumbs">
     <h1>
-        <i class="fa fa-bars"></i> {{'Add a New Share' | translate}}
+        <i class="fa fa-bars"></i> {{ 'Add a New Share' | translate }}
     </h1>
 </div>
 
 <clr-tabs>
     <clr-tab>
-        <button clrTabLink id="tabFundShareButton">{{'Share' | translate}}</button>
+        <button clrTabLink id="tabFundShareButton">{{ 'Share' | translate }}</button>
         <clr-tab-content class="outer">
-            <h3>{{'Please fill out the following information to create a new Share:' | translate}}</h3>
+            <h3>{{ 'Please fill out the following information to create a new Share' | translate }}:</h3>
 
             <form [formGroup]="newFundShareForm">
                 <section class="form-block" *ngIf="newFundShareForm">
                     <div class="row">
                         <div class="form-group col-sm-3">
-                            <label class="control-label required-field">{{'Is this Share part of an existing Fund?' | translate}}</label>
+                            <label class="control-label required-field">{{ 'Is this Share part of an existing Fund?' | translate }}</label>
                             <ng-select
                                 id="selectFund"
                                 [containerWidth]="'100%'"
                                 [items]="fundListItems"
-                                placeholder="{{'Select a Fund' | translate}}"
+                                placeholder="{{ 'Select a Fund' | translate }}"
                                 [formControl]="newFundShareForm.controls['fund']"
                                 [required]="true">
                             </ng-select>
                         </div>
 
                         <div class="form-group col-sm-3 alt-option btn-container">
-                            <p>{{'or' | translate}}
+                            <p>{{ 'or' | translate }}
                                 <a [routerLink]="['/product-module/product/fund/new']" [queryParams]="{fromShare : 'true', fund : null}"
                                     id="buttonAddNewFund">
-                                    {{'add a new Fund' | translate}}
+                                    {{ 'Add a New Fund' | translate }}
                                 </a>
                             </p>
                         </div>
@@ -39,12 +39,12 @@
                         <form [formGroup]="fundForm">                            
                             <div class="row">
                                 <div class="form-group col-sm-4">
-                                    <label class="control-label">{{'Legal Entity Identifier (LEI)' | translate}}</label>
+                                    <label class="control-label">{{ 'Legal Entity Identifier (LEI)' | translate }}</label>
                                     <input type="text" id="legalEntity" name="legalEntity" formControlName="legalEntity">
                                 </div>
                             
                                 <div class="form-group col-sm-4">
-                                    <label class="control-label">{{'Domicile' | translate}}</label>
+                                    <label class="control-label">{{ 'Domicile' | translate }}</label>
                                     <input type="text" id="domicile" name="domicile" formControlName="domicile">
                                 </div>
                             </div>
@@ -52,7 +52,7 @@
                     </section>
 
                     <div class="row">
-                        <p><strong>- {{'or' | translate}} -</strong></p>
+                        <p><strong>- {{ 'or' | translate }} -</strong></p>
                     </div>
 
                     <div class="row">
@@ -62,7 +62,7 @@
                                 id="share-prefill-select"
                                 [containerWidth]="'100%'"
                                 [items]="shareListItems"
-                                placeholder="{{'Select a share' | translate}}"
+                                placeholder="{{ 'Select a share' | translate }}"
                                 [formControl]="newFundShareForm.controls['share']">
                             </ng-select>
                         </div>
@@ -74,11 +74,11 @@
                 <div class="col-sm-12">
                     <form>
                         <div class="form-group">
-                            <a href="/#/product-module/product" class="btn btn-default" id="buttonBack">{{'Back' | translate}}</a>
+                            <a href="/#/product-module/product" class="btn btn-default" id="buttonBack">{{ 'Back' | translate }}</a>
                             <button type="button" class="btn btn-primary action-button select-fund" id="buttonSelectFund"
                                 (click)="selectFund()"
                                 [disabled]="!isValid()">
-                                {{'Next' | translate}}
+                                {{ 'Next' | translate }}
                             </button>
                         </div>
                     </form>

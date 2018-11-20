@@ -26,7 +26,6 @@ const AM_USERTYPE = 36;
 })
 
 export class OfiManagementCompanyComponent implements OnInit, OnDestroy {
-
     language = 'en';
     private usertype: number;
 
@@ -229,7 +228,6 @@ export class OfiManagementCompanyComponent implements OnInit, OnDestroy {
     }
 
     save() {
-
         if (!this.isFormValid) {
             return;
         }

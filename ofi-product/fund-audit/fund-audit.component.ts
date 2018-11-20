@@ -13,7 +13,6 @@ import { OfiFundService } from '@ofi/ofi-main/ofi-req-services/ofi-product/fund/
     styleUrls: ['./fund-audit.component.scss'],
 })
 export class FundAuditComponent implements OnInit, OnDestroy {
-
     fundID: number;
     fundName: string;
     unSubscribe: Subject<any> = new Subject();

@@ -1,24 +1,22 @@
 <div class="header-breadcrumbs">
     <h1>
-        <i class="fa fa-home"></i> {{'Umbrella Audit Trail:' | translate}} {{umbrellaName}}
+        <i class="fa fa-home"></i> {{ 'Umbrella Audit Trail: @umbrellaName@' | translate: { 'umbrellaName': umbrellaName } }}
     </h1>
 </div>
 
 <clr-tabs>
     <clr-tab>
         <button clrTabLink>
-            <i class="fa fa-th-list"></i> {{'Umbrella Audit Trail' | translate}}
+            <i class="fa fa-th-list"></i> {{ 'Umbrella Audit Trail' | translate }}
         </button>
         <clr-tab-content *clrIfActive>
-
             <div *ngIf="umbrellaID">
                 <umbrella-audit-datagrid [umbrellaID]="umbrellaID"></umbrella-audit-datagrid>
             </div>
 
             <div class="form-group col-sm-6 btn-container">
-                <button id="back-btn" type="button" class="btn btn-default" (click)="navigateToPreviousLocation()">{{'Back' | translate}}</button>
+                <button id="back-btn" type="button" class="btn btn-default" (click)="navigateToPreviousLocation()">{{ 'Back' | translate }}</button>
             </div>
-
         </clr-tab-content>
     </clr-tab>
 </clr-tabs>

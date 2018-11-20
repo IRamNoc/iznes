@@ -6,7 +6,6 @@ import {
 import { NgRedux, select } from '@angular-redux/store';
 import { Observable ,  Subscription } from 'rxjs';
 import { ToasterService } from 'angular2-toaster';
-
 import { ProductConfigTypes } from './Configuration';
 import {
     OfiProductConfigService,
@@ -104,7 +103,7 @@ export class ProductConfigurationComponent implements OnInit, OnDestroy {
     private onCreateSuccess(): void {
         this.redux.dispatch(clearRequestedConfiguration());
 
-        this.toaster.pop('success', this.translate.translate('Product Configuration saved successfully'));
+        this.toaster.pop('success', this.translate.translate('Product configuration saved successfully'));
     }
 
     private onCreateError(e): void {

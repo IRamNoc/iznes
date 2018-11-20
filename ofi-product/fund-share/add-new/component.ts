@@ -22,7 +22,6 @@ import { OfiFundShareService } from '@ofi/ofi-main/ofi-req-services/ofi-product/
     changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class AddNewFundShareComponent implements OnInit, OnDestroy {
-
     fundList: any;
     fundListItems: any[];
     shareList = {};
@@ -55,9 +54,9 @@ export class AddNewFundShareComponent implements OnInit, OnDestroy {
     }
 
     checkIfFromFund() {
-        this.route.queryParams.subscribe(params => {
+        this.route.queryParams.subscribe((params) => {
             if (params.fund) {
-                const fundID = parseInt(params.fund);
+                const fundID = parseInt(params.fund, 10);
                 this.waitForCurrentFund(fundID);
             }
         });
@@ -65,13 +64,13 @@ export class AddNewFundShareComponent implements OnInit, OnDestroy {
 
     waitForCurrentFund(fundID) {
         this.fundListOb.pipe(
-            map(fundItems => {
+            map((fundItems) => {
                 return _.find(fundItems, ['fundID', fundID]);
             }),
             filter(fundItem => !!fundItem),
             take(1),
         )
-            .subscribe(fundItem => {
+            .subscribe((fundItem) => {
                 const newUrl = this.router.createUrlTree([], {
                     queryParams: { fund: null },
                     queryParamsHandling: 'merge',
@@ -101,7 +100,7 @@ export class AddNewFundShareComponent implements OnInit, OnDestroy {
     }
 
     private initSubscriptions(): void {
-        this.subscriptionsArray.push(this.fundListOb.subscribe(navFund => {
+        this.subscriptionsArray.push(this.fundListOb.subscribe((navFund) => {
             this.updateFundList(navFund);
         }));
         this.subscriptionsArray.push(this.newFundShareForm.controls.fund.valueChanges.subscribe((fund) => {
@@ -221,5 +220,4 @@ export class AddNewFundShareComponent implements OnInit, OnDestroy {
             subscription.unsubscribe();
         }
     }
-
 }

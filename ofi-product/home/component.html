@@ -1,14 +1,12 @@
 <!-- Breadcrumbs. -->
 <div class="header-breadcrumbs">
-    <h1 id="am-product-home"><i class="fa fa-bar-chart"></i>{{'Shares / Funds / Umbrella funds' | translate}}
-    </h1>
+    <h1 id="am-product-home"><i class="fa fa-bar-chart"></i>{{ 'Shares / Funds / Umbrella Funds' | translate }}</h1>
 </div>
 
 <!-- Main content. -->
 <section class="subtitle">
-    <p>{{'Here are all the Shares / Funds and Umbrella funds that were created by @amManagementCompany@.' | translate: {'amManagementCompany': amManagementCompany} }}
-        <br>{{'You can also add a new share, a new fund or a new umbrella fund:' | translate}}
-
+    <p>{{ 'Here are all the Shares / Funds and Umbrella funds that were created by @amManagementCompany@.' | translate: {'amManagementCompany': amManagementCompany} }}
+        <br>{{ 'You can also add a new share, a new fund or a new umbrella fund' | translate }}""
     </p>
 </section>
 
@@ -18,7 +16,7 @@
         <div class="col-xs-6">
             <a href="#" (click)="panel.open = !panel.open; $event.preventDefault();">
                 <i class="fa fa-chevron-right" [class.rotate]="panel.open"></i>
-                <h2> {{'@panel.title@' | translate: {'panel.title': panel.title} }} ({{panel.count}})</h2>
+                <h2> {{ '@panel.title@' | translate: {'panel.title': panel.title} }} ({{panel.count}})</h2>
             </a>
         </div>
 
@@ -32,17 +30,19 @@
     <!-- Panel body -->
     <div class="row panel-body" [class.hidden]="!panel.open">
         <div class="col-xs-12">
-            <div class="mb-1" *ngIf="panel.title === 'Shares'">{{'Display only active Shares' | translate}}
+            <div class="mb-1" *ngIf="panel.title === 'Shares'">{{ 'Display only active Shares' | translate }}
 
                 <label class="switch">
-                    <input type="checkbox" class="form-control" id="switchActiveShares" [ngModel]="showOnlyActive" (click)="handleShareToggleClick()">
+                    <input type="checkbox" 
+                            class="form-control" 
+                            id="switchActiveShares" 
+                            [ngModel]="showOnlyActive" 
+                            (click)="handleShareToggleClick()">
                     <span class="slider round"></span>
                 </label>
             </div>
             <clr-datagrid #myDataGrid>
-                <clr-dg-column [clrDgField]="column.dataSource" *ngFor="let column of panel.columns">{{column.label}}
-
-                </clr-dg-column>
+                <clr-dg-column [clrDgField]="column.dataSource" *ngFor="let column of panel.columns">{{column.label}}</clr-dg-column>
                 <clr-dg-column *ngIf="panel.buttons">Actions</clr-dg-column>
 
                 <ng-container *ngIf="!panel.buttons">

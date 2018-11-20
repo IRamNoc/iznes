@@ -12,18 +12,15 @@ import { SET_NEW_PASSWORD } from '@setl/core-store/index';
 import { AlertsService } from '@setl/jaspero-ng2-alerts/index';
 import { MultilingualService } from '@setl/multilingual';
 import { OfiKycService } from '@ofi/ofi-main/ofi-req-services/ofi-kyc/service';
-
 import { take } from 'rxjs/operators';
-import { get as getValue } from 'lodash'
-
+import { get as getValue } from 'lodash';
 
 @Component({
     selector: 'app-profile-my-informations',
     templateUrl: './component.html',
-    styleUrls: ['./component.scss']
+    styleUrls: ['./component.scss'],
 })
 export class OfiProfileMyInformationsComponent implements OnInit {
-
     appConfig: AppConfig;
     userInfo = {
         firstName: '',
@@ -38,7 +35,7 @@ export class OfiProfileMyInformationsComponent implements OnInit {
         amCompanyName: '',
         companyName: '',
         phoneCode: '',
-        phoneNumber: ''
+        phoneNumber: '',
     };
 
     changePassForm: FormGroup;
@@ -72,26 +69,29 @@ export class OfiProfileMyInformationsComponent implements OnInit {
     ) {
         this.appConfig = appConfig;
 
-        let validator = this.appConfig.production ? passwordValidator : null;
-        this.changePassForm = new FormGroup({
-            'oldPassword': new FormControl(
-                '',
-                Validators.required
-            ),
-            'password': new FormControl(
-                '',
-                Validators.compose([
+        const validator = this.appConfig.production ? passwordValidator : null;
+        this.changePassForm = new FormGroup(
+            {
+                oldPassword: new FormControl(
+                    '',
                     Validators.required,
-                    validator
-                ])
-            ),
-            'passwordConfirm': new FormControl(
-                '',
-                Validators.compose([
-                    Validators.required,
-                ])
-            )
-        }, this.passwordValidator);
+                ),
+                password: new FormControl(
+                    '',
+                    Validators.compose([
+                        Validators.required,
+                        validator,
+                    ]),
+                ),
+                passwordConfirm: new FormControl(
+                    '',
+                    Validators.compose([
+                        Validators.required,
+                    ]),
+                ),
+            },
+            this.passwordValidator,
+        );
 
         this.oldPassword = this.changePassForm.controls['oldPassword'];
         this.password = this.changePassForm.controls['password'];
@@ -114,7 +114,7 @@ export class OfiProfileMyInformationsComponent implements OnInit {
                 lastName: d.lastName,
                 companyName: d.companyName,
                 phoneCode: d.phoneCode,
-                phoneNumber: d.phoneNumber
+                phoneNumber: d.phoneNumber,
             };
 
             this.userType = d.userType;
@@ -146,10 +146,9 @@ export class OfiProfileMyInformationsComponent implements OnInit {
         }
 
         if (this.validation > 2) {
-
             const asyncTaskPipe = this.myUserService.saveNewPassword({
                 oldPassword: formValues.oldPassword,
-                newPassword: formValues.password
+                newPassword: formValues.password,
             });
 
             // Get response
@@ -163,15 +162,14 @@ export class OfiProfileMyInformationsComponent implements OnInit {
                         const token = getValue(data, '[1].Data[0].Token', '');
                         this.memberSocketService.token = token;
 
-                        this.toasterService.pop('success', 'Your password has been successfully changed!');
+                        this.toasterService.pop(
+                            'success', this.translate.translate('Your password has been successfully changed'));
                         this.router.navigate(['home']);
                     },
                     (e) => {
-                        this.alertsService.create('warning', `
-                        Failed to change your password!
-                    `);
-                    }
-                )
+                        this.alertsService.create('warning', this.translate.translate('Failed to change your password'));
+                    },
+                ),
             );
         }
     }
@@ -189,18 +187,18 @@ export class OfiProfileMyInformationsComponent implements OnInit {
         this.ngRedux.dispatch(SagaHelper.runAsyncCallback(
             asyncTaskPipe,
             () => {
-                this.toasterService.pop('success', 'Saved changes');
+                this.toasterService.pop('success', this.translate.translate('Saved changes'));
                 this.router.navigate(['home']);
             },
             (data) => {
                 this.toasterService.pop('error', JSON.stringify(data));
-            })
+            }),
         );
     }
 
     hasError(path, error) {
         if (this.changePassForm) {
-            let formControl: AbstractControl = path ? this.changePassForm.get(path) : this.changePassForm;
+            const formControl: AbstractControl = path ? this.changePassForm.get(path) : this.changePassForm;
 
             if (error !== 'required' && formControl.hasError('required')) {
                 return false;
@@ -210,7 +208,7 @@ export class OfiProfileMyInformationsComponent implements OnInit {
     }
 
     isTouched(path) {
-        let formControl: AbstractControl = this.changePassForm.get(path);
+        const formControl: AbstractControl = this.changePassForm.get(path);
 
         return formControl.touched;
     }

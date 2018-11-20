@@ -2,7 +2,6 @@ import * as _ from 'lodash';
 import { Injectable, Inject } from '@angular/core';
 import { NgRedux } from '@angular-redux/store';
 import { FormGroup, FormBuilder, Validators, FormControl, ValidatorFn, AbstractControl } from '@angular/forms';
-
 import { FileService } from '@setl/core-req-services';
 import { SagaHelper } from '@setl/utils';
 

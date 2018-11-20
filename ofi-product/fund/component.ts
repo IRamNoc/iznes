@@ -171,8 +171,8 @@ export class FundComponent implements OnInit, OnDestroy {
         private route: ActivatedRoute,
         private changeDetectorRef: ChangeDetectorRef,
         private confirmationService: ConfirmationService,
-        public translate: MultilingualService,
         private leiService: LeiService,
+        public translate: MultilingualService,
         @Inject('product-config') productConfig,
     ) {
 
@@ -812,7 +812,7 @@ export class FundComponent implements OnInit, OnDestroy {
             .subscribe((leiList) => {
                 this.leiList = leiList;
 
-                if(this.fundForm) {
+                if (this.fundForm) {
                     this.fundForm.controls.legalEntityIdentifier.updateValueAndValidity({
                         emitEvent: true,
                     });
@@ -1039,7 +1039,7 @@ export class FundComponent implements OnInit, OnDestroy {
         if (!this.param) {
 
             this.fundService.iznCreateFund(payload)
-                .then(fund => {
+                .then((fund) => {
                     const fundID = _.get(fund, ['1', 'Data', '0', 'fundID']);
                     const fundName = _.get(fund, ['1', 'Data', '0', 'fundName']);
 

@@ -39,7 +39,7 @@
             </div>
 
             <div *ngIf="viewMode === 'UMBRELLA'" class="umbrellaForm">
-                <h3>{{ 'Please fill in the following information to create a new Fund:' | translate }}</h3>
+                <h3>{{ 'Please fill in the following information to create a new Fund' | translate }}:</h3>
 
                 <form [formGroup]="umbrellaForm" (ngSubmit)="submitUmbrellaForm()">
                     <section class="form-block">
@@ -67,7 +67,7 @@
 
                         <div class="row" *ngIf="selectedUmbrella == 0">
                             <div class="col-sm-12">
-                                <p>{{ 'The fund is not part of an Umbrella Fund.' | translate }}</p>
+                                <p>{{ 'The Fund is not part of an Umbrella Fund.' | translate }}</p>
                             </div>
                         </div>
 
@@ -106,7 +106,7 @@
 
                         <div class="row">
                             <div class="form-group col-sm-3">
-                                <label class="control-label" for="fund-prefill-select">{{ 'Duplicate an existing fund'
+                                <label class="control-label" for="fund-prefill-select">{{ 'Duplicate an existing Fund'
                                     | translate }}</label>
                                 <ng-select id="fund-prefill-select" 
                                             [containerWidth]="'100%'" 

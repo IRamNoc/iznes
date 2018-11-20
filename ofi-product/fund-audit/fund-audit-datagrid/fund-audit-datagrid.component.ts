@@ -13,7 +13,6 @@ import { MultilingualService } from '@setl/multilingual';
     styleUrls: ['./fund-audit-datagrid.component.scss'],
 })
 export class FundAuditDatagridComponent implements OnInit, OnDestroy, OnChanges {
-
     fundAuditItems = [];
     fundAuditList = [];
     filteredAuditItems = [];

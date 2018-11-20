@@ -110,7 +110,6 @@
                             <div class="form-group required-field col-sm-6">
                                 <label for="uf_registerOfficeAddress" class="control-label">{{ 'Address of the
                                     Registered Office of the Umbrella Fund' | translate }}
-
                                 </label>
                                 <input type="text" id="uf_registerOfficeAddress" formControlName="registerOfficeAddress">
 
@@ -120,7 +119,7 @@
                             </div>
 
                             <div class="form-group col-sm-6">
-                                <label for="uf_registerOfficeAddressLine2" class="control-label">{{ 'Address line 2' |
+                                <label for="uf_registerOfficeAddressLine2" class="control-label">{{ 'Address Line 2' |
                                     translate }}</label>
                                 <input type="text" 
                                         id="uf_registerOfficeAddressLine2" 
@@ -137,7 +136,8 @@
                                         id="uf_registerOfficeAddressZipCode" 
                                         formControlName="registerOfficeAddressZipCode">
 
-                                <div class="field-error">{{ ' Field is required' | translate }}</div>
+                                <div *ngIf="umbrellaFundForm.controls['registerOfficeAddressZipCode'].hasError('required') && umbrellaFundForm.controls['registerOfficeAddressZipCode'].touched"
+                                    class="field-error">{{ 'Field is required' | translate }}</div>
                             </div>
 
                             <div class="form-group required-field col-sm-4">
@@ -146,7 +146,8 @@
                                         id="uf_registerOfficeAddressCity" 
                                         formControlName="registerOfficeAddressCity">
 
-                                <div class="field-error">{{ ' Field is required' | translate }}</div>
+                                <div *ngIf="umbrellaFundForm.controls['registerOfficeAddressCity'].hasError('required') && umbrellaFundForm.controls['registerOfficeAddressCity'].touched"
+                                    class="field-error">{{ 'Field is required' | translate }}</div>
                             </div>
 
                             <div class="form-group required-field col-sm-4">
@@ -158,7 +159,8 @@
                                             [placeholder]="translate.translate('Select a country')" formControlName="registerOfficeAddressCountry">
                                 </ng-select>
 
-                                <div class="field-error">{{ ' Field is required' | translate }}</div>
+                                <div *ngIf="umbrellaFundForm.controls['registerOfficeAddressCountry'].hasError('required') && umbrellaFundForm.controls['registerOfficeAddressCountry'].touched"
+                                    class="field-error">{{ 'Field is required' | translate }}</div>
                             </div>
 
                             <div class="form-group required-field col-sm-6">
@@ -172,7 +174,7 @@
                                             formControlName="domicile">
                                 </ng-select>
 
-                                <div *ngIf="umbrellaFundForm.controls['domicile'].hasError('required') && umbrellaFundForm.controls['domicile'].touched" class="text-danger">{{ 'Field is required' | translate }}</div>
+                                <div *ngIf="umbrellaFundForm.controls['domicile'].hasError('required') && umbrellaFundForm.controls['domicile'].touched" class="field-error">{{ 'Field is required' | translate }}</div>
                             </div>
 
                             <div class="form-group required-field col-sm-6">
@@ -190,9 +192,9 @@
                                 </div>
 
                                 <div *ngIf="umbrellaFundForm.controls['umbrellaFundCreationDate'].hasError('required') && umbrellaFundForm.controls['umbrellaFundCreationDate'].touched"
-                                    class="text-danger">{{ 'Field is required' | translate }}</div>
+                                    class="field-error">{{ 'Field is required' | translate }}</div>
                                 <div *ngIf="umbrellaFundForm.controls['umbrellaFundCreationDate'].hasError('pattern') && umbrellaFundForm.controls['umbrellaFundCreationDate'].touched"
-                                    class="text-danger">{{ 'Incorrect date' | translate }}</div>
+                                    class="field-error">{{ 'Incorrect date' | translate }}</div>
                             </div>
 
                             <div class="form-group required-field col-sm-6">
@@ -205,7 +207,7 @@
                                 </ng-select>
 
                                 <div *ngIf="umbrellaFundForm.controls['managementCompanyID'].hasError('required') && umbrellaFundForm.controls['managementCompanyID'].touched"
-                                    class="text-danger">{{ 'Field is required' | translate }}</div>
+                                    class="field-error">{{ 'Field is required' | translate }}</div>
                             </div>
 
                             <div class="form-group required-field col-sm-6">
@@ -218,7 +220,7 @@
                                 </ng-select>
 
                                 <div *ngIf="umbrellaFundForm.controls['fundAdministratorID'].hasError('required') && umbrellaFundForm.controls['fundAdministratorID'].touched"
-                                    class="text-danger">{{ 'Field is required' | translate }}
+                                    class="field-error">{{ 'Field is required' | translate }}
                                 </div>
                             </div>
 
@@ -232,8 +234,7 @@
                                 </ng-select>
 
                                 <div *ngIf="umbrellaFundForm.controls['custodianBankID'].hasError('required') && umbrellaFundForm.controls['custodianBankID'].touched"
-                                    class="text-danger">{{ 'Field is required' | translate }}
-
+                                    class="field-error">{{ 'Field is required' | translate }}
                                 </div>
                             </div>
 
@@ -243,6 +244,10 @@
                                 <input type="text" 
                                         id="uf_investmentAdvisor" 
                                         formControlName="investmentAdvisorID">
+
+                                <div *ngIf="umbrellaFundForm.controls['investmentAdvisorID'].hasError('required') && umbrellaFundForm.controls['investmentAdvisorID'].touched"
+                                    class="field-error">{{ 'Field is required' | translate }}
+                                </div>
                             </div>
 
                             <div class="form-group col-sm-6">
@@ -375,11 +380,13 @@
                             </div>
                             <div class="form-group col-sm-6">
                                 <label class="control-label" for="uf_additionnalNotes">{{ 'Additional Notes' |
-                                    translate }}</label>
+                                    translate }}
+                                </label>
                                 <textarea id="uf_additionnalNotes" 
                                             class="form-control" 
                                             formControlName="additionnalNotes"
-                                            maxlength="500"></textarea>
+                                            maxlength="500">
+                                </textarea>
                             </div>
                         </div>
                     </div>

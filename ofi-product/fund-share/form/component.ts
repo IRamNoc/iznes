@@ -208,11 +208,11 @@ export class FundShareComponent implements OnInit, OnDestroy {
         )
         .subscribe((params) => {
             const fundShareId = params.get('shareId') as any;
-            this.fundShareId = fundShareId ? parseInt(fundShareId) : fundShareId;
+            this.fundShareId = fundShareId ? parseInt(fundShareId, 10) : fundShareId;
             this.prefill = null;
 
             if (this.userType === userTypeEnum.AM && this.fundShareId) {
-                this.model.fundShareId = parseInt(fundShareId);
+                this.model.fundShareId = parseInt(fundShareId, 10);
                 this.mode = FundShareMode.Update;
                 if (this.currDraft !== 1) {
                     this.model.keyFacts.mandatory.fundShareName.disabled = true;
@@ -793,8 +793,21 @@ export class FundShareComponent implements OnInit, OnDestroy {
     }
 
     private onCreateDocumentsSuccess(data, draft: number): void {
-        this.toaster.pop('success', data.fundShareName + (draft == 1 ? ' draft' : '') +
-            ' has been successfully created');
+        let message;
+
+        if (draft) {
+            message = this.translate.translate(
+                '@fundShareName@ draft has been successfully created',
+                { 'fundShareName': data.fundShareName },
+            );
+        } else {
+            message = this.translate.translate(
+                '@fundShareName@ has been successfully created',
+                { 'fundShareName': data.fundShareName },
+            );
+        }
+
+        this.toaster.pop('success', message);
 
         this.router.navigateByUrl('product-module/product');
     }
@@ -839,12 +852,12 @@ export class FundShareComponent implements OnInit, OnDestroy {
         if (draft) {
             message = this.translate.translate(
                 '@fundShareName@ draft has been successfully updated',
-                { 'fundShareName': this.model.keyFacts.mandatory.fundShareName.value() }
+                { 'fundShareName': this.model.keyFacts.mandatory.fundShareName.value() },
             );
         } else {
             message = this.translate.translate(
                 '@fundShareName@ has been successfully updated',
-                { 'fundShareName': this.model.keyFacts.mandatory.fundShareName.value() }
+                { 'fundShareName': this.model.keyFacts.mandatory.fundShareName.value() },
             );
         }
 
@@ -861,18 +874,18 @@ export class FundShareComponent implements OnInit, OnDestroy {
 
         if (draft) {
             message = this.translate.translate(
-                '@fundShareName@ draft could not be updated', 
-                { 'fundShareName': this.model.keyFacts.mandatory.fundShareName.value() }
+                '@fundShareName@ draft could not be updated',
+                { 'fundShareName': this.model.keyFacts.mandatory.fundShareName.value() },
             );
         } else {
             message = this.translate.translate(
                 '@fundShareName@ could not be updated',
-                { 'fundShareName': this.model.keyFacts.mandatory.fundShareName.value() }
+                { 'fundShareName': this.model.keyFacts.mandatory.fundShareName.value() },
             );
         }
 
         this.toaster.pop(
-            'error', 
+            'error',
             message,
         );
     }

@@ -14,7 +14,7 @@ import { OfiFundShareService } from '@ofi/ofi-main/ofi-req-services/ofi-product/
 import {
     FundShareAuditDetail,
     clearRequestedFundShareAudit,
-    setRequestedFundShareAudit
+    setRequestedFundShareAudit,
 } from '@ofi/ofi-main/ofi-store/ofi-product/fund-share-audit';
 
 import { MultilingualService } from '@setl/multilingual';
@@ -24,7 +24,7 @@ import { getOfiFundShareCurrentRequest } from '@ofi/ofi-main/ofi-store/ofi-produ
     styleUrls: ['./component.scss'],
     selector: 'app-ofi-product-fund-share-audit',
     templateUrl: './component.html',
-    changeDetection: ChangeDetectionStrategy.OnPush
+    changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class FundShareAuditComponent implements OnInit, OnDestroy {
     fundShare;
@@ -38,7 +38,7 @@ export class FundShareAuditComponent implements OnInit, OnDestroy {
         format: 'YYYY-MM-DD',
         closeOnSelect: true,
         disableKeypress: true,
-        locale: null
+        locale: null,
     };
 
     @select(['ofi', 'ofiProduct', 'ofiFundShareAudit', 'requestedFundShareAudit']) fundShareAuditRequestedOb: Observable<any>;
@@ -46,13 +46,16 @@ export class FundShareAuditComponent implements OnInit, OnDestroy {
     @select(['ofi', 'ofiProduct', 'ofiFundShare', 'requested']) fundShareRequestedOb: Observable<any>;
     @select(['ofi', 'ofiProduct', 'ofiFundShare', 'fundShare']) fundShareOb: Observable<any>;
 
-    constructor(private redux: NgRedux<any>,
+    constructor(
+        private redux: NgRedux<any>,
         private route: ActivatedRoute,
         private router: Router,
         private changeDetectorRef: ChangeDetectorRef,
         private service: FundShareAuditService,
         public translate: MultilingualService,
-        private ofiFundShareService: OfiFundShareService) { }
+        private ofiFundShareService: OfiFundShareService,
+    ) {
+    }
 
     ngOnInit() {
         this.initSearchForm();
@@ -61,15 +64,15 @@ export class FundShareAuditComponent implements OnInit, OnDestroy {
     }
 
     private initSubscriptions(): void {
-        this.subscriptionsArray.push(this.route.paramMap.subscribe(params => {
+        this.subscriptionsArray.push(this.route.paramMap.subscribe((params) => {
             const fundShareId = params.get('shareId') as any;
-            this.fundShareId = fundShareId ? parseInt(fundShareId) : fundShareId;
+            this.fundShareId = fundShareId ? parseInt(fundShareId, 10) : fundShareId;
         }));
 
-        this.subscriptionsArray.push(this.fundShareAuditRequestedOb.subscribe(requested => {
+        this.subscriptionsArray.push(this.fundShareAuditRequestedOb.subscribe((requested) => {
             this.requestFundShareAudit(requested);
         }));
-        this.subscriptionsArray.push(this.fundShareAuditOb.subscribe(fundShareAudit => {
+        this.subscriptionsArray.push(this.fundShareAuditOb.subscribe((fundShareAudit) => {
             this.updateFundShareAudit(fundShareAudit);
         }));
 
@@ -82,7 +85,7 @@ export class FundShareAuditComponent implements OnInit, OnDestroy {
 
         this.subscriptionsArray.push(fundShareRequestedSubscription);
 
-        const fundShareSubscription = this.fundShareOb.subscribe(fundShare => {
+        const fundShareSubscription = this.fundShareOb.subscribe((fundShare) => {
             this.fundShare = fundShare;
             this.changeDetectorRef.markForCheck();
         });
@@ -92,7 +95,7 @@ export class FundShareAuditComponent implements OnInit, OnDestroy {
     private initSearchForm(): void {
         this.searchForm = new FormGroup({
             dateFrom: new FormControl(moment().add('-1', 'month').format('YYYY-MM-DD')),
-            dateTo: new FormControl(moment().format('YYYY-MM-DD'))
+            dateTo: new FormControl(moment().format('YYYY-MM-DD')),
         });
 
         this.subscriptionsArray.push(this.searchForm.valueChanges.pipe(debounceTime(1000)).subscribe((values) => {

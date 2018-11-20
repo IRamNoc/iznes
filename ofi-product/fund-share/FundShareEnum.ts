@@ -3,7 +3,7 @@ export enum ClassCodeEnum {
     ClassC,
     ClassD,
     ClassR,
-    ClassI
+    ClassI,
 }
 export enum CurrencyEnum {
     EUR,
@@ -15,12 +15,12 @@ export enum InvestmentStatusEnum {
     SoftClosed,
     HardClosed,
     ClosedRedemption,
-    ClosedSubscriptionRedemption
+    ClosedSubscriptionRedemption,
 }
 export enum StatusEnum {
     Master,
     Feeder,
-    NA
+    NA,
 }
 export enum ValuationFrequencyEnum {
     Daily,
@@ -36,12 +36,12 @@ export enum ValuationFrequencyEnum {
 }
 export enum PricingTypeEnum {
     Historic,
-    Forward
+    Forward,
 }
 export enum CouponTypeEnum {
     Interest,
     CapitalGain,
-    InterestCapitalGain
+    InterestCapitalGain,
 }
 export enum FrequencyOfDistributionDeclarationEnum {
     Daily,
@@ -51,13 +51,13 @@ export enum FrequencyOfDistributionDeclarationEnum {
     Monthly,
     Quartely,
     TwiceAYear,
-    Annually
+    Annually,
 }
 export enum TradeCyclePeriodEnum {
     Daily,
     Weekly,
     Monthly,
-    Yearly
+    Yearly,
 }
 export enum WeeklyDealingDaysEnum {
     FirstBusinessDay,
@@ -66,7 +66,7 @@ export enum WeeklyDealingDaysEnum {
     Tuesday,
     Wednesday,
     Thursday,
-    Friday
+    Friday,
 }
 export enum WeeklyDealingDaysAltEnum {
     CalendarDay,
@@ -75,7 +75,7 @@ export enum WeeklyDealingDaysAltEnum {
     Tuesday,
     Wednesday,
     Thursday,
-    Friday
+    Friday,
 }
 export enum MonthlyDealingDaysEnum {
     First = 1,
@@ -109,7 +109,7 @@ export enum MonthlyDealingDaysEnum {
     TwentyNinth,
     Thirtieth,
     ThirtyFirst,
-    Last
+    Last,
 }
 export enum YearlyDealingDaysEnum {
     January,
@@ -123,7 +123,7 @@ export enum YearlyDealingDaysEnum {
     September,
     October,
     November,
-    December
+    December,
 }
 export enum AssetClassEnum {
     Alternatives,
@@ -135,7 +135,7 @@ export enum AssetClassEnum {
     MoneyMarket,
     Options,
     PrivateEquity,
-    RealEstate
+    RealEstate,
 }
 export enum GeographicalAreaEnum {
     Asia,
@@ -151,17 +151,17 @@ export enum GeographicalAreaEnum {
     LatinAmericaEM,
     MiddleEastAfricaEM,
     UnitedKingdom,
-    USA
+    USA,
 }
 export enum NavHedgeEnum {
     No,
     YesNav,
-    YesResidual
+    YesResidual,
 }
 export enum DistributionPolicyEnum {
     Accumulating,
     Distributing,
-    Both
+    Both,
 }
 export enum LifecycleEnum {
     Projected,
@@ -170,18 +170,18 @@ export enum LifecycleEnum {
     Active,
     Dormant,
     InLiquidation,
-    Terminated
+    Terminated,
 }
 export enum IndexTypeEnum {
     Price,
     Performance,
     PerformanceNetDividends,
-    PerformanceGrossDividends
+    PerformanceGrossDividends,
 }
 export enum ReplicationFirstLevelEnum {
     Physical,
     Synthetical,
-    Others
+    Others,
 }
 export enum ReplicationSecondLevelEnum {
     Full,
@@ -190,18 +190,18 @@ export enum ReplicationSecondLevelEnum {
     UnfundedSwap,
     FundedSwap,
     Combination,
-    Futures
+    Futures,
 }
 export enum SubscriptionCategoryEnum {
     Shares,
     Amount,
-    Both
+    Both,
 }
 export enum CurrencyHedgeEnum {
     NoHedge,
     FullPortfolioHedge,
     CurrencyOverlay,
-    PartialHedge
+    PartialHedge,
 }
 export enum BusinessDaysEnum {
     MinusOne = -1,
@@ -210,7 +210,7 @@ export enum BusinessDaysEnum {
     Two = 2,
     Three = 3,
     Four = 4,
-    Five = 5
+    Five = 5,
 }
 export enum TimezonesEnum {
     UTCP11,
@@ -241,7 +241,7 @@ export enum ListingStatus {
     Planned,
     Active,
     Suspended,
-    Delisted
+    Delisted,
 }
 export enum RiskIndicatorEnum {
     One,
@@ -250,18 +250,18 @@ export enum RiskIndicatorEnum {
     Four,
     Five,
     Six,
-    Seven
+    Seven,
 }
 export enum LiquidityRiskEnum {
     M,
     I,
-    L
+    L,
 }
 export enum PRIIPCategoryEnum {
     One,
     Two,
     Three,
-    Four
+    Four,
 }
 export enum InvestmentAmountEnum {
     OneThousand,
@@ -269,29 +269,29 @@ export enum InvestmentAmountEnum {
     FiftyThousand,
     OneHundredThousand,
     TwoHundredThousand,
-    OneMillion
+    OneMillion,
 }
 export enum InvestorProfileEnum {
     AllInvestors,
     ProfessionalInvestors,
-    EligibleCounterparties
+    EligibleCounterparties,
 }
 export enum ProfileEligibilityEnum {
     Retail,
     Professional,
     Both,
-    Neither
+    Neither,
 }
 export enum HomeCountryRestrictionEnum {
     No,
     Specialized,
     Restricted,
-    Fund
+    Fund,
 }
 export enum MIFIDSecuritiesClassificationEnum {
     NonComplex,
     Complex,
-    Others
+    Others,
 }
 export enum EfamaMainEFCCategoryEnum {
     Equity,
@@ -299,13 +299,13 @@ export enum EfamaMainEFCCategoryEnum {
     MultiAsset,
     MoneyMarket,
     ARIS,
-    Other
+    Other,
 }
 export enum TISTIDReportingEnum {
     YesBoth,
     TIS,
     TID,
-    NoBoth
+    NoBoth,
 }
 export enum FatcaStatusV2Enum {
     SponsoredFFI,
@@ -334,7 +334,7 @@ export enum FatcaStatusV2Enum {
     ExceptedInterAffiliateFFI,
     DirectReportingNFFE,
     SponsoredDirectReportingNFFE,
-    NotAFinancialAccount
+    NotAFinancialAccount,
 }
 
 export enum SellBuyCalendar {
