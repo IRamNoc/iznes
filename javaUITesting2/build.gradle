@@ -3,7 +3,6 @@ version '1.0-SNAPSHOT'
 
 apply plugin: 'groovy'
 apply plugin: 'java'
-compileJava {options.encoding = "US-ASCII"}
 
 sourceCompatibility = 1.8
 
