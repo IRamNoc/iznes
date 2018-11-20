@@ -46,5 +46,4 @@ import { OfiOrdersModule } from '@ofi/ofi-main/ofi-orders/ofi-orders.module';
 
 /* Class. */
 export class OfiSubPortfolio {
-
 }
