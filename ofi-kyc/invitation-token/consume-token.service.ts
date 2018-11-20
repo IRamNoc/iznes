@@ -7,7 +7,7 @@ import { NgRedux } from '@angular-redux/store';
 import {
     ChainService,
     MyWalletsService,
-    InitialisationService
+    InitialisationService,
 } from '@setl/core-req-services';
 import { OfiKycService } from '@ofi/ofi-main/ofi-req-services/ofi-kyc/service';
 

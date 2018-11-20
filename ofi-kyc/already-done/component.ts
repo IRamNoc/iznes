@@ -15,7 +15,7 @@ import { MultilingualService } from '@setl/multilingual';
 @Component({
     selector: 'app-ofi-kyc-already-done',
     templateUrl: './component.html',
-    styleUrls: ['./component.scss']
+    styleUrls: ['./component.scss'],
 })
 export class OfiKycAlreadyDoneComponent implements OnInit, OnDestroy {
     appConfig: AppConfig;
@@ -36,7 +36,7 @@ export class OfiKycAlreadyDoneComponent implements OnInit, OnDestroy {
         email: '',
         phoneCode: '',
         phoneNumber: '',
-        companyName: ''
+        companyName: '',
     };
 
     sendNewKycBody = {
@@ -96,8 +96,8 @@ export class OfiKycAlreadyDoneComponent implements OnInit, OnDestroy {
                 this.amDetails = immutableHelper.copy(this.amDetails);
 
                 this.changeDetectorRef.markForCheck();
-
             });
+
         this.myDetails$.pipe(
             takeUntil(this.unsubscribe))
             .subscribe((d) => {
@@ -113,7 +113,7 @@ export class OfiKycAlreadyDoneComponent implements OnInit, OnDestroy {
 
         this.language$.pipe(
             takeUntil(this.unsubscribe))
-            .subscribe((language) => this.lang = language);
+            .subscribe(language => this.lang = language);
     }
 
     onCancel() {
@@ -127,7 +127,7 @@ export class OfiKycAlreadyDoneComponent implements OnInit, OnDestroy {
                 lang: this.lang,
                 amFirstName: this.amDetails.firstName.value,
                 amCompanyName: this.amDetails.companyName.value,
-                investorCompanyName: this.investorDetails.companyName
+                investorCompanyName: this.investorDetails.companyName,
             });
 
             const newUserDetails = {

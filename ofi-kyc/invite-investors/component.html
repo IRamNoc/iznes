@@ -167,7 +167,7 @@
             <div class="row">
                 <div class="form-group col-sm-12">
                     <button id="btnKycAddInvestor" type="button" class="btn btn-success" (click)="addInvestor(invitationForm)">
-                        <i class="fa fa-plus"></i> {{ 'Add another email invitation' | translate }}
+                        <i class="fa fa-plus"></i> {{ 'Add Another Email Invitation' | translate }}
                     </button>
                 </div>
             </div>
@@ -176,8 +176,8 @@
 
                 <button id="btnKycSubmit" type="submit" class="btn btn-primary" [disabled]="!invitationForm.valid">
                     <i class="fa fa-save"></i>
-                    <span *ngIf="!hasMultipleInvites">{{ 'Send email invitation' | translate }}</span>
-                    <span *ngIf="hasMultipleInvites">{{' Send email invitations' | translate }}</span>
+                    <span *ngIf="!hasMultipleInvites">{{ 'Send Email Invitation' | translate }}</span>
+                    <span *ngIf="hasMultipleInvites">{{' Send Email Invitations' | translate }}</span>
                 </button>
             </div>
         </section>

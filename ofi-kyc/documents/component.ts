@@ -10,10 +10,9 @@ import { MultilingualService } from '@setl/multilingual';
     selector: 'app-invite-investors',
     styleUrls: ['./component.scss'],
     templateUrl: './component.html',
-    changeDetection: ChangeDetectionStrategy.OnPush
+    changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class OfiDocumentsComponent implements OnInit, OnDestroy {
-
     showModal = false;
     countdown = 5;
 
@@ -160,7 +159,7 @@ export class OfiDocumentsComponent implements OnInit, OnDestroy {
                 },
                 open: false,
                 data: this.service.getUmbrellaFunds(),
-                //link: '/product-module/umbrella-funds/:id',
+                // link: '/product-module/umbrella-funds/:id',
             },
             {
                 title: this.translate.translate('Shares, Funds & Umbrella Funds waiting for your validation (modification not yet published to investors on IZNES)'),

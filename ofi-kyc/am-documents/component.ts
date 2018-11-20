@@ -147,7 +147,7 @@ export class OfiAmDocumentsComponent implements OnDestroy, OnInit {
             '2': [],
             '-2': [],
             'invited': [],
-            'all': []
+            'all': [],
         };
 
         const replaceStatus = {

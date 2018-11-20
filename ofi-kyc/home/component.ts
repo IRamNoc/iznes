@@ -6,7 +6,7 @@ import { Subject } from 'rxjs/Subject';
 import 'rxjs/add/operator/takeUntil';
 import { fromJS } from 'immutable';
 import { ToasterService } from 'angular2-toaster';
-import { APP_CONFIG, AppConfig } from '@setl/utils';
+import { APP_CONFIG, AppConfig, ConfirmationService } from '@setl/utils';
 import { MultilingualService } from '@setl/multilingual';
 
 /* Ofi orders request service. */
@@ -18,7 +18,6 @@ import { OfiKycService } from '@ofi/ofi-main/ofi-req-services/ofi-kyc/service';
 import { MyUserService } from '@setl/core-req-services';
 import { SagaHelper } from '@setl/utils/index';
 import { Endpoints } from '../config';
-import { ConfirmationService } from '@setl/utils';
 
 @Component({
     styleUrls: ['./component.scss'],
@@ -116,14 +115,16 @@ export class OfiKycHomeComponent implements AfterViewInit, OnDestroy {
             { id: 'menu-account-module' },
         ]);
 
-        const listToRedux = listImu.reduce((result, item) => {
+        const listToRedux = listImu.reduce(
+            (result, item) => {
+                result.push({
+                    id: item.get('id', ''),
+                });
 
-            result.push({
-                id: item.get('id', ''),
-            });
-
-            return result;
-        }, []);
+                return result;
+            },
+            [],
+        );
 
         this.ngRedux.dispatch({ type: SET_HIGHLIGHT_LIST, data: listToRedux });
         this.ngRedux.dispatch(setAppliedHighlight());
@@ -132,7 +133,7 @@ export class OfiKycHomeComponent implements AfterViewInit, OnDestroy {
         this.confirmationService.create(
             this.translate.translate('My Information'),
             this.translate.translate('My information can be changed later in "Profile" at the top of the page.'),
-            { confirmText: this.translate.translate('OK, I understand'), declineText: '' }
+            { confirmText: this.translate.translate('OK, I understand'), declineText: '' },
         ).subscribe((ans) => {
             if (ans.resolved) {
                 this.closeModal();
@@ -164,7 +165,7 @@ export class OfiKycHomeComponent implements AfterViewInit, OnDestroy {
         this.ngRedux.dispatch(clearAppliedHighlight());
         // this.showModal = false;
 
-        this.route.queryParams.subscribe(queryParams => {
+        this.route.queryParams.subscribe((queryParams) => {
             if (this.isPortfolioManagerType()) {
                 this.portfolioManagerAction();
             } else {

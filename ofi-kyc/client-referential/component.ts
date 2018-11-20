@@ -68,11 +68,10 @@ export class OfiClientReferentialComponent implements OnInit, OnDestroy {
         disableKeypress: true,
         locale: this.language,
         isDayDisabledCallback: (thisDate) => {
-            if (!!thisDate && this.searchForm.controls['searchTo'].value != '') {
+            if (!!thisDate && this.searchForm.controls['searchTo'].value !== '') {
                 return (thisDate.diff(this.searchForm.controls['searchTo'].value) > 0);
-            } else {
-                return false;
             }
+            return false;
         },
     };
 
@@ -83,11 +82,10 @@ export class OfiClientReferentialComponent implements OnInit, OnDestroy {
         disableKeypress: true,
         locale: this.language,
         isDayDisabledCallback: (thisDate) => {
-            if (!!thisDate && this.searchForm.controls['searchFrom'].value != '') {
+            if (!!thisDate && this.searchForm.controls['searchFrom'].value !== '') {
                 return (thisDate.diff(this.searchForm.controls['searchFrom'].value) < 0);
-            } else {
-                return false;
             }
+            return false;
         },
     };
 
@@ -116,13 +114,13 @@ export class OfiClientReferentialComponent implements OnInit, OnDestroy {
                 private alertsService: AlertsService,
                 private ofiKycService: OfiKycService,
                 private toasterService: ToasterService,
-                public translate: MultilingualService,
                 private ofiFundShareService: OfiFundShareService,
                 private ofiKycObservablesService: OfiKycObservablesService,
                 private ngRedux: NgRedux<any>,
                 private fileDownloader: FileDownloader,
                 private route: ActivatedRoute,
-                private router: Router) {
+                private router: Router,
+                public translate: MultilingualService) {
 
         this.investorTypeForm = new FormGroup({
             investorType: new FormControl(''),
@@ -168,25 +166,25 @@ export class OfiClientReferentialComponent implements OnInit, OnDestroy {
         }));
 
         this.subscriptions.push(this.requestedOfiKycListOb.subscribe(
-            (requested) => this.requestKycList(requested)));
+            requested => this.requestKycList(requested)));
 
-        this.subscriptions.push(this.tokenOb.subscribe(token => {
+        this.subscriptions.push(this.tokenOb.subscribe((token) => {
             this.socketToken = token;
         }));
 
-        this.subscriptions.push(this.userIdOb.subscribe(userId => {
+        this.subscriptions.push(this.userIdOb.subscribe((userId) => {
             this.userId = userId;
         }));
 
         this.subscriptions.push(this.searchForm.valueChanges.pipe(debounceTime(500)).subscribe((form) => {
-            if (this.pageType == 'audit') this.requestAuditSearch();
+            if (this.pageType === 'audit') this.requestAuditSearch();
         }));
 
         this.subscriptions.push(
             observableCombineLatest(
                 this.clientReferentialOb,
                 this.amKycListObs,
-                this.route.params
+                this.route.params,
             )
             .subscribe(([clientReferential, amKycList, params]) => {
                 this.kycId = (!params.kycId ? '' : params.kycId);
@@ -198,7 +196,7 @@ export class OfiClientReferentialComponent implements OnInit, OnDestroy {
                 });
 
                 this.showInfo = false;
-                if (!!this.clients[this.kycId] && this.clients[this.kycId].alreadyCompleted == 0) {
+                if (!!this.clients[this.kycId] && this.clients[this.kycId].alreadyCompleted === 0) {
                     this.showInfo = true;
                 }
 
@@ -210,13 +208,13 @@ export class OfiClientReferentialComponent implements OnInit, OnDestroy {
                     this.investorKycIds[amKycList[key].investorUserID].push(amKycList[key].kycID);
                     this.allKycIds.push(amKycList[key].kycID);
 
-                    if (amKycList[key].kycID == this.kycId) this.currentInvestor = amKycList[key];
+                    if (amKycList[key].kycID === this.kycId) this.currentInvestor = amKycList[key];
                 });
 
                 if (!this.isPortfolioManager() && !_.isEmpty(this.currentInvestor)) {
                     this.companyName = _.get(this.currentInvestor, 'investorCompanyName', '');
 
-                    if (this.kycId != '') {
+                    if (this.kycId !== '') {
                         const phoneNumber = (this.currentInvestor.investorPhoneCode && this.currentInvestor.investorPhoneNumber) ? `${this.currentInvestor.investorPhoneCode} ${this.currentInvestor.investorPhoneNumber}` : '';
                         const approvalDateRequestTs = mDateHelper.dateStrToUnixTimestamp(this.currentInvestor.lastUpdated, 'YYYY-MM-DD HH:mm:ss');
                         const approvalDateRequest = mDateHelper.unixTimestampToDateStr(approvalDateRequestTs, 'DD / MM / YYYY');
@@ -226,15 +224,15 @@ export class OfiClientReferentialComponent implements OnInit, OnDestroy {
                             firstName: this.currentInvestor.investorFirstName,
                             lastName: this.currentInvestor.investorLastName,
                             email: this.currentInvestor.investorEmail,
-                            phoneNumber: phoneNumber,
-                            approvalDateRequest: approvalDateRequest,
+                            phoneNumber,
+                            approvalDateRequest,
                         });
                     }
                 } else {
-                   if (this.isPortfolioManager()) {
+                    if (this.isPortfolioManager()) {
                        // force load share access data if portfolio manager.
-                       this.loadTab(2);
-                   }
+                        this.loadTab(2);
+                    }
                 }
 
                 this.changeDetectorRef.markForCheck();
@@ -243,7 +241,7 @@ export class OfiClientReferentialComponent implements OnInit, OnDestroy {
     }
 
     requestSearch() {
-        let investorType = (this.investorTypeForm.controls['investorType'].value.length > 0) ? this.investorTypeForm.controls['investorType'].value[0].id : -1;
+        const investorType = (this.investorTypeForm.controls['investorType'].value.length > 0) ? this.investorTypeForm.controls['investorType'].value[0].id : -1;
         this.ofiKycService.defaultrequestgetclientreferential(investorType);
     }
 
@@ -252,15 +250,14 @@ export class OfiClientReferentialComponent implements OnInit, OnDestroy {
     }
 
     viewClient(id) {
-        this.router.navigateByUrl((id == 'list' ? '/client-referential' : '/client-referential/' + id));
+        this.router.navigateByUrl((id === 'list' ? '/client-referential' : '/client-referential/' + id));
     }
 
     loadTab(tab) {
-        if (tab == 2) {
-
-            let tempOtherData = {};
-            if (this.amKycList.length > 0 && this.amKycList.findIndex((kyc) => kyc.kycID == this.kycId) !== -1) {
-                const kyc = this.amKycList.filter((kyc) => kyc.kycID == this.kycId)[0];
+        if (tab === 2) {
+            const tempOtherData = {};
+            if (this.amKycList.length > 0 && this.amKycList.findIndex(kyc => kyc.kycID === this.kycId) !== -1) {
+                const kyc = this.amKycList.filter(kyc => kyc.kycID === this.kycId)[0];
 
                 this.companyName = kyc.investorCompanyName;
 
@@ -273,7 +270,7 @@ export class OfiClientReferentialComponent implements OnInit, OnDestroy {
                 };
 
                 this.otherData = tempOtherData;
-                let investorWalletData = [];
+                const investorWalletData = [];
 
                 // Get the fund access for investor walletID and render it.
                 this.ofiFundShareService.requestInvestorFundAccess({ investorWalletId: kyc.investorWalletID }).then((data) => {
@@ -283,7 +280,7 @@ export class OfiClientReferentialComponent implements OnInit, OnDestroy {
 
                     this.tableData = [];
                     Object.keys(this.shareData).forEach((key) => {
-                        if (this.shareData[key].draft == 0) {
+                        if (this.shareData[key].draft === 0) {
                             this.tableData.push({
                                 id: this.shareData[key]['fundShareID'],
                                 kycId: this.kycId,
@@ -308,13 +305,11 @@ export class OfiClientReferentialComponent implements OnInit, OnDestroy {
 
                     this.changeDetectorRef.markForCheck();
                 }).catch((e) => {
-
                 });
             }
-        } else if (tab == 3) {
-
-            if (this.amKycList.length > 0 && this.amKycList.findIndex((kyc) => kyc.kycID == this.kycId) !== -1) {
-                const kyc = this.amKycList.filter((kyc) => kyc.kycID == this.kycId)[0];
+        } else if (tab === 3) {
+            if (this.amKycList.length > 0 && this.amKycList.findIndex(kyc => kyc.kycID === this.kycId) !== -1) {
+                const kyc = this.amKycList.filter(kyc => kyc.kycID === this.kycId)[0];
 
                 this.companyName = kyc.investorCompanyName;
             }
@@ -326,20 +321,20 @@ export class OfiClientReferentialComponent implements OnInit, OnDestroy {
                     let fundStats = {
                         fundName: '',
                         amount: 0,
-                        ratio: 0
+                        ratio: 0,
                     };
                     data[1].Data.forEach((row, index) => {
-                        if (tempArr.length > 0 && fundStats['fundName'] != row.fundName) {
+                        if (tempArr.length > 0 && fundStats['fundName'] !== row.fundName) {
                             this.holdingsTable.push({
                                 fundName: fundStats['fundName'],
                                 fundCurrency: fundStats['fundCurrency'],
                                 amount: fundStats['amount'],
-                                ratio: fundStats['ratio']
+                                ratio: fundStats['ratio'],
                             });
                             fundStats = {
                                 fundName: '',
                                 amount: 0,
-                                ratio: 0
+                                ratio: 0,
                             };
                             this.holdingsTable = this.holdingsTable.concat(...tempArr);
                             tempArr = [];
@@ -355,7 +350,7 @@ export class OfiClientReferentialComponent implements OnInit, OnDestroy {
                         fundName: fundStats['fundName'],
                         fundCurrency: fundStats['fundCurrency'],
                         amount: fundStats['amount'],
-                        ratio: fundStats['ratio']
+                        ratio: fundStats['ratio'],
                     });
                     this.holdingsTable = this.holdingsTable.concat(...tempArr);
                 }
@@ -385,8 +380,8 @@ export class OfiClientReferentialComponent implements OnInit, OnDestroy {
      * @returns {number}
      */
     roundDown(number: any, decimals: any) {
-        decimals = decimals || 0;
-        return math.format((Math.floor(number * Math.pow(10, decimals)) / Math.pow(10, decimals)), 14);
+        const decimalsVal = decimals || 0;
+        return math.format((Math.floor(number * Math.pow(10, decimalsVal)) / Math.pow(10, decimalsVal)), 14);
     }
 
     /**
@@ -401,17 +396,17 @@ export class OfiClientReferentialComponent implements OnInit, OnDestroy {
     }
 
     downloadReferentialCSVFile() {
-        let investorType = (this.investorTypeForm.controls['investorType'].value.length > 0) ? this.investorTypeForm.controls['investorType'].value[0].id : -1;
+        const investorType = (this.investorTypeForm.controls['investorType'].value.length > 0) ? this.investorTypeForm.controls['investorType'].value[0].id : -1;
         this.fileDownloader.downLoaderFile({
             method: 'getIznesReferentialCSVFile',
             token: this.socketToken,
             userId: this.userId,
-            type: investorType
+            type: investorType,
         });
     }
 
     requestAuditSearch() {
-        let params = {
+        const params = {
             id: this.kycId,
             search: this.searchForm.controls['searchInvestor'].value,
             from: this.searchForm.controls['searchFrom'].value,
@@ -459,12 +454,12 @@ export class OfiClientReferentialComponent implements OnInit, OnDestroy {
     }
 
     changePage(page) {
-        if (page == this.pageType) {
+        if (page === this.pageType) {
             this.viewClient('list');
         } else {
             this.pageType = page;
-            if (page == 'audit') {
-                if (this.kycId != '') {
+            if (page === 'audit') {
+                if (this.kycId !== '') {
                     this.searchForm.controls['searchInvestor'].patchValue(this.clients[this.kycId].companyName);
                     this.searchForm.controls['searchInvestor'].disable();
                 } else {
@@ -496,11 +491,11 @@ export class OfiClientReferentialComponent implements OnInit, OnDestroy {
       * @return boolean
      */
     isPortfolioManager(): boolean {
-       return this.currentInvestor.investorUserID === null;
+        return this.currentInvestor.investorUserID === null;
     }
 
     ngOnDestroy() {
-        for (let key of this.subscriptions) {
+        for (const key of this.subscriptions) {
             key.unsubscribe();
         }
     }
