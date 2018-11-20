@@ -23,7 +23,7 @@ export class MyHoldingsComponent implements OnInit, OnDestroy {
     searchForm: FormGroup;
     unSubscribe: Subject<any> = new Subject();
     language = 'en';
-    managementCompanyList: any[] = []
+    managementCompanyList: any[] = [];
     allCompaniesList: any[] = [];
 
     @select(['user', 'connected', 'connectedWallet']) connectedWallet$;

@@ -5,7 +5,7 @@ import { NgRedux, select } from '@angular-redux/store';
 import { Unsubscribe } from 'redux';
 import { fromJS } from 'immutable';
 /* Utils. */
-import { ConfirmationService, NumberConverterService } from '@setl/utils';
+import { ConfirmationService, NumberConverterService, mDateHelper } from '@setl/utils';
 /* Alerts and confirms. */
 import { AlertsService } from '@setl/jaspero-ng2-alerts';
 import { Subject } from 'rxjs';
@@ -15,11 +15,10 @@ import { ActivatedRoute, Router } from '@angular/router';
 import { OfiReportsService } from '../../ofi-req-services/ofi-reports/service';
 /* store */
 import { ofiManageOrderActions } from '@ofi/ofi-main/ofi-store';
-import { APP_CONFIG, AppConfig, FileDownloader } from "@setl/utils/index";
+import { APP_CONFIG, AppConfig, FileDownloader } from '@setl/utils/index';
 import * as moment from 'moment';
 import { MultilingualService } from '@setl/multilingual';
 import { get } from 'lodash';
-import { mDateHelper } from '@setl/utils';
 
 /* Types. */
 interface SelectedItem {
@@ -58,11 +57,10 @@ export class CentralisationReportComponent implements OnInit, OnDestroy {
         disableKeypress: true,
         locale: this.language,
         isDayDisabledCallback: (thisDate) => {
-            if (!!thisDate && this.filtersForm.controls['dateTo'].value != '') {
+            if (!!thisDate && this.filtersForm.controls['dateTo'].value !== '') {
                 return (thisDate.diff(this.filtersForm.controls['dateTo'].value) > 0);
-            } else {
-                return false;
             }
+            return false;
         },
     };
     toConfigDate = {
@@ -72,11 +70,10 @@ export class CentralisationReportComponent implements OnInit, OnDestroy {
         disableKeypress: true,
         locale: this.language,
         isDayDisabledCallback: (thisDate) => {
-            if (!!thisDate && this.filtersForm.controls['dateFrom'].value != '') {
+            if (!!thisDate && this.filtersForm.controls['dateFrom'].value !== '') {
                 return (thisDate.diff(this.filtersForm.controls['dateFrom'].value) < 0);
-            } else {
-                return false;
             }
+            return false;
         },
     };
 
@@ -133,18 +130,18 @@ export class CentralisationReportComponent implements OnInit, OnDestroy {
         {
             name: this.translate.translate('Redemption (%)'),
             value: 0,
-        }
+        },
     ];
 
     customColors = [
         {
             name: this.translate.translate('Subscription (%)'),
-            value: '#51AD5B'
+            value: '#51AD5B',
         },
         {
             name: this.translate.translate('Redemption (%)'),
-            value: '#AF2418'
-        }
+            value: '#AF2418',
+        },
     ];
 
     fundsPayload: any;
@@ -175,13 +172,13 @@ export class CentralisationReportComponent implements OnInit, OnDestroy {
                 private alertsService: AlertsService,
                 private route: ActivatedRoute,
                 private router: Router,
-                private _fb: FormBuilder,
+                private fb: FormBuilder,
                 private memberSocketService: MemberSocketService,
                 private ofiReportsService: OfiReportsService,
                 private alerts: AlertsService,
-                private _confirmationService: ConfirmationService,
-                private _numberConverterService: NumberConverterService,
-                private _fileDownloader: FileDownloader,
+                private confirmationService: ConfirmationService,
+                private numberConverterService: NumberConverterService,
+                private fileDownloader: FileDownloader,
                 private translate: MultilingualService,
                 @Inject(APP_CONFIG) appConfig: AppConfig) {
         // reset datagrid
@@ -203,7 +200,7 @@ export class CentralisationReportComponent implements OnInit, OnDestroy {
             {
                 name: this.translate.translate('Redemption (%)'),
                 value: 0,
-            }
+            },
         ];
 
         this.isFundLevel = (this.router.url.indexOf('/centralisation/funds') !== -1) ? true : false;
@@ -225,20 +222,20 @@ export class CentralisationReportComponent implements OnInit, OnDestroy {
         this.createFiltersForm();
         this.filtersForm.reset();
 
-        this.subscriptions.push(this.requestLanguageObj.subscribe((requested) => this.getLanguage(requested)));
+        this.subscriptions.push(this.requestLanguageObj.subscribe(requested => this.getLanguage(requested)));
 
         /* Subscribe for this user's details. */
-        this.subscriptions.push(this.myDetailOb.subscribe((myDetails) => this.myDetails = myDetails));
+        this.subscriptions.push(this.myDetailOb.subscribe(myDetails => this.myDetails = myDetails));
 
         if (this.isFundLevel) {
             // funds list for ng-select
-            this.subscriptions.push(this.requestedFundsListOb.subscribe((requestedFundsList) => this.requestedFundsListFromRedux(requestedFundsList)));
-            this.subscriptions.push(this.fundsListOb.subscribe((fundsList) => this.getFundsListFromRedux(fundsList)));
+            this.subscriptions.push(this.requestedFundsListOb.subscribe(requestedFundsList => this.requestedFundsListFromRedux(requestedFundsList)));
+            this.subscriptions.push(this.fundsListOb.subscribe(fundsList => this.getFundsListFromRedux(fundsList)));
 
             // funds details
             this.subscriptions.push(this.fundsDetailsListOb.subscribe((fundsDetailsList) => {
                 this.fundsDetails = fundsDetailsList;
-                //TODO: temp fix. this.fundsDetails.funds.length > 0 fix in backend.
+                // TODO: temp fix. this.fundsDetails.funds.length > 0 fix in backend.
                 if (this.fundsDetails.totals && this.fundsDetails.funds.length > 0) {
                     if (this.fundsDetails.totals.hasOwnProperty('totalNetAmount')) {
                         this.fundsTotalNetAmount = Number(this.fundsDetails.totals.totalNetAmount);
@@ -257,7 +254,7 @@ export class CentralisationReportComponent implements OnInit, OnDestroy {
                         {
                             name: this.translate.translate('Redemption (%)'),
                             value: (this.fundsTotalRedemptionAmount * 100 / (this.fundsTotalSubscriptionAmount + this.fundsTotalRedemptionAmount)),
-                        }
+                        },
                     ];
                 } else {
                     // this.fundsDetails = [];
@@ -272,7 +269,7 @@ export class CentralisationReportComponent implements OnInit, OnDestroy {
                         {
                             name: this.translate.translate('Redemption (%)'),
                             value: 0,
-                        }
+                        },
                     ];
                 }
                 this.changeDetectorRef.markForCheck();
@@ -281,13 +278,13 @@ export class CentralisationReportComponent implements OnInit, OnDestroy {
 
         if (this.isShareLevel) {
             // share list for ng-select
-            this.subscriptions.push(this.requestedSharesListOb.subscribe((requestedSharesList) => this.requestedSharesListFromRedux(requestedSharesList)));
-            this.subscriptions.push(this.sharesListOb.subscribe((sharesList) => this.getSharesListFromRedux(sharesList)));
+            this.subscriptions.push(this.requestedSharesListOb.subscribe(requestedSharesList => this.requestedSharesListFromRedux(requestedSharesList)));
+            this.subscriptions.push(this.sharesListOb.subscribe(sharesList => this.getSharesListFromRedux(sharesList)));
 
             // shares details
             this.subscriptions.push(this.sharesDetailsListOb.subscribe((sharesDetailsList) => {
                 this.sharesDetails = sharesDetailsList;
-                //TODO: temp fix. this.sharesDetails.shares.length > 0 fix in backend.
+                // TODO: temp fix. this.sharesDetails.shares.length > 0 fix in backend.
                 if (this.sharesDetails.totals && this.sharesDetails.shares.length > 0) {
                     if (this.sharesDetails.totals.hasOwnProperty('totalNetAmount')) {
                         this.sharesTotalNetAmount = Number(this.sharesDetails.totals.totalNetAmount);
@@ -306,7 +303,7 @@ export class CentralisationReportComponent implements OnInit, OnDestroy {
                         {
                             name: this.translate.translate('Redemption (%)'),
                             value: (this.sharesTotalRedemptionAmount * 100 / (this.sharesTotalSubscriptionAmount + this.sharesTotalRedemptionAmount)),
-                        }
+                        },
                     ];
                 } else {
                     // this.sharesDetails = [];
@@ -321,7 +318,7 @@ export class CentralisationReportComponent implements OnInit, OnDestroy {
                         {
                             name: this.translate.translate('Redemption (%)'),
                             value: 0,
-                        }
+                        },
                     ];
                 }
                 this.changeDetectorRef.markForCheck();
@@ -350,7 +347,7 @@ export class CentralisationReportComponent implements OnInit, OnDestroy {
             {
                 name: this.translate.translate('Redemption (%)'),
                 value: 0,
-            }
+            },
         ];
     }
 
@@ -362,15 +359,15 @@ export class CentralisationReportComponent implements OnInit, OnDestroy {
     getLanguage(requested): void {
         if (requested) {
             switch (requested) {
-            case 'fra':
-                this.language = 'fr';
-                break;
-            case 'eng':
-                this.language = 'en';
-                break;
-            default:
-                this.language = 'en';
-                break;
+                case 'fra':
+                    this.language = 'fr';
+                    break;
+                case 'eng':
+                    this.language = 'en';
+                    break;
+                default:
+                    this.language = 'en';
+                    break;
             }
             this.changeDetectorRef.markForCheck();
         }
@@ -385,15 +382,18 @@ export class CentralisationReportComponent implements OnInit, OnDestroy {
     getFundsListFromRedux(fundsList) {
         const listImu = fromJS(fundsList);
 
-        this.fundsList = listImu.reduce((result, item) => {
-            let isLei = (item.get('lei') === '' || item.get('lei') === null) ? '' : ' (' + item.get('isin') + ')';
-            result.push({
-                id: item.get('fundId'),
-                text: item.get('fundName') + isLei,
-            });
+        this.fundsList = listImu.reduce(
+            (result, item) => {
+                const isLei = (item.get('lei') === '' || item.get('lei') === null) ? '' : ' (' + item.get('isin') + ')';
+                result.push({
+                    id: item.get('fundId'),
+                    text: item.get('fundName') + isLei,
+                });
 
-            return result;
-        }, []);
+                return result;
+            },
+            [],
+        );
 
         this.changeDetectorRef.markForCheck();
     }
@@ -407,15 +407,18 @@ export class CentralisationReportComponent implements OnInit, OnDestroy {
     getSharesListFromRedux(sharesList) {
         const listImu = fromJS(sharesList);
 
-        this.sharesList = listImu.reduce((result, item) => {
-            let isIsin = (item.get('isin') === '' || item.get('isin') === null) ? '' : ' (' + item.get('isin') + ')';
-            result.push({
-                id: item.get('shareId'),
-                text: item.get('shareName') + isIsin,
-            });
+        this.sharesList = listImu.reduce(
+            (result, item) => {
+                const isIsin = (item.get('isin') === '' || item.get('isin') === null) ? '' : ' (' + item.get('isin') + ')';
+                result.push({
+                    id: item.get('shareId'),
+                    text: item.get('shareName') + isIsin,
+                });
 
-            return result;
-        }, []);
+                return result;
+            },
+            [],
+        );
 
         this.changeDetectorRef.markForCheck();
     }
@@ -428,10 +431,13 @@ export class CentralisationReportComponent implements OnInit, OnDestroy {
     updateFiltersForm() {
         const tomorrow = moment().add(1, 'days').format('YYYY-MM-DD');
         const lastMonth = moment().subtract(1, 'month').format('YYYY-MM-DD');
-        this.filtersForm.get('specificDate').patchValue([{
-            id: 3,
-            text: this.translate.translate('Specific Settlement Period')
-        }], { emitEvent: false });
+        this.filtersForm.get('specificDate').patchValue(
+            [{
+                id: 3,
+                text: this.translate.translate('Specific Settlement Period'),
+            }],
+            { emitEvent: false },
+        );
         this.filtersForm.get('dateFrom').patchValue(lastMonth, { emitEvent: false });
         this.filtersForm.get('dateTo').patchValue(tomorrow, { emitEvent: false });
         this.filtersForm.get('specificDate').updateValueAndValidity();
@@ -441,7 +447,7 @@ export class CentralisationReportComponent implements OnInit, OnDestroy {
     }
 
     createFiltersForm() {
-        this.filtersForm = this._fb.group({
+        this.filtersForm = this.fb.group({
             selectList: [
                 '',
             ],
@@ -455,7 +461,7 @@ export class CentralisationReportComponent implements OnInit, OnDestroy {
                 '',
             ],
         });
-        this.subscriptions.push(this.filtersForm.valueChanges.subscribe((form) => this.requestSearch(form)));
+        this.subscriptions.push(this.filtersForm.valueChanges.subscribe(form => this.requestSearch(form)));
     }
 
     requestSearch(form) {
@@ -532,7 +538,7 @@ export class CentralisationReportComponent implements OnInit, OnDestroy {
                     {
                         name: this.translate.translate('Redemption (%)'),
                         value: 0,
-                    }
+                    },
                 ];
             }
         }
@@ -562,7 +568,7 @@ export class CentralisationReportComponent implements OnInit, OnDestroy {
                     {
                         name: this.translate.translate('Redemption (%)'),
                         value: 0,
-                    }
+                    },
                 ];
             }
         }
@@ -580,9 +586,8 @@ export class CentralisationReportComponent implements OnInit, OnDestroy {
         if (this.isShareLevel) {
             sharename = get(this.sharesDetails, ['shares', id, 'shareName'], '');
             searchDate = get(this.sharesDetails, ['shares', id, searchDateType], '');
-        }
-        // fund level
-        else {
+        } else {
+            // fund level
             fundname = get(this.fundsDetails, ['funds', id, 'fundName'], '');
             searchDate = get(this.fundsDetails, ['funds', id, searchDateType], '');
         }
@@ -605,7 +610,7 @@ export class CentralisationReportComponent implements OnInit, OnDestroy {
         if (this.myDetails) {
             if (this.myDetails.userId) {
                 if (this.isFundLevel && this.isFundsPayloadOK) {
-                    this._fileDownloader.downLoaderFile({
+                    this.fileDownloader.downLoaderFile({
                         method: 'exportCentralisationFunds',
                         token: this.memberSocketService.token,
                         fundId: this.fundsPayload.fundId,
@@ -616,7 +621,7 @@ export class CentralisationReportComponent implements OnInit, OnDestroy {
                     });
                 }
                 if (this.isShareLevel && this.isSharesPayloadOK) {
-                    this._fileDownloader.downLoaderFile({
+                    this.fileDownloader.downLoaderFile({
                         method: 'exportCentralisationShares',
                         token: this.memberSocketService.token,
                         shareId: this.sharesPayload.shareId,
