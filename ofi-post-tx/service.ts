@@ -15,6 +15,7 @@ import { SagaHelper, commonHelper, LogService } from '@setl/utils';
 import { clearContractNeedHandle, clearRegisterIssuerNeedHandle } from '@setl/core-store';
 import { setLastCreatedRegisterIssuerDetail } from '@setl/core-store/assets/my-issuers/actions';
 import * as moment from 'moment';
+import { MultilingualService } from '@setl/multilingual';
 
 @Injectable()
 export class OfiPostTxService implements OnDestroy {
@@ -24,14 +25,16 @@ export class OfiPostTxService implements OnDestroy {
     @select(['wallet', 'myWalletContract', 'lastCreated']) lastCreatedContractOb;
     @select(['asset', 'myIssuers', 'lastCreated']) lastCreatedIssuer;
 
-    constructor(private _memberSocketService: MemberSocketService,
-                private _ngRedux: NgRedux<any>,
-                private _ofiFundInvestService: OfiFundInvestService,
+    constructor(private memberSocketService: MemberSocketService,
+                private ngRedux: NgRedux<any>,
+                private ofiFundInvestService: OfiFundInvestService,
                 private walletnodeTxService: WalletnodeTxService,
-                private _adminUsersService: AdminUsersService,
-                private _ofiNavService: OfiNavService,
+                private adminUsersService: AdminUsersService,
+                private ofiNavService: OfiNavService,
                 private logService: LogService,
-                private _alertsService: AlertsService) {
+                private alertsService: AlertsService,
+                public translate: MultilingualService,
+    ) {
         this.subscriptionsArray.push(
             this.lastCreatedContractOb.subscribe(lastCreated => this.handleLastCreatedContract(lastCreated)),
             this.lastCreatedIssuer.subscribe(lastCreated => this.handleLastCreatedIssuer(lastCreated)),
@@ -39,14 +42,12 @@ export class OfiPostTxService implements OnDestroy {
     }
 
     ngOnDestroy() {
-
         for (const subscription of this.subscriptionsArray) {
             subscription.unsubscribe();
         }
     }
 
     handleLastCreatedIssuer(lastCreated) {
-
         this.logService.log('blockchain output lastCreated: ', lastCreated);
 
         const needHandle = lastCreated.needHandle;
@@ -69,7 +70,7 @@ export class OfiPostTxService implements OnDestroy {
                     this.saveNewWallet(lastCreated);
                 } else if (currentStep === 'saveFinished') {
                     // set need handle to false;
-                    this._ngRedux.dispatch(clearRegisterIssuerNeedHandle());
+                    this.ngRedux.dispatch(clearRegisterIssuerNeedHandle());
                 }
             }
         }
@@ -86,7 +87,6 @@ export class OfiPostTxService implements OnDestroy {
             if (actionType === 'ofi-arrangement') {
                 this.createArrangement(lastCreated);
             }
-
         }
     }
 
@@ -95,16 +95,16 @@ export class OfiPostTxService implements OnDestroy {
         const arrangementData = _.get(requestData, 'metaData.arrangementData', {});
 
         // save arrangement
-        const asyncTaskPipe = this._ofiFundInvestService.addArrangementRequest(arrangementData);
+        const asyncTaskPipe = this.ofiFundInvestService.addArrangementRequest(arrangementData);
 
-        this._ngRedux.dispatch(SagaHelper.runAsyncCallback(
+        this.ngRedux.dispatch(SagaHelper.runAsyncCallback(
             asyncTaskPipe,
             (response) => {
                 // save arrangement and contract map
                 const arrangementId = _.get(response, '[1].Data[0].arrangementID', 0);
 
                 // set need handle to false;
-                this._ngRedux.dispatch(clearContractNeedHandle());
+                this.ngRedux.dispatch(clearContractNeedHandle());
 
                 // Update success alert message
                 this.updateArrangeCreateStatus({ arrangementId });
@@ -117,14 +117,14 @@ export class OfiPostTxService implements OnDestroy {
                 const contractAddress = _.get(requestData, 'contractAddress', '');
                 const expiry = _.get(requestData, 'contractExpiry', 0);
 
-                const addMapAsyncPipe = this._ofiFundInvestService.addArrangementContractMapRequest({
+                const addMapAsyncPipe = this.ofiFundInvestService.addArrangementContractMapRequest({
                     walletId,
                     arrangementId,
                     contractAddress,
                     expiry,
                 });
 
-                this._ngRedux.dispatch(SagaHelper.runAsyncCallback(
+                this.ngRedux.dispatch(SagaHelper.runAsyncCallback(
                     addMapAsyncPipe,
                     (addMapResponse) => {
                         this.logService.log('success----------------');
@@ -144,31 +144,31 @@ export class OfiPostTxService implements OnDestroy {
     updateArrangeCreateStatus(data) {
         const arrangementId = commonHelper.pad(data.arrangementId, 10, '0');
 
-        this._alertsService.updateView('success', `<table class="table grid">
-                        <tbody>
-                            <tr class="fadeIn">
-                                <td class="text-left text-success" width="500px">
-                                <i class="fa fa-check text-primary" aria-hidden="true"></i>
-                                &nbsp;Order in blockchain ledger</td>
-                            </tr>
-                            <tr class="fadeIn">
-                                <td class="text-left text-success" width="500px">
-                                <i class="fa fa-check text-primary" aria-hidden="true"></i>
-                                &nbsp;Order ID: ${arrangementId}</td>
-                            </tr>
-                        </tbody>
-                    </table>
-        `);
-
+        this.alertsService.updateView(
+            'success',
+            `<table class="table grid">
+                <tbody>
+                    <tr class="fadeIn">
+                        <td class="text-left text-success" width="500px">
+                        <i class="fa fa-check text-primary" aria-hidden="true"></i>
+                        &nbsp;${this.translate.translate('Order in blockchain ledger')}</td>
+                    </tr>
+                    <tr class="fadeIn">
+                        <td class="text-left text-success" width="500px">
+                        <i class="fa fa-check text-primary" aria-hidden="true"></i>
+                        &nbsp;${this.translate.translate('Order ID: @arrangementId@', { 'arrangementId': arrangementId })}</td>
+                    </tr>
+                </tbody>
+            </table>`);
     }
 
     saveNewWallet(requestData) {
         // set need handle to false;
-        this._ngRedux.dispatch(clearRegisterIssuerNeedHandle());
+        this.ngRedux.dispatch(clearRegisterIssuerNeedHandle());
 
         const shareName = requestData.metaData.arrangementData.sharesList[requestData.metaData.arrangementData.currentShare].shareName;
 
-        const asyncTaskPipe = this._adminUsersService.createNewWallet(
+        const asyncTaskPipe = this.adminUsersService.createNewWallet(
             {
                 walletName: shareName,
                 walletAccount: requestData.metaData.arrangementData.accountId,
@@ -176,7 +176,7 @@ export class OfiPostTxService implements OnDestroy {
             },
         );
 
-        this._ngRedux.dispatch(SagaHelper.runAsyncCallback(
+        this.ngRedux.dispatch(SagaHelper.runAsyncCallback(
             asyncTaskPipe,
             (data) => {
                 // this.logService.log('1) saveNewWallet : success', data); // success
@@ -193,7 +193,7 @@ export class OfiPostTxService implements OnDestroy {
     saveNewWalletPermission(requestData) {
         const shareName = requestData.metaData.arrangementData.sharesList[requestData.metaData.arrangementData.currentShare].shareName;
 
-        const asyncTaskPipe = this._adminUsersService.newUserWalletPermissions(
+        const asyncTaskPipe = this.adminUsersService.newUserWalletPermissions(
             {
                 walletName: shareName,
                 userId: requestData.metaData.arrangementData.userId,
@@ -201,13 +201,16 @@ export class OfiPostTxService implements OnDestroy {
             },
         );
 
-        this._ngRedux.dispatch(SagaHelper.runAsyncCallback(
+        this.ngRedux.dispatch(SagaHelper.runAsyncCallback(
             asyncTaskPipe,
             (data) => {
                 // this.logService.log('2) saveNewWalletPermission : success', data); // success
-                setTimeout(() => {
-                    this.saveNewAddress(requestData);
-                },         2000);
+                setTimeout(
+                    () => {
+                        this.saveNewAddress(requestData);
+                    },
+                    2000,
+                );
             },
             (data) => {
                 this.logService.log('saveNewWalletPermission Error: ', data);
@@ -222,7 +225,7 @@ export class OfiPostTxService implements OnDestroy {
             },
         );
 
-        this._ngRedux.dispatch(SagaHelper.runAsyncCallback(
+        this.ngRedux.dispatch(SagaHelper.runAsyncCallback(
             asyncTaskPipe,
             (data) => {
                 // this.logService.log('3) saveNewAddress : success', data); // success
@@ -246,11 +249,11 @@ export class OfiPostTxService implements OnDestroy {
             },
         );
 
-        this._ngRedux.dispatch(SagaHelper.runAsyncCallback(
+        this.ngRedux.dispatch(SagaHelper.runAsyncCallback(
             asyncTaskPipe,
             (data) => {
                 // this.logService.log('4) saveRegisterIssuer : success', data); // success
-                this._ngRedux.dispatch(setLastCreatedRegisterIssuerDetail(data, {
+                this.ngRedux.dispatch(setLastCreatedRegisterIssuerDetail(data, {
                     actionType: 'ofi-create-new-share',
                     arrangementData: {
                         currentShare: requestData.metaData.arrangementData.currentShare,
@@ -269,7 +272,7 @@ export class OfiPostTxService implements OnDestroy {
 
     saveRegisterAsset(requestData) {
         // set need handle to false;
-        this._ngRedux.dispatch(clearRegisterIssuerNeedHandle());
+        this.ngRedux.dispatch(clearRegisterIssuerNeedHandle());
 
         const asyncTaskPipe = this.walletnodeTxService.registerAsset(
             {
@@ -281,7 +284,7 @@ export class OfiPostTxService implements OnDestroy {
             },
         );
 
-        this._ngRedux.dispatch(SagaHelper.runAsyncCallback(
+        this.ngRedux.dispatch(SagaHelper.runAsyncCallback(
             asyncTaskPipe,
             (data) => {
                 // this.logService.log('5) saveRegisterAsset : success', data); // success
@@ -306,7 +309,7 @@ export class OfiPostTxService implements OnDestroy {
             },
         );
 
-        this._ngRedux.dispatch(SagaHelper.runAsyncCallback(
+        this.ngRedux.dispatch(SagaHelper.runAsyncCallback(
             asyncTaskPipe,
             (data) => {
                 // this.logService.log('6) saveCoupon : success', data); // success
@@ -321,7 +324,7 @@ export class OfiPostTxService implements OnDestroy {
     saveIssueAssetMap(requestData) {
         const asset = requestData.metaData.arrangementData.sharesList[requestData.metaData.arrangementData.currentShare].isin +
             '|' + requestData.metaData.arrangementData.sharesList[requestData.metaData.arrangementData.currentShare].shareName;
-        const asyncTaskPipe = this._ofiFundInvestService.insertIssueAssetMap(
+        const asyncTaskPipe = this.ofiFundInvestService.insertIssueAssetMap(
             {
                 address: requestData.metaData.arrangementData.sharesList[requestData.metaData.arrangementData.currentShare].address,
                 asset,
@@ -330,7 +333,7 @@ export class OfiPostTxService implements OnDestroy {
             },
         );
 
-        this._ngRedux.dispatch(SagaHelper.runAsyncCallback(
+        this.ngRedux.dispatch(SagaHelper.runAsyncCallback(
             asyncTaskPipe,
             (data) => {
                 // Save estimated nav for the fundshare.
@@ -342,7 +345,7 @@ export class OfiPostTxService implements OnDestroy {
                 if (requestData.metaData.arrangementData.currentShare < (nbShares - 1)) {
                     requestData.metaData.arrangementData.currentShare++;
                     requestData.metaData.arrangementData.currentStep = 'saveNewWallet';
-                    this._ngRedux.dispatch(setLastCreatedRegisterIssuerDetail(data, {
+                    this.ngRedux.dispatch(setLastCreatedRegisterIssuerDetail(data, {
                         actionType: 'ofi-create-new-share',
                         arrangementData: {
                             currentShare: requestData.metaData.arrangementData.currentShare,
@@ -355,7 +358,7 @@ export class OfiPostTxService implements OnDestroy {
                     }));
                 } else {
                     this.updateSuccessResponse();
-                    this._ngRedux.dispatch(setLastCreatedRegisterIssuerDetail(data, {
+                    this.ngRedux.dispatch(setLastCreatedRegisterIssuerDetail(data, {
                         actionType: 'ofi-create-new-share',
                         arrangementData: {
                             currentShare: requestData.metaData.arrangementData.currentShare,
@@ -376,13 +379,13 @@ export class OfiPostTxService implements OnDestroy {
 
     saveFundShareEstimatedNav(fundShare: string, estimatedNav: number) {
         this.logService.log('saving nav', fundShare, estimatedNav);
-        const asyncTaskPipe = this._ofiNavService.updateNav({
+        const asyncTaskPipe = this.ofiNavService.updateNav({
             fundName: fundShare,
             fundDate: moment().format('YYYY-MM-DD'),
             price: estimatedNav,
             priceStatus: 1,
         });
-        this._ngRedux.dispatch(SagaHelper.runAsyncCallback(
+        this.ngRedux.dispatch(SagaHelper.runAsyncCallback(
             asyncTaskPipe,
             (data) => {
             },
@@ -392,48 +395,50 @@ export class OfiPostTxService implements OnDestroy {
     }
 
     showErrorResponse(response) {
-
         const message = _.get(response, '[1].Data[0].Message', '');
 
-        this._alertsService.create('error', `
-                    <table class="table grid">
-
-                        <tbody>
-                            <tr>
-                                <td class="text-center text-danger">${message}</td>
-                            </tr>
-                        </tbody>
-                    </table>
-                    `);
+        this.alertsService.create(
+            'error',
+            `<table class="table grid">
+                <tbody>
+                    <tr>
+                        <td class="text-center text-danger">${message}</td>
+                    </tr>
+                </tbody>
+            </table>`,
+        );
     }
 
     showSuccessResponse() {
-        this._alertsService.create('waiting', `
-            <table class="table grid">
+        this.alertsService.create(
+            'waiting',
+            `<table class="table grid">
                 <tbody>
                     <tr>
                         <td class="text-center text-warning" width="500px">
-                            <h3><i class="fa fa-exclamation-triangle text-danger" aria-hidden="true"></i>&nbsp;Do not close your browser window</h3>
-                            <p>We are saving your progress. This may take a few moments.</p>
+                            <h3><i class="fa fa-exclamation-triangle text-danger" aria-hidden="true"></i>&nbsp;${this.translate.translate('Do not close your browser window')}</h3>
+                            <p>${this.translate.translate('We are saving your progress. This may take a few moments.')}</p>
                         </td>
                     </tr>
                 </tbody>
-            </table>
-        `);
+            </table>`,
+        );
     }
 
     updateSuccessResponse() {
-        this._alertsService.updateView('success', `<table class="table grid">
+        this.alertsService.updateView(
+            'success',
+            `<table class="table grid">
                 <tbody>
                     <tr class="fadeIn">
                         <td class="text-center text-success" width="500px">
-                            <h3>Your form has been saved successfully!</h3>
-                            <p>You can now close this pop-up.</p>
+                            <h3>${this.translate.translate('Your form has been saved successfully')}</h3>
+                            <p>${this.translate.translate('You can now close this pop-up.')}</p>
                         </td>
                     </tr>
                 </tbody>
-            </table>
-        `);
+            </table>`,
+        );
     }
 
 }

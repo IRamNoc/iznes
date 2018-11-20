@@ -104,24 +104,24 @@ export class PlaceOrdersComponent implements OnInit, OnDestroy {
         this.investmentPortfolioItems = this.translate.translate([
             {
                 id: 1,
-                text: 'investment portfolio 1'
+                text: 'investment portfolio 1',
             },
             {
                 id: 2,
-                text: 'investment portfolio 2'
+                text: 'investment portfolio 2',
             },
             {
                 id: 3,
-                text: 'investment portfolio 3'
+                text: 'investment portfolio 3',
             },
             {
                 id: 4,
-                text: 'investment portfolio 4'
+                text: 'investment portfolio 4',
             },
             {
                 id: 5,
-                text: 'investment portfolio 5'
-            }
+                text: 'investment portfolio 5',
+            },
         ]);
     }
 
@@ -177,7 +177,7 @@ export class PlaceOrdersComponent implements OnInit, OnDestroy {
             format: 'YYYY-MM-DD',
             closeOnSelect: true,
             disableKeypress: true,
-            locale: this.language
+            locale: this.language,
         };
     }
 

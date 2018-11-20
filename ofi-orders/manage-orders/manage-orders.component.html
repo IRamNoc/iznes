@@ -67,8 +67,11 @@
                                     <div class="form-group">
                                         <label>{{ 'Share Name' | translate }}</label>
                                         <div class="input-button-group">
-                                            <input id="orders-search-sharename" [formControl]="tabsControl[0].searchForm.controls['sharename']" name="search-sharename"
-                                                   type="text" [placeholder]="translate.translate('Share Name')" style="width: 100% !important">
+                                            <input id="orders-search-sharename" 
+                                                    [formControl]="tabsControl[0].searchForm.controls['sharename']" name="search-sharename"
+                                                    type="text" 
+                                                    [placeholder]="translate.translate('Share Name')" 
+                                                    style="width: 100% !important">
                                         </div>
                                     </div>
                                 </td>
@@ -140,7 +143,8 @@
                                                         [formControl]="tabsControl[0].searchForm.controls['orderID']" 
                                                         name="search-sharename" 
                                                         type="number"
-                                                        [placeholder]="translate.translate('Order ID')" style="width: 100% !important">
+                                                        [placeholder]="translate.translate('Order ID')" 
+                                                        style="width: 100% !important">
                                             </div>
                                         </div>
                                         <ng-container *ngIf="isIznesAdmin">

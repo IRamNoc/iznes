@@ -21,7 +21,8 @@ export class PortfolioManagerListComponent implements OnInit, OnDestroy {
     constructor(
         private ofiPortfolioManagerDataService: OfiPortfolioManagerDataService,
         private router: Router,
-    ) {}
+    ) {
+    }
 
     ngOnInit() {
         (<any>this).appSubscribe(this.ofiPortfolioManagerDataService.getPortfolioManagerArrayList(), pmList => this.portfolioMangerList = pmList);

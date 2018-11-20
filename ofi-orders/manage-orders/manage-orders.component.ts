@@ -105,11 +105,10 @@ export class ManageOrdersComponent implements OnInit, AfterViewInit, OnDestroy {
         disableKeypress: true,
         locale: this.language,
         isDayDisabledCallback: (thisDate) => {
-            if (!!thisDate && this.tabsControl[0].searchForm.controls['toDate'].value != '') {
+            if (!!thisDate && this.tabsControl[0].searchForm.controls['toDate'].value !== '') {
                 return (thisDate.diff(this.tabsControl[0].searchForm.controls['toDate'].value) > 0);
-            } else {
-                return false;
             }
+            return false;
         },
     };
     toConfigDate = {
@@ -119,11 +118,10 @@ export class ManageOrdersComponent implements OnInit, AfterViewInit, OnDestroy {
         disableKeypress: true,
         locale: this.language,
         isDayDisabledCallback: (thisDate) => {
-            if (!!thisDate && this.tabsControl[0].searchForm.controls['fromDate'].value != '') {
+            if (!!thisDate && this.tabsControl[0].searchForm.controls['fromDate'].value !== '') {
                 return (thisDate.diff(this.tabsControl[0].searchForm.controls['fromDate'].value) < 0);
-            } else {
-                return false;
             }
+            return false;
         },
     };
 
@@ -226,7 +224,7 @@ export class ManageOrdersComponent implements OnInit, AfterViewInit, OnDestroy {
         let iznesAdmin = false;
         if (!!this.menuSpec && Object.keys(this.menuSpec).length > 0) {
             this.menuSpec[Object.keys(this.menuSpec)[0]].forEach((row) => {
-                if (row['element_id'] == 'order-activity') iznesAdmin = true;
+                if (row['element_id'] === 'order-activity') iznesAdmin = true;
             });
         }
         return iznesAdmin;
@@ -265,19 +263,22 @@ export class ManageOrdersComponent implements OnInit, AfterViewInit, OnDestroy {
         this.datagridParams.setSearchFilters(this.searchFilters);
         this.searchFilters.optionalFilters
         .subscribe(show => this.isOptionalFiltersVisible = show);
-        
+
         this.searchForm = this.searchFilters.getForm();
-        if(this.isinParam) {
+        if (this.isinParam) {
             this.searchForm.patchValue({ isin: this.isinParam }, { emitEvent: true });
             this.manageOrdersService.setFilters(this.searchFilters.get());
         }
 
         this.setInitialTabs();
 
-        this.appSubscribe(this.requestedLanguage$, (requested) => {
-            this.getLanguage(requested);
-            this.translateSelectMenus()
-        }); 
+        this.appSubscribe(
+            this.requestedLanguage$,
+            (requested) => {
+                this.getLanguage(requested);
+                this.translateSelectMenus();
+            },
+        );
         this.appSubscribe(this.userType$, type => this.userType = type);
         this.appSubscribe(this.walletDirectory$, walletDirectory => this.walletDirectory = walletDirectory);
         this.appSubscribe(observableCombineLatest(this.myWallets$, this.connectedWallet$.pipe(filter(id => id !== 0)), this.menuSpec$), ([myWallets, walletId, menuSpec]) => {
@@ -540,7 +541,7 @@ export class ManageOrdersComponent implements OnInit, AfterViewInit, OnDestroy {
         // Get opened tabs from redux store.
         const openedTabs = immutableHelper.get(
             this.ngRedux.getState(),
-            ['ofi', 'ofiOrders', 'manageOrders', 'openedTabs']
+            ['ofi', 'ofiOrders', 'manageOrders', 'openedTabs'],
         );
 
         /* Default tabs. */
@@ -603,12 +604,12 @@ export class ManageOrdersComponent implements OnInit, AfterViewInit, OnDestroy {
         this.confirmationService.create(
             `<span>${this.translate.translate('Are you sure?')}</span>`,
             `<span>${this.translate.translate(
-                'Are you sure you want to settle the @confMessage@?', 
+                'Are you sure you want to settle the @confMessage@?',
                 { 'confMessage': confMessage })}</span>`,
-            { 
-                confirmText: this.translate.translate('Confirm'), 
-                declineText: this.translate.translate('Back'), 
-                btnClass: 'info'
+            {
+                confirmText: this.translate.translate('Confirm'),
+                declineText: this.translate.translate('Back'),
+                btnClass: 'info',
             },
         ).subscribe((ans) => {
             if (ans.resolved) {
@@ -639,10 +640,10 @@ export class ManageOrdersComponent implements OnInit, AfterViewInit, OnDestroy {
         this.confirmationService.create(
             `<span>${this.translate.translate('Are you sure?')}</span>`,
             `<span>${this.translate.translate('Are you sure you want cancel the @confMessage@?', { 'confMessage': confMessage })}</span>`,
-            { 
-                confirmText: this.translate.translate('Confirm'), 
-                declineText: this.translate.translate('Back'), 
-                btnClass: 'error' 
+            {
+                confirmText: this.translate.translate('Confirm'),
+                declineText: this.translate.translate('Back'),
+                btnClass: 'error',
             },
         ).subscribe((ans) => {
             if (ans.resolved) {
@@ -854,15 +855,15 @@ export class ManageOrdersComponent implements OnInit, AfterViewInit, OnDestroy {
         let orderType = '';
         let subject = '';
         let dateFormat = '';
-      
+
         const toasterMessages = {
-            success: 
+            success:
                 this.translate.translate('The message has been successfully sent to @targetedOrder.firstName@ @targetedOrder.lastName@.', { 'targetedOrder.firstName': targetedOrder.firstName, 'targetedOrder.lastName': targetedOrder.lastName }),
-            fail: 
+            fail:
                 this.translate.translate('The message has failed to be sent to @targetedOrder.firstName@ @targetedOrder.lastName@.', { 'targetedOrder.firstName': targetedOrder.firstName, 'targetedOrder.lastName': targetedOrder.lastName }),
         };
 
-        orderType = (targetedOrder.orderType === 3) ? 
+        orderType = (targetedOrder.orderType === 3) ?
             this.translate.translate('subscription') : this.translate.translate('redemption');
         subject = `${orderType} ${orderRef} - ${this.translate.translate('Cancelled')}`;
         dateFormat = 'YYYY-MM-DD HH:mm:ss';
@@ -885,7 +886,7 @@ export class ManageOrdersComponent implements OnInit, AfterViewInit, OnDestroy {
             this.toasterService.pop('success', toasterMessages.success);
         }).catch((error) => {
             this.logService.log('on message fail: ', error);
-            this.toasterService.pop('error', toasterMessages.fail)
+            this.toasterService.pop('error', toasterMessages.fail);
         });
     }
 
@@ -907,7 +908,7 @@ export class ManageOrdersComponent implements OnInit, AfterViewInit, OnDestroy {
     }
 
     /**
-     * Get order type string with consideration of transation
+     * Get order type string with consideration of translation
      *
      * @param {{orderId: number | string; sellBuyLinkOrderID: number | string}} orderData
      * @return {string | boolean}

@@ -187,7 +187,7 @@ function buildFundAccessData(dataArr, pmId: number) {
 
     return fundData.map((fund: IznesFundDetail) => {
         const fundId = fund.fundID;
-        const thisFundAccess = get(accessData, [pmId, 'fundAccess', fundId], {status: false, fundId,});
+        const thisFundAccess = get(accessData, [pmId, 'fundAccess', fundId], { status: false, fundId });
         return {
             fundName: fund.fundName,
             ...thisFundAccess,
