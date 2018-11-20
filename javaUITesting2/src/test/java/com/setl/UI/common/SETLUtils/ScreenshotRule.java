@@ -45,7 +45,7 @@ public class ScreenshotRule extends TestWatcher {
             dir = "/Users/shared/screenshots//";
         }
         else {
-            dir = "/home/jenkins/workspace/IznesUIAcceptanceTests/target/test-attachments//";
+            dir = "/var/lib/jenkins/workspace/IznesUIAcceptanceTests/target/test-attachments//";
         }
         String userDirectory = dir;
 
