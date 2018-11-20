@@ -12,10 +12,9 @@ import {
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 /* Redux */
 import { NgRedux, select } from '@angular-redux/store';
-
 import * as _ from 'lodash';
-
 import { KycMyInformations } from '../../ofi-store/ofi-kyc/my-informations';
+
 // Services
 import {
     OfiManagementCompanyService,
@@ -214,12 +213,15 @@ export class OfiMyInformationsComponent implements OnInit, OnDestroy {
         }
 
         const managementCompanyListImu = fromJS(managementCompanyList);
-        this.managementCompanyList = managementCompanyListImu.reduce((result, item) => {
-            result.push({
-                companyName: item.get('companyName', '')
-            });
-            return result;
-        }, []);
+        this.managementCompanyList = managementCompanyListImu.reduce(
+            (result, item) => {
+                result.push({
+                    companyName: item.get('companyName', ''),
+                });
+                return result;
+            },
+            [],
+        );
 
         // get am company name
         const assetManagerValue = this.managementCompanyList && this.managementCompanyList[0].companyName;

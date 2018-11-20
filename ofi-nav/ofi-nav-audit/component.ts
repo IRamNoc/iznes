@@ -9,13 +9,12 @@ import { fromJS } from 'immutable';
 import { Observable, Subscription } from 'rxjs';
 import { NumberConverterService, MoneyValuePipe, NavHelperService } from '@setl/utils';
 import { Datagrid } from '@clr/angular';
-
 import { OfiNavAuditService } from './service';
 import { OfiNavService } from '@ofi/ofi-main/ofi-req-services/ofi-product/nav/service';
 import {
     NavAuditDetail,
     clearRequestedNavAudit,
-    setRequestedNavAudit
+    setRequestedNavAudit,
 } from '@ofi/ofi-main/ofi-store/ofi-product/nav-audit';
 import { MultilingualService } from '@setl/multilingual';
 
@@ -23,7 +22,7 @@ import { MultilingualService } from '@setl/multilingual';
     styleUrls: ['./component.scss'],
     selector: 'app-ofi-product-nav-audit',
     templateUrl: './component.html',
-    changeDetection: ChangeDetectionStrategy.OnPush
+    changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class OfiNavAuditComponent implements OnInit, OnDestroy {
 
@@ -37,7 +36,7 @@ export class OfiNavAuditComponent implements OnInit, OnDestroy {
         format: 'YYYY-MM-DD',
         closeOnSelect: true,
         disableKeypress: true,
-        locale: null
+        locale: null,
     };
     /* Datagrid server driven */
     auditDataItemsLen: number;
@@ -70,18 +69,18 @@ export class OfiNavAuditComponent implements OnInit, OnDestroy {
     }
 
     private initSubscriptions(): void {
-        this.subscriptionsArray.push(this.route.paramMap.subscribe(params => {
+        this.subscriptionsArray.push(this.route.paramMap.subscribe((params) => {
             const fundShareId = params.get('shareId') as any;
-            this.fundShareId = fundShareId ? parseInt(fundShareId) : fundShareId;
+            this.fundShareId = fundShareId ? parseInt(fundShareId, 10) : fundShareId;
         }));
 
-        this.subscriptionsArray.push(this.navAuditRequestedOb.subscribe(requested => {
+        this.subscriptionsArray.push(this.navAuditRequestedOb.subscribe((requested) => {
             this.requestNavAudit(requested);
         }));
-        this.subscriptionsArray.push(this.navAuditOb.subscribe(navAudit => {
+        this.subscriptionsArray.push(this.navAuditOb.subscribe((navAudit) => {
             this.updateNavAudit(navAudit);
         }));
-        this.subscriptionsArray.push(this.navFundOb.subscribe(navFund => {
+        this.subscriptionsArray.push(this.navFundOb.subscribe((navFund) => {
             this.updateNavFund(navFund);
         }));
     }
@@ -89,7 +88,7 @@ export class OfiNavAuditComponent implements OnInit, OnDestroy {
     private initSearchForm(): void {
         this.searchForm = new FormGroup({
             dateFrom: new FormControl(moment().add('-1', 'month').format('YYYY-MM-DD')),
-            dateTo: new FormControl(moment().format('YYYY-MM-DD'))
+            dateTo: new FormControl(moment().format('YYYY-MM-DD')),
         });
 
         this.subscriptionsArray.push(this.searchForm.valueChanges.pipe(debounceTime(1000)).subscribe((values) => {
@@ -100,14 +99,15 @@ export class OfiNavAuditComponent implements OnInit, OnDestroy {
     private requestNavAudit(requested: boolean): void {
         if (requested) return;
 
-        OfiNavService.defaultRequestNavAuditTrail(this.ofiNavService,
+        OfiNavService.defaultRequestNavAuditTrail(
+            this.ofiNavService,
             this.redux,
             {
                 fundShareId: this.fundShareId,
                 dateFrom: this.searchForm.value.dateFrom ? this.searchForm.value.dateFrom : '',
                 dateTo: this.searchForm.value.dateTo ? this.searchForm.value.dateTo : '',
                 offset: (this.gridRowOffSet * this.gridItemsPerPage),
-                limit: this.gridItemsPerPage
+                limit: this.gridItemsPerPage,
             },
             () => {
             },
@@ -160,7 +160,7 @@ export class OfiNavAuditComponent implements OnInit, OnDestroy {
     }
 
     returnToNav(): void {
-        this.router.navigateByUrl(`product-module/net-asset-value/fund-view`);
+        this.router.navigateByUrl('product-module/net-asset-value/fund-view');
     }
 
     isLogTypeCancel(item: NavAuditDetail): boolean {

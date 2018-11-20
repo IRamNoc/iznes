@@ -5,10 +5,8 @@ import { NgRedux, select } from '@angular-redux/store';
 import { Observable, Subscription } from 'rxjs';
 import { distinctUntilChanged } from 'rxjs/operators';
 import * as moment from 'moment';
-
 import * as model from '../OfiNav';
 import { OfiManageNavPopupService } from '../ofi-manage-nav-popup/service';
-
 import { OfiCorpActionService } from '../../ofi-req-services/ofi-corp-actions/service';
 import { OfiNavService } from '../../ofi-req-services/ofi-product/nav/service';
 import {
@@ -17,7 +15,7 @@ import {
     getOfiNavFundViewCurrentRequest,
     ofiSetCurrentNavFundHistoryRequest,
     setRequestedNavFundHistory,
-    setRequestedNavFundView
+    setRequestedNavFundView,
 } from '../../ofi-store/ofi-product/nav';
 import {
     APP_CONFIG,
@@ -25,19 +23,18 @@ import {
     FileDownloader,
     immutableHelper,
     MoneyValuePipe,
-    NumberConverterService
+    NumberConverterService,
 } from '@setl/utils';
 import { MultilingualService } from '@setl/multilingual';
-import { AlertsService } from "@setl/jaspero-ng2-alerts/src/alerts.service";
+import { AlertsService } from '@setl/jaspero-ng2-alerts/src/alerts.service';
 import { OfiCurrenciesService } from '@ofi/ofi-main/ofi-req-services/ofi-currencies/service';
 
 @Component({
     selector: 'app-nav-fund-view',
     templateUrl: './component.html',
-    styleUrls: ['./component.scss']
+    styleUrls: ['./component.scss'],
 })
 export class OfiNavFundView implements OnInit, OnDestroy {
-
     navFund: model.NavInfoModel;
     navFundHistory: any;
     socketToken: string;
@@ -51,15 +48,15 @@ export class OfiNavFundView implements OnInit, OnDestroy {
         format: 'YYYY-MM-DD',
         closeOnSelect: true,
         disableKeypress: true,
-        locale: null
-    }
+        locale: null,
+    };
     dateToConfig: any = {
         firstDayOfWeek: 'mo',
         format: 'YYYY-MM-DD',
         closeOnSelect: true,
         disableKeypress: true,
-        locale: null
-    }
+        locale: null,
+    };
     datePeriodItems: any;
     usingDatePeriodToSearch: boolean = false;
     navToChangeTriggeredByDatePeriod: boolean = false;
@@ -157,7 +154,7 @@ export class OfiNavFundView implements OnInit, OnDestroy {
             navDateTo = this.navHistoryForm.value.navDateTo;
         }
 
-        return `${moment(navDateFrom).format('YYYY-MM-DD')} > ${moment(navDateTo).format('YYYY-MM-DD')}`
+        return `${moment(navDateFrom).format('YYYY-MM-DD')} > ${moment(navDateTo).format('YYYY-MM-DD')}`;
     }
 
     isNavNull(nav: number): boolean {
@@ -248,8 +245,7 @@ export class OfiNavFundView implements OnInit, OnDestroy {
                             <td class="text-center text-success">${successMessage}</td>
                         </tr>
                     </tbody>
-                </table>
-            `,
+                </table>`,
                 {},
                 'NAVs Upload - Success',
             );
@@ -286,16 +282,16 @@ export class OfiNavFundView implements OnInit, OnDestroy {
 
     private initSubscriptions(): void {
         // fund view
-        this.subscriptionsArray.push(this.navFundRequestedOb.subscribe(requested => {
+        this.subscriptionsArray.push(this.navFundRequestedOb.subscribe((requested) => {
             this.requestNavFund(requested);
         }));
-        this.subscriptionsArray.push(this.navFundOb.subscribe(navFund => {
+        this.subscriptionsArray.push(this.navFundOb.subscribe((navFund) => {
             this.updateNavFund(navFund);
         }));
-        this.subscriptionsArray.push(this.tokenOb.subscribe(token => {
+        this.subscriptionsArray.push(this.tokenOb.subscribe((token) => {
             this.socketToken = token;
         }));
-        this.subscriptionsArray.push(this.userOb.subscribe(userId => {
+        this.subscriptionsArray.push(this.userOb.subscribe((userId) => {
             this.userId = userId;
         }));
 
@@ -308,7 +304,7 @@ export class OfiNavFundView implements OnInit, OnDestroy {
             // comment out and default search up to "today"
             // navDateTo: new FormControl(moment().add(-1, 'days').format('YYYY-MM-DD')),
             navDateTo: new FormControl(moment().add(0, 'days').format('YYYY-MM-DD')),
-            datePeriod: new FormControl([])
+            datePeriod: new FormControl([]),
         });
 
         this.dateFromConfig.max = moment();
@@ -350,25 +346,25 @@ export class OfiNavFundView implements OnInit, OnDestroy {
     private initDatePeriodItems(): void {
         this.datePeriodItems = this.translate.translate([{
             id: this.generateDatePeriod(-30, 'days', 0, 'days'),
-            text: 'Last 30 days'
+            text: 'Last 30 days',
         }, {
             id: this.generateDatePeriod(-3, 'months', 0, 'days'),
-            text: 'Last 3 months'
+            text: 'Last 3 months',
         }, {
             id: this.generateDatePeriod(-6, 'months', 0, 'days'),
-            text: 'Last 6 months'
+            text: 'Last 6 months',
         }, {
             id: this.generateDatePeriod(-9, 'months', 0, 'days'),
-            text: 'Last 9 months'
+            text: 'Last 9 months',
         }, {
             id: this.generateDatePeriod(-12, 'months', 0, 'days'),
-            text: 'Last 12 months'
+            text: 'Last 12 months',
         }, {
             id: this.generateYearToDatePeriod(),
-            text: 'Year to date'
+            text: 'Year to date',
         }, {
             id: this.generateBeginningOfTimePeriod(),
-            text: 'Since the beginning'
+            text: 'Since the beginning',
         }]);
     }
 
@@ -448,9 +444,9 @@ export class OfiNavFundView implements OnInit, OnDestroy {
 
         return {
             shareId: this.navFund.shareId,
-            navDateFrom: navDateFrom,
-            navDateTo: navDateTo
-        }
+            navDateFrom,
+            navDateTo,
+        };
     }
 
     /**

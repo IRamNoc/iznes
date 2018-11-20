@@ -5,7 +5,6 @@ import { Observable, Subscription } from 'rxjs';
 import { AlertsService } from '@setl/jaspero-ng2-alerts';
 import * as _ from 'lodash';
 import * as moment from 'moment';
-
 import * as model from '../OfiNav';
 import { OfiManageNavPopupService } from './service';
 import { OfiNavService } from '../../ofi-req-services/ofi-product/nav/service';
@@ -14,7 +13,7 @@ import {
     clearRequestedNavFundsList,
     clearRequestedNavFundHistory,
     ofiSetCurrentNavLatestRequest,
-    clearRequestedNavLatest
+    clearRequestedNavLatest,
 } from '../../ofi-store/ofi-product/nav';
 import { CurrencyValue } from '../../ofi-product/fund-share/fundShareValue';
 import { NumberConverterService, MoneyValuePipe } from '@setl/utils';
@@ -23,7 +22,7 @@ import { MultilingualService } from '@setl/multilingual';
 @Component({
     selector: 'app-nav-add',
     templateUrl: './component.html',
-    styleUrls: ['./component.scss']
+    styleUrls: ['./component.scss'],
 })
 export class OfiManageNavPopup implements OnInit {
     private mode: model.NavPopupMode;
@@ -43,7 +42,7 @@ export class OfiManageNavPopup implements OnInit {
         format: 'YYYY-MM-DD',
         closeOnSelect: true,
         disableKeypress: true,
-        locale: null
+        locale: null,
     };
 
     navPublishDateConfig: any = {
@@ -51,7 +50,7 @@ export class OfiManageNavPopup implements OnInit {
         format: 'YYYY-MM-DD',
         closeOnSelect: true,
         disableKeypress: true,
-        locale: null
+        locale: null,
     };
 
     navForm: FormGroup;
@@ -70,8 +69,8 @@ export class OfiManageNavPopup implements OnInit {
                 private numberConverterService: NumberConverterService,
                 private popupService: OfiManageNavPopupService,
                 public translate: MultilingualService,
-                private moneyValuePipe: MoneyValuePipe
-                ) {
+                private moneyValuePipe: MoneyValuePipe,
+    ) {
 
         this.initStatusData();
         this.initSubscriptions();
@@ -90,13 +89,13 @@ export class OfiManageNavPopup implements OnInit {
     }
 
     private initSubscriptions(): void {
-        this.subscriptionsArray.push(this.navLatestRequestedOb.subscribe(requested => {
+        this.subscriptionsArray.push(this.navLatestRequestedOb.subscribe((requested) => {
             this.requestNavLatest(requested);
         }));
-        this.subscriptionsArray.push(this.navLatestOb.subscribe(navList => {
+        this.subscriptionsArray.push(this.navLatestOb.subscribe((navList) => {
             this.updateNavLatest(navList);
 
-            if(this.popupModel) this.initNavForm(this.popupModel.share, this.popupModel.mode);
+            if (this.popupModel) this.initNavForm(this.popupModel.share, this.popupModel.mode);
         }));
     }
 
@@ -130,7 +129,7 @@ export class OfiManageNavPopup implements OnInit {
     }
 
     navFormValid(): boolean {
-        return (this.navForm) && this.navForm.valid && this.share != undefined;
+        return (this.navForm) && this.navForm.valid && this.share !== undefined;
     }
 
     showStatusWarning(): boolean {
@@ -139,12 +138,12 @@ export class OfiManageNavPopup implements OnInit {
 
     private initNavForm(share: model.NavInfoModel, mode: model.NavPopupMode): void {
         const statusObj = (share.status) ?
-            [_.find(this.statusItems, {'id': share.status})] :
+            [_.find(this.statusItems, { id: share.status })] :
             [this.statusItems[0]];
 
         const nav = this.isDeleteMode() ? this.numberConverterService.toFrontEnd(share.nav) : this.navLatest;
 
-        let status = _.isNil(share.status) ? [] : [{id : share.status}];
+        const status = _.isNil(share.status) ? [] : [{ id : share.status }];
         this.navForm = new FormGroup({
             nav: new FormControl(nav),
             price: new FormControl('', Validators.compose([
@@ -171,15 +170,15 @@ export class OfiManageNavPopup implements OnInit {
 
         if(mode === model.NavPopupMode.ADD) {
             this.navForm.controls.status.enable();
-        } else if(mode === model.NavPopupMode.ADD_EXISTING) {
+        } else if (mode === model.NavPopupMode.ADD_EXISTING) {
             this.navForm.controls.status.enable();
             this.navForm.controls.navDate.disable();
             this.navForm.controls.navPubDate.disable();
-        } else if(mode === model.NavPopupMode.EDIT) {
+        } else if (mode === model.NavPopupMode.EDIT) {
             this.navForm.controls.status.disable();
             this.navForm.controls.navDate.disable();
             this.navForm.controls.navPubDate.disable();
-        } else if(mode == model.NavPopupMode.DELETE) {
+        } else if (mode === model.NavPopupMode.DELETE) {
             this.navForm.controls.nav.disable();
             this.navForm.controls.status.disable();
             this.navForm.controls.navDate.disable();
@@ -202,15 +201,15 @@ export class OfiManageNavPopup implements OnInit {
     private initStatusData(): void {
         this.statusItems = this.translate.translate([{
             id: 1,
-            text: 'Estimated'
+            text: 'Estimated',
         }, {
             id: 2,
-            text: 'Technical'
+            text: 'Technical',
         }, {
             id: -1,
-            text: 'Validated'
+            text: 'Validated',
         }]);
-    };
+    }
 
     /**
      * add/edit new nav
@@ -225,14 +224,16 @@ export class OfiManageNavPopup implements OnInit {
             fundDate: `${this.navForm.controls.navDate.value} 00:00:00`,
             navPublicationDate: `${this.navForm.controls.navPubDate.value} 00:00:00`,
             price: this.numberConverterService.toBlockchain(this.navForm.controls.price.value.replace(/\s+/g, '')),
-            priceStatus: this.navForm.controls.status.value[0].id
-        }
+            priceStatus: this.navForm.controls.status.value[0].id,
+        };
 
-        OfiNavService.defaultUpdateNav(this.ofiNavService,
+        OfiNavService.defaultUpdateNav(
+            this.ofiNavService,
             this.redux,
             requestData,
-            (res) => this.updateNavSuccessCallback(res),
-            (res) => this.updateNavErrorCallback(res));
+            res => this.updateNavSuccessCallback(res),
+            res => this.updateNavErrorCallback(res),
+        );
     }
 
     private updateNavSuccessCallback(res: any): void {
@@ -258,14 +259,16 @@ export class OfiManageNavPopup implements OnInit {
         const requestData = {
             shareId: this.share.shareId,
             navDate: `${this.navForm.controls.navDate.value} 00:00:00`,
-            navStatus: this.navForm.controls.status.value[0].id
-        }
+            navStatus: this.navForm.controls.status.value[0].id,
+        };
 
-        OfiNavService.defaultDeleteNav(this.ofiNavService,
+        OfiNavService.defaultDeleteNav(
+            this.ofiNavService,
             this.redux,
             requestData,
-            (res) => this.deleteNavSuccessCallback(res),
-            (res) => this.deleteNavErrorCallback(res));
+            res => this.deleteNavSuccessCallback(res),
+            res => this.deleteNavErrorCallback(res),
+        );
     }
 
     private deleteNavSuccessCallback(res: any): void {
@@ -292,16 +295,17 @@ export class OfiManageNavPopup implements OnInit {
 
         const requestData = {
             fundShareId: this.share.shareId,
-            navDate: `${this.share.navDate}`
-        }
+            navDate: `${this.share.navDate}`,
+        };
 
-        OfiNavService.defaultRequestNavLatest(this.ofiNavService,
+        OfiNavService.defaultRequestNavLatest(
+            this.ofiNavService,
             this.redux,
             requestData,
             () => {
             },
             () => {
-            }
+            },
         );
 
         this.redux.dispatch(ofiSetCurrentNavLatestRequest(requestData));
@@ -361,12 +365,11 @@ export class OfiManageNavPopup implements OnInit {
         this.redux.dispatch(clearRequestedNavFundsList());
         this.redux.dispatch(clearRequestedNavFundHistory());
     }
-
 }
 
 const regex = {
     floatMaxTwoDecimals: /^\d+(\.\d{1,2})?$/,
-}
+};
 
 /**
  * Number validator:

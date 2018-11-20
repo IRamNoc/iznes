@@ -8,17 +8,21 @@ import * as _ from 'lodash';
 import * as model from '../OfiNav';
 import { OfiManageNavPopupService, ManageNavCloseEvent } from '../ofi-manage-nav-popup/service';
 import { OfiNavService } from '../../ofi-req-services/ofi-product/nav/service';
-
 import {
     clearRequestedNavFundsList,
     getOfiNavFundsListCurrentRequest,
     ofiSetCurrentNavFundsListRequest,
     ofiSetCurrentNavFundViewRequest,
 } from '../../ofi-store/ofi-product/nav';
-
-import { APP_CONFIG, AppConfig, FileDownloader, MoneyValuePipe, NumberConverterService } from '@setl/utils';
+import {
+    APP_CONFIG,
+    AppConfig,
+    FileDownloader,
+    MoneyValuePipe,
+    NumberConverterService,
+    ConfirmationService,
+} from '@setl/utils';
 import { MultilingualService } from '@setl/multilingual';
-import { ConfirmationService } from '@setl/utils';
 import { AlertsService } from '@setl/jaspero-ng2-alerts/src/alerts.service';
 import { OfiCurrenciesService } from '@ofi/ofi-main/ofi-req-services/ofi-currencies/service';
 
@@ -153,7 +157,7 @@ export class OfiNavFundsList implements OnInit, OnDestroy {
     }
 
     isAddNavDisabled(share: model.NavInfoModel): boolean {
-        if(share.status as any == 3) return false;
+        if (share.status as any == 3) return false;
 
         return share.status as any == -1;
         // return !this.isNavNull(share.nav);
@@ -165,15 +169,13 @@ export class OfiNavFundsList implements OnInit, OnDestroy {
 
     cancelNav(share: model.NavInfoModel): void {
         this.cancelNavMessage = this.translate.translate(
-            `Are you sure you wish to cancel the NAV for<br /><strong>@shareName@</strong>`,
-            {
-                shareName: share.fundShareName
-            }
+            'Are you sure you wish to cancel the NAV for<br /><strong>@shareName@</strong>',
+            { 'shareName': share.fundShareName },
         );
 
         this.confirmationService.create(this.cancelNavTitle, this.cancelNavMessage)
             .subscribe((resolved) => {
-                if(resolved.resolved) {
+                if (resolved.resolved) {
                     OfiNavService.defaultCancelNav(
                         this.ofiNavService,
                         this.redux,
@@ -182,17 +184,18 @@ export class OfiNavFundsList implements OnInit, OnDestroy {
                             shareId: share.shareId,
                             navDate: share.navDate,
                         },
-                        (res) => this.onCancelNavSuccess(res),
-                        () => this.onCancelNavError());
+                        res => this.onCancelNavSuccess(res),
+                        () => this.onCancelNavError(),
+                    );
                 }
             });
     }
 
     private onCancelNavSuccess(res): void {
-        if((res[1]) && res[1].Data[0]) {
+        if ((res[1]) && res[1].Data[0]) {
             console.log(res);
 
-            if(res[1].Data[0].Status === 'Fail') return this.onCancelNavError();
+            if (res[1].Data[0].Status === 'Fail') return this.onCancelNavError();
 
             this.alertService.create('success', this.cancelNavSuccessMessage);
 
@@ -215,7 +218,7 @@ export class OfiNavFundsList implements OnInit, OnDestroy {
 
         this.redux.dispatch(ofiSetCurrentNavFundViewRequest(navFundViewRequest));
 
-        this.router.navigateByUrl(`product-module/net-asset-value/fund-view`);
+        this.router.navigateByUrl('product-module/net-asset-value/fund-view');
     }
 
     exportCSV(): void {
@@ -280,8 +283,7 @@ export class OfiNavFundsList implements OnInit, OnDestroy {
                             <td class="text-center text-success">${successMessage}</td>
                         </tr>
                     </tbody>
-                </table>
-            `,
+                </table>`,
                 {},
                 this.translate.translate('NAVs Upload - Success'),
             );
@@ -306,8 +308,7 @@ export class OfiNavFundsList implements OnInit, OnDestroy {
                             <td class="text-center text-danger">${errorMessage}</td>
                         </tr>
                     </tbody>
-                </table>
-            `,
+                </table>`,
                 {},
                 this.translate.translate('NAVs Upload - Error'),
             );
@@ -324,16 +325,16 @@ export class OfiNavFundsList implements OnInit, OnDestroy {
     }
 
     private initSubscriptions(): void {
-        this.subscriptionsArray.push(this.navRequestedOb.subscribe(requested => {
+        this.subscriptionsArray.push(this.navRequestedOb.subscribe((requested) => {
             this.requestNavList(requested);
         }));
-        this.subscriptionsArray.push(this.navListOb.subscribe(navList => {
+        this.subscriptionsArray.push(this.navListOb.subscribe((navList) => {
             this.updateNavList(navList);
         }));
-        this.subscriptionsArray.push(this.tokenOb.subscribe(token => {
+        this.subscriptionsArray.push(this.tokenOb.subscribe((token) => {
             this.socketToken = token;
         }));
-        this.subscriptionsArray.push(this.userOb.subscribe(userId => {
+        this.subscriptionsArray.push(this.userOb.subscribe((userId) => {
             this.userId = userId;
         }));
 
