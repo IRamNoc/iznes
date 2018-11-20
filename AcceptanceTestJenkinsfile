@@ -1,4 +1,4 @@
-node("jenkins03") {
+node {
 
     timestamps {
 
