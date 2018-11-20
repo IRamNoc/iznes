@@ -156,7 +156,7 @@ export class OfiPostTxService implements OnDestroy {
                     <tr class="fadeIn">
                         <td class="text-left text-success" width="500px">
                         <i class="fa fa-check text-primary" aria-hidden="true"></i>
-                        &nbsp;${this.translate.translate('Order ID: @arrangementId@', { 'arrangementId': arrangementId })}</td>
+                        &nbsp;${this.translate.translate('Order ID: @arrangementId@', { arrangementId })}</td>
                     </tr>
                 </tbody>
             </table>`);
