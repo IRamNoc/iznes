@@ -144,7 +144,7 @@ export class PortfolioManagerDetailComponent implements OnInit, OnDestroy {
             ? this.translate.translate('No changes have been made to the Portfolio Manager\' Fund Access permissions.')
             : this.translate.translate('Please confirm the changes made to the Portfolio Manager\' Fund Access permissions.');
 
-        this.confirmationService.create('Confirm Fund Access:', message, {
+        this.confirmationService.create(this.translate.translate('Confirm Fund Access:'), message, {
             confirmText: this.translate.translate('Confirm Access and Save Changes'),
             declineText: this.translate.translate('Cancel'),
             btnClass: 'primary',

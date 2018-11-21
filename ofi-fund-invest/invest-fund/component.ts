@@ -775,7 +775,7 @@ export class InvestFundComponent implements OnInit, OnDestroy {
 
                 return result;
             },
-            []
+            [],
         );
 
         // Set default or selected address.
@@ -906,7 +906,7 @@ export class InvestFundComponent implements OnInit, OnDestroy {
                 <table class="table grid">
                     <tbody>
                         <tr>
-                            <td class="text-center text-info">Creating order.<br />${this.translate.translate('This may take a few moments.')}</td>
+                            <td class="text-center text-info">${this.translate.translate('Creating order')}.<br />${this.translate.translate('This may take a few moments.')}</td>
                         </tr>
                     </tbody>
                 </table>

@@ -354,7 +354,7 @@ export class OfiSubPortfolioComponent implements OnInit, OnDestroy {
         const index = this.addressList.findIndex(x => x.address === address);
         if (index > -1) {
             this.confirmationService.create(
-                this.translate.translate(`Delete ${this.addressList[index].label} - ${this.addressList[index].iban}`), this.translate.translate('Are you sure you want to delete this sub-portfolio?'), 
+                this.translate.translate(`Delete ${this.addressList[index].label} - ${this.addressList[index].iban}`), this.translate.translate('Are you sure you want to delete this sub-portfolio?'),
                 {
                     confirmText: this.translate.translate('Delete'),
                     declineText: this.translate.translate('Cancel'),

@@ -850,7 +850,7 @@
                                                             theme="dp-material">
                                                 </div>
                                                 <div *ngIf="fundForm.controls['fiscalYearEnd'].touched && fundForm.controls['fiscalYearEnd'].hasError('required')"
-                                                    class="text-danger">{{ 'Field is required' | translate }}</div>
+                                                    class="field-error">{{ 'Field is required' | translate }}</div>
                                                 <span *ngIf="fundForm.controls['fiscalYearEnd'].touched && fundForm.controls['fiscalYearEnd'].hasError('pattern')"
                                                     class="field-error">{{ 'Incorrect date' | translate }}</span>
                                             </div>

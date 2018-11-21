@@ -355,14 +355,13 @@ export class InvestFundFormService {
     }
 
     showSuccessResponse() {
-
         this.alertsService.create('waiting', `
                     <table class="table grid">
                         <tbody>
                             <tr>
                                 <td class="text-left text-success" width="500px">
                                 <i class="fa fa-clock-o text-primary" aria-hidden="true"></i>
-                                &nbsp;Waiting order to be put in blockchain ledger</div></td>
+                                &nbsp;${this.translate.translate('Waiting order to be put in blockchain ledger')}</div></td>
                             </tr>
                         </tbody>
                     </table>

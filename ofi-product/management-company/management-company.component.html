@@ -298,8 +298,11 @@
                                 <span mltag="txt_commercialcontact">Commercial Contact</span>
                             </label>
                             <div>
-                                <input type="text" id="commercialContact" class="form-control" formControlName="commercialContact"
-                                    placeholder="If non applicable please fill in the value &#34;N/A&#34; here">
+                                <input type="text" 
+                                        id="commercialContact" 
+                                        class="form-control" 
+                                        formControlName="commercialContact"
+                                        placeholder="If non applicable please fill in the value &#34;N/A&#34; here">
                             </div>
                             <div *ngIf="managementCompanyForm.controls.commercialContact.hasError('required') && managementCompanyForm.controls.commercialContact.touched"
                                 class="field-error">{{ 'Field is required' | translate }}</div>
