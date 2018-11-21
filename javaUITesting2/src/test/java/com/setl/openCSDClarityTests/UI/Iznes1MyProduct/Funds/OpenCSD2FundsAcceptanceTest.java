@@ -203,7 +203,7 @@ public class OpenCSD2FundsAcceptanceTest {
         driver.findElement(By.id("fund-cancelUmbrella-btn")).click();
         try {
             String pageHeading = driver.findElement(By.id("am-product-home")).getText();
-            assertTrue(pageHeading.equals("Shares / Funds / Umbrella funds"));
+            assertTrue(pageHeading.equals("Shares / Funds / Umbrella Funds"));
         } catch (Exception e) {
             fail(e.getMessage());
         }
@@ -353,7 +353,7 @@ public class OpenCSD2FundsAcceptanceTest {
         }
         try {
             String pageHeading = driver.findElement(By.id("am-product-home")).getText();
-            assertTrue(pageHeading.equals("Shares / Funds / Umbrella funds"));
+            assertTrue(pageHeading.equals("Shares / Funds / Umbrella Funds"));
         } catch (Exception e) {
             fail(e.getMessage());
         }
