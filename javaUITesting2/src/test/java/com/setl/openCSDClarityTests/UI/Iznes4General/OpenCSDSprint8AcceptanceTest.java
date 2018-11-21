@@ -64,6 +64,7 @@ public class OpenCSDSprint8AcceptanceTest {
     @After
     public void tearDown() throws Exception {
         setDBToProdOn();
+
     }
 
     @Test

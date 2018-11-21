@@ -61,6 +61,10 @@ public class OpenCSDMyAccountAcceptanceTest {
         screenshotRule.setDriver(driver);
         setDBTwoFAOff();
     }
+    @After
+    public void teardown() {
+
+    }
 
 
     @Test
