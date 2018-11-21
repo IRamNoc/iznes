@@ -1,7 +1,6 @@
 import { FormGroup, FormArray, FormControl, Validators } from '@angular/forms';
 import * as _ from 'lodash';
 import * as E from '../../FundShareEnum';
-import { MultilingualService } from '@setl/multilingual';
 
 export class FundShareTradeCycleModel {
     form: FormGroup;
@@ -14,7 +13,6 @@ export class FundShareTradeCycleModel {
     private _yearlyDealingDays: string;
 
     constructor(
-        private translate: MultilingualService,
     ) {
         this.form = new FormGroup({
             tradeCyclePeriod: new FormControl(null, Validators.required),
