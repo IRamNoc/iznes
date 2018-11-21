@@ -4,6 +4,7 @@ import com.setl.UI.common.SETLUtils.RepeatRule;
 import com.setl.UI.common.SETLUtils.ScreenshotRule;
 import com.setl.UI.common.SETLUtils.TestMethodPrinterRule;
 import custom.junit.runners.OrderedJUnit4ClassRunner;
+import org.junit.After;
 import org.junit.Before;
 import org.junit.Rule;
 import org.junit.Test;
@@ -56,6 +57,10 @@ public class OpenCSDMessageModuleAcceptanceTest {
         testSetUp();
         screenshotRule.setDriver(driver);
         setDBTwoFAOff();
+    }
+    @After
+    public void teardown() {
+
     }
 
     @Test

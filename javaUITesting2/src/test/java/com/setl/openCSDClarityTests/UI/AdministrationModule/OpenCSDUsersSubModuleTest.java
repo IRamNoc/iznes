@@ -6,10 +6,7 @@ import com.setl.UI.common.SETLUtils.TestMethodPrinterRule;
 import custom.junit.runners.OrderedJUnit4ClassRunner;
 import io.setl.restapi.client.RestApi;
 import io.setl.restapi.client.message.MemberNodeMessageFactory;
-import org.junit.Before;
-import org.junit.Ignore;
-import org.junit.Rule;
-import org.junit.Test;
+import org.junit.*;
 import org.junit.rules.Timeout;
 import org.junit.runner.RunWith;
 import org.openqa.selenium.JavascriptExecutor;
@@ -42,6 +39,10 @@ public class OpenCSDUsersSubModuleTest {
         testSetUp();
         screenshotRule.setDriver(driver);
         setDBTwoFAOff();
+    }
+    @After
+    public void teardown() {
+
     }
 
     @Test

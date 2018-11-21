@@ -4,10 +4,12 @@ import com.setl.UI.common.SETLUIHelpers.*;
 import com.setl.UI.common.SETLUtils.ScreenshotRule;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.core.Logger;
+import org.junit.After;
 import org.junit.Before;
 import org.junit.Rule;
 
 import static com.setl.UI.common.SETLUIHelpers.LoginAndNavigationHelper.*;
+import static com.setl.UI.common.SETLUIHelpers.SetUp.driver;
 import static com.setl.UI.common.SETLUIHelpers.SetUp.testSetUp;
 import static com.setl.workflows.LoginAndNavigateToPage.*;
 
@@ -24,6 +26,10 @@ public class OpenCSDCreateMemberAndAssignChain {
         loginAndNavigateToPage(SetUp.adminuser, SetUp.adminuserPassword, "menu_members");
         acceptCookies();
         MemberDetailsHelper.navigateToAddNewMemberTab();
+    }
+    @After
+    public void teardown() {
+
     }
   
     public static void shouldAssignChainToMember() throws InterruptedException {

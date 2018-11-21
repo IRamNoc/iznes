@@ -67,7 +67,6 @@ import {
     UserTeamsAuditComponent,
     UserTeamsCreateUpdateComponent,
     UserTeamsListComponent,
-    AccountSignUpComponent,
     AccountSignUpRedirectComponent,
 } from '@setl/core-account-admin';
 import {
@@ -114,6 +113,8 @@ import { ConnectionComponent } from '@setl/core-connections/connections/componen
 import { SetlMessagesComponent } from '@setl/core-messages';
 import { OfiWaitingApprovalComponent } from '@ofi/ofi-main/ofi-kyc/waiting-approval/component';
 import { SetlLoginComponent, SetlLogoutComponent } from '@setl/core-login';
+import { OfiLoginComponent } from '@ofi/ofi-main/ofi-login/login/component';
+import { OfiAccountSignUpComponent } from '@ofi/ofi-main/ofi-login/sign-up/account.component';
 
 /* Portfolio manager */
 import {
@@ -137,7 +138,7 @@ export const ROUTES: Routes = [
         children: [
             {
                 path: 'login',
-                component: SetlLoginComponent,
+                component: OfiLoginComponent,
             },
             {
                 path: 'logout',
@@ -145,11 +146,11 @@ export const ROUTES: Routes = [
             },
             {
                 path: 'reset/:token',
-                component: SetlLoginComponent,
+                component: OfiLoginComponent,
             },
             {
                 path: 'reset-two-factor/:twofactortoken',
-                component: SetlLoginComponent,
+                component: OfiLoginComponent,
             },
         ],
     },
@@ -169,7 +170,7 @@ export const ROUTES: Routes = [
     },
     {
         path: 'account-signup',
-        component: AccountSignUpComponent,
+        component: OfiAccountSignUpComponent,
     },
     {
         path: 'account-signup-redirect/:invitationToken',

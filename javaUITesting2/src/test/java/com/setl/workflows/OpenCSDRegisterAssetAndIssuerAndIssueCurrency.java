@@ -6,11 +6,9 @@ import com.setl.UI.common.SETLUIHelpers.WalletDetailsHelper;
 import com.setl.UI.common.SETLUtils.ScreenshotRule;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.core.Logger;
-import org.junit.Before;
-import org.junit.Ignore;
-import org.junit.Rule;
-import org.junit.Test;
+import org.junit.*;
 
+import static com.setl.UI.common.SETLUIHelpers.SetUp.driver;
 import static com.setl.UI.common.SETLUIHelpers.SetUp.testSetUp;
 
 public class OpenCSDRegisterAssetAndIssuerAndIssueCurrency {
@@ -26,6 +24,10 @@ public class OpenCSDRegisterAssetAndIssuerAndIssueCurrency {
         LoginAndNavigateToPage.loginAndNavigateToPage("Payment_Bank1_User1", "alex01", "menu_wallet");
         LoginAndNavigationHelper.acceptCookies();
         WalletDetailsHelper.navigateToActionsTab();
+    }
+    @After
+    public void teardown() {
+
     }
 
     public void shouldAssignChainToMember() throws InterruptedException {

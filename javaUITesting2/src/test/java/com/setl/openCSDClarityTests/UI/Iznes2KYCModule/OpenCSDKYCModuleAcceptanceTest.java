@@ -64,6 +64,7 @@ public class OpenCSDKYCModuleAcceptanceTest {
     @After
     public void tearDown() throws Exception {
         setDBToProdOn();
+
     }
 
     @Test

@@ -53,6 +53,7 @@ public class OpenCSDNAVAcceptanceTest {
     @After
     public void tearDown() throws Exception {
         setDBToProdOn();
+
     }
 
     @Test

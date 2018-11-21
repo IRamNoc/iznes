@@ -4,10 +4,7 @@ import com.setl.UI.common.SETLUtils.RepeatRule;
 import com.setl.UI.common.SETLUtils.ScreenshotRule;
 import com.setl.UI.common.SETLUtils.TestMethodPrinterRule;
 import custom.junit.runners.OrderedJUnit4ClassRunner;
-import org.junit.Before;
-import org.junit.Ignore;
-import org.junit.Rule;
-import org.junit.Test;
+import org.junit.*;
 import org.junit.rules.Timeout;
 import org.junit.runner.RunWith;
 import org.openqa.selenium.By;
@@ -250,7 +247,7 @@ public class OpenCSDTeamsSubModuleTest {
         validateTeamsCreated(1, teamReference[0], teamName[0], teamDescription[0]);
         validateMyClientsTeamPermissions(teamName[0]);
     }
-    //@Test //TODO Sprint 15 task
+    @Test //TODO Sprint 15 task
     public void TG3284_shouldCreateTeamWithPermissionsPortfolioManager() throws InterruptedException, SQLException {
         String [] teamName = generateRandomTeamName();
         String [] teamReference = generateRandomTeamReference();
