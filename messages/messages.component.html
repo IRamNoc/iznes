@@ -165,6 +165,8 @@
 
             <setl-message-with-links *ngIf="currentMessage.action && currentMessage.action.type === 'messageWithLink'" [data]="currentMessage.action.data" [content]="currentMessage.content"></setl-message-with-links>
 
+            <setl-message-download *ngIf="currentMessage.action && currentMessage.action.type === 'file'" [url]="currentMessage.action.url" [userId]="userId" [isActed]="currentMessage.isActed" [mailId]="currentMessage.mailId" [walletId]="walletId"></setl-message-download>
+
         </div>
 
         <div class="message_view_menu">
