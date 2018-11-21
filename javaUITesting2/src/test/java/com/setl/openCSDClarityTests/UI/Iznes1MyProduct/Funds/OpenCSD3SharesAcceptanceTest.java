@@ -63,6 +63,7 @@ public class OpenCSD3SharesAcceptanceTest {
     @After
     public void tearDown() throws Exception {
         setDBToProdOn();
+
     }
 
     @Test

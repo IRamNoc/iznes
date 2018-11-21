@@ -20,23 +20,31 @@ public class ScreenshotRule extends TestWatcher {
         this.driver = driver;
 
     }
+
     @Override
     protected void failed(Throwable e, Description description) {
+        try {
         TakesScreenshot takesScreenshot = (TakesScreenshot) driver;
-
         File scrFile = takesScreenshot.getScreenshotAs(OutputType.FILE);
         File destFile = getDestinationFile(description);
-        try {
+
             FileUtils.copyFile(scrFile, destFile);
         } catch (IOException ioe) {
             throw new RuntimeException(ioe);
         }
-        driver.close();
-        driver.quit();
     }
 
     @Override
-    protected void succeeded(Description description) {driver.close(); driver.quit();}
+    protected void succeeded(Description description) {
+
+    }
+
+    @Override
+    protected void finished(Description description){
+        //Always gets called after any test
+        driver.close();
+        driver.quit();
+    }
 
     private File getDestinationFile(Description description) {
         String OS = System.getProperty("os.name");
