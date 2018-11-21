@@ -1,7 +1,7 @@
 <div class="header-breadcrumbs fundCreateComponent">
     <h1>
         <i class="fa fa-bars"></i>
-        <span *ngIf="!param">{{ 'Add a New Fund' | translate }}</span>
+        <span *ngIf="!param">{{ 'Add New Fund' | translate }}</span>
         <span *ngIf="param">{{ 'Fund: @fundForm.controls[\'fundName\'].value@' | translate:
             { 'fundForm.controls[\'fundName\'].value': fundForm.controls['fundName'].value }
             }}
@@ -60,7 +60,7 @@
                                 <p>
                                     {{ 'or' | translate }}
                                     <a id="fund-add-new-umbrella-btn" [routerLink]="['/product-module/product/umbrella-fund/new']"
-                                        [queryParams]="{fromFund: 'true', umbrella : null}" queryParamsHandling="merge">{{ 'Add a new Umbrella Fund' | translate }}</a>
+                                        [queryParams]="{fromFund: 'true', umbrella : null}" queryParamsHandling="merge">{{ 'Add New Umbrella Fund' | translate }}</a>
                                 </p>
                             </div>
                         </div>

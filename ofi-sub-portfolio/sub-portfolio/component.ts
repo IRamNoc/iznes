@@ -221,7 +221,7 @@ export class OfiSubPortfolioComponent implements OnInit, OnDestroy {
                 target: 'menu-sub-portfolio',
             },
             {
-                title: this.translate.translate('Add a New Sub-portfolio'),
+                title: this.translate.translate('Add New Sub-portfolio'),
                 text: this.translate.translate('You can add a new sub-portfolio by clicking on this button. You will need to provide a name and an IBAN for the sub-portfolio you want to create.'),
                 target: 'btn-add-new-subportfolio',
             },

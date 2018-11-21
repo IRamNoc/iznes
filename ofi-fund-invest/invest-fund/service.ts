@@ -18,6 +18,7 @@ import { setLastCreatedContractDetail } from '@setl/core-store';
 import { AlertsService } from '@setl/jaspero-ng2-alerts';
 import { OfiFundInvestService } from '../../ofi-req-services/ofi-fund-invest/service';
 import { ArrangementType } from '../../ofi-req-services/ofi-fund-invest/model';
+import { MultilingualService } from '@setl/multilingual';
 import * as _ from 'lodash';
 
 @Injectable()
@@ -31,7 +32,9 @@ export class InvestFundFormService {
                 private numberConverterService: NumberConverterService,
                 private alertsService: AlertsService,
                 private ofiFundInvestService: OfiFundInvestService,
-                @Inject(APP_CONFIG) appConfig: AppConfig) {
+                public translate: MultilingualService,
+                @Inject(APP_CONFIG) appConfig: AppConfig,
+    ) {
         this.divider = appConfig.numberDivider;
     }
 
