@@ -167,7 +167,7 @@ public class OpenCSD2FundsAcceptanceTest {
         navigateToPageByID("menu-product-home");
         driver.findElement(By.id("new-fund-btn")).click();
         String pageHeading = driver.findElement(By.xpath("/html/body/app-root/app-basic-layout/div/ng-sidebar-container/div/div/div/main/div[1]/div/ng-component/div[1]/h1/span")).getText();
-        assertTrue(pageHeading.equals("Add a New Fund"));
+        assertTrue(pageHeading.equals("Add New Fund"));
     }
 
     @Test
@@ -184,7 +184,7 @@ public class OpenCSD2FundsAcceptanceTest {
         }
         try {
             String pageHeading = driver.findElement(By.id("add-fund-title")).getText();
-            assertTrue(pageHeading.equals("Add a new Umbrella Fund"));
+            assertTrue(pageHeading.equals("Add New Umbrella Fund"));
         } catch (Exception e) {
             fail("Page heading text was not correct : " + e.getMessage());
         }

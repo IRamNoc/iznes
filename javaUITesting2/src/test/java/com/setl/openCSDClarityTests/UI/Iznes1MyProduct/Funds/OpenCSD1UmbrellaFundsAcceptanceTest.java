@@ -151,7 +151,7 @@ public class OpenCSD1UmbrellaFundsAcceptanceTest {
         navigateToDropdown("menu-my-products");
         navigateToPageByID("menu-product-home");
         String pageHeading = driver.findElement(By.id("am-product-home")).getText();
-        assertTrue(pageHeading.equals("Shares / Funds / Umbrella funds"));
+        assertTrue(pageHeading.equals("Shares / Funds / Umbrella Funds"));
     }
 
     @Test
