@@ -80,7 +80,6 @@ export class TooltipDirective implements OnInit, OnDestroy, AfterViewInit {
         private _changeDetectorRef: ChangeDetectorRef,
     ) {
         this.el = this._el.nativeElement;
-        this.UserTourService = this.injector.get(UserTourService);
 
         this.parentDiv = document.getElementsByClassName('content-area')[0];
         if (!this.parentDiv) {
