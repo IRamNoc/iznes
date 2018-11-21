@@ -1,0 +1,378 @@
+<div class="login-container content-area" *ngIf="showLogin" [@fadeInOnLoad]>
+    <div class="container">
+        <div class="vertical-center row">
+            <div class="col-md-6 content-container">
+                <div class="inner">
+                    <div class="logo-container">
+                        <img id="logo-iznes" src="/assets/images/logo-shadow.png" alt="IZNES">
+                    </div>
+                    <div class="text-container">
+                        <div class="row">
+                            <div class="col-xl-12">
+                                <h1 class="text-center">{{ 'Investing in funds has never been so easy!' | translate }}</h1>
+                            </div>
+                        </div>
+                        <div class="row">
+                            <div class="col-xl-12">
+                                <p class="text-center">{{ 'The pan-European platform for investment in UCITS units and recordkeeping in Blockchain compatible with the various distribution channels' | translate }}</p>
+                            </div>
+                        </div>
+                        <div class="row">
+                            <div class="col-xl-12 text-center">
+                                <a class="btn btn-outline" href="{{ language === 'en-Latn' ? 'https://www.iznes.io/index_EN.html' : 'https://www.iznes.io' }}" target="_blank">{{ 'Learn more about' | translate }}
+                                    <strong>IZNES</strong></a>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="col-md-6 text-center box-container">
+                <div class="col-xl-12 inner">
+                    <ng-container *ngIf="(!showModal && !resetPassword && !showTwoFactorModal) || resetTwoFactorToken; then loginFormTemplate"></ng-container>
+                    <ng-container *ngIf="showModal && (!emailSent || isTokenExpired && !emailSent) && !changePassword; then resetPasswordRequestTemplate"></ng-container>
+                    <ng-container *ngIf="showModal && emailSent && !changePassword; then emailSentTemplate"></ng-container>
+                    <ng-container *ngIf="showModal && changePassword; then changePasswordFormTemplate"></ng-container>
+                    <ng-container *ngIf="resetPassword; then resetPasswordFormTemplate"></ng-container>
+                    <ofi-two-factor
+                        *ngIf="showTwoFactorModal"
+                        [qrCode]="qrCode"
+                        (modalCancelled)="showTwoFactorModal=!$event; showResetTwoFactor=!$event"
+                        [resetToken]="resetTwoFactorToken"
+                        [showReset]="showResetTwoFactor"
+                        (verifiedToken)="resetTwoFactorToken=''; twoFactorResetVerified=true"
+                        (clearToken)="resetTwoFactorToken=''">
+                    </ofi-two-factor>
+                    <!--LOGIN BOX FOOTER-->
+                    <div class="row">
+                        <div class="col-xs-4">
+                            <div class="language-container">
+                                <clr-dropdown>
+                                    <button id="language-selector" type="button" class="dropdown-toggle btn btn-link btn-sm language-selector" clrDropdownTrigger>
+                                        <i class="icon-globe"></i> {{getLabel(language)}}
+                                        <i class="fa fa-chevron-down"></i>
+                                    </button>
+                                    <clr-dropdown-menu clrPosition="bottom-left" *clrIfOpen>
+                                        <button class="dropdown-header" type="button">{{ 'Choose your language' | translate }}</button>
+                                        <button type="button" clrDropdownItem *ngFor="let lang of getLangs()" (click)="updateLang(lang)">
+                                            {{getLabel(lang)}}
+                                        </button>
+                                    </clr-dropdown-menu>
+                                </clr-dropdown>
+                            </div>
+                        </div>
+
+                        <div class="forgot-password col-xs-4">
+                            <a *ngIf="!showModal && !resetPassword && !showTwoFactorModal" id="forgotten-password-link" class="reset-link" (click)="showFPModal()">
+                                {{ 'Forgot your password?' | translate }}
+                            </a>
+                            <a *ngIf="showTwoFactorModal && !showResetTwoFactor && !twoFactorResetVerified && !qrCode" id="reset-two-factor-link" class="reset-link" (click)="showResetTwoFactor=true">
+                                {{ 'Lost access to your code?' | translate }}
+                            </a>
+                        </div>
+
+                        <div class="required-text col-xs-4">
+                            <p class="required-field">{{ 'Required field' | translate }}</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+        </div>
+    </div>
+</div>
+
+<!--LOGIN FORM TEMPLATE-->
+<ng-template #loginFormTemplate>
+    <div class="login-box" [@fadeIn]>
+        <div class="top-bar">
+            <div class="icon">
+                <i class="icon-key"></i>
+            </div>
+            <h2>{{ 'Login to access' | translate }} <strong>IZNES</strong></h2>
+        </div>
+        <div class="form-container">
+            <form [formGroup]="loginForm" (ngSubmit)="login(loginForm.value)">
+                <div class="form-group">
+                    <label class="required-field" for="login-username">{{ 'Username' | translate }}</label>
+                    <input
+                        id="login-username"
+                        type="text"
+                        name="username"
+                        placeholder="{{ 'Enter your username' | translate }}"
+                        class="form-control"
+                        formControlName="username"
+                        #usernameInput
+                        (change)="setUsernameRequired()">
+                    <div *ngIf="!loginForm.controls['username'].valid" class="field-error">
+                        {{ 'Field is required' | translate }}
+                    </div>
+                </div>
+
+                <div class="form-group">
+                    <label class="required-field" for="login-password">{{ 'Password' | translate }}</label>
+                    <input
+                        id="login-password"
+                        name="password"
+                        [type]="showPassword === true ? 'text' : 'password'"
+                        class="form-control"
+                        placeholder="{{ 'Enter your password' | translate }}"
+                        formControlName="password"
+                        (focus)="setUsernameRequired()"
+                        #passwordInput>
+                    <i [class]="showPassword ? 'fa fa-unlock toggle-password' : 'fa fa-lock toggle-password'" (click)="showPassword = !showPassword" title="{{ 'Show/hide password' | translate }}"></i>
+                    <div *ngIf="!loginForm.controls['password'].valid" class="field-error">
+                        {{ 'Field is required' | translate }}
+                    </div>
+                </div>
+
+                <div class="form-group">
+                    <button
+                        id="login-submit"
+                        type="submit"
+                        class="btn btn-primary btn-block"
+                        (click)="setUsernameRequired(); loginForm.get('password').markAsTouched()">
+                        {{ 'Login to my IZNES account' | translate }}
+                    </button>
+                </div>
+            </form>
+        </div>
+    </div>
+</ng-template>
+
+<!--RESET PASSWORD REQUEST TEMPLATE-->
+<ng-template #resetPasswordRequestTemplate>
+    <div class="login-box" [@fadeIn]>
+        <div class="top-bar">
+            <div class="icon">
+                <i class="icon-key"></i>
+            </div>
+            <h2>{{ 'Reset password' | translate }}</h2>
+        </div>
+        <div class="form-container">
+            <div *ngIf="isTokenExpired" class="text-block">
+                <p class="no-margin"><strong>{{ 'This link has expired!' | translate }}</strong></p>
+                <p class="no-margin">{{ 'Please retype your email address to change your password.' | translate }}</p>
+            </div>
+            <form [formGroup]="forgottenPasswordForm" (ngSubmit)="sendEmail()">
+                <div class="form-group">
+                    <label class="required-field" for="forgotten-password-email">{{ 'Email Address' | translate }}</label>
+                    <input
+                        id="forgotten-password-email"
+                        type="text"
+                        name="email"
+                        placeholder="{{ 'Enter your email address' | translate }}"
+                        class="form-control"
+                        formControlName="email">
+                    <div *ngIf="forgottenPasswordForm.controls.email.hasError('required')" class="field-error">
+                        {{ 'Field is required' | translate }}
+                    </div>
+                    <div *ngIf="!forgottenPasswordForm.controls.email.valid && !forgottenPasswordForm.controls.email.hasError('required')" class="field-error">
+                        {{ 'Email not valid!' | translate }}
+                    </div>
+                </div>
+
+                <div class="form-group">
+                    <button id="forgotten-password-cancel"
+                            class="btn btn-multi"
+                            type="button"
+                            (click)="closeFPModal()">
+                        {{ 'Cancel' | translate }}
+                    </button>
+                    <button id="forgotten-password-submit"
+                            type="submit"
+                            class="btn btn-primary btn-multi"
+                            [disabled]="!forgottenPasswordForm.valid">
+                        {{ 'Send' | translate }}
+                    </button>
+                </div>
+            </form>
+        </div>
+    </div>
+</ng-template>
+
+<!--EMAIL SENT TEMPLATE-->
+<ng-template #emailSentTemplate>
+    <div class="login-box" [@fadeIn]>
+        <div class="top-bar">
+            <div class="icon">
+                <i class="icon-key"></i>
+            </div>
+            <h2>{{ 'Email sent' | translate }}</h2>
+        </div>
+        <div class="form-container">
+            <p class="no-margin">{{ 'An email has been sent to' | translate }}:</p>
+            <p class="no-margin text-center"><strong>{{ emailUser }}</strong></p>
+            <p>{{ 'This message will automatically close in @countdown@ seconds.' | translate: {'countdown': countdown} }}</p>
+            <div class="form-group">
+                <button id="email-sent-close" class="btn" type="button" (click)="closeFPModal()">
+                    {{ 'Close' | translate }}
+                </button>
+            </div>
+        </div>
+    </div>
+</ng-template>
+
+<!--CHANGE PASSWORD FORM TEMPLATE-->
+<ng-template #changePasswordFormTemplate>
+    <div class="login-box" [@fadeIn]>
+        <div class="top-bar">
+            <div class="icon">
+                <i class="icon-key"></i>
+            </div>
+            <h2>{{ 'Change your password' | translate }}</h2>
+        </div>
+        <div class="form-container">
+            <form [formGroup]="changePasswordForm" (ngSubmit)="saveNewPassword()">
+                <div class="form-group">
+                    <label class="required-field" for="change-password-new">
+                        {{ 'New password' | translate }}
+                        <app-password-tooltip></app-password-tooltip>
+                    </label>
+                    <input id="change-password-new"
+                           [type]="(showPasswords.change1 === true) ? 'text' : 'password'"
+                           class="form-control"
+                           [class.error]="changePasswordForm.controls.passwordConfirm.hasError('mismatch')"
+                           formControlName="password"
+                           size="45"
+                           placeholder="{{ 'Enter your new password' | translate }}">
+                    <div *ngIf="hasError(changePasswordForm.get('password'), 'required')" class="field-error">
+                        {{ 'Field is required' | translate }}
+                    </div>
+                    <div *ngIf="hasError(changePasswordForm.get('password'), 'rules') || hasError(changePasswordForm.get('password'), 'length')" class="field-error">
+                        {{ 'Password does not satisfy security criteria' | translate }}
+                    </div>
+                    <div *ngIf="changePasswordForm.controls.passwordConfirm.hasError('mismatch') && !changePasswordForm.controls.password.hasError('minlength') && !hasError(changePasswordForm.get('password'), 'rules') && !hasError(changePasswordForm.get('password'), 'length')"
+                         class="field-error force-display-error">
+                        {{ 'Passwords do not match' | translate }}
+                    </div>
+                    <i [class]="showPasswords.change1 ? 'fa fa-unlock toggle-password' : 'fa fa-lock toggle-password'" aria-hidden="true" (click)="toggleShowPasswords('change1')" title="{{ 'Show/hide password' | translate }}"></i>
+                </div>
+
+                <div class="form-group text-center">
+                    <label class="required-field" for="change-password-confirm">
+                        {{ 'Password confirmation' | translate }}
+                    </label>
+
+                    <input id="change-password-confirm"
+                           [type]="(showPasswords.change2 === true) ? 'text' : 'password'"
+                           class="form-control"
+                           formControlName="passwordConfirm"
+                           placeholder="{{ 'Enter your new password' | translate }}">
+                    <div *ngIf="hasError(changePasswordForm.get('passwordConfirm'), 'required')" class="field-error">
+                        {{ 'Field is required' | translate }}
+                    </div>
+                    <div *ngIf="changePasswordForm.controls.passwordConfirm.hasError('mismatch') && !changePasswordForm.controls.passwordConfirm.hasError('minlength')" class="field-error">
+                        {{ 'Passwords do not match' | translate }}
+                    </div>
+                    <i [class]="showPasswords.change2 ? 'fa fa-unlock toggle-password' : 'fa fa-lock toggle-password'" aria-hidden="true" (click)="toggleShowPasswords('change2')" title="{{ 'Show/hide password' | translate }}"></i>
+                </div>
+                <div class="form-group">
+                    <button id="change-password-cancel"
+                            class="btn btn-multi"
+                            type="button"
+                            (click)="closeFPModal()">
+                        {{'Cancel' | translate}}
+                    </button>
+                    <button id="change-password-submit"
+                            type="submit"
+                            class="btn btn-primary btn-multi"
+                            [disabled]="!changePasswordForm.valid">
+                        {{'Send' | translate}}
+                    </button>
+                </div>
+            </form>
+        </div>
+    </div>
+</ng-template>
+
+<!--RESET PASSWORD FORM TEMPLATE-->
+<ng-template #resetPasswordFormTemplate>
+    <div class="login-box" [@fadeIn]>
+        <div class="top-bar">
+            <div class="icon">
+                <i class="icon-key"></i>
+            </div>
+            <h2>{{ 'Reset password' | translate }}</h2>
+        </div>
+        <div class="form-container">
+            <div class="text-block">
+                <p class="no-margin"><strong>{{'Your password has expired and must be changed' | translate}}</strong>
+                </p>
+            </div>
+            <form [formGroup]="resetPasswordForm" (ngSubmit)="resetUserPassword($event)">
+                <div class="form-group">
+                    <label class="required-field" for="reset-password-current">
+                        {{ 'Current password' | translate }}
+                    </label>
+                    <input
+                        id="reset-password-current"
+                        class="form-control"
+                        [type]="(showPasswords.resetold === true) ? 'text' : 'password'"
+                        size="45"
+                        formControlName="oldPassword"
+                        placeholder="{{ 'Enter your current password' | translate }}">
+                    <div *ngIf="hasError(resetPasswordForm.get('oldPassword'), 'required')" class="field-error">
+                        {{ 'Field is required' | translate }}
+                    </div>
+                    <i [class]="showPasswords.resetold ? 'fa fa-unlock toggle-password' : 'fa fa-lock toggle-password'" aria-hidden="true" (click)="toggleShowPasswords('resetold')" title="{{ 'Show/hide password' | translate }}"></i>
+                </div>
+
+                <div class="form-group">
+                    <label class="required-field" for="reset-password-new">
+                        {{ 'New password' | translate }}
+                        <app-password-tooltip></app-password-tooltip>
+                    </label>
+                    <input
+                        id="reset-password-new"
+                        class="form-control"
+                        [class.error]="resetPasswordForm.controls.passwordConfirm.hasError('mismatch')"
+                        [type]="(showPasswords.reset1 === true) ? 'text' : 'password'"
+                        size="45"
+                        formControlName="password"
+                        placeholder="{{ 'Enter your new password' | translate }}"
+                    />
+                    <div *ngIf="hasError(resetPasswordForm.get('password'), 'required')" class="field-error">
+                        {{ 'Field is required' | translate }}
+                    </div>
+                    <div *ngIf="hasError(resetPasswordForm.get('password'), 'rules') || hasError(resetPasswordForm.get('password'), 'length')" class="field-error">
+                        {{'Password does not satisfy security criteria' | translate}}
+                    </div>
+                    <div *ngIf="hasError(resetPasswordForm.get('password'), 'same') && !hasError(resetPasswordForm.get('password'), 'rules') && !hasError(resetPasswordForm.get('password'), 'length')" class="field-error">
+                        {{ 'Password must be new' | translate }}
+                    </div>
+                    <div *ngIf="hasError(resetPasswordForm.get('passwordConfirm'), 'mismatch') && !hasError(resetPasswordForm.get('password'), 'rules') && !hasError(resetPasswordForm.get('password'), 'length') && !hasError(resetPasswordForm.get('password'), 'same')" class="field-error force-display-error">
+                        {{ 'Passwords do not match' | translate }}
+                    </div>
+                    <i [class]="showPasswords.reset1 ? 'fa fa-unlock toggle-password' : 'fa fa-lock toggle-password'" aria-hidden="true" (click)="toggleShowPasswords('reset1')" title="{{ 'Show/hide password' | translate }}"></i>
+                </div>
+
+                <div class="form-group">
+                    <label class="required-field" for="reset-password-confirm">
+                        {{ 'Password confirmation' | translate }}
+                    </label>
+                    <input class="form-control"
+                           id="reset-password-confirm"
+                           [type]="(showPasswords.reset2 === true) ? 'text' : 'password'"
+                           size="45"
+                           formControlName="passwordConfirm"
+                           placeholder="{{ 'Enter your new password' | translate }}">
+                    <div *ngIf="hasError(resetPasswordForm.get('passwordConfirm'), 'required')" class="field-error">
+                        {{ 'Field is required' | translate }}
+                    </div>
+                    <div *ngIf="hasError(resetPasswordForm.get('passwordConfirm'), 'mismatch')" class="field-error">
+                        {{ 'Passwords do not match' | translate }}
+                    </div>
+                    <i [class]="showPasswords.reset2 ? 'fa fa-unlock toggle-password' : 'fa fa-lock toggle-password'" aria-hidden="true" (click)="toggleShowPasswords('reset2')" title="{{ 'Show/hide password' | translate }}"></i>
+                </div>
+                <div class="form-group">
+                    <button id="reset-password-submit"
+                            type="submit"
+                            class="btn btn-primary"
+                            [disabled]="!resetPasswordForm.valid">
+                        {{ 'Reset password' | translate }}
+                    </button>
+                </div>
+            </form>
+        </div>
+    </div>
+</ng-template>
