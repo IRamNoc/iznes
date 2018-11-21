@@ -72,14 +72,14 @@ export class NewKycDocumentsComponent implements OnInit, OnDestroy {
             takeUntil(this.unsubscribe),
             map(kycs => kycs[0]),
             rxFilter((kyc: any) => {
-                    return kyc && kyc.amcID;
-                }),
-            )
-            .subscribe((kyc) => {
-                if (this.shouldPersist(kyc)) {
+                return kyc && kyc.amcID;
+            }),
+        )
+        .subscribe((kyc) => {
+            if (this.shouldPersist(kyc)) {
                 this.persistForm();
             }
-            });
+        });
     }
 
     shouldPersist(kyc) {
@@ -92,11 +92,11 @@ export class NewKycDocumentsComponent implements OnInit, OnDestroy {
     initData() {
         this.connectedWallet$
         .pipe(
-                takeUntil(this.unsubscribe),
+            takeUntil(this.unsubscribe),
         )
-            .subscribe((connectedWallet) => {
+        .subscribe((connectedWallet) => {
             this.connectedWallet = connectedWallet;
-            });
+        });
     }
 
     persistForm() {
@@ -206,7 +206,7 @@ export class NewKycDocumentsComponent implements OnInit, OnDestroy {
                     this.initSubscriptions();
                 });
             });
-            });
+        });
     }
 
     ngOnDestroy() {

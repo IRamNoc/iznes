@@ -107,7 +107,7 @@
                 </div>
 
                 <div class="row">
-                    <div class="form-group col-sm-6" [class.has-error]="hasError(['common', 'kycw8benefatcadoc', 'hash'])">
+                    <div class="form-group required-field col-sm-6" [class.has-error]="hasError(['common', 'kycw8benefatcadoc', 'hash'])">
                         <label for="kycw8benefatcadoc" class="control-label">
                             {{ 'Form W-8BEN-E (FACTA)' | translate }}
                         </label>
@@ -128,7 +128,7 @@
 
                 <!-- Listed -->
                 <div class="row" *ngIf="!isDisabled('listed')">
-                    <div class="form-group col-sm-6" [class.has-error]="hasError(['listed', 'kycisincodedoc', 'hash'])">
+                    <div class="form-group required-field col-sm-6" [class.has-error]="hasError(['listed', 'kycisincodedoc', 'hash'])">
                         <label for="kycisincodedoc" class="control-label">
                             {{ 'ISIN code of the listed share' | translate }}
                         </label>
@@ -142,7 +142,7 @@
                         <span class="field-error">{{ 'File is required' | translate }}</span>
                     </div>
 
-                    <div class="form-group col-sm-6" [class.has-error]="hasError(['listed', 'kycevidencefloatable', 'hash'])" *ngIf="!isDisabled('listed.kycevidencefloatable')">
+                    <div class="form-group required-field col-sm-6" [class.has-error]="hasError(['listed', 'kycevidencefloatable', 'hash'])" *ngIf="!isDisabled('listed.kycevidencefloatable')">
                         <label for="kycevidencefloatable" class="control-label">
                             {{ 'Evidence of stocklisting and confirmation that 75% of the company\'s shares are floatable and tradable on the market' | translate }}
                         </label>
@@ -159,7 +159,7 @@
 
                 <!-- Regulated -->
                 <div class="row" *ngIf="!isDisabled('regulated')">
-                    <div class="form-group col-sm-6" [class.has-error]="hasError(['regulated', 'kycproofofapprovaldoc', 'hash'])">
+                    <div class="form-group required-field col-sm-6" [class.has-error]="hasError(['regulated', 'kycproofofapprovaldoc', 'hash'])">
                         <label for="kycproofofapprovaldoc" class="control-label">
                             {{ 'Proof of approval or copy of order' | translate }}
                         </label>
@@ -173,7 +173,7 @@
                         <span class="field-error">{{ 'File is required' | translate }}</span>
                     </div>
 
-                    <div class="form-group col-sm-6" [class.has-error]="hasError(['regulated', 'kycproofregulationdoc', 'hash'])">
+                    <div class="form-group required-field col-sm-6" [class.has-error]="hasError(['regulated', 'kycproofregulationdoc', 'hash'])">
                         <label for="kycproofregulationdoc" class="control-label">
                             {{ 'Proof of regulation/supervision from the regulator\'s website' | translate }}
                         </label>
