@@ -602,6 +602,38 @@ input:checked + .slider:before {
     transform: translateX(26px);
 }
 
+.switch.small {
+    height: 16px;
+
+    .slider {
+        &:before {
+            height: 12px;
+            width: 12px;
+        }
+
+        &.round {
+            height: 16px;
+            width: 36px;
+            line-height: 16px;
+        }
+    }
+    input {
+        & + .slider:after {
+            padding-left: 16px;
+        }
+
+        &:checked + .slider {
+
+            &:before {
+                transform: translateX(20px);
+            }
+            &:after {
+                padding-left: 3px;
+            }
+        }
+    }
+}
+
 /* Rounded sliders */
 .slider.round {
     border-radius: 25px;
