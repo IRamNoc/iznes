@@ -189,7 +189,7 @@
                         </div>
                         <div class="form-group col-sm-6"></div>
                     </div>
-                    <div class="row">
+                    <div class="row address">
                         <div class="form-group col-sm-6">
                             <label class="required-field" for="postalAddressLine1">
                                 <span>Registered Company’s Headquarters address</span>
@@ -238,7 +238,7 @@
                             </label>
                             <div id="country">
                                 <ng-select [items]="countries" [allowClear]="true" placeholder="Please select"
-                                    formControlName="country"></ng-select>
+                                    [containerWidth]="'92.5%'" formControlName="country"></ng-select>
                                 <div *ngIf="managementCompanyForm.controls.country.hasError('required') && managementCompanyForm.controls.country.touched"
                                     class="text-danger" mltag="txt_countryrequired">Country is required</div>
                             </div>
