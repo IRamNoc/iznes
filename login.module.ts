@@ -44,6 +44,7 @@ import { LoginService } from './login.service';
         SetlLoginComponent,
         SignupComponent,
         EnrollComponent,
+        AuthenticateComponent,
     ],
     providers: [
         ToasterService,

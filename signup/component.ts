@@ -2,7 +2,7 @@ import { Component, OnDestroy, Inject, OnInit, Input, Output, EventEmitter } fro
 import { ActivatedRoute, Router } from '@angular/router';
 import { FormGroup, Validators, FormControl, AbstractControl } from '@angular/forms';
 import { NgRedux, select } from '@angular-redux/store';
-import { Subscription } from 'rxjs';
+import { Subscription } from 'rxjs/Subscription';
 import * as _ from 'lodash';
 
 import {
@@ -26,8 +26,8 @@ import { passwordValidator } from '@setl/utils/helper/validators/password.direct
 
 import * as Model from './model';
 import { MemberSocketService } from '@setl/websocket-service';
-import { LoginService } from "../login.service";
-import { combineLatest } from "rxjs/observable/combineLatest";
+import { LoginService } from '../login.service';
+import { combineLatest } from 'rxjs/observable/combineLatest';
 
 @Component({
     selector: 'app-signup',
@@ -37,7 +37,11 @@ import { combineLatest } from "rxjs/observable/combineLatest";
 export class SignupComponent implements OnDestroy, OnInit {
     appConfig: AppConfig;
     invitationToken = '';
-    language: string;
+    public language: string;
+    public langLabels = {
+        'fr-Latn': 'Francais',
+        'en-Latn': 'English',
+    };
     redirectURL: string;
     signupForm: FormGroup;
     showPassword: boolean = false;
@@ -65,6 +69,7 @@ export class SignupComponent implements OnDestroy, OnInit {
 
     @select(['user', 'authentication']) authenticationOb;
     @select(['user', 'siteSettings', 'forceTwoFactor']) forceTwoFactorOb;
+    @select(['user', 'siteSettings', 'language']) requestLanguage;
 
     constructor(private redux: NgRedux<any>,
                 private activatedRoute: ActivatedRoute,
@@ -116,6 +121,10 @@ export class SignupComponent implements OnDestroy, OnInit {
                 this.updateState(authentication);
             }
         }));
+
+        this.subscriptions.push(
+            this.requestLanguage.subscribe(requested => this.language = requested ? requested : 'English'),
+        );
 
         window.onbeforeunload = null;
     }
@@ -291,12 +300,6 @@ export class SignupComponent implements OnDestroy, OnInit {
         this.showPassword = !this.showPassword;
     }
 
-    ngOnDestroy() {
-        for (const subscription of this.subscriptions) {
-            subscription.unsubscribe();
-        }
-    }
-
     hasError(path, error?) {
         if (this.signupForm) {
             const formControl: AbstractControl = path ? this.signupForm.get(path) : this.signupForm;
@@ -315,5 +318,23 @@ export class SignupComponent implements OnDestroy, OnInit {
         const formControl: AbstractControl = this.signupForm.get(path);
 
         return formControl.touched;
+    }
+
+    updateLang(lang: string) {
+        this.redux.dispatch(setLanguage(lang));
+    }
+
+    getLangs() {
+        return Object.keys(this.langLabels);
+    }
+
+    getLabel(lang: string): string {
+        return this.langLabels[lang];
+    }
+
+    ngOnDestroy() {
+        for (const subscription of this.subscriptions) {
+            subscription.unsubscribe();
+        }
     }
 }

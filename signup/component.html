@@ -16,9 +16,9 @@
                     {{'Username' | translate}}
                 </label>
                 <input id="su-username-field" class="form-control" type="text" name="username" disabled
-                    [placeholder]="translate.translate('User name')"
-                    formControlName="username"
-                    [class.error]="hasError('username', 'required')">
+                       [placeholder]="translate.translate('User name')"
+                       formControlName="username"
+                       [class.error]="hasError('username', 'required')">
             </div>
 
             <!-- Password -->
@@ -30,10 +30,10 @@
                     </label>
                     <div class="toggle-parent">
                         <input id="su-password-field" class="form-control" name="password"
-                            [type]="(showPassword) ? 'text' : 'password'"
-                            [placeholder]="translate.translate('Password')"
-                            formControlName="password"
-                            [class.error]="hasError('password', 'required')">
+                               [type]="(showPassword) ? 'text' : 'password'"
+                               [placeholder]="translate.translate('Password')"
+                               formControlName="password"
+                               [class.error]="hasError('password', 'required')">
 
                         <span class="toggle-password" (click)="toggleShowPasswords()" title="Show/hide passwords">
                             <i class="fa fa-eye-slash" aria-hidden="true"></i>
@@ -58,10 +58,10 @@
 
                     <div class="toggle-parent">
                         <input id="su-passwordConfirm-field" class="form-control" name="passwordConfirm"
-                            [type]="(showConfirmPassword) ? 'text' : 'password'"
-                            [placeholder]="translate.translate('Retype password')"
-                            formControlName="passwordConfirm"
-                            [class.error]="hasError('passwordConfirm', 'rules')">
+                               [type]="(showConfirmPassword) ? 'text' : 'password'"
+                               [placeholder]="translate.translate('Retype password')"
+                               formControlName="passwordConfirm"
+                               [class.error]="hasError('passwordConfirm', 'rules')">
 
                         <span class="toggle-password" (click)="toggleShowPasswords(true)" title="Show/hide passwords">
                             <i class="fa fa-eye-slash" aria-hidden="true"></i>
@@ -81,11 +81,22 @@
 
             <div class="form-group">
                 <button id="signup-submit" type="submit" class="btn btn-primary block full-width m-b"
-                    [disabled]="!signupForm.valid">
+                        [disabled]="!signupForm.valid">
                     {{ buttonText }}
                 </button>
             </div>
         </form>
+
+        <div class="language-container">
+            <clr-dropdown>
+                <button type="button" class="dropdown-toggle btn btn-link btn-sm language-selector" clrDropdownTrigger>
+                    {{getLabel(language)}}
+                </button>
+                <clr-dropdown-menu clrPosition="bottom-left" *clrIfOpen>
+                    <button type="button" clrDropdownItem *ngFor="let lang of getLangs()" (click)="updateLang(lang)">{{getLabel(lang)}}</button>
+                </clr-dropdown-menu>
+            </clr-dropdown>
+        </div>
     </div>
 
     <p>
