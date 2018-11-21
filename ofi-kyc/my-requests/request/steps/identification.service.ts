@@ -1,5 +1,7 @@
 import { Injectable } from '@angular/core';
 import { FormArray } from '@angular/forms';
+import { NgRedux, select } from '@angular-redux/store';
+import { take } from 'rxjs/operators';
 
 import {
     mapValues,
@@ -23,25 +25,40 @@ import { NewRequestService } from '../new-request.service';
 import { RequestsService } from '../../requests.service';
 import { DocumentsService } from './documents.service';
 import { BeneficiaryService } from './identification/beneficiary.service';
+import { setMyKycStakeholderRelations } from '@ofi/ofi-main/ofi-store/ofi-kyc/kyc-request';
 
 @Injectable()
 export class IdentificationService {
 
+    @select(['ofi', 'ofiKyc', 'myKycRequested', 'stakeholderRelations']) stakeholderRelations$;
+
     stakeholderIdsToUpdate = {};
+    stakeholdersRelationTable = [];
+    previousStakeholdersRelationTable = [];
 
     constructor(
         private newRequestService: NewRequestService,
         private requestsService: RequestsService,
         private documentsService: DocumentsService,
         private beneficiaryService: BeneficiaryService,
+        private ngRedux: NgRedux<any>,
     ) {
     }
 
+    getPreviousRelations() {
+        this.stakeholderRelations$.pipe(take(1))
+        .subscribe((relations) => {
+            this.previousStakeholdersRelationTable = relations;
+        });
+    }
+
     sendRequest(form, requests, connectedWallet) {
+        this.getPreviousRelations();
+        this.stakeholdersRelationTable = [];
+
         const promises = [];
         const context = this.newRequestService.context;
-
-        requests.forEach((request) => {
+        requests.forEach((request, index) => {
             const kycID = request.kycID;
 
             const formGroupGeneral = form.get('generalInformation');
@@ -51,7 +68,11 @@ export class IdentificationService {
 
             const formGroupCompany = form.get('companyInformation');
             const formGroupBeneficiaries = formGroupCompany.get('beneficiaries');
-            promises.concat(this.handleBeneficiaries(formGroupBeneficiaries, kycID, connectedWallet));
+
+            this.stakeholdersRelationTable.push({ kycID, stakeholderIDs: [] });
+            const beneficiariesPromises = this.handleBeneficiaries(formGroupBeneficiaries, kycID, connectedWallet, index);
+
+            promises.push(beneficiariesPromises);
 
             formGroupCompany.get('kycID').setValue(kycID);
             const companyPromise = this.sendRequestCompany(formGroupCompany);
@@ -81,40 +102,62 @@ export class IdentificationService {
             promises.push(updateStepPromise);
         });
 
-        return Promise.all(promises);
+        return Promise.all(promises).then(() => {
+            this.ngRedux.dispatch(setMyKycStakeholderRelations(this.stakeholdersRelationTable));
+        });
     }
 
-    handleBeneficiaries(formGroupBeneficiaries, kycID, connectedWallet) {
-        const promises = this.sendRequestBeneficiaries(formGroupBeneficiaries, kycID, connectedWallet);
+    handleBeneficiaries(formGroupBeneficiaries, kycID, connectedWallet, kycIndex) {
+        const beneficiaryValues = formGroupBeneficiaries.value;
+        const promises = this.sendRequestBeneficiaries(beneficiaryValues, kycID, connectedWallet).then((responses) => {
+            formGroupBeneficiaries.controls.forEach((beneficiary, index) => {
+                if (kycIndex === 0) {
+                    beneficiary.get('companyBeneficiariesID').setValue(responses[index]);
+                }
+                beneficiaryValues[index].companyBeneficiariesID = responses[index];
+            });
 
-        let toResend: any = {
-            controls : [],
-        };
+            return beneficiaryValues;
+        });
+
+        let toResend: any[] = [];
 
         // We first need to be sure we have all stakeholder ids before resending them with updated parent ids
-        return Promise.all(promises).then(() => {
-            formGroupBeneficiaries.controls.forEach((stakeholder) => {
-                const parent = stakeholder.get('common.parent');
-                const parentValue = getValue(parent, 'value[0].id');
+        return promises.then((beneficiaryValues) => {
+            beneficiaryValues.forEach((rawStakeholder, index) => {
+                const stakeholder = clone(rawStakeholder);
+                const parent = stakeholder.common.parent;
+                const parentValue = getValue(parent, [0, 'id']);
 
-                if (!parentValue) {
-                    return;
-                }
-                const newValue = this.stakeholderIdsToUpdate[parentValue];
-                const isOld = this.beneficiaryService.isLocalBeneficiaryId(parent);
+                let newValue = this.stakeholderIdsToUpdate[parentValue];
 
-                if (isOld && newValue) {
-                    parent.setValue([{ id: newValue }]);
-                    toResend.controls.push(stakeholder);
+                if (parentValue !== -1) {
+                    const position = this.getPositionInRelations(this.stakeholdersRelationTable, parentValue);
+
+                    if (position !== null) {
+                        const foundRelation = find(this.stakeholdersRelationTable, ['kycID', kycID]);
+                        newValue = foundRelation.stakeholderIDs[position];
+                    }
+
+                    if (newValue) {
+                        const value = [{ id: newValue }];
+                        if (kycIndex === 0) {
+                            formGroupBeneficiaries.get(`${index}.common.parent`).setValue(value);
+                        }
+                        stakeholder.common.parent = value;
+                        toResend.push(stakeholder);
+                    }
                 }
             });
 
             this.beneficiaryService.fillInStakeholderSelects(formGroupBeneficiaries);
 
-            if (toResend.controls.length) {
-                this.sendRequestBeneficiaries(toResend, kycID, connectedWallet);
+            if (toResend.length) {
+                const promises = this.sendRequestBeneficiaries(toResend, kycID, connectedWallet);
 
-                toResend = {};
+                toResend = [];
+
+                return promises;
             }
         });
     }
@@ -161,44 +204,66 @@ export class IdentificationService {
         return this.requestsService.sendRequest(messageBody);
     }
 
-    sendRequestBeneficiaries(formGroupBeneficiaries, kycID, connectedWallet) {
+    sendRequestBeneficiaries(beneficiariesValue, kycID, connectedWallet) {
         const promises = [];
 
-        formGroupBeneficiaries.controls.forEach((formGroupBeneficiary) => {
-            const value = formGroupBeneficiary.value;
-            const kycDocument = getValue(value, ['naturalPerson', 'document']);
+        beneficiariesValue.forEach((beneficiaryValue, index) => {
+            const kycDocument = getValue(beneficiaryValue, ['naturalPerson', 'document']);
             const kycDocumentID = getValue(kycDocument, 'kycDocumentID');
             const hash = getValue(kycDocument, 'hash');
 
-            formGroupBeneficiary.get('kycID').setValue(kycID);
+            beneficiaryValue.kycID = kycID;
 
             let beneficiaryPromise;
             if (kycDocumentID) {
-                beneficiaryPromise = this.sendRequestBeneficiary(formGroupBeneficiary, kycDocumentID);
+                beneficiaryPromise = this.sendRequestBeneficiary(beneficiaryValue, kycDocumentID, index);
             } else if (hash) {
                 beneficiaryPromise = this.documentsService.sendRequestDocumentControl(kycDocument, connectedWallet).then((data) => {
                     const kycDocumentID = getValue(data, 'kycDocumentID');
 
-                    return this.sendRequestBeneficiary(formGroupBeneficiary, kycDocumentID);
+                    return this.sendRequestBeneficiary(beneficiaryValue, kycDocumentID, index);
                 });
             } else {
-                beneficiaryPromise = this.sendRequestBeneficiary(formGroupBeneficiary, null);
+                beneficiaryPromise = this.sendRequestBeneficiary(beneficiaryValue, null, index);
             }
 
             promises.push(beneficiaryPromise);
         });
 
-        return promises;
+        return Promise.all(promises);
     }
 
-    sendRequestBeneficiary(formGroupBeneficiary, documentID) {
-        const value = formGroupBeneficiary.value;
-        const firstLevel = omit(value, ['common', 'legalPerson', 'naturalPerson']);
-        const values = merge(firstLevel, value.common, value.legalPerson, value.naturalPerson);
+    getPositionInRelations(relationTable, companyBeneficiariesID) {
+        let position = null;
+
+        relationTable.forEach((relation) => {
+            relation.stakeholderIDs.forEach((stakeholder, index) => {
+                if (stakeholder === companyBeneficiariesID) {
+                    position = index;
+                }
+            });
+        });
+
+        return position;
+    }
+
+    sendRequestBeneficiary(beneficiaryValue, documentID, index) {
+        const firstLevel = omit(beneficiaryValue, ['common', 'legalPerson', 'naturalPerson']);
+        const values = merge(firstLevel, beneficiaryValue.common, beneficiaryValue.legalPerson, beneficiaryValue.naturalPerson);
         const extracted = this.newRequestService.getValues(values);
 
         const oldCompanyBeneficiariesID = extracted.companyBeneficiariesID;
         const parent = extracted.parent;
+
+        if (oldCompanyBeneficiariesID) {
+            const currentKycID = beneficiaryValue.kycID;
+            const position = this.getPositionInRelations(this.previousStakeholdersRelationTable, oldCompanyBeneficiariesID);
+
+            if (position !== null) {
+                const foundRelation = find(this.previousStakeholdersRelationTable, ['kycID', currentKycID]);
+                extracted.companyBeneficiariesID = foundRelation.stakeholderIDs[position];
+            }
+        }
 
         if (this.beneficiaryService.isLocalBeneficiaryId(oldCompanyBeneficiariesID)) {
             delete extracted.companyBeneficiariesID;
@@ -216,12 +281,18 @@ export class IdentificationService {
         };
         return this.requestsService.sendRequest(messageBody).then((data) => {
             const companyBeneficiariesID = getValue(data, [1, 'Data', 0, 'companyBeneficiariesID']);
+
             if (companyBeneficiariesID) {
                 if (this.beneficiaryService.isLocalBeneficiaryId(oldCompanyBeneficiariesID)) {
                     this.stakeholderIdsToUpdate[oldCompanyBeneficiariesID] = Number(companyBeneficiariesID);
                 }
+                const relation = find(this.stakeholdersRelationTable, ['kycID', extracted.kycID]);
 
-                formGroupBeneficiary.controls['companyBeneficiariesID'].setValue(companyBeneficiariesID);
+                if (relation) {
+                    relation.stakeholderIDs[index] = companyBeneficiariesID;
+                }
+
+                return companyBeneficiariesID;
             }
         });
     }
