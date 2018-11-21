@@ -3,7 +3,7 @@
 </div>
 
 <clr-tabs>
-    <clr-tab>
+    <clr-tab *ngIf="!isAssetManager">
         <button id="mcTabList" clrTabLink (click)="resetForm()">
             <i class="fa fa-th-list" mltag="txt_nbsp">&nbsp;</i><span mltag="txt_list">List</span>
         </button>
@@ -267,6 +267,7 @@
                             <div *ngIf="managementCompanyForm.controls.operationalContact.hasError('required') && managementCompanyForm.controls.operationalContact.touched"
                                 class="text-danger" mltag="txt_thisfieldisrequired">This field is required</div>
                         </div>
+                        <div class="form-group col-sm-6"></div>
                     </div>
                     <div class="row">
 
@@ -288,8 +289,7 @@
                                 <span mltag="txt_websiteUrl">Management Company Website Address</span>
                             </label>
                             <div>
-                                <input type="text" id="mc_websiteUrl" class="form-control" formControlName="websiteUrl"
-                                    placeholder="Please fill in the commercial email address of the management company">
+                                <input type="text" id="mc_websiteUrl" class="form-control" formControlName="websiteUrl">
                             </div>
                             <div *ngIf="managementCompanyForm.controls['websiteUrl'].hasError('required') && managementCompanyForm.controls['websiteUrl'].touched"
                                 class="text-danger" mltag="txt_thisfieldisrequired">This field is required</div>
@@ -329,8 +329,6 @@
                                     ngDefaultControl></setl-file-drop>
                                 <setl-file-viewer *ngIf="fileMetadata.getHash('signature')" [fileHash]="fileMetadata.getHash('signature')"></setl-file-viewer>
                             </div>
-                            <div *ngIf="false" class="text-danger" mltag="txt_thisfieldisrequired">This field is
-                                required</div>
                         </div>
                         <div class="form-group col-sm-6">
                             <label for="mc_logo" class="required-field">
@@ -343,13 +341,11 @@
                                     ngDefaultControl></setl-file-drop>
                                 <setl-file-viewer *ngIf="fileMetadata.getHash('logo')" [fileHash]="fileMetadata.getHash('logo')"></setl-file-viewer>
                             </div>
-                            <div *ngIf="false" class="text-danger" mltag="txt_thisfieldisrequired">This field is
-                                required</div>
                         </div>
                     </div>
                     <div class="row">
                         <div class="form-group col-sm-12">
-                            <button id="mcBtnSubmitForm" type="submit" class="btn btn-primary" [disabled]="!managementCompanyForm.valid || !fileMetadata.isValid()">
+                            <button id="mcBtnSubmitForm" type="submit" class="btn btn-primary" [disabled]="!isFormValid">
                                 <div *ngIf="!editForm; else editMcFBtSubmit">
                                     <i class="fa fa-save"></i> <span mltag="txt_save">Save</span>
                                 </div>

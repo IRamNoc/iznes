@@ -10,11 +10,10 @@ import { MultilingualService } from '@setl/multilingual';
 @Component({
     templateUrl: './place-orders.component.html',
     styleUrls: ['./place-orders.component.scss'],
-    changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class PlaceOrdersComponent implements OnInit, OnDestroy {
     language: string;
-    subscriptions: Array<Subscription> = [];
+    subscriptions: Subscription[] = [];
     placeOrdersFormGroup: FormGroup;
     routeOption: string;
     subtitleLabel: string;
@@ -56,7 +55,7 @@ export class PlaceOrdersComponent implements OnInit, OnDestroy {
                 private kycService: OfiKycService,
                 private redux: NgRedux<any>,
                 private logService: LogService,
-                public _translate: MultilingualService,
+                public translate: MultilingualService,
                 private route: ActivatedRoute) {
 
         console.clear();
@@ -87,8 +86,22 @@ export class PlaceOrdersComponent implements OnInit, OnDestroy {
         this.isDatesInfoAccordionOpened = true;
         this.isOrderInfoAccordionOpened = true;
 
+        /* Init */
+        this.translateSelectMenus();
+        this.initForm();
+        this.initDatePickerConfig();
+    }
+
+    ngOnInit(): void {
+        this.subscriptions.push(this.languageObs.subscribe((language) => {
+            this.language = language;
+            this.translateSelectMenus();
+        }));
+    }
+
+    translateSelectMenus() {
         /* Investment portfolio items */
-        this.investmentPortfolioItems = [
+        this.investmentPortfolioItems = this.translate.translate([
             {
                 id: 1,
                 text: 'investment portfolio 1'
@@ -109,21 +122,7 @@ export class PlaceOrdersComponent implements OnInit, OnDestroy {
                 id: 5,
                 text: 'investment portfolio 5'
             }
-        ];
-
-        /* Init */
-        this.initForm();
-        this.initDatePickerConfig();
-    }
-
-    ngOnInit(): void {
-        this.subscriptions.push(this.languageObs.subscribe(language => this.language = language));
-    }
-
-    ngOnDestroy(): void {
-        this.cdr.detach();
-
-        this.subscriptions.map(subscription => subscription.unsubscribe());
+        ]);
     }
 
     initForm() {
@@ -241,5 +240,11 @@ export class PlaceOrdersComponent implements OnInit, OnDestroy {
         this.logService.log('quantity: ', this.placeOrdersFormGroup.controls['quantity'].value);
         this.logService.log('amount: ', this.placeOrdersFormGroup.controls['amount'].value);
         this.logService.log('settlement date: ', this.placeOrdersFormGroup.controls['settlementDate'].value);
+    }
+
+    ngOnDestroy(): void {
+        this.cdr.detach();
+
+        this.subscriptions.map(subscription => subscription.unsubscribe());
     }
 }

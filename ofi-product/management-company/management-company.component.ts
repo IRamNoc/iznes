@@ -1,9 +1,10 @@
 import * as _ from 'lodash';
 import { Component, OnInit, ChangeDetectorRef, ChangeDetectionStrategy, OnDestroy, Inject } from '@angular/core';
+import { Location } from '@angular/common';
 import { FormGroup } from '@angular/forms';
 import { NgRedux, select } from '@angular-redux/store';
 import { Subject } from 'rxjs/Subject';
-import { takeUntil } from 'rxjs/operators';
+import { takeUntil, take, switchMap, filter } from 'rxjs/operators';
 import { ToasterService } from 'angular2-toaster';
 
 import { SagaHelper, LogService } from '@setl/utils';
@@ -13,6 +14,9 @@ import { ManagagementCompanyService } from './management-company.service';
 import { ManagementCompanyListState } from '../../ofi-store/ofi-product/management-company';
 import { ManagementCompanyFileMetadata, ManagementCompanyFileMetadataField } from './management-company-file-metadata';
 import { legalFormList } from '../../ofi-kyc/my-requests/requests.config';
+import { FileDropEvent } from '@setl/core-filedrop';
+
+const AM_USERTYPE = 36;
 
 @Component({
     selector: 'management-company',
@@ -24,8 +28,10 @@ import { legalFormList } from '../../ofi-kyc/my-requests/requests.config';
 export class OfiManagementCompanyComponent implements OnInit, OnDestroy {
 
     language = 'en';
+    private usertype: number;
 
     managementCompanyForm: FormGroup;
+    isProduction = true;
     editForm = false;
     showSearchTab = false;
     showModal = false;
@@ -46,7 +52,9 @@ export class OfiManagementCompanyComponent implements OnInit, OnDestroy {
 
     // List of redux observable.
     @select(['user', 'siteSettings', 'language']) language$;
+    @select(['user', 'myDetail', 'userType']) usertype$;
     @select(['ofi', 'ofiProduct', 'ofiManagementCompany', 'managementCompanyList', 'managementCompanyList']) managementCompanyList$;
+    @select(['user', 'siteSettings', 'production']) isProduction$;
 
     constructor(
         private ngRedux: NgRedux<any>,
@@ -56,6 +64,7 @@ export class OfiManagementCompanyComponent implements OnInit, OnDestroy {
         private alertsService: AlertsService,
         private toasterSevice: ToasterService,
         private service: ManagagementCompanyService,
+        private location: Location,
         @Inject('phoneCodeList') phoneCodeList,
         @Inject('product-config') productConfig,
     ) {
@@ -74,6 +83,21 @@ export class OfiManagementCompanyComponent implements OnInit, OnDestroy {
             )
             .subscribe(language => this.setLanguage(language));
 
+        this.isProduction$
+            .pipe(
+                takeUntil(this.unSubscribe),
+            )
+            .subscribe(isProduction => this.isProduction = isProduction);
+
+        this.usertype$
+            .pipe(
+                take(2),
+                takeUntil(this.unSubscribe),
+            )
+            .subscribe((usertype) => {
+                this.usertype = usertype;
+            });
+
         this.managementCompanyList$
             .pipe(
                 takeUntil(this.unSubscribe),
@@ -82,41 +106,48 @@ export class OfiManagementCompanyComponent implements OnInit, OnDestroy {
                 this.managementCompanyList = _.values(managementCompanyList);
                 this.markForCheck();
             });
-    }
 
-    public onDropFile(filedropEvent, fieldName: ManagementCompanyFileMetadataField) {
-        if (!filedropEvent.files.length) {
-            this.fileMetadata.setProperty(
-                fieldName,
-                {
-                    title: null,
-                    hash: null,
-                },
-            );
-            this.markForCheck();
-            return;
-        }
-        this.service.uploadFile(filedropEvent, this.managementCompanyForm.controls[fieldName])
-            .then((res) => {
-                if (res) {
-                    this.toasterSevice.pop('success', `${res.name} successfully uploaded`);
+        this.usertype$
+            .pipe(
+                switchMap(() => this.managementCompanyList$),
+                filter(l => !!Object.keys(l).length),
+                takeUntil(this.unSubscribe),
+            )
+            .subscribe((managementCompanyList) => {
+                if (this.isAssetManager) {
+                    this.editCompany(_.values(managementCompanyList)[0]);
                 }
-                this.fileMetadata.setProperty(
-                    fieldName,
-                    {
-                        title: res.name,
-                        hash: res.hash,
-                    },
-                );
-                this.markForCheck();
-            })
-            .catch((err) => {
-                this.toasterSevice.pop('error', `failed to upload file: ${err}`);
             });
     }
 
+    get isAssetManager(): boolean {
+        return this.usertype === AM_USERTYPE;
+    }
+
+    get isFormValid(): boolean {
+        return this.managementCompanyForm.valid && (!this.isProduction || this.fileMetadata.isValid());
+    }
+
+    public onDropFile(filedropEvent: FileDropEvent, fieldName: ManagementCompanyFileMetadataField) {
+        const hasFiles = filedropEvent.files.length;
+        this.fileMetadata.setProperty(
+            fieldName,
+            {
+                title: hasFiles ? filedropEvent.files[0].name : null,
+                hash: hasFiles ? `data:${filedropEvent.files[0].mimeType};base64,${filedropEvent.files[0].data}` : null,
+            },
+        );
+
+        this.markForCheck();
+    }
+
     public getCountryName(countryAbbreviation: string): string {
-        return _.find(this.countries, { id: countryAbbreviation }).text;
+        const thisCountryData = _.find(this.countries, { id: countryAbbreviation });
+
+        if (thisCountryData) {
+            return thisCountryData.text;
+        }
+        return '';
     }
 
     ngOnDestroy() {
@@ -198,7 +229,7 @@ export class OfiManagementCompanyComponent implements OnInit, OnDestroy {
 
     save() {
 
-        if (!this.managementCompanyForm.valid || !this.fileMetadata.isValid()) {
+        if (!this.isFormValid) {
             return;
         }
 
@@ -213,90 +244,42 @@ export class OfiManagementCompanyComponent implements OnInit, OnDestroy {
 
         this.showSearchTab = false; // reset
 
-        // update
-        if (this.editForm) {
-            const asyncTaskPipe = this.mcService.updateManagementCompany(payload);
+        const asyncTaskPipe = this.editForm
+            ? this.mcService.updateManagementCompany(payload)
+            : this.mcService.saveManagementCompany(payload);
 
-            this.ngRedux.dispatch(SagaHelper.runAsyncCallback(
-                asyncTaskPipe,
-                (data) => {
-                    this.mcService.fetchManagementCompanyList();
-                    this.resetForm();
-                    this.showSearchTab = true;
-                    this.showSuccessResponse('Management company has successfully been updated');
-                },
-                (data) => {
-                    this.logService.log('error: ', data);
-                    this.toasterSevice.pop('error', 'failed to update management company');
-                }),
-            );
-        } else {
-            // insert
-            const asyncTaskPipe = this.mcService.saveManagementCompany(payload);
-
-            this.ngRedux.dispatch(SagaHelper.runAsyncCallback(
-                asyncTaskPipe,
-                (data) => {
-                    this.mcService.fetchManagementCompanyList();
-
-                    const tempPassword = data[1].Data[0].newPasswordString;
-
-                    this.resetForm();
-                    this.showSearchTab = true;
-                    this.showSuccessResponse('Management company has successfully been created.<br><br>Temporary password: ' + tempPassword);
-                },
-                (data) => {
-                    this.logService.log('error: ', data);
-                    this.toasterSevice.pop('error', 'failed to create management company');
-                }),
-            );
-        }
+        this.ngRedux.dispatch(SagaHelper.runAsyncCallback(
+            asyncTaskPipe,
+            () => {
+                this.mcService.fetchManagementCompanyList();
+                this.resetForm();
+                this.showSearchTab = true;
+                this.showSuccessResponse(`Management company has successfully been ${this.editForm ? 'updated' : 'created'}.`);
+                if (this.isAssetManager) {
+                    this.location.back();
+                }
+            },
+            (data) => {
+                this.logService.log('error: ', data);
+                this.toasterSevice.pop('error', `failed to ${this.editForm ? 'update' : 'create'} management company`);
+            }),
+        );
     }
 
     markForCheck() {
         this._changeDetectorRef.markForCheck();
     }
 
-    showErrorResponse(response) {
-
-        const message = _.get(response, '[1].Data[0].Message', '');
-
-        this.alertsService.create('error', `
-                    <table class="table grid">
-
-                        <tbody>
-                            <tr>
-                                <td class="text-center text-danger">${message}</td>
-                            </tr>
-                        </tbody>
-                    </table>
-                    `);
-    }
-
     showSuccessResponse(message) {
-
-        this.alertsService.create('success', `
-                    <table class="table grid">
-
-                        <tbody>
-                            <tr>
-                                <td class="text-center text-success">${message}</td>
-                            </tr>
-                        </tbody>
-                    </table>
-                    `);
-    }
-
-    showInvalidForm(message) {
-        this.alertsService.create('error', `
-                    <table class="table grid">
-
-                        <tbody>
-                            <tr>
-                                <td class="text-center text-danger">${message}</td>
-                            </tr>
-                        </tbody>
-                    </table>
-                    `);
+        this.alertsService.create(
+            'success',
+            `<table class="table grid">
+                <tbody>
+                    <tr>
+                        <td class="text-center text-success">${message}</td>
+                    </tr>
+                </tbody>
+            </table>`
+        );
     }
 }

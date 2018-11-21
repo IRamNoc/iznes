@@ -32,7 +32,9 @@ import {
     DeleteKycRequestMessageBody,
     GetClientReferentialMessageBody,
     AuditSearchRequestBody,
-    AuditSearchRequestData
+    AuditSearchRequestData,
+    DuplicateKycRequestData,
+    DuplicateKycMessageBody,
 } from './model';
 
 import { createMemberNodeRequest, createMemberNodeSagaRequest } from '@setl/utils/common';
@@ -401,6 +403,18 @@ export class OfiKycService {
             accountName: _.get(requestData, 'email', ''),
             accountDescription: _.get(requestData, 'email', '') + '_account',
             lang: _.get(requestData, 'lang', ''),
+        };
+
+        return createMemberNodeRequest(this.memberSocketService, messageBody);
+    }
+
+    duplicate(requestData: DuplicateKycRequestData){
+        const messageBody: DuplicateKycMessageBody = {
+            RequestName: 'iznesduplicatekyc',
+            token: this.memberSocketService.token,
+            managementCompanies: requestData.managementCompanies,
+            kycToDuplicate: requestData.kycToDuplicate,
+            investorWalletID: requestData.investorWalletID,
         };
 
         return createMemberNodeRequest(this.memberSocketService, messageBody);

@@ -2,6 +2,7 @@
     <h1 class="text-overflow">
         <i class="fa fa-plus"></i>
         <span id="new-request-title">{{ 'Make New Request' | translate }}</span>
+        <span *ngIf="duplicateCompany"> {{'from already sent request to' | translate}} {{duplicateCompany}}</span>
     </h1>
 </div>
 
@@ -17,7 +18,7 @@
 
 <form-steps *ngIf="stepsConfig" [stepsConfig]="stepsConfig" (action)="handleAction($event)" [@toggle]="animating" (@toggle.done)="applyFullForm()">
     <form-step>
-        <kyc-step-select-amc #step [form]="forms.get('selection')" [alreadyRegistered]="!fullForm" (registered)="registered($event)" [disabled]="currentCompletedStep" (submitEvent)="handleSubmit($event)"></kyc-step-select-amc>
+        <kyc-step-select-amc #step [form]="forms.get('selection')" [alreadyRegistered]="!fullForm" (registered)="registered($event)" [disabled]="currentCompletedStep" (submitEvent)="handleSubmit($event)" [duplicate]="duplicate"></kyc-step-select-amc>
     </form-step>
     <form-step *ngIf="fullForm">
         <kyc-step-introduction #step (submitEvent)="handleSubmit($event)"></kyc-step-introduction>
@@ -29,7 +30,7 @@
         <kyc-step-risk-profile #step [form]="forms.get('riskProfile')" (submitEvent)="handleSubmit($event)"></kyc-step-risk-profile>
     </form-step>
     <form-step *ngIf="fullForm">
-        <kyc-step-documents #step [form]="forms.get('documents')" [isPro]="isPro" (submitEvent)="handleSubmit($event)"></kyc-step-documents>
+        <kyc-step-documents #step [form]="forms.get('documents')" [documents]="documents" (submitEvent)="handleSubmit($event)"></kyc-step-documents>
     </form-step>
     <form-step>
         <kyc-step-validation #step [form]="forms.get('validation')" (submitEvent)="handleSubmit($event)"></kyc-step-validation>

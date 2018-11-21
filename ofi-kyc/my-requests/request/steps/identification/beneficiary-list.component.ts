@@ -1,5 +1,8 @@
-import { Component, Input, OnInit, Output, EventEmitter } from '@angular/core';
+import { Component, Input, OnInit, Output, EventEmitter, OnDestroy } from '@angular/core';
 import { FormArray, FormGroup } from '@angular/forms';
+import { select } from '@angular-redux/store';
+import { Subject } from 'rxjs';
+import { takeUntil } from 'rxjs/operators';
 import { get as getValue, isNil, find, isEmpty, isNumber, values } from 'lodash';
 
 import { ConfirmationService } from '@setl/utils';
@@ -15,15 +18,18 @@ import { NewRequestService } from '../../new-request.service';
     templateUrl: './beneficiary-list.component.html',
     styleUrls: ['./beneficiary-list.component.scss'],
 })
-export class BeneficiaryListComponent implements OnInit {
+export class BeneficiaryListComponent implements OnInit, OnDestroy {
     @Input() stakeholders: FormArray;
     @Output() refresh: EventEmitter<any> = new EventEmitter<any>();
+    @select(['ofi', 'ofiKyc', 'myKycRequested', 'stakeholderRelations']) stakeholderRelations$;
 
     selectedStakeholderIndex = null;
     stakeholderCounter = 0;
     stakeholderBackup = null;
     isModalOpen: any = false;
     mode: string;
+    unsubscribe: Subject<void> = new Subject();
+    relations;
 
     get openModal() {
         return this.isModalOpen;
@@ -32,7 +38,7 @@ export class BeneficiaryListComponent implements OnInit {
     set openModal(value) {
         this.isModalOpen = value;
 
-        if(value === 'naturalClose'){
+        if (value === 'naturalClose') {
             this.isModalOpen = false;
         }
 
@@ -70,7 +76,15 @@ export class BeneficiaryListComponent implements OnInit {
     }
 
     ngOnInit() {
+        this.initSubscriptions();
+    }
 
+    initSubscriptions() {
+        this.stakeholderRelations$.pipe(
+            takeUntil(this.unsubscribe),
+        ).subscribe((relations) => {
+            this.relations = relations;
+        });
     }
 
     closeModal(cancel?) {
@@ -215,11 +229,28 @@ export class BeneficiaryListComponent implements OnInit {
         const companyBeneficiariesID = stakeholderToRemove.value.companyBeneficiariesID;
 
         if (this.shouldRemoveStakeholder(companyBeneficiariesID)) {
-            this.identificationService.deleteBeneficiary(
-                stakeholderToRemove.value.kycID,
-                stakeholderToRemove.value.companyBeneficiariesID,
-            );
+            this.getAllStakeholdersToRemove(stakeholderToRemove);
         }
+    }
+
+    getAllStakeholdersToRemove(stakeholderToRemove) {
+        const kycID = stakeholderToRemove.value.kycID;
+        const companyBeneficiariesID = stakeholderToRemove.value.companyBeneficiariesID;
+        const relation = find(this.relations, ['kycID', kycID]);
+        const position = relation.stakeholderIDs.indexOf(companyBeneficiariesID);
+
+        if (position !== -1) {
+            this.relations.forEach((relation) => {
+                const kycID = relation.kycID;
+                const companyBeneficiariesID = relation.stakeholderIDs[position];
+
+                this.deleteBeneficiary(kycID, companyBeneficiariesID);
+            });
+        }
+    }
+
+    deleteBeneficiary(kycID, companyBeneficiariesID) {
+        this.identificationService.deleteBeneficiary(kycID, companyBeneficiariesID);
     }
 
     getTitle() {
@@ -279,5 +310,14 @@ export class BeneficiaryListComponent implements OnInit {
                 this.markFormGroupTouched(control);
             }
         });
+    }
+
+    hasError() {
+        return this.stakeholders.dirty && !this.stakeholders.length;
+    }
+
+    ngOnDestroy(){
+        this.unsubscribe.next();
+        this.unsubscribe.complete();
     }
 }

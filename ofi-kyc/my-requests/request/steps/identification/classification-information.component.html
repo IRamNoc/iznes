@@ -68,20 +68,20 @@
                         <tr *ngFor="let amc of amcs">
                             <td>{{amc.companyName}}</td>
                             <td *ngIf="investorType !== 'nonPro'">
-                                <span class="middle" [ngClass]="{bold: !getFormControl(amc.amcID).value}">{{'Professional Investor'}}</span>
+                                <span class="middle" [ngClass]="{bold: !getFormControl(amc.kycID).value}">{{'Professional Investor'}}</span>
                                 <label class="switch">
-                                    <input type="checkbox" class="form-control" [formControl]="getFormControl(amc.amcID)">
+                                    <input type="checkbox" class="form-control" [formControl]="getFormControl(amc.kycID)">
                                     <span class="slider round" data-yes="YES" data-no="NO"></span>
                                 </label>
-                                <span class="middle" [ngClass]="{bold: getFormControl(amc.amcID).value}">{{'Non Professional Investor'}}</span>
+                                <span class="middle" [ngClass]="{bold: getFormControl(amc.kycID).value}">{{'Non Professional Investor'}}</span>
                             </td>
                             <td *ngIf="investorType === 'nonPro'">
-                                <span class="middle" [ngClass]="{bold: !getFormControl(amc.amcID).value}">{{'Non Professional Investor'}}</span>
+                                <span class="middle" [ngClass]="{bold: !getFormControl(amc.kycID).value}">{{'Non Professional Investor'}}</span>
                                 <label class="switch">
-                                    <input type="checkbox" class="form-control" [formControl]="getFormControl(amc.amcID)">
+                                    <input type="checkbox" class="form-control" [formControl]="getFormControl(amc.kycID)">
                                     <span class="slider round" data-yes="YES" data-no="NO"></span>
                                 </label>
-                                <span class="middle" [ngClass]="{bold: getFormControl(amc.amcID).value}">{{'Professional Investor'}}</span>
+                                <span class="middle" [ngClass]="{bold: getFormControl(amc.kycID).value}">{{'Professional Investor'}}</span>
                             </td>
                         </tr>
                         </tbody>

@@ -1,24 +1,144 @@
-.table td{
-    line-height: 24px;
+.management-companies {
+    $blue: #546E94;
+    $grey: #E4E4E4;
+    $dark-grey: #D2D2D2;
+    $border-size: 5px;
 
-    .switch{
-        height: 24px;
-        vertical-align: middle;
+    .management-company-container{
+        float: left;
+        width: 19%;
+        margin-left: 1.25%;
+
+        margin-bottom: 15px;
+
+        &:first-child,
+        &:nth-child(5n+1){
+            margin-left: 0;
+        }
+    }
+
+    .link,
+    .actions{
+        font-size: 10px;
+        line-height: 1.8;
+    }
+    .link{
+        text-align: right;
+    }
+
+    .management-company {
+        position: relative;
+
+        &.selected{
+            &::before{
+                // Triangle
+                content: '';
+                position: absolute;
+                top: 0;
+                left: 0;
+                z-index: 1;
+                border-color: transparent;
+                border-style: solid;
+                border-width: 30px;
+                border-left-color: $blue;
+                border-top-color: $blue;
+            }
+
+            .confirm-mark{
+                position: absolute;
+                top: 4px;
+                left: 6px;
+                z-index: 2;
+                color: $grey;
+            }
+        }
+
+        &.selected .infos,
+        .infos:hover{
+            background-color: $blue;
+            cursor: pointer;
+
+            .logo{
+                border: $border-size solid $blue;
+                border-bottom: 0;
+                padding: 0 0 $border-size;
+            }
+
+            .name{
+                color: white;
+            }
+        }
+
+        .infos {
+            outline: 1px solid $dark-grey;
+            margin-bottom: 3px;
+        }
+        .logo {
+            background-color: $grey;
+            padding: $border-size;
+            text-align: center;
+
+            .img-container{
+                padding-bottom: 46%;
+                position: relative;
+
+                .img{
+                    position: absolute;
+                    top: 0;
+                    right: 0;
+                    bottom: 0;
+                    left: 0;
+
+                    img,
+                    i
+                    {
+                        position: absolute;
+                        top: 50%;
+                        left: 50%;
+                        transform: translate(-50%, -50%);
+                        width: 100%;
+                    }
+                }
+            }
+        }
+        .name {
+            padding: 5px;
+            text-align: center;
+            color: $blue;
+            font-size: 12px;
+
+            overflow: hidden;
+            white-space: nowrap;
+            text-overflow: ellipsis;
+        }
+
+        .actions {
+            .switch{
+                margin-left: 0;
+            }
+        }
+
+        .done {
+            span,
+            .switch {
+                vertical-align: middle;
+            }
+        }
     }
 }
 
-input{
-    +.slider{
+input {
+    + .slider {
         top: unset;
         text-align: left;
 
-        &:after{
-            content : attr(data-no)
+        &:after {
+            content: attr(data-no)
         }
     }
-    &:checked + .slider{
-        &:after{
-            content : attr(data-yes)
+    &:checked + .slider {
+        &:after {
+            content: attr(data-yes)
         }
     }
 }

@@ -1,7 +1,7 @@
 import { Component, Input, OnInit, OnDestroy, ViewChild } from '@angular/core';
 import { FormGroup, FormArray } from '@angular/forms';
 import { get as getValue, set as setValue, filter, isEmpty, castArray, find } from 'lodash';
-import { select } from '@angular-redux/store';
+import { select, NgRedux } from '@angular-redux/store';
 import { Subject } from 'rxjs';
 import { filter as rxFilter, map, take, takeUntil } from 'rxjs/operators';
 import { FormPercentDirective } from '@setl/utils/directives/form-percent/formpercent';
@@ -10,6 +10,7 @@ import { DocumentsService } from '../documents.service';
 import { NewRequestService } from '../../new-request.service';
 import { BeneficiaryService } from './beneficiary.service';
 import { countries } from '../../../requests.config';
+import { setMyKycStakeholderRelations } from '@ofi/ofi-main/ofi-store/ofi-kyc/kyc-request';
 
 @Component({
     selector: 'company-information',
@@ -20,6 +21,7 @@ export class CompanyInformationComponent implements OnInit, OnDestroy {
     @ViewChild(FormPercentDirective) formPercent: FormPercentDirective;
     @Input() form: FormGroup;
     @select(['ofi', 'ofiKyc', 'myKycRequested', 'kycs']) requests$;
+    @select(['ofi', 'ofiKyc', 'myKycRequested', 'formPersist']) persistedForms$;
 
     unsubscribe: Subject<any> = new Subject();
     open: boolean = false;
@@ -41,6 +43,7 @@ export class CompanyInformationComponent implements OnInit, OnDestroy {
         private identificationService: IdentificationService,
         private documentsService: DocumentsService,
         private beneficiaryService: BeneficiaryService,
+        private ngRedux: NgRedux<any>,
     ) {
     }
 
@@ -59,6 +62,15 @@ export class CompanyInformationComponent implements OnInit, OnDestroy {
 
         this.initFormCheck();
         this.getCurrentFormData();
+
+        this.persistedForms$
+        .pipe(takeUntil(this.unsubscribe))
+        .subscribe((forms) => {
+            if (forms.identification) {
+                this.formPercent.refreshFormPercent();
+            }
+        })
+        ;
     }
 
     initFormCheck() {
@@ -153,12 +165,12 @@ export class CompanyInformationComponent implements OnInit, OnDestroy {
         investorOnBehalfControl.disable();
 
         switch (value) {
-            case 'ownAccount':
-                ownAccountControl.enable();
-                break;
-            case 'onBehalfOfThirdParties':
-                investorOnBehalfControl.enable();
-                break;
+        case 'ownAccount':
+            ownAccountControl.enable();
+            break;
+        case 'onBehalfOfThirdParties':
+            investorOnBehalfControl.enable();
+            break;
         }
 
         this.formPercent.refreshFormPercent();
@@ -271,60 +283,89 @@ export class CompanyInformationComponent implements OnInit, OnDestroy {
     }
 
     getCurrentFormData() {
-        this.requests$
+        const requests$ = this.requests$
         .pipe(
             rxFilter(requests => !isEmpty(requests)),
-            map(requests => castArray(requests[0])),
+        );
+
+        requests$.pipe(
             takeUntil(this.unsubscribe),
-        )
-        .subscribe((requests) => {
-            requests.forEach((request) => {
-                this.identificationService.getCurrentFormCompanyData(request.kycID).then((formData) => {
-                    if (formData) {
-                        this.form.patchValue(formData);
-                        this.formPercent.refreshFormPercent();
-                    }
-                });
-                this.identificationService.getCurrentFormCompanyBeneficiariesData(request.kycID).then((formData) => {
+        ).subscribe((requests) => {
+            const promises = [];
+            const stakeholdersRelationTable = [];
+
+            requests.forEach((request, index) => {
+
+                const promise = this.identificationService.getCurrentFormCompanyBeneficiariesData(request.kycID).then((formData) => {
                     if (!isEmpty(formData)) {
-                        const beneficiaries: FormArray = this.form.get('beneficiaries') as FormArray;
+                        const relation = {
+                            kycID: request.kycID,
+                            stakeholderIDs: formData.map(stakeholder => stakeholder.companyBeneficiariesID),
+                        };
 
-                        while (beneficiaries.length) {
-                            beneficiaries.removeAt(0);
-                        }
+                        stakeholdersRelationTable.push(relation);
 
-                        const promises = formData.map((controlValue) => {
-                            const control = this.newRequestService.createBeneficiary();
-                            const documentID = controlValue.documentID;
+                        if (index === 0) {
+                            const beneficiaries: FormArray = this.form.get('beneficiaries') as FormArray;
 
-                            controlValue = buildBeneficiaryObject(controlValue);
-
-                            if (documentID) {
-                                return this.documentsService.getDocument(documentID).then((document) => {
-                                    if (document) {
-                                        setValue(controlValue, ['naturalPerson', 'document'], {
-                                            name: document.name,
-                                            hash: document.hash,
-                                            kycDocumentID: document.kycDocumentID,
-                                        });
-                                    }
-                                    control.patchValue(controlValue);
-                                    beneficiaries.push(control);
-                                });
+                            while (beneficiaries.length) {
+                                beneficiaries.removeAt(0);
                             }
 
-                            control.patchValue(controlValue);
-                            beneficiaries.push(control);
-                        });
+                            const promises = formData.map((controlValue) => {
+                                const control = this.newRequestService.createBeneficiary();
+                                const documentID = controlValue.documentID;
 
-                        Promise.all(promises).then(() => {
-                            this.beneficiaryService.fillInStakeholderSelects(this.form.get('beneficiaries'));
-                            this.beneficiaryService.updateStakeholdersValidity(this.form.get('beneficiaries') as FormArray);
-                            this.formPercent.refreshFormPercent();
-                        });
+                                controlValue = buildBeneficiaryObject(controlValue);
+
+                                if (documentID) {
+                                    return this.documentsService.getDocument(documentID).then((document) => {
+                                        if (document) {
+                                            setValue(controlValue, ['naturalPerson', 'document'], {
+                                                name: document.name,
+                                                hash: document.hash,
+                                                kycDocumentID: document.kycDocumentID,
+                                            });
+                                        }
+                                        control.patchValue(controlValue);
+                                        beneficiaries.push(control);
+                                    });
+                                }
+
+                                control.patchValue(controlValue);
+                                beneficiaries.push(control);
+                            });
+
+                            Promise.all(promises).then(() => {
+                                this.beneficiaryService.fillInStakeholderSelects(this.form.get('beneficiaries'));
+                                this.beneficiaryService.updateStakeholdersValidity(this.form.get('beneficiaries') as FormArray);
+                                this.formPercent.refreshFormPercent();
+                            });
+                        }
                     }
                 });
+
+                promises.push(promise);
             });
+
+            Promise.all(promises).then(() => {
+                this.ngRedux.dispatch(setMyKycStakeholderRelations(stakeholdersRelationTable));
+            });
+        });
+
+        requests$.pipe(
+            map(requests => requests[0]),
+            rxFilter(request => !!request),
+            takeUntil(this.unsubscribe),
+        )
+        .subscribe((request) => {
+            this.identificationService.getCurrentFormCompanyData(request.kycID).then((formData) => {
+                if (formData) {
+                    this.form.patchValue(formData);
+                    this.formPercent.refreshFormPercent();
+                }
+            });
+            ;
         });
     }
 

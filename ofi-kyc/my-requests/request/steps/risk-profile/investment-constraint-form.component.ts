@@ -10,7 +10,7 @@ import { RiskProfileService } from '../risk-profile.service';
 @Component({
     selector: 'investment-constraint-form',
     templateUrl: './investment-constraint-form.component.html',
-    styleUrls: ['./investment-constraint-form.component.scss']
+    styleUrls: ['./investment-constraint-form.component.scss'],
 })
 export class InvestmentConstraintFormComponent implements OnInit, OnDestroy {
     @Output() refreshForm = new EventEmitter<void>();
@@ -28,7 +28,7 @@ export class InvestmentConstraintFormComponent implements OnInit, OnDestroy {
 
     constructor(
         private newRequestService: NewRequestService,
-        private riskProfileService: RiskProfileService
+        private riskProfileService: RiskProfileService,
     ) {
     }
 
@@ -59,14 +59,14 @@ export class InvestmentConstraintFormComponent implements OnInit, OnDestroy {
         this.managementCompanyList$
             .pipe(
                 rxFilter((amcList: List<any>) => amcList && amcList.size > 0),
-                takeUntil(this.unsubscribe)
+                takeUntil(this.unsubscribe),
             )
-            .subscribe(amcList => {
+            .subscribe((amcList) => {
                 const managementCompanyList = amcList.toJS();
-                let amcID = this.form.get('assetManagementCompanyID').value;
+                const amcID = this.form.get('assetManagementCompanyID').value;
 
                 if (amcID) {
-                    let found = find(managementCompanyList, ['companyID', amcID]);
+                    const found = find(managementCompanyList, ['companyID', amcID]);
 
                     if (found) {
                         this.amc = found;
@@ -76,13 +76,13 @@ export class InvestmentConstraintFormComponent implements OnInit, OnDestroy {
     }
 
     initFormCheck() {
-        this.form.get('investmentDecisionsAdHocCommittee').valueChanges.subscribe(value => {
+        this.form.get('investmentDecisionsAdHocCommittee').valueChanges.subscribe((value) => {
             this.formCheckInvestmentDecisionsAdHocCommittee(value);
         });
     }
 
     formCheckInvestmentDecisionsAdHocCommittee(value) {
-        let control = this.form.get('investmentDecisionsAdHocCommitteeSpecification');
+        const control = this.form.get('investmentDecisionsAdHocCommitteeSpecification');
         if (value === 'yes') {
             control.enable();
         } else {
@@ -97,7 +97,7 @@ export class InvestmentConstraintFormComponent implements OnInit, OnDestroy {
     }
 
     isDisabled(path) {
-        let control = this.form.get(path);
+        const control = this.form.get(path);
 
         return control.disabled;
     }

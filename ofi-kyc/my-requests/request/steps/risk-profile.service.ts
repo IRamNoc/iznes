@@ -63,7 +63,6 @@ export class RiskProfileService {
 
         const naturesValue = formGroupNature.get('natures').value;
 
-
         let natureForAM;
 
         if (amcID) {

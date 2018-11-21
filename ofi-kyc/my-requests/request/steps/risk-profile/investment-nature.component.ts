@@ -52,7 +52,7 @@ export class InvestmentNatureComponent implements OnInit {
         ;
     }
 
-    initData(){
+    initData() {
         this.currentlyRequestedKycs$
             .pipe(
                 takeUntil(this.unsubscribe),

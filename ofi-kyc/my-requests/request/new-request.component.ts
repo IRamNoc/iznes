@@ -1,16 +1,17 @@
 import { Component, OnInit, ViewChild, AfterViewInit } from '@angular/core';
 import { trigger, state, style, transition, animate } from '@angular/animations';
-import {FormBuilder} from '@angular/forms';
+import { Location } from '@angular/common';
+import { FormBuilder } from '@angular/forms';
 import { ActivatedRoute, Router } from '@angular/router';
-import {select, NgRedux} from '@angular-redux/store';
-import { get as getValue, map, sort, remove, partial, invert } from 'lodash';
-import {Subject, combineLatest} from 'rxjs';
-import {takeUntil} from 'rxjs/operators';
+import { select, NgRedux } from '@angular-redux/store';
+import { get as getValue, map, sort, remove, partial, invert, find } from 'lodash';
+import { Subject, combineLatest } from 'rxjs';
+import { takeUntil, take, filter as rxFilter, map as rxMap } from 'rxjs/operators';
 
 import { clearMyKycRequestedPersist } from '@ofi/ofi-main/ofi-store/ofi-kyc';
 import { MultilingualService } from '@setl/multilingual';
 import { steps, formStepsLight, formStepsFull } from '../requests.config';
-import {NewRequestService} from './new-request.service';
+import { NewRequestService } from './new-request.service';
 
 import { FormstepsComponent } from '@setl/utils/components/formsteps/formsteps.component';
 
@@ -30,9 +31,12 @@ import { FormstepsComponent } from '@setl/utils/components/formsteps/formsteps.c
     ],
 })
 export class NewKycRequestComponent implements OnInit, AfterViewInit {
+
     @ViewChild(FormstepsComponent) formSteps;
 
     @select(['ofi', 'ofiKyc', 'myKycRequested', 'kycs']) requests$;
+    @select(['ofi', 'ofiKyc', 'myKycList', 'kycList']) myKycList$;
+    @select(['ofi', 'ofiProduct', 'ofiManagementCompany', 'investorManagementCompanyList', 'investorManagementCompanyList']) managementCompanyList$;
 
     unsubscribe: Subject<any> = new Subject();
     stepsConfig: any;
@@ -44,6 +48,13 @@ export class NewKycRequestComponent implements OnInit, AfterViewInit {
     };
 
     currentCompletedStep;
+    documentRules = {
+        isListed: null,
+        isFloatableHigh: null,
+        isRegulated: null,
+    };
+    duplicate;
+    duplicateCompany = '';
 
     constructor(
         private formBuilder: FormBuilder,
@@ -52,11 +63,39 @@ export class NewKycRequestComponent implements OnInit, AfterViewInit {
         private newRequestService: NewRequestService,
         public translate: MultilingualService,
         private ngRedux: NgRedux<any>,
+        private router: Router,
+        private location: Location,
     ) {
     }
 
-    get isPro() {
-        return this.investorType === 'proBySize' || this.investorType === 'proByNature';
+    get documents() {
+        const isListed = this.forms.get('identification.companyInformation.companyListed').value;
+        const isFloatableHigh = this.forms.get('identification.companyInformation.floatableShares').value >= 75;
+        const isRegulated = this.forms.get('identification.companyInformation.activityRegulated').value;
+        let changed = false;
+
+        if (this.documentRules.isListed !== isListed) {
+            this.documentRules.isListed = isListed;
+            changed = true;
+        }
+        if (this.documentRules.isFloatableHigh !== isFloatableHigh) {
+            this.documentRules.isFloatableHigh = isFloatableHigh;
+            changed = true;
+        }
+        if (this.documentRules.isRegulated !== isRegulated) {
+            this.documentRules.isRegulated = isRegulated;
+            changed = true;
+        }
+
+        if (!changed) {
+            return this.documentRules;
+        }
+
+        return {
+            isListed: this.documentRules.isListed,
+            isFloatableHigh: this.documentRules.isFloatableHigh,
+            isRegulated: this.documentRules.isRegulated,
+        };
     }
 
     get investorType() {
@@ -96,20 +135,35 @@ export class NewKycRequestComponent implements OnInit, AfterViewInit {
             this.goToStep(nextStep);
         }
     }
+    removeQueryParams() {
+        const newUrl = this.router.createUrlTree([], {
+            queryParams: {
+                duplicate: null,
+            },
+            queryParamsHandling: 'merge',
+        });
+        this.location.replaceState(this.router.serializeUrl(newUrl));
+    }
 
     initSubscriptions() {
         this.requests$
         .pipe(
-            takeUntil(this.unsubscribe)
+            takeUntil(this.unsubscribe),
         )
-        .subscribe(amcs => {
+        .subscribe((amcs) => {
             this.newRequestService.getContext(amcs);
         })
         ;
 
-        this.route.queryParamMap.subscribe(params => {
+        this.route.queryParamMap.subscribe((params) => {
             const step = params.get('step');
             const completed = params.get('completed');
+
+            if (params.get('duplicate')) {
+                this.duplicate = Number(params.get('duplicate'));
+                this.removeQueryParams();
+                this.getDuplicatedCompany();
+            }
 
             this.fullForm = !(completed === 'true');
 
@@ -186,6 +240,18 @@ export class NewKycRequestComponent implements OnInit, AfterViewInit {
         if (!component.form) {
             component.handleSubmit();
         }
+    getDuplicatedCompany() {
+        combineLatest(this.myKycList$, this.managementCompanyList$)
+        .pipe(
+            rxMap(([kycs, managementCompanies]) => ([kycs, managementCompanies.toJS()])),
+            rxFilter(([kycs, managementCompanies]) => managementCompanies.length),
+            take(1),
+        )
+        .subscribe(([kycs, managementCompanies]) => {
+            const kyc = find(kycs, ['kycID', this.duplicate]);
+            const managementCompany = find(managementCompanies, ['companyID', kyc.amManagementCompanyID]);
+            this.duplicateCompany = managementCompany.companyName;
+        });
     }
 
     registered(isRegistered) {

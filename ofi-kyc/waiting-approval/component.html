@@ -103,12 +103,12 @@
                             <textarea *ngIf="waitingApprovalFormGroup.controls['status'].value === REJECTED_STATUS && initialStatusId != -2"
                                     id="rejectText"
                                     class="form-control"
-                                    [placeholder]="_translate.translate('Please indicate here why you would like to reject this application. This will be sent as a message to your client on the IZNES platform.')" formControlName="additionalText">
+                                    [placeholder]="translate.translate('Please indicate here why you would like to reject this application. This will be sent as a message to your client on the IZNES platform.')" formControlName="additionalText">
                             </textarea>
                             <!-- Ask for more info -->
                             <textarea *ngIf="waitingApprovalFormGroup.controls['status'].value === ASK_FOR_MORE_INFO_STATUS"                 id="askMoreInfoText"
                                         class="form-control"
-                                        [placeholder]="_translate.translate('Please ask for more information here. This will be sent as a message to your client on the IZNES platform.')" formControlName="additionalText">
+                                        [placeholder]="translate.translate('Please ask for more information here. This will be sent as a message to your client on the IZNES platform.')" formControlName="additionalText">
                             </textarea>
                         </div>
 
@@ -177,10 +177,10 @@
         </div>
 
         <p *ngIf="optOptions.investorStatus !== investorStatusList.nonPro"
-           [innerHTML]="_translate.translate('Please be aware that @company@ was classified as <strong>professional investor</strong> and has opted for a <strong>non professional investor</strong> classification.', {'company': investor.companyName.value})">
+           [innerHTML]="translate.translate('Please be aware that @company@ was classified as <strong>professional investor</strong> and has opted for a <strong>non professional investor</strong> classification.', {'company': investor.companyName.value})">
         </p>
         <p *ngIf="optOptions.investorStatus === investorStatusList.nonPro"
-           [innerHTML]="_translate.translate('Please be aware that @company@ was classified as <strong>non professional investor</strong> and has asked for a <strong>professional investor</strong> classification.', {'company': investor.companyName.value} )">
+           [innerHTML]="translate.translate('Please be aware that @company@ was classified as <strong>non professional investor</strong> and has asked for a <strong>professional investor</strong> classification.', {'company': investor.companyName.value} )">
         </p>
 
         <p>
@@ -190,14 +190,14 @@
         <div>
             <label>
                 <input type="radio" name="accept" [value]="true" [(ngModel)]="optOptions.choice" />&nbsp;
-                <span [innerHTML]="_translate.translate('Yes, I accept this <strong>with</strong> classification change</span>')"></span>
+                <span [innerHTML]="translate.translate('Yes, I accept this <strong>with</strong> classification change</span>')"></span>
             </label>
         </div>
 
         <div>
             <label>
                 <input type="radio" name="accept" [value]="false" [(ngModel)]="optOptions.choice" />&nbsp;
-                <span [innerHTML]="_translate.translate('Yes, I accept this <strong>without</strong> classification change</span>')"></span>
+                <span [innerHTML]="translate.translate('Yes, I accept this <strong>without</strong> classification change</span>')"></span>
             </label>
         </div>
     </div>

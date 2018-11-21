@@ -25,16 +25,28 @@ export class NewKycDocumentsComponent implements OnInit, OnDestroy {
     @Output() submitEvent: EventEmitter<any> = new EventEmitter<any>();
     @Input() form: FormGroup;
 
-    @Input() set isPro(isPro) {
-        if (isPro) {
-            (this.form.get('other') as FormGroup).disable();
-            (this.form.get('pro') as FormGroup).enable();
-        } else {
-            (this.form.get('other') as FormGroup).enable();
-            (this.form.get('pro') as FormGroup).disable();
+    @Input() set documents(documents) {
+        const listedDocuments = this.form.get('listed');
+        const floatableDocument = this.form.get('listed.kycevidencefloatable');
+        const regulatedDocuments = this.form.get('regulated');
+
+        listedDocuments.disable();
+        if (documents.isListed) {
+            listedDocuments.enable();
         }
+
+        floatableDocument.disable();
+        if (documents.isFloatableHigh) {
+            floatableDocument.enable();
+        }
+
+        regulatedDocuments.disable();
+        if (documents.isRegulated) {
+            regulatedDocuments.enable();
+        }
+
         this.formPercent.refreshFormPercent();
-    };
+    }
 
     open;
     unsubscribe: Subject<any> = new Subject();
@@ -45,7 +57,7 @@ export class NewKycDocumentsComponent implements OnInit, OnDestroy {
         private newRequestService: NewRequestService,
         private persistService: PersistService,
         private documentsService: DocumentsService,
-        private changeDetectorRef: ChangeDetectorRef
+        private changeDetectorRef : ChangeDetectorRef,
     ) {
     }
 
@@ -80,7 +92,7 @@ export class NewKycDocumentsComponent implements OnInit, OnDestroy {
     initData() {
         this.connectedWallet$
         .pipe(
-            takeUntil(this.unsubscribe)
+                takeUntil(this.unsubscribe),
         )
             .subscribe((connectedWallet) => {
             this.connectedWallet = connectedWallet;
@@ -93,8 +105,8 @@ export class NewKycDocumentsComponent implements OnInit, OnDestroy {
             this.form,
             this.newRequestService.context,
             {
-                reset: false
-            }
+                reset : false,
+            },
         );
     }
 
@@ -102,7 +114,7 @@ export class NewKycDocumentsComponent implements OnInit, OnDestroy {
         this.persistService.refreshState(
             'newkycrequest/documents',
             this.newRequestService.createDocumentsFormGroup(),
-            this.newRequestService.context
+            this.newRequestService.context,
         );
     }
 

@@ -30,3 +30,11 @@ export function setMyKycRequestedPersist(formName: string) {
 
 export const CLEAR_MY_KYC_REQUESTED_PERSIST = `${name}/CLEAR_MY_KYC_REQUESTED_PERSIST`;
 export const clearMyKycRequestedPersist = kAction(CLEAR_MY_KYC_REQUESTED_PERSIST);
+
+export const SET_STAKEHOLDER_RELATIONS = `${name}/SET_STAKEHOLDER_RELATIONS`;
+export function setMyKycStakeholderRelations(stakeholderRelations){
+    return {
+        type: SET_STAKEHOLDER_RELATIONS,
+        payload: stakeholderRelations,
+    };
+}

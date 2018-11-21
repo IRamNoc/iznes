@@ -2,7 +2,6 @@ import { Injectable } from '@angular/core';
 import { NgRedux } from '@angular-redux/store';
 import { get as getValue, toPairs, map, chain, value, omit, pickBy, pick, find, parseInt, isNil, toString, sortBy, isEmpty } from 'lodash';
 
-
 import { FileDownloader } from '@setl/utils';
 import { MemberSocketService } from '@setl/websocket-service';
 import { OfiKycService } from '@ofi/ofi-main/ofi-req-services/ofi-kyc/service';
@@ -23,7 +22,7 @@ export class KycDetailsService {
     ) {
     }
 
-    clearData(){
+    clearData() {
         this.ngRedux.dispatch(clearkycdetailsall());
     }
 
@@ -103,7 +102,7 @@ export class KycDetailsService {
         return array;
     }
 
-    order(data){
+    order(data) {
         return sortBy(data, (val) => {
             return requestsConfig.controlOrder.indexOf(val.originalId);
         });
@@ -116,7 +115,7 @@ export class KycDetailsService {
     extractDocuments(documents) {
         return documents.map(document => ({
             id: this.getDocumentType(document.type),
-            hash: document.hash
+            hash: document.hash,
         }));
     }
 
@@ -166,13 +165,13 @@ export class KycDetailsService {
                 let found = find(list, ['id', cur]);
                 found = found ? found.text : cur;
                 return acc ? [acc, found].join('|') : found;
-            }, '');
+            },                                                '');
         }
 
         return controlValue;
     }
 
-    getBooleanValueFromControl(controlName, controlValue){
+    getBooleanValueFromControl(controlName, controlValue) {
         if (requestsConfig.booleanControls.indexOf(controlName) !== -1) {
             controlValue = parseInt(controlValue, 10);
 

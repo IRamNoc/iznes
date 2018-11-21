@@ -20,7 +20,6 @@
 </div>
 
 <div class="my-1 right">
-    <button class="btn" (click)="exportStakeholders()">{{'Export Stakeholders' | translate}}</button>
     <button class="btn btn-primary" (click)="addStakeholder()">
         <i class="fa fa-plus"></i>
         {{'Add Stakeholder' | translate}}
@@ -34,7 +33,7 @@
         <th>{{'Name' | translate}}</th>
         <th>{{'Parent' | translate}}</th>
         <th>{{'Country of tax residence' | translate}}</th>
-        <th>{{'Nationality' | translate}}</th>I
+        <th>{{'Nationality' | translate}}</th>
         <th>{{'Holding percentage' | translate}}</th>
         <th>{{'Holding type' | translate}}</th>
         <th>{{'Voting percentage' | translate}}</th>
@@ -42,8 +41,17 @@
     </thead>
     <tbody>
     <tr beneficiary-line *ngFor="let stakeholder of stakeholders.controls; index as i" [stakeholder]="stakeholder" (action)="handleAction($event, i)" (click)="viewStakeholder(i)"></tr>
+    <tr class="empty" *ngIf="!stakeholders.controls.length">
+        <td colspan="8">
+            {{'No data for the moment, please add at least one stakeholder.' | translate}}
+        </td>
+    </tr>
     </tbody>
 </table>
+
+<p class="txtRed" *ngIf="hasError()">
+    {{'Please add at least one stakeholder' | translate}}
+</p>
 
 <clr-modal [(clrModalOpen)]="openModal" [clrModalSize]="'xl'" *ngIf="mode && selectedStakeholder">
 
