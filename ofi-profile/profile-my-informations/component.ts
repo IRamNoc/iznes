@@ -1,7 +1,7 @@
-import { Component, OnInit, Inject, ChangeDetectorRef } from '@angular/core';
+import { Component, OnInit, Inject, ChangeDetectorRef, OnDestroy } from '@angular/core';
 import { NgRedux, select } from '@angular-redux/store';
 import { AbstractControl, FormControl, FormGroup, Validators } from '@angular/forms';
-import { Router } from '@angular/router';
+import { Router, ActivatedRoute } from '@angular/router';
 import { ToasterService } from 'angular2-toaster';
 import { MemberSocketService } from '@setl/websocket-service';
 import { APP_CONFIG, AppConfig } from '@setl/utils';
@@ -12,21 +12,23 @@ import { SET_NEW_PASSWORD } from '@setl/core-store/index';
 import { AlertsService } from '@setl/jaspero-ng2-alerts/index';
 import { MultilingualService } from '@setl/multilingual';
 import { OfiKycService } from '@ofi/ofi-main/ofi-req-services/ofi-kyc/service';
-import { take } from 'rxjs/operators';
 import { get as getValue } from 'lodash';
+import { Subject } from 'rxjs/Subject';
 
 @Component({
     selector: 'app-profile-my-informations',
     templateUrl: './component.html',
     styleUrls: ['./component.scss'],
 })
-export class OfiProfileMyInformationsComponent implements OnInit {
+export class OfiProfileMyInformationsComponent implements OnInit, OnDestroy {
+
     appConfig: AppConfig;
     userInfo = {
         firstName: '',
         lastName: '',
     };
     userType: string;
+    setHomePage: string;
 
     public userInfoExtended: any = {
         email: '',
@@ -51,6 +53,7 @@ export class OfiProfileMyInformationsComponent implements OnInit {
     };
 
     externalNotificationsAvailable: boolean = false;
+    unSubscribe: Subject<any> = new Subject();
 
     @select(['user', 'myDetail']) myDetail: any;
     @select(['ofi', 'ofiKyc', 'myInformations']) myKyc: any;
@@ -65,6 +68,7 @@ export class OfiProfileMyInformationsComponent implements OnInit {
         private alertsService: AlertsService,
         public translate: MultilingualService,
         private memberSocketService: MemberSocketService,
+        private activatedRoute: ActivatedRoute,
         @Inject(APP_CONFIG) appConfig: AppConfig,
     ) {
         this.appConfig = appConfig;
@@ -119,9 +123,17 @@ export class OfiProfileMyInformationsComponent implements OnInit {
 
             this.userType = d.userType;
         });
+
         this.myKyc.subscribe((d) => {
-            this.userInfoExtended.amCompanyName = d.amCompanyName;
+            this.userInfoExtended.amCompanyName = d.amCompanyName || 'IZNES';
         });
+
+        this.setHomePage = this.activatedRoute.snapshot.paramMap.get('sethomepage') || '';
+    }
+
+    ngOnDestroy() {
+        this.unSubscribe.next();
+        this.unSubscribe.complete();
     }
 
     passwordValidator(g: FormGroup) {
@@ -182,6 +194,7 @@ export class OfiProfileMyInformationsComponent implements OnInit {
             phoneCode: userInformations.phoneCode,
             phoneNumber: userInformations.phoneNumber,
             companyName: userInformations.companyName,
+            defaultHomePage: this.setHomePage,
         };
         const asyncTaskPipe = this.myUserService.saveMyUserDetails(user);
         this.ngRedux.dispatch(SagaHelper.runAsyncCallback(
