@@ -1,7 +1,5 @@
 import { Injectable } from '@angular/core';
 import * as _ from 'lodash';
-import { ToasterService } from 'angular2-toaster';
-import { MultilingualService } from '@setl/multilingual';
 import { MemberSocketService } from '@setl/websocket-service';
 import { FileService } from '@setl/core-req-services/file/file.service';
 import { OfiKycService } from '@ofi/ofi-main/ofi-req-services/ofi-kyc/service';
@@ -26,8 +24,6 @@ export class RequestsService {
         private memberSocketService: MemberSocketService,
         private fileService: FileService,
         private kycService: OfiKycService,
-        private toasterService: ToasterService,
-        private translateService: MultilingualService,
     ) {
     }
 
@@ -96,15 +92,7 @@ export class RequestsService {
     }
 
     deleteKyc(kycID) {
-        return this.kycService.deleteKycRequest({
-            kycID,
-        }).then(
-            (response) => {
-                this.toasterService.pop('success', this.translateService.translate('The request has been successfully deleted'));
-            },
-        ).catch(() => {
-            this.toasterService.pop('error', this.translateService.translate('Couldn\'t delete KYC request, please try again later.'));
-        });
+        return this.kycService.deleteKycRequest({ kycID });
     }
 
     getKycGeneral(kycID) {
