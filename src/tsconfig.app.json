@@ -16,23 +16,13 @@
         "../node_modules/@setl/core-messages/messages/mockMailHelper.ts",
         "../node_modules/@setl/core-fileviewer/http.mock.ts",
         "../node_modules/@ofi/ofi-main/ofi-product/fund-share/helper/node_modules/**/*",
-        "../setl_modules/**/*.spec.ts",
-        "../ofi_modules/**/*.spec.ts",
-        "../setl_modules/@setl/utils/components/ng2-date-picker/demo/**/*",
-        "../setl_modules/core-test/**/*",
-        "../setl_modules/module-template/**/*",
-        "../setl_modules/node_modules/*/*",
-        "../setl_modules/utils/components/ng2-date-picker/demo/**/*",
-        "../setl_modules/core-messages/messages/mockMailHelper.ts",
-        "../setl_modules/ofi-main/ofi-product/fund-share/helper/node_modules/**/*",
-        "../setl_modules/core-fileviewer/http.mock.ts"
     ],
     "include": [
         "../src/**/*",
         "../node_modules/@ofi/**/*",
         "../node_modules/@setl/**/*",
-        "../setl_modules/**/*",
-        "../ofi_modules/**/*",
+        "../node_modules/@setl/websocket-service/node_modules/@setl/socketcluster-wrapper/**/*",
+        "../node_modules/@setl/websocket-service/node_modules/@setl/vanilla-websocket-wrapper/**/*",
         "../node_modules/ng2-gravatar-directive/src/**/*",
         "../node_modules/ngx-quill-editor/**/*"
     ]

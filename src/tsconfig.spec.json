@@ -16,16 +16,15 @@
   ],
     "exclude": [
         "../**/*.test.ts",
-        "../setl_modules/module-template",
         "../node_modules/@ofi/ofi-main/ofi-product/fund-share/helper/__tests__/**/*",
-        "../setl_modules/ofi-main/ofi-product/fund-share/helper/__tests__/**/*"
     ],
     "include": [
         "**/*.spec.ts",
         "**/*.d.ts",
         "../node_modules/@ofi/**/*",
         "../node_modules/@setl/**/*",
-        "../setl_modules/**/*",
+        "../node_modules/@setl/websocket-service/node_modules/@setl/socketcluster-wrapper/**/*",
+        "../node_modules/@setl/websocket-service/node_modules/@setl/vanilla-websocket-wrapper/**/*",
         "../node_modules/ng2-gravatar-directive/src/**/*",
         "../node_modules/ngx-quill-editor/**/*"
     ]
