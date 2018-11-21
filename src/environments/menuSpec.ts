@@ -283,7 +283,7 @@ const assetServicing = {
     ],
 };
 const ofiProductHome = {
-    label: 'Shares / Funds / Umbrella funds',
+    label: 'Shares / Funds / Umbrella Funds',
     label_txt: 'txt_sharesfundsumbrellafunds',
     icon_class: 'fa fa-bar-chart',
     element_id: 'menu-product-home',
@@ -364,7 +364,7 @@ const myAssetManagers = {
     always_displayed: true,
     children: [
         {
-            label: 'My documents',
+            label: 'My Documents',
             label_txt: 'txt_my-documents',
             icon_class: 'fa fa-copy',
             element_id: 'top-menu-my-documents',
@@ -519,7 +519,6 @@ export const menuSpec: MenuSpec = {
                     reportsCollectsArchives,
                 ],
             },
-
         ],
         custodian: [
             home,
@@ -705,8 +704,8 @@ export const menuSpec: MenuSpec = {
                 icon_class: 'fa fa-users',
                 element_id: 'menu-management-companies',
                 router_link: '/management-company',
-            }
-        ]
+            },
+        ],
     },
     disabled: [],
 };
