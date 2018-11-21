@@ -1,4 +1,4 @@
-import { Component, OnInit, Input, Output, EventEmitter } from '@angular/core';
+import { Component, OnInit, Input, Output, EventEmitter, ElementRef } from '@angular/core';
 import { get as getValue, remove } from 'lodash';
 import { select, NgRedux } from '@angular-redux/store';
 import { Subject } from 'rxjs';
@@ -36,6 +36,7 @@ export class NewKycIdentificationComponent implements OnInit {
         private persistRequestService: PersistRequestService,
         private ngRedux: NgRedux<any>,
         private beneficiaryService: BeneficiaryService,
+        private element: ElementRef,
     ) {
     }
 
@@ -145,24 +146,25 @@ export class NewKycIdentificationComponent implements OnInit {
         e.preventDefault();
         if (!this.form.valid) {
             formHelper.dirty(this.form);
+            formHelper.scrollToFirstError(this.element.nativeElement);
             return;
         }
 
         this.requests$
-            .pipe(take(1))
-            .subscribe((requests) => {
+        .pipe(take(1))
+        .subscribe((requests) => {
             this
-                .identificationService
-                .sendRequest(this.form, requests, this.connectedWallet)
-                .then(() => {
-                    this.submitEvent.emit({
-                        completed: true,
-                    });
-                    this.clearPersistForm();
-                })
-                .catch(() => {
-                    this.newRequestService.errorPop();
-                })
+            .identificationService
+            .sendRequest(this.form, requests, this.connectedWallet)
+            .then(() => {
+                this.submitEvent.emit({
+                    completed: true,
+                });
+                this.clearPersistForm();
+            })
+            .catch(() => {
+                this.newRequestService.errorPop();
+            })
             ;
         });
     }

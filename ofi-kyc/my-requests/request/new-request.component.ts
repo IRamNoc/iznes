@@ -63,7 +63,6 @@ export class NewKycRequestComponent implements OnInit, AfterViewInit {
         private newRequestService: NewRequestService,
         public translate: MultilingualService,
         private ngRedux: NgRedux<any>,
-        private router: Router,
         private location: Location,
     ) {
     }
@@ -240,6 +239,8 @@ export class NewKycRequestComponent implements OnInit, AfterViewInit {
         if (!component.form) {
             component.handleSubmit();
         }
+    }
+
     getDuplicatedCompany() {
         combineLatest(this.myKycList$, this.managementCompanyList$)
         .pipe(

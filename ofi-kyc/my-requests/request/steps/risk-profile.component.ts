@@ -1,4 +1,4 @@
-import { Component, OnInit, OnDestroy, Input, Output, EventEmitter } from '@angular/core';
+import { Component, OnInit, OnDestroy, Input, Output, EventEmitter, ElementRef } from '@angular/core';
 import { select } from '@angular-redux/store';
 import { isEmpty, castArray } from 'lodash';
 import { Subject } from 'rxjs';
@@ -27,6 +27,7 @@ export class NewKycRiskProfileComponent implements OnInit, OnDestroy {
         private newRequestService: NewRequestService,
         private riskProfileService: RiskProfileService,
         private persistService: PersistService,
+        private element: ElementRef,
     ) {
     }
 
@@ -41,15 +42,15 @@ export class NewKycRiskProfileComponent implements OnInit, OnDestroy {
         .pipe(
             map(kycs => kycs[0]),
             rxFilter((kyc: any) => {
-                    return kyc && kyc.amcID;
-                }),
-                take(1),
+                return kyc && kyc.amcID;
+            }),
+            take(1),
         )
-            .subscribe((kyc) => {
-                if (this.shouldPersist(kyc)) {
+        .subscribe((kyc) => {
+            if (this.shouldPersist(kyc)) {
                 this.persistForm();
             }
-            });
+        });
     }
 
     shouldPersist(kyc) {
@@ -63,14 +64,14 @@ export class NewKycRiskProfileComponent implements OnInit, OnDestroy {
         this.requests$
         .pipe(
             rxFilter(requests => !isEmpty(requests)),
-                takeUntil(this.unsubscribe),
+            takeUntil(this.unsubscribe),
         )
-            .subscribe((requests) => {
-                requests.forEach((request) => {
+        .subscribe((requests) => {
+            requests.forEach((request) => {
                 this.riskProfileService.getCurrentFormObjectiveData(request.kycID);
-                    this.riskProfileService.getCurrentFormNatureData(request.kycID);
+                this.riskProfileService.getCurrentFormNatureData(request.kycID);
             });
-            });
+        });
     }
 
     persistForm() {
@@ -100,24 +101,25 @@ export class NewKycRiskProfileComponent implements OnInit, OnDestroy {
 
         if (!this.form.valid) {
             formHelper.dirty(this.form);
+            formHelper.scrollToFirstError(this.element.nativeElement);
             return;
         }
 
         this.requests$
         .pipe(
-                take(1),
+            take(1),
         )
-            .subscribe((requests) => {
+        .subscribe((requests) => {
             this.riskProfileService.sendRequest(this.form, requests)
-                .then(() => {
-                    this.clearPersistForm();
-                    this.submitEvent.emit({
-                        completed: true,
-                    });
-                })
-                .catch(() => {
-                    this.newRequestService.errorPop();
-                })
+            .then(() => {
+                this.clearPersistForm();
+                this.submitEvent.emit({
+                    completed: true,
+                });
+            })
+            .catch(() => {
+                this.newRequestService.errorPop();
+            })
             ;
         });
     }

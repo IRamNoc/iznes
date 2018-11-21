@@ -175,10 +175,10 @@ export class NewKycSelectAmcComponent implements OnInit, OnDestroy {
             result = false;
         } else {
             result = reduce(
-            selectedManagementCompanies,
-            (result, value) => {
-            return result && value.registered;
-            },
+                selectedManagementCompanies,
+                (result, value) => {
+                    return result && value.registered;
+                },
                 true,
             );
         }
