@@ -134,11 +134,11 @@ export class UmbrellaFundComponent implements OnInit, AfterViewInit, OnDestroy {
         private managementCompanyService: OfiManagementCompanyService,
         private logService: LogService,
         private confirmationService: ConfirmationService,
-        public translate: MultilingualService,
         private leiService: LeiService,
+        public translate: MultilingualService,
         @Inject('product-config') productConfig,
     ) {
-        this.countries = productConfig.fundItems.domicileItems;
+        this.countries = this.translate.translate(productConfig.fundItems.domicileItems);
         this.fundAdminOptions = productConfig.fundItems.fundAdministratorItems;
         this.custodianBankOptions = productConfig.fundItems.custodianBankItems;
         this.payingagentOptions = productConfig.fundItems.payingAgentItems;
@@ -146,7 +146,7 @@ export class UmbrellaFundComponent implements OnInit, AfterViewInit, OnDestroy {
         this.taxAuditorOptions = productConfig.fundItems.taxAuditorItems;
         this.principalPromoterOptions = productConfig.fundItems.principalPromoterItems;
         this.legalAdvisorOptions = productConfig.fundItems.legalAdvisorItems;
-        this.transferAgentOptions = productConfig.fundItems.transferAgentItems;
+        this.transferAgentOptions = this.translate.translate(productConfig.fundItems.transferAgentItems);
         this.centralizingAgentOptions = productConfig.fundItems.centralizingAgentItems;
 
         this.managementCompanyService.getManagementCompanyList();

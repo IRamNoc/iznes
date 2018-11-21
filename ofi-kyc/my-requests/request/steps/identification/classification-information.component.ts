@@ -63,6 +63,7 @@ export class ClassificationInformationComponent implements OnInit, OnDestroy {
         this.translate.translate(this.natureOfTransactionsList);
 
         this.volumeOfTransactionsList = this.newRequestService.volumeOfTransactionsList;
+        this.translate.translate(this.volumeOfTransactionsList);
 
         this.initCheckForm();
         this.getCurrentFormData();

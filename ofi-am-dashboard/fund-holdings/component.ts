@@ -76,7 +76,7 @@ export class FundHoldingsComponent implements OnInit, AfterViewInit, OnDestroy {
                 private ofiAmDashboardService: OfiAmDashboardService,
                 private ofiNavService: OfiNavService,
                 private walletNodeRequestService: WalletNodeRequestService,
-                private _numberConverterService: NumberConverterService,
+                private numberConverterService: NumberConverterService,
                 private logService: LogService,
     ) {
         /* Assign the fund share form. */
@@ -328,8 +328,8 @@ export class FundHoldingsComponent implements OnInit, AfterViewInit, OnDestroy {
                                     finalHoldersList.push({
                                         walletName: this.walletDirectoryList[id].walletName,
                                         label: walletIdList[key].label,
-                                        amount: math.round((this._numberConverterService.toFrontEnd(oReturn.nav.price) * this._numberConverterService.toFrontEnd(holdersList[Object.keys(holdersList)[i]])), 2),
-                                        quantity: this._numberConverterService.toFrontEnd(holdersList[Object.keys(holdersList)[i]]),
+                                        amount: math.round((this.numberConverterService.toFrontEnd(oReturn.nav.price) * this.numberConverterService.toFrontEnd(holdersList[Object.keys(holdersList)[i]])), 2),
+                                        quantity: this.numberConverterService.toFrontEnd(holdersList[Object.keys(holdersList)[i]]),
                                     });
                                     /* Add to total number of units. */
                                     numberOfUnits += holdersList[Object.keys(holdersList)[i]];
@@ -341,8 +341,8 @@ export class FundHoldingsComponent implements OnInit, AfterViewInit, OnDestroy {
                         }
 
                         /* Set he number of holdings. */
-                        oReturn['units'] = this._numberConverterService.toFrontEnd(numberOfUnits);
-                        oReturn.nav.price = this._numberConverterService.toFrontEnd(oReturn.nav.price);
+                        oReturn['units'] = this.numberConverterService.toFrontEnd(numberOfUnits);
+                        oReturn.nav.price = this.numberConverterService.toFrontEnd(oReturn.nav.price);
 
                         /* For each holder, let's figure out  */
                         let finalHolder: any;

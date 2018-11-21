@@ -38,7 +38,7 @@ export class BeneficiaryComponent implements OnInit, OnDestroy {
         this.holdingTypesList = this.newRequestService.holdingTypesList;
         this.translate.translate(this.holdingTypesList);
         this.identificationNumberList = this.newRequestService.identificationNumberList;
-        this.countries = countries;
+        this.countries = this.translate.translate(countries);
     }
 
     ngOnInit() {

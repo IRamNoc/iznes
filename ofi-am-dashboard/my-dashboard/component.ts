@@ -34,6 +34,7 @@ import {
     LogService,
 } from '@setl/utils';
 import * as math from 'mathjs';
+import { MultilingualService } from '@setl/multilingual';
 
 @Component({
     selector: 'core-am-dashboard',
@@ -81,7 +82,9 @@ export class MyDashboardComponent implements OnInit, AfterViewInit, OnDestroy {
                 private walletNodeRequestService: WalletNodeRequestService,
                 private numberConverterService: NumberConverterService,
                 private logService: LogService,
-                private myWalletService: MyWalletsService) {
+                private myWalletService: MyWalletsService,
+                public translate: MultilingualService,
+    ) {
         /* Assign the fund share form. */
         this.fundShareForm = new FormGroup({
             selectFund: new FormControl(0),
@@ -155,10 +158,10 @@ export class MyDashboardComponent implements OnInit, AfterViewInit, OnDestroy {
                 this.fundAssetList = sortedByCompany;
 
                 /* Default the array with the any selection. */
-                this.filteredFundAssetList = [{
+                this.filteredFundAssetList = this.translate.translate([{
                     id: '0',
                     text: 'All',
-                }];
+                }]);
 
                 /* Now let's also push a UI object into the filtered list for each company. */
                 for (const company in sortedByCompany) {

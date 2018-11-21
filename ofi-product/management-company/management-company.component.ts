@@ -45,7 +45,7 @@ export class OfiManagementCompanyComponent implements OnInit, OnDestroy {
     managementCompanyList = [];
     countries;
     phoneNumbersCountryCodes;
-    legalFormList = legalFormList;
+    legalFormList;
 
     unSubscribe: Subject<any> = new Subject();
 
@@ -70,8 +70,9 @@ export class OfiManagementCompanyComponent implements OnInit, OnDestroy {
     ) {
         this.mcService.getManagementCompanyList();
 
-        this.countries = productConfig.fundItems.domicileItems;
+        this.countries = this.translate.translate(productConfig.fundItems.domicileItems);
         this.phoneNumbersCountryCodes = phoneCodeList;
+        this.legalFormList = this.translate.translate(legalFormList);
 
         this.managementCompanyForm = this.service.generateForm();
     }

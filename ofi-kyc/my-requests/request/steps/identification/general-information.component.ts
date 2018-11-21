@@ -9,6 +9,7 @@ import { FormPercentDirective } from '@setl/utils/directives/form-percent/formpe
 import { countries } from '../../../requests.config';
 import { NewRequestService } from '../../new-request.service';
 import { IdentificationService } from '../identification.service';
+import { MultilingualService } from '@setl/multilingual';
 
 @Component({
     selector: 'general-information',
@@ -21,7 +22,7 @@ export class GeneralInformationComponent implements OnInit, OnDestroy {
 
     unsubscribe: Subject<any> = new Subject();
     open: boolean = false;
-    countries = countries;
+    countries;
     legalFormList;
     publicEstablishmentList;
     identificationNumberList;
@@ -30,13 +31,19 @@ export class GeneralInformationComponent implements OnInit, OnDestroy {
     constructor(
         private newRequestService: NewRequestService,
         private identificationService: IdentificationService,
+        public translate: MultilingualService,
     ) {
     }
 
     ngOnInit() {
         this.legalFormList = this.newRequestService.legalFormList;
+        this.translate.translate(this.legalFormList);
         this.publicEstablishmentList = this.newRequestService.publicEstablishmentList;
+        this.translate.translate(this.publicEstablishmentList);
         this.identificationNumberList = this.newRequestService.identificationNumberList;
+        this.translate.translate(this.identificationNumberList);
+
+        this.countries = this.translate.translate(countries);
 
         this.initFormCheck();
         this.getCurrentFormData();
