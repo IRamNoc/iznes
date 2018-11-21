@@ -1,5 +1,5 @@
 package com.setl.UI.common.SETLUIHelpers;
-import org.junit.Test;
+import com.setl.UI.common.SETLUtils.RandomData;
 import org.openqa.selenium.By;
 import org.openqa.selenium.Keys;
 import org.openqa.selenium.WebElement;
@@ -11,7 +11,6 @@ import java.util.Arrays;
 import java.util.List;
 
 import static com.setl.UI.common.SETLUIHelpers.LoginAndNavigationHelper.loginAndVerifySuccess;
-import static com.setl.UI.common.SETLUIHelpers.LoginAndNavigationHelper.logout;
 import static com.setl.UI.common.SETLUIHelpers.LoginAndNavigationHelper.navigateToDropdown;
 import static com.setl.UI.common.SETLUIHelpers.MemberDetailsHelper.scrollElementIntoViewById;
 import static com.setl.UI.common.SETLUIHelpers.SetUp.driver;
@@ -22,15 +21,9 @@ import static org.junit.Assert.*;
 import static org.openqa.selenium.support.ui.ExpectedConditions.*;
 import static com.setl.UI.common.SETLUIHelpers.MemberDetailsHelper.scrollElementIntoViewByXpath;
 
+import static SETLAPIHelpers.DatabaseHelper.*;
+
 public class AdministrationModuleHelper {
-
-    static Connection conn = null;
-
-    public static String connectionString = "jdbc:mysql://localhost:9998/setlnet?nullNamePatternMatchesAll=true";
-
-    // Defines username and password to connect to database server.
-    static String DBUsername = "root";
-    static String DBPassword = "nahafusi61hucupoju78";
 
     public static String[] generateRandomTeamName() {
         String str = randomAlphabetic(7);
@@ -74,12 +67,12 @@ public class AdministrationModuleHelper {
     }
     public static String[] generateUser() {
         String str = randomAlphabetic(5);
-        String userName = "Donald" + str;
+        String userName = "iZNESUser" + str;
         return new String[]{userName};
     }
     public static String[] generateBadUser() {
         String str = randomAlphabetic(5);
-        String userName = "_Donald_" + str;
+        String userName = "_iZNESUser_" + str;
         return new String[]{userName};
     }
 
@@ -106,7 +99,7 @@ public class AdministrationModuleHelper {
         try {
             wait.until(refreshed(visibilityOfElementLocated(By.xpath("/html/body/app-root/app-basic-layout/div/ng-sidebar-container/div/div/div/main/div/div/app-core-admin-teams-crud/div"))));
             String header = driver.findElement(By.xpath("/html/body/app-root/app-basic-layout/div/ng-sidebar-container/div/div/div/main/div/div/app-core-admin-teams-crud/div")).getText();
-            assertTrue(header.contains("Create a New Team"));
+            assertTrue(header.contains("Create New Team"));
         } catch (Exception e) {
             fail("Page heading test was not correct : " + e.getMessage());
         }
@@ -125,7 +118,7 @@ public class AdministrationModuleHelper {
         driver.findElement(By.xpath("//*[@id=\"iznes\"]/app-root/jaspero-confirmations/jaspero-confirmation/div[2]/div[4]/button[2]")).click();
         Thread.sleep(1000);
         wait.until(refreshed(visibilityOfElementLocated(By.className("jaspero__dialog-title"))));
-        assertTrue(driver.findElement(By.xpath("//*[@id=\"iznes\"]/app-root/jaspero-confirmations/jaspero-confirmation/div[2]/div[3]")).getText().equals("Are you sure you wish to create this Team?"));
+        assertTrue(driver.findElement(By.xpath("//*[@id=\"iznes\"]/app-root/jaspero-confirmations/jaspero-confirmation/div[2]/div[3]")).getText().equals("Are you sure you want to create this Team?"));
         driver.findElement(By.xpath("//*[@id=\"iznes\"]/app-root/jaspero-confirmations/jaspero-confirmation/div[2]/div[4]/button[2]")).click();
         wait.until(visibilityOfElementLocated(By.xpath("/html/body/app-root/jaspero-alerts/jaspero-alert/div[2]/div[1]")));
         driver.findElement(By.xpath("/html/body/app-root/jaspero-alerts/jaspero-alert/div[2]/div[1]")).getText().equals("error!");
@@ -181,9 +174,9 @@ public class AdministrationModuleHelper {
         driver.findElement(By.xpath("/html/body/app-root/app-basic-layout/div/ng-sidebar-container/div/div/div/main/div/div/app-core-admin-users-crud/clr-tabs/clr-tab/clr-tab-content/div[5]/div[2]/button[1]")).click();
         wait.until(visibilityOfElementLocated(By.xpath("/html/body/app-root/jaspero-confirmations/jaspero-confirmation/div[2]/div[1]")));
         String update = driver.findElement(By.xpath("/html/body/app-root/jaspero-confirmations/jaspero-confirmation/div[2]/div[1]")).getText();
-        assertTrue(update.equals("Update User"));
+        assertEquals("Update User", update);
         String message = driver.findElement(By.xpath("/html/body/app-root/jaspero-confirmations/jaspero-confirmation/div[2]/div[3]")).getText();
-        assertTrue(message.equals("Are you sure you wish to update this User?"));
+        assertEquals("Are you sure you wish to update this User?", message);
         driver.findElement(By.xpath("/html/body/app-root/jaspero-confirmations/jaspero-confirmation/div[2]/div[4]/button[2]")).click();
     }
 
@@ -202,7 +195,7 @@ public class AdministrationModuleHelper {
         driver.findElement(By.xpath("//*[@id=\"iznes\"]/app-root/jaspero-confirmations/jaspero-confirmation/div[2]/div[4]/button[2]")).click();
         Thread.sleep(1000);
         wait.until(refreshed(visibilityOfElementLocated(By.className("jaspero__dialog-title"))));
-        assertTrue(driver.findElement(By.xpath("//*[@id=\"iznes\"]/app-root/jaspero-confirmations/jaspero-confirmation/div[2]/div[3]")).getText().equals("Are you sure you wish to create this Team?"));
+        assertTrue(driver.findElement(By.xpath("//*[@id=\"iznes\"]/app-root/jaspero-confirmations/jaspero-confirmation/div[2]/div[3]")).getText().equals("Are you sure you want to create this Team?"));
         driver.findElement(By.xpath("//*[@id=\"iznes\"]/app-root/jaspero-confirmations/jaspero-confirmation/div[2]/div[4]/button[2]")).click();
         wait.until(refreshed(invisibilityOfElementLocated(By.className("jaspero__dialog-title"))));
         wait.until(refreshed(visibilityOfElementLocated(By.xpath("/html/body/app-root/app-basic-layout/div/ng-sidebar-container/div/div/div/main/div/div/app-core-admin-teams-list/div/h1"))));
@@ -217,7 +210,7 @@ public class AdministrationModuleHelper {
         assertTrue(create.contains("Create Team"));
         driver.findElement(By.xpath("/html/body/app-root/app-basic-layout/div/ng-sidebar-container/div/div/div/main/div/div/app-core-admin-teams-crud/clr-tabs/clr-tab/clr-tab-content/div[5]/div[2]/button")).click();
         wait.until(refreshed(visibilityOfElementLocated(By.className("jaspero__dialog-title"))));
-        assertTrue(driver.findElement(By.xpath("//*[@id=\"iznes\"]/app-root/jaspero-confirmations/jaspero-confirmation/div[2]/div[3]")).getText().equals("Are you sure you wish to create this Team?"));
+        assertTrue(driver.findElement(By.xpath("//*[@id=\"iznes\"]/app-root/jaspero-confirmations/jaspero-confirmation/div[2]/div[3]")).getText().equals("Are you sure you want to create this Team?"));
         driver.findElement(By.xpath("//*[@id=\"iznes\"]/app-root/jaspero-confirmations/jaspero-confirmation/div[2]/div[4]/button[2]")).click();
         wait.until(refreshed(invisibilityOfElementLocated(By.className("jaspero__dialog-title"))));
         wait.until(refreshed(visibilityOfElementLocated(By.xpath("/html/body/app-root/app-basic-layout/div/ng-sidebar-container/div/div/div/main/div/div/app-core-admin-teams-list/div/h1"))));
@@ -307,6 +300,7 @@ public class AdministrationModuleHelper {
     public static void searchUser(String reference, String firstName, String lastName, String emailAddress, String phoneNumber) throws InterruptedException {
         final WebDriverWait wait = new WebDriverWait(driver, timeoutInSeconds);
         wait.until(visibilityOfElementLocated(By.id("tabAccountAdminUsersButton"))).isDisplayed();
+        Thread.sleep(2000);
         WebElement refSearch = driver.findElement(By.cssSelector("clr-dg-column.col-ref > div:nth-child(1) > clr-dg-string-filter:nth-child(1)"));
         wait.until(visibilityOf(refSearch));
         wait.until(elementToBeClickable(refSearch));
@@ -315,19 +309,19 @@ public class AdministrationModuleHelper {
         wait.until(elementToBeClickable(refField));
         refField.sendKeys(reference);
         String columnReference = driver.findElement(By.id("accountAdminTeamCellRef0")).getText();
-        assertTrue(columnReference.equals(reference));
+        assertEquals(columnReference, reference);
         String columnFirstName = driver.findElement(By.id("accountAdminTeamCellFirstName0")).getText();
-        assertTrue(columnFirstName.equals(firstName));
+        assertEquals(columnFirstName, firstName);
         String columnLastName = driver.findElement(By.id("accountAdminTeamCellLastName0")).getText();
-        assertTrue(columnLastName.equals(lastName));
+        assertEquals(columnLastName, lastName);
         String columnEmail = driver.findElement(By.id("accountAdminTeamCellEmail0")).getText();
-        assertTrue(columnEmail.equals(emailAddress));
+        assertEquals(columnEmail, emailAddress);
         String columnPhone = driver.findElement(By.id("accountAdminTeamCellPhone0")).getText();
-        assertTrue(columnPhone.equals(phoneNumber));
+        assertEquals(columnPhone, phoneNumber);
         String columnType = driver.findElement(By.id("accountAdminTeamCellType0")).getText();
-        assertTrue(columnType.equals("Asset manager"));
-        assertTrue(driver.findElement(By.xpath("/html/body/app-root/app-basic-layout/div/ng-sidebar-container/div/div/div/main/div/div/app-core-admin-users-list/clr-tabs/clr-tab/clr-tab-content/clr-datagrid/div/div/div/clr-dg-table-wrapper/div[2]/clr-dg-row/div/clr-dg-cell[7]/span")).getText().equals("1"));
-        assertTrue(driver.findElement(By.xpath("/html/body/app-root/app-basic-layout/div/ng-sidebar-container/div/div/div/main/div/div/app-core-admin-users-list/clr-tabs/clr-tab/clr-tab-content/clr-datagrid/div/div/div/clr-dg-table-wrapper/div[2]/clr-dg-row/div/clr-dg-cell[8]/span")).getText().equals("Pending"));
+        assertEquals("Asset manager", columnType);
+        assertEquals("1", driver.findElement(By.xpath("/html/body/app-root/app-basic-layout/div/ng-sidebar-container/div/div/div/main/div/div/app-core-admin-users-list/clr-tabs/clr-tab/clr-tab-content/clr-datagrid/div/div/div/clr-dg-table-wrapper/div[2]/clr-dg-row/div/clr-dg-cell[7]/span")).getText());
+        assertEquals("Pending", driver.findElement(By.xpath("/html/body/app-root/app-basic-layout/div/ng-sidebar-container/div/div/div/main/div/div/app-core-admin-users-list/clr-tabs/clr-tab/clr-tab-content/clr-datagrid/div/div/div/clr-dg-table-wrapper/div[2]/clr-dg-row/div/clr-dg-cell[8]/span")).getText());
 
     }
 
@@ -383,7 +377,7 @@ public class AdministrationModuleHelper {
         wait.until(visibilityOfElementLocated(By.xpath("//*[@id=\"iznes\"]/app-root/jaspero-confirmations/jaspero-confirmation/div[2]"))).isDisplayed();
         wait.until(elementToBeClickable(By.xpath("//*[@id=\"iznes\"]/app-root/jaspero-confirmations/jaspero-confirmation/div[2]/div[4]/button[2]"))).isDisplayed();
         assertTrue(driver.findElement(By.xpath("//*[@id=\"iznes\"]/app-root/jaspero-confirmations/jaspero-confirmation/div[2]/div[1]")).getText().equals("Update Team"));
-        assertTrue(driver.findElement(By.xpath("//*[@id=\"iznes\"]/app-root/jaspero-confirmations/jaspero-confirmation/div[2]/div[3]")).getText().equals("Are you sure you wish to update this Team?"));
+        assertTrue(driver.findElement(By.xpath("//*[@id=\"iznes\"]/app-root/jaspero-confirmations/jaspero-confirmation/div[2]/div[3]")).getText().equals("Are you sure you want to update this Team?"));
         driver.findElement(By.xpath("//*[@id=\"iznes\"]/app-root/jaspero-confirmations/jaspero-confirmation/div[2]/div[4]/button[2]")).click();
         wait.until(refreshed(visibilityOfElementLocated(By.id("tabAccountAdminTeamsButton"))));
     }
@@ -392,7 +386,7 @@ public class AdministrationModuleHelper {
         wait.until(visibilityOfElementLocated(By.id("name")));
         wait.until(elementToBeClickable(By.id("name")));
         String nameEntry = driver.findElement(By.id("name")).getAttribute("value");
-        assertTrue(nameEntry.equals(reName));
+        assertEquals(nameEntry, reName);
     }
     public static void selectDeleteTeam (String Answer, String teamName) throws InterruptedException {
         final WebDriverWait wait = new WebDriverWait(driver, timeoutInSeconds);
@@ -593,11 +587,12 @@ public class AdministrationModuleHelper {
         driver.findElement(By.cssSelector("#permissionsCellActions10 > label:nth-child(1) > span:nth-child(2)")).click();
     }
 
-    public static String validateAdminTeamPermissions(String teamName) throws SQLException {
+    public static boolean checkTeamHasPermissionsInDatabase(String teamName, List<String> expectedPermissions) throws SQLException {
         conn = DriverManager.getConnection(connectionString, DBUsername, DBPassword);
         Statement stmt = conn.createStatement();
         ResultSet rs = null;
         String teamID = null;
+        boolean result = false;
         try {
             String getUserTeamID = "select userTeamID from setlnet.tblUserTeams where name = " + "\"" + teamName + "\"";
             rs = stmt.executeQuery(getUserTeamID);
@@ -610,16 +605,25 @@ public class AdministrationModuleHelper {
             while(gp.next()){
                 actualList.add(gp.getString("permissionName"));
             }
-            List<String> expectedList = Arrays.asList("Create Teams","Create Users","Delete Teams","Delete Users", "Manage Team Memberships", "Manage Team Permissions", "Update Teams", "Update Users", "View Teams", "View Users");
-            assertEquals(expectedList, actualList);
-            }catch (Exception e) {
+
+            result = actualList.containsAll(expectedPermissions);
+
+        } catch (Exception e) {
             e.printStackTrace();
-            fail();
+            fail("DB connection failure");
         } finally {
             conn.close();
             stmt.close();
             rs.close();
-        } return teamID;
+            return result;
+        }
+
+    }
+
+    public static void validateAdminTeamPermissions(String teamName) throws SQLException {
+
+        List<String> expectedList = Arrays.asList("Create Teams","Create Users","Delete Teams","Delete Users", "Manage Team Memberships", "Manage Team Permissions", "Update Teams", "Update Users", "View Teams", "View Users");
+        assert checkTeamHasPermissionsInDatabase(teamName, expectedList) : "validateAdminTeamPermissions failure";
     }
 
     public static void selectOrderBookPermissions() {
@@ -637,34 +641,10 @@ public class AdministrationModuleHelper {
         driver.findElement(By.cssSelector("#permissionsCellActions13 > label:nth-child(1) > span:nth-child(2)")).click();
     }
 
-    public static String validateOrderBookTeamPermissions(String teamName) throws SQLException {
-        conn = DriverManager.getConnection(connectionString, DBUsername, DBPassword);
-        Statement stmt = conn.createStatement();
-        ResultSet rs = null;
-        String teamID = null;
-        try {
-            String getUserTeamID = "select userTeamID from setlnet.tblUserTeams where name = " + "\"" + teamName + "\"";
-            rs = stmt.executeQuery(getUserTeamID);
-            rs.last();
-            teamID = rs.getString("userTeamID");
-            String getPermissions = "SELECT a.userTeamID, a.reference , a.name as userTeamName, c.name as permissionName FROM setlnet.tblUserTeams a INNER JOIN setlnet.tblUserTeamPermissionAreasMap b on a.userTeamID = b.userTeamID INNER JOIN setlnet.tblUserTeamPermissionAreas c on b.permissionAreaID = c.permissionAreaID where a.userTeamID = " + "\"" + teamID + "\" order by c.name";
-            ResultSet gp = stmt.executeQuery(getPermissions);
+    public static void validateOrderBookTeamPermissions(String teamName) throws SQLException {
 
-            List<String> actualList = new ArrayList<>();
-            while(gp.next()){
-                actualList.add(gp.getString("permissionName"));
-            }
-            List<String> expectedList = Arrays.asList("Cancel Orders", "View Orders");
-            assertEquals(expectedList, actualList);
-        }catch (Exception e) {
-            e.printStackTrace();
-            fail();
-        } finally {
-            conn.close();
-            stmt.close();
-            rs.close();
-        } return teamID;
-
+        List<String> expectedList = Arrays.asList("Cancel Orders", "View Orders");
+        assert checkTeamHasPermissionsInDatabase(teamName, expectedList) : "validateOrderBookTeamPermissions failure";
     }
 
     public static void selectMyReportsPermissions() {
@@ -754,36 +734,37 @@ public class AdministrationModuleHelper {
         driver.findElement(By.cssSelector("#permissionsCellActions23 > label:nth-child(1) > span:nth-child(2)")).click();
     }
 
-    public static String validateMyClientsTeamPermissions(String teamName) throws SQLException {
-        conn = DriverManager.getConnection(connectionString, DBUsername, DBPassword);
-        Statement stmt = conn.createStatement();
-        ResultSet rs = null;
-        String teamID = null;
-        try {
-            String getUserTeamID = "select userTeamID from setlnet.tblUserTeams where name = " + "\"" + teamName + "\"";
-            rs = stmt.executeQuery(getUserTeamID);
-            rs.last();
-            teamID = rs.getString("userTeamID");
-            String getPermissions = "SELECT a.userTeamID, a.reference , a.name as userTeamName, c.name as permissionName FROM setlnet.tblUserTeams a INNER JOIN setlnet.tblUserTeamPermissionAreasMap b on a.userTeamID = b.userTeamID INNER JOIN setlnet.tblUserTeamPermissionAreas c on b.permissionAreaID = c.permissionAreaID where a.userTeamID = " + "\"" + teamID + "\" order by c.name";
-            ResultSet gp = stmt.executeQuery(getPermissions);
+    public static void validateMyClientsTeamPermissions(String teamName) throws SQLException {
 
-            List<String> actualList = new ArrayList<>();
-            while(gp.next()){
-                actualList.add(gp.getString("permissionName"));
-            }
-            List<String> expectedList = Arrays.asList("Invite Investors", "Update Client Referentials", "Update KYC Requests", "View Client Referentials", "View KYC Requests");
-            assertEquals(expectedList, actualList);
-        }catch (Exception e) {
-            e.printStackTrace();
-            fail();
-        } finally {
-            conn.close();
-            stmt.close();
-            rs.close();
-        } return teamID;
+        List<String> permissions = Arrays.asList("Invite Investors", "Update Client Referentials", "Update KYC Requests", "View Client Referentials", "View KYC Requests");
+        assert checkTeamHasPermissionsInDatabase(teamName, permissions) : "validateMyClientsTeamPermissions failure";
     }
 
+    public static void selectPortfolioManagerPermissions()
+    {
+        scrollElementIntoViewById("permissionsCellName18");
+        driver.findElement(By.id("permissionsCellName18")).click();
 
+        //http://si-taiga01.dev.setl.io/project/antoninriggi-iznes-20/task/3286
+        //turned off spell checking whilst its failing on the site
+//        assert driver.findElement(By.id("permissionsCellName24")).getText().equals("View Portfolio Manager") : "Text/wording error";
+//        assert driver.findElement(By.id("permissionsCellDesc24")).getText().equals("Get information about PM, funds managed and shares authorisation") : "Text/wording error";
+//
+//        assert driver.findElement(By.id("permissionsCellName25")).getText().equals("Update Portfolio Manager") : "Text/wording error";
+//        assert driver.findElement(By.id("permissionsCellDesc25")).getText().equals("Modify funds' list linked to a PM and share authorisation") : "Text/wording error";
+//
+//        assert driver.findElement(By.id("permissionsCellName26")).getText().equals("Invite Portfolio Manager") : "Text/wording error";
+//        assert driver.findElement(By.id("permissionsCellDesc26")).getText().equals("Invite a new PM into IZNES") : "Text/wording error";
+
+        driver.findElement(By.cssSelector("#permissionsCellActions24 > label:nth-child(1) > span:nth-child(2)")).click();
+        driver.findElement(By.cssSelector("#permissionsCellActions25 > label:nth-child(1) > span:nth-child(2)")).click();
+        driver.findElement(By.cssSelector("#permissionsCellActions26 > label:nth-child(1) > span:nth-child(2)")).click();
+    }
+
+    public static boolean validateMyClientsTeamPortfolioManagerPermissions(String teamName) throws SQLException {
+        List<String> permissions = Arrays.asList("View Portfolio Manager", "Update Portfolio Manager", "Invite Portfolio Manager");
+        return checkTeamHasPermissionsInDatabase(teamName, permissions);
+    }
 
     public static String getUserTokenByEmailFromDBInvitation(String userEmail) throws SQLException {
         conn = DriverManager.getConnection(connectionString, DBUsername, DBPassword);
@@ -846,6 +827,7 @@ public class AdministrationModuleHelper {
         String administrationTab = driver.findElement(By.id("menu-admin")).getText();
         assertEquals("Administration", administrationTab);
         driver.findElement(By.id("menu-admin")).click();
+        Thread.sleep(250);
         String usersTab = driver.findElement(By.id("menu-admin-users")).getText();
         assertEquals("Users", usersTab);
         String teamsTab = driver.findElement(By.id("menu-admin-teams")).getText();

@@ -1,5 +1,6 @@
 package com.setl.openCSDClarityTests.UI.Iznes4General;
 
+import com.setl.UI.common.SETLBusinessData.IBAN;
 import com.setl.UI.common.SETLUtils.Repeat;
 import com.setl.UI.common.SETLUtils.RepeatRule;
 import com.setl.UI.common.SETLUtils.ScreenshotRule;
@@ -63,6 +64,7 @@ public class OpenCSDSprint8AcceptanceTest {
     @After
     public void tearDown() throws Exception {
         setDBToProdOn();
+
     }
 
     @Test
@@ -88,7 +90,7 @@ public class OpenCSDSprint8AcceptanceTest {
         fillOutFundDetailsStep2(uFundDetails[0], randomLEI);
         assertPopupNextFundNo("Share");
         searchFundsTable(uFundDetails[0]);
-        createShare(uFundDetails[0], uShareDetails[0], uIsin[0]);
+        createShare(uFundDetails[0], uShareDetails[0], uIsin[0], IBAN.generateRandomIban("FR"));
         searchSharesTable(uShareDetails[0]);
         driver.findElement(By.id("product-dashboard-link-fundShareID-0")).click();
         wait.until(visibilityOfElementLocated(By.id("tabCalendarButton"))).isDisplayed();

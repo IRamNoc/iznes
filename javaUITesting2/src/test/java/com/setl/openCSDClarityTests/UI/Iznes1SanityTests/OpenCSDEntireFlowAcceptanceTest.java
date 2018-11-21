@@ -1,5 +1,7 @@
 package com.setl.openCSDClarityTests.UI.Iznes1SanityTests;
 
+import com.setl.UI.common.SETLBusinessData.IBAN;
+import com.setl.UI.common.SETLUtils.Repeat;
 import com.setl.UI.common.SETLUtils.RepeatRule;
 import com.setl.UI.common.SETLUtils.ScreenshotRule;
 import com.setl.UI.common.SETLUtils.TestMethodPrinterRule;
@@ -58,7 +60,7 @@ public class OpenCSDEntireFlowAcceptanceTest {
     @Rule
     public RepeatRule repeatRule = new RepeatRule();
     @Rule
-    public Timeout globalTimeout = new Timeout(250000);
+    public Timeout globalTimeout = new Timeout(300000);
     @Rule
     public TestMethodPrinterRule pr = new TestMethodPrinterRule(System.out);
 
@@ -73,43 +75,33 @@ public class OpenCSDEntireFlowAcceptanceTest {
     @After
     public void tearDown() throws Exception {
         setDBToProdOn();
+
     }
 
     @Test
-    public void shouldTest_EntireIZNESPlatform() throws Exception
-    {
-
+    public void shouldTest_EntireIZNESPlatform() throws Exception {
+        //-----------------------------------------------------------
         String No = "11"; String userNo = "0" + No;
-
         String[] email = generateRandomEmail();
-
         String AMUsername = "am"; String AMPassword = "alex01";
-
         String InvUsername = email[0]; String InvPassword = "asdASD123";
         //String InvUsername = "therealjordanmiller@gmail.com"; String InvPassword = "asdASD123";
-
         String managementCompEntered = "Management Company"; String managementCompExpected = "Management Company";
-
-
         String[] uFundDetails = generateRandomFundsDetails();
         String[] uShareDetails = generateRandomShareDetails();
         String umbFundDetails = generateRandomUmbrellaFundName();
         String[] uIsin = generateRandomISIN();
-        String umbLei = generateRandomLEI();
-        String fundLei = generateRandomLEI();
-        String shareCurrency = "EUR";
-        int latestNav = 14;
+        String umbLei = generateRandomLEI(); String fundLei = generateRandomLEI();
+        String shareCurrency = "EUR"; int latestNav = 14;
         String companyName = "Jordan Corporation";
         String firstName = "Jordan"; String lastName = "Miller";
         String phoneNo = "07956701992";
         String[] uSubNameDetails = generateRandomSubPortfolioName();
         String[] uAmount = generateRandomAmount();
-
         String uSubIBANDetails = "FR7630006000011234567890189";
+        //-----------------------------------------------------------
 
-        System.out.println("=======================================================");
-        System.out.println("IZNES Entire Flow Test Now Starting...");
-        System.out.println("=======================================================");
+        alert("IZNES Entire Flow Test Now Starting...");
 
         loginAndVerifySuccess(AMUsername, AMPassword);
         waitForHomePageToLoad();
@@ -128,7 +120,7 @@ public class OpenCSDEntireFlowAcceptanceTest {
         searchFundsTable(uFundDetails[0]);
         getFundTableRow(0, uFundDetails[0], fundLei, "EUR", managementCompExpected, "Afghanistan", "Contractual Fund", umbFundDetails);
 
-        createShare(uFundDetails[0], uShareDetails[0], uIsin[0]);
+        createShare(uFundDetails[0], uShareDetails[0], uIsin[0], IBAN.generateRandomIban("FR"));
         searchSharesTable(uShareDetails[0]);
         getShareTableRow(0, uShareDetails[0], uIsin[0], uFundDetails[0], shareCurrency, managementCompExpected, "", "share class", "Open");
 
@@ -170,12 +162,7 @@ public class OpenCSDEntireFlowAcceptanceTest {
         placeOrder(uIsin[0], uShareDetails[0], managementCompEntered, shareCurrency, latestNav, uAmount[0]);
         validatePlacedOrder(companyName, uIsin[0], uShareDetails[0], shareCurrency, uAmount[0]);
 
-        System.out.println("=======================================================");
-        System.out.println("Navigate to " + baseUrl);
-        System.out.println("Login as " + AMUsername + " to view the order.");
-        System.out.println("=======================================================");
-
-
+        alert("Login as '" + AMUsername + "' to view the order.");
     }
 
     public static void validatePlacedOrder(String companyName, String isin, String shareNames, String currency, String amount) throws IOException, InterruptedException{
@@ -197,6 +184,13 @@ public class OpenCSDEntireFlowAcceptanceTest {
 
         System.out.println("Status : Order details all displayed correctly");
         System.out.println("Status : Order will now be cut off in 1 minute");
+
+    }
+
+    public static void alert(String message) throws IOException, InterruptedException{
+        System.out.println("=======================================================");
+        System.out.println(message);
+        System.out.println("=======================================================");
 
     }
 }

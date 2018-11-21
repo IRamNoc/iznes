@@ -1,4 +1,5 @@
 package com.setl.openCSDClarityTests.UI.Iznes1MyProduct.NetAssetValue;
+import com.setl.UI.common.SETLBusinessData.IBAN;
 import com.setl.UI.common.SETLUtils.RepeatRule;
 import com.setl.UI.common.SETLUtils.ScreenshotRule;
 import com.setl.UI.common.SETLUtils.TestMethodPrinterRule;
@@ -52,6 +53,7 @@ public class OpenCSDNAVAcceptanceTest {
     @After
     public void tearDown() throws Exception {
         setDBToProdOn();
+
     }
 
     @Test
@@ -81,7 +83,7 @@ public class OpenCSDNAVAcceptanceTest {
         fillOutFundDetailsStep2(uFundDetails[0], generateRandomLEI());
 
         assertPopupNextFundNo("Share");
-        createShare(uFundDetails[0], uShareDetails[0], uIsin[0]);
+        createShare(uFundDetails[0], uShareDetails[0], uIsin[0], IBAN.generateRandomIban("FR"));
 
         navigateToNAVPageFromFunds();
 
@@ -125,7 +127,7 @@ public class OpenCSDNAVAcceptanceTest {
         fillOutFundDetailsStep2(uFundDetails[0], generateRandomLEI());
 
         assertPopupNextFundNo("Share");
-        createShare(uFundDetails[0], uShareDetails[0], uIsin[0]);
+        createShare(uFundDetails[0], uShareDetails[0], uIsin[0], IBAN.generateRandomIban("FR"));
 
         navigateToNAVPageFromFunds();
         wait.until(refreshed(visibilityOfElementLocated(By.id("NAV-Share-Name-0"))));
@@ -157,7 +159,7 @@ public class OpenCSDNAVAcceptanceTest {
         fillOutFundDetailsStep2(uFundDetails[0], generateRandomLEI());
 
         assertPopupNextFundNo("Share");
-        createShare(uFundDetails[0], uShareDetails[0], uIsin[0]);
+        createShare(uFundDetails[0], uShareDetails[0], uIsin[0], IBAN.generateRandomIban("FR"));
         navigateToNAVPageFromFunds();
         wait.until(refreshed(visibilityOfElementLocated(By.id("NAV-Share-Name-0"))));
         driver.findElement(By.id("Search-field")).sendKeys(uShareDetails[0]);
@@ -202,7 +204,7 @@ public class OpenCSDNAVAcceptanceTest {
         fillOutFundDetailsStep2(uFundDetails[0], generateRandomLEI());
 
         assertPopupNextFundNo("Share");
-        createShare(uFundDetails[0], uShareDetails[0], uIsin[0]);
+        createShare(uFundDetails[0], uShareDetails[0], uIsin[0], IBAN.generateRandomIban("FR"));
         navigateToNAVPageFromFunds();
         wait.until(refreshed(visibilityOfElementLocated(By.id("NAV-Share-Name-0"))));
         driver.findElement(By.id("NAV-Share-Name-0")).click();
@@ -255,7 +257,7 @@ public class OpenCSDNAVAcceptanceTest {
         fillOutFundDetailsStep2(uFundDetails[0], fundLei);
         assertPopupNextFundNo("Share");
         searchFundsTable(uFundDetails[0]);
-        createShare(uFundDetails[0], uShareDetails[0], uIsin[0]);
+        createShare(uFundDetails[0], uShareDetails[0], uIsin[0], IBAN.generateRandomIban("FR"));
         searchSharesTable(uShareDetails[0]);
         setSharesNAVandValidate(uShareDetails[0], latestNav);
 
@@ -300,7 +302,7 @@ public class OpenCSDNAVAcceptanceTest {
         fillOutFundDetailsStep2(uFundDetails[0], fundLei);
         assertPopupNextFundNo("Share");
         searchFundsTable(uFundDetails[0]);
-        createShare(uFundDetails[0], uShareDetails[0], uIsin[0]);
+        createShare(uFundDetails[0], uShareDetails[0], uIsin[0], IBAN.generateRandomIban("FR"));
         searchSharesTable(uShareDetails[0]);
         setSharesNAVandValidate(uShareDetails[0], latestNav);
 
@@ -336,7 +338,7 @@ public class OpenCSDNAVAcceptanceTest {
         assertPopupNextFundNo("Share");
         searchFundsTable(uFundDetails[0]);
 
-        createShare(uFundDetails[0], uShareDetails[0], uIsin[0]);
+        createShare(uFundDetails[0], uShareDetails[0], uIsin[0], IBAN.generateRandomIban("FR"));
         setSharesNAVandValidate(uShareDetails[0], latestNav);
         Thread.sleep(1000);
         String NAVPre = driver.findElement(By.id("NAV-Val-Value-0")).getText();
@@ -377,7 +379,7 @@ public class OpenCSDNAVAcceptanceTest {
         assertPopupNextFundNo("Share");
         searchFundsTable(uFundDetails[0]);
 
-        createShare(uFundDetails[0], uShareDetails[0], uIsin[0]);
+        createShare(uFundDetails[0], uShareDetails[0], uIsin[0], IBAN.generateRandomIban("FR"));
         searchSharesTable(uShareDetails[0]);
 
         setSharesNAVandValidate(uShareDetails[0], latestNav);

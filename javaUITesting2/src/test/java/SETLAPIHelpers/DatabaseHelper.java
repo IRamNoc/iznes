@@ -24,13 +24,13 @@ import static org.junit.Assert.fail;
 public class DatabaseHelper {
 
 
-    static Connection conn = null;
+    public static Connection conn = null;
 
     public static String connectionString = "jdbc:mysql://localhost:9998/setlnet?nullNamePatternMatchesAll=true";
 
     // Defines username and password to connect to database server.
-    static String DBUsername = "root";
-    static String DBPassword = "nahafusi61hucupoju78";
+    public static final String DBUsername = "root";
+    public static final String DBPassword = "nahafusi61hucupoju78";
 
     public static void validateDatabaseAccountTable(String accountName, String accountDescription, int expectedCount) throws SQLException {
         conn = DriverManager.getConnection(connectionString, DBUsername, DBPassword);

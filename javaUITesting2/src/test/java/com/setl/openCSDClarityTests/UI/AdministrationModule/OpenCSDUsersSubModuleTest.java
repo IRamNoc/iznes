@@ -6,10 +6,7 @@ import com.setl.UI.common.SETLUtils.TestMethodPrinterRule;
 import custom.junit.runners.OrderedJUnit4ClassRunner;
 import io.setl.restapi.client.RestApi;
 import io.setl.restapi.client.message.MemberNodeMessageFactory;
-import org.junit.Before;
-import org.junit.Ignore;
-import org.junit.Rule;
-import org.junit.Test;
+import org.junit.*;
 import org.junit.rules.Timeout;
 import org.junit.runner.RunWith;
 import org.openqa.selenium.JavascriptExecutor;
@@ -24,25 +21,9 @@ import static com.setl.UI.common.SETLUIHelpers.LoginAndNavigationHelper.navigate
 import static com.setl.UI.common.SETLUIHelpers.SetUp.driver;
 import static com.setl.UI.common.SETLUIHelpers.SetUp.testSetUp;
 
-
 @RunWith(OrderedJUnit4ClassRunner.class)
 
 public class OpenCSDUsersSubModuleTest {
-
-    public static String connectionString = "jdbc:mysql://localhost:9998/setlnet?nullNamePatternMatchesAll=true";
-
-    // Defines username and password to connect to database server.
-    static String username = "root";
-    static String password = "nahafusi61hucupoju78";
-
-    static String testusername = "TestUserNullInfo";
-    static String testpassword = "Testpass123";
-
-    static RestApi<MemberNodeMessageFactory> api;
-
-
-    JavascriptExecutor jse = (JavascriptExecutor) driver;
-
 
     @Rule
     public ScreenshotRule screenshotRule = new ScreenshotRule();
@@ -58,6 +39,10 @@ public class OpenCSDUsersSubModuleTest {
         testSetUp();
         screenshotRule.setDriver(driver);
         setDBTwoFAOff();
+    }
+    @After
+    public void teardown() {
+
     }
 
     @Test
@@ -76,8 +61,6 @@ public class OpenCSDUsersSubModuleTest {
         selectUserType();
         createUserDisabled();
     }
-
-
     @Test
     @Ignore //Static Team no longer Exists it was removed due to old data
     public void shouldNotCreateUser() throws InterruptedException, SQLException {

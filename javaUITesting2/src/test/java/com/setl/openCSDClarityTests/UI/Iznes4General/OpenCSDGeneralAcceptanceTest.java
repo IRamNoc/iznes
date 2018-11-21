@@ -5,10 +5,7 @@ import com.setl.UI.common.SETLUtils.RepeatRule;
 import com.setl.UI.common.SETLUtils.ScreenshotRule;
 import com.setl.UI.common.SETLUtils.TestMethodPrinterRule;
 import custom.junit.runners.OrderedJUnit4ClassRunner;
-import org.junit.Before;
-import org.junit.Ignore;
-import org.junit.Rule;
-import org.junit.Test;
+import org.junit.*;
 import org.junit.rules.Timeout;
 import org.junit.runner.RunWith;
 import org.openqa.selenium.*;
@@ -56,6 +53,10 @@ public class OpenCSDGeneralAcceptanceTest {
         screenshotRule.setDriver(driver);
         deleteFormdataFromDatabase("8", "1");
         setDBTwoFAOff();
+    }
+    @After
+    public void teardown() {
+
     }
 
     @Test
@@ -431,6 +432,45 @@ public class OpenCSDGeneralAcceptanceTest {
             fail("success message did not match : " + e.getMessage());
         }
     }
+
+    public static void inviteAPortfolioManager(String email, String firstname, String lastname, String expectedResult, List<String> funds) throws InterruptedException, IOException {
+        WebDriverWait wait = new WebDriverWait(driver, timeoutInSeconds);
+        wait.until(visibilityOfElementLocated(By.id("invite-investors-btn")));
+        wait.until(elementToBeClickable(By.id("invite-investors-btn")));
+        driver.findElement(By.id("invite-investors-btn")).click();
+        wait.until(visibilityOfElementLocated(By.id("kyc_email_0")));
+        driver.findElement(By.id("kyc_email_0")).sendKeys(email);
+        driver.findElement(By.id("kyc_language_0")).click();
+
+        driver.findElement(By.cssSelector("div > ul > li:nth-child(2) > div > a")).click();
+
+        driver.findElement(By.id("kyc_firstName_0")).sendKeys(firstname);
+        driver.findElement(By.id("kyc_lastName_0")).sendKeys(lastname);
+        searchSelectTopOptionXpath("Portfolio Manager", "//*[@id=\"kyc_investorType_0\"]/div", "//*[@id=\"kyc_investorType_0\"]/div/div[3]/div/input", "//*[@id=\"kyc_investorType_0\"]/div/div[3]/ul/li[1]/div/a");
+
+        for (String fund : funds)
+        {
+            searchSelectTopOptionXpath(fund , "//*[@id=\"pm_funds_0\"]/div", "//*[@id=\"pm_funds_0\"]/div/div[2]/div/input", "//*[@id=\"pm_funds_0\"]/div/div[2]/ul/li[1]/div/a");
+        }
+
+
+        driver.findElement(By.id("btnKycSubmit")).click();
+
+        wait.until(visibilityOf(driver.findElement(By.className("jaspero__dialog-title"))));
+
+        try {
+            String success = driver.findElement(By.className("jaspero__dialog-title")).getText();
+            assertTrue("Popup text, expected: " + expectedResult + " but was: " + success, success.equals(expectedResult));
+
+            //click the close button
+            driver.findElement(By.xpath("//*[@id=\"iznes\"]/app-root/jaspero-alerts/jaspero-alert/div[2]/div[4]/button")).click();
+
+
+        } catch (Exception e) {
+            fail("success message did not match : " + e.getMessage());
+        }
+    }
+
 
     public static void inviteAnInvestorExpectingFailed(String email, String firstname, String lastname) {
         driver.findElement(By.id("kyc_email_0")).sendKeys(email);

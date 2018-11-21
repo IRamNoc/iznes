@@ -4,10 +4,7 @@ import com.setl.UI.common.SETLUtils.RepeatRule;
 import com.setl.UI.common.SETLUtils.ScreenshotRule;
 import com.setl.UI.common.SETLUtils.TestMethodPrinterRule;
 import custom.junit.runners.OrderedJUnit4ClassRunner;
-import org.junit.Before;
-import org.junit.Ignore;
-import org.junit.Rule;
-import org.junit.Test;
+import org.junit.*;
 import org.junit.rules.Timeout;
 import org.junit.runner.RunWith;
 import org.openqa.selenium.By;
@@ -54,6 +51,10 @@ public class OpenCSD2FundsAcceptanceTest {
         testSetUp();
         screenshotRule.setDriver(driver);
         setDBTwoFAOff();
+    }
+    @After
+    public void teardown() {
+
     }
 
     @Test
@@ -427,7 +428,7 @@ public class OpenCSD2FundsAcceptanceTest {
 
     }
 
-    private void createFund() throws InterruptedException {
+    public void createFund() throws InterruptedException {
         WebDriverWait wait = new WebDriverWait(driver, timeoutInSeconds);
         driver.findElement(By.id("new-fund-btn")).click();
         driver.findElement(By.xpath("//*[@id=\"fund-umbrellaControl-select-1\"]/div")).click();

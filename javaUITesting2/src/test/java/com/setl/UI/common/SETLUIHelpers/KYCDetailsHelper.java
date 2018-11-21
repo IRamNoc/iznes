@@ -280,6 +280,7 @@ public class KYCDetailsHelper extends LoginAndNavigationHelper {
 
         driver.findElement(By.xpath("//*[@id=\"iznes\"]/app-root/app-basic-layout/div/ng-sidebar-container/div/div/div/main/div/div/ng-component/ng-component/div[3]/div[3]/button[1]")).click();
 
+        Thread.sleep(1000);
         try {
             scrollElementIntoViewByXpath("//*[@id=\"iznes\"]/app-root/app-basic-layout/div/ng-sidebar-container/div/div/div/main/div/div/ng-component/ng-component/div[3]/div[3]/button[3]");
             WebElement button = driver.findElement(By.cssSelector("button.btn.btn-success.btNext"));
@@ -321,6 +322,7 @@ public class KYCDetailsHelper extends LoginAndNavigationHelper {
             assertTrue(introductionStepKYC.equals("fs-active"));
         }catch (Exception e){fail(e.getMessage());}
         try {
+            Thread.sleep(1000);
             driver.findElement(By.xpath("//*[@id=\"iznes\"]/app-root/app-basic-layout/div/ng-sidebar-container/div/div/div/main/div[1]/div/ng-component/ng-component/div[3]/div[3]/button[4]")).click();
         }catch (Exception e){
             fail(e.getMessage());}

@@ -33,6 +33,7 @@ import static com.setl.openCSDClarityTests.UI.Iznes4General.OpenCSDGeneralAccept
 import static org.junit.Assert.assertTrue;
 import static org.junit.Assert.fail;
 import static org.openqa.selenium.support.ui.ExpectedConditions.*;
+import static org.openqa.selenium.support.ui.ExpectedConditions.visibilityOfElementLocated;
 
 
 @RunWith(OrderedJUnit4ClassRunner.class)
@@ -48,7 +49,7 @@ public class OpenCSDKYCModuleAcceptanceTest {
     @Rule
     public RepeatRule repeatRule = new RepeatRule();
     @Rule
-    public Timeout globalTimeout = new Timeout(120000);
+    public Timeout globalTimeout = new Timeout(145000);
     @Rule
     public TestMethodPrinterRule pr = new TestMethodPrinterRule(System.out);
 
@@ -63,6 +64,7 @@ public class OpenCSDKYCModuleAcceptanceTest {
     @After
     public void tearDown() throws Exception {
         setDBToProdOn();
+
     }
 
     @Test
@@ -348,7 +350,8 @@ public class OpenCSDKYCModuleAcceptanceTest {
 
         wait.until(visibilityOfElementLocated(By.xpath("//*[@id=\"iznes\"]/app-root/jaspero-confirmations/jaspero-confirmation/div[2]")));
         String jaspTitle = driver.findElement(By.className("jaspero__dialog-title")).getText();
-        assertTrue(jaspTitle.equals("Confirm Fund Share Access:"));
+        System.out.println(jaspTitle);
+        assertTrue(jaspTitle.equals("Confirm Fund Share Access"));
 
         driver.findElement(By.xpath("//*[@id=\"iznes\"]/app-root/jaspero-confirmations/jaspero-confirmation/div[2]/div[4]/button[2]")).click();
 
@@ -493,6 +496,8 @@ public class OpenCSDKYCModuleAcceptanceTest {
         saveKYCAndVerifySuccessPageOne();
         selectOptionAndSubmitKYC("yes");
         logout();
+
+        dropdownSelect("xpath", "//*[@id=\"new-user-account-select\"]", "Company");
     }
 
 
@@ -510,31 +515,27 @@ public class OpenCSDKYCModuleAcceptanceTest {
         Thread.sleep(750);
 
         String identificationTitle = driver.findElement(By.xpath("//*[@id=\"iznes\"]/app-root/app-basic-layout/div/ng-sidebar-container/div/div/div/main/div/div/ng-component/ng-component/div[3]/div[2]/div/section[3]/kyc-step-identification/h3")).getText();
-        System.out.println(identificationTitle);
-        assertTrue(identificationTitle.equals("Client's Identification as a Legal Entity"));
         String generalInfoPercent = driver.findElement(By.xpath("//*[@id=\"step-identification\"]/general-information/div/div[1]/div[2]/div/div[1]/div/div/div/span")).getText();
+        String lei = generateRandomLEI();
+
+
+        assertTrue(identificationTitle.equals("Client's Identification as a Legal Entity"));
         assertTrue(generalInfoPercent.equals("0%"));
         driver.findElement(By.xpath("//*[@id=\"step-identification\"]/general-information/div/div[1]/div[1]/a/h2")).click();
         wait.until(visibilityOfElementLocated(By.id("registeredCompanyName")));
         driver.findElement(By.id("registeredCompanyName")).sendKeys(companyName);
 
-        searchSelectTopOptionXpath("EARL: Entreprise agricole à responsabilité limitée", "//*[@id=\"legalForm\"]/div", "//*[@id=\"legalForm\"]/div/div[3]/div/input", "//*[@id=\"legalForm\"]/div/div[3]/ul/li[1]/div/a");
-
-        String lei = generateRandomLEI();
+        dropdownSelect("xpath", "//*[@id=\"legalForm\"]", "EARL: Entreprise agricole à responsabilité limitée");
         driver.findElement(By.xpath("//*[@id=\"leiCode\"]")).sendKeys(lei);
-
         driver.findElement(By.id("registeredCompanyAddressLine1")).sendKeys("21 Something Street");
-
         driver.findElement(By.xpath("//*[@id=\"step-identification\"]/general-information/div/div[2]/div/div[5]/div[1]/input")).sendKeys("IP11EY");
-
-        searchSelectTopOptionXpath("Jordan", "//*[@id=\"countryTaxResidence\"]/div", "//*[@id=\"countryTaxResidence\"]/div/div[3]/div/input", "//*[@id=\"countryTaxResidence\"]/div/div[3]/ul/li[1]/div/a");
-
+        dropdownSelect("xpath", "//*[@id=\"countryTaxResidence\"]", "Jordan");
         driver.findElement(By.xpath("//*[@id=\"step-identification\"]/general-information/div/div[2]/div/div[5]/div[2]/input")).sendKeys("Ipswich");
 
         String percentBarColourPre = driver.findElement(By.xpath("//*[@id=\"step-identification\"]/general-information/div/div[1]/div[2]/div/div[1]/div/div/div")).getCssValue("background-color");
         assertTrue(percentBarColourPre.equals("rgba(255, 183, 77, 1)"));
 
-        searchSelectTopOptionXpath("Jordan", "//*[@id=\"step-identification\"]/general-information/div/div[2]/div/div[5]/div[3]/ng-select/div", "//*[@id=\"step-identification\"]/general-information/div/div[2]/div/div[5]/div[3]/ng-select/div/div[3]/div/input", "//*[@id=\"step-identification\"]/general-information/div/div[2]/div/div[5]/div[3]/ng-select/div/div[3]/ul/li[1]/div/a");
+        dropdownSelect("xpath", "//*[@id=\"step-identification\"]/general-information/div/div[2]/div/div[5]/div[3]/ng-select", "Jordan");
 
         String percent9 = driver.findElement(By.xpath("//*[@id=\"step-identification\"]/general-information/div/div[1]/div[2]/div/div[1]/div/div/div/span")).getText();
         assertTrue(percent9.equals("100%"));
@@ -546,127 +547,218 @@ public class OpenCSDKYCModuleAcceptanceTest {
         wait.until(invisibilityOfElementLocated(By.id("registeredCompanyName")));
     }
 
-    public static void KYCProcessStep3CompanyInfoComplete() throws IOException, InterruptedException{
+    public static void dropdownSelect(String selectorType, String element, String input) throws IOException, InterruptedException{
+
         WebDriverWait wait = new WebDriverWait(driver, timeoutInSeconds);
+
+        if (selectorType.equals("xpath")){
+
+            String dropdownOpen = element + "/div";
+            String topOption = dropdownOpen + "/div[3]/ul/li[1]/div/a";
+            String lowOption = dropdownOpen + "/div[3]/ul/li[2]/div/a";
+
+            scrollElementIntoViewByXpath(dropdownOpen);
+
+            driver.findElement(By.xpath(dropdownOpen)).click();
+
+            wait.until(visibilityOfElementLocated(By.xpath(topOption)));
+
+            driver.findElement(By.xpath(dropdownOpen + "/div[3]/div/input")).sendKeys(input);
+
+            wait.until(invisibilityOfElementLocated(By.xpath(lowOption)));
+
+            driver.findElement(By.xpath(topOption)).click();
+
+            wait.until(invisibilityOfElementLocated(By.xpath(topOption)));
+
+        }if (selectorType.equals("id")){
+
+            String createdXpath = "//*[@id='" + element + "']";
+            String dropdownOpenID = createdXpath + "/div";
+            String topOption = dropdownOpenID + "/div[3]/ul/li[1]/div/a";
+            String lowOption = dropdownOpenID + "/div[3]/ul/li[2]/div/a";
+
+            //scrollElementIntoViewById(dropdownOpenID);
+
+            driver.findElement(By.xpath(dropdownOpenID)).click();
+
+            wait.until(visibilityOfElementLocated(By.xpath(topOption)));
+
+            driver.findElement(By.xpath(dropdownOpenID + "/div[3]/div/input")).sendKeys(input);
+
+            wait.until(invisibilityOfElementLocated(By.xpath(lowOption)));
+
+            driver.findElement(By.xpath(topOption)).click();
+
+            wait.until(invisibilityOfElementLocated(By.xpath(topOption)));
+        }
+    }public static void dropdownSelect2(String selectorType, String element, String input) throws IOException, InterruptedException {
+
+        WebDriverWait wait = new WebDriverWait(driver, timeoutInSeconds);
+
+        if (selectorType.equals("xpath")) {
+
+            String dropdownOpen = element + "/div";
+            String topOption = dropdownOpen + "/div[2]/ul/li[1]/div/a";
+            String lowOption = dropdownOpen + "/div[2]/ul/li[2]/div/a";
+
+            scrollElementIntoViewByXpath(dropdownOpen);
+
+            driver.findElement(By.xpath(dropdownOpen)).click();
+
+            wait.until(visibilityOfElementLocated(By.xpath(topOption)));
+
+            driver.findElement(By.xpath(dropdownOpen + "/div[2]/div/input")).sendKeys(input);
+
+            wait.until(invisibilityOfElementLocated(By.xpath(lowOption)));
+
+            driver.findElement(By.xpath(topOption)).click();
+
+            wait.until(invisibilityOfElementLocated(By.xpath(topOption)));
+
+        }
+    }
+
+    public static void sendKeys(String selectorType, String element, String input) throws IOException, InterruptedException{
+
+        WebDriverWait wait = new WebDriverWait(driver, timeoutInSeconds);
+
+        if (selectorType.equals("xpath")){
+
+            scrollElementIntoViewByXpath(element);
+
+            wait.until(visibilityOfElementLocated(By.xpath(element)));
+
+            driver.findElement(By.xpath(element)).clear();
+            Thread.sleep(250);
+            driver.findElement(By.xpath(element)).sendKeys(input);
+
+        }if (selectorType.equals("id")){
+
+            scrollElementIntoViewById(element);
+
+            wait.until(visibilityOfElementLocated(By.id(element)));
+
+            driver.findElement(By.id(element)).clear();
+            Thread.sleep(250);
+            driver.findElement(By.id(element)).sendKeys(input);
+        }
+    }
+
+    public static void click(String selectorType, String element) throws IOException, InterruptedException{
+
+        if (selectorType.equals("xpath")){
+
+            scrollElementIntoViewByXpath(element);
+
+            driver.findElement(By.xpath(element)).click();
+            Thread.sleep(250);
+
+        }if (selectorType.equals("id")){
+
+            scrollElementIntoViewById(element);
+
+            driver.findElement(By.id(element)).click();
+            Thread.sleep(250);
+        }
+    }
+
+    public static void expandableForms(String openOrClose, String selectorType, String element) throws IOException, InterruptedException{
+
+        if (selectorType.equals("xpath")){
+
+            scrollElementIntoViewByXpath(element);
+
+            if (openOrClose.equals("open")){
+                driver.findElement(By.xpath(element)).click();
+                Thread.sleep(500);
+            }
+        }
+    }
+
+
+    public static void KYCProcessStep3CompanyInfoComplete() throws IOException, InterruptedException{
 
         String companyInfoPercent = driver.findElement(By.xpath("//*[@id=\"step-identification\"]/company-information/form/div[1]/div[2]/div/div[1]/div/div/div/span")).getText();
         assertTrue(companyInfoPercent.equals("0%"));
 
-        driver.findElement(By.xpath("//*[@id=\"step-identification\"]/company-information/form/div[1]/div[1]/a/h2")).click();
-        wait.until(visibilityOfElementLocated(By.id("activities")));
+        expandableForms("open", "xpath", "//*[@id=\"step-identification\"]/company-information/form/div[1]/div[1]/a/h2");
 
-        searchSelectTopOptionXpath("Consumer Electronics", "//*[@id=\"sectorActivity\"]/div", "//*[@id=\"sectorActivity\"]/div/div[3]/div/input", "//*[@id=\"sectorActivity\"]/div/div[3]/ul/li[1]/div/a");
+        dropdownSelect("xpath", "//*[@id=\"sectorActivity\"]", "Consumer Electronics");
+        dropdownSelect("xpath", "//*[@id=\"geographicalAreaOfActivity\"]", "OECD outside the European Union");
+        dropdownSelect("xpath", "//*[@id=\"activities\"]", "Own-account");
+        dropdownSelect("xpath", "//*[@id=\"ownAccountinvestor\"]", "Embassies and Consulates");
 
-        searchSelectTopOptionXpath("European union", "//*[@id=\"geographicalAreaOfActivity\"]/div", "//*[@id=\"geographicalAreaOfActivity\"]/div/div[3]/div/input", "//*[@id=\"geographicalAreaOfActivity\"]/div/div[3]/ul/li[1]/div/a");
+        sendKeys("id", "geographicalAreaOfActivitySpecification", "Specified");
+        sendKeys("id", "balanceSheetTotal", "9");
+        sendKeys("id", "netRevenuesNetIncome", "9");
+        sendKeys("id", "shareholderEquity", "9");
 
-        searchSelectTopOptionXpath("Own-account", "//*[@id=\"activities\"]/div", "//*[@id=\"activities\"]/div/div[3]/div/input", "//*[@id=\"activities\"]/div/div[3]/ul/li[1]/div/a");
+        dropdownSelect("id", "geographicalOrigin1", "Country");
+        dropdownSelect("id", "geographicalOrigin2", "Jordan");
+        dropdownSelect("id", "totalFinancialAssetsAlreadyInvested", "0 to 50 million €");
 
-        searchSelectTopOptionXpath("Embassies and Consulates", "//*[@id=\"ownAccountinvestor\"]/div", "//*[@id=\"ownAccountinvestor\"]/div/div[3]/div/input", "//*[@id=\"ownAccountinvestor\"]/div/div[3]/ul/li[1]/div/a");
+        click("id","premiumsAndContributions" );
 
-        driver.findElement(By.id("balanceSheetTotal")).sendKeys("9");
+        dropdownSelect("xpath", "//*[@id=\"beneficiaryType\"]", "Legal person");
 
-        driver.findElement(By.id("netRevenuesNetIncome")).sendKeys("9");
+        sendKeys("id", "legalName-benef-0", "Jordan Corparation Ltd");
+        sendKeys("id", "leiCode-benef-0", generateRandomLEI());
+        sendKeys("id", "address-benef-0", "159 Connextions");
+        sendKeys("id", "zipCode-benef-0", "IP11QJ");
+        sendKeys("id", "city-benef-0", "Ipswich");
 
-        driver.findElement(By.id("shareholderEquity")).sendKeys("9");
+        dropdownSelect("xpath", "//*[@id=\"country-benef-0\"]", "Jordan");
+        dropdownSelect("xpath", "//*[@id=\"nationalIdNumber-benef-0\"]", "SIRET");
 
-        searchSelectTopOptionXpath("Country", "//*[@id=\"geographicalOrigin1\"]/div", "//*[@id=\"geographicalOrigin1\"]/div/div[3]/div/input", "//*[@id=\"geographicalOrigin1\"]/div/div[3]/ul/li[1]/div/a");
-        searchSelectTopOptionXpath("Jordan", "//*[@id=\"geographicalOrigin2\"]/div", "//*[@id=\"geographicalOrigin2\"]/div/div[3]/div/input", "//*[@id=\"geographicalOrigin2\"]/div/div[3]/ul/li[1]/div/a");
-        searchSelectTopOptionXpath("0 to 50 million €", "//*[@id=\"totalFinancialAssetsAlreadyInvested\"]/div", "//*[@id=\"totalFinancialAssetsAlreadyInvested\"]/div/div[3]/div/input", "//*[@id=\"totalFinancialAssetsAlreadyInvested\"]/div/div[3]/ul/li[1]/div/a");
+        sendKeys("xpath", "//*[@id=\"step-identification\"]/company-information/form/div[2]/div/div[11]/div[2]/beneficiary/div/div[2]/div[5]/div[2]/input", "12312341231232");
+        sendKeys("id", "holdingPercentage-benef-0", "12");
 
-        driver.findElement(By.id("premiumsAndContributions")).click();
+        dropdownSelect("xpath", "//*[@id=\"holdingType-benef-0\"]", "Indirect holding");
 
-        searchSelectTopOptionXpath("Legal person", "//*[@id=\"beneficiaryType\"]/div", "//*[@id=\"beneficiaryType\"]/div/div[3]/div/input", "//*[@id=\"beneficiaryType\"]/div/div[3]/ul/li[1]/div/a");
-
-
-        driver.findElement(By.id("legalName-benef-0")).sendKeys("Jordan Corparation Ltd");
-
-        driver.findElement(By.id("leiCode-benef-0")).sendKeys(generateRandomLEI());
-
-        driver.findElement(By.id("address-benef-0")).sendKeys("159 Connextions");
-
-        driver.findElement(By.id("zipCode-benef-0")).sendKeys("IP11QJ");
-
-        driver.findElement(By.id("city-benef-0")).sendKeys("Ipswich");
-
-
-        searchSelectTopOptionXpath("Jordan", "//*[@id=\"country-benef-0\"]/div", "//*[@id=\"country-benef-0\"]/div/div[3]/div/input", "//*[@id=\"country-benef-0\"]/div/div[3]/ul/li[1]/div/a");
-
-        searchSelectTopOptionXpath("SIRET", "//*[@id=\"nationalIdNumber-benef-0\"]/div", "//*[@id=\"nationalIdNumber-benef-0\"]/div/div[3]/div/input", "//*[@id=\"nationalIdNumber-benef-0\"]/div/div[3]/ul/li[1]/div/a");
-
-        driver.findElement(By.xpath("//*[@id=\"step-identification\"]/company-information/form/div[2]/div/div[11]/div[2]/beneficiary/div/div[2]/div[5]/div[2]/input")).sendKeys("12312341231232");
-
-        driver.findElement(By.id("holdingPercentage-benef-0")).sendKeys("12");
-
-        searchSelectTopOptionXpath("Direct holding", "//*[@id=\"holdingType-benef-0\"]/div", "//*[@id=\"holdingType-benef-0\"]/div/div[3]/div/input", "//*[@id=\"holdingType-benef-0\"]/div/div[3]/ul/li[1]/div/a");
-
-        scrollElementIntoViewByXpath("//*[@id=\"step-identification\"]/company-information/form/div[1]/div[1]/a/h2");
-        wait.until(visibilityOfElementLocated(By.xpath("//*[@id=\"step-identification\"]/company-information/form/div[1]/div[1]/a/h2")));
-        wait.until(elementToBeClickable(By.xpath("//*[@id=\"step-identification\"]/company-information/form/div[1]/div[1]/a/h2")));
-        driver.findElement(By.xpath("//*[@id=\"step-identification\"]/company-information/form/div[1]/div[1]/a/h2")).click();
-        wait.until(invisibilityOfElementLocated(By.id("activities")));
+        expandableForms("open", "xpath", "//*[@id=\"step-identification\"]/company-information/form/div[1]/div[1]/a/h2");
     }
 
     public static void KYCProcessStep3BankingInfoComplete(String companyName, String iBan) throws IOException, InterruptedException{
-        WebDriverWait wait = new WebDriverWait(driver, timeoutInSeconds);
 
         Thread.sleep(500);
 
-        driver.findElement(By.xpath("//*[@id=\"step-identification\"]/banking-information/div/div[1]/div[1]/a/h2")).click();
-        Thread.sleep(1500);
-
-        scrollElementIntoViewByXpath("//*[@id=\"step-identification\"]/banking-information/div/div[2]/div/div[2]/div[2]/button");
+        expandableForms("open", "xpath", "//*[@id=\"step-identification\"]/banking-information/div/div[1]/div[1]/a/h2");
 
         String companyNameRead = driver.findElement(By.xpath("//*[@id=\"step-identification\"]/banking-information/div/div[2]/div/div[1]/div/input")).getAttribute("value");
         assertTrue(companyNameRead.equals(companyName));
 
-        driver.findElement(By.id("establishmentName-0")).sendKeys("Establishment Name");
+        sendKeys("id", "establishmentName-0", "Establishment Name");
+        sendKeys("id", "iban-0", iBan);
+        sendKeys("id", "bic-0", "asdfGAaaXXX");
+        sendKeys("id", "establishmentAddress0", "159 Connextions");
+        sendKeys("id", "zipCode-0", "IP1 1QJ");
+        sendKeys("id", "city-0", "Ipswich");
 
-        driver.findElement(By.id("iban-0")).sendKeys(iBan);
+        dropdownSelect("xpath", "//*[@id=\"country0\"]", "Jordan");
 
-        driver.findElement(By.id("bic-0")).sendKeys("asdfGAaaXXX");
-
-        driver.findElement(By.id("establishmentAddress0")).sendKeys("159 Connextions");
-
-        driver.findElement(By.id("zipCode-0")).sendKeys("IP1 1QJ");
-
-        driver.findElement(By.id("city-0")).sendKeys("Ipswich");
-
-        searchSelectTopOptionXpath("Jordan", "//*[@id=\"country0\"]/div", "//*[@id=\"country0\"]/div/div[3]/div/input", "//*[@id=\"country0\"]/div/div[3]/ul/li[1]/div/a");
-
-
-        driver.findElement(By.xpath("//*[@id=\"step-identification\"]/banking-information/div/div[1]/div[1]/a/h2")).click();
-        wait.until(invisibilityOfElementLocated(By.id("activities")));
+        expandableForms("open", "xpath", "//*[@id=\"step-identification\"]/banking-information/div/div[1]/div[1]/a/h2");
     }
 
     public static void KYCProcessStep3ClassificationInfoComplete() throws IOException, InterruptedException{
-        WebDriverWait wait = new WebDriverWait(driver, timeoutInSeconds);
 
         Thread.sleep(500);
-        driver.findElement(By.xpath("//*[@id=\"step-identification\"]/classification-information/div/div[1]/div[1]/a/h2")).click();
-        Thread.sleep(1500);
+        expandableForms("open", "xpath", "//*[@id=\"step-identification\"]/classification-information/div/div[1]/div[1]/a/h2");
 
-        driver.findElement(By.id("firstName")).sendKeys("Jordan");
-        driver.findElement(By.id("lastName")).sendKeys("Miller");
+        sendKeys("id", "firstName", "Jordan");
+        sendKeys("id", "lastName", "Miller");
+        sendKeys("id", "jobPosition", "Intern");
+        sendKeys("id", "numberYearsExperienceRelatedFunction", "9");
+        sendKeys("id", "numberYearsCurrentPosition", "9");
 
-        driver.findElement(By.id("jobPosition")).sendKeys("Intern");
+        dropdownSelect2("xpath", "//*[@id=\"financialInstruments\"]", "Money Market Securities");
+        dropdownSelect2("xpath", "//*[@id=\"marketArea\"]", "OECD outside the European Union");
+        dropdownSelect("xpath", "//*[@id=\"natureTransactionPerYear\"]", "0 to 1 000 €");
+        dropdownSelect("xpath", "//*[@id=\"volumeTransactionPerYear\"]", "1 to 10 transactions");
 
-        driver.findElement(By.id("numberYearsExperienceRelatedFunction")).sendKeys("1");
+        expandableForms("open", "xpath", "//*[@id=\"step-identification\"]/banking-information/div/div[1]/div[1]/a/h2");
 
-        driver.findElement(By.id("numberYearsCurrentPosition")).sendKeys("1");
-
-        searchSelectTopOptionXpath("Bonds", "//*[@id=\"financialInstruments\"]/div", "//*[@id=\"financialInstruments\"]/div/div[2]/div/input", "//*[@id=\"financialInstruments\"]/div/div[2]/ul/li[1]/div/a");
-
-        searchSelectTopOptionXpath("European union", "//*[@id=\"marketArea\"]/div", "//*[@id=\"marketArea\"]/div/div[2]/div/input", "//*[@id=\"marketArea\"]/div/div[2]/ul/li[1]/div/a");
-
-        searchSelectTopOptionXpath("0 to 1 000 €", "//*[@id=\"natureTransactionPerYear\"]/div", "//*[@id=\"natureTransactionPerYear\"]/div/div[3]/div/input", "//*[@id=\"natureTransactionPerYear\"]/div/div[3]/ul/li[1]/div/a");
-
-        searchSelectTopOptionXpath("1 to 10 transactions", "//*[@id=\"volumeTransactionPerYear\"]/div", "//*[@id=\"volumeTransactionPerYear\"]/div/div[3]/div/input", "//*[@id=\"volumeTransactionPerYear\"]/div/div[3]/ul/li[1]/div/a");
-
-
-        driver.findElement(By.xpath("//*[@id=\"step-identification\"]/banking-information/div/div[1]/div[1]/a/h2")).click();
-        wait.until(invisibilityOfElementLocated(By.id("activities")));
         System.out.println("Status : KYC Step 3 completed");
-
     }
 
     public static void selectOptionAndSubmitKYC(String option) throws IOException, InterruptedException{
@@ -809,6 +901,8 @@ public class OpenCSDKYCModuleAcceptanceTest {
             KYCProcessWelcomeToIZNES2(email[0], companyName, phoneNo, firstName, lastName, managementCompEntered);
             KYCProcessStep1Alternate(managementCompEntered, "No", "False", "");
 
+            Thread.sleep(500);
+
             System.out.println("Cancelling KYC");
             getKYCCancelButton().click();
 
@@ -845,6 +939,8 @@ public class OpenCSDKYCModuleAcceptanceTest {
         newInvestorSignUp(email[0], INVPassword);
         KYCProcessWelcomeToIZNES2(email[0], companyName, phoneNo, firstName, lastName, managementCompEntered);
         KYCProcessStep1Alternate(managementCompEntered, "No", "False", "");
+
+        Thread.sleep(500);
 
         System.out.println("Cancelling KYC");
         getKYCCancelButton().click();

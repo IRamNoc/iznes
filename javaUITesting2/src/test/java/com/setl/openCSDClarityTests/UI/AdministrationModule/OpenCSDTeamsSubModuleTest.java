@@ -4,16 +4,17 @@ import com.setl.UI.common.SETLUtils.RepeatRule;
 import com.setl.UI.common.SETLUtils.ScreenshotRule;
 import com.setl.UI.common.SETLUtils.TestMethodPrinterRule;
 import custom.junit.runners.OrderedJUnit4ClassRunner;
-import org.junit.Before;
-import org.junit.Rule;
-import org.junit.Test;
+import org.junit.*;
 import org.junit.rules.Timeout;
 import org.junit.runner.RunWith;
 import org.openqa.selenium.By;
 import org.openqa.selenium.JavascriptExecutor;
 
 
+import java.sql.Array;
 import java.sql.SQLException;
+import java.util.Arrays;
+import java.util.List;
 
 import static SETLAPIHelpers.DatabaseHelper.setDBTwoFAOff;
 import static com.setl.UI.common.SETLUIHelpers.AdministrationModuleHelper.*;
@@ -59,6 +60,7 @@ public class OpenCSDTeamsSubModuleTest {
         validateTeamsCreated(1, teamName[0], teamReference[0], teamDescription[0]);
     }
     @Test
+    @Ignore //TG2747
     public void shouldNotAllowNullNameRefDesc() throws InterruptedException {
         loginAndVerifySuccess("am", "alex01");
         navigateToDropdown("menu-administration");
@@ -244,6 +246,25 @@ public class OpenCSDTeamsSubModuleTest {
         logout();
         validateTeamsCreated(1, teamReference[0], teamName[0], teamDescription[0]);
         validateMyClientsTeamPermissions(teamName[0]);
+    }
+    @Test //TODO Sprint 15 task
+    public void TG3284_shouldCreateTeamWithPermissionsPortfolioManager() throws InterruptedException, SQLException {
+        String [] teamName = generateRandomTeamName();
+        String [] teamReference = generateRandomTeamReference();
+        String [] teamDescription = fillInDescription();
+        loginAndVerifySuccess("am", "alex01");
+        navigateToDropdown("menu-administration");
+        navigateToDropdown("menu-administration-teams");
+        selectAddNewTeam();
+        fillInTeamsDetails(teamName[0], teamReference[0], teamDescription[0]);
+        selectPortfolioManagerPermissions();
+        selectCreateNewTeam();
+        searchTeam(teamReference[0], teamName[0], teamDescription[0], "Pending");
+        logout();
+        validateTeamsCreated(1, teamReference[0], teamName[0], teamDescription[0]);
+        //validateMyClientsTeamPortfolioManagerPermissions(teamName[0]);
+        List<String> expectedPermissions = Arrays.asList("View Portfolio Manager", "Update Portfolio Manager", "Invite Portfolio Manager");
+        assert checkTeamHasPermissionsInDatabase(teamName[0], expectedPermissions) : "DB permission check failure";
     }
 
 }
