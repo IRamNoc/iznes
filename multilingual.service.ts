@@ -232,7 +232,6 @@ export class MultilingualService {
             v.classList.remove('highlighMissingTranslations');
             v.classList.remove('blink_bg');
         });
-
     }
 
     public replaceMissingTranslations(str) {
