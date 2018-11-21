@@ -235,8 +235,8 @@
 <ng-container *ngIf="pageType == 'audit'">
     <div class="header-breadcrumbs">
         <h1 id="ofi-client-referential-audit"><i class="fa fa-clock-o"></i>
-            {{ 'Client Authorisation Audit Trail' | translate }}:
-            {{(kycId != '' ? clients[kycId].companyName + ' - ' + clients[kycId].clientReference: '')}}
+            {{ 'Client Authorisation Audit Trail' | translate }}
+            {{(kycId != '' ? ': ' + clients[kycId].companyName + ' - ' + clients[kycId].clientReference: '')}}
         </h1>
     </div>
 

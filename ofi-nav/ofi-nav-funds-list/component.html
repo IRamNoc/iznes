@@ -4,8 +4,11 @@
         <span id="NAV-Title">{{ 'Net Asset Value' | translate }}</span>
     </h1>
 
-    <span>{{ 'Please select a date type and a date to access to the available NAVs.' | translate }}<br>{{ 'You will have access to the NAV\'s history of a specific share in clicking on the corresponding row.' | translate }}
-    </span>
+    <section class="subtitle">
+        <p>{{ 'Please select a date type and a date to access to the available NAVs.' | translate }}<br>{{ 'You will have
+            access to the NAV\'s history of a specific share in clicking on the corresponding row.' | translate }}
+        </p>
+    </section>
 </div>
 
 <clr-tabs *ngIf="searchForm">
@@ -35,14 +38,14 @@
                 <div class="form-horizontal">
                     <div class="row">
                         <div class="form-group col-sm-4">
-                            <label class="control-label" for="Search-field">{{ 'Search a Share Name or ISIN' | translate }}</label>
+                            <label class="control-label" for="Search-field">{{ 'Search Share Name or ISIN' | translate }}</label>
                             <input type="text" 
                                     id="Search-field" 
                                     name="navSearch" 
                                     formControlName="shareName">
                         </div>
                         <div class="form-group col-sm-4" *ngIf="dateTypes && searchForm">
-                            <label class="control-label" for="NAV-Date-Filter">{{ 'Select a Date' | translate }}</label>
+                            <label class="control-label" for="NAV-Date-Filter">{{ 'Select Date Type' | translate }}</label>
                             <ng-select id="NAV-Date-Filter" 
                                     class="fluid-width" 
                                     [items]="dateTypes" 
@@ -52,6 +55,7 @@
                             </ng-select>
                         </div>
                         <div class="form-group col-sm-4">
+                            <label class="control-label" for="Date-filter">{{ 'Select Date' | translate }}</label>
                             <div class="input-group date-pick-wrapper no-label">
                                 <span class="fa fa-calendar"></span>
                                 <input id="Date-filter" 
