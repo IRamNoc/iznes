@@ -367,10 +367,10 @@ public class OpenCSDKYCModuleAcceptanceTest {
 
         driver.get(url);
         Thread.sleep(1000);
-        driver.findElement(By.id("su-password-field")).sendKeys(investorPassword);
-        driver.findElement(By.id("su-passwordConfirm-field")).sendKeys(investorPassword);
+        driver.findElement(By.id("sign-up-password")).sendKeys(investorPassword);
+        driver.findElement(By.id("sign-up-password-confirm")).sendKeys(investorPassword);
         try {
-            driver.findElement(By.id("signup-submit")).click();
+            driver.findElement(By.id("sign-up-submit")).click();
         }catch (Exception e){
             fail();
         }
