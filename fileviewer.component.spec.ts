@@ -14,6 +14,7 @@ import { PdfMockService } from '@setl/core-req-services/pdf/pdf.mock.service';
 import { SecurityContext } from '@angular/core';
 import { SagaHelper, FileDownloader, SetlServicesModule } from '@setl/utils';
 import { HttpClientModule } from '@angular/common/http';
+import { SetlPipesModule } from '@setl/utils';
 
 let origRunAsync;
 
@@ -33,7 +34,7 @@ describe('FileViewerComponent', () => {
     beforeEach(() => {
 
         TestBed.configureTestingModule({
-            imports: [ClarityModule, HttpClientModule],
+            imports: [ClarityModule, HttpClientModule, SetlPipesModule],
             declarations: [FileViewerComponent, FileViewerPreviewComponent],
             providers: [
                 AlertsService,
