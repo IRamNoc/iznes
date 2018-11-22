@@ -1,6 +1,5 @@
 import { Component, OnInit, OnDestroy, ChangeDetectorRef, Inject, Output, EventEmitter } from '@angular/core';
 import { MultilingualService } from '@setl/multilingual';
-import { WalletNodeSocketService } from '@setl/websocket-service';
 import { APP_CONFIG } from '@setl/utils/appConfig/appConfig';
 import { AppConfig } from '@setl/utils/appConfig/appConfig.model';
 import { mapTo } from 'rxjs/operators';
@@ -39,7 +38,6 @@ export class ConnectionStatusAlerts implements OnInit, OnDestroy {
 
     constructor(public translate: MultilingualService,
                 public changeDetectorRef: ChangeDetectorRef,
-                private walletNodeSocketService: WalletNodeSocketService,
                 private nodeAlertsService: NodeAlertsService,
                 @Inject(APP_CONFIG) appConfig: AppConfig) {
 
@@ -58,8 +56,9 @@ export class ConnectionStatusAlerts implements OnInit, OnDestroy {
 
     ngOnInit() {
         /* Connection subscriptions */
-        this.subscriptions.push(this.walletNodeSocketService.close.subscribe(this.walletNodeDead()));
-        this.subscriptions.push(this.walletNodeSocketService.open.subscribe(() => this.walletNodeAlive()));
+        this.subscriptions.push(this.nodeAlertsService.disconnected.subscribe((disconnected) => {
+            disconnected ? this.walletNodeDead() : this.walletNodeAlive();
+        }));
         this.subscriptions.push(this.onlineOb.subscribe(status => this.internetDead(status)));
     }
 
@@ -109,41 +108,38 @@ export class ConnectionStatusAlerts implements OnInit, OnDestroy {
     /**
      * Handles displaying the wallet node disconnection alert
      * -----------------------------------------------------
-     * @return function
      */
     walletNodeDead() {
-        return () => {
-            if (!this.connectionStatus.walletNodeDead) {
-                const timer = setInterval(
-                    () => {
-                        this.connectionStatus.walletNodeTimer -= 1;
-                        this.connectionStatus.walletNodeTimerString =
-                            this.translate.translate(
-                                'You\'ve been disconnected from our servers, you should be reconnected in @timer@ sec',
-                                { timer: this.connectionStatus.walletNodeTimer },
-                            );
-                        this.connectionStatus.loading = false;
-                        this.changeDetectorRef.detectChanges();
-                    },
-                    1000,
-                );
-                setTimeout(
-                    () => {
-                        clearInterval(timer);
-                        this.connectionStatus.walletNodeTimerString = this.translate.translate(
-                            'You\'ve been disconnected from our servers, you should be reconnected soon');
-                        this.connectionStatus.loading = true;
-                        this.connectionStatus.walletNodeTimer = this.timerSecs;
-                        this.changeDetectorRef.detectChanges();
-                    },
-                    1000 * this.timerSecs,
-                );
-                this.connectionStatus.walletNodeDead = true;
-                this.connectionStatus.walletNodeReconnected = false;
-                this.isActiveConnectionAlert();
-                this.changeDetectorRef.detectChanges();
-            }
-        };
+        if (!this.connectionStatus.walletNodeDead) {
+            const timer = setInterval(
+                () => {
+                    this.connectionStatus.walletNodeTimer -= 1;
+                    this.connectionStatus.walletNodeTimerString =
+                        this.translate.translate(
+                            'You\'ve been disconnected from our servers, you should be reconnected in @timer@ sec',
+                            { timer: this.connectionStatus.walletNodeTimer },
+                        );
+                    this.connectionStatus.loading = false;
+                    this.changeDetectorRef.detectChanges();
+                },
+                1000,
+            );
+            setTimeout(
+                () => {
+                    clearInterval(timer);
+                    this.connectionStatus.walletNodeTimerString = this.translate.translate(
+                        'You\'ve been disconnected from our servers, you should be reconnected soon');
+                    this.connectionStatus.loading = true;
+                    this.connectionStatus.walletNodeTimer = this.timerSecs;
+                    this.changeDetectorRef.detectChanges();
+                },
+                1000 * this.timerSecs,
+            );
+            this.connectionStatus.walletNodeDead = true;
+            this.connectionStatus.walletNodeReconnected = false;
+            this.isActiveConnectionAlert();
+            this.changeDetectorRef.detectChanges();
+        }
     }
 
     /**
