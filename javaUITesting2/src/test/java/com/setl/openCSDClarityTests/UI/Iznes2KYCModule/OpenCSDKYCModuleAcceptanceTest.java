@@ -366,7 +366,7 @@ public class OpenCSDKYCModuleAcceptanceTest {
         String url = "https://uk-lon-li-006.opencsd.io/#/redirect/en/" + token;
 
         driver.get(url);
-        Thread.sleep(1000);
+        Thread.sleep(2000);
         driver.findElement(By.id("sign-up-password")).sendKeys(investorPassword);
         driver.findElement(By.id("sign-up-password-confirm")).sendKeys(investorPassword);
         try {

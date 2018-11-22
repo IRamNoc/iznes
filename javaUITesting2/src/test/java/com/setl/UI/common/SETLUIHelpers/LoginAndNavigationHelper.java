@@ -14,6 +14,7 @@ import org.openqa.selenium.support.ui.WebDriverWait;
 
 import javax.imageio.ImageIO;
 import java.awt.image.BufferedImage;
+import java.io.File;
 import java.io.IOException;
 import java.net.URL;
 import java.sql.SQLException;
@@ -261,10 +262,11 @@ public class LoginAndNavigationHelper {
     }
 
 
-    public static void processSuccessful2FaIfRequired(String userName)
+    public static void processSuccessful2FaIfRequired(String userName) throws InterruptedException
     {
-        List<WebElement> twoFaId = driver.findElements(By.id("qrCodeNumber"));
-        List<WebElement> alreadyHave2FA = driver.findElements(By.id("forgotten-two-factor-link"));
+        Thread.sleep(500);
+        List<WebElement> twoFaId = driver.findElements(By.id("qr-code"));
+        List<WebElement> alreadyHave2FA = driver.findElements(By.id("reset-two-factor-link"));
         if (twoFaId.size() > 0 || alreadyHave2FA.size() > 0)
         {
             System.out.println("Encountered 2FA...");
@@ -275,11 +277,20 @@ public class LoginAndNavigationHelper {
                 System.out.println("Processing new 2FA challenge from QR code");
 
                 WebElement QrCode = QrCodes.get(0); //get the first barcode
-                String src = QrCode.getAttribute("src"); //get the URL to the image
+                //WebElement QrCode = twoFaId.get(0);
+                String src = QrCode.getAttribute("src"); //get the URL to the image //this no longer works :(
                 try
                 {
+
+                    System.out.println("Image link: " + src);
                     //get the image and turn it into a bitmap
                     BufferedImage img = ImageIO.read(new URL(src));
+
+                    //workaround for not having the src link from QR code element
+//                    TakesScreenshot screenshot = (TakesScreenshot) driver;
+//                    File capture = screenshot.getScreenshotAs(OutputType.FILE);
+//                    BufferedImage  img = ImageIO.read(capture);
+
                     LuminanceSource source = new BufferedImageLuminanceSource(img);
                     BinaryBitmap bitmap = new BinaryBitmap(new HybridBinarizer(source));
 
@@ -296,8 +307,8 @@ public class LoginAndNavigationHelper {
                     Totp generator = new Totp(secret);
                     String otp = generator.now();
 
-                    driver.findElement(By.id("qrCodeNumber")).sendKeys(otp);
-                    driver.findElement(By.id("authenticate-qr-submit")).click();
+                    SetUp.driver.findElement(By.id("two-factor-code")).sendKeys(otp);
+                    SetUp.driver.findElement(By.id("two-factor-submit")).click();
                 }
                 catch (Exception e)
                 {
@@ -323,8 +334,8 @@ public class LoginAndNavigationHelper {
                 Totp generator = new Totp(secret);
                 String otp = generator.now();
 
-                driver.findElement(By.id("qrCodeNumber")).sendKeys(otp);
-                driver.findElement(By.id("authenticate-qr-submit")).click();
+                driver.findElement(By.id("two-factor-code")).sendKeys(otp);
+                driver.findElement(By.id("two-factor-submit")).click();
 
             }
 
@@ -437,10 +448,11 @@ public class LoginAndNavigationHelper {
         wait.until(ExpectedConditions.visibilityOf(logout));
         wait.until(elementToBeClickable(logout));
 
-        Thread.sleep(750);
+        Thread.sleep(500);
         try {
 
             logout.click();
+            Thread.sleep(500);
 
         } catch (Exception e) {
             fail("Settings dropdown not available " + e.getMessage());
