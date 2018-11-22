@@ -33,11 +33,11 @@ public class LoginAndNavigationHelper {
 
     public static void ensureLoginPageIsEnglish()
     {
-        if (driver.findElement(By.className("login-subheading")).getText().toLowerCase().contains("identification"))
+        if (driver.findElement(By.xpath("//h2[@class='ng-tns-c5-2']")).getText().toLowerCase().contains("identifiez-vous pour"))
         {
-            WebElement languageButton = driver.findElement(By.className("dropdown"));
+            WebElement languageButton = driver.findElement(By.id("language-selector"));
             languageButton.click();
-            WebElement english = driver.findElement(By.xpath("//clr-dropdown-menu[@class='dropdown-menu ng-star-inserted']//button[@type='button'][contains(text(),'English')]"));
+            WebElement english = driver.findElement(By.xpath("//button[contains(text(),'English')]"));
             english.click();
         }
     }
@@ -107,7 +107,7 @@ public class LoginAndNavigationHelper {
     public static void waitForLoginPageToLoad() throws InterruptedException {
         WebDriverWait wait = new WebDriverWait(driver, timeoutInSeconds);
         try {
-            WebElement usernameInput = driver.findElement(By.id("username-field"));
+            WebElement usernameInput = driver.findElement(By.id("login-username"));
             wait.until(visibilityOf(usernameInput));
             wait.until(elementToBeClickable(usernameInput));
         } catch (Exception e) {
@@ -115,7 +115,7 @@ public class LoginAndNavigationHelper {
         }
 
         try {
-            WebElement passwordInput = driver.findElement(By.id("password-field"));
+            WebElement passwordInput = driver.findElement(By.id("login-password"));
             wait.until(visibilityOf(passwordInput));
             wait.until(elementToBeClickable(passwordInput));
         } catch (Exception i) {
@@ -133,7 +133,7 @@ public class LoginAndNavigationHelper {
 
     public static void enterLoginCredentialsUserName(String username) {
             WebDriverWait wait = new WebDriverWait(driver, timeoutInSeconds);
-            WebElement name = driver.findElement(By.id("username-field"));
+            WebElement name = driver.findElement(By.id("login-username"));
         try {
             wait.until(visibilityOf(name));
             wait.until(elementToBeClickable(name));
@@ -147,7 +147,7 @@ public class LoginAndNavigationHelper {
     public static void enterLoginCredentialsPassword(String password) {
             WebDriverWait wait = new WebDriverWait(driver, timeoutInSeconds);
         try {
-            WebElement login_password = driver.findElement(By.id("password-field"));
+            WebElement login_password = driver.findElement(By.id("login-password"));
             wait.until(visibilityOf(login_password));
             wait.until(elementToBeClickable(login_password));
             login_password.clear();
