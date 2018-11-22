@@ -3,10 +3,13 @@
     <drop-handler
         (onDropFiles)="handleDropFiles($event)"
         [multiple]="multiple"
-        inline="inline"
+        [inline]="inline"
         [formControl]="formControl"
         [preset]="preset"
         [filePermission]="filePermission"
         [disabled]="disabled"
+        [usePreview]="usePreview"
+        [imageConstraint]="imageConstraint"
+        [allowFileTypes]="allowFileTypes"
     ></drop-handler>
 </div>
