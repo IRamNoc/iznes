@@ -129,8 +129,8 @@
                 <setl-message-cancel-order [config]="currentMessage.action"></setl-message-cancel-order>
             </p>
 
-            <p *ngIf="currentMessage.action && currentMessage.action.type === 'sendTxt'">
-                <button class="btn btn-primary" (click)="downloadTxtFile(currentMessage.action.orderID, currentMessage.action.MT502ID, currentMessage.action.orderType);">Download File</button>
+            <p *ngIf="currentMessage.action && currentMessage.action.type === 'mtMessage'">
+                <button class="btn btn-primary" (click)="downloadTxtFile(currentMessage.action);">Download File</button>
             </p>
 
             <p *ngIf="currentMessage.action && currentMessage.action.type === 'sendAssetManagementBookEntryCertification'">
@@ -164,6 +164,8 @@
             </setl-message-workflow2>
 
             <setl-message-with-links *ngIf="currentMessage.action && currentMessage.action.type === 'messageWithLink'" [data]="currentMessage.action.data" [content]="currentMessage.content"></setl-message-with-links>
+
+            <setl-message-download *ngIf="currentMessage.action && currentMessage.action.type === 'file'" [url]="currentMessage.action.url" [userId]="userId" [isActed]="currentMessage.isActed" [mailId]="currentMessage.mailId" [walletId]="walletId"></setl-message-download>
 
         </div>
 
