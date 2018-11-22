@@ -25,7 +25,6 @@ export class BeneficiaryListComponent implements OnInit, OnDestroy {
     @Output() refresh: EventEmitter<any> = new EventEmitter<any>();
     @select(['ofi', 'ofiKyc', 'myKycRequested', 'stakeholderRelations']) stakeholderRelations$;
 
-    rawStakeholders;
     selectedStakeholderIndex = null;
     stakeholderBackup = null;
     isModalOpen: any = false;
@@ -171,7 +170,7 @@ export class BeneficiaryListComponent implements OnInit, OnDestroy {
         stakeholder.get('companyBeneficiariesID').setValue(`temp${this.nextId}`);
 
         if (this.selectedStakeholderIndex === 0) {
-            this.beneficiaryService.setFirstStakeholderHolding(stakeholder);
+            this.beneficiaryService.setStakeholderDirectHolding(stakeholder);
             this.beneficiaryService.setFirstStakeholderParent(stakeholder);
         }
 
@@ -188,7 +187,7 @@ export class BeneficiaryListComponent implements OnInit, OnDestroy {
         const parent = find(this.parents, ['id', parentControl.get('companyBeneficiariesID').value]);
 
         childControl.get('common.parent').setValue([parent]);
-        this.beneficiaryService.setChildStakeholderHolding(childControl);
+        this.beneficiaryService.setStakeholderIndirectHolding(childControl);
     }
 
     editStakeholder(i) {
@@ -256,7 +255,7 @@ export class BeneficiaryListComponent implements OnInit, OnDestroy {
         const firstStakeholder = stakeholders.at(0);
         if (firstStakeholder && i === 0) {
             this.beneficiaryService.setFirstStakeholderParent(firstStakeholder);
-            this.beneficiaryService.setFirstStakeholderHolding(firstStakeholder);
+            this.beneficiaryService.setStakeholderDirectHolding(firstStakeholder);
         }
         this.removeParentFromStakeholders(companyBeneficiariesID);
 
@@ -351,8 +350,16 @@ export class BeneficiaryListComponent implements OnInit, OnDestroy {
         });
     }
 
-    hasError() {
-        return this.stakeholders.dirty && !this.stakeholders.length;
+    hasError(type) {
+        if (this.openModal || !this.stakeholders.dirty) {
+            return;
+        }
+
+        if (type === 'length') {
+            return !this.stakeholders.length;
+        }
+
+        return this.stakeholders.length && this.stakeholders.invalid;
     }
 
     ngOnDestroy(){

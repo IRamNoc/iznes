@@ -26,7 +26,7 @@ export class BeneficiaryLineComponent {
     }
 
     get beneficiaryType() {
-        return getValue(this.stakeholderValue, 'beneficiaryType');
+        return this.beneficiaryService.getStakeholderType(this.stakeholder);
     }
 
     get name() {

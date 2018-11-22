@@ -17,6 +17,10 @@ export class BeneficiaryComponent implements OnInit, OnDestroy {
     @Input() form;
     @Input() set parents(parents: any[]) {
         this.parentsFiltered = parents.filter((parent, i) => i !== this.index);
+        this.parentsFiltered.unshift({
+            id: '-1',
+            text: this.translate.translate('No parent'),
+        });
     }
     get parents() {
         return this.parentsFiltered;
@@ -80,6 +84,21 @@ export class BeneficiaryComponent implements OnInit, OnDestroy {
 
             this.formCheckNationalIdNumber(nationalIdNumberValue);
         });
+
+        this.form.get('common.parent')
+            .valueChanges
+            .pipe(takeUntil(this.unsubscribe))
+            .subscribe((parent) => {
+                const id = getValue(parent, [0, 'id']);
+                const stakeholder = this.form;
+
+                if (id === '-1') {
+                    this.beneficiaryService.setStakeholderIndirectHolding(stakeholder);
+                } else {
+                    this.beneficiaryService.setStakeholderDirectHolding(stakeholder);
+                }
+            })
+        ;
     }
 
     formCheckNationalIdNumber(value) {

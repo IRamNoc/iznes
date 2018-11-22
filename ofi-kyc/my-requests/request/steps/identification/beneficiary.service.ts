@@ -3,13 +3,27 @@ import { AbstractControl, Validators, FormControl, FormArray } from '@angular/fo
 
 import { get as getValue, find, isNumber } from 'lodash';
 
+import { MultilingualService } from '@setl/multilingual';
 import { sirenValidator, siretValidator } from '@setl/utils/helper/validators';
-import { countries, holdingTypesList } from '../../../requests.config';
+import { countries, holdingTypesList, beneficiaryTypesList } from '../../../requests.config';
 
 @Injectable({
     providedIn: 'root',
 })
 export class BeneficiaryService {
+
+    constructor(
+        private translate: MultilingualService
+    ) {}
+
+    getStakeholderType(stakeholder) {
+        const type = stakeholder.get('beneficiaryType').value;
+        const typeObject = find(beneficiaryTypesList, ['id', type]);
+
+        if (typeObject) {
+            return typeObject.text;
+        }
+    }
 
     getDisplayName(stakeholder) {
         stakeholder = stakeholder.value;
@@ -31,13 +45,13 @@ export class BeneficiaryService {
         stakeholder.get('common.parent').setValue(-1);
     }
 
-    setFirstStakeholderHolding(stakeholder: AbstractControl) {
+    setStakeholderDirectHolding(stakeholder: AbstractControl) {
         const directHolding = find(holdingTypesList, ['id', 'directHolding']);
 
         stakeholder.get('common.holdingType').setValue([directHolding]);
     }
 
-    setChildStakeholderHolding(stakeholder: AbstractControl) {
+    setStakeholderIndirectHolding(stakeholder: AbstractControl) {
         const indirectHolding = find(holdingTypesList, ['id', 'indirectHolding']);
 
         stakeholder.get('common.holdingType').setValue([indirectHolding]);
