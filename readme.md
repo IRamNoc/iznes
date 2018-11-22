@@ -71,6 +71,27 @@ Note that whether this is true or false, the emitted array will always be an arr
 
 The `formControl` can be set to a custom FormControl of your choice, instead of emitting an event, the files array will be patched into the value of your FormControl.
 
+#### The `inline` property.
+
+The `inline` specify the file drop component render as inline input in a form 
+
+### The `usePreview` property.
+
+The `usePreview` specify that we want the file (only support image atm) render with preview.
+
+example on using preview: 
+```html
+<setl-file-drop class="form-control" id="mc_logo" [formControl]="managementCompanyForm.controls['logo']"
+             (onDrop)="onDropFile($event, 'logo')" [preset]="{ name: fileMetadata.getTitle('logo'), fileBase64: fileMetadata.getHash('logo') }"
+             [inline]="true"
+             [usePreview]="true"
+             [allowFileTypes]="['image/png', 'image/jpeg']"
+             ngDefaultControl></setl-file-drop>
+```
+
+### The `allowFileTypes` property.
+The `allowFileTypes` specify what file types we allow.
+
 Your HTML:
 ```html
 <setl-file-drop
