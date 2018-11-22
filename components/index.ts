@@ -1,22 +1,22 @@
-import {NgModule} from '@angular/core';
+import { NgModule } from '@angular/core';
 import {
     VariousAddressSelectComponent,
 } from './various-address-select/various-address-select.component';
-import {SelectModule} from './ng2-select/select.module';
-import {CommonModule} from '@angular/common';
-import {ReactiveFormsModule} from '@angular/forms';
-import {ConfirmationComponent} from './jaspero-confirmation/confirmation.component';
-import {ConfirmationsComponent} from './jaspero-confirmation/confirmations.component';
-import {ConfirmationService} from './jaspero-confirmation/confirmations.service';
-import {DpDatePickerModule} from './ng2-date-picker/date-picker.module';
-import {SwitchButtonComponent} from './switch-button/component';
-import {DatePickerExtendedModule} from './date-picker-extended/module';
-import {PasswordTooltipComponent} from './passwords/tooltip.component';
-import {SetlPipesModule} from '../pipes';
-import {SetlDirectivesModule} from '../directives';
-import {DynamicFormsModule} from './dynamic-forms/module';
-import {MultilingualModule} from '@setl/multilingual/multilingual.module';
-import {ClarityModule} from '@clr/angular';
+import { SelectModule } from './ng2-select/select.module';
+import { CommonModule } from '@angular/common';
+import { ReactiveFormsModule } from '@angular/forms';
+import { ConfirmationComponent } from './jaspero-confirmation/confirmation.component';
+import { ConfirmationsComponent } from './jaspero-confirmation/confirmations.component';
+import { ConfirmationService } from './jaspero-confirmation/confirmations.service';
+import { DpDatePickerModule } from './ng2-date-picker/date-picker.module';
+import { SwitchButtonComponent } from './switch-button/component';
+import { DatePickerExtendedModule } from './date-picker-extended/module';
+import { PasswordTooltipComponent } from './passwords/tooltip.component';
+import { SetlPipesModule } from '../pipes';
+import { SetlDirectivesModule } from '../directives';
+import { DynamicFormsModule } from './dynamic-forms/module';
+import { MultilingualModule } from '@setl/multilingual/multilingual.module';
+import { ClarityModule } from '@clr/angular';
 
 @NgModule({
     declarations: [
@@ -24,7 +24,7 @@ import {ClarityModule} from '@clr/angular';
         ConfirmationsComponent,
         ConfirmationComponent,
         SwitchButtonComponent,
-        PasswordTooltipComponent
+        PasswordTooltipComponent,
     ],
     exports: [
         VariousAddressSelectComponent,
@@ -32,7 +32,7 @@ import {ClarityModule} from '@clr/angular';
         SelectModule,
         SwitchButtonComponent,
         DatePickerExtendedModule,
-        PasswordTooltipComponent
+        PasswordTooltipComponent,
     ],
     imports: [
         CommonModule,
@@ -42,7 +42,7 @@ import {ClarityModule} from '@clr/angular';
         DpDatePickerModule,
         MultilingualModule,
         DatePickerExtendedModule,
-        SetlDirectivesModule
+        SetlDirectivesModule,
     ],
     providers: [ConfirmationService],
 })

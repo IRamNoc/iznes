@@ -1,131 +1,164 @@
-import { Component, OnInit, OnDestroy, ChangeDetectorRef } from '@angular/core';
-import { select } from '@angular-redux/store';
+import { Component, OnInit, OnDestroy, ChangeDetectorRef, Inject, Output, EventEmitter } from '@angular/core';
+import { MultilingualService } from '@setl/multilingual';
+import { WalletNodeSocketService } from '@setl/websocket-service';
+import { APP_CONFIG } from '@setl/utils/appConfig/appConfig';
+import { AppConfig } from '@setl/utils/appConfig/appConfig.model';
+import { mapTo } from 'rxjs/operators';
+import { Observable } from 'rxjs/Observable';
 import { Subscription } from 'rxjs/Subscription';
-import { ClrDatagridSortOrder } from '@clr/angular';
-import { isEmpty } from 'lodash';
+import { NodeAlertsService } from '@setl/core-req-services';
 
 @Component({
     styleUrls: ['./component.scss'],
-    selector: 'blockchain-status-tracker',
+    selector: 'connection-status-alerts',
     templateUrl: './component.html',
 })
 
-export class BlockchainStatusTracker implements OnInit, OnDestroy {
+export class ConnectionStatusAlerts implements OnInit, OnDestroy {
 
-    @select(['walletNode', 'transactionStatus']) transactionStatus;
+    @Output() activeAlert: EventEmitter<any> = new EventEmitter();
 
-    public failUpdate: Boolean = false;
-    public pendingUpdate: Boolean = false;
-    public successUpdate: Boolean = false;
-    public pendingCount: number = 0;
-    public successCount: number = 0;
-    public failCount: number = 0;
-    public showStatusModal: boolean = false;
-    public maxTransactions: boolean = false;
-    public txList: {}[];
-    public descSort = ClrDatagridSortOrder.DESC;
-    public objectKeys = Object.keys;
+    private appConfig: AppConfig;
+
+    public onlineOb;
+    private timerSecs = 7;
+    public connectionStatus: any = {
+        walletNodeDead: false,
+        walletNodeReconnected: false,
+        walletNodeTimer: this.timerSecs,
+        walletNodeTimerString:
+            `You've been disconnected from our servers, you should be reconnected in ${this.timerSecs} sec`,
+        loading: false,
+        internetDead: false,
+        internetReconnected: false,
+    };
+
+    public walletNodeDeadModal: Observable<boolean>;
 
     private subscriptions: Subscription[] = [];
-    private pendingTimeout: any;
-    private successTimeout: any;
-    private failTimeout: any;
 
-    constructor(
-        private changeDetectorRef: ChangeDetectorRef,
-    ) {
+    constructor(public translate: MultilingualService,
+                public changeDetectorRef: ChangeDetectorRef,
+                private walletNodeSocketService: WalletNodeSocketService,
+                private nodeAlertsService: NodeAlertsService,
+                @Inject(APP_CONFIG) appConfig: AppConfig) {
+
+        this.appConfig = appConfig;
+        this.appConfig.platform = !this.appConfig.platform ? 'OpenCSD' : this.appConfig.platform;
+
+        /* Create observable from navigator.onLine event which returns the online status of the browser */
+        this.onlineOb = Observable.merge(
+            Observable.of(navigator.onLine),
+            Observable.fromEvent(window, 'online').pipe(mapTo(true)),
+            Observable.fromEvent(window, 'offline').pipe(mapTo(false)),
+        );
+
+        this.walletNodeDeadModal = this.nodeAlertsService.dead;
     }
 
     ngOnInit() {
-        this.subscriptions.push(this.transactionStatus.subscribe(
-            (transaction) => {
-                // Ensure transaction volume is less than 10,000 to keep UI tidy
-                if (Object.keys(transaction).length > 9999) {
-                    this.maxTransactions = true;
-                    return;
-                }
-
-                // Got new data so clear txList, save old counts for diffs and reset counters
-                this.txList = [];
-                const oldFailCount = this.failCount;
-                const oldPendingCount = this.pendingCount;
-                const oldSuccessCount = this.successCount;
-                this.failCount = 0;
-                this.pendingCount = 0;
-                this.successCount = 0;
-
-                // Loop over transactions and count pending and successful
-                for (const hash in transaction) {
-
-                    // Work out counts
-                    if (!transaction[hash].success && !transaction[hash].fail) this.pendingCount += 1; // TX Pending
-                    if (transaction[hash].success) this.successCount += 1; // TX Success
-                    if (transaction[hash].fail) this.failCount += 1; // TX Fail
-
-                    // Tidy request obj
-                    delete transaction[hash].request.updated;
-                    delete transaction[hash].request.height;
-
-                    // Push to the txList
-                    this.txList.push({
-                        hash,
-                        success: transaction[hash].success,
-                        fail: transaction[hash].fail,
-                        request: transaction[hash].request,
-                        date: transaction[hash].dateRequested,
-                    });
-                }
-
-                // Apply update CSS class if new TXs detected and set 5sec timeout to remove
-                if (this.failCount > oldFailCount) {
-                    this.failUpdate = true;
-                    clearTimeout(this.failTimeout);
-                    this.failTimeout = setTimeout(
-                        () => {
-                            this.failUpdate = false;
-                        },
-                        5000,
-                    );
-                }
-                if (this.pendingCount > oldPendingCount) {
-                    this.pendingUpdate = true;
-                    clearTimeout(this.pendingTimeout);
-                    this.pendingTimeout = setTimeout(
-                        () => {
-                            this.pendingUpdate = false;
-                        },
-                        5000,
-                    );
-                }
-                if (this.successCount > oldSuccessCount) {
-                    this.successUpdate = true;
-                    clearTimeout(this.successTimeout);
-                    this.successTimeout = setTimeout(
-                        () => {
-                            this.successUpdate = false;
-                        },
-                        5000,
-                    );
-                }
-            },
-        ));
+        /* Connection subscriptions */
+        this.subscriptions.push(this.walletNodeSocketService.close.subscribe(this.walletNodeDead()));
+        this.subscriptions.push(this.walletNodeSocketService.open.subscribe(() => this.walletNodeAlive()));
+        this.subscriptions.push(this.onlineOb.subscribe(status => this.internetDead(status)));
     }
 
-    formatText(text) {
-        const string = String(text);
-        if (String(text).length > 18) {
-            return `${string.substring(0, 15)}...`;
+    /**
+     * Handles the users internet disconnected and reconnected alerts
+     * --------------------------------------------------------------
+     * @param status - users internet connected boolean
+     */
+    internetDead(status) {
+        if (this.connectionStatus.internetDead && status) {
+            this.connectionStatus.internetReconnected = true;
+            setTimeout(
+                () => {
+                    this.connectionStatus.internetReconnected = false;
+                    this.isActiveConnectionAlert();
+                    this.changeDetectorRef.detectChanges();
+                },
+                3000,
+            );
         }
-        return string;
+        this.connectionStatus.internetDead = !status;
+        this.isActiveConnectionAlert();
+        this.changeDetectorRef.detectChanges();
+    }
+
+    /**
+     * Handles displaying the wallet node reconnected alert
+     * ----------------------------------------------------
+     */
+    walletNodeAlive() {
+        if (this.connectionStatus.walletNodeDead) {
+            this.connectionStatus.walletNodeReconnected = true;
+            setTimeout(
+                () => {
+                    this.connectionStatus.walletNodeReconnected = false;
+                    this.isActiveConnectionAlert();
+                    this.changeDetectorRef.detectChanges();
+                },
+                3000,
+            );
+        }
+        this.connectionStatus.walletNodeDead = false;
+        this.isActiveConnectionAlert();
+        this.changeDetectorRef.detectChanges();
+    }
+
+    /**
+     * Handles displaying the wallet node disconnection alert
+     * -----------------------------------------------------
+     * @return function
+     */
+    walletNodeDead() {
+        return () => {
+            if (!this.connectionStatus.walletNodeDead) {
+                const timer = setInterval(
+                    () => {
+                        this.connectionStatus.walletNodeTimer -= 1;
+                        this.connectionStatus.walletNodeTimerString =
+                            this.translate.translate(
+                                'You\'ve been disconnected from our servers, you should be reconnected in @timer@ sec',
+                                { timer: this.connectionStatus.walletNodeTimer },
+                            );
+                        this.connectionStatus.loading = false;
+                        this.changeDetectorRef.detectChanges();
+                    },
+                    1000,
+                );
+                setTimeout(
+                    () => {
+                        clearInterval(timer);
+                        this.connectionStatus.walletNodeTimerString = this.translate.translate(
+                            'You\'ve been disconnected from our servers, you should be reconnected soon');
+                        this.connectionStatus.loading = true;
+                        this.connectionStatus.walletNodeTimer = this.timerSecs;
+                        this.changeDetectorRef.detectChanges();
+                    },
+                    1000 * this.timerSecs,
+                );
+                this.connectionStatus.walletNodeDead = true;
+                this.connectionStatus.walletNodeReconnected = false;
+                this.isActiveConnectionAlert();
+                this.changeDetectorRef.detectChanges();
+            }
+        };
+    }
+
+    /**
+     * Emits boolean to activeAlert based on if a connection alert is visible
+     * ----------------------------------------------------------------------
+     */
+    isActiveConnectionAlert() {
+        this.activeAlert.emit(this.connectionStatus.walletNodeDead || this.connectionStatus.internetDead ||
+            this.connectionStatus.walletNodeReconnected || this.connectionStatus.internetReconnected);
     }
 
     ngOnDestroy() {
-        /* Detach the change detector on destroy. */
-        this.changeDetectorRef.detach();
-
-        /* Unsubscribe from subscriptions */
         for (const subscription of this.subscriptions) {
             subscription.unsubscribe();
         }
+        this.changeDetectorRef.detach();
     }
 }
