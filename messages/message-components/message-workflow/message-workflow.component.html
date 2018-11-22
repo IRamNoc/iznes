@@ -3,6 +3,6 @@
     <div class="btn-group btn-primary" *ngIf="!isActed && decodedData && decodedData['type'] === 'vote'">
         <button *ngFor="let choice of decodedData['options']" (click)="doTransfer(choice.address)" class="btn" [disabled]="isActed || disableSend || walletAddresses.length === 0">{{ choice.buttonLabel }}</button>
     </div>
-    <p *ngIf="isActed">This vote has already been registred.</p>
+    <p *ngIf="isActed">This vote has been registered.</p>
 
 </div>
