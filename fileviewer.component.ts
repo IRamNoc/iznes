@@ -1,6 +1,6 @@
 import {
     ChangeDetectionStrategy, ChangeDetectorRef, Component, Input, OnInit, Inject, OnChanges,
-    SecurityContext,
+    SecurityContext, OnDestroy,
 } from '@angular/core';
 import { DomSanitizer, SafeResourceUrl } from '@angular/platform-browser';
 import { NgRedux, select } from '@angular-redux/store';
@@ -8,7 +8,7 @@ import * as SagaHelper from '@setl/utils/sagaHelper';
 import { AlertsService, AlertType } from '@setl/jaspero-ng2-alerts';
 import { MemberSocketService } from '@setl/websocket-service';
 import { createMemberNodeRequest } from '@setl/utils/common';
-
+import { MultilingualService } from '@setl/multilingual';
 import { PdfService } from '@setl/core-req-services/pdf/pdf.service';
 import { APP_CONFIG } from '@setl/utils/appConfig/appConfig';
 import { AppConfig } from '@setl/utils/appConfig/appConfig.model';
@@ -27,10 +27,9 @@ enum ViewType {
     selector: 'setl-file-viewer',
     templateUrl: 'fileviewer.component.html',
     styleUrls: ['fileviewer.component.css'],
-    changeDetection: ChangeDetectionStrategy.OnPush,
 })
 
-export class FileViewerComponent implements OnInit, OnChanges {
+export class FileViewerComponent implements OnInit, OnChanges, OnDestroy {
     @Input() fileHash: string = null;
     @Input() fileId: string = null;
     @Input() pdfId: string = null;
@@ -58,7 +57,9 @@ export class FileViewerComponent implements OnInit, OnChanges {
                        private ngRedux: NgRedux<any>,
                        private previewModalService: FileViewerPreviewService,
                        private fileDownloader: FileDownloader,
-                       @Inject(APP_CONFIG) private appConfig: AppConfig) {
+                       private translate: MultilingualService,
+                       @Inject(APP_CONFIG) private appConfig: AppConfig,
+    ) {
         this.appConfig = appConfig;
         this.baseUrl = 'http';
         if (this.appConfig.MEMBER_NODE_CONNECTION.port === 443) {
@@ -84,7 +85,6 @@ export class FileViewerComponent implements OnInit, OnChanges {
     }
 
     public ngOnInit() {
-
     }
 
     public ngOnChanges() {
@@ -104,7 +104,6 @@ export class FileViewerComponent implements OnInit, OnChanges {
                 resolve();
             }
         });
-
     }
 
     public openFileModal() {
@@ -128,7 +127,7 @@ export class FileViewerComponent implements OnInit, OnChanges {
             const data = result[1].Data;
             if (data.error) {
                 this.previewModalService.close();
-                this.showAlert('Unable to view file', 'error');
+                this.showAlert(this.translate.translate('Unable to view file'), 'error');
             } else {
                 const fileName = data.filename;
                 const downloadId = data.downloadId;
@@ -171,7 +170,7 @@ export class FileViewerComponent implements OnInit, OnChanges {
         createMemberNodeRequest(this.memberSocketService, messageBody).then((result) => {
             const data = result[1].Data;
             if (data.error) {
-                this.showAlert('Unable to download file', 'error');
+                this.showAlert(this.translate.translate('Unable to download file'), 'error');
             } else {
                 this.fileDownloader.downLoaderFile({
                     method: 'retrieve',
@@ -217,5 +216,9 @@ export class FileViewerComponent implements OnInit, OnChanges {
                   </tbody>
               </table>
           `);
+    }
+
+    ngOnDestroy(): void {
+        this.changeDetectorRef.detach();
     }
 }
