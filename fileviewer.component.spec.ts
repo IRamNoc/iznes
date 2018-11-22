@@ -11,12 +11,26 @@ import { FileViewerPreviewComponent } from './preview-modal/component';
 import { FileViewerPreviewService } from './preview-modal/service';
 import { PdfService } from '@setl/core-req-services/pdf/pdf.service';
 import { PdfMockService } from '@setl/core-req-services/pdf/pdf.mock.service';
-import { SecurityContext } from '@angular/core';
-import { SagaHelper, FileDownloader, SetlServicesModule } from '@setl/utils';
+import { SagaHelper, FileDownloader, SetlServicesModule, SetlPipesModule } from '@setl/utils';
 import { HttpClientModule } from '@angular/common/http';
-import { SetlPipesModule } from '@setl/utils';
+import { MultilingualService } from '@setl/multilingual';
+import { Router } from '@angular/router';
+import { Pipe, PipeTransform } from '@angular/core';
+const multilingualServiceSpy = jasmine.createSpyObj('MultilingualService', ['translate']);
+
+import {
+    RouterMock,
+} from '@setl/core-test-util';
 
 let origRunAsync;
+
+// Stub for translate
+@Pipe({ name: 'translate' })
+export class TranslatePipe implements PipeTransform {
+    transform(value: any): any {
+        return value;
+    }
+}
 
 describe('FileViewerComponent', () => {
 
@@ -35,7 +49,7 @@ describe('FileViewerComponent', () => {
 
         TestBed.configureTestingModule({
             imports: [ClarityModule, HttpClientModule, SetlPipesModule],
-            declarations: [FileViewerComponent, FileViewerPreviewComponent],
+            declarations: [FileViewerComponent, FileViewerPreviewComponent, TranslatePipe],
             providers: [
                 AlertsService,
                 FileViewerPreviewService,
@@ -51,6 +65,8 @@ describe('FileViewerComponent', () => {
                         },
                     },
                 },
+                { provide: MultilingualService, useValue: multilingualServiceSpy },
+                { provide: Router, useValue: RouterMock },
                 FileDownloader,
                 SetlServicesModule,
             ],

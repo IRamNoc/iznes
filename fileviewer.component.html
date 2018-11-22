@@ -4,8 +4,6 @@
 
 <a style="text-decoration: underline;" (click)="openFileModal()" *ngIf="((pdfId !== null && pdfId !== '') || (fileHash !== null && fileHash !== '')) && viewType == 1 ">{{'link' | translate }}</a>
 
-<div class="no-file" *ngIf="(pdfId === null || pdfId === '') && (fileHash === null || fileHash === '')">{{ 'No File' |
-    translate }}</div>
+<div class="no-file" *ngIf="(pdfId === null || pdfId === '') && (fileHash === null || fileHash === '')">{{ 'No File' | translate }}</div>
 
-<button *ngIf="viewType === 2" type="button" class="btn btn-primary" (click)="downloadFile()">{{ 'Download File' |
-    translate }}</button>
+<button *ngIf="viewType === 2" type="button" class="btn btn-primary" (click)="downloadFile()">{{ 'Download File' | translate }}</button>
