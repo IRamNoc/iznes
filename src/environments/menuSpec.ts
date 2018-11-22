@@ -283,7 +283,7 @@ const assetServicing = {
     ],
 };
 const ofiProductHome = {
-    label: 'Shares / Funds / Umbrella funds',
+    label: 'Shares / Funds / Umbrella Funds',
     label_txt: 'txt_sharesfundsumbrellafunds',
     icon_class: 'fa fa-bar-chart',
     element_id: 'menu-product-home',
@@ -317,7 +317,7 @@ const productsNav = {
 
 const profileMyInfo = {
     label: 'My Information',
-    label_txt: 'txt_my_information',
+    label_txt: 'txt_myinformation',
     icon_class: '',
     element_id: 'top-menu-my-info',
     router_link: '/profile/my-information',
@@ -325,13 +325,13 @@ const profileMyInfo = {
 
 const kycDocuments = {
     label: 'My Clients',
-    label_txt: 'txt_my_clients',
+    label_txt: 'txt_myclients',
     icon_class: 'fa fa-align-left',
     element_id: 'top-menu-my-clients',
     children: [
         {
             label: 'On-boarding Management',
-            label_txt: 'txt_on_boarding_management',
+            label_txt: 'txt_onboardingmanagement',
             icon_class: 'fa fa-align-left',
             element_id: 'top-menu-onboarding-management',
             router_link: '/on-boarding/management',
@@ -339,7 +339,7 @@ const kycDocuments = {
         },
         {
             label: 'Client Referential',
-            label_txt: 'txt_client_referential',
+            label_txt: 'txt_clientreferential',
             icon_class: 'fa fa-users',
             element_id: 'top-menu-client-referential',
             router_link: '/client-referential',
@@ -347,7 +347,7 @@ const kycDocuments = {
         },
         {
             label: 'Portfolio Managers',
-            label_txt: 'txt_portfolio_manager',
+            label_txt: 'txt_portfoliomanager',
             icon_class: 'fa fa-users',
             element_id: 'side-portfolio-manager',
             router_link: '/portfolio-manager',
@@ -358,21 +358,21 @@ const kycDocuments = {
 
 const myAssetManagers = {
     label: 'My Asset Managers',
-    label_txt: 'txt_my_asset_managers',
+    label_txt: 'txt_myassetmanagers',
     icon_class: 'fa fa-users',
     element_id: 'top-menu-my-asset-managers',
     always_displayed: true,
     children: [
         {
-            label: 'My documents',
-            label_txt: 'txt_my-documents',
+            label: 'My Documents',
+            label_txt: 'txt_mydocuments',
             icon_class: 'fa fa-copy',
             element_id: 'top-menu-my-documents',
             router_link: '/my-asset-managers/my-documents',
         },
         {
             label: 'My Requests',
-            label_txt: 'txt_my_requests',
+            label_txt: 'txt_myrequests',
             icon_class: 'fa fa-file-text',
             element_id: 'top-menu-my-requests',
             router_link: '/my-requests/list',
@@ -474,7 +474,7 @@ export const menuSpec: MenuSpec = {
             manageOrders,
             {
                 label: 'My Reports',
-                label_txt: 'txt_my_reports',
+                label_txt: 'txt_myreports',
                 icon_class: 'fa fa-book',
                 element_id: 'menu-am-report-section',
                 children: [
@@ -486,7 +486,7 @@ export const menuSpec: MenuSpec = {
             kycDocuments,
             {
                 label: 'My Products',
-                label_txt: 'txt_my_products',
+                label_txt: 'txt_myproducts',
                 icon_class: 'fa fa-industry',
                 element_id: 'menu-my-products',
                 children: [
@@ -502,7 +502,7 @@ export const menuSpec: MenuSpec = {
             messages,
             {
                 label: 'My Products',
-                label_txt: 'txt_my_products',
+                label_txt: 'txt_myproducts',
                 icon_class: 'fa fa-industry',
                 element_id: 'menu-my-products',
                 children: [
@@ -519,7 +519,6 @@ export const menuSpec: MenuSpec = {
                     reportsCollectsArchives,
                 ],
             },
-
         ],
         custodian: [
             home,
@@ -539,7 +538,7 @@ export const menuSpec: MenuSpec = {
             messages,
             {
                 label: 'My Products',
-                label_txt: 'txt_my_products',
+                label_txt: 'txt_myproducts',
                 icon_class: 'fa fa-industry',
                 element_id: 'menu-my-products',
                 children: [
@@ -701,12 +700,12 @@ export const menuSpec: MenuSpec = {
         iznes_admin: [
             {
                 label: 'Management Companies',
-                label_txt: 'txt_management-companies',
+                label_txt: 'txt_managementcompanies',
                 icon_class: 'fa fa-users',
                 element_id: 'menu-management-companies',
                 router_link: '/management-company',
-            }
-        ]
+            },
+        ],
     },
     disabled: [],
 };

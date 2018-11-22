@@ -243,7 +243,7 @@ public class FundsDetailsHelper extends LoginAndNavigationHelper {
         try {
             wait.until(visibilityOfElementLocated(By.id("add-fund-title")));
             String pageHeading = driver.findElement(By.id("add-fund-title")).getText();
-            assertTrue(pageHeading.equals("Add a new Umbrella Fund"));
+            assertTrue(pageHeading.equals("Add New Umbrella Fund"));
         } catch (Exception e) {
             fail("Page heading text was not correct : " + e.getMessage());
         }
@@ -878,7 +878,7 @@ public class FundsDetailsHelper extends LoginAndNavigationHelper {
         WebDriverWait wait = new WebDriverWait(driver, timeoutInSeconds);
         assertTrue(isElementPresent(By.cssSelector("i.fa.fa-align-left")));
         assertTrue(isElementPresent(By.id("am-product-home")));
-        assertTrue(driver.findElement(By.id("am-product-home")).getText().contentEquals("Shares / Funds / Umbrella funds"));
+        assertTrue(driver.findElement(By.id("am-product-home")).getText().contentEquals("Shares / Funds / Umbrella Funds"));
         assertTrue(driver.findElement(By.xpath("//app-ofi-am-product-home/div[4]/div[2]/div/div")).getText().contentEquals("Display only active Shares"));
         assertTrue(isElementPresent(By.id("switchActiveShares")));
         assertTrue(driver.findElement(By.id("switchActiveShares")).isEnabled());
@@ -889,19 +889,19 @@ public class FundsDetailsHelper extends LoginAndNavigationHelper {
         scrollElementIntoViewById("new-share-btn");
         wait.until(visibilityOfElementLocated(By.id("new-share-btn")));
         wait.until(elementToBeClickable(By.id("new-share-btn")));
-        assertTrue(driver.findElement(By.id("new-share-btn")).getText().contains("Add new Share"));
+        assertTrue(driver.findElement(By.id("new-share-btn")).getText().contains("Add New Share"));
 
         assertTrue(isElementPresent(By.xpath("//app-ofi-am-product-home/div[3]/div[1]/div[1]")));
         assertTrue(driver.findElement(By.xpath("//app-ofi-am-product-home/div[3]/div[1]/div[1]")).getText().contains("Funds"));
         assertTrue(isElementPresent(By.cssSelector("i.fa.fa-chevron-right.rotate")));
         assertTrue(isElementPresent(By.xpath("//app-ofi-am-product-home/div[3]/div[1]/div[2]")));
-        assertTrue(driver.findElement(By.id("new-fund-btn")).getText().contains("Add new Fund"));
+        assertTrue(driver.findElement(By.id("new-fund-btn")).getText().contains("Add New Fund"));
 
         assertTrue(isElementPresent(By.xpath("//app-ofi-am-product-home/div[2]/div[1]/div[1]")));
-        assertTrue(driver.findElement(By.xpath("//app-ofi-am-product-home/div[2]/div[1]/div[1]")).getText().contains("Umbrella funds"));
+        assertTrue(driver.findElement(By.xpath("//app-ofi-am-product-home/div[2]/div[1]/div[1]")).getText().contains("Umbrella Funds"));
         assertTrue(isElementPresent(By.cssSelector("i.fa.fa-chevron-right.rotate")));
         assertTrue(isElementPresent(By.xpath("//app-ofi-am-product-home/div[2]/div[1]/div[2]")));
-        assertTrue(driver.findElement(By.id("new-umbrella-fund-btn")).getText().contains("Add new Umbrella fund"));
+        assertTrue(driver.findElement(By.id("new-umbrella-fund-btn")).getText().contains("Add New Umbrella Fund"));
     }
 
     public static void validateNAVPageLayout() {

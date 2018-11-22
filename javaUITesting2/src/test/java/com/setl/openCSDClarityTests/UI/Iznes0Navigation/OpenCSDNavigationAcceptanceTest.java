@@ -91,7 +91,7 @@ public class OpenCSDNavigationAcceptanceTest {
     public void shouldNavigateToMyProductsFromHomepageButtons() throws IOException, InterruptedException {
         loginAndVerifySuccess("am", "alex01");
         driver.findElement(By.xpath("//*[@id=\"iznes\"]/app-root/app-basic-layout/div/ng-sidebar-container/div/div/div/main/div/div/ng-component/div/app-dashboard/div/app-counter-tile[1]/div/a")).click();
-        verifyCorrectPageContains("Shares / Funds / Umbrella funds");
+        verifyCorrectPageContains("Shares / Funds / Umbrella Funds");
     }
 
     @Test
@@ -145,7 +145,7 @@ public class OpenCSDNavigationAcceptanceTest {
         loginAndVerifySuccess("am", "alex01");
         navigateToDropdown("top-menu-my-clients");
         navigateToPageByID("top-menu-client-referential");
-        verifyCorrectPage("Client Referential : All Clients");
+        verifyCorrectPage("Client Referential: All Clients");
     }
 
     @Test
@@ -153,7 +153,7 @@ public class OpenCSDNavigationAcceptanceTest {
         loginAndVerifySuccess("am", "alex01");
         navigateToDropdown("menu-my-products");
         navigateToPageByID("menu-product-home");
-        verifyCorrectPage("Shares / Funds / Umbrella funds");
+        verifyCorrectPage("Shares / Funds / Umbrella Funds");
     }
 
     @Test
