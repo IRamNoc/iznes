@@ -3,10 +3,11 @@ import { FormArray, FormGroup } from '@angular/forms';
 import { select } from '@angular-redux/store';
 import { Subject } from 'rxjs';
 import { takeUntil } from 'rxjs/operators';
-import { get as getValue, isNil, find, isEmpty, isNumber, values } from 'lodash';
+import { get as getValue, isNil, find, isEmpty, isNumber, values, some } from 'lodash';
 
 import { ConfirmationService } from '@setl/utils';
 import { ToasterService } from 'angular2-toaster';
+import { AlertsService } from '@setl/jaspero-ng2-alerts';
 
 import { MultilingualService } from '@setl/multilingual';
 import { BeneficiaryService } from './beneficiary.service';
@@ -20,16 +21,21 @@ import { NewRequestService } from '../../new-request.service';
 })
 export class BeneficiaryListComponent implements OnInit, OnDestroy {
     @Input() stakeholders: FormArray;
+
     @Output() refresh: EventEmitter<any> = new EventEmitter<any>();
     @select(['ofi', 'ofiKyc', 'myKycRequested', 'stakeholderRelations']) stakeholderRelations$;
 
+    rawStakeholders;
     selectedStakeholderIndex = null;
-    stakeholderCounter = 0;
     stakeholderBackup = null;
     isModalOpen: any = false;
     mode: string;
     unsubscribe: Subject<void> = new Subject();
     relations;
+
+    get nextId() {
+        return this.getHighestID() + 1;
+    }
 
     get openModal() {
         return this.isModalOpen;
@@ -59,12 +65,6 @@ export class BeneficiaryListComponent implements OnInit, OnDestroy {
         return this.beneficiaryService.parents(this.stakeholders);
     }
 
-    get nextId() {
-        this.stakeholderCounter += 1;
-
-        return this.stakeholderCounter;
-    }
-
     constructor(
         private identificationService: IdentificationService,
         private newRequestService: NewRequestService,
@@ -72,6 +72,7 @@ export class BeneficiaryListComponent implements OnInit, OnDestroy {
         private translateService: MultilingualService,
         private confirmationService: ConfirmationService,
         private toasterService: ToasterService,
+        private alertsService: AlertsService,
     ) {
     }
 
@@ -79,7 +80,24 @@ export class BeneficiaryListComponent implements OnInit, OnDestroy {
         this.initSubscriptions();
     }
 
+    getHighestID() {
+        const stakeholders = this.stakeholders;
+        const highest = stakeholders.controls.reduce(
+            (highest, stakeholder) => {
+                let currentID = stakeholder.get('companyBeneficiariesID').value;
+                currentID = currentID.replace('temp', '');
+                currentID = Number(currentID);
+
+                return Math.max(highest, currentID);
+            },
+            0,
+        );
+
+        return highest;
+    }
+
     initSubscriptions() {
+
         this.stakeholderRelations$.pipe(
             takeUntil(this.unsubscribe),
         ).subscribe((relations) => {
@@ -187,6 +205,27 @@ export class BeneficiaryListComponent implements OnInit, OnDestroy {
     }
 
     checkRemove(i) {
+        const currentID = this.stakeholders.at(i).get('companyBeneficiariesID').value;
+        const existsAsParent = some(this.stakeholders.controls, (stakeholder) => {
+            const parent = getValue(stakeholder.get('common.parent').value, [0, 'id']);
+            return parent === currentID;
+        });
+
+        if (existsAsParent) {
+            this.modalCantRemove();
+            return;
+        }
+
+        this.modalRemove(i);
+    }
+
+    modalCantRemove() {
+        const message = this.translateService.translate('Please delete all children of this stakeholder.');
+
+        this.alertsService.create('error', message);
+    }
+
+    modalRemove(i) {
         const stakeholder = this.stakeholders.at(i);
         let title = this.translateService.translate('Delete stakeholder');
         const message = this.translateService.translate('Are you sure you want to delete this stakeholder?');
