@@ -8,7 +8,7 @@ import * as SagaHelper from '@setl/utils/sagaHelper';
 import { AlertsService, AlertType } from '@setl/jaspero-ng2-alerts';
 import { MemberSocketService } from '@setl/websocket-service';
 import { createMemberNodeRequest } from '@setl/utils/common';
-
+import { MultilingualService } from '@setl/multilingual';
 import { PdfService } from '@setl/core-req-services/pdf/pdf.service';
 import { APP_CONFIG } from '@setl/utils/appConfig/appConfig';
 import { AppConfig } from '@setl/utils/appConfig/appConfig.model';
@@ -16,8 +16,6 @@ import { FileDownloader } from '@setl/utils/services/file-downloader/service';
 
 import { ValidateFileMessageBody } from './fileviewer.model';
 import { FileViewerPreviewService } from './preview-modal/service';
-
-import { MultilingualService } from '@setl/multilingual';
 
 enum ViewType {
     Button = 0,
@@ -220,9 +218,7 @@ export class FileViewerComponent implements OnInit, OnChanges, OnDestroy {
           `);
     }
 
-    /* On Destroy. */
     ngOnDestroy(): void {
-        /* Detach the change detector on destroy. */
         this.changeDetectorRef.detach();
     }
 }
