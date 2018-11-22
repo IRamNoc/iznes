@@ -262,7 +262,7 @@ public class OpenCSDTeamsSubModuleTest {
         searchTeam(teamReference[0], teamName[0], teamDescription[0], "Pending");
         logout();
         validateTeamsCreated(1, teamReference[0], teamName[0], teamDescription[0]);
-        //validateMyClientsTeamPortfolioManagerPermissions(teamName[0]);
+
         List<String> expectedPermissions = Arrays.asList("View Portfolio Manager", "Update Portfolio Manager", "Invite Portfolio Manager");
         assert checkTeamHasPermissionsInDatabase(teamName[0], expectedPermissions) : "DB permission check failure";
     }
