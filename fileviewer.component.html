@@ -1,8 +1,11 @@
 <div *ngIf="(pdfId !== null && pdfId !== '') || (fileHash !== null && fileHash !== '') && viewType == 0 ">
-    <button type="button" class="btn btn-primary" (click)="openFileModal()" mltag="txt_viewfile">View File</button>
+    <button type="button" class="btn btn-primary" (click)="openFileModal()">{{ 'View File' | translate }}</button>
 </div>
-<a mltag="txt_link" style="text-decoration: underline;" (click)="openFileModal()" *ngIf="((pdfId !== null && pdfId !== '') || (fileHash !== null && fileHash !== '')) && viewType == 1 ">link</a>
-<div class="no-file" *ngIf="(pdfId === null || pdfId === '') && (fileHash === null || fileHash === '')" mltag="txt_nofile">
-    No File
-</div>
-<button *ngIf="viewType === 2" type="button" class="btn btn-primary" (click)="downloadFile()" mltag="txt_download_file">Download File</button>
+
+<a style="text-decoration: underline;" (click)="openFileModal()" *ngIf="((pdfId !== null && pdfId !== '') || (fileHash !== null && fileHash !== '')) && viewType == 1 ">{{'link' | translate }}</a>
+
+<div class="no-file" *ngIf="(pdfId === null || pdfId === '') && (fileHash === null || fileHash === '')">{{ 'No File' |
+    translate }}</div>
+
+<button *ngIf="viewType === 2" type="button" class="btn btn-primary" (click)="downloadFile()">{{ 'Download File' |
+    translate }}</button>

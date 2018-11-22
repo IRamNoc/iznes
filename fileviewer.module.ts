@@ -4,6 +4,7 @@ import { FileViewerComponent } from './fileviewer.component';
 import { FileViewerPreviewComponent } from './preview-modal/component';
 import { FileViewerPreviewService } from './preview-modal/service';
 import { ClarityModule } from '@clr/angular';
+import { SetlPipesModule } from '@setl/utils';
 
 @NgModule({
     declarations: [
@@ -17,6 +18,7 @@ import { ClarityModule } from '@clr/angular';
     imports: [
         BrowserModule,
         ClarityModule,
+        SetlPipesModule,
     ],
     providers: [
         FileViewerPreviewService,
