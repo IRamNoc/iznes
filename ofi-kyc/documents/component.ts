@@ -2,7 +2,7 @@ import { ChangeDetectionStrategy, ChangeDetectorRef, Component, OnDestroy, OnIni
 import { AbstractControl, FormControl, FormArray, FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { Subpanel } from './models';
 import { MockKYCDocumentsService } from './documents.mock.service';
-import { LogService} from '@setl/utils';
+import { LogService } from '@setl/utils';
 import { Router } from '@angular/router';
 import { MultilingualService } from '@setl/multilingual';
 

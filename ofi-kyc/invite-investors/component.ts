@@ -22,7 +22,7 @@ const emailRegex = /^(((\([A-z0-9]+\))?[^<>()\[\]\\.,;:\s@"]+(\.[^<>()\[\]\\.,;:
     selector: 'app-invite-investors',
     styleUrls: ['./component.scss'],
     templateUrl: './component.html',
-    changeDetection: ChangeDetectionStrategy.OnPush,
+    // changeDetection: ChangeDetectionStrategy.OnPush,
     providers: [OfiKycObservablesService],
 })
 export class OfiInviteInvestorsComponent implements OnInit, OnDestroy {
@@ -101,7 +101,7 @@ export class OfiInviteInvestorsComponent implements OnInit, OnDestroy {
         });
 
         this.panel = {
-            title: this.translate.translate('Invites Recap') || this.translate.translate('Invites Recap'),
+            title: this.translate.translate('Invites Recap'),
             open: true,
         };
 
