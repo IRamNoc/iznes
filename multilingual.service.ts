@@ -19,7 +19,7 @@ export class MultilingualService {
 
     /* Constructor. */
     constructor(
-        private route: ActivatedRoute,
+        // private route: ActivatedRoute,
         private router: Router,
         private http: HttpClient,
     ) {
