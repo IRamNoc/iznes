@@ -635,6 +635,7 @@ export class NewRequestService {
 
                 votingPercentage: ['', Validators.required],
                 exerciseControl: [0, Validators.required],
+                document: this.createDocumentFormGroup('kycbeneficiarydoc', !this.isProduction),
             }),
             legalPerson: this.formBuilder.group({
                 legalName: ['', Validators.required],
@@ -652,7 +653,6 @@ export class NewRequestService {
                 dateOfBirth: ['', Validators.required],
                 cityOfBirth: ['', this.getLengthValidator()],
                 countryOfBirth: ['', Validators.required],
-                document: this.createDocumentFormGroup('kycbeneficiarydoc', !this.isProduction),
                 isLegalRepresentative: [0, Validators.required],
             }),
             delete: 0,

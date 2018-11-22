@@ -208,7 +208,7 @@ export class IdentificationService {
         const promises = [];
 
         beneficiariesValue.forEach((beneficiaryValue, index) => {
-            const kycDocument = getValue(beneficiaryValue, ['naturalPerson', 'document']);
+            const kycDocument = getValue(beneficiaryValue, ['common', 'document']);
             const kycDocumentID = getValue(kycDocument, 'kycDocumentID');
             const hash = getValue(kycDocument, 'hash');
 

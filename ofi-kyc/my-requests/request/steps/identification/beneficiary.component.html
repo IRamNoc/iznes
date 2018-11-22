@@ -120,6 +120,20 @@
 
         <div class="row">
             <div class="form-group required-field col-sm-6">
+                <label for="beneficiary-kbis-document-benef" class="control-label">{{'Kbis extract (or equivalent) less than 3 month old' | translate}}</label>
+                <div class="filedrop-wrapper">
+                    <setl-file-drop filePermission="0" class="form-control" id="beneficiary-kbis-document-benef"
+                                    (onDrop)="uploadFile($event)"
+                                    [preset]="form.get('common.document').value"
+                                    ngDefaultControl
+                                    [disabled]="disabled"
+                    ></setl-file-drop>
+                </div>
+            </div>
+        </div>
+
+        <div class="row">
+            <div class="form-group required-field col-sm-6">
                 <label for="holdingPercentage-benef">{{'Holding percentage' | translate}}</label>
                 <input id="holdingPercentage-benef" type="number" [formControl]="form.get('common.holdingPercentage')" placeholder="{{'Define a value (%)' | translate}}" [attr.disabled]="disabled">
                 <span class="field-error" *ngIf="hasError(['common', 'holdingPercentage'], ['required'])">{{'Field is required' | translate}}</span>
@@ -244,7 +258,7 @@
                 <div class="filedrop-wrapper">
                     <setl-file-drop filePermission="0" class="form-control" id="beneficiary-document-benef"
                                     (onDrop)="uploadFile($event)"
-                                    [preset]="form.get(['naturalPerson', 'document']).value"
+                                    [preset]="form.get('common.document').value"
                                     ngDefaultControl
                                     [disabled]="disabled"
                     ></setl-file-drop>
