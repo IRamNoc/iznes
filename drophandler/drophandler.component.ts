@@ -14,7 +14,7 @@ import * as _ from 'lodash';
 import { AlertsService, AlertType } from '@setl/jaspero-ng2-alerts';
 
 import { FormControl } from '@angular/forms';
-import { FileDropItem, FilePermission, FileDropEvent } from '../FileDrop';
+import { FileDropItem, FilePermission, FileDropEvent, ImageConstraint, AllowFileType, File } from '../FileDrop';
 
 /* Decorator. */
 @Component({
@@ -43,6 +43,15 @@ export class DropHandler implements AfterViewInit {
     @Input() filePermission: FilePermission = FilePermission.Private;
 
     @Input() disabled: boolean = false;
+
+    // whether to show file's preview
+    @Input() usePreview: boolean = false;
+
+    // image constraint
+    @Input() imageConstraint: ImageConstraint;
+
+    // allow file types
+    @Input() allowFileTypes: AllowFileType[];
 
     /* Inputs and forms. */
     @ViewChild('fileInput') public fileInput: ElementRef;
@@ -95,31 +104,31 @@ export class DropHandler implements AfterViewInit {
      * Handles a drop event on the dropzone.
      *
      * @param  {event} object - The drop event, contains all information.
-     * @return {boolean}
+     * @return {Promise<boolean>}
      */
-    public handleDrop(event): boolean {
+    public async handleDrop(event): Promise<boolean> {
         if (this.disabled) {
             return;
         }
         /* Check if files were dropped... */
         if (event.dataTransfer && event.dataTransfer.files) {
-            const invalidFileNames = [];
-            const validFiles = [];
+            const invalidFileSizeNames = [];
+            let validFiles = [];
             _.each(event.dataTransfer.files, (function (file) {
                 if (!this.isValidFileSize(file)) {
-                    invalidFileNames.push(file.name);
+                    invalidFileSizeNames.push(file.name);
                 } else {
                     validFiles.push(file);
                 }
             }).bind(this));
 
-            if (invalidFileNames.length > 0) {
+            if (invalidFileSizeNames.length > 0) {
                 let message = 'File';
-                if (invalidFileNames.length > 1) {
+                if (invalidFileSizeNames.length > 1) {
                     message += 's';
                 }
-                message += ' \'' + invalidFileNames.join('\', \'') + '\' exceed';
-                if (invalidFileNames.length === 1) {
+                message += ' \'' + invalidFileSizeNames.join('\', \'') + '\' exceed';
+                if (invalidFileSizeNames.length === 1) {
                     message += 's';
                 }
                 message += ' maximum file size for upload.';
@@ -128,6 +137,12 @@ export class DropHandler implements AfterViewInit {
                     'error'
                 );
             }
+
+            // check image constraint
+            validFiles = await this.checkImageConstraint(validFiles);
+
+            // check image constraint
+            validFiles = this.checkFileType(validFiles);
 
             if (validFiles.length < 1) {
                 return;
@@ -138,6 +153,7 @@ export class DropHandler implements AfterViewInit {
 
             /* Process the files. */
             this.handleConversion();
+
         }
 
         /* Detect changes. */
@@ -186,16 +202,16 @@ export class DropHandler implements AfterViewInit {
      * Handles the changing of files, i.e the processing and building of the file array.
      *
      * @param {event} object - the change event on the file input.
-     * @return {boolean}
+     * @return {Promise<boolean>}
      */
-    public handleFileChange(event): boolean {
+    public async handleFileChange(event): Promise<boolean> {
         if (this.disabled) {
             return;
         }
         /* Check. */
         if (event.target && event.target.files) {
             const invalidFileNames = [];
-            const validFiles = [];
+            let validFiles = [];
             _.each(event.target.files, (function (file, fileIndex) {
                 if (!this.isValidFileSize(file)) {
                     invalidFileNames.push(file.name);
@@ -216,9 +232,15 @@ export class DropHandler implements AfterViewInit {
                 message += ' maximum file size for upload.';
                 this.showAlert(
                     message,
-                    'error'
+                    'error',
                 );
             }
+
+            // check image constraint
+            validFiles = await this.checkImageConstraint(validFiles);
+
+            // check image constraint
+            validFiles = this.checkFileType(validFiles);
 
             if (validFiles.length < 1) {
                 return;
@@ -229,6 +251,7 @@ export class DropHandler implements AfterViewInit {
 
             /* Process the files. */
             this.handleConversion();
+
         }
 
         /* Return. */
@@ -468,6 +491,7 @@ export class DropHandler implements AfterViewInit {
                         this.silentEncodedFiles[j].filePermission = this.filePermission;
                         this.silentEncodedFiles[j].id = i;
                         this.silentEncodedFiles[j].mimeType = files[i].type;
+
                     }
                     j++;
                 }
@@ -579,4 +603,92 @@ export class DropHandler implements AfterViewInit {
               </table>
           `);
     }
+
+    /**
+     * Check if images match the images constraint. if any of the image not match, we remove them from the image list,
+     * and show warning message.
+     * @param {File[]} files
+     * @return {Promise<File[]>}
+     */
+    async checkImageConstraint(files: File[]): Promise<File[]> {
+
+        if (this.imageConstraint) {
+            const validImages = [];
+            const invalidImageNames = [];
+            for (const file of files) {
+                const imageSize = await getImageSize(file);
+                if (imageSize.width === this.imageConstraint.width && imageSize.width === this.imageConstraint.width) {
+                    validImages.push(file);
+                } else {
+                    invalidImageNames.push(file.name);
+                }
+            }
+
+            if (invalidImageNames.length > 0) {
+                const message = `The dimension of '${invalidImageNames.join("' '")}' must be ${this.imageConstraint.width} x ${this.imageConstraint.height}`;
+                this.showAlert(
+                    message,
+                    'error',
+                );
+            }
+
+            return validImages;
+        }
+
+        return files;
+
+    }
+
+    /**
+     * Check if file type match the allowFileTypes. if any of the file not match, we remove them from the file list,
+     * and show warning message.
+     * @param {File[]} files
+     * @return {Promise<File[]>}
+     */
+    checkFileType(files) {
+
+        if (this.allowFileTypes) {
+            const validFiles = [];
+            const invalidFileNames = [];
+            for (const file of files) {
+                if (this.allowFileTypes.includes(file.type)) {
+                    validFiles.push(file);
+                } else {
+                    invalidFileNames.push(file.name);
+                }
+            }
+
+            if (invalidFileNames.length > 0) {
+                const message = `The file type of '${invalidFileNames.join("' '")}' must be one of '${this.allowFileTypes.join("' '")}'`;
+                this.showAlert(
+                    message,
+                    'error',
+                );
+            }
+
+            return validFiles;
+        }
+
+        return files;
+
+    }
+
+}
+
+/**
+ * Get image size with observable
+ * @param {blob} file
+ * @return {Promise<{width: number; height: number}>}
+ */
+function getImageSize(file): Promise<{width: number; height: number}> {
+
+    return new Promise<{ width: number; height: number; }>((resolve, reject) => {
+        try {
+            createImageBitmap(file).then((data: {width: number; height: number}) => {
+                resolve(data);
+            });
+        } catch (e) {
+            reject(false);
+        }
+    });
 }

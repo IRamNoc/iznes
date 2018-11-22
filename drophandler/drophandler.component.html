@@ -60,18 +60,22 @@
                 (drop)="handleDrop($event)">
             </div>
 
-            <div class="drop-file-nofile" [hidden]="uploadedFiles.length || preset?.name">{{uploadPrompt}}</div>
-            <div class="drop-file-meta" *ngIf="uploadedFiles.length">
-                <span *ngFor="let file of uploadedFiles; let i = index">
+            <div class="drop-file-nofile" [hidden]="encodedFiles.length || preset?.name">{{uploadPrompt}}</div>
+            <div class="drop-file-meta" *ngIf="encodedFiles.length">
+                <span *ngFor="let file of encodedFiles; let i = index">
                     <span class="added-file-inline {{file.status}}-inline" *ngIf="file.name">
-                        <i class="fa fa-times" (click)="stopPropagation($event);clearFiles(i)"></i> {{ file.name }}
+                        <i class="fa fa-times" (click)="stopPropagation($event);clearFiles(i)"></i>
+                        <span *ngIf="!usePreview">{{ file.name }}</span>
+                        <file-preview *ngIf="usePreview" [fileUploadObj]="file"></file-preview>
                     </span>
                 </span>
             </div>
-            
+
             <div class="drop-file-meta" *ngIf="!uploadedFiles.length && preset?.name">
                 <span class="added-file-inline uploaded-file-inline">
-                    <i class="fa fa-times" (click)="stopPropagation($event);clearPreset()"></i> {{ preset.name }}
+                    <i class="fa fa-times" (click)="stopPropagation($event);clearPreset()"></i>
+                    <span *ngIf="!usePreview">{{ preset.name }}</span>
+                    <file-preview *ngIf="usePreview" [fileDataString]="preset.fileBase64"></file-preview>
                 </span>
             </div>
         </div>

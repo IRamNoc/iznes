@@ -7,6 +7,8 @@ import { BrowserModule } from '@angular/platform-browser';
 import { FileDropComponent } from './filedrop.component';
 import { DropHandler } from './drophandler/drophandler.component';
 
+import { SetlComponentsModule } from '@setl/utils';
+
 /* User admin service. */
 @NgModule({
     declarations: [
@@ -22,6 +24,7 @@ import { DropHandler } from './drophandler/drophandler.component';
     imports: [
         CommonModule,
         BrowserModule,
+        SetlComponentsModule,
     ],
     providers: [],
 })

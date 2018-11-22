@@ -29,3 +29,10 @@ export interface FileDropEvent {
     target: DropHandler;
     files: File[];
 }
+
+export interface ImageConstraint {
+    width: number;
+    height: number;
+}
+
+export type AllowFileType = 'application/pdf' | 'image/png' | 'image/jpeg';

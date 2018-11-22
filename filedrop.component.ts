@@ -5,7 +5,7 @@ import { Component, Input, Output, EventEmitter, OnInit } from '@angular/core';
 import { FormControl } from '@angular/forms';
 
 /* DropHandler Component */
-import { FileDropItem, FileDropEvent, FilePermission } from './FileDrop';
+import { FileDropItem, FileDropEvent, FilePermission, ImageConstraint, AllowFileType } from './FileDrop';
 
 @Component({
     selector: 'setl-file-drop',
@@ -31,6 +31,15 @@ export class FileDropComponent implements OnInit {
     @Input() filePermission: FilePermission = FilePermission.Private;
 
     @Input() disabled: boolean = false;
+
+    // whether to show file's preview
+    @Input() usePreview: boolean = false;
+
+    // image constraint
+    @Input() imageConstraint: ImageConstraint;
+
+    // allow file types
+    @Input() allowFileTypes: AllowFileType[];
 
     /* Constructor */
     public constructor () {
