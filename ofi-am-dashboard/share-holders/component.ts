@@ -278,15 +278,15 @@ export class ShareHoldersComponent implements OnInit, OnDestroy {
     getLanguage(requested): void {
         if (requested) {
             switch (requested) {
-            case 'fra':
-                this.language = 'fr';
-                break;
-            case 'eng':
-                this.language = 'en';
-                break;
-            default:
-                this.language = 'en';
-                break;
+                case 'fra':
+                    this.language = 'fr';
+                    break;
+                case 'eng':
+                    this.language = 'en';
+                    break;
+                default:
+                    this.language = 'en';
+                    break;
             }
         }
     }

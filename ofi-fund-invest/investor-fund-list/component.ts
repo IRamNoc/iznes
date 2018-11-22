@@ -72,6 +72,7 @@ export class OfiInvestorFundListComponent implements OnInit, OnDestroy {
 
     ngOnInit() {
         this.setInitialTabs();
+        this.changeDetectorRef.detectChanges();
 
         this.subscriptionsArray.push(this.connectedWalletOb.subscribe((connected) => {
             this.connectedWalletId = connected;
@@ -99,7 +100,7 @@ export class OfiInvestorFundListComponent implements OnInit, OnDestroy {
 
         this.subscriptionsArray.push(this.requestedLanguage$.subscribe((language) => {
             this.language = language;
-            this.changeDetectorRef.detectChanges();
+            this.setInitialTabs();
         }));
     }
 
@@ -127,6 +128,10 @@ export class OfiInvestorFundListComponent implements OnInit, OnDestroy {
         }
 
         this.tabsControl = openedTabs;
+
+        // Translate title of default tab on init (if openedTabs is not empty) and on language change
+        this.tabsControl[0].title.text = this.translate.translate(this.tabsControl[0].title.text);
+        this.changeDetectorRef.detectChanges();
     }
 
     getDisplay() {
