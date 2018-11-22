@@ -4,6 +4,6 @@
         <button class="btn" [disabled]="isActed || disableSend || !enoughCash || walletAddresses.length === 0" (click)="doTransfer()">Exercise options</button>
         <!--<button class="btn" [disabled]="true">Exercise some options</button>-->
     </div>
-    <p *ngIf="isActed">This message has already been acted on.</p>
+    <p *ngIf="isActed">This message has been acted on.</p>
 
 </div>
