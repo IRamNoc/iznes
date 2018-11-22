@@ -132,6 +132,8 @@ public class DatabaseHelper {
         Statement stmt = conn.createStatement();
 
         stmt.executeUpdate("UPDATE setlnet.tblSiteSetting SET value = 0 WHERE settingID = '5'");
+        stmt.executeUpdate("UPDATE setlnet.tblUsers SET twoFactorAuthentication = '0'");
+        stmt.executeUpdate("UPDATE setlnet.tblUsers SET twoFactorVerified = '0'");
 
         conn.close();
         stmt.close();

@@ -799,10 +799,10 @@ public class AdministrationModuleHelper {
         wait.until(visibilityOfElementLocated(By.id("su-username-field")));
         String emailField = driver.findElement(By.id("su-username-field")).getAttribute("value");
         assertEquals(emailField, Email);
-        driver.findElement(By.id("su-password-field")).sendKeys("asdASD123");
-        driver.findElement(By.id("su-passwordConfirm-field")).sendKeys("asdASD123");
+        driver.findElement(By.id("sign-up-password")).sendKeys("asdASD123");
+        driver.findElement(By.id("sign-up-password-confirm")).sendKeys("asdASD123");
         wait.until(elementToBeClickable(By.id("signup-submit")));
-        driver.findElement(By.id("signup-submit")).click();
+        driver.findElement(By.id("sign-up-submit")).click();
         wait.until(visibilityOfElementLocated(By.xpath("//*[@id=\"iznes\"]/app-root/jaspero-confirmations/jaspero-confirmation/div[2]/div[4]/button")));
         wait.until(elementToBeClickable(By.xpath("//*[@id=\"iznes\"]/app-root/jaspero-confirmations/jaspero-confirmation/div[2]/div[4]/button")));
         String confirmation = driver.findElement(By.xpath("//*[@id=\"iznes\"]/app-root/jaspero-confirmations/jaspero-confirmation/div[2]/div[3]/p/b")).getText();
