@@ -17,6 +17,7 @@ import {SetlDirectivesModule} from '../directives';
 import {DynamicFormsModule} from './dynamic-forms/module';
 import {MultilingualModule} from '@setl/multilingual/multilingual.module';
 import {ClarityModule} from '@clr/angular';
+import { FilePreviewComponent } from "./file-preview/file-preview.component";
 
 @NgModule({
     declarations: [
@@ -24,7 +25,8 @@ import {ClarityModule} from '@clr/angular';
         ConfirmationsComponent,
         ConfirmationComponent,
         SwitchButtonComponent,
-        PasswordTooltipComponent
+        PasswordTooltipComponent,
+        FilePreviewComponent,
     ],
     exports: [
         VariousAddressSelectComponent,
@@ -32,7 +34,8 @@ import {ClarityModule} from '@clr/angular';
         SelectModule,
         SwitchButtonComponent,
         DatePickerExtendedModule,
-        PasswordTooltipComponent
+        PasswordTooltipComponent,
+        FilePreviewComponent,
     ],
     imports: [
         CommonModule,
