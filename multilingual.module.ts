@@ -2,10 +2,10 @@
 import { NgModule } from '@angular/core';
 
 /* Directive. */
-import {MultilingualDirective} from './multilingual.directive';
+import { MultilingualDirective } from './multilingual.directive';
 
 /* Service. */
-import {MultilingualService} from './multilingual.service';
+import { MultilingualService } from './multilingual.service';
 
 /* Module declaration. */
 @NgModule({
@@ -18,6 +18,6 @@ import {MultilingualService} from './multilingual.service';
     ],
     providers: [
         MultilingualService,
-    ]
+    ],
 })
 export class MultilingualModule {  }

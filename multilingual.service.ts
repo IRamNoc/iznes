@@ -1,32 +1,30 @@
 /* Angular/vendor imports. */
-import {Injectable} from '@angular/core';
-import {Subscription} from 'rxjs';
-import {select} from '@angular-redux/store';
+import { Injectable } from '@angular/core';
+import { Subscription } from 'rxjs/Subscription';
+import { select } from '@angular-redux/store';
 import { HttpClient, HttpHeaders } from '@angular/common/http';
-import {ActivatedRoute, Router} from '@angular/router';
-import {Translations} from './translations';
+import { ActivatedRoute, Router } from '@angular/router';
+import { Translations } from './translations';
 
 /* Service Class. */
 @Injectable()
 export class MultilingualService {
-
     language;
 
     private translations = [];
     private apiUrl = 'http://si-babel01:8080';
-    private subscriptionsArray: Array<Subscription> = [];
-
+    private subscriptionsArray: Subscription[] = [];
 
     @select(['user', 'siteSettings', 'language']) getLanguage;
 
     /* Constructor. */
     constructor(
-        private route: ActivatedRoute,
+        // private route: ActivatedRoute,
         private router: Router,
         private http: HttpClient,
     ) {
         /* Stub. */
-        this.subscriptionsArray.push(this.getLanguage.subscribe((language) => this.language = language));
+        this.subscriptionsArray.push(this.getLanguage.subscribe(language => this.language = language));
     }
 
     public currentLanguage(): string {
@@ -93,7 +91,7 @@ export class MultilingualService {
             }
         }
 
-        /* ...otherwise return origin string. */
+        /* ...otherwise return original string. */
         return str;
     }
 
@@ -138,11 +136,17 @@ export class MultilingualService {
             //     console.log('%c *******************************************', 'color: green;');
             // }
 
-            const inTranslationArray = this.translations.find((item) => item.original === value);
+            const inTranslationArray = this.translations.find(item => item.original === value);
 
             if (!inTranslationArray && foundTag === false) { // only not found
                 this.translations.push(
-                    {from: this.router.url, original: value, mltag: mltag, translation: str, found: (foundTag) ? true : foundTag}
+                    {
+                        from: this.router.url,
+                        original: value,
+                        mltag,
+                        translation: str,
+                        found: (foundTag) ? true : foundTag,
+                    },
                 );
             }
         }
@@ -158,12 +162,12 @@ export class MultilingualService {
                 str = [];
                 if (Array.isArray(value)) {
                     // if array -> loop on each
-                    for (let elt of value) {
+                    for (const elt of value) {
                         // if object json -> translate
                         if (typeof elt === 'object') {
                             // ng-select
                             if (elt.text) {
-                                str.push({id: elt.id, text: this.parseString(elt.text)});
+                                str.push({ id: elt.id, text: this.parseString(elt.text) });
                             }
                         } else {
                             // if array of strings
@@ -173,7 +177,7 @@ export class MultilingualService {
                 } else {
                     // if not array
                     if (typeof value === 'object') {
-                        str = {id: value.id, text: this.parseString(value.text)};
+                        str = { id: value.id, text: this.parseString(value.text) };
                     } else {
                         str = this.parseString(value, params);
                     }
@@ -191,9 +195,8 @@ export class MultilingualService {
         if (value !== '' && value !== undefined) {
             // console.log('FUNCTION TRANSLATE FOR ' + value + ' IN ' + this.language);
             return this.process(value, params);
-        } else {
-            return value;
         }
+        return value;
     }
 
     public getTranslations() {
@@ -206,10 +209,10 @@ export class MultilingualService {
         this.apiUrl = 'http://10.0.2.72:8000'; // prod
         try {
             const httpOptions = {
-                headers: new HttpHeaders({ 'Content-Type': 'application/json' })
-            }
+                headers: new HttpHeaders({ 'Content-Type': 'application/json' }),
+            };
             return await this.http
-                .post(this.apiUrl + '/api/sites/1/whitelist-translations', formData, httpOptions)
+                .post(`${this.apiUrl}/api/sites/1/whitelist-translations`, formData, httpOptions)
                 .toPromise();
         } catch (error) {
             return await this.handleError(error);
@@ -229,21 +232,20 @@ export class MultilingualService {
             v.classList.remove('highlighMissingTranslations');
             v.classList.remove('blink_bg');
         });
-
     }
 
     public replaceMissingTranslations(str) {
         const elements = document.getElementsByTagName('*');
         const excludes = 'html,head,style,title,link,meta,script,object,iframe';
-        for (let i = 0; i < elements.length; i++) {
-            let element = elements[i];
+        for (let i = 0; i < elements.length; i += 1) {
+            const element = elements[i];
             if ((excludes + ',').indexOf(element.nodeName.toLowerCase() + ',') === -1) {
-                for (let j = 0; j < element.childNodes.length; j++) {
-                    let node = element.childNodes[j];
+                for (let j = 0; j < element.childNodes.length; j += 1) {
+                    const node = element.childNodes[j];
                     if (node.nodeType === 3) {
-                        let text = node.nodeValue;
-                        let regex = new RegExp(this.escapeRegExp(str), 'gi');
-                        let replacedText = text.replace(regex, 'STRFOUND');
+                        const text = node.nodeValue;
+                        const regex = new RegExp(this.escapeRegExp(str), 'gi');
+                        const replacedText = text.replace(regex, 'STRFOUND');
                         if (replacedText !== text) {
                             element.classList.add('highlighMissingTranslations');
                             element.classList.add('blink_bg');
