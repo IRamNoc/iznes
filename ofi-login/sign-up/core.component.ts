@@ -19,5 +19,15 @@ import { animate, state, style, transition, trigger } from '@angular/animations'
 export class OfiCoreSignUpComponent extends SignupComponent {
 
     public showResetTwoFactor: boolean = false;
+    public language: string;
+    public showTwoFactorModal = false;
+    public qrCode: string = '';
+    public langLabels = {
+        'fr-Latn': 'Francais',
+        'en-Latn': 'English',
+    };
 
+    getLabel(lang: string): string {
+        return this.langLabels[lang];
+    }
 }
