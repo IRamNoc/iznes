@@ -30,17 +30,20 @@ export class NewKycDocumentsComponent implements OnInit, OnDestroy {
         const floatableDocument = this.form.get('listed.kycevidencefloatable');
         const regulatedDocuments = this.form.get('regulated');
 
+        floatableDocument.disable();
         listedDocuments.disable();
+        regulatedDocuments.disable();
+
         if (documents.isListed) {
             listedDocuments.enable();
+
+            if (documents.isFloatableHigh) {
+                floatableDocument.enable();
+            } else {
+                floatableDocument.disable();
+            }
         }
 
-        floatableDocument.disable();
-        if (documents.isFloatableHigh) {
-            floatableDocument.enable();
-        }
-
-        regulatedDocuments.disable();
         if (documents.isRegulated) {
             regulatedDocuments.enable();
         }
