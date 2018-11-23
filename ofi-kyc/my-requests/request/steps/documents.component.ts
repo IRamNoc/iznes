@@ -13,7 +13,7 @@ import { steps } from '../../requests.config';
 
 @Component({
     selector: 'kyc-step-documents',
-    templateUrl: './documents.component.html'
+    templateUrl: './documents.component.html',
 })
 export class NewKycDocumentsComponent implements OnInit, OnDestroy {
     @ViewChild(FormPercentDirective) formPercent: FormPercentDirective;
@@ -25,13 +25,12 @@ export class NewKycDocumentsComponent implements OnInit, OnDestroy {
         if (isPro) {
             (this.form.get('other') as FormGroup).disable();
             (this.form.get('pro') as FormGroup).enable();
-        }
-        else {
+        } else {
             (this.form.get('other') as FormGroup).enable();
             (this.form.get('pro') as FormGroup).disable();
         }
         this.formPercent.refreshFormPercent();
-    };
+    }
 
     open;
     unsubscribe: Subject<any> = new Subject();
@@ -42,7 +41,7 @@ export class NewKycDocumentsComponent implements OnInit, OnDestroy {
         private newRequestService: NewRequestService,
         private persistService: PersistService,
         private documentsService: DocumentsService,
-        private changeDetectorRef : ChangeDetectorRef
+        private changeDetectorRef: ChangeDetectorRef,
     ) {
     }
 
@@ -77,7 +76,7 @@ export class NewKycDocumentsComponent implements OnInit, OnDestroy {
     initData() {
         this.connectedWallet$
             .pipe(
-                takeUntil(this.unsubscribe)
+                takeUntil(this.unsubscribe),
             )
             .subscribe((connectedWallet) => {
                 this.connectedWallet = connectedWallet;
@@ -90,8 +89,8 @@ export class NewKycDocumentsComponent implements OnInit, OnDestroy {
             this.form,
             this.newRequestService.context,
             {
-                reset : false
-            }
+                reset: false,
+            },
         );
     }
 
@@ -99,27 +98,27 @@ export class NewKycDocumentsComponent implements OnInit, OnDestroy {
         this.persistService.refreshState(
             'newkycrequest/documents',
             this.newRequestService.createDocumentsFormGroup(),
-            this.newRequestService.context
+            this.newRequestService.context,
         );
     }
 
     uploadFile($event, formControl: AbstractControl) {
-        formControl = <FormControl> formControl;
+        const fControl = <FormControl> formControl;
 
-        if(!$event.files.length){
-            let type = formControl.get('type').value;
-            let newDocumentControl = this.newRequestService.createDocumentFormGroup(type).value;
-            formControl.patchValue(newDocumentControl);
-        } else{
+        if (!$event.files.length) {
+            const type = fControl.get('type').value;
+            const newDocumentControl = this.newRequestService.createDocumentFormGroup(type).value;
+            fControl.patchValue(newDocumentControl);
+        } else {
             this.requestsService.uploadFile($event).then((file: any) => {
-                formControl.get('hash').patchValue(file.fileHash);
-                formControl.get('name').patchValue(file.fileTitle);
+                fControl.get('hash').patchValue(file.fileHash);
+                fControl.get('name').patchValue(file.fileTitle);
             });
         }
     }
 
     isDisabled(path) {
-        let control = this.form.get(path);
+        const control = this.form.get(path);
 
         return control.disabled;
     }
@@ -137,9 +136,9 @@ export class NewKycDocumentsComponent implements OnInit, OnDestroy {
 
         this.requests$
             .pipe(
-                take(1)
+                take(1),
             )
-            .subscribe(requests => {
+            .subscribe((requests) => {
                 this.documentsService.sendRequest(this.form, requests, this.connectedWallet);
 
                 this.clearPersistForm();
@@ -153,18 +152,18 @@ export class NewKycDocumentsComponent implements OnInit, OnDestroy {
             .pipe(
                 rxFilter(requests => !isEmpty(requests)),
                 map(requests => castArray(requests[0])),
-                takeUntil(this.unsubscribe)
+                takeUntil(this.unsubscribe),
             )
-            .subscribe(requests => {
-                requests.forEach(request => {
+            .subscribe((requests) => {
+                requests.forEach((request) => {
                     this.documentsService.getCurrentFormDocumentsData(request.kycID, this.connectedWallet).then((data) => {
                         // Patch the global document data followed by the kyc form data
                         data.forEach((formData, index) => {
-                            formData.forEach(value => {
-                                let type = value.type;
-                                let shouldContinue = (index === 1 || (index === 0 && value.common));
-                                let path = documentFormPaths[type];
-                                let control = this.form.get([path, type]);
+                            formData.forEach((value) => {
+                                const type = value.type;
+                                const shouldContinue = (index === 1 || (index === 0 && value.common));
+                                const path = documentFormPaths[type];
+                                const control = this.form.get([path, type]);
 
                                 if (type && shouldContinue && control) {
                                     control.patchValue(value);

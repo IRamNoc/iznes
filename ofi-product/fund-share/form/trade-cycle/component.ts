@@ -1,20 +1,18 @@
-import {Component, OnInit, ChangeDetectionStrategy, ChangeDetectorRef, OnDestroy, Input, Output, EventEmitter} from '@angular/core';
-import {FormGroup, FormControl, FormArray} from '@angular/forms';
-import {Observable, Subscription} from 'rxjs';
-
-import {FundShareTradeCycleModel, TradeCycleModelDropdowns} from './model';
+import { Component, OnInit, ChangeDetectionStrategy, ChangeDetectorRef, OnDestroy, Input, Output, EventEmitter } from '@angular/core';
+import { FormGroup, FormControl, FormArray } from '@angular/forms';
+import { Observable, Subscription } from 'rxjs';
+import { FundShareTradeCycleModel, TradeCycleModelDropdowns } from './model';
 
 @Component({
     styleUrls: ['./component.scss'],
     selector: 'app-ofi-am-trade-cycle',
     templateUrl: './component.html',
-    changeDetection: ChangeDetectionStrategy.OnPush
+    changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class FundShareTradeCycleComponent implements OnInit, OnDestroy {
-
     private _tradeType: string;
     @Input() set tradeType(value: string) {
-        if(!value) return;
+        if (!value) return;
 
         this._tradeType = value;
         this.typeLowercase = this.getTypeFormatted(0);
@@ -65,7 +63,7 @@ export class FundShareTradeCycleComponent implements OnInit, OnDestroy {
     }
 
     showAdd(index: number, len: number): boolean {
-        return index+1 === len;
+        return index + 1 === len;
     }
 
     showRemove(index: number, len: number): boolean {
@@ -81,10 +79,9 @@ export class FundShareTradeCycleComponent implements OnInit, OnDestroy {
     ngOnDestroy() {
         this.model = undefined;
     }
-
 }
 
 enum TextStyleEnum {
     Lowercase,
-    Capitilised
+    Capitilised,
 }

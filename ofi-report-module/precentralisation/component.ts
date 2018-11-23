@@ -5,7 +5,8 @@ import { NgRedux, select } from '@angular-redux/store';
 import { Unsubscribe } from 'redux';
 import { fromJS } from 'immutable';
 /* Utils. */
-import { ConfirmationService, NumberConverterService } from '@setl/utils';
+import { ConfirmationService, NumberConverterService, mDateHelper } from '@setl/utils';
+import { APP_CONFIG, AppConfig, FileDownloader } from '@setl/utils/index';
 /* Alerts and confirms. */
 import { AlertsService } from '@setl/jaspero-ng2-alerts';
 import { Subject } from 'rxjs';
@@ -15,10 +16,8 @@ import { ActivatedRoute, Router } from '@angular/router';
 import { OfiReportsService } from '../../ofi-req-services/ofi-reports/service';
 /* store */
 import { ofiManageOrderActions } from '@ofi/ofi-main/ofi-store';
-import { APP_CONFIG, AppConfig, FileDownloader } from "@setl/utils/index";
 import * as moment from 'moment';
 import { MultilingualService } from '@setl/multilingual';
-import { mDateHelper } from '@setl/utils';
 import { get } from 'lodash';
 
 /* Types. */
@@ -57,11 +56,10 @@ export class PrecentralisationReportComponent implements OnInit, OnDestroy {
         disableKeypress: true,
         locale: this.language,
         isDayDisabledCallback: (thisDate) => {
-            if (!!thisDate && this.filtersForm.controls['dateTo'].value != '') {
+            if (!!thisDate && this.filtersForm.controls['dateTo'].value !== '') {
                 return (thisDate.diff(this.filtersForm.controls['dateTo'].value) > 0);
-            } else {
-                return false;
             }
+            return false;
         },
     };
     toConfigDate = {
@@ -71,11 +69,10 @@ export class PrecentralisationReportComponent implements OnInit, OnDestroy {
         disableKeypress: true,
         locale: this.language,
         isDayDisabledCallback: (thisDate) => {
-            if (!!thisDate && this.filtersForm.controls['dateFrom'].value != '') {
+            if (!!thisDate && this.filtersForm.controls['dateFrom'].value !== '') {
                 return (thisDate.diff(this.filtersForm.controls['dateFrom'].value) < 0);
-            } else {
-                return false;
             }
+            return false;
         },
     };
 
@@ -127,7 +124,7 @@ export class PrecentralisationReportComponent implements OnInit, OnDestroy {
     customColors: any = [];
 
     colorScheme = { domain: ['#51AD5B', '#AF2418'] };
-    
+
     fundsPayload: any;
     isFundsPayloadOK: any;
     sharesPayload: any;
@@ -163,7 +160,7 @@ export class PrecentralisationReportComponent implements OnInit, OnDestroy {
                 private confirmationService: ConfirmationService,
                 private numberConverterService: NumberConverterService,
                 private fileDownloader: FileDownloader,
-                private translate: MultilingualService,
+                public translate: MultilingualService,
                 @Inject(APP_CONFIG) appConfig: AppConfig) {
         // reset datagrid
         this.fundsDetails = [];
@@ -175,7 +172,7 @@ export class PrecentralisationReportComponent implements OnInit, OnDestroy {
         this.sharesTotalRedemptionAmount = 0;
         this.fundsTotalNetAmount = 0;
         this.fundsTotalSubscriptionAmount = 0;
-        this.fundsTotalRedemptionAmount = 0;       
+        this.fundsTotalRedemptionAmount = 0;
         this.pieChartDatas = [
             {
                 name: this.translate.translate('Subscription (%)'),
@@ -184,18 +181,18 @@ export class PrecentralisationReportComponent implements OnInit, OnDestroy {
             {
                 name: this.translate.translate('Redemption (%)'),
                 value: 0,
-            }
+            },
         ];
 
         this.customColors = [
             {
                 name: this.translate.translate('Subscription (%)'),
-                value: '#51AD5B'
+                value: '#51AD5B',
             },
             {
                 name: this.translate.translate('Redemption (%)'),
-                value: '#AF2418'
-            }
+                value: '#AF2418',
+            },
         ];
 
         this.isFundLevel = (this.router.url.indexOf('/precentralisation/funds') !== -1) ? true : false;
@@ -249,7 +246,7 @@ export class PrecentralisationReportComponent implements OnInit, OnDestroy {
                         {
                             name: this.translate.translate('Redemption (%)'),
                             value: (this.fundsTotalRedemptionAmount * 100 / (this.fundsTotalSubscriptionAmount + this.fundsTotalRedemptionAmount)),
-                        }
+                        },
                     ];
                 } else {
                     // this.fundsDetails = [];
@@ -264,7 +261,7 @@ export class PrecentralisationReportComponent implements OnInit, OnDestroy {
                         {
                             name: this.translate.translate('Redemption (%)'),
                             value: 0,
-                        }
+                        },
                     ];
                 }
                 this.changeDetectorRef.markForCheck();
@@ -273,8 +270,8 @@ export class PrecentralisationReportComponent implements OnInit, OnDestroy {
 
         if (this.isShareLevel) {
             // share list for ng-select
-            this.subscriptions.push(this.requestedSharesListOb.subscribe((requestedSharesList) => this.requestedSharesListFromRedux(requestedSharesList)));
-            this.subscriptions.push(this.sharesListOb.subscribe((sharesList) => this.getSharesListFromRedux(sharesList)));
+            this.subscriptions.push(this.requestedSharesListOb.subscribe(requestedSharesList => this.requestedSharesListFromRedux(requestedSharesList)));
+            this.subscriptions.push(this.sharesListOb.subscribe(sharesList => this.getSharesListFromRedux(sharesList)));
 
             // shares details
             this.subscriptions.push(this.sharesDetailsListOb.subscribe((sharesDetailsList) => {
@@ -297,7 +294,7 @@ export class PrecentralisationReportComponent implements OnInit, OnDestroy {
                         {
                             name: this.translate.translate('Redemption (%)'),
                             value: (this.sharesTotalRedemptionAmount * 100 / (this.sharesTotalSubscriptionAmount + this.sharesTotalRedemptionAmount)),
-                        }
+                        },
                     ];
                 } else {
                     // this.sharesDetails = [];
@@ -312,7 +309,7 @@ export class PrecentralisationReportComponent implements OnInit, OnDestroy {
                         {
                             name: this.translate.translate('Redemption (%)'),
                             value: 0,
-                        }
+                        },
                     ];
                 }
                 this.changeDetectorRef.markForCheck();
@@ -341,7 +338,7 @@ export class PrecentralisationReportComponent implements OnInit, OnDestroy {
             {
                 name: this.translate.translate('Redemption (%)'),
                 value: 0,
-            }
+            },
         ];
     }
 
@@ -353,15 +350,15 @@ export class PrecentralisationReportComponent implements OnInit, OnDestroy {
     getLanguage(requested): void {
         if (requested) {
             switch (requested) {
-            case 'fra':
-                this.language = 'fr';
-                break;
-            case 'eng':
-                this.language = 'en';
-                break;
-            default:
-                this.language = 'en';
-                break;
+                case 'fra':
+                    this.language = 'fr';
+                    break;
+                case 'eng':
+                    this.language = 'en';
+                    break;
+                default:
+                    this.language = 'en';
+                    break;
             }
             this.changeDetectorRef.markForCheck();
         }
@@ -376,15 +373,18 @@ export class PrecentralisationReportComponent implements OnInit, OnDestroy {
     getFundsListFromRedux(fundsList) {
         const listImu = fromJS(fundsList);
 
-        this.fundsList = listImu.reduce((result, item) => {
-            let isLei = (item.get('lei') === '' || item.get('lei') === null) ? '' : ' (' + item.get('isin') + ')';
-            result.push({
-                id: item.get('fundId'),
-                text: item.get('fundName') + isLei,
-            });
+        this.fundsList = listImu.reduce(
+            (result, item) => {
+                const isLei = (item.get('lei') === '' || item.get('lei') === null) ? '' : ' (' + item.get('isin') + ')';
+                result.push({
+                    id: item.get('fundId'),
+                    text: item.get('fundName') + isLei,
+                });
 
-            return result;
-        }, []);
+                return result;
+            },
+            [],
+        );
 
         if (this.fundsList.length > 0 && this.fundsPayload) {
             // console.log('fundsPayload', this.fundsPayload);
@@ -403,15 +403,18 @@ export class PrecentralisationReportComponent implements OnInit, OnDestroy {
     getSharesListFromRedux(sharesList) {
         const listImu = fromJS(sharesList);
 
-        this.sharesList = listImu.reduce((result, item) => {
-            let isIsin = (item.get('isin') === '' || item.get('isin') === null) ? '' : ' (' + item.get('isin') + ')';
-            result.push({
-                id: item.get('shareId'),
-                text: item.get('shareName') + isIsin,
-            });
+        this.sharesList = listImu.reduce(
+            (result, item) => {
+                const isIsin = (item.get('isin') === '' || item.get('isin') === null) ? '' : ' (' + item.get('isin') + ')';
+                result.push({
+                    id: item.get('shareId'),
+                    text: item.get('shareName') + isIsin,
+                });
 
-            return result;
-        }, []);
+                return result;
+            },
+            [],
+        );
 
         if (this.sharesList.length > 0 && this.sharesPayload) {
             // console.log('sharesPayload', this.sharesPayload);
@@ -429,10 +432,13 @@ export class PrecentralisationReportComponent implements OnInit, OnDestroy {
     updateFiltersForm() {
         const yesterday = moment().subtract(1, 'day').format('YYYY-MM-DD');
         const nextWeek = moment().add(1, 'week').format('YYYY-MM-DD');
-        this.filtersForm.get('specificDate').patchValue([{
-            id: 3,
-            text: this.translate.translate('Specific Settlement Period')
-        }], { emitEvent: false });
+        this.filtersForm.get('specificDate').patchValue(
+            [{
+                id: 3,
+                text: this.translate.translate('Specific Settlement Period'),
+            }],
+            { emitEvent: false },
+        );
         this.filtersForm.get('dateFrom').patchValue(yesterday, { emitEvent: false });
         this.filtersForm.get('dateTo').patchValue(nextWeek, { emitEvent: false });
         this.filtersForm.get('specificDate').updateValueAndValidity();
@@ -461,16 +467,19 @@ export class PrecentralisationReportComponent implements OnInit, OnDestroy {
         });
         this.dateFrom = yesterday;
         this.dateTo = nextWeek;
-        this.filtersForm.get('specificDate').patchValue([{
-            id: 2,
-            text: this.translate.translate('Specific NAV Period')
-        }], { emitEvent: false });
+        this.filtersForm.get('specificDate').patchValue(
+            [{
+                id: 2,
+                text: this.translate.translate('Specific NAV Period'),
+            }],
+            { emitEvent: false },
+        );
         this.filtersForm.get('dateFrom').patchValue(yesterday, { emitEvent: false });
         this.filtersForm.get('dateTo').patchValue(nextWeek, { emitEvent: false });
         this.filtersForm.get('specificDate').updateValueAndValidity();
         this.filtersForm.get('dateFrom').updateValueAndValidity();
         this.filtersForm.get('dateTo').updateValueAndValidity();
-        this.subscriptions.push(this.filtersForm.valueChanges.subscribe((form) => this.requestSearch(form)));
+        this.subscriptions.push(this.filtersForm.valueChanges.subscribe(form => this.requestSearch(form)));
         this.changeDetectorRef.markForCheck();
     }
 
@@ -548,7 +557,7 @@ export class PrecentralisationReportComponent implements OnInit, OnDestroy {
                     {
                         name: this.translate.translate('Redemption (%)'),
                         value: 0,
-                    }
+                    },
                 ];
             }
         }
@@ -578,7 +587,7 @@ export class PrecentralisationReportComponent implements OnInit, OnDestroy {
                     {
                         name: this.translate.translate('Redemption (%)'),
                         value: 0,
-                    }
+                    },
                 ];
 
             }

@@ -51,7 +51,7 @@
 <div class="row" style="margin-top: 10px;">
     <div class="form-group button-group">
         <div class="col-sm-12">
-            <button (click)="handleClose()" class="btn btn-secondary">{{'Close' | translate}}</button>
+            <button (click)="handleClose()" class="btn btn-secondary">{{ 'Close' | translate }}</button>
         </div>
     </div>
 </div>
@@ -61,64 +61,55 @@
         <div class="col-md-6 col-sm-12">
             <table class="rwd-table">
                 <tr>
-                    <th colspan="2">{{'Section 1' | translate}}</th>
+                    <th colspan="2">{{ 'Section 1' | translate }}</th>
                 </tr>
                 <tr>
                     <td style="padding:4px 0px"></td>
                     <td style="padding:4px 0px"></td>
                 </tr>
                 <tr class="data-row">
-                    <td class="font-weight-bold">{{'ISIN' | translate}}</td>
+                    <td class="font-weight-bold">{{ 'ISIN' | translate }}</td>
                     <td>{{metaData.isin}}</td>
                 </tr>
                 <tr class="data-row">
-                    <td class="font-weight-bold">{{'Portfolio Code' | translate}}</td>
+                    <td class="font-weight-bold">{{ 'Portfolio Code' | translate }}</td>
                     <td>{{metaData.portfolioCode}}</td>
                 </tr>
                 <tr class="data-row">
-                    <td class="font-weight-bold">{{'Share Name' | translate}}</td>
+                    <td class="font-weight-bold">{{ 'Share Name' | translate }}</td>
                     <td>{{metaData.shareName}}</td>
                 </tr>
                 <tr class="data-row">
-                    <td class="font-weight-bold">{{'Status' | translate}}</td>
+                    <td class="font-weight-bold">{{ 'Status' | translate }}</td>
                     <td>{{metaData.fundShareStatus[0] && metaData.fundShareStatus[0]['text']}}</td>
                 </tr>
                 <tr class="data-row">
-                    <td class="font-weight-bold">{{'Address' | translate}}</td>
+                    <td class="font-weight-bold">{{ 'Address' | translate }}</td>
                     <td>{{metaData.fundAddressPrefix && metaData.fundAddressPrefix + ','}}
                         {{metaData.fundAddress1 && metaData.fundAddress1 + ','}}
                         {{metaData.fundAddress2 && metaData.fundAddress2 + ','}}
                         {{metaData.fundAddress3 && metaData.fundAddress3 + ','}}
                         {{metaData.fundAddress4 && metaData.fundAddress4 + ','}}
-
-
-
-
-
-
-
-
-
                     </td>
                 </tr>
                 <tr class="data-row">
-                    <td class="font-weight-bold">{{'LEI' | translate}}</td>
+                    <td class="font-weight-bold">{{ 'LEI' | translate }}</td>
                     <td>{{metaData.leiCode}}</td>
                 </tr>
                 <tr class="data-row">
-                    <td class="font-weight-bold">{{'Share type' | translate}}</td>
+                    <td class="font-weight-bold">{{ 'Share Type' | translate }}</td>
                     <td>{{metaData.shareType[0] && metaData.shareType[0]['text']}}</td>
                 </tr>
                 <tr class="data-row">
-                    <td class="font-weight-bold">{{'Income Allocation' | translate}}</td>
+                    <td class="font-weight-bold">{{ 'Income Allocation' | translate }}</td>
                     <td>{{metaData.incomeAllocation[0] && metaData.incomeAllocation[0]['text']}}</td>
                 </tr>
                 <tr class="data-row">
-                    <td class="font-weight-bold">{{'Currency of Share' | translate}}</td>
+                    <td class="font-weight-bold">{{ 'Currency of Share' | translate }}</td>
                     <td>{{metaData.shareCurrency[0] && metaData.shareCurrency[0]['text']}}</td>
                 </tr>
                 <tr class="data-row">
-                    <td class="font-weight-bold">{{'Portfolio Currency' | translate}}</td>
+                    <td class="font-weight-bold">{{ 'Portfolio Currency' | translate }}</td>
                     <td>{{metaData.portfolioCurrency[0] && metaData.portfolioCurrency[0]['text']}}</td>
                 </tr>
                 <!--<setl-file-viewer fileHash="5fbae10e71c4fb42269be9da2e921c1c135505588948bc5a778fced290f1cb67">-->
@@ -128,87 +119,70 @@
         <div class="col-md-6 col-sm-12">
             <table class="rwd-table">
                 <tr>
-                    <th colspan="2">{{'Section 2' | translate}}</th>
+                    <th colspan="2">{{ 'Section 2' | translate }}</th>
                 </tr>
                 <tr>
                     <td style="padding:4px 0px"></td>
                     <td style="padding:4px 0px"></td>
                 </tr>
                 <tr class="data-row">
-                    <td class="font-weight-bold">{{'Approval Date' | translate}}</td>
+                    <td class="font-weight-bold">{{ 'Approval Date' | translate }}</td>
                     <td>{{metaData.approvalDate}}</td>
                 </tr>
-
                 <tr class="data-row">
-                    <td class="font-weight-bold">{{'Creation Date' | translate}}</td>
+                    <td class="font-weight-bold">{{ 'Creation Date' | translate }}</td>
                     <td>{{metaData.creationDate}}</td>
                 </tr>
                 <tr class="data-row">
-                    <td class="font-weight-bold">{{'Dissolution Date' | translate}}</td>
+                    <td class="font-weight-bold">{{ 'Dissolution Date' | translate }}</td>
                     <td>{{metaData.dissolutionDate}}</td>
                 </tr>
                 <tr class="data-row">
-                    <td class="font-weight-bold">{{'Side Pocket' | translate}}</td>
-                    <td *ngIf="metaData.sidePocket">{{'Yes' | translate}}
-
-                    </td>
-                    <td *ngIf="!metaData.sidePocket">{{'No' | translate}}
-
-                    </td>
+                    <td class="font-weight-bold">{{ 'Side Pocket' | translate }}</td>
+                    <td *ngIf="metaData.sidePocket">{{ 'Yes' | translate }}</td>
+                    <td *ngIf="!metaData.sidePocket">{{ 'No' | translate }}</td>
                 </tr>
                 <tr class="data-row">
-                    <td class="font-weight-bold">{{'In liquidation' | translate}}</td>
-                    <td *ngIf="metaData.fundInLiquidation">{{'Yes' | translate}}
-
-                    </td>
-                    <td *ngIf="!metaData.fundInLiquidation">{{'No' | translate}}
-
-                    </td>
+                    <td class="font-weight-bold">{{ 'In Liquidation' | translate}}</td>
+                    <td *ngIf="metaData.fundInLiquidation">{{ 'Yes' | translate }}</td>
+                    <td *ngIf="!metaData.fundInLiquidation">{{ 'No' | translate }}</td>
                 </tr>
                 <tr class="data-row">
-                    <td class="font-weight-bold">{{'Valuation Frequency' | translate}}</td>
+                    <td class="font-weight-bold">{{ 'Valuation Frequency' | translate }}</td>
                     <td>{{metaData.valuationFrequency[0] && metaData.valuationFrequency[0]['text']}}</td>
                 </tr>
                 <tr class="data-row">
-                    <td class="font-weight-bold">{{'Business Day Rule' | translate}}</td>
-                    <td *ngIf="metaData.fundBusinessDayRule">{{'Yes' | translate}}
-
-                    </td>
-                    <td *ngIf="!metaData.fundBusinessDayRule">{{'No' | translate}}
-
-                    </td>
+                    <td class="font-weight-bold">{{ 'Business Day Rule' | translate }}</td>
+                    <td *ngIf="metaData.fundBusinessDayRule">{{ 'Yes' | translate }}</td>
+                    <td *ngIf="!metaData.fundBusinessDayRule">{{ 'No' | translate }}</td>
                 </tr>
                 <tr class="data-row">
-                    <td class="font-weight-bold">{{'Applicable Rights' | translate}}</td>
+                    <td class="font-weight-bold">{{ 'Applicable Rights' | translate }}</td>
                     <td>{{metaData.applicableRight[0] && metaData.applicableRight[0]['text']}}</td>
                 </tr>
                 <tr class="data-row">
-                    <td class="font-weight-bold">{{'Estimated NAV' | translate}}</td>
-                    <td *ngIf="metaData.fundEstimated">{{'Yes' | translate}}
-
-                    </td>
-                    <td *ngIf="!metaData.fundEstimated">{{'No' | translate}}
-
-                    </td>
+                    <td class="font-weight-bold">{{ 'Estimated NAV' | translate }}</td>
+                    <td *ngIf="metaData.fundEstimated">{{ 'Yes' | translate }}</td>
+                    <td *ngIf="!metaData.fundEstimated">{{ 'No' | translate }}</td>
                 </tr>
                 <tr class="data-row">
-                    <td class="font-weight-bold">{{'Estimated NAV Date' | translate}}</td>
+                    <td class="font-weight-bold">{{ 'Estimated NAV Date' | translate }}</td>
                     <td>{{metaData.estimatedNavDate}}</td>
                 </tr>
                 <tr class="data-row">
-                    <td class="font-weight-bold">{{'Regulator Disclosure' | translate}}</td>
+                    <td class="font-weight-bold">{{ 'Regulator Disclosure' | translate }}</td>
                     <td>{{metaData.amfDisclosure}}</td>
                 </tr>
                 <tr class="data-row">
-                    <td class="font-weight-bold">{{'Reporting Country' | translate}}</td>
+                    <td class="font-weight-bold">{{ 'Reporting Country' | translate }}</td>
                     <td>{{metaData.reportingCountry[0] && metaData.reportingCountry[0]['text']}}</td>
                 </tr>
                 <tr class="data-row">
-                    <td class="font-weight-bold">{{'End of First Financial Year' | translate}}</td>
+                    <td class="font-weight-bold">{{ 'End of First Financial Year' | translate }}</td>
                     <td>{{metaData.endOfFirstYearDate}}</td>
                 </tr>
                 <tr class="data-row">
-                    <td class="font-weight-bold">{{'Closing Date' | translate}}</td>
+                    <td class="font-weight-bold">{{ 'Closing Date' | translate }}</td>
                     <td>{{metaData.closingDate}}</td>
                 </tr>
             </table>
@@ -222,96 +196,74 @@
         <div class="col-md-6 col-sm-12">
             <table class="rwd-table">
                 <tr>
-                    <th colspan="2">{{'Section 1' | translate}}</th>
+                    <th colspan="2">{{ 'Section 1' | translate }}</th>
                 </tr>
                 <tr>
                     <td style="padding:4px 0px"></td>
                     <td style="padding:4px 0px"></td>
                 </tr>
                 <tr class="data-row">
-                    <td class="font-weight-bold">{{'Asset management company' | translate}}</td>
+                    <td class="font-weight-bold">{{ 'Asset Management Company' | translate }}</td>
                     <td>{{metaData.assetManagementCompany[0] && metaData.assetManagementCompany[0]['text']}}</td>
                 </tr>
                 <tr class="data-row">
-                    <td class="font-weight-bold">{{'Address' | translate}}</td>
+                    <td class="font-weight-bold">{{ 'Address' | translate }}</td>
                     <td>{{metaData.managementCompanyAddressPrefix && metaData.managementCompanyAddressPrefix + ','}}
                         {{metaData.managementCompanyAddress1 && metaData.managementCompanyAddress1 + ','}}
                         {{metaData.managementCompanyAddress2 && metaData.managementCompanyAddress2 + ','}}
                         {{metaData.managementCompanyAddress3 && metaData.managementCompanyAddress3 + ','}}
                         {{metaData.managementCompanyAddress4 && metaData.managementCompanyAddress4 + ','}}
                         {{metaData.managementCompanyCodePostal && metaData.managementCompanyCodePostal}}
-
-
-
-
-
-
-
-
-
-
-
                     </td>
                 </tr>
                 <tr class="data-row">
-                    <td class="font-weight-bold">{{'Delegated asset management company' | translate}}</td>
+                    <td class="font-weight-bold">{{ 'Delegated Asset Management Company' | translate }}</td>
                     <td>{{metaData.delegatedAssetManagementCompany[0] && metaData.delegatedAssetManagementCompany[0]['text']}}</td>
                 </tr>
                 <tr class="data-row">
-                    <td class="font-weight-bold">{{'Address' | translate}}</td>
+                    <td class="font-weight-bold">{{ 'Address' | translate }}</td>
                     <td>{{metaData.delegatedManagementCompanyAddressPrefix && metaData.delegatedManagementCompanyAddressPrefix + ','}}
                         {{metaData.delegatedManagementCompanyAddress1 && metaData.delegatedManagementCompanyAddress1 + ','}}
                         {{metaData.delegatedManagementCompanyAddress2 && metaData.delegatedManagementCompanyAddress2 + ','}}
                         {{metaData.delegatedManagementCompanyAddress3 && metaData.delegatedManagementCompanyAddress3 + ','}}
                         {{metaData.delegatedManagementCompanyAddress4 && metaData.delegatedManagementCompanyAddress4 + ','}}
                         {{metaData.delegatedManagementCompanyCodePostal && metaData.delegatedManagementCompanyCodePostal}}
-
-
-
-
-
-
-
-
-
-
-
                     </td>
                 </tr>
                 <tr class="data-row">
-                    <td class="font-weight-bold">{{'Delegation of FX and Treasury' | translate}}</td>
+                    <td class="font-weight-bold">{{ 'Delegation of FX and Treasury' | translate }}</td>
                     <td>{{metaData.delegationFxTreasury}}</td>
                 </tr>
                 <tr class="data-row">
-                    <td class="font-weight-bold">{{'Promoter' | translate}}</td>
+                    <td class="font-weight-bold">{{ 'Promoter' | translate }}</td>
                     <td>{{metaData.promoter}}</td>
                 </tr>
                 <tr class="data-row">
-                    <td class="font-weight-bold">{{'Statutory Advisor' | translate}}</td>
+                    <td class="font-weight-bold">{{ 'Statutory Advisor' | translate }}</td>
                     <td>{{metaData.statutoryAdvisor}}</td>
                 </tr>
                 <tr class="data-row">
-                    <td class="font-weight-bold">{{'CAC Mandate Renewal Date' | translate}}</td>
+                    <td class="font-weight-bold">{{ 'CAC Mandate Renewal Date' | translate }}</td>
                     <td>{{metaData.cacRenewalDate}}</td>
                 </tr>
                 <tr class="data-row">
-                    <td class="font-weight-bold">{{'Compensator' | translate}}</td>
+                    <td class="font-weight-bold">{{ 'Compensator' | translate }}</td>
                     <td>{{metaData.compensator}}</td>
                 </tr>
                 <tr class="data-row">
-                    <td class="font-weight-bold">{{'Fin/Invest/Alloc Adviser' | translate}}</td>
+                    <td class="font-weight-bold">{{ 'Fin/Invest/Alloc Adviser' | translate }}</td>
                     <td>{{metaData.finInvestAllocAdviser}}</td>
                 </tr>
                 <tr class="data-row">
-                    <td class="font-weight-bold">{{'Custodian' | translate}}</td>
+                    <td class="font-weight-bold">{{ 'Custodian' | translate }}</td>
                     <td>{{metaData.custodian}}</td>
                 </tr>
                 <tr class="data-row">
-                    <td class="font-weight-bold">{{'Depositary' | translate}}</td>
+                    <td class="font-weight-bold">{{ 'Depositary' | translate }}</td>
                     <td>{{metaData.depositary}}</td>
                 </tr>
                 <tr class="data-row">
-                    <td class="font-weight-bold">{{'Sub Custodian' | translate}}</td>
+                    <td class="font-weight-bold">{{ 'Sub Custodian' | translate }}</td>
                     <td>{{metaData.subCustodian}}</td>
                 </tr>
             </table>
@@ -319,35 +271,35 @@
         <div class="col-md-6 col-sm-12">
             <table class="rwd-table">
                 <tr>
-                    <th colspan="2">{{'Section 2' | translate}}</th>
+                    <th colspan="2">{{ 'Section 2' | translate }}</th>
                 </tr>
                 <tr>
                     <td style="padding:4px 0px"></td>
                     <td style="padding:4px 0px"></td>
                 </tr>
                 <tr class="data-row">
-                    <td class="font-weight-bold">{{'Centralising Order Agent' | translate}}</td>
+                    <td class="font-weight-bold">{{ 'Centralising Order Agent' | translate }}</td>
                     <td>{{metaData.orderAgent}}</td>
                 </tr>
 
                 <tr class="data-row">
-                    <td class="font-weight-bold">{{'Prime Broker' | translate}}</td>
+                    <td class="font-weight-bold">{{ 'Prime Broker' | translate }}</td>
                     <td>{{metaData.primeBroker}}</td>
                 </tr>
                 <tr class="data-row">
-                    <td class="font-weight-bold">{{'Regulatory Reporting' | translate}}</td>
+                    <td class="font-weight-bold">{{ 'Regulatory Reporting' | translate }}</td>
                     <td>{{metaData.regulatoryReporting}}</td>
                 </tr>
                 <tr class="data-row">
-                    <td class="font-weight-bold">{{'Registry Account Manager' | translate}}</td>
+                    <td class="font-weight-bold">{{ 'Registry Account Manager' | translate }}</td>
                     <td>{{metaData.registryAccountManager}}</td>
                 </tr>
                 <tr class="data-row">
-                    <td class="font-weight-bold">{{'Administrative and Accounting Manager' | translate}}</td>
+                    <td class="font-weight-bold">{{ 'Administrative and Accounting Manager' | translate }}</td>
                     <td>{{metaData.adminAccountManager}}</td>
                 </tr>
                 <tr class="data-row">
-                    <td class="font-weight-bold">{{'Administrator NAV' | translate}}</td>
+                    <td class="font-weight-bold">{{ 'Administrator NAV' | translate }}</td>
                     <td>{{metaData.administratorNav[0] && metaData.administratorNav[0]['text']}}</td>
                 </tr>
             </table>
@@ -360,41 +312,33 @@
         <div class="col-md-6 col-sm-12">
             <table class="rwd-table">
                 <tr>
-                    <th colspan="2">{{'Section 1' | translate}}</th>
+                    <th colspan="2">{{ 'Section 1' | translate }}</th>
                 </tr>
                 <tr>
                     <td style="padding:4px 0px"></td>
                     <td style="padding:4px 0px"></td>
                 </tr>
                 <tr class="data-row">
-                    <td class="font-weight-bold">{{'Asset class' | translate}}</td>
+                    <td class="font-weight-bold">{{ 'Asset Class' | translate }}</td>
                     <td>{{metaData.assetClass[0] && metaData.assetClass[0]['text']}}</td>
                 </tr>
                 <tr class="data-row">
-                    <td class="font-weight-bold">{{'Sub class of asset' | translate}}</td>
+                    <td class="font-weight-bold">{{ 'Sub Class of Asset' | translate }}</td>
                     <td>{{metaData.subAssetClass[0] && metaData.subAssetClass[0]['text']}}</td>
                 </tr>
                 <tr class="data-row">
-                    <td class="font-weight-bold">{{'Geographical area' | translate}}</td>
+                    <td class="font-weight-bold">{{ 'Geographical Area' | translate}}</td>
                     <td>{{metaData.geographicalArea[0] && metaData.geographicalArea[0]['text']}}</td>
                 </tr>
                 <tr class="data-row">
-                    <td class="font-weight-bold">{{'SRI' | translate}}</td>
-                    <td *ngIf="metaData.fundSri">{{'Yes' | translate}}
-
-                    </td>
-                    <td *ngIf="!metaData.fundSri">{{'No' | translate}}
-
-                    </td>
+                    <td class="font-weight-bold">{{ 'SRI' | translate }}</td>
+                    <td *ngIf="metaData.fundSri">{{ 'Yes' | translate }}</td>
+                    <td *ngIf="!metaData.fundSri">{{ 'No' | translate }}</td>
                 </tr>
                 <tr class="data-row">
-                    <td class="font-weight-bold">{{'Co-promotion' | translate}}</td>
-                    <td *ngIf="metaData.fundCopromotion">{{'Yes' | translate}}
-
-                    </td>
-                    <td *ngIf="!metaData.fundCopromotion">{{'No' | translate}}
-
-                    </td>
+                    <td class="font-weight-bold">{{ 'Co-promotion' | translate }}</td>
+                    <td *ngIf="metaData.fundCopromotion">{{ 'Yes' | translate }}</td>
+                    <td *ngIf="!metaData.fundCopromotion">{{ 'No' | translate }}</td>
                 </tr>
             </table>
         </div>
@@ -406,30 +350,30 @@
         <div class="col-md-6 col-sm-12">
             <table class="rwd-table">
                 <tr>
-                    <th colspan="2">{{'Section 1' | translate}}</th>
+                    <th colspan="2">{{ 'Section 1' | translate }}</th>
                 </tr>
                 <tr>
                     <td style="padding:4px 0px"></td>
                     <td style="padding:4px 0px"></td>
                 </tr>
                 <tr class="data-row">
-                    <td class="font-weight-bold">{{'Supervisory Authority' | translate}}</td>
+                    <td class="font-weight-bold">{{ 'Supervisory Authority' | translate }}</td>
                     <td>{{metaData.supervisoryAuthority[0] && metaData.supervisoryAuthority[0]['text']}}</td>
                 </tr>
                 <tr class="data-row">
-                    <td class="font-weight-bold">{{'AMF classification' | translate}}</td>
+                    <td class="font-weight-bold">{{ 'AMF Classification' | translate }}</td>
                     <td>{{metaData.amfClassification[0] && metaData.amfClassification[0]['text']}}</td>
                 </tr>
                 <tr class="data-row">
-                    <td class="font-weight-bold">{{'UcitsIV classification' | translate}}</td>
+                    <td class="font-weight-bold">{{ 'UcitsIV Classification' | translate }}</td>
                     <td>{{metaData.ucitsIVClassification[0] && metaData.ucitsIVClassification[0]['text']}}</td>
                 </tr>
                 <tr class="data-row">
-                    <td class="font-weight-bold">{{'legal_nature' | translate}}</td>
+                    <td class="font-weight-bold">{{ 'Legal Nature' | translate }}</td>
                     <td>{{metaData.legalNature[0] && metaData.legalNature[0]['text']}}</td>
                 </tr>
                 <tr class="data-row">
-                    <td class="font-weight-bold">{{'Form of opcvm' | translate}}</td>
+                    <td class="font-weight-bold">{{ 'Form of OPCVM' | translate }}</td>
                     <td>{{metaData.formOfOpcvm[0] && metaData.formOfOpcvm[0]['text']}}</td>
                 </tr>
             </table>
@@ -437,38 +381,26 @@
         <div class="col-md-6 col-sm-12">
             <table class="rwd-table">
                 <tr>
-                    <th colspan="2">{{'Section 2' | translate}}</th>
+                    <th colspan="2">{{ 'Section 2' | translate }}</th>
                 </tr>
                 <tr>
                     <td style="padding:4px 0px"></td>
                     <td style="padding:4px 0px"></td>
                 </tr>
                 <tr class="data-row">
-                    <td class="font-weight-bold">{{'UCITS of UCITS' | translate}}</td>
-                    <td *ngIf="metaData.fundUcitsOfUcits">{{'Yes' | translate}}
-
-                    </td>
-                    <td *ngIf="!metaData.fundUcitsOfUcits">{{'No' | translate}}
-
-                    </td>
+                    <td class="font-weight-bold">{{ 'UCITS of UCITS' | translate }}</td>
+                    <td *ngIf="metaData.fundUcitsOfUcits">{{ 'Yes' | translate }}</td>
+                    <td *ngIf="!metaData.fundUcitsOfUcits">{{ 'No' | translate }}</td>
                 </tr>
                 <tr class="data-row">
-                    <td class="font-weight-bold">{{'Feeder' | translate}}</td>
-                    <td *ngIf="metaData.fundFeeder">{{'Yes' | translate}}
-
-                    </td>
-                    <td *ngIf="!metaData.fundFeeder">{{'No' | translate}}
-
-                    </td>
+                    <td class="font-weight-bold">{{ 'Feeder' | translate }}</td>
+                    <td *ngIf="metaData.fundFeeder">{{ 'Yes' | translate }}</td>
+                    <td *ngIf="!metaData.fundFeeder">{{ 'No' | translate }}</td>
                 </tr>
                 <tr class="data-row">
-                    <td class="font-weight-bold">{{'Master' | translate}}</td>
-                    <td *ngIf="metaData.fundMaster">{{'Yes' | translate}}
-
-                    </td>
-                    <td *ngIf="!metaData.fundMaster">{{'No' | translate}}
-
-                    </td>
+                    <td class="font-weight-bold">{{ 'Master' | translate }}</td>
+                    <td *ngIf="metaData.fundMaster">{{ 'Yes' | translate }}</td>
+                    <td *ngIf="!metaData.fundMaster">{{ 'No' | translate }}</td>
                 </tr>
             </table>
         </div>
@@ -480,50 +412,50 @@
         <div class="col-md-6 col-sm-12">
             <table class="rwd-table">
                 <tr>
-                    <th colspan="2">{{'Section 1' | translate}}</th>
+                    <th colspan="2">{{ 'Section 1' | translate }}</th>
                 </tr>
                 <tr>
                     <td style="padding:4px 0px"></td>
                     <td style="padding:4px 0px"></td>
                 </tr>
                 <tr class="data-row">
-                    <td class="font-weight-bold">{{'Max Indirect Fees' | translate}}</td>
+                    <td class="font-weight-bold">{{ 'Max Indirect Fees' | translate }}</td>
                     <td>{{'@metaData.maxIndirectFees@ %' | translate: {'metaData.maxIndirectFees': metaData.maxIndirectFees} }}</td>
                 </tr>
                 <tr class="data-row">
-                    <td class="font-weight-bold">{{'Max Management Fees' | translate}}</td>
+                    <td class="font-weight-bold">{{ 'Max Management Fees' | translate }}</td>
                     <td>{{'@metaData.maxManagementFees@ %' | translate: {'metaData.maxManagementFees': metaData.maxManagementFees} }}</td>
                 </tr>
                 <tr class="data-row">
-                    <td class="font-weight-bold">{{'Prospectus Calculation Basis' | translate}}</td>
+                    <td class="font-weight-bold">{{ 'Prospectus Calculation Basis' | translate }}</td>
                     <td>{{metaData.prospectusCalcBasis}}</td>
                 </tr>
                 <tr class="data-row">
-                    <td class="font-weight-bold">{{'Actual Calculation Basis' | translate}}</td>
+                    <td class="font-weight-bold">{{ 'Actual Calculation Basis' | translate }}</td>
                     <td>{{metaData.actualCalcBasis}}</td>
                 </tr>
                 <tr class="data-row">
-                    <td class="font-weight-bold">{{'Provisioned Actual Management Fee' | translate}}</td>
+                    <td class="font-weight-bold">{{ 'Provisioned Actual Management Fee' | translate }}</td>
                     <td>{{'@metaData.provisionedActualManagementFees@ %' | translate: {'metaData.provisionedActualManagementFees': metaData.provisionedActualManagementFees} }}</td>
                 </tr>
                 <tr class="data-row">
-                    <td class="font-weight-bold">{{'Acquired Subscription Fee' | translate}}</td>
+                    <td class="font-weight-bold">{{ 'Acquired Subscription Fee' | translate }}</td>
                     <td>{{'@metaData.acquiredSubscriptionFees@ %' | translate: {'metaData.acquiredSubscriptionFees': metaData.acquiredSubscriptionFees} }}</td>
                 </tr>
                 <tr class="data-row">
-                    <td class="font-weight-bold">{{'Acquired Redemption Fee' | translate}}</td>
+                    <td class="font-weight-bold">{{ 'Acquired Redemption Fee' | translate }}</td>
                     <td>{{'@metaData.acquiredRedemptionFees@ %' | translate: {'metaData.acquiredRedemptionFees': metaData.acquiredRedemptionFees} }}</td>
                 </tr>
                 <tr class="data-row">
-                    <td class="font-weight-bold">{{'Maximum non-acquired Subscription Fee' | translate}}</td>
+                    <td class="font-weight-bold">{{ 'Maximum Non-acquired Subscription Fee' | translate }}</td>
                     <td>{{'@metaData.maxSubscriptionFees@ %' | translate: {'metaData.maxSubscriptionFees': metaData.maxSubscriptionFees} }}</td>
                 </tr>
                 <tr class="data-row">
-                    <td class="font-weight-bold">{{'Maximum non-accrued Redemption Fee' | translate}}</td>
+                    <td class="font-weight-bold">{{ 'Maximum Non-accrued Redemption Fee' | translate }}</td>
                     <td>{{'@metaData.maxRedemptionFees@ %' | translate: {'metaData.maxRedemptionFees': metaData.maxRedemptionFees} }}</td>
                 </tr>
                 <tr class="data-row">
-                    <td class="font-weight-bold">{{'Outperformance Fee' | translate}}</td>
+                    <td class="font-weight-bold">{{ 'Outperformance Fee' | translate }}</td>
                     <td>{{'@metaData.outPerformanceFee@ %' | translate: {'metaData.outPerformanceFee': metaData.outPerformanceFee} }}</td>
                 </tr>
             </table>
@@ -531,40 +463,36 @@
         <div class="col-md-6 col-sm-12">
             <table class="rwd-table">
                 <tr>
-                    <th colspan="2">{{'Section 2' | translate}}</th>
+                    <th colspan="2">{{ 'Section 2' | translate }}</th>
                 </tr>
                 <tr>
                     <td style="padding:4px 0px"></td>
                     <td style="padding:4px 0px"></td>
                 </tr>
                 <tr class="data-row">
-                    <td class="font-weight-bold">{{'Hurdle' | translate}}</td>
+                    <td class="font-weight-bold">{{ 'Hurdle' | translate }}</td>
                     <td>{{'@metaData.hurdle@ %' | translate: {'metaData.hurdle': metaData.hurdle} }}</td>
                 </tr>
                 <tr class="data-row">
-                    <td class="font-weight-bold">{{'High Water Mark' | translate}}</td>
+                    <td class="font-weight-bold">{{ 'High Water Mark' | translate }}</td>
                     <td>{{'@metaData.highWaterMark@ %' | translate: {'metaData.highWaterMark': metaData.highWaterMark} }}</td>
                 </tr>
                 <tr class="data-row">
-                    <td class="font-weight-bold">{{'VMF First Collection Date' | translate}}</td>
+                    <td class="font-weight-bold">{{ 'VMF First Collection Date' | translate }}</td>
                     <td>{{'@metaData.vmfFirstCollectionDate@ %' | translate: {'metaData.vmfFirstCollectionDate': metaData.vmfFirstCollectionDate} }}</td>
                 </tr>
                 <tr class="data-row">
-                    <td class="font-weight-bold">{{'VMF billing month' | translate}}</td>
+                    <td class="font-weight-bold">{{ 'VMF Billing Month' | translate }}</td>
                     <td>{{metaData.vmfBillingMonth[0] && metaData.vmfBillingMonth[0]['text']}}</td>
                 </tr>
                 <tr class="data-row">
-                    <td class="font-weight-bold">{{'VMF frequency' | translate}}</td>
+                    <td class="font-weight-bold">{{ 'VMF Frequency' | translate }}</td>
                     <td>{{metaData.vmfFrequency[0] && metaData.vmfFrequency[0]['text']}}</td>
                 </tr>
                 <tr class="data-row">
-                    <td class="font-weight-bold">{{'Acquisition on Redemption' | translate}}</td>
-                    <td *ngIf="metaData.fundAcquisitionOnRedemption">{{'Yes' | translate}}
-
-                    </td>
-                    <td *ngIf="!metaData.fundAcquisitionOnRedemption">{{'No' | translate}}
-
-                    </td>
+                    <td class="font-weight-bold">{{ 'Acquisition on Redemption' | translate }}</td>
+                    <td *ngIf="metaData.fundAcquisitionOnRedemption">{{ 'Yes' | translate }}</td>
+                    <td *ngIf="!metaData.fundAcquisitionOnRedemption">{{ 'No' | translate }}</td>
                 </tr>
             </table>
         </div>
@@ -576,35 +504,31 @@
         <div class="col-md-6 col-sm-12">
             <table class="rwd-table">
                 <tr>
-                    <th colspan="2">{{'Section 1' | translate}}</th>
+                    <th colspan="2">{{ 'Section 1' | translate }}</th>
                 </tr>
                 <tr>
                     <td style="padding:4px 0px"></td>
                     <td style="padding:4px 0px"></td>
                 </tr>
                 <tr class="data-row">
-                    <td class="font-weight-bold">{{'Guarantee of Capital' | translate}}</td>
-                    <td *ngIf="metaData.fundGuaranteeOfCapital">{{'Yes' | translate}}
-
-                    </td>
-                    <td *ngIf="!metaData.fundGuaranteeOfCapital">{{'No' | translate}}
-
-                    </td>
+                    <td class="font-weight-bold">{{ 'Guarantee of Capital' | translate }}</td>
+                    <td *ngIf="metaData.fundGuaranteeOfCapital">{{ 'Yes' | translate }}</td>
+                    <td *ngIf="!metaData.fundGuaranteeOfCapital">{{ 'No' | translate }}</td>
                 </tr>
                 <tr class="data-row">
-                    <td class="font-weight-bold">{{'Method of Engagement' | translate}}</td>
+                    <td class="font-weight-bold">{{ 'Method of Engagement' | translate }}</td>
                     <td>{{metaData.methodOfEngagement[0] && metaData.methodOfEngagement[0]['text']}}</td>
                 </tr>
                 <tr class="data-row">
-                    <td class="font-weight-bold">{{'Regulatory Level of Leverage' | translate}}</td>
+                    <td class="font-weight-bold">{{ 'Regulatory Level of Leverage' | translate }}</td>
                     <td>{{'@metaData.regulatoryLevelOfLeverage@ %' | translate: {'metaData.regulatoryLevelOfLeverage': metaData.regulatoryLevelOfLeverage} }}</td>
                 </tr>
                 <tr class="data-row">
-                    <td class="font-weight-bold">{{'SRRI' | translate}}</td>
+                    <td class="font-weight-bold">{{ 'SRRI' | translate }}</td>
                     <td>{{metaData.srri[0] && metaData.srri[0]['text']}}</td>
                 </tr>
                 <tr class="data-row">
-                    <td class="font-weight-bold">{{'Main risks' | translate}}</td>
+                    <td class="font-weight-bold">{{ 'Main Risks' | translate }}</td>
                     <td>{{metaData.regulatoryLevelOfLeverage}}</td>
                 </tr>
             </table>
@@ -617,68 +541,48 @@
         <div class="col-md-6 col-sm-12">
             <table class="rwd-table">
                 <tr>
-                    <th colspan="2">{{'Section 1' | translate}}</th>
+                    <th colspan="2">{{ 'Section 1' | translate }}</th>
                 </tr>
                 <tr>
                     <td style="padding:4px 0px"></td>
                     <td style="padding:4px 0px"></td>
                 </tr>
                 <tr class="data-row">
-                    <td class="font-weight-bold">{{'Subscriber profile' | translate}}</td>
+                    <td class="font-weight-bold">{{ 'Subscriber Profile' | translate }}</td>
                     <td>{{metaData.subscriberProfile[0] && metaData.subscriberProfile[0]['text']}}</td>
                 </tr>
                 <tr class="data-row">
-                    <td class="font-weight-bold">{{'Dedicated' | translate}}</td>
-                    <td *ngIf="metaData.fundDedicated">{{'Yes' | translate}}
-
-                    </td>
-                    <td *ngIf="!metaData.fundDedicated">{{'No' | translate}}
-
-                    </td>
+                    <td class="font-weight-bold">{{ 'Dedicated' | translate }}</td>
+                    <td *ngIf="metaData.fundDedicated">{{ 'Yes' | translate }}</td>
+                    <td *ngIf="!metaData.fundDedicated">{{ 'No' | translate }}</td>
                 </tr>
                 <tr class="data-row">
-                    <td class="font-weight-bold">{{'Reserved' | translate}}</td>
-                    <td *ngIf="metaData.fundReserved">{{'Yes' | translate}}
-
-                    </td>
-                    <td *ngIf="!metaData.fundReserved">{{'No' | translate}}
-
-                    </td>
+                    <td class="font-weight-bold">{{ 'Reserved' | translate }}</td>
+                    <td *ngIf="metaData.fundReserved">{{ 'Yes' | translate }}</td>
+                    <td *ngIf="!metaData.fundReserved">{{ 'No' | translate }}</td>
                 </tr>
                 <tr class="data-row">
-                    <td class="font-weight-bold">{{'Access Conditions' | translate}}</td>
+                    <td class="font-weight-bold">{{ 'Access Conditions' | translate }}</td>
                     <td>{{metaData.accessCondition}}</td>
                 </tr>
                 <tr class="data-row">
-                    <td class="font-weight-bold">{{'Investment Horizon' | translate}}</td>
+                    <td class="font-weight-bold">{{ 'Investment Horizon' | translate }}</td>
                     <td>{{metaData.investmentHorizon}}</td>
                 </tr>
                 <tr class="data-row">
-                    <td class="font-weight-bold">{{'PEA Eligability' | translate}}</td>
-                    <td *ngIf="metaData.fundPeaEligibility">{{'Yes' | translate}}
-
-                    </td>
-                    <td *ngIf="!metaData.fundPeaEligibility">{{'No' | translate}}
-
-                    </td>
+                    <td class="font-weight-bold">{{ 'PEA Eligability' | translate }}</td>
+                    <td *ngIf="metaData.fundPeaEligibility">{{ 'Yes' | translate }}</td>
+                    <td *ngIf="!metaData.fundPeaEligibility">{{ 'No' | translate }}</td>
                 </tr>
                 <tr class="data-row">
-                    <td class="font-weight-bold">{{'Tax Ration 90%' | translate}}</td>
-                    <td *ngIf="metaData.fundTaxRatio90Percent">{{'Yes' | translate}}
-
-                    </td>
-                    <td *ngIf="!metaData.fundTaxRatio90Percent">{{'No' | translate}}
-
-                    </td>
+                    <td class="font-weight-bold">{{ 'Tax Ration 90%' | translate }}</td>
+                    <td *ngIf="metaData.fundTaxRatio90Percent">{{ 'Yes' | translate }}</td>
+                    <td *ngIf="!metaData.fundTaxRatio90Percent">{{ 'No' | translate }}</td>
                 </tr>
                 <tr class="data-row">
-                    <td class="font-weight-bold">{{'Reverse Solictation' | translate}}</td>
-                    <td *ngIf="metaData.fundReverseSolicitation">{{'Yes' | translate}}
-
-                    </td>
-                    <td *ngIf="!metaData.fundReverseSolicitation">{{'No' | translate}}
-
-                    </td>
+                    <td class="font-weight-bold">{{ 'Reverse Solictation' | translate }}</td>
+                    <td *ngIf="metaData.fundReverseSolicitation">{{ 'Yes' | translate }}</td>
+                    <td *ngIf="!metaData.fundReverseSolicitation">{{ 'No' | translate }}</td>
                 </tr>
             </table>
         </div>
@@ -690,46 +594,46 @@
         <div class="col-md-6 col-sm-12">
             <table class="rwd-table">
                 <tr>
-                    <th colspan="2">{{'Section 1' | translate}}</th>
+                    <th colspan="2">{{ 'Section 1' | translate }}</th>
                 </tr>
                 <tr>
                     <td style="padding:4px 0px"></td>
                     <td style="padding:4px 0px"></td>
                 </tr>
                 <tr class="data-row">
-                    <td>{{'Initial NAV' | translate}}</td>
+                    <td>{{ 'Initial NAV' | translate }}</td>
                     <td>{{metaData.initialNav}}</td>
                 </tr>
                 <tr class="data-row">
-                    <td>{{'Is Known NAV' | translate}}</td>
+                    <td>{{ 'Is Known NAV' | translate }}</td>
                     <td>{{metaData.knownNav[0] && metaData.knownNav[0]['text']}}</td>
                 </tr>
                 <tr class="data-row">
-                    <td>{{'Decimalisation' | translate}}</td>
+                    <td>{{ 'Decimalisation' | translate }}</td>
                     <td>{{metaData.decimalisation[0] && metaData.decimalisation[0]['text']}}</td>
                 </tr>
                 <tr class="data-row">
-                    <td>{{'Form of Unit' | translate}}</td>
+                    <td>{{ 'Form of Unit' | translate }}</td>
                     <td>{{metaData.formOfUnit[0] && metaData.formOfUnit[0]['text']}}</td>
                 </tr>
                 <tr class="data-row">
-                    <td>{{'Form of Redemption' | translate}}</td>
+                    <td>{{ 'Form of Redemption' | translate }}</td>
                     <td>{{metaData.formOfRedemption[0] && metaData.formOfRedemption[0]['text']}}</td>
                 </tr>
                 <tr class="data-row">
-                    <td>{{'Form of Subscription' | translate}}</td>
+                    <td>{{ 'Form of Subscription' | translate }}</td>
                     <td>{{metaData.formOfsubscription[0] && metaData.formOfsubscription[0]['text']}}</td>
                 </tr>
                 <tr class="data-row">
-                    <td>{{'Minimum Initial Subscription' | translate}}</td>
+                    <td>{{ 'Minimum Initial Subscription' | translate }}</td>
                     <td>{{metaData.minInitSubscription}}</td>
                 </tr>
                 <tr class="data-row">
-                    <td>{{'Minimum Subscription Value' | translate}}</td>
+                    <td>{{ 'Minimum Subscription Value' | translate }}</td>
                     <td>{{metaData.minSubscriptionvalue}}</td>
                 </tr>
                 <tr class="data-row">
-                    <td>{{'Minimum Subscription Units' | translate}}</td>
+                    <td>{{ 'Minimum Subscription Units' | translate }}</td>
                     <td>{{metaData.minsubscriptionUnits}}</td>
                 </tr>
             </table>
@@ -737,47 +641,31 @@
         <div class="col-md-6 col-sm-12">
             <table class="rwd-table">
                 <tr>
-                    <th colspan="2">{{'Section 2' | translate}}</th>
+                    <th colspan="2">{{ 'Section 2' | translate }}</th>
                 </tr>
                 <tr>
                     <td style="padding:4px 0px"></td>
                     <td style="padding:4px 0px"></td>
                 </tr>
                 <tr class="data-row">
-                    <td>{{'Swing Pricing' | translate}}</td>
-                    <td *ngIf="metaData.fundSwingPricing">{{'Yes' | translate}}
-
-                    </td>
-                    <td *ngIf="!metaData.fundSwingPricing">{{'No' | translate}}
-
-                    </td>
+                    <td>{{ 'Swing Pricing' | translate }}</td>
+                    <td *ngIf="metaData.fundSwingPricing">{{ 'Yes' | translate }}</td>
+                    <td *ngIf="!metaData.fundSwingPricing">{{ 'No' | translate }}</td>
                 </tr>
                 <tr class="data-row">
-                    <td>{{'Admission to Blockchain' | translate}}</td>
-                    <td *ngIf="metaData.fundAdmissionToBlockchain">{{'Yes' | translate}}
-
-                    </td>
-                    <td *ngIf="!metaData.fundAdmissionToBlockchain">{{'No' | translate}}
-
-                    </td>
+                    <td>{{ 'Admission to Blockchain' | translate }}</td>
+                    <td *ngIf="metaData.fundAdmissionToBlockchain">{{ 'Yes' | translate }}</td>
+                    <td *ngIf="!metaData.fundAdmissionToBlockchain">{{ 'No' | translate }}</td>
                 </tr>
                 <tr class="data-row">
-                    <td>{{'Currency Hedged Amount' | translate}}</td>
-                    <td *ngIf="metaData.fundCurrencyHedgedAmount">{{'Yes' | translate}}
-
-                    </td>
-                    <td *ngIf="!metaData.fundCurrencyHedgedAmount">{{'No' | translate}}
-
-                    </td>
+                    <td>{{ 'Currency Hedged Amount' | translate }}</td>
+                    <td *ngIf="metaData.fundCurrencyHedgedAmount">{{ 'Yes' | translate }}</td>
+                    <td *ngIf="!metaData.fundCurrencyHedgedAmount">{{ 'No' | translate }} </td>
                 </tr>
                 <tr class="data-row">
-                    <td>{{'Guarantee or Protection' | translate}}</td>
-                    <td *ngIf="metaData.fundGuaranteeOrProtection">{{'Yes' | translate}}
-
-                    </td>
-                    <td *ngIf="!metaData.fundGuaranteeOrProtection">{{'No' | translate}}
-
-                    </td>
+                    <td>{{ 'Guarantee or Protection' | translate }}</td>
+                    <td *ngIf="metaData.fundGuaranteeOrProtection">{{ 'Yes' | translate }}</td>
+                    <td *ngIf="!metaData.fundGuaranteeOrProtection">{{ 'No' | translate }}</td>
                 </tr>
             </table>
         </div>
@@ -789,63 +677,59 @@
         <div class="col-md-6 col-sm-12">
             <table class="rwd-table">
                 <tr>
-                    <th colspan="2">{{'Section 1' | translate}}</th>
+                    <th colspan="2">{{ 'Section 1' | translate }}</th>
                 </tr>
                 <tr>
                     <td style="padding:4px 0px"></td>
                     <td style="padding:4px 0px"></td>
                 </tr>
                 <tr class="data-row">
-                    <td>{{'S/R Schedule' | translate}}</td>
+                    <td>{{ 'S/R Schedule' | translate }}</td>
                     <td>{{metaData.srSchedule && metaData.srSchedule[0]['text']}}</td>
                 </tr>
                 <tr class="data-row">
-                    <td>{{'Valuation Price' | translate}}</td>
+                    <td>{{ 'Valuation Price' | translate }}</td>
                     <td>{{metaData.valuationPrice && metaData.valuationPrice[0]['text']}}</td>
                 </tr>
                 <tr class="data-row">
-                    <td>{{'DVP' | translate}}</td>
-                    <td *ngIf="metaData.fundDvp">{{'Yes' | translate}}
-
-                    </td>
-                    <td *ngIf="!metaData.fundDvp">{{'No' | translate}}
-
-                    </td>
+                    <td>{{ 'DVP' | translate }}</td>
+                    <td *ngIf="metaData.fundDvp">{{ 'Yes' | translate }}</td>
+                    <td *ngIf="!metaData.fundDvp">{{ 'No' | translate }}</td>
                 </tr>
                 <tr class="data-row">
-                    <td>{{'Date Calculation Conditions' | translate}}</td>
+                    <td>{{ 'Date Calculation Conditions' | translate }}</td>
                     <td>{{metaData.dateCalculationConditions && metaData.dateCalculationConditions[0]['text']}}</td>
                 </tr>
                 <tr class="data-row">
-                    <td>{{'Cash Delivery Date' | translate}}</td>
+                    <td>{{ 'Cash Delivery Date' | translate }}</td>
                     <td>{{metaData.cashDeliveryDate && metaData.cashDeliveryDate[0]['text']}}</td>
                 </tr>
                 <tr class="data-row">
-                    <td>{{'Settlement Date' | translate}}</td>
+                    <td>{{ 'Settlement Date' | translate }}</td>
                     <td>{{metaData.settlementDate && metaData.settlementDate[0]['text']}}</td>
                 </tr>
                 <tr class="data-row">
-                    <td>{{'Subscription Cut-off' | translate}}</td>
+                    <td>{{ 'Subscription Cut-off' | translate }}</td>
                     <td>{{metaData.subscriptionCutOff && metaData.subscriptionCutOff[0]['text']}}</td>
                 </tr>
                 <tr class="data-row">
-                    <td>{{'Subscription Cut-off Hour' | translate}}</td>
+                    <td>{{ 'Subscription Cut-off Hour' | translate }}</td>
                     <td>{{metaData.subscriptionCutOffHour && metaData.subscriptionCutOffHour[0]['text']}}</td>
                 </tr>
                 <tr class="data-row">
-                    <td>{{'Advance Notice' | translate}}</td>
+                    <td>{{ 'Advance Notice' | translate }}</td>
                     <td>{{metaData.advancedNotice}}</td>
                 </tr>
                 <tr class="data-row">
-                    <td>{{'Redemption Cut-off' | translate}}</td>
+                    <td>{{ 'Redemption Cut-off' | translate }}</td>
                     <td>{{metaData.redemptionCutOff && metaData.redemptionCutOff[0]['text']}}</td>
                 </tr>
                 <tr class="data-row">
-                    <td>{{'Redemption Cut-off Hour' | translate}}</td>
+                    <td>{{ 'Redemption Cut-off Hour' | translate }}</td>
                     <td>{{metaData.redemptionCutOffHour && metaData.redemptionCutOffHour[0]['text']}}</td>
                 </tr>
                 <tr class="data-row">
-                    <td>{{'Redemption Advanced Notice' | translate}}</td>
+                    <td>{{ 'Redemption Advanced Notice' | translate }}</td>
                     <td>{{metaData.redemptionAdvancedNotice}}</td>
                 </tr>
             </table>
@@ -853,34 +737,34 @@
         <div class="col-md-6 col-sm-12">
             <table class="rwd-table">
                 <tr>
-                    <th colspan="2">{{'Section 2' | translate}}</th>
+                    <th colspan="2">{{ 'Section 2' | translate }}</th>
                 </tr>
                 <tr>
                     <td style="padding:4px 0px"></td>
                     <td style="padding:4px 0px"></td>
                 </tr>
                 <tr class="data-row">
-                    <td>{{'Blocking Period' | translate}}</td>
+                    <td>{{ 'Blocking Period' | translate }}</td>
                     <td>{{metaData.blockingPeriod}}</td>
                 </tr>
                 <tr class="data-row">
-                    <td>{{'Gate' | translate}}</td>
+                    <td>{{ 'Gate' | translate }}</td>
                     <td>{{'@metaData.gate@ %' | translate: {'metaData.gate': metaData.gate} }}</td>
                 </tr>
                 <tr class="data-row">
-                    <td>{{'Sale/Purchase Conditions' | translate}}</td>
+                    <td>{{ 'Sale/Purchase Conditions' | translate }}</td>
                     <td>{{metaData.salePurchaseConditions && metaData.salePurchaseConditions[0]['text']}}</td>
                 </tr>
                 <tr class="data-row">
-                    <td>{{'Initial NAV date' | translate}}</td>
+                    <td>{{ 'Initial NAV Date' | translate }}</td>
                     <td>{{metaData.initialNavDate && metaData.initialNavDate[0]['text']}}</td>
                 </tr>
                 <tr class="data-row">
-                    <td>{{'Settlement Date on Initial NAV' | translate}}</td>
+                    <td>{{ 'Settlement Date on Initial NAV' | translate }}</td>
                     <td>{{metaData.settlementDateOnInitial && metaData.settlementDateOnInitial[0]['text']}}</td>
                 </tr>
                 <tr class="data-row">
-                    <td>{{'Free Switch Allowable' | translate}}</td>
+                    <td>{{ 'Free Switch Allowable' | translate }}</td>
                     <td>{{metaData.fundSwitchFreePossibility && metaData.fundSwitchFreePossibility[0]['text']}}</td>
                 </tr>
             </table>
@@ -893,21 +777,21 @@
         <div class="col-sm-12 col-md-6">
             <table class="rwd-table">
                 <tr>
-                    <th colspan="2">{{'Document' | translate}}</th>
+                    <th colspan="2">{{ 'Document' | translate }}</th>
                 </tr>
                 <tr>
                     <td style="padding:4px 0px"></td>
                     <td style="padding:4px 0px"></td>
                 </tr>
                 <tr class="data-row">
-                    <td>{{'Key Investor Information' | translate}}</td>
+                    <td>{{ 'Key Investor Information' | translate }}</td>
                     <td>
                         <setl-file-viewer *ngIf="metaData.fundDocDici != ''" [fileHash]="metaData.fundDocDici">
                         </setl-file-viewer>
                     </td>
                 </tr>
                 <tr class="data-row">
-                    <td>{{'Product Sheet' | translate}}</td>
+                    <td>{{ 'Product Sheet' | translate }}</td>
                     <td>
                         <setl-file-viewer *ngIf="metaData.fundDocProductSheet != ''" [fileHash]="metaData.fundDocProductSheet">
                         </setl-file-viewer>

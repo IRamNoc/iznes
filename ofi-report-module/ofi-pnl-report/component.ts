@@ -1,5 +1,5 @@
 import {
-    Component, OnInit, ChangeDetectionStrategy, OnDestroy, ChangeDetectorRef
+    Component, OnInit, ChangeDetectionStrategy, OnDestroy, ChangeDetectorRef,
 } from '@angular/core';
 import { FormControl, Validators } from '@angular/forms';
 import { Subscription } from 'rxjs';
@@ -13,10 +13,10 @@ import { OfiFundInvestService } from '../../ofi-req-services/ofi-fund-invest/ser
 import {
     InitialisationService,
     MyWalletsService,
-    WalletNodeRequestService
+    WalletNodeRequestService,
 } from '@setl/core-req-services';
 import {
-    setRequestedWalletAddresses
+    setRequestedWalletAddresses,
 } from '@setl/core-store';
 import * as math from 'mathjs';
 import { MultilingualService } from '@setl/multilingual';
@@ -33,7 +33,7 @@ interface ActiveBalanceListItem {
     selector: 'app-ofi-pnl-report',
     templateUrl: 'component.html',
     styleUrls: ['./component.scss'],
-    changeDetection: ChangeDetectionStrategy.OnPush
+    changeDetection: ChangeDetectionStrategy.OnPush,
 })
 
 export class OfiPnlReportComponent implements OnInit, OnDestroy {
@@ -85,7 +85,8 @@ export class OfiPnlReportComponent implements OnInit, OnDestroy {
                 private walletNodeRequestService: WalletNodeRequestService,
                 private logService: LogService,
                 public translate: MultilingualService,
-                private changeDetectorRef: ChangeDetectorRef) {
+                private changeDetectorRef: ChangeDetectorRef,
+    ) {
     }
 
     ngOnDestroy() {
@@ -103,10 +104,10 @@ export class OfiPnlReportComponent implements OnInit, OnDestroy {
                 title: {
                     icon: 'fa fa-th-list',
                     text: this.translate.translate('List'),
-                    colorClass: ''
+                    colorClass: '',
                 },
-                active: true
-            }
+                active: true,
+            },
         ];
 
         this.relatedTxList = [];
@@ -116,20 +117,20 @@ export class OfiPnlReportComponent implements OnInit, OnDestroy {
         this.address = new FormControl('', [Validators.required]);
 
         // List of observable subscription.
-        this.subscriptionsArray.push(this.connectedWalletOb.subscribe(connected => {
+        this.subscriptionsArray.push(this.connectedWalletOb.subscribe((connected) => {
             this.connectedWalletId = connected;
         }));
         this.subscriptionsArray.push(this.requestedOfiInvestorFundListOb.subscribe(
-            (requested) => this.requestMyFundAccess(requested)));
+            (requested => this.requestMyFundAccess(requested))));
         this.subscriptionsArray.push(this.shareDataOb.subscribe((shareData) => {
             this.updateSharePrice(shareData);
         }));
         this.subscriptionsArray.push(this.clientTxListRequestedOb.subscribe(requested => this.requestClientTx(requested)));
-        this.subscriptionsArray.push(this.clientTxListOb.subscribe(clientTxList => {
+        this.subscriptionsArray.push(this.clientTxListOb.subscribe((clientTxList) => {
             this.updateActiveBalanceList(clientTxList);
         }));
-        this.subscriptionsArray.push(this.addressListOb.subscribe((addressList) => this.updateAddressList(addressList)));
-        this.subscriptionsArray.push(this.requestedAddressListOb.subscribe(requested => {
+        this.subscriptionsArray.push(this.addressListOb.subscribe(addressList => this.updateAddressList(addressList)));
+        this.subscriptionsArray.push(this.requestedAddressListOb.subscribe((requested) => {
             this.requestAddressList(requested);
         }));
         this.subscriptionsArray.push(this.requestedLabelListOb.subscribe(requested => this.requestWalletLabel(requested)));
@@ -144,8 +145,12 @@ export class OfiPnlReportComponent implements OnInit, OnDestroy {
             this.ngRedux.dispatch(setRequestedClientTxList());
 
             // Request the list.
-            OfiClientTxService.defaultRequestWalletClientTxs(this.ofiClientTxService, this.ngRedux,
-                this.connectedWalletId, '');
+            OfiClientTxService.defaultRequestWalletClientTxs(
+                this.ofiClientTxService,
+                this.ngRedux,
+                this.connectedWalletId,
+                '',
+            );
         }
     }
 
@@ -156,20 +161,25 @@ export class OfiPnlReportComponent implements OnInit, OnDestroy {
 
         this.pnlRegister = this.processClientTxList(clientTxListData);
 
-        this.activeBalanceList = immutableHelper.reduce(this.pnlRegister, (result, item, key) => {
-            const lastMovement = mDateHelper.dateStrToUnixTimestamp(item.lastMovement, 'YYYY-MM-DD HH:mm:ss');
+        this.activeBalanceList = immutableHelper.reduce(
+            this.pnlRegister,
+            (result, item, key) => {
+                const lastMovement = mDateHelper.dateStrToUnixTimestamp(item.lastMovement, 'YYYY-MM-DD HH:mm:ss');
 
-            const thisBalance: ActiveBalanceListItem = {
-                fundName: key,
-                activeQuantity: item.activeBalance,
-                realisePnl: math.round(item.realisePnl, 2),
-                unRealisePnl: math.round(item.unRealisePnl, 2),
-                lastMovement
-            };
+                const thisBalance: ActiveBalanceListItem = {
+                    fundName: key,
+                    activeQuantity: item.activeBalance,
+                    realisePnl: math.round(item.realisePnl, 2),
+                    unRealisePnl: math.round(item.unRealisePnl, 2),
+                    lastMovement,
+                };
 
-            result.push(thisBalance);
-            return result;
-        }, []);
+                result.push(thisBalance);
+
+                return result;
+            },
+            [],
+        );
 
         this.changeDetectorRef.detectChanges();
     }
@@ -177,23 +187,27 @@ export class OfiPnlReportComponent implements OnInit, OnDestroy {
     filterTxsWithAddress(clientTxListData, addressObj): any {
         const address = _.get(addressObj, 'id', '');
 
-        return immutableHelper.reduce(clientTxListData, (result, shareTxs, shareName) => {
+        return immutableHelper.reduce(
+            clientTxListData, 
+            (result, shareTxs, shareName) => {
+                result[shareName] = shareTxs.reduce(
+                    (txResult, tx) => {
+                        const thisTxAddr = tx.get('transactionAddress', '');
 
-            result[shareName] = shareTxs.reduce((txResult, tx) => {
-                const thisTxAddr = tx.get('transactionAddress', '');
+                        if (thisTxAddr === address) {
+                            const thisTxId = tx.get('transactionId', 0);
+                            txResult[thisTxId] = tx.toJS();
+                        }
 
-                if (thisTxAddr === address) {
-                    const thisTxId = tx.get('transactionId', 0);
-                    txResult[thisTxId] = tx.toJS();
-                }
+                        return txResult;
+                    },
+                    {},
+                );
 
-                return txResult;
-
-            }, {});
-
-            return result;
-
-        }, {});
+                return result;
+            },
+            {},
+        );
     }
 
     handleSelectedAddress(value) {
@@ -229,23 +243,27 @@ export class OfiPnlReportComponent implements OnInit, OnDestroy {
         const clientTxListData = this.filterTxsWithAddress(this.clientTxListObj, this.addressSelected);
         const txsObj = clientTxListData[shareName];
 
-        this.relatedTxList = immutableHelper.reduce(txsObj, (result, item) => {
-            const txDateNumber = mDateHelper.dateStrToUnixTimestamp(item.get('transactionDate', ''), 'YYYY-MM-DD HH:mm:ss');
+        this.relatedTxList = immutableHelper.reduce(
+            txsObj,
+            (result, item) => {
+                const txDateNumber = mDateHelper.dateStrToUnixTimestamp(item.get('transactionDate', ''), 'YYYY-MM-DD HH:mm:ss');
 
-            result.push({
-                transactionInstrumentName: item.get('transactionInstrumentName', ''),
-                transactionType: item.get('transactionType', ''),
-                transactionId: item.get('transactionId', ''),
-                transactionRefId: item.get('transactionRefId', ''),
-                transactionPrice: this.numberConverterService.toFrontEnd(item.get('transactionPrice', '')),
-                transactionUnits: this.numberConverterService.toFrontEnd(item.get('transactionUnits', '')),
-                transactionSettlement: math.round(
-                    this.numberConverterService.toFrontEnd(item.get('transactionSettlement', '')), 2),
-                transactionDate: txDateNumber,
-            });
-            return result;
+                result.push({
+                    transactionInstrumentName: item.get('transactionInstrumentName', ''),
+                    transactionType: item.get('transactionType', ''),
+                    transactionId: item.get('transactionId', ''),
+                    transactionRefId: item.get('transactionRefId', ''),
+                    transactionPrice: this.numberConverterService.toFrontEnd(item.get('transactionPrice', '')),
+                    transactionUnits: this.numberConverterService.toFrontEnd(item.get('transactionUnits', '')),
+                    transactionSettlement: math.round(
+                        this.numberConverterService.toFrontEnd(item.get('transactionSettlement', '')), 2),
+                    transactionDate: txDateNumber,
+                });
 
-        }, []);
+                return result;
+            },
+            [],
+        );
 
         // show modal;
         this.showRelatedTxModal = true;
@@ -253,14 +271,19 @@ export class OfiPnlReportComponent implements OnInit, OnDestroy {
     }
 
     updateSharePrice(priceData) {
-        this.sharePriceList = immutableHelper.reduce(priceData, (result, item) => {
-            const fundName = item.get('issuer', '');
-            const shareName = item.get('shareName', '');
-            const fullName = fundName + '|' + shareName;
+        this.sharePriceList = immutableHelper.reduce(
+            priceData,
+            (result, item) => {
+                const fundName = item.get('issuer', '');
+                const shareName = item.get('shareName', '');
+                const fullName = fundName + '|' + shareName;
 
-            result[fullName] = this.numberConverterService.toFrontEnd(item.get('price', 0));
-            return result;
-        }, {});
+                result[fullName] = this.numberConverterService.toFrontEnd(item.get('price', 0));
+
+                return result;
+            },
+            {},
+        );
     }
 
     /**
@@ -299,21 +322,25 @@ export class OfiPnlReportComponent implements OnInit, OnDestroy {
     }
 
     updateAddressList(addressList) {
-        this.addressList = immutableHelper.reduce(addressList, (result, item) => {
-            const addr = item.get('addr', false);
-            const label = item.get('label', false);
+        this.addressList = immutableHelper.reduce(
+            addressList,
+            (result, item) => {
+                const addr = item.get('addr', false);
+                const label = item.get('label', false);
 
-            if (addr && label) {
-                const addressItem = {
-                    id: item.get('addr', ''),
-                    text: item.get('label', '')
-                };
+                if (addr && label) {
+                    const addressItem = {
+                        id: item.get('addr', ''),
+                        text: item.get('label', ''),
+                    };
 
-                result.push(addressItem);
-            }
+                    result.push(addressItem);
+                }
 
-            return result;
-        }, []);
+                return result;
+            },
+            [],
+        );
 
         // Set default or selected address.
         const hasSelectedAddressInList = immutableHelper.filter(this.addressList, (thisItem) => {
@@ -327,7 +354,7 @@ export class OfiPnlReportComponent implements OnInit, OnDestroy {
                     onlySelf: true,
                     emitEvent: true,
                     emitModelToViewChange: true,
-                    emitViewToModelChange: true
+                    emitViewToModelChange: true,
                 });
                 this.handleSelectedAddress(this.addressList[0]);
             } else {
@@ -335,7 +362,7 @@ export class OfiPnlReportComponent implements OnInit, OnDestroy {
                     onlySelf: true,
                     emitEvent: true,
                     emitModelToViewChange: true,
-                    emitViewToModelChange: true
+                    emitViewToModelChange: true,
                 });
                 this.handleSelectedAddress(this.addressSelected);
             }

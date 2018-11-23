@@ -4,7 +4,7 @@ import {
     OnDestroy,
     OnInit,
     AfterViewInit,
-    Input
+    Input,
 } from '@angular/core';
 import { FormArray, FormBuilder, FormControl, FormGroup, Validators } from '@angular/forms';
 import { OfiKycService } from '@ofi/ofi-main/ofi-req-services/ofi-kyc/service';
@@ -70,20 +70,23 @@ export class MyRequestsDetailsComponent implements OnInit, AfterViewInit, OnDest
     }
 
     ngAfterViewInit() {
-        setTimeout(() => {
-            document.getElementById('blocStatus').style.opacity = '1';
-            document.getElementById('blocStatus').style.marginTop = '0';
-        }, 200);
+        setTimeout(
+            () => {
+                document.getElementById('blocStatus').style.opacity = '1';
+                document.getElementById('blocStatus').style.marginTop = '0';
+            },
+            200,
+        );
     }
 
     initSubscriptions() {
         this.myKycList$
         .pipe(
-            takeUntil(this.unSubscribe)
+            takeUntil(this.unSubscribe),
         )
-        .subscribe(kycList => {
+        .subscribe((kycList) => {
             this.kycList = kycList;
-            const kyc = this.kycList.find((item) => item.kycID === this.kycID);
+            const kyc = this.kycList.find(item => item.kycID === this.kycID);
             if (kyc && typeof kyc !== 'undefined' && kyc !== undefined && kyc !== null) {
                 this.requestDetailStatus = this.statusList[kyc.status];
                 this.isKYCFull = (kyc.alreadyCompleted === 1 || kyc.status === 2) ? false : true;
@@ -92,7 +95,7 @@ export class MyRequestsDetailsComponent implements OnInit, AfterViewInit, OnDest
                     firstName: kyc.firstName,
                     lastName: kyc.lastName,
                     email: kyc.emailAddress,
-                    phone: kyc.phoneNumber
+                    phone: kyc.phoneNumber,
                 });
                 this.lastUpdate = convertUtcStrToLocalStr(kyc.lastUpdated, 'YYYY-MM-DD HH:mm:SS');
                 this.ofiKycService.fetchStatusAuditByKycID(this.kycID);
@@ -132,15 +135,15 @@ export class MyRequestsDetailsComponent implements OnInit, AfterViewInit, OnDest
     }
 
     redirectToRelatedKycs(kycID) {
-        let currentKyc = find(this.kycList, ['kycID', kycID]);
-        let completedStep = currentKyc.completedStep;
+        const currentKyc = find(this.kycList, ['kycID', kycID]);
+        const completedStep = currentKyc.completedStep;
         let extras = {};
 
-        let grouped = groupBy(this.kycList, 'currentGroup');
-        let currentGroup = grouped[currentKyc.currentGroup];
+        const grouped = groupBy(this.kycList, 'currentGroup');
+        const currentGroup = grouped[currentKyc.currentGroup];
 
-        let kycIDs = [];
-        currentGroup.forEach(kyc => {
+        const kycIDs = [];
+        currentGroup.forEach((kyc) => {
             kycIDs.push({
                 kycID: kyc.kycID,
                 amcID: kyc.amManagementCompanyID,
@@ -153,8 +156,8 @@ export class MyRequestsDetailsComponent implements OnInit, AfterViewInit, OnDest
             extras = {
                 queryParams: {
                     step: completedStep,
-                    completed: currentGroup.reduce((acc, kyc) => acc && !!kyc.alreadyCompleted, true)
-                }
+                    completed: currentGroup.reduce((acc, kyc) => acc && !!kyc.alreadyCompleted, true),
+                },
             };
         }
 
@@ -165,7 +168,7 @@ export class MyRequestsDetailsComponent implements OnInit, AfterViewInit, OnDest
 
     ngOnDestroy(): void {
         /* Unsunscribe Observables. */
-        for (let key of this.subscriptions) {
+        for (const key of this.subscriptions) {
             key.unsubscribe();
         }
 

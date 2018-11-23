@@ -13,10 +13,9 @@ import { Router } from '@angular/router';
 /* Redux */
 import { NgRedux, select } from '@angular-redux/store';
 import { MultilingualService } from '@setl/multilingual';
-import { APP_CONFIG, AppConfig, MoneyValuePipe, NumberConverterService } from '@setl/utils';
+import { APP_CONFIG, AppConfig, MoneyValuePipe, NumberConverterService, LogService } from '@setl/utils';
 /* Ofi orders request service. */
 import { OfiOrdersService } from '@ofi/ofi-main/ofi-req-services/ofi-orders/service';
-import { LogService } from '@setl/utils';
 
 // recordkeeping
 import { MemberSocketService } from '@setl/websocket-service';
@@ -37,7 +36,6 @@ import {
     templateUrl: './component.html',
 })
 export class OfiHomeComponent implements AfterViewInit, OnInit, OnDestroy {
-
     appConfig: AppConfig;
 
     /* Public properties. */
@@ -64,18 +62,18 @@ export class OfiHomeComponent implements AfterViewInit, OnInit, OnDestroy {
     /* Constructor. */
     constructor(
         private changeDetectorRef: ChangeDetectorRef,
-        private _numberConverterService: NumberConverterService,
-        private _ngRedux: NgRedux<any>,
-        private _moneyValuePipe: MoneyValuePipe,
-        private _fb: FormBuilder,
-        private _router: Router,
+        private numberConverterService: NumberConverterService,
+        private ngRedux: NgRedux<any>,
+        private moneyValuePipe: MoneyValuePipe,
+        private fb: FormBuilder,
+        private router: Router,
         public translate: MultilingualService,
         private logService: LogService,
-        private _myWalletService: MyWalletsService,
-        private _memberService: MemberService,
+        private myWalletService: MyWalletsService,
+        private memberService: MemberService,
         private memberSocketService: MemberSocketService,
-        private _walletnodeTxService: WalletnodeTxService,
-        private _walletNodeRequestService: WalletNodeRequestService,
+        private walletnodeTxService: WalletnodeTxService,
+        private walletNodeRequestService: WalletNodeRequestService,
         private ofiOrdersService: OfiOrdersService,
         private ofiReportsService: OfiReportsService,
         @Inject(APP_CONFIG) appConfig: AppConfig,
@@ -163,7 +161,7 @@ export class OfiHomeComponent implements AfterViewInit, OnInit, OnDestroy {
     }
 
     private numPad(num) {
-        return num < 10 ? "0" + num : num;
+        return num < 10 ? '0' + num : num;
     }
 
     /**
@@ -178,7 +176,7 @@ export class OfiHomeComponent implements AfterViewInit, OnInit, OnDestroy {
         let wallet;
         if (this.connectedWalletId && Object.keys(this.myWallets).length) {
             for (wallet in this.myWallets) {
-                if (wallet == this.connectedWalletId) {
+                if (Number(wallet) === this.connectedWalletId) {
                     this.connectedWalletName = this.myWallets[wallet].walletName;
                     break;
                 }
@@ -198,7 +196,7 @@ export class OfiHomeComponent implements AfterViewInit, OnInit, OnDestroy {
         this.changeDetectorRef.detach();
 
         /* Unsunscribe Observables. */
-        for (let key in this.subscriptions) {
+        for (const key in this.subscriptions) {
             this.subscriptions[key].unsubscribe();
         }
     }

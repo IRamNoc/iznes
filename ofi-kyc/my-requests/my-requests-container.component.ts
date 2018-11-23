@@ -5,24 +5,23 @@ import { Subject } from 'rxjs';
 import { filter, takeUntil } from 'rxjs/operators';
 
 @Component({
-    template: '<router-outlet></router-outlet>'
+    template: '<router-outlet></router-outlet>',
 })
-export class MyRequestsContainerComponent implements OnInit, OnDestroy{
-
+export class MyRequestsContainerComponent implements OnInit, OnDestroy {
     @select(['ofi', 'ofiKyc', 'myKycList', 'requested']) myKycListRequested$;
 
     private unsubscribe: Subject<any> = new Subject();
 
     constructor(
-        private ofiKycService: OfiKycService
+        private ofiKycService: OfiKycService,
     ) {
     }
 
-    ngOnInit(){
+    ngOnInit() {
         this.initSubscriptions();
     }
 
-    initSubscriptions(){
+    initSubscriptions() {
         this.myKycListRequested$
             .pipe(
                 filter(requested => !requested),
@@ -30,15 +29,14 @@ export class MyRequestsContainerComponent implements OnInit, OnDestroy{
             )
             .subscribe(() => {
                 this.getRequests();
-            })
-        ;
+            });
     }
 
     getRequests() {
         this.ofiKycService.getMyKycList();
     }
 
-    ngOnDestroy(){
+    ngOnDestroy() {
         this.unsubscribe.next();
         this.unsubscribe.complete();
     }

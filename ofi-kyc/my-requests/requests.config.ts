@@ -93,7 +93,6 @@ export const selectControls = [
 ];
 
 export const controlOrder = [
-
     // General
     'registeredCompanyName',
     'legalForm',
@@ -438,7 +437,7 @@ export const regulatoryStatusList = [
     },
     {
         id: 'institutionalInvestors',
-        text: 'Approved or regulated institutional investors',
+        text: 'Approved or regulated Institutional Investors',
     },
     {
         id: 'otherInvestors',
@@ -446,7 +445,7 @@ export const regulatoryStatusList = [
     },
     {
         id: 'managementCompany',
-        text: 'Management company (including SICAV) / Financial Investment Advisor',
+        text: 'Management Company (including SICAV) / Financial Investment Advisor',
     },
     {
         id: 'centralBank',
@@ -454,11 +453,11 @@ export const regulatoryStatusList = [
     },
     {
         id: 'nationalGovService',
-        text: 'National government or service, including public bodies responsible for public debt at national level',
+        text: 'National Government or Service, including public bodies responsible for public debt at national level',
     },
     {
         id: 'internationBodies',
-        text: 'Public international financial bodies to which France or any other OECD Member State adheres (IMF, EIB, World Bank, etc.)',
+        text: 'Public International Financial bodies to which France or any other OECD Member State adheres (IMF, EIB, World Bank, etc.)',
     },
     {
         id: 'other',
@@ -469,18 +468,18 @@ export const regulatoryStatusList = [
 export const regulatoryStatusInsurerTypeList = [
     {
         id: 'Regulatedasset',
-        text: 'Regulated asset',
+        text: 'Regulated Asset',
     },
     {
         id: 'Lifeinsurancecontracts',
-        text: 'Life insurance contracts',
+        text: 'Life Insurance Contracts',
     },
 ];
 
 export const publicEstablishmentList = [
     {
         id: 'Councilhouse',
-        text: 'Council house',
+        text: 'Council House',
     },
     {
         id: 'other',
@@ -495,7 +494,7 @@ export const companyActivitiesList = [
     },
     {
         id: 'onBehalfOfThirdParties',
-        text: 'Third parties',
+        text: 'Third Parties',
     },
 ];
 
@@ -514,15 +513,15 @@ export const ownAccountInvestorList = [
     },
     {
         id: 'Nationalsportsassociationsandsportsagents',
-        text: 'National sports associations and sports agents',
+        text: 'National Sports Associations and Sports Agents',
     },
     {
         id: 'Tradingretailingofpreciousmetals',
-        text: 'Trading & retailing of precious metals',
+        text: 'Trading & Retailing of precious metals',
     },
     {
         id: 'Artmarketantiques',
-        text: 'Art market / antiques',
+        text: 'Art Market / Antiques',
     },
     {
         id: 'Building',
@@ -530,11 +529,11 @@ export const ownAccountInvestorList = [
     },
     {
         id: 'Computertelephonytelecommunication',
-        text: 'Computer / telephony / telecommunication',
+        text: 'Computer / Telephony / Telecommunication',
     },
     {
         id: 'Guardingandsecurity',
-        text: 'Guarding and security',
+        text: 'Guarding and Security',
     },
     {
         id: 'Packaging',
@@ -546,19 +545,19 @@ export const ownAccountInvestorList = [
     },
     {
         id: 'GoldpannersFrenchGuiana',
-        text: 'Gold panners (French Guiana)',
+        text: 'Gold Panners (French Guiana)',
     },
     {
         id: 'Wastetreatment',
-        text: 'Waste treatment',
+        text: 'Waste Treatment',
     },
     {
         id: 'Usedvehicletrading',
-        text: 'Used vehicle trading',
+        text: 'Used Vehicle Trading',
     },
     {
         id: 'Renewableenergies',
-        text: 'Renewable energies',
+        text: 'Renewable Energies',
     },
     {
         id: 'TrainingActivityInterim',
@@ -578,11 +577,11 @@ export const ownAccountInvestorList = [
     },
     {
         id: 'Realestateagencies',
-        text: 'Real estate agencies',
+        text: 'Real Estate Agencies',
     },
     {
         id: 'Onlinegamingcompanies',
-        text: 'Online gaming companies',
+        text: 'Online Gaming Companies',
     },
     {
         id: 'LogisticsTransport',
@@ -594,7 +593,7 @@ export const ownAccountInvestorList = [
     },
     {
         id: 'ManagementCompanyInvestmentserviceprovider',
-        text: 'Management Company / Investment service provider',
+        text: 'Management Company / Investment Service Provider',
     },
 ];
 
@@ -612,7 +611,7 @@ export const investorOnBehalfList = [
 export const geographicalAreaList = [
     {
         id: 'Europeanunion',
-        text: 'European union',
+        text: 'European Union',
     },
     {
         id: 'oecd',
@@ -900,11 +899,11 @@ export const financialInstrumentsList = [
     },
     {
         id: 'Listedshares',
-        text: 'Listed shares',
+        text: 'Listed Shares',
     },
     {
         id: 'Unlistedshares',
-        text: 'Unlisted shares',
+        text: 'Unlisted Shares',
     },
     {
         id: 'UCITS',
@@ -916,7 +915,7 @@ export const financialInstrumentsList = [
     },
     {
         id: 'Foreignexchangemarket',
-        text: 'Foreign exchange market',
+        text: 'Foreign Exchange Market',
     },
     {
         id: 'Swaps',
@@ -989,7 +988,7 @@ export const volumeOfTransactionsList = [
 export const investmentVehiclesList = [
     {
         id: 'MoneymarketsecuritiesTreasury',
-        text: 'Money market securities (Treasury)',
+        text: 'Money Market Securities (Treasury)',
     },
     {
         id: 'Bonds',
@@ -1001,11 +1000,11 @@ export const investmentVehiclesList = [
     },
     {
         id: 'Listedshares',
-        text: 'Listed shares',
+        text: 'Listed Shares',
     },
     {
         id: 'Unlistedshares',
-        text: 'Unlisted shares',
+        text: 'Unlisted Shares',
     },
     {
         id: 'UCITS',
@@ -1025,7 +1024,7 @@ export const investmentVehiclesList = [
     },
     {
         id: 'Foreignexchangemarket',
-        text: 'Foreign exchange market',
+        text: 'Foreign Exchange Market',
     },
     {
         id: 'Swaps',
@@ -1048,7 +1047,7 @@ export const investmentVehiclesList = [
 export const financialAssetManagementMethodList = [
     {
         id: 'internalManagement',
-        text: 'Internal management',
+        text: 'Internal Management',
     },
     {
         id: 'withAdviceOfAuthorisedThirdPartyInstitution',
@@ -1110,7 +1109,7 @@ export const performanceProfileList = [
     },
     {
         id: 'Leverageeffect',
-        text: 'Leverage effect',
+        text: 'Leverage Effect',
     },
     {
         id: 'others',
@@ -1121,7 +1120,7 @@ export const performanceProfileList = [
 export const clientNeedsList = [
     {
         id: 'Standaloneinvestment',
-        text: 'Standalone investment',
+        text: 'Standalone Investment',
     },
     {
         id: 'PortfolioComponentDiversification',
@@ -1163,7 +1162,7 @@ export const investmentHorizonList = [
 export const riskProfileList = [
     {
         id: 'GuaranteedCapital',
-        text: 'Guaranteed Capital',
+        text: 'Guaranteed capital',
     },
     {
         id: 'partiallyProtected',
@@ -1209,19 +1208,19 @@ export const riskAcceptanceList = [
 export const capitalNatureList = [
     {
         id: 'equityAndReserves',
-        text: 'Equity & reserves',
+        text: 'Equity & Reserves',
     },
     {
         id: 'generalAssets',
-        text: 'General assets (insurance contracts)',
+        text: 'General Assets (Insurance Contracts)',
     },
     {
         id: 'premiumsAndContributions',
-        text: 'Premiums & contributions',
+        text: 'Premiums & Contributions',
     },
     {
         id: 'saleGoodsServices',
-        text: 'Sale of goods and services',
+        text: 'Sale of Goods and Services',
     },
     {
         id: 'exceptionalEvents',
@@ -1296,22 +1295,22 @@ export const documentTypesList = [
 export const beneficiaryTypesList = [
     {
         id: 'legalPerson',
-        text: 'Legal person',
+        text: 'Legal Person',
     },
     {
         id: 'naturalPerson',
-        text: 'Natural person',
+        text: 'Natural Person',
     },
 ];
 
 export const holdingTypesList = [
     {
         id: 'directHolding',
-        text: 'Direct holding',
+        text: 'Direct Holding',
     },
     {
         id: 'indirectHolding',
-        text: 'Indirect holding',
+        text: 'Indirect Holding',
     },
 ];
 
@@ -1333,26 +1332,26 @@ export const identificationNumberList = [
 export const controlToName = {
     // General
     registeredCompanyName: 'Registered Company Name or Legal Name',
-    legalForm: 'Legal form',
+    legalForm: 'Legal Form',
     leiCode: 'LEI Code',
     otherIdentificationNumber: 'Other identification number type',
     otherIdentificationNumberText: 'Other identification number',
     registeredCompanyAddressLine1: "Registered company's headquarters address (including country)",
-    registeredCompanyAddressLine2: 'Address line 2',
+    registeredCompanyAddressLine2: 'Address Line 2',
     registeredCompanyZipCode: 'ZIP Code',
     registeredCompanyCity: 'City',
     registeredCompanyCountry: 'Country',
-    commercialDomiciliation: 'Commercial domiciliation : Does the client have a commercial address (mailbox: P/O BOX)?',
-    commercialAddressLine1: 'Commercial address',
-    commercialAddressLine2: 'Address line 2',
+    commercialDomiciliation: 'Commercial Domiciliation: Does the client have a commercial address (mailbox: P/O BOX)?',
+    commercialAddressLine1: 'Commercial Address',
+    commercialAddressLine2: 'Address Line 2',
     commercialZipCode: 'ZIP Code',
     commercialCity: 'City',
     commercialCountry: 'Country',
-    countryTaxResidence: 'Country of tax residence',
-    regulatoryStatus: 'Regulatory status',
-    regulatoryStatusListingOther: 'Regulatory status specification',
-    regulatoryStatusInsurerType: 'Insurer type',
-    regulatoryStatusListingMarkets: 'Listing market(s)',
+    countryTaxResidence: 'Country of Tax Residence',
+    regulatoryStatus: 'Regulatory Status',
+    regulatoryStatusListingOther: 'Regulatory Status Specification',
+    regulatoryStatusInsurerType: 'Insurer Type',
+    regulatoryStatusListingMarkets: 'Listing Market(s)',
 
     // Company
     sectorActivity: 'Primary sector of activity',
@@ -1363,59 +1362,59 @@ export const controlToName = {
     geographicalAreaOfActivity: 'Geographical area of the activity',
     geographicalAreaOfActivitySpecification: 'Geographical area of the activity specification',
     totalFinancialAssetsAlreadyInvested: 'Total Financial assets already invested',
-    capitalNature: 'Nature and origin of the capital invested by the legal entity',
+    capitalNature: 'Nature and origin of the capital invested by the Legal Entity',
     activityRegulated: 'Is the activity regulated?',
-    regulator: 'Regulator or a supervisory authority',
-    approvalNumber: 'Approval number',
+    regulator: 'Regulator or a Supervisory Authority',
+    approvalNumber: 'Approval Number',
     companyListed: 'Is the company listed?',
-    listingMarkets: 'Listing market(s)',
-    bloombergCode: 'Bloomberg code',
+    listingMarkets: 'Listing Market(s)',
+    bloombergCode: 'Bloomberg Code',
     isinCode: 'ISIN code of the listed share',
     floatableShares: 'Percentage of floatable and tradable company\'s shares',
     balanceSheetTotal: 'Balance Sheet Total (€)',
     netRevenuesNetIncome: 'Net Revenues or Net Income (€)',
     shareholderEquity: "Shareholder's Equity (€)",
-    equityAndReserves: 'Equity & reserves',
-    generalAssets: 'General assets (insurance contracts)',
-    premiumsAndContributions: 'Premiums & contributions',
-    saleGoodsServices: 'Sale of goods and services',
+    equityAndReserves: 'Equity & Reserves',
+    generalAssets: 'General Assets (Insurance Contracts)',
+    premiumsAndContributions: 'Premiums & Contributions',
+    saleGoodsServices: 'Sale of Goods and Services',
     treasury: 'Treasury',
     others: 'Others',
     geographicalOrigin1: 'Geographical origin (specify by area or country)',
     geographicalOrigin2: 'Geographical origin precision',
 
     // Beneficiaries
-    beneficiaryType: 'Beneficiary type',
-    firstName: 'First name',
-    lastName: 'Last name',
-    address: 'Beneficiary address',
-    address2: 'Address line 2',
+    beneficiaryType: 'Beneficiary Type',
+    firstName: 'First Name',
+    lastName: 'Last Name',
+    address: 'Beneficiary Address',
+    address2: 'Address Line 2',
     nationality: 'Nationality',
-    dateOfBirth: 'Date of birth',
-    cityOfBirth: 'City of birth',
-    countryOfBirth: 'Country of birth',
+    dateOfBirth: 'Date of Birth',
+    cityOfBirth: 'City of Birth',
+    countryOfBirth: 'Country of Birth',
     documentID: 'Document',
-    holdingPercentage: 'Holding percentage',
-    holdingType: 'Holding type',
+    holdingPercentage: 'Holding Percentage',
+    holdingType: 'Holding Type',
     nationalIdNumber: 'National Identification Number',
     nationalIdNumberText: 'National ID Number Specification',
-    legalName: 'Legal name',
+    legalName: 'Legal Name',
 
     // Custodian
     establishmentName: 'Establishment Name',
     iban: 'IBAN',
     bic: 'BIC',
-    addressLine1: 'Establishement address',
-    addressLine2: 'Address line 2',
+    addressLine1: 'Establishement Address',
+    addressLine2: 'Address Line 2',
     zipCode: 'Zip Code',
     city: 'City',
     country: 'Country',
 
     // Classification
-    investorStatus: 'Investor status',
-    excludeProducts: 'Excluded category of products/services',
+    investorStatus: 'Investor Status',
+    excludeProducts: 'Excluded category of Products/Services',
     changeProfessionalStatus: 'Opted for non professional status',
-    jobPosition: 'Job position',
+    jobPosition: 'Job Position',
     numberYearsExperienceRelatedFunction: 'Number of years of experience in a function related to financial markets',
     numberYearsCurrentPosition: 'Number of years of experience in current position',
     financialInstruments: 'Financial instruments that have already been the subject of transactions by the said natural person in the professional environment',
@@ -1423,8 +1422,8 @@ export const controlToName = {
     marketArea: 'Market area(s) which have been the subject of transactions',
     natureTransactionPerYear: 'Nature of transactions per year (in €)',
     volumeTransactionPerYear: 'Volume of transactions per year (in €)',
-    activitiesBenefitFromExperience: 'Activities/professions allow to benefit from experience in the financial field',
-    activitiesBenefitFromExperienceSpecification: 'Benefit specification',
+    activitiesBenefitFromExperience: 'Activities/Professions allow to benefit from experience in the financial field',
+    activitiesBenefitFromExperienceSpecification: 'Benefit Specification',
 
     // Risk nature
     financialAssetManagementMethod: 'Financial asset management method',
@@ -1436,9 +1435,9 @@ export const controlToName = {
     investmentvehiclesAlreadyUsedSpecification: 'Investment vehicles already used specification',
 
     // Risk objective
-    performanceProfile: 'Performance profile',
-    performanceProfileSpecification: 'Performance profile specification',
-    clientNeeds: 'Client needs (purpose of the investment)',
+    performanceProfile: 'Performance Profile',
+    performanceProfileSpecification: 'Performance Profile Specification',
+    clientNeeds: 'Client Needs (purpose of the investment)',
     otherFinancialInformation: 'Other relevant financial information (optional) including periodic cash flows to be invested in cash management, asset allocation',
     investmentHorizonWanted: 'Investment horizons wanted',
     investmentHorizonWantedSpecificPeriod: 'Investment horizons wanted (specific period)',
@@ -1462,12 +1461,11 @@ export const controlToName = {
     actingOnBehalfOf: 'On behalf of',
     doneAt: 'Done at',
     doneDate: 'Date',
-    positionRepresentative: 'Position of the representative of the legal person',
-    electronicSignatureDocumentID: 'National identification card',
+    positionRepresentative: 'Position of the representative of the Legal Person',
+    electronicSignatureDocumentID: 'National Identification Card',
 };
 
 export const controlToList = {
-
     // General
     legalForm: 'legalFormList',
     registeredCompanyCountry: 'countries',

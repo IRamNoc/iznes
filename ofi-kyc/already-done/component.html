@@ -1,7 +1,7 @@
 <div class="header-breadcrumbs">
     <h1 *ngIf="investorStatus == 'confirmation'"><i class="fa fa-unlock"></i>
         <span id="ofi-welcome-kyc">{{ 'Welcome to @appConfig.platform@' | translate: {'appConfig.platform': appConfig.platform} }}</span></h1>
-    <h1 *ngIf="investorStatus == 'waiting-for-validation'"><i class="fa fa-unlock"></i>{{ 'KYC documents - Awaiting confirmation from: @amDetails.companyName.value@' | translate: {'amDetails.companyName.value': amDetails.companyName.value} }}
+    <h1 *ngIf="investorStatus == 'waiting-for-validation'"><i class="fa fa-unlock"></i>{{ 'KYC Documents - Awaiting Confirmation From: @amDetails.companyName.value@' | translate: {'amDetails.companyName.value': amDetails.companyName.value} }}
     </h1>
 </div>
 

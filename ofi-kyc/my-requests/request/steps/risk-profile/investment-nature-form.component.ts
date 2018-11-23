@@ -4,7 +4,6 @@ import { select } from '@angular-redux/store';
 import { Subject } from 'rxjs';
 import { filter as rxFilter, map, takeUntil, take, tap } from 'rxjs/operators';
 import { List } from 'immutable';
-
 import { FormPercentDirective } from '@setl/utils/directives/form-percent/formpercent';
 import { RiskProfileService } from '../risk-profile.service';
 import { NewRequestService } from '../../new-request.service';
@@ -15,7 +14,6 @@ import { NewRequestService } from '../../new-request.service';
     styleUrls: ['./investment-nature-form.component.scss'],
 })
 export class InvestmentNatureFormComponent implements OnInit {
-
     @Output() refreshForm = new EventEmitter<void>();
     @Input() form;
     @Input() multiple;
@@ -33,7 +31,7 @@ export class InvestmentNatureFormComponent implements OnInit {
 
     constructor(
         private newRequestService: NewRequestService,
-        private riskProfileService: RiskProfileService
+        private riskProfileService: RiskProfileService,
     ) {
     }
 
@@ -60,8 +58,7 @@ export class InvestmentNatureFormComponent implements OnInit {
                     this.amc = found;
                 }
             }
-        })
-        ;
+        });
 
         this.investmentVehicleList = this.newRequestService.investmentVehiclesList;
         this.frequencyList = this.newRequestService.frequencyList;
@@ -99,8 +96,7 @@ export class InvestmentNatureFormComponent implements OnInit {
         )
         .subscribe((data: any) => {
             this.form.patchValue(data);
-        })
-        ;
+        });
     }
 
     hasError(control, error = []) {

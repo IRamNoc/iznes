@@ -5,13 +5,13 @@ const ClassCodeValue = {
     [E.ClassCodeEnum.ClassC]: 'Class C',
     [E.ClassCodeEnum.ClassD]: 'Class D',
     [E.ClassCodeEnum.ClassR]: 'Class R',
-    [E.ClassCodeEnum.ClassI]: 'Class I'
+    [E.ClassCodeEnum.ClassI]: 'Class I',
 };
 
 const CurrencyValue = {
     [E.CurrencyEnum.EUR]: 'EUR',
     [E.CurrencyEnum.GBP]: 'GBP',
-    [E.CurrencyEnum.USD]: 'USD'
+    [E.CurrencyEnum.USD]: 'USD',
 };
 
 const TimeZoneOffsetValue = {
@@ -37,11 +37,11 @@ const TimeZoneOffsetValue = {
     [E.TimezonesEnum.UTCM8]: 8,
     [E.TimezonesEnum.UTCM9]: 9,
     [E.TimezonesEnum.UTCM10]: 10,
-    [E.TimezonesEnum.UTCM11]: 11
+    [E.TimezonesEnum.UTCM11]: 11,
 };
 
 export {
     ClassCodeValue,
     CurrencyValue,
-    TimeZoneOffsetValue
+    TimeZoneOffsetValue,
 };

@@ -29,7 +29,7 @@ export class OfiUmbrellaFundService {
         private memberSocketService: MemberSocketService,
         private ngRedux: NgRedux<any>,
     ) {
-        this.getConnectedWallet.subscribe((getConnectedWallet) => this.myWalletID(getConnectedWallet));
+        this.getConnectedWallet.subscribe(getConnectedWallet => this.myWalletID(getConnectedWallet));
     }
 
     static setRequested(boolValue: boolean, ngRedux: NgRedux<any>) {
@@ -107,7 +107,6 @@ export class OfiUmbrellaFundService {
     }
 
     updateUmbrellaFund(ufData: UmbrellaFundDetail, ngRedux: NgRedux<any>): any {
-
         const messageBody: any = {
             RequestName: 'iznupdateumbrellafund',
             token: this.memberSocketService.token,
@@ -155,7 +154,7 @@ export class OfiUmbrellaFundService {
         const messageBody: IznDeleteUmbrellaDraftRequestBody = {
             RequestName: 'izndeleteumbrelladraft',
             token: this.memberSocketService.token,
-            id: id,
+            id,
         };
 
         return createMemberNodeSagaRequest(this.memberSocketService, messageBody);

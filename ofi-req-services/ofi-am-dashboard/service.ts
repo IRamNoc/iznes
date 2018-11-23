@@ -1,11 +1,11 @@
 /* Core/Angular imports. */
-import {Injectable} from '@angular/core';
-import {NgRedux} from '@angular-redux/store';
+import { Injectable } from '@angular/core';
+import { NgRedux } from '@angular-redux/store';
 
 /* Member socket and nodeSagaRequest import. */
-import {MemberSocketService} from '@setl/websocket-service';
-import {createMemberNodeSagaRequest} from '@setl/utils/common';
-import {SagaHelper, Common} from '@setl/utils';
+import { MemberSocketService } from '@setl/websocket-service';
+import { createMemberNodeSagaRequest } from '@setl/utils/common';
+import { SagaHelper, Common } from '@setl/utils';
 import * as _ from 'lodash';
 
 /* Import interfaces for message bodies. */
@@ -15,20 +15,25 @@ import {
     GetFundWithHoldersRequestData,
 } from './model';
 
-import { OFI_SET_FUNDS_BY_USER_REQUESTED, OFI_SET_FUNDS_BY_USER_LIST, OFI_SET_FUNDS_WITH_HOLDERS_REQUESTED, OFI_SET_FUNDS_WITH_HOLDERS_LIST } from '../../ofi-store/ofi-am-dashboard/share-holders/actions';
+import {
+    OFI_SET_FUNDS_BY_USER_REQUESTED,
+    OFI_SET_FUNDS_BY_USER_LIST,
+    OFI_SET_FUNDS_WITH_HOLDERS_REQUESTED,
+    OFI_SET_FUNDS_WITH_HOLDERS_LIST,
+} from '../../ofi-store/ofi-am-dashboard/share-holders/actions';
 
 @Injectable()
 export class OfiAmDashboardService {
-
     /* Constructor. */
     constructor(private memberSocketService: MemberSocketService,
-                private ngRedux: NgRedux<any>,) {
+                private ngRedux: NgRedux<any>,
+    ) {
         /* Stub. */
     }
 
     static defaultRequestGetUserManagementCompanyFunds(ofiAmDashboardService: OfiAmDashboardService, ngRedux: NgRedux<any>) {
         // Set the state flag to true. so we do not request it again.
-        ngRedux.dispatch({type: OFI_SET_FUNDS_BY_USER_REQUESTED});
+        ngRedux.dispatch({ type: OFI_SET_FUNDS_BY_USER_REQUESTED });
 
         // Request the list.
         const asyncTaskPipe = ofiAmDashboardService.getUserManagementCompanyFunds();
@@ -37,7 +42,7 @@ export class OfiAmDashboardService {
             [OFI_SET_FUNDS_BY_USER_LIST],
             [],
             asyncTaskPipe,
-            {}
+            {},
         ));
     }
 
@@ -52,7 +57,7 @@ export class OfiAmDashboardService {
             [OFI_SET_FUNDS_WITH_HOLDERS_LIST],
             [],
             asyncTaskPipe,
-            {}
+            {},
         ));
     }
 
@@ -65,12 +70,12 @@ export class OfiAmDashboardService {
         /* Setup the message body. */
         const messageBody: OfiMemberNodeBody = {
             RequestName: 'getfundmanageasset',
-            token: this.memberSocketService.token
+            token: this.memberSocketService.token,
         };
 
         /* Return the new member node saga request. */
         return this.buildRequest({
-            'taskPipe': createMemberNodeSagaRequest(this.memberSocketService, messageBody),
+            taskPipe: createMemberNodeSagaRequest(this.memberSocketService, messageBody),
         });
     }
 
@@ -93,7 +98,7 @@ export class OfiAmDashboardService {
 
         /* Return the new member node saga request. */
         return this.buildRequest({
-            'taskPipe': createMemberNodeSagaRequest(this.memberSocketService, messageBody),
+            taskPipe: createMemberNodeSagaRequest(this.memberSocketService, messageBody),
         });
     }
 
@@ -141,10 +146,9 @@ export class OfiAmDashboardService {
                     },
                     (error) => {
                         reject(error);
-                    }
-                )
+                    },
+                ),
             );
-        })
+        });
     }
-
 }

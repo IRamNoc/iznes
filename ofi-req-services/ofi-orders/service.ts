@@ -31,7 +31,8 @@ export class OfiOrdersService {
 
     /* Constructor. */
     constructor(private memberSocketService: MemberSocketService,
-                private ngRedux: NgRedux<any>) {
+                private ngRedux: NgRedux<any>,
+    ) {
         /* Stub. */
     }
 
@@ -115,7 +116,7 @@ export class OfiOrdersService {
             ordertype: requestData.orderType,
             orderby: requestData.orderBy,
             ordervalue: requestData.orderValue,
-            comment: requestData.comment
+            comment: requestData.comment,
         };
 
         return createMemberNodeRequest(this.memberSocketService, messageBody);
@@ -127,7 +128,7 @@ export class OfiOrdersService {
         const messageBody: IznesMarkOrderSettleRequestBody = {
             RequestName: 'iznesmarkordersettle',
             token: this.memberSocketService.token,
-            orderId: requestData.orderId
+            orderId: requestData.orderId,
         };
 
         return createMemberNodeRequest(this.memberSocketService, messageBody);
@@ -135,7 +136,6 @@ export class OfiOrdersService {
     }
 
     requestManageOrdersList(data: ManageOrdersRequestData): any {
-
         const messageBody: OfiAmOrdersRequestBody = {
             RequestName: 'izngetamorders',
             token: this.memberSocketService.token,
@@ -161,7 +161,6 @@ export class OfiOrdersService {
     }
 
     requestInvestorOrdersList(data: ManageOrdersRequestData): any {
-
         const messageBody: OfiAmOrdersRequestBody = {
             RequestName: 'izngetinvestororders',
             token: this.memberSocketService.token,
@@ -187,7 +186,6 @@ export class OfiOrdersService {
     }
 
     requestIznesAdminOrdersList(data: ManageOrdersRequestData): any {
-
         const messageBody: OfiIznAdminOrdersRequestBody = {
             RequestName: 'iznactivitiesgetorders',
             token: this.memberSocketService.token,
@@ -216,7 +214,6 @@ export class OfiOrdersService {
     }
 
     requestCancelOrderByAM(data: CancelOrderRequestData): any {
-
         const messageBody: OfiCancelOrderRequestBody = {
             RequestName: 'izncancelorderbyam',
             token: this.memberSocketService.token,
@@ -227,7 +224,6 @@ export class OfiOrdersService {
     }
 
     requestCancelOrderByInvestor(data: CancelOrderRequestData): any {
-
         const messageBody: OfiCancelOrderRequestBody = {
             RequestName: 'izncancelorderbyinvestor',
             token: this.memberSocketService.token,
@@ -261,8 +257,8 @@ export class OfiOrdersService {
                     },
                     (error) => {
                         reject(error);
-                    }
-                )
+                    },
+                ),
             );
         });
     }

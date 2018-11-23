@@ -17,13 +17,15 @@
             <div class="row" *ngIf="amcs?.length > 1">
                 <div class="form-group col-sm-12">
                     <p>
-                        {{'The following information can be completed for all management companies or for each of them depending on your investment objectives' | translate}}
+                        {{ 'The following information can be completed for all management companies or for each of them depending on your investment objectives' | translate }}
                     </p>
 
                     <div class="checkbox-inline">
-                        <input type="checkbox" id="objectivesSameInvestmentCrossAm" formControlName="objectivesSameInvestmentCrossAm">
+                        <input type="checkbox" 
+                                id="objectivesSameInvestmentCrossAm" 
+                                formControlName="objectivesSameInvestmentCrossAm">
                         <label for="objectivesSameInvestmentCrossAm">
-                            {{'I would like to have the same investment objectives for all management companies' | translate}}
+                            {{ 'I would like to have the same investment objectives for all management companies' | translate }}
                         </label>
                     </div>
                 </div>

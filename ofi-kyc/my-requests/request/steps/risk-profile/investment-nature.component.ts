@@ -34,7 +34,6 @@ export class InvestmentNatureComponent implements OnInit {
         this.initData();
         this.initFormCheck();
         this.getCurrentFormData();
-
         this.updateCrossAM();
     }
 
@@ -48,11 +47,10 @@ export class InvestmentNatureComponent implements OnInit {
                 this.form.get('naturesSameInvestmentCrossAm').patchValue(cross, { emitEvent: false });
                 this.formCheckSameNatureCrossAm(cross);
             }
-        })
-        ;
+        });
     }
 
-    initData(){
+    initData() {
         this.currentlyRequestedKycs$
             .pipe(
                 takeUntil(this.unsubscribe),
@@ -61,8 +59,7 @@ export class InvestmentNatureComponent implements OnInit {
             .subscribe((requestedKycs) => {
                 this.amcs = values(requestedKycs);
                 this.updateCrossAM();
-            })
-        ;
+            });
     }
 
     updateCrossAM() {
@@ -77,8 +74,7 @@ export class InvestmentNatureComponent implements OnInit {
             .subscribe((value) => {
                 this.riskProfileService.currentServerData.risknature.next('');
                 this.formCheckSameNatureCrossAm(value);
-            })
-        ;
+            });
     }
 
     formCheckSameNatureCrossAm(value) {

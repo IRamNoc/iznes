@@ -1,5 +1,4 @@
-import { OfiSubPortfolioComponent } from "./ofi-sub-portfolio/sub-portfolio/component";
-
+import { OfiSubPortfolioComponent } from './ofi-sub-portfolio/sub-portfolio/component';
 export { OfiFundInvestModule } from './ofi-fund-invest/module';
 export { OfiInvestorFundListComponent } from './ofi-fund-invest/investor-fund-list/component';
 

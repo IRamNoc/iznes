@@ -26,6 +26,7 @@ import {
     mDateHelper,
     MoneyValuePipe,
     NumberConverterService,
+    LogService,
 } from '@setl/utils';
 import {
     InitialisationService,
@@ -43,11 +44,9 @@ import { OrderRequest } from '../../ofi-product/fund-share/helper/models';
 import { OrderByType, OrderType } from '../../ofi-orders/order.model';
 import { ToasterService, Toast } from 'angular2-toaster';
 import { Router } from '@angular/router';
-import { LogService } from '@setl/utils';
 import { MultilingualService } from '@setl/multilingual';
 import { MessagesService } from '@setl/core-messages';
 import { SellBuyCalendar } from '../../ofi-product/fund-share/FundShareEnum';
-
 import { OfiFundShareService } from '@ofi/ofi-main/ofi-req-services/ofi-product/fund-share/service';
 import { DomSanitizer } from '@angular/platform-browser';
 import { FileDownloader } from '@setl/utils/services/file-downloader/service';
@@ -144,7 +143,7 @@ export class InvestFundComponent implements OnInit, OnDestroy {
     valuationDate: FormControl;
     settlementDate: FormControl;
 
-    //  sadata.
+    // sadata
     shareData: any;
 
     // Form
@@ -221,7 +220,7 @@ export class InvestFundComponent implements OnInit, OnDestroy {
     }
 
     get feePercentage(): number {
-        return this._numberConverterService.toFrontEnd(this.orderHelper.feePercentage);
+        return this.numberConverterService.toFrontEnd(this.orderHelper.feePercentage);
     }
 
     get cutoffTime(): string {
@@ -253,9 +252,9 @@ export class InvestFundComponent implements OnInit, OnDestroy {
 
     get orderTypeLabel(): string {
         return {
-            subscribe: this._translate.getTranslationByString('Subscription'),
-            redeem: this._translate.getTranslationByString('Redemption'),
-            sellbuy: this._translate.getTranslationByString('Sell / Buy'),
+            subscribe: this.translate.getTranslationByString('Subscription'),
+            redeem: this.translate.getTranslationByString('Redemption'),
+            sellbuy: this.translate.getTranslationByString('Sell / Buy'),
         }[this.type];
     }
 
@@ -298,21 +297,21 @@ export class InvestFundComponent implements OnInit, OnDestroy {
 
     get orderValue() {
         return {
-            q: this._numberConverterService.toBlockchain(
-                this._moneyValuePipe.parse(this.form.controls.quantity.value, 5),
+            q: this.numberConverterService.toBlockchain(
+                this.moneyValuePipe.parse(this.form.controls.quantity.value, 5),
             ),
-            a: this._numberConverterService.toBlockchain(
-                this._moneyValuePipe.parse(this.trueAmount || this.form.controls.amount.value, 2),
+            a: this.numberConverterService.toBlockchain(
+                this.moneyValuePipe.parse(this.trueAmount || this.form.controls.amount.value, 2),
             ),
         }[this.actionBy];
     }
 
     get nav() {
-        return this._numberConverterService.toFrontEnd(this.shareData.price);
+        return this.numberConverterService.toFrontEnd(this.shareData.price);
     }
 
     get navStr() {
-        return this._moneyValuePipe.transform(this.nav, 4);
+        return this.moneyValuePipe.transform(this.nav, 4);
     }
 
     get allowCheckDisclaimer(): string | null {
@@ -334,37 +333,37 @@ export class InvestFundComponent implements OnInit, OnDestroy {
     get allowAmount(): any {
         if (typeof this.orderHelper === 'undefined') {
             return '';
-        } else {
-            let isValid = this.orderHelper.checkOrderByIsAllow('a').orderValid;
-            if (this.allowAmountAndQuantity) {
-                isValid = isValid && (this.actionBy === 'a');
-            }
-
-            return isValid ? null : '';
         }
+
+        let isValid = this.orderHelper.checkOrderByIsAllow('a').orderValid;
+        if (this.allowAmountAndQuantity) {
+            isValid = isValid && (this.actionBy === 'a');
+        }
+
+        return isValid ? null : '';
     }
 
     get allowQuantity(): any {
         if (typeof this.orderHelper === 'undefined') {
             return '';
-        } else {
-            let isValid = this.orderHelper.checkOrderByIsAllow('q').orderValid;
-
-            if (this.allowAmountAndQuantity) {
-                isValid = isValid && (this.actionBy === 'q');
-            }
-            return isValid ? null : '';
         }
+
+        let isValid = this.orderHelper.checkOrderByIsAllow('q').orderValid;
+
+        if (this.allowAmountAndQuantity) {
+            isValid = isValid && (this.actionBy === 'q');
+        }
+        return isValid ? null : '';
     }
 
     get allowAmountAndQuantity(): any {
         if (typeof this.orderHelper === 'undefined') {
             return false;
-        } else {
-            const isAllowedAmount = this.orderHelper.checkOrderByIsAllow('a').orderValid;
-            const isAllowedQuantity = this.orderHelper.checkOrderByIsAllow('q').orderValid;
-            return isAllowedAmount && isAllowedQuantity;
         }
+
+        const isAllowedAmount = this.orderHelper.checkOrderByIsAllow('a').orderValid;
+        const isAllowedQuantity = this.orderHelper.checkOrderByIsAllow('q').orderValid;
+        return isAllowedAmount && isAllowedQuantity;
     }
 
     get shareAsset(): string {
@@ -419,15 +418,15 @@ export class InvestFundComponent implements OnInit, OnDestroy {
             return false;
         }
 
-        const toNumber = this._moneyValuePipe.parse(this.quantity.value, 4);
-        const redeeming = this._numberConverterService.toBlockchain(toNumber);
+        const toNumber = this.moneyValuePipe.parse(this.quantity.value, 4);
+        const redeeming = this.numberConverterService.toBlockchain(toNumber);
         const balance = this.subPortfolioBalance;
         return Boolean(redeeming > balance);
     }
 
     get amountTooBig() {
         const value = this.amount.value;
-        let quantity = this._moneyValuePipe.parse(value, 4);
+        let quantity = this.moneyValuePipe.parse(value, 4);
 
         if (isNaN(quantity)) {
             quantity = 0;
@@ -443,11 +442,11 @@ export class InvestFundComponent implements OnInit, OnDestroy {
         mifiidServicesCosts: number;
         mifiidIncidentalCosts: number;
     } {
-        const mifiidChargesOneOff = this._numberConverterService.toFrontEnd(this.shareData.mifiidChargesOneOff);
-        const mifiidChargesOngoing = this._numberConverterService.toFrontEnd(this.shareData.mifiidChargesOngoing);
-        const mifiidTransactionCosts = this._numberConverterService.toFrontEnd(this.shareData.mifiidTransactionCosts);
-        const mifiidServicesCosts = this._numberConverterService.toFrontEnd(this.shareData.mifiidServicesCosts);
-        const mifiidIncidentalCosts = this._numberConverterService.toFrontEnd(this.shareData.mifiidIncidentalCosts);
+        const mifiidChargesOneOff = this.numberConverterService.toFrontEnd(this.shareData.mifiidChargesOneOff);
+        const mifiidChargesOngoing = this.numberConverterService.toFrontEnd(this.shareData.mifiidChargesOngoing);
+        const mifiidTransactionCosts = this.numberConverterService.toFrontEnd(this.shareData.mifiidTransactionCosts);
+        const mifiidServicesCosts = this.numberConverterService.toFrontEnd(this.shareData.mifiidServicesCosts);
+        const mifiidIncidentalCosts = this.numberConverterService.toFrontEnd(this.shareData.mifiidIncidentalCosts);
 
         return {
             mifiidChargesOneOff,
@@ -459,26 +458,25 @@ export class InvestFundComponent implements OnInit, OnDestroy {
     }
 
     constructor(
-        private _changeDetectorRef: ChangeDetectorRef,
-        public _moneyValuePipe: MoneyValuePipe,
-        private _myWalletService: MyWalletsService,
-        private _walletNodeRequestService: WalletNodeRequestService,
-        private _numberConverterService: NumberConverterService,
-        private _ofiOrdersService: OfiOrdersService,
-        private _alertsService: AlertsService,
-        private _confirmationService: ConfirmationService,
-        private _toaster: ToasterService,
-        private _router: Router,
+        private changeDetectorRef: ChangeDetectorRef,
+        public moneyValuePipe: MoneyValuePipe,
+        private myWalletService: MyWalletsService,
+        private walletNodeRequestService: WalletNodeRequestService,
+        private numberConverterService: NumberConverterService,
+        private ofiOrdersService: OfiOrdersService,
+        private alertsService: AlertsService,
+        private confirmationService: ConfirmationService,
+        private toaster: ToasterService,
+        private router: Router,
         private logService: LogService,
-        public _translate: MultilingualService,
-        private _ngRedux: NgRedux<any>,
-        private _messagesService: MessagesService,
+        public translate: MultilingualService,
+        private ngRedux: NgRedux<any>,
+        private messagesService: MessagesService,
         public sanitizer: DomSanitizer,
         private fileDownloader: FileDownloader,
         private fileService: FileService,
         private shareService: OfiFundShareService,
     ) {
-
     }
 
     ngOnDestroy() {
@@ -528,16 +526,15 @@ export class InvestFundComponent implements OnInit, OnDestroy {
         this.metadata = {
             subscribe: {
                 actionLabel: 'subscribe',
-                feeLabel: this._translate.getTranslationByString('Entry fee'),
-
+                feeLabel: this.translate.getTranslationByString('Entry Fee'),
             },
             redeem: {
                 actionLabel: 'redeem',
-                feeLabel: this._translate.getTranslationByString('Exit fee'),
+                feeLabel: this.translate.getTranslationByString('Exit Fee'),
             },
             sellbuy: {
                 actionLabel: 'sellbuy',
-                feeLabel: this._translate.getTranslationByString('Entry / Exit fee'),
+                feeLabel: this.translate.getTranslationByString('Entry / Exit Fee'),
             },
         }[this.type];
 
@@ -564,7 +561,7 @@ export class InvestFundComponent implements OnInit, OnDestroy {
         .pipe(
             takeUntil(this.unSubscribe),
         )
-        .subscribe(connected => {
+        .subscribe((connected) => {
             this.connectedWalletId = connected;
         });
 
@@ -614,7 +611,7 @@ export class InvestFundComponent implements OnInit, OnDestroy {
                 clearInterval(this.toastTimer);
             }
             if (this.timerToast) {
-                this._toaster.clear(this.timerToast.toastId);
+                this.toaster.clear(this.timerToast.toastId);
                 this.timerToast = null;
             }
             if (!v) {
@@ -637,37 +634,43 @@ export class InvestFundComponent implements OnInit, OnDestroy {
 
     updateToastTimer(unixtime: number) {
         if (this.timerToast) {
-            this._toaster.clear(this.timerToast.toastId);
+            this.toaster.clear(this.timerToast.toastId);
             this.timerToast = null;
         }
-        this.timerToast = this._toaster.pop(
+        this.timerToast = this.toaster.pop(
             'warning',
-            `Time left before the next cut-off: ${this.getFormattedUnixTime(unixtime)}`,
+            this.translate.translate(
+                'Time left before the next cut-off: @time@',
+                { 'time': this.getFormattedUnixTime(unixtime) },
+            ),
         );
     }
 
     setToastTimer() {
-        return setInterval(() => {
-            const cutOffValue = new Date(
-                this.calenderHelper
-                .getCutoffTimeForSpecificDate(moment(this.cutoffDate.value), this.getCalendarHelperOrderNumber())
-                .format('YYYY-MM-DD HH:mm'),
-            );
+        return setInterval(
+            () => {
+                const cutOffValue = new Date(
+                    this.calenderHelper
+                    .getCutoffTimeForSpecificDate(moment(this.cutoffDate.value), this.getCalendarHelperOrderNumber())
+                    .format('YYYY-MM-DD HH:mm'),
+                );
 
-            const now = new Date();
+                const now = new Date();
 
-            const remainingTime = cutOffValue.getTime() - now.getTime();
-            if (remainingTime > 0) {
-                this.updateToastTimer(remainingTime);
-            } else {
-                if (this.timerToast) {
-                    this._toaster.clear(this.timerToast.toastId);
-                    this.timerToast = null;
+                const remainingTime = cutOffValue.getTime() - now.getTime();
+                if (remainingTime > 0) {
+                    this.updateToastTimer(remainingTime);
+                } else {
+                    if (this.timerToast) {
+                        this.toaster.clear(this.timerToast.toastId);
+                        this.timerToast = null;
+                    }
+                    this.showAlertCutOffError();
+                    clearInterval(this.toastTimer);
                 }
-                this.showAlertCutOffError();
-                clearInterval(this.toastTimer);
-            }
-        }, 1000);
+            },
+            1000,
+        );
     }
 
     getFormattedUnixTime(value: number): string {
@@ -712,7 +715,7 @@ export class InvestFundComponent implements OnInit, OnDestroy {
             return false;
         }
 
-        const quantity = this._numberConverterService.toFrontEnd(this.subPortfolioBalance);
+        const quantity = this.numberConverterService.toFrontEnd(this.subPortfolioBalance);
 
         this.quantityInput.nativeElement.focus();
         this.form.get('quantity').setValue(quantity);
@@ -720,7 +723,6 @@ export class InvestFundComponent implements OnInit, OnDestroy {
     }
 
     updateDateInputs() {
-
         this.configDateCutoff.isDayDisabledCallback = (thisDate) => {
             // if day in the past.
             // if day if not the cutoff day for the fund.
@@ -735,8 +737,7 @@ export class InvestFundComponent implements OnInit, OnDestroy {
             return !this.isSettlementDay(thisDate);
         };
 
-        this._changeDetectorRef.detectChanges();
-
+        this.changeDetectorRef.detectChanges();
     }
 
     isCutoffDay(thisDate: moment.Moment): boolean {
@@ -755,24 +756,26 @@ export class InvestFundComponent implements OnInit, OnDestroy {
     }
 
     updateAddressList(addressList) {
-
         this.addressListObj = addressList;
-        this.addressList = immutableHelper.reduce(addressList, (result, item) => {
+        this.addressList = immutableHelper.reduce(
+            addressList,
+            (result, item) => {
+                const addr = item.get('addr', false);
+                const label = item.get('label', false);
 
-            const addr = item.get('addr', false);
-            const label = item.get('label', false);
+                if (addr && label) {
+                    const addressItem = {
+                        id: item.get('addr', ''),
+                        text: item.get('label', ''),
+                    };
 
-            if (addr && label) {
-                const addressItem = {
-                    id: item.get('addr', ''),
-                    text: item.get('label', ''),
-                };
+                    result.push(addressItem);
+                }
 
-                result.push(addressItem);
-            }
-
-            return result;
-        }, []);
+                return result;
+            },
+            [],
+        );
 
         // Set default or selected address.
         const hasSelectedAddressInList = immutableHelper.filter(this.addressList, (thisItem) => {
@@ -790,8 +793,7 @@ export class InvestFundComponent implements OnInit, OnDestroy {
             }
         }
 
-        this._changeDetectorRef.markForCheck();
-
+        this.changeDetectorRef.markForCheck();
     }
 
     requestAddressList(requestedState) {
@@ -801,19 +803,18 @@ export class InvestFundComponent implements OnInit, OnDestroy {
         // If the state is false, that means we need to request the list.
         if (!requestedState && this.connectedWalletId !== 0) {
             // Set the state flag to true. so we do not request it again.
-            this._ngRedux.dispatch(setRequestedWalletAddresses());
+            this.ngRedux.dispatch(setRequestedWalletAddresses());
 
             // Request the list.
-            InitialisationService.requestWalletAddresses(this._ngRedux, this._walletNodeRequestService, this.connectedWalletId);
+            InitialisationService.requestWalletAddresses(this.ngRedux, this.walletNodeRequestService, this.connectedWalletId);
         }
     }
 
     requestWalletLabel(requestedState) {
-
         // If the state is false, that means we need to request the list.
         if (!requestedState && this.connectedWalletId !== 0) {
 
-            MyWalletsService.defaultRequestWalletLabel(this._ngRedux, this._myWalletService, this.connectedWalletId);
+            MyWalletsService.defaultRequestWalletLabel(this.ngRedux, this.myWalletService, this.connectedWalletId);
         }
     }
 
@@ -826,7 +827,6 @@ export class InvestFundComponent implements OnInit, OnDestroy {
     }
 
     buildOrderRequest() {
-
         return {
             shareIsin: this.shareData.isin,
             portfolioId: this.connectedWalletId,
@@ -901,18 +901,17 @@ export class InvestFundComponent implements OnInit, OnDestroy {
         }
 
         // show waiting pop up until create order response come back.
-        this._alertsService.create('info', `
+        this.alertsService.create('info', `
                 <table class="table grid">
                     <tbody>
                         <tr>
-                            <td class="text-center text-info">Creating order.<br />This may take a few moments.</td>
+                            <td class="text-center text-info">${this.translate.translate('Creating order')}.<br />${this.translate.translate('This may take a few moments.')}</td>
                         </tr>
                     </tbody>
                 </table>
         `, { showCloseButton: false, overlayClickToClose: false });
 
-        this._ofiOrdersService.addNewOrder(request).then((data) => {
-
+        this.ofiOrdersService.addNewOrder(request).then((data) => {
             let orderSuccessMsg = '';
 
             if (this.type === 'sellbuy') {
@@ -922,7 +921,10 @@ export class InvestFundComponent implements OnInit, OnDestroy {
                 const orderRedeemId = _.get(data, ['1', 'Data', '0', 'linkedRedemptionOrderId'], 0);
                 const orderRedemRef = commonHelper.pad(orderRedeemId, 8, '0');
 
-                orderSuccessMsg = `Your order ${orderRedemRef} & ${orderSubRef} have been successfully placed and are now initiated.`;
+                orderSuccessMsg = this.translate.translate(
+                    'Your order @orderRedemRef@ & @orderSubRef@ have been successfully placed and are now initiated.',
+                    { 'orderRedemRef': orderRedemRef, 'orderSubRef': orderSubRef },
+                );
 
                 if (this.amountTooBig) {
                     this.sendMessageToAM({
@@ -943,7 +945,10 @@ export class InvestFundComponent implements OnInit, OnDestroy {
                 const orderId = _.get(data, ['1', 'Data', '0', 'orderID'], 0);
                 const orderRef = commonHelper.pad(orderId, 8, '0');
 
-                orderSuccessMsg = `Your order ${orderRef} has been successfully placed and is now initiated.`;
+                orderSuccessMsg = this.translate.translate(
+                    'Your order @orderRef@ has been successfully placed and is now initiated.',
+                    { 'orderRef': orderRef },
+                );
 
                 if (this.amountTooBig) {
                     this.sendMessageToAM({
@@ -955,26 +960,38 @@ export class InvestFundComponent implements OnInit, OnDestroy {
                 }
             }
 
-            this._toaster.pop('success', orderSuccessMsg);
+            this.toaster.pop('success', orderSuccessMsg);
             this.handleClose();
 
-            this._router.navigateByUrl('/order-book/my-orders/list');
+            this.router.navigateByUrl('/order-book/my-orders/list');
         }).catch((data) => {
             const errorMessage = _.get(data, ['1', 'Data', '0', 'Message'], '');
-            this._toaster.pop('warning', errorMessage);
+            this.toaster.pop('warning', errorMessage);
 
-            this._alertsService.close();
+            this.alertsService.close();
         });
-
     }
 
     sendMessageToAM(params) {
         const amWalletID = params.walletID;
-        const subject = `Warning - Soft Limit amount exceeded on ${params.orderTypeLabel} order ${params.orderRef}`;
-        const body = `<p>Hello,<br /><br />
-Please be aware that the ${params.orderTypeLabel} order ${params.orderRef} has exceeded the limit of 15 million.<br />
-%@link@%<br /><br />
-The IZNES Team.</p>`;
+
+        const subjectStr = this.translate.translate(
+            'Warning - Soft Limit amount exceeded on @orderTypeLabel@ order @orderRef@',
+            { 'orderTypeLabel': params.orderTypeLabel, 'orderRef': params.orderRef },
+        );
+
+        const bodyStr = `
+            <p>
+            ${this.translate.translate('Hello')}
+            <br /><br />
+            ${this.translate.translate(
+                'Please be aware that the @orderTypeLabel@ order @orderRef has exceeded the limit of 15 million.',
+                { 'orderTypeLabel': params.orderTypeLabel, 'orderRef': params.orderRef },
+            )}
+            <br />%@link@%<br /><br />
+            ${this.translate.translate('The IZNES Team')}
+            .</p>
+        `;
 
         const action = {
             type: 'messageWithLink',
@@ -983,13 +1000,13 @@ The IZNES Team.</p>`;
                     {
                         link: `/#/manage-orders?orderID=${params.orderID}`,
                         anchorCss: 'btn btn-secondary',
-                        anchorText: 'Go to this order',
+                        anchorText: this.translate.translate('Go to this order'),
                     },
                 ],
             },
         };
 
-        this._messagesService.sendMessage([amWalletID], subject, body, action as any);
+        this.messagesService.sendMessage([amWalletID], subjectStr, bodyStr, action as any);
     }
 
     subscribeForChange(type: string): void {
@@ -1006,7 +1023,6 @@ The IZNES Team.</p>`;
 
         const callBack = {
             quantity: (value) => {
-
                 /**
                  * amount = unit * nav
                  * Warning: Before changing this logic check with team lead
@@ -1014,7 +1030,7 @@ The IZNES Team.</p>`;
                 const val = Number(value.toString().replace(/\s+/g, ''));
 
                 const amount = math.format(math.chain(val).multiply(this.nav).done(), 14);
-                const amountStr = this._moneyValuePipe.transform(amount, 2);
+                const amountStr = this.moneyValuePipe.transform(amount, 2);
                 beTriggered.patchValue(amountStr, { onlySelf: true, emitEvent: false });
 
                 this.calcFeeNetAmount();
@@ -1025,13 +1041,13 @@ The IZNES Team.</p>`;
                  * quantity = amount / nav
                  * Warning: Before changing this logic check with team lead
                  */
-                const newValue = this._moneyValuePipe.parse(value, 2);
+                const newValue = this.moneyValuePipe.parse(value, 2);
 
                 this.trueAmount = newValue;
 
                 const quantity = math.format(math.chain(newValue).divide(this.nav).done(), 14); // {notation: 'fixed', precision: this.shareData.maximumNumDecimal}
                 const newQuantity = this.roundDown(quantity, this.shareData.maximumNumDecimal).toString();
-                const newQuantityStr = this._moneyValuePipe.transform(newQuantity, this.shareData.maximumNumDecimal);
+                const newQuantityStr = this.moneyValuePipe.transform(newQuantity, this.shareData.maximumNumDecimal);
                 beTriggered.patchValue(newQuantityStr, { onlySelf: true, emitEvent: false });
 
                 this.calcFeeNetAmount();
@@ -1046,9 +1062,8 @@ The IZNES Team.</p>`;
      * Based on Quantity
      */
     calcFeeNetAmount() {
-
         // get amount
-        const quantityParsed = this._moneyValuePipe.parse(this.quantity.value, 5);
+        const quantityParsed = this.moneyValuePipe.parse(this.quantity.value, 5);
 
         // we have two scenario to handle in there.
         // 1. if we working on known nav, as we always round the the amount down according to the quantity.
@@ -1059,24 +1074,23 @@ The IZNES Team.</p>`;
         if (this.isKnownNav()) {
             amount = math.format(math.chain(quantityParsed).multiply(this.nav).done(), 14);
         } else {
-            amount = this._moneyValuePipe.parse(this.amount.value, 2);
+            amount = this.moneyValuePipe.parse(this.amount.value, 2);
         }
 
         // calculate fee
         const fee = calFee(amount, this.feePercentage);
-        const feeStr = this._moneyValuePipe.transform(fee.toString(), 2).toString();
+        const feeStr = this.moneyValuePipe.transform(fee.toString(), 2).toString();
         this.feeAmount.setValue(feeStr);
 
         // net amount for subscription order
         const netAmountSub = calNetAmount(amount, fee, 's');
-        const netAmountSubStr = this._moneyValuePipe.transform(netAmountSub.toString(), 2).toString();
+        const netAmountSubStr = this.moneyValuePipe.transform(netAmountSub.toString(), 2).toString();
         this.netAmountSub.setValue(netAmountSubStr);
 
         // net amount for redemption order
         const netAmountRedeem = calNetAmount(amount, fee, 'r');
-        const netAmountRedeemStr = this._moneyValuePipe.transform(netAmountRedeem.toString(), 2).toString();
+        const netAmountRedeemStr = this.moneyValuePipe.transform(netAmountRedeem.toString(), 2).toString();
         this.netAmountRedeem.setValue(netAmountRedeemStr);
-
     }
 
     /**
@@ -1085,9 +1099,9 @@ The IZNES Team.</p>`;
      */
     roundAmount() {
         if (this.isKnownNav()) {
-            const quantityParsed = this._moneyValuePipe.parse(this.quantity.value, 5);
+            const quantityParsed = this.moneyValuePipe.parse(this.quantity.value, 5);
             const amount = math.format(math.chain(quantityParsed).multiply(this.nav).done(), 14);
-            const amountStr = this._moneyValuePipe.transform(amount.toString(), 2).toString();
+            const amountStr = this.moneyValuePipe.transform(amount.toString(), 2).toString();
             this.amount.patchValue(amountStr, { onlySelf: true, emitEvent: false });
 
             this.unSubscribeForChange();
@@ -1106,8 +1120,8 @@ The IZNES Team.</p>`;
      * @returns {number}
      */
     roundDown(number: any, decimals: any) {
-        decimals = decimals || 0;
-        return math.format((Math.floor(number * Math.pow(10, decimals)) / Math.pow(10, decimals)), 14);
+        const decimalsVal = decimals || 0;
+        return math.format((Math.floor(number * Math.pow(10, decimalsVal)) / Math.pow(10, decimalsVal)), 14);
     }
 
     isValidOrderValue() {
@@ -1150,7 +1164,6 @@ The IZNES Team.</p>`;
         const cutoffHour = moment(this.cutoffTime, 'HH:mm').format('HH:mm');
 
         if (type === 'cutoff') {
-
             const cutoffDateStr = this.getCutoffTimeForSpecificDate(momentDateValue)
             .format('YYYY-MM-DD HH:mm');
 
@@ -1166,7 +1179,6 @@ The IZNES Team.</p>`;
 
             this.dateBy = 'cutoff';
         } else if (type === 'valuation') {
-
             const mCutoffDate = this.getCutoffDateFromValuation(momentDateValue);
             const cutoffDateStr = this.getCutoffTimeForSpecificDate(mCutoffDate)
             .format('YYYY-MM-DD HH:mm');
@@ -1206,26 +1218,24 @@ The IZNES Team.</p>`;
         }
 
         return false;
-
     }
 
     handleOrderConfirmation() {
-
         if (this.doValidate && this.handleCutOffDateError()) {
             return;
         }
 
         const subPortfolioName = this.address.value[0]['text'];
-        const amount = this._moneyValuePipe.parse(this.amount.value, 4);
-        const quantity = this._moneyValuePipe.parse(this.quantity.value, this.shareData.maximumNumDecimal);
-        const amountStr = this._moneyValuePipe.transform(amount, 4);
-        const quantityStr = this._moneyValuePipe.transform(quantity, Number(this.shareData.maximumNumDecimal));
-        const amountMessage = this.amountTooBig ? '<p class="mb-1"><span class="text-danger blink_me">Order amount above 15 million</span></p>' : '';
+        const amount = this.moneyValuePipe.parse(this.amount.value, 4);
+        const quantity = this.moneyValuePipe.parse(this.quantity.value, this.shareData.maximumNumDecimal);
+        const amountStr = this.moneyValuePipe.transform(amount, 4);
+        const quantityStr = this.moneyValuePipe.transform(quantity, Number(this.shareData.maximumNumDecimal));
+        const amountMessage = this.amountTooBig ? `<p class="mb-1"><span class="text-danger blink_me">${this.translate.translate('Order amount above 15 million')}</span></p>` : '';
 
         let conditionalMessage;
         if (this.type === 'redeem') {
-            const quantityBlockchain = this._numberConverterService.toBlockchain(quantity);
-            conditionalMessage = (quantityBlockchain === this.subPortfolioBalance) ? '<p class="mb-1"><span class="text-danger blink_me">All your position for this portfolio will be redeemed</span></p>' : '';
+            const quantityBlockchain = this.numberConverterService.toBlockchain(quantity);
+            conditionalMessage = (quantityBlockchain === this.subPortfolioBalance) ? `<p class="mb-1"><span class="text-danger blink_me">${this.translate.translate('All your position for this portfolio will be redeemed')}</span></p>` : '';
         }
 
         let orderValueHtml = '';
@@ -1233,80 +1243,82 @@ The IZNES Team.</p>`;
         if (this.type === 'sellbuy') {
             orderValueHtml = `
                     <tr>
-                        <td class="left"><b>Redemption Quantity:</b></td>
+                        <td class="left"><b>${this.translate.translate('Redemption Quantity')}:</b></td>
                         <td>${quantityStr}</td>
                     </tr>
                     <tr>
-                        <td class="left"><b>Subscription Quantity:</b></td>
+                        <td class="left"><b>${this.translate.translate('Subscription Quantity')}:</b></td>
                         <td>${quantityStr}</td>
                     </tr>
                     <tr>
-                        <td class="left"><b>Redemption Amount:</b></td>
+                        <td class="left"><b>${this.translate.translate('Redemption Amount')}:</b></td>
                         <td>${amountStr}</td>
                     </tr>
                     <tr>
-                        <td class="left"><b>Subscription Amount:</b></td>
+                        <td class="left"><b>${this.translate.translate('Subscription Amount')}:</b></td>
                         <td>${amountStr}</td>
                     </tr>
-
            `;
         } else {
             orderValueHtml = `
                     <tr>
-                        <td class="left"><b>Quantity:</b></td>
+                        <td class="left"><b>${this.translate.translate('Quantity')}:</b></td>
                         <td>${quantityStr}</td>
                     </tr>
                     <tr>
-                        <td class="left"><b>Amount:</b></td>
+                        <td class="left"><b>${this.translate.translate('Amount')}:</b></td>
                         <td>${amountStr}</td>
                     </tr>
-
            `;
         }
 
         const message = `
-            <p class="mb-1"><span class="text-warning">Please check information about your order before confirm it:</span></p>
+            <p class="mb-1"><span class="text-warning">${this.translate.translate('Please check information about your order before confirm it')}:</span></p>
             ${conditionalMessage ? conditionalMessage : ''}
             ${amountMessage}
             <table class="table grid">
                 <tbody>
                     <tr>
-                        <td class="left"><b>Order Type:</b></td>
+                        <td class="left"><b>${this.translate.translate('Order Type')}:</b></td>
                         <td>${this.orderTypeLabel}</td>
                     </tr>
                     <tr>
-                        <td class="left"><b>Investment SubPortfolio:</b></td>
+                        <td class="left"><b>${this.translate.translate('Investment Sub-portfolio')}:</b></td>
                         <td>${subPortfolioName}</td>
                     </tr>
                     <tr>
-                        <td class="left"><b>Share Name:</b></td>
+                        <td class="left"><b>${this.translate.translate('Share Name')}:</b></td>
                         <td>${this.shareData.fundShareName}</td>
                     </tr>
                     <tr>
-                        <td class="left"><b>ISIN:</b></td>
+                        <td class="left"><b>${this.translate.translate('ISIN')}:</b></td>
                         <td>${this.shareData.isin}</td>
                     </tr>
                     <tr>
-                        <td class="left"><b>Currency:</b></td>
+                        <td class="left"><b>${this.translate.translate('Currency')}:</b></td>
                         <td>${this.currency}</td>
                     </tr>
                     ${orderValueHtml}
                     <tr>
-                        <td class="left"><b>NAV Date:</b></td>
+                        <td class="left"><b>${this.translate.translate('NAV Date')}:</b></td>
                         <td>${this.valuationDate.value}</td>
                     </tr>
                     <tr>
-                        <td class="left"><b>Settlement Date:</b></td>
+                        <td class="left"><b>${this.translate.translate('Settlement Date')}:</b></td>
                         <td>${this.settlementDate.value}</td>
                     </tr>
                 </tbody>
             </table>
             `;
 
-        this._confirmationService.create(
-            '<span>Order confirmation</span>',
+        this.confirmationService.create(
+            `<span>${this.translate.translate('Order Confirmation')}</span>`,
             message,
-            { confirmText: 'Confirm', declineText: 'Cancel', btnClass: 'primary' },
+            {
+                confirmText: this.translate.translate('Confirm'),
+                declineText: this.translate.translate('Cancel'),
+                btnClass: 'primary',
+            },
         ).subscribe((ans) => {
             if (ans.resolved) {
                 this.handleSubmit();
@@ -1359,12 +1371,12 @@ The IZNES Team.</p>`;
 
     showAlertCutOffError() {
         if (this.doValidate) {
-            this._alertsService
+            this.alertsService
             .create('error', `
                     <table class="table grid">
                         <tbody>
                             <tr>
-                                <td class="text-center text-danger">The Cut-off has been reached</td>
+                                <td class="text-center text-danger">${this.translate.translate('The Cut-off has been reached')}</td>
                             </tr>
                         </tbody>
                     </table>
@@ -1441,16 +1453,16 @@ The IZNES Team.</p>`;
     getOrderTypeTitle(isNoun: boolean = true): string {
         if (isNoun) {
             return {
-                subscribe: this._translate.getTranslationByString('Subscription'),
-                redeem: this._translate.getTranslationByString('Redemption'),
-                sellbuy: this._translate.getTranslationByString('Sell / Buy'),
+                subscribe: this.translate.getTranslationByString('Subscription'),
+                redeem: this.translate.getTranslationByString('Redemption'),
+                sellbuy: this.translate.getTranslationByString('Sell / Buy'),
             }[this.type];
         }
 
         return {
-            subscribe: this._translate.getTranslationByString('Subscribe'),
-            redeem: this._translate.getTranslationByString('Redeem'),
-            sellbuy: this._translate.getTranslationByString('Sell / Buy'),
+            subscribe: this.translate.getTranslationByString('Subscribe'),
+            redeem: this.translate.getTranslationByString('Redeem'),
+            sellbuy: this.translate.getTranslationByString('Sell / Buy'),
         }[this.type];
 
     }
@@ -1461,9 +1473,9 @@ The IZNES Team.</p>`;
      */
     getOrderTypeSubTitle(): string {
         return {
-            subscribe: this._translate.getTranslationByString('Please fill in the following information to subscribe to this share'),
-            redeem: this._translate.getTranslationByString('Please fill in the following information to redeem this share'),
-            sellbuy: this._translate.getTranslationByString('Please fill in the following information to **simultaneously** redeem and subscribe to this share:'),
+            subscribe: this.translate.getTranslationByString('Please fill in the following information to subscribe to this share'),
+            redeem: this.translate.getTranslationByString('Please fill in the following information to redeem this share'),
+            sellbuy: this.translate.getTranslationByString('Please fill in the following information to **simultaneously** redeem and subscribe to this share:'),
         }[this.type];
     }
 
@@ -1555,58 +1567,57 @@ The IZNES Team.</p>`;
      * Show alert error that redemption order over 80%, and no active order
      */
     show80PercentNoActiveOrderError() {
-        this._alertsService
+        this.alertsService
         .create('error', `
                 <table class="table grid">
                     <tbody>
                         <tr>
                             <td class="text-center text-danger">
-                                ${this._translate.getTranslationByString('You may not place a redemption order for more than 80% of your positions.')}
+                                ${this.translate.getTranslationByString('You may not place a redemption order for more than 80% of your positions.')}
                             </td>
                         </tr>
                         <tr>
                             <td class="text-center text-danger">
-                                ${this._translate.getTranslationByString('If you wish to redeem all your positions, you can redeem in quantity by clicking on the button "Redeem All".')}
+                                ${this.translate.getTranslationByString('If you wish to redeem all your positions, you can redeem in quantity by clicking on the button "Redeem All".')}
                             </td>
                         </tr>
                     </tbody>
                 </table>
-            `, {}, this._translate.getTranslationByString('Order above 80% of your position'));
+            `, {}, this.translate.getTranslationByString('Order above 80% of your position'));
     }
 
     /**
      * Show alert error that redemption order over 80%, and there are active order(s)
      */
     show80PercentHasActiveOrderError() {
-        this._alertsService
+        this.alertsService
         .create('error', `
                 <table class="table grid">
                     <tbody>
                         <tr>
                             <td class="text-center text-danger">
-                                ${this._translate.getTranslationByString('You may not place this redemption order because on the basis of your already made redemption orders you will sell more than 80% of your positions.')}
+                                ${this.translate.getTranslationByString('You may not place this redemption order because on the basis of your already made redemption orders you will sell more than 80% of your positions.')}
                             </td>
                         </tr>
                         <tr>
                             <td class="text-center text-danger">
-                                ${this._translate.getTranslationByString('If you wish to redeem more than 80% of your position, you can cancel previous redeem orders and place an order in quantiy.')}
+                                ${this.translate.getTranslationByString('If you wish to redeem more than 80% of your position, you can cancel previous redeem orders and place an order in quantity.')}
                             </td>
                         </tr>
                     </tbody>
                 </table>
-            `, {}, this._translate.getTranslationByString('Order above 80% of your position'));
+            `, {}, this.translate.getTranslationByString('Order above 80% of your position'));
     }
 
     validateKiid() {
-
         this.fileService.validateFile(this.shareData.kiid).then((result) => {
             const data = result[1].Data;
             if (data.error) {
-                this._alertsService.create('error', `
+                this.alertsService.create('error', `
                     <table class="table grid">
                         <tbody>
                             <tr>
-                                <td class="text-center text-error">Unable to view file</td>
+                                <td class="text-center text-error">${this.translate.translate('Unable to view file')}</td>
                             </tr>
                         </tbody>
                     </table>
@@ -1628,7 +1639,7 @@ The IZNES Team.</p>`;
                     filename: data.filename,
                 };
 
-                this._changeDetectorRef.markForCheck();
+                this.changeDetectorRef.markForCheck();
             });
         });
     }
@@ -1637,8 +1648,8 @@ The IZNES Team.</p>`;
         this.shareService.validateKiid(this.connectedWalletId, this.shareData.fundShareID)
         .then(() => {
             this.kiidModal.isOpen = false;
-            this._changeDetectorRef.markForCheck();
-            this._ngRedux.dispatch(validateKiid(this.shareData.fundShareID));
+            this.changeDetectorRef.markForCheck();
+            this.ngRedux.dispatch(validateKiid(this.shareData.fundShareID));
         });
     }
 }
@@ -1655,7 +1666,7 @@ function numberValidator(control: FormControl): { [s: string]: boolean } {
     // check if number is none zero as well
 
     const testString = control.value.toString();
-    const numberParsed = Number.parseInt(testString.replace(/[.,\s]/, ''));
+    const numberParsed = Number.parseInt(testString.replace(/[.,\s]/, ''), 10);
 
     if (!/^\d+$|^\d+[\d,. ]+\d$/.test(testString) || numberParsed === 0) {
         return { invalidNumber: true };
@@ -1668,7 +1679,6 @@ function numberValidator(control: FormControl): { [s: string]: boolean } {
  * @return {{[p: string]: boolean}}
  */
 function emptyArrayValidator(control: FormControl): { [s: string]: boolean } {
-
     const formValue = control.value;
     if (formValue instanceof Array && control.value.length === 0) {
         return { required: true };
@@ -1701,9 +1711,9 @@ function closestDay(dayToFind: number): string {
  * @return {number}
  */
 function calFee(amount: number | string, feePercent: number | string): number {
-    amount = Number(amount);
-    feePercent = Number(feePercent);
-    return Number(math.format(math.chain(amount).multiply((feePercent)).done(), 14));
+    const amountVal = Number(amount);
+    const feePercentVal = Number(feePercent);
+    return Number(math.format(math.chain(amountVal).multiply((feePercentVal)).done(), 14));
 }
 
 /**
@@ -1715,10 +1725,10 @@ function calFee(amount: number | string, feePercent: number | string): number {
  * @return {number}
  */
 function calNetAmount(amount: number | string, fee: number | string, orderType: string): number {
-    amount = Number(amount);
-    fee = Number(fee);
+    const amountVal = Number(amount);
+    const feeVal = Number(fee);
     return {
-        s: Number(math.format(math.chain(amount).add(fee).done(), 14)),
-        r: Number(math.format(math.chain(amount).subtract(fee).done(), 14)),
+        s: Number(math.format(math.chain(amountVal).add(feeVal).done(), 14)),
+        r: Number(math.format(math.chain(amountVal).subtract(feeVal).done(), 14)),
     }[orderType];
 }

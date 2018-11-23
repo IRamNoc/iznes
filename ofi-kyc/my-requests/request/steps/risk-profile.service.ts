@@ -11,7 +11,7 @@ export class RiskProfileService {
 
     currentServerData = {
         risknature: new BehaviorSubject({}),
-        riskobjective : new BehaviorSubject({}),
+        riskobjective: new BehaviorSubject({}),
     };
 
     constructor(
@@ -63,7 +63,6 @@ export class RiskProfileService {
 
         const naturesValue = formGroupNature.get('natures').value;
 
-
         let natureForAM;
 
         if (amcID) {
@@ -92,10 +91,10 @@ export class RiskProfileService {
 
     sendRequestUpdateCurrentStep(kycID, context) {
         const messageBody = {
-            RequestName : 'iznesupdatecurrentstep',
+            RequestName: 'iznesupdatecurrentstep',
             kycID,
-            completedStep : 'riskProfile',
-            currentGroup : context,
+            completedStep: 'riskProfile',
+            currentGroup: context,
         };
 
         return this.requestsService.sendRequest(messageBody);

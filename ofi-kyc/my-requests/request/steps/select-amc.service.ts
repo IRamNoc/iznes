@@ -5,7 +5,6 @@ import * as moment from 'moment';
 
 @Injectable()
 export class SelectAmcService {
-
     constructor(
         private newRequestService: NewRequestService,
         private requestsService: RequestsService,
@@ -13,10 +12,10 @@ export class SelectAmcService {
     }
 
     async createMultipleDrafts(values, connectedWallet) {
-        let ids = await this.newRequestService.createMultipleDrafts(values, connectedWallet);
-        let context = this.newRequestService.getContext(ids);
+        const ids = await this.newRequestService.createMultipleDrafts(values, connectedWallet);
+        const context = this.newRequestService.getContext(ids);
         ids.forEach(id => {
-            let kycID = id.kycID;
+            const kycID = id.kycID;
             this.sendRequestUpdateCurrentStep(kycID, context);
         });
 
@@ -26,9 +25,9 @@ export class SelectAmcService {
     sendRequestUpdateCurrentStep(kycID, context) {
         const messageBody = {
             RequestName: 'iznesupdatecurrentstep',
-            kycID: kycID,
+            kycID,
             completedStep: 'amcSelection',
-            currentGroup: context
+            currentGroup: context,
         };
 
         return this.requestsService.sendRequest(messageBody);

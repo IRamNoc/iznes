@@ -122,7 +122,7 @@ export class FundShareComponent implements OnInit, OnDestroy {
         private ofiFundShareFormService: OfiFundShareFormService,
         private ofiCurrenciesService: OfiCurrenciesService,
         private fb: FormBuilder,
-        public _translate: MultilingualService,
+        public translate: MultilingualService,
         private location: Location,
         @Inject('product-config') productConfig,
     ) {
@@ -135,7 +135,7 @@ export class FundShareComponent implements OnInit, OnDestroy {
             lei: [{ value: '', disabled: true }],
         });
 
-        this.errorHelper = new StepsHelper(this._translate);
+        this.errorHelper = new StepsHelper(this.translate);
     }
 
     ngOnInit() {
@@ -144,7 +144,6 @@ export class FundShareComponent implements OnInit, OnDestroy {
 
         this.redux.dispatch(clearRequestedFundShare());
         this.redux.dispatch(clearRequestedFundShareDocs());
-
     }
 
     get fund() {
@@ -168,7 +167,6 @@ export class FundShareComponent implements OnInit, OnDestroy {
     }
 
     private initSubscriptions(): void {
-
         this.userDetailOb
         .pipe(
             takeUntil(this.unSubscribe),
@@ -210,11 +208,11 @@ export class FundShareComponent implements OnInit, OnDestroy {
         )
         .subscribe((params) => {
             const fundShareId = params.get('shareId') as any;
-            this.fundShareId = fundShareId ? parseInt(fundShareId) : fundShareId;
+            this.fundShareId = fundShareId ? parseInt(fundShareId, 10) : fundShareId;
             this.prefill = null;
 
             if (this.userType === userTypeEnum.AM && this.fundShareId) {
-                this.model.fundShareId = parseInt(fundShareId);
+                this.model.fundShareId = parseInt(fundShareId, 10);
                 this.mode = FundShareMode.Update;
                 if (this.currDraft !== 1) {
                     this.model.keyFacts.mandatory.fundShareName.disabled = true;
@@ -225,7 +223,6 @@ export class FundShareComponent implements OnInit, OnDestroy {
             // if (this.mode === FundShareMode.Create) {
             //     this.model = FundShareTestData.generate(new FundShare());
             // }
-
         });
 
         // Hydrates the duplicate share select
@@ -367,7 +364,6 @@ export class FundShareComponent implements OnInit, OnDestroy {
             if (this.isRead()) {
                 this.ofiFundService.fetchFundByID(fundShare.fundID);
             }
-
         });
 
         this.userDetailOb
@@ -659,7 +655,6 @@ export class FundShareComponent implements OnInit, OnDestroy {
      * @return void
      */
     private updateFundShareDocs(fundShareDocs: any): void {
-
         if ((!fundShareDocs.prospectus) || fundShareDocs.prospectus.length < 1) return;
 
         this.fundShareDocsData = fundShareDocs;
@@ -683,7 +678,6 @@ export class FundShareComponent implements OnInit, OnDestroy {
      * @return void
      */
     private getManagementCompanyList(list) {
-
         const listIndexes = Object.keys(list);
 
         if (!listIndexes) {
@@ -740,8 +734,11 @@ export class FundShareComponent implements OnInit, OnDestroy {
         return `<table class="table grid">
             <tbody>
                 <tr>
-                    <td class="text-center text-info">Creating Fund Share.<br /><i>` +
-            message + `</i></td>
+                    <td class="text-center text-info">
+                        ${this.translate.translate('Creating Fund Share')}.
+                        <br />
+                        <i>` + message + `</i>
+                    </td>
                 </tr>
             </tbody>
         </table>
@@ -779,7 +776,6 @@ export class FundShareComponent implements OnInit, OnDestroy {
     }
 
     private onCreateSuccess(data, draft: number): void {
-
         data = data[0];
         if (data.Status === 'Fail') {
             this.onCreateError(data, draft);
@@ -797,8 +793,21 @@ export class FundShareComponent implements OnInit, OnDestroy {
     }
 
     private onCreateDocumentsSuccess(data, draft: number): void {
-        this.toaster.pop('success', data.fundShareName + (draft == 1 ? ' draft' : '') +
-            ' has been successfully created');
+        let message;
+
+        if (draft) {
+            message = this.translate.translate(
+                '@fundShareName@ draft has been successfully created',
+                { 'fundShareName': data.fundShareName },
+            );
+        } else {
+            message = this.translate.translate(
+                '@fundShareName@ has been successfully created',
+                { 'fundShareName': data.fundShareName },
+            );
+        }
+
+        this.toaster.pop('success', message);
 
         this.router.navigateByUrl('product-module/product');
     }
@@ -816,7 +825,7 @@ export class FundShareComponent implements OnInit, OnDestroy {
             <table class="table grid">
                 <tbody>
                     <tr>
-                        <td class="text-center text-danger"><b>An error occured</b><br />
+                        <td class="text-center text-danger"><b>${this.translate.translate('An error occured')}</b><br />
                         <i>${message}</i></td>
                     </tr>
                 </tbody>
@@ -825,7 +834,6 @@ export class FundShareComponent implements OnInit, OnDestroy {
     }
 
     private onUpdateSuccess(data, draft: number): void {
-
         data = (!!data[0] ? data[0] : data);
 
         OfiFundShareService
@@ -839,16 +847,47 @@ export class FundShareComponent implements OnInit, OnDestroy {
     }
 
     private onUpdateDocumentSuccess(draft: number): void {
-        this.toaster.pop('success', this.model.keyFacts.mandatory.fundShareName.value() +
-            (draft == 1 ? ' draft' : '') + ' has been successfully updated');
+        let message;
+
+        if (draft) {
+            message = this.translate.translate(
+                '@fundShareName@ draft has been successfully updated',
+                { 'fundShareName': this.model.keyFacts.mandatory.fundShareName.value() },
+            );
+        } else {
+            message = this.translate.translate(
+                '@fundShareName@ has been successfully updated',
+                { 'fundShareName': this.model.keyFacts.mandatory.fundShareName.value() },
+            );
+        }
+
+        this.toaster.pop(
+            'success',
+            message,
+        );
 
         this.router.navigateByUrl('product-module/product');
     }
 
     private onUpdateError(draft: number): void {
-        this.toaster.pop('error', this.model.keyFacts.mandatory.fundShareName.value() +
-            (draft == 1 ? ' draft' : '') +
-            ' could not be updated');
+        let message;
+
+        if (draft) {
+            message = this.translate.translate(
+                '@fundShareName@ draft could not be updated',
+                { 'fundShareName': this.model.keyFacts.mandatory.fundShareName.value() },
+            );
+        } else {
+            message = this.translate.translate(
+                '@fundShareName@ could not be updated',
+                { 'fundShareName': this.model.keyFacts.mandatory.fundShareName.value() },
+            );
+        }
+
+        this.toaster.pop(
+            'error',
+            message,
+        );
     }
 
     /**
@@ -862,9 +901,9 @@ export class FundShareComponent implements OnInit, OnDestroy {
         }
 
         this.confirmationService.create(
-            '<span>Are you sure?</span>',
-            '<span>Any Fund Share data you have entered will be lost.</span>',
-            { confirmText: 'Confirm', declineText: 'Cancel' },
+            `<span>${this.translate.translate('Are you sure?')}</span>`,
+            `<span>${this.translate.translate('Any Fund Share data you have entered will be lost.')}</span>`,
+            { confirmText: this.translate.translate('Confirm'), declineText: this.translate.translate('Cancel') },
         ).subscribe((ans) => {
             if (ans.resolved) {
                 this.router.navigateByUrl('product-module/product');
@@ -949,5 +988,4 @@ export class FundShareComponent implements OnInit, OnDestroy {
         this.unSubscribe.next();
         this.unSubscribe.complete();
     }
-
 }

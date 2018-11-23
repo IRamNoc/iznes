@@ -88,7 +88,7 @@ export class FundShare {
     getRequest(draft): OfiFundShare {
         return {
             accountId: this.accountId,
-            draft: draft,
+            draft,
             fundShareName: this.keyFacts.mandatory.fundShareName.value(),
             fundShareID: this.fundShareId,
             fundID: this.fundID,
@@ -176,7 +176,6 @@ export class FundShare {
     }
 
     resetFundShare() {
-
         this.calendar = {
             ...this.calendar,
             mandatory: new ShareCalendarMandatory(),
@@ -223,7 +222,6 @@ export class FundShare {
     }
 
     setFundShare(fundShare: OfiFundShare, isPrefill = false): void {
-
         this.fundID = fundShare.fundID;
         this.keyFacts.mandatory.fundShareName.preset = isPrefill ? null : fundShare.fundShareName;
         this.keyFacts.mandatory.isin.preset = isPrefill ? null : fundShare.isin;
@@ -303,11 +301,9 @@ export class FundShare {
         this.applyOptionalData((this.taxation.optional as any), JSON.parse(fundShare.taxationOptionalData));
         this.applyOptionalData((this.solvency.optional as any), JSON.parse(fundShare.solvencyIIOptionalData));
         this.applyOptionalData((this.representation.optional as any), JSON.parse(fundShare.representationOptionalData));
-
     }
 
     updateFundShare(fundShare: OfiFundShare, isPrefill = false): void {
-
         this.fundShareId = fundShare.fundShareID;
         this.fundID = fundShare.fundID;
 
@@ -439,7 +435,6 @@ export class FundShare {
             tpts2: this.documents.optional.tpts2.value(),
         };
     }
-
     setFundShareDocs(fundShareDocs: OfiFundShareDocuments): void {
 
         this.setDocumentItem(this.documents.mandatory.prospectus, fundShareDocs.prospectus);
@@ -842,14 +837,13 @@ export class FundShare {
     private getStatusFeederValue(): number {
         if (!!this.keyFacts.mandatory.status.value() && this.keyFacts.mandatory.status.value().length > 0 && parseInt(this.keyFacts.mandatory.status.value()[0].id) === FundShareEnum.StatusEnum.Feeder) {
             return this.keyFacts.mandatory.feeder.value()[0].id;
-        } else {
-            return 0;
         }
+        return 0;
     }
 
     private getSelectValue(formItem: FormItem): any {
         const rawValue = formItem.value();
-        return (rawValue != undefined) && rawValue.length ? rawValue[0].id : null;
+        return (rawValue !== undefined) && rawValue.length ? rawValue[0].id : null;
     }
 
     disableAllShareFields() {

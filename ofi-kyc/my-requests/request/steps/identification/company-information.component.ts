@@ -60,15 +60,13 @@ export class CompanyInformationComponent implements OnInit, OnDestroy {
     }
 
     initFormCheck() {
-
         this.form.get('sectorActivity').valueChanges
         .pipe(takeUntil(this.unsubscribe))
         .subscribe((data) => {
             const sectorActivityValue = getValue(data, [0, 'id']);
 
             this.formCheckSectorActivity(sectorActivityValue);
-        })
-        ;
+        });
 
         this.form.get('activities').valueChanges
         .pipe(takeUntil(this.unsubscribe))
@@ -313,11 +311,11 @@ export class CompanyInformationComponent implements OnInit, OnDestroy {
                             beneficiaries.removeAt(0);
                         }
 
-                        const promises = formData.map((controlValue) => {
+                        const promises = formData.map((controlVal) => {
                             const control = this.newRequestService.createBeneficiary();
-                            const documentID = controlValue.documentID;
+                            const documentID = controlVal.documentID;
 
-                            controlValue = buildBeneficiaryObject(controlValue);
+                            const controlValue = buildBeneficiaryObject(controlVal);
 
                             if (documentID) {
                                 return this.documentsService.getDocument(documentID).then((document) => {

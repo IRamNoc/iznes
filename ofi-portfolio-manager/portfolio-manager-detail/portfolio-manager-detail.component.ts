@@ -1,20 +1,21 @@
-import { Component, OnDestroy, OnInit } from "@angular/core";
+import { Component, OnDestroy, OnInit } from '@angular/core';
 import { AppObservableHandler } from '@setl/utils/decorators/app-observable-handler';
 import { ActivatedRoute, Router } from '@angular/router';
 import {
     PortfolioManagerDetail,
-    PortfolioManagerList
-} from "../../ofi-store/ofi-portfolio-manager/portfolio-manage-list/model";
-import { OfiFundDataService } from "../../ofi-data-service/product/fund/ofi-fund-data-service";
+    PortfolioManagerList,
+} from '../../ofi-store/ofi-portfolio-manager/portfolio-manage-list/model';
+import { OfiFundDataService } from '../../ofi-data-service/product/fund/ofi-fund-data-service';
 import { combineLatest } from 'rxjs';
 import { map } from 'rxjs/operators';
-import { OfiPortfolioMangerService } from "../../ofi-req-services/ofi-portfolio-manager/service";
-import { OfiPortfolioManagerDataService } from "../../ofi-data-service/portfolio-manager/ofi-portfolio-manager-data.service";
-import { IznesFundDetail } from "../../ofi-store/ofi-product/fund/fund-list/model";
+import { OfiPortfolioMangerService } from '../../ofi-req-services/ofi-portfolio-manager/service';
+import { OfiPortfolioManagerDataService } from '../../ofi-data-service/portfolio-manager/ofi-portfolio-manager-data.service';
+import { IznesFundDetail } from '../../ofi-store/ofi-product/fund/fund-list/model';
 import { get } from 'lodash';
-import { FormControl } from "@angular/forms";
+import { FormControl } from '@angular/forms';
 import { ConfirmationService } from '@setl/utils/index';
-import { ToasterService } from "angular2-toaster";
+import { ToasterService } from 'angular2-toaster';
+import { MultilingualService } from '@setl/multilingual';
 
 interface FundAccess {
     fundName: string;
@@ -43,30 +44,32 @@ export class PortfolioManagerDetailComponent implements OnInit, OnDestroy {
     fundAccessChanges: FundChnage[];
 
     constructor(
-       private _activeRoute: ActivatedRoute,
-       private _ofiFundDataService: OfiFundDataService,
-       private _ofiPortfolioMangerService: OfiPortfolioMangerService,
-       private _ofiPortfolioManagerDataService: OfiPortfolioManagerDataService,
-       private _confirmationService: ConfirmationService,
-       private _router: Router,
-       private _toasterService: ToasterService,
-    ) {}
+        private activeRoute: ActivatedRoute,
+        private ofiFundDataService: OfiFundDataService,
+        private ofiPortfolioMangerService: OfiPortfolioMangerService,
+        private ofiPortfolioManagerDataService: OfiPortfolioManagerDataService,
+        private confirmationService: ConfirmationService,
+        private router: Router,
+        private toasterService: ToasterService,
+        public translate: MultilingualService,
+    ) {
+    }
 
     ngOnInit() {
         (<any>this).appSubscribe(
-            this._activeRoute.queryParams,
+            this.activeRoute.queryParams,
             (params: PortfolioManagerDetail) => {
                 this.pm = params;
                 this.requestPmDetail(params.pmId);
             });
 
         const $accessFundData = combineLatest(
-            this._ofiFundDataService.getFundArrayList(),
-            this._ofiPortfolioManagerDataService.getPortfolioManagerList(),
+            this.ofiFundDataService.getFundArrayList(),
+            this.ofiPortfolioManagerDataService.getPortfolioManagerList(),
         ).pipe(
-           map((dataArr) => {
-             return buildFundAccessData(dataArr, this.pm.pmId);
-           }),
+            map((dataArr) => {
+                return buildFundAccessData(dataArr, this.pm.pmId);
+            }),
         );
 
         (<any>this).appSubscribe(
@@ -82,7 +85,7 @@ export class PortfolioManagerDetailComponent implements OnInit, OnDestroy {
      * @param {number} pmId
      */
     requestPmDetail(pmId: number) {
-        this._ofiPortfolioMangerService.defaultRequestPortpolioManagerDetail(pmId);
+        this.ofiPortfolioMangerService.defaultRequestPortpolioManagerDetail(pmId);
     }
 
     /**
@@ -90,9 +93,9 @@ export class PortfolioManagerDetailComponent implements OnInit, OnDestroy {
      * @param {FundAccess} fundAccess
      */
     handleManagerShareAccess(fundAccess: FundAccess) {
-       const kycId = fundAccess.kycId;
-        // this._router.navigate(['client-referential'], { queryParams: { kycId } });
-        this._router.navigateByUrl(`client-referential/${kycId}`);
+        const kycId = fundAccess.kycId;
+        // this.router.navigate(['client-referential'], { queryParams: { kycId } });
+        this.router.navigateByUrl(`client-referential/${kycId}`);
     }
 
     /**
@@ -104,45 +107,46 @@ export class PortfolioManagerDetailComponent implements OnInit, OnDestroy {
      * @return {boolean}
      */
     fundAccessHasKyc(fundAccess: FundAccess) {
-       return !!fundAccess.kycId && fundAccess.status;
+        return !!fundAccess.kycId && fundAccess.status;
     }
 
     handleAccessChange() {
        // if the fund access is not the same, we add it to fundAccessChanges array.
-        this.fundAccessChanges = this.fundAccessList.reduce((accu, fundAccess: FundAccess) => {
-            if (fundAccess.status !== fundAccess.statusFormControl.value) {
-                accu.push({
-                    fundName: fundAccess.fundName,
-                    fundId: fundAccess.fundId,
-                    pmId: fundAccess.pmId,
-                    status: fundAccess.statusFormControl.value,
-                });
-            }
+        this.fundAccessChanges = this.fundAccessList.reduce(
+            (accu, fundAccess: FundAccess) => {
+                if (fundAccess.status !== fundAccess.statusFormControl.value) {
+                    accu.push({
+                        fundName: fundAccess.fundName,
+                        fundId: fundAccess.fundId,
+                        pmId: fundAccess.pmId,
+                        status: fundAccess.statusFormControl.value,
+                    });
+                }
 
-            return accu;
-        }, []);
-
+                return accu;
+            },
+            [],
+        );
     }
 
     /**
      *  Navigate back to portfolio manager list.
      */
     backToPmList() {
-       this._router.navigateByUrl('portfolio-manager');
+        this.router.navigateByUrl('portfolio-manager');
     }
 
     /**
      * show confirmation about applying fund access changes
      */
     confirmSave() {
-        const message = this.fundAccessChanges.length === 0 ?
-                'No changes have been made to the Portfolio manager\' Fund Access permissions.'
-                :
-                'Please confirm the changes made to the Portfolio manager\' Fund Access permissions.';
+        const message = this.fundAccessChanges.length === 0
+            ? this.translate.translate('No changes have been made to the Portfolio Manager\' Fund Access permissions.')
+            : this.translate.translate('Please confirm the changes made to the Portfolio Manager\' Fund Access permissions.');
 
-        this._confirmationService.create('Confirm Fund Access:', message, {
-            confirmText: 'Confirm Access and Save Changes',
-            declineText: 'Cancel',
+        this.confirmationService.create(this.translate.translate('Confirm Fund Access:'), message, {
+            confirmText: this.translate.translate('Confirm Access and Save Changes'),
+            declineText: this.translate.translate('Cancel'),
             btnClass: 'primary',
         }).subscribe((ans) => {
             if (ans.resolved) {
@@ -156,7 +160,7 @@ export class PortfolioManagerDetailComponent implements OnInit, OnDestroy {
      */
     saveFundAccess() {
         const requests = this.fundAccessChanges.map((accessChange) => {
-            return this._ofiPortfolioMangerService.updatePortfolioManagerFundAccess({
+            return this.ofiPortfolioMangerService.updatePortfolioManagerFundAccess({
                 pmId: accessChange.pmId,
                 fundId: accessChange.fundId,
                 status: accessChange.status ? 1 : 0,
@@ -165,7 +169,13 @@ export class PortfolioManagerDetailComponent implements OnInit, OnDestroy {
 
         Promise.all(requests).then(() => {
             this.fundAccessChanges = [];
-            this._toasterService.pop('success', this.pm.emailAddress + '\'s fund authorisation has been successfully updated');
+            this.toasterService.pop(
+                'success',
+                this.translate.translate(
+                    '@emailAddress@\'s fund authorisation has been successfully updated',
+                    { 'emailAddress': this.pm.emailAddress },
+                ),
+            );
         });
     }
 
@@ -177,7 +187,7 @@ function buildFundAccessData(dataArr, pmId: number) {
 
     return fundData.map((fund: IznesFundDetail) => {
         const fundId = fund.fundID;
-        const thisFundAccess = get(accessData, [pmId, 'fundAccess', fundId], {status: false, fundId,});
+        const thisFundAccess = get(accessData, [pmId, 'fundAccess', fundId], { status: false, fundId });
         return {
             fundName: fund.fundName,
             ...thisFundAccess,

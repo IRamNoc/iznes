@@ -47,7 +47,7 @@ export class OfiSignUpComponent implements OnInit, OnDestroy {
         const description = this.translate.translate(
             'Your @appConfig.platform@ account will be created with this email address, provided by the Asset Management company.', { 'appConfig.platform': this.appConfig.platform });
 
-        const buttonText = this.translate.translate('Create an account');
+        const buttonText = this.translate.translate('Create Account');
 
         this.configuration = {
             doLoginAfterCallback: true,

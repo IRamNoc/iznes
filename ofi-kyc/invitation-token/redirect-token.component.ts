@@ -4,7 +4,7 @@ import { get as getValue } from 'lodash';
 import { OfiKycService } from '@ofi/ofi-main/ofi-req-services/ofi-kyc/service';
 
 @Component({
-    template: ''
+    template: '',
 })
 export class OfiRedirectTokenComponent implements OnInit {
     private lang;
@@ -13,12 +13,12 @@ export class OfiRedirectTokenComponent implements OnInit {
     constructor(
         private router: Router,
         private activatedRoute: ActivatedRoute,
-        private ofiKycService: OfiKycService
+        private ofiKycService: OfiKycService,
     ) {
     }
 
     ngOnInit() {
-        this.activatedRoute.params.subscribe(params => {
+        this.activatedRoute.params.subscribe((params) => {
             this.lang = params.lang;
             this.invitationToken = params.invitationToken;
 
@@ -28,13 +28,13 @@ export class OfiRedirectTokenComponent implements OnInit {
 
     initChecks() {
         this.checkToken(this.invitationToken).then(
-            response => {
-                let data = getValue(response, [1, 'Data', 0]);
-                let investorCheck = getValue(data, ['hasInvestorBeenCreated']);
-                let email = getValue(data, ['email']);
-                let params : any = {
+            (response) => {
+                const data = getValue(response, [1, 'Data', 0]);
+                const investorCheck = getValue(data, ['hasInvestorBeenCreated']);
+                const email = getValue(data, ['email']);
+                const params : any = {
                     invitationToken : this.invitationToken,
-                    email: email
+                    email,
                 };
 
                 if (investorCheck) {
@@ -43,24 +43,25 @@ export class OfiRedirectTokenComponent implements OnInit {
                     params.lang = this.lang;
                     this.redirectToSignup(params);
                 }
-            }, response => {
-                if(response === 'not_used'){
+            },
+            (response) => {
+                if (response === 'not_used') {
                     this.redirectToLogin({
-                        error : true
+                        error: true,
                     });
-                } else{
-                    let email = getValue(response, [1, 'Data', 0, 'email']);
+                } else {
+                    const email = getValue(response, [1, 'Data', 0, 'email']);
 
                     this.redirectToLogin({
-                        email : email,
-                        error : true
+                        email,
+                        error: true,
                     });
                 }
             });
     }
 
     redirectToSignup(params) {
-        let extras: any = {
+        const extras: any = {
             queryParams: params,
         };
 
@@ -68,7 +69,7 @@ export class OfiRedirectTokenComponent implements OnInit {
     }
 
     redirectToLogin(params: any = {}) {
-        let extras: any = {
+        const extras: any = {
             queryParams: params,
         };
 
@@ -77,20 +78,23 @@ export class OfiRedirectTokenComponent implements OnInit {
 
     checkToken(token) {
         return this.ofiKycService.verifyInvitationToken(token).then(
-            result => {
+            (result) => {
                 return result;
             },
             () => {
                 return this.checkIfUsed();
-            }
+            },
         );
     }
 
     checkIfUsed() {
-        return this.ofiKycService.isInvitationTokenUsed(this.invitationToken).then(response => {
-            return Promise.reject(response);
-        }, response => {
-            return Promise.reject('not_used');
-        });
+        return this.ofiKycService.isInvitationTokenUsed(this.invitationToken).then(
+            (response) => {
+                return Promise.reject(response);
+            },
+            () => {
+                return Promise.reject('not_used');
+            },
+        );
     }
 }

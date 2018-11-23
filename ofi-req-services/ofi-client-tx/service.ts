@@ -1,18 +1,20 @@
-import {Injectable} from '@angular/core';
-import {MemberSocketService} from '@setl/websocket-service';
+import { Injectable } from '@angular/core';
+import { MemberSocketService } from '@setl/websocket-service';
 import {
-    RequestClientTxRequestBody
+    RequestClientTxRequestBody,
 } from './model';
-import {SagaHelper, Common} from '@setl/utils';
-import {createMemberNodeSagaRequest} from '@setl/utils/common';
-import {NgRedux} from '@angular-redux/store';
+import { SagaHelper, Common } from '@setl/utils';
+import { createMemberNodeSagaRequest } from '@setl/utils/common';
+import { NgRedux } from '@angular-redux/store';
 import * as _ from 'lodash';
 
-import {SET_CLIENT_TX_LIST, setRequestedClientTxList} from '../../ofi-store/ofi-client-txs';
+import { SET_CLIENT_TX_LIST, setRequestedClientTxList } from '../../ofi-store/ofi-client-txs';
 
 @Injectable()
 export class OfiClientTxService {
-    constructor(private memberSocketService: MemberSocketService,) {
+    constructor(
+        private memberSocketService: MemberSocketService,
+    ) {
     }
 
     /**
@@ -28,7 +30,7 @@ export class OfiClientTxService {
         ngRedux.dispatch(setRequestedClientTxList());
 
         // Request the list.
-        const asyncTaskPipe = ofiClientTxService.requestWalletClientTxs({walletId, shareName});
+        const asyncTaskPipe = ofiClientTxService.requestWalletClientTxs({ walletId, shareName });
 
         ngRedux.dispatch(SagaHelper.runAsync(
             [SET_CLIENT_TX_LIST],
@@ -37,7 +39,7 @@ export class OfiClientTxService {
             {},
             (data) => {
                 // console.log(data);
-            }
+            },
         ));
     }
 
@@ -55,5 +57,4 @@ export class OfiClientTxService {
 
         return createMemberNodeSagaRequest(this.memberSocketService, messageBody);
     }
-
 }

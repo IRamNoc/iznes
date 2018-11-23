@@ -3,7 +3,7 @@ import { AbstractControl, FormControl, Validators } from '@angular/forms';
 import { Subject } from 'rxjs';
 import { takeUntil } from 'rxjs/operators';
 import { get as getValue } from 'lodash';
-import {sirenValidator, siretValidator} from '@setl/utils/helper/validators';
+import { sirenValidator, siretValidator } from '@setl/utils/helper/validators';
 import { RequestsService } from '../../../requests.service';
 import { NewRequestService, configDate } from '../../new-request.service';
 import { countries } from '../../../requests.config';
@@ -38,7 +38,7 @@ export class BeneficiaryComponent implements OnInit, OnDestroy {
         this.holdingTypesList = this.newRequestService.holdingTypesList;
         this.translate.translate(this.holdingTypesList);
         this.identificationNumberList = this.newRequestService.identificationNumberList;
-        this.countries = countries;
+        this.countries = this.translate.translate(countries);
     }
 
     ngOnInit() {

@@ -23,7 +23,6 @@ import { DocumentsService } from './documents.service';
 
 @Injectable()
 export class IdentificationService {
-
     constructor(
         private newRequestService: NewRequestService,
         private requestsService: RequestsService,
@@ -54,13 +53,13 @@ export class IdentificationService {
             const formGroupBanking = form.get('bankingInformation');
             formGroupBanking.get('kycID').setValue(kycID);
 
-            let formGroupBankingHolders = formGroupBanking.get('custodianHolders');
-            let formGroupBankingHoldersValue = formGroupBankingHolders.value;
+            const formGroupBankingHolders = formGroupBanking.get('custodianHolders');
+            const formGroupBankingHoldersValue = formGroupBankingHolders.value;
             formGroupBankingHoldersValue.forEach((singleHolderValue, key) => {
                 let data = pickBy(singleHolderValue);
                 data = Object.assign({}, data, { kycID });
 
-                let bankingPromise = this.sendRequestBanking(data).then(data => {
+                const bankingPromise = this.sendRequestBanking(data).then((data) => {
                     (formGroupBankingHolders as FormArray).at(key).get('custodianID').patchValue(data.custodianID);
                 });
                 promises.push(bankingPromise);
@@ -256,10 +255,10 @@ const beneficiaryFormPaths = {
     leiCode: 'legalPerson',
 };
 
-export function buildBeneficiaryObject(data) {
+export function buildBeneficiaryObject(responseData) {
     const beneficiary = {};
 
-    data = pickBy(data);
+    const data = pickBy(responseData);
     forEach(data, (value, key) => {
         let path = getValue(beneficiaryFormPaths, key, '');
         path = path ? [path, key].join('.') : key;

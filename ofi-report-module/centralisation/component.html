@@ -10,14 +10,12 @@
             {{ 'Funds Level' | translate }}
         </button>
         <clr-tab-content *clrIfActive="isFundLevel">
-            <section class="form-block">
-                
+            <section class="form-block">                
                 <p>
                     {{ 'Please find below the centralisation report at fund level.' | translate }}
                     <br>
                     {{ 'If you want you can filter this report by a specific NAV Date / Settlement Date or a range of date and/or by Fund.' | translate }}
-                </p>
-               
+                </p>               
 
                 <form [formGroup]="filtersForm" id="centra-funds-filters">
                     <div class="row">
@@ -183,6 +181,7 @@
                                     <clr-icon shape="check"></clr-icon>
                                 </button>
                             </clr-dg-column-toggle-button>
+                            
                         </clr-dg-column-toggle>
                         {{pagination.firstItem + 1}} - {{pagination.lastItem + 1}}
 

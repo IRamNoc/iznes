@@ -1,9 +1,9 @@
 <div class="header-breadcrumbs fundCreateComponent">
     <h1>
         <i class="fa fa-bars"></i>
-        <span *ngIf="!param">{{'Add a New Fund' | translate}}</span>
-        <span *ngIf="param">{{'Fund: @fundForm.controls[\'fundName\'].value@' | translate:
-            {'fundForm.controls[\'fundName\'].value': fundForm.controls['fundName'].value}
+        <span *ngIf="!param">{{ 'Add New Fund' | translate }}</span>
+        <span *ngIf="param">{{ 'Fund: @fundForm.controls[\'fundName\'].value@' | translate:
+            { 'fundForm.controls[\'fundName\'].value': fundForm.controls['fundName'].value }
             }}
         </span>
     </h1>
@@ -14,7 +14,7 @@
 <clr-tabs class="fundCreateComponent">
     <clr-tab>
         <button clrTabLink id="standardform">
-            <i class="fa fa-bars"></i> {{'Fund' | translate}}
+            <i class="fa fa-bars"></i> {{ 'Fund' | translate }}
         </button>
 
         <clr-tab-content *clrIfActive>
@@ -23,90 +23,105 @@
             <div *ngIf="viewMode === 'FUND'" class="row tab-header-container">
                 <div class="form-group">
                     <button *ngIf="param" class="btn btn-default" id="auditTrailButton" (click)="auditTrail(param)">
-                        {{'Audit Trail' | translate}}
+                        {{ 'Audit Trail' | translate }}
                     </button>
                     <button *ngIf="param" class="btn btn-primary" id="duplicateButton" (click)="duplicate(param)">
-                        {{'Duplicate Fund' | translate}}
+                        {{ 'Duplicate Fund' | translate }}
                     </button>
-                    <ng-select *ngIf="!param" id="fund-prefill-select" [items]="fundListItems" [allowClear]="true"
-                        [placeholder]="_translate.translate('Duplicate from an existing Fund')" [formControl]="fundControl">
+                    <ng-select *ngIf="!param" 
+                                id="fund-prefill-select" 
+                                [items]="fundListItems" 
+                                [allowClear]="true"
+                                [placeholder]="translate.translate('Duplicate from an existing Fund')" 
+                                [formControl]="fundControl">
                     </ng-select>
                 </div>
             </div>
 
             <div *ngIf="viewMode === 'UMBRELLA'" class="umbrellaForm">
-                <h3>{{'Please fill in the following information to create a new Fund:' | translate}}</h3>
+                <h3>{{ 'Please fill in the following information to create a new Fund' | translate }}:</h3>
 
                 <form [formGroup]="umbrellaForm" (ngSubmit)="submitUmbrellaForm()">
                     <section class="form-block">
                         <div class="row">
                             <div class="form-group required-field col-sm-3">
-                                <label class="control-label" for="fund-umbrellaControl-select-1">{{'Is this Fund part
-                                    of an Umbrella Fund?' | translate}}</label>
-                                <ng-select id="fund-umbrellaControl-select-1" [containerWidth]="'100%'" [items]="umbrellaItems"
-                                    [allowClear]="false" [placeholder]="_translate.translate('Select or type an Umbrella Fund name')"
-                                    [formControl]="umbrellaControl">
+                                <label class="control-label" for="fund-umbrellaControl-select-1">{{ 'Is this Fund part
+                                    of an Umbrella Fund?' | translate }}</label>
+                                <ng-select id="fund-umbrellaControl-select-1" 
+                                            [containerWidth]="'100%'" 
+                                            [items]="umbrellaItems"
+                                            [allowClear]="false" 
+                                            [placeholder]="translate.translate('Select or type an Umbrella Fund name')"
+                                            [formControl]="umbrellaControl">
                                 </ng-select>
                             </div>
 
                             <div class="form-group col-sm-3 btn-container">
                                 <p>
-                                    {{'or' | translate}}
+                                    {{ 'or' | translate }}
                                     <a id="fund-add-new-umbrella-btn" [routerLink]="['/product-module/product/umbrella-fund/new']"
-                                        [queryParams]="{fromFund: 'true', umbrella : null}" queryParamsHandling="merge">Add
-                                        a new Umbrella Fund</a>
+                                        [queryParams]="{fromFund: 'true', umbrella : null}" queryParamsHandling="merge">{{ 'Add New Umbrella Fund' | translate }}</a>
                                 </p>
                             </div>
                         </div>
 
                         <div class="row" *ngIf="selectedUmbrella == 0">
                             <div class="col-sm-12">
-                                <p>{{'The fund is not part of an Umbrella Fund.' | translate}}</p>
+                                <p>{{ 'The Fund is not part of an Umbrella Fund.' | translate }}</p>
                             </div>
                         </div>
 
                         <section class="form-block" *ngIf="selectedUmbrella > 0">
                             <div class="row">
                                 <div class="form-group col-sm-6">
-                                    <label class="control-label" for="umbrellaFundName">{{'Umbrella Fund Name' |
-                                        translate}}</label>
-                                    <input type="text" name="umbrellaFundName" id="umbrellaFundName" formControlName="umbrellaFundName">
+                                    <label class="control-label" for="umbrellaFundName">{{ 'Umbrella Fund Name' |
+                                        translate }}</label>
+                                    <input type="text" 
+                                            name="umbrellaFundName" 
+                                            id="umbrellaFundName" 
+                                            formControlName="umbrellaFundName">
                                 </div>
                                 <div class="form-group col-sm-6">
-                                    <label class="control-label" for="umbrellaLei">{{'Legal Entity Identifier (LEI)' |
-                                        translate}}</label>
-                                    <input type="text" name="umbrellaLei" id="umbrellaLei" formControlName="umbrellaLei">
+                                    <label class="control-label" for="umbrellaLei">{{ 'Legal Entity Identifier (LEI)' |
+                                        translate }}</label>
+                                    <input type="text" 
+                                            name="umbrellaLei" 
+                                            id="umbrellaLei" 
+                                            formControlName="umbrellaLei">
                                 </div>
                                 <div class="form-group col-sm-6">
-                                    <label class="control-label" for="umbrellaFundDomicile">{{'Umbrella Fund Domicile
-                                        (Country)' | translate}}</label>
-                                    <input type="text" name="umbrellaFundDomicile" id="umbrellaFundDomicile"
-                                        formControlName="umbrellaFundDomicile">
+                                    <label class="control-label" for="umbrellaFundDomicile">{{ 'Umbrella Fund Domicile
+                                        (Country)' | translate }}</label>
+                                    <input type="text" 
+                                            name="umbrellaFundDomicile" 
+                                            id="umbrellaFundDomicile"
+                                            formControlName="umbrellaFundDomicile">
                                 </div>
                             </div>
                         </section>
 
                         <div class="row">
-                            <p><strong>- {{'or' | translate}} -</strong></p>
+                            <p><strong>- {{ 'or' | translate }} -</strong></p>
                         </div>
 
                         <div class="row">
                             <div class="form-group col-sm-3">
-                                <label class="control-label" for="fund-prefill-select">{{ 'Duplicate an existing fund'
+                                <label class="control-label" for="fund-prefill-select">{{ 'Duplicate an existing Fund'
                                     | translate }}</label>
-                                <ng-select id="fund-prefill-select" [containerWidth]="'100%'" [items]="fundListItems"
-                                    [allowClear]="true" [placeholder]="_translate.translate('Duplicate from an existing Fund')"
-                                    [formControl]="fundControl">
+                                <ng-select id="fund-prefill-select" 
+                                            [containerWidth]="'100%'" 
+                                            [items]="fundListItems"
+                                            [allowClear]="true" 
+                                            [placeholder]="translate.translate('Duplicate from an existing Fund')"
+                                            [formControl]="fundControl">
                                 </ng-select>
                             </div>
                         </div>
 
                         <div class="row">
                             <div class="form-group col-sm-12 submit-container">
-                                <button id="fund-cancelUmbrella-btn" type="button" class="btn btn-default" (click)="onClickBack()">{{'Cancel'
-                                    | translate}}</button>
-                                <button id="fund-submitUmbrella-btn" type="submit" class="btn btn-primary" [disabled]="!umbrellaForm.valid">{{'Next'
-                                    | translate}}</button>
+                                <button id="fund-cancelUmbrella-btn" type="button" class="btn btn-default" (click)="onClickBack()">{{ 'Cancel' | translate }}</button>
+                                <button id="fund-submitUmbrella-btn" type="submit" class="btn btn-primary" [disabled]="!umbrellaForm.valid">{{ 'Next' | translate }}</button>
                             </div>
                         </div>
 
@@ -121,10 +136,17 @@
                         <div class="col-xs-12">
                             <a id="fundsUmbrellaFundHeading" href="#" (click)="panels[0].open = !panels[0].open; $event.preventDefault();">
                                 <i class="fa fa-chevron-right" [class.rotate]="panels[0].open"></i>
-                                <h2>{{isUmbrellaSelected() ? 'Umbrella Fund: ' + umbrellaControl.value[0].text : 'No
-                                    Umbrella
-                                    Fund'}}
+
+                                <h2>
+                                    <ng-container *ngIf="isUmbrellaSelected()">
+                                        {{ 'Umbrella Fund: @umbrellaFund@' | translate: { 'umbrellaFund': umbrellaControl.value[0].text } }}
+                                    </ng-container> 
+                                    
+                                    <ng-container *ngIf="!isUmbrellaSelected()">
+                                        {{ 'No Umbrella Fund' | translate }}
+                                    </ng-container>
                                 </h2>
+
                             </a>
                         </div>
                     </div>
@@ -139,7 +161,7 @@
                                     <div class="col-xs-12">
                                         <a id="fundsChooseAnotherFund" href="#" (click)="panels[0][0].open = !panels[0][0].open; $event.preventDefault();">
                                             <i class="fa fa-chevron-right" [class.rotate]="panels[0][0].open"></i>
-                                            <h2>{{'Choose another umbrella fund:' | translate}}</h2>
+                                            <h2>{{ 'Choose another Umbrella Fund:' | translate }}</h2>
                                         </a>
                                     </div>
                                 </div>
@@ -149,31 +171,34 @@
                                     <section class="form-block" *ngIf="isUmbrellaSelected()">
                                         <div class="row">
                                             <div class="form-group col-sm-6">
-                                                <label class="control-label" for="umbrellaEditLei">{{'Legal Entity
-                                                    Identifier (LEI)' | translate}}</label>
-                                                <input type="text" name="umbrellaEditLei" id="umbrellaEditLei"
-                                                    formControlName="umbrellaEditLei">
+                                                <label class="control-label" for="umbrellaEditLei">{{ 'Legal Entity
+                                                    Identifier (LEI)' | translate }}</label>
+                                                <input type="text" 
+                                                        name="umbrellaEditLei" 
+                                                        id="umbrellaEditLei"
+                                                        formControlName="umbrellaEditLei">
                                             </div>
                                             <div class="form-group col-sm-6">
-                                                <label class="control-label" for="umbrellaEditFundDomicile">{{'Umbrella
-                                                    Fund Domicile (Country)' | translate}}</label>
-                                                <input type="text" name="umbrellaEditFundDomicile" id="umbrellaEditFundDomicile"
-                                                    formControlName="umbrellaEditFundDomicile">
+                                                <label class="control-label" for="umbrellaEditFundDomicile">{{ 'Umbrella
+                                                    Fund Domicile (Country)' | translate }}</label>
+                                                <input type="text" 
+                                                        name="umbrellaEditFundDomicile" 
+                                                        id="umbrellaEditFundDomicile"
+                                                        formControlName="umbrellaEditFundDomicile">
                                             </div>
                                         </div>
                                     </section>
                                     <section class="form-block">
                                         <div class="row">
                                             <div id="fund-umbrellaControl-select-2Div" class="form-group col-sm-6">
-                                                <label class="control-label" for="fund-umbrellaControl-select-2">{{'Click
-                                                    here to select another Umbrella Fund for this Fund' | translate}}
-
+                                                <label class="control-label" for="fund-umbrellaControl-select-2">{{ 'Click
+                                                    here to select another Umbrella Fund for this Fund' | translate }}
                                                 </label>
-                                                <ng-select id="fund-umbrellaControl-select-2" [items]="umbrellaItems"
-                                                    [allowClear]="false" [placeholder]="_translate.translate('Select or type an Umbrella Fund')"
-                                                    [formControl]="umbrellaControl">
-
-
+                                                <ng-select id="fund-umbrellaControl-select-2" 
+                                                            [items]="umbrellaItems"
+                                                            [allowClear]="false" 
+                                                            [placeholder]="translate.translate('Select or type an Umbrella Fund')"
+                                                            [formControl]="umbrellaControl">
                                                 </ng-select>
                                             </div>
                                         </div>
@@ -187,7 +212,7 @@
                                     <div class="col-xs-12">
                                         <a id="fundsUmbrellaFundMainInformation" href="#" (click)="panels[0][1].open = !panels[0][1].open; $event.preventDefault();">
                                             <i class="fa fa-chevron-right" [class.rotate]="panels[0][1].open"></i>
-                                            <h2>{{'Main information' | translate}}</h2>
+                                            <h2>{{ 'Main Information' | translate }}</h2>
                                         </a>
                                     </div>
                                 </div>
@@ -196,174 +221,181 @@
                                 <div class="panel-body" [class.hidden]="!panels[0][1].open">
                                     <div class="row">
                                         <div class="form-group col-sm-6">
-                                            <label for="uf_umbrellaFundName">{{'Umbrella Fund Name' | translate}}
-
-                                            </label>
+                                            <label for="uf_umbrellaFundName">{{ 'Umbrella Fund Name' | translate }}</label>
                                             <div>
-                                                <input type="text" id="uf_umbrellaFundName" class="form-control"
-                                                    formControlName="umbrellaFundName">
+                                                <input type="text" 
+                                                        id="uf_umbrellaFundName" 
+                                                        class="form-control"
+                                                        formControlName="umbrellaFundName">
                                             </div>
                                         </div>
                                         <div class="form-group col-sm-6">
-                                            <label for="uf_lei">{{'Legal Entity Identifier (LEI)' | translate}}
-
-                                            </label>
+                                            <label for="uf_lei">{{ 'Legal Entity Identifier (LEI)' | translate }}</label>
                                             <div>
-                                                <input type="text" id="uf_lei" class="form-control" formControlName="legalEntityIdentifier">
+                                                <input type="text" 
+                                                        id="uf_lei" 
+                                                        class="form-control" 
+                                                        formControlName="legalEntityIdentifier">
                                             </div>
                                         </div>
                                     </div>
                                     <div class="row">
                                         <div class="form-group col-sm-6">
-                                            <label for="uf_registerOffice">{{'Name of the Registered Office of the
-                                                Umbrella Fund' | translate}}
-
-                                            </label>
+                                            <label for="uf_registerOffice">{{ 'Name of the Registered Office of the
+                                                Umbrella Fund' | translate }}</label>
                                             <div>
-                                                <input type="text" id="uf_registerOffice" class="form-control"
-                                                    formControlName="registerOffice">
+                                                <input type="text" 
+                                                        id="uf_registerOffice" 
+                                                        class="form-control"
+                                                        formControlName="registerOffice">
                                             </div>
                                         </div>
 
                                         <div class="w-100"></div>
 
                                         <div class="form-group col-sm-6">
-                                            <label for="uf_registerOfficeAddress">{{'Address of the Registered Office
-                                                of the Umbrella Fund' | translate}}
-
-                                            </label>
+                                            <label for="uf_registerOfficeAddress">{{ 'Address of the Registered Office
+                                                of the Umbrella Fund' | translate }}</label>
                                             <div>
-                                                <input type="text" id="uf_registerOfficeAddress" class="form-control"
-                                                    formControlName="registerOfficeAddress">
+                                                <input type="text" 
+                                                        id="uf_registerOfficeAddress" 
+                                                        class="form-control"
+                                                        formControlName="registerOfficeAddress">
                                             </div>
                                         </div>
                                         <div class="form-group col-sm-6">
-                                            <label for="uf_registerOfficeAddressLine2">{{'Address line 2' | translate}}
-
-                                            </label>
+                                            <label for="uf_registerOfficeAddressLine2">{{ 'Address Line 2' | translate }}</label>
                                             <div>
-                                                <input type="text" id="uf_registerOfficeAddressLine2" class="form-control"
-                                                    formControlName="registerOfficeAddressLine2">
+                                                <input type="text" 
+                                                        id="uf_registerOfficeAddressLine2" 
+                                                        class="form-control"
+                                                        formControlName="registerOfficeAddressLine2">
                                             </div>
                                         </div>
 
                                         <div class="form-group col-sm-4">
-                                            <label for="uf_registerOfficeAddressZipCode">{{'ZIP Code' | translate}}
-
-                                            </label>
+                                            <label for="uf_registerOfficeAddressZipCode">{{ 'ZIP Code' | translate }}</label>
                                             <div>
-                                                <input type="text" id="uf_registerOfficeAddressZipCode" class="form-control"
-                                                    formControlName="registerOfficeAddressZipCode">
+                                                <input type="text" 
+                                                        id="uf_registerOfficeAddressZipCode" 
+                                                        class="form-control"
+                                                        formControlName="registerOfficeAddressZipCode">
                                             </div>
                                         </div>
                                         <div class="form-group col-sm-4">
-                                            <label for="uf_registerOfficeAddressCity">{{'City' | translate}}
-
-                                            </label>
+                                            <label for="uf_registerOfficeAddressCity">{{ 'City' | translate }}</label>
                                             <div>
-                                                <input type="text" id="uf_registerOfficeAddressCity" class="form-control"
-                                                    formControlName="registerOfficeAddressCity">
+                                                <input type="text" 
+                                                        id="uf_registerOfficeAddressCity" 
+                                                        class="form-control"
+                                                        formControlName="registerOfficeAddressCity">
                                             </div>
                                         </div>
                                         <div class="form-group col-sm-4">
-                                            <label for="uf_registerOfficeAddressCountry">{{'Country' | translate}}
-
-                                            </label>
+                                            <label for="uf_registerOfficeAddressCountry">{{ 'Country' | translate }}</label>
                                             <div>
-                                                <input type="text" id="uf_registerOfficeAddressCountry" class="form-control"
-                                                    formControlName="registerOfficeAddressCountry">
+                                                <input type="text" 
+                                                        id="uf_registerOfficeAddressCountry" 
+                                                        class="form-control"
+                                                        formControlName="registerOfficeAddressCountry">
                                             </div>
                                         </div>
                                     </div>
                                     <div class="row">
                                         <div class="form-group col-sm-6">
-                                            <label for="uf_domicile">{{'Umbrella Fund Domicile (country)' | translate}}
-
-                                            </label>
+                                            <label for="uf_domicile">{{ 'Umbrella Fund Domicile (country)' | translate }}</label>
                                             <div>
-                                                <input type="text" id="uf_domicile" class="form-control"
-                                                    formControlName="domicile">
+                                                <input type="text" 
+                                                        id="uf_domicile" 
+                                                        class="form-control"
+                                                        formControlName="domicile">
                                             </div>
                                         </div>
                                         <div class="form-group col-sm-6">
-                                            <label for="uf_umbrellaFundCreationDate">{{'Umbrella Fund Creation Date' |
-                                                translate}}
+                                            <label for="uf_umbrellaFundCreationDate">{{ 'Umbrella Fund Creation Date' |
+                                                translate }}</label>
 
-                                            </label>
                                             <div class="input-group date-pick-wrapper">
                                                 <span class="fa fa-calendar" aria-hidden="true"></span>
-                                                <input id="uf_umbrellaFundCreationDate" formControlName="umbrellaFundCreationDate"
-                                                    autocomplete="off" [dpDayPicker]="configDate" [placeholder]="_translate.translate('Choose a date')"
-                                                    mode="day" theme="dp-material">
+                                                <input id="uf_umbrellaFundCreationDate" 
+                                                        formControlName="umbrellaFundCreationDate"
+                                                        autocomplete="off" 
+                                                        [dpDayPicker]="configDate" 
+                                                        [placeholder]="translate.translate('Choose a date')"
+                                                        mode="day" 
+                                                        theme="dp-material">
                                             </div>
                                         </div>
                                     </div>
                                     <div class="row">
                                         <div class="form-group col-sm-6">
-                                            <label for="uf_managementCompany">{{'Management Company' | translate}}
-
-                                            </label>
+                                            <label for="uf_managementCompany">{{ 'Management Company' | translate }}</label>
                                             <div>
-                                                <input type="text" id="uf_managementCompany" class="form-control"
-                                                    formControlName="managementCompanyID">
+                                                <input type="text" 
+                                                        id="uf_managementCompany" 
+                                                        class="form-control"
+                                                        formControlName="managementCompanyID">
                                             </div>
                                         </div>
                                         <div class="form-group col-sm-6">
-                                            <label for="uf_fundAdministrator">{{'Fund Administrator' | translate}}
-
-                                            </label>
+                                            <label for="uf_fundAdministrator">{{ 'Fund Administrator' | translate }}</label>
                                             <div>
-                                                <input type="text" id="uf_fundAdministrator" class="form-control"
-                                                    formControlName="fundAdministratorID">
+                                                <input type="text" 
+                                                        id="uf_fundAdministrator" 
+                                                        class="form-control"
+                                                        formControlName="fundAdministratorID">
                                             </div>
                                         </div>
                                     </div>
                                     <div class="row">
                                         <div class="form-group col-sm-6">
-                                            <label for="uf_custodian">{{'Custodian Bank' | translate}}
-
-                                            </label>
+                                            <label for="uf_custodian">{{ 'Custodian Bank' | translate }}</label>
                                             <div>
-                                                <input type="text" id="uf_custodian" class="form-control"
-                                                    formControlName="custodianBankID">
+                                                <input type="text" 
+                                                        id="uf_custodian" 
+                                                        class="form-control"
+                                                        formControlName="custodianBankID">
                                             </div>
                                         </div>
                                         <div class="form-group col-sm-6">
-                                            <label class="control-label" for="uf_investmentAdvisor">{{'Investment
-                                                Advisor' | translate}}</label>
-                                            <input type="text" name="uf_investmentAdvisor" id="uf_investmentAdvisor"
-                                                [formControl]="umbrellaEditForm.controls['investmentAdvisorID']">
-                                            <span class="field-error" *ngIf="umbrellaEditForm.controls['investmentAdvisorID'].hasError('required') && umbrellaEditForm.controls['investmentAdvisorID'].touched">{{'Incorrect
-                                                entry' | translate}}</span>
+                                            <label class="control-label" for="uf_investmentAdvisor">{{ 'Investment
+                                                Advisor' | translate }}</label>
+                                            <input type="text" 
+                                                    name="uf_investmentAdvisor" 
+                                                    id="uf_investmentAdvisor"
+                                                    [formControl]="umbrellaEditForm.controls['investmentAdvisorID']">
+                                            <span class="field-error" *ngIf="umbrellaEditForm.controls['investmentAdvisorID'].hasError('required') && umbrellaEditForm.controls['investmentAdvisorID'].touched">{{ 'Incorrect Entry' | translate }}</span>
                                         </div>
                                         <div class="form-group col-sm-6">
-                                            <label for="uf_payingAgent">{{'Paying Agent' | translate}}
-
-                                            </label>
+                                            <label for="uf_payingAgent">{{ 'Paying Agent' | translate }}</label>
                                             <div>
-                                                <ng-select id="uf_payingAgent" [items]="payingAgentItems" [allowClear]="true"
-                                                    [multiple]="true" [disabled]="umbrellaEditForm.controls['payingAgentID']"
-                                                    [placeholder]="_translate.translate('Select')" [formControl]="umbrellaEditForm.controls['payingAgentID']">
+                                                <ng-select id="uf_payingAgent" 
+                                                            [items]="payingAgentItems" 
+                                                            [allowClear]="true"
+                                                            [multiple]="true" 
+                                                            [disabled]="umbrellaEditForm.controls['payingAgentID']"
+                                                            [placeholder]="translate.translate('Select')" 
+                                                            [formControl]="umbrellaEditForm.controls['payingAgentID']">
                                                 </ng-select>
                                             </div>
                                         </div>
                                         <div class="form-group col-sm-6" *ngIf="umbrellaEditForm.controls['transferAgentID'].value">
-                                            <label>{{'Transfer Agent' | translate}}
-
-                                            </label>
+                                            <label>{{ 'Transfer Agent' | translate }}</label>
                                             <div>
-                                                <input type="text" id="uf_transferAgentID" class="form-control"
-                                                    formControlName="transferAgentID">
+                                                <input type="text" 
+                                                        id="uf_transferAgentID" 
+                                                        class="form-control"
+                                                        formControlName="transferAgentID">
                                             </div>
 
                                         </div>
                                         <div class="form-group col-sm-6" *ngIf="umbrellaEditForm.controls['centralisingAgentID'].value">
-                                            <label>{{'Centralising Agent' | translate}}
-
-                                            </label>
+                                            <label>{{ 'Centralising Agent' | translate }}</label>
                                             <div>
-                                                <input type="text" id="uf_centralisingAgentID" class="form-control"
-                                                    formControlName="centralisingAgentID">
+                                                <input type="text" 
+                                                        id="uf_centralisingAgentID" 
+                                                        class="form-control"
+                                                        formControlName="centralisingAgentID">
                                             </div>
                                         </div>
                                     </div>
@@ -376,7 +408,7 @@
                                     <div class="col-xs-12">
                                         <a id="fundsUmbrellaFundsOptionalInformation" href="#" (click)="panels[0][2].open = !panels[0][2].open; $event.preventDefault();">
                                             <i class="fa fa-chevron-right" [class.rotate]="panels[0][2].open"></i>
-                                            <h2>{{'Optional Information' | translate}}</h2>
+                                            <h2>{{ 'Optional Information' | translate }}</h2>
                                         </a>
                                     </div>
                                 </div>
@@ -385,89 +417,97 @@
                                 <div class="panel-body" [class.hidden]="!panels[0][2].open">
                                     <div class="row">
                                         <div class="form-group col-sm-6">
-                                            <label for="uf_giin">{{'Global Intermediary Identification Number (GIIN)' |
-                                                translate}}
-
-                                            </label>
+                                            <label for="uf_giin">{{ 'Global Intermediary Identification Number (GIIN)' |
+                                                translate }}</label>
                                             <div>
-                                                <input type="text" id="uf_giin" class="form-control" formControlName="giin">
+                                                <input type="text" 
+                                                        id="uf_giin" 
+                                                        class="form-control" 
+                                                        formControlName="giin">
                                             </div>
                                         </div>
                                         <div class="form-group col-sm-6">
-                                            <label for="uf_delegatedManagementCompany">{{'Delegated Management Company'
-                                                | translate}}
-
-                                            </label>
+                                            <label for="uf_delegatedManagementCompany">{{ 'Delegated Management Company'
+                                                | translate }}</label>
                                             <div>
-                                                <input type="text" id="uf_delegatedManagementCompany" class="form-control"
-                                                    formControlName="delegatedManagementCompanyID">
-                                            </div>
-                                        </div>
-                                    </div>
-                                    <div class="row">
-                                        <div class="form-group col-sm-6">
-                                            <label for="uf_auditor">{{'Auditor' | translate}}
-
-                                            </label>
-                                            <div>
-                                                <input type="text" id="uf_auditor" class="form-control" formControlName="auditorID">
-                                            </div>
-                                        </div>
-                                        <div class="form-group col-sm-6">
-                                            <label for="uf_taxAuditor">{{'Tax Auditor' | translate}}
-
-                                            </label>
-                                            <div>
-                                                <input type="text" id="uf_taxAuditor" class="form-control"
-                                                    formControlName="taxAuditorID">
+                                                <input type="text" 
+                                                        id="uf_delegatedManagementCompany" 
+                                                        class="form-control"
+                                                        formControlName="delegatedManagementCompanyID">
                                             </div>
                                         </div>
                                     </div>
                                     <div class="row">
                                         <div class="form-group col-sm-6">
-                                            <label for="uf_principalPromoter">{{'Principal Promoter' | translate}}
-
-                                            </label>
+                                            <label for="uf_auditor">{{ 'Auditor' | translate }}</label>
                                             <div>
-                                                <ng-select id="uf_principalPromoter" [items]="principalPromoterItems"
-                                                    [allowClear]="true" [multiple]="true" [disabled]="umbrellaEditForm.controls['principlePromoterID'].disabled"
-                                                    [placeholder]="_translate.translate('Select')" [formControl]="umbrellaEditForm.controls['principlePromoterID']">
+                                                <input type="text" 
+                                                        id="uf_auditor" 
+                                                        class="form-control" 
+                                                        formControlName="auditorID">
+                                            </div>
+                                        </div>
+                                        <div class="form-group col-sm-6">
+                                            <label for="uf_taxAuditor">{{ 'Tax Auditor' | translate }}</label>
+                                            <div>
+                                                <input type="text" 
+                                                        id="uf_taxAuditor" 
+                                                        class="form-control"
+                                                        formControlName="taxAuditorID">
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="row">
+                                        <div class="form-group col-sm-6">
+                                            <label for="uf_principalPromoter">{{ 'Principal Promoter' | translate }}</label>
+                                            <div>
+                                                <ng-select id="uf_principalPromoter" 
+                                                            [items]="principalPromoterItems"
+                                                            [allowClear]="true" 
+                                                            [multiple]="true" 
+                                                            [disabled]="umbrellaEditForm.controls['principlePromoterID'].disabled"
+                                                            [placeholder]="translate.translate('Select')" 
+                                                            [formControl]="umbrellaEditForm.controls['principlePromoterID']">
                                                 </ng-select>
                                             </div>
                                         </div>
                                         <div class="form-group col-sm-6">
-                                            <label for="uf_legalAdvisor">{{'Legal Advisor' | translate}}
-
-                                            </label>
+                                            <label for="uf_legalAdvisor">{{ 'Legal Advisor' | translate }}</label>
                                             <div>
-                                                <input type="text" id="uf_legalAdvisor" class="form-control"
-                                                    formControlName="legalAdvisorID">
+                                                <input type="text" 
+                                                        id="uf_legalAdvisor" 
+                                                        class="form-control"
+                                                        formControlName="legalAdvisorID">
                                             </div>
                                         </div>
                                     </div>
                                     <div class="row">
                                         <div class="form-group col-sm-6">
-                                            <label for="uf_directors">{{'Directors' | translate}}
-
-                                            </label>
+                                            <label for="uf_directors">{{ 'Directors' | translate }}</label>
                                             <div>
-                                                <input type="text" id="uf_directors" class="form-control"
-                                                    formControlName="directors">
+                                                <input type="text" 
+                                                        id="uf_directors" 
+                                                        class="form-control"
+                                                        formControlName="directors">
                                             </div>
                                         </div>
                                         <div class="form-group col-sm-6">
-                                            <label class="control-label" for="uf_internalReference">{{'Internal
-                                                Reference' | translate}}</label>
-                                            <input type="text" id="uf_internalReference" formControlName="internalReference"
-                                                maxlength="50">
+                                            <label class="control-label" for="uf_internalReference">{{ 'Internal
+                                                Reference' | translate }}</label>
+                                            <input type="text" 
+                                                    id="uf_internalReference" 
+                                                    formControlName="internalReference"
+                                                    maxlength="50">
                                         </div>
                                     </div>
                                     <div class="row">
                                         <div class="form-group col-sm-6">
-                                            <label class="control-label" for="uf_additionnalNotes">{{'Additional Notes'
-                                                | translate}}</label>
-                                            <textarea id="uf_additionnalNotes" formControlName="additionnalNotes"
-                                                maxlength="500"></textarea>
+                                            <label class="control-label" for="uf_additionnalNotes">{{ 'Additional Notes'
+                                                | translate }}</label>
+                                            <textarea id="uf_additionnalNotes" 
+                                                        formControlName="additionnalNotes"
+                                                        maxlength="500">
+                                            </textarea>
                                         </div>
                                     </div>
                                 </div>
@@ -483,7 +523,9 @@
                         <div class="col-xs-12">
                             <a href="#" (click)="panels[1].open = !panels[1].open; $event.preventDefault();">
                                 <i class="fa fa-chevron-right" [class.rotate]="panels[1].open"></i>
-                                <h2> {{'Fund' | translate}}: {{fundForm.controls['fundName'].value}}</h2>
+                                <h2>
+                                    {{ 'Fund: @fundName@' | translate: { 'fundName': fundForm.controls['fundName'].value } }}
+                                </h2>
                             </a>
                         </div>
                     </div>
@@ -500,7 +542,7 @@
                                             <a href="#" (click)="panels[1][0].open = !panels[1][0].open; $event.preventDefault();">
                                                 <i class="fa fa-chevron-right" [class.rotate]="panels[1][0].open">
                                                 </i>
-                                                <h2>{{'Main Information' | translate}}</h2>
+                                                <h2>{{ 'Main Information' | translate }}</h2>
                                             </a>
                                         </div>
                                     </div>
@@ -509,158 +551,187 @@
                                     <div class="panel-body" [class.hidden]="!panels[1][0].open">
                                         <div class="row">
                                             <div class="form-group required-field col-sm-6">
-                                                <label class="control-label">{{'Fund Structure' | translate}}</label>
+                                                <label class="control-label">{{ 'Fund Structure' | translate }}</label>
                                                 <div class="radio-inline disabled">
-                                                    <input type="radio" name="isFundStructure" id="isFundStructure1"
-                                                        formControlName="isFundStructure" value="{{enums.isFundStructure.FUND}}">
-                                                    <label for="isFundStructure1">{{'Single fund Structure' |
-                                                        translate}}</label>
+                                                    <input type="radio" 
+                                                            name="isFundStructure" 
+                                                            id="isFundStructure1"
+                                                            formControlName="isFundStructure" 
+                                                            value="{{enums.isFundStructure.FUND}}">
+                                                    <label for="isFundStructure1">{{ 'Single fund Structure' |
+                                                        translate }}</label>
                                                 </div>
                                                 <div class="radio-inline disabled">
-                                                    <input type="radio" name="isFundStructure" id="isFundStructure2"
-                                                        formControlName="isFundStructure" value="{{enums.isFundStructure.UMBRELLA}}">
-                                                    <label for="isFundStructure2">{{'Fund Umbrella Structure' |
-                                                        translate}}</label>
+                                                    <input type="radio" 
+                                                            name="isFundStructure" 
+                                                            id="isFundStructure2"
+                                                            formControlName="isFundStructure" 
+                                                            value="{{enums.isFundStructure.UMBRELLA}}">
+                                                    <label for="isFundStructure2">{{ 'Fund Umbrella Structure' |
+                                                        translate }}</label>
                                                 </div>
                                             </div>
                                         </div>
                                         <div class="row">
                                             <div class="form-group required-field col-sm-6">
                                                 <div>
-                                                    <label class="control-label" for="fundName">{{'Fund Name' |
-                                                        translate}}</label>
-                                                    <input type="text" name="fundName" id="fundName" formControlName="fundName"
-                                                        maxlength="100">
+                                                    <label class="control-label" for="fundName">{{ 'Fund Name' |
+                                                        translate }}</label>
+                                                    <input type="text" 
+                                                            name="fundName" 
+                                                            id="fundName" 
+                                                            formControlName="fundName"
+                                                            maxlength="100">
                                                     <span *ngIf="fundForm.controls['fundName'].touched && fundForm.controls['fundName'].hasError('required')"
-                                                        class="field-error">{{'Field is required' | translate}}</span>
+                                                        class="field-error">{{ 'Field is required' | translate }}</span>
                                                     <span *ngIf="fundForm.controls['fundName'].touched && fundForm.controls['fundName'].hasError('pattern')"
-                                                        class="field-error">{{'Incorrect entry' | translate}}</span>
+                                                        class="field-error">{{ 'Incorrect Entry' | translate }}</span>
                                                 </div>
                                             </div>
 
                                             <div class="form-group col-sm-6">
-                                                <label class="control-label" for="legalEntityIdentifier">{{'Legal
-                                                    Entity Identifier (LEI)' | translate}}</label>
+                                                <label class="control-label" for="legalEntityIdentifier">{{ 'Legal
+                                                    Entity Identifier (LEI)' | translate }}</label>
                                                 <div class="lei">
                                                     <label class="switch">
-                                                        <input type="checkbox" class="form-control" id="switchActiveShares"
-                                                            [ngModel]="isLeiVisible" [ngModelOptions]="{standalone: true}"
-                                                            (click)="toggleLeiSwitch(!isLeiVisible)">
+                                                        <input type="checkbox" 
+                                                                class="form-control" 
+                                                                id="switchActiveShares"
+                                                                [ngModel]="isLeiVisible" 
+                                                                [ngModelOptions]="{standalone: true}"
+                                                                (click)="toggleLeiSwitch(!isLeiVisible)">
                                                         <span class="slider round"></span>
                                                     </label>
                                                     <div *ngIf="isLeiVisible">
-                                                        <input type="text" name="legalEntityIdentifier" id="legalEntityIdentifier"
-                                                            formControlName="legalEntityIdentifier" maxlength="20">
+                                                        <input type="text" 
+                                                                name="legalEntityIdentifier" 
+                                                                id="legalEntityIdentifier"
+                                                                formControlName="legalEntityIdentifier" 
+                                                                maxlength="20">
                                                         <span *ngIf="fundForm.controls['legalEntityIdentifier'].touched && fundForm.controls['legalEntityIdentifier'].hasError('pattern')"
-                                                            class="field-error">{{'LEI must meet ISO 17442 format ([4x
-                                                            0-9]00[12x A-z0-9][4x 0-9])' | translate}}</span>
+                                                            class="field-error">{{ 'LEI must meet ISO 17442 format ([4x
+                                                            0-9]00[12x A-z0-9][4x 0-9])' | translate }}</span>
                                                         <span *ngIf="fundForm.controls['legalEntityIdentifier'].touched && fundForm.controls['legalEntityIdentifier'].hasError('isAlreadyExisting')"
-                                                            class="field-error">{{'LEI is already existing' | translate}}</span>
+                                                            class="field-error">{{ 'LEI is already existing' | translate }}</span>
                                                     </div>
                                                 </div>
                                             </div>
                                         </div>
                                         <div class="row">
                                             <div class="form-group col-sm-6">
-                                                <label class="control-label" for="registerOffice">{{'Name of the
-                                                    Registered Office of the Fund' | translate}}</label>
-                                                <input type="text" name="registerOffice" id="registerOffice"
-                                                    formControlName="registerOffice">
+                                                <label class="control-label" for="registerOffice">{{ 'Name of the
+                                                    Registered Office of the Fund' | translate }}</label>
+                                                <input type="text" 
+                                                        name="registerOffice" 
+                                                        id="registerOffice"
+                                                        formControlName="registerOffice">
                                                 <span *ngIf="fundForm.controls['registerOffice'].touched && fundForm.controls['registerOffice'].hasError('pattern')"
-                                                    class="field-error">{{'Incorrect name' | translate}}</span>
+                                                    class="field-error">{{ 'Incorrect Name' | translate }}</span>
                                             </div>
 
                                             <div class="form-group col-sm-6">
-                                                <label class="control-label" for="registerOfficeAddress">{{'Address of
-                                                    the register Office of the Fund' | translate}}</label>
-                                                <input type="text" name="registerOfficeAddress" id="registerOfficeAddress"
-                                                    formControlName="registerOfficeAddress">
+                                                <label class="control-label" for="registerOfficeAddress">{{ 'Address of
+                                                    the Registered Office of the Fund' | translate }}</label>
+                                                <input type="text" 
+                                                        name="registerOfficeAddress" 
+                                                        id="registerOfficeAddress"
+                                                        formControlName="registerOfficeAddress">
                                                 <span *ngIf="fundForm.controls['registerOfficeAddress'].touched && fundForm.controls['registerOfficeAddress'].hasError('pattern')"
-                                                    class="field-error">{{'Incorrect address' | translate}}</span>
+                                                    class="field-error">{{ 'Incorrect address' | translate }}</span>
                                             </div>
                                         </div>
                                         <div class="row">
                                             <div class="form-group required-field col-sm-6">
                                                 <div>
-                                                    <label class="control-label" for="domicile">{{'Fund Domicile
-                                                        (country)' | translate}}</label>
-                                                    <ng-select id="domicile" [items]="domicileItems" [allowClear]="true"
-                                                        [placeholder]="_translate.translate('Select')" [formControl]="fundForm.controls['domicile']">
+                                                    <label class="control-label" for="domicile">{{ 'Fund Domicile
+                                                        (Country)' | translate }}</label>
+                                                    <ng-select id="domicile" 
+                                                                [items]="domicileItems" 
+                                                                [allowClear]="true"
+                                                                [placeholder]="translate.translate('Select')" 
+                                                                [formControl]="fundForm.controls['domicile']">
                                                     </ng-select>
-                                                    <span class="field-error" *ngIf="fundForm.controls['domicile'].hasError('required') && fundForm.controls['domicile'].touched">{{'Field
-                                                        is required' | translate}}</span>
+                                                    <span class="field-error" *ngIf="fundForm.controls['domicile'].hasError('required') && fundForm.controls['domicile'].touched">{{ 'Field
+                                                        is required' | translate }}</span>
                                                 </div>
                                             </div>
 
                                             <div class="form-group col-sm-6">
-                                                <label class="control-label" for="tradingAccount">{{'Trading Account' |
-                                                    translate}}</label>
-                                                <input type="text" name="tradingAccount" id="tradingAccount"
-                                                    formControlName="tradingAccount">
+                                                <label class="control-label" for="tradingAccount">{{ 'Trading Account' |
+                                                    translate }}</label>
+                                                <input type="text" 
+                                                        name="tradingAccount" 
+                                                        id="tradingAccount"
+                                                        formControlName="tradingAccount">
                                                 <span *ngIf="fundForm.controls['tradingAccount'].touched && fundForm.controls['tradingAccount'].hasError('pattern')"
-                                                    class="field-error">{{'Incorrect account' | translate}}</span>
+                                                    class="field-error">{{ 'Incorrect Account' | translate }}</span>
                                             </div>
                                         </div>
                                         <div class="row">
                                             <div class="form-group required-field col-sm-6">
                                                 <div *ngIf="isHomeCountryLegalTypeVisible()">
-                                                    <label class="control-label" for="homeCountryLegalType">{{'Home
-                                                        Country Legal Type of Fund' | translate}}</label>
-                                                    <ng-select id="homeCountryLegalType" [items]="homeCountryLegalTypeItems"
-                                                        [allowClear]="true" [placeholder]="_translate.translate('Select')"
-                                                        [formControl]="fundForm.controls['homeCountryLegalType']">
-
-
+                                                    <label class="control-label" for="homeCountryLegalType">{{ 'Home
+                                                        Country Legal Type of Fund' | translate }}</label>
+                                                    <ng-select id="homeCountryLegalType" 
+                                                                [items]="homeCountryLegalTypeItems"
+                                                                [allowClear]="true" 
+                                                                [placeholder]="translate.translate('Select')"
+                                                                [formControl]="fundForm.controls['homeCountryLegalType']">
                                                     </ng-select>
-                                                    <span class="field-error" *ngIf="fundForm.controls['homeCountryLegalType'].hasError('required') && fundForm.controls['homeCountryLegalType'].touched">{{'Field
-                                                        is required' | translate}}</span>
+                                                    <span class="field-error" *ngIf="fundForm.controls['homeCountryLegalType'].hasError('required') && fundForm.controls['homeCountryLegalType'].touched">{{ 'Field
+                                                        is required' | translate }}</span>
                                                 </div>
                                             </div>
                                         </div>
                                         <div class="row">
                                             <div class="form-group required-field col-sm-6">
-                                                <label class="control-label">{{'Is EU Directive Relevant?' |
-                                                    translate}}</label>
+                                                <label class="control-label">{{ 'Is EU Directive Relevant?' |
+                                                    translate }}</label>
                                                 <div class="radio-inline">
-                                                    <input type="radio" name="isEuDirective" id="isEuDirective1"
-                                                        formControlName="isEuDirective" value="{{enums.isEuDirective.YES}}">
-                                                    <label for="isEuDirective1">{{'Yes' | translate}}</label>
+                                                    <input type="radio" 
+                                                            name="isEuDirective" 
+                                                            id="isEuDirective1"
+                                                            formControlName="isEuDirective" 
+                                                            value="{{enums.isEuDirective.YES}}">
+                                                    <label for="isEuDirective1">{{ 'Yes' | translate }}</label>
                                                 </div>
                                                 <div class="radio-inline">
-                                                    <input type="radio" name="isEuDirective" id="isEuDirective2"
-                                                        formControlName="isEuDirective" value="{{enums.isEuDirective.NO}}">
-                                                    <label for="isEuDirective2">{{'No' | translate}}</label>
+                                                    <input type="radio" 
+                                                            name="isEuDirective" 
+                                                            id="isEuDirective2"
+                                                            formControlName="isEuDirective" 
+                                                            value="{{enums.isEuDirective.NO}}">
+                                                    <label for="isEuDirective2">{{ 'No' | translate }}</label>
                                                 </div>
                                             </div>
                                         </div>
                                         <div class="row" *ngIf="fundForm.controls['isEuDirective'].value === enums.isEuDirective.YES.toString()">
                                             <div class="form-group required-field col-sm-6">
                                                 <div>
-                                                    <label class="control-label" for="typeOfEuDirective">{{'Type of EU
-                                                        Directive' | translate}}</label>
-                                                    <ng-select id="typeOfEuDirective" [items]="typeOfEuDirectiveItems"
-                                                        [allowClear]="true" [placeholder]="_translate.translate('Select')"
-                                                        [formControl]="fundForm.controls['typeOfEuDirective']">
-
-
+                                                    <label class="control-label" for="typeOfEuDirective">{{ 'Type of EU
+                                                        Directive' | translate }}</label>
+                                                    <ng-select id="typeOfEuDirective"
+                                                                [items]="typeOfEuDirectiveItems"
+                                                                [allowClear]="true" 
+                                                                [placeholder]="translate.translate('Select')"
+                                                                [formControl]="fundForm.controls['typeOfEuDirective']">
                                                     </ng-select>
-                                                    <span class="field-error" *ngIf="fundForm.controls['typeOfEuDirective'].hasError('required') && fundForm.controls['typeOfEuDirective'].touched">{{'Field
-                                                        is required' | translate}}</span>
+                                                    <span class="field-error" *ngIf="fundForm.controls['typeOfEuDirective'].hasError('required') && fundForm.controls['typeOfEuDirective'].touched">{{ 'Field is required' | translate }}</span>
                                                 </div>
                                             </div>
 
                                             <div class="form-group required-field col-sm-6">
                                                 <div *ngIf="fundForm.controls['isEuDirective'].value === enums.isEuDirective.YES.toString() && getEuDirectiveType() === enums.typeOfEuDirective.UCITS">
-                                                    <label class="control-label" for="UcitsVersion">{{'UCITS Version' |
-                                                        translate}}</label>
-                                                    <ng-select id="UcitsVersion" [items]="UcitsVersionItems"
-                                                        [allowClear]="true" [placeholder]="_translate.translate('Select')"
-                                                        [formControl]="fundForm.controls['UcitsVersion']">
-
-
+                                                    <label class="control-label" for="UcitsVersion">{{ 'UCITS Version' |
+                                                        translate }}</label>
+                                                    <ng-select id="UcitsVersion" 
+                                                                [items]="UcitsVersionItems"
+                                                                [allowClear]="true" 
+                                                                [placeholder]="translate.translate('Select')"
+                                                                [formControl]="fundForm.controls['UcitsVersion']">
                                                     </ng-select>
-                                                    <span class="field-error" *ngIf="fundForm.controls['UcitsVersion'].hasError('required') && fundForm.controls['UcitsVersion'].touched">{{'Field
-                                                        is required' | translate}}</span>
+                                                    <span class="field-error" *ngIf="fundForm.controls['UcitsVersion'].hasError('required') && fundForm.controls['UcitsVersion'].touched">
+                                                        {{ 'Field is required' | translate }}</span>
                                                 </div>
                                             </div>
                                         </div>
@@ -668,263 +739,289 @@
                                         <div class="row">
                                             <div class="form-group required-field col-sm-6">
                                                 <div>
-                                                    <label class="control-label" for="legalForm">{{'Legal Form of the
-                                                        Fund' | translate}}</label>
-                                                    <ng-select id="legalForm" [items]="legalFormItems" [allowClear]="true"
-                                                        [placeholder]="_translate.translate('Select')" [formControl]="fundForm.controls['legalForm']">
-
-
+                                                    <label class="control-label" for="legalForm">{{ 'Legal Form of the
+                                                        Fund' | translate }}</label>
+                                                    <ng-select id="legalForm" 
+                                                                [items]="legalFormItems" 
+                                                                [allowClear]="true"
+                                                                [placeholder]="translate.translate('Select')" 
+                                                                [formControl]="fundForm.controls['legalForm']">
                                                     </ng-select>
-                                                    <span class="field-error" *ngIf="fundForm.controls['legalForm'].hasError('required') && fundForm.controls['legalForm'].touched">{{'Field
-                                                        is required' | translate}}</span>
+                                                    <span class="field-error" *ngIf="fundForm.controls['legalForm'].hasError('required') && fundForm.controls['legalForm'].touched">{{ 'Field
+                                                        is required' | translate }}</span>
                                                 </div>
                                             </div>
 
                                             <div class="form-group required-field col-sm-6">
                                                 <div *ngIf="isNationalNomenclatureOfLegalFormVisible()">
-                                                    <label class="control-label" for="nationalNomenclatureOfLegalForm">{{'National
-                                                        Nomenclature of Legal Fund' | translate}}</label>
-                                                    <ng-select id="nationalNomenclatureOfLegalForm" [items]="nationalNomenclatureOfLegalFormItems"
-                                                        [allowClear]="true" [placeholder]="_translate.translate('Select')"
-                                                        [formControl]="fundForm.controls['nationalNomenclatureOfLegalForm']">
-
-
+                                                    <label class="control-label" for="nationalNomenclatureOfLegalForm">
+                                                        {{ 'National Nomenclature of Legal Fund' | translate }}</label>
+                                                    <ng-select id="nationalNomenclatureOfLegalForm" 
+                                                                [items]="nationalNomenclatureOfLegalFormItems"
+                                                                [allowClear]="true" 
+                                                                [placeholder]="translate.translate('Select')"
+                                                                [formControl]="fundForm.controls['nationalNomenclatureOfLegalForm']">
                                                     </ng-select>
-                                                    <span class="field-error" *ngIf="fundForm.controls['nationalNomenclatureOfLegalForm'].hasError('required') && fundForm.controls['nationalNomenclatureOfLegalForm'].touched">{{'Field
-                                                        is required' | translate}}</span>
+                                                    <span class="field-error" *ngIf="fundForm.controls['nationalNomenclatureOfLegalForm'].hasError('required') && fundForm.controls['nationalNomenclatureOfLegalForm'].touched">{{ 'Field
+                                                        is required' | translate }}</span>
                                                 </div>
                                             </div>
 
                                             <div class="form-group col-sm-6">
-                                                <label class="control-label" for="fundCreationDate">{{'Fund Creation
-                                                    Date (YYYY-MM-DD)' | translate}}</label>
+                                                <label class="control-label" for="fundCreationDate">{{ 'Fund Creation
+                                                    Date (YYYY-MM-DD)' | translate }}</label>
                                                 <div class="input-group">
                                                     <span class="fa fa-calendar" aria-hidden="true"></span>
-                                                    <input id="fundCreationDate" formControlName="fundCreationDate"
-                                                        autocomplete="off" [dpDayPicker]="configDate" [placeholder]="_translate.translate('Choose a date')"
-                                                        mode="day" theme="dp-material">
+                                                    <input id="fundCreationDate" 
+                                                            formControlName="fundCreationDate"
+                                                            autocomplete="off" 
+                                                            [dpDayPicker]="configDate" 
+                                                            [placeholder]="translate.translate('Choose a date')"
+                                                            mode="day" 
+                                                            theme="dp-material">
                                                 </div>
                                                 <span *ngIf="fundForm.controls['fundCreationDate'].touched && fundForm.controls['fundCreationDate'].hasError('pattern')"
-                                                    class="field-error">{{'Incorrect date' | translate}}</span>
+                                                    class="field-error">{{ 'Incorrect Date' | translate }}</span>
                                             </div>
 
                                             <div class="form-group col-sm-6">
-                                                <label class="control-label" for="fundLaunchate">{{'Fund Launch Date
-                                                    (YYYY-MM-DD)' | translate}}</label>
+                                                <label class="control-label" for="fundLaunchate">{{ 'Fund Launch Date
+                                                    (YYYY-MM-DD)' | translate }}</label>
                                                 <div class="input-group">
                                                     <span class="fa fa-calendar" aria-hidden="true"></span>
-                                                    <input id="fundLaunchate" formControlName="fundLaunchate"
-                                                        [dpDayPicker]="configDate" [placeholder]="_translate.translate('Choose a date')"
-                                                        mode="day" theme="dp-material">
+                                                    <input id="fundLaunchate" 
+                                                            formControlName="fundLaunchate"
+                                                            [dpDayPicker]="configDate" 
+                                                            [placeholder]="translate.translate('Choose a date')"
+                                                            mode="day" 
+                                                            theme="dp-material">
                                                 </div>
                                                 <span *ngIf="fundForm.controls['fundLaunchate'].touched && fundForm.controls['fundLaunchate'].hasError('pattern')"
-                                                    class="field-error">{{'Incorrect date' | translate}}</span>
+                                                    class="field-error">{{ 'Incorrect Date' | translate }}</span>
                                             </div>
 
                                             <div class="form-group required-field col-sm-6">
                                                 <div>
-                                                    <label class="control-label" for="fundCurrency">{{'Fund Currency' |
-                                                        translate}}</label>
-                                                    <ng-select id="fundCurrency" [items]="fundCurrencyItems"
-                                                        [allowClear]="true" [placeholder]="_translate.translate('Select')"
-                                                        [formControl]="fundForm.controls['fundCurrency']">
-
-
+                                                    <label class="control-label" for="fundCurrency">{{ 'Fund Currency' |
+                                                        translate }}</label>
+                                                    <ng-select id="fundCurrency" 
+                                                                [items]="fundCurrencyItems"
+                                                                [allowClear]="true" 
+                                                                [placeholder]="translate.translate('Select')"
+                                                                [formControl]="fundForm.controls['fundCurrency']">
                                                     </ng-select>
-                                                    <span class="field-error" *ngIf="fundForm.controls['fundCurrency'].hasError('required') && fundForm.controls['fundCurrency'].touched">{{'Field
-                                                        is required' | translate}}</span>
+                                                    <span class="field-error" *ngIf="fundForm.controls['fundCurrency'].hasError('required') && fundForm.controls['fundCurrency'].touched">
+                                                        {{ 'Field is required' | translate }}</span>
                                                 </div>
                                             </div>
 
                                             <div class="form-group required-field col-sm-6">
-                                                <label class="control-label">{{'Open-ended or Close-ended Fund
-                                                    Structure' | translate}}</label>
+                                                <label class="control-label">{{ 'Open-ended or Close-ended Fund
+                                                    Structure' | translate }}</label>
                                                 <div class="radio-inline">
-                                                    <input type="radio" name="openOrCloseEnded" id="openOrCloseEnded1"
-                                                        formControlName="openOrCloseEnded" value="{{enums.openOrCloseEnded.OPEN_ENDED}}">
-                                                    <label for="openOrCloseEnded1">{{'Open-ended' | translate}}</label>
+                                                    <input type="radio" 
+                                                            name="openOrCloseEnded" 
+                                                            id="openOrCloseEnded1"
+                                                            formControlName="openOrCloseEnded" 
+                                                            value="{{enums.openOrCloseEnded.OPEN_ENDED}}">
+                                                    <label for="openOrCloseEnded1">{{ 'Open-ended' | translate }}</label>
                                                 </div>
                                                 <div class="radio-inline">
-                                                    <input type="radio" name="openOrCloseEnded" id="openOrCloseEnded2"
-                                                        formControlName="openOrCloseEnded" value="{{enums.openOrCloseEnded.CLOSE_ENDED}}">
-                                                    <label for="openOrCloseEnded2">{{'Close-ended' | translate}}</label>
+                                                    <input type="radio" 
+                                                            name="openOrCloseEnded" 
+                                                            id="openOrCloseEnded2"
+                                                            formControlName="openOrCloseEnded" 
+                                                            value="{{enums.openOrCloseEnded.CLOSE_ENDED}}">
+                                                    <label for="openOrCloseEnded2">{{ 'Close-ended' | translate }}</label>
                                                 </div>
                                             </div>
 
                                             <div class="form-group required-field col-sm-6">
-                                                <label class="control-label" for="fiscalYearEnd">{{'Next Fiscal Year
-                                                    End (YYYY-MM)' | translate}}</label>
+                                                <label class="control-label" for="fiscalYearEnd">{{ 'Next Fiscal Year
+                                                    End (YYYY-MM)' | translate }}</label>
                                                 <div class="input-group">
                                                     <span class="fa fa-calendar" aria-hidden="true"></span>
-                                                    <input id="fiscalYearEnd" formControlName="fiscalYearEnd"
-                                                        [dpDayPicker]="configMonth" [required]="true" [placeholder]="_translate.translate('Choose a date')"
-                                                        mode="month" theme="dp-material">
+                                                    <input id="fiscalYearEnd" 
+                                                            formControlName="fiscalYearEnd"
+                                                            [dpDayPicker]="configMonth" 
+                                                            [required]="true" 
+                                                            [placeholder]="translate.translate('Choose a date')"
+                                                            mode="month" 
+                                                            theme="dp-material">
                                                 </div>
                                                 <div *ngIf="fundForm.controls['fiscalYearEnd'].touched && fundForm.controls['fiscalYearEnd'].hasError('required')"
-                                                    class="text-danger">{{'Field is required' | translate}}</div>
+                                                    class="field-error">{{ 'Field is required' | translate }}</div>
                                                 <span *ngIf="fundForm.controls['fiscalYearEnd'].touched && fundForm.controls['fiscalYearEnd'].hasError('pattern')"
-                                                    class="field-error">{{'Incorrect date' | translate}}</span>
+                                                    class="field-error">{{ 'Incorrect date' | translate }}</span>
                                             </div>
 
                                             <div class="form-group required-field col-sm-6">
-                                                <label class="control-label">{{'Is Fund of Funds' | translate}}</label>
+                                                <label class="control-label">{{ 'Is Fund of Funds' | translate }}</label>
                                                 <div class="radio-inline">
                                                     <input type="radio" name="isFundOfFund" id="isFundOfFund1"
                                                         formControlName="isFundOfFund" value="{{enums.isFundOfFund.YES}}">
-                                                    <label for="isFundOfFund1">{{'Yes' | translate}}</label>
+                                                    <label for="isFundOfFund1">{{ 'Yes' | translate }}</label>
                                                 </div>
                                                 <div class="radio-inline">
                                                     <input type="radio" name="isFundOfFund" id="isFundOfFund2"
                                                         formControlName="isFundOfFund" value="{{enums.isFundOfFund.NO}}">
-                                                    <label for="isFundOfFund2">{{'No' | translate}}</label>
+                                                    <label for="isFundOfFund2">{{ 'No' | translate }}</label>
                                                 </div>
                                             </div>
 
                                             <div class="form-group required-field col-sm-6">
                                                 <div>
-                                                    <label class="control-label" for="managementCompanyID">{{'Management
-                                                        Company' | translate}}</label>
-                                                    <ng-select id="managementCompanyID" [items]="managementCompanyItems"
-                                                        [allowClear]="true" [placeholder]="_translate.translate('Select')"
-                                                        [formControl]="fundForm.controls['managementCompanyID']">
-
-
+                                                    <label class="control-label" for="managementCompanyID">{{ 'Management
+                                                        Company' | translate }}</label>
+                                                    <ng-select id="managementCompanyID" 
+                                                                [items]="managementCompanyItems"
+                                                                [allowClear]="true" 
+                                                                [placeholder]="translate.translate('Select')"
+                                                                [formControl]="fundForm.controls['managementCompanyID']">
                                                     </ng-select>
-                                                    <span class="field-error" *ngIf="fundForm.controls['managementCompanyID'].hasError('required') && fundForm.controls['managementCompanyID'].touched">{{'Field
-                                                        is required' | translate}}</span>
+                                                    <span class="field-error" *ngIf="fundForm.controls['managementCompanyID'].hasError('required') && fundForm.controls['managementCompanyID'].touched">{{ 'Field is required' | translate }}</span>
                                                 </div>
                                             </div>
 
                                             <div class="form-group required-field col-sm-6">
                                                 <div>
-                                                    <label class="control-label" for="fundAdministrator">{{'Fund
-                                                        Administrator' | translate}}</label>
-                                                    <ng-select id="fundAdministrator" [items]="fundAdministratorItems"
-                                                        [allowClear]="true" [placeholder]="_translate.translate('Select')"
-                                                        [formControl]="fundForm.controls['fundAdministratorID']">
-
-
+                                                    <label class="control-label" for="fundAdministrator">{{ 'Fund
+                                                        Administrator' | translate }}</label>
+                                                    <ng-select id="fundAdministrator" 
+                                                                [items]="fundAdministratorItems"
+                                                                [allowClear]="true" 
+                                                                [placeholder]="translate.translate('Select')"
+                                                                [formControl]="fundForm.controls['fundAdministratorID']">
                                                     </ng-select>
-                                                    <span class="field-error" *ngIf="fundForm.controls['fundAdministratorID'].hasError('required') && fundForm.controls['fundAdministratorID'].touched">{{'Field
-                                                        is required' | translate}}</span>
+                                                    <span class="field-error" *ngIf="fundForm.controls['fundAdministratorID'].hasError('required') && fundForm.controls['fundAdministratorID'].touched">{{ 'Field is required' | translate }}</span>
                                                 </div>
                                             </div>
 
                                             <div class="form-group required-field col-sm-6">
                                                 <div>
-                                                    <label class="control-label" for="custodianBank">{{'Custodian Bank'
-                                                        | translate}}</label>
-                                                    <ng-select id="custodianBank" [items]="custodianBankItems"
-                                                        [allowClear]="true" [placeholder]="_translate.translate('Select')"
-                                                        [formControl]="fundForm.controls['custodianBankID']">
-
-
+                                                    <label class="control-label" for="custodianBank">{{ 'Custodian Bank'
+                                                        | translate }}</label>
+                                                    <ng-select id="custodianBank" 
+                                                                [items]="custodianBankItems"
+                                                                [allowClear]="true" 
+                                                                [placeholder]="translate.translate('Select')"
+                                                                [formControl]="fundForm.controls['custodianBankID']">
                                                     </ng-select>
-                                                    <span class="field-error" *ngIf="fundForm.controls['custodianBankID'].hasError('required') && fundForm.controls['custodianBankID'].touched">{{'Field
-                                                        is required' | translate}}</span>
+                                                    <span class="field-error" *ngIf="fundForm.controls['custodianBankID'].hasError('required') && fundForm.controls['custodianBankID'].touched">
+                                                        {{ 'Field is required' | translate }}</span>
                                                 </div>
                                             </div>
 
                                             <div class="form-group col-sm-6">
-                                                <label class="control-label" for="investmentManager">{{'Investment
-                                                    Manager' | translate}}</label>
-                                                <ng-select id="investmentManager" [items]="investmentManagerItems"
-                                                    [allowClear]="true" [placeholder]="_translate.translate('Select')"
-                                                    [formControl]="fundForm.controls['investmentManagerID']">
-
-
+                                                <label class="control-label" for="investmentManager">{{ 'Investment
+                                                    Manager' | translate }}</label>
+                                                <ng-select id="investmentManager" 
+                                                            [items]="investmentManagerItems"
+                                                            [allowClear]="true" 
+                                                            [placeholder]="translate.translate('Select')"
+                                                            [formControl]="fundForm.controls['investmentManagerID']">
                                                 </ng-select>
                                             </div>
 
                                             <div class="form-group col-sm-6">
-                                                <label class="control-label" for="principalPromoter">{{'Principal
-                                                    Promoter' | translate}}</label>
-                                                <ng-select id="principalPromoter" [items]="principalPromoterItems"
-                                                    [allowClear]="true" [multiple]="true" [placeholder]="_translate.translate('Select')"
-                                                    [formControl]="fundForm.controls['principlePromoterID']">
-
-
+                                                <label class="control-label" for="principalPromoter">{{ 'Principal
+                                                    Promoter' | translate }}</label>
+                                                <ng-select id="principalPromoter" 
+                                                            [items]="principalPromoterItems"
+                                                            [allowClear]="true" 
+                                                            [multiple]="true" 
+                                                            [placeholder]="translate.translate('Select')"
+                                                            [formControl]="fundForm.controls['principlePromoterID']">
                                                 </ng-select>
                                             </div>
 
                                             <div class="form-group col-sm-6">
-                                                <label class="control-label" for="payingAgent">{{'Paying Agent' |
-                                                    translate}}</label>
-                                                <ng-select id="payingAgent" [items]="payingAgentItems" [allowClear]="true"
-                                                    [multiple]="true" [placeholder]="_translate.translate('Select')"
-                                                    [formControl]="fundForm.controls['payingAgentID']">
-
-
+                                                <label class="control-label" for="payingAgent">{{ 'Paying Agent' |
+                                                    translate }}</label>
+                                                <ng-select id="payingAgent" 
+                                                            [items]="payingAgentItems" 
+                                                            [allowClear]="true"
+                                                            [multiple]="true" 
+                                                            [placeholder]="translate.translate('Select')"
+                                                            [formControl]="fundForm.controls['payingAgentID']">
                                                 </ng-select>
                                             </div>
 
                                             <div class="form-group col-sm-6">
-                                                <label class="control-label" for="fundManagers">{{'Fund Managers' |
-                                                    translate}}</label>
-                                                <input type="text" name="fundManagers" id="fundManagers"
-                                                    formControlName="fundManagers">
-                                                <span class="field-error" *ngIf="fundForm.controls['fundManagers'].hasError('required') && fundForm.controls['fundManagers'].touched">{{'Incorrect
-                                                    entry' | translate}}</span>
+                                                <label class="control-label" for="fundManagers">{{ 'Fund Managers' |
+                                                    translate }}</label>
+                                                <input type="text" 
+                                                        name="fundManagers" 
+                                                        id="fundManagers"
+                                                        formControlName="fundManagers">
+                                                <span class="field-error" *ngIf="fundForm.controls['fundManagers'].hasError('required') && fundForm.controls['fundManagers'].touched">{{ 'Incorrect
+                                                    Entry' | translate}}</span>
                                             </div>
 
                                             <div class="form-group col-sm-6" *ngIf="isTransferAgentActive()">
                                                 <div>
-                                                    <label class="control-label" for="transferAgent">{{'Transfer Agent'
-                                                        | translate}}</label>
-                                                    <ng-select id="transferAgent" [items]="transferAgentItems"
-                                                        [allowClear]="true" [placeholder]="_translate.translate('Select')"
-                                                        [formControl]="fundForm.controls['transferAgentID']">
-
-
+                                                    <label class="control-label" for="transferAgent">{{ 'Transfer Agent'
+                                                        | translate }}</label>
+                                                    <ng-select id="transferAgent" 
+                                                                [items]="transferAgentItems"
+                                                                [allowClear]="true" 
+                                                                [placeholder]="translate.translate('Select')"
+                                                                [formControl]="fundForm.controls['transferAgentID']">
                                                     </ng-select>
                                                 </div>
                                             </div>
 
                                             <div class="form-group col-sm-6" *ngIf="isCentralizingAgentActive()">
                                                 <div>
-                                                    <label class="control-label" for="centralizingAgent">{{'Centralizing
-                                                        Agent' | translate}}</label>
-                                                    <ng-select id="centralizingAgent" [items]="centralizingAgentItems"
-                                                        [allowClear]="true" [placeholder]="_translate.translate('Select')"
-                                                        [formControl]="fundForm.controls['centralizingAgentID']">
-
-
+                                                    <label class="control-label" for="centralizingAgent">{{ 'Centralizing
+                                                        Agent' | translate }}</label>
+                                                    <ng-select id="centralizingAgent" 
+                                                                [items]="centralizingAgentItems"
+                                                                [allowClear]="true" 
+                                                                [placeholder]="translate.translate('Select')"
+                                                                [formControl]="fundForm.controls['centralizingAgentID']">
                                                     </ng-select>
                                                 </div>
                                             </div>
 
                                             <div class="form-group required-field col-sm-6">
-                                                <label class="control-label">{{'Is Dedicated Fund' | translate}}</label>
+                                                <label class="control-label">{{ 'Is Dedicated Fund' | translate }}</label>
                                                 <div class="radio-inline">
-                                                    <input type="radio" name="isDedicatedFund" id="isDedicatedFund1"
-                                                        formControlName="isDedicatedFund" value="{{enums.isDedicatedFund.YES}}">
-                                                    <label for="isDedicatedFund1">{{'Yes' | translate}}</label>
+                                                    <input type="radio" 
+                                                            name="isDedicatedFund" 
+                                                            id="isDedicatedFund1"
+                                                            formControlName="isDedicatedFund" 
+                                                            value="{{enums.isDedicatedFund.YES}}">
+                                                    <label for="isDedicatedFund1">{{ 'Yes' | translate }}</label>
                                                 </div>
                                                 <div class="radio-inline">
-                                                    <input type="radio" name="isDedicatedFund" id="isDedicatedFund2"
-                                                        formControlName="isDedicatedFund" value="{{enums.isDedicatedFund.NO}}">
-                                                    <label for="isDedicatedFund2">{{'No' | translate}}</label>
+                                                    <input type="radio" 
+                                                            name="isDedicatedFund" 
+                                                            id="isDedicatedFund2"
+                                                            formControlName="isDedicatedFund" 
+                                                            value="{{enums.isDedicatedFund.NO}}">
+                                                    <label for="isDedicatedFund2">{{ 'No' | translate }}</label>
                                                 </div>
                                             </div>
 
                                             <div class="form-group required-field col-sm-6">
                                                 <div>
-                                                    <label class="control-label" for="portfolioCurrencyHedge">{{'Portfolio
-                                                        Currency Hedge' | translate}}</label>
-                                                    <ng-select id="portfolioCurrencyHedge" [items]="portfolioCurrencyHedgeItems"
-                                                        [allowClear]="true" [placeholder]="_translate.translate('Select')"
-                                                        [formControl]="fundForm.controls['portfolioCurrencyHedge']">
-
-
+                                                    <label class="control-label" for="portfolioCurrencyHedge">{{ 'Portfolio
+                                                        Currency Hedge' | translate }}</label>
+                                                    <ng-select id="portfolioCurrencyHedge" 
+                                                                [items]="portfolioCurrencyHedgeItems"
+                                                                [allowClear]="true" 
+                                                                [placeholder]="translate.translate('Select')"
+                                                                [formControl]="fundForm.controls['portfolioCurrencyHedge']">
                                                     </ng-select>
-                                                    <span class="field-error" *ngIf="fundForm.controls['portfolioCurrencyHedge'].hasError('required') && fundForm.controls['portfolioCurrencyHedge'].touched">{{'Field
-                                                        is required' | translate}}</span>
+                                                    <span class="field-error" *ngIf="fundForm.controls['portfolioCurrencyHedge'].hasError('required') && fundForm.controls['portfolioCurrencyHedge'].touched">{{ 'Field
+                                                        is required' | translate }}</span>
                                                 </div>
                                             </div>
 
                                             <div class="form-group col-sm-6">
-                                                <label class="control-label" for="investmentObjective">{{'Investment
-                                                    Objective' | translate}}</label>
+                                                <label class="control-label" for="investmentObjective">{{ 'Investment
+                                                    Objective' | translate }}</label>
                                                 <textarea name="investmentObjective" id="investmentObjective"
                                                     formControlName="investmentObjective"></textarea>
                                             </div>
@@ -937,9 +1034,8 @@
                                     <div class="row panel-header">
                                         <div class="col-xs-12">
                                             <a href="#" (click)="panels[1][1].open = !panels[1][1].open; $event.preventDefault();">
-                                                <i class="fa fa-chevron-right" [class.rotate]="panels[1][1].open">
-                                                </i>
-                                                <h2>{{'Holiday Management' | translate}}</h2>
+                                                <i class="fa fa-chevron-right" [class.rotate]="panels[1][1].open"></i>
+                                                <h2>{{ 'Holiday Management' | translate }}</h2>
                                             </a>
                                         </div>
                                     </div>
@@ -947,24 +1043,32 @@
                                     <!-- Panel body -->
                                     <div class="panel-body" [class.hidden]="!panels[1][1].open">
                                         <div class="form-group col-sm-12">
-                                            <label class="control-label">{{'Use Default Holiday Management
-                                                Configuration?' | translate}}
-                                                <i>{{'(Can be found in My Products > Configuration)' | translate}}</i>
+                                            <label class="control-label">{{ 'Use Default Holiday Management
+                                                Configuration?' | translate }}
+                                                <i>{{ '(Can be found in My Products > Configuration)' | translate }}</i>
                                             </label>
                                             <div class="radio-inline">
-                                                <input type="radio" name="useDefaultHolidayMgmt" id="useDefaultHolidayMgmtYes"
-                                                    formControlName="useDefaultHolidayMgmt" value="{{enums.useDefaultHolidayMgmt.YES}}">
-                                                <label for="useDefaultHolidayMgmtYes">{{'Yes' | translate}}</label>
+                                                <input type="radio" 
+                                                        name="useDefaultHolidayMgmt" 
+                                                        id="useDefaultHolidayMgmtYes"
+                                                        formControlName="useDefaultHolidayMgmt" 
+                                                        value="{{enums.useDefaultHolidayMgmt.YES}}">
+                                                <label for="useDefaultHolidayMgmtYes">{{ 'Yes' | translate }}</label>
                                             </div>
                                             <div class="radio-inline">
-                                                <input type="radio" name="useDefaultHolidayMgmt" id="useDefaultHolidayMgmtNo"
-                                                    formControlName="useDefaultHolidayMgmt" value="{{enums.useDefaultHolidayMgmt.NO}}">
-                                                <label for="useDefaultHolidayMgmtNo">{{'No' | translate}}</label>
+                                                <input type="radio" 
+                                                        name="useDefaultHolidayMgmt" 
+                                                        id="useDefaultHolidayMgmtNo"
+                                                        formControlName="useDefaultHolidayMgmt" 
+                                                        value="{{enums.useDefaultHolidayMgmt.NO}}">
+                                                <label for="useDefaultHolidayMgmtNo">{{ 'No' | translate }}</label>
                                             </div>
                                         </div>
 
                                         <div class="form-group col-sm-12">
-                                            <date-picker-extended [hidden]="!showHolidayMgmtConfig()" [dates]="fundForm.value.holidayMgmtConfig"
+                                            <date-picker-extended 
+                                                [hidden]="!showHolidayMgmtConfig()" 
+                                                [dates]="fundForm.value.holidayMgmtConfig"
                                                 (datesEmitter)="setHolidayMgmtConfig($event)">
                                             </date-picker-extended>
                                         </div>
@@ -976,9 +1080,8 @@
                                     <div class="row panel-header">
                                         <div class="col-xs-12">
                                             <a href="#" (click)="panels[1][2].open = !panels[1][2].open; $event.preventDefault();">
-                                                <i class="fa fa-chevron-right" [class.rotate]="panels[1][2].open">
-                                                </i>
-                                                <h2>{{'Optional Information' | translate}}</h2>
+                                                <i class="fa fa-chevron-right" [class.rotate]="panels[1][2].open"></i>
+                                                <h2>{{ 'Optional Information' | translate }}</h2>
                                             </a>
                                         </div>
                                     </div>
@@ -987,284 +1090,373 @@
                                     <div class="panel-body" [class.hidden]="!panels[1][2].open">
                                         <div class="row">
                                             <div class="form-group col-sm-6">
-                                                <label class="control-label" for="globalItermediaryIdentification">{{'Global
-                                                    Intermediary Identification Number (GIIN)' | translate}}</label>
-                                                <input type="text" name="globalItermediaryIdentification" id="globalItermediaryIdentification"
-                                                    formControlName="globalItermediaryIdentification" maxlength="19">
+                                                <label class="control-label" for="globalItermediaryIdentification">{{ 'Global Intermediary Identification Number (GIIN)' | translate }}</label>
+                                                <input type="text" 
+                                                        name="globalItermediaryIdentification" id="globalItermediaryIdentification"
+                                                        formControlName="globalItermediaryIdentification" 
+                                                        maxlength="19">
                                                 <span *ngIf="fundForm.controls['globalItermediaryIdentification'].touched && fundForm.controls['globalItermediaryIdentification'].hasError('pattern')"
-                                                    class="field-error">{{'Accepted format: [6x A-Z0-9].[5x A-Z0-9].[2x
-                                                    A-Z].[3x 0-9]' | translate}}</span>
+                                                    class="field-error">{{ 'Accepted format: [6x A-Z0-9].[5x A-Z0-9].[2x
+                                                    A-Z].[3x 0-9]' | translate }}</span>
                                             </div>
 
                                             <div class="form-group col-sm-6">
-                                                <label class="control-label" for="delegatedManagementCompany">{{'Delegated
-                                                    Management Company' | translate}}</label>
-                                                <ng-select id="delegatedManagementCompany" [items]="managementCompanyItems"
-                                                    [allowClear]="true" [placeholder]="_translate.translate('Select')"
-                                                    [formControl]="fundForm.controls['delegatedManagementCompany']">
-
-
+                                                <label class="control-label" for="delegatedManagementCompany">{{ 'Delegated
+                                                    Management Company' | translate }}</label>
+                                                <ng-select id="delegatedManagementCompany" 
+                                                            [items]="managementCompanyItems"
+                                                            [allowClear]="true" 
+                                                            [placeholder]="translate.translate('Select')"                   [formControl]="fundForm.controls['delegatedManagementCompany']">
                                                 </ng-select>
                                             </div>
 
                                             <div class="form-group col-sm-6">
-                                                <label class="control-label" for="investmentAdvisor">{{'Investment
-                                                    Advisor' | translate}}</label>
-                                                <input type="text" name="investmentAdvisor" id="investmentAdvisor"
-                                                    [formControl]="fundForm.controls['investmentAdvisorID']">
-                                                <span class="field-error" *ngIf="fundForm.controls['investmentAdvisorID'].hasError('required') && fundForm.controls['investmentAdvisorID'].touched">{{'Incorrect
-                                                    entry' | translate}}</span>
+                                                <label class="control-label" for="investmentAdvisor">{{ 'Investment
+                                                    Advisor' | translate }}</label>
+                                                <input type="text" 
+                                                        name="investmentAdvisor" 
+                                                        id="investmentAdvisor"
+                                                        [formControl]="fundForm.controls['investmentAdvisorID']">
+                                                <span class="field-error" *ngIf="fundForm.controls['investmentAdvisorID'].hasError('required') && fundForm.controls['investmentAdvisorID'].touched">
+                                                    {{ 'Incorrect Entry' | translate }}</span>
                                             </div>
 
                                             <div class="form-group col-sm-6">
-                                                <label class="control-label" for="auditor">{{'Auditor' | translate}}</label>
-                                                <ng-select id="auditor" [items]="auditorItems" [allowClear]="true"
-                                                    [placeholder]="_translate.translate('Select')" [formControl]="fundForm.controls['auditorID']">
-
-
+                                                <label class="control-label" for="auditor">{{ 'Auditor' | translate }}</label>
+                                                <ng-select id="auditor" 
+                                                            [items]="auditorItems" 
+                                                            [allowClear]="true"
+                                                            [placeholder]="translate.translate('Select')" 
+                                                            [formControl]="fundForm.controls['auditorID']">
                                                 </ng-select>
                                             </div>
 
                                             <div class="form-group col-sm-6">
-                                                <label class="control-label" for="taxAuditor">{{'Tax Auditor' |
-                                                    translate}}</label>
-                                                <ng-select id="taxAuditor" [items]="taxAuditorItems" [allowClear]="true"
-                                                    [placeholder]="_translate.translate('Select')" [formControl]="fundForm.controls['taxAuditorID']">
-
-
+                                                <label class="control-label" for="taxAuditor">{{ 'Tax Auditor' |
+                                                    translate }}</label>
+                                                <ng-select id="taxAuditor" 
+                                                            [items]="taxAuditorItems" 
+                                                            [allowClear]="true"
+                                                            [placeholder]="translate.translate('Select')" 
+                                                            [formControl]="fundForm.controls['taxAuditorID']">
                                                 </ng-select>
                                             </div>
 
                                             <div class="form-group col-sm-6">
-                                                <label class="control-label" for="legalAdvisor">{{'Legal Advisor' |
-                                                    translate}}</label>
-                                                <ng-select id="legalAdvisor" [items]="legalAdvisorItems" [allowClear]="true"
-                                                    [placeholder]="_translate.translate('Select')" [formControl]="fundForm.controls['legalAdvisorID']">
-
-
+                                                <label class="control-label" for="legalAdvisor">{{ 'Legal Advisor' |
+                                                    translate }}</label>
+                                                <ng-select id="legalAdvisor" 
+                                                            [items]="legalAdvisorItems" 
+                                                            [allowClear]="true"
+                                                            [placeholder]="translate.translate('Select')" 
+                                                            [formControl]="fundForm.controls['legalAdvisorID']">
                                                 </ng-select>
                                             </div>
 
                                             <div class="form-group col-sm-6">
-                                                <label class="control-label" for="directors">{{'Directors' |
-                                                    translate}}</label>
-                                                <input type="text" name="directors" id="directors" formControlName="directors">
+                                                <label class="control-label" for="directors">{{ 'Directors' | translate }}</label>
+                                                <input type="text" 
+                                                        name="directors" 
+                                                        id="directors" 
+                                                        formControlName="directors">
                                             </div>
 
                                             <div class="form-group col-sm-6">
-                                                <label class="control-label">{{'Has Embedded Derivatives' | translate}}</label>
+                                                <label class="control-label">{{ 'Has Embedded Derivatives' | translate }}</label>
                                                 <div class="radio-inline">
-                                                    <input type="radio" name="hasEmbeddedDirective" id="hasEmbeddedDirective1"
-                                                        formControlName="hasEmbeddedDirective" value="{{enums.hasEmbeddedDirective.YES}}">
-                                                    <label for="hasEmbeddedDirective1">{{'Yes' | translate}}</label>
+                                                    <input type="radio" 
+                                                            name="hasEmbeddedDirective" 
+                                                            id="hasEmbeddedDirective1"
+                                                            formControlName="hasEmbeddedDirective" 
+                                                            value="{{enums.hasEmbeddedDirective.YES}}">
+                                                    <label for="hasEmbeddedDirective1">{{ 'Yes' | translate }}</label>
                                                 </div>
                                                 <div class="radio-inline">
-                                                    <input type="radio" name="hasEmbeddedDirective" id="hasEmbeddedDirective2"
-                                                        formControlName="hasEmbeddedDirective" value="{{enums.hasEmbeddedDirective.NO}}">
-                                                    <label for="hasEmbeddedDirective2">{{'No' | translate}}</label>
+                                                    <input type="radio" 
+                                                            name="hasEmbeddedDirective" 
+                                                            id="hasEmbeddedDirective2"
+                                                            formControlName="hasEmbeddedDirective" 
+                                                            value="{{enums.hasEmbeddedDirective.NO}}">
+                                                    <label for="hasEmbeddedDirective2">{{ 'No' | translate }}</label>
                                                 </div>
                                             </div>
                                         </div>
                                         <div class="row">
                                             <div class="form-group col-sm-6">
-                                                <label class="control-label">{{'Has Capital Preservation' | translate}}</label>
+                                                <label class="control-label">{{ 'Has Capital Preservation' | translate }}</label>
                                                 <div class="radio-inline">
-                                                    <input type="radio" name="hasCapitalPreservation" id="hasCapitalPreservation1"
-                                                        formControlName="hasCapitalPreservation" value="{{enums.hasCapitalPreservation.YES}}">
-                                                    <label for="hasCapitalPreservation1">{{'Yes' | translate}}</label>
+                                                    <input type="radio" 
+                                                            name="hasCapitalPreservation" 
+                                                            id="hasCapitalPreservation1"
+                                                            formControlName="hasCapitalPreservation" 
+                                                            value="{{enums.hasCapitalPreservation.YES}}">
+                                                    <label for="hasCapitalPreservation1">{{ 'Yes' | translate }}</label>
                                                 </div>
                                                 <div class="radio-inline">
-                                                    <input type="radio" name="hasCapitalPreservation" id="hasCapitalPreservation2"
-                                                        formControlName="hasCapitalPreservation" value="{{enums.hasCapitalPreservation.NO}}">
-                                                    <label for="hasCapitalPreservation2">{{'No' | translate}}</label>
+                                                    <input type="radio" 
+                                                            name="hasCapitalPreservation" 
+                                                            id="hasCapitalPreservation2"
+                                                            formControlName="hasCapitalPreservation" 
+                                                            value="{{enums.hasCapitalPreservation.NO}}">
+                                                    <label for="hasCapitalPreservation2">{{ 'No' | translate }}</label>
                                                 </div>
                                             </div>
                                         </div>
                                         <div class="row" *ngIf="fundForm.controls['hasCapitalPreservation'].value === enums.hasCapitalPreservation.YES.toString()">
                                             <div class="form-group col-sm-6">
-                                                <label class="control-label" for="capitalPreservationLevel">{{'Capital
-                                                    Preservation Level' | translate}}</label>
-                                                <input type="number" name="capitalPreservationLevel" id="capitalPreservationLevel"
-                                                    formControlName="capitalPreservationLevel">
+                                                <label class="control-label" for="capitalPreservationLevel">{{ 'Capital
+                                                    Preservation Level' | translate }}</label>
+                                                <input type="number" 
+                                                        name="capitalPreservationLevel" 
+                                                        id="capitalPreservationLevel"
+                                                        formControlName="capitalPreservationLevel">
                                             </div>
 
                                             <div class="form-group col-sm-6">
-                                                <label class="control-label" for="capitalPreservationPeriod">{{'Capital
-                                                    Preservation Period' | translate}}</label>
-                                                <ng-select id="capitalPreservationPeriod" [items]="capitalPreservationPeriodItems"
-                                                    [allowClear]="true" [placeholder]="_translate.translate('Select')"
-                                                    [formControl]="fundForm.controls['capitalPreservationPeriod']">
-
-
+                                                <label class="control-label" for="capitalPreservationPeriod">{{ 'Capital
+                                                    Preservation Period' | translate }}</label>
+                                                <ng-select id="capitalPreservationPeriod" 
+                                                            [items]="capitalPreservationPeriodItems"
+                                                            [allowClear]="true" 
+                                                            [placeholder]="translate.translate('Select')"
+                                                            [formControl]="fundForm.controls['capitalPreservationPeriod']">
                                                 </ng-select>
                                             </div>
                                         </div>
                                         <div class="row">
                                             <div class="form-group col-sm-6">
-                                                <label class="control-label">{{'Has CPPI' | translate}}</label>
+                                                <label class="control-label">{{ 'Has CPPI' | translate }}</label>
                                                 <div class="radio-inline">
-                                                    <input type="radio" name="hasCppi" id="hasCppi1" formControlName="hasCppi"
-                                                        value="{{enums.hasCppi.YES}}">
-                                                    <label for="hasCppi1">{{'Yes' | translate}}</label>
+                                                    <input type="radio" 
+                                                            name="hasCppi" id="hasCppi1" 
+                                                            formControlName="hasCppi"
+                                                            value="{{enums.hasCppi.YES}}">
+                                                    <label for="hasCppi1">{{ 'Yes' | translate }}</label>
                                                 </div>
                                                 <div class="radio-inline">
-                                                    <input type="radio" name="hasCppi" id="hasCppi2" formControlName="hasCppi"
-                                                        value="{{enums.hasCppi.NO}}">
-                                                    <label for="hasCppi2">{{'No' | translate}}</label>
+                                                    <input type="radio" 
+                                                            name="hasCppi" 
+                                                            id="hasCppi2" 
+                                                            formControlName="hasCppi"
+                                                            value="{{enums.hasCppi.NO}}">
+                                                    <label for="hasCppi2">{{ 'No' | translate }}</label>
                                                 </div>
                                             </div>
 
                                             <div class="form-group col-sm-6">
                                                 <div *ngIf="fundForm.controls['hasCppi'].value === enums.hasCppi.YES.toString()">
-                                                    <label class="control-label" for="cppiMultiplier">{{'CPPI
-                                                        Multiplier' | translate}}</label>
-                                                    <input type="number" name="cppiMultiplier" id="cppiMultiplier"
-                                                        formControlName="cppiMultiplier">
+                                                    <label class="control-label" for="cppiMultiplier">{{ 'CPPI
+                                                        Multiplier' | translate }}</label>
+                                                    <input type="number"
+                                                            name="cppiMultiplier" 
+                                                            id="cppiMultiplier"
+                                                            formControlName="cppiMultiplier">
                                                 </div>
                                             </div>
 
                                             <div class="form-group col-sm-6">
-                                                <label class="control-label">{{'Has Hedge Fund Strategy' | translate}}</label>
+                                                <label class="control-label">{{ 'Has Hedge Fund Strategy' | translate }}</label>
                                                 <div class="radio-inline">
-                                                    <input type="radio" name="hasHedgeFundStrategy" id="hasHedgeFundStrategy1"
-                                                        formControlName="hasHedgeFundStrategy" value="{{enums.hasHedgeFundStrategy.YES}}">
-                                                    <label for="hasHedgeFundStrategy1">{{'Yes' | translate}}</label>
+                                                    <input type="radio" 
+                                                            name="hasHedgeFundStrategy" 
+                                                            id="hasHedgeFundStrategy1"
+                                                            formControlName="hasHedgeFundStrategy" 
+                                                            value="{{enums.hasHedgeFundStrategy.YES}}">
+                                                    <label for="hasHedgeFundStrategy1">{{ 'Yes' | translate }}</label>
                                                 </div>
                                                 <div class="radio-inline">
-                                                    <input type="radio" name="hasHedgeFundStrategy" id="hasHedgeFundStrategy2"
-                                                        formControlName="hasHedgeFundStrategy" value="{{enums.hasHedgeFundStrategy.NO}}">
-                                                    <label for="hasHedgeFundStrategy2">{{'No' | translate}}</label>
-                                                </div>
-                                            </div>
-
-                                            <div class="form-group col-sm-6">
-                                                <label class="control-label">{{'Is Leveraged' | translate}}</label>
-                                                <div class="radio-inline">
-                                                    <input type="radio" name="isLeveraged" id="isLeveraged1"
-                                                        formControlName="isLeveraged" value="{{enums.isLeveraged.YES}}">
-                                                    <label for="isLeveraged1">{{'Yes' | translate}}</label>
-                                                </div>
-                                                <div class="radio-inline">
-                                                    <input type="radio" name="isLeveraged" id="isLeveraged2"
-                                                        formControlName="isLeveraged" value="{{enums.isLeveraged.NO}}">
-                                                    <label for="isLeveraged2">{{'No' | translate}}</label>
+                                                    <input type="radio" 
+                                                            name="hasHedgeFundStrategy" 
+                                                            id="hasHedgeFundStrategy2"
+                                                            formControlName="hasHedgeFundStrategy" 
+                                                            value="{{enums.hasHedgeFundStrategy.NO}}">
+                                                    <label for="hasHedgeFundStrategy2">{{ 'No' | translate }}</label>
                                                 </div>
                                             </div>
 
                                             <div class="form-group col-sm-6">
-                                                <label class="control-label">{{'Has 130/30 Strategy' | translate}}</label>
+                                                <label class="control-label">{{ 'Is Leveraged' | translate }}</label>
                                                 <div class="radio-inline">
-                                                    <input type="radio" name="has130Or30Strategy" id="has130Or30Strategy1"
-                                                        formControlName="has130Or30Strategy" value="{{enums.has130_30Strategy.YES}}">
-                                                    <label for="has130Or30Strategy1">{{'Yes' | translate}}</label>
+                                                    <input type="radio" 
+                                                            name="isLeveraged" 
+                                                            id="isLeveraged1"
+                                                            formControlName="isLeveraged" 
+                                                            value="{{enums.isLeveraged.YES}}">
+                                                    <label for="isLeveraged1">{{ 'Yes' | translate }}</label>
                                                 </div>
                                                 <div class="radio-inline">
-                                                    <input type="radio" name="has130Or30Strategy" id="has130Or30Strategy2"
-                                                        formControlName="has130Or30Strategy" value="{{enums.has130_30Strategy.NO}}">
-                                                    <label for="has130Or30Strategy2">{{'No' | translate}}</label>
-                                                </div>
-                                            </div>
-
-                                            <div class="form-group col-sm-6">
-                                                <label class="control-label">{{'Is Fund Targeting Environmental or
-                                                    Social Objectives (EOS)' | translate}}</label>
-                                                <div class="radio-inline">
-                                                    <input type="radio" name="isFundTargetingEos" id="isFundTargetingEos1"
-                                                        formControlName="isFundTargetingEos" value="{{enums.isFundTargetingEos.YES}}">
-                                                    <label for="isFundTargetingEos1">{{'Yes' | translate}}</label>
-                                                </div>
-                                                <div class="radio-inline">
-                                                    <input type="radio" name="isFundTargetingEos" id="isFundTargetingEos2"
-                                                        formControlName="isFundTargetingEos" value="{{enums.isFundTargetingEos.NO}}">
-                                                    <label for="isFundTargetingEos2">{{'No' | translate}}</label>
+                                                    <input type="radio" 
+                                                            name="isLeveraged" 
+                                                            id="isLeveraged2"
+                                                            formControlName="isLeveraged" 
+                                                            value="{{enums.isLeveraged.NO}}">
+                                                    <label for="isLeveraged2">{{ 'No' | translate }}</label>
                                                 </div>
                                             </div>
 
                                             <div class="form-group col-sm-6">
-                                                <label class="control-label">{{'Is Fund Targeting Socially Responsible
-                                                    Investment (SRI)' | translate}}</label>
+                                                <label class="control-label">{{ 'Has 130/30 Strategy' | translate }}</label>
                                                 <div class="radio-inline">
-                                                    <input type="radio" name="isFundTargetingSri" id="isFundTargetingSri1"
-                                                        formControlName="isFundTargetingSri" value="{{enums.isFundTargetingSri.YES}}">
-                                                    <label for="isFundTargetingSri1">{{'Yes' | translate}}</label>
+                                                    <input type="radio" 
+                                                            name="has130Or30Strategy" 
+                                                            id="has130Or30Strategy1"
+                                                            formControlName="has130Or30Strategy" 
+                                                            value="{{enums.has130_30Strategy.YES}}">
+                                                    <label for="has130Or30Strategy1">{{ 'Yes' | translate }}</label>
                                                 </div>
                                                 <div class="radio-inline">
-                                                    <input type="radio" name="isFundTargetingSri" id="isFundTargetingSri2"
-                                                        formControlName="isFundTargetingSri" value="{{enums.isFundTargetingSri.NO}}">
-                                                    <label for="isFundTargetingSri2">{{'No' | translate}}</label>
-                                                </div>
-                                            </div>
-
-                                            <div class="form-group col-sm-6">
-                                                <label class="control-label">{{'Is Passive Fund' | translate}}</label>
-                                                <div class="radio-inline">
-                                                    <input type="radio" name="isPassiveFund" id="isPassiveFund1"
-                                                        formControlName="isPassiveFund" value="{{enums.isPassiveFund.YES}}">
-                                                    <label for="isPassiveFund1">{{'Yes' | translate}}</label>
-                                                </div>
-                                                <div class="radio-inline">
-                                                    <input type="radio" name="isPassiveFund" id="isPassiveFund2"
-                                                        formControlName="isPassiveFund" value="{{enums.isPassiveFund.NO}}">
-                                                    <label for="isPassiveFund2">{{'No' | translate}}</label>
+                                                    <input type="radio" 
+                                                            name="has130Or30Strategy" 
+                                                            id="has130Or30Strategy2"
+                                                            formControlName="has130Or30Strategy" 
+                                                            value="{{enums.has130_30Strategy.NO}}">
+                                                    <label for="has130Or30Strategy2">{{ 'No' | translate }}</label>
                                                 </div>
                                             </div>
 
                                             <div class="form-group col-sm-6">
-                                                <label class="control-label">{{'Has Security Lending' | translate}}</label>
+                                                <label class="control-label">{{ 'Is Fund Targeting Environmental or
+                                                    Social Objectives (EOS)' | translate }}</label>
                                                 <div class="radio-inline">
-                                                    <input type="radio" name="hasSecurityiesLending" id="hasSecurityiesLending1"
-                                                        formControlName="hasSecurityiesLending" value="{{enums.hasSecurityiesLending.YES}}">
-                                                    <label for="hasSecurityiesLending1">{{'Yes' | translate}}</label>
+                                                    <input type="radio" 
+                                                            name="isFundTargetingEos" 
+                                                            id="isFundTargetingEos1"
+                                                            formControlName="isFundTargetingEos" 
+                                                            value="{{enums.isFundTargetingEos.YES}}">
+                                                    <label for="isFundTargetingEos1">{{ 'Yes' | translate }}</label>
                                                 </div>
                                                 <div class="radio-inline">
-                                                    <input type="radio" name="hasSecurityiesLending" id="hasSecurityiesLending2"
-                                                        formControlName="hasSecurityiesLending" value="{{enums.hasSecurityiesLending.NO}}">
-                                                    <label for="hasSecurityiesLending2">{{'No' | translate}}</label>
+                                                    <input type="radio" 
+                                                            name="isFundTargetingEos" 
+                                                            id="isFundTargetingEos2"
+                                                            formControlName="isFundTargetingEos" 
+                                                            value="{{enums.isFundTargetingEos.NO}}">
+                                                    <label for="isFundTargetingEos2">{{ 'No' | translate }}</label>
+                                                </div>
+                                            </div>
+
+                                            <div class="form-group col-sm-6">
+                                                <label class="control-label">{{ 'Is Fund Targeting Socially Responsible
+                                                    Investment (SRI)' | translate }}</label>
+                                                <div class="radio-inline">
+                                                    <input type="radio" 
+                                                            name="isFundTargetingSri" 
+                                                            id="isFundTargetingSri1"
+                                                            formControlName="isFundTargetingSri" 
+                                                            value="{{enums.isFundTargetingSri.YES}}">
+                                                    <label for="isFundTargetingSri1">{{ 'Yes' | translate }}</label>
+                                                </div>
+                                                <div class="radio-inline">
+                                                    <input type="radio" 
+                                                            name="isFundTargetingSri" 
+                                                            id="isFundTargetingSri2"
+                                                            formControlName="isFundTargetingSri" 
+                                                            value="{{enums.isFundTargetingSri.NO}}">
+                                                    <label for="isFundTargetingSri2">{{ 'No' | translate }}</label>
+                                                </div>
+                                            </div>
+
+                                            <div class="form-group col-sm-6">
+                                                <label class="control-label">{{ 'Is Passive Fund' | translate }}</label>
+                                                <div class="radio-inline">
+                                                    <input type="radio" 
+                                                            name="isPassiveFund" 
+                                                            id="isPassiveFund1"
+                                                            formControlName="isPassiveFund" 
+                                                            value="{{enums.isPassiveFund.YES}}">
+                                                    <label for="isPassiveFund1">{{ 'Yes' | translate }}</label>
+                                                </div>
+                                                <div class="radio-inline">
+                                                    <input type="radio" 
+                                                            name="isPassiveFund" 
+                                                            id="isPassiveFund2"
+                                                            formControlName="isPassiveFund" 
+                                                            value="{{enums.isPassiveFund.NO}}">
+                                                    <label for="isPassiveFund2">{{ 'No' | translate }}</label>
+                                                </div>
+                                            </div>
+
+                                            <div class="form-group col-sm-6">
+                                                <label class="control-label">{{ 'Has Security Lending' | translate }}</label>
+                                                <div class="radio-inline">
+                                                    <input type="radio" 
+                                                            name="hasSecurityiesLending" 
+                                                            id="hasSecurityiesLending1"
+                                                            formControlName="hasSecurityiesLending" 
+                                                            value="{{enums.hasSecurityiesLending.YES}}">
+                                                    <label for="hasSecurityiesLending1">{{ 'Yes' | translate }}</label>
+                                                </div>
+                                                <div class="radio-inline">
+                                                    <input type="radio" 
+                                                            name="hasSecurityiesLending" 
+                                                            id="hasSecurityiesLending2"
+                                                            formControlName="hasSecurityiesLending" 
+                                                            value="{{enums.hasSecurityiesLending.NO}}">
+                                                    <label for="hasSecurityiesLending2">{{ 'No' | translate }}</label>
                                                 </div>
                                             </div>
 
                                             <div class="form-group checkbox-container col-sm-6">
-                                                <label class="control-label">{{'Has Swap' | translate}}</label>
+                                                <label class="control-label">{{ 'Has Swap' | translate }}</label>
                                                 <div class="radio-inline">
-                                                    <input type="radio" name="hasSwap" id="hasSwap1" formControlName="hasSwap"
-                                                        value="{{enums.hasSwap.YES}}">
-                                                    <label for="hasSwap1">{{'Yes' | translate}}</label>
+                                                    <input type="radio" 
+                                                            name="hasSwap" 
+                                                            id="hasSwap1" 
+                                                            formControlName="hasSwap"
+                                                            value="{{enums.hasSwap.YES}}">
+                                                    <label for="hasSwap1">{{ 'Yes' | translate }}</label>
                                                 </div>
                                                 <div class="radio-inline">
-                                                    <input type="radio" name="hasSwap" id="hasSwap2" formControlName="hasSwap"
-                                                        value="{{enums.hasSwap.NO}}">
-                                                    <label for="hasSwap2">{{'No' | translate}}</label>
+                                                    <input type="radio"
+                                                            name="hasSwap" 
+                                                            id="hasSwap2" 
+                                                            formControlName="hasSwap"
+                                                            value="{{enums.hasSwap.NO}}">
+                                                    <label for="hasSwap2">{{ 'No' | translate }}</label>
                                                 </div>
                                             </div>
 
                                             <div class="form-group checkbox-container col-sm-6">
-                                                <label class="control-label">{{'Has Duration Hedge' | translate}}</label>
+                                                <label class="control-label">{{ 'Has Duration Hedge' | translate }}</label>
                                                 <div class="radio-inline">
-                                                    <input type="radio" name="hasDurationHedge" id="hasDurationHedge1"
-                                                        formControlName="hasDurationHedge" value="{{enums.hasDurationHedge.YES}}">
-                                                    <label for="hasDurationHedge1">{{'Yes' | translate}}</label>
+                                                    <input type="radio" 
+                                                            name="hasDurationHedge" 
+                                                            id="hasDurationHedge1"
+                                                            formControlName="hasDurationHedge" 
+                                                            value="{{enums.hasDurationHedge.YES}}">
+                                                    <label for="hasDurationHedge1">{{ 'Yes' | translate }}</label>
                                                 </div>
                                                 <div class="radio-inline">
-                                                    <input type="radio" name="hasDurationHedge" id="hasDurationHedge2"
-                                                        formControlName="hasDurationHedge" value="{{enums.hasDurationHedge.NO}}">
-                                                    <label for="hasDurationHedge2">{{'No' | translate}}</label>
+                                                    <input type="radio" 
+                                                            name="hasDurationHedge" 
+                                                            id="hasDurationHedge2"
+                                                            formControlName="hasDurationHedge" 
+                                                            value="{{enums.hasDurationHedge.NO}}">
+                                                    <label for="hasDurationHedge2">{{ 'No' | translate }}</label>
                                                 </div>
                                             </div>
 
                                             <div class="form-group col-sm-6">
-                                                <label class="control-label" for="internalReference">{{'Internal
-                                                    Reference' | translate}}</label>
-                                                <input type="text" name="internalReference" id="internalReference"
-                                                    formControlName="internalReference" maxlength="50">
+                                                <label class="control-label" for="internalReference">{{ 'Internal
+                                                    Reference' | translate }}</label>
+                                                <input type="text" 
+                                                        name="internalReference" 
+                                                        id="internalReference"
+                                                        formControlName="internalReference" 
+                                                        maxlength="50">
                                             </div>
                                         </div>
 
                                         <div class="row">
                                             <div class="form-group col-sm-6">
-                                                <label class="control-label" for="additionnalNotes">{{'Additional
-                                                    Notes' | translate}}</label>
-                                                <textarea name="additionnalNotes" id="additionnalNotes" class="form-control"
-                                                    formControlName="additionnalNotes" maxlength="500"></textarea>
+                                                <label class="control-label" for="additionnalNotes">{{ 'Additional
+                                                    Notes' | translate }}</label>
+                                                <textarea name="additionnalNotes" 
+                                                            id="additionnalNotes" 
+                                                            class="form-control"
+                                                            formControlName="additionnalNotes" 
+                                                            maxlength="500">
+                                                </textarea>
                                             </div>
                                         </div>
                                     </div>
@@ -1276,16 +1468,15 @@
                 <br>
 
                 <div class="form-group col-sm-6">
-                    <button id="fund-cancelfund-btn" type="button" class="btn btn-default" (click)="onClickBack()">{{'Cancel'
-                        | translate}}</button>
+                    <button id="fund-cancelfund-btn" type="button" class="btn btn-default" (click)="onClickBack()">
+                        {{ 'Cancel' | translate}} </button>
 
-                    <button *ngIf="currDraft == 1 || !param" id="fund-savedraftfund-btn" type="button" class="btn btn-primary"
-                        (click)="saveDraft()">
-                        <i class="fa fa-save"></i> {{(!param ? 'Save Draft' : 'Update Draft') | translate}}
+                    <button *ngIf="currDraft == 1 || !param" id="fund-savedraftfund-btn" type="button" class="btn btn-primary" (click)="saveDraft()">
+                        <i class="fa fa-save"></i> {{ (!param ? 'Save Draft' : 'Update Draft') | translate }}
                     </button>
 
                     <button id="fund-submitfund-btn" type="submit" class="btn btn-primary" [disabled]="!fundForm.valid">
-                        <i class="fa fa-save"></i> {{!param || currDraft == 1 ? 'Save' : 'Update'}}
+                        <i class="fa fa-save"></i> {{ !param || currDraft == 1 ? 'Save' : 'Update' }}
                     </button>
                 </div>
             </form>

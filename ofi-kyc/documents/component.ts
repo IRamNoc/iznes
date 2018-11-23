@@ -1,18 +1,18 @@
-import {ChangeDetectionStrategy, ChangeDetectorRef, Component, OnDestroy, OnInit} from '@angular/core';
-import {AbstractControl, FormControl, FormArray, FormBuilder, FormGroup, Validators} from '@angular/forms';
+import { ChangeDetectionStrategy, ChangeDetectorRef, Component, OnDestroy, OnInit } from '@angular/core';
+import { AbstractControl, FormControl, FormArray, FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { Subpanel } from './models';
 import { MockKYCDocumentsService } from './documents.mock.service';
-import { LogService} from "@setl/utils";
+import { LogService } from '@setl/utils';
 import { Router } from '@angular/router';
+import { MultilingualService } from '@setl/multilingual';
 
 @Component({
     selector: 'app-invite-investors',
     styleUrls: ['./component.scss'],
     templateUrl: './component.html',
-    changeDetection: ChangeDetectionStrategy.OnPush
+    changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class OfiDocumentsComponent implements OnInit, OnDestroy {
-
     showModal = false;
     countdown = 5;
 
@@ -21,53 +21,53 @@ export class OfiDocumentsComponent implements OnInit, OnDestroy {
 
     /* Constructor. */
     constructor(
-        private _fb: FormBuilder,
-        private _changeDetectorRef: ChangeDetectorRef,
+        private fb: FormBuilder,
+        private changeDetectorRef: ChangeDetectorRef,
         private service: MockKYCDocumentsService,
         private logService: LogService,
-        private _router: Router,
+        private router: Router,
+        public translate: MultilingualService,
     ) {
-
     }
 
     ngOnInit() {
         this.panelDefs = [
             {
-                title: 'Shares',
+                title: this.translate.translate('Shares'),
                 columns: [
                     {
-                        label: 'Share name',
+                        label: this.translate.translate('Share Name'),
                         dataSource: 'name',
                         sortable: true,
                     },
                     {
-                        label: 'Fund name',
+                        label: this.translate.translate('Fund Name'),
                         dataSource: 'fund',
                         sortable: true,
                     },
                     {
-                        label: 'ISIN',
+                        label: this.translate.translate('ISIN'),
                         dataSource: 'isin',
                         sortable: true,
                     },
                     {
-                        label: 'Management company',
+                        label: this.translate.translate('Management Company'),
                         dataSource: 'managementCompany',
                         sortable: true,
                     },
                     {
-                        label: 'Type of share',
+                        label: this.translate.translate('Type of Share'),
                         dataSource: 'type',
                         sortable: true,
                     },
                     {
-                        label: 'Status (close or open?)',
+                        label: this.translate.translate('Status (Close or Open?)'),
                         dataSource: 'status',
                         sortable: true,
                     },
                 ],
                 action: {
-                    title: 'Add new Share',
+                    title: this.translate.translate('Add New Share'),
                     icon: 'plus',
                     callback: this.addShare,
                 },
@@ -76,46 +76,46 @@ export class OfiDocumentsComponent implements OnInit, OnDestroy {
                 data: this.service.getShares(),
             },
             {
-                title: 'Funds',
+                title: this.translate.translate('Funds'),
                 columns: [
                     {
-                        label: 'Fund name',
+                        label: this.translate.translate('Fund Name'),
                         dataSource: 'name',
                         sortable: true,
                     },
                     {
-                        label: 'LEI',
+                        label: this.translate.translate('LEI'),
                         dataSource: 'lei',
                         sortable: true,
                     },
                     {
-                        label: 'Management company',
+                        label: this.translate.translate('Management Company'),
                         dataSource: 'managementCompany',
                         sortable: true,
                     },
                     {
-                        label: 'Country',
+                        label: this.translate.translate('Country'),
                         dataSource: 'country',
                         sortable: true,
                     },
                     {
-                        label: 'Low status',
+                        label: this.translate.translate('Low Status'),
                         dataSource: 'lowStatus',
                         sortable: true,
                     },
                     {
-                        label: 'Umbrella fund (to which the fund belongs)',
+                        label: this.translate.translate('Umbrella Fund (to which the fund belongs)'),
                         dataSource: 'umbrellaFund',
                         sortable: true,
                     },
                     {
-                        label: 'Currency of the fund',
+                        label: this.translate.translate('Currency of the Fund'),
                         dataSource: 'currency',
                         sortable: true,
                     },
                 ],
                 action: {
-                    title: 'Add new Fund',
+                    title: this.translate.translate('Add New Fund'),
                     icon: 'plus',
                     callback: this.addFund,
                 },
@@ -124,73 +124,73 @@ export class OfiDocumentsComponent implements OnInit, OnDestroy {
                 // link: '/product-module/funds/:id',
             },
             {
-                title: 'Umbrella Funds',
+                title: this.translate.translate('Umbrella Funds'),
                 columns: [
                     {
-                        label: 'Umbrella fund name',
+                        label: this.translate.translate('Umbrella Fund Name'),
                         dataSource: 'name',
                         sortable: true,
                     },
                     {
-                        label: 'LEI',
+                        label: this.translate.translate('LEI'),
                         dataSource: 'lei',
                         sortable: true,
                     },
                     {
-                        label: 'Management company',
+                        label: this.translate.translate('Management Company'),
                         dataSource: 'managementCompany',
                         sortable: true,
                     },
                     {
-                        label: 'Country',
+                        label: this.translate.translate('Country'),
                         dataSource: 'country',
                         sortable: true,
                     },
                     {
-                        label: 'Currency of the umbrealla fund',
+                        label: this.translate.translate('Currency of the Umbrella Fund'),
                         dataSource: 'currency',
                         sortable: true,
                     },
                 ],
                 action: {
-                    title: 'Add new Fund',
+                    title: this.translate.translate('Add New Fund'),
                     icon: 'plus',
-                    callback: this.addUmbreallaFund,
+                    callback: this.addUmbrellaFund,
                 },
                 open: false,
                 data: this.service.getUmbrellaFunds(),
-                //link: '/product-module/umbrella-funds/:id',
+                // link: '/product-module/umbrella-funds/:id',
             },
             {
-                title: 'Shares, Funds & Umbreallas waiting for your validation (modification not yet published to investors on IZNES)',
+                title: this.translate.translate('Shares, Funds & Umbrella Funds waiting for your validation (modification not yet published to investors on IZNES)'),
                 columns: [
                     {
-                        label: 'Status',
+                        label: this.translate.translate('Status'),
                         dataSource: 'status',
                         sortable: true,
                     },
                     {
-                        label: 'Type',
+                        label: this.translate.translate('Type'),
                         dataSource: 'type',
                         sortable: true,
                     },
                     {
-                        label: 'Product name',
+                        label: this.translate.translate('Product Name'),
                         dataSource: 'name',
                         sortable: true,
                     },
                     {
-                        label: 'Date of modification',
+                        label: this.translate.translate('Date of Modification'),
                         dataSource: 'date',
                         sortable: true,
                     },
                     {
-                        label: 'To be validated for (date)',
+                        label: this.translate.translate('To be validated for (date)'),
                         dataSource: 'validationDate',
                         sortable: true,
                     },
                     {
-                        label: 'Modified by',
+                        label: this.translate.translate('Modified By'),
                         dataSource: 'modifiedBy',
                         sortable: true,
                     },
@@ -214,7 +214,7 @@ export class OfiDocumentsComponent implements OnInit, OnDestroy {
                     const regex = new RegExp(match);
                     ret = ret.replace(regex, row[key]);
                 });
-                this._router.navigateByUrl(ret);
+                this.router.navigateByUrl(ret);
             }
         }
     }
@@ -227,22 +227,18 @@ export class OfiDocumentsComponent implements OnInit, OnDestroy {
         this.logService.log('add new fund!');
     }
 
-    addUmbreallaFund() {
-        this.logService.log('add umbrealla fund!');
+    addUmbrellaFund() {
+        this.logService.log('add umbrella fund!');
     }
 
     /* On Destroy. */
     ngOnDestroy(): void {
         /* Detach the change detector on destroy. */
-        this._changeDetectorRef.detach();
+        this.changeDetectorRef.detach();
 
         /* Unsunscribe Observables. */
         for (const key in this.subscriptions) {
             this.subscriptions[key].unsubscribe();
         }
-    }
-
-    markForCheck() {
-        this._changeDetectorRef.markForCheck();
     }
 }

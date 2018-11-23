@@ -1,14 +1,17 @@
-import {Injectable} from '@angular/core';
-import {NgRedux} from '@angular-redux/store';
+import { Injectable } from '@angular/core';
+import { NgRedux } from '@angular-redux/store';
 import * as _ from 'lodash';
-import {LogService} from '@setl/utils';
-import {OfiInitialisationService} from '../initialisation/initialisation.service';
-import {ofiClearHolderDetailRequested, ofiClearRequestedAmHolders} from "../../ofi-store/ofi-reports/holders/actions";
+import { LogService } from '@setl/utils';
+import { OfiInitialisationService } from '../initialisation/initialisation.service';
+import { ofiClearHolderDetailRequested, ofiClearRequestedAmHolders } from '../../ofi-store/ofi-reports/holders/actions';
 
 @Injectable()
 export class OfiWalletnodeChannelService {
 
-    constructor(private ngRedux: NgRedux<any>, private logService: LogService,) {
+    constructor(
+        private ngRedux: NgRedux<any>,
+        private logService: LogService,
+    ) {
     }
 
     /**
@@ -22,7 +25,6 @@ export class OfiWalletnodeChannelService {
         this.logService.log(this.ngRedux);
         this.logService.log('-------ofi received update from wallet node-------');
         this.logService.log(id, message, userData);
-
 
         const updateType = _.get(message, 'MessageType', '');
 
@@ -51,7 +53,6 @@ export class OfiWalletnodeChannelService {
          */
     }
 
-
     handleStateViewUpdate(data) {
         this.logService.log('---ofi handle state view update---');
         /**
@@ -59,7 +60,6 @@ export class OfiWalletnodeChannelService {
          */
 
         this.updateWalletBalance(data);
-
     }
 
     handleBlockChangeUpdate(data) {
@@ -75,4 +75,3 @@ export class OfiWalletnodeChannelService {
     updateWalletBalance(data) {
     }
 }
-

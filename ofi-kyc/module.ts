@@ -118,5 +118,4 @@ import { OfiFundDataService } from '../ofi-data-service/product/fund/ofi-fund-da
 
 /* Class. */
 export class OfiKYCModule {
-
 }

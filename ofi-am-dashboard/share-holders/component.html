@@ -54,9 +54,7 @@
                         <div class="row ">
                             <div class="form-group col-lg-8">
                                 <p>
-                                    {{ 'Please select the fund on which you want to see the recordkeeping or export
-                                    recordkeeping for all funds by clicking on
-                                    the top right button.' | translate }}
+                                    {{ 'Please select the Fund on which you want to see the recordkeeping or export recordkeeping for all Funds by the top right button.' | translate }}
                                 </p>
 
                                 <div style="margin: 10px 0;">
@@ -141,7 +139,7 @@
             <div class="row ">
                 <div class="col-lg-8">
                     <h3 style="margin-bottom: 3px;">{{ 'Please find a list of all your products below' | translate }}</h3>
-                    <p>{{ 'You can access the recordkeeping for a specific Fund or Share by clicking on the corresponding line in the datagrid below.' | translate }}</p>
+                    <p>{{ 'You can access the recordkeeping for a specific Fund or Share by clicking on the corresponding line in the table below.' | translate }}</p>
                 </div>
 
                 <div class="col-lg-4 text-right">
@@ -306,11 +304,11 @@
             <br>
 
             <clr-datagrid clrDgSortIcon #ordersDataGrid [clrDgLoading]="loadingDatagrid">
-                <clr-dg-column>{{'Ranking' | translate}}</clr-dg-column>
-                <clr-dg-column>{{'Investor' | translate}}</clr-dg-column>
-                <clr-dg-column>{{'Portfolio' | translate}}</clr-dg-column>
-                <clr-dg-column class="right">{{'AUI (Settled)' | translate}}</clr-dg-column>
-                <clr-dg-column class="right">{{'Ratio (% AUI)' | translate}}</clr-dg-column>
+                <clr-dg-column>{{ 'Ranking' | translate }}</clr-dg-column>
+                <clr-dg-column>{{ 'Investor' | translate }}</clr-dg-column>
+                <clr-dg-column>{{ 'Portfolio' | translate }}</clr-dg-column>
+                <clr-dg-column class="right">{{' AUI (Settled)' | translate }}</clr-dg-column>
+                <clr-dg-column class="right">{{ 'Ratio (% AUI)' | translate }}</clr-dg-column>
 
                 <clr-dg-row *clrDgItems="let item of holdersFundData">
                     <clr-dg-cell>{{item.ranking}}</clr-dg-cell>

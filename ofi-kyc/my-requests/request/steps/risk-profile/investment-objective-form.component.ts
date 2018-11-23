@@ -12,7 +12,7 @@ import { MultilingualService } from '@setl/multilingual';
 @Component({
     selector: 'investment-objective-form',
     templateUrl: './investment-objective-form.component.html',
-    styleUrls: ['./investment-objective-form.component.scss']
+    styleUrls: ['./investment-objective-form.component.scss'],
 })
 export class InvestmentObjectiveFormComponent implements OnInit, OnDestroy {
     @Output() refreshForm = new EventEmitter<void>();
@@ -54,17 +54,16 @@ export class InvestmentObjectiveFormComponent implements OnInit, OnDestroy {
             .pipe(
                 rxFilter((data: any) => !isEmpty(data)),
                 rxFilter((data: any) => {
-                    let currentAMCId = this.form.get('assetManagementCompanyID').value;
-                    let dataAMCId = data.assetManagementCompanyID;
+                    const currentAMCId = this.form.get('assetManagementCompanyID').value;
+                    const dataAMCId = data.assetManagementCompanyID;
                     return !this.multiple || (dataAMCId === currentAMCId);
                 }),
-                take(1)
+                take(1),
             )
             .subscribe((data: any) => {
                 data.riskAcceptance = pick(data, ['riskAcceptanceLevel1', 'riskAcceptanceLevel2', 'riskAcceptanceLevel3', 'riskAcceptanceLevel4']);
                 this.form.patchValue(data);
-            })
-        ;
+            });
     }
 
     initData() {
@@ -73,19 +72,18 @@ export class InvestmentObjectiveFormComponent implements OnInit, OnDestroy {
                 rxFilter((managementCompanyList: List<any>) => managementCompanyList && managementCompanyList.size > 0),
                 takeUntil(this.unsubscribe),
             )
-            .subscribe(amcList => {
+            .subscribe((amcList) => {
                 const managementCompanyList = amcList.toJS();
-                let amcID = this.form.get('assetManagementCompanyID').value;
+                const amcID = this.form.get('assetManagementCompanyID').value;
 
                 if (amcID) {
-                    let found = find(managementCompanyList, ['companyID', amcID]);
+                    const found = find(managementCompanyList, ['companyID', amcID]);
 
                     if (found) {
                         this.amc = found;
                     }
                 }
-            })
-        ;
+            });
 
         this.investmentHorizonList = this.newRequestService.investmentHorizonList;
         this.riskProfileList = this.newRequestService.riskProfileList;
@@ -100,32 +98,29 @@ export class InvestmentObjectiveFormComponent implements OnInit, OnDestroy {
     initFormCheck() {
         this.form.get('performanceProfile').valueChanges
             .pipe(
-                takeUntil(this.unsubscribe)
+                takeUntil(this.unsubscribe),
             )
-            .subscribe(data => {
+            .subscribe((data) => {
                 this.formCheckPerformanceProfile(data);
-            })
-        ;
+            });
 
         this.form.get('riskProfile').valueChanges
             .pipe(
-                takeUntil(this.unsubscribe)
+                takeUntil(this.unsubscribe),
             )
-            .subscribe(value => {
-                let riskProfileValue = getValue(value, [0, 'id']);
+            .subscribe((value) => {
+                const riskProfileValue = getValue(value, [0, 'id']);
 
                 this.formCheckRiskProfile(riskProfileValue);
-            })
-        ;
+            });
 
         this.form.get('investmentHorizonWanted.specific').valueChanges
             .pipe(
-                takeUntil(this.unsubscribe)
+                takeUntil(this.unsubscribe),
             )
-            .subscribe(value => {
+            .subscribe((value) => {
                 this.formCheckInvestmentHorizonWanted(value);
-            })
-        ;
+            });
 
         // Form persist patchvalue comes in too early so we have to manually recheck the values
         (this.form.get('performanceProfile') as FormControl).updateValueAndValidity();
@@ -134,7 +129,7 @@ export class InvestmentObjectiveFormComponent implements OnInit, OnDestroy {
     }
 
     formCheckInvestmentHorizonWanted(value) {
-        let investmentHorizonWantedSpecificPeriodControl : FormControl = this.form.get('investmentHorizonWantedSpecificPeriod');
+        const investmentHorizonWantedSpecificPeriodControl: FormControl = this.form.get('investmentHorizonWantedSpecificPeriod');
 
         if (value) {
             investmentHorizonWantedSpecificPeriodControl.enable();
@@ -145,19 +140,19 @@ export class InvestmentObjectiveFormComponent implements OnInit, OnDestroy {
         this.refreshForm.emit();
     }
 
-    formCheckPerformanceProfile(data){
-        let hasOther = data.others;
-        let performanceProfileSpecificationControl = this.form.get('performanceProfileSpecification');
+    formCheckPerformanceProfile(data) {
+        const hasOther = data.others;
+        const performanceProfileSpecificationControl = this.form.get('performanceProfileSpecification');
 
-        if(hasOther){
+        if (hasOther) {
             performanceProfileSpecificationControl.enable();
-        } else{
+        } else {
             performanceProfileSpecificationControl.disable();
         }
     }
 
     formCheckRiskProfile(value) {
-        let riskProfileCapitalControl : FormControl = this.form.get('riskProfileCapital');
+        const riskProfileCapitalControl: FormControl = this.form.get('riskProfileCapital');
 
         if (value === 'partiallyProtected') {
             riskProfileCapitalControl.enable();
@@ -173,7 +168,7 @@ export class InvestmentObjectiveFormComponent implements OnInit, OnDestroy {
     }
 
     isDisabled(path) {
-        let control = this.form.get(path);
+        const control = this.form.get(path);
 
         return control.disabled;
     }

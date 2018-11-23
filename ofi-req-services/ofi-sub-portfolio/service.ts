@@ -25,14 +25,13 @@ interface OfiDeleteSubPortfolioData {
 
 @Injectable()
 export class OfiSubPortfolioService {
-
     /* Constructor. */
     constructor(private memberSocketService: MemberSocketService,
-                private ngRedux: NgRedux<any>) {
+                private ngRedux: NgRedux<any>,
+    ) {
     }
 
     saveNewSubPortfolio(data: OfiAddSubPortfolioData): any {
-
         const messageBody: OfiAddSubPortfolioRequestBody = {
             RequestName: 'iznsavenewsubportfolio',
             token: this.memberSocketService.token,
@@ -45,7 +44,6 @@ export class OfiSubPortfolioService {
     }
 
     deleteSubPortfolio(data: OfiDeleteSubPortfolioData): any {
-
         const messageBody: OfiDeleteSubPortfolioRequestBody = {
             RequestName: 'izndeletesubportfolio',
             token: this.memberSocketService.token,
