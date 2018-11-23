@@ -86,10 +86,10 @@
             <div class="row">
                 <div class="form-group col-sm-12">
                     <label class="control-label" for="share_specified_amount">{{ 'Share Specified Amount' | translate }}</label>
-                    <input type="text" 
-                            id="share_specified_amount" 
-                            name="share_specified_amount" 
-                            value="{{tableData[currentOverride]['minInvestment']}}" 
+                    <input type="text"
+                            id="share_specified_amount"
+                            name="share_specified_amount"
+                            value="{{tableData[currentOverride]['minInvestment']}}"
                             disabled>
                 </div>
             </div>
@@ -105,11 +105,11 @@
                         value="{{tableData[currentOverride]['overrideAmount'] | moneyValue: 2}}"
                         disabled>
                     <div *ngIf="tableData[currentOverride]['overrideDocumentTitle'] != '' && tableData[currentOverride]['overrideDocumentTitle'] != null" class="filedrop-wrapper">
-                        <input type="text" 
-                                class="wrapper-current-override" 
-                                id="share_current_override" 
-                                name="share_current_override" 
-                                value="{{tableData[currentOverride]['overrideAmount'] | moneyValue: 5}}" 
+                        <input type="text"
+                                class="wrapper-current-override"
+                                id="share_current_override"
+                                name="share_current_override"
+                                value="{{tableData[currentOverride]['overrideAmount'] | moneyValue: 5}}"
                                 disabled>
                         <setl-file-viewer id="override_file_viewer" *ngIf="!tableData[currentOverride]['newOverride']" [fileHash]="tableData[currentOverride]['overrideDocument']"></setl-file-viewer>
                     </div>
@@ -119,11 +119,11 @@
             <div class="row">
                 <div class="form-group col-sm-12">
                     <label class="control-label" for="newOverrideAmount">{{ 'New Override' | translate }}</label>
-                    <input type="text" 
-                            id="newOverrideAmount" 
-                            name="newOverrideAmount" 
-                            value="0" 
-                            [(ngModel)]="newOverride['amount']" 
+                    <input type="text"
+                            id="newOverrideAmount"
+                            name="newOverrideAmount"
+                            value="0"
+                            [(ngModel)]="newOverride['amount']"
                             appNumberFormatter="2">
                 </div>
             </div>
@@ -131,7 +131,7 @@
             <div class="row">
                 <div class="col-sm-12 fileDropDiv">
                     <div class="font-85">{{ 'Upload a file below to justify this change for the customer' | translate }}.</div>
-                    <setl-file-drop id="override_file_upload" name="override_file_upload" (onDrop)="onDropFiles($event)" ngDefaultControl></setl-file-drop>
+                    <setl-file-drop id="override_file_upload" name="override_file_upload" (onDrop)="onDropFiles($event)" [inline]="true" ngDefaultControl></setl-file-drop>
                 </div>
             </div>
         </form>

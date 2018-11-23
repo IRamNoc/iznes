@@ -385,17 +385,12 @@
                             </label>
                             <div class="filedrop-wrapper">
                                 <input type="hidden" class="form-control" formControlName="signature">
-                                
-                                <setl-file-drop class="form-control" 
-                                                id="mc_signature" 
-                                                [formControl]="managementCompanyForm.controls['signature']"
-                                                (onDrop)="onDropFile($event, 'signature')" 
-                                                [preset]="{ name: fileMetadata.getTitle('signature') }"
-                                                ngDefaultControl>
-                                </setl-file-drop>
-                                <setl-file-viewer *ngIf="fileMetadata.getHash('signature')" 
-                                                    [fileHash]="fileMetadata.getHash('signature')">
-                                </setl-file-viewer>
+                                <setl-file-drop class="form-control" id="mc_signature" [formControl]="managementCompanyForm.controls['signature']"
+                                    (onDrop)="onDropFile($event, 'signature')" [preset]="{ name: fileMetadata.getTitle('signature'), fileBase64: fileMetadata.getHash('signature') }"
+                                    [inline]="true"
+                                    [usePreview]="true"
+                                    [allowFileTypes]="['image/png', 'image/jpeg']"
+                                    ngDefaultControl></setl-file-drop>
                             </div>
                         </div>
                         <div class="form-group col-sm-6">
@@ -404,16 +399,12 @@
                             </label>
                             <div class="filedrop-wrapper">
                                 <input type="hidden" class="form-control" formControlName="logo">
-                                <setl-file-drop class="form-control" 
-                                                id="mc_logo" 
-                                                [formControl]="managementCompanyForm.controls['logo']"
-                                                (onDrop)="onDropFile($event, 'logo')" 
-                                                [preset]="{ name: fileMetadata.getTitle('logo') }"
-                                                ngDefaultControl>
-                                </setl-file-drop>
-                                <setl-file-viewer *ngIf="fileMetadata.getHash('logo')" 
-                                                    [fileHash]="fileMetadata.getHash('logo')">
-                                </setl-file-viewer>
+                                <setl-file-drop class="form-control" id="mc_logo" [formControl]="managementCompanyForm.controls['logo']"
+                                    (onDrop)="onDropFile($event, 'logo')" [preset]="{ name: fileMetadata.getTitle('logo'), fileBase64: fileMetadata.getHash('logo') }"
+                                    [inline]="true"
+                                    [usePreview]="true"
+                                    [allowFileTypes]="['image/png', 'image/jpeg']"
+                                    ngDefaultControl></setl-file-drop>
                             </div>
                         </div>
                     </div>

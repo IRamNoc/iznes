@@ -261,6 +261,7 @@
                                     id="beneficiary-document-benef-{{index}}"
                                     (onDrop)="uploadFile($event)"
                                     [preset]="form.get(['naturalPerson', 'document']).value"
+                                    [inline]="true"
                                     ngDefaultControl>
                     </setl-file-drop>
                 </div>

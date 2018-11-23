@@ -48,9 +48,9 @@
                             <label for="doneAt">
                                 {{ 'Done At' | translate }}:
                             </label>
-                            <input type="text" 
-                                    id="doneAt" 
-                                    formControlName="doneAt" 
+                            <input type="text"
+                                    id="doneAt"
+                                    formControlName="doneAt"
                                     placeholder="{{ 'Please fill in a city' | translate }}">
                             <span class="field-error" *ngIf="hasError('doneAt', ['required'])">{{ 'Field is required' | translate }}</span>
                             <span class="field-error" *ngIf="hasError('doneAt', ['maxlength'])">{{ 'Value is too long' | translate }}</span>
@@ -63,13 +63,13 @@
 
                             <div class="input-group date-pick-wrapper">
                                 <span class="fa fa-calendar" aria-hidden="true"></span>
-                                <input disabled="true" 
-                                        autocomplete="off" 
-                                        [dpDayPicker]="configDate" 
-                                        id="doneDate" 
-                                        formControlName="doneDate" 
-                                        placeholder="{{configDate.format}}" 
-                                        mode="day" 
+                                <input disabled="true"
+                                        autocomplete="off"
+                                        [dpDayPicker]="configDate"
+                                        id="doneDate"
+                                        formControlName="doneDate"
+                                        placeholder="{{configDate.format}}"
+                                        mode="day"
                                         theme="dp-material">
                             </div>
 
@@ -82,9 +82,9 @@
                             <label for="positionRepresentative">
                                 {{ 'Position of the Representative of the Legal Person' | translate }}:
                             </label>
-                            <input type="text" 
-                                    id="positionRepresentative" 
-                                    formControlName="positionRepresentative" 
+                            <input type="text"
+                                    id="positionRepresentative"
+                                    formControlName="positionRepresentative"
                                     placeholder="{{ 'Please fill in representative\'s position' | translate }}">
                             <span class="field-error" *ngIf="hasError('positionRepresentative', ['required'])">{{ 'Field is required' | translate }}</span>
                             <span class="field-error" *ngIf="hasError('positionRepresentative', ['maxlength'])">{{ 'Value is too long' | translate }}</span>
@@ -97,6 +97,7 @@
                                 <setl-file-drop filePermission="0" class="form-control" id="electronicSignatureDocument"
                                                 (onDrop)="uploadFile($event)"
                                                 [preset]="form.get('electronicSignatureDocument').value"
+                                                [inline]="true"
                                                 ngDefaultControl>
                                 </setl-file-drop>
                             </div>
