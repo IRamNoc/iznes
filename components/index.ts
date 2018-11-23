@@ -1,7 +1,5 @@
 import { NgModule } from '@angular/core';
-import {
-    VariousAddressSelectComponent,
-} from './various-address-select/various-address-select.component';
+import { VariousAddressSelectComponent } from './various-address-select/various-address-select.component';
 import { SelectModule } from './ng2-select/select.module';
 import { CommonModule } from '@angular/common';
 import { ReactiveFormsModule } from '@angular/forms';
@@ -14,9 +12,8 @@ import { DatePickerExtendedModule } from './date-picker-extended/module';
 import { PasswordTooltipComponent } from './passwords/tooltip.component';
 import { SetlPipesModule } from '../pipes';
 import { SetlDirectivesModule } from '../directives';
-import { DynamicFormsModule } from './dynamic-forms/module';
 import { MultilingualModule } from '@setl/multilingual/multilingual.module';
-import { ClarityModule } from '@clr/angular';
+import { FilePreviewComponent } from './file-preview/file-preview.component';
 
 @NgModule({
     declarations: [
@@ -25,6 +22,7 @@ import { ClarityModule } from '@clr/angular';
         ConfirmationComponent,
         SwitchButtonComponent,
         PasswordTooltipComponent,
+        FilePreviewComponent,
     ],
     exports: [
         VariousAddressSelectComponent,
@@ -33,6 +31,7 @@ import { ClarityModule } from '@clr/angular';
         SwitchButtonComponent,
         DatePickerExtendedModule,
         PasswordTooltipComponent,
+        FilePreviewComponent,
     ],
     imports: [
         CommonModule,
