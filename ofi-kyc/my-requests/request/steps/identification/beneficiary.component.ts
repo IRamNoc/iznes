@@ -12,6 +12,7 @@ import { BeneficiaryService } from './beneficiary.service';
 @Component({
     selector: 'beneficiary',
     templateUrl: './beneficiary.component.html',
+    styleUrls: ['./beneficiary.component.scss'],
 })
 export class BeneficiaryComponent implements OnInit, OnDestroy {
     @Input() form;

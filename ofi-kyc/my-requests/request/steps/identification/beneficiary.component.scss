@@ -1,0 +1,7 @@
+.disabled{
+    .radio-inline:hover{
+        & > *{
+            cursor: default !important;
+        }
+    }
+}
