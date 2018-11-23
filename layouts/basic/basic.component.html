@@ -1,4 +1,6 @@
-<div class="main-container">
+<connection-status-alerts (activeAlert)="activeAlert=$event"></connection-status-alerts>
+
+<div class="main-container" [class.connection-alert]="activeAlert">
 
     <ng-sidebar-container (scroll)="handleSidebarFixingOnScroll($event)" [scrollTop]="scrollTopPosition">
 
