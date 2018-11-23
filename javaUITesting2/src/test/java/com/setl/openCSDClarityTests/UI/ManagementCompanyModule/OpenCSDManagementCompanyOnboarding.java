@@ -14,9 +14,13 @@ import org.junit.runner.RunWith;
 import org.openqa.selenium.JavascriptExecutor;
 
 
+import java.sql.SQLException;
+
 import static SETLAPIHelpers.DatabaseHelper.setDBToProdOff;
 import static SETLAPIHelpers.DatabaseHelper.setDBToProdOn;
 import static SETLAPIHelpers.DatabaseHelper.setDBTwoFAOff;
+import static com.setl.UI.common.SETLUIHelpers.AdministrationModuleHelper.getUserTokenByEmailFromDBInvitation;
+import static com.setl.UI.common.SETLUIHelpers.FundsDetailsHelper.generateRandomShareDetails;
 import static com.setl.UI.common.SETLUIHelpers.ManagementCompanyModuleHelper.*;
 import static com.setl.UI.common.SETLUIHelpers.SetUp.driver;
 import static com.setl.UI.common.SETLUIHelpers.SetUp.testSetUp;
@@ -26,7 +30,7 @@ import static com.setl.UI.common.SETLUIHelpers.KYCDetailsHelper.*;
 
 public class OpenCSDManagementCompanyOnboarding {
 
-    JavascriptExecutor jse = (JavascriptExecutor)driver;
+    JavascriptExecutor jse = (JavascriptExecutor) driver;
 
     @Rule
     public ScreenshotRule screenshotRule = new ScreenshotRule();
@@ -60,6 +64,7 @@ public class OpenCSDManagementCompanyOnboarding {
         accountCreation(password[2], email[1], loginName[0]);
         logout();
     }
+
     @Test
     public void TG2624_shouldNavigateToManagementCompany() throws InterruptedException {
         String[] password = generateManagementCompanyUserDetails();
@@ -72,6 +77,7 @@ public class OpenCSDManagementCompanyOnboarding {
         navigateToDropdown("menu-management-company");
         assertPage("Management Company");
     }
+
     @Test
     public void TG2624_ShouldAssertLabelsOnForm() throws InterruptedException {
         String[] password = generateManagementCompanyUserDetails();
@@ -85,6 +91,7 @@ public class OpenCSDManagementCompanyOnboarding {
         assertPage("Management Company");
         assertPageFormLabels();
     }
+
     @Test
     public void TG2624_shouldCheckManagementCompanyList() throws InterruptedException {
         String[] password = generateManagementCompanyUserDetails();
@@ -98,6 +105,7 @@ public class OpenCSDManagementCompanyOnboarding {
         assertPage("Management Company");
         checkManagementCompanyList("Management Company", "am2");
     }
+
     @Test
     public void TG2624_shouldAssertAssetManagerCompanyDetails() throws InterruptedException {
         String[] password = generateManagementCompanyUserDetails();
@@ -110,6 +118,7 @@ public class OpenCSDManagementCompanyOnboarding {
         navigateToDropdown("menu-management-company");
         assertManagementCompanyDetailsOnEdit();
     }
+
     @Test
     public void TG2624_shouldFilLInManagementCompanyForm() throws InterruptedException {
         String[] password = generateManagementCompanyUserDetails();
@@ -124,14 +133,16 @@ public class OpenCSDManagementCompanyOnboarding {
         String[] Address2 = generateAddressDetails();
         String[] postCode = generateAddressDetails();
         String[] city = generateAddressDetails();
+        String companyName = companyName();
         loginAndVerifySuccess("Emmanuel", "alex01");
         accountCreation(password[2], email[1], loginName[0]);
         logout();
         loginAndVerifySuccess(loginName[0], password[2]);
         navigateToDropdown("menu-management-company");
         assertPageFormLabels();
-        fillInManagementCompanyFormData(email[1],country[4], SIRET[4], LEI[0], BIC[1], GIIN[2],Address1[0], Address2[1], postCode[2], city[3]);
+        fillInManagementCompanyFormData(companyName, email[1], country[4], SIRET[4], LEI[0], BIC[1], GIIN[2], Address1[0], Address2[1], postCode[2], city[3]);
     }
+
     @Test
     public void TG2624_shouldAssertRequiredField() throws InterruptedException {
         String[] password = generateManagementCompanyUserDetails();
@@ -143,5 +154,62 @@ public class OpenCSDManagementCompanyOnboarding {
         loginAndVerifySuccess(loginName[0], password[2]);
         navigateToDropdown("menu-management-company");
         assertRequiredFields();
+    }
+
+    @Test
+    public void TG624_shouldConfirmAssetManagerCreation() throws InterruptedException {
+        String[] password = generateManagementCompanyUserDetails();
+        String[] loginName = generateManagementCompanyUserDetails();
+        String[] email = generateManagementCompanyUserDetails();
+        String[] country = generateAddressDetails();
+        String[] SIRET = generateISOSpecificCodes();
+        String[] LEI = generateISOSpecificCodes();
+        String[] BIC = generateISOSpecificCodes();
+        String[] GIIN = generateISOSpecificCodes();
+        String[] Address1 = generateAddressDetails();
+        String[] Address2 = generateAddressDetails();
+        String[] postCode = generateAddressDetails();
+        String[] city = generateAddressDetails();
+        String companyName = companyName();
+        loginAndVerifySuccess("Emmanuel", "alex01");
+        accountCreation(password[2], email[1], loginName[0]);
+        logout();
+        loginAndVerifySuccess(loginName[0], password[2]);
+        navigateToDropdown("menu-management-company");
+        assertPageFormLabels();
+        fillInManagementCompanyFormData(companyName, email[1], country[4], SIRET[4], LEI[0], BIC[1], GIIN[2], Address1[0], Address2[1], postCode[2], city[3]);
+        searchManagementCompany(companyName, LEI[0], country[4]);
+    }
+
+    @Test
+    public void TG_shouldLogInAndConfirmAssetManagementAccount() throws InterruptedException, SQLException {
+        String[] password = generateManagementCompanyUserDetails();
+        String[] loginName = generateManagementCompanyUserDetails();
+        String[] email = generateManagementCompanyUserDetails();
+        String[] country = generateAddressDetails();
+        String[] SIRET = generateISOSpecificCodes();
+        String[] LEI = generateISOSpecificCodes();
+        String[] BIC = generateISOSpecificCodes();
+        String[] GIIN = generateISOSpecificCodes();
+        String[] Address1 = generateAddressDetails();
+        String[] Address2 = generateAddressDetails();
+        String[] postCode = generateAddressDetails();
+        String[] city = generateAddressDetails();
+        String companyName = companyName();
+        loginAndVerifySuccess("Emmanuel", "alex01");
+        accountCreation(password[2], email[1], loginName[0]);
+        logout();
+        loginAndVerifySuccess(loginName[0], password[2]);
+        navigateToDropdown("menu-management-company");
+        assertPageFormLabels();
+        fillInManagementCompanyFormData(companyName, email[1], country[4], SIRET[4], LEI[0], BIC[1], GIIN[2], Address1[0], Address2[1], postCode[2], city[3]);
+        searchManagementCompany(companyName, LEI[0], country[4]);
+        logout();
+        String resetLink = pipePasswordURL(email[1]);
+        Thread.sleep(1000);
+        navigateURLToLoginFromResetToken(resetLink);
+        setPasswordAndLogin("asdASD123", email[1]);
+        accountSetupMyInformation(email[1], companyName);
+        assertMenuNavigation();
     }
 }
