@@ -51,13 +51,13 @@ public class AdministrationModuleHelper {
     public static String[] generateEmail() {
         String str1 = randomAlphabetic(7);
         String str2 = randomNumeric(5);
-        String userEmail = str1 + "email@" + str2 +".co.uk";
+        String userEmail = str1 + "." + str2 + "@setl.io";
         return new String[]{userEmail};
     }
     public static String[] generateBadEmail() {
         String str1 = randomAlphabetic(7);
         String str2 = randomNumeric(5);
-        String userEmail = str1 + "_email@_" + str2 +"_.co.uk";
+        String userEmail = str1 + "._" + str2 + "@setl._io";
         return new String[]{userEmail};
     }
     public static String[] generatePhoneNumber() {

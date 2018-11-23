@@ -1,8 +1,6 @@
 package com.setl.UI.common.SETLUIHelpers;
 
-import org.openqa.selenium.By;
-import org.openqa.selenium.Keys;
-import org.openqa.selenium.WebElement;
+import org.openqa.selenium.*;
 import org.openqa.selenium.support.ui.WebDriverWait;
 
 import java.sql.*;
@@ -10,6 +8,7 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
+import static com.setl.UI.common.SETLUIHelpers.SetUp.baseUrl;
 import static com.setl.UI.common.SETLUIHelpers.SetUp.driver;
 import static com.setl.UI.common.SETLUIHelpers.SetUp.timeoutInSeconds;
 import static org.apache.commons.lang3.RandomStringUtils.randomAlphabetic;
@@ -31,7 +30,7 @@ public class ManagementCompanyModuleHelper {
 
     public static String[] generateManagementCompanyUserDetails() {
         String loginName = "McUser" + randomAlphabetic(5);
-        String email = "McUserEmail." + randomAlphabetic(4) + "@email.com";
+        String email = "McUserEmail." + randomAlphabetic(4) + "@setl.io";
         String password = "asdASD123";
         return new String[]{loginName, email, password};
     }
@@ -61,9 +60,12 @@ public class ManagementCompanyModuleHelper {
         }
         assertEquals(expectedLabels, actualLabels);
     }
-    public static void fillInManagementCompanyFormData(String email, String country, String SIRENT, String LEI, String BIC, String GIIN, String Address1, String Address2, String postCode, String city) {
+    public static String companyName(){
+        return "Management Company (" + randomAlphabetic(5) + ")";
+    }
+    public static void fillInManagementCompanyFormData(String companyName, String email, String country, String SIRENT, String LEI, String BIC, String GIIN, String Address1, String Address2, String postCode, String city) {
         WebDriverWait wait = new WebDriverWait(driver, timeoutInSeconds);
-        driver.findElement(By.id("companyName")).sendKeys("Mike’s Totally Cool Property Management");
+        driver.findElement(By.id("companyName")).sendKeys(companyName);
         driver.findElement(By.id("emailAddress")).sendKeys(email);
         try{//Try to select Legal Form
             driver.findElement(By.cssSelector("div.row:nth-child(1) > div:nth-child(3) > div:nth-child(2) > ng-select:nth-child(1) > div:nth-child(1) > div:nth-child(2) > span:nth-child(1) > span:nth-child(1)")).click();
@@ -77,7 +79,7 @@ public class ManagementCompanyModuleHelper {
             wait.until(elementToBeClickable(By.xpath("/html/body/app-root/app-basic-layout/div/ng-sidebar-container/div/div/div/main/div/div/management-company/clr-tabs/clr-tab[2]/clr-tab-content/form/section/div[2]/div[1]/div/ng-select/div/div[3]/div/input"))).sendKeys(country);
             wait.until(elementToBeClickable(By.xpath("/html/body/app-root/app-basic-layout/div/ng-sidebar-container/div/div/div/main/div/div/management-company/clr-tabs/clr-tab[2]/clr-tab-content/form/section/div[2]/div[1]/div/ng-select/div/div[3]/ul/li[1]/div"))).click();
         }catch (Exception e){
-            fail("Unable to select from drop down, Tax Redidence");
+            fail("Unable to select from drop down, Tax Residence");
         }
         driver.findElement(By.id("supervisoryAuthority")).sendKeys("Mike's Supervisory Authority");
         driver.findElement(By.id("rcsMatriculation")).sendKeys("MCs Accounting Standards");
@@ -110,6 +112,12 @@ public class ManagementCompanyModuleHelper {
         }
        driver.findElement(By.id("kyc_additionnal_phoneNumber")).sendKeys("07464575836");
        driver.findElement(By.id("mcBtnSubmitForm")).click();
+       //Success Modal Assertion and Close Select
+       wait.until(visibilityOfElementLocated(By.xpath("//*[@id=\"iznes\"]/app-root/jaspero-alerts/jaspero-alert/div[2]/div[1]")));
+       String title = driver.findElement(By.xpath("//*[@id=\"iznes\"]/app-root/jaspero-alerts/jaspero-alert/div[2]/div[1]")).getText();
+       assertEquals(title, "Success!");
+       assertEquals("Management company has successfully been created.", driver.findElement(By.xpath("//*[@id=\"iznes\"]/app-root/jaspero-alerts/jaspero-alert/div[2]/div[3]/table/tbody/tr/td")).getText());
+       driver.findElement(By.xpath("//*[@id=\"iznes\"]/app-root/jaspero-alerts/jaspero-alert/div[2]/div[4]/button")).click();
     }
     public static void assertEmailBodySentToManagementCompany(String email) {
         /*
@@ -172,11 +180,6 @@ public class ManagementCompanyModuleHelper {
         assertEquals(" List", driver.findElement(By.id("mcTabList")).getText());
         assertEquals(companyA, driver.findElement(By.xpath("/html/body/app-root/app-basic-layout/div/ng-sidebar-container/div/div/div/main/div/div/management-company/clr-tabs/clr-tab[1]/clr-tab-content/section/clr-datagrid/div/div/div/clr-dg-table-wrapper/div[2]/clr-dg-row[1]/div/clr-dg-cell[1]")).getText());
         assertEquals(companyB, driver.findElement(By.xpath("/html/body/app-root/app-basic-layout/div/ng-sidebar-container/div/div/div/main/div/div/management-company/clr-tabs/clr-tab[1]/clr-tab-content/section/clr-datagrid/div/div/div/clr-dg-table-wrapper/div[2]/clr-dg-row[2]/div/clr-dg-cell[1]")).getText());
-    }
-    public static void accountCreationStepTwo(String email, String invitedBy, String companyName, String firstName, String lastName, String phoneNumber) {
-        /*
-        For this step (2) we need to pass the required fields for the sign up process, once the user is on the "CompanyDetails" similiar to the investor creation page.
-        */
     }
     public static void assertManagementCompanyDetailsOnEdit(){
         WebDriverWait wait = new WebDriverWait(driver, timeoutInSeconds);
@@ -253,6 +256,111 @@ public class ManagementCompanyModuleHelper {
         // Management Company Phone Number is a Required Field
         driver.findElement(By.id("kyc_additionnal_phoneNumber")).sendKeys(Keys.TAB);
         assertEquals("Field is required", driver.findElement(By.xpath("/html/body/app-root/app-basic-layout/div/ng-sidebar-container/div/div/div/main/div/div/management-company/clr-tabs/clr-tab[2]/clr-tab-content/form/section/div[9]/div[2]/div/div[2]/div")).getText());
+    }
+    public static void searchManagementCompany(String companyName, String lei, String country) throws InterruptedException {
+        WebDriverWait wait = new WebDriverWait(driver, timeoutInSeconds);
+        wait.until(visibilityOfElementLocated(By.id("mcTabList")));
+        Thread.sleep(1000);
+        //Find the search function for Management Company Name and search for passed in companyName
+        driver.findElement(By.xpath("/html/body/app-root/app-basic-layout/div/ng-sidebar-container/div/div/div/main/div/div/management-company/clr-tabs/clr-tab[1]/clr-tab-content/section/clr-datagrid/div/div/div/clr-dg-table-wrapper/div[1]/div/clr-dg-column[1]/div/clr-dg-string-filter/clr-dg-filter")).click();
+        wait.until(elementToBeClickable(By.cssSelector("input.ng-pristine"))).sendKeys(companyName);
+        //Find the top row returned from search and assert three column data
+        assertEquals(companyName,driver.findElement(By.xpath("/html/body/app-root/app-basic-layout/div/ng-sidebar-container/div/div/div/main/div/div/management-company/clr-tabs/clr-tab[1]/clr-tab-content/section/clr-datagrid/div/div/div/clr-dg-table-wrapper/div[2]/clr-dg-row[1]/div/clr-dg-cell[1]")).getText());
+        assertEquals(lei, driver.findElement(By.xpath("/html/body/app-root/app-basic-layout/div/ng-sidebar-container/div/div/div/main/div/div/management-company/clr-tabs/clr-tab[1]/clr-tab-content/section/clr-datagrid/div/div/div/clr-dg-table-wrapper/div[2]/clr-dg-row[1]/div/clr-dg-cell[2]")).getText());
+        assertEquals(country, driver.findElement(By.xpath("/html/body/app-root/app-basic-layout/div/ng-sidebar-container/div/div/div/main/div/div/management-company/clr-tabs/clr-tab[1]/clr-tab-content/section/clr-datagrid/div/div/div/clr-dg-table-wrapper/div[2]/clr-dg-row[1]/div/clr-dg-cell[3]")).getText());
+    }
+    public static void setPasswordAndLogin(String pwd, String companyName){
+        WebDriverWait wait = new WebDriverWait(driver, timeoutInSeconds);
+        wait.until(visibilityOfElementLocated(By.id("change-password-new")));
+        wait.until(elementToBeClickable(By.id("change-password-new")));
+        driver.findElement(By.id("change-password-new")).sendKeys(pwd);
+        driver.findElement(By.id("change-password-confirm")).sendKeys(pwd);
+        driver.findElement(By.id("change-password-submit")).click();
+        wait.until(refreshed(elementToBeClickable(By.id("login-username")))).clear();
+        driver.findElement(By.id("login-username")).sendKeys(companyName);
+        driver.findElement(By.id("login-password")).sendKeys(pwd);
+        driver.findElement(By.id("login-submit")).click();
+        wait.until(refreshed(visibilityOfElementLocated(By.id("menu-home"))));
+        wait.until(elementToBeClickable(By.id("menu-home")));
+    }
+    public static String pipePasswordURL(String email) throws SQLException {
+        conn = DriverManager.getConnection(connectionString, DBUsername, DBPassword);
+        Statement stmt = conn.createStatement();
+        ResultSet rs = null;
+        String resetToken = null;
+        try {
+            String getResetToken = "SELECT resetToken FROM setlnet.tblUsers where emailAddress = " + "\"" + email + "\"";
+            rs = stmt.executeQuery(getResetToken);
+            rs.last();
+            resetToken = rs.getString("resetToken");
+            String resetLink = "https://uk-lon-li-006.opencsd.io/#/reset/" + resetToken + "?sethomepage=#x3D;/home";
+            System.out.println(resetLink);
+            return resetLink;
+        } catch (Exception e) {
+            e.printStackTrace();
+            fail();
+        } finally {
+            conn.close();
+            stmt.close();
+            rs.close();
+        }
+        return resetToken;
+    }
+    public static void navigateURLToLoginFromResetToken (String resetLink ) {
+        driver.get(resetLink);
+    }
+    public static void accountSetupMyInformation(String email, String companyName){
+        WebDriverWait wait = new WebDriverWait(driver, timeoutInSeconds);
+        wait.until(visibilityOfElementLocated(By.id("ofi-welcome-additionnal")));
+        assertEquals(email, driver.findElement(By.xpath("//*[@id=\"topBarMenu\"]/p")).getText());
+        assertEquals(companyName, driver.findElement(By.xpath("//*[@id=\"iznes\"]/app-root/app-basic-layout/div/ng-sidebar-container/div/div/app-navigation-topbar/header/div[2]/div[2]/div/ng-select/div/div[2]/span/span[2]")).getText());
+        assertEquals(email, driver.findElement(By.id("kyc_additionnal_email")).getAttribute("value"));
+        assertEquals(companyName, driver.findElement(By.id("kyc_additionnal_companyName")).getAttribute("value"));
+        driver.findElement(By.id("kyc_additionnal_firstName")).sendKeys("Michael");
+        driver.findElement(By.id("kyc_additionnal_lastName")).sendKeys("Setl");
+        driver.findElement(By.id("kyc_additionnal_phoneNumber")).sendKeys("08009898989");
+        //Selecting from DropDown for Phone Number
+        driver.findElement(By.xpath("//*[@id=\"kyc_additionnal_phoneCode\"]/div/div[2]/span/span")).click();
+        driver.findElement(By.xpath("//*[@id=\"kyc_additionnal_phoneCode\"]/div/div[3]/div/input")).sendKeys("United Kingdom");
+        driver.findElement(By.xpath("//*[@id=\"kyc_additionnal_phoneCode\"]/div/div[3]/ul/li/div")).click();
+        driver.findElement(By.id("btnKycSubmit")).click();
+        wait.until(visibilityOfElementLocated(By.id("menu-home")));
+    }
+    public static void assertMenuNavigation() throws InterruptedException {
+        WebDriverWait wait = new WebDriverWait(driver, timeoutInSeconds);
+        //Assert Main Navigation Menu
+        assertEquals("Order Book", driver.findElement(By.id("menu-manage-orders")).getText());
+        assertEquals("My Reports", driver.findElement(By.id("menu-am-report-section")).getText());
+        assertEquals("My Clients", driver.findElement(By.id("top-menu-my-clients")).getText());
+        assertEquals("My Products", driver.findElement(By.id("menu-my-products")).getText());
+        assertEquals("Administration", driver.findElement(By.id("menu-admin")).getText());
+        //Assert SubModules for Reporting
+        driver.findElement(By.id("menu-am-report-section")).click();
+        wait.until(elementToBeClickable(By.id("holders-list")));
+        Thread.sleep(1000);
+        assertEquals("Recordkeeping", driver.findElement(By.id("holders-list")).getText());
+        assertEquals("Precentralisation", driver.findElement(By.id("menu-report-centralization")).getText());
+        assertEquals("Centralisation", driver.findElement(By.xpath("//*[@id=\"menu-report-centralization-select\"]")).getText());
+        //Assert SubModules for Clients
+        driver.findElement(By.id("top-menu-my-clients")).click();
+        wait.until(elementToBeClickable(By.id("top-menu-onboarding-management")));
+        Thread.sleep(1000);
+        assertEquals("On-boarding Management", driver.findElement(By.id("top-menu-onboarding-management")).getText());
+        assertEquals("Client Referential", driver.findElement(By.id("menu-client-referential")).getText());
+        assertEquals("Portfolio Managers", driver.findElement(By.id("menu-portfolio-manager")).getText());
+        //Assert SubModules for My Products
+        driver.findElement(By.id("menu-my-products")).click();
+        wait.until(elementToBeClickable(By.id("menu-product-home")));
+        Thread.sleep(1000);
+        assertEquals("Shares / Funds / Umbrella funds", driver.findElement(By.id("menu-product-home")).getText());
+        assertEquals("Net Asset Value", driver.findElement(By.id("menu-nav")).getText());
+        assertEquals("Configuration", driver.findElement(By.id("menu-product-config")).getText());
+        //Assert SubModules for Administration
+        driver.findElement(By.id("menu-admin")).click();
+        wait.until(elementToBeClickable(By.id("menu-admin-users")));
+        Thread.sleep(1000);
+        assertEquals("Users", driver.findElement(By.id("menu-admin-users")).getText());
+        assertEquals("Teams", driver.findElement(By.id("menu-admin-teams")).getText());
     }
 }
 
