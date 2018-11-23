@@ -17,7 +17,7 @@ import { animate, state, style, transition, trigger } from '@angular/animations'
     ],
 })
 export class OfiTwoFactorComponent extends AuthenticateComponent {
-    
+
     showModal: boolean = true;
     emailSent = false;
     showResetInstruction: boolean = false;

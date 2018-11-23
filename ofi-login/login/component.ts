@@ -6,13 +6,6 @@ import { SetlLoginComponent, LoginGuardService, LoginService } from '@setl/core-
     styleUrls: ['./component.scss'],
     templateUrl: './component.html',
     animations: [
-        trigger('fadeInOnLoad', [
-            transition(':enter', [
-                style({ opacity: 0 }),
-                animate(1600, style({ opacity: 1 })),
-            ]),
-            state('*', style({ opacity: 1 })),
-        ]),
         trigger('fadeIn', [
             transition(':enter', [
                 style({ opacity: 0 }),
@@ -24,18 +17,8 @@ import { SetlLoginComponent, LoginGuardService, LoginService } from '@setl/core-
 })
 export class OfiLoginComponent extends SetlLoginComponent {
 
-    public showLogin: boolean = false;
     public showPassword: boolean = false;
     public showResetTwoFactor: boolean = false;
     public twoFactorResetVerified: boolean = false;
-
-    ngAfterViewInit() {
-        setTimeout(
-            () => {
-                this.showLogin = true;
-            },
-            200,
-        );
-    }
 
 }
