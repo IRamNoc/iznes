@@ -159,7 +159,7 @@ export class OfiInvMyDocumentsComponent implements OnDestroy, OnInit, AfterViewI
                 takeUntil(this.unSubscribe),
             )
             .subscribe(() => {
-                this.deleteDocument(this.allUploadsFiles['kycproofofapprovaldoc'].fileID);
+                this.deleteDocument(this.allUploadsFiles['kycstatuscertifieddoc'].fileID);
             });
 
         this.uploadMyDocumentsForm.controls.upload2.valueChanges
@@ -167,7 +167,7 @@ export class OfiInvMyDocumentsComponent implements OnDestroy, OnInit, AfterViewI
                 takeUntil(this.unSubscribe),
             )
             .subscribe(() => {
-                this.deleteDocument(this.allUploadsFiles['kycisincodedoc'].fileID);
+                this.deleteDocument(this.allUploadsFiles['kyckbisdoc'].fileID);
             });
 
         this.uploadMyDocumentsForm.controls.upload3.valueChanges
@@ -175,7 +175,7 @@ export class OfiInvMyDocumentsComponent implements OnDestroy, OnInit, AfterViewI
                 takeUntil(this.unSubscribe),
             )
             .subscribe(() => {
-                this.deleteDocument(this.allUploadsFiles['kycwolfsbergdoc'].fileID);
+                this.deleteDocument(this.allUploadsFiles['kycannualreportdoc'].fileID);
             });
 
         this.uploadMyDocumentsForm.controls.upload4.valueChanges
@@ -183,7 +183,7 @@ export class OfiInvMyDocumentsComponent implements OnDestroy, OnInit, AfterViewI
                 takeUntil(this.unSubscribe),
             )
             .subscribe(() => {
-                this.deleteDocument(this.allUploadsFiles['kycstatuscertifieddoc'].fileID);
+                this.deleteDocument(this.allUploadsFiles['kycidorpassportdoc'].fileID);
             });
 
         this.uploadMyDocumentsForm.controls.upload5.valueChanges
@@ -191,7 +191,7 @@ export class OfiInvMyDocumentsComponent implements OnDestroy, OnInit, AfterViewI
                 takeUntil(this.unSubscribe),
             )
             .subscribe(() => {
-                this.deleteDocument(this.allUploadsFiles['kyckbisdoc'].fileID);
+                this.deleteDocument(this.allUploadsFiles['kycwolfsbergdoc'].fileID);
             });
 
         this.uploadMyDocumentsForm.controls.upload6.valueChanges
@@ -199,7 +199,7 @@ export class OfiInvMyDocumentsComponent implements OnDestroy, OnInit, AfterViewI
                 takeUntil(this.unSubscribe),
             )
             .subscribe(() => {
-                this.deleteDocument(this.allUploadsFiles['kycannualreportdoc'].fileID);
+                this.deleteDocument(this.allUploadsFiles['kyctaxcertificationdoc'].fileID);
             });
 
         this.uploadMyDocumentsForm.controls.upload7.valueChanges
@@ -207,7 +207,7 @@ export class OfiInvMyDocumentsComponent implements OnDestroy, OnInit, AfterViewI
                 takeUntil(this.unSubscribe),
             )
             .subscribe(() => {
-                this.deleteDocument(this.allUploadsFiles['kycidorpassportdoc'].fileID);
+                this.deleteDocument(this.allUploadsFiles['kycw8benefatcadoc'].fileID);
             });
 
         this.uploadMyDocumentsForm.controls.upload8.valueChanges
@@ -215,7 +215,7 @@ export class OfiInvMyDocumentsComponent implements OnDestroy, OnInit, AfterViewI
                 takeUntil(this.unSubscribe),
             )
             .subscribe(() => {
-                this.deleteDocument(this.allUploadsFiles['kyclistshareholdersdoc'].fileID);
+                this.deleteDocument(this.allUploadsFiles['kycisincodedoc'].fileID);
             });
 
         this.uploadMyDocumentsForm.controls.upload9.valueChanges
@@ -223,7 +223,7 @@ export class OfiInvMyDocumentsComponent implements OnDestroy, OnInit, AfterViewI
                 takeUntil(this.unSubscribe),
             )
             .subscribe(() => {
-                this.deleteDocument(this.allUploadsFiles['kyclistdirectorsdoc'].fileID);
+                this.deleteDocument(this.allUploadsFiles['kycevidencefloatable'].fileID);
             });
 
         this.uploadMyDocumentsForm.controls.upload10.valueChanges
@@ -231,7 +231,7 @@ export class OfiInvMyDocumentsComponent implements OnDestroy, OnInit, AfterViewI
                 takeUntil(this.unSubscribe),
             )
             .subscribe(() => {
-                this.deleteDocument(this.allUploadsFiles['kyclistauthoriseddoc'].fileID);
+                this.deleteDocument(this.allUploadsFiles['kycproofofapprovaldoc'].fileID);
             });
 
         this.uploadMyDocumentsForm.controls.upload11.valueChanges
@@ -239,7 +239,7 @@ export class OfiInvMyDocumentsComponent implements OnDestroy, OnInit, AfterViewI
                 takeUntil(this.unSubscribe),
             )
             .subscribe(() => {
-                this.deleteDocument(this.allUploadsFiles['kycbeneficialownersdoc'].fileID);
+                this.deleteDocument(this.allUploadsFiles['kycproofregulationdoc'].fileID);
             });
     }
 
