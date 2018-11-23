@@ -33,6 +33,7 @@ export class BeneficiaryListComponent implements OnInit, OnDestroy {
     mode: string;
     unsubscribe: Subject<void> = new Subject();
     relations;
+    parents;
 
     get nextId() {
         return this.getHighestID() + 1;
@@ -62,10 +63,6 @@ export class BeneficiaryListComponent implements OnInit, OnDestroy {
         return this.stakeholders.at(this.selectedStakeholderIndex);
     }
 
-    get parents() {
-        return this.beneficiaryService.parents(this.stakeholders);
-    }
-
     get listStakeholders() {
         if (!this.sortedStakeholders.length) {
             this.sortStakeholders();
@@ -90,6 +87,10 @@ export class BeneficiaryListComponent implements OnInit, OnDestroy {
         this.initSubscriptions();
     }
 
+    updateParents() {
+        this.parents = this.beneficiaryService.parents(this.stakeholders);
+    }
+
     sortStakeholders() {
         const hasValue = getValue(this.stakeholders.get('0.companyBeneficiariesID'), 'value');
 
@@ -97,6 +98,7 @@ export class BeneficiaryListComponent implements OnInit, OnDestroy {
             return;
         }
         this.sortedStakeholders = this.hierarchySort.sort(this.stakeholders.controls);
+        this.updateParents();
     }
 
     getHighestID() {
@@ -167,8 +169,7 @@ export class BeneficiaryListComponent implements OnInit, OnDestroy {
     }
 
     handleAction(action, index) {
-        const stakeholderInList = this.sortedStakeholders[index];
-        const realIndex = this.stakeholders.controls.indexOf(stakeholderInList);
+        const realIndex = this.getRealIndex(index);
 
         switch (action) {
             case 'addChild':
@@ -181,6 +182,26 @@ export class BeneficiaryListComponent implements OnInit, OnDestroy {
                 this.checkRemove(realIndex);
                 break;
         }
+    }
+
+    getParent(index) {
+        const realIndex = this.getRealIndex(index);
+        const stakeholder = this.stakeholders.at(realIndex);
+
+        if (stakeholder) {
+            const parent = stakeholder.get('common.parent').value;
+            const parentID = getValue(parent, [0, 'id']);
+
+            if (parentID && parentID !== -1) {
+                return find(this.parents, ['id', parentID]);
+            }
+        }
+    }
+
+    getRealIndex(index) {
+        const stakeholderInList = this.sortedStakeholders[index];
+
+        return this.stakeholders.controls.indexOf(stakeholderInList);
     }
 
     addStakeholder(parentIndex?) {

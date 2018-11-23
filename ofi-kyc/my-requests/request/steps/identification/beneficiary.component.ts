@@ -1,4 +1,4 @@
-import { Component, Input, Output, EventEmitter, OnInit, OnDestroy } from '@angular/core';
+import { Component, Input, Output, EventEmitter, OnInit, OnDestroy, HostBinding } from '@angular/core';
 import { FormControl } from '@angular/forms';
 import { Subject } from 'rxjs';
 import { takeUntil } from 'rxjs/operators';
@@ -10,11 +10,14 @@ import { MultilingualService } from '@setl/multilingual';
 import { BeneficiaryService } from './beneficiary.service';
 
 @Component({
-    selector: 'beneficiary',
+    selector: '[beneficiary]',
     templateUrl: './beneficiary.component.html',
     styleUrls: ['./beneficiary.component.scss'],
 })
 export class BeneficiaryComponent implements OnInit, OnDestroy {
+    @HostBinding('class.open') get open() {
+        return !this.form.get('legalPerson').disabled || !this.form.get('naturalPerson').disabled;
+    }
     @Input() form;
     @Input() set parents(parents: any[]) {
         this.parentsFiltered = parents.filter((parent, i) => i !== this.index);

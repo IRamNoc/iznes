@@ -44,7 +44,7 @@
     </tr>
     </thead>
     <tbody>
-    <tr beneficiary-line *ngFor="let stakeholder of listStakeholders; index as i" [stakeholder]="stakeholder" (action)="handleAction($event, i)" (click)="viewStakeholder(i)"></tr>
+    <tr beneficiary-line *ngFor="let stakeholder of listStakeholders; index as i" [stakeholder]="stakeholder" (action)="handleAction($event, i)" (click)="viewStakeholder(i)" [parent]="getParent(i)"></tr>
     <tr class="empty" *ngIf="!stakeholders.controls.length">
         <td colspan="8">
             {{'No data for the moment, please add at least one stakeholder.' | translate}}
@@ -67,8 +67,7 @@
         {{getTitle()}}
     </h3>
 
-    <div class="modal-body">
-        <beneficiary [form]="selectedStakeholder" [index]="selectedStakeholderIndex" [parents]="parents" [disabled]="mode === 'view' ? true : null" (refresh)="askRefresh()"></beneficiary>
+    <div class="modal-body" beneficiary [form]="selectedStakeholder" [index]="selectedStakeholderIndex" [parents]="parents" [disabled]="mode === 'view' ? true : null" (refresh)="askRefresh()">
     </div>
 
     <div class="modal-footer">

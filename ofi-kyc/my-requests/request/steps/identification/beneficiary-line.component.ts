@@ -10,6 +10,7 @@ import { BeneficiaryService } from './beneficiary.service';
 })
 export class BeneficiaryLineComponent {
     @Input() stakeholder;
+    @Input() parent;
     @Output() action: EventEmitter<any> = new EventEmitter<any>();
 
     get stakeholderValue() {
@@ -24,8 +25,10 @@ export class BeneficiaryLineComponent {
         return this.beneficiaryService.getDisplayName(this.stakeholder);
     }
 
-    get parent() {
-        return getValue(this.stakeholderValue, 'common.parent[0].text');
+    get parentText() {
+        if (this.parent) {
+            return this.parent.text;
+        }
     }
 
     get countryTaxResidence() {
@@ -50,7 +53,8 @@ export class BeneficiaryLineComponent {
 
     constructor(
         private beneficiaryService: BeneficiaryService,
-    ) {}
+    ) {
+    }
 
     handleActionsClick($event: Event) {
         $event.stopPropagation();
