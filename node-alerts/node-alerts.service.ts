@@ -11,8 +11,8 @@ import {
 import { MyUserService } from '../my-user/my-user.service';
 import { WalletnodeChannelService } from '../walletnode-channel/service';
 
-import { BehaviorSubject,  timer,  merge,  of } from 'rxjs';
-import { mapTo,  distinctUntilChanged,  switchMap,  map,  filter,  switchAll } from 'rxjs/operators';
+import { BehaviorSubject, timer, merge, of } from 'rxjs';
+import { mapTo, distinctUntilChanged, switchMap, map, filter, switchAll } from 'rxjs/operators';
 
 @Injectable()
 export class NodeAlertsService {
@@ -20,6 +20,7 @@ export class NodeAlertsService {
     private waitCount = 3;
     private walletNodeTTL = 30000;
     private deathSubject: BehaviorSubject<boolean> = new BehaviorSubject<boolean>(false);
+    private disconnectedSubject: BehaviorSubject<boolean> = new BehaviorSubject<boolean>(false);
 
     constructor(
         private toasterService: ToasterService,
@@ -34,6 +35,10 @@ export class NodeAlertsService {
 
     get dead() {
         return this.deathSubject.asObservable();
+    }
+
+    get disconnected() {
+        return this.disconnectedSubject.asObservable();
     }
 
     setNodesCallbacks() {
@@ -122,6 +127,7 @@ export class NodeAlertsService {
                 this.toasterService.pop('success', messages.success);
                 poppedDisconnect = false;
                 connectionErrors = 0;
+                this.disconnectedSubject.next(false);
             }
             clearTimeout(timer);
         };
@@ -130,6 +136,7 @@ export class NodeAlertsService {
             this.toasterService.pop(messages.errorType, messages.error);
             poppedDisconnect = true;
             connectionErrors = 0;
+            this.disconnectedSubject.next(true);
         };
 
         return {
