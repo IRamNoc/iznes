@@ -17,7 +17,7 @@ export class ConnectionStatusAlerts implements OnInit, OnDestroy {
 
     @Output() activeAlert: EventEmitter<any> = new EventEmitter();
 
-    private appConfig: AppConfig;
+    public appConfig: AppConfig;
 
     public onlineOb;
     private timerSecs = 7;
