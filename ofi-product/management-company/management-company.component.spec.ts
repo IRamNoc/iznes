@@ -14,6 +14,7 @@ import {
     DpDatePickerModule,
     LogService,
     SetlPipesModule,
+    SetlComponentsModule,
 } from '@setl/utils';
 import {
     OfiManagementCompanyService,
@@ -22,7 +23,8 @@ import { AlertsService } from '@setl/jaspero-ng2-alerts';
 import { phoneCodeList } from '../../shared/phone-codes.values';
 import productConfig from '../productConfig';
 import { FileService } from '@setl/core-req-services';
-import { File } from '@setl/core-filedrop';
+import { FileDropModule, File } from '@setl/core-filedrop';
+import { FileViewerModule } from '@setl/core-fileviewer';
 
 import { MultilingualService } from '@setl/multilingual';
 import { Router } from '@angular/router';
@@ -141,6 +143,9 @@ describe('OfiManagementCompanyComponent', () => {
                 ClarityModule,
                 DpDatePickerModule,
                 SetlPipesModule,
+                SetlComponentsModule,
+                FileViewerModule,
+                FileDropModule,
             ],
             providers: [
                 { provide: ManagagementCompanyService, useClass: ManagagementCompanyServiceMock },
