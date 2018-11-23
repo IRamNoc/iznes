@@ -843,7 +843,7 @@ export class FundShare {
 
     private getSelectValue(formItem: FormItem): any {
         const rawValue = formItem.value();
-        return (rawValue !== undefined) && rawValue.length ? rawValue[0].id : null;
+        return (rawValue != undefined) && rawValue.length ? rawValue[0].id : null;
     }
 
     disableAllShareFields() {
