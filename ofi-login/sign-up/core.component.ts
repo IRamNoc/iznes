@@ -7,13 +7,6 @@ import { animate, state, style, transition, trigger } from '@angular/animations'
     styleUrls: ['../login/component.scss'],
     templateUrl: './component.html',
     animations: [
-        trigger('fadeInOnLoad', [
-            transition(':enter', [
-                style({ opacity: 0 }),
-                animate(1600, style({ opacity: 1 })),
-            ]),
-            state('*', style({ opacity: 1 })),
-        ]),
         trigger('fadeIn', [
             transition(':enter', [
                 style({ opacity: 0 }),
@@ -25,16 +18,6 @@ import { animate, state, style, transition, trigger } from '@angular/animations'
 })
 export class OfiCoreSignUpComponent extends SignupComponent {
 
-    public showLogin: boolean = false;
     public showResetTwoFactor: boolean = false;
-
-    ngAfterViewInit() {
-        setTimeout(
-            () => {
-                this.showLogin = true;
-            },
-            200,
-        );
-    }
 
 }

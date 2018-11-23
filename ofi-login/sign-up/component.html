@@ -1,4 +1,4 @@
-<div class="login-container content-area" *ngIf="showLogin" [@fadeInOnLoad]>
+<div class="login-container content-area">
     <div class="container">
         <div class="vertical-center row">
             <div class="col-md-6 content-container">
@@ -19,7 +19,7 @@
                         </div>
                         <div class="row">
                             <div class="col-xl-12 text-center">
-                                <a class="btn btn-outline" href="{{ language === 'en-Latn' ? 'https://www.iznes.io/index_EN.html' : 'https://www.iznes.io' }}" target="_blank">{{ 'Learn more about' | translate }}
+                                <a class="btn btn-outline" href="{{ language === 'en-Latn' ? 'https://www.iznes.io/en' : 'https://www.iznes.io' }}" target="_blank">{{ 'Learn more about' | translate }}
                                     <strong>IZNES</strong></a>
                             </div>
                         </div>
@@ -109,9 +109,8 @@
                     <ofi-two-factor
                         *ngIf="showTwoFactorModal"
                         [qrCode]="qrCode"
-                        (modalCancelled)="showTwoFactorModal=!$event; showResetTwoFactor=!$event"
+                        (modalCancelled)="showTwoFactorModal=!$event"
                         [resetToken]="resetTwoFactorToken"
-                        [showReset]="showResetTwoFactor"
                         (verifiedToken)="resetTwoFactorToken=''"
                         (clearToken)="resetTwoFactorToken=''">
                     </ofi-two-factor>

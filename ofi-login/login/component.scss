@@ -1,10 +1,9 @@
 :host /deep/ {
     .login-container {
-        position: fixed;
         overflow: auto;
         display: flex;
         width: 100%;
-        height: 100%;
+        height: 100vh;
         background: url('/assets/images/iznes-login-bg.jpg') #546883 no-repeat center center fixed;
         -webkit-background-size: cover;
         -moz-background-size: cover;
