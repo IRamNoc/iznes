@@ -1388,10 +1388,6 @@ export const identificationNumberList = [
         id: 'siren',
         text: 'SIREN',
     },
-    {
-        id: 'other',
-        text: 'Other',
-    },
 ];
 
 export const controlToName = {

@@ -210,7 +210,7 @@ export class NewRequestService {
                 Validators.required,
                 Validators.pattern(/^\w{18}\d{2}$|n\/a/i),
             ]],
-            otherIdentificationNumber: [null, Validators.maxLength(255)],
+            otherIdentificationNumber: [null, this.getLengthValidator(255)],
             otherIdentificationNumberText: [{ value: '', disabled: true }, Validators.required],
             registeredCompanyAddressLine1: ['', this.getLengthValidator(255)],
             registeredCompanyAddressLine2: ['', Validators.maxLength(255)],
