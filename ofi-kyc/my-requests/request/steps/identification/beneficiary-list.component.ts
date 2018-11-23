@@ -3,16 +3,17 @@ import { FormArray, FormGroup } from '@angular/forms';
 import { select } from '@angular-redux/store';
 import { Subject } from 'rxjs';
 import { takeUntil } from 'rxjs/operators';
-import { get as getValue, isNil, find, isEmpty, isNumber, values, some } from 'lodash';
+import { get as getValue, isNil, find, isEmpty, isNumber, values, some, filter } from 'lodash';
 
 import { ConfirmationService } from '@setl/utils';
 import { ToasterService } from 'angular2-toaster';
 import { AlertsService } from '@setl/jaspero-ng2-alerts';
 
 import { MultilingualService } from '@setl/multilingual';
-import { BeneficiaryService } from './beneficiary.service';
+import { BeneficiaryService, HierarchySort } from './beneficiary.service';
 import { IdentificationService } from '../identification.service';
 import { NewRequestService } from '../../new-request.service';
+import get = Reflect.get;
 
 @Component({
     selector: 'beneficiary-list',
@@ -26,6 +27,7 @@ export class BeneficiaryListComponent implements OnInit, OnDestroy {
     @select(['ofi', 'ofiKyc', 'myKycRequested', 'stakeholderRelations']) stakeholderRelations$;
 
     selectedStakeholderIndex = null;
+    sortedStakeholders = [];
     stakeholderBackup = null;
     isModalOpen: any = false;
     mode: string;
@@ -64,6 +66,14 @@ export class BeneficiaryListComponent implements OnInit, OnDestroy {
         return this.beneficiaryService.parents(this.stakeholders);
     }
 
+    get listStakeholders() {
+        if (!this.sortedStakeholders.length) {
+            this.sortStakeholders();
+        }
+
+        return this.sortedStakeholders;
+    }
+
     constructor(
         private identificationService: IdentificationService,
         private newRequestService: NewRequestService,
@@ -72,11 +82,21 @@ export class BeneficiaryListComponent implements OnInit, OnDestroy {
         private confirmationService: ConfirmationService,
         private toasterService: ToasterService,
         private alertsService: AlertsService,
+        private hierarchySort: HierarchySort,
     ) {
     }
 
     ngOnInit() {
         this.initSubscriptions();
+    }
+
+    sortStakeholders() {
+        const hasValue = getValue(this.stakeholders.get('0.companyBeneficiariesID'), 'value');
+
+        if (!hasValue) {
+            return;
+        }
+        this.sortedStakeholders = this.hierarchySort.sort(this.stakeholders.controls);
     }
 
     getHighestID() {
@@ -107,6 +127,7 @@ export class BeneficiaryListComponent implements OnInit, OnDestroy {
     closeModal(cancel?) {
         const stakeholder = this.stakeholders.at(this.selectedStakeholderIndex);
 
+
         if (cancel && this.mode === 'add') {
             this.removeStakeholder(this.selectedStakeholderIndex);
         }
@@ -118,6 +139,7 @@ export class BeneficiaryListComponent implements OnInit, OnDestroy {
 
         if (!cancel && stakeholder.valid) {
             this.confirmClose(this.mode);
+            this.sortStakeholders();
         }
 
         if (!cancel && !stakeholder.valid) {
@@ -145,15 +167,18 @@ export class BeneficiaryListComponent implements OnInit, OnDestroy {
     }
 
     handleAction(action, index) {
+        const stakeholderInList = this.sortedStakeholders[index];
+        const realIndex = this.stakeholders.controls.indexOf(stakeholderInList);
+
         switch (action) {
             case 'addChild':
-                this.addStakeholder(index);
+                this.addStakeholder(realIndex);
                 break;
             case 'edit':
-                this.editStakeholder(index);
+                this.editStakeholder(realIndex);
                 break;
             case 'remove':
-                this.checkRemove(index);
+                this.checkRemove(realIndex);
                 break;
         }
     }

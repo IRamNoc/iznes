@@ -20,6 +20,10 @@
 </div>
 
 <div class="my-1 right">
+    <button class="btn btn-primary" (click)="sortStakeholders()">
+        <i class="fa fa-plus"></i>
+        {{'Sort Stakeholders' | translate}}
+    </button>
     <button class="btn btn-primary" (click)="addStakeholder()">
         <i class="fa fa-plus"></i>
         {{'Add Stakeholder' | translate}}
@@ -40,7 +44,7 @@
     </tr>
     </thead>
     <tbody>
-    <tr beneficiary-line *ngFor="let stakeholder of stakeholders.controls; index as i" [stakeholder]="stakeholder" (action)="handleAction($event, i)" (click)="viewStakeholder(i)"></tr>
+    <tr beneficiary-line *ngFor="let stakeholder of listStakeholders; index as i" [stakeholder]="stakeholder" (action)="handleAction($event, i)" (click)="viewStakeholder(i)"></tr>
     <tr class="empty" *ngIf="!stakeholders.controls.length">
         <td colspan="8">
             {{'No data for the moment, please add at least one stakeholder.' | translate}}

@@ -9,17 +9,8 @@ import { BeneficiaryService } from './beneficiary.service';
     styleUrls: ['./beneficiary-line.component.scss'],
 })
 export class BeneficiaryLineComponent {
-
-    @HostListener('mouseenter') onEnter() {
-        this.hovering = true;
-    }
-    @HostListener('mouseleave') onLeave() {
-        this.hovering = false;
-    }
     @Input() stakeholder;
     @Output() action: EventEmitter<any> = new EventEmitter<any>();
-
-    hovering: boolean = false;
 
     get stakeholderValue() {
         return this.stakeholder.value;

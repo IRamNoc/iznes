@@ -6,6 +6,7 @@ import { get as getValue, find, isNumber } from 'lodash';
 import { MultilingualService } from '@setl/multilingual';
 import { sirenValidator, siretValidator } from '@setl/utils/helper/validators';
 import { countries, holdingTypesList, beneficiaryTypesList } from '../../../requests.config';
+import has = Reflect.has;
 
 @Injectable({
     providedIn: 'root',
@@ -13,7 +14,7 @@ import { countries, holdingTypesList, beneficiaryTypesList } from '../../../requ
 export class BeneficiaryService {
 
     constructor(
-        private translate: MultilingualService
+        private translate: MultilingualService,
     ) {}
 
     getStakeholderType(stakeholder) {
@@ -169,4 +170,44 @@ export class BeneficiaryService {
             this.formCheckNationalIdNumber(stakeholder, nationalIdNumber);
         });
     }
+}
+
+@Injectable({
+    providedIn: 'root',
+})
+export class HierarchySort {
+
+    private hashObject = {};
+    private noParent = -1;
+
+    private hierarchySort(hashObject, key, result) {
+        if (!hashObject[key]) {
+            return;
+        }
+
+        const arr = hashObject[key];
+
+        arr.forEach((single) => {
+            result.push(single);
+            this.hierarchySort(hashObject, single.get('companyBeneficiariesID').value, result);
+        });
+
+        return result;
+    }
+
+    sort(controls) {
+        this.hashObject = {};
+
+        controls.forEach((control) => {
+            const parent = getValue(control.get('common.parent').value, [0, 'id'], this.noParent);
+            if (!this.hashObject[parent]) {
+                this.hashObject[parent] = [];
+            }
+            this.hashObject[parent].push(control);
+        });
+
+        const result = this.hierarchySort(this.hashObject, this.noParent, []);
+        return result;
+    }
+
 }

@@ -19,7 +19,7 @@ export class BeneficiaryComponent implements OnInit, OnDestroy {
     @Input() set parents(parents: any[]) {
         this.parentsFiltered = parents.filter((parent, i) => i !== this.index);
         this.parentsFiltered.unshift({
-            id: '-1',
+            id: -1,
             text: this.translate.translate('No parent'),
         });
     }

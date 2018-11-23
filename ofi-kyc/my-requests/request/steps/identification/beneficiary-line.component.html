@@ -4,9 +4,9 @@
 <td>{{countryTaxResidence | translate}}</td>
 <td>{{nationality | translate}}</td>
 <td>{{holdingPercentage}} %</td>
-<td *ngIf="!hovering">{{holdingType}}</td>
-<td *ngIf="!hovering">{{votingPercentage}} %</td>
-<td *ngIf="hovering" (click)="handleActionsClick($event)" colspan="2">
+<td class="no-hover">{{holdingType}}</td>
+<td class="no-hover">{{votingPercentage}} %</td>
+<td class="hover" (click)="handleActionsClick($event)" colspan="2">
     <div class="actions">
         <button class="btn btn-primary btn-sm" (click)="addChild($event)"><i class="fa fa-plus"></i> {{'Add child' | translate}}</button>
         <button class="btn btn-sm" (click)="editStakeholder($event)">{{'Edit' | translate}}</button>

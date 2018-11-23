@@ -30,7 +30,6 @@
         <div class="form-group required-field col-sm-6">
             <label class="control-label" for="holdingType-benef">{{'Holding type' | translate}}</label>
             <ng-select id="holdingType-benef" [items]="holdingTypesList" [formControl]="form.get('common.holdingType')" placeholder="{{'Type' | translate}}" [disabled]="true"></ng-select>
-            <span class="field-error" *ngIf="hasError(['common', 'holdingType'], ['required'])">{{'Field is required' | translate}}</span>
         </div>
     </div>
 
