@@ -624,7 +624,7 @@ export class ManageOrdersComponent implements OnInit, AfterViewInit, OnDestroy {
             this.ofiOrdersService.markOrderSettle({ orderId }).then((data) => {
                 // const orderId = _.get(data, ['1', 'Data', '0', 'orderID'], 0);
                 const orderRef = commonHelper.pad(orderId, 11, '0');
-                this.toasterService.pop(this.translate.translate('success'), this.translate.translate('Order @orderRef@ has been successfully settled.', { 'orderRef': orderRef }));
+                this.toasterService.pop('success', this.translate.translate('Order @orderRef@ has been successfully settled.', { 'orderRef': orderRef }));
                 // this.handleClose();
                 // this._router.navigateByUrl('/order-book/my-orders/list');
                 this.logService.log(data);
