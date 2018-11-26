@@ -356,22 +356,22 @@ export class ContractService {
         let jsonArray: any = [];
         _.each(subModels, (subModel) => {
             switch (subModel.constructor.name) {
-            case 'AuthorisationModel':
-                jsonArray.push(this.authorisationService.toJSON(subModel));
-                break;
-            case 'ParameterItemModel':
-                jsonArray = {};
-                jsonArray[subModel.key] = this.parameterItemService.toJSON(subModel);
-                break;
-            case 'PartyModel':
-                if (jsonArray.length === 0) {
-                    jsonArray.push(subModels.length);
-                }
-                jsonArray.push(this.partyService.toJSON(subModel));
-                break;
-            case 'EncumbranceModel':
-                jsonArray.push(this.encumbranceService.toJSON(subModel));
-                break;
+                case 'AuthorisationModel':
+                    jsonArray.push(this.authorisationService.toJSON(subModel));
+                    break;
+                case 'ParameterItemModel':
+                    jsonArray = {};
+                    jsonArray[subModel.key] = this.parameterItemService.toJSON(subModel);
+                    break;
+                case 'PartyModel':
+                    if (jsonArray.length === 0) {
+                        jsonArray.push(subModels.length);
+                    }
+                    jsonArray.push(this.partyService.toJSON(subModel));
+                    break;
+                case 'EncumbranceModel':
+                    jsonArray.push(this.encumbranceService.toJSON(subModel));
+                    break;
             }
         });
         return jsonArray;
