@@ -139,7 +139,7 @@
                             <div *ngIf="formControl.controls.email.hasError('required') && formControl.controls.email.touched"
                                  class="field-error">{{ 'Field is required' | translate }}
                             </div>
-                            <div *ngIf="!formControl.controls.email.valid && formControl.controls.email.touched && !formControl.controls.email.hasError('required')"
+                            <div *ngIf="!formControl.controls.email.valid && !formControl.controls.email.hasError('required')"
                                  class="field-error">{{ 'Invalid email format' | translate }}
                             </div>
                         </div>
@@ -518,7 +518,7 @@
                 </clr-tab-content>
             </clr-tab>
 
-            <clr-tab>
+            <clr-tab *ngIf="tabid !== 1">
                 <a clrTabLink><i class="fa fa-lock"></i> {{ 'Reset Access' | translate }}</a>
                 <clr-tab-content *clrIfActive>
                     <div class="panel-body">
