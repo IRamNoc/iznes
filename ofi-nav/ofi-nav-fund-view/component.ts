@@ -373,11 +373,11 @@ export class OfiNavFundView implements OnInit, OnDestroy {
     }
 
     private generateYearToDatePeriod(): string {
-        return `${moment().startOf('year').format('YYYY-MM-DD 00:00:00')}|${moment().add(-1, 'days').format('YYYY-MM-DD 00:00:00')}`;
+        return `${moment().startOf('year').format('YYYY-MM-DD 00:00:00')}|${moment().format('YYYY-MM-DD 00:00:00')}`;
     }
 
     private generateBeginningOfTimePeriod(): string {
-        return `${moment('1970-01-01 00:00:00').format('YYYY-MM-DD 00:00:00')}|${moment().add(-1, 'days').format('YYYY-MM-DD 00:00:00')}`;
+        return `${moment('1970-01-01 00:00:00').format('YYYY-MM-DD 00:00:00')}|${moment().format('YYYY-MM-DD 00:00:00')}`;
     }
 
     /**
