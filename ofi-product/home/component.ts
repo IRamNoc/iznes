@@ -346,7 +346,7 @@ export class ProductHomeComponent implements OnInit, OnDestroy {
         const fundList = [];
         if (_.values(funds).length > 0) {
             _.values(funds).map((fund) => {
-                if (fund.draft === 0) {
+                if (Number(fund.draft) === 0) {
                     const domicile = _.find(this.countryItems, { id: fund.domicile }) || { text: '' };
                     const lawStatus = _.find(this.legalFormItems, { id: fund.legalForm }) || { text: '' };
                     const fundCurrency = this.fundCurrencyItems.find(p => p.id === Number(fund.fundCurrency));
@@ -386,7 +386,7 @@ export class ProductHomeComponent implements OnInit, OnDestroy {
 
         if ((shares !== undefined) && Object.keys(shares).length > 0) {
             Object.keys(shares).map((key) => {
-                if (shares[key].draft == 0) {
+                if (Number(shares[key].draft) === 0) {
                     const share = shares[key];
                     const keyFactsStatus = new FundShareModels.ShareKeyFactsStatus();
                     const status = _.find(keyFactsStatus.shareClassInvestmentStatus.listItems, (item) => {
@@ -395,7 +395,7 @@ export class ProductHomeComponent implements OnInit, OnDestroy {
 
                     const shareCurrency = this.fundCurrencyItems.find(p => p.id === share.shareClassCurrency);
 
-                    if (share.draft === 0) {
+                    if (Number(share.draft) === 0) {
                         shareList.push({
                             fundShareID: share.fundShareID,
                             shareName: share.fundShareName,
@@ -426,7 +426,7 @@ export class ProductHomeComponent implements OnInit, OnDestroy {
 
         if (data.length > 0) {
             data.map((item) => {
-                if (item.get('draft') == 0) {
+                if (Number(item.get('draft')) === 0) {
                     const domicile = _.find(this.countryItems, { id: item.get('domicile') }) || { text: '' };
 
                     umbrellaFundList.push({
@@ -474,7 +474,7 @@ export class ProductHomeComponent implements OnInit, OnDestroy {
         const data1 = fromJS(umbrellaList).toArray();
         if (data1.length > 0) {
             data1.map((item) => {
-                if (item.get('draft') === 1) {
+                if (Number(item.get('draft')) === 1) {
                     const name = item.get('umbrellaFundName', '');
                     this.draftList.push({
                         draftID: item.get('umbrellaFundID', 0),
@@ -490,7 +490,7 @@ export class ProductHomeComponent implements OnInit, OnDestroy {
         const data2 = fromJS(fundList).toArray();
         if (data2.length > 0) {
             data2.map((item) => {
-                if (item.get('draft') === 1) {
+                if (Number(item.get('draft')) === 1) {
                     const name = item.get('fundName', '');
                     this.draftList.push({
                         draftID: item.get('fundID', 0),
@@ -506,7 +506,7 @@ export class ProductHomeComponent implements OnInit, OnDestroy {
         const data3 = fromJS(shareList).toArray();
         if (data3.length > 0) {
             data3.map((item) => {
-                if (item.get('draft') === 1) {
+                if (Number(item.get('draft')) === 1) {
                     const name = item.get('fundShareName', '');
                     this.draftList.push({
                         draftID: item.get('fundShareID', 0),
@@ -531,9 +531,9 @@ export class ProductHomeComponent implements OnInit, OnDestroy {
             Share: 'fund-share',
         };
 
-        if (btnType === 'edit') {
+        if (String(btnType) === 'edit') {
             this.router.navigateByUrl('/product-module/product/' + temp[dataType] + '/' + id);
-        } else if (btnType === 'delete') {
+        } else if (String(btnType) === 'delete') {
 
             this.confirmationService.create(
                 'Draft Delete',
@@ -546,15 +546,15 @@ export class ProductHomeComponent implements OnInit, OnDestroy {
             ).subscribe((ans) => {
                 if (ans.resolved) {
                     this.draftList.splice(this.draftList.findIndex(draft => draft.draftID === id && draft.draftType === dataType), 1);
-                    if (dataType === 'Umbrella Fund') {
+                    if (String(dataType) === 'Umbrella Fund') {
                         this.ofiUmbrellaFundService.iznDeleteUmbrellaDraft(this.ofiUmbrellaFundService, this.ngRedux, id);
                         this.ofiUmbrellaFundService.fetchUmbrellaList();
                     }
-                    if (dataType === 'Fund') {
+                    if (String(dataType) === 'Fund') {
                         this.ofiFundService.iznDeleteFundDraft(this.ofiFundService, this.ngRedux, id);
                         this.ofiFundService.fetchFundList();
                     }
-                    if (dataType === 'Share') {
+                    if (String(dataType) === 'Share') {
                         this.ofiFundShareService.iznDeleteShareDraft(this.ofiFundShareService, this.ngRedux, id);
                         OfiFundShareService.defaultRequestIznesShareList(this.ofiFundShareService, this.ngRedux);
                     }

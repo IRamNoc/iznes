@@ -224,7 +224,7 @@ export class ManageOrdersComponent implements OnInit, AfterViewInit, OnDestroy {
         let iznesAdmin = false;
         if (!!this.menuSpec && Object.keys(this.menuSpec).length > 0) {
             this.menuSpec[Object.keys(this.menuSpec)[0]].forEach((row) => {
-                if (row['element_id'] === 'order-activity') iznesAdmin = true;
+                if (String(row['element_id']) === 'order-activity') iznesAdmin = true;
             });
         }
         return iznesAdmin;

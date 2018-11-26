@@ -425,14 +425,14 @@ export class FundHoldingsComponent implements OnInit, AfterViewInit, OnDestroy {
      *
      * @return {object} - the fund wanted.
      */
-    private getFundById(id): any {
+    private getFundById(id: number): any {
         /* Variables. */
         let userAsset;
 
         /* Loop over each fund... */
         for (userAsset of this.userAssetList) {
             /* ...if this is the one, breaking will leave userAsset as it... */
-            if (userAsset.asset === id) break;
+            if (Number(userAsset.asset) === id) break;
 
             /* ... if not, set to false in case there are no more. */
             userAsset = false;

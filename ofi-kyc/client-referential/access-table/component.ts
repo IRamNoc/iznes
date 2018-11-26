@@ -72,7 +72,7 @@ export class OfiFundAccessTable {
     }
 
     onClickAccess(id) {
-        const index = this.tableData.findIndex(i => i.id === id);
+        const index = this.tableData.findIndex(i => i.id === Number(id));
 
         this.tableData[index]['access'] = !this.tableData[index]['access'];
         this.tableData[index]['accessChanged'] = !this.tableData[index]['accessChanged'];
@@ -87,7 +87,7 @@ export class OfiFundAccessTable {
     }
 
     checkFee(id, type) {
-        const index = this.tableData.findIndex(i => i.id === id);
+        const index = this.tableData.findIndex(i => i.id === Number(id));
 
         if (isNaN(parseFloat(this.tableData[index][type])) || !isFinite(this.tableData[index][type])) this.tableData[index][type] = 0;
         this.tableData[index][type] = Math.round((this.tableData[index][type]) * DIVIDER_NUMBER) / DIVIDER_NUMBER;
@@ -101,7 +101,12 @@ export class OfiFundAccessTable {
         this.showOverrideModal = true;
     }
 
-    closeOverrideModal(type) {
+    /**
+     * Close override modal
+     *
+     * @param {number} type
+     */
+    closeOverrideModal(type: number) {
         if (type === 1) {
             this.tableData[this.currentOverride]['newOverride'] = true;
             this.tableData[this.currentOverride]['override'] = true;
@@ -187,7 +192,7 @@ export class OfiFundAccessTable {
     }
 
     saveData() {
-        const changedData = this.tableData.filter(i => this.changes.findIndex(j => j.id === i.id) > -1);
+        const changedData = this.tableData.filter(i => this.changes.findIndex(j => j.id === Number(i.id)) > -1);
         const promises = [];
         const uploadData = {};
 
