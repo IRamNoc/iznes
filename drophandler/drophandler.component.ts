@@ -12,7 +12,7 @@ import {
 } from '@angular/core';
 import * as _ from 'lodash';
 import { AlertsService, AlertType } from '@setl/jaspero-ng2-alerts';
-
+import { MultilingualService } from '@setl/multilingual';
 import { FormControl } from '@angular/forms';
 import { FileDropItem, FilePermission, FileDropEvent, ImageConstraint, AllowFileType, File } from '../FileDrop';
 
@@ -20,12 +20,11 @@ import { FileDropItem, FilePermission, FileDropEvent, ImageConstraint, AllowFile
 @Component({
     selector: 'drop-handler',
     templateUrl: 'drophandler.component.html',
-    styleUrls: ['drophandler.component.css']
+    styleUrls: ['drophandler.component.css'],
 })
 
 /* Class. */
 export class DropHandler implements AfterViewInit {
-
     /* Events */
     @Output() onDropFiles: EventEmitter<FileDropEvent> = new EventEmitter();
 
@@ -75,6 +74,7 @@ export class DropHandler implements AfterViewInit {
         public renderer: Renderer,
         public changeDetectorRef: ChangeDetectorRef,
         public alertsService: AlertsService,
+        public translate: MultilingualService,
     ) {
         /* Stub */
     }
@@ -83,9 +83,9 @@ export class DropHandler implements AfterViewInit {
     public ngAfterViewInit(): void {
         /* Fix the text on the ui. */
         if (this.multiple) {
-            this.uploadPrompt = 'Drag and Drop files here, or Click to Upload';
+            this.uploadPrompt = this.translate.translate('Drag and Drop files here, or Click to Upload');
         } else {
-            this.uploadPrompt = 'Drag and Drop a file here, or Click to Upload';
+            this.uploadPrompt = this.translate.translate('Drag and Drop a file here, or Click to Upload');
         }
         this.changeDetectorRef.detectChanges();
 
@@ -114,7 +114,7 @@ export class DropHandler implements AfterViewInit {
         if (event.dataTransfer && event.dataTransfer.files) {
             const invalidFileSizeNames = [];
             let validFiles = [];
-            _.each(event.dataTransfer.files, (function (file) {
+            _.each(event.dataTransfer.files, ((file) => {
                 if (!this.isValidFileSize(file)) {
                     invalidFileSizeNames.push(file.name);
                 } else {
@@ -123,18 +123,23 @@ export class DropHandler implements AfterViewInit {
             }).bind(this));
 
             if (invalidFileSizeNames.length > 0) {
-                let message = 'File';
+                let message = '';
+
                 if (invalidFileSizeNames.length > 1) {
-                    message += 's';
+                    message += this.translate.translate(
+                        'Files \'@invalidFileSizeNames@\' exceed maximum size of upload',
+                        { invalidFileSizeNames: invalidFileSizeNames.join('\', \'') });
                 }
-                message += ' \'' + invalidFileSizeNames.join('\', \'') + '\' exceed';
+
                 if (invalidFileSizeNames.length === 1) {
-                    message += 's';
+                    message += this.translate.translate(
+                        'File \'@invalidFileSizeNames@\' exceeds maximum size of upload',
+                        { invalidFileSizeNames: invalidFileSizeNames.join('\', \'') });
                 }
-                message += ' maximum file size for upload.';
+
                 this.showAlert(
                     message,
-                    'error'
+                    'error',
                 );
             }
 
@@ -153,7 +158,6 @@ export class DropHandler implements AfterViewInit {
 
             /* Process the files. */
             this.handleConversion();
-
         }
 
         /* Detect changes. */
@@ -183,7 +187,7 @@ export class DropHandler implements AfterViewInit {
         /* Handle click event of native file input. */
         const clickevent = new MouseEvent('click', { bubbles: true });
         this.renderer.invokeElementMethod(
-            this.fileInput.nativeElement, 'dispatchEvent', [clickevent]
+            this.fileInput.nativeElement, 'dispatchEvent', [clickevent],
         );
 
         /* Detect changes. */
@@ -212,7 +216,7 @@ export class DropHandler implements AfterViewInit {
         if (event.target && event.target.files) {
             const invalidFileNames = [];
             let validFiles = [];
-            _.each(event.target.files, (function (file, fileIndex) {
+            _.each(event.target.files, ((file, fileIndex) => {
                 if (!this.isValidFileSize(file)) {
                     invalidFileNames.push(file.name);
                 } else {
@@ -221,15 +225,20 @@ export class DropHandler implements AfterViewInit {
             }).bind(this));
 
             if (invalidFileNames.length > 0) {
-                let message = 'File';
+                let message = '';
+
                 if (invalidFileNames.length > 1) {
-                    message += 's';
+                    message += this.translate.translate(
+                        'Files \'@invalidFileNames@\' exceed maximum size of upload',
+                        { invalidFileNames: invalidFileNames.join('\', \'') });
                 }
-                message += ' \'' + invalidFileNames.join('\', \'') + '\' exceed';
+
                 if (invalidFileNames.length === 1) {
-                    message += 's';
+                    message += this.translate.translate(
+                        'File \'@invalidFileNames@\' exceeds maximum size of upload',
+                        { invalidFileNames: invalidFileNames.join('\', \'') });
                 }
-                message += ' maximum file size for upload.';
+
                 this.showAlert(
                     message,
                     'error',
@@ -251,7 +260,6 @@ export class DropHandler implements AfterViewInit {
 
             /* Process the files. */
             this.handleConversion();
-
         }
 
         /* Return. */
@@ -342,7 +350,7 @@ export class DropHandler implements AfterViewInit {
         this.isHovering = true;
 
         /* Update the prompt text. */
-        this.uploadPrompt = 'Drop your files to add them!';
+        this.uploadPrompt = this.translate.translate('Drop your files to add them');
     }
 
     /**
@@ -360,7 +368,7 @@ export class DropHandler implements AfterViewInit {
         this.isHovering = false;
 
         /* Update the prompt text. */
-        this.uploadPrompt = 'Drag and Drop a file here, or Click to Upload';
+        this.uploadPrompt = this.translate.translate('Drag and Drop a file here, or Click to Upload');
     }
 
     /**
@@ -385,13 +393,13 @@ export class DropHandler implements AfterViewInit {
         /* Slice the encoded files. */
         this.encodedFiles = [
             ...this.encodedFiles.slice(0, index),
-            ...this.encodedFiles.slice(index + 1, this.encodedFiles.length)
+            ...this.encodedFiles.slice(index + 1, this.encodedFiles.length),
         ];
 
         /* Slice the uploaded files. */
         this.uploadedFiles = [
             ...this.uploadedFiles.slice(0, index),
-            ...this.uploadedFiles.slice(index + 1, this.uploadedFiles.length)
+            ...this.uploadedFiles.slice(index + 1, this.uploadedFiles.length),
         ];
 
         /* Update the UI. */
@@ -426,11 +434,9 @@ export class DropHandler implements AfterViewInit {
      */
     private base64Files(files, callback): void {
         /* Variables. */
-        let
-            i,
-            file,
-            myReader: FileReader,
-            grandTotal = 0;
+        let file;
+        let myReader: FileReader;
+        let grandTotal = 0;
 
         /* Return if no files. */
         if (!files.length) {
@@ -446,7 +452,7 @@ export class DropHandler implements AfterViewInit {
         this.silentEncodedFiles = [];
 
         /* Loop over files. */
-        for (i = 0; i < files.length; i++) {
+        for (let i = 0; i < files.length; i += 1) {
             /* Set a pointer. */
             file = files[i];
 
@@ -456,7 +462,7 @@ export class DropHandler implements AfterViewInit {
             }
 
             /* Add to the grand total, used to check later. */
-            grandTotal++;
+            grandTotal += 1;
 
             /* Instatiate a new reader. */
             myReader = new FileReader();
@@ -469,37 +475,40 @@ export class DropHandler implements AfterViewInit {
         }
 
         /* Now wait for all files to be done. */
-        this.processInterval = setInterval(() => {
-            /* Check if the files have been processed. */
-            if (grandTotal === this.silentEncodedFiles.length) {
-                /* If they're all done, clear this interval. */
-                clearInterval(this.processInterval);
+        this.processInterval = setInterval(
+            () => {
+                /* Check if the files have been processed. */
+                if (grandTotal === this.silentEncodedFiles.length) {
+                    /* If they're all done, clear this interval. */
+                    clearInterval(this.processInterval);
 
-                /* Let's loop over the files.... */
-                let j = 0;
-                for (i = 0; i < files.length; i++) {
-                    /* ...continue if no file... */
-                    if (!files[i] || files[i].status === 'uploaded-file') {
-                        continue;
+                    /* Let's loop over the files.... */
+                    let j = 0;
+                    for (let i = 0; i < files.length; i += 1) {
+                        /* ...continue if no file... */
+                        if (!files[i] || files[i].status === 'uploaded-file') {
+                            continue;
+                        }
+
+                        /* ...if we have a file, add the meta data back... */
+                        if (this.silentEncodedFiles[j]) {
+                            this.silentEncodedFiles[j].name = files[i].name;
+                            this.silentEncodedFiles[j].lastModified = files[i].lastModified;
+                            this.silentEncodedFiles[j].status = files[i].status;
+                            this.silentEncodedFiles[j].filePermission = this.filePermission;
+                            this.silentEncodedFiles[j].id = i;
+                            this.silentEncodedFiles[j].mimeType = files[i].type;
+
+                        }
+                        j += 1;
                     }
 
-                    /* ...if we have a file, add the meta data back... */
-                    if (this.silentEncodedFiles[j]) {
-                        this.silentEncodedFiles[j].name = files[i].name;
-                        this.silentEncodedFiles[j].lastModified = files[i].lastModified;
-                        this.silentEncodedFiles[j].status = files[i].status;
-                        this.silentEncodedFiles[j].filePermission = this.filePermission;
-                        this.silentEncodedFiles[j].id = i;
-                        this.silentEncodedFiles[j].mimeType = files[i].type;
-
-                    }
-                    j++;
+                    /* Call the callback, when done. */
+                    callback(this.silentEncodedFiles);
                 }
-
-                /* Call the callback, when done. */
-                callback(this.silentEncodedFiles);
-            }
-        }, 250); // 250 to save the lag spike during upload.
+            },
+            250,
+        ); // 250 to save the lag spike during upload.
     }
 
     /**
@@ -533,21 +542,34 @@ export class DropHandler implements AfterViewInit {
         const base64data = btoa(readerEvt.target.result);
 
         /* Push the file object into the encodedFiles array. */
-        this.silentEncodedFiles.push({ 'data': base64data });
+        this.silentEncodedFiles.push({ data: base64data });
     }
 
     /**
      * Update Files Text
      * -----------------
-     * Basically updates the text that tells the user how many files they've uploaded.
+     * Updates the text that tells the user how many files they've uploaded.
      *
      * @return {void}
      */
     private updateFilesText(): void {
         /* Update. */
-        this.numberFilesText = (
-            (!this.uploadedFiles || this.uploadedFiles.length === 0) ? 'No' : this.uploadedFiles.length) + ' ' +
-            (this.multiple && this.uploadedFiles.length > 1 ? 'files' : 'file') + ' selected.';
+        if (!this.uploadedFiles || this.uploadedFiles.length === 0) {
+            this.numberFilesText = this.translate.translate(
+                'No @fileContext@ selected',
+                {
+                    fileContext: (this.multiple && this.uploadedFiles.length > 1 ? 'files' : 'file'),
+                },
+            );
+        } else {
+            this.numberFilesText = this.translate.translate(
+                '@fileCount@ @fileContext@ selected',
+                {
+                    fileCount: this.uploadedFiles.length,
+                    fileContext: (this.multiple && this.uploadedFiles.length > 1 ? 'files' : 'file'),
+                },
+            );
+        }
 
         /* Detect changes. */
         this.changeDetectorRef.detectChanges();
@@ -611,7 +633,6 @@ export class DropHandler implements AfterViewInit {
      * @return {Promise<File[]>}
      */
     async checkImageConstraint(files: File[]): Promise<File[]> {
-
         if (this.imageConstraint) {
             const validImages = [];
             const invalidImageNames = [];
@@ -625,7 +646,15 @@ export class DropHandler implements AfterViewInit {
             }
 
             if (invalidImageNames.length > 0) {
-                const message = `The dimension of '${invalidImageNames.join("' '")}' must be ${this.imageConstraint.width} x ${this.imageConstraint.height}`;
+                const message = this.translate.translate(
+                    'The dimension of @invalidImageNames@ must be @imageConstraintWidth@ x @imageConstraintHeight@.',
+                    {
+                        invalidImageNames: invalidImageNames.join("' '"),
+                        imageConstraintWidth: this.imageConstraint.width,
+                        imageConstraintHeight: this.imageConstraint.height,
+                    },
+                );
+
                 this.showAlert(
                     message,
                     'error',
@@ -636,7 +665,6 @@ export class DropHandler implements AfterViewInit {
         }
 
         return files;
-
     }
 
     /**
@@ -646,7 +674,6 @@ export class DropHandler implements AfterViewInit {
      * @return {Promise<File[]>}
      */
     checkFileType(files) {
-
         if (this.allowFileTypes) {
             const validFiles = [];
             const invalidFileNames = [];
@@ -659,7 +686,14 @@ export class DropHandler implements AfterViewInit {
             }
 
             if (invalidFileNames.length > 0) {
-                const message = `The file type of '${invalidFileNames.join("' '")}' must be one of '${this.allowFileTypes.join("' '")}'`;
+                const message = this.translate.translate(
+                    'The file type of @invalidFileNames@ must be one of @allowFileTypes@.',
+                    {
+                        invalidFileNames: invalidFileNames.join("' '"),
+                        allowFileTypes: this.allowFileTypes.join("' '"),
+                    },
+                );
+
                 this.showAlert(
                     message,
                     'error',
@@ -670,9 +704,7 @@ export class DropHandler implements AfterViewInit {
         }
 
         return files;
-
     }
-
 }
 
 /**
@@ -681,7 +713,6 @@ export class DropHandler implements AfterViewInit {
  * @return {Promise<{width: number; height: number}>}
  */
 function getImageSize(file): Promise<{width: number; height: number}> {
-
     return new Promise<{ width: number; height: number; }>((resolve, reject) => {
         try {
             createImageBitmap(file).then((data: {width: number; height: number}) => {
