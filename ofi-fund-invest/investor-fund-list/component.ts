@@ -457,6 +457,14 @@ export class OfiInvestorFundListComponent implements OnInit, OnDestroy {
             subscription.unsubscribe();
         }
 
-        this.ngRedux.dispatch(ofiListOfFundsComponentActions.setAllTabs(this.tabsControl));
+        const allTabs = immutableHelper.copy(this.tabsControl);
+
+        const checkForActive = _.find(allTabs, (item) => {
+            return item.active === true;
+        });
+
+        if(!checkForActive) allTabs[0].active = true;
+
+        this.ngRedux.dispatch(ofiListOfFundsComponentActions.setAllTabs(allTabs));
     }
 }
