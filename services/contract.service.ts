@@ -1,5 +1,8 @@
 import { Injectable } from '@angular/core';
-import { PartyService, AuthorisationService, ParameterItemService, EncumbranceService } from '../services/';
+import { EncumbranceService } from './encumbrance.service';
+import { AuthorisationService } from './authorisation.service';
+import { PartyService } from './party.service';
+import { ParameterItemService } from './parameterItem.service';
 import {
     AuthorisationModel,
     ParameterItemModel,
