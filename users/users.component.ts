@@ -311,7 +311,7 @@ export class AdminUsersComponent implements OnInit, AfterViewInit, OnDestroy {
 
         if (this.searchedUsersList.length) {
             this.paginatedUsersList =
-            this.searchedUsersList.slice(this.dgPageFrom, this.dgPageFrom + this.dgPageSize);
+                this.searchedUsersList.slice(this.dgPageFrom, this.dgPageFrom + this.dgPageSize);
         } else {
             this.paginatedUsersList = this.usersList.slice(this.dgPageFrom, this.dgPageFrom + this.dgPageSize);
         }
@@ -1521,7 +1521,9 @@ export class AdminUsersComponent implements OnInit, AfterViewInit, OnDestroy {
         const group = new FormGroup(
             {
                 username: new FormControl('', [Validators.required, Validators.pattern('^[A-Za-z0-9-_@.]{1,45}$')]),
-                email: new FormControl('', [Validators.required, Validators.email]),
+                email: new FormControl('', [Validators.required, Validators.pattern(
+                    '^([(][A-z0-9]+[)])?(([^<>()\\[\\]\\\\.,;:\\s@"]+(\\.[^<>()\\[\\]\\\\.,;:\\s@"]+)*)|(".+"))@' +
+                    '((\\[[0-9]{1,3}\\.[0-9]{1,3}\\.[0-9]{1,3}\\.[0-9]{1,3}])|(([a-zA-Z\\-0-9]+\\.)+[a-zA-Z]{2,}))$')]),
                 accountType: new FormControl('', [Validators.required]),
                 userType: new FormControl('', [Validators.required]),
                 userLocked: new FormControl(0),
@@ -1588,7 +1590,7 @@ export class AdminUsersComponent implements OnInit, AfterViewInit, OnDestroy {
                         () => {
                             this.alertsService.generate(
                                 'error',
-                                'Sorry, something went wrong.<br>Please try again later.'
+                                'Sorry, something went wrong.<br>Please try again later.',
                             );
                         }),
                     );
