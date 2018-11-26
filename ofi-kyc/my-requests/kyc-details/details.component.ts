@@ -183,7 +183,7 @@ export class KycDetailsComponent implements OnInit, OnDestroy {
         )
         .subscribe((beneficiaries) => {
             const promises = beneficiaries.map((beneficiary) => {
-                beneficiary.splice(beneficiary.findIndex(item => item.id == 'delete'), 1);
+                beneficiary.splice(beneficiary.findIndex(item => String(item.id) === 'delete'), 1);
                 return this.kycDetailsService.getHashes(beneficiary);
             });
             Promise.all(promises).then((beneficiaries) => {

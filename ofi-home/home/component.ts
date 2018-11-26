@@ -45,7 +45,7 @@ export class OfiHomeComponent implements AfterViewInit, OnInit, OnDestroy {
     /* Private properties. */
     private subscriptions: any[] = [];
     private myWallets: any = [];
-    private connectedWalletId: any = 0;
+    private connectedWalletId: number = 0;
     userType: number;
 
     nbUnreadMessages = 0;

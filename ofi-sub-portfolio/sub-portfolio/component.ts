@@ -370,7 +370,7 @@ export class OfiSubPortfolioComponent implements OnInit, OnDestroy {
                     this.ngRedux.dispatch(SagaHelper.runAsyncCallback(
                         asyncTaskPipe,
                         (response) => {
-                            if (response[1].Data == '0') {
+                            if (String(response[1].Data) === '0') {
                                 this.ngRedux.dispatch(clearRequestedWalletLabel());
                                 this.toaster.pop('success', this.translate.translate('Your sub-portfolio @addressLabel@ has been successfully deleted. This may take a moment to update.', { 'addressLabel': this.addressList[index].label }));
                             } else {
