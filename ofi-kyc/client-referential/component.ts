@@ -68,7 +68,7 @@ export class OfiClientReferentialComponent implements OnInit, OnDestroy {
         disableKeypress: true,
         locale: this.language,
         isDayDisabledCallback: (thisDate) => {
-            if (!!thisDate && this.searchForm.controls['searchTo'].value !== '') {
+            if (!!thisDate && this.searchForm.controls['searchTo'].value != '') {
                 return (thisDate.diff(this.searchForm.controls['searchTo'].value) > 0);
             }
             return false;
@@ -82,7 +82,7 @@ export class OfiClientReferentialComponent implements OnInit, OnDestroy {
         disableKeypress: true,
         locale: this.language,
         isDayDisabledCallback: (thisDate) => {
-            if (!!thisDate && this.searchForm.controls['searchFrom'].value !== '') {
+            if (!!thisDate && this.searchForm.controls['searchFrom'].value != '') {
                 return (thisDate.diff(this.searchForm.controls['searchFrom'].value) < 0);
             }
             return false;
@@ -177,7 +177,7 @@ export class OfiClientReferentialComponent implements OnInit, OnDestroy {
         }));
 
         this.subscriptions.push(this.searchForm.valueChanges.pipe(debounceTime(500)).subscribe((form) => {
-            if (this.pageType === 'audit') this.requestAuditSearch();
+            if (this.pageType == 'audit') this.requestAuditSearch();
         }));
 
         this.subscriptions.push(
@@ -196,7 +196,7 @@ export class OfiClientReferentialComponent implements OnInit, OnDestroy {
                 });
 
                 this.showInfo = false;
-                if (!!this.clients[this.kycId] && this.clients[this.kycId].alreadyCompleted === 0) {
+                if (!!this.clients[this.kycId] && this.clients[this.kycId].alreadyCompleted == 0) {
                     this.showInfo = true;
                 }
 
@@ -208,13 +208,13 @@ export class OfiClientReferentialComponent implements OnInit, OnDestroy {
                     this.investorKycIds[amKycList[key].investorUserID].push(amKycList[key].kycID);
                     this.allKycIds.push(amKycList[key].kycID);
 
-                    if (amKycList[key].kycID === this.kycId) this.currentInvestor = amKycList[key];
+                    if (amKycList[key].kycID == this.kycId) this.currentInvestor = amKycList[key];
                 });
 
                 if (!this.isPortfolioManager() && !_.isEmpty(this.currentInvestor)) {
                     this.companyName = _.get(this.currentInvestor, 'investorCompanyName', '');
 
-                    if (this.kycId !== '') {
+                    if (this.kycId != '') {
                         const phoneNumber = (this.currentInvestor.investorPhoneCode && this.currentInvestor.investorPhoneNumber) ? `${this.currentInvestor.investorPhoneCode} ${this.currentInvestor.investorPhoneNumber}` : '';
                         const approvalDateRequestTs = mDateHelper.dateStrToUnixTimestamp(this.currentInvestor.lastUpdated, 'YYYY-MM-DD HH:mm:ss');
                         const approvalDateRequest = mDateHelper.unixTimestampToDateStr(approvalDateRequestTs, 'DD / MM / YYYY');
@@ -250,14 +250,14 @@ export class OfiClientReferentialComponent implements OnInit, OnDestroy {
     }
 
     viewClient(id) {
-        this.router.navigateByUrl((id === 'list' ? '/client-referential' : '/client-referential/' + id));
+        this.router.navigateByUrl((id == 'list' ? '/client-referential' : '/client-referential/' + id));
     }
 
     loadTab(tab) {
-        if (tab === 2) {
+        if (tab == 2) {
             const tempOtherData = {};
-            if (this.amKycList.length > 0 && this.amKycList.findIndex(kyc => kyc.kycID === this.kycId) !== -1) {
-                const kyc = this.amKycList.filter(kyc => kyc.kycID === this.kycId)[0];
+            if (this.amKycList.length > 0 && this.amKycList.findIndex(kyc => kyc.kycID == this.kycId) != -1) {
+                const kyc = this.amKycList.filter(kyc => kyc.kycID == this.kycId)[0];
 
                 this.companyName = kyc.investorCompanyName;
 
@@ -307,9 +307,9 @@ export class OfiClientReferentialComponent implements OnInit, OnDestroy {
                 }).catch((e) => {
                 });
             }
-        } else if (tab === 3) {
-            if (this.amKycList.length > 0 && this.amKycList.findIndex(kyc => kyc.kycID === this.kycId) !== -1) {
-                const kyc = this.amKycList.filter(kyc => kyc.kycID === this.kycId)[0];
+        } else if (tab == 3) {
+            if (this.amKycList.length > 0 && this.amKycList.findIndex(kyc => kyc.kycID == this.kycId) !== -1) {
+                const kyc = this.amKycList.filter(kyc => kyc.kycID == this.kycId)[0];
 
                 this.companyName = kyc.investorCompanyName;
             }
@@ -324,7 +324,7 @@ export class OfiClientReferentialComponent implements OnInit, OnDestroy {
                         ratio: 0,
                     };
                     data[1].Data.forEach((row, index) => {
-                        if (tempArr.length > 0 && fundStats['fundName'] !== row.fundName) {
+                        if (tempArr.length > 0 && fundStats['fundName'] != row.fundName) {
                             this.holdingsTable.push({
                                 fundName: fundStats['fundName'],
                                 fundCurrency: fundStats['fundCurrency'],
@@ -454,12 +454,12 @@ export class OfiClientReferentialComponent implements OnInit, OnDestroy {
     }
 
     changePage(page) {
-        if (page === this.pageType) {
+        if (page == this.pageType) {
             this.viewClient('list');
         } else {
             this.pageType = page;
-            if (page === 'audit') {
-                if (this.kycId !== '') {
+            if (page == 'audit') {
+                if (this.kycId != '') {
                     this.searchForm.controls['searchInvestor'].patchValue(this.clients[this.kycId].companyName);
                     this.searchForm.controls['searchInvestor'].disable();
                 } else {
@@ -491,7 +491,7 @@ export class OfiClientReferentialComponent implements OnInit, OnDestroy {
       * @return boolean
      */
     isPortfolioManager(): boolean {
-        return this.currentInvestor.investorUserID === null;
+        return this.currentInvestor.investorUserID == null;
     }
 
     ngOnDestroy() {
