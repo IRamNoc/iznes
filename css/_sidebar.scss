@@ -100,13 +100,33 @@
 
         label {
             margin: 0;
-            padding: 12px;
-            padding-left: 20px;
-            padding-right: 20px;
+            padding: 12px 20px 12px 20px;
             font-size: 13px;
-
+            line-height: 20px;
+            position: relative;
             &::after {
+                content: none;
+            }
+
+            span {
                 float: right;
+                width: calc(100% - 25px);
+                padding-right: 20px;
+                &::after {
+                    content: '';
+                    height: 10px;
+                    width: 10px;
+                    -webkit-transform: rotate(-90deg);
+                    transform: rotate(-90deg);
+                    transition-duration: 0.3s;
+                    background: url('data:image/svg+xml;charset=utf8,<svg%20xmlns%3D "http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg" %20viewBox%3D "0%200%2012%2012" >%0A%20%20%20%20<defs>%0A%20%20%20%20%20%20%20%20<style>.cls-1%7Bfill%3A%239a9a9a%3B%7D<%2Fstyle>%0A%20%20%20%20<%2Fdefs>%0A%20%20%20%20<title>Caret<%2Ftitle>%0A%20%20%20%20<path%20class%3D "cls-1" %20d%3D "M6%2C9L1.2%2C4.2a0.68%2C0.68%2C0%2C0%2C1%2C1-1L6%2C7.08%2C9.84%2C3.24a0.68%2C0.68%2C0%2C1%2C1%2C1%2C1Z" %2F>%0A<%2Fsvg>%0A') no-repeat;
+                    background-size: contain;
+                    vertical-align: middle;
+                    margin: 0;
+                    position: absolute;
+                    right: 20px;
+                    top: calc(50% - 5px);
+                }
             }
         }
 
