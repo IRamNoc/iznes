@@ -123,7 +123,7 @@ export class NavigationSidebarComponent implements OnInit, AfterViewInit {
                 const clabel = this._translate.getTranslation(cmltag) || childrenItem.get('label', '');
                 childrenResult.push(childrenItem.set('label', clabel).toJS());
                 return childrenResult;
-            }, []);
+            },                                      []);
             if (children.length > 0) {
                 result.push(item.set('label', label).set('children', children).toJS());
             } else {
@@ -131,7 +131,7 @@ export class NavigationSidebarComponent implements OnInit, AfterViewInit {
             }
 
             return result;
-        }, []);
+        },                            []);
     }
 
     /**
