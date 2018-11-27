@@ -60,6 +60,12 @@
                     padding: 12px;
                     padding-left: 30px;
                     padding-right: 20px;
+
+                    span {
+                        float: right;
+                        width: calc(100% - 25px);
+                    }
+
                 }
             }
 
