@@ -272,8 +272,7 @@ export class SetlMessagesComponent implements OnDestroy, OnInit {
                             message.recipientWalletName = this.walletDirectoryList[message.recipientId].walletName;
                         }
                     }
-
-                    message.isChecked = false;
+                    message.isChecked = this.checkedMessages.includes(message.mailId);
                     return message;
                 }
             });
