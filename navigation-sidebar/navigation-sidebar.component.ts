@@ -13,7 +13,6 @@ import { get } from 'lodash';
     styleUrls: ['./navigation-sidebar.component.scss'],
 })
 export class NavigationSidebarComponent implements OnInit, AfterViewInit {
-
     public unreadMessages;
     menuJson: any;
     menuParent = [];
@@ -28,16 +27,17 @@ export class NavigationSidebarComponent implements OnInit, AfterViewInit {
 
     constructor(private router: Router,
                 @Inject(APP_CONFIG) public appConfig: AppConfig,
-                private _changeDetectorRef: ChangeDetectorRef,
-                public _translate: MultilingualService,
+                private changeDetectorRef: ChangeDetectorRef,
                 private logService: LogService,
                 private menuSpecService: MenuSpecService,
-                private ngRedux: NgRedux<any>) {
+                private ngRedux: NgRedux<any>,
+                public translate: MultilingualService,
+    ) {
     }
 
     ngOnInit() {
         /* Subscribe for language change. */
-        this.subscription = this._translate.getLanguage.subscribe((data) => {
+        this.subscription = this.translate.getLanguage.subscribe((data) => {
             /* Retrieve and declare data... */
             const currentState = this.ngRedux.getState();
             const currentUserDetails = getMyDetail(currentState);
@@ -68,6 +68,7 @@ export class NavigationSidebarComponent implements OnInit, AfterViewInit {
             const menuSpec = this.appConfig.menuSpec;
             /* Translate the menu. */
             this.menuJson = this.translateMenu(menuSpec.side[userTypeStr]);
+
             this.disabledMenus = menuSpec.disabled;
             if (!this.menuJson) {
                 console.warn('Navigation Render: No menu structure found!');
@@ -79,6 +80,7 @@ export class NavigationSidebarComponent implements OnInit, AfterViewInit {
             this.menuSpecService.getMenuSpec().subscribe((menuSpec) => {
                 /* Translate the menu. */
                 this.menuJson = this.translateMenu(menuSpec.side[userTypeStr]);
+
                 this.disabledMenus = menuSpec.disabled;
                 if (!this.menuJson) {
                     console.warn('Navigation Render: No menu structure found!');
@@ -88,14 +90,14 @@ export class NavigationSidebarComponent implements OnInit, AfterViewInit {
                     if (row['children'] != null) this.menuParent.push(row['element_id']);
                 });
             });
-
         });
-
     }
 
     /**
      * check if menu is disable.
+     *
      * @param {string} url
+     *
      * @return {boolean}
      */
     isMenuDisabled(url: string): boolean {
@@ -103,7 +105,6 @@ export class NavigationSidebarComponent implements OnInit, AfterViewInit {
     }
 
     ngAfterViewInit() {
-
         this.inboxUnread.subscribe(
             (unreadMessages) => {
                 this.unreadMessages = unreadMessages;
@@ -114,24 +115,30 @@ export class NavigationSidebarComponent implements OnInit, AfterViewInit {
     translateMenu(rawMenuData) {
         if (!rawMenuData) return;
 
-        return immutableHelper.reduce(rawMenuData, (result, item) => {
-            const mltag = item.get('label_txt', '');
-            const label = this._translate.getTranslation(mltag) || item.get('label', '');
-            const children_old = item.get('children', []);
-            const children = immutableHelper.reduce(children_old, (childrenResult, childrenItem) => {
-                const cmltag = childrenItem.get('label_txt', '');
-                const clabel = this._translate.getTranslation(cmltag) || childrenItem.get('label', '');
-                childrenResult.push(childrenItem.set('label', clabel).toJS());
-                return childrenResult;
-            },                                      []);
-            if (children.length > 0) {
-                result.push(item.set('label', label).set('children', children).toJS());
-            } else {
-                result.push(item.set('label', label).toJS());
-            }
+        return immutableHelper.reduce(
+            rawMenuData, (result, item) => {
+                const mltag = item.get('label_txt', '');
+                const label = this.translate.getTranslation(mltag) || item.get('label', '');
+                const childrenOld = item.get('children', []);
+                const children = immutableHelper.reduce(
+                    childrenOld, (childrenResult, childrenItem) => {
+                        const cmltag = childrenItem.get('label_txt', '');
+                        const clabel = this.translate.getTranslation(cmltag) || childrenItem.get('label', '');
+                        childrenResult.push(childrenItem.set('label', clabel).toJS());
+                        return childrenResult;
+                    },
+                    [],
+                );
+                if (children.length > 0) {
+                    result.push(item.set('label', label).set('children', children).toJS());
+                } else {
+                    result.push(item.set('label', label).toJS());
+                }
 
-            return result;
-        },                            []);
+                return result;
+            },
+            [],
+        );
     }
 
     /**
@@ -150,7 +157,7 @@ export class NavigationSidebarComponent implements OnInit, AfterViewInit {
         const routerUrl = this.router.url;
         let active = false;
 
-        children.forEach(child => {
+        children.forEach((child) => {
             const route = child.router_link;
             const routeRegex = new RegExp(`^${route}(\/\S+)?`);
 
