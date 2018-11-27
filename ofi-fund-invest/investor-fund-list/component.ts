@@ -34,6 +34,7 @@ export class OfiInvestorFundListComponent implements OnInit, OnDestroy {
     @Input() linkRoute: string;
 
     tabsControl: Array<any>;
+    routeTabId: number;
     fundListObj: any;
     fundList: Array<any>;
     connectedWalletId: number;
@@ -90,7 +91,7 @@ export class OfiInvestorFundListComponent implements OnInit, OnDestroy {
 
         this.subscriptionsArray.push(this.route.params.subscribe((params: Params) => {
             const tabId = _.get(params, 'tabid', 0);
-            this.setTabActive(tabId);
+            this.routeTabId = parseInt(tabId);
         }));
 
         this.subscriptionsArray.push(this.balancesOb.subscribe((walletsbalances) => {
@@ -131,6 +132,9 @@ export class OfiInvestorFundListComponent implements OnInit, OnDestroy {
 
         // Translate title of default tab on init (if openedTabs is not empty) and on language change
         this.tabsControl[0].title.text = this.translate.translate(this.tabsControl[0].title.text);
+
+        this.setTabActive();
+
         this.changeDetectorRef.detectChanges();
     }
 
@@ -213,11 +217,11 @@ export class OfiInvestorFundListComponent implements OnInit, OnDestroy {
         this.changeDetectorRef.markForCheck();
     }
 
-    setTabActive(index: number): void {
+    setTabActive(): void {
         const tabControlImu = fromJS(this.tabsControl);
 
         const newTabControlImu = tabControlImu.map((item, thisIndex) => {
-            return item.set('active', thisIndex === Number(index));
+            return item.set('active', thisIndex === Number(this.routeTabId));
         });
 
         this.tabsControl = newTabControlImu.toJS();
@@ -245,6 +249,8 @@ export class OfiInvestorFundListComponent implements OnInit, OnDestroy {
         let i;
         for (i = 0; i < this.tabsControl.length; i += 1) {
             if ((this.tabsControl[i].fundShareId === shareId) && (this.tabsControl[i]['actionType'] === 'subscribe')) {
+                this.setNewActiveTab(i);
+
                 this.router.navigateByUrl(`/list-of-funds/${i}`);
 
                 return;
@@ -269,7 +275,7 @@ export class OfiInvestorFundListComponent implements OnInit, OnDestroy {
         });
 
         // Activate the new tab.
-        this.router.navigateByUrl(`/list-of-funds/${this.tabsControl.length - 1}`);
+        this.navigateToNewTab();
     }
 
     /**
@@ -294,6 +300,8 @@ export class OfiInvestorFundListComponent implements OnInit, OnDestroy {
         let i;
         for (i = 0; i < this.tabsControl.length; i += 1) {
             if ((this.tabsControl[i].fundShareId === shareId) && (this.tabsControl[i]['actionType'] === 'redeem')) {
+                this.setNewActiveTab(i);
+                
                 this.router.navigateByUrl(`/list-of-funds/${i}`);
 
                 return;
@@ -318,7 +326,7 @@ export class OfiInvestorFundListComponent implements OnInit, OnDestroy {
         });
 
         // Activate the new tab.
-        this.router.navigateByUrl(`/list-of-funds/${this.tabsControl.length - 1}`);
+        this.navigateToNewTab();
     }
 
     /**
@@ -330,6 +338,8 @@ export class OfiInvestorFundListComponent implements OnInit, OnDestroy {
         let i;
         for (i = 0; i < this.tabsControl.length; i += 1) {
             if ((this.tabsControl[i].fundShareId === shareId) && (this.tabsControl[i]['actionType'] === 'sellbuy')) {
+                this.setNewActiveTab(i);
+                
                 this.router.navigateByUrl(`/list-of-funds/${i}`);
 
                 return;
@@ -354,7 +364,7 @@ export class OfiInvestorFundListComponent implements OnInit, OnDestroy {
         });
 
         // Activate the new tab.
-        this.router.navigateByUrl(`/list-of-funds/${this.tabsControl.length - 1}`);
+        this.navigateToNewTab();
     }
 
     /**
@@ -366,6 +376,8 @@ export class OfiInvestorFundListComponent implements OnInit, OnDestroy {
         let i;
         for (i = 0; i < this.tabsControl.length; i += 1) {
             if ((this.tabsControl[i].fundShareId === this.fundList[index].id) && (this.tabsControl[i]['actionType'] === 'view')) {
+                this.setNewActiveTab(i);
+                
                 this.router.navigateByUrl(`/list-of-funds/${i}`);
 
                 return;
@@ -391,7 +403,7 @@ export class OfiInvestorFundListComponent implements OnInit, OnDestroy {
         });
 
         // Activate the new tab.
-        this.router.navigateByUrl(`/list-of-funds/${this.tabsControl.length - 1}`);
+        this.navigateToNewTab();
     }
 
     /**
@@ -412,6 +424,7 @@ export class OfiInvestorFundListComponent implements OnInit, OnDestroy {
         ];
 
         // Reset Tabs.
+        this.setNewActiveTab(0);
         this.router.navigateByUrl('/list-of-funds/0');
 
         return;
@@ -450,6 +463,26 @@ export class OfiInvestorFundListComponent implements OnInit, OnDestroy {
      */
     allowSellBuy(share: { allowSellBuy: number }): boolean {
         return (share.allowSellBuy === 1);
+    }
+
+    private setNewActiveTab(i: number): void {
+        this.resetTabControlActive();
+
+        const newTabs = immutableHelper.copy(this.tabsControl);
+        newTabs[i].active = true;
+
+        this.tabsControl = newTabs;
+    }
+
+    private resetTabControlActive(): void {
+        this.tabsControl.forEach((tab) => {
+            tab.active = false;
+        });
+    }
+
+    private navigateToNewTab(): void {
+        this.setNewActiveTab(this.tabsControl.length - 1);
+        this.router.navigateByUrl(`/list-of-funds/${this.tabsControl.length - 1}`);
     }
 
     ngOnDestroy() {
