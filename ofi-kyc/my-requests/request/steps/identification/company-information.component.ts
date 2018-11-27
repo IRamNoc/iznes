@@ -9,6 +9,7 @@ import { IdentificationService, buildBeneficiaryObject } from '../identification
 import { DocumentsService } from '../documents.service';
 import { NewRequestService } from '../../new-request.service';
 import { countries } from '../../../requests.config';
+import { MultilingualService } from '@setl/multilingual';
 
 @Component({
     selector: 'company-information',
@@ -19,6 +20,7 @@ export class CompanyInformationComponent implements OnInit, OnDestroy {
     @ViewChild(FormPercentDirective) formPercent: FormPercentDirective;
     @Input() form: FormGroup;
     @select(['ofi', 'ofiKyc', 'myKycRequested', 'kycs']) requests$;
+    @select(['user', 'siteSettings', 'language']) requestLanguageObj;
 
     unsubscribe: Subject<any> = new Subject();
     open: boolean = false;
@@ -39,24 +41,18 @@ export class CompanyInformationComponent implements OnInit, OnDestroy {
         private newRequestService: NewRequestService,
         private identificationService: IdentificationService,
         private documentsService: DocumentsService,
+        public translate: MultilingualService,
     ) {
     }
 
     ngOnInit() {
-        this.regulatoryStatusList = this.newRequestService.regulatoryStatusList;
-        this.regulatoryStatusInsurerTypeList = this.newRequestService.regulatoryStatusInsurerTypeList;
-        this.sectorActivityList = this.newRequestService.sectorActivityList;
-        this.companyActivitiesList = this.newRequestService.companyActivitiesList;
-        this.ownAccountInvestorList = this.newRequestService.ownAccountInvestorList;
-        this.investorOnBehalfList = this.newRequestService.investorOnBehalfList;
-        this.geographicalOriginTypeList = this.newRequestService.geographicalOriginTypeList;
-        this.financialAssetsInvestedList = this.newRequestService.financialAssetsInvestedList;
-        this.geographicalAreaList = this.newRequestService.geographicalAreaList;
-        this.custodianHolderAccountList = this.newRequestService.custodianHolderAccountList;
-        this.listingMarketsList = this.newRequestService.listingMarketsList;
-
         this.initFormCheck();
         this.getCurrentFormData();
+        this.initLists();
+
+        this.requestLanguageObj
+        .pipe(takeUntil(this.unsubscribe))
+        .subscribe(() => this.initLists());
     }
 
     initFormCheck() {
@@ -119,6 +115,21 @@ export class CompanyInformationComponent implements OnInit, OnDestroy {
         });
     }
 
+    initLists() {
+        this.regulatoryStatusInsurerTypeList = this.translate.translate(
+            this.newRequestService.regulatoryStatusInsurerTypeList);
+        this.regulatoryStatusList = this.translate.translate(this.newRequestService.regulatoryStatusList);
+        this.sectorActivityList = this.translate.translate(this.newRequestService.sectorActivityList);
+        this.companyActivitiesList = this.translate.translate(this.newRequestService.companyActivitiesList);
+        this.ownAccountInvestorList = this.translate.translate(this.newRequestService.ownAccountInvestorList);
+        this.investorOnBehalfList = this.translate.translate(this.newRequestService.investorOnBehalfList);
+        this.geographicalOriginTypeList = this.translate.translate(this.newRequestService.geographicalOriginTypeList);
+        this.financialAssetsInvestedList = this.translate.translate(this.newRequestService.financialAssetsInvestedList);
+        this.geographicalAreaList = this.translate.translate(this.newRequestService.geographicalAreaList);
+        this.custodianHolderAccountList = this.translate.translate(this.newRequestService.custodianHolderAccountList);
+        this.listingMarketsList = this.translate.translate(this.newRequestService.listingMarketsList);
+    }
+
     get beneficiaries() {
         return (this.form.get('beneficiaries') as FormArray).controls;
     }
@@ -149,12 +160,12 @@ export class CompanyInformationComponent implements OnInit, OnDestroy {
         investorOnBehalfControl.disable();
 
         switch (value) {
-        case 'ownAccount':
-            ownAccountControl.enable();
-            break;
-        case 'onBehalfOfThirdParties':
-            investorOnBehalfControl.enable();
-            break;
+            case 'ownAccount':
+                ownAccountControl.enable();
+                break;
+            case 'onBehalfOfThirdParties':
+                investorOnBehalfControl.enable();
+                break;
         }
 
         this.formPercent.refreshFormPercent();
@@ -224,12 +235,12 @@ export class CompanyInformationComponent implements OnInit, OnDestroy {
         }
 
         switch (value) {
-        case 'insurer':
-            form.get('regulatoryStatusInsurerType').enable();
-            break;
-        case 'other' :
-            form.get('regulatoryStatusListingOther').enable();
-            break;
+            case 'insurer':
+                form.get('regulatoryStatusInsurerType').enable();
+                break;
+            case 'other' :
+                form.get('regulatoryStatusListingOther').enable();
+                break;
         }
 
         this.formPercent.refreshFormPercent();

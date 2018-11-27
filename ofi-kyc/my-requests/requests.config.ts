@@ -1404,7 +1404,7 @@ export const controlToName = {
     establishmentName: 'Establishment Name',
     iban: 'IBAN',
     bic: 'BIC',
-    addressLine1: 'Establishement Address',
+    addressLine1: 'Establishment Address',
     addressLine2: 'Address Line 2',
     zipCode: 'Zip Code',
     city: 'City',
