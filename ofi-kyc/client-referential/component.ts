@@ -109,18 +109,18 @@ export class OfiClientReferentialComponent implements OnInit, OnDestroy {
 
     /* Constructor. */
     constructor(private fb: FormBuilder,
-                private changeDetectorRef: ChangeDetectorRef,
-                private location: Location,
-                private alertsService: AlertsService,
-                private ofiKycService: OfiKycService,
-                private toasterService: ToasterService,
-                private ofiFundShareService: OfiFundShareService,
-                private ofiKycObservablesService: OfiKycObservablesService,
-                private ngRedux: NgRedux<any>,
-                private fileDownloader: FileDownloader,
-                private route: ActivatedRoute,
-                private router: Router,
-                public translate: MultilingualService) {
+        private changeDetectorRef: ChangeDetectorRef,
+        private location: Location,
+        private alertsService: AlertsService,
+        private ofiKycService: OfiKycService,
+        private toasterService: ToasterService,
+        private ofiFundShareService: OfiFundShareService,
+        private ofiKycObservablesService: OfiKycObservablesService,
+        private ngRedux: NgRedux<any>,
+        private fileDownloader: FileDownloader,
+        private route: ActivatedRoute,
+        private router: Router,
+        public translate: MultilingualService) {
 
         this.investorTypeForm = new FormGroup({
             investorType: new FormControl(''),
@@ -186,58 +186,68 @@ export class OfiClientReferentialComponent implements OnInit, OnDestroy {
                 this.amKycListObs,
                 this.route.params,
             )
-            .subscribe(([clientReferential, amKycList, params]) => {
-                this.kycId = (!params.kycId ? '' : params.kycId);
+                .subscribe(([clientReferential, amKycList, params]) => {
+                    this.kycId = (!params.kycId ? '' : params.kycId);
 
-                this.clientReferential = clientReferential;
+                    this.clientReferential = clientReferential;
 
-                clientReferential.forEach((client) => {
-                    this.clients[client.kycID] = client;
-                });
+                    clientReferential.forEach((client) => {
+                        this.clients[client.kycID] = client;
+                    });
 
-                this.showInfo = false;
-                if (!!this.clients[this.kycId] && this.clients[this.kycId].alreadyCompleted == 0) {
-                    this.showInfo = true;
-                }
-
-                Object.keys(amKycList).forEach((key) => {
-                    this.amKycList.push(amKycList[key]);
-                    if (!this.investorKycIds[amKycList[key].investorUserID]) {
-                        this.investorKycIds[amKycList[key].investorUserID] = [];
+                    this.showInfo = false;
+                    if (!!this.clients[this.kycId] && this.clients[this.kycId].alreadyCompleted == 0) {
+                        this.showInfo = true;
                     }
-                    this.investorKycIds[amKycList[key].investorUserID].push(amKycList[key].kycID);
-                    this.allKycIds.push(amKycList[key].kycID);
 
-                    if (amKycList[key].kycID == this.kycId) this.currentInvestor = amKycList[key];
-                });
+                    Object.keys(amKycList).forEach((key) => {
+                        this.amKycList.push(amKycList[key]);
+                        if (!this.investorKycIds[amKycList[key].investorUserID]) {
+                            this.investorKycIds[amKycList[key].investorUserID] = [];
+                        }
+                        this.investorKycIds[amKycList[key].investorUserID].push(amKycList[key].kycID);
+                        this.allKycIds.push(amKycList[key].kycID);
 
-                if (!this.isPortfolioManager() && !_.isEmpty(this.currentInvestor)) {
-                    this.companyName = _.get(this.currentInvestor, 'investorCompanyName', '');
+                        if (amKycList[key].kycID == this.kycId) this.currentInvestor = amKycList[key];
+                    });
 
-                    if (this.kycId != '') {
-                        const phoneNumber = (this.currentInvestor.investorPhoneCode && this.currentInvestor.investorPhoneNumber) ? `${this.currentInvestor.investorPhoneCode} ${this.currentInvestor.investorPhoneNumber}` : '';
-                        const approvalDateRequestTs = mDateHelper.dateStrToUnixTimestamp(this.currentInvestor.lastUpdated, 'YYYY-MM-DD HH:mm:ss');
-                        const approvalDateRequest = mDateHelper.unixTimestampToDateStr(approvalDateRequestTs, 'DD / MM / YYYY');
-                        this.investorForm.setValue({
-                            companyName: this.currentInvestor.investorCompanyName,
-                            clientReference: this.currentInvestor.clientReference,
-                            firstName: this.currentInvestor.investorFirstName,
-                            lastName: this.currentInvestor.investorLastName,
-                            email: this.currentInvestor.investorEmail,
-                            phoneNumber,
-                            approvalDateRequest,
-                        });
+                    if (!this.isPortfolioManager() && !_.isEmpty(this.currentInvestor)) {
+                        this.companyName = _.get(this.currentInvestor, 'investorCompanyName', '');
+
+                        if (this.kycId != '') {
+                            const phoneNumber = (this.currentInvestor.investorPhoneCode && this.currentInvestor.investorPhoneNumber) ? `${this.currentInvestor.investorPhoneCode} ${this.currentInvestor.investorPhoneNumber}` : '';
+                            const approvalDateRequestTs = mDateHelper.dateStrToUnixTimestamp(this.currentInvestor.lastUpdated, 'YYYY-MM-DD HH:mm:ss');
+                            const approvalDateRequest = mDateHelper.unixTimestampToDateStr(approvalDateRequestTs, 'DD / MM / YYYY');
+                            this.investorForm.setValue({
+                                companyName: this.currentInvestor.investorCompanyName,
+                                clientReference: this.currentInvestor.clientReference,
+                                firstName: this.currentInvestor.investorFirstName,
+                                lastName: this.currentInvestor.investorLastName,
+                                email: this.currentInvestor.investorEmail,
+                                phoneNumber,
+                                approvalDateRequest,
+                            });
+                        }
+                    } else {
+                        if (this.isPortfolioManager()) {
+                            // force load share access data if portfolio manager.
+                            this.loadTab(2);
+                        }
                     }
-                } else {
-                    if (this.isPortfolioManager()) {
-                       // force load share access data if portfolio manager.
-                        this.loadTab(2);
-                    }
-                }
 
-                this.changeDetectorRef.markForCheck();
-            }),
+                    this.changeDetectorRef.markForCheck();
+                }),
         );
+    }
+
+    getClientReferentialDescriptionTitle(): string {
+        if (!this.kycId) {
+            return '';
+        }
+
+        const clientRef = this.clients[this.kycId];
+
+        return `: ${clientRef.companyName}${clientRef.clientReference ? ` - ${clientRef.clientReference}` : ''}`;
     }
 
     requestSearch() {
@@ -476,14 +486,14 @@ export class OfiClientReferentialComponent implements OnInit, OnDestroy {
             invitedID: this.currentInvestor.invitedID,
         };
         this.ofiKycService.updateInvestor(payload)
-        .then(() => {
-            this.ofiKycService.setRequestedClientReferential(false);
-            this.ofiKycService.setRequestedAMKycList(false);
-            this.toasterService.pop('success', this.translate.translate('Client reference updated'));
-        })
-        .catch(() => {
-            this.toasterService.pop('success', this.translate.translate('Failed to update client reference'));
-        });
+            .then(() => {
+                this.ofiKycService.setRequestedClientReferential(false);
+                this.ofiKycService.setRequestedAMKycList(false);
+                this.toasterService.pop('success', this.translate.translate('Client reference updated'));
+            })
+            .catch(() => {
+                this.toasterService.pop('success', this.translate.translate('Failed to update client reference'));
+            });
     }
 
     /**
