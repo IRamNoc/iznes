@@ -3,13 +3,14 @@ import { CommonModule } from '@angular/common';
 import { ClarityModule } from '@clr/angular';
 
 import { BlockchainStatusTracker } from './component';
-import { SetlDirectivesModule } from '@setl/utils';
+import { SetlDirectivesModule, SetlPipesModule } from '@setl/utils';
 
 @NgModule({
     imports: [
         CommonModule,
         ClarityModule,
         SetlDirectivesModule,
+        SetlPipesModule,
     ],
     declarations: [
         BlockchainStatusTracker,
