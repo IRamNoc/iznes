@@ -39,7 +39,7 @@
                             <input type="text"
                                     id="{{'iban-' + i}}"
                                     formControlName="iban"
-                                    placeholder="{{ 'Fill your cash account IBAN number' | translate }}">
+                                    placeholder="{{ 'Fill in your cash account IBAN number' | translate }}">
                             <span class="field-error" *ngIf="hasError([i,'iban'], ['required'])">{{ 'Field is required' | translate }}</span>
                             <span class="field-error" *ngIf="hasError([i,'iban'], ['iban'])">{{ 'IBAN must be 14 to 34 characters long with 2 letters at the beginning.' | translate }}</span>
                         </div>
@@ -59,7 +59,7 @@
                             <input type="text"
                                     id="{{'establishmentAddress' + i}}"
                                     formControlName="addressLine1"
-                                    placeholder="{{ 'Fill in your establishment\'s address.' | translate }}">
+                                    placeholder="{{ 'Fill in your establishment\'s address' | translate }}">
                             <span class="field-error" *ngIf="hasError([i,'addressLine1'], ['required'])">{{ 'Field is required' | translate }}</span>
                             <span class="field-error" *ngIf="hasError([i,'addressLine1'], ['maxlength'])">{{ 'Address too long' | translate }}</span>
                         </div>
