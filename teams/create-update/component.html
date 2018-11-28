@@ -1,17 +1,17 @@
 <div class="header-breadcrumbs">
     <h1><i class="fa fa-address-book-o"></i> 
         <ng-container *ngIf="isCreateMode()">
-            {{ 'Create New @noun@' | translate: { 'noun': noun } }}
+            {{ ['Create', noun].join(' ') | translate }}
         </ng-container>
         <ng-container *ngIf="!isCreateMode()">
-            {{ 'Update @noun@' | translate: { 'noun': noun } }}
+            {{ ['Update', noun].join(' ') | translate }}
         </ng-container>
     </h1>
 </div>
 
 <clr-tabs>
     <clr-tab>
-        <button clrTabLink id="tabAccountAdmin{{noun}}sButton">{{ '@noun@' | translate: { 'noun': noun } }}</button>
+        <button clrTabLink id="tabAccountAdmin{{noun}}sButton">{{ noun | translate }}</button>
         <clr-tab-content class="outer">
             <app-core-admin-user-teams-status *ngIf="isUpdateMode()"
                 [noun]="noun"
@@ -19,7 +19,7 @@
                 [entityId]="entityId">
             </app-core-admin-user-teams-status>
 
-            <h3>{{ '@noun@ Details' | translate: { 'noun': noun } }}</h3>
+            <h3>{{ [noun, 'Details'].join(' ') | translate }}</h3>
 
             <app-dynamic-form [model]="form"></app-dynamic-form>
             
@@ -42,7 +42,7 @@
             
             <div class="row actions bottom">
                 <div class="col-sm-12">
-                    <h3>{{ (isTeamsPage()) ? 'Team Permissions' : 'User Permissions' | translate }}</h3>
+                    <h3>{{ (isTeamsPage() ? 'Team Permissions' : 'User Permissions') | translate }}</h3>
                 </div>
             </div>
 
@@ -65,17 +65,17 @@
                 <div class="col">
                     <button class="btn btn-primary" (click)="save()" [disabled]="!isValid()">
                         <ng-container *ngIf="isCreateMode()">
-                            {{ 'Create @noun@' | translate: { 'noun': noun } }}
+                           {{ ['Create', noun].join(' ') | translate }} 
                         </ng-container>
                         <ng-container *ngIf="!isCreateMode()">
-                            {{ 'Update @noun@' | translate: { 'noun': noun } }}
+                            {{ ['Update', noun].join(' ') | translate }}
                         </ng-container>
                     </button>
                 </div>
 
                 <div class="col justify-end" *ngIf="isUpdateMode()">
                     <button class="btn btn-danger" (click)="doDeleteTeam()">
-                        {{ 'Delete @noun@' | translate: { 'noun': noun } }}
+                        {{ ['Delete', noun].join(' ') | translate }}
                     </button>
                 </div>
             </div>

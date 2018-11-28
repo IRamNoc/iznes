@@ -20,14 +20,16 @@
         </div>
 
         <div class="col col-sm-4 justify-end">
-            <a [routerLink]="getCreateNewLink()" class="btn">{{ 'Create New @noun@ ' | translate: { 'noun': noun } }}</a>
+            <a [routerLink]="getCreateNewLink()" class="btn">                
+                {{ ['Create New', noun].join(' ') | translate }}
+            </a>
         </div>
     </div>
 </form>
 
 <clr-datagrid #dataGrid>
     <clr-dg-column *ngFor="let col of datagridConfig.columns" class="col-{{col.styleClass}}">
-        <span id="userMgmtCol{{col.id}}">{{ '@col.title@' | translate: { 'col.title': col.title } }}</span>
+        <span id="userMgmtCol{{col.id}}">{{ col.title | translate }}</span>
     </clr-dg-column>
     <clr-dg-column class="col-actions">
         <span id="userMgmtColActions">{{ 'Active' | translate }}</span>

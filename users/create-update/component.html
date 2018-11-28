@@ -1,10 +1,10 @@
 <div class="header-breadcrumbs">
-    <h1><i class="fa fa-address-book-o"></i> {{ (isCreateMode()) ? 'Create New User(s)' : 'Update User' | translate }}</h1>
+    <h1><i class="fa fa-address-book-o"></i> {{ (isCreateMode() ? 'Create New User(s)' : 'Update User') | translate }}</h1>
 </div>
 
 <clr-tabs>
     <clr-tab>
-        <button clrTabLink id="tabAccountAdmin{{noun}}sButton">{{ '@noun@' | translate: { 'noun': noun} }}</button>
+        <button clrTabLink id="tabAccountAdmin{{noun}}sButton">{{ noun | translate }}</button>
         <clr-tab-content class="outer">
             <ng-container *ngIf="isCreateMode()">
                 <div class="well">
@@ -71,7 +71,7 @@
             <ng-container *ngIf="isUpdateMode()">
                 <div class="row actions bottom">
                     <div class="col-sm-12">
-                        <h3>{{ (isTeamsPage()) ? 'Team Permissions' : 'User Permissions' | translate }}
+                        <h3>{{ (isTeamsPage() ? 'Team Permissions' : 'User Permissions') | translate }}
                             <i class="tooltip fa fa-question-circle" [tooltip]="userPermissionsTooltip"></i>
                         </h3>
                     </div>
@@ -95,14 +95,14 @@
                 
                 <div class="col">
                     <button class="btn btn-primary" (click)="save()" [disabled]="!isValid()">
-                        {{ (isCreateMode()) ? 'Create User(s)' : 'Update User Details' | translate }}
+                        {{ (isCreateMode() ? 'Create User(s)' : 'Update User Details') | translate }}
                     </button>
 
                     <button [hidden]="isUpdateMode() && isUserInvitationComplete()" 
                             class="btn btn-primary" 
                             (click)="save(true)" 
                             [disabled]="!isValid()">
-                    {{ (isCreateMode()) ? 'Create &amp; Send Invitation(s)' : 'Update &amp; Send Invitation' | translate }}
+                    {{ (isCreateMode() ? 'Create &amp; Send Invitation(s)' : 'Update &amp; Send Invitation') | translate }}
                     </button>
 
                     <i class="tooltip fa fa-question-circle" *ngIf="createUserTooltip" [tooltip]="createUserTooltip"></i>      

@@ -36,6 +36,7 @@ export class AccountAdminCreateUpdateBase<Type> implements OnInit, OnDestroy {
     protected subscriptions: Subscription[] = [];
 
     @select(['user', 'myDetail', 'accountId']) accountIdOb;
+    @select(['user', 'siteSettings', 'language']) requestLanguageOb;
 
     /**
      *
@@ -58,13 +59,7 @@ export class AccountAdminCreateUpdateBase<Type> implements OnInit, OnDestroy {
         this.processParams();
         this.initSubscriptions();
         this.initPermissions();
-
-        this.alertCreateTitle = this.translate.translate('Create @noun@', { 'noun': this.noun });
-        this.alertUpdateTitle = this.translate.translate('Update @noun@', { 'noun': this.noun });
-        this.alertCreateMessage = this.translate.translate(
-            'Are you sure you want to create this @noun@?', { 'noun': this.noun });
-        this.alertUpdateMessage = this.translate.translate(
-            'Are you sure you want to update this @noun@?', { 'noun': this.noun });
+        this.initAlertMessages();
     }
 
     private processParams(): void {
@@ -84,12 +79,21 @@ export class AccountAdminCreateUpdateBase<Type> implements OnInit, OnDestroy {
         this.subscriptions.push(this.accountIdOb.subscribe((accountId: number) => {
             this.accountId = accountId;
         }));
+
+        this.subscriptions.push(this.requestLanguageOb.subscribe(() => this.initAlertMessages()));
     }
 
     private initPermissions(): void {
         this.permissionsForm = new FormGroup({
             permissions: new FormControl(),
         });
+    }
+
+    private initAlertMessages() {
+        this.alertCreateTitle = this.translate.translate(`Create ${this.noun}`);
+        this.alertUpdateTitle = this.translate.translate(`Update ${this.noun}`);
+        this.alertCreateMessage = this.translate.translate(`Are you sure you want to create this ${this.noun}?`);
+        this.alertUpdateMessage = this.translate.translate(`Are you sure you want to update this ${this.noun}?`);
     }
 
     isTeamsPage(): boolean {
@@ -122,9 +126,9 @@ export class AccountAdminCreateUpdateBase<Type> implements OnInit, OnDestroy {
         let message = '';
 
         if (this.isCreateMode()) {
-            message = this.translate.translate('@entityName@ successfully created', { 'entityName': entityName });
+            message = this.translate.translate('@entityName@ successfully created', { entityName });
         } else if (this.isUpdateMode()) {
-            message = this.translate.translate('@entityName@ successfully updated', { 'entityName': entityName });
+            message = this.translate.translate('@entityName@ successfully updated', { entityName });
         }
 
         this.toaster.pop('success', message);
@@ -140,9 +144,9 @@ export class AccountAdminCreateUpdateBase<Type> implements OnInit, OnDestroy {
         let message = '';
 
         if (this.isCreateMode()) {
-            message = this.translate.translate('@entityName@ failed to be created', { 'entityName': entityName });
+            message = this.translate.translate('@entityName@ failed to be created', { entityName });
         } else if (this.isUpdateMode()) {
-            message = this.translate.translate('@entityName@ failed to be updated', { 'entityName': entityName });
+            message = this.translate.translate('@entityName@ failed to be updated', { entityName });
         }
 
         message += `.<br /><i>${errorMessage}</i>`;
@@ -152,9 +156,8 @@ export class AccountAdminCreateUpdateBase<Type> implements OnInit, OnDestroy {
 
     delete(title: string): void {
         this.confirmations.create(
-            this.translate.translate('Delete @title@', { 'title': title }),
-            this.translate.translate(
-                'Are you sure you want to delete this @noun@?', { 'noun': this.noun.toLowerCase() }),
+            this.translate.translate('Delete @title@', { title }),
+            this.translate.translate(`Are you sure you want to delete this ${this.noun}`),
         ).subscribe((value) => {
             if (value.resolved) {
                 this.onDeleteConfirm();
@@ -168,21 +171,21 @@ export class AccountAdminCreateUpdateBase<Type> implements OnInit, OnDestroy {
     }
 
     protected onDeleteSuccess(entityName: string): void {
-        const message = this.translate.translate('@entityName@ successfully deleted', { 'entityName': entityName });
+        const message = this.translate.translate('@entityName@ successfully deleted', { entityName });
         this.toaster.pop('success', message);
 
         this.router.navigateByUrl(this.getBackUrl());
     }
 
     protected onDeleteError(entityName: string, error: AccountAdminErrorResponse): void {
-        let message = this.translate.translate('Failed to delete @entityName@', { 'entityName': entityName });
+        let message = this.translate.translate('Failed to delete @entityName@', { entityName });
         message += `<br /><i>${error[1].Data[0].Message}</i>`;
 
         this.alerts.create('error', message);
     }
 
     protected onReadEntityError(): void {
-        const message = this.translate.translate('Failed to read @noun@', { 'noun': this.noun.toLowerCase() });
+        const message = this.translate.translate(`Failed to read ${this.noun}`);
         this.toaster.pop('error', message);
 
         this.router.navigateByUrl(this.getBackUrl());
