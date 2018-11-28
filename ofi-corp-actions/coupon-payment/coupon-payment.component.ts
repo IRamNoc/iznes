@@ -9,7 +9,7 @@ import { WalletNodeRequestService, InitialisationService } from '@setl/core-req-
 
 /* Alerts and confirms. */
 import { AlertsService } from '@setl/jaspero-ng2-alerts';
-import { ConfirmationService } from '@setl/utils';
+import { ConfirmationService, immutableHelper, LogService } from '@setl/utils';
 
 /* Utils. */
 import { MoneyValuePipe } from '@setl/utils/pipes';
@@ -21,16 +21,15 @@ import { OfiCorpActionService } from '../../ofi-req-services/ofi-corp-actions/se
 import {
     getConnectedWallet,
     setRequestedWalletHolding,
-    getWalletHoldingByAsset
+    getWalletHoldingByAsset,
 } from '@setl/core-store';
 
 /* Ofi Store stuff. */
 import {
     getOfiCouponList,
-    getOfiUserIssuedAssets
+    getOfiUserIssuedAssets,
 } from '../../ofi-store';
 
-import { immutableHelper, LogService } from '@setl/utils';
 import { ActivatedRoute, Params, Router } from '@angular/router';
 import * as _ from 'lodash';
 import { ofiCouponActions } from '@ofi/ofi-main/ofi-store';
@@ -39,7 +38,7 @@ import { MultilingualService } from '@setl/multilingual';
 /* Decorator. */
 @Component({
     templateUrl: './coupon-payment.component.html',
-    changeDetection: ChangeDetectionStrategy.OnPush
+    changeDetection: ChangeDetectionStrategy.OnPush,
 })
 
 /* Class. */
@@ -99,12 +98,12 @@ export class CouponPaymentComponent implements OnInit, AfterViewInit, OnDestroy 
             this.userAssetList = list;
 
             /* Also map the array for ui elements. */
-            this.filteredUserAssetList = list.map(asset => {
+            this.filteredUserAssetList = list.map((asset) => {
                 return {
                     id: asset.asset,
-                    text: asset.asset
-                }
-            })
+                    text: asset.asset,
+                };
+            });
         });
 
         /* Subscribe for wallet holdings by address. */
@@ -162,10 +161,10 @@ export class CouponPaymentComponent implements OnInit, AfterViewInit, OnDestroy 
 
     ngAfterViewInit() {
         /* State. */
-        let state = this.ngRedux.getState();
+        const state = this.ngRedux.getState();
 
         /* Check if we need to request the coupon list. */
-        let couponList = getOfiCouponList(state);
+        const couponList = getOfiCouponList(state);
         if (!couponList.length) {
             /* If the list is empty, request it. */
             this.ofiCorpActionService.getCouponList().then(() => {
@@ -179,7 +178,7 @@ export class CouponPaymentComponent implements OnInit, AfterViewInit, OnDestroy 
         }
 
         /* Check if we need to request the user issued assets. */
-        let userIssuedAssetsList = getOfiUserIssuedAssets(state);
+        const userIssuedAssetsList = getOfiUserIssuedAssets(state);
         if (!userIssuedAssetsList.length) {
             /* If the list is empty, request it. */
             this.ofiCorpActionService.getUserIssuedAssets().then(() => {
