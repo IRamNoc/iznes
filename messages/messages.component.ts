@@ -16,6 +16,7 @@ import { FileDownloader } from '@setl/utils';
 import { setConnectedWallet } from '@setl/core-store/index';
 import { SagaHelper } from '@setl/utils/index';
 import { MyWalletsService } from '@setl/core-req-services/index';
+import { MultilingualService } from '@setl/multilingual';
 
 @Component({
     selector: 'setl-messages',
@@ -109,6 +110,7 @@ export class SetlMessagesComponent implements OnDestroy, OnInit {
                 private logService: LogService,
                 private fileDownloader: FileDownloader,
                 private myWalletsService: MyWalletsService,
+                public translate: MultilingualService,
                 @Inject(APP_CONFIG) appConfig: AppConfig) {
         this.mailHelper = new MailHelper(ngRedux, myMessageService);
         this.messageService = new MessagesService(this.ngRedux, this.myMessageService);
@@ -198,7 +200,7 @@ export class SetlMessagesComponent implements OnDestroy, OnInit {
                             this.messageService.clearReply();
 
                             this.messageComposeForm.setValue({
-                                subject: 'Re: ' + reply.subject,
+                                subject: `${this.translate.translate('Re')}: ${reply.subject}`,
                                 recipients: [{ id: { walletId: reply.senderId }, text: reply.senderWalletName }],
                                 body: '<br><p>&nbsp;&nbsp;&nbsp;<s>' +
                                 '&nbsp;'.repeat(200) + '</s></p><p>&nbsp;&nbsp;&nbsp;<b>' +
@@ -262,9 +264,10 @@ export class SetlMessagesComponent implements OnDestroy, OnInit {
                         message.senderWalletName = this.walletDirectoryList[message.senderId].walletName;
                     } else {
                         if (message.senderId === -1) {
-                            message.senderWalletName = this.appConfig.internalMessageSender || 'System message';
+                            message.senderWalletName = this.appConfig.internalMessageSender ||
+                                this.translate.translate('System message');
                         } else {
-                            message.senderWalletName = 'Deleted wallet';
+                            message.senderWalletName = this.translate.translate('Deleted wallet');
                         }
                     }
                     if (message.recipientId) {
@@ -564,15 +567,15 @@ export class SetlMessagesComponent implements OnDestroy, OnInit {
         }
 
         if (!formData.subject || !generalBody || !formData.recipients) {
-            this.toaster.pop('error', 'Please fill out all fields');
+            this.toaster.pop('error', this.translate.translate('Please fill out all fields'));
         } else {
             this.messageService.sendMessage(recipients, subject, generalBody, null).then(
                 () => {
-                    this.toaster.pop('success', 'Your message has been sent!');
+                    this.toaster.pop('success', this.translate.translate('Your message has been sent!'));
                     this.closeAndResetComposed();
                 },
                 (err) => {
-                    this.toaster.pop('error', 'Message sending failed');
+                    this.toaster.pop('error', this.translate.translate('Message sending failed'));
                     console.error('Message sending failed', err);
                 },
             );
