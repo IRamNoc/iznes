@@ -96,7 +96,7 @@
                                 <input id="create-coupon-nature" 
                                         type="text" 
                                         [formControl]="formControl.controls['couponNature']" 
-                                        placeholder="translate.translate('Nature of Action')" 
+                                        placeholder="{{ 'Nature of Action' | translate }}" 
                                         class="form-control nature">
                             </div>
                         </div>
@@ -106,7 +106,7 @@
                                 <input id="create-coupon-drafter" 
                                         type="text" 
                                         [formControl]="formControl.controls['couponDrafter']" 
-                                        placeholder="translate.translate('Drafter')" 
+                                        placeholder="{{ 'Drafter' | translate }}" 
                                         class="form-control drafter">
                             </div>
                         </div>
@@ -121,6 +121,7 @@
                                         [allowClear]="true" 
                                         [formControl]="formControl.controls['couponFundShareName']" 
                                         (selected)="selectedFundShare($event)" 
+                                        placeholder="{{ 'Select fund share' | translate }}"
                                         (removed)="selectedFundShare([])">
                             </ng-select>
                         </div>
@@ -130,7 +131,7 @@
                                 <input id="create-coupon-isin" 
                                         type="text" 
                                         [formControl]="formControl.controls['couponIsin']" 
-                                        placeholder="translate.translate('ISIN')" 
+                                        placeholder="{{ 'ISIN' | translate }}" 
                                         class="form-control coupon-isin">
                             </div>
                         </div>
@@ -146,7 +147,7 @@
                                         (keyup)="calculateGrossAmount()" 
                                         type="text" 
                                         [formControl]="formControl.controls['couponAmountByShare']" 
-                                        placeholder="translate.translate('Amount by share')" 
+                                        placeholder="{{ 'Amount by share' | translate }}" 
                                         class="form-control amount-by-share">
                             </div>
                         </div>
@@ -156,7 +157,7 @@
                                 <input id="create-coupon-fund-share-units" 
                                         type="text" 
                                         [formControl]="formControl.controls['couponFundShareUnits']" 
-                                        placeholder="translate.translate('Fund share units')" 
+                                        placeholder="{{ 'Fund share units' | translate }}" 
                                         class="form-control fund-share-units">
                             </div>
                         </div>
@@ -166,7 +167,7 @@
                                 <input id="create-coupon-gross-amount" 
                                         type="text" 
                                         [formControl]="formControl.controls['couponGrossAmount']" 
-                                        placeholder="translate.translate('Gross amount')" 
+                                        placeholder="{{ 'Gross amount')" 
                                         class="form-control gross-amount">
                             </div>
                         </div>
@@ -184,7 +185,7 @@
                                 <input id="create-coupon-valuation-date" 
                                         type="date" 
                                         [formControl]="formControl.controls['couponValuationDate']" 
-                                        placeholder="translate.translate('Valuation date')" 
+                                        placeholder="{{ 'Valuation date' | translate }}" 
                                         class="form-control valuation-date">
                             </div>
                         </div>
@@ -194,7 +195,7 @@
                                 <input id="create-coupon-valuation-time" 
                                         type="time" 
                                         [formControl]="formControl.controls['couponValuationTime']" 
-                                        placeholder="translate.translate('Time')" 
+                                        placeholder="{{ 'Time' | translate }}" 
                                         class="form-control valuation-time">
                             </div>
                         </div>
@@ -212,7 +213,7 @@
                                 <input id="create-coupon-settlement-date" 
                                         type="date" 
                                         [formControl]="formControl.controls['couponSettlementDate']" 
-                                        placeholder="translate.translate('Settlement date')" 
+                                        placeholder="{{ 'Settlement date' | translate }}" 
                                         class="form-control settlement-date">
                             </div>
                         </div>
@@ -222,7 +223,7 @@
                                 <input id="create-coupon-settlement-time" 
                                         type="time" 
                                         [formControl]="formControl.controls['couponSettlementTime']" 
-                                        placeholder="translate.translate('Time')" 
+                                        placeholder="{{ 'Time' | translate }}" 
                                         class="form-control settlement-time">
                             </div>
                         </div>
@@ -237,7 +238,7 @@
                                 <input id="create-coupon-comments" 
                                         type="text" 
                                         [formControl]="formControl.controls['couponComments']" 
-                                        [placeholder]="translate.translate('Comments')" 
+                                        [placeholder]="{{ 'Comments' | translate }}" 
                                         class="form-control comments">
                             </div>
                         </div>
@@ -267,7 +268,7 @@
                                 <input id="view-coupon-nature" 
                                         type="text" 
                                         [formControl]="formControl.controls['couponNature']" 
-                                        placeholder="translate.translate('Nature of action')" 
+                                        placeholder="{{ 'Nature of action' | translate }}" 
                                         class="form-control nature">
                             </div>
                         </div>
@@ -277,7 +278,7 @@
                                 <input id="view-coupon-drafter" 
                                         type="text" 
                                         [formControl]="formControl.controls['couponDrafter']" 
-                                        placeholder="translate.translate('Drafter')" 
+                                        placeholder="{{ 'Drafter' | translate }}" 
                                         class="form-control drafter">
                             </div>
                         </div>
@@ -291,6 +292,7 @@
                             <ng-select [items]="filteredUserAssetList" 
                                         [allowClear]="false" 
                                         [disabled]="true" 
+                                        placeholder="{{ 'Select fund share' | translate }}"
                                         [formControl]="formControl.controls['couponFundShareName']">
                             </ng-select>
                         </div>
@@ -301,7 +303,7 @@
                                 <input id="view-coupon-isin" 
                                         type="text" 
                                         [formControl]="formControl.controls['couponIsin']" 
-                                        placeholder="translate.translate('ISIN')" 
+                                        placeholder="{{ 'ISIN' | translate }}" 
                                         class="form-control coupon-isin">
                             </div>
                         </div>
@@ -317,7 +319,7 @@
                                         (keyup)="calculateGrossAmount()" 
                                         type="text" 
                                         [formControl]="formControl.controls['couponAmountByShare']" 
-                                        placeholder="translate.translate('Amount by share')" 
+                                        placeholder="{{ 'Amount by share' | translate }}" 
                                         class="form-control amount-by-share">
                             </div>
                         </div>
@@ -327,7 +329,7 @@
                                 <input id="view-coupon-fund-share-units" 
                                         type="text" 
                                         [formControl]="formControl.controls['couponFundShareUnits']" 
-                                        placeholder="translate.translate('Fund share units')" 
+                                        placeholder="{{ 'Fund share units' | translate }}" 
                                         class="form-control fund-share-units">
                             </div>
                         </div>
@@ -337,7 +339,7 @@
                                 <input id="view-coupon-gross-amount" 
                                         type="text" 
                                         [formControl]="formControl.controls['couponGrossAmount']" 
-                                        placeholder="translate.translate('Gross amount')" 
+                                        placeholder="{{ 'Gross amount' | translate }}" 
                                         class="form-control gross-amount">
                             </div>
                         </div>
@@ -355,7 +357,7 @@
                                 <input id="view-coupon-valuation-date" 
                                         type="date" 
                                         [formControl]="formControl.controls['couponValuationDate']" 
-                                        placeholder="translate.translate('Valuation date')" 
+                                        placeholder="{{ 'Valuation date' | translate }}" 
                                         class="form-control valuation-date">
                             </div>
                         </div>
@@ -365,7 +367,7 @@
                                 <input id="view-coupon-valuation-time" 
                                         type="time" 
                                         [formControl]="formControl.controls['couponValuationTime']" 
-                                        placeholder="translate.translate('Time')" 
+                                        placeholder="{{ 'Time' | translate }}" 
                                         class="form-control valuation-time">
                             </div>
                         </div>
@@ -383,7 +385,7 @@
                                 <input id="view-coupon-settlement-date" 
                                         type="date" 
                                         [formControl]="formControl.controls['couponSettlementDate']" 
-                                        placeholder="translate.translate('Settlement date')" 
+                                        placeholder="{{ 'Settlement date' | translate }}" 
                                         class="form-control settlement-date">
                             </div>
                         </div>
@@ -393,7 +395,7 @@
                                 <input id="view-coupon-settlement-time" 
                                         type="time" 
                                         [formControl]="formControl.controls['couponSettlementTime']" 
-                                        placeholder="translate.translate('Time')" 
+                                        placeholder="{{ 'Time' | translate }}" 
                                         class="form-control settlement-time">
                             </div>
                         </div>
@@ -408,7 +410,7 @@
                                 <input id="view-coupon-comments" 
                                         type="text" 
                                         [formControl]="formControl.controls['couponComments']" 
-                                        [placeholder]="translate.translate('Comments')" 
+                                        [placeholder]="{{ 'Comments' | translate }}" 
                                         class="form-control comments">
                             </div>
                         </div>
