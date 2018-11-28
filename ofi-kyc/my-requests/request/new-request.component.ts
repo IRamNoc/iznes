@@ -12,11 +12,12 @@ import { steps } from '../requests.config';
 
 @Component({
     templateUrl: './new-request.component.html',
-    styleUrls : ['./new-request.component.scss'],
+    styleUrls: ['./new-request.component.scss'],
 })
 export class NewKycRequestComponent implements OnInit {
     @ViewChild(FormStepsDirective) formSteps;
     @select(['ofi', 'ofiKyc', 'myKycRequested', 'kycs']) requests$;
+    @select(['user', 'siteSettings', 'language']) language$;
 
     unsubscribe: Subject<any> = new Subject();
     stepsConfig: any;
@@ -73,8 +74,7 @@ export class NewKycRequestComponent implements OnInit {
             )
             .subscribe((amcs) => {
                 this.newRequestService.getContext(amcs);
-            })
-        ;
+            });
 
         this.route.queryParamMap.subscribe((params) => {
             const step = params.get('step');
@@ -83,6 +83,10 @@ export class NewKycRequestComponent implements OnInit {
             this.fullForm = !(completed === 'true');
 
             this.initFormSteps(step);
+        });
+
+        this.language$.subscribe(() => {
+            this.initFormSteps(this.currentCompletedStep);
         });
     }
 
