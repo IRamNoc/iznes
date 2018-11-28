@@ -397,7 +397,7 @@ const accountAdmin = {
     children: [
         {
             label: 'Users',
-            label_txt: 'txt_users',
+            label_txt: 'txt_administrationusers',
             icon_class: 'fa fa-users',
             element_id: 'menu-administration-users',
             router_link: '/account-admin/users',
@@ -405,7 +405,7 @@ const accountAdmin = {
         },
         {
             label: 'Teams',
-            label_txt: 'txt_teams',
+            label_txt: 'txt_administrationteams',
             icon_class: 'fa fa-address-book-o',
             element_id: 'menu-administration-teams',
             router_link: '/account-admin/teams',
