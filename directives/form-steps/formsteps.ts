@@ -78,7 +78,7 @@ export class FormStepsDirective implements OnInit, OnDestroy, AfterViewInit {
     constructor(
         private _el: ElementRef,
         private renderer: Renderer2,
-        private _translate: MultilingualService,
+        private translate: MultilingualService,
         private router: Router,
         private _activatedRoute: ActivatedRoute,
         private changeDetectorRef: ChangeDetectorRef,
@@ -206,7 +206,7 @@ export class FormStepsDirective implements OnInit, OnDestroy, AfterViewInit {
             // add finish screen
             this.divFinished = document.createElement('div');
             this.divFinished.className = 'fs-slider-finished';
-            this.divFinished.innerHTML = this._translate.translate('Finished!');
+            this.divFinished.innerHTML = this.translate.translate('Finished!');
             this.divSliderContainer.appendChild(this.divFinished);
             this.divFinished.style.width = this.divSliderSize + 'px';
 
@@ -275,7 +275,7 @@ export class FormStepsDirective implements OnInit, OnDestroy, AfterViewInit {
             // PREV
             this.btPrev = document.createElement('button');
             this.btPrev.className = 'btn btn-info btPrev';
-            this.btPrev.innerHTML = 'Previous';
+            this.btPrev.innerHTML = this.translate.translate('Previous');
             this.btPrev.setAttribute('type', 'button');
             this.divButtons.appendChild(this.btPrev);
             this.btPrev.onclick = (event) => {
@@ -290,7 +290,7 @@ export class FormStepsDirective implements OnInit, OnDestroy, AfterViewInit {
             // Close
             this.btClose = document.createElement('button');
             this.btClose.className = 'btn btn-warning btPrev';
-            this.btClose.innerHTML = 'Close';
+            this.btClose.innerHTML = this.translate.translate('Close');
             this.btClose.setAttribute('type', 'button');
             this.divButtons.appendChild(this.btClose);
             this.btClose.onclick = (event) => {
@@ -300,7 +300,7 @@ export class FormStepsDirective implements OnInit, OnDestroy, AfterViewInit {
             // NEXT
             this.btNext = document.createElement('button');
             this.btNext.className = 'btn btn-success btNext';
-            this.btNext.innerHTML = 'Next';
+            this.btNext.innerHTML = this.translate.translate('Next');
             this.btNext.setAttribute('type', 'button');
             this.divButtons.appendChild(this.btNext);
             this.btNext.onclick = (event) => {
@@ -328,7 +328,7 @@ export class FormStepsDirective implements OnInit, OnDestroy, AfterViewInit {
             // SUBMIT
             this.btSubmit = document.createElement('button');
             this.btSubmit.className = 'btn btn-success btSubmit';
-            this.btSubmit.innerHTML = 'Finish';
+            this.btSubmit.innerHTML = this.translate.translate('Finish');
             this.divButtons.appendChild(this.btSubmit);
             this.btSubmit.onclick = (event) => {
                 if (this.isValid()) {
@@ -387,10 +387,10 @@ export class FormStepsDirective implements OnInit, OnDestroy, AfterViewInit {
     }
 
     move() {
-        if(this.currentStep === 0){
-            this.btClose.innerHTML = 'Cancel';
-        } else{
-            this.btClose.innerHTML = 'Close';
+        if (this.currentStep === 0) {
+            this.btClose.innerHTML = this.translate.translate('Cancel');
+        } else {
+            this.btClose.innerHTML = this.translate.translate('Close');
         }
 
         this.divSliderContainer.style.marginLeft = ((this.currentStep * this.divSliderSize) * -1) + 'px';
@@ -644,14 +644,14 @@ export class FormStepsDirective implements OnInit, OnDestroy, AfterViewInit {
         }
     }
 
-    clickSubmit(element){
+    clickSubmit(element) {
         const formID = element.dataset.form;
         const form = this.divSliderContainer.querySelector('#' + formID);
 
-        if(form){
+        if (form) {
             const formInput: HTMLElement = form.querySelector('input[type="submit"]');
 
-            if(formInput){
+            if (formInput) {
                 formInput.click();
             }
         }
