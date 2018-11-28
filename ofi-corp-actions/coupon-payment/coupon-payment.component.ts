@@ -151,7 +151,7 @@ export class CouponPaymentComponent implements OnInit, AfterViewInit, OnDestroy 
                     couponId: -1,
                     formControl: this.newCouponFormGroup(),
                     active: false,
-                }
+                },
             ];
             return true;
         }
@@ -201,11 +201,10 @@ export class CouponPaymentComponent implements OnInit, AfterViewInit, OnDestroy 
      */
     public handleNewCoupon(): void {
         /* Varibales. */
-        let
-            thisTab = this.tabsControl[1],
-            formData = thisTab.formControl.value,
-            setFundShare: any = false,
-            newCoupon = {};
+        const thisTab = this.tabsControl[1];
+        const formData = thisTab.formControl.value;
+        let setFundShare: any = false;
+        const newCoupon = {};
 
         /* Let's check if the form is valid first... */
         if (!thisTab.formControl.valid || !formData.couponFundShareName.length) {
@@ -234,27 +233,27 @@ export class CouponPaymentComponent implements OnInit, AfterViewInit, OnDestroy 
         newCoupon['comment'] = formData.couponComments;
 
         /* Date validation. */
-        if (new Date(formData.couponSettlementDate + " " + formData.couponSettlementTime) <= new Date()) {
+        if (new Date(formData.couponSettlementDate + ' ' + formData.couponSettlementTime) <= new Date()) {
             /* ...let the user know. */
             this.showError('Please ensure all dates are set to a point in the future.');
             return;
         }
 
-        if (new Date(formData.couponValuationDate + " " + formData.couponValuationTime) <= new Date()) {
+        if (new Date(formData.couponValuationDate + ' ' + formData.couponValuationTime) <= new Date()) {
             /* ...let the user know. */
             this.showError('Please ensure all dates are set to a point in the future.');
             return;
         }
 
         /* Dates. */
-        newCoupon['dateLastUpdated'] = this.formatDate("YYYY-MM-DD hh:mm:ss", new Date());
+        newCoupon['dateLastUpdated'] = this.formatDate('YYYY-MM-DD hh:mm:ss', new Date());
         newCoupon['dateSettlement'] = this.formatDate(
-            "YYYY-MM-DD hh:mm:ss",
-            new Date(formData.couponSettlementDate + " " + formData.couponSettlementTime)
+            'YYYY-MM-DD hh:mm:ss',
+            new Date(formData.couponSettlementDate + ' ' + formData.couponSettlementTime),
         );
         newCoupon['dateValuation'] = this.formatDate(
-            "YYYY-MM-DD hh:mm:ss",
-            new Date(formData.couponValuationDate + " " + formData.couponValuationTime)
+            'YYYY-MM-DD hh:mm:ss',
+            new Date(formData.couponValuationDate + ' ' + formData.couponValuationTime),
         );
 
         /* Now send the request. */
@@ -271,7 +270,7 @@ export class CouponPaymentComponent implements OnInit, AfterViewInit, OnDestroy 
             /* Tell the user it went wrong. */
             this.showError('Failed to create a new coupon payment.');
             console.warn(error);
-        })
+        });
 
         return;
     }
@@ -285,7 +284,8 @@ export class CouponPaymentComponent implements OnInit, AfterViewInit, OnDestroy 
      */
     public handleViewCoupon(couponId: number): void {
         /* Let's firstly find the coupon in the list. */
-        let coupon, foundActive = false;
+        let coupon;
+        let foundActive = false;
         for (coupon of this.couponList) {
             if (coupon.couponID == couponId) {
                 /* Breaking here leaves coupon set
@@ -313,7 +313,7 @@ export class CouponPaymentComponent implements OnInit, AfterViewInit, OnDestroy 
                 /* ...and gotta call this again. */
                 this.changeDetectorRef.detectChanges();
             }
-        })
+        });
 
         /* If we found an active tab, no need to do anymore... */
         if (foundActive) {
@@ -321,13 +321,12 @@ export class CouponPaymentComponent implements OnInit, AfterViewInit, OnDestroy 
         }
 
         /* Workout some data before setting it. */
-        let
-            fixedValudation = this.formatDate("YYYY-MM-DD hh:mm:ss", new Date(coupon.dateValuation)),
-            fixedSettlement = this.formatDate("YYYY-MM-DD hh:mm:ss", new Date(coupon.dateSettlement)),
-            couponValuationDate = '',
-            couponValuationTime = '',
-            couponSettlementDate = '',
-            couponSettlementTime = '';
+        const fixedValudation = this.formatDate('YYYY-MM-DD hh:mm:ss', new Date(coupon.dateValuation));
+        const fixedSettlement = this.formatDate('YYYY-MM-DD hh:mm:ss', new Date(coupon.dateSettlement));
+        let couponValuationDate = '';
+        let couponValuationTime = '';
+        let couponSettlementDate = '';
+        let couponSettlementTime = '';
 
         /* If the dates are valid, set them. */
         if (fixedValudation) {
@@ -343,22 +342,22 @@ export class CouponPaymentComponent implements OnInit, AfterViewInit, OnDestroy 
         this.tabsControl.push({
             title: {
                 icon: 'fa-search',
-                text: coupon.fund
+                text: coupon.fund,
             },
             couponId: coupon.couponID,
             formControl: new FormGroup({
-                'couponNature': new FormControl({value: 'Coupon Payment', disabled: true}),
-                'couponDrafter': new FormControl({value: this.myDetails.username, disabled: true}),
-                'couponFundShareName': new FormControl({value: [{id: 0, text: coupon.fund}], disabled: true}),
-                'couponIsin': new FormControl({value: coupon.fundIsin, disabled: true}),
-                'couponAmountByShare': new FormControl({value: coupon.amount, disabled: true}),
-                'couponFundShareUnits': new FormControl({value: (coupon.amountGross / coupon.amount), disabled: true}),
-                'couponGrossAmount': new FormControl({value: coupon.amountGross, disabled: true}),
-                'couponValuationDate': new FormControl({value: couponValuationDate, disabled: true}),
-                'couponValuationTime': new FormControl({value: couponValuationTime, disabled: true}),
-                'couponSettlementDate': new FormControl({value: couponSettlementDate, disabled: true}),
-                'couponSettlementTime': new FormControl({value: couponSettlementTime, disabled: true}),
-                'couponComments': new FormControl({value: coupon.comment, disabled: true})
+                couponNature: new FormControl({ value: 'Coupon Payment', disabled: true }),
+                couponDrafter: new FormControl({ value: this.myDetails.username, disabled: true }),
+                couponFundShareName: new FormControl({ value: [{ id: 0, text: coupon.fund }], disabled: true }),
+                couponIsin: new FormControl({ value: coupon.fundIsin, disabled: true }),
+                couponAmountByShare: new FormControl({ value: coupon.amount, disabled: true }),
+                couponFundShareUnits: new FormControl({ value: (coupon.amountGross / coupon.amount), disabled: true }),
+                couponGrossAmount: new FormControl({ value: coupon.amountGross, disabled: true }),
+                couponValuationDate: new FormControl({ value: couponValuationDate, disabled: true }),
+                couponValuationTime: new FormControl({ value: couponValuationTime, disabled: true }),
+                couponSettlementDate: new FormControl({ value: couponSettlementDate, disabled: true }),
+                couponSettlementTime: new FormControl({ value: couponSettlementTime, disabled: true }),
+                couponComments: new FormControl({ value: coupon.comment, disabled: true }),
             }),
             couponStatus: coupon.status,
             active: false,
@@ -391,21 +390,19 @@ export class CouponPaymentComponent implements OnInit, AfterViewInit, OnDestroy 
         }
 
         /* Pointers. */
-        const
-            thisTab = this.tabsControl[tabid];
+        const thisTab = this.tabsControl[tabid];
 
         /* Let's start building the request. */
-        let
-            thisCoupon = this.getCouponById(thisTab.couponId),
-            successMessage = "",
-            errorMessage = "",
-            updateCoupon = {
-                'couponId': thisTab.couponId,
-                'accountId': this.myDetails.accountId,
-                'amount': thisCoupon.amount,
-                'amountGross': thisCoupon.amountGross,
-                'status': 0, // -1 is settled, 0 is canceled.
-            };
+        const thisCoupon = this.getCouponById(thisTab.couponId);
+        let successMessage = '';
+        let errorMessage = '';
+        const updateCoupon = {
+            couponId: thisTab.couponId,
+            accountId: this.myDetails.accountId,
+            amount: thisCoupon.amount,
+            amountGross: thisCoupon.amountGross,
+            status: 0, // -1 is settled, 0 is canceled.
+        };
 
         /* Let's update the status to the correct value. */
         switch (action) {
@@ -453,9 +450,8 @@ export class CouponPaymentComponent implements OnInit, AfterViewInit, OnDestroy 
      */
     public selectedFundShare(selected): void {
         /* Variables. */
-        let
-            userAsset = this.getFundById(selected.id),
-            newCouponControls = this.tabsControl[1].formControl;
+        const userAsset = this.getFundById(selected.id);
+        const newCouponControls = this.tabsControl[1].formControl;
 
         /* Check if we found it. */
         if (!userAsset) {
@@ -555,10 +551,9 @@ export class CouponPaymentComponent implements OnInit, AfterViewInit, OnDestroy 
      */
     public calculateGrossAmount(): void {
         /* Ok, so let's get the variables. */
-        let
-            newCouponControls = this.tabsControl[1].formControl,
-            amount = Number(newCouponControls.controls['couponAmountByShare']._value),
-            price = Number(newCouponControls.controls['couponFundShareUnits']._value);
+        const newCouponControls = this.tabsControl[1].formControl;
+        const amount = Number(newCouponControls.controls['couponAmountByShare']._value);
+        const price = Number(newCouponControls.controls['couponFundShareUnits']._value);
 
         /* Now let's check that the user has entered something usable. */
         if (amount && amount >= 0 && !isNaN(amount)) {
@@ -593,18 +588,17 @@ export class CouponPaymentComponent implements OnInit, AfterViewInit, OnDestroy 
      */
     public formatCouponDate(dateString) {
         /* Validation. */
-        if (!dateString) return "";
+        if (!dateString) return '';
 
         /* Variables. */
-        let
-            date = new Date(dateString),
-            returnString = "";
+        const date = new Date(dateString);
+        let returnString = '';
 
         /* Build the date. */
-        returnString += date.getFullYear() + "-" + this.padNumberLeft(date.getMonth()) + "-" + this.padNumberLeft(date.getDate()) + " ";
+        returnString += date.getFullYear() + '-' + this.padNumberLeft(date.getMonth()) + '-' + this.padNumberLeft(date.getDate()) + ' ';
 
         /* Build the time. */
-        returnString += this.padNumberLeft(date.getHours()) + ":" + this.padNumberLeft(date.getMinutes()) + ":" + this.padNumberLeft(date.getSeconds());
+        returnString += this.padNumberLeft(date.getHours()) + ':' + this.padNumberLeft(date.getMinutes()) + ':' + this.padNumberLeft(date.getSeconds());
 
         return returnString;
     }
@@ -642,7 +636,7 @@ export class CouponPaymentComponent implements OnInit, AfterViewInit, OnDestroy 
     }
 
     private numPad(num) {
-        return num < 10 ? "0" + num : num;
+        return num < 10 ? '0' + num : num;
     }
 
     /**
@@ -671,25 +665,28 @@ export class CouponPaymentComponent implements OnInit, AfterViewInit, OnDestroy 
 
             /* Now let's wait for it, and resolve with it. */
             let timesToTry = 10;
-            const waitInterval = setInterval(() => {
-                if (this.walletHoldingsByAddress[userIssuedAsset.walletID] &&
-                    this.walletHoldingsByAddress[userIssuedAsset.walletID][userIssuedAsset.addr] &&
-                    this.walletHoldingsByAddress[userIssuedAsset.walletID][userIssuedAsset.addr][userIssuedAsset.asset]) {
-                    /* Clear the interval. */
-                    clearInterval(waitInterval);
-                    /* Resolve. */
-                    resolve(this.walletHoldingsByAddress[userIssuedAsset.walletID][userIssuedAsset.addr][userIssuedAsset.asset]);
-                } else if (!timesToTry) {
-                    /* If we've tried too many times, we probably don't have access... so clear the interval. */
-                    clearInterval(waitInterval);
+            const waitInterval = setInterval(
+                () => {
+                    if (this.walletHoldingsByAddress[userIssuedAsset.walletID] &&
+                        this.walletHoldingsByAddress[userIssuedAsset.walletID][userIssuedAsset.addr] &&
+                        this.walletHoldingsByAddress[userIssuedAsset.walletID][userIssuedAsset.addr][userIssuedAsset.asset]) {
+                        /* Clear the interval. */
+                        clearInterval(waitInterval);
+                        /* Resolve. */
+                        resolve(this.walletHoldingsByAddress[userIssuedAsset.walletID][userIssuedAsset.addr][userIssuedAsset.asset]);
+                    } else if (!timesToTry) {
+                        /* If we've tried too many times, we probably don't have access... so clear the interval. */
+                        clearInterval(waitInterval);
 
-                    /* then reject. */
-                    reject();
-                } else {
-                    /* Decrement if we're still looping. */
-                    timesToTry--;
-                }
-            }, 100);
+                        /* then reject. */
+                        reject();
+                    } else {
+                        /* Decrement if we're still looping. */
+                        timesToTry--;
+                    }
+                },
+                100,
+            );
         });
     }
 
@@ -703,18 +700,18 @@ export class CouponPaymentComponent implements OnInit, AfterViewInit, OnDestroy 
      */
     public padNumberLeft(num: number | string, zeros?: number): string {
         /* Validation. */
-        if (!num && num != 0) return "";
+        if (!num && num != 0) return '';
         zeros = zeros || 2;
 
         /* Variables. */
         num = num.toString();
-        let // 11 is the total required string length.
-            requiredZeros = zeros - num.length,
-            returnString = "";
+        // 11 is the total required string length.
+        let requiredZeros = zeros - num.length;
+        let returnString = '';
 
         /* Now add the zeros. */
         while (requiredZeros--) {
-            returnString += "0";
+            returnString += '0';
         }
 
         return returnString + num;
@@ -729,51 +726,47 @@ export class CouponPaymentComponent implements OnInit, AfterViewInit, OnDestroy 
      */
     private newCouponFormGroup(): FormGroup {
         return new FormGroup({
-            'couponNature': new FormControl(
-                {value: 'Coupon Payment', disabled: true}
+            couponNature: new FormControl(
+                { value: 'Coupon Payment', disabled: true },
             ),
-            'couponDrafter': new FormControl(
-                {value: this.myDetails.username, disabled: true}
+            couponDrafter: new FormControl(
+                { value: this.myDetails.username, disabled: true },
             ),
-
-            'couponFundShareName': new FormControl(
+            couponFundShareName: new FormControl(
                 [],
-                Validators.required
+                Validators.required,
             ),
-            'couponIsin': new FormControl(
-                {value: '', disabled: true}
+            couponIsin: new FormControl(
+                { value: '', disabled: true },
             ),
-
-            'couponAmountByShare': new FormControl(
+            couponAmountByShare: new FormControl(
                 '',
-                Validators.required
+                Validators.required,
             ),
-            'couponFundShareUnits': new FormControl(
-                {value: '', disabled: true}
+            couponFundShareUnits: new FormControl(
+                { value: '', disabled: true },
             ),
-            'couponGrossAmount': new FormControl(
-                {value: '', disabled: true}
+            couponGrossAmount: new FormControl(
+                { value: '', disabled: true }, 
             ),
-
-            'couponValuationDate': new FormControl(
+            couponValuationDate: new FormControl(
                 '',
-                Validators.required
+                Validators.required,
             ),
-            'couponValuationTime': new FormControl(
+            couponValuationTime: new FormControl(
                 '',
-                [Validators.required]
+                [Validators.required],
             ),
-            'couponSettlementDate': new FormControl(
+            couponSettlementDate: new FormControl(
                 '',
-                Validators.required
+                Validators.required,
             ),
-            'couponSettlementTime': new FormControl(
+            couponSettlementTime: new FormControl(
                 '',
-                Validators.required
+                Validators.required,
             ),
-
-            'couponComments': new FormControl(
-                ''
+            couponComments: new FormControl(
+                '',
             ),
         });
     }
@@ -897,7 +890,7 @@ export class CouponPaymentComponent implements OnInit, AfterViewInit, OnDestroy 
         this.changeDetectorRef.detach();
 
         /* Unsunscribe Observables. */
-        for (var key in this.subscriptions) {
+        for (const key in this.subscriptions) {
             this.subscriptions[key].unsubscribe();
         }
 
