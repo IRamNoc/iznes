@@ -600,7 +600,7 @@ export const menuSpec: MenuSpec = {
                 label: 'Report',
                 label_txt: 'txt_reports',
                 icon_class: 'fa fa-flag',
-                element_id: 'menu-asset-servicing',
+                element_id: 'menu-reports',
                 children: [
                     reportsBalances,
                     reportsIssues,
