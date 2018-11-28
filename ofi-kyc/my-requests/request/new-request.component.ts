@@ -85,7 +85,7 @@ export class NewKycRequestComponent implements OnInit {
             this.initFormSteps(step);
         });
 
-        this.language$.subscribe(() => {
+        this.language$.pipe(takeUntil(this.unsubscribe)).subscribe(() => {
             this.initFormSteps(this.currentCompletedStep);
         });
     }
