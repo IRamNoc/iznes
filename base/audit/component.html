@@ -1,5 +1,5 @@
 <div class="header-breadcrumbs">
-    <h1><i class="fa fa-address-book-o"></i> {{ '@noun@\'s Audit' | translate: { 'noun': noun} }}</h1>
+    <h1><i class="fa fa-address-book-o"></i> {{ [noun + 's', 'Audit'].join(' ') | translate }}</h1>
 </div>
 
 <clr-tabs>
@@ -10,23 +10,26 @@
                 <div class="form-horizontal">
                     <div class="row">
                         <div class="form-group col-sm-3">
-                            <label class="control-label">{{ '@noun@' | translate: { 'noun': noun } }}</label>
-                            <input id="auditSearch" name="auditSearch" class="form-control"
-                                type="text"
-                                [placeholder]="translate.translate('Search by @noun@ name or reference', { 'noun': noun })"
-                                formControlName="entitySearch"/>
+                            <label class="control-label">{{ noun | translate }}</label>
+                            <input id="auditSearch" 
+                                    name="auditSearch" 
+                                    class="form-control"
+                                    type="text"
+                                    placeholder="{{ ['Search by', noun, 'name or reference'].join(' ') | translate }}"
+                                    formControlName="entitySearch"/>
                         </div>
 
                         <div class="form-group col-sm-3">
                             <label class="control-label">{{ 'Date From' | translate }}</label>
                             <div class="input-group date-pick-wrapper">
                                 <span class="fa fa-calendar"></span>
-                                <input id="auditDateFrom" name="auditDateFrom"
-                                    [placeholder]="translate.translate('Choose a date')"
-                                    formControlName="dateFrom"
-                                    [dpDayPicker]="dateConfig"
-                                    mode="day"
-                                    theme="dp-material">
+                                <input id="auditDateFrom" 
+                                        name="auditDateFrom"
+                                        placeholder="{{ 'Choose a date' | translate }}"
+                                        formControlName="dateFrom"
+                                        [dpDayPicker]="dateConfig"
+                                        mode="day"
+                                        theme="dp-material">
                             </div>
                         </div>
 
@@ -34,18 +37,21 @@
                             <label class="control-label">{{ 'Date To' | translate }}</label>
                             <div class="input-group date-pick-wrapper">
                                 <span class="fa fa-calendar"></span>
-                                <input id="auditDateTo" name="auditDateTo"
-                                    [placeholder]="translate.translate('Choose a date')"
-                                    formControlName="dateTo"
-                                    [dpDayPicker]="dateConfig"
-                                    mode="day"
-                                    theme="dp-material">
+                                <input id="auditDateTo" 
+                                        name="auditDateTo"
+                                        placeholder="{{ 'Choose a date' | translate }}"
+                                        formControlName="dateTo"
+                                        [dpDayPicker]="dateConfig"
+                                        mode="day"
+                                        theme="dp-material">
                             </div>
                         </div>
 
                         <div class="form-group col-sm-3">
                             <label class="control-label">&nbsp;</label>
-                            <button class="btn" (click)="exportCSV()">{{ 'Export @noun@ Audit as CSV' | translate: { 'noun': noun} }}</button>
+                            <button class="btn" (click)="exportCSV()">
+                                {{ ['Export', noun, 'Audit as CSV'].join(' ') | translate }}
+                            </button>
                         </div>
                     </div>
                 </div>
@@ -53,7 +59,7 @@
 
             <clr-datagrid #dataGrid>
                 <clr-dg-column *ngFor="let col of datagridConfig.columns" class="col-{{col.styleClass}}">
-                    <span id="auditCol{{col.id}}">{{ '@col.title@' | translate: { 'col.title': col.title } }}</span>
+                    <span id="auditCol{{col.id}}">{{ col.title | translate }}</span>
                 </clr-dg-column>
             
                 <clr-dg-row *clrDgItems="let entity of audit; let idx = index;" id="{{'auditRow' + idx}}"

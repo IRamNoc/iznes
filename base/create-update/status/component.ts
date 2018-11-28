@@ -66,14 +66,14 @@ export class AccountAdminStatusComponentBase<Type> implements OnInit, OnDestroy 
 
     getStatusText(): string {
         switch (this.status) {
-        case 0:
-            return this.textDisable;
-        case 1:
-            return this.textEnable;
-        case 2:
-            return this.textPending;
-        default:
-            return '';
+            case 0:
+                return this.textDisable;
+            case 1:
+                return this.textEnable;
+            case 2:
+                return this.textPending;
+            default:
+                return '';
         }
     }
 
@@ -81,8 +81,8 @@ export class AccountAdminStatusComponentBase<Type> implements OnInit, OnDestroy 
         this.toaster.pop('success', this.translate.translate(
             `${this.noun} successfully ${this.status ? 'enabled' : 'disabled'}`,
             (this.status)
-                ? this.translate.translate('@noun@ successfully enabled@', { 'noun': this.noun })
-                : this.translate.translate('@noun@ successfully disabled@', { 'noun': this.noun }),
+                ? this.translate.translate(`${this.noun} successfully enabled`)
+                : this.translate.translate(`${this.noun} successfully disabled`),
         ));
 
         this.router.navigateByUrl(this.getBackURL());
@@ -93,8 +93,8 @@ export class AccountAdminStatusComponentBase<Type> implements OnInit, OnDestroy 
 
         this.toaster.pop('error', this.translate.translate(
             (this.status)
-                ? this.translate.translate('@noun@ could not be enabled', { 'noun': this.noun })
-                : this.translate.translate('@noun@ could not be disabled', { 'noun': this.noun }),
+                ? this.translate.translate(`${this.noun} could not be enabled`)
+                : this.translate.translate(`${this.noun} could not be disabled`),
         ));
     }
 
