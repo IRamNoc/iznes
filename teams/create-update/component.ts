@@ -47,10 +47,6 @@ export class UserTeamsCreateUpdateComponent
         }
     }
 
-    private createString(strArr: String[]) {
-        return strArr.join(' ');
-    }
-
     private onReadTeamSuccess(data): void {
         const team: Model.AccountAdminTeam = data[1].Data[0];
 
