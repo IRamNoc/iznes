@@ -33,7 +33,11 @@
                 </button>
             </div>
             <div class="message_list_menu_pages">
-                <pagination-controls (pageChange)="currentPage = $event; onPageChange($event)" maxSize="5">
+                <pagination-controls
+                    (pageChange)="currentPage = $event; onPageChange($event)"
+                    maxSize="5"
+                    previousLabel="{{ 'Previous' | translate }}"
+                    nextLabel="{{ 'Next' | translate }}">
                 </pagination-controls>
             </div>
         </div>
