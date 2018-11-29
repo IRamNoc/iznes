@@ -5,8 +5,8 @@
     <b>Chain:</b> {{ data['chainid'] }}<br>
     <b>Valid From:</b> {{ prettyTime(data['startdate']) }}<br>
     <b>Valid Until:</b> {{ prettyTime(data['enddate']) }}<br>
-    <b>Reference:</b> {{ data['poareference'] }}<br>
-    <b>Permissions:</b></p>
+    <b>Reference:</b> {{ data['poareference'] }}</p><br>
+    <p><b>Permissions:</b></p>
     <ul>
         <li *ngFor="let p of data['permissions']">{{ prettyNames(p['txtype']) }} using assets: {{ p['assets'].join(', ') }} with total quantity: {{ p['amount'] }}</li>
     </ul>

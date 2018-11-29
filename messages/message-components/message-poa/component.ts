@@ -74,7 +74,7 @@ export class SetlMessagePOAComponent implements OnInit {
         istfm: 'Cancel Asset',
         nsreg: 'Register Namespace',
         nstra: 'Transfer Namespace',
-        txnul: 'Null transaction',
+        txnul: 'Read Balance',
         trtom: 'Transfer to many',
         txraw: 'Raw transaction',
         xcadd: 'Add Cross Chain',
