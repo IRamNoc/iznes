@@ -149,8 +149,10 @@ export class NewKycSelectAmcComponent implements OnInit, OnDestroy {
     }
 
     toggleManagementCompany(managementCompany) {
-        managementCompany.selected = !managementCompany.selected;
-        this.onRegisteredChange();
+        if (!this.submitted) {
+            managementCompany.selected = !managementCompany.selected;
+            this.onRegisteredChange();
+        }
     }
 
     getQueryParams() {
