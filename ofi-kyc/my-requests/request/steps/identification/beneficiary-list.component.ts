@@ -305,6 +305,7 @@ export class BeneficiaryListComponent implements OnInit, OnDestroy {
         }
         this.removeParentFromStakeholders(companyBeneficiariesID);
 
+        this.sortStakeholders();
         this.askRefresh();
     }
 
