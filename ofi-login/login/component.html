@@ -63,7 +63,7 @@
 
                         <div class="forgot-password col-xs-4">
                             <a *ngIf="!showModal && !resetPassword && !showTwoFactorModal" id="forgotten-password-link" class="reset-link" (click)="showFPModal()">
-                                {{ 'Forgot your password?' | translate }}
+                                {{ 'Forgotten password' | translate }}
                             </a>
                             <a *ngIf="showTwoFactorModal && !showResetTwoFactor && !twoFactorResetVerified && !qrCode" id="reset-two-factor-link" class="reset-link" (click)="showResetTwoFactor=true">
                                 {{ 'Lost access to your code?' | translate }}
@@ -146,7 +146,7 @@
             <div class="icon">
                 <i class="icon-key"></i>
             </div>
-            <h2>{{ 'Reset password' | translate }}</h2>
+            <h2>{{ 'Reset your password' | translate }}</h2>
         </div>
         <div class="form-container">
             <div *ngIf="isTokenExpired" class="text-block">
