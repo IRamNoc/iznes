@@ -174,7 +174,11 @@ export const legalFormList = [
     },
     {
         id: 'GEIE',
-        text: "GEIE: Groupement européen d'intérêt économiqueGIE : Groupement d'intérêt économique",
+        text: "GEIE: Groupement européen d'intérêt économique",
+    },
+    {
+        id: 'GIE',
+        text: 'Groupement d\'intérêt économique',
     },
     {
         id: 'SARL',
