@@ -135,7 +135,11 @@ export class OfiNavFundsList implements OnInit, OnDestroy {
      * @memberof OfiNavFundView
      */
     getCurrencyString(currencyId: number): string {
-        return this.currencyList.find(v => v.id === currencyId).text || 'N/A';
+        try {
+            return this.currencyList.find(v => v.id === currencyId).text || 'N/A';
+        } catch (e) {
+            return 'N/A';
+        }
     }
 
     getNextValuationClass(nextValuationDate: string): string {
