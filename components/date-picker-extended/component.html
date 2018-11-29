@@ -12,6 +12,6 @@
 	<dp-day-calendar [(ngModel)]="selectedDates" [config]="dateConfig" theme="dp-material" [disabled]="disabled"></dp-day-calendar>
 
 	<div class="calendar c-footer" *ngIf="showClearButton">
-		<button class="btn btn-danger clear" (click)="clear()" type="button">Clear</button>
+		<button class="btn btn-danger clear" (click)="clear()" type="button">{{ 'Reset' | translate }}</button>
 	</div>
 </div>
