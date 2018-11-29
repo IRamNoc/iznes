@@ -1,4 +1,4 @@
-import { ChangeDetectionStrategy, ChangeDetectorRef, Component, OnDestroy, OnInit, Inject } from '@angular/core';
+import { ChangeDetectorRef, Component, OnDestroy, OnInit, Inject } from '@angular/core';
 import { FormArray, FormBuilder, FormControl, FormGroup, Validators } from '@angular/forms';
 import { Location } from '@angular/common';
 import { OfiKycService } from '../../ofi-req-services/ofi-kyc/service';

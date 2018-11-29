@@ -90,22 +90,22 @@
                 <clr-dg-column class="col-currency">
                     <span id="NAV-CN-NAV-CCY">{{ 'NAV CCY' | translate }}</span>
                 </clr-dg-column>
-                <clr-dg-column>
+                <clr-dg-column class="right">
                     <span id="NAV-CN-NAV">{{ 'NAV' | translate }}</span>
                 </clr-dg-column>
-                <clr-dg-column>
+                <clr-dg-column class="right">
                     <span id="NAV-CN-NAV-Estimated">{{ 'NAV' | translate }}<br>{{ 'Estimated' | translate }}</span>
                 </clr-dg-column>
-                <clr-dg-column>
+                <clr-dg-column class="right">
                     <span id="NAV-CN-NAV-Technical">{{ 'NAV' | translate }}<br>{{ 'Technical' | translate }}</span>
                 </clr-dg-column>
-                <clr-dg-column>
+                <clr-dg-column class="right">
                     <span id="NAV-CN-NAV-Validated">{{ 'NAV' | translate }}<br>{{ 'Validated' | translate }}</span>
                 </clr-dg-column>
                 <clr-dg-column class="col-status">
                     <span id="NAV-CN-Status">{{ 'Status' | translate }}</span>
                 </clr-dg-column>
-                <clr-dg-column class="actions">
+                <clr-dg-column class="actions right">
                     <span id="NAV-CN-Actions">{{ 'Actions' | translate }}</span>
                 </clr-dg-column>
 
@@ -118,15 +118,15 @@
                     <clr-dg-cell id="{{'NAV-CCY-'+ (item.currency==0?'EURO-':(item.currency==1?'USD-':'GBP-')) +idx}}" class="col-currency" (click)="navigateToShare(item.shareId)">
                         {{'@getCurrencyString(item.currency)@' | translate: {'getCurrencyString(item.currency)': getCurrencyString(item.currency)} }}
                     </clr-dg-cell>
-                    <clr-dg-cell (click)="navigateToShare(item.shareId)">
+                    <clr-dg-cell (click)="navigateToShare(item.shareId)" class="right">
                         <span id="{{'NAV-Value-'+idx}}" [hidden]="isNavNull(item.nav)">{{ navToFrontEndString(item.nav)}}</span>
                         <span id="{{'NAV-Status-'+idx}}" [hidden]="!isNavNull(item.nav)" class="label label-warning">{{ 'Pending' | translate }}</span>
                     </clr-dg-cell>
-                    <clr-dg-cell id="{{'NAV-EstValue-'+idx}}" class="nav-status-price" [class.not-set]="!item.navEstimated" (click)="navigateToShare(item.shareId)">{{item.navEstimated ? navToFrontEndString(item.navEstimated) : 'N/A'}}
+                    <clr-dg-cell id="{{'NAV-EstValue-'+idx}}" class="nav-status-price right" [class.not-set]="!item.navEstimated" (click)="navigateToShare(item.shareId)">{{item.navEstimated ? navToFrontEndString(item.navEstimated) : 'N/A'}}
                     </clr-dg-cell>
-                    <clr-dg-cell id="{{'NAV-Tech-Value-'+idx}}" class="nav-status-price" [class.not-set]="!item.navTechnical" (click)="navigateToShare(item.shareId)">{{item.navTechnical ? navToFrontEndString(item.navTechnical) : 'N/A'}}
+                    <clr-dg-cell id="{{'NAV-Tech-Value-'+idx}}" class="nav-status-price right" [class.not-set]="!item.navTechnical" (click)="navigateToShare(item.shareId)">{{item.navTechnical ? navToFrontEndString(item.navTechnical) : 'N/A'}}
                     </clr-dg-cell>
-                    <clr-dg-cell id="{{'NAV-Val-Value-'+idx}}" class="nav-status-price" [class.not-set]="!item.navValidated" (click)="navigateToShare(item.shareId)">{{item.navValidated ? navToFrontEndString(item.navValidated) : 'N/A'}}
+                    <clr-dg-cell id="{{'NAV-Val-Value-'+idx}}" class="nav-status-price right" [class.not-set]="!item.navValidated" (click)="navigateToShare(item.shareId)">{{item.navValidated ? navToFrontEndString(item.navValidated) : 'N/A'}}
                     </clr-dg-cell>
                     <clr-dg-cell class="col-status" (click)="navigateToShare(item.shareId)">
                         <span [ngSwitch]="item.status">
