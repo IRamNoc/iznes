@@ -275,8 +275,7 @@ export class SetlMessagesComponent implements OnDestroy, OnInit {
                             message.recipientWalletName = this.walletDirectoryList[message.recipientId].walletName;
                         }
                     }
-
-                    message.isChecked = false;
+                    message.isChecked = this.checkedMessages.includes(message.mailId);
                     return message;
                 }
             });
@@ -313,7 +312,7 @@ export class SetlMessagesComponent implements OnDestroy, OnInit {
      */
     refreshMailbox(page = 0) {
         this.currentPage = page;
-        this.checkedMessages = [];
+        this.storeCheckedMessages();
         const categoryType = this.categories[this.currentCategory].type;
         this.requestMailboxByCategory(categoryType, page);
     }
@@ -378,6 +377,7 @@ export class SetlMessagesComponent implements OnDestroy, OnInit {
             return;
         }
         this.messages[index].isChecked = true;
+        this.storeCheckedMessages();
     }
 
     /**
@@ -386,11 +386,12 @@ export class SetlMessagesComponent implements OnDestroy, OnInit {
      * @param index
      */
     messageAllChecked(index, event) {
-        this.selectAll = this.selectAll ? false : true;
+        this.selectAll = !this.selectAll;
 
         this.messages = this.messages.map((message) => {
             return { ...message, isChecked: this.selectAll };
         });
+        this.storeCheckedMessages();
     }
 
     /**
@@ -474,14 +475,7 @@ export class SetlMessagesComponent implements OnDestroy, OnInit {
             this.messageView = false;
         }
 
-        // Save any checked messages so we can restore them once new data comes in
-        this.checkedMessages = [];
-        this.messages.forEach((message) => {
-            if (message.isChecked) {
-                this.checkedMessages.push(message.mailId);
-            }
-        });
-
+        this.storeCheckedMessages();
         this.resetMessages(reset);
         this.uncheckAll();
         this.clearSearch();
@@ -510,6 +504,18 @@ export class SetlMessagesComponent implements OnDestroy, OnInit {
         }
         this.categories = categories;
         this.changeDetectorRef.markForCheck();
+    }
+
+    /**
+     * Save any checked messages so we can restore them once new data comes in
+     */
+    storeCheckedMessages() {
+        this.checkedMessages = [];
+        this.messages.forEach((message) => {
+            if (message.isChecked) {
+                this.checkedMessages.push(message.mailId);
+            }
+        });
     }
 
     /**
