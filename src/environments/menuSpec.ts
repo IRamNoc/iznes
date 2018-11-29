@@ -321,6 +321,7 @@ const profileMyInfo = {
     icon_class: '',
     element_id: 'top-menu-my-info',
     router_link: '/profile/my-information',
+    dynamic_link: '/profile/my-information[^/]*',
 };
 
 const kycDocuments = {
