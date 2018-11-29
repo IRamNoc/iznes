@@ -34,7 +34,7 @@ export class OfiAmDocumentsComponent implements OnDestroy, OnInit {
     private subscriptions: any[] = [];
 
     /* Observables. */
-    @select(['user', 'siteSettings', 'language']) requestLanguageObj;
+    @select(['user', 'siteSettings', 'language']) requestLanguageOb;
     @select(['ofi', 'ofiKyc', 'amKycList', 'requested']) requestedOfiKycListOb;
     @select(['ofi', 'ofiKyc', 'amKycList', 'amKycList']) kycListOb;
 
@@ -54,7 +54,7 @@ export class OfiAmDocumentsComponent implements OnDestroy, OnInit {
         this.subscriptions.push(this.requestedOfiKycListOb.subscribe(
             requested => this.requestKycList(requested)));
         this.subscriptions.push(
-            observableCombineLatest(this.kycListOb, this.requestLanguageObj).subscribe(([amKycListData]) => {
+            observableCombineLatest(this.kycListOb, this.requestLanguageOb).subscribe(([amKycListData]) => {
                 this.updateTable(amKycListData);
             },
         ));
