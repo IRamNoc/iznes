@@ -414,6 +414,14 @@ const accountAdmin = {
     ],
 };
 
+const managementCompany = {
+    label: 'Management Companies',
+    label_txt: 'txt_managementcompanies',
+    icon_class: 'fa fa-users',
+    element_id: 'menu-management-companies',
+    router_link: '/management-company',
+};
+
 export const menuSpec: MenuSpec = {
     top: {
         profile: {
@@ -496,6 +504,7 @@ export const menuSpec: MenuSpec = {
                 ],
             },
             accountAdmin,
+            managementCompany,
         ],
         valuer: [
             home,
@@ -698,13 +707,7 @@ export const menuSpec: MenuSpec = {
             },
         ],
         iznes_admin: [
-            {
-                label: 'Management Companies',
-                label_txt: 'txt_managementcompanies',
-                icon_class: 'fa fa-users',
-                element_id: 'menu-management-companies',
-                router_link: '/management-company',
-            },
+            managementCompany,
         ],
     },
     disabled: [],
