@@ -19,7 +19,6 @@ interface SelectedItem {
     selector: 'am-share-holders',
     templateUrl: './component.html',
     styleUrls: ['./component.scss'],
-    changeDetection: ChangeDetectionStrategy.OnPush,
 })
 
 export class ShareHoldersComponent implements OnInit, OnDestroy {
@@ -67,14 +66,8 @@ export class ShareHoldersComponent implements OnInit, OnDestroy {
     tabsControl: Array<any> = [];
     tabTitle = '';
 
-    /* Ui Lists. */
-    holderFilters: Array<SelectedItem> = [
-        { id: 0, text: 'All' },
-        { id: 10, text: 'Top 10 holders' },
-        { id: 20, text: 'Top 20 holders' },
-        { id: 50, text: 'Top 50 holders' },
-        { id: 100, text: 'Top 100 holders' },
-    ];
+    /* UI Lists. */
+    holderFilters: Array<SelectedItem> = [];
 
     /* datas */
     fundsNbHolders = 0;
@@ -139,8 +132,15 @@ export class ShareHoldersComponent implements OnInit, OnDestroy {
         this.isShareLevel = this.router.url.indexOf('/shares/') !== -1;
         this.isListLevel = !this.isFundLevel && !this.isShareLevel;
 
-        this.subscriptions.push(this.requestLanguageObj.subscribe(requested => this.getLanguage(requested)));
+        this.subscriptions.push(this.requestLanguageObj.subscribe((requested) => {
+            this.getLanguage(requested);
+            this.setHolderFilters();
+            this.translateTabs();
+        }));
+
         this.subscriptions.push(this.myDetailOb.subscribe(myDetails => this.getUserDetails(myDetails)));
+
+        this.setHolderFilters();
 
         this.listSearchForm = this.fb.group({
             searchFunds: [
@@ -190,7 +190,7 @@ export class ShareHoldersComponent implements OnInit, OnDestroy {
                     {
                         title: {
                             icon: 'fa fa-th-list',
-                            text: 'List',
+                            text: this.translate.translate('List'),
                         },
                         link: '/reports/holders-list',
                         id: 0,
@@ -207,7 +207,7 @@ export class ShareHoldersComponent implements OnInit, OnDestroy {
                     this.tabsControl.push({
                         title: {
                             icon: 'fa fa-th-list',
-                            text: 'Funds Level',
+                            text: this.translate.translate('Funds Level'),
                         },
                         link: '/reports/holders-list/funds',
                         type: 'funds',
@@ -235,7 +235,7 @@ export class ShareHoldersComponent implements OnInit, OnDestroy {
                     this.tabsControl.push({
                         title: {
                             icon: 'fa fa-th-list',
-                            text: 'Shares Level',
+                            text: this.translate.translate('Shares Level'),
                         },
                         link: '/reports/holders-list/shares',
                         type: 'shares',
@@ -321,7 +321,7 @@ export class ShareHoldersComponent implements OnInit, OnDestroy {
 
     fundWithHoldersRequested(requested): void {
         if (!requested) {
-            let payload: any = {
+            const payload: any = {
                 fundId: this.selectedFundId,
             };
             if (this.selectedTopHolders !== 0) {
@@ -445,6 +445,34 @@ export class ShareHoldersComponent implements OnInit, OnDestroy {
         this.loadingDatagrid = false;
     }
 
+    setHolderFilters() {
+        this.holderFilters = this.translate.translate([
+            { id: 0, text: 'All' },
+            { id: 10, text: 'Top 10 holders' },
+            { id: 20, text: 'Top 20 holders' },
+            { id: 50, text: 'Top 50 holders' },
+            { id: 100, text: 'Top 100 holders' },
+        ]);
+    }
+
+    translateTabs() {
+        this.tabsControl.forEach((tab) => {
+            switch (tab.type) {
+                case 'shares':
+                    tab.title.text = this.translate.translate('Shares Level');
+                    break;
+                case 'funds':
+                    tab.title.text = this.translate.translate('Funds Level');
+                    break;
+                case 'list':
+                    tab.title.text = this.translate.translate('List');
+                    break;
+                default:
+                    break;
+            }
+        });
+    }
+
     setInitialTabs() {
         // Get opened tabs from redux store.
         const openedTabs = [];
@@ -455,7 +483,7 @@ export class ShareHoldersComponent implements OnInit, OnDestroy {
                 {
                     title: {
                         icon: 'fa fa-th-list',
-                        text: 'List',
+                        text: this.translate.translate('List'),
                     },
                     link: '/reports/holders-list',
                     id: 0,
