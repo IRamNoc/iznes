@@ -87,9 +87,10 @@ export class SetlMessageWorkflowComponent implements OnInit {
             if (!this.decodedData) {
                 return;
             }
-            // this.transferTemplate.asset = this.decodedData['asset'];
-            this.transferTemplate['namespace'] = this.decodedData['asset'].split('|')[0];
-            this.transferTemplate['instrument'] = this.decodedData['asset'].split('|')[1];
+            if (this.decodedData['asset']) {
+                this.transferTemplate['namespace'] = this.decodedData['asset'].split('|')[0];
+                this.transferTemplate['instrument'] = this.decodedData['asset'].split('|')[1];
+            }
         }
         this.transferTemplate['walletid'] = this.walletId;
 
@@ -106,7 +107,8 @@ export class SetlMessageWorkflowComponent implements OnInit {
             this.balances = balances;
             for (let i = 0; i < balances.length; i += 1) {
                 const bal = balances[i];
-                if (bal['asset'] === this.decodedData['asset']) {
+
+                if (this.decodedData && bal['asset'] === this.decodedData['asset']) {
                     this.transferTemplate['amount'] = bal['free'];
                 }
             }
