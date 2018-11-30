@@ -1,5 +1,5 @@
 // Vendor
-import { ChangeDetectionStrategy, ChangeDetectorRef, Component, Inject, OnDestroy, OnInit } from '@angular/core';
+import { ChangeDetectorRef, Component, Inject, OnDestroy, OnInit } from '@angular/core';
 
 import { fromJS } from 'immutable';
 
@@ -28,7 +28,6 @@ import { MultilingualService } from '@setl/multilingual';
     styleUrls: ['./component.scss'],
     selector: 'app-ofi-am-product-home',
     templateUrl: './component.html',
-    changeDetection: ChangeDetectionStrategy.OnPush,
 })
 
 export class ProductHomeComponent implements OnInit, OnDestroy {
@@ -46,232 +45,14 @@ export class ProductHomeComponent implements OnInit, OnDestroy {
     countryItems = [];
     legalFormItems = [];
 
-    columns = {
-        shareName: {
-            label: this.translate.translate('Share Name'),
-            dataSource: 'shareName',
-            sortable: true,
-        },
-        shareCurrency: {
-            label: this.translate.translate('Share Currency'),
-            dataSource: 'shareCurrency',
-            sortable: true,
-        },
-        fundName: {
-            label: this.translate.translate('Fund Name'),
-            dataSource: 'fundName',
-            sortable: true,
-        },
-        fFundName: {
-            label: this.translate.translate('Fund Name'),
-            dataSource: 'fundName',
-            sortable: true,
-        },
-        isin: {
-            label: this.translate.translate('ISIN'),
-            dataSource: 'isin',
-            sortable: true,
-        },
-        managementCompany: {
-            label: this.translate.translate('Management Company'),
-            dataSource: 'managementCompany',
-            sortable: true,
-        },
-        shareClass: {
-            label: this.translate.translate('Share Class'),
-            dataSource: 'shareClass',
-            sortable: true,
-        },
-        status: {
-            label: this.translate.translate('Status (Close or Open?)'),
-            dataSource: 'status',
-            sortable: true,
-        },
-        lei: {
-            label: this.translate.translate('LEI'),
-            dataSource: 'legalEntityIdentifier',
-            sortable: true,
-        },
-        country: {
-            label: this.translate.translate('Domicile'),
-            dataSource: 'domicile',
-            sortable: true,
-        },
-        lawStatus: {
-            label: this.translate.translate('Legal Form'),
-            dataSource: 'lawStatus',
-            sortable: true,
-        },
-        umbrellaFund: {
-            label: this.translate.translate('Umbrella Fund'),
-            dataSource: 'umbrellaFundName',
-            sortable: true,
-        },
-        fundCurrency: {
-            label: this.translate.translate('Fund Currency'),
-            dataSource: 'fundCurrency',
-            sortable: true,
-        },
-        uFundName: {
-            label: this.translate.translate('Umbrella Fund Name'),
-            dataSource: 'umbrellaFundName',
-            sortable: true,
-        },
-        waitingStatus: {
-            label: this.translate.translate('Status'),
-            dataSource: 'waitingStatus',
-            sortable: true,
-        },
-        waitingType: {
-            label: this.translate.translate('Type'),
-            dataSource: 'waitingType',
-            sortable: true,
-        },
-        productName: {
-            label: this.translate.translate('Product Name'),
-            dataSource: 'productName',
-            sortable: true,
-        },
-        dateModification: {
-            label: this.translate.translate('Date of Modification'),
-            dataSource: 'dateModification',
-            sortable: true,
-        },
-        validateFor: {
-            label: this.translate.translate('To be validate for (date)'),
-            dataSource: 'validateFor',
-            sortable: true,
-        },
-        modifiedBy: {
-            label: this.translate.translate('Modified By'),
-            dataSource: 'modifiedBy',
-            sortable: true,
-        },
-        draftType: {
-            label: this.translate.translate('Product Type'),
-            dataSource: 'draftType',
-            sortable: true,
-        },
-        draftName: {
-            label: this.translate.translate('Product Name'),
-            dataSource: 'draftName',
-            sortable: true,
-        },
-        draftCreated: {
-            label: this.translate.translate('Created By'),
-            dataSource: 'draftCreated',
-            sortable: true,
-        },
-        draftDate: {
-            label: this.translate.translate('Created Date'),
-            dataSource: 'draftDate',
-            sortable: true,
-        },
-    };
-    panelDefs = [
-        {
-            title: this.translate.translate('Umbrella Funds'),
-            columns: [
-                this.columns['uFundName'],
-                this.columns['lei'],
-                this.columns['managementCompany'],
-                this.columns['country'],
-            ],
-            action: {
-                id: 'new-umbrella-fund-btn',
-                title: this.translate.translate('Add New Umbrella Fund'),
-                icon: 'plus',
-                type: 'ufund',
-            },
-            link: '/product-module/product/umbrella-fund/',
-            linkIdent: 'umbrellaFundID',
-            open: true,
-            data: this.umbrellaFundList,
-            count: this.umbrellaFundList.length,
-            columnLink: 'umbrellaFundName',
-        },
-        {
-            title: this.translate.translate('Funds/Subfunds'),
-            columns: [
-                this.columns['fFundName'],
-                this.columns['lei'],
-                this.columns['fundCurrency'],
-                this.columns['managementCompany'],
-                this.columns['country'],
-                this.columns['lawStatus'],
-                this.columns['umbrellaFund'],
-            ],
-            action: {
-                id: 'new-fund-btn',
-                title: this.translate.translate('Add New Fund'),
-                icon: 'plus',
-                type: 'fund',
-            },
-            link: '/product-module/product/fund/',
-            linkIdent: 'fundID',
-            open: true,
-            data: this.fundList,
-            count: this.fundList.length,
-            columnLink: 'fundName',
-        },
-        {
-            title: this.translate.translate('Shares'),
-            columns: [
-                this.columns['shareName'],
-                this.columns['isin'],
-                this.columns['fundName'],
-                this.columns['shareCurrency'],
-                this.columns['managementCompany'],
-                // this.columns['uFundName'],
-                this.columns['shareClass'],
-                this.columns['status'],
-            ],
-            action: {
-                id: 'new-share-btn',
-                title: this.translate.translate('Add New Share'),
-                icon: 'plus',
-                type: 'share',
-            },
-            link: '/product-module/product/fund-share/',
-            linkIdent: 'fundShareID',
-            open: true,
-            data: this.filteredShareList,
-            count: this.filteredShareList.length,
-            columnLink: 'shareName',
-        },
-        {
-            title: this.translate.translate('Drafts'),
-            columns: [
-                this.columns['draftType'],
-                this.columns['draftName'],
-                this.columns['draftCreated'],
-                this.columns['draftDate'],
-            ],
-            open: true,
-            data: this.draftList,
-            count: this.draftList.length,
-            columnLink: '',
-            buttons: [
-                {
-                    text: this.translate.translate('Edit Draft'),
-                    class: 'btn btn-success btn-sm no-margin',
-                    click: 'edit',
-                    iconClass: 'fa fa-edit',
-                },
-                {
-                    text: this.translate.translate('Delete Draft'),
-                    class: 'btn btn-danger btn-sm',
-                    click: 'delete',
-                    iconClass: 'fa fa-remove',
-                },
-            ],
-        },
-    ];
+    columns = {};
+    panelDefs = [];
 
     /* Private properties. */
     subscriptions: Array<Subscription> = [];
 
     /* Redux observables. */
+    @select(['user', 'siteSettings', 'language']) requestLanguageOb;
     @select(['user', 'myDetail']) userDetailObs;
     @select(['ofi', 'ofiProduct', 'ofiFund', 'fundList', 'iznFundList']) fundListObs;
     @select(['ofi', 'ofiProduct', 'ofiFundShareList', 'requestedIznesShare']) requestedShareListObs;
@@ -308,6 +89,9 @@ export class ProductHomeComponent implements OnInit, OnDestroy {
     }
 
     ngOnInit() {
+        this.initColumns();
+        this.initPanelDefs();
+
         this.ofiCurrenciesService.getCurrencyList();
         this.ofiManagementCompanyService.getManagementCompanyList();
         this.ofiUmbrellaFundService.fetchUmbrellaList();
@@ -322,6 +106,11 @@ export class ProductHomeComponent implements OnInit, OnDestroy {
         this.subscriptions.push(this.requestedShareListObs.subscribe(requested => this.requestShareList(requested)));
         this.subscriptions.push(this.shareListObs.subscribe(shares => this.getShareList(shares)));
         this.subscriptions.push(this.umbrellaFundAccessListOb.subscribe((list: any) => this.getUmbrellaFundList(list)));
+
+        this.subscriptions.push(this.requestLanguageOb.subscribe(() => {
+            this.initColumns();
+            this.initPanelDefs();
+        }));
 
         // drafts
         this.subscriptions.push(
@@ -610,6 +399,233 @@ export class ProductHomeComponent implements OnInit, OnDestroy {
 
     goToView(url, id) {
         this.router.navigateByUrl(`${url}${id}`);
+    }
+
+    initColumns() {
+        this.columns = {
+            shareName: {
+                label: this.translate.translate('Share Name'),
+                dataSource: 'shareName',
+                sortable: true,
+            },
+            shareCurrency: {
+                label: this.translate.translate('Share Currency'),
+                dataSource: 'shareCurrency',
+                sortable: true,
+            },
+            fundName: {
+                label: this.translate.translate('Fund Name'),
+                dataSource: 'fundName',
+                sortable: true,
+            },
+            fFundName: {
+                label: this.translate.translate('Fund Name'),
+                dataSource: 'fundName',
+                sortable: true,
+            },
+            isin: {
+                label: this.translate.translate('ISIN'),
+                dataSource: 'isin',
+                sortable: true,
+            },
+            managementCompany: {
+                label: this.translate.translate('Management Company'),
+                dataSource: 'managementCompany',
+                sortable: true,
+            },
+            shareClass: {
+                label: this.translate.translate('Share Class'),
+                dataSource: 'shareClass',
+                sortable: true,
+            },
+            status: {
+                label: this.translate.translate('Status (Close or Open?)'),
+                dataSource: 'status',
+                sortable: true,
+            },
+            lei: {
+                label: this.translate.translate('LEI'),
+                dataSource: 'legalEntityIdentifier',
+                sortable: true,
+            },
+            country: {
+                label: this.translate.translate('Domicile'),
+                dataSource: 'domicile',
+                sortable: true,
+            },
+            lawStatus: {
+                label: this.translate.translate('Legal Form'),
+                dataSource: 'lawStatus',
+                sortable: true,
+            },
+            umbrellaFund: {
+                label: this.translate.translate('Umbrella Fund'),
+                dataSource: 'umbrellaFundName',
+                sortable: true,
+            },
+            fundCurrency: {
+                label: this.translate.translate('Fund Currency'),
+                dataSource: 'fundCurrency',
+                sortable: true,
+            },
+            uFundName: {
+                label: this.translate.translate('Umbrella Fund Name'),
+                dataSource: 'umbrellaFundName',
+                sortable: true,
+            },
+            waitingStatus: {
+                label: this.translate.translate('Status'),
+                dataSource: 'waitingStatus',
+                sortable: true,
+            },
+            waitingType: {
+                label: this.translate.translate('Type'),
+                dataSource: 'waitingType',
+                sortable: true,
+            },
+            productName: {
+                label: this.translate.translate('Product Name'),
+                dataSource: 'productName',
+                sortable: true,
+            },
+            dateModification: {
+                label: this.translate.translate('Date of Modification'),
+                dataSource: 'dateModification',
+                sortable: true,
+            },
+            validateFor: {
+                label: this.translate.translate('To be validate for (date)'),
+                dataSource: 'validateFor',
+                sortable: true,
+            },
+            modifiedBy: {
+                label: this.translate.translate('Modified By'),
+                dataSource: 'modifiedBy',
+                sortable: true,
+            },
+            draftType: {
+                label: this.translate.translate('Product Type'),
+                dataSource: 'draftType',
+                sortable: true,
+            },
+            draftName: {
+                label: this.translate.translate('Product Name'),
+                dataSource: 'draftName',
+                sortable: true,
+            },
+            draftCreated: {
+                label: this.translate.translate('Created By'),
+                dataSource: 'draftCreated',
+                sortable: true,
+            },
+            draftDate: {
+                label: this.translate.translate('Created Date'),
+                dataSource: 'draftDate',
+                sortable: true,
+            },
+        };
+    }
+
+    initPanelDefs() {
+        this.panelDefs = [
+            {
+                title: this.translate.translate('Umbrella Funds'),
+                columns: [
+                    this.columns['uFundName'],
+                    this.columns['lei'],
+                    this.columns['managementCompany'],
+                    this.columns['country'],
+                ],
+                action: {
+                    id: 'new-umbrella-fund-btn',
+                    title: this.translate.translate('Add New Umbrella Fund'),
+                    icon: 'plus',
+                    type: 'ufund',
+                },
+                link: '/product-module/product/umbrella-fund/',
+                linkIdent: 'umbrellaFundID',
+                open: true,
+                data: this.umbrellaFundList,
+                count: this.umbrellaFundList.length,
+                columnLink: 'umbrellaFundName',
+            },
+            {
+                title: this.translate.translate('Funds/Subfunds'),
+                columns: [
+                    this.columns['fFundName'],
+                    this.columns['lei'],
+                    this.columns['fundCurrency'],
+                    this.columns['managementCompany'],
+                    this.columns['country'],
+                    this.columns['lawStatus'],
+                    this.columns['umbrellaFund'],
+                ],
+                action: {
+                    id: 'new-fund-btn',
+                    title: this.translate.translate('Add New Fund'),
+                    icon: 'plus',
+                    type: 'fund',
+                },
+                link: '/product-module/product/fund/',
+                linkIdent: 'fundID',
+                open: true,
+                data: this.fundList,
+                count: this.fundList.length,
+                columnLink: 'fundName',
+            },
+            {
+                title: this.translate.translate('Shares'),
+                columns: [
+                    this.columns['shareName'],
+                    this.columns['isin'],
+                    this.columns['fundName'],
+                    this.columns['shareCurrency'],
+                    this.columns['managementCompany'],
+                    // this.columns['uFundName'],
+                    this.columns['shareClass'],
+                    this.columns['status'],
+                ],
+                action: {
+                    id: 'new-share-btn',
+                    title: this.translate.translate('Add New Share'),
+                    icon: 'plus',
+                    type: 'share',
+                },
+                link: '/product-module/product/fund-share/',
+                linkIdent: 'fundShareID',
+                open: true,
+                data: this.filteredShareList,
+                count: this.filteredShareList.length,
+                columnLink: 'shareName',
+            },
+            {
+                title: this.translate.translate('Drafts'),
+                columns: [
+                    this.columns['draftType'],
+                    this.columns['draftName'],
+                    this.columns['draftCreated'],
+                    this.columns['draftDate'],
+                ],
+                open: true,
+                data: this.draftList,
+                count: this.draftList.length,
+                columnLink: '',
+                buttons: [
+                    {
+                        text: this.translate.translate('Edit Draft'),
+                        class: 'btn btn-success btn-sm no-margin',
+                        click: 'edit',
+                        iconClass: 'fa fa-edit',
+                    },
+                    {
+                        text: this.translate.translate('Delete Draft'),
+                        class: 'btn btn-danger btn-sm',
+                        click: 'delete',
+                        iconClass: 'fa fa-remove',
+                    },
+                ],
+            },
+        ];
     }
 
     /**

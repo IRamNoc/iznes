@@ -20,7 +20,6 @@ import { MultilingualService } from '@setl/multilingual';
 @Component({
     selector: 'app-ofi-product-configuration',
     templateUrl: './component.html',
-    changeDetection: ChangeDetectionStrategy.OnPush,
     styles: ['.btn { margin-top: 20px; }'],
 })
 
