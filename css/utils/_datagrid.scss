@@ -64,10 +64,6 @@
     line-height: 24px;
 }
 
-.datagrid-placeholder-image:before {
-    content: "No Results Found";
-}
-
 .datagrid-placeholder-image {
     background-image: none !important;
     width: 100% !important;
@@ -149,10 +145,6 @@ app-wfe .datagrid .datagrid-body .datagrid-row .datagrid-cell {
     float: right;
 }
 
-.column-toggle--action::after {
-    content: " Show/hide fields" !important;
-}
-
 .datagrid .datagrid-body .datagrid-row .datagrid-cell {
     line-height: 24px;
     padding: 8px;
@@ -188,4 +180,22 @@ app-wfe .datagrid .datagrid-body .datagrid-row .datagrid-cell {
 
 .datagrid-spinner {
     z-index: 10;
+}
+
+.datagrid-placeholder-image:before {
+    content: "No Results Found";
+}
+
+.column-toggle--action::after {
+    content: " Show/hide fields";
+}
+
+.fr-Latn {
+    .datagrid-placeholder-image::before {
+        content: "Aucun résultat n'est disponible";
+    }
+
+    .column-toggle--action::after {
+        content: " Montrer/cacher les champs";
+    }
 }

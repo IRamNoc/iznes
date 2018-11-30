@@ -12,7 +12,6 @@ import {
 } from '@angular/core';
 import { NgRedux, select } from '@angular-redux/store';
 import { setVersion } from '@setl/core-store';
-import { Subscription } from 'rxjs/Subscription';
 import { FadeSlideRight } from '../../animations/fade-slide-right';
 
 import { MyUserService } from '@setl/core-req-services';
@@ -25,6 +24,8 @@ import { get, isEmpty } from 'lodash';
 import { HttpClient } from '@angular/common/http';
 import { AppConfig } from '@setl/utils/appConfig/appConfig.model';
 import { APP_CONFIG } from '@setl/utils/appConfig/appConfig';
+
+import { Subscription } from 'rxjs/Subscription';
 import { debounceTime } from 'rxjs/operators';
 
 @Component({
@@ -74,6 +75,8 @@ export class BasicLayoutComponent implements OnInit, OnDestroy, AfterViewInit {
     public currentVersion: string;
     public currentLanguage: string;
     public currentParentUrl: string;
+
+    public activeAlert: boolean = false;
 
     /* Observable subscription array. */
     subscriptionsArray: Subscription[] = [];
@@ -162,8 +165,7 @@ export class BasicLayoutComponent implements OnInit, OnDestroy, AfterViewInit {
 
         // If sidebar is greater than viewport height, fix sidebar when it reaches bottom of the screen or remove if not
         if (this.sidebarHeight > window.innerHeight) {
-            this.fixSidebarBottom =
-                (this.sidebarHeight - event.target.scrollTop) <= event.target.clientHeight ? true : false;
+            this.fixSidebarBottom = (this.sidebarHeight - event.target.scrollTop) <= event.target.clientHeight;
         }
     }
 

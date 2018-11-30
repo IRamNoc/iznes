@@ -30,6 +30,7 @@
     position: fixed !important;
     height: 100%;
     top: 75px;
+    transition: top 0.3s linear;
 }
 
 .sidenav.fixed-bottom {
@@ -50,4 +51,24 @@ ng-sidebar-container {
     overflow-y: auto !important;
     overflow-x: hidden !important;
     margin-top: 75px;
+}
+
+:host {
+    /deep/ {
+        .main-container {
+            transition: height 0.3s linear;
+            height: 100%;
+            position: fixed;
+            width: 100%;
+            &.connection-alert {
+                height: calc(100% - 90px);
+                app-navigation-topbar {
+                    top: 90px;
+                }
+                .sidenav.fixed {
+                    top: 165px;
+                }
+            }
+        }
+    }
 }
