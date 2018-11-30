@@ -3,14 +3,14 @@
     <ng-container *ngTemplateOutlet="messageMenu"></ng-container>
 
     <div class="message_list">
-        <h2>{{currentBox.name}} <span class="mail-count" *ngIf="currentBoxCount > 0">{{currentBoxCount || 0}}</span>
+        <h2>{{ currentBox.name | translate }}
+            <span class="mail-count" *ngIf="currentBoxCount > 0">{{currentBoxCount || 0}}</span>
         </h2>
         <div class="search">
             <span *ngIf="search" class="search-filter" [class.show]="search"><a href="#" (click)="clearSearch($event); searchBox.value='' ">
                     <i class="fa fa-search">
                     </i> {{search}} <i class="fa fa-times"></i></a></span>
-            <input type="form-control text" placeholder="Search {{currentBox.name}}" #searchBox (keyup.enter)="handleSearch(searchBox.value); searchBox.value = '';" (keyup)="showCross = (searchBox.value != '' ? true : false);" id="messagesSearch" mltag="txt_searchcurrentboxname">
-
+            <input type="form-control text" placeholder="{{ ['Search', currentBox.name].join(' ') | translate }}" #searchBox (keyup.enter)="handleSearch(searchBox.value); searchBox.value = '';" (keyup)="showCross = (searchBox.value != '' ? true : false);" id="messagesSearch">
 
             <button (click)="handleSearch(searchBox.value); searchBox.value = ''; showCross = false;" class="" id="messagesSearchBtn">
                 <i class="fa fa-search"></i></button>
@@ -20,28 +20,30 @@
         <div class="message_list_menu">
             <div class="message_list_menu_buttons">
                 <button id="messagesRefresh" (click)="refreshMailbox()"><i class="fa fa-refresh"></i>
-                    <span mltag="txt_refresh">Refresh</span></button>
+                    {{ 'Refresh' | translate }}
+                </button>
                 <button [class.disabled]="checked.length === 0" *ngIf="currentBox.type == 'inbox'" id="messagesMarkAsRead" (click)="checkedMarkAsRead()">
-
-                    <i class="fa fa-eye"></i> <span mltag="txt_markasread">Mark as Read</span>
+                    <i class="fa fa-eye"></i> {{ 'Mark as Read' | translate }}
                 </button>
                 <button [class.disabled]="checked.length === 0" *ngIf="currentBox.type == 'inbox'" id="messagesDelete" (click)="checked.length > 0 && showDeleteModal = true">
-
-                    <i class="fa fa-trash-o"></i> <span mltag="txt_delete">Delete</span>
+                    <i class="fa fa-trash-o"></i> {{ 'Delete' | translate }}
                 </button>
                 <button [class.disabled]="checked.length === 0" *ngIf="currentBox.type == 'deleted'" id="messagesPutBack" (click)="checkedPutBack()">
-
-                    <i class="fa fa-inbox"></i> <span mltag="txt_restoremessage">Restore Message</span>
+                    <i class="fa fa-inbox"></i> {{ 'Restore Message' | translate }}
                 </button>
             </div>
             <div class="message_list_menu_pages">
-                <pagination-controls (pageChange)="currentPage = $event; onPageChange($event)" maxSize="5">
+                <pagination-controls
+                    (pageChange)="currentPage = $event; onPageChange($event)"
+                    maxSize="5"
+                    previousLabel="{{ 'Previous' | translate }}"
+                    nextLabel="{{ 'Next' | translate }}">
                 </pagination-controls>
             </div>
         </div>
 
         <div class="message_list_none" [hidden]="messages.length != 0">
-            <h3 mltag="txt_nomessages">No Messages</h3>
+            <h3>{{ 'No Messages' | translate }}</h3>
         </div>
 
         <!-- Header row -->
@@ -51,9 +53,9 @@
                     <i class="fa" [ngClass]="{'fa-check': selectAll === true}" (click)="messageAllChecked(i, $event)">
                     </i>
                 </div>
-                <div class="message_list_item_sender">{{(this.currentCategory==2?'To':'From')}}</div>
-                <div class="message_list_item_subject" mltag="txt_subject">Subject</div>
-                <div class="message_list_item_date" mltag="txt_date">Date</div>
+                <div class="message_list_item_sender">{{ (this.currentCategory == 2 ? 'To' : 'From') | translate }}</div>
+                <div class="message_list_item_subject">{{ 'Subject' | translate }}</div>
+                <div class="message_list_item_date">{{ 'Date' | translate }}</div>
             </div>
         </div>
 
@@ -81,8 +83,6 @@
                 </div>
             </div>
         </div>
-
-
     </div>
 </div>
 
@@ -91,10 +91,10 @@
     <div class="message_view">
 
         <div class="message_view_header">
-            <h4><span mltag="txt_subject">Subject</span>: <b [innerHtml]="currentMessage.subject"></b></h4>
+            <h4>{{ 'Subject' | translate }}: <b [innerHtml]="currentMessage.subject"></b></h4>
             <div class="message_view_header_title">
-                <p>From: {{currentMessage.senderWalletName}}</p>
-                <p>To: {{currentMessage.recipientWalletName}}</p>
+                <p>{{ 'From' | translate }}: {{currentMessage.senderWalletName}}</p>
+                <p>{{ 'To' | translate }}: {{currentMessage.recipientWalletName}}</p>
             </div>
             <div class="message_view_header_date">{{currentMessage.date | datex: "MMM D YYYY HH:mm:ss"}}
 
@@ -129,13 +129,13 @@
                 <setl-message-cancel-order [config]="currentMessage.action"></setl-message-cancel-order>
             </p>
 
-            <p *ngIf="currentMessage.action && currentMessage.action.type === 'sendTxt'">
-                <button class="btn btn-primary" (click)="downloadTxtFile(currentMessage.action.orderID, currentMessage.action.MT502ID, currentMessage.action.orderType);">Download File</button>
+            <p *ngIf="currentMessage.action && currentMessage.action.type === 'mtMessage'">
+                <button class="btn btn-primary" (click)="downloadTxtFile(currentMessage.action);">{{ 'Download File' | translate }}</button>
             </p>
 
             <p *ngIf="currentMessage.action && currentMessage.action.type === 'sendAssetManagementBookEntryCertification'">
                 <button class="btn btn-primary" (click)="handleDownloadBookEntryCertification(currentMessage.action.assetManagementCompanyId, currentMessage.action.settlementDate);">
-                    Download Certification of Book Entry
+                    {{ 'Download Certification of Book Entry' | translate }}
                 </button>
             </p>
 
@@ -156,24 +156,28 @@
             </setl-message-workflow>
 
             <setl-message-workflow2 *ngIf="currentMessage.action && currentMessage.action.type === 'wflMessage2'"
-                                   [data]="currentMessage.action.data"
-                                   [userId]="userId"
-                                   [isActed]="currentMessage.isActed"
-                                   [walletId]="walletId"
-                                   [mailId]="currentMessage.mailId">
+                                    [data]="currentMessage.action.data"
+                                    [userId]="userId"
+                                    [isActed]="currentMessage.isActed"
+                                    [walletId]="walletId"
+                                    [mailId]="currentMessage.mailId">
             </setl-message-workflow2>
 
             <setl-message-with-links *ngIf="currentMessage.action && currentMessage.action.type === 'messageWithLink'" [data]="currentMessage.action.data" [content]="currentMessage.content"></setl-message-with-links>
+
+            <setl-message-download *ngIf="currentMessage.action && currentMessage.action.type === 'file'" [url]="currentMessage.action.url" [userId]="userId" [isActed]="currentMessage.isActed" [mailId]="currentMessage.mailId" [walletId]="walletId"></setl-message-download>
 
         </div>
 
         <div class="message_view_menu">
             <button *ngIf="currentMessage.senderId != walletId && currentMessage.senderId != -1" id="messagesReply" (click)="replyMessage()">
-                <i class="fa fa-reply"></i> <span mltag="txt_reply">Reply</span></button>
+                <i class="fa fa-reply"></i> {{ 'Reply' | translate }}
+            </button>
             <button id="messagesClose" (click)="closeMessage()"><i class="fa fa-times"></i>
-                <span mltag="txt_close">Close</span></button>
+                {{ 'Close' | translate }}
+            </button>
             <button *ngIf="! ['sent', 'deleted'].includes(currentBox.type)" [title]="currentBox.type" (click)="showDeleteModal = true">
-                <i class="fa fa-trash-o"></i> <span mltag="txt_delete">Delete</span>
+                <i class="fa fa-trash-o"></i> {{ 'Delete' | translate }}
             </button>
         </div>
 
@@ -186,7 +190,7 @@
     <div class="message_compose">
 
         <div class="message_view_header">
-            <h2 mltag="txt_composemessage">Compose Message</h2>
+            <h2>{{ 'Compose Message' | translate }}</h2>
             <div class="message_view_header_buttons">
             </div>
         </div>
@@ -196,24 +200,21 @@
             <div class="message_compose_input">
 
                 <div class="message_compose_input_field">
-                    <div class="message_compose_input_field_label" mltag="txt_to">To
-
+                    <div class="message_compose_input_field_label">
+                        {{ 'To' | translate }}
                     </div>
                     <div class="message_compose_input_field_value">
-                        <ng-select [multiple]="true" [items]="items" [disabled]="disabled" id="messagesRecipients" [formControl]="messageComposeForm.controls['recipients']" (data)="refreshValue($event)" (selected)="selected($event)" (removed)="removed($event)" [captureKeys]="true" [containerWidth]="" placeholder="Select Recipients" mltag="txt_selectrecipients">
-
-
+                        <ng-select [multiple]="true" [items]="items" [disabled]="disabled" id="messagesRecipients" [formControl]="messageComposeForm.controls['recipients']" (data)="refreshValue($event)" (selected)="selected($event)" (removed)="removed($event)" [captureKeys]="true" [containerWidth]="" placeholder="{{ 'Select Recipients' | translate }}">
                         </ng-select>
                     </div>
                 </div>
 
                 <div class="message_compose_input_field">
-                    <div class="message_compose_input_field_label" mltag="txt_subject">Subject
-
+                    <div class="message_compose_input_field_label">
+                        {{ 'Subject' | translate }}
                     </div>
                     <div class="message_compose_input_field_value">
                         <input [formControl]="messageComposeForm.controls['subject']" class="form-control" type="text" placeholder="" size="45" id="messagesSubject">
-
                     </div>
                 </div>
             </div>
@@ -228,10 +229,11 @@
             <div class="message_view_menu">
                 <!--<button><i class="fa fa-reply"></i> Reply</button>-->
                 <button id="messagesCloseCompose" (click)="closeAndResetComposed()"><i class="fa fa-times"></i>
-                    <span mltag="txt_discard">Discard</span>
+                    {{ 'Discard' | translate }}
                 </button>
                 <button class="blue" id="messagesSendMessage"><i class="fa fa-paper-plane"></i>
-                    <span mltag="txt_send">Send</span></button>
+                    {{ 'Send' | translate }}
+                </button>
             </div>
         </form>
 
@@ -239,38 +241,38 @@
 </div>
 
 <clr-modal [(clrModalOpen)]="showDeleteModal">
-    <h3 class="modal-title" mltag="txt_confirmdeletion">Confirm deletion</h3>
+    <h3 class="modal-title">{{ 'Confirm deletion' | translate }}</h3>
     <div class="modal-body">
-        <p *ngIf="checked.length > 1" mltag="txt_areyousureyouwanttodeletethesedb8c1730c3">Are you sure you want to delete these messages?</p>
-        <p *ngIf="checked.length <= 1" mltag="txt_areyousureyouwanttodeletethism768061d64e">Are you sure you want to delete this message?</p>
+        <p *ngIf="checked.length > 1">{{ 'Are you sure you want to delete these messages?' | translate }}</p>
+        <p *ngIf="checked.length <= 1">{{ 'Are you sure you want to delete this message?' | translate }}</p>
     </div>
     <div class="modal-footer">
-        <button type="button" class="btn btn-outline" (click)="showDeleteModal = false" id="messagesDeleteModalCancel" mltag="txt_cancel">Cancel
-
+        <button type="button" class="btn btn-outline" (click)="showDeleteModal = false" id="messagesDeleteModalCancel">
+            {{ 'Cancel' | translate }}
         </button>
-        <button *ngIf="checked.length > 0" type="button" class="btn btn-primary" (click)="showDeleteModal = false; checkedDeleted()" id="messagesDeleteModalOk" mltag="txt_ok">
-            Ok
+        <button *ngIf="checked.length > 0" type="button" class="btn btn-primary" (click)="showDeleteModal = false; checkedDeleted()" id="messagesDeleteModalOk">
+            {{ 'OK' | translate }}
         </button>
-        <button *ngIf="checked.length === 0" type="button" class="btn btn-primary" (click)="showDeleteModal = false; deleteMessage()" id="messagesDeleteModalOk" mltag="txt_ok">
-            Ok
+        <button *ngIf="checked.length === 0" type="button" class="btn btn-primary" (click)="showDeleteModal = false; deleteMessage()" id="messagesDeleteModalOk">
+            {{ 'OK' | translate }}
         </button>
     </div>
 </clr-modal>
 
 <ng-template #messageMenu>
     <div class="message_menu">
-        <button routerLink="/messages/compose" [ngClass]="{'active': 999 === currentCategory}" id="messagescompose" mltag="txt_composemessage">Compose Message
-
+        <button routerLink="/messages/compose" [ngClass]="{'active': 999 === currentCategory}" id="messagescompose">
+            {{ 'Compose Message' | translate }}
         </button>
 
-        <h3 mltag="txt_folders">Folders</h3>
+        <h3>{{ 'Folders' | translate }}</h3>
 
         <ul *ngFor="let category of categories; let i = index">
             <li [routerLink]="['/messages', category.type]" [ngClass]="{'active': i === currentCategory, 'level-selected': i === currentCategory}" id="messages{{category.type}}">
 
 
                 <div *ngFor="let padding of getPadding(category)" class="padding"></div>
-                <i class="fa {{category.icon}}"></i> {{category.name}}
+                <i class="fa {{category.icon}}"></i> {{ category.name | translate }}
                 <span *ngIf="category.type == 'inbox' && unreadMessages > 0" class="label label-success">{{unreadMessages}}</span>
             </li>
         </ul>

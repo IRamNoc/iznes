@@ -16,6 +16,7 @@ import { FileDownloader } from '@setl/utils';
 import { setConnectedWallet } from '@setl/core-store/index';
 import { SagaHelper } from '@setl/utils/index';
 import { MyWalletsService } from '@setl/core-req-services/index';
+import { MultilingualService } from '@setl/multilingual';
 
 @Component({
     selector: 'setl-messages',
@@ -109,6 +110,7 @@ export class SetlMessagesComponent implements OnDestroy, OnInit {
                 private logService: LogService,
                 private fileDownloader: FileDownloader,
                 private myWalletsService: MyWalletsService,
+                public translate: MultilingualService,
                 @Inject(APP_CONFIG) appConfig: AppConfig) {
         this.mailHelper = new MailHelper(ngRedux, myMessageService);
         this.messageService = new MessagesService(this.ngRedux, this.myMessageService);
@@ -198,12 +200,12 @@ export class SetlMessagesComponent implements OnDestroy, OnInit {
                             this.messageService.clearReply();
 
                             this.messageComposeForm.setValue({
-                                subject: 'Re: ' + reply.subject,
+                                subject: `${this.translate.translate('Re')}: ${reply.subject}`,
                                 recipients: [{ id: { walletId: reply.senderId }, text: reply.senderWalletName }],
                                 body: '<br><p>&nbsp;&nbsp;&nbsp;<s>' +
-                                    '&nbsp;'.repeat(200) + '</s></p><p>&nbsp;&nbsp;&nbsp;<b>' +
-                                    reply.senderWalletName + '</b> ' + reply.date + ':</p>' +
-                                    reply.body.replace(/<p>/g, '<p>&nbsp;&nbsp;&nbsp;'),
+                                '&nbsp;'.repeat(200) + '</s></p><p>&nbsp;&nbsp;&nbsp;<b>' +
+                                reply.senderWalletName + '</b> ' + reply.date + ':</p>' +
+                                reply.body.replace(/<p>/g, '<p>&nbsp;&nbsp;&nbsp;'),
                             });
                         }
                     });
@@ -262,9 +264,10 @@ export class SetlMessagesComponent implements OnDestroy, OnInit {
                         message.senderWalletName = this.walletDirectoryList[message.senderId].walletName;
                     } else {
                         if (message.senderId === -1) {
-                            message.senderWalletName = this.appConfig.internalMessageSender || 'System message';
+                            message.senderWalletName = this.appConfig.internalMessageSender ||
+                                this.translate.translate('System message');
                         } else {
-                            message.senderWalletName = 'Deleted wallet';
+                            message.senderWalletName = this.translate.translate('Deleted wallet');
                         }
                     }
                     if (message.recipientId) {
@@ -272,8 +275,7 @@ export class SetlMessagesComponent implements OnDestroy, OnInit {
                             message.recipientWalletName = this.walletDirectoryList[message.recipientId].walletName;
                         }
                     }
-
-                    message.isChecked = false;
+                    message.isChecked = this.checkedMessages.includes(message.mailId);
                     return message;
                 }
             });
@@ -310,7 +312,7 @@ export class SetlMessagesComponent implements OnDestroy, OnInit {
      */
     refreshMailbox(page = 0) {
         this.currentPage = page;
-        this.checkedMessages = [];
+        this.storeCheckedMessages();
         const categoryType = this.categories[this.currentCategory].type;
         this.requestMailboxByCategory(categoryType, page);
     }
@@ -375,6 +377,7 @@ export class SetlMessagesComponent implements OnDestroy, OnInit {
             return;
         }
         this.messages[index].isChecked = true;
+        this.storeCheckedMessages();
     }
 
     /**
@@ -383,11 +386,12 @@ export class SetlMessagesComponent implements OnDestroy, OnInit {
      * @param index
      */
     messageAllChecked(index, event) {
-        this.selectAll = this.selectAll ? false : true;
+        this.selectAll = !this.selectAll;
 
         this.messages = this.messages.map((message) => {
             return { ...message, isChecked: this.selectAll };
         });
+        this.storeCheckedMessages();
     }
 
     /**
@@ -471,14 +475,7 @@ export class SetlMessagesComponent implements OnDestroy, OnInit {
             this.messageView = false;
         }
 
-        // Save any checked messages so we can restore them once new data comes in
-        this.checkedMessages = [];
-        this.messages.forEach((message) => {
-            if (message.isChecked) {
-                this.checkedMessages.push(message.mailId);
-            }
-        });
-
+        this.storeCheckedMessages();
         this.resetMessages(reset);
         this.uncheckAll();
         this.clearSearch();
@@ -507,6 +504,18 @@ export class SetlMessagesComponent implements OnDestroy, OnInit {
         }
         this.categories = categories;
         this.changeDetectorRef.markForCheck();
+    }
+
+    /**
+     * Save any checked messages so we can restore them once new data comes in
+     */
+    storeCheckedMessages() {
+        this.checkedMessages = [];
+        this.messages.forEach((message) => {
+            if (message.isChecked) {
+                this.checkedMessages.push(message.mailId);
+            }
+        });
     }
 
     /**
@@ -564,15 +573,15 @@ export class SetlMessagesComponent implements OnDestroy, OnInit {
         }
 
         if (!formData.subject || !generalBody || !formData.recipients) {
-            this.toaster.pop('error', 'Please fill out all fields');
+            this.toaster.pop('error', this.translate.translate('Please fill out all fields'));
         } else {
             this.messageService.sendMessage(recipients, subject, generalBody, null).then(
                 () => {
-                    this.toaster.pop('success', 'Your message has been sent!');
+                    this.toaster.pop('success', this.translate.translate('Your message has been sent!'));
                     this.closeAndResetComposed();
                 },
                 (err) => {
-                    this.toaster.pop('error', 'Message sending failed');
+                    this.toaster.pop('error', this.translate.translate('Message sending failed'));
                     console.error('Message sending failed', err);
                 },
             );
@@ -635,15 +644,22 @@ export class SetlMessagesComponent implements OnDestroy, OnInit {
         this.router.navigateByUrl('/messages/compose');
     }
 
-    downloadTxtFile(id, MT502ID, type) {
-        this.fileDownloader.downLoaderFile({
-            method: 'getIznMT502',
+    downloadTxtFile(data) {
+        let body = {
+            method: 'getIznMTFile',
+            mtType: data.mtType,
             token: this.socketToken,
-            orderId: id,
-            MT502ID,
-            type,
+            orderId: data.orderID,
             userId: this.userId,
-        });
+        };
+
+        if (data.mtType == 'MT101') body['messageType'] = data.messageType;
+        if (data.mtType == 'MT502') {
+            body['MT502ID'] = data.MT502ID;
+            body['type'] = data.orderType;
+        }
+
+        this.fileDownloader.downLoaderFile(body);
     }
 
     handleDownloadBookEntryCertification(assetManagementCompanyId, settlementDate) {

@@ -1,0 +1,10 @@
+<div class="message-body">
+    <!-- body gets printed automagically -->
+
+    <div class="btn-group btn-primary" *ngIf="!isActed">
+        <div *ngIf="canShowButton()" (click)="performPost()" class="btn">Download</div>
+    </div>
+
+    <p *ngIf="isActed">You have already downloaded this file.</p>
+
+</div>

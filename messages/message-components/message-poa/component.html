@@ -1,15 +1,15 @@
 <div class="message-body">
     <!-- body gets printed automagically -->
-    <p><b>Address:</b> {{ data['address'] }}</p>
-    <p><b>Attorney:</b> {{ data['attorneyaddress'] }}</p>
-    <p><b>Chain:</b> {{ data['chainid'] }}</p>
-    <p><b>Valid From:</b> {{ prettyTime(data['startdate']) }}</p>
-    <p><b>Valid Until:</b> {{ prettyTime(data['enddate']) }}</p>
-    <p><b>Reference:</b> {{ data['poareference'] }}</p>
+    <p><b>Address:</b> {{ data['address'] }}<br>
+    <b>Attorney:</b> {{ data['attorneyaddress'] }}<br>
+    <b>Chain:</b> {{ data['chainid'] }}<br>
+    <b>Valid From:</b> {{ prettyTime(data['startdate']) }}<br>
+    <b>Valid Until:</b> {{ prettyTime(data['enddate']) }}<br>
+    <b>Reference:</b> {{ data['poareference'] }}</p><br>
     <p><b>Permissions:</b></p>
     <ul>
         <li *ngFor="let p of data['permissions']">{{ prettyNames(p['txtype']) }} using assets: {{ p['assets'].join(', ') }} with total quantity: {{ p['amount'] }}</li>
     </ul>
-    <hr>
+    <br>
     <button *ngIf="canAct && !isActed" [disabled]="inProgress" class="btn btn-primary" (click)="acceptPoa()">Sign</button>
 </div>
