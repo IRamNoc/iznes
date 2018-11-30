@@ -1,4 +1,4 @@
-import { Component, OnInit, ChangeDetectorRef } from '@angular/core';
+import { Component, OnInit, OnDestroy, ChangeDetectorRef } from '@angular/core';
 import { MultilingualService } from '@setl/multilingual';
 import { select } from '@angular-redux/store';
 import { Subscription } from 'rxjs/Subscription';
@@ -8,7 +8,7 @@ import { Subscription } from 'rxjs/Subscription';
     template: `<i *ngIf="showTooltip" class="fa fa-info-circle"
                   [tooltip]="{text: passwordStrengthText, size: \'medium\'}"></i>`,
 })
-export class PasswordTooltipComponent implements OnInit {
+export class PasswordTooltipComponent implements OnInit, OnDestroy {
     public passwordStrengthText: string = '';
     public showTooltip: boolean = true;
     private subscription: Subscription;
