@@ -31,3 +31,16 @@ h3{
         left: 0;
     }
 }
+
+input {
+    + .slider {
+        &:after {
+            content: '';
+        }
+    }
+    &:checked + .slider {
+        &:after {
+            content: '';
+        }
+    }
+}

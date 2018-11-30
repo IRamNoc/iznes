@@ -64,7 +64,7 @@ export class BeneficiaryListComponent implements OnInit, OnDestroy {
     }
 
     get listStakeholders() {
-        if (!this.sortedStakeholders.length) {
+        if (!this.sortedStakeholders.length && this.stakeholders.length) {
             this.sortStakeholders();
         }
 
@@ -92,9 +92,8 @@ export class BeneficiaryListComponent implements OnInit, OnDestroy {
     }
 
     sortStakeholders() {
-        const hasValue = getValue(this.stakeholders.get('0.companyBeneficiariesID'), 'value');
-
-        if (!hasValue) {
+        if (!this.stakeholders.length) {
+            this.sortedStakeholders = [];
             return;
         }
         this.sortedStakeholders = this.hierarchySort.sort(this.stakeholders.controls);
