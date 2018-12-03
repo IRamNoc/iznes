@@ -59,6 +59,7 @@ export class OfiManageNavPopup implements OnInit {
 
     private subscriptionsArray: Subscription[] = [];
 
+    @select(['user', 'siteSettings', 'language']) requestLanguageOb;
     @select(['ofi', 'ofiProduct', 'ofiManageNav', 'ofiNavLatest', 'requested']) navLatestRequestedOb: Observable<any>;
     @select(['ofi', 'ofiProduct', 'ofiManageNav', 'ofiNavLatest', 'navLatest']) navLatestOb: Observable<any>;
 
@@ -71,12 +72,12 @@ export class OfiManageNavPopup implements OnInit {
                 public translate: MultilingualService,
                 private moneyValuePipe: MoneyValuePipe,
     ) {
-
-        this.initStatusData();
-        this.initSubscriptions();
     }
 
     ngOnInit() {
+        this.initStatusData();
+        this.initSubscriptions();
+
         this.popupService.onOpen.subscribe((res: { share: model.NavInfoModel, mode: model.NavPopupMode }) => {
             this.redux.dispatch(clearRequestedNavLatest());
             this.navExceedsThreshold = false;
@@ -96,6 +97,10 @@ export class OfiManageNavPopup implements OnInit {
             this.updateNavLatest(navList);
 
             if (this.popupModel) this.initNavForm(this.popupModel.share, this.popupModel.mode);
+        }));
+        this.subscriptionsArray.push(this.requestLanguageOb.subscribe(() => {
+            this.initStatusData();
+            this.changeDetectorRef.detectChanges();
         }));
     }
 
