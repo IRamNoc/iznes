@@ -9,6 +9,8 @@ import org.openqa.selenium.WebDriver;
 
 import java.io.File;
 import java.io.IOException;
+import java.nio.file.FileSystems;
+import java.nio.file.Path;
 
 public class ScreenshotRule extends TestWatcher {
     private WebDriver driver = null;
@@ -53,6 +55,17 @@ public class ScreenshotRule extends TestWatcher {
             dir = "/Users/shared/screenshots//";
         }
         else {
+            Path path = FileSystems.getDefault().getPath(".");
+            System.out.println("*********************************************************");
+            System.out.println("*********************************************************");
+            System.out.println("*********************************************************");
+            System.out.println("*********************************************************");
+            System.out.println(path);
+            System.out.println("*********************************************************");
+            System.out.println("*********************************************************");
+            System.out.println("*********************************************************");
+            System.out.println("*********************************************************");
+
             dir = "/var/lib/jenkins/workspace/IznesUIAcceptanceTests/target/test-attachments//";
         }
         String userDirectory = dir;
