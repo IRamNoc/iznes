@@ -338,7 +338,7 @@ export class MyUserService implements OnDestroy {
 
     statusNotifications(): any {
         const messageBody: StatusNotificationsMessageBody = {
-            RequestName: 'queue/status',
+            RequestName: 'queueStatus',
             token: this.memberSocketService.token,
         };
 
@@ -347,7 +347,7 @@ export class MyUserService implements OnDestroy {
 
     registerNotifications(): any {
         const messageBody: RegisterNotificationsMessageBody = {
-            RequestName: 'queue/register',
+            RequestName: 'queueRegister',
             token: this.memberSocketService.token,
         };
 
@@ -356,7 +356,7 @@ export class MyUserService implements OnDestroy {
 
     truncateNotifications(): any {
         const messageBody: TruncateNotificationsMessageBody = {
-            RequestName: 'queue/truncate',
+            RequestName: 'queueTruncate',
             token: this.memberSocketService.token,
         };
 
@@ -365,7 +365,7 @@ export class MyUserService implements OnDestroy {
 
     removeNotifications(): any {
         const messageBody: RemoveNotificationsMessageBody = {
-            RequestName: 'queue/remove',
+            RequestName: 'queueRemove',
             token: this.memberSocketService.token,
         };
 
@@ -374,7 +374,7 @@ export class MyUserService implements OnDestroy {
 
     testNotifications(): any {
         const messageBody: TestNotificationsMessageBody = {
-            RequestName: 'queue/test',
+            RequestName: 'queueTest',
             token: this.memberSocketService.token,
         };
 
