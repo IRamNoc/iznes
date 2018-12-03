@@ -52,7 +52,7 @@ public class ManagementCompanyModuleHelper {
     }
     public static void assertPageFormLabels() {
         driver.findElement(By.id("mcTabAddNewMc")).click();
-        List<String> expectedLabels = Arrays.asList("Management Company Name", "Email Address of the Super Admin", "Legal Form", "Country of tax residence", "Supervisory Authority", "RCS matriculation", "Identification number (SIRET / SIREN)", "Share Capital", "LEI Code", "BIC Code", "GIIN Code", "Registered Company’s Headquarters address", "Address line 2", "ZIP Code", "City", "Country", "Commercial Contact", "Operational Contact", "Director Contact", "Management Company Website Address", "Management Company Phone Number", "Document Signature to be displayed on the Certification of Book Entry", "Document Logo of the Management Company");
+        List<String> expectedLabels = Arrays.asList("Management Company Name", "Email Address of the Super Admin", "Legal Form", "Country of Tax Residence", "Supervisory Authority", "RCS Matriculation", "Identification Number (SIRET / SIREN)", "Share Capital", "LEI Code", "BIC Code", "GIIN Code", "Registered Company's Headquarters Address", "Address Line 2", "ZIP Code", "City", "Country", "Commercial Contact", "Operational Contact", "Director Contact", "Management Company Website Address", "Management Company Phone Number", "Document Signature to be displayed on the Certification of Book Entry", "Document Logo of the Management Company");
         List<String> actualLabels = new ArrayList<>();
         List<WebElement> elements = driver.findElements(By.xpath("/html/body/app-root/app-basic-layout/div/ng-sidebar-container/div/div/div/main/div/div/management-company/clr-tabs/clr-tab[*]/clr-tab-content/form/section/div[*]/div[*]/label"));
         for (WebElement element : elements) {
@@ -68,16 +68,16 @@ public class ManagementCompanyModuleHelper {
         driver.findElement(By.id("companyName")).sendKeys(companyName);
         driver.findElement(By.id("emailAddress")).sendKeys(email);
         try{//Try to select Legal Form
-            driver.findElement(By.cssSelector("div.row:nth-child(1) > div:nth-child(3) > div:nth-child(2) > ng-select:nth-child(1) > div:nth-child(1) > div:nth-child(2) > span:nth-child(1) > span:nth-child(1)")).click();
-            wait.until(elementToBeClickable(By.xpath("/html/body/app-root/app-basic-layout/div/ng-sidebar-container/div/div/div/main/div/div/management-company/clr-tabs/clr-tab[2]/clr-tab-content/form/section/div[1]/div[3]/div/ng-select/div/div[3]/div/input"))).sendKeys("Friendly Society");
-            wait.until(elementToBeClickable(By.xpath("/html/body/app-root/app-basic-layout/div/ng-sidebar-container/div/div/div/main/div/div/management-company/clr-tabs/clr-tab[2]/clr-tab-content/form/section/div[1]/div[3]/div/ng-select/div/div[3]/ul/li[1]/div"))).click();
+            driver.findElement(By.cssSelector("div.row:nth-child(1) > div:nth-child(3) > ng-select:nth-child(2) > div:nth-child(1) > div:nth-child(2) > span:nth-child(1) > i:nth-child(3)")).click();
+            wait.until(elementToBeClickable(By.xpath("/html/body/app-root/app-basic-layout/div/ng-sidebar-container/div/div/div/main/div/div/management-company/clr-tabs/clr-tab[2]/clr-tab-content/form/section/div[1]/div[3]/ng-select/div/div[3]/div/input"))).sendKeys("Friendly Society");
+            wait.until(elementToBeClickable(By.xpath("/html/body/app-root/app-basic-layout/div/ng-sidebar-container/div/div/div/main/div/div/management-company/clr-tabs/clr-tab[2]/clr-tab-content/form/section/div[1]/div[3]/ng-select/div/div[3]/ul/li[1]/div/a"))).click();
         }catch (Exception e) {
             fail("Unable to Select from drop down");
         }
         try{//Try to select county of Tax Residence
-            driver.findElement(By.cssSelector("div.row:nth-child(2) > div:nth-child(1) > div:nth-child(2) > ng-select:nth-child(1) > div:nth-child(1) > div:nth-child(2) > span:nth-child(1) > span:nth-child(1)")).click();
-            wait.until(elementToBeClickable(By.xpath("/html/body/app-root/app-basic-layout/div/ng-sidebar-container/div/div/div/main/div/div/management-company/clr-tabs/clr-tab[2]/clr-tab-content/form/section/div[2]/div[1]/div/ng-select/div/div[3]/div/input"))).sendKeys(country);
-            wait.until(elementToBeClickable(By.xpath("/html/body/app-root/app-basic-layout/div/ng-sidebar-container/div/div/div/main/div/div/management-company/clr-tabs/clr-tab[2]/clr-tab-content/form/section/div[2]/div[1]/div/ng-select/div/div[3]/ul/li[1]/div"))).click();
+            driver.findElement(By.cssSelector("div.row:nth-child(2) > div:nth-child(1) > ng-select:nth-child(2) > div:nth-child(1) > div:nth-child(2) > span:nth-child(1) > i:nth-child(3)")).click();
+            wait.until(elementToBeClickable(By.xpath("/html/body/app-root/app-basic-layout/div/ng-sidebar-container/div/div/div/main/div/div/management-company/clr-tabs/clr-tab[2]/clr-tab-content/form/section/div[2]/div[1]/ng-select/div/div[3]/div/input"))).sendKeys(country);
+            wait.until(elementToBeClickable(By.xpath("/html/body/app-root/app-basic-layout/div/ng-sidebar-container/div/div/div/main/div/div/management-company/clr-tabs/clr-tab[2]/clr-tab-content/form/section/div[2]/div[1]/ng-select/div/div[3]/ul/li[1]/div/a"))).click();
         }catch (Exception e){
             fail("Unable to select from drop down, Tax Residence");
         }
@@ -93,9 +93,9 @@ public class ManagementCompanyModuleHelper {
         driver.findElement(By.id("postalCode")).sendKeys(postCode);
         driver.findElement(By.id("city")).sendKeys(city);
         try{//Try to select country from County
-            driver.findElement(By.cssSelector("#country > ng-select:nth-child(1) > div:nth-child(1) > div:nth-child(2) > span:nth-child(1) > span:nth-child(1)")).click();
-            wait.until(elementToBeClickable(By.xpath("/html/body/app-root/app-basic-layout/div/ng-sidebar-container/div/div/div/main/div/div/management-company/clr-tabs/clr-tab[2]/clr-tab-content/form/section/div[6]/div[5]/div/ng-select/div/div[3]/div/input"))).sendKeys(country);
-            wait.until(elementToBeClickable(By.xpath("/html/body/app-root/app-basic-layout/div/ng-sidebar-container/div/div/div/main/div/div/management-company/clr-tabs/clr-tab[2]/clr-tab-content/form/section/div[6]/div[5]/div/ng-select/div/div[3]/ul/li[1]/div"))).click();
+            driver.findElement(By.cssSelector("div.form-group:nth-child(5) > ng-select:nth-child(2) > div:nth-child(1) > div:nth-child(2) > span:nth-child(1) > i:nth-child(3)")).click();
+            wait.until(elementToBeClickable(By.xpath("/html/body/app-root/app-basic-layout/div/ng-sidebar-container/div/div/div/main/div/div/management-company/clr-tabs/clr-tab[2]/clr-tab-content/form/section/div[6]/div[5]/ng-select/div/div[3]/div/input"))).sendKeys(country);
+            wait.until(elementToBeClickable(By.xpath("/html/body/app-root/app-basic-layout/div/ng-sidebar-container/div/div/div/main/div/div/management-company/clr-tabs/clr-tab[2]/clr-tab-content/form/section/div[6]/div[5]/ng-select/div/div[3]/ul/li[1]/div/a"))).click();
         }catch (Exception e){
             fail("Unable to select from drop down, Address County");
         }
@@ -104,7 +104,7 @@ public class ManagementCompanyModuleHelper {
         driver.findElement(By.id("directorContact")).sendKeys("Samuel Hutchinson");
         driver.findElement(By.id("mc_websiteUrl")).sendKeys("uk-lon-li-006.dev.setl.io");
         try{//Try to select county from Phone Number Country Selection
-            driver.findElement(By.cssSelector("#kyc_additionnal_phoneCode > div:nth-child(1) > div:nth-child(2) > span:nth-child(1) > span:nth-child(1)")).click();
+            driver.findElement(By.cssSelector("#kyc_additionnal_phoneCode > div:nth-child(1) > div:nth-child(2) > span:nth-child(1) > i:nth-child(3)")).click();
             wait.until(elementToBeClickable(By.xpath("/html/body/app-root/app-basic-layout/div/ng-sidebar-container/div/div/div/main/div/div/management-company/clr-tabs/clr-tab[2]/clr-tab-content/form/section/div[9]/div[2]/div/div[1]/ng-select/div/div[3]/div/input"))).sendKeys(country);
             wait.until(elementToBeClickable(By.xpath("/html/body/app-root/app-basic-layout/div/ng-sidebar-container/div/div/div/main/div/div/management-company/clr-tabs/clr-tab[2]/clr-tab-content/form/section/div[9]/div[2]/div/div[1]/ng-select/div/div[3]/ul/li[1]/div"))).click();
         }catch (Exception e){
@@ -116,7 +116,7 @@ public class ManagementCompanyModuleHelper {
        wait.until(visibilityOfElementLocated(By.xpath("//*[@id=\"iznes\"]/app-root/jaspero-alerts/jaspero-alert/div[2]/div[1]")));
        String title = driver.findElement(By.xpath("//*[@id=\"iznes\"]/app-root/jaspero-alerts/jaspero-alert/div[2]/div[1]")).getText();
        assertEquals(title, "Success!");
-       assertEquals("Management company has successfully been created.", driver.findElement(By.xpath("//*[@id=\"iznes\"]/app-root/jaspero-alerts/jaspero-alert/div[2]/div[3]/table/tbody/tr/td")).getText());
+       assertEquals("Management company has successfully been created", driver.findElement(By.xpath("//*[@id=\"iznes\"]/app-root/jaspero-alerts/jaspero-alert/div[2]/div[3]/table/tbody/tr/td")).getText());
        driver.findElement(By.xpath("//*[@id=\"iznes\"]/app-root/jaspero-alerts/jaspero-alert/div[2]/div[4]/button")).click();
     }
     public static void assertEmailBodySentToManagementCompany(String email) {
@@ -158,12 +158,12 @@ public class ManagementCompanyModuleHelper {
         wait.until(elementToBeClickable(By.xpath("/html/body/app-root/app-basic-layout/div/ng-sidebar-container/div/div/div/main/div/div/setl-admin-users/div[2]/clr-tabs/clr-tab[2]/clr-tab-content/div[2]/form/div/div[5]/div/div/clr-tabs/clr-tab[1]/clr-tab-content/div/ng-select/div/div[2]/div/input"))).sendKeys("IZNES Admin Group");
         wait.until(elementToBeClickable(By.xpath("/html/body/app-root/app-basic-layout/div/ng-sidebar-container/div/div/div/main/div/div/setl-admin-users/div[2]/clr-tabs/clr-tab[2]/clr-tab-content/div[2]/form/div/div[5]/div/div/clr-tabs/clr-tab[1]/clr-tab-content/div/ng-select/div/div[2]/ul/li/div/a"))).click();
         //Removing Transactional Chain
-        driver.findElement(By.id("clr-tab-link-12")).click();
+        driver.findElement(By.xpath("//*[@id=\"clr-tab-link-11\"]")).click();
         wait.until(elementToBeClickable(By.cssSelector("#clr-tab-content-6 > div > ng-select:nth-child(1) > div > div.ui-select-match.dropdown > span > a > i"))).click();
         String chain = driver.findElement(By.xpath("/html/body/app-root/app-basic-layout/div/ng-sidebar-container/div/div/div/main/div/div/setl-admin-users/div[2]/clr-tabs/clr-tab[2]/clr-tab-content/div[2]/form/div/div[5]/div/div/clr-tabs/clr-tab[2]/clr-tab-content/div/ng-select[1]/div/div[2]/span/span")).getText();
         assertNotEquals("Chain2700", chain);
          //Selecting Menu
-        driver.findElement(By.id("clr-tab-link-15")).click();
+        driver.findElement(By.xpath("//*[@id=\"clr-tab-link-14\"]")).click();
         driver.findElement(By.xpath("/html/body/app-root/app-basic-layout/div/ng-sidebar-container/div/div/div/main/div/div/setl-admin-users/div[2]/clr-tabs/clr-tab[2]/clr-tab-content/div[2]/form/div/div[5]/div/div/clr-tabs/clr-tab[5]/clr-tab-content/div/ng-select/div/div[2]/span/span")).click();
         wait.until(elementToBeClickable(By.xpath("/html/body/app-root/app-basic-layout/div/ng-sidebar-container/div/div/div/main/div/div/setl-admin-users/div[2]/clr-tabs/clr-tab[2]/clr-tab-content/div[2]/form/div/div[5]/div/div/clr-tabs/clr-tab[5]/clr-tab-content/div/ng-select/div/div[3]/div/input"))).sendKeys("IZNES Admin");
         wait.until(elementToBeClickable(By.xpath("/html/body/app-root/app-basic-layout/div/ng-sidebar-container/div/div/div/main/div/div/setl-admin-users/div[2]/clr-tabs/clr-tab[2]/clr-tab-content/div[2]/form/div/div[5]/div/div/clr-tabs/clr-tab[5]/clr-tab-content/div/ng-select/div/div[3]/ul/li/div/a/div"))).click();
@@ -177,7 +177,7 @@ public class ManagementCompanyModuleHelper {
         driver.findElement(By.xpath("/html/body/app-root/jaspero-alerts/jaspero-alert/div[3]/div[4]/button")).click();
     }
     public static void checkManagementCompanyList(String companyA, String companyB){
-        assertEquals(" List", driver.findElement(By.id("mcTabList")).getText());
+        assertEquals("List", driver.findElement(By.id("mcTabList")).getText());
         assertEquals(companyA, driver.findElement(By.xpath("/html/body/app-root/app-basic-layout/div/ng-sidebar-container/div/div/div/main/div/div/management-company/clr-tabs/clr-tab[1]/clr-tab-content/section/clr-datagrid/div/div/div/clr-dg-table-wrapper/div[2]/clr-dg-row[1]/div/clr-dg-cell[1]")).getText());
         assertEquals(companyB, driver.findElement(By.xpath("/html/body/app-root/app-basic-layout/div/ng-sidebar-container/div/div/div/main/div/div/management-company/clr-tabs/clr-tab[1]/clr-tab-content/section/clr-datagrid/div/div/div/clr-dg-table-wrapper/div[2]/clr-dg-row[2]/div/clr-dg-cell[1]")).getText());
     }
@@ -187,7 +187,7 @@ public class ManagementCompanyModuleHelper {
         wait.until(visibilityOfElementLocated(By.id("mcTabEditMc")));
         assertEquals("Edit management company", driver.findElement(By.id("mcTabEditMc")).getText());
         assertEquals("Management Company", driver.findElement(By.id("companyName")).getAttribute("value"));
-        assertEquals("am@setl.io", driver.findElement(By.id("emailAddress")).getAttribute("value"));
+        assertEquals("PP@setl.io", driver.findElement(By.id("emailAddress")).getAttribute("value"));
         assertEquals("French Gov", driver.findElement(By.id("supervisoryAuthority")).getAttribute("value"));
         assertEquals("0001", driver.findElement(By.id("numSiretOrSiren")).getAttribute("value"));
         assertEquals("100000", driver.findElement(By.id("shareCapital")).getAttribute("value"));
@@ -200,8 +200,13 @@ public class ManagementCompanyModuleHelper {
         assertEquals("0123456789", driver.findElement(By.id("directorContact")).getAttribute("value"));
     }
     public static void assertPage(String pageHeader) {
-        String pageTitle = driver.findElement(By.xpath("/html/body/app-root/app-basic-layout/div/ng-sidebar-container/div/div/div/main/div/div/management-company/div/h1/span")).getText();
-        assertEquals(pageHeader, pageTitle);
+        try {
+            String pageTitle = driver.findElement(By.xpath("//*[@id=\"iznes\"]/app-root/app-basic-layout/div/ng-sidebar-container/div/div/div/main/div/div/management-company/div")).getText();
+            assertEquals(pageHeader, pageTitle);
+            System.out.println(pageTitle);
+        }catch(Exception e){
+            fail("Page Title on Management Company Page is incorrect");
+        }
     }
     public static void assertRequiredFields() {
         driver.findElement(By.id("mcTabAddNewMc")).click();

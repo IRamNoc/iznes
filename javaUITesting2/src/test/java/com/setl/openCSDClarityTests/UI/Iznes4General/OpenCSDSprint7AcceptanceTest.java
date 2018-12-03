@@ -134,8 +134,8 @@ public class OpenCSDSprint7AcceptanceTest {
         assertTrue(driver.findElement(By.xpath("//*[@id=\"iznes\"]/app-root/app-basic-layout/div/ng-sidebar-container/div/div/app-navigation-topbar/header/div[2]/div[3]/div[2]/a")).isDisplayed());
         driver.findElement(By.xpath("//*[@id=\"iznes\"]/app-root/app-basic-layout/div/ng-sidebar-container/div/div/app-navigation-topbar/header/div[2]/div[3]/div[2]/a")).click();
 
-        wait.until(visibilityOfAllElementsLocatedBy(By.id("username-field")));
-        assertTrue(driver.findElement(By.id("username-field")).isDisplayed());
+        wait.until(visibilityOfAllElementsLocatedBy(By.id("login-username")));
+        assertTrue(driver.findElement(By.id("login-username")).isDisplayed());
     }
 
     @Test
