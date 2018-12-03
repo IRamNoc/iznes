@@ -31,7 +31,7 @@
                                     <i class="fa fa-plus"></i>
                                     {{ 'Add Another User' | translate }}
                                 </button>
-                                <i class="tooltip tooltip-right fa fa-question-circle" [tooltip]="addAdditionalUserTooltip"></i>
+                                <i *ngIf="showTooltips" class="tooltip tooltip-right fa fa-question-circle" [tooltip]="addAdditionalUserTooltip"></i>
                             </div>
                         </div>
                     </div>
@@ -50,7 +50,7 @@
                 <div class="col-sm-12">
                     <h3>
                         {{ 'Team Memberships' | translate }}
-                        <i class="tooltip fa fa-question-circle" [tooltip]="teamMembershipsTooltip"></i>
+                        <i *ngIf="showTooltips" class="tooltip fa fa-question-circle" [tooltip]="teamMembershipsTooltip"></i>
                     </h3>
                 </div>
             </div>

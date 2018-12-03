@@ -1,4 +1,4 @@
-import { Component, OnInit, OnDestroy } from '@angular/core';
+import { Component, OnInit, OnDestroy, ChangeDetectorRef } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
 import { NgRedux, select } from '@angular-redux/store';
 import * as _ from 'lodash';
@@ -44,11 +44,13 @@ export class UsersCreateUpdateComponent
     siteSettings;
     usersPanelOpen: boolean = true;
     userTypes;
+    showTooltips: boolean = true;
 
     private user: Model.AccountAdminUser;
     private userTeamsSelected: TeamModel.AccountAdminTeam[];
     private userHasActiveTeam: () => boolean;
 
+    @select(['user', 'siteSettings', 'language']) requestLanguageOb;
     @select(['userAdmin', 'userTypes', 'userTypes']) userTypesOb;
     @select(['userAdmin', 'userTypes', 'requested']) userTypesReqOb;
     @select(['user', 'myDetail']) myDetailsOb;
@@ -62,6 +64,7 @@ export class UsersCreateUpdateComponent
                 protected toaster: ToasterService,
                 protected confirmations: ConfirmationService,
                 protected translate: MultilingualService,
+                private changeDetectorRef: ChangeDetectorRef,
                 private userMgmtService: UserManagementServiceBase) {
         super(route, router, alerts, toaster, confirmations, translate);
         this.noun = AccountAdminNouns.User;
@@ -93,6 +96,9 @@ export class UsersCreateUpdateComponent
                 the permissions outlined in User permissions.`),
             size: 'small',
         };
+
+        this.changeDetectorRef.detectChanges();
+        this.showTooltips = true;
     }
 
     private initTranslations(): void {
@@ -139,10 +145,16 @@ export class UsersCreateUpdateComponent
             this.siteSettings = settings;
         });
 
+        const languageSub = this.requestLanguageOb.subscribe(() => {
+            this.showTooltips = false;
+            this.initTooltips();
+        });
+
         this.subscriptions.push(
             myDetailsSub,
             userTypesSub,
             siteSettingsSub,
+            languageSub,
         );
     }
 
@@ -448,5 +460,13 @@ export class UsersCreateUpdateComponent
 
     ngOnDestroy() {
         super.ngOnDestroy();
+
+        /* Unsubscribe Observables. */
+        for (const key in this.subscriptions) {
+            this.subscriptions[key].unsubscribe();
+        }
+
+        /* Detach the change detector on destroy. */
+        this.changeDetectorRef.detach();
     }
 }

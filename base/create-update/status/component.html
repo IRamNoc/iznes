@@ -2,7 +2,7 @@
     <div class="col-sm-12">
         <h3>{{ [noun, 'Status'].join(' ') | translate }}</h3>
 
-        <p>Current status: <span class="status"
+        <p>{{ 'Current status' | translate }}: <span class="status"
             [class.enabled]="isStatusEnabled()"
             [class.disabled]="isStatusDisabled()"
             [class.pending]="isStatusPending()">

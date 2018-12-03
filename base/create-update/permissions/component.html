@@ -31,10 +31,10 @@
                 [class.fa-angle-right]="!showParentAsOpen(permission)"
                 [class.fa-angle-down]="showParentAsOpen(permission)"
                 [hidden]="!isPermissionParent(permission)">
-            </i> {{permission.name}}
+            </i> {{ permission.name | translate }}
         </clr-dg-cell>
         <clr-dg-cell id="permissionsCellDesc{{idx}}" class="col-desc" [class.parent]="isPermissionParent(permission)">
-            {{permission.description}}
+            {{ permission.description | translate }}
         </clr-dg-cell>
         <clr-dg-cell id="permissionsCellActions{{idx}}" class="col-actions">
             <label class="switch" *ngIf="!isPermissionParent(permission)">
