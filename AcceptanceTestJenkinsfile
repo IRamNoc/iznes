@@ -19,7 +19,9 @@ node {
                                                            url          : 'git@si-nexus01.dev.setl.io:opencsd-rewrite/opencsd-frontend-clarity.git']]])
         }
         stage('Clear Environment Data'){
-            sh '''cd /var/membership-db/deploy/ && ./cleanblockchain iznes'''
+            sh '''cd /var/membership-db/deploy/ &&
+            ./cleanblockchain iznes &&
+            ./updatedb iznes'''
         }
 
         stage('Run Acceptance Tests') {
