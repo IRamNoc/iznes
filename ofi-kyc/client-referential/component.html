@@ -2,8 +2,7 @@
     <!-- Breadcrumbs. -->
     <div class="header-breadcrumbs">
         <h1 id="ofi-client-referential"><i class="fa fa-users"></i>
-            {{ 'Client Referential' | translate }}
-            <span *ngIf="kycId == ''">: {{ 'All Clients' | translate }}</span>
+            {{ 'Client Referential' | translate }}<span *ngIf="kycId == ''">: {{ 'All Clients' | translate }}</span>
             <span *ngIf="kycId != '' && !!clients[kycId]">{{ getClientReferentialDescriptionTitle() }}</span>
         </h1>
     </div>
@@ -32,8 +31,11 @@
                                     {{ 'Investor Type' | translate }}
                                 </label>
 
-                                <ng-select id="investor-type-select" class="form-control" [items]="investorTypes"
-                                    [allowClear]="true" [placeholder]="translate.translate('Select')" formControlName="investorType">
+                                <ng-select id="investor-type-select" 
+                                            class="form-control" 
+                                            [items]="investorTypes"
+                                            [allowClear]="true" 
+                                            [placeholder]="translate.translate('Select investor type')" formControlName="investorType">
                                 </ng-select>
                             </div>
                         </form>
@@ -256,8 +258,11 @@
                         <div class="form-group col-sm-3">
                             <label for="audit-search-investor">{{ 'Search an Investor' | translate }}</label>
                             <div class="input-button-group">
-                                <input id="audit-search-investor" [formControl]="searchForm.controls['searchInvestor']"
-                                    name="search-sharename" type="text" [placeholder]="translate.translate('Investor name or reference')"
+                                <input id="audit-search-investor" 
+                                        [formControl]="searchForm.controls['searchInvestor']"
+                                        name="search-sharename" 
+                                        type="text" 
+                                        [placeholder]="translate.translate('Investor name or reference')"
                                     style="width: 100% !important">
                             </div>
                         </div>
@@ -265,18 +270,26 @@
                             <label for="orders-search-from-date">{{ 'From Date' | translate }}</label>
                             <div class="input-group date-pick-wrapper">
                                 <span class="fa fa-calendar" aria-hidden="true"></span>
-                                <input id="orders-search-from-date" [formControl]="searchForm.controls['searchFrom']"
-                                    autocomplete="off" [dpDayPicker]="fromConfigDate" [placeholder]="translate.translate('Choose a date')"
-                                    mode="day" theme="dp-material">
+                                <input id="orders-search-from-date" 
+                                        [formControl]="searchForm.controls['searchFrom']"
+                                        autocomplete="off" 
+                                        [dpDayPicker]="fromConfigDate" 
+                                        [placeholder]="translate.translate('Choose a date')"
+                                        mode="day" 
+                                        theme="dp-material">
                             </div>
                         </div>
                         <div class="form-group col-sm-3">
                             <label for="orders-search-to-date">{{ 'To Date' | translate }}</label>
                             <div class="input-group date-pick-wrapper">
                                 <span class="fa fa-calendar" aria-hidden="true"></span>
-                                <input id="orders-search-to-date" [formControl]="searchForm.controls['searchTo']"
-                                    autocomplete="off" [dpDayPicker]="toConfigDate" [placeholder]="translate.translate('Choose a date')"
-                                    mode="day" theme="dp-material">
+                                <input id="orders-search-to-date" 
+                                        [formControl]="searchForm.controls['searchTo']"
+                                        autocomplete="off" 
+                                        [dpDayPicker]="toConfigDate" 
+                                        [placeholder]="translate.translate('Choose a date')"
+                                        mode="day" 
+                                        theme="dp-material">
                             </div>
                         </div>
                         <div class="col-sm-3">

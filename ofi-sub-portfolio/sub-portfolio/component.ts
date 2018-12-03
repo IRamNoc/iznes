@@ -30,7 +30,6 @@ import { MyUserService } from '@setl/core-req-services/my-user/my-user.service';
     selector: 'ofi-sub-portfolio',
     styleUrls: ['./component.scss'],
     templateUrl: './component.html',
-    changeDetection: ChangeDetectionStrategy.OnPush,
 })
 
 export class OfiSubPortfolioComponent implements OnInit, OnDestroy {
@@ -53,7 +52,8 @@ export class OfiSubPortfolioComponent implements OnInit, OnDestroy {
 
     showAddress = {};
 
-    // List of Redux observable.
+    // List of Redux observable
+    @select(['user', 'siteSettings', 'language']) languageOb;
     @select(['wallet', 'myWalletAddress', 'addressList']) addressListOb;
     @select(['wallet', 'myWalletAddress', 'requestedAddressList']) requestedAddressListOb;
     @select(['wallet', 'myWalletAddress', 'requestedLabel']) requestedLabelListOb;
@@ -66,12 +66,12 @@ export class OfiSubPortfolioComponent implements OnInit, OnDestroy {
                 private walletNodeRequestService: WalletNodeRequestService,
                 private ofiSubPortfolioService: OfiSubPortfolioService,
                 private confirmationService: ConfirmationService,
-                public translate: MultilingualService,
                 private toaster: ToasterService,
                 private logService: LogService,
                 private userTourService: UserTourService,
                 private myUserService: MyUserService,
                 private changeDetectorRef: ChangeDetectorRef,
+                public translate: MultilingualService,
         ) {
 
         /* tab meta */
@@ -106,6 +106,13 @@ export class OfiSubPortfolioComponent implements OnInit, OnDestroy {
             .push(this.requestedLabelListOb
             .subscribe((requested: boolean) => {
                 this.requestWalletLabel(requested);
+            }));
+
+            this.subscriptionsArray
+            .push(this.languageOb
+            .subscribe(() => {
+                this.tabDetail[0]['title'].text = this.translate.translate('Manage Sub-portfolio');
+                this.changeDetectorRef.markForCheck();
             }));
         }));
 

@@ -174,7 +174,11 @@ export const legalFormList = [
     },
     {
         id: 'GEIE',
-        text: "GEIE: Groupement européen d'intérêt économiqueGIE : Groupement d'intérêt économique",
+        text: "GEIE: Groupement européen d'intérêt économique",
+    },
+    {
+        id: 'GIE',
+        text: 'Groupement d\'intérêt économique',
     },
     {
         id: 'SARL',
@@ -1404,7 +1408,7 @@ export const controlToName = {
     establishmentName: 'Establishment Name',
     iban: 'IBAN',
     bic: 'BIC',
-    addressLine1: 'Establishement Address',
+    addressLine1: 'Establishment Address',
     addressLine2: 'Address Line 2',
     zipCode: 'Zip Code',
     city: 'City',

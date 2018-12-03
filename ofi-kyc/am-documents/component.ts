@@ -13,7 +13,7 @@ import { APP_CONFIG, AppConfig, immutableHelper } from '@setl/utils';
 /* Ofi orders request service. */
 import { clearAppliedHighlight, SET_HIGHLIGHT_LIST, setAppliedHighlight } from '@setl/core-store/index';
 import { setInformations, KycMyInformations } from '../../ofi-store/ofi-kyc/my-informations';
-import { Observable } from 'rxjs';
+import { Observable, combineLatest as observableCombineLatest } from 'rxjs';
 
 import { OfiKycService } from '../../ofi-req-services/ofi-kyc/service';
 import { Router } from '@angular/router';
@@ -34,6 +34,7 @@ export class OfiAmDocumentsComponent implements OnDestroy, OnInit {
     private subscriptions: any[] = [];
 
     /* Observables. */
+    @select(['user', 'siteSettings', 'language']) requestLanguageOb;
     @select(['ofi', 'ofiKyc', 'amKycList', 'requested']) requestedOfiKycListOb;
     @select(['ofi', 'ofiKyc', 'amKycList', 'amKycList']) kycListOb;
 
@@ -52,8 +53,11 @@ export class OfiAmDocumentsComponent implements OnDestroy, OnInit {
     ngOnInit() {
         this.subscriptions.push(this.requestedOfiKycListOb.subscribe(
             requested => this.requestKycList(requested)));
-        this.subscriptions.push(this.kycListOb.subscribe(
-            amKycListData => this.updateTable(amKycListData)));
+        this.subscriptions.push(
+            observableCombineLatest(this.kycListOb, this.requestLanguageOb).subscribe(([amKycListData]) => {
+                this.updateTable(amKycListData);
+            },
+        ));
     }
 
     updateTable(tableData) {

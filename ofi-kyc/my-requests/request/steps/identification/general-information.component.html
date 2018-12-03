@@ -43,7 +43,7 @@
                     <input type="text"
                             id="leiCode"
                             formControlName="leiCode"
-                            placeholder="{{ 'If non applicable please fill in the value &quot;N/A&quot; here' }}">
+                            placeholder="{{ 'If non applicable please fill in the value &quot;N/A&quot; here' | translate }}">
                     <span class="field-error" *ngIf="hasError('leiCode', ['required'])">{{ 'Field is required' | translate }}</span>
                     <span class="field-error" *ngIf="hasError('leiCode', ['pattern'])">{{ 'LEI must be 20 characters long' | translate }}</span>
                 </div>
@@ -56,7 +56,7 @@
                                 id="otherIdentificationNumber" 
                                 [items]="identificationNumberList" 
                                 formControlName="otherIdentificationNumber" 
-                                placeholder="{{ 'Type' | translate }}">
+                                placeholder="{{ 'Select identification number type' | translate }}">
                     </ng-select>
                     <span class="field-error" *ngIf="hasError(['otherIdentificationNumber'], ['required'])">{{ 'Field is required' | translate }}</span>
                 </div>

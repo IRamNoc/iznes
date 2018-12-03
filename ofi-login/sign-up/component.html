@@ -34,12 +34,9 @@
                             <div class="icon">
                                 <i class="icon-key"></i>
                             </div>
-                            <h2>{{ title | translate }}</h2>
+                            <h2>{{ 'Register to access IZNES' | translate }}</h2>
                         </div>
                         <div class="form-container">
-                            <div class="text-block">
-                                <p class="no-margin"><strong>{{ description }}</strong></p>
-                            </div>
                             <form [formGroup]="signupForm" (ngSubmit)="signup(signupForm.value)">
 
                                 <div class="form-group">
@@ -84,7 +81,7 @@
                                         class="form-control"
                                         name="passwordConfirm"
                                         [type]="(showConfirmPassword) ? 'text' : 'password'"
-                                        placeholder="{{ 'Password confirmation' | translate }}"
+                                        placeholder="{{ 'Enter your password' | translate }}"
                                         formControlName="passwordConfirm"
                                         [class.ng-invalid]="hasError('', 'mismatch') && isTouched('password') && isTouched('passwordConfirm')">
                                     <i [class]="showConfirmPassword ? 'fa fa-unlock toggle-password' : 'fa fa-lock toggle-password'" aria-hidden="true" (click)="toggleShowPasswords(true)" title="Show/hide passwords"></i>
@@ -99,7 +96,7 @@
                                 <div class="form-group">
                                     <button id="sign-up-submit" type="submit" class="btn btn-primary"
                                             [disabled]="!signupForm.valid">
-                                        {{ buttonText }}
+                                        {{ 'Login to my IZNES account' | translate }}
                                     </button>
                                 </div>
                             </form>

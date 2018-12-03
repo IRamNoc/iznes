@@ -20,6 +20,7 @@ export class InvestmentObjectiveFormComponent implements OnInit, OnDestroy {
     @Input() multiple;
     @Input() index;
     @select(['ofi', 'ofiProduct', 'ofiManagementCompany', 'investorManagementCompanyList', 'investorManagementCompanyList']) managementCompanyList$;
+    @select(['user', 'siteSettings', 'language']) requestLanguageObj;
 
     unsubscribe: Subject<any> = new Subject();
     open: boolean = true;
@@ -47,6 +48,7 @@ export class InvestmentObjectiveFormComponent implements OnInit, OnDestroy {
         this.initData();
         this.getCurrentFormData();
         this.configDate = configDate;
+        this.initLists();
     }
 
     getCurrentFormData() {
@@ -85,14 +87,9 @@ export class InvestmentObjectiveFormComponent implements OnInit, OnDestroy {
                 }
             });
 
-        this.investmentHorizonList = this.newRequestService.investmentHorizonList;
-        this.riskProfileList = this.newRequestService.riskProfileList;
-
-        this.translate.translate(this.riskProfileList);
-
-        this.riskAcceptanceList = this.newRequestService.riskAcceptanceList;
-        this.performanceProfileList = this.newRequestService.performanceProfileList;
-        this.clientNeeds = this.newRequestService.clientNeedsList;
+        this.requestLanguageObj
+        .pipe(takeUntil(this.unsubscribe))
+        .subscribe(() => this.initLists());
     }
 
     initFormCheck() {
@@ -126,6 +123,16 @@ export class InvestmentObjectiveFormComponent implements OnInit, OnDestroy {
         (this.form.get('performanceProfile') as FormControl).updateValueAndValidity();
         (this.form.get('riskProfile') as FormControl).updateValueAndValidity();
         (this.form.get('investmentHorizonWanted.specific') as FormControl).updateValueAndValidity();
+    }
+
+    initLists() {
+        // Do not attempt translation of riskAcceptanceList in its current format
+        this.riskAcceptanceList = this.newRequestService.riskAcceptanceList;
+
+        this.investmentHorizonList = this.translate.translate(this.newRequestService.investmentHorizonList);
+        this.riskProfileList = this.translate.translate(this.newRequestService.riskProfileList);
+        this.performanceProfileList = this.translate.translate(this.newRequestService.performanceProfileList);
+        this.clientNeeds = this.translate.translate(this.newRequestService.clientNeedsList);
     }
 
     formCheckInvestmentHorizonWanted(value) {
