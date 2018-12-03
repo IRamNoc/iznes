@@ -19,7 +19,7 @@
                 <input type="text"
                         id="legalName-benef-{{index}}"
                         formControlName="legalName"
-                        placeholder="{{ 'Fill in beneficiary\'s company name or legal name' | translate }}">
+                        placeholder="{{ 'Fill in company name or legal name' | translate }}">
                 <span class="field-error" *ngIf="hasError(['legalPerson', 'legalName'], ['required'])">{{ 'Field is required' | translate }}</span>
                 <span class="field-error" *ngIf="hasError(['legalPerson', 'legalName'], ['maxlength'])">{{ 'Name is too long' | translate }}</span>
             </div>
@@ -28,7 +28,7 @@
                 <input type="text"
                         id="leiCode-benef-{{index}}"
                         formControlName="leiCode"
-                        placeholder="{{ 'Fill in beneficiary\'s company LEI code' | translate }}">
+                        placeholder="{{ 'Fill in company LEI code' | translate }}">
                 <span class="field-error" *ngIf="hasError(['legalPerson', 'leiCode'], ['required'])">{{ 'Field is required' | translate }}</span>
                 <span class="field-error" *ngIf="hasError(['legalPerson', 'leiCode'], ['pattern'])">{{ 'LEI must be 20 characters long' | translate }}</span>
             </div>
@@ -40,7 +40,7 @@
                 <input type="text"
                         id="address-benef-{{index}}"
                         [formControl]="form.get('common.address')"
-                        placeholder="{{ 'Fill in beneficiary\'s address' | translate }}">
+                        placeholder="{{ 'Fill in an address' | translate }}">
                 <span class="field-error" *ngIf="hasError(['common', 'address'], ['required'])">{{ 'Field is required' | translate }}</span>
                 <span class="field-error" *ngIf="hasError(['common', 'address'], ['maxlength'])">{{ 'Address is too long' | translate }}</span>
             </div>
@@ -93,7 +93,7 @@
                 <ng-select id="nationalIdNumber-benef-{{index}}" 
                             [items]="identificationNumberList" 
                             formControlName="nationalIdNumber" 
-                            placeholder="{{ 'Type' | translate }}"></ng-select>
+                            placeholder="{{ 'Select identification number type' | translate }}"></ng-select>
                 <span class="field-error" *ngIf="hasError(['legalPerson', 'nationalIdNumber'], ['required'])">{{ 'Field is required' | translate }}</span>
             </div>
 
@@ -236,7 +236,7 @@
                 <label class="control-label" for="cityOfBirth-benef-{{index}}">{{ 'City of Birth' | translate}}</label>
                 <input type="text"
                         id="cityOfBirth-benef-{{index}}"
-                        placeholder="{{ 'Fill in a city of birth' }}">
+                        placeholder="{{ 'Fill in a city' }}">
                         formControlName="cityOfBirth">
                 <span class="field-error" *ngIf="hasError(['naturalPerson', 'cityOfBirth'], ['required'])">{{ 'Field is required' | translate }}</span>
                 <span class="field-error" *ngIf="hasError(['naturalPerson', 'cityOfBirth'], ['maxlength'])">{{ 'City is too long' | translate }}</span>
