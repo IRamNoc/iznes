@@ -14,9 +14,6 @@ import { MultilingualService } from '@setl/multilingual';
     styleUrls: ['./external-notifications.component.scss'],
 })
 export class ExternalNotificationsComponent implements OnInit, OnDestroy {
-    userId: number;
-    apiKey: string;
-
     copied = false;
     externalNotificationsStatus: {} = {};
     externalNotificationsEnabled: boolean;
@@ -28,7 +25,7 @@ export class ExternalNotificationsComponent implements OnInit, OnDestroy {
         messages_unacknowledged: false,
     };
 
-    rabbitMQEndpoint = `${window.location.protocol}//${window.location.hostname}:5672`;
+    rabbitMQEndpoint = `amqps://${window.location.hostname}:5671`;
 
     @select(['user', 'myDetail']) getUserDetails$;
     @select(['user', 'authentication']) authentication$;
@@ -49,32 +46,6 @@ export class ExternalNotificationsComponent implements OnInit, OnDestroy {
 
     ngOnInit() {
         this.getExternalNotificationsStatus();
-
-        this.subscriptionsArray.push(this.getUserDetails$.subscribe((details) => {
-            this.userId = details.userId;
-        }));
-
-        this.subscriptionsArray.push(this.authentication$.subscribe((auth) => {
-            this.apiKey = auth.apiKey;
-        }));
-    }
-
-    handleCopyApiKey(event) {
-        const textArea = document.createElement('textarea');
-        textArea.setAttribute('style', 'width:1px;border:0;opacity:0;');
-        document.body.appendChild(textArea);
-        textArea.value = this.apiKey;
-        textArea.select();
-        document.execCommand('copy');
-        document.body.removeChild(textArea);
-        this.copied = true;
-        setTimeout(
-            () => {
-                this.copied = false;
-                this.changeDetectorRef.markForCheck();
-            },
-            500,
-        );
     }
 
     /**
