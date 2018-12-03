@@ -7,9 +7,9 @@ import { AlertsService } from '@setl/jaspero-ng2-alerts';
 import { ToasterService } from 'angular2-toaster';
 import * as _ from 'lodash';
 import * as moment from 'moment';
-
 import { ConfirmationService } from '../jaspero-confirmation/confirmations.service';
 import { DatePickerExtendedHelper } from './helpers/date';
+import { MultilingualService } from '@setl/multilingual';
 
 @Component({
     styleUrls: ['./component.scss'],
@@ -35,6 +35,7 @@ export class DatePickerExtendedComponent implements OnInit, OnDestroy {
     constructor(private changeDetectorRef: ChangeDetectorRef,
                 private confirmationService: ConfirmationService,
                 private toaster: ToasterService,
+                public translate: MultilingualService,
     ) {
         this.initForm();
     }
@@ -92,9 +93,9 @@ export class DatePickerExtendedComponent implements OnInit, OnDestroy {
 
     clear(): void {
         this.confirmationService.create(
-            '<span>Are you sure?</span>',
-            '<span>' + this.areYouSureMessage + '</span>',
-            { confirmText: 'Confirm', declineText: 'Cancel' },
+            `<span>${this.translate.translate('Are you sure?')}</span>`,
+            `<span>${this.areYouSureMessage}</span>`,
+            { confirmText: this.translate.translate('Confirm'), declineText: this.translate.translate('Cancel') },
         ).subscribe((ans) => {
             if (ans.resolved) {
                 this.selectedDates = [];

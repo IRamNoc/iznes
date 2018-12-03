@@ -21,16 +21,7 @@ export class ConnectionStatusAlerts implements OnInit, OnDestroy {
 
     public onlineOb;
     private timerSecs = 7;
-    public connectionStatus: any = {
-        walletNodeDead: false,
-        walletNodeReconnected: false,
-        walletNodeTimer: this.timerSecs,
-        walletNodeTimerString:
-            `You've been disconnected from our servers, you should be reconnected in ${this.timerSecs} sec`,
-        loading: false,
-        internetDead: false,
-        internetReconnected: false,
-    };
+    public connectionStatus: any = {};
 
     public walletNodeDeadModal: Observable<boolean>;
 
@@ -55,6 +46,21 @@ export class ConnectionStatusAlerts implements OnInit, OnDestroy {
     }
 
     ngOnInit() {
+        const walletNodeTimerString = this.translate.translate(
+            "You've been disconnected from our servers, you should be reconnected in @timerSecs@ sec",
+            { timerSecs: this.timerSecs },
+        );
+
+        this.connectionStatus = {
+            walletNodeDead: false,
+            walletNodeReconnected: false,
+            walletNodeTimer: this.timerSecs,
+            walletNodeTimerString,
+            loading: false,
+            internetDead: false,
+            internetReconnected: false,
+        };
+
         /* Connection subscriptions */
         this.subscriptions.push(this.nodeAlertsService.disconnected.subscribe((disconnected) => {
             disconnected ? this.walletNodeDead() : this.walletNodeAlive();

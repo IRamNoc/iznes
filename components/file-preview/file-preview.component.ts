@@ -62,7 +62,7 @@ export class FilePreviewComponent {
         try {
             // if fileUploadObj is provided, use it
             if (this.fileUploadObj) {
-               return (this.fileUploadObj.mimeType as supportMimeType);
+                return (this.fileUploadObj.mimeType as supportMimeType);
             }
 
             // trim out 'data:'
