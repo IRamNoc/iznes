@@ -311,7 +311,7 @@
                                 id="geographicalOrigin1"
                                 [items]="geographicalOriginTypeList"
                                 formControlName="geographicalOrigin1"
-                                placeholder="{{ 'Please select a type of geographical origin' | translate }}">
+                                placeholder="{{ 'Select a type of geographical origin' | translate }}">
                     </ng-select>
                 </div>
                 <div class="form-group required-field col-md-6 col-xl-3" *ngIf="geographicalOrigin === 'country'">
@@ -320,7 +320,7 @@
                                 id="geographicalOrigin2"
                                 [items]="countries"
                                 formControlName="geographicalOrigin2"
-                                placeholder="{{ 'Please select a country(ies)' | translate }}">
+                                placeholder="{{ 'Select a country' | translate }}">
                     </ng-select>
                 </div>
                 <div class="form-group required-field col-md-6 col-xl-3" *ngIf="geographicalOrigin === 'area'">
@@ -329,7 +329,7 @@
                                 id="geographicalOrigin2"
                                 [items]="geographicalAreaList"
                                 formControlName="geographicalOrigin2"
-                                placeholder="{{ 'Please select an area(s)' | translate }}">
+                                placeholder="{{ 'Select an area' | translate }}">
                     </ng-select>
                 </div>
             </div>
@@ -340,7 +340,7 @@
                     <ng-select [items]="financialAssetsInvestedList"
                                 id="totalFinancialAssetsAlreadyInvested"
                                 formControlName="totalFinancialAssetsAlreadyInvested"
-                                placeholder="{{ 'Please select a range' | translate }}">
+                                placeholder="{{ 'Select a range' | translate }}">
                     </ng-select>
                     <span class="field-error" *ngIf="hasError('totalFinancialAssetsAlreadyInvested')">{{ 'Field is required' | translate }}</span>
                 </div>
