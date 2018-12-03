@@ -55,7 +55,7 @@ public class ScreenshotRule extends TestWatcher {
             dir = "/Users/shared/screenshots//";
         }
         else {
-            Path path = FileSystems.getDefault().getPath(".");
+            Path path = FileSystems.getDefault().getPath(toString());
             System.out.println("*********************************************************");
             System.out.println("*********************************************************");
             System.out.println("*********************************************************");
