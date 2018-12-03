@@ -18,6 +18,9 @@ node {
                       userRemoteConfigs                : [[credentialsId: '294d9ac9-499b-487d-8c4c-ba53c0cb56a7',
                                                            url          : 'git@si-nexus01.dev.setl.io:opencsd-rewrite/opencsd-frontend-clarity.git']]])
         }
+        stage('Clear Environment Data'){
+            sh '''cd /var/membership-db/deploy/ && ./cleanblockchain iznes'''
+        }
 
         stage('Run Acceptance Tests') {
             try{
@@ -25,7 +28,6 @@ node {
                     cd ~/workspace/IznesUIAcceptanceTests/javaUITesting2
                     export DISPLAY=:10
                     ./gradlew clean build -x test --parallel && ./gradlew build'''
-
 
             } catch (err) {
                 if (currentBuild.result == 'UNSTABLE')
