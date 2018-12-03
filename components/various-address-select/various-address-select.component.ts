@@ -23,22 +23,22 @@ const noop = () => {
     }],
 })
 export class VariousAddressSelectComponent implements ControlValueAccessor {
-    @Input() ownWalletAddressArray = [
+    @Input() ownWalletAddressArray = this.translate.translate([
         { id: 1, text: '2 Connection' },
         { id: 2, text: 'Owned Address' },
         { id: 3, text: 'Other Address' },
-    ];
-    @Input() relationshipArray = [
+    ]);
+    @Input() relationshipArray = this.translate.translate([
         { id: 1, text: '1 Connection' },
         { id: 2, text: 'Owned Address' },
         { id: 3, text: 'Other Address' },
-    ];
+    ]);
     @Input() required: boolean = false;
-    addressTypes = [
+    addressTypes = this.translate.translate([
         { id: 1, text: 'Connection' },
         { id: 2, text: 'Owned Address' },
         { id: 3, text: 'Other Address' },
-    ];
+    ]);
 
     selectedAddressType = 1;
 
@@ -113,45 +113,45 @@ export class VariousAddressSelectComponent implements ControlValueAccessor {
         let ng2SelectValue;
 
         switch (this.selectedAddressType) {
-        case 1:
-            if (_.get(this.relationshipSelect, 'value[0].id', null) === value) {
-                return true;
-            }
-            ng2SelectValue = this.relationshipArray.reduce(
-                (result, currentValue) => {
-                    if (currentValue.id === value) {
-                        result.push(currentValue);
-                    }
-                    return result;
-                },
-                [],
-            );
+            case 1:
+                if (_.get(this.relationshipSelect, 'value[0].id', null) === value) {
+                    return true;
+                }
+                ng2SelectValue = this.relationshipArray.reduce(
+                    (result, currentValue) => {
+                        if (currentValue.id === value) {
+                            result.push(currentValue);
+                        }
+                        return result;
+                    },
+                    [],
+                );
 
-            this.relationshipSelect.setValue(ng2SelectValue);
-            break;
+                this.relationshipSelect.setValue(ng2SelectValue);
+                break;
 
-        case 2:
-            if (_.get(this.ownedAddressSelect, 'value[0].id', null) === value) {
-                return true;
-            }
-            ng2SelectValue = this.ownWalletAddressArray.reduce(
-                (result, currentValue) => {
-                    if (currentValue.id === value) {
-                        result.push(currentValue);
-                    }
-                    return result;
-                },
-                [],
-            );
-            this.ownedAddressSelect.setValue(ng2SelectValue);
-            break;
+            case 2:
+                if (_.get(this.ownedAddressSelect, 'value[0].id', null) === value) {
+                    return true;
+                }
+                ng2SelectValue = this.ownWalletAddressArray.reduce(
+                    (result, currentValue) => {
+                        if (currentValue.id === value) {
+                            result.push(currentValue);
+                        }
+                        return result;
+                    },
+                    [],
+                );
+                this.ownedAddressSelect.setValue(ng2SelectValue);
+                break;
 
-        case 3:
-            if (this.otherAddress.value === value) {
-                return true;
-            }
-            this.otherAddress.setValue(value);
-            break;
+            case 3:
+                if (this.otherAddress.value === value) {
+                    return true;
+                }
+                this.otherAddress.setValue(value);
+                break;
         }
     }
 }

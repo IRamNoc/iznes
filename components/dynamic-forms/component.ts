@@ -2,6 +2,7 @@ import { Component, OnInit, ChangeDetectionStrategy, ChangeDetectorRef, Input } 
 import { FormGroup } from '@angular/forms';
 import { FormItem, FormItemStyle, FormElement, isFormItem } from './DynamicForm';
 import { DynamicFormService } from './service';
+import { MultilingualService } from '@setl/multilingual';
 
 @Component({
     styleUrls: ['./component.scss'],
@@ -26,6 +27,7 @@ export class DynamicFormComponent implements OnInit {
 
     constructor(private service: DynamicFormService,
                 private changeDetectorRef: ChangeDetectorRef,
+                public translate: MultilingualService,
     ) {
     }
 
