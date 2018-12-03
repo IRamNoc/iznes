@@ -6,7 +6,7 @@ import { Subscription } from 'rxjs/Subscription';
 @Component({
     selector: 'app-password-tooltip',
     template: `<i *ngIf="showTooltip" class="fa fa-info-circle"
-                  [tooltip]="{text: passwordStrengthText, size: \'medium\'}"></i>`,
+                  [tooltip]="{text: passwordStrengthText, size: 'medium'}"></i>`,
 })
 export class PasswordTooltipComponent implements OnInit, OnDestroy {
     public passwordStrengthText: string = '';
@@ -14,16 +14,12 @@ export class PasswordTooltipComponent implements OnInit, OnDestroy {
     private subscription: Subscription;
     @select(['user', 'siteSettings', 'language']) languageOb;
 
-    constructor(
-        private translate: MultilingualService,
-        private changeDetectorRef: ChangeDetectorRef,
-    ) {
+    constructor(private translate: MultilingualService, private changeDetectorRef: ChangeDetectorRef) {
     }
 
     ngOnInit() {
         this.subscription = this.languageOb.subscribe(() => {
             this.showTooltip = false;
-            this.changeDetectorRef.detectChanges();
             this.setPasswordStrengthText();
         });
     }
@@ -38,8 +34,8 @@ export class PasswordTooltipComponent implements OnInit, OnDestroy {
                 <li>${this.translate.translate('One symbol')}</li>
                 <li>${this.translate.translate('One international character')}</li>
             </ul>`;
-        this.showTooltip = true;
         this.changeDetectorRef.detectChanges();
+        this.showTooltip = true;
     }
 
     ngOnDestroy() {
