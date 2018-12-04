@@ -24,7 +24,7 @@ import { MultilingualService } from '@setl/multilingual';
 @Component({
     selector: 'setl-transactions',
     templateUrl: './transactions.component.html',
-    styleUrls: ['./transactions.component.scss']
+    styleUrls: ['./transactions.component.scss'],
 })
 export class SetlTransactionsComponent implements OnInit, OnDestroy {
 
