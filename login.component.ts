@@ -44,7 +44,7 @@ import { combineLatest } from 'rxjs/observable/combineLatest';
 import { Subscription } from 'rxjs/Subscription';
 import { MultilingualService } from '@setl/multilingual';
 import { passwordValidator } from '@setl/utils/helper/validators/password.directive';
-import { LoginService } from "./login.service";
+import { LoginService } from './login.service';
 
 /* Dectorator. */
 @Component({
@@ -394,7 +394,8 @@ export class SetlLoginComponent implements OnDestroy, OnInit, AfterViewInit {
                 this.initialisationService,
             );
             window.onbeforeunload = (e) => {
-                const leaveMessage = 'Changes that you made may not be saved if you leave this page.';
+                const leaveMessage = this.translate.translate(
+                    'Changes that you made may not be saved if you leave this page.');
                 e.returnValue = leaveMessage;
                 return leaveMessage;
             };
@@ -417,7 +418,9 @@ export class SetlLoginComponent implements OnDestroy, OnInit, AfterViewInit {
     displayError() {
         setTimeout(
             () => {
-                this.toasterService.pop('error', 'This link is no longer valid. Please try to login again.');
+                this.toasterService.pop(
+                    'error',
+                    this.translate.translate('This link is no longer valid. Please try to login again.'));
             },
             0,
         );
@@ -489,7 +492,7 @@ export class SetlLoginComponent implements OnDestroy, OnInit, AfterViewInit {
                 (data) => {
                     this.alertsService.generate(
                         'error',
-                        'Sorry, something went wrong.<br>Please try again later!');
+                        this.translate.translate('Sorry, something went wrong.<br>Please try again later.'));
                     this.closeFPModal();
                 }),
             );
@@ -550,7 +553,9 @@ export class SetlLoginComponent implements OnDestroy, OnInit, AfterViewInit {
                         this.changedPassword = true;
                         this.closeFPModal();
 
-                        this.toasterService.pop('success', 'Your password has been changed!');
+                        this.toasterService.pop(
+                            'success',
+                            this.translate.translate('Your password has been changed!'));
                     } else {
                         this.alertsService.generate(
                             'error',
@@ -561,7 +566,7 @@ export class SetlLoginComponent implements OnDestroy, OnInit, AfterViewInit {
                 (data) => {
                     this.alertsService.generate(
                         'error',
-                        'Sorry, something went wrong.<br>Please try again later!');
+                        this.translate.translate('Sorry, something went wrong.<br>Please try again later.'));
                     this.closeFPModal();
                 }),
             );
@@ -588,8 +593,9 @@ export class SetlLoginComponent implements OnDestroy, OnInit, AfterViewInit {
                     this.subscriptionsArray.push(
                         this.alertsService.generate(
                             'success',
-                            'Your password has been reset<br><br>A confirmation email will be sent to you.',
-                            { buttonMessage: `Continue to ${platformName}` },
+                            this.translate.translate(
+                                'Your password has been reset<br><br>A confirmation email will be sent to you.'),
+                            { buttonMessage: this.translate.translate('Continue to @platformName@', { platformName }) },
                         ).subscribe(() => {
                             if (!this.changedPasswordContinue) {
                                 this.changedPasswordContinue = true;
@@ -634,32 +640,32 @@ export class SetlLoginComponent implements OnDestroy, OnInit, AfterViewInit {
         const responseStatus = _.get(data, '[1].Data[0].Status', 'other').toLowerCase();
 
         switch (responseStatus) {
-        case 'fail':
-            this.showLoginErrorMessage(
-                'warning',
-                '<span mltag="txt_loginerror">Invalid email address or password!</span>',
-            );
-            break;
-        case 'locked':
-            this.showLoginErrorMessage(
-                'info',
-                '<span mltag="txt_accountlocked">' +
-                'Sorry, your account has been locked. ' +
-                'Please contact your Administrator.</span>',
-            );
-            break;
-        default:
-            this.showLoginErrorMessage(
-                'error',
-                '<span mltag="txt_loginproblem">' +
-                'Sorry, there was a problem logging in, please try again.</span>',
-            );
-            break;
+            case 'fail':
+                this.showLoginErrorMessage(
+                    'warning',
+                    `<span>${this.translate.translate(
+                        'Invalid email address or password.')}</span>`,
+                );
+                break;
+            case 'locked':
+                this.showLoginErrorMessage(
+                    'info',
+                    `<span>${this.translate.translate(
+                        'Sorry, your account has been locked. Please contact your Administrator.')}</span>`,
+                );
+                break;
+            default:
+                this.showLoginErrorMessage(
+                    'error',
+                    `<span>${this.translate.translate(
+                        'Sorry, there was a problem logging in, please try again.')}</span>`,
+                );
+                break;
         }
     }
 
     showLoginErrorMessage(type, msg) {
-        this.alertsService.generate(type, msg, { buttonMessage: 'Close' });
+        this.alertsService.generate(type, msg, { buttonMessage: this.translate.translate('Close') });
     }
 
     updateLang(lang: string) {
