@@ -18,6 +18,17 @@ import { FormstepsComponent } from '@setl/utils/components/formsteps/formsteps.c
 @Component({
     templateUrl: './new-request.component.html',
     styleUrls: ['./new-request.component.scss'],
+    animations: [
+        trigger('toggle', [
+            state('false', style({
+                opacity: 1,
+            })),
+            state('true', style({
+                opacity: 0,
+            })),
+            transition('* => *', animate(250)),
+        ]),
+    ],
 })
 export class NewKycRequestComponent implements OnInit, AfterViewInit {
 
