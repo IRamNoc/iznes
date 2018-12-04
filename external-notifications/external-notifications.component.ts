@@ -6,6 +6,7 @@ import { MyUserService } from '@setl/core-req-services';
 import { MemberSocketService } from '@setl/websocket-service';
 import * as _ from 'lodash';
 import { Subscription } from 'rxjs/Subscription';
+import { MultilingualService } from '@setl/multilingual';
 
 @Component({
     selector: 'app-external-notifications',
@@ -41,7 +42,9 @@ export class ExternalNotificationsComponent implements OnInit, OnDestroy {
         private ngRedux: NgRedux<any>,
         private memberSocketService: MemberSocketService,
         private myUserService: MyUserService,
-        private confirmationService: ConfirmationService) {
+        private confirmationService: ConfirmationService,
+        public translate: MultilingualService,
+    ) {
     }
 
     ngOnInit() {
@@ -86,10 +89,20 @@ export class ExternalNotificationsComponent implements OnInit, OnDestroy {
         const asyncTaskPipe = setting ?
             this.myUserService.registerNotifications() : this.myUserService.removeNotifications();
 
+        let confirmationTitle = '';
+        let confirmationMessage = '';
+
+        if (setting) {
+            confirmationTitle = this.translate.translate('Enable External Notifications');
+            confirmationMessage = this.translate.translate('Are you sure you want to enable External Notifications?');
+        } else {
+            confirmationTitle = this.translate.translate('Disable External Notifications');
+            confirmationMessage = this.translate.translate('Are you sure you want to disable External Notifications?');
+        }
+
         this.confirmationService.create(
-            `<span>${setting ? 'Enable' : 'Disable'} External Notifications</span>`,
-            `<span class="text-warning">Are you sure you want to
-                 ${setting ? 'enable' : 'disable'} External Notifications?</span>`,
+            `<span>${confirmationTitle}</span>`,
+            `<span class="text-warning">${confirmationMessage}</span>`,
         ).subscribe((ans) => {
             if (ans.resolved) {
                 this.ngRedux.dispatch(SagaHelper.runAsync(
@@ -105,15 +118,15 @@ export class ExternalNotificationsComponent implements OnInit, OnDestroy {
                                     <table class="table grid">
                                         <tbody>
                                             <tr>
-                                                <td class="left"><b>Status:</b></td>
+                                                <td class="left"><b>${this.translate.translate('Status')}:</b></td>
                                                 <td>${response.status}</td>
                                             </tr>
                                             <tr>
-                                                <td class="left"><b>Username:</b></td>
+                                                <td class="left"><b>${this.translate.translate('Username')}:</b></td>
                                                 <td>${response.user}</td>
                                             </tr>
                                             <tr>
-                                                <td class="left"><b>Password:</b></td>
+                                                <td class="left"><b>${this.translate.translate('Password')}:</b></td>
                                                 <td>${response.password}</td>
                                             </tr>
                                         </tbody>
@@ -122,18 +135,27 @@ export class ExternalNotificationsComponent implements OnInit, OnDestroy {
                                 this.externalNotificationsEnabled = true;
                                 this.getExternalNotificationsStatus();
                             } else {
-                                this.alertsService.generate('error', 'Something has gone wrong. Please try again.');
+                                this.alertsService.generate(
+                                    'error',
+                                    this.translate.translate('Something has gone wrong. Please try again.'),
+                                );
                             }
                         } else {
                             this.externalNotificationsEnabled = false;
                             clearInterval(this.statusInterval);
-                            this.alertsService.generate('success', 'External Notifications have been disabled.');
+                            this.alertsService.generate(
+                                'success',
+                                this.translate.translate('External Notifications have been disabled.'),
+                            );
                         }
                         this.changeDetectorRef.detectChanges();
                     },
                     (data) => {
                         console.error('error: ', data);
-                        this.alertsService.generate('error', 'External Notifications settings could not be changed.');
+                        this.alertsService.generate(
+                            'error',
+                            this.translate.translate('External Notifications settings could not be changed.'),
+                        );
                     }),
                 );
             }
@@ -183,12 +205,12 @@ export class ExternalNotificationsComponent implements OnInit, OnDestroy {
             asyncTaskPipe,
             {},
             () => {
-                this.alertsService.generate('success', 'Test message successfully sent.');
+                this.alertsService.generate('success', this.translate.translate('Test message successfully sent.'));
                 this.getExternalNotificationsStatus();
             },
             (response) => {
                 console.error('error: ', response);
-                this.alertsService.generate('error', 'Failed to send test message.');
+                this.alertsService.generate('error', this.translate.translate('Failed to send test message.'));
             },
         ));
     }
@@ -200,8 +222,9 @@ export class ExternalNotificationsComponent implements OnInit, OnDestroy {
         const asyncTaskPipe = this.myUserService.truncateNotifications();
 
         this.confirmationService.create(
-            '<span>Delete Messages</span>',
-            '<span class="text-warning">Are you sure you want to delete all messages?</span>',
+            `<span>${this.translate.translate('Delete Messages')}</span>`,
+            `<span class="text-warning">${this.translate.translate(
+                'Are you sure you want to delete all messages?')}</span>`,
         ).subscribe((ans) => {
             if (ans.resolved) {
                 this.ngRedux.dispatch(SagaHelper.runAsync(
@@ -210,12 +233,18 @@ export class ExternalNotificationsComponent implements OnInit, OnDestroy {
                     asyncTaskPipe,
                     {},
                     () => {
-                        this.alertsService.generate('success', 'Messages successfully deleted.');
+                        this.alertsService.generate(
+                            'success',
+                            this.translate.translate('Messages successfully deleted.'),
+                        );
                         this.getExternalNotificationsStatus();
                     },
                     (response) => {
                         console.error('error: ', response);
-                        this.alertsService.generate('error', 'Failed to delete messages.');
+                        this.alertsService.generate(
+                            'error',
+                            this.translate.translate('Failed to delete messages.'),
+                        );
                     },
                 ));
             }
