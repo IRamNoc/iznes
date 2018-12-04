@@ -37,7 +37,11 @@ import { combineLatest } from 'rxjs/observable/combineLatest';
 export class SignupComponent implements OnDestroy, OnInit {
     appConfig: AppConfig;
     invitationToken = '';
-    language: string;
+    public language: string;
+    public langLabels = {
+        'fr-Latn': 'Francais',
+        'en-Latn': 'English',
+    };
     redirectURL: string;
     signupForm: FormGroup;
     showPassword: boolean = false;
@@ -65,6 +69,7 @@ export class SignupComponent implements OnDestroy, OnInit {
 
     @select(['user', 'authentication']) authenticationOb;
     @select(['user', 'siteSettings', 'forceTwoFactor']) forceTwoFactorOb;
+    @select(['user', 'siteSettings', 'language']) requestLanguage;
 
     constructor(private redux: NgRedux<any>,
                 private activatedRoute: ActivatedRoute,
@@ -116,6 +121,10 @@ export class SignupComponent implements OnDestroy, OnInit {
                 this.updateState(authentication);
             }
         }));
+
+        this.subscriptions.push(
+            this.requestLanguage.subscribe(requested => this.language = requested ? requested : 'English'),
+        );
 
         window.onbeforeunload = null;
     }
@@ -295,12 +304,6 @@ export class SignupComponent implements OnDestroy, OnInit {
         this.showPassword = !this.showPassword;
     }
 
-    ngOnDestroy() {
-        for (const subscription of this.subscriptions) {
-            subscription.unsubscribe();
-        }
-    }
-
     hasError(path, error?) {
         if (this.signupForm) {
             const formControl: AbstractControl = path ? this.signupForm.get(path) : this.signupForm;
@@ -319,5 +322,23 @@ export class SignupComponent implements OnDestroy, OnInit {
         const formControl: AbstractControl = this.signupForm.get(path);
 
         return formControl.touched;
+    }
+
+    updateLang(lang: string) {
+        this.redux.dispatch(setLanguage(lang));
+    }
+
+    getLangs() {
+        return Object.keys(this.langLabels);
+    }
+
+    getLabel(lang: string): string {
+        return this.langLabels[lang];
+    }
+
+    ngOnDestroy() {
+        for (const subscription of this.subscriptions) {
+            subscription.unsubscribe();
+        }
     }
 }
