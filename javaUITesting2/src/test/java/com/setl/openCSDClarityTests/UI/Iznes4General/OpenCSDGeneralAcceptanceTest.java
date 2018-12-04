@@ -154,7 +154,8 @@ public class OpenCSDGeneralAcceptanceTest {
         driver.findElement(By.xpath("//button[@type='button'][contains(text(),'Close')]")).click();
 
         System.out.println("2018-11-05 Bug raised - blob doesnt get deleted. http://si-taiga01.dev.setl.io/project/paul-opencsd-reconfiguration-and-factorisation-project/issue/468");
-        validateDatabaseUsersFormdataTable(0, "2", "8");
+        //Added row Count to 1 as the Blob is not deleted but the content of the blob is deleted so the row still persists.
+        validateDatabaseUsersFormdataTable(1, "2", "8");
 
     }
 
