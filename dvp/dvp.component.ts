@@ -5,6 +5,7 @@ import { Subscription } from 'rxjs/Subscription';
 import { AlertsService } from '@setl/jaspero-ng2-alerts';
 import * as moment from 'moment';
 import { walletHelper, mDateHelper } from '@setl/utils';
+import { MultilingualService } from '@setl/multilingual';
 import {
     setRequestedWalletAddresses,
     setRequestedWalletToRelationship,
@@ -60,7 +61,9 @@ export class ContractsDvpComponent implements OnInit, OnDestroy {
                 private walletNodeRequestService: WalletNodeRequestService,
                 private myWalletService: MyWalletsService,
                 private alertsService: AlertsService,
-                private dvpService: DVPContractService) {
+                private dvpService: DVPContractService,
+                public translate: MultilingualService,
+    ) {
     }
 
     ngOnInit() {
@@ -179,10 +182,10 @@ export class ContractsDvpComponent implements OnInit, OnDestroy {
     private initParties(): void {
         this.parties = [{
             id: partyA,
-            title: 'Party A',
+            title: this.translate.translate('Party A'),
         }, {
             id: partyB,
-            title: 'Party B',
+            title: this.translate.translate('Party B'),
             toggleAssetReturn: true,
         }];
     }
@@ -256,7 +259,10 @@ export class ContractsDvpComponent implements OnInit, OnDestroy {
      */
     createContract(): void {
         if (this.createContractForm.invalid) {
-            this.alertsService.generate('error', 'Please complete all details on the form correctly.');
+            this.alertsService.generate(
+                'error',
+                this.translate.translate('Please complete all details on the form correctly.'),
+            );
             return;
         }
 
@@ -267,7 +273,10 @@ export class ContractsDvpComponent implements OnInit, OnDestroy {
             res => this.showResponseModal(res),
             (res) => {
                 console.error('Fail', res);
-                this.alertsService.generate('error', 'Failed to create contract.');
+                this.alertsService.generate(
+                    'error',
+                    this.translate.translate('Failed to create contract.'),
+                );
             },
         );
     }
@@ -279,19 +288,19 @@ export class ContractsDvpComponent implements OnInit, OnDestroy {
             <table class="table grid">
                 <tbody>
                     <tr>
-                        <td class="left"><b>Contract:</b></td>
+                        <td class="left"><b>${this.translate.translate('Contract')}:</b></td>
                         <td>${createContractResponse.contractaddress}</td>
                     </tr>
                     <tr>
-                        <td class="left"><b>Creator Address:</b></td>
+                        <td class="left"><b>${this.translate.translate('Creator Address')}:</b></td>
                         <td>${contractData.creator.value[0].id}</td>
                     </tr>
                     <tr>
-                        <td class="left"><b>Contract Expires:</b></td>
+                        <td class="left"><b>${this.translate.translate('Contract Expires')}:</b></td>
                         <td>${contractData.expireDate.value} ${contractData.expireTime.value}</td>
                     </tr>
                     <tr>
-                        <td class="left"><b>Tx hash:</b></td>
+                        <td class="left"><b>${this.translate.translate('Tx hash')}:</b></td>
                         <td>${createContractResponse.hash.substring(0, 10)}...</td>
                     </tr>
                 </tbody>
