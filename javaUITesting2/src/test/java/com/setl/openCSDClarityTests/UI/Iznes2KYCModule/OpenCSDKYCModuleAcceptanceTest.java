@@ -517,9 +517,9 @@ public class OpenCSDKYCModuleAcceptanceTest {
         String generalInfoPercent = driver.findElement(By.xpath("//*[@id=\"step-identification\"]/general-information/div/div[1]/div[2]/div/div[1]/div/div/div/span")).getText();
         String lei = generateRandomLEI();
 
-
         assertEquals("CLIENT'S IDENTIFICATION AS A LEGAL ENTITY", identificationTitle);
-        assertEquals("0%", generalInfoPercent);
+        assert generalInfoPercent.equals("0%") : "percentage was not 0% it was " + generalInfoPercent;
+
         driver.findElement(By.xpath("//*[@id=\"step-identification\"]/general-information/div/div[1]/div[1]/a/h2")).click();
         wait.until(visibilityOfElementLocated(By.id("registeredCompanyName")));
         driver.findElement(By.id("registeredCompanyName")).sendKeys(companyName);
@@ -558,7 +558,11 @@ public class OpenCSDKYCModuleAcceptanceTest {
 
             scrollElementIntoViewByXpath(dropdownOpen);
 
-            driver.findElement(By.xpath(dropdownOpen)).click();
+            Thread.sleep(500);
+
+            wait.until(visibilityOfElementLocated(By.xpath(dropdownOpen)));
+            WebElement dropdown = driver.findElement(By.xpath(dropdownOpen));
+            dropdown.click();
 
             wait.until(visibilityOfElementLocated(By.xpath(topOption)));
 
@@ -664,12 +668,18 @@ public class OpenCSDKYCModuleAcceptanceTest {
 
     public static void expandableForms(String openOrClose, String selectorType, String element) throws IOException, InterruptedException{
 
+        WebDriverWait wait = new WebDriverWait(driver, timeoutInSeconds);
+
         if (selectorType.equals("xpath")){
 
             scrollElementIntoViewByXpath(element);
 
+            Thread.sleep(500);
+
             if (openOrClose.equals("open")){
-                driver.findElement(By.xpath(element)).click();
+                wait.until(visibilityOfElementLocated(By.xpath(element)));
+                WebElement theElement = driver.findElement(By.xpath(element));
+                theElement.click();
                 Thread.sleep(500);
             }
         }
@@ -681,7 +691,7 @@ public class OpenCSDKYCModuleAcceptanceTest {
         String companyInfoPercent = driver.findElement(By.xpath("//*[@id=\"step-identification\"]/company-information/form/div[1]/div[2]/div/div[1]/div/div/div/span")).getText();
         assertTrue(companyInfoPercent.equals("0%"));
 
-        expandableForms("open", "xpath", "//*[@id=\"step-identification\"]/company-information/form/div[1]/div[1]/a/h2");
+        expandableForms("open", "xpath", "//*[@id=\"step-identification\"]/company-information/form/div[1]/div[1]/a/i");
 
         dropdownSelect("xpath", "//*[@id=\"sectorActivity\"]", "Consumer Electronics");
         dropdownSelect("xpath", "//*[@id=\"geographicalAreaOfActivity\"]", "OECD outside the European Union");

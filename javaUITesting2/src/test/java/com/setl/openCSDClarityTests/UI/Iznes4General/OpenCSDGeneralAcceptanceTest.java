@@ -6,6 +6,8 @@ import com.setl.UI.common.SETLUtils.ScreenshotRule;
 import com.setl.UI.common.SETLUtils.TestMethodPrinterRule;
 import custom.junit.runners.OrderedJUnit4ClassRunner;
 import org.junit.*;
+import org.junit.rules.DisableOnDebug;
+import org.junit.rules.TestRule;
 import org.junit.rules.Timeout;
 import org.junit.runner.RunWith;
 import org.openqa.selenium.*;
@@ -20,7 +22,6 @@ import static SETLAPIHelpers.DatabaseHelper.*;
 import static com.setl.UI.common.SETLUIHelpers.AccountsDetailsHelper.loginAndVerifySuccess;
 import static com.setl.UI.common.SETLUIHelpers.AccountsDetailsHelper.loginAndVerifySuccessAdmin;
 import static com.setl.UI.common.SETLUIHelpers.AccountsDetailsHelper.logout;
-import static com.setl.UI.common.SETLUIHelpers.AccountsDetailsHelper.navigateTo365Page;
 import static com.setl.UI.common.SETLUIHelpers.AccountsDetailsHelper.navigateToDropdown;
 import static com.setl.UI.common.SETLUIHelpers.AccountsDetailsHelper.navigateToLoginPage;
 import static com.setl.UI.common.SETLUIHelpers.AccountsDetailsHelper.navigateToPage;
@@ -43,7 +44,7 @@ public class OpenCSDGeneralAcceptanceTest {
     @Rule
     public RepeatRule repeatRule = new RepeatRule();
     @Rule
-    public Timeout globalTimeout = new Timeout(30000);
+    public TestRule timeout = new DisableOnDebug(Timeout.seconds(40));
     @Rule
     public TestMethodPrinterRule pr = new TestMethodPrinterRule(System.out);
 
@@ -141,7 +142,7 @@ public class OpenCSDGeneralAcceptanceTest {
         searchText2.click();
         Thread.sleep(1000);
 
-        validateDatabaseUsersFormdataTable(1, "2", "8");
+        validateDatabaseUsersFormdataTable(newWalletName, "2", "8");
 
         WebElement saveButton = driver.findElement(By.id("new-wallet-submit"));
         saveButton.click();
@@ -154,8 +155,9 @@ public class OpenCSDGeneralAcceptanceTest {
         driver.findElement(By.xpath("//button[@type='button'][contains(text(),'Close')]")).click();
 
         System.out.println("2018-11-05 Bug raised - blob doesnt get deleted. http://si-taiga01.dev.setl.io/project/paul-opencsd-reconfiguration-and-factorisation-project/issue/468");
-        //Added row Count to 1 as the Blob is not deleted but the content of the blob is deleted so the row still persists.
-        validateDatabaseUsersFormdataTable(1, "2", "8");
+        //Blob is not deleted but the content of the blob is deleted so the row still persists.
+        validateDatabaseUsersFormdataTable("", "2", "8");
+
 
     }
 
@@ -232,12 +234,6 @@ public class OpenCSDGeneralAcceptanceTest {
         waitForHomePageToLoad();
         navigateToDropdown("menu-my-products");
         navigateToPageByID("menu-nav");
-    }
-
-    @Test
-    @Ignore("Not needed yet")
-    public void shouldLoginToOffice365() throws InterruptedException {
-        LoginToOutlook("test@setl.io", "Sphericals1057!");
     }
 
     @Test
@@ -330,43 +326,6 @@ public class OpenCSDGeneralAcceptanceTest {
         assertTrue(firstnameMyInfo.equals(firstname));
         String lastnameMyInfo = driver.findElement(By.id("kyc_additionnal_lastName")).getAttribute("value");
         assertTrue(lastnameMyInfo.equals(lastname));
-    }
-
-    public static void LoginToOutlook(String email, String password) throws InterruptedException {
-        WebDriverWait wait = new WebDriverWait(driver, timeoutInSeconds);
-        navigateTo365Page();
-        driver.findElement(By.className("msame_Header_name")).click();
-        WebElement signInEmail = driver.findElement(By.id("i0116"));
-        wait.until(visibilityOf(signInEmail));
-        signInEmail.sendKeys(email);
-        try {
-            driver.findElement(By.id("idSIButton9")).click();
-        } catch (Exception e1) {
-            fail(e1.getMessage());
-        }
-        Thread.sleep(850);
-        WebElement displayName = driver.findElement(By.id("displayName"));
-        wait.until(visibilityOf(displayName));
-        WebElement signInPassword = driver.findElement(By.id("i0118"));
-        signInPassword.sendKeys(password);
-        try {
-            driver.findElement(By.id("idSIButton9")).click();
-        } catch (Exception e2) {
-            fail(e2.getMessage());
-        }
-        try {
-            driver.findElement(By.id("idSIButton9")).click();
-        } catch (Exception e3) {
-            fail(e3.getMessage());
-        }
-
-        wait.until(visibilityOfElementLocated(By.id("ShellMail_link")));
-        wait.until(elementToBeClickable(By.id("ShellMail_link")));
-        WebElement shellMail = driver.findElement(By.id("ShellMail_link"));
-        wait.until(ExpectedConditions.refreshed(visibilityOf(shellMail)));
-        wait.until(ExpectedConditions.refreshed(elementToBeClickable(shellMail)));
-        shellMail.click();
-
     }
 
     public static void navigateToTopbarItem(String toplevelID, String itemID, String headingID) {

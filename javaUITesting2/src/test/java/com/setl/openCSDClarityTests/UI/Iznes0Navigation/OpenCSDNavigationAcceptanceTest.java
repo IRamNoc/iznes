@@ -38,18 +38,6 @@ import static org.openqa.selenium.support.ui.ExpectedConditions.visibilityOfElem
 
 public class OpenCSDNavigationAcceptanceTest {
 
-    public static String connectionString = "jdbc:mysql://localhost:9998/setlnet?nullNamePatternMatchesAll=true";
-
-    // Defines username and password to connect to database server.
-    static String username = "root";
-    static String password = "nahafusi61hucupoju78";
-
-    static String testusername = "TestUserNullInfo";
-    static String testpassword = "Testpass123";
-
-    JavascriptExecutor jse = (JavascriptExecutor)driver;
-
-
     @Rule
     public ScreenshotRule screenshotRule = new ScreenshotRule();
     @Rule
@@ -91,7 +79,7 @@ public class OpenCSDNavigationAcceptanceTest {
     public void shouldNavigateToMyProductsFromHomepageButtons() throws IOException, InterruptedException {
         loginAndVerifySuccess("am", "alex01");
         driver.findElement(By.xpath("//*[@id=\"iznes\"]/app-root/app-basic-layout/div/ng-sidebar-container/div/div/div/main/div/div/ng-component/div/app-dashboard/div/app-counter-tile[1]/div/a")).click();
-        verifyCorrectPageContains("Shares / Funds / Umbrella Funds");
+        verifyCorrectPageContains("Shares / Funds / Umbrella funds");
     }
 
     @Test
@@ -153,7 +141,7 @@ public class OpenCSDNavigationAcceptanceTest {
         loginAndVerifySuccess("am", "alex01");
         navigateToDropdown("menu-my-products");
         navigateToPageByID("menu-product-home");
-        verifyCorrectPage("Shares / Funds / Umbrella Funds");
+        verifyCorrectPage("Shares / Funds / Umbrella funds");
     }
 
     @Test

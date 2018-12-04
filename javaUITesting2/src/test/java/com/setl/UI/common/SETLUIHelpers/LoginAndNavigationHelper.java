@@ -34,34 +34,26 @@ public class LoginAndNavigationHelper {
 
     public static void ensureLoginPageIsEnglish()
     {
-        if (driver.findElement(By.xpath("//h2[@class='ng-tns-c5-2']")).getText().toLowerCase().contains("identifiez-vous pour"))
+        try
         {
-            WebElement languageButton = driver.findElement(By.id("language-selector"));
-            languageButton.click();
-            WebElement english = driver.findElement(By.xpath("//button[contains(text(),'English')]"));
-            english.click();
+            List<WebElement> languageDropdown = driver.findElements(By.id("language-selector"));
+
+            if (languageDropdown.size() < 1) {
+                System.out.println("Didn't find a language dropdown");
+                return;
+            }
+
+            if (!languageDropdown.get(0).getText().equalsIgnoreCase("English"))
+            {
+                System.out.println("NOTE - Page was NOT in English");
+                languageDropdown.get(0).click();
+                WebElement english = driver.findElement(By.xpath("//button[contains(text(),'English')]"));
+                english.click();
+            }
         }
-    }
-
-    public static void navigateTo365Page() throws InterruptedException {
-        WebDriverWait wait = new WebDriverWait(driver, timeoutInSeconds);
-        driver.get("https://www.office.com/");
-        WebElement page_heading = driver.findElement(By.id("hero-header"));
-        wait.until(visibilityOf(page_heading));
-
-    }
-
-    public static void navigateToPage2(String pageHref) {
-        WebDriverWait wait = new WebDriverWait(driver, timeoutInSeconds);
-        WebElement page2 = driver.findElement(By.xpath("//a[@href='#/" + pageHref + "']"));
-        try {
-            wait.until(visibilityOf(page2));
-            wait.until(elementToBeClickable(page2));
-            page2.click();
-
-        } catch (Error e) {
-
-            fail(pageHref + "page not present");
+        catch (Exception e)
+        {
+            //we did our best
         }
     }
 
@@ -223,6 +215,7 @@ public class LoginAndNavigationHelper {
         System.out.println("=======================================================");
     }
 
+    //todo move this out of loginhelper
     public static void investorInviteOption(String email, String name, String surname, String reference, String investorType)throws InterruptedException {
         WebDriverWait wait = new WebDriverWait(driver, timeoutInSeconds);
         driver.findElement(By.id("invite-investors-btn")).click();
@@ -277,8 +270,7 @@ public class LoginAndNavigationHelper {
                 System.out.println("Processing new 2FA challenge from QR code");
 
                 WebElement QrCode = QrCodes.get(0); //get the first barcode
-                //WebElement QrCode = twoFaId.get(0);
-                String src = QrCode.getAttribute("src"); //get the URL to the image //this no longer works :(
+                String src = QrCode.getAttribute("src"); //get the URL to the image
                 try
                 {
 
@@ -286,10 +278,10 @@ public class LoginAndNavigationHelper {
                     //get the image and turn it into a bitmap
                     BufferedImage img = ImageIO.read(new URL(src));
 
-                    //workaround for not having the src link from QR code element
-//                    TakesScreenshot screenshot = (TakesScreenshot) driver;
-//                    File capture = screenshot.getScreenshotAs(OutputType.FILE);
-//                    BufferedImage  img = ImageIO.read(capture);
+                    //workaround for if you cannot get src link from QR code element
+                    //TakesScreenshot screenshot = (TakesScreenshot) driver;
+                    //File capture = screenshot.getScreenshotAs(OutputType.FILE);
+                    //BufferedImage  img = ImageIO.read(capture);
 
                     LuminanceSource source = new BufferedImageLuminanceSource(img);
                     BinaryBitmap bitmap = new BinaryBitmap(new HybridBinarizer(source));
@@ -448,11 +440,11 @@ public class LoginAndNavigationHelper {
         wait.until(ExpectedConditions.visibilityOf(logout));
         wait.until(elementToBeClickable(logout));
 
-        Thread.sleep(500);
+        Thread.sleep(500); //should not need to wait here
         try {
 
             logout.click();
-            Thread.sleep(500);
+            Thread.sleep(2000); //TODO - reduce this later.  There is a front end logout delay introduced 22/11/2018 - so we will wait a bit
 
         } catch (Exception e) {
             fail("Settings dropdown not available " + e.getMessage());
