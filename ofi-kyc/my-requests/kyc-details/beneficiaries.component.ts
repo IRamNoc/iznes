@@ -121,7 +121,7 @@ export class KycDetailsStakeholdersComponent implements OnInit {
     getParent(stakeholder) {
         const parent = stakeholder.parent;
 
-        if (parent >= 0) {
+        if ((parent != undefined) && parent >= 0) {
             const parentStakeholder = find(this.stakeholderList, ['companyBeneficiariesID', parent]);
 
             const parentName = this.getName(parentStakeholder);
