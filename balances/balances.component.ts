@@ -12,6 +12,7 @@ import { filter, each } from 'lodash';
 import { first, map } from 'rxjs/operators';
 import { Observable } from 'rxjs/Observable';
 import { Subscription } from 'rxjs/Subscription';
+import { MultilingualService } from '@setl/multilingual';
 
 @Component({
     selector: 'setl-balances',
@@ -52,6 +53,7 @@ export class SetlBalancesComponent implements AfterViewInit, OnInit, OnDestroy {
                        private changeDetector: ChangeDetectorRef,
                        private ngRedux: NgRedux<any>,
                        private fileService: FileService,
+                       public translate: MultilingualService,
     ) {
     }
 
@@ -86,7 +88,7 @@ export class SetlBalancesComponent implements AfterViewInit, OnInit, OnDestroy {
         this.initTabUpdates();
 
         this.tabControl = new TabControl({
-            title: 'Balances',
+            title: this.translate.translate('Balances'),
             icon: 'th-list',
             active: true,
             data: {
@@ -103,10 +105,10 @@ export class SetlBalancesComponent implements AfterViewInit, OnInit, OnDestroy {
         const hash = this.route.snapshot.paramMap.get('hash');
         if (hash) {
             switch (this.route.snapshot.paramMap.get('action')) {
-            case 'history':
-                return this.findAsset(hash).then(asset => this.handleViewHistory(asset));
-            case 'breakdown':
-                return this.findAsset(hash).then(asset => this.handleViewBreakdown(asset));
+                case 'history':
+                    return this.findAsset(hash).then(asset => this.handleViewHistory(asset));
+                case 'breakdown':
+                    return this.findAsset(hash).then(asset => this.handleViewBreakdown(asset));
             }
         }
     }
@@ -193,7 +195,7 @@ export class SetlBalancesComponent implements AfterViewInit, OnInit, OnDestroy {
         }
 
         this.tabControl.new({
-            title: `${asset.asset} History`,
+            title: `${asset.asset} ${this.translate.translate('History')}`,
             icon: 'history',
             active: false,
             data: {

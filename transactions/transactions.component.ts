@@ -19,6 +19,7 @@ import {
 } from '@setl/core-store/wallet/transactions/actions';
 
 import { TabControl, Tab } from '../tabs';
+import { MultilingualService } from '@setl/multilingual';
 
 @Component({
     selector: 'setl-transactions',
@@ -46,12 +47,14 @@ export class SetlTransactionsComponent implements OnInit, OnDestroy {
                 private changeDetector: ChangeDetectorRef,
                 private location: Location,
                 private redux: NgRedux<any>,
-                private route: ActivatedRoute) {
+                private route: ActivatedRoute,
+                public translate: MultilingualService,
+    ) {
     }
 
     ngOnInit() {
         this.tabControl = new TabControl({
-            title: 'Transactions',
+            title: this.translate.translate('Transactions'),
             icon: 'key',
             active: true,
             data: {},

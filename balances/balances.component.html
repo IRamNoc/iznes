@@ -124,7 +124,7 @@
             <clr-datagrid #myDataGrid [clrDgLoading]="(transactions | async)?.loading">
                 <clr-dg-column>{{ 'Action' | translate }}</clr-dg-column>
                 <clr-dg-column>{{ 'Tx ID' | translate }}</clr-dg-column>
-                <clr-dg-column>{{ 'Assset' | translate }}</clr-dg-column>
+                <clr-dg-column>{{ 'Asset' | translate }}</clr-dg-column>
                 <clr-dg-column class="right">{{ 'Amount' | translate }}</clr-dg-column>
                 <clr-dg-column>{{ 'Time (UTC)' | translate }}</clr-dg-column>
                 <clr-dg-column>{{ 'Type' | translate }}</clr-dg-column>
@@ -175,7 +175,7 @@
                         </div>
 
                         <div class="btn-group btn-pagination">
-                            Page: {{(transactions | async)?.currentPage + 1}}
+                            {{ 'Page' | translate }}: {{(transactions | async)?.currentPage + 1}}
                         </div>
                     </div>
                 </clr-dg-footer>

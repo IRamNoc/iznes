@@ -6,6 +6,7 @@ import { Subscription } from 'rxjs/Subscription';
 import { TabControl, Tab } from '../tabs';
 import { select } from '@angular-redux/store';
 import { isEmpty } from 'lodash';
+import { MultilingualService } from '@setl/multilingual';
 
 @Component({
     selector: 'setl-issue',
@@ -13,7 +14,6 @@ import { isEmpty } from 'lodash';
     styleUrls: ['./issue.component.css'],
 })
 export class SetlIssueComponent implements OnInit, OnDestroy, AfterViewInit {
-
     @ViewChild('myDataGrid') myDataGrid;
     @select(['user', 'connected', 'connectedWallet']) getConnectedWallet;
     @select(['wallet', 'addressDirectory']) addressDirectory;
@@ -30,9 +30,12 @@ export class SetlIssueComponent implements OnInit, OnDestroy, AfterViewInit {
 
     constructor(private walletNodeRequestService: WalletNodeRequestService,
                 private changeDetector: ChangeDetectorRef,
-                private reportingService: ReportingService) {
+                private reportingService: ReportingService,
+                public translate: MultilingualService,
+    ) {
 
-        this.subscriptions.push(this.getConnectedWallet.subscribe((connectedWalletId) => {
+        this.subscriptions.push(this.getConnectedWallet.subscribe(
+            (connectedWalletId) => {
                 this.connectedWalletId = connectedWalletId;
                 this.closeTabs();
             },
@@ -43,7 +46,7 @@ export class SetlIssueComponent implements OnInit, OnDestroy, AfterViewInit {
         this.issuers$ = this.reportingService.getIssuers();
 
         this.tabControl = new TabControl({
-            title: 'Issue Reports',
+            title: this.translate.translate('Issue Reports'),
             icon: 'money',
             active: true,
             data: {
