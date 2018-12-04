@@ -346,7 +346,7 @@ public class LoginAndNavigationHelper {
         WebDriverWait wait = new WebDriverWait(driver, timeoutInSeconds);
         try {
 
-            wait.until(visibilityOfElementLocated(By.id("topBarMenu")));
+            wait.until(visibilityOfElementLocated(By.id("menu-home")));
 
         } catch (Exception e) {
             fail("Page heading was not present " + e.getMessage());
@@ -543,65 +543,78 @@ public class LoginAndNavigationHelper {
         assertTrue(isElementPresent(By.xpath("//*[@id=\"iznes\"]/app-root/app-basic-layout/div/ng-sidebar-container/div/div/div/main/div/div/ng-component/div[1]/h1")));
         assertTrue(driver.findElement(By.xpath("//*[@id=\"iznes\"]/app-root/app-basic-layout/div/ng-sidebar-container/div/div/div/main/div/div/ng-component/div[1]/h1")).getText().contentEquals("On-boarding Management"));
         assertTrue(isElementPresent(By.xpath("//*[@id=\"iznes\"]/app-root/app-basic-layout/div/ng-sidebar-container/div/div/div/main/div/div/ng-component/div[2]/p")));
-        assertTrue(driver.findElement(By.xpath("//*[@id=\"iznes\"]/app-root/app-basic-layout/div/ng-sidebar-container/div/div/div/main/div/div/ng-component/div[2]/p")).getText().contentEquals("Here's a list of all clients' KYC, organised by status:"));
+        assertTrue(driver.findElement(By.xpath("//*[@id=\"iznes\"]/app-root/app-basic-layout/div/ng-sidebar-container/div/div/div/main/div/div/ng-component/div[2]/p")).getText().contentEquals("Here's a list of all clients' KYC, organised by status"));
 
         assertTrue(isElementPresent(By.xpath("/html/body/app-root/app-basic-layout/div/ng-sidebar-container/div/div/div/main/div/div/ng-component/div[3]/div[1]/div/a/i")));
         assertTrue(isElementPresent(By.xpath("/html/body/app-root/app-basic-layout/div/ng-sidebar-container/div/div/div/main/div/div/ng-component/div[3]/div[1]/div/a")));
         System.out.println(driver.findElement(By.xpath("/html/body/app-root/app-basic-layout/div/ng-sidebar-container/div/div/div/main/div/div/ng-component/div[3]/div[1]/div/a")).getText());
-        assertTrue(driver.findElement(By.xpath("/html/body/app-root/app-basic-layout/div/ng-sidebar-container/div/div/div/main/div/div/ng-component/div[3]/div[1]/div/a")).getText().contains("Waiting for Approval"));
+        assertTrue(driver.findElement(By.xpath("/html/body/app-root/app-basic-layout/div/ng-sidebar-container/div/div/div/main/div/div/ng-component/div[3]/div[1]/div/a")).getText().contains("Waiting for Approval (0)"));
 
         assertTrue(isElementPresent(By.xpath("/html/body/app-root/app-basic-layout/div/ng-sidebar-container/div/div/div/main/div/div/ng-component/div[4]/div[1]/div/a/i")));
         assertTrue(isElementPresent(By.xpath("/html/body/app-root/app-basic-layout/div/ng-sidebar-container/div/div/div/main/div/div/ng-component/div[4]/div[1]/div/a")));
         System.out.println(driver.findElement(By.xpath("/html/body/app-root/app-basic-layout/div/ng-sidebar-container/div/div/div/main/div/div/ng-component/div[4]/div[1]/div/a")).getText());
-        assertTrue(driver.findElement(By.xpath("/html/body/app-root/app-basic-layout/div/ng-sidebar-container/div/div/div/main/div/div/ng-component/div[4]/div[1]/div/a")).getText().contains("Accepted - Funds Access Authorizations"));
+        assertTrue(driver.findElement(By.xpath("/html/body/app-root/app-basic-layout/div/ng-sidebar-container/div/div/div/main/div/div/ng-component/div[4]/div[1]/div/a")).getText().contains("Accepted - Funds Access Authorizations (0)"));
 
         assertTrue(isElementPresent(By.xpath("/html/body/app-root/app-basic-layout/div/ng-sidebar-container/div/div/div/main/div/div/ng-component/div[5]/div[1]/div/a/i")));
         assertTrue(isElementPresent(By.xpath("/html/body/app-root/app-basic-layout/div/ng-sidebar-container/div/div/div/main/div/div/ng-component/div[5]/div[1]/div/a")));
         System.out.println(driver.findElement(By.xpath("/html/body/app-root/app-basic-layout/div/ng-sidebar-container/div/div/div/main/div/div/ng-component/div[5]/div[1]/div/a")).getText());
-        assertTrue(driver.findElement(By.xpath("/html/body/app-root/app-basic-layout/div/ng-sidebar-container/div/div/div/main/div/div/ng-component/div[5]/div[1]/div/a")).getText().contains("Awaiting for more information from your client"));
+        assertTrue(driver.findElement(By.xpath("/html/body/app-root/app-basic-layout/div/ng-sidebar-container/div/div/div/main/div/div/ng-component/div[5]/div[1]/div/a")).getText().contains("Awaiting for more information from your Client (0)"));
 
         assertTrue(isElementPresent(By.xpath("/html/body/app-root/app-basic-layout/div/ng-sidebar-container/div/div/div/main/div/div/ng-component/div[6]/div[1]/div/a/i")));
         assertTrue(isElementPresent(By.xpath("/html/body/app-root/app-basic-layout/div/ng-sidebar-container/div/div/div/main/div/div/ng-component/div[6]/div[1]/div/a")));
         System.out.println(driver.findElement(By.xpath("/html/body/app-root/app-basic-layout/div/ng-sidebar-container/div/div/div/main/div/div/ng-component/div[6]/div[1]/div/a")).getText());
-        assertTrue(driver.findElement(By.xpath("/html/body/app-root/app-basic-layout/div/ng-sidebar-container/div/div/div/main/div/div/ng-component/div[6]/div[1]/div/a")).getText().contains("Rejected"));
+        assertTrue(driver.findElement(By.xpath("/html/body/app-root/app-basic-layout/div/ng-sidebar-container/div/div/div/main/div/div/ng-component/div[6]/div[1]/div/a")).getText().contains("Rejected (0)"));
 
         assertTrue(isElementPresent(By.xpath("/html/body/app-root/app-basic-layout/div/ng-sidebar-container/div/div/div/main/div/div/ng-component/div[7]/div[1]/div/a/i")));
         assertTrue(isElementPresent(By.xpath("/html/body/app-root/app-basic-layout/div/ng-sidebar-container/div/div/div/main/div/div/ng-component/div[7]/div[1]/div/a")));
         System.out.println(driver.findElement(By.xpath("/html/body/app-root/app-basic-layout/div/ng-sidebar-container/div/div/div/main/div/div/ng-component/div[7]/div[1]/div/a")).getText());
-        assertTrue(driver.findElement(By.xpath("/html/body/app-root/app-basic-layout/div/ng-sidebar-container/div/div/div/main/div/div/ng-component/div[7]/div[1]/div/a")).getText().contains("Started by your clients"));
+        assertTrue(driver.findElement(By.xpath("/html/body/app-root/app-basic-layout/div/ng-sidebar-container/div/div/div/main/div/div/ng-component/div[7]/div[1]/div/a")).getText().contains("Started by your Clients (0)"));
 
         assertTrue(isElementPresent(By.xpath("/html/body/app-root/app-basic-layout/div/ng-sidebar-container/div/div/div/main/div/div/ng-component/div[8]/div[1]/div/a/i")));
         assertTrue(isElementPresent(By.xpath("/html/body/app-root/app-basic-layout/div/ng-sidebar-container/div/div/div/main/div/div/ng-component/div[8]/div[1]/div/a")));
         System.out.println(driver.findElement(By.xpath("/html/body/app-root/app-basic-layout/div/ng-sidebar-container/div/div/div/main/div/div/ng-component/div[8]/div[1]/div/a")).getText());
-        assertTrue(driver.findElement(By.xpath("/html/body/app-root/app-basic-layout/div/ng-sidebar-container/div/div/div/main/div/div/ng-component/div[8]/div[1]/div/a")).getText().contains("All your KYC and Client Folders"));
+        assertTrue(driver.findElement(By.xpath("/html/body/app-root/app-basic-layout/div/ng-sidebar-container/div/div/div/main/div/div/ng-component/div[8]/div[1]/div/a")).getText().contains("All your KYC and Client Folders (0)"));
     }
     public static void validateHeadersOnHomePageTableTG1376(){
         String orderRef = driver.findElement(By.xpath("//*[@id=\"Order-REF\"]/div/button")).getText();
-        assertTrue(orderRef.equals("Order REF"));
+        assertEquals("Order Reference", orderRef);
         String orderType = driver.findElement(By.xpath("//*[@id=\"Order-Type\"]/div/button")).getText();
-        assertTrue(orderType.equals("Order type"));
+        assertEquals("Order Type", orderType);
         String investor = driver.findElement(By.xpath("//*[@id=\"Order-Investor\"]/div/button")).getText();
-        assertTrue(investor.equals("Investor"));
+        assertEquals("Investor", investor);
         String iSIN = driver.findElement(By.xpath("//*[@id=\"Order-ISIN\"]/div/button")).getText();
-        assertTrue(iSIN.equals("ISIN"));
+        assertEquals("ISIN", iSIN);
         String shareName = driver.findElement(By.xpath("//*[@id=\"Order-Share-Name\"]/div/button")).getText();
-        assertTrue(shareName.equals("Share Name"));
+        assertEquals("Share Name", shareName);
         String shareCurrency = driver.findElement(By.xpath("//*[@id=\"Order-Share-Currency\"]/div/button")).getText();
-        assertTrue(shareCurrency.equals("Share Currency"));
+        assertEquals("Share Currency", shareCurrency);
         String quantity = driver.findElement(By.xpath("//*[@id=\"Order-Quantity\"]/div/button")).getText();
-        assertTrue(quantity.equals("Quantity"));
+        assertEquals("Quantity", quantity);
+        String tradeBy = driver.findElement(By.id("Order-Traded-By")).getText();
+        assertEquals("Traded By", tradeBy);
         String tradeAmount = driver.findElement(By.xpath("//*[@id=\"Order-Trade-Amount\"]/div/button")).getText();
-        assertTrue(tradeAmount.equals("Trade Amount"));
+        assertEquals("Trade Amount", tradeAmount);
         String orderDate = driver.findElement(By.xpath("//*[@id=\"Order-Order-Date\"]/div/button")).getText();
-        assertTrue(orderDate.equals("Order Date"));
+        assertEquals("Order Date", orderDate);
         String cutOffDate = driver.findElement(By.xpath("//*[@id=\"Order-Cut-Off-Date\"]/div/button")).getText();
-        assertTrue(cutOffDate.equals("Cut-off date"));
+        assertEquals("Cut-off Date", cutOffDate);
         String settlementDate = driver.findElement(By.xpath("//*[@id=\"Order-Settlement-Date\"]/div/button")).getText();
-        assertTrue(settlementDate.equals("Settlement Date"));
+        assertEquals("Settlement Date", settlementDate);
         String status = driver.findElement(By.xpath("//*[@id=\"Order-Status\"]/div/button")).getText();
-        assertTrue(status.equals("Status"));
+        assertEquals("Status", status);
         String actions = driver.findElement(By.xpath("//*[@id=\"Order-Action\"]/div/span/span")).getText();
-        assertTrue(actions.equals("Actions"));
+        assertEquals("Actions", actions);
+    }
+
+    public static void selectingWalletAssetManagerWallet() {
+        WebDriverWait wait = new WebDriverWait(driver, timeoutInSeconds);
+        driver.findElement(By.xpath("//*[@id=\"iznes\"]/app-root/app-basic-layout/div/ng-sidebar-container/div/div/app-navigation-topbar/header/div[2]/div[2]/div/ng-select/div/div[2]/span/i[2]")).click();
+        driver.findElement(By.xpath("//*[@id=\"iznes\"]/app-root/app-basic-layout/div/ng-sidebar-container/div/div/app-navigation-topbar/header/div[2]/div[2]/div/ng-select/div/div[3]/div/input")).sendKeys("AssetManagerWallet");
+        wait.until(invisibilityOfElementLocated(By.xpath("//*[@id=\"iznes\"]/app-root/app-basic-layout/div/ng-sidebar-container/div/div/app-navigation-topbar/header/div[2]/div[2]/div/ng-select/div/div[3]/ul/li[2]")));
+        driver.findElement(By.xpath("//*[@id=\"iznes\"]/app-root/app-basic-layout/div/ng-sidebar-container/div/div/app-navigation-topbar/header/div[2]/div[2]/div/ng-select/div/div[3]/ul/li[1]")).click();
+        String headerHome = driver.findElement(By.xpath("/html/body/app-root/app-basic-layout/div/ng-sidebar-container/div/div/div/main/div/div/ng-component/div/h1")).getText();
+        System.out.println(headerHome);
+        assertTrue(headerHome.contains("Home - AssetManagerWallet"));
     }
 
 }

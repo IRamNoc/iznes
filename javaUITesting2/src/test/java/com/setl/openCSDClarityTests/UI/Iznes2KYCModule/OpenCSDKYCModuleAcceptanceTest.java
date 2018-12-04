@@ -30,8 +30,7 @@ import static com.setl.UI.common.SETLUIHelpers.MemberDetailsHelper.scrollElement
 import static com.setl.UI.common.SETLUIHelpers.SetUp.*;
 import static SETLAPIHelpers.DatabaseHelper.*;
 import static com.setl.openCSDClarityTests.UI.Iznes4General.OpenCSDGeneralAcceptanceTest.*;
-import static org.junit.Assert.assertTrue;
-import static org.junit.Assert.fail;
+import static org.junit.Assert.*;
 import static org.openqa.selenium.support.ui.ExpectedConditions.*;
 import static org.openqa.selenium.support.ui.ExpectedConditions.visibilityOfElementLocated;
 
@@ -519,8 +518,8 @@ public class OpenCSDKYCModuleAcceptanceTest {
         String lei = generateRandomLEI();
 
 
-        assertTrue(identificationTitle.equals("Client's Identification as a Legal Entity"));
-        assertTrue(generalInfoPercent.equals("0%"));
+        assertEquals("CLIENT'S IDENTIFICATION AS A LEGAL ENTITY", identificationTitle);
+        assertEquals("0%", generalInfoPercent);
         driver.findElement(By.xpath("//*[@id=\"step-identification\"]/general-information/div/div[1]/div[1]/a/h2")).click();
         wait.until(visibilityOfElementLocated(By.id("registeredCompanyName")));
         driver.findElement(By.id("registeredCompanyName")).sendKeys(companyName);
@@ -533,15 +532,15 @@ public class OpenCSDKYCModuleAcceptanceTest {
         driver.findElement(By.xpath("//*[@id=\"step-identification\"]/general-information/div/div[2]/div/div[5]/div[2]/input")).sendKeys("Ipswich");
 
         String percentBarColourPre = driver.findElement(By.xpath("//*[@id=\"step-identification\"]/general-information/div/div[1]/div[2]/div/div[1]/div/div/div")).getCssValue("background-color");
-        assertTrue(percentBarColourPre.equals("rgba(255, 183, 77, 1)"));
+        assertEquals("rgba(255, 183, 77, 1)", percentBarColourPre);
 
         dropdownSelect("xpath", "//*[@id=\"step-identification\"]/general-information/div/div[2]/div/div[5]/div[3]/ng-select", "Jordan");
 
         String percent9 = driver.findElement(By.xpath("//*[@id=\"step-identification\"]/general-information/div/div[1]/div[2]/div/div[1]/div/div/div/span")).getText();
-        assertTrue(percent9.equals("100%"));
+        assertEquals("100%", percent9);
 
         String percentBarColourPost = driver.findElement(By.xpath("//*[@id=\"step-identification\"]/general-information/div/div[1]/div[2]/div/div[1]/div/div/div")).getCssValue("background-color");
-        assertTrue(percentBarColourPost.equals("rgba(102, 187, 106, 1)"));
+        assertEquals("rgba(102, 187, 106, 1)", percentBarColourPost);
 
         driver.findElement(By.xpath("//*[@id=\"step-identification\"]/general-information/div/div[1]/div[1]/a/h2")).click();
         wait.until(invisibilityOfElementLocated(By.id("registeredCompanyName")));

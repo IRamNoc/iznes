@@ -212,55 +212,55 @@ public class ManagementCompanyModuleHelper {
         driver.findElement(By.id("mcTabAddNewMc")).click();
         //Management Company Name is a Required Field
         driver.findElement(By.id("companyName")).sendKeys(Keys.TAB);
-        assertEquals("Field is required", driver.findElement(By.xpath("/html/body/app-root/app-basic-layout/div/ng-sidebar-container/div/div/div/main/div/div/management-company/clr-tabs/clr-tab[2]/clr-tab-content/form/section/div[1]/div[1]/div[2]")).getText());
+        assertEquals("Field is required", driver.findElement(By.cssSelector("#clr-tab-content-2 > form > section > div:nth-child(1) > div:nth-child(1) > span")).getText());
         //Email Address of the Super Admin is a Required Field
         driver.findElement(By.id("emailAddress")).sendKeys(Keys.TAB);
-        assertEquals("Field is required", driver.findElement(By.xpath("/html/body/app-root/app-basic-layout/div/ng-sidebar-container/div/div/div/main/div/div/management-company/clr-tabs/clr-tab[2]/clr-tab-content/form/section/div[1]/div[2]/div[2]")).getText());
+        assertEquals("Field is required", driver.findElement(By.cssSelector("#clr-tab-content-2 > form > section > div:nth-child(1) > div:nth-child(2) > span")).getText());
         //Supervisory Authority is a Required Field
         driver.findElement(By.id("supervisoryAuthority")).sendKeys(Keys.TAB);
-        assertEquals("Field is required", driver.findElement(By.xpath("/html/body/app-root/app-basic-layout/div/ng-sidebar-container/div/div/div/main/div/div/management-company/clr-tabs/clr-tab[2]/clr-tab-content/form/section/div[2]/div[2]/div[2]")).getText());
+        assertEquals("Field is required", driver.findElement(By.cssSelector("#clr-tab-content-2 > form > section > div:nth-child(2) > div:nth-child(2) > span")).getText());
         //RCS matriculation is a Required Field
         driver.findElement(By.id("rcsMatriculation")).sendKeys(Keys.TAB);
-        assertEquals("Field is required", driver.findElement(By.xpath("/html/body/app-root/app-basic-layout/div/ng-sidebar-container/div/div/div/main/div/div/management-company/clr-tabs/clr-tab[2]/clr-tab-content/form/section/div[3]/div[1]/div[2]")).getText());
+        assertEquals("Field is required", driver.findElement(By.xpath("//*[@id=\"clr-tab-content-2\"]/form/section/div[3]/div[1]/span")).getText());
         //Identification number (SIRET / SIREN) is a Required Field
         driver.findElement(By.id("numSiretOrSiren")).sendKeys(Keys.TAB);
-        assertEquals("Field is required", driver.findElement(By.xpath("/html/body/app-root/app-basic-layout/div/ng-sidebar-container/div/div/div/main/div/div/management-company/clr-tabs/clr-tab[2]/clr-tab-content/form/section/div[3]/div[2]/div[2]")).getText());
+        assertEquals("Field is required", driver.findElement(By.xpath("//*[@id=\"clr-tab-content-2\"]/form/section/div[3]/div[2]/span")).getText());
         //Share Capital is a Required Field
         driver.findElement(By.id("shareCapital")).sendKeys(Keys.TAB);
-        assertEquals("Field is required", driver.findElement(By.xpath("/html/body/app-root/app-basic-layout/div/ng-sidebar-container/div/div/div/main/div/div/management-company/clr-tabs/clr-tab[2]/clr-tab-content/form/section/div[4]/div[1]/div[2]")).getText());
+        assertEquals("Field is required", driver.findElement(By.xpath("//*[@id=\"clr-tab-content-2\"]/form/section/div[4]/div[1]/span")).getText());
         //LEI Code is a Required Field
         driver.findElement(By.id("lei")).sendKeys(Keys.TAB);
-        assertEquals("Field is required", driver.findElement(By.xpath("/html/body/app-root/app-basic-layout/div/ng-sidebar-container/div/div/div/main/div/div/management-company/clr-tabs/clr-tab[2]/clr-tab-content/form/section/div[4]/div[2]/div[2]")).getText());
+        assertEquals("Field is required", driver.findElement(By.xpath("//*[@id=\"clr-tab-content-2\"]/form/section/div[4]/div[2]/span")).getText());
         //BIC Code is a Required Field
         driver.findElement(By.id("bic")).sendKeys(Keys.TAB);
-        assertEquals("Field is required", driver.findElement(By.xpath("/html/body/app-root/app-basic-layout/div/ng-sidebar-container/div/div/div/main/div/div/management-company/clr-tabs/clr-tab[2]/clr-tab-content/form/section/div[5]/div[1]/div[2]")).getText());
+        assertEquals("Field is required", driver.findElement(By.xpath("//*[@id=\"clr-tab-content-2\"]/form/section/div[5]/div[1]/span")).getText());
         //Registered Company’s Headquarters address is a Required Field
         driver.findElement(By.id("postalAddressLine1")).sendKeys(Keys.TAB);
-        assertEquals("Field is required", driver.findElement(By.xpath("/html/body/app-root/app-basic-layout/div/ng-sidebar-container/div/div/div/main/div/div/management-company/clr-tabs/clr-tab[2]/clr-tab-content/form/section/div[6]/div[1]/div[2]")).getText());
+        assertEquals("Field is required", driver.findElement(By.xpath("//*[@id=\"clr-tab-content-2\"]/form/section/div[6]/div[1]/span")).getText());
         //ZIP Code is a Required Field
         scrollElementIntoViewById("postalCode");
         driver.findElement(By.id("postalCode")).sendKeys(Keys.TAB);
-        assertEquals("Field is required", driver.findElement(By.xpath("/html/body/app-root/app-basic-layout/div/ng-sidebar-container/div/div/div/main/div/div/management-company/clr-tabs/clr-tab[2]/clr-tab-content/form/section/div[6]/div[3]/div[2]")).getText());
+        assertEquals("Field is required", driver.findElement(By.xpath("//*[@id=\"clr-tab-content-2\"]/form/section/div[6]/div[3]/span")).getText());
         //City is a Required Field
         driver.findElement(By.id("city")).sendKeys(Keys.TAB);
-        assertEquals("Field is required", driver.findElement(By.xpath("/html/body/app-root/app-basic-layout/div/ng-sidebar-container/div/div/div/main/div/div/management-company/clr-tabs/clr-tab[2]/clr-tab-content/form/section/div[6]/div[4]/div[2]")).getText());
+        assertEquals("Field is required", driver.findElement(By.xpath("//*[@id=\"clr-tab-content-2\"]/form/section/div[6]/div[4]/span")).getText());
         //Commercial Contact is a Required Field
         driver.findElement(By.id("commercialContact")).sendKeys(Keys.TAB);
-        assertEquals("Field is required", driver.findElement(By.xpath("/html/body/app-root/app-basic-layout/div/ng-sidebar-container/div/div/div/main/div/div/management-company/clr-tabs/clr-tab[2]/clr-tab-content/form/section/div[7]/div[1]/div[2]")).getText());
+        assertEquals("Field is required", driver.findElement(By.xpath("//*[@id=\"clr-tab-content-2\"]/form/section/div[7]/div[1]/span")).getText());
         //Operational Contact is a Required Field
         scrollElementIntoViewById("operationalContact");
         driver.findElement(By.id("operationalContact")).sendKeys(Keys.TAB);
-        assertEquals("Field is required", driver.findElement(By.xpath("/html/body/app-root/app-basic-layout/div/ng-sidebar-container/div/div/div/main/div/div/management-company/clr-tabs/clr-tab[2]/clr-tab-content/form/section/div[7]/div[2]/div[2]")).getText());
+        assertEquals("Field is required", driver.findElement(By.xpath("//*[@id=\"clr-tab-content-2\"]/form/section/div[7]/div[2]/span")).getText());
         //Director Contact is a Required Field
         driver.findElement(By.id("directorContact")).sendKeys(Keys.TAB);
-        assertEquals("Field is required", driver.findElement(By.xpath("/html/body/app-root/app-basic-layout/div/ng-sidebar-container/div/div/div/main/div/div/management-company/clr-tabs/clr-tab[2]/clr-tab-content/form/section/div[8]/div/div[2]")).getText());
+        assertEquals("Field is required", driver.findElement(By.xpath("//*[@id=\"clr-tab-content-2\"]/form/section/div[8]/div/span")).getText());
         //Management Company Website Address is a Required Field
         scrollElementIntoViewById("mc_websiteUrl");
         driver.findElement(By.id("mc_websiteUrl")).sendKeys(Keys.TAB);
-        assertEquals("Field is required", driver.findElement(By.xpath("/html/body/app-root/app-basic-layout/div/ng-sidebar-container/div/div/div/main/div/div/management-company/clr-tabs/clr-tab[2]/clr-tab-content/form/section/div[9]/div[1]/div[2]")).getText());
+        assertEquals("Field is required", driver.findElement(By.xpath("//*[@id=\"clr-tab-content-2\"]/form/section/div[9]/div[1]/span")).getText());
         // Management Company Phone Number is a Required Field
         driver.findElement(By.id("kyc_additionnal_phoneNumber")).sendKeys(Keys.TAB);
-        assertEquals("Field is required", driver.findElement(By.xpath("/html/body/app-root/app-basic-layout/div/ng-sidebar-container/div/div/div/main/div/div/management-company/clr-tabs/clr-tab[2]/clr-tab-content/form/section/div[9]/div[2]/div/div[2]/div")).getText());
+        assertEquals("Field is required", driver.findElement(By.xpath("//*[@id=\"clr-tab-content-2\"]/form/section/div[9]/div[2]/div/div[2]/span")).getText());
     }
     public static void searchManagementCompany(String companyName, String lei, String country) throws InterruptedException {
         WebDriverWait wait = new WebDriverWait(driver, timeoutInSeconds);

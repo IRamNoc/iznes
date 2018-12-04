@@ -907,18 +907,18 @@ public class FundsDetailsHelper extends LoginAndNavigationHelper {
     public static void validateNAVPageLayout() {
         assertTrue(isElementPresent(By.id("NAV-Title")));
         assertTrue(driver.findElement(By.id("NAV-Title")).getText().contains("Net Asset Value"));
-        assertTrue(isElementPresent(By.xpath("/html/body/app-root/app-basic-layout/div/ng-sidebar-container/div/div/div/main/div/div/app-nav-manage-list/div/span")));
-        assertTrue(driver.findElement(By.xpath("/html/body/app-root/app-basic-layout/div/ng-sidebar-container/div/div/div/main/div/div/app-nav-manage-list/div/span")).getText().contentEquals("Please select a date type and a date to access to the available NAVs.\n" +
+        assertTrue(isElementPresent(By.xpath("//*[@id=\"iznes\"]/app-root/app-basic-layout/div/ng-sidebar-container/div/div/div/main/div/div/app-nav-manage-list/div/section")));
+        assertTrue(driver.findElement(By.xpath("//*[@id=\"iznes\"]/app-root/app-basic-layout/div/ng-sidebar-container/div/div/div/main/div/div/app-nav-manage-list/div/section")).getText().contentEquals("Please select a date type and a date to access to the available NAVs.\n" +
             "You will have access to the NAV's history of a specific share in clicking on the corresponding row."));
         assertTrue(isElementPresent(By.id("netAssetValueTab")));
         //assertTrue(driver.findElement(By.id("netAssetValueTab")).getText().contentEquals("NAVs for all your shares"));
         assertTrue(isElementPresent(By.xpath("/html/body/app-root/app-basic-layout/div/ng-sidebar-container/div/div/div/main/div/div/app-nav-manage-list/clr-tabs/clr-tab/clr-tab-content/form/div/div/div[1]/label")));
-        assertTrue(driver.findElement(By.xpath("/html/body/app-root/app-basic-layout/div/ng-sidebar-container/div/div/div/main/div/div/app-nav-manage-list/clr-tabs/clr-tab/clr-tab-content/form/div/div/div[1]/label")).getText().contentEquals("Search a Share Name or ISIN"));
+        assertTrue(driver.findElement(By.xpath("//*[@id=\"clr-tab-content-1\"]/form/div/div/div[1]")).getText().contentEquals("Search Share Name or ISIN"));
         assertTrue(isElementPresent(By.id("Search-field")));
         assertTrue(isElementPresent(By.xpath("/html/body/app-root/app-basic-layout/div/ng-sidebar-container/div/div/div/main/div/div/app-nav-manage-list/clr-tabs/clr-tab/clr-tab-content/form/div/div/div[2]/label")));
-        assertTrue(driver.findElement(By.xpath("/html/body/app-root/app-basic-layout/div/ng-sidebar-container/div/div/div/main/div/div/app-nav-manage-list/clr-tabs/clr-tab/clr-tab-content/form/div/div/div[2]/label")).getText().contentEquals("Select a Date"));
+        assertTrue(driver.findElement(By.xpath("//*[@id=\"clr-tab-content-1\"]/form/div/div/div[2]/label")).getText().contentEquals("Select Date Type"));
         assertTrue(isElementPresent(By.xpath("/html/body/app-root/app-basic-layout/div/ng-sidebar-container/div/div/div/main/div/div/app-nav-manage-list/clr-tabs/clr-tab/clr-tab-content/form/div/div/div[2]/ng-select/div/div[2]/span/span")));
-        assertTrue(driver.findElement(By.xpath("/html/body/app-root/app-basic-layout/div/ng-sidebar-container/div/div/div/main/div/div/app-nav-manage-list/clr-tabs/clr-tab/clr-tab-content/form/div/div/div[2]/ng-select/div/div[2]/span/span")).getText().contentEquals("NAV Date"));
+        assertTrue(driver.findElement(By.xpath("//*[@id=\"clr-tab-content-1\"]/form/div/div/div[3]")).getText().contentEquals("Select Date"));
         assertTrue(isElementPresent(By.id("Date-filter")));
         assertTrue(driver.findElement(By.id("Date-filter")).getAttribute("value").contentEquals(getTodayDate()));
         assertTrue(isElementPresent(By.id("NAV-Date-Filter")));

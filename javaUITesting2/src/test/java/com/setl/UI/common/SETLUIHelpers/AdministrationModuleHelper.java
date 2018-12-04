@@ -524,9 +524,9 @@ public class AdministrationModuleHelper {
         driver.findElement(By.cssSelector("#permissionsCellActions1 > label:nth-child(1) > span:nth-child(2)")).click();
         //Assert Create Users
         String createUsersName = driver.findElement(By.id("permissionsCellName2")).getText();
-        assertTrue(createUsersName.equals("Create Users"));
+        assertTrue(createUsersName.equals("Create User(s)"));
         String createUsersDescription = driver.findElement(By.id("permissionsCellDesc2")).getText();
-        assertTrue(createUsersDescription.equals("Create users"));
+        assertTrue(createUsersDescription.equals("Create User(s)"));
         //Select Permission
         driver.findElement(By.cssSelector("#permissionsCellActions2 > label:nth-child(1) > span:nth-child(2)")).click();
         //Assert Update Users
@@ -540,21 +540,21 @@ public class AdministrationModuleHelper {
         String deleteUsersName = driver.findElement(By.id("permissionsCellName4")).getText();
         assertTrue(deleteUsersName.equals("Delete Users"));
         String deleteUsersDescription = driver.findElement(By.id("permissionsCellDesc4")).getText();
-        assertTrue(deleteUsersDescription.equals("Delete users"));
+        assertTrue(deleteUsersDescription.equals("Delete Users"));
         //Select Permission
         driver.findElement(By.cssSelector("#permissionsCellActions4 > label:nth-child(1) > span:nth-child(2)")).click();
         //Assert View Teams
         String viewTeamsName = driver.findElement(By.id("permissionsCellName5")).getText();
         assertTrue(viewTeamsName.equals("View Teams"));
         String viewTeamsDescription = driver.findElement(By.id("permissionsCellDesc5")).getText();
-        assertTrue(viewTeamsDescription.equals("View teams"));
+        assertTrue(viewTeamsDescription.equals("View Teams"));
         //Select Permission
         driver.findElement(By.cssSelector("#permissionsCellActions5 > label:nth-child(1) > span:nth-child(2)")).click();
         //Assert Create Teams
         String createTeamsName = driver.findElement(By.id("permissionsCellName6")).getText();
         assertTrue(createTeamsName.equals("Create Teams"));
         String createTeamsDescription = driver.findElement(By.id("permissionsCellDesc6")).getText();
-        assertTrue(createTeamsDescription.equals("Create teams"));
+        assertTrue(createTeamsDescription.equals("Create Teams"));
         //Select Permission
         driver.findElement(By.cssSelector("#permissionsCellActions6 > label:nth-child(1) > span:nth-child(2)")).click();
         //Assert Update Teams
@@ -568,7 +568,7 @@ public class AdministrationModuleHelper {
         String deleteTeamsName = driver.findElement(By.id("permissionsCellName8")).getText();
         assertTrue(deleteTeamsName.equals("Delete Teams"));
         String deleteTeamsDescription = driver.findElement(By.id("permissionsCellDesc8")).getText();
-        assertTrue(deleteTeamsDescription.equals("Delete teams"));
+        assertTrue(deleteTeamsDescription.equals("Delete Teams"));
         //Select Permission
         driver.findElement(By.cssSelector("#permissionsCellActions8 > label:nth-child(1) > span:nth-child(2)")).click();
         //Assert Manage Team Memberships
@@ -796,12 +796,12 @@ public class AdministrationModuleHelper {
 
     public static void shouldValidateSignUpProcess(String firstName, String lastName, String Email, String phoneNumber) throws InterruptedException {
         final WebDriverWait wait = new WebDriverWait(driver, timeoutInSeconds);
-        wait.until(visibilityOfElementLocated(By.id("su-username-field")));
-        String emailField = driver.findElement(By.id("su-username-field")).getAttribute("value");
+        wait.until(visibilityOfElementLocated(By.id("sign-up-username")));
+        String emailField = driver.findElement(By.id("sign-up-username")).getAttribute("value");
         assertEquals(emailField, Email);
         driver.findElement(By.id("sign-up-password")).sendKeys("asdASD123");
         driver.findElement(By.id("sign-up-password-confirm")).sendKeys("asdASD123");
-        wait.until(elementToBeClickable(By.id("signup-submit")));
+        wait.until(elementToBeClickable(By.id("sign-up-submit")));
         driver.findElement(By.id("sign-up-submit")).click();
         wait.until(visibilityOfElementLocated(By.xpath("//*[@id=\"iznes\"]/app-root/jaspero-confirmations/jaspero-confirmation/div[2]/div[4]/button")));
         wait.until(elementToBeClickable(By.xpath("//*[@id=\"iznes\"]/app-root/jaspero-confirmations/jaspero-confirmation/div[2]/div[4]/button")));
