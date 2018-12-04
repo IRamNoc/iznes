@@ -44,8 +44,6 @@ export class SetlMyAccountComponent implements OnDestroy, OnInit {
 
     countries = [];
 
-    
-
     userDetailsForm: FormGroup;
     changePassForm: FormGroup;
     enableTFAForm: FormGroup;
