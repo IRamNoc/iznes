@@ -67,8 +67,11 @@
                                     <div class="form-group">
                                         <label>{{ 'Share Name' | translate }}</label>
                                         <div class="input-button-group">
-                                            <input id="orders-search-sharename" [formControl]="tabsControl[0].searchForm.controls['sharename']" name="search-sharename"
-                                                   type="text" [placeholder]="translate.translate('Share Name')" style="width: 100% !important">
+                                            <input id="orders-search-sharename" 
+                                                    [formControl]="tabsControl[0].searchForm.controls['sharename']" name="search-sharename"
+                                                    type="text" 
+                                                    [placeholder]="translate.translate('Share Name')" 
+                                                    style="width: 100% !important">
                                         </div>
                                     </div>
                                 </td>
@@ -132,7 +135,7 @@
                                 <div class="panel-body" [class.hidden]="!isOptionalFiltersVisible">
                                     <div class="row">
                                         <div class="form-group col-sm-3">
-                                            <label>{{ 'Order Ref' | translate}}
+                                            <label>{{ 'Order Reference' | translate}}
 
                                             </label>
                                             <div class="input-button-group">
@@ -140,7 +143,8 @@
                                                         [formControl]="tabsControl[0].searchForm.controls['orderID']" 
                                                         name="search-sharename" 
                                                         type="number"
-                                                        [placeholder]="translate.translate('Order ID')" style="width: 100% !important">
+                                                        [placeholder]="translate.translate('Order ID')" 
+                                                        style="width: 100% !important">
                                             </div>
                                         </div>
                                         <ng-container *ngIf="isIznesAdmin">
@@ -235,7 +239,7 @@
 
                 <clr-datagrid (clrDgRefresh)="refresh($event)" [clrDgLoading]="loading" clrDgSortIcon #ordersDataGrid>
                     <clr-dg-column [clrDgField]="'orderRef'" clrDgSortIcon clrDgSortNoSearch id="Order-REF">
-                        <ng-container *clrDgHideableColumn="{hidden: false}">{{ 'Order Ref' | translate }}
+                        <ng-container *clrDgHideableColumn="{hidden: false}">{{ 'Order Reference' | translate }}
                             <span class="column-label"></span>
                         </ng-container>
                     </clr-dg-column>

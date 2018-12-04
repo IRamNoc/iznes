@@ -3,10 +3,12 @@ import { FormArray, FormBuilder, FormControl, FormGroup, Validators } from '@ang
 import { Location } from '@angular/common';
 import { OfiKycService } from '../../ofi-req-services/ofi-kyc/service';
 import { OfiKycObservablesService } from '../../ofi-req-services/ofi-kyc/kyc-observable';
-import { immutableHelper } from '@setl/utils';
+import { FileDownloader, SagaHelper, mDateHelper, immutableHelper } from '@setl/utils';
 import { NgRedux, select } from '@angular-redux/store';
-import { Subject } from 'rxjs';
+import { Observable } from 'rxjs/Rx';
+import { Subject } from 'rxjs/Subject';
 import { debounceTime } from 'rxjs/operators';
+import { combineLatest as observableCombineLatest } from 'rxjs';
 import { Router, ActivatedRoute } from '@angular/router';
 import { AlertsService } from '@setl/jaspero-ng2-alerts';
 import { ToasterService } from 'angular2-toaster';
@@ -15,11 +17,7 @@ import { MultilingualService } from '@setl/multilingual';
 import { AppObservableHandler } from '@setl/utils/decorators/app-observable-handler';
 import { OfiFundShareService } from '../../ofi-req-services/ofi-product/fund-share/service';
 import * as math from 'mathjs';
-import { FileDownloader, SagaHelper } from '@setl/utils';
-import { OFI_SET_CLIENT_REFERENTIAL_AUDIT } from "@ofi/ofi-main/ofi-store";
-import { mDateHelper } from "@setl/utils";
-import { combineLatest as observableCombineLatest } from 'rxjs';
-import { Observable } from "rxjs/Rx";
+import { OFI_SET_CLIENT_REFERENTIAL_AUDIT } from '@ofi/ofi-main/ofi-store';
 import { Moment } from 'moment';
 
 @AppObservableHandler
@@ -53,11 +51,11 @@ export class OfiClientReferentialComponent implements OnInit, OnDestroy {
     socketToken: string;
     userId: string;
 
-    investorTypes = [
+    investorTypes = this.translate.translate([
         { id: 0, text: 'All Investors' },
         { id: 45, text: 'Institutional Investor' },
         { id: 55, text: 'Retail Investor' },
-    ];
+    ]);
 
     // Locale
     language = 'en';
@@ -72,9 +70,8 @@ export class OfiClientReferentialComponent implements OnInit, OnDestroy {
         isDayDisabledCallback: (thisDate) => {
             if (!!thisDate && this.searchForm.controls['searchTo'].value != '') {
                 return (thisDate.diff(this.searchForm.controls['searchTo'].value) > 0);
-            } else {
-                return false;
             }
+            return false;
         },
     };
 
@@ -87,9 +84,8 @@ export class OfiClientReferentialComponent implements OnInit, OnDestroy {
         isDayDisabledCallback: (thisDate) => {
             if (!!thisDate && this.searchForm.controls['searchFrom'].value != '') {
                 return (thisDate.diff(this.searchForm.controls['searchFrom'].value) < 0);
-            } else {
-                return false;
             }
+            return false;
         },
     };
 
@@ -112,19 +108,19 @@ export class OfiClientReferentialComponent implements OnInit, OnDestroy {
     @select(['user', 'myDetail', 'userId']) userIdOb;
 
     /* Constructor. */
-    constructor(private _fb: FormBuilder,
-                private _changeDetectorRef: ChangeDetectorRef,
-                private _location: Location,
-                private alertsService: AlertsService,
-                private _ofiKycService: OfiKycService,
-                private _toasterService: ToasterService,
-                public _translate: MultilingualService,
-                private _ofiFundShareService: OfiFundShareService,
-                private _ofiKycObservablesService: OfiKycObservablesService,
-                private _ngRedux: NgRedux<any>,
-                private _fileDownloader: FileDownloader,
-                private _route: ActivatedRoute,
-                private router: Router) {
+    constructor(private fb: FormBuilder,
+        private changeDetectorRef: ChangeDetectorRef,
+        private location: Location,
+        private alertsService: AlertsService,
+        private ofiKycService: OfiKycService,
+        private toasterService: ToasterService,
+        private ofiFundShareService: OfiFundShareService,
+        private ofiKycObservablesService: OfiKycObservablesService,
+        private ngRedux: NgRedux<any>,
+        private fileDownloader: FileDownloader,
+        private route: ActivatedRoute,
+        private router: Router,
+        public translate: MultilingualService) {
 
         this.investorTypeForm = new FormGroup({
             investorType: new FormControl(''),
@@ -136,7 +132,7 @@ export class OfiClientReferentialComponent implements OnInit, OnDestroy {
             searchFrom: new FormControl(''),
         });
 
-        this.investorForm = this._fb.group({
+        this.investorForm = this.fb.group({
             companyName: { value: '', disabled: true },
             clientReference: '',
             firstName: { value: '', disabled: true },
@@ -148,7 +144,7 @@ export class OfiClientReferentialComponent implements OnInit, OnDestroy {
     }
 
     ngOnInit(): void {
-        this._ofiKycService.setRequestedClientReferential(false);
+        this.ofiKycService.setRequestedClientReferential(false);
 
         this.subscriptions.push(this.requestedOb.subscribe((requested) => {
             if (!requested) {
@@ -158,11 +154,11 @@ export class OfiClientReferentialComponent implements OnInit, OnDestroy {
 
         this.subscriptions.push(this.clientReferentialAuditOb.subscribe((clientReferentialAudit) => {
             this.clientReferentialAudit = clientReferentialAudit;
-            this._changeDetectorRef.markForCheck();
+            this.changeDetectorRef.markForCheck();
         }));
 
         this.subscriptions.push(this.investorTypeForm.valueChanges.subscribe(() => {
-            this._ofiKycService.setRequestedClientReferential(false);
+            this.ofiKycService.setRequestedClientReferential(false);
         }));
 
         this.subscriptions.push(this.amAllFundShareListOb.subscribe((fundShareList) => {
@@ -170,13 +166,13 @@ export class OfiClientReferentialComponent implements OnInit, OnDestroy {
         }));
 
         this.subscriptions.push(this.requestedOfiKycListOb.subscribe(
-            (requested) => this.requestKycList(requested)));
+            requested => this.requestKycList(requested)));
 
-        this.subscriptions.push(this.tokenOb.subscribe(token => {
+        this.subscriptions.push(this.tokenOb.subscribe((token) => {
             this.socketToken = token;
         }));
 
-        this.subscriptions.push(this.userIdOb.subscribe(userId => {
+        this.subscriptions.push(this.userIdOb.subscribe((userId) => {
             this.userId = userId;
         }));
 
@@ -188,65 +184,75 @@ export class OfiClientReferentialComponent implements OnInit, OnDestroy {
             observableCombineLatest(
                 this.clientReferentialOb,
                 this.amKycListObs,
-                this._route.params
+                this.route.params,
             )
-            .subscribe(([clientReferential, amKycList, params]) => {
-                this.kycId = (!params.kycId ? '' : params.kycId);
+                .subscribe(([clientReferential, amKycList, params]) => {
+                    this.kycId = (!params.kycId ? '' : params.kycId);
 
-                this.clientReferential = clientReferential;
+                    this.clientReferential = clientReferential;
 
-                clientReferential.forEach((client) => {
-                    this.clients[client.kycID] = client;
-                });
+                    clientReferential.forEach((client) => {
+                        this.clients[client.kycID] = client;
+                    });
 
-                this.showInfo = false;
-                if (!!this.clients[this.kycId] && this.clients[this.kycId].alreadyCompleted == 0) {
-                    this.showInfo = true;
-                }
-
-                Object.keys(amKycList).forEach((key) => {
-                    this.amKycList.push(amKycList[key]);
-                    if (!this.investorKycIds[amKycList[key].investorUserID]) {
-                        this.investorKycIds[amKycList[key].investorUserID] = [];
+                    this.showInfo = false;
+                    if (!!this.clients[this.kycId] && this.clients[this.kycId].alreadyCompleted == 0) {
+                        this.showInfo = true;
                     }
-                    this.investorKycIds[amKycList[key].investorUserID].push(amKycList[key].kycID);
-                    this.allKycIds.push(amKycList[key].kycID);
 
-                    if (amKycList[key].kycID == this.kycId) this.currentInvestor = amKycList[key];
-                });
+                    Object.keys(amKycList).forEach((key) => {
+                        this.amKycList.push(amKycList[key]);
+                        if (!this.investorKycIds[amKycList[key].investorUserID]) {
+                            this.investorKycIds[amKycList[key].investorUserID] = [];
+                        }
+                        this.investorKycIds[amKycList[key].investorUserID].push(amKycList[key].kycID);
+                        this.allKycIds.push(amKycList[key].kycID);
 
-                if (!this.isPortfolioManager() && !_.isEmpty(this.currentInvestor)) {
-                    this.companyName = _.get(this.currentInvestor, 'investorCompanyName', '');
+                        if (amKycList[key].kycID == this.kycId) this.currentInvestor = amKycList[key];
+                    });
 
-                    if (this.kycId != '') {
-                        const phoneNumber = (this.currentInvestor.investorPhoneCode && this.currentInvestor.investorPhoneNumber) ? `${this.currentInvestor.investorPhoneCode} ${this.currentInvestor.investorPhoneNumber}` : '';
-                        const approvalDateRequestTs = mDateHelper.dateStrToUnixTimestamp(this.currentInvestor.lastUpdated, 'YYYY-MM-DD HH:mm:ss');
-                        const approvalDateRequest = mDateHelper.unixTimestampToDateStr(approvalDateRequestTs, 'DD / MM / YYYY');
-                        this.investorForm.setValue({
-                            companyName: this.currentInvestor.investorCompanyName,
-                            clientReference: this.currentInvestor.clientReference,
-                            firstName: this.currentInvestor.investorFirstName,
-                            lastName: this.currentInvestor.investorLastName,
-                            email: this.currentInvestor.investorEmail,
-                            phoneNumber: phoneNumber,
-                            approvalDateRequest: approvalDateRequest,
-                        });
+                    if (!this.isPortfolioManager() && !_.isEmpty(this.currentInvestor)) {
+                        this.companyName = _.get(this.currentInvestor, 'investorCompanyName', '');
+
+                        if (this.kycId != '') {
+                            const phoneNumber = (this.currentInvestor.investorPhoneCode && this.currentInvestor.investorPhoneNumber) ? `${this.currentInvestor.investorPhoneCode} ${this.currentInvestor.investorPhoneNumber}` : '';
+                            const approvalDateRequestTs = mDateHelper.dateStrToUnixTimestamp(this.currentInvestor.lastUpdated, 'YYYY-MM-DD HH:mm:ss');
+                            const approvalDateRequest = mDateHelper.unixTimestampToDateStr(approvalDateRequestTs, 'DD / MM / YYYY');
+                            this.investorForm.setValue({
+                                companyName: this.currentInvestor.investorCompanyName,
+                                clientReference: this.currentInvestor.clientReference,
+                                firstName: this.currentInvestor.investorFirstName,
+                                lastName: this.currentInvestor.investorLastName,
+                                email: this.currentInvestor.investorEmail,
+                                phoneNumber,
+                                approvalDateRequest,
+                            });
+                        }
+                    } else {
+                        if (this.isPortfolioManager()) {
+                            // force load share access data if portfolio manager.
+                            this.loadTab(2);
+                        }
                     }
-                } else {
-                   if (this.isPortfolioManager()) {
-                       // force load share access data if portfolio manager.
-                       this.loadTab(2);
-                   }
-                }
 
-                this._changeDetectorRef.markForCheck();
-            }),
+                    this.changeDetectorRef.markForCheck();
+                }),
         );
     }
 
+    getClientReferentialDescriptionTitle(): string {
+        if (!this.kycId) {
+            return '';
+        }
+
+        const clientRef = this.clients[this.kycId];
+
+        return `: ${clientRef.companyName}${clientRef.clientReference ? ` - ${clientRef.clientReference}` : ''}`;
+    }
+
     requestSearch() {
-        let investorType = (this.investorTypeForm.controls['investorType'].value.length > 0) ? this.investorTypeForm.controls['investorType'].value[0].id : -1;
-        this._ofiKycService.defaultrequestgetclientreferential(investorType);
+        const investorType = (this.investorTypeForm.controls['investorType'].value.length > 0) ? this.investorTypeForm.controls['investorType'].value[0].id : -1;
+        this.ofiKycService.defaultrequestgetclientreferential(investorType);
     }
 
     gotoInvite() {
@@ -259,10 +265,9 @@ export class OfiClientReferentialComponent implements OnInit, OnDestroy {
 
     loadTab(tab) {
         if (tab == 2) {
-
-            let tempOtherData = {};
-            if (this.amKycList.length > 0 && this.amKycList.findIndex((kyc) => kyc.kycID == this.kycId) !== -1) {
-                const kyc = this.amKycList.filter((kyc) => kyc.kycID == this.kycId)[0];
+            const tempOtherData = {};
+            if (this.amKycList.length > 0 && this.amKycList.findIndex(kyc => kyc.kycID == this.kycId) != -1) {
+                const kyc = this.amKycList.filter(kyc => kyc.kycID == this.kycId)[0];
 
                 this.companyName = kyc.investorCompanyName;
 
@@ -275,17 +280,17 @@ export class OfiClientReferentialComponent implements OnInit, OnDestroy {
                 };
 
                 this.otherData = tempOtherData;
-                let investorWalletData = [];
+                const investorWalletData = [];
 
                 // Get the fund access for investor walletID and render it.
-                this._ofiFundShareService.requestInvestorFundAccess({ investorWalletId: kyc.investorWalletID }).then((data) => {
+                this.ofiFundShareService.requestInvestorFundAccess({ investorWalletId: kyc.investorWalletID }).then((data) => {
                     _.get(data, '[1].Data', []).forEach((row) => {
                         investorWalletData[row['shareID']] = row;
                     });
 
                     this.tableData = [];
                     Object.keys(this.shareData).forEach((key) => {
-                        if (this.shareData[key].draft == 0) {
+                        if (this.shareData[key].draft === 0) {
                             this.tableData.push({
                                 id: this.shareData[key]['fundShareID'],
                                 kycId: this.kycId,
@@ -308,27 +313,25 @@ export class OfiClientReferentialComponent implements OnInit, OnDestroy {
                         }
                     });
 
-                    this._changeDetectorRef.markForCheck();
+                    this.changeDetectorRef.markForCheck();
                 }).catch((e) => {
-
                 });
             }
         } else if (tab == 3) {
-
-            if (this.amKycList.length > 0 && this.amKycList.findIndex((kyc) => kyc.kycID == this.kycId) !== -1) {
-                const kyc = this.amKycList.filter((kyc) => kyc.kycID == this.kycId)[0];
+            if (this.amKycList.length > 0 && this.amKycList.findIndex(kyc => kyc.kycID == this.kycId) !== -1) {
+                const kyc = this.amKycList.filter(kyc => kyc.kycID == this.kycId)[0];
 
                 this.companyName = kyc.investorCompanyName;
             }
 
-            this._ofiFundShareService.requestInvestorHoldings(this.kycId).then((data) => {
+            this.ofiFundShareService.requestInvestorHoldings(this.kycId).then((data) => {
                 this.holdingsTable = [];
                 if (data[1].Data.length > 0) {
                     let tempArr = [];
                     let fundStats = {
                         fundName: '',
                         amount: 0,
-                        ratio: 0
+                        ratio: 0,
                     };
                     data[1].Data.forEach((row, index) => {
                         if (tempArr.length > 0 && fundStats['fundName'] != row.fundName) {
@@ -336,12 +339,12 @@ export class OfiClientReferentialComponent implements OnInit, OnDestroy {
                                 fundName: fundStats['fundName'],
                                 fundCurrency: fundStats['fundCurrency'],
                                 amount: fundStats['amount'],
-                                ratio: fundStats['ratio']
+                                ratio: fundStats['ratio'],
                             });
                             fundStats = {
                                 fundName: '',
                                 amount: 0,
-                                ratio: 0
+                                ratio: 0,
                             };
                             this.holdingsTable = this.holdingsTable.concat(...tempArr);
                             tempArr = [];
@@ -357,13 +360,12 @@ export class OfiClientReferentialComponent implements OnInit, OnDestroy {
                         fundName: fundStats['fundName'],
                         fundCurrency: fundStats['fundCurrency'],
                         amount: fundStats['amount'],
-                        ratio: fundStats['ratio']
+                        ratio: fundStats['ratio'],
                     });
                     this.holdingsTable = this.holdingsTable.concat(...tempArr);
                 }
-                this._changeDetectorRef.markForCheck();
+                this.changeDetectorRef.markForCheck();
             }).catch((e) => {
-
             });
         }
     }
@@ -388,8 +390,8 @@ export class OfiClientReferentialComponent implements OnInit, OnDestroy {
      * @returns {number}
      */
     roundDown(number: any, decimals: any) {
-        decimals = decimals || 0;
-        return math.format((Math.floor(number * Math.pow(10, decimals)) / Math.pow(10, decimals)), 14);
+        const decimalsVal = decimals || 0;
+        return math.format((Math.floor(number * Math.pow(10, decimalsVal)) / Math.pow(10, decimalsVal)), 14);
     }
 
     /**
@@ -399,31 +401,31 @@ export class OfiClientReferentialComponent implements OnInit, OnDestroy {
      */
     requestKycList(requested): void {
         if (!requested) {
-            OfiKycService.defaultRequestAmKycList(this._ofiKycService, this._ngRedux);
+            OfiKycService.defaultRequestAmKycList(this.ofiKycService, this.ngRedux);
         }
     }
 
     downloadReferentialCSVFile() {
-        let investorType = (this.investorTypeForm.controls['investorType'].value.length > 0) ? this.investorTypeForm.controls['investorType'].value[0].id : -1;
-        this._fileDownloader.downLoaderFile({
+        const investorType = (this.investorTypeForm.controls['investorType'].value.length > 0) ? this.investorTypeForm.controls['investorType'].value[0].id : -1;
+        this.fileDownloader.downLoaderFile({
             method: 'getIznesReferentialCSVFile',
             token: this.socketToken,
             userId: this.userId,
-            type: investorType
+            type: investorType,
         });
     }
 
     requestAuditSearch() {
-        let params = {
+        const params = {
             id: this.kycId,
             search: this.searchForm.controls['searchInvestor'].value,
             from: this.searchForm.controls['searchFrom'].value,
             to: this.searchForm.controls['searchTo'].value,
         };
 
-        const asyncTaskPipe = this._ofiKycService.requestAuditSearch(params);
+        const asyncTaskPipe = this.ofiKycService.requestAuditSearch(params);
 
-        this._ngRedux.dispatch(SagaHelper.runAsync(
+        this.ngRedux.dispatch(SagaHelper.runAsync(
             [OFI_SET_CLIENT_REFERENTIAL_AUDIT],
             [],
             asyncTaskPipe,
@@ -432,7 +434,7 @@ export class OfiClientReferentialComponent implements OnInit, OnDestroy {
     }
 
     downloadReferentialAuditCSVFile() {
-        this._fileDownloader.downLoaderFile({
+        this.fileDownloader.downLoaderFile({
             method: 'getIznesReferentialAuditCSVFile',
             token: this.socketToken,
             userId: this.userId,
@@ -444,7 +446,7 @@ export class OfiClientReferentialComponent implements OnInit, OnDestroy {
     }
 
     downloadAllHoldingsCSVFile() {
-        this._fileDownloader.downLoaderFile({
+        this.fileDownloader.downLoaderFile({
             method: 'exportClientReferentialClientsHoldings',
             token: this.socketToken,
             userId: this.userId,
@@ -453,7 +455,7 @@ export class OfiClientReferentialComponent implements OnInit, OnDestroy {
     }
 
     downloadSingleHoldingsCSVFile() {
-        this._fileDownloader.downLoaderFile({
+        this.fileDownloader.downLoaderFile({
             method: 'exportClientReferentialClientHoldings',
             token: this.socketToken,
             userId: this.userId,
@@ -483,15 +485,15 @@ export class OfiClientReferentialComponent implements OnInit, OnDestroy {
             clientReference: this.investorForm.controls['clientReference'].value,
             invitedID: this.currentInvestor.invitedID,
         };
-        this._ofiKycService.updateInvestor(payload)
-        .then(() => {
-            this._ofiKycService.setRequestedClientReferential(false);
-            this._ofiKycService.setRequestedAMKycList(false);
-            this._toasterService.pop('success', 'Client reference updated');
-        })
-        .catch(() => {
-            this._toasterService.pop('success', 'Failed to update client reference');
-        });
+        this.ofiKycService.updateInvestor(payload)
+            .then(() => {
+                this.ofiKycService.setRequestedClientReferential(false);
+                this.ofiKycService.setRequestedAMKycList(false);
+                this.toasterService.pop('success', this.translate.translate('Client reference updated'));
+            })
+            .catch(() => {
+                this.toasterService.pop('success', this.translate.translate('Failed to update client reference'));
+            });
     }
 
     /**
@@ -499,11 +501,11 @@ export class OfiClientReferentialComponent implements OnInit, OnDestroy {
       * @return boolean
      */
     isPortfolioManager(): boolean {
-       return this.currentInvestor.investorUserID === null;
+        return this.currentInvestor.investorUserID == null;
     }
 
     ngOnDestroy() {
-        for (let key of this.subscriptions) {
+        for (const key of this.subscriptions) {
             key.unsubscribe();
         }
     }

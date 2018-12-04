@@ -142,7 +142,8 @@
                                     id="financialInstruments"
                                     [items]="financialInstrumentsList"
                                     [formControl]="form.get(['nonPro', 'financialInstruments'])"
-                                    [multiple]="true"></ng-select>
+                                    [multiple]="true">
+                        </ng-select>
                         <span class="field-error" *ngIf="hasError(['nonPro', 'financialInstruments'])">{{ 'Field is required' | translate }}</span>
                     </div>
                     <div class="form-group col-sm-6 flex-items-xs-bottom" *ngIf="!isDisabled(['nonPro', 'financialInstrumentsSpecification'])">
@@ -164,7 +165,8 @@
                                     placeholder="{{ 'Select' | translate }}"
                                     [items]="geographicalAreaList"
                                     [formControl]="form.get(['nonPro', 'marketArea'])"
-                                    [multiple]="true"></ng-select>
+                                    [multiple]="true">
+                        </ng-select>
                         <span class="field-error" *ngIf="hasError(['nonPro', 'marketArea'])">{{ 'Field is required' | translate }}</span>
                     </div>
                 </div>
@@ -176,7 +178,8 @@
                         <ng-select id="natureTransactionPerYear"
                                     placeholder="{{ 'Please select the nature of transactions' | translate }}"
                                     [items]="natureOfTransactionsList"
-                                    [formControl]="form.get(['nonPro', 'natureTransactionPerYear'])"></ng-select>
+                                    [formControl]="form.get(['nonPro', 'natureTransactionPerYear'])">
+                        </ng-select>
                         <span class="field-error" *ngIf="hasError(['nonPro', 'natureTransactionPerYear'])">{{ 'Field is required' | translate }}</span>
                     </div>
                     <div class="form-group required-field col-sm-6">
@@ -186,7 +189,8 @@
                         <ng-select id="volumeTransactionPerYear"
                                     placeholder="{{ 'Select the volume of transactions' | translate }}"
                                     [items]="volumeOfTransactionsList"
-                                    [formControl]="form.get(['nonPro', 'volumeTransactionPerYear'])"></ng-select>
+                                    [formControl]="form.get(['nonPro', 'volumeTransactionPerYear'])">
+                        </ng-select>
                         <span class="field-error" *ngIf="hasError(['nonPro', 'volumeTransactionPerYear'])">{{ 'Field is required' | translate }}</span>
                     </div>
                 </div>

@@ -12,7 +12,7 @@ import { ConsumeTokenService } from '../invitation-token/consume-token.service';
 
 @Component({
     selector: 'app-ofi-kyc-signup',
-    template: '<app-signup [configuration]="configuration" (signupDataEmit)="setSignupData($event)"></app-signup>',
+    template: '<ofi-sign-up [configuration]="configuration" (signupDataEmit)="setSignupData($event)"></ofi-sign-up>',
 })
 export class OfiSignUpComponent implements OnInit, OnDestroy {
     configuration: ISignupConfiguration;
@@ -47,7 +47,7 @@ export class OfiSignUpComponent implements OnInit, OnDestroy {
         const description = this.translate.translate(
             'Your @appConfig.platform@ account will be created with this email address, provided by the Asset Management company.', { 'appConfig.platform': this.appConfig.platform });
 
-        const buttonText = this.translate.translate('Create an account');
+        const buttonText = this.translate.translate('Create Account');
 
         this.configuration = {
             doLoginAfterCallback: true,
@@ -84,13 +84,13 @@ export class OfiSignUpComponent implements OnInit, OnDestroy {
                     resolve();
 
                     this
-                        .authenticationOb
-                        .pipe(
-                            takeUntil(this.unsubscribe),
-                        )
-                        .subscribe((authentication) => {
-                            this.updateState(authentication);
-                        });
+                    .authenticationOb
+                    .pipe(
+                        takeUntil(this.unsubscribe),
+                    )
+                    .subscribe((authentication) => {
+                        this.updateState(authentication);
+                    });
                 });
             }).catch((e) => {
                 this.alertsService.create(

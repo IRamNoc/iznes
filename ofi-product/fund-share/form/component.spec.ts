@@ -668,7 +668,7 @@ describe('FundShareComponent', () => {
 
         it('should render as AM', () => {
             const headerEl = fixture.debugElement.query(By.css('h1')).nativeElement;
-            expect(headerEl.innerText).toContain('Add new Share');
+            expect(headerEl.innerText).toContain('Add New Share');
         });
 
         it('should call the getFundList method of ofiFundService', () => {
@@ -797,7 +797,7 @@ describe('FundShareComponent', () => {
 
         it('should render as AM', () => {
             const headerEl = fixture.debugElement.query(By.css('h1')).nativeElement;
-            expect(headerEl.innerText).toContain('Add new Share');
+            expect(headerEl.innerText).toContain('Add New Share');
         });
 
         it('should call the fetchIznesShareList method of ofiFundShareService', () => {

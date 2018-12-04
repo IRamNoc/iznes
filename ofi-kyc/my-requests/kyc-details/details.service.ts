@@ -6,7 +6,6 @@ import { FileDownloader } from '@setl/utils';
 import { MemberSocketService } from '@setl/websocket-service';
 import { OfiKycService } from '@ofi/ofi-main/ofi-req-services/ofi-kyc/service';
 import * as requestsConfig from '../requests.config';
-
 import { clearkycdetailsall } from '@ofi/ofi-main/ofi-store/ofi-kyc/kyc-details';
 
 @Injectable({

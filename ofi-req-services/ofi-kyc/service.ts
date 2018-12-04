@@ -45,7 +45,7 @@ import {
     SET_AMKYCLIST,
     SET_REQUESTED,
     setrequested,
-    clearrequested
+    clearrequested,
 } from '@ofi/ofi-main/ofi-store/ofi-kyc/ofi-am-kyc-list';
 import {
     SET_KYC_DETAILS_GENERAL,
@@ -72,12 +72,13 @@ import { SET_INFORMATIONS_FROM_API } from '@ofi/ofi-main/ofi-store/ofi-kyc/my-in
 import {
     ofiClearRequestedClientReferential,
     SET_MY_KYC_LIST,
-    SET_MY_KYC_LIST_REQUESTED
+    SET_MY_KYC_LIST_REQUESTED,
+    ofiSetRequestedClientReferential,
+    OFI_SET_CLIENT_REFERENTIAL,
 } from '@ofi/ofi-main/ofi-store/ofi-kyc';
 import { Subject } from 'rxjs';
-import { takeUntil } from 'rxjs/operators';
-import { filter, take } from 'rxjs/operators';
-
+import { filter, take, takeUntil } from 'rxjs/operators';
+import { Observable } from 'rxjs/Rx';
 import {
     SET_INVESTOR_INVITATIONS_LIST,
     SET_INVESTOR_INVITATIONS_LIST_REQUESTED,
@@ -94,14 +95,11 @@ import {
     OFI_SET_MY_DOCUMENTS_LIST,
     OFI_SET_REQUESTED_MY_DOCUMENTS,
 } from '@ofi/ofi-main/ofi-store/ofi-kyc/inv-my-documents';
-import { Observable } from "rxjs/Rx";
 
 import { investorInvitation } from '../../ofi-store/ofi-kyc/invitationsByUserAmCompany/model';
-import { ofiSetRequestedClientReferential, OFI_SET_CLIENT_REFERENTIAL } from "@ofi/ofi-main/ofi-store/ofi-kyc";
 
 @Injectable()
 export class OfiKycService {
-
     informationAuditTrailList = [];
     statusAuditTrailList = [];
     validConnectedWallet$: Subject<number>;
@@ -167,7 +165,7 @@ export class OfiKycService {
             [SET_AMKYCLIST],
             [],
             asyncTaskPipe,
-            {}
+            {},
         ));
     }
 
@@ -184,7 +182,7 @@ export class OfiKycService {
             [SET_KYC_DETAILS_GENERAL],
             [],
             asyncTaskPipe,
-            {}
+            {},
         ));
     }
 
@@ -199,7 +197,7 @@ export class OfiKycService {
             [SET_KYC_DETAILS_COMPANY],
             [],
             asyncTaskPipe,
-            {}
+            {},
         ));
     }
 
@@ -214,7 +212,7 @@ export class OfiKycService {
             [SET_KYC_DETAILS_COMPANYBENEFICIARIES],
             [],
             asyncTaskPipe,
-            {}
+            {},
         ));
     }
 
@@ -229,7 +227,7 @@ export class OfiKycService {
             [SET_KYC_DETAILS_BANKING],
             [],
             asyncTaskPipe,
-            {}
+            {},
         ));
     }
 
@@ -244,7 +242,7 @@ export class OfiKycService {
             [SET_KYC_DETAILS_CLASSIFICATION],
             [],
             asyncTaskPipe,
-            {}
+            {},
         ));
     }
 
@@ -259,7 +257,7 @@ export class OfiKycService {
             [SET_KYC_DETAILS_RISKNATURE],
             [],
             asyncTaskPipe,
-            {}
+            {},
         ));
     }
 
@@ -274,7 +272,7 @@ export class OfiKycService {
             [SET_KYC_DETAILS_RISKOBJECTIVES],
             [],
             asyncTaskPipe,
-            {}
+            {},
         ));
     }
 
@@ -289,7 +287,7 @@ export class OfiKycService {
             [SET_KYC_DETAILS_DOCUMENTS],
             [],
             asyncTaskPipe,
-            {}
+            {},
         ));
     }
 
@@ -304,7 +302,7 @@ export class OfiKycService {
             [SET_KYC_DETAILS_VALIDATION],
             [],
             asyncTaskPipe,
-            {}
+            {},
         ));
     }
 
@@ -312,7 +310,7 @@ export class OfiKycService {
 
     static defaultRequestGetInvKycDocuments(ofiKycService: OfiKycService, ngRedux: NgRedux<any>, getKycDocumentRequestData: GetKycDocumentRequestData) {
         // Set the state flag to true. so we do not request it again.
-        ngRedux.dispatch({ type: OFI_SET_REQUESTED_MY_DOCUMENTS, });
+        ngRedux.dispatch({ type: OFI_SET_REQUESTED_MY_DOCUMENTS });
 
         // Request the list.
         const asyncTaskPipe = ofiKycService.getKycDocuments(getKycDocumentRequestData);
@@ -326,22 +324,22 @@ export class OfiKycService {
     }
 
     requestKycDocumentByID(ngRedux: NgRedux<any>, kycDocumentID) {
-        let messageBody = {
+        const messageBody = {
             token: this.memberSocketService.token,
             RequestName: 'getkycdocument',
-            kycDocumentID: kycDocumentID
+            kycDocumentID,
         };
 
         return createMemberNodeRequest(this.memberSocketService, messageBody);
     }
 
     notifyKycCompletion(investorID, message, kycID) {
-        let messageBody = {
+        const messageBody = {
             token: this.memberSocketService.token,
             RequestName: 'iznnotifyinvestorkyccompletion',
             investorID,
             message,
-            kycID
+            kycID,
         };
 
         return createMemberNodeRequest(this.memberSocketService, messageBody);
@@ -354,14 +352,13 @@ export class OfiKycService {
             token: this.memberSocketService.token,
             assetManagerName: _.get(requstData, 'assetManagerName', ''),
             amCompanyName: _.get(requstData, 'amCompanyName', ''),
-            investors: _.get(requstData, 'investors', [])
+            investors: _.get(requstData, 'investors', []),
         };
 
         return createMemberNodeRequest(this.memberSocketService, messageBody);
     }
 
     verifyInvitationToken(token: string): any {
-
         const messageBody: VerifyInvitationTokenRequestBody = {
             RequestName: 'iznesverifytoken',
             token,
@@ -372,18 +369,15 @@ export class OfiKycService {
     }
 
     useInvitationToken(invitationToken: string) {
-
         const messageBody: UseTokenRequestBody = {
             RequestName: 'izneskycusetoken',
             invitationToken,
         };
 
         return createMemberNodeRequest(this.memberSocketService, messageBody);
-
     }
 
     isInvitationTokenUsed(token: string): any {
-
         const messageBody: VerifyInvitationTokenRequestBody = {
             RequestName: 'iznesistokenused',
             token,
@@ -394,7 +388,6 @@ export class OfiKycService {
     }
 
     createUser(requestData: CreateUserRequestData): any {
-
         const messageBody: CreateUserRequestBody = {
             RequestName: 'iznessignup',
             token: _.get(requestData, 'token', ''),
@@ -492,7 +485,6 @@ export class OfiKycService {
     }
 
     getAmKycList(): any {
-
         const messageBody: GetAmKycListRequestBody = {
             RequestName: 'iznesgetamkyclist',
             token: this.memberSocketService.token,
@@ -515,10 +507,10 @@ export class OfiKycService {
                 const asyncTaskPipe = createMemberNodeSagaRequest(this.memberSocketService, messageBody);
 
                 return this.buildRequest({
-                    'taskPipe': asyncTaskPipe,
-                    'successActions': [SET_MY_KYC_LIST, SET_MY_KYC_LIST_REQUESTED],
+                    taskPipe: asyncTaskPipe,
+                    successActions: [SET_MY_KYC_LIST, SET_MY_KYC_LIST_REQUESTED],
                 });
-            }
+            },
         );
     }
 
@@ -560,8 +552,8 @@ export class OfiKycService {
         };
 
         return this.buildRequest({
-            'taskPipe': createMemberNodeSagaRequest(this.memberSocketService, messageBody),
-            'successActions': [SET_INFORMATIONS_FROM_API],
+            taskPipe: createMemberNodeSagaRequest(this.memberSocketService, messageBody),
+            successActions: [SET_INFORMATIONS_FROM_API],
         });
     }
 
@@ -598,8 +590,8 @@ export class OfiKycService {
                     },
                     (error) => {
                         reject(error);
-                    }
-                )
+                    },
+                ),
             );
         });
     }
@@ -615,7 +607,6 @@ export class OfiKycService {
     }
 
     saveFundAccess(requestData: SaveFundAccessRequestData): any {
-
         const messageBody: SaveFundAccessRequestBody = {
             RequestName: 'iznesfundaccessadd',
             token: this.memberSocketService.token,
@@ -628,95 +619,86 @@ export class OfiKycService {
     /* My Request Details */
 
     getKycBanking(kycID: number): any {
-
         const messageBody: getKycRequestDetailsRequestBody = {
             RequestName: 'getkycbanking',
             token: this.memberSocketService.token,
-            kycID: kycID,
+            kycID,
         };
 
         return createMemberNodeSagaRequest(this.memberSocketService, messageBody);
     }
 
     getKycClassification(kycID: number): any {
-
         const messageBody: getKycRequestDetailsRequestBody = {
             RequestName: 'getkycclassification',
             token: this.memberSocketService.token,
-            kycID: kycID,
+            kycID,
         };
 
         return createMemberNodeSagaRequest(this.memberSocketService, messageBody);
     }
 
     getKycCompany(kycID: number): any {
-
         const messageBody: getKycRequestDetailsRequestBody = {
             RequestName: 'getkyccompany',
             token: this.memberSocketService.token,
-            kycID: kycID,
+            kycID,
         };
 
         return createMemberNodeSagaRequest(this.memberSocketService, messageBody);
     }
 
     getKycCompanyBeneficiaries(kycID: number): any {
-
         const messageBody: getKycRequestDetailsRequestBody = {
             RequestName: 'getkyccompanybeneficiaries',
             token: this.memberSocketService.token,
-            kycID: kycID,
+            kycID,
         };
 
         return createMemberNodeSagaRequest(this.memberSocketService, messageBody);
     }
 
     getKycGeneral(kycID: number): any {
-
         const messageBody: getKycRequestDetailsRequestBody = {
             RequestName: 'getkycgeneral',
             token: this.memberSocketService.token,
-            kycID: kycID,
+            kycID,
         };
 
         return createMemberNodeSagaRequest(this.memberSocketService, messageBody);
     }
 
     getKycDocument(kycID: number): any {
-
         const messageBody: getKycRequestDetailsRequestBody = {
             RequestName: 'getkycdocument',
             token: this.memberSocketService.token,
-            kycID: kycID,
+            kycID,
         };
 
         return createMemberNodeSagaRequest(this.memberSocketService, messageBody);
     }
 
     getKycRiskNature(kycID: number): any {
-
         const messageBody: getKycRequestDetailsRequestBody = {
             RequestName: 'getkycrisknature',
             token: this.memberSocketService.token,
-            kycID: kycID,
+            kycID,
         };
 
         return createMemberNodeSagaRequest(this.memberSocketService, messageBody);
     }
 
     getKycRiskObjective(kycID: number): any {
-
         const messageBody: getKycRequestDetailsRequestBody = {
             RequestName: 'getkycriskobjective',
             token: this.memberSocketService.token,
-            kycID: kycID,
+            kycID,
         };
 
         return createMemberNodeSagaRequest(this.memberSocketService, messageBody);
     }
 
     getKycValidation(kycID: number): any {
-
         const messageBody: getKycRequestDetailsRequestBody = {
             RequestName: 'getkycvalidation',
             token: this.memberSocketService.token,
@@ -762,9 +744,7 @@ export class OfiKycService {
         return createMemberNodeRequest(this.memberSocketService, messageBody);
     }
 
-
     createKYCDraftOrWaitingApproval(requestData: createKYCDraftRequestData) {
-
         const messageBody: createKYCDraftMessageBody = {
             RequestName: 'izncreatedraftorwaitingapprovalkycrequest',
             token: this.memberSocketService.token,
@@ -772,15 +752,13 @@ export class OfiKycService {
             managementCompanyID: _.get(requestData, 'managementCompanyID', ''),
             investorWalletID: _.get(requestData, 'investorWalletID', ''),
             kycStatus: _.get(requestData, 'kycStatus', ''),
-            alreadyCompleted: _.get(requestData, 'alreadyCompleted', '')
+            alreadyCompleted: _.get(requestData, 'alreadyCompleted', ''),
         };
 
         return createMemberNodeRequest(this.memberSocketService, messageBody);
-
     }
 
     deleteKycRequest(requestData: DeleteKycRequestData) {
-
         const messageBody: DeleteKycRequestMessageBody = {
             RequestName: 'izndeletekycrequest',
             token: this.memberSocketService.token,
@@ -788,7 +766,6 @@ export class OfiKycService {
         };
 
         return createMemberNodeRequest(this.memberSocketService, messageBody);
-
     }
 
     getStatusAuditByKycID(kycID: number) {
@@ -856,7 +833,7 @@ export class OfiKycService {
             RequestName: 'iznnotifyamfromrequest',
             token: this.memberSocketService.token,
             type: 'kycContinuedFromRequest',
-            kycID
+            kycID,
         };
 
         return createMemberNodeRequest(this.memberSocketService, messageBody);
@@ -867,18 +844,17 @@ export class OfiKycService {
             RequestName: 'iznnotifyamfromaskmoreinfo',
             token: this.memberSocketService.token,
             type: 'kycContinuedFromAskMoreInfo',
-            kycID
+            kycID,
         };
 
         return createMemberNodeRequest(this.memberSocketService, messageBody);
     }
 
     getclientreferential(type: number): any {
-
         const messageBody: GetClientReferentialMessageBody = {
             RequestName: 'izngetclientreferential',
             token: this.memberSocketService.token,
-            type: type,
+            type,
         };
 
         return createMemberNodeSagaRequest(this.memberSocketService, messageBody);
@@ -895,13 +871,12 @@ export class OfiKycService {
             [OFI_SET_CLIENT_REFERENTIAL],
             [],
             asyncTaskPipe,
-            {}
+            {},
         ));
     }
 
     setRequestedClientReferential(boolValue: boolean) {
         // false = doRequest | true = already requested
-
         if (!boolValue) {
             this.ngRedux.dispatch(ofiClearRequestedClientReferential());
         } else {
@@ -911,7 +886,6 @@ export class OfiKycService {
 
     setRequestedAMKycList(boolValue: boolean) {
         // false = doRequest | true = already requested
-
         if (!boolValue) {
             this.ngRedux.dispatch(clearrequested());
         } else {
@@ -920,7 +894,6 @@ export class OfiKycService {
     }
 
     requestAuditSearch(requestData: AuditSearchRequestData): any {
-
         const messageBody: AuditSearchRequestBody = {
             RequestName: 'iznesreferentialauditsearch',
             token: this.memberSocketService.token,
@@ -932,5 +905,4 @@ export class OfiKycService {
 
         return createMemberNodeSagaRequest(this.memberSocketService, messageBody);
     }
-
 }

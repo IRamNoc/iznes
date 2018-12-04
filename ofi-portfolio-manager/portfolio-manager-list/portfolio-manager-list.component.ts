@@ -1,8 +1,8 @@
-import { Component, OnDestroy, OnInit } from "@angular/core";
+import { Component, OnDestroy, OnInit } from '@angular/core';
 import { AppObservableHandler } from '@setl/utils/decorators/app-observable-handler';
-import { OfiPortfolioManagerDataService } from "../../ofi-data-service/portfolio-manager/ofi-portfolio-manager-data.service";
-import { Router } from "@angular/router";
-import { PortfolioManagerDetail } from "../../ofi-store/ofi-portfolio-manager/portfolio-manage-list/model";
+import { OfiPortfolioManagerDataService } from '../../ofi-data-service/portfolio-manager/ofi-portfolio-manager-data.service';
+import { Router } from '@angular/router';
+import { PortfolioManagerDetail } from '../../ofi-store/ofi-portfolio-manager/portfolio-manage-list/model';
 
 @AppObservableHandler
 @Component({
@@ -19,12 +19,13 @@ export class PortfolioManagerListComponent implements OnInit, OnDestroy {
     ];
 
     constructor(
-        private _ofiPortfolioManagerDataService: OfiPortfolioManagerDataService,
-        private _router: Router,
-    ) {}
+        private ofiPortfolioManagerDataService: OfiPortfolioManagerDataService,
+        private router: Router,
+    ) {
+    }
 
     ngOnInit() {
-        (<any>this).appSubscribe(this._ofiPortfolioManagerDataService.getPortfolioManagerArrayList(), pmList => this.portfolioMangerList = pmList);
+        (<any>this).appSubscribe(this.ofiPortfolioManagerDataService.getPortfolioManagerArrayList(), pmList => this.portfolioMangerList = pmList);
     }
 
     ngOnDestroy() {
@@ -44,7 +45,6 @@ export class PortfolioManagerListComponent implements OnInit, OnDestroy {
      * @param {PortfolioManagerDetail} pmId
      */
     handleClick(pm: PortfolioManagerDetail): void {
-        this._router.navigate(['portfolio-manager', 'detail'], { queryParams: pm });
+        this.router.navigate(['portfolio-manager', 'detail'], { queryParams: pm });
     }
-
 }

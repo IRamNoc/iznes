@@ -12,10 +12,9 @@ import {
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 /* Redux */
 import { NgRedux, select } from '@angular-redux/store';
-
 import * as _ from 'lodash';
-
 import { KycMyInformations } from '../../ofi-store/ofi-kyc/my-informations';
+
 // Services
 import {
     OfiManagementCompanyService,
@@ -36,7 +35,6 @@ export enum ViewMode {
 })
 
 export class OfiMyInformationsComponent implements OnInit, OnDestroy {
-
     // Locale
     language = 'fr-Latn';
 
@@ -58,16 +56,15 @@ export class OfiMyInformationsComponent implements OnInit, OnDestroy {
     public managementCompanyList;
 
     constructor(
-        private _changeDetectorRef: ChangeDetectorRef,
-        private _ngRedux: NgRedux<any>,
-        private _fb: FormBuilder,
-        public _translate: MultilingualService,
+        private changeDetectorRef: ChangeDetectorRef,
+        private ngRedux: NgRedux<any>,
+        private fb: FormBuilder,
+        public translate: MultilingualService,
         @Inject('phoneCodeList') phoneCodeList,
     ) {
-
         this.phoneNumbersCountryCodes = phoneCodeList;
 
-        this.additionnalForm = this._fb.group({
+        this.additionnalForm = this.fb.group({
             email: [
                 '',
                 Validators.compose([
@@ -155,16 +152,16 @@ export class OfiMyInformationsComponent implements OnInit, OnDestroy {
     switchPhoneCode() {
         if (this.additionnalForm && this.additionnalForm.controls) {
             switch (this.language) {
-            case 'fr-Latn':
-                this.additionnalForm.controls['phoneCode'].patchValue([{ id: '+33', text: 'France (+33)' }]);
-                break;
-            case 'en-Latn':
-                this.additionnalForm.controls['phoneCode']
-                .patchValue([{ id: '+44', text: 'United Kingdom (+44)' }]);
-                break;
-            default:
-                this.additionnalForm.controls['phoneCode'].patchValue([{ id: '+33', text: 'France (+33)' }]);
-                break;
+                case 'fr-Latn':
+                    this.additionnalForm.controls['phoneCode'].patchValue([{ id: '+33', text: 'France (+33)' }]);
+                    break;
+                case 'en-Latn':
+                    this.additionnalForm.controls['phoneCode']
+                    .patchValue([{ id: '+44', text: 'United Kingdom (+44)' }]);
+                    break;
+                default:
+                    this.additionnalForm.controls['phoneCode'].patchValue([{ id: '+33', text: 'France (+33)' }]);
+                    break;
             }
         }
     }
@@ -191,7 +188,7 @@ export class OfiMyInformationsComponent implements OnInit, OnDestroy {
     /* On Destroy. */
     ngOnDestroy(): void {
         /* Detach the change detector on destroy. */
-        this._changeDetectorRef.detach();
+        this.changeDetectorRef.detach();
 
         /* Unsunscribe Observables. */
         for (const key in this.subscriptions) {
@@ -200,11 +197,10 @@ export class OfiMyInformationsComponent implements OnInit, OnDestroy {
     }
 
     markForCheck() {
-        this._changeDetectorRef.markForCheck();
+        this.changeDetectorRef.markForCheck();
     }
 
     getManagementCompanyListFromRedux(managementCompanyList) {
-
         // if investor no need to run the code
         if (this.type === 46) {
             return;
@@ -216,18 +212,21 @@ export class OfiMyInformationsComponent implements OnInit, OnDestroy {
         }
 
         const managementCompanyListImu = fromJS(managementCompanyList);
-        this.managementCompanyList = managementCompanyListImu.reduce((result, item) => {
-            result.push({
-                companyName: item.get('companyName', '')
-            });
-            return result;
-        }, []);
+        this.managementCompanyList = managementCompanyListImu.reduce(
+            (result, item) => {
+                result.push({
+                    companyName: item.get('companyName', ''),
+                });
+                return result;
+            },
+            [],
+        );
 
         // get am company name
         const assetManagerValue = this.managementCompanyList && this.managementCompanyList[0].companyName;
         this.additionnalForm.controls['companyName'].setValue(assetManagerValue);
         this.additionnalForm.controls['companyName'].disable();
 
-        this._changeDetectorRef.markForCheck();
+        this.changeDetectorRef.markForCheck();
     }
 }

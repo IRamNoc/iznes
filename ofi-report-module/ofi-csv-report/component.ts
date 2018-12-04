@@ -21,7 +21,7 @@ import {
     setRequestedWalletLabel,
     clearRequestedWalletLabel,
     setRequestedWalletAddresses,
-    clearRequestedWalletAddresses
+    clearRequestedWalletAddresses,
 } from '@setl/core-store';
 import { AlertsService } from '@setl/jaspero-ng2-alerts';
 import {
@@ -30,7 +30,7 @@ import {
     mDateHelper,
     MoneyValuePipe,
     NumberConverterService,
-    ConfirmationService
+    ConfirmationService,
 } from '@setl/utils';
 
 import { OfiCorpActionService } from '../../ofi-req-services/ofi-corp-actions/service';
@@ -41,7 +41,7 @@ import { MultilingualService } from '@setl/multilingual';
     selector: 'app-nav',
     templateUrl: './component.html',
     styleUrls: ['./component.scss'],
-    changeDetection: ChangeDetectionStrategy.OnPush
+    changeDetection: ChangeDetectionStrategy.OnPush,
 })
 
 export class OfiManageCsvComponent implements OnInit, OnDestroy {
@@ -65,7 +65,7 @@ export class OfiManageCsvComponent implements OnInit, OnDestroy {
 
     // Search form
     searchForm: FormGroup;
-    //navDate: FormControl;
+    // navDate: FormControl;
     navDateTo: FormControl;
     navDateFrom: FormControl;
 
@@ -78,15 +78,16 @@ export class OfiManageCsvComponent implements OnInit, OnDestroy {
     @select(['user', 'authentication', 'token']) tokenOb;
     @select(['user', 'myDetail', 'userId']) userOb;
 
-    constructor(private _ngRedux: NgRedux<any>,
+    constructor(private ngRedux: NgRedux<any>,
                 private alertsService: AlertsService,
-                private _changeDetectorRef: ChangeDetectorRef,
-                private _moneyValuePipe: MoneyValuePipe,
-                private _confirmationService: ConfirmationService,
-                private _numberConverterService: NumberConverterService,
-                private _ofiCorpActionService: OfiCorpActionService,
+                private changeDetectorRef: ChangeDetectorRef,
+                private moneyValuePipe: MoneyValuePipe,
+                private confirmationService: ConfirmationService,
+                private numberConverterService: NumberConverterService,
+                private ofiCorpActionService: OfiCorpActionService,
+                private fileService: FileService,
                 public translate: MultilingualService,
-                private fileService: FileService) {
+    ) {
     }
 
     ngOnDestroy() {
@@ -100,8 +101,8 @@ export class OfiManageCsvComponent implements OnInit, OnDestroy {
         this.tabDetail = {
             title: {
                 text: this.translate.translate('Historical Orders'),
-                icon: 'fa-history'
-            }
+                icon: 'fa-history',
+            },
         };
 
         // search formGroup
@@ -113,7 +114,7 @@ export class OfiManageCsvComponent implements OnInit, OnDestroy {
 
         this.searchForm = new FormGroup({
             navDateFrom: this.navDateFrom,
-            navDateTo: this.navDateTo
+            navDateTo: this.navDateTo,
         });
 
         this.connectedWalletId = 0;
@@ -123,42 +124,42 @@ export class OfiManageCsvComponent implements OnInit, OnDestroy {
         // nav form
         this.navFormPrice = new FormControl('');
         this.navForm = new FormGroup({
-            nav: this.navFormPrice
+            nav: this.navFormPrice,
         });
 
         // Reduce observable subscription
-        this.subscriptionsArray.push(this.connectedWalletOb.subscribe(connected => {
+        this.subscriptionsArray.push(this.connectedWalletOb.subscribe((connected) => {
             this.connectedWalletId = connected;
         }));
 
         // Reduce observable subscription
-        this.subscriptionsArray.push(this.tokenOb.subscribe(token => {
+        this.subscriptionsArray.push(this.tokenOb.subscribe((token) => {
             this.socketToken = token;
         }));
 
         // Reduce observable subscription
-        this.subscriptionsArray.push(this.userOb.subscribe(userId => {
+        this.subscriptionsArray.push(this.userOb.subscribe((userId) => {
             this.userId = userId;
         }));
 
-        this._changeDetectorRef.markForCheck();
+        this.changeDetectorRef.markForCheck();
     }
 
     getCsvReport() {
-        let data = this.searchForm.value;
-        let fromSplit = data.navDateFrom.split(/[\/-]/g);
-        let toSplit = data.navDateTo.split(/[\/-]/g);
+        const data = this.searchForm.value;
+        const fromSplit = data.navDateFrom.split(/[\/-]/g);
+        const toSplit = data.navDateTo.split(/[\/-]/g);
 
-        let dateFrom: any = this.formatDate('YYYY-MM-DD', new Date(fromSplit[2], fromSplit[1]-1, fromSplit[0]));
-        let dateTo: any = this.formatDate('YYYY-MM-DD', new Date(toSplit[2], toSplit[1]-1, toSplit[0]));
+        let dateFrom: any = this.formatDate('YYYY-MM-DD', new Date(fromSplit[2], fromSplit[1] - 1, fromSplit[0]));
+        let dateTo: any = this.formatDate('YYYY-MM-DD', new Date(toSplit[2], toSplit[1] - 1, toSplit[0]));
 
         if (!dateTo) dateTo = this.formatDate('YYYY-MM-DD', new Date());
         if (!dateFrom) dateFrom = moment(dateTo).subtract(1, 'days');
 
-        //production:
+        // production:
         // let url = 'https://' + window.location.hostname + '/mn/file?token=' + this.socketToken + '&method=historicalCsv&walletId=' + this.connectedWalletId + '&userId=' + this.userId + '&dateFrom=' + encodeURIComponent(dateFrom) + '&dateTo=' + encodeURIComponent(dateTo);
 
-        //local:
+        // local:
         let url = 'http://' + window.location.hostname + ':9788/file?token=' + this.socketToken + '&method=historicalCsv&walletId=' + this.connectedWalletId + '&userId=' + this.userId + '&dateFrom=' + encodeURIComponent(dateFrom) + '&dateTo=' + encodeURIComponent(dateTo);
 
         window.open(url, '_blank');
@@ -220,21 +221,21 @@ export class OfiManageCsvComponent implements OnInit, OnDestroy {
      */
     private formatDate (formatString:string, dateObj:Date) {
         /* Return if we're missing a param. */
-        if ( ! formatString || ! dateObj ) return false;
+        if (!formatString || !dateObj) return false;
 
         /* Return the formatted string. */
         return formatString
             .replace('YYYY', dateObj.getFullYear().toString())
             .replace('YY', dateObj.getFullYear().toString().slice(2, 3))
-            .replace('MM', this.numPad( (dateObj.getMonth() + 1).toString() ))
-            .replace('DD', this.numPad( dateObj.getDate().toString() ))
-            .replace('hh', this.numPad( dateObj.getHours() ))
-            .replace('hH', this.numPad( dateObj.getHours() > 12 ? dateObj.getHours() - 12 : dateObj.getHours() ))
-            .replace('mm', this.numPad( dateObj.getMinutes() ))
-            .replace('ss', this.numPad( dateObj.getSeconds() ))
+            .replace('MM', this.numPad((dateObj.getMonth() + 1).toString()))
+            .replace('DD', this.numPad(dateObj.getDate().toString()))
+            .replace('hh', this.numPad(dateObj.getHours()))
+            .replace('hH', this.numPad(dateObj.getHours() > 12 ? dateObj.getHours() - 12 : dateObj.getHours()))
+            .replace('mm', this.numPad(dateObj.getMinutes()))
+            .replace('ss', this.numPad(dateObj.getSeconds()));
     }
 
     private numPad (num) {
-        return num < 10 ? "0"+num : num;
+        return num < 10 ? '0' + num : num;
     }
 }

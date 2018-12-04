@@ -1,14 +1,14 @@
 <div class="header-breadcrumbs">
-    <h1><i class="fa fa-cog"></i> Configuration</h1>
+    <h1><i class="fa fa-cog"></i> {{ 'Configuration' | translate }}</h1>
 </div>
 
 <clr-tabs>
     <clr-tab>
-        <button clrTabLink id="tabConfigurationButton">{{'Holiday Management' | translate}}</button>
+        <button clrTabLink id="tabConfigurationButton">{{ 'Holiday Management' | translate }}</button>
         <clr-tab-content class="outer">
-            <p>Configure on which dates, trades should not be able to be placed.</p>
-            <p>These settings will effect all Funds which are configured to use these default settings.</p>
-            <p>Funds with individually configured dates, will need to be updated manually.</p>
+            <p>{{ 'Configure on which dates, trades should not be able to be placed.' | translate }}</p>
+            <p>{{ 'These settings will effect all Funds which are configured to use these default settings.' | translate }}</p>
+            <p>{{ 'Funds with individually configured dates, will need to be updated manually.' | translate }}</p>
             
             <date-picker-extended *ngIf="config" [dates]="config.holidayManagement.dates" (datesEmitter)="getDates($event)"></date-picker-extended>
 

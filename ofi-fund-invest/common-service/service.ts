@@ -1,15 +1,13 @@
-import {Injectable} from '@angular/core';
-import {FundCharacteristic} from './model';
-import {immutableHelper, mDateHelper} from '@setl/utils';
-import {NumberConverterService} from '@setl/utils';
+import { Injectable } from '@angular/core';
+import { FundCharacteristic } from './model';
+import { immutableHelper, mDateHelper, NumberConverterService } from '@setl/utils';
 
 @Injectable()
 export class CommonService {
-    constructor(private _numberConverterService: NumberConverterService) {
+    constructor(private numberConverterService: NumberConverterService) {
     }
 
     getFundCharacteristic(shareData): FundCharacteristic {
-
         const currentTimeStamp = mDateHelper.getCurrentUnixTimestamp();
 
         // Cutoff
@@ -24,7 +22,6 @@ export class CommonService {
             sCutoffDateTimeNumber = mDateHelper.addDay(new Date(sCutoffDateTimeNumber), 1);
             sCutoffDateTimeStr = mDateHelper.unixTimestampToDateStr(sCutoffDateTimeNumber, 'YYYY-MM-DD HH:mm');
         }
-
 
         const rCutOffOffset = Number(immutableHelper.get(shareData, ['metaData', 'redemptionCutOff', '0', 'id'], 0));
         const rCutoffDate = mDateHelper.addDay(new Date(), rCutOffOffset);
@@ -61,7 +58,6 @@ export class CommonService {
         const rValuationDateStr = mDateHelper.unixTimestampToDateStr(rValuationDate, 'YYYY-MM-DD');
         const rValuationDateTimeStr = rValuationDateStr + ' ' + rValuationTime;
         const rValuationDateTimeNumber = mDateHelper.dateStrToUnixTimestamp(rValuationDateTimeStr, 'YYYY-MM-DD HH:mm');
-
 
         // settlement
         const settlementDateOffset = immutableHelper.get(shareData, ['metaData', 'settlementDate', '0', 'id'], 0);
@@ -100,9 +96,9 @@ export class CommonService {
 
         // allow type
         const typeDef = {
-            '1': 'quantity',
-            '2': 'amount',
-            '3': 'both'
+            1: 'quantity',
+            2: 'amount',
+            3: 'both',
         };
 
         const sAllowTypeNum = Number(immutableHelper.get(shareData, ['metaData', 'formOfsubscription', '0', 'id'], '3'));
@@ -121,7 +117,7 @@ export class CommonService {
         const sMinUnit = Number(immutableHelper.get(shareData, ['metaData', 'minInitSubscription'], 0));
 
         // nav
-        const nav = this._numberConverterService.toFrontEnd(Number(immutableHelper.get(shareData, ['price'], 0)));
+        const nav = this.numberConverterService.toFrontEnd(Number(immutableHelper.get(shareData, ['price'], 0)));
 
         return {
             sCutOffOffset,
@@ -156,7 +152,7 @@ export class CommonService {
             decimalisation,
             sMinValue,
             sMinUnit,
-            nav
+            nav,
         };
     }
 
@@ -172,4 +168,3 @@ export class CommonService {
     }
 
 }
-

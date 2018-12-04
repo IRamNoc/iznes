@@ -4,7 +4,7 @@
         <h1 id="ofi-client-referential"><i class="fa fa-users"></i>
             {{ 'Client Referential' | translate }}
             <span *ngIf="kycId == ''">: {{ 'All Clients' | translate }}</span>
-            <span *ngIf="kycId != '' && !!clients[kycId]">: {{clients[kycId].companyName}} - {{clients[kycId].clientReference}}</span>
+            <span *ngIf="kycId != '' && !!clients[kycId]">{{ getClientReferentialDescriptionTitle() }}</span>
         </h1>
     </div>
 
@@ -16,25 +16,26 @@
             <clr-tab-content>
                 <div class="row">
                     <div class="col-sm-6">
-                        {{ 'Please find below the list of your clients.' | translate }}
+                        {{ 'Please find below the list of your clients' | translate }}
                     </div>
                     <div class="col-sm-6" align="right">
-                        {{ 'From here you will also be able to invite more investors to join IZNES:' | translate }}
-                        <button id="invite-investors-btn" class="btn" style="margin-left: 10px;" (click)="gotoInvite();">{{ 'Invite Investors' | translate }}</button>
+                        {{ 'From here you will also be able to invite more investors to join IZNES' | translate }}
+                        <button id="invite-investors-btn" class="btn" style="margin-left: 10px;" (click)="gotoInvite();">{{
+                            'Invite Investors' | translate }}</button>
                     </div>
                 </div>
                 <div class="row">
                     <div class="col-sm-6">
-                        <p>{{ 'Investor Type' | translate }}</p>
                         <form [formGroup]="investorTypeForm">
-                            <ng-select
-                                id="investor-type-select"
-                                class="form-control"
-                                [items]="investorTypes"
-                                [allowClear]="true"
-                                [placeholder]="_translate.translate('Select')"
-                                formControlName="investorType">
-                            </ng-select>
+                            <div class="form-group col-sm-6">
+                                <label for="investor-type-select" class="control-label">
+                                    {{ 'Investor Type' | translate }}
+                                </label>
+
+                                <ng-select id="investor-type-select" class="form-control" [items]="investorTypes"
+                                    [allowClear]="true" [placeholder]="translate.translate('Select')" formControlName="investorType">
+                                </ng-select>
+                            </div>
                         </form>
                     </div>
                     <div class="col-sm-6" align="right">
@@ -59,7 +60,8 @@
                             <clr-dg-column [clrDgField]="'companyName'">{{ 'Company' | translate }}</clr-dg-column>
                             <clr-dg-column [clrDgField]="'leiCode'">{{ 'LEI' | translate }}</clr-dg-column>
                             <clr-dg-column [clrDgField]="'legalForm'">{{ 'Legal Form' | translate }}</clr-dg-column>
-                            <clr-dg-column [clrDgField]="'sectorActivity'">{{ 'Primary Sector of Activity' | translate }}</clr-dg-column>
+                            <clr-dg-column [clrDgField]="'sectorActivity'">{{ 'Primary Sector of Activity' | translate
+                                }}</clr-dg-column>
                             <clr-dg-column [clrDgField]="'email'">{{ 'Email' | translate }}</clr-dg-column>
 
                             <clr-dg-row *clrDgItems="let item of clientReferential" style="cursor: pointer;" (click)="viewClient(item.kycID);">
@@ -92,43 +94,43 @@
                 <form [formGroup]="investorForm" (ngSubmit)="saveClientReference()">
                     <div class="row">
                         <div class="form-group col-sm-6">
-                            <label for="companyName">{{ 'Company Name:' | translate }}</label>
+                            <label for="companyName">{{ 'Company Name' | translate }}</label>
                             <div>
                                 <input type="text" id="companyName" class="form-control" formControlName="companyName">
                             </div>
                         </div>
                         <div class="form-group col-sm-6">
-                            <label for="clientReference">{{ 'Client Reference:' | translate }}</label>
+                            <label for="clientReference">{{ 'Client Reference' | translate }}</label>
                             <div>
                                 <input type="text" id="clientReference" class="form-control" formControlName="clientReference">
                             </div>
                         </div>
                         <div class="form-group col-sm-6">
-                            <label for="firstName">{{ 'First Name:' | translate }}</label>
+                            <label for="firstName">{{ 'First Name' | translate }}</label>
                             <div>
                                 <input type="text" id="firstName" class="form-control" formControlName="firstName">
                             </div>
                         </div>
                         <div class="form-group col-sm-6">
-                            <label for="lastName">{{ 'Last Name:' | translate }}</label>
+                            <label for="lastName">{{ 'Last Name' | translate }}</label>
                             <div>
                                 <input type="text" id="lastName" class="form-control" formControlName="lastName">
                             </div>
                         </div>
                         <div class="form-group col-sm-6">
-                            <label for="email">{{ 'Email Address:' | translate }}</label>
+                            <label for="email">{{ 'Email Address' | translate }}</label>
                             <div>
                                 <input type="text" id="email" class="form-control" formControlName="email">
                             </div>
                         </div>
                         <div class="form-group col-sm-6">
-                            <label for="phoneNumber">{{ 'Phone Number:' | translate }}</label>
+                            <label for="phoneNumber">{{ 'Phone Number' | translate }}</label>
                             <div>
                                 <input type="text" id="phoneNumber" class="form-control" formControlName="phoneNumber">
                             </div>
                         </div>
                         <div class="form-group col-sm-6">
-                            <label for="approvalDateRequest">{{ 'Date of Approval Request:' | translate }}</label>
+                            <label for="approvalDateRequest">{{ 'Date of Approval Request' | translate }}</label>
                             <div>
                                 <input type="text" id="approvalDateRequest" class="form-control" formControlName="approvalDateRequest">
                             </div>
@@ -136,7 +138,8 @@
                     </div>
                     <div class="row">
                         <div class="form-group col-sm-12 submit-container">
-                            <button id="investorForm-btn-submit" type="submit" class="btn btn-primary" [disabled]="!investorForm.dirty">{{ 'Save' | translate }}</button>
+                            <button id="investorForm-btn-submit" type="submit" class="btn btn-primary" [disabled]="!investorForm.dirty">{{
+                                'Save' | translate }}</button>
                         </div>
                     </div>
                 </form>
@@ -146,7 +149,8 @@
 
                     <div class="row" *ngIf="showInfo">
                         <div class="col-sm-12" style="margin-top: 0.5rem">
-                            <p>{{ 'Please find below the information and documents provided by @companyName@ during the KYC application to your company.' | translate: {'companyName': companyName} }}</p>
+                            <p>{{ 'Please find below the information and documents provided by @companyName@ during the
+                                KYC application to your company.' | translate: { 'companyName': companyName} }}</p>
                         </div>
                     </div>
                     <kyc-details [kycID]="kycId"></kyc-details>
@@ -162,10 +166,12 @@
             <clr-tab-content *clrIfActive="isPortfolioManager() ? true : false">
                 <div class="row">
                     <div class="col-sm-6" style="margin-top: 0.5rem">
-                        <p>{{ 'Please find below the authorisation of @companyName@ regarding your shares.' | translate: {'companyName': companyName} }}</p>
+                        <p>{{ 'Please find below the authorisation of @companyName@ regarding your shares.' |
+                            translate: { 'companyName': companyName } }}</p>
                     </div>
                     <div class="col-sm-6" align="right">
-                        <button class="btn btn-primary" (click)="changePage('audit')">{{ 'View Previous Updates' | translate }}</button>
+                        <button class="btn btn-primary" (click)="changePage('audit')">{{ 'View Previous Updates' |
+                            translate }}</button>
                     </div>
                 </div>
                 <access-table [otherData]="otherData" [tableDataArr]="tableData" (back)="changePage('list')" style="width: 100%"></access-table>
@@ -176,10 +182,12 @@
             <clr-tab-content>
                 <div class="row">
                     <div class="col-sm-6" style="margin-top: 0.5rem">
-                        <p>{{ 'Please find below @companyName@\'s holding details:' | translate: {'companyName': companyName} }}</p>
+                        <p>{{ 'Please find below @companyName@\'s holding details:' | translate: { 'companyName':
+                            companyName} }}</p>
                     </div>
                     <div class="col-sm-6" align="right">
-                        <button class="btn btn-primary" (click)="downloadSingleHoldingsCSVFile()">{{ 'Export Holdings' | translate }}</button>
+                        <button class="btn btn-primary" (click)="downloadSingleHoldingsCSVFile()">{{ 'Export Holdings'
+                            | translate }}</button>
                     </div>
                 </div>
                 <clr-datagrid #holdingDataGrid>
@@ -232,8 +240,8 @@
 <ng-container *ngIf="pageType == 'audit'">
     <div class="header-breadcrumbs">
         <h1 id="ofi-client-referential-audit"><i class="fa fa-clock-o"></i>
-            {{ 'Client Authorisation Audit Trail' | translate }}:
-            {{(kycId != '' ? clients[kycId].companyName + ' - ' + clients[kycId].clientReference: '')}}
+            {{ 'Client Authorisation Audit Trail' | translate }}
+            {{ getClientReferentialDescriptionTitle() }}
         </h1>
     </div>
 
@@ -246,44 +254,34 @@
                 <form [formGroup]="searchForm" id="search-audit-form" (keydown.enter)="$event.preventDefault()">
                     <div class="row bordered">
                         <div class="form-group col-sm-3">
-                            <label>{{ 'Search an Investor' | translate }}</label>
+                            <label for="audit-search-investor">{{ 'Search an Investor' | translate }}</label>
                             <div class="input-button-group">
-                                <input id="audit-search-investor" 
-                                        [formControl]="searchForm.controls['searchInvestor']" 
-                                        name="search-sharename" 
-                                        type="text"
-                                       [placeholder]="_translate.translate('Investor name or reference')" 
-                                       style="width: 100% !important">
+                                <input id="audit-search-investor" [formControl]="searchForm.controls['searchInvestor']"
+                                    name="search-sharename" type="text" [placeholder]="translate.translate('Investor name or reference')"
+                                    style="width: 100% !important">
                             </div>
                         </div>
                         <div class="form-group col-sm-3">
                             <label for="orders-search-from-date">{{ 'From Date' | translate }}</label>
                             <div class="input-group date-pick-wrapper">
                                 <span class="fa fa-calendar" aria-hidden="true"></span>
-                                <input id="orders-search-from-date" 
-                                        [formControl]="searchForm.controls['searchFrom']" 
-                                        autocomplete="off" 
-                                        [dpDayPicker]="fromConfigDate" 
-                                        [placeholder]="_translate.translate('Choose a date')"
-                                        mode="day" 
-                                        theme="dp-material">
+                                <input id="orders-search-from-date" [formControl]="searchForm.controls['searchFrom']"
+                                    autocomplete="off" [dpDayPicker]="fromConfigDate" [placeholder]="translate.translate('Choose a date')"
+                                    mode="day" theme="dp-material">
                             </div>
                         </div>
                         <div class="form-group col-sm-3">
                             <label for="orders-search-to-date">{{ 'To Date' | translate }}</label>
                             <div class="input-group date-pick-wrapper">
                                 <span class="fa fa-calendar" aria-hidden="true"></span>
-                                <input id="orders-search-to-date" 
-                                        [formControl]="searchForm.controls['searchTo']" 
-                                        autocomplete="off" 
-                                        [dpDayPicker]="toConfigDate" 
-                                        [placeholder]="_translate.translate('Choose a date')"
-                                        mode="day" 
-                                        theme="dp-material">
+                                <input id="orders-search-to-date" [formControl]="searchForm.controls['searchTo']"
+                                    autocomplete="off" [dpDayPicker]="toConfigDate" [placeholder]="translate.translate('Choose a date')"
+                                    mode="day" theme="dp-material">
                             </div>
                         </div>
                         <div class="col-sm-3">
-                            <button class="btn btn-primary" align="right" style="margin-top: 20px;" (click)="downloadReferentialAuditCSVFile()">{{ 'Export Audit Trail' | translate }}</button>
+                            <button class="btn btn-primary" align="right" style="margin-top: 20px;" (click)="downloadReferentialAuditCSVFile()">{{
+                                'Export Audit Trail' | translate }}</button>
                         </div>
                     </div>
                 </form>

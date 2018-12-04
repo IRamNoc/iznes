@@ -12,7 +12,8 @@ export class FundShareTradeCycleModel {
     private _monthlyDealingDays: string;
     private _yearlyDealingDays: string;
 
-    constructor() {
+    constructor(
+    ) {
         this.form = new FormGroup({
             tradeCyclePeriod: new FormControl(null, Validators.required),
             weeklyDealingDays: new FormControl(),
@@ -28,43 +29,43 @@ export class FundShareTradeCycleModel {
             if (!!value) {
                 if (value[0].id === E.TradeCyclePeriodEnum.Daily) {
                     this.form.controls.weeklyDealingDays.clearValidators();
-                    (this.form.controls.monthlyDealingDays as FormArray).controls.forEach(c => {
+                    (this.form.controls.monthlyDealingDays as FormArray).controls.forEach((c) => {
                         this.clearValidators(c);
                     });
-                    (this.form.controls.yearlyDealingDays as FormArray).controls.forEach(c => {
+                    (this.form.controls.yearlyDealingDays as FormArray).controls.forEach((c) => {
                         this.clearValidators(c);
                     });
                 } else if (value[0].id === E.TradeCyclePeriodEnum.Weekly) {
                     this.form.controls.weeklyDealingDays.setValidators(Validators.required);
-                    (this.form.controls.monthlyDealingDays as FormArray).controls.forEach(c => {
+                    (this.form.controls.monthlyDealingDays as FormArray).controls.forEach((c) => {
                         this.clearValidators(c);
                     });
-                    (this.form.controls.yearlyDealingDays as FormArray).controls.forEach(c => {
+                    (this.form.controls.yearlyDealingDays as FormArray).controls.forEach((c) => {
                         this.clearValidators(c);
                     });
                 } else if (value[0].id === E.TradeCyclePeriodEnum.Monthly) {
                     this.form.controls.weeklyDealingDays.clearValidators();
-                    (this.form.controls.monthlyDealingDays as FormArray).controls.forEach(c => {
+                    (this.form.controls.monthlyDealingDays as FormArray).controls.forEach((c) => {
                         this.setValidatorRequired(c);
                     });
-                    (this.form.controls.yearlyDealingDays as FormArray).controls.forEach(c => {
+                    (this.form.controls.yearlyDealingDays as FormArray).controls.forEach((c) => {
                         this.clearValidators(c);
                     });
                 } else if (value[0].id === E.TradeCyclePeriodEnum.Yearly) {
                     this.form.controls.weeklyDealingDays.clearValidators();
-                    (this.form.controls.monthlyDealingDays as FormArray).controls.forEach(c => {
+                    (this.form.controls.monthlyDealingDays as FormArray).controls.forEach((c) => {
                         this.clearValidators(c);
                     });
-                    (this.form.controls.yearlyDealingDays as FormArray).controls.forEach(c => {
+                    (this.form.controls.yearlyDealingDays as FormArray).controls.forEach((c) => {
                         this.setValidatorRequired(c);
                     });
                 }
 
                 this.form.controls.weeklyDealingDays.updateValueAndValidity();
-                (this.form.controls.monthlyDealingDays as FormArray).controls.forEach(c => {
+                (this.form.controls.monthlyDealingDays as FormArray).controls.forEach((c) => {
                     this.updateValueAndValidity(c);
                 });
-                (this.form.controls.yearlyDealingDays as FormArray).controls.forEach(c => {
+                (this.form.controls.yearlyDealingDays as FormArray).controls.forEach((c) => {
                     this.updateValueAndValidity(c);
                 });
             }
@@ -100,14 +101,12 @@ export class FundShareTradeCycleModel {
     }
 
     get tradeCyclePeriod(): number {
-        return this.form.value.tradeCyclePeriod ?
-            this.form.value.tradeCyclePeriod[0].id :
-            null;
+        return this.form.value.tradeCyclePeriod ? this.form.value.tradeCyclePeriod[0].id : null;
     }
 
     set tradeCyclePeriod(value: number) {
         this.form.controls.tradeCyclePeriod.setValue(
-            this.getDropdownItemFromValue(this.dropdownItems.tradeCyclePeriodItems, value)
+            this.getDropdownItemFromValue(this.dropdownItems.tradeCyclePeriodItems, value),
         );
     }
 
@@ -129,9 +128,7 @@ export class FundShareTradeCycleModel {
     }
 
     get weeklyDealingDays(): any[] {
-        return this.form.value.weeklyDealingDays ?
-            this.form.value.weeklyDealingDays :
-            [];
+        return this.form.value.weeklyDealingDays ? this.form.value.weeklyDealingDays : [];
     }
 
     set weeklyDealingDays(value: any[]) {
@@ -187,7 +184,7 @@ export class FundShareTradeCycleModel {
 
             let controls;
 
-            if (item.termC != undefined) {
+            if (item.termC !== undefined) {
                 const termC = [_.find(this.dropdownItems.monthItems, (ditem) => {
                     return ditem.id === item.termC;
                 })];
@@ -195,13 +192,13 @@ export class FundShareTradeCycleModel {
                 controls = {
                     termA: new FormControl(termA),
                     termB: new FormControl(termB),
-                    termC: new FormControl(termC)
-                }
+                    termC: new FormControl(termC),
+                };
             } else {
                 controls = {
                     termA: new FormControl(termA),
-                    termB: new FormControl(termB)
-                }
+                    termB: new FormControl(termB),
+                };
             }
 
             formArr.push(new FormGroup(controls));
@@ -220,13 +217,13 @@ export class FundShareTradeCycleModel {
                 obj = {
                     termA: item.controls.termA.value[0].id,
                     termB: item.controls.termB.value[0].id,
-                    termC: item.controls.termC.value[0].id
-                }
+                    termC: item.controls.termC.value[0].id,
+                };
             } else {
                 obj = {
                     termA: item.controls.termA.value[0].id,
-                    termB: item.controls.termB.value[0].id
-                }
+                    termB: item.controls.termB.value[0].id,
+                };
             }
 
             arr.push(obj);
@@ -238,7 +235,7 @@ export class FundShareTradeCycleModel {
     addMonthlyDealingDays(): void {
         const group = new FormGroup({
             termA: new FormControl(null, Validators.required),
-            termB: new FormControl(null, Validators.required)
+            termB: new FormControl(null, Validators.required),
         });
 
         const name = `monthlyDealingDays${(Object.keys(this.form.controls.monthlyDealingDays).length + 1).toString()}`;
@@ -255,7 +252,7 @@ export class FundShareTradeCycleModel {
         const group = new FormGroup({
             termA: new FormControl(null, Validators.required),
             termB: new FormControl(null, Validators.required),
-            termC: new FormControl(null, Validators.required)
+            termC: new FormControl(null, Validators.required),
         });
 
         const name = `yearlyDealingDays${(Object.keys(this.form.controls.yearlyDealingDays).length + 1).toString()}`;
@@ -278,8 +275,8 @@ export class TradeCycleModelDropdowns {
         { id: E.TradeCyclePeriodEnum.Daily, text: 'Daily' },
         { id: E.TradeCyclePeriodEnum.Weekly, text: 'Weekly' },
         { id: E.TradeCyclePeriodEnum.Monthly, text: 'Monthly' },
-        { id: E.TradeCyclePeriodEnum.Yearly, text: 'Yearly' }
-    ]
+        { id: E.TradeCyclePeriodEnum.Yearly, text: 'Yearly' },
+    ];
     weeklyItems = [
         { id: E.WeeklyDealingDaysEnum.FirstBusinessDay, text: 'First Business Day' },
         { id: E.WeeklyDealingDaysEnum.LastBusinessDay, text: 'Last Business Day' },
@@ -287,8 +284,8 @@ export class TradeCycleModelDropdowns {
         { id: E.WeeklyDealingDaysEnum.Tuesday, text: 'Tuesday' },
         { id: E.WeeklyDealingDaysEnum.Wednesday, text: 'Wednesday' },
         { id: E.WeeklyDealingDaysEnum.Thursday, text: 'Thursday' },
-        { id: E.WeeklyDealingDaysEnum.Friday, text: 'Friday' }
-    ]
+        { id: E.WeeklyDealingDaysEnum.Friday, text: 'Friday' },
+    ];
     dayItems = [
         { id: E.WeeklyDealingDaysEnum.FirstBusinessDay, text: 'Calendar day' },
         { id: E.WeeklyDealingDaysEnum.LastBusinessDay, text: 'Business Day' },
@@ -296,8 +293,8 @@ export class TradeCycleModelDropdowns {
         { id: E.WeeklyDealingDaysEnum.Tuesday, text: 'Tuesday' },
         { id: E.WeeklyDealingDaysEnum.Wednesday, text: 'Wednesday' },
         { id: E.WeeklyDealingDaysEnum.Thursday, text: 'Thursday' },
-        { id: E.WeeklyDealingDaysEnum.Friday, text: 'Friday' }
-    ]
+        { id: E.WeeklyDealingDaysEnum.Friday, text: 'Friday' },
+    ];
     numberItems = [
         { id: E.MonthlyDealingDaysEnum.First, text: '1st' },
         { id: E.MonthlyDealingDaysEnum.Second, text: '2nd' },
@@ -330,8 +327,8 @@ export class TradeCycleModelDropdowns {
         { id: E.MonthlyDealingDaysEnum.TwentyNinth, text: '29th' },
         { id: E.MonthlyDealingDaysEnum.Thirtieth, text: '30th' },
         { id: E.MonthlyDealingDaysEnum.ThirtyFirst, text: '31st' },
-        { id: E.MonthlyDealingDaysEnum.Last, text: 'Last day of Month' }
-    ]
+        { id: E.MonthlyDealingDaysEnum.Last, text: 'Last day of Month' },
+    ];
     monthItems = [
         { id: E.YearlyDealingDaysEnum.January, text: 'January' },
         { id: E.YearlyDealingDaysEnum.February, text: 'February' },
@@ -345,7 +342,7 @@ export class TradeCycleModelDropdowns {
         { id: E.YearlyDealingDaysEnum.October, text: 'October' },
         { id: E.YearlyDealingDaysEnum.November, text: 'November' },
         { id: E.YearlyDealingDaysEnum.December, text: 'December' },
-    ]
+    ];
 }
 
 export interface DealingDaysTerms {

@@ -1,13 +1,12 @@
 // Vendor
-import {ChangeDetectionStrategy, ChangeDetectorRef, Component, OnDestroy, OnInit, AfterViewInit} from '@angular/core';
-import {FormGroup, FormControl, Validators} from '@angular/forms';
-import {fromJS} from 'immutable';
-import {SagaHelper} from '@setl/utils';
-import {Subscription} from 'rxjs';
-import {select, NgRedux} from '@angular-redux/store';
+import { ChangeDetectionStrategy, ChangeDetectorRef, Component, OnDestroy, OnInit, AfterViewInit } from '@angular/core';
+import { FormGroup, FormControl, Validators } from '@angular/forms';
+import { fromJS } from 'immutable';
+import { Subscription } from 'rxjs';
+import { select, NgRedux } from '@angular-redux/store';
 
 /* Selectors */
-import {getOfiUserIssuedAssets} from '@ofi/ofi-main/ofi-store';
+import { getOfiUserIssuedAssets } from '@ofi/ofi-main/ofi-store';
 
 /* Core redux imports. */
 import {
@@ -18,27 +17,26 @@ import {
 } from '@setl/core-store';
 
 /* Ofi corp service. */
-import {OfiCorpActionService} from '../../ofi-req-services/ofi-corp-actions/service';
-import {OfiAmDashboardService} from '../../ofi-req-services/ofi-am-dashboard/service';
-import {OfiNavService} from '../../ofi-req-services/ofi-product/nav/service';
+import { OfiCorpActionService } from '../../ofi-req-services/ofi-corp-actions/service';
+import { OfiAmDashboardService } from '../../ofi-req-services/ofi-am-dashboard/service';
+import { OfiNavService } from '../../ofi-req-services/ofi-product/nav/service';
 
 /* Alert service. */
-import {AlertsService} from '@setl/jaspero-ng2-alerts';
-
-import {WalletNodeRequestService, InitialisationService, MyWalletsService} from '@setl/core-req-services';
+import { AlertsService } from '@setl/jaspero-ng2-alerts';
+import { WalletNodeRequestService, InitialisationService, MyWalletsService } from '@setl/core-req-services';
 
 /* Utils. */
 import {
     NumberConverterService,
     commonHelper,
-    LogService
+    LogService,
 } from '@setl/utils';
 import * as math from 'mathjs';
 
 @Component({
     selector: 'core-am-dashboard',
     templateUrl: './component.html',
-    changeDetection: ChangeDetectionStrategy.OnPush
+    changeDetection: ChangeDetectionStrategy.OnPush,
 })
 
 export class FundHoldingsComponent implements OnInit, AfterViewInit, OnDestroy {
@@ -73,24 +71,26 @@ export class FundHoldingsComponent implements OnInit, AfterViewInit, OnDestroy {
     constructor(private ngRedux: NgRedux<any>,
                 private changeDetectorRef: ChangeDetectorRef,
                 private alertsService: AlertsService,
-                private _myWalletService: MyWalletsService,
+                private myWalletService: MyWalletsService,
                 private ofiCorpActionService: OfiCorpActionService,
                 private ofiAmDashboardService: OfiAmDashboardService,
                 private ofiNavService: OfiNavService,
                 private walletNodeRequestService: WalletNodeRequestService,
-                private _numberConverterService: NumberConverterService,
-                private logService: LogService
-                ) {
+                private numberConverterService: NumberConverterService,
+                private logService: LogService,
+    ) {
         /* Assign the fund share form. */
-        this.fundShareForm = new FormGroup({
-            'selectFund': new FormControl(0)
-        });
+        this.fundShareForm = new FormGroup(
+            {
+                selectFund: new FormControl(0),
+            },
+        );
 
-        this.subscriptions['fundShareForm'] = this.fundShareForm.valueChanges.subscribe((form) => this.handleFundSelection(form));
+        this.subscriptions['fundShareForm'] = this.fundShareForm.valueChanges.subscribe(form => this.handleFundSelection(form));
 
         /* Subscribe to wallet holdings. */
         this.subscriptions['wallet-holdings'] = this.walletHoldingRequestedStateOb.subscribe(requested => this.requestWalletHolding(requested));
-        this.subscriptions['wallet-addressList'] = this.requestedAddressListOb.subscribe(requested => {
+        this.subscriptions['wallet-addressList'] = this.requestedAddressListOb.subscribe((requested) => {
             this.requestAddressList(requested);
         });
         this.subscriptions['wallet-labels'] = this.requestedLabelListOb.subscribe(requested => this.requestWalletLabel(requested));
@@ -139,21 +139,21 @@ export class FundHoldingsComponent implements OnInit, AfterViewInit, OnDestroy {
             this.userAssetList = list;
 
             /* Also map the array for ui elements. */
-            this.filteredUserAssetList = list.map(asset => {
+            this.filteredUserAssetList = list.map((asset) => {
                 return {
                     id: asset.asset,
-                    text: asset.asset
-                }
-            })
+                    text: asset.asset,
+                };
+            });
         });
     }
 
     public ngAfterViewInit() {
         /* State. */
-        let state = this.ngRedux.getState();
+        const state = this.ngRedux.getState();
 
         /* Check if we need to request the user issued assets. */
-        let userIssuedAssetsList = getOfiUserIssuedAssets(state);
+        const userIssuedAssetsList = getOfiUserIssuedAssets(state);
         if (!userIssuedAssetsList.length) {
             /* If the list is empty, request it. */
             this.ofiCorpActionService.getUserIssuedAssets().then(() => {
@@ -182,12 +182,11 @@ export class FundHoldingsComponent implements OnInit, AfterViewInit, OnDestroy {
     }
 
     requestWalletLabel(requestedState) {
-
         this.logService.log('checking requested', this.requestedWalletAddress);
         // If the state is false, that means we need to request the list.
         if (!requestedState && this.connectedWalletId !== 0) {
 
-            MyWalletsService.defaultRequestWalletLabel(this.ngRedux, this._myWalletService, this.connectedWalletId);
+            MyWalletsService.defaultRequestWalletLabel(this.ngRedux, this.myWalletService, this.connectedWalletId);
         }
     }
 
@@ -201,9 +200,8 @@ export class FundHoldingsComponent implements OnInit, AfterViewInit, OnDestroy {
     public handleFundSelection(form): void {
         this.logService.log(' |---- Handle Fund Selection');
         /* Ok... get the selected form. */
-        let
-            fund: any = false,
-            fundShareFormValue = this.fundShareForm.value;
+        let fund: any = false;
+        const fundShareFormValue = this.fundShareForm.value;
 
         /* Fail safely if nothing was select. */
         this.logService.log(' | fundShareFormValue:', fundShareFormValue);
@@ -252,7 +250,6 @@ export class FundHoldingsComponent implements OnInit, AfterViewInit, OnDestroy {
         return;
     }
 
-
     public getNavForAsset(asset, navs) {
         for (const nav of navs) {
             if (nav.fundName === asset) {
@@ -260,7 +257,6 @@ export class FundHoldingsComponent implements OnInit, AfterViewInit, OnDestroy {
             }
         }
     }
-
 
     /**
      * Get Fund Dashboard Data
@@ -275,21 +271,21 @@ export class FundHoldingsComponent implements OnInit, AfterViewInit, OnDestroy {
         /* Return a promise. */
         return new Promise((resolve, reject) => {
             /* Ok, let's build the request to get the NAV list... */
-            let navRequest = {
+            const navRequest = {
                 fundname: fund.asset,
                 navdate: null,
                 status: 0,
                 pagenum: 0,
-                pagesize: 1
+                pagesize: 1,
             };
             this.logService.log(' |--- Get Fund Dash Data');
 
             /* Return data. */
-            let oReturn: any = {};
+            const oReturn: any = {};
 
             /* ...and send it. */
             this.ofiAmDashboardService.buildRequest({
-                'taskPipe': this.ofiNavService.requestNav(navRequest)
+                taskPipe: this.ofiNavService.requestNav(navRequest)
             }).then((response) => {
                 this.logService.log(' | success: ', response);
 
@@ -300,44 +296,40 @@ export class FundHoldingsComponent implements OnInit, AfterViewInit, OnDestroy {
 
                 this.logService.log(' | fund: ', fund.asset);
                 /* Split asset name... */
-                let assetParts = fund.asset.split('|');
+                const assetParts = fund.asset.split('|');
 
                 /* Request holders of this fund. */
                 this.requestWalletIssueHolding(assetParts[0], assetParts[1], fund.walletId).then((response) => {
                     /* Get the list of holders. */
-                    let
-                        holdersList = response[1].data['holders'],
-                        key, addresses = [];
+                    const holdersList = response[1].data['holders'];
+                    const addresses = [];
 
                     /* Push all the keys (addresses) into an array */
-                    for (key in holdersList) addresses.push(key);
+                    for (const key in holdersList) addresses.push(key);
 
                     /* Request all the wallet IDs of these addresses. */
                     this.ofiAmDashboardService.getWalletIdsByAddresses(addresses).then((response) => {
                         this.logService.log(' | > getWalletIdsByAddresses response: ', response);
-                        let walletIdList = response[1].Data;
+                        const walletIdList = response[1].Data;
 
                         /* Now let's map the holders to wallets. */
                         this.logService.log(' | ~ map: ', this.walletDirectoryList, walletIdList);
-                        let
-                            key,
-                            id,
-                            i: number,
-                            finalHoldersList = [],
-                            numberOfUnits = 0;
+
+                        const finalHoldersList = [];
+                        let numberOfUnits = 0;
 
                         /* For each wallet, loop the directory list and find it... */
-                        i = 0;
-                        for (key in walletIdList) {
-                            for (id in this.walletDirectoryList) {
+                        let i = 0;
+                        for (const key in walletIdList) {
+                            for (const id in this.walletDirectoryList) {
                                 /* ...check if we've found it... */
                                 if (this.walletDirectoryList[id].commuPub === walletIdList[key].commuPub) {
                                     /* ...if we have, push a nice object into the array. */
                                     finalHoldersList.push({
-                                        'walletName': this.walletDirectoryList[id].walletName,
-                                        'label': walletIdList[key].label,
-                                        'amount': math.round((this._numberConverterService.toFrontEnd(oReturn.nav.price) * this._numberConverterService.toFrontEnd(holdersList[Object.keys(holdersList)[i]])), 2),
-                                        'quantity': this._numberConverterService.toFrontEnd(holdersList[Object.keys(holdersList)[i]]),
+                                        walletName: this.walletDirectoryList[id].walletName,
+                                        label: walletIdList[key].label,
+                                        amount: math.round((this.numberConverterService.toFrontEnd(oReturn.nav.price) * this.numberConverterService.toFrontEnd(holdersList[Object.keys(holdersList)[i]])), 2),
+                                        quantity: this.numberConverterService.toFrontEnd(holdersList[Object.keys(holdersList)[i]]),
                                     });
                                     /* Add to total number of units. */
                                     numberOfUnits += holdersList[Object.keys(holdersList)[i]];
@@ -349,8 +341,8 @@ export class FundHoldingsComponent implements OnInit, AfterViewInit, OnDestroy {
                         }
 
                         /* Set he number of holdings. */
-                        oReturn['units'] = this._numberConverterService.toFrontEnd(numberOfUnits);
-                        oReturn.nav.price = this._numberConverterService.toFrontEnd(oReturn.nav.price);
+                        oReturn['units'] = this.numberConverterService.toFrontEnd(numberOfUnits);
+                        oReturn.nav.price = this.numberConverterService.toFrontEnd(oReturn.nav.price);
 
                         /* For each holder, let's figure out  */
                         let finalHolder: any;
@@ -370,29 +362,27 @@ export class FundHoldingsComponent implements OnInit, AfterViewInit, OnDestroy {
                             oReturn['graphLabels'].push(oReturn['holders'][returnHolder]['label']);
                         }
 
-
                         /* Resolve the original promise. */
                         resolve(oReturn);
                     }).catch((error) => {
                         this.logService.log(' | > getWalletIdsByAddresses error: ', error);
-                    })
-                    this.logService.log(" | holdersList: ", holdersList);
+                    });
 
+                    this.logService.log(' | holdersList: ', holdersList);
 
                 }).catch((error) => {
-                    this.logService.log(" | error: ", error);
+                    this.logService.log(' | error: ', error);
                 });
             }).catch((error) => {
                 /* Handle error. */
                 console.warn(' | error: ', error);
                 reject(false);
-            })
+            });
 
             /* Return. */
             return;
         });
     }
-
 
     /**
      * Request Wallet Issue Holding
@@ -403,15 +393,15 @@ export class FundHoldingsComponent implements OnInit, AfterViewInit, OnDestroy {
      */
     private requestWalletIssueHolding(issuer, instrument, walletId = 0) {
         /* Ok, let's build a nice request object. */
-        let request: any = {};
+        const request: any = {};
         request['walletId'] = walletId == 0 ? this.connectedWalletId : walletId;
         request['issuer'] = issuer;
         request['instrument'] = instrument;
 
         /* Send the request and return the promise. */
         return this.ofiAmDashboardService.buildRequest({
-            'taskPipe': this.walletNodeRequestService.requestWalletIssueHolding(request),
-            'successActions': SET_ISSUE_HOLDING,
+            taskPipe: this.walletNodeRequestService.requestWalletIssueHolding(request),
+            successActions: SET_ISSUE_HOLDING,
         });
     }
 
@@ -435,14 +425,14 @@ export class FundHoldingsComponent implements OnInit, AfterViewInit, OnDestroy {
      *
      * @return {object} - the fund wanted.
      */
-    private getFundById(id): any {
+    private getFundById(id: number): any {
         /* Variables. */
         let userAsset;
 
         /* Loop over each fund... */
         for (userAsset of this.userAssetList) {
             /* ...if this is the one, breaking will leave userAsset as it... */
-            if (userAsset.asset == id) break;
+            if (Number(userAsset.asset) === id) break;
 
             /* ... if not, set to false in case there are no more. */
             userAsset = false;
@@ -517,7 +507,7 @@ export class FundHoldingsComponent implements OnInit, AfterViewInit, OnDestroy {
      * @returns {string}
      */
     private numPad(num) {
-        return num < 10 ? "0" + num : num;
+        return num < 10 ? '0' + num : num;
     }
 
     ngOnDestroy(): void {
@@ -525,7 +515,7 @@ export class FundHoldingsComponent implements OnInit, AfterViewInit, OnDestroy {
         this.changeDetectorRef.detach();
 
         /* Unsunscribe Observables. */
-        for (var key in this.subscriptions) {
+        for (const key in this.subscriptions) {
             this.subscriptions[key].unsubscribe();
         }
     }
@@ -598,5 +588,4 @@ export class FundHoldingsComponent implements OnInit, AfterViewInit, OnDestroy {
               </table>
           `);
     }
-
 }

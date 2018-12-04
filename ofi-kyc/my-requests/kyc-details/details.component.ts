@@ -113,8 +113,7 @@ export class KycDetailsComponent implements OnInit, OnDestroy {
         .subscribe((data) => {
             general.data = data;
             this.changeDetectorRef.markForCheck();
-        })
-        ;
+        });
 
         return general;
     }
@@ -136,8 +135,7 @@ export class KycDetailsComponent implements OnInit, OnDestroy {
         .subscribe((data) => {
             company.data = data;
             this.changeDetectorRef.markForCheck();
-        })
-        ;
+        });
 
         return company;
     }
@@ -166,8 +164,7 @@ export class KycDetailsComponent implements OnInit, OnDestroy {
         .subscribe((data) => {
             banking.data = data;
             this.changeDetectorRef.markForCheck();
-        })
-        ;
+        });
 
         return banking;
     }
@@ -201,8 +198,7 @@ export class KycDetailsComponent implements OnInit, OnDestroy {
             data.splice(hasBeenAcceptedIndex, 1);
             classification.data = data;
             this.changeDetectorRef.markForCheck();
-        })
-        ;
+        });
 
         return classification;
     }
@@ -251,8 +247,7 @@ export class KycDetailsComponent implements OnInit, OnDestroy {
         )
         .subscribe((data) => {
             riskNature.data = data;
-        })
-        ;
+        });
 
         return riskNature;
     }
@@ -285,8 +280,7 @@ export class KycDetailsComponent implements OnInit, OnDestroy {
             riskObjectives.data = data.filter((row) => {
                 return ids.indexOf(row.originalId) > -1;
             });
-        })
-        ;
+        });
 
         return riskObjectives;
     }
@@ -315,8 +309,7 @@ export class KycDetailsComponent implements OnInit, OnDestroy {
             riskContraints.data = data.filter((row) => {
                 return ids.indexOf(row.originalId) > -1;
             });
-        })
-        ;
+        });
 
         return riskContraints;
     }
@@ -335,15 +328,14 @@ export class KycDetailsComponent implements OnInit, OnDestroy {
         )
         .subscribe((data) => {
             documents.data = data;
-        })
-        ;
+        });
 
         return documents;
     }
 
     getValidation() {
         const validation = {
-            title: 'Applicant Information',
+            title: this.translate.translate('Applicant Information'),
             data: '',
         };
 
@@ -357,8 +349,7 @@ export class KycDetailsComponent implements OnInit, OnDestroy {
             await this.kycDetailsService.getHashes(data);
             validation.data = data;
             this.changeDetectorRef.markForCheck();
-        })
-        ;
+        });
 
         return validation;
     }

@@ -22,18 +22,18 @@ const emailRegex = /^(((\([A-z0-9]+\))?[^<>()\[\]\\.,;:\s@"]+(\.[^<>()\[\]\\.,;:
     selector: 'app-invite-investors',
     styleUrls: ['./component.scss'],
     templateUrl: './component.html',
-    changeDetection: ChangeDetectionStrategy.OnPush,
+    // changeDetection: ChangeDetectionStrategy.OnPush,
     providers: [OfiKycObservablesService],
 })
 export class OfiInviteInvestorsComponent implements OnInit, OnDestroy {
     invitationForm: FormGroup;
     investor: any;
-    languages = [
+    languages = this.translate.translate([
         { id: 'fr', text: 'Français' },
         { id: 'en', text: 'English' },
         // {id: 'tch', text: '繁體中文'},
         // {id: 'sch', text: '中文'}
-    ];
+    ]);
 
     investorTypes: any;
 
@@ -42,11 +42,8 @@ export class OfiInviteInvestorsComponent implements OnInit, OnDestroy {
     };
 
     panel: any;
-
     inviteItems: investorInvitation[];
-
     fundSelectList: {id: string, text: string}[];
-
     unSubscribe: Subject<any> = new Subject();
 
     /* Constructor. */
@@ -56,11 +53,11 @@ export class OfiInviteInvestorsComponent implements OnInit, OnDestroy {
                 private alertsService: AlertsService,
                 private ofiKycService: OfiKycService,
                 private toasterService: ToasterService,
-                public translate: MultilingualService,
                 private ofiKycObservablesService: OfiKycObservablesService,
                 @Inject('kycEnums') kycEnums,
                 private ofiFundDataService: OfiFundDataService,
-                private redux: NgRedux<any>) {
+                private redux: NgRedux<any>,
+                public translate: MultilingualService) {
 
         this.enums.status = kycEnums.status;
 
@@ -72,20 +69,20 @@ export class OfiInviteInvestorsComponent implements OnInit, OnDestroy {
                         Validators.compose([
                             Validators.required,
                             Validators.pattern(emailRegex),
-                        ])
+                        ]),
                     ],
                     language: [
                         '',
                         Validators.compose([
-                            Validators.required
-                        ])
+                            Validators.required,
+                        ]),
                     ],
                     clientReference: [
                         '',
                     ],
                     investorType: [
                         '',
-                        Validators.required
+                        Validators.required,
                     ],
                     fundList: [
                         [],
@@ -98,14 +95,14 @@ export class OfiInviteInvestorsComponent implements OnInit, OnDestroy {
                     ],
                     message: [
                         '',
-                    ]
-                })
-            ])
+                    ],
+                }),
+            ]),
         });
 
         this.panel = {
-            title: this.translate.translate('Invites Recap') || 'Invites Recap',
-            open: true
+            title: this.translate.translate('Invites Recap'),
+            open: true,
         };
 
         this.investorTypes = this.translate.translate([
@@ -174,20 +171,20 @@ export class OfiInviteInvestorsComponent implements OnInit, OnDestroy {
                     Validators.required,
                     Validators.pattern(emailRegex),
                     this.duplicateValidator.bind(this),
-                ])
+                ]),
             ],
             language: [
                 '',
                 Validators.compose([
-                    Validators.required
-                ])
+                    Validators.required,
+                ]),
             ],
             clientReference: [
                 '',
             ],
             investorType: [
                 '',
-                Validators.required
+                Validators.required,
             ],
             fundList: [[]],
             pmFunds: [
@@ -201,7 +198,7 @@ export class OfiInviteInvestorsComponent implements OnInit, OnDestroy {
             ],
             message: [
                 '',
-            ]
+            ],
         });
         control.push(addrCtrl);
     }
@@ -224,7 +221,7 @@ export class OfiInviteInvestorsComponent implements OnInit, OnDestroy {
             const validEmailList = [];
             const invalidEmailList = [];
 
-            formValues.investors.map(investor => {
+            formValues.investors.map((investor) => {
                 if ((emailAddressList.indexOf(investor.email) === -1) && alreadyInitiatedList.indexOf(investor.email) === -1) {
                     validEmailList.push(investor.email);
                 } else {
@@ -248,7 +245,10 @@ export class OfiInviteInvestorsComponent implements OnInit, OnDestroy {
     }
 
     displayInvitationSuccessModal(emails: Array<string>): void {
-        let message = '<p><b>An invitation email to IZNES was sent to:</b></p><table class="table grid"><tbody>';
+        let message = '<p><b>';
+
+        message += this.translate.translate('An invitation email to IZNES was sent to:');
+        message += '</b></p><table class="table grid" > <tbody>';
 
         for (const email of emails) {
             message += '<tr><td>' + email + '</td></tr>';
@@ -262,7 +262,7 @@ export class OfiInviteInvestorsComponent implements OnInit, OnDestroy {
         invalidEmailAddressList.map((emailAddress) => {
             this.toasterService.pop(
                 'warning',
-                `A user has already created an account with this following email address "${emailAddress}".`
+                this.translate.translate('A user has already created an account with the following email address: @emailAddress@', { 'emailAddress': emailAddress }),
             );
         });
     }
@@ -337,36 +337,42 @@ export class OfiInviteInvestorsComponent implements OnInit, OnDestroy {
  * construct invitation request with form value.
  */
 function constructInvitationRequest(formValue) {
-    const investors = formValue.investors.reduce((result, item) => {
-        const investorType = _.get(item, ['investorType', 0], {}).id;
-        // check the investor type
-        if (investorType !== 10 && investorType !== 20) {
-            throw new Error('We should only allow investor type 10 or 20');
-        }
+    const investors = formValue.investors.reduce(
+        (result, item) => {
+            const investorType = _.get(item, ['investorType', 0], {}).id;
+            // check the investor type
+            if (investorType !== 10 && investorType !== 20) {
+                throw new Error('We should only allow investor type 10 or 20');
+            }
 
-        // get the fundList in array of fundId
-        const fundList = _.get(item, 'fundList') || [];
-        const fundIdList = fundList.reduce((acc, fund) => {
-            acc.push(fund.id);
-            return acc;
-        }, []);
+            // get the fundList in array of fundId
+            const fundList = _.get(item, 'fundList') || [];
+            const fundIdList = fundList.reduce(
+                (acc, fund) => {
+                    acc.push(fund.id);
+                    return acc;
+                },
+                [],
+            );
 
-        result.push({
-            investorType,
-            email: _.get(item, 'email', ''),
-            firstname: _.get(item, 'firstName', ''),
-            lastname: _.get(item, 'lastName', ''),
-            lang: _.get(item, 'language', 'fr'),
-            clientreference: _.get(item, 'clientReference', ''),
-            message: _.get(item, 'message', ''),
-            fundList: fundIdList,
-        });
-        return result;
-    }, []);
+            result.push({
+                investorType,
+                email: _.get(item, 'email', ''),
+                firstname: _.get(item, 'firstName', ''),
+                lastname: _.get(item, 'lastName', ''),
+                lang: _.get(item, 'language', 'fr'),
+                clientreference: _.get(item, 'clientReference', ''),
+                message: _.get(item, 'message', ''),
+                fundList: fundIdList,
+            });
+            return result;
+        },
+        [],
+    );
 
     return {
         assetManagerName: 'OFI',
         amCompanyName: 'OFI Am Management',
-        investors
+        investors,
     };
 }

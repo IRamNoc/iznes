@@ -1,8 +1,8 @@
-import {MemberNodeMessageBody} from '@setl/utils/common';
+import { MemberNodeMessageBody } from '@setl/utils/common';
 
 export enum ArrangementType {
     SUBSCRIBE = 3,
-    REDEEM
+    REDEEM,
 }
 
 export interface RequetFundAccessMy extends MemberNodeMessageBody {

@@ -5,7 +5,6 @@ import { get as getValue } from 'lodash';
 
 @Injectable()
 export class SelectAmcService {
-
     constructor(
         private newRequestService: NewRequestService,
         private requestsService: RequestsService,

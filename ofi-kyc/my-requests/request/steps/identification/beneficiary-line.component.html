@@ -8,9 +8,9 @@
 <td class="no-hover">{{votingPercentage}} %</td>
 <td class="hover" (click)="handleActionsClick($event)" colspan="2">
     <div class="actions">
-        <button class="btn btn-primary btn-sm" (click)="addChild($event)"><i class="fa fa-plus"></i> {{'Add child' | translate}}</button>
-        <button class="btn btn-sm" (click)="editStakeholder($event)">{{'Edit' | translate}}</button>
-        <button class="btn btn-sm" (click)="removeStakeholder($event)">
+        <button class="btn btn-primary btn-sm" (click)="addChild()"><i class="fa fa-plus"></i> {{'Add child' | translate}}</button>
+        <button class="btn btn-sm" (click)="editStakeholder()">{{'Edit' | translate}}</button>
+        <button class="btn btn-sm" (click)="removeStakeholder()">
             <i class="fa fa-trash"></i>
             {{'Delete' | translate}}
         </button>

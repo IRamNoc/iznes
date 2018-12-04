@@ -11,57 +11,60 @@
 
 <div class="panel-body" [class.hidden]="!open" [ngClass]="{'nature pl-1': multiple}" [formGroup]="form">
 
-
     <div class="row">
-
         <div class="col-sm-6" formGroupName="financialAssetManagementMethod">
-
             <div>
-                <label class="required-field">{{'Financial asset management method' | translate}}</label>
+                <label class="required-field">{{ 'Financial Asset Management Method' | translate }}</label>
             </div>
 
             <div class="mt-1">
                 <span class="checkbox-inline pr-1 pb-1">
-                    <input type="checkbox" id="internalManagement-{{index}}" formControlName="internalManagement">
+                    <input type="checkbox" 
+                            id="internalManagement-{{index}}" 
+                            formControlName="internalManagement">
                     <label for="internalManagement-{{index}}">
-                        {{'Internal management' | translate}}
+                        {{ 'Internal Management' | translate }}
                     </label>
                 </span>
 
                 <span class="checkbox-inline pr-1 pb-1">
-                    <input type="checkbox" id="withAdviceOfAuthorisedThirdPartyInstitution-{{index}}" formControlName="withAdviceOfAuthorisedThirdPartyInstitution">
+                    <input type="checkbox" 
+                            id="withAdviceOfAuthorisedThirdPartyInstitution-{{index}}" formControlName="withAdviceOfAuthorisedThirdPartyInstitution">
                     <label for="withAdviceOfAuthorisedThirdPartyInstitution-{{index}}">
-                        {{'With the advice of an authorised third party institution' | translate}}
+                        {{ 'With the advice of an authorised third party institution' | translate }}
                     </label>
                 </span>
 
                 <span class="checkbox-inline pr-1 pb-1">
-                    <input type="checkbox" id="mandateEntrustedToManagers-{{index}}" formControlName="mandateEntrustedToManagers">
+                    <input type="checkbox" 
+                            id="mandateEntrustedToManagers-{{index}}" 
+                            formControlName="mandateEntrustedToManagers">
                     <label for="mandateEntrustedToManagers-{{index}}">
-                        {{'By mandate(s) entrusted to a manager(s)' | translate}}
+                        {{ 'By mandate(s) entrusted to a manager(s)' | translate }}
                     </label>
                 </span>
             </div>
 
-            <p class="txtRed" *ngIf="hasError('financialAssetManagementMethod')">{{'Select at least one' | translate}}</p>
+            <p class="txtRed" *ngIf="hasError('financialAssetManagementMethod')">{{ 'Select at least one' | translate }}</p>
         </div>
 
         <div class="col-sm-6" formGroupName="frequencyFinancialTransactions">
-
             <div>
-                <label class="required-field">{{'Frequency of financial transactions' | translate}}</label>
+                <label class="required-field">{{ 'Frequency of Financial Transactions' | translate }}</label>
             </div>
 
             <div class="mt-1">
                 <span class="checkbox-inline pr-1 pb-1" *ngFor="let frequency of frequencyList">
-                    <input type="checkbox" id="{{frequency.id}}-{{index}}" formControlName="{{frequency.id}}">
+                    <input type="checkbox" 
+                            id="{{frequency.id}}-{{index}}" 
+                            formControlName="{{frequency.id}}">
                     <label for="{{frequency.id}}-{{index}}">
                         {{frequency.text | translate}}
                     </label>
                 </span>
             </div>
 
-            <p class="txtRed" *ngIf="hasError('frequencyFinancialTransactions')">{{'Select at least one' | translate}}</p>
+            <p class="txtRed" *ngIf="hasError('frequencyFinancialTransactions')">{{ 'Select at least one' | translate }}</p>
 
         </div>
 
@@ -69,26 +72,28 @@
 
     <div class="row">
         <div class="col-sm-12">
-
             <div>
-                <label class="required-field">{{'Investment vehicles already used' | translate}}</label>
+                <label class="required-field">{{ 'Investment Vehicles Already Used' | translate }}</label>
             </div>
 
             <div class="mt-1">
                 <span class="checkbox-inline pr-1 pb-1" *ngFor="let vehicle of investmentVehicleList" [class.inline]="vehicle.id === 'other'">
                     <span formGroupName="investmentvehiclesAlreadyUsed">
-                        <input type="checkbox" id="{{vehicle.id}}-{{index}}" formControlName="{{vehicle.id}}">
+                        <input type="checkbox" 
+                                id="{{vehicle.id}}-{{index}}" 
+                                formControlName="{{vehicle.id}}">
                         <label class="required-field" for="{{vehicle.id}}-{{index}}">
                             {{vehicle.text | translate}}
                         </label>
                     </span>
-                    <input formControlName="investmentvehiclesAlreadyUsedSpecification" class="pl-1" type="text" *ngIf="vehicle.id === 'other' && !isDisabled('investmentvehiclesAlreadyUsedSpecification')" placeholder="{{'Please specify' | translate}}">
+                    <input formControlName="investmentvehiclesAlreadyUsedSpecification" 
+                            class="pl-1" 
+                            type="text" 
+                            *ngIf="vehicle.id === 'other' && !isDisabled('investmentvehiclesAlreadyUsedSpecification')" placeholder="{{'Please specify' | translate}}">
                 </span>
 
-                <p class="txtRed" *ngIf="hasError('investmentvehiclesAlreadyUsed')">{{'Select at least one' | translate}}</p>
+                <p class="txtRed" *ngIf="hasError('investmentvehiclesAlreadyUsed')">{{ 'Select at least one' | translate }}</p>
             </div>
-
         </div>
     </div>
-
 </div>

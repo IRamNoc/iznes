@@ -12,8 +12,9 @@ import {
     ofiSetRequestedPmList,
 } from '../../ofi-store/ofi-portfolio-manager/portfolio-manage-list/actions';
 import {
-    OfiPortfolioManagerDetailrequestBody, OfiPortfolioManagerListRequestBody,
-    OfiPortfolioManagerUpdateRequestBody
+    OfiPortfolioManagerDetailrequestBody,
+    OfiPortfolioManagerListRequestBody,
+    OfiPortfolioManagerUpdateRequestBody,
 } from './model';
 
 @Injectable()
@@ -21,7 +22,8 @@ export class OfiPortfolioMangerService {
 
     /* Constructor. */
     constructor(private memberSocketService: MemberSocketService,
-                private ngRedux: NgRedux<any>) {
+                private ngRedux: NgRedux<any>,
+    ) {
         /* Stub. */
     }
 
@@ -48,7 +50,6 @@ export class OfiPortfolioMangerService {
      * @return {any}
      */
     requestPortfolioManagerList(): any {
-
         const messageBody: OfiPortfolioManagerListRequestBody = {
             RequestName: 'iznportfoliomanagerlist',
             token: this.memberSocketService.token,
@@ -79,7 +80,6 @@ export class OfiPortfolioMangerService {
      * @param: {number} pmId
      */
     requestPortfolioManagerDetail(pmId: number): any {
-
         const messageBody: OfiPortfolioManagerDetailrequestBody = {
             RequestName: 'iznportfoliomanagerlist',
             token: this.memberSocketService.token,
@@ -94,7 +94,6 @@ export class OfiPortfolioMangerService {
      * @param: {{pmId: number; fundId: number; status: number}} pmId
      */
     updatePortfolioManagerFundAccess(requestData: {pmId: number; fundId: number; status: number}): any {
-
         const messageBody: OfiPortfolioManagerUpdateRequestBody = {
             RequestName: 'iznupdatepmfundaccess',
             token: this.memberSocketService.token,
@@ -105,5 +104,4 @@ export class OfiPortfolioMangerService {
 
         return createMemberNodeRequest(this.memberSocketService, messageBody);
     }
-
 }

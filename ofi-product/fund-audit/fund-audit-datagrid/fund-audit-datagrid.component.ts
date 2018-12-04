@@ -4,7 +4,6 @@ import { Subject } from 'rxjs/Subject';
 import { takeUntil } from 'rxjs/operators';
 import { combineLatest } from 'rxjs/observable/combineLatest';
 import { FormBuilder, FormGroup } from '@angular/forms';
-
 import { OfiFundService } from '@ofi/ofi-main/ofi-req-services/ofi-product/fund/fund.service';
 import { MultilingualService } from '@setl/multilingual';
 
@@ -14,7 +13,6 @@ import { MultilingualService } from '@setl/multilingual';
     styleUrls: ['./fund-audit-datagrid.component.scss'],
 })
 export class FundAuditDatagridComponent implements OnInit, OnDestroy, OnChanges {
-
     fundAuditItems = [];
     fundAuditList = [];
     filteredAuditItems = [];
@@ -52,7 +50,6 @@ export class FundAuditDatagridComponent implements OnInit, OnDestroy, OnChanges 
     }
 
     ngOnInit() {
-
         if (this.fundID) {
             this.fundService.fetchFundAuditByFundID(this.fundID);
         }

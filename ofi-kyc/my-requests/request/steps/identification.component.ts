@@ -76,8 +76,8 @@ export class NewKycIdentificationComponent implements OnInit {
     prePersistForm() {
         this.persistRequestService
         .loadFormState('newkycrequest/identification', this.newRequestService.context)
-        .then((data) => {
-            data = getValue(data, [1, 'Data', 0, 'data']);
+        .then((responseData) => {
+            const data = getValue(responseData, [1, 'Data', 0, 'data']);
 
             if (!data) {
                 throw 'No data';

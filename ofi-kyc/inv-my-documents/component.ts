@@ -14,9 +14,8 @@ import { NgRedux, select } from '@angular-redux/store';
 import { fromJS } from 'immutable';
 import { FormControl, FormGroup } from '@angular/forms';
 import { Subject } from 'rxjs/Subject';
-import { takeUntil } from 'rxjs/operators'
+import { takeUntil } from 'rxjs/operators';
 import { MultilingualService } from '@setl/multilingual';
-
 import * as _ from 'lodash';
 import * as SagaHelper from '@setl/utils/sagaHelper';
 import { ToasterService } from 'angular2-toaster';
@@ -71,7 +70,7 @@ export class OfiInvMyDocumentsComponent implements OnDestroy, OnInit, AfterViewI
         'kycproofofapprovaldoc',
         'kycproofregulationdoc',
     ];
-    changed = {};
+    changed: any = {};
 
     unSubscribe: Subject<any> = new Subject();
 
@@ -81,11 +80,12 @@ export class OfiInvMyDocumentsComponent implements OnDestroy, OnInit, AfterViewI
 
     constructor(
         private changeDetectorRef: ChangeDetectorRef,
-        private translate: MultilingualService,
         private fileService: FileService,
         private ofiKycService: OfiKycService,
         private toaster: ToasterService,
         private ngRedux: NgRedux<any>,
+        public translate: MultilingualService,
+        @Inject('kycEnums') kycEnums,
     ) {
         this.kycEnums.forEach((doc) => {
             this.allUploadsFiles[doc] = {
@@ -138,20 +138,20 @@ export class OfiInvMyDocumentsComponent implements OnDestroy, OnInit, AfterViewI
             .pipe(
                 takeUntil(this.unSubscribe),
             )
-            .subscribe(connected => {
+            .subscribe((connected) => {
                 this.connectedWalletId = connected;
 
                 this.requestedOfiInvMyDocsOb
                     .pipe(
                         takeUntil(this.unSubscribe),
                     )
-                    .subscribe((requested) => this.requestedOfiInvMyDocs(requested));
+                    .subscribe(requested => this.requestedOfiInvMyDocs(requested));
 
                 this.OfiInvMyDocsListOb
                     .pipe(
                         takeUntil(this.unSubscribe),
                     )
-                    .subscribe((list) => this.getMyDocumentsFromRedux(list));
+                    .subscribe(list => this.getMyDocumentsFromRedux(list));
             });
 
         this.uploadMyDocumentsForm.controls.upload1.valueChanges
@@ -284,19 +284,22 @@ export class OfiInvMyDocumentsComponent implements OnDestroy, OnInit, AfterViewI
 
     getMyDocumentsFromRedux(list) {
         const listImu = fromJS(list);
-        this.filesFromRedux = listImu.reduce((result, item) => {
-            result.push({
-                kycID: item.get('kycID'),
-                kycDocumentID: item.get('kycDocumentID'),
-                walletID: item.get('walletID'),
-                name: item.get('name'),
-                hash: item.get('hash'),
-                type: item.get('type'),
-                common: item.get('common'),
-                isDefault: item.get('default'),
-            });
-            return result;
-        }, []);
+        this.filesFromRedux = listImu.reduce(
+            (result, item) => {
+                result.push({
+                    kycID: item.get('kycID'),
+                    kycDocumentID: item.get('kycDocumentID'),
+                    walletID: item.get('walletID'),
+                    name: item.get('name'),
+                    hash: item.get('hash'),
+                    type: item.get('type'),
+                    common: item.get('common'),
+                    isDefault: item.get('default'),
+                });
+                return result;
+            },
+            [],
+        );
 
         let allChecked = true;
         for (const i in this.allUploadsFiles) {

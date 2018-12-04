@@ -42,5 +42,4 @@ import { OfiCorpActionService } from '../ofi-req-services/ofi-corp-actions/servi
 
 /* Class. */
 export class OfiCorpActionsModule {
-
 }

@@ -122,7 +122,7 @@ export class NewKycDocumentsComponent implements OnInit, OnDestroy {
     }
 
     uploadFile($event, formControl: AbstractControl) {
-        formControl = <FormControl> formControl;
+        const fControl = <FormControl> formControl;
 
         if (!$event.files.length) {
             const type = formControl.get('type').value;
@@ -130,8 +130,8 @@ export class NewKycDocumentsComponent implements OnInit, OnDestroy {
             formControl.patchValue(newDocumentControl);
         } else {
             this.requestsService.uploadFile($event).then((file: any) => {
-                formControl.get('hash').patchValue(file.fileHash);
-                formControl.get('name').patchValue(file.fileTitle);
+                fControl.get('hash').patchValue(file.fileHash);
+                fControl.get('name').patchValue(file.fileTitle);
             });
         }
     }

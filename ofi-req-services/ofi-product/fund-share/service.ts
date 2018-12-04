@@ -4,7 +4,6 @@ import { MemberSocketService } from '@setl/websocket-service';
 import { SagaHelper, NumberConverterService, LogService } from '@setl/utils';
 import { NgRedux, select } from '@angular-redux/store';
 import { createMemberNodeRequest, createMemberNodeSagaRequest } from '@setl/utils/common';
-
 import {
     AmAllFundShareListRequestBody,
     InvestorFundAccessRequestBody,
@@ -28,9 +27,9 @@ import {
     clearRequestedFundShareDocs,
     SET_FUND_SHARE_AUDIT,
     setRequestedFundShareAudit,
-    clearRequestedFundShareAudit
+    clearRequestedFundShareAudit,
 } from '@ofi/ofi-main/ofi-store/ofi-product';
-import { OfiFundService } from "../fund/fund.service";
+import { OfiFundService } from '../fund/fund.service';
 
 export interface RequestInvestorFundAccessData {
     investorWalletId: number;
@@ -38,14 +37,12 @@ export interface RequestInvestorFundAccessData {
 
 @Injectable()
 export class OfiFundShareService {
-
     constructor(
         private memberSocketService: MemberSocketService,
         private logService: LogService,
         private numberService: NumberConverterService,
         private ngRedux: NgRedux<any>,
     ) {
-
     }
 
     static defaultRequestAmAllFundShareList(ofiFundService: OfiFundShareService, ngRedux: NgRedux<any>) {
@@ -75,7 +72,7 @@ export class OfiFundShareService {
                 [],
                 asyncTaskPipe,
                 {},
-            )
+            ),
         );
     }
 
@@ -86,7 +83,7 @@ export class OfiFundShareService {
     requestAmAllFundShareList(): any {
         const messageBody: AmAllFundShareListRequestBody = {
             RequestName: 'izngetfundsharelist',
-            token: this.memberSocketService.token
+            token: this.memberSocketService.token,
         };
 
         return createMemberNodeSagaRequest(this.memberSocketService, messageBody);
@@ -111,7 +108,7 @@ export class OfiFundShareService {
     requestIznesShareList() {
         const messageBody: IznesShareListRequestMessageBody = {
             RequestName: 'izngetfundsharelist',
-            token: this.memberSocketService.token
+            token: this.memberSocketService.token,
         };
 
         return createMemberNodeSagaRequest(this.memberSocketService, messageBody);
@@ -133,14 +130,14 @@ export class OfiFundShareService {
                 [],
                 asyncTaskPipe,
                 {},
-            )
+            ),
         );
     }
 
     requestIznesAllShareList() {
         const messageBody: IznesShareListRequestMessageBody = {
             RequestName: 'izngetallfundsharelist',
-            token: this.memberSocketService.token
+            token: this.memberSocketService.token,
         };
 
         return createMemberNodeSagaRequest(this.memberSocketService, messageBody);
@@ -154,7 +151,7 @@ export class OfiFundShareService {
         const messageBody: InvestorFundAccessRequestBody = {
             RequestName: 'iznesgetinvestorfundaccess',
             token: this.memberSocketService.token,
-            investorWalletId: requestData.investorWalletId
+            investorWalletId: requestData.investorWalletId,
         };
         this.logService.log('this is the request', messageBody);
 
@@ -169,7 +166,7 @@ export class OfiFundShareService {
         const messageBody: InvestorHoldingsRequestBody = {
             RequestName: 'iznclientreferentialgetclientholdings',
             token: this.memberSocketService.token,
-            kycId: kycId
+            kycId,
         };
 
         return createMemberNodeRequest(this.memberSocketService, messageBody);
@@ -192,16 +189,16 @@ export class OfiFundShareService {
             [],
             asyncTaskPipe,
             {},
-            (data) => successCallback(data),
-            (e) => errorCallback(e)
+            data => successCallback(data),
+            e => errorCallback(e),
         ));
     }
 
     createFundShare(requestData): any {
         let messageBody = {
             RequestName: 'iznescreatefundshare',
-            token: this.memberSocketService.token
-        }
+            token: this.memberSocketService.token,
+        };
 
         this.convertNumbersForBlockchain(requestData);
         messageBody = Object.assign(requestData, messageBody);
@@ -250,16 +247,16 @@ export class OfiFundShareService {
             [],
             asyncTaskPipe,
             {},
-            (data) => successCallback(data),
-            (e) => errorCallback(e)
+            data => successCallback(data),
+            e => errorCallback(e),
         ));
     }
 
     updateFundShare(requestData): any {
         let messageBody = {
             RequestName: 'iznesupdatefundshare',
-            token: this.memberSocketService.token
-        }
+            token: this.memberSocketService.token,
+        };
 
         this.convertNumbersForBlockchain(requestData);
         messageBody = Object.assign(requestData, messageBody);
@@ -284,16 +281,16 @@ export class OfiFundShareService {
             [],
             asyncTaskPipe,
             {},
-            (data) => successCallback(data),
-            (e) => errorCallback(e)
+            data => successCallback(data),
+            e => errorCallback(e),
         ));
     }
 
     createFundShareDocuments(requestData): any {
         let messageBody = {
             RequestName: 'iznescreatefundsharedocs',
-            token: this.memberSocketService.token
-        }
+            token: this.memberSocketService.token,
+        };
 
         messageBody = Object.assign(requestData, messageBody);
 
@@ -301,7 +298,6 @@ export class OfiFundShareService {
     }
 
     fetchFundShareDocs(fundShareID: number) {
-
         const asyncTaskPipe = this.requestFundShareDocs(fundShareID);
 
         this.ngRedux.dispatch(SagaHelper.runAsync(
@@ -323,14 +319,13 @@ export class OfiFundShareService {
         };
 
         return createMemberNodeSagaRequest(this.memberSocketService, messageBody);
-
     }
 
     fetchFundShareDocsPromise(requestData): any {
         const messageBody: FundShareRequestBody = {
             RequestName: 'iznesgetfundsharedocs',
             token: this.memberSocketService.token,
-            fundShareID: _.get(requestData, 'fundShareID')
+            fundShareID: _.get(requestData, 'fundShareID'),
         };
 
         return new Promise((resolve, reject) => {
@@ -347,7 +342,6 @@ export class OfiFundShareService {
                 reject(new Error(err));
             });
         });
-
     }
 
     /**
@@ -367,16 +361,16 @@ export class OfiFundShareService {
             [],
             asyncTaskPipe,
             {},
-            (data) => successCallback(data),
-            (e) => errorCallback(e)
+            data => successCallback(data),
+            e => errorCallback(e),
         ));
     }
 
     updateFundShareDocuments(requestData): any {
         let messageBody = {
             RequestName: 'iznesupdatefundsharedocs',
-            token: this.memberSocketService.token
-        }
+            token: this.memberSocketService.token,
+        };
 
         messageBody = Object.assign(requestData, messageBody);
 
@@ -400,16 +394,16 @@ export class OfiFundShareService {
             [],
             asyncTaskPipe,
             {},
-            (data) => successCallback(data),
-            (e) => errorCallback(e)
+            data => successCallback(data),
+            e => errorCallback(e),
         ));
     }
 
     getFundShareAudit(requestData): any {
         let messageBody = {
             RequestName: 'getfundshareaudit',
-            token: this.memberSocketService.token
-        }
+            token: this.memberSocketService.token,
+        };
 
         messageBody = Object.assign(requestData, messageBody);
 
@@ -445,7 +439,7 @@ export class OfiFundShareService {
         const messageBody: IznDeleteShareDraftRequestBody = {
             RequestName: 'izndeleteShareDraft',
             token: this.memberSocketService.token,
-            id: id,
+            id,
         };
 
         return createMemberNodeSagaRequest(this.memberSocketService, messageBody);

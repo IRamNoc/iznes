@@ -4,7 +4,6 @@ import { get as getValue, isEmpty, castArray } from 'lodash';
 import { Subject } from 'rxjs';
 import { filter, map, takeUntil } from 'rxjs/operators';
 import { select } from '@angular-redux/store';
-
 import { FormPercentDirective } from '@setl/utils/directives/form-percent/formpercent';
 import { IdentificationService } from '../identification.service';
 import { NewRequestService } from '../../new-request.service';

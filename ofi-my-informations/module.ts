@@ -44,5 +44,4 @@ import { phoneCodeList } from '../shared/phone-codes.values';
 
 /* Class. */
 export class OfiMyInformationsModule {
-
 }

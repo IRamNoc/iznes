@@ -1,38 +1,27 @@
-// Vendor
 import { ChangeDetectionStrategy, ChangeDetectorRef, Component, OnDestroy, OnInit } from '@angular/core';
 import { FormBuilder, FormGroup } from '@angular/forms';
 import { ActivatedRoute, Router } from '@angular/router';
-
-// redux
 import { NgRedux, select } from '@angular-redux/store';
 import { fromJS } from 'immutable';
 import * as _ from 'lodash';
-
-/* Utils. */
 import { FileDownloader } from '@setl/utils';
-
-/* services */
 import { MemberSocketService } from '@setl/websocket-service';
 import { OfiAmDashboardService } from '../../ofi-req-services/ofi-am-dashboard/service';
 import { OfiReportsService } from '../../ofi-req-services/ofi-reports/service';
 import { MultilingualService } from '@setl/multilingual';
 
-/* Types. */
 interface SelectedItem {
     id: number;
     text: string;
 }
 
-/* Decorator. */
 @Component({
     selector: 'am-share-holders',
     templateUrl: './component.html',
     styleUrls: ['./component.scss'],
-    changeDetection: ChangeDetectionStrategy.OnPush
 })
 
 export class ShareHoldersComponent implements OnInit, OnDestroy {
-
     // list forms
     listSearchForm: FormGroup;
 
@@ -70,21 +59,15 @@ export class ShareHoldersComponent implements OnInit, OnDestroy {
         format: 'YYYY-MM-DD',
         closeOnSelect: true,
         disableKeypress: true,
-        locale: this.language
+        locale: this.language,
     };
 
     /* Tabs Control array */
     tabsControl: Array<any> = [];
     tabTitle = '';
 
-    /* Ui Lists. */
-    holderFilters: Array<SelectedItem> = [
-        { id: 0, text: 'All' },
-        { id: 10, text: 'Top 10 holders' },
-        { id: 20, text: 'Top 20 holders' },
-        { id: 50, text: 'Top 50 holders' },
-        { id: 100, text: 'Top 100 holders' },
-    ];
+    /* UI Lists. */
+    holderFilters: Array<SelectedItem> = [];
 
     /* datas */
     fundsNbHolders = 0;
@@ -98,7 +81,6 @@ export class ShareHoldersComponent implements OnInit, OnDestroy {
     shareSettlementDate = '';
     sharesAUM = 0;
     sharesCCY = '';
-
 
     allList: any = [];
     fundList: any = [];
@@ -141,8 +123,8 @@ export class ShareHoldersComponent implements OnInit, OnDestroy {
                 private ofiReportsService: OfiReportsService,
                 private ofiAmDashboardService: OfiAmDashboardService,
                 private fileDownloader: FileDownloader,
-                public translate: MultilingualService,
                 private activatedRoute: ActivatedRoute,
+                public translate: MultilingualService,
     ) {
         this.loadingDatagrid = false;
 
@@ -150,8 +132,15 @@ export class ShareHoldersComponent implements OnInit, OnDestroy {
         this.isShareLevel = this.router.url.indexOf('/shares/') !== -1;
         this.isListLevel = !this.isFundLevel && !this.isShareLevel;
 
-        this.subscriptions.push(this.requestLanguageObj.subscribe((requested) => this.getLanguage(requested)));
-        this.subscriptions.push(this.myDetailOb.subscribe((myDetails) => this.getUserDetails(myDetails)));
+        this.subscriptions.push(this.requestLanguageObj.subscribe((requested) => {
+            this.getLanguage(requested);
+            this.setHolderFilters();
+            this.translateTabs();
+        }));
+
+        this.subscriptions.push(this.myDetailOb.subscribe(myDetails => this.getUserDetails(myDetails)));
+
+        this.setHolderFilters();
 
         this.listSearchForm = this.fb.group({
             searchFunds: [
@@ -175,38 +164,38 @@ export class ShareHoldersComponent implements OnInit, OnDestroy {
         });
 
         // all list
-        this.subscriptions.push(this.requestedOfiAmHoldersObj.subscribe((requested) => this.getAmHoldersRequested(requested)));
-        this.subscriptions.push(this.OfiAmHoldersListObj.subscribe((list) => this.getAmHoldersListFromRedux(list)));
+        this.subscriptions.push(this.requestedOfiAmHoldersObj.subscribe(requested => this.getAmHoldersRequested(requested)));
+        this.subscriptions.push(this.OfiAmHoldersListObj.subscribe(list => this.getAmHoldersListFromRedux(list)));
 
         // fund select
-        this.subscriptions.push(this.fundsByUserRequestedOb.subscribe((requested) => this.fundsByUserRequested(requested)));
-        this.subscriptions.push(this.fundsByUserListOb.subscribe((list) => this.fundsByUserList(list)));
+        this.subscriptions.push(this.fundsByUserRequestedOb.subscribe(requested => this.fundsByUserRequested(requested)));
+        this.subscriptions.push(this.fundsByUserListOb.subscribe(list => this.fundsByUserList(list)));
 
         // fund list
-        this.subscriptions.push(this.fundWithHoldersListOb.subscribe((list) => this.fundWithHoldersList(list)));
+        this.subscriptions.push(this.fundWithHoldersListOb.subscribe(list => this.fundWithHoldersList(list)));
 
         // valueChange
-        this.subscriptions.push(this.listSearchForm.valueChanges.subscribe((form) => this.requestSearch()));
-        this.subscriptions.push(this.searchForm.valueChanges.subscribe((form) => this.requestSearch()));
-        this.subscriptions.push(this.filtersForm.valueChanges.subscribe((form) => this.requestSearch()));
+        this.subscriptions.push(this.listSearchForm.valueChanges.subscribe(() => this.requestSearch()));
+        this.subscriptions.push(this.searchForm.valueChanges.subscribe(() => this.requestSearch()));
+        this.subscriptions.push(this.filtersForm.valueChanges.subscribe(() => this.requestSearch()));
 
         this.setInitialTabs();
 
-        this.subscriptions.push(this.route.params.subscribe(params => {
+        this.subscriptions.push(this.route.params.subscribe((params) => {
             const tabId = Number(params['tabid']);
 
             if (typeof tabId !== 'undefined' && tabId > 0) {
                 // reset tabs
                 this.tabsControl = [
                     {
-                        'title': {
-                            'icon': 'fa fa-th-list',
-                            'text': 'List'
+                        title: {
+                            icon: 'fa fa-th-list',
+                            text: this.translate.translate('List'),
                         },
-                        'link': '/reports/holders-list',
-                        'id': 0,
-                        'type': 'list',
-                        'active': this.isListLevel,
+                        link: '/reports/holders-list',
+                        id: 0,
+                        type: 'list',
+                        active: this.isListLevel,
                     },
                 ];
 
@@ -216,17 +205,17 @@ export class ShareHoldersComponent implements OnInit, OnDestroy {
                     this.fundWithHoldersRequested(false);
 
                     this.tabsControl.push({
-                        'title': {
-                            'icon': 'fa fa-th-list',
-                            'text': 'Funds Level'
+                        title: {
+                            icon: 'fa fa-th-list',
+                            text: this.translate.translate('Funds Level'),
                         },
-                        'link': '/reports/holders-list/funds',
-                        'type': 'funds',
-                        'id': this.selectedFundId,
-                        'active': this.isFundLevel,
+                        link: '/reports/holders-list/funds',
+                        type: 'funds',
+                        id: this.selectedFundId,
+                        active: this.isFundLevel,
                     });
 
-                    let obj = this.fundList.find(o => o.id === this.selectedFundId);
+                    const obj = this.fundList.find(o => o.id === this.selectedFundId);
                     if (obj && obj !== undefined) {
                         this.searchForm.get('search').patchValue([obj], { emitEvent: false });
                     }
@@ -241,26 +230,26 @@ export class ShareHoldersComponent implements OnInit, OnDestroy {
                         selectedFilter: this.holderFilters[0].id,
                     });
 
-                    this.subscriptions.push(this.shareHolderDetailObs.subscribe((data) => this.getHolderDetail(data)));
+                    this.subscriptions.push(this.shareHolderDetailObs.subscribe(data => this.getHolderDetail(data)));
 
                     this.tabsControl.push({
-                        'title': {
-                            'icon': 'fa fa-th-list',
-                            'text': 'Shares Level'
+                        title: {
+                            icon: 'fa fa-th-list',
+                            text: this.translate.translate('Shares Level'),
                         },
-                        'link': '/reports/holders-list/shares',
-                        'type': 'shares',
-                        'id': this.selectedShareId,
-                        'active': this.isShareLevel,
+                        link: '/reports/holders-list/shares',
+                        type: 'shares',
+                        id: this.selectedShareId,
+                        active: this.isShareLevel,
                     });
 
-                    let obj = this.sharesList.find(o => o.id === this.selectedShareId);
+                    const obj = this.sharesList.find(o => o.id === this.selectedShareId);
                     if (obj && obj !== undefined) {
                         this.searchForm.get('search').patchValue([obj], { emitEvent: false });
                     }
 
                     if (this.allList.length > 0 && this.isShareLevel && this.selectedShareId > 0) {
-                        const share = this.allList.find((item) => item.shareId === this.selectedShareId);
+                        const share = this.allList.find(item => item.shareId === this.selectedShareId);
 
                         this.tabTitle = `${share.shareName} - ${share.shareIsin}`;
                     }
@@ -289,15 +278,15 @@ export class ShareHoldersComponent implements OnInit, OnDestroy {
     getLanguage(requested): void {
         if (requested) {
             switch (requested) {
-            case 'fra':
-                this.language = 'fr';
-                break;
-            case 'eng':
-                this.language = 'en';
-                break;
-            default:
-                this.language = 'en';
-                break;
+                case 'fra':
+                    this.language = 'fr';
+                    break;
+                case 'eng':
+                    this.language = 'en';
+                    break;
+                default:
+                    this.language = 'en';
+                    break;
             }
         }
     }
@@ -314,22 +303,25 @@ export class ShareHoldersComponent implements OnInit, OnDestroy {
 
     fundsByUserList(list) {
         const listImu = fromJS(list);
-        this.fundList = listImu.reduce((result, item) => {
-            let text = item.fundLei !== '' ? `${item.fundName} (${item.fundLei})` : item.fundName;
+        this.fundList = listImu.reduce(
+            (result, item) => {
+                const text = item.fundLei !== '' ? `${item.fundName} (${item.fundLei})` : item.fundName;
 
-            result.push({
-                id: item.fundId,
-                text,
-            });
-            return result;
-        }, []);
+                result.push({
+                    id: item.fundId,
+                    text,
+                });
+                return result;
+            },
+            [],
+        );
 
         this.changeDetectorRef.markForCheck();
     }
 
     fundWithHoldersRequested(requested): void {
         if (!requested) {
-            let payload: any = {
+            const payload: any = {
                 fundId: this.selectedFundId,
             };
             if (this.selectedTopHolders !== 0) {
@@ -348,25 +340,28 @@ export class ShareHoldersComponent implements OnInit, OnDestroy {
 
         if (list.length > 0) {
             if (!!list[0].Message) {
-                let id = this.fundList.findIndex((r) => r.id == this.selectedFundId)
+                const id = this.fundList.findIndex((r) => r.id == this.selectedFundId)
                 this.tabTitle = (id > -1 ? this.fundList[id].text : '');
             } else {
                 const listImu = fromJS(list);
                 this.fundsData = [];
-                this.fundsData = listImu.reduce((result, item) => {
-                    result.push({
-                        fundId: item.get('fundId'),
-                        fundName: item.get('fundName'),
-                        fundAum: item.get('fundAum'),
-                        fundHolderNumber: item.get('fundHolderNumber'),
-                        lastSettlementDate: item.get('lastSettlementDate'),
-                        fundCurrency: item.get('fundCurrency'),
-                        holders: item.get('holders'),
-                    });
-                    return result;
-                }, []);
+                this.fundsData = listImu.reduce(
+                    (result, item) => {
+                        result.push({
+                            fundId: item.get('fundId'),
+                            fundName: item.get('fundName'),
+                            fundAum: item.get('fundAum'),
+                            fundHolderNumber: item.get('fundHolderNumber'),
+                            lastSettlementDate: item.get('lastSettlementDate'),
+                            fundCurrency: item.get('fundCurrency'),
+                            holders: item.get('holders'),
+                        });
+                        return result;
+                    },
+                    [],
+                );
 
-                let lei = (typeof this.fundsData[0].fundLei !== 'undefined') ? ' - ' + this.fundsData[0].fundLei : '';
+                const lei = (typeof this.fundsData[0].fundLei !== 'undefined') ? ' - ' + this.fundsData[0].fundLei : '';
                 this.tabTitle = `${this.fundsData[0].fundName}${lei}`;
 
                 this.fundSettlementDate = this.fundsData[0].lastSettlementDate;
@@ -374,18 +369,21 @@ export class ShareHoldersComponent implements OnInit, OnDestroy {
                 this.fundsAUM = this.fundsData[0].fundAum;
                 this.fundsCCY = this.fundsData[0].fundCurrency;
 
-                this.holdersFundData = this.fundsData[0].holders.reduce((result, item) => {
-                    result.push({
-                        ranking: item.get('ranking'),
-                        portfolio: item.get('portfolio'),
-                        investorName: item.get('investorName'),
-                        quantity: item.get('quantity'),
-                        amount: item.get('amount'),
-                        shareRatio: item.get('shareRatio'),
-                        fundRatio: item.get('fundRatio'),
-                    });
-                    return result;
-                }, []);
+                this.holdersFundData = this.fundsData[0].holders.reduce(
+                    (result, item) => {
+                        result.push({
+                            ranking: item.get('ranking'),
+                            portfolio: item.get('portfolio'),
+                            investorName: item.get('investorName'),
+                            quantity: item.get('quantity'),
+                            amount: item.get('amount'),
+                            shareRatio: item.get('shareRatio'),
+                            fundRatio: item.get('fundRatio'),
+                        });
+                        return result;
+                    },
+                    [],
+                );
             }
         }
 
@@ -447,6 +445,34 @@ export class ShareHoldersComponent implements OnInit, OnDestroy {
         this.loadingDatagrid = false;
     }
 
+    setHolderFilters() {
+        this.holderFilters = this.translate.translate([
+            { id: 0, text: 'All' },
+            { id: 10, text: 'Top 10 holders' },
+            { id: 20, text: 'Top 20 holders' },
+            { id: 50, text: 'Top 50 holders' },
+            { id: 100, text: 'Top 100 holders' },
+        ]);
+    }
+
+    translateTabs() {
+        this.tabsControl.forEach((tab) => {
+            switch (tab.type) {
+                case 'shares':
+                    tab.title.text = this.translate.translate('Shares Level');
+                    break;
+                case 'funds':
+                    tab.title.text = this.translate.translate('Funds Level');
+                    break;
+                case 'list':
+                    tab.title.text = this.translate.translate('List');
+                    break;
+                default:
+                    break;
+            }
+        });
+    }
+
     setInitialTabs() {
         // Get opened tabs from redux store.
         const openedTabs = [];
@@ -455,16 +481,17 @@ export class ShareHoldersComponent implements OnInit, OnDestroy {
             /* Default tabs. */
             this.tabsControl = [
                 {
-                    'title': {
-                        'icon': 'fa fa-th-list',
-                        'text': 'List'
+                    title: {
+                        icon: 'fa fa-th-list',
+                        text: this.translate.translate('List'),
                     },
-                    'link': '/reports/holders-list',
-                    'id': 0,
-                    'type': 'list',
-                    'active': this.isListLevel,
+                    link: '/reports/holders-list',
+                    id: 0,
+                    type: 'list',
+                    active: this.isListLevel,
                 },
             ];
+
             return true;
         }
     }
@@ -476,7 +503,6 @@ export class ShareHoldersComponent implements OnInit, OnDestroy {
     }
 
     requestSearch() {
-
         this.loadingDatagrid = true;
 
         if (this.isListLevel) {
@@ -491,7 +517,7 @@ export class ShareHoldersComponent implements OnInit, OnDestroy {
         }
 
         if (this.isFundLevel) {
-            let oldSelectedFundId = this.selectedFundId;
+            const oldSelectedFundId = this.selectedFundId;
             this.selectedFundId = (this.searchForm.controls['search'].value.length > 0) ? this.searchForm.controls['search'].value[0].id : 0;
             this.selectedTopHolders = (this.filtersForm.controls['topholders'].value.length > 0) ? this.filtersForm.controls['topholders'].value[0].id : 0;
             if (this.selectedFundId > 0) {
@@ -513,7 +539,7 @@ export class ShareHoldersComponent implements OnInit, OnDestroy {
         }
 
         if (this.isShareLevel) {
-            let oldSelectedShareId = this.selectedShareId;
+            const oldSelectedShareId = this.selectedShareId;
             this.selectedShareId = (this.searchForm.controls['search'].value.length > 0) ? this.searchForm.controls['search'].value[0].id : 0;
             this.selectedTopHolders = (this.filtersForm.controls['topholders'].value.length > 0) ? this.filtersForm.controls['topholders'].value[0].id : 0;
             if (this.selectedShareId > 0) {

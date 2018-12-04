@@ -31,5 +31,4 @@ export class CircleStatusIndicator {
     get sizeString(): string {
         return this.size + 'px';
     }
-
 }

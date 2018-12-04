@@ -407,10 +407,10 @@ const beneficiaryFormPaths = {
     leiCode : 'legalPerson',
 };
 
-export function buildBeneficiaryObject(data) {
+export function buildBeneficiaryObject(responseData) {
     const beneficiary = {};
 
-    data = pickBy(data);
+    const data = pickBy(responseData);
     forEach(data, (value, key) => {
         let path = getValue(beneficiaryFormPaths, key, '');
         path = path ? [path, key].join('.') : key;

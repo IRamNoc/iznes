@@ -35,10 +35,13 @@ export class TextInputListComponent implements OnInit, OnChanges {
     ngOnChanges() {
         if (this.getContentKeys().length) {
             this.contentForm = this.fb.group({
-                ...this.getContentKeys().reduce((acc, cur) => {
-                    acc[cur] = { value: this.content[cur].value, disabled: true };
-                    return acc;
-                }, {})
+                ...this.getContentKeys().reduce(
+                    (acc, cur) => {
+                        acc[cur] = { value: this.content[cur].value, disabled: true };
+                        return acc;
+                    },
+                    {},
+                ),
             });
         }
     }

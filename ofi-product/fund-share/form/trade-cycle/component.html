@@ -1,22 +1,31 @@
 <form [formGroup]="model.form">
     <div class="row">
         <div class="form-group col-sm-6">
-            <label [ngClass]="{'control-label': true, 'required-field': true}" for="{{typeLowercase}}TradeCyclePeriod">{{'@typeCapitilised@ Trade
+            <label [ngClass]="{'control-label': true, 'required-field': true}" for="{{typeLowercase}}TradeCyclePeriod">{{ '@typeCapitilised@ Trade
                 Cycle Period' | translate: {'typeCapitilised': typeCapitilised} }}</label>
 
-            <ng-select id="{{typeLowercase}}TradeCyclePeriod" [items]="model.dropdownItems.tradeCyclePeriodItems" [active]="model.form.value.tradeCyclePeriod"
-                       placeholder="" [formControl]="model.form.controls['tradeCyclePeriod']" [disabled]="model.form.controls['tradeCyclePeriod']['disabled']">
+            <ng-select id="{{typeLowercase}}TradeCyclePeriod" 
+                        [items]="model.dropdownItems.tradeCyclePeriodItems" 
+                        [active]="model.form.value.tradeCyclePeriod"
+                        placeholder="" 
+                        [formControl]="model.form.controls['tradeCyclePeriod']" 
+                        [disabled]="model.form.controls['tradeCyclePeriod']['disabled']">
             </ng-select>
         </div>
     </div>
 
     <div class="row" [hidden]="model.tradeCyclePeriod !== 1">
         <div class="form-group col-sm-4">
-            <label [ngClass]="{'control-label': true, 'required-field': true}" for="{{typeLowercase}}WeeklyDealingDays">{{'Weekly @typeCapitilised@
+            <label [ngClass]="{'control-label': true, 'required-field': true}" for="{{typeLowercase}}WeeklyDealingDays">{{ 'Weekly @typeCapitilised@
                 Dealing Days' | translate: {'typeCapitilised': typeCapitilised} }}</label>
 
-            <ng-select id="{{typeLowercase}}WeeklyDealingDays" [items]="model.dropdownItems.weeklyItems" [active]="model.form.value.weeklyDealingDays"
-                       [multiple]="true" placeholder="" [formControl]="model.form.controls['weeklyDealingDays']" [disabled]="model.form.controls['weeklyDealingDays']['disabled']">
+            <ng-select id="{{typeLowercase}}WeeklyDealingDays" 
+                        [items]="model.dropdownItems.weeklyItems" 
+                        [active]="model.form.value.weeklyDealingDays"
+                        [multiple]="true" 
+                        placeholder="" 
+                        [formControl]="model.form.controls['weeklyDealingDays']" 
+                        [disabled]="model.form.controls['weeklyDealingDays']['disabled']">
             </ng-select>
         </div>
     </div>
@@ -24,30 +33,32 @@
     <div [hidden]="model.tradeCyclePeriod !== 2" formArrayName="monthlyDealingDays">
         <div class="row" *ngFor="let control of getControls('monthlyDealingDays'); let idx = index;">
             <div class="form-group col-sm-4">
-                <label [ngClass]="{'control-label': true, 'required-field': true}" for="{{typeLowercase}}MonthlyDealingDaysTermA">{{'Number' | translate}}</label>
+                <label [ngClass]="{'control-label': true, 'required-field': true}" for="{{typeLowercase}}MonthlyDealingDaysTermA">{{ 'Number' | translate }}</label>
 
-                <ng-select id="{{typeLowercase}}MonthlyDealingDaysTermA" [items]="model.dropdownItems.numberItems" placeholder="" [formControl]="control.controls.termA"
-                           [disabled]="control.controls.termA['disabled']">
+                <ng-select id="{{typeLowercase}}MonthlyDealingDaysTermA" 
+                            [items]="model.dropdownItems.numberItems" 
+                            placeholder="" 
+                            [formControl]="control.controls.termA"
+                            [disabled]="control.controls.termA['disabled']">
                 </ng-select>
             </div>
 
             <div class="form-group col-sm-4">
-                <label [ngClass]="{'control-label': true, 'required-field': true}" for="{{typeLowercase}}MonthlyDealingDaysTermB">{{'Day' | translate}}</label>
+                <label [ngClass]="{'control-label': true, 'required-field': true}" for="{{typeLowercase}}MonthlyDealingDaysTermB">{{ 'Day' | translate }}</label>
 
-                <ng-select id="{{typeLowercase}}MonthlyDealingDaysTermB" [items]="model.dropdownItems.dayItems" placeholder="" [formControl]="control.controls.termB"
-                           [disabled]="control.controls.termB['disabled']">
+                <ng-select id="{{typeLowercase}}MonthlyDealingDaysTermB" 
+                            [items]="model.dropdownItems.dayItems" 
+                            placeholder="" 
+                            [formControl]="control.controls.termB"
+                            [disabled]="control.controls.termB['disabled']">
                 </ng-select>
             </div>
 
             <div class="form-group col-sm-4" style="padding-top: 20px;">
-                <button class="btn btn-warning" (click)="removeMonthlyDealingDays(idx)" [hidden]="!showRemove(idx, model.form.controls.monthlyDealingDays.controls.length)">{{'Remove'
-                    | translate}}
-
-                </button>
-                <button class="btn btn-primary" (click)="addMonthlyDealingDays()" [hidden]="!showAdd(idx, model.form.controls.monthlyDealingDays.controls.length)">{{'Add'
-                    | translate}}
-
-                </button>
+                <button class="btn btn-warning" (click)="removeMonthlyDealingDays(idx)" [hidden]="!showRemove(idx, model.form.controls.monthlyDealingDays.controls.length)">{{ 'Remove'
+                    | translate }}</button>
+                <button class="btn btn-primary" (click)="addMonthlyDealingDays()" [hidden]="!showAdd(idx, model.form.controls.monthlyDealingDays.controls.length)">{{ 'Add'
+                    | translate }}</button>
             </div>
         </div>
     </div>
@@ -55,38 +66,43 @@
     <div [hidden]="model.tradeCyclePeriod !== 3" formArrayName="yearlyDealingDays">
         <div class="row" *ngFor="let control of getControls('yearlyDealingDays'); let idx = index;">
             <div class="form-group col-sm-3">
-                <label [ngClass]="{'control-label': true, 'required-field': true}" for="{{typeLowercase}}YearlyDealingDaysTermA">{{'Number' | translate}}</label>
+                <label [ngClass]="{'control-label': true, 'required-field': true}" for="{{typeLowercase}}YearlyDealingDaysTermA">{{ 'Number' | translate }}</label>
 
-                <ng-select id="{{typeLowercase}}YearlyDealingDaysTermA" [items]="model.dropdownItems.numberItems" placeholder="" [formControl]="control.controls.termA"
-                           disabled="control.controls.termA['disabled']">
+                <ng-select id="{{typeLowercase}}YearlyDealingDaysTermA" 
+                            [items]="model.dropdownItems.numberItems" 
+                            placeholder="" 
+                            [formControl]="control.controls.termA"
+                            disabled="control.controls.termA['disabled']">
                 </ng-select>
             </div>
 
             <div class="form-group col-sm-3">
-                <label [ngClass]="{'control-label': true, 'required-field': true}" for="{{typeLowercase}}YearlyDealingDaysTermB">{{'Day' | translate}}</label>
+                <label [ngClass]="{'control-label': true, 'required-field': true}" for="{{typeLowercase}}YearlyDealingDaysTermB">{{ 'Day' | translate }}</label>
 
-                <ng-select id="{{typeLowercase}}YearlyDealingDaysTermB" [items]="model.dropdownItems.dayItems" placeholder="" [formControl]="control.controls.termB"
-                           disabled="control.controls.termB['disabled']">
+                <ng-select id="{{typeLowercase}}YearlyDealingDaysTermB" 
+                            [items]="model.dropdownItems.dayItems" 
+                            placeholder="" 
+                            [formControl]="control.controls.termB"
+                            disabled="control.controls.termB['disabled']">
                 </ng-select>
             </div>
 
             <div class="form-group col-sm-3">
-                <label [ngClass]="{'control-label': true, 'required-field': true}" for="{{typeLowercase}}YearlyDealingDaysTermC">{{'Month' | translate}}</label>
+                <label [ngClass]="{'control-label': true, 'required-field': true}" for="{{typeLowercase}}YearlyDealingDaysTermC">{{ 'Month' | translate }}</label>
 
-                <ng-select id="{{typeLowercase}}YearlyDealingDaysTermC" [items]="model.dropdownItems.monthItems" placeholder="" [formControl]="control.controls.termC"
-                           disabled="control.controls.termC['disabled']">
+                <ng-select id="{{typeLowercase}}YearlyDealingDaysTermC" 
+                            [items]="model.dropdownItems.monthItems" 
+                            placeholder="" 
+                            [formControl]="control.controls.termC"
+                            disabled="control.controls.termC['disabled']">
                 </ng-select>
             </div>
 
             <div class="form-group col-sm-3" style="padding-top: 20px;">
-                <button class="btn btn-warning" (click)="removeYearlyDealingDays(idx)" [hidden]="!showRemove(idx, model.form.controls.yearlyDealingDays.controls.length)">{{'Remove'
-                    | translate}}
-
-                </button>
-                <button class="btn btn-primary" (click)="addYearlyDealingDays()" [hidden]="!showAdd(idx, model.form.controls.yearlyDealingDays.controls.length)">{{'Add'
-                    | translate}}
-
-                </button>
+                <button class="btn btn-warning" (click)="removeYearlyDealingDays(idx)" [hidden]="!showRemove(idx, model.form.controls.yearlyDealingDays.controls.length)">{{ 'Remove'
+                    | translate }}</button>
+                <button class="btn btn-primary" (click)="addYearlyDealingDays()" [hidden]="!showAdd(idx, model.form.controls.yearlyDealingDays.controls.length)">{{ 'Add'
+                    | translate }}</button>
             </div>
         </div>
     </div>

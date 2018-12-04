@@ -1,26 +1,30 @@
 <div class="header-breadcrumbs">
     <h1>
         <i class="fa fa-bars"></i>
-        <span>{{(isCreate() || currDraft == 1 ? 'Add new Share' : 'View Share') | translate}}</span>
+        <span>{{ (isCreate() || currDraft == 1 ? 'Add New Share' : 'View Share') | translate }}</span>
     </h1>
 </div>
 
 <clr-tabs *ngIf="loadUI()">
     <clr-tab>
-        <button clrTabLink id="tabFundShareButton">{{'Shares' | translate}}
+        <button clrTabLink id="tabFundShareButton">{{ 'Shares' | translate }}
 
         </button>
         <clr-tab-content class="outer">
             <div *ngIf="!isRead()" class="row tab-header-container">
                 <div class="col-sm-6">
-                    <p>{{(isCreate() || currDraft == 1 ? 'Please fill in the following information to create a new Share.': 'Ammend the following information to update this share.') | translate}}</p>
+                    <p>{{ (isCreate() || currDraft == 1 ? 'Please fill in the following information to create a new Share.': 'Ammend the following information to update this share.') | translate }}</p>
                 </div>
                 <div class="col-sm-6">
                     <div class="form-group btn-container">
-                        <button class="btn btn-default" (click)="goToAuditTrail()" *ngIf="!isCreate()">{{'Share Audit Trail' | translate}}</button>
-                        <button class="btn btn-default" (click)="duplicateShare()" *ngIf="!isCreate()">{{'Duplicate a share' | translate}}</button>
-                        <ng-select *ngIf="isCreate()" id="share-prefill-select" [items]="shareListItems" [allowClear]="true" [placeholder]="_translate.translate('Duplicate from an existing Share')"
-                                   [formControl]="shareControl">
+                        <button class="btn btn-default" (click)="goToAuditTrail()" *ngIf="!isCreate()">{{ 'Share Audit Trail' | translate }}</button>
+                        <button class="btn btn-default" (click)="duplicateShare()" *ngIf="!isCreate()">{{ 'Duplicate a share' | translate }}</button>
+                        <ng-select *ngIf="isCreate()" 
+                                    id="share-prefill-select" 
+                                    [items]="shareListItems" 
+                                    [allowClear]="true" 
+                                    [placeholder]="translate.translate('Duplicate from an existing Share')"
+                                    [formControl]="shareControl">
                         </ng-select>
                     </div>
                 </div>
@@ -30,8 +34,8 @@
                     <div class="col-sm-12">
                         <a href="#" (click)="openPanel(panels['umbrella']['root'], $event)">
                             <i class="fa fa-chevron-right" [class.rotate]="isPanelOpen(panels['umbrella']['root'])"></i>
-                            <h2 id="toggleFund">{{'Umbrella Fund: @model.umbrella.umbrellaFundName.value()@' | translate: {'model.umbrella.umbrellaFundName.value()':
-                                model.umbrella.umbrellaFundName.value()} }}</h2>
+                            <h2 id="toggleFund">{{ 'Umbrella Fund: @model.umbrella.umbrellaFundName.value()@' | translate: { 'model.umbrella.umbrellaFundName.value()':
+                                model.umbrella.umbrellaFundName.value() } }}</h2>
                         </a>
                     </div>
                 </div>
@@ -41,8 +45,7 @@
                             <div class="col-sm-12">
                                 <a href="#" (click)="openPanel(panels['umbrella']['main'], $event)">
                                     <i class="fa fa-chevron-right" [class.rotate]="isPanelOpen(panels['umbrella']['main'])"></i>
-                                    <h2 id="toggleFund">{{'Main Information' | translate}}
-                                    </h2>
+                                    <h2 id="toggleFund">{{' Main Information' | translate }}</h2>
                                 </a>
                             </div>
                         </div>
@@ -56,8 +59,7 @@
                             <div class="col-sm-12">
                                 <a href="#" (click)="openPanel(panels['umbrella']['optionnal'], $event)">
                                     <i class="fa fa-chevron-right" [class.rotate]="isPanelOpen(panels['umbrella']['optionnal'])"></i>
-                                    <h2 id="toggleFund">{{'Optionnal Information' | translate}}
-                                    </h2>
+                                    <h2 id="toggleFund">{{ 'Optionnal Information' | translate }}</h2>
                                 </a>
                             </div>
                         </div>
@@ -72,8 +74,7 @@
                     <div class="col-sm-12">
                         <a href="#" (click)="openPanel(panels['fund']['root'], $event)">
                             <i class="fa fa-chevron-right" [class.rotate]="isPanelOpen(panels['fund']['root'])"></i>
-                            <h2 id="toggleFund">{{'Fund: @model.fund.name.value()@' | translate: {'model.fund.name.value()': model.fund.name.value()}
-                                }}
+                            <h2 id="toggleFund">{{ 'Fund: @model.fund.name.value()@' | translate: { 'model.fund.name.value()': model.fund.name.value() } }}
                             </h2>
                         </a>
                     </div>
@@ -85,8 +86,7 @@
                             <div class="col-sm-12">
                                 <a href="#" (click)="openPanel(panels['fund']['select'], $event)">
                                     <i class="fa fa-chevron-right" [class.rotate]="isPanelOpen(panels['fund']['select'])"></i>
-                                    <h2 id="toggleFund">{{'Choose another fund' | translate: {'model.fund.name.value()': model.fund.name.value()}
-                                        }}
+                                    <h2 id="toggleFund">{{ 'Choose Another Fund' | translate: { 'model.fund.name.value()': model.fund.name.value()} }}
                                     </h2>
                                 </a>
                             </div>
@@ -96,21 +96,23 @@
                                 <section class="form-block">
                                     <div class="row">
                                         <div class="form-group col-sm-6">
-                                            <label class="control-label" for="lei">{{'Legal Entity Identifier (LEI)' | translate}}</label>
+                                            <label class="control-label" for="lei">{{ 'Legal Entity Identifier (LEI)' | translate }}</label>
                                             <input class="form-control" type="text" id="lei" name="lei" formControlName="lei">
                                         </div>
                                         <div class="form-group col-sm-6">
-                                            <label class="control-label" for="domicile">{{'Umbrella Fund Domicile (Country)' | translate}}</label>
+                                            <label class="control-label" for="domicile">{{ 'Umbrella Fund Domicile (Country)' | translate }}</label>
                                             <input class="form-control" type="text" id="domicile" name="domicile" formControlName="domicile">
                                         </div>
                                     </div>
                                     <div class="row">
                                         <div class="form-group col-sm-6">
-                                            <label class="control-label" for="selectFund">{{'Click here to select another Umbrella Fund for this Fund' | translate}}
-
-                                            </label>
-                                            <ng-select class="form-control" id="selectFund" [items]="fundListItems" placeholder="" [formControl]="selectFundForm.controls['fund']"
-                                                       [required]="true">
+                                            <label class="control-label" for="selectFund">{{ 'Click here to select another Umbrella Fund for this Fund' | translate }}</label>
+                                            <ng-select class="form-control" 
+                                                        id="selectFund" 
+                                                        [items]="fundListItems" 
+                                                        placeholder="" 
+                                                        [formControl]="selectFundForm.controls['fund']"
+                                                        [required]="true">
                                             </ng-select>
                                         </div>
                                     </div>
@@ -126,7 +128,7 @@
                             <div class="col-sm-12">
                                 <a href="#" (click)="openPanel(panels['fund']['main'], $event)">
                                     <i class="fa fa-chevron-right" [class.rotate]="isPanelOpen(panels['fund']['main'])"></i>
-                                    <h2 id="toggleFund">{{'Main Information' | translate}}
+                                    <h2 id="toggleFund">{{ 'Main Information' | translate }}
                                     </h2>
                                 </a>
                             </div>
@@ -141,7 +143,7 @@
                             <div class="col-sm-12">
                                 <a href="#" (click)="openPanel(panels['fund']['holiday'], $event)">
                                     <i class="fa fa-chevron-right" [class.rotate]="isPanelOpen(panels['fund']['holiday'])"></i>
-                                    <h2 id="toggleFund">{{'Holiday Information' | translate}}
+                                    <h2 id="toggleFund">{{ 'Holiday Information' | translate }}
                                     </h2>
                                 </a>
                             </div>
@@ -156,8 +158,7 @@
                             <div class="col-sm-12">
                                 <a href="#" (click)="openPanel(panels['fund']['optionnal'], $event)">
                                     <i class="fa fa-chevron-right" [class.rotate]="isPanelOpen(panels['fund']['optionnal'])"></i>
-                                    <h2 id="toggleFund">{{'Optionnal Information' | translate}}
-                                    </h2>
+                                    <h2 id="toggleFund">{{ 'Optionnal Information' | translate }}</h2>
                                 </a>
                             </div>
                         </div>
@@ -170,11 +171,8 @@
 
             <clr-tabs #tabsRef>
                 <clr-tab>
-                    <button clrTabLink id="tabKeyFactsButton">{{'Key Facts' | translate}}
-
-
-                        <span class="required" [hidden]="model.keyFacts.mandatory.isValid()">*
-                        </span>
+                    <button clrTabLink id="tabKeyFactsButton">{{ 'Key Facts' | translate }}
+                        <span class="required" [hidden]="model.keyFacts.mandatory.isValid()">*</span>
                     </button>
                     <clr-tab-content>
                         <div class="well">
@@ -182,7 +180,7 @@
                                 <div class="col-xs-6">
                                     <a href="#" (click)="openPanel(panels['keyFacts'].status, $event)">
                                         <i class="fa fa-chevron-right" [class.rotate]="isPanelOpen(panels['keyFacts'].status)"></i>
-                                        <h2 id="toggleKeyFactsStatus">{{'Key Facts: Share Status' | translate}}</h2>
+                                        <h2 id="toggleKeyFactsStatus">{{ 'Key Facts: Share Status' | translate }}</h2>
                                     </a>
                                 </div>
                             </div>
@@ -198,7 +196,7 @@
                                 <div class="col-xs-6">
                                     <a href="#" (click)="openPanel(panels['keyFacts'].mandatory, $event)">
                                         <i class="fa fa-chevron-right" [class.rotate]="isPanelOpen(panels['keyFacts'].mandatory)"></i>
-                                        <h2 id="toggleKeyFactsMandatory">{{'Key Facts: Main Information' | translate}}</h2>
+                                        <h2 id="toggleKeyFactsMandatory">{{ 'Key Facts: Main Information' | translate }}</h2>
                                     </a>
                                 </div>
                             </div>
@@ -210,7 +208,7 @@
                                 <div class="col-xs-6">
                                     <a href="#" (click)="openPanel(panels['keyFacts'].optional, $event)">
                                         <i class="fa fa-chevron-right" [class.rotate]="isPanelOpen(panels['keyFacts'].optional)"></i>
-                                        <h2 id="toggleKeyFactsOptional">{{'Key Facts: Optional Information' | translate}}</h2>
+                                        <h2 id="toggleKeyFactsOptional">{{ 'Key Facts: Optional Information' | translate }}</h2>
                                     </a>
                                 </div>
                             </div>
@@ -222,11 +220,8 @@
                 </clr-tab>
 
                 <clr-tab>
-                    <button clrTabLink id="tabCharacteristicsButton">{{'Characteristics' | translate}}
-
-
-                        <span class="required" [hidden]="model.characteristic.mandatory.isValid()">*
-                        </span>
+                    <button clrTabLink id="tabCharacteristicsButton">{{ 'Characteristics' | translate }}
+                        <span class="required" [hidden]="model.characteristic.mandatory.isValid()">*</span>
                     </button>
                     <clr-tab-content>
                         <div class="well">
@@ -234,7 +229,7 @@
                                 <div class="col-xs-6">
                                     <a href="#" (click)="openPanel(panels['characteristic'].mandatory, $event)">
                                         <i class="fa fa-chevron-right" [class.rotate]="isPanelOpen(panels['characteristic'].mandatory)"></i>
-                                        <h2 id="toggleCharacteristicMandatory">{{'Characteristics: Main Information' | translate}}</h2>
+                                        <h2 id="toggleCharacteristicMandatory">{{ 'Characteristics: Main Information' | translate }}</h2>
                                     </a>
                                 </div>
                             </div>
@@ -246,9 +241,7 @@
                 </clr-tab>
 
                 <clr-tab>
-                    <button clrTabLink id="tabCalendarButton">{{'Calendar' | translate}}
-
-
+                    <button clrTabLink id="tabCalendarButton">{{ 'Calendar' | translate }}
                         <span class="required" [hidden]="model.calendar.mandatory.isValid() && model.calendar.subscriptionTradeCycle.isValid() && model.calendar.redemptionTradeCycle.isValid()">*
                         </span>
                     </button>
@@ -258,20 +251,14 @@
                                 <div class="col-xs-6">
                                     <a href="#" (click)="openPanel(panels['calendar'].mandatory, $event)">
                                         <i class="fa fa-chevron-right" [class.rotate]="isPanelOpen(panels['calendar'].mandatory)"></i>
-                                        <h2 id="toggleCalendarMandatory">{{'Calendar: Main Information' | translate}}</h2>
+                                        <h2 id="toggleCalendarMandatory">{{ 'Calendar: Main Information' | translate }}</h2>
                                     </a>
                                 </div>
                             </div>
                             <div class="row panel-body" [class.hidden]="!isPanelOpen(panels['calendar'].mandatory)">
-                                <app-ofi-am-trade-cycle #tradeCycleSubscription [tradeType]="'Subscription'" (modelEmitter)="calendarSubscriptionModelEvent($event)">
+                                <app-ofi-am-trade-cycle #tradeCycleSubscription [tradeType]="'Subscription'" (modelEmitter)="calendarSubscriptionModelEvent($event)"></app-ofi-am-trade-cycle>
 
-
-                                </app-ofi-am-trade-cycle>
-
-                                <app-ofi-am-trade-cycle #tradeCycleRedemption [tradeType]="'Redemption'" (modelEmitter)="calendarRedemptionModelEvent($event)">
-
-
-                                </app-ofi-am-trade-cycle>
+                                <app-ofi-am-trade-cycle #tradeCycleRedemption [tradeType]="'Redemption'" (modelEmitter)="calendarRedemptionModelEvent($event)"></app-ofi-am-trade-cycle>
 
                                 <app-dynamic-form [model]="model.calendar.mandatory"></app-dynamic-form>
                             </div>
@@ -280,11 +267,8 @@
                 </clr-tab>
 
                 <clr-tab>
-                    <button clrTabLink id="tabFeesButton">{{'Fees' | translate}}
-
-
-                        <span class="required" [hidden]="model.fees.mandatory.isValid()">*
-                        </span>
+                    <button clrTabLink id="tabFeesButton">{{ 'Fees' | translate }}
+                        <span class="required" [hidden]="model.fees.mandatory.isValid()">*</span>
                     </button>
                     <clr-tab-content>
                         <div class="well">
@@ -292,7 +276,7 @@
                                 <div class="col-xs-6">
                                     <a href="#" (click)="openPanel(panels['fees'].mandatory, $event)">
                                         <i class="fa fa-chevron-right" [class.rotate]="isPanelOpen(panels['fees'].mandatory)"></i>
-                                        <h2 id="toggleFeesMandatory">{{'Fees: Main Information' | translate}}</h2>
+                                        <h2 id="toggleFeesMandatory">{{ 'Fees: Main Information' | translate }}</h2>
                                     </a>
                                 </div>
                             </div>
@@ -304,7 +288,7 @@
                                 <div class="col-xs-6">
                                     <a href="#" (click)="openPanel(panels['fees'].optional, $event)">
                                         <i class="fa fa-chevron-right" [class.rotate]="isPanelOpen(panels['fees'].optional)"></i>
-                                        <h2 id="toggleFeesOptional">{{'Fees: Optional Information' | translate}}</h2>
+                                        <h2 id="toggleFeesOptional">{{ 'Fees: Optional Information' | translate }}</h2>
                                     </a>
                                 </div>
                             </div>
@@ -316,11 +300,8 @@
                 </clr-tab>
 
                 <clr-tab>
-                    <button clrTabLink id="tabProfileButton">{{'Profile' | translate}}
-
-
-                        <span class="required" [hidden]="model.profile.mandatory.isValid()">*
-                        </span>
+                    <button clrTabLink id="tabProfileButton">{{ 'Profile' | translate }}
+                        <span class="required" [hidden]="model.profile.mandatory.isValid()">*</span>
                     </button>
                     <clr-tab-content>
                         <div class="well">
@@ -328,7 +309,7 @@
                                 <div class="col-xs-6">
                                     <a href="#" (click)="openPanel(panels['profile'].mandatory, $event)">
                                         <i class="fa fa-chevron-right" [class.rotate]="isPanelOpen(panels['profile'].mandatory)"></i>
-                                        <h2 id="toggleProfileMandatory">{{'Profile: Main Information' | translate}}</h2>
+                                        <h2 id="toggleProfileMandatory">{{ 'Profile: Main Information' | translate }}</h2>
                                     </a>
                                 </div>
                             </div>
@@ -340,7 +321,7 @@
                                 <div class="col-xs-6">
                                     <a href="#" (click)="openPanel(panels['profile'].optional, $event)">
                                         <i class="fa fa-chevron-right" [class.rotate]="isPanelOpen(panels['profile'].optional)"></i>
-                                        <h2 id="toggleProfileOptional">{{'Profile: Optional Information' | translate}}</h2>
+                                        <h2 id="toggleProfileOptional">{{ 'Profile: Optional Information' | translate }}</h2>
                                     </a>
                                 </div>
                             </div>
@@ -352,16 +333,14 @@
                 </clr-tab>
 
                 <clr-tab>
-                    <button clrTabLink id="tabRespresentationButton">{{'Representation' | translate}}
-
-                    </button>
+                    <button clrTabLink id="tabRespresentationButton">{{ 'Representation' | translate }}</button>
                     <clr-tab-content>
                         <div class="well">
                             <div class="row panel-header">
                                 <div class="col-xs-6">
                                     <a href="#" (click)="openPanel(panels['representation'].optional, $event)">
                                         <i class="fa fa-chevron-right" [class.rotate]="isPanelOpen(panels['representation'].optional)"></i>
-                                        <h2 id="toggleRepresentationOptional">{{'Representation: Optional Information' | translate}}</h2>
+                                        <h2 id="toggleRepresentationOptional">{{ 'Representation: Optional Information' | translate }}</h2>
                                     </a>
                                 </div>
                             </div>
@@ -373,7 +352,7 @@
                 </clr-tab>
 
                 <clr-tab>
-                    <button clrTabLink id="tabFTaxationButton">{{'Taxation' | translate}}
+                    <button clrTabLink id="tabFTaxationButton">{{ 'Taxation' | translate }}
 
                     </button>
                     <clr-tab-content>
@@ -382,7 +361,7 @@
                                 <div class="col-xs-6">
                                     <a href="#" (click)="openPanel(panels['taxation'].optional, $event)">
                                         <i class="fa fa-chevron-right" [class.rotate]="isPanelOpen(panels['taxation'].optional)"></i>
-                                        <h2 id="toggleTaxationOptional">{{'Taxation: Optional Information' | translate}}</h2>
+                                        <h2 id="toggleTaxationOptional">{{ 'Taxation: Optional Information' | translate }}</h2>
                                     </a>
                                 </div>
                             </div>
@@ -394,16 +373,14 @@
                 </clr-tab>
 
                 <clr-tab>
-                    <button clrTabLink id="tabListingButton">{{'Listing' | translate}}
-
-                    </button>
+                    <button clrTabLink id="tabListingButton">{{ 'Listing' | translate }}</button>
                     <clr-tab-content>
                         <div class="well">
                             <div class="row panel-header">
                                 <div class="col-xs-6">
                                     <a href="#" (click)="openPanel(panels['listing'].optional, $event)">
                                         <i class="fa fa-chevron-right" [class.rotate]="isPanelOpen(panels['listing'].optional)"></i>
-                                        <h2 id="toggleListingOptional">{{'Listing: Optional Information' | translate}}</h2>
+                                        <h2 id="toggleListingOptional">{{ 'Listing: Optional Information' | translate }}</h2>
                                     </a>
                                 </div>
                             </div>
@@ -415,16 +392,14 @@
                 </clr-tab>
 
                 <clr-tab>
-                    <button clrTabLink id="tabPRIIPButton">{{'PRIIPS' | translate}}
-
-                    </button>
+                    <button clrTabLink id="tabPRIIPButton">{{ 'PRIIPS' | translate }}</button>
                     <clr-tab-content>
                         <div class="well">
                             <div class="row panel-header">
                                 <div class="col-xs-6">
                                     <a href="#" (click)="openPanel(panels['priip'].optional, $event)">
                                         <i class="fa fa-chevron-right" [class.rotate]="isPanelOpen(panels['priip'].optional)"></i>
-                                        <h2 id="togglePriipOptional">{{'PRIIPS: Optional Information' | translate}}</h2>
+                                        <h2 id="togglePriipOptional">{{ 'PRIIPS: Optional Information' | translate }}</h2>
                                     </a>
                                 </div>
                             </div>
@@ -436,16 +411,14 @@
                 </clr-tab>
 
                 <clr-tab>
-                    <button clrTabLink id="tabSolvencyButton">{{'Solvency II' | translate}}
-
-                    </button>
+                    <button clrTabLink id="tabSolvencyButton">{{ 'Solvency II' | translate }}</button>
                     <clr-tab-content>
                         <div class="well">
                             <div class="row panel-header">
                                 <div class="col-xs-6">
                                     <a href="#" (click)="openPanel(panels['solvency'].optional, $event)">
                                         <i class="fa fa-chevron-right" [class.rotate]="isPanelOpen(panels['solvency'].optional)"></i>
-                                        <h2 id="toggleSolvencyOptional">{{'Solvency II: Optional Information' | translate}}</h2>
+                                        <h2 id="toggleSolvencyOptional">{{ 'Solvency II: Optional Information' | translate }}</h2>
                                     </a>
                                 </div>
                             </div>
@@ -457,11 +430,8 @@
                 </clr-tab>
 
                 <clr-tab>
-                    <button clrTabLink id="tabDocumentsButton">{{'Documents' | translate}}
-
-
-                        <span class="required" [hidden]="model.documents.mandatory.isValid()">*
-                        </span>
+                    <button clrTabLink id="tabDocumentsButton">{{ 'Documents' | translate }}
+                        <span class="required" [hidden]="model.documents.mandatory.isValid()">*</span>
                     </button>
                     <clr-tab-content>
                         <div class="well">
@@ -469,7 +439,7 @@
                                 <div class="col-xs-6">
                                     <a href="#" (click)="openPanel(panels['documents'].mandatory, $event)">
                                         <i class="fa fa-chevron-right" [class.rotate]="isPanelOpen(panels['documents'].mandatory)"></i>
-                                        <h2 id="toggleDocumentsMandatory">{{'Documents: Main Information' | translate}}</h2>
+                                        <h2 id="toggleDocumentsMandatory">{{ 'Documents: Main Information' | translate }}</h2>
                                     </a>
                                 </div>
                             </div>
@@ -481,7 +451,7 @@
                                 <div class="col-xs-6">
                                     <a href="#" (click)="openPanel(panels['documents'].optional, $event)">
                                         <i class="fa fa-chevron-right" [class.rotate]="isPanelOpen(panels['documents'].optional)"></i>
-                                        <h2 id="toggleDocumentsOptional">{{'Documents: Optional Information' | translate}}</h2>
+                                        <h2 id="toggleDocumentsOptional">{{ 'Documents: Optional Information' | translate }}</h2>
                                     </a>
                                 </div>
                             </div>
@@ -494,12 +464,9 @@
 
                 <div class="form-group previous-next">
                     <div class="buttons">
-                        <button class="btn btn-default" id="previousTab" (click)="previousTab()" [disabled]="hidePreviousTabButton()">{{'Previous' | translate}}
-
-                        </button>
-                        <button class="btn btn-default" id="nextTab" (click)="nextTab()" [disabled]="hideNextTabButton()">{{'Next' | translate}}
-
-                        </button>
+                        <button class="btn btn-default" id="previousTab" (click)="previousTab()" [disabled]="hidePreviousTabButton()">{{ 'Previous' | translate }}</button>
+                        <button class="btn btn-default" id="nextTab" (click)="nextTab()" [disabled]="hideNextTabButton()">
+                            {{ 'Next' | translate }}</button>
                     </div>
                 </div>
             </clr-tabs>
@@ -508,16 +475,16 @@
             <div class="form-group row actions bottom">
                 <div class="col-sm-12">
                     <button (click)="cancelFundShare()" class="btn btn-default action-button cancel" id="cancelFundShareBottom">
-                        {{isRead() ? 'Back' : 'Cancel' | translate}}
+                        {{ isRead() ? 'Back' : 'Cancel' | translate }}
                     </button>
 
                     <button *ngIf="isCreate() || currDraft == 1" id="saveDraftFundShareBottom" type="button" class="btn btn-primary" (click)="saveDraft()">
-                        <i class="fa fa-save"></i> {{(isCreate() ? 'Save Draft' : 'Update Draft') | translate}}
+                        <i class="fa fa-save"></i> {{ (isCreate() ? 'Save Draft' : 'Update Draft') | translate }}
                     </button>
 
                     <button *ngIf="!isRead()" type="button" class="btn btn-primary action-button save" id="saveFundShareBottom" (click)="saveFundShare()" [disabled]="!model.isValid()">
                         <i class="fa fa-save"></i>
-                        {{(isCreate() || currDraft == 1 ? 'Create Share' : 'Update Share') | translate}}
+                        {{ (isCreate() || currDraft == 1 ? 'Create Share' : 'Update Share') | translate }}
                     </button>
                 </div>
             </div>

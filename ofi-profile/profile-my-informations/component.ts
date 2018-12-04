@@ -1,7 +1,7 @@
-import { Component, OnInit, Inject, ChangeDetectorRef } from '@angular/core';
+import { Component, OnInit, Inject, ChangeDetectorRef, OnDestroy } from '@angular/core';
 import { NgRedux, select } from '@angular-redux/store';
 import { AbstractControl, FormControl, FormGroup, Validators } from '@angular/forms';
-import { Router } from '@angular/router';
+import { Router, ActivatedRoute } from '@angular/router';
 import { ToasterService } from 'angular2-toaster';
 import { MemberSocketService } from '@setl/websocket-service';
 import { APP_CONFIG, AppConfig } from '@setl/utils';
@@ -12,17 +12,15 @@ import { SET_NEW_PASSWORD } from '@setl/core-store/index';
 import { AlertsService } from '@setl/jaspero-ng2-alerts/index';
 import { MultilingualService } from '@setl/multilingual';
 import { OfiKycService } from '@ofi/ofi-main/ofi-req-services/ofi-kyc/service';
-
-import { take } from 'rxjs/operators';
-import { get as getValue } from 'lodash'
-
+import { get as getValue } from 'lodash';
+import { Subject } from 'rxjs/Subject';
 
 @Component({
     selector: 'app-profile-my-informations',
     templateUrl: './component.html',
-    styleUrls: ['./component.scss']
+    styleUrls: ['./component.scss'],
 })
-export class OfiProfileMyInformationsComponent implements OnInit {
+export class OfiProfileMyInformationsComponent implements OnInit, OnDestroy {
 
     appConfig: AppConfig;
     userInfo = {
@@ -30,6 +28,7 @@ export class OfiProfileMyInformationsComponent implements OnInit {
         lastName: '',
     };
     userType: string;
+    setHomePage: string;
 
     public userInfoExtended: any = {
         email: '',
@@ -38,7 +37,7 @@ export class OfiProfileMyInformationsComponent implements OnInit {
         amCompanyName: '',
         companyName: '',
         phoneCode: '',
-        phoneNumber: ''
+        phoneNumber: '',
     };
 
     changePassForm: FormGroup;
@@ -54,44 +53,49 @@ export class OfiProfileMyInformationsComponent implements OnInit {
     };
 
     externalNotificationsAvailable: boolean = false;
+    unSubscribe: Subject<any> = new Subject();
 
     @select(['user', 'myDetail']) myDetail: any;
     @select(['ofi', 'ofiKyc', 'myInformations']) myKyc: any;
 
     constructor(
-        private _ngRedux: NgRedux<any>,
+        private ngRedux: NgRedux<any>,
         private router: Router,
         private changeDetectorRef: ChangeDetectorRef,
         private toasterService: ToasterService,
         private myUserService: MyUserService,
         private ofiKycService: OfiKycService,
         private alertsService: AlertsService,
-        public _translate: MultilingualService,
+        public translate: MultilingualService,
         private memberSocketService: MemberSocketService,
+        private activatedRoute: ActivatedRoute,
         @Inject(APP_CONFIG) appConfig: AppConfig,
     ) {
         this.appConfig = appConfig;
 
-        let validator = this.appConfig.production ? passwordValidator : null;
-        this.changePassForm = new FormGroup({
-            'oldPassword': new FormControl(
-                '',
-                Validators.required
-            ),
-            'password': new FormControl(
-                '',
-                Validators.compose([
+        const validator = this.appConfig.production ? passwordValidator : null;
+        this.changePassForm = new FormGroup(
+            {
+                oldPassword: new FormControl(
+                    '',
                     Validators.required,
-                    validator
-                ])
-            ),
-            'passwordConfirm': new FormControl(
-                '',
-                Validators.compose([
-                    Validators.required,
-                ])
-            )
-        }, this.passwordValidator);
+                ),
+                password: new FormControl(
+                    '',
+                    Validators.compose([
+                        Validators.required,
+                        validator,
+                    ]),
+                ),
+                passwordConfirm: new FormControl(
+                    '',
+                    Validators.compose([
+                        Validators.required,
+                    ]),
+                ),
+            },
+            this.passwordValidator,
+        );
 
         this.oldPassword = this.changePassForm.controls['oldPassword'];
         this.password = this.changePassForm.controls['password'];
@@ -114,14 +118,22 @@ export class OfiProfileMyInformationsComponent implements OnInit {
                 lastName: d.lastName,
                 companyName: d.companyName,
                 phoneCode: d.phoneCode,
-                phoneNumber: d.phoneNumber
+                phoneNumber: d.phoneNumber,
             };
 
             this.userType = d.userType;
         });
+
         this.myKyc.subscribe((d) => {
-            this.userInfoExtended.amCompanyName = d.amCompanyName;
+            this.userInfoExtended.amCompanyName = d.amCompanyName || 'IZNES';
         });
+
+        this.setHomePage = this.activatedRoute.snapshot.paramMap.get('sethomepage') || '';
+    }
+
+    ngOnDestroy() {
+        this.unSubscribe.next();
+        this.unSubscribe.complete();
     }
 
     passwordValidator(g: FormGroup) {
@@ -146,14 +158,13 @@ export class OfiProfileMyInformationsComponent implements OnInit {
         }
 
         if (this.validation > 2) {
-
             const asyncTaskPipe = this.myUserService.saveNewPassword({
                 oldPassword: formValues.oldPassword,
-                newPassword: formValues.password
+                newPassword: formValues.password,
             });
 
             // Get response
-            this._ngRedux.dispatch(
+            this.ngRedux.dispatch(
                 SagaHelper.runAsync(
                     [SET_NEW_PASSWORD],
                     [],
@@ -163,15 +174,14 @@ export class OfiProfileMyInformationsComponent implements OnInit {
                         const token = getValue(data, '[1].Data[0].Token', '');
                         this.memberSocketService.token = token;
 
-                        this.toasterService.pop('success', 'Your password has been successfully changed!');
+                        this.toasterService.pop(
+                            'success', this.translate.translate('Your password has been successfully changed'));
                         this.router.navigate(['home']);
                     },
                     (e) => {
-                        this.alertsService.create('warning', `
-                        Failed to change your password!
-                    `);
-                    }
-                )
+                        this.alertsService.create('warning', this.translate.translate('Failed to change your password'));
+                    },
+                ),
             );
         }
     }
@@ -184,23 +194,24 @@ export class OfiProfileMyInformationsComponent implements OnInit {
             phoneCode: userInformations.phoneCode,
             phoneNumber: userInformations.phoneNumber,
             companyName: userInformations.companyName,
+            defaultHomePage: this.setHomePage,
         };
         const asyncTaskPipe = this.myUserService.saveMyUserDetails(user);
-        this._ngRedux.dispatch(SagaHelper.runAsyncCallback(
+        this.ngRedux.dispatch(SagaHelper.runAsyncCallback(
             asyncTaskPipe,
             () => {
-                this.toasterService.pop('success', 'Saved changes');
+                this.toasterService.pop('success', this.translate.translate('Saved changes'));
                 this.router.navigate(['home']);
             },
             (data) => {
                 this.toasterService.pop('error', JSON.stringify(data));
-            })
+            }),
         );
     }
 
     hasError(path, error) {
         if (this.changePassForm) {
-            let formControl: AbstractControl = path ? this.changePassForm.get(path) : this.changePassForm;
+            const formControl: AbstractControl = path ? this.changePassForm.get(path) : this.changePassForm;
 
             if (error !== 'required' && formControl.hasError('required')) {
                 return false;
@@ -210,7 +221,7 @@ export class OfiProfileMyInformationsComponent implements OnInit {
     }
 
     isTouched(path) {
-        let formControl: AbstractControl = this.changePassForm.get(path);
+        const formControl: AbstractControl = this.changePassForm.get(path);
 
         return formControl.touched;
     }
@@ -227,7 +238,7 @@ export class OfiProfileMyInformationsComponent implements OnInit {
     getExternalNotificationsAvailable(): any {
         const asyncTaskPipe = this.myUserService.statusNotifications();
 
-        this._ngRedux.dispatch(SagaHelper.runAsync(
+        this.ngRedux.dispatch(SagaHelper.runAsync(
             [],
             [],
             asyncTaskPipe,
@@ -245,5 +256,4 @@ export class OfiProfileMyInformationsComponent implements OnInit {
             },
         ));
     }
-
 }

@@ -1,8 +1,7 @@
 import { Injectable } from '@angular/core';
-import { select } from '@angular-redux/store';
+import { select, NgRedux } from '@angular-redux/store';
 import { FormGroup, FormBuilder, Validators } from '@angular/forms';
 import { MultilingualService } from '@setl/multilingual';
-import { NgRedux } from '@angular-redux/store';
 import { ToasterService } from 'angular2-toaster';
 import {
     map,
@@ -241,13 +240,11 @@ export class NewRequestService {
                 { value: '', disabled: true },
                 Validators.required,
             ],
-
             geographicalAreaOfActivity: ['', Validators.required],
             geographicalAreaOfActivitySpecification: [
                 { value: '', disabled: true },
                 this.getLengthValidator(255),
             ],
-
             activityRegulated: 0,
             regulatoryStatus: [{ value: '', disabled: true }, Validators.required],
             regulatoryStatusInsurerType: [
@@ -266,7 +263,6 @@ export class NewRequestService {
                 { value: '', disabled: true },
                 this.getLengthValidator(),
             ],
-
             companyListed: 0,
             listingMarkets: [
                 { value: '', disabled: true },
@@ -288,9 +284,7 @@ export class NewRequestService {
                     Validators.max(100),
                 ],
             ],
-
             balanceSheetTotal: ['', Validators.required],
-
             netRevenuesNetIncome: ['', [
                 Validators.required,
                 Validators.min(0),
@@ -322,10 +316,12 @@ export class NewRequestService {
             ],
             totalFinancialAssetsAlreadyInvested: ['', Validators.required],
         });
+
         const bankingInformation = fb.group({
             kycID: '',
             custodianHolders: fb.array([this.createHolder()]),
         });
+
         const classificationInformation = fb.group({
             kycID: '',
             investorStatus: 0,
@@ -774,7 +770,8 @@ export class NewRequestService {
 
                         return acc ? [acc, val].join(' ') : val;
                     },
-                    '');
+                    '',
+                );
             }
 
             if (isObject(single)) {

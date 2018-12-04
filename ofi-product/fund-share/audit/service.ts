@@ -1,8 +1,8 @@
-import {Injectable} from '@angular/core';
+import { Injectable } from '@angular/core';
 import * as _ from 'lodash';
 
-import {NumberConverterService} from "@setl/utils";
-import {FundShareAuditDetail} from '@ofi/ofi-main/ofi-store/ofi-product/fund-share-audit';
+import { NumberConverterService } from '@setl/utils';
+import { FundShareAuditDetail } from '@ofi/ofi-main/ofi-store/ofi-product/fund-share-audit';
 import * as Models from '../models';
 
 @Injectable()
@@ -21,7 +21,7 @@ export class FundShareAuditService {
         new Models.ShareProfileOptional(),
         new Models.ShareRepresentationOptional(),
         new Models.ShareSolvencyOptional(),
-        new Models.ShareTaxationOptional()
+        new Models.ShareTaxationOptional(),
     ];
 
     constructor(private numberConverterService: NumberConverterService) {}
@@ -40,7 +40,7 @@ export class FundShareAuditService {
             let found = false;
 
             _.forEach(Object.keys(model), (key: string) => {
-                if(key.toLowerCase() == item.field.toLowerCase()) {
+                if (key.toLowerCase() === item.field.toLowerCase()) {
                     item.mltag = model[item.field].mltag;
                     item.field = model[item.field].label;
 
@@ -49,8 +49,8 @@ export class FundShareAuditService {
                     return false;
                 }
             });
-            
-            if(found) return false;
+
+            if (found) return false;
         });
     }
 
@@ -59,7 +59,7 @@ export class FundShareAuditService {
             let found = false;
 
             _.forEach(Object.keys(model), (key: string) => {
-                if((key.toLowerCase() == item.field.toLowerCase()) &&
+                if ((key.toLowerCase() === item.field.toLowerCase()) &&
                     ((model[key]) && model[key].isBlockchainValue === true)) {
 
                     item.oldValue = this.numberConverterService.toFrontEnd(item.oldValue);
@@ -71,7 +71,7 @@ export class FundShareAuditService {
                 }
             });
 
-            if(found) return false;
+            if (found) return false;
         });
     }
 }

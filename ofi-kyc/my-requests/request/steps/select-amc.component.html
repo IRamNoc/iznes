@@ -22,8 +22,13 @@
             <div class="management-company-container" *ngFor="let managementCompany of managementCompanies">
 
                 <div class="link">
-                    <i class="fa fa-external-link"></i>
-                    <a href="{{managementCompany.websiteUrl}}" target="_blank">{{'Visit website' | translate}}</a>
+                    <ng-container *ngIf="isWebsiteAddressValid(managementCompany.websiteUrl)">
+                        <i class="fa fa-external-link"></i>
+                        <a href="{{getWebsiteAddress(managementCompany.websiteUrl)}}" target="_blank">{{'Visit website' | translate}}</a>
+                    </ng-container>
+                    <ng-container *ngIf="!isWebsiteAddressValid(managementCompany.websiteUrl)">
+                        &nbsp;
+                    </ng-container>
                 </div>
 
                 <div class="management-company" [class.selected]="managementCompany.selected">
@@ -46,7 +51,7 @@
                     <div class="actions" *ngIf="!duplicate">
                         <div class="done">
                             <span>
-                                {{'KYC already done?'}}
+                                {{'KYC Completed?' | translate}}
                             </span>
 
                             <label class="switch small" *ngIf="managementCompany.id">

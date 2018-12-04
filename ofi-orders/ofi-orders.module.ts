@@ -57,5 +57,4 @@ import { ManageOrdersService } from './manage-orders/manage-orders.service';
 
 /* Class. */
 export class OfiOrdersModule {
-
 }

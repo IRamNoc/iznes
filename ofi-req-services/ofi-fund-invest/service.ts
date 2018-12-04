@@ -20,7 +20,6 @@ export class OfiFundInvestService {
         private memberSocketService: MemberSocketService,
         private ngRedux: NgRedux<any>,
     ) {
-
     }
 
     /**
@@ -41,7 +40,7 @@ export class OfiFundInvestService {
             [SET_FUND_ACCESS_MY],
             [],
             asyncTaskPipe,
-            {}
+            {},
         ));
     }
 
@@ -63,7 +62,7 @@ export class OfiFundInvestService {
         const messageBody: RequetFundAccessMy = {
             RequestName: 'izngetmyfundshareaccesslist',
             token: this.memberSocketService.token,
-            walletId: requestData.walletId || 0
+            walletId: requestData.walletId || 0,
         };
 
         return createMemberNodeSagaRequest(this.memberSocketService, messageBody);
@@ -95,7 +94,7 @@ export class OfiFundInvestService {
             parties: _.get(requestData, 'parties', {}),
             cutoff: _.get(requestData, 'cutoff', ''),
             delivery: _.get(requestData, 'delivery', ''),
-            valuation: _.get(requestData, 'valuation', '')
+            valuation: _.get(requestData, 'valuation', ''),
         };
 
         return createMemberNodeSagaRequest(this.memberSocketService, messageBody);

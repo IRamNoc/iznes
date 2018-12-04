@@ -1,12 +1,10 @@
 import { Injectable } from '@angular/core';
 import { Subject } from 'rxjs';
-
 import { immutableHelper } from '@setl/utils';
 import * as model from '../OfiNav';
 
 @Injectable()
 export class OfiManageNavPopupService {
-
     private _share: model.NavInfoModel;
     private _mode: model.NavPopupMode;
 
@@ -19,14 +17,14 @@ export class OfiManageNavPopupService {
         this._share = share;
         this._mode = mode;
 
-        this.onOpen.next({ share: share, mode: mode });
+        this.onOpen.next({ share, mode });
     }
-    
+
     close(isSave: boolean): void {
         this.onClose.next({
-            isSave: isSave,
+            isSave,
             isCancel: !isSave,
-            share: this._share ? immutableHelper.copy(this._share) : null
+            share: this._share ? immutableHelper.copy(this._share) : null,
         });
 
         this._share = null;

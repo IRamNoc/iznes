@@ -120,5 +120,4 @@ import { phoneCodeList } from '../shared/phone-codes.values';
 })
 
 export class OfiAmProductHomeModule {
-
 }

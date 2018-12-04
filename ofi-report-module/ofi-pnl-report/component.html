@@ -25,7 +25,7 @@
                     <div class="row">
                         <div class="form-group col-sm-4">
                             <label class="control-label">
-                                <span class="ml_translated">{{ 'Sub-portfolio' | translate }}</span>
+                                {{ 'Sub-portfolio' | translate }}
                             </label>
                             <div>
                                 <ng-select [items]="addressList" 
@@ -51,7 +51,7 @@
                     <clr-dg-cell>
                         <div class="btn-group btn-sm">
                             <button class="btn text-primary" (click)="viewRelateTxs(tx.fundName)">
-                                <i class="fa fa-eye"></i>{{'Related Transactions' | translate}}
+                                <i class="fa fa-eye"></i>{{ 'Related Transactions' | translate }}
                             </button>
                         </div>
                     </clr-dg-cell>
@@ -76,7 +76,7 @@
     <div class="modal-title">
         <i class="fa fa-bar-chart modal-icon" style="color:#1AB399"></i>
         <h4 class="modal-title-text">
-            <span class="ml_translated">{{ 'Related Transactions' | translate }}</span>
+            {{ 'Related Transactions' | translate }}
         </h4>
     </div>
 

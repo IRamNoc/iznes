@@ -6,7 +6,6 @@ import { combineLatest } from 'rxjs/observable/combineLatest';
 import { select } from '@angular-redux/store';
 import * as _ from 'lodash';
 import { Location } from '@angular/common';
-
 import { OfiUmbrellaFundService } from '@ofi/ofi-main/ofi-req-services/ofi-product/umbrella-fund/service';
 
 @Component({
@@ -14,7 +13,6 @@ import { OfiUmbrellaFundService } from '@ofi/ofi-main/ofi-req-services/ofi-produ
     styleUrls: ['./umbrella-audit.component.scss'],
 })
 export class UmbrellaAuditComponent implements OnInit, OnDestroy {
-
     umbrellaID: number;
     umbrellaName: string;
     unSubscribe: Subject<any> = new Subject();
@@ -27,7 +25,6 @@ export class UmbrellaAuditComponent implements OnInit, OnDestroy {
         private umbrellaService: OfiUmbrellaFundService,
         private location: Location,
     ) {
-
     }
 
     ngOnInit() {
@@ -63,7 +60,6 @@ export class UmbrellaAuditComponent implements OnInit, OnDestroy {
 
                 this.umbrellaName = _.get(umbrellaList[params.umbrellaID], ['umbrellaFundName']);
             });
-
     }
 
     ngOnDestroy() {

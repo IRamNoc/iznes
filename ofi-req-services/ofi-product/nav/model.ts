@@ -1,10 +1,10 @@
-import {MemberNodeMessageBody} from '@setl/utils/common';
+import { MemberNodeMessageBody } from '@setl/utils/common';
 
 export enum NavStatus {
     FINAL = -1,
     ALL_STATUS = 0,
     ESTIMATE = 1,
-    PENDING = 2
+    PENDING = 2,
 }
 
 export interface RequestNavMessageBody extends MemberNodeMessageBody {
