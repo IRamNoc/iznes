@@ -131,7 +131,8 @@ export class RegisterAssetComponent implements OnInit, OnDestroy {
                     console.error('fail', data);
                     this.alertsService.generate(
                         'error',
-                        this.translate.translate('Failed to register asset.'));
+                        this.translate.translate('Failed to register asset.'),
+                    );
                 },
             ));
         }

@@ -17,6 +17,7 @@ import { Unsubscribe } from 'redux';
 import * as _ from 'lodash';
 import { Subscription } from 'rxjs/Subscription';
 import { Observable } from 'rxjs/Observable';
+import { MultilingualService } from '@setl/multilingual';
 
 @Component({
     selector: 'app-request-asset',
@@ -54,7 +55,9 @@ export class RequestAssetComponent implements OnInit, OnDestroy {
                 private alertsService: AlertsService,
                 private walletNodeRequestService: WalletNodeRequestService,
                 private messagesService: MessagesService,
-                private connectionService: ConnectionService) {
+                private connectionService: ConnectionService,
+                public translate: MultilingualService,
+    ) {
 
         /* Data subscriptions */
         this.initAssetSubscriptions();
@@ -126,11 +129,11 @@ export class RequestAssetComponent implements OnInit, OnDestroy {
         const amount = this.requestAssetForm.get('amount').value;
 
         const actionConfig: MessageActionsConfig = new MessageActionsConfig();
-        actionConfig.completeText = 'Transfer of Asset Complete';
+        actionConfig.completeText = this.translate.translate('Transfer of Asset Complete');
 
         /* Add the action button that will apear on the email */
         actionConfig.actions.push({
-            text: 'Transfer Asset',
+            text: this.translate.translate('Transfer Asset'),
             text_mltag: 'txt_transferasset',
             styleClasses: 'btn-primary',
             messageType: 'tx',
@@ -149,17 +152,17 @@ export class RequestAssetComponent implements OnInit, OnDestroy {
         /* Add the data regarding the asset transfer to the email */
         actionConfig.content.push(
             {
-                name: 'Asset',
+                name: this.translate.translate('Asset'),
                 name_mltag: 'txt_asset',
                 content: fullAssetId,
             },
             {
-                name: 'Address To',
+                name: this.translate.translate('Address To'),
                 name_mltag: 'txt_addressto',
                 content: this.addressTo,
             },
             {
-                name: 'Amount',
+                name: this.translate.translate('Amount'),
                 name_mltag: 'txt_amount',
                 content: amount,
             },
@@ -167,13 +170,13 @@ export class RequestAssetComponent implements OnInit, OnDestroy {
 
         this.messagesService.sendMessage(
             [this.walletFrom],
-            'Transfer Asset Request',
+            this.translate.translate('Transfer Asset Request'),
             null,
             actionConfig,
         ).then((data) => {
-            this.alertsService.generate('success', 'Transfer Request successfully sent.');
+            this.alertsService.generate('success', this.translate.translate('Transfer Request successfully sent.'));
         }).catch((e) => {
-            this.alertsService.generate('error', 'Transfer Request could not be sent.');
+            this.alertsService.generate('error', this.translate.translate('Transfer Request could not be sent.'));
         });
     }
 

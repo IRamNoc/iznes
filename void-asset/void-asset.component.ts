@@ -270,10 +270,10 @@ export class VoidAssetComponent implements OnInit, OnDestroy {
                                     /* Show success modal. */
                                     this.alertsService.generate(
                                         'success',
-                                        this.translate.translate('Asset issuance has been successfully voided.'));
+                                        this.translate.translate('Asset issuance has been successfully voided.'),
+                                    );
                                     this.voidAssetForm.reset();
                                 }
-
                             },
                             (data) => {
                                 console.log('fail', data);
