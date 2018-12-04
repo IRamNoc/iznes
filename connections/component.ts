@@ -19,6 +19,7 @@ import { AlertsService } from '@setl/jaspero-ng2-alerts';
 import { SagaHelper } from '@setl/utils/index';
 import { ConfirmationService } from '@setl/utils';
 import { MessageConnectionConfig, MessagesService } from '@setl/core-messages';
+import { MultilingualService } from '@setl/multilingual';
 
 @Component({
     selector: 'app-my-connections',
@@ -75,7 +76,9 @@ export class ConnectionComponent implements OnInit, OnDestroy {
                 private myWalletsService: MyWalletsService,
                 private connectionService: ConnectionService,
                 private messagesService: MessagesService,
-                private confirmationService: ConfirmationService) {
+                private confirmationService: ConfirmationService,
+                public translate: MultilingualService,
+    ) {
 
         this.connectedWalletId = 0;
         this.requestedWalletAddress = false;
@@ -333,12 +336,18 @@ export class ConnectionComponent implements OnInit, OnDestroy {
                 if (!isUpdateConnection) {
                     this.onSendConnectionMessage(response[1].Data[0]);
                 } else {
-                    this.alertsService.generate('success', 'The connection has been updated.');
+                    this.alertsService.generate(
+                        'success',
+                        this.translate.translate('The connection has been updated.'),
+                    );
                     this.isEditTabDisplayed = false;
                 }
             },
             () => {
-                this.alertsService.generate('error', 'This connection already exists.');
+                this.alertsService.generate(
+                    'error',
+                    this.translate.translate('This connection already exists.'),
+                );
             }),
         );
 
@@ -363,9 +372,13 @@ export class ConnectionComponent implements OnInit, OnDestroy {
 
     handleDeleteButtonClick(connectionToDelete) {
         this.confirmationService.create(
-            '<span>Delete a connection</span>',
+            `<span>${this.translate.translate('Delete a connection')}</span>`,
             `<span class="text-warning">
-                Are you sure you want to delete the connection with ${connectionToDelete.connection}?</span>`,
+                ${this.translate.translate(
+                    'Are you sure you want to delete the connection with @connectionToDelete@?',
+                    { connectionToDelete: connectionToDelete.connection },
+                )}
+            </span>`,
         ).subscribe((ans) => {
             if (ans.resolved) {
                 const data = {
@@ -380,7 +393,10 @@ export class ConnectionComponent implements OnInit, OnDestroy {
                     () => {
                         ConnectionService.setRequestedFromConnections(false, this.ngRedux);
                         ConnectionService.setRequestedToConnections(false, this.ngRedux);
-                        this.alertsService.generate('success', 'The connection has been deleted.');
+                        this.alertsService.generate(
+                            'success',
+                            this.translate.translate('The connection has been deleted.'),
+                        );
                     },
                     (error) => {
                         console.error('error: ', error);
@@ -410,7 +426,10 @@ export class ConnectionComponent implements OnInit, OnDestroy {
             () => {
                 ConnectionService.setRequestedFromConnections(false, this.ngRedux);
                 ConnectionService.setRequestedToConnections(false, this.ngRedux);
-                this.alertsService.generate('success', message);
+                this.alertsService.generate(
+                    'success',
+                    this.translate.translate(message),
+                );
             },
             (error) => {
                 console.error('error on reject connection: ', error);
@@ -450,7 +469,10 @@ export class ConnectionComponent implements OnInit, OnDestroy {
             this.ngRedux.dispatch(SagaHelper.runAsyncCallback(
                 asyncTaskPipe,
                 () => {
-                    this.alertsService.generate('success', 'The connection request has been accepted');
+                    this.alertsService.generate(
+                        'success',
+                        this.translate.translate('The connection request has been accepted'),
+                    );
                     ConnectionService.setRequestedFromConnections(false, this.ngRedux);
                     ConnectionService.setRequestedToConnections(false, this.ngRedux);
                 },
@@ -482,14 +504,14 @@ export class ConnectionComponent implements OnInit, OnDestroy {
         const actionConfig = new MessageConnectionConfig();
 
         actionConfig.actions.push({
-            text: 'Accept',
+            text: this.translate.translate('Accept'),
             text_mltag: 'txt_accept',
             styleClasses: 'btn-success',
             payload: acceptPayload,
         });
 
         actionConfig.actions.push({
-            text: 'Reject',
+            text: this.translate.translate('Reject'),
             text_mltag: 'txt_reject',
             styleClasses: 'btn-danger',
             payload: rejectPayload,
@@ -499,17 +521,23 @@ export class ConnectionComponent implements OnInit, OnDestroy {
 
         this.walletList.forEach((item) => {
             if (item.id === response.LeiSender) {
-                messageBody = `${item.text} has sent you a connection request.`;
+                messageBody = this.translate.translate(
+                    '@itemText@ has sent you a connection request.',
+                    { itemText: item.text },
+                );
             }
         });
 
         this.messagesService.sendMessage(
             [response.LeiSender],
-            'Connection request',
+            this.translate.translate('Connection request'),
             messageBody,
             actionConfig,
         ).then(() => {
-            this.alertsService.generate('success', 'A connection request has been sent');
+            this.alertsService.generate(
+                'success',
+                this.translate.translate('A connection request has been sent'),
+            );
         }).catch((e) => {
             console.log('connection request email fail: ', e);
         });
