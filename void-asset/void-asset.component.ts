@@ -12,6 +12,7 @@ import {
 import * as _ from 'lodash';
 import { Subscription } from 'rxjs/Subscription';
 import { AlertsService } from '@setl/jaspero-ng2-alerts';
+import { MultilingualService } from '@setl/multilingual';
 
 @Component({
     selector: 'app-void-asset',
@@ -47,7 +48,9 @@ export class VoidAssetComponent implements OnInit, OnDestroy {
                 private walletnodeTxService: WalletnodeTxService,
                 private myWalletsService: MyWalletsService,
                 private logService: LogService,
-                private alertsService: AlertsService) {
+                private alertsService: AlertsService,
+                public translate: MultilingualService,
+    ) {
 
         const newState = this.ngRedux.getState();
         this.walletIssuerDetail = getWalletIssuerDetail(newState);
@@ -250,7 +253,11 @@ export class VoidAssetComponent implements OnInit, OnDestroy {
                                                     //     },
                                                     //     5000);
 
-                                                    this.alertsService.generate('success', 'Asset issuance has been successfully voided and deleted.');
+                                                    this.alertsService.generate(
+                                                        'success',
+                                                        this.translate.translate(
+                                                            'Asset issuance has been successfully voided and deleted.'),
+                                                        );
                                                     this.voidAssetForm.reset();
                                                 },
                                                 (data) => {
@@ -261,7 +268,9 @@ export class VoidAssetComponent implements OnInit, OnDestroy {
                                         10000);
                                 } else {
                                     /* Show success modal. */
-                                    this.alertsService.generate('success', 'Asset issuance has been successfully voided.');
+                                    this.alertsService.generate(
+                                        'success',
+                                        this.translate.translate('Asset issuance has been successfully voided.'));
                                     this.voidAssetForm.reset();
                                 }
 
@@ -272,7 +281,10 @@ export class VoidAssetComponent implements OnInit, OnDestroy {
                             },
                         ));
                     } else {
-                        this.alertsService.generate('error', 'There are no holders of this asset.');
+                        this.alertsService.generate(
+                            'error',
+                            this.translate.translate('There are no holders of this asset.'),
+                        );
                     }
                 },
                 (data) => {

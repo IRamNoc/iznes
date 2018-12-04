@@ -5,6 +5,7 @@ import { NgRedux, select } from '@angular-redux/store';
 import * as _ from 'lodash';
 import { AlertsService } from '@setl/jaspero-ng2-alerts';
 import { Subscription } from 'rxjs/Subscription';
+import { MultilingualService } from '@setl/multilingual';
 import {
     WalletnodeTxService, WalletNodeRequestService, MyWalletsService, InitialisationService,
 } from '@setl/core-req-services';
@@ -68,6 +69,7 @@ export class EncumberAssetsComponent implements OnInit, OnDestroy {
         private walletNodeRequestService: WalletNodeRequestService,
         private changeDetectorRef: ChangeDetectorRef,
         private alertsService: AlertsService,
+        public translate: MultilingualService,
     ) {
         /* Subscribe to the connectedWalletId and setup (or clear) the form group on wallet change */
         this.subscriptionsArray.push(this.connectedWalletOb.subscribe((connectedWalletId) => {
@@ -164,13 +166,16 @@ export class EncumberAssetsComponent implements OnInit, OnDestroy {
                 asyncTaskPipe,
                 {},
                 () => {
-                    this.alertsService.generate('success', 'The asset has been encumbered.');
+                    this.alertsService.generate(
+                        'success',
+                        this.translate.translate('The asset has been encumbered.'));
                     this.encumberAssetsForm.reset();
                 },
                 (data) => {
                     console.error('fail', data);
-                    const message = !_.isEmpty(data[1].data.error) ? `Failed to encumber asset. Reason:<br>
-                            ${data[1].data.error}` : 'Failed to encumber asset.';
+                    const message = !_.isEmpty(data[1].data.error)
+                        ? `${this.translate.translate('Failed to encumber asset. Reason:<br>')} ${data[1].data.error}`
+                        : this.translate.translate('Failed to encumber asset.');
                     this.alertsService.generate('error', message);
                 }),
             );
@@ -267,15 +272,15 @@ export class EncumberAssetsComponent implements OnInit, OnDestroy {
     getLanguage(locale): void {
         if (locale) {
             switch (locale) {
-            case 'fra':
-                this.language = 'fr';
-                break;
-            case 'eng':
-                this.language = 'en';
-                break;
-            default:
-                this.language = 'en';
-                break;
+                case 'fra':
+                    this.language = 'fr';
+                    break;
+                case 'eng':
+                    this.language = 'en';
+                    break;
+                default:
+                    this.language = 'en';
+                    break;
             }
         }
     }
