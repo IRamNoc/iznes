@@ -124,13 +124,8 @@ public class OpenCSDSprint8AcceptanceTest {
         loginAndVerifySuccess("am", "alex01");
         validateCSSOnNavigationBarByID("menu-home");
         String Home = driver.findElement(By.id("menu-home")).getText();
-        assertTrue(Home.equals(Home));
-        driver.findElement(By.xpath("//*[@id=\"iznes\"]/app-root/app-basic-layout/div/ng-sidebar-container/div/div/app-navigation-topbar/header/div[2]/div[2]/div/ng-select/div/div[2]/span/i[2]")).click();
-        driver.findElement(By.xpath("//*[@id=\"iznes\"]/app-root/app-basic-layout/div/ng-sidebar-container/div/div/app-navigation-topbar/header/div[2]/div[2]/div/ng-select/div/div[3]/div/input")).sendKeys("AssetManagerWallet");
-        wait.until(invisibilityOfElementLocated(By.xpath("//*[@id=\"iznes\"]/app-root/app-basic-layout/div/ng-sidebar-container/div/div/app-navigation-topbar/header/div[2]/div[2]/div/ng-select/div/div[3]/ul/li[2]")));
-        driver.findElement(By.xpath("//*[@id=\"iznes\"]/app-root/app-basic-layout/div/ng-sidebar-container/div/div/app-navigation-topbar/header/div[2]/div[2]/div/ng-select/div/div[3]/ul/li[1]")).click();
-        String headerHome = driver.findElement(By.xpath("/html/body/app-root/app-basic-layout/div/ng-sidebar-container/div/div/div/main/div/div/ng-component/div/h1")).getText();
-        assertTrue(headerHome.contains("AssetManagerWallet"));
+        assertEquals(Home, Home);
+        selectingWalletAssetManagerWallet();
         wait.until(visibilityOfElementLocated(By.xpath("//*[@id=\"manage-orders\"]")));
         String orderBookWalletID = driver.findElement(By.xpath("//*[@id=\"manage-orders\"]")).getText();
         assertTrue(orderBookWalletID.contains("AssetManagerWallet"));
