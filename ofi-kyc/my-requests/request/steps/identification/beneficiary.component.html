@@ -124,7 +124,7 @@
                 <ng-select id="holdingType-benef-{{index}}" 
                             [items]="holdingTypesList" 
                             [formControl]="form.get('common.holdingType')" 
-                            placeholder="{{ 'Type' | translate }}"></ng-select>
+                            placeholder="{{ 'Select a type' | translate }}"></ng-select>
                 <span class="field-error" *ngIf="hasError(['common', 'holdingType'], ['required'])">{{ 'Field is required' | translate }}</span>
             </div>
         </div>
