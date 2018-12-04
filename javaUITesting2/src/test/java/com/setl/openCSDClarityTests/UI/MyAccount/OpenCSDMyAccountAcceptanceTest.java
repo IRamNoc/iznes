@@ -99,7 +99,7 @@ public class OpenCSDMyAccountAcceptanceTest {
         populateMyInfoPage("Fred", "Custodian", "fred@setl.io",  "222", "111111", false);
         navigateToDropdown("dropdown-user");
         navigateToPageByID("top-menu-my-info");
-        verifyUpdatedMyInfoPage("am@setl.io", "", "Asset", "Manager",  "United Kingdom (+44)", "235689");
+        verifyUpdatedMyInfoPage("am@setl.io", "IZNES", "Asset", "Manager",  "United Kingdom (+44)", "235689");
     }
 
     @Test
