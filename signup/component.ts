@@ -190,7 +190,7 @@ export class SignupComponent implements OnDestroy, OnInit {
     }
 
     get title(): string {
-        return this.configuration ? this.configuration.title : this.translate.translate('Sign up');
+        return this.configuration ? this.configuration.title : this.translate.translate('Sign Up');
     }
 
     get description(): string {
@@ -267,26 +267,27 @@ export class SignupComponent implements OnDestroy, OnInit {
         const responseStatus = _.get(data, '[1].Data[0].Status', 'other').toLowerCase();
 
         switch (responseStatus) {
-        case 'fail':
-            this.showLoginErrorMessage(
-                'warning',
-                `<span class="text-warning">${this.translate.translate('Invalid email address or password!')}</span>`,
-            );
-            break;
-        case 'locked':
-            this.showLoginErrorMessage(
-                'info',
-                `<span class="text-warning">${this.translate.translate(
-                    'Sorry, your account has been locked. Please contact your Administrator.')}</span>`,
-            );
-            break;
-        default:
-            this.showLoginErrorMessage(
-                'error',
-                `<span class="text-warning">${this.translate.translate(
-                    'Sorry, there was a problem logging in. Please try again.')}</span>`,
-            );
-            break;
+            case 'fail':
+                this.showLoginErrorMessage(
+                    'warning',
+                    `<span class="text-warning">${this.translate.translate(
+                        'Invalid email address or password.')}</span>`,
+                );
+                break;
+            case 'locked':
+                this.showLoginErrorMessage(
+                    'info',
+                    `<span class="text-warning">${this.translate.translate(
+                        'Sorry, your account has been locked. Please contact your Administrator.')}</span>`,
+                );
+                break;
+            default:
+                this.showLoginErrorMessage(
+                    'error',
+                    `<span class="text-warning">${this.translate.translate(
+                        'Sorry, there was a problem logging in. Please try again.')}</span>`,
+                );
+                break;
         }
     }
 
