@@ -10,11 +10,12 @@ import {
 } from '@setl/core-store';
 import { AlertsService } from '@setl/jaspero-ng2-alerts';
 import { Unsubscribe } from 'redux';
+import { MultilingualService } from '@setl/multilingual';
 
 @Component({
     selector: 'app-register-asset',
     templateUrl: './register-asset.component.html',
-    styleUrls: ['./register-asset.component.css']
+    styleUrls: ['./register-asset.component.css'],
 })
 export class RegisterAssetComponent implements OnInit, OnDestroy {
     registerAssetForm: FormGroup;
@@ -30,7 +31,9 @@ export class RegisterAssetComponent implements OnInit, OnDestroy {
     constructor(private alertsService: AlertsService,
                 private ngRedux: NgRedux<any>,
                 private walletNodeRequestService: WalletNodeRequestService,
-                private walletnodeTxService: WalletnodeTxService) {
+                private walletnodeTxService: WalletnodeTxService,
+                public translate: MultilingualService,
+    ) {
         this.reduxUnsubscribe = ngRedux.subscribe(() => this.updateState());
         this.updateState();
 
@@ -126,7 +129,10 @@ export class RegisterAssetComponent implements OnInit, OnDestroy {
                 },
                 (data) => {
                     console.error('fail', data);
-                    this.alertsService.generate('error', 'Failed to register asset.');
+                    this.alertsService.generate(
+                        'error',
+                        this.translate.translate('Failed to register asset.'),
+                    );
                 },
             ));
         }
@@ -141,19 +147,19 @@ export class RegisterAssetComponent implements OnInit, OnDestroy {
             <table class="table grid">
                 <tbody>
                     <tr>
-                        <td class="left"><b>Issuer:</b></td>
+                        <td class="left"><b>${this.translate.translate('Issuer')}:</b></td>
                         <td>${currentRegisterInstrumentRequest.issuerIdentifier}</td>
                     </tr>
                     <tr>
-                        <td class="left"><b>Instrument:</b></td>
+                        <td class="left"><b>${this.translate.translate('Instrument')}:</b></td>
                         <td>${currentRegisterInstrumentRequest.instrument}</td>
                     </tr>
                     <tr>
-                        <td class="left"><b>Address:</b></td>
+                        <td class="left"><b>${this.translate.translate('Address')}:</b></td>
                         <td>${currentRegisterInstrumentRequest.issuerAddress}</td>
                     </tr>
                     <tr>
-                        <td class="left"><b>Tx hash:</b></td>
+                        <td class="left"><b>${this.translate.translate('Tx hash')}:</b></td>
                         <td>${currentRegisterInstrumentRequest.txHash.substring(0, 10)}...</td>
                     </tr>
                 </tbody>

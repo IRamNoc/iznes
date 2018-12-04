@@ -14,6 +14,7 @@ import {
 import { AlertsService } from '@setl/jaspero-ng2-alerts';
 import { Unsubscribe } from 'redux';
 import { Subscription } from 'rxjs/Subscription';
+import { MultilingualService } from '@setl/multilingual';
 
 @Component({
     selector: 'app-register-issuer',
@@ -40,7 +41,9 @@ export class RegisterIssuerComponent implements OnInit, OnDestroy {
                 private walletNodeRequestService: WalletNodeRequestService,
                 private alertsService: AlertsService,
                 private changeDetectorRef: ChangeDetectorRef,
-                private myWalletService: MyWalletsService) {
+                private myWalletService: MyWalletsService,
+                public translate: MultilingualService,
+    ) {
 
         this.reduxUnsubscribe = ngRedux.subscribe(() => this.updateState());
         this.updateState();
@@ -130,7 +133,7 @@ export class RegisterIssuerComponent implements OnInit, OnDestroy {
                 },
                 (data) => {
                     console.error('fail', data);
-                    this.alertsService.generate('error', 'Failed to register issuer.');
+                    this.alertsService.generate('error', this.translate.translate('Failed to register issuer.'));
                 },
             ));
         }
@@ -151,15 +154,15 @@ export class RegisterIssuerComponent implements OnInit, OnDestroy {
             <table class="table grid">
                 <tbody>
                     <tr>
-                        <td class="left"><b>Issuer:</b></td>
+                        <td class="left"><b>${this.translate.translate('Issuer')}:</b></td>
                         <td>${currentRegisterIssuerRequest.issuerIdentifier}</td>
                     </tr>
                     <tr>
-                        <td class="left"><b>Address:</b></td>
+                        <td class="left"><b>${this.translate.translate('Address')}:</b></td>
                         <td>${currentRegisterIssuerRequest.issuerAddress}</td>
                     </tr>
                     <tr>
-                        <td class="left"><b>Tx hash:</b></td>
+                        <td class="left"><b>${this.translate.translate('Tx hash')}:</b></td>
                         <td>${currentRegisterIssuerRequest.txHash.substring(0, 10)}...</td>
                     </tr>
                 </tbody>

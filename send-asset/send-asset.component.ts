@@ -13,6 +13,7 @@ import {
 import { AlertsService } from '@setl/jaspero-ng2-alerts';
 import * as _ from 'lodash';
 import { Subscription } from 'rxjs/Subscription';
+import { MultilingualService } from '@setl/multilingual';
 
 @Component({
     selector: 'app-send-asset',
@@ -48,7 +49,9 @@ export class SendAssetComponent implements OnInit, OnDestroy {
                 private alertsService: AlertsService,
                 private walletNodeRequestService: WalletNodeRequestService,
                 private walletnodeTxService: WalletnodeTxService,
-                private myWalletService: MyWalletsService) {
+                private myWalletService: MyWalletsService,
+                public translate: MultilingualService,
+    ) {
 
         /* Subscribe to the connectedWalletId and setup (or clear) the form group on wallet change */
         this.subscriptionsArray.push(this.connectedWalletOb.subscribe((connectedWalletId) => {
@@ -159,8 +162,10 @@ export class SendAssetComponent implements OnInit, OnDestroy {
                 },
                 (data) => {
                     console.error('fail', data);
-                    const message = !_.isEmpty(data[1].data.error) ? `Failed to send asset. Reason:<br>
-                        ${data[1].data.error}` : 'Failed to send asset.';
+
+                    const message = !_.isEmpty(data[1].data.error)
+                        ? `${this.translate.translate('Failed to send asset. Reason:<br>')} ${data[1].data.error}`
+                        : this.translate.translate('Failed to send asset.');
                     this.alertsService.generate('error', message);
                 },
             ));
@@ -248,31 +253,31 @@ export class SendAssetComponent implements OnInit, OnDestroy {
                 <table class="table grid">
                     <tbody>
                         <tr>
-                            <td class="left"><b>Issuer:</b></td>
+                            <td class="left"><b>${this.translate.translate('Issuer')}:</b></td>
                             <td>${sendAssetResponse.issuerIdentifier}</td>
                         </tr>
                         <tr>
-                            <td class="left"><b>Instrument:</b></td>
+                            <td class="left"><b>${this.translate.translate('Instrument')}:</b></td>
                             <td>${sendAssetResponse.instrument}</td>
                         </tr>
                         <tr>
-                            <td class="left"><b>Issuer Address:</b></td>
+                            <td class="left"><b>${this.translate.translate('Issuer Address')}:</b></td>
                             <td>${sendAssetResponse.issuerAddress}</td>
                         </tr>
                         <tr>
-                            <td class="left"><b>To Address:</b></td>
+                            <td class="left"><b>${this.translate.translate('To Address')}:</b></td>
                             <td>${sendAssetResponse.toAddress}</td>
                         </tr>
                         <tr>
-                            <td class="left"><b>Amount</b></td>
+                            <td class="left"><b>${this.translate.translate('Amount')}</b></td>
                             <td>${sendAssetResponse.amount}</td>
                         </tr>
                         <tr>
-                            <td class="left"><b>Tx hash:</b></td>
+                            <td class="left"><b>${this.translate.translate('Tx hash')}:</b></td>
                             <td>${sendAssetResponse.txHash.substring(0, 10)}...</td>
                         </tr>
                         <tr>
-                            <td class="left"><b>Tx hash:</b></td>
+                            <td class="left"><b>${this.translate.translate('Tx hash')}:</b></td>
                             <td>${sendAssetResponse.needNotify}</td>
                         </tr>
                     </tbody>
