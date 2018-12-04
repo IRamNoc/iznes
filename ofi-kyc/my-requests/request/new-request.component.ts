@@ -18,17 +18,6 @@ import { FormstepsComponent } from '@setl/utils/components/formsteps/formsteps.c
 @Component({
     templateUrl: './new-request.component.html',
     styleUrls: ['./new-request.component.scss'],
-    animations: [
-        trigger('toggle', [
-            state('false', style({
-                opacity: 1,
-            })),
-            state('true', style({
-                opacity: 0,
-            })),
-            transition('* => *', animate(250)),
-        ]),
-    ],
 })
 export class NewKycRequestComponent implements OnInit, AfterViewInit {
 
@@ -37,6 +26,7 @@ export class NewKycRequestComponent implements OnInit, AfterViewInit {
     @select(['ofi', 'ofiKyc', 'myKycRequested', 'kycs']) requests$;
     @select(['ofi', 'ofiKyc', 'myKycList', 'kycList']) myKycList$;
     @select(['ofi', 'ofiProduct', 'ofiManagementCompany', 'investorManagementCompanyList', 'investorManagementCompanyList']) managementCompanyList$;
+    @select(['user', 'siteSettings', 'language']) language$;
 
     unsubscribe: Subject<any> = new Subject();
     stepsConfig: any;
@@ -146,13 +136,12 @@ export class NewKycRequestComponent implements OnInit, AfterViewInit {
 
     initSubscriptions() {
         this.requests$
-        .pipe(
-            takeUntil(this.unsubscribe),
-        )
-        .subscribe((amcs) => {
-            this.newRequestService.getContext(amcs);
-        })
-        ;
+            .pipe(
+                takeUntil(this.unsubscribe),
+            )
+            .subscribe((amcs) => {
+                this.newRequestService.getContext(amcs);
+            });
 
         this.route.queryParamMap.subscribe((params) => {
             const step = params.get('step');
@@ -167,6 +156,10 @@ export class NewKycRequestComponent implements OnInit, AfterViewInit {
             this.fullForm = !(completed === 'true');
 
             this.initFormSteps(step);
+        });
+
+        this.language$.pipe(takeUntil(this.unsubscribe)).subscribe(() => {
+            this.initFormSteps(this.currentCompletedStep);
         });
     }
 

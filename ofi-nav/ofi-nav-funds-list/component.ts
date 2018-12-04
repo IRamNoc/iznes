@@ -68,6 +68,7 @@ export class OfiNavFundsList implements OnInit, OnDestroy {
     @select(['ofi', 'ofiCurrencies', 'currencies']) currenciesObs;
     @select(['user', 'authentication', 'token']) tokenOb;
     @select(['user', 'myDetail', 'userId']) userOb;
+    @select(['user', 'siteSettings', 'language']) requestLanguageOb;
 
     private subscriptionsArray: Subscription[] = [];
 
@@ -135,7 +136,11 @@ export class OfiNavFundsList implements OnInit, OnDestroy {
      * @memberof OfiNavFundView
      */
     getCurrencyString(currencyId: number): string {
-        return this.currencyList.find(v => v.id === currencyId).text || 'N/A';
+        try {
+            return this.currencyList.find(v => v.id === currencyId).text || 'N/A';
+        } catch (e) {
+            return 'N/A';
+        }
     }
 
     getNextValuationClass(nextValuationDate: string): string {
@@ -339,6 +344,12 @@ export class OfiNavFundsList implements OnInit, OnDestroy {
         }));
 
         this.subscriptionsArray.push(this.currenciesObs.subscribe(c => this.getCurrencyList(c)));
+
+        this.subscriptionsArray.push(this.requestLanguageOb.subscribe(() => {
+            this.initDataTypes();
+            this.initTranslations();
+            this.initSearchForm();
+        }));
     }
 
     private initSearchForm(): void {

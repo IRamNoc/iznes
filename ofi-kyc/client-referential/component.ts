@@ -1,4 +1,4 @@
-import { ChangeDetectionStrategy, ChangeDetectorRef, Component, OnDestroy, OnInit, Inject } from '@angular/core';
+import { ChangeDetectorRef, Component, OnDestroy, OnInit, Inject } from '@angular/core';
 import { FormArray, FormBuilder, FormControl, FormGroup, Validators } from '@angular/forms';
 import { Location } from '@angular/common';
 import { OfiKycService } from '../../ofi-req-services/ofi-kyc/service';
@@ -25,7 +25,6 @@ import { Moment } from 'moment';
     selector: 'app-client-referential',
     styleUrls: ['./component.scss'],
     templateUrl: './component.html',
-    changeDetection: ChangeDetectionStrategy.OnPush,
     providers: [OfiKycObservablesService],
 })
 export class OfiClientReferentialComponent implements OnInit, OnDestroy {
@@ -51,11 +50,7 @@ export class OfiClientReferentialComponent implements OnInit, OnDestroy {
     socketToken: string;
     userId: string;
 
-    investorTypes = this.translate.translate([
-        { id: 0, text: 'All Investors' },
-        { id: 45, text: 'Institutional Investor' },
-        { id: 55, text: 'Retail Investor' },
-    ]);
+    investorTypes = [];
 
     // Locale
     language = 'en';
@@ -106,21 +101,23 @@ export class OfiClientReferentialComponent implements OnInit, OnDestroy {
     @select(['ofi', 'ofiProduct', 'ofiFundShareList', 'iznShareList']) amAllFundShareListOb;
     @select(['user', 'authentication', 'token']) tokenOb;
     @select(['user', 'myDetail', 'userId']) userIdOb;
+    @select(['user', 'siteSettings', 'language']) requestLanguageOb;
 
     /* Constructor. */
     constructor(private fb: FormBuilder,
-        private changeDetectorRef: ChangeDetectorRef,
-        private location: Location,
-        private alertsService: AlertsService,
-        private ofiKycService: OfiKycService,
-        private toasterService: ToasterService,
-        private ofiFundShareService: OfiFundShareService,
-        private ofiKycObservablesService: OfiKycObservablesService,
-        private ngRedux: NgRedux<any>,
-        private fileDownloader: FileDownloader,
-        private route: ActivatedRoute,
-        private router: Router,
-        public translate: MultilingualService) {
+                private changeDetectorRef: ChangeDetectorRef,
+                private location: Location,
+                private alertsService: AlertsService,
+                private ofiKycService: OfiKycService,
+                private toasterService: ToasterService,
+                private ofiFundShareService: OfiFundShareService,
+                private ofiKycObservablesService: OfiKycObservablesService,
+                private ngRedux: NgRedux<any>,
+                private fileDownloader: FileDownloader,
+                private route: ActivatedRoute,
+                private router: Router,
+                public translate: MultilingualService,
+    ) {
 
         this.investorTypeForm = new FormGroup({
             investorType: new FormControl(''),
@@ -145,6 +142,8 @@ export class OfiClientReferentialComponent implements OnInit, OnDestroy {
 
     ngOnInit(): void {
         this.ofiKycService.setRequestedClientReferential(false);
+
+        this.initInvestorTypes();
 
         this.subscriptions.push(this.requestedOb.subscribe((requested) => {
             if (!requested) {
@@ -174,6 +173,10 @@ export class OfiClientReferentialComponent implements OnInit, OnDestroy {
 
         this.subscriptions.push(this.userIdOb.subscribe((userId) => {
             this.userId = userId;
+        }));
+
+        this.subscriptions.push(this.requestLanguageOb.subscribe(() => {
+            this.initInvestorTypes();
         }));
 
         this.subscriptions.push(this.searchForm.valueChanges.pipe(debounceTime(500)).subscribe((form) => {
@@ -238,6 +241,14 @@ export class OfiClientReferentialComponent implements OnInit, OnDestroy {
                     this.changeDetectorRef.markForCheck();
                 }),
         );
+    }
+
+    initInvestorTypes() {
+        this.investorTypes = this.translate.translate([
+            { id: 0, text: 'All Investors' },
+            { id: 45, text: 'Institutional Investor' },
+            { id: 55, text: 'Retail Investor' },
+        ]);
     }
 
     getClientReferentialDescriptionTitle(): string {

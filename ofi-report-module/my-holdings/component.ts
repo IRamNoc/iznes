@@ -201,6 +201,10 @@ export class MyHoldingsComponent implements OnInit, OnDestroy {
      * @returns {string}
      */
     getCurrencyString(currencyId: number): string {
-        return this.currencyList.find(v => v.id === currencyId).text || '';
+        try {
+            return this.currencyList.find(v => v.id === currencyId).text || '';
+        } catch (e) {
+            return '';
+        }
     }
 }

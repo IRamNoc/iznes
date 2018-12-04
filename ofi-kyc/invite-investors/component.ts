@@ -1,10 +1,10 @@
-import { ChangeDetectionStrategy, ChangeDetectorRef, Component, OnDestroy, OnInit, Inject } from '@angular/core';
+import { ChangeDetectorRef, Component, OnDestroy, OnInit, Inject } from '@angular/core';
 import { FormArray, FormBuilder, FormControl, FormGroup, Validators } from '@angular/forms';
 import { Location } from '@angular/common';
 import { OfiKycService } from '../../ofi-req-services/ofi-kyc/service';
 import { OfiKycObservablesService } from '../../ofi-req-services/ofi-kyc/kyc-observable';
 import { immutableHelper } from '@setl/utils';
-import { NgRedux } from '@angular-redux/store';
+import { NgRedux, select } from '@angular-redux/store';
 import { Subject } from 'rxjs';
 import { AlertsService } from '@setl/jaspero-ng2-alerts';
 import { ToasterService } from 'angular2-toaster';
@@ -22,7 +22,6 @@ const emailRegex = /^(((\([A-z0-9]+\))?[^<>()\[\]\\.,;:\s@"]+(\.[^<>()\[\]\\.,;:
     selector: 'app-invite-investors',
     styleUrls: ['./component.scss'],
     templateUrl: './component.html',
-    // changeDetection: ChangeDetectionStrategy.OnPush,
     providers: [OfiKycObservablesService],
 })
 export class OfiInviteInvestorsComponent implements OnInit, OnDestroy {
@@ -35,6 +34,8 @@ export class OfiInviteInvestorsComponent implements OnInit, OnDestroy {
         // {id: 'sch', text: '中文'}
     ]);
 
+    subscriptions: Array<any> = [];
+
     investorTypes: any;
 
     enums = {
@@ -45,6 +46,8 @@ export class OfiInviteInvestorsComponent implements OnInit, OnDestroy {
     inviteItems: investorInvitation[];
     fundSelectList: {id: string, text: string}[];
     unSubscribe: Subject<any> = new Subject();
+
+    @select(['user', 'siteSettings', 'language']) requestLanguageOb;
 
     /* Constructor. */
     constructor(private fb: FormBuilder,
@@ -99,17 +102,6 @@ export class OfiInviteInvestorsComponent implements OnInit, OnDestroy {
                 }),
             ]),
         });
-
-        this.panel = {
-            title: this.translate.translate('Invites Recap'),
-            open: true,
-        };
-
-        this.investorTypes = this.translate.translate([
-            { id: 10, text: 'Institutional Investor' },
-            { id: 20, text: 'Portfolio Manager' },
-            { id: 30, text: 'Retail Investor' },
-        ]);
     }
 
     /**
@@ -124,6 +116,9 @@ export class OfiInviteInvestorsComponent implements OnInit, OnDestroy {
     }
 
     ngOnInit(): void {
+        this.initPanel();
+        this.initInvestorTypes();
+
         (<any>this).appSubscribe(this.ofiKycObservablesService.getInvitationData(), (d: investorInvitation[]) => {
             this.inviteItems = d;
             if (this.inviteItems.length) {
@@ -143,6 +138,26 @@ export class OfiInviteInvestorsComponent implements OnInit, OnDestroy {
         });
 
         (<any>this).appSubscribe(this.ofiFundDataService.getFundSelectList(), fundSelectList => this.fundSelectList = fundSelectList);
+
+        this.subscriptions.push(this.requestLanguageOb.subscribe(() => {
+            this.initPanel();
+            this.initInvestorTypes();
+        }));
+    }
+
+    initPanel() {
+        this.panel = {
+            title: this.translate.translate('Invites Recap'),
+            open: true,
+        };
+    }
+
+    initInvestorTypes() {
+        this.investorTypes = this.translate.translate([
+            { id: 10, text: 'Institutional Investor' },
+            { id: 20, text: 'Portfolio Manager' },
+            { id: 30, text: 'Retail Investor' },
+        ]);
     }
 
     getControls(frmGrp: FormGroup, key: string) {
@@ -330,6 +345,9 @@ export class OfiInviteInvestorsComponent implements OnInit, OnDestroy {
     }
 
     ngOnDestroy() {
+        for (const key of this.subscriptions) {
+            key.unsubscribe();
+        }
     }
 }
 
