@@ -37,10 +37,12 @@ public class PageHelper extends LoginAndNavigationHelper {
         }
     }
 
-    public static void verifyCorrectPage(String title) {
+    public static void verifyCorrectPage(String expected) {
         String test = driver.findElement(By.className("header-breadcrumbs")).getText();
         System.out.println(test);
-        assertTrue(driver.findElement(By.className("header-breadcrumbs")).getText().equals(title));
+
+        String actual = driver.findElement(By.className("header-breadcrumbs")).getText();
+        assert actual.equals(expected) : String.format("Expected '%s' but was '%s'", expected, actual);
     }
 
     public static void verifyCorrectPageContains(String title) {

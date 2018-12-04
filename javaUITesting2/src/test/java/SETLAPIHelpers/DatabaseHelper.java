@@ -90,21 +90,23 @@ public class DatabaseHelper {
         }
     }
 
-    public static void validateDatabaseUsersFormdataTable(int expectedCount, String formId, String userId) throws SQLException {
+    public static void validateDatabaseUsersFormdataTable(String walletName, String formId, String userId) throws SQLException {
         conn = DriverManager.getConnection(connectionString, DBUsername, DBPassword);
 
         //for the query
         Statement stmt = conn.createStatement();
         ResultSet rs = null;
 
+        String result = "", expected = "\"walletName\":\""+ walletName +"\"";
+
         int rows = 0;
 
         try {
-            rs =  stmt.executeQuery("select data from setlnet.tblUsersFormdata where formId = " + "\"" + formId + "\" AND userId =  " + "\"" + userId + "\"");
-            while (rs.next()) //rs.next returns true while there is a result, so should return false if there are no rows
-            {
-                rows = rs.getRow(); //returns the row number
-            }
+            rs =  stmt.executeQuery("select * from setlnet.tblUsersFormdata where formId = " + "\"" + formId + "\" AND userId =  " + "\"" + userId + "\"");
+            rs.next();
+
+            result = rs.getString("data");
+            expected = "\"walletName\":\""+ walletName +"\"";
         }
         catch (Exception e) {
             e.printStackTrace();
@@ -115,7 +117,7 @@ public class DatabaseHelper {
             rs.close();
         }
 
-        assertEquals("There should be exactly " + expectedCount + " record(s) matching: ", expectedCount, rows);
+        assert result.contains(expected) : "could not find expected content";
     }
 
     public static void setDBToProdOff() throws SQLException {

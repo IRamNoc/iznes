@@ -264,7 +264,7 @@ public class UmbrellaFundFundSharesDetailsHelper {
     }
 
     public static void shareCreationSubmit() throws InterruptedException {
-        WebDriverWait wait = new WebDriverWait(driver, timeoutInSeconds);
+        WebDriverWait wait = new WebDriverWait(driver, 60); //creating a share can take a while...
 
         try {
             scrollElementIntoViewById("saveFundShareBottom");

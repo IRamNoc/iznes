@@ -7,6 +7,8 @@ import com.setl.UI.common.SETLUtils.ScreenshotRule;
 import com.setl.UI.common.SETLUtils.TestMethodPrinterRule;
 import custom.junit.runners.OrderedJUnit4ClassRunner;
 import org.junit.*;
+import org.junit.rules.DisableOnDebug;
+import org.junit.rules.TestRule;
 import org.junit.rules.Timeout;
 import org.junit.runner.RunWith;
 import org.openqa.selenium.By;
@@ -60,7 +62,7 @@ public class OpenCSDEntireFlowAcceptanceTest {
     @Rule
     public RepeatRule repeatRule = new RepeatRule();
     @Rule
-    public Timeout globalTimeout = new Timeout(300000);
+    public TestRule timeout = new DisableOnDebug(Timeout.seconds(60*5));
     @Rule
     public TestMethodPrinterRule pr = new TestMethodPrinterRule(System.out);
 
@@ -127,11 +129,15 @@ public class OpenCSDEntireFlowAcceptanceTest {
         setSharesNAVandValidate(uShareDetails[0], latestNav);
         logout();
 
+        System.out.println("Status : Inviting investor - " + email[0]);
         loginAndVerifySuccess(AMUsername, AMPassword);
         waitForHomePageToLoad();
         navigateToInviteInvestorPage();
         inviteAnInvestor(email[0], firstName, lastName, "Success!", "Institutional Investor");
         logout();
+
+        setDBToProdOff(); // really need this to be off when an investor logs in!
+
         newInvestorSignUp(email[0], InvPassword);
         KYCProcessWelcomeToIZNES2(email[0], companyName, phoneNo, firstName, lastName, managementCompEntered);
 
@@ -147,6 +153,7 @@ public class OpenCSDEntireFlowAcceptanceTest {
         KYCProcessRequestListValidation("Yes","Success!", managementCompEntered, "Waiting approval", "No", "", "");
         logout();
 
+        System.out.println("Status : AM Accepting Investor");
         KYCAcceptMostRecentRequest2(AMUsername, AMPassword, companyName, firstName, lastName, phoneNo, "accept");
 
         validateClientReferentialAndGrantFundAccess(companyName, No, uIsin[0]);
@@ -155,8 +162,10 @@ public class OpenCSDEntireFlowAcceptanceTest {
         logout();
 
         loginAndVerifySuccess(InvUsername, InvPassword);
+        System.out.println("Status : Investor creates Sub Portfolio");
         createSubPortfolio(uSubNameDetails[0], uSubIBANDetails);
 
+        System.out.println("Status : Placing order");
         navigateToDropdown("menu-order-module");
         navigateToPageByID("menu-list-of-fund");
         placeOrder(uIsin[0], uShareDetails[0], managementCompEntered, shareCurrency, latestNav, uAmount[0]);

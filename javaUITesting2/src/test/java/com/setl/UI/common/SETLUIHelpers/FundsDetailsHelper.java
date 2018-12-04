@@ -240,13 +240,12 @@ public class FundsDetailsHelper extends LoginAndNavigationHelper {
         scrollElementIntoViewById("new-umbrella-fund-btn");
         Thread.sleep(1000);
         driver.findElement(By.id("new-umbrella-fund-btn")).click();
-        try {
-            wait.until(visibilityOfElementLocated(By.id("add-fund-title")));
-            String pageHeading = driver.findElement(By.id("add-fund-title")).getText();
-            assertTrue(pageHeading.equals("Add New Umbrella Fund"));
-        } catch (Exception e) {
-            fail("Page heading text was not correct : " + e.getMessage());
-        }
+        wait.until(visibilityOfElementLocated(By.id("add-fund-title")));
+        String pageHeading = driver.findElement(By.id("add-fund-title")).getText();
+        String expected = "new umbrella fund";
+        assert pageHeading.toLowerCase().contains(expected)
+            : String.format("Not on correct page.  Expected '%s' but was '%s'", expected, pageHeading);
+
     }
     public static void fillFundNameRandom (String fundNameDuplicate, String IDname) throws InterruptedException {
 
@@ -992,25 +991,42 @@ public class FundsDetailsHelper extends LoginAndNavigationHelper {
         String orderDate = date1 + " " + "00:00";
 
         Thread.sleep(750);
-        driver.findElement(By.id("cutoffdate")).sendKeys(orderDate);
+
+        //find somewhere to click on after we populate the date pickers, so that they disappear
+        WebElement somewhere = driver.findElement(By.id("quantity"));
+
+        driver.findElement(By.id("cutoffdate")).sendKeys(orderDate + Keys.ESCAPE);
+        somewhere.click();
+
         Thread.sleep(750);
-        driver.findElement(By.id("valuationdate")).sendKeys(orderDate);
+        driver.findElement(By.id("valuationdate")).sendKeys(orderDate+ Keys.ESCAPE);
+        somewhere.click();
         Thread.sleep(750);
-        driver.findElement(By.id("settlementdate")).sendKeys(orderDate);
+        driver.findElement(By.id("settlementdate")).sendKeys(orderDate+ Keys.ESCAPE);
+        somewhere.click();
         Thread.sleep(750);
-        driver.findElement(By.id("cutoffdate")).clear();
-        driver.findElement(By.id("cutoffdate")).sendKeys(orderDate);
-        Thread.sleep(750);
-        driver.findElement(By.id("valuationdate")).clear();
-        driver.findElement(By.id("valuationdate")).sendKeys(orderDate);
-        driver.findElement(By.id("quantity")).clear();
+//        driver.findElement(By.id("cutoffdate")).clear();
+//        driver.findElement(By.id("cutoffdate")).sendKeys(orderDate);
+//        Thread.sleep(750);
+//        driver.findElement(By.id("valuationdate")).clear();
+//        driver.findElement(By.id("valuationdate")).sendKeys(orderDate);
+
+
+        //the quantity text box doesn't like having values sent to it or using the clear() command
+        WebElement quantity = driver.findElement(By.id("quantity"));
+        String currentValue = "0.00000"; //quantity.getText(); //nay work
+        for (int i = 0; i < currentValue.length(); i++ )
+        {
+            quantity.sendKeys(Keys.BACK_SPACE);
+            Thread.sleep(50);
+        }
         driver.findElement(By.id("quantity")).sendKeys(amount);
 
         scrollElementIntoViewByCss("app-invest-fund > form > div > div.row > div > div > button.btn.btn-primary.ng-star-inserted");
         Thread.sleep(750);
         driver.findElement(By.id("checkbox")).click();
         driver.findElement(By.cssSelector("app-invest-fund > form > div > div.row > div > div > button.btn.btn-primary.ng-star-inserted")).click();
-        Thread.sleep(1000);
+        Thread.sleep(2000);
         String modalTitle = driver.findElement(By.xpath("//*[@id=\"iznes\"]/app-root/jaspero-confirmations/jaspero-confirmation/div[2]/div[1]/span")).getText();
         assertTrue(modalTitle.equals("Order Confirmation"));
         driver.findElement(By.xpath("//*[@id=\"iznes\"]/app-root/jaspero-confirmations/jaspero-confirmation/div[2]/div[4]/button[2]")).click();
@@ -1055,16 +1071,30 @@ public class FundsDetailsHelper extends LoginAndNavigationHelper {
         WebDriverWait wait = new WebDriverWait(driver, timeoutInSeconds);
         navigateToNAVPageFromFunds();
         driver.findElement(By.id("Search-field")).sendKeys(shareName);
+
         wait.until(visibilityOfElementLocated(By.id("Btn-AddNewNAV-0")));
         wait.until(elementToBeClickable(By.id("Btn-AddNewNAV-0")));
-        driver.findElement(By.id("Btn-AddNewNAV-0")).click();
+        WebElement navButton = driver.findElement(By.id("Btn-AddNewNAV-0"));
+        navButton.click();
 
         wait.until(visibilityOfElementLocated(By.xpath("//*[@id=\"iznes\"]/app-root/app-basic-layout/div/ng-sidebar-container/div/div/div/main/div/div/app-nav-manage-list/app-nav-add/clr-modal/div/div[1]/div/div[1]/div/div[1]/h3/span")));
         String NAVpopupTitle = driver.findElement(By.xpath("//*[@id=\"iznes\"]/app-root/app-basic-layout/div/ng-sidebar-container/div/div/div/main/div/div/app-nav-manage-list/app-nav-add/clr-modal/div/div[1]/div/div[1]/div/div[1]/h3/span")).getText();
         assertTrue(NAVpopupTitle.equals("Add New NAV"));
-        driver.findElement(By.xpath("//*[@id=\"iznes\"]/app-root/app-basic-layout/div/ng-sidebar-container/div/div/div/main/div/div/app-nav-manage-list/app-nav-add/clr-modal/div/div[1]/div/div[1]/div/div[2]/form/div/div[4]/input")).click();
-        driver.findElement(By.xpath("//*[@id=\"iznes\"]/app-root/app-basic-layout/div/ng-sidebar-container/div/div/div/main/div/div/app-nav-manage-list/app-nav-add/clr-modal/div/div[1]/div/div[1]/div/div[2]/form/div/div[4]/input")).clear();
-        driver.findElement(By.xpath("//*[@id=\"iznes\"]/app-root/app-basic-layout/div/ng-sidebar-container/div/div/div/main/div/div/app-nav-manage-list/app-nav-add/clr-modal/div/div[1]/div/div[1]/div/div[2]/form/div/div[4]/input")).sendKeys("" + navValue);
+        //driver.findElement(By.xpath("//*[@id=\"iznes\"]/app-root/app-basic-layout/div/ng-sidebar-container/div/div/div/main/div/div/app-nav-manage-list/app-nav-add/clr-modal/div/div[1]/div/div[1]/div/div[2]/form/div/div[4]/input")).click();
+        //driver.findElement(By.xpath("//*[@id=\"iznes\"]/app-root/app-basic-layout/div/ng-sidebar-container/div/div/div/main/div/div/app-nav-manage-list/app-nav-add/clr-modal/div/div[1]/div/div[1]/div/div[2]/form/div/div[4]/input")).clear();
+        //driver.findElement(By.xpath("//*[@id=\"iznes\"]/app-root/app-basic-layout/div/ng-sidebar-container/div/div/div/main/div/div/app-nav-manage-list/app-nav-add/clr-modal/div/div[1]/div/div[1]/div/div[2]/form/div/div[4]/input")).sendKeys("" + navValue);
+
+        wait.until(visibilityOfElementLocated(By.id("Set-nav-field")));
+        WebElement navValueTextBox = driver.findElement(By.id("Set-nav-field"));
+        navValueTextBox.click();
+
+        //navValueTextBox.clear(); //clear does not work, so send multiple deletes
+        for (int i=0; i<4; i++) {
+            navValueTextBox.sendKeys(Keys.BACK_SPACE);
+            Thread.sleep(50);
+        }
+        navValueTextBox.sendKeys("" + navValue);
+
         searchAndSelectTopDropdown("Status-nav-btn", "Validated");
         driver.findElement(By.xpath("//*[@id=\"iznes\"]/app-root/app-basic-layout/div/ng-sidebar-container/div/div/div/main/div/div/app-nav-manage-list/app-nav-add/clr-modal/div/div[1]/div/div[1]/div/div[3]/button[2]")).click();
 
@@ -1077,8 +1107,9 @@ public class FundsDetailsHelper extends LoginAndNavigationHelper {
         wait.until(invisibilityOfElementLocated(By.xpath("//*[@id=\"iznes\"]/app-root/jaspero-alerts/jaspero-alert/div[2]/div[4]/button")));
 
         try {
+            wait.until(visibilityOfElementLocated(By.id("NAV-Value-0")));
             String TableNav = driver.findElement(By.id("NAV-Value-0")).getText();
-            assertTrue(TableNav.equals(navValue + ".00"));
+            assert TableNav.equals(navValue + ".00") : String.format("Expected %s but was %s", navValue, TableNav);
         } catch (Error e) {
             fail(e.getMessage());
         }
