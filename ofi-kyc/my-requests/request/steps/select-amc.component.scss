@@ -135,12 +135,12 @@ input {
         text-align: left;
 
         &:after {
-            content: attr(data-no)
+            content: attr(data-no);
         }
     }
     &:checked + .slider {
         &:after {
-            content: attr(data-yes)
+            content: attr(data-yes);
         }
     }
 }
