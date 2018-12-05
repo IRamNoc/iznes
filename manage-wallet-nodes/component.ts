@@ -4,6 +4,7 @@ import { SagaHelper, LogService } from '@setl/utils';
 import { NgRedux, select } from '@angular-redux/store';
 import { fromJS } from 'immutable';
 import { PersistService } from '@setl/core-persist';
+import { MultilingualService } from '@setl/multilingual';
 
 // Alerts and confirms
 import { AlertsService } from '@setl/jaspero-ng2-alerts';
@@ -15,7 +16,6 @@ import { Subscription } from 'rxjs/Subscription';
 // Services
 import { AdminUsersService } from '@setl/core-req-services/useradmin/useradmin.service';
 import { ChainService } from '@setl/core-req-services/chain/service';
-import { MultilingualService } from '@setl/multilingual';
 
 @Component({
     selector: 'app-wallet-nodes',
@@ -62,17 +62,19 @@ export class ManageWalletNodesComponent implements OnInit, OnDestroy {
                 private confirmationService: ConfirmationService,
                 private multilingualService: MultilingualService,
                 private logService: LogService,
-                private persistService: PersistService) {
+                private persistService: PersistService,
+                public translate: MultilingualService,
+    ) {
 
         // Build initial tabs
         this.tabsControl = [
             {
-                title: '<i class="fa fa-search"></i> Search',
+                title: `<i class="fa fa-search"></i> ${this.translate.translate('Search')}`,
                 chainId: -1,
                 active: true,
             },
             {
-                title: '<i class="fa fa-plus"></i> Add New Wallet Node',
+                title: `<i class="fa fa-plus"></i> ${this.translate.translate('Add New Wallet Node')}`,
                 chainId: -1,
                 formControl: this.persistService.watchForm('manageMember/walletNodes', new FormGroup(
                     {
@@ -190,22 +192,21 @@ export class ManageWalletNodesComponent implements OnInit, OnDestroy {
         // Check node port is 13535
         if (nodePort !== 13535) {
             check = false; // failed check
-            message = '<li class="text-warning">In most cases Node Port should be set to 13535</li>';
+            message = `<li class="text-warning">${this.translate.translate('In most cases the Node Port should be set to 13535')}</li>`;
         }
 
         // If not HTTPS check address is 'localhost'
         if (location.protocol !== 'https:' && nodeAddress !== 'localhost') {
             check = false; // failed check
-            message = '<li class="text-warning">' +
-                'As you are on a local server, Node Address should be set to localhost</li>';
+            message = `<li class="text-warning">${this.translate.translate('As you are on a local server, the Node Address should be set to localhost')}</li>`;
         }
 
         if (!check) {
             // Trigger warning alert
             this.confirmationService.create(
-                '<span>Are you sure?</span>',
-                `<strong class="text-warning">Please check the below:</strong><ol>${message}</ol>`,
-                { confirmText: 'Continue', declineText: 'Amend' },
+                `<span>${this.translate.translate('Are you sure?')}</span>`,
+                `<strong class="text-warning">${this.translate.translate('Please check the below')}:</strong><ol>${message}</ol>`,
+                { confirmText: this.translate.translate('Continue'), declineText: this.translate.translate('Amend') },
             ).subscribe((ans) => {
                 if (ans.resolved) {
                     if (type === 'add') {
@@ -259,13 +260,18 @@ export class ManageWalletNodesComponent implements OnInit, OnDestroy {
                 asyncTaskPipe,
                 () => {
                     AdminUsersService.setRequestedWalletNodes(false, this.ngRedux);
-                    this.alertsService.generate('success', 'Wallet Node has successfully been saved.');
+                    this.alertsService.generate(
+                        'success',
+                        this.translate.translate('Wallet Node has successfully been saved.'),
+                    );
                     this.setTabActive(0);
                 },
                 (data) => {
                     this.logService.log('Error: ', data);
-                    this.alertsService.generate('error', 'Error saving new Wallet Node. ' +
-                        'Please check that a Wallet Node with this name does not already exist.');
+                    this.alertsService.generate(
+                        'error',
+                        this.translate.translate('Error saving new Wallet Node. Please check that a Wallet Node with this name does not already exist.'),
+                    );
                     this.changeDetectorRef.markForCheck();
                 },
             ));
@@ -304,12 +310,18 @@ export class ManageWalletNodesComponent implements OnInit, OnDestroy {
                 asyncTaskPipe,
                 () => {
                     AdminUsersService.setRequestedWalletNodes(false, this.ngRedux);
-                    this.alertsService.generate('success', 'Wallet Node has successfully been updated.');
+                    this.alertsService.generate(
+                        'success',
+                        this.translate.translate('Wallet Node has successfully been updated.'),
+                    );
                     this.setTabActive(0);
                 },
                 (data) => {
                     this.logService.log('Error: ', data);
-                    this.alertsService.generate('error', 'Failed to update Wallet Node.');
+                    this.alertsService.generate(
+                        'error',
+                        this.translate.translate('Failed to update Wallet Node.'),
+                    );
                     this.changeDetectorRef.markForCheck();
                 },
             ));
@@ -324,8 +336,10 @@ export class ManageWalletNodesComponent implements OnInit, OnDestroy {
     handleDelete(walletNode: any): void {
         /* Ask the user if they're sure... */
         this.confirmationService.create(
-            '<span>Deleting a Wallet Node</span>',
-            `<span class="text-warning">Are you sure you want to delete '${walletNode.walletNodeName}'?</span>`,
+            `<span>${this.translate.translate('Deleting a Wallet Node')}</span>`,
+            `<span class="text-warning">${this.translate.translate(
+                'Are you sure you want to delete @walletNodeName@?',
+                { walletNodeName: walletNode.walletNodeName })}</span>`,
         ).subscribe((ans) => {
             /* ...if they are... */
             if (ans.resolved) {
@@ -343,11 +357,17 @@ export class ManageWalletNodesComponent implements OnInit, OnDestroy {
                     asyncTaskPipe,
                     () => {
                         AdminUsersService.setRequestedWalletNodes(false, this.ngRedux);
-                        this.alertsService.generate('success', 'Wallet Node has been deleted.');
+                        this.alertsService.generate(
+                            'success',
+                            this.translate.translate('Wallet Node has been deleted.'),
+                        );
                     },
                     (data) => {
                         this.logService.log('error: ', data);
-                        this.alertsService.generate('error', 'Failed to delete Wallet Node.');
+                        this.alertsService.generate(
+                            'error',
+                            this.translate.translate('Failed to delete Wallet Node.'),
+                        );
                     },
                 ));
             }
@@ -448,15 +468,15 @@ export class ManageWalletNodesComponent implements OnInit, OnDestroy {
         // this.logService.log('Language changed from ' + this.language + ' to ' + requested);
         if (requested) {
             switch (requested) {
-            case 'fra':
-                this.language = 'fr';
-                break;
-            case 'eng':
-                this.language = 'en';
-                break;
-            default:
-                this.language = 'en';
-                break;
+                case 'fra':
+                    this.language = 'fr';
+                    break;
+                case 'eng':
+                    this.language = 'en';
+                    break;
+                default:
+                    this.language = 'en';
+                    break;
             }
         }
     }

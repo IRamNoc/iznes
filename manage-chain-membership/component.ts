@@ -13,6 +13,7 @@ import {
     setRequestedManageMemberList,
 } from '@setl/core-store';
 import { SagaHelper, LogService } from '@setl/utils';
+import { MultilingualService } from '@setl/multilingual';
 
 @Component({
     selector: 'app-manage-chain-membership',
@@ -24,15 +25,8 @@ import { SagaHelper, LogService } from '@setl/utils';
 export class ManageChainMembershipComponent implements OnInit, OnDestroy {
     tabsControl: {}[];
 
-    chainMemberShipTypeItems: any[] = [
-        { id: 1, text: 'Custodian' },
-        { id: 2, text: 'Registrar' },
-        { id: 3, text: 'Clearer' },
-        { id: 4, text: 'Payment Institution' },
-        { id: 5, text: 'Regulator' },
-        { id: 7, text: 'Exchange' },
-        { id: 8, text: 'Central Bank' },
-    ];
+    chainMemberShipTypeItems: any[] = [];
+
     memberList: any[];
     memberListObject: object;
 
@@ -58,11 +52,13 @@ export class ManageChainMembershipComponent implements OnInit, OnDestroy {
                 private memberService: MemberService,
                 private adminUsersService: AdminUsersService,
                 private logService: LogService,
-                private changeDetectorRef: ChangeDetectorRef) {
+                private changeDetectorRef: ChangeDetectorRef,
+                public translate: MultilingualService,
+    ) {
         /* Default tabs. */
         this.tabsControl = [
             {
-                title: '<i class="fa fa-search"></i> Search',
+                title: `<i class="fa fa-search"></i> ${this.translate.translate('Search')}`,
                 active: true,
             },
         ];
@@ -80,6 +76,7 @@ export class ManageChainMembershipComponent implements OnInit, OnDestroy {
             requestedState => this.requestChainList(requestedState)));
 
         // Chain membership items
+        this.setChainMemberShipTypeItems();
 
         // Chain membership form
         this.membershipForm = new FormGroup({
@@ -93,7 +90,10 @@ export class ManageChainMembershipComponent implements OnInit, OnDestroy {
 
     addMembershipItem(memberValue = [], memberTypeValue = [], nodeValue = []) {
         if (this.membershipForm.value.chain.length === 0) {
-            this.alertsService.generate('error', 'Please choose a chain first.');
+            this.alertsService.generate(
+                'error',
+                this.translate.translate('Please choose a chain first.'),
+            );
             return false;
         }
         // Add membership item to form array.
@@ -218,7 +218,10 @@ export class ManageChainMembershipComponent implements OnInit, OnDestroy {
 
         if (currentSelectedMemberIds.includes(selectedId)) {
             this.membershipForm.controls['membershipArr']['at'](index)['patchValue']({ member: [] });
-            this.alertsService.generate('warning', 'Member is selected from other entry.');
+            this.alertsService.generate(
+                'warning',
+                this.translate.translate('Member is selected from other entry.'),
+            );
         }
 
     }
@@ -334,10 +337,16 @@ export class ManageChainMembershipComponent implements OnInit, OnDestroy {
             this.ngRedux.dispatch(SagaHelper.runAsyncCallback(
                 asyncTaskPipe,
                 () => {
-                    this.alertsService.generate('success', 'Chain Membership is updated.');
+                    this.alertsService.generate(
+                        'success',
+                        this.translate.translate('Chain Membership is updated.'),
+                    );
                 },
                 (data) => {
-                    this.alertsService.generate('error', 'Failed to update Chain Membership.');
+                    this.alertsService.generate(
+                        'error',
+                        this.translate.translate('Failed to update Chain Membership.'),
+                    );
                     this.logService.log(data);
                 },
             ));
@@ -423,6 +432,18 @@ export class ManageChainMembershipComponent implements OnInit, OnDestroy {
         }
 
         return toUpdate;
+    }
+
+    setChainMemberShipTypeItems() {
+        this.chainMemberShipTypeItems = this.translate.translate([
+            { id: 1, text: 'Custodian' },
+            { id: 2, text: 'Registrar' },
+            { id: 3, text: 'Clearer' },
+            { id: 4, text: 'Payment Institution' },
+            { id: 5, text: 'Regulator' },
+            { id: 7, text: 'Exchange' },
+            { id: 8, text: 'Central Bank' },
+        ]);
     }
 
     ngOnDestroy() {

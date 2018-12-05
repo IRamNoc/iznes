@@ -5,7 +5,7 @@ import { NgRedux, select } from '@angular-redux/store';
 import { Subscription } from 'rxjs/Subscription';
 import { fromJS } from 'immutable';
 import * as _ from 'lodash';
-
+import { MultilingualService } from '@setl/multilingual';
 import { AlertsService } from '@setl/jaspero-ng2-alerts';
 import { ChainService } from '@setl/core-req-services/chain/service';
 
@@ -37,16 +37,18 @@ export class ManageChainsComponent implements OnInit, AfterViewInit, OnDestroy {
                 private changeDetectorRef: ChangeDetectorRef,
                 private alertsService: AlertsService,
                 private chainService: ChainService,
-                private confirmationService: ConfirmationService) {
+                private confirmationService: ConfirmationService,
+                public translate: MultilingualService,
+    ) {
 
         this.tabsControl = [
             {
-                title: '<i class="fa fa-search"></i> Search',
+                title: `<i class="fa fa-search"></i> ${this.translate.translate('Search')}`,
                 chainId: -1,
                 active: true,
             },
             {
-                title: '<i class="fa fa-plus"></i> Add New Chain',
+                title: `<i class="fa fa-plus"></i> ${this.translate.translate('Add New Chain')}`,
                 chainId: -1,
                 formControl: new FormGroup(
                     {
@@ -110,15 +112,15 @@ export class ManageChainsComponent implements OnInit, AfterViewInit, OnDestroy {
     getLanguage(locale): void {
         if (locale) {
             switch (locale) {
-            case 'fra':
-                this.language = 'fr';
-                break;
-            case 'eng':
-                this.language = 'en';
-                break;
-            default:
-                this.language = 'en';
-                break;
+                case 'fra':
+                    this.language = 'fr';
+                    break;
+                case 'eng':
+                    this.language = 'en';
+                    break;
+                default:
+                    this.language = 'en';
+                    break;
             }
         }
     }
@@ -152,12 +154,18 @@ export class ManageChainsComponent implements OnInit, AfterViewInit, OnDestroy {
                 asyncTaskPipe,
                 (data) => {
                     ChainService.setRequested(false, this.ngRedux);
-                    this.alertsService.generate('success', 'Chain created successfully.');
+                    this.alertsService.generate(
+                        'success',
+                        this.translate.translate('Chain created successfully.'),
+                    );
                 },
                 (data) => {
                     const reason = !_.isEmpty(data[1].Data[0].Message) ?
-                        `. Reason:<br> ${data[1].Data[0].Message}` : '';
-                    this.alertsService.generate('error', `Failed to create chain ${reason}.`);
+                        `${this.translate.translate('Reason')}:<br> ${data[1].Data[0].Message}` : '';
+                    this.alertsService.generate(
+                        'error',
+                        this.translate.translate('Failed to create chain. @reason@', { reason }),
+                    );
                 },
             ));
         }
@@ -191,14 +199,20 @@ export class ManageChainsComponent implements OnInit, AfterViewInit, OnDestroy {
                 asyncTaskPipe,
                 (data) => {
                     ChainService.setRequested(false, this.ngRedux);
-                    this.alertsService.generate('success', 'Chain updated successfully.');
+                    this.alertsService.generate(
+                        'success', 
+                        this.translate.translate('Chain updated successfully.'),
+                    );
 
                     this.tabsControl[tabId]['title'] = `<i class="fa fa-chain"></i> ${chainName}`;
                 },
                 (data) => {
                     const reason = !_.isEmpty(data[1].Data[0].Message) ?
-                        `. Reason:<br> ${data[1].Data[0].Message}` : '';
-                    this.alertsService.generate('error', `Failed to update chain.' ${reason}`);
+                        `${this.translate.translate('Reason')}:<br> ${data[1].Data[0].Message}` : '';
+                    this.alertsService.generate(
+                        'error',
+                        this.translate.translate('Failed to update chain. @reason@', { reason }),
+                    );
                 },
             ));
         }
@@ -246,8 +260,10 @@ export class ManageChainsComponent implements OnInit, AfterViewInit, OnDestroy {
     handleDelete(chain: any): void {
         /* Ask the user if they're sure... */
         this.confirmationService.create(
-            '<span>Deleting a Chain</span>',
-            `<span class="text-warning">Are you sure you want to delete '${chain.chainName}'?</span>`,
+            `<span>${this.translate.translate('Deleting a Chain')}</span>`,
+            `<span class="text-warning">${this.translate.translate(
+                'Are you sure you want to delete @chainName@?',
+                { chainName: chain.chainName })}</span>`,
         ).subscribe((ans) => {
             /* ...if they are, send the delete request... */
             if (ans.resolved) {
@@ -265,12 +281,18 @@ export class ManageChainsComponent implements OnInit, AfterViewInit, OnDestroy {
                     asyncTaskPipe,
                     () => {
                         ChainService.setRequested(false, this.ngRedux);
-                        this.alertsService.generate('success', 'Chain deleted successfully.');
+                        this.alertsService.generate(
+                            'success',
+                            this.translate.translate('Chain deleted successfully.'),
+                        );
                     },
                     (data) => {
                         const reason = !_.isEmpty(data[1].Data[0].Message) ?
-                            `. Reason:<br> ${data[1].Data[0].Message}` : '';
-                        this.alertsService.generate('error', `Failed to delete chain${reason}`);
+                            `${this.translate.translate('Reason')}:<br> ${data[1].Data[0].Message}` : '';
+                        this.alertsService.generate(
+                            'error',
+                            this.translate.translate('Failed to delete chain. @reason@', { reason }),
+                        );
                     },
                 ));
             }
