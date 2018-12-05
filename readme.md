@@ -87,11 +87,11 @@ this.translation.translate('Are you sure you want to cancel the @message@?', { '
 
 ## 5. Using the `mltag` directive.
 
-**Note: Use of the `mltag` directive has been depreciated in favour of the pipe or the translate method (see point #4) above.**
+**Note: Use of the `mltag` directive has been deprecated in favour of the pipe or the translate method (see point #4) above.**
 
 **Note: Please replace instances of `mltag` with the pipe or the translate method (see point #4) as you encounter them in the codebase.**
 
-### Depreciated
+### Deprecated
 
 **Note: You'll have to import the `MultilingualModule` into the module that your component is declared in.**
 
