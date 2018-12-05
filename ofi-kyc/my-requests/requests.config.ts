@@ -488,8 +488,7 @@ export const sectorActivityList = [
 export const listingMarketsList = [
     { id: 'londonstockexchange', text: 'London Stock Exchange' },
     { id: 'borsefrankfurter', text: 'Börse Frankfurter' },
-    { id: 'nyse', text: 'NYSE' },
-    { id: 'euronext', text: 'Euronext' },
+    { id: 'nyseeuronext', text: 'NYSE Euronext' },
     { id: 'deutscheborse', text: 'Deutsche Börse' },
     { id: 'borseberlin', text: 'Börse Berlin' },
     { id: 'batseurope', text: 'Bats Europe' },
