@@ -1,4 +1,4 @@
-<form (ngSubmit)="handleOrderConfirmation()" [formGroup]="form" [class.error]="!form.valid && form.touched">
+<form (ngSubmit)="handleOrderConfirmation()" [formGroup]="form" [class.error]="!form.valid && form.touched"  (keydown.enter)="$event.preventDefault()">
     <div class="form-horizontal">
         <h2>{{getOrderTypeTitle()}}</h2>
         {{getOrderTypeSubTitle()}}
