@@ -10,6 +10,7 @@ import { ClrDatagridStringFilterInterface } from '@clr/angular';
 import { ActivatedRoute, Params, Router } from '@angular/router';
 import { ConfirmationService, immutableHelper, LogService } from '@setl/utils';
 import * as _ from 'lodash';
+import { MultilingualService } from '@setl/multilingual';
 
 /* Internal. */
 import { permissionGroupActions } from '@setl/core-store';
@@ -58,58 +59,9 @@ export class AdminPermissionsComponent implements OnInit, AfterViewInit, OnDestr
     public permissionsList: any;
 
     /* The permission levels list. */
-    public permissionTxLevelsList = [
-        {
-            id: 'canDelegate',
-            text: 'Delegate',
-        },
-        {
-            id: 'canRead',
-            text: 'Read',
-        },
-        {
-            id: 'canInsert',
-            text: 'Insert',
-        },
-    ];
-
-    public permissionLevelsList = [
-        {
-            id: 'canDelegate',
-            text: 'Delegate',
-        },
-        {
-            id: 'canRead',
-            text: 'Read',
-        },
-        {
-            id: 'canInsert',
-            text: 'Insert',
-        },
-        {
-            id: 'canUpdate',
-            text: 'Update',
-        },
-        {
-            id: 'canDelete',
-            text: 'Delete',
-        },
-    ];
-
-    public menuPermissionLevelsList = [
-        {
-            id: 'topProfileAccess',
-            text: 'Top - Profile Access',
-        },
-        {
-            id: 'sideAccess',
-            text: 'Side Access',
-        },
-        {
-            id: 'disabledAccess',
-            text: 'Disable Access',
-        },
-    ];
+    permissionTxLevelsList = [];
+    permissionLevelsList = [];
+    menuPermissionLevelsList = [];
 
     /* Filtered areas list. */
     public filteredAdminAreaList = [];
@@ -131,7 +83,9 @@ export class AdminPermissionsComponent implements OnInit, AfterViewInit, OnDestr
                 private ngRedux: NgRedux<any>,
                 private confirmationService: ConfirmationService,
                 private logService: LogService,
-                private persistService: PersistService) {
+                private persistService: PersistService,
+                public translate: MultilingualService,
+    ) {
     }
 
     public ngOnInit() {
@@ -139,6 +93,7 @@ export class AdminPermissionsComponent implements OnInit, AfterViewInit, OnDestr
         this.groupTypes = this.userAdminService.getGroupTypes();
 
         this.setInitialTabs();
+        this.setPermissionLevelLists();
 
         /* Subscribe to the admin group list observable. */
         this.subscriptions['allGroupList'] = this.userAdminService.getGroupListSubject().subscribe((list) => {
@@ -210,7 +165,7 @@ export class AdminPermissionsComponent implements OnInit, AfterViewInit, OnDestr
                 {
                     title: {
                         icon: 'fa-search',
-                        text: 'Search',
+                        text: this.translate.translate('Search'),
                     },
                     groupId: -1,
                     active: true,
@@ -218,7 +173,7 @@ export class AdminPermissionsComponent implements OnInit, AfterViewInit, OnDestr
                 {
                     title: {
                         icon: 'fa-plus',
-                        text: 'Add New Group',
+                        text: this.translate.translate('Add New Group'),
                     },
                     groupId: -1,
                     formControl: this.newAddGroupFormgroup(),
@@ -353,9 +308,10 @@ export class AdminPermissionsComponent implements OnInit, AfterViewInit, OnDestr
 
             /* Let's now ask the user if they're sure... */
             this.confirmationService.create(
-                '<span>Deleting a permission group</span>',
-                `<span class="text-warning">Are you sure you want to delete
-                '${this.allGroupList[index].groupName}'?</span>`,
+                `<span>${this.translate.translate('Deleting a permission group')}</span>`,
+                `<span class="text-warning">${this.translate.translate(
+                    'Are you sure you want to delete @groupName@?',
+                    { groupName: this.allGroupList[index].groupName })}</span>`,
             ).subscribe((ans) => {
                 /* ...if they are... */
                 if (ans.resolved) {
@@ -367,10 +323,16 @@ export class AdminPermissionsComponent implements OnInit, AfterViewInit, OnDestr
                         }
 
                         /* Handle success. */
-                        this.alertsService.generate('success', 'Successfully deleted permission group.');
+                        this.alertsService.generate(
+                            'success',
+                            this.translate.translate('Successfully deleted permission group.'),
+                        );
                     }).catch((error) => {
                         /* Handle error. */
-                        this.alertsService.generate('error', 'Failed to delete permission group.');
+                        this.alertsService.generate(
+                            'error',
+                            this.translate.translate('Failed to delete permission group.'),
+                        );
                         this.logService.log('Failed to delete permission group: ', error);
                     });
                 }
@@ -530,7 +492,10 @@ export class AdminPermissionsComponent implements OnInit, AfterViewInit, OnDestr
             this.userAdminService[functionCall](permissionsData).then((response) => {
                 this.logService.log('Set new group permissions.', response);
             }).catch((error) => {
-                this.alertsService.generate('error', 'Failed to create this permission group.');
+                this.alertsService.generate(
+                    'error',
+                    this.translate.translate('Failed to create this permission group.'),
+                );
                 this.logService.log('Failed to set new group permissions.', error);
             });
 
@@ -539,14 +504,19 @@ export class AdminPermissionsComponent implements OnInit, AfterViewInit, OnDestr
 
             /* Success message. */
             this.subscriptions['newGroupSuccessAlert'] =
-                this.alertsService.generate('success', 'Successfully created group.').subscribe(() => {
-                    if (tabid > 1) {
-                        this.closeTab(tabid);
-                    }
-                });
+                this.alertsService.generate(
+                    'success',
+                    this.translate.translate('Successfully created group.')).subscribe(() => {
+                        if (tabid > 1) {
+                            this.closeTab(tabid);
+                        }
+                    });
         }).catch((error) => {
             /* Implement an error message for failing to create the group. */
-            this.alertsService.generate('error', 'Failed to create this permission group.');
+            this.alertsService.generate(
+                'error',
+                this.translate.translate('Failed to create this permission group.'),
+            );
             this.logService.log('Failed to create new group.', error);
         });
 
@@ -620,18 +590,26 @@ export class AdminPermissionsComponent implements OnInit, AfterViewInit, OnDestr
                 this.tabsControl[tabid].oldPermissions = newPermissions;
             }).catch((error) => {
                 console.warn('Failed to update the group permissions.', error);
-                this.alertsService.generate('error', 'Failed to update this permission group.');
+                this.alertsService.generate(
+                    'error',
+                    this.translate.translate('Failed to update this permission group.'),
+                );
             });
 
             /* Success message. */
             this.subscriptions['updateGroupSuccessAlert'] =
-                this.alertsService.generate('success', 'Successfully updated this permission group.').subscribe(() => {
-                    this.closeTab(tabid);
-                });
+                this.alertsService.generate(
+                    'success',
+                    this.translate.translate('Successfully updated this permission group.')).subscribe(() => {
+                        this.closeTab(tabid);
+                    });
         }).catch((response) => {
             /* Implement an error message for failing to update the group. */
             console.warn('Failed to update the group.', response);
-            this.alertsService.generate('error', 'Failed to update this permission group.');
+            this.alertsService.generate(
+                'error',
+                this.translate.translate('Failed to update this permission group.'),
+            );
         });
 
         /* Clear the form. */
@@ -735,6 +713,61 @@ export class AdminPermissionsComponent implements OnInit, AfterViewInit, OnDestr
         this.tabsControl = immutableHelper.map(this.tabsControl, (item, thisIndex) => {
             return item.set('active', thisIndex === Number(index));
         });
+    }
+
+    private setPermissionLevelLists() {
+        this.permissionTxLevelsList = this.translate.translate([
+            {
+                id: 'canDelegate',
+                text: 'Delegate',
+            },
+            {
+                id: 'canRead',
+                text: 'Read',
+            },
+            {
+                id: 'canInsert',
+                text: 'Insert',
+            },
+        ]);
+
+        this.permissionLevelsList = this.translate.translate([
+            {
+                id: 'canDelegate',
+                text: 'Delegate',
+            },
+            {
+                id: 'canRead',
+                text: 'Read',
+            },
+            {
+                id: 'canInsert',
+                text: 'Insert',
+            },
+            {
+                id: 'canUpdate',
+                text: 'Update',
+            },
+            {
+                id: 'canDelete',
+                text: 'Delete',
+            },
+        ]);
+
+        this.menuPermissionLevelsList = this.translate.translate([
+            {
+                id: 'topProfileAccess',
+                text: 'Top - Profile Access',
+            },
+            {
+                id: 'sideAccess',
+                text: 'Side Access',
+            },
+            {
+                id: 'disabledAccess',
+                text: 'Disable Access',
+            },
+        ]);
     }
 
     ngOnDestroy(): void {
