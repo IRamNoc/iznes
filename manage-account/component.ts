@@ -11,6 +11,7 @@ import { SET_ACCOUNT_LIST, SET_MANAGE_MEMBER_LIST, setRequestedAccountList, setR
 import { AlertsService } from '@setl/jaspero-ng2-alerts';
 import { SagaHelper, LogService, ConfirmationService } from '@setl/utils';
 import * as _ from 'lodash';
+import { MultilingualService } from '@setl/multilingual';
 
 export function getManageMember(state) {
     const myMemberId = state.user.myDetail.memberId;
@@ -60,16 +61,18 @@ export class ManageAccountComponent implements OnInit, OnDestroy {
                 private accountService: AccountsService,
                 private memberService: MemberService,
                 private changeDetectorRef: ChangeDetectorRef,
-                private logService: LogService) {
+                private logService: LogService,
+                public translate: MultilingualService,
+    ) {
         /* Default tabs. */
         this.tabsControl = [
             {
-                title: '<i class="fa fa-search"></i> Search',
+                title: `<i class="fa fa-search"></i> ${this.translate.translate('Search')}`,
                 accountId: -1,
                 active: true,
             },
             {
-                title: '<i class="fa fa-plus"></i> Add New Account',
+                title: `<i class="fa fa-plus"></i>  ${this.translate.translate('Add New Account')}`,
                 accountId: -1,
                 formControl: new FormGroup(
                     {
@@ -247,11 +250,17 @@ export class ManageAccountComponent implements OnInit, OnDestroy {
             this.ngRedux.dispatch(SagaHelper.runAsyncCallback(
                 asyncTaskPipe,
                 () => {
-                    this.alertsService.generate('success', 'Account has been created successfully.');
+                    this.alertsService.generate(
+                        'success',
+                        this.translate.translate('Account has been created successfully.'),
+                    );
                 },
                 (data) => {
                     console.error('fail', data);
-                    this.alertsService.generate('error', 'Failed to create account.');
+                    this.alertsService.generate(
+                        'error',
+                        this.translate.translate('Failed to create account.'),
+                    );
                 },
             ));
         }
@@ -290,11 +299,17 @@ export class ManageAccountComponent implements OnInit, OnDestroy {
             this.ngRedux.dispatch(SagaHelper.runAsyncCallback(
                 asyncTaskPipe,
                 (data) => {
-                    this.alertsService.generate('success', 'Account has been updated successfully.');
+                    this.alertsService.generate(
+                        'success',
+                        this.translate.translate('Account has been updated successfully.'),
+                    );
                     this.logService.log(data);
                 },
                 (data) => {
-                    this.alertsService.generate('error', 'Failed to update account.');
+                    this.alertsService.generate(
+                        'error',
+                        this.translate.translate('Failed to update account.'),
+                    );
                     this.logService.log(data);
                 },
             ));
@@ -350,8 +365,9 @@ export class ManageAccountComponent implements OnInit, OnDestroy {
     handleDelete(index: number): void {
         /* Let's now ask the user if they're sure... */
         this.confirmationService.create(
-            '<span>Deleting an Account</span>',
-            '<span class="text-warning">Are you sure you want to delete this account?</span>')
+            `<span>${this.translate.translate('Deleting an Account')}</span>`,
+            `<span class="text-warning">${this.translate.translate(
+                'Are you sure you want to delete this account?')}</span>`)
         .subscribe((ans) => {
             if (ans.resolved) {
                 // ... they are so send the delete request
@@ -377,11 +393,17 @@ export class ManageAccountComponent implements OnInit, OnDestroy {
                 this.ngRedux.dispatch(SagaHelper.runAsyncCallback(
                     asyncTaskPipe,
                     (data) => {
-                        this.alertsService.generate('success', 'Account has been deleted successfully.');
+                        this.alertsService.generate(
+                            'success',
+                            this.translate.translate('Account has been deleted successfully.'),
+                        );
                         this.logService.log(data);
                     },
                     (data) => {
-                        this.alertsService.generate('error', 'Failed to delete to account.');
+                        this.alertsService.generate(
+                            'error',
+                            this.translate.translate('Failed to delete to account.'),
+                        );
                         this.logService.log(data);
                     },
                 ));

@@ -10,6 +10,7 @@ import { MemberService } from '@setl/core-req-services';
 import { AlertsService } from '@setl/jaspero-ng2-alerts';
 import { clearRequestedManageMemberList, SET_MANAGE_MEMBER_LIST, setRequestedManageMemberList } from '@setl/core-store';
 import { ConfirmationService, SagaHelper } from '@setl/utils';
+import { MultilingualService } from '@setl/multilingual';
 
 interface NewMemberUserDetail {
     memberName: string;
@@ -48,17 +49,19 @@ export class ManageMemberComponent implements OnInit, OnDestroy {
                 private alertsService: AlertsService,
                 private memberService: MemberService,
                 private confirmationService: ConfirmationService,
-                private changeDetectorRef: ChangeDetectorRef) {
+                private changeDetectorRef: ChangeDetectorRef,
+                public translate: MultilingualService,
+    ) {
         this.allowedToSave = [];
         /* Default tabs. */
         this.tabsControl = [
             {
-                title: '<i class="fa fa-search"></i> Search',
+                title: `<i class="fa fa-search"></i> ${this.translate.translate('Search')}`,
                 memberId: -1,
                 active: true,
             },
             {
-                title: '<i class="fa fa-plus"></i> Add New Member',
+                title: `<i class="fa fa-plus"></i> ${this.translate.translate('Add New Member')}`,
                 memberId: -1,
                 formControl: new FormGroup(
                     {
@@ -181,7 +184,10 @@ export class ManageMemberComponent implements OnInit, OnDestroy {
                 (data) => {
                     /* Handle error message. */
                     console.warn('Failed to add member', data);
-                    this.alertsService.generate('error', 'Failed to add new member');
+                    this.alertsService.generate(
+                        'error',
+                        this.translate.translate('Failed to add new member.'),
+                    );
                 },
             ));
         }
@@ -218,7 +224,10 @@ export class ManageMemberComponent implements OnInit, OnDestroy {
             this.ngRedux.dispatch(SagaHelper.runAsyncCallback(
                 asyncTaskPipe,
                 () => {
-                    this.alertsService.generate('success', 'Member is updated.');
+                    this.alertsService.generate(
+                        'success', 
+                        this.translate.translate('Member is updated.'),
+                    );
                 },
                 (data) => {
                     const message = _.get(data, '[1].Data[0].Message', '');
@@ -277,8 +286,9 @@ export class ManageMemberComponent implements OnInit, OnDestroy {
     handleDelete(index: number): void {
         /* Let's now ask the user if they're sure... */
         this.confirmationService.create(
-            '<span>Deleting a Member</span>',
-            '<span class="text-warning">Are you sure you want to delete this member?</span>',
+            `<span>${this.translate.translate('Deleting a Member')}</span>`,
+            `<span class="text-warning">${this.translate.translate(
+                'Are you sure you want to delete this member?')}</span>`,
         ).subscribe((ans) => {
             /* ... they are so now send the delete request */
             if (ans.resolved) {
@@ -305,7 +315,10 @@ export class ManageMemberComponent implements OnInit, OnDestroy {
                 this.ngRedux.dispatch(SagaHelper.runAsyncCallback(
                     asyncTaskPipe,
                     () => {
-                        this.alertsService.generate('success', 'Member is deleted.');
+                        this.alertsService.generate(
+                            'success', 
+                            this.translate.translate('Member is deleted.'),
+                        );
                     },
                     (data) => {
                         const message = _.get(data, '[1].Data[0].Message', '');
@@ -364,7 +377,10 @@ export class ManageMemberComponent implements OnInit, OnDestroy {
         const patt = new RegExp('^[a-zA-Z0-9àáâäãåąčćęèéêëėįìíîïłńòóôöõøùúûüųūÿýżź' +
             'ñçčšžÀÁÂÄÃÅĄĆČĖĘÈÉÊËÌÍÎÏĮŁŃÒÓÔÖÕØÙÚÛÜŲŪŸÝŻŹÑßÇŒÆČŠŽ∂ð ,.\'-]+$');
         if (!patt.test(str)) {
-            this.alertsService.generate('error', 'Invalid characters in Member name.');
+            this.alertsService.generate(
+                'error',
+                this.translate.translate('Invalid characters in Member name.'),
+            );
             return false;
         }
 
@@ -378,19 +394,19 @@ export class ManageMemberComponent implements OnInit, OnDestroy {
         this.alertsService.create('success', `
         <table class="table grid large">
             <tr>
-                <td class="left">Member Name</td>
+                <td class="left">${this.translate.translate('Member Name')}</td>
                 <td class="left" id="newMemberName">${this.createdNewMemberUser.memberName}</td>
             </tr>
             <tr>
-                <td class="left">Email Address</td>
+                <td class="left">${this.translate.translate('Email Address')}</td>
                 <td class="left" id="newMemberEmail">${this.createdNewMemberUser.emailAddress}</td>
             </tr>
             <tr>
-                <td class="left">Username</td>
+                <td class="left" > ${this.translate.translate('Username<')}/td>
                 <td class="left" id="newMemberUsername">${this.createdNewMemberUser.userName}</td>
             </tr>
             <tr>
-                <td class="left">Password</td>
+                 <td class="left" > ${this.translate.translate('Password')}</td>
                 <td class="left" id="newMemberPassword">${this.createdNewMemberUser.password}</td>
             </tr>
         </table>
