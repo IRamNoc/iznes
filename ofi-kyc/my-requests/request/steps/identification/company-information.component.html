@@ -71,7 +71,7 @@
 
                 <div class="row">
                     <div class="form-group required-field col-sm-4">
-                        <label>&nbsp;</label>
+                        <label>{{ 'Regulator / Supervisory Authority' | translate }}</label>
                         <input type="text" 
                                 id="regulator" 
                                 formControlName="regulator" 
@@ -79,7 +79,7 @@
                         <span class="field-error" *ngIf="hasError('regulator')">{{ 'Field is required' | translate }}</span>
                     </div>
                     <div class="form-group required-field col-sm-4">
-                        <label>&nbsp;</label>
+                        <label>{{ 'Approval Number' | translate }}</label>
                         <input type="text" 
                                 id="approvalNumber" 
                                 formControlName="approvalNumber" 
@@ -136,6 +136,7 @@
 
             <div class="row" *ngIf="!isDisabled('listingMarkets')">
                 <div class="form-group required-field col-sm-4">
+                    <label class="control-label" for="listingMarkets">{{ 'Listing Market(s)' | translate }}</label>
                     <ng-select class="large-select" 
                                 [multiple]="true" 
                                 [items]="listingMarketsList" 
@@ -146,6 +147,7 @@
                     <span class="field-error" *ngIf="hasError('listingMarkets')">{{ 'Field is required' | translate }}</span>
                 </div>
                 <div class="form-group required-field col-sm-4">
+                    <label class="control-label" for="bloombergCode">{{ 'Bloomberg Code' | translate }}</label>
                     <input type="text" 
                             id="bloombergCode" 
                             formControlName="bloombergCode" 
@@ -154,6 +156,7 @@
                     <span class="field-error" *ngIf="hasError('bloombergCode', ['maxlength'])">{{ 'Field is too long' | translate }}</span>
                 </div>
                 <div class="form-group required-field col-sm-4">
+                    <label class="control-label" for="isinCode">{{ 'ISIN' | translate }}</label>
                     <input type="text" 
                             id="isinCode" 
                             formControlName="isinCode" 
@@ -163,6 +166,7 @@
                     <span class="field-error" *ngIf="hasError('isinCode', ['maxlength'])">{{ 'Field is too long' | translate }}</span>
                 </div>
                 <div class="form-group required-field col-sm-4">
+                    <label class="control-label" for="floatableShares">{{ 'Percentage of Floatable Shares' | translate }}</label>
                     <input type="number" 
                             id="floatableShares" 
                             formControlName="floatableShares" 
