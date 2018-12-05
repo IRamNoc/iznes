@@ -5,6 +5,7 @@ import { FormControl, FormGroup, Validators } from '@angular/forms';
 import { NgRedux, select } from '@angular-redux/store';
 import * as _ from 'lodash';
 import { ActivatedRoute, Params, Router } from '@angular/router';
+import { MultilingualService } from '@setl/multilingual';
 
 /* Alerts and confirms. */
 import { AlertsService } from '@setl/jaspero-ng2-alerts';
@@ -100,6 +101,7 @@ export class AdminUsersComponent implements OnInit, AfterViewInit, OnDestroy {
                 private logService: LogService,
                 private confirmationService: ConfirmationService,
                 private myUserService: MyUserService,
+                public translate: MultilingualService,
     ) {
         this.subscriptions['language'] = this.requestLanguageOb.subscribe((lang) => {
             if (lang) this.language = lang;
@@ -116,7 +118,7 @@ export class AdminUsersComponent implements OnInit, AfterViewInit, OnDestroy {
                 {
                     title: {
                         icon: 'fa-search',
-                        text: 'Search',
+                        text: this.translate.translate('Search'),
                     },
                     userId: -1,
                     active: true,
@@ -124,7 +126,7 @@ export class AdminUsersComponent implements OnInit, AfterViewInit, OnDestroy {
                 {
                     title: {
                         icon: 'fa-user',
-                        text: 'Add User',
+                        text: this.translate.translate('Add User'),
                     },
                     userId: -1,
                     formControl: this.getNewUserFormGroup(),
@@ -483,9 +485,13 @@ export class AdminUsersComponent implements OnInit, AfterViewInit, OnDestroy {
                                     );
                                     this.alertsService.generate(
                                         'warning',
-                                        `You changed access to '${controls['walletsFull'].value[i].text}'
-                                         <br><br><b>Read access</b> <i class="fa fa-arrow-right"></i>
-                                         <b>Full access</b>.`);
+                                        `${this.translate.translate(
+                                            'You changed access to @wallet@.',
+                                            { wallet: controls['walletsFull'].value[i].text })}
+                                            <br><br><b>${this.translate.translate('Read access')}
+                                            </b> <i class="fa fa-arrow-right"></i>
+                                            <b>${this.translate.translate('Full access')}</b>.`,
+                                        );
                                 } else {
                                     delete controls['walletsFull'].value[i];
                                     controls['walletsFull'].patchValue(
@@ -494,8 +500,13 @@ export class AdminUsersComponent implements OnInit, AfterViewInit, OnDestroy {
 
                                     this.alertsService.generate(
                                         'warning',
-                                        `You changed access to '${controls['walletsRead'].value[j].text}'<br><br>
-                                        <b>Full access</b> <i class="fa fa-arrow-right"></i> <b>Read access</b>.`);
+                                        `${this.translate.translate(
+                                            'You changed access to @wallet@.',
+                                            { wallet: controls['walletsRead'].value[j].text })}
+                                            <br><br><b>${this.translate.translate('Full access')}
+                                            </b> <i class="fa fa-arrow-right"></i>
+                                            <b>${this.translate.translate('Read access')}</b>.`,
+                                        );
                                 }
                             }
                         }
@@ -539,9 +550,13 @@ export class AdminUsersComponent implements OnInit, AfterViewInit, OnDestroy {
                                     );
                                     this.alertsService.generate(
                                         'warning',
-                                        `You changed access to '${controls['groupWalletsFull'].value[i].text}'
-                                        <br><br><b>Read access</b> <i class="fa fa-arrow-right"></i>
-                                        <b>Full access</b>.`);
+                                        `${this.translate.translate(
+                                            'You changed access to @wallet@.',
+                                            { wallet: controls['groupWalletsFull'].value[i].text })}
+                                            <br><br><b>${this.translate.translate('Read access')}
+                                            </b> <i class="fa fa-arrow-right"></i>
+                                            <b>${this.translate.translate('Full access')}</b>.`,
+                                        );
                                 } else {
                                     delete controls['groupWalletsFull'].value[i];
                                     controls['groupWalletsFull'].patchValue(
@@ -550,9 +565,13 @@ export class AdminUsersComponent implements OnInit, AfterViewInit, OnDestroy {
 
                                     this.alertsService.generate(
                                         'warning',
-                                        `You changed access to '${controls['groupWalletsRead'].value[j].text}'
-                                        <br><br><b>Full access</b> <i class="fa fa-arrow-right"></i>
-                                        <b>Read access</b>.`);
+                                        `${this.translate.translate(
+                                            'You changed access to @wallet@.',
+                                            { wallet: controls['groupWalletsRead'].value[j].text })}
+                                            <br><br><b>${this.translate.translate('Full access')}
+                                            </b> <i class="fa fa-arrow-right"></i>
+                                            <b>${this.translate.translate('Read access')}</b>.`,
+                                        );
                                 }
                             }
                         }
@@ -689,7 +708,10 @@ export class AdminUsersComponent implements OnInit, AfterViewInit, OnDestroy {
                 /* Stub. */
             }).catch((error) => {
                 /* Handle Error. */
-                this.alertsService.generate('error', 'Failed to save this user\'s administrative groups.');
+                this.alertsService.generate(
+                    'error',
+                    this.translate.translate('Failed to save this user\'s administrative groups.'),
+                );
             });
 
             /* Save tx group access. */
@@ -702,7 +724,10 @@ export class AdminUsersComponent implements OnInit, AfterViewInit, OnDestroy {
                 /* Stub. */
             }).catch((error) => {
                 /* Handle Error. */
-                this.alertsService.generate('error', 'Failed to save this user\'s transactional groups.');
+                this.alertsService.generate(
+                    'error',
+                    this.translate.translate('Failed to save this user\'s transactional groups.'),
+                );
             });
 
             /* Save admin group access. */
@@ -715,7 +740,10 @@ export class AdminUsersComponent implements OnInit, AfterViewInit, OnDestroy {
                 /* Stub. */
             }).catch((error) => {
                 /* Handle Error. */
-                this.alertsService.generate('error', 'Failed to save this user\'s menu groups.');
+                this.alertsService.generate(
+                    'error',
+                    this.translate.translate('Failed to save this user\'s menu groups.'),
+                );
             });
 
             /* Save wallet access. */
@@ -726,7 +754,10 @@ export class AdminUsersComponent implements OnInit, AfterViewInit, OnDestroy {
                 /* Stub. */
             }).catch((error) => {
                 /* Handle Error. */
-                this.alertsService.generate('error', 'Failed to save this user\'s wallet permissions.');
+                this.alertsService.generate(
+                    'error',
+                    this.translate.translate('Failed to save this user\'s wallet permissions.'),
+                );
             });
 
             /* Save wallet access. */
@@ -739,7 +770,10 @@ export class AdminUsersComponent implements OnInit, AfterViewInit, OnDestroy {
                 /* Stub. */
             }).catch((error) => {
                 /* Handle Error. */
-                this.alertsService.generate('error', 'Failed to save this user\'s group wallet permissions.');
+                this.alertsService.generate(
+                    'error',
+                    this.translate.translate('Failed to save this user\'s group wallet permissions.'),
+                );
             });
 
             /* Save the chain access. */
@@ -751,7 +785,10 @@ export class AdminUsersComponent implements OnInit, AfterViewInit, OnDestroy {
                 /* Stub. */
             }).catch((error) => {
                 /* Handle Error. */
-                this.alertsService.generate('error', 'Failed to save this user\'s chain access.');
+                this.alertsService.generate(
+                    'error',
+                    this.translate.translate('Failed to save this user\'s chain access.'),
+                );
             });
 
             /* Clear the form. */
@@ -761,11 +798,18 @@ export class AdminUsersComponent implements OnInit, AfterViewInit, OnDestroy {
             this.updateUserList(() => {
                 /* Handle success message & update users list */
                 this.logService.log('Successfully created user.', response);
-                this.alertsService.generate('success', 'Successfully created user.');
+                this.alertsService.generate(
+                    'success',
+                    this.translate.translate('Successfully created user.'),
+                );
             });
         }).catch((error) => {
             /* Handle error. */
-            this.alertsService.generate('error', 'Failed to save this user.');
+            this.alertsService.generate(
+                'error',
+                this.translate.translate('Failed to save this user.'),
+            );
+
             console.warn('Failed to save this user: ', error);
         });
 
@@ -817,7 +861,10 @@ export class AdminUsersComponent implements OnInit, AfterViewInit, OnDestroy {
                 this.logService.log('updated user admin groups.', response);
             }).catch((error) => {
                 this.logService.log('error updating user admin groups.', error);
-                this.alertsService.generate('error', 'Failed to update this user\'s administrative groups.');
+                this.alertsService.generate(
+                    'error',
+                    this.translate.translate('Failed to update this user\'s administrative groups.'),
+                );
             });
 
             /* Save tx group access. */
@@ -830,7 +877,10 @@ export class AdminUsersComponent implements OnInit, AfterViewInit, OnDestroy {
                 this.logService.log('updated user tx groups.', response);
             }).catch((error) => {
                 this.logService.log('error updating user tx groups.', error);
-                this.alertsService.generate('error', 'Failed to update this user\'s transactional groups.');
+                this.alertsService.generate(
+                    'error',
+                    this.translate.translate('Failed to update this user\'s transactional groups.'),
+                );
             });
 
             /* Save menu group access. */
@@ -843,7 +893,10 @@ export class AdminUsersComponent implements OnInit, AfterViewInit, OnDestroy {
                 this.logService.log('updated user menu groups.', response);
             }).catch((error) => {
                 this.logService.log('error updating user menu groups.', error);
-                this.alertsService.generate('error', 'Failed to update this user\'s menu groups.');
+                this.alertsService.generate(
+                    'error',
+                    this.translate.translate('Failed to update this user\'s menu groups.'),
+                );
             });
 
             /* Save wallet access, first diff, then set the new ones to the old ones. */
@@ -864,7 +917,10 @@ export class AdminUsersComponent implements OnInit, AfterViewInit, OnDestroy {
                 thisTab['oldWalletAccess'] = newWalletAccess;
             }).catch((error) => {
                 this.logService.log('error updating user wallet permissions.', error);
-                this.alertsService.generate('error', 'Failed to update this user\'s wallet permissions.');
+                this.alertsService.generate(
+                    'error',
+                    this.translate.translate('Failed to update this user\'s wallet permissions.'),
+                );
             });
 
             /* Save group wallet access, first diff, then set the new ones to the old ones. */
@@ -884,7 +940,10 @@ export class AdminUsersComponent implements OnInit, AfterViewInit, OnDestroy {
                 thisTab['oldGroupWalletAccess'] = newGroupWalletAccess;
             }).catch((error) => {
                 this.logService.log('error updating user group wallet permissions.', error);
-                this.alertsService.generate('error', 'Failed to update this user\'s group wallet permissions.');
+                this.alertsService.generate(
+                    'error',
+                    this.translate.translate('Failed to update this user\'s group wallet permissions.'),
+                );
             });
 
             /* Now we'll save chain access, first get the diffs. */
@@ -908,18 +967,27 @@ export class AdminUsersComponent implements OnInit, AfterViewInit, OnDestroy {
                 this.logService.log('updated user chain access: ', response);
             }).catch((error) => {
                 this.logService.log('error updating user wallet permissions.', error);
-                this.alertsService.generate('error', 'Failed to update this user\'s wallet permissions.');
+                this.alertsService.generate(
+                    'error',
+                    this.translate.translate('Failed to update this user\'s wallet permissions.'),
+                );
             });
 
             this.updateUserList(() => {
                 /* Handle success message & update users list */
                 this.logService.log('Successfully edited user.', response);
-                this.alertsService.generate('success', 'Successfully updated user details.');
+                this.alertsService.generate(
+                    'success',
+                    this.translate.translate('Successfully updated user details.'),
+                );
             });
         }).catch((error) => {
             /* Handle error message. */
             this.logService.log('Failed to edit user.', error);
-            this.alertsService.generate('error', 'Failed to update user details.');
+            this.alertsService.generate(
+                'error',
+                this.translate.translate('Failed to update user details.'),
+            );
         });
 
         /* Return */
@@ -1118,9 +1186,12 @@ export class AdminUsersComponent implements OnInit, AfterViewInit, OnDestroy {
         /* Send the request. */
         /* Let's now ask the user if they're sure... */
         this.confirmationService.create(
-            '<span>Deleting a User</span>',
-            `<span class="text-warning">Are you sure you want to delete
-            '${this.usersList[userIndex].userName}'?</span>`,
+            `<span>${this.translate.translate('Deleting a User')}</span>`,
+            `<span class="text-warning">${this.translate.translate(
+                'Are you sure you want to delete @userName@?',
+                { userName: this.usersList[userIndex].userName },
+            )}</span>`,
+
         ).subscribe((ans) => {
             /* ...if they are... */
             if (ans.resolved) {
@@ -1137,11 +1208,17 @@ export class AdminUsersComponent implements OnInit, AfterViewInit, OnDestroy {
                     /* Handle success message. */
                     this.updateUserList(() => {
                         /* Handle success message & update users list */
-                        this.alertsService.generate('success', 'Successfully deleted user.');
+                        this.alertsService.generate(
+                            'success',
+                            this.translate.translate('Successfully deleted user.'),
+                        );
                     });
                 }).catch((error) => {
                     /* Handle error message. */
-                    this.alertsService.generate('error', 'Failed to delete user.');
+                    this.alertsService.generate(
+                        'error',
+                        this.translate.translate('Failed to delete user.'),
+                    );
                     console.warn(error);
                 });
             }
@@ -1230,7 +1307,10 @@ export class AdminUsersComponent implements OnInit, AfterViewInit, OnDestroy {
         }).catch((error) => {
             /* handle the error message */
             this.logService.log('Editing user, admin permissions error: ', error);
-            this.alertsService.generate('error', 'Failed to fetch this user\'s administrative permissions.');
+            this.alertsService.generate(
+                'error',
+                this.translate.translate('Failed to fetch this user\'s administrative permissions.'),
+            );
         });
 
         /* Get Tx permissions. */
@@ -1248,7 +1328,10 @@ export class AdminUsersComponent implements OnInit, AfterViewInit, OnDestroy {
         }).catch((error) => {
             /* Handle the error message */
             this.logService.log('Editing user, tx permissions error: ', error);
-            this.alertsService.generate('error', 'Failed to fetch this user\'s transactional permissions.');
+            this.alertsService.generate(
+                'error',
+                this.translate.translate('Failed to fetch this user\'s transactional permissions.'),
+            );
         });
 
         /* Get Menu permissions. */
@@ -1266,7 +1349,10 @@ export class AdminUsersComponent implements OnInit, AfterViewInit, OnDestroy {
         }).catch((error) => {
             /* handle the error message */
             this.logService.log('Editing user, menu permissions error: ', error);
-            this.alertsService.generate('error', 'Failed to fetch this user\'s menu permissions.');
+            this.alertsService.generate(
+                'error',
+                this.translate.translate('Failed to fetch this user\'s menu permissions.'),
+            );
         });
 
         this.userAdminService.requestUserWalletPermissions({
@@ -1318,7 +1404,10 @@ export class AdminUsersComponent implements OnInit, AfterViewInit, OnDestroy {
         }).catch((error) => {
             /* Handle the error message */
             this.logService.log('Editing user, wallet permission error: ', error);
-            this.alertsService.generate('error', 'Failed to fetch this user\'s wallet permissions.');
+            this.alertsService.generate(
+                'error',
+                this.translate.translate('Failed to fetch this user\'s wallet permissions.'),
+            );
         });
 
         /* Get user's group wallet permission */
@@ -1365,7 +1454,10 @@ export class AdminUsersComponent implements OnInit, AfterViewInit, OnDestroy {
         }).catch((error) => {
             /* Handle the error message */
             this.logService.log('Editing user, group wallet permission error: ', error);
-            this.alertsService.generate('error', 'Failed to fetch this user\'s group wallet permissions.');
+            this.alertsService.generate(
+                'error',
+                this.translate.translate('Failed to fetch this user\'s group wallet permissions.'),
+            );
         });
 
         /* Now we need to get the user's wallet access. */
@@ -1400,7 +1492,10 @@ export class AdminUsersComponent implements OnInit, AfterViewInit, OnDestroy {
         }).catch((error) => {
             /* Handle the error message */
             this.logService.log('Failed to fetch user\'s chain access: ', error);
-            this.alertsService.generate('error', 'Failed to fetch this user\'s chain access.');
+            this.alertsService.generate(
+                'error',
+                this.translate.translate('Failed to fetch this user\'s chain access.'),
+            );
         });
 
         /* Activate the new tab. */
@@ -1572,9 +1667,10 @@ export class AdminUsersComponent implements OnInit, AfterViewInit, OnDestroy {
 
         if (emailControl.valid && emailControl.value) {
             this.confirmationService.create(
-                '<span>Reset Password</span>',
-                `<span class="text-warning">Are you sure you want to send a reset password email to
-            '${emailControl.value}'?</span>`,
+                `<span>${this.translate.translate('Reset Password')}</span>`,
+                `<span class="text-warning">${this.translate.translate(
+                    'Are you sure you want to send a reset password email to @email@?', 
+                    { email: emailControl.value })}</span>`,
             ).subscribe((ans) => {
                 if (ans.resolved) {
                     const asyncTaskPipe = this.myUserService.forgotPassword({
@@ -1585,12 +1681,15 @@ export class AdminUsersComponent implements OnInit, AfterViewInit, OnDestroy {
                     this.ngRedux.dispatch(SagaHelper.runAsyncCallback(
                         asyncTaskPipe,
                         () => {
-                            this.alertsService.generate('success', 'Reset password email successfully sent.');
+                            this.alertsService.generate(
+                                'success',
+                                this.translate.translate('Reset password email successfully sent.'),
+                            );
                         },
                         () => {
                             this.alertsService.generate(
                                 'error',
-                                'Sorry, something went wrong.<br>Please try again later.',
+                                this.translate.translate('Sorry, something went wrong.<br>Please try again later.'),
                             );
                         }),
                     );
@@ -1599,7 +1698,8 @@ export class AdminUsersComponent implements OnInit, AfterViewInit, OnDestroy {
         } else {
             this.alertsService.generate(
                 'error',
-                'User\'s email address is invalid. Please check and try again.');
+                this.translate.translate('User\'s email address is invalid. Please check and try again.'),
+            );
         }
     }
 
@@ -1614,9 +1714,10 @@ export class AdminUsersComponent implements OnInit, AfterViewInit, OnDestroy {
 
         if (emailControl.valid && emailControl.value) {
             this.confirmationService.create(
-                '<span>Reset Two-Factor</span>',
-                `<span class="text-warning">Are you sure you want to send a reset Two-Factor email to
-            '${emailControl.value}'?</span>`,
+                `<span>${this.translate.translate('Reset Two-Factor')}</span>`,
+                `<span class="text-warning">${this.translate.translate(
+                    'Are you sure you want to send a reset Two-Factor email to @email@?',
+                    { email: emailControl.value })}</span>`,
             ).subscribe((ans) => {
                 if (ans.resolved) {
                     const asyncTaskPipe = this.myUserService.forgotTwoFactor({ email: emailControl.value });
@@ -1626,12 +1727,14 @@ export class AdminUsersComponent implements OnInit, AfterViewInit, OnDestroy {
                         () => {
                             this.alertsService.generate(
                                 'success',
-                                'Reset Two-Factor email successfully sent.');
+                                this.translate.translate('Reset Two-Factor email successfully sent.'),
+                            );
                         },
                         () => {
                             this.alertsService.generate(
                                 'error',
-                                'Sorry, something went wrong.<br>Please try again later!');
+                                this.translate.translate('Sorry, something went wrong.<br>Please try again later.'),
+                            );
                         }),
                     );
                 }
@@ -1639,7 +1742,8 @@ export class AdminUsersComponent implements OnInit, AfterViewInit, OnDestroy {
         } else {
             this.alertsService.generate(
                 'error',
-                'User\'s email address is invalid. Please check and try again.');
+                this.translate.translate('User\'s email address is invalid. Please check and try again.'),
+            );
         }
     }
 

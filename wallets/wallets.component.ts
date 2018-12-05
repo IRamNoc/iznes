@@ -13,6 +13,7 @@ import { ActivatedRoute, Params, Router } from '@angular/router';
 import * as _ from 'lodash';
 import * as moment from 'moment';
 import { managedWalletsActions } from '@setl/core-store';
+import { MultilingualService } from '@setl/multilingual';
 
 /* Decorator. */
 @Component({
@@ -64,7 +65,9 @@ export class AdminWalletsComponent implements OnInit, AfterViewInit, OnDestroy {
         private router: Router,
         private alertsService: AlertsService,
         private confirmationService: ConfirmationService,
-        private persistService: PersistService) {
+        private persistService: PersistService,
+        public translate: MultilingualService,
+    ) {
     }
 
     public ngOnInit() {
@@ -149,7 +152,7 @@ export class AdminWalletsComponent implements OnInit, AfterViewInit, OnDestroy {
                 {
                     title: {
                         icon: 'fa-search',
-                        text: 'Search',
+                        text: this.translate.translate('Search'),
                     },
                     walletId: -1,
                     active: true,
@@ -157,7 +160,7 @@ export class AdminWalletsComponent implements OnInit, AfterViewInit, OnDestroy {
                 {
                     title: {
                         icon: 'fa-user',
-                        text: 'Add Wallet',
+                        text: this.translate.translate('Add Wallet'),
                     },
                     walletId: -1,
                     formControl: this.newWalletFormGroup(),
@@ -205,7 +208,10 @@ export class AdminWalletsComponent implements OnInit, AfterViewInit, OnDestroy {
 
         /* If the form is not valid, don't submit. */
         if (!thisTab.formControl.valid) {
-            this.alertsService.generate('error', 'Please complete this form before submitting it.');
+            this.alertsService.generate(
+                'error',
+                this.translate.translate('Please complete this form before submitting it.'),
+            );
             return;
         }
 
@@ -279,11 +285,17 @@ export class AdminWalletsComponent implements OnInit, AfterViewInit, OnDestroy {
         this.userAdminService.createNewWallet(newWallet)
         .then(() => {
             /* Handle response. */
-            this.alertsService.generate('success', 'Successfully created the new wallet.');
+            this.alertsService.generate(
+                'success',
+                this.translate.translate('Successfully created the new wallet.'),
+            );
         })
         .catch(() => {
             /* Show error if we failed to create the wallet. */
-            this.alertsService.generate('error', 'Failed to create the new wallet.');
+            this.alertsService.generate(
+                'error',
+                this.translate.translate('Failed to create the new wallet.'),
+            );
         });
 
         /* Clear new wallet form. */
@@ -308,7 +320,10 @@ export class AdminWalletsComponent implements OnInit, AfterViewInit, OnDestroy {
 
         /* If the form is not valid, don't submit. */
         if (!thisTab.formControl.valid) {
-            this.alertsService.generate('error', 'Please complete this form before submitting it.');
+            this.alertsService.generate(
+                'error',
+                this.translate.translate('Please complete this form before submitting it.'),
+            );
             return;
         }
 
@@ -386,10 +401,16 @@ export class AdminWalletsComponent implements OnInit, AfterViewInit, OnDestroy {
             }
             // TODO Update Wallet Locked status
             /* Handle Success. */
-            this.alertsService.generate('success', 'Successfully updated this wallet.');
+            this.alertsService.generate(
+                'success',
+                this.translate.translate('Successfully updated this wallet.'),
+            );
         }).catch((error) => {
             /* Handle error. */
-            this.alertsService.generate('error', 'Failed to update this wallet.');
+            this.alertsService.generate(
+                'error',
+                this.translate.translate('Failed to update this wallet.'),
+            );
             console.warn(error);
         });
 
@@ -434,8 +455,11 @@ export class AdminWalletsComponent implements OnInit, AfterViewInit, OnDestroy {
 
         /* Let's now ask the user if they're sure... */
         this.confirmationService.create(
-            '<span>Deleting a Wallet</span>',
-            `<span class="text-warning">Are you sure you want to delete '${this.walletList[index].walletName}'?</span>`,
+            `<span>${this.translate.translate('Deleting a Wallet')}</span>`,
+            `<span class="text-warning">${this.translate.translate(
+                'Are you sure you want to delete @walletName@?',
+                { walletName: this.walletList[index].walletName },
+            )}</span>`,
         ).subscribe((ans) => {
             /* ...if they are... */
             if (ans.resolved) {
@@ -450,10 +474,16 @@ export class AdminWalletsComponent implements OnInit, AfterViewInit, OnDestroy {
                     }
 
                     /* Handle success message. */
-                    this.alertsService.generate('success', 'Successfully deleted wallet.');
+                    this.alertsService.generate(
+                        'success',
+                        this.translate.translate('Successfully deleted wallet.'),
+                    );
                 }).catch((error) => {
                     /* Handle error message. */
-                    this.alertsService.generate('error', 'Failed to delete wallet.');
+                    this.alertsService.generate(
+                        'error',
+                        this.translate.translate('Failed to delete wallet.'),
+                    );
                     console.warn(error);
                 });
             }

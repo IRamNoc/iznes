@@ -4,6 +4,7 @@ import { Subscription } from 'rxjs/Subscription';
 import { select, NgRedux } from '@angular-redux/store';
 import { ActivatedRoute, Params, Router } from '@angular/router';
 import * as _ from 'lodash';
+import { MultilingualService } from '@setl/multilingual';
 
 import {
     MyWalletsService,
@@ -55,7 +56,9 @@ export class ManageSubPortfolioComponent implements OnInit, OnDestroy {
                 private logService: LogService,
                 private changeDetectorRef: ChangeDetectorRef,
                 private route: ActivatedRoute,
-                private router: Router) {
+                private router: Router,
+                public translate: MultilingualService,
+        ) {
 
         this.connectedWalletId = 0;
         this.requestedWalletAddress = false;
@@ -163,14 +166,14 @@ export class ManageSubPortfolioComponent implements OnInit, OnDestroy {
             {
                 title: {
                     icon: 'fa-search',
-                    text: 'Search',
+                    text: this.translate.translate('Search'),
                 },
                 active: true,
             },
             {
                 title: {
                     icon: 'fa-plus',
-                    text: 'Add New Sub-portfolio',
+                    text: this.translate.translate('Add New Sub-portfolio'),
                 },
                 formControl: this.createSubPortfolioFormGroup(),
                 active: false,
@@ -229,7 +232,7 @@ export class ManageSubPortfolioComponent implements OnInit, OnDestroy {
         this.tabsControl.push({
             title: {
                 icon: 'fa-pencil',
-                text: `Edit ${name}`,
+                text: `${this.translate.translate('Edit')} ${name}`,
             },
             formControl: this.createSubPortfolioFormGroup(name, iban),
             active: true,
@@ -315,7 +318,7 @@ export class ManageSubPortfolioComponent implements OnInit, OnDestroy {
         this.tabsControl.push({
             title: {
                 icon: 'fa-pencil',
-                text: `Edit ${name}`,
+                text: `${this.translate.translate('Edit')} ${name}`,
             },
             formControl: this.createSubPortfolioFormGroup(name, iban),
             active: false,
@@ -368,15 +371,16 @@ export class ManageSubPortfolioComponent implements OnInit, OnDestroy {
                         this.clearAddSubportfolioForm(tabId);
                     },
                     (labelResponse) => {
-                        const message = '<span mltag="txt_address_created_sub_fail">' +
-                            'Portfolio address was created in the blockchain, but sub-portfolio was not created.' +
-                            '</span>';
+                        const message = `<span>${this.translate.translate('Portfolio address was created in the blockchain, but sub-portfolio was not created.')}</span>`;
                         this.alertsService.generate('error', message);
                     }));
             },
             (data) => {
                 console.error('Fail', data);
-                this.alertsService.generate('error', 'Failed to create sub-portfolio.');
+                this.alertsService.generate(
+                    'error',
+                    this.translate.translate('Failed to create sub-portfolio.'),
+                );
             }));
     }
 
@@ -413,7 +417,10 @@ export class ManageSubPortfolioComponent implements OnInit, OnDestroy {
             },
             (labelResponse) => {
                 console.error('Fail', labelResponse);
-                this.alertsService.generate('error', 'Failed to update sub-portfolio.');
+                this.alertsService.generate(
+                    'error',
+                    this.translate.translate('Failed to update sub-portfolio.'),
+                );
             }));
 
         /* Update the tab with updated data. */
@@ -429,35 +436,49 @@ export class ManageSubPortfolioComponent implements OnInit, OnDestroy {
      */
     handleLabelResponse(message: string) {
         switch (message) {
-        case 'All OK':
-            this.alertsService.generate('success', '<span mltag="txt_portfolio_created">' +
-                'Sub-portfolio created.</span>');
-            break;
+            case 'All OK':
+                this.alertsService.generate(
+                    'success',
+                    `<span mltag="txt_portfolio_created">${this.translate.translate('Sub-portfolio created.')}</span>`,
+                );
+                break;
 
-        case 'Updated':
-            this.alertsService.generate('success', '<span>' +
-                'Sub-portfolio updated.</span>');
-            break;
+            case 'Updated':
+                this.alertsService.generate(
+                    'success',
+                    `<span>${this.translate.translate('Sub-portfolio updated.')}</span>`,
+                );
+                break;
 
-        case 'Duplicate Label':
-            this.alertsService.generate('warning', '<span mltag="txt_subportfolioname_is_exist">' +
-                'Sub-portfolio name already exists.</span>');
-            break;
+            case 'Duplicate Label':
+                this.alertsService.generate(
+                    'warning',
+                    `<span mltag="txt_subportfolioname_is_exist">
+                    ${this.translate.translate('Sub-portfolio name already exists.')}</span>`,
+                );
+                break;
 
-        case 'Duplicate IBAN':
-            this.alertsService.generate('warning', '<span mltag="txt_iban_is_exist">' +
-                'IBAN has already exists.</span>');
-            break;
+            case 'Duplicate IBAN':
+                this.alertsService.generate(
+                    'warning',
+                    `<span mltag="txt_iban_is_exist">${this.translate.translate('IBAN has already exists.')}</span>`,
+                );
+                break;
 
-        case 'Duplicate Label and IBAN':
-            this.alertsService.generate('warning', '<span mltag="txt_subportfolioname_and_iban_is_exist">' +
-                'Sub-portfolio and IBAN already exist.</span>');
-            break;
+            case 'Duplicate Label and IBAN':
+                this.alertsService.generate(
+                    'warning',
+                    `<span mltag="txt_subportfolioname_and_iban_is_exist">
+                    ${this.translate.translate('Sub-portfolio and IBAN already exist.')}</span>`,
+                );
+                break;
 
-        default:
-            this.alertsService.generate('success', '<span mltag="txt_portfolio_created">' +
-                'Sub-portfolio created.</span>');
-            break;
+            default:
+                this.alertsService.generate(
+                    'success',
+                    `<span mltag="txt_portfolio_created">${this.translate.translate('Sub-portfolio created.')}</span>`,
+                );
+                break;
         }
     }
 
