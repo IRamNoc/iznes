@@ -2,6 +2,7 @@ import { Component, OnInit, OnDestroy } from '@angular/core';
 import { Router, ActivatedRoute } from '@angular/router';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { Subscription, Subject } from 'rxjs';
+import * as _ from 'lodash';
 import { takeUntil } from 'rxjs/operators';
 import { NgRedux, select } from '@angular-redux/store';
 import { findIndex } from 'lodash';
@@ -21,9 +22,11 @@ import {
 export class MyRequestsComponent implements OnInit, OnDestroy {
     @select(['ofi', 'ofiKyc', 'myKycList', 'kycList']) myKycList$;
     @select(['ofi', 'ofiKyc', 'myKycList', 'tabs']) openTabs$;
+    @select(['ofi', 'ofiProduct', 'ofiManagementCompany', 'investorManagementCompanyList']) invManagementCompanies$;
 
     isListDisplayed;
     kycList: any[];
+    invManagementCompanies: any[];
     subscriptions: Subscription[] = [];
     tabs: any[] = [];
 
@@ -32,6 +35,8 @@ export class MyRequestsComponent implements OnInit, OnDestroy {
     choices: FormGroup;
 
     private unsubscribe: Subject<any> = new Subject();
+    private companyRequestedIds: number[];
+    private companyIds: number[];
 
     constructor(
         private ngRedux: NgRedux<any>,
@@ -66,10 +71,13 @@ export class MyRequestsComponent implements OnInit, OnDestroy {
         .subscribe((kycList) => {
             this.kycList = kycList;
 
+            if(kycList != undefined) this.getRequestedManagementCompanyIds();
+
             this.kycListSelect = kycList.filter(kyc => kyc.status && !kyc.alreadyCompleted).map(kyc => ({
                 id: kyc.kycID,
                 text: kyc.companyName,
             }));
+
         });
 
         this.openTabs$
@@ -79,6 +87,38 @@ export class MyRequestsComponent implements OnInit, OnDestroy {
         .subscribe((openTabs) => {
             this.tabs = openTabs;
         });
+
+        this.invManagementCompanies$
+        .pipe(
+            takeUntil(this.unsubscribe),
+        )
+        .subscribe((companies) => {
+            this.invManagementCompanies = companies.investorManagementCompanyList;
+
+            if(companies != undefined) this.getInvManagementCompanyIds();
+        });            
+    }
+
+    private getInvManagementCompanyIds(): void {
+        this.companyIds = [];
+
+        this.invManagementCompanies.forEach((company) => {
+            this.companyIds.push(company.get('companyID'));
+        });
+    }
+
+    private getRequestedManagementCompanyIds(): void {
+        this.companyRequestedIds = [];
+
+        this.kycList.forEach((kyc) => {
+            this.companyRequestedIds.push(kyc.amManagementCompanyID);
+        });
+    }
+
+    hasCompaniesToRequest(): boolean {
+        if(_.isEqual(this.companyIds.sort(), this.companyRequestedIds.sort())) return false;
+
+        return true;
     }
 
     getAssetManagementCompanies() {

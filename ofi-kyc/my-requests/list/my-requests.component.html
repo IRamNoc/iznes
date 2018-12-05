@@ -16,7 +16,7 @@
                         <p class="m-0">
                             {{ 'In this submodule, you can select the Asset Management Companies you want to work with and follow the status of your requests' | translate }}
                         </p>
-                        <button (click)="newRequestModal = true" class="btn btn-primary m-0" id="kyc-newRequestBtn">
+                        <button (click)="newRequestModal = true" [disabled]="!hasCompaniesToRequest()" class="btn btn-primary m-0" id="kyc-newRequestBtn">
                             {{ 'Make New Request' | translate }}
                         </button>
                     </div>

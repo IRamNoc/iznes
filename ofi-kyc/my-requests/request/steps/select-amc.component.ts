@@ -210,7 +210,7 @@ export class NewKycSelectAmcComponent implements OnInit, OnDestroy {
 
         let ids;
         if (this.duplicate) {
-            ids = await this.selectAmcService.duplicate(this.selectedManagementCompanies, 1, this.connectedWallet);
+            ids = await this.selectAmcService.duplicate(this.selectedManagementCompanies, this.duplicate, this.connectedWallet);
         } else {
             ids = await this.selectAmcService.createMultipleDrafts(this.selectedManagementCompanies, this.connectedWallet);
         }
