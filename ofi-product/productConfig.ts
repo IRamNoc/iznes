@@ -773,6 +773,7 @@ export const fundItems = {
         { id: 6, text: 'Quarterly' },
         { id: 7, text: 'Twice a year' },
         { id: 8, text: 'Annually' },
+        { id: 9, text: 'None' },
     ],
     transferAgentItems: [
         { id: 1, text: 'transfer agent 1' },
