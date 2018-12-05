@@ -25,6 +25,7 @@ export class BlockchainStatusTracker implements OnInit, OnDestroy {
     public txList: {}[];
     public descSort = ClrDatagridSortOrder.DESC;
     public objectKeys = Object.keys;
+    public pageSize: number = 5;
 
     private subscriptions: Subscription[] = [];
     private pendingTimeout: any;
@@ -117,6 +118,10 @@ export class BlockchainStatusTracker implements OnInit, OnDestroy {
             return `${string.substring(0, 15)}...`;
         }
         return string;
+    }
+
+    validItem(item) {
+        return item !== '' && typeof item !== 'object';
     }
 
     ngOnDestroy() {

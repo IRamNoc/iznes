@@ -11,7 +11,6 @@ import { DynamicFormService } from './service';
 })
 
 export class DynamicFormComponent implements OnInit {
-
     private formModel: { [key: string]: FormElement };
     @Input() set model(model: { [key: string]: FormElement }) {
         this.formModel = model;
@@ -26,7 +25,8 @@ export class DynamicFormComponent implements OnInit {
     formKeys: string[];
 
     constructor(private service: DynamicFormService,
-                private changeDetectorRef: ChangeDetectorRef) {
+                private changeDetectorRef: ChangeDetectorRef,
+    ) {
     }
 
     ngOnInit() {

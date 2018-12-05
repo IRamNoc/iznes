@@ -1,7 +1,6 @@
 import {
     Component, Input, Output, EventEmitter,
-    OnInit, OnDestroy,
-    ChangeDetectionStrategy, ChangeDetectorRef,
+    OnInit, OnDestroy, ChangeDetectorRef,
 } from '@angular/core';
 import { FormGroup, FormControl } from '@angular/forms';
 import { AlertsService } from '@setl/jaspero-ng2-alerts';
@@ -16,7 +15,6 @@ import { DatePickerExtendedHelper } from './helpers/date';
     styleUrls: ['./component.scss'],
     selector: 'date-picker-extended',
     templateUrl: './component.html',
-    changeDetection: ChangeDetectionStrategy.OnPush,
 })
 
 export class DatePickerExtendedComponent implements OnInit, OnDestroy {
@@ -36,7 +34,8 @@ export class DatePickerExtendedComponent implements OnInit, OnDestroy {
 
     constructor(private changeDetectorRef: ChangeDetectorRef,
                 private confirmationService: ConfirmationService,
-                private toaster: ToasterService) {
+                private toaster: ToasterService,
+    ) {
         this.initForm();
     }
 

@@ -7,7 +7,8 @@ import {
     ViewChild,
     ContentChildren,
     AfterContentInit,
-    ElementRef
+    ElementRef,
+    ChangeDetectorRef,
 } from '@angular/core';
 import { FormstepComponent } from './formstep.component';
 import { map, get as getValue } from 'lodash';
@@ -57,8 +58,11 @@ export class FormstepsComponent implements AfterContentInit {
         return this._position;
     }
 
+    disabled: boolean = false;
+
     constructor(
         private element: ElementRef,
+        private changeDetectorRef: ChangeDetectorRef,
     ) {
     }
 
@@ -107,11 +111,23 @@ export class FormstepsComponent implements AfterContentInit {
     }
 
     previous() {
+        this.disabled = true;
         this.go(-1);
-    }
 
+        setTimeout(() => {
+            this.disabled = false;
+            this.changeDetectorRef.detectChanges();
+        }, 600);
+    }
+    
     next() {
+        this.disabled = true;
         this.go(1);
+
+        setTimeout(() => {
+            this.disabled = false;
+            this.changeDetectorRef.detectChanges();
+        }, 600);
     }
 
     go(offset) {

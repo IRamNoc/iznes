@@ -1,23 +1,33 @@
 :host {
-    @media only screen and (min-width: 1700px) {
-        position: absolute;
-        left: 30%;
-    }
-    .sm-col {
-        max-width: 200px;
-    }
-    .modal-body clr-datagrid {
-        max-height: 64vh;
-        .additionalInfos {
-            .item {
-                float: left;
-                width: 30%;
-                margin: 0 3% 0 0;
-                overflow: hidden;
-                b {
-                    width: 38%;
-                    display: inline-block;
+    /deep/ {
+        @media only screen and (min-width: 1700px) {
+            position: absolute;
+            left: 30%;
+        }
+        .sm-col {
+            max-width: 200px;
+        }
+        .modal-body clr-datagrid {
+            max-height: 64vh;
+            .additionalInfos {
+                .item {
+                    float: left;
+                    width: 30%;
+                    margin: 0 3% 0 0;
+                    overflow: hidden;
+                    b {
+                        width: 38%;
+                        float: left;
+                        overflow: hidden;
+                    }
+                    span {
+                        float: right;
+                        width: 60%
+                    }
                 }
+            }
+            .column-switch-wrapper {
+                display: none;
             }
         }
     }

@@ -5,15 +5,16 @@ import {
     Input,
     ChangeDetectorRef,
     Output,
-    EventEmitter, forwardRef
+    EventEmitter,
+    forwardRef,
 } from '@angular/core';
-import {ControlValueAccessor, NG_VALUE_ACCESSOR} from '@angular/forms';
+import { ControlValueAccessor, NG_VALUE_ACCESSOR } from '@angular/forms';
 
 const noop = () => {
 };
 
 interface Config {
-    buttonsText: Array<string>;
+    buttonsText: string[];
     disabled: boolean;
 }
 
@@ -32,8 +33,7 @@ interface Config {
             </button>
         </div>
     `,
-    styles: [
-            `
+    styles: [`
             .btn-primary {
                 -webkit-box-shadow: inset 0 3px 5px rgba(0, 0, 0, .075);
                 box-shadow: inset 0 3px 5px rgba(0, 0, 0, .075);
@@ -47,20 +47,17 @@ interface Config {
             .btn.btn-primary:disabled {
                 border-color: #565656;
             }
-
-        `
-    ],
+            `]
+    ,
     changeDetection: ChangeDetectionStrategy.OnPush,
     providers: [{
         provide: NG_VALUE_ACCESSOR,
         useExisting: forwardRef(() => SwitchButtonComponent),
-        multi: true
-    }]
+        multi: true,
+    }],
 })
 
-
 export class SwitchButtonComponent implements ControlValueAccessor {
-
     @Input() value: number;
     @Input() config: Config;
     @Output() public updateValue: EventEmitter<any> = new EventEmitter();
@@ -68,8 +65,7 @@ export class SwitchButtonComponent implements ControlValueAccessor {
     private onTouchedCallback: () => void = noop;
     private onChangeCallback: (_: any) => void = noop;
 
-
-    constructor(private _changeDetectorRef: ChangeDetectorRef) {
+    constructor(private changeDetectorRef: ChangeDetectorRef) {
         this.value = 0;
     }
 
