@@ -39,20 +39,6 @@
             <div class="row">
                 <div class="col-xs-6">
                     <div class="form-group">
-                        <label>{{ 'Username' | translate }}</label>
-                        <input type="text" class="form-control" [value]="'opencsd_' + userId" readonly>
-                    </div>
-                </div>
-                <div class="col-xs-6">
-                    <div class="form-group">
-                        <label>{{ 'Password' | translate }}</label>
-                        <ng-container *ngTemplateOutlet="apiInput"></ng-container>
-                    </div>
-                </div>
-            </div>
-            <div class="row">
-                <div class="col-xs-6">
-                    <div class="form-group">
                         <label>{{ 'Endpoint URL' | translate }}</label>
                         <input type="text" class="form-control" [value]="rabbitMQEndpoint" readonly>
                     </div>
@@ -111,18 +97,3 @@
         </form>
     </section>
 </ng-container>
-
-<ng-template #apiInput>
-    <input *ngIf="showApiKey" type="text" class="form-control mono" [value]="apiKey" readonly>
-    <input *ngIf="!showApiKey" type="text" class="form-control mono" [value]="apiKey.substr(0, 4) + '•'.repeat(apiKey.length - 8) + apiKey.substr(apiKey.length - 4, 4)"
-        readonly>
-    <span *ngIf="!showApiKey" (click)="showApiKey = true" class="click">
-        <i class="fa fa-eye"></i> {{ 'show' | translate }}</span>    
-    <span *ngIf="showApiKey" (click)="showApiKey = false" class="click">
-        <i class="fa fa-eye-slash"></i> {{ 'hide' | translate }}</span> &nbsp;
-    <span (click)="handleCopyApiKey($event)" class="click">
-        <i class="fa fa-files-o"></i> 
-        <span *ngIf="copied" class="text-success">{{ 'copied' | translate }}!</span>
-        <span *ngIf="!copied">{{ 'copy' | translate }}</span>
-    </span>
-</ng-template>
