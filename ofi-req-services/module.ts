@@ -17,7 +17,7 @@ import { OfiReportsService } from './ofi-reports/service';
 
 import { OfiCorpActionService } from './ofi-corp-actions/service';
 import { OfiMemberNodeChannelService } from './ofi-member-node-channel/service';
-import { OfiSubPortfolioService } from './ofi-sub-portfolio/service';
+import { OfiSubPortfolioReqService } from './ofi-sub-portfolio/service';
 
 @NgModule({
     exports: [],
@@ -38,7 +38,7 @@ import { OfiSubPortfolioService } from './ofi-sub-portfolio/service';
         OfiAmDashboardService,
         OfiKycService,
         OfiReportsService,
-        OfiSubPortfolioService,
+        OfiSubPortfolioReqService,
     ],
 })
 

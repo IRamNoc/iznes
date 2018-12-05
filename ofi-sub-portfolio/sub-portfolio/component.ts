@@ -1,56 +1,51 @@
 // Vendor
-import { ChangeDetectionStrategy, ChangeDetectorRef, Component, OnDestroy, OnInit } from '@angular/core';
+import { ChangeDetectorRef, Component, OnDestroy } from '@angular/core';
 import { FormGroup, FormControl, Validators } from '@angular/forms';
 import { select, NgRedux } from '@angular-redux/store';
+import { ToasterService } from 'angular2-toaster';
 import { Subscription } from 'rxjs';
 import * as _ from 'lodash';
 
 // Internal
-import {
-    MyWalletsService,
-    WalletNodeRequestService,
-    InitialisationService,
-} from '@setl/core-req-services';
-
-import {
-    clearRequestedWalletLabel,
-    setRequestedWalletAddresses,
-} from '@setl/core-store';
-
+import { MyWalletsService, WalletNodeRequestService } from '@setl/core-req-services';
+import { clearRequestedWalletLabel } from '@setl/core-store';
+import { OfiSubPortfolioService } from './service';
 import { AlertsService } from '@setl/jaspero-ng2-alerts';
 import { SagaHelper, immutableHelper, LogService, ConfirmationService } from '@setl/utils';
-import { OfiSubPortfolioService } from '../../ofi-req-services/ofi-sub-portfolio/service';
-import { ToasterService } from 'angular2-toaster';
+import { OfiSubPortfolioReqService } from '@ofi/ofi-main/ofi-req-services/ofi-sub-portfolio/service';
 import { MultilingualService } from '@setl/multilingual';
 import { userToursEnums } from '@setl/core-req-services/usertour/config';
 import { UserTourService } from '@setl/core-req-services/usertour/service';
 import { MyUserService } from '@setl/core-req-services/my-user/my-user.service';
+import { fundItems } from '@ofi/ofi-main/ofi-product/productConfig';
 
 @Component({
     selector: 'ofi-sub-portfolio',
     styleUrls: ['./component.scss'],
+    providers: [OfiSubPortfolioService],
     templateUrl: './component.html',
 })
 
-export class OfiSubPortfolioComponent implements OnInit, OnDestroy {
+export class OfiSubPortfolioComponent implements OnDestroy {
     addressObject: any;
     addressList: Array<any>;
-
-    // List of observable subscription
     subscriptionsArray: Array<Subscription> = [];
 
     tabDetail: Array<object>;
 
-    connectedWalletId: number;
-    requestedWalletAddress: boolean;
+    connectedWalletId: number = 0;
+    requestedWalletAddress: boolean = false;
 
     showAddModal: boolean = false;
 
     showUsertour = false;
     private tourObject = [];
-    // userToursEnums: any;
 
-    showAddress = {};
+    showAddress: boolean = false;
+    currentAddress: string;
+    editForm: boolean = false;
+
+    countries = fundItems.domicileItems;
 
     // List of Redux observable
     @select(['user', 'siteSettings', 'language']) languageOb;
@@ -59,11 +54,14 @@ export class OfiSubPortfolioComponent implements OnInit, OnDestroy {
     @select(['wallet', 'myWalletAddress', 'requestedLabel']) requestedLabelListOb;
     @select(['user', 'connected', 'connectedWallet']) connectedWalletOb;
     @select(['user', 'myDetail', 'defaultHomePage']) defaultHomePageOb;
+    @select(['ofi', 'sub-portfolio', 'requested']) subPortfolioRequestedOb;
+    @select(['ofi', 'ofiSubPortfolio', 'bankingDetails']) subPortfolioBankingDetailsOb;
 
     constructor(private ngRedux: NgRedux<any>,
                 private alertsService: AlertsService,
                 private myWalletService: MyWalletsService,
                 private walletNodeRequestService: WalletNodeRequestService,
+                private ofiSubPortfolioReqService: OfiSubPortfolioReqService,
                 private ofiSubPortfolioService: OfiSubPortfolioService,
                 private confirmationService: ConfirmationService,
                 private toaster: ToasterService,
@@ -72,48 +70,36 @@ export class OfiSubPortfolioComponent implements OnInit, OnDestroy {
                 private myUserService: MyUserService,
                 private changeDetectorRef: ChangeDetectorRef,
                 public translate: MultilingualService,
-        ) {
-
-        /* tab meta */
+    ) {
         this.tabDetail = [{
             title: {
                 text: this.translate.translate('Manage Sub-portfolio'),
                 icon: 'fa-id-badge',
             },
         }];
+        this.initSubscriptions();
+        this.setupFormGroup();
+    }
 
-        this.newForm();
+    /**
+     * Initialise Subscriptions
+     * @return void
+     */
+    initSubscriptions() {
+        this.subscriptionsArray.push(this.ofiSubPortfolioService.getSubPortfolioData().subscribe((data) => {
+            this.addressList = data;
+            console.log('+++ this.addressList', this.addressList);
+        }));
 
-        this.connectedWalletId = 0;
-        this.requestedWalletAddress = false;
+        this.ofiSubPortfolioService.updateSubPortfolioObservable();
 
         this.subscriptionsArray.push(this.connectedWalletOb.subscribe((connected: number) => {
             this.connectedWalletId = connected;
+        }));
 
-            this.subscriptionsArray
-            .push(this.addressListOb
-            .subscribe((addressList: any) => {
-                this.updateAddressList(addressList);
-            }));
-
-            this.subscriptionsArray
-            .push(this.requestedAddressListOb
-            .subscribe((requested: boolean) => {
-                this.requestAddressList(requested);
-            }));
-
-            this.subscriptionsArray
-            .push(this.requestedLabelListOb
-            .subscribe((requested: boolean) => {
-                this.requestWalletLabel(requested);
-            }));
-
-            this.subscriptionsArray
-            .push(this.languageOb
-            .subscribe(() => {
-                this.tabDetail[0]['title'].text = this.translate.translate('Manage Sub-portfolio');
-                this.changeDetectorRef.markForCheck();
-            }));
+        this.subscriptionsArray.push(this.languageOb.subscribe(() => {
+            this.tabDetail[0]['title'].text = this.translate.translate('Manage Sub-portfolio');
+            this.changeDetectorRef.markForCheck();
         }));
 
         this.subscriptionsArray.push(this.defaultHomePageOb.subscribe((defaultHomePage) => {
@@ -123,164 +109,43 @@ export class OfiSubPortfolioComponent implements OnInit, OnDestroy {
         }));
     }
 
-    newForm() {
+    /**
+     * Setup FormGroup
+     * @return void
+     */
+    setupFormGroup() {
         this.tabDetail[0]['formControl'] = new FormGroup(
             {
-                subPortfolioName: new FormControl('', [Validators.required, this.duplicatedLabel.bind(this)]),
-                subPortfolioIban: new FormControl('', [Validators.required, validateIBAN]),
+                label: new FormControl('', [Validators.required, this.duplicatedLabel.bind(this)]),
+                establishmentName: new FormControl('', [Validators.required]),
+                addressLine1: new FormControl('', [Validators.required]),
+                addressLine2: new FormControl(''),
+                zipCode: new FormControl('', [Validators.required]),
+                city: new FormControl('', [Validators.required]),
+                country: new FormControl('', [Validators.required]),
+                iban: new FormControl('', [Validators.required, validateIBAN]),
+                bic: new FormControl('', [Validators.required]),
             },
         );
     }
 
-    ngOnDestroy() {
-        for (const subscription of this.subscriptionsArray) {
-            subscription.unsubscribe();
-        }
-    }
-
-    updateAddressList(addressList) {
-        this.logService.log('addressList: ', addressList);
-        this.addressObject = addressList;
-
-        this.addressList = immutableHelper.reduce(
-            addressList,
-            (result, item) => {
-                const addressItem = {
-                    address: item.get('addr', ''),
-                    label: item.get('label', ''),
-                    iban: item.get('iban', ''),
-                    editing: false,
-                };
-
-                if (addressItem.iban !== '' && addressItem.address !== '') {
-                    result.push(addressItem);
-                }
-
-                return result;
-            },
-            [],
-        );
-
-        this.changeDetectorRef.markForCheck();
-    }
-
-    requestAddressList(requestedState) {
-        this.requestedWalletAddress = requestedState;
-        this.logService.log('requested wallet address', this.requestedWalletAddress);
-
-        // If the state is false, that means we need to request the list.
-        if (!requestedState && this.connectedWalletId !== 0) {
-            // Set the state flag to true. so we do not request it again.
-            this.ngRedux.dispatch(setRequestedWalletAddresses());
-
-            // Request the list.
-            InitialisationService.requestWalletAddresses(this.ngRedux, this.walletNodeRequestService, this.connectedWalletId);
-        }
-    }
-
-    requestWalletLabel(requestedState) {
-        this.logService.log('checking requested', this.requestedWalletAddress);
-        // If the state is false, that means we need to request the list.
-        if (!requestedState && this.connectedWalletId !== 0) {
-
-            MyWalletsService.defaultRequestWalletLabel(this.ngRedux, this.myWalletService, this.connectedWalletId);
-        }
-    }
-
-    restartUserTour() {
-        if (this.connectedWalletId > 0) {
-            setTimeout(
-                () => {
-                    const asyncTaskPipe = this.userTourService.saveUserTour({
-                        type: userToursEnums.names.utmysubportfolios,
-                        value: 0,
-                        walletid: this.connectedWalletId,
-                    });
-
-                    this.ngRedux.dispatch({
-                        type: 'RUN_ASYNC_TASK',
-                        successTypes: (data) => {
-                        },
-                        failureTypes: (data) => {
-                        },
-                        descriptor: asyncTaskPipe,
-                        args: {},
-                        successCallback: (response) => {
-                            UserTourService.setRequestedUserTours(false, this.ngRedux);
-                        },
-                        failureCallback: (response) => {
-                            console.log('Error save userTour failed: ', response);
-                        },
-                    });
-                },
-                200,
-            );
-        }
-    }
-
-    launchTour() {
-        this.tourObject = [];
-        this.tourObject.push(
-            {
-                usertourName: userToursEnums.names.utmysubportfolios,
-                title: this.translate.translate('My Sub-portfolios'),
-                text: this.translate.translate('In this module, you will be able to create and manage your sub-porfolios. Sub-portfolios are the bank accounts that you will use to place orders on IZNES. You can create as many sub-portfolios as you want, depending on your investments objectives.'),
-                target: 'menu-sub-portfolio',
-            },
-            {
-                title: this.translate.translate('Add New Sub-portfolio'),
-                text: this.translate.translate('You can add a new sub-portfolio by clicking on this button. You will need to provide a name and an IBAN for the sub-portfolio you want to create.'),
-                target: 'btn-add-new-subportfolio',
-            },
-            {
-                title: this.translate.translate('Manage your Sub-portfolios'),
-                text: this.translate.translate('Once you have created your sub-porfolios, from this column "Actions", you will be able to edit or delete your sub-portfolios.'),
-                target: 'subportfolios-col-actions',
-            },
-        );
-        // TODO: disabled as user tour needs additional work in V2.1/2.2
-        // this.showUsertour = true;
-    }
-
-    ngOnInit() {
-        // if home = subport then launch tour!
-        // on save make home blank.
-    }
-
     /**
-     * Handle Add new profile click.
-     *
-     */
-    handleAddProfile(): void {
-    }
-
-    handleEditSubPortfolio(address): void {
-    }
-
-    /**
-     * Handle edit button is clicked.
-     * @param index
-     */
-    handleEdit(address): void {
-        this.addressList = immutableHelper.map(this.addressList, (addressEntry) => {
-            if (addressEntry.get('address', '') === address) {
-                return addressEntry.set('editing', true);
-            }
-            return addressEntry;
-        });
-    }
-
-    /**
-     * Handle cancel button is clicked.
+     * Handle edit button click
      * @param address
      */
-    handleCancelEdit(address): void {
-        this.addressList = immutableHelper.map(this.addressList, (addressEntry) => {
-            if (addressEntry.get('address', '') === address) {
-                return addressEntry.set('editing', false);
-            }
-            return addressEntry;
+    handleEdit(address): void {
+        this.setupFormGroup();
+        const subPortfolio = this.addressList.find((subPortfolio) => {
+            return subPortfolio.addr === address;
         });
+
+        Object.keys(subPortfolio).forEach((item) => {
+            if (this.tabDetail[0]['formControl'].controls[item]) {
+                this.tabDetail[0]['formControl'].controls[item].patchValue(subPortfolio[item]);
+            }
+        });
+        this.editForm = true;
+        this.showAddModal = true;
     }
 
     handleUpdateLabel(value, address, iban) {
@@ -312,31 +177,40 @@ export class OfiSubPortfolioComponent implements OnInit, OnDestroy {
 
             default:
                 this.toaster.pop('success', this.translate.translate(
-                    'Your sub-portfolio @subPortfolioName@ has been successfully @actionType@. This may take a moment to update.', { 'subPortfolioName': this.tabDetail[0]['formControl'].value.subPortfolioName, 'actionType': type }));
+                    'Your sub-portfolio @subPortfolioName@ has been successfully @actionType@. This may take a moment to update.', {
+                        subPortfolioName: this.tabDetail[0]['formControl'].value.subPortfolioName,
+                        actionType: type,
+                    }));
                 break;
         }
     }
 
     toggleAddModal() {
+        this.editForm = false;
         this.showAddModal = !this.showAddModal;
     }
 
     saveSubPortfolio() {
-        const name = this.tabDetail[0]['formControl'].value.subPortfolioName;
-        const iban = this.tabDetail[0]['formControl'].value.subPortfolioIban;
+        const values = this.tabDetail[0]['formControl'].value;
 
-        const asyncTaskPipe = this.ofiSubPortfolioService.saveNewSubPortfolio({
+        const asyncTaskPipe = this.ofiSubPortfolioReqService.saveNewSubPortfolio({
             walletId: this.connectedWalletId,
-            name,
-            iban,
+            label: values.label,
+            establishmentName: values.establishmentName,
+            addressLine1: values.addressLine1,
+            addressLine2: values.addressLine2,
+            zipCode: values.zipCode,
+            city: values.city,
+            country: _.get(values, 'country[0].id', ''),
+            iban: values.iban,
+            bic: values.bic,
         });
 
         this.ngRedux.dispatch(SagaHelper.runAsyncCallback(
             asyncTaskPipe,
             (labelResponse) => {
-                this.ngRedux.dispatch(clearRequestedWalletLabel());
                 const message = _.get(labelResponse, '[1].Data[0].Message', 'OK');
-
+                this.ofiSubPortfolioService.resetRequestedFlags();
                 if (message === 'OK') {
                     this.handleLabelResponse(message, 'created');
                     this.closeAddModal();
@@ -352,9 +226,42 @@ export class OfiSubPortfolioComponent implements OnInit, OnDestroy {
             }));
     }
 
+    updateSubPortfolio() {
+        const values = this.tabDetail[0]['formControl'].value;
+
+        const asyncTaskPipe = this.ofiSubPortfolioReqService.updateSubPortfolio({
+            walletId: this.connectedWalletId,
+            option: this.currentAddress,
+            label: values.label,
+            establishmentName: values.establishmentName,
+            addressLine1: values.addressLine1,
+            addressLine2: values.addressLine2,
+            zipCode: values.zipCode,
+            city: values.city,
+            country: _.get(values, 'country[0].id', ''),
+            iban: values.iban,
+            bic: values.bic,
+        });
+
+        this.ngRedux.dispatch(SagaHelper.runAsyncCallback(
+            asyncTaskPipe,
+            (labelResponse) => {
+                const message = _.get(labelResponse, '[1].Data[0].Message', 'OK');
+                this.ofiSubPortfolioService.resetRequestedFlags();
+                if (message === 'OK') {
+                    this.handleLabelResponse(message, 'created');
+                    this.closeAddModal();
+                }
+            },
+            () => {
+                this.showErrorMessage(this.translate.translate('Error updating sub-portfolio'));
+            }));
+    }
+
     closeAddModal() {
-        this.newForm();
+        this.setupFormGroup();
         this.toggleAddModal();
+        this.editForm = false;
     }
 
     handleDelete(address) {
@@ -369,7 +276,7 @@ export class OfiSubPortfolioComponent implements OnInit, OnDestroy {
                 },
             ).subscribe((ans) => {
                 if (ans.resolved) {
-                    const asyncTaskPipe = this.ofiSubPortfolioService.deleteSubPortfolio({
+                    const asyncTaskPipe = this.ofiSubPortfolioReqService.deleteSubPortfolio({
                         walletId: this.connectedWalletId,
                         address,
                     });
@@ -505,6 +412,67 @@ export class OfiSubPortfolioComponent implements OnInit, OnDestroy {
             return null;
         }
         return null;
+    }
+
+    restartUserTour() {
+        if (this.connectedWalletId > 0) {
+            setTimeout(
+                () => {
+                    const asyncTaskPipe = this.userTourService.saveUserTour({
+                        type: userToursEnums.names.utmysubportfolios,
+                        value: 0,
+                        walletid: this.connectedWalletId,
+                    });
+
+                    this.ngRedux.dispatch({
+                        type: 'RUN_ASYNC_TASK',
+                        successTypes: (data) => {
+                        },
+                        failureTypes: (data) => {
+                        },
+                        descriptor: asyncTaskPipe,
+                        args: {},
+                        successCallback: (response) => {
+                            UserTourService.setRequestedUserTours(false, this.ngRedux);
+                        },
+                        failureCallback: (response) => {
+                            console.log('Error save userTour failed: ', response);
+                        },
+                    });
+                },
+                200,
+            );
+        }
+    }
+
+    launchTour() {
+        this.tourObject = [];
+        this.tourObject.push(
+            {
+                usertourName: userToursEnums.names.utmysubportfolios,
+                title: this.translate.translate('My Sub-portfolios'),
+                text: this.translate.translate('In this module, you will be able to create and manage your sub-porfolios. Sub-portfolios are the bank accounts that you will use to place orders on IZNES. You can create as many sub-portfolios as you want, depending on your investments objectives.'),
+                target: 'menu-sub-portfolio',
+            },
+            {
+                title: this.translate.translate('Add New Sub-portfolio'),
+                text: this.translate.translate('You can add a new sub-portfolio by clicking on this button. You will need to provide a name and an IBAN for the sub-portfolio you want to create.'),
+                target: 'btn-add-new-subportfolio',
+            },
+            {
+                title: this.translate.translate('Manage your Sub-portfolios'),
+                text: this.translate.translate('Once you have created your sub-porfolios, from this column "Actions", you will be able to edit or delete your sub-portfolios.'),
+                target: 'subportfolios-col-actions',
+            },
+        );
+        // TODO: disabled as user tour needs additional work in V2.1/2.2
+        // this.showUsertour = true;
+    }
+
+    ngOnDestroy() {
+        for (const subscription of this.subscriptionsArray) {
+            subscription.unsubscribe();
+        }
     }
 }
 

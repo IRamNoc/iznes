@@ -1,0 +1,7 @@
+import { name } from './__init__';
+import { kAction } from '@setl/utils/common';
+
+export const SET_SUB_PORTFOLIO_BANKING_DETAILS_REQUESTED = `${name}/SET_SUB_PORTFOLIO_BANKING_DETAILS_REQUESTED`;
+export const RESET_SUB_PORTFOLIO_BANKING_DETAILS_REQUESTED = `${name}/RESET_SUB_PORTFOLIO_BANKING_DETAILS_REQUESTED`;
+export const SET_SUB_PORTFOLIO_BANKING_DETAILS_LIST = `${name}/SET_SUB_PORTFOLIO_BANKING_DETAILS_LIST`;
+export const resetSubPortfolioBankingDetailsRequested = kAction(RESET_SUB_PORTFOLIO_BANKING_DETAILS_REQUESTED);
