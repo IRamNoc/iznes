@@ -186,9 +186,13 @@ export class UmbrellaFundComponent implements OnInit, AfterViewInit, OnDestroy {
             registerOfficeAddressLine2: [
                 '',
             ],
-            registerOfficeAddressZipCode: [''],
-            registerOfficeAddressCity: [''],
-            registerOfficeAddressCountry: [[], Validators.required],
+            registerOfficeAddressZipCode: [
+                '',
+            ],
+            registerOfficeAddressCity: [
+                '',
+            ],
+            registerOfficeAddressCountry: [[]],
             legalEntityIdentifier: [
                 '',
             ],

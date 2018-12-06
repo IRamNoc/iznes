@@ -141,7 +141,7 @@
                                         formControlName="registerOfficeAddressCity">
                             </div>
 
-                            <div class="form-group required-field col-sm-4">
+                            <div class="form-group col-sm-4">
                                 <label for="uf_registerOfficeAddressCountry" class="control-label">{{ 'Country' |
                                     translate }}</label>
                                 <ng-select id="uf_registerOfficeAddressCountry" 
@@ -149,9 +149,6 @@
                                             [allowClear]="true"
                                             [placeholder]="translate.translate('Select a country')" formControlName="registerOfficeAddressCountry">
                                 </ng-select>
-
-                                <div *ngIf="umbrellaFundForm.controls['registerOfficeAddressCountry'].hasError('required') && umbrellaFundForm.controls['registerOfficeAddressCountry'].touched"
-                                    class="field-error">{{ 'Field is required' | translate }}</div>
                             </div>
 
                             <div class="form-group required-field col-sm-6">
