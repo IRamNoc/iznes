@@ -307,7 +307,7 @@ export class FundComponent implements OnInit, OnDestroy {
                 Validators.max(100),
             ])],
             capitalPreservationPeriod: [null],
-            capitalisationDate: [null, this.validators.date.month],
+            // capitalisationDate: [null, this.validators.date.month],
             hasCppi: [null],
             cppiMultiplier: [null],
             hasHedgeFundStrategy: [null],
@@ -698,7 +698,7 @@ export class FundComponent implements OnInit, OnDestroy {
             transferAgentID: _.get(this.fundForm.controls['transferAgentID'].value, ['0', 'id'], null),
             centralizingAgentID: _.get(this.fundForm.controls['centralizingAgentID'].value, ['0', 'id'], null),
             capitalPreservationPeriod: _.get(this.fundForm.controls['capitalPreservationPeriod'].value, ['0', 'id'], null),
-            capitalisationDate: (this.fundForm.controls['capitalisationDate'].value === null ? null : this.fundForm.controls['capitalisationDate'].value),
+            // capitalisationDate: (this.fundForm.controls['capitalisationDate'].value === null ? null : this.fundForm.controls['capitalisationDate'].value),
             holidayMgmtConfig: this.getHolidayMgmtConfig(),
             legalEntityIdentifier: this.isLeiVisible ? this.fundForm.controls['legalEntityIdentifier'].value : null,
         };
