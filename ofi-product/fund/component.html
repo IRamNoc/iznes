@@ -838,13 +838,13 @@
 
                                             <div class="form-group required-field col-sm-6">
                                                 <label class="control-label" for="fiscalYearEnd">{{ 'Fiscal Year End (MM-DD)' | translate }}</label>
-                                                <div class="input-group">
+                                                <div class="input-group hideWeekdays">
                                                     <span class="fa fa-calendar" aria-hidden="true"></span>
                                                     <input id="fiscalYearEnd" 
                                                             formControlName="fiscalYearEnd"
-                                                            [dpDayPicker]="configMonth" 
+                                                            [dpDayPicker]="configMonthDay" 
                                                             [placeholder]="translate.translate('Choose a date')"
-                                                            mode="month" 
+                                                            mode="day" 
                                                             theme="dp-material">
                                                 </div>
                                                 <span *ngIf="fundForm.controls['fiscalYearEnd'].touched && fundForm.controls['fiscalYearEnd'].hasError('pattern')"
@@ -1229,9 +1229,9 @@
                                                     <span class="fa fa-calendar" aria-hidden="true"></span>
                                                     <input id="capitalisationDate"          
                                                             formControlName="capitalisationDate" 
-                                                            [dpDayPicker]="configMonth" 
+                                                            [dpDayPicker]="configDate" 
                                                             [placeholder]="translate.translate('Choose a date')" 
-                                                            mode="month" 
+                                                            mode="day" 
                                                             theme="dp-material">
                                                 </div>
                                             </div>

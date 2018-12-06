@@ -14,6 +14,7 @@ import { OfiProductConfigService } from '@ofi/ofi-main/ofi-req-services/ofi-prod
 import { OfiUmbrellaFundService } from '@ofi/ofi-main/ofi-req-services/ofi-product/umbrella-fund/service';
 import { Fund } from '@ofi/ofi-main/ofi-req-services/ofi-product/fund/fund.service.model';
 import { UmbrellaFundDetail } from '@ofi/ofi-main/ofi-store/ofi-product/umbrella-fund/umbrella-fund-list/model';
+import * as moment from 'moment';
 
 import {
     OfiManagementCompanyService,
@@ -128,11 +129,12 @@ export class FundComponent implements OnInit, OnDestroy {
         locale: this.language,
     };
 
-    configMonth = {
-        format: 'YYYY-MM',
+    configMonthDay = {
+        format: 'MM-DD',
         closeOnSelect: true,
         disableKeypress: true,
         locale: this.language,
+        monthFormat: 'MMM',
     };
 
     // product config
@@ -215,8 +217,8 @@ export class FundComponent implements OnInit, OnDestroy {
                 ...this.configDate,
                 locale: this.language,
             };
-            this.configMonth = {
-                ...this.configMonth,
+            this.configMonthDay = {
+                ...this.configMonthDay,
                 locale: this.language,
             };
         });
@@ -696,7 +698,7 @@ export class FundComponent implements OnInit, OnDestroy {
             transferAgentID: _.get(this.fundForm.controls['transferAgentID'].value, ['0', 'id'], null),
             centralizingAgentID: _.get(this.fundForm.controls['centralizingAgentID'].value, ['0', 'id'], null),
             capitalPreservationPeriod: _.get(this.fundForm.controls['capitalPreservationPeriod'].value, ['0', 'id'], null),
-            capitalisationDate: (this.fundForm.controls['capitalisationDate'].value === null ? null : this.fundForm.controls['capitalisationDate'].value + '-01'),
+            capitalisationDate: (this.fundForm.controls['capitalisationDate'].value === null ? null : this.fundForm.controls['capitalisationDate'].value),
             holidayMgmtConfig: this.getHolidayMgmtConfig(),
             legalEntityIdentifier: this.isLeiVisible ? this.fundForm.controls['legalEntityIdentifier'].value : null,
         };

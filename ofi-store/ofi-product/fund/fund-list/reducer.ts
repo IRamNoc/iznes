@@ -55,7 +55,7 @@ function handleGetIznesFunds(state: FundListState, action: Action): any {
                 ..._.omit(fund, ['Status']),
                 fundCreationDate: fund.fundCreationDate !== null ? fund.fundCreationDate.substr(0, 10) : null,
                 fundLaunchate: fund.fundLaunchate !== null ? fund.fundLaunchate.substr(0, 10) : null,
-                fiscalYearEnd: fund.fiscalYearEnd !== null ? fund.fiscalYearEnd.substr(0, 7) : null,
+                fiscalYearEnd: fund.fiscalYearEnd !== null ? fund.fiscalYearEnd : null,
                 principlePromoterID,
                 payingAgentID,
                 investmentAdvisorID,
