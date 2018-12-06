@@ -168,14 +168,14 @@ export class EncumberAssetsComponent implements OnInit, OnDestroy {
                 () => {
                     this.alertsService.generate(
                         'success',
-                        this.translate.translate('The asset has been encumbered.')
+                        this.translate.translate('The asset has been encumbered.'),
                     );
                     this.encumberAssetsForm.reset();
                 },
                 (data) => {
                     console.error('fail', data);
                     const message = !_.isEmpty(data[1].data.error)
-                        ? `${this.translate.translate('Failed to encumber asset. Reason:<br>')} ${data[1].data.error}`
+                        ? `${this.translate.translate('Failed to encumber asset. Reason:')}<br>${data[1].data.error}`
                         : this.translate.translate('Failed to encumber asset.');
                     this.alertsService.generate('error', message);
                 }),
