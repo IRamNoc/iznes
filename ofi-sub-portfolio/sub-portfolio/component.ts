@@ -42,13 +42,8 @@ export class OfiSubPortfolioComponent implements OnDestroy {
     private tourObject = [];
 
     @select(['user', 'siteSettings', 'language']) languageOb;
-    @select(['wallet', 'myWalletAddress', 'addressList']) addressListOb;
-    @select(['wallet', 'myWalletAddress', 'requestedAddressList']) requestedAddressListOb;
-    @select(['wallet', 'myWalletAddress', 'requestedLabel']) requestedLabelListOb;
     @select(['user', 'connected', 'connectedWallet']) connectedWalletOb;
     @select(['user', 'myDetail', 'defaultHomePage']) defaultHomePageOb;
-    @select(['ofi', 'sub-portfolio', 'requested']) subPortfolioRequestedOb;
-    @select(['ofi', 'ofiSubPortfolio', 'bankingDetails']) subPortfolioBankingDetailsOb;
 
     constructor(private ngRedux: NgRedux<any>,
                 private alertsService: AlertsService,
