@@ -492,7 +492,8 @@ export class SetlLoginComponent implements OnDestroy, OnInit, AfterViewInit {
                 (data) => {
                     this.alertsService.generate(
                         'error',
-                        this.translate.translate('Sorry, something went wrong.<br>Please try again later.'));
+                        `${this.translate.translate('Sorry, something went wrong.')}<br>${this.translate.translate('Please try again later.')}`,
+                    );
                     this.closeFPModal();
                 }),
             );
