@@ -165,7 +165,7 @@
                                 <div *ngIf="umbrellaFundForm.controls['domicile'].hasError('required') && umbrellaFundForm.controls['domicile'].touched" class="field-error">{{ 'Field is required' | translate }}</div>
                             </div>
 
-                            <div class="form-group required-field col-sm-6">
+                            <div class="form-group col-sm-6">
                                 <label for="uf_umbrellaFundCreationDate" class="control-label">{{ 'Umbrella Fund
                                     Creation Date' | translate }}</label>
 
@@ -179,8 +179,6 @@
                                             mode="day" theme="dp-material">
                                 </div>
 
-                                <div *ngIf="umbrellaFundForm.controls['umbrellaFundCreationDate'].hasError('required') && umbrellaFundForm.controls['umbrellaFundCreationDate'].touched"
-                                    class="field-error">{{ 'Field is required' | translate }}</div>
                                 <div *ngIf="umbrellaFundForm.controls['umbrellaFundCreationDate'].hasError('pattern') && umbrellaFundForm.controls['umbrellaFundCreationDate'].touched"
                                     class="field-error">{{ 'Incorrect date' | translate }}</div>
                             </div>

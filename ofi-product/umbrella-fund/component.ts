@@ -205,7 +205,6 @@ export class UmbrellaFundComponent implements OnInit, AfterViewInit, OnDestroy {
             umbrellaFundCreationDate: [
                 '',
                 Validators.compose([
-                    Validators.required,
                     productConfig.validators.date.day,
                 ]),
             ],
