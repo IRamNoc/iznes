@@ -18,6 +18,7 @@ export const validators = {
     date: {
         day: Validators.pattern(/^\d{4}-(0[1-9]|1[0-2])-((0[1-9])|([1-2]\d)|(3[0-1]))$/),
         month: Validators.pattern(/^\d{4}-(0[1-9]|1[0-2])$/),
+        monthday: Validators.pattern(/^(0[1-9]|1[0-2])-(0[1-9]|([1-2]\d)|(3[0-1]))$/),
     },
     lei: Validators.pattern(/^\d{4}[a-zA-Z0-9]{14}\d{2}$/),
     giin: Validators.pattern(/^[A-Z0-9]{6}.[A-Z0-9]{5}.[A-Z]{2}.[0-9]{3}$/),

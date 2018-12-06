@@ -279,7 +279,7 @@ export class FundComponent implements OnInit, OnDestroy {
             fundLaunchate: [null, this.validators.date.day],
             fundCurrency: [[], this.validators.ngSelectRequired],
             openOrCloseEnded: [null, Validators.required],
-            fiscalYearEnd: [null, this.validators.date.month],
+            fiscalYearEnd: [null, this.validators.date.monthday],
             isFundOfFund: [null, Validators.required],
             managementCompanyID: [[], this.validators.ngSelectRequired],
             fundAdministratorID: [[], this.validators.ngSelectRequired],
