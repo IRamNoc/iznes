@@ -66,6 +66,7 @@ export class FundComponent implements OnInit, OnDestroy {
     };
 
     isLeiVisible = false;
+    isFundCapitalisationDateVisible = false;
     viewMode = 'UMBRELLA';
     selectedUmbrella: number;
     param: string;
@@ -304,6 +305,7 @@ export class FundComponent implements OnInit, OnDestroy {
                 Validators.max(100),
             ])],
             capitalPreservationPeriod: [null],
+            capitalisationDate: [null, this.validators.date.month],
             hasCppi: [null],
             cppiMultiplier: [null],
             hasHedgeFundStrategy: [null],
@@ -515,6 +517,18 @@ export class FundComponent implements OnInit, OnDestroy {
             }
         });
 
+        this.fundForm.controls['capitalPreservationPeriod'].valueChanges
+        .pipe(
+            takeUntil(this.unSubscribe),
+        )
+        .subscribe((d) => {
+            if (d[0].text === 'None') {
+                this.isFundCapitalisationDateVisible = true;
+            } else {
+                this.isFundCapitalisationDateVisible = false;
+            }
+        });
+
         this.fundForm.controls['hasCppi'].valueChanges
         .pipe(
             takeUntil(this.unSubscribe),
@@ -682,6 +696,7 @@ export class FundComponent implements OnInit, OnDestroy {
             transferAgentID: _.get(this.fundForm.controls['transferAgentID'].value, ['0', 'id'], null),
             centralizingAgentID: _.get(this.fundForm.controls['centralizingAgentID'].value, ['0', 'id'], null),
             capitalPreservationPeriod: _.get(this.fundForm.controls['capitalPreservationPeriod'].value, ['0', 'id'], null),
+            capitalisationDate: (this.fundForm.controls['capitalisationDate'].value === null ? null : this.fundForm.controls['capitalisationDate'].value + '-01'),
             holidayMgmtConfig: this.getHolidayMgmtConfig(),
             legalEntityIdentifier: this.isLeiVisible ? this.fundForm.controls['legalEntityIdentifier'].value : null,
         };

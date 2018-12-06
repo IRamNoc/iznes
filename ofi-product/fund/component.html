@@ -1223,6 +1223,24 @@
                                                 </ng-select>
                                             </div>
                                         </div>
+
+                                        <div class="row" *ngIf="isFundCapitalisationDateVisible">
+                                            <div class="form-group col-sm-6">                                            </div>
+
+                                            <div class="form-group col-sm-6">
+                                                <label class="control-label" for="capitalisationDate">{{ 'Fund Capitalisation Date (YYYY-MM)' | translate }}</label>
+                                                <div class="input-group">
+                                                    <span class="fa fa-calendar" aria-hidden="true"></span>
+                                                    <input id="capitalisationDate"          
+                                                            formControlName="capitalisationDate" 
+                                                            [dpDayPicker]="configMonth" 
+                                                            [placeholder]="translate.translate('Choose a date')" 
+                                                            mode="month" 
+                                                            theme="dp-material">
+                                                </div>
+                                            </div>
+                                        </div>
+
                                         <div class="row">
                                             <div class="form-group col-sm-6">
                                                 <label class="control-label">{{ 'Has CPPI' | translate }}</label>

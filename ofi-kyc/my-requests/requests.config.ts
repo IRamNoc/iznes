@@ -178,7 +178,7 @@ export const legalFormList = [
     },
     {
         id: 'GIE',
-        text: 'Groupement d\'intérêt économique',
+        text: 'GIE: Groupement d\'intérêt économique',
     },
     {
         id: 'SARL',
