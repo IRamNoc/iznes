@@ -618,18 +618,23 @@ export class NewRequestService {
                 city: ['', this.getLengthValidator(255)],
                 country: ['', Validators.required],
                 countryTaxResidence: ['', Validators.required],
-                holdingPercentage: [
-                    '',
-                    [
+                holdingPercentage: ['', [
                         Validators.required,
                         Validators.min(0),
                         Validators.max(100),
+                        Validators.pattern(/^\d+$/i)
                     ],
                 ],
                 holdingType: ['', Validators.required],
                 nationality: ['', Validators.required],
 
-                votingPercentage: ['', Validators.required],
+                votingPercentage: ['', [
+                        Validators.required,
+                        Validators.min(0),
+                        Validators.max(100),
+                        Validators.pattern(/^\d+$/i)
+                    ],
+                ],
                 exerciseControl: [0, Validators.required],
                 document: this.createDocumentFormGroup('kycbeneficiarydoc', !this.isProduction),
             }),
