@@ -117,7 +117,6 @@ export class BeneficiaryListComponent implements OnInit, OnDestroy {
     }
 
     initSubscriptions() {
-
         this.stakeholderRelations$.pipe(
             takeUntil(this.unsubscribe),
         ).subscribe((relations) => {
@@ -128,7 +127,6 @@ export class BeneficiaryListComponent implements OnInit, OnDestroy {
     closeModal(cancel?) {
         const stakeholder = this.stakeholders.at(this.selectedStakeholderIndex);
 
-
         if (cancel && this.mode === 'add') {
             this.removeStakeholder(this.selectedStakeholderIndex);
         }
@@ -138,20 +136,46 @@ export class BeneficiaryListComponent implements OnInit, OnDestroy {
             this.stakeholderBackup = null;
         }
 
-        if (!cancel && stakeholder.valid) {
+        if (!cancel && this.isValidUpdate(stakeholder)) {
             this.confirmClose(this.mode);
             this.sortStakeholders();
         }
 
-        if (!cancel && !stakeholder.valid) {
+        if (!cancel && !this.isValidUpdate(stakeholder)) {
             this.markFormGroupTouched(stakeholder as FormGroup);
         }
 
-        if (cancel || stakeholder.valid) {
+        if (cancel || this.isValidUpdate(stakeholder)) {
             this.selectedStakeholderIndex = null;
             this.openModal = 'naturalClose';
             this.mode = null;
         }
+    }
+
+    private isValidUpdate(stakeholder): boolean {
+        const type = stakeholder.get('beneficiaryType').value;
+
+        if(this.isLegalPerson(type)) {
+            return this.isLegalPersonValid(stakeholder);
+        } else if(this.isNaturalPerson(type)) {
+            return this.isNaturalPersonValid(stakeholder);
+        }
+    }
+
+    private isLegalPersonValid(stakeholder): boolean {
+        return stakeholder.controls.legalPerson.valid &&
+            stakeholder.controls.common.valid;
+    }
+
+    private isNaturalPersonValid(stakeholder): boolean {
+        return stakeholder.controls.naturalPerson.valid &&
+            stakeholder.controls.common.valid;
+    }
+
+    canDoUpdate(): boolean {
+        const stakeholder = this.stakeholders.at(this.selectedStakeholderIndex);
+
+        return this.isValidUpdate(stakeholder);
     }
 
     confirmClose(mode) {
@@ -357,10 +381,10 @@ export class BeneficiaryListComponent implements OnInit, OnDestroy {
         const currentStakeholder = this.stakeholders.at(this.selectedStakeholderIndex);
         const type = currentStakeholder.get('beneficiaryType').value;
 
-        if (type === 'legalPerson') {
+        if (this.isLegalPerson(type)) {
             return 'fa-building';
         }
-        if (type === 'naturalPerson') {
+        if (this.isNaturalPerson(type)) {
             return 'fa-user';
         }
     }
@@ -406,6 +430,14 @@ export class BeneficiaryListComponent implements OnInit, OnDestroy {
         }
 
         return this.stakeholders.length && this.stakeholders.invalid;
+    }
+
+    private isLegalPerson(type: string): boolean {
+        return type === 'legalPerson';
+    }
+    
+    private isNaturalPerson(type: string): boolean {
+        return type === 'naturalPerson';
     }
 
     ngOnDestroy(){

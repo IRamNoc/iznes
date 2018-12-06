@@ -69,11 +69,11 @@
     <div class="modal-footer">
         <div *ngIf="mode === 'add'">
             <button type="button" class="btn btn-outline mr-1" (click)="closeModal(true)">{{'Cancel' | translate}}</button>
-            <button type="button" class="btn btn-success" (click)="closeModal()">{{'Validate' | translate}}</button>
+            <button type="button" class="btn btn-success" (click)="closeModal()" [disabled]="!canDoUpdate()">{{'Validate' | translate}}</button>
         </div>
         <div *ngIf="mode === 'edit'">
             <button type="button" class="btn btn-outline mr-1" (click)="closeModal(true)">{{'Cancel' | translate}}</button>
-            <button type="button" class="btn btn-success" (click)="closeModal()">{{'Update' | translate}}</button>
+            <button type="button" class="btn btn-success" (click)="closeModal()" [disabled]="!canDoUpdate()">{{'Update' | translate}}</button>
         </div>
         <div *ngIf="mode === 'view'">
             <button type="button" class="btn btn-outline mr-1" (click)="closeModal(true)">{{'Close' | translate}}</button>
