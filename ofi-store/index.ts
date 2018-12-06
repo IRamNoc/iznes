@@ -43,8 +43,11 @@ import { KycReducer, KycState } from './ofi-kyc';
 /* Currencies */
 import { CurrencyState, CurrencyReducer } from './ofi-currencies';
 import { OfiPortfolioManagerState, OfiPortfolioMangerReducer } from './ofi-portfolio-manager';
-import { SubPortfolioBankingDetailsState, OfiSubPortfolioBankingDetailsReducer } from './ofi-sub-portfolio';
-import { RESET_SUB_PORTFOLIO_BANKING_DETAILS_REQUESTED } from "./ofi-sub-portfolio/actions";
+import {
+    SubPortfolioBankingDetailsState,
+    OfiSubPortfolioBankingDetailsReducer,
+    RESET_SUB_PORTFOLIO_BANKING_DETAILS_REQUESTED,
+} from './ofi-sub-portfolio';
 
 export {
     SET_FUND_ACCESS_MY,
