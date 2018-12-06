@@ -13,7 +13,13 @@
 }
 
 #subportfolio-form-modal .modal-body {
-    overflow: visible;
+    @media screen and (min-height: 550px) {
+        overflow: visible;
+    }
+    .field-error {
+        width: 100%;
+        margin-right: 0;
+    }
 }
 
 .clickable {

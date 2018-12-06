@@ -1,6 +1,6 @@
 <div class="header-breadcrumbs">
     <!--<i class="userTourBtn fa fa-question-circle" (click)="restartUserTour()" [tooltip]="{text:translate.translate('Launch User Tour'), size: 'small', transform: false}"></i>-->
-    <h1 id="sub-portfolio"><i class="fa fa-id-badge"></i> {{ 'Sub-Portfolio' | translate }}</h1>
+    <h1 id="sub-portfolio"><i class="fa fa-id-badge"></i> {{ 'Sub-portfolio' | translate }}</h1>
 </div>
 
 <div class="wrapper wrapper-content">
@@ -25,14 +25,14 @@
         <div class="panel-body">
 
             <div align="right">
-                <button id="btn-add-new-subportfolio" class="btn btn-success" (click)="toggleAddModal();">
-                    <i class="fa fa-plus"></i> {{ 'Add New Sub-Portfolio' | translate }}
+                <button id="btn-add-new-subportfolio" class="btn btn-success" (click)="toggleFormModal();">
+                    <i class="fa fa-plus"></i> {{ 'Add New Sub-portfolio' | translate }}
                 </button>
             </div>
 
             <clr-datagrid>
                 <clr-dg-column [clrDgField]="'label'" clrDgSortIcon>
-                    <span>{{ 'Sub-Portfolio Name' | translate }}</span>
+                    <span>{{ 'Sub-portfolio Name' | translate }}</span>
                     <span class="column-label"></span>
                 </clr-dg-column>
                 <clr-dg-column [clrDgField]="'label'" clrDgSortIcon>
@@ -51,8 +51,8 @@
                     <span>{{ 'Actions' | translate }}</span>
                 </clr-dg-column>
 
-                <clr-dg-row *clrDgItems="let address of addressList;" (click)="currentAddress = address.addr">
-                    <clr-dg-cell class="clickable" (click)="showAddress = true">
+                <clr-dg-row *clrDgItems="let address of addressList;">
+                    <clr-dg-cell class="clickable" (click)="showAddress = true; currentAddress = address.addr">
                         {{ address.label }}
                     </clr-dg-cell>
                     <clr-dg-cell>
@@ -70,7 +70,7 @@
                                     class="btn btn-success">
                                 <i class="fa fa-edit"></i> <span>{{ 'Edit' | translate }}</span>
                             </button>
-                            <button (click)="handleDelete(address.address)"
+                            <button (click)="handleDelete(address.addr)"
                                     class="btn btn-danger">
                                 <i class="fa fa-trash-o"></i> <span>{{ 'Delete' | translate }}</span>
                             </button>
@@ -87,32 +87,31 @@
     </ng-template>
 </div>
 
-<clr-modal [(clrModalOpen)]="showAddModal" [clrModalSize]="'lg'" id="subportfolio-form-modal">
-    <h3 id="override_header" class="modal-title">{{ editForm ? 'Edit Sub-Portfolio' : 'Create New Sub-Portfolio' | translate }}</h3>
+<clr-modal [(clrModalOpen)]="showFormModal" [clrModalSize]="'xl'" id="subportfolio-form-modal">
+    <h3 id="override_header" class="modal-title">{{ editForm ? 'Edit Sub-portfolio' : 'Create New Sub-portfolio' | translate }}</h3>
     <div class="modal-body">
         <form class="p-0" [formGroup]="this.tabDetail[0]['formControl']">
             <div class="row">
                 <div class="form-group col-sm-6">
                     <label class="control-label required-field">
-                        {{ 'Sub-Portfolio Name' | translate}}
+                        {{ 'Sub-portfolio Name' | translate}}
                     </label>
                     <input type="text"
-                           #label
                            placeholder="{{ 'Name of your sub-portfolio' | translate }}"
                            class="form-control"
                            formControlName="label">
-                    <span class="field-error" *ngIf="getFormError('label')">{{getFormError('label')}}</span>
+                    <span class="field-error">{{ getFormError('label') }}</span>
                 </div>
                 <div class="form-group col-sm-6">
                     <label class="control-label required-field">
                         {{ 'Establishment Name' | translate}}
                     </label>
                     <input type="text"
-                           #establishmentName
                            placeholder="{{ 'Name of your bank establishment' | translate }}"
                            class="form-control"
-                           formControlName="establishmentName">
-                    <span class="field-error" *ngIf="getFormError('establishmentName')">{{getFormError('establishmentName')}}</span>
+                           formControlName="establishmentName"
+                           maxlength="45">
+                    <span class="field-error">{{ getFormError('establishmentName') }}</span>
                 </div>
             </div>
             <div class="row">
@@ -121,22 +120,20 @@
                         {{ 'Establishment Address' | translate}}
                     </label>
                     <input type="text"
-                           #addressLine1
                            placeholder="{{ 'Address of your bank establishment' | translate }}"
                            class="form-control"
                            formControlName="addressLine1">
-                    <span class="field-error" *ngIf="getFormError('addressLine1')">{{getFormError('addressLine1')}}</span>
+                    <span class="field-error">{{ getFormError('addressLine1') }}</span>
                 </div>
                 <div class="form-group col-sm-6">
                     <label class="control-label">
                         &nbsp;
                     </label>
                     <input type="text"
-                           #addressLine2
                            placeholder="{{ 'Address line 2' | translate }}"
                            class="form-control"
                            formControlName="addressLine2">
-                    <span class="field-error" *ngIf="getFormError('addressLine2')">{{getFormError('addressLine2')}}</span>
+                    <span class="field-error">{{ getFormError('addressLine2') }}</span>
                 </div>
             </div>
             <div class="row">
@@ -145,22 +142,21 @@
                         {{ 'ZIP Code' | translate }}
                     </label>
                     <input type="text"
-                           #zipCode
                            placeholder="{{ 'Zip Code' | translate }}"
                            class="form-control"
                            formControlName="zipCode">
-                    <span class="field-error" *ngIf="getFormError('zipCode')">{{getFormError('zipCode')}}</span>
+                    <span class="field-error">{{ getFormError('zipCode') }}</span>
                 </div>
                 <div class="form-group col-sm-6">
                     <label class="control-label required-field">
                         {{ 'City' | translate }}
                     </label>
                     <input type="text"
-                           #city
                            placeholder="{{ 'City' | translate }}"
                            class="form-control"
-                           formControlName="city">
-                    <span class="field-error" *ngIf="getFormError('city')">{{getFormError('city')}}</span>
+                           formControlName="city"
+                           maxlength="10">
+                    <span class="field-error">{{ getFormError('city') }}</span>
                 </div>
             </div>
             <div class="row">
@@ -171,38 +167,36 @@
                         formControlName="country"
                         placeholder="{{' Please select a country' | translate}}">
                     </ng-select>
-                    <span class="field-error" *ngIf="getFormError('country')">{{getFormError('country')}}</span>
+                    <span class="field-error">{{ getFormError('country') }}</span>
                 </div>
                 <div class="form-group col-sm-6 required-field">
                     <label class="control-label required-field">{{ 'IBAN' | translate }}</label>
                     <input type="text"
-                           #iban
                            placeholder="{{ 'Cash account IBAN number' | translate }}"
                            class="form-control"
                            formControlName="iban"
                            maxlength="34">
-                    <span class="field-error" *ngIf="getFormError('iban')">{{getFormError('iban')}}</span>
+                    <span class="field-error">{{ getFormError('iban') }}</span>
                 </div>
             </div>
             <div class="row">
                 <div class="form-group col-sm-6 required-field">
                     <label class="control-label required-field">{{ 'BIC' | translate }}</label>
                     <input type="text"
-                           #iban
                            placeholder="{{ 'Cash account BIC number' | translate }}"
                            class="form-control"
                            formControlName="bic"
-                           maxlength="34">
-                    <span class="field-error" *ngIf="getFormError('bic')">{{getFormError('bic')}}</span>
+                           maxlength="45">
+                    <span class="field-error">{{ getFormError('bic') }}</span>
                 </div>
             </div>
         </form>
     </div>
     <div class="modal-footer">
-        <button id="override_cancel" type="button" class="btn btn-warning margin-right-10" (click)="closeAddModal();">
+        <button id="override_cancel" type="button" class="btn btn-warning margin-right-10" (click)="toggleFormModal();">
             {{ 'Cancel' | translate }}
         </button>
-        <button id="override_save" type="button" class="btn btn-success" (click)="editForm ? updateSubPortfolio() : saveSubPortfolio();" [disabled]="!this.tabDetail[0]['formControl'].valid">
+        <button id="override_save" type="button" class="btn btn-success" (click)="editForm ? updateSubPortfolio() : saveSubPortfolio();" [disabled]="!tabDetail[0]['formControl'].valid">
             {{ editForm ? 'Update' : 'Create' | translate }}
         </button>
     </div>
@@ -213,7 +207,7 @@
 <!--</div>-->
 
 <clr-modal [(clrModalOpen)]="showAddress">
-    <h3 id="override_header" class="modal-title">{{ 'Sub-Portfolio Address' | translate }}</h3>
+    <h3 id="override_header" class="modal-title">{{ 'Sub-portfolio Address' | translate }}</h3>
     <div class="modal-body">
         <div class="row">
             <div class="col-sm-4">

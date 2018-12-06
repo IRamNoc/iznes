@@ -14,10 +14,10 @@ import { WalletNodeRequestService, MyWalletsService } from '@setl/core-req-servi
 @Injectable()
 export class OfiSubPortfolioService {
 
-    public subPortfolioList: any[] = [];
     private subscriptions: Array<Subscription> = [];
+    public subPortfolioList: any[] = [];
     public connectedWalletId: number = 0;
-    subPortfolioListOb: Subject<any> = new Subject;
+    public subPortfolioListOb: Subject<any> = new Subject;
 
     @select(['user', 'connected', 'connectedWallet']) connectedWalletOb;
     @select(['wallet', 'myWalletAddress', 'addressList']) addressListOb;
@@ -32,6 +32,14 @@ export class OfiSubPortfolioService {
         private myWalletsService: MyWalletsService,
         private ofiSubPortfolioReqService: OfiSubPortfolioReqService,
     ) {
+        this.initSubscriptions();
+    }
+
+    /**
+     * Initialise Subscriptions
+     * @return void
+     */
+    private initSubscriptions() {
         this.subscriptions.push(this.connectedWalletOb.subscribe((connected: number) => {
             if (this.connectedWalletId !== 0) {
                 this.connectedWalletId = connected;
@@ -46,46 +54,58 @@ export class OfiSubPortfolioService {
         }));
 
         combineLatest(this.addressListOb, this.subPortfolioBankingDetailsOb)
-        .subscribe(([addressList, bankingDetails]) => {
-            console.log('+++ bankingDetails', bankingDetails);
-            this.subPortfolioList = [];
-            Object.keys(addressList).forEach((subPortfolio) => {
-                this.subPortfolioList.push(Object.assign({}, addressList[subPortfolio], bankingDetails[subPortfolio]));
+            .subscribe(([addressList, bankingDetails]) => {
+                this.subPortfolioList = [];
+                this.subPortfolioList = [];
+                Object.keys(addressList).forEach((subPortfolio) => {
+                    this.subPortfolioList.push(Object.assign({}, addressList[subPortfolio], bankingDetails[subPortfolio]));
+                });
+                this.updateSubPortfolioObservable();
             });
-            this.updateSubPortfolioObservable();
-        });
     }
 
+    /**
+     * Resets the Redux requested flags for WalletLabels and Sub-portfolio banking details
+     * @return void
+     */
     public resetRequestedFlags() {
         this.ngRedux.dispatch(resetSubPortfolioBankingDetailsRequested());
         this.ngRedux.dispatch(clearRequestedWalletLabel());
     }
 
+    /**
+     * Calls next on the Sub-portfolio List Observable
+     * @return void
+     */
     public updateSubPortfolioObservable() {
         this.subPortfolioListOb.next(this.subPortfolioList);
     }
 
+    /**
+     * Gets the Sub-portfolio list observable
+     * @return {observable} subPortfolioListOb
+     */
     public getSubPortfolioData() {
         return this.subPortfolioListOb;
     }
 
+    /**
+     * Requests the Sub-portfolio banking details
+     * @param requestedState
+     */
     public requestBankingDetails(requestedState) {
         if (!requestedState && this.connectedWalletId !== 0) {
-            OfiSubPortfolioService.requestSubPortfolioBankingDetails(this.ngRedux, this.ofiSubPortfolioReqService, this.connectedWalletId);
+            const asyncTaskPipe = this.ofiSubPortfolioReqService.getSubPortfolioBankingDetails({
+                walletId: this.connectedWalletId,
+            });
+
+            this.ngRedux.dispatch(SagaHelper.runAsync(
+                [SET_SUB_PORTFOLIO_BANKING_DETAILS_REQUESTED, SET_SUB_PORTFOLIO_BANKING_DETAILS_LIST],
+                [],
+                asyncTaskPipe,
+                {},
+            ));
         }
-    }
-
-    static requestSubPortfolioBankingDetails(ngRedux: NgRedux<any>, ofiSubPortfolioReqService: OfiSubPortfolioReqService, walletId: number) {
-        const asyncTaskPipe = ofiSubPortfolioReqService.getSubPortfolioBankingDetails({
-            walletId,
-        });
-
-        ngRedux.dispatch(SagaHelper.runAsync(
-            [SET_SUB_PORTFOLIO_BANKING_DETAILS_REQUESTED, SET_SUB_PORTFOLIO_BANKING_DETAILS_LIST],
-            [],
-            asyncTaskPipe,
-            {},
-        ));
     }
 
     ngOnDestroy() {
