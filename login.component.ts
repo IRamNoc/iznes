@@ -593,8 +593,7 @@ export class SetlLoginComponent implements OnDestroy, OnInit, AfterViewInit {
                     this.subscriptionsArray.push(
                         this.alertsService.generate(
                             'success',
-                            this.translate.translate(
-                                'Your password has been reset<br><br>A confirmation email will be sent to you.'),
+                            `${this.translate.translate('Your password has been reset.')}<br><br>${this.translate.translate('A confirmation email will be sent to you.')}`,
                             { buttonMessage: this.translate.translate('Continue to @platformName@', { platformName }) },
                         ).subscribe(() => {
                             if (!this.changedPasswordContinue) {
