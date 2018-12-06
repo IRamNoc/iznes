@@ -492,7 +492,8 @@ export class SetlLoginComponent implements OnDestroy, OnInit, AfterViewInit {
                 (data) => {
                     this.alertsService.generate(
                         'error',
-                        this.translate.translate('Sorry, something went wrong.<br>Please try again later.'));
+                        `${this.translate.translate('Sorry, something went wrong.')}<br>${this.translate.translate('Please try again later.')}`,
+                    );
                     this.closeFPModal();
                 }),
             );
@@ -593,8 +594,7 @@ export class SetlLoginComponent implements OnDestroy, OnInit, AfterViewInit {
                     this.subscriptionsArray.push(
                         this.alertsService.generate(
                             'success',
-                            this.translate.translate(
-                                'Your password has been reset<br><br>A confirmation email will be sent to you.'),
+                            `${this.translate.translate('Your password has been reset.')}<br><br>${this.translate.translate('A confirmation email will be sent to you.')}`,
                             { buttonMessage: this.translate.translate('Continue to @platformName@', { platformName }) },
                         ).subscribe(() => {
                             if (!this.changedPasswordContinue) {
