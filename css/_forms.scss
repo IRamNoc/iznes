@@ -60,6 +60,10 @@ form, .form {
             width: 95%;
         }
 
+        .input-group.hideWeekdays div.dp-weekdays {
+            display: none;
+        }
+
         .input-group.date-pick-wrapper {
 
             label, span {
