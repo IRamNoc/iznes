@@ -49,9 +49,10 @@ import {
     SetlComponentsModule,
     SetlDirectivesModule,
     SetlPipesModule,
-    SetlServicesModule
+    SetlServicesModule,
 } from '@setl/utils';
 import { BlockchainStatusTrackerModule } from '@setl/utils/components/blockchain-status-tracker/module';
+import { ConnectionStatusAlertsModule } from '@setl/utils/components/connection-status-alerts/module';
 import { ClarityModule } from '@clr/angular';
 import { MultilingualModule } from '@setl/multilingual/multilingual.module';
 /* Import the persist module. */
@@ -62,7 +63,7 @@ import { MockFundService } from './layouts/ui-form/components/layout2/fund.mock.
 import { FileDropModule } from '@setl/core-filedrop';
 import { FileViewerModule } from '@setl/core-fileviewer';
 
-import { UserTourService } from "@setl/core-req-services/usertour/service"
+import { UserTourService } from '@setl/core-req-services/usertour/service';
 
 @NgModule({
     imports: [
@@ -82,6 +83,7 @@ import { UserTourService } from "@setl/core-req-services/usertour/service"
         FileDropModule,
         FileViewerModule,
         BlockchainStatusTrackerModule,
+        ConnectionStatusAlertsModule,
     ],
     declarations: [
         /* Directives. */

@@ -158,16 +158,3 @@
         <button type="button" class="btn btn-primary" (click)="showMissingTranslations = false">{{ 'Close' | translate }}</button>
     </div>
 </clr-modal>
-
-<clr-modal [clrModalOpen]="walletNodeDead | async" [clrModalClosable]="false">
-    <div class="modal-title">
-        <i class="fa fa-exclamation-triangle modal-icon text-warning"></i>
-        <h4 class="modal-title-text">{{ 'Connection issues' | translate }} <i class="fa fa-plug"></i></h4>
-    </div>
-    <div class="modal-body tcenter">
-        <p>{{ 'Your connection to the WalletNode has been lost. Please wait while we attempt to reconnect you.' | translate }}</p>
-        <p>{{ 'Alternatively, you could try refreshing your browser.' | translate }}</p>
-    </div>
-    <div class="modal-footer">
-    </div>
-</clr-modal>

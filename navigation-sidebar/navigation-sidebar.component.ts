@@ -13,7 +13,6 @@ import { get } from 'lodash';
     styleUrls: ['./navigation-sidebar.component.scss'],
 })
 export class NavigationSidebarComponent implements OnInit, AfterViewInit {
-
     public unreadMessages;
     menuJson: any;
     menuParent = [];
@@ -29,10 +28,11 @@ export class NavigationSidebarComponent implements OnInit, AfterViewInit {
     constructor(private router: Router,
                 @Inject(APP_CONFIG) public appConfig: AppConfig,
                 private changeDetectorRef: ChangeDetectorRef,
-                public translate: MultilingualService,
                 private logService: LogService,
                 private menuSpecService: MenuSpecService,
-                private ngRedux: NgRedux<any>) {
+                private ngRedux: NgRedux<any>,
+                public translate: MultilingualService,
+    ) {
     }
 
     ngOnInit() {
@@ -68,6 +68,7 @@ export class NavigationSidebarComponent implements OnInit, AfterViewInit {
             const menuSpec = this.appConfig.menuSpec;
             /* Translate the menu. */
             this.menuJson = this.translateMenu(menuSpec.side[userTypeStr]);
+
             this.disabledMenus = menuSpec.disabled;
             if (!this.menuJson) {
                 console.warn('Navigation Render: No menu structure found!');
@@ -79,6 +80,7 @@ export class NavigationSidebarComponent implements OnInit, AfterViewInit {
             this.menuSpecService.getMenuSpec().subscribe((menuSpec) => {
                 /* Translate the menu. */
                 this.menuJson = this.translateMenu(menuSpec.side[userTypeStr]);
+
                 this.disabledMenus = menuSpec.disabled;
                 if (!this.menuJson) {
                     console.warn('Navigation Render: No menu structure found!');
@@ -88,13 +90,13 @@ export class NavigationSidebarComponent implements OnInit, AfterViewInit {
                     if (row['children'] != null) this.menuParent.push(row['element_id']);
                 });
             });
-
         });
     }
 
     /**
      * Check if menu is disabled.
      * @param {string} url
+     *
      * @return {boolean}
      */
     isMenuDisabled(url: string): boolean {
