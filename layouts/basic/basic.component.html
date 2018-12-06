@@ -6,10 +6,10 @@
 
             <div class="ng-sidebar-header">
                 <div class="ng-sidebar-header-left">
-                    <button class="btn btn-outline btn-sm mr-1" (click)="toggleSidebar()">{{'Close' | translate}}</button>
+                    <button class="btn btn-outline btn-sm mr-1" (click)="toggleSidebar()">{{ 'Close' | translate }}</button>
                 </div>
                 <div class="ng-sidebar-header-middle title_text">
-                    <i class="fa fa-cogs"></i>{{'Settings' | translate}}
+                    <i class="fa fa-cogs"></i>{{ 'Settings' | translate }}
                 </div>
                 <div class="ng-sidebar-header-right">
 
@@ -19,9 +19,9 @@
 
                 <div class="ng-sidebar-section-header">
                     <div class="title_text">
-                        <i class="fa fa-language"></i> {{'Language' | translate}}
+                        <i class="fa fa-language"></i> {{ 'Language' | translate }}
                     </div>
-                    {{'Choose your language.' | translate}}
+                    {{ 'Choose your language.' | translate }}
 
                 </div>
                 <div class="ng-sidebar-section-body">
@@ -30,11 +30,11 @@
                         <div class="form-group">
                             <div class="radio" (click)="changeLanguage('fr-Latn')">
                                 <input type="radio" name="gridRadios1" id="lang_fra" [checked]="isCurrentLanguage('fr-Latn')">
-                                <label for="lang_fra">{{'Français' | translate}}</label>
+                                <label for="lang_fra">{{ 'Français' | translate }}</label>
                             </div>
                             <div class="radio" (click)="changeLanguage('en-Latn')">
                                 <input type="radio" name="gridRadios1" id="lang_eng" [checked]="isCurrentLanguage('en-Latn')">
-                                <label for="lang_eng">{{'English' | translate}}</label>
+                                <label for="lang_eng">{{ 'English' | translate }}</label>
                             </div>
                         </div>
                     </section>
