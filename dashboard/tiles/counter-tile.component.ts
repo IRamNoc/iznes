@@ -1,4 +1,4 @@
-import {Component, OnInit, Input, HostBinding} from '@angular/core';
+import { Component, OnInit, Input, HostBinding } from '@angular/core';
 import { DomSanitizer } from '@angular/platform-browser';
 
 @Component({
@@ -7,7 +7,6 @@ import { DomSanitizer } from '@angular/platform-browser';
     styleUrls: ['counter-tile.component.scss'],
 })
 export class CounterTileComponent implements OnInit {
-
     @HostBinding('style.backgroundColor') backgroundColor: any = '';
 
     @Input() public name: string;
