@@ -161,7 +161,7 @@ export class UnencumberAssetsComponent implements OnInit, OnDestroy {
                     console.error('fail', data);
 
                     const message = !_.isEmpty(data[1].data.error)
-                    ? `${this.translate.translate('Failed to unencumber asset. Reason:<br>')} ${data[1].data.error}`
+                        ? `${this.translate.translate('Failed to unencumber asset. Reason:')}<br>${data[1].data.error}`
                     : this.translate.translate('Failed to unencumber asset.');
                     this.alertsService.generate('error', message);
                 }),
