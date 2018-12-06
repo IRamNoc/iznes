@@ -106,13 +106,11 @@
 
                             <div class="w-100"></div>
 
-                            <div class="form-group required-field col-sm-6">
+                            <div class="form-group col-sm-6">
                                 <label for="uf_registerOfficeAddress" class="control-label">{{ 'Address of the
                                     Registered Office of the Umbrella Fund' | translate }}
                                 </label>
                                 <input type="text" id="uf_registerOfficeAddress" formControlName="registerOfficeAddress">
-
-                                <div class="field-error">{{ ' Field is required' | translate }}</div>
                                 <div *ngIf="umbrellaFundForm.controls['registerOfficeAddress'].touched && umbrellaFundForm.controls['registerOfficeAddress'].hasError('pattern')"
                                     class="field-error">{{ 'Incorrect entry' | translate }}</div>
                             </div>

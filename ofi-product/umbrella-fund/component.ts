@@ -182,9 +182,6 @@ export class UmbrellaFundComponent implements OnInit, AfterViewInit, OnDestroy {
             ],
             registerOfficeAddress: [
                 '',
-                Validators.compose([
-                    Validators.required,
-                ]),
             ],
             registerOfficeAddressLine2: [
                 '',
