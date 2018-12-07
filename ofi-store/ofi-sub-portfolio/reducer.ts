@@ -1,10 +1,11 @@
 import { Action } from 'redux';
-
+import * as _ from 'lodash';
 import { SubPortfolioBankingDetailsState } from './model';
 import {
     SET_SUB_PORTFOLIO_BANKING_DETAILS_LIST,
     RESET_SUB_PORTFOLIO_BANKING_DETAILS_REQUESTED,
     SET_SUB_PORTFOLIO_BANKING_DETAILS_REQUESTED,
+    DELETE_SUB_PORTFOLIO_BANKING_DETAIL,
 } from './actions';
 import { get, merge } from 'lodash';
 
@@ -26,6 +27,9 @@ export const OfiSubPortfolioBankingDetailsReducer =
 
             case SET_SUB_PORTFOLIO_BANKING_DETAILS_LIST:
                 return ofiSetSubPortfolioBankingDetailsState(state, action);
+
+            case DELETE_SUB_PORTFOLIO_BANKING_DETAIL:
+                return ofiDeleteSubPortfolioBankingDetailState(state, action);
 
             default:
                 return state;
@@ -57,6 +61,28 @@ function ofiSetSubPortfolioBankingDetailsState(state: SubPortfolioBankingDetails
     });
 
     return Object.assign({}, state, { bankingDetails: subPortfolioBankingDetailsList });
+}
+
+/**
+ * Delete Sub-Portfolio banking detail
+ * --------------------------------------
+ * @param {SubPortfolioBankingDetailsState} state
+ * @param {Action} action
+ * @return {SubPortfolioBankingDetailsState}
+ */
+function ofiDeleteSubPortfolioBankingDetailState(state: SubPortfolioBankingDetailsState, action: Action) {
+
+    const deletedAddress = _.get(action, 'payload[1].Data.response[0].DeletedAddress', '');
+    const newList = JSON.parse(JSON.stringify(state.bankingDetails));
+
+    Object.keys(newList).find((key) => {
+        if (key === deletedAddress) {
+            delete newList[key];
+            return newList;
+        }
+    });
+
+    return Object.assign({}, state, { bankingDetails: newList });
 }
 
 /**

@@ -47,6 +47,7 @@ import {
     SubPortfolioBankingDetailsState,
     OfiSubPortfolioBankingDetailsReducer,
     RESET_SUB_PORTFOLIO_BANKING_DETAILS_REQUESTED,
+    DELETE_SUB_PORTFOLIO_BANKING_DETAIL,
 } from './ofi-sub-portfolio';
 
 export {
@@ -191,6 +192,7 @@ export {
     RESET_SUB_PORTFOLIO_BANKING_DETAILS_REQUESTED,
     resetSubPortfolioBankingDetailsRequested,
     SET_SUB_PORTFOLIO_BANKING_DETAILS_LIST,
+    DELETE_SUB_PORTFOLIO_BANKING_DETAIL,
 } from './ofi-sub-portfolio';
 
 /*--------------------------------------------------*/

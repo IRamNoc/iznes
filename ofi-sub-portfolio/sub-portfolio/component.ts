@@ -8,7 +8,8 @@ import * as _ from 'lodash';
 
 // Internal
 import { MyWalletsService, WalletNodeRequestService } from '@setl/core-req-services';
-import { clearRequestedWalletLabel } from '@setl/core-store';
+import { clearRequestedWalletLabel, DELETE_WALLET_LABEL } from '@setl/core-store';
+import { DELETE_SUB_PORTFOLIO_BANKING_DETAIL } from '@ofi/ofi-main/ofi-store';
 import { OfiSubPortfolioService } from './service';
 import { AlertsService } from '@setl/jaspero-ng2-alerts';
 import { SagaHelper, LogService, ConfirmationService } from '@setl/utils';
@@ -181,8 +182,13 @@ export class OfiSubPortfolioComponent implements OnDestroy {
                     }
                 }
             },
-            () => {
-                this.alertsService.generate('error', this.translate.translate('Error creating sub-portfolio'));
+            (response) => {
+                const message = _.get(response, '[1].Data[0].Message', 'Fail');
+                if (message === 'Duplicate Label') {
+                    this.handleLabelResponse(message, 'created');
+                } else {
+                    this.alertsService.generate('error', this.translate.translate('Error creating sub-portfolio'));
+                }
             }));
     }
 
@@ -229,9 +235,10 @@ export class OfiSubPortfolioComponent implements OnDestroy {
      */
     handleDelete(address) {
         const index = this.addressList.findIndex(x => x.addr === address);
+        const addressLabel = this.addressList[index].label;
         if (index > -1) {
             this.confirmationService.create(
-                this.translate.translate(`Delete ${this.addressList[index].label} - ${this.addressList[index].iban}`),
+                this.translate.translate(`Delete ${addressLabel} - ${this.addressList[index].iban}`),
                 this.translate.translate('Are you sure you want to delete this sub-portfolio? You will not be able to create another sub-portfolio with this name.'),
                 {
                     confirmText: this.translate.translate('Delete'),
@@ -245,14 +252,17 @@ export class OfiSubPortfolioComponent implements OnDestroy {
                         address,
                     });
 
-                    this.ngRedux.dispatch(SagaHelper.runAsyncCallback(
+                    this.ngRedux.dispatch(SagaHelper.runAsync(
+                        [DELETE_WALLET_LABEL, DELETE_SUB_PORTFOLIO_BANKING_DETAIL],
+                        [],
                         asyncTaskPipe,
+                        {},
                         (response) => {
-                            if (String(response[1].Data) === '0') {
+                            if (String(_.get(response, '[1].Data.balance', '0')) === '0') {
                                 this.ngRedux.dispatch(clearRequestedWalletLabel());
                                 this.alertsService.generate('success', this.translate.translate(
                                     'Your sub-portfolio @addressLabel@ has been successfully deleted. This may take a moment to update.',
-                                    { addressLabel: this.addressList[index].label }));
+                                    { addressLabel }));
                             } else {
                                 this.alertsService.generate('warning', this.translate.translate(
                                     'You are not able to delete this sub-portfolio because it is not empty. If you want to delete it, you need to redeem all of your shares from this sub-portfolio'));

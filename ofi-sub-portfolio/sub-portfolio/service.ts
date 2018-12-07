@@ -6,31 +6,35 @@ import {
     resetSubPortfolioBankingDetailsRequested,
     SET_SUB_PORTFOLIO_BANKING_DETAILS_LIST,
 } from '@ofi/ofi-main/ofi-store';
-import { clearRequestedWalletLabel } from '@setl/core-store';
+import { clearRequestedWalletLabel, setRequestedWalletAddresses } from '@setl/core-store';
 import * as SagaHelper from '@setl/utils/sagaHelper';
 import { OfiSubPortfolioReqService } from '@ofi/ofi-main/ofi-req-services/ofi-sub-portfolio/service';
-import { WalletNodeRequestService, MyWalletsService } from '@setl/core-req-services';
+import { WalletNodeRequestService, MyWalletsService, InitialisationService } from '@setl/core-req-services';
 
 @Injectable()
 export class OfiSubPortfolioService {
 
     private subscriptions: Array<Subscription> = [];
+    private requestedBankingDetails: boolean = false;
+    private requestedWalletLabel: boolean = false;
+    private requestedWalletAddresses: boolean = false;
     public subPortfolioList: any[] = [];
     public connectedWalletId: number = 0;
     public subPortfolioListOb: Subject<any> = new Subject;
 
     @select(['user', 'connected', 'connectedWallet']) connectedWalletOb;
-    @select(['wallet', 'myWalletAddress', 'addressList']) addressListOb;
+    @select(['ofi', 'ofiSubPortfolio', 'requested']) subPortfolioRequestedOb;
     @select(['wallet', 'myWalletAddress', 'requestedAddressList']) requestedAddressListOb;
     @select(['wallet', 'myWalletAddress', 'requestedLabel']) requestedLabelListOb;
+    @select(['wallet', 'myWalletAddress', 'addressList']) addressListOb;
     @select(['ofi', 'ofiSubPortfolio', 'bankingDetails']) subPortfolioBankingDetailsOb;
-    @select(['ofi', 'ofiSubPortfolio', 'requested']) subPortfolioRequestedOb;
 
     constructor(
         private ngRedux: NgRedux<any>,
         private walletNodeRequestService: WalletNodeRequestService,
         private myWalletsService: MyWalletsService,
         private ofiSubPortfolioReqService: OfiSubPortfolioReqService,
+        private myWalletService: MyWalletsService,
     ) {
         this.initSubscriptions();
     }
@@ -40,20 +44,19 @@ export class OfiSubPortfolioService {
      * @return void
      */
     private initSubscriptions() {
-        this.subscriptions.push(this.connectedWalletOb.subscribe((connected: number) => {
-            if (this.connectedWalletId !== 0) {
-                this.connectedWalletId = connected;
-                this.resetRequestedFlags();
-            } else {
-                this.connectedWalletId = connected;
-            }
-        }));
+        this.subscriptions.push(
+            combineLatest(this.connectedWalletOb, this.subPortfolioRequestedOb, this.requestedAddressListOb, this.requestedLabelListOb)
+            .subscribe(([walletID, subPortRequested, addrListRequested, labelListRequested]) => {
+                if (walletID !== this.connectedWalletId) {
+                    this.resetRequestedFlags();
+                }
+                this.connectedWalletId = walletID;
+                this.requestBankingDetails(subPortRequested);
+                this.requestAddressList(addrListRequested);
+                this.requestWalletLabel(labelListRequested);
+            }));
 
-        this.subscriptions.push(this.subPortfolioRequestedOb.subscribe((requested) => {
-            this.requestBankingDetails(requested);
-        }));
-
-        combineLatest(this.addressListOb, this.subPortfolioBankingDetailsOb)
+        this.subscriptions.push(combineLatest(this.addressListOb, this.subPortfolioBankingDetailsOb)
             .subscribe(([addressList, bankingDetails]) => {
                 this.subPortfolioList = [];
                 this.subPortfolioList = [];
@@ -61,14 +64,17 @@ export class OfiSubPortfolioService {
                     this.subPortfolioList.push(Object.assign({}, addressList[subPortfolio], bankingDetails[subPortfolio]));
                 });
                 this.updateSubPortfolioObservable();
-            });
+            }));
     }
 
     /**
-     * Resets the Redux requested flags for WalletLabels and Sub-portfolio banking details
+     * Resets the requested flags for Wallet Addresses, Labels and Sub-portfolio banking details
      * @return void
      */
     public resetRequestedFlags() {
+        this.requestedBankingDetails = false;
+        this.requestedWalletLabel = false;
+        this.requestedWalletAddresses = false;
         this.ngRedux.dispatch(resetSubPortfolioBankingDetailsRequested());
         this.ngRedux.dispatch(clearRequestedWalletLabel());
     }
@@ -90,11 +96,12 @@ export class OfiSubPortfolioService {
     }
 
     /**
-     * Requests the Sub-portfolio banking details
+     * Requests the Sub-portfolio banking details based on requested flags
      * @param requestedState
      */
     public requestBankingDetails(requestedState) {
-        if (!requestedState && this.connectedWalletId !== 0) {
+        if (!requestedState && this.connectedWalletId !== 0 && !this.requestedBankingDetails) {
+            this.requestedBankingDetails = true;
             const asyncTaskPipe = this.ofiSubPortfolioReqService.getSubPortfolioBankingDetails({
                 walletId: this.connectedWalletId,
             });
@@ -105,6 +112,29 @@ export class OfiSubPortfolioService {
                 asyncTaskPipe,
                 {},
             ));
+        }
+    }
+
+    /**
+     * Requests Wallet Addresses based on requested flags
+     * @param requestedState
+     */
+    requestAddressList(requestedState) {
+        if (!requestedState && this.connectedWalletId !== 0 && !this.requestedWalletAddresses) {
+            this.requestedWalletAddresses = true;
+            this.ngRedux.dispatch(setRequestedWalletAddresses());
+            InitialisationService.requestWalletAddresses(this.ngRedux, this.walletNodeRequestService, this.connectedWalletId);
+        }
+    }
+
+    /**
+     * Requests Wallet Labels based on requested flags
+     * @param requestedState
+     */
+    requestWalletLabel(requestedState) {
+        if (!requestedState && this.connectedWalletId !== 0 && !this.requestedWalletLabel) {
+            this.requestedWalletLabel = true;
+            MyWalletsService.defaultRequestWalletLabel(this.ngRedux, this.myWalletService, this.connectedWalletId);
         }
     }
 
