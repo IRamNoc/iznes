@@ -45,29 +45,27 @@ import static org.junit.Assert.assertTrue;
 
 public class OpenCSDEntireFlowAcceptanceTest {
 
-    public static String connectionString = "jdbc:mysql://localhost:9998/setlnet?nullNamePatternMatchesAll=true";
-
-    // Defines username and password to connect to database server.
-    static String username = "root";
-    static String password = "nahafusi61hucupoju78";
-
-    static String testusername = "TestUserNullInfo";
-    static String testpassword = "Testpass123";
-
-    JavascriptExecutor jse = (JavascriptExecutor) driver;
-
-
     @Rule
     public ScreenshotRule screenshotRule = new ScreenshotRule();
     @Rule
     public RepeatRule repeatRule = new RepeatRule();
     @Rule
-    public TestRule timeout = new DisableOnDebug(Timeout.seconds(60*5));
+    public TestRule timeout = new DisableOnDebug(Timeout.seconds(60*10));
     @Rule
     public TestMethodPrinterRule pr = new TestMethodPrinterRule(System.out);
 
     @Before
     public void setUp() throws Exception {
+
+        boolean isDebug =
+            java.lang.management.ManagementFactory.getRuntimeMXBean().
+                getInputArguments().toString().indexOf("-agentlib:jdwp") > 0;
+
+        if (!isDebug) {
+            System.out.println("Waiting to make sure system has had a chance to wake up");
+            Thread.sleep(20000);
+        }
+
         testSetUp();
         screenshotRule.setDriver(driver);
         setDBToProdOff();
