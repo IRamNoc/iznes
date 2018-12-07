@@ -116,6 +116,8 @@ export class BeneficiaryComponent implements OnInit, OnDestroy {
     }
 
     uploadFile($event) {
+        if($event.files.length === 0) return;
+        
         const formControl = this.form.get('common.document');
 
         this.requestsService.uploadFile($event).then((file: any) => {
