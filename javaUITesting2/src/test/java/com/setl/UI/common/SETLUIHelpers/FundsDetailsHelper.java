@@ -957,6 +957,7 @@ public class FundsDetailsHelper extends LoginAndNavigationHelper {
     }
 
     public static void placeOrder(String isin, String shareName, String managementCompany, String currency, int nav, String amount) throws IOException, InterruptedException{
+       WebDriverWait wait  = new WebDriverWait(driver, 10);
         verifyCorrectPage("Place Order");
         Thread.sleep(1000);
 
@@ -975,7 +976,10 @@ public class FundsDetailsHelper extends LoginAndNavigationHelper {
         System.out.println("Status : Order details matched");
         Thread.sleep(5000);
 
-        driver.findElement(By.xpath("//*[@id=\"subportfolio\"]/div")).click();
+        WebElement portfolio = driver.findElement(By.xpath("//*[@id=\"subportfolio\"]/div"));
+        wait.until(refreshed(visibilityOf(portfolio)));
+        wait.until(refreshed(elementToBeClickable(portfolio)));
+        portfolio.click();
         Thread.sleep(750);
         try {
             driver.findElement(By.xpath("//*[@id=\"subportfolio\"]/div/div[3]/ul/li/div/a")).click();
@@ -1005,12 +1009,6 @@ public class FundsDetailsHelper extends LoginAndNavigationHelper {
         driver.findElement(By.id("settlementdate")).sendKeys(orderDate+ Keys.ESCAPE);
         somewhere.click();
         Thread.sleep(750);
-//        driver.findElement(By.id("cutoffdate")).clear();
-//        driver.findElement(By.id("cutoffdate")).sendKeys(orderDate);
-//        Thread.sleep(750);
-//        driver.findElement(By.id("valuationdate")).clear();
-//        driver.findElement(By.id("valuationdate")).sendKeys(orderDate);
-
 
         //the quantity text box doesn't like having values sent to it or using the clear() command
         WebElement quantity = driver.findElement(By.id("quantity"));
