@@ -3,6 +3,7 @@ package com.setl.UI.common.SETLUIHelpers;
 import org.openqa.selenium.*;
 import org.openqa.selenium.support.ui.WebDriverWait;
 
+import static com.setl.UI.common.SETLUIHelpers.MemberDetailsHelper.scrollElementIntoViewBy;
 import static com.setl.UI.common.SETLUIHelpers.MemberDetailsHelper.scrollElementIntoViewById;
 import static com.setl.UI.common.SETLUIHelpers.SetUp.driver;
 import static com.setl.UI.common.SETLUIHelpers.SetUp.timeoutInSeconds;
@@ -70,10 +71,17 @@ public class PageHelper extends LoginAndNavigationHelper {
     public static void waitForNewShareButton() throws InterruptedException {
         WebDriverWait wait = new WebDriverWait(driver, timeoutInSeconds);
         try {
-            wait.until(visibilityOfElementLocated((By.id("new-share-btn"))));
-            wait.until(elementToBeClickable(By.id("new-share-btn")));
-            scrollElementIntoViewById("new-share-btn");
-            WebElement newShare = driver.findElement(By.id("new-share-btn"));
+
+            Thread.sleep(500);
+
+            //By bye = By.id("new-share-btn"); // maybe Selenium doesn't like this
+            By bye = By.xpath("//button[contains(@id,'new-share-btn')]");
+
+            wait.until(visibilityOfElementLocated((bye)));
+            wait.until(elementToBeClickable(bye));
+            scrollElementIntoViewBy(bye);
+            WebElement newShare = driver.findElement(bye);
+
             wait.until(invisibilityOfElementLocated(By.className("toast-title")));
             newShare.click();
         }catch (Error e){

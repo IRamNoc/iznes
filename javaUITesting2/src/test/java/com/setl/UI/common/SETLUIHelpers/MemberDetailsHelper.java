@@ -268,6 +268,11 @@ public class MemberDetailsHelper extends LoginAndNavigationHelper {
         }
     }
 
+    public static void scrollElementIntoViewBy(By bye){
+        WebElement element = driver.findElement(bye);
+        ((JavascriptExecutor) driver).executeScript("arguments[0].scrollIntoView(true);",element);
+    }
+
     public static void scrollElementIntoViewByWebElement(WebElement WebElement){
         WebElement element = WebElement;
         ((JavascriptExecutor) driver).executeScript("arguments[0].scrollIntoView(true);",element);
