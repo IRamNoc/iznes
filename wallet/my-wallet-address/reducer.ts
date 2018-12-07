@@ -107,10 +107,8 @@ function handleSetRequestedWalletAddresses(state) {
 function handleClearRequestedWalletAddresses(state) {
     const requestedAddressList = false;
     const requestedCompleteAddresses = false;
-    const addressList = {};
 
     return Object.assign({}, state, {
-        addressList,
         requestedAddressList,
         requestedCompleteAddresses,
     });
@@ -167,8 +165,6 @@ function handleSetWalletLabel(state, action): MyWalletAddressState {
 function handleSetWalletLabelUpdated(state, action): MyWalletAddressState {
     /* Get the payload from the JSON object. */
     const updatedLabel = _.get(action, 'payload[1].Data');
-
-    console.log('+++ updatedLabel: ', updatedLabel);
 
     /* Clone the wallet labels list. */
     const newList = JSON.parse(JSON.stringify(state.addressList));
