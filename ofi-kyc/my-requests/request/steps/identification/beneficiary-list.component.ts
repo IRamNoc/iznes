@@ -383,9 +383,10 @@ export class BeneficiaryListComponent implements OnInit, OnDestroy {
 
         if (this.isLegalPerson(type)) {
             return 'fa-building';
-        }
-        if (this.isNaturalPerson(type)) {
+        } else if (this.isNaturalPerson(type)) {
             return 'fa-user';
+        } else {
+            return 'fa-users';
         }
     }
 
