@@ -1,23 +1,9 @@
-[beneficiary-line]{
-    cursor: pointer;
-}
+[beneficiary-line] { cursor: pointer; }
 
-.right{
-    text-align: right;
-}
+.right { text-align: right; }
 
-table{
-    table-layout: fixed;
-}
+table { table-layout: fixed; }
 
-tbody tr:not(.empty){
-    &:hover{
-        background-color: #F9F9F9;
-    }
-}
+tbody tr:not(.empty):hover { background-color: #E9E9E9; }
 
-.empty{
-    td{
-        padding: 30px;
-    }
-}
+.empty td { padding: 30px; }
