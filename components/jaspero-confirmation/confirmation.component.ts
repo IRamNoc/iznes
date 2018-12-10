@@ -1,4 +1,11 @@
-import { Component, Injector, NgZone } from '@angular/core';
+import {
+    Component,
+    ElementRef,
+    Injector,
+    NgZone,
+    OnInit,
+    ViewChild,
+} from '@angular/core';
 import { animate, state, style, transition, trigger } from '@angular/animations';
 import { ResolveEmit } from './interfaces/resolve-emit';
 
@@ -42,8 +49,8 @@ import { ResolveEmit } from './interfaces/resolve-emit';
             <div class="jaspero__dialog-content" [innerHtml]="incomingData.message">
             </div>
             <div class="jaspero__dialog-actions">
-                <button *ngIf="incomingData.declineText != ''" class="default" (click)="resolve({resolved: false})">{{incomingData.declineText}}</button>
-                <button class="{{incomingData.btnClass}}" (click)="resolve({resolved: true})">{{incomingData.confirmText}}</button>
+                <button #declineBtn *ngIf="incomingData.declineText != ''" class="default" (click)="resolve({resolved: false})">{{incomingData.declineText}}</button>
+                <button #confirmBtn class="{{incomingData.btnClass}}" (click)="resolve({resolved: true})">{{incomingData.confirmText}} ookk</button>
             </div>
         </div>
     `,
@@ -249,7 +256,10 @@ import { ResolveEmit } from './interfaces/resolve-emit';
         ])
     ]
 })
-export class ConfirmationComponent {
+export class ConfirmationComponent implements OnInit {
+    @ViewChild('declineBtn') declineBtn:ElementRef;
+    @ViewChild('confirmBtn') confirmBtn:ElementRef;
+
     constructor(private _injector: Injector,
                 private _ngZone: NgZone) {
         for (const key in this.incomingData) {
@@ -259,6 +269,13 @@ export class ConfirmationComponent {
                 this.incomingData[key] = fromInjector;
             }
         }
+
+    }
+
+    ngOnInit(): void {
+        setTimeout(() => {
+            this.setFocusButton();
+        }, 500);
     }
 
     animationState = 'enter';
@@ -272,7 +289,8 @@ export class ConfirmationComponent {
         confirmText: 'Yes',
         declineText: 'No',
         resolve: null,
-        btnClass: 'primary'
+        btnClass: 'primary',
+        focusButton: 'decline',
     };
 
     overlayClick() {
@@ -306,6 +324,20 @@ export class ConfirmationComponent {
                 });
             }, 450);
         });
+    }
+
+    /**
+     * Set focus when confirmation pop-up first show up.
+     */
+    setFocusButton() {
+        const buttonToFocus = this.incomingData.focusButton;
+
+        if (buttonToFocus === 'confirm') {
+            this.confirmBtn.nativeElement.focus();
+        } else {
+            this.declineBtn.nativeElement.focus();
+        }
+
     }
 }
 
