@@ -236,7 +236,7 @@
                 <label class="control-label" for="cityOfBirth-benef-{{index}}">{{ 'City of Birth' | translate}}</label>
                 <input type="text"
                         id="cityOfBirth-benef-{{index}}"
-                        placeholder="{{ 'Fill in a city' }}">
+                        placeholder="{{ 'Fill in a city' }}"
                         formControlName="cityOfBirth">
                 <span class="field-error" *ngIf="hasError(['naturalPerson', 'cityOfBirth'], ['required'])">{{ 'Field is required' | translate }}</span>
                 <span class="field-error" *ngIf="hasError(['naturalPerson', 'cityOfBirth'], ['maxlength'])">{{ 'City is too long' | translate }}</span>
