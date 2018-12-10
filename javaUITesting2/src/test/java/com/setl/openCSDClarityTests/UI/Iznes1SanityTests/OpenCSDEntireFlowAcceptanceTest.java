@@ -1,10 +1,7 @@
 package com.setl.openCSDClarityTests.UI.Iznes1SanityTests;
 
 import com.setl.UI.common.SETLBusinessData.IBAN;
-import com.setl.UI.common.SETLUtils.Repeat;
-import com.setl.UI.common.SETLUtils.RepeatRule;
-import com.setl.UI.common.SETLUtils.ScreenshotRule;
-import com.setl.UI.common.SETLUtils.TestMethodPrinterRule;
+import com.setl.UI.common.SETLUtils.*;
 import custom.junit.runners.OrderedJUnit4ClassRunner;
 import org.junit.*;
 import org.junit.rules.DisableOnDebug;
@@ -46,7 +43,7 @@ import static org.junit.Assert.assertTrue;
 public class OpenCSDEntireFlowAcceptanceTest {
 
     @Rule
-    public ScreenshotRule screenshotRule = new ScreenshotRule();
+    public ScreenshotRule2 screenshotRule = new ScreenshotRule2();
     @Rule
     public RepeatRule repeatRule = new RepeatRule();
     @Rule
