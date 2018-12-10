@@ -6,3 +6,8 @@
         font-size : calc(0.5rem - 1px);
     }
 }
+
+/deep/ h3 {
+    margin-top: 1em;
+    text-transform: uppercase;
+}
