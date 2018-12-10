@@ -9,13 +9,11 @@ import org.openqa.selenium.WebDriver;
 
 import java.io.File;
 import java.io.IOException;
-import java.nio.file.FileSystems;
-import java.nio.file.Path;
 
-public class ScreenshotRule extends TestWatcher {
+public class ScreenshotRule2 extends TestWatcher {
     private WebDriver driver = null;
 
-    public ScreenshotRule() {
+    public ScreenshotRule2() {
     }
 
     public void setDriver(WebDriver driver) {
@@ -26,9 +24,9 @@ public class ScreenshotRule extends TestWatcher {
     @Override
     protected void failed(Throwable e, Description description) {
         try {
-        TakesScreenshot takesScreenshot = (TakesScreenshot) driver;
-        File scrFile = takesScreenshot.getScreenshotAs(OutputType.FILE);
-        File destFile = getDestinationFile(description);
+            TakesScreenshot takesScreenshot = (TakesScreenshot) driver;
+            File scrFile = takesScreenshot.getScreenshotAs(OutputType.FILE);
+            File destFile = getDestinationFile(description);
 
             FileUtils.copyFile(scrFile, destFile);
         } catch (IOException ioe) {
@@ -54,8 +52,8 @@ public class ScreenshotRule extends TestWatcher {
         if (OS.equals("Mac OS X")){
             dir = "/Users/shared/screenshots//";
         }
-        else {//Directs to IznesUI Test Pack Jenkins Project
-            dir = "/var/lib/jenkins/workspace/IznesUIAcceptanceTests/target/test-attachments//";
+        else {//Directs to IznesEntireFlow Jenkins Project
+            dir = "/var/lib/jenkins/workspace/IznesEntireFlowTest/target/test-attachments//";
         }
         String userDirectory = dir;
 
@@ -65,3 +63,5 @@ public class ScreenshotRule extends TestWatcher {
         return new File(absoluteFileName);
     }
 }
+
+
