@@ -3,6 +3,7 @@ import { FormGroup, FormArray } from '@angular/forms';
 import { get as getValue, set as setValue, filter, isEmpty, castArray, find } from 'lodash';
 import { select, NgRedux } from '@angular-redux/store';
 import { Subject } from 'rxjs';
+import * as _ from 'lodash';
 import { filter as rxFilter, map, take, takeUntil } from 'rxjs/operators';
 import { FormPercentDirective } from '@setl/utils/directives/form-percent/formpercent';
 import { IdentificationService, buildBeneficiaryObject } from '../identification.service';
@@ -115,6 +116,12 @@ export class CompanyInformationComponent implements OnInit, OnDestroy {
         this.form.get('geographicalOrigin1').valueChanges
         .pipe(takeUntil(this.unsubscribe))
         .subscribe((data) => {
+            const control = this.form.get('geographicalOrigin2');
+
+            if(!control) return;
+
+            control.setValue('');
+
             const geographicalOriginTypeValue = getValue(data, [0, 'id']);
 
             this.formCheckGeographicalOrigin(geographicalOriginTypeValue);
