@@ -295,7 +295,7 @@ export class SendAssetComponent implements OnInit, OnDestroy {
      * @param holding
      */
     setAddressHoldings(holdings, holding) {
-        this.addressHoldings = {};
+        this.addressHoldings[holding] = {};
 
         for (const breakdown in holdings[this.connectedWalletId][holding].breakdown) {
             const address = holdings[this.connectedWalletId][holding].breakdown[breakdown];
