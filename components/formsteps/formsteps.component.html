@@ -14,7 +14,7 @@
         <span *ngIf="!position">{{'Cancel' | translate}}</span>
         <span *ngIf="position">{{'Close' | translate}}</span>
     </button>
-    <button #submit class="btn btn-success" (click)="askNext()" [disabled]="disabled">
+    <button #submit class="btn btn-success" (click)="askNext()" [disabled]="disabled || !isStepValid()">
         <span *ngIf="!isEnd()">
             {{'Next' | translate}}
         </span>

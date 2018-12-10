@@ -41,11 +41,15 @@ export class FormstepsComponent implements AfterContentInit {
     _position;
     _stepsConfig;
     progress = [];
+    _disabled: boolean = false;
 
     get steps() {
         return this.stepComponents.reduce((acc, cur) => acc.concat([cur.step]), []);
     }
 
+    get position() {
+        return this._position;
+    }
     set position(position) {
         this._position = position;
         this.setActive(position);
@@ -54,11 +58,12 @@ export class FormstepsComponent implements AfterContentInit {
         this.updateSubmitID();
     }
 
-    get position() {
-        return this._position;
+    get disabled(): boolean {
+        return this._disabled;
     }
-
-    disabled: boolean = false;
+    set disabled(state: boolean) {
+        this._disabled = state;
+    }
 
     constructor(
         private element: ElementRef,
@@ -169,6 +174,18 @@ export class FormstepsComponent implements AfterContentInit {
     getForm() {
         let id = getValue(this.stepsConfig, [this.position, 'id']);
         return id || null;
+    }
+
+    isStepValid(): boolean {
+        const stepComponent = this.getActiveComponent().step;
+        
+        if (!stepComponent.isStepValid) return true;
+        
+        return stepComponent.isStepValid();
+    }
+
+    private getActiveComponent() {
+        return this.stepComponents.toArray()[this._position];
     }
 
 }
