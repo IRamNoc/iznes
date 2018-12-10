@@ -48,7 +48,7 @@
                         </div>
                     </div>
 
-                    <div class="actions" *ngIf="!duplicate">
+                    <div class="actions" *ngIf="!duplicate" [hidden]="!managementCompany.selected">
                         <div class="done">
                             <span>
                                 {{'KYC Completed?' | translate}}
