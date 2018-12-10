@@ -253,6 +253,14 @@ export class NewKycSelectAmcComponent implements OnInit, OnDestroy {
         return pattern.test(url);
     }
 
+    /* isStepValid
+     * - this gets run by the form-steps component to enable/disable the next button
+     */
+    isStepValid() {
+        return (this.selectedManagementCompanies.length && this.selectedManagementCompanies.length > 0) ||
+            this.submitted
+    }
+
     ngOnDestroy() {
         this.unsubscribe.next();
         this.unsubscribe.complete();

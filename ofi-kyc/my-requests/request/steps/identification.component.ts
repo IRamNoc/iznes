@@ -173,8 +173,16 @@ export class NewKycIdentificationComponent implements OnInit {
         const general = this.form.get('generalInformation');
         const company = this.form.get('companyInformation');
         const banking = this.form.get('bankingInformation');
+        const classification = this.form.get('classificationInformation');
 
-        return general.valid && company.valid && banking.valid;
+        return general.valid && company.valid && banking.valid && classification.valid;
+    }
+
+    /* isStepValid
+     * - this gets run by the form-steps component to enable/disable the next button
+     */
+    isStepValid() {
+        return this.checkCompletion();
     }
 
     ngOnDestroy() {

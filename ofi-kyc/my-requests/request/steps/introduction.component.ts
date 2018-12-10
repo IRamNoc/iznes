@@ -44,4 +44,11 @@ export class NewKycIntroductionComponent {
 
         return this.requestsService.sendRequest(messageBody);
     }
+
+    /* isStepValid
+     * - this gets run by the form-steps component to enable/disable the next button
+     */
+    isStepValid() {
+        return true;
+    }
 }
