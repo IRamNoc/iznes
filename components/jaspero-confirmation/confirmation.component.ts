@@ -332,7 +332,7 @@ export class ConfirmationComponent implements OnInit {
     setFocusButton() {
         const buttonToFocus = this.incomingData.focusButton;
 
-        if (buttonToFocus === 'confirm') {
+        if (buttonToFocus === 'confirm' || !this.declineBtn) {
             this.confirmBtn.nativeElement.focus();
         } else {
             this.declineBtn.nativeElement.focus();
