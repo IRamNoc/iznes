@@ -73,7 +73,6 @@ export class OfiSubPortfolioReqService {
             iban: data.iban,
             bic: data.bic,
         };
-        console.log('+++ save SubPort', messageBody);
 
         return createMemberNodeSagaRequest(this.memberSocketService, messageBody);
     }

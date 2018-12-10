@@ -59,7 +59,6 @@ export class OfiSubPortfolioService {
         this.subscriptions.push(combineLatest(this.addressListOb, this.subPortfolioBankingDetailsOb)
             .subscribe(([addressList, bankingDetails]) => {
                 this.subPortfolioList = [];
-                this.subPortfolioList = [];
                 Object.keys(addressList).forEach((subPortfolio) => {
                     this.subPortfolioList.push(Object.assign({}, addressList[subPortfolio], bankingDetails[subPortfolio]));
                 });
