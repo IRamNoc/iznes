@@ -50,7 +50,7 @@ import { ResolveEmit } from './interfaces/resolve-emit';
             </div>
             <div class="jaspero__dialog-actions">
                 <button #declineBtn *ngIf="incomingData.declineText != ''" class="default" (click)="resolve({resolved: false})">{{incomingData.declineText}}</button>
-                <button #confirmBtn class="{{incomingData.btnClass}}" (click)="resolve({resolved: true})">{{incomingData.confirmText}} ookk</button>
+                <button #confirmBtn class="{{incomingData.btnClass}}" (click)="resolve({resolved: true})">{{incomingData.confirmText}}</button>
             </div>
         </div>
     `,
