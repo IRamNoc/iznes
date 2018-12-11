@@ -242,8 +242,6 @@ export class OfiFundAccessTable {
                     ),
                 );
 
-                console.error(this.investorData['investorWalletID']);
-
                 const recipientsArr = [this.investorData['investorWalletID']];
                 const subjectStr = this.translate.translate(
                     '@amCompany@ has updated your access',
