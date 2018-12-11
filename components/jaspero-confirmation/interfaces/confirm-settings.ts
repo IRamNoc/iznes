@@ -5,4 +5,5 @@ export interface ConfirmSettings {
     confirmText?: string;
     declineText: string;
     btnClass?: string;
+    focusButton?: string;
 }
