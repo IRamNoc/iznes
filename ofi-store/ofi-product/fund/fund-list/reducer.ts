@@ -51,11 +51,22 @@ function handleGetIznesFunds(state: FundListState, action: Action): any {
             const payingAgentID = (fund.payingAgentID) ? JSON.parse(fund.payingAgentID) : null;
             const investmentAdvisorID = (fund.investmentAdvisorID) ? JSON.parse(fund.investmentAdvisorID) : null;
 
+            let fiscalYearEnd = null;
+
+            // Get fiscalYearEnd in MM-DD format
+            if (fund.fiscalYearEnd !== null) {
+                if (fund.fiscalYearEnd.length === 19) { // e.g. '2018-05-01 00:00:00'
+                    fiscalYearEnd = fund.fiscalYearEnd.substr(5, 5); // '05-01'
+                } else if (fund.fiscalYearEnd.length === 5) { // e.g. '05-01'
+                    fiscalYearEnd = fund.fiscalYearEnd; // '05-01'
+                }
+            }
+
             const fundData: IznesFundDetail = {
                 ..._.omit(fund, ['Status']),
                 fundCreationDate: fund.fundCreationDate !== null ? fund.fundCreationDate.substr(0, 10) : null,
                 fundLaunchate: fund.fundLaunchate !== null ? fund.fundLaunchate.substr(0, 10) : null,
-                fiscalYearEnd: fund.fiscalYearEnd !== null ? fund.fiscalYearEnd : null,
+                fiscalYearEnd,
                 principlePromoterID,
                 payingAgentID,
                 investmentAdvisorID,
