@@ -53,7 +53,7 @@ function handleGetIznesFunds(state: FundListState, action: Action): any {
 
             let fiscalYearEnd = null;
 
-            // Get fiscalYearEnd in MM-DD format
+            // Get fund.fiscalYearEnd in MM-DD format
             if (fund.fiscalYearEnd !== null) {
                 if (fund.fiscalYearEnd.length === 19) { // e.g. '2018-05-01 00:00:00'
                     fiscalYearEnd = fund.fiscalYearEnd.substr(5, 5); // '05-01'
@@ -61,6 +61,12 @@ function handleGetIznesFunds(state: FundListState, action: Action): any {
                     fiscalYearEnd = fund.fiscalYearEnd; // '05-01'
                 }
             }
+
+            // TODO: delete temp values
+            const registerOfficeAddressLine2 = null;
+            const registerOfficeAddressZipCode = null;
+            const registerOfficeAddressCity = null;
+            const registerOfficeAddressCountry = null;
 
             const fundData: IznesFundDetail = {
                 ..._.omit(fund, ['Status']),
@@ -70,6 +76,10 @@ function handleGetIznesFunds(state: FundListState, action: Action): any {
                 principlePromoterID,
                 payingAgentID,
                 investmentAdvisorID,
+                registerOfficeAddressLine2, // TODO: remove temp value
+                registerOfficeAddressZipCode, // TODO: remove temp value
+                registerOfficeAddressCity, // TODO: remove temp value
+                registerOfficeAddressCountry, // TODO: remove temp value
             };
 
             return {

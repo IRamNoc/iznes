@@ -28,6 +28,10 @@ export interface IznesFundDetail {
     lei: string;
     registerOffice: string;
     registerOfficeAddress: string;
+    registerOfficeAddressLine2: string;
+    registerOfficeAddressZipCode: string;
+    registerOfficeAddressCity: string;
+    registerOfficeAddressCountry: string;
     domicile: string;
     isEuDirective: string;
     typeOfEuDirective: string;
