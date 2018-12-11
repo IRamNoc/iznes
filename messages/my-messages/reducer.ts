@@ -203,7 +203,6 @@ function formatMessagesDataResponse(rawMessagesData: Array<any>): Array<MessageD
             const date = moment(
                 `${thisMessageDetail.get('mailDate')} UTC+00:00`,
                 'YYYY-MM-DD HH:mm:ss ZZ',
-                'utc',
             )
             .tz(moment.tz.guess())
             .format('YYYY-MM-DD HH:mm:ss');
