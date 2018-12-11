@@ -1,110 +1,119 @@
 /* Angular/vendor imports. */
-import { Directive, ElementRef, EventEmitter, Output, OnInit } from '@angular/core';
+import { Directive, ElementRef, EventEmitter, Output } from '@angular/core';
 import { MultilingualService } from '@setl/multilingual';
+import { UserPreferenceService } from '@setl/core-req-services/user-preference/service';
+import * as _ from 'lodash';
 
-/* Decorator. */
 @Directive({
-    selector: '[rowsPerPage]'
+    selector: '[rowsPerPage]',
+    providers: [UserPreferenceService],
 })
 
-/* Export directive class. */
-export class RowsPerPageDirective implements OnInit {
+export class RowsPerPageDirective {
 
-    private changes: MutationObserver;
     private htmlRendered: boolean = false;
     private defaultRows: any;
+    private rowValues = [5, 10, 20, 50, 100];
 
-    // Output that will emit outside the directive
     @Output() rowsUpdate: EventEmitter<any> = new EventEmitter();
 
-    /* Constructor. */
     constructor(
         private el: ElementRef,
-        public translate: MultilingualService,
+        private translate: MultilingualService,
+        private userPreferenceService: UserPreferenceService,
     ) {
+        this.requestUsersRowsPerPage();
     }
 
-    ngOnInit() {
-        // Get default row value or set to 5 if not set
-        this.defaultRows = this.el.nativeElement.getAttribute('rowsPerPage') || 5;
-
-        // Emit the default value to set the rows on the datagrid
-        this.rowsUpdate.emit(Number(this.defaultRows));
-
-        // Setup the MutationObserver to watch for changes on the datagrid
-        this.changes = new MutationObserver(
-            (mutations: MutationRecord[]) => {
-                mutations.forEach((mutation: MutationRecord) => this.renderChecker());
-            },
-        );
-        this.changes.observe(this.el.nativeElement.closest('clr-datagrid'), {
-            attributes: true,
-        });
-
+    /**
+     * Requests the Users Stored RowsPerPage
+     * ------------------------------------
+     * If no saved user preference exists, then falls back to the value in the rowsPerPage HTML attribute or 5 if
+     * that's undefined
+     */
+    requestUsersRowsPerPage() {
+        this.userPreferenceService.getUserPreference({ key: 'rowsperpage' })
+            .then((response) => {
+                const userStoredRows = _.get(response, '[1].Data[0].value', false);
+                this.defaultRows = userStoredRows ? userStoredRows :
+                    this.el.nativeElement.getAttribute('rowsPerPage') || 5;
+                this.rowsUpdate.emit(Number(this.defaultRows));
+                this.renderSelect();
+            });
     }
 
-    renderChecker() {
-        // Stop running if HTML is already rendered
+    /**
+     * Handles the HTML Rendering
+     * --------------------------
+     */
+    renderSelect() {
         if (this.htmlRendered) {
             return;
         }
 
-        // Set array of possible row values
-        const rowValues = [5, 10, 20, 50, 100];
-
-        // If default rows isn't in rowValues, add it in and sort numerically
-        if (!rowValues.includes(Number(this.defaultRows))) {
-            rowValues.push(this.defaultRows);
-            rowValues.sort((a, b) => a - b);
+        if (!this.rowValues.includes(Number(this.defaultRows))) {
+            this.rowValues.push(this.defaultRows);
+            this.rowValues.sort((a, b) => a - b);
         }
 
-        // Build the HTML for rows per page select
+        this.el.nativeElement.innerHTML = this.buildSelectHTML();
+        this.htmlRendered = true;
+
+        this.setupEventListener();
+    }
+
+    /**
+     * Builds the Select HTML
+     * ----------------------
+     * @return {string} selectHTML
+     */
+    buildSelectHTML() {
+        const datagrid = this.el.nativeElement.closest('clr-datagrid').outerHTML;
+        let borderClass = '';
+        if ((datagrid.match(/clr-dg-column-toggle/g) || []).length) {
+            borderClass = 'separator';
+        }
         let selectHTML = `
-            <div class="page-size">
+            <div class="page-size ${borderClass}">
                 ${this.translate.translate('Rows per page')}
-                <select id="selectPageSize">
-        `;
-        rowValues.forEach(addOption);
+                <select id="selectPageSize">`;
 
-        function addOption(currentValue) {
-            selectHTML += `<option value="${currentValue}">${currentValue}</option>`;
-        }
+        this.rowValues.forEach((value) => {
+            selectHTML += `<option value="${value}">${value}</option>`;
+        });
 
         selectHTML += `
                 </select>
-            </div>
-        `;
+            </div>`;
 
-        // Count the rows in the datagrid
-        const datagrid = this.el.nativeElement.closest('clr-datagrid').outerHTML;
-        const rowCount = (datagrid.match(/datagrid-row-master/g) || []).length;
+        return selectHTML;
+    }
 
-        // If datagrid is more than one page then render the HTML
-        if (rowCount >= this.defaultRows) {
+    /**
+     * Sets Up the Event Listener on the RowsPerPage Select
+     * ----------------------------------------------------
+     */
+    setupEventListener() {
+        const select = (this.el.nativeElement.firstElementChild.firstElementChild) as HTMLSelectElement;
+        select.value = this.defaultRows;
 
-            // Push the HTML to the DOM
-            this.el.nativeElement.innerHTML = selectHTML;
+        select.addEventListener('change', () => this.handleSelectChange(select));
+    }
 
-            // Set flag that HTML has been rendered
-            this.htmlRendered = true;
+    /**
+     * Handles Select Input Change
+     * ---------------------------
+     * @param select
+     */
+    handleSelectChange(select: HTMLSelectElement) {
+        const value = Number(select.options[select.selectedIndex].value);
+        this.rowsUpdate.emit(value);
+        this.userPreferenceService.saveUserPreference({ key: 'rowsperpage', value });
 
-            // Target the select just created
-            const select = (this.el.nativeElement.firstElementChild.firstElementChild) as HTMLSelectElement;
-
-            // Set the selected value to the default rows
-            select.value = this.defaultRows;
-
-            // Listen for value changes and emit them to change the rows per page
-            select.addEventListener('change', function () {
-                const value = Number(select.options[select.selectedIndex].value);
-                this.rowsUpdate.emit(value);
-
-                // Fix static datagrid height if rows per page is 20 or greater
-                document.querySelector('clr-datagrid').classList.remove('dg-height-fix');
-                if (value >= 20) {
-                    document.querySelector('clr-datagrid').classList.add('dg-height-fix');
-                }
-            }.bind(this));
+        // Fix static datagrid height if rows per page is 20 or greater
+        document.querySelector('clr-datagrid').classList.remove('dg-height-fix');
+        if (value >= 20) {
+            document.querySelector('clr-datagrid').classList.add('dg-height-fix');
         }
     }
 }
