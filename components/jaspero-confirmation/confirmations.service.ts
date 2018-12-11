@@ -8,7 +8,8 @@ import {ResolveEmit} from './interfaces/resolve-emit';
 export class ConfirmationService {
     confirmation$ = new Subject<ConfirmEmit>();
     defaultConfirmationSettings: ConfirmSettings = {
-        declineText: 'No'
+        declineText: 'No',
+        focusButton: 'decline',
     };
 
     create(title: string, message: string, override: ConfirmSettings = this.defaultConfirmationSettings) {
@@ -18,7 +19,7 @@ export class ConfirmationService {
             title,
             message,
             resolve$,
-            override
+            override,
         });
 
         return resolve$;

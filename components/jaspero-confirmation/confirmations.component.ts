@@ -37,7 +37,8 @@ export class ConfirmationsComponent implements OnInit, OnDestroy {
         showCloseButton: true,
         confirmText: 'Yes',
         declineText: 'No',
-        btnClass: 'primary'
+        btnClass: 'primary',
+        focusButton: 'decline',
     };
 
     private _current: any;
