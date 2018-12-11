@@ -3,10 +3,11 @@ Rows Per Page is a directive for use on Clarity Datagrids across Setl projects. 
 the DOM allowing users to choose the amount of rows to display per datagrid page.
 
 Features:
-* A default of 5 Rows Per Page with preset values of `5, 10, 20, 50 and 100` to select between 
-* Pass a custom default Rows Per Page value which gets added to the select input if not already present
-* If there is no data or only 1 page on the datagrid, the Rows Per Page select won't render
-* A CSS fix is applied to remove the static height of the datagrid if 20 Rows Per Page or greater is selected
+* A default of 5 RowsPerPage with preset values of `5, 10, 20, 50 and 100` to select between
+* Pass in a custom array of numbers to the `[defaultRows]` input to override the above presets
+* Saves the users RowsPerPage preference to MySQL on each change and restores this setting
+* If no saved user setting exists, you can pass a custom default value in the RowsPerPage HTML attribute which gets added to the select input if not already present
+* A CSS fix is applied to remove the static height of the datagrid if 20 RowsPerPage or greater is selected
 
 # Usage:
 ## 1. Import the `SetlDirectivesModule`
@@ -39,14 +40,15 @@ An example of a HTML datagrid footer in a component using the directive.
 
 ```html
 <clr-dg-footer>
-    <div rowsPerPage="10" (rowsUpdate)="pageSize = $event"></div>
+    <div rowsPerPage="10" [defaultRows]="[5, 10, 15, 20]" (rowsUpdate)="pageSize = $event"></div>
     {{pagination.firstItem + 1}} - {{pagination.lastItem + 1}}
     <clr-dg-pagination #pagination [clrDgPageSize]="pageSize"></clr-dg-pagination>
 </clr-dg-footer>
 ```
 
-* The `rowsPerPage="10"` is passing a default of 10 Rows Per Page. Equally you can omit the value and just use
+* `rowsPerPage="10"` is passing a default of 10 RowsPerPage (Note: this will be overwritten if a saved user preference exists). Equally you can omit the value and just use
 `rowsPerPage` which will set the default to 5
-* The `(rowsUpdate)="pageSize = $event"` updates the variable defined on the `component.ts` with the Rows Per Page
+* `[defaultRows]` is the optional input to pass a custom array of numbers to replace the select options with 
+* `(rowsUpdate)="pageSize = $event"` updates the variable defined on the `component.ts` with the RowsPerPage
 value as it is changed
-* The `[clrDgPageSize]="pageSize"` is passing the Rows Per Page value to the datagrid
+* `[clrDgPageSize]="pageSize"` is passing the RowsPerPage value to the datagrid

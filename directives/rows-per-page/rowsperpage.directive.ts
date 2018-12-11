@@ -1,5 +1,5 @@
 /* Angular/vendor imports. */
-import { Directive, ElementRef, EventEmitter, Output } from '@angular/core';
+import { Directive, ElementRef, EventEmitter, Output, Input } from '@angular/core';
 import { MultilingualService } from '@setl/multilingual';
 import { UserPreferenceService } from '@setl/core-req-services/user-preference/service';
 import * as _ from 'lodash';
@@ -13,8 +13,8 @@ export class RowsPerPageDirective {
 
     private htmlRendered: boolean = false;
     private defaultRows: any;
-    private rowValues = [5, 10, 20, 50, 100];
 
+    @Input() rowValues: number[] = [5, 10, 20, 50, 100];
     @Output() rowsUpdate: EventEmitter<any> = new EventEmitter();
 
     constructor(
