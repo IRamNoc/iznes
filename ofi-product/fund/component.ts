@@ -290,7 +290,7 @@ export class FundComponent implements OnInit, OnDestroy {
             fundManagers: [null],
             transferAgentID: [[]],
             centralizingAgentID: [[]],
-            isDedicatedFund: [null, Validators.required],
+            isDedicatedFund: [null],
             portfolioCurrencyHedge: [[], this.validators.ngSelectRequired],
 
             globalItermediaryIdentification: [null, this.validators.giin],
