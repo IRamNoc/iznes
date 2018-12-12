@@ -18,6 +18,8 @@ import { ClrDgRowClickableDirective } from './clr-dg-row-clickable/directive';
 import { MoneyValuePipe } from '../pipes';
 import { RowsPerPageDirective } from './rows-per-page/rowsperpage.directive';
 import { FixedHeaderDirective } from './fixed-header/fixed-header.directive';
+import { UserTourDirective } from './user-tour/user-tour.directive';
+import {UserPreferenceService} from "@setl/core-req-services";
 
 @NgModule({
     declarations: [
@@ -35,6 +37,7 @@ import { FixedHeaderDirective } from './fixed-header/fixed-header.directive';
         ActiveHeaderButtonDirective,
         RowsPerPageDirective,
         FixedHeaderDirective,
+        UserTourDirective,
     ],
     exports: [
         NumberFormatterDirective,
@@ -51,6 +54,7 @@ import { FixedHeaderDirective } from './fixed-header/fixed-header.directive';
         ActiveHeaderButtonDirective,
         RowsPerPageDirective,
         FixedHeaderDirective,
+        UserTourDirective,
     ],
     imports: [
         CommonModule,
