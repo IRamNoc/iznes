@@ -28,6 +28,10 @@ export interface Fund {
     legalEntityIdentifier: string;
     registerOffice: string;
     registerOfficeAddress: string;
+    registerOfficeAddressLine2: string;
+    registerOfficeAddressZipCode: string;
+    registerOfficeAddressCity: string;
+    registerOfficeAddressCountry: string;
     domicile: string;
     tradingAccount: string;
     isEuDirective: any;
