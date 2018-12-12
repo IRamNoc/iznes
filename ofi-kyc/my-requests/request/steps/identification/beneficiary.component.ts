@@ -117,13 +117,20 @@ export class BeneficiaryComponent implements OnInit, OnDestroy {
 
     uploadFile($event) {
         if($event.files.length === 0) return;
-        
+
         const formControl = this.form.get('common.document');
 
         this.requestsService.uploadFile($event).then((file: any) => {
-            formControl.get('hash').patchValue(file.fileHash);
-            formControl.get('name').patchValue(file.fileTitle);
-            formControl.get('kycDocumentID').patchValue('');
+            const newFormGroup = {
+                common: formControl.get('common').value,
+                hash: file.fileHash,
+                isDefault: formControl.get('isDefault').value,
+                kycDocumentID: '',
+                name: file.fileTitle,
+                type: formControl.get('common').value,
+            }
+
+            formControl.setValue(newFormGroup);
         });
     }
 
