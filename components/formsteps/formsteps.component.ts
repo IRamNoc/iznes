@@ -177,11 +177,13 @@ export class FormstepsComponent implements AfterContentInit {
     }
 
     isStepValid(): boolean {
-        const stepComponent = this.getActiveComponent().step;
+        const stepComponent = this.getActiveComponent();
+
+        if ((!stepComponent) || !stepComponent.step) return true;
         
-        if (!stepComponent.isStepValid) return true;
+        if (!stepComponent.step.isStepValid) return true;
         
-        return stepComponent.isStepValid();
+        return stepComponent.step.isStepValid();
     }
 
     private getActiveComponent() {
