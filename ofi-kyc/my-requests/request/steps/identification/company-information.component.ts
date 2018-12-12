@@ -337,7 +337,7 @@ export class CompanyInformationComponent implements OnInit, OnDestroy {
                                 if (documentID) {
                                     return this.documentsService.getDocument(documentID).then((document) => {
                                         if (document) {
-                                            setValue(controlValue, ['naturalPerson', 'document'], {
+                                            setValue(controlValue, ['common', 'document'], {
                                                 name: document.name,
                                                 hash: document.hash,
                                                 kycDocumentID: document.kycDocumentID,
