@@ -68,6 +68,7 @@ export interface IznesFundDetail {
     hasCapitalPreservation: string;
     capitalPreservationLevel: string;
     capitalPreservationPeriod: string;
+    capitalisationDate: string;
     hasCppi: string;
     cppiMultiplier: string;
     hasHedgeFundStrategy: string;

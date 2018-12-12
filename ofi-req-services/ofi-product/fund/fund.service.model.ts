@@ -68,7 +68,7 @@ export interface Fund {
     hasCapitalPreservation: hasCapitalPreservation;
     capitalPreservationLevel: number;
     capitalPreservationPeriod: number;
-    capitalisationDate: string; // date
+    capitalisationDate: string;
     hasCppi: hasCppi;
     cppiMultiplier: string;
     hasHedgeFundStrategy: hasHedgeFundStrategy;
