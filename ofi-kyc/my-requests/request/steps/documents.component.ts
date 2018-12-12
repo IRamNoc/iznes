@@ -108,7 +108,7 @@ export class NewKycDocumentsComponent implements OnInit, OnDestroy {
             this.form,
             this.newRequestService.context,
             {
-                reset : false,
+                reset: false,
             },
         );
     }
@@ -205,11 +205,18 @@ export class NewKycDocumentsComponent implements OnInit, OnDestroy {
 
                     this.form.updateValueAndValidity();
                     this.changeDetectorRef.markForCheck();
-
+                    this.formPercent.refreshFormPercent();
+                    
                     this.initSubscriptions();
                 });
             });
         });
+    }
+
+    getDocumentPreset(formItem: string[]) {
+        const value = this.form.get(formItem).value;
+
+        return !value.hash ? undefined : value;
     }
 
     /* isStepValid
