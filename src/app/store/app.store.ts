@@ -16,8 +16,8 @@ import createSagaMiddleware from 'redux-saga';
 
 // Dev extension for monitor redux in browser dev tool.
 const devtools: StoreEnhancer<AppState> =
-    window['devToolsExtension'] ?
-        window['devToolsExtension']() : f => f;
+    window['__REDUX_DEVTOOLS_EXTENSION__'] ?
+        window['__REDUX_DEVTOOLS_EXTENSION__']() : f => f;
 
 // Async Saga
 const appSaga = SagaHelper.asyncTaskSaga;
@@ -28,7 +28,7 @@ const appSaga = SagaHelper.asyncTaskSaga;
  */
 const sagaMiddleware = createSagaMiddleware();
 
-const composeMiddlewares = window['devToolsExtension'] ? compose(
+const composeMiddlewares = window['__REDUX_DEVTOOLS_EXTENSION__'] ? compose(
     devtools,
     applyMiddleware(SagaHelper.preSagaMiddleWare),
     applyMiddleware(sagaMiddleware),
