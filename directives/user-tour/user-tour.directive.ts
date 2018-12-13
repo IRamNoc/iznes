@@ -30,7 +30,12 @@ export class UserTourDirective implements AfterViewInit, OnDestroy{
         this.userPreferenceService.getUserPreference({ key: this.config.tourName }).then((response) => {
             const completedTour = _.get(response, '[1].Data[0].value', false);
             if (!completedTour) {
-                this.launchUserTour();
+                setTimeout(
+                    () => {
+                        this.launchUserTour();
+                    },
+                    200,
+                );
             }
         });
 
@@ -71,13 +76,16 @@ export class UserTourDirective implements AfterViewInit, OnDestroy{
     }
 
     createStage(stage) {
-        const stageEl = this.el.nativeElement.querySelector(`#${stage}`);
+        const stageEl = this.el.nativeElement.querySelector(`div #${stage}`);
+        console.log('+++ this.el.nativeElement', this.el.nativeElement);
 
         stageEl.classList.add('stage');
+        if (this.config.stages[stage].highlight) stageEl.classList.add('highlight');
         stageEl.classList.add(this.config.stages[stage].horizontalPosition);
         stageEl.classList.add(this.config.stages[stage].verticalPosition);
 
         const signpost = document.createElement('span');
+        signpost.className = 'signpost';
         const totalStages = Object.keys(this.config.stages).length;
         const prevBtnHTML = this.currentStage > 0 ?
             `<button id="${stage}-prev-btn" class="btn btn-outline btn-prev">Prev</button>` : '';
@@ -134,6 +142,9 @@ export class UserTourDirective implements AfterViewInit, OnDestroy{
         if (currentStageEl) {
             currentStageEl.lastChild.remove();
             currentStageEl.className = '';
+            ['top', 'bottom', 'left', 'right', 'stage'].forEach((classToRemove) => {
+                currentStageEl.classList.remove(classToRemove);
+            });
         }
     }
 
@@ -148,6 +159,9 @@ export class UserTourDirective implements AfterViewInit, OnDestroy{
         this.el.nativeElement.querySelectorAll('.datagrid-overlay-wrapper').forEach((datagrid) => {
             datagrid.classList.remove('visible');
         });
+
+        // Save user preference
+        this.userPreferenceService.saveUserPreference({ key: this.config.tourName, value: true });
     }
 
     removeEventListeners(lastStage) {
