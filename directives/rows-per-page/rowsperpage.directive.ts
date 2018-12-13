@@ -1,5 +1,6 @@
 /* Angular/vendor imports. */
-import {Directive, ElementRef, EventEmitter, Output, OnInit} from '@angular/core';
+import { Directive, ElementRef, EventEmitter, Output, OnInit } from '@angular/core';
+import { MultilingualService } from '@setl/multilingual';
 
 /* Decorator. */
 @Directive({
@@ -19,11 +20,11 @@ export class RowsPerPageDirective implements OnInit {
     /* Constructor. */
     constructor(
         private el: ElementRef,
+        public translate: MultilingualService,
     ) {
     }
 
     ngOnInit() {
-
         // Get default row value or set to 5 if not set
         this.defaultRows = this.el.nativeElement.getAttribute('rowsPerPage') || 5;
 
@@ -31,9 +32,10 @@ export class RowsPerPageDirective implements OnInit {
         this.rowsUpdate.emit(Number(this.defaultRows));
 
         // Setup the MutationObserver to watch for changes on the datagrid
-        this.changes = new MutationObserver((mutations: MutationRecord[]) => {
+        this.changes = new MutationObserver(
+            (mutations: MutationRecord[]) => {
                 mutations.forEach((mutation: MutationRecord) => this.renderChecker());
-            }
+            },
         );
         this.changes.observe(this.el.nativeElement.closest('clr-datagrid'), {
             attributes: true,
@@ -59,13 +61,13 @@ export class RowsPerPageDirective implements OnInit {
         // Build the HTML for rows per page select
         let selectHTML = `
             <div class="page-size">
-                Rows per page
+                ${this.translate.translate('Rows per page')}
                 <select id="selectPageSize">
         `;
         rowValues.forEach(addOption);
 
         function addOption(currentValue) {
-            selectHTML += '<option value="' + currentValue + '">' + currentValue + '</option>';
+            selectHTML += `<option value="${currentValue}">${currentValue}</option>`;
         }
 
         selectHTML += `

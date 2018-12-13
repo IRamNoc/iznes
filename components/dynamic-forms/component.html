@@ -4,7 +4,7 @@
             <div class="row">
                 <ng-container *ngFor="let item of formKeys; trackBy: trackFormItemByFn">
                     <div class="form-group {{model[item].cssClass}}" [hidden]="isHidden(item)">
-                        <label class="control-label" [class.required-field]="model[item].required" for="{{item}}">{{model[item].label}}</label>
+                        <label class="control-label" [class.required-field]="model[item].required" for="{{item}}">{{ model[item].label | translate }}</label>
 
                         <ng-container [ngSwitch]="isElementFormItem(model[item])">
                             <ng-container *ngSwitchCase="false">
@@ -28,7 +28,7 @@
                                             [class.required-field]="model[item].required"
                                             type="text"
                                             maxlength="{{model[item].maxLength}}"
-                                            placeholder="{{model[item].placeholder}}"
+                                            placeholder="{{ model[item].placeholder | translate }}"
                                             formControlName="{{item}}"/>
                                     </ng-container>
 
@@ -36,7 +36,7 @@
                                         <input id="{{item}}" name="{{item}}" class="form-control"
                                             [class.required-field]="model[item].required"
                                             type="number"
-                                            placeholder="{{model[item].placeholder}}"
+                                            placeholder="{{ model[item].placeholder | translate }}"
                                             formControlName="{{item}}"/>
                                     </ng-container>
 
@@ -47,7 +47,9 @@
                                             'touched': (isTouched(model[item]))
                                             }">
                                             <span class="fa fa-calendar"></span>
-                                            <input id="{{item}}" name="{{item}}" placeholder="{{model[item].placeholder}}"
+                                            <input id="{{item}}" 
+                                                name="{{ item | translate }}" 
+                                                placeholder="{{ model[item].placeholder | translate }}"
                                                 formControlName="{{item}}"
                                                 [dpDayPicker]="model[item].dateOptions"
                                                 [readonly]="false"
@@ -63,7 +65,7 @@
                                                 [items]="model[item].listItems"
                                                 [active]="model[item].preset"
                                                 [disabled]="model[item].control.disabled"
-                                                placeholder="{{model[item].placeholder}}"
+                                                placeholder="{{ model[item].placeholder | translate }}"
                                                 [formControl]="model[item].control"
                                                 [multiple]="model[item].listAllowMultiple || false"
                                                 [required]="model[item].required">
@@ -92,9 +94,11 @@
                                     </ng-container>
 
                                     <ng-container *ngSwitchCase="6">
-                                        <textarea id="{{item}}" name="{{item}}" class="form-control"
+                                        <textarea id="{{item}}" 
+                                                name="{{item}}" 
+                                                class="form-control"
                                                 [class.required-field]="model[item].required"
-                                                placeholder="{{model[item].placeholder}}"
+                                                placeholder="{{ model[item].placeholder | translate }}"
                                                 formControlName="{{item}}">
                                         </textarea>
                                     </ng-container>
@@ -102,8 +106,10 @@
                                     <ng-container *ngSwitchCase="7">
                                         <div class="input-group">
                                             <span class="fa fa-clock-o"></span>
-                                            <input id="{{item}}" name="{{item}}" type="time"
-                                                placeholder="{{model[item].placeholder}}"
+                                            <input id="{{item}}" 
+                                                name="{{item}}" 
+                                                type="time"
+                                                placeholder="{{ model[item].placeholder | translate }}"
                                                 formControlName="{{item}}"/>
                                         </div>
                                     </ng-container>
@@ -116,8 +122,7 @@
                                             [dates]="model[item].control.value"
                                             [showClearButton]="!model[item].disabled"
                                             [showWeekendToggle]="!model[item].disabled"
-                                            [disabled]="model[item].disabled"
-                                        >
+                                            [disabled]="model[item].disabled">
                                         </date-picker-extended>
                                     </ng-container>
 
@@ -129,7 +134,9 @@
                                             }">
                                             <span>from</span>
                                             <span class="fa fa-calendar"></span>
-                                            <input id="{{item}}_from" name="{{item}}_from" placeholder="{{model[item].placeholder}}"
+                                            <input id="{{item}}_from" 
+                                                name="{{item}}_from" 
+                                                placeholder="{{ model[item].placeholder | translate }}"
                                                 formControlName="{{item}}_from"
                                                 [dpDayPicker]="model[item].dateOptions"
                                                 [readonly]="false"
@@ -139,7 +146,9 @@
                                                 autocomplete="off"/>
                                             <span>to</span>
                                             <span class="fa fa-calendar"></span>
-                                            <input id="{{item}}_to" name="{{item}}_to" placeholder="{{model[item].placeholder}}"
+                                            <input id="{{item}}_to" 
+                                                name="{{item}}_to" 
+                                                placeholder="{{ model[item].placeholder | translate }}"
                                                 formControlName="{{item}}_to"
                                                 [dpDayPicker]="model[item].dateOptions"
                                                 [readonly]="false"
