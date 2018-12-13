@@ -43,10 +43,10 @@
 <ng-template #staticBalanceList>
     <div class="panel-body">
         <clr-datagrid #myDataGrid>
-            <clr-dg-column style="min-width: 170px;">{{ 'Asset' | translate }}</clr-dg-column>
-            <clr-dg-column class="right" style="min-width: 170px;">{{ 'Total' | translate }}</clr-dg-column>
-            <clr-dg-column class="right">{{ 'Encumbered' | translate }}</clr-dg-column>
-            <clr-dg-column class="right">{{ 'Free' | translate }}</clr-dg-column>
+            <clr-dg-column [clrDgField]="'asset'" clrDgSortIcon style="min-width: 170px;">{{ 'Asset' | translate }}</clr-dg-column>
+            <clr-dg-column [clrDgField]="'total'" clrDgSortIcon class="right" style="min-width: 170px;">{{ 'Total' | translate }}</clr-dg-column>
+            <clr-dg-column [clrDgField]="'totalencumbered'" clrDgSortIcon class="right">{{ 'Encumbered' | translate }}</clr-dg-column>
+            <clr-dg-column [clrDgField]="'free'" clrDgSortIcon class="right">{{ 'Free' | translate }}</clr-dg-column>
             <clr-dg-column class="right" style="min-width: 160px;">{{ 'Actions' | translate }}</clr-dg-column>
 
             <clr-dg-row *clrDgItems="let asset of balances$ | async" [class.flash]="asset.isNew">
@@ -94,12 +94,11 @@
             </div>
 
             <clr-datagrid #myDataGrid>
-                <clr-dg-column>{{ 'Address Label' | translate }}</clr-dg-column>
-                <clr-dg-column>{{ 'Address' | translate }}</clr-dg-column>
-                <clr-dg-column class="right">{{ 'Total' | translate }}</clr-dg-column>
-                <clr-dg-column class="right">{{ 'Encumbered' | translate }}</clr-dg-column>
-                <clr-dg-column class="right">{{ 'Free' | translate }}</clr-dg-column>
-
+                <clr-dg-column [clrDgField]="'label'" clrDgSortIcon>{{ 'Address Label' | translate }}</clr-dg-column>
+                <clr-dg-column [clrDgField]="'addr'" clrDgSortIcon>{{ 'Address' | translate }}</clr-dg-column>
+                <clr-dg-column [clrDgField]="'balance'" clrDgSortIcon class="right">{{ 'Total' | translate }}</clr-dg-column>
+                <clr-dg-column [clrDgField]="'encumbrance'" clrDgSortIcon class="right">{{ 'Encumbered' | translate }}</clr-dg-column>
+                <clr-dg-column [clrDgField]="'free'" clrDgSortIcon class="right">{{ 'Free' | translate }}</clr-dg-column>
 
                 <clr-dg-row *clrDgItems="let breakdown of asset.breakdown">
                     <clr-dg-cell>{{breakdown.label}}</clr-dg-cell>
