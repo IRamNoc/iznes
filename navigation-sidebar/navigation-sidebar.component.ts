@@ -94,8 +94,7 @@ export class NavigationSidebarComponent implements OnInit, AfterViewInit {
     }
 
     /**
-     * check if menu is disable.
-     *
+     * Check if menu is disabled.
      * @param {string} url
      *
      * @return {boolean}

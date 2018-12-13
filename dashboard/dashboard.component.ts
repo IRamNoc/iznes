@@ -5,10 +5,9 @@ import { DomSanitizer, SafeResourceUrl, SafeUrl } from '@angular/platform-browse
     selector: 'app-dashboard',
     templateUrl: 'dashboard.component.html',
     styleUrls: ['dashboard.component.scss'],
-    encapsulation: ViewEncapsulation.None
+    encapsulation: ViewEncapsulation.None,
 })
 export class DashboardComponent implements OnInit {
-
     @Input() rows: number;
     @Input() columns: number;
 
