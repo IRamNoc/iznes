@@ -93,12 +93,7 @@ export class ExternalNotificationsComponent implements OnInit, OnDestroy {
                                                 <td>${response.status}</td>
                                             </tr>
                                             <tr>
-                                                <td class="left"><b>${this.translate.translate('Username')}:</b></td>
-                                                <td>${response.user}</td>
-                                            </tr>
-                                            <tr>
-                                                <td class="left"><b>${this.translate.translate('Password')}:</b></td>
-                                                <td>${response.password}</td>
+                                                <td colspan="2" class="left">${this.translate.translate('Please request a certificate from support.')}</td>
                                             </tr>
                                         </tbody>
                                     </table>
