@@ -110,6 +110,9 @@ export class SetlMessageWorkflowComponent2 implements OnInit {
                     this.denominator = a['asset'];
                 }
             }
+            if (this.decodedData['assets'].length === 1) {
+                this.enoughCash = true;
+            }
         }
 
         this.subscriptionsArray.push(this.requestedAddressListOb.subscribe((requested) => {
