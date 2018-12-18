@@ -20,10 +20,10 @@ apiEndpoint="$apiUrl:$apiPort/api/sites/$iznesSiteId/whitelist-translations"
 mysql -u${user} -p${pwd} ${database} -N -e "${query}" | while IFS= read -r item
 do
    
-    # Create mltag for each item
+    # Create mltag for each error item
     mltag=`echo "console.log('txt_' + '$item'.replace(/[^a-z0-9A-Z]/g, '').toLowerCase());" | node`
     
-    # Truncate mltag if length is longer than 34 characters
+    # Truncate and pad mltag if length is greater than 34 characters
     length=${#mltag}
 
     if [ $length -gt 34 ]; then
@@ -31,13 +31,13 @@ do
         mltag=`echo "console.log('$mltag'.substring(0, 34) + '$hash'.substring(10, 20));" | node`
     fi    
 
-    # Create payload object using mltag and item
+    # Create JSON payload object using mltag and error
     payload=`echo "console.log(JSON.stringify({ mltag: '$mltag', value: '$item', location: 'stored_procedure' }));" | node`
     
     # Send payload to API
     curl -d "$payload" -H "Content-Type: application/json" -X POST ${apiEndpoint}
 
-    # Testing
+    # Testing...
     # echo "$payload"
    
 done 
