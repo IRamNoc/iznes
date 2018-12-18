@@ -16,7 +16,7 @@ apiPort="8000"
 # Set API endpoint
 apiEndpoint="$apiUrl:$apiPort/api/sites/$iznesSiteId/whitelist-translations"
 
-# Send errors to the translations database
+# Get errors from tblErrors 
 mysql -u${user} -p${pwd} ${database} -N -e "${query}" | while IFS= read -r item
 do
    
@@ -31,12 +31,13 @@ do
         mltag=`echo "console.log('$mltag'.substring(0, 34) + '$hash'.substring(10, 20));" | node`
     fi    
 
-    # Create payload object
+    # Create payload object using mltag and item
     payload=`echo "console.log(JSON.stringify({ mltag: '$mltag', value: '$item', location: 'stored_procedure' }));" | node`
     
-    # Send to API
+    # Send payload to API
     curl -d "$payload" -H "Content-Type: application/json" -X POST ${apiEndpoint}
 
+    # Testing
     # echo "$payload"
    
 done 
