@@ -389,8 +389,8 @@ export class OfiInvMyDocumentsComponent implements OnDestroy, OnInit, AfterViewI
             files: _.filter(event.files, (file) => {
                 return file.status !== 'uploaded-file';
             }),
-            // secure: true,
-            // path: '/iznes/kyc-inv-docs',
+            secure: true,
+            path: this.kycDocPath,
         });
 
         this.ngRedux.dispatch(SagaHelper.runAsyncCallback(

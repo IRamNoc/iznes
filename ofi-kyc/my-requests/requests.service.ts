@@ -256,6 +256,8 @@ export class RequestsService {
             files: _.filter(event.files, (file) => {
                 return file.status !== 'uploaded-file';
             }),
+            secure: true,
+            path: '/iznes/kyc-inv-docs',
         });
 
         return new Promise((resolve, reject) => {

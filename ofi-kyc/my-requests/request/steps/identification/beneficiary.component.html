@@ -254,7 +254,7 @@
                 <label class="control-label" for="cityOfBirth-benef-{{index}}">{{ 'City of Birth' | translate}}</label>
                 <input type="text"
                         id="cityOfBirth-benef-{{index}}"
-                        placeholder="{{ 'Fill in a city' }}"
+                        placeholder="{{ 'Fill in a city' | translate }}"
                         formControlName="cityOfBirth">
                 <span class="field-error" *ngIf="hasError(['naturalPerson', 'cityOfBirth'], ['required'])">{{ 'Field is required' | translate }}</span>
                 <span class="field-error" *ngIf="hasError(['naturalPerson', 'cityOfBirth'], ['maxlength'])">{{ 'City is too long' | translate }}</span>
@@ -284,10 +284,13 @@
 
         <div class="row">
             <div class="form-group required-field col-sm-6">
-                <label for="holdingPercentage-benef">{{'Holding percentage' | translate}}</label>
-                <input id="holdingPercentage-benef" type="number" [formControl]="form.get('common.holdingPercentage')" placeholder="{{'Define a value (%)' | translate}}" [attr.disabled]="disabled">
-                <span class="field-error" *ngIf="hasError(['common', 'holdingPercentage'], ['required'])">{{'Field is required' | translate}}</span>
-                <span class="field-error" *ngIf="hasError(['common', 'holdingPercentage'], ['min', 'max'])">{{'Value must be between 0 and 100' | translate}}</span>
+                <label for="holdingPercentage-benef-{{index}}">{{ 'Holding Percentage' | translate }}</label>
+                <input id="holdingPercentage-benef-{{index}}" 
+                        type="number" 
+                        [formControl]="form.get('common.holdingPercentage')" 
+                        placeholder="{{ 'Define a value @valueType@' | translate: { valueType: '(%)' } }}">
+                <span class="field-error" *ngIf="hasError(['common', 'holdingPercentage'], ['required'])">{{ 'Field is required' | translate }}</span>
+                <span class="field-error" *ngIf="hasError(['common', 'holdingPercentage'], ['min', 'max'])">{{ 'Value must be between 0 and 100' | translate }}</span>
             </div>
 
             <div class="form-group required-field col-sm-6">
