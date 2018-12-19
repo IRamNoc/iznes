@@ -290,25 +290,6 @@ export class SendAssetComponent implements OnInit, OnDestroy {
     }
 
     /**
-     * Set holdings by address for validation checks
-     *
-     * @param holdings
-     * @param holding
-     */
-    setAddressHoldings(holdings, holding) {
-        this.addressHoldings[holding] = {};
-
-        for (const breakdown in holdings[this.connectedWalletId][holding].breakdown) {
-            const address = holdings[this.connectedWalletId][holding].breakdown[breakdown];
-            if (_.isEmpty(this.addressHoldings[holding])) this.addressHoldings[holding] = {};
-            this.addressHoldings[holding][address.addr] = address.free;
-        }
-
-        /* Refresh form validation */
-        this.sendAssetForm.get('amount').updateValueAndValidity();
-    }
-
-    /**
      * Update addressHoldings object and form validation until block update comes in
      *
      * @param response
