@@ -52,7 +52,6 @@ export class SendAssetComponent implements OnInit, OnDestroy {
                 private myWalletService: MyWalletsService,
                 public translate: MultilingualService,
     ) {
-
         /* Subscribe to the connectedWalletId and setup (or clear) the form group on wallet change */
         this.subscriptionsArray.push(this.connectedWalletOb.subscribe((connectedWalletId) => {
             this.connectedWalletId = connectedWalletId;
@@ -209,9 +208,10 @@ export class SendAssetComponent implements OnInit, OnDestroy {
 
         if (asset && assetAddress) {
             // this.addressHoldingAmount = this.addressHoldings[asset][assetAddress] || 0;
-            this.addressHoldingAmount = this.addressHoldings[asset].breakdown.find((address) => {
+            const addressHolding = _.get(this.addressHoldings, `[${asset}].breakdown`, []).find((address) => {
                 return address.addr === assetAddress;
-            }).free;
+            });
+            this.addressHoldingAmount = _.get(addressHolding, 'free', 0);
 
             this.showAddressHolding = true;
             if (amount) {
@@ -323,12 +323,16 @@ export class SendAssetComponent implements OnInit, OnDestroy {
         const toAddress = _.get(response, '[1].data.toaddr', '');
         const amount = _.get(response, '[1].data.amount', '');
         const asset = `${_.get(response, '[1].data.namespace', '')}|${_.get(response, '[1].data.classid', '')}`;
-        const fromHolding = _.get(this.addressHoldings, `[${asset}][${fromAddress}]`, 0);
-        const toHolding = _.get(this.addressHoldings, `[${asset}][${toAddress}]`, 0);
+        const fromHolding = _.get(this.addressHoldings, `[${asset}].breakdown`, []).find((address) => {
+            return address.addr === fromAddress;
+        });
+        const toHolding = _.get(this.addressHoldings, `[${asset}].breakdown`, []).find((address) => {
+            return address.addr === toAddress;
+        });
 
         /* Update addressHoldings object */
-        if (fromHolding) this.addressHoldings[asset][fromAddress] = fromHolding - amount;
-        if (toHolding) this.addressHoldings[asset][toAddress] = toHolding + amount;
+        if (!_.isEmpty(fromHolding)) fromHolding.free -= amount;
+        if (!_.isEmpty(toHolding)) toHolding.free -= toHolding + amount;
 
         /* Refresh form validation */
         this.sendAssetForm.get('amount').updateValueAndValidity();
