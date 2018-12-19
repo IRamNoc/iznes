@@ -1,3 +1,7 @@
+#step-selection {
+    padding-bottom: 0;
+}
+
 .management-companies {
     $blue: #546E94;
     $grey: #E4E4E4;
@@ -9,7 +13,7 @@
         width: 19%;
         margin-left: 1.25%;
 
-        margin-bottom: 15px;
+        margin-bottom: 40px;
 
         &:first-child,
         &:nth-child(5n+1){
@@ -21,6 +25,7 @@
     .actions{
         font-size: 10px;
         line-height: 1.8;
+        position: absolute;
     }
     .link{
         text-align: right;

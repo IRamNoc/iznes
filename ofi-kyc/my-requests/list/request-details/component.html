@@ -2,10 +2,10 @@
     <table>
         <tr>
             <td class="text-right" style="line-height: 1.1em;">
-                <span *ngIf="requestDetailStatus === 'Approved'" class="status text-success">{{ 'ACCEPTED' | translate | uppercase }}</span>
-                <span *ngIf="requestDetailStatus === 'Rejected'" class="status text-red">{{ 'REJECTED' | translate | uppercase }}</span>
-                <span *ngIf="requestDetailStatus === 'WaitingForApproval'" class="status text-warning">{{ 'WAITING APPROVAL' | translate | uppercase }}</span>
-                <span *ngIf="requestDetailStatus === 'WaitingForMoreInfo'" class="status text-warning">{{ 'WAITING INFORMATION' | translate | uppercase }}</span>
+                <span *ngIf="requestDetailStatus === 'Approved'" class="status text-success">{{ 'Accepted' | translate }}</span>
+                <span *ngIf="requestDetailStatus === 'Rejected'" class="status text-red">{{ 'Rejected' | translate }}</span>
+                <span *ngIf="requestDetailStatus === 'WaitingForApproval'" class="status text-warning">{{ 'Waiting Approval' | translate }}</span>
+                <span *ngIf="requestDetailStatus === 'WaitingForMoreInfo'" class="status text-warning">{{ 'Waiting Information' | translate }}</span>
                 <br>
                 <small>{{ 'Last Update' | translate }}: {{lastUpdate}}</small>
             </td>
