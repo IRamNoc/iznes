@@ -1,10 +1,19 @@
 import { Component, OnInit, OnDestroy } from '@angular/core';
+import { Router, ActivatedRoute } from '@angular/router';
+import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { Subscription, Subject } from 'rxjs';
+import * as _ from 'lodash';
 import { takeUntil } from 'rxjs/operators';
 import { NgRedux, select } from '@angular-redux/store';
 import { findIndex } from 'lodash';
-import { ClearMyKycRequestedIds } from '@ofi/ofi-main/ofi-store/ofi-kyc/kyc-request/actions';
-import { ClearMyKycListRequested, SetMyKycOpenTab, ClearMyKycOpenTab, SetMyKycOpenTabActive } from '@ofi/ofi-main/ofi-store/ofi-kyc/kyc-list/actions';
+import { clearMyKycRequestedIds } from '@ofi/ofi-main/ofi-store/ofi-kyc/kyc-request/actions';
+import { OfiManagementCompanyService } from '@ofi/ofi-main/ofi-req-services/ofi-product/management-company/management-company.service';
+import {
+    ClearMyKycListRequested,
+    SetMyKycOpenTab,
+    ClearMyKycOpenTab,
+    SetMyKycOpenTabActive,
+} from '@ofi/ofi-main/ofi-store/ofi-kyc/kyc-list/actions';
 
 @Component({
     styleUrls: ['./my-requests.component.scss'],
@@ -13,39 +22,107 @@ import { ClearMyKycListRequested, SetMyKycOpenTab, ClearMyKycOpenTab, SetMyKycOp
 export class MyRequestsComponent implements OnInit, OnDestroy {
     @select(['ofi', 'ofiKyc', 'myKycList', 'kycList']) myKycList$;
     @select(['ofi', 'ofiKyc', 'myKycList', 'tabs']) openTabs$;
+    @select(['ofi', 'ofiProduct', 'ofiManagementCompany', 'investorManagementCompanyList']) invManagementCompanies$;
 
     isListDisplayed;
     kycList: any[];
+    invManagementCompanies: any[];
     subscriptions: Subscription[] = [];
     tabs: any[] = [];
 
-    private unsubscribe: Subject<any> = new Subject();
+    newRequestModal: boolean = false;
+    kycListSelect: any[] = [];
+    choices: FormGroup;
 
-    constructor(private ngRedux: NgRedux<any>) {
+    private unsubscribe: Subject<any> = new Subject();
+    private companyRequestedIds: number[];
+    private companyIds: number[];
+
+    constructor(
+        private ngRedux: NgRedux<any>,
+        private router: Router,
+        private fb: FormBuilder,
+        private route: ActivatedRoute,
+        private ofiManagementCompanyService: OfiManagementCompanyService,
+    ) {
     }
 
     ngOnInit() {
         this.initSubscriptions();
-        this.ngRedux.dispatch(ClearMyKycRequestedIds());
+        this.initForm();
+        this.getAssetManagementCompanies();
+
+        this.ngRedux.dispatch(clearMyKycRequestedIds());
         this.ngRedux.dispatch(ClearMyKycListRequested());
+    }
+
+    initForm() {
+        this.choices = this.fb.group({
+            choice: this.fb.control('duplicate'),
+            selected: this.fb.control(null, Validators.required),
+        });
     }
 
     initSubscriptions() {
         this.myKycList$
-            .pipe(
-                takeUntil(this.unsubscribe),
-            )
-            .subscribe((kycList) => {
-                this.kycList = kycList;
-            });
+        .pipe(
+            takeUntil(this.unsubscribe),
+        )
+        .subscribe((kycList) => {
+            this.kycList = kycList;
+
+            if(kycList != undefined) this.getRequestedManagementCompanyIds();
+
+            this.kycListSelect = kycList.filter(kyc => kyc.status && !kyc.alreadyCompleted).map(kyc => ({
+                id: kyc.kycID,
+                text: kyc.companyName,
+            }));
+
+        });
 
         this.openTabs$
-            .pipe(
-                takeUntil(this.unsubscribe),
-            )
-            .subscribe((openTabs) => {
-                this.tabs = openTabs;
-            });
+        .pipe(
+            takeUntil(this.unsubscribe),
+        )
+        .subscribe((openTabs) => {
+            this.tabs = openTabs;
+        });
+
+        this.invManagementCompanies$
+        .pipe(
+            takeUntil(this.unsubscribe),
+        )
+        .subscribe((companies) => {
+            this.invManagementCompanies = companies.investorManagementCompanyList;
+
+            if(companies != undefined) this.getInvManagementCompanyIds();
+        });            
+    }
+
+    private getInvManagementCompanyIds(): void {
+        this.companyIds = [];
+
+        this.invManagementCompanies.forEach((company) => {
+            this.companyIds.push(company.get('companyID'));
+        });
+    }
+
+    private getRequestedManagementCompanyIds(): void {
+        this.companyRequestedIds = [];
+
+        this.kycList.forEach((kyc) => {
+            this.companyRequestedIds.push(kyc.amManagementCompanyID);
+        });
+    }
+
+    hasCompaniesToRequest(): boolean {
+        if(_.isEqual(this.companyIds.sort(), this.companyRequestedIds.sort())) return false;
+
+        return true;
+    }
+
+    getAssetManagementCompanies() {
+        this.ofiManagementCompanyService.fetchInvestorManagementCompanyList(true);
     }
 
     selectedKyc(kyc) {
@@ -65,6 +142,39 @@ export class MyRequestsComponent implements OnInit, OnDestroy {
                 },
             );
             this.ngRedux.dispatch(action);
+        }
+    }
+
+    handleConfirm() {
+        const choice = this.choices.get('choice').value;
+        const selectedControl = this.choices.get('selected');
+
+        if (choice === 'duplicate' && !this.choices.valid) {
+            selectedControl.markAsTouched();
+            return;
+        }
+
+        const navigationExtras: any = {
+            relativeTo: this.route,
+        };
+
+        if (choice === 'duplicate') {
+            const kycToDuplicate = selectedControl.value[0].id;
+
+            navigationExtras.queryParams = {
+                duplicate: kycToDuplicate,
+            };
+        }
+
+        this.router.navigate(['../', 'new'], navigationExtras);
+    }
+
+    hasError() {
+        const choice = this.choices.get('choice').value;
+        const selectedControl = this.choices.get('selected');
+
+        if (choice === 'duplicate' && selectedControl.touched && !selectedControl.valid) {
+            return true;
         }
     }
 

@@ -25,6 +25,7 @@ import {
     GetKycDocumentRequestData,
     GetKycDocumentRequestBody,
     GetMyKycListRequestBody,
+    GetKycRequestBody,
     createKYCDraftMessageBody,
     createKYCDraftRequestData,
     DeleteKycRequestData,
@@ -32,6 +33,8 @@ import {
     GetClientReferentialMessageBody,
     AuditSearchRequestBody,
     AuditSearchRequestData,
+    DuplicateKycRequestData,
+    DuplicateKycMessageBody,
 } from './model';
 
 import { createMemberNodeRequest, createMemberNodeSagaRequest } from '@setl/utils/common';
@@ -398,6 +401,18 @@ export class OfiKycService {
         return createMemberNodeRequest(this.memberSocketService, messageBody);
     }
 
+    duplicate(requestData: DuplicateKycRequestData){
+        const messageBody: DuplicateKycMessageBody = {
+            RequestName: 'iznesduplicatekyc',
+            token: this.memberSocketService.token,
+            managementCompanies: requestData.managementCompanies,
+            kycToDuplicate: requestData.kycToDuplicate,
+            investorWalletID: requestData.investorWalletID,
+        };
+
+        return createMemberNodeRequest(this.memberSocketService, messageBody);
+    }
+
     /**
      * Accept an investor's KYC approval
      *
@@ -415,6 +430,8 @@ export class OfiKycService {
             amCompanyName: _.get(requestData, 'amCompanyName', ''),
             lang: _.get(requestData, 'lang', ''),
             invitedID: _.get(requestData, 'invitedID', ''),
+            changeAccepted: _.get(requestData, 'changeAccepted', null),
+            currentClassification: _.get(requestData, 'currentClassification', ''),
         };
 
         return createMemberNodeRequest(this.memberSocketService, messageBody);
@@ -495,6 +512,16 @@ export class OfiKycService {
                 });
             },
         );
+    }
+
+    getKyc(kycID) {
+        const messageBody: GetKycRequestBody = {
+            RequestName: 'iznesgetkyc',
+            token: this.memberSocketService.token,
+            kycID,
+        };
+
+        return createMemberNodeRequest(this.memberSocketService, messageBody);
     }
 
     fetchInvitationsByUserAmCompany() {

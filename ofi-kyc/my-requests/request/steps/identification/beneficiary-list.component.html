@@ -1,0 +1,83 @@
+<h4>{{'Stakeholders - Shareholders and Beneficiaries' | translate}}</h4>
+
+
+<div class="my-1">
+    <clr-alert [clrAlertClosable]="false" [clrAlertSizeSmall]="true">
+        <div class="alert-item">
+            <span class="alert-text">
+                {{"Please provide information about any legal entity or natural person, directly or indirectly, holding more than 10% of your company's shares or voting rights, as well as any legal entity or natural person exercising control or decision-making influence over the company (example: legal representatives)." | translate}}
+            </span>
+        </div>
+    </clr-alert>
+
+    <clr-alert [clrAlertSizeSmall]="true" [clrAlertType]="'alert-warning'" [clrAlertClosable]="false">
+        <div class="alert-item">
+            <strong class="alert-text">
+                {{'Be aware that the first stakeholder you need to add is a level 1 stakeholder, i.e. he has a direct holding of your company.' | translate}}
+            </strong>
+        </div>
+    </clr-alert>
+</div>
+
+<div class="my-1 right">
+    <button class="btn btn-primary" (click)="addStakeholder()">
+        <i class="fa fa-plus"></i>
+        {{'Add Stakeholder' | translate}}
+    </button>
+</div>
+
+<table class="table">
+    <thead>
+    <tr>
+        <th>{{'Type' | translate}}</th>
+        <th>{{'Name' | translate}}</th>
+        <th>{{'Parent' | translate}}</th>
+        <th>{{'Country of tax residence' | translate}}</th>
+        <th>{{'Nationality' | translate}}</th>
+        <th>{{'Holding percentage' | translate}}</th>
+        <th>{{'Holding type' | translate}}</th>
+        <th>{{'Voting percentage' | translate}}</th>
+    </tr>
+    </thead>
+    <tbody>
+    <tr beneficiary-line *ngFor="let stakeholder of listStakeholders; index as i" [stakeholder]="stakeholder" (action)="handleAction($event, i)" (click)="viewStakeholder(i)" [parent]="getParent(i)"></tr>
+    <tr class="empty" *ngIf="!stakeholders.controls.length">
+        <td colspan="8">
+            {{'No data for the moment, please add at least one stakeholder.' | translate}}
+        </td>
+    </tr>
+    </tbody>
+</table>
+
+<p class="txtRed" *ngIf="hasError('length')">
+    {{'Please add at least one stakeholder' | translate}}
+</p>
+<p class="txtRed" *ngIf="hasError('invalid')">
+    {{'Please make sure all stakeholder information has been entered' | translate}}
+</p>
+
+<clr-modal [(clrModalOpen)]="openModal" [clrModalSize]="'xl'" *ngIf="mode && selectedStakeholder">
+
+    <h3 class="modal-title fa">
+        <i class="fa" [ngClass]="getIcon()"></i>
+        {{getTitle()}}
+    </h3>
+
+    <div class="modal-body" beneficiary [form]="selectedStakeholder" [index]="selectedStakeholderIndex" [parents]="parents" [disabled]="mode === 'view' ? true : null" (refresh)="askRefresh()">
+    </div>
+
+    <div class="modal-footer">
+        <div *ngIf="mode === 'add'">
+            <button type="button" class="btn btn-outline mr-1" (click)="closeModal(true)">{{'Cancel' | translate}}</button>
+            <button type="button" class="btn btn-success" (click)="closeModal()" [disabled]="!canDoUpdate()">{{'Validate' | translate}}</button>
+        </div>
+        <div *ngIf="mode === 'edit'">
+            <button type="button" class="btn btn-outline mr-1" (click)="closeModal(true)">{{'Cancel' | translate}}</button>
+            <button type="button" class="btn btn-success" (click)="closeModal()" [disabled]="!canDoUpdate()">{{'Update' | translate}}</button>
+        </div>
+        <div *ngIf="mode === 'view'">
+            <button type="button" class="btn btn-outline mr-1" (click)="closeModal(true)">{{'Close' | translate}}</button>
+        </div>
+    </div>
+
+</clr-modal>

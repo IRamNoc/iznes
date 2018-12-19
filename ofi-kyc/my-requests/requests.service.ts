@@ -1,7 +1,5 @@
 import { Injectable } from '@angular/core';
 import * as _ from 'lodash';
-import { ToasterService } from 'angular2-toaster';
-import { MultilingualService } from '@setl/multilingual';
 import { MemberSocketService } from '@setl/websocket-service';
 import { FileService } from '@setl/core-req-services/file/file.service';
 import { OfiKycService } from '@ofi/ofi-main/ofi-req-services/ofi-kyc/service';
@@ -26,32 +24,40 @@ export class RequestsService {
         private memberSocketService: MemberSocketService,
         private fileService: FileService,
         private kycService: OfiKycService,
-        private toasterService: ToasterService,
-        private translateService: MultilingualService,
     ) {
     }
 
-    extractManagementCompanyData(companies, kycList) {
+    extractManagementCompanyData(companies, kycList, requestedKycs) {
         if (_.isEmpty(companies)) {
             return [];
         }
+
         if (!_.isEmpty(kycList)) {
-            companies = this.filterCompanies(companies, kycList);
+            companies = this.filterCompanies(companies, kycList, requestedKycs);
         }
 
         return _.chain(companies)
         .map(company => ({
             id: company.companyID,
             text: company.companyName,
+            websiteUrl: company.websiteUrl,
+            image: company.logoHash,
+            registered: false,
         }))
         .values()
         .value();
     }
 
-    filterCompanies(companies, kycList) {
+    filterCompanies(companies, kycList, requestedKycs) {
         kycList = _.keyBy(kycList, 'amManagementCompanyID');
+        requestedKycs = _.keyBy(requestedKycs, 'amcID');
 
-        return _.filter(companies, company => !kycList[company.companyID]);
+        return _.filter(companies, (company) => {
+            const isInKycList = kycList[company.companyID];
+            const isInRequestedList = requestedKycs[company.companyID];
+
+            return !isInKycList || isInRequestedList;
+        });
     }
 
     shapeServerData(data) {
@@ -61,9 +67,14 @@ export class RequestsService {
             }
 
             if (selectControls.indexOf(key) !== -1) {
-                const split = value.split(' ');
+                let valueArray;
+                if (typeof value === 'string') {
+                    valueArray = value.split(' ');
+                } else {
+                    valueArray = _.castArray(value);
+                }
 
-                return split.map((value) => {
+                return valueArray.map((value) => {
                     return { id: value };
                 });
             }
@@ -81,15 +92,7 @@ export class RequestsService {
     }
 
     deleteKyc(kycID) {
-        return this.kycService.deleteKycRequest({
-            kycID,
-        }).then(
-            (response) => {
-                this.toasterService.pop('success', this.translateService.translate('The request has been successfully deleted'));
-            },
-        ).catch(() => {
-            this.toasterService.pop('error', this.translateService.translate('Couldn\'t delete KYC request, please try again later.'));
-        });
+        return this.kycService.deleteKycRequest({ kycID });
     }
 
     getKycGeneral(kycID) {
@@ -253,18 +256,17 @@ export class RequestsService {
             files: _.filter(event.files, (file) => {
                 return file.status !== 'uploaded-file';
             }),
+            secure: true,
+            path: '/iznes/kyc-inv-docs',
         });
 
         return new Promise((resolve, reject) => {
-            const saga = SagaHelper.runAsyncCallback(
-                asyncTaskPipe,
-                (response) => {
-                    const file = _.get(response, [1, 'Data', 0, 0]);
-                    resolve(file);
-                },
-                () => {
-                    reject();
-                });
+            const saga = SagaHelper.runAsyncCallback(asyncTaskPipe, (response) => {
+                const file = _.get(response, [1, 'Data', 0, 0]);
+                resolve(file);
+            },                                       () => {
+                reject();
+            });
 
             this.ngRedux.dispatch(saga);
         });

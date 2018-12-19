@@ -5,7 +5,7 @@ import { AmKycListReducer, AmKycListState } from './ofi-am-kyc-list';
 import { investorInvitationState, investorInvitationReducer } from './invitationsByUserAmCompany';
 import { kycStatusAuditTrailState, kycStatusAuditTrailReducer } from './status-audit-trail';
 import { MyKycListState, MyKycListReducer } from './kyc-list';
-import { MyKycRequestedState, MyKycRequestedReducer, MyKycSetRequestedKycs } from './kyc-request';
+import { MyKycRequestedState, myKycRequestedReducer, setMyKycRequestedKycs } from './kyc-request';
 import { kycInformationAuditTrailState, kycInformationAuditTrailReducer } from './information-audit-trail';
 import { OfiInvMyDocumentsListReducer, OfiInvMyDocumentsState } from './inv-my-documents';
 import { OfiClientReferentialState, OfiClientReferentialReducer } from "./client-referential";
@@ -82,7 +82,9 @@ export {
 } from './inv-my-documents';
 
 export {
-    MyKycSetRequestedKycs
+    setMyKycRequestedKycs,
+    setMyKycRequestedPersist,
+    clearMyKycRequestedPersist,
 } from './kyc-request';
 
 export interface KycState {
@@ -90,7 +92,7 @@ export interface KycState {
     amKycList: AmKycListState;
     investorInvitations: investorInvitationState;
     myKycList: MyKycListState;
-    myKycRequested: MyKycRequestedState
+    myKycRequested: MyKycRequestedState;
     kycDetails: KycDetailsState;
     statusAuditTrail: kycStatusAuditTrailState;
     informationAuditTrail: kycInformationAuditTrailState;
@@ -104,7 +106,7 @@ export const KycReducer: Reducer<KycState> = combineReducers<KycState>({
     amKycList: AmKycListReducer,
     investorInvitations: investorInvitationReducer,
     myKycList: MyKycListReducer,
-    myKycRequested: MyKycRequestedReducer,
+    myKycRequested: myKycRequestedReducer,
     kycDetails: KycDetailsReducer,
     statusAuditTrail: kycStatusAuditTrailReducer,
     informationAuditTrail: kycInformationAuditTrailReducer,

@@ -101,7 +101,7 @@ export class InvestmentConstraintComponent implements OnInit, OnDestroy {
         const constraintsControl = this.form.get('constraints');
         const numberOfControls = constraintsControl.length;
 
-        for (let i = numberOfControls; i >= 0; i--) {
+        for (let i = numberOfControls; i >= 0; i -= 1) {
             constraintsControl.removeAt(i);
         }
         constraints.forEach((constraint) => {

@@ -2,7 +2,7 @@ import { Injectable } from '@angular/core';
 import { select, NgRedux } from '@angular-redux/store';
 import { FormGroup, FormBuilder, Validators } from '@angular/forms';
 import { MultilingualService } from '@setl/multilingual';
-
+import { ToasterService } from 'angular2-toaster';
 import {
     map,
     get as getValue,
@@ -18,10 +18,9 @@ import {
     isNil,
     every,
 } from 'lodash';
-
 import { CustomValidators } from '@setl/utils/helper';
 import { OfiKycService } from '@ofi/ofi-main/ofi-req-services/ofi-kyc/service';
-import { MyKycSetRequestedKycs } from '@ofi/ofi-main/ofi-store/ofi-kyc';
+import { setMyKycRequestedKycs } from '@ofi/ofi-main/ofi-store/ofi-kyc';
 import { RequestsService } from '../requests.service';
 
 import {
@@ -97,6 +96,7 @@ export class NewRequestService {
         private requestsService: RequestsService,
         private ngRedux: NgRedux<any>,
         private ofiKycService: OfiKycService,
+        private toasterService: ToasterService
     ) {
         this.subscriptions.push(this.productionOb.subscribe((production) => {
             this.isProduction = production;
@@ -209,7 +209,7 @@ export class NewRequestService {
                 Validators.required,
                 Validators.pattern(/^\w{18}\d{2}$|n\/a/i),
             ]],
-            otherIdentificationNumber: ['', Validators.maxLength(255)],
+            otherIdentificationNumber: [null, this.getLengthValidator(255)],
             otherIdentificationNumberText: [{ value: '', disabled: true }, Validators.required],
             registeredCompanyAddressLine1: ['', this.getLengthValidator(255)],
             registeredCompanyAddressLine2: ['', Validators.maxLength(255)],
@@ -293,24 +293,22 @@ export class NewRequestService {
                 Validators.required,
                 Validators.min(0),
             ]],
-            beneficiaries: fb.array([this.createBeneficiary()]),
-            capitalNature: fb.group(
-                {
-                    equityAndReserves: '',
-                    generalAssets: '',
-                    premiumsAndContributions: '',
-                    saleGoodsServices: '',
-                    exceptionalEvents: '',
-                    treasury: '',
-                    others: '',
-                    othersText: [{ value: '', disabled: true }, Validators.required],
+
+            beneficiaries: fb.array([], Validators.required),
+            capitalNature: fb.group({
+                equityAndReserves: '',
+                generalAssets: '',
+                premiumsAndContributions: '',
+                saleGoodsServices: '',
+                exceptionalEvents: '',
+                treasury: '',
+                others: '',
+                othersText: [{ value: '', disabled: true }, Validators.required],
+            },                      {
+                validator: (formGroup) => {
+                    return CustomValidators.multipleCheckboxValidator(formGroup);
                 },
-                {
-                    validator: (formGroup) => {
-                        return CustomValidators.multipleCheckboxValidator(formGroup);
-                    },
-                },
-            ),
+            }),
             geographicalOrigin1: ['', Validators.required],
             geographicalOrigin2: [
                 { value: '', disabled: true },
@@ -326,11 +324,11 @@ export class NewRequestService {
 
         const classificationInformation = fb.group({
             kycID: '',
-            investorStatus: '',
-            pro: fb.group({
-                excludeProducts: ['', Validators.maxLength(255)],
-                changeProfessionalStatus: 0,
-            }),
+            investorStatus: 0,
+            optFor: 0,
+            optForValues: fb.array([]),
+            excludeProducts: ['', Validators.maxLength(255)],
+
             nonPro: fb.group({
                 firstName: ['', this.getLengthValidator()],
                 lastName: ['', this.getLengthValidator()],
@@ -358,6 +356,27 @@ export class NewRequestService {
             bankingInformation,
             classificationInformation,
         });
+    }
+
+    createOptFor(id) {
+        const fb = this.formBuilder;
+
+        return fb.group({
+            id,
+            opted: 0,
+        });
+    }
+
+    createOptFors(amcs) {
+        const optfors = [];
+        const length = amcs.length || 1;
+
+        for (let i = 0; i < length; i += 1) {
+            const id = amcs[i];
+            optfors.push(this.createOptFor(id));
+        }
+
+        return optfors;
     }
 
     createRiskProfileFormGroup() {
@@ -391,23 +410,21 @@ export class NewRequestService {
 
         return fb.group({
             common: fb.group({
-                kyclistshareholdersdoc: this.createDocumentFormGroup('kyclistshareholdersdoc', true),
-                kyclistdirectorsdoc: this.createDocumentFormGroup('kyclistdirectorsdoc', !this.isProduction),
-                kycbeneficialownersdoc: this.createDocumentFormGroup('kycbeneficialownersdoc', !this.isProduction),
-                kyclistauthoriseddoc: this.createDocumentFormGroup('kyclistauthoriseddoc', !this.isProduction),
-                kyctaxcertificationdoc: this.createDocumentFormGroup('kyctaxcertificationdoc', !this.isProduction),
-                kycw8benefatcadoc: this.createDocumentFormGroup('kycw8benefatcadoc', true),
-            }),
-            pro: fb.group({
-                kycproofofapprovaldoc: this.createDocumentFormGroup('kycproofofapprovaldoc', true),
-                kycisincodedoc: this.createDocumentFormGroup('kycisincodedoc', true),
-                kycwolfsbergdoc: this.createDocumentFormGroup('kycwolfsbergdoc', !this.isProduction),
-            }),
-            other: fb.group({
                 kycstatuscertifieddoc: this.createDocumentFormGroup('kycstatuscertifieddoc', !this.isProduction),
                 kyckbisdoc: this.createDocumentFormGroup('kyckbisdoc', !this.isProduction),
                 kycannualreportdoc: this.createDocumentFormGroup('kycannualreportdoc', !this.isProduction),
                 kycidorpassportdoc: this.createDocumentFormGroup('kycidorpassportdoc', !this.isProduction),
+                kycwolfsbergdoc: this.createDocumentFormGroup('kycwolfsbergdoc', !this.isProduction),
+                kyctaxcertificationdoc: this.createDocumentFormGroup('kyctaxcertificationdoc', !this.isProduction),
+                kycw8benefatcadoc: this.createDocumentFormGroup('kycw8benefatcadoc', !this.isProduction),
+            }),
+            listed: fb.group({
+                kycisincodedoc: this.createDocumentFormGroup('kycisincodedoc', !this.isProduction),
+                kycevidencefloatable: this.createDocumentFormGroup('kycevidencefloatable', !this.isProduction),
+            }),
+            regulated: fb.group({
+                kycproofofapprovaldoc: this.createDocumentFormGroup('kycproofofapprovaldoc', !this.isProduction),
+                kycproofregulationdoc: this.createDocumentFormGroup('kycproofregulationdoc', !this.isProduction),
             }),
         });
     }
@@ -469,7 +486,7 @@ export class NewRequestService {
         const natures = [];
         const length = amcs.length || 1;
 
-        for (let i = 0; i < length; i++) {
+        for (let i = 0; i < length; i += 1) {
             const id = amcs[i];
             natures.push(this.createInvestmentNature(id));
         }
@@ -527,11 +544,9 @@ export class NewRequestService {
                             const riskAcceptanceLevel4 = level4.value;
 
                             const total = riskAcceptanceLevel1 + riskAcceptanceLevel2 + riskAcceptanceLevel3 + riskAcceptanceLevel4;
-
                             const valuesFilled = every([riskAcceptanceLevel1, riskAcceptanceLevel2, riskAcceptanceLevel3, riskAcceptanceLevel4], (risk) => {
                                 return !isNil(risk) && risk !== '';
                             });
-
                             const required = level1.touched && level2.touched && level3.touched && level4.touched && !valuesFilled;
 
                             if (total === 100) {
@@ -554,7 +569,7 @@ export class NewRequestService {
         const objectives = [];
         const length = amcs.length || 1;
 
-        for (let i = 0; i < length; i++) {
+        for (let i = 0; i < length; i += 1) {
             const id = amcs[i];
             objectives.push(this.createInvestmentObjective(id));
         }
@@ -581,7 +596,7 @@ export class NewRequestService {
         const constraints = [];
         const length = amcs.length || 1;
 
-        for (let i = 0; i < length; i++) {
+        for (let i = 0; i < length; i += 1) {
             const id = amcs[i];
             constraints.push(this.createConstraint(id));
         }
@@ -596,20 +611,32 @@ export class NewRequestService {
             beneficiaryType: ['', Validators.required],
 
             common: this.formBuilder.group({
+                parent: [-1, Validators.required],
                 address: ['', Validators.required],
                 address2: '',
                 zipCode: ['', this.getLengthValidator(10)],
                 city: ['', this.getLengthValidator(255)],
                 country: ['', Validators.required],
-                holdingPercentage: [
-                    '',
-                    [
+                countryTaxResidence: ['', Validators.required],
+                holdingPercentage: ['', [
                         Validators.required,
                         Validators.min(0),
                         Validators.max(100),
+                        Validators.pattern(/^\d+$/i)
                     ],
                 ],
                 holdingType: ['', Validators.required],
+                nationality: ['', Validators.required],
+
+                votingPercentage: ['', [
+                        Validators.required,
+                        Validators.min(0),
+                        Validators.max(100),
+                        Validators.pattern(/^\d+$/i)
+                    ],
+                ],
+                exerciseControl: [0, Validators.required],
+                document: this.createDocumentFormGroup('kycbeneficiarydoc', !this.isProduction),
             }),
             legalPerson: this.formBuilder.group({
                 legalName: ['', Validators.required],
@@ -624,11 +651,10 @@ export class NewRequestService {
             naturalPerson: this.formBuilder.group({
                 firstName: ['', this.getLengthValidator()],
                 lastName: ['', this.getLengthValidator()],
-                nationality: ['', Validators.required],
                 dateOfBirth: ['', Validators.required],
                 cityOfBirth: ['', this.getLengthValidator()],
                 countryOfBirth: ['', Validators.required],
-                document: this.createDocumentFormGroup('kycbeneficiarydoc', !this.isProduction),
+                isLegalRepresentative: [0, Validators.required],
             }),
             delete: 0,
         });
@@ -645,6 +671,14 @@ export class NewRequestService {
             zipCode: ['', this.getLengthValidator(10)],
             city: ['', this.getLengthValidator()],
             country: ['', Validators.required],
+        });
+    }
+
+    duplicate(selectedCompanies, kycToDuplicate, connectedWallet) {
+        return this.ofiKycService.duplicate({
+            managementCompanies: selectedCompanies,
+            kycToDuplicate,
+            investorWalletID: connectedWallet,
         });
     }
 
@@ -686,7 +720,7 @@ export class NewRequestService {
     }
 
     storeCurrentKycs(ids) {
-        const requestedKycs = MyKycSetRequestedKycs(ids);
+        const requestedKycs = setMyKycRequestedKycs(ids);
         this.ngRedux.dispatch(requestedKycs);
     }
 
@@ -716,6 +750,11 @@ export class NewRequestService {
             kycStatus: 0,
             alreadyCompleted: choice.registered ? 1 : 0,
         });
+    }
+
+    errorPop() {
+        const translation = this.multilingualService.translate('The server returned an error. Please try again later.');
+        this.toasterService.pop('error', translation);
     }
 
     /**

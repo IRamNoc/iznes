@@ -30,7 +30,7 @@ import { KycStatus as statusList } from '@ofi/ofi-main/ofi-kyc/my-requests/reque
 export class MyRequestsDetailsComponent implements OnInit, AfterViewInit, OnDestroy {
     @Input() kycID: number;
 
-    kycList: Array<any>;
+    kycList: any[];
     statusList;
 
     disabledForm: FormGroup;
@@ -44,7 +44,7 @@ export class MyRequestsDetailsComponent implements OnInit, AfterViewInit, OnDest
 
     isKYCFull = true;
 
-    private subscriptions: Array<any> = [];
+    private subscriptions: any[] = [];
     unSubscribe: Subject<any> = new Subject();
 
     @select(['ofi', 'ofiKyc', 'myKycList', 'kycList']) myKycList$;
@@ -75,8 +75,7 @@ export class MyRequestsDetailsComponent implements OnInit, AfterViewInit, OnDest
                 document.getElementById('blocStatus').style.opacity = '1';
                 document.getElementById('blocStatus').style.marginTop = '0';
             },
-            200,
-        );
+            200);
     }
 
     initSubscriptions() {
@@ -89,7 +88,7 @@ export class MyRequestsDetailsComponent implements OnInit, AfterViewInit, OnDest
             const kyc = this.kycList.find(item => item.kycID === this.kycID);
             if (kyc && typeof kyc !== 'undefined' && kyc !== undefined && kyc !== null) {
                 this.requestDetailStatus = this.statusList[kyc.status];
-                this.isKYCFull = (kyc.alreadyCompleted === 1 || kyc.status === 2) ? false : true;
+                this.isKYCFull = (!(kyc.alreadyCompleted === 1 || kyc.status === 2));
                 this.companyName = kyc.companyName;
                 this.disabledForm.patchValue({
                     firstName: kyc.firstName,

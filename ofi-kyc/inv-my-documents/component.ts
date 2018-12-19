@@ -8,6 +8,7 @@ import {
     OnInit,
     AfterViewInit,
 } from '@angular/core';
+import { trigger, state, style, animate, transition } from '@angular/animations';
 /* Redux */
 import { NgRedux, select } from '@angular-redux/store';
 import { fromJS } from 'immutable';
@@ -25,18 +26,51 @@ import { ofiClearRequestedMyDocuments } from '@ofi/ofi-main/ofi-store/ofi-kyc/in
 @Component({
     styleUrls: ['./component.scss'],
     templateUrl: './component.html',
+    animations: [
+        trigger('fade', [
+
+            state('in', style({ opacity: 1 })),
+
+            transition(':enter', [
+                style({ opacity: 0 }),
+                animate(600),
+            ]),
+
+            transition(
+                ':leave',
+                animate(
+                    600,
+                    style(
+                        { opacity: 0 },
+                    ),
+                ),
+            ),
+        ]),
+    ],
 })
 export class OfiInvMyDocumentsComponent implements OnDestroy, OnInit, AfterViewInit {
-    public kycEnums;
-
     public uploadMyDocumentsForm: FormGroup;
     public connectedWalletId: number;
     public subscriptions: Array<any> = [];
 
     allUploadsFiles: any = [];
-    nbUploads = 13;
+    nbUploads = 11;
     filesFromRedux = [];
     kycDocPath: string = '/iznes/kyc-inv-docs';
+    kycEnums = [
+        'kycstatuscertifieddoc',
+        'kyckbisdoc',
+        'kycannualreportdoc',
+        'kycidorpassportdoc',
+        'kycwolfsbergdoc',
+        'kyctaxcertificationdoc',
+        'kycw8benefatcadoc',
+        'kycisincodedoc',
+        'kycevidencefloatable',
+        'kycproofofapprovaldoc',
+        'kycproofregulationdoc',
+    ];
+    changed: any = {};
 
     unSubscribe: Subject<any> = new Subject();
 
@@ -53,26 +87,24 @@ export class OfiInvMyDocumentsComponent implements OnDestroy, OnInit, AfterViewI
         public translate: MultilingualService,
         @Inject('kycEnums') kycEnums,
     ) {
-        this.kycEnums = kycEnums.documents;
-
-        for (const k in this.kycEnums) {
-            if (this.kycEnums.hasOwnProperty(this.kycEnums[k])) {
-                this.allUploadsFiles[this.kycEnums[k]] = {
+        this.kycEnums.forEach((doc) => {
+            this.allUploadsFiles[doc] = {
+                fileID: 0,
+                hash: '',
+                name: '',
+                type: doc,
+                common: 0,
+                isDefault: 1,
+                preset: {
                     fileID: 0,
                     hash: '',
                     name: '',
-                    type: this.kycEnums[k],
-                    common: 0,
-                    isDefault: 1,
-                    preset: {
-                        fileID: 0,
-                        hash: '',
-                        name: '',
-                    },
-                    saved: false,
-                };
-            }
-        }
+                },
+                saved: false,
+            };
+
+            this.changed[doc] = false;
+        });
 
         this.uploadMyDocumentsForm = new FormGroup({
             shareAll: new FormControl(false),
@@ -98,10 +130,6 @@ export class OfiInvMyDocumentsComponent implements OnDestroy, OnInit, AfterViewI
             shareUpload10: new FormControl(false),
             upload11: new FormControl([]),
             shareUpload11: new FormControl(false),
-            upload12: new FormControl([]),
-            shareUpload12: new FormControl(false),
-            upload13: new FormControl([]),
-            shareUpload13: new FormControl(false),
         });
     }
 
@@ -131,7 +159,7 @@ export class OfiInvMyDocumentsComponent implements OnDestroy, OnInit, AfterViewI
                 takeUntil(this.unSubscribe),
             )
             .subscribe(() => {
-                this.deleteDocument(this.allUploadsFiles[this.kycEnums.kycproofofapprovaldoc].fileID);
+                this.deleteDocument(this.allUploadsFiles['kycstatuscertifieddoc'].fileID);
             });
 
         this.uploadMyDocumentsForm.controls.upload2.valueChanges
@@ -139,7 +167,7 @@ export class OfiInvMyDocumentsComponent implements OnDestroy, OnInit, AfterViewI
                 takeUntil(this.unSubscribe),
             )
             .subscribe(() => {
-                this.deleteDocument(this.allUploadsFiles[this.kycEnums.kycisincodedoc].fileID);
+                this.deleteDocument(this.allUploadsFiles['kyckbisdoc'].fileID);
             });
 
         this.uploadMyDocumentsForm.controls.upload3.valueChanges
@@ -147,7 +175,7 @@ export class OfiInvMyDocumentsComponent implements OnDestroy, OnInit, AfterViewI
                 takeUntil(this.unSubscribe),
             )
             .subscribe(() => {
-                this.deleteDocument(this.allUploadsFiles[this.kycEnums.kycwolfsbergdoc].fileID);
+                this.deleteDocument(this.allUploadsFiles['kycannualreportdoc'].fileID);
             });
 
         this.uploadMyDocumentsForm.controls.upload4.valueChanges
@@ -155,7 +183,7 @@ export class OfiInvMyDocumentsComponent implements OnDestroy, OnInit, AfterViewI
                 takeUntil(this.unSubscribe),
             )
             .subscribe(() => {
-                this.deleteDocument(this.allUploadsFiles[this.kycEnums.kycstatuscertifieddoc].fileID);
+                this.deleteDocument(this.allUploadsFiles['kycidorpassportdoc'].fileID);
             });
 
         this.uploadMyDocumentsForm.controls.upload5.valueChanges
@@ -163,7 +191,7 @@ export class OfiInvMyDocumentsComponent implements OnDestroy, OnInit, AfterViewI
                 takeUntil(this.unSubscribe),
             )
             .subscribe(() => {
-                this.deleteDocument(this.allUploadsFiles[this.kycEnums.kyckbisdoc].fileID);
+                this.deleteDocument(this.allUploadsFiles['kycwolfsbergdoc'].fileID);
             });
 
         this.uploadMyDocumentsForm.controls.upload6.valueChanges
@@ -171,7 +199,7 @@ export class OfiInvMyDocumentsComponent implements OnDestroy, OnInit, AfterViewI
                 takeUntil(this.unSubscribe),
             )
             .subscribe(() => {
-                this.deleteDocument(this.allUploadsFiles[this.kycEnums.kycannualreportdoc].fileID);
+                this.deleteDocument(this.allUploadsFiles['kyctaxcertificationdoc'].fileID);
             });
 
         this.uploadMyDocumentsForm.controls.upload7.valueChanges
@@ -179,7 +207,7 @@ export class OfiInvMyDocumentsComponent implements OnDestroy, OnInit, AfterViewI
                 takeUntil(this.unSubscribe),
             )
             .subscribe(() => {
-                this.deleteDocument(this.allUploadsFiles[this.kycEnums.kycidorpassportdoc].fileID);
+                this.deleteDocument(this.allUploadsFiles['kycw8benefatcadoc'].fileID);
             });
 
         this.uploadMyDocumentsForm.controls.upload8.valueChanges
@@ -187,7 +215,7 @@ export class OfiInvMyDocumentsComponent implements OnDestroy, OnInit, AfterViewI
                 takeUntil(this.unSubscribe),
             )
             .subscribe(() => {
-                this.deleteDocument(this.allUploadsFiles[this.kycEnums.kyclistshareholdersdoc].fileID);
+                this.deleteDocument(this.allUploadsFiles['kycisincodedoc'].fileID);
             });
 
         this.uploadMyDocumentsForm.controls.upload9.valueChanges
@@ -195,7 +223,7 @@ export class OfiInvMyDocumentsComponent implements OnDestroy, OnInit, AfterViewI
                 takeUntil(this.unSubscribe),
             )
             .subscribe(() => {
-                this.deleteDocument(this.allUploadsFiles[this.kycEnums.kyclistdirectorsdoc].fileID);
+                this.deleteDocument(this.allUploadsFiles['kycevidencefloatable'].fileID);
             });
 
         this.uploadMyDocumentsForm.controls.upload10.valueChanges
@@ -203,7 +231,7 @@ export class OfiInvMyDocumentsComponent implements OnDestroy, OnInit, AfterViewI
                 takeUntil(this.unSubscribe),
             )
             .subscribe(() => {
-                this.deleteDocument(this.allUploadsFiles[this.kycEnums.kyclistauthoriseddoc].fileID);
+                this.deleteDocument(this.allUploadsFiles['kycproofofapprovaldoc'].fileID);
             });
 
         this.uploadMyDocumentsForm.controls.upload11.valueChanges
@@ -211,23 +239,7 @@ export class OfiInvMyDocumentsComponent implements OnDestroy, OnInit, AfterViewI
                 takeUntil(this.unSubscribe),
             )
             .subscribe(() => {
-                this.deleteDocument(this.allUploadsFiles[this.kycEnums.kycbeneficialownersdoc].fileID);
-            });
-
-        this.uploadMyDocumentsForm.controls.upload12.valueChanges
-            .pipe(
-                takeUntil(this.unSubscribe),
-            )
-            .subscribe(() => {
-                this.deleteDocument(this.allUploadsFiles[this.kycEnums.kyctaxcertificationdoc].fileID);
-            });
-
-        this.uploadMyDocumentsForm.controls.upload13.valueChanges
-            .pipe(
-                takeUntil(this.unSubscribe),
-            )
-            .subscribe(() => {
-                this.deleteDocument(this.allUploadsFiles[this.kycEnums.kycw8benefatcadoc].fileID);
+                this.deleteDocument(this.allUploadsFiles['kycproofregulationdoc'].fileID);
             });
     }
 
@@ -249,6 +261,24 @@ export class OfiInvMyDocumentsComponent implements OnDestroy, OnInit, AfterViewI
                 walletID: this.connectedWalletId,
                 kycID: 0,
             });
+        }
+    }
+
+    markAsChanged(doc) {
+        if (this.changed[doc] !== undefined) {
+            const timer = setTimeout(
+                () => {
+                    this.changed[doc] = false;
+                    this.changeDetectorRef.detectChanges();
+                },
+                2000,
+            );
+
+            if (this.changed[doc]) {
+                clearTimeout(this.changed[doc]);
+            }
+
+            this.changed[doc] = timer;
         }
     }
 
@@ -360,7 +390,7 @@ export class OfiInvMyDocumentsComponent implements OnDestroy, OnInit, AfterViewI
                 return file.status !== 'uploaded-file';
             }),
             secure: true,
-            path: '/iznes/kyc-inv-docs',
+            path: this.kycDocPath,
         });
 
         this.ngRedux.dispatch(SagaHelper.runAsyncCallback(
@@ -412,6 +442,8 @@ export class OfiInvMyDocumentsComponent implements OnDestroy, OnInit, AfterViewI
                         this.saveFileInDatabase(fileRelated);
                     }
 
+                    this.markAsChanged(fileRelated);
+
                     changeDetectorRef.markForCheck();
                     changeDetectorRef.detectChanges();
                 }
@@ -450,6 +482,7 @@ export class OfiInvMyDocumentsComponent implements OnDestroy, OnInit, AfterViewI
             asyncTaskPipe,
             (data) => {
                 // success
+                this.markAsChanged(fileRelated);
                 this.ngRedux.dispatch(ofiClearRequestedMyDocuments());
             },
             (data) => {
@@ -459,6 +492,7 @@ export class OfiInvMyDocumentsComponent implements OnDestroy, OnInit, AfterViewI
     }
 
     deleteDocument(documentID) {
+        console.log('deleting document');
         this.ofiKycService.deleteKycDocument(documentID)
             .then(() => {
                 OfiKycService.defaultRequestGetInvKycDocuments(this.ofiKycService, this.ngRedux, {

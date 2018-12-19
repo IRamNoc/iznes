@@ -1,0 +1,15 @@
+:host{
+    overflow-y: visible;
+
+    &.open{
+        overflow-y: auto;
+    }
+}
+
+.disabled{
+    .radio-inline:hover{
+        & > *{
+            cursor: default !important;
+        }
+    }
+}
