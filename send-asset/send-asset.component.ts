@@ -71,11 +71,7 @@ export class SendAssetComponent implements OnInit, OnDestroy {
                     }
                     this.allInstrumentList = walletHelper.walletInstrumentListToSelectItem(positiveHoldings);
                     this.changeDetectorRef.markForCheck();
-
-                    /* Set the addressHoldings object for validation */
-                    // this.setAddressHoldings(holdings, holding);
                 }
-
                 this.addressHoldings = holdings[this.connectedWalletId];
             }
             /* Display alert if there are no instruments in the list */
@@ -207,7 +203,6 @@ export class SendAssetComponent implements OnInit, OnDestroy {
         if (_.isObject(amountErrors)) delete amountErrors.insufficientFunds;
 
         if (asset && assetAddress) {
-            // this.addressHoldingAmount = this.addressHoldings[asset][assetAddress] || 0;
             const addressHolding = _.get(this.addressHoldings, `[${asset}].breakdown`, []).find((address) => {
                 return address.addr === assetAddress;
             });
