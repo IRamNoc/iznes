@@ -101,8 +101,7 @@ export class BeneficiaryComponent implements OnInit, OnDestroy {
                 } else {
                     this.beneficiaryService.setStakeholderDirectHolding(stakeholder);
                 }
-            })
-        ;
+            });
     }
 
     formCheckNationalIdNumber(value) {
@@ -128,7 +127,7 @@ export class BeneficiaryComponent implements OnInit, OnDestroy {
                 kycDocumentID: '',
                 name: file.fileTitle,
                 type: formControl.get('common').value,
-            }
+            };
 
             formControl.setValue(newFormGroup);
         });

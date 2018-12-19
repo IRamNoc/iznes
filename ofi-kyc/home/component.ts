@@ -157,7 +157,7 @@ export class OfiKycHomeComponent implements AfterViewInit, OnDestroy {
                 this.toasterService.pop('success', this.translate.translate('Your form has been saved successfully!'));
             },
             () => {
-                this.toasterService.pop('error', this.translate.translate('Failed to save your informations.'));
+                this.toasterService.pop('error', this.translate.translate('Failed to save your information.'));
                 return;
             }),
         );

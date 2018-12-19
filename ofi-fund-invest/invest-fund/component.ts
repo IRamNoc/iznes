@@ -1568,7 +1568,8 @@ export class InvestFundComponent implements OnInit, OnDestroy {
      */
     show80PercentNoActiveOrderError() {
         this.alertsService
-        .create('error', `
+        .create(
+            'error', `
                 <table class="table grid">
                     <tbody>
                         <tr>
@@ -1583,7 +1584,9 @@ export class InvestFundComponent implements OnInit, OnDestroy {
                         </tr>
                     </tbody>
                 </table>
-            `, {}, this.translate.getTranslationByString('Order above 80% of your position'));
+            `,
+            {},
+            this.translate.getTranslationByString('Order above 80% of your position'));
     }
 
     /**
@@ -1591,7 +1594,8 @@ export class InvestFundComponent implements OnInit, OnDestroy {
      */
     show80PercentHasActiveOrderError() {
         this.alertsService
-        .create('error', `
+        .create(
+            'error', `
                 <table class="table grid">
                     <tbody>
                         <tr>
@@ -1606,7 +1610,9 @@ export class InvestFundComponent implements OnInit, OnDestroy {
                         </tr>
                     </tbody>
                 </table>
-            `, {}, this.translate.getTranslationByString('Order above 80% of your position'));
+            `,
+            {},
+            this.translate.getTranslationByString('Order above 80% of your position'));
     }
 
     validateKiid() {

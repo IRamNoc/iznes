@@ -141,8 +141,8 @@ export class PortfolioManagerDetailComponent implements OnInit, OnDestroy {
      */
     confirmSave() {
         const message = this.fundAccessChanges.length === 0
-            ? this.translate.translate('No changes have been made to the Portfolio Manager\' Fund Access permissions.')
-            : this.translate.translate('Please confirm the changes made to the Portfolio Manager\' Fund Access permissions.');
+            ? this.translate.translate('No changes have been made to the Portfolio Manager\'s Fund Access permissions.')
+            : this.translate.translate('Please confirm the changes made to the Portfolio Manager\'s Fund Access permissions.');
 
         this.confirmationService.create(this.translate.translate('Confirm Fund Access:'), message, {
             confirmText: this.translate.translate('Confirm Access and Save Changes'),

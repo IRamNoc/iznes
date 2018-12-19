@@ -174,7 +174,7 @@ export class OfiNavFundsList implements OnInit, OnDestroy {
 
     cancelNav(share: model.NavInfoModel): void {
         this.cancelNavMessage = this.translate.translate(
-            'Are you sure you wish to cancel the NAV for<br /><strong>@shareName@</strong>',
+            'Are you sure you wish to cancel the NAV for @shareName@?',
             { 'shareName': share.fundShareName },
         );
 

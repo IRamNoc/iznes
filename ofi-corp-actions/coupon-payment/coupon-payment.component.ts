@@ -235,13 +235,14 @@ export class CouponPaymentComponent implements OnInit, AfterViewInit, OnDestroy 
         /* Date validation. */
         if (new Date(formData.couponSettlementDate + ' ' + formData.couponSettlementTime) <= new Date()) {
             /* ...let the user know. */
-            this.showError('Please ensure all dates are set to a point in the future.');
+            this.showError(this.translate.translate('Please ensure all dates are set to a point in the future.'));
             return;
         }
 
         if (new Date(formData.couponValuationDate + ' ' + formData.couponValuationTime) <= new Date()) {
             /* ...let the user know. */
-            this.showError('Please ensure all dates are set to a point in the future.');
+            this.showError(this.translate.translate(
+                'Please ensure all dates are set to a point in the future.'));
             return;
         }
 
@@ -265,10 +266,10 @@ export class CouponPaymentComponent implements OnInit, AfterViewInit, OnDestroy 
             this.router.navigateByUrl('/corporate-actions/coupon-payment/0');
 
             /* ...and then let the user know it went well. */
-            this.showSuccess('Successfully created the new coupon payment.');
+            this.showSuccess(this.translate.translate('Successfully created the new coupon payment.'));
         }).catch((error) => {
             /* Tell the user it went wrong. */
-            this.showError('Failed to create a new coupon payment.');
+            this.showError(this.translate.translate('Failed to create a new coupon payment.'));
             console.warn(error);
         });
 
@@ -297,7 +298,7 @@ export class CouponPaymentComponent implements OnInit, AfterViewInit, OnDestroy 
 
         /* Check if we found the coupon. */
         if (!coupon) {
-            this.showError('Could not show that coupon.');
+            this.showError(this.translate.translate('Could not show that coupon.'));
             return;
         }
 
@@ -385,7 +386,7 @@ export class CouponPaymentComponent implements OnInit, AfterViewInit, OnDestroy 
     public handleUpdateCoupon(tabid: number, action: string) {
         /* Validation. */
         if (!tabid || !action) {
-            this.showError('Something went wrong, please try again.');
+            this.showError(this.translate.translate('Something went wrong, please try again.'));
             return;
         }
 
@@ -421,7 +422,7 @@ export class CouponPaymentComponent implements OnInit, AfterViewInit, OnDestroy 
             case 'confirm-payment':
                 updateCoupon.status = 6;
                 successMessage = this.translate.translate('Successfully confirmed off platform payment for this coupon payment.');
-                errorMessage = this.translate.translate('Failed to confirm off platform payement for this coupon payment. Try again later.');
+                errorMessage = this.translate.translate('Failed to confirm off platform payment for this coupon payment. Try again later.');
                 break;
         }
 

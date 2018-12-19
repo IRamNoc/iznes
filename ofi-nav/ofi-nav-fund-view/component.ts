@@ -140,8 +140,8 @@ export class OfiNavFundView implements OnInit, OnDestroy {
     getCurrencyString(currencyId: number): string {
         try {
             return this.currencyList.find(v => v.id === currencyId).text || 'N/A';
-        } catch(e) {
-            return 'N/A'
+        } catch (e) {
+            return 'N/A';
         }
     }
 
@@ -251,7 +251,7 @@ export class OfiNavFundView implements OnInit, OnDestroy {
                     </tbody>
                 </table>`,
                 {},
-                'NAVs Upload - Success',
+                this.translate.translate('NAVs Upload - Success'),
             );
         }
     }

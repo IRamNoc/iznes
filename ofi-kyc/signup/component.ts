@@ -96,7 +96,7 @@ export class OfiSignUpComponent implements OnInit, OnDestroy {
             }).catch((e) => {
                 this.alertsService.create(
                     'error',
-                    `<span class="text-warning">${this.translate.translate('Sorry, something went wrong')}.<br>${this.translate.translate('Please try again later')}.</span>`,
+                    `<span class="text-warning">${this.translate.translate('Sorry, something went wrong.')}<br>${this.translate.translate('Please try again later.')}</span>`,
                 );
             });
         });
