@@ -276,16 +276,22 @@ export class OfiManagementCompanyComponent implements OnInit, OnDestroy {
                 const action = this.editForm ? 'update' : 'create';
                 const errorMessage = _.get(data, '[1].Data[0].Message', '');
 
-                switch(errorMessage) {
+                switch (errorMessage) {
                     case 'email address already exist.':
-                        message = this.translate.translate(`Fail to ${action} management company, email address already exist.`);
+                        message = this.translate.translate(
+                            'Fail to @action@ management company, email address already exist.', { 'action': action },
+                        );
                         break;
 
                     case 'company name already exist.':
-                        message = this.translate.translate(`Fail to ${action} management company, company name already exist.`);
+                        message = this.translate.translate(
+                            'Fail to @action@ management company, company name already exist.', { 'action': action },
+                        );
                         break;
                     default:
-                        message = this.translate.translate(`Fail to ${action} management company.`);
+                        message = this.translate.translate(
+                             'Fail to @action@ management company.', { 'action': action },
+                        );
                 }
 
                 this.toasterSevice.pop(
