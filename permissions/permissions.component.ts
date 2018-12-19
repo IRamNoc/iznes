@@ -477,7 +477,7 @@ export class AdminPermissionsComponent implements OnInit, AfterViewInit, OnDestr
             permissionsData['isGroup'] = 1;
             permissionsData['toAdd'] = permissionsReformed;
             permissionsData['toUpdate'] = {}; // we're only adding as we're creating.
-            permissionsData['toDelete'] = {}; // we're only adding as we're creating.
+            permissionsData['toDelete'] = []; // we're only adding as we're creating.
 
             /* Figure out which function to call. */
             let functionCall = 'updateAdminPermissions';
@@ -507,10 +507,10 @@ export class AdminPermissionsComponent implements OnInit, AfterViewInit, OnDestr
                 this.alertsService.generate(
                     'success',
                     this.translate.translate('Successfully created group.')).subscribe(() => {
-                        if (tabid > 1) {
-                            this.closeTab(tabid);
-                        }
-                    });
+                    if (tabid > 1) {
+                        this.closeTab(tabid);
+                    }
+                });
         }).catch((error) => {
             /* Implement an error message for failing to create the group. */
             this.alertsService.generate(
@@ -601,8 +601,8 @@ export class AdminPermissionsComponent implements OnInit, AfterViewInit, OnDestr
                 this.alertsService.generate(
                     'success',
                     this.translate.translate('Successfully updated this permission group.')).subscribe(() => {
-                        this.closeTab(tabid);
-                    });
+                    this.closeTab(tabid);
+                });
         }).catch((response) => {
             /* Implement an error message for failing to update the group. */
             console.warn('Failed to update the group.', response);
