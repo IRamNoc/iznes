@@ -306,7 +306,7 @@ export class OfiSubPortfolioComponent implements OnInit, OnDestroy {
 
     handleLabelResponse(message, type) {
         switch (message) {
-            case 'Duplicate Label':
+            case 'Duplicate label':
                 this.toaster.pop('error', this.translate.translate('Sub-portfolio name already exists'));
                 break;
 

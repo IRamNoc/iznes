@@ -246,7 +246,7 @@ export class OfiNavFundView implements OnInit, OnDestroy {
                 <table class="table grid">
                     <tbody>
                         <tr>
-                            <td class="text-center text-success">${successMessage}</td>
+                            <td class="text-center text-success">${this.translate.translate(successMessage)}</td>
                         </tr>
                     </tbody>
                 </table>`,
@@ -264,7 +264,7 @@ export class OfiNavFundView implements OnInit, OnDestroy {
 
             let alertBody = '<table class="table grid"><tbody><tr><td class="text-center text-danger">';
             alertBody += this.translate.translate('NAVs upload for @fundShareName@ has failed for the following reason:', { 'fundShareName': this.navFund.fundShareName });
-            alertBody += `</td></tr><tr><td class="text-center text-danger">${errorMessage}</td></tr></tbody></table>`;
+            alertBody += `</td></tr><tr><td class="text-center text-danger">${this.translate.translate(errorMessage)}</td></tr></tbody></table>`;
 
             this.alertService.create(
                 'error',

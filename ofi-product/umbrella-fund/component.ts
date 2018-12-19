@@ -652,7 +652,9 @@ export class UmbrellaFundComponent implements OnInit, AfterViewInit, OnDestroy {
                     // this.modalTitle = 'Error';
                     // this.modalText = JSON.stringify(data);
                     // this.showTextModal = true;
-                    const errMsg = _.get(data, '[1].Data[0].Message', '');
+                    let errMsg = _.get(data, '[1].Data[0].Message', '');
+                    errMsg = this.translate.translate(errMsg);
+
                     this.toasterService.pop(
                         'error',
                         this.translate.translate(
@@ -691,7 +693,8 @@ export class UmbrellaFundComponent implements OnInit, AfterViewInit, OnDestroy {
                 (data) => {
                     this.logService.log('Error: ', data);
 
-                    const errMsg = _.get(data, '[1].Data[0].Message', '');
+                    let errMsg = _.get(data, '[1].Data[0].Message', '');
+                    errMsg = this.translate.translate(errMsg);
 
                     let userErrMsg = this.translate.translate(
                         'Failed to create the Umbrella Fund. @errMsg@',
@@ -793,7 +796,9 @@ export class UmbrellaFundComponent implements OnInit, AfterViewInit, OnDestroy {
             },
             (err) => {
                 this.logService.log('Error: ', err);
-                const error = _.get(err, '[1].Data[0].Message', '');
+                let error = _.get(err, '[1].Data[0].Message', '');
+                error = this.translate.translate(error);
+
                 this.toasterService.pop('error', `${errorMessage} (${error})`);
                 this.changeDetectorRef.markForCheck();
             }),

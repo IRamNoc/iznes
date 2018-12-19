@@ -362,7 +362,7 @@ export class OfiManageNavPopup implements OnInit {
     private showErrorModal(data): void {
         const result = data[1].Data[0].Message;
         const errorMessage = result && result.length > 0
-            ? result
+            ? this.translate.translate(result)
             : this.translate.translate('Please ensure that all inputs are in the right format');
 
         this.alertsService.create('error', `${errorMessage}`);

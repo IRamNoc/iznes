@@ -1081,7 +1081,9 @@ export class FundComponent implements OnInit, OnDestroy {
                 return;
             })
             .catch((err) => {
-                const errMsg = _.get(err, '[1].Data[0].Message', '');
+                let errMsg = _.get(err, '[1].Data[0].Message', '');
+                errMsg = this.translate.translate(errMsg);
+
                 this.toasterService.pop(
                     'error',
                     this.translate.translate(
@@ -1116,7 +1118,9 @@ export class FundComponent implements OnInit, OnDestroy {
                 return;
             })
             .catch((err) => {
-                const errMsg = _.get(err, '[1].Data[0].Message', '');
+                let errMsg = _.get(err, '[1].Data[0].Message', '');
+                errMsg = this.translate.translate(errMsg);
+
                 this.toasterService.pop(
                     'error',
                     this.translate.translate(
@@ -1141,7 +1145,9 @@ export class FundComponent implements OnInit, OnDestroy {
                 return;
             })
             .catch((err) => {
-                const errMsg = _.get(err, '[1].Data[0].Message', '');
+                let errMsg = _.get(err, '[1].Data[0].Message', '');
+                errMsg = this.translate.translate(errMsg);
+
                 this.toasterService.pop(
                     'error',
                     this.translate.translate(
