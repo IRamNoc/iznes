@@ -54,9 +54,19 @@
 }
 
 .datagrid-foot {
-    border-top: 0px solid #ccc;
+    border-top: 0 solid #ccc;
     .page-size {
         float: left;
+        &.separator {
+            padding: 1px 0 0 10px;
+            margin-left: 3px;
+            border-left: #e4e4e4 solid 1px;
+            color: #9a9a9a;
+            select {
+                color: #9a9a9a;
+            }
+        }
+
     }
 }
 
