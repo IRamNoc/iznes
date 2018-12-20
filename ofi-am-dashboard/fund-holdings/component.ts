@@ -563,7 +563,7 @@ export class FundHoldingsComponent implements OnInit, AfterViewInit, OnDestroy {
               <table class="table grid">
                   <tbody>
                       <tr>
-                          <td class="text-center text-warning">${message}</td>
+                          <td class="text-center text-warning">${this.translate.translate(message)}</td>
                       </tr>
                   </tbody>
               </table>
@@ -584,7 +584,7 @@ export class FundHoldingsComponent implements OnInit, AfterViewInit, OnDestroy {
               <table class="table grid">
                   <tbody>
                       <tr>
-                          <td class="text-center text-success">${message}</td>
+                          <td class="text-center text-success">${this.translate.translate(message)}</td>
                       </tr>
                   </tbody>
               </table>

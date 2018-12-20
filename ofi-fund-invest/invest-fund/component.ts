@@ -965,7 +965,9 @@ export class InvestFundComponent implements OnInit, OnDestroy {
 
             this.router.navigateByUrl('/order-book/my-orders/list');
         }).catch((data) => {
-            const errorMessage = _.get(data, ['1', 'Data', '0', 'Message'], '');
+            let errorMessage = _.get(data, ['1', 'Data', '0', 'Message'], 'Could not place order');
+            errorMessage = this.translate.translate(errorMessage);
+
             this.toaster.pop('warning', errorMessage);
 
             this.alertsService.close();

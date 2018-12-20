@@ -858,7 +858,7 @@ export class CouponPaymentComponent implements OnInit, AfterViewInit, OnDestroy 
               <table class="table grid">
                   <tbody>
                       <tr>
-                          <td class="text-center text-warning">${message}</td>
+                          <td class="text-center text-warning">${this.translate.translate(message)}</td>
                       </tr>
                   </tbody>
               </table>
