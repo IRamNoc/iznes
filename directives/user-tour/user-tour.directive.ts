@@ -88,11 +88,13 @@ export class UserTourDirective implements AfterViewInit, OnDestroy{
     createStage(stage) {
         const stageEl = this.el.nativeElement.querySelector(`div #${stage}`);
 
+        // Preserve width of child element
         if (this.config.stages[stage].preserveWidth) stageEl.style.width = `${stageEl.offsetWidth}px`;
 
         stageEl.classList.add('stage');
+
+        // Highlight child element
         if (this.config.stages[stage].highlight) stageEl.classList.add('highlight');
-        stageEl.classList.add(this.config.stages[stage].position);
 
         const signpost = document.createElement('span');
         signpost.className = 'signpost';
@@ -108,7 +110,15 @@ export class UserTourDirective implements AfterViewInit, OnDestroy{
                         ${(totalStages - 1) === this.currentStage ? 'Close' : 'Next'}</button>
                     <p class="stage-number">${this.currentStage + 1} of ${totalStages}</p>`;
 
+        if (this.config.stages[stage].position) {
+            stageEl.classList.add(this.config.stages[stage].position);
+        } else {
+            stageEl.classList.add(this.calculatePosition(stageEl, signpost));
+        }
+
         stageEl.appendChild(signpost);
+
+        signpost.scrollIntoView({ block: 'center' });
 
         const prevBtn = this.el.nativeElement.querySelector(`#${stage}-prev-btn`);
         const nextBtn = this.el.nativeElement.querySelector(`#${stage}-next-btn`);
@@ -117,6 +127,28 @@ export class UserTourDirective implements AfterViewInit, OnDestroy{
         nextBtn.addEventListener('click', () => this.prepNextStage());
         if (prevBtn) prevBtn.addEventListener('click', () => this.prepPrevStage());
         closeBtn.addEventListener('click', () => this.closeUserTour());
+    }
+
+    calculatePosition(stageEl, signpostEl) {
+        const offset = stageEl.getBoundingClientRect();
+        const right = document.documentElement.clientWidth - offset.left;
+        const bottom = document.documentElement.clientHeight - offset.top;
+        const sidebarWidth = document.querySelector('nav.sidenav').clientWidth;
+        const topbarHeight = document.querySelector('app-navigation-topbar').clientHeight;
+        const signpostHeight = signpostEl.clientHeight;
+        const signpostWidth = signpostEl.clientWidth;
+
+        if (bottom > signpostHeight) {
+            if (right > signpostWidth) return 'right-bottom';
+            if (offset.left > (signpostWidth + sidebarWidth)) return 'left-bottom';
+            return 'bottom-middle';
+        }
+        if (offset.top > (signpostHeight + topbarHeight)) {
+            if (right > signpostWidth) return 'right-top';
+            if (offset.left > (signpostWidth + sidebarWidth)) return 'left-top';
+            return 'top-middle';
+        }
+        return 'right-bottom';
     }
 
     /**
