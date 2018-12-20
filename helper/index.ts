@@ -6,6 +6,7 @@ import * as mDateHelper from './m-date-wrapper';
 import * as commonHelper from './common';
 import * as ShortHash from './common/shorthash';
 import * as CustomValidators from './validators';
+import * as formHelper from './forms';
 
 export {
     walletHelper,
@@ -15,5 +16,6 @@ export {
     mDateHelper,
     commonHelper,
     ShortHash,
-    CustomValidators
+    CustomValidators,
+    formHelper
 };

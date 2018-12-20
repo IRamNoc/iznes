@@ -12,7 +12,12 @@ import { DatePickerExtendedModule } from './date-picker-extended/module';
 import { PasswordTooltipComponent } from './passwords/tooltip.component';
 import { SetlPipesModule } from '../pipes';
 import { SetlDirectivesModule } from '../directives';
+import { DynamicFormsModule } from './dynamic-forms/module';
 import { MultilingualModule } from '@setl/multilingual/multilingual.module';
+import { ClarityModule } from '@clr/angular';
+import { FormstepsComponent } from './formsteps/formsteps.component';
+import { FormstepComponent } from './formsteps/formstep.component';
+import { ProgressComponent } from './formsteps/progress/progress.component';
 import { FilePreviewComponent } from './file-preview/file-preview.component';
 
 @NgModule({
@@ -22,6 +27,9 @@ import { FilePreviewComponent } from './file-preview/file-preview.component';
         ConfirmationComponent,
         SwitchButtonComponent,
         PasswordTooltipComponent,
+        FormstepsComponent,
+        FormstepComponent,
+        ProgressComponent,
         FilePreviewComponent,
     ],
     exports: [
@@ -31,6 +39,9 @@ import { FilePreviewComponent } from './file-preview/file-preview.component';
         SwitchButtonComponent,
         DatePickerExtendedModule,
         PasswordTooltipComponent,
+        FormstepsComponent,
+        FormstepComponent,
+        ProgressComponent,
         FilePreviewComponent,
     ],
     imports: [
