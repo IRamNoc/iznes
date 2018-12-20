@@ -31,13 +31,13 @@ do
         mltag=`echo "console.log('$mltag'.substring(0, 34) + '$hash'.substring(10, 20));" | node`
     fi    
 
-    # Create JSON payload object using mltag and error
-    payload=`echo "console.log(JSON.stringify({ mltag: '$mltag', value: '$item', location: 'stored_procedure' }));" | node`
+    # Create JSON object using mltag and error
+    data=`echo "console.log(JSON.stringify({ mltag: '$mltag', value: '$item', location: 'stored_procedure' }));" | node`
     
-    # Send payload to API
-    curl -d "$payload" -H "Content-Type: application/json" -X POST ${apiEndpoint}
+    # Send data object to API
+    curl -d "$data" -H "Content-Type: application/json" -X POST ${apiEndpoint}
 
     # Testing...
-    # echo "$payload"
+    # echo "$data"
    
 done 
