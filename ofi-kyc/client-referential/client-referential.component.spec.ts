@@ -12,7 +12,7 @@ import { OfiClientReferentialComponent } from './component';
 import { OfiFundAccessTable } from './access-table/component';
 import { KycDetailsComponent } from '../my-requests/kyc-details/details.component';
 import { KycDetailsGridComponent } from '../my-requests/kyc-details/details-grid.component';
-import { KycDetailsBeneficiariesComponent } from '../my-requests/kyc-details/beneficiaries.component';
+import { KycDetailsStakeholdersComponent } from '../my-requests/kyc-details/beneficiaries.component';
 
 import { OfiKycService } from '../../ofi-req-services/ofi-kyc/service';
 import { OfiFundShareService } from '@ofi/ofi-main/ofi-req-services/ofi-product/fund-share/service';
@@ -76,7 +76,7 @@ describe('OfiClientReferentialComponent', () => {
                 SetlFileDropStub,
                 SetlFileViewerStub,
                 KycDetailsGridComponent,
-                KycDetailsBeneficiariesComponent,
+                KycDetailsStakeholdersComponent,
             ],
             imports: [
                 FormsModule,
