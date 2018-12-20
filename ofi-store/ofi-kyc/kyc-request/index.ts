@@ -1,11 +1,14 @@
 export {
-    MyKycRequestedState
+    MyKycRequestedState,
 } from './model';
 
 export {
-    MyKycSetRequestedKycs
+    setMyKycRequestedKycs,
+    setMyKycRequestedPersist,
+    clearMyKycRequestedPersist,
+    setMyKycStakeholderRelations,
 } from './actions';
 
 export {
-    MyKycRequestedReducer
+    myKycRequestedReducer,
 } from './reducer';

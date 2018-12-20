@@ -1,10 +1,12 @@
-import { Component, OnInit, Input, OnDestroy, ViewChild, ChangeDetectorRef } from '@angular/core';
+import { Component, OnInit, Input, OnDestroy, ViewChild, ChangeDetectorRef, Output, EventEmitter } from '@angular/core';
 import { FormGroup, FormControl, AbstractControl } from '@angular/forms';
-import { PersistService } from '@setl/core-persist';
 import { isEmpty, castArray } from 'lodash';
 import { select } from '@angular-redux/store';
 import { Subject } from 'rxjs';
 import { filter as rxFilter, map, take, takeUntil } from 'rxjs/operators';
+import { PersistService } from '@setl/core-persist';
+import { formHelper } from '@setl/utils/helper';
+
 import { FormPercentDirective } from '@setl/utils/directives/form-percent/formpercent';
 import { RequestsService } from '../../requests.service';
 import { NewRequestService } from '../new-request.service';
@@ -19,16 +21,33 @@ export class NewKycDocumentsComponent implements OnInit, OnDestroy {
     @ViewChild(FormPercentDirective) formPercent: FormPercentDirective;
     @select(['user', 'connected', 'connectedWallet']) connectedWallet$;
     @select(['ofi', 'ofiKyc', 'myKycRequested', 'kycs']) requests$;
+
+    @Output() submitEvent: EventEmitter<any> = new EventEmitter<any>();
     @Input() form: FormGroup;
 
-    @Input() set isPro(isPro) {
-        if (isPro) {
-            (this.form.get('other') as FormGroup).disable();
-            (this.form.get('pro') as FormGroup).enable();
-        } else {
-            (this.form.get('other') as FormGroup).enable();
-            (this.form.get('pro') as FormGroup).disable();
+    @Input() set documents(documents) {
+        const listedDocuments = this.form.get('listed');
+        const floatableDocument = this.form.get('listed.kycevidencefloatable');
+        const regulatedDocuments = this.form.get('regulated');
+
+        floatableDocument.disable();
+        listedDocuments.disable();
+        regulatedDocuments.disable();
+
+        if (documents.isListed) {
+            listedDocuments.enable();
+
+            if (documents.isFloatableHigh) {
+                floatableDocument.enable();
+            } else {
+                floatableDocument.disable();
+            }
         }
+
+        if (documents.isRegulated) {
+            regulatedDocuments.enable();
+        }
+
         this.formPercent.refreshFormPercent();
     }
 
@@ -41,7 +60,7 @@ export class NewKycDocumentsComponent implements OnInit, OnDestroy {
         private newRequestService: NewRequestService,
         private persistService: PersistService,
         private documentsService: DocumentsService,
-        private changeDetectorRef: ChangeDetectorRef,
+        private changeDetectorRef : ChangeDetectorRef,
     ) {
     }
 
@@ -52,18 +71,18 @@ export class NewKycDocumentsComponent implements OnInit, OnDestroy {
 
     initSubscriptions() {
         this.requests$
-            .pipe(
-                takeUntil(this.unsubscribe),
-                map(kycs => kycs[0]),
-                rxFilter((kyc: any) => {
-                    return kyc && kyc.amcID;
-                }),
-            )
-            .subscribe((kyc) => {
-                if (this.shouldPersist(kyc)) {
-                    this.persistForm();
-                }
-            });
+        .pipe(
+            takeUntil(this.unsubscribe),
+            map(kycs => kycs[0]),
+            rxFilter((kyc: any) => {
+                return kyc && kyc.amcID;
+            }),
+        )
+        .subscribe((kyc) => {
+            if (this.shouldPersist(kyc)) {
+                this.persistForm();
+            }
+        });
     }
 
     shouldPersist(kyc) {
@@ -75,12 +94,12 @@ export class NewKycDocumentsComponent implements OnInit, OnDestroy {
 
     initData() {
         this.connectedWallet$
-            .pipe(
-                takeUntil(this.unsubscribe),
-            )
-            .subscribe((connectedWallet) => {
-                this.connectedWallet = connectedWallet;
-            });
+        .pipe(
+            takeUntil(this.unsubscribe),
+        )
+        .subscribe((connectedWallet) => {
+            this.connectedWallet = connectedWallet;
+        });
     }
 
     persistForm() {
@@ -106,9 +125,9 @@ export class NewKycDocumentsComponent implements OnInit, OnDestroy {
         const fControl = <FormControl> formControl;
 
         if (!$event.files.length) {
-            const type = fControl.get('type').value;
+            const type = formControl.get('type').value;
             const newDocumentControl = this.newRequestService.createDocumentFormGroup(type).value;
-            fControl.patchValue(newDocumentControl);
+            formControl.patchValue(newDocumentControl);
         } else {
             this.requestsService.uploadFile($event).then((file: any) => {
                 fControl.get('hash').patchValue(file.fileHash);
@@ -131,54 +150,80 @@ export class NewKycDocumentsComponent implements OnInit, OnDestroy {
         e.preventDefault();
 
         if (!this.form.valid) {
+            formHelper.dirty(this.form);
             return;
         }
 
         this.requests$
-            .pipe(
-                take(1),
-            )
-            .subscribe((requests) => {
-                this.documentsService.sendRequest(this.form, requests, this.connectedWallet);
+        .pipe(
+            take(1),
+        )
+        .subscribe((requests) => {
+            this
+                .documentsService
+                .sendRequest(this.form, requests, this.connectedWallet)
+                .then(() => {
+                    this.clearPersistForm();
+                    this.submitEvent.emit({
+                        completed: true,
+                    });
+                })
+                .catch(() => {
+                    this.newRequestService.errorPop();
+                })
+            ;
 
-                this.clearPersistForm();
-            });
+        });
 
         return;
     }
 
     getCurrentFormData() {
         this.requests$
-            .pipe(
-                rxFilter(requests => !isEmpty(requests)),
-                map(requests => castArray(requests[0])),
-                takeUntil(this.unsubscribe),
-            )
-            .subscribe((requests) => {
-                requests.forEach((request) => {
-                    this.documentsService.getCurrentFormDocumentsData(request.kycID, this.connectedWallet).then((data) => {
-                        // Patch the global document data followed by the kyc form data
-                        data.forEach((formData, index) => {
-                            formData.forEach((value) => {
-                                const type = value.type;
-                                const shouldContinue = (index === 1 || (index === 0 && value.common));
-                                const path = documentFormPaths[type];
-                                const control = this.form.get([path, type]);
+        .pipe(
+            rxFilter(requests => !isEmpty(requests)),
+            map(requests => castArray(requests[0])),
+            takeUntil(this.unsubscribe),
+        )
+        .subscribe((requests) => {
+            requests.forEach((request) => {
+                this.documentsService.getCurrentFormDocumentsData(request.kycID, this.connectedWallet).then((data) => {
+                    // Patch the global document data followed by the kyc form data
+                    data.forEach((formData, index) => {
+                        formData.forEach((value) => {
+                            const type = value.type;
+                            const shouldContinue = (index === 1 || (index === 0 && value.common));
+                            const path = documentFormPaths[type];
+                            const control = this.form.get([path, type]);
 
-                                if (type && shouldContinue && control) {
-                                    control.patchValue(value);
-                                }
-                            });
-
+                            if (type && shouldContinue && control) {
+                                control.patchValue(value);
+                            }
                         });
 
-                        this.form.updateValueAndValidity();
-                        this.changeDetectorRef.markForCheck();
-
-                        this.initSubscriptions();
                     });
+
+                    this.form.updateValueAndValidity();
+                    this.changeDetectorRef.markForCheck();
+                    this.formPercent.refreshFormPercent();
+                    
+                    this.initSubscriptions();
                 });
             });
+        });
+    }
+
+    getDocumentPreset(formItem: string[]) {
+        const value = this.form.get(formItem).value;
+
+        return !value.hash ? undefined : value;
+    }
+
+    /* isStepValid
+     * - this gets run by the form-steps component to enable/disable the next button
+     */
+    isStepValid() {
+        return this.form.valid;
     }
 
     ngOnDestroy() {

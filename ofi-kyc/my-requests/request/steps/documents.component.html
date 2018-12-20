@@ -1,5 +1,8 @@
-<div class="well">
+<h3 class="text-center step-title">
+    {{ 'Documents' | translate }}
+</h3>
 
+<div class="well">
     <div class="row panel-header clr-align-items-center">
         <div class="col-sm-9">
             <a href="#" (click)="open = !open; $event.preventDefault();">
@@ -17,174 +20,30 @@
             <form [formGroup]="form" id="step-documents" (ngSubmit)="handleSubmit($event)">
 
                 <!-- Common documents -->
+
                 <div class="row">
-                    <div class="form-group col-sm-6" [class.has-error]="hasError(['common', 'kyclistshareholdersdoc', 'hash'])">
-                        <label for="kyclistshareholdersdoc" class="control-label">
-                            {{ 'Official documents (or equivalent) listing the shareholders with their % of ownership if greater than 25%' | translate }}
-                        </label>
-                        <div class="filedrop-wrapper">
-                            <setl-file-drop filePermission="0" class="form-control" id="kyclistshareholdersdoc"
-                                            (onDrop)="uploadFile($event, form.get(['common', 'kyclistshareholdersdoc']))"
-                                            [preset]="form.get(['common', 'kyclistshareholdersdoc']).value"
-                                            [inline]="true"
-                                            ngDefaultControl>
-                            </setl-file-drop>
-                        </div>
-                        <span class="field-error">{{ 'File is required' | translate }}</span>
-                    </div>
-
-                    <div class="form-group required-field col-sm-6" [class.has-error]="hasError(['common', 'kyclistdirectorsdoc', 'hash'])">
-                        <label for="kyclistdirectorsdoc" class="control-label">
-                            {{ 'Official document (or equivalent) listing the directors' | translate }}
-                        </label>
-                        <div class="filedrop-wrapper">
-                            <setl-file-drop filePermission="0" class="form-control" id="kyclistdirectorsdoc"
-                                            (onDrop)="uploadFile($event, form.get(['common', 'kyclistdirectorsdoc']))"
-                                            [preset]="form.get(['common', 'kyclistdirectorsdoc']).value"
-                                            [inline]="true"
-                                            ngDefaultControl>
-                            </setl-file-drop>
-                        </div>
-                        <span class="field-error">{{ 'File is required' | translate }}</span>
-                    </div>
-                </div>
-                <div class="row">
-                    <div class="form-group required-field col-sm-6" [class.has-error]="hasError(['common', 'kycbeneficialownersdoc', 'hash'])">
-                        <label for="kycbeneficialownersdoc" class="control-label">
-                            {{ 'List of beneficial owners' | translate }}
-                        </label>
-                        <div class="filedrop-wrapper">
-                            <setl-file-drop filePermission="0" class="form-control" id="kycbeneficialownersdoc"
-                                            (onDrop)="uploadFile($event, form.get(['common', 'kycbeneficialownersdoc']))"
-                                            [preset]="form.get(['common', 'kycbeneficialownersdoc']).value"
-                                            [inline]="true"
-                                            ngDefaultControl>
-                            </setl-file-drop>
-                        </div>
-                        <span class="field-error">{{ 'File is required' | translate }}</span>
-                    </div>
-
-                    <div class="form-group required-field col-sm-6" [class.has-error]="hasError(['common', 'kyclistauthoriseddoc', 'hash'])">
-                        <label for="kyclistauthoriseddoc" class="control-label">
-                            {{ 'List of persons authorised to give instructions' | translate }}
-                        </label>
-                        <div class="filedrop-wrapper">
-                            <setl-file-drop filePermission="0" class="form-control" id="kyclistauthoriseddoc"
-                                            (onDrop)="uploadFile($event, form.get(['common', 'kyclistauthoriseddoc']))"
-                                            [preset]="form.get(['common', 'kyclistauthoriseddoc']).value"
-                                            [inline]="true"
-                                            ngDefaultControl>
-                            </setl-file-drop>
-                        </div>
-                        <span class="field-error">{{ 'File is required' | translate }}</span>
-                    </div>
-                </div>
-                <div class="row">
-                    <div class="form-group required-field col-sm-6" [class.has-error]="hasError(['common', 'kyctaxcertificationdoc', 'hash'])">
-                        <label for="kyctaxcertificationdoc" class="control-label">
-                            {{ 'Tax self-certification form (see attachment)' | translate }}
-                        </label>
-                        <div class="filedrop-wrapper">
-                            <setl-file-drop filePermission="0" class="form-control" id="kyctaxcertificationdoc"
-                                            (onDrop)="uploadFile($event, form.get(['common', 'kyctaxcertificationdoc']))"
-                                            [preset]="form.get(['common', 'kyctaxcertificationdoc']).value"
-                                            [inline]="true"
-                                            ngDefaultControl>
-                            </setl-file-drop>
-                        </div>
-                        <span class="field-error">{{ 'File is required' | translate }}</span>
-                    </div>
-
-
-                    <div class="form-group col-sm-6" [class.has-error]="hasError(['common', 'kycw8benefatcadoc', 'hash'])">
-                        <label for="kycw8benefatcadoc" class="control-label">
-                            {{ 'Form W-8BEN-E (FATCA) if available' | translate }}
-                        </label>
-                        <div class="filedrop-wrapper">
-                            <setl-file-drop filePermission="0" class="form-control" id="kycw8benefatcadoc"
-                                            (onDrop)="uploadFile($event, form.get(['common', 'kycw8benefatcadoc']))"
-                                            [preset]="form.get(['common', 'kycw8benefatcadoc']).value"
-                                            [inline]="true"
-                                            ngDefaultControl>
-                            </setl-file-drop>
-                        </div>
-                        <span class="field-error">{{ 'File is required' | translate }}</span>
-                    </div>
-                </div>
-
-                <!-- Listed company -->
-                <div class="row" *ngIf="!isDisabled('pro')">
-                    <div class="form-group col-sm-6" [class.has-error]="hasError(['pro', 'kycproofofapprovaldoc', 'hash'])">
-                        <label for="kycproofofapprovaldoc" class="control-label">
-                            {{ 'Proof of approval or copy of decree (if applicable)' | translate }}
-                        </label>
-                        <div class="filedrop-wrapper">
-                            <setl-file-drop filePermission="0" class="form-control" id="kycproofofapprovaldoc"
-                                            (onDrop)="uploadFile($event, form.get(['pro', 'kycproofofapprovaldoc']))"
-                                            [preset]="form.get(['pro', 'kycproofofapprovaldoc']).value"
-                                            [inline]="true"
-                                            ngDefaultControl>
-                            </setl-file-drop>
-                        </div>
-                        <span class="field-error">{{ 'File is required' | translate }}</span>
-                    </div>
-
-                    <div class="form-group col-sm-6" [class.has-error]="hasError(['pro', 'kycisincodedoc', 'hash'])">
-                        <label for="kycisincodedoc" class="control-label">
-                            {{ 'ISIN code of the listed share (if applicable)' | translate }}
-                        </label>
-                        <div class="filedrop-wrapper">
-                            <setl-file-drop filePermission="0" class="form-control" id="kycisincodedoc"
-                                            (onDrop)="uploadFile($event, form.get(['pro', 'kycisincodedoc']))"
-                                            [preset]="form.get(['pro', 'kycisincodedoc']).value"
-                                            [inline]="true"
-                                            ngDefaultControl>
-                            </setl-file-drop>
-                        </div>
-                        <span class="field-error">{{ 'File is required' | translate }}</span>
-                    </div>
-                </div>
-                <div class="row" *ngIf="!isDisabled('pro')">
-                    <div class="form-group required-field col-sm-6" [class.has-error]="hasError(['pro', 'kycwolfsbergdoc', 'hash'])">
-                        <label for="kycwolfsbergdoc" class="control-label">
-                            {{ 'Wolfsberg Questionnaire or equivalent' | translate }}
-                        </label>
-                        <div class="filedrop-wrapper">
-                            <setl-file-drop filePermission="0" class="form-control" id="kycwolfsbergdoc"
-                                            (onDrop)="uploadFile($event, form.get(['pro', 'kycwolfsbergdoc']))"
-                                            [preset]="form.get(['pro', 'kycwolfsbergdoc']).value"
-                                            [inline]="true"
-                                            ngDefaultControl>
-                            </setl-file-drop>
-                        </div>
-                        <span class="field-error">{{ 'File is required' | translate }}</span>
-                    </div>
-                </div>
-
-                <!-- Other -->
-                <div class="row" *ngIf="!isDisabled('other')">
-                    <div class="form-group required-field col-sm-6" [class.has-error]="hasError(['other', 'kycstatuscertifieddoc', 'hash'])">
+                    <div class="form-group required-field col-sm-6" [class.has-error]="hasError(['common', 'kycstatuscertifieddoc', 'hash'])">
                         <label for="kycstatuscertifieddoc" class="control-label">
-                            {{ 'Status "certified" (or equivalent) by the duly authorized representative of the client' | translate }}
+                            {{ 'Statuses "certified" by the duly authorized representative of the client' | translate }}
                         </label>
                         <div class="filedrop-wrapper">
                             <setl-file-drop filePermission="0" class="form-control" id="kycstatuscertifieddoc"
-                                            (onDrop)="uploadFile($event, form.get(['other', 'kycstatuscertifieddoc']))"
-                                            [preset]="form.get(['other', 'kycstatuscertifieddoc']).value"
+                                            (onDrop)="uploadFile($event, form.get(['common', 'kycstatuscertifieddoc']))"
+                                            [preset]="getDocumentPreset(['common', 'kycstatuscertifieddoc'])"
                                             [inline]="true"
                                             ngDefaultControl>
                             </setl-file-drop>
                         </div>
                         <span class="field-error">{{ 'File is required' | translate }}</span>
                     </div>
-                    <div class="form-group required-field col-sm-6" [class.has-error]="hasError(['other', 'kyckbisdoc', 'hash'])">
+                    <div class="form-group required-field col-sm-6" [class.has-error]="hasError(['common', 'kyckbisdoc', 'hash'])">
                         <label for="kyckbisdoc" class="control-label">
                             {{ 'Kbis extract (or equivalent) less than 3 months old' | translate }}
                         </label>
                         <div class="filedrop-wrapper">
                             <setl-file-drop filePermission="0" class="form-control" id="kyckbisdoc"
-                                            (onDrop)="uploadFile($event, form.get(['other', 'kyckbisdoc']))"
-                                            [preset]="form.get(['other', 'kyckbisdoc']).value"
+                                            (onDrop)="uploadFile($event, form.get(['common', 'kyckbisdoc']))"
+                                            [preset]="getDocumentPreset(['common', 'kyckbisdoc'])"
                                             [inline]="true"
                                             ngDefaultControl>
                             </setl-file-drop>
@@ -192,29 +51,149 @@
                         <span class="field-error">{{ 'File is required' | translate }}</span>
                     </div>
                 </div>
-                <div class="row" *ngIf="!isDisabled('other')">
-                    <div class="form-group required-field col-sm-6" [class.has-error]="hasError(['other', 'kycannualreportdoc', 'hash'])">
+
+                <div class="row">
+                    <div class="form-group required-field col-sm-6" [class.has-error]="hasError(['common', 'kycannualreportdoc', 'hash'])">
                         <label for="kycannualreportdoc" class="control-label">
                             {{ 'Latest audited annual report' | translate }}
                         </label>
                         <div class="filedrop-wrapper">
                             <setl-file-drop filePermission="0" class="form-control" id="kycannualreportdoc"
-                                            (onDrop)="uploadFile($event, form.get(['other', 'kycannualreportdoc']))"
-                                            [preset]="form.get(['other', 'kycannualreportdoc']).value"
+                                            (onDrop)="uploadFile($event, form.get(['common', 'kycannualreportdoc']))"
+                                            [preset]="getDocumentPreset(['common', 'kycannualreportdoc'])"
                                             [inline]="true"
                                             ngDefaultControl>
                             </setl-file-drop>
                         </div>
                         <span class="field-error">{{ 'File is required' | translate }}</span>
                     </div>
-                    <div class="form-group required-field col-sm-6" [class.has-error]="hasError(['other', 'kycidorpassportdoc', 'hash'])">
+                    <div class="form-group required-field col-sm-6" [class.has-error]="hasError(['common', 'kycidorpassportdoc', 'hash'])">
                         <label for="kycidorpassportdoc" class="control-label">
-                            {{ 'National identity card or valid passport or residence card of the signatory with photograph ' | translate }}
+                            {{ 'National identity card or valid passport or residence card of the signatory with photograph' | translate }}
                         </label>
                         <div class="filedrop-wrapper">
                             <setl-file-drop filePermission="0" class="form-control" id="kycidorpassportdoc"
-                                            (onDrop)="uploadFile($event, form.get(['other', 'kycidorpassportdoc']))"
-                                            [preset]="form.get(['other', 'kycidorpassportdoc']).value"
+                                            (onDrop)="uploadFile($event, form.get(['common', 'kycidorpassportdoc']))"
+                                            [preset]="getDocumentPreset(['common', 'kycidorpassportdoc'])"
+                                            [inline]="true"
+                                            ngDefaultControl>
+                            </setl-file-drop>
+                        </div>
+                        <span class="field-error">{{ 'File is required' | translate }}</span>
+                    </div>
+                </div>
+
+                <div class="row">
+                    <div class="form-group required-field col-sm-6" [class.has-error]="hasError(['common', 'kycwolfsbergdoc', 'hash'])">
+                        <label for="kycwolfsbergdoc" class="control-label">
+                            {{ 'Wolfsberg Questionnaire or equivalent' | translate }}
+                        </label>
+                        <div class="filedrop-wrapper">
+                            <setl-file-drop filePermission="0" class="form-control" id="kycwolfsbergdoc"
+                                            (onDrop)="uploadFile($event, form.get(['common', 'kycwolfsbergdoc']))"
+                                            [preset]="getDocumentPreset(['common', 'kycwolfsbergdoc'])"
+                                            [inline]="true"
+                                            ngDefaultControl>
+                            </setl-file-drop>
+                        </div>
+                        <span class="field-error">{{ 'File is required' | translate }}</span>
+                    </div>
+
+                    <div class="form-group required-field col-sm-6" [class.has-error]="hasError(['common', 'kyctaxcertificationdoc', 'hash'])">
+                        <label for="kyctaxcertificationdoc" class="control-label">
+                            {{ 'Tax self-certification form (CRS)' | translate }}
+                        </label>
+                        <div class="filedrop-wrapper">
+                            <setl-file-drop filePermission="0" class="form-control" id="kyctaxcertificationdoc"
+                                            (onDrop)="uploadFile($event, form.get(['common', 'kyctaxcertificationdoc']))"
+                                            [preset]="getDocumentPreset(['common', 'kyctaxcertificationdoc'])"
+                                            [inline]="true"
+                                            ngDefaultControl>
+                            </setl-file-drop>
+                        </div>
+                        <span class="field-error">{{ 'File is required' | translate }}</span>
+                    </div>
+                </div>
+
+                <div class="row">
+                    <div class="form-group required-field col-sm-6" [class.has-error]="hasError(['common', 'kycw8benefatcadoc', 'hash'])">
+                        <label for="kycw8benefatcadoc" class="control-label">
+                            {{ 'Form W-8BEN-E (FACTA)' | translate }}
+                        </label>
+                        <div class="filedrop-wrapper">
+                            <setl-file-drop filePermission="0" class="form-control" id="kycw8benefatcadoc"
+                                            (onDrop)="uploadFile($event, form.get(['common', 'kycw8benefatcadoc']))"
+                                            [preset]="getDocumentPreset(['common', 'kycw8benefatcadoc'])"
+                                            [inline]="true"
+                                            ngDefaultControl>
+                            </setl-file-drop>
+                        </div>
+                        <span class="field-error">{{ 'File is required' | translate }}</span>
+                    </div>
+                </div>
+
+                <div class="row">
+
+                </div>
+
+                <!-- Listed -->
+                <div class="row" *ngIf="!isDisabled('listed')">
+                    <div class="form-group required-field col-sm-6" [class.has-error]="hasError(['listed', 'kycisincodedoc', 'hash'])">
+                        <label for="kycisincodedoc" class="control-label">
+                            {{ 'ISIN code of the listed share' | translate }}
+                        </label>
+                        <div class="filedrop-wrapper">
+                            <setl-file-drop filePermission="0" class="form-control" id="kycisincodedoc"
+                                            (onDrop)="uploadFile($event, form.get(['listed', 'kycisincodedoc']))"
+                                            [preset]="getDocumentPreset(['listed', 'kycisincodedoc'])"
+                                            [inline]="true"
+                                            ngDefaultControl>
+                            </setl-file-drop>
+                        </div>
+                        <span class="field-error">{{ 'File is required' | translate }}</span>
+                    </div>
+
+                    <div class="form-group required-field col-sm-6" [class.has-error]="hasError(['listed', 'kycevidencefloatable', 'hash'])" *ngIf="!isDisabled('listed.kycevidencefloatable')">
+                        <label for="kycevidencefloatable" class="control-label">
+                            {{ 'Evidence of stocklisting and confirmation that 75% of the company\'s shares are floatable and tradable on the market' | translate }}
+                        </label>
+                        <div class="filedrop-wrapper">
+                            <setl-file-drop filePermission="0" class="form-control" id="kycevidencefloatable"
+                                            (onDrop)="uploadFile($event, form.get(['listed', 'kycevidencefloatable']))"
+                                            [preset]="getDocumentPreset(['listed', 'kycevidencefloatable'])"
+                                            [inline]="true"
+                                            ngDefaultControl>
+                            </setl-file-drop>
+                        </div>
+                        <span class="field-error">{{ 'File is required' | translate }}</span>
+                    </div>
+                </div>
+
+                <!-- Regulated -->
+                <div class="row" *ngIf="!isDisabled('regulated')">
+                    <div class="form-group required-field col-sm-6" [class.has-error]="hasError(['regulated', 'kycproofofapprovaldoc', 'hash'])">
+                        <label for="kycproofofapprovaldoc" class="control-label">
+                            {{ 'Proof of approval or copy of order' | translate }}
+                        </label>
+                        <div class="filedrop-wrapper">
+                            <setl-file-drop filePermission="0" class="form-control" id="kycproofofapprovaldoc"
+                                            (onDrop)="uploadFile($event, form.get(['regulated', 'kycproofofapprovaldoc']))"
+                                            [preset]="getDocumentPreset(['regulated', 'kycproofofapprovaldoc'])"
+                                            [inline]="true"
+                                            ngDefaultControl>
+                            </setl-file-drop>
+                        </div>
+                        <span class="field-error">{{ 'File is required' | translate }}</span>
+                    </div>
+
+                    <div class="form-group required-field col-sm-6" [class.has-error]="hasError(['regulated', 'kycproofregulationdoc', 'hash'])">
+                        <label for="kycproofregulationdoc" class="control-label">
+                            {{ 'Proof of regulation/supervision from the regulator\'s website' | translate }}
+                        </label>
+                        <div class="filedrop-wrapper">
+                            <setl-file-drop filePermission="0" class="form-control" id="kycproofregulationdoc"
+                                            (onDrop)="uploadFile($event, form.get(['regulated', 'kycproofregulationdoc']))"
+                                            [preset]="getDocumentPreset(['regulated', 'kycproofregulationdoc'])"
                                             [inline]="true"
                                             ngDefaultControl>
                             </setl-file-drop>

@@ -78,6 +78,7 @@ export class OfiSignUpComponent implements OnInit, OnDestroy {
                         confirmText: this.translate.translate('Continue to @platform@', { 'platform': this.appConfig.platform }),
                         declineText: '',
                         btnClass: 'success',
+                        focusButton: 'confirm',
                     },
                 ).subscribe(() => {
                     // Resolve so user gets logged in and has a token

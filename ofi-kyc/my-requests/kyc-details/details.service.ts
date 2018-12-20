@@ -1,6 +1,9 @@
 import { Injectable } from '@angular/core';
 import { NgRedux } from '@angular-redux/store';
-import { get as getValue, toPairs, map, chain, value, omit, pickBy, pick, find, parseInt, isNil, toString, sortBy } from 'lodash';
+import { get as getValue, toPairs, map, chain, value, omit, pickBy, pick, find, parseInt, isNil, toString, sortBy, isEmpty } from 'lodash';
+
+import { FileDownloader } from '@setl/utils';
+import { MemberSocketService } from '@setl/websocket-service';
 import { OfiKycService } from '@ofi/ofi-main/ofi-req-services/ofi-kyc/service';
 import * as requestsConfig from '../requests.config';
 import { clearkycdetailsall } from '@ofi/ofi-main/ofi-store/ofi-kyc/kyc-details';
@@ -13,6 +16,8 @@ export class KycDetailsService {
     constructor(
         private ofiKycService: OfiKycService,
         private ngRedux: NgRedux<any>,
+        private memberSocketService: MemberSocketService,
+        private fileDownloader: FileDownloader,
     ) {
     }
 
@@ -21,6 +26,29 @@ export class KycDetailsService {
     }
 
     getData(kycID) {
+        return this.ofiKycService.getKyc(kycID).then((response) => {
+            const alreadyCompleted = getValue(response, [1, 'Data', 0, 'alreadyCompleted']);
+
+            if (isNil(alreadyCompleted)) {
+                return;
+            }
+
+            if (alreadyCompleted === 0) {
+                this.getDetails(kycID);
+            }
+            if (alreadyCompleted === 1) {
+                this.getLightDetails(kycID);
+            }
+
+            return alreadyCompleted;
+        });
+    }
+
+    getLightDetails(kycID) {
+        OfiKycService.defaultRequestKycDetailsValidation(this.ofiKycService, this.ngRedux, kycID);
+    }
+
+    getDetails(kycID) {
         OfiKycService.defaultRequestKycDetailsGeneral(this.ofiKycService, this.ngRedux, kycID);
         OfiKycService.defaultRequestKycDetailsCompany(this.ofiKycService, this.ngRedux, kycID);
         OfiKycService.defaultRequestKycDetailsCompanyBeneficiaries(this.ofiKycService, this.ngRedux, kycID);
@@ -37,23 +65,17 @@ export class KycDetailsService {
     }
 
     toArray(data) {
-        const booleans = chain(data)
-            .pickBy((val, key) => requestsConfig.booleanControls.indexOf(key) !== -1)
-            .mapValues(value => parseInt(value, 10) ? 1 : 0)
-            .value();
+        if (!isNil(data.optFor)) {
+            if (data.investorStatus === requestsConfig.investorStatusList.nonPro) {
+                data.optForPro = data.optFor;
+            } else if (data.investorStatus !== requestsConfig.investorStatusList.nonPro) {
+                data.optForNonPro = data.optFor;
+            }
 
-        const currencies = chain(data)
-            .pickBy((val, key) => requestsConfig.currencyControls.indexOf(key) !== -1)
-            .mapValues(value => `${value} €`)
-            .value();
-
-        const percentage = chain(data)
-            .pickBy((val, key) => requestsConfig.percentageControls.indexOf(key) !== -1)
-            .mapValues(value => `${value} %`)
-            .value();
+            delete data.optFor;
+        }
 
         const array = chain(data)
-            .merge(booleans, currencies, percentage)
             .omit([
                 'kycID',
                 'objectivesSameInvestmentCrossAm',
@@ -67,7 +89,11 @@ export class KycDetailsService {
             .map(([controlName, controlValue]) => ({
                 originalId: controlName,
                 id: this.getNameFromControl(controlName),
-                value: this.getValueFromControl(controlName, controlValue)
+                originalValue: controlValue,
+                value: (() => {
+                    controlValue = this.getValueFromControl(controlName, controlValue);
+                    return this.getBooleanValueFromControl(controlName, controlValue);
+                })(),
             }))
             .filter()
             .value();
@@ -124,6 +150,27 @@ export class KycDetailsService {
         const listName = requestsConfig.controlToList[controlName];
         const list = requestsConfig[listName];
 
+        if (requestsConfig.percentageControls.indexOf(controlName) !== -1) {
+            return `${controlValue} %`;
+        }
+
+        if (requestsConfig.currencyControls.indexOf(controlName) !== -1) {
+            return `${controlValue} €`;
+        }
+
+        if (list) {
+            controlValue = toString(controlValue);
+            return (controlValue as string).split(' ').reduce((acc, cur) => {
+                let found = find(list, ['id', cur]);
+                found = found ? found.text : cur;
+                return acc ? [acc, found].join('|') : found;
+            },                                                '');
+        }
+
+        return controlValue;
+    }
+
+    getBooleanValueFromControl(controlName, controlValue) {
         if (requestsConfig.booleanControls.indexOf(controlName) !== -1) {
             controlValue = parseInt(controlValue, 10);
 
@@ -133,22 +180,23 @@ export class KycDetailsService {
                 controlValue = 'Yes';
             }
         }
-        if (list) {
-            controlValue = toString(controlValue);
-            return (controlValue as string).split(' ').reduce(
-                (acc, cur) => {
-                    let found = find(list, ['id', cur]);
-                    found = found ? found.text : cur;
-                    return acc ? [acc, found].join('|') : found;
-                },
-                '',
-            );
-        }
 
         return controlValue;
     }
 
     getNameFromControl(controlName) {
         return requestsConfig.controlToName[controlName] || controlName;
+    }
+
+    exportStakeholders(kycID, userID) {
+        const config = {
+            method: 'exportKYCBeneficiariesCSV',
+            token: this.memberSocketService.token,
+            kycID,
+            userId: userID,
+            timezoneoffset: new Date().getTimezoneOffset(),
+        };
+
+        this.fileDownloader.downLoaderFile(config);
     }
 }

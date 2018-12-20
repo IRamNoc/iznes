@@ -1,22 +1,10 @@
-<form [formGroup]="form" id="step-selection" (ngSubmit)="handleFormSubmit($event)" class="well p-1">
+<h3 class="text-center step-title">
+    {{ 'Select Management Companies' | translate }}
+</h3>
 
-    <div class="row" [class.mb-1]="isTableDisplayed">
-        <div class="col-sm-6">
-            <span class="pb-1">
-                {{ 'Please select the Asset Management Companies you would like to work with on IZNES.' | translate }}
-            </span>
+<form [formGroup]="form" id="step-selection" (ngSubmit)="handleSubmit($event)" class="well p-1">
 
-            <ng-select [items]="filteredManagementCompanies"
-                       [multiple]="true"
-                       [formControl]="form.get('managementCompanies')"
-                       placeholder="{{ 'Search' | translate }}"
-                       class="form-control"
-                       [disabled]="submitted"
-            ></ng-select>
-        </div>
-    </div>
-
-    <div class="row" *ngIf="alreadyRegistered && isTableDisplayed">
+    <div class="row" *ngIf="alreadyRegistered">
         <div class="col-sm-12">
 
             <div class="text-center mb-1">
@@ -24,59 +12,73 @@
                     <clr-icon class="alert-icon" shape="exclamation-triangle"></clr-icon>
                 </span>
                 <span class="alert-text text-warning">
-                    {{ 'Warning: if you select Yes in the following table, you will not be able to benefit from all the KYC features of IZNES.' | translate }}
+                    {{ 'Warning: if you select Yes in the following list, you will not be able to benefit from all the KYC features of IZNES.' | translate }}
                 </span>
             </div>
 
         </div>
     </div>
 
-    <div class="row" *ngIf="isTableDisplayed">
-        <div class="col-sm-12">
-            <table class="table">
-                <thead>
-                <tr>
-                    <th>{{ 'Asset Management Companies' | translate }}</th>
-                    <th>{{ 'Are you already registered?' | translate }}</th>
-                </tr>
-                </thead>
-                <tbody>
-                <tr *ngIf="managementCompanies && preselectedManagementCompany.id">
-                    <td>{{managementCompanies[preselectedManagementCompany.id]?.companyName}}</td>
-                    <td>
-                        <label class="switch">
-                            <input [attr.disabled]="submitted ? 'true' : null" 
-                                    type="checkbox" 
-                                    name="registered" 
-                                    class="form-control" 
-                                    [(ngModel)]="preselectedManagementCompany.registered" 
-                                    [ngModelOptions]="{standalone: true}" 
-                                    (ngModelChange)="onRegisteredChange()">
-                            <span class="slider round" data-yes="YES" data-no="NO"></span>
-                        </label>
-                    </td>
-                </tr>
-                <tr *ngFor="let company of selectedManagementCompanies">
-                    <td>{{company.text}}</td>
-                    <td>
-                        <label class="switch" *ngIf="company.id">
-                            <input [attr.disabled]="submitted ? 'true' : null" 
-                                    type="checkbox" 
-                                    id="registered_{{company.id}}" 
-                                    name="registered" 
-                                    [(ngModel)]="company.registered" 
-                                    [ngModelOptions]="{standalone: true}" 
-                                    class="form-control" 
-                                    (ngModelChange)="onRegisteredChange()">
-                            <span class="slider round" data-yes="YES" data-no="NO"></span>
-                        </label>
-                    </td>
-                </tr>
-                </tbody>
-            </table>
+    <div>
+
+        <div class="management-companies">
+
+            <div class="management-company-container" *ngFor="let managementCompany of managementCompanies">
+
+                <div class="link">
+                    <ng-container *ngIf="isWebsiteAddressValid(managementCompany.websiteUrl)">
+                        <i class="fa fa-external-link"></i>
+                        <a href="{{getWebsiteAddress(managementCompany.websiteUrl)}}" target="_blank">{{'Visit website' | translate}}</a>
+                    </ng-container>
+                    <ng-container *ngIf="!isWebsiteAddressValid(managementCompany.websiteUrl)">
+                        &nbsp;
+                    </ng-container>
+                </div>
+
+                <div class="management-company" [class.selected]="managementCompany.selected">
+                    <i class="fa fa-check fa-2x confirm-mark" *ngIf="managementCompany.selected"></i>
+
+                    <div class="infos" (click)="toggleManagementCompany(managementCompany)">
+                        <div class="logo">
+                            <div class="img-container">
+                                <div class="img">
+                                    <img *ngIf="managementCompany.image" src="{{managementCompany.image}}" alt="{{managementCompany.text}}"/>
+                                    <i *ngIf="!managementCompany.image" class="fa fa-building-o fa-3x"></i>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="name">
+                            <strong>{{managementCompany.text}}</strong>
+                        </div>
+                    </div>
+
+                    <div class="actions" *ngIf="!duplicate" [hidden]="!managementCompany.selected">
+                        <div class="done">
+                            <span>
+                                {{'KYC Completed?' | translate}}
+                            </span>
+
+                            <label class="switch small" *ngIf="managementCompany.id">
+                                <input [attr.disabled]="submitted ? 'true' : null"
+                                       type="checkbox"
+                                       id="registered_{{managementCompany.id}}"
+                                       name="registered"
+                                       class="form-control"
+                                       [(ngModel)]="managementCompany.registered"
+                                       [ngModelOptions]="{standalone: true}"
+                                       (ngModelChange)="onRegisteredChange()">
+                                <span class="slider round" data-yes="YES" data-no="NO"></span>
+                            </label>
+                        </div>
+                    </div>
+                </div>
+
+            </div>
+
         </div>
+
     </div>
 
-    <input type="submit" class="hidden" />
+    <input type="submit" class="hidden"/>
 
 </form>

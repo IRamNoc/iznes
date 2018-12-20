@@ -136,7 +136,7 @@ export class InvestmentObjectiveFormComponent implements OnInit, OnDestroy {
     }
 
     formCheckInvestmentHorizonWanted(value) {
-        const investmentHorizonWantedSpecificPeriodControl: FormControl = this.form.get('investmentHorizonWantedSpecificPeriod');
+        const investmentHorizonWantedSpecificPeriodControl : FormControl = this.form.get('investmentHorizonWantedSpecificPeriod');
 
         if (value) {
             investmentHorizonWantedSpecificPeriodControl.enable();
@@ -159,7 +159,7 @@ export class InvestmentObjectiveFormComponent implements OnInit, OnDestroy {
     }
 
     formCheckRiskProfile(value) {
-        const riskProfileCapitalControl: FormControl = this.form.get('riskProfileCapital');
+        const riskProfileCapitalControl : FormControl = this.form.get('riskProfileCapital');
 
         if (value === 'partiallyProtected') {
             riskProfileCapitalControl.enable();

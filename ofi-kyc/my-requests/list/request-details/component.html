@@ -2,10 +2,10 @@
     <table>
         <tr>
             <td class="text-right" style="line-height: 1.1em;">
-                <span *ngIf="requestDetailStatus === 'Approved'" class="status text-success">{{ 'ACCEPTED' | translate | uppercase }}</span>
-                <span *ngIf="requestDetailStatus === 'Rejected'" class="status text-red">{{ 'REJECTED' | translate | uppercase }}</span>
-                <span *ngIf="requestDetailStatus === 'WaitingForApproval'" class="status text-warning">{{ 'WAITING APPROVAL' | translate | uppercase }}</span>
-                <span *ngIf="requestDetailStatus === 'WaitingForMoreInfo'" class="status text-warning">{{ 'WAITING INFORMATION' | translate | uppercase }}</span>
+                <span *ngIf="requestDetailStatus === 'Approved'" class="status text-success">{{ 'Accepted' | translate }}</span>
+                <span *ngIf="requestDetailStatus === 'Rejected'" class="status text-red">{{ 'Rejected' | translate }}</span>
+                <span *ngIf="requestDetailStatus === 'WaitingForApproval'" class="status text-warning">{{ 'Waiting Approval' | translate }}</span>
+                <span *ngIf="requestDetailStatus === 'WaitingForMoreInfo'" class="status text-warning">{{ 'Waiting Information' | translate }}</span>
                 <br>
                 <small>{{ 'Last Update' | translate }}: {{lastUpdate}}</small>
             </td>
@@ -47,7 +47,7 @@
         <ng-container>
             <h1 [ngClass]="{'mt-1': (requestDetailStatus === 'Approved' || requestDetailStatus === 'WaitingForApproval')}">{{ '@companyName@\'s Contact Details' | translate: { 'companyName': companyName } }}</h1>
             <div class="row" [ngClass]="{'mt-1': (requestDetailStatus === 'Approved' || requestDetailStatus === 'WaitingForApproval')}">
-                <div class="col-md-12"> 
+                <div class="col-md-12">
                     <section class="form-block">
                         <div class="row">
                             <div class="form-group col-md-3">
@@ -75,10 +75,10 @@
 </div>
 
 <!-- Main content. -->
-<ng-container *ngIf="isKYCFull">
+<ng-container>
     <div class="wrapper wrapper-content">
         <div class="hr-line-dashed"></div>
-        <p>{{ 'Please find below the information and documents you provided during the application for @companyName@.' | translate: { 'companyName': companyName } }}</p>
+        <p *ngIf="isKYCFull">{{'Please find below the information and documents you provided during the application for @companyName@.' | translate: {'companyName': companyName} }}</p>
     </div>
     <kyc-details [kycID]="kycID"></kyc-details>
 </ng-container>

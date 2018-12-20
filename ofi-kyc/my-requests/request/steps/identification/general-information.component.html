@@ -50,15 +50,10 @@
             </div>
 
             <div class="row">
-                <div class="form-group col-sm-6">
-                    <label class="control-label" for="otherIdentificationNumber">{{' Other Identification Number' | translate }}</label>
-                    <ng-select allowClear="true" 
-                                id="otherIdentificationNumber" 
-                                [items]="identificationNumberList" 
-                                formControlName="otherIdentificationNumber" 
-                                placeholder="{{ 'Select identification number type' | translate }}">
-                    </ng-select>
-                    <span class="field-error" *ngIf="hasError(['otherIdentificationNumber'], ['required'])">{{ 'Field is required' | translate }}</span>
+                <div class="form-group required-field col-sm-6">
+                    <label class="control-label" for="otherIdentificationNumber">{{'Other identification number' | translate}}</label>
+                    <ng-select id="otherIdentificationNumber" [items]="identificationNumberList" formControlName="otherIdentificationNumber" placeholder="{{'Type' | translate}}"></ng-select>
+                    <span class="field-error" *ngIf="hasError(['otherIdentificationNumber'], ['required'])">{{'Field is required' | translate}}</span>
                 </div>
 
                 <div *ngIf="!isDisabled(['otherIdentificationNumberText'])" class="form-group required-field col-sm-6">

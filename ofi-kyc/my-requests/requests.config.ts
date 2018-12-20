@@ -1,5 +1,41 @@
 import { fundItems } from '@ofi/ofi-main/ofi-product/productConfig';
 
+export const formStepsFull = [
+    {
+        title: 'Selection',
+        id: 'step-selection',
+    },
+    {
+        title: 'Introduction',
+    },
+    {
+        title: 'Identification',
+        id: 'step-identification',
+    },
+    {
+        title: 'Risk profile',
+        id: 'step-risk-profile',
+    },
+    {
+        title: 'Documents',
+        id: 'step-documents',
+    },
+    {
+        title: 'Validation',
+        id: 'step-validation',
+    },
+];
+export const formStepsLight = [
+    {
+        title: 'Selection',
+        id: 'step-selection',
+    },
+    {
+        title: 'Validation',
+        id: 'step-validation',
+    },
+];
+
 export enum investorStatusList {
     nonPro,
     proByNature,
@@ -21,6 +57,17 @@ export const investorStatusTextList = [
     },
 ];
 
+export const minimalInvestorStatusTextList = [
+    {
+        id: '0',
+        text: 'Non professional investor',
+    },
+    {
+        id: '1',
+        text: 'Professional investor',
+    },
+];
+
 export const booleanControls = [
     'commercialDomiciliation',
     'activitiesBenefitFromExperience',
@@ -29,6 +76,11 @@ export const booleanControls = [
     'naturesSameInvestmentCrossAm',
     'objectivesSameInvestmentCrossAm',
     'constraintsSameInvestmentCrossAm',
+    'optFor',
+    'optForPro',
+    'optForNonPro',
+    'exerciseControl',
+    'isLegalRepresentative',
 ];
 
 export const currencyControls = [
@@ -44,6 +96,7 @@ export const percentageControls = [
     'riskAcceptanceLevel4',
     'holdingPercentage',
     'floatableShares',
+    'votingPercentage',
 ];
 
 export const fileControls = [
@@ -87,9 +140,10 @@ export const selectControls = [
     'regulatoryStatus',
     'regulatoryStatusInsurerType',
     'riskProfile',
-    'beneficiaryType',
     'nationalIdNumber',
     'holdingType',
+    'parent',
+    'country',
 ];
 
 export const controlOrder = [
@@ -138,15 +192,33 @@ export const controlOrder = [
     'geographicalOrigin1',
     'geographicalOrigin2',
     'totalFinancialAssetsAlreadyInvested',
+
+    // Classification
+    'investorStatus',
+    'optForPro',
+    'optForNonPro',
+    'excludeProducts',
+    'firstName',
+    'lastName',
+    'jobPosition',
+    'numberYearsExperienceRelatedFunction',
+    'numberYearsCurrentPosition',
+    'financialInstruments',
+    'financialInstrumentsSpecification',
+    'marketArea',
+    'natureTransactionPerYear',
+    'volumeTransactionPerYear',
+    'activitiesBenefitFromExperience',
+    'activitiesBenefitFromExperienceSpecification',
 ];
 
 export const steps = {
-    amcSelection: 1,
-    introduction: 2,
-    identification: 3,
-    riskProfile: 4,
-    documents: 5,
-    validation: 6,
+    amcSelection: 0,
+    introduction: 1,
+    identification: 2,
+    riskProfile: 3,
+    documents: 4,
+    validation: 5,
 };
 
 export const countries = fundItems.domicileItems;
@@ -416,8 +488,7 @@ export const sectorActivityList = [
 export const listingMarketsList = [
     { id: 'londonstockexchange', text: 'London Stock Exchange' },
     { id: 'borsefrankfurter', text: 'Börse Frankfurter' },
-    { id: 'nyse', text: 'NYSE' },
-    { id: 'euronext', text: 'Euronext' },
+    { id: 'nyse', text: 'NYSE Euronext' },
     { id: 'deutscheborse', text: 'Deutsche Börse' },
     { id: 'borseberlin', text: 'Börse Berlin' },
     { id: 'batseurope', text: 'Bats Europe' },
@@ -1242,32 +1313,8 @@ export const capitalNatureList = [
 
 export const documentTypesList = [
     {
-        id: 'kyclistshareholdersdoc',
-        text: 'Official documents (or equivalent) listing the shareholders with their % of ownership if greater than 25%',
-    },
-    {
-        id: 'kyclistdirectorsdoc',
-        text: 'Official document (or equivalent) listing the directors',
-    },
-    {
-        id: 'kycbeneficialownersdoc',
-        text: 'List of beneficial owners',
-    },
-    {
-        id: 'kyclistauthoriseddoc',
-        text: 'List of persons authorised to give instructions',
-    },
-    {
-        id: 'kyctaxcertificationdoc',
-        text: 'Tax self-certification form',
-    },
-    {
-        id: 'kycw8benefatcadoc',
-        text: 'Form W-8BEN-E (FATCA',
-    },
-    {
         id: 'kycstatuscertifieddoc',
-        text: 'Status "certified" (or equivalent) by the duly authorized representative of the client',
+        text: 'Statuses "certified" by the duly authorized representative of the client',
     },
     {
         id: 'kyckbisdoc',
@@ -1282,16 +1329,32 @@ export const documentTypesList = [
         text: 'National identity card or valid passport or residence card of the signatory with photograph',
     },
     {
-        id: 'kycproofofapprovaldoc',
-        text: 'Proof of approval or copy of decree',
+        id: 'kycwolfsbergdoc',
+        text: 'Wolfsberg Questionnaire or equivalent',
+    },
+    {
+        id: 'kyctaxcertificationdoc',
+        text: 'Tax self certification form (CRS)',
+    },
+    {
+        id: 'kycw8benefatcadoc',
+        text: 'Form W-8BEN-E (FACTA)',
     },
     {
         id: 'kycisincodedoc',
         text: 'ISIN code of the listed share',
     },
     {
-        id: 'kycwolfsbergdoc',
-        text: 'Wolfsberg Questionnaire or equivalentFor',
+        id: 'kycevidencefloatable',
+        text: 'Evidence of stocklisting and confirmation that 75% of the company\'s shares are floatable and tradable on the market',
+    },
+    {
+        id: 'kycproofofapprovaldoc',
+        text: 'Proof of approval or copy of order',
+    },
+    {
+        id: 'kycproofregulationdoc',
+        text: 'Proof of regulation/supervision from the Regulator’s Website',
     },
 
 ];
@@ -1327,10 +1390,6 @@ export const identificationNumberList = [
         id: 'siren',
         text: 'SIREN',
     },
-    {
-        id: 'other',
-        text: 'Other',
-    },
 ];
 
 export const controlToName = {
@@ -1340,8 +1399,8 @@ export const controlToName = {
     leiCode: 'LEI Code',
     otherIdentificationNumber: 'Other identification number type',
     otherIdentificationNumberText: 'Other identification number',
-    registeredCompanyAddressLine1: "Registered company's headquarters address (including country)",
-    registeredCompanyAddressLine2: 'Address Line 2',
+    registeredCompanyAddressLine1: "Registered company's headquarters address",
+    registeredCompanyAddressLine2: 'Address line 2',
     registeredCompanyZipCode: 'ZIP Code',
     registeredCompanyCity: 'City',
     registeredCompanyCountry: 'Country',
@@ -1359,7 +1418,7 @@ export const controlToName = {
 
     // Company
     sectorActivity: 'Primary sector of activity',
-    sectorActivityText: 'Sector of activity',
+    sectorActivityText: 'Primary sector of activity specification',
     activities: 'Management in behalf of',
     ownAccountinvestor: 'Own-account for',
     investorOnBehalfThirdParties: 'Third parties type',
@@ -1415,10 +1474,12 @@ export const controlToName = {
     country: 'Country',
 
     // Classification
-    investorStatus: 'Investor Status',
-    excludeProducts: 'Excluded category of Products/Services',
-    changeProfessionalStatus: 'Opted for non professional status',
-    jobPosition: 'Job Position',
+    optForPro: 'Asked for professional status',
+    optForNonPro: 'Opted for non professional classification',
+    classificationChangeAccepted: 'Classification change accepted',
+    investorStatus: 'Initial investor status',
+    excludeProducts: 'Excluded category of products/services',
+    jobPosition: 'Job position',
     numberYearsExperienceRelatedFunction: 'Number of years of experience in a function related to financial markets',
     numberYearsCurrentPosition: 'Number of years of experience in current position',
     financialInstruments: 'Financial instruments that have already been the subject of transactions by the said natural person in the professional environment',
@@ -1518,4 +1579,5 @@ export const controlToList = {
 
     nationality: 'countries',
     countryTaxResidence: 'countries',
+    country: 'countries',
 };

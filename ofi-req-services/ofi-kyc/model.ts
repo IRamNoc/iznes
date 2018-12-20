@@ -41,6 +41,19 @@ export interface CreateUserRequestData {
     lang: string;
 }
 
+export interface DuplicateKycRequestData{
+    managementCompanies: any[];
+    kycToDuplicate: number;
+    investorWalletID: number;
+}
+
+export interface DuplicateKycMessageBody extends MemberNodeMessageBody{
+    token: string;
+    managementCompanies: any[];
+    kycToDuplicate: number;
+    investorWalletID: number;
+}
+
 export interface CreateUserRequestBody extends MemberNodeMessageBody {
     token: string;
     email: string;
@@ -142,6 +155,11 @@ export interface GetAmKycListRequestBody extends MemberNodeMessageBody {
 export interface GetMyKycListRequestBody extends MemberNodeMessageBody {
     token: string;
     walletid: number;
+}
+
+export interface GetKycRequestBody extends MemberNodeMessageBody {
+    token: string;
+    kycID: number;
 }
 
 export interface GetInvestorRequestBody extends MemberNodeMessageBody {

@@ -16,7 +16,7 @@
                         <p class="m-0">
                             {{ 'In this submodule, you can select the Asset Management Companies you want to work with and follow the status of your requests' | translate }}
                         </p>
-                        <button [routerLink]="['../new']" class="btn btn-primary m-0" id="kyc-newRequestBtn">
+                        <button (click)="newRequestModal = true" [disabled]="!hasCompaniesToRequest()" class="btn btn-primary m-0" id="kyc-newRequestBtn">
                             {{ 'Make New Request' | translate }}
                         </button>
                     </div>
@@ -41,3 +41,42 @@
     </clr-tabs>
 
 </div>
+
+<clr-modal [(clrModalOpen)]="newRequestModal">
+    <div class="modal-title">{{'Make a new request' | translate}}</div>
+    <div class="modal-body">
+
+        <div class="pb-1">
+            <clr-alert [clrAlertSizeSmall]="true" [clrAlertType]="'alert-info'" [clrAlertClosable]="false">
+                <div class="alert-item">
+                    <span class="alert-text">
+                        {{ 'In order to save you time and not fill in the form again, you can duplicate an already sent request.' | translate }}
+                    </span>
+                </div>
+            </clr-alert>
+        </div>
+
+        <form [formGroup]="choices">
+            <div class="radio-inline opt-btn-element">
+                <input type="radio" id="opt-type-scratch" value="scratch" formControlName="choice">
+                <label for="opt-type-scratch">{{'Make a request from scratch' | translate}}</label>
+            </div>
+            <div class="radio-inline opt-btn-element">
+                <input type="radio" id="opt-type-duplicate" value="duplicate" formControlName="choice">
+                <label for="opt-type-duplicate">{{'Duplicate a request' | translate}}</label>
+            </div>
+
+            <div class="selector">
+                <ng-select [items]="kycListSelect" [formControl]="choices.get('selected')" placeholder="{{'Select previous request' | translate}}" [disabled]="choices.get('choice').value === 'scratch'"></ng-select>
+                <small class="txtRed" *ngIf="hasError()">
+                    {{'Select a KYC to duplicate' | translate}}
+                </small>
+            </div>
+        </form>
+
+    </div>
+    <div class="modal-footer">
+        <button class="btn" (click)="newRequestModal = false">{{'Cancel' | translate}}</button>
+        <button class="btn btn-primary" (click)="handleConfirm()">{{'Validate' | translate}}</button>
+    </div>
+</clr-modal>
