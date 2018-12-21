@@ -1,7 +1,7 @@
-/* Angular/vendor imports. */
 import { Directive, ElementRef, EventEmitter, Output, Input, AfterViewInit, OnDestroy } from '@angular/core';
 import { MultilingualService } from '@setl/multilingual';
 import { UserPreferenceService } from '@setl/core-req-services/user-preference/service';
+import { TourConfig } from './model';
 import * as _ from 'lodash';
 
 @Directive({
@@ -13,11 +13,8 @@ export class UserTourDirective implements AfterViewInit, OnDestroy{
 
     private currentStage: number = 0;
 
-    @Input() config: any = {
-        tourName: '',
-        stages: {},
-    };
-    @Output() rowsUpdate: EventEmitter<any> = new EventEmitter();
+    @Input() config: TourConfig;
+    @Output() stage: EventEmitter<any> = new EventEmitter();
 
     constructor(
         private el: ElementRef,
@@ -27,30 +24,43 @@ export class UserTourDirective implements AfterViewInit, OnDestroy{
     }
 
     ngAfterViewInit() {
-        this.userPreferenceService.getUserPreference({ key: this.config.tourName }).then((response) => {
-            const completedTour = _.get(response, '[1].Data[0].value', false);
-            if (!completedTour) {
-                setTimeout(
-                    () => {
-                        this.launchUserTour();
-                    },
-                    200,
-                );
-            }
-        });
-
         this.createLaunchTrigger();
+        this.handleLaunch();
     }
 
     /**
-     * Launch User Tour
-     * ----------------
+     * Handles when to launch the User Tour based on the config settings
+     * -----------------------------------------------------------------
      */
-    launchUserTour() {
+    private handleLaunch() {
+        if (this.config.hasOwnProperty('autostart')) {
+            if (this.config.autostart) this.launchUserTour();
+        } else {
+            // Check if user has previously completed this tour
+            this.userPreferenceService.getUserPreference({ key: this.config.tourName }).then((response) => {
+                const completedTour = _.get(response, '[1].Data[0].value', false);
+                if (!completedTour) {
+                    setTimeout(
+                        () => {
+                            this.launchUserTour();
+                        },
+                        200,
+                    );
+                }
+            });
+        }
+    }
+
+    /**
+     * Launches the User Tour
+     * ----------------------
+     */
+    private launchUserTour() {
         this.currentStage = 0;
 
         this.el.nativeElement.classList.add('usertour');
 
+        // Create the overlay div
         const overlay = document.createElement('div');
         overlay.className = 'overlay';
         this.el.nativeElement.insertBefore(overlay, this.el.nativeElement.firstChild);
@@ -60,14 +70,15 @@ export class UserTourDirective implements AfterViewInit, OnDestroy{
             datagrid.classList.add('visible');
         });
 
-        this.createStage(Object.keys(this.config.stages)[0]);
+        // Create Tour Stage
+        this.createStage(Object.keys(this.config.stages)[this.currentStage]);
     }
 
     /**
      * Create Launch Trigger
      * ---------------------
      */
-    createLaunchTrigger() {
+    private createLaunchTrigger() {
         const triggerParentEl = this.el.nativeElement.firstChild;
         triggerParentEl.firstChild.setAttribute('style', 'display: inline-block');
         const triggerDiv = document.createElement('div');
@@ -76,16 +87,17 @@ export class UserTourDirective implements AfterViewInit, OnDestroy{
         triggerDiv.innerHTML = '<i class="fa fa-question-circle text-primary user-tour-icon"></i>';
         triggerParentEl.appendChild(triggerDiv);
 
+        // Add click event listener to launch tour
         this.el.nativeElement.querySelector(`#launch-btn-${this.config.tourName} .fa`)
             .addEventListener('click', () => this.launchUserTour());
     }
 
     /**
-     * Create Stage
-     * ------------
+     * Creates a User Tour Stage
+     * -------------------------
      * @param stage
      */
-    createStage(stage) {
+    private createStage(stage) {
         const stageEl = this.el.nativeElement.querySelector(`div #${stage}`);
 
         // Preserve width of child element
@@ -96,6 +108,7 @@ export class UserTourDirective implements AfterViewInit, OnDestroy{
         // Highlight child element
         if (this.config.stages[stage].highlight) stageEl.classList.add('highlight');
 
+        // Create signpost element
         const signpost = document.createElement('span');
         signpost.className = 'signpost';
         const totalStages = Object.keys(this.config.stages).length;
@@ -103,40 +116,49 @@ export class UserTourDirective implements AfterViewInit, OnDestroy{
             `<button id="${stage}-prev-btn" class="btn btn-outline btn-prev">Prev</button>` : '';
         signpost.innerHTML = `
                     <i id="close-user-tour-${stage}" class="fa fa-times close-btn"></i>
-                    <h2><!--<i class="fa fa-question-circle text-primary"></i>-->${this.config.stages[stage].title}</h2>
-                    <p>${this.config.stages[stage].text}</p>
+                    <h2>${this.translate.translate(this.config.stages[stage].title)}</h2>
+                    <p>${this.translate.translate(this.config.stages[stage].text)}</p>
+                    <p class="must-complete">Please complete the action above to continue</p>
                     ${prevBtnHTML}
                     <button id="${stage}-next-btn" class="btn btn-outline btn-next">
                         ${(totalStages - 1) === this.currentStage ? 'Close' : 'Next'}</button>
                     <p class="stage-number">${this.currentStage + 1} of ${totalStages}</p>`;
+        stageEl.appendChild(signpost);
 
+        // Scroll child element into view
+        stageEl.scrollIntoView();
+
+        // Set position of signpost
         if (this.config.stages[stage].position) {
             stageEl.classList.add(this.config.stages[stage].position);
         } else {
             stageEl.classList.add(this.calculatePosition(stageEl, signpost));
         }
 
-        stageEl.appendChild(signpost);
-
-        signpost.scrollIntoView({ block: 'center' });
-
+        // Set click event listeners for signpost buttons
         const prevBtn = this.el.nativeElement.querySelector(`#${stage}-prev-btn`);
         const nextBtn = this.el.nativeElement.querySelector(`#${stage}-next-btn`);
         const closeBtn = this.el.nativeElement.querySelector(`#close-user-tour-${stage}`);
-
         nextBtn.addEventListener('click', () => this.prepNextStage());
         if (prevBtn) prevBtn.addEventListener('click', () => this.prepPrevStage());
         closeBtn.addEventListener('click', () => this.closeUserTour());
     }
 
-    calculatePosition(stageEl, signpostEl) {
+    /**
+     * Calculates the position of the signpost
+     * --------------------------------------
+     * @param stageEl
+     * @param signpostEl
+     * @return positionClass
+     */
+    private calculatePosition(stageEl, signpostEl) {
         const offset = stageEl.getBoundingClientRect();
-        const right = document.documentElement.clientWidth - offset.left;
-        const bottom = document.documentElement.clientHeight - offset.top;
+        const right = (document.documentElement.clientWidth - stageEl.offsetWidth) - offset.left;
+        const bottom = (document.documentElement.clientHeight - stageEl.offsetHeight) - offset.top;
         const sidebarWidth = document.querySelector('nav.sidenav').clientWidth;
         const topbarHeight = document.querySelector('app-navigation-topbar').clientHeight;
-        const signpostHeight = signpostEl.clientHeight;
-        const signpostWidth = signpostEl.clientWidth;
+        const signpostHeight = signpostEl.offsetHeight;
+        const signpostWidth = signpostEl.offsetWidth;
 
         if (bottom > signpostHeight) {
             if (right > signpostWidth) return 'right-bottom';
@@ -152,28 +174,31 @@ export class UserTourDirective implements AfterViewInit, OnDestroy{
     }
 
     /**
-     * Prepare Next Stage
+     * Prepares the Next Stage
      * ------------------
      */
-    prepNextStage() {
+    private prepNextStage() {
         const stageKey = Object.keys(this.config.stages)[this.currentStage];
 
+        // Check if current stage is must complete
         if (this.config.stages[stageKey].hasOwnProperty('mustComplete')) {
             if (!this.config.stages[stageKey].mustComplete()) {
-                console.log('+++ stage must complete', this.config);
-                alert('you shall not pass!');
+                const stageEl = this.el.nativeElement.querySelector(`div #${stageKey}`);
+                if (stageEl) stageEl.querySelector('.must-complete').setAttribute('style', 'display: block;');
                 return;
             }
         }
 
         this.closeCurrentStage();
-
         this.currentStage += 1;
 
+        // Close user tour if this is the last stage
         if (this.currentStage === Object.keys(this.config.stages).length) {
             this.closeUserTour();
             return;
         }
+
+        // Otherwise create next stage
         this.createStage(Object.keys(this.config.stages)[this.currentStage]);
     }
 
@@ -183,40 +208,34 @@ export class UserTourDirective implements AfterViewInit, OnDestroy{
      */
     prepPrevStage() {
         this.closeCurrentStage();
-
         this.currentStage -= 1;
-
-        if (this.currentStage === Object.keys(this.config.stages).length) {
-            this.closeUserTour();
-            return;
-        }
         this.createStage(Object.keys(this.config.stages)[this.currentStage]);
     }
 
     /**
-     * Close Current Stage
+     * Closes the Current Stage
      * -------------------
      */
     closeCurrentStage() {
-        const lastStage = Object.keys(this.config.stages)[this.currentStage];
-
-        this.removeEventListeners(lastStage);
-
-        const currentStageEl = this.el.nativeElement.querySelector(`#${lastStage}`);
+        const currentStage = Object.keys(this.config.stages)[this.currentStage];
+        this.removeEventListeners(currentStage);
+        const currentStageEl = this.el.nativeElement.querySelector(`#${currentStage}`);
         if (currentStageEl) {
+            // Remove any classes set
             currentStageEl.lastChild.remove();
-            ['top', 'bottom', 'left', 'right', 'stage'].forEach((classToRemove) => {
-                currentStageEl.classList.remove(classToRemove);
-            });
+            ['top-left', 'top-middle', 'top-right', 'right-top', 'right-middle', 'right-bottom', 'bottom-left',
+                'bottom-middle', 'bottom-right', 'left-top', 'left-middle', 'left-bottom', 'stage']
+                .forEach((classToRemove) => {
+                    currentStageEl.classList.remove(classToRemove);
+                });
         }
     }
 
     /**
-     * Close User Tour
+     * Closes the User Tour
      * ---------------
      */
     closeUserTour() {
-        // Close stage
         this.closeCurrentStage();
 
         // Remove overlay
@@ -227,7 +246,7 @@ export class UserTourDirective implements AfterViewInit, OnDestroy{
             datagrid.classList.remove('visible');
         });
 
-        // Save user preference
+        // Save user preference that tour is complete
         this.userPreferenceService.saveUserPreference({ key: this.config.tourName, value: true });
     }
 
