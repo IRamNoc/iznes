@@ -33,6 +33,7 @@ export class SendAssetComponent implements OnInit, OnDestroy {
     addressHoldings: {} = {};
     addressHoldingAmount: number = 0;
     showAddressHolding: boolean = false;
+    tourConfig: any = {};
 
     @select(['user', 'connected', 'connectedWallet']) connectedWalletOb;
     @select(['wallet', 'myWalletHolding', 'holdingByAsset']) holdingByAssetOb;
@@ -63,6 +64,7 @@ export class SendAssetComponent implements OnInit, OnDestroy {
             const positiveHoldings = {};
             this.allInstrumentList = [];
             this.noInstrumentsAlert = false;
+            this.setTourConfig();
             if (!_.isEmpty(holdings) && holdings.hasOwnProperty(this.connectedWalletId) && this.connectedWalletId) {
                 for (const holding in holdings[this.connectedWalletId]) {
                     /* Add to instrument list if free holdings is greater than 0 */
@@ -77,6 +79,7 @@ export class SendAssetComponent implements OnInit, OnDestroy {
             /* Display alert if there are no instruments in the list */
             if (!this.allInstrumentList.length) {
                 this.noInstrumentsAlert = true;
+                this.setTourConfig();
             }
         }));
 
@@ -113,6 +116,8 @@ export class SendAssetComponent implements OnInit, OnDestroy {
         this.subscriptionsArray.push(this.newSendAssetRequest.subscribe((newSendAssetRequest) => {
             this.showResponseModal(newSendAssetRequest);
         }));
+
+        this.setTourConfig();
     }
 
     ngOnInit() {
@@ -188,6 +193,10 @@ export class SendAssetComponent implements OnInit, OnDestroy {
                 this.holdingsValidator,
             ],
         );
+
+        this.sendAssetForm.valueChanges.subscribe((values) => {
+            console.log('+++ values', values);
+        });
     }
 
     /**
@@ -312,6 +321,72 @@ export class SendAssetComponent implements OnInit, OnDestroy {
 
         /* Refresh form validation */
         this.sendAssetForm.get('amount').updateValueAndValidity();
+    }
+
+    setTourConfig() {
+        this.tourConfig = { tourName: 'usertour_sendasset' };
+        if (this.noInstrumentsAlert) {
+            this.tourConfig.stages = {
+                usertour1: {
+                    title: 'Send Asset',
+                    text: `In this component you can create a request to send an amount of an asset from one address to
+                       another. You don't have any assets setup for this wallet currently. Visit the
+                       <a href="/#/asset-servicing/register-issuer">'Register Issuer'</a>
+                       section to set up one and return later to complete the send asset tour.`,
+                },
+            };
+        } else {
+            this.tourConfig = {
+                tourName: 'usertour_sendasset',
+                stages: {
+                    usertour1: {
+                        title: 'Send Asset',
+                        text: `In this component you can create a request to send an amount of an asset from one address
+                        to another. This quick tour will guide you through creating a transaction request.`,
+                    },
+                    usertour2: {
+                        title: 'Select the asset',
+                        text: 'Select the asset you wish to send.',
+                        highlight: true,
+                        mustComplete: () => {
+                            return !!_.get(this.sendAssetForm, 'value.asset[0].id', false);
+                        },
+                    },
+                    usertour3: {
+                        title: 'Select from address',
+                        text: `Select the send from address for the transaction. You'll also be able to see how much
+                        balance this address holds of this asset. Choose one with a positive balance.`,
+                        highlight: true,
+                        mustComplete: () => {
+                            return !!_.get(this.sendAssetForm, 'value.assetAddress[0].id', false);
+                        },
+                    },
+                    usertour4: {
+                        title: 'Choose the recipient',
+                        text: `Select the recipient address type and then find the recipient address for the
+                        transaction. Make sure the recipient address is different to the from address.`,
+                        mustComplete: () => {
+                            return !!_.get(this.sendAssetForm, 'value.recipient', false);
+                        },
+                        highlight: true,
+                    },
+                    usertour5: {
+                        title: 'Enter the amount',
+                        text: 'Finally enter the amount you wish to send of the selected asset.',
+                        highlight: true,
+                        mustComplete: () => {
+                            return _.get(this.sendAssetForm, 'value.amount', 0) > 0;
+                        },
+                    },
+                    usertour6: {
+                        title: 'Send the request',
+                        text: `If all of the steps above have been correctly completed and you are happy with the
+                        details entered, you can now send your transaction request.`,
+                        highlight: true,
+                    },
+                },
+            };
+        }
     }
 
     ngOnDestroy() {
