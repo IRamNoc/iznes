@@ -1,13 +1,15 @@
 # Introduction
-Rows Per Page is a directive for use on Clarity Datagrids across Setl projects. The directive adds a select input to
-the DOM allowing users to choose the amount of rows to display per datagrid page.
+UserTour is a directive for use across Setl projects. The directive takes a config object and displays tooltip style signpost elements to the UI
+to guide the user through a particular feature or component. 
 
 Features:
-* A default of 5 RowsPerPage with preset values of `5, 10, 20, 50 and 100` to select between
-* Pass in a custom array of numbers to the `[defaultRows]` input to override the above presets
-* Saves the users RowsPerPage preference to MySQL on each change and restores this setting
-* If no saved user setting exists, you can pass a custom default value in the RowsPerPage HTML attribute which gets added to the select input if not already present
-* A CSS fix is applied to remove the static height of the datagrid if 20 RowsPerPage or greater is selected
+* Easy to setup - just import, wrap the HTML you want to use in a div with the directive on, create the config object and away you go
+* Works across components - the directive uses DOM manipulation after the view has been rendered so as long as all components have been wrapped in
+the div containing the directive it will work
+* Make a tour step 'must complete' so the user has to complete an action before proceeding. Pass a callback function that returns a boolean to control
+when the user can proceed
+* The position of the signpost on the UI is calculated automatically or can be set manually in the config
+* Plus other settings can be controlled from the config...
 
 # Usage:
 ## 1. Import the `SetlDirectivesModule`
@@ -24,31 +26,110 @@ import { SetlDirectivesModule } from '@setl/utils/directives/index';
 })
 ```
 
-## 2. Using the `RowsPerPageDirective`.
+## 2. Setting up the `UserTourDirective`.
 
-Set up a variable in your `component.ts` to store the emitted value to pass to the datagrid
+Set up a config object to pass to the UserTourDirective. Below is an example of a minimal setup:
 
 ```typescript
-    public pageSize: Number;
+    public tourConfig: any = {
+        tourName: 'usertour_example',
+        stages: {
+            stage1: {
+                title: 'Example Tour Title 1',
+                text: 'Example User Tour Text 1',
+            },
+            stage2: {
+                title: 'Example Tour Title 2',
+                text: 'Example UserTour Text 2',
+            }
+        }
+    };
 ```
 
-## 3. Using the `rowsPerPage` directive.
+## 3. Implementing the `userTour` directive.
 
 **Note: you'll have to import the `SetlDirectivesModule` into the module that your component is declared in.**
 
-An example of a HTML datagrid footer in a component using the directive.
+Wrap all of the HTML you want to setup the User Tour for in a `<div>` containing the directive and feed it the config you have created:
 
 ```html
-<clr-dg-footer>
-    <div rowsPerPage="10" [defaultRows]="[5, 10, 15, 20]" (rowsUpdate)="pageSize = $event"></div>
-    {{pagination.firstItem + 1}} - {{pagination.lastItem + 1}}
-    <clr-dg-pagination #pagination [clrDgPageSize]="pageSize"></clr-dg-pagination>
-</clr-dg-footer>
+<div userTour [config]="tourConfig">
+    <h1>Your content to tour</h1>
+    <p>Example content</p>
+    ...
+</div>
 ```
 
-* `rowsPerPage="10"` is passing a default of 10 RowsPerPage (Note: this will be overwritten if a saved user preference exists). Equally you can omit the value and just use
-`rowsPerPage` which will set the default to 5
-* `[defaultRows]` is the optional input to pass a custom array of numbers to replace the select options with 
-* `(rowsUpdate)="pageSize = $event"` updates the variable defined on the `component.ts` with the RowsPerPage
-value as it is changed
-* `[clrDgPageSize]="pageSize"` is passing the RowsPerPage value to the datagrid
+Then wrap each element you want to pick out as a stage of the User Tour in a `<div>` with an ID that matches the corresponding key of the stage name
+in the config object:
+
+```html
+<div userTour [config]="tourConfig">
+    <div id="stage1">
+        <h1>Your content to tour</h1>
+    </div>
+    <div id="stage2">
+       <p>Example content</p>
+   </div>
+    ...
+</div>
+```
+That's it! You're up and running.
+
+# Config Settings
+There are a number of useful settings you can control in in the config object:
+<br>*? at the end of a property name means it's optional*
+```typescript
+{
+    tourName: 'string',
+    // Unique name of the User Tour
+    
+    autostart?: 'boolean',
+    // TRUE autostarts every load, FALSE never autostarts AND omitting launches it on first view
+    // (first view only is controlled by saving to tblUserPrefence once a tour has been closed)
+    
+    stages: {
+        
+        [stageName: string]: {
+            // Name of the stage which must match the id of the div wrapping the child element in the HTML
+            
+            title: 'string',
+            // Title displayed on the tour stage signpost
+            
+            text: 'string',
+            // Text displayed on the tour stage signpost
+            
+            mustComplete?: () => {};
+            // Pass a callback function that returns a boolean to determine if a user can move past this stage.
+            // If omitted must complete is not set
+            
+            highlight?: boolean;
+            // Highlights the child stage element with a white background
+            
+            position?: PositionEnum;
+            // Sets a position for the signpost, otherwise it is calculated automatically
+            
+            preserveWidth?: boolean;
+            // Preserve the width of the child stage element (use if the tour styles effect the child element width)
+        },
+        ...
+        // Repeat for as many stages as required
+    }
+}
+
+enum PositionEnum {
+    'top-left',
+    'top-middle',
+    'top-right',
+    'right-top',
+    'right-middle',
+    'right-bottom',
+    'bottom-left',
+    'bottom-middle',
+    'bottom-right',
+    'left-top',
+    'left-middle',
+    'left-bottom',
+}
+
+```
