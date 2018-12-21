@@ -193,10 +193,6 @@ export class SendAssetComponent implements OnInit, OnDestroy {
                 this.holdingsValidator,
             ],
         );
-
-        this.sendAssetForm.valueChanges.subscribe((values) => {
-            console.log('+++ values', values);
-        });
     }
 
     /**
@@ -349,7 +345,7 @@ export class SendAssetComponent implements OnInit, OnDestroy {
                         text: 'Select the asset you wish to send.',
                         highlight: true,
                         mustComplete: () => {
-                            return !!_.get(this.sendAssetForm, 'value.asset[0].id', false);
+                            return this.sendAssetForm.controls.asset.valid;
                         },
                     },
                     usertour3: {
@@ -358,7 +354,7 @@ export class SendAssetComponent implements OnInit, OnDestroy {
                         balance this address holds of this asset. Choose one with a positive balance.`,
                         highlight: true,
                         mustComplete: () => {
-                            return !!_.get(this.sendAssetForm, 'value.assetAddress[0].id', false);
+                            return this.sendAssetForm.controls.assetAddress.valid;
                         },
                     },
                     usertour4: {
@@ -366,7 +362,7 @@ export class SendAssetComponent implements OnInit, OnDestroy {
                         text: `Select the recipient address type and then find the recipient address for the
                         transaction. Make sure the recipient address is different to the from address.`,
                         mustComplete: () => {
-                            return !!_.get(this.sendAssetForm, 'value.recipient', false);
+                            return this.sendAssetForm.controls.recipient.valid;
                         },
                         highlight: true,
                     },
@@ -375,7 +371,7 @@ export class SendAssetComponent implements OnInit, OnDestroy {
                         text: 'Finally enter the amount you wish to send of the selected asset.',
                         highlight: true,
                         mustComplete: () => {
-                            return _.get(this.sendAssetForm, 'value.amount', 0) > 0;
+                            return this.sendAssetForm.controls.amount.valid;
                         },
                     },
                     usertour6: {
