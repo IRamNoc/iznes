@@ -23,12 +23,11 @@
         display: inline-block;
         position: relative;
         z-index: 5;
+        width: auto;
         &.highlight {
             background: rgba(255, 255, 255, 1);
-            border: solid 8px transparent;
-            border-left: solid 15px transparent;
-            border-right: solid 15px transparent;
-            margin: -8px -15px;
+            border: solid 22px transparent;
+            margin: -22px;
             border-radius: 10px;
         }
         .signpost {
@@ -43,21 +42,18 @@
             text-align: left;
             line-height: 22px;
             text-shadow: none;
+            cursor: default;
+            .must-complete {
+                color: red;
+                display: none;
+            }
             &::before {
                 content: '';
-                border-bottom: 18px solid transparent;
-                border-right: 18px solid #9a9a9a;
                 position: absolute;
-                left: -18px;
-                top: -1px;
             }
             &::after {
                 content: '';
-                border-bottom: 18px solid transparent;
-                border-right: 18px solid #fff;
-                left:-16px;
                 position: absolute;
-                top: 0;
             }
             .btn-next {
                 float: right;
@@ -86,178 +82,126 @@
             bottom: calc(100% + 20px);
             &::before {
                 border-top: 18px solid #9a9a9a;
-                border-bottom: 0;
                 border-left: 18px solid transparent;
-                border-right: 0;
                 bottom: -19px;
-                top: auto;
-                left: -1px;
-                right: auto;
+                right: -1px;
             }
             &::after {
                 border-top: 18px solid #fff;
-                border-bottom: 0;
                 border-left: 18px solid transparent;
-                border-right: 0;
-                right: 0;
-                left: auto;
                 bottom: -17px;
-                top: auto;
+                right: 0;
             }
         }
         &.top-middle .signpost {
             left: calc(50% - 200px);
             top: auto;
-            bottom: calc(100% + 20px);
+            bottom: calc(100% + 36px);
             &::before {
                 border-top: 18px solid #9a9a9a;
-                border-bottom: 0;
                 border-left: 18px solid transparent;
                 border-right: 18px solid transparent;
                 transform: translateX(-50%);
                 bottom: -18px;
-                top: auto;
                 right: calc(50% - 36px);
-                left: auto;
             }
             &::after {
                 border-top: 18px solid #fff;
-                border-bottom: 0;
                 border-left: 18px solid transparent;
                 border-right: 18px solid transparent;
                 right: calc(50% - 18px);
-                left: auto;
                 bottom: -17px;
-                top: auto;
             }
         }
         &.top-right .signpost {
             right: -400px;
-            left: auto;
             top: auto;
             bottom: calc(100% + 20px);
             &::before {
                 border-top: 18px solid #9a9a9a;
-                border-bottom: 0;
-                border-left: 0;
                 border-right: 18px solid transparent;
                 bottom: -19px;
-                top: auto;
                 left: -1px;
-                right: auto;
             }
             &::after {
                 border-top: 18px solid #fff;
-                border-bottom: 0;
-                border-left: 0;
                 border-right: 18px solid transparent;
-                right: auto;
-                left: 0;
                 bottom: -17px;
-                top: auto;
+                left: 0;
             }
         }
         &.right-top .signpost {
             right: -420px;
-            left: auto;
             top: auto;
             bottom: 100%;
             &::before {
-                border-top: 0;
                 border-bottom: 18px solid #9a9a9a;
                 border-left: 18px solid transparent;
-                border-right: 0;
                 bottom: -1px;
-                top: auto;
                 left: -19px;
-                right: auto;
             }
             &::after {
-                border-top: 0;
                 border-bottom: 18px solid #fff;
                 border-left: 18px solid transparent;
-                border-right: 0;
-                right: auto;
                 left: -17px;
                 bottom: 0;
-                top: auto;
             }
         }
         &.right-middle .signpost {
             right: -420px;
-            left: auto;
             top: 50%;
             transform: translateY(-50%);
             &::before {
-                border-left: 0;
                 border-right: 18px solid #9a9a9a;
                 border-top: 18px solid transparent;
                 border-bottom: 18px solid transparent;
                 transform: translateX(-50%);
-                bottom: auto;
                 top: calc(50% - 18px);
-                right: auto;
                 left: -10px;
             }
             &::after {
-                border-left: 0;
                 border-right: 18px solid #fff;
                 border-top: 18px solid transparent;
                 border-bottom: 18px solid transparent;
-                bottom: auto;
                 top: calc(50% - 18px);
-                right: auto;
                 left: -18px;
             }
         }
         &.right-bottom .signpost {
             right: -420px;
-            left: auto;
             top: 100%;
             &::before {
-                border-left: 0;
                 border-right: 18px solid #9a9a9a;
                 border-bottom: 18px solid transparent;
-                border-top: 0;
                 top: -1px;
-                bottom: auto;
-                right: auto;
                 left: -19px;
             }
             &::after {
-                border-left: 0;
                 border-right: 18px solid #fff;
                 border-bottom: 18px solid transparent;
-                border-top: 0;
-                top: 0;
-                bottom: auto;
-                right: auto;
                 left: -17px;
+                top: 0;
             }
         }
         &.bottom-left .signpost {
             left: -400px;
-            top: calc(100% + 20px);
+            top: calc(100% + 36px);
             &::before {
                 border-bottom: 18px solid #9a9a9a;
                 border-left: 18px solid transparent;
-                border-right: 0;
                 top: -19px;
                 right: -1px;
-                left: auto;
             }
             &::after {
                 border-bottom: 18px solid #fff;
                 border-left: 18px solid transparent;
-                border-right: 0;
                 right: 0;
-                left: auto;
                 top: -17px;
             }
         }
         &.bottom-middle .signpost {
             left: calc(50% - 200px);
-            top: calc(100% + 20px);
+            top: calc(100% + 36px);
             &::before {
                 border-bottom: 18px solid #9a9a9a;
                 border-left: 18px solid transparent;
@@ -265,166 +209,82 @@
                 transform: translateX(-50%);
                 top: -18px;
                 right: calc(50% - 36px);
-                left: auto;
             }
             &::after {
                 border-bottom: 18px solid #fff;
                 border-left: 18px solid transparent;
                 border-right: 18px solid transparent;
                 right: calc(50% - 18px);
-                left: auto;
                 top: -17px;
             }
         }
         &.bottom-right .signpost {
             right: -400px;
-            top: calc(100% + 20px);
+            top: calc(100% + 36px);
             &::before {
                 border-bottom: 18px solid #9a9a9a;
-                border-left: 0;
                 border-right: 18px solid transparent;
                 top: -19px;
                 left: -1px;
-                right: auto;
             }
             &::after {
                 border-bottom: 18px solid #fff;
-                border-left: 0;
                 border-right: 18px solid transparent;
-                right: auto;
                 left: 0;
                 top: -17px;
             }
         }
         &.left-top .signpost {
             left: -420px;
-            right: auto;
             top: auto;
             bottom: 100%;
             &::before {
-                border-top: 0;
                 border-bottom: 18px solid #9a9a9a;
                 border-right: 18px solid transparent;
-                border-left: 0;
                 bottom: -1px;
-                top: auto;
                 right: -19px;
-                left: auto;
             }
             &::after {
-                border-top: 0;
                 border-bottom: 18px solid #fff;
                 border-right: 18px solid transparent;
-                border-left: 0;
-                left: auto;
                 right: -17px;
                 bottom: 0;
-                top: auto;
             }
         }
         &.left-middle .signpost {
             left: -420px;
-            right: auto;
             top: 50%;
             transform: translateY(-50%);
             &::before {
-                border-right: 0;
                 border-left: 18px solid #9a9a9a;
                 border-top: 18px solid transparent;
                 border-bottom: 18px solid transparent;
                 transform: translateX(-50%);
-                bottom: auto;
                 top: calc(50% - 18px);
-                left: auto;
                 right: -28px;
             }
             &::after {
-                border-right: 0;
                 border-left: 18px solid #fff;
                 border-top: 18px solid transparent;
                 border-bottom: 18px solid transparent;
-                bottom: auto;
                 top: calc(50% - 18px);
-                left: auto;
                 right: -18px;
             }
         }
         &.left-bottom .signpost {
             left: -420px;
-            right: auto;
             top: 100%;
-            bottom: auto;
             &::before {
-                border-right: 0;
                 border-left: 18px solid #9a9a9a;
                 border-bottom: 18px solid transparent;
-                border-top: 0;
                 top: -1px;
-                bottom: auto;
-                left: auto;
                 right: -19px;
             }
             &::after {
-                border-right: 0;
                 border-left: 18px solid #fff;
                 border-bottom: 18px solid transparent;
-                border-top: 0;
                 top: 0;
-                bottom: auto;
-                left: auto;
                 right: -17px;
-            }
-        }
-
-
-        &.left .signpost {
-            left: -430px;
-            &::before {
-                border-bottom: 18px solid transparent;
-                border-left: 18px solid #9a9a9a;
-                border-right: 0;
-                right: -18px;
-                left: auto;
-            }
-            &::after {
-                border-bottom: 18px solid transparent;
-                border-left: 18px solid #fff;
-                border-right: 0;
-                right: -16px;
-                left: auto;
-            }
-        }
-        &.right .signpost {
-            right: -430px;
-        }
-        &.middle .signpost {
-            top: calc(50% + 5px);
-            transform: translateY(-50%);
-            &::before {
-                top: calc(50% - 1px);
-                transform: translateY(-50%);
-            }
-            &::after {
-                top: 50%;
-                transform: translateY(-50%);
-            }
-        }
-        &.bottom .signpost {
-            top: auto;
-            bottom: 5px;
-            &::before {
-                bottom: -1px;
-                top: auto;
-                border-bottom: 0;
-                border-top: 18px solid transparent;
-                border-right: 18px solid #9a9a9a;
-            }
-            &::after {
-                bottom: 0;
-                top: auto;
-                border-top: 18px solid transparent;
-                border-bottom: 0;
-                border-right: 18px solid #fff;
             }
         }
     }
