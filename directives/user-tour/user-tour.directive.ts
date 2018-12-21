@@ -79,16 +79,23 @@ export class UserTourDirective implements AfterViewInit, OnDestroy{
      * ---------------------
      */
     private createLaunchTrigger() {
-        const triggerParentEl = this.el.nativeElement.firstChild;
-        triggerParentEl.firstChild.setAttribute('style', 'display: inline-block');
-        const triggerDiv = document.createElement('div');
-        triggerDiv.setAttribute('id', `launch-btn-${this.config.tourName}`);
-        triggerDiv.classList.add('launch-user-tour');
-        triggerDiv.innerHTML = '<i class="fa fa-question-circle text-primary user-tour-icon"></i>';
-        triggerParentEl.appendChild(triggerDiv);
+        const existingLaunchDiv = document.querySelector('.launch-user-tour');
+        let launchDiv;
+        if (existingLaunchDiv) {
+            launchDiv = existingLaunchDiv;
+        } else {
+            const triggerParentEl = document.querySelector('.router-container');
+            launchDiv = document.createElement('div');
+            launchDiv.classList.add('launch-user-tour');
+            triggerParentEl.appendChild(launchDiv);
+        }
+        const trigger = document.createElement('div');
+        trigger.innerHTML = `<i id="launch-btn-${this.config.tourName}" class="fa fa-question-circle text-primary
+                                user-tour-icon"></i>`;
+        launchDiv.appendChild(trigger);
 
         // Add click event listener to launch tour
-        this.el.nativeElement.querySelector(`#launch-btn-${this.config.tourName} .fa`)
+        launchDiv.querySelector(`#launch-btn-${this.config.tourName}`)
             .addEventListener('click', () => this.launchUserTour());
     }
 
@@ -267,7 +274,9 @@ export class UserTourDirective implements AfterViewInit, OnDestroy{
     }
 
     ngOnDestroy() {
-        this.el.nativeElement.querySelector(`#launch-btn-${this.config.tourName} .fa`)
+        document.querySelector(`#launch-btn-${this.config.tourName}`)
             .removeEventListener('click', () => this.launchUserTour());
+
+        document.querySelector('.launch-user-tour').remove();
     }
 }

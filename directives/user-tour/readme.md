@@ -9,6 +9,7 @@ the div containing the directive it will work
 * Make a tour step 'must complete' so the user has to complete an action before proceeding. Pass a callback function that returns a boolean to control
 when the user can proceed
 * The position of the signpost on the UI is calculated automatically or can be set manually in the config
+* Adds a blue `?` UI icon to the DOM so users can launch the Tour
 * Plus other settings can be controlled from the config...
 
 # Usage:
@@ -41,8 +42,8 @@ Set up a config object to pass to the UserTourDirective. Below is an example of 
             stage2: {
                 title: 'Example Tour Title 2',
                 text: 'Example UserTour Text 2',
-            }
-        }
+            },
+        },
     };
 ```
 
@@ -94,10 +95,10 @@ There are a number of useful settings you can control in in the config object:
             // Name of the stage which must match the id of the div wrapping the child element in the HTML
             
             title: 'string',
-            // Title displayed on the tour stage signpost
+            // Title displayed on the tour stage signpost. This will be passed through the translation service
             
             text: 'string',
-            // Text displayed on the tour stage signpost
+            // Text displayed on the tour stage signpost. This will be passed through the translation service
             
             mustComplete?: () => {};
             // Pass a callback function that returns a boolean to determine if a user can move past this stage.
