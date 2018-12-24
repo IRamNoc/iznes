@@ -54,7 +54,7 @@ Set up a config object to pass to the UserTourDirective. Below is an example of 
 Wrap all of the HTML you want to setup the User Tour for in a `<div>` containing the directive and feed it the config you have created:
 
 ```html
-<div userTour [config]="tourConfig">
+<div [userTour]="tourConfig">
     <h1>Your content to tour</h1>
     <p>Example content</p>
     ...
@@ -65,7 +65,7 @@ Then wrap each element you want to pick out as a stage of the User Tour in a `<d
 in the config object:
 
 ```html
-<div userTour [config]="tourConfig">
+<div [userTour]="tourConfig">
     <div id="stage1">
         <h1>Your content to tour</h1>
     </div>
