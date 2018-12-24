@@ -99,6 +99,7 @@ export class TooltipDirective implements OnInit, OnDestroy {
                     this.hideTooltip();
                 }
             };
+            this.divTooltipText.innerHTML += this.config.text;
 
             // size rules
             if (!this.config.size) {
@@ -355,12 +356,12 @@ export class TooltipDirective implements OnInit, OnDestroy {
     }
 
     getPageSize() {
-        const w = window,
-            d = document,
-            e = d.documentElement,
-            g = d.getElementsByTagName('body')[0],
-            x = w.innerWidth || e.clientWidth || g.clientWidth,
-            y = w.innerHeight || e.clientHeight || g.clientHeight;
+        const w = window;
+        const d = document;
+        const e = d.documentElement;
+        const g = d.getElementsByTagName('body')[0];
+        const x = w.innerWidth || e.clientWidth || g.clientWidth;
+        const y = w.innerHeight || e.clientHeight || g.clientHeight;
         return { width: x, height: y };
     }
 
@@ -399,7 +400,7 @@ export class TooltipDirective implements OnInit, OnDestroy {
                     break;
             }
             this.renderer.setStyle(this.divTooltip, 'opacity', '0');
-            this.renderer.setStyle(this.divTooltip, 'pointer-events', 'none'); // allow click through transparent tooltips
+            this.renderer.setStyle(this.divTooltip, 'pointer-events', 'none'); // allow click through tooltips
             this.renderer.setStyle(document.querySelector(`#tooltipCloseBtn_${this.randID}`), 'opacity', '0');
         }
     }
@@ -407,7 +408,7 @@ export class TooltipDirective implements OnInit, OnDestroy {
     generateID(length) {
         let text = '';
         const possible = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789';
-        for (let i = 0; i < length; i++) {
+        for (let i = 0; i < length; i += 1) {
             text += possible.charAt(Math.floor(Math.random() * possible.length));
         }
         return text;
@@ -429,7 +430,7 @@ export class TooltipDirective implements OnInit, OnDestroy {
     isChild(parent, child) {
         let node = child.parentNode;
         while (node != null) {
-            if (node == parent) {
+            if (node === parent) {
                 return true;
             }
             node = node.parentNode;
