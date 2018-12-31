@@ -1,9 +1,15 @@
 .launch-user-tour {
-    float: right;
-    .user-tour-icon {
-        font-size: 40px;
-        cursor: pointer;
-        margin: 0;
+    position: absolute;
+    right: 20px;
+    top: 20px;
+    div {
+        display: inline-block;
+        margin: 0 3px;
+        .user-tour-icon {
+            font-size: 40px;
+            cursor: pointer;
+            margin: 0;
+        }
     }
 }
 
