@@ -379,16 +379,3 @@ export {
     getAccountAdminUserPermissions,
     userPermissionAreasReducer,
 } from './account-admin/';
-
-/*
- User tour
- */
-// import { OfiUserTourReducer, OfiUserTourState } from './usertour';
-export {
-    UsersToursState,
-    UsersToursReducer,
-    SET_USERTOUR_INPROGRESS,
-    SET_USER_TOURS,
-    setUserToursRequested,
-    clearUserToursRequested,
-} from './usertour';
