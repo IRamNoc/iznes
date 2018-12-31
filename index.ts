@@ -20,6 +20,7 @@ export { T2sService } from './t2s/t2s.service';
 export { CoreWorkflowEngineService } from './workflow-engine/service';
 export { PersistRequestService } from './persist/persist.service';
 export { NodeAlertsService } from './node-alerts/node-alerts.service';
+export { UserPreferenceService } from './user-preference/service';
 export { ReportingService } from './reporting/reporting.service';
 export { PermissionsRequestService } from './permissions/permissions-request.service';
 export { BaseDataService } from './data-services/base-data-service/base-data.service';
