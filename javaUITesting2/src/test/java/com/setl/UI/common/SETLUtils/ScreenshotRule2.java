@@ -53,7 +53,7 @@ public class ScreenshotRule2 extends TestWatcher {
             dir = "/Users/shared/screenshots//";
         }
         else {//Directs to IznesEntireFlow Jenkins Project
-            dir = "~/jenkins/workspace/IznesEntireFlowTest/target/test-attachments//";
+            dir = "/home/jenkins/workspace/IznesEntireFlowTest/target/test-attachments//";
         }
         String userDirectory = dir;
 
