@@ -55,7 +55,7 @@ public class ScreenshotRule extends TestWatcher {
             dir = "/Users/shared/screenshots//";
         }
         else {//Directs to IznesUI Test Pack Jenkins Project
-            dir = "/var/lib/jenkins/workspace/IznesUIAcceptanceTests/target/test-attachments//";
+            dir = "/home/jenkins/workspace/IznesUIAcceptanceTests/target/test-attachments//";
         }
         String userDirectory = dir;
 
