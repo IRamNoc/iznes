@@ -107,6 +107,11 @@ export class UserTourDirective implements AfterViewInit, OnDestroy{
     private createStage(stage) {
         const stageEl = this.el.nativeElement.querySelector(`div #${stage}`);
 
+        // Prevent scrolling
+        if (document.querySelector('ng-sidebar-container')) {
+            document.querySelector('ng-sidebar-container').setAttribute('style', 'overflow: hidden!important;');
+        }
+
         // Preserve width of child element
         if (this.userTour.stages[stage].preserveWidth) stageEl.style.width = `${stageEl.offsetWidth}px`;
 
@@ -248,7 +253,8 @@ export class UserTourDirective implements AfterViewInit, OnDestroy{
         // Remove overlay
         this.el.nativeElement.querySelector('.usertour .overlay').remove();
 
-        // Remove overflow hidden override on datagrids
+        // Remove overflow hidden override on layout container and datagrids
+        (document.querySelector('ng-sidebar-container') as HTMLElement).style.overflow = '';
         this.el.nativeElement.querySelectorAll('.datagrid-overlay-wrapper').forEach((datagrid) => {
             datagrid.classList.remove('visible');
         });
