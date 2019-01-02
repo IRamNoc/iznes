@@ -41,8 +41,6 @@ export class TooltipDirective implements OnInit, OnDestroy {
 
     @HostListener('mouseover') onMouseOver(): void {
         this.showTooltip();
-        document.querySelector('ng-sidebar-container')
-            .addEventListener('scroll', (event) => { this.getScroll(event); }, false);
     }
 
     @HostListener('mouseleave') onMouseLeave(): void {
