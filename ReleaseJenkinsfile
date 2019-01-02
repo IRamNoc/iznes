@@ -1,31 +1,31 @@
-node {
+node('jenkins03') {
     timestamps {
 
         stage('Check Out Application Code') {
 
-                checkout([$class                           : 'GitSCM', branches: [[name: '*/release']],
-                          doGenerateSubmoduleConfigurations: false, extensions: [],
-                          submoduleCfg                     : [], userRemoteConfigs:
-                              [[credentialsId: '6afd5a8d-023a-49f6-ba58-4f6b35cf3023',
-                                url          : 'git@si-nexus01.dev.setl.io:opencsd-rewrite/opencsd-frontend-clarity.git']]])
-            }
+            checkout([$class                           : 'GitSCM', branches: [[name: '*/release']],
+                      doGenerateSubmoduleConfigurations: false, extensions: [],
+                      submoduleCfg                     : [], userRemoteConfigs:
+                          [[credentialsId: '6afd5a8d-023a-49f6-ba58-4f6b35cf3023',
+                            url          : 'git@si-nexus01.dev.setl.io:opencsd-rewrite/opencsd-frontend-clarity.git']]])
+        }
 
-            stage('Build & Unit Test') {
+        stage('Build & Unit Test') {
 
-                sh '''yarn install &&
+            sh '''yarn install &&
                         cd src &&
                         sass styles.scss:styles.css &&
                         cd ../ '''
 
-                stage('Build Prod') {
-                    sh 'yarn build-prod --output-path iznes_release_dist; cp ./VERSION ./iznes_release_dist/'
-                }
+            stage('Build Prod') {
+                sh 'yarn build-prod --output-path iznes_release_dist; cp ./VERSION ./iznes_release_dist/'
+            }
 
-                stage('Copy code to deployment folder') {
-                    sh '''rm -rf /var/lib/jenkins/Deploy/iznes_release_dist &&
+            stage('Copy code to deployment folder') {
+                sh '''rm -rf /var/lib/jenkins/Deploy/iznes_release_dist &&
                         rsync -a ./iznes_release_dist /var/lib/jenkins/Deploy/'''
 
-                    sh 'php /var/lib/jenkins/build/tools/move-code.php opencsd-iznes release /var/lib/jenkins/Deploy/iznes_release_dist'
+                sh 'php /var/lib/jenkins/build/tools/move-code.php opencsd-iznes release /var/lib/jenkins/Deploy/iznes_release_dist'
 
             }
 
