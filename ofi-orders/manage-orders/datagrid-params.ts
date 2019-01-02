@@ -68,10 +68,10 @@ export class DatagridParams {
 
         this.data.dateSearchField = get(searchValues, ['dateType', '0', 'id'], false);
         const fromDate = moment(get(searchValues, ['fromDate'], null), 'YYYY-MM-DD');
-        const toDate = moment(get(searchValues, ['toDate'], null), 'YYYY-MM-DD').add(1, 'days').subtract(1, 'minutes');
+        const toDate = moment(get(searchValues, ['toDate'], null), 'YYYY-MM-DD').add(1, 'days').subtract(1, 'seconds');
 
-        this.data.fromDate = fromDate.format('YYYY-MM-DD HH:mm');
-        this.data.toDate = toDate.format('YYYY-MM-DD HH:mm');
+        this.data.fromDate = fromDate.format('YYYY-MM-DD HH:mm:ss');
+        this.data.toDate = toDate.format('YYYY-MM-DD HH:mm:ss');
 
         if (this.data.toDate === 'Invalid date' || this.data.fromDate === 'Invalid date') {
             this.data.dateSearchField = null;
