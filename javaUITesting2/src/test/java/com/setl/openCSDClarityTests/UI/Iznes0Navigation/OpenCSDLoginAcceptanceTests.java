@@ -20,7 +20,7 @@ import static com.setl.UI.common.SETLUIHelpers.LoginAndNavigationHelper.logout;
 import static com.setl.UI.common.SETLUIHelpers.SetUp.driver;
 import static com.setl.UI.common.SETLUIHelpers.SetUp.testSetUp;
 
-public class OpenCSDLoginAccetpanceTests
+public class OpenCSDLoginAcceptanceTests
 {
     @Rule
     public ScreenshotRule screenshotRule = new ScreenshotRule();
