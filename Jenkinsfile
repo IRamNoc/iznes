@@ -1,22 +1,15 @@
-node {
-
-}
-
-node {
+node('jenkins03') {
     timestamps {
+        stage('Check Out Tests') {
+            checkout([$class: 'GitSCM', branches: [[name: '*/master']],
+                      doGenerateSubmoduleConfigurations: false, extensions: [],
+                      submoduleCfg: [], userRemoteConfigs: [[credentialsId: 'd2b5fbd5-eb0f-4619-a094-d7d6f7fa249c',
+                                                             url: 'git@si-nexus01.dev.setl.io:opencsd-rewrite/opencsd-frontend-clarity.git']]])
+        }
 
-            stage('Check Out Application Code') {
+        stage('Build & Unit Test') {
 
-                checkout([$class                           : 'GitSCM', branches: [[name: '*/master']],
-                          doGenerateSubmoduleConfigurations: false, extensions: [],
-                          submoduleCfg                     : [], userRemoteConfigs:
-                              [[credentialsId: '6afd5a8d-023a-49f6-ba58-4f6b35cf3023',
-                                url          : 'git@si-nexus01.dev.setl.io:opencsd-rewrite/opencsd-frontend-clarity.git']]])
-            }
-
-            stage('Build & Unit Test') {
-
-                sh '''rm -f yarn.lock &&
+            sh '''rm -f yarn.lock &&
                         yarn install &&
                         yarn upgrade &&
                         yarn test &&
@@ -24,28 +17,28 @@ node {
                         sass styles.scss:styles.css &&
                         cd ../ '''
 
-                junit allowEmptyResults: true, keepLongStdio: true,
-                    testResults: '/TESTS-Headless**'
-            }
+            junit allowEmptyResults: true, keepLongStdio: true,
+                testResults: '/TESTS-Headless**'
+        }
 
-            stage('Build Prod') {
-                sh 'yarn build-prod '
-            }
+        stage('Build Prod') {
+            sh 'yarn build-prod '
+        }
 
-            stage('Copy code to deployment folder') {
-                sh '''  rm -rf /var/lib/jenkins/Deploy/dist &&
+        stage('Copy code to deployment folder') {
+            sh '''  rm -rf /var/lib/jenkins/Deploy/dist &&
                         cp VERSION ./dist &&
                         rsync -a ./dist /var/lib/jenkins/Deploy/'''
 
-                sh 'php /var/lib/jenkins/build/tools/move-code.php opencsd-iznes dev /var/lib/jenkins/Deploy/dist'
+            sh 'php /var/lib/jenkins/build/tools/move-code.php opencsd-iznes dev /var/lib/jenkins/Deploy/dist'
 
-            }
+        }
 
-            stage('Sonar Scan') {
-                withSonarQubeEnv {
+        stage('Sonar Scan') {
+            withSonarQubeEnv {
 
-                    sh 'sudo gulp sonar --project New_OpenCSD_FrontEnd '
-                }
+                sh 'gulp sonar --project New_OpenCSD_FrontEnd '
             }
         }
+    }
 }
