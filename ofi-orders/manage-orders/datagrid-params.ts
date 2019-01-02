@@ -105,6 +105,13 @@ export class DatagridParams {
             cutOffDate: 'cutoffDate',
             settlementDate: 'settlementDate',
             orderStatus: 'orderStatus',
+            investorCompanyName: 'investorCompanyName',
+            portfolio: 'portfolio',
+            assetManagementCompany: 'assetManagementCompany',
+            tradedBy: 'tradedBy',
+            latestNAV: 'latestNAV',
+            feesAmount: 'feesAmount',
+            navDate: 'navDate',
         };
 
         this.data.sortByField = get(fieldMap, get(state, 'sort.by'), this.data.sortByField);
