@@ -19,6 +19,8 @@ import { FormstepsComponent } from './formsteps/formsteps.component';
 import { FormstepComponent } from './formsteps/formstep.component';
 import { ProgressComponent } from './formsteps/progress/progress.component';
 import { FilePreviewComponent } from './file-preview/file-preview.component';
+import { NgxJsonViewerModule } from 'ngx-json-viewer';
+import { JsonViewer } from './json-viewer/json-viewer';
 
 @NgModule({
     declarations: [
@@ -31,6 +33,7 @@ import { FilePreviewComponent } from './file-preview/file-preview.component';
         FormstepComponent,
         ProgressComponent,
         FilePreviewComponent,
+        JsonViewer,
     ],
     exports: [
         VariousAddressSelectComponent,
@@ -43,6 +46,7 @@ import { FilePreviewComponent } from './file-preview/file-preview.component';
         FormstepComponent,
         ProgressComponent,
         FilePreviewComponent,
+        JsonViewer,
     ],
     imports: [
         CommonModule,
@@ -53,6 +57,7 @@ import { FilePreviewComponent } from './file-preview/file-preview.component';
         MultilingualModule,
         DatePickerExtendedModule,
         SetlDirectivesModule,
+        NgxJsonViewerModule,
     ],
     providers: [ConfirmationService],
 })
