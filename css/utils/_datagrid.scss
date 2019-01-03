@@ -209,3 +209,19 @@ app-wfe .datagrid .datagrid-body .datagrid-row .datagrid-cell {
         content: " Montrer/cacher les champs";
     }
 }
+
+//start:
+//temporary fix for clarity version lower than V1, need to remove after we update to V1 or greater
+.datagrid-overlay-wrapper {
+    border-collapse: separate;
+    border: 1px solid #ccc;
+    border-radius: .125rem;
+}
+
+.datagrid {
+    border-collapse: initial;
+    border: none;
+    border-radius: unset;
+}
+//temporary fix for clarity version lower than V1, need to remove after we update to V1 or greater
+//end:
