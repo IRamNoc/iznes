@@ -21,7 +21,7 @@ export const orderTypes: SelectedItem[] = [
 
 export const dateTypes: SelectedItem[] = [
     { id: 'orderDate', text: 'Order Date' },
-    { id: 'cutOffDate', text: 'Cut-off Date' },
+    { id: 'cutoffDate', text: 'Cut-off Date' },
     { id: 'navDate', text: 'NAV Date' },
     { id: 'settlementDate', text: 'Settlement Date' },
 ];
