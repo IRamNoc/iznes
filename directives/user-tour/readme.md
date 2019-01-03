@@ -1,6 +1,5 @@
 # Introduction
-UserTour is a directive for use across Setl projects. The directive takes a config object and displays tooltip style signpost elements to the UI
-to guide the user through a particular feature or component. 
+UserTour is a directive for use across Setl projects. The directive takes a config object and displays tooltip style signpost elements to the UI to guide the user through a particular feature or component. 
 
 Features:
 * Easy to setup - just import, wrap the HTML you want to use in a div with the directive on, create the config object and away you go
@@ -9,7 +8,8 @@ the div containing the directive it will work
 * Make a tour step 'must complete' so the user has to complete an action before proceeding. Pass a callback function that returns a boolean to control
 when the user can proceed
 * The position of the signpost on the UI is calculated automatically or can be set manually in the config
-* Adds a blue `?` UI icon to the DOM so users can launch the Tour
+* Adds a blue `?` UI icon to the DOM so users can launch the Tour. Or turn this off and use a custom trigger on the component
+* Call methods on the directive from your component to launch, close or move through the UserTour
 * Plus other settings can be controlled from the config...
 
 # Usage:
@@ -78,7 +78,7 @@ in the config object:
 That's it! You're up and running.
 
 # Config Settings
-There are a number of useful settings you can control in in the config object:
+There are a number of useful settings you can control in the config object:
 <br>*? at the end of a property name means it's optional*
 ```typescript
 {
@@ -88,6 +88,9 @@ There are a number of useful settings you can control in in the config object:
     autostart?: 'boolean',
     // TRUE autostarts every load, FALSE never autostarts AND omitting launches it on first view
     // (first view only is controlled by saving to tblUserPrefence once a tour has been closed)
+
+    createIcon?: 'boolean',
+    // Controls whether to create the `?` UI trigger icon. TRUE by default
     
     stages: {
         
@@ -134,3 +137,35 @@ enum PositionEnum {
 }
 
 ```
+# Applying custom functionality
+
+## 1. Trigger actions based on the current stage number of the tour
+The current stage number is emitted from the directive so you can hook into it and trigger custom functionality on your component. Just tap into the `(stage)` output:
+```html
+<div [userTour]="tourConfig" (stage)="myCustomFunction($event)">
+```
+
+## 2. Call methods on the UserTour directive
+
+Import the directive and using `@ViewChild` you can call any of it's methods directly from your component to control launching, closing and moving through stages of the tour:
+
+```typescript
+import { ViewChild } from '@angular/core';
+import { UserTourDirective } from '@setl/utils/directives/user-tour/user-tour.directive';
+
+@ViewChild(UserTourDirective) userTour;
+```
+
+After the view has rendered, you can then access any of the below methods:
+
+```typescript
+this.userTour.launchUserTour(); // Launches the UserTour
+
+this.userTour.closeUserTour(); // Closes the UserTour
+
+this.userTour.prepNextStage(); // Moves to the next step of the tour
+
+this.userTour.prepPrevStage(); // Moves to the previous step of the tour
+
+```
+*Note, use `@ViewChildren` instead if you are using multiple UserTours on the same component, and then access the methods above like `this.userTour.first.launchUserTour` where `.first` is the first UserTour directive and `.second` is the second etc.*

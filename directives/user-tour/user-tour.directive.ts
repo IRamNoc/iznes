@@ -24,7 +24,6 @@ export class UserTourDirective implements AfterViewInit, OnDestroy{
     }
 
     ngAfterViewInit() {
-        this.createLaunchTrigger();
         this.handleLaunch();
     }
 
@@ -33,6 +32,8 @@ export class UserTourDirective implements AfterViewInit, OnDestroy{
      * -----------------------------------------------------------------
      */
     private handleLaunch() {
+        if (_.get(this.userTour, 'createIcon', true)) this.createLaunchTrigger();
+
         if (this.userTour.hasOwnProperty('autostart')) {
             if (this.userTour.autostart) this.launchUserTour();
         } else {
@@ -203,6 +204,7 @@ export class UserTourDirective implements AfterViewInit, OnDestroy{
 
         this.closeCurrentStage();
         this.currentStage += 1;
+        this.stage.emit(this.currentStage + 1);
 
         // Close user tour if this is the last stage
         if (this.currentStage === Object.keys(this.userTour.stages).length) {
@@ -221,6 +223,7 @@ export class UserTourDirective implements AfterViewInit, OnDestroy{
     prepPrevStage() {
         this.closeCurrentStage();
         this.currentStage -= 1;
+        this.stage.emit(this.currentStage + 1);
         this.createStage(Object.keys(this.userTour.stages)[this.currentStage]);
     }
 
@@ -251,7 +254,9 @@ export class UserTourDirective implements AfterViewInit, OnDestroy{
         this.closeCurrentStage();
 
         // Remove overlay
-        this.el.nativeElement.querySelector('.usertour .overlay').remove();
+        if (this.el.nativeElement.querySelector('.usertour .overlay')) {
+            this.el.nativeElement.querySelector('.usertour .overlay').remove();
+        }
 
         // Remove overflow hidden override on layout container and datagrids
         (document.querySelector('ng-sidebar-container') as HTMLElement).style.overflow = '';

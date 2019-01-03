@@ -1,6 +1,7 @@
 export interface TourConfig {
     tourName: string;
     autostart?: boolean;
+    createIcon?: boolean;
     stages: StagesConfig;
 }
 
