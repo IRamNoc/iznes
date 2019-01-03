@@ -1,4 +1,4 @@
-<div [userTour]="tourConfig">
+<div [userTour]="userTourConfig" (stage)="userTourStage=$event">
     <div class="header-breadcrumbs">
         <div id="usertour1">
             <h1><i class="fa fa-share-square-o"></i> {{ 'Send Asset' | translate }}</h1>

@@ -1,4 +1,4 @@
-import { ChangeDetectorRef, Component, OnDestroy, OnInit } from '@angular/core';
+import { ChangeDetectorRef, Component, OnDestroy, ViewChild } from '@angular/core';
 import { FormControl, FormGroup, Validators } from '@angular/forms';
 import { SagaHelper, walletHelper } from '@setl/utils';
 import { NgRedux, select } from '@angular-redux/store';
@@ -14,13 +14,14 @@ import { AlertsService } from '@setl/jaspero-ng2-alerts';
 import * as _ from 'lodash';
 import { Subscription } from 'rxjs/Subscription';
 import { MultilingualService } from '@setl/multilingual';
+import { UserTourDirective } from '@setl/utils/directives/user-tour/user-tour.directive';
 
 @Component({
     selector: 'app-send-asset',
     templateUrl: './send-asset.component.html',
     styleUrls: ['./send-asset.component.css'],
 })
-export class SendAssetComponent implements OnInit, OnDestroy {
+export class SendAssetComponent implements OnDestroy {
     sendAssetForm: FormGroup;
     subscriptionsArray: Subscription[] = [];
     connectedWalletId: number;
@@ -33,7 +34,9 @@ export class SendAssetComponent implements OnInit, OnDestroy {
     addressHoldings: {} = {};
     addressHoldingAmount: number = 0;
     showAddressHolding: boolean = false;
-    tourConfig: any = {};
+    userTourConfig: any = {};
+    userTourStage: number = 0;
+    @ViewChild(UserTourDirective) userTour;
 
     @select(['user', 'connected', 'connectedWallet']) connectedWalletOb;
     @select(['wallet', 'myWalletHolding', 'holdingByAsset']) holdingByAssetOb;
@@ -64,7 +67,7 @@ export class SendAssetComponent implements OnInit, OnDestroy {
             const positiveHoldings = {};
             this.allInstrumentList = [];
             this.noInstrumentsAlert = false;
-            this.setTourConfig();
+            this.setUserTourConfig();
             if (!_.isEmpty(holdings) && holdings.hasOwnProperty(this.connectedWalletId) && this.connectedWalletId) {
                 for (const holding in holdings[this.connectedWalletId]) {
                     /* Add to instrument list if free holdings is greater than 0 */
@@ -79,7 +82,7 @@ export class SendAssetComponent implements OnInit, OnDestroy {
             /* Display alert if there are no instruments in the list */
             if (!this.allInstrumentList.length) {
                 this.noInstrumentsAlert = true;
-                this.setTourConfig();
+                this.setUserTourConfig();
             }
         }));
 
@@ -117,10 +120,7 @@ export class SendAssetComponent implements OnInit, OnDestroy {
             this.showResponseModal(newSendAssetRequest);
         }));
 
-        this.setTourConfig();
-    }
-
-    ngOnInit() {
+        this.setUserTourConfig();
     }
 
     /**
@@ -291,6 +291,11 @@ export class SendAssetComponent implements OnInit, OnDestroy {
             `);
 
             this.ngRedux.dispatch(finishSendAssetNotification());
+
+            // Close User Tour if on last stage
+            if (this.userTourStage === 6) {
+                this.userTour.closeUserTour();
+            }
         }
     }
 
@@ -319,10 +324,10 @@ export class SendAssetComponent implements OnInit, OnDestroy {
         this.sendAssetForm.get('amount').updateValueAndValidity();
     }
 
-    setTourConfig() {
-        this.tourConfig = { tourName: 'usertour_sendasset' };
+    setUserTourConfig() {
+        this.userTourConfig = { tourName: 'usertour_sendasset' };
         if (this.noInstrumentsAlert) {
-            this.tourConfig.stages = {
+            this.userTourConfig.stages = {
                 usertour1: {
                     title: 'Send Asset',
                     text: `In this component you can create a request to send an amount of an asset from one address to
@@ -332,54 +337,51 @@ export class SendAssetComponent implements OnInit, OnDestroy {
                 },
             };
         } else {
-            this.tourConfig = {
-                tourName: 'usertour_sendasset',
-                stages: {
-                    usertour1: {
-                        title: 'Send Asset',
-                        text: `In this component you can create a request to send an amount of an asset from one address
-                        to another. This quick tour will guide you through creating a transaction request.`,
+            this.userTourConfig.stages = {
+                usertour1: {
+                    title: 'Send Asset',
+                    text: `In this component you can create a request to send an amount of an asset from one address
+                    to another. This quick tour will guide you through creating a transaction request.`,
+                },
+                usertour2: {
+                    title: 'Select the asset',
+                    text: 'Select the asset you wish to send.',
+                    highlight: true,
+                    mustComplete: () => {
+                        return this.sendAssetForm.controls.asset.valid;
                     },
-                    usertour2: {
-                        title: 'Select the asset',
-                        text: 'Select the asset you wish to send.',
-                        highlight: true,
-                        mustComplete: () => {
-                            return this.sendAssetForm.controls.asset.valid;
-                        },
+                },
+                usertour3: {
+                    title: 'Select from address',
+                    text: `Select the send from address for the transaction. You'll also be able to see how much
+                    balance this address holds of this asset. Choose one with a positive balance.`,
+                    highlight: true,
+                    mustComplete: () => {
+                        return this.sendAssetForm.controls.assetAddress.valid;
                     },
-                    usertour3: {
-                        title: 'Select from address',
-                        text: `Select the send from address for the transaction. You'll also be able to see how much
-                        balance this address holds of this asset. Choose one with a positive balance.`,
-                        highlight: true,
-                        mustComplete: () => {
-                            return this.sendAssetForm.controls.assetAddress.valid;
-                        },
+                },
+                usertour4: {
+                    title: 'Choose the recipient',
+                    text: `Select the recipient address type and then find the recipient address for the
+                    transaction. Make sure the recipient address is different to the from address.`,
+                    mustComplete: () => {
+                        return this.sendAssetForm.controls.recipient.valid;
                     },
-                    usertour4: {
-                        title: 'Choose the recipient',
-                        text: `Select the recipient address type and then find the recipient address for the
-                        transaction. Make sure the recipient address is different to the from address.`,
-                        mustComplete: () => {
-                            return this.sendAssetForm.controls.recipient.valid;
-                        },
-                        highlight: true,
+                    highlight: true,
+                },
+                usertour5: {
+                    title: 'Enter the amount',
+                    text: 'Finally enter the amount you wish to send of the selected asset.',
+                    highlight: true,
+                    mustComplete: () => {
+                        return this.sendAssetForm.controls.amount.valid;
                     },
-                    usertour5: {
-                        title: 'Enter the amount',
-                        text: 'Finally enter the amount you wish to send of the selected asset.',
-                        highlight: true,
-                        mustComplete: () => {
-                            return this.sendAssetForm.controls.amount.valid;
-                        },
-                    },
-                    usertour6: {
-                        title: 'Send the request',
-                        text: `If all of the steps above have been correctly completed and you are happy with the
-                        details entered, you can now send your transaction request.`,
-                        highlight: true,
-                    },
+                },
+                usertour6: {
+                    title: 'Send the request',
+                    text: `If all of the steps above have been correctly completed and you are happy with the
+                    details entered, you can now send your transaction request.`,
+                    highlight: true,
                 },
             };
         }
