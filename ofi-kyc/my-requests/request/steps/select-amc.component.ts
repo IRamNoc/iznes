@@ -141,7 +141,7 @@ export class NewKycSelectAmcComponent implements OnInit, OnDestroy {
     }
 
     selectManagementCompany(amcID) {
-        const managementCompany = find(this.managementCompanies, ['id', amcID]);
+        const managementCompany = find(this.managementCompanies, ['id', +amcID]);
 
         if (managementCompany) {
             this.toggleManagementCompany(managementCompany);
@@ -156,7 +156,12 @@ export class NewKycSelectAmcComponent implements OnInit, OnDestroy {
     }
 
     getQueryParams() {
-        this.route.queryParams.subscribe((queryParams) => {
+        combineLatest(
+            this.route.queryParams,
+            this.managementCompanyList$.pipe(
+                rxFilter(mcs => Boolean(mcs)),
+            ),
+        ).subscribe(([queryParams, _]) => {
             if (queryParams.invitationToken) {
                 const amcID = queryParams.amcID;
 
