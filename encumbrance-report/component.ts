@@ -13,7 +13,6 @@ import * as moment from 'moment';
 @Component({
     selector: 'encumbrance-report',
     templateUrl: './component.html',
-    styleUrls: ['./component.scss'],
 })
 
 export class EncumbranceReportComponent implements OnInit, OnDestroy {
