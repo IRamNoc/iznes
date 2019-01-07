@@ -25,9 +25,6 @@ export class MyWalletsService {
     }
 
     static defaultRequestWalletLabel(ngRedux: NgRedux<any>, myWalletService: MyWalletsService, walletId: number) {
-
-        console.log('+++ REQUEST WALLET LABELS');
-
         // Set the state flag to true. so we do not request it again.
         ngRedux.dispatch(setRequestedWalletLabel());
 
