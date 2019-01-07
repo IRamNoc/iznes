@@ -37,6 +37,13 @@ interface RequestWalletInstrument {
     walletId: number;
 }
 
+interface RequestEncumbranceDetails {
+    walletid: number;
+    address?: string;
+    namespace?: string;
+    classid?: string;
+}
+
 @Injectable()
 export class WalletNodeRequestService {
     constructor(private walletNodeSocketService: WalletNodeSocketService,
@@ -165,5 +172,17 @@ export class WalletNodeRequestService {
         return createWalletNodeRequest(this.walletNodeSocketService, 'request', messageBody).then((response) => {
             return _.get(response, '[1].data');
         });
+    }
+
+    requestEncumbranceDetails(requestData: RequestEncumbranceDetails) {
+        const messageBody: any = {
+            topic: 'encumbrancedetails',
+            walletid: _.get(requestData, 'walletid', 0),
+            address: _.get(requestData, 'address', ''),
+            namespace: _.get(requestData, 'namespace', ''),
+            classid: _.get(requestData, 'classid', ''),
+        };
+
+        return createWalletNodeSagaRequest(this.walletNodeSocketService, 'request', messageBody);
     }
 }
