@@ -4,6 +4,7 @@ import { SetlBalancesComponent } from './balances/balances.component';
 import { SetlIssueComponent } from './issue/issue.component';
 import { SetlTransactionsComponent } from './transactions/transactions.component';
 import { ReportingService } from './reporting.service';
+import { EncumbranceReportComponent } from  './encumbrance-report/component';
 
 /* Clarity module. */
 import { ClarityModule } from '@clr/angular';
@@ -25,11 +26,13 @@ import { FileViewerModule } from '@setl/core-fileviewer';
         SetlBalancesComponent,
         SetlIssueComponent,
         SetlTransactionsComponent,
+        EncumbranceReportComponent,
     ],
     exports: [
         SetlBalancesComponent,
         SetlIssueComponent,
         SetlTransactionsComponent,
+        EncumbranceReportComponent,
     ],
     providers: [
         ReportingService,
