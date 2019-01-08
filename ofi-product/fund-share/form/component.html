@@ -13,7 +13,7 @@
         <clr-tab-content class="outer">
             <div *ngIf="!isRead()" class="row tab-header-container">
                 <div class="col-sm-6">
-                    <p>{{ (isCreate() || currDraft == 1 ? 'Please fill in the following information to create a new Share.': 'Ammend the following information to update this share.') | translate }}</p>
+                    <p>{{ (isCreate() || currDraft == 1 ? 'Please fill in the following information to create a new Share.': 'Amend the following information to update this share.') | translate }}</p>
                 </div>
                 <div class="col-sm-6">
                     <div class="form-group btn-container">
@@ -59,7 +59,7 @@
                             <div class="col-sm-12">
                                 <a href="#" (click)="openPanel(panels['umbrella']['optionnal'], $event)">
                                     <i class="fa fa-chevron-right" [class.rotate]="isPanelOpen(panels['umbrella']['optionnal'])"></i>
-                                    <h2 id="toggleFund">{{ 'Optionnal Information' | translate }}</h2>
+                                    <h2 id="toggleFund">{{ 'Optional Information' | translate }}</h2>
                                 </a>
                             </div>
                         </div>
@@ -158,7 +158,7 @@
                             <div class="col-sm-12">
                                 <a href="#" (click)="openPanel(panels['fund']['optionnal'], $event)">
                                     <i class="fa fa-chevron-right" [class.rotate]="isPanelOpen(panels['fund']['optionnal'])"></i>
-                                    <h2 id="toggleFund">{{ 'Optionnal Information' | translate }}</h2>
+                                    <h2 id="toggleFund">{{ 'Optional Information' | translate }}</h2>
                                 </a>
                             </div>
                         </div>
@@ -251,7 +251,7 @@
                                 <div class="col-xs-6">
                                     <a href="#" (click)="openPanel(panels['calendar'].mandatory, $event)">
                                         <i class="fa fa-chevron-right" [class.rotate]="isPanelOpen(panels['calendar'].mandatory)"></i>
-                                        <h2 id="toggleCalendarMandatory">{{ 'Calendar: Main Information' | translate }}</h2>
+                                        <h2 id="toggleCalendarMandatory">{{ 'Calendar Information' | translate }}</h2>
                                     </a>
                                 </div>
                             </div>
