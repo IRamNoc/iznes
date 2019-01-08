@@ -1,4 +1,4 @@
-# Introduction
+# UserTour Directive
 UserTour is a directive for use across Setl projects. The directive takes a config object and displays tooltip style signpost elements to the UI to guide the user through a particular feature or component. 
 
 Features:
