@@ -3,7 +3,6 @@ import { select } from '@angular-redux/store';
 import {BaseDataService, WalletNodeRequestService} from '@setl/core-req-services';
 import { Observable } from 'rxjs/Rx';
 import {mergeMap, map, filter} from 'rxjs/operators';
-import {ContractService} from '@setl/core-contracts/services/contract.service';
 
 @Injectable({
     providedIn: 'root',
@@ -15,7 +14,6 @@ export class ContractsDataService extends BaseDataService<WalletNodeRequestServi
 
     constructor(
         private walletNodeRequestService: WalletNodeRequestService,
-        private contractService: ContractService,
     ) {
         super(walletNodeRequestService);
         super.setupData(
