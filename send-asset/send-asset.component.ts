@@ -67,7 +67,6 @@ export class SendAssetComponent implements OnDestroy {
             const positiveHoldings = {};
             this.allInstrumentList = [];
             this.noInstrumentsAlert = false;
-            this.setUserTourConfig();
             if (!_.isEmpty(holdings) && holdings.hasOwnProperty(this.connectedWalletId) && this.connectedWalletId) {
                 for (const holding in holdings[this.connectedWalletId]) {
                     /* Add to instrument list if free holdings is greater than 0 */
@@ -82,8 +81,8 @@ export class SendAssetComponent implements OnDestroy {
             /* Display alert if there are no instruments in the list */
             if (!this.allInstrumentList.length) {
                 this.noInstrumentsAlert = true;
-                this.setUserTourConfig();
             }
+            this.setUserTourConfig();
         }));
 
         this.subscriptionsArray.push(this.requestedAddressListLabelOb.subscribe((requested) => {
@@ -119,8 +118,6 @@ export class SendAssetComponent implements OnDestroy {
         this.subscriptionsArray.push(this.newSendAssetRequest.subscribe((newSendAssetRequest) => {
             this.showResponseModal(newSendAssetRequest);
         }));
-
-        this.setUserTourConfig();
     }
 
     /**
@@ -347,35 +344,27 @@ export class SendAssetComponent implements OnDestroy {
                     title: 'Select the asset',
                     text: 'Select the asset you wish to send.',
                     highlight: true,
-                    mustComplete: () => {
-                        return this.sendAssetForm.controls.asset.valid;
-                    },
+                    mustComplete: () => this.sendAssetForm.controls.asset.valid,
                 },
                 usertour3: {
                     title: 'Select from address',
                     text: `Select the send from address for the transaction. You'll also be able to see how much
                     balance this address holds of this asset. Choose one with a positive balance.`,
                     highlight: true,
-                    mustComplete: () => {
-                        return this.sendAssetForm.controls.assetAddress.valid;
-                    },
+                    mustComplete: () => this.sendAssetForm.controls.assetAddress.valid,
                 },
                 usertour4: {
                     title: 'Choose the recipient',
                     text: `Select the recipient address type and then find the recipient address for the
                     transaction. Make sure the recipient address is different to the from address.`,
-                    mustComplete: () => {
-                        return this.sendAssetForm.controls.recipient.valid;
-                    },
+                    mustComplete: () => this.sendAssetForm.controls.recipient.valid,
                     highlight: true,
                 },
                 usertour5: {
                     title: 'Enter the amount',
                     text: 'Finally enter the amount you wish to send of the selected asset.',
                     highlight: true,
-                    mustComplete: () => {
-                        return this.sendAssetForm.controls.amount.valid;
-                    },
+                    mustComplete: () => this.sendAssetForm.controls.amount.valid,
                 },
                 usertour6: {
                     title: 'Send the request',
