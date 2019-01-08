@@ -6,7 +6,11 @@ Features:
 * A module that can be imported into any other module that gives you access to the service.
 * Direct access to the translations object.
 
-# Usage:
+# Overview
+
+See the [Translations](http://wiki.ad.setl.io/search?term=translations) page in the [SETL Wiki](http://wiki.ad.setl.io) for guidance on how to use the translations system.
+
+# Usage
 ## 1. Import the `MultilingualModule`
 
 Import the `MultilingualModule` into your module by using an import statement and adding it to the imports array.
@@ -54,10 +58,6 @@ class MyComponent {
 ```
 
 ## 4. Using the `MultilingualService` to create a new translation.
-
-**Note: See the `Translations System` document for guidance on how to enter new translations into the translations database via the translations generator.**
-
-**Note: See the `Translations System` document for guidance on how to use `updateTranslations.sh` to update the `translations.ts` file with new translations.**
 
 Translate a string using the following methods:
 
