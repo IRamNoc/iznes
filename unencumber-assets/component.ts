@@ -9,12 +9,7 @@ import { Subscription } from 'rxjs/Subscription';
 import {
     WalletnodeTxService, WalletNodeRequestService, MyWalletsService, InitialisationService,
 } from '@setl/core-req-services';
-
-import {
-    setRequestedWalletAddresses,
-    setRequestedWalletInstrument,
-    ADD_WALLETNODE_TX_STATUS,
-} from '@setl/core-store';
+import { setRequestedWalletAddresses, ADD_WALLETNODE_TX_STATUS } from '@setl/core-store';
 
 @Component({
     selector: 'app-unencumber-assets',
@@ -33,6 +28,8 @@ export class UnencumberAssetsComponent implements OnInit, OnDestroy {
     walletDirectoryList = {};
     walletDirectoryListRaw: any[];
     walletRelationships: any[];
+    noInstrumentsAlert: boolean = false;
+    disableAssetSelect: boolean = true; // disable asset select until populated
 
     configFiltersDate = {
         firstDayOfWeek: 'mo',
@@ -53,8 +50,7 @@ export class UnencumberAssetsComponent implements OnInit, OnDestroy {
 
     @select(['user', 'siteSettings', 'language']) requestLanguageObj;
     @select(['user', 'connected', 'connectedWallet']) connectedWalletOb;
-    @select(['asset', 'myInstruments', 'requestedWalletInstrument']) requestedInstrumentState;
-    @select(['asset', 'myInstruments', 'instrumentList']) instrumentListOb;
+    @select(['wallet', 'myWalletHolding', 'holdingByAsset']) holdingByAssetOb;
     @select(['wallet', 'myWalletAddress', 'requestedAddressList']) addressListRequestedStateOb;
     @select(['wallet', 'myWalletAddress', 'requestedLabel']) requestedLabelListObs;
     @select(['wallet', 'myWalletAddress', 'addressList']) addressListOb;
@@ -73,15 +69,15 @@ export class UnencumberAssetsComponent implements OnInit, OnDestroy {
     ) {
         /* Subscribe to the connectedWalletId and setup (or clear) the form group on wallet change */
         this.subscriptionsArray.push(this.connectedWalletOb.subscribe((connectedWalletId) => {
+            if (this.connectedWalletId) {
+                this.unencumberAssetsForm.reset();
+                this.disableAssetSelect = true;
+            } else {
+                this.setFormGroup();
+            }
             this.connectedWalletId = connectedWalletId;
-            this.setFormGroup();
         }));
-        this.subscriptionsArray.push(this.requestedInstrumentState.subscribe((requestedState) => {
-            this.requestWalletInstruments(requestedState);
-        }));
-        this.subscriptionsArray.push(this.instrumentListOb.subscribe((instrumentList) => {
-            this.assetListOption = walletHelper.walletInstrumentListToSelectItem(instrumentList);
-        }));
+        this.subscriptionsArray.push(this.holdingByAssetOb.subscribe(holdings => this.setAssetList(holdings)));
         this.subscriptionsArray.push(this.requestedLabelListObs.subscribe((requested) => {
             this.requestWalletLabel(requested);
         }));
@@ -185,19 +181,22 @@ export class UnencumberAssetsComponent implements OnInit, OnDestroy {
     }
 
     /**
-     * Requests wallet instruments.
+     * Sets the items for the Asset Select.
      *
-     * @param {boolean} requestedInstrumentState
+     * @param {object} holdings
      */
-    requestWalletInstruments(requestedInstrumentState: boolean) {
-        if (!requestedInstrumentState) {
-            const walletId = this.connectedWalletId;
-
-            // Set request wallet issuers flag to true, to indicate that we have already requested wallet issuer.
-            this.ngRedux.dispatch(setRequestedWalletInstrument());
-
-            InitialisationService.requestWalletInstruments(this.ngRedux, this.walletNodeRequestService, walletId);
+    setAssetList(holdings) {
+        const positiveHoldings = {};
+        this.assetListOption = [];
+        this.noInstrumentsAlert = false;
+        if (_.get(holdings, this.connectedWalletId, false)) {
+            for (const holding in holdings[this.connectedWalletId]) {
+                if (holdings[this.connectedWalletId][holding].free > 0) positiveHoldings[holding] = holding;
+            }
+            this.assetListOption = walletHelper.walletInstrumentListToSelectItem(positiveHoldings);
         }
+        this.assetListOption.length ? this.disableAssetSelect = false : this.noInstrumentsAlert = true;
+        this.changeDetectorRef.markForCheck();
     }
 
     /**
