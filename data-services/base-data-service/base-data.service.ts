@@ -25,25 +25,25 @@ export class BaseDataService<Service> {
         };
     }
 
-    requestData(dataId: string, requestedState: boolean) {
+    requestData(dataId: string, requestedState: boolean, ...args) {
         // If the state is false, that means we need to request the list.
         if (!requestedState) {
             // Request the list.
-            this.dataService[this.dataSet[dataId].requestMethod]();
+            this.dataService[this.dataSet[dataId].requestMethod](...args);
         }
     }
 
     /**
      * Subscribe to the redux data, and return the observable.
      */
-    getData<Data>(dataId: string): Observable<Data> {
+    getData<Data>(dataId: string, ...args): Observable<Data> {
         if (!this.dataSet[dataId]) {
             throw new Error('Seem like you forgot to call "setupData()"');
         }
 
-        // subscribe to requested flag on investor invitation.
+        // subscribe to requested flag on the data.
         this.dataSet[dataId].requested$.subscribe((requested) => {
-            this.requestData(dataId, requested);
+            this.requestData(dataId, requested, ...args);
         });
 
         return this.dataSet[dataId].data$;

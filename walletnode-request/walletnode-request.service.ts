@@ -2,7 +2,7 @@ import { Injectable, Inject } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { Observable } from 'rxjs/Observable';
 import { WalletNodeSocketService } from '@setl/websocket-service';
-import { AppConfig, APP_CONFIG } from '@setl/utils';
+import {AppConfig, APP_CONFIG, SagaHelper} from '@setl/utils';
 import { createWalletNodeSagaRequest, createWalletNodeRequest } from '@setl/utils/common';
 import {
     WalletAddressRequestMessageBody,
@@ -14,6 +14,8 @@ import {
     RequestContractsByWalletBody,
 } from './walletnode-request.service.model';
 import * as _ from 'lodash';
+import {NgRedux} from '@angular-redux/store';
+import {SET_CONTRACT_LIST} from '@setl/core-store/wallet/my-wallet-contract/actions';
 
 interface RequestIssueHolding {
     walletId: number;
@@ -37,10 +39,18 @@ interface RequestWalletInstrument {
     walletId: number;
 }
 
+interface RequestEncumbranceDetails {
+    walletid: number;
+    address?: string;
+    namespace?: string;
+    classid?: string;
+}
+
 @Injectable()
 export class WalletNodeRequestService {
     constructor(private walletNodeSocketService: WalletNodeSocketService,
                 private http: HttpClient,
+                private ngRedux: NgRedux<any>,
                 @Inject(APP_CONFIG) public appConfig: AppConfig) {
     }
 
@@ -130,6 +140,18 @@ export class WalletNodeRequestService {
         return createWalletNodeSagaRequest(this.walletNodeSocketService, 'request', messageBody);
     }
 
+    defaultRequestContractsByWallet(walletId: number) {
+        // Request the list.
+        const asyncTaskPipe = this.requestContractsByWallet({walletId});
+
+        this.ngRedux.dispatch(SagaHelper.runAsync(
+            [SET_CONTRACT_LIST],
+            [],
+            asyncTaskPipe,
+            {},
+        ));
+    }
+
     /**
      * Request Contracts by Wallet
      *
@@ -165,5 +187,17 @@ export class WalletNodeRequestService {
         return createWalletNodeRequest(this.walletNodeSocketService, 'request', messageBody).then((response) => {
             return _.get(response, '[1].data');
         });
+    }
+
+    requestEncumbranceDetails(requestData: RequestEncumbranceDetails) {
+        const messageBody: any = {
+            topic: 'encumbrancedetails',
+            walletid: _.get(requestData, 'walletid', 0),
+            address: _.get(requestData, 'address', ''),
+            namespace: _.get(requestData, 'namespace', ''),
+            classid: _.get(requestData, 'classid', ''),
+        };
+
+        return createWalletNodeSagaRequest(this.walletNodeSocketService, 'request', messageBody);
     }
 }
