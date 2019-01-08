@@ -328,6 +328,7 @@ export class UiTooltipsComponent implements OnInit {
         this.changeDetectorRef.markForCheck();
     }
 
+    // CODE FOR LEGACY USER TOUR REMOVED FROM CODE BASE
 /*    resetUserTour() {
         if (this.connectedWalletId > 0) {
             setTimeout(() => {
