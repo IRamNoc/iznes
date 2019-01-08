@@ -3,6 +3,7 @@ import {pad} from '../helper/common';
 import * as moment from 'moment';
 
 import { MultilingualService } from '@setl/multilingual';
+import {StrTruncatePipe} from './str-truncate.pipe';
 
 @Pipe({
     name: 'translate',
@@ -211,7 +212,8 @@ export class PercentagePipe implements PipeTransform {
         CapitalizePipe,
         PaddingPipe,
         DateXPipe,
-        PercentagePipe
+        PercentagePipe,
+        StrTruncatePipe,
     ],
     exports: [
         TranslatePipe,
@@ -222,8 +224,9 @@ export class PercentagePipe implements PipeTransform {
         CapitalizePipe,
         PaddingPipe,
         DateXPipe,
-        PercentagePipe
-    ]
+        PercentagePipe,
+        StrTruncatePipe,
+    ],
 })
 
 export class SetlPipesModule {
