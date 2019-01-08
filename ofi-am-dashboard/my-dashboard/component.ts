@@ -204,7 +204,7 @@ export class MyDashboardComponent implements OnInit, AfterViewInit, OnDestroy {
                 this.changeDetectorRef.detectChanges();
             }).catch((error) => {
                 /* Handle error. */
-                this.showError('Failed to get your issued assets.');
+                this.showError(this.translate.translate('Failed to get your issued assets.'));
                 console.warn('Failed to get your issued assets: ', error);
             });
         }

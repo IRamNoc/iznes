@@ -642,7 +642,7 @@ export class ProductHomeComponent implements OnInit, OnDestroy {
               <table class="table grid">
                   <tbody>
                       <tr>
-                          <td class="text-center text-success">${message}</td>
+                          <td class="text-center text-success">${this.translate.translate(message)}</td>
                       </tr>
                   </tbody>
               </table>
@@ -713,7 +713,7 @@ export class ProductHomeComponent implements OnInit, OnDestroy {
               <table class="table grid">
                   <tbody>
                       <tr>
-                          <td class="text-center text-danger">${message}</td>
+                          <td class="text-center text-danger">${this.translate.translate(message)}</td>
                       </tr>
                   </tbody>
               </table>
@@ -734,7 +734,7 @@ export class ProductHomeComponent implements OnInit, OnDestroy {
               <table class="table grid">
                   <tbody>
                       <tr>
-                          <td class="text-center text-warning">${message}</td>
+                          <td class="text-center text-warning">${this.translate.translate(message)}</td>
                       </tr>
                   </tbody>
               </table>

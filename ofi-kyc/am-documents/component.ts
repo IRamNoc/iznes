@@ -62,9 +62,8 @@ export class OfiAmDocumentsComponent implements OnDestroy, OnInit {
 
     updateTable(tableData) {
         const tableDataCopy = immutableHelper.filter(tableData, (item, key) => {
-            return Boolean(item.get('investorUserID'))
+            return Boolean(item.get('investorUserID'));
         });
-
 
         const columns = {
             1: {

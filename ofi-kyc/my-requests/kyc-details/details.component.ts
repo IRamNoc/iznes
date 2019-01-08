@@ -235,7 +235,7 @@ export class KycDetailsComponent implements OnInit, OnDestroy {
 
     getRiskNature() {
         const riskNature = {
-            title: this.translate.translate('Investment\'s Nature'),
+            title: this.translate.translate('Investments\' Nature'),
             data: '',
         };
 
@@ -254,7 +254,7 @@ export class KycDetailsComponent implements OnInit, OnDestroy {
 
     getRiskObjective() {
         const riskObjectives = {
-            title: this.translate.translate('Investment\'s Objectives'),
+            title: this.translate.translate('Investments\' Objectives'),
             data: '',
         };
 
@@ -287,7 +287,7 @@ export class KycDetailsComponent implements OnInit, OnDestroy {
 
     getRiskConstraint() {
         const riskContraints = {
-            title: this.translate.translate('Investment\'s Constraints'),
+            title: this.translate.translate('Investments\' Constraints'),
             data: '',
         };
 

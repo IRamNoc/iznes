@@ -825,8 +825,8 @@ export class FundShareComponent implements OnInit, OnDestroy {
             <table class="table grid">
                 <tbody>
                     <tr>
-                        <td class="text-center text-danger"><b>${this.translate.translate('An error occured')}</b><br />
-                        <i>${message}</i></td>
+                        <td class="text-center text-danger"><b>${this.translate.translate('An error occurred')}</b><br />
+                        <i>${this.translate.translate(message)}</i></td>
                     </tr>
                 </tbody>
             </table>

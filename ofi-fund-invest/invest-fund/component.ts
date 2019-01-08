@@ -965,7 +965,9 @@ export class InvestFundComponent implements OnInit, OnDestroy {
 
             this.router.navigateByUrl('/order-book/my-orders/list');
         }).catch((data) => {
-            const errorMessage = _.get(data, ['1', 'Data', '0', 'Message'], '');
+            let errorMessage = _.get(data, ['1', 'Data', '0', 'Message'], 'Could not place order');
+            errorMessage = this.translate.translate(errorMessage);
+
             this.toaster.pop('warning', errorMessage);
 
             this.alertsService.close();
@@ -1568,7 +1570,8 @@ export class InvestFundComponent implements OnInit, OnDestroy {
      */
     show80PercentNoActiveOrderError() {
         this.alertsService
-        .create('error', `
+        .create(
+            'error', `
                 <table class="table grid">
                     <tbody>
                         <tr>
@@ -1583,7 +1586,9 @@ export class InvestFundComponent implements OnInit, OnDestroy {
                         </tr>
                     </tbody>
                 </table>
-            `, {}, this.translate.getTranslationByString('Order above 80% of your position'));
+            `,
+            {},
+            this.translate.getTranslationByString('Order above 80% of your position'));
     }
 
     /**
@@ -1591,7 +1596,8 @@ export class InvestFundComponent implements OnInit, OnDestroy {
      */
     show80PercentHasActiveOrderError() {
         this.alertsService
-        .create('error', `
+        .create(
+            'error', `
                 <table class="table grid">
                     <tbody>
                         <tr>
@@ -1606,7 +1612,9 @@ export class InvestFundComponent implements OnInit, OnDestroy {
                         </tr>
                     </tbody>
                 </table>
-            `, {}, this.translate.getTranslationByString('Order above 80% of your position'));
+            `,
+            {},
+            this.translate.getTranslationByString('Order above 80% of your position'));
     }
 
     validateKiid() {

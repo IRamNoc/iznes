@@ -715,7 +715,7 @@ export class ManageOrdersComponent implements OnInit, AfterViewInit, OnDestroy {
         if (this.walletDirectory[order.investorWalletID] && this.walletDirectory[order.investorWalletID].walletName) {
             return this.walletDirectory[order.investorWalletID].walletName;
         }
-        return 'Not found!';
+        return this.translate.translate('Not found!');
     }
 
     showCurrency(order) {
@@ -723,7 +723,7 @@ export class ManageOrdersComponent implements OnInit, AfterViewInit, OnDestroy {
         if (obj !== undefined) {
             return obj.text;
         }
-        return 'Not found!';
+        return this.translate.translate('Not found!');
     }
 
     buildLink(order, event, orderIdKey = 'orderID') {

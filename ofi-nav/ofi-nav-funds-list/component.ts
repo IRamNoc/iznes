@@ -174,7 +174,7 @@ export class OfiNavFundsList implements OnInit, OnDestroy {
 
     cancelNav(share: model.NavInfoModel): void {
         this.cancelNavMessage = this.translate.translate(
-            'Are you sure you wish to cancel the NAV for<br /><strong>@shareName@</strong>',
+            'Are you sure you wish to cancel the NAV for @shareName@?',
             { 'shareName': share.fundShareName },
         );
 
@@ -285,7 +285,7 @@ export class OfiNavFundsList implements OnInit, OnDestroy {
                 <table class="table grid">
                     <tbody>
                         <tr>
-                            <td class="text-center text-success">${successMessage}</td>
+                            <td class="text-center text-success">${this.translate.translate(successMessage)}</td>
                         </tr>
                     </tbody>
                 </table>`,
@@ -310,7 +310,7 @@ export class OfiNavFundsList implements OnInit, OnDestroy {
                             <td class="text-center text-danger">${this.translate.translate('NAVs upload has failed for the following reason:')}</td>
                         </tr>
                         <tr>
-                            <td class="text-center text-danger">${errorMessage}</td>
+                            <td class="text-center text-danger">${this.translate.translate(errorMessage)}</td>
                         </tr>
                     </tbody>
                 </table>`,

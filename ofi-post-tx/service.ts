@@ -402,7 +402,7 @@ export class OfiPostTxService implements OnDestroy {
             `<table class="table grid">
                 <tbody>
                     <tr>
-                        <td class="text-center text-danger">${message}</td>
+                        <td class="text-center text-danger">${this.translate.translate(message)}</td>
                     </tr>
                 </tbody>
             </table>`,
