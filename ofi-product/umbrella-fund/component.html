@@ -88,7 +88,7 @@
                                                  maxlength="20">
                                         <div *ngIf="umbrellaFundForm.controls['legalEntityIdentifier'].touched && umbrellaFundForm.controls['legalEntityIdentifier'].errors" class="field-error">
                                             <span *ngIf="umbrellaFundForm.controls['legalEntityIdentifier'].hasError('required')">{{ 'Field is required' | translate }}</span>
-                                            <span *ngIf="umbrellaFundForm.controls['legalEntityIdentifier'].hasError('pattern')">{{ 'LEI must meet ISO 17442 format ([4x 0-9][14x A-z0-9][2x 0-9]).' | translate }}</span>
+                                            <span *ngIf="umbrellaFundForm.controls['legalEntityIdentifier'].hasError('pattern')">{{ 'LEI must meet ISO 17442 format.' | translate }}</span>
                                             <span *ngIf="umbrellaFundForm.controls['legalEntityIdentifier'].hasError('isAlreadyExisting')">{{ 'LEI already exists' | translate }}</span>
                                         </div>
                                     </div>
