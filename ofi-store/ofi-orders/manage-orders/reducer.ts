@@ -93,7 +93,7 @@ export const OfiManageOrderListReducer = function (
         case 'cutoff':
             return patchOrder(state, action.payload.order.orderId, { orderStatus: 2 });
         case 'cancel':
-            return patchOrder(state, action.payload.orderID, { orderStatus: 0 });
+            return patchOrder(state, action.payload.order.orderID, { orderStatus: 0 });
         case 'commit':
             return patchOrder(state, action.payload.orderID, { orderStatus: 3 });
         case 'complete':

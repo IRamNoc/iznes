@@ -436,12 +436,12 @@ export class BeneficiaryListComponent implements OnInit, OnDestroy {
     private isLegalPerson(type: string): boolean {
         return type === 'legalPerson';
     }
-    
+
     private isNaturalPerson(type: string): boolean {
         return type === 'naturalPerson';
     }
 
-    ngOnDestroy(){
+    ngOnDestroy() {
         this.unsubscribe.next();
         this.unsubscribe.complete();
     }

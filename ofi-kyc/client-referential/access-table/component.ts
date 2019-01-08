@@ -255,7 +255,7 @@ export class OfiFundAccessTable {
                         ${this.translate.translate('Click on the button below to go to the Funds shares page to see all changes and begin trading on IZNES')}.
                         <br><br>%@link@%<br><br>
                         ${this.translate.translate('Thank you')},
-                        <br><br>${this.translate.translate('The IZNES team')}.
+                        <br><br>${this.translate.translate('The IZNES team')}
                 `;
 
                 const action = {

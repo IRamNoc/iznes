@@ -248,7 +248,7 @@ export class OfiSubPortfolioComponent implements OnInit, OnDestroy {
 
     handleLabelResponse(message, type) {
         switch (message) {
-            case 'Duplicate Label':
+            case 'Duplicate label':
                 this.toaster.pop('error', this.translate.translate('Sub-portfolio name already exists'));
                 break;
 
@@ -303,7 +303,11 @@ export class OfiSubPortfolioComponent implements OnInit, OnDestroy {
         const index = this.addressList.findIndex(x => x.address === address);
         if (index > -1) {
             this.confirmationService.create(
-                this.translate.translate(`Delete ${this.addressList[index].label} - ${this.addressList[index].iban}`), this.translate.translate('Are you sure you want to delete this sub-portfolio?'),
+                this.translate.translate(
+                    'Delete @label@ - @iban@',
+                    { 'label': this.addressList[index].label, 'iban': this.addressList[index].iban },
+                ),
+                this.translate.translate('Are you sure you want to delete this sub-portfolio?'),
                 {
                     confirmText: this.translate.translate('Delete'),
                     declineText: this.translate.translate('Cancel'),
@@ -323,7 +327,7 @@ export class OfiSubPortfolioComponent implements OnInit, OnDestroy {
                                 this.ngRedux.dispatch(clearRequestedWalletLabel());
                                 this.toaster.pop('success', this.translate.translate('Your sub-portfolio @addressLabel@ has been successfully deleted. This may take a moment to update.', { 'addressLabel': this.addressList[index].label }));
                             } else {
-                                this.showWarningResponse(this.translate.translate('You are not able to delete this sub-portfolio because it is not empty. If you want to delete it, you need to redeem all of your shares from this sub-portfolio'));
+                                this.showWarningResponse(this.translate.translate('You are not able to delete this sub-portfolio because it is not empty. If you want to delete it, you need to redeem all of your shares from this sub-portfolio.'));
                             }
                         },
                         (labelResponse) => {
