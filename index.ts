@@ -95,6 +95,9 @@ export {
     SET_ALL_TRANSACTIONS,
     TransactionsReducer,
     managedWalletsActions,
+    SET_ENCUMBRANCES,
+    setRequestedEncumbrances,
+    clearRequestedEncumbrances,
 } from './wallet';
 
 export {

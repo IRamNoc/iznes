@@ -7,6 +7,14 @@ import {
 } from './address-directory';
 
 import {
+    EncumbrancesState,
+    SET_ENCUMBRANCES,
+    setRequestedEncumbrances,
+    clearRequestedEncumbrances,
+    encumbrancesReducer,
+} from './encumbrances';
+
+import {
     MyWalletAddressState,
     MyWalletAddressReducer,
     SET_WALLET_ADDRESSES,
@@ -101,6 +109,12 @@ export {
 };
 
 export {
+    SET_ENCUMBRANCES,
+    setRequestedEncumbrances,
+    clearRequestedEncumbrances,
+};
+
+export {
     SET_WALLET_ADDRESSES,
     getWalletAddressList,
     clearRequestedWalletAddresses,
@@ -171,6 +185,7 @@ export {
 
 export interface WalletState {
     addressDirectory: AddressDirectoryState;
+    encumbrances: EncumbrancesState;
     myWalletAddress: MyWalletAddressState;
     myWallets: MyWalletsState;
     myWalletHolding: MyWalletHoldingState;
@@ -184,6 +199,7 @@ export interface WalletState {
 export const walletReducer: Reducer<WalletState> = combineReducers<WalletState>(
     {
         addressDirectory: addressDirectoryReducer,
+        encumbrances: encumbrancesReducer,
         myWalletAddress: MyWalletAddressReducer,
         myWallets: MyWalletsReducer,
         myWalletHolding: MyWalletHoldingReducer,
