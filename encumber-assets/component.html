@@ -12,12 +12,25 @@
                 <section class="form-block">
                     <div class="row">
                         <div class="form-group col-sm-6">
+
+                            <div class="alert alert-warning" *ngIf="noInstrumentsAlert">
+                                <div class="alert-items">
+                                    <div class="alert-item static">
+                                        <div class="alert-icon-wrapper">
+                                            <clr-icon class="alert-icon" shape="exclamation-triangle"></clr-icon>
+                                        </div>
+                                        <span class="alert-text">{{ 'There are no assets with available balance in this wallet' | translate }}</span>
+                                    </div>
+                                </div>
+                            </div>
+
                             <label class="control-label required-field" for="asset">{{ 'Asset' | translate }}</label>
                             <ng-select id="asset"
                                        [items]="assetListOption"
                                        [allowClear]="true"
                                        formControlName="asset"
-                                       placeholder="{{ 'Select' | translate }}">
+                                       placeholder="{{ 'Select' | translate }}"
+                                       [disabled]="disableAssetSelect">
                             </ng-select>
                             <div *ngIf="encumberAssetsForm.controls.asset.hasError('required') && encumberAssetsForm.controls.asset.touched"
                                   class="field-error">{{ 'Field is required' | translate }}</div>
