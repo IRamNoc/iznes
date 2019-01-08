@@ -1,18 +1,41 @@
-<clr-modal [clrModalOpen]="open" [clrModalSize]="'lg'" (clrModalOpenChange)="modalOpenChange()">
-    <h3 class="modal-title">{{ 'Beneficiaries Details' | translate }}</h3>
-    <div class="modal-body">
+<div class="top">
+    <h3>{{'Stakeholders - Shareholders and Beneficiaries' | translate}}</h3>
 
-        <div *ngFor="let beneficiary of beneficiaries; let i = index" class="mb-2">
-            <h4 class="mb-1">
-                <i class="fa fa-user"></i>
-                {{ 'Beneficiary' | translate }} {{(i + 1)}} - {{getName(beneficiary)}}
-            </h4>
+    <button class="btn btn-primary m-0" (click)="exportStakeholders()">{{'Export Stakeholders' | translate}}</button>
+</div>
 
-            <kyc-details-grid [data]="beneficiary"></kyc-details-grid>
-        </div>
+<table class="table">
+    <thead>
+    <tr>
+        <th>{{'Type' | translate}}</th>
+        <th>{{'Name' | translate}}</th>
+        <th>{{'Parent' | translate}}</th>
+        <th>{{'Country Tax of Residence' | translate}}</th>
+        <th>{{'Nationality' | translate}}</th>
+        <th>{{'Holding percentage' | translate}}</th>
+        <th>{{'Holding type' | translate}}</th>
+        <th>{{'Voting percentage' | translate}}</th>
+        <th>{{'Action' | translate}}</th>
+    </tr>
+    </thead>
 
-    </div>
-    <div class="modal-footer">
-        <button type="button" class="btn btn-primary" (click)="modalOpenChange()">{{ 'Close' | translate }}</button>
-    </div>
-</clr-modal>
+    <tbody>
+    <tr *ngFor="let stakeholder of stakeholderReadableList">
+        <td>{{stakeholder.beneficiaryType}}</td>
+        <td>{{stakeholder.name}}</td>
+        <td>{{stakeholder.parent}}</td>
+        <td>{{stakeholder.countryTaxResidence}}</td>
+        <td>{{stakeholder.nationality}}</td>
+        <td>{{stakeholder.holdingPercentage}}</td>
+        <td>{{stakeholder.holdingType}}</td>
+        <td>{{stakeholder.votingPercentage}}</td>
+        <td class="action">
+            <button class="btn btn-sm" (click)="selectStakeholder(stakeholder)">
+                {{'View' | translate}}
+            </button>
+        </td>
+    </tr>
+    </tbody>
+</table>
+
+<kyc-details-stakeholder-modal [stakeholder]="selectedStakeholder" *ngIf="selectedStakeholder" (close)="deselectStakeholder()"></kyc-details-stakeholder-modal>

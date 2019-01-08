@@ -301,7 +301,7 @@ export class OfiInvestorFundListComponent implements OnInit, OnDestroy {
         for (i = 0; i < this.tabsControl.length; i += 1) {
             if ((this.tabsControl[i].fundShareId === shareId) && (this.tabsControl[i]['actionType'] === 'redeem')) {
                 this.setNewActiveTab(i);
-                
+
                 this.router.navigateByUrl(`/list-of-funds/${i}`);
 
                 return;
@@ -339,7 +339,7 @@ export class OfiInvestorFundListComponent implements OnInit, OnDestroy {
         for (i = 0; i < this.tabsControl.length; i += 1) {
             if ((this.tabsControl[i].fundShareId === shareId) && (this.tabsControl[i]['actionType'] === 'sellbuy')) {
                 this.setNewActiveTab(i);
-                
+
                 this.router.navigateByUrl(`/list-of-funds/${i}`);
 
                 return;
@@ -377,7 +377,7 @@ export class OfiInvestorFundListComponent implements OnInit, OnDestroy {
         for (i = 0; i < this.tabsControl.length; i += 1) {
             if ((this.tabsControl[i].fundShareId === this.fundList[index].id) && (this.tabsControl[i]['actionType'] === 'view')) {
                 this.setNewActiveTab(i);
-                
+
                 this.router.navigateByUrl(`/list-of-funds/${i}`);
 
                 return;

@@ -32,6 +32,7 @@ import {
     LogService,
 } from '@setl/utils';
 import * as math from 'mathjs';
+import { MultilingualService } from '@setl/multilingual';
 
 @Component({
     selector: 'core-am-dashboard',
@@ -78,6 +79,7 @@ export class FundHoldingsComponent implements OnInit, AfterViewInit, OnDestroy {
                 private walletNodeRequestService: WalletNodeRequestService,
                 private numberConverterService: NumberConverterService,
                 private logService: LogService,
+                public translate: MultilingualService,
     ) {
         /* Assign the fund share form. */
         this.fundShareForm = new FormGroup(
@@ -161,7 +163,7 @@ export class FundHoldingsComponent implements OnInit, AfterViewInit, OnDestroy {
                 this.changeDetectorRef.detectChanges();
             }).catch((error) => {
                 /* Handle error. */
-                this.showError('Failed to get your issued assets.');
+                this.showError(this.translate.translate('Failed to get your issued assets'));
                 console.warn('Failed to get your issued assets: ', error);
             });
         }
@@ -561,7 +563,7 @@ export class FundHoldingsComponent implements OnInit, AfterViewInit, OnDestroy {
               <table class="table grid">
                   <tbody>
                       <tr>
-                          <td class="text-center text-warning">${message}</td>
+                          <td class="text-center text-warning">${this.translate.translate(message)}</td>
                       </tr>
                   </tbody>
               </table>
@@ -582,7 +584,7 @@ export class FundHoldingsComponent implements OnInit, AfterViewInit, OnDestroy {
               <table class="table grid">
                   <tbody>
                       <tr>
-                          <td class="text-center text-success">${message}</td>
+                          <td class="text-center text-success">${this.translate.translate(message)}</td>
                       </tr>
                   </tbody>
               </table>

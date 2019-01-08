@@ -1,9 +1,10 @@
 import { Component, Input, OnInit, OnDestroy, ViewChild } from '@angular/core';
 import { FormGroup, FormControl } from '@angular/forms';
-import { get as getValue, isEmpty, castArray, find, pick, omit } from 'lodash';
+import { isEmpty, castArray, find, pick, omit, values, map, assign, findIndex, get as getValue } from 'lodash';
 import { select } from '@angular-redux/store';
-import { Subject } from 'rxjs';
-import { filter, map, takeUntil } from 'rxjs/operators';
+import { Subject, combineLatest } from 'rxjs';
+import { filter, map as rxMap, takeUntil } from 'rxjs/operators';
+
 import { IdentificationService } from '../identification.service';
 import { NewRequestService } from '../../new-request.service';
 import { countries, investorStatusList } from '../../../requests.config';
@@ -18,9 +19,11 @@ import { MultilingualService } from '@setl/multilingual';
 export class ClassificationInformationComponent implements OnInit, OnDestroy {
     @ViewChild(FormPercentDirective) formPercent: FormPercentDirective;
     @Input() form;
+    @Input() enabled;
     @Input() investorType;
-
-    @select(['ofi', 'ofiKyc', 'myKycRequested', 'kycs']) requests$;
+    @select(['ofi', 'ofiKyc', 'myKycRequested', 'kycs']) currentlyRequestedKycs$;
+    @select(['ofi', 'ofiProduct', 'ofiManagementCompany', 'investorManagementCompanyList', 'investorManagementCompanyList']) managementCompanyList$;
+    @select(['ofi', 'ofiKyc', 'myKycRequested', 'formPersist']) persistedForms$;
 
     unsubscribe: Subject<any> = new Subject();
     open: boolean = false;
@@ -29,6 +32,8 @@ export class ClassificationInformationComponent implements OnInit, OnDestroy {
     geographicalAreaList;
     natureOfTransactionsList;
     volumeOfTransactionsList;
+    amcs = [];
+    ready = false;
 
     constructor(
         private newRequestService: NewRequestService,
@@ -37,11 +42,20 @@ export class ClassificationInformationComponent implements OnInit, OnDestroy {
     ) {
     }
 
-    ngOnChanges(changes) {
-        const investorType = changes.investorType.currentValue;
+    openPanel($e) {
+        $e.preventDefault();
 
-        if (investorType !== changes.investorType.previousValue) {
-            this.investorChanged(investorType);
+        if (this.enabled) {
+            this.open = !this.open;
+        }
+    }
+
+    ngOnChanges(changes) {
+        const currentInvestorType = getValue(changes, ['investorType', 'currentValue']);
+        const previousInvestorType = getValue(changes, ['investorType', 'previousValue']);
+
+        if (currentInvestorType !== previousInvestorType) {
+            this.investorChanged(currentInvestorType);
         }
     }
 
@@ -49,10 +63,51 @@ export class ClassificationInformationComponent implements OnInit, OnDestroy {
         const investorStatus = investorStatusList[investorType];
 
         this.form.get('investorStatus').patchValue(investorStatus);
+        if (this.ready) {
+            this.form.get('optFor').setValue(0);
+        }
         this.toggleForm(investorType);
     }
 
     ngOnInit() {
+        this.ready = false;
+        this.initData();
+        this.initCheckForm();
+        this.getCurrentFormData();
+        this.investorChanged(this.investorType);
+    }
+
+    initData() {
+        combineLatest(this.currentlyRequestedKycs$, this.managementCompanyList$)
+        .pipe(
+            takeUntil(this.unsubscribe),
+            filter(([requestedKycs, managementCompanyList]) => {
+                return !isEmpty(requestedKycs) && managementCompanyList && managementCompanyList.size > 0;
+            }),
+            rxMap(([requestedKycs, managementCompanyList]) => {
+                const amcs = map(requestedKycs, (requested) => {
+                    return assign({}, requested, find(managementCompanyList.toJS(), ['companyID', requested.amcID]));
+                });
+
+                return amcs;
+            }),
+        )
+        .subscribe((amcs) => {
+            this.amcs = amcs;
+
+            this.generateOptFors(amcs).disable();
+        })
+        ;
+
+        this.persistedForms$
+        .pipe(takeUntil(this.unsubscribe))
+        .subscribe((forms) => {
+            if (forms.identification) {
+                setTimeout(() => { this.ready = true; });
+            }
+        })
+        ;
+
         this.financialInstrumentsList = this.newRequestService.financialInstrumentsList;
         this.translate.translate(this.financialInstrumentsList);
 
@@ -63,28 +118,19 @@ export class ClassificationInformationComponent implements OnInit, OnDestroy {
         this.translate.translate(this.natureOfTransactionsList);
 
         this.volumeOfTransactionsList = this.newRequestService.volumeOfTransactionsList;
-        this.translate.translate(this.volumeOfTransactionsList);
+    }
 
-        this.initCheckForm();
-        this.getCurrentFormData();
-        this.investorChanged(this.investorType);
+    multiOpt() {
+        const optFor = this.form.get('optFor').value;
+
+        return optFor && this.amcs.length > 1;
     }
 
     toggleForm(investorType) {
-        const pro: FormGroup = this.form.get('pro');
-        const changeProfessionalStatus = this.form.get('pro.changeProfessionalStatus').value;
-
         if (investorType === 'nonPro') {
-            pro.disable();
             this.toggleNonPro('enable');
         } else {
-            pro.enable();
-
-            if (!changeProfessionalStatus) {
-                this.toggleNonPro('disable');
-            } else {
-                this.toggleNonPro('enable');
-            }
+            this.toggleNonPro('disable');
         }
 
         this.formPercent.refreshFormPercent();
@@ -104,38 +150,38 @@ export class ClassificationInformationComponent implements OnInit, OnDestroy {
 
     initCheckForm() {
         this.form.get('nonPro.financialInstruments').valueChanges
-            .pipe(
-                takeUntil(this.unsubscribe),
-            )
-            .subscribe((data) => {
-                this.formCheckFinancialInstruments(data);
-            });
-
+        .pipe(takeUntil(this.unsubscribe))
+        .subscribe((data) => {
+            this.formCheckFinancialInstruments(data);
+        })
+        ;
         this.form.get('nonPro.activitiesBenefitFromExperience').valueChanges
-            .pipe(
-                takeUntil(this.unsubscribe),
-            )
-            .subscribe((experienceFinancialFieldValue) => {
-                this.formCheckExperienceFinancialField(experienceFinancialFieldValue);
-            });
+        .pipe(takeUntil(this.unsubscribe))
+        .subscribe((experienceFinancialFieldValue) => {
+            this.formCheckExperienceFinancialField(experienceFinancialFieldValue);
+        })
+        ;
 
-        this.form.get('pro.changeProfessionalStatus').valueChanges
-            .pipe(
-                takeUntil(this.unsubscribe),
-            )
-            .subscribe((changeProfessionalStatus) => {
-                this.formCheckProToNonProChoice(changeProfessionalStatus);
-            });
+        this.form.get('optFor').valueChanges
+        .pipe(takeUntil(this.unsubscribe))
+        .subscribe((value) => {
+            this.formCheckOptFor(value);
+        });
     }
 
-    formCheckProToNonProChoice(value) {
-        if (value) {
-            this.toggleNonPro('enable');
-        } else {
-            this.toggleNonPro('disable');
+    formCheckOptFor(value) {
+        const optForControl = this.form.get('optForValues');
+
+        if (this.amcs.length <= 1) {
+            optForControl.disable();
+            return;
         }
 
-        this.formPercent.refreshFormPercent();
+        if (value) {
+            optForControl.enable();
+        } else {
+            optForControl.disable();
+        }
     }
 
     formCheckExperienceFinancialField(value) {
@@ -160,6 +206,40 @@ export class ClassificationInformationComponent implements OnInit, OnDestroy {
         }
     }
 
+    getFormControl(kycID) {
+        if (!kycID) {
+            return;
+        }
+
+        const formControl = this.form.get('optForValues');
+        const value = formControl.value;
+        const index = findIndex(value, ['id', kycID]);
+
+        return formControl.at(index).get('opted');
+    }
+
+    generateOptFors(amcs, values = []) {
+        amcs = map(amcs, amc => amc.kycID);
+        const optFors = this.newRequestService.createOptFors(amcs);
+
+        const optForsControl = this.form.get('optForValues');
+        const numberOfControls = optForsControl.length;
+
+        for (let i = numberOfControls; i > 0; i -= 1) {
+            optForsControl.removeAt(i - 1);
+        }
+
+        optFors.forEach((optFor, i) => {
+            if (values[i]) {
+                optFor.get('opted').setValue(values[i]);
+            }
+
+            optForsControl.push(optFor);
+        });
+
+        return optForsControl;
+    }
+
     isDisabled(path) {
         const control = this.form.get(path);
 
@@ -171,26 +251,41 @@ export class ClassificationInformationComponent implements OnInit, OnDestroy {
     }
 
     getCurrentFormData() {
-        this.requests$
-            .pipe(
-                filter(requests => !isEmpty(requests)),
-                map(requests => castArray(requests[0])),
-                takeUntil(this.unsubscribe),
-            )
-            .subscribe((requests) => {
-                requests.forEach((request) => {
-                    this.identificationService.getCurrentFormClassificationData(request.kycID).then((formData) => {
-                        if (formData) {
-                            const common = pick(formData, ['kycID', 'investorStatus']);
-                            const pro = pick(formData, ['excludeProducts', 'changeProfessionalStatus']);
-                            const nonPro = omit(formData, ['kycID', 'investorStatus', 'excludeProducts', 'changeProfessionalStatus']);
-                            this.form.patchValue(common);
-                            this.form.get('pro').patchValue(pro);
-                            this.form.get('nonPro').patchValue(nonPro);
-                        }
-                    });
+        this.currentlyRequestedKycs$
+        .pipe(
+            filter(requests => !isEmpty(requests)),
+            takeUntil(this.unsubscribe),
+        )
+        .subscribe((requests) => {
+            const promises = [];
+
+            requests.forEach((request, i) => {
+                const promise = this.identificationService.getCurrentFormClassificationData(request.kycID).then((formData) => {
+                    if (!isEmpty(formData) && i === 0) {
+                        const common = pick(formData, ['kycID', 'investorStatus', 'excludeProducts']);
+                        const nonPro = omit(formData, ['kycID', 'investorStatus', 'excludeProducts', 'optFor']);
+                        this.form.patchValue(common);
+
+                        this.form.get('nonPro').patchValue(nonPro);
+                    }
+                    return formData;
                 });
+
+                promises.push(promise);
             });
+
+            Promise.all(promises).then((results) => {
+                const haveResults = results.reduce((acc, cur) => acc || !isEmpty(cur), false);
+                if (haveResults) {
+                    const optFor = results.reduce((acc, result) => !!result.optFor || acc, false);
+                    const optForsControl = this.generateOptFors(results, map(results, 'optFor'));
+                    this.form.get('optFor').patchValue(optFor);
+
+                    this.formCheckOptFor(optFor);
+                }
+            });
+        })
+        ;
     }
 
     ngOnDestroy() {

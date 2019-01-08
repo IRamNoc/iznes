@@ -1,0 +1,14 @@
+.hover{display: none;}
+:host:hover{
+    .no-hover{
+        display: none;
+    }
+    .hover{
+        display: table-cell;
+    }
+}
+
+td{
+    vertical-align: middle;
+    line-height: 26px;
+}

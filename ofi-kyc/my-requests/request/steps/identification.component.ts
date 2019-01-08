@@ -1,13 +1,16 @@
-import { Component, OnInit, Input } from '@angular/core';
+import { Component, OnInit, Input, Output, EventEmitter, ElementRef } from '@angular/core';
 import { get as getValue, remove } from 'lodash';
-import { select } from '@angular-redux/store';
-import { PersistService } from '@setl/core-persist';
+import { select, NgRedux } from '@angular-redux/store';
 import { Subject } from 'rxjs';
 import { map, take, takeUntil, filter as rxFilter } from 'rxjs/operators';
 import { PersistRequestService } from '@setl/core-req-services';
+import { PersistService } from '@setl/core-persist';
+import { formHelper } from '@setl/utils/helper';
 import { NewRequestService } from '../new-request.service';
 import { IdentificationService } from './identification.service';
+import { setMyKycRequestedPersist } from '@ofi/ofi-main/ofi-store/ofi-kyc';
 import { steps } from '../../requests.config';
+import { BeneficiaryService } from './identification/beneficiary.service';
 
 @Component({
     selector: 'kyc-step-identification',
@@ -16,6 +19,9 @@ import { steps } from '../../requests.config';
 export class NewKycIdentificationComponent implements OnInit {
     @Input() form;
     @Input() investorType;
+
+    @Output() submitEvent: EventEmitter<any> = new EventEmitter<any>();
+
     @select(['ofi', 'ofiKyc', 'myKycRequested', 'kycs']) requests$;
     @select(['user', 'connected', 'connectedWallet']) connectedWallet$;
 
@@ -28,6 +34,9 @@ export class NewKycIdentificationComponent implements OnInit {
         private identificationService: IdentificationService,
         private persistService: PersistService,
         private persistRequestService: PersistRequestService,
+        private ngRedux: NgRedux<any>,
+        private beneficiaryService: BeneficiaryService,
+        private element: ElementRef,
     ) {
     }
 
@@ -93,7 +102,7 @@ export class NewKycIdentificationComponent implements OnInit {
         const holders = getValue(parsed, ['bankingInformation', 'custodianHolders']);
 
         const beneficiariesControl = this.form.get(['companyInformation', 'beneficiaries']);
-        if (beneficiaries.length > 1) {
+        if (beneficiaries.length > 0) {
             beneficiariesControl.controls.splice(0);
             for (let i = 0; i < beneficiaries.length; i += 1) {
                 beneficiariesControl.push(this.newRequestService.createBeneficiary());
@@ -115,9 +124,14 @@ export class NewKycIdentificationComponent implements OnInit {
             this.form,
             this.newRequestService.context,
             {
-                reset: false,
+                reset : false,
+                returnPromise: true,
             },
-        );
+        ).then(() => {
+            this.beneficiaryService.updateStakeholdersValidity(this.form.get('companyInformation.beneficiaries'));
+
+            this.ngRedux.dispatch(setMyKycRequestedPersist('identification'));
+        });
     }
 
     clearPersistForm() {
@@ -130,20 +144,46 @@ export class NewKycIdentificationComponent implements OnInit {
 
     handleSubmit(e) {
         e.preventDefault();
-
         if (!this.form.valid) {
+            formHelper.dirty(this.form);
+            formHelper.scrollToFirstError(this.element.nativeElement);
             return;
         }
 
         this.requests$
-            .pipe(
-                take(1),
-            )
-            .subscribe((requests) => {
-                this.identificationService.sendRequest(this.form, requests, this.connectedWallet).then(() => {
-                    this.clearPersistForm();
+        .pipe(take(1))
+        .subscribe((requests) => {
+            this
+            .identificationService
+            .sendRequest(this.form, requests, this.connectedWallet)
+            .then(() => {
+                this.submitEvent.emit({
+                    completed: true,
                 });
-            });
+                this.clearPersistForm();
+            })
+            .catch(() => {
+                this.newRequestService.errorPop();
+            })
+            ;
+        });
+    }
+
+    checkCompletion() {
+        const general = this.form.get('generalInformation');
+        const company = this.form.get('companyInformation');
+        const banking = this.form.get('bankingInformation');
+
+        return general.valid && company.valid && banking.valid;
+    }
+
+    /* isStepValid
+     * - this gets run by the form-steps component to enable/disable the next button
+     */
+    isStepValid() {
+        const classification = this.form.get('classificationInformation');
+
+        return this.checkCompletion() && classification.valid;
     }
 
     ngOnDestroy() {

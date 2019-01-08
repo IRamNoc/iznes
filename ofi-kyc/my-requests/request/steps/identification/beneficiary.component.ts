@@ -1,22 +1,38 @@
-import { Component, Input, Output, EventEmitter, OnInit, OnDestroy } from '@angular/core';
-import { AbstractControl, FormControl, Validators } from '@angular/forms';
+import { Component, Input, Output, EventEmitter, OnInit, OnDestroy, HostBinding } from '@angular/core';
+import { FormControl } from '@angular/forms';
 import { Subject } from 'rxjs';
 import { takeUntil } from 'rxjs/operators';
 import { get as getValue } from 'lodash';
-import { sirenValidator, siretValidator } from '@setl/utils/helper/validators';
 import { RequestsService } from '../../../requests.service';
 import { NewRequestService, configDate } from '../../new-request.service';
 import { countries } from '../../../requests.config';
 import { MultilingualService } from '@setl/multilingual';
+import { BeneficiaryService } from './beneficiary.service';
 
 @Component({
-    selector: 'beneficiary',
+    selector: '[beneficiary]',
     templateUrl: './beneficiary.component.html',
+    styleUrls: ['./beneficiary.component.scss'],
 })
 export class BeneficiaryComponent implements OnInit, OnDestroy {
+    @HostBinding('class.open') get open() {
+        return !this.form.get('legalPerson').disabled || !this.form.get('naturalPerson').disabled;
+    }
     @Input() form;
+    @Input() set parents(parents: any[]) {
+        this.parentsFiltered = parents.filter((parent, i) => i !== this.index);
+        this.parentsFiltered.unshift({
+            id: -1,
+            text: this.translate.translate('No parent'),
+        });
+    }
+    get parents() {
+        return this.parentsFiltered;
+    }
     @Input() index;
-    @Output() ready: EventEmitter<any> = new EventEmitter<any>();
+    @Input() disabled;
+
+    @Output() refresh: EventEmitter<any> = new EventEmitter<any>();
 
     unsubscribe: Subject<any> = new Subject<any>();
     configDate;
@@ -24,11 +40,13 @@ export class BeneficiaryComponent implements OnInit, OnDestroy {
     holdingTypesList;
     identificationNumberList;
     countries;
+    parentsFiltered;
 
     constructor(
         private requestsService: RequestsService,
         private newRequestService: NewRequestService,
         public translate: MultilingualService,
+        private beneficiaryService: BeneficiaryService,
     ) {
         this.configDate = configDate;
 
@@ -49,7 +67,7 @@ export class BeneficiaryComponent implements OnInit, OnDestroy {
 
         (this.form.get('beneficiaryType') as FormControl).updateValueAndValidity();
         (this.form.get('legalPerson.nationalIdNumber') as FormControl).updateValueAndValidity();
-        this.ready.emit();
+        this.refresh.emit();
     }
 
     initFormCheck() {
@@ -57,9 +75,7 @@ export class BeneficiaryComponent implements OnInit, OnDestroy {
         .get('beneficiaryType')
         .valueChanges
         .pipe(takeUntil(this.unsubscribe))
-        .subscribe((data) => {
-            const beneficiaryTypeValue = getValue(data, [0, 'id']);
-
+        .subscribe((beneficiaryTypeValue) => {
             this.formCheckBeneficiaryType(beneficiaryTypeValue);
         });
 
@@ -72,51 +88,48 @@ export class BeneficiaryComponent implements OnInit, OnDestroy {
 
             this.formCheckNationalIdNumber(nationalIdNumberValue);
         });
+
+        this.form.get('common.parent')
+            .valueChanges
+            .pipe(takeUntil(this.unsubscribe))
+            .subscribe((parent) => {
+                const id = getValue(parent, [0, 'id']);
+                const stakeholder = this.form;
+
+                if (id === '-1') {
+                    this.beneficiaryService.setStakeholderIndirectHolding(stakeholder);
+                } else {
+                    this.beneficiaryService.setStakeholderDirectHolding(stakeholder);
+                }
+            });
     }
 
     formCheckNationalIdNumber(value) {
-        const nationalIdNumberTextControl: AbstractControl = this.form.get('legalPerson.nationalIdNumberText');
+        this.beneficiaryService.formCheckNationalIdNumber(this.form, value);
 
-        if (value) {
-            nationalIdNumberTextControl.enable();
-
-            if (value === 'siren') {
-                nationalIdNumberTextControl.setValidators([sirenValidator, Validators.required]);
-            } else if (value === 'siret') {
-                nationalIdNumberTextControl.setValidators([siretValidator, Validators.required]);
-            } else {
-                nationalIdNumberTextControl.setValidators([Validators.required]);
-            }
-
-            this.ready.emit();
-        } else {
-            nationalIdNumberTextControl.disable();
-        }
-
-        nationalIdNumberTextControl.updateValueAndValidity();
+        this.refresh.emit();
     }
 
     formCheckBeneficiaryType(value) {
-        const legalPersonControl: AbstractControl = this.form.get('legalPerson');
-        const naturalPersonControl: AbstractControl = this.form.get('naturalPerson');
-
-        if (value === 'legalPerson') {
-            legalPersonControl.enable();
-            naturalPersonControl.disable();
-            (this.form.get('legalPerson.nationalIdNumber') as FormControl).updateValueAndValidity();
-        } else if (value === 'naturalPerson') {
-            naturalPersonControl.enable();
-            legalPersonControl.disable({ emitEvent: false });
-        }
+        this.beneficiaryService.formCheckBeneficiaryType(this.form, value);
     }
 
     uploadFile($event) {
-        const formControl = this.form.get('naturalPerson.document');
+        if($event.files.length === 0) return;
+
+        const formControl = this.form.get('common.document');
 
         this.requestsService.uploadFile($event).then((file: any) => {
-            formControl.get('hash').patchValue(file.fileHash);
-            formControl.get('name').patchValue(file.fileTitle);
-            formControl.get('kycDocumentID').patchValue('');
+            const newFormGroup = {
+                common: formControl.get('common').value,
+                hash: file.fileHash,
+                isDefault: formControl.get('isDefault').value,
+                kycDocumentID: '',
+                name: file.fileTitle,
+                type: formControl.get('common').value,
+            };
+
+            formControl.setValue(newFormGroup);
         });
     }
 

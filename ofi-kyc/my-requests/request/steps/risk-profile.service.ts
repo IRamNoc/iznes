@@ -16,7 +16,7 @@ export class RiskProfileService {
 
     constructor(
         private newRequestService: NewRequestService,
-        private requestsService: RequestsService,
+        private requestsService : RequestsService,
     ) {
     }
 
@@ -147,9 +147,8 @@ export class RiskProfileService {
             ...formGroupValue,
         };
 
-        promises.push(this.requestsService.sendRequest(messageBody));
+        return this.requestsService.sendRequest(messageBody);
 
-        return promises;
     }
 
     getCurrentFormNatureData(kycID) {

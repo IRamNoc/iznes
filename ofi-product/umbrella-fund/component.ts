@@ -649,11 +649,13 @@ export class UmbrellaFundComponent implements OnInit, AfterViewInit, OnDestroy {
                     // this.modalTitle = 'Error';
                     // this.modalText = JSON.stringify(data);
                     // this.showTextModal = true;
-                    const errMsg = _.get(data, '[1].Data[0].Message', '');
+                    let errMsg = _.get(data, '[1].Data[0].Message', '');
+                    errMsg = this.translate.translate(errMsg);
+
                     this.toasterService.pop(
                         'error',
                         this.translate.translate(
-                            'Failed to update the umbrella fund. @errMsg@',
+                            'Failed to update the Umbrella Fund. @errMsg@',
                             { 'errMsg': errMsg },
                         ),
                     );
@@ -688,15 +690,16 @@ export class UmbrellaFundComponent implements OnInit, AfterViewInit, OnDestroy {
                 (data) => {
                     this.logService.log('Error: ', data);
 
-                    const errMsg = _.get(data, '[1].Data[0].Message', '');
+                    let errMsg = _.get(data, '[1].Data[0].Message', '');
+                    errMsg = this.translate.translate(errMsg);
 
                     let userErrMsg = this.translate.translate(
-                        'Failed to create the umbrella fund. @errMsg@',
+                        'Failed to create the Umbrella Fund. @errMsg@',
                         { 'errMsg': errMsg },
                     );
 
-                    if (errMsg === 'Umbrella Fund is already exist with the same umbrella fund name.') {
-                        userErrMsg = this.translate.translate('This name is already being used by another umbrella fund.');
+                    if (errMsg === 'Duplicate Umbrella Fund name.') {
+                        userErrMsg = this.translate.translate('This name is already being used by another Umbrella Fund.');
                     }
 
                     this.toasterService.pop('error', userErrMsg);
@@ -771,14 +774,14 @@ export class UmbrellaFundComponent implements OnInit, AfterViewInit, OnDestroy {
         if (this.isEditMode) {
             successMessage = this.translate.translate('@umbrellaFundName@ draft has been successfully updated', { 'umbrellaFundName': umbrellaFundName });
 
-            errorMessage = this.translate.translate('Failed to update the draft umbrella fund');
+            errorMessage = this.translate.translate('Failed to update the draft Umbrella Fund');
         } else {
             successMessage = this.translate.translate(
                 '@umbrellaFundName@ draft has been successfully saved',
                 { 'umbrellaFundName': umbrellaFundName },
             );
 
-            errorMessage = this.translate.translate('Failed to create the draft umbrella fund.');
+            errorMessage = this.translate.translate('Failed to create the draft Umbrella Fund.');
         }
 
         this.ngRedux.dispatch(SagaHelper.runAsyncCallback(
@@ -790,7 +793,9 @@ export class UmbrellaFundComponent implements OnInit, AfterViewInit, OnDestroy {
             },
             (err) => {
                 this.logService.log('Error: ', err);
-                const error = _.get(err, '[1].Data[0].Message', '');
+                let error = _.get(err, '[1].Data[0].Message', '');
+                error = this.translate.translate(error);
+
                 this.toasterService.pop('error', `${errorMessage} (${error})`);
                 this.changeDetectorRef.markForCheck();
             }),
@@ -832,7 +837,7 @@ export class UmbrellaFundComponent implements OnInit, AfterViewInit, OnDestroy {
             `<span>${this.translate.translate('By clicking "Yes", you will be able to create a fund directly linked to @umbrellaFundName@', { 'umbrellaFundName': umbrellaFundName })}.</span>`;
 
         this.confirmationService.create(
-            `<span>${this.translate.translate('Do you want to create a fund?')}</span>`,
+            `<span>${this.translate.translate('Do you want to create a Fund?')}</span>`,
             message,
             { confirmText: 'Yes', declineText: 'No' },
         ).subscribe((ans) => {
@@ -921,7 +926,7 @@ export class UmbrellaFundComponent implements OnInit, AfterViewInit, OnDestroy {
               <table class="table grid">
                   <tbody>
                       <tr>
-                          <td class="text-center text-danger">${message}</td>
+                          <td class="text-center text-danger">${this.translate.translate(message)}</td>
                       </tr>
                   </tbody>
               </table>
@@ -963,7 +968,7 @@ export class UmbrellaFundComponent implements OnInit, AfterViewInit, OnDestroy {
               <table class="table grid">
                   <tbody>
                       <tr>
-                          <td class="text-center text-success">${message}</td>
+                          <td class="text-center text-success">${this.translate.translate(message)}</td>
                       </tr>
                   </tbody>
               </table>

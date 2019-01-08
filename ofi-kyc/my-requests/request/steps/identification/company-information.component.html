@@ -71,7 +71,7 @@
 
                 <div class="row">
                     <div class="form-group required-field col-sm-4">
-                        <label>&nbsp;</label>
+                        <label>{{ 'Regulator / Supervisory Authority' | translate }}</label>
                         <input type="text" 
                                 id="regulator" 
                                 formControlName="regulator" 
@@ -79,7 +79,7 @@
                         <span class="field-error" *ngIf="hasError('regulator')">{{ 'Field is required' | translate }}</span>
                     </div>
                     <div class="form-group required-field col-sm-4">
-                        <label>&nbsp;</label>
+                        <label>{{ 'Approval Number' | translate }}</label>
                         <input type="text" 
                                 id="approvalNumber" 
                                 formControlName="approvalNumber" 
@@ -136,6 +136,7 @@
 
             <div class="row" *ngIf="!isDisabled('listingMarkets')">
                 <div class="form-group required-field col-sm-4">
+                    <label class="control-label" for="listingMarkets">{{ 'Listing Market(s)' | translate }}</label>
                     <ng-select class="large-select" 
                                 [multiple]="true" 
                                 [items]="listingMarketsList" 
@@ -146,6 +147,7 @@
                     <span class="field-error" *ngIf="hasError('listingMarkets')">{{ 'Field is required' | translate }}</span>
                 </div>
                 <div class="form-group required-field col-sm-4">
+                    <label class="control-label" for="bloombergCode">{{ 'Bloomberg Code' | translate }}</label>
                     <input type="text" 
                             id="bloombergCode" 
                             formControlName="bloombergCode" 
@@ -154,6 +156,7 @@
                     <span class="field-error" *ngIf="hasError('bloombergCode', ['maxlength'])">{{ 'Field is too long' | translate }}</span>
                 </div>
                 <div class="form-group required-field col-sm-4">
+                    <label class="control-label" for="isinCode">{{ 'ISIN' | translate }}</label>
                     <input type="text" 
                             id="isinCode" 
                             formControlName="isinCode" 
@@ -163,6 +166,7 @@
                     <span class="field-error" *ngIf="hasError('isinCode', ['maxlength'])">{{ 'Field is too long' | translate }}</span>
                 </div>
                 <div class="form-group required-field col-sm-4">
+                    <label class="control-label" for="floatableShares">{{ 'Percentage of Floatable Shares' | translate }}</label>
                     <input type="number" 
                             id="floatableShares" 
                             formControlName="floatableShares" 
@@ -314,19 +318,19 @@
                                 placeholder="{{ 'Select a type of geographical origin' | translate }}">
                     </ng-select>
                 </div>
-                <div class="form-group required-field col-md-6 col-xl-3" *ngIf="geographicalOrigin === 'country'">
-                    <label for="geographicalOrigin2">{{ 'Country' | translate }}</label>
+                <div class="form-group required-field col-md-6 col-xl-3" [hidden]="geographicalOrigin !== 'country'">
+                    <label for="geographicalOriginCountry">{{ 'Country' | translate }}</label>
                     <ng-select class="large-select"
-                                id="geographicalOrigin2"
+                                id="geographicalOriginCountry"
                                 [items]="countries"
                                 formControlName="geographicalOrigin2"
                                 placeholder="{{ 'Select a country' | translate }}">
                     </ng-select>
                 </div>
-                <div class="form-group required-field col-md-6 col-xl-3" *ngIf="geographicalOrigin === 'area'">
-                    <label for="geographicalOrigin2">{{ 'Area' | translate }}</label>
+                <div class="form-group required-field col-md-6 col-xl-3" [hidden]="geographicalOrigin !== 'area'">
+                    <label for="geographicalOriginArea">{{ 'Area' | translate }}</label>
                     <ng-select class="large-select"
-                                id="geographicalOrigin2"
+                                id="geographicalOriginArea"
                                 [items]="geographicalAreaList"
                                 formControlName="geographicalOrigin2"
                                 placeholder="{{ 'Select an area' | translate }}">
@@ -347,40 +351,7 @@
             </div>
 
             <!-- Beneficiaries-->
-            <h4>{{ 'Actual Beneficiaries' | translate }}</h4>
-            <div class="beneficiaries mb-2">
-
-                <div class="my-1">
-                    <clr-alert [clrAlertClosable]="false" [clrAlertSizeSmall]="true">
-                        <div class="alert-item">
-                            <span class="alert-text">
-                                {{ 'The first beneficiary you will add will be a direct beneficiary. You can then add other direct or indirect beneficiaries by clicking on the "Add another beneficiary" button.' | translate }}
-                            </span>
-                        </div>
-                    </clr-alert>
-                    <clr-alert [clrAlertSizeSmall]="true" [clrAlertType]="'alert-warning'" [clrAlertClosable]="false">
-                        <div class="alert-item">
-                            <span class="alert-text">
-                                {{ 'Please fill information for all beneficiaries that hold more than 10% of the company.' | translate }}
-                            </span>
-                        </div>
-                    </clr-alert>
-                </div>
-
-                <div class="my-1 pl-1 beneficiary" *ngFor="let beneficiary of beneficiaries; let i = index" formArrayName="beneficiaries">
-                    <a *ngIf="i > 0" class="close text-warning" (click)="removeBeneficiary(i)"><i class="fa fa-times-circle"></i></a>
-
-                    <beneficiary [form]="beneficiary" [index]="i" (ready)="handleReady()"></beneficiary>
-
-                </div>
-
-                <div class="form-group col-xs-12">
-                    <button class="btn btn-primary" (click)="addBeneficiary()">
-                        {{ 'Add Another Beneficiary' | translate }}
-                    </button>
-                </div>
-            </div>
-            <!-- End beneficiaries -->
+            <beneficiary-list [stakeholders]="form.get('beneficiaries')" (refresh)="refresh()"></beneficiary-list>
         </div>
     </div>
 </form>

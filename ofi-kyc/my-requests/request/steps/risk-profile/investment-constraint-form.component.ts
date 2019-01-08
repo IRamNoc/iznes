@@ -59,7 +59,7 @@ export class InvestmentConstraintFormComponent implements OnInit, OnDestroy {
         this.managementCompanyList$
             .pipe(
                 rxFilter((amcList: List<any>) => amcList && amcList.size > 0),
-                takeUntil(this.unsubscribe)
+                takeUntil(this.unsubscribe),
             )
             .subscribe((amcList) => {
                 const managementCompanyList = amcList.toJS();

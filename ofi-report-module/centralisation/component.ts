@@ -124,22 +124,22 @@ export class CentralisationReportComponent implements OnInit, OnDestroy {
     colorScheme = { domain: ['#51AD5B', '#AF2418'] };
     pieChartDatas = [
         {
-            name: this.translate.translate('Subscription (%)'),
+            name: `${this.translate.translate('Subscription')} (%)`,
             value: 0,
         },
         {
-            name: this.translate.translate('Redemption (%)'),
+            name: `${this.translate.translate('Redemption')} (%)`,
             value: 0,
         },
     ];
 
     customColors = [
         {
-            name: this.translate.translate('Subscription (%)'),
+            name: `${this.translate.translate('Subscription')} (%)`,
             value: '#51AD5B',
         },
         {
-            name: this.translate.translate('Redemption (%)'),
+            name: `${this.translate.translate('Redemption')} (%)`,
             value: '#AF2418',
         },
     ];
@@ -194,11 +194,11 @@ export class CentralisationReportComponent implements OnInit, OnDestroy {
         this.fundsTotalRedemptionAmount = 0;
         this.pieChartDatas = [
             {
-                name: this.translate.translate('Subscription (%)'),
+                name: `${this.translate.translate('Subscription')} (%)`,
                 value: 0,
             },
             {
-                name: this.translate.translate('Redemption (%)'),
+                name: `${this.translate.translate('Redemption')} (%)`,
                 value: 0,
             },
         ];
@@ -248,11 +248,11 @@ export class CentralisationReportComponent implements OnInit, OnDestroy {
                     }
                     this.pieChartDatas = [
                         {
-                            name: this.translate.translate('Subscription (%)'),
+                            name: `${this.translate.translate('Subscription')} (%)`,
                             value: (this.fundsTotalSubscriptionAmount * 100 / (this.fundsTotalSubscriptionAmount + this.fundsTotalRedemptionAmount)),
                         },
                         {
-                            name: this.translate.translate('Redemption (%)'),
+                            name: `${this.translate.translate('Redemption')} (%)`,
                             value: (this.fundsTotalRedemptionAmount * 100 / (this.fundsTotalSubscriptionAmount + this.fundsTotalRedemptionAmount)),
                         },
                     ];
@@ -263,11 +263,11 @@ export class CentralisationReportComponent implements OnInit, OnDestroy {
                     this.fundsTotalRedemptionAmount = 0;
                     this.pieChartDatas = [
                         {
-                            name: this.translate.translate('Subscription (%)'),
+                            name: `${this.translate.translate('Subscription')} (%)`,
                             value: 0,
                         },
                         {
-                            name: this.translate.translate('Redemption (%)'),
+                            name: `${this.translate.translate('Redemption')} (%)`,
                             value: 0,
                         },
                     ];
@@ -297,11 +297,11 @@ export class CentralisationReportComponent implements OnInit, OnDestroy {
                     }
                     this.pieChartDatas = [
                         {
-                            name: this.translate.translate('Subscription (%)'),
+                            name: `${this.translate.translate('Subscription')} (%)`,
                             value: (this.sharesTotalSubscriptionAmount * 100 / (this.sharesTotalSubscriptionAmount + this.sharesTotalRedemptionAmount)),
                         },
                         {
-                            name: this.translate.translate('Redemption (%)'),
+                            name: `${this.translate.translate('Redemption')} (%)`,
                             value: (this.sharesTotalRedemptionAmount * 100 / (this.sharesTotalSubscriptionAmount + this.sharesTotalRedemptionAmount)),
                         },
                     ];
@@ -312,11 +312,11 @@ export class CentralisationReportComponent implements OnInit, OnDestroy {
                     this.sharesTotalRedemptionAmount = 0;
                     this.pieChartDatas = [
                         {
-                            name: this.translate.translate('Subscription (%)'),
+                            name: `${this.translate.translate('Subscription')} (%)`,
                             value: 0,
                         },
                         {
-                            name: this.translate.translate('Redemption (%)'),
+                            name: `${this.translate.translate('Redemption')} (%)`,
                             value: 0,
                         },
                     ];
@@ -341,11 +341,11 @@ export class CentralisationReportComponent implements OnInit, OnDestroy {
         this.fundsTotalRedemptionAmount = 0;
         this.pieChartDatas = [
             {
-                name: this.translate.translate('Subscription (%)'),
+                name: `${this.translate.translate('Subscription')} (%)`,
                 value: 0,
             },
             {
-                name: this.translate.translate('Redemption (%)'),
+                name: `${this.translate.translate('Redemption')} (%)`,
                 value: 0,
             },
         ];
@@ -532,11 +532,11 @@ export class CentralisationReportComponent implements OnInit, OnDestroy {
                 this.fundsDetails = [];
                 this.pieChartDatas = [
                     {
-                        name: this.translate.translate('Subscription (%)'),
+                        name: `${this.translate.translate('Subscription')} (%)`,
                         value: 0,
                     },
                     {
-                        name: this.translate.translate('Redemption (%)'),
+                        name: `${this.translate.translate('Redemption')} (%)`,
                         value: 0,
                     },
                 ];
@@ -562,11 +562,11 @@ export class CentralisationReportComponent implements OnInit, OnDestroy {
                 this.sharesDetails = [];
                 this.pieChartDatas = [
                     {
-                        name: this.translate.translate('Subscription (%)'),
+                        name: `${this.translate.translate('Subscription')} (%)`,
                         value: 0,
                     },
                     {
-                        name: this.translate.translate('Redemption (%)'),
+                        name: `${this.translate.translate('Redemption')} (%)`,
                         value: 0,
                     },
                 ];

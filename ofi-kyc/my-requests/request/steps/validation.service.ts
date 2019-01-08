@@ -22,24 +22,24 @@ export class ValidationService {
 
             formGroupValidation.get('kycID').setValue(kycID);
 
-            let validationPromise;
+            let promise;
             const kycDocumentID = formGroupValidation.get('electronicSignatureDocument.kycDocumentID').value;
             if (kycDocumentID) {
-                validationPromise = this.sendRequestValidation(formGroupValidation, kycDocumentID, kycID);
+                promise = this.sendRequestValidation(formGroupValidation, kycDocumentID, kycID);
             } else {
                 const documentValue = formGroupValidation.get('electronicSignatureDocument').value;
                 if (documentValue.name && documentValue.hash) {
-                    validationPromise = this.documentsService.sendRequestDocumentControl(documentValue, connectedWallet).then((data) => {
+                    promise = this.documentsService.sendRequestDocumentControl(documentValue, connectedWallet).then((data) => {
                         const kycDocumentID = getValue(data, 'kycDocumentID');
 
-                        this.sendRequestValidation(formGroupValidation, kycDocumentID, kycID);
+                        return this.sendRequestValidation(formGroupValidation, kycDocumentID, kycID);
                     });
                 } else {
-                    this.sendRequestValidation(formGroupValidation, 0, kycID);
+                    promise = this.sendRequestValidation(formGroupValidation, 0, kycID);
                 }
             }
 
-            promises.push(validationPromise);
+            promises.push(promise);
 
             const updateStepPromise = this.sendRequestUpdateCurrentStep(kycID, context);
             promises.push(updateStepPromise);
