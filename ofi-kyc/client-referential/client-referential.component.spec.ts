@@ -58,6 +58,7 @@ class SetlFileDropStub {
 class SetlFileViewerStub {
     @Input('fileHash') fileHash;
     @Input('viewType') viewType;
+    @Input() secure;
 }
 
 describe('OfiClientReferentialComponent', () => {
