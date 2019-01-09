@@ -14,8 +14,8 @@ import {
 
 // ** please don't remove this below commented import please,
 // as i use it for building the compiled version
-// import {BlockchainContractService} from '../../../../utils/services/blockchain-contract/service';
-import { BlockchainContractService } from '@setl/utils/services/blockchain-contract/service';
+// import {BlockchainContractService} from '../../../../utils/services/blockchain-contract/service'; //compile
+import { BlockchainContractService } from '@setl/utils/services/blockchain-contract/service'; //notcompile
 import {
     Contract,
     ContractData,
@@ -25,11 +25,11 @@ import {
 
     // ** please don't remove this below commented import please,
     // as i use it for building the compiled version
-    // } from '../../../../utils/services/blockchain-contract/model';
-} from '@setl/utils/services/blockchain-contract/model';
+    // } from '../../../../utils/services/blockchain-contract/model'; //compile
+} from '@setl/utils/services/blockchain-contract/model'; //notcompile
 
-// import { fixToDecimal } from '../../../../utils/helper/common/math-helper';
-import { fixToDecimal } from '@setl/utils/helper/common/math-helper';
+// import { fixToDecimal } from '../../../../utils/helper/common/math-helper'; //compile
+import { fixToDecimal } from '@setl/utils/helper/common/math-helper'; //notcompile
 
 import { Base64 } from './base64';
 import {
