@@ -29,6 +29,7 @@ export class NewKycSelectAmcComponent implements OnInit, OnDestroy {
 
     submitted = false;
     alreadyRegistered = false;
+    preSelectedAm: {amcId: number, invitationToken}
 
     @Input() duplicate;
     @Input() form: FormGroup;
@@ -52,6 +53,7 @@ export class NewKycSelectAmcComponent implements OnInit, OnDestroy {
         return filter(this.managementCompanies, company => company.selected).map(company => ({
             id: company.id,
             registered: company.registered,
+            invitationToken: this.getInvitationToken(company.id),
         }));
     }
 
@@ -141,7 +143,7 @@ export class NewKycSelectAmcComponent implements OnInit, OnDestroy {
     }
 
     selectManagementCompany(amcID) {
-        const managementCompany = find(this.managementCompanies, ['id', +amcID]);
+        const managementCompany = find(this.managementCompanies, ['id', amcID]);
 
         if (managementCompany) {
             this.toggleManagementCompany(managementCompany);
@@ -163,9 +165,14 @@ export class NewKycSelectAmcComponent implements OnInit, OnDestroy {
             ),
         ).subscribe(([queryParams, _]) => {
             if (queryParams.invitationToken) {
-                const amcID = queryParams.amcID;
+                const amcId = Number(queryParams.amcID);
 
-                this.selectManagementCompany(amcID);
+                this.preSelectedAm = {
+                    amcId,
+                    invitationToken: queryParams.invitationToken,
+                };
+
+                this.selectManagementCompany(amcId);
             }
         });
     }
@@ -264,6 +271,17 @@ export class NewKycSelectAmcComponent implements OnInit, OnDestroy {
     isStepValid() {
         return (this.selectedManagementCompanies.length && this.selectedManagementCompanies.length > 0) ||
             this.submitted
+    }
+
+    /**
+     * Get invitation token if amId is same with the amId from preselected am
+     * @param amcId
+     */
+    getInvitationToken(amcId: number): string {
+       if (amcId === this.preSelectedAm.amcId) {
+          return this.preSelectedAm.invitationToken;
+       }
+       return undefined;
     }
 
     ngOnDestroy() {
