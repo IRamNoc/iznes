@@ -59,7 +59,7 @@
                             <div class="col-sm-12">
                                 <a href="#" (click)="openPanel(panels['umbrella']['optionnal'], $event)">
                                     <i class="fa fa-chevron-right" [class.rotate]="isPanelOpen(panels['umbrella']['optionnal'])"></i>
-                                    <h2 id="toggleFund">{{ 'Optionnal Information' | translate }}</h2>
+                                    <h2 id="toggleFund">{{ 'Optional Information' | translate }}</h2>
                                 </a>
                             </div>
                         </div>
@@ -158,7 +158,7 @@
                             <div class="col-sm-12">
                                 <a href="#" (click)="openPanel(panels['fund']['optionnal'], $event)">
                                     <i class="fa fa-chevron-right" [class.rotate]="isPanelOpen(panels['fund']['optionnal'])"></i>
-                                    <h2 id="toggleFund">{{ 'Optionnal Information' | translate }}</h2>
+                                    <h2 id="toggleFund">{{ 'Optional Information' | translate }}</h2>
                                 </a>
                             </div>
                         </div>
@@ -249,10 +249,7 @@
                         <div class="well">
                             <div class="row panel-header">
                                 <div class="col-xs-6">
-                                    <a href="#" (click)="openPanel(panels['calendar'].mandatory, $event)">
-                                        <i class="fa fa-chevron-right" [class.rotate]="isPanelOpen(panels['calendar'].mandatory)"></i>
-                                        <h2 id="toggleCalendarMandatory">{{ 'Calendar Information' | translate }}</h2>
-                                    </a>
+                                    <h2>{{ 'Calendar Information' | translate }}</h2>
                                 </div>
                             </div>
                             <div class="row panel-body" [class.hidden]="!isPanelOpen(panels['calendar'].mandatory)">
