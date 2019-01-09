@@ -241,7 +241,7 @@
 
                 <clr-tab>
                     <button clrTabLink id="tabCalendarButton">{{ 'Calendar' | translate }}
-                        <span class="required" [hidden]="model.calendar.mandatory.isValid() && model.calendar.subscriptionTradeCycle.isValid() && model.calendar.redemptionTradeCycle.isValid()">*
+                        <span class="required" [hidden]="model.calendarSubscription.mandatory.isValid() && model.calendarRedemption.mandatory.isValid() && model.calendarSubscription.subscriptionTradeCycle.isValid() && model.calendarRedemption.redemptionTradeCycle.isValid()">*
                         </span>
                     </button>
                     <clr-tab-content>
@@ -252,11 +252,25 @@
                                 </div>
                             </div>
                             <div class="row panel-body">
-                                <app-ofi-am-trade-cycle #tradeCycleSubscription [tradeType]="'Subscription'" (modelEmitter)="calendarSubscriptionModelEvent($event)"></app-ofi-am-trade-cycle>
+                                <div class="subscription-container">
+                                    <h3><i class="fa fa-sign-in subscription-icon"></i>{{ 'SUBSCRIPTION' | translate | uppercase }}</h3>
+                                    <div class="subscription-section">
+                                        <p><strong>{{ 'Cut-off Date Settings' | translate }}</strong></p>
+                                        <app-ofi-am-trade-cycle #tradeCycleSubscription [tradeType]="'Subscription'" (modelEmitter)="calendarSubscriptionModelEvent($event)"></app-ofi-am-trade-cycle>
+                                        
+                                        <app-dynamic-form [model]="model.calendarSubscription.mandatory"></app-dynamic-form>
+                                    </div>
+                                </div>
 
-                                <app-ofi-am-trade-cycle #tradeCycleRedemption [tradeType]="'Redemption'" (modelEmitter)="calendarRedemptionModelEvent($event)"></app-ofi-am-trade-cycle>
-
-                                <app-dynamic-form [model]="model.calendar.mandatory"></app-dynamic-form>
+                                <div class="redemption-container">
+                                    <h3><i class="fa fa-sign-out redemption-icon"></i>{{ 'REDEMPTION' | translate | uppercase }}</h3>
+                                    <div class="redemption-section">
+                                        <p><strong>{{ 'Cut-off Date Settings' | translate }}</strong></p>
+                                        <app-ofi-am-trade-cycle #tradeCycleRedemption [tradeType]="'Redemption'" (modelEmitter)="calendarRedemptionModelEvent($event)"></app-ofi-am-trade-cycle>
+                                        
+                                        <app-dynamic-form [model]="model.calendarRedemption.mandatory"></app-dynamic-form>
+                                    </div>
+                                </div>
                             </div>
                         </div>
                     </clr-tab-content>

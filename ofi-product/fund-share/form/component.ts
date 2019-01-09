@@ -569,19 +569,19 @@ export class FundShareComponent implements OnInit, OnDestroy {
     }
 
     calendarSubscriptionModelEvent(model: FundShareTradeCycleModel): void {
-        this.model.calendar.subscriptionTradeCycle = model;
+        this.model.calendarSubscription.subscriptionTradeCycle = model;
         if (this.isRead()) {
-            this.model.calendar.subscriptionTradeCycle.disable();
-            this.model.calendar.subscriptionTradeCycle.clearAllValidators();
+            this.model.calendarSubscription.subscriptionTradeCycle.disable();
+            this.model.calendarSubscription.subscriptionTradeCycle.clearAllValidators();
         }
         if (this.fundShareData) this.model.setSubscriptionTradeCycleData(this.fundShareData);
     }
 
     calendarRedemptionModelEvent(model: FundShareTradeCycleModel): void {
-        this.model.calendar.redemptionTradeCycle = model;
+        this.model.calendarRedemption.redemptionTradeCycle = model;
         if (this.isRead()) {
-            this.model.calendar.redemptionTradeCycle.disable();
-            this.model.calendar.redemptionTradeCycle.clearAllValidators();
+            this.model.calendarRedemption.redemptionTradeCycle.disable();
+            this.model.calendarRedemption.redemptionTradeCycle.clearAllValidators();
         }
         if (this.fundShareData) this.model.setRedemptionTradeCycleData(this.fundShareData);
     }
