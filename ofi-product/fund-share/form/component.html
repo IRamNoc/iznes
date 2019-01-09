@@ -13,12 +13,12 @@
         <clr-tab-content class="outer">
             <div *ngIf="!isRead()" class="row tab-header-container">
                 <div class="col-sm-6">
-                    <p>{{ (isCreate() || currDraft == 1 ? 'Please fill in the following information to create a new Share.': 'Ammend the following information to update this share.') | translate }}</p>
+                    <p>{{ (isCreate() || currDraft == 1 ? 'Please fill in the following information to create a new Share.': 'Amend the following information to update this share.') | translate }}</p>
                 </div>
                 <div class="col-sm-6">
                     <div class="form-group btn-container">
                         <button class="btn btn-default" (click)="goToAuditTrail()" *ngIf="!isCreate()">{{ 'Share Audit Trail' | translate }}</button>
-                        <button class="btn btn-default" (click)="duplicateShare()" *ngIf="!isCreate()">{{ 'Duplicate a share' | translate }}</button>
+                        <button class="btn btn-default" (click)="duplicateShare()" *ngIf="!isCreate()">{{ 'Duplicate Share' | translate }}</button>
                         <ng-select *ngIf="isCreate()" 
                                     id="share-prefill-select" 
                                     [items]="shareListItems" 
@@ -116,7 +116,6 @@
                                             </ng-select>
                                         </div>
                                     </div>
-
                                 </section>
                             </form>
                         </div>
