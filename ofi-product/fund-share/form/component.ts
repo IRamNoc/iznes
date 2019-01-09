@@ -90,7 +90,7 @@ export class FundShareComponent implements OnInit, AfterViewInit, OnDestroy {
 
     unSubscribe: Subject<any> = new Subject();
 
-    private isSubscribedDynamicFormValueChanges: boolean = false;
+    private isSubscribedToCalendarValueChanges: boolean = false;
 
     @ViewChild('calendarSubscriptionForm')
     private calendarSubscriptionForm: DynamicFormComponent;
@@ -157,8 +157,26 @@ export class FundShareComponent implements OnInit, AfterViewInit, OnDestroy {
     }
 
     ngAfterViewInit() {
-    // ngDoCheck() {
-        this.isCalendar();
+        if (this.calendarSubscriptionForm && this.calendarRedemptionForm && !this.isSubscribedToCalendarValueChanges) {
+
+            this.isSubscribedToCalendarValueChanges = true;
+
+            this.calendarSubscriptionForm.form.controls['subscriptionCutOffTimeZone'].valueChanges
+            .pipe(
+                takeUntil(this.unSubscribe),
+            )
+            .subscribe((d) => {
+                console.log('+++ subscriptionCutOffTimeZone: ', d);
+            });
+
+            this.calendarRedemptionForm.form.controls['redemptionCutOffTimeZone'].valueChanges
+            .pipe(
+                takeUntil(this.unSubscribe),
+            )
+            .subscribe((d) => {
+                console.log('+++ redemptionCutOffTimeZone: ', d);
+            });
+        }
     }
 
     get fund() {
@@ -961,29 +979,6 @@ export class FundShareComponent implements OnInit, AfterViewInit, OnDestroy {
         this.router.navigateByUrl(url);
         this.changeDetectorRef.markForCheck();
         this.changeDetectorRef.detectChanges();
-    }
-
-    isCalendar() {
-        if (this.calendarSubscriptionForm && this.calendarRedemptionForm && !this.isSubscribedDynamicFormValueChanges) {
-            console.log('+++ this.calendarSubscriptionForm: ', this.calendarSubscriptionForm);
-            this.isSubscribedDynamicFormValueChanges = true;
-
-            this.calendarSubscriptionForm.form.controls['subscriptionCutOffTimeZone'].valueChanges
-            .pipe(
-                takeUntil(this.unSubscribe),
-            )
-            .subscribe((d) => {
-                console.log('+++ subscriptionCutOffTimeZone: ', d);
-            });
-
-            this.calendarRedemptionForm.form.controls['redemptionCutOffTimeZone'].valueChanges
-            .pipe(
-                takeUntil(this.unSubscribe),
-            )
-            .subscribe((d) => {
-                console.log('+++ redemptionCutOffTimeZone: ', d);
-            });
-        }
     }
 
     previousTab(): void {
