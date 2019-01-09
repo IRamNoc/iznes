@@ -251,7 +251,8 @@
                                     <h2>{{ 'Calendar Information' | translate }}</h2>
                                 </div>
                             </div>
-                            <div class="row panel-body" [class.hidden]="!isPanelOpen(panels['calendar'].mandatory)">
+                            <!-- <div class="row panel-body" [class.hidden]="!isPanelOpen(panels['calendar'].mandatory)"> -->
+                            <div class="row panel-body">
                                 <app-ofi-am-trade-cycle #tradeCycleSubscription [tradeType]="'Subscription'" (modelEmitter)="calendarSubscriptionModelEvent($event)"></app-ofi-am-trade-cycle>
 
                                 <app-ofi-am-trade-cycle #tradeCycleRedemption [tradeType]="'Redemption'" (modelEmitter)="calendarRedemptionModelEvent($event)"></app-ofi-am-trade-cycle>
