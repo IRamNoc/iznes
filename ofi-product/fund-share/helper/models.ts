@@ -156,7 +156,6 @@ export interface ShareRegistrationCertificateEmailPayload {
     amComPub: string;
     investorAddress: string;
     amAddress: string;
-    amCompanyLogo: string;
     amCompanyName: string;
     amCompanyLegalForm: string;
     amCompanyShareCapital: string;
@@ -168,7 +167,9 @@ export interface ShareRegistrationCertificateEmailPayload {
     amCompanyRcsMatriculation: string;
     amCompanyWebsiteUrl: string;
     amCompanyPhoneNumber: string;
-    amCompanySignature: string;
+    amCompanyID: number;
+    setl_db_b64_amCompanyLogo: any;
+    setl_db_b64_amCompanySignature: any;
 }
 
 export interface InvestorBalances {

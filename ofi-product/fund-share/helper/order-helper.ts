@@ -302,7 +302,6 @@ export class OrderHelper {
                     clientReference: order.clientReference,
                     date: todayStr,
                     numberOfShares: toNormalScale(Number(holding), 5),
-                    amCompanyLogo: order.amCompanyLogo,
                     amCompanyName: order.amCompanyName,
                     amCompanyLegalForm: order.amCompanyLegalForm,
                     amCompanyShareCapital,
@@ -314,7 +313,28 @@ export class OrderHelper {
                     amCompanyRcsMatriculation: order.amCompanyRcsMatriculation,
                     amCompanyWebsiteUrl: order.amCompanyWebsiteUrl,
                     amCompanyPhoneNumber: order.amCompanyPhoneNumber,
-                    amCompanySignature: order.amCompanySignature,
+                    setl_db_b64_amCompanyLogo: {
+                        query: 'call s2_iznMnGetMcImage(?, ?)',
+                        params: {
+                            type: 'logo',
+                            mcId: order.amCompanyID,
+                        },
+                        defaults: {
+                            type: 'string',
+                            mcId: 'number',
+                        }
+                    },
+                    setl_db_b64_amCompanySignature: {
+                        query: 'call s2_iznMnGetMcImage(?, ?)',
+                        params: {
+                            type: 'signature',
+                            mcId: order.amCompanyID,
+                        },
+                        defaults: {
+                            type: 'string',
+                            mcId: 'number',
+                        }
+                    }
                 },
             },
         };
