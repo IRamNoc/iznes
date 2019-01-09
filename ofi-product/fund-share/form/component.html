@@ -258,7 +258,7 @@
                                         <p><strong>{{ 'Cut-off Date Settings' | translate }}</strong></p>
                                         <app-ofi-am-trade-cycle #tradeCycleSubscription [tradeType]="'Subscription'" (modelEmitter)="calendarSubscriptionModelEvent($event)"></app-ofi-am-trade-cycle>
                                         
-                                        <app-dynamic-form [model]="model.calendarSubscription.mandatory"></app-dynamic-form>
+                                        <app-dynamic-form #calendarSubscriptionForm [model]="model.calendarSubscription.mandatory"></app-dynamic-form>
                                     </div>
                                 </div>
 
@@ -268,7 +268,7 @@
                                         <p><strong>{{ 'Cut-off Date Settings' | translate }}</strong></p>
                                         <app-ofi-am-trade-cycle #tradeCycleRedemption [tradeType]="'Redemption'" (modelEmitter)="calendarRedemptionModelEvent($event)"></app-ofi-am-trade-cycle>
                                         
-                                        <app-dynamic-form [model]="model.calendarRedemption.mandatory"></app-dynamic-form>
+                                        <app-dynamic-form #calendarRedemptionForm [model]="model.calendarRedemption.mandatory"></app-dynamic-form>
                                     </div>
                                 </div>
                             </div>
@@ -480,7 +480,6 @@
                     </div>
                 </div>
             </clr-tabs>
-
 
             <div class="form-group row actions bottom">
                 <div class="col-sm-12">

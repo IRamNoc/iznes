@@ -12,6 +12,7 @@ import {
     OnInit,
     ViewChild,
     Inject,
+    AfterViewInit,
 } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
 import { NgRedux, select } from '@angular-redux/store';
@@ -21,6 +22,7 @@ import { AlertsService } from '@setl/jaspero-ng2-alerts';
 import { ToasterService } from 'angular2-toaster';
 import { ClrTabs } from '@clr/angular';
 import { ConfirmationService, ClrTabsHelper } from '@setl/utils';
+import { DynamicFormComponent } from '@setl/utils/components/dynamic-forms/';
 import { Location } from '@angular/common';
 
 import { setRequestedIznesFunds } from '@ofi/ofi-main/ofi-store/ofi-product/fund';
@@ -59,7 +61,7 @@ import {
     templateUrl: './component.html',
     changeDetection: ChangeDetectionStrategy.OnPush,
 })
-export class FundShareComponent implements OnInit, OnDestroy {
+export class FundShareComponent implements OnInit, AfterViewInit, OnDestroy {
     private fundShareData: OfiFundShare;
     private fundShareDocsData: OfiFundShareDocuments;
     isReady: boolean = false;
@@ -87,6 +89,14 @@ export class FundShareComponent implements OnInit, OnDestroy {
     currDraft: number;
 
     unSubscribe: Subject<any> = new Subject();
+
+    private isSubscribedDynamicFormValueChanges: boolean = false;
+
+    @ViewChild('calendarSubscriptionForm')
+    private calendarSubscriptionForm: DynamicFormComponent;
+
+    @ViewChild('calendarRedemptionForm')
+    private calendarRedemptionForm: DynamicFormComponent;
 
     @ViewChild('tabsRef') tabsRef: ClrTabs;
     @ViewChild('fundHolidayInput') fundHolidayInput;
@@ -144,6 +154,11 @@ export class FundShareComponent implements OnInit, OnDestroy {
 
         this.redux.dispatch(clearRequestedFundShare());
         this.redux.dispatch(clearRequestedFundShareDocs());
+    }
+
+    ngAfterViewInit() {
+    // ngDoCheck() {
+        this.isCalendar();
     }
 
     get fund() {
@@ -946,6 +961,29 @@ export class FundShareComponent implements OnInit, OnDestroy {
         this.router.navigateByUrl(url);
         this.changeDetectorRef.markForCheck();
         this.changeDetectorRef.detectChanges();
+    }
+
+    isCalendar() {
+        if (this.calendarSubscriptionForm && this.calendarRedemptionForm && !this.isSubscribedDynamicFormValueChanges) {
+            console.log('+++ this.calendarSubscriptionForm: ', this.calendarSubscriptionForm);
+            this.isSubscribedDynamicFormValueChanges = true;
+
+            this.calendarSubscriptionForm.form.controls['subscriptionCutOffTimeZone'].valueChanges
+            .pipe(
+                takeUntil(this.unSubscribe),
+            )
+            .subscribe((d) => {
+                console.log('+++ subscriptionCutOffTimeZone: ', d);
+            });
+
+            this.calendarRedemptionForm.form.controls['redemptionCutOffTimeZone'].valueChanges
+            .pipe(
+                takeUntil(this.unSubscribe),
+            )
+            .subscribe((d) => {
+                console.log('+++ redemptionCutOffTimeZone: ', d);
+            });
+        }
     }
 
     previousTab(): void {
