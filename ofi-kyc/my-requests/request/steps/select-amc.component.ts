@@ -278,7 +278,7 @@ export class NewKycSelectAmcComponent implements OnInit, OnDestroy {
      * @param amcId
      */
     getInvitationToken(amcId: number): string {
-       if (amcId === this.preSelectedAm.amcId) {
+       if (this.preSelectedAm && amcId === this.preSelectedAm.amcId) {
           return this.preSelectedAm.invitationToken;
        }
        return undefined;
