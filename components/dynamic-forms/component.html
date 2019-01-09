@@ -4,7 +4,11 @@
             <div class="row">
                 <ng-container *ngFor="let item of formKeys; trackBy: trackFormItemByFn">
                     <div class="form-group {{model[item].cssClass}}" [hidden]="isHidden(item)">
-                        <label class="control-label" [class.required-field]="model[item].required" for="{{item}}">{{ model[item].label | translate }}</label>
+                        <div *ngIf="model[item].title">
+                            <p><strong>{{ model[item].title | translate }}</strong></p>
+                        </div>
+                        
+                        <label class="control-label" [class.hasTitle]="model[item].title" [class.required-field]="model[item].required" for="{{item}}">{{ model[item].label | translate }}</label>
 
                         <ng-container [ngSwitch]="isElementFormItem(model[item])">
                             <ng-container *ngSwitchCase="false">
