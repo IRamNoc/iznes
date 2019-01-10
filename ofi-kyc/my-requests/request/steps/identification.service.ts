@@ -281,8 +281,6 @@ export class IdentificationService {
             ...extracted,
         };
 
-        console.log('stake8:', messageBody);
-
         return this.requestsService.sendRequest(messageBody).then((data) => {
             const companyBeneficiariesID = getValue(data, [1, 'Data', 0, 'companyBeneficiariesID']);
 
