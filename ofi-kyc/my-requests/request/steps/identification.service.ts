@@ -109,7 +109,6 @@ export class IdentificationService {
     }
 
     handleBeneficiaries(formGroupBeneficiaries, kycID, connectedWallet, kycIndex) {
-
         const beneficiaryValues = formGroupBeneficiaries.value;
         const promises = this.sendRequestBeneficiaries(beneficiaryValues, kycID, connectedWallet).then((responses) => {
             formGroupBeneficiaries.controls.forEach((beneficiary, index) => {
@@ -207,7 +206,6 @@ export class IdentificationService {
     }
 
     sendRequestBeneficiaries(beneficiariesValue, kycID, connectedWallet) {
-
         const promises = [];
 
         beneficiariesValue.forEach((beneficiaryValue, index) => {
@@ -249,7 +247,6 @@ export class IdentificationService {
     }
 
     sendRequestBeneficiary(kycID, beneficiaryValue, documentID, index) {
-
         const firstLevel = omit(beneficiaryValue, ['common', 'legalPerson', 'naturalPerson']);
         const values = merge(firstLevel, beneficiaryValue.common, beneficiaryValue.legalPerson, beneficiaryValue.naturalPerson);
         const extracted = this.newRequestService.getValues(values);
