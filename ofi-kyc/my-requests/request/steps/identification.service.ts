@@ -47,9 +47,9 @@ export class IdentificationService {
 
     getPreviousRelations() {
         this.stakeholderRelations$.pipe(take(1))
-        .subscribe((relations) => {
-            this.previousStakeholdersRelationTable = relations;
-        });
+            .subscribe((relations) => {
+                this.previousStakeholdersRelationTable = relations;
+            });
     }
 
     sendRequest(form, requests, connectedWallet) {
@@ -59,6 +59,7 @@ export class IdentificationService {
         const promises = [];
         const context = this.newRequestService.context;
         requests.forEach((request, index) => {
+
             const kycID = request.kycID;
 
             const formGroupGeneral = form.get('generalInformation');
@@ -212,19 +213,17 @@ export class IdentificationService {
             const kycDocumentID = getValue(kycDocument, 'kycDocumentID');
             const hash = getValue(kycDocument, 'hash');
 
-            beneficiaryValue.kycID = kycID;
-
             let beneficiaryPromise;
             if (kycDocumentID) {
-                beneficiaryPromise = this.sendRequestBeneficiary(beneficiaryValue, kycDocumentID, index);
+                beneficiaryPromise = this.sendRequestBeneficiary(kycID, beneficiaryValue, kycDocumentID, index);
             } else if (hash) {
                 beneficiaryPromise = this.documentsService.sendRequestDocumentControl(kycDocument, connectedWallet).then((data) => {
                     const kycDocumentID = getValue(data, 'kycDocumentID');
 
-                    return this.sendRequestBeneficiary(beneficiaryValue, kycDocumentID, index);
+                    return this.sendRequestBeneficiary(kycID, beneficiaryValue, kycDocumentID, index);
                 });
             } else {
-                beneficiaryPromise = this.sendRequestBeneficiary(beneficiaryValue, null, index);
+                beneficiaryPromise = this.sendRequestBeneficiary(kycID, beneficiaryValue, null, index);
             }
 
             promises.push(beneficiaryPromise);
@@ -247,7 +246,7 @@ export class IdentificationService {
         return position;
     }
 
-    sendRequestBeneficiary(beneficiaryValue, documentID, index) {
+    sendRequestBeneficiary(kycID, beneficiaryValue, documentID, index) {
         const firstLevel = omit(beneficiaryValue, ['common', 'legalPerson', 'naturalPerson']);
         const values = merge(firstLevel, beneficiaryValue.common, beneficiaryValue.legalPerson, beneficiaryValue.naturalPerson);
         const extracted = this.newRequestService.getValues(values);
@@ -256,7 +255,7 @@ export class IdentificationService {
         const parent = extracted.parent;
 
         if (oldCompanyBeneficiariesID) {
-            const currentKycID = beneficiaryValue.kycID;
+            const currentKycID = kycID;
             const position = this.getPositionInRelations(this.previousStakeholdersRelationTable, oldCompanyBeneficiariesID);
 
             if (position !== null) {
@@ -275,10 +274,13 @@ export class IdentificationService {
         delete extracted.document;
         extracted.documentID = documentID;
 
+        extracted.kycID = kycID;
+
         const messageBody = {
             RequestName: 'updatekyccompanybeneficiaries',
             ...extracted,
         };
+
         return this.requestsService.sendRequest(messageBody).then((data) => {
             const companyBeneficiariesID = getValue(data, [1, 'Data', 0, 'companyBeneficiariesID']);
 
@@ -392,19 +394,19 @@ const beneficiaryFormPaths = {
     countryTaxResidence: 'common',
     holdingPercentage: 'common',
     holdingType: 'common',
-    nationality : 'common',
-    votingPercentage : 'common',
+    nationality: 'common',
+    votingPercentage: 'common',
 
-    firstName : 'naturalPerson',
-    lastName : 'naturalPerson',
-    dateOfBirth : 'naturalPerson',
-    cityOfBirth : 'naturalPerson',
-    countryOfBirth : 'naturalPerson',
+    firstName: 'naturalPerson',
+    lastName: 'naturalPerson',
+    dateOfBirth: 'naturalPerson',
+    cityOfBirth: 'naturalPerson',
+    countryOfBirth: 'naturalPerson',
 
-    legalName : 'legalPerson',
-    nationalIdNumber : 'legalPerson',
-    nationalIdNumberText : 'legalPerson',
-    leiCode : 'legalPerson',
+    legalName: 'legalPerson',
+    nationalIdNumber: 'legalPerson',
+    nationalIdNumberText: 'legalPerson',
+    leiCode: 'legalPerson',
 };
 
 export function buildBeneficiaryObject(responseData) {
