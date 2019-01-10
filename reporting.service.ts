@@ -588,7 +588,8 @@ export class ReportingService {
                     if (asset.holders) {
                         newHolders = Object.getOwnPropertyNames(asset.holders).map((addr) => {
                             const balance = asset.holders[addr];
-                            const encumbered = 0;
+                            const breakdown = asset.breakdown.find(holding => holding.addr === addr);
+                            const encumbered = (breakdown || {}).encumbrance || 0;
                             const free = balance - encumbered;
                             return { addr, balance, encumbered, free };
                         });
