@@ -442,7 +442,11 @@ export class OfiWaitingApprovalComponent implements OnInit, OnDestroy {
             const data = error[1].Data[0];
 
             if (data.Status === 'Fail') {
-                this.showErrorAlert(this.translate.translate('The KYC request has already been updated. The request requires the investor\'s attention now'));
+                this.showErrorAlert(
+                    this.translate.translate(
+                        'The KYC request has already been updated. The request requires the investor\'s attention now.',
+                    ),
+                );
             }
         });
     }
@@ -481,8 +485,12 @@ export class OfiWaitingApprovalComponent implements OnInit, OnDestroy {
 
     sendActionMessageToInvestor(investorWalletId: number) {
         const subject = (this.language === 'fr-Latn')
-            ? `Documents KYC: ${this.amCompanyName} a approuvé vos documents KYC`
-            : `KYC Documents: ${this.amCompanyName} approved your KYC documents`;
+            ? this.translate.translate(
+                'Documents KYC: @amCompanyName@ a approuvé vos documents KYC', { 'amCompanyName': this.amCompanyName },
+            )
+            : this.translate.translate(
+                'KYC Documents: @amCompanyName@ approved your KYC documents', { 'amCompanyName': this.amCompanyName },
+            );
 
         const actionConfig = new MessageKycConfig();
         actionConfig.investorFirstName = this.investor.firstName.value;
@@ -535,7 +543,7 @@ export class OfiWaitingApprovalComponent implements OnInit, OnDestroy {
             const data = error[1].Data[0];
 
             if (data.Status === 'Fail') {
-                this.showErrorAlert(this.translate.translate('The KYC request has already been updated. The request requires the investor\'s attention now'));
+                this.showErrorAlert(this.translate.translate('The KYC request has already been updated. The request requires the investor\'s attention now.'));
             }
         });
     }

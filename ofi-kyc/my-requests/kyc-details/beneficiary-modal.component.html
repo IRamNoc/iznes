@@ -87,7 +87,7 @@
                     </div>
                     <div class="form-group col-sm-6">
                         <label class="control-label">{{'KBIS document' | translate}}</label>
-                        <setl-file-viewer *ngIf="stakeholder.fileHash" [fileHash]="stakeholder.fileHash" [viewType]="2"></setl-file-viewer>
+                        <setl-file-viewer *ngIf="stakeholder.fileHash" [fileHash]="stakeholder.fileHash" [viewType]="2" [secure]="true"></setl-file-viewer>
                     </div>
                 </div>
 
@@ -200,7 +200,7 @@
 
                     <div class="form-group col-sm-6">
                         <label class="control-label">{{'Identity proof document' | translate}}</label>
-                        <setl-file-viewer *ngIf="stakeholder.fileHash" [fileHash]="stakeholder.fileHash" [viewType]="2"></setl-file-viewer>
+                        <setl-file-viewer *ngIf="stakeholder.fileHash" [fileHash]="stakeholder.fileHash" [viewType]="2" [secure]="true"></setl-file-viewer>
                     </div>
                 </div>
 

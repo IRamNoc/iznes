@@ -198,7 +198,6 @@ export class OfiSubPortfolioComponent implements OnDestroy {
      */
     updateSubPortfolio() {
         const values = this.tabDetail[0]['formControl'].value;
-
         const asyncTaskPipe = this.ofiSubPortfolioReqService.updateSubPortfolio({
             walletId: this.connectedWalletId,
             option: this.currentAddress,
@@ -238,7 +237,10 @@ export class OfiSubPortfolioComponent implements OnDestroy {
         const addressLabel = this.addressList[index].label;
         if (index > -1) {
             this.confirmationService.create(
-                this.translate.translate(`Delete ${addressLabel} - ${this.addressList[index].iban}`),
+                this.translate.translate(
+                    'Delete @label@ - @iban@',
+                    { label: this.addressList[index].label, iban: this.addressList[index].iban },
+                ),
                 this.translate.translate('Are you sure you want to delete this sub-portfolio? You will not be able to create another sub-portfolio with this name.'),
                 {
                     confirmText: this.translate.translate('Delete'),

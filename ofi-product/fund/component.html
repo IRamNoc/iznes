@@ -609,8 +609,7 @@
                                                                 formControlName="legalEntityIdentifier" 
                                                                 maxlength="20">
                                                         <span *ngIf="fundForm.controls['legalEntityIdentifier'].touched && fundForm.controls['legalEntityIdentifier'].hasError('pattern')"
-                                                            class="field-error">{{ 'LEI must meet ISO 17442 format ([4x
-                                                            0-9]00[12x A-z0-9][4x 0-9])' | translate }}</span>
+                                                            class="field-error">{{ 'LEI must meet ISO 17442 format' | translate }}</span>
                                                         <span *ngIf="fundForm.controls['legalEntityIdentifier'].touched && fundForm.controls['legalEntityIdentifier'].hasError('isAlreadyExisting')"
                                                             class="field-error">{{ 'LEI is already existing' | translate }}</span>
                                                     </div>
