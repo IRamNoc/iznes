@@ -90,13 +90,10 @@ export class FundShareComponent implements OnInit, AfterViewInit, OnDestroy {
 
     unSubscribe: Subject<any> = new Subject();
 
-    private isSubscribedToCalendarValueChanges: boolean = false;
+    private isSubscribedToCalendarFormChanges: boolean = false;
 
-    @ViewChild('calendarSubscriptionForm')
-    private calendarSubscriptionForm: DynamicFormComponent;
-
-    @ViewChild('calendarRedemptionForm')
-    private calendarRedemptionForm: DynamicFormComponent;
+    @ViewChild('calendarSubscriptionForm') private calendarSubscriptionForm: DynamicFormComponent;
+    @ViewChild('calendarRedemptionForm') private calendarRedemptionForm: DynamicFormComponent;
 
     @ViewChild('tabsRef') tabsRef: ClrTabs;
     @ViewChild('fundHolidayInput') fundHolidayInput;
@@ -157,24 +154,35 @@ export class FundShareComponent implements OnInit, AfterViewInit, OnDestroy {
     }
 
     ngAfterViewInit() {
-        if (this.calendarSubscriptionForm && this.calendarRedemptionForm && !this.isSubscribedToCalendarValueChanges) {
+        /* The Subscription and Redemption Cut-off Time Zones must always be the same */
+        if (this.calendarSubscriptionForm && this.calendarRedemptionForm && !this.isSubscribedToCalendarFormChanges) {
 
-            this.isSubscribedToCalendarValueChanges = true;
+            this.isSubscribedToCalendarFormChanges = true;
 
             this.calendarSubscriptionForm.form.controls['subscriptionCutOffTimeZone'].valueChanges
             .pipe(
                 takeUntil(this.unSubscribe),
             )
-            .subscribe((d) => {
-                console.log('+++ subscriptionCutOffTimeZone: ', d);
+            .subscribe((subscriptionCutOffTimeZone) => {
+                const subCutOffTimeZone = _.cloneDeep(subscriptionCutOffTimeZone);
+                const redemptionCutOff = _.get(this.calendarRedemptionForm, 'form.controls[\'redemptionCutOffTimeZone\'].value[0].text', null);
+
+                if (redemptionCutOff && (redemptionCutOff !== subscriptionCutOffTimeZone[0].text)) {
+                    this.calendarRedemptionForm.form.controls['redemptionCutOffTimeZone'].patchValue(subCutOffTimeZone);
+                }
             });
 
             this.calendarRedemptionForm.form.controls['redemptionCutOffTimeZone'].valueChanges
             .pipe(
                 takeUntil(this.unSubscribe),
             )
-            .subscribe((d) => {
-                console.log('+++ redemptionCutOffTimeZone: ', d);
+            .subscribe((redemptionCutOffTimeZone) => {
+                const redCutOffTimeZone = _.cloneDeep(redemptionCutOffTimeZone);
+                const subscriptionCutOff = _.get(this.calendarSubscriptionForm, 'form.controls[\'subscriptionCutOffTimeZone\'].value[0].text', null);
+
+                if (subscriptionCutOff && (subscriptionCutOff !== redemptionCutOffTimeZone[0].text)) {
+                    this.calendarSubscriptionForm.form.controls['subscriptionCutOffTimeZone'].patchValue(redCutOffTimeZone);
+                }
             });
         }
     }
