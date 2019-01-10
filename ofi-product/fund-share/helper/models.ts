@@ -3,6 +3,8 @@ import {
 } from '@setl/utils/services/blockchain-contract/model'; //notcompile
 //} from '../../../../utils/services/blockchain-contract/model'; //compile
 import { IznesShareDetail } from '../../../ofi-store/ofi-product/fund-share-list/model';
+import moment = require("moment");
+import { NavStatus } from "../../../ofi-req-services/ofi-product/nav/model";
 
 export interface OrderRequest {
     token: string;
@@ -23,9 +25,6 @@ export interface OrderRequest {
 }
 
 export interface IznShareDetailWithNav extends IznesShareDetail {
-    price: number;
-    priceDate: string;
-    priceStatus: number;
     amCompanyID: number;
     amWalletID: number;
     amAddress: string;
@@ -200,3 +199,9 @@ export const OrderByNumber = {
     q: 1,
     a: 2,
 };
+
+export interface NavData {
+    value: number;
+    date: string;
+    status: NavStatus;
+}

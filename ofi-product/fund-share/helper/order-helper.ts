@@ -25,10 +25,10 @@ import {
 
     // ** please don't remove this below commented import please,
     // as i use it for building the compiled version
-    // } from '../../../../utils/services/blockchain-contract/model'; //compile
+//} from '../../../../utils/services/blockchain-contract/model'; //compile
 } from '@setl/utils/services/blockchain-contract/model'; //notcompile
 
-// import { fixToDecimal } from '../../../../utils/helper/common/math-helper'; //compile
+//import { fixToDecimal } from '../../../../utils/helper/common/math-helper'; //compile
 import { fixToDecimal } from '@setl/utils/helper/common/math-helper'; //notcompile
 
 import { Base64 } from './base64';
@@ -55,8 +55,9 @@ import {
     orderTypeToString,
     OrderByNumber,
     InvestorBalances,
-    ShareRegistrationCertificateEmailPayload,
+    ShareRegistrationCertificateEmailPayload, NavData,
 } from './models';
+import {NavStatus} from "../../../ofi-req-services/ofi-product/nav/model";
 
 const AuthoriseRef = 'Confirm payment sent';
 
@@ -68,7 +69,6 @@ export class OrderHelper {
     orderType: number;
     orderBy: number;
     orderValue: number;
-    nav: number;
     orderAsset: string;
     amIssuingAddress: string;
     amWalletId: number;
@@ -89,6 +89,24 @@ export class OrderHelper {
     // unique references for this order helper instance
     encumberRef: string;
     poaRef: string;
+
+    private currentNav: NavData;
+
+    get nav() {
+       if (typeof this.currentNav === 'undefined') {
+          throw new Error('NAV is not set, after order helper instance is setup, nav must be set.');
+       }
+       const orderNavDate = (this.getOrderDates() as OrderDates).valuation;
+       if (moment(this.currentNav.date, 'YYYY-MM-DD HH:mm').isAfter(orderNavDate)) {
+            throw new Error('NAV date is greater than order\'s valuation date.');
+       }
+       return this.currentNav;
+    }
+
+    set nav(d: NavData) {
+       this.currentNav = d;
+    }
+
 
     get feePercentage() {
         return (this.isSellBuy && this.isAllowSellBuy) ?
@@ -149,7 +167,6 @@ export class OrderHelper {
         this.orderType = OrderTypeNumber[orderRequest.ordertype];
         this.orderBy = OrderByNumber[orderRequest.orderby];
         this.orderValue = Number(orderRequest.ordervalue);
-        this.nav = Number(fundShare.price);
         this.orderAsset = fundShare.isin + '|' + fundShare.fundShareName;
         this.amIssuingAddress = fundShare.amAddress;
         this.amWalletId = fundShare.amWalletID;
@@ -612,7 +629,7 @@ export class OrderHelper {
         const currency = this.currency;
         const fundShareID = this.fundShare.fundShareID;
         const byAmountOrQuantity = this.orderBy;
-        const estimatedPrice = this.nav;
+        const estimatedPrice = this.nav.value;
         let orderFigure = this.getOrderFigures();
 
         if (!OrderHelper.isResponseGood(orderFigure as VerifyResponse)) {
@@ -861,7 +878,7 @@ export class OrderHelper {
             const orderCalc = calculateFigures(
                 {
                     feePercentage: this.feePercentage,
-                    nav: this.nav,
+                    nav: this.nav.value,
                     orderBy: this.orderBy,
                     orderType: this.orderType,
                     value: this.orderValue,
@@ -1333,14 +1350,14 @@ export class OrderHelper {
         const orderNavDate = (this.getOrderDates() as OrderDates).valuation.format('YYYY-MM-DD');
 
         // get the latest nav's date
-        const latestNavDate = moment(this.fundShare.priceDate, 'YYYY-MM-DD HH:mm').format('YYYY-MM-DD');
+        const latestNavDate = moment(this.nav.date, 'YYYY-MM-DD HH:mm').format('YYYY-MM-DD');
 
         // get the latest nav's status
-        const latestNavStatus = this.fundShare.priceStatus;
+        const latestNavStatus = this.nav.status;
 
         // check if latest nav's status is  validated
         // check if latest nav's date is same as the order's
-        if (Number(latestNavStatus) !== -1) {
+        if (Number(latestNavStatus) !== NavStatus.FINAL) {
             return false;
         }
 
@@ -1350,4 +1367,5 @@ export class OrderHelper {
 
         return true;
     }
+
 }
