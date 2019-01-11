@@ -46,6 +46,10 @@ import { MultilingualService } from '@setl/multilingual';
 import { passwordValidator } from '@setl/utils/helper/validators/password.directive';
 import { LoginService } from './login.service';
 
+export interface LoginRedirect {
+   loginedRedirect(redirect: string, urlParams: any): void;
+}
+
 /* Dectorator. */
 @Component({
     selector: 'app-login',
@@ -54,7 +58,7 @@ import { LoginService } from './login.service';
 })
 
 /* Class. */
-export class SetlLoginComponent implements OnDestroy, OnInit, AfterViewInit {
+export class SetlLoginComponent implements OnDestroy, OnInit, AfterViewInit, LoginRedirect {
     appConfig: AppConfig;
 
     // Locale
@@ -128,7 +132,7 @@ export class SetlLoginComponent implements OnDestroy, OnInit, AfterViewInit {
                 private channelService: ChannelService,
                 private accountsService: AccountsService,
                 private permissionGroupService: PermissionGroupService,
-                private router: Router,
+                public router: Router,
                 private activatedRoute: ActivatedRoute,
                 private alertsService: AlertsService,
                 private chainService: ChainService,
@@ -364,23 +368,6 @@ export class SetlLoginComponent implements OnDestroy, OnInit, AfterViewInit {
             //     this.router.navigateByUrl(redirect);
             // }
 
-            const redirect: any = myAuthenData.defaultHomePage ? myAuthenData.defaultHomePage : '/home';
-
-            if (this.queryParams.invitationToken) {
-                const extras = {
-                    queryParams: {
-                        invitationToken: this.queryParams.invitationToken,
-                        redirect,
-                    },
-                };
-
-                this.router.navigate(['consume'], extras);
-            } else {
-                this.router.navigateByUrl(redirect);
-            }
-
-            this.isLogin = true;
-
             // Request initial data from member node.
             InitialisationService.membernodeInitialisation(
                 this.ngRedux,
@@ -399,6 +386,13 @@ export class SetlLoginComponent implements OnDestroy, OnInit, AfterViewInit {
                 e.returnValue = leaveMessage;
                 return leaveMessage;
             };
+
+            const redirect: any = myAuthenData.defaultHomePage ? myAuthenData.defaultHomePage : '/home';
+
+            this.loginedRedirect(redirect, this.queryParams);
+
+            this.isLogin = true;
+
         }
     }
 
@@ -690,4 +684,9 @@ export class SetlLoginComponent implements OnDestroy, OnInit, AfterViewInit {
 
         return this.appConfig.platform;
     }
+
+    loginedRedirect(redirect: string, urlParams: any) {
+        this.router.navigateByUrl(redirect);
+    }
+
 }
