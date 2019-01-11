@@ -831,7 +831,7 @@ export class OrderHelper {
         let estimatedPrice;
 
         price = 0;
-        estimatedPrice = this.fundShare.price;
+        estimatedPrice = this.nav.value;
 
         return {
             price,
@@ -915,7 +915,7 @@ export class OrderHelper {
         let orderValid = true;
         let errorMessage = '';
 
-        if (Number(this.fundShare.price) <= 0) {
+        if (Number(this.nav.value) <= 0) {
             orderValid = false;
             errorMessage = 'Nav less than or equal 0';
         }
@@ -958,7 +958,7 @@ export class OrderHelper {
                 this.fundShare.investorTotalHolding,
                 this.fundShare.investorTotalEncumber,
                 this.fundShare.investorRedemptionEncumber,
-                this.fundShare.price,
+                this.nav.value,
             );
 
             if (!OrderHelper.isResponseGood(redeemOverResponse)) {

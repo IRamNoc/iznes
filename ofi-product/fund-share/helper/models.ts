@@ -3,7 +3,6 @@ import {
 } from '@setl/utils/services/blockchain-contract/model'; //notcompile
 //} from '../../../../utils/services/blockchain-contract/model'; //compile
 import { IznesShareDetail } from '../../../ofi-store/ofi-product/fund-share-list/model';
-import moment = require("moment");
 import { NavStatus } from "../../../ofi-req-services/ofi-product/nav/model";
 
 export interface OrderRequest {
