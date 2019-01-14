@@ -29,6 +29,9 @@ export class NewKycSelectAmcComponent implements OnInit, OnDestroy {
 
     submitted = false;
     alreadyRegistered = false;
+    preSelectedAm: {amcId: number, invitationToken}
+
+    selectedAMCIDs = new Set();
 
     @Input() duplicate;
     @Input() form: FormGroup;
@@ -49,10 +52,12 @@ export class NewKycSelectAmcComponent implements OnInit, OnDestroy {
     @select(['ofi', 'ofiProduct', 'ofiManagementCompany', 'investorManagementCompanyList', 'investorManagementCompanyList']) managementCompanyList$;
 
     get selectedManagementCompanies() {
-        return filter(this.managementCompanies, company => company.selected).map(company => ({
+        const selected = filter(this.managementCompanies, company => this.selectedAMCIDs.has(company.id)).map(company => ({
             id: company.id,
             registered: company.registered,
+            invitationToken: this.getInvitationToken(company.id),
         }));
+        return selected;
     }
 
     constructor(
@@ -132,7 +137,7 @@ export class NewKycSelectAmcComponent implements OnInit, OnDestroy {
             const managementCompany = find(this.managementCompanies, ['id', amcID]);
 
             if (foundKyc) {
-                managementCompany.selected = true;
+                this.selectedAMCIDs.add(managementCompany.id)
                 managementCompany.registered = foundKyc.alreadyCompleted;
             }
         });
@@ -141,7 +146,7 @@ export class NewKycSelectAmcComponent implements OnInit, OnDestroy {
     }
 
     selectManagementCompany(amcID) {
-        const managementCompany = find(this.managementCompanies, ['id', +amcID]);
+        const managementCompany = find(this.managementCompanies, ['id', amcID]);
 
         if (managementCompany) {
             this.toggleManagementCompany(managementCompany);
@@ -150,7 +155,11 @@ export class NewKycSelectAmcComponent implements OnInit, OnDestroy {
 
     toggleManagementCompany(managementCompany) {
         if (!this.submitted) {
-            managementCompany.selected = !managementCompany.selected;
+            if (this.selectedAMCIDs.has(managementCompany.id)) {
+               this.selectedAMCIDs.delete(managementCompany.id);
+            } else {
+               this.selectedAMCIDs.add(managementCompany.id);
+            }
             this.onRegisteredChange();
         }
     }
@@ -163,9 +172,14 @@ export class NewKycSelectAmcComponent implements OnInit, OnDestroy {
             ),
         ).subscribe(([queryParams, _]) => {
             if (queryParams.invitationToken) {
-                const amcID = queryParams.amcID;
+                const amcId = Number(queryParams.amcID);
 
-                this.selectManagementCompany(amcID);
+                this.preSelectedAm = {
+                    amcId,
+                    invitationToken: queryParams.invitationToken,
+                };
+
+                this.selectManagementCompany(amcId);
             }
         });
     }
@@ -264,6 +278,25 @@ export class NewKycSelectAmcComponent implements OnInit, OnDestroy {
     isStepValid() {
         return (this.selectedManagementCompanies.length && this.selectedManagementCompanies.length > 0) ||
             this.submitted
+    }
+
+    /**
+     * Get invitation token if amId is same with the amId from preselected am
+     * @param amcId
+     */
+    getInvitationToken(amcId: number): string {
+        if (this.preSelectedAm && amcId === this.preSelectedAm.amcId) {
+            return this.preSelectedAm.invitationToken;
+        }
+        return undefined;
+    }
+
+    /**
+     * Check if amc is selected, for a given amcID
+     * @param amcID
+     */
+    isAMCSelected(amcID: number):boolean {
+        return this.selectedAMCIDs.has(amcID);
     }
 
     ngOnDestroy() {
