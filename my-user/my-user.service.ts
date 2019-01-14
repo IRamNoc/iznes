@@ -151,6 +151,10 @@ export class MyUserService implements OnDestroy {
             }));
     }
 
+    isReady() {
+        return this.memberSocketService.token && this.memberSocketService.token !== 'twoFactorRequired';
+    }
+
     ngOnDestroy() {
         for (const subscription of this.subscriptionsArray) {
             subscription.unsubscribe();
