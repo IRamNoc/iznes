@@ -420,7 +420,6 @@ export class NavigationTopbarComponent implements OnInit, AfterViewInit, OnDestr
         );
 
         this.ngRedux.dispatch(clearRequestedMailInitial());
-        // this.ngRedux.dispatch(clearRequestedWalletLabel());
     }
 
     public removed(value: any): void {
