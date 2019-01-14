@@ -377,7 +377,7 @@ const myAssetManagers = {
             icon_class: 'fa fa-file-text',
             element_id: 'top-menu-my-requests',
             router_link: '/my-requests/list',
-            dynamic_link: '/my-requests/list[^\/]*',
+            dynamic_link: '/my-requests/[^\/]*',
         },
     ],
 };
