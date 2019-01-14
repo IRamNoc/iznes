@@ -31,6 +31,8 @@ export class NewKycSelectAmcComponent implements OnInit, OnDestroy {
     alreadyRegistered = false;
     preSelectedAm: {amcId: number, invitationToken}
 
+    selectedAMCIDs = new Set();
+
     @Input() duplicate;
     @Input() form: FormGroup;
 
@@ -50,11 +52,12 @@ export class NewKycSelectAmcComponent implements OnInit, OnDestroy {
     @select(['ofi', 'ofiProduct', 'ofiManagementCompany', 'investorManagementCompanyList', 'investorManagementCompanyList']) managementCompanyList$;
 
     get selectedManagementCompanies() {
-        return filter(this.managementCompanies, company => company.selected).map(company => ({
+        const selected = filter(this.managementCompanies, company => this.selectedAMCIDs.has(company.id)).map(company => ({
             id: company.id,
             registered: company.registered,
             invitationToken: this.getInvitationToken(company.id),
         }));
+        return selected;
     }
 
     constructor(
@@ -134,7 +137,7 @@ export class NewKycSelectAmcComponent implements OnInit, OnDestroy {
             const managementCompany = find(this.managementCompanies, ['id', amcID]);
 
             if (foundKyc) {
-                managementCompany.selected = true;
+                this.selectedAMCIDs.add(managementCompany.id)
                 managementCompany.registered = foundKyc.alreadyCompleted;
             }
         });
@@ -152,7 +155,11 @@ export class NewKycSelectAmcComponent implements OnInit, OnDestroy {
 
     toggleManagementCompany(managementCompany) {
         if (!this.submitted) {
-            managementCompany.selected = !managementCompany.selected;
+            if (this.selectedAMCIDs.has(managementCompany.id)) {
+               this.selectedAMCIDs.delete(managementCompany.id);
+            } else {
+               this.selectedAMCIDs.add(managementCompany.id);
+            }
             this.onRegisteredChange();
         }
     }
@@ -278,10 +285,18 @@ export class NewKycSelectAmcComponent implements OnInit, OnDestroy {
      * @param amcId
      */
     getInvitationToken(amcId: number): string {
-       if (this.preSelectedAm && amcId === this.preSelectedAm.amcId) {
-          return this.preSelectedAm.invitationToken;
-       }
-       return undefined;
+        if (this.preSelectedAm && amcId === this.preSelectedAm.amcId) {
+            return this.preSelectedAm.invitationToken;
+        }
+        return undefined;
+    }
+
+    /**
+     * Check if amc is selected, for a given amcID
+     * @param amcID
+     */
+    isAMCSelected(amcID: number):boolean {
+        return this.selectedAMCIDs.has(amcID);
     }
 
     ngOnDestroy() {

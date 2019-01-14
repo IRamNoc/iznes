@@ -29,8 +29,8 @@
                     &nbsp;
                 </div>
 
-                <div class="management-company" [class.selected]="managementCompany.selected">
-                    <i class="fa fa-check fa-2x confirm-mark" *ngIf="managementCompany.selected"></i>
+                <div class="management-company" [class.selected]="isAMCSelected(managementCompany.id)">
+                    <i class="fa fa-check fa-2x confirm-mark" *ngIf="isAMCSelected(managementCompany.id)"></i>
 
                     <div class="infos" (click)="toggleManagementCompany(managementCompany)">
                         <div class="logo">
@@ -46,7 +46,7 @@
                         </div>
                     </div>
 
-                    <div class="actions" *ngIf="!duplicate" [hidden]="!managementCompany.selected">
+                    <div class="actions" *ngIf="!duplicate" [hidden]="!isAMCSelected(managementCompany.id)">
                         <div class="done">
                             <span>
                                 {{'KYC Completed?' | translate}}

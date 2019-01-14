@@ -19,7 +19,7 @@ export class OfiRedirectTokenComponent implements OnInit {
 
     ngOnInit() {
         this.activatedRoute.params.subscribe((params) => {
-            this.lang = params.lang;
+            this.lang = params.lang || 'en';
             this.invitationToken = params.invitationToken;
 
             this.initChecks();
@@ -32,9 +32,11 @@ export class OfiRedirectTokenComponent implements OnInit {
                 const data = getValue(response, [1, 'Data', 0]);
                 const investorCheck = getValue(data, ['hasInvestorBeenCreated']);
                 const email = getValue(data, ['email']);
+                const amcID = getValue(data, ['amManagementCompanyID']);
                 const params : any = {
                     invitationToken : this.invitationToken,
                     email,
+                    amcID,
                 };
 
                 if (investorCheck) {
