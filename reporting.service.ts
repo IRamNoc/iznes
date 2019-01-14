@@ -1,8 +1,7 @@
 import { combineLatest as observableCombineLatest } from 'rxjs/observable/combineLatest';
 import { BehaviorSubject } from 'rxjs/BehaviorSubject';
-import { Subject } from 'rxjs/Subject';
 import { Observable } from 'rxjs/Observable';
-import { first, filter, tap, distinctUntilChanged, takeUntil } from 'rxjs/operators';
+import { first, filter, tap, distinctUntilChanged } from 'rxjs/operators';
 import { Injectable } from '@angular/core';
 import { NgRedux } from '@angular-redux/store';
 import { HoldingByAsset, MyWalletHoldingState } from '@setl/core-store/wallet/my-wallet-holding';
@@ -92,7 +91,6 @@ export class ReportingService {
     private addressList$;
     private addressDirectory$;
     private issuerList$;
-    private destroyed = new Subject();
 
     constructor(private ngRedux: NgRedux<any>,
                 private walletNodeRequestService: WalletNodeRequestService,
@@ -101,6 +99,7 @@ export class ReportingService {
                 private myWalletService: MyWalletsService,
                 private memberSocketService: MemberSocketService,
     ) {
+
         this.connectedWalletId$ = this.ngRedux.select(['user', 'connected', 'connectedWallet']);
         this.connectedChain$ = this.ngRedux.select(['user', 'connected', 'connectedChain']);
         this.myChainAccess$ = this.ngRedux.select(['chain', 'myChainAccess', 'myChainAccess']);
@@ -143,7 +142,6 @@ export class ReportingService {
                 this.labelRequested$,
             ],
         ).pipe(
-            takeUntil(this.destroyed),
             tap(([connectedWalletId, connectedChainId, labelRequested]) => {
                 if (this.connectedWalletId !== connectedWalletId) {
                     this.connectedWalletId = connectedWalletId;
@@ -155,16 +153,18 @@ export class ReportingService {
         const dataStream$ = observableCombineLatest(idStream$, ...this.onLoad$, (ids, ...rest) => {
                 return [...ids, ...rest];
             }).pipe(
-            filter(([a, b, c, d, addressList]) => !isEmpty(addressList)));
+            filter(([a, b, c, d, e, addressList]) => !isEmpty(addressList)));
 
-        dataStream$.subscribe(([connectedWalletId, connectedChainId, chainAccess, walletList, addressList]) => {
-            this.walletList = walletList;
-            this.myChainAccess = chainAccess[this.connectedChainId];
-            this.walletInfo = walletList[this.connectedWalletId];
-            this.addressList = addressList;
+        dataStream$.subscribe(
+            ([connectedWalletId, connectedChainId, requestedLabel, chainAccess, walletList, addressList]) => {
+                this.walletList = walletList;
+                this.myChainAccess = chainAccess[this.connectedChainId];
+                this.walletInfo = walletList[this.connectedWalletId];
+                this.addressList = addressList;
 
-            initialisedSubject.next(true);
-        });
+                initialisedSubject.next(true);
+            },
+        );
 
         const requestedStream$ = observableCombineLatest(
             idStream$,
@@ -189,18 +189,9 @@ export class ReportingService {
     }
 
     private initRefetchData() {
-        this.walletHoldingRequested$.pipe(
-            takeUntil(this.destroyed),
-            filter(refetchFilter)).subscribe(() => this.requestWalletHolding(),
-        );
-        this.walletIssuerRequested$.pipe(
-            takeUntil(this.destroyed),
-            filter(refetchFilter)).subscribe(() => this.requestWalletIssuer(),
-        );
-        this.labelRequested$.pipe(
-            takeUntil(this.destroyed),
-            filter(refetchFilter)).subscribe(() => this.requestWalletData(),
-        );
+        this.walletHoldingRequested$.pipe(filter(refetchFilter)).subscribe(() => this.requestWalletHolding());
+        this.walletIssuerRequested$.pipe(filter(refetchFilter)).subscribe(() => this.requestWalletIssuer());
+        this.labelRequested$.pipe(filter(refetchFilter)).subscribe(() => this.requestWalletData());
     }
 
     public initSubscriptions() {
@@ -614,13 +605,5 @@ export class ReportingService {
                 err => reject(err),
             ));
         });
-    }
-
-    /**
-     * Unsubscribe from observables (to be called in ngOnDestroy from child components)
-     */
-    public onDestroy() {
-        this.destroyed.next(true);
-        this.destroyed.complete();
     }
 }
