@@ -15,11 +15,13 @@ export class LoginService {
     }
 
     postLoginRequests() {
-        const asyncTaskPipes = this.myUserService.getSiteMenu(this.ngRedux);
-        this.ngRedux.dispatch(SagaHelper.runAsync(
-            [SET_SITE_MENU],
-            [],
-            asyncTaskPipes, {},
-        ));
+        if (this.myUserService.isReady()){
+            const asyncTaskPipes = this.myUserService.getSiteMenu(this.ngRedux);
+            this.ngRedux.dispatch(SagaHelper.runAsync(
+                [SET_SITE_MENU],
+                [],
+                asyncTaskPipes, {},
+            ));
+        }
     }
 }
