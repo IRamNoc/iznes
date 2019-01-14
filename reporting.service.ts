@@ -189,7 +189,6 @@ export class ReportingService {
     }
 
     private initRefetchData() {
-        console.log('+++ refetch data');
         this.walletHoldingRequested$.pipe(
             takeUntil(this.destroyed),
             filter(refetchFilter)).subscribe(() => this.requestWalletHolding(),
