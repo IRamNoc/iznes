@@ -123,8 +123,5 @@ export class HomeComponent implements OnInit, OnDestroy {
 
         /* Detach the change detector on destroy. */
         this.changeDetectorRef.detach();
-
-        /* Destroy reporting service subscriptions */
-        this.reportingService.onDestroy();
     }
 }
