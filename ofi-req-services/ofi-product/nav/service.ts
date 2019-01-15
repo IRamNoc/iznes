@@ -12,7 +12,7 @@ import {
     CancelNavMessageBody,
 } from './model';
 import { SagaHelper } from '@setl/utils';
-import { createMemberNodeSagaRequest } from '@setl/utils/common';
+import {createMemberNodeRequest, createMemberNodeSagaRequest} from '@setl/utils/common';
 import { NgRedux } from '@angular-redux/store';
 import * as _ from 'lodash';
 
@@ -27,6 +27,7 @@ import {
 } from '../../../ofi-store/ofi-product/nav';
 
 import { SET_NAV_AUDIT } from '../../../ofi-store/ofi-product/nav-audit';
+import {ExtractMNResponse} from "@setl/utils/decorators/extract-response";
 
 const GLOBAL_UPLOAD_MODE = 'global';
 const DETAIL_UPLOAD_MODE = 'detail';
@@ -359,5 +360,21 @@ export class OfiNavService {
                 err => errorCallback(err),
             ),
         );
+    }
+
+    @ExtractMNResponse({
+        isList: false,
+    })
+    requestLatestNav(requestData: {
+        isin: string;
+        navdate: string;
+    }): any {
+        const messageBody = {
+            RequestName: 'izngetlatestnav',
+            token: this.memberSocketService.token,
+            ...requestData,
+        };
+
+        return createMemberNodeRequest(this.memberSocketService, messageBody);
     }
 }
