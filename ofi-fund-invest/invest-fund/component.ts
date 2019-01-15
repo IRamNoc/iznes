@@ -172,6 +172,7 @@ export class InvestFundComponent implements OnInit, OnDestroy {
     addressListObj;
 
     amountLimit: number = 15000000;
+    subPortfolioRedemptionEncumberBalance: number;
 
     panels = {
         1: true,
@@ -406,11 +407,7 @@ export class InvestFundComponent implements OnInit, OnDestroy {
      * @return {number}
      */
     get subPortfolioRedemptionEncumBalance(): number {
-        // todo
-        // it is a place holder at the moment, later on we will have redemption encumber from holdingsdetail,
-        // and we would be able to work it out by the encumber reference.
-        return 0;
-        // return 3000000;
+        return this.subPortfolioRedemptionEncumberBalance;
     }
 
     get isRedeemTooMuch(): boolean {
@@ -540,95 +537,117 @@ export class InvestFundComponent implements OnInit, OnDestroy {
 
         // List of observable subscription.
         this.shareDataOb
-        .pipe(
-            takeUntil(this.unSubscribe),
-        )
-        .subscribe((shareData) => {
-            this.shareData = immutableHelper.get(shareData, String(this.shareId), {});
-            this.calenderHelper = new CalendarHelper(this.shareData);
+            .pipe(
+                takeUntil(this.unSubscribe),
+            )
+            .subscribe((shareData) => {
+                this.shareData = immutableHelper.get(shareData, String(this.shareId), {});
+                this.calenderHelper = new CalendarHelper(this.shareData);
 
-            this.orderHelper = new OrderHelper(this.shareData, this.buildFakeOrderRequestToBackend());
+                this.orderHelper = new OrderHelper(this.shareData, this.buildFakeOrderRequestToBackend());
 
-            this.actionBy = _.isNull(this.allowAmount) ? 'a' : 'q';
+                this.actionBy = _.isNull(this.allowAmount) ? 'a' : 'q';
 
-            if (!!this.shareData.keyFactOptionalData.sri) this.shareData.keyFactOptionalData.sri = this.shareData.keyFactOptionalData.sri[0].text;
-            if (!!this.shareData.keyFactOptionalData.srri) this.shareData.keyFactOptionalData.srri = this.shareData.keyFactOptionalData.srri[0].text;
+                if (!!this.shareData.keyFactOptionalData.sri) this.shareData.keyFactOptionalData.sri = this.shareData.keyFactOptionalData.sri[0].text;
+                if (!!this.shareData.keyFactOptionalData.srri) this.shareData.keyFactOptionalData.srri = this.shareData.keyFactOptionalData.srri[0].text;
 
-            this.updateDateInputs();
-        });
+                this.updateDateInputs();
+            });
 
         this.connectedWalletOb
-        .pipe(
-            takeUntil(this.unSubscribe),
-        )
-        .subscribe((connected) => {
-            this.connectedWalletId = connected;
-        });
+            .pipe(
+                takeUntil(this.unSubscribe),
+            )
+            .subscribe((connected) => {
+                this.connectedWalletId = connected;
+            });
 
         combineLatest(
             this.shareDataOb,
             this.connectedWalletOb,
         )
-        .pipe(
-            distinctUntilChanged(),
-            takeUntil(this.unSubscribe),
-        )
-        .subscribe(([shareData, connectedWallet]) => {
-            if (!shareData || !connectedWallet) {
-                return;
-            }
-            if (!this.shareData.hasValidatedKiid) {
-                this.validateKiid();
-            }
-        });
+            .pipe(
+                distinctUntilChanged(),
+                takeUntil(this.unSubscribe),
+            )
+            .subscribe(([shareData, connectedWallet]) => {
+                if (!shareData || !connectedWallet) {
+                    return;
+                }
+                if (!this.shareData.hasValidatedKiid) {
+                    this.validateKiid();
+                }
+            });
 
         this.addressListOb
-        .pipe(
-            takeUntil(this.unSubscribe),
-        )
-        .subscribe(addressList => this.updateAddressList(addressList));
+            .pipe(
+                takeUntil(this.unSubscribe),
+            )
+            .subscribe(addressList => this.updateAddressList(addressList));
 
         this.requestedAddressListOb
-        .pipe(
-            takeUntil(this.unSubscribe),
-        )
-        .subscribe(requested => this.requestAddressList(requested));
+            .pipe(
+                takeUntil(this.unSubscribe),
+            )
+            .subscribe(requested => this.requestAddressList(requested));
 
         this.requestedLabelListOb
-        .pipe(
-            takeUntil(this.unSubscribe),
-        )
-        .subscribe(requested => this.requestWalletLabel(requested));
+            .pipe(
+                takeUntil(this.unSubscribe),
+            )
+            .subscribe(requested => this.requestWalletLabel(requested));
 
         this.cutoffDate.valueChanges
-        .pipe(
-            takeUntil(this.unSubscribe),
-            distinctUntilChanged(),
-            throttleTime(1000),
-        )
-        .subscribe((v) => {
-            if (this.toastTimer) {
-                clearInterval(this.toastTimer);
-            }
-            if (this.timerToast) {
-                this.toaster.clear(this.timerToast.toastId);
-                this.timerToast = null;
-            }
-            if (!v) {
-                return;
-            }
+            .pipe(
+                takeUntil(this.unSubscribe),
+                distinctUntilChanged(),
+                throttleTime(1000),
+            )
+            .subscribe((v) => {
+                if (this.toastTimer) {
+                    clearInterval(this.toastTimer);
+                }
+                if (this.timerToast) {
+                    this.toaster.clear(this.timerToast.toastId);
+                    this.timerToast = null;
+                }
+                if (!v) {
+                    return;
+                }
 
-            const cutOffValue = new Date(
-                this.calenderHelper
-                .getCutoffTimeForSpecificDate(moment(v), this.getCalendarHelperOrderNumber())
-                .format('YYYY-MM-DD HH:mm'),
-            );
+                const cutOffValue = new Date(
+                    this.calenderHelper
+                        .getCutoffTimeForSpecificDate(moment(v), this.getCalendarHelperOrderNumber())
+                        .format('YYYY-MM-DD HH:mm'),
+                );
 
-            const now = new Date();
+                const now = new Date();
 
-            const remainingTime = cutOffValue.getTime() - now.getTime();
-            this.updateToastTimer(remainingTime);
-            this.toastTimer = this.setToastTimer();
+                const remainingTime = cutOffValue.getTime() - now.getTime();
+                this.updateToastTimer(remainingTime);
+                this.toastTimer = this.setToastTimer();
+            });
+
+    }
+
+    getEncumbrance(): Promise<null> {
+        const subportfolio = _.get(this.address, ['value', '0', 'id'], '');
+        return new Promise((resolve, reject) => {
+            this.walletNodeRequestService.fetchEncumbranceDetails(
+                this.shareData.isin,
+                this.shareData.fundShareName,
+                this.connectedWalletId,
+                subportfolio,
+            )
+                .then((res) => {
+                    this.subPortfolioRedemptionEncumberBalance = OrderHelper.getInvestorRedemptionTotalEcumbrance(
+                        res,
+                        subportfolio,
+                        this.shareData.isin,
+                        this.shareData.fundShareName,
+                    );
+                    resolve();
+                });
         });
     }
 
@@ -651,8 +670,8 @@ export class InvestFundComponent implements OnInit, OnDestroy {
             () => {
                 const cutOffValue = new Date(
                     this.calenderHelper
-                    .getCutoffTimeForSpecificDate(moment(this.cutoffDate.value), this.getCalendarHelperOrderNumber())
-                    .format('YYYY-MM-DD HH:mm'),
+                        .getCutoffTimeForSpecificDate(moment(this.cutoffDate.value), this.getCalendarHelperOrderNumber())
+                        .format('YYYY-MM-DD HH:mm'),
                 );
 
                 const now = new Date();
@@ -862,8 +881,13 @@ export class InvestFundComponent implements OnInit, OnDestroy {
     handleIsRedeemOver80Percent(): boolean {
         // check if this is a redemption order or if it is a sell buy order
         if ((this.type === 'sellbuy' || this.type === 'redeem') && (this.actionBy === 'a')) {
-            const checkResponse = OrderHelper.isRedeemOver80Percent(this.orderValue, this.subPortfolioTotalBalance,
-                this.subPortfolioEncumberedBalance, this.subPortfolioRedemptionEncumBalance, this.shareData.price);
+            const checkResponse = OrderHelper.isRedeemOver80Percent(
+                this.orderValue,
+                this.subPortfolioTotalBalance,
+                this.subPortfolioEncumberedBalance,
+                this.subPortfolioRedemptionEncumBalance,
+                this.shareData.price,
+            );
 
             if (!OrderHelper.isResponseGood(checkResponse)) {
                 // redeem over 80%
@@ -896,82 +920,86 @@ export class InvestFundComponent implements OnInit, OnDestroy {
             return false;
         }
 
-        if (!this.handleIsRedeemOver80Percent()) {
-            return false;
-        }
+        this.getEncumbrance()
+            .then(() => {
 
-        // show waiting pop up until create order response come back.
-        this.alertsService.create('info', `
-                <table class="table grid">
-                    <tbody>
-                        <tr>
-                            <td class="text-center text-info">${this.translate.translate('Creating order')}.<br />${this.translate.translate('This may take a few moments.')}</td>
-                        </tr>
-                    </tbody>
-                </table>
-        `, { showCloseButton: false, overlayClickToClose: false });
-
-        this.ofiOrdersService.addNewOrder(request).then((data) => {
-            let orderSuccessMsg = '';
-
-            if (this.type === 'sellbuy') {
-                const orderSubId = _.get(data, ['1', 'Data', '0', 'linkedSubscriptionOrderId'], 0);
-                const orderSubRef = commonHelper.pad(orderSubId, 8, '0');
-
-                const orderRedeemId = _.get(data, ['1', 'Data', '0', 'linkedRedemptionOrderId'], 0);
-                const orderRedemRef = commonHelper.pad(orderRedeemId, 8, '0');
-
-                orderSuccessMsg = this.translate.translate(
-                    'Your order @orderRedemRef@ & @orderSubRef@ have been successfully placed and are now initiated.',
-                    { 'orderRedemRef': orderRedemRef, 'orderSubRef': orderSubRef },
-                );
-
-                if (this.amountTooBig) {
-                    this.sendMessageToAM({
-                        walletID: this.shareData.amDefaultWalletId,
-                        orderTypeLabel: this.orderTypeLabel,
-                        orderID: orderSubId,
-                        orderRef: orderSubRef,
-                    });
-
-                    this.sendMessageToAM({
-                        walletID: this.shareData.amDefaultWalletId,
-                        orderTypeLabel: this.orderTypeLabel,
-                        orderID: orderRedeemId,
-                        orderRef: orderRedemRef,
-                    });
+                if (!this.handleIsRedeemOver80Percent()) {
+                    return false;
                 }
-            } else {
-                const orderId = _.get(data, ['1', 'Data', '0', 'orderID'], 0);
-                const orderRef = commonHelper.pad(orderId, 8, '0');
 
-                orderSuccessMsg = this.translate.translate(
-                    'Your order @orderRef@ has been successfully placed and is now initiated.',
-                    { 'orderRef': orderRef },
-                );
+                // show waiting pop up until create order response come back.
+                this.alertsService.create('info', `
+                        <table class="table grid">
+                            <tbody>
+                                <tr>
+                                    <td class="text-center text-info">${this.translate.translate('Creating order')}.<br />${this.translate.translate('This may take a few moments.')}</td>
+                                </tr>
+                            </tbody>
+                        </table>
+                `, { showCloseButton: false, overlayClickToClose: false });
 
-                if (this.amountTooBig) {
-                    this.sendMessageToAM({
-                        walletID: this.shareData.amDefaultWalletId,
-                        orderTypeLabel: this.orderTypeLabel,
-                        orderID: orderId,
-                        orderRef,
-                    });
-                }
-            }
+                this.ofiOrdersService.addNewOrder(request).then((data) => {
+                    let orderSuccessMsg = '';
 
-            this.toaster.pop('success', orderSuccessMsg);
-            this.handleClose();
+                    if (this.type === 'sellbuy') {
+                        const orderSubId = _.get(data, ['1', 'Data', '0', 'linkedSubscriptionOrderId'], 0);
+                        const orderSubRef = commonHelper.pad(orderSubId, 8, '0');
 
-            this.router.navigateByUrl('/order-book/my-orders/list');
-        }).catch((data) => {
-            let errorMessage = _.get(data, ['1', 'Data', '0', 'Message'], 'Could not place order');
-            errorMessage = this.translate.translate(errorMessage);
+                        const orderRedeemId = _.get(data, ['1', 'Data', '0', 'linkedRedemptionOrderId'], 0);
+                        const orderRedemRef = commonHelper.pad(orderRedeemId, 8, '0');
 
-            this.toaster.pop('warning', errorMessage);
+                        orderSuccessMsg = this.translate.translate(
+                            'Your order @orderRedemRef@ & @orderSubRef@ have been successfully placed and are now initiated.',
+                            { 'orderRedemRef': orderRedemRef, 'orderSubRef': orderSubRef },
+                        );
 
-            this.alertsService.close();
-        });
+                        if (this.amountTooBig) {
+                            this.sendMessageToAM({
+                                walletID: this.shareData.amDefaultWalletId,
+                                orderTypeLabel: this.orderTypeLabel,
+                                orderID: orderSubId,
+                                orderRef: orderSubRef,
+                            });
+
+                            this.sendMessageToAM({
+                                walletID: this.shareData.amDefaultWalletId,
+                                orderTypeLabel: this.orderTypeLabel,
+                                orderID: orderRedeemId,
+                                orderRef: orderRedemRef,
+                            });
+                        }
+                    } else {
+                        const orderId = _.get(data, ['1', 'Data', '0', 'orderID'], 0);
+                        const orderRef = commonHelper.pad(orderId, 8, '0');
+
+                        orderSuccessMsg = this.translate.translate(
+                            'Your order @orderRef@ has been successfully placed and is now initiated.',
+                            { 'orderRef': orderRef },
+                        );
+
+                        if (this.amountTooBig) {
+                            this.sendMessageToAM({
+                                walletID: this.shareData.amDefaultWalletId,
+                                orderTypeLabel: this.orderTypeLabel,
+                                orderID: orderId,
+                                orderRef,
+                            });
+                        }
+                    }
+
+                    this.toaster.pop('success', orderSuccessMsg);
+                    this.handleClose();
+
+                    this.router.navigateByUrl('/order-book/my-orders/list');
+                }).catch((data) => {
+                    let errorMessage = _.get(data, ['1', 'Data', '0', 'Message'], 'Could not place order');
+                    errorMessage = this.translate.translate(errorMessage);
+
+                    this.toaster.pop('warning', errorMessage);
+
+                    this.alertsService.close();
+                });
+            });
     }
 
     sendMessageToAM(params) {
@@ -1167,7 +1195,7 @@ export class InvestFundComponent implements OnInit, OnDestroy {
 
         if (type === 'cutoff') {
             const cutoffDateStr = this.getCutoffTimeForSpecificDate(momentDateValue)
-            .format('YYYY-MM-DD HH:mm');
+                .format('YYYY-MM-DD HH:mm');
 
             const mValuationDate = this.getValuationDateFromCutoff(momentDateValue);
             const valuationDateStr = mValuationDate.clone().format('YYYY-MM-DD');
@@ -1183,7 +1211,7 @@ export class InvestFundComponent implements OnInit, OnDestroy {
         } else if (type === 'valuation') {
             const mCutoffDate = this.getCutoffDateFromValuation(momentDateValue);
             const cutoffDateStr = this.getCutoffTimeForSpecificDate(mCutoffDate)
-            .format('YYYY-MM-DD HH:mm');
+                .format('YYYY-MM-DD HH:mm');
 
             const mSettlementDate = this.getSettlementDateFromCutoff(mCutoffDate);
             const settlementDateStr = mSettlementDate.format('YYYY-MM-DD');
@@ -1195,7 +1223,7 @@ export class InvestFundComponent implements OnInit, OnDestroy {
         } else if (type === 'settlement') {
             const mCutoffDate = this.getCutoffDateFromSettlement(momentDateValue);
             const cutoffDateStr = this.getCutoffTimeForSpecificDate(mCutoffDate)
-            .format('YYYY-MM-DD HH:mm');
+                .format('YYYY-MM-DD HH:mm');
 
             const mValuationDate = this.getValuationDateFromCutoff(mCutoffDate);
             const valuationStr = mValuationDate.format('YYYY-MM-DD');
@@ -1374,7 +1402,7 @@ export class InvestFundComponent implements OnInit, OnDestroy {
     showAlertCutOffError() {
         if (this.doValidate) {
             this.alertsService
-            .create('error', `
+                .create('error', `
                     <table class="table grid">
                         <tbody>
                             <tr>
@@ -1383,13 +1411,13 @@ export class InvestFundComponent implements OnInit, OnDestroy {
                         </tbody>
                     </table>
                 `)
-            .pipe(
-                take(1),
-            )
-            .subscribe(() => {
-                this.disclaimer.setValue(false);
-                this.cutoffDate.setErrors({ tooLate: true });
-            });
+                .pipe(
+                    take(1),
+                )
+                .subscribe(() => {
+                    this.disclaimer.setValue(false);
+                    this.cutoffDate.setErrors({ tooLate: true });
+                });
         }
     }
 
@@ -1570,8 +1598,7 @@ export class InvestFundComponent implements OnInit, OnDestroy {
      */
     show80PercentNoActiveOrderError() {
         this.alertsService
-        .create(
-            'error', `
+            .create('error', `
                 <table class="table grid">
                     <tbody>
                         <tr>
@@ -1596,8 +1623,7 @@ export class InvestFundComponent implements OnInit, OnDestroy {
      */
     show80PercentHasActiveOrderError() {
         this.alertsService
-        .create(
-            'error', `
+            .create('error', `
                 <table class="table grid">
                     <tbody>
                         <tr>
@@ -1654,11 +1680,11 @@ export class InvestFundComponent implements OnInit, OnDestroy {
 
     onValidateKiid() {
         this.shareService.validateKiid(this.connectedWalletId, this.shareData.fundShareID)
-        .then(() => {
-            this.kiidModal.isOpen = false;
-            this.changeDetectorRef.markForCheck();
-            this.ngRedux.dispatch(validateKiid(this.shareData.fundShareID));
-        });
+            .then(() => {
+                this.kiidModal.isOpen = false;
+                this.changeDetectorRef.markForCheck();
+                this.ngRedux.dispatch(validateKiid(this.shareData.fundShareID));
+            });
     }
 }
 
