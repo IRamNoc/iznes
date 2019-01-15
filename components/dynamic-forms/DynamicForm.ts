@@ -31,6 +31,7 @@ export interface FormItem {
 
     fileData?: any;
     filePermission?: FilePermission;
+    title?: string;
 }
 
 export enum FormItemType {
