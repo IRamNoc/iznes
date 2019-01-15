@@ -99,6 +99,7 @@ export class ReportingService {
                 private myWalletService: MyWalletsService,
                 private memberSocketService: MemberSocketService,
     ) {
+
         this.connectedWalletId$ = this.ngRedux.select(['user', 'connected', 'connectedWallet']);
         this.connectedChain$ = this.ngRedux.select(['user', 'connected', 'connectedChain']);
         this.myChainAccess$ = this.ngRedux.select(['chain', 'myChainAccess', 'myChainAccess']);
@@ -138,27 +139,32 @@ export class ReportingService {
                 this.connectedWalletId$.pipe(
                     filter(id => id > 0), distinctUntilChanged()),
                 this.connectedChain$.pipe(filter(id => id > 0), distinctUntilChanged()),
+                this.labelRequested$,
             ],
         ).pipe(
-            tap(([connectedWalletId, connectedChainId]) => {
-                this.connectedWalletId = connectedWalletId;
-                this.connectedChainId = connectedChainId;
-                this.requestWalletData();
+            tap(([connectedWalletId, connectedChainId, labelRequested]) => {
+                if (this.connectedWalletId !== connectedWalletId) {
+                    this.connectedWalletId = connectedWalletId;
+                    this.connectedChainId = connectedChainId;
+                    if (!labelRequested) this.requestWalletData();
+                }
             }));
 
         const dataStream$ = observableCombineLatest(idStream$, ...this.onLoad$, (ids, ...rest) => {
                 return [...ids, ...rest];
             }).pipe(
-            filter(([a, b, c, d, addressList]) => !isEmpty(addressList)))
-        ;
-        dataStream$.subscribe(([connectedWalletId, connectedChainId, chainAccess, walletList, addressList]) => {
-            this.walletList = walletList;
-            this.myChainAccess = chainAccess[this.connectedChainId];
-            this.walletInfo = walletList[this.connectedWalletId];
-            this.addressList = addressList;
+            filter(([a, b, c, d, e, addressList]) => !isEmpty(addressList)));
 
-            initialisedSubject.next(true);
-        });
+        dataStream$.subscribe(
+            ([connectedWalletId, connectedChainId, requestedLabel, chainAccess, walletList, addressList]) => {
+                this.walletList = walletList;
+                this.myChainAccess = chainAccess[this.connectedChainId];
+                this.walletInfo = walletList[this.connectedWalletId];
+                this.addressList = addressList;
+
+                initialisedSubject.next(true);
+            },
+        );
 
         const requestedStream$ = observableCombineLatest(
             idStream$,
