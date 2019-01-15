@@ -31,6 +31,11 @@ export const SET_WALLET_LABEL = `${name}/SET_WALLET_LABEL`;
 export const SET_WALLET_LABEL_UPDATED = `${name}/SET_WALLET_LABEL_UPDATED`;
 
 /**
+ * Delete wallet label.
+ */
+export const DELETE_WALLET_LABEL = `${name}/DELETE_WALLET_LABEL`;
+
+/**
  * Set (Set to true) request wallet label state
  * Flag that to indicate we do not need to request it again.
  */

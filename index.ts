@@ -54,6 +54,7 @@ export {
     getWalletAddressList,
     SET_WALLET_LABEL,
     SET_WALLET_LABEL_UPDATED,
+    DELETE_WALLET_LABEL,
     setRequestedWalletLabel,
     clearRequestedWalletLabel,
     SET_OWN_WALLETS,

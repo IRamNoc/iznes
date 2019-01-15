@@ -14,29 +14,32 @@ const initialState: MyWalletAddressState = {
 export const MyWalletAddressReducer = function (state: MyWalletAddressState = initialState,
                                                 action: AsyncTaskResponseAction) {
     switch (action.type) {
-    case MyWalletAddressActions.SET_WALLET_ADDRESSES:
-        return handleSetWalletAddresses(state, action);
+        case MyWalletAddressActions.SET_WALLET_ADDRESSES:
+            return handleSetWalletAddresses(state, action);
 
-    case MyWalletAddressActions.SET_REQUESTED_WALLET_ADDRESSES:
-        return handleSetRequestedWalletAddresses(state);
+        case MyWalletAddressActions.SET_REQUESTED_WALLET_ADDRESSES:
+            return handleSetRequestedWalletAddresses(state);
 
-    case MyWalletAddressActions.CLEAR_REQUESTED_WALLET_ADDRESSES:
-        return handleClearRequestedWalletAddresses(state);
+        case MyWalletAddressActions.CLEAR_REQUESTED_WALLET_ADDRESSES:
+            return handleClearRequestedWalletAddresses(state);
 
-    case MyWalletAddressActions.SET_WALLET_LABEL:
-        return handleSetWalletLabel(state, action);
+        case MyWalletAddressActions.SET_WALLET_LABEL:
+            return handleSetWalletLabel(state, action);
 
-    case MyWalletAddressActions.SET_WALLET_LABEL_UPDATED:
-        return handleSetWalletLabelUpdated(state, action);
+        case MyWalletAddressActions.SET_WALLET_LABEL_UPDATED:
+            return handleSetWalletLabelUpdated(state, action);
 
-    case MyWalletAddressActions.SET_REQUESTED_WALLET_LABEL:
-        return handleSetRequestedWalletLabel(state);
+        case MyWalletAddressActions.DELETE_WALLET_LABEL:
+            return handleDeleteWalletLabel(state, action);
 
-    case MyWalletAddressActions.CLEAR_REQUESTED_WALLET_LABEL:
-        return handleClearRequestedWalletLabel(state);
+        case MyWalletAddressActions.SET_REQUESTED_WALLET_LABEL:
+            return handleSetRequestedWalletLabel(state);
 
-    default:
-        return state;
+        case MyWalletAddressActions.CLEAR_REQUESTED_WALLET_LABEL:
+            return handleClearRequestedWalletLabel(state);
+
+        default:
+            return state;
     }
 };
 
@@ -107,10 +110,8 @@ function handleSetRequestedWalletAddresses(state) {
 function handleClearRequestedWalletAddresses(state) {
     const requestedAddressList = false;
     const requestedCompleteAddresses = false;
-    const addressList = {};
 
     return Object.assign({}, state, {
-        addressList,
         requestedAddressList,
         requestedCompleteAddresses,
     });
@@ -144,11 +145,8 @@ function handleSetWalletLabel(state, action): MyWalletAddressState {
         {},
     );
 
-    const currentAddressLit = state.addressList;
-    const currentAddressListImu = fromJS(currentAddressLit);
     const formattedLabelDataImu = fromJS(formattedLabelData);
-
-    const newAddressListImu = _.pickBy(currentAddressListImu.mergeDeep(formattedLabelDataImu).toJS(), (value) => {
+    const newAddressListImu = _.pickBy(formattedLabelDataImu.toJS(), (value) => {
         return value.deleted === 0;
     });
 
@@ -168,8 +166,6 @@ function handleSetWalletLabelUpdated(state, action): MyWalletAddressState {
     /* Get the payload from the JSON object. */
     const updatedLabel = _.get(action, 'payload[1].Data');
 
-    console.log('+++ updatedLabel: ', updatedLabel);
-
     /* Clone the wallet labels list. */
     const newList = JSON.parse(JSON.stringify(state.addressList));
 
@@ -185,6 +181,27 @@ function handleSetWalletLabelUpdated(state, action): MyWalletAddressState {
     });
 
     /* Return the old state with the updated wallet label list. */
+    return Object.assign({}, state, { addressList: newList });
+}
+
+/**
+ * Handle DELETE_WALLET_LABEL action
+ *
+ * @param state
+ * @param action
+ * @return {any}
+ */
+function handleDeleteWalletLabel(state, action): MyWalletAddressState {
+    const deletedAddress = _.get(action, 'payload[1].Data.response[0].DeletedAddress', '');
+    const newList = JSON.parse(JSON.stringify(state.addressList));
+
+    Object.keys(newList).find((key) => {
+        if (newList[key].addr === deletedAddress) {
+            delete newList[key];
+            return newList;
+        }
+    });
+
     return Object.assign({}, state, { addressList: newList });
 }
 

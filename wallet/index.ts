@@ -23,6 +23,7 @@ import {
     setRequestedWalletAddresses,
     SET_WALLET_LABEL,
     SET_WALLET_LABEL_UPDATED,
+    DELETE_WALLET_LABEL,
     setRequestedWalletLabel,
     clearRequestedWalletLabel,
 } from './my-wallet-address';
@@ -121,6 +122,7 @@ export {
     setRequestedWalletAddresses,
     SET_WALLET_LABEL,
     SET_WALLET_LABEL_UPDATED,
+    DELETE_WALLET_LABEL,
     setRequestedWalletLabel,
     clearRequestedWalletLabel,
 };
