@@ -189,6 +189,21 @@ export class WalletNodeRequestService {
         });
     }
 
+    fetchEncumbranceDetails(isin, shareName, walletid, subportfolio): Promise<any> {
+        const messageBody = {
+            topic: 'encumbrancedetails',
+            walletid,
+            walletids: null,
+            address: subportfolio,
+            namespace: isin,
+            classid: shareName,
+            reference: null,
+        };
+        return createWalletNodeRequest(this.walletNodeSocketService, 'request', messageBody).then((response) => {
+            return _.get(response, [1]);
+        });
+    }
+    
     requestEncumbranceDetails(requestData: RequestEncumbranceDetails) {
         const messageBody: any = {
             topic: 'encumbrancedetails',
