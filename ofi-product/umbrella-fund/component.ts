@@ -179,22 +179,20 @@ export class UmbrellaFundComponent implements OnInit, AfterViewInit, OnDestroy {
             ],
             registerOffice: [
                 '',
-                Validators.compose([
-                    Validators.required,
-                ]),
             ],
             registerOfficeAddress: [
                 '',
-                Validators.compose([
-                    Validators.required,
-                ]),
             ],
             registerOfficeAddressLine2: [
                 '',
             ],
-            registerOfficeAddressZipCode: ['', Validators.required],
-            registerOfficeAddressCity: ['', Validators.required],
-            registerOfficeAddressCountry: [[], Validators.required],
+            registerOfficeAddressZipCode: [
+                '',
+            ],
+            registerOfficeAddressCity: [
+                '',
+            ],
+            registerOfficeAddressCountry: [[]],
             legalEntityIdentifier: [
                 '',
             ],
@@ -207,7 +205,6 @@ export class UmbrellaFundComponent implements OnInit, AfterViewInit, OnDestroy {
             umbrellaFundCreationDate: [
                 '',
                 Validators.compose([
-                    Validators.required,
                     productConfig.validators.date.day,
                 ]),
             ],

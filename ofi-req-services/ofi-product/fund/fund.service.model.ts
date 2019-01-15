@@ -28,6 +28,10 @@ export interface Fund {
     legalEntityIdentifier: string;
     registerOffice: string;
     registerOfficeAddress: string;
+    registerOfficeAddressLine2: string;
+    registerOfficeAddressZipCode: string;
+    registerOfficeAddressCity: string;
+    registerOfficeAddressCountry: string;
     domicile: string;
     tradingAccount: string;
     isEuDirective: any;
@@ -64,6 +68,7 @@ export interface Fund {
     hasCapitalPreservation: hasCapitalPreservation;
     capitalPreservationLevel: number;
     capitalPreservationPeriod: number;
+    capitalisationDate: string;
     hasCppi: hasCppi;
     cppiMultiplier: string;
     hasHedgeFundStrategy: hasHedgeFundStrategy;

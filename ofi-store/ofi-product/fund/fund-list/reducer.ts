@@ -51,14 +51,34 @@ function handleGetIznesFunds(state: FundListState, action: Action): any {
             const payingAgentID = (fund.payingAgentID) ? JSON.parse(fund.payingAgentID) : null;
             const investmentAdvisorID = (fund.investmentAdvisorID) ? JSON.parse(fund.investmentAdvisorID) : null;
 
+            const registerOfficeAddressLine2 = (fund.registerOfficeAddressLine2) ? JSON.parse(fund.registerOfficeAddressLine2) : null;
+            const registerOfficeAddressZipCode = (fund.registerOfficeAddressZipCode) ? JSON.parse(fund.registerOfficeAddressZipCode) : null;
+            const registerOfficeAddressCity = (fund.registerOfficeAddressCity) ? JSON.parse(fund.registerOfficeAddressCity) : null;
+            const registerOfficeAddressCountry = (fund.registerOfficeAddressCountry) ? JSON.parse(fund.registerOfficeAddressCountry) : null;
+
+            let fiscalYearEnd = null;
+
+            // Get fund.fiscalYearEnd in MM-DD format
+            if (fund.fiscalYearEnd !== null) {
+                if (fund.fiscalYearEnd.length === 19) { // e.g. '2018-05-01 00:00:00'
+                    fiscalYearEnd = fund.fiscalYearEnd.substr(5, 5); // '05-01'
+                } else if (fund.fiscalYearEnd.length === 5) { // e.g. '05-01'
+                    fiscalYearEnd = fund.fiscalYearEnd; // '05-01'
+                }
+            }
+
             const fundData: IznesFundDetail = {
                 ..._.omit(fund, ['Status']),
                 fundCreationDate: fund.fundCreationDate !== null ? fund.fundCreationDate.substr(0, 10) : null,
                 fundLaunchate: fund.fundLaunchate !== null ? fund.fundLaunchate.substr(0, 10) : null,
-                fiscalYearEnd: fund.fiscalYearEnd !== null ? fund.fiscalYearEnd.substr(0, 7) : null,
+                fiscalYearEnd,
                 principlePromoterID,
                 payingAgentID,
                 investmentAdvisorID,
+                registerOfficeAddressLine2,
+                registerOfficeAddressZipCode,
+                registerOfficeAddressCity,
+                registerOfficeAddressCountry,
             };
 
             return {

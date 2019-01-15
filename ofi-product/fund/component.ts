@@ -14,6 +14,7 @@ import { OfiProductConfigService } from '@ofi/ofi-main/ofi-req-services/ofi-prod
 import { OfiUmbrellaFundService } from '@ofi/ofi-main/ofi-req-services/ofi-product/umbrella-fund/service';
 import { Fund } from '@ofi/ofi-main/ofi-req-services/ofi-product/fund/fund.service.model';
 import { UmbrellaFundDetail } from '@ofi/ofi-main/ofi-store/ofi-product/umbrella-fund/umbrella-fund-list/model';
+import * as moment from 'moment';
 
 import {
     OfiManagementCompanyService,
@@ -66,6 +67,7 @@ export class FundComponent implements OnInit, OnDestroy {
     };
 
     isLeiVisible = false;
+    isFundCapitalisationDateVisible = false;
     viewMode = 'UMBRELLA';
     selectedUmbrella: number;
     param: string;
@@ -127,11 +129,12 @@ export class FundComponent implements OnInit, OnDestroy {
         locale: this.language,
     };
 
-    configMonth = {
-        format: 'YYYY-MM',
+    configMonthDay = {
+        format: 'MM-DD',
         closeOnSelect: true,
         disableKeypress: true,
         locale: this.language,
+        monthFormat: 'MMM',
     };
 
     // product config
@@ -214,8 +217,8 @@ export class FundComponent implements OnInit, OnDestroy {
                 ...this.configDate,
                 locale: this.language,
             };
-            this.configMonth = {
-                ...this.configMonth,
+            this.configMonthDay = {
+                ...this.configMonthDay,
                 locale: this.language,
             };
         });
@@ -264,6 +267,10 @@ export class FundComponent implements OnInit, OnDestroy {
             legalEntityIdentifier: [null, this.validators.lei],
             registerOffice: [null],
             registerOfficeAddress: [null],
+            registerOfficeAddressLine2: [null],
+            registerOfficeAddressZipCode: [null],
+            registerOfficeAddressCity: [null],
+            registerOfficeAddressCountry: [null],
             domicile: [[], this.validators.ngSelectRequired],
             tradingAccount: [],
             isEuDirective: [null, Validators.required],
@@ -276,7 +283,7 @@ export class FundComponent implements OnInit, OnDestroy {
             fundLaunchate: [null, this.validators.date.day],
             fundCurrency: [[], this.validators.ngSelectRequired],
             openOrCloseEnded: [null, Validators.required],
-            fiscalYearEnd: [null, Validators.compose([Validators.required, this.validators.date.month])],
+            fiscalYearEnd: [null, this.validators.date.monthday],
             isFundOfFund: [null, Validators.required],
             managementCompanyID: [[], this.validators.ngSelectRequired],
             fundAdministratorID: [[], this.validators.ngSelectRequired],
@@ -287,7 +294,7 @@ export class FundComponent implements OnInit, OnDestroy {
             fundManagers: [null],
             transferAgentID: [[]],
             centralizingAgentID: [[]],
-            isDedicatedFund: [null, Validators.required],
+            isDedicatedFund: [null],
             portfolioCurrencyHedge: [[], this.validators.ngSelectRequired],
 
             globalItermediaryIdentification: [null, this.validators.giin],
@@ -304,6 +311,7 @@ export class FundComponent implements OnInit, OnDestroy {
                 Validators.max(100),
             ])],
             capitalPreservationPeriod: [null],
+            capitalisationDate: [null, this.validators.date.month],
             hasCppi: [null],
             cppiMultiplier: [null],
             hasHedgeFundStrategy: [null],
@@ -515,6 +523,18 @@ export class FundComponent implements OnInit, OnDestroy {
             }
         });
 
+        this.fundForm.controls['capitalPreservationPeriod'].valueChanges
+        .pipe(
+            takeUntil(this.unSubscribe),
+        )
+        .subscribe((d) => {
+            if (d[0].text === 'None') {
+                this.isFundCapitalisationDateVisible = true;
+            } else {
+                this.isFundCapitalisationDateVisible = false;
+            }
+        });
+
         this.fundForm.controls['hasCppi'].valueChanges
         .pipe(
             takeUntil(this.unSubscribe),
@@ -682,6 +702,7 @@ export class FundComponent implements OnInit, OnDestroy {
             transferAgentID: _.get(this.fundForm.controls['transferAgentID'].value, ['0', 'id'], null),
             centralizingAgentID: _.get(this.fundForm.controls['centralizingAgentID'].value, ['0', 'id'], null),
             capitalPreservationPeriod: _.get(this.fundForm.controls['capitalPreservationPeriod'].value, ['0', 'id'], null),
+            capitalisationDate: _.get(this.fundForm.controls['capitalisationDate'].value, ['0', 'id'], null),
             holidayMgmtConfig: this.getHolidayMgmtConfig(),
             legalEntityIdentifier: this.isLeiVisible ? this.fundForm.controls['legalEntityIdentifier'].value : null,
         };

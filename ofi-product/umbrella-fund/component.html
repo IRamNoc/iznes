@@ -95,25 +95,22 @@
                                 </div>
                             </div>
 
-                            <div class="form-group required-field col-sm-6">
+                            <div class="form-group col-sm-6">
                                 <label for="uf_registerOffice" class="control-label">{{ 'Name of the Registered Office
                                     of the Umbrella Fund' | translate }}
                                 </label>
                                 <input type="text" id="uf_registerOffice" formControlName="registerOffice">
-                                <div class="field-error">{{ 'Field is required' | translate }}</div>
                                 <div *ngIf="umbrellaFundForm.controls['registerOffice'].touched && umbrellaFundForm.controls['registerOffice'].hasError('pattern')"
                                     class="field-error">{{ 'Incorrect entry' | translate }}</div>
                             </div>
 
                             <div class="w-100"></div>
 
-                            <div class="form-group required-field col-sm-6">
+                            <div class="form-group col-sm-6">
                                 <label for="uf_registerOfficeAddress" class="control-label">{{ 'Address of the
                                     Registered Office of the Umbrella Fund' | translate }}
                                 </label>
                                 <input type="text" id="uf_registerOfficeAddress" formControlName="registerOfficeAddress">
-
-                                <div class="field-error">{{ ' Field is required' | translate }}</div>
                                 <div *ngIf="umbrellaFundForm.controls['registerOfficeAddress'].touched && umbrellaFundForm.controls['registerOfficeAddress'].hasError('pattern')"
                                     class="field-error">{{ 'Incorrect entry' | translate }}</div>
                             </div>
@@ -128,29 +125,23 @@
                                     class="field-error">{{ 'Incorrect entry' | translate }}</div>
                             </div>
 
-                            <div class="form-group required-field col-sm-4">
+                            <div class="form-group col-sm-4">
                                 <label for="uf_registerOfficeAddressZipCode" class="control-label">{{ 'ZIP Code' |
                                     translate }}
                                 </label>
                                 <input type="text" 
                                         id="uf_registerOfficeAddressZipCode" 
                                         formControlName="registerOfficeAddressZipCode">
-
-                                <div *ngIf="umbrellaFundForm.controls['registerOfficeAddressZipCode'].hasError('required') && umbrellaFundForm.controls['registerOfficeAddressZipCode'].touched"
-                                    class="field-error">{{ 'Field is required' | translate }}</div>
                             </div>
 
-                            <div class="form-group required-field col-sm-4">
+                            <div class="form-group col-sm-4">
                                 <label for="uf_registerOfficeAddressCity" class="control-label">{{ 'City' | translate }}</label>
                                 <input type="text" 
                                         id="uf_registerOfficeAddressCity" 
                                         formControlName="registerOfficeAddressCity">
-
-                                <div *ngIf="umbrellaFundForm.controls['registerOfficeAddressCity'].hasError('required') && umbrellaFundForm.controls['registerOfficeAddressCity'].touched"
-                                    class="field-error">{{ 'Field is required' | translate }}</div>
                             </div>
 
-                            <div class="form-group required-field col-sm-4">
+                            <div class="form-group col-sm-4">
                                 <label for="uf_registerOfficeAddressCountry" class="control-label">{{ 'Country' |
                                     translate }}</label>
                                 <ng-select id="uf_registerOfficeAddressCountry" 
@@ -158,9 +149,6 @@
                                             [allowClear]="true"
                                             [placeholder]="translate.translate('Select a country')" formControlName="registerOfficeAddressCountry">
                                 </ng-select>
-
-                                <div *ngIf="umbrellaFundForm.controls['registerOfficeAddressCountry'].hasError('required') && umbrellaFundForm.controls['registerOfficeAddressCountry'].touched"
-                                    class="field-error">{{ 'Field is required' | translate }}</div>
                             </div>
 
                             <div class="form-group required-field col-sm-6">
@@ -177,7 +165,7 @@
                                 <div *ngIf="umbrellaFundForm.controls['domicile'].hasError('required') && umbrellaFundForm.controls['domicile'].touched" class="field-error">{{ 'Field is required' | translate }}</div>
                             </div>
 
-                            <div class="form-group required-field col-sm-6">
+                            <div class="form-group col-sm-6">
                                 <label for="uf_umbrellaFundCreationDate" class="control-label">{{ 'Umbrella Fund
                                     Creation Date' | translate }}</label>
 
@@ -191,8 +179,6 @@
                                             mode="day" theme="dp-material">
                                 </div>
 
-                                <div *ngIf="umbrellaFundForm.controls['umbrellaFundCreationDate'].hasError('required') && umbrellaFundForm.controls['umbrellaFundCreationDate'].touched"
-                                    class="field-error">{{ 'Field is required' | translate }}</div>
                                 <div *ngIf="umbrellaFundForm.controls['umbrellaFundCreationDate'].hasError('pattern') && umbrellaFundForm.controls['umbrellaFundCreationDate'].touched"
                                     class="field-error">{{ 'Incorrect date' | translate }}</div>
                             </div>

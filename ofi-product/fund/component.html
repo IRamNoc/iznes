@@ -303,7 +303,7 @@
                                     </div>
                                     <div class="row">
                                         <div class="form-group col-sm-6">
-                                            <label for="uf_domicile">{{ 'Umbrella Fund Domicile (country)' | translate }}</label>
+                                            <label for="uf_domicile">{{ 'Umbrella Fund Domicile (Country)' | translate }}</label>
                                             <div>
                                                 <input type="text" 
                                                         id="uf_domicile" 
@@ -616,29 +616,62 @@
                                                 </div>
                                             </div>
                                         </div>
+                                    
                                         <div class="row">
                                             <div class="form-group col-sm-6">
-                                                <label class="control-label" for="registerOffice">{{ 'Name of the
-                                                    Registered Office of the Fund' | translate }}</label>
-                                                <input type="text" 
-                                                        name="registerOffice" 
-                                                        id="registerOffice"
-                                                        formControlName="registerOffice">
-                                                <span *ngIf="fundForm.controls['registerOffice'].touched && fundForm.controls['registerOffice'].hasError('pattern')"
-                                                    class="field-error">{{ 'Incorrect Name' | translate }}</span>
+                                                <label for="registerOffice">{{ 'Name of the Registered Office of the
+                                                    Fund' | translate }}</label>
+                                                <div>
+                                                    <input type="text" 
+                                                            id="registerOffice" 
+                                                            class="form-control" 
+                                                            formControlName="registerOffice">
+                                                    <span *ngIf="fundForm.controls['registerOffice'].touched && fundForm.controls['registerOffice'].hasError('pattern')"
+                                                        class="field-error">{{ 'Incorrect Name' | translate }}</span>
+                                                </div>
                                             </div>
-
+                                        
+                                            <div class="w-100"></div>
+                                        
                                             <div class="form-group col-sm-6">
-                                                <label class="control-label" for="registerOfficeAddress">{{ 'Address of
-                                                    the Registered Office of the Fund' | translate }}</label>
-                                                <input type="text" 
-                                                        name="registerOfficeAddress" 
-                                                        id="registerOfficeAddress"
-                                                        formControlName="registerOfficeAddress">
-                                                <span *ngIf="fundForm.controls['registerOfficeAddress'].touched && fundForm.controls['registerOfficeAddress'].hasError('pattern')"
-                                                    class="field-error">{{ 'Incorrect address' | translate }}</span>
+                                                <label for="registerOfficeAddress">{{ 'Address of the Registered Office
+                                                    of the Fund' | translate }}</label>
+                                                <div>
+                                                    <input type="text" 
+                                                            id="registerOfficeAddress" 
+                                                            class="form-control" 
+                                                            formControlName="registerOfficeAddress">
+                                                    <span *ngIf="fundForm.controls['registerOfficeAddress'].touched && fundForm.controls['registerOfficeAddress'].hasError('pattern')"
+                                                        class="field-error">{{ 'Incorrect address' | translate }}</span>
+                                                </div>
+                                            </div>
+                                            <div class="form-group col-sm-6">
+                                                <label for="registerOfficeAddressLine2">{{ 'Address Line 2' | translate }}</label>
+                                                <div>
+                                                    <input type="text" id="registerOfficeAddressLine2" class="form-control" formControlName="registerOfficeAddressLine2">
+                                                </div>
+                                            </div>
+                                        
+                                            <div class="form-group col-sm-4">
+                                                <label for="registerOfficeAddressZipCode">{{ 'ZIP Code' | translate }}</label>
+                                                <div>
+                                                    <input type="text" id="registerOfficeAddressZipCode" class="form-control" formControlName="registerOfficeAddressZipCode">
+                                                </div>
+                                            </div>
+                                            <div class="form-group col-sm-4">
+                                                <label for="registerOfficeAddressCity">{{ 'City' | translate }}</label>
+                                                <div>
+                                                    <input type="text" id="registerOfficeAddressCity" class="form-control" formControlName="registerOfficeAddressCity">
+                                                </div>
+                                            </div>
+                                            <div class="form-group col-sm-4">
+                                                <label for="registerOfficeAddressCountry">{{ 'Country' | translate }}</label>
+                                                <div>
+                                                    <input type="text" id="registerOfficeAddressCountry" class="form-control" formControlName="registerOfficeAddressCountry">
+                                                </div>
                                             </div>
                                         </div>
+
                                         <div class="row">
                                             <div class="form-group required-field col-sm-6">
                                                 <div>
@@ -667,7 +700,7 @@
                                             </div>
                                         </div>
                                         <div class="row">
-                                            <div class="form-group required-field col-sm-6">
+                                            <div class="form-group col-sm-6">
                                                 <div *ngIf="isHomeCountryLegalTypeVisible()">
                                                     <label class="control-label" for="homeCountryLegalType">{{ 'Home
                                                         Country Legal Type of Fund' | translate }}</label>
@@ -677,8 +710,6 @@
                                                                 [placeholder]="translate.translate('Select')"
                                                                 [formControl]="fundForm.controls['homeCountryLegalType']">
                                                     </ng-select>
-                                                    <span class="field-error" *ngIf="fundForm.controls['homeCountryLegalType'].hasError('required') && fundForm.controls['homeCountryLegalType'].touched">{{ 'Field
-                                                        is required' | translate }}</span>
                                                 </div>
                                             </div>
                                         </div>
@@ -836,20 +867,16 @@
                                             </div>
 
                                             <div class="form-group required-field col-sm-6">
-                                                <label class="control-label" for="fiscalYearEnd">{{ 'Next Fiscal Year
-                                                    End (YYYY-MM)' | translate }}</label>
-                                                <div class="input-group">
+                                                <label class="control-label" for="fiscalYearEnd">{{ 'Fiscal Year End (MM-DD)' | translate }}</label>
+                                                <div class="input-group hideWeekdays">
                                                     <span class="fa fa-calendar" aria-hidden="true"></span>
                                                     <input id="fiscalYearEnd" 
                                                             formControlName="fiscalYearEnd"
-                                                            [dpDayPicker]="configMonth" 
-                                                            [required]="true" 
+                                                            [dpDayPicker]="configMonthDay" 
                                                             [placeholder]="translate.translate('Choose a date')"
-                                                            mode="month" 
+                                                            mode="day" 
                                                             theme="dp-material">
                                                 </div>
-                                                <div *ngIf="fundForm.controls['fiscalYearEnd'].touched && fundForm.controls['fiscalYearEnd'].hasError('required')"
-                                                    class="field-error">{{ 'Field is required' | translate }}</div>
                                                 <span *ngIf="fundForm.controls['fiscalYearEnd'].touched && fundForm.controls['fiscalYearEnd'].hasError('pattern')"
                                                     class="field-error">{{ 'Incorrect date' | translate }}</span>
                                             </div>
@@ -983,7 +1010,7 @@
                                                 </div>
                                             </div>
 
-                                            <div class="form-group required-field col-sm-6">
+                                            <div class="form-group col-sm-6">
                                                 <label class="control-label">{{ 'Is Dedicated Fund' | translate }}</label>
                                                 <div class="radio-inline">
                                                     <input type="radio" 
@@ -1222,6 +1249,24 @@
                                                 </ng-select>
                                             </div>
                                         </div>
+                                      
+                                        <div class="row" *ngIf="isFundCapitalisationDateVisible">
+                                            <div class="form-group col-sm-6"></div>
+
+                                            <div class="form-group col-sm-6">
+                                                <label class="control-label" for="capitalisationDate">{{ 'Fund Capitalisation Date (YYYY-MM-DD)' | translate }}</label>
+                                                <div class="input-group">
+                                                    <span class="fa fa-calendar" aria-hidden="true"></span>
+                                                    <input id="capitalisationDate"          
+                                                            formControlName="capitalisationDate" 
+                                                            [dpDayPicker]="configDate" 
+                                                            [placeholder]="translate.translate('Choose a date')" 
+                                                            mode="day" 
+                                                            theme="dp-material">
+                                                </div>
+                                            </div>
+                                        </div>
+
                                         <div class="row">
                                             <div class="form-group col-sm-6">
                                                 <label class="control-label">{{ 'Has CPPI' | translate }}</label>

@@ -28,6 +28,10 @@ export interface IznesFundDetail {
     lei: string;
     registerOffice: string;
     registerOfficeAddress: string;
+    registerOfficeAddressLine2: string;
+    registerOfficeAddressZipCode: string;
+    registerOfficeAddressCity: string;
+    registerOfficeAddressCountry: string;
     domicile: string;
     isEuDirective: string;
     typeOfEuDirective: string;
@@ -64,6 +68,7 @@ export interface IznesFundDetail {
     hasCapitalPreservation: string;
     capitalPreservationLevel: string;
     capitalPreservationPeriod: string;
+    capitalisationDate: string;
     hasCppi: string;
     cppiMultiplier: string;
     hasHedgeFundStrategy: string;
