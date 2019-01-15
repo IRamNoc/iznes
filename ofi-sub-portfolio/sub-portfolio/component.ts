@@ -18,7 +18,6 @@ import { OfiSubPortfolioReqService } from '@ofi/ofi-main/ofi-req-services/ofi-su
 import { MultilingualService } from '@setl/multilingual';
 import { MyUserService } from '@setl/core-req-services/my-user/my-user.service';
 import { fundItems } from '@ofi/ofi-main/ofi-product/productConfig';
-import { userToursEnums } from '@setl/core-req-services/usertour/config';
 
 @Component({
     selector: 'ofi-sub-portfolio',
