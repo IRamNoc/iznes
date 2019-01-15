@@ -63,8 +63,6 @@ import { MockFundService } from './layouts/ui-form/components/layout2/fund.mock.
 import { FileDropModule } from '@setl/core-filedrop';
 import { FileViewerModule } from '@setl/core-fileviewer';
 
-import { UserTourService } from '@setl/core-req-services/usertour/service';
-
 @NgModule({
     imports: [
         RouterModule,
@@ -161,7 +159,6 @@ import { UserTourService } from '@setl/core-req-services/usertour/service';
         /* Services. */
         MenuDropdownService,
         MockFundService,
-        UserTourService
     ],
 })
 export class SetlLayoutModule {
