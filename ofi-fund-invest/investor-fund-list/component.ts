@@ -6,9 +6,6 @@ import * as _ from 'lodash';
 import { combineLatest as observableCombineLatest, Subscription } from 'rxjs';
 
 // Internal
-import {
-    MemberService,
-} from '@setl/core-req-services';
 import { OfiFundInvestService } from '../../ofi-req-services/ofi-fund-invest/service';
 import { NumberConverterService, immutableHelper } from '@setl/utils';
 import { ActivatedRoute, Router, Params } from '@angular/router';
@@ -18,10 +15,10 @@ import { AlertsService } from '@setl/jaspero-ng2-alerts';
 import { CalendarHelper } from '../../ofi-product/fund-share/helper/calendar-helper';
 import { OrderType } from '../../ofi-orders/order.model';
 import { HoldingByAsset } from '@setl/core-store/wallet/my-wallet-holding';
-import { ReportingService } from '@setl/core-balances/reporting.service';
 import { SellBuyCalendar } from '../../ofi-product/fund-share/FundShareEnum';
 import { setRequestedFundAccessMy } from '../../ofi-store/ofi-fund-invest';
 import { MultilingualService } from '@setl/multilingual';
+import { InitialisationService, WalletNodeRequestService } from '@setl/core-req-services';
 
 @Component({
     selector: 'app-investor-fund-list',
@@ -58,16 +55,17 @@ export class OfiInvestorFundListComponent implements OnInit, OnDestroy {
     @select(['user', 'siteSettings', 'production']) productionOb;
     @select(['wallet', 'myWalletHolding', 'holdingByAsset']) balancesOb;
 
-    constructor(private ngRedux: NgRedux<any>,
-                private memberService: MemberService,
-                private changeDetectorRef: ChangeDetectorRef,
-                private numberConverterService: NumberConverterService,
-                private route: ActivatedRoute,
-                private router: Router,
-                private alerts: AlertsService,
-                private reportingService: ReportingService,
-                private ofiFundInvestService: OfiFundInvestService,
-                public translate: MultilingualService,
+    constructor(
+        private ngRedux: NgRedux<any>,
+        private changeDetectorRef: ChangeDetectorRef,
+        private numberConverterService: NumberConverterService,
+        private route: ActivatedRoute,
+        private router: Router,
+        private alerts: AlertsService,
+        private ofiFundInvestService: OfiFundInvestService,
+        public translate: MultilingualService,
+        private initialisationService: InitialisationService,
+        private walletNodeRequestService: WalletNodeRequestService,
     ) {
     }
 
@@ -81,6 +79,8 @@ export class OfiInvestorFundListComponent implements OnInit, OnDestroy {
             if (this.connectedWalletId !== 0) {
                 this.subscriptionsArray.push(this.requestedOfiInvestorFundListOb.subscribe(
                     requested => this.requestMyFundAccess(requested)));
+
+                InitialisationService.requestWalletHolding(this.ngRedux, this.walletNodeRequestService, this.connectedWalletId);
             }
         }));
         this.subscriptionsArray.push(this.productionOb.subscribe(production => this.production = production));
@@ -496,7 +496,7 @@ export class OfiInvestorFundListComponent implements OnInit, OnDestroy {
             return item.active === true;
         });
 
-        if(!checkForActive) allTabs[0].active = true;
+        if (!checkForActive) allTabs[0].active = true;
 
         this.ngRedux.dispatch(ofiListOfFundsComponentActions.setAllTabs(allTabs));
     }
