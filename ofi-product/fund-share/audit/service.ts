@@ -9,7 +9,8 @@ import * as Models from '../models';
 export class FundShareAuditService {
 
     private static modelsArr: any[] = [
-        new Models.ShareCalendarMandatory(),
+        new Models.ShareCalendarSubscriptionMandatory(),
+        new Models.ShareCalendarRedemptionMandatory(),
         new Models.ShareCharacteristicMandatory(),
         new Models.ShareFeesMandatory(),
         new Models.ShareFeesOptional(),

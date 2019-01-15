@@ -1,4 +1,5 @@
-export { ShareCalendarMandatory } from './calendar';
+export { ShareCalendarSubscriptionMandatory } from './calendar';
+export { ShareCalendarRedemptionMandatory } from './calendar';
 export { ShareCharacteristicMandatory } from './characteristic';
 export { ShareFeesMandatory, ShareFeesOptional } from './fees';
 export { ShareKeyFactsStatus, ShareKeyFactsMandatory, ShareKeyFactsOptional } from './keyFacts';

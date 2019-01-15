@@ -13,12 +13,12 @@
         <clr-tab-content class="outer">
             <div *ngIf="!isRead()" class="row tab-header-container">
                 <div class="col-sm-6">
-                    <p>{{ (isCreate() || currDraft == 1 ? 'Please fill in the following information to create a new Share.': 'Ammend the following information to update this share.') | translate }}</p>
+                    <p>{{ (isCreate() || currDraft == 1 ? 'Please fill in the following information to create a new Share.': 'Amend the following information to update this share.') | translate }}</p>
                 </div>
                 <div class="col-sm-6">
                     <div class="form-group btn-container">
                         <button class="btn btn-default" (click)="goToAuditTrail()" *ngIf="!isCreate()">{{ 'Share Audit Trail' | translate }}</button>
-                        <button class="btn btn-default" (click)="duplicateShare()" *ngIf="!isCreate()">{{ 'Duplicate a share' | translate }}</button>
+                        <button class="btn btn-default" (click)="duplicateShare()" *ngIf="!isCreate()">{{ 'Duplicate Share' | translate }}</button>
                         <ng-select *ngIf="isCreate()" 
                                     id="share-prefill-select" 
                                     [items]="shareListItems" 
@@ -59,7 +59,7 @@
                             <div class="col-sm-12">
                                 <a href="#" (click)="openPanel(panels['umbrella']['optionnal'], $event)">
                                     <i class="fa fa-chevron-right" [class.rotate]="isPanelOpen(panels['umbrella']['optionnal'])"></i>
-                                    <h2 id="toggleFund">{{ 'Optionnal Information' | translate }}</h2>
+                                    <h2 id="toggleFund">{{ 'Optional Information' | translate }}</h2>
                                 </a>
                             </div>
                         </div>
@@ -116,7 +116,6 @@
                                             </ng-select>
                                         </div>
                                     </div>
-
                                 </section>
                             </form>
                         </div>
@@ -158,7 +157,7 @@
                             <div class="col-sm-12">
                                 <a href="#" (click)="openPanel(panels['fund']['optionnal'], $event)">
                                     <i class="fa fa-chevron-right" [class.rotate]="isPanelOpen(panels['fund']['optionnal'])"></i>
-                                    <h2 id="toggleFund">{{ 'Optionnal Information' | translate }}</h2>
+                                    <h2 id="toggleFund">{{ 'Optional Information' | translate }}</h2>
                                 </a>
                             </div>
                         </div>
@@ -242,25 +241,36 @@
 
                 <clr-tab>
                     <button clrTabLink id="tabCalendarButton">{{ 'Calendar' | translate }}
-                        <span class="required" [hidden]="model.calendar.mandatory.isValid() && model.calendar.subscriptionTradeCycle.isValid() && model.calendar.redemptionTradeCycle.isValid()">*
+                        <span class="required" [hidden]="model.calendarSubscription.mandatory.isValid() && model.calendarRedemption.mandatory.isValid() && model.calendarSubscription.subscriptionTradeCycle.isValid() && model.calendarRedemption.redemptionTradeCycle.isValid()">*
                         </span>
                     </button>
                     <clr-tab-content>
                         <div class="well">
                             <div class="row panel-header">
                                 <div class="col-xs-6">
-                                    <a href="#" (click)="openPanel(panels['calendar'].mandatory, $event)">
-                                        <i class="fa fa-chevron-right" [class.rotate]="isPanelOpen(panels['calendar'].mandatory)"></i>
-                                        <h2 id="toggleCalendarMandatory">{{ 'Calendar: Main Information' | translate }}</h2>
-                                    </a>
+                                    <h2>{{ 'Calendar Information' | translate }}</h2>
                                 </div>
                             </div>
-                            <div class="row panel-body" [class.hidden]="!isPanelOpen(panels['calendar'].mandatory)">
-                                <app-ofi-am-trade-cycle #tradeCycleSubscription [tradeType]="'Subscription'" (modelEmitter)="calendarSubscriptionModelEvent($event)"></app-ofi-am-trade-cycle>
+                            <div class="row panel-body">
+                                <div class="subscription-container">
+                                    <h3><i class="fa fa-sign-in subscription-icon"></i>{{ 'SUBSCRIPTION' | translate | uppercase }}</h3>
+                                    <div class="subscription-section">
+                                        <p><strong>{{ 'Cut-off Date Settings' | translate }}</strong></p>
+                                        <app-ofi-am-trade-cycle #tradeCycleSubscription [tradeType]="'Subscription'" (modelEmitter)="calendarSubscriptionModelEvent($event)"></app-ofi-am-trade-cycle>
+                                        
+                                        <app-dynamic-form #calendarSubscriptionForm [model]="model.calendarSubscription.mandatory"></app-dynamic-form>
+                                    </div>
+                                </div>
 
-                                <app-ofi-am-trade-cycle #tradeCycleRedemption [tradeType]="'Redemption'" (modelEmitter)="calendarRedemptionModelEvent($event)"></app-ofi-am-trade-cycle>
-
-                                <app-dynamic-form [model]="model.calendar.mandatory"></app-dynamic-form>
+                                <div class="redemption-container">
+                                    <h3><i class="fa fa-sign-out redemption-icon"></i>{{ 'REDEMPTION' | translate | uppercase }}</h3>
+                                    <div class="redemption-section">
+                                        <p><strong>{{ 'Cut-off Date Settings' | translate }}</strong></p>
+                                        <app-ofi-am-trade-cycle #tradeCycleRedemption [tradeType]="'Redemption'" (modelEmitter)="calendarRedemptionModelEvent($event)"></app-ofi-am-trade-cycle>
+                                        
+                                        <app-dynamic-form #calendarRedemptionForm [model]="model.calendarRedemption.mandatory"></app-dynamic-form>
+                                    </div>
+                                </div>
                             </div>
                         </div>
                     </clr-tab-content>
@@ -470,7 +480,6 @@
                     </div>
                 </div>
             </clr-tabs>
-
 
             <div class="form-group row actions bottom">
                 <div class="col-sm-12">

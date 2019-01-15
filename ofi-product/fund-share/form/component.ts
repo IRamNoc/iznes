@@ -12,6 +12,7 @@ import {
     OnInit,
     ViewChild,
     Inject,
+    AfterViewInit,
 } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
 import { NgRedux, select } from '@angular-redux/store';
@@ -21,6 +22,7 @@ import { AlertsService } from '@setl/jaspero-ng2-alerts';
 import { ToasterService } from 'angular2-toaster';
 import { ClrTabs } from '@clr/angular';
 import { ConfirmationService, ClrTabsHelper } from '@setl/utils';
+import { DynamicFormComponent } from '@setl/utils/components/dynamic-forms/';
 import { Location } from '@angular/common';
 
 import { setRequestedIznesFunds } from '@ofi/ofi-main/ofi-store/ofi-product/fund';
@@ -59,7 +61,7 @@ import {
     templateUrl: './component.html',
     changeDetection: ChangeDetectionStrategy.OnPush,
 })
-export class FundShareComponent implements OnInit, OnDestroy {
+export class FundShareComponent implements OnInit, AfterViewInit, OnDestroy {
     private fundShareData: OfiFundShare;
     private fundShareDocsData: OfiFundShareDocuments;
     isReady: boolean = false;
@@ -87,6 +89,11 @@ export class FundShareComponent implements OnInit, OnDestroy {
     currDraft: number;
 
     unSubscribe: Subject<any> = new Subject();
+
+    private isSubscribedToCalendarFormChanges: boolean = false;
+
+    @ViewChild('calendarSubscriptionForm') private calendarSubscriptionForm: DynamicFormComponent;
+    @ViewChild('calendarRedemptionForm') private calendarRedemptionForm: DynamicFormComponent;
 
     @ViewChild('tabsRef') tabsRef: ClrTabs;
     @ViewChild('fundHolidayInput') fundHolidayInput;
@@ -144,6 +151,40 @@ export class FundShareComponent implements OnInit, OnDestroy {
 
         this.redux.dispatch(clearRequestedFundShare());
         this.redux.dispatch(clearRequestedFundShareDocs());
+    }
+
+    ngAfterViewInit() {
+        /* The Subscription and Redemption Cut-off Time Zones must always be the same */
+        if (this.calendarSubscriptionForm && this.calendarRedemptionForm && !this.isSubscribedToCalendarFormChanges) {
+
+            this.isSubscribedToCalendarFormChanges = true;
+
+            this.calendarSubscriptionForm.form.controls['subscriptionCutOffTimeZone'].valueChanges
+            .pipe(
+                takeUntil(this.unSubscribe),
+            )
+            .subscribe((subscriptionCutOffTimeZone) => {
+                const subCutOffTimeZone = _.cloneDeep(subscriptionCutOffTimeZone);
+                const redemptionCutOff = _.get(this.calendarRedemptionForm, 'form.controls[\'redemptionCutOffTimeZone\'].value[0].text', null);
+
+                if (redemptionCutOff && (redemptionCutOff !== subscriptionCutOffTimeZone[0].text)) {
+                    this.calendarRedemptionForm.form.controls['redemptionCutOffTimeZone'].patchValue(subCutOffTimeZone);
+                }
+            });
+
+            this.calendarRedemptionForm.form.controls['redemptionCutOffTimeZone'].valueChanges
+            .pipe(
+                takeUntil(this.unSubscribe),
+            )
+            .subscribe((redemptionCutOffTimeZone) => {
+                const redCutOffTimeZone = _.cloneDeep(redemptionCutOffTimeZone);
+                const subscriptionCutOff = _.get(this.calendarSubscriptionForm, 'form.controls[\'subscriptionCutOffTimeZone\'].value[0].text', null);
+
+                if (subscriptionCutOff && (subscriptionCutOff !== redemptionCutOffTimeZone[0].text)) {
+                    this.calendarSubscriptionForm.form.controls['subscriptionCutOffTimeZone'].patchValue(redCutOffTimeZone);
+                }
+            });
+        }
     }
 
     get fund() {
@@ -569,19 +610,19 @@ export class FundShareComponent implements OnInit, OnDestroy {
     }
 
     calendarSubscriptionModelEvent(model: FundShareTradeCycleModel): void {
-        this.model.calendar.subscriptionTradeCycle = model;
+        this.model.calendarSubscription.subscriptionTradeCycle = model;
         if (this.isRead()) {
-            this.model.calendar.subscriptionTradeCycle.disable();
-            this.model.calendar.subscriptionTradeCycle.clearAllValidators();
+            this.model.calendarSubscription.subscriptionTradeCycle.disable();
+            this.model.calendarSubscription.subscriptionTradeCycle.clearAllValidators();
         }
         if (this.fundShareData) this.model.setSubscriptionTradeCycleData(this.fundShareData);
     }
 
     calendarRedemptionModelEvent(model: FundShareTradeCycleModel): void {
-        this.model.calendar.redemptionTradeCycle = model;
+        this.model.calendarRedemption.redemptionTradeCycle = model;
         if (this.isRead()) {
-            this.model.calendar.redemptionTradeCycle.disable();
-            this.model.calendar.redemptionTradeCycle.clearAllValidators();
+            this.model.calendarRedemption.redemptionTradeCycle.disable();
+            this.model.calendarRedemption.redemptionTradeCycle.clearAllValidators();
         }
         if (this.fundShareData) this.model.setRedemptionTradeCycleData(this.fundShareData);
     }
