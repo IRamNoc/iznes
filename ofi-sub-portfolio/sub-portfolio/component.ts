@@ -16,7 +16,6 @@ import { SagaHelper, LogService, ConfirmationService } from '@setl/utils';
 import { CustomValidators } from '@setl/utils/helper';
 import { OfiSubPortfolioReqService } from '@ofi/ofi-main/ofi-req-services/ofi-sub-portfolio/service';
 import { MultilingualService } from '@setl/multilingual';
-import { UserTourService } from '@setl/core-req-services/usertour/service';
 import { MyUserService } from '@setl/core-req-services/my-user/my-user.service';
 import { fundItems } from '@ofi/ofi-main/ofi-product/productConfig';
 import { userToursEnums } from '@setl/core-req-services/usertour/config';
@@ -55,7 +54,6 @@ export class OfiSubPortfolioComponent implements OnDestroy {
                 private confirmationService: ConfirmationService,
                 private toaster: ToasterService,
                 private logService: LogService,
-                private userTourService: UserTourService,
                 private myUserService: MyUserService,
                 public translate: MultilingualService,
     ) {
@@ -356,64 +354,6 @@ export class OfiSubPortfolioComponent implements OnDestroy {
             return null;
         }
         return null;
-    }
-
-    /* USER TOUR CURRENTLY INACTIVE */
-    restartUserTour() {
-        if (this.connectedWalletId > 0) {
-            setTimeout(
-                () => {
-                    const asyncTaskPipe = this.userTourService.saveUserTour({
-                        type: userToursEnums.names.utmysubportfolios,
-                        value: 0,
-                        walletid: this.connectedWalletId,
-                    });
-
-                    this.ngRedux.dispatch({
-                        type: 'RUN_ASYNC_TASK',
-                        successTypes: (data) => {
-                        },
-                        failureTypes: (data) => {
-                        },
-                        descriptor: asyncTaskPipe,
-                        args: {},
-                        successCallback: (response) => {
-                            UserTourService.setRequestedUserTours(false, this.ngRedux);
-                        },
-                        failureCallback: (response) => {
-                            console.log('Error save userTour failed: ', response);
-                        },
-                    });
-                },
-                200,
-            );
-        }
-    }
-
-    launchTour() {
-        this.tourObject = [];
-        this.tourObject.push(
-            {
-                usertourName: userToursEnums.names.utmysubportfolios,
-                title: this.translate.translate('My Sub-portfolios'),
-                text: this.translate.translate(
-                    'In this module, you will be able to create and manage your sub-porfolios. Sub-portfolios are' +
-                    'the bank accounts that you will use to place orders on IZNES. You can create as many sub-portfolios as you want, depending on your investments objectives.'),
-                target: 'menu-sub-portfolio',
-            },
-            {
-                title: this.translate.translate('Add New Sub-portfolio'),
-                text: this.translate.translate('You can add a new sub-portfolio by clicking on this button. You will need to provide a name and an IBAN for the sub-portfolio you want to create.'),
-                target: 'btn-add-new-subportfolio',
-            },
-            {
-                title: this.translate.translate('Manage your Sub-portfolios'),
-                text: this.translate.translate('Once you have created your sub-porfolios, from this column "Actions", you will be able to edit or delete your sub-portfolios.'),
-                target: 'subportfolios-col-actions',
-            },
-        );
-        // TODO: disabled as user tour needs additional work in V2.1/2.2
-        // this.showUsertour = true;
     }
 
     ngOnDestroy() {
