@@ -15,7 +15,7 @@ import {
     ReactiveFormsModule,
 } from '@angular/forms';
 import { ClarityModule } from '@clr/angular';
-import { SetlPipesModule, DpDatePickerModule, SetlComponentsModule } from '@setl/utils';
+import { SetlPipesModule, DpDatePickerModule, SetlComponentsModule, SetlDirectivesModule } from '@setl/utils';
 
 @NgModule({
     imports: [
@@ -27,6 +27,7 @@ import { SetlPipesModule, DpDatePickerModule, SetlComponentsModule } from '@setl
         SetlPipesModule,
         DpDatePickerModule,
         SetlComponentsModule,
+        SetlDirectivesModule,
     ],
     declarations: [
         RegisterIssuerComponent,
