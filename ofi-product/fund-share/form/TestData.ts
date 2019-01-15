@@ -46,20 +46,19 @@ export class FundShareTestData {
         (model.characteristic.mandatory.subscriptionCurrency.preset as any) =
             [{ id: E.CurrencyEnum.EUR, text: 'EUR' }];
 
-        (model.calendar.mandatory.navPeriodForSubscription.preset as any) = [{ id: E.BusinessDaysEnum.Two, text: '2' }];
-        (model.calendar.mandatory.navPeriodForRedemption.preset as any) = [{ id: E.BusinessDaysEnum.Two, text: '2' }];
-        model.calendar.mandatory.redemptionCutOffTime.preset = '12:00:00';
-        (model.calendar.mandatory.redemptionCutOffTimeZone.preset as any) = [{
-            id: 'Europe/London',
-            text: 'Europe/London'
+        (model.calendarSubscription.mandatory.navPeriodForSubscription.preset as any) = [{ id: E.BusinessDaysEnum.Two, text: '2' }];
+        (model.calendarRedemption.mandatory.navPeriodForRedemption.preset as any) = [{ id: E.BusinessDaysEnum.Two, text: '2' }];
+        model.calendarRedemption.mandatory.redemptionCutOffTime.preset = '12:00:00';
+        (model.calendarRedemption.mandatory.redemptionCutOffTimeZone.preset as any) = [{
+            id: 'Europe/London', text: 'Europe/London',
         }];
-        (model.calendar.mandatory.redemptionSettlementPeriod.preset as any) =
+        (model.calendarRedemption.mandatory.redemptionSettlementPeriod.preset as any) =
             [{ id: E.BusinessDaysEnum.One, text: '1' }];
-        model.calendar.mandatory.subscriptionCutOffTime.preset = '12:00:00';
-        (model.calendar.mandatory.subscriptionCutOffTimeZone.preset as any) =
+        model.calendarSubscription.mandatory.subscriptionCutOffTime.preset = '12:00:00';
+        (model.calendarSubscription.mandatory.subscriptionCutOffTimeZone.preset as any) =
             [{ id: 'Europe/London', text: 'Europe/London' }];
         // model.calendar.mandatory.subscriptionRedemptionCalendar.preset = 1;
-        (model.calendar.mandatory.subscriptionSettlementPeriod.preset as any) =
+        (model.calendarSubscription.mandatory.subscriptionSettlementPeriod.preset as any) =
             [{ id: E.BusinessDaysEnum.One, text: '1' }];
 
         model.fees.mandatory.maxManagementFee.preset = 1;
