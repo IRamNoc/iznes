@@ -43,6 +43,12 @@ import { KycReducer, KycState } from './ofi-kyc';
 /* Currencies */
 import { CurrencyState, CurrencyReducer } from './ofi-currencies';
 import { OfiPortfolioManagerState, OfiPortfolioMangerReducer } from './ofi-portfolio-manager';
+import {
+    SubPortfolioBankingDetailsState,
+    OfiSubPortfolioBankingDetailsReducer,
+    RESET_SUB_PORTFOLIO_BANKING_DETAILS_REQUESTED,
+    DELETE_SUB_PORTFOLIO_BANKING_DETAIL,
+} from './ofi-sub-portfolio';
 
 export {
     SET_FUND_ACCESS_MY,
@@ -180,6 +186,15 @@ export {
 /* Currencies */
 export { CurrencyActions } from './ofi-currencies';
 
+/* Sub-Portfolio */
+export {
+    SET_SUB_PORTFOLIO_BANKING_DETAILS_REQUESTED,
+    RESET_SUB_PORTFOLIO_BANKING_DETAILS_REQUESTED,
+    resetSubPortfolioBankingDetailsRequested,
+    SET_SUB_PORTFOLIO_BANKING_DETAILS_LIST,
+    DELETE_SUB_PORTFOLIO_BANKING_DETAIL,
+} from './ofi-sub-portfolio';
+
 /*--------------------------------------------------*/
 /*--------------- OFI GLOBAL REDUCER ---------------*/
 
@@ -195,6 +210,7 @@ export interface OfiState {
     ofiReports: OfiReportsState;
     ofiAmDashboard: OfiAmDashboardsState;
     ofiPortfolioManager: OfiPortfolioManagerState;
+    ofiSubPortfolio: SubPortfolioBankingDetailsState;
 }
 
 export const OfiReducer: Reducer<OfiState> = combineReducers<OfiState>({
@@ -208,4 +224,5 @@ export const OfiReducer: Reducer<OfiState> = combineReducers<OfiState>({
     ofiReports: OfiReportsReducer,
     ofiAmDashboard: OfiAmDashboardsReducer,
     ofiPortfolioManager: OfiPortfolioMangerReducer,
+    ofiSubPortfolio: OfiSubPortfolioBankingDetailsReducer,
 });
