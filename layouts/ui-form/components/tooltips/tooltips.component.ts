@@ -5,6 +5,9 @@ import { NgRedux, select } from '@angular-redux/store';
 import { Subject, Subscription } from 'rxjs';
 import { MultilingualService } from '@setl/multilingual';
 
+import {userToursEnums} from '@setl/core-req-services/usertour/config';
+import {UserTourService} from '@setl/core-req-services/usertour/service';
+
 @Component({
     selector: 'app-ui-layouts-tooltips',
     templateUrl: './tooltips.component.html',
@@ -251,7 +254,9 @@ export class UiTooltipsComponent implements OnInit {
         private ngRedux: NgRedux<any>,
         private changeDetectorRef: ChangeDetectorRef,
         public _translate: MultilingualService,
+        private _userTourService: UserTourService,
     ) {
+        this.userTourEnums = userToursEnums;
 
         this.language$.takeUntil(this.unsubscribe).subscribe((language) => this.lang = language);
 
@@ -261,7 +266,7 @@ export class UiTooltipsComponent implements OnInit {
     }
 
     ngOnInit() {
-        //this.launchTour();
+        this.launchTour();
     }
 
     randomString(len) {
@@ -328,8 +333,7 @@ export class UiTooltipsComponent implements OnInit {
         this.changeDetectorRef.markForCheck();
     }
 
-    // CODE FOR LEGACY USER TOUR REMOVED FROM CODE BASE
-/*    resetUserTour() {
+    resetUserTour() {
         if (this.connectedWalletId > 0) {
             setTimeout(() => {
                 const asyncTaskPipe = this._userTourService.saveUserTour({
@@ -355,9 +359,9 @@ export class UiTooltipsComponent implements OnInit {
                 });
             }, 200);
         }
-    }*/
+    }
 
- /*   launchTour() {
+    launchTour() {
         this.tourObject = [];
         setTimeout(() => {
             this.tourObject.push(
@@ -393,7 +397,7 @@ export class UiTooltipsComponent implements OnInit {
             this.showTour = true;
             this.changeDetectorRef.markForCheck();
         }, 50);
-    }*/
+    }
 
     toggleInfoPanes(event: Event): void {
         event.preventDefault();
