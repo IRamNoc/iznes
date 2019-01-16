@@ -1,4 +1,4 @@
-import { ComponentFixture, fakeAsync, TestBed, tick } from '@angular/core/testing';
+/* import { ComponentFixture, fakeAsync, TestBed, tick } from '@angular/core/testing';
 import { Directive, Input, Pipe, PipeTransform } from '@angular/core';
 import { of, Subject } from 'rxjs';
 
@@ -612,4 +612,4 @@ describe('FundComponent', () => {
             expect(pop).toHaveBeenCalledWith(...expectedResult);
         }));
     });
-});
+}); */
