@@ -272,20 +272,14 @@ export class NavigationTopbarComponent implements OnInit, AfterViewInit, OnDestr
             (memberNodeSessionManager) => {
                 this.showCountdownModal = _.get(memberNodeSessionManager, 'startCountDown', 0);
 
-                // Temporary Feature TG-479: Skip asking to refresh token and just do it. (core project only).
-                if (this.appConfig.platform == 'OpenCSD') {
-                    if (this.showCountdownModal){
-                        this.handleExtendSession();
-                    }
-                } else {
-                    const remainingSecond = _.get(memberNodeSessionManager, 'remainingSecond', 0);
-                    this.remainingSecond = remainingSecond;
+                const remainingSecond = _.get(memberNodeSessionManager, 'remainingSecond', 0);
+                this.remainingSecond = remainingSecond;
 
-                    if (remainingSecond <= 0) {
-                        this.router.navigateByUrl('');
-                        this.logout();
-                    }
+                if (remainingSecond <= 0) {
+                    this.router.navigateByUrl('');
+                    this.logout();
                 }
+
             },
         ));
 
