@@ -520,6 +520,8 @@ export class FundComponent implements OnInit, OnDestroy {
             if (d === this.enums.hasCapitalPreservation.NO.toString()) {
                 this.fundForm.controls['capitalPreservationLevel'].setValue(null);
                 this.fundForm.controls['capitalPreservationPeriod'].setValue(null);
+                this.fundForm.controls['capitalisationDate'].setValue(null);
+                this.isFundCapitalisationDateVisible = false;
             }
         });
 
@@ -528,7 +530,7 @@ export class FundComponent implements OnInit, OnDestroy {
             takeUntil(this.unSubscribe),
         )
         .subscribe((d) => {
-            if (d[0].text === 'None') {
+            if (d && d[0] && d[0].text === 'None') {
                 this.isFundCapitalisationDateVisible = true;
             } else {
                 this.isFundCapitalisationDateVisible = false;
