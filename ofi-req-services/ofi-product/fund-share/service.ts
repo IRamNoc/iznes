@@ -105,9 +105,34 @@ export class OfiFundShareService {
         );
     }
 
+    fetchIznesAdminShareList() {
+        const asyncTaskPipe = this.requestIznesAdminShareList();
+
+        this.ngRedux.dispatch(
+            SagaHelper.runAsync(
+                [SET_FUND_SHARE],
+                [],
+                asyncTaskPipe,
+                {},
+                () => {
+                    this.ngRedux.dispatch(setRequestedIznesShares());
+                },
+            ),
+        );
+    }
+
     requestIznesShareList() {
         const messageBody: IznesShareListRequestMessageBody = {
             RequestName: 'izngetfundsharelist',
+            token: this.memberSocketService.token,
+        };
+
+        return createMemberNodeSagaRequest(this.memberSocketService, messageBody);
+    }
+
+    requestIznesAdminShareList() {
+        const messageBody: IznesShareListRequestMessageBody = {
+            RequestName: 'izngetadminfundsharelist',
             token: this.memberSocketService.token,
         };
 

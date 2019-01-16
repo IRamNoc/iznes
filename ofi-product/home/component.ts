@@ -22,6 +22,8 @@ import { OfiCurrenciesService } from '../../ofi-req-services/ofi-currencies/serv
 import { Observable, Subscription, combineLatest as observableCombineLatest } from 'rxjs';
 import { MultilingualService } from '@setl/multilingual';
 
+const AM_USERTYPE = 36;
+
 /* Models */
 
 @Component({
@@ -50,13 +52,20 @@ export class ProductHomeComponent implements OnInit, OnDestroy {
 
     /* Private properties. */
     subscriptions: Array<Subscription> = [];
+    private usertype: number;
 
     /* Redux observables. */
     @select(['user', 'siteSettings', 'language']) requestLanguageOb;
     @select(['user', 'myDetail']) userDetailObs;
+    @select(['user', 'myDetail', 'userType']) usertype$;
     @select(['ofi', 'ofiProduct', 'ofiFund', 'fundList', 'iznFundList']) fundListObs;
     @select(['ofi', 'ofiProduct', 'ofiFundShareList', 'requestedIznesShare']) requestedShareListObs;
     @select(['ofi', 'ofiProduct', 'ofiFundShareList', 'iznShareList']) shareListObs;
+
+    /* For IZNES Admins */
+    @select(['ofi', 'ofiProduct', 'ofiFundShare', 'requested']) requestedFundShareObs;
+    @select(['ofi', 'ofiProduct', 'ofiFundShare', 'fundShare']) fundShareObs;
+
     @select(['ofi', 'ofiProduct', 'ofiUmbrellaFund', 'umbrellaFundList', 'umbrellaFundList']) umbrellaFundAccessListOb;
     @select([
         'ofi',
@@ -92,10 +101,15 @@ export class ProductHomeComponent implements OnInit, OnDestroy {
         this.initColumns();
         this.initPanelDefs();
 
-        this.ofiCurrenciesService.getCurrencyList();
-        this.ofiManagementCompanyService.getManagementCompanyList();
-        this.ofiUmbrellaFundService.fetchUmbrellaList();
-        this.ofiFundService.getFundList();
+        this.subscriptions.push(this.usertype$.subscribe((usertype) => {
+            this.usertype = usertype;
+        }));
+
+        /* For IZNES Admins */
+        if (!this.isAssetManager()) {
+            this.subscriptions.push(this.requestedFundShareObs.subscribe(requested => this.requestShareList(requested)));
+            this.subscriptions.push(this.fundShareObs.subscribe(shares => this.getShareList(shares)));
+        }
 
         this.subscriptions.push(this.currenciesObs.subscribe(c => this.getCurrencyList(c)));
         this.subscriptions.push(this.managementCompanyAccessListOb
@@ -105,21 +119,34 @@ export class ProductHomeComponent implements OnInit, OnDestroy {
         this.subscriptions.push(this.fundListObs.subscribe(funds => this.getFundList(funds)));
         this.subscriptions.push(this.requestedShareListObs.subscribe(requested => this.requestShareList(requested)));
         this.subscriptions.push(this.shareListObs.subscribe(shares => this.getShareList(shares)));
-        this.subscriptions.push(this.umbrellaFundAccessListOb.subscribe((list: any) => this.getUmbrellaFundList(list)));
 
+        this.subscriptions.push(this.umbrellaFundAccessListOb.subscribe((list: any) => this.getUmbrellaFundList(list)));
         this.subscriptions.push(this.requestLanguageOb.subscribe(() => {
             this.initColumns();
             this.initPanelDefs();
         }));
 
         // drafts
-        this.subscriptions.push(
-            observableCombineLatest(this.fundListObs, this.shareListObs, this.umbrellaFundAccessListOb).subscribe(([fundList, shareList, umbrellaList]) => {
-                this.getDrafts(fundList, shareList, umbrellaList);
-            }),
-        );
+        if (this.isAssetManager()) {
+            this.subscriptions.push(
+                observableCombineLatest(this.fundListObs, this.shareListObs, this.umbrellaFundAccessListOb).subscribe(([fundList, shareList, umbrellaList]) => {
+                    this.getDrafts(fundList, shareList, umbrellaList);
+                }),
+            );
+        }
 
         OfiFundShareService.defaultRequestIznesShareList(this.ofiFundShareService, this.ngRedux);
+
+        this.ofiCurrenciesService.getCurrencyList();
+
+        if (this.isAssetManager()) {
+            this.ofiManagementCompanyService.getManagementCompanyList();
+            this.ofiUmbrellaFundService.fetchUmbrellaList();
+            this.ofiFundService.getFundList();
+        } else {
+            this.ofiUmbrellaFundService.getAdminUmbrellaList();
+            this.ofiFundService.getAdminFundList();
+        }
     }
 
     ngOnDestroy(): void {
@@ -131,9 +158,12 @@ export class ProductHomeComponent implements OnInit, OnDestroy {
         });
     }
 
+    isAssetManager(): boolean {
+        return this.usertype === AM_USERTYPE;
+    }
+
     getFundList(funds: any): void {
-        const fundList = [];
-        if (_.values(funds).length > 0) {
+        const fundList = [];        if (_.values(funds).length > 0) {
             _.values(funds).map((fund) => {
                 if (Number(fund.draft) === 0) {
                     const domicile = _.find(this.countryItems, { id: fund.domicile }) || { text: '' };
@@ -166,7 +196,11 @@ export class ProductHomeComponent implements OnInit, OnDestroy {
 
     requestShareList(requested): void {
         if (!requested) {
-            OfiFundShareService.defaultRequestIznesShareList(this.ofiFundShareService, this.ngRedux);
+            if (this.isAssetManager()) {
+                OfiFundShareService.defaultRequestIznesShareList(this.ofiFundShareService, this.ngRedux);
+            } else {
+                this.ofiFundShareService.fetchIznesAdminShareList();
+            }
         }
     }
 
@@ -310,6 +344,7 @@ export class ProductHomeComponent implements OnInit, OnDestroy {
 
         this.panelDefs[3].data = this.draftList;
         this.panelDefs[3].count = this.draftList.length;
+
         this.changeDetectorRef.markForCheck();
     }
 
@@ -598,34 +633,39 @@ export class ProductHomeComponent implements OnInit, OnDestroy {
                 count: this.filteredShareList.length,
                 columnLink: 'shareName',
             },
-            {
-                title: this.translate.translate('Drafts'),
-                columns: [
-                    this.columns['draftType'],
-                    this.columns['draftName'],
-                    this.columns['draftCreated'],
-                    this.columns['draftDate'],
-                ],
-                open: true,
-                data: this.draftList,
-                count: this.draftList.length,
-                columnLink: '',
-                buttons: [
-                    {
-                        text: this.translate.translate('Edit Draft'),
-                        class: 'btn btn-success btn-sm no-margin',
-                        click: 'edit',
-                        iconClass: 'fa fa-edit',
-                    },
-                    {
-                        text: this.translate.translate('Delete Draft'),
-                        class: 'btn btn-danger btn-sm',
-                        click: 'delete',
-                        iconClass: 'fa fa-remove',
-                    },
-                ],
-            },
         ];
+
+        if (this.isAssetManager()) {
+            this.panelDefs.push(
+                {
+                    title: this.translate.translate('Drafts'),
+                    columns: [
+                        this.columns['draftType'],
+                        this.columns['draftName'],
+                        this.columns['draftCreated'],
+                        this.columns['draftDate'],
+                    ],
+                    open: true,
+                    data: this.draftList,
+                    count: this.draftList.length,
+                    columnLink: '',
+                    buttons: [
+                        {
+                            text: this.translate.translate('Edit Draft'),
+                            class: 'btn btn-success btn-sm no-margin',
+                            click: 'edit',
+                            iconClass: 'fa fa-edit',
+                        },
+                        {
+                            text: this.translate.translate('Delete Draft'),
+                            class: 'btn btn-danger btn-sm',
+                            click: 'delete',
+                            iconClass: 'fa fa-remove',
+                        },
+                    ],
+                },
+            );
+        }
     }
 
     /**

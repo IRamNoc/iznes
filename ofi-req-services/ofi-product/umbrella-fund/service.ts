@@ -55,6 +55,20 @@ export class OfiUmbrellaFundService {
         ));
     }
 
+    getAdminUmbrellaList() {
+        const asyncTaskPipe = this.requestAdminUmbrellaFundList();
+
+        this.ngRedux.dispatch(SagaHelper.runAsync(
+            [SET_UMBRELLA_FUND_LIST],
+            [],
+            asyncTaskPipe,
+            {},
+            () => {
+                this.ngRedux.dispatch(setRequestedUmbrellaFund());
+            },
+        ));
+    }
+
     myWalletID(walletID) {
         this.walletID = walletID;
     }
@@ -62,6 +76,16 @@ export class OfiUmbrellaFundService {
     requestUmbrellaFundList(): any {
         const messageBody: UmbrellaFundRequestMessageBody = {
             RequestName: 'izngetumbrellafundlist',
+            token: this.memberSocketService.token,
+            walletID: 0,
+        };
+
+        return createMemberNodeSagaRequest(this.memberSocketService, messageBody);
+    }
+
+    requestAdminUmbrellaFundList(): any {
+        const messageBody: UmbrellaFundRequestMessageBody = {
+            RequestName: 'izngetadminumbrellafundlist',
             token: this.memberSocketService.token,
             walletID: 0,
         };

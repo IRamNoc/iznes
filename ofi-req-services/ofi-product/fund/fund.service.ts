@@ -73,6 +73,13 @@ export class OfiFundService {
         this.fetchFundList();
     }
 
+    getAdminFundList() {
+        if (this.isFundRequested) {
+            return;
+        }
+        this.fetchAdminFundList();
+    }
+
     requestIznesFundList(): any {
         const messageBody: IznesFundRequestMessageBody = {
             RequestName: 'izngetfundlist',
@@ -82,8 +89,31 @@ export class OfiFundService {
         return createMemberNodeSagaRequest(this.memberSocketService, messageBody);
     }
 
+    requestIznesAdminFundList(): any {
+        const messageBody: IznesFundRequestMessageBody = {
+            RequestName: 'izngetadminfundlist',
+            token: this.memberSocketService.token,
+        };
+
+        return createMemberNodeSagaRequest(this.memberSocketService, messageBody);
+    }
+
     fetchFundList() {
         const asyncTaskPipe = this.requestIznesFundList();
+
+        this.ngRedux.dispatch(SagaHelper.runAsync(
+            [GET_IZN_FUND_LIST],
+            [],
+            asyncTaskPipe,
+            {},
+            () => {
+                this.ngRedux.dispatch(setRequestedIznesFunds());
+            },
+        ));
+    }
+
+    fetchAdminFundList() {
+        const asyncTaskPipe = this.requestIznesAdminFundList();
 
         this.ngRedux.dispatch(SagaHelper.runAsync(
             [GET_IZN_FUND_LIST],

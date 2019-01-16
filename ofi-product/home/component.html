@@ -5,9 +5,14 @@
 
 <!-- Main content. -->
 <section class="subtitle">
-    <p>{{ 'Here are all the Shares / Funds and Umbrella Funds that were created by @amManagementCompany@.' | translate: {'amManagementCompany': amManagementCompany} }}
-        <br>{{ 'You can also add a new Share, a new Fund or a new Umbrella Fund' | translate }}.
-    </p>
+    <div *ngIf="isAssetManager(); else iznesAdminTemplate">
+        <p>{{ 'Here are all the Shares / Funds and Umbrella Funds that were created by @amManagementCompany@.' | translate: {'amManagementCompany': amManagementCompany} }}
+            <br>{{ 'You can also add a new Share, a new Fund or a new Umbrella Fund' | translate }}.
+        </p>
+    </div>    
+    <ng-template #iznesAdminTemplate>
+        <p>{{ 'Here are all the Shares / Funds and Umbrella Funds that were created within IZNES.' }}
+    </ng-template>
 </section>
 
 <div class="well" *ngFor="let panel of panelDefs">
@@ -21,7 +26,7 @@
         </div>
 
         <div class="col-xs-6 text-right">
-            <button *ngIf="panel.action" id="{{panel.action.id}}" class="btn btn-primary action-button" (click)="addForm(panel.action.type)">
+            <button *ngIf="isAssetManager() && panel.action" id="{{panel.action.id}}" class="btn btn-primary action-button" (click)="addForm(panel.action.type)">
                 <i class="fa fa-{{panel.action.icon}}"></i> {{panel.action.title}}
             </button>
         </div>
