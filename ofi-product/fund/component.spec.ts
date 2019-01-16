@@ -1,4 +1,4 @@
-/* import { ComponentFixture, fakeAsync, TestBed, tick } from '@angular/core/testing';
+import { ComponentFixture, fakeAsync, TestBed, tick } from '@angular/core/testing';
 import { Directive, Input, Pipe, PipeTransform } from '@angular/core';
 import { of, Subject } from 'rxjs';
 
@@ -63,7 +63,7 @@ const iznCreateFund = jasmine.createSpy('iznCreateFund')
                 fundLaunchate: null,
                 fundCurrency: 0,
                 openOrCloseEnded: 0,
-                fiscalYearEnd: '2018-01-01',
+                fiscalYearEnd: '01-01',
                 isFundOfFund: 0,
                 managementCompanyID: 1,
                 fundAdministratorID: 1,
@@ -235,7 +235,7 @@ const testPayload = {
         },
     ],
     openOrCloseEnded: '0',
-    fiscalYearEnd: '2018-01',
+    fiscalYearEnd: '01-01',
     isFundOfFund: '0',
     managementCompanyID: [
         {
@@ -591,6 +591,7 @@ describe('FundComponent', () => {
                 ...comp.fundFormValue(),
                 draft: 0,
             });
+
             comp.submitFundForm();
 
             tick();
@@ -611,4 +612,4 @@ describe('FundComponent', () => {
             expect(pop).toHaveBeenCalledWith(...expectedResult);
         }));
     });
-}); */
+});
