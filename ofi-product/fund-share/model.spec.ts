@@ -1,4 +1,4 @@
-/* import { FundShare } from './model';
+import { FundShare } from './model';
 import { FundShareTradeCycleModel } from './form/trade-cycle/model';
 
 describe('FundShareModel', () => {
@@ -15,8 +15,8 @@ describe('FundShareModel', () => {
         redFundShareTradeCycleModel = new FundShareTradeCycleModel();
         redFundShareTradeCycleModel.addMonthlyDealingDays();
         redFundShareTradeCycleModel.addYearlyDealingDays();
-        fundShareModel.calendar.subscriptionTradeCycle = subFundShareTradeCycleModel;
-        fundShareModel.calendar.redemptionTradeCycle = redFundShareTradeCycleModel;
+        fundShareModel.calendarSubscription.subscriptionTradeCycle = subFundShareTradeCycleModel;
+        fundShareModel.calendarRedemption.redemptionTradeCycle = redFundShareTradeCycleModel;
     });
 
     describe('disableAllShareFields', () => {
@@ -24,9 +24,14 @@ describe('FundShareModel', () => {
         it('should set disabled properties of calendar to true', () => {
             fundShareModel.disableAllShareFields();
 
-            Object.keys(fundShareModel.calendar.mandatory).forEach((field) => {
-                expect(fundShareModel.calendar.mandatory[field].disabled).toEqual(true);
-                expect(fundShareModel.calendar.mandatory[field].required).toEqual(false);
+            Object.keys(fundShareModel.calendarSubscription.mandatory).forEach((field) => {
+                expect(fundShareModel.calendarSubscription.mandatory[field].disabled).toEqual(true);
+                expect(fundShareModel.calendarSubscription.mandatory[field].required).toEqual(false);
+            });
+
+            Object.keys(fundShareModel.calendarRedemption.mandatory).forEach((field) => {
+                expect(fundShareModel.calendarRedemption.mandatory[field].disabled).toEqual(true);
+                expect(fundShareModel.calendarRedemption.mandatory[field].required).toEqual(false);
             });
         });
 
@@ -141,4 +146,3 @@ describe('FundShareModel', () => {
         });
     });
 });
- */
