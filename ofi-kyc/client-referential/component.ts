@@ -494,7 +494,7 @@ export class OfiClientReferentialComponent implements OnInit, OnDestroy {
     saveClientReference() {
         const payload = {
             clientReference: this.investorForm.controls['clientReference'].value,
-            invitedID: this.currentInvestor.invitedID,
+            kycID: this.currentInvestor.kycID,
         };
         this.ofiKycService.updateInvestor(payload)
             .then(() => {
