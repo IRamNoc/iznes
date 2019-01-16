@@ -50,7 +50,19 @@ import { SellBuyCalendar } from '../../ofi-product/fund-share/FundShareEnum';
 import { OfiFundShareService } from '@ofi/ofi-main/ofi-req-services/ofi-product/fund-share/service';
 import { DomSanitizer } from '@angular/platform-browser';
 import { FileDownloader } from '@setl/utils/services/file-downloader/service';
-import { validateKiid } from '@ofi/ofi-main/ofi-store/ofi-fund-invest/ofi-fund-access-my';
+import {OfiNavService} from "../../ofi-req-services/ofi-product/nav/service";
+import {validateKiid} from "../../ofi-store/ofi-fund-invest/ofi-fund-access-my";
+
+interface DateChangeEvent {
+    type: string;
+    event: any;
+}
+
+interface ValuationNav {
+    price: number;
+    status: number;
+    date: string;
+}
 
 @Component({
     selector: 'app-invest-fund',
@@ -194,6 +206,10 @@ export class InvestFundComponent implements OnInit, OnDestroy {
         filename: null,
     };
 
+    orderDatesChange$ = new Subject<DateChangeEvent>();
+
+    valuationNav: ValuationNav;
+
     /**
      * This function pads floats as string with zeros
      * @param value {float} the value to pad with zeros
@@ -308,7 +324,23 @@ export class InvestFundComponent implements OnInit, OnDestroy {
     }
 
     get nav() {
-        return this.numberConverterService.toFrontEnd(this.shareData.price);
+        if (this.valuationNav) {
+            return this.numberConverterService.toFrontEnd(this.valuationNav.price);
+        } else {
+            return this.numberConverterService.toFrontEnd(this.shareData.price);
+        }
+    }
+
+    get navData() {
+        if (this.valuationNav) {
+            return this.valuationNav;
+        } else {
+            return {
+                price: this.shareData.price,
+                date: this.shareData.priceDate,
+                status: this.shareData.priceStatus,
+            };
+        }
     }
 
     get navStr() {
@@ -473,6 +505,7 @@ export class InvestFundComponent implements OnInit, OnDestroy {
         private fileDownloader: FileDownloader,
         private fileService: FileService,
         private shareService: OfiFundShareService,
+        private ofiNavService: OfiNavService,
     ) {
     }
 
@@ -627,6 +660,12 @@ export class InvestFundComponent implements OnInit, OnDestroy {
                 this.updateToastTimer(remainingTime);
                 this.toastTimer = this.setToastTimer();
             });
+
+        this.orderDatesChange$.pipe(
+            takeUntil(this.unSubscribe),
+            distinctUntilChanged(),
+            throttleTime(1000),
+        ).subscribe(this.subscribeForChangeDate.bind(this));
 
     }
 
@@ -886,7 +925,7 @@ export class InvestFundComponent implements OnInit, OnDestroy {
                 this.subPortfolioTotalBalance,
                 this.subPortfolioEncumberedBalance,
                 this.subPortfolioRedemptionEncumBalance,
-                this.shareData.price,
+                this.nav,
             );
 
             if (!OrderHelper.isResponseGood(checkResponse)) {
@@ -1165,7 +1204,7 @@ export class InvestFundComponent implements OnInit, OnDestroy {
         return Boolean(minValue <= this.orderValue);
     }
 
-    subscribeForChangeDate(type: string, $event: any): boolean {
+    subscribeForChangeDate(e: DateChangeEvent): boolean {
         if (!this.doValidate) {
             this.dateBy = 'cutoff';
             return true;
@@ -1176,24 +1215,22 @@ export class InvestFundComponent implements OnInit, OnDestroy {
             cutoff: this.cutoffDate,
             valuation: this.valuationDate,
             settlement: this.settlementDate,
-        }[type];
+        }[e.type];
 
         const beTriggered: FormControl = {
             cutoff: [this.valuationDate, this.settlementDate],
             valuation: [this.cutoffDate, this.settlementDate],
             settlement: [this.cutoffDate, this.valuationDate],
-        }[type];
+        }[e.type];
 
-        const momentDateValue = $event[0];
+        const momentDateValue = e.event[0];
 
         // if select the same date again. That mean, no changes in $event. momentDateValue is undefined.
         if (typeof momentDateValue === 'undefined') {
             return true;
         }
 
-        const cutoffHour = moment(this.cutoffTime, 'HH:mm').format('HH:mm');
-
-        if (type === 'cutoff') {
+        if (e.type === 'cutoff') {
             const cutoffDateStr = this.getCutoffTimeForSpecificDate(momentDateValue)
                 .format('YYYY-MM-DD HH:mm');
 
@@ -1208,7 +1245,7 @@ export class InvestFundComponent implements OnInit, OnDestroy {
             beTriggered[1].setValue(settlementDateStr);
 
             this.dateBy = 'cutoff';
-        } else if (type === 'valuation') {
+        } else if (e.type === 'valuation') {
             const mCutoffDate = this.getCutoffDateFromValuation(momentDateValue);
             const cutoffDateStr = this.getCutoffTimeForSpecificDate(mCutoffDate)
                 .format('YYYY-MM-DD HH:mm');
@@ -1220,7 +1257,7 @@ export class InvestFundComponent implements OnInit, OnDestroy {
             beTriggered[1].setValue(settlementDateStr);
 
             this.dateBy = 'valuation';
-        } else if (type === 'settlement') {
+        } else if (e.type === 'settlement') {
             const mCutoffDate = this.getCutoffDateFromSettlement(momentDateValue);
             const cutoffDateStr = this.getCutoffTimeForSpecificDate(mCutoffDate)
                 .format('YYYY-MM-DD HH:mm');
@@ -1246,6 +1283,8 @@ export class InvestFundComponent implements OnInit, OnDestroy {
             this.quantity.patchValue(0);
             this.quantity.markAsUntouched();
         }
+
+        this.updateNavForNavDate();
 
         return false;
     }
@@ -1443,7 +1482,7 @@ export class InvestFundComponent implements OnInit, OnDestroy {
      * @return {string}
      */
     latestNavDateFormated(): string {
-        return this.getDate(this.shareData.priceDate);
+        return this.getDate(this.navData.date);
     }
 
     /**
@@ -1460,7 +1499,7 @@ export class InvestFundComponent implements OnInit, OnDestroy {
         const latestNavDate = this.latestNavDateFormated();
 
         // get the latest nav's status
-        const latestNavStatus = this.shareData.priceStatus;
+        const latestNavStatus = this.navData.status;
 
         // check if latest nav's status is  validated
         // check if latest nav's date is same as the order's
@@ -1686,6 +1725,28 @@ export class InvestFundComponent implements OnInit, OnDestroy {
                 this.ngRedux.dispatch(validateKiid(this.shareData.fundShareID));
             });
     }
+
+    newOrderChangeUpdateEvent(type: string, event: any){
+       this.orderDatesChange$.next({
+           type,
+           event,
+       });
+    }
+
+    updateNavForNavDate() {
+        if (this.valuationDate.value === '') {
+            this.valuationNav = undefined;
+        }
+        this.ofiNavService.requestLatestNav({
+            isin: this.shareData.isin,
+            navdate: this.valuationDate.value
+        }).then((response) => {
+            console.log('nav', response);
+            this.valuationNav = response;
+        }).catch(e => console.error(e));
+
+    }
+
 }
 
 /**

@@ -1,8 +1,9 @@
 import {
     ContractData,
-} from '@setl/utils/services/blockchain-contract/model';
-// } from '../../../../utils/services/blockchain-contract/model';
+} from '@setl/utils/services/blockchain-contract/model'; //notcompile
+//} from '../../../../utils/services/blockchain-contract/model'; //compile
 import { IznesShareDetail } from '../../../ofi-store/ofi-product/fund-share-list/model';
+import { NavStatus } from "../../../ofi-req-services/ofi-product/nav/model";
 
 export interface OrderRequest {
     token: string;
@@ -23,9 +24,6 @@ export interface OrderRequest {
 }
 
 export interface IznShareDetailWithNav extends IznesShareDetail {
-    price: number;
-    priceDate: string;
-    priceStatus: number;
     amCompanyID: number;
     amWalletID: number;
     amAddress: string;
@@ -156,7 +154,6 @@ export interface ShareRegistrationCertificateEmailPayload {
     amComPub: string;
     investorAddress: string;
     amAddress: string;
-    amCompanyLogo: string;
     amCompanyName: string;
     amCompanyLegalForm: string;
     amCompanyShareCapital: string;
@@ -168,7 +165,9 @@ export interface ShareRegistrationCertificateEmailPayload {
     amCompanyRcsMatriculation: string;
     amCompanyWebsiteUrl: string;
     amCompanyPhoneNumber: string;
-    amCompanySignature: string;
+    amCompanyID: number;
+    setl_db_b64_amCompanyLogo: any;
+    setl_db_b64_amCompanySignature: any;
 }
 
 export interface InvestorBalances {
@@ -199,3 +198,9 @@ export const OrderByNumber = {
     q: 1,
     a: 2,
 };
+
+export interface NavData {
+    value: number;
+    date: string;
+    status: NavStatus;
+}

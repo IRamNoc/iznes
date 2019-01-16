@@ -55,7 +55,7 @@
                                         [ngStyle]="{'width':'100%'}" 
                                         [readonly]="doValidate" 
                                         autocomplete="off"
-                                        (dateChange)="subscribeForChangeDate('cutoff', $event)">
+                                        (dateChange)="newOrderChangeUpdateEvent('cutoff', $event)">
                             </div>
                             <span *ngIf="cutoffDate.hasError('required') && cutoffDate.touched" class="field-error">{{ 'Field is required' | translate }}</span>
                             <span *ngIf="cutoffDate.hasError('tooLate')" class="field-error">{{ 'Cut-off has been reached' | translate }}</span>
@@ -83,7 +83,7 @@
                                         [ngStyle]="{'width':'100%'}" 
                                         [readonly]="doValidate" 
                                         autocomplete="off"
-                                        (dateChange)="subscribeForChangeDate('valuation', $event)">
+                                        (dateChange)="newOrderChangeUpdateEvent('valuation', $event)">
                             </div>
                             <span *ngIf="valuationDate.hasError('required') && valuationDate.touched" class="field-error">{{ 'Field is required' | translate }}</span>
                         </div>
@@ -107,7 +107,7 @@
                                             [ngStyle]="{'width':'100%'}" 
                                             [readonly]="doValidate" 
                                             autocomplete="off"
-                                            (dateChange)="subscribeForChangeDate('settlement', $event)">
+                                            (dateChange)="newOrderChangeUpdateEvent('settlement', $event)">
                                 </div>
                                 <span *ngIf="settlementDate.hasError('required') && settlementDate.touched" class="field-error">{{ 'Field is required' | translate }}</span>
                             </div>
