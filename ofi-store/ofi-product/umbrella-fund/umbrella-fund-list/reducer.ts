@@ -59,6 +59,7 @@ function formatUmbrellaFundDataResponse(rawUmbrellaFundData: Array<any>): Array<
                 domicile: item.get('domicile'),
                 umbrellaFundCreationDate: item.get('umbrellaFundCreationDate'),
                 managementCompanyID: item.get('managementCompanyID'),
+                companyName: item.get('companyName'),
                 fundAdministratorID: item.get('fundAdministratorID'),
                 custodianBankID: item.get('custodianBankID'),
                 investmentAdvisorID: JSON.parse(item.get('investmentAdvisorID')),
