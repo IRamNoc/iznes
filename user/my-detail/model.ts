@@ -26,4 +26,5 @@ export interface MyDetailState {
     phoneCode: string;
     phoneNumber: string;
     defaultWalletID: number;
+    sessionTimeoutSecs: number;
 }
