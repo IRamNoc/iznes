@@ -27,7 +27,7 @@ import {
     RemoveNotificationsMessageBody,
     TestNotificationsMessageBody,
 } from './my-user.service.model';
-import { NgRedux } from '@angular-redux/store';
+import { NgRedux, select } from '@angular-redux/store';
 import {
     setMembernodeSessionManager,
     resetMembernodeSessionManager,
@@ -107,16 +107,18 @@ interface GetLanguageTokenData {
     userID: string;
 }
 
-/* TIMEOUT + TIMEOUT_COUNTDOWN must be =< session timeout */
-const TIMEOUT = 9 * 60 * 1000;
-const TIMEOUT_COUNTDOWN = 60;
-
 @Injectable()
 export class MyUserService implements OnDestroy {
-    subscriptionsArray: Subscription[];
+    @select(['user', 'myDetail', 'sessionTimeoutSecs']) sessionTimeoutSecsOb;
+    private subscriptionsArray: Subscription[] = [];
+    private TIMEOUT_COUNTDOWN: number = 60; // Modal countdown seconds
+    private TIMEOUT: number; // Milliseconds until modal displayed
 
     constructor(private memberSocketService: MemberSocketService) {
-        this.subscriptionsArray = [];
+        // TIMEOUT + TIMEOUT_COUNTDOWN must be <= session timeout
+        this.subscriptionsArray.push(this.sessionTimeoutSecsOb.subscribe((sessionTimeoutSecs) => {
+            this.TIMEOUT = sessionTimeoutSecs ? (sessionTimeoutSecs - this.TIMEOUT_COUNTDOWN) * 1000 : 0;
+        }));
     }
 
     defaultRefreshToken(ngRedux: NgRedux<any>): any {
@@ -136,10 +138,10 @@ export class MyUserService implements OnDestroy {
 
                 ngRedux.dispatch(resetMembernodeSessionManager());
 
-                const timer = observableTimer(TIMEOUT, 1000);
+                const timer = observableTimer(this.TIMEOUT, 1000);
                 // subscribing to a observable returns a subscription object
                 this.subscriptionsArray.push(timer.subscribe((t) => {
-                    if (t > TIMEOUT_COUNTDOWN) {
+                    if (t > this.TIMEOUT_COUNTDOWN) {
                         this.ngOnDestroy();
                     } else {
                         ngRedux.dispatch(setMembernodeSessionManager(t));
