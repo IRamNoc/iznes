@@ -528,7 +528,7 @@ export class FundComponent implements OnInit, OnDestroy {
             takeUntil(this.unSubscribe),
         )
         .subscribe((d) => {
-            if (d && d[0].text === 'None') {
+            if (d && d.length && d[0].text === 'None') {
                 this.isFundCapitalisationDateVisible = true;
             } else {
                 this.isFundCapitalisationDateVisible = false;
@@ -1056,7 +1056,6 @@ export class FundComponent implements OnInit, OnDestroy {
         };
 
         if (!this.param) {
-
             this.fundService.iznCreateFund(payload)
             .then((fund) => {
                 const fundID = _.get(fund, ['1', 'Data', '0', 'fundID']);
