@@ -311,7 +311,7 @@ export class FundComponent implements OnInit, OnDestroy {
                 Validators.max(100),
             ])],
             capitalPreservationPeriod: [null],
-            capitalisationDate: [null, this.validators.date.month],
+            capitalisationDate: [null, this.validators.date.day],
             hasCppi: [null],
             cppiMultiplier: [null],
             hasHedgeFundStrategy: [null],
@@ -528,7 +528,7 @@ export class FundComponent implements OnInit, OnDestroy {
             takeUntil(this.unSubscribe),
         )
         .subscribe((d) => {
-            if (d[0].text === 'None') {
+            if (d && d[0].text === 'None') {
                 this.isFundCapitalisationDateVisible = true;
             } else {
                 this.isFundCapitalisationDateVisible = false;
@@ -686,7 +686,6 @@ export class FundComponent implements OnInit, OnDestroy {
             auditorID: _.get(this.fundForm.controls['auditorID'].value, ['0', 'id'], null),
             taxAuditorID: _.get(this.fundForm.controls['taxAuditorID'].value, ['0', 'id'], null),
             legalAdvisorID: _.get(this.fundForm.controls['legalAdvisorID'].value, ['0', 'id'], null),
-            fiscalYearEnd: (this.fundForm.controls['fiscalYearEnd'].value === null ? null : this.fundForm.controls['fiscalYearEnd'].value + '-01'),
             fundAdministratorID: _.get(this.fundForm.controls['fundAdministratorID'].value, ['0', 'id'], null),
             custodianBankID: _.get(this.fundForm.controls['custodianBankID'].value, ['0', 'id'], null),
             investmentManagerID: _.get(this.fundForm.controls['investmentManagerID'].value, ['0', 'id'], null),
@@ -702,7 +701,6 @@ export class FundComponent implements OnInit, OnDestroy {
             transferAgentID: _.get(this.fundForm.controls['transferAgentID'].value, ['0', 'id'], null),
             centralizingAgentID: _.get(this.fundForm.controls['centralizingAgentID'].value, ['0', 'id'], null),
             capitalPreservationPeriod: _.get(this.fundForm.controls['capitalPreservationPeriod'].value, ['0', 'id'], null),
-            capitalisationDate: _.get(this.fundForm.controls['capitalisationDate'].value, ['0', 'id'], null),
             holidayMgmtConfig: this.getHolidayMgmtConfig(),
             legalEntityIdentifier: this.isLeiVisible ? this.fundForm.controls['legalEntityIdentifier'].value : null,
         };
