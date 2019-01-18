@@ -44,7 +44,7 @@ export class NavigationSidebarComponent implements OnInit, AfterViewInit {
             const userType = currentUserDetails.userType;
 
             /* Figure out what user we are, in a cool way. */
-            const userTypeStr = {
+            let userTypeStr = {
                 15: 'system_admin',
                 25: 'chain_admin',
                 27: 'bank',
