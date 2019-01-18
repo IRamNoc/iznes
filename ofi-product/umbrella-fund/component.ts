@@ -585,7 +585,7 @@ export class UmbrellaFundComponent implements OnInit, AfterViewInit, OnDestroy {
             registerOfficeAddressCountry: _.get(formValues.registerOfficeAddressCountry, ['0', 'id']),
             legalEntityIdentifier: this.isLeiVisible ? formValues.legalEntityIdentifier : null,
             domicile: formValues.domicile[0].id,
-            umbrellaFundCreationDate: formValues.umbrellaFundCreationDate,
+            umbrellaFundCreationDate: formValues.umbrellaFundCreationDate || null,
             managementCompanyID: formValues.managementCompanyID[0].id,
             fundAdministratorID: formValues.fundAdministratorID[0].id,
             custodianBankID: formValues.custodianBankID[0].id,
