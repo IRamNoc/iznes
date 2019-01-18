@@ -703,6 +703,10 @@ export class FundComponent implements OnInit, OnDestroy {
             capitalPreservationPeriod: _.get(this.fundForm.controls['capitalPreservationPeriod'].value, ['0', 'id'], null),
             holidayMgmtConfig: this.getHolidayMgmtConfig(),
             legalEntityIdentifier: this.isLeiVisible ? this.fundForm.controls['legalEntityIdentifier'].value : null,
+            fundCreationDate: this.fundForm.controls['fundCreationDate'].value || null,
+            fundLaunchate: this.fundForm.controls['fundLaunchate'].value || null,
+            fiscalYearEnd: this.fundForm.controls['fiscalYearEnd'].value || null,
+            capitalisationDate: this.fundForm.controls['capitalisationDate'].value || null,
         };
     }
 
