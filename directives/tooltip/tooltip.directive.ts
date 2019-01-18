@@ -12,6 +12,7 @@ export class TooltipDirective implements OnInit, OnDestroy {
     parentDiv: any;
     pCases = [0, 0, 0, 0]; // top - right - bottom - left
     randID: string;
+    scrollEl = document.querySelector('ng-sidebar-container');
 
     constructor(
         private el: ElementRef,
@@ -113,6 +114,7 @@ export class TooltipDirective implements OnInit, OnDestroy {
                 }
             }
         }
+        if (this.scrollEl) this.scrollEl.addEventListener('scroll', (event) => { this.getScroll(event); }, true);
     }
 
     showTooltip(): void {
@@ -279,8 +281,7 @@ export class TooltipDirective implements OnInit, OnDestroy {
     }
 
     cleanAll(): void {
-        document.querySelector('ng-sidebar-container')
-            .removeEventListener('scroll', (event) => { this.getScroll(event); }, true);
+        if (this.scrollEl) this.scrollEl.removeEventListener('scroll', (event) => { this.getScroll(event); }, true);
         if (this.divTooltip !== null && this.divTooltip !== undefined) {
             this.divTooltip.remove();
             this.divTooltip = null;
