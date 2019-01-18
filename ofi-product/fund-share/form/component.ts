@@ -216,7 +216,7 @@ export class FundShareComponent implements OnInit, AfterViewInit, OnDestroy {
             this.model.accountId = userDetail.accountId;
             this.userType = userDetail.userType;
 
-            if (this.userType === userTypeEnum.INVESTOR) {
+            if ((this.userType === userTypeEnum.INVESTOR) || this.isAdmin()) {
                 this.mode = FundShareMode.Read;
                 this.model.disableAllShareFields();
                 this.ofiManagementCompanyService.fetchInvestorManagementCompanyList();
@@ -965,6 +965,10 @@ export class FundShareComponent implements OnInit, AfterViewInit, OnDestroy {
 
     isUpdate(): boolean {
         return this.mode === FundShareMode.Update;
+    }
+
+    isAdmin(): boolean {
+        return (this.userType === userTypeEnum.ADMIN);
     }
 
     openPanel(obj: { [key: string]: any }, $event): void {

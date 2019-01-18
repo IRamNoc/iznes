@@ -912,4 +912,5 @@ export enum FundShareMode {
 export enum userTypeEnum {
     INVESTOR = 46,
     AM = 36,
+    ADMIN = 35,
 }
