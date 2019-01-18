@@ -30,7 +30,7 @@ import {
 } from '@setl/utils';
 
 import { get, isEmpty, isEqual, find, isUndefined } from 'lodash';
-import * as moment from 'moment';
+import * as moment from 'moment-timezone';
 import { ToasterService } from 'angular2-toaster';
 /* Services. */
 import { WalletNodeRequestService } from '@setl/core-req-services';
@@ -666,21 +666,33 @@ export class ManageOrdersComponent implements OnInit, AfterViewInit, OnDestroy {
         });
     }
 
-    exportOrders(): void {
-        let methodName = '';
+    getMethodName(): string {
         if (this.isIznesAdmin) {
-            methodName = 'exportActivitiesOrders';
-        } else if (this.myDetails && this.myDetails.userType && this.myDetails.userType === 36) {  // AM side
-            methodName = 'exportAssetManagerOrders';
-        } else if (this.myDetails && this.myDetails.userType && this.myDetails.userType === 46) {  // INV side
-            methodName = 'exportInvestorOrders';
+            return 'exportActivitiesOrders';
+        }
+        if (this.myDetails && this.myDetails.userType && this.myDetails.userType === 36) {  // AM side
+            return 'exportAssetManagerOrders';
+        }
+        if (this.myDetails && this.myDetails.userType && this.myDetails.userType === 46) {  // INV side
+            return 'exportInvestorOrders';
+        }
+        return '';
+    }
+
+    exportOrders(): void {
+        const method = this.getMethodName();
+
+        if (!method) {
+            return;
         }
 
+        const timezone: string = moment.tz.guess();
         this.fileDownloader.downLoaderFile({
-            method: methodName,
+            method,
             token: this.memberSocketService.token,
             userId: this.myDetails.userId,
             ...this.datagridParams.get(),
+            timezone,
         });
     }
 
