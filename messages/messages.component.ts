@@ -443,8 +443,8 @@ export class SetlMessagesComponent implements OnDestroy, OnInit {
 
             // Set isActed if message has expired
             const currentTime = Math.floor(Date.now() / 1000);
-            const expiry = (currentMessage.action || {}).expiry || 0;
-            if (!currentMessage.isActed && expiry && expiry < currentTime) {
+            const messageExpiry = (currentMessage.action || {}).expiry || 0;
+            if (!currentMessage.isActed && messageExpiry && messageExpiry < currentTime) {
                 this.messageService.markMessageAsActed(this.walletId, currentMessage.mailId, null);
                 this.messages[index].isActed = true;
             }
