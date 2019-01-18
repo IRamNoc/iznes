@@ -435,6 +435,39 @@ export class OfiFundShareService {
         return createMemberNodeSagaRequest(this.memberSocketService, messageBody);
     }
 
+    /**
+     * Get fund share audit data for IZNES Admins
+     * @return {any}
+     */
+    static adminFundShareAudit(ofiFundService: OfiFundShareService,
+                               ngRedux: NgRedux<any>,
+                               requestData,
+                               successCallback: (data) => void,
+                               errorCallback: (e) => void) {
+
+        const asyncTaskPipe = ofiFundService.getAdminFundShareAudit(requestData);
+
+        ngRedux.dispatch(SagaHelper.runAsync(
+            [SET_FUND_SHARE_AUDIT],
+            [],
+            asyncTaskPipe,
+            {},
+            data => successCallback(data),
+            e => errorCallback(e),
+        ));
+    }
+
+    getAdminFundShareAudit(requestData): any {
+        let messageBody = {
+            RequestName: 'getadminfundshareaudit',
+            token: this.memberSocketService.token,
+        };
+
+        messageBody = Object.assign(requestData, messageBody);
+
+        return createMemberNodeSagaRequest(this.memberSocketService, messageBody);
+    }
+
     private convertNumbersForBlockchain(request: any): void {
         request.minInitialSubscriptionInAmount = this.numberService.toBlockchain(request.minInitialSubscriptionInAmount);
         request.minInitialSubscriptionInShare = this.numberService.toBlockchain(request.minInitialSubscriptionInShare);
