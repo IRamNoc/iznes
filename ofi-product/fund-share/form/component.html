@@ -493,7 +493,7 @@
             <div class="form-group row actions bottom">
                 <div class="col-sm-12">
                     <button (click)="cancelFundShare()" class="btn btn-default action-button cancel" id="cancelFundShareBottom">
-                        {{ isRead() ? 'Back' : 'Cancel' | translate }}
+                        {{ isAdmin() ? 'Close' : isRead() ? 'Back' : 'Cancel' | translate }}
                     </button>
 
                     <button *ngIf="isCreate() || currDraft == 1" id="saveDraftFundShareBottom" type="button" class="btn btn-primary" (click)="saveDraft()">
