@@ -43,7 +43,9 @@ export interface OfiFundShare {
     monthlyRedemptionDealingDays: string;
     yearlyRedemptionDealingDays: string;
     navPeriodForSubscription: number;
+    subscriptionEnableNonWorkingDay: number;
     navPeriodForRedemption: number;
+    redemptionEnableNonWorkingDay: number;
     portfolioCurrencyHedge: number;
     subscriptionCutOffTime: string;
     subscriptionCutOffTimeZone: number;

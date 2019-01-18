@@ -172,7 +172,9 @@ export class FundShare {
                 this.convertArrayToJSON(
                     (this.calendarRedemption.redemptionTradeCycle as FundShareTradeCycleModel).yearlyDealingDays),
             navPeriodForSubscription: this.getSelectValue(this.calendarSubscription.mandatory.navPeriodForSubscription),
+            subscriptionEnableNonWorkingDay: this.calendarSubscription.mandatory.subscriptionEnableNonWorkingDay.value(),
             navPeriodForRedemption: this.getSelectValue(this.calendarRedemption.mandatory.navPeriodForRedemption),
+            redemptionEnableNonWorkingDay: this.calendarRedemption.mandatory.redemptionEnableNonWorkingDay.value(),
             keyFactOptionalData: this.generateJSONString(this.keyFacts.optional),
             profileOptionalData: this.generateJSONString(this.profile.optional),
             priipOptionalData: this.generateJSONString(this.priip.optional),
@@ -291,10 +293,12 @@ export class FundShare {
             this.calendarSubscription.mandatory.navPeriodForSubscription,
             fundShare.navPeriodForSubscription,
         );
+        this.calendarSubscription.mandatory.subscriptionEnableNonWorkingDay.preset = fundShare.subscriptionEnableNonWorkingDay;
         this.setListItemPreset(
             this.calendarRedemption.mandatory.navPeriodForRedemption,
             fundShare.navPeriodForRedemption,
         );
+        this.calendarRedemption.mandatory.redemptionEnableNonWorkingDay.preset = fundShare.redemptionEnableNonWorkingDay;
 
         // removed by PZ 28/06/2018
         // this.calendar.mandatory.subscriptionRedemptionCalendar.preset = fundShare.subscriptionRedemptionCalendar;
@@ -373,10 +377,12 @@ export class FundShare {
             this.calendarSubscription.mandatory.navPeriodForSubscription,
             fundShare.navPeriodForSubscription,
         );
+        this.calendarSubscription.mandatory.subscriptionEnableNonWorkingDay.control.setValue(fundShare.subscriptionEnableNonWorkingDay);
         this.setListItemValue(
             this.calendarRedemption.mandatory.navPeriodForRedemption,
             fundShare.navPeriodForRedemption,
         );
+        this.calendarRedemption.mandatory.redemptionEnableNonWorkingDay.control.setValue(fundShare.redemptionEnableNonWorkingDay);
 
         // removed by PZ 28/06/2018
         // this.calendar.mandatory.subscriptionRedemptionCalendar.control.setValue(fundShare.subscriptionRedemptionCalendar);
