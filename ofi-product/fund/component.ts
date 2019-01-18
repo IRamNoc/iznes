@@ -520,6 +520,8 @@ export class FundComponent implements OnInit, OnDestroy {
             if (d === this.enums.hasCapitalPreservation.NO.toString()) {
                 this.fundForm.controls['capitalPreservationLevel'].setValue(null);
                 this.fundForm.controls['capitalPreservationPeriod'].setValue(null);
+                this.fundForm.controls['capitalisationDate'].setValue(null);
+                this.isFundCapitalisationDateVisible = false;
             }
         });
 
