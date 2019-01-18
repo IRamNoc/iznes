@@ -63,6 +63,7 @@ export class NavigationSidebarComponent implements OnInit, AfterViewInit {
             }[userType];
             if (!userTypeStr) {
                 console.warn('Navigation Render: Missing user type!');
+                userTypeStr = 'ui'; // falls back to UI as default
             }
 
             const menuSpec = this.appConfig.menuSpec;
