@@ -97,7 +97,8 @@ export class ProductCharacteristicComponent implements OnInit, OnDestroy {
             const shareClassCurrency = _.find(currencies, { id: d.shareClassCurrency }).text;
             const prospectus = d.prospectus || '|||';
             const kiid = d.kiid || '|||';
-            const legalForm = _.find(this.legalFormItems, { id: d.legalForm }).text;
+            const legalFormObj = _.find(this.legalFormItems, { id: d.legalForm }) || {};
+            const legalForm = legalFormObj.text;
             const subscriptionSettlementPeriod = d.subscriptionSettlementPeriod === 0 ? 'D' :
                 d.subscriptionSettlementPeriod > 0 ? `D+${d.subscriptionSettlementPeriod}` :
                     `D${d.subscriptionSettlementPeriod}`;
