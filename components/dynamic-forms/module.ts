@@ -9,6 +9,7 @@ import { FileDropModule } from '@setl/core-filedrop';
 import { FileViewerModule } from '@setl/core-fileviewer/fileviewer.module';
 import { DatePickerExtendedModule } from '../date-picker-extended/module';
 import { SetlPipesModule } from '../../pipes';
+import { ClarityModule } from '@clr/angular';
 
 import { DynamicFormComponent } from './component';
 import { DynamicFormService } from './service';
@@ -25,6 +26,7 @@ import { DynamicFormService } from './service';
         FileViewerModule,
         DatePickerExtendedModule,
         SetlPipesModule,
+        ClarityModule,
     ],
     declarations: [
         DynamicFormComponent,

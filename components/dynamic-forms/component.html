@@ -8,7 +8,7 @@
                             <p><strong>{{ model[item].title | translate }}</strong></p>
                         </div>
                         
-                        <label class="control-label" [class.hasTitle]="model[item].title" [class.required-field]="model[item].required" for="{{item}}">{{ model[item].label | translate }}</label>
+                        <label *ngIf="!model[item].noLabel" class="control-label" [class.hasTitle]="model[item].title" [class.required-field]="model[item].required" for="{{item}}">{{ model[item].label | translate }}</label>
 
                         <ng-container [ngSwitch]="isElementFormItem(model[item])">
                             <ng-container *ngSwitchCase="false">
@@ -161,6 +161,27 @@
                                                 theme="dp-material"
                                                 autocomplete="off"/>
                                         </div>
+                                    </ng-container>
+                                    <ng-container *ngSwitchCase="10">
+                                        <div class="checkbox-inline flex-items-xs-middle">
+                                            <input type="checkbox"
+                                                   id="{{item}}"
+                                                   formControlName="{{item}}">
+                                            <label for="{{item}}">
+                                                {{ model[item].checkboxLabel | translate }}
+                                            </label>
+                                        </div>
+                                        <div *ngIf="model[item].checkboxHint()" class="alert alert-info alert-sm flex-items-xs-middle">
+                                            <div class="alert-items">
+                                                <div class="alert-item static">
+                                                    <div class="alert-icon-wrapper">
+                                                        <clr-icon class="alert-icon" shape="exclamation-circle"></clr-icon>
+                                                    </div>
+                                                    <div class="alert-text">{{model[item].checkboxHint() | translate}}</div>
+                                                </div>
+                                            </div>
+                                        </div>
+
                                     </ng-container>
                                 </ng-container>
                             </ng-container>

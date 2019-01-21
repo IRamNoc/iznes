@@ -32,6 +32,8 @@ export interface FormItem {
 
     fileData?: any;
     filePermission?: FilePermission;
+    checkboxLabel?: string;
+    checkboxHint?: () => string;
 }
 
 export enum FormItemType {
@@ -45,6 +47,7 @@ export enum FormItemType {
     time,
     extendedDate,
     dateRange,
+    checkbox,
 }
 
 export enum FormItemStyle {
