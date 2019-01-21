@@ -255,7 +255,6 @@ export class OfiSubPortfolioComponent implements OnDestroy {
                             }
                         },
                         (labelResponse) => {
-                            console.log('+++ labelResponse', labelResponse);
                             this.alertsService.generate('error', this.translate.translate('Error deleting sub-portfolio'));
                         }));
                 }
