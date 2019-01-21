@@ -197,7 +197,7 @@
             {{ 'Cancel' | translate }}
         </button>
         <button id="override_save" type="button" class="btn btn-success" (click)="editForm ? updateSubPortfolio() : saveSubPortfolio();" [disabled]="!tabDetail[0]['formControl'].valid">
-            {{ editForm ? 'Update' : 'Create' | translate }}
+            {{ (editForm ? 'Update' : 'Create') | translate }}
         </button>
     </div>
 </clr-modal>
