@@ -1614,7 +1614,7 @@ export class InvestFundComponent implements OnInit, OnDestroy {
      * @param momentDateValue
      * @return {moment.Moment}
      */
-    getCutoffDateFromValuation(momentDateValue): moment.Moment {
+    getCutoffDateFromValuation(momentDateValue): moment.Moment | false {
         const orderNumberType = this.getCalendarHelperOrderNumber();
 
         return this.calenderHelper.getCutoffDateFromValuation(momentDateValue, orderNumberType);
