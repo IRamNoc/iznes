@@ -6,7 +6,6 @@ export class ShareCalendarSubscriptionMandatory extends DynamicFormsValidator {
         type: FormItemType.time,
         label: 'Cut-off Time',
         required: true,
-        mltag: 'txt_fundshare_cutofftimesub',
     };
     subscriptionCutOffTimeZone: FormItem = {
         type: FormItemType.list,
@@ -14,7 +13,6 @@ export class ShareCalendarSubscriptionMandatory extends DynamicFormsValidator {
         required: true,
         listItems: mDateHelper.getMomentTimeZoneNameList(),
         style: [FormItemStyle.BreakOnAfter],
-        mltag: 'txt_fundshare_cuttofftimesubred',
     };
     navPeriodForSubscription: FormItem = {
         type: FormItemType.list,
@@ -30,7 +28,6 @@ export class ShareCalendarSubscriptionMandatory extends DynamicFormsValidator {
             { id: E.BusinessDaysEnum.Five, text: 'D+5' },
         ],
         required: true,
-        mltag: 'txt_fundshare_navperiodsub',
     };
     subscriptionEnableNonWorkingDay: FormItem = {
         type: FormItemType.checkbox,
@@ -45,7 +42,6 @@ export class ShareCalendarSubscriptionMandatory extends DynamicFormsValidator {
         hidden: () => {
             return this.navPeriodForSubscription.value() === null;
         },
-        mltag: 'txt_enable_nav_dates_outside_working_days',
     };
     subscriptionSettlementPeriod: FormItem = {
         type: FormItemType.list,
@@ -60,14 +56,12 @@ export class ShareCalendarSubscriptionMandatory extends DynamicFormsValidator {
             { id: E.BusinessDaysEnum.Four, text: 'D+4' },
             { id: E.BusinessDaysEnum.Five, text: 'D+5' },
         ],
-        mltag: 'txt_fundshare_subsettleperiod',
     };
     // removed by PZ 28/06/2018
     // subscriptionRedemptionCalendar: FormItem = {
     //     type: FormItemType.text,
     //     label: 'Calendar of subscription/redemption',
     //     required: true,
-    //     mltag: 'txt_fundshare_subredcalendar',
     // };
 }
 
@@ -76,7 +70,6 @@ export class ShareCalendarRedemptionMandatory extends DynamicFormsValidator {
         type: FormItemType.time,
         label: 'Cut-off Time',
         required: true,
-        mltag: 'txt_fundshare_cutofftimered',
     };
     redemptionCutOffTimeZone: FormItem = {
         type: FormItemType.list,
@@ -84,7 +77,6 @@ export class ShareCalendarRedemptionMandatory extends DynamicFormsValidator {
         required: true,
         listItems: mDateHelper.getMomentTimeZoneNameList(),
         style: [FormItemStyle.BreakOnAfter],
-        mltag: 'txt_fundshare_cutofftimesubred',
     };
     navPeriodForRedemption: FormItem = {
         type: FormItemType.list,
@@ -100,7 +92,6 @@ export class ShareCalendarRedemptionMandatory extends DynamicFormsValidator {
             { id: E.BusinessDaysEnum.Five, text: 'D+5' },
         ],
         required: true,
-        mltag: 'txt_fundshare_navperiodred',
     };
     redemptionEnableNonWorkingDay: FormItem = {
         type: FormItemType.checkbox,
@@ -115,7 +106,6 @@ export class ShareCalendarRedemptionMandatory extends DynamicFormsValidator {
         hidden: () => {
             return this.navPeriodForRedemption.value() === null;
         },
-        mltag: 'txt_enable_nav_dates_outside_working_days',
     };
     redemptionSettlementPeriod: FormItem = {
         type: FormItemType.list,
@@ -130,17 +120,14 @@ export class ShareCalendarRedemptionMandatory extends DynamicFormsValidator {
             { id: E.BusinessDaysEnum.Four, text: 'D+4' },
             { id: E.BusinessDaysEnum.Five, text: 'D+5' },
         ],
-        mltag: 'txt_fundshare_redsettleperiod',
     };
     // removed by PZ 28/06/2018
     // subscriptionRedemptionCalendar: FormItem = {
     //     type: FormItemType.text,
     //     label: 'Calendar of subscription/redemption',
     //     required: true,
-    //     mltag: 'txt_fundshare_subredcalendar',
     // };
 }
-
 
 function getNonWorkingDayHintMsg(periodValue: {id: number}[], enableNonWorkingDay: boolean): string {
     if (!enableNonWorkingDay ||
@@ -157,6 +144,5 @@ function getNonWorkingDayHintMsg(periodValue: {id: number}[], enableNonWorkingDa
         [E.BusinessDaysEnum.Three]: 'The NAV date will correspond to the calendar day before the next 4 business day',
         [E.BusinessDaysEnum.Four]: 'The NAV date will correspond to the calendar day before the next 5 business day',
         [E.BusinessDaysEnum.Five]: 'The NAV date will correspond to the calendar day before the next 6 business day',
-    }[periodValue[0].id]
-
+    }[periodValue[0].id];
 }
