@@ -2,7 +2,6 @@
 import { Component, OnDestroy } from '@angular/core';
 import { FormGroup, FormControl, Validators } from '@angular/forms';
 import { select, NgRedux } from '@angular-redux/store';
-import { ToasterService } from 'angular2-toaster';
 import { Subscription } from 'rxjs';
 import * as _ from 'lodash';
 
@@ -12,7 +11,7 @@ import { clearRequestedWalletLabel, DELETE_WALLET_LABEL } from '@setl/core-store
 import { DELETE_SUB_PORTFOLIO_BANKING_DETAIL } from '@ofi/ofi-main/ofi-store';
 import { OfiSubPortfolioService } from './service';
 import { AlertsService } from '@setl/jaspero-ng2-alerts';
-import { SagaHelper, LogService, ConfirmationService } from '@setl/utils';
+import { SagaHelper,  ConfirmationService } from '@setl/utils';
 import { CustomValidators } from '@setl/utils/helper';
 import { OfiSubPortfolioReqService } from '@ofi/ofi-main/ofi-req-services/ofi-sub-portfolio/service';
 import { MultilingualService } from '@setl/multilingual';
@@ -37,12 +36,8 @@ export class OfiSubPortfolioComponent implements OnDestroy {
     public editForm: boolean = false;
     public countries: any[] = this.translate.translate(fundItems.domicileItems);
 
-    public showUsertour: boolean = false;
-    private tourObject = [];
-
     @select(['user', 'siteSettings', 'language']) languageOb;
     @select(['user', 'connected', 'connectedWallet']) connectedWalletOb;
-    @select(['user', 'myDetail', 'defaultHomePage']) defaultHomePageOb;
 
     constructor(private ngRedux: NgRedux<any>,
                 private alertsService: AlertsService,
@@ -51,8 +46,6 @@ export class OfiSubPortfolioComponent implements OnDestroy {
                 private ofiSubPortfolioReqService: OfiSubPortfolioReqService,
                 private ofiSubPortfolioService: OfiSubPortfolioService,
                 private confirmationService: ConfirmationService,
-                private toaster: ToasterService,
-                private logService: LogService,
                 private myUserService: MyUserService,
                 public translate: MultilingualService,
     ) {
@@ -84,12 +77,6 @@ export class OfiSubPortfolioComponent implements OnDestroy {
         this.subscriptionsArray.push(this.languageOb.subscribe(() => {
             this.tabDetail[0]['title'].text = this.translate.translate('Manage Sub-portfolio');
             this.countries = this.translate.translate(fundItems.domicileItems);
-        }));
-
-        this.subscriptionsArray.push(this.defaultHomePageOb.subscribe((defaultHomePage) => {
-            if (defaultHomePage === '/user-administration/subportfolio') {
-                // launch the tour!
-            }
         }));
     }
 
@@ -258,7 +245,7 @@ export class OfiSubPortfolioComponent implements OnDestroy {
                         {},
                         (response) => {
                             if (String(_.get(response, '[1].Data.balance', '0')) === '0') {
-                                this.ngRedux.dispatch(clearRequestedWalletLabel());
+                                this.ofiSubPortfolioService.resetRequestedFlags();
                                 this.alertsService.generate('success', this.translate.translate(
                                     'Your sub-portfolio @addressLabel@ has been successfully deleted. This may take a moment to update.',
                                     { addressLabel }));
@@ -268,6 +255,7 @@ export class OfiSubPortfolioComponent implements OnDestroy {
                             }
                         },
                         (labelResponse) => {
+                            console.log('+++ labelResponse', labelResponse);
                             this.alertsService.generate('error', this.translate.translate('Error deleting sub-portfolio'));
                         }));
                 }
