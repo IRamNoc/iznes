@@ -408,8 +408,12 @@ export class FundComponent implements OnInit, OnDestroy {
                 .setValue(FundComponent.getListItemText(newUmbrella.taxAuditorID, this.taxAuditorItems));
                 this.umbrellaEditForm.controls['transferAgentID']
                 .setValue(FundComponent.getListItemText(newUmbrella.transferAgentID, this.transferAgentItems));
-                this.umbrellaEditForm.controls['umbrellaFundCreationDate']
-                .setValue(newUmbrella.umbrellaFundCreationDate.split(' ', 1)[0]);
+
+                if (newUmbrella.umbrellaFundCreationDate) {
+                    this.umbrellaEditForm.controls['umbrellaFundCreationDate']
+                    .setValue(newUmbrella.umbrellaFundCreationDate.split(' ', 1)[0]);
+                }
+
                 this.umbrellaEditForm.controls['umbrellaFundID']
                 .setValue(newUmbrella.umbrellaFundID);
                 this.umbrellaEditForm.controls['umbrellaFundName']
