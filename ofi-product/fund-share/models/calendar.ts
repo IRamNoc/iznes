@@ -30,8 +30,22 @@ export class ShareCalendarSubscriptionMandatory extends DynamicFormsValidator {
             { id: E.BusinessDaysEnum.Five, text: 'D+5' },
         ],
         required: true,
-        style: [FormItemStyle.BreakOnAfter],
         mltag: 'txt_fundshare_navperiodsub',
+    };
+    subscriptionEnableNonWorkingDay: FormItem = {
+        type: FormItemType.checkbox,
+        title: '',
+        label: '',
+        checkboxLabel: 'Enable NAV dates outside working days',
+        required: false,
+        style: [FormItemStyle.BreakOnAfter],
+        checkboxHint: () => {
+            return getNonWorkingDayHintMsg(this.navPeriodForSubscription.value(), this.subscriptionEnableNonWorkingDay.value());
+        },
+        hidden: () => {
+            return this.navPeriodForSubscription.value() === null;
+        },
+        mltag: 'txt_enable_nav_dates_outside_working_days',
     };
     subscriptionSettlementPeriod: FormItem = {
         type: FormItemType.list,
@@ -86,8 +100,22 @@ export class ShareCalendarRedemptionMandatory extends DynamicFormsValidator {
             { id: E.BusinessDaysEnum.Five, text: 'D+5' },
         ],
         required: true,
-        style: [FormItemStyle.BreakOnAfter],
         mltag: 'txt_fundshare_navperiodred',
+    };
+    redemptionEnableNonWorkingDay: FormItem = {
+        type: FormItemType.checkbox,
+        title: '',
+        label: '',
+        checkboxLabel: 'Enable NAV dates outside working days',
+        required: false,
+        style: [FormItemStyle.BreakOnAfter],
+        checkboxHint: () => {
+            return getNonWorkingDayHintMsg(this.navPeriodForRedemption.value(), this.redemptionEnableNonWorkingDay.value());
+        },
+        hidden: () => {
+            return this.navPeriodForRedemption.value() === null;
+        },
+        mltag: 'txt_enable_nav_dates_outside_working_days',
     };
     redemptionSettlementPeriod: FormItem = {
         type: FormItemType.list,
@@ -111,4 +139,24 @@ export class ShareCalendarRedemptionMandatory extends DynamicFormsValidator {
     //     required: true,
     //     mltag: 'txt_fundshare_subredcalendar',
     // };
+}
+
+
+function getNonWorkingDayHintMsg(periodValue: {id: number}[], enableNonWorkingDay: boolean): string {
+    if (!enableNonWorkingDay ||
+        !periodValue
+    ) {
+        return undefined;
+    }
+
+    return {
+        [E.BusinessDaysEnum.MinusOne]: 'The NAV date will correspond to the calendar day before the cutoff day',
+        [E.BusinessDaysEnum.Zero]: 'The NAV date will correspond to the calendar day before the next business day',
+        [E.BusinessDaysEnum.One]: 'The NAV date will correspond to the calendar day before the next 2 business day',
+        [E.BusinessDaysEnum.Two]: 'The NAV date will correspond to the calendar day before the next 3 business day',
+        [E.BusinessDaysEnum.Three]: 'The NAV date will correspond to the calendar day before the next 4 business day',
+        [E.BusinessDaysEnum.Four]: 'The NAV date will correspond to the calendar day before the next 5 business day',
+        [E.BusinessDaysEnum.Five]: 'The NAV date will correspond to the calendar day before the next 6 business day',
+    }[periodValue[0].id]
+
 }
