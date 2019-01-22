@@ -134,7 +134,6 @@ export class RequestAssetComponent implements OnInit, OnDestroy {
         /* Add the action button that will apear on the email */
         actionConfig.actions.push({
             text: this.translate.translate('Transfer Asset'),
-            text_mltag: 'txt_transferasset',
             styleClasses: 'btn-primary',
             messageType: 'tx',
             payload: {
@@ -153,17 +152,14 @@ export class RequestAssetComponent implements OnInit, OnDestroy {
         actionConfig.content.push(
             {
                 name: this.translate.translate('Asset'),
-                name_mltag: 'txt_asset',
                 content: fullAssetId,
             },
             {
                 name: this.translate.translate('Address To'),
-                name_mltag: 'txt_addressto',
                 content: this.addressTo,
             },
             {
                 name: this.translate.translate('Amount'),
-                name_mltag: 'txt_amount',
                 content: amount,
             },
         );
