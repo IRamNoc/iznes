@@ -435,9 +435,9 @@
                         </clr-dg-cell>
                         <clr-dg-cell *ngIf="!isIznesAdmin" [ngSwitch]="order.orderStatus" class="right">
                             <!--&lt;!&ndash; Actions &ndash;&gt;-->
-                            <!--<button type="button" *ngIf="order.orderStatus == 1; else cancelDisabled" (click)="cancelOrder(i)" class="btn btn-sm btn-danger" mltag="txt_cancel">Cancel</button>-->
+                            <!--<button type="button" *ngIf="order.orderStatus == 1; else cancelDisabled" (click)="cancelOrder(i)" class="btn btn-sm btn-danger">{{ 'Cancel' | translate }}</button>-->
                             <!--<ng-template #cancelDisabled>-->
-                            <!--<button type="button" class="btn btn-sm btn-info" disabled mltag="txt_cancel">Cancel</button>-->
+                            <!--<button type="button" class="btn btn-sm btn-info" disabled>{{ 'Cancel' | translate }}</button>-->
                             <!--</ng-template>-->
 
                             <button type="button" class="btn btn-sm btn-danger" (click)="cancelOrder(i)" *ngSwitchCase="1">{{ 'Cancel' | translate }}</button>
