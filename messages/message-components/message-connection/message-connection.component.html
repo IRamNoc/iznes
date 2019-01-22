@@ -31,38 +31,36 @@
 
 <!-- Accept connection modal -->
 <clr-modal [(clrModalOpen)]="isModalDisplayed">
-    <h3 class="modal-title">Accept connection request</h3>
+    <h3 class="modal-title">{{ 'Accept connection request' | translate }}</h3>
     <div class="modal-body">
 
         <form>
             <div class="form-group">
                 <div class="tooltip left tooltip-sm">
                     <i class="fa fa-info-circle"></i>
-                    <span class="tooltip-content">Select an address to use for this connection</span>
-                    <label class="control-label required-field" mltag="txt_address">Address</label>
+                    <span class="tooltip-content">{{ 'Select an address to use for this connection' | translate }}</span>
+                    <label class="control-label required-field">{{ 'Address' | translate }}</label>
                 </div>
                
                 <ng-select 
                     id="accept-subportfolio-addr-link" 
                     [items]="addressList" 
                     [allowClear]="true" 
-                    placeholder="Select address" 
-                    [formControl]="formGroup.controls['selectedAddress']" 
-                    mltag="txt_selectasubportfolio">
+                    placeholder="{{ 'Select address' | translate }}" 
+                    [formControl]="formGroup.controls['selectedAddress']"
+                >
                 </ng-select>
 
-                <div *ngIf="formGroup.controls['selectedAddress'].hasError('required') && formGroup.controls['selectedAddress'].touched" class="text-danger" mltag="txt_thisfieldisrequired">This field is required</div>
+                <div *ngIf="formGroup.controls['selectedAddress'].hasError('required') && formGroup.controls['selectedAddress'].touched" class="text-danger">{{ 'Field is required' | translate }}</div>
             </div>
         </form>
 
     </div>
 
     <div class="modal-footer">
-        <button type="button" id="accept-connection-cancel-btn" class="btn btn-outline" (click)="handleAcceptButtonClick(false)" mltag="txt_cancel">
-            Cancel
+        <button type="button" id="accept-connection-cancel-btn" class="btn btn-outline" (click)="handleAcceptButtonClick(false)">{{ 'Cancel' | translate }}
         </button>
-        <button type="button" id="accept-connection-submit-btn" class="btn btn-primary" (click)="handleAcceptButtonClick(true)" mltag="txt_submit">
-            Submit
+        <button type="button" id="accept-connection-submit-btn" class="btn btn-primary" (click)="handleAcceptButtonClick(true)">{{ 'Submit' | translate }}
         </button>
     </div>
 </clr-modal>
