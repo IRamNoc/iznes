@@ -439,7 +439,7 @@ export class ManageSubPortfolioComponent implements OnInit, OnDestroy {
             case 'All OK':
                 this.alertsService.generate(
                     'success',
-                    `<span mltag="txt_portfolio_created">${this.translate.translate('Sub-portfolio created.')}</span>`,
+                    `<span>${this.translate.translate('Sub-portfolio created.')}</span>`,
                 );
                 break;
 
@@ -453,7 +453,7 @@ export class ManageSubPortfolioComponent implements OnInit, OnDestroy {
             case 'Duplicate Label':
                 this.alertsService.generate(
                     'warning',
-                    `<span mltag="txt_subportfolioname_is_exist">
+                    `<span>
                     ${this.translate.translate('Sub-portfolio name already exists.')}</span>`,
                 );
                 break;
@@ -461,22 +461,21 @@ export class ManageSubPortfolioComponent implements OnInit, OnDestroy {
             case 'Duplicate IBAN':
                 this.alertsService.generate(
                     'warning',
-                    `<span mltag="txt_iban_is_exist">${this.translate.translate('IBAN has already exists.')}</span>`,
+                    `<span>${this.translate.translate('IBAN already exists.')}</span>`,
                 );
                 break;
 
             case 'Duplicate Label and IBAN':
                 this.alertsService.generate(
                     'warning',
-                    `<span mltag="txt_subportfolioname_and_iban_is_exist">
-                    ${this.translate.translate('Sub-portfolio and IBAN already exist.')}</span>`,
+                    `<span>${this.translate.translate('Sub-portfolio and IBAN already exist.')}</span>`,
                 );
                 break;
 
             default:
                 this.alertsService.generate(
                     'success',
-                    `<span mltag="txt_portfolio_created">${this.translate.translate('Sub-portfolio created.')}</span>`,
+                    `<span>${this.translate.translate('Sub-portfolio created.')}</span>`,
                 );
                 break;
         }
