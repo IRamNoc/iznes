@@ -573,22 +573,22 @@ export class UmbrellaFundComponent implements OnInit, AfterViewInit, OnDestroy {
         this.router.navigateByUrl('/product-module/product');
     }
 
-    save(formValues) {
-        const payload: UmbrellaFundDetail = {
-            draft: 0,
-            umbrellaFundName: formValues.umbrellaFundName,
+    getPayload(formValues): UmbrellaFundDetail {
+        return {
+            draft: null,
+            umbrellaFundName: formValues.umbrellaFundName || null,
             registerOffice: formValues.registerOffice,
             registerOfficeAddress: formValues.registerOfficeAddress,
             registerOfficeAddressLine2: formValues.registerOfficeAddressLine2,
             registerOfficeAddressZipCode: formValues.registerOfficeAddressZipCode,
             registerOfficeAddressCity: formValues.registerOfficeAddressCity,
-            registerOfficeAddressCountry: _.get(formValues.registerOfficeAddressCountry, ['0', 'id']),
+            registerOfficeAddressCountry: _.get(formValues.registerOfficeAddressCountry, ['0', 'id'], null),
             legalEntityIdentifier: this.isLeiVisible ? formValues.legalEntityIdentifier : null,
-            domicile: formValues.domicile[0].id,
-            umbrellaFundCreationDate: formValues.umbrellaFundCreationDate || null,
-            managementCompanyID: formValues.managementCompanyID[0].id,
-            fundAdministratorID: formValues.fundAdministratorID[0].id,
-            custodianBankID: formValues.custodianBankID[0].id,
+            domicile: (formValues.domicile.length > 0) ? formValues.domicile[0].id : null,
+            umbrellaFundCreationDate: (formValues.umbrellaFundCreationDate != '') ? formValues.umbrellaFundCreationDate : null,
+            managementCompanyID: (formValues.managementCompanyID.length > 0) ? formValues.managementCompanyID[0].id : null,
+            fundAdministratorID: (formValues.fundAdministratorID.length > 0) ? formValues.fundAdministratorID[0].id : null,
+            custodianBankID: (formValues.custodianBankID.length > 0) ? formValues.custodianBankID[0].id : null,
             investmentAdvisorID: formValues.investmentAdvisorID,
             payingAgentID: this.getIdsFromList(formValues.payingAgentID),
             transferAgentID: _.get(formValues.transferAgent, ['0', 'id'], null),
@@ -602,6 +602,13 @@ export class UmbrellaFundComponent implements OnInit, AfterViewInit, OnDestroy {
             directors: formValues.directors,
             internalReference: formValues.internalReference,
             additionnalNotes: formValues.additionnalNotes,
+        }
+    }
+
+    save(formValues) {
+        const payload: UmbrellaFundDetail = {
+            ...this.getPayload(formValues),
+            draft: 0,
         };
 
         if (!!formValues.umbrellaFundID && formValues.umbrellaFundID !== '' && this.isEditMode) {
@@ -717,33 +724,8 @@ export class UmbrellaFundComponent implements OnInit, AfterViewInit, OnDestroy {
 
         } else {
             const payload: UmbrellaFundDetail = {
+                ...this.getPayload(formValues),
                 draft: 1,
-                umbrellaFundName: formValues.umbrellaFundName,
-                registerOffice: formValues.registerOffice,
-                registerOfficeAddress: formValues.registerOfficeAddress,
-                registerOfficeAddressLine2: formValues.registerOfficeAddressLine2,
-                registerOfficeAddressZipCode: formValues.registerOfficeAddressZipCode,
-                registerOfficeAddressCity: formValues.registerOfficeAddressCity,
-                registerOfficeAddressCountry: _.get(formValues.registerOfficeAddressCountry, ['0', 'id']),
-                legalEntityIdentifier: this.isLeiVisible ? formValues.legalEntityIdentifier : null,
-                domicile: (formValues.domicile.length > 0) ? formValues.domicile[0].id : null,
-                umbrellaFundCreationDate: (formValues.umbrellaFundCreationDate != '') ? formValues.umbrellaFundCreationDate : null,
-                managementCompanyID: (formValues.managementCompanyID.length > 0) ? formValues.managementCompanyID[0].id : null,
-                fundAdministratorID: (formValues.fundAdministratorID.length > 0) ? formValues.fundAdministratorID[0].id : null,
-                custodianBankID: (formValues.custodianBankID.length > 0) ? formValues.custodianBankID[0].id : null,
-                investmentAdvisorID: formValues.investmentAdvisorID,
-                payingAgentID: this.getIdsFromList(formValues.payingAgentID),
-                transferAgentID: _.get(formValues.transferAgent, ['0', 'id'], null),
-                centralisingAgentID: _.get(formValues.centralisingAgentID, ['0', 'id'], null),
-                giin: formValues.giin || null,
-                delegatedManagementCompanyID: (formValues.delegatedManagementCompanyID.length > 0) ? formValues.delegatedManagementCompanyID[0].id : null,
-                auditorID: (formValues.auditorID.length > 0) ? formValues.auditorID[0].id : null,
-                taxAuditorID: (formValues.taxAuditorID.length > 0) ? formValues.taxAuditorID[0].id : null,
-                principlePromoterID: this.getIdsFromList(formValues.principlePromoterID),
-                legalAdvisorID: (formValues.legalAdvisorID.length > 0) ? formValues.legalAdvisorID[0].id : null,
-                directors: formValues.directors,
-                internalReference: formValues.internalReference,
-                additionnalNotes: formValues.additionnalNotes,
             };
 
             let asyncTaskPipe = null;
