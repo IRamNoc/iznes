@@ -8,13 +8,11 @@ export class MessageConnectionConfig {
 
 export class MessageConnection {
     text = '';
-    text_mltag = '';
     payload: any; // api payload,
     styleClasses? = '';
 }
 
 export class MessageField {
     name = '';
-    name_mltag = '';
     content = '';
 }
