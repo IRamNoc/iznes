@@ -134,7 +134,7 @@
             </p>
 
             <p *ngIf="currentMessage.action && currentMessage.action.type === 'sendAssetManagementBookEntryCertification'">
-                <button class="btn btn-primary" (click)="handleDownloadBookEntryCertification(currentMessage.action.assetManagementCompanyId, currentMessage.action.settlementDate);">
+                <button class="btn btn-primary" (click)="handleDownloadBookEntryCertification(currentMessage.action.assetManagementCompanyId, currentMessage.action.settlementDate, currentMessage.action.assetManagementBIC);">
                     {{ 'Download Certification of Book Entry' | translate }}
                 </button>
             </p>
