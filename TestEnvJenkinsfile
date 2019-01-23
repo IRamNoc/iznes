@@ -27,7 +27,7 @@ node {
 
 
         stage('Deploy Blockchain jars to Test Environment') {
-            sh 'php /var/lib/jenkins/build/tools/deploy-code.php uk-lon-li-006.opencsd.io blockchain 1.0.48'
+            sh 'php /var/lib/jenkins/build/tools/deploy-code.php uk-lon-li-006.opencsd.io blockchain 1.0.49'
         }
 
 
