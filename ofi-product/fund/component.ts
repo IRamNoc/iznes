@@ -464,6 +464,7 @@ export class FundComponent implements OnInit, OnDestroy {
 
             if (d && this.isHomeCountryLegalTypeVisible()) {
                 this.homeCountryLegalTypeItems = this.fundItems.homeCountryLegalTypeItems[d[0].id] || [];
+                this.fundForm.controls['homeCountryLegalType'].setValidators(Validators.required);
             } else {
                 this.homeCountryLegalTypeItems = [];
                 this.fundForm.controls['homeCountryLegalType'].clearValidators();
