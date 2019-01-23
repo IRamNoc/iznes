@@ -149,7 +149,7 @@ export class MyUserService implements OnDestroy {
                 }));
             },
             (data) => {
-                throw new Error('Fail to refresh session token');
+                console.error('Fail to refresh session token: ', data);
             }));
     }
 
@@ -333,11 +333,11 @@ export class MyUserService implements OnDestroy {
      */
     updateHomePage(homepage: string): any {
         const messageBody: SaveUserDetailsRequestBody =
-            {
-                RequestName: 'ud',
-                token: this.memberSocketService.token,
-                defaultHomePage: homepage,
-            };
+        {
+            RequestName: 'ud',
+            token: this.memberSocketService.token,
+            defaultHomePage: homepage,
+        };
 
         return createMemberNodeRequest(this.memberSocketService, messageBody);
     }
