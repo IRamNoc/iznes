@@ -490,7 +490,7 @@ export class FundComponent implements OnInit, OnDestroy {
             takeUntil(this.unSubscribe),
         )
         .subscribe((d) => {
-            if (_.get(d, ['0', 'id'], false) !== this.enums.typeOfEuDirective.UCITS.toString()) {
+            if (_.get(d, ['0', 'id'], false) !== this.enums.typeOfEuDirective.UCITS) {
                 this.fundForm.controls['UcitsVersion'].setValue([]);
                 this.fundForm.controls['UcitsVersion'].clearValidators();
                 this.fundForm.controls['UcitsVersion'].updateValueAndValidity();
