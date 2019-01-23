@@ -37,6 +37,7 @@ export class RowsPerPageDirective {
                 const userStoredRows = _.get(response, '[1].Data[0].value', false);
                 this.defaultRows = userStoredRows ? userStoredRows :
                     this.el.nativeElement.getAttribute('rowsPerPage') || 5;
+                this.el.nativeElement.setAttribute('rowsperpage', this.defaultRows);
                 this.rowsUpdate.emit(Number(this.defaultRows));
                 this.renderSelect();
             });
@@ -109,6 +110,7 @@ export class RowsPerPageDirective {
         const value = Number(select.options[select.selectedIndex].value);
         this.rowsUpdate.emit(value);
         this.userPreferenceService.saveUserPreference({ key: 'rowsperpage', value });
+        this.el.nativeElement.setAttribute('rowsperpage', value);
 
         // Fix static datagrid height if rows per page is 20 or greater
         document.querySelector('clr-datagrid').classList.remove('dg-height-fix');
