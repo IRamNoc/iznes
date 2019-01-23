@@ -667,7 +667,12 @@
                                             <div class="form-group col-sm-4">
                                                 <label for="registerOfficeAddressCountry">{{ 'Country' | translate }}</label>
                                                 <div>
-                                                    <input type="text" id="registerOfficeAddressCountry" class="form-control" formControlName="registerOfficeAddressCountry">
+                                                    <ng-select id="registerOfficeAddressCountry" 
+                                                                [items]="domicileItems" 
+                                                                [allowClear]="true" 
+                                                                [placeholder]="translate.translate('Select')"
+                                                                [formControl]="fundForm.controls['registerOfficeAddressCountry']">
+                                                    </ng-select>
                                                 </div>
                                             </div>
                                         </div>
@@ -700,7 +705,7 @@
                                             </div>
                                         </div>
                                         <div class="row">
-                                            <div class="form-group col-sm-6">
+                                            <div class="form-group required-field col-sm-6">
                                                 <div *ngIf="isHomeCountryLegalTypeVisible()">
                                                     <label class="control-label" for="homeCountryLegalType">{{ 'Home
                                                         Country Legal Type of Fund' | translate }}</label>
