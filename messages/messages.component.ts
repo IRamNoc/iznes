@@ -671,13 +671,14 @@ export class SetlMessagesComponent implements OnDestroy, OnInit {
         this.fileDownloader.downLoaderFile(body);
     }
 
-    handleDownloadBookEntryCertification(assetManagementCompanyId, settlementDate) {
+    handleDownloadBookEntryCertification(assetManagementCompanyId, settlementDate, assetManagementBIC) {
         this.fileDownloader.downLoaderFile({
             method: 'exportAssetManagementBookEntryCertification',
             token: this.socketToken,
             userId: this.userId,
             assetManagementCompanyId,
-            settlementDate
+            settlementDate,
+            assetManagementBIC,
         });
     }
 }
