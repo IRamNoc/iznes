@@ -14,7 +14,6 @@ import { OfiProductConfigService } from '@ofi/ofi-main/ofi-req-services/ofi-prod
 import { OfiUmbrellaFundService } from '@ofi/ofi-main/ofi-req-services/ofi-product/umbrella-fund/service';
 import { Fund } from '@ofi/ofi-main/ofi-req-services/ofi-product/fund/fund.service.model';
 import { UmbrellaFundDetail } from '@ofi/ofi-main/ofi-store/ofi-product/umbrella-fund/umbrella-fund-list/model';
-import * as moment from 'moment';
 
 import {
     OfiManagementCompanyService,
@@ -270,7 +269,7 @@ export class FundComponent implements OnInit, OnDestroy {
             registerOfficeAddressLine2: [null],
             registerOfficeAddressZipCode: [null],
             registerOfficeAddressCity: [null],
-            registerOfficeAddressCountry: [null],
+            registerOfficeAddressCountry: [[]],
             domicile: [[], this.validators.ngSelectRequired],
             tradingAccount: [],
             isEuDirective: [null, Validators.required],
@@ -681,6 +680,7 @@ export class FundComponent implements OnInit, OnDestroy {
                 ? Number(this.fundForm.controls.hasDurationHedge.value)
                 : null,
 
+            registerOfficeAddressCountry: _.get(this.fundForm.controls['registerOfficeAddressCountry'].value, ['0', 'id'], null),
             domicile: _.get(this.fundForm.controls['domicile'].value, ['0', 'id'], null),
             typeOfEuDirective: _.get(this.fundForm.controls['typeOfEuDirective'].value, ['0', 'id'], null),
             UcitsVersion: _.get(this.fundForm.controls['UcitsVersion'].value, ['0', 'id'], null),
@@ -865,12 +865,12 @@ export class FundComponent implements OnInit, OnDestroy {
 
             if (!val || !this.isLeiAlreadyExisting(val)) {
                 return;
-            } else {
-                leiControl
-                .setErrors({
-                    isAlreadyExisting: true,
-                });
             }
+
+            leiControl
+            .setErrors({
+                isAlreadyExisting: true,
+            });
         });
         this.leiService.fetchLEIs();
     }
@@ -911,6 +911,7 @@ export class FundComponent implements OnInit, OnDestroy {
 
             return {
                 ...fund,
+                registerOfficeAddressCountry: FundComponent.getListItem(fund.registerOfficeAddressCountry, this.domicileItems),
                 domicile: FundComponent.getListItem(fund.domicile, this.domicileItems),
                 typeOfEuDirective: FundComponent.getListItem(
                     fund.typeOfEuDirective,
