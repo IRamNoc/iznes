@@ -218,21 +218,18 @@ export class ShareFundOptionnal extends DynamicFormsValidator {
         required: false,
         disabled: true,
         listItems: PC.fundItems.investmentAdvisorItems,
-        mltag: 'txt_fundshare_fund_optionnal_investmentAdvisor',
     };
     auditor: FormItem = {
         type: FormItemType.list,
         label: 'Auditor',
         required: false,
         disabled: true,
-        listItems: PC.fundItems.auditorItems,
     };
     taxAuditor: FormItem = {
         type: FormItemType.list,
         label: 'Tax Auditor',
         required: false,
         disabled: true,
-        listItems: PC.fundItems.taxAuditorItems,
     };
     legalAdvisor: FormItem = {
         type: FormItemType.list,
@@ -286,7 +283,6 @@ export class ShareFundOptionnal extends DynamicFormsValidator {
         label: 'Has CPPI',
         required: false,
         disabled: true,
-        mltag: 'txt_fundshare_fund_optionnal_hasCppi',
     };
     cppiMultiplier: FormItem = {
         type: FormItemType.number,
@@ -297,7 +293,6 @@ export class ShareFundOptionnal extends DynamicFormsValidator {
             const v = this.hasCppi.value();
             return !v;
         },
-        mltag: 'txt_fundshare_fund_optionnal_cppiMultiplier',
     };
     hasHedgeFundStrategy: FormItem = {
         type: FormItemType.boolean,
@@ -305,76 +300,65 @@ export class ShareFundOptionnal extends DynamicFormsValidator {
         required: false,
         disabled: true,
         style: [FormItemStyle.BreakOnBefore],
-        mltag: 'txt_fundshare_fund_optionnal_hasHedgeFundStrategy',
     };
     isLeveraged: FormItem = {
         type: FormItemType.boolean,
         label: 'Is Leveraged',
         required: false,
         disabled: true,
-        mltag: 'txt_fundshare_fund_optionnal_isLeveraged',
     };
     has130Or30Strategy: FormItem = {
         type: FormItemType.boolean,
         label: 'Has 130/30 Strategy',
         required: false,
         disabled: true,
-        mltag: 'txt_fundshare_fund_optionnal_has130Or30Strategy',
     };
     isFundTargetingEos: FormItem = {
         type: FormItemType.boolean,
         label: 'Is Fund Targeting Environmental or Social Objectives (EOS)',
         required: false,
         disabled: true,
-        mltag: 'txt_fundshare_fund_optionnal_isFundTargetingEos',
     };
     isFundTargetingSri: FormItem = {
         type: FormItemType.boolean,
         label: 'Is Fund Targeting Socially Responsible Investment (SRI)',
         required: false,
         disabled: true,
-        mltag: 'txt_fundshare_fund_optionnal_isFundTargetingSri',
     };
     isPassiveFund: FormItem = {
         type: FormItemType.boolean,
         label: 'Is Passive Fund',
         required: false,
         disabled: true,
-        mltag: 'txt_fundshare_fund_optionnal_isPassiveFund',
     };
     hasSecurityiesLending: FormItem = {
         type: FormItemType.boolean,
         label: 'Has Security Lending',
         required: false,
         disabled: true,
-        mltag: 'txt_fundshare_fund_optionnal_hasSecurityiesLending',
     };
     hasSwap: FormItem = {
         type: FormItemType.boolean,
         label: 'Has Swap',
         required: false,
         disabled: true,
-        mltag: 'txt_fundshare_fund_optionnal_hasSwap',
     };
     hasDurationHedge: FormItem = {
         type: FormItemType.boolean,
         label: 'Has Duration Hedge',
         required: false,
         disabled: true,
-        mltag: 'txt_fundshare_fund_optionnal_hasDurationHedge',
     };
     internalReference: FormItem = {
         type: FormItemType.text,
         label: 'Internal Reference',
         required: false,
         disabled: true,
-        mltag: 'txt_fundshare_fund_optionnal_internalReference',
     };
     additionnalNotes: FormItem = {
         type: FormItemType.textarea,
         label: 'Additional Notes',
         required: false,
         disabled: true,
-        mltag: 'txt_fundshare_fund_optionnal_additionnalNotes',
     };
 }
