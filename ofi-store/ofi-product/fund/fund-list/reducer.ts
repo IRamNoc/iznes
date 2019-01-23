@@ -51,11 +51,6 @@ function handleGetIznesFunds(state: FundListState, action: Action): any {
             const payingAgentID = (fund.payingAgentID) ? JSON.parse(fund.payingAgentID) : null;
             const investmentAdvisorID = (fund.investmentAdvisorID) ? JSON.parse(fund.investmentAdvisorID) : null;
 
-            const registerOfficeAddressLine2 = (fund.registerOfficeAddressLine2) ? JSON.parse(fund.registerOfficeAddressLine2) : null;
-            const registerOfficeAddressZipCode = (fund.registerOfficeAddressZipCode) ? JSON.parse(fund.registerOfficeAddressZipCode) : null;
-            const registerOfficeAddressCity = (fund.registerOfficeAddressCity) ? JSON.parse(fund.registerOfficeAddressCity) : null;
-            const registerOfficeAddressCountry = (fund.registerOfficeAddressCountry) ? JSON.parse(fund.registerOfficeAddressCountry) : null;
-
             let fiscalYearEnd = null;
 
             // Get fund.fiscalYearEnd in MM-DD format
@@ -76,10 +71,6 @@ function handleGetIznesFunds(state: FundListState, action: Action): any {
                 principlePromoterID,
                 payingAgentID,
                 investmentAdvisorID,
-                registerOfficeAddressLine2,
-                registerOfficeAddressZipCode,
-                registerOfficeAddressCity,
-                registerOfficeAddressCountry,
             };
 
             return {
