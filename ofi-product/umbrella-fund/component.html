@@ -58,8 +58,7 @@
                         <!-- Panel body -->
                         <div class="row panel-body" [class.hidden]="!mainInformationOpen">
                             <div class="form-group required-field col-sm-6">
-                                <label for="uf_umbrellaFundName" class="control-label">{{ 'Umbrella Fund Name' |
-                                    translate }}</label>
+                                <label for="uf_umbrellaFundName" class="control-label">{{ 'Umbrella Fund Name' | translate }}</label>
                                 <input type="text" 
                                         id="uf_umbrellaFundName" 
                                         formControlName="umbrellaFundName">
@@ -69,8 +68,7 @@
                             </div>
 
                             <div class="form-group required-field col-sm-6">
-                                <label for="uf_lei" class="control-label">{{ 'Legal Entity Identifier (LEI)' |
-                                    translate }}</label>
+                                <label for="uf_lei" class="control-label">{{ 'Legal Entity Identifier (LEI)' | translate }}</label>
                                 <div class="lei">
                                     <label class="switch">
                                         <input type="checkbox" 
@@ -116,8 +114,7 @@
                             </div>
 
                             <div class="form-group col-sm-6">
-                                <label for="uf_registerOfficeAddressLine2" class="control-label">{{ 'Address Line 2' |
-                                    translate }}</label>
+                                <label for="uf_registerOfficeAddressLine2" class="control-label">{{ 'Address Line 2' | translate }}</label>
                                 <input type="text" 
                                         id="uf_registerOfficeAddressLine2" 
                                         formControlName="registerOfficeAddressLine2">
@@ -126,9 +123,7 @@
                             </div>
 
                             <div class="form-group col-sm-4">
-                                <label for="uf_registerOfficeAddressZipCode" class="control-label">{{ 'ZIP Code' |
-                                    translate }}
-                                </label>
+                                <label for="uf_registerOfficeAddressZipCode" class="control-label">{{ 'ZIP Code' | translate }}</label>
                                 <input type="text" 
                                         id="uf_registerOfficeAddressZipCode" 
                                         formControlName="registerOfficeAddressZipCode">
@@ -142,8 +137,7 @@
                             </div>
 
                             <div class="form-group col-sm-4">
-                                <label for="uf_registerOfficeAddressCountry" class="control-label">{{ 'Country' |
-                                    translate }}</label>
+                                <label for="uf_registerOfficeAddressCountry" class="control-label">{{ 'Country' | translate }}</label>
                                 <ng-select id="uf_registerOfficeAddressCountry" 
                                             [items]="countries" 
                                             [allowClear]="true"
@@ -152,9 +146,7 @@
                             </div>
 
                             <div class="form-group required-field col-sm-6">
-                                <label for="uf_domicile" class="control-label">{{ 'Umbrella Fund Domicile (country)' |
-                                    translate }}</label>
-
+                                <label for="uf_domicile" class="control-label">{{ 'Umbrella Fund Domicile (country)' | translate }}</label>
                                 <ng-select id="uf_domicile" 
                                             [items]="countries" 
                                             [allowClear]="true" 
@@ -166,9 +158,7 @@
                             </div>
 
                             <div class="form-group col-sm-6">
-                                <label for="uf_umbrellaFundCreationDate" class="control-label">{{ 'Umbrella Fund
-                                    Creation Date' | translate }}</label>
-
+                                <label for="uf_umbrellaFundCreationDate" class="control-label">{{ 'Umbrella Fund Creation Date' | translate }}</label>
                                 <div class="input-group date-pick-wrapper">
                                     <span class="fa fa-calendar" aria-hidden="true"></span>
                                     <input id="uf_umbrellaFundCreationDate" 
@@ -184,8 +174,7 @@
                             </div>
 
                             <div class="form-group required-field col-sm-6">
-                                <label for="uf_managementCompany" class="control-label">{{ 'Management Company' |
-                                    translate }}</label>
+                                <label for="uf_managementCompany" class="control-label">{{ 'Management Company' | translate }}</label>
                                 <ng-select id="uf_managementCompany" 
                                             [items]="managementCompanyList" 
                                             [allowClear]="true"
@@ -197,8 +186,7 @@
                             </div>
 
                             <div class="form-group required-field col-sm-6">
-                                <label for="uf_fundAdministrator" class="control-label">{{ 'Fund Administrator' |
-                                    translate }}</label>
+                                <label for="uf_fundAdministrator" class="control-label">{{ 'Fund Administrator' | translate }}</label>
                                 <ng-select id="uf_fundAdministrator" 
                                             [items]="fundAdminOptions" 
                                             [allowClear]="true"
@@ -225,8 +213,7 @@
                             </div>
 
                             <div class="form-group col-sm-6">
-                                <label for="uf_investmentAdvisor" class="control-label">{{ 'Investment Advisor' |
-                                    translate }}</label>
+                                <label for="uf_investmentAdvisor" class="control-label">{{ 'Investment Advisor' | translate }}</label>
                                 <input type="text" 
                                         id="uf_investmentAdvisor" 
                                         formControlName="investmentAdvisorID">
@@ -258,8 +245,7 @@
                             </div>
 
                             <div *ngIf="isCentralizingAgentActive()" class="form-group required-field col-sm-6">
-                                <label for="uf_centralizingAgent" class="control-label">{{ 'Centralising Agent' |
-                                    translate }}</label>
+                                <label for="uf_centralizingAgent" class="control-label">{{ 'Centralising Agent' | translate }}</label>
                                 <ng-select id="uf_centralizingAgent" 
                                             [items]="centralizingAgentOptions" 
                                             [allowClear]="true"
@@ -284,9 +270,7 @@
                         <!-- Panel body -->
                         <div class="row panel-body" [class.hidden]="!optionalInformationOpen">
                             <div class="form-group col-sm-6">
-                                <label for="uf_giin" class="control-label">{{ 'Global Intermediary Identification Number
-                                    (GIIN)' | translate }}</label>
-
+                                <label for="uf_giin" class="control-label">{{ 'Global Intermediary Identification Number (GIIN)' | translate }}</label>
                                 <input type="text" 
                                         id="uf_giin" 
                                         formControlName="giin" 
@@ -297,9 +281,7 @@
                             </div>
 
                             <div class="form-group col-sm-6">
-                                <label for="uf_delegatedManagementCompany" class="control-label">{{ 'Delegated
-                                    Management Company' | translate }}</label>
-
+                                <label for="uf_delegatedManagementCompany" class="control-label">{{ 'Delegated Management Company' | translate }}</label>
                                 <ng-select id="uf_delegatedManagementCompany" 
                                             [items]="managementCompanyList"
                                             [allowClear]="true" 
@@ -328,8 +310,7 @@
                             </div>
 
                             <div class="form-group col-sm-6">
-                                <label for="uf_principalPromoter" class="control-label">{{ 'Principal Promoter' |
-                                    translate }}</label>
+                                <label for="uf_principalPromoter" class="control-label">{{ 'Principal Promoter' | translate }}</label>
                                 <ng-select id="uf_principalPromoter" 
                                             style="width: 95%" 
                                             [items]="principalPromoterOptions"
@@ -357,16 +338,14 @@
                             </div>
 
                             <div class="form-group col-sm-6">
-                                <label class="control-label" for="uf_internalReference">{{ 'Internal Reference' |
-                                    translate }}</label>
+                                <label class="control-label" for="uf_internalReference">{{ 'Internal Reference' | translate }}</label>
                                 <input type="text" 
                                         id="uf_internalReference" 
                                         formControlName="internalReference"
                                         maxlength="50">
                             </div>
                             <div class="form-group col-sm-6">
-                                <label class="control-label" for="uf_additionnalNotes">{{ 'Additional Notes' |
-                                    translate }}
+                                <label class="control-label" for="uf_additionnalNotes">{{ 'Additional Notes' |translate }}
                                 </label>
                                 <textarea id="uf_additionnalNotes" 
                                             class="form-control" 
@@ -418,13 +397,7 @@
         </p>
     </div>
     <div class="modal-footer">
-        <button type="button" class="btn btn-outline" id="mcConfirmModalBtnYes" (click)="confirmModal(0)">{{ 'No' |
-            translate }}
-
-        </button>
-        <button type="button" class="btn btn-primary" id="mcConfirmModalBtnNo" (click)="confirmModal(1)">{{ 'Yes' |
-            translate }}
-
-        </button>
+        <button type="button" class="btn btn-outline" id="mcConfirmModalBtnYes" (click)="confirmModal(0)">{{ 'No' | translate }}</button>
+        <button type="button" class="btn btn-primary" id="mcConfirmModalBtnNo" (click)="confirmModal(1)">{{ 'Yes' | translate }}</button>
     </div>
 </clr-modal>

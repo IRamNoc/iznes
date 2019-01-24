@@ -287,7 +287,7 @@ export class UmbrellaFundComponent implements OnInit, AfterViewInit, OnDestroy {
                 this.umbrellaFundForm.controls['registerOffice'].setValue(name);
             });
 
-        // language
+        // Language
         this.requestLanguageObj
             .pipe(
                 takeUntil(this.unSubscribe),
@@ -378,12 +378,11 @@ export class UmbrellaFundComponent implements OnInit, AfterViewInit, OnDestroy {
 
                 if (!val || !this.isLeiAlreadyExisting(val)) {
                     return;
-                } else {
-                    leiControl
-                        .setErrors({
-                            isAlreadyExisting: true,
-                        });
                 }
+
+                leiControl.setErrors({
+                    isAlreadyExisting: true,
+                });
             });
 
         this.leiService.fetchLEIs();
@@ -392,25 +391,31 @@ export class UmbrellaFundComponent implements OnInit, AfterViewInit, OnDestroy {
     ngAfterViewInit() {
     }
 
-    ngOnDestroy(): void {
-        /* Detach the change detector on destroy. */
-        this.changeDetectorRef.detach();
-
-        /* Unsubscribe Observables. */
-        this.unSubscribe.next();
-        this.unSubscribe.complete();
-    }
-
+    /**
+     * Toggle the visibility of the transferAgentID form control given the selected domicile
+     *
+     * @return {void}
+     */
     isTransferAgentActive() {
         const id = _.get(this.umbrellaFundForm.controls['domicile'].value, ['0', 'id'], false);
         return id === 'IE' || id === 'LU';
     }
 
+    /**
+     * Toggle the visibility of the centralisingAgentID form control given the selected domicile
+     *
+     * @return {void}
+     */
     isCentralizingAgentActive() {
         const id = _.get(this.umbrellaFundForm.controls['domicile'].value, ['0', 'id'], false);
         return id === 'FR';
     }
 
+    /**
+     * Update the language configurations
+     *
+     * @return {void}
+     */
     getLanguage(language): void {
         if (!language) {
             return;
@@ -423,6 +428,13 @@ export class UmbrellaFundComponent implements OnInit, AfterViewInit, OnDestroy {
         };
     }
 
+    /**
+     * Return the matched list (else return an empty array)
+     *
+     * @param {array} val
+     * @param {array} list
+     * @return {array}
+     */
     getListItems(
         val: string[],
         list: { id: string, text: string }[],
@@ -440,6 +452,12 @@ export class UmbrellaFundComponent implements OnInit, AfterViewInit, OnDestroy {
         });
     }
 
+    /**
+     * Return the ids from a list
+     *
+     * @param {array} val
+     * @return {array}
+     */
     getIdsFromList(val: { id: number, text: string }[]): number[] {
         if (!val.length) {
             return [];
@@ -447,6 +465,12 @@ export class UmbrellaFundComponent implements OnInit, AfterViewInit, OnDestroy {
         return val.map(item => item.id);
     }
 
+    /**
+     * Initialise the umbrellaFundList and umbrellaListItems
+     *
+     * @param {object} list
+     * @return {object|void}
+     */
     getUmbrellaFundList(list) {
         if (!Object.keys(list).length) {
             this.umbrellaFundList = [];
@@ -515,6 +539,12 @@ export class UmbrellaFundComponent implements OnInit, AfterViewInit, OnDestroy {
         });
     }
 
+    /**
+     * Initialise the managementCompanyList
+     *
+     * @param {object} list
+     * @return {object|void}
+     */
     getManagementCompanyList(list) {
         if (!Object.keys(list).length) {
             this.managementCompanyList = [];
@@ -531,6 +561,12 @@ export class UmbrellaFundComponent implements OnInit, AfterViewInit, OnDestroy {
         });
     }
 
+    /**
+     * Populate the umbrellaFundForm with data filtered from the umbrellaFundList
+     *
+     * @param {number} umbrellaID
+     * @return {void}
+     */
     fillFormByUmbrellaID(umbrellaID: string) {
         const requestedUmbrella = this.umbrellaFundList
             .filter(item => item.umbrellaFundID.toString() === umbrellaID);
@@ -550,6 +586,12 @@ export class UmbrellaFundComponent implements OnInit, AfterViewInit, OnDestroy {
         this.currentLei = payload.legalEntityIdentifier;
     }
 
+    /**
+     * Check for the existence of an LEI in the leiList
+     *
+     * @param {string} currentLei
+     * @return {boolean}
+     */
     isLeiAlreadyExisting(currentLei: string): boolean {
         // if undefined the LEI won't exist
         if (!currentLei) return false;
@@ -561,18 +603,42 @@ export class UmbrellaFundComponent implements OnInit, AfterViewInit, OnDestroy {
         return this.leiList.indexOf(currentLei) !== -1;
     }
 
+    /**
+     * Duplicate an Umbrella Fund
+     *
+     * @param {string} umbrellaID
+     * @return {void}
+     */
     duplicate(umbrellaID: string) {
         this.router.navigateByUrl(`/product-module/product/umbrella-fund/new?prefill=${umbrellaID}`);
     }
 
+    /**
+     * Redirect to the Umbrella Fund Audit page
+     *
+     * @param {string} umbrellaID
+     * @return {void}
+     */
     auditTrail(umbrellaID: string) {
         this.router.navigateByUrl(`/product-module/product/umbrella-fund/${umbrellaID}/audit`);
     }
 
+    /**
+     * Redirect to the Product page
+     *
+     * @param {string} umbrellaID
+     * @return {void}
+     */
     cancel() {
         this.router.navigateByUrl('/product-module/product');
     }
 
+    /**
+     * Create a Umbrella Fund payload object
+     *
+     * @param {object} formValues
+     * @return {object}
+     */
     getPayload(formValues): UmbrellaFundDetail {
         return {
             draft: null,
@@ -602,9 +668,15 @@ export class UmbrellaFundComponent implements OnInit, AfterViewInit, OnDestroy {
             directors: formValues.directors,
             internalReference: formValues.internalReference,
             additionnalNotes: formValues.additionnalNotes,
-        }
+        };
     }
 
+    /**
+     * Save/Update an Umbrella Fund
+     *
+     * @param {object} formValues
+     * @return {void}
+     */
     save(formValues) {
         const payload: UmbrellaFundDetail = {
             ...this.getPayload(formValues),
@@ -612,7 +684,7 @@ export class UmbrellaFundComponent implements OnInit, AfterViewInit, OnDestroy {
         };
 
         if (!!formValues.umbrellaFundID && formValues.umbrellaFundID !== '' && this.isEditMode) {
-            // UPDATE
+            // Update
             const asyncTaskPipe = this.ofiUmbrellaFundService.updateUmbrellaFund(
                 {
                     ...payload,
@@ -668,10 +740,10 @@ export class UmbrellaFundComponent implements OnInit, AfterViewInit, OnDestroy {
                     );
 
                     this.changeDetectorRef.markForCheck();
-                })
+                }),
             );
         } else {
-            // INSERT
+            // Save/Insert
             const asyncTaskPipe = this.ofiUmbrellaFundService.saveUmbrellaFund(
                 payload,
                 this.ngRedux);
@@ -716,6 +788,12 @@ export class UmbrellaFundComponent implements OnInit, AfterViewInit, OnDestroy {
         }
     }
 
+    /**
+     * Save/Update an Umbrella Fund Draft
+     *
+     * @param {object} formValues
+     * @return {void}
+     */
     saveDraft(formValues) {
         if (formValues.managementCompanyID.length == 0) {
             this.showWarning(
@@ -749,6 +827,13 @@ export class UmbrellaFundComponent implements OnInit, AfterViewInit, OnDestroy {
         }
     }
 
+    /**
+     * Dispatch an asyncTaskPipe
+     *
+     * @param asyncTaskPipe
+     * @param {string} umbrellaFundName
+     * @return {void}
+     */
     dispatchAction(asyncTaskPipe, umbrellaFundName) {
         let successMessage;
         let errorMessage;
@@ -784,6 +869,12 @@ export class UmbrellaFundComponent implements OnInit, AfterViewInit, OnDestroy {
         );
     }
 
+    /**
+     * Redirect to the linked Fund
+     *
+     * @param {any} umbrellaID
+     * @return {void}
+     */
     redirectToFund(umbrellaID?) {
         let extras = {};
 
@@ -800,6 +891,12 @@ export class UmbrellaFundComponent implements OnInit, AfterViewInit, OnDestroy {
         this.router.navigate(['/product-module/product/fund/new'], extras);
     }
 
+    /**
+     * Toggle the visibility and validity of the legalEntityIdentifier form control
+     *
+     * @param {boolean} nextState
+     * @return {void}
+     */
     toggleLeiSwitch(nextState: boolean) {
         if (!nextState) {
             this.umbrellaFundForm.controls['legalEntityIdentifier'].disable();
@@ -814,6 +911,12 @@ export class UmbrellaFundComponent implements OnInit, AfterViewInit, OnDestroy {
         this.isLeiVisible = nextState;
     }
 
+    /**
+     * Show Fund creation confirmation modal
+     *
+     * @param {boolean} nextState
+     * @return {void}
+     */
     displayFundPopup(umbrellaFundName, umbrellaFundID) {
         const message =
             `<span>${this.translate.translate('By clicking "Yes", you will be able to create a fund directly linked to @umbrellaFundName@', { 'umbrellaFundName': umbrellaFundName })}.</span>`;
@@ -831,6 +934,12 @@ export class UmbrellaFundComponent implements OnInit, AfterViewInit, OnDestroy {
         });
     }
 
+    /**
+     * Show Fund successfully created toaster
+     *
+     * @param {boolean} nextState
+     * @return {void}
+     */
     creationSuccess(umbrellaFundName) {
         this.toasterService.pop(
             'success',
@@ -847,9 +956,8 @@ export class UmbrellaFundComponent implements OnInit, AfterViewInit, OnDestroy {
     }
 
     /**
-     * Format Date
-     * -----------
-     * Formats a date to a string.
+     * Format a date to a string
+     *
      * YYYY - 4 character year
      * YY - 2 character year
      * MM - 2 character month
@@ -895,9 +1003,7 @@ export class UmbrellaFundComponent implements OnInit, AfterViewInit, OnDestroy {
      */
 
     /**
-     * Show Error Message
-     * ------------------
-     * Shows an error popup.
+     * Show an error popup
      *
      * @param  {message} string - the string to be shown in the message.
      * @return {void}
@@ -916,9 +1022,7 @@ export class UmbrellaFundComponent implements OnInit, AfterViewInit, OnDestroy {
     }
 
     /**
-     * Show Warning Message
-     * ------------------
-     * Shows a warning popup.
+     * Show a warning popup
      *
      * @param  {message} string - the string to be shown in the message.
      * @return {void}
@@ -937,9 +1041,7 @@ export class UmbrellaFundComponent implements OnInit, AfterViewInit, OnDestroy {
     }
 
     /**
-     * Show Success Message
-     * ------------------
-     * Shows an success popup.
+     * Show a success popup
      *
      * @param  {message} string - the string to be shown in the message.
      * @return {void}
@@ -955,5 +1057,14 @@ export class UmbrellaFundComponent implements OnInit, AfterViewInit, OnDestroy {
                   </tbody>
               </table>
           `);
+    }
+
+    ngOnDestroy(): void {
+        /* Detach the change detector on destroy. */
+        this.changeDetectorRef.detach();
+
+        /* Unsubscribe Observables. */
+        this.unSubscribe.next();
+        this.unSubscribe.complete();
     }
 }
