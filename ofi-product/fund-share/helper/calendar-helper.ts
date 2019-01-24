@@ -4,28 +4,6 @@ import * as moment from 'moment-business-days';
 import * as momentTz from 'moment-timezone';
 import * as E from '../FundShareEnum';
 
-export const FRANCE_HOLIDAYS_2018 = [
-    //     Monday 1 January 2018 (New Year’s Day)
-    '2018-01-01',
-
-    // Friday 30 March 2018 (Good Friday)
-    '2018-03-30',
-
-    // Monday 2 April 2018 (Easter Monday)
-    '2018-04-02',
-
-    // Tuesday 1 May 2018 (Labour Day)
-    '2018-05-01',
-
-    '2018-06-04',
-
-    // Tuesday 25 December 2018 (Christmas Day)
-    '2018-12-25',
-
-    // Wednesday 26 December 2018 (Boxing Day)
-    '2018-12-26',
-];
-
 export const DAY_NUMBER = {
     [E.WeeklyDealingDaysEnum.Monday]: 1,
     [E.WeeklyDealingDaysEnum.Tuesday]: 2,
@@ -130,11 +108,11 @@ export class CalendarHelper {
             holidays = JSON.parse(fundShare.holidayMgmtConfig);
 
             if (!(holidays instanceof Array)) {
-                holidays = FRANCE_HOLIDAYS_2018;
+                holidays = [];
             }
 
         } catch (e) {
-            holidays = FRANCE_HOLIDAYS_2018;
+            holidays = [];
         }
 
         // set holidays

@@ -1,6 +1,6 @@
 import { Injectable } from '@angular/core';
 import { NgRedux } from '@angular-redux/store';
-import { get as getValue, toPairs, map, chain, value, omit, pickBy, pick, find, parseInt, isNil, toString, sortBy, isEmpty } from 'lodash';
+import { get as getValue, toPairs, map, chain, value, omit, pickBy, pick, find, parseInt, isNil, toString, sortBy, isEmpty, isNull } from 'lodash';
 
 import { FileDownloader } from '@setl/utils';
 import { MemberSocketService } from '@setl/websocket-service';
@@ -66,7 +66,7 @@ export class KycDetailsService {
 
     toArray(data) {
         // handle formatting for kyc classification
-        if (!isNil(data.optFor)) {
+        if (!isNull(data.optFor)) {
             if (data.investorStatus === requestsConfig.investorStatusList.nonPro) {
                 data.optForPro = data.optFor;
             } else if (data.investorStatus !== requestsConfig.investorStatusList.nonPro) {
@@ -75,7 +75,7 @@ export class KycDetailsService {
 
             delete data.optFor;
         }
-        if (isNil(data.classificationChangeAccepted)) {
+        if (isNull(data.classificationChangeAccepted)) {
             data.classificationChangeAccepted = 0;
         }
 
