@@ -38,6 +38,8 @@ import { SagaHelper, LogService, ConfirmationService } from '@setl/utils';
 import { validators } from '../productConfig';
 import { MultilingualService } from '@setl/multilingual';
 
+const ADMIN_USER_TYPE = 35;
+
 @Component({
     styleUrls: ['./component.scss'],
     selector: 'app-ofi-am-product-umbrella-fund',
@@ -65,6 +67,8 @@ export class UmbrellaFundComponent implements OnInit, AfterViewInit, OnDestroy {
     isLeiVisible = false;
     mainInformationOpen = true;
     optionalInformationOpen = false;
+
+    userType = null;
 
     // Locale
     language = 'fr';
@@ -104,6 +108,7 @@ export class UmbrellaFundComponent implements OnInit, AfterViewInit, OnDestroy {
     unSubscribe: Subject<any> = new Subject();
 
     /* Redux observables. */
+    @select(['user', 'myDetail']) userDetailOb;
     @select(['user', 'siteSettings', 'language']) requestLanguageObj;
     @select(['ofi', 'ofiProduct', 'ofiUmbrellaFund', 'umbrellaFundList', 'umbrellaFundList']) umbrellaFundAccessListOb;
     @select(['ofi', 'ofiProduct', 'ofiManagementCompany', 'managementCompanyList', 'managementCompanyList']) managementCompanyAccessListOb;
@@ -150,7 +155,20 @@ export class UmbrellaFundComponent implements OnInit, AfterViewInit, OnDestroy {
         this.centralizingAgentOptions = productConfig.fundItems.centralizingAgentItems;
 
         this.managementCompanyService.getManagementCompanyList();
-        this.ofiUmbrellaFundService.fetchUmbrellaList();
+
+        this.userDetailOb
+            .pipe(
+                takeUntil(this.unSubscribe),
+            )
+            .subscribe((userDetail) => {
+                this.userType = userDetail.userType;
+
+                if (!this.isAdmin()) {
+                    this.ofiUmbrellaFundService.fetchUmbrellaList();
+                } else {
+                    this.ofiUmbrellaFundService.getAdminUmbrellaList();
+                }
+            });
 
         // param url
         this.activatedRoute.params
@@ -314,9 +332,9 @@ export class UmbrellaFundComponent implements OnInit, AfterViewInit, OnDestroy {
                         UmbrellaFundComponent.getListItem(queryParams.prefill, this.umbrellaListItems),
                     );
                 }
-                if (
-                    this.managementCompanyList.length > 0
-                    && this.managementCompanyList
+
+                if (this.managementCompanyList
+                    && this.managementCompanyList.length > 0
                     && (this.umbrellaFundID || queryParams.prefill)
                 ) {
                     this.fillFormByUmbrellaID(this.umbrellaFundID || queryParams.prefill);
@@ -562,7 +580,7 @@ export class UmbrellaFundComponent implements OnInit, AfterViewInit, OnDestroy {
     }
 
     /**
-     * Populate the umbrellaFundForm with data filtered from the umbrellaFundList
+     * Populate the umbrellaFundForm
      *
      * @param {number} umbrellaID
      * @return {void}
@@ -584,6 +602,10 @@ export class UmbrellaFundComponent implements OnInit, AfterViewInit, OnDestroy {
         this.toggleLeiSwitch(!!u.legalEntityIdentifier);
         this.umbrellaFundForm.setValue(payload);
         this.currentLei = payload.legalEntityIdentifier;
+
+        if (this.isAdmin()) {
+            this.umbrellaFundForm.disable();
+        }
     }
 
     /**
@@ -809,7 +831,7 @@ export class UmbrellaFundComponent implements OnInit, AfterViewInit, OnDestroy {
             let asyncTaskPipe = null;
 
             if (!!formValues.umbrellaFundID && formValues.umbrellaFundID !== '' && this.isEditMode) {
-                // UPDATE
+                // Update
                 asyncTaskPipe = this.ofiUmbrellaFundService.updateUmbrellaFund(
                     {
                         ...payload,
@@ -817,7 +839,7 @@ export class UmbrellaFundComponent implements OnInit, AfterViewInit, OnDestroy {
                     },
                     this.ngRedux);
             } else {
-                // INSERT
+                // Save/Insert
                 asyncTaskPipe = this.ofiUmbrellaFundService.saveUmbrellaFund(
                     payload,
                     this.ngRedux);
@@ -912,6 +934,17 @@ export class UmbrellaFundComponent implements OnInit, AfterViewInit, OnDestroy {
     }
 
     /**
+     * Check whether the userType is an IZNES Admin User
+     *
+     * If TRUE, disables all form controls on the view
+     *
+     * @return {boolean}
+     */
+    isAdmin(): boolean {
+        return (this.userType === ADMIN_USER_TYPE);
+    }
+
+    /**
      * Show Fund creation confirmation modal
      *
      * @param {boolean} nextState
@@ -983,7 +1016,7 @@ export class UmbrellaFundComponent implements OnInit, AfterViewInit, OnDestroy {
             .replace('hh', this.numPad(dateObj.getHours()))
             .replace('hH', this.numPad(dateObj.getHours() > 12 ? dateObj.getHours() - 12 : dateObj.getHours()))
             .replace('mm', this.numPad(dateObj.getMinutes()))
-            .replace('ss', this.numPad(dateObj.getSeconds()))
+            .replace('ss', this.numPad(dateObj.getSeconds()));
     }
 
     /**
