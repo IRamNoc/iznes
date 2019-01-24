@@ -17,24 +17,26 @@
         <clr-tab-content>
             <!-- Button container -->
             <div class="row tab-header-container">
-                <p *ngIf="isEditMode" class="text-overflow">
+                <p *ngIf="isEditMode || isAdmin();" class="text-overflow">
                     {{ 'Please find below all the information for the umbrella fund
                     @umbrellaFundForm.controls.umbrellaFundName.value@' | translate:
                     { 'umbrellaFundForm.controls.umbrellaFundName.value':
                     umbrellaFundForm.controls.umbrellaFundName.value } }}
                 </p>
-                <p id="new-fund-text-span" *ngIf="!isEditMode">{{ 'Please fill in the following information to create a
-                    new Umbrella Fund' | translate }}</p>
+                <p id="new-fund-text-span" *ngIf="!isEditMode && !isAdmin()">{{ 'Please fill in the following information to create a
+                    new Umbrella Fund' | translate }}
+                </p>
+            
                 <div class="form-group">
-                    <button *ngIf="isEditMode" class="btn btn-default" id="auditTrailButton" (click)="auditTrail(umbrellaFundID)">
+                    <button *ngIf="isEditMode || isAdmin()" class="btn btn-default" id="auditTrailButton" (click)="auditTrail(umbrellaFundID)">
                         {{ 'Audit Trail' | translate }}
                     </button>
-                    <button *ngIf="isEditMode" class="btn btn-primary" id="uploadNavFileButton" (click)="duplicate(umbrellaFundID)">
+                    <button *ngIf="isEditMode && !isAdmin()" class="btn btn-primary" id="uploadNavFileButton" (click)="duplicate(umbrellaFundID)">
                         {{ 'Duplicate Umbrella Fund' | translate }}
                     </button>
-                    <ng-select *ngIf="!isEditMode" 
-                                id="umbrella_select" 
-                                [items]="umbrellaListItems" 
+                    <ng-select *ngIf="!isEditMode"
+                                id="umbrella_select"
+                                [items]="umbrellaListItems"
                                 [allowClear]="true"
                                 [placeholder]="translate.translate('Duplicate from an existing Umbrella Fund')" 
                                 [formControl]="umbrellaControl"
@@ -42,7 +44,7 @@
                     </ng-select>
                 </div>
             </div>
-
+            
             <form [formGroup]="umbrellaFundForm" novalidate (ngSubmit)="save(umbrellaFundForm.value)">
                 <section class="form-block">
                     <div class="well">
