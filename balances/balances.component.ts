@@ -11,6 +11,7 @@ import { FileService, PdfService } from '@setl/core-req-services';
 import { filter, get } from 'lodash';
 import { first, map } from 'rxjs/operators';
 import { Observable } from 'rxjs/Observable';
+import { combineLatest } from 'rxjs/observable/combineLatest';
 import { Subscription } from 'rxjs/Subscription';
 import { MultilingualService } from '@setl/multilingual';
 import { AlertsService } from '@setl/jaspero-ng2-alerts';
@@ -27,16 +28,17 @@ export class SetlBalancesComponent implements AfterViewInit, OnInit, OnDestroy {
 
     @ViewChild('myDataGrid') myDataGrid;
     @select(['user', 'connected', 'connectedWallet']) getConnectedWallet;
+    @select(['wallet', 'myWallets', 'walletList']) walletListOb;
 
     public tabControl: TabControl;
     public tabs: Tab[];
     readonly transactionFields = new WalletTxHelperModel.WalletTransactionFields().fields;
     private subscriptions: Subscription[] = [];
     public connectedWalletId;
+    private walletName: string;
     public exportModalDisplay: string = '';
     public exportFilename: string = 'Balance-Export.csv';
     public exportFileHash: string = '';
-    public pdfID: number = 0;
     private viewingAsset: string;
     /* Datagrid properties */
     public pageSize: number;
@@ -82,11 +84,14 @@ export class SetlBalancesComponent implements AfterViewInit, OnInit, OnDestroy {
             this.balances = balances;
         });
 
-        this.subscriptions.push(this.getConnectedWallet.subscribe((connectedWalletId) => {
-            this.connectedWalletId = connectedWalletId;
-            this.closeTabs();
-            previous = [];
-        },
+        this.subscriptions.push(
+            combineLatest(this.getConnectedWallet, this.walletListOb).subscribe(([connectedWalletId, walletList]) => {
+                this.connectedWalletId = connectedWalletId;
+                this.closeTabs();
+                previous = [];
+
+                this.walletName = (walletList[connectedWalletId] || {}).walletName;
+            },
         ));
 
         this.initTabUpdates();
@@ -319,6 +324,8 @@ export class SetlBalancesComponent implements AfterViewInit, OnInit, OnDestroy {
      * @return {void}
      */
     public exportCSV() {
+        this.alertsService.create('loading');
+
         const csvData = this.formatExportData('CSV');
         if (csvData.length === 0) {
             this.alertsService.generate('error', this.translate.translate('There are no records to export'));
@@ -347,6 +354,7 @@ export class SetlBalancesComponent implements AfterViewInit, OnInit, OnDestroy {
                 if (data.fileHash) {
                     this.exportFileHash = data.fileHash;
                     this.showExportModal('CSV');
+                    this.alertsService.create('clear');
                     return;
                 }
                 this.alertsService.generate(
@@ -368,25 +376,20 @@ export class SetlBalancesComponent implements AfterViewInit, OnInit, OnDestroy {
      * @returns {void}
      */
     public exportPDF() {
-        const metadata = {
-            ...this.formatExportData('PDF'),
-            walletName: 'WalletA',
-            date: moment().format('YYYY-MM-DD H:mm:ss'),
-        };
+        this.alertsService.create('loading');
 
-        console.log('+++ metadata', metadata);
+        const metadata = this.formatExportData('PDF');
 
         const asyncTaskPipe = this.pdfService.createPdfMetadata({
-            type: 2,
+            type: null,
             metadata,
         });
 
         this.ngRedux.dispatch(SagaHelper.runAsyncCallback(
             asyncTaskPipe,
             (successResponse) => {
-                console.log('+++ successResponse', successResponse);
-                this.pdfID = get(successResponse, '[1].Data[0].pdfID', 0);
-                if (!this.pdfID) {
+                const pdfID = get(successResponse, '[1].Data[0].pdfID', 0);
+                if (!pdfID) {
                     this.alertsService.generate(
                         'error', this.translate.translate('Something has gone wrong. Please try again later'));
                     return;
@@ -398,13 +401,13 @@ export class SetlBalancesComponent implements AfterViewInit, OnInit, OnDestroy {
                     file: 'balances',
                 };
 
-                this.pdfService.getPdf(this.pdfID, pdfConfig).then((response) => {
+                this.pdfService.getPdf(pdfID, pdfConfig).then((response) => {
                     this.exportFileHash = response;
                     this.showExportModal('PDF');
+                    this.alertsService.create('clear');
                 });
             },
-            (failResponse) => {
-                console.log('+++ failResponse', failResponse);
+            () => {
                 this.alertsService.generate(
                     'error', this.translate.translate('Something has gone wrong. Please try again later'));
             }),
@@ -430,9 +433,14 @@ export class SetlBalancesComponent implements AfterViewInit, OnInit, OnDestroy {
             });
         }
 
-        console.log('+++ this.myDataGrid', this.myDataGrid);
         const breakdown = !data[0].hasOwnProperty('breakdown');
-        return { breakdown, asset: breakdown ? this.viewingAsset : '', data };
+        return {
+            breakdown,
+            asset: breakdown ? this.viewingAsset : '',
+            data,
+            walletName: this.walletName,
+            date: moment().format('YYYY-MM-DD H:mm:ss'),
+        };
     }
 
     /**

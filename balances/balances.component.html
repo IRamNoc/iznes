@@ -34,9 +34,7 @@
     </div>
     <div class="modal-footer">
         <setl-file-viewer [fileHash]="exportFileHash" [viewType]="2"></setl-file-viewer>
-        <button type="button" class="btn btn-primary">
-            <span (click)="hideExportModal()">{{ 'Cancel' | translate }}</span>
-        </button>
+        <button type="button" class="btn btn-primary" (click)="hideExportModal()">{{ 'Cancel' | translate }}</button>
     </div>
 </clr-modal>
 
@@ -72,8 +70,8 @@
 
             <clr-dg-footer>
                 <div rowsPerPage="10" (rowsUpdate)="pageSize = $event"></div>
-                <button [disabled]="!myDataGrid.items['_filtered'].length" *ngIf="myDataGrid.items['_filtered']" class="btn btn-sm btn-success-outline" (click)="exportCSV()">{{ 'Export CSV' | translate }}</button>
-                <button [disabled]="!myDataGrid.items['_filtered'].length" *ngIf="myDataGrid.items['_filtered']" class="btn btn-sm btn-danger-outline" (click)="exportPDF()">{{ 'Export PDF' | translate }}</button>
+                <button [disabled]="!myDataGrid.items['_filtered'].length" class="btn btn-sm btn-success-outline" (click)="exportCSV()">{{ 'Export CSV' | translate }}</button>
+                <button [disabled]="!myDataGrid.items['_filtered'].length" class="btn btn-sm btn-danger-outline" (click)="exportPDF()">{{ 'Export PDF' | translate }}</button>
                 &nbsp;
                 {{pagination.firstItem + 1}} - {{pagination.lastItem + 1}}
                 <clr-dg-pagination #pagination [clrDgPageSize]="pageSize" [clrDgPage]="pageCurrent"
@@ -111,8 +109,8 @@
 
                 <clr-dg-footer>
                     <div rowsPerPage="10" (rowsUpdate)="pageSize = $event"></div>
-                    <button [disabled]="!myDataGrid.items['_filtered'].length" *ngIf="myDataGrid.items['_filtered']" class="btn btn-sm btn-success-outline" (click)="exportCSV()">{{ 'Export CSV' | translate }}</button>
-                    <button [disabled]="!myDataGrid.items['_filtered'].length" *ngIf="myDataGrid.items['_filtered']" class="btn btn-sm btn-danger-outline" (click)="exportPDF()">{{ 'Export PDF' | translate }}</button>
+                    <button [disabled]="!myDataGrid.items['_filtered'].length" class="btn btn-sm btn-success-outline" (click)="exportCSV()">{{ 'Export CSV' | translate }}</button>
+                    <button [disabled]="!myDataGrid.items['_filtered'].length" class="btn btn-sm btn-danger-outline" (click)="exportPDF()">{{ 'Export PDF' | translate }}</button>
                     &nbsp;
                     {{pagination.firstItem + 1}} - {{pagination.lastItem + 1}}
                     <clr-dg-pagination #pagination [clrDgPageSize]="pageSize"></clr-dg-pagination>
@@ -213,7 +211,7 @@
             </div>
         </div>
 
-        <div class="form-group tx-view-header">
+        <div class="form-block tx-view-header">
             <button type="button" class="btn btn-primary" (click)="handleClose(id, asset)">{{ 'Close' | translate }}
             </button>
         </div>
