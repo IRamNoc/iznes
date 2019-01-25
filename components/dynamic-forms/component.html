@@ -45,14 +45,14 @@
                                     </ng-container>
 
                                     <ng-container *ngSwitchCase="2">
-                                        <div [ngClass]="{ 
+                                        <div [ngClass]="{
                                             'input-group': true,
                                             'invalid': (hasErrorMessage(model[item])),
                                             'touched': (isTouched(model[item]))
                                             }">
                                             <span class="fa fa-calendar"></span>
-                                            <input id="{{item}}" 
-                                                name="{{ item | translate }}" 
+                                            <input id="{{item}}"
+                                                name="{{ item | translate }}"
                                                 placeholder="{{ model[item].placeholder | translate }}"
                                                 formControlName="{{item}}"
                                                 [dpDayPicker]="model[item].dateOptions"
@@ -68,7 +68,7 @@
                                         <ng-select id="{{item}}" *ngIf="showDropdown(model[item])"
                                                 [items]="model[item].listItems"
                                                 [active]="model[item].preset"
-                                                [disabled]="model[item].control.disabled"
+                                                [isDisabled]="model[item].control.disabled"
                                                 placeholder="{{ model[item].placeholder | translate }}"
                                                 [formControl]="model[item].control"
                                                 [multiple]="model[item].listAllowMultiple || false"
@@ -92,15 +92,15 @@
                                     <ng-container *ngSwitchCase="5">
                                         <div class="filedrop-wrapper">
                                             <input type="hidden" class="form-control" formControlName="{{item}}">
-                                            <setl-file-drop id="{{item}}" [inline]="true" [formControl]="model[item].control" [preset]="model[item].fileData" [filePermission]="model[item].filePermission" [disabled]="model[item].disabled" (onDrop)="onDropFiles($event, model[item])" ngDefaultControl></setl-file-drop>
+                                            <setl-file-drop id="{{item}}" [inline]="true" [formControl]="model[item].control" [preset]="model[item].fileData" [filePermission]="model[item].filePermission" [isDisabled]="model[item].disabled" (onDrop)="onDropFiles($event, model[item])" ngDefaultControl></setl-file-drop>
                                             <setl-file-viewer *ngIf="model[item].fileData" [fileHash]="model[item].fileData.hash"></setl-file-viewer>
                                             <!-- <a *ngIf="model[item].fileData"class="btn btn-primary" href="/mn/file?method=retrieve&fileHash={{model[item].fileData.hash}}&downloadId={{model[item].fileData.fileID}}" target="_blank">View</a> -->
                                         </div>
                                     </ng-container>
 
                                     <ng-container *ngSwitchCase="6">
-                                        <textarea id="{{item}}" 
-                                                name="{{item}}" 
+                                        <textarea id="{{item}}"
+                                                name="{{item}}"
                                                 class="form-control"
                                                 [class.required-field]="model[item].required"
                                                 placeholder="{{ model[item].placeholder | translate }}"
@@ -111,8 +111,8 @@
                                     <ng-container *ngSwitchCase="7">
                                         <div class="input-group">
                                             <span class="fa fa-clock-o"></span>
-                                            <input id="{{item}}" 
-                                                name="{{item}}" 
+                                            <input id="{{item}}"
+                                                name="{{item}}"
                                                 type="time"
                                                 placeholder="{{ model[item].placeholder | translate }}"
                                                 formControlName="{{item}}"/>
@@ -139,8 +139,8 @@
                                             }">
                                             <span>from</span>
                                             <span class="fa fa-calendar"></span>
-                                            <input id="{{item}}_from" 
-                                                name="{{item}}_from" 
+                                            <input id="{{item}}_from"
+                                                name="{{item}}_from"
                                                 placeholder="{{ model[item].placeholder | translate }}"
                                                 formControlName="{{item}}_from"
                                                 [dpDayPicker]="model[item].dateOptions"
@@ -151,8 +151,8 @@
                                                 autocomplete="off"/>
                                             <span>to</span>
                                             <span class="fa fa-calendar"></span>
-                                            <input id="{{item}}_to" 
-                                                name="{{item}}_to" 
+                                            <input id="{{item}}_to"
+                                                name="{{item}}_to"
                                                 placeholder="{{ model[item].placeholder | translate }}"
                                                 formControlName="{{item}}_to"
                                                 [dpDayPicker]="model[item].dateOptions"
