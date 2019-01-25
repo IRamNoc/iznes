@@ -156,7 +156,6 @@ export class FundShareComponent implements OnInit, AfterViewInit, OnDestroy {
     ngAfterViewInit() {
         /* The Subscription and Redemption Cut-off Time Zones must always be the same */
         if (this.calendarSubscriptionForm && this.calendarRedemptionForm && !this.isSubscribedToCalendarFormChanges) {
-
             this.isSubscribedToCalendarFormChanges = true;
 
             this.calendarSubscriptionForm.form.controls['subscriptionCutOffTimeZone'].valueChanges
@@ -167,7 +166,7 @@ export class FundShareComponent implements OnInit, AfterViewInit, OnDestroy {
                 const subCutOffTimeZone = _.cloneDeep(subscriptionCutOffTimeZone);
                 const redemptionCutOff = _.get(this.calendarRedemptionForm, 'form.controls[\'redemptionCutOffTimeZone\'].value[0].text', null);
 
-                if (redemptionCutOff && (redemptionCutOff !== subscriptionCutOffTimeZone[0].text)) {
+                if (redemptionCutOff !== subscriptionCutOffTimeZone[0].text) {
                     this.calendarRedemptionForm.form.controls['redemptionCutOffTimeZone'].patchValue(subCutOffTimeZone);
                 }
             });
@@ -180,7 +179,7 @@ export class FundShareComponent implements OnInit, AfterViewInit, OnDestroy {
                 const redCutOffTimeZone = _.cloneDeep(redemptionCutOffTimeZone);
                 const subscriptionCutOff = _.get(this.calendarSubscriptionForm, 'form.controls[\'subscriptionCutOffTimeZone\'].value[0].text', null);
 
-                if (subscriptionCutOff && (subscriptionCutOff !== redemptionCutOffTimeZone[0].text)) {
+                if (subscriptionCutOff !== redemptionCutOffTimeZone[0].text) {
                     this.calendarSubscriptionForm.form.controls['subscriptionCutOffTimeZone'].patchValue(redCutOffTimeZone);
                 }
             });
