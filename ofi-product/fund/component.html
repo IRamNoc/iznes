@@ -1571,7 +1571,7 @@
 
                 <div class="form-group col-sm-6">
                     <button id="fund-cancelfund-btn" type="button" class="btn btn-default" (click)="onClickBack()">
-                        {{ 'Cancel' | translate}} </button>
+                        {{ (!isAdmin() ? 'Cancel' : 'Close') | translate}} </button>
 
                     <button *ngIf="currDraft == 1 || !param" id="fund-savedraftfund-btn" type="button" class="btn btn-primary" (click)="saveDraft()">
                         <i class="fa fa-save"></i> {{ (!param ? 'Save Draft' : 'Update Draft') | translate }}
