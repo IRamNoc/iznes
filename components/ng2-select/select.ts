@@ -176,7 +176,7 @@ export class SelectComponent implements OnInit, ControlValueAccessor {
             return;
         }
         // backspace
-        if (!isUpMode && e.keyCode === 8) {
+        if (!isUpMode && e.keyCode === 8 && this.allowClear) {
             const el: any = this.element.nativeElement
             .querySelector('div.ui-select-container .option-wrapper > .select-search >input');
             if (!el.value || el.value.length <= 0) {
@@ -194,7 +194,7 @@ export class SelectComponent implements OnInit, ControlValueAccessor {
             return;
         }
         // del
-        if (!isUpMode && e.keyCode === 46) {
+        if (!isUpMode && e.keyCode === 46 && this.allowClear) {
             if (this.active.length > 0) {
                 this.remove(this.active[this.active.length - 1]);
             }
