@@ -1573,11 +1573,11 @@
                     <button id="fund-cancelfund-btn" type="button" class="btn btn-default" (click)="onClickBack()">
                         {{ (!isAdmin() ? 'Cancel' : 'Close') | translate}} </button>
 
-                    <button *ngIf="currDraft == 1 || !param" id="fund-savedraftfund-btn" type="button" class="btn btn-primary" (click)="saveDraft()">
+                    <button *ngIf="(currDraft == 1 || !param) && !isAdmin()" id="fund-savedraftfund-btn" type="button" class="btn btn-primary" (click)="saveDraft()">
                         <i class="fa fa-save"></i> {{ (!param ? 'Save Draft' : 'Update Draft') | translate }}
                     </button>
 
-                    <button id="fund-submitfund-btn" type="submit" class="btn btn-primary" [disabled]="!fundForm.valid">
+                    <button *ngIf="!isAdmin()" id="fund-submitfund-btn" type="submit" class="btn btn-primary" [disabled]="!fundForm.valid">
                         <i class="fa fa-save"></i> {{ !param || currDraft == 1 ? 'Save' : 'Update' }}
                     </button>
                 </div>
