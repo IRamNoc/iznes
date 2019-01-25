@@ -25,7 +25,7 @@
                     <button *ngIf="param" class="btn btn-default" id="auditTrailButton" (click)="auditTrail(param)">
                         {{ 'Audit Trail' | translate }}
                     </button>
-                    <button *ngIf="param" class="btn btn-primary" id="duplicateButton" (click)="duplicate(param)">
+                    <button *ngIf="param && !isAdmin()" class="btn btn-primary" id="duplicateButton" (click)="duplicate(param)">
                         {{ 'Duplicate Fund' | translate }}
                     </button>
                     <ng-select *ngIf="!param" 
