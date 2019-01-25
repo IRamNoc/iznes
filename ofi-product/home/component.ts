@@ -91,7 +91,6 @@ export class ProductHomeComponent implements OnInit, OnDestroy {
                 private ofiCurrenciesService: OfiCurrenciesService,
                 public translate: MultilingualService,
     ) {
-
         this.countryItems = productConfig.fundItems.domicileItems;
         this.legalFormItems = productConfig.fundItems.fundLegalFormItems;
         this.showOnlyActive = !this.showOnlyActive;
@@ -155,12 +154,25 @@ export class ProductHomeComponent implements OnInit, OnDestroy {
         });
     }
 
+    /**
+     * Check if the user is an IZNES Admin
+     *
+     * @return {boolean}
+     */
     isAssetManager(): boolean {
         return this.usertype === AM_USERTYPE;
     }
 
+    /**
+     * Populate the Fund list
+     *
+     * @param {object} funds
+     * @return {void}
+     */
     getFundList(funds: any): void {
-        const fundList = [];        if (_.values(funds).length > 0) {
+        const fundList = [];
+
+        if (_.values(funds).length > 0) {
             _.values(funds).map((fund) => {
                 if (Number(fund.draft) === 0) {
                     const domicile = _.find(this.countryItems, { id: fund.domicile }) || { text: '' };
@@ -191,6 +203,11 @@ export class ProductHomeComponent implements OnInit, OnDestroy {
         this.changeDetectorRef.markForCheck();
     }
 
+    /**
+     * Request the Share list
+     *
+     * @return {void}
+     */
     requestShareList(requested): void {
         if (!requested) {
             if (this.isAssetManager()) {
@@ -201,6 +218,12 @@ export class ProductHomeComponent implements OnInit, OnDestroy {
         }
     }
 
+    /**
+     * Populate the Share list
+     *
+     * @param {object} shares
+     * @return {void}
+     */
     getShareList(shares): void {
         const shareList = [];
 
@@ -240,7 +263,13 @@ export class ProductHomeComponent implements OnInit, OnDestroy {
         this.changeDetectorRef.markForCheck();
     }
 
-    getUmbrellaFundList(umbrellaFunds) {
+    /**
+     * Populate the Umbrella Fund list
+     *
+     * @param {object} umbrellaList
+     * @return {void}
+     */
+    getUmbrellaFundList(umbrellaFunds): void {
         const data = fromJS(umbrellaFunds).toArray();
         const umbrellaFundList = [];
 
@@ -288,7 +317,15 @@ export class ProductHomeComponent implements OnInit, OnDestroy {
         this.changeDetectorRef.markForCheck();
     }
 
-    getDrafts(fundList, shareList, umbrellaList) {
+    /**
+     * Get drafts for Umbrella Funds, Funds, and Shares
+     *
+     * @param {object} fundList
+     * @param {object} shareList
+     * @param {object} umbrellaList
+     * @return {void}
+     */
+    getDrafts(fundList, shareList, umbrellaList): void {
         this.draftList = [];
 
         const data1 = fromJS(umbrellaList).toArray();
@@ -345,7 +382,15 @@ export class ProductHomeComponent implements OnInit, OnDestroy {
         this.changeDetectorRef.markForCheck();
     }
 
-    varBtn(btnType, dataType, id) {
+    /**
+     * Handle Edit and Delete button clicks
+     *
+     * @param {string} btnType - edit or delete
+     * @param {string} dataType - Umbrella Fund, Fund or Share
+     * @param {string} id - id of the Umbrella Fund, Fund or Share
+     * @return {void}
+     */
+    varBtn(btnType, dataType, id): void {
         const temp = {
             'Umbrella Fund': 'umbrella-fund',
             Fund: 'fund',
@@ -384,13 +429,24 @@ export class ProductHomeComponent implements OnInit, OnDestroy {
         }
     }
 
-    getCurrencyList(data) {
+    /**
+     * Get the currencies list
+     *
+     * @param {object} data - the raw data to convert
+     * @return {void}
+     */
+    getCurrencyList(data): void {
         if (data) {
             this.fundCurrencyItems = data.toJS();
         }
     }
 
-    handleShareToggleClick() {
+    /**
+     * Toggle the display of only active shares
+     *
+     * @return {void}
+     */
+    handleShareToggleClick(): void {
         this.showOnlyActive = !this.showOnlyActive;
         this.filteredShareList = this.shareList.filter((share) => {
             return (this.showOnlyActive) ? share.status !== 'Closed for subscription and redemption' : share.status;
@@ -401,7 +457,13 @@ export class ProductHomeComponent implements OnInit, OnDestroy {
         this.changeDetectorRef.markForCheck();
     }
 
-    addForm(type) {
+    /**
+     * Redirect to an add new Umbrella Fund, Fund or Share page
+     *
+     * @param {string} type - Umbrella Fund, Fund or Share
+     * @return {void}
+     */
+    addForm(type): void {
         switch (type) {
             case 'share':
                 this.router.navigateByUrl('/product-module/product/fund-share/new');
@@ -415,7 +477,13 @@ export class ProductHomeComponent implements OnInit, OnDestroy {
         }
     }
 
-    getUmbrellaFundName(id) {
+    /**
+     * Get an Umbrella Fund name
+     *
+     * @param {number} id
+     * @return {string}
+     */
+    getUmbrellaFundName(id): string {
         if (id && id !== 0 && id !== null) {
             if (this.umbrellaFundList.length > 0) {
                 const obj = this.umbrellaFundList.find(o => o.umbrellaFundID === id);
@@ -429,11 +497,23 @@ export class ProductHomeComponent implements OnInit, OnDestroy {
         }
     }
 
-    goToView(url, id) {
+    /**
+     * Redirect to the given URL
+     *
+     * @param {string} url
+     * @param {string} id
+     * @return {void}
+     */
+    goToView(url, id): void {
         this.router.navigateByUrl(`${url}${id}`);
     }
 
-    initColumns() {
+    /**
+     * Intialise datagrid columns
+     *
+     * @return {void}
+     */
+    initColumns(): void {
         this.columns = {
             shareName: {
                 label: this.translate.translate('Share Name'),
@@ -558,7 +638,12 @@ export class ProductHomeComponent implements OnInit, OnDestroy {
         };
     }
 
-    initPanelDefs() {
+    /**
+     * Define panels and their datagrid columns
+     *
+     * @return {void}
+     */
+    initPanelDefs(): void {
         if (this.isAssetManager()) {
             this.panelDefs = [
                 {
@@ -739,14 +824,12 @@ export class ProductHomeComponent implements OnInit, OnDestroy {
     }
 
     /**
-     * Show Success Message
-     * ------------------
-     * Shows an success popup.
+     * Show a success popup
      *
-     * @param  {message} string - the string to be shown in the message.
+     * @param {message} string - the string to be shown in the message.
      * @return {void}
      */
-    showSuccess(message) {
+    showSuccess(message): void {
         /* Show the message. */
         this.alertsService.create('success', `
               <table class="table grid">
@@ -775,7 +858,7 @@ export class ProductHomeComponent implements OnInit, OnDestroy {
      * @param  {Date}   dateObj      [description]
      * @return {[type]}              [description]
      */
-    private formatDate(formatString: string, dateObj: Date) {
+    private formatDate(formatString: string, dateObj: Date): string|boolean {
         /* Return if we're missing a param. */
         if (!formatString || !dateObj) {
             return false;
@@ -805,19 +888,17 @@ export class ProductHomeComponent implements OnInit, OnDestroy {
      * @param num
      * @returns {string}
      */
-    private numPad(num) {
+    private numPad(num): string {
         return num < 10 ? '0' + num : num;
     }
 
     /**
-     * Show Error Message
-     * ------------------
-     * Shows an error popup.
+     * Show an error popup
      *
-     * @param  {message} string - the string to be shown in the message.
+     * @param {message} string - the string to be shown in the message.
      * @return {void}
      */
-    private showError(message) {
+    private showError(message): void {
         /* Show the error. */
         this.alertsService.create('error', `
               <table class="table grid">
@@ -831,14 +912,12 @@ export class ProductHomeComponent implements OnInit, OnDestroy {
     }
 
     /**
-     * Show Warning Message
-     * ------------------
-     * Shows a warning popup.
+     * Show a warning popup
      *
-     * @param  {message} string - the string to be shown in the message.
+     * @param {message} string - the string to be shown in the message.
      * @return {void}
      */
-    private showWarning(message) {
+    private showWarning(message): void {
         /* Show the error. */
         this.alertsService.create('warning', `
               <table class="table grid">

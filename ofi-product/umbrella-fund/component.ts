@@ -409,12 +409,21 @@ export class UmbrellaFundComponent implements OnInit, AfterViewInit, OnDestroy {
     ngAfterViewInit() {
     }
 
+    ngOnDestroy(): void {
+        /* Detach the change detector on destroy. */
+        this.changeDetectorRef.detach();
+
+        /* Unsubscribe Observables. */
+        this.unSubscribe.next();
+        this.unSubscribe.complete();
+    }
+
     /**
      * Toggle the visibility of the transferAgentID form control given the selected domicile
      *
-     * @return {void}
+     * @return {boolean}
      */
-    isTransferAgentActive() {
+    isTransferAgentActive(): boolean {
         const id = _.get(this.umbrellaFundForm.controls['domicile'].value, ['0', 'id'], false);
         return id === 'IE' || id === 'LU';
     }
@@ -422,9 +431,9 @@ export class UmbrellaFundComponent implements OnInit, AfterViewInit, OnDestroy {
     /**
      * Toggle the visibility of the centralisingAgentID form control given the selected domicile
      *
-     * @return {void}
+     * @return {boolean}
      */
-    isCentralizingAgentActive() {
+    isCentralizingAgentActive(): boolean {
         const id = _.get(this.umbrellaFundForm.controls['domicile'].value, ['0', 'id'], false);
         return id === 'FR';
     }
@@ -489,7 +498,7 @@ export class UmbrellaFundComponent implements OnInit, AfterViewInit, OnDestroy {
      * @param {object} list
      * @return {object|void}
      */
-    getUmbrellaFundList(list) {
+    getUmbrellaFundList(list): object|void {
         if (!Object.keys(list).length) {
             this.umbrellaFundList = [];
             this.umbrellaListItems = [];
@@ -563,7 +572,7 @@ export class UmbrellaFundComponent implements OnInit, AfterViewInit, OnDestroy {
      * @param {object} list
      * @return {object|void}
      */
-    getManagementCompanyList(list) {
+    getManagementCompanyList(list): object|void {
         if (!Object.keys(list).length) {
             this.managementCompanyList = [];
             return;
@@ -585,7 +594,7 @@ export class UmbrellaFundComponent implements OnInit, AfterViewInit, OnDestroy {
      * @param {number} umbrellaID
      * @return {void}
      */
-    fillFormByUmbrellaID(umbrellaID: string) {
+    fillFormByUmbrellaID(umbrellaID: string): void {
         const requestedUmbrella = this.umbrellaFundList
             .filter(item => item.umbrellaFundID.toString() === umbrellaID);
 
@@ -631,7 +640,7 @@ export class UmbrellaFundComponent implements OnInit, AfterViewInit, OnDestroy {
      * @param {string} umbrellaID
      * @return {void}
      */
-    duplicate(umbrellaID: string) {
+    duplicate(umbrellaID: string): void {
         this.router.navigateByUrl(`/product-module/product/umbrella-fund/new?prefill=${umbrellaID}`);
     }
 
@@ -641,7 +650,7 @@ export class UmbrellaFundComponent implements OnInit, AfterViewInit, OnDestroy {
      * @param {string} umbrellaID
      * @return {void}
      */
-    auditTrail(umbrellaID: string) {
+    auditTrail(umbrellaID: string): void {
         this.router.navigateByUrl(`/product-module/product/umbrella-fund/${umbrellaID}/audit`);
     }
 
@@ -651,7 +660,7 @@ export class UmbrellaFundComponent implements OnInit, AfterViewInit, OnDestroy {
      * @param {string} umbrellaID
      * @return {void}
      */
-    cancel() {
+    cancel(): void {
         this.router.navigateByUrl('/product-module/product');
     }
 
@@ -699,7 +708,7 @@ export class UmbrellaFundComponent implements OnInit, AfterViewInit, OnDestroy {
      * @param {object} formValues
      * @return {void}
      */
-    save(formValues) {
+    save(formValues): void {
         const payload: UmbrellaFundDetail = {
             ...this.getPayload(formValues),
             draft: 0,
@@ -816,7 +825,7 @@ export class UmbrellaFundComponent implements OnInit, AfterViewInit, OnDestroy {
      * @param {object} formValues
      * @return {void}
      */
-    saveDraft(formValues) {
+    saveDraft(formValues): void {
         if (formValues.managementCompanyID.length == 0) {
             this.showWarning(
                 this.translate.translate('Please fill in at least the management company to be able to save as draft.'),
@@ -856,7 +865,7 @@ export class UmbrellaFundComponent implements OnInit, AfterViewInit, OnDestroy {
      * @param {string} umbrellaFundName
      * @return {void}
      */
-    dispatchAction(asyncTaskPipe, umbrellaFundName) {
+    dispatchAction(asyncTaskPipe, umbrellaFundName): void {
         let successMessage;
         let errorMessage;
 
@@ -897,7 +906,7 @@ export class UmbrellaFundComponent implements OnInit, AfterViewInit, OnDestroy {
      * @param {any} umbrellaID
      * @return {void}
      */
-    redirectToFund(umbrellaID?) {
+    redirectToFund(umbrellaID?): void {
         let extras = {};
 
         if (umbrellaID) {
@@ -919,7 +928,7 @@ export class UmbrellaFundComponent implements OnInit, AfterViewInit, OnDestroy {
      * @param {boolean} nextState
      * @return {void}
      */
-    toggleLeiSwitch(nextState: boolean) {
+    toggleLeiSwitch(nextState: boolean): void {
         if (!nextState) {
             this.umbrellaFundForm.controls['legalEntityIdentifier'].disable();
             this.umbrellaFundForm.controls['legalEntityIdentifier'].clearValidators();
@@ -947,10 +956,11 @@ export class UmbrellaFundComponent implements OnInit, AfterViewInit, OnDestroy {
     /**
      * Show Fund creation confirmation modal
      *
-     * @param {boolean} nextState
+     * @param {string} umbrellaFundName
+     * @param {number} umbrellaFundID
      * @return {void}
      */
-    displayFundPopup(umbrellaFundName, umbrellaFundID) {
+    displayFundPopup(umbrellaFundName: string, umbrellaFundID): void {
         const message =
             `<span>${this.translate.translate('By clicking "Yes", you will be able to create a fund directly linked to @umbrellaFundName@', { 'umbrellaFundName': umbrellaFundName })}.</span>`;
 
@@ -970,10 +980,10 @@ export class UmbrellaFundComponent implements OnInit, AfterViewInit, OnDestroy {
     /**
      * Show Fund successfully created toaster
      *
-     * @param {boolean} nextState
+     * @param {string} umbrellaFundName
      * @return {void}
      */
-    creationSuccess(umbrellaFundName) {
+    creationSuccess(umbrellaFundName: string): void {
         this.toasterService.pop(
             'success',
             this.translate.translate(
@@ -1038,10 +1048,10 @@ export class UmbrellaFundComponent implements OnInit, AfterViewInit, OnDestroy {
     /**
      * Show an error popup
      *
-     * @param  {message} string - the string to be shown in the message.
+     * @param {message} string - the string to be shown in the message.
      * @return {void}
      */
-    private showError(message) {
+    private showError(message: string): void {
         /* Show the error. */
         this.alertsService.create('error', `
               <table class="table grid">
@@ -1057,10 +1067,10 @@ export class UmbrellaFundComponent implements OnInit, AfterViewInit, OnDestroy {
     /**
      * Show a warning popup
      *
-     * @param  {message} string - the string to be shown in the message.
+     * @param {message} string - the string to be shown in the message.
      * @return {void}
      */
-    private showWarning(message) {
+    private showWarning(message: string): void {
         /* Show the error. */
         this.alertsService.create('warning', `
               <table class="table grid">
@@ -1076,10 +1086,10 @@ export class UmbrellaFundComponent implements OnInit, AfterViewInit, OnDestroy {
     /**
      * Show a success popup
      *
-     * @param  {message} string - the string to be shown in the message.
+     * @param {message} string - the string to be shown in the message.
      * @return {void}
      */
-    showSuccess(message) {
+    showSuccess(message: string): void {
         /* Show the message. */
         this.alertsService.create('success', `
               <table class="table grid">
@@ -1090,14 +1100,5 @@ export class UmbrellaFundComponent implements OnInit, AfterViewInit, OnDestroy {
                   </tbody>
               </table>
           `);
-    }
-
-    ngOnDestroy(): void {
-        /* Detach the change detector on destroy. */
-        this.changeDetectorRef.detach();
-
-        /* Unsubscribe Observables. */
-        this.unSubscribe.next();
-        this.unSubscribe.complete();
     }
 }
