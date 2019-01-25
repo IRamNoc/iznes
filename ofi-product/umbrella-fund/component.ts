@@ -441,9 +441,10 @@ export class UmbrellaFundComponent implements OnInit, AfterViewInit, OnDestroy {
     /**
      * Update the language configurations
      *
+     * @param {string} language
      * @return {void}
      */
-    getLanguage(language): void {
+    getLanguage(language: string): void {
         if (!language) {
             return;
         }
@@ -458,9 +459,9 @@ export class UmbrellaFundComponent implements OnInit, AfterViewInit, OnDestroy {
     /**
      * Return the matched list (else return an empty array)
      *
-     * @param {array} val
-     * @param {array} list
-     * @return {array}
+     * @param {string[]} val
+     * @param {any} list
+     * @return {{ id: string, text: string }[]}
      */
     getListItems(
         val: string[],
@@ -482,8 +483,8 @@ export class UmbrellaFundComponent implements OnInit, AfterViewInit, OnDestroy {
     /**
      * Return the ids from a list
      *
-     * @param {array} val
-     * @return {array}
+     * @param {object} val
+     * @return {number[]}
      */
     getIdsFromList(val: { id: number, text: string }[]): number[] {
         if (!val.length) {
@@ -495,10 +496,10 @@ export class UmbrellaFundComponent implements OnInit, AfterViewInit, OnDestroy {
     /**
      * Initialise the umbrellaFundList and umbrellaListItems
      *
-     * @param {object} list
-     * @return {object|void}
+     * @param {any} list
+     * @return {any|void}
      */
-    getUmbrellaFundList(list): object|void {
+    getUmbrellaFundList(list: any): any|void {
         if (!Object.keys(list).length) {
             this.umbrellaFundList = [];
             this.umbrellaListItems = [];
@@ -569,10 +570,10 @@ export class UmbrellaFundComponent implements OnInit, AfterViewInit, OnDestroy {
     /**
      * Initialise the managementCompanyList
      *
-     * @param {object} list
-     * @return {object|void}
+     * @param {any} list
+     * @return {any|void}
      */
-    getManagementCompanyList(list): object|void {
+    getManagementCompanyList(list: any): any|void {
         if (!Object.keys(list).length) {
             this.managementCompanyList = [];
             return;
@@ -667,10 +668,10 @@ export class UmbrellaFundComponent implements OnInit, AfterViewInit, OnDestroy {
     /**
      * Create a Umbrella Fund payload object
      *
-     * @param {object} formValues
-     * @return {object}
+     * @param {any} formValues
+     * @return {any}
      */
-    getPayload(formValues): UmbrellaFundDetail {
+    getPayload(formValues: any): UmbrellaFundDetail {
         return {
             draft: null,
             umbrellaFundName: formValues.umbrellaFundName || null,
@@ -705,10 +706,10 @@ export class UmbrellaFundComponent implements OnInit, AfterViewInit, OnDestroy {
     /**
      * Save/Update an Umbrella Fund
      *
-     * @param {object} formValues
+     * @param {any} formValues
      * @return {void}
      */
-    save(formValues): void {
+    save(formValues: any): void {
         const payload: UmbrellaFundDetail = {
             ...this.getPayload(formValues),
             draft: 0,
@@ -822,7 +823,7 @@ export class UmbrellaFundComponent implements OnInit, AfterViewInit, OnDestroy {
     /**
      * Save/Update an Umbrella Fund Draft
      *
-     * @param {object} formValues
+     * @param {any} formValues
      * @return {void}
      */
     saveDraft(formValues): void {
@@ -861,11 +862,11 @@ export class UmbrellaFundComponent implements OnInit, AfterViewInit, OnDestroy {
     /**
      * Dispatch an asyncTaskPipe
      *
-     * @param asyncTaskPipe
+     * @param {any} asyncTaskPipe
      * @param {string} umbrellaFundName
      * @return {void}
      */
-    dispatchAction(asyncTaskPipe, umbrellaFundName): void {
+    dispatchAction(asyncTaskPipe: any, umbrellaFundName: string): void {
         let successMessage;
         let errorMessage;
 
@@ -906,7 +907,7 @@ export class UmbrellaFundComponent implements OnInit, AfterViewInit, OnDestroy {
      * @param {any} umbrellaID
      * @return {void}
      */
-    redirectToFund(umbrellaID?): void {
+    redirectToFund(umbrellaID?: any): void {
         let extras = {};
 
         if (umbrellaID) {
@@ -957,10 +958,10 @@ export class UmbrellaFundComponent implements OnInit, AfterViewInit, OnDestroy {
      * Show Fund creation confirmation modal
      *
      * @param {string} umbrellaFundName
-     * @param {number} umbrellaFundID
+     * @param {any} umbrellaFundID
      * @return {void}
      */
-    displayFundPopup(umbrellaFundName: string, umbrellaFundID): void {
+    displayFundPopup(umbrellaFundName: string, umbrellaFundID: any): void {
         const message =
             `<span>${this.translate.translate('By clicking "Yes", you will be able to create a fund directly linked to @umbrellaFundName@', { 'umbrellaFundName': umbrellaFundName })}.</span>`;
 
@@ -1032,10 +1033,10 @@ export class UmbrellaFundComponent implements OnInit, AfterViewInit, OnDestroy {
     /**
      * Num Pad
      *
-     * @param num
+     * @param {any} num
      * @returns {string}
      */
-    private numPad(num) {
+    private numPad(num: any): string {
         return num < 10 ? '0' + num : num;
     }
 

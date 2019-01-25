@@ -1250,7 +1250,14 @@ export class FundComponent implements OnInit, OnDestroy {
         return (this.userType === ADMIN_USER_TYPE);
     }
 
-    displaySharePopup(fundName, fundID) {
+    /**
+    * Show Share creation confirmation modal
+    *
+    * @param {string} fundName
+    * @param {any} fundID
+    * @return {void}
+    */
+    displaySharePopup(fundName: string, fundID: any): void {
         const message = `<span>${this.translate.translate('By clicking "Yes", you will be able to create a share directly linked to @fundName@.', { 'fundName': fundName })}</span>`;
 
         this.confirmationService.create(
