@@ -8,3 +8,6 @@ require('./element.closest');
 if (!(window as any).hasOwnProperty('TouchEvent')) {
     (window as any).TouchEvent = {};
 }
+
+(window as any).global = window;
+global.Buffer = global.Buffer || require('buffer').Buffer;
