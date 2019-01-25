@@ -7,12 +7,14 @@ import { TabControl, Tab } from '../tabs';
 import { NgRedux, select } from '@angular-redux/store';
 import * as json2csv from 'json2csv';
 import * as SagaHelper from '@setl/utils/sagaHelper/index';
-import { FileService } from '@setl/core-req-services';
-import { filter, each } from 'lodash';
+import { FileService, PdfService } from '@setl/core-req-services';
+import { filter, get } from 'lodash';
 import { first, map } from 'rxjs/operators';
 import { Observable } from 'rxjs/Observable';
 import { Subscription } from 'rxjs/Subscription';
 import { MultilingualService } from '@setl/multilingual';
+import { AlertsService } from '@setl/jaspero-ng2-alerts';
+import * as moment from 'moment';
 
 @Component({
     selector: 'setl-balances',
@@ -31,9 +33,11 @@ export class SetlBalancesComponent implements AfterViewInit, OnInit, OnDestroy {
     readonly transactionFields = new WalletTxHelperModel.WalletTransactionFields().fields;
     private subscriptions: Subscription[] = [];
     public connectedWalletId;
-    public exportModalDisplay: boolean = false;
-    public exportFilename: string = 'BalancesExport.csv';
+    public exportModalDisplay: string = '';
+    public exportFilename: string = 'Balance-Export.csv';
     public exportFileHash: string = '';
+    public pdfID: number = 0;
+    private viewingAsset: string;
     /* Datagrid properties */
     public pageSize: number;
     public pageCurrent: number;
@@ -54,8 +58,8 @@ export class SetlBalancesComponent implements AfterViewInit, OnInit, OnDestroy {
                        private ngRedux: NgRedux<any>,
                        private fileService: FileService,
                        public translate: MultilingualService,
-    ) {
-    }
+                       private alertsService: AlertsService,
+                       private pdfService: PdfService) {}
 
     /**
      * Ng On Init
@@ -165,6 +169,7 @@ export class SetlBalancesComponent implements AfterViewInit, OnInit, OnDestroy {
      * @return void
      */
     public handleViewBreakdown(asset): void {
+        this.viewingAsset = asset.asset;
         this.editTab = true;
         if (this.tabControl.activate(this.findTab(asset.hash, 'breakdown'))) {
             return;
@@ -234,6 +239,7 @@ export class SetlBalancesComponent implements AfterViewInit, OnInit, OnDestroy {
     handleClose(id, asset) {
         this.tabControl.close(id);
         this.reportingService.historyResetByAsset(asset.asset);
+        this.viewingAsset = '';
     }
 
     /**
@@ -312,19 +318,22 @@ export class SetlBalancesComponent implements AfterViewInit, OnInit, OnDestroy {
      *
      * @return {void}
      */
-    public exportList() {
-        const options = {};
-        const csvData = this.myDataGrid.items['_filtered'];
+    public exportCSV() {
+        const csvData = this.formatExportData('CSV');
         if (csvData.length === 0) {
+            this.alertsService.generate('error', this.translate.translate('There are no records to export'));
             return;
         }
-        const encodedCsv = Buffer.from(json2csv.parse(csvData, options)).toString('base64');
+
+        const encodedCsv = Buffer.from(json2csv.parse(csvData, {})).toString('base64');
+
         const fileData = {
             name: this.exportFilename,
             data: encodedCsv,
             status: '',
             filePermission: 1,
         };
+
         const asyncTaskPipe = this.fileService.addFile({
             files: filter([fileData], (file) => {
                 return file.status !== 'uploaded-file';
@@ -333,34 +342,97 @@ export class SetlBalancesComponent implements AfterViewInit, OnInit, OnDestroy {
 
         this.ngRedux.dispatch(SagaHelper.runAsyncCallback(
             asyncTaskPipe,
-            (data) => {
-                if (data[1] && data[1].Data) {
-                    let errorMessage;
-                    each(data[1].Data, (file) => {
-                        if (file.error) {
-                            errorMessage = file.error;
-                        } else {
-                            this.exportFileHash = file[0].fileHash;
-                            this.showExportModal();
-                        }
-                    });
-                    if (errorMessage) {
-                    }
+            (successResponse) => {
+                const data = get(successResponse, '[1].Data[0][0]', {});
+                if (data.fileHash) {
+                    this.exportFileHash = data.fileHash;
+                    this.showExportModal('CSV');
+                    return;
                 }
+                this.alertsService.generate(
+                    'error', this.translate.translate('Something has gone wrong. Please try again later'));
             },
-            (data) => {
-                let errorMessage;
-                each(data[1].Data, (file) => {
-                    if (file.error) {
-                        errorMessage += file.error + '<br/>';
-                    }
-                });
-                if (errorMessage) {
-                    if (errorMessage) {
-                    }
-                }
+            (failResponse) => {
+                const data = get(failResponse, '[1].Data[0]', {});
+                const errorText = data.error ? data.error : 'Something has gone wrong. Please try again later';
+                this.alertsService.generate('error', this.translate.translate(errorText));
             }),
         );
+    }
+
+    /**
+     * Export PDF
+     *
+     * Exports current dataGrid List to PDF format
+     *
+     * @returns {void}
+     */
+    public exportPDF() {
+        const metadata = {
+            ...this.formatExportData('PDF'),
+            walletName: 'WalletA',
+            date: moment().format('YYYY-MM-DD H:mm:ss'),
+        };
+
+        console.log('+++ metadata', metadata);
+
+        const asyncTaskPipe = this.pdfService.createPdfMetadata({
+            type: 2,
+            metadata,
+        });
+
+        this.ngRedux.dispatch(SagaHelper.runAsyncCallback(
+            asyncTaskPipe,
+            (successResponse) => {
+                console.log('+++ successResponse', successResponse);
+                this.pdfID = get(successResponse, '[1].Data[0].pdfID', 0);
+                if (!this.pdfID) {
+                    this.alertsService.generate(
+                        'error', this.translate.translate('Something has gone wrong. Please try again later'));
+                    return;
+                }
+
+                const pdfConfig = {
+                    orientation: 'portrait',
+                    border: '15mm',
+                    file: 'balances',
+                };
+
+                this.pdfService.getPdf(this.pdfID, pdfConfig).then((response) => {
+                    this.exportFileHash = response;
+                    this.showExportModal('PDF');
+                });
+            },
+            (failResponse) => {
+                console.log('+++ failResponse', failResponse);
+                this.alertsService.generate(
+                    'error', this.translate.translate('Something has gone wrong. Please try again later'));
+            }),
+        );
+    }
+
+    /**
+     * Format Export Data
+     *
+     * Formats the current filtered datagrid data for CSV and PDF exports, removing breakdown and deleted properties
+     *
+     * @returns {array} exportData
+     */
+    private formatExportData(type) {
+        const data = this.myDataGrid.items['_filtered'];
+
+        if (type === 'CSV') {
+            return data.map((item) => {
+                const clonedItem = JSON.parse(JSON.stringify(item)); // deep clone
+                delete clonedItem.breakdown;
+                delete clonedItem.deleted;
+                return clonedItem;
+            });
+        }
+
+        console.log('+++ this.myDataGrid', this.myDataGrid);
+        const breakdown = !data[0].hasOwnProperty('breakdown');
+        return { breakdown, asset: breakdown ? this.viewingAsset : '', data };
     }
 
     /**
@@ -368,9 +440,8 @@ export class SetlBalancesComponent implements AfterViewInit, OnInit, OnDestroy {
      *
      * @return {void}
      */
-    public showExportModal() {
-        this.exportModalDisplay = true;
-        this.changeDetector.markForCheck();
+    public showExportModal(type) {
+        this.exportModalDisplay = type;
         this.changeDetector.detectChanges();
     }
 
@@ -380,8 +451,7 @@ export class SetlBalancesComponent implements AfterViewInit, OnInit, OnDestroy {
      * @return {void}
      */
     public hideExportModal() {
-        this.exportModalDisplay = false;
-        this.changeDetector.markForCheck();
+        this.exportModalDisplay = '';
         this.changeDetector.detectChanges();
     }
 
