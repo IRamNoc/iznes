@@ -19,6 +19,7 @@ export interface FormItem {
     isBlockchainValue?: boolean;
     isValid?: () => boolean;
     required: boolean;
+    allowClear?: boolean;
     title?: string;
 
     listItems?: {
