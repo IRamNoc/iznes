@@ -591,7 +591,7 @@ export class UmbrellaFundComponent implements OnInit, AfterViewInit, OnDestroy {
     /**
      * Populate the umbrellaFundForm
      *
-     * @param {number} umbrellaID
+     * @param {string} umbrellaID
      * @return {void}
      */
     fillFormByUmbrellaID(umbrellaID: string): void {
@@ -945,7 +945,7 @@ export class UmbrellaFundComponent implements OnInit, AfterViewInit, OnDestroy {
     /**
      * Check whether the userType is an IZNES Admin User
      *
-     * If TRUE, disables all form controls on the view
+     * If TRUE, all form controls are disabled
      *
      * @return {boolean}
      */

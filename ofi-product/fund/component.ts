@@ -31,6 +31,8 @@ interface FundList {
     [key: string]: any;
 }
 
+const ADMIN_USER_TYPE = 35;
+
 @Component({
     templateUrl: './component.html',
     styleUrls: ['./component.scss'],
@@ -108,6 +110,8 @@ export class FundComponent implements OnInit, OnDestroy {
 
     currentLei: string;
 
+    userType = null;
+
     // Locale
     language = 'en';
 
@@ -140,6 +144,7 @@ export class FundComponent implements OnInit, OnDestroy {
     productConfig;
     holidayMgmtConfigDates: () => string[];
 
+    @select(['user', 'myDetail']) userDetailOb;
     @select(['user', 'siteSettings', 'language']) language$;
     @select(['ofi', 'ofiProduct', 'ofiUmbrellaFund', 'umbrellaFundList', 'umbrellaFundList']) umbrellaFundList$;
     @select(['ofi', 'ofiProduct', 'ofiFund', 'fundList', 'iznFundList']) fundList$;
@@ -177,7 +182,6 @@ export class FundComponent implements OnInit, OnDestroy {
         public translate: MultilingualService,
         @Inject('product-config') productConfig,
     ) {
-
         this.umbrellaService.fetchUmbrellaList();
         this.ofiManagementCompanyService.getManagementCompanyList();
         this.ofiCurrenciesService.getCurrencyList();
@@ -205,6 +209,20 @@ export class FundComponent implements OnInit, OnDestroy {
         this.payingAgentItems = this.fundItems.payingAgentItems;
         this.transferAgentItems = this.fundItems.transferAgentItems;
         this.centralizingAgentItems = this.fundItems.centralizingAgentItems;
+
+        this.userDetailOb
+            .pipe(
+                takeUntil(this.unSubscribe),
+            )
+            .subscribe((userDetail) => {
+                this.userType = userDetail.userType;
+
+                if (!this.isAdmin()) {
+                    this.fundService.getFundList();
+                } else {
+                    this.fundService.getAdminFundList();
+                }
+            });
 
         this.language$
         .pipe(
@@ -633,6 +651,77 @@ export class FundComponent implements OnInit, OnDestroy {
         });
     }
 
+    ngOnInit() {
+        this.route.queryParams.subscribe((params) => {
+            if (params.fromShare) {
+                this.currentRoute.fromShare = true;
+            }
+            if (params.umbrella) {
+                this.waitForCurrentUmbrella(params.umbrella);
+            }
+        });
+
+        this.fundControl.valueChanges
+            .pipe(
+                takeUntil(this.unSubscribe),
+            )
+            .subscribe((item) => {
+                if (!item || !item.length) {
+                    this.umbrellaControl.reset();
+                    this.umbrellaEditForm.reset();
+                    this.fundForm.reset();
+                    return;
+                }
+                this.fillFormByFundID(item[0].id);
+                this.changeDetectorRef.markForCheck();
+            });
+
+        this.leiListOb
+            .pipe(
+                takeUntil(this.unSubscribe),
+            )
+            .subscribe((leiList) => {
+                this.leiList = leiList;
+
+                if (this.fundForm) {
+                    this.fundForm.controls.legalEntityIdentifier.updateValueAndValidity({
+                        emitEvent: true,
+                    });
+                }
+            });
+
+        this.fundForm.controls['legalEntityIdentifier'].valueChanges
+            .pipe(
+                takeUntil(this.unSubscribe),
+            )
+            .subscribe((val) => {
+                if (!this.isLeiVisible) {
+                    return;
+                }
+
+                const leiControl = this.fundForm.controls.legalEntityIdentifier;
+
+                if (leiControl.errors) {
+                    return;
+                }
+
+                if (!val || !this.isLeiAlreadyExisting(val)) {
+                    return;
+                }
+
+                leiControl
+                    .setErrors({
+                        isAlreadyExisting: true,
+                    });
+            });
+        this.leiService.fetchLEIs();
+    }
+
+    ngOnDestroy() {
+        this.unSubscribe.next();
+        this.unSubscribe.complete();
+    }
+
     fundFormValue() {
         return {
             ...this.fundForm.getRawValue(),
@@ -808,72 +897,6 @@ export class FundComponent implements OnInit, OnDestroy {
         return this.leiList.indexOf(currentLei) !== -1;
     }
 
-    ngOnInit() {
-        this.route.queryParams.subscribe((params) => {
-            if (params.fromShare) {
-                this.currentRoute.fromShare = true;
-            }
-            if (params.umbrella) {
-                this.waitForCurrentUmbrella(params.umbrella);
-            }
-        });
-
-        this.fundControl.valueChanges
-        .pipe(
-            takeUntil(this.unSubscribe),
-        )
-        .subscribe((item) => {
-            if (!item || !item.length) {
-                this.umbrellaControl.reset();
-                this.umbrellaEditForm.reset();
-                this.fundForm.reset();
-                return;
-            }
-            this.fillFormByFundID(item[0].id);
-            this.changeDetectorRef.markForCheck();
-        });
-
-        this.leiListOb
-        .pipe(
-            takeUntil(this.unSubscribe),
-        )
-        .subscribe((leiList) => {
-            this.leiList = leiList;
-
-            if (this.fundForm) {
-                this.fundForm.controls.legalEntityIdentifier.updateValueAndValidity({
-                    emitEvent: true,
-                });
-            }
-        });
-
-        this.fundForm.controls['legalEntityIdentifier'].valueChanges
-        .pipe(
-            takeUntil(this.unSubscribe),
-        )
-        .subscribe((val) => {
-            if (!this.isLeiVisible) {
-                return;
-            }
-
-            const leiControl = this.fundForm.controls.legalEntityIdentifier;
-
-            if (leiControl.errors) {
-                return;
-            }
-
-            if (!val || !this.isLeiAlreadyExisting(val)) {
-                return;
-            }
-
-            leiControl
-            .setErrors({
-                isAlreadyExisting: true,
-            });
-        });
-        this.leiService.fetchLEIs();
-    }
-
     setManagementCompanyItems(d) {
         const values = _.values(d);
         if (!values.length) {
@@ -968,7 +991,13 @@ export class FundComponent implements OnInit, OnDestroy {
         });
     }
 
-    fillFormByFundID(fundID: string) {
+    /**
+     * Populate the fundForm
+     *
+     * @param {string} fundID
+     * @return {void}
+     */
+    fillFormByFundID(fundID: string): void {
         const fund = _.find(this.fundList, { fundID: Number(fundID) });
         if (fund.umbrellaFundID) {
             this.umbrellaControl.setValue(
@@ -1021,6 +1050,10 @@ export class FundComponent implements OnInit, OnDestroy {
         this.toggleLeiSwitch(!!fund.legalEntityIdentifier);
 
         this.currentLei = fund.legalEntityIdentifier;
+
+        if (this.isAdmin()) {
+            this.fundForm.disable();
+        }
 
         return;
     }
@@ -1206,6 +1239,17 @@ export class FundComponent implements OnInit, OnDestroy {
         this.router.navigateByUrl(`/product-module/product/fund/${fundID}/audit`);
     }
 
+    /**
+     * Check whether the userType is an IZNES Admin User
+     *
+     * If TRUE, all form controls are disabled
+     *
+     * @return {boolean}
+     */
+    isAdmin(): boolean {
+        return (this.userType === ADMIN_USER_TYPE);
+    }
+
     displaySharePopup(fundName, fundID) {
         const message = `<span>${this.translate.translate('By clicking "Yes", you will be able to create a share directly linked to @fundName@.', { 'fundName': fundName })}</span>`;
 
@@ -1266,10 +1310,5 @@ export class FundComponent implements OnInit, OnDestroy {
             ]));
         }
         this.isLeiVisible = nextState;
-    }
-
-    ngOnDestroy() {
-        this.unSubscribe.next();
-        this.unSubscribe.complete();
     }
 }
