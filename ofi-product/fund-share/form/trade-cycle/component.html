@@ -9,7 +9,7 @@
                         [active]="model.form.value.tradeCyclePeriod"
                         placeholder="" 
                         [formControl]="model.form.controls['tradeCyclePeriod']" 
-                        [disabled]="model.form.controls['tradeCyclePeriod']['disabled']">
+                        [isDisabled]="model.form.controls['tradeCyclePeriod']['disabled']">
             </ng-select>
         </div>
     </div>
@@ -25,7 +25,7 @@
                         [multiple]="true" 
                         placeholder="" 
                         [formControl]="model.form.controls['weeklyDealingDays']" 
-                        [disabled]="model.form.controls['weeklyDealingDays']['disabled']">
+                        [isDisabled]="model.form.controls['weeklyDealingDays']['disabled']">
             </ng-select>
         </div>
     </div>
@@ -39,7 +39,7 @@
                             [items]="model.dropdownItems.numberItems" 
                             placeholder="" 
                             [formControl]="control.controls.termA"
-                            [disabled]="control.controls.termA['disabled']">
+                            [isDisabled]="control.controls.termA['disabled']">
                 </ng-select>
             </div>
 
@@ -50,7 +50,7 @@
                             [items]="model.dropdownItems.dayItems" 
                             placeholder="" 
                             [formControl]="control.controls.termB"
-                            [disabled]="control.controls.termB['disabled']">
+                            [isDisabled]="control.controls.termB['disabled']">
                 </ng-select>
             </div>
 
@@ -72,7 +72,7 @@
                             [items]="model.dropdownItems.numberItems" 
                             placeholder="" 
                             [formControl]="control.controls.termA"
-                            disabled="control.controls.termA['disabled']">
+                            [isDisabled]="control.controls.termA['disabled']">
                 </ng-select>
             </div>
 
@@ -83,7 +83,7 @@
                             [items]="model.dropdownItems.dayItems" 
                             placeholder="" 
                             [formControl]="control.controls.termB"
-                            disabled="control.controls.termB['disabled']">
+                            [isDisabled]="control.controls.termB['disabled']">
                 </ng-select>
             </div>
 
@@ -94,7 +94,7 @@
                             [items]="model.dropdownItems.monthItems" 
                             placeholder="" 
                             [formControl]="control.controls.termC"
-                            disabled="control.controls.termC['disabled']">
+                            [isDisabled]="control.controls.termC['disabled']">
                 </ng-select>
             </div>
 
