@@ -1,11 +1,13 @@
 import { ChangeDetectorRef, Component, Inject, OnDestroy, OnInit, ViewChild } from '@angular/core';
 import { FormControl, FormGroup } from '@angular/forms';
 import { Router } from '@angular/router';
+import { Location } from '@angular/common';
 import { NgRedux, select } from '@angular-redux/store';
 import { Observable, Subscription } from 'rxjs';
 import { distinctUntilChanged } from 'rxjs/operators';
 import * as moment from 'moment';
 import * as model from '../OfiNav';
+import { userTypes } from '../../shared/userTypes';
 import { OfiManageNavPopupService } from '../ofi-manage-nav-popup/service';
 import { OfiCorpActionService } from '../../ofi-req-services/ofi-corp-actions/service';
 import { OfiNavService } from '../../ofi-req-services/ofi-product/nav/service';
@@ -39,6 +41,7 @@ export class OfiNavFundView implements OnInit, OnDestroy {
     navFundHistory: any;
     socketToken: string;
     userId: number;
+    isIznesAdmin: boolean = false;
 
     navHistoryForm: FormGroup;
 
@@ -76,10 +79,11 @@ export class OfiNavFundView implements OnInit, OnDestroy {
     @select(['ofi', 'ofiProduct', 'ofiManageNav', 'ofiNavFundHistory', 'navFundHistory']) navFundHistoryOb: Observable<any>;
     @select(['ofi', 'ofiCurrencies', 'currencies']) currenciesObs;
     @select(['user', 'authentication', 'token']) tokenOb;
-    @select(['user', 'myDetail', 'userId']) userOb;
+    @select(['user', 'myDetail']) userOb;
     private subscriptionsArray: Subscription[] = [];
 
-    constructor(private redux: NgRedux<any>,
+    constructor(
+        private redux: NgRedux<any>,
                 private router: Router,
                 private changeDetectorRef: ChangeDetectorRef,
                 private ofiCorpActionService: OfiCorpActionService,
@@ -91,7 +95,9 @@ export class OfiNavFundView implements OnInit, OnDestroy {
                 private ofiCurrenciesService: OfiCurrenciesService,
                 private fileDownloader: FileDownloader,
                 public translate: MultilingualService,
-                @Inject(APP_CONFIG) appConfig: AppConfig) {
+                private location: Location,
+                @Inject(APP_CONFIG) appConfig: AppConfig,
+                ) {
         this.appConfig = appConfig;
         this.isNavUploadModalDisplayed = false;
         this.navCsvFile = null;
@@ -295,8 +301,9 @@ export class OfiNavFundView implements OnInit, OnDestroy {
         this.subscriptionsArray.push(this.tokenOb.subscribe((token) => {
             this.socketToken = token;
         }));
-        this.subscriptionsArray.push(this.userOb.subscribe((userId) => {
-            this.userId = userId;
+        this.subscriptionsArray.push(this.userOb.subscribe((user) => {
+            this.userId = user.userId;
+            this.isIznesAdmin = user.userType === userTypes.SYSTEM_ADMIN;
         }));
 
         this.subscriptionsArray.push(this.currenciesObs.subscribe(c => this.getCurrencyList(c)));
@@ -473,6 +480,10 @@ export class OfiNavFundView implements OnInit, OnDestroy {
     private generateExportURL(url: string, isProd: boolean = true): string {
         return isProd ? `https://${window.location.hostname}/mn/${url}` :
             `http://${window.location.hostname}:9788/${url}`;
+    }
+
+    navigateBack() {
+        this.location.back();
     }
 
     private clearRequestedHistory(): void {
