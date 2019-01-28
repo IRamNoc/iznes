@@ -20,7 +20,7 @@ import {
 import { MultilingualService } from '@setl/multilingual';
 import { getOfiFundShareCurrentRequest } from '@ofi/ofi-main/ofi-store/ofi-product/fund-share';
 
-const ADMIN_USERTYPE = 35;
+const ADMIN_USER_TYPE = 35;
 
 @Component({
     styleUrls: ['./component.scss'],
@@ -162,8 +162,13 @@ export class FundShareAuditComponent implements OnInit, OnDestroy {
         this.router.navigateByUrl(`product-module/product/fund-share/${this.fundShareId}`);
     }
 
+    /**
+     * Check whether the userType is an IZNES Admin User
+     *
+     * @return {boolean}
+     */
     isAdmin(): boolean {
-        return this.userType === ADMIN_USERTYPE;
+        return this.userType === ADMIN_USER_TYPE;
     }
 
     ngOnDestroy() {

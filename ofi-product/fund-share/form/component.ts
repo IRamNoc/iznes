@@ -967,6 +967,11 @@ export class FundShareComponent implements OnInit, AfterViewInit, OnDestroy {
         return this.mode === FundShareMode.Update;
     }
 
+    /**
+     * Check whether the userType is an IZNES Admin User
+     *
+     * @return {boolean}
+     */
     isAdmin(): boolean {
         return (this.userType === userTypeEnum.ADMIN);
     }

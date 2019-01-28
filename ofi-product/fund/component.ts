@@ -109,8 +109,7 @@ export class FundComponent implements OnInit, OnDestroy {
     centralizingAgentItems = [];
 
     currentLei: string;
-
-    userType = null;
+    userType;
 
     // Locale
     language = 'en';
@@ -182,10 +181,8 @@ export class FundComponent implements OnInit, OnDestroy {
         public translate: MultilingualService,
         @Inject('product-config') productConfig,
     ) {
-        this.umbrellaService.fetchUmbrellaList();
         this.ofiManagementCompanyService.getManagementCompanyList();
         this.ofiCurrenciesService.getCurrencyList();
-        this.fundService.getFundList();
 
         this.fundItems = productConfig.fundItems;
         this.enums = productConfig.enums;
@@ -219,8 +216,11 @@ export class FundComponent implements OnInit, OnDestroy {
 
                 if (!this.isAdmin()) {
                     this.fundService.getFundList();
+                    this.umbrellaService.fetchUmbrellaList();
                 } else {
+                /* For IZNES Admins */
                     this.fundService.getAdminFundList();
+                    this.umbrellaService.getAdminUmbrellaList();
                 }
             });
 
@@ -1241,8 +1241,6 @@ export class FundComponent implements OnInit, OnDestroy {
 
     /**
      * Check whether the userType is an IZNES Admin User
-     *
-     * If TRUE, all form controls are disabled
      *
      * @return {boolean}
      */

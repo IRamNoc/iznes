@@ -94,7 +94,6 @@ export class OfiUmbrellaFundService {
     }
 
     saveUmbrellaFund(ufData: UmbrellaFundDetail, ngRedux: NgRedux<any>): any {
-
         const messageBody: SaveUmbrellaFundRequestBody = {
             RequestName: 'izncreateumbrellafund',
             token: this.memberSocketService.token,
@@ -187,6 +186,23 @@ export class OfiUmbrellaFundService {
     fetchUmbrellaAuditByUmbrellaID(umbrellaFundID: number) {
         const messageBody: fetchUmbrellaAuditRequestBody = {
             RequestName: 'izngetumbrellaaudit',
+            token: this.memberSocketService.token,
+            umbrellaFundID,
+        };
+
+        const asyncTaskPipe = createMemberNodeSagaRequest(this.memberSocketService, messageBody);
+
+        this.ngRedux.dispatch(SagaHelper.runAsync(
+            [SET_UMBRELLA_AUDIT],
+            [],
+            asyncTaskPipe,
+            {},
+        ));
+    }
+
+    fetchAdminUmbrellaAuditByUmbrellaID(umbrellaFundID: number) {
+        const messageBody: fetchUmbrellaAuditRequestBody = {
+            RequestName: 'izngetadminumbrellaaudit',
             token: this.memberSocketService.token,
             umbrellaFundID,
         };

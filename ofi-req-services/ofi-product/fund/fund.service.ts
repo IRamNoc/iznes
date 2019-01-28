@@ -212,6 +212,23 @@ export class OfiFundService {
         ));
     }
 
+    fetchAdminFundAuditByFundID(fundID: number) {
+        const messageBody: fetchFundAuditRequestBody = {
+            RequestName: 'izngetadminfundaudit',
+            token: this.memberSocketService.token,
+            fundID,
+        };
+
+        const asyncTaskPipe = createMemberNodeSagaRequest(this.memberSocketService, messageBody);
+
+        this.ngRedux.dispatch(SagaHelper.runAsync(
+            [SET_FUND_AUDIT],
+            [],
+            asyncTaskPipe,
+            {},
+        ));
+    }
+
     fetchFundByID(fundId: number) {
         const messageBody = {
             RequestName: 'izngetfundbyid',

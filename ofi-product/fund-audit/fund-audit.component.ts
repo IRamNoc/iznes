@@ -8,6 +8,8 @@ import * as _ from 'lodash';
 import { Location } from '@angular/common';
 import { OfiFundService } from '@ofi/ofi-main/ofi-req-services/ofi-product/fund/fund.service';
 
+const ADMIN_USER_TYPE = 35;
+
 @Component({
     templateUrl: './fund-audit.component.html',
     styleUrls: ['./fund-audit.component.scss'],
@@ -16,9 +18,11 @@ export class FundAuditComponent implements OnInit, OnDestroy {
     fundID: number;
     fundName: string;
     unSubscribe: Subject<any> = new Subject();
+    userType;
 
     @select(['ofi', 'ofiProduct', 'ofiFund', 'fundList', 'iznFundList']) fundList$;
     @select(['ofi', 'ofiProduct', 'ofiFund', 'fundList', 'requested']) requestedFundList$;
+    @select(['user', 'myDetail']) userDetailOb;
 
     constructor(
         private activatedRoute: ActivatedRoute,
@@ -28,6 +32,13 @@ export class FundAuditComponent implements OnInit, OnDestroy {
     }
 
     ngOnInit() {
+        this.userDetailOb
+            .pipe(
+                takeUntil(this.unSubscribe),
+            ).subscribe((userDetail) => {
+                this.userType = userDetail.userType;
+            });
+
         this.activatedRoute.params
             .pipe(
                 takeUntil(this.unSubscribe),
@@ -42,7 +53,12 @@ export class FundAuditComponent implements OnInit, OnDestroy {
             )
             .subscribe((isFetched) => {
                 if (!isFetched) {
-                    this.fundService.fetchFundList();
+                    if (!this.isAdmin()) {
+                        this.fundService.fetchFundList();
+                    } else {
+                        /* For IZNES Admins */
+                        this.fundService.fetchAdminFundList();
+                    }
                 }
             });
 
@@ -69,5 +85,14 @@ export class FundAuditComponent implements OnInit, OnDestroy {
 
     navigateToPreviousLocation() {
         this.location.back();
+    }
+
+    /**
+     * Check whether the userType is an IZNES Admin User
+     *
+     * @return {boolean}
+     */
+    isAdmin(): boolean {
+        return (this.userType === ADMIN_USER_TYPE);
     }
 }

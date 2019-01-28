@@ -118,6 +118,7 @@ function handleClearRequested(state: UmbrellaFundListState, action: Action): Umb
 
 function handleSetUmbrellaAudit(state: UmbrellaFundListState, action): UmbrellaFundListState {
     const data = _.get(action.payload, [1, 'Data']);
+
     if (!data.length) {
         return state;
     }
