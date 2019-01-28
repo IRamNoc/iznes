@@ -857,12 +857,21 @@ export class FundComponent implements OnInit, OnDestroy {
         return _.get(this.fundForm.controls['typeOfEuDirective'].value, ['0', 'id'], false);
     }
 
-    // Returns true if an umbrella item has been selected
+    /**
+     * Toggle the visibility of form elements given the selection of an Umbrella Fund
+     *
+     * @return {boolean}
+     */
     isUmbrellaSelected() {
         const umb = _.get(this.umbrellaEditForm.controls['umbrellaFund'].value, ['0', 'id'], false);
         return umb !== false && umb !== '0';
     }
 
+    /**
+     * Toggle the visibility of the homeCountryLegalType form control given the selected domicile
+     *
+     * @return {boolean}
+     */
     isHomeCountryLegalTypeVisible() {
         const id = _.get(this.fundForm.controls['domicile'].value, ['0', 'id'], false);
         if (!id) {
@@ -872,20 +881,41 @@ export class FundComponent implements OnInit, OnDestroy {
         return homeCountryLegalTypesKeys.indexOf(id) !== -1;
     }
 
+    /**
+     * Toggle the visibility of the nationalNomenclatureOfLegalForm form control given the value of legalForm
+     *
+     * @return {boolean}
+     */
     isNationalNomenclatureOfLegalFormVisible() {
         return _.get(this.fundForm.controls['legalForm'].value, ['length'], false);
     }
 
+    /**
+     * Toggle the visibility of the transferAgentID form control given the selected domicile
+     *
+     * @return {boolean}
+     */
     isTransferAgentActive() {
         const id = _.get(this.fundForm.controls['domicile'].value, ['0', 'id'], false);
         return id === 'IE' || id === 'LU';
     }
 
+    /**
+     * Toggle the visibility of the centralisingAgentID form control given the selected domicile
+     *
+     * @return {boolean}
+     */
     isCentralizingAgentActive() {
         const id = _.get(this.fundForm.controls['domicile'].value, ['0', 'id'], false);
         return id === 'FR';
     }
 
+    /**
+     * Check for the existence of an LEI in the leiList
+     *
+     * @param {string} currentLei
+     * @return {boolean}
+     */
     isLeiAlreadyExisting(currentLei: string): boolean {
         // if undefined the LEI won't exist
         if (!currentLei) return false;
@@ -897,6 +927,12 @@ export class FundComponent implements OnInit, OnDestroy {
         return this.leiList.indexOf(currentLei) !== -1;
     }
 
+    /**
+     * Set the managementCompanyItems
+     *
+     * @param {any} funds
+     * @return {void | object}
+     */
     setManagementCompanyItems(d) {
         const values = _.values(d);
         if (!values.length) {
@@ -910,7 +946,13 @@ export class FundComponent implements OnInit, OnDestroy {
         });
     }
 
-    setFundList(funds) {
+    /**
+     * Set the fundList and fundListItems
+     *
+     * @param {any} funds
+     * @return {void | object}
+     */
+    setFundList(funds): void | object {
         if (!Object.keys(funds).length) {
             this.fundList = [];
             this.fundListItems = [];
@@ -1069,7 +1111,13 @@ export class FundComponent implements OnInit, OnDestroy {
         });
     }
 
-    setCurrentUmbrella(umbrella) {
+    /**
+     * Set the current Umbrella Fund and update URL
+     *
+     * @param {any}
+     * @return {void}
+     */
+    setCurrentUmbrella(umbrella): void {
         this.umbrellaControl.setValue([{
             id: umbrella.umbrellaFundID,
             text: umbrella.umbrellaFundName,
@@ -1083,11 +1131,20 @@ export class FundComponent implements OnInit, OnDestroy {
         this.changeDetectorRef.markForCheck();
     }
 
-    // forms
+    /**
+     * Hide the fund creation forms
+     *
+     * @return {void}
+     */
     submitUmbrellaForm(): void {
         this.viewMode = 'FUND';
     }
 
+    /**
+     * Save/Update a Fund
+     *
+     * @return {void}
+     */
     submitFundForm() {
         if (!this.fundForm.valid) {
             return;
@@ -1159,6 +1216,11 @@ export class FundComponent implements OnInit, OnDestroy {
         }
     }
 
+    /**
+     * Save/Update a Fund Draft
+     *
+     * @return {void}
+     */
     saveDraft() {
         const payload: Fund = {
             draft: 1,
@@ -1223,6 +1285,12 @@ export class FundComponent implements OnInit, OnDestroy {
         }
     }
 
+    /**
+     * Redirect to the new Fund Share page
+     *
+     * @param {string} fundID
+     * @return {void}
+     */
     redirectToShare(fundID?) {
         let query = {};
         if (fundID) {
@@ -1231,10 +1299,22 @@ export class FundComponent implements OnInit, OnDestroy {
         this.router.navigate(['/product-module/product/fund-share/new'], { queryParams: query });
     }
 
+    /**
+     * Duplicate a Fund
+     *
+     * @param {string} fundID
+     * @return {void}
+     */
     duplicate(fundID: string) {
         this.router.navigateByUrl(`/product-module/product/fund/new?prefill=${fundID}`);
     }
 
+    /**
+     * Redirect to the Fund Audit page
+     *
+     * @param {string} fundID
+     * @return {void}
+     */
     auditTrail(fundID: string) {
         this.router.navigateByUrl(`/product-module/product/fund/${fundID}/audit`);
     }
@@ -1249,12 +1329,12 @@ export class FundComponent implements OnInit, OnDestroy {
     }
 
     /**
-    * Show Share creation confirmation modal
-    *
-    * @param {string} fundName
-    * @param {any} fundID
-    * @return {void}
-    */
+     * Show Share creation confirmation modal
+     *
+     * @param {string} fundName
+     * @param {any} fundID
+     * @return {void}
+     */
     displaySharePopup(fundName: string, fundID: any): void {
         const message = `<span>${this.translate.translate('By clicking "Yes", you will be able to create a share directly linked to @fundName@.', { 'fundName': fundName })}</span>`;
 
@@ -1272,6 +1352,12 @@ export class FundComponent implements OnInit, OnDestroy {
         });
     }
 
+    /**
+     * Show Fund successfully created toaster
+     *
+     * @param {string} fundName
+     * @return {void}
+     */
     creationSuccess(fundName) {
         this.toasterService.pop(
             'success',
@@ -1287,10 +1373,20 @@ export class FundComponent implements OnInit, OnDestroy {
         this.router.navigateByUrl('/product-module/product');
     }
 
+    /**
+     * Set list of holiday dates from the datepicker
+     *
+     * @return {void}
+     */
     setHolidayMgmtConfig(dates: () => string[]): void {
         this.holidayMgmtConfigDates = dates;
     }
 
+    /**
+     * Get list of holiday dates in json format
+     *
+     * @return {string}
+     */
     getHolidayMgmtConfig(): string {
         if (this.fundForm.value.useDefaultHolidayMgmt === '0') {
             return JSON.stringify(this.holidayMgmtConfigDates());
@@ -1299,10 +1395,22 @@ export class FundComponent implements OnInit, OnDestroy {
         return JSON.stringify([]);
     }
 
+    /**
+     * Toggle the visibility of the Default Holiday Management Configuration datepicker
+     *
+     * @param {boolean} nextState
+     * @return {void}
+     */
     showHolidayMgmtConfig(): boolean {
         return this.fundForm.value.useDefaultHolidayMgmt === '0';
     }
 
+    /**
+     * Toggle the visibility and validity of the legalEntityIdentifier form control
+     *
+     * @param {boolean} nextState
+     * @return {void}
+     */
     toggleLeiSwitch(nextState: boolean) {
         if (!nextState) {
             this.fundForm.controls['legalEntityIdentifier'].disable();

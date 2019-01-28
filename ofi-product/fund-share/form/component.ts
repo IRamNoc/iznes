@@ -771,6 +771,11 @@ export class FundShareComponent implements OnInit, AfterViewInit, OnDestroy {
         }
     }
 
+    /**
+     * Save/Update a Fund Share Draft
+     *
+     * @return {void}
+     */
     private getSaveShareText(message: string, progress: number): string {
         return `<table class="table grid">
             <tbody>
@@ -789,8 +794,9 @@ export class FundShareComponent implements OnInit, AfterViewInit, OnDestroy {
     }
 
     /**
-     * save the draft fund share (this is used for create and update)
-     * @return void
+     * Save/Update a Fund Share Draft
+     *
+     * @return {void}
      */
     saveDraft(): void {
         const request = this.model.getRequest(1);
@@ -933,7 +939,7 @@ export class FundShareComponent implements OnInit, AfterViewInit, OnDestroy {
 
     /**
      * cancel and leave the fund share (this is used for create and update)
-     * @return void
+     * @return {void{}
      */
     cancelFundShare(): void {
         if (this.isRead()) {

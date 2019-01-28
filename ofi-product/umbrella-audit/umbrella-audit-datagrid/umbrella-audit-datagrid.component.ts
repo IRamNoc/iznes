@@ -6,6 +6,7 @@ import { combineLatest } from 'rxjs/observable/combineLatest';
 import { FormBuilder, FormGroup } from '@angular/forms';
 import { OfiUmbrellaFundService } from '@ofi/ofi-main/ofi-req-services/ofi-product/umbrella-fund/service';
 import { MultilingualService } from '@setl/multilingual';
+import * as moment from 'moment';
 
 const ADMIN_USER_TYPE = 35;
 
@@ -45,10 +46,10 @@ export class UmbrellaAuditDatagridComponent implements OnInit, OnDestroy, OnChan
     ) {
         this.searchForm = this.fb.group({
             startDate: [
-                '',
+                moment().add('-1', 'month').format('YYYY-MM-DD'),
             ],
             endDate: [
-                '',
+                moment().format('YYYY-MM-DD'),
             ],
         });
     }
