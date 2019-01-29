@@ -107,7 +107,7 @@
                                 </button>
                                 <button class="btn btn-orange btn-sm" style="margin: 0px;" (click)="handleBuySell(fund.id)" [attr.disabled]="disableRedeem((fund.isin + '|' + fund.shareName)) && !allowSellBuy(fund)">
                                     <i class="fa fa-circle-o-notch"></i>
-                                    <span mltag=""> {{ 'Sell/Buy' | translate }}</span></button>
+                                    <span> {{ 'Sell/Buy' | translate }}</span></button>
                             </div>
                         </clr-dg-cell>
                     </clr-dg-row>
