@@ -2,12 +2,10 @@
     <div [ngSwitch]="config.type">
         <!-- KYC approved -->
         <div *ngSwitchCase="'kycApproved'">
-            <p class="padding"><span mltag="txt_hello">Hello</span> {{config.investorFirstName}},</p>
+            <p class="padding"><span>{{ 'Hello' | translate }}</span> {{config.investorFirstName}},</p>
 
             <p class="padding">
-                <span mltag="txt_wehavethepleasuretoinformyouth66f22600c6">We have the pleasure to inform you that</span> {{config.amCompanyName}} <span mltag="txt_approvedthekycdocumentspertain0de3204a14">approved the KYC documents pertaining
-                to
-                </span> {{config.investorCompanyName}}.
+                {{ 'We have the pleasure to inform you that @amCompanyName@ approved the KYC documents pertaining to @investorCompanyName@.' | translate: {'amCompanyName': config.amCompanyName, 'investorCompanyName': config.investorCompanyName} }}
             </p>
 
             <div *ngIf="askedForClassificationChange">
@@ -30,9 +28,7 @@
             </div>
 
             <p class="padding">{{config.amCompanyName}} 
-                <span mltag="txt_willshortlyenableyoutoaccessfue630933a91">
-                    {{'will shortly enable you to access funds’ shares, in order for your company to be able to invest on the IZNES platform.' | translate}}
-                </span>
+                {{ '@config.amCompanyName@ will shortly enable you to access funds’ shares, in order for your company to be able to invest on the IZNES platform.' | translate: {'@config.amCompanyName@': @config.amCompanyName@} }}
             </p>
 
             <p class="padding">{{'Thank you' | translate}},</p>

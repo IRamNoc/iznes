@@ -10,7 +10,6 @@ export class MessageActionsConfig {
 
 export class MessageAction {
     text: string = '';
-    text_mltag: string = '';
     messageType: string = ''; // tx
     payload: any; // api payload,
     successType: string;
@@ -20,6 +19,5 @@ export class MessageAction {
 
 export class MessageField {
     name: string = '';
-    name_mltag: string = '';
     content: string = '';
 }
