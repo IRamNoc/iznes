@@ -91,7 +91,7 @@
                 <ng-container *ngFor="let field of transactionFields">
                     <div class="form-group" *ngIf="transaction[field.field]">
                         <label class="col-sm-3 control-label">
-                            <span class="ml" mltag="txt_">{{field.displayName}}</span>
+                            <span>{{ field.displayName | translate }}</span>
                         </label>
                         <div class="col-sm-9">
                             <input type="text" 
