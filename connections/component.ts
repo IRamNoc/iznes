@@ -505,14 +505,12 @@ export class ConnectionComponent implements OnInit, OnDestroy {
 
         actionConfig.actions.push({
             text: this.translate.translate('Accept'),
-            text_mltag: 'txt_accept',
             styleClasses: 'btn-success',
             payload: acceptPayload,
         });
 
         actionConfig.actions.push({
             text: this.translate.translate('Reject'),
-            text_mltag: 'txt_reject',
             styleClasses: 'btn-danger',
             payload: rejectPayload,
         });
