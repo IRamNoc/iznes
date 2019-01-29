@@ -50,8 +50,8 @@ import { SellBuyCalendar } from '../../ofi-product/fund-share/FundShareEnum';
 import { OfiFundShareService } from '@ofi/ofi-main/ofi-req-services/ofi-product/fund-share/service';
 import { DomSanitizer } from '@angular/platform-browser';
 import { FileDownloader } from '@setl/utils/services/file-downloader/service';
-import {OfiNavService} from "../../ofi-req-services/ofi-product/nav/service";
-import {validateKiid} from "../../ofi-store/ofi-fund-invest/ofi-fund-access-my";
+import { OfiNavService } from "../../ofi-req-services/ofi-product/nav/service";
+import { validateKiid } from "../../ofi-store/ofi-fund-invest/ofi-fund-access-my";
 
 interface DateChangeEvent {
     type: string;
@@ -679,6 +679,7 @@ export class InvestFundComponent implements OnInit, OnDestroy {
                 subportfolio,
             )
                 .then((res) => {
+
                     this.subPortfolioRedemptionEncumberBalance = OrderHelper.getInvestorRedemptionTotalEcumbrance(
                         res,
                         subportfolio,
@@ -925,7 +926,7 @@ export class InvestFundComponent implements OnInit, OnDestroy {
                 this.subPortfolioTotalBalance,
                 this.subPortfolioEncumberedBalance,
                 this.subPortfolioRedemptionEncumBalance,
-                this.nav,
+                this.numberConverterService.toBlockchain(this.nav),
             );
 
             if (!OrderHelper.isResponseGood(checkResponse)) {
@@ -1054,9 +1055,9 @@ export class InvestFundComponent implements OnInit, OnDestroy {
             ${this.translate.translate('Hello')}
             <br /><br />
             ${this.translate.translate(
-                'Please be aware that the @orderTypeLabel@ order @orderRef has exceeded the limit of 15 million.',
-                { 'orderTypeLabel': params.orderTypeLabel, 'orderRef': params.orderRef },
-            )}
+            'Please be aware that the @orderTypeLabel@ order @orderRef has exceeded the limit of 15 million.',
+            { 'orderTypeLabel': params.orderTypeLabel, 'orderRef': params.orderRef },
+        )}
             <br />%@link@%<br /><br />
             ${this.translate.translate('The IZNES Team')}
             .</p>
@@ -1653,8 +1654,8 @@ export class InvestFundComponent implements OnInit, OnDestroy {
                     </tbody>
                 </table>
             `,
-            {},
-            this.translate.getTranslationByString('Order above 80% of your position'));
+                {},
+                this.translate.getTranslationByString('Order above 80% of your position'));
     }
 
     /**
@@ -1678,8 +1679,8 @@ export class InvestFundComponent implements OnInit, OnDestroy {
                     </tbody>
                 </table>
             `,
-            {},
-            this.translate.getTranslationByString('Order above 80% of your position'));
+                {},
+                this.translate.getTranslationByString('Order above 80% of your position'));
     }
 
     validateKiid() {
@@ -1726,11 +1727,11 @@ export class InvestFundComponent implements OnInit, OnDestroy {
             });
     }
 
-    newOrderChangeUpdateEvent(type: string, event: any){
-       this.orderDatesChange$.next({
-           type,
-           event,
-       });
+    newOrderChangeUpdateEvent(type: string, event: any) {
+        this.orderDatesChange$.next({
+            type,
+            event,
+        });
     }
 
     updateNavForNavDate() {
@@ -1741,7 +1742,6 @@ export class InvestFundComponent implements OnInit, OnDestroy {
             isin: this.shareData.isin,
             navdate: this.valuationDate.value
         }).then((response) => {
-            console.log('nav', response);
             this.valuationNav = response;
         }).catch(e => console.error(e));
 
