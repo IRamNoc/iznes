@@ -1174,8 +1174,11 @@ export class FundComponent implements OnInit, OnDestroy {
                 return;
             })
             .catch((err) => {
-                let errMsg = _.get(err, '[1].Data.Message', '');
-                errMsg = this.translate.translate(errMsg);
+                let errMsg = _.get(err, ['1', 'Data', '0', 'Message'], '');
+
+                if (errMsg) {
+                    errMsg = this.translate.translate(errMsg);
+                }
 
                 this.toasterService.pop(
                     'error',
