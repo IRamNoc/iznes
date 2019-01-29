@@ -3,7 +3,7 @@
 		<form [formGroup]="form">
 			<div class="toggle-switch">
 				<input type="checkbox" id="excludeWeekendsToggle" name="excludeWeekendsToggle"
-					formControlName="excludeWeekends">
+					formControlName="excludeWeekends" [attr.disabled]="disabled || null">
 				<label for="excludeWeekendsToggle">{{ 'Exclude Weekends (toggle)' | translate }}</label>
 			</div>
 		</form>
@@ -12,6 +12,6 @@
 	<dp-day-calendar [(ngModel)]="selectedDates" [config]="dateConfig" theme="dp-material" [disabled]="disabled"></dp-day-calendar>
 
 	<div class="calendar c-footer" *ngIf="showClearButton">
-		<button class="btn btn-danger clear" (click)="clear()" type="button">{{ 'Reset' | translate }}</button>
+		<button class="btn btn-danger clear" (click)="clear()" type="button" [attr.disabled]="disabled || null">{{ 'Reset' | translate }}</button>
 	</div>
 </div>
