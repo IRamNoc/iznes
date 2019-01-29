@@ -5,7 +5,7 @@ import { omit } from 'lodash';
 import { MockNgRedux } from '@angular-redux/store/testing';
 import { ClarityModule } from '@clr/angular';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
-
+import * as moment from 'moment';
 import { UmbrellaAuditDatagridComponent } from './umbrella-audit-datagrid.component';
 import {
     DpDatePickerModule,
@@ -137,8 +137,8 @@ describe('UmbrellaAuditDatagridComponent', () => {
             umbrellaAuditListStub.complete();
 
             const expectedFormValue = {
-                startDate: '',
-                endDate: '',
+                startDate: moment().add('-1', 'month').format('YYYY-MM-DD'),
+                endDate: moment().format('YYYY-MM-DD'),
             };
 
             tick();
