@@ -105,9 +105,34 @@ export class OfiFundShareService {
         );
     }
 
+    fetchIznesAdminShareList() {
+        const asyncTaskPipe = this.requestIznesAdminShareList();
+
+        this.ngRedux.dispatch(
+            SagaHelper.runAsync(
+                [SET_FUND_SHARE],
+                [],
+                asyncTaskPipe,
+                {},
+                () => {
+                    this.ngRedux.dispatch(setRequestedIznesShares());
+                },
+            ),
+        );
+    }
+
     requestIznesShareList() {
         const messageBody: IznesShareListRequestMessageBody = {
             RequestName: 'izngetfundsharelist',
+            token: this.memberSocketService.token,
+        };
+
+        return createMemberNodeSagaRequest(this.memberSocketService, messageBody);
+    }
+
+    requestIznesAdminShareList() {
+        const messageBody: IznesShareListRequestMessageBody = {
+            RequestName: 'izngetadminfundsharelist',
             token: this.memberSocketService.token,
         };
 
@@ -402,6 +427,39 @@ export class OfiFundShareService {
     getFundShareAudit(requestData): any {
         let messageBody = {
             RequestName: 'getfundshareaudit',
+            token: this.memberSocketService.token,
+        };
+
+        messageBody = Object.assign(requestData, messageBody);
+
+        return createMemberNodeSagaRequest(this.memberSocketService, messageBody);
+    }
+
+    /**
+     * Get fund share audit data for IZNES Admins
+     * @return {any}
+     */
+    static adminFundShareAudit(ofiFundService: OfiFundShareService,
+                               ngRedux: NgRedux<any>,
+                               requestData,
+                               successCallback: (data) => void,
+                               errorCallback: (e) => void) {
+
+        const asyncTaskPipe = ofiFundService.getAdminFundShareAudit(requestData);
+
+        ngRedux.dispatch(SagaHelper.runAsync(
+            [SET_FUND_SHARE_AUDIT],
+            [],
+            asyncTaskPipe,
+            {},
+            data => successCallback(data),
+            e => errorCallback(e),
+        ));
+    }
+
+    getAdminFundShareAudit(requestData): any {
+        let messageBody = {
+            RequestName: 'getadminfundshareaudit',
             token: this.memberSocketService.token,
         };
 

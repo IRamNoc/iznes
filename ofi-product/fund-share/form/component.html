@@ -29,6 +29,15 @@
                     </div>
                 </div>
             </div>
+            <div *ngIf="isAdmin()" class="row tab-header-container">
+                <div class="col-sm-6"></div>
+                <div class="col-sm-6">
+                    <div class="form-group btn-container">
+                        <button class="btn btn-default" (click)="goToAuditTrail()">{{ 'Share Audit Trail' | translate }}</button>
+                    </div>
+                </div>
+            </div>
+
             <div class="well" *ngIf="hasUmbrellaFund()">
                 <div class="row panel-header">
                     <div class="col-sm-12">
@@ -484,7 +493,7 @@
             <div class="form-group row actions bottom">
                 <div class="col-sm-12">
                     <button (click)="cancelFundShare()" class="btn btn-default action-button cancel" id="cancelFundShareBottom">
-                        {{ isRead() ? 'Back' : 'Cancel' | translate }}
+                        {{ isAdmin() ? 'Close' : isRead() ? 'Back' : 'Cancel' | translate }}
                     </button>
 
                     <button *ngIf="isCreate() || currDraft == 1" id="saveDraftFundShareBottom" type="button" class="btn btn-primary" (click)="saveDraft()">

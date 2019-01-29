@@ -22,6 +22,8 @@ import { OfiCurrenciesService } from '../../ofi-req-services/ofi-currencies/serv
 import { Observable, Subscription, combineLatest as observableCombineLatest } from 'rxjs';
 import { MultilingualService } from '@setl/multilingual';
 
+const AM_USERTYPE = 36;
+
 /* Models */
 
 @Component({
@@ -50,13 +52,20 @@ export class ProductHomeComponent implements OnInit, OnDestroy {
 
     /* Private properties. */
     subscriptions: Array<Subscription> = [];
+    private usertype: number;
 
     /* Redux observables. */
     @select(['user', 'siteSettings', 'language']) requestLanguageOb;
     @select(['user', 'myDetail']) userDetailObs;
+    @select(['user', 'myDetail', 'userType']) usertype$;
     @select(['ofi', 'ofiProduct', 'ofiFund', 'fundList', 'iznFundList']) fundListObs;
     @select(['ofi', 'ofiProduct', 'ofiFundShareList', 'requestedIznesShare']) requestedShareListObs;
     @select(['ofi', 'ofiProduct', 'ofiFundShareList', 'iznShareList']) shareListObs;
+
+    /* For IZNES Admins */
+    @select(['ofi', 'ofiProduct', 'ofiFundShare', 'requested']) requestedFundShareObs;
+    @select(['ofi', 'ofiProduct', 'ofiFundShare', 'fundShare']) fundShareObs;
+
     @select(['ofi', 'ofiProduct', 'ofiUmbrellaFund', 'umbrellaFundList', 'umbrellaFundList']) umbrellaFundAccessListOb;
     @select([
         'ofi',
@@ -82,7 +91,6 @@ export class ProductHomeComponent implements OnInit, OnDestroy {
                 private ofiCurrenciesService: OfiCurrenciesService,
                 public translate: MultilingualService,
     ) {
-
         this.countryItems = productConfig.fundItems.domicileItems;
         this.legalFormItems = productConfig.fundItems.fundLegalFormItems;
         this.showOnlyActive = !this.showOnlyActive;
@@ -92,11 +100,9 @@ export class ProductHomeComponent implements OnInit, OnDestroy {
         this.initColumns();
         this.initPanelDefs();
 
-        this.ofiCurrenciesService.getCurrencyList();
-        this.ofiManagementCompanyService.getManagementCompanyList();
-        this.ofiUmbrellaFundService.fetchUmbrellaList();
-        this.ofiFundService.getFundList();
-
+        this.subscriptions.push(this.usertype$.subscribe((usertype) => {
+            this.usertype = usertype;
+        }));
         this.subscriptions.push(this.currenciesObs.subscribe(c => this.getCurrencyList(c)));
         this.subscriptions.push(this.managementCompanyAccessListOb
         .subscribe(d => this.managementCompanyAccessList = d));
@@ -105,21 +111,38 @@ export class ProductHomeComponent implements OnInit, OnDestroy {
         this.subscriptions.push(this.fundListObs.subscribe(funds => this.getFundList(funds)));
         this.subscriptions.push(this.requestedShareListObs.subscribe(requested => this.requestShareList(requested)));
         this.subscriptions.push(this.shareListObs.subscribe(shares => this.getShareList(shares)));
-        this.subscriptions.push(this.umbrellaFundAccessListOb.subscribe((list: any) => this.getUmbrellaFundList(list)));
 
+        this.subscriptions.push(this.umbrellaFundAccessListOb.subscribe((list: any) => this.getUmbrellaFundList(list)));
         this.subscriptions.push(this.requestLanguageOb.subscribe(() => {
             this.initColumns();
             this.initPanelDefs();
         }));
 
-        // drafts
-        this.subscriptions.push(
-            observableCombineLatest(this.fundListObs, this.shareListObs, this.umbrellaFundAccessListOb).subscribe(([fundList, shareList, umbrellaList]) => {
-                this.getDrafts(fundList, shareList, umbrellaList);
-            }),
-        );
+        /* For IZNES Admins */
+        if (!this.isAssetManager()) {
+            this.subscriptions.push(this.requestedFundShareObs.subscribe(requested => this.requestShareList(requested)));
+            this.subscriptions.push(this.fundShareObs.subscribe(shares => this.getShareList(shares)));
+        } else {
+            // Drafts
+            this.subscriptions.push(
+                observableCombineLatest(this.fundListObs, this.shareListObs, this.umbrellaFundAccessListOb).subscribe(([fundList, shareList, umbrellaList]) => {
+                    this.getDrafts(fundList, shareList, umbrellaList);
+                }),
+            );
+        }
 
-        OfiFundShareService.defaultRequestIznesShareList(this.ofiFundShareService, this.ngRedux);
+        this.ofiCurrenciesService.getCurrencyList();
+
+        /* For IZNES Admins */
+        if (!this.isAssetManager()) {
+            this.ofiUmbrellaFundService.getAdminUmbrellaList();
+            this.ofiFundService.getAdminFundList();
+        } else {
+            OfiFundShareService.defaultRequestIznesShareList(this.ofiFundShareService, this.ngRedux);
+            this.ofiManagementCompanyService.getManagementCompanyList();
+            this.ofiUmbrellaFundService.fetchUmbrellaList();
+            this.ofiFundService.getFundList();
+        }
     }
 
     ngOnDestroy(): void {
@@ -131,8 +154,24 @@ export class ProductHomeComponent implements OnInit, OnDestroy {
         });
     }
 
+    /**
+     * Check if the user is an IZNES Admin
+     *
+     * @return {boolean}
+     */
+    isAssetManager(): boolean {
+        return this.usertype === AM_USERTYPE;
+    }
+
+    /**
+     * Populate the Fund list
+     *
+     * @param {object} funds
+     * @return {void}
+     */
     getFundList(funds: any): void {
         const fundList = [];
+
         if (_.values(funds).length > 0) {
             _.values(funds).map((fund) => {
                 if (Number(fund.draft) === 0) {
@@ -147,7 +186,7 @@ export class ProductHomeComponent implements OnInit, OnDestroy {
                         managementCompany: _.get(
                             this.managementCompanyAccessList,
                             [fund.managementCompanyID, 'companyName'],
-                            '',
+                            fund.companyName,
                         ),
                         domicile: domicile.text,
                         lawStatus: lawStatus.text,
@@ -164,12 +203,27 @@ export class ProductHomeComponent implements OnInit, OnDestroy {
         this.changeDetectorRef.markForCheck();
     }
 
+    /**
+     * Request the Share list
+     *
+     * @return {void}
+     */
     requestShareList(requested): void {
         if (!requested) {
-            OfiFundShareService.defaultRequestIznesShareList(this.ofiFundShareService, this.ngRedux);
+            if (this.isAssetManager()) {
+                OfiFundShareService.defaultRequestIznesShareList(this.ofiFundShareService, this.ngRedux);
+            } else {
+                this.ofiFundShareService.fetchIznesAdminShareList();
+            }
         }
     }
 
+    /**
+     * Populate the Share list
+     *
+     * @param {object} shares
+     * @return {void}
+     */
     getShareList(shares): void {
         const shareList = [];
 
@@ -209,7 +263,13 @@ export class ProductHomeComponent implements OnInit, OnDestroy {
         this.changeDetectorRef.markForCheck();
     }
 
-    getUmbrellaFundList(umbrellaFunds) {
+    /**
+     * Populate the Umbrella Fund list
+     *
+     * @param {object} umbrellaList
+     * @return {void}
+     */
+    getUmbrellaFundList(umbrellaFunds): void {
         const data = fromJS(umbrellaFunds).toArray();
         const umbrellaFundList = [];
 
@@ -230,7 +290,7 @@ export class ProductHomeComponent implements OnInit, OnDestroy {
                         managementCompany: _.get(
                             this.managementCompanyAccessList,
                             [item.get('managementCompanyID', 0), 'companyName'],
-                            '',
+                            item.get('companyName', ''),
                         ),
                         fundAdministratorID: item.get('fundAdministratorID', 0),
                         custodianBankID: item.get('custodianBankID', 0),
@@ -257,7 +317,15 @@ export class ProductHomeComponent implements OnInit, OnDestroy {
         this.changeDetectorRef.markForCheck();
     }
 
-    getDrafts(fundList, shareList, umbrellaList) {
+    /**
+     * Get drafts for Umbrella Funds, Funds, and Shares
+     *
+     * @param {object} fundList
+     * @param {object} shareList
+     * @param {object} umbrellaList
+     * @return {void}
+     */
+    getDrafts(fundList, shareList, umbrellaList): void {
         this.draftList = [];
 
         const data1 = fromJS(umbrellaList).toArray();
@@ -310,10 +378,19 @@ export class ProductHomeComponent implements OnInit, OnDestroy {
 
         this.panelDefs[3].data = this.draftList;
         this.panelDefs[3].count = this.draftList.length;
+
         this.changeDetectorRef.markForCheck();
     }
 
-    varBtn(btnType, dataType, id) {
+    /**
+     * Handle Edit and Delete button clicks
+     *
+     * @param {string} btnType - edit or delete
+     * @param {string} dataType - Umbrella Fund, Fund or Share
+     * @param {string} id - id of the Umbrella Fund, Fund or Share
+     * @return {void}
+     */
+    varBtn(btnType, dataType, id): void {
         const temp = {
             'Umbrella Fund': 'umbrella-fund',
             Fund: 'fund',
@@ -352,13 +429,24 @@ export class ProductHomeComponent implements OnInit, OnDestroy {
         }
     }
 
-    getCurrencyList(data) {
+    /**
+     * Get the currencies list
+     *
+     * @param {object} data - the raw data to convert
+     * @return {void}
+     */
+    getCurrencyList(data): void {
         if (data) {
             this.fundCurrencyItems = data.toJS();
         }
     }
 
-    handleShareToggleClick() {
+    /**
+     * Toggle the display of only active shares
+     *
+     * @return {void}
+     */
+    handleShareToggleClick(): void {
         this.showOnlyActive = !this.showOnlyActive;
         this.filteredShareList = this.shareList.filter((share) => {
             return (this.showOnlyActive) ? share.status !== 'Closed for subscription and redemption' : share.status;
@@ -369,7 +457,13 @@ export class ProductHomeComponent implements OnInit, OnDestroy {
         this.changeDetectorRef.markForCheck();
     }
 
-    addForm(type) {
+    /**
+     * Redirect to an add new Umbrella Fund, Fund or Share page
+     *
+     * @param {string} type - Umbrella Fund, Fund or Share
+     * @return {void}
+     */
+    addForm(type): void {
         switch (type) {
             case 'share':
                 this.router.navigateByUrl('/product-module/product/fund-share/new');
@@ -383,7 +477,13 @@ export class ProductHomeComponent implements OnInit, OnDestroy {
         }
     }
 
-    getUmbrellaFundName(id) {
+    /**
+     * Get an Umbrella Fund name
+     *
+     * @param {number} id
+     * @return {string}
+     */
+    getUmbrellaFundName(id): string {
         if (id && id !== 0 && id !== null) {
             if (this.umbrellaFundList.length > 0) {
                 const obj = this.umbrellaFundList.find(o => o.umbrellaFundID === id);
@@ -397,11 +497,23 @@ export class ProductHomeComponent implements OnInit, OnDestroy {
         }
     }
 
-    goToView(url, id) {
+    /**
+     * Redirect to the given URL
+     *
+     * @param {string} url
+     * @param {string} id
+     * @return {void}
+     */
+    goToView(url, id): void {
         this.router.navigateByUrl(`${url}${id}`);
     }
 
-    initColumns() {
+    /**
+     * Intialise datagrid columns
+     *
+     * @return {void}
+     */
+    initColumns(): void {
         this.columns = {
             shareName: {
                 label: this.translate.translate('Share Name'),
@@ -526,117 +638,198 @@ export class ProductHomeComponent implements OnInit, OnDestroy {
         };
     }
 
-    initPanelDefs() {
-        this.panelDefs = [
-            {
-                title: this.translate.translate('Umbrella Funds'),
-                columns: [
-                    this.columns['uFundName'],
-                    this.columns['lei'],
-                    this.columns['managementCompany'],
-                    this.columns['country'],
-                ],
-                action: {
-                    id: 'new-umbrella-fund-btn',
-                    title: this.translate.translate('Add New Umbrella Fund'),
-                    icon: 'plus',
-                    type: 'ufund',
-                },
-                link: '/product-module/product/umbrella-fund/',
-                linkIdent: 'umbrellaFundID',
-                open: true,
-                data: this.umbrellaFundList,
-                count: this.umbrellaFundList.length,
-                columnLink: 'umbrellaFundName',
-            },
-            {
-                title: this.translate.translate('Funds/Subfunds'),
-                columns: [
-                    this.columns['fFundName'],
-                    this.columns['lei'],
-                    this.columns['fundCurrency'],
-                    this.columns['managementCompany'],
-                    this.columns['country'],
-                    this.columns['lawStatus'],
-                    this.columns['umbrellaFund'],
-                ],
-                action: {
-                    id: 'new-fund-btn',
-                    title: this.translate.translate('Add New Fund'),
-                    icon: 'plus',
-                    type: 'fund',
-                },
-                link: '/product-module/product/fund/',
-                linkIdent: 'fundID',
-                open: true,
-                data: this.fundList,
-                count: this.fundList.length,
-                columnLink: 'fundName',
-            },
-            {
-                title: this.translate.translate('Shares'),
-                columns: [
-                    this.columns['shareName'],
-                    this.columns['isin'],
-                    this.columns['fundName'],
-                    this.columns['shareCurrency'],
-                    this.columns['managementCompany'],
-                    // this.columns['uFundName'],
-                    this.columns['shareClass'],
-                    this.columns['status'],
-                ],
-                action: {
-                    id: 'new-share-btn',
-                    title: this.translate.translate('Add New Share'),
-                    icon: 'plus',
-                    type: 'share',
-                },
-                link: '/product-module/product/fund-share/',
-                linkIdent: 'fundShareID',
-                open: true,
-                data: this.filteredShareList,
-                count: this.filteredShareList.length,
-                columnLink: 'shareName',
-            },
-            {
-                title: this.translate.translate('Drafts'),
-                columns: [
-                    this.columns['draftType'],
-                    this.columns['draftName'],
-                    this.columns['draftCreated'],
-                    this.columns['draftDate'],
-                ],
-                open: true,
-                data: this.draftList,
-                count: this.draftList.length,
-                columnLink: '',
-                buttons: [
-                    {
-                        text: this.translate.translate('Edit Draft'),
-                        class: 'btn btn-success btn-sm no-margin',
-                        click: 'edit',
-                        iconClass: 'fa fa-edit',
+    /**
+     * Define panels and their datagrid columns
+     *
+     * @return {void}
+     */
+    initPanelDefs(): void {
+        if (this.isAssetManager()) {
+            this.panelDefs = [
+                {
+                    title: this.translate.translate('Umbrella Funds'),
+                    columns: [
+                        this.columns['uFundName'],
+                        this.columns['lei'],
+                        this.columns['managementCompany'],
+                        this.columns['country'],
+                    ],
+                    action: {
+                        id: 'new-umbrella-fund-btn',
+                        title: this.translate.translate('Add New Umbrella Fund'),
+                        icon: 'plus',
+                        type: 'ufund',
                     },
-                    {
-                        text: this.translate.translate('Delete Draft'),
-                        class: 'btn btn-danger btn-sm',
-                        click: 'delete',
-                        iconClass: 'fa fa-remove',
+                    link: '/product-module/product/umbrella-fund/',
+                    linkIdent: 'umbrellaFundID',
+                    open: true,
+                    data: this.umbrellaFundList,
+                    count: this.umbrellaFundList.length,
+                    columnLink: 'umbrellaFundName',
+                },
+                {
+                    title: this.translate.translate('Funds/Subfunds'),
+                    columns: [
+                        this.columns['fFundName'],
+                        this.columns['lei'],
+                        this.columns['fundCurrency'],
+                        this.columns['managementCompany'],
+                        this.columns['country'],
+                        this.columns['lawStatus'],
+                        this.columns['umbrellaFund'],
+                    ],
+                    action: {
+                        id: 'new-fund-btn',
+                        title: this.translate.translate('Add New Fund'),
+                        icon: 'plus',
+                        type: 'fund',
                     },
-                ],
-            },
-        ];
+                    link: '/product-module/product/fund/',
+                    linkIdent: 'fundID',
+                    open: true,
+                    data: this.fundList,
+                    count: this.fundList.length,
+                    columnLink: 'fundName',
+                },
+                {
+                    title: this.translate.translate('Shares'),
+                    columns: [
+                        this.columns['shareName'],
+                        this.columns['isin'],
+                        this.columns['fundName'],
+                        this.columns['shareCurrency'],
+                        this.columns['managementCompany'],
+                        // this.columns['uFundName'],
+                        this.columns['shareClass'],
+                        this.columns['status'],
+                    ],
+                    action: {
+                        id: 'new-share-btn',
+                        title: this.translate.translate('Add New Share'),
+                        icon: 'plus',
+                        type: 'share',
+                    },
+                    link: '/product-module/product/fund-share/',
+                    linkIdent: 'fundShareID',
+                    open: true,
+                    data: this.filteredShareList,
+                    count: this.filteredShareList.length,
+                    columnLink: 'shareName',
+                },
+                {
+                    title: this.translate.translate('Drafts'),
+                    columns: [
+                        this.columns['draftType'],
+                        this.columns['draftName'],
+                        this.columns['draftCreated'],
+                        this.columns['draftDate'],
+                    ],
+                    open: true,
+                    data: this.draftList,
+                    count: this.draftList.length,
+                    columnLink: '',
+                    buttons: [
+                        {
+                            text: this.translate.translate('Edit Draft'),
+                            class: 'btn btn-success btn-sm no-margin',
+                            click: 'edit',
+                            iconClass: 'fa fa-edit',
+                        },
+                        {
+                            text: this.translate.translate('Delete Draft'),
+                            class: 'btn btn-danger btn-sm',
+                            click: 'delete',
+                            iconClass: 'fa fa-remove',
+                        },
+                    ],
+                },
+            ];
+        }
+
+        /* For IZNES Admins */
+        if (!this.isAssetManager()) {
+            this.panelDefs = [
+                {
+                    title: this.translate.translate('Umbrella Funds'),
+                    columns: [
+                        this.columns['managementCompany'],
+                        this.columns['uFundName'],
+                        this.columns['lei'],
+                        this.columns['country'],
+                    ],
+                    action: {
+                        id: 'new-umbrella-fund-btn',
+                        title: this.translate.translate('Add New Umbrella Fund'),
+                        icon: 'plus',
+                        type: 'ufund',
+                    },
+                    link: '/product-module/product/umbrella-fund/',
+                    linkIdent: 'umbrellaFundID',
+                    open: true,
+                    data: this.umbrellaFundList,
+                    count: this.umbrellaFundList.length,
+                    columnLink: 'umbrellaFundName',
+                },
+                {
+                    title: this.translate.translate('Funds/Subfunds'),
+                    columns: [
+                        this.columns['managementCompany'],
+                        this.columns['fFundName'],
+                        this.columns['lei'],
+                        this.columns['fundCurrency'],
+                        this.columns['country'],
+                        this.columns['lawStatus'],
+                        this.columns['umbrellaFund'],
+                    ],
+                    action: {
+                        id: 'new-fund-btn',
+                        title: this.translate.translate('Add New Fund'),
+                        icon: 'plus',
+                        type: 'fund',
+                    },
+                    link: '/product-module/product/fund/',
+                    linkIdent: 'fundID',
+                    open: true,
+                    data: this.fundList,
+                    count: this.fundList.length,
+                    columnLink: 'fundName',
+                },
+                {
+                    title: this.translate.translate('Shares'),
+                    columns: [
+                        this.columns['managementCompany'],
+                        this.columns['shareName'],
+                        this.columns['isin'],
+                        this.columns['fundName'],
+                        this.columns['shareCurrency'],
+                        // this.columns['uFundName'],
+                        this.columns['shareClass'],
+                        this.columns['status'],
+                    ],
+                    action: {
+                        id: 'new-share-btn',
+                        title: this.translate.translate('Add New Share'),
+                        icon: 'plus',
+                        type: 'share',
+                    },
+                    link: '/product-module/product/fund-share/',
+                    linkIdent: 'fundShareID',
+                    open: true,
+                    data: this.filteredShareList,
+                    count: this.filteredShareList.length,
+                    columnLink: 'shareName',
+                },
+            ];
+        }
     }
 
     /**
-     * Show Success Message
-     * ------------------
-     * Shows an success popup.
+     * Show a success popup
      *
-     * @param  {message} string - the string to be shown in the message.
+     * @param {message} string - the string to be shown in the message.
      * @return {void}
      */
-    showSuccess(message) {
+    showSuccess(message): void {
         /* Show the message. */
         this.alertsService.create('success', `
               <table class="table grid">
@@ -665,7 +858,7 @@ export class ProductHomeComponent implements OnInit, OnDestroy {
      * @param  {Date}   dateObj      [description]
      * @return {[type]}              [description]
      */
-    private formatDate(formatString: string, dateObj: Date) {
+    private formatDate(formatString: string, dateObj: Date): string|boolean {
         /* Return if we're missing a param. */
         if (!formatString || !dateObj) {
             return false;
@@ -695,19 +888,17 @@ export class ProductHomeComponent implements OnInit, OnDestroy {
      * @param num
      * @returns {string}
      */
-    private numPad(num) {
+    private numPad(num): string {
         return num < 10 ? '0' + num : num;
     }
 
     /**
-     * Show Error Message
-     * ------------------
-     * Shows an error popup.
+     * Show an error popup
      *
-     * @param  {message} string - the string to be shown in the message.
+     * @param {message} string - the string to be shown in the message.
      * @return {void}
      */
-    private showError(message) {
+    private showError(message): void {
         /* Show the error. */
         this.alertsService.create('error', `
               <table class="table grid">
@@ -721,14 +912,12 @@ export class ProductHomeComponent implements OnInit, OnDestroy {
     }
 
     /**
-     * Show Warning Message
-     * ------------------
-     * Shows a warning popup.
+     * Show a warning popup
      *
-     * @param  {message} string - the string to be shown in the message.
+     * @param {message} string - the string to be shown in the message.
      * @return {void}
      */
-    private showWarning(message) {
+    private showWarning(message): void {
         /* Show the error. */
         this.alertsService.create('warning', `
               <table class="table grid">

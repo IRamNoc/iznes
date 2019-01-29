@@ -31,6 +31,8 @@ interface FundList {
     [key: string]: any;
 }
 
+const ADMIN_USER_TYPE = 35;
+
 @Component({
     templateUrl: './component.html',
     styleUrls: ['./component.scss'],
@@ -107,6 +109,7 @@ export class FundComponent implements OnInit, OnDestroy {
     centralizingAgentItems = [];
 
     currentLei: string;
+    userType;
 
     // Locale
     language = 'en';
@@ -140,6 +143,7 @@ export class FundComponent implements OnInit, OnDestroy {
     productConfig;
     holidayMgmtConfigDates: () => string[];
 
+    @select(['user', 'myDetail']) userDetailOb;
     @select(['user', 'siteSettings', 'language']) language$;
     @select(['ofi', 'ofiProduct', 'ofiUmbrellaFund', 'umbrellaFundList', 'umbrellaFundList']) umbrellaFundList$;
     @select(['ofi', 'ofiProduct', 'ofiFund', 'fundList', 'iznFundList']) fundList$;
@@ -177,11 +181,8 @@ export class FundComponent implements OnInit, OnDestroy {
         public translate: MultilingualService,
         @Inject('product-config') productConfig,
     ) {
-
-        this.umbrellaService.fetchUmbrellaList();
         this.ofiManagementCompanyService.getManagementCompanyList();
         this.ofiCurrenciesService.getCurrencyList();
-        this.fundService.getFundList();
 
         this.fundItems = productConfig.fundItems;
         this.enums = productConfig.enums;
@@ -205,6 +206,23 @@ export class FundComponent implements OnInit, OnDestroy {
         this.payingAgentItems = this.fundItems.payingAgentItems;
         this.transferAgentItems = this.fundItems.transferAgentItems;
         this.centralizingAgentItems = this.fundItems.centralizingAgentItems;
+
+        this.userDetailOb
+            .pipe(
+                takeUntil(this.unSubscribe),
+            )
+            .subscribe((userDetail) => {
+                this.userType = userDetail.userType;
+
+                if (!this.isAdmin()) {
+                    this.fundService.getFundList();
+                    this.umbrellaService.fetchUmbrellaList();
+                } else {
+                /* For IZNES Admins */
+                    this.fundService.getAdminFundList();
+                    this.umbrellaService.getAdminUmbrellaList();
+                }
+            });
 
         this.language$
         .pipe(
@@ -532,7 +550,7 @@ export class FundComponent implements OnInit, OnDestroy {
             takeUntil(this.unSubscribe),
         )
         .subscribe((d) => {
-            if (d && d.length && d[0].text === 'None') {
+            if (d && d[0] && d[0].text === 'None') {
                 this.isFundCapitalisationDateVisible = true;
             } else {
                 this.isFundCapitalisationDateVisible = false;
@@ -631,6 +649,77 @@ export class FundComponent implements OnInit, OnDestroy {
 
             this.fundCurrencyItems = data;
         });
+    }
+
+    ngOnInit() {
+        this.route.queryParams.subscribe((params) => {
+            if (params.fromShare) {
+                this.currentRoute.fromShare = true;
+            }
+            if (params.umbrella) {
+                this.waitForCurrentUmbrella(params.umbrella);
+            }
+        });
+
+        this.fundControl.valueChanges
+            .pipe(
+                takeUntil(this.unSubscribe),
+            )
+            .subscribe((item) => {
+                if (!item || !item.length) {
+                    this.umbrellaControl.reset();
+                    this.umbrellaEditForm.reset();
+                    this.fundForm.reset();
+                    return;
+                }
+                this.fillFormByFundID(item[0].id);
+                this.changeDetectorRef.markForCheck();
+            });
+
+        this.leiListOb
+            .pipe(
+                takeUntil(this.unSubscribe),
+            )
+            .subscribe((leiList) => {
+                this.leiList = leiList;
+
+                if (this.fundForm) {
+                    this.fundForm.controls.legalEntityIdentifier.updateValueAndValidity({
+                        emitEvent: true,
+                    });
+                }
+            });
+
+        this.fundForm.controls['legalEntityIdentifier'].valueChanges
+            .pipe(
+                takeUntil(this.unSubscribe),
+            )
+            .subscribe((val) => {
+                if (!this.isLeiVisible) {
+                    return;
+                }
+
+                const leiControl = this.fundForm.controls.legalEntityIdentifier;
+
+                if (leiControl.errors) {
+                    return;
+                }
+
+                if (!val || !this.isLeiAlreadyExisting(val)) {
+                    return;
+                }
+
+                leiControl
+                    .setErrors({
+                        isAlreadyExisting: true,
+                    });
+            });
+        this.leiService.fetchLEIs();
+    }
+
+    ngOnDestroy() {
+        this.unSubscribe.next();
+        this.unSubscribe.complete();
     }
 
     fundFormValue() {
@@ -768,12 +857,21 @@ export class FundComponent implements OnInit, OnDestroy {
         return _.get(this.fundForm.controls['typeOfEuDirective'].value, ['0', 'id'], false);
     }
 
-    // Returns true if an umbrella item has been selected
+    /**
+     * Toggle the visibility of form elements given the selection of an Umbrella Fund
+     *
+     * @return {boolean}
+     */
     isUmbrellaSelected() {
         const umb = _.get(this.umbrellaEditForm.controls['umbrellaFund'].value, ['0', 'id'], false);
         return umb !== false && umb !== '0';
     }
 
+    /**
+     * Toggle the visibility of the homeCountryLegalType form control given the selected domicile
+     *
+     * @return {boolean}
+     */
     isHomeCountryLegalTypeVisible() {
         const id = _.get(this.fundForm.controls['domicile'].value, ['0', 'id'], false);
         if (!id) {
@@ -783,20 +881,41 @@ export class FundComponent implements OnInit, OnDestroy {
         return homeCountryLegalTypesKeys.indexOf(id) !== -1;
     }
 
+    /**
+     * Toggle the visibility of the nationalNomenclatureOfLegalForm form control given the value of legalForm
+     *
+     * @return {boolean}
+     */
     isNationalNomenclatureOfLegalFormVisible() {
         return _.get(this.fundForm.controls['legalForm'].value, ['length'], false);
     }
 
+    /**
+     * Toggle the visibility of the transferAgentID form control given the selected domicile
+     *
+     * @return {boolean}
+     */
     isTransferAgentActive() {
         const id = _.get(this.fundForm.controls['domicile'].value, ['0', 'id'], false);
         return id === 'IE' || id === 'LU';
     }
 
+    /**
+     * Toggle the visibility of the centralisingAgentID form control given the selected domicile
+     *
+     * @return {boolean}
+     */
     isCentralizingAgentActive() {
         const id = _.get(this.fundForm.controls['domicile'].value, ['0', 'id'], false);
         return id === 'FR';
     }
 
+    /**
+     * Check for the existence of an LEI in the leiList
+     *
+     * @param {string} currentLei
+     * @return {boolean}
+     */
     isLeiAlreadyExisting(currentLei: string): boolean {
         // if undefined the LEI won't exist
         if (!currentLei) return false;
@@ -808,72 +927,12 @@ export class FundComponent implements OnInit, OnDestroy {
         return this.leiList.indexOf(currentLei) !== -1;
     }
 
-    ngOnInit() {
-        this.route.queryParams.subscribe((params) => {
-            if (params.fromShare) {
-                this.currentRoute.fromShare = true;
-            }
-            if (params.umbrella) {
-                this.waitForCurrentUmbrella(params.umbrella);
-            }
-        });
-
-        this.fundControl.valueChanges
-        .pipe(
-            takeUntil(this.unSubscribe),
-        )
-        .subscribe((item) => {
-            if (!item || !item.length) {
-                this.umbrellaControl.reset();
-                this.umbrellaEditForm.reset();
-                this.fundForm.reset();
-                return;
-            }
-            this.fillFormByFundID(item[0].id);
-            this.changeDetectorRef.markForCheck();
-        });
-
-        this.leiListOb
-        .pipe(
-            takeUntil(this.unSubscribe),
-        )
-        .subscribe((leiList) => {
-            this.leiList = leiList;
-
-            if (this.fundForm) {
-                this.fundForm.controls.legalEntityIdentifier.updateValueAndValidity({
-                    emitEvent: true,
-                });
-            }
-        });
-
-        this.fundForm.controls['legalEntityIdentifier'].valueChanges
-        .pipe(
-            takeUntil(this.unSubscribe),
-        )
-        .subscribe((val) => {
-            if (!this.isLeiVisible) {
-                return;
-            }
-
-            const leiControl = this.fundForm.controls.legalEntityIdentifier;
-
-            if (leiControl.errors) {
-                return;
-            }
-
-            if (!val || !this.isLeiAlreadyExisting(val)) {
-                return;
-            }
-
-            leiControl
-            .setErrors({
-                isAlreadyExisting: true,
-            });
-        });
-        this.leiService.fetchLEIs();
-    }
-
+    /**
+     * Set the managementCompanyItems
+     *
+     * @param {any} funds
+     * @return {void | object}
+     */
     setManagementCompanyItems(d) {
         const values = _.values(d);
         if (!values.length) {
@@ -887,7 +946,13 @@ export class FundComponent implements OnInit, OnDestroy {
         });
     }
 
-    setFundList(funds) {
+    /**
+     * Set the fundList and fundListItems
+     *
+     * @param {any} funds
+     * @return {void | object}
+     */
+    setFundList(funds): void | object {
         if (!Object.keys(funds).length) {
             this.fundList = [];
             this.fundListItems = [];
@@ -968,7 +1033,13 @@ export class FundComponent implements OnInit, OnDestroy {
         });
     }
 
-    fillFormByFundID(fundID: string) {
+    /**
+     * Populate the fundForm
+     *
+     * @param {string} fundID
+     * @return {void}
+     */
+    fillFormByFundID(fundID: string): void {
         const fund = _.find(this.fundList, { fundID: Number(fundID) });
         if (fund.umbrellaFundID) {
             this.umbrellaControl.setValue(
@@ -1022,6 +1093,10 @@ export class FundComponent implements OnInit, OnDestroy {
 
         this.currentLei = fund.legalEntityIdentifier;
 
+        if (this.isAdmin()) {
+            this.fundForm.disable();
+        }
+
         return;
     }
 
@@ -1036,7 +1111,13 @@ export class FundComponent implements OnInit, OnDestroy {
         });
     }
 
-    setCurrentUmbrella(umbrella) {
+    /**
+     * Set the current Umbrella Fund and update URL
+     *
+     * @param {any}
+     * @return {void}
+     */
+    setCurrentUmbrella(umbrella): void {
         this.umbrellaControl.setValue([{
             id: umbrella.umbrellaFundID,
             text: umbrella.umbrellaFundName,
@@ -1050,11 +1131,20 @@ export class FundComponent implements OnInit, OnDestroy {
         this.changeDetectorRef.markForCheck();
     }
 
-    // forms
+    /**
+     * Hide the fund creation forms
+     *
+     * @return {void}
+     */
     submitUmbrellaForm(): void {
         this.viewMode = 'FUND';
     }
 
+    /**
+     * Save/Update a Fund
+     *
+     * @return {void}
+     */
     submitFundForm() {
         if (!this.fundForm.valid) {
             return;
@@ -1126,6 +1216,11 @@ export class FundComponent implements OnInit, OnDestroy {
         }
     }
 
+    /**
+     * Save/Update a Fund Draft
+     *
+     * @return {void}
+     */
     saveDraft() {
         const payload: Fund = {
             draft: 1,
@@ -1190,6 +1285,12 @@ export class FundComponent implements OnInit, OnDestroy {
         }
     }
 
+    /**
+     * Redirect to the new Fund Share page
+     *
+     * @param {string} fundID
+     * @return {void}
+     */
     redirectToShare(fundID?) {
         let query = {};
         if (fundID) {
@@ -1198,15 +1299,43 @@ export class FundComponent implements OnInit, OnDestroy {
         this.router.navigate(['/product-module/product/fund-share/new'], { queryParams: query });
     }
 
+    /**
+     * Duplicate a Fund
+     *
+     * @param {string} fundID
+     * @return {void}
+     */
     duplicate(fundID: string) {
         this.router.navigateByUrl(`/product-module/product/fund/new?prefill=${fundID}`);
     }
 
+    /**
+     * Redirect to the Fund Audit page
+     *
+     * @param {string} fundID
+     * @return {void}
+     */
     auditTrail(fundID: string) {
         this.router.navigateByUrl(`/product-module/product/fund/${fundID}/audit`);
     }
 
-    displaySharePopup(fundName, fundID) {
+    /**
+     * Check whether the userType is an IZNES Admin User
+     *
+     * @return {boolean}
+     */
+    isAdmin(): boolean {
+        return (this.userType === ADMIN_USER_TYPE);
+    }
+
+    /**
+     * Show Share creation confirmation modal
+     *
+     * @param {string} fundName
+     * @param {any} fundID
+     * @return {void}
+     */
+    displaySharePopup(fundName: string, fundID: any): void {
         const message = `<span>${this.translate.translate('By clicking "Yes", you will be able to create a share directly linked to @fundName@.', { 'fundName': fundName })}</span>`;
 
         this.confirmationService.create(
@@ -1223,6 +1352,12 @@ export class FundComponent implements OnInit, OnDestroy {
         });
     }
 
+    /**
+     * Show Fund successfully created toaster
+     *
+     * @param {string} fundName
+     * @return {void}
+     */
     creationSuccess(fundName) {
         this.toasterService.pop(
             'success',
@@ -1238,10 +1373,20 @@ export class FundComponent implements OnInit, OnDestroy {
         this.router.navigateByUrl('/product-module/product');
     }
 
+    /**
+     * Set list of holiday dates from the datepicker
+     *
+     * @return {void}
+     */
     setHolidayMgmtConfig(dates: () => string[]): void {
         this.holidayMgmtConfigDates = dates;
     }
 
+    /**
+     * Get list of holiday dates in json format
+     *
+     * @return {string}
+     */
     getHolidayMgmtConfig(): string {
         if (this.fundForm.value.useDefaultHolidayMgmt === '0') {
             return JSON.stringify(this.holidayMgmtConfigDates());
@@ -1250,10 +1395,22 @@ export class FundComponent implements OnInit, OnDestroy {
         return JSON.stringify([]);
     }
 
+    /**
+     * Toggle the visibility of the Default Holiday Management Configuration datepicker
+     *
+     * @param {boolean} nextState
+     * @return {void}
+     */
     showHolidayMgmtConfig(): boolean {
         return this.fundForm.value.useDefaultHolidayMgmt === '0';
     }
 
+    /**
+     * Toggle the visibility and validity of the legalEntityIdentifier form control
+     *
+     * @param {boolean} nextState
+     * @return {void}
+     */
     toggleLeiSwitch(nextState: boolean) {
         if (!nextState) {
             this.fundForm.controls['legalEntityIdentifier'].disable();
@@ -1266,10 +1423,5 @@ export class FundComponent implements OnInit, OnDestroy {
             ]));
         }
         this.isLeiVisible = nextState;
-    }
-
-    ngOnDestroy() {
-        this.unSubscribe.next();
-        this.unSubscribe.complete();
     }
 }

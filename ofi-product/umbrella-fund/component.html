@@ -17,31 +17,33 @@
         <clr-tab-content>
             <!-- Button container -->
             <div class="row tab-header-container">
-                <p *ngIf="isEditMode" class="text-overflow">
+                <p *ngIf="isEditMode || isAdmin();" class="text-overflow">
                     {{ 'Please find below all the information for the umbrella fund
                     @umbrellaFundForm.controls.umbrellaFundName.value@' | translate:
                     { 'umbrellaFundForm.controls.umbrellaFundName.value':
                     umbrellaFundForm.controls.umbrellaFundName.value } }}
                 </p>
-                <p id="new-fund-text-span" *ngIf="!isEditMode">{{ 'Please fill in the following information to create a
-                    new Umbrella Fund' | translate }}</p>
+                <p id="new-fund-text-span" *ngIf="!isEditMode && !isAdmin()">{{ 'Please fill in the following information to create a new Umbrella Fund' | translate }}
+                </p>
+            
                 <div class="form-group">
-                    <button *ngIf="isEditMode" class="btn btn-default" id="auditTrailButton" (click)="auditTrail(umbrellaFundID)">
+                    <button *ngIf="isEditMode || isAdmin()" class="btn btn-default" id="auditTrailButton" (click)="auditTrail(umbrellaFundID)">
                         {{ 'Audit Trail' | translate }}
                     </button>
-                    <button *ngIf="isEditMode" class="btn btn-primary" id="uploadNavFileButton" (click)="duplicate(umbrellaFundID)">
+                    <button *ngIf="isEditMode && !isAdmin()" class="btn btn-primary" id="uploadNavFileButton" (click)="duplicate(umbrellaFundID)">
                         {{ 'Duplicate Umbrella Fund' | translate }}
                     </button>
-                    <ng-select *ngIf="!isEditMode" 
-                                id="umbrella_select" 
-                                [items]="umbrellaListItems" 
+                    <ng-select *ngIf="!isEditMode"
+                                id="umbrella_select"
+                                [items]="umbrellaListItems"
                                 [allowClear]="true"
                                 [placeholder]="translate.translate('Duplicate from an existing Umbrella Fund')" 
-                                [formControl]="umbrellaControl">
+                                [formControl]="umbrellaControl"
+                                [disabled]="isAdmin()">
                     </ng-select>
                 </div>
             </div>
-
+            
             <form [formGroup]="umbrellaFundForm" novalidate (ngSubmit)="save(umbrellaFundForm.value)">
                 <section class="form-block">
                     <div class="well">
@@ -58,19 +60,18 @@
                         <!-- Panel body -->
                         <div class="row panel-body" [class.hidden]="!mainInformationOpen">
                             <div class="form-group required-field col-sm-6">
-                                <label for="uf_umbrellaFundName" class="control-label">{{ 'Umbrella Fund Name' |
-                                    translate }}</label>
+                                <label for="uf_umbrellaFundName" class="control-label">{{ 'Umbrella Fund Name' | translate }}</label>
                                 <input type="text" 
                                         id="uf_umbrellaFundName" 
-                                        formControlName="umbrellaFundName">
+                                        formControlName="umbrellaFundName"
+                                        [disabled]="isAdmin()">
                                 <div class="field-error">{{ 'Field is required' | translate }}</div>
                                 <div *ngIf="umbrellaFundForm.controls['umbrellaFundName'].touched && umbrellaFundForm.controls['umbrellaFundName'].hasError('pattern')"
                                     class="field-error">{{ 'Incorrect entry' | translate }}</div>
                             </div>
 
                             <div class="form-group required-field col-sm-6">
-                                <label for="uf_lei" class="control-label">{{ 'Legal Entity Identifier (LEI)' |
-                                    translate }}</label>
+                                <label for="uf_lei" class="control-label">{{ 'Legal Entity Identifier (LEI)' | translate }}</label>
                                 <div class="lei">
                                     <label class="switch">
                                         <input type="checkbox" 
@@ -78,14 +79,16 @@
                                                 id="switchActiveShares" 
                                                 [ngModel]="isLeiVisible"
                                                 [ngModelOptions]="{standalone: true}" 
-                                                (click)="toggleLeiSwitch(!isLeiVisible)">
+                                                (click)="toggleLeiSwitch(!isLeiVisible)"
+                                                [disabled]="isAdmin()">
                                         <span class="slider round"></span>
                                     </label>
                                     <div *ngIf="isLeiVisible">
                                         <input type="text" 
                                                 id="uf_lei" 
                                                 formControlName="legalEntityIdentifier"
-                                                 maxlength="20">
+                                                maxlength="20"
+                                                [disabled]="isAdmin()">
                                         <div *ngIf="umbrellaFundForm.controls['legalEntityIdentifier'].touched && umbrellaFundForm.controls['legalEntityIdentifier'].errors" class="field-error">
                                             <span *ngIf="umbrellaFundForm.controls['legalEntityIdentifier'].hasError('required')">{{ 'Field is required' | translate }}</span>
                                             <span *ngIf="umbrellaFundForm.controls['legalEntityIdentifier'].hasError('pattern')">{{ 'LEI must meet ISO 17442 format.' | translate }}</span>
@@ -99,7 +102,7 @@
                                 <label for="uf_registerOffice" class="control-label">{{ 'Name of the Registered Office
                                     of the Umbrella Fund' | translate }}
                                 </label>
-                                <input type="text" id="uf_registerOffice" formControlName="registerOffice">
+                                <input type="text" id="uf_registerOffice" formControlName="registerOffice" [disabled]="isAdmin()">
                                 <div *ngIf="umbrellaFundForm.controls['registerOffice'].touched && umbrellaFundForm.controls['registerOffice'].hasError('pattern')"
                                     class="field-error">{{ 'Incorrect entry' | translate }}</div>
                             </div>
@@ -110,65 +113,63 @@
                                 <label for="uf_registerOfficeAddress" class="control-label">{{ 'Address of the
                                     Registered Office of the Umbrella Fund' | translate }}
                                 </label>
-                                <input type="text" id="uf_registerOfficeAddress" formControlName="registerOfficeAddress">
+                                <input type="text" id="uf_registerOfficeAddress" formControlName="registerOfficeAddress" [disabled]="isAdmin()">
                                 <div *ngIf="umbrellaFundForm.controls['registerOfficeAddress'].touched && umbrellaFundForm.controls['registerOfficeAddress'].hasError('pattern')"
                                     class="field-error">{{ 'Incorrect entry' | translate }}</div>
                             </div>
 
                             <div class="form-group col-sm-6">
-                                <label for="uf_registerOfficeAddressLine2" class="control-label">{{ 'Address Line 2' |
-                                    translate }}</label>
+                                <label for="uf_registerOfficeAddressLine2" class="control-label">{{ 'Address Line 2' | translate }}</label>
                                 <input type="text" 
                                         id="uf_registerOfficeAddressLine2" 
-                                        formControlName="registerOfficeAddressLine2">
+                                        formControlName="registerOfficeAddressLine2"
+                                        [disabled]="isAdmin()">
                                 <div *ngIf="umbrellaFundForm.controls['registerOfficeAddressLine2'].touched && umbrellaFundForm.controls['registerOfficeAddressLine2'].hasError('pattern')"
                                     class="field-error">{{ 'Incorrect entry' | translate }}</div>
                             </div>
 
                             <div class="form-group col-sm-4">
-                                <label for="uf_registerOfficeAddressZipCode" class="control-label">{{ 'ZIP Code' |
-                                    translate }}
-                                </label>
+                                <label for="uf_registerOfficeAddressZipCode" class="control-label">{{ 'ZIP Code' | translate }}</label>
                                 <input type="text" 
                                         id="uf_registerOfficeAddressZipCode" 
-                                        formControlName="registerOfficeAddressZipCode">
+                                        formControlName="registerOfficeAddressZipCode"
+                                        [disabled]="isAdmin()">
                             </div>
 
                             <div class="form-group col-sm-4">
                                 <label for="uf_registerOfficeAddressCity" class="control-label">{{ 'City' | translate }}</label>
                                 <input type="text" 
                                         id="uf_registerOfficeAddressCity" 
-                                        formControlName="registerOfficeAddressCity">
+                                        formControlName="registerOfficeAddressCity"
+                                        [disabled]="isAdmin()">
                             </div>
 
                             <div class="form-group col-sm-4">
-                                <label for="uf_registerOfficeAddressCountry" class="control-label">{{ 'Country' |
-                                    translate }}</label>
+                                <label for="uf_registerOfficeAddressCountry" class="control-label">{{ 'Country' | translate }}</label>
                                 <ng-select id="uf_registerOfficeAddressCountry" 
                                             [items]="countries" 
                                             [allowClear]="true"
-                                            [placeholder]="translate.translate('Select a country')" formControlName="registerOfficeAddressCountry">
+                                            [placeholder]="translate.translate('Select a country')" 
+                                            formControlName="registerOfficeAddressCountry"
+                                            [disabled]="isAdmin()">
                                 </ng-select>
                             </div>
 
                             <div class="form-group required-field col-sm-6">
-                                <label for="uf_domicile" class="control-label">{{ 'Umbrella Fund Domicile (country)' |
-                                    translate }}</label>
-
+                                <label for="uf_domicile" class="control-label">{{ 'Umbrella Fund Domicile (country)' | translate }}</label>
                                 <ng-select id="uf_domicile" 
                                             [items]="countries" 
                                             [allowClear]="true" 
                                             [placeholder]="translate.translate('Select a country')"
-                                            formControlName="domicile">
+                                            formControlName="domicile"
+                                            [disabled]="isAdmin()">
                                 </ng-select>
 
                                 <div *ngIf="umbrellaFundForm.controls['domicile'].hasError('required') && umbrellaFundForm.controls['domicile'].touched" class="field-error">{{ 'Field is required' | translate }}</div>
                             </div>
 
                             <div class="form-group col-sm-6">
-                                <label for="uf_umbrellaFundCreationDate" class="control-label">{{ 'Umbrella Fund
-                                    Creation Date' | translate }}</label>
-
+                                <label for="uf_umbrellaFundCreationDate" class="control-label">{{ 'Umbrella Fund Creation Date' | translate }}</label>
                                 <div class="input-group date-pick-wrapper">
                                     <span class="fa fa-calendar" aria-hidden="true"></span>
                                     <input id="uf_umbrellaFundCreationDate" 
@@ -176,7 +177,8 @@
                                             autocomplete="off" 
                                             [dpDayPicker]="configDate" 
                                             [placeholder]="translate.translate('Choose a date')"
-                                            mode="day" theme="dp-material">
+                                            mode="day" theme="dp-material"
+                                            [disabled]="isAdmin()">
                                 </div>
 
                                 <div *ngIf="umbrellaFundForm.controls['umbrellaFundCreationDate'].hasError('pattern') && umbrellaFundForm.controls['umbrellaFundCreationDate'].touched"
@@ -184,12 +186,12 @@
                             </div>
 
                             <div class="form-group required-field col-sm-6">
-                                <label for="uf_managementCompany" class="control-label">{{ 'Management Company' |
-                                    translate }}</label>
+                                <label for="uf_managementCompany" class="control-label">{{ 'Management Company' | translate }}</label>
                                 <ng-select id="uf_managementCompany" 
                                             [items]="managementCompanyList" 
                                             [allowClear]="true"
-                                            [placeholder]="translate.translate('Select')" formControlName="managementCompanyID">
+                                            [placeholder]="translate.translate('Select')" formControlName="managementCompanyID"
+                                            [disabled]="isAdmin()">
                                 </ng-select>
 
                                 <div *ngIf="umbrellaFundForm.controls['managementCompanyID'].hasError('required') && umbrellaFundForm.controls['managementCompanyID'].touched"
@@ -197,12 +199,13 @@
                             </div>
 
                             <div class="form-group required-field col-sm-6">
-                                <label for="uf_fundAdministrator" class="control-label">{{ 'Fund Administrator' |
-                                    translate }}</label>
+                                <label for="uf_fundAdministrator" class="control-label">{{ 'Fund Administrator' | translate }}</label>
                                 <ng-select id="uf_fundAdministrator" 
                                             [items]="fundAdminOptions" 
                                             [allowClear]="true"
-                                            [placeholder]="translate.translate('Select')" formControlName="fundAdministratorID">
+                                            [placeholder]="translate.translate('Select')" 
+                                            formControlName="fundAdministratorID"
+                                            [disabled]="isAdmin()">
                                 </ng-select>
 
                                 <div *ngIf="umbrellaFundForm.controls['fundAdministratorID'].hasError('required') && umbrellaFundForm.controls['fundAdministratorID'].touched"
@@ -216,7 +219,8 @@
                                             [items]="custodianBankOptions" 
                                             [allowClear]="true"
                                             [placeholder]="translate.translate('Select')" 
-                                            formControlName="custodianBankID">
+                                            formControlName="custodianBankID"
+                                            [disabled]="isAdmin()">
                                 </ng-select>
 
                                 <div *ngIf="umbrellaFundForm.controls['custodianBankID'].hasError('required') && umbrellaFundForm.controls['custodianBankID'].touched"
@@ -225,11 +229,11 @@
                             </div>
 
                             <div class="form-group col-sm-6">
-                                <label for="uf_investmentAdvisor" class="control-label">{{ 'Investment Advisor' |
-                                    translate }}</label>
+                                <label for="uf_investmentAdvisor" class="control-label">{{ 'Investment Advisor' | translate }}</label>
                                 <input type="text" 
                                         id="uf_investmentAdvisor" 
-                                        formControlName="investmentAdvisorID">
+                                        formControlName="investmentAdvisorID"
+                                        [disabled]="isAdmin()">
 
                                 <div *ngIf="umbrellaFundForm.controls['investmentAdvisorID'].hasError('required') && umbrellaFundForm.controls['investmentAdvisorID'].touched"
                                     class="field-error">{{ 'Field is required' | translate }}
@@ -243,7 +247,8 @@
                                             [allowClear]="true"
                                             [multiple]="true" 
                                             [placeholder]="translate.translate('Select')" 
-                                            formControlName="payingAgentID">
+                                            formControlName="payingAgentID"
+                                            [disabled]="isAdmin()">
                                 </ng-select>
                             </div>
 
@@ -253,18 +258,19 @@
                                             [items]="transferAgentOptions" 
                                             [allowClear]="true"
                                             [placeholder]="translate.translate('Select')" 
-                                            [formControl]="umbrellaFundForm.controls['transferAgentID']">
+                                            [formControl]="umbrellaFundForm.controls['transferAgentID']"
+                                            [disabled]="isAdmin()">
                                 </ng-select>
                             </div>
 
                             <div *ngIf="isCentralizingAgentActive()" class="form-group required-field col-sm-6">
-                                <label for="uf_centralizingAgent" class="control-label">{{ 'Centralising Agent' |
-                                    translate }}</label>
+                                <label for="uf_centralizingAgent" class="control-label">{{ 'Centralising Agent' | translate }}</label>
                                 <ng-select id="uf_centralizingAgent" 
                                             [items]="centralizingAgentOptions" 
                                             [allowClear]="true"
                                             [placeholder]="translate.translate('Select')" 
-                                            [formControl]="umbrellaFundForm.controls['centralisingAgentID']">
+                                            [formControl]="umbrellaFundForm.controls['centralisingAgentID']"
+                                            [disabled]="isAdmin()">
                                 </ng-select>
                             </div>
                         </div>
@@ -284,26 +290,25 @@
                         <!-- Panel body -->
                         <div class="row panel-body" [class.hidden]="!optionalInformationOpen">
                             <div class="form-group col-sm-6">
-                                <label for="uf_giin" class="control-label">{{ 'Global Intermediary Identification Number
-                                    (GIIN)' | translate }}</label>
-
+                                <label for="uf_giin" class="control-label">{{ 'Global Intermediary Identification Number (GIIN)' | translate }}</label>
                                 <input type="text" 
                                         id="uf_giin" 
                                         formControlName="giin" 
-                                        maxlength="19">
+                                        maxlength="19"
+                                        [disabled]="isAdmin()">
                                 <div *ngIf="umbrellaFundForm.controls['giin'].hasError('pattern') && umbrellaFundForm.controls['giin'].touched" class="field-error">
                                     {{ 'Accepted format: [6x A-Z0-9].[5x A-Z0-9].[2x A-Z].[3x 0-9]' | translate }}
                                 </div>
                             </div>
 
                             <div class="form-group col-sm-6">
-                                <label for="uf_delegatedManagementCompany" class="control-label">{{ 'Delegated
-                                    Management Company' | translate }}</label>
-
+                                <label for="uf_delegatedManagementCompany" class="control-label">{{ 'Delegated Management Company' | translate }}</label>
                                 <ng-select id="uf_delegatedManagementCompany" 
                                             [items]="managementCompanyList"
                                             [allowClear]="true" 
-                                            [placeholder]="translate.translate('Select')" formControlName="delegatedManagementCompanyID">
+                                            [placeholder]="translate.translate('Select')" 
+                                            formControlName="delegatedManagementCompanyID"
+                                            [disabled]="isAdmin()">
                                 </ng-select>
                             </div>
 
@@ -313,7 +318,8 @@
                                             [items]="auditorOptions" 
                                             [allowClear]="true" 
                                             [placeholder]="translate.translate('Select')"
-                                            formControlName="auditorID">
+                                            formControlName="auditorID"
+                                            [disabled]="isAdmin()">
                                 </ng-select>
                             </div>
 
@@ -323,20 +329,21 @@
                                             [items]="taxAuditorOptions" 
                                             [allowClear]="true"
                                             [placeholder]="translate.translate('Select')" 
-                                            formControlName="taxAuditorID">
+                                            formControlName="taxAuditorID"
+                                            [disabled]="isAdmin()">
                                 </ng-select>
                             </div>
 
                             <div class="form-group col-sm-6">
-                                <label for="uf_principalPromoter" class="control-label">{{ 'Principal Promoter' |
-                                    translate }}</label>
+                                <label for="uf_principalPromoter" class="control-label">{{ 'Principal Promoter' | translate }}</label>
                                 <ng-select id="uf_principalPromoter" 
                                             style="width: 95%" 
                                             [items]="principalPromoterOptions"
                                             [allowClear]="true" 
                                             [multiple]="true" 
                                             [placeholder]="translate.translate('Select')"
-                                            formControlName="principlePromoterID">
+                                            formControlName="principlePromoterID"
+                                            [disabled]="isAdmin()">
                                 </ng-select>
                             </div>
 
@@ -347,31 +354,32 @@
                                             [items]="legalAdvisorOptions"
                                             [allowClear]="true" 
                                             [placeholder]="translate.translate('Select')" 
-                                            formControlName="legalAdvisorID">
+                                            formControlName="legalAdvisorID"
+                                            [disabled]="isAdmin()">
                                 </ng-select>
                             </div>
 
                             <div class="form-group col-sm-6">
                                 <label for="uf_directors" class="control-label">{{ 'Directors' | translate }}</label>
-                                <input type="text" id="uf_directors" formControlName="directors">
+                                <input type="text" id="uf_directors" formControlName="directors" [disabled]="isAdmin()">
                             </div>
 
                             <div class="form-group col-sm-6">
-                                <label class="control-label" for="uf_internalReference">{{ 'Internal Reference' |
-                                    translate }}</label>
+                                <label class="control-label" for="uf_internalReference">{{ 'Internal Reference' | translate }}</label>
                                 <input type="text" 
                                         id="uf_internalReference" 
                                         formControlName="internalReference"
-                                        maxlength="50">
+                                        maxlength="50"
+                                        [disabled]="isAdmin()">
                             </div>
                             <div class="form-group col-sm-6">
-                                <label class="control-label" for="uf_additionnalNotes">{{ 'Additional Notes' |
-                                    translate }}
+                                <label class="control-label" for="uf_additionnalNotes">{{ 'Additional Notes' |translate }}
                                 </label>
                                 <textarea id="uf_additionnalNotes" 
                                             class="form-control" 
                                             formControlName="additionnalNotes"
-                                            maxlength="500">
+                                            maxlength="500"
+                                            [disabled]="isAdmin()">
                                 </textarea>
                             </div>
                         </div>
@@ -380,16 +388,15 @@
 
                     <div class="form-group col-sm-6">
                         <button id="ufBtnResetForm" type="button" class="btn btn-info" (click)="cancel()">
-                            {{(!isEditMode ? 'Cancel' : 'Close') | translate }}
+                            {{(!isEditMode && !isAdmin() ? 'Cancel' : 'Close') | translate }}
                         </button>
 
                         <button *ngIf="currDraft == 1 || !isEditMode" id="mcBtnSubmitFormDraft" type="button" class="btn btn-primary" (click)="saveDraft(umbrellaFundForm.value)">
                             <i class="fa fa-save"></i> {{(!isEditMode ? 'Save Draft' : 'Update Draft') | translate }}
                         </button>
 
-                        <button id="mcBtnSubmitForm" type="submit" class="btn btn-primary" [disabled]="!umbrellaFundForm.valid">
-                            <i class="fa fa-save"></i> {{(!isEditMode || currDraft == 1 ? 'Save' : 'Update') |
-                            translate }}
+                        <button *ngIf="!isAdmin()" id="mcBtnSubmitForm" type="submit" class="btn btn-primary" [disabled]="!umbrellaFundForm.valid">
+                            <i class="fa fa-save"></i> {{(!isEditMode || currDraft == 1 ? 'Save' : 'Update') | translate }}
                         </button>
                     </div>
                 </section>
@@ -418,13 +425,7 @@
         </p>
     </div>
     <div class="modal-footer">
-        <button type="button" class="btn btn-outline" id="mcConfirmModalBtnYes" (click)="confirmModal(0)">{{ 'No' |
-            translate }}
-
-        </button>
-        <button type="button" class="btn btn-primary" id="mcConfirmModalBtnNo" (click)="confirmModal(1)">{{ 'Yes' |
-            translate }}
-
-        </button>
+        <button type="button" class="btn btn-outline" id="mcConfirmModalBtnYes" (click)="confirmModal(0)">{{ 'No' | translate }}</button>
+        <button type="button" class="btn btn-primary" id="mcConfirmModalBtnNo" (click)="confirmModal(1)">{{ 'Yes' | translate }}</button>
     </div>
 </clr-modal>

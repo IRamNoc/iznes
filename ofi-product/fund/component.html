@@ -25,7 +25,7 @@
                     <button *ngIf="param" class="btn btn-default" id="auditTrailButton" (click)="auditTrail(param)">
                         {{ 'Audit Trail' | translate }}
                     </button>
-                    <button *ngIf="param" class="btn btn-primary" id="duplicateButton" (click)="duplicate(param)">
+                    <button *ngIf="param && !isAdmin()" class="btn btn-primary" id="duplicateButton" (click)="duplicate(param)">
                         {{ 'Duplicate Fund' | translate }}
                     </button>
                     <ng-select *ngIf="!param" 
@@ -33,7 +33,8 @@
                                 [items]="fundListItems" 
                                 [allowClear]="true"
                                 [placeholder]="translate.translate('Duplicate from an existing Fund')" 
-                                [formControl]="fundControl">
+                                [formControl]="fundControl"
+                                [disabled]="isAdmin()">
                     </ng-select>
                 </div>
             </div>
@@ -45,14 +46,14 @@
                     <section class="form-block">
                         <div class="row">
                             <div class="form-group required-field col-sm-3">
-                                <label class="control-label" for="fund-umbrellaControl-select-1">{{ 'Is this Fund part
-                                    of an Umbrella Fund?' | translate }}</label>
+                                <label class="control-label" for="fund-umbrellaControl-select-1">{{ 'Is this Fund part of an Umbrella Fund?' | translate }}</label>
                                 <ng-select id="fund-umbrellaControl-select-1" 
                                             [containerWidth]="'100%'" 
                                             [items]="umbrellaItems"
                                             [allowClear]="false" 
                                             [placeholder]="translate.translate('Select or type an Umbrella Fund name')"
-                                            [formControl]="umbrellaControl">
+                                            [formControl]="umbrellaControl"
+                                            [disabled]="isAdmin()">
                                 </ng-select>
                             </div>
 
@@ -74,28 +75,28 @@
                         <section class="form-block" *ngIf="selectedUmbrella > 0">
                             <div class="row">
                                 <div class="form-group col-sm-6">
-                                    <label class="control-label" for="umbrellaFundName">{{ 'Umbrella Fund Name' |
-                                        translate }}</label>
+                                    <label class="control-label" for="umbrellaFundName">{{ 'Umbrella Fund Name' | translate }}</label>
                                     <input type="text" 
                                             name="umbrellaFundName" 
                                             id="umbrellaFundName" 
-                                            formControlName="umbrellaFundName">
+                                            formControlName="umbrellaFundName"
+                                            [disabled]="isAdmin()">
                                 </div>
                                 <div class="form-group col-sm-6">
-                                    <label class="control-label" for="umbrellaLei">{{ 'Legal Entity Identifier (LEI)' |
-                                        translate }}</label>
+                                    <label class="control-label" for="umbrellaLei">{{ 'Legal Entity Identifier (LEI)' | translate }}</label>
                                     <input type="text" 
                                             name="umbrellaLei" 
                                             id="umbrellaLei" 
-                                            formControlName="umbrellaLei">
+                                            formControlName="umbrellaLei"
+                                            [disabled]="isAdmin()">
                                 </div>
                                 <div class="form-group col-sm-6">
-                                    <label class="control-label" for="umbrellaFundDomicile">{{ 'Umbrella Fund Domicile
-                                        (Country)' | translate }}</label>
+                                    <label class="control-label" for="umbrellaFundDomicile">{{ 'Umbrella Fund Domicile (Country)' | translate }}</label>
                                     <input type="text" 
                                             name="umbrellaFundDomicile" 
                                             id="umbrellaFundDomicile"
-                                            formControlName="umbrellaFundDomicile">
+                                            formControlName="umbrellaFundDomicile"
+                                            [disabled]="isAdmin()">
                                 </div>
                             </div>
                         </section>
@@ -106,14 +107,14 @@
 
                         <div class="row">
                             <div class="form-group col-sm-3">
-                                <label class="control-label" for="fund-prefill-select">{{ 'Duplicate an existing Fund'
-                                    | translate }}</label>
+                                <label class="control-label" for="fund-prefill-select">{{ 'Duplicate an existing Fund' | translate }}</label>
                                 <ng-select id="fund-prefill-select" 
                                             [containerWidth]="'100%'" 
                                             [items]="fundListItems"
                                             [allowClear]="true" 
                                             [placeholder]="translate.translate('Duplicate from an existing Fund')"
-                                            [formControl]="fundControl">
+                                            [formControl]="fundControl"
+                                            [disabled]="isAdmin()">
                                 </ng-select>
                             </div>
                         </div>
@@ -171,34 +172,34 @@
                                     <section class="form-block" *ngIf="isUmbrellaSelected()">
                                         <div class="row">
                                             <div class="form-group col-sm-6">
-                                                <label class="control-label" for="umbrellaEditLei">{{ 'Legal Entity
-                                                    Identifier (LEI)' | translate }}</label>
+                                                <label class="control-label" for="umbrellaEditLei">{{ 'Legal Entity Identifier (LEI)' | translate }}</label>
                                                 <input type="text" 
                                                         name="umbrellaEditLei" 
                                                         id="umbrellaEditLei"
-                                                        formControlName="umbrellaEditLei">
+                                                        formControlName="umbrellaEditLei"
+                                                        [disabled]="isAdmin()">
                                             </div>
                                             <div class="form-group col-sm-6">
-                                                <label class="control-label" for="umbrellaEditFundDomicile">{{ 'Umbrella
-                                                    Fund Domicile (Country)' | translate }}</label>
+                                                <label class="control-label" for="umbrellaEditFundDomicile">{{ 'Umbrella Fund Domicile (Country)' | translate }}</label>
                                                 <input type="text" 
                                                         name="umbrellaEditFundDomicile" 
                                                         id="umbrellaEditFundDomicile"
-                                                        formControlName="umbrellaEditFundDomicile">
+                                                        formControlName="umbrellaEditFundDomicile"
+                                                        [disabled]="isAdmin()">
                                             </div>
                                         </div>
                                     </section>
                                     <section class="form-block">
                                         <div class="row">
                                             <div id="fund-umbrellaControl-select-2Div" class="form-group col-sm-6">
-                                                <label class="control-label" for="fund-umbrellaControl-select-2">{{ 'Click
-                                                    here to select another Umbrella Fund for this Fund' | translate }}
+                                                <label class="control-label" for="fund-umbrellaControl-select-2">{{ 'Click here to select another Umbrella Fund for this Fund' | translate }}
                                                 </label>
                                                 <ng-select id="fund-umbrellaControl-select-2" 
                                                             [items]="umbrellaItems"
                                                             [allowClear]="false" 
                                                             [placeholder]="translate.translate('Select or type an Umbrella Fund')"
-                                                            [formControl]="umbrellaControl">
+                                                            [formControl]="umbrellaControl"
+                                                            [disabled]="isAdmin()">
                                                 </ng-select>
                                             </div>
                                         </div>
@@ -226,7 +227,8 @@
                                                 <input type="text" 
                                                         id="uf_umbrellaFundName" 
                                                         class="form-control"
-                                                        formControlName="umbrellaFundName">
+                                                        formControlName="umbrellaFundName"
+                                                        [disabled]="isAdmin()">
                                             </div>
                                         </div>
                                         <div class="form-group col-sm-6">
@@ -235,32 +237,33 @@
                                                 <input type="text" 
                                                         id="uf_lei" 
                                                         class="form-control" 
-                                                        formControlName="legalEntityIdentifier">
+                                                        formControlName="legalEntityIdentifier"
+                                                        [disabled]="isAdmin()">
                                             </div>
                                         </div>
                                     </div>
                                     <div class="row">
                                         <div class="form-group col-sm-6">
-                                            <label for="uf_registerOffice">{{ 'Name of the Registered Office of the
-                                                Umbrella Fund' | translate }}</label>
+                                            <label for="uf_registerOffice">{{ 'Name of the Registered Office of the Umbrella Fund' | translate }}</label>
                                             <div>
                                                 <input type="text" 
                                                         id="uf_registerOffice" 
                                                         class="form-control"
-                                                        formControlName="registerOffice">
+                                                        formControlName="registerOffice"
+                                                        [disabled]="isAdmin()">
                                             </div>
                                         </div>
 
                                         <div class="w-100"></div>
 
                                         <div class="form-group col-sm-6">
-                                            <label for="uf_registerOfficeAddress">{{ 'Address of the Registered Office
-                                                of the Umbrella Fund' | translate }}</label>
+                                            <label for="uf_registerOfficeAddress">{{ 'Address of the Registered Office of the Umbrella Fund' | translate }}</label>
                                             <div>
                                                 <input type="text" 
                                                         id="uf_registerOfficeAddress" 
                                                         class="form-control"
-                                                        formControlName="registerOfficeAddress">
+                                                        formControlName="registerOfficeAddress"
+                                                        [disabled]="isAdmin()">
                                             </div>
                                         </div>
                                         <div class="form-group col-sm-6">
@@ -269,7 +272,8 @@
                                                 <input type="text" 
                                                         id="uf_registerOfficeAddressLine2" 
                                                         class="form-control"
-                                                        formControlName="registerOfficeAddressLine2">
+                                                        formControlName="registerOfficeAddressLine2"
+                                                        [disabled]="isAdmin()">
                                             </div>
                                         </div>
 
@@ -279,7 +283,8 @@
                                                 <input type="text" 
                                                         id="uf_registerOfficeAddressZipCode" 
                                                         class="form-control"
-                                                        formControlName="registerOfficeAddressZipCode">
+                                                        formControlName="registerOfficeAddressZipCode"
+                                                        [disabled]="isAdmin()">
                                             </div>
                                         </div>
                                         <div class="form-group col-sm-4">
@@ -288,7 +293,8 @@
                                                 <input type="text" 
                                                         id="uf_registerOfficeAddressCity" 
                                                         class="form-control"
-                                                        formControlName="registerOfficeAddressCity">
+                                                        formControlName="registerOfficeAddressCity"
+                                                        [disabled]="isAdmin()">
                                             </div>
                                         </div>
                                         <div class="form-group col-sm-4">
@@ -297,7 +303,8 @@
                                                 <input type="text" 
                                                         id="uf_registerOfficeAddressCountry" 
                                                         class="form-control"
-                                                        formControlName="registerOfficeAddressCountry">
+                                                        formControlName="registerOfficeAddressCountry"
+                                                        [disabled]="isAdmin()">
                                             </div>
                                         </div>
                                     </div>
@@ -308,12 +315,12 @@
                                                 <input type="text" 
                                                         id="uf_domicile" 
                                                         class="form-control"
-                                                        formControlName="domicile">
+                                                        formControlName="domicile"
+                                                        [disabled]="isAdmin()">
                                             </div>
                                         </div>
                                         <div class="form-group col-sm-6">
-                                            <label for="uf_umbrellaFundCreationDate">{{ 'Umbrella Fund Creation Date' |
-                                                translate }}</label>
+                                            <label for="uf_umbrellaFundCreationDate">{{ 'Umbrella Fund Creation Date' | translate }}</label>
 
                                             <div class="input-group date-pick-wrapper">
                                                 <span class="fa fa-calendar" aria-hidden="true"></span>
@@ -323,7 +330,8 @@
                                                         [dpDayPicker]="configDate" 
                                                         [placeholder]="translate.translate('Choose a date')"
                                                         mode="day" 
-                                                        theme="dp-material">
+                                                        theme="dp-material"
+                                                        [disabled]="isAdmin()">
                                             </div>
                                         </div>
                                     </div>
@@ -334,7 +342,8 @@
                                                 <input type="text" 
                                                         id="uf_managementCompany" 
                                                         class="form-control"
-                                                        formControlName="managementCompanyID">
+                                                        formControlName="managementCompanyID"
+                                                        [disabled]="isAdmin()">
                                             </div>
                                         </div>
                                         <div class="form-group col-sm-6">
@@ -343,7 +352,8 @@
                                                 <input type="text" 
                                                         id="uf_fundAdministrator" 
                                                         class="form-control"
-                                                        formControlName="fundAdministratorID">
+                                                        formControlName="fundAdministratorID"
+                                                        [disabled]="isAdmin()">
                                             </div>
                                         </div>
                                     </div>
@@ -354,16 +364,17 @@
                                                 <input type="text" 
                                                         id="uf_custodian" 
                                                         class="form-control"
-                                                        formControlName="custodianBankID">
+                                                        formControlName="custodianBankID"
+                                                        [disabled]="isAdmin()">
                                             </div>
                                         </div>
                                         <div class="form-group col-sm-6">
-                                            <label class="control-label" for="uf_investmentAdvisor">{{ 'Investment
-                                                Advisor' | translate }}</label>
+                                            <label class="control-label" for="uf_investmentAdvisor">{{ 'Investment Advisor' | translate }}</label>
                                             <input type="text" 
                                                     name="uf_investmentAdvisor" 
                                                     id="uf_investmentAdvisor"
-                                                    [formControl]="umbrellaEditForm.controls['investmentAdvisorID']">
+                                                    [formControl]="umbrellaEditForm.controls['investmentAdvisorID']"
+                                                    [disabled]="isAdmin()">
                                             <span class="field-error" *ngIf="umbrellaEditForm.controls['investmentAdvisorID'].hasError('required') && umbrellaEditForm.controls['investmentAdvisorID'].touched">{{ 'Incorrect Entry' | translate }}</span>
                                         </div>
                                         <div class="form-group col-sm-6">
@@ -375,7 +386,8 @@
                                                             [multiple]="true" 
                                                             [disabled]="umbrellaEditForm.controls['payingAgentID']"
                                                             [placeholder]="translate.translate('Select')" 
-                                                            [formControl]="umbrellaEditForm.controls['payingAgentID']">
+                                                            [formControl]="umbrellaEditForm.controls['payingAgentID']"
+                                                            [disabled]="isAdmin()">
                                                 </ng-select>
                                             </div>
                                         </div>
@@ -385,7 +397,8 @@
                                                 <input type="text" 
                                                         id="uf_transferAgentID" 
                                                         class="form-control"
-                                                        formControlName="transferAgentID">
+                                                        formControlName="transferAgentID"
+                                                        [disabled]="isAdmin()">
                                             </div>
 
                                         </div>
@@ -395,7 +408,8 @@
                                                 <input type="text" 
                                                         id="uf_centralisingAgentID" 
                                                         class="form-control"
-                                                        formControlName="centralisingAgentID">
+                                                        formControlName="centralisingAgentID"
+                                                        [disabled]="isAdmin()">
                                             </div>
                                         </div>
                                     </div>
@@ -417,23 +431,23 @@
                                 <div class="panel-body" [class.hidden]="!panels[0][2].open">
                                     <div class="row">
                                         <div class="form-group col-sm-6">
-                                            <label for="uf_giin">{{ 'Global Intermediary Identification Number (GIIN)' |
-                                                translate }}</label>
+                                            <label for="uf_giin">{{ 'Global Intermediary Identification Number (GIIN)' | translate }}</label>
                                             <div>
                                                 <input type="text" 
                                                         id="uf_giin" 
                                                         class="form-control" 
-                                                        formControlName="giin">
+                                                        formControlName="giin"
+                                                        [disabled]="isAdmin()">
                                             </div>
                                         </div>
                                         <div class="form-group col-sm-6">
-                                            <label for="uf_delegatedManagementCompany">{{ 'Delegated Management Company'
-                                                | translate }}</label>
+                                            <label for="uf_delegatedManagementCompany">{{ 'Delegated Management Company' | translate }}</label>
                                             <div>
                                                 <input type="text" 
                                                         id="uf_delegatedManagementCompany" 
                                                         class="form-control"
-                                                        formControlName="delegatedManagementCompanyID">
+                                                        formControlName="delegatedManagementCompanyID"
+                                                        [disabled]="isAdmin()">
                                             </div>
                                         </div>
                                     </div>
@@ -444,7 +458,8 @@
                                                 <input type="text" 
                                                         id="uf_auditor" 
                                                         class="form-control" 
-                                                        formControlName="auditorID">
+                                                        formControlName="auditorID"
+                                                        [disabled]="isAdmin()">
                                             </div>
                                         </div>
                                         <div class="form-group col-sm-6">
@@ -453,7 +468,8 @@
                                                 <input type="text" 
                                                         id="uf_taxAuditor" 
                                                         class="form-control"
-                                                        formControlName="taxAuditorID">
+                                                        formControlName="taxAuditorID"
+                                                        [disabled]="isAdmin()">
                                             </div>
                                         </div>
                                     </div>
@@ -467,7 +483,8 @@
                                                             [multiple]="true" 
                                                             [disabled]="umbrellaEditForm.controls['principlePromoterID'].disabled"
                                                             [placeholder]="translate.translate('Select')" 
-                                                            [formControl]="umbrellaEditForm.controls['principlePromoterID']">
+                                                            [formControl]="umbrellaEditForm.controls['principlePromoterID']"
+                                                            [disabled]="isAdmin()">
                                                 </ng-select>
                                             </div>
                                         </div>
@@ -477,7 +494,8 @@
                                                 <input type="text" 
                                                         id="uf_legalAdvisor" 
                                                         class="form-control"
-                                                        formControlName="legalAdvisorID">
+                                                        formControlName="legalAdvisorID"
+                                                        [disabled]="isAdmin()">
                                             </div>
                                         </div>
                                     </div>
@@ -488,25 +506,26 @@
                                                 <input type="text" 
                                                         id="uf_directors" 
                                                         class="form-control"
-                                                        formControlName="directors">
+                                                        formControlName="directors"
+                                                        [disabled]="isAdmin()">
                                             </div>
                                         </div>
                                         <div class="form-group col-sm-6">
-                                            <label class="control-label" for="uf_internalReference">{{ 'Internal
-                                                Reference' | translate }}</label>
+                                            <label class="control-label" for="uf_internalReference">{{ 'Internal Reference' | translate }}</label>
                                             <input type="text" 
                                                     id="uf_internalReference" 
                                                     formControlName="internalReference"
-                                                    maxlength="50">
+                                                    maxlength="50"
+                                                    [disabled]="isAdmin()">
                                         </div>
                                     </div>
                                     <div class="row">
                                         <div class="form-group col-sm-6">
-                                            <label class="control-label" for="uf_additionnalNotes">{{ 'Additional Notes'
-                                                | translate }}</label>
+                                            <label class="control-label" for="uf_additionnalNotes">{{ 'Additional Notes' | translate }}</label>
                                             <textarea id="uf_additionnalNotes" 
                                                         formControlName="additionnalNotes"
-                                                        maxlength="500">
+                                                        maxlength="500"
+                                                        [disabled]="isAdmin()">
                                             </textarea>
                                         </div>
                                     </div>
@@ -557,31 +576,31 @@
                                                             name="isFundStructure" 
                                                             id="isFundStructure1"
                                                             formControlName="isFundStructure" 
-                                                            value="{{enums.isFundStructure.FUND}}">
-                                                    <label for="isFundStructure1">{{ 'Single fund Structure' |
-                                                        translate }}</label>
+                                                            value="{{enums.isFundStructure.FUND}}"
+                                                            [disabled]="isAdmin()">
+                                                    <label for="isFundStructure1">{{ 'Single fund Structure' | translate }}</label>
                                                 </div>
                                                 <div class="radio-inline disabled">
                                                     <input type="radio" 
                                                             name="isFundStructure" 
                                                             id="isFundStructure2"
                                                             formControlName="isFundStructure" 
-                                                            value="{{enums.isFundStructure.UMBRELLA}}">
-                                                    <label for="isFundStructure2">{{ 'Fund Umbrella Structure' |
-                                                        translate }}</label>
+                                                            value="{{enums.isFundStructure.UMBRELLA}}"
+                                                            [disabled]="isAdmin()">
+                                                    <label for="isFundStructure2">{{ 'Fund Umbrella Structure' | translate }}</label>
                                                 </div>
                                             </div>
                                         </div>
                                         <div class="row">
                                             <div class="form-group required-field col-sm-6">
                                                 <div>
-                                                    <label class="control-label" for="fundName">{{ 'Fund Name' |
-                                                        translate }}</label>
+                                                    <label class="control-label" for="fundName">{{ 'Fund Name' | translate }}</label>
                                                     <input type="text" 
                                                             name="fundName" 
                                                             id="fundName" 
                                                             formControlName="fundName"
-                                                            maxlength="100">
+                                                            maxlength="100"
+                                                            [disabled]="isAdmin()">
                                                     <span *ngIf="fundForm.controls['fundName'].touched && fundForm.controls['fundName'].hasError('required')"
                                                         class="field-error">{{ 'Field is required' | translate }}</span>
                                                     <span *ngIf="fundForm.controls['fundName'].touched && fundForm.controls['fundName'].hasError('pattern')"
@@ -590,8 +609,7 @@
                                             </div>
 
                                             <div class="form-group col-sm-6">
-                                                <label class="control-label" for="legalEntityIdentifier">{{ 'Legal
-                                                    Entity Identifier (LEI)' | translate }}</label>
+                                                <label class="control-label" for="legalEntityIdentifier">{{ 'Legal Entity Identifier (LEI)' | translate }}</label>
                                                 <div class="lei">
                                                     <label class="switch">
                                                         <input type="checkbox" 
@@ -599,7 +617,8 @@
                                                                 id="switchActiveShares"
                                                                 [ngModel]="isLeiVisible" 
                                                                 [ngModelOptions]="{standalone: true}"
-                                                                (click)="toggleLeiSwitch(!isLeiVisible)">
+                                                                (click)="toggleLeiSwitch(!isLeiVisible)"
+                                                                [disabled]="isAdmin()">
                                                         <span class="slider round"></span>
                                                     </label>
                                                     <div *ngIf="isLeiVisible">
@@ -607,7 +626,8 @@
                                                                 name="legalEntityIdentifier" 
                                                                 id="legalEntityIdentifier"
                                                                 formControlName="legalEntityIdentifier" 
-                                                                maxlength="20">
+                                                                maxlength="20"
+                                                                [disabled]="isAdmin()">
                                                         <span *ngIf="fundForm.controls['legalEntityIdentifier'].touched && fundForm.controls['legalEntityIdentifier'].hasError('pattern')"
                                                             class="field-error">{{ 'LEI must meet ISO 17442 format' | translate }}</span>
                                                         <span *ngIf="fundForm.controls['legalEntityIdentifier'].touched && fundForm.controls['legalEntityIdentifier'].hasError('isAlreadyExisting')"
@@ -619,13 +639,13 @@
                                     
                                         <div class="row">
                                             <div class="form-group col-sm-6">
-                                                <label for="registerOffice">{{ 'Name of the Registered Office of the
-                                                    Fund' | translate }}</label>
+                                                <label for="registerOffice">{{ 'Name of the Registered Office of the Fund' | translate }}</label>
                                                 <div>
                                                     <input type="text" 
                                                             id="registerOffice" 
                                                             class="form-control" 
-                                                            formControlName="registerOffice">
+                                                            formControlName="registerOffice"
+                                                            [disabled]="isAdmin()">
                                                     <span *ngIf="fundForm.controls['registerOffice'].touched && fundForm.controls['registerOffice'].hasError('pattern')"
                                                         class="field-error">{{ 'Incorrect Name' | translate }}</span>
                                                 </div>
@@ -634,13 +654,13 @@
                                             <div class="w-100"></div>
                                         
                                             <div class="form-group col-sm-6">
-                                                <label for="registerOfficeAddress">{{ 'Address of the Registered Office
-                                                    of the Fund' | translate }}</label>
+                                                <label for="registerOfficeAddress">{{ 'Address of the Registered Office of the Fund' | translate }}</label>
                                                 <div>
                                                     <input type="text" 
                                                             id="registerOfficeAddress" 
                                                             class="form-control" 
-                                                            formControlName="registerOfficeAddress">
+                                                            formControlName="registerOfficeAddress"
+                                                            [disabled]="isAdmin()">
                                                     <span *ngIf="fundForm.controls['registerOfficeAddress'].touched && fundForm.controls['registerOfficeAddress'].hasError('pattern')"
                                                         class="field-error">{{ 'Incorrect address' | translate }}</span>
                                                 </div>
@@ -648,20 +668,20 @@
                                             <div class="form-group col-sm-6">
                                                 <label for="registerOfficeAddressLine2">{{ 'Address Line 2' | translate }}</label>
                                                 <div>
-                                                    <input type="text" id="registerOfficeAddressLine2" class="form-control" formControlName="registerOfficeAddressLine2">
+                                                    <input type="text" id="registerOfficeAddressLine2" class="form-control" formControlName="registerOfficeAddressLine2" [disabled]="isAdmin()">
                                                 </div>
                                             </div>
                                         
                                             <div class="form-group col-sm-4">
                                                 <label for="registerOfficeAddressZipCode">{{ 'ZIP Code' | translate }}</label>
                                                 <div>
-                                                    <input type="text" id="registerOfficeAddressZipCode" class="form-control" formControlName="registerOfficeAddressZipCode">
+                                                    <input type="text" id="registerOfficeAddressZipCode" class="form-control" formControlName="registerOfficeAddressZipCode" [disabled]="isAdmin()">
                                                 </div>
                                             </div>
                                             <div class="form-group col-sm-4">
                                                 <label for="registerOfficeAddressCity">{{ 'City' | translate }}</label>
                                                 <div>
-                                                    <input type="text" id="registerOfficeAddressCity" class="form-control" formControlName="registerOfficeAddressCity">
+                                                    <input type="text" id="registerOfficeAddressCity" class="form-control" formControlName="registerOfficeAddressCity" [disabled]="isAdmin()">
                                                 </div>
                                             </div>
                                             <div class="form-group col-sm-4">
@@ -671,7 +691,8 @@
                                                                 [items]="domicileItems" 
                                                                 [allowClear]="true" 
                                                                 [placeholder]="translate.translate('Select')"
-                                                                [formControl]="fundForm.controls['registerOfficeAddressCountry']">
+                                                                [formControl]="fundForm.controls['registerOfficeAddressCountry']"
+                                                                [disabled]="isAdmin()">
                                                     </ng-select>
                                                 </div>
                                             </div>
@@ -680,13 +701,13 @@
                                         <div class="row">
                                             <div class="form-group required-field col-sm-6">
                                                 <div>
-                                                    <label class="control-label" for="domicile">{{ 'Fund Domicile
-                                                        (Country)' | translate }}</label>
+                                                    <label class="control-label" for="domicile">{{ 'Fund Domicile (Country)' | translate }}</label>
                                                     <ng-select id="domicile" 
                                                                 [items]="domicileItems" 
                                                                 [allowClear]="true"
                                                                 [placeholder]="translate.translate('Select')" 
-                                                                [formControl]="fundForm.controls['domicile']">
+                                                                [formControl]="fundForm.controls['domicile']"
+                                                                [disabled]="isAdmin()">
                                                     </ng-select>
                                                     <span class="field-error" *ngIf="fundForm.controls['domicile'].hasError('required') && fundForm.controls['domicile'].touched">{{ 'Field
                                                         is required' | translate }}</span>
@@ -694,12 +715,12 @@
                                             </div>
 
                                             <div class="form-group col-sm-6">
-                                                <label class="control-label" for="tradingAccount">{{ 'Trading Account' |
-                                                    translate }}</label>
+                                                <label class="control-label" for="tradingAccount">{{ 'Trading Account' | translate }}</label>
                                                 <input type="text" 
                                                         name="tradingAccount" 
                                                         id="tradingAccount"
-                                                        formControlName="tradingAccount">
+                                                        formControlName="tradingAccount"
+                                                        [disabled]="isAdmin()">
                                                 <span *ngIf="fundForm.controls['tradingAccount'].touched && fundForm.controls['tradingAccount'].hasError('pattern')"
                                                     class="field-error">{{ 'Incorrect Account' | translate }}</span>
                                             </div>
@@ -707,27 +728,27 @@
                                         <div class="row">
                                             <div class="form-group col-sm-6">
                                                 <div *ngIf="isHomeCountryLegalTypeVisible()">
-                                                    <label class="control-label" for="homeCountryLegalType">{{ 'Home
-                                                        Country Legal Type of Fund' | translate }}</label>
+                                                    <label class="control-label" for="homeCountryLegalType">{{ 'Home Country Legal Type of Fund' | translate }}</label>
                                                     <ng-select id="homeCountryLegalType" 
                                                                 [items]="homeCountryLegalTypeItems"
                                                                 [allowClear]="true" 
                                                                 [placeholder]="translate.translate('Select')"
-                                                                [formControl]="fundForm.controls['homeCountryLegalType']">
+                                                                [formControl]="fundForm.controls['homeCountryLegalType']"
+                                                                [disabled]="isAdmin()">
                                                     </ng-select>
                                                 </div>
                                             </div>
                                         </div>
                                         <div class="row">
                                             <div class="form-group required-field col-sm-6">
-                                                <label class="control-label">{{ 'Is EU Directive Relevant?' |
-                                                    translate }}</label>
+                                                <label class="control-label">{{ 'Is EU Directive Relevant?' | translate }}</label>
                                                 <div class="radio-inline">
                                                     <input type="radio" 
                                                             name="isEuDirective" 
                                                             id="isEuDirective1"
                                                             formControlName="isEuDirective" 
-                                                            value="{{enums.isEuDirective.YES}}">
+                                                            value="{{enums.isEuDirective.YES}}"
+                                                            [disabled]="isAdmin()">
                                                     <label for="isEuDirective1">{{ 'Yes' | translate }}</label>
                                                 </div>
                                                 <div class="radio-inline">
@@ -735,7 +756,8 @@
                                                             name="isEuDirective" 
                                                             id="isEuDirective2"
                                                             formControlName="isEuDirective" 
-                                                            value="{{enums.isEuDirective.NO}}">
+                                                            value="{{enums.isEuDirective.NO}}"
+                                                            [disabled]="isAdmin()">
                                                     <label for="isEuDirective2">{{ 'No' | translate }}</label>
                                                 </div>
                                             </div>
@@ -743,13 +765,13 @@
                                         <div class="row" *ngIf="fundForm.controls['isEuDirective'].value === enums.isEuDirective.YES.toString()">
                                             <div class="form-group required-field col-sm-6">
                                                 <div>
-                                                    <label class="control-label" for="typeOfEuDirective">{{ 'Type of EU
-                                                        Directive' | translate }}</label>
+                                                    <label class="control-label" for="typeOfEuDirective">{{ 'Type of EU Directive' | translate }}</label>
                                                     <ng-select id="typeOfEuDirective"
                                                                 [items]="typeOfEuDirectiveItems"
                                                                 [allowClear]="true" 
                                                                 [placeholder]="translate.translate('Select')"
-                                                                [formControl]="fundForm.controls['typeOfEuDirective']">
+                                                                [formControl]="fundForm.controls['typeOfEuDirective']"
+                                                                [disabled]="isAdmin()">
                                                     </ng-select>
                                                     <span class="field-error" *ngIf="fundForm.controls['typeOfEuDirective'].hasError('required') && fundForm.controls['typeOfEuDirective'].touched">{{ 'Field is required' | translate }}</span>
                                                 </div>
@@ -757,13 +779,13 @@
 
                                             <div class="form-group required-field col-sm-6">
                                                 <div *ngIf="fundForm.controls['isEuDirective'].value === enums.isEuDirective.YES.toString() && getEuDirectiveType() === enums.typeOfEuDirective.UCITS">
-                                                    <label class="control-label" for="UcitsVersion">{{ 'UCITS Version' |
-                                                        translate }}</label>
+                                                    <label class="control-label" for="UcitsVersion">{{ 'UCITS Version' | translate }}</label>
                                                     <ng-select id="UcitsVersion" 
                                                                 [items]="UcitsVersionItems"
                                                                 [allowClear]="true" 
                                                                 [placeholder]="translate.translate('Select')"
-                                                                [formControl]="fundForm.controls['UcitsVersion']">
+                                                                [formControl]="fundForm.controls['UcitsVersion']"
+                                                                [disabled]="isAdmin()">
                                                     </ng-select>
                                                     <span class="field-error" *ngIf="fundForm.controls['UcitsVersion'].hasError('required') && fundForm.controls['UcitsVersion'].touched">
                                                         {{ 'Field is required' | translate }}</span>
@@ -774,13 +796,13 @@
                                         <div class="row">
                                             <div class="form-group required-field col-sm-6">
                                                 <div>
-                                                    <label class="control-label" for="legalForm">{{ 'Legal Form of the
-                                                        Fund' | translate }}</label>
+                                                    <label class="control-label" for="legalForm">{{ 'Legal Form of the Fund' | translate }}</label>
                                                     <ng-select id="legalForm" 
                                                                 [items]="legalFormItems" 
                                                                 [allowClear]="true"
                                                                 [placeholder]="translate.translate('Select')" 
-                                                                [formControl]="fundForm.controls['legalForm']">
+                                                                [formControl]="fundForm.controls['legalForm']"
+                                                                [disabled]="isAdmin()">
                                                     </ng-select>
                                                     <span class="field-error" *ngIf="fundForm.controls['legalForm'].hasError('required') && fundForm.controls['legalForm'].touched">{{ 'Field
                                                         is required' | translate }}</span>
@@ -795,16 +817,15 @@
                                                                 [items]="nationalNomenclatureOfLegalFormItems"
                                                                 [allowClear]="true" 
                                                                 [placeholder]="translate.translate('Select')"
-                                                                [formControl]="fundForm.controls['nationalNomenclatureOfLegalForm']">
+                                                                [formControl]="fundForm.controls['nationalNomenclatureOfLegalForm']"
+                                                                [disabled]="isAdmin()">
                                                     </ng-select>
-                                                    <span class="field-error" *ngIf="fundForm.controls['nationalNomenclatureOfLegalForm'].hasError('required') && fundForm.controls['nationalNomenclatureOfLegalForm'].touched">{{ 'Field
-                                                        is required' | translate }}</span>
+                                                    <span class="field-error" *ngIf="fundForm.controls['nationalNomenclatureOfLegalForm'].hasError('required') && fundForm.controls['nationalNomenclatureOfLegalForm'].touched">{{ 'Field is required' | translate }}</span>
                                                 </div>
                                             </div>
 
                                             <div class="form-group col-sm-6">
-                                                <label class="control-label" for="fundCreationDate">{{ 'Fund Creation
-                                                    Date (YYYY-MM-DD)' | translate }}</label>
+                                                <label class="control-label" for="fundCreationDate">{{ 'Fund Creation Date (YYYY-MM-DD)' | translate }}</label>
                                                 <div class="input-group">
                                                     <span class="fa fa-calendar" aria-hidden="true"></span>
                                                     <input id="fundCreationDate" 
@@ -813,15 +834,15 @@
                                                             [dpDayPicker]="configDate" 
                                                             [placeholder]="translate.translate('Choose a date')"
                                                             mode="day" 
-                                                            theme="dp-material">
+                                                            theme="dp-material"
+                                                            [disabled]="isAdmin()">
                                                 </div>
                                                 <span *ngIf="fundForm.controls['fundCreationDate'].touched && fundForm.controls['fundCreationDate'].hasError('pattern')"
                                                     class="field-error">{{ 'Incorrect Date' | translate }}</span>
                                             </div>
 
                                             <div class="form-group col-sm-6">
-                                                <label class="control-label" for="fundLaunchate">{{ 'Fund Launch Date
-                                                    (YYYY-MM-DD)' | translate }}</label>
+                                                <label class="control-label" for="fundLaunchate">{{ 'Fund Launch Date (YYYY-MM-DD)' | translate }}</label>
                                                 <div class="input-group">
                                                     <span class="fa fa-calendar" aria-hidden="true"></span>
                                                     <input id="fundLaunchate" 
@@ -829,7 +850,8 @@
                                                             [dpDayPicker]="configDate" 
                                                             [placeholder]="translate.translate('Choose a date')"
                                                             mode="day" 
-                                                            theme="dp-material">
+                                                            theme="dp-material"
+                                                            [disabled]="isAdmin()">
                                                 </div>
                                                 <span *ngIf="fundForm.controls['fundLaunchate'].touched && fundForm.controls['fundLaunchate'].hasError('pattern')"
                                                     class="field-error">{{ 'Incorrect Date' | translate }}</span>
@@ -837,13 +859,13 @@
 
                                             <div class="form-group required-field col-sm-6">
                                                 <div>
-                                                    <label class="control-label" for="fundCurrency">{{ 'Fund Currency' |
-                                                        translate }}</label>
+                                                    <label class="control-label" for="fundCurrency">{{ 'Fund Currency' | translate }}</label>
                                                     <ng-select id="fundCurrency" 
                                                                 [items]="fundCurrencyItems"
                                                                 [allowClear]="true" 
                                                                 [placeholder]="translate.translate('Select')"
-                                                                [formControl]="fundForm.controls['fundCurrency']">
+                                                                [formControl]="fundForm.controls['fundCurrency']"
+                                                                [disabled]="isAdmin()">
                                                     </ng-select>
                                                     <span class="field-error" *ngIf="fundForm.controls['fundCurrency'].hasError('required') && fundForm.controls['fundCurrency'].touched">
                                                         {{ 'Field is required' | translate }}</span>
@@ -851,14 +873,14 @@
                                             </div>
 
                                             <div class="form-group required-field col-sm-6">
-                                                <label class="control-label">{{ 'Open-ended or Close-ended Fund
-                                                    Structure' | translate }}</label>
+                                                <label class="control-label">{{ 'Open-ended or Close-ended Fund Structure' | translate }}</label>
                                                 <div class="radio-inline">
                                                     <input type="radio" 
                                                             name="openOrCloseEnded" 
                                                             id="openOrCloseEnded1"
                                                             formControlName="openOrCloseEnded" 
-                                                            value="{{enums.openOrCloseEnded.OPEN_ENDED}}">
+                                                            value="{{enums.openOrCloseEnded.OPEN_ENDED}}"
+                                                            [disabled]="isAdmin()">
                                                     <label for="openOrCloseEnded1">{{ 'Open-ended' | translate }}</label>
                                                 </div>
                                                 <div class="radio-inline">
@@ -866,7 +888,8 @@
                                                             name="openOrCloseEnded" 
                                                             id="openOrCloseEnded2"
                                                             formControlName="openOrCloseEnded" 
-                                                            value="{{enums.openOrCloseEnded.CLOSE_ENDED}}">
+                                                            value="{{enums.openOrCloseEnded.CLOSE_ENDED}}"
+                                                            [disabled]="isAdmin()">
                                                     <label for="openOrCloseEnded2">{{ 'Close-ended' | translate }}</label>
                                                 </div>
                                             </div>
@@ -880,7 +903,8 @@
                                                             [dpDayPicker]="configMonthDay" 
                                                             [placeholder]="translate.translate('Choose a date')"
                                                             mode="day" 
-                                                            theme="dp-material">
+                                                            theme="dp-material"
+                                                            [disabled]="isAdmin()">
                                                 </div>
                                                 <span *ngIf="fundForm.controls['fiscalYearEnd'].touched && fundForm.controls['fiscalYearEnd'].hasError('pattern')"
                                                     class="field-error">{{ 'Incorrect date' | translate }}</span>
@@ -890,25 +914,25 @@
                                                 <label class="control-label">{{ 'Is Fund of Funds' | translate }}</label>
                                                 <div class="radio-inline">
                                                     <input type="radio" name="isFundOfFund" id="isFundOfFund1"
-                                                        formControlName="isFundOfFund" value="{{enums.isFundOfFund.YES}}">
+                                                        formControlName="isFundOfFund" value="{{enums.isFundOfFund.YES}}" [disabled]="isAdmin()">
                                                     <label for="isFundOfFund1">{{ 'Yes' | translate }}</label>
                                                 </div>
                                                 <div class="radio-inline">
                                                     <input type="radio" name="isFundOfFund" id="isFundOfFund2"
-                                                        formControlName="isFundOfFund" value="{{enums.isFundOfFund.NO}}">
+                                                        formControlName="isFundOfFund" value="{{enums.isFundOfFund.NO}}" [disabled]="isAdmin()">
                                                     <label for="isFundOfFund2">{{ 'No' | translate }}</label>
                                                 </div>
                                             </div>
 
                                             <div class="form-group required-field col-sm-6">
                                                 <div>
-                                                    <label class="control-label" for="managementCompanyID">{{ 'Management
-                                                        Company' | translate }}</label>
+                                                    <label class="control-label" for="managementCompanyID">{{ 'Management Company' | translate }}</label>
                                                     <ng-select id="managementCompanyID" 
                                                                 [items]="managementCompanyItems"
                                                                 [allowClear]="true" 
                                                                 [placeholder]="translate.translate('Select')"
-                                                                [formControl]="fundForm.controls['managementCompanyID']">
+                                                                [formControl]="fundForm.controls['managementCompanyID']"
+                                                                [disabled]="isAdmin()">
                                                     </ng-select>
                                                     <span class="field-error" *ngIf="fundForm.controls['managementCompanyID'].hasError('required') && fundForm.controls['managementCompanyID'].touched">{{ 'Field is required' | translate }}</span>
                                                 </div>
@@ -916,13 +940,13 @@
 
                                             <div class="form-group required-field col-sm-6">
                                                 <div>
-                                                    <label class="control-label" for="fundAdministrator">{{ 'Fund
-                                                        Administrator' | translate }}</label>
+                                                    <label class="control-label" for="fundAdministrator">{{ 'Fund Administrator' | translate }}</label>
                                                     <ng-select id="fundAdministrator" 
                                                                 [items]="fundAdministratorItems"
                                                                 [allowClear]="true" 
                                                                 [placeholder]="translate.translate('Select')"
-                                                                [formControl]="fundForm.controls['fundAdministratorID']">
+                                                                [formControl]="fundForm.controls['fundAdministratorID']"
+                                                                [disabled]="isAdmin()">
                                                     </ng-select>
                                                     <span class="field-error" *ngIf="fundForm.controls['fundAdministratorID'].hasError('required') && fundForm.controls['fundAdministratorID'].touched">{{ 'Field is required' | translate }}</span>
                                                 </div>
@@ -930,13 +954,13 @@
 
                                             <div class="form-group required-field col-sm-6">
                                                 <div>
-                                                    <label class="control-label" for="custodianBank">{{ 'Custodian Bank'
-                                                        | translate }}</label>
+                                                    <label class="control-label" for="custodianBank">{{ 'Custodian Bank' | translate }}</label>
                                                     <ng-select id="custodianBank" 
                                                                 [items]="custodianBankItems"
                                                                 [allowClear]="true" 
                                                                 [placeholder]="translate.translate('Select')"
-                                                                [formControl]="fundForm.controls['custodianBankID']">
+                                                                [formControl]="fundForm.controls['custodianBankID']"
+                                                                [disabled]="isAdmin()">
                                                     </ng-select>
                                                     <span class="field-error" *ngIf="fundForm.controls['custodianBankID'].hasError('required') && fundForm.controls['custodianBankID'].touched">
                                                         {{ 'Field is required' | translate }}</span>
@@ -944,73 +968,73 @@
                                             </div>
 
                                             <div class="form-group col-sm-6">
-                                                <label class="control-label" for="investmentManager">{{ 'Investment
-                                                    Manager' | translate }}</label>
+                                                <label class="control-label" for="investmentManager">{{ 'Investment Manager' | translate }}</label>
                                                 <ng-select id="investmentManager" 
                                                             [items]="investmentManagerItems"
                                                             [allowClear]="true" 
                                                             [placeholder]="translate.translate('Select')"
-                                                            [formControl]="fundForm.controls['investmentManagerID']">
+                                                            [formControl]="fundForm.controls['investmentManagerID']"
+                                                            [disabled]="isAdmin()">
                                                 </ng-select>
                                             </div>
 
                                             <div class="form-group col-sm-6">
-                                                <label class="control-label" for="principalPromoter">{{ 'Principal
-                                                    Promoter' | translate }}</label>
+                                                <label class="control-label" for="principalPromoter">{{ 'Principal Promoter' | translate }}</label>
                                                 <ng-select id="principalPromoter" 
                                                             [items]="principalPromoterItems"
                                                             [allowClear]="true" 
                                                             [multiple]="true" 
                                                             [placeholder]="translate.translate('Select')"
-                                                            [formControl]="fundForm.controls['principlePromoterID']">
+                                                            [formControl]="fundForm.controls['principlePromoterID']"
+                                                            [disabled]="isAdmin()">
                                                 </ng-select>
                                             </div>
 
                                             <div class="form-group col-sm-6">
-                                                <label class="control-label" for="payingAgent">{{ 'Paying Agent' |
-                                                    translate }}</label>
+                                                <label class="control-label" for="payingAgent">{{ 'Paying Agent' | translate }}</label>
                                                 <ng-select id="payingAgent" 
                                                             [items]="payingAgentItems" 
                                                             [allowClear]="true"
                                                             [multiple]="true" 
                                                             [placeholder]="translate.translate('Select')"
-                                                            [formControl]="fundForm.controls['payingAgentID']">
+                                                            [formControl]="fundForm.controls['payingAgentID']"
+                                                            [disabled]="isAdmin()">
                                                 </ng-select>
                                             </div>
 
                                             <div class="form-group col-sm-6">
-                                                <label class="control-label" for="fundManagers">{{ 'Fund Managers' |
-                                                    translate }}</label>
+                                                <label class="control-label" for="fundManagers">{{ 'Fund Managers' | translate }}</label>
                                                 <input type="text" 
                                                         name="fundManagers" 
                                                         id="fundManagers"
-                                                        formControlName="fundManagers">
+                                                        formControlName="fundManagers"
+                                                        [disabled]="isAdmin()">
                                                 <span class="field-error" *ngIf="fundForm.controls['fundManagers'].hasError('required') && fundForm.controls['fundManagers'].touched">{{ 'Incorrect
                                                     Entry' | translate}}</span>
                                             </div>
 
                                             <div class="form-group col-sm-6" *ngIf="isTransferAgentActive()">
                                                 <div>
-                                                    <label class="control-label" for="transferAgent">{{ 'Transfer Agent'
-                                                        | translate }}</label>
+                                                    <label class="control-label" for="transferAgent">{{ 'Transfer Agent' | translate }}</label>
                                                     <ng-select id="transferAgent" 
                                                                 [items]="transferAgentItems"
                                                                 [allowClear]="true" 
                                                                 [placeholder]="translate.translate('Select')"
-                                                                [formControl]="fundForm.controls['transferAgentID']">
+                                                                [formControl]="fundForm.controls['transferAgentID']"
+                                                                [disabled]="isAdmin()">
                                                     </ng-select>
                                                 </div>
                                             </div>
 
                                             <div class="form-group col-sm-6" *ngIf="isCentralizingAgentActive()">
                                                 <div>
-                                                    <label class="control-label" for="centralizingAgent">{{ 'Centralizing
-                                                        Agent' | translate }}</label>
+                                                    <label class="control-label" for="centralizingAgent">{{ 'Centralizing Agent' | translate }}</label>
                                                     <ng-select id="centralizingAgent" 
                                                                 [items]="centralizingAgentItems"
                                                                 [allowClear]="true" 
                                                                 [placeholder]="translate.translate('Select')"
-                                                                [formControl]="fundForm.controls['centralizingAgentID']">
+                                                                [formControl]="fundForm.controls['centralizingAgentID']"
+                                                                [disabled]="isAdmin()">
                                                     </ng-select>
                                                 </div>
                                             </div>
@@ -1022,7 +1046,8 @@
                                                             name="isDedicatedFund" 
                                                             id="isDedicatedFund1"
                                                             formControlName="isDedicatedFund" 
-                                                            value="{{enums.isDedicatedFund.YES}}">
+                                                            value="{{enums.isDedicatedFund.YES}}"
+                                                            [disabled]="isAdmin()">
                                                     <label for="isDedicatedFund1">{{ 'Yes' | translate }}</label>
                                                 </div>
                                                 <div class="radio-inline">
@@ -1030,31 +1055,30 @@
                                                             name="isDedicatedFund" 
                                                             id="isDedicatedFund2"
                                                             formControlName="isDedicatedFund" 
-                                                            value="{{enums.isDedicatedFund.NO}}">
+                                                            value="{{enums.isDedicatedFund.NO}}"
+                                                            [disabled]="isAdmin()">
                                                     <label for="isDedicatedFund2">{{ 'No' | translate }}</label>
                                                 </div>
                                             </div>
 
                                             <div class="form-group required-field col-sm-6">
                                                 <div>
-                                                    <label class="control-label" for="portfolioCurrencyHedge">{{ 'Portfolio
-                                                        Currency Hedge' | translate }}</label>
+                                                    <label class="control-label" for="portfolioCurrencyHedge">{{ 'Portfolio Currency Hedge' | translate }}</label>
                                                     <ng-select id="portfolioCurrencyHedge" 
                                                                 [items]="portfolioCurrencyHedgeItems"
                                                                 [allowClear]="true" 
                                                                 [placeholder]="translate.translate('Select')"
-                                                                [formControl]="fundForm.controls['portfolioCurrencyHedge']">
+                                                                [formControl]="fundForm.controls['portfolioCurrencyHedge']"
+                                                                [disabled]="isAdmin()">
                                                     </ng-select>
-                                                    <span class="field-error" *ngIf="fundForm.controls['portfolioCurrencyHedge'].hasError('required') && fundForm.controls['portfolioCurrencyHedge'].touched">{{ 'Field
-                                                        is required' | translate }}</span>
+                                                    <span class="field-error" *ngIf="fundForm.controls['portfolioCurrencyHedge'].hasError('required') && fundForm.controls['portfolioCurrencyHedge'].touched">{{ 'Field is required' | translate }}</span>
                                                 </div>
                                             </div>
 
                                             <div class="form-group col-sm-6">
-                                                <label class="control-label" for="investmentObjective">{{ 'Investment
-                                                    Objective' | translate }}</label>
+                                                <label class="control-label" for="investmentObjective">{{ 'Investment Objective' | translate }}</label>
                                                 <textarea name="investmentObjective" id="investmentObjective"
-                                                    formControlName="investmentObjective"></textarea>
+                                                    formControlName="investmentObjective" [disabled]="isAdmin()"></textarea>
                                             </div>
                                         </div>
                                     </div>
@@ -1074,8 +1098,7 @@
                                     <!-- Panel body -->
                                     <div class="panel-body" [class.hidden]="!panels[1][1].open">
                                         <div class="form-group col-sm-12">
-                                            <label class="control-label">{{ 'Use Default Holiday Management
-                                                Configuration?' | translate }}
+                                            <label class="control-label">{{ 'Use Default Holiday Management Configuration?' | translate }}
                                                 <i>{{ '(Can be found in My Products > Configuration)' | translate }}</i>
                                             </label>
                                             <div class="radio-inline">
@@ -1083,7 +1106,8 @@
                                                         name="useDefaultHolidayMgmt" 
                                                         id="useDefaultHolidayMgmtYes"
                                                         formControlName="useDefaultHolidayMgmt" 
-                                                        value="{{enums.useDefaultHolidayMgmt.YES}}">
+                                                        value="{{enums.useDefaultHolidayMgmt.YES}}"
+                                                        [disabled]="isAdmin()">
                                                 <label for="useDefaultHolidayMgmtYes">{{ 'Yes' | translate }}</label>
                                             </div>
                                             <div class="radio-inline">
@@ -1091,7 +1115,8 @@
                                                         name="useDefaultHolidayMgmt" 
                                                         id="useDefaultHolidayMgmtNo"
                                                         formControlName="useDefaultHolidayMgmt" 
-                                                        value="{{enums.useDefaultHolidayMgmt.NO}}">
+                                                        value="{{enums.useDefaultHolidayMgmt.NO}}"
+                                                        [disabled]="isAdmin()">
                                                 <label for="useDefaultHolidayMgmtNo">{{ 'No' | translate }}</label>
                                             </div>
                                         </div>
@@ -1100,7 +1125,8 @@
                                             <date-picker-extended 
                                                 [hidden]="!showHolidayMgmtConfig()" 
                                                 [dates]="fundForm.value.holidayMgmtConfig"
-                                                (datesEmitter)="setHolidayMgmtConfig($event)">
+                                                (datesEmitter)="setHolidayMgmtConfig($event)"
+                                                [disabled]="isAdmin()">
                                             </date-picker-extended>
                                         </div>
                                     </div>
@@ -1125,29 +1151,31 @@
                                                 <input type="text" 
                                                         name="globalItermediaryIdentification" id="globalItermediaryIdentification"
                                                         formControlName="globalItermediaryIdentification" 
-                                                        maxlength="19">
+                                                        maxlength="19"
+                                                        [disabled]="isAdmin()">
                                                 <span *ngIf="fundForm.controls['globalItermediaryIdentification'].touched && fundForm.controls['globalItermediaryIdentification'].hasError('pattern')"
                                                     class="field-error">{{ 'Accepted format: [6x A-Z0-9].[5x A-Z0-9].[2x
                                                     A-Z].[3x 0-9]' | translate }}</span>
                                             </div>
 
                                             <div class="form-group col-sm-6">
-                                                <label class="control-label" for="delegatedManagementCompany">{{ 'Delegated
-                                                    Management Company' | translate }}</label>
+                                                <label class="control-label" for="delegatedManagementCompany">{{ 'Delegated Management Company' | translate }}</label>
                                                 <ng-select id="delegatedManagementCompany" 
                                                             [items]="managementCompanyItems"
                                                             [allowClear]="true" 
-                                                            [placeholder]="translate.translate('Select')"                   [formControl]="fundForm.controls['delegatedManagementCompany']">
+                                                            [placeholder]="translate.translate('Select')"                   
+                                                            [formControl]="fundForm.controls['delegatedManagementCompany']"
+                                                            [disabled]="isAdmin()">
                                                 </ng-select>
                                             </div>
 
                                             <div class="form-group col-sm-6">
-                                                <label class="control-label" for="investmentAdvisor">{{ 'Investment
-                                                    Advisor' | translate }}</label>
+                                                <label class="control-label" for="investmentAdvisor">{{ 'Investment Advisor' | translate }}</label>
                                                 <input type="text" 
                                                         name="investmentAdvisor" 
                                                         id="investmentAdvisor"
-                                                        [formControl]="fundForm.controls['investmentAdvisorID']">
+                                                        [formControl]="fundForm.controls['investmentAdvisorID']"
+                                                        [disabled]="isAdmin()">
                                                 <span class="field-error" *ngIf="fundForm.controls['investmentAdvisorID'].hasError('required') && fundForm.controls['investmentAdvisorID'].touched">
                                                     {{ 'Incorrect Entry' | translate }}</span>
                                             </div>
@@ -1158,29 +1186,30 @@
                                                             [items]="auditorItems" 
                                                             [allowClear]="true"
                                                             [placeholder]="translate.translate('Select')" 
-                                                            [formControl]="fundForm.controls['auditorID']">
+                                                            [formControl]="fundForm.controls['auditorID']"
+                                                            [disabled]="isAdmin()">
                                                 </ng-select>
                                             </div>
 
                                             <div class="form-group col-sm-6">
-                                                <label class="control-label" for="taxAuditor">{{ 'Tax Auditor' |
-                                                    translate }}</label>
+                                                <label class="control-label" for="taxAuditor">{{ 'Tax Auditor' | translate }}</label>
                                                 <ng-select id="taxAuditor" 
                                                             [items]="taxAuditorItems" 
                                                             [allowClear]="true"
                                                             [placeholder]="translate.translate('Select')" 
-                                                            [formControl]="fundForm.controls['taxAuditorID']">
+                                                            [formControl]="fundForm.controls['taxAuditorID']"
+                                                            [disabled]="isAdmin()">
                                                 </ng-select>
                                             </div>
 
                                             <div class="form-group col-sm-6">
-                                                <label class="control-label" for="legalAdvisor">{{ 'Legal Advisor' |
-                                                    translate }}</label>
+                                                <label class="control-label" for="legalAdvisor">{{ 'Legal Advisor' | translate }}</label>
                                                 <ng-select id="legalAdvisor" 
                                                             [items]="legalAdvisorItems" 
                                                             [allowClear]="true"
                                                             [placeholder]="translate.translate('Select')" 
-                                                            [formControl]="fundForm.controls['legalAdvisorID']">
+                                                            [formControl]="fundForm.controls['legalAdvisorID']"
+                                                            [disabled]="isAdmin()">
                                                 </ng-select>
                                             </div>
 
@@ -1189,7 +1218,8 @@
                                                 <input type="text" 
                                                         name="directors" 
                                                         id="directors" 
-                                                        formControlName="directors">
+                                                        formControlName="directors"
+                                                        [disabled]="isAdmin()">
                                             </div>
 
                                             <div class="form-group col-sm-6">
@@ -1199,7 +1229,8 @@
                                                             name="hasEmbeddedDirective" 
                                                             id="hasEmbeddedDirective1"
                                                             formControlName="hasEmbeddedDirective" 
-                                                            value="{{enums.hasEmbeddedDirective.YES}}">
+                                                            value="{{enums.hasEmbeddedDirective.YES}}"
+                                                            [disabled]="isAdmin()">
                                                     <label for="hasEmbeddedDirective1">{{ 'Yes' | translate }}</label>
                                                 </div>
                                                 <div class="radio-inline">
@@ -1207,7 +1238,8 @@
                                                             name="hasEmbeddedDirective" 
                                                             id="hasEmbeddedDirective2"
                                                             formControlName="hasEmbeddedDirective" 
-                                                            value="{{enums.hasEmbeddedDirective.NO}}">
+                                                            value="{{enums.hasEmbeddedDirective.NO}}"
+                                                            [disabled]="isAdmin()">
                                                     <label for="hasEmbeddedDirective2">{{ 'No' | translate }}</label>
                                                 </div>
                                             </div>
@@ -1220,7 +1252,8 @@
                                                             name="hasCapitalPreservation" 
                                                             id="hasCapitalPreservation1"
                                                             formControlName="hasCapitalPreservation" 
-                                                            value="{{enums.hasCapitalPreservation.YES}}">
+                                                            value="{{enums.hasCapitalPreservation.YES}}"
+                                                            [disabled]="isAdmin()">
                                                     <label for="hasCapitalPreservation1">{{ 'Yes' | translate }}</label>
                                                 </div>
                                                 <div class="radio-inline">
@@ -1228,29 +1261,30 @@
                                                             name="hasCapitalPreservation" 
                                                             id="hasCapitalPreservation2"
                                                             formControlName="hasCapitalPreservation" 
-                                                            value="{{enums.hasCapitalPreservation.NO}}">
+                                                            value="{{enums.hasCapitalPreservation.NO}}"
+                                                            [disabled]="isAdmin()">
                                                     <label for="hasCapitalPreservation2">{{ 'No' | translate }}</label>
                                                 </div>
                                             </div>
                                         </div>
                                         <div class="row" *ngIf="fundForm.controls['hasCapitalPreservation'].value === enums.hasCapitalPreservation.YES.toString()">
                                             <div class="form-group col-sm-6">
-                                                <label class="control-label" for="capitalPreservationLevel">{{ 'Capital
-                                                    Preservation Level' | translate }}</label>
+                                                <label class="control-label" for="capitalPreservationLevel">{{ 'Capital Preservation Level' | translate }}</label>
                                                 <input type="number" 
                                                         name="capitalPreservationLevel" 
                                                         id="capitalPreservationLevel"
-                                                        formControlName="capitalPreservationLevel">
+                                                        formControlName="capitalPreservationLevel"
+                                                        [disabled]="isAdmin()">
                                             </div>
 
                                             <div class="form-group col-sm-6">
-                                                <label class="control-label" for="capitalPreservationPeriod">{{ 'Capital
-                                                    Preservation Period' | translate }}</label>
+                                                <label class="control-label" for="capitalPreservationPeriod">{{ 'Capital Preservation Period' | translate }}</label>
                                                 <ng-select id="capitalPreservationPeriod" 
                                                             [items]="capitalPreservationPeriodItems"
                                                             [allowClear]="true" 
                                                             [placeholder]="translate.translate('Select')"
-                                                            [formControl]="fundForm.controls['capitalPreservationPeriod']">
+                                                            [formControl]="fundForm.controls['capitalPreservationPeriod']"
+                                                            [disabled]="isAdmin()">
                                                 </ng-select>
                                             </div>
                                         </div>
@@ -1267,7 +1301,8 @@
                                                             [dpDayPicker]="configDate" 
                                                             [placeholder]="translate.translate('Choose a date')" 
                                                             mode="day" 
-                                                            theme="dp-material">
+                                                            theme="dp-material"
+                                                            [disabled]="isAdmin()">
                                                 </div>
                                             </div>
                                         </div>
@@ -1279,7 +1314,8 @@
                                                     <input type="radio" 
                                                             name="hasCppi" id="hasCppi1" 
                                                             formControlName="hasCppi"
-                                                            value="{{enums.hasCppi.YES}}">
+                                                            value="{{enums.hasCppi.YES}}"
+                                                            [disabled]="isAdmin()">
                                                     <label for="hasCppi1">{{ 'Yes' | translate }}</label>
                                                 </div>
                                                 <div class="radio-inline">
@@ -1287,19 +1323,20 @@
                                                             name="hasCppi" 
                                                             id="hasCppi2" 
                                                             formControlName="hasCppi"
-                                                            value="{{enums.hasCppi.NO}}">
+                                                            value="{{enums.hasCppi.NO}}"
+                                                            [disabled]="isAdmin()">
                                                     <label for="hasCppi2">{{ 'No' | translate }}</label>
                                                 </div>
                                             </div>
 
                                             <div class="form-group col-sm-6">
                                                 <div *ngIf="fundForm.controls['hasCppi'].value === enums.hasCppi.YES.toString()">
-                                                    <label class="control-label" for="cppiMultiplier">{{ 'CPPI
-                                                        Multiplier' | translate }}</label>
+                                                    <label class="control-label" for="cppiMultiplier">{{ 'CPPI Multiplier' | translate }}</label>
                                                     <input type="number"
                                                             name="cppiMultiplier" 
                                                             id="cppiMultiplier"
-                                                            formControlName="cppiMultiplier">
+                                                            formControlName="cppiMultiplier"
+                                                            [disabled]="isAdmin()">
                                                 </div>
                                             </div>
 
@@ -1310,7 +1347,8 @@
                                                             name="hasHedgeFundStrategy" 
                                                             id="hasHedgeFundStrategy1"
                                                             formControlName="hasHedgeFundStrategy" 
-                                                            value="{{enums.hasHedgeFundStrategy.YES}}">
+                                                            value="{{enums.hasHedgeFundStrategy.YES}}"
+                                                            [disabled]="isAdmin()">
                                                     <label for="hasHedgeFundStrategy1">{{ 'Yes' | translate }}</label>
                                                 </div>
                                                 <div class="radio-inline">
@@ -1318,7 +1356,8 @@
                                                             name="hasHedgeFundStrategy" 
                                                             id="hasHedgeFundStrategy2"
                                                             formControlName="hasHedgeFundStrategy" 
-                                                            value="{{enums.hasHedgeFundStrategy.NO}}">
+                                                            value="{{enums.hasHedgeFundStrategy.NO}}"
+                                                            [disabled]="isAdmin()">
                                                     <label for="hasHedgeFundStrategy2">{{ 'No' | translate }}</label>
                                                 </div>
                                             </div>
@@ -1330,7 +1369,8 @@
                                                             name="isLeveraged" 
                                                             id="isLeveraged1"
                                                             formControlName="isLeveraged" 
-                                                            value="{{enums.isLeveraged.YES}}">
+                                                            value="{{enums.isLeveraged.YES}}"
+                                                            [disabled]="isAdmin()">
                                                     <label for="isLeveraged1">{{ 'Yes' | translate }}</label>
                                                 </div>
                                                 <div class="radio-inline">
@@ -1338,7 +1378,8 @@
                                                             name="isLeveraged" 
                                                             id="isLeveraged2"
                                                             formControlName="isLeveraged" 
-                                                            value="{{enums.isLeveraged.NO}}">
+                                                            value="{{enums.isLeveraged.NO}}"
+                                                            [disabled]="isAdmin()">
                                                     <label for="isLeveraged2">{{ 'No' | translate }}</label>
                                                 </div>
                                             </div>
@@ -1350,7 +1391,8 @@
                                                             name="has130Or30Strategy" 
                                                             id="has130Or30Strategy1"
                                                             formControlName="has130Or30Strategy" 
-                                                            value="{{enums.has130_30Strategy.YES}}">
+                                                            value="{{enums.has130_30Strategy.YES}}"
+                                                            [disabled]="isAdmin()">
                                                     <label for="has130Or30Strategy1">{{ 'Yes' | translate }}</label>
                                                 </div>
                                                 <div class="radio-inline">
@@ -1358,20 +1400,21 @@
                                                             name="has130Or30Strategy" 
                                                             id="has130Or30Strategy2"
                                                             formControlName="has130Or30Strategy" 
-                                                            value="{{enums.has130_30Strategy.NO}}">
+                                                            value="{{enums.has130_30Strategy.NO}}"
+                                                            [disabled]="isAdmin()">
                                                     <label for="has130Or30Strategy2">{{ 'No' | translate }}</label>
                                                 </div>
                                             </div>
 
                                             <div class="form-group col-sm-6">
-                                                <label class="control-label">{{ 'Is Fund Targeting Environmental or
-                                                    Social Objectives (EOS)' | translate }}</label>
+                                                <label class="control-label">{{ 'Is Fund Targeting Environmental or Social Objectives (EOS)' | translate }}</label>
                                                 <div class="radio-inline">
                                                     <input type="radio" 
                                                             name="isFundTargetingEos" 
                                                             id="isFundTargetingEos1"
                                                             formControlName="isFundTargetingEos" 
-                                                            value="{{enums.isFundTargetingEos.YES}}">
+                                                            value="{{enums.isFundTargetingEos.YES}}"
+                                                            [disabled]="isAdmin()">
                                                     <label for="isFundTargetingEos1">{{ 'Yes' | translate }}</label>
                                                 </div>
                                                 <div class="radio-inline">
@@ -1379,20 +1422,21 @@
                                                             name="isFundTargetingEos" 
                                                             id="isFundTargetingEos2"
                                                             formControlName="isFundTargetingEos" 
-                                                            value="{{enums.isFundTargetingEos.NO}}">
+                                                            value="{{enums.isFundTargetingEos.NO}}"
+                                                            [disabled]="isAdmin()">
                                                     <label for="isFundTargetingEos2">{{ 'No' | translate }}</label>
                                                 </div>
                                             </div>
 
                                             <div class="form-group col-sm-6">
-                                                <label class="control-label">{{ 'Is Fund Targeting Socially Responsible
-                                                    Investment (SRI)' | translate }}</label>
+                                                <label class="control-label">{{ 'Is Fund Targeting Socially Responsible Investment (SRI)' | translate }}</label>
                                                 <div class="radio-inline">
                                                     <input type="radio" 
                                                             name="isFundTargetingSri" 
                                                             id="isFundTargetingSri1"
                                                             formControlName="isFundTargetingSri" 
-                                                            value="{{enums.isFundTargetingSri.YES}}">
+                                                            value="{{enums.isFundTargetingSri.YES}}"
+                                                            [disabled]="isAdmin()">
                                                     <label for="isFundTargetingSri1">{{ 'Yes' | translate }}</label>
                                                 </div>
                                                 <div class="radio-inline">
@@ -1400,7 +1444,8 @@
                                                             name="isFundTargetingSri" 
                                                             id="isFundTargetingSri2"
                                                             formControlName="isFundTargetingSri" 
-                                                            value="{{enums.isFundTargetingSri.NO}}">
+                                                            value="{{enums.isFundTargetingSri.NO}}"
+                                                            [disabled]="isAdmin()">
                                                     <label for="isFundTargetingSri2">{{ 'No' | translate }}</label>
                                                 </div>
                                             </div>
@@ -1412,7 +1457,8 @@
                                                             name="isPassiveFund" 
                                                             id="isPassiveFund1"
                                                             formControlName="isPassiveFund" 
-                                                            value="{{enums.isPassiveFund.YES}}">
+                                                            value="{{enums.isPassiveFund.YES}}"
+                                                            [disabled]="isAdmin()">
                                                     <label for="isPassiveFund1">{{ 'Yes' | translate }}</label>
                                                 </div>
                                                 <div class="radio-inline">
@@ -1420,7 +1466,8 @@
                                                             name="isPassiveFund" 
                                                             id="isPassiveFund2"
                                                             formControlName="isPassiveFund" 
-                                                            value="{{enums.isPassiveFund.NO}}">
+                                                            value="{{enums.isPassiveFund.NO}}"
+                                                            [disabled]="isAdmin()">
                                                     <label for="isPassiveFund2">{{ 'No' | translate }}</label>
                                                 </div>
                                             </div>
@@ -1432,7 +1479,8 @@
                                                             name="hasSecurityiesLending" 
                                                             id="hasSecurityiesLending1"
                                                             formControlName="hasSecurityiesLending" 
-                                                            value="{{enums.hasSecurityiesLending.YES}}">
+                                                            value="{{enums.hasSecurityiesLending.YES}}"
+                                                            [disabled]="isAdmin()">
                                                     <label for="hasSecurityiesLending1">{{ 'Yes' | translate }}</label>
                                                 </div>
                                                 <div class="radio-inline">
@@ -1440,7 +1488,8 @@
                                                             name="hasSecurityiesLending" 
                                                             id="hasSecurityiesLending2"
                                                             formControlName="hasSecurityiesLending" 
-                                                            value="{{enums.hasSecurityiesLending.NO}}">
+                                                            value="{{enums.hasSecurityiesLending.NO}}"
+                                                            [disabled]="isAdmin()">
                                                     <label for="hasSecurityiesLending2">{{ 'No' | translate }}</label>
                                                 </div>
                                             </div>
@@ -1452,7 +1501,8 @@
                                                             name="hasSwap" 
                                                             id="hasSwap1" 
                                                             formControlName="hasSwap"
-                                                            value="{{enums.hasSwap.YES}}">
+                                                            value="{{enums.hasSwap.YES}}"
+                                                            [disabled]="isAdmin()">
                                                     <label for="hasSwap1">{{ 'Yes' | translate }}</label>
                                                 </div>
                                                 <div class="radio-inline">
@@ -1460,7 +1510,8 @@
                                                             name="hasSwap" 
                                                             id="hasSwap2" 
                                                             formControlName="hasSwap"
-                                                            value="{{enums.hasSwap.NO}}">
+                                                            value="{{enums.hasSwap.NO}}"
+                                                            [disabled]="isAdmin()">
                                                     <label for="hasSwap2">{{ 'No' | translate }}</label>
                                                 </div>
                                             </div>
@@ -1472,7 +1523,8 @@
                                                             name="hasDurationHedge" 
                                                             id="hasDurationHedge1"
                                                             formControlName="hasDurationHedge" 
-                                                            value="{{enums.hasDurationHedge.YES}}">
+                                                            value="{{enums.hasDurationHedge.YES}}"
+                                                            [disabled]="isAdmin()">
                                                     <label for="hasDurationHedge1">{{ 'Yes' | translate }}</label>
                                                 </div>
                                                 <div class="radio-inline">
@@ -1480,31 +1532,32 @@
                                                             name="hasDurationHedge" 
                                                             id="hasDurationHedge2"
                                                             formControlName="hasDurationHedge" 
-                                                            value="{{enums.hasDurationHedge.NO}}">
+                                                            value="{{enums.hasDurationHedge.NO}}"
+                                                            [disabled]="isAdmin()">
                                                     <label for="hasDurationHedge2">{{ 'No' | translate }}</label>
                                                 </div>
                                             </div>
 
                                             <div class="form-group col-sm-6">
-                                                <label class="control-label" for="internalReference">{{ 'Internal
-                                                    Reference' | translate }}</label>
+                                                <label class="control-label" for="internalReference">{{ 'Internal Reference' | translate }}</label>
                                                 <input type="text" 
                                                         name="internalReference" 
                                                         id="internalReference"
                                                         formControlName="internalReference" 
-                                                        maxlength="50">
+                                                        maxlength="50"
+                                                        [disabled]="isAdmin()">
                                             </div>
                                         </div>
 
                                         <div class="row">
                                             <div class="form-group col-sm-6">
-                                                <label class="control-label" for="additionnalNotes">{{ 'Additional
-                                                    Notes' | translate }}</label>
+                                                <label class="control-label" for="additionnalNotes">{{ 'Additional Notes' | translate }}</label>
                                                 <textarea name="additionnalNotes" 
                                                             id="additionnalNotes" 
                                                             class="form-control"
                                                             formControlName="additionnalNotes" 
-                                                            maxlength="500">
+                                                            maxlength="500"
+                                                            [disabled]="isAdmin()">
                                                 </textarea>
                                             </div>
                                         </div>
@@ -1518,13 +1571,13 @@
 
                 <div class="form-group col-sm-6">
                     <button id="fund-cancelfund-btn" type="button" class="btn btn-default" (click)="onClickBack()">
-                        {{ 'Cancel' | translate}} </button>
+                        {{ (!isAdmin() ? 'Cancel' : 'Close') | translate}} </button>
 
-                    <button *ngIf="currDraft == 1 || !param" id="fund-savedraftfund-btn" type="button" class="btn btn-primary" (click)="saveDraft()">
+                    <button *ngIf="(currDraft == 1 || !param) && !isAdmin()" id="fund-savedraftfund-btn" type="button" class="btn btn-primary" (click)="saveDraft()">
                         <i class="fa fa-save"></i> {{ (!param ? 'Save Draft' : 'Update Draft') | translate }}
                     </button>
 
-                    <button id="fund-submitfund-btn" type="submit" class="btn btn-primary" [disabled]="!fundForm.valid">
+                    <button *ngIf="!isAdmin()" id="fund-submitfund-btn" type="submit" class="btn btn-primary" [disabled]="!fundForm.valid">
                         <i class="fa fa-save"></i> {{ !param || currDraft == 1 ? 'Save' : 'Update' }}
                     </button>
                 </div>

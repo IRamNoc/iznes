@@ -14,6 +14,7 @@ export interface UmbrellaFundDetail {
     domicile: string;
     umbrellaFundCreationDate: string;
     managementCompanyID: number;
+    companyName?: string;
     fundAdministratorID: number;
     custodianBankID: number;
     investmentAdvisorID: number[];

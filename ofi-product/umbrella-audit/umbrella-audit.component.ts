@@ -8,6 +8,8 @@ import * as _ from 'lodash';
 import { Location } from '@angular/common';
 import { OfiUmbrellaFundService } from '@ofi/ofi-main/ofi-req-services/ofi-product/umbrella-fund/service';
 
+const ADMIN_USER_TYPE = 35;
+
 @Component({
     templateUrl: './umbrella-audit.component.html',
     styleUrls: ['./umbrella-audit.component.scss'],
@@ -17,6 +19,9 @@ export class UmbrellaAuditComponent implements OnInit, OnDestroy {
     umbrellaName: string;
     unSubscribe: Subject<any> = new Subject();
 
+    userType = null;
+
+    @select(['user', 'myDetail']) userDetailOb;
     @select(['ofi', 'ofiProduct', 'ofiUmbrellaFund', 'umbrellaFundList', 'umbrellaFundList']) umbrellaList$;
     @select(['ofi', 'ofiProduct', 'ofiUmbrellaFund', 'umbrellaFundList', 'requested']) requestedUmbrellaList$;
 
@@ -28,6 +33,14 @@ export class UmbrellaAuditComponent implements OnInit, OnDestroy {
     }
 
     ngOnInit() {
+        this.userDetailOb
+            .pipe(
+                takeUntil(this.unSubscribe),
+            )
+            .subscribe((userDetail) => {
+                this.userType = userDetail.userType;
+            });
+
         this.activatedRoute.params
             .pipe(
                 takeUntil(this.unSubscribe),
@@ -42,7 +55,12 @@ export class UmbrellaAuditComponent implements OnInit, OnDestroy {
             )
             .subscribe((isFetched) => {
                 if (!isFetched) {
-                    this.umbrellaService.fetchUmbrellaList();
+                    if (!this.isAdmin()) {
+                        this.umbrellaService.fetchUmbrellaList();
+                    } else {
+                        /* For IZNES Admins */
+                        this.umbrellaService.getAdminUmbrellaList();
+                    }
                 }
             });
 
@@ -69,5 +87,14 @@ export class UmbrellaAuditComponent implements OnInit, OnDestroy {
 
     navigateToPreviousLocation() {
         this.location.back();
+    }
+
+    /**
+     * Check whether the userType is an IZNES Admin User
+     *
+     * @return {boolean}
+     */
+    isAdmin(): boolean {
+        return (this.userType === ADMIN_USER_TYPE);
     }
 }

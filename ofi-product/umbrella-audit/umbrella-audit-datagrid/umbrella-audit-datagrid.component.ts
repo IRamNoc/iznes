@@ -6,6 +6,9 @@ import { combineLatest } from 'rxjs/observable/combineLatest';
 import { FormBuilder, FormGroup } from '@angular/forms';
 import { OfiUmbrellaFundService } from '@ofi/ofi-main/ofi-req-services/ofi-product/umbrella-fund/service';
 import { MultilingualService } from '@setl/multilingual';
+import * as moment from 'moment';
+
+const ADMIN_USER_TYPE = 35;
 
 @Component({
     selector: 'umbrella-audit-datagrid',
@@ -16,6 +19,7 @@ export class UmbrellaAuditDatagridComponent implements OnInit, OnDestroy, OnChan
     umbrellaAuditItems = [];
     umbrellaAuditList = [];
     filteredAuditItems = [];
+    userType;
 
     searchForm: FormGroup;
     // Locale
@@ -32,6 +36,7 @@ export class UmbrellaAuditDatagridComponent implements OnInit, OnDestroy, OnChan
     unSubscribe: Subject<any> = new Subject();
     @Input('umbrellaID') umbrellaID;
     @select(['ofi', 'ofiProduct', 'ofiUmbrellaFund', 'umbrellaFundList', 'audit']) umbrellaAuditList$;
+    @select(['user', 'myDetail']) userDetailOb;
 
     constructor(
         private changeDetectorRef: ChangeDetectorRef,
@@ -41,17 +46,28 @@ export class UmbrellaAuditDatagridComponent implements OnInit, OnDestroy, OnChan
     ) {
         this.searchForm = this.fb.group({
             startDate: [
-                '',
+                moment().add('-1', 'month').format('YYYY-MM-DD'),
             ],
             endDate: [
-                '',
+                moment().format('YYYY-MM-DD'),
             ],
         });
     }
 
     ngOnInit() {
+        this.userDetailOb
+            .pipe(
+                takeUntil(this.unSubscribe),
+            ).subscribe((userDetail) => {
+                this.userType = userDetail.userType;
+            });
+
         if (this.umbrellaID) {
-            this.umbrellaService.fetchUmbrellaAuditByUmbrellaID(this.umbrellaID);
+            if (!this.isAdmin()) {
+                this.umbrellaService.fetchUmbrellaAuditByUmbrellaID(this.umbrellaID);
+            } else {
+                this.umbrellaService.fetchAdminUmbrellaAuditByUmbrellaID(this.umbrellaID);
+            }
         }
 
         this.umbrellaAuditList$
@@ -69,8 +85,12 @@ export class UmbrellaAuditDatagridComponent implements OnInit, OnDestroy, OnChan
     }
 
     ngOnChanges(changes) {
-        if (changes.umbrellaID.currentValue !== changes.umbrellaID.previousValue && changes.umbrellaID.currentValue) {
-            this.umbrellaService.fetchUmbrellaAuditByUmbrellaID(changes.umbrellaID.currentValue);
+        if (this.userType && changes.umbrellaID.currentValue && (changes.umbrellaID.currentValue !== changes.umbrellaID.previousValue)) {
+            if (!this.isAdmin()) {
+                this.umbrellaService.fetchUmbrellaAuditByUmbrellaID(changes.umbrellaID.currentValue);
+            } else {
+                this.umbrellaService.fetchAdminUmbrellaAuditByUmbrellaID(changes.umbrellaID.currentValue);
+            }
             this.updateUmbrellaAuditItems();
         }
     }
@@ -131,5 +151,14 @@ export class UmbrellaAuditDatagridComponent implements OnInit, OnDestroy, OnChan
         return list.filter((item) => {
             return Date.parse(filterValue + ' 23:59:59') >= Date.parse(item.dateModified);
         });
+    }
+
+    /**
+     * Check whether the userType is an IZNES Admin User
+     *
+     * @return {boolean}
+     */
+    isAdmin(): boolean {
+        return (this.userType === ADMIN_USER_TYPE);
     }
 }
