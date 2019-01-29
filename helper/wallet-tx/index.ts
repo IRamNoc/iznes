@@ -3,7 +3,7 @@ import * as Model from './model';
 import * as moment from '../m-date-wrapper';
 import * as common from '../common';
 
-export class WalletTxHelper {    
+export class WalletTxHelper {
     /**
      * Convert an array of array transactions
      * @param transactions any[]
@@ -105,8 +105,9 @@ export class WalletTxHelper {
      * @param original any[]
      * @return {any}
      */
-    static createRegisterIssuerTransaction(transaction: Model.WalletTransaction, original: any[]): Model.WalletTransaction {
-        transaction.txType = "Register Issuer";
+    static createRegisterIssuerTransaction(transaction: Model.WalletTransaction,
+                                           original: any[]): Model.WalletTransaction {
+        transaction.txType = 'Register Issuer';
 
         transaction.height = common.commaSeparateNumber(original[13]);
         transaction.instrument = original[11];
@@ -122,8 +123,9 @@ export class WalletTxHelper {
      * @param original any[]
      * @return {any}
      */
-    static createRegisterAddressTransaction(transaction: Model.WalletTransaction, original: any[]): Model.WalletTransaction {
-        transaction.txType = "Register Address";
+    static createRegisterAddressTransaction(transaction: Model.WalletTransaction,
+                                            original: any[]): Model.WalletTransaction {
+        transaction.txType = 'Register Address';
 
         transaction.height = common.commaSeparateNumber(original[13]);
         transaction.sig = original[12];
@@ -138,7 +140,7 @@ export class WalletTxHelper {
      * @return {any}
      */
     static createSplitTransaction(transaction: Model.WalletTransaction, original: any[]): Model.WalletTransaction {
-        transaction.txType = "Stock Split";
+        transaction.txType = 'Stock Split';
 
         transaction.height = common.commaSeparateNumber(original[13]);
         transaction.issuer = original[10];
@@ -154,8 +156,9 @@ export class WalletTxHelper {
      * @param original any[]
      * @return {any}
      */
-    static createDividentTransaction(transaction: Model.WalletTransaction, original: any[]): Model.WalletTransaction {
-        transaction.txType = "Stock Split";
+    static createDividentTransaction(transaction: Model.WalletTransaction,
+                                     original: any[]): Model.WalletTransaction {
+        transaction.txType = 'Stock Split';
 
         transaction.height = common.commaSeparateNumber(original[13]);
         transaction.instrument = original[11];
@@ -177,8 +180,9 @@ export class WalletTxHelper {
      * @param original any[]
      * @return {any}
      */
-    static createNewContractTransaction(transaction: Model.WalletTransaction, original: any[]): Model.WalletTransaction {
-        transaction.txType = "New Contract";
+    static createNewContractTransaction(transaction: Model.WalletTransaction,
+                                        original: any[]): Model.WalletTransaction {
+        transaction.txType = 'New Contract';
 
         transaction.height = common.commaSeparateNumber(original[13]);
         transaction.sig = original[12];
@@ -193,8 +197,9 @@ export class WalletTxHelper {
      * @param original any[]
      * @return {any}
      */
-    static createCommitContractTransaction(transaction: Model.WalletTransaction, original: any[]): Model.WalletTransaction {
-        transaction.txType = "Contract Commitment";
+    static createCommitContractTransaction(transaction: Model.WalletTransaction,
+                                           original: any[]): Model.WalletTransaction {
+        transaction.txType = 'Contract Commitment';
 
         transaction.height = common.commaSeparateNumber(original[13]);
         transaction.sig = original[12];
@@ -209,8 +214,9 @@ export class WalletTxHelper {
      * @param original any[]
      * @return {any}
      */
-    static createIssueAssetTransaction(transaction: Model.WalletTransaction, original: any[]): Model.WalletTransaction {
-        transaction.txType = "Issue Asset";
+    static createIssueAssetTransaction(transaction: Model.WalletTransaction,
+                                       original: any[]): Model.WalletTransaction {
+        transaction.txType = 'Issue Asset';
 
         transaction.amount = original[13];
         transaction.issuer = original[10];
@@ -229,8 +235,9 @@ export class WalletTxHelper {
      * @param original any[]
      * @return {any}
      */
-    static createRegisterAssetTransaction(transaction: Model.WalletTransaction, original: any[]): Model.WalletTransaction {
-        transaction.txType = "Register Asset";
+    static createRegisterAssetTransaction(transaction: Model.WalletTransaction,
+                                          original: any[]): Model.WalletTransaction {
+        transaction.txType = 'Register Asset';
 
         transaction.issuer = original[10];
         transaction.instrument = original[11];
@@ -246,8 +253,9 @@ export class WalletTxHelper {
      * @param original any[]
      * @return {any}
      */
-    static createAssetTransferTransaction(transaction: Model.WalletTransaction, original: any[]): Model.WalletTransaction {
-        transaction.txType = "Asset Transfer";
+    static createAssetTransferTransaction(transaction: Model.WalletTransaction,
+                                          original: any[]): Model.WalletTransaction {
+        transaction.txType = 'Asset Transfer';
 
         transaction.amount = original[14];
         transaction.issuer = original[10];
@@ -267,8 +275,9 @@ export class WalletTxHelper {
      * @param original any[]
      * @return {any}
      */
-    static createMemoTransaction(transaction: Model.WalletTransaction, original: any[]): Model.WalletTransaction {
-        transaction.txType = "Memo Tx";
+    static createMemoTransaction(transaction: Model.WalletTransaction,
+                                 original: any[]): Model.WalletTransaction {
+        transaction.txType = 'Memo Tx';
 
         transaction.issuer = original[10];
         transaction.instrument = original[11];
@@ -284,8 +293,9 @@ export class WalletTxHelper {
      * @param original any[]
      * @return {any}
      */
-    static createEncumberTransaction(transaction: Model.WalletTransaction, original: any[]): Model.WalletTransaction {
-        transaction.txType = "Encumber";
+    static createEncumberTransaction(transaction: Model.WalletTransaction,
+                                     original: any[]): Model.WalletTransaction {
+        transaction.txType = 'Encumber';
 
         transaction.amount = original[13];
         transaction.dictData = original[14];
@@ -306,8 +316,9 @@ export class WalletTxHelper {
      * @param original any[]
      * @return {any}
      */
-    static createUnencumberTransaction(transaction: Model.WalletTransaction, original: any[]): Model.WalletTransaction {
-        transaction.txType = "Unencumber";
+    static createUnencumberTransaction(transaction: Model.WalletTransaction,
+                                       original: any[]): Model.WalletTransaction {
+        transaction.txType = 'Unencumber';
 
         transaction.amount = original[13];
         transaction.dictData = original[14];
@@ -328,8 +339,9 @@ export class WalletTxHelper {
      * @param original any[]
      * @return {any}
      */
-    static createVoidingAssetTransaction(transaction: Model.WalletTransaction, original: any[]): Model.WalletTransaction {
-        transaction.txType = "Voiding Asset";
+    static createVoidingAssetTransaction(transaction: Model.WalletTransaction,
+                                         original: any[]): Model.WalletTransaction {
+        transaction.txType = 'Voiding Asset';
 
         transaction.amount = original[15];
         transaction.issuer = original[10];
@@ -349,8 +361,9 @@ export class WalletTxHelper {
      * @param original any[]
      * @return {any}
      */
-    static createTransferToManyTransaction(transaction: Model.WalletTransaction, original: any[]): Model.WalletTransaction {
-        transaction.txType = "Transfer to many";
+    static createTransferToManyTransaction(transaction: Model.WalletTransaction,
+                                           original: any[]): Model.WalletTransaction {
+        transaction.txType = 'Transfer to many';
 
         transaction.issuer = original[10];
         transaction.instrument = original[11];
@@ -363,12 +376,10 @@ export class WalletTxHelper {
         return transaction;
     }
 
-
     /**
      * Helpers
      */
     private static getUTCDateTime(unix: number): string {
-        return moment.unixTimestampToDateStr(unix, "YYYY-MM-DD HH:mm:ss UTC");
+        return moment.unixTimestampToDateStr(unix, 'YYYY-MM-DD HH:mm:ss UTC');
     }
-
 }
