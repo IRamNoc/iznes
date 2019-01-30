@@ -52,10 +52,17 @@ export class OfiProfileMyInformationsComponent implements OnInit, OnDestroy {
         3: false,
     };
 
+    userId: number;
+    connectedWalletId: number;
+    apiKey: string;
+    copied = false;
+
     externalNotificationsAvailable: boolean = false;
     unSubscribe: Subject<any> = new Subject();
 
     @select(['user', 'myDetail']) myDetail: any;
+    @select(['user', 'authentication']) authentication$;
+    @select(['user', 'connected', 'connectedWallet']) connectedWalletId$;
     @select(['ofi', 'ofiKyc', 'myInformations']) myKyc: any;
 
     constructor(
@@ -122,6 +129,7 @@ export class OfiProfileMyInformationsComponent implements OnInit, OnDestroy {
             };
 
             this.userType = d.userType;
+            this.userId = d.userId;
         });
 
         this.myKyc.subscribe((d) => {
@@ -129,6 +137,14 @@ export class OfiProfileMyInformationsComponent implements OnInit, OnDestroy {
         });
 
         this.setHomePage = this.activatedRoute.snapshot.paramMap.get('sethomepage') || '';
+
+        this.connectedWalletId$.subscribe((id) => {
+            this.connectedWalletId = id;
+        });
+
+        this.authentication$.subscribe((auth) => {
+            this.apiKey = auth.apiKey;
+        });
     }
 
     ngOnDestroy() {
@@ -255,5 +271,28 @@ export class OfiProfileMyInformationsComponent implements OnInit, OnDestroy {
                 this.changeDetectorRef.detectChanges();
             },
         ));
+    }
+
+    /**
+     * Copy the API key to the clipboard
+     *
+     * @return {void}
+     */
+    handleCopyApiKey() {
+        const textArea = document.createElement('textarea');
+        textArea.setAttribute('style', 'width:1px;border:0;opacity:0;');
+        document.body.appendChild(textArea);
+        textArea.value = this.apiKey;
+        textArea.select();
+        document.execCommand('copy');
+        document.body.removeChild(textArea);
+        this.copied = true;
+        setTimeout(
+            () => {
+                this.copied = false;
+                this.changeDetectorRef.markForCheck();
+            },
+            500,
+        );
     }
 }
