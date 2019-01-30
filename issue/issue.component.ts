@@ -263,53 +263,39 @@ export class SetlIssueComponent implements OnInit, OnDestroy, AfterViewInit {
 
         const data = rawData.map((item) => {
             if (this.viewingAsset) {
-                subtitle = `Breakdown for ${this.viewingAsset}`;
+                subtitle = this.translate
+                    .translate('Breakdown for @viewingAsset@', { viewingAsset: this.viewingAsset });
                 return {
-                    Wallet: item.walletName,
-                    Label: item.addrLabel,
-                    Address: item.addr,
-                    Percent: `${Math.round(item.percentage * 100) / 100}%`,
-                    Total: item.balance,
-                    Encumbered: item.encumbered,
-                    Free: item.free,
+                    [this.translate.translate('Wallet')]: item.walletName,
+                    [this.translate.translate('Label')]: item.addrLabel,
+                    [this.translate.translate('Address')]: item.addr,
+                    [this.translate.translate('Percent')]: `${Math.round(item.percentage * 100) / 100}%`,
+                    [this.translate.translate('Total')]: item.balance,
+                    [this.translate.translate('Encumbered')]: item.encumbered,
+                    [this.translate.translate('Free')]: item.free,
                 };
             }
-            subtitle = 'Overview';
+            subtitle = this.translate.translate('Overview');
             return {
-                Asset: item.asset,
-                Label: item.addressLabel,
-                Address: item.address,
-                Total: item.total,
+                [this.translate.translate('Asset')]: item.asset,
+                [this.translate.translate('Label')]: item.addressLabel,
+                [this.translate.translate('Address')]: item.address,
+                [this.translate.translate('Total')]: item.total,
             };
         });
 
         return {
-            title: 'Issue Report',
+            title: this.translate.translate('Issue Report'),
             subtitle,
-            text: 'This is an auto-generated issue report with data correct as of the date above.',
+            text: this.translate
+                .translate('This is an auto-generated issue report with data correct as of the date above.'),
             data,
-            rightAlign: ['Percent', 'Total', 'Encumbered', 'Free'],
+            rightAlign: [this.translate.translate('Percent'), this.translate.translate('Total'),
+                this.translate.translate('Encumbered'), this.translate.translate('Free')],
             walletName: this.walletName,
             date: moment().format('YYYY-MM-DD H:mm:ss'),
         };
     }
-
-    /**
-     * Format Export CSV Data
-     *
-     * Formats the current filtered datagrid data for CSV exports
-     *
-     * @returns {array} exportData
-     */
-/*     formatExportCSVData() {
-        const rawData = JSON.parse(JSON.stringify(this.myDataGrid.items['_filtered']));
-
-        return rawData.map((item) => {
-            delete item.breakdown;
-            delete item.deleted;
-            return item;
-        });
-    } */
 
     /**
      * Show Export Modal

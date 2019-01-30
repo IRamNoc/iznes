@@ -434,30 +434,32 @@ export class SetlBalancesComponent implements AfterViewInit, OnInit, OnDestroy {
 
         const data = rawData.map((item) => {
             if (item.breakdown) {
-                subtitle = 'Overview';
+                subtitle = this.translate.translate('Overview');
                 return {
-                    Asset: item.asset,
-                    Free: item.free,
-                    Total: item.total,
-                    Encumbered: item.totalencumbered,
+                    [this.translate.translate('Asset')]: item.asset,
+                    [this.translate.translate('Free')]: item.free,
+                    [this.translate.translate('Total')]: item.total,
+                    [this.translate.translate('Encumbered')]: item.totalencumbered,
                 };
             }
-            subtitle = `Breakdown for ${this.viewingAsset}`;
+            subtitle = this.translate.translate('Breakdown for @asset@', { asset: this.viewingAsset });
             return {
-                'Address Label': item.label,
-                Address: item.addr,
-                Total: item.balance,
-                Encumbered: item.encumbrance,
-                Free: item.free,
+                [this.translate.translate('Address Label')]: item.label,
+                [this.translate.translate('Address')]: item.addr,
+                [this.translate.translate('Total')]: item.balance,
+                [this.translate.translate('Encumbered')]: item.encumbrance,
+                [this.translate.translate('Free')]: item.free,
             };
         });
 
         return {
-            title: 'Balances Report',
+            title: this.translate.translate('Balances Report'),
             subtitle,
-            text: 'This is an auto-generated balances report with data correct as of the date above.',
+            text: this.translate
+                .translate('This is an auto-generated balances report with data correct as of the date above.'),
             data,
-            rightAlign: ['Free', 'Total', 'Encumbered'],
+            rightAlign: [this.translate.translate('Free'), this.translate.translate('Total'),
+                this.translate.translate('Encumbered')],
             walletName: this.walletName,
             date: moment().format('YYYY-MM-DD H:mm:ss'),
         };

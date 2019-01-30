@@ -221,7 +221,8 @@ export class EncumbranceReportComponent implements OnInit, OnDestroy {
     public exportCSV() {
         this.alertsService.create('loading');
 
-        const csvData = this.formatExportCSVData();
+        const csvData = this.myDataGrid.items['_filtered'];
+
         if (csvData.length === 0) {
             this.alertsService.generate('error', this.translate.translate('There are no records to export'));
             return;
@@ -327,39 +328,26 @@ export class EncumbranceReportComponent implements OnInit, OnDestroy {
     private formatExportPDFData() {
         const data = this.myDataGrid.items['_filtered'].map((item) => {
             return {
-                Reference: item.reference,
-                Asset: item.asset,
-                'Beneficiary Address': item.beneficiary,
-                Encumbered: item.amount,
-                Start: item.start,
-                End: item.end,
+                [this.translate.translate('Reference')]: item.reference,
+                [this.translate.translate('Asset')]: item.asset,
+                [this.translate.translate('Beneficiary Address')]: item.beneficiary,
+                [this.translate.translate('Encumbered')]: item.amount,
+                [this.translate.translate('Start')]: item.start,
+                [this.translate.translate('End')]: item.end,
             };
         });
 
         return {
-            title: 'Encumbrance Report',
-            subtitle: `Breakdown for ${this.viewingAddress}`,
-            text: 'This is an auto-generated encumbrance report with data correct as of the date above.',
+            title: this.translate.translate('Encumbrance Report'),
+            subtitle: this.translate
+                .translate('Breakdown for @viewingAddress@', { viewingAddress: this.viewingAddress }),
+            text: this.translate
+                .translate('This is an auto-generated encumbrance report with data correct as of the date above.'),
             data,
-            rightAlign: ['Encumbered'],
+            rightAlign: [this.translate.translate('Encumbered')],
             walletName: this.walletName,
             date: moment().format('YYYY-MM-DD H:mm:ss'),
         };
-    }
-
-    /**
-     * Format Export CSV Data
-     *
-     * Formats the current filtered datagrid data for CSV exports
-     *
-     * @returns {array} exportData
-     */
-    formatExportCSVData() {
-        const rawData = JSON.parse(JSON.stringify(this.myDataGrid.items['_filtered']));
-
-        return rawData.map((item) => {
-            delete item.breakdown;
-        });
     }
 
     /**
