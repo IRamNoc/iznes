@@ -97,7 +97,7 @@ const handleGetInvestorHoldingList = (state, action) => {
     const response = action.payload[1].Data;
     let invHoldingsList = List();
 
-    if (response.length > 0) {
+    if (response && response.length > 0) {
         response.forEach((it) => {
             const item = Map({ ...it });
             invHoldingsList = invHoldingsList.push(item);

@@ -149,6 +149,7 @@ export const selectControls = [
 export const controlOrder = [
     // General
     'registeredCompanyName',
+    'commercialName',
     'legalForm',
     'leiCode',
     'otherIdentificationNumber',
@@ -1395,6 +1396,7 @@ export const identificationNumberList = [
 export const controlToName = {
     // General
     registeredCompanyName: 'Registered Company Name or Legal Name',
+    commercialName: 'Commercial Name',
     legalForm: 'Legal Form',
     leiCode: 'LEI Code',
     otherIdentificationNumber: 'Other identification number type',

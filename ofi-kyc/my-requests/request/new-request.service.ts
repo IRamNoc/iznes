@@ -96,7 +96,7 @@ export class NewRequestService {
         private requestsService: RequestsService,
         private ngRedux: NgRedux<any>,
         private ofiKycService: OfiKycService,
-        private toasterService: ToasterService
+        private toasterService: ToasterService,
     ) {
         this.subscriptions.push(this.productionOb.subscribe((production) => {
             this.isProduction = production;
@@ -204,6 +204,7 @@ export class NewRequestService {
         const generalInformation = fb.group({
             kycID: '',
             registeredCompanyName: ['', this.getLengthValidator(255)],
+            commercialName: [''],
             legalForm: ['', Validators.required],
             leiCode: ['', [
                 Validators.required,

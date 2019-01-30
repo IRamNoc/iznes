@@ -46,7 +46,7 @@ export class NewKycRequestComponent implements OnInit, AfterViewInit {
     animating: Boolean;
     fullForm = true;
     applyFullForm = () => {
-    };
+    }
 
     currentCompletedStep;
     documentRules = {
