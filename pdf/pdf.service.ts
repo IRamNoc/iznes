@@ -1,9 +1,9 @@
-import {Injectable} from '@angular/core';
-import {MemberSocketService} from '@setl/websocket-service';
-import {select, NgRedux} from '@angular-redux/store';
+import { Injectable } from '@angular/core';
+import { MemberSocketService } from '@setl/websocket-service';
+import { select, NgRedux } from '@angular-redux/store';
 import * as SagaHelper from '@setl/utils/sagaHelper';
 import * as utilsCommon from '@setl/utils/common';
-import {CreatePdfMetadataMessageBody, GetPdfMessageBody} from './pdf.service.model';
+import { CreatePdfMetadataMessageBody, GetPdfMessageBody } from './pdf.service.model';
 import * as _ from 'lodash';
 
 interface CreatePdfMetadata {
@@ -31,20 +31,19 @@ export class PdfService {
 
     constructor(
         private memberSocketService: MemberSocketService,
-        private ngRedux: NgRedux<any>
-    ) {
+        private ngRedux: NgRedux<any>) {
         if (this.getConnectedWallet) {
             this.getConnectedWallet.subscribe(
                 (function (data) {
                     this.walletId = data;
-                }).bind(this)
+                }).bind(this),
             );
         }
         if (this.getUser) {
             this.getUser.subscribe(
                 (function (data) {
                     this.userId = data;
-                }).bind(this)
+                }).bind(this),
             );
         }
     }
