@@ -70,8 +70,8 @@
 
             <clr-dg-footer>
                 <div rowsPerPage="10" (rowsUpdate)="pageSize = $event"></div>
-                <button [disabled]="!myDataGrid.items['_filtered'].length" class="btn btn-sm btn-success-outline" (click)="exportCSV()">{{ 'Export CSV' | translate }}</button>
-                <button [disabled]="!myDataGrid.items['_filtered'].length" class="btn btn-sm btn-danger-outline" (click)="exportPDF()">{{ 'Export PDF' | translate }}</button>
+                <button [disabled]="disableExportBtn()" class="btn btn-sm btn-success-outline" (click)="exportCSV()">{{ 'Export CSV' | translate }}</button>
+                <button [disabled]="disableExportBtn()" class="btn btn-sm btn-danger-outline" (click)="exportPDF()">{{ 'Export PDF' | translate }}</button>
                 &nbsp;
                 {{pagination.firstItem + 1}} - {{pagination.lastItem + 1}}
                 <clr-dg-pagination #pagination [clrDgPageSize]="pageSize" [clrDgPage]="pageCurrent"
