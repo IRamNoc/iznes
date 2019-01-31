@@ -97,4 +97,60 @@
 
         </clr-tab-content>
     </clr-tab>
+
+    <clr-tab>
+        <button clrTabLink id="button">
+            <i class="fa fa-terminal"></i> {{ 'API' | translate }}
+        </button>
+        <clr-tab-content>
+            <form class="form-vertical">
+                <div class="row">
+                    <div class="col-xs-6">
+                        <div class="form-group">
+                            <label>{{ 'User ID' | translate }}
+                            </label>
+                            <input type="text" class="form-control" [value]="userId" readonly>
+                        </div>
+                    </div>
+                    <div class="col-xs-6">
+                        <div class="form-group">
+                            <label>{{ 'Wallet ID' | translate }}</label>
+                            <input type="text" class="form-control" [value]="connectedWalletId" readonly>
+                        </div>
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col-xs-6">
+                        <div class="form-group">
+                            <label>{{ 'API Key' | translate }}</label>
+                            <div class="alert alert-warning api-alert" *ngIf="!apiKey; else apiInput">
+                                <div class="alert-items">
+                                    <div class="alert-item static">
+                                        <div class="alert-icon-wrapper">
+                                            <clr-icon class="alert-icon" shape="exclamation-triangle"></clr-icon>
+                                        </div>
+                                        <span class="alert-text">{{ 'There is no API key available for this user' | translate
+                                            }}</span>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </form>
+        </clr-tab-content>
+    </clr-tab>    
 </clr-tabs>
+
+<ng-template #apiInput>
+    <input *ngIf="showApiKey" type="text" class="form-control mono" [value]="apiKey" readonly>
+    <input *ngIf="!showApiKey" type="text" class="form-control mono" [value]="apiKey.substr(0, 4) + '•'.repeat(apiKey.length - 8) + apiKey.substr(apiKey.length - 4, 4)"
+        readonly>
+    <span *ngIf="!showApiKey" (click)="showApiKey = true" class="click"><i class="fa fa-eye"></i> {{ 'show' | translate
+        }}</span>
+    <span *ngIf="showApiKey" (click)="showApiKey = false" class="click"><i class="fa fa-eye-slash"></i> {{ 'hide' |
+        translate }}</span>
+    &nbsp;
+    <span (click)="handleCopyApiKey($event)" class="click"><i class="fa fa-files-o"></i> <span *ngIf="copied" class="text-success">{{
+            'copied' | translate }}!</span><span *ngIf="!copied">{{ 'copy' | translate }}</span></span>
+</ng-template>
