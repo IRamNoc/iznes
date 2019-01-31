@@ -1,4 +1,4 @@
-node('jenkins03') {
+node() {
     timestamps {
         stage('Check Out Tests') {
             checkout([$class: 'GitSCM', branches: [[name: '*/master']],
@@ -7,6 +7,7 @@ node('jenkins03') {
                                                              url: 'git@si-nexus01.dev.setl.io:opencsd-rewrite/opencsd-frontend-clarity.git']]])
         }
 
+        try {
         stage('Build & Unit Test') {
 
             sh '''rm -f yarn.lock &&
@@ -20,11 +21,25 @@ node('jenkins03') {
             junit allowEmptyResults: true, keepLongStdio: true,
                 testResults: '/TESTS-Headless**'
         }
+        }catch (e) {
+            currentBuild.result = "FAILED"
+            mail(to: 'bill.mackie@setl.io, neil.gentry@setl.io, jordan.miller@setl.io, mingrui.huang@setl.io, ollie.kett@setl.io',
+                subject: "Unit tests For Job '${env.JOB_NAME}'- (${env.BUILD_NUMBER}) has FAILED",
+                body: "Please go to ${env.BUILD_URL} for more details. ");
 
-        stage('Build Prod') {
-            sh 'yarn build-prod '
         }
 
+        try {
+            stage('Build Prod') {
+                sh 'yarn build-prod '
+            }
+        }catch (e) {
+            currentBuild.result = "FAILED"
+            mail(to: 'bill.mackie@setl.io, nick.ridler@setl.io, dan.sarracayo@setl.io, mat.bland@setl.io, ollie.kett@setl.io',
+                subject: "Production Build for Job '${env.JOB_NAME}'- (${env.BUILD_NUMBER}) has FAILED",
+                body: "Please go to ${env.BUILD_URL} for more details. ");
+
+        }
         stage('Copy code to deployment folder') {
             sh '''  rm -rf /var/lib/jenkins/Deploy/dist &&
                         cp VERSION ./dist &&
