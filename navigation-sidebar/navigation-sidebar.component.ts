@@ -5,7 +5,6 @@ import { APP_CONFIG, AppConfig, immutableHelper, LogService } from '@setl/utils'
 import { getMyDetail } from '@setl/core-store';
 import { MultilingualService } from '@setl/multilingual/multilingual.service';
 import { MenuSpecService } from '@setl/utils/services/menuSpec/service';
-import { get } from 'lodash';
 
 @Component({
     selector: 'app-navigation-sidebar',
@@ -93,10 +92,6 @@ export class NavigationSidebarComponent implements OnInit, AfterViewInit {
                 });
             });
         });
-    }
-
-    navCollapsed(event) {
-        console.log('+++ navCollapsed', event);
     }
 
     /**
