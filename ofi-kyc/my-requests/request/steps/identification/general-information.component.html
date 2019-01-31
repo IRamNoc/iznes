@@ -60,13 +60,20 @@
 
             <div class="row">
                 <div class="form-group required-field col-sm-6">
-                    <label class="control-label" for="otherIdentificationNumber">{{'Other identification number' | translate}}</label>
-                    <ng-select id="otherIdentificationNumber" [items]="identificationNumberList" formControlName="otherIdentificationNumber" placeholder="{{'Type' | translate}}"></ng-select>
-                    <span class="field-error" *ngIf="hasError(['otherIdentificationNumber'], ['required'])">{{'Field is required' | translate}}</span>
+                    <label class="control-label" for="otherIdentificationNumberType">{{'Other Identification Number Type' | translate}}</label>
+                    <ng-select id="otherIdentificationNumberType" [items]="identificationNumberTypeList" formControlName="otherIdentificationNumberType" placeholder="{{'Type' | translate}}"></ng-select>
+                    <span class="field-error" *ngIf="hasError(['otherIdentificationNumberType'], ['required'])">{{'Field is required' | translate}}</span>
+                </div>
+
+                <div *ngIf="!isDisabled(['otherIdentificationNumberTypeSpecify'])" class="form-group required-field col-sm-6">
+                    <label class="control-label" for="otherIdentificationNumberTypeSpecify">{{'Your Number Type' | translate}}</label>
+                    <input type="text" formControlName="otherIdentificationNumberTypeSpecify" placeholder="{{ 'Specify your identification number type' | translate }}">
+                    <span class="field-error" *ngIf="hasError(['otherIdentificationNumberTypeSpecify'], ['required'])">{{ 'Field is required'
+                        | translate }}</span>
                 </div>
 
                 <div *ngIf="!isDisabled(['otherIdentificationNumberText'])" class="form-group required-field col-sm-6">
-                    <label class="control-label" for="otherIdentificationNumberText">&nbsp;</label>
+                    <label class="control-label" for="otherIdentificationNumberText">{{'Other Identification Number' | translate}}</label>
                     <input type="text" 
                             formControlName="otherIdentificationNumberText" 
                             placeholder="{{ 'Fill in your identification number' | translate }}">

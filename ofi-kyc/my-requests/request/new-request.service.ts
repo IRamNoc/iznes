@@ -81,7 +81,7 @@ export class NewRequestService {
     riskAcceptanceList;
     beneficiaryTypesList;
     holdingTypesList;
-    identificationNumberList;
+    identificationNumberTypeList;
     listingMarketsList;
     saveContext = '';
 
@@ -126,7 +126,7 @@ export class NewRequestService {
         this.riskAcceptanceList = riskAcceptanceList;
         this.beneficiaryTypesList = beneficiaryTypesList;
         this.holdingTypesList = holdingTypesList;
-        this.identificationNumberList = identificationNumberList;
+        this.identificationNumberTypeList = identificationNumberList;
         this.listingMarketsList = listingMarketsList;
     }
 
@@ -210,7 +210,8 @@ export class NewRequestService {
                 Validators.required,
                 Validators.pattern(/^\w{18}\d{2}$|n\/a/i),
             ]],
-            otherIdentificationNumber: [null, this.getLengthValidator(255)],
+            otherIdentificationNumberType: [null, this.getLengthValidator(255)],
+            otherIdentificationNumberTypeSpecify: [{ value: '', disabled: true }],
             otherIdentificationNumberText: [{ value: '', disabled: true }, Validators.required],
             registeredCompanyAddressLine1: ['', this.getLengthValidator(255)],
             registeredCompanyAddressLine2: ['', Validators.maxLength(255)],

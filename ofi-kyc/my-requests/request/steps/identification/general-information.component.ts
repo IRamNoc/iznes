@@ -26,7 +26,7 @@ export class GeneralInformationComponent implements OnInit, OnDestroy {
     countries;
     legalFormList;
     publicEstablishmentList;
-    identificationNumberList;
+    identificationNumberTypeList;
     associations;
 
     constructor(
@@ -49,12 +49,12 @@ export class GeneralInformationComponent implements OnInit, OnDestroy {
     }
 
     initFormCheck() {
-        this.form.get('otherIdentificationNumber').valueChanges
+        this.form.get('otherIdentificationNumberType').valueChanges
             .pipe(takeUntil(this.unsubscribe))
             .subscribe((data) => {
-                const otherIdentificationNumberValue = getValue(data, [0, 'id']);
+                const otherIdentificationNumberTypeValue = getValue(data, [0, 'id']);
 
-                this.formCheckOtherIdentificationNumber(otherIdentificationNumberValue);
+                this.formCheckOtherIdentificationNumberType(otherIdentificationNumberTypeValue);
             });
 
         this.form.get('commercialDomiciliation').valueChanges
@@ -86,31 +86,42 @@ export class GeneralInformationComponent implements OnInit, OnDestroy {
         this.formPercent.refreshFormPercent();
     }
 
-    formCheckOtherIdentificationNumber(value) {
+    formCheckOtherIdentificationNumberType(value) {
         const otherIdentificationNumberTextControl: AbstractControl = this.form.get('otherIdentificationNumberText');
+        const otherIdentificationNumberTypeSpecifyControl: AbstractControl = this.form.get('otherIdentificationNumberTypeSpecify');
+
+        otherIdentificationNumberTypeSpecifyControl.disable();
 
         if (value) {
             otherIdentificationNumberTextControl.enable();
 
             if (value === 'siren') {
                 otherIdentificationNumberTextControl.setValidators([sirenValidator, Validators.required]);
+                otherIdentificationNumberTypeSpecifyControl.setValue(null);
             } else if (value === 'siret') {
                 otherIdentificationNumberTextControl.setValidators([siretValidator, Validators.required]);
+                otherIdentificationNumberTypeSpecifyControl.setValue(null);
+            } else if (value === 'other') {
+                otherIdentificationNumberTypeSpecifyControl.enable();
+                otherIdentificationNumberTextControl.setValidators([Validators.required]);
             } else {
                 otherIdentificationNumberTextControl.setValidators([Validators.required]);
+                otherIdentificationNumberTypeSpecifyControl.setValue(null);
             }
         } else {
             otherIdentificationNumberTextControl.disable();
+            otherIdentificationNumberTypeSpecifyControl.disable();
         }
 
         otherIdentificationNumberTextControl.updateValueAndValidity();
+        otherIdentificationNumberTypeSpecifyControl.updateValueAndValidity();
         this.formPercent.refreshFormPercent();
     }
 
     initLists() {
         this.legalFormList = this.translate.translate(this.newRequestService.legalFormList);
         this.publicEstablishmentList = this.translate.translate(this.newRequestService.publicEstablishmentList);
-        this.identificationNumberList = this.translate.translate(this.newRequestService.identificationNumberList);
+        this.identificationNumberTypeList = this.translate.translate(this.newRequestService.identificationNumberTypeList);
     }
 
     hasError(control, error = []) {

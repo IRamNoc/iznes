@@ -125,7 +125,7 @@ export const selectControls = [
     'volumeTransactionPerYear',
     'activities',
     'ownAccountinvestor',
-    'otherIdentificationNumber',
+    'otherIdentificationNumberType',
     'listingMarkets',
     'investorOnBehalfThirdParties',
     'geographicalAreaOfActivity',
@@ -152,7 +152,8 @@ export const controlOrder = [
     'commercialName',
     'legalForm',
     'leiCode',
-    'otherIdentificationNumber',
+    'otherIdentificationNumberType',
+    'otherIdentificationNumberTypeSpecify',
     'otherIdentificationNumberText',
     'registeredCompanyAddressLine1',
     'registeredCompanyAddressLine2',
@@ -1391,6 +1392,10 @@ export const identificationNumberList = [
         id: 'siren',
         text: 'SIREN',
     },
+    {
+        id: 'other',
+        text: 'Other',
+    },
 ];
 
 export const controlToName = {
@@ -1399,7 +1404,8 @@ export const controlToName = {
     commercialName: 'Commercial Name',
     legalForm: 'Legal Form',
     leiCode: 'LEI Code',
-    otherIdentificationNumber: 'Other identification number type',
+    otherIdentificationNumberType: 'Other identification number type',
+    otherIdentificationNumberTypeSpecify: 'Your number type',
     otherIdentificationNumberText: 'Other identification number',
     registeredCompanyAddressLine1: "Registered company's headquarters address",
     registeredCompanyAddressLine2: 'Address line 2',
@@ -1539,7 +1545,7 @@ export const controlToList = {
     sectorActivity: 'sectorActivityList',
     regulatoryStatus: 'regulatoryStatusList',
     regulatoryStatusInsurerType: 'regulatoryStatusInsurerTypeList',
-    otherIdentificationNumber: 'identificationNumberList',
+    otherIdentificationNumberType: 'identificationNumberTypeList',
     commercialCountry: 'countries',
 
     // Company

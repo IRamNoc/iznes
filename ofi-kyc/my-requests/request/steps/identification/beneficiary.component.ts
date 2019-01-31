@@ -38,7 +38,7 @@ export class BeneficiaryComponent implements OnInit, OnDestroy {
     configDate;
     beneficiaryTypesList;
     holdingTypesList;
-    identificationNumberList;
+    identificationNumberTypeList;
     countries;
     parentsFiltered;
 
@@ -55,7 +55,7 @@ export class BeneficiaryComponent implements OnInit, OnDestroy {
 
         this.holdingTypesList = this.newRequestService.holdingTypesList;
         this.translate.translate(this.holdingTypesList);
-        this.identificationNumberList = this.newRequestService.identificationNumberList;
+        this.identificationNumberTypeList = this.newRequestService.identificationNumberTypeList;
         this.countries = this.translate.translate(countries);
     }
 
