@@ -68,6 +68,105 @@ export const minimalInvestorStatusTextList = [
     },
 ];
 
+export const financialRating = [
+    {
+        id: '0',
+        text: 'AAA',
+    },
+    {
+        id: '1',
+        text: 'AA+',
+    },
+    {
+        id: '2',
+        text: 'AA',
+    },
+    {
+        id: '3',
+        text: 'AA-',
+    },
+    {
+        id: '4',
+        text: 'A+',
+    },
+    {
+        id: '5',
+        text: 'A',
+    },
+    {
+        id: '6',
+        text: 'A-',
+    },
+    {
+        id: '7',
+        text: 'BBB+',
+    },
+    {
+        id: '8',
+        text: 'BBB',
+    },
+    {
+        id: '9',
+        text: 'BBB-',
+    },
+    {
+        id: '10',
+        text: 'BB+',
+    },
+    {
+        id: '11',
+        text: 'BB',
+    },
+    {
+        id: '12',
+        text: 'BB-',
+    },
+    {
+        id: '13',
+        text: 'B+',
+    },
+    {
+        id: '14',
+        text: 'B',
+    },
+    {
+        id: '15',
+        text: 'B-',
+    },
+    {
+        id: '16',
+        text: 'B',
+    },
+    {
+        id: '17',
+        text: 'CCC+',
+    },
+    {
+        id: '18',
+        text: 'CCC',
+    },
+    {
+        id: '19',
+        text: 'CCC-',
+    },
+    {
+        id: '20',
+        text: 'CC',
+    },
+    {
+        id: '21',
+        text: 'C/CI/R',
+    },
+    {
+        id: '22',
+        text: 'SD',
+    },
+    {
+        id: '23',
+        text: 'D',
+    },
+];
+
 export const booleanControls = [
     'commercialDomiciliation',
     'activitiesBenefitFromExperience',
