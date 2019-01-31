@@ -52,10 +52,17 @@ export class OfiProfileMyInformationsComponent implements OnInit, OnDestroy {
         3: false,
     };
 
+    userId: number;
+    connectedWalletId: number;
+    apiKey: string;
+    copied = false;
+
     externalNotificationsAvailable: boolean = false;
     unSubscribe: Subject<any> = new Subject();
 
     @select(['user', 'myDetail']) myDetail: any;
+    @select(['user', 'authentication']) authentication$;
+    @select(['user', 'connected', 'connectedWallet']) connectedWalletId$;
     @select(['ofi', 'ofiKyc', 'myInformations']) myKyc: any;
 
     constructor(
@@ -122,6 +129,7 @@ export class OfiProfileMyInformationsComponent implements OnInit, OnDestroy {
             };
 
             this.userType = d.userType;
+            this.userId = d.userId;
         });
 
         this.myKyc.subscribe((d) => {
@@ -129,6 +137,14 @@ export class OfiProfileMyInformationsComponent implements OnInit, OnDestroy {
         });
 
         this.setHomePage = this.activatedRoute.snapshot.paramMap.get('sethomepage') || '';
+
+        this.connectedWalletId$.subscribe((id) => {
+            this.connectedWalletId = id;
+        });
+
+        this.authentication$.subscribe((auth) => {
+            this.apiKey = auth.apiKey;
+        });
     }
 
     ngOnDestroy() {
@@ -136,17 +152,35 @@ export class OfiProfileMyInformationsComponent implements OnInit, OnDestroy {
         this.unSubscribe.complete();
     }
 
-    passwordValidator(g: FormGroup) {
+    /**
+     * Check new password does not match existing password
+     *
+     * @param {FormControl} g
+     * @return {object}
+     */
+    passwordValidator(g: FormGroup): object {
         const oldNew = g.get('oldPassword').value !== g.get('password').value ? null : { 'oldNew': true };
         const mismatch = g.get('password').value === g.get('passwordConfirm').value ? null : { 'mismatch': true };
         return (oldNew) ? oldNew : mismatch;
     }
 
-    toggleShowPasswords(id) {
+    /**
+     * Toggle visibilty of password
+     *
+     * @param {any} id
+     * @return {void}
+     */
+    toggleShowPasswords(id: any): void {
         this.showPasswords[id] = !this.showPasswords[id];
     }
 
-    changePass(formValues) {
+    /**
+     * Update password
+     *
+     * @param {object} formValues
+     * @return {void}
+     */
+    changePass(formValues): void {
         this.validation = 0;
 
         if (formValues.password.length > 7) {
@@ -186,7 +220,13 @@ export class OfiProfileMyInformationsComponent implements OnInit, OnDestroy {
         }
     }
 
-    saveUserInformations(userInformations) {
+    /**
+     * Save user details
+     *
+     * @param {object} userInformations
+     * @return {void}
+     */
+    saveUserInformations(userInformations): void {
         const user = {
             firstName: userInformations.firstName,
             lastName: userInformations.lastName,
@@ -209,7 +249,14 @@ export class OfiProfileMyInformationsComponent implements OnInit, OnDestroy {
         );
     }
 
-    hasError(path, error) {
+    /**
+     * Check if a form control has an error (else any errors)
+     *
+     * @param {string} path - the name of the form control
+     * @param {string} error - the name of the error to test for
+     * @return {any}
+     */
+    hasError(path, error): any {
         if (this.changePassForm) {
             const formControl: AbstractControl = path ? this.changePassForm.get(path) : this.changePassForm;
 
@@ -220,13 +267,24 @@ export class OfiProfileMyInformationsComponent implements OnInit, OnDestroy {
         }
     }
 
-    isTouched(path) {
+    /**
+     * Return whether the form control is touched
+     *
+     * @param {string} path - the name of the form control
+     * @return {boolean}
+     */
+    isTouched(path): boolean {
         const formControl: AbstractControl = this.changePassForm.get(path);
 
         return formControl.touched;
     }
 
-    closeUserInformations() {
+    /**
+     * Redirect to Homepage
+     *
+     * @return {void}
+     */
+    closeUserInformations(): void {
         this.router.navigate(['home']);
     }
 
@@ -255,5 +313,28 @@ export class OfiProfileMyInformationsComponent implements OnInit, OnDestroy {
                 this.changeDetectorRef.detectChanges();
             },
         ));
+    }
+
+    /**
+     * Copy the API key to the clipboard
+     *
+     * @return {void}
+     */
+    handleCopyApiKey(): void {
+        const textArea = document.createElement('textarea');
+        textArea.setAttribute('style', 'width:1px;border:0;opacity:0;');
+        document.body.appendChild(textArea);
+        textArea.value = this.apiKey;
+        textArea.select();
+        document.execCommand('copy');
+        document.body.removeChild(textArea);
+        this.copied = true;
+        setTimeout(
+            () => {
+                this.copied = false;
+                this.changeDetectorRef.markForCheck();
+            },
+            500,
+        );
     }
 }
