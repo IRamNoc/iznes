@@ -86,6 +86,7 @@ export const booleanControls = [
 export const currencyControls = [
     'balanceSheetTotal',
     'netRevenuesNetIncome',
+    'shareCapital',
     'shareholderEquity',
 ];
 
@@ -155,6 +156,7 @@ export const controlOrder = [
     'otherIdentificationNumberType',
     'otherIdentificationNumberTypeSpecify',
     'otherIdentificationNumberText',
+    'shareCapital',
     'registeredCompanyAddressLine1',
     'registeredCompanyAddressLine2',
     'registeredCompanyZipCode',
@@ -1407,6 +1409,7 @@ export const controlToName = {
     otherIdentificationNumberType: 'Other identification number type',
     otherIdentificationNumberTypeSpecify: 'Your number type',
     otherIdentificationNumberText: 'Other identification number',
+    shareCapital: 'shareCapital',
     registeredCompanyAddressLine1: "Registered company's headquarters address",
     registeredCompanyAddressLine2: 'Address line 2',
     registeredCompanyZipCode: 'ZIP Code',

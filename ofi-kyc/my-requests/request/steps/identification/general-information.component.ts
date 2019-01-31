@@ -103,7 +103,7 @@ export class GeneralInformationComponent implements OnInit, OnDestroy {
                 otherIdentificationNumberTypeSpecifyControl.setValue(null);
             } else if (value === 'other') {
                 otherIdentificationNumberTypeSpecifyControl.enable();
-                otherIdentificationNumberTextControl.setValidators([Validators.required]);
+                otherIdentificationNumberTypeSpecifyControl.setValidators([Validators.required]);
             } else {
                 otherIdentificationNumberTextControl.setValidators([Validators.required]);
                 otherIdentificationNumberTypeSpecifyControl.setValue(null);

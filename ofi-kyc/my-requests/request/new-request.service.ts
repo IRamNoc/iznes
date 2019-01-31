@@ -213,6 +213,10 @@ export class NewRequestService {
             otherIdentificationNumberType: [null, this.getLengthValidator(255)],
             otherIdentificationNumberTypeSpecify: [{ value: '', disabled: true }],
             otherIdentificationNumberText: [{ value: '', disabled: true }, Validators.required],
+            shareCapital: ['', [
+                Validators.required,
+                Validators.min(0),
+            ]],
             registeredCompanyAddressLine1: ['', this.getLengthValidator(255)],
             registeredCompanyAddressLine2: ['', Validators.maxLength(255)],
             registeredCompanyZipCode: ['', this.getLengthValidator(10)],
