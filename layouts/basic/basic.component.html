@@ -60,13 +60,7 @@
 
             <div class="content-container">
 
-                <!-- Navigation Sidebar. -->
-                <nav class="sidenav" (wheel)="sidebarScroll($event)" (click)="handleSidebarFixingOnClick()"
-                     [ngClass]="{'fixed' : fixSidebar, 'fixed-bottom' : fixSidebarBottom}">
-                    <div #sidebar class="sidebar-wrapper">
-                        <app-navigation-sidebar></app-navigation-sidebar>
-                    </div>
-                </nav>
+                <app-navigation-sidebar></app-navigation-sidebar>
 
                 <main #main class="content-area" appBackToTop [ngClass]="{'menuHideContent': menuShown === 0}"
                       [@routerTransition]="currentParentUrl" [ngStyle]="{'min-height.px' : sidebarHeight}">
@@ -81,6 +75,7 @@
                     </div>
 
                 </main>
+
             </div>
 
         </div>

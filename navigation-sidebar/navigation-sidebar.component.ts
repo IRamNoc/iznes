@@ -19,6 +19,7 @@ export class NavigationSidebarComponent implements OnInit, AfterViewInit {
     menuParentOpen: string;
     // all the menu that need to disabled.
     private disabledMenus: string[] = [];
+    collapsed: boolean = false;
 
     private subscription: any;
 
@@ -92,6 +93,10 @@ export class NavigationSidebarComponent implements OnInit, AfterViewInit {
                 });
             });
         });
+    }
+
+    navCollapsed(event) {
+        console.log('+++ navCollapsed', event);
     }
 
     /**

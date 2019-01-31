@@ -3,12 +3,9 @@ import {
     ChangeDetectorRef,
     Component,
     OnDestroy,
-    OnInit,
     ViewChild,
     ElementRef,
     Inject,
-    HostListener,
-    AfterViewInit,
 } from '@angular/core';
 import { NgRedux, select } from '@angular-redux/store';
 import { setVersion } from '@setl/core-store';
@@ -36,7 +33,7 @@ import { debounceTime } from 'rxjs/operators';
     animations: [FadeSlideRight],
 })
 
-export class BasicLayoutComponent implements OnInit, OnDestroy, AfterViewInit {
+export class BasicLayoutComponent implements OnDestroy {
     @ViewChild('main') mainEl: ElementRef;
     @ViewChild('sidebar') sidebarEl: ElementRef;
 
@@ -55,18 +52,12 @@ export class BasicLayoutComponent implements OnInit, OnDestroy, AfterViewInit {
     public keyClose = false;
     public autoCollapseHeight: number = null;
     public autoCollapseWidth: number = null;
-    public fixSidebar: boolean = true;
-    public fixSidebarBottom: boolean = false;
-    public sidebarHeight: number;
-    public scrollTopPosition: number;
-    public topBarHeight: number = 75; // default topbar height
 
     /* Redux observables. */
     public _MODES: string[] = ['over', 'push', 'slide'];
     public POSITIONS: string[] = ['left', 'right', 'top', 'bottom'];
 
     /* Redux observables. */
-    @select(['user', 'siteSettings', 'menuShown']) menuShowOb;
     @select(['user', 'siteSettings', 'version']) requestVersionObj;
     @select(['user', 'siteSettings', 'language']) requestLanguageObj;
 
@@ -101,17 +92,6 @@ export class BasicLayoutComponent implements OnInit, OnDestroy, AfterViewInit {
             }));
         }
 
-        /* By default show the menu. */
-        this.menuShown = 1;
-
-        /* Subscribe to the menu shown value in redux. */
-        this.subscriptionsArray.push(this.menuShowOb.subscribe(
-            (menuState) => {
-                /* Call menu has changed. */
-                this.menuHasChanged(menuState);
-            },
-        ));
-
         /* Subscribe to the language flag in redux. */
         this.subscriptionsArray.push(this.requestLanguageObj.subscribe(language => this.getLanguage(language)));
 
@@ -122,81 +102,6 @@ export class BasicLayoutComponent implements OnInit, OnDestroy, AfterViewInit {
                 console.log(this.currentParentUrl);
             }
         }));
-    }
-
-    /**
-     * On Init.
-     */
-    ngOnInit() {
-        /* Stub. */
-    }
-
-    ngAfterViewInit() {
-        // Check height of sidebar and if greater than window height remove fixed class
-        this.sidebarHeight = this.sidebarEl.nativeElement.clientHeight;
-        if (this.sidebarHeight > (window.innerHeight - this.topBarHeight)) this.fixSidebar = false;
-    }
-
-    @HostListener('window:resize', ['$event'])
-    /**
-     * Handle Sidebar Fixing On Window Resize
-     * --------------------------------------
-     * Fix the sidebar when the viewport height is greater than it's height, or remove if not
-     */
-    handleSidebarFixingOnWindowResize() {
-        this.sidebarHeight = this.sidebarEl.nativeElement.clientHeight;
-        this.fixSidebar = this.sidebarHeight > (window.innerHeight - this.topBarHeight) ? false : true;
-    }
-
-    /**
-     * Handle Sidebar Fixing On Scroll
-     * -------------------------------
-     * Fix the sidebar when it's bottom reaches the bottom of the page and remove when scrolled back above this
-     *
-     * @param event
-     */
-    handleSidebarFixingOnScroll(event) {
-        // Pass scroll information to content scroll area
-        this.scrollTopPosition = event.target.scrollTop;
-        this.topBarHeight = window.innerHeight - event.target.clientHeight;
-
-        // Set sidebar height for min-height property on content area, plus 20px to avoid scroll bar issues
-        this.sidebarHeight = this.sidebarEl.nativeElement.clientHeight + 20;
-
-        // If sidebar is greater than viewport height, fix sidebar when it reaches bottom of the screen or remove if not
-        if (this.sidebarHeight > window.innerHeight) {
-            this.fixSidebarBottom = (this.sidebarHeight - event.target.scrollTop) <= event.target.clientHeight;
-        }
-    }
-
-    /**
-     * Handle Sidebar Fixing On Click
-     * -------------------------------
-     * Unfix the sidebar when a menu item expands to increase it's height to larger than the viewport, or fix if not
-     */
-    handleSidebarFixingOnClick() {
-        // setTimeout to account for CSS transition time before calculating heights
-        setTimeout(
-            () => {
-                // Set sidebar height for min-height property on content area, plus 20px to avoid scroll bar issues
-                this.sidebarHeight = this.sidebarEl.nativeElement.clientHeight + 20;
-                this.fixSidebar =
-                    this.sidebarHeight > (window.innerHeight - this.topBarHeight) ? false : true;
-                this.changeDetectorRef.detectChanges();
-            },
-            200,
-        );
-    }
-
-    /**
-     * Sidebar Scroll
-     * --------------
-     * Passes the delta information of the wheel event on the sidebar to set the scrollTop position of the content area
-     *
-     * @param event
-     */
-    sidebarScroll(event) {
-        this.scrollTopPosition += event.deltaY;
     }
 
     /** Get Language
@@ -252,25 +157,6 @@ export class BasicLayoutComponent implements OnInit, OnDestroy, AfterViewInit {
 
         /* Detect changes. */
         this.changeDetectorRef.detectChanges();
-    }
-
-    /**
-     * Menu Has Changed
-     * ----------------
-     * Toggles the menuShow flag.
-     *
-     * @param menuState
-     */
-    public menuHasChanged(menuState) {
-        /* Invert the menuShown flag. */
-        if (menuState) {
-            this.menuShown = 1;
-        } else {
-            this.menuShown = 0;
-        }
-
-        /* Mark for check. */
-        this.changeDetectorRef.markForCheck();
     }
 
     /**
