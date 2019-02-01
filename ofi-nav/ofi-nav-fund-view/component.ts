@@ -31,6 +31,8 @@ import { MultilingualService } from '@setl/multilingual';
 import { AlertsService } from '@setl/jaspero-ng2-alerts/src/alerts.service';
 import { OfiCurrenciesService } from '@ofi/ofi-main/ofi-req-services/ofi-currencies/service';
 
+const ADMIN_USER_URL = '/net-asset-value/';
+
 @Component({
     selector: 'app-nav-fund-view',
     templateUrl: './component.html',
@@ -41,7 +43,6 @@ export class OfiNavFundView implements OnInit, OnDestroy {
     navFundHistory: any;
     socketToken: string;
     userId: number;
-    isIznesAdmin: boolean = false;
 
     navHistoryForm: FormGroup;
 
@@ -71,6 +72,10 @@ export class OfiNavFundView implements OnInit, OnDestroy {
     hasResult: boolean;
     currencyList: any[];
 
+    get isIznesAdmin():boolean {
+        return this.router.url.startsWith(ADMIN_USER_URL);
+    }
+
     @ViewChild('detailNavCsvFile')
     detailNavCsvFile: any;
     @select(['ofi', 'ofiProduct', 'ofiManageNav', 'ofiNavFundView', 'requested']) navFundRequestedOb: Observable<any>;
@@ -79,7 +84,6 @@ export class OfiNavFundView implements OnInit, OnDestroy {
     @select(['ofi', 'ofiProduct', 'ofiManageNav', 'ofiNavFundHistory', 'navFundHistory']) navFundHistoryOb: Observable<any>;
     @select(['ofi', 'ofiCurrencies', 'currencies']) currenciesObs;
     @select(['user', 'authentication', 'token']) tokenOb;
-    @select(['user', 'myDetail']) userOb;
     private subscriptionsArray: Subscription[] = [];
 
     constructor(
@@ -300,10 +304,6 @@ export class OfiNavFundView implements OnInit, OnDestroy {
         }));
         this.subscriptionsArray.push(this.tokenOb.subscribe((token) => {
             this.socketToken = token;
-        }));
-        this.subscriptionsArray.push(this.userOb.subscribe((user) => {
-            this.userId = user.userId;
-            this.isIznesAdmin = user.userType === userTypes.SYSTEM_ADMIN;
         }));
 
         this.subscriptionsArray.push(this.currenciesObs.subscribe(c => this.getCurrencyList(c)));

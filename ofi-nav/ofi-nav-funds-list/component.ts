@@ -27,6 +27,8 @@ import { MultilingualService } from '@setl/multilingual';
 import { AlertsService } from '@setl/jaspero-ng2-alerts/src/alerts.service';
 import { OfiCurrenciesService } from '@ofi/ofi-main/ofi-req-services/ofi-currencies/service';
 
+const ADMIN_USER_URL = '/net-asset-value/';
+
 @Component({
     selector: 'app-nav-manage-list',
     templateUrl: './component.html',
@@ -37,7 +39,6 @@ export class OfiNavFundsList implements OnInit, OnDestroy {
     navListItems: model.NavModel[];
     socketToken: string;
     userId: number;
-    isIznesAdmin: boolean = false;
 
     searchForm: FormGroup;
     dateTypes: any[];
@@ -64,6 +65,10 @@ export class OfiNavFundsList implements OnInit, OnDestroy {
     private cancelNavMessage: string;
     private cancelNavSuccessMessage: string;
     private cancelNavErrorMessage: string;
+
+    get isIznesAdmin():boolean {
+        return this.router.url.startsWith(ADMIN_USER_URL);
+    }
 
     @select(['ofi', 'ofiProduct', 'ofiManageNav', 'ofiNavFundsList', 'requested']) navRequestedOb: Observable<any>;
     @select(['ofi', 'ofiProduct', 'ofiManageNav', 'ofiNavFundsList', 'navFundsList']) navListOb: Observable<any>;
@@ -343,7 +348,6 @@ export class OfiNavFundsList implements OnInit, OnDestroy {
         }));
         this.subscriptionsArray.push(this.userOb.subscribe((user) => {
             this.userId = user.userId;
-            this.isIznesAdmin = user.userType === userTypes.SYSTEM_ADMIN;
         }));
 
         this.subscriptionsArray.push(this.currenciesObs.subscribe(c => this.getCurrencyList(c)));
