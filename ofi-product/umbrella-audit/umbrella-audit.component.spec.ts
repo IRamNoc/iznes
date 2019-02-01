@@ -15,6 +15,7 @@ import {
 } from '@setl/utils';
 import { OfiUmbrellaFundService } from '@ofi/ofi-main/ofi-req-services/ofi-product/umbrella-fund/service';
 import { MultilingualService } from '@setl/multilingual';
+import {RouterTestingModule} from "@angular/router/testing";
 
 const ofiUmbrellaFundServiceSpy = {
 
@@ -61,6 +62,7 @@ describe('UmbrellaAuditComponent', () => {
                 FormsModule,
                 ReactiveFormsModule,
                 DpDatePickerModule,
+                RouterTestingModule,
             ],
             providers: [
                 { provide: OfiUmbrellaFundService, useValue: ofiUmbrellaFundServiceSpy },
