@@ -18,7 +18,7 @@ import { AppObservableHandler } from '@setl/utils/decorators/app-observable-hand
 import { OfiFundShareService } from '../../ofi-req-services/ofi-product/fund-share/service';
 import * as math from 'mathjs';
 import { OFI_SET_CLIENT_REFERENTIAL_AUDIT } from '@ofi/ofi-main/ofi-store';
-import { Moment } from 'moment';
+import * as moment from 'moment-timezone';
 
 @AppObservableHandler
 @Component({
@@ -445,6 +445,7 @@ export class OfiClientReferentialComponent implements OnInit, OnDestroy {
     }
 
     downloadReferentialAuditCSVFile() {
+        const timezone: string = moment.tz.guess();
         this.fileDownloader.downLoaderFile({
             method: 'getIznesReferentialAuditCSVFile',
             token: this.socketToken,
@@ -453,6 +454,7 @@ export class OfiClientReferentialComponent implements OnInit, OnDestroy {
             search: this.searchForm.controls['searchInvestor'].value,
             from: this.searchForm.controls['searchFrom'].value,
             to: this.searchForm.controls['searchTo'].value,
+            timezone,
         });
     }
 

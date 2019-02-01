@@ -34,8 +34,9 @@ const ofiKycServiceStub = {
     setRequestedClientReferential: () => { },
 };
 
-const locationBackSpy = jasmine.createSpy('back')
-    .and.returnValue(null);
+const fileDownloaderStub = {
+    downLoaderFile: jasmine.createSpy('downLoaderFile'),
+};
 
 @Pipe({ name: 'translate' })
 export class TranslatePipe implements PipeTransform {
@@ -96,7 +97,7 @@ describe('OfiClientReferentialComponent', () => {
                 { provide: ToasterService, useValue: {} },
                 { provide: OfiFundShareService, useValue: {} },
                 { provide: NgRedux, useFactory: MockNgRedux.getInstance },
-                { provide: FileDownloader, useValue: {} },
+                { provide: FileDownloader, useValue: fileDownloaderStub },
                 { provide: ActivatedRoute, useValue: {} },
                 { provide: Router, useValue: RouterMock },
                 { provide: MultilingualService, useValue: multilingualServiceStub },
@@ -121,6 +122,7 @@ describe('OfiClientReferentialComponent', () => {
     }));
 
     afterEach(() => {
+        fileDownloaderStub.downLoaderFile.calls.reset();
     });
 
     describe('getClientReferentialDescriptionTitle', () => {
@@ -157,6 +159,14 @@ describe('OfiClientReferentialComponent', () => {
 
             expect(comp.getClientReferentialDescriptionTitle()).toContain(expectedCompanyName);
             expect(comp.getClientReferentialDescriptionTitle()).toContain(expectedClientReference);
+        });
+    });
+
+    describe('downloadReferentialAuditCSVFile', () => {
+        it('should call the call the downLoaderFile method of FileDownloader with an timezone key in the payload', () => {
+            comp.downloadReferentialAuditCSVFile();
+            expect(fileDownloaderStub.downLoaderFile).toHaveBeenCalledTimes(1);
+            expect(Object.keys(fileDownloaderStub.downLoaderFile.calls.mostRecent().args[0])).toContain('timezone');
         });
     });
 });
