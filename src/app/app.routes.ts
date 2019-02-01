@@ -391,28 +391,13 @@ export const ROUTES: Routes = [
                         canActivate: [LoginGuardService],
                     },
                     {
-                        path: 'product/umbrella-fund/new',
-                        component: UmbrellaFundComponent,
-                        canActivate: [LoginGuardService],
-                    },
-                    {
                         path: 'product/umbrella-fund/:id',
                         component: UmbrellaFundComponent,
                         canActivate: [LoginGuardService],
                     },
                     {
-                        path: 'product/fund/new',
-                        component: FundComponent,
-                        canActivate: [LoginGuardService],
-                    },
-                    {
                         path: 'product/fund/:id',
                         component: FundComponent,
-                        canActivate: [LoginGuardService],
-                    },
-                    {
-                        path: 'product/fund-share/new',
-                        component: AddNewFundShareComponent,
                         canActivate: [LoginGuardService],
                     },
                     {
@@ -438,26 +423,6 @@ export const ROUTES: Routes = [
                     {
                         path: 'product/fund-share',
                         component: FundShareComponent,
-                        canActivate: [LoginGuardService],
-                    },
-                    {
-                        path: 'net-asset-value',
-                        component: OfiNavFundsList,
-                        canActivate: [LoginGuardService],
-                    },
-                    {
-                        path: 'net-asset-value/fund-view',
-                        component: OfiNavFundView,
-                        canActivate: [LoginGuardService],
-                    },
-                    {
-                        path: 'net-asset-value/fund-view/:shareId/audit',
-                        component: OfiNavAuditComponent,
-                        canActivate: [LoginGuardService],
-                    },
-                    {
-                        path: 'configuration',
-                        component: ProductConfigurationComponent,
                         canActivate: [LoginGuardService],
                     },
                 ],
