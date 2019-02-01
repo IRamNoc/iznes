@@ -428,6 +428,16 @@ export const ROUTES: Routes = [
                 ],
             },
             {
+                path: 'net-asset-value',
+                component: OfiNavFundsList,
+                canActivate: [LoginGuardService],
+            },
+            {
+                path: 'net-asset-value/fund-view',
+                component: OfiNavFundView,
+                canActivate: [LoginGuardService],
+            },
+            {
                 path: 'management-company',
                 component: OfiManagementCompanyComponent,
                 canActivate: [LoginGuardService],
