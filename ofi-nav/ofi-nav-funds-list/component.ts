@@ -6,7 +6,6 @@ import { Observable, Subscription } from 'rxjs';
 import * as moment from 'moment';
 import * as _ from 'lodash';
 import * as model from '../OfiNav';
-import { userTypes } from '../../shared/userTypes';
 import { OfiManageNavPopupService, ManageNavCloseEvent } from '../ofi-manage-nav-popup/service';
 import { OfiNavService } from '../../ofi-req-services/ofi-product/nav/service';
 import {
