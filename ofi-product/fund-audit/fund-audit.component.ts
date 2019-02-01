@@ -1,5 +1,5 @@
 import { Component, OnInit, OnDestroy } from '@angular/core';
-import { ActivatedRoute } from '@angular/router';
+import { ActivatedRoute, Router } from '@angular/router';
 import { Subject } from 'rxjs/Subject';
 import { takeUntil } from 'rxjs/operators';
 import { combineLatest } from 'rxjs/observable/combineLatest';
@@ -8,7 +8,7 @@ import * as _ from 'lodash';
 import { Location } from '@angular/common';
 import { OfiFundService } from '@ofi/ofi-main/ofi-req-services/ofi-product/fund/fund.service';
 
-const ADMIN_USER_TYPE = 35;
+const ADMIN_USER_URL = '/admin-product-module/';
 
 @Component({
     templateUrl: './fund-audit.component.html',
@@ -18,26 +18,19 @@ export class FundAuditComponent implements OnInit, OnDestroy {
     fundID: number;
     fundName: string;
     unSubscribe: Subject<any> = new Subject();
-    userType;
 
     @select(['ofi', 'ofiProduct', 'ofiFund', 'fundList', 'iznFundList']) fundList$;
     @select(['ofi', 'ofiProduct', 'ofiFund', 'fundList', 'requested']) requestedFundList$;
-    @select(['user', 'myDetail']) userDetailOb;
 
     constructor(
         private activatedRoute: ActivatedRoute,
         private fundService: OfiFundService,
         private location: Location,
+        private router: Router,
     ) {
     }
 
     ngOnInit() {
-        this.userDetailOb
-            .pipe(
-                takeUntil(this.unSubscribe),
-            ).subscribe((userDetail) => {
-                this.userType = userDetail.userType;
-            });
 
         this.activatedRoute.params
             .pipe(
@@ -93,6 +86,6 @@ export class FundAuditComponent implements OnInit, OnDestroy {
      * @return {boolean}
      */
     isAdmin(): boolean {
-        return (this.userType === ADMIN_USER_TYPE);
+        return this.router.url.startsWith(ADMIN_USER_URL);
     }
 }

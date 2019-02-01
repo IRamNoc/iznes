@@ -55,6 +55,8 @@ import {
     ShareCreationStep,
 } from '@ofi/ofi-main/ofi-product/fund-share/form/StepsHelper';
 
+const ADMIN_USER_URL = '/admin-product-module/';
+
 @Component({
     styleUrls: ['./component.scss'],
     selector: 'app-ofi-am-product-fund-share',
@@ -941,6 +943,11 @@ export class FundShareComponent implements OnInit, AfterViewInit, OnDestroy {
      * @return {void{}
      */
     cancelFundShare(): void {
+        if (this.isAdmin()) {
+            this.router.navigateByUrl(`${ADMIN_USER_URL}product`);
+            return;
+        }
+
         if (this.isRead()) {
             this.location.back();
             return;
@@ -973,12 +980,12 @@ export class FundShareComponent implements OnInit, AfterViewInit, OnDestroy {
     }
 
     /**
-     * Check whether the userType is an IZNES Admin User
+     * Checks the URL to determine if the user is an IZNES Admin User
      *
      * @return {boolean}
      */
     isAdmin(): boolean {
-        return (this.userType === userTypeEnum.ADMIN);
+        return this.router.url.startsWith(ADMIN_USER_URL);
     }
 
     openPanel(obj: { [key: string]: any }, $event): void {
@@ -992,7 +999,7 @@ export class FundShareComponent implements OnInit, AfterViewInit, OnDestroy {
     }
 
     goToAuditTrail(): void {
-        this.router.navigateByUrl(`product-module/product/fund-share/${this.fundShareId}/audit`);
+        this.router.navigateByUrl(`${this.isAdmin() ? ADMIN_USER_URL : '/product-module/'}product/fund-share/${this.fundShareId}/audit`);
     }
 
     duplicateShare() {

@@ -20,7 +20,7 @@ import {
 import { MultilingualService } from '@setl/multilingual';
 import { getOfiFundShareCurrentRequest } from '@ofi/ofi-main/ofi-store/ofi-product/fund-share';
 
-const ADMIN_USER_TYPE = 35;
+const ADMIN_USER_URL = '/admin-product-module/';
 
 @Component({
     styleUrls: ['./component.scss'],
@@ -42,13 +42,11 @@ export class FundShareAuditComponent implements OnInit, OnDestroy {
         disableKeypress: true,
         locale: null,
     };
-    userType;
 
     @select(['ofi', 'ofiProduct', 'ofiFundShareAudit', 'requestedFundShareAudit']) fundShareAuditRequestedOb: Observable<any>;
     @select(['ofi', 'ofiProduct', 'ofiFundShareAudit', 'fundShareAudit']) fundShareAuditOb: Observable<any>;
     @select(['ofi', 'ofiProduct', 'ofiFundShare', 'requested']) fundShareRequestedOb: Observable<any>;
     @select(['ofi', 'ofiProduct', 'ofiFundShare', 'fundShare']) fundShareOb: Observable<any>;
-    @select(['user', 'myDetail']) userDetailOb;
 
     constructor(
         private redux: NgRedux<any>,
@@ -71,10 +69,6 @@ export class FundShareAuditComponent implements OnInit, OnDestroy {
         this.subscriptionsArray.push(this.route.paramMap.subscribe((params) => {
             const fundShareId = params.get('shareId') as any;
             this.fundShareId = fundShareId ? parseInt(fundShareId, 10) : fundShareId;
-        }));
-
-        this.subscriptionsArray.push(this.userDetailOb.subscribe((userDetail) => {
-            this.userType = userDetail.userType;
         }));
 
         this.subscriptionsArray.push(this.fundShareAuditRequestedOb.subscribe((requested) => {
@@ -159,7 +153,7 @@ export class FundShareAuditComponent implements OnInit, OnDestroy {
     }
 
     returnToShare(): void {
-        this.router.navigateByUrl(`product-module/product/fund-share/${this.fundShareId}`);
+        this.router.navigateByUrl(`${this.isAdmin() ? ADMIN_USER_URL : '/product-module/'}product/fund-share/${this.fundShareId}`);
     }
 
     /**
@@ -168,7 +162,7 @@ export class FundShareAuditComponent implements OnInit, OnDestroy {
      * @return {boolean}
      */
     isAdmin(): boolean {
-        return this.userType === ADMIN_USER_TYPE;
+        return this.router.url.startsWith(ADMIN_USER_URL);
     }
 
     ngOnDestroy() {

@@ -31,7 +31,7 @@ interface FundList {
     [key: string]: any;
 }
 
-const ADMIN_USER_TYPE = 35;
+const ADMIN_USER_URL = '/admin-product-module/';
 
 @Component({
     templateUrl: './component.html',
@@ -109,7 +109,6 @@ export class FundComponent implements OnInit, OnDestroy {
     centralizingAgentItems = [];
 
     currentLei: string;
-    userType;
 
     // Locale
     language = 'en';
@@ -143,7 +142,6 @@ export class FundComponent implements OnInit, OnDestroy {
     productConfig;
     holidayMgmtConfigDates: () => string[];
 
-    @select(['user', 'myDetail']) userDetailOb;
     @select(['user', 'siteSettings', 'language']) language$;
     @select(['ofi', 'ofiProduct', 'ofiUmbrellaFund', 'umbrellaFundList', 'umbrellaFundList']) umbrellaFundList$;
     @select(['ofi', 'ofiProduct', 'ofiFund', 'fundList', 'iznFundList']) fundList$;
@@ -207,22 +205,14 @@ export class FundComponent implements OnInit, OnDestroy {
         this.transferAgentItems = this.fundItems.transferAgentItems;
         this.centralizingAgentItems = this.fundItems.centralizingAgentItems;
 
-        this.userDetailOb
-            .pipe(
-                takeUntil(this.unSubscribe),
-            )
-            .subscribe((userDetail) => {
-                this.userType = userDetail.userType;
-
-                if (!this.isAdmin()) {
-                    this.fundService.getFundList();
-                    this.umbrellaService.fetchUmbrellaList();
-                } else {
-                /* For IZNES Admins */
-                    this.fundService.getAdminFundList();
-                    this.umbrellaService.getAdminUmbrellaList();
-                }
-            });
+        if (!this.isAdmin()) {
+            this.fundService.getFundList();
+            this.umbrellaService.fetchUmbrellaList();
+        } else {
+        /* For IZNES Admins */
+            this.fundService.getAdminFundList();
+            this.umbrellaService.getAdminUmbrellaList();
+        }
 
         this.language$
         .pipe(
@@ -1319,7 +1309,7 @@ export class FundComponent implements OnInit, OnDestroy {
      * @return {void}
      */
     auditTrail(fundID: string) {
-        this.router.navigateByUrl(`/product-module/product/fund/${fundID}/audit`);
+        this.router.navigateByUrl(`${this.isAdmin() ? ADMIN_USER_URL : '/product-module/'}product/fund/${fundID}/audit`);
     }
 
     /**
@@ -1328,7 +1318,7 @@ export class FundComponent implements OnInit, OnDestroy {
      * @return {boolean}
      */
     isAdmin(): boolean {
-        return (this.userType === ADMIN_USER_TYPE);
+        return this.router.url.startsWith(ADMIN_USER_URL);
     }
 
     /**
@@ -1373,7 +1363,7 @@ export class FundComponent implements OnInit, OnDestroy {
     }
 
     onClickBack() {
-        this.router.navigateByUrl('/product-module/product');
+        this.router.navigateByUrl(`${this.isAdmin() ? ADMIN_USER_URL : '/product-module/'}product`);
     }
 
     /**
