@@ -12,7 +12,7 @@
             <span *ngIf="childMenuJson.router_link == '/messages' && this.unreadMessages > 0" class="label label-success">{{this.unreadMessages}}</span>
         </a>
     
-        <span *ngIf="isMenuDisabled(childMenuJson.router_link)" clrVerticalNavLink>
+        <span *ngIf="isMenuDisabled(childMenuJson.router_link)" clrVerticalNavLink class="disable">
             <clr-icon [attr.shape]="childMenuJson.icon_class" clrVerticalNavIcon></clr-icon>
             <span [attr.mltag]="childMenuJson.label_txt">{{childMenuJson.label}}</span>
         </span>
@@ -26,7 +26,7 @@
                         <span [attr.mltag]="innerChild.label_txt">{{innerChild.label}}</span>
                     </a>
                 
-                    <span *ngIf="isMenuDisabled(innerChild.router_link)" clrVerticalNavLink [attr.id]="innerChild.element_id" routerLinkActive="active">
+                    <span *ngIf="isMenuDisabled(innerChild.router_link)" clrVerticalNavLink [attr.id]="innerChild.element_id" routerLinkActive="active" class="disable">
                         <span [attr.mltag]="innerChild.label_txt">{{innerChild.label}}</span>
                     </span>
                 </ng-container>
