@@ -1,11 +1,13 @@
 import { ChangeDetectorRef, Component, Inject, OnDestroy, OnInit, ViewChild } from '@angular/core';
 import { FormControl, FormGroup } from '@angular/forms';
 import { Router } from '@angular/router';
+import { Location } from '@angular/common';
 import { NgRedux, select } from '@angular-redux/store';
 import { Observable, Subscription } from 'rxjs';
 import { distinctUntilChanged } from 'rxjs/operators';
 import * as moment from 'moment';
 import * as model from '../OfiNav';
+import { userTypes } from '../../shared/userTypes';
 import { OfiManageNavPopupService } from '../ofi-manage-nav-popup/service';
 import { OfiCorpActionService } from '../../ofi-req-services/ofi-corp-actions/service';
 import { OfiNavService } from '../../ofi-req-services/ofi-product/nav/service';
@@ -28,6 +30,8 @@ import {
 import { MultilingualService } from '@setl/multilingual';
 import { AlertsService } from '@setl/jaspero-ng2-alerts/src/alerts.service';
 import { OfiCurrenciesService } from '@ofi/ofi-main/ofi-req-services/ofi-currencies/service';
+
+const ADMIN_USER_URL = '/net-asset-value/';
 
 @Component({
     selector: 'app-nav-fund-view',
@@ -68,6 +72,10 @@ export class OfiNavFundView implements OnInit, OnDestroy {
     hasResult: boolean;
     currencyList: any[];
 
+    get isIznesAdmin():boolean {
+        return this.router.url.startsWith(ADMIN_USER_URL);
+    }
+
     @ViewChild('detailNavCsvFile')
     detailNavCsvFile: any;
     @select(['ofi', 'ofiProduct', 'ofiManageNav', 'ofiNavFundView', 'requested']) navFundRequestedOb: Observable<any>;
@@ -76,10 +84,10 @@ export class OfiNavFundView implements OnInit, OnDestroy {
     @select(['ofi', 'ofiProduct', 'ofiManageNav', 'ofiNavFundHistory', 'navFundHistory']) navFundHistoryOb: Observable<any>;
     @select(['ofi', 'ofiCurrencies', 'currencies']) currenciesObs;
     @select(['user', 'authentication', 'token']) tokenOb;
-    @select(['user', 'myDetail', 'userId']) userOb;
     private subscriptionsArray: Subscription[] = [];
 
-    constructor(private redux: NgRedux<any>,
+    constructor(
+        private redux: NgRedux<any>,
                 private router: Router,
                 private changeDetectorRef: ChangeDetectorRef,
                 private ofiCorpActionService: OfiCorpActionService,
@@ -91,7 +99,9 @@ export class OfiNavFundView implements OnInit, OnDestroy {
                 private ofiCurrenciesService: OfiCurrenciesService,
                 private fileDownloader: FileDownloader,
                 public translate: MultilingualService,
-                @Inject(APP_CONFIG) appConfig: AppConfig) {
+                private location: Location,
+                @Inject(APP_CONFIG) appConfig: AppConfig,
+                ) {
         this.appConfig = appConfig;
         this.isNavUploadModalDisplayed = false;
         this.navCsvFile = null;
@@ -295,9 +305,6 @@ export class OfiNavFundView implements OnInit, OnDestroy {
         this.subscriptionsArray.push(this.tokenOb.subscribe((token) => {
             this.socketToken = token;
         }));
-        this.subscriptionsArray.push(this.userOb.subscribe((userId) => {
-            this.userId = userId;
-        }));
 
         this.subscriptionsArray.push(this.currenciesObs.subscribe(c => this.getCurrencyList(c)));
     }
@@ -473,6 +480,10 @@ export class OfiNavFundView implements OnInit, OnDestroy {
     private generateExportURL(url: string, isProd: boolean = true): string {
         return isProd ? `https://${window.location.hostname}/mn/${url}` :
             `http://${window.location.hostname}:9788/${url}`;
+    }
+
+    navigateBack() {
+        this.location.back();
     }
 
     private clearRequestedHistory(): void {

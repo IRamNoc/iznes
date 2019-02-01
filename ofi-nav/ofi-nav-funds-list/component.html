@@ -5,7 +5,8 @@
     </h1>
 
     <section class="subtitle">
-        <p>{{ 'Please select a date type and a date to access to the available NAVs.' | translate }}<br>{{ 'You will have
+        <p>{{ 'Please select a date type and a date to access to the available NAVs.' | translate }}<br>{{ 'You will
+            have
             access to the NAV\'s history of a specific share in clicking on the corresponding row.' | translate }}
         </p>
     </section>
@@ -22,7 +23,7 @@
             <!-- Button container -->
             <div class="row">
                 <div class="form-group button-container">
-                    <button class="btn btn-primary" id="uploadNavFileButton" (click)="isNavUploadModalDisplayed = true">
+                    <button *ngIf="!isIznesAdmin" class="btn btn-primary" id="uploadNavFileButton" (click)="isNavUploadModalDisplayed = true">
                         {{ 'Upload NAVs' | translate }}
                     </button>
 
@@ -38,33 +39,22 @@
                 <div class="form-horizontal">
                     <div class="row">
                         <div class="form-group col-sm-4">
-                            <label class="control-label" for="Search-field">{{ 'Search Share Name or ISIN' | translate }}</label>
-                            <input type="text" 
-                                    id="Search-field" 
-                                    name="navSearch" 
-                                    formControlName="shareName">
+                            <label class="control-label" for="Search-field">{{ 'Search Share Name or ISIN' | translate
+                                }}</label>
+                            <input type="text" id="Search-field" name="navSearch" formControlName="shareName">
                         </div>
                         <div class="form-group col-sm-4" *ngIf="dateTypes && searchForm">
                             <label class="control-label" for="NAV-Date-Filter">{{ 'Select Date Type' | translate }}</label>
-                            <ng-select id="NAV-Date-Filter" 
-                                    class="fluid-width" 
-                                    [items]="dateTypes" 
-                                    formControlName="dateType" 
-                                    [placeholder]="translate.translate('Select Date type')" 
-                                    [allowClear]="false">
+                            <ng-select id="NAV-Date-Filter" class="fluid-width" [items]="dateTypes" formControlName="dateType"
+                                [placeholder]="translate.translate('Select Date type')" [allowClear]="false">
                             </ng-select>
                         </div>
                         <div class="form-group col-sm-4">
                             <label class="control-label" for="Date-filter">{{ 'Select Date' | translate }}</label>
                             <div class="input-group date-pick-wrapper no-label">
                                 <span class="fa fa-calendar"></span>
-                                <input id="Date-filter" 
-                                        name="searchDate" 
-                                        [placeholder]="translate.translate('Choose a date')" 
-                                        formControlName="date" 
-                                        [dpDayPicker]="dateConfig" 
-                                        mode="day" 
-                                        theme="dp-material">
+                                <input id="Date-filter" name="searchDate" [placeholder]="translate.translate('Choose a date')"
+                                    formControlName="date" [dpDayPicker]="dateConfig" mode="day" theme="dp-material">
                             </div>
                         </div>
                     </div>
@@ -72,6 +62,9 @@
             </form>
 
             <clr-datagrid #dataGrid>
+                <clr-dg-column *ngIf="isIznesAdmin">
+                    <span id="NAV-CN-Management-company">{{ 'Management Company' | translate }}</span>
+                </clr-dg-column>
                 <clr-dg-column class="col-fundsharename">
                     <span id="NAV-CN-Share-Name">{{ 'Share Name' | translate }}</span>
                 </clr-dg-column>
@@ -105,59 +98,75 @@
                 <clr-dg-column class="col-status">
                     <span id="NAV-CN-Status">{{ 'Status' | translate }}</span>
                 </clr-dg-column>
-                <clr-dg-column class="actions right">
+                <clr-dg-column class="actions right" *ngIf="!isIznesAdmin">
                     <span id="NAV-CN-Actions">{{ 'Actions' | translate }}</span>
                 </clr-dg-column>
 
-                <clr-dg-row *clrDgItems="let item of navListItems; let idx = index;" id="{{'product-nav-row' + idx}}" clrDgRowClickable>
-                    <clr-dg-cell id="{{'NAV-Share-Name-'+idx}}" class="col-fundsharename" (click)="navigateToShare(item.shareId)" title="{{item.fundShareName}}">{{item.fundShareName}}</clr-dg-cell>
+                <clr-dg-row *clrDgItems="let item of navListItems; let idx = index;" id="{{'product-nav-row' + idx}}"
+                    clrDgRowClickable>
+                    <clr-dg-cell *ngIf="isIznesAdmin" id="{{'NAV-Management-company-'+idx}}" class="col-fundsharename"
+                        (click)="navigateToShare(item.shareId)" title="{{item.managementCompany}}">{{item.managementCompany}}</clr-dg-cell>
+                    <clr-dg-cell id="{{'NAV-Share-Name-'+idx}}" class="col-fundsharename" (click)="navigateToShare(item.shareId)"
+                        title="{{item.fundShareName}}">{{item.fundShareName}}</clr-dg-cell>
                     <clr-dg-cell id="{{'NAV-ISIN-'+idx}}" (click)="navigateToShare(item.shareId)">{{item.isin}}</clr-dg-cell>
                     <clr-dg-cell id="{{'NAV-NAV-Date-'+idx}}" class="col-date" (click)="navigateToShare(item.shareId)">{{item.navDate}}</clr-dg-cell>
                     <clr-dg-cell id="{{'NAV-Pub-Date-'+idx}}" class="col-date" (click)="navigateToShare(item.shareId)">{{item.navPubDate}}</clr-dg-cell>
-                    <clr-dg-cell id="{{'NAV-Val-Date'+idx}}" class="col-date" (click)="navigateToShare(item.shareId)" class="{{getNextValuationClass(item.nextValuationDate)}}">{{item.nextValuationDate}}</clr-dg-cell>
-                    <clr-dg-cell id="{{'NAV-CCY-'+ (item.currency==0?'EURO-':(item.currency==1?'USD-':'GBP-')) +idx}}" class="col-currency" (click)="navigateToShare(item.shareId)">
-                        {{'@getCurrencyString(item.currency)@' | translate: {'getCurrencyString(item.currency)': getCurrencyString(item.currency)} }}
+                    <clr-dg-cell id="{{'NAV-Val-Date'+idx}}" class="col-date" (click)="navigateToShare(item.shareId)"
+                        class="{{getNextValuationClass(item.nextValuationDate)}}">{{item.nextValuationDate}}</clr-dg-cell>
+                    <clr-dg-cell id="{{'NAV-CCY-'+ (item.currency==0?'EURO-':(item.currency==1?'USD-':'GBP-')) +idx}}"
+                        class="col-currency" (click)="navigateToShare(item.shareId)">
+                        {{'@getCurrencyString(item.currency)@' | translate: {'getCurrencyString(item.currency)':
+                        getCurrencyString(item.currency)} }}
                     </clr-dg-cell>
                     <clr-dg-cell (click)="navigateToShare(item.shareId)" class="right">
-                        <span id="{{'NAV-Value-'+idx}}" [hidden]="isNavNull(item.nav)">{{ navToFrontEndString(item.nav)}}</span>
-                        <span id="{{'NAV-Status-'+idx}}" [hidden]="!isNavNull(item.nav)" class="label label-warning">{{ 'Pending' | translate }}</span>
+                        <span id="{{'NAV-Value-'+idx}}" [hidden]="isNavNull(item.nav)">{{
+                            navToFrontEndString(item.nav)}}</span>
+                        <span id="{{'NAV-Status-'+idx}}" [hidden]="!isNavNull(item.nav)" class="label label-warning">{{
+                            'Pending' | translate }}</span>
                     </clr-dg-cell>
-                    <clr-dg-cell id="{{'NAV-EstValue-'+idx}}" class="nav-status-price right" [class.not-set]="!item.navEstimated" (click)="navigateToShare(item.shareId)">{{item.navEstimated ? navToFrontEndString(item.navEstimated) : 'N/A'}}
+                    <clr-dg-cell id="{{'NAV-EstValue-'+idx}}" class="nav-status-price right" [class.not-set]="!item.navEstimated"
+                        (click)="navigateToShare(item.shareId)">{{item.navEstimated ?
+                        navToFrontEndString(item.navEstimated) : 'N/A'}}
                     </clr-dg-cell>
-                    <clr-dg-cell id="{{'NAV-Tech-Value-'+idx}}" class="nav-status-price right" [class.not-set]="!item.navTechnical" (click)="navigateToShare(item.shareId)">{{item.navTechnical ? navToFrontEndString(item.navTechnical) : 'N/A'}}
+                    <clr-dg-cell id="{{'NAV-Tech-Value-'+idx}}" class="nav-status-price right" [class.not-set]="!item.navTechnical"
+                        (click)="navigateToShare(item.shareId)">{{item.navTechnical ?
+                        navToFrontEndString(item.navTechnical) : 'N/A'}}
                     </clr-dg-cell>
-                    <clr-dg-cell id="{{'NAV-Val-Value-'+idx}}" class="nav-status-price right" [class.not-set]="!item.navValidated" (click)="navigateToShare(item.shareId)">{{item.navValidated ? navToFrontEndString(item.navValidated) : 'N/A'}}
+                    <clr-dg-cell id="{{'NAV-Val-Value-'+idx}}" class="nav-status-price right" [class.not-set]="!item.navValidated"
+                        (click)="navigateToShare(item.shareId)">{{item.navValidated ?
+                        navToFrontEndString(item.navValidated) : 'N/A'}}
                     </clr-dg-cell>
                     <clr-dg-cell class="col-status" (click)="navigateToShare(item.shareId)">
                         <span [ngSwitch]="item.status">
                             <span *ngSwitchCase="-1">
-                                <span id="{{'NAV-Status-Validated-'+idx}}" class="label label-success">{{ 'Validated' | translate }}</span>
+                                <span id="{{'NAV-Status-Validated-'+idx}}" class="label label-success">{{ 'Validated' |
+                                    translate }}</span>
                             </span>
                             <span *ngSwitchCase="1">
-                                <span id="{{'NAV-Status-Estimated-'+idx}}" class="label label-warning">{{ 'Estimated' | translate }}</span>
+                                <span id="{{'NAV-Status-Estimated-'+idx}}" class="label label-warning">{{ 'Estimated' |
+                                    translate }}</span>
                             </span>
                             <span *ngSwitchCase="2">
-                                <span id="{{'NAV-Status-Technical'+idx}}" class="label label-warning">{{ 'Technical' | translate }}</span>
+                                <span id="{{'NAV-Status-Technical'+idx}}" class="label label-warning">{{ 'Technical' |
+                                    translate }}</span>
                             </span>
                             <span *ngSwitchCase="3">
-                                <span id="{{'NAV-Status-Cancelled'+idx}}" class="label label-danger">{{ 'Cancelled' | translate }}</span>
+                                <span id="{{'NAV-Status-Cancelled'+idx}}" class="label label-danger">{{ 'Cancelled' |
+                                    translate }}</span>
                             </span>
                         </span>
                     </clr-dg-cell>
-                    <clr-dg-cell class="actions">
+                    <clr-dg-cell class="actions" *ngIf="!isIznesAdmin">
                         <div class="btn-group btn-sm">
-                            <button id="{{'Btn-AddNewNAV-'+idx}}" class="btn btn-success btn-sm"
-                                (click)="addNav(item)"
+                            <button id="{{'Btn-AddNewNAV-'+idx}}" class="btn btn-success btn-sm" (click)="addNav(item)"
                                 [disabled]="isAddNavDisabled(item)">
                                 <i class="fa fa-plus"></i> {{ 'Add' | translate }}
                             </button>
-                            <button id="{{'Btn-ModifyNAV-'+idx}}" class="btn btn-info btn-sm"
-                                (click)="modifyNav(item)"
+                            <button id="{{'Btn-ModifyNAV-'+idx}}" class="btn btn-info btn-sm" (click)="modifyNav(item)"
                                 [disabled]="item.status != -1">
                                 <i class="fa fa-edit"></i> {{ 'Edit' | translate }}
                             </button>
-                            <button id="{{'Btn-CancelNAV-'+idx}}" class="btn btn-danger btn-sm"
-                                (click)="cancelNav(item)"
+                            <button id="{{'Btn-CancelNAV-'+idx}}" class="btn btn-danger btn-sm" (click)="cancelNav(item)"
                                 [disabled]="item.status != -1">
                                 <i class="fa fa-close"></i> {{ 'Cancel' | translate }}
                             </button>
@@ -184,32 +193,20 @@
             <section class="form-block">
                 <div class="form-group col-sm-12">
                     <label class="control-label" for="globalNavCsvFile">{{ 'File to upload: ' | translate }}</label>
-                    <input #globalNavCsvFile
-                           id="globalNavCsvFile"
-                           name="globalNavCsvFile"
-                           type="file"
-                           accept="text/csv"
-                           (change)="navCsvFile = $event.target.files[0]"/>
+                    <input #globalNavCsvFile id="globalNavCsvFile" name="globalNavCsvFile" type="file" accept="text/csv"
+                        (change)="navCsvFile = $event.target.files[0]" />
                 </div>
             </section>
         </form>
     </div>
 
     <div class="modal-footer">
-        <button id='globalNavModalCancelButton'
-                type="button"
-                class="btn btn-outline"
-                [disabled]="!hasResult"
-                (click)="resetNavUploadModal()">
+        <button id='globalNavModalCancelButton' type="button" class="btn btn-outline" [disabled]="!hasResult" (click)="resetNavUploadModal()">
             {{ 'Cancel' | translate }}
         </button>
 
-        <button *ngIf="hasResult"
-                id='globalNavModalSubmitButton'
-                type="button"
-                class="btn btn-success"
-                (click)="handleUploadNavSubmitClick()"
-                [disabled]="!navCsvFile">
+        <button *ngIf="hasResult" id='globalNavModalSubmitButton' type="button" class="btn btn-success" (click)="handleUploadNavSubmitClick()"
+            [disabled]="!navCsvFile">
             {{ 'Upload' | translate }}
         </button>
 
