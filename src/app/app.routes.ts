@@ -383,6 +383,51 @@ export const ROUTES: Routes = [
                 ],
             },
             {
+                path: 'admin-product-module',
+                children: [
+                    {
+                        path: 'product',
+                        component: ProductHomeComponent,
+                        canActivate: [LoginGuardService],
+                    },
+                    {
+                        path: 'product/umbrella-fund/:id',
+                        component: UmbrellaFundComponent,
+                        canActivate: [LoginGuardService],
+                    },
+                    {
+                        path: 'product/fund/:id',
+                        component: FundComponent,
+                        canActivate: [LoginGuardService],
+                    },
+                    {
+                        path: 'product/fund-share/:shareId/audit',
+                        component: FundShareAuditComponent,
+                        canActivate: [LoginGuardService],
+                    },
+                    {
+                        path: 'product/umbrella-fund/:umbrellaID/audit',
+                        component: UmbrellaAuditComponent,
+                        canActivate: [LoginGuardService],
+                    },
+                    {
+                        path: 'product/fund/:fundID/audit',
+                        component: FundAuditComponent,
+                        canActivate: [LoginGuardService],
+                    },
+                    {
+                        path: 'product/fund-share/:shareId',
+                        component: FundShareComponent,
+                        canActivate: [LoginGuardService],
+                    },
+                    {
+                        path: 'product/fund-share',
+                        component: FundShareComponent,
+                        canActivate: [LoginGuardService],
+                    },
+                ],
+            },
+            {
                 path: 'management-company',
                 component: OfiManagementCompanyComponent,
                 canActivate: [LoginGuardService],
