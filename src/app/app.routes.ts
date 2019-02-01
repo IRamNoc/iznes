@@ -383,6 +383,86 @@ export const ROUTES: Routes = [
                 ],
             },
             {
+                path: 'admin-product-module',
+                children: [
+                    {
+                        path: 'product',
+                        component: ProductHomeComponent,
+                        canActivate: [LoginGuardService],
+                    },
+                    {
+                        path: 'product/umbrella-fund/new',
+                        component: UmbrellaFundComponent,
+                        canActivate: [LoginGuardService],
+                    },
+                    {
+                        path: 'product/umbrella-fund/:id',
+                        component: UmbrellaFundComponent,
+                        canActivate: [LoginGuardService],
+                    },
+                    {
+                        path: 'product/fund/new',
+                        component: FundComponent,
+                        canActivate: [LoginGuardService],
+                    },
+                    {
+                        path: 'product/fund/:id',
+                        component: FundComponent,
+                        canActivate: [LoginGuardService],
+                    },
+                    {
+                        path: 'product/fund-share/new',
+                        component: AddNewFundShareComponent,
+                        canActivate: [LoginGuardService],
+                    },
+                    {
+                        path: 'product/fund-share/:shareId/audit',
+                        component: FundShareAuditComponent,
+                        canActivate: [LoginGuardService],
+                    },
+                    {
+                        path: 'product/umbrella-fund/:umbrellaID/audit',
+                        component: UmbrellaAuditComponent,
+                        canActivate: [LoginGuardService],
+                    },
+                    {
+                        path: 'product/fund/:fundID/audit',
+                        component: FundAuditComponent,
+                        canActivate: [LoginGuardService],
+                    },
+                    {
+                        path: 'product/fund-share/:shareId',
+                        component: FundShareComponent,
+                        canActivate: [LoginGuardService],
+                    },
+                    {
+                        path: 'product/fund-share',
+                        component: FundShareComponent,
+                        canActivate: [LoginGuardService],
+                    },
+                    {
+                        path: 'net-asset-value',
+                        component: OfiNavFundsList,
+                        canActivate: [LoginGuardService],
+                    },
+                    {
+                        path: 'net-asset-value/fund-view',
+                        component: OfiNavFundView,
+                        canActivate: [LoginGuardService],
+                    },
+                    {
+                        path: 'net-asset-value/fund-view/:shareId/audit',
+                        component: OfiNavAuditComponent,
+                        canActivate: [LoginGuardService],
+                    },
+                    {
+                        path: 'configuration',
+                        component: ProductConfigurationComponent,
+                        canActivate: [LoginGuardService],
+                    },
+                ],
+            },
+            {
                 path: 'management-company',
                 component: OfiManagementCompanyComponent,
                 canActivate: [LoginGuardService],
