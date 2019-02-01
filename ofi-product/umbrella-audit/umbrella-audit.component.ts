@@ -1,5 +1,5 @@
 import { Component, OnInit, OnDestroy } from '@angular/core';
-import { ActivatedRoute } from '@angular/router';
+import { ActivatedRoute, Router } from '@angular/router';
 import { Subject } from 'rxjs/Subject';
 import { takeUntil } from 'rxjs/operators';
 import { combineLatest } from 'rxjs/observable/combineLatest';
@@ -8,7 +8,7 @@ import * as _ from 'lodash';
 import { Location } from '@angular/common';
 import { OfiUmbrellaFundService } from '@ofi/ofi-main/ofi-req-services/ofi-product/umbrella-fund/service';
 
-const ADMIN_USER_TYPE = 35;
+const ADMIN_USER_URL = '/admin-product-module/';
 
 @Component({
     templateUrl: './umbrella-audit.component.html',
@@ -19,9 +19,6 @@ export class UmbrellaAuditComponent implements OnInit, OnDestroy {
     umbrellaName: string;
     unSubscribe: Subject<any> = new Subject();
 
-    userType = null;
-
-    @select(['user', 'myDetail']) userDetailOb;
     @select(['ofi', 'ofiProduct', 'ofiUmbrellaFund', 'umbrellaFundList', 'umbrellaFundList']) umbrellaList$;
     @select(['ofi', 'ofiProduct', 'ofiUmbrellaFund', 'umbrellaFundList', 'requested']) requestedUmbrellaList$;
 
@@ -29,17 +26,11 @@ export class UmbrellaAuditComponent implements OnInit, OnDestroy {
         private activatedRoute: ActivatedRoute,
         private umbrellaService: OfiUmbrellaFundService,
         private location: Location,
+        private router: Router,
     ) {
     }
 
     ngOnInit() {
-        this.userDetailOb
-            .pipe(
-                takeUntil(this.unSubscribe),
-            )
-            .subscribe((userDetail) => {
-                this.userType = userDetail.userType;
-            });
 
         this.activatedRoute.params
             .pipe(
@@ -95,6 +86,6 @@ export class UmbrellaAuditComponent implements OnInit, OnDestroy {
      * @return {boolean}
      */
     isAdmin(): boolean {
-        return (this.userType === ADMIN_USER_TYPE);
+        return this.router.url.startsWith(ADMIN_USER_URL);
     }
 }
