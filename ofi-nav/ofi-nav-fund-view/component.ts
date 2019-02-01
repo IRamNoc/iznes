@@ -7,6 +7,7 @@ import { Observable, Subscription } from 'rxjs';
 import { distinctUntilChanged } from 'rxjs/operators';
 import * as moment from 'moment';
 import * as model from '../OfiNav';
+import { userTypes } from '../../shared/userTypes';
 import { OfiManageNavPopupService } from '../ofi-manage-nav-popup/service';
 import { OfiCorpActionService } from '../../ofi-req-services/ofi-corp-actions/service';
 import { OfiNavService } from '../../ofi-req-services/ofi-product/nav/service';
