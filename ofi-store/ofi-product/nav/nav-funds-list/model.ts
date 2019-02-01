@@ -1,4 +1,5 @@
 export interface NavDetail {
+    managementCompany?: string;
     shareId: number;
     fundId: number;
     fundShareName: string;

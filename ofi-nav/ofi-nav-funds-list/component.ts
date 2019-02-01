@@ -1,11 +1,12 @@
 import { ChangeDetectorRef, Component, Inject, OnDestroy, OnInit, ViewChild } from '@angular/core';
 import { FormControl, FormGroup } from '@angular/forms';
-import { Router } from '@angular/router';
+import { Router, ActivatedRoute } from '@angular/router';
 import { NgRedux, select } from '@angular-redux/store';
 import { Observable, Subscription } from 'rxjs';
 import * as moment from 'moment';
 import * as _ from 'lodash';
 import * as model from '../OfiNav';
+import { userTypes } from '../../shared/userTypes';
 import { OfiManageNavPopupService, ManageNavCloseEvent } from '../ofi-manage-nav-popup/service';
 import { OfiNavService } from '../../ofi-req-services/ofi-product/nav/service';
 import {
@@ -25,6 +26,8 @@ import {
 import { MultilingualService } from '@setl/multilingual';
 import { AlertsService } from '@setl/jaspero-ng2-alerts/src/alerts.service';
 import { OfiCurrenciesService } from '@ofi/ofi-main/ofi-req-services/ofi-currencies/service';
+
+const ADMIN_USER_URL = '/net-asset-value/';
 
 @Component({
     selector: 'app-nav-manage-list',
@@ -63,28 +66,33 @@ export class OfiNavFundsList implements OnInit, OnDestroy {
     private cancelNavSuccessMessage: string;
     private cancelNavErrorMessage: string;
 
+    get isIznesAdmin():boolean {
+        return this.router.url.startsWith(ADMIN_USER_URL);
+    }
+
     @select(['ofi', 'ofiProduct', 'ofiManageNav', 'ofiNavFundsList', 'requested']) navRequestedOb: Observable<any>;
     @select(['ofi', 'ofiProduct', 'ofiManageNav', 'ofiNavFundsList', 'navFundsList']) navListOb: Observable<any>;
     @select(['ofi', 'ofiCurrencies', 'currencies']) currenciesObs;
     @select(['user', 'authentication', 'token']) tokenOb;
-    @select(['user', 'myDetail', 'userId']) userOb;
+    @select(['user', 'myDetail']) userOb;
     @select(['user', 'siteSettings', 'language']) requestLanguageOb;
 
     private subscriptionsArray: Subscription[] = [];
 
     constructor(private router: Router,
-                private redux: NgRedux<any>,
-                private changeDetectorRef: ChangeDetectorRef,
-                private ofiNavService: OfiNavService,
-                private numberConverterService: NumberConverterService,
-                private moneyPipe: MoneyValuePipe,
-                private popupService: OfiManageNavPopupService,
-                private alertService: AlertsService,
-                private confirmationService: ConfirmationService,
-                private ofiCurrenciesService: OfiCurrenciesService,
-                private fileDownloader: FileDownloader,
-                public translate: MultilingualService,
-                @Inject(APP_CONFIG) appConfig: AppConfig) {
+        private redux: NgRedux<any>,
+        private changeDetectorRef: ChangeDetectorRef,
+        private ofiNavService: OfiNavService,
+        private numberConverterService: NumberConverterService,
+        private moneyPipe: MoneyValuePipe,
+        private popupService: OfiManageNavPopupService,
+        private alertService: AlertsService,
+        private confirmationService: ConfirmationService,
+        private ofiCurrenciesService: OfiCurrenciesService,
+        private fileDownloader: FileDownloader,
+        private route: ActivatedRoute,
+        public translate: MultilingualService,
+        @Inject(APP_CONFIG) appConfig: AppConfig) {
         this.appConfig = appConfig;
         this.isNavUploadModalDisplayed = false;
         this.navCsvFile = null;
@@ -198,7 +206,6 @@ export class OfiNavFundsList implements OnInit, OnDestroy {
 
     private onCancelNavSuccess(res): void {
         if ((res[1]) && res[1].Data[0]) {
-            console.log(res);
 
             if (res[1].Data[0].Status === 'Fail') return this.onCancelNavError();
 
@@ -223,7 +230,7 @@ export class OfiNavFundsList implements OnInit, OnDestroy {
 
         this.redux.dispatch(ofiSetCurrentNavFundViewRequest(navFundViewRequest));
 
-        this.router.navigateByUrl('product-module/net-asset-value/fund-view');
+        this.router.navigate(['fund-view'], {relativeTo: this.route});
     }
 
     exportCSV(): void {
@@ -339,8 +346,8 @@ export class OfiNavFundsList implements OnInit, OnDestroy {
         this.subscriptionsArray.push(this.tokenOb.subscribe((token) => {
             this.socketToken = token;
         }));
-        this.subscriptionsArray.push(this.userOb.subscribe((userId) => {
-            this.userId = userId;
+        this.subscriptionsArray.push(this.userOb.subscribe((user) => {
+            this.userId = user.userId;
         }));
 
         this.subscriptionsArray.push(this.currenciesObs.subscribe(c => this.getCurrencyList(c)));
@@ -425,12 +432,15 @@ export class OfiNavFundsList implements OnInit, OnDestroy {
     }
 
     private initDataTypes(): void {
-        this.dateTypes = this.translate.translate([{
-            id: 'navDate',
-            text: 'NAV Date',
-        }, {
-            id: 'navPubDate',
-            text: 'NAV Published Date',
-        }]);
+        this.dateTypes = this.translate.translate([
+            {
+                id: 'navDate',
+                text: 'NAV Date',
+            },
+            {
+                id: 'navPubDate',
+                text: 'NAV Published Date',
+            },
+        ]);
     }
 }

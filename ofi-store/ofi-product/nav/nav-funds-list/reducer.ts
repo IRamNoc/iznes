@@ -70,6 +70,7 @@ function handleSetOfiNavFundsList(state: OfiNavFundsListState, action: Action): 
             const nextValuationDate = NavHelperService.getNextValuationDate(nextValuationDateRaw, navDate) || 'N/A';
 
             result.push({
+                managementCompany: item.get('asm'),
                 shareId: item.get('shareId', 0),
                 fundId: item.get('fundId', 0),
                 fundShareName: item.get('fundShareName', ''),
