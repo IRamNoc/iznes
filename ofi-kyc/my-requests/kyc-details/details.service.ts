@@ -88,7 +88,6 @@ export class KycDetailsService {
                 'companyBeneficiariesID',
                 'custodianID',
             ])
-            .omitBy(isNil)
             .toPairs()
             .map(([controlName, controlValue]) => ({
                 originalId: controlName,

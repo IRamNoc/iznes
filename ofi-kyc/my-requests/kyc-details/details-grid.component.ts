@@ -13,7 +13,8 @@ export class KycDetailsGridComponent {
 
     constructor(
         private kycDetailsService : KycDetailsService,
-    ) {}
+    ) {
+    }
 
     openBeneficiaries($event) {
         $event.preventDefault();
