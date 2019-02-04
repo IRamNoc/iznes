@@ -5,7 +5,7 @@ import { MockNgRedux } from '@angular-redux/store/testing';
 import { ClarityModule } from '@clr/angular';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { Subject } from 'rxjs/Subject';
-import { ActivatedRoute } from '@angular/router';
+import { ActivatedRoute, Router } from '@angular/router';
 import { Location } from '@angular/common';
 
 import { FundAuditComponent } from './fund-audit.component';
@@ -15,6 +15,7 @@ import {
 } from '@setl/utils';
 import { OfiFundService } from '@ofi/ofi-main/ofi-req-services/ofi-product/fund/fund.service';
 import { MultilingualService } from '@setl/multilingual';
+import { RouterTestingModule } from '@angular/router/testing';
 
 const ofiFundServiceSpy = {
 
@@ -61,6 +62,7 @@ describe('FundAuditComponent', () => {
                 FormsModule,
                 ReactiveFormsModule,
                 DpDatePickerModule,
+                RouterTestingModule,
             ],
             providers: [
                 { provide: OfiFundService, useValue: ofiFundServiceSpy },

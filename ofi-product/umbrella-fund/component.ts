@@ -38,7 +38,7 @@ import { SagaHelper, LogService, ConfirmationService } from '@setl/utils';
 import { validators } from '../productConfig';
 import { MultilingualService } from '@setl/multilingual';
 
-const ADMIN_USER_TYPE = 35;
+const ADMIN_USER_URL = '/admin-product-module/';
 
 @Component({
     styleUrls: ['./component.scss'],
@@ -67,8 +67,6 @@ export class UmbrellaFundComponent implements OnInit, AfterViewInit, OnDestroy {
     isLeiVisible = false;
     mainInformationOpen = true;
     optionalInformationOpen = false;
-
-    userType = null;
 
     // Locale
     language = 'fr';
@@ -108,7 +106,6 @@ export class UmbrellaFundComponent implements OnInit, AfterViewInit, OnDestroy {
     unSubscribe: Subject<any> = new Subject();
 
     /* Redux observables. */
-    @select(['user', 'myDetail']) userDetailOb;
     @select(['user', 'siteSettings', 'language']) requestLanguageObj;
     @select(['ofi', 'ofiProduct', 'ofiUmbrellaFund', 'umbrellaFundList', 'umbrellaFundList']) umbrellaFundAccessListOb;
     @select(['ofi', 'ofiProduct', 'ofiManagementCompany', 'managementCompanyList', 'managementCompanyList']) managementCompanyAccessListOb;
@@ -156,19 +153,11 @@ export class UmbrellaFundComponent implements OnInit, AfterViewInit, OnDestroy {
 
         this.managementCompanyService.getManagementCompanyList();
 
-        this.userDetailOb
-            .pipe(
-                takeUntil(this.unSubscribe),
-            )
-            .subscribe((userDetail) => {
-                this.userType = userDetail.userType;
-
-                if (!this.isAdmin()) {
-                    this.ofiUmbrellaFundService.fetchUmbrellaList();
-                } else {
-                    this.ofiUmbrellaFundService.getAdminUmbrellaList();
-                }
-            });
+        if (!this.isAdmin()) {
+            this.ofiUmbrellaFundService.fetchUmbrellaList();
+        } else {
+            this.ofiUmbrellaFundService.getAdminUmbrellaList();
+        }
 
         // param url
         this.activatedRoute.params
@@ -652,7 +641,7 @@ export class UmbrellaFundComponent implements OnInit, AfterViewInit, OnDestroy {
      * @return {void}
      */
     auditTrail(umbrellaID: string): void {
-        this.router.navigateByUrl(`/product-module/product/umbrella-fund/${umbrellaID}/audit`);
+        this.router.navigateByUrl(`${this.isAdmin() ? ADMIN_USER_URL : '/product-module/'}product/umbrella-fund/${umbrellaID}/audit`);
     }
 
     /**
@@ -662,7 +651,7 @@ export class UmbrellaFundComponent implements OnInit, AfterViewInit, OnDestroy {
      * @return {void}
      */
     cancel(): void {
-        this.router.navigateByUrl('/product-module/product');
+        this.router.navigateByUrl(`${this.isAdmin() ? ADMIN_USER_URL : '/product-module/'}product`);
     }
 
     /**
@@ -951,7 +940,7 @@ export class UmbrellaFundComponent implements OnInit, AfterViewInit, OnDestroy {
      * @return {boolean}
      */
     isAdmin(): boolean {
-        return (this.userType === ADMIN_USER_TYPE);
+        return this.router.url.startsWith(ADMIN_USER_URL);
     }
 
     /**
