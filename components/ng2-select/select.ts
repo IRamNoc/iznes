@@ -1,6 +1,6 @@
 import {
     Component, Input, Output, EventEmitter, ElementRef, OnInit, forwardRef,
-    ChangeDetectionStrategy, ChangeDetectorRef,
+    ChangeDetectionStrategy, ChangeDetectorRef, Renderer2, ViewChild,
 } from '@angular/core';
 import { ControlValueAccessor, NG_VALUE_ACCESSOR } from '@angular/forms';
 import { SelectItem } from './select-item';
@@ -69,6 +69,15 @@ export class SelectComponent implements OnInit, ControlValueAccessor {
 
     @Input()
     public set disabled(value: boolean) {
+        console.warn('[ng2-select] Input "disabled" has will be deprecated. Due to Angular warning. Please use "isDisabled" instead.');
+        this.disabledFlag = value;
+        if (this.disabledFlag === true) {
+            this.hideOptions();
+        }
+    }
+
+    @Input()
+    public set isDisabled(value: boolean) {
         this.disabledFlag = value;
         if (this.disabledFlag === true) {
             this.hideOptions();
@@ -121,6 +130,9 @@ export class SelectComponent implements OnInit, ControlValueAccessor {
     @Output() public typed: EventEmitter<any> = new EventEmitter();
     @Output() public opened: EventEmitter<any> = new EventEmitter();
 
+    @ViewChild('multiDropdownInput') multiDDInput: ElementRef;
+    @ViewChild('singleDropdownInput') singleDDInput: ElementRef;
+
     public options: SelectItem[] = [];
     public itemObjects: SelectItem[] = [];
     public activeOption: SelectItem;
@@ -150,11 +162,27 @@ export class SelectComponent implements OnInit, ControlValueAccessor {
     private disabledFlag = false;
     private activeFlag: SelectItem[] = [];
 
+
     public constructor(element: ElementRef,
+                       private renderer2 : Renderer2,
                        private changeDetectorRef: ChangeDetectorRef, public translate: MultilingualService) {
         this.element = element;
         this.clickedOutside = this.clickedOutside.bind(this);
 
+    }
+
+    setDisabledState(isDisabled: boolean): void {
+
+        let el;
+
+        if (this.multiple) {
+            el = this.multiDDInput;
+        } else {
+            el = this.singleDDInput;
+        }
+        if (el) {
+            this.renderer2.setProperty(el.nativeElement, 'disabled', isDisabled);
+        }
     }
 
     public sanitize(html: string): string {
