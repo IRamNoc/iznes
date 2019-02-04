@@ -403,7 +403,7 @@ function constructPartiesListData(partiesData: PartiesData, mustSignsObjs: {[add
                 (resultPayList: Array<PartyListEntryPayListData>, payDataImu: any, asset: string) => {
 
                     const payData: PayAmountData = payDataImu.toJS();
-                    const assetParts = asset.split(/[|:]/);
+                    const assetParts = asset.split('|');
                     const payAmount = payData.amount;
                     const payPublicKey = ''; // optional
                     const paySignature = ''; // optional
@@ -426,7 +426,7 @@ function constructPartiesListData(partiesData: PartiesData, mustSignsObjs: {[add
             const partyReceiveList: Array<PartyListEntryReceiveListData> = immutableHelper.reduce(partyReceiveData,
                 (resultReceiveList: Array<PartyListEntryReceiveListData>, receiveAmount: ReceiveAmountData, asset: string) => {
 
-                    const assetParts = asset.split(/[|:]/);
+                    const assetParts = asset.split('|');
 
                     const receiveRow: PartyListEntryReceiveListData = [address, assetParts[0], assetParts[1], receiveAmount];
 
