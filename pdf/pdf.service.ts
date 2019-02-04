@@ -1,9 +1,9 @@
-import {Injectable} from '@angular/core';
-import {MemberSocketService} from '@setl/websocket-service';
-import {select, NgRedux} from '@angular-redux/store';
+import { Injectable } from '@angular/core';
+import { MemberSocketService } from '@setl/websocket-service';
+import { select, NgRedux } from '@angular-redux/store';
 import * as SagaHelper from '@setl/utils/sagaHelper';
 import * as utilsCommon from '@setl/utils/common';
-import {CreatePdfMetadataMessageBody, GetPdfMessageBody} from './pdf.service.model';
+import { CreatePdfMetadataMessageBody, GetPdfMessageBody } from './pdf.service.model';
 import * as _ from 'lodash';
 
 interface CreatePdfMetadata {
@@ -31,37 +31,35 @@ export class PdfService {
 
     constructor(
         private memberSocketService: MemberSocketService,
-        private ngRedux: NgRedux<any>
-    ) {
+        private ngRedux: NgRedux<any>) {
         if (this.getConnectedWallet) {
             this.getConnectedWallet.subscribe(
                 (function (data) {
                     this.walletId = data;
-                }).bind(this)
+                }).bind(this),
             );
         }
         if (this.getUser) {
             this.getUser.subscribe(
                 (function (data) {
                     this.userId = data;
-                }).bind(this)
+                }).bind(this),
             );
         }
     }
 
-    // remove as not used
-    // public createPdfMetadata(requestData: CreatePdfMetadata): any {
-    //     if (this.walletId) {
-    //         const messageBody: CreatePdfMetadataMessageBody = {
-    //             RequestName: 'createpdfmetadata',
-    //             token: this.token,
-    //             walletID: this.walletId,
-    //             type: _.get(requestData, 'type', null),
-    //             metadata: _.get(requestData, 'metadata', null)
-    //         };
-    //         return utilsCommon.createMemberNodeSagaRequest(this.memberSocketService, messageBody);
-    //     }
-    // }
+    public createPdfMetadata(requestData: CreatePdfMetadata): any {
+        if (this.walletId) {
+            const messageBody: CreatePdfMetadataMessageBody = {
+                RequestName: 'createpdfmetadata',
+                token: this.token,
+                walletID: this.walletId,
+                type: _.get(requestData, 'type', null),
+                metadata: _.get(requestData, 'metadata', null),
+            };
+            return utilsCommon.createMemberNodeSagaRequest(this.memberSocketService, messageBody);
+        }
+    }
 
     /**
      * Get PDF
@@ -70,10 +68,8 @@ export class PdfService {
      *
      * @return {Promise}
      */
-    public getPdf(pdfID: any): any {
-        const asyncTaskPipe = this.getPdfRequest({
-            pdfID: pdfID
-        });
+    public getPdf(pdfID: any, file = null, pdfOptions = null): any {
+        const asyncTaskPipe = this.getPdfRequest({ pdfID }, file, pdfOptions);
         return new Promise((resolve, reject) => {
             this.ngRedux.dispatch(
                 SagaHelper.runAsyncCallback(
@@ -85,19 +81,21 @@ export class PdfService {
                     },
                     (error) => {
                         reject(error);
-                    }
-                )
+                    },
+                ),
             );
         });
     }
 
-    public getPdfRequest(requestData: GetPdf): any {
+    public getPdfRequest(requestData: GetPdf, file = null, pdfOptions = null): any {
         if (this.walletId) {
             const messageBody: GetPdfMessageBody = {
                 RequestName: 'getpdf',
                 token: this.memberSocketService.token,
                 walletID: this.walletId,
-                pdfID: _.get(requestData, 'pdfID', null)
+                pdfID: _.get(requestData, 'pdfID', null),
+                file,
+                pdfOptions,
             };
             return utilsCommon.createMemberNodeSagaRequest(this.memberSocketService, messageBody);
         }
