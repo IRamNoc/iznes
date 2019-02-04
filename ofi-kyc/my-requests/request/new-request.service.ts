@@ -233,6 +233,7 @@ export class NewRequestService {
             commercialCity: [{ value: '', disabled: true }, Validators.required],
             commercialCountry: [{ value: '', disabled: true }, Validators.required],
             countryTaxResidence: ['', Validators.required],
+            countryRegistration: ['', Validators.required],
         });
         const companyInformation = fb.group({
             kycID: '',

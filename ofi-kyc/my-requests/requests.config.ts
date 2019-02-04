@@ -236,6 +236,7 @@ export const selectControls = [
     'legalForm',
     'registeredCompanyCountry',
     'countryTaxResidence',
+    'countryRegistration',
     'sectorActivity',
     'regulatoryStatus',
     'regulatoryStatusInsurerType',
@@ -270,6 +271,7 @@ export const controlOrder = [
     'commercialCity',
     'commercialCountry',
     'countryTaxResidence',
+    'countryRegistration',
 
     // Company
     'sectorActivity',
@@ -1523,6 +1525,7 @@ export const controlToName = {
     commercialCity: 'City',
     commercialCountry: 'Country',
     countryTaxResidence: 'Country of Tax Residence',
+    countryRegistration: 'Country of Registration',
     regulatoryStatus: 'Regulatory Status',
     regulatoryStatusListingOther: 'Regulatory Status Specification',
     regulatoryStatusInsurerType: 'Insurer Type',
@@ -1652,6 +1655,7 @@ export const controlToList = {
     regulatoryStatusInsurerType: 'regulatoryStatusInsurerTypeList',
     otherIdentificationNumberType: 'identificationNumberTypeList',
     commercialCountry: 'countries',
+    countryRegistration: 'countries',
 
     // Company
     activities: 'companyActivitiesList',
@@ -1690,6 +1694,7 @@ export const controlToList = {
     investmentHorizonWanted: 'investmentHorizonList',
     riskProfile: 'riskProfileList',
 
+    // Stakeholder
     nationality: 'countries',
     countryTaxResidence: 'countries',
     country: 'countries',
