@@ -7,12 +7,15 @@ import { TabControl, Tab } from '../tabs';
 import { NgRedux, select } from '@angular-redux/store';
 import * as json2csv from 'json2csv';
 import * as SagaHelper from '@setl/utils/sagaHelper/index';
-import { FileService } from '@setl/core-req-services';
-import { filter, each } from 'lodash';
+import { FileService, PdfService } from '@setl/core-req-services';
+import { filter, get } from 'lodash';
 import { first, map } from 'rxjs/operators';
 import { Observable } from 'rxjs/Observable';
+import { combineLatest } from 'rxjs/observable/combineLatest';
 import { Subscription } from 'rxjs/Subscription';
 import { MultilingualService } from '@setl/multilingual';
+import { AlertsService } from '@setl/jaspero-ng2-alerts';
+import * as moment from 'moment';
 
 @Component({
     selector: 'setl-balances',
@@ -25,15 +28,17 @@ export class SetlBalancesComponent implements AfterViewInit, OnInit, OnDestroy {
 
     @ViewChild('myDataGrid') myDataGrid;
     @select(['user', 'connected', 'connectedWallet']) getConnectedWallet;
+    @select(['wallet', 'myWallets', 'walletList']) walletListOb;
 
     public tabControl: TabControl;
     public tabs: Tab[];
     readonly transactionFields = new WalletTxHelperModel.WalletTransactionFields().fields;
     private subscriptions: Subscription[] = [];
     public connectedWalletId;
-    public exportModalDisplay: boolean = false;
-    public exportFilename: string = 'BalancesExport.csv';
+    private walletName: string;
+    public exportModalDisplay: string = '';
     public exportFileHash: string = '';
+    private viewingAsset: string;
     /* Datagrid properties */
     public pageSize: number;
     public pageCurrent: number;
@@ -54,8 +59,8 @@ export class SetlBalancesComponent implements AfterViewInit, OnInit, OnDestroy {
                        private ngRedux: NgRedux<any>,
                        private fileService: FileService,
                        public translate: MultilingualService,
-    ) {
-    }
+                       private alertsService: AlertsService,
+                       private pdfService: PdfService) {}
 
     /**
      * Ng On Init
@@ -78,11 +83,14 @@ export class SetlBalancesComponent implements AfterViewInit, OnInit, OnDestroy {
             this.balances = balances;
         });
 
-        this.subscriptions.push(this.getConnectedWallet.subscribe((connectedWalletId) => {
-            this.connectedWalletId = connectedWalletId;
-            this.closeTabs();
-            previous = [];
-        },
+        this.subscriptions.push(
+            combineLatest(this.getConnectedWallet, this.walletListOb).subscribe(([connectedWalletId, walletList]) => {
+                this.connectedWalletId = connectedWalletId;
+                this.closeTabs();
+                previous = [];
+
+                this.walletName = (walletList[connectedWalletId] || {}).walletName;
+            },
         ));
 
         this.initTabUpdates();
@@ -165,6 +173,7 @@ export class SetlBalancesComponent implements AfterViewInit, OnInit, OnDestroy {
      * @return void
      */
     public handleViewBreakdown(asset): void {
+        this.viewingAsset = asset.asset;
         this.editTab = true;
         if (this.tabControl.activate(this.findTab(asset.hash, 'breakdown'))) {
             return;
@@ -234,6 +243,7 @@ export class SetlBalancesComponent implements AfterViewInit, OnInit, OnDestroy {
     handleClose(id, asset) {
         this.tabControl.close(id);
         this.reportingService.historyResetByAsset(asset.asset);
+        this.viewingAsset = '';
     }
 
     /**
@@ -312,19 +322,24 @@ export class SetlBalancesComponent implements AfterViewInit, OnInit, OnDestroy {
      *
      * @return {void}
      */
-    public exportList() {
-        const options = {};
-        const csvData = this.myDataGrid.items['_filtered'];
+    public exportCSV() {
+        this.alertsService.create('loading');
+
+        const csvData = this.formatExportCSVData();
         if (csvData.length === 0) {
+            this.alertsService.generate('error', this.translate.translate('There are no records to export'));
             return;
         }
-        const encodedCsv = Buffer.from(json2csv.parse(csvData, options)).toString('base64');
+
+        const encodedCsv = Buffer.from(json2csv.parse(csvData, {})).toString('base64');
+
         const fileData = {
-            name: this.exportFilename,
+            name: 'Balance-Export.csv',
             data: encodedCsv,
             status: '',
             filePermission: 1,
         };
+
         const asyncTaskPipe = this.fileService.addFile({
             files: filter([fileData], (file) => {
                 return file.status !== 'uploaded-file';
@@ -333,34 +348,138 @@ export class SetlBalancesComponent implements AfterViewInit, OnInit, OnDestroy {
 
         this.ngRedux.dispatch(SagaHelper.runAsyncCallback(
             asyncTaskPipe,
-            (data) => {
-                if (data[1] && data[1].Data) {
-                    let errorMessage;
-                    each(data[1].Data, (file) => {
-                        if (file.error) {
-                            errorMessage = file.error;
-                        } else {
-                            this.exportFileHash = file[0].fileHash;
-                            this.showExportModal();
-                        }
-                    });
-                    if (errorMessage) {
-                    }
+            (successResponse) => {
+                const data = get(successResponse, '[1].Data[0][0]', {});
+                if (data.fileHash) {
+                    this.exportFileHash = data.fileHash;
+                    this.showExportModal('CSV');
+                    this.alertsService.create('clear');
+                    return;
                 }
+                this.alertsService.generate(
+                    'error', this.translate.translate('Something has gone wrong. Please try again later'));
             },
-            (data) => {
-                let errorMessage;
-                each(data[1].Data, (file) => {
-                    if (file.error) {
-                        errorMessage += file.error + '<br/>';
-                    }
-                });
-                if (errorMessage) {
-                    if (errorMessage) {
-                    }
-                }
+            (failResponse) => {
+                const data = get(failResponse, '[1].Data[0]', {});
+                const errorText = data.error ? data.error : 'Something has gone wrong. Please try again later';
+                this.alertsService.generate('error', this.translate.translate(errorText));
             }),
         );
+    }
+
+    /**
+     * Export PDF
+     *
+     * Exports current dataGrid List to PDF format
+     *
+     * @returns {void}
+     */
+    public exportPDF() {
+        this.alertsService.create('loading');
+
+        const metadata = this.formatExportPDFData();
+        const asyncTaskPipe = this.pdfService.createPdfMetadata({ type: null, metadata });
+
+        this.ngRedux.dispatch(SagaHelper.runAsyncCallback(
+            asyncTaskPipe,
+            (successResponse) => {
+                const pdfID = get(successResponse, '[1].Data[0].pdfID', 0);
+
+                if (!pdfID) {
+                    return this.alertsService.generate(
+                        'error', this.translate.translate('Something has gone wrong. Please try again later'));
+                }
+
+                const pdfOptions = {
+                    orientation: 'portrait',
+                    border: { top: '15mm', right: '15mm', bottom: '0', left: '15mm' },
+                    footer: {
+                        height: '20mm',
+                        contents: `
+                        <div class="footer">
+                            <p class="left">${metadata.title} | {{page}} of {{pages}}</p>
+                            <p class="right">${metadata.date}</p>
+                        </div>`,
+                    },
+                };
+
+                this.pdfService.getPdf(pdfID, 'report', pdfOptions).then((response) => {
+                    this.exportFileHash = response;
+                    this.showExportModal('PDF');
+                    this.alertsService.create('clear');
+                }).catch((e) => {
+                    console.error(e);
+                    this.alertsService.generate(
+                        'error', this.translate.translate('Something has gone wrong. Please try again later'));
+                });
+            },
+            (e) => {
+                console.error(e);
+                this.alertsService.generate(
+                    'error', this.translate.translate('Something has gone wrong. Please try again later'));
+            }),
+        );
+    }
+
+    /**
+     * Format Export Data
+     *
+     * Formats the current filtered datagrid data for PDF exports
+     *
+     * @returns {array} exportData
+     */
+    private formatExportPDFData() {
+        const rawData = this.myDataGrid.items['_filtered'];
+        let subtitle;
+
+        const data = rawData.map((item) => {
+            if (item.breakdown) {
+                subtitle = this.translate.translate('Overview');
+                return {
+                    [this.translate.translate('Asset')]: item.asset,
+                    [this.translate.translate('Free')]: item.free,
+                    [this.translate.translate('Total')]: item.total,
+                    [this.translate.translate('Encumbered')]: item.totalencumbered,
+                };
+            }
+            subtitle = this.translate.translate('Breakdown for @asset@', { asset: this.viewingAsset });
+            return {
+                [this.translate.translate('Address Label')]: item.label,
+                [this.translate.translate('Address')]: item.addr,
+                [this.translate.translate('Total')]: item.balance,
+                [this.translate.translate('Encumbered')]: item.encumbrance,
+                [this.translate.translate('Free')]: item.free,
+            };
+        });
+
+        return {
+            title: this.translate.translate('Balances Report'),
+            subtitle,
+            text: this.translate
+                .translate('This is an auto-generated balances report with data correct as of the date above.'),
+            data,
+            rightAlign: [this.translate.translate('Free'), this.translate.translate('Total'),
+                this.translate.translate('Encumbered')],
+            walletName: this.walletName,
+            date: moment().format('YYYY-MM-DD H:mm:ss'),
+        };
+    }
+
+    /**
+     * Format Export CSV Data
+     *
+     * Formats the current filtered datagrid data for CSV exports
+     *
+     * @returns {array} exportData
+     */
+    formatExportCSVData() {
+        const rawData = JSON.parse(JSON.stringify(this.myDataGrid.items['_filtered']));
+
+        return rawData.map((item) => {
+            delete item.breakdown;
+            delete item.deleted;
+            return item;
+        });
     }
 
     /**
@@ -368,9 +487,8 @@ export class SetlBalancesComponent implements AfterViewInit, OnInit, OnDestroy {
      *
      * @return {void}
      */
-    public showExportModal() {
-        this.exportModalDisplay = true;
-        this.changeDetector.markForCheck();
+    public showExportModal(type) {
+        this.exportModalDisplay = type;
         this.changeDetector.detectChanges();
     }
 
@@ -380,8 +498,7 @@ export class SetlBalancesComponent implements AfterViewInit, OnInit, OnDestroy {
      * @return {void}
      */
     public hideExportModal() {
-        this.exportModalDisplay = false;
-        this.changeDetector.markForCheck();
+        this.exportModalDisplay = '';
         this.changeDetector.detectChanges();
     }
 
@@ -395,6 +512,15 @@ export class SetlBalancesComponent implements AfterViewInit, OnInit, OnDestroy {
     public setCurrentPage(page) {
         if (!this.editTab) this.pageCurrent = page;
         this.editTab = false;
+    }
+
+    /**
+     * Checks if the datagrid export buttons should be disabled
+     *
+     * @returns {boolean}
+     */
+    disableExportBtn() {
+        return Boolean(!get(this.myDataGrid, "items['_filtered'].length", true));
     }
 
     /**
