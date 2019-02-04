@@ -83,12 +83,22 @@
                     <span class="field-error" *ngIf="hasError(['otherIdentificationNumberText'], ['validSiren'])">{{ 'SIREN must be 9 digits long' | translate }}</span>
                     <span class="field-error" *ngIf="hasError(['otherIdentificationNumberText'], ['validSiret'])">{{ 'SIRET must be 14 digits long' | translate }}</span>
                 </div>
-            
+            </div>    
+            <div class="row">
                 <div class="form-group required-field col-sm-6">
                     <label class="control-label" for="shareCapital">{{'Share Capital' | translate}}</label>
                     <input type="number" formControlName="shareCapital" placeholder="{{ 'Define a value (€)' | translate }}">
                     <span class="field-error" *ngIf="hasError('shareCapital', ['required'])">{{ 'Field is required' | translate }}</span>
                     <span class="field-error" *ngIf="hasError('shareCapital', ['min'])">{{ 'Number should not be negative' | translate }}</span>
+                </div>
+
+                <div class="form-group col-sm-6">
+                    <label class="control-label" for="financialRating">{{'Financial Rating' | translate}}</label>
+                    <ng-select id="financialRating"
+                                [items]="financialRatingList"
+                                formControlName="financialRating"
+                                placeholder="{{ 'Select your financial rating' | translate }}">
+                    </ng-select>
                 </div>
             </div>    
 

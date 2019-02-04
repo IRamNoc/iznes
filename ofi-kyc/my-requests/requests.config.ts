@@ -68,101 +68,101 @@ export const minimalInvestorStatusTextList = [
     },
 ];
 
-export const financialRating = [
+export const financialRatingList = [
     {
-        id: '0',
+        id: 'AAA',
         text: 'AAA',
     },
     {
-        id: '1',
+        id: 'AA+',
         text: 'AA+',
     },
     {
-        id: '2',
+        id: 'AA',
         text: 'AA',
     },
     {
-        id: '3',
+        id: 'AA-',
         text: 'AA-',
     },
     {
-        id: '4',
+        id: 'A+',
         text: 'A+',
     },
     {
-        id: '5',
+        id: 'A',
         text: 'A',
     },
     {
-        id: '6',
+        id: 'A-',
         text: 'A-',
     },
     {
-        id: '7',
+        id: 'BBB+',
         text: 'BBB+',
     },
     {
-        id: '8',
+        id: 'BBB',
         text: 'BBB',
     },
     {
-        id: '9',
+        id: 'BBB-',
         text: 'BBB-',
     },
     {
-        id: '10',
+        id: 'BB+',
         text: 'BB+',
     },
     {
-        id: '11',
+        id: 'BB',
         text: 'BB',
     },
     {
-        id: '12',
+        id: 'BB-',
         text: 'BB-',
     },
     {
-        id: '13',
+        id: 'B+',
         text: 'B+',
     },
     {
-        id: '14',
+        id: 'B',
         text: 'B',
     },
     {
-        id: '15',
+        id: 'B-',
         text: 'B-',
     },
     {
-        id: '16',
+        id: 'B',
         text: 'B',
     },
     {
-        id: '17',
+        id: 'CCC+',
         text: 'CCC+',
     },
     {
-        id: '18',
+        id: 'CCC',
         text: 'CCC',
     },
     {
-        id: '19',
+        id: 'CCC-',
         text: 'CCC-',
     },
     {
-        id: '20',
+        id: 'CC',
         text: 'CC',
     },
     {
-        id: '21',
+        id: 'C/CI/R',
         text: 'C/CI/R',
     },
     {
-        id: '22',
+        id: 'SD',
         text: 'SD',
     },
     {
-        id: '23',
+        id: 'D',
         text: 'D',
     },
 ];
@@ -244,6 +244,7 @@ export const selectControls = [
     'holdingType',
     'parent',
     'country',
+    'financialRating',
 ];
 
 export const controlOrder = [
@@ -256,6 +257,7 @@ export const controlOrder = [
     'otherIdentificationNumberTypeSpecify',
     'otherIdentificationNumberText',
     'shareCapital',
+    'financialRating',
     'registeredCompanyAddressLine1',
     'registeredCompanyAddressLine2',
     'registeredCompanyZipCode',
@@ -1508,7 +1510,7 @@ export const controlToName = {
     otherIdentificationNumberType: 'Other identification number type',
     otherIdentificationNumberTypeSpecify: 'Your number type',
     otherIdentificationNumberText: 'Other identification number',
-    shareCapital: 'shareCapital',
+    shareCapital: 'Share Capital',
     registeredCompanyAddressLine1: "Registered company's headquarters address",
     registeredCompanyAddressLine2: 'Address line 2',
     registeredCompanyZipCode: 'ZIP Code',
@@ -1644,6 +1646,7 @@ export const controlToList = {
     // General
     legalForm: 'legalFormList',
     registeredCompanyCountry: 'countries',
+    financialRating: 'financialRatingList',
     sectorActivity: 'sectorActivityList',
     regulatoryStatus: 'regulatoryStatusList',
     regulatoryStatusInsurerType: 'regulatoryStatusInsurerTypeList',

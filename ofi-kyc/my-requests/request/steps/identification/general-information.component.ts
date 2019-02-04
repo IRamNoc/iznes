@@ -25,6 +25,7 @@ export class GeneralInformationComponent implements OnInit, OnDestroy {
     open: boolean = false;
     countries;
     legalFormList;
+    financialRatingList;
     publicEstablishmentList;
     identificationNumberTypeList;
     associations;
@@ -120,6 +121,7 @@ export class GeneralInformationComponent implements OnInit, OnDestroy {
 
     initLists() {
         this.legalFormList = this.translate.translate(this.newRequestService.legalFormList);
+        this.financialRatingList = this.newRequestService.financialRatingList;
         this.publicEstablishmentList = this.translate.translate(this.newRequestService.publicEstablishmentList);
         this.identificationNumberTypeList = this.translate.translate(this.newRequestService.identificationNumberTypeList);
     }

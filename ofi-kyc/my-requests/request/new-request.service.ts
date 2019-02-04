@@ -26,6 +26,7 @@ import { RequestsService } from '../requests.service';
 import {
     booleanControls,
     legalFormList,
+    financialRatingList,
     sectorActivityList,
     regulatoryStatusList,
     regulatoryStatusInsurerTypeList,
@@ -58,6 +59,7 @@ export class NewRequestService {
     isProduction = false;
 
     legalFormList;
+    financialRatingList;
     sectorActivityList;
     regulatoryStatusList;
     regulatoryStatusInsurerTypeList;
@@ -103,6 +105,7 @@ export class NewRequestService {
         }));
 
         this.legalFormList = legalFormList;
+        this.financialRatingList = financialRatingList;
         this.sectorActivityList = sectorActivityList;
         this.regulatoryStatusList = regulatoryStatusList;
         this.regulatoryStatusInsurerTypeList = regulatoryStatusInsurerTypeList;
@@ -217,6 +220,7 @@ export class NewRequestService {
                 Validators.required,
                 Validators.min(0),
             ]],
+            financialRating: [''],
             registeredCompanyAddressLine1: ['', this.getLengthValidator(255)],
             registeredCompanyAddressLine2: ['', Validators.maxLength(255)],
             registeredCompanyZipCode: ['', this.getLengthValidator(10)],
