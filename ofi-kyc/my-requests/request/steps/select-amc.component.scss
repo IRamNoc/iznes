@@ -94,9 +94,17 @@
                     bottom: 0;
                     left: 0;
 
-                    img,
-                    i
-                    {
+                    img {
+                        left: 50%;
+                        max-height: 95%;
+                        max-width: 95%;
+                        position: absolute;
+                        top: 50%;
+                        transform: translate(-50%, -50%);
+                        width: auto;
+                    }
+
+                    i{
                         left: 50%;
                         max-height: 100%;
                         position: absolute;
