@@ -1614,6 +1614,7 @@ export const controlToName = {
     frequencyFinancialTransactions: 'Frequency of financial transactions',
     investmentvehiclesAlreadyUsed: 'Investment vehicles already used',
     investmentvehiclesAlreadyUsedSpecification: 'Investment vehicles already used specification',
+    naturesSameInvestmentCrossAm: 'I would like to have the same investment nature for all management companies',
 
     // Risk objective
     performanceProfile: 'Performance Profile',
@@ -1628,6 +1629,7 @@ export const controlToName = {
     riskAcceptanceLevel2: 'Risk acceptance: Middleman (SRRI = 2/3, SRI = 2)',
     riskAcceptanceLevel3: 'Risk acceptance: Advanced (SRRI = 4 to 6, SRI = 3 to 5)',
     riskAcceptanceLevel4: 'Risk acceptance: Expert (SRRI = 6, SRI = 6/7)',
+    objectivesSameInvestmentCrossAm: 'I would like to have the same investment objectives for all management companies',
 
     // Risk constraints
     statutoryConstraints: 'Statutory constraints/special rules concerning eligible assets',
@@ -1636,6 +1638,7 @@ export const controlToName = {
     investmentDecisionsAdHocCommittee: 'Are investment decisions validated by an ad hoc committee?',
     investmentDecisionsAdHocCommitteeSpecification: 'Ad hoc committee specification',
     otherPersonsAuthorised: 'Other persons authorised to take investment decisions and give instructions',
+    constraintsSameInvestmentCrossAm: 'I would like to have the same investment objectives for all management companies',
 
     // Validation
     undersigned: 'Identity',
