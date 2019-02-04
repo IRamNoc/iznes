@@ -23,6 +23,15 @@ node() {
         }
         }catch (e) {
             currentBuild.result = "FAILED"
+
+            emailext attachLog: true,
+                compressLog: true,
+
+                recipientProviders: [culprits()],
+                replyTo: 'no-reply@setl.io',
+                subject: "Unit Tests for Job '${env.JOB_NAME}'- (${env.BUILD_NUMBER}) have FAILED",
+                body: "Please go to ${env.BUILD_URL} for more details. "
+
             mail(to: 'bill.mackie@setl.io, neil.gentry@setl.io, jordan.miller@setl.io, mingrui.huang@setl.io, ollie.kett@setl.io',
                 subject: "Unit tests For Job '${env.JOB_NAME}'- (${env.BUILD_NUMBER}) has FAILED",
                 body: "Please go to ${env.BUILD_URL} for more details. ");
@@ -35,7 +44,16 @@ node() {
             }
         }catch (e) {
             currentBuild.result = "FAILED"
-            mail(to: 'bill.mackie@setl.io, nick.ridler@setl.io, dan.sarracayo@setl.io, mat.bland@setl.io, ollie.kett@setl.io',
+
+            emailext attachLog: true,
+                compressLog: true,
+
+                recipientProviders: [culprits()],
+                replyTo: 'no-reply@setl.io',
+                subject: "Production Build for Job '${env.JOB_NAME}'- (${env.BUILD_NUMBER}) have FAILED",
+                body: "Please go to ${env.BUILD_URL} for more details. "
+
+            mail(to: 'bill.mackie@setl.io, neil.gentry@setl.io, jordan.miller@setl.io, mingrui.huang@setl.io, ollie.kett@setl.io',
                 subject: "Production Build for Job '${env.JOB_NAME}'- (${env.BUILD_NUMBER}) has FAILED",
                 body: "Please go to ${env.BUILD_URL} for more details. ");
 
