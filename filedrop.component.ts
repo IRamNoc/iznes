@@ -30,7 +30,20 @@ export class FileDropComponent implements OnInit {
 
     @Input() filePermission: FilePermission = FilePermission.Private;
 
-    @Input() disabled: boolean = false;
+    @Input()
+    public set disabled(v: boolean) {
+        console.warn('[core-filedrop] Input "disabled" has will be deprecated. Due to Angular warning. Please use "isDisabled" instead.');
+        this.disabledFlag = v;
+    }
+
+    public get disabled(): boolean {
+        return this.disabledFlag;
+    }
+
+    @Input()
+    set isDisabled(v: boolean) {
+        this.disabledFlag = v;
+    }
 
     // whether to show file's preview
     @Input() usePreview: boolean = false;
@@ -40,6 +53,8 @@ export class FileDropComponent implements OnInit {
 
     // allow file types
     @Input() allowFileTypes: AllowFileType[];
+
+    private disabledFlag = false;
 
     /* Constructor */
     public constructor () {
