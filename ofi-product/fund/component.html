@@ -384,7 +384,7 @@
                                                             [items]="payingAgentItems" 
                                                             [allowClear]="true"
                                                             [multiple]="true" 
-                                                            [disabled]="umbrellaEditForm.controls['payingAgentID']"
+                                                            [isDisabled]="umbrellaEditForm.controls['payingAgentID']"
                                                             [placeholder]="translate.translate('Select')" 
                                                             [formControl]="umbrellaEditForm.controls['payingAgentID']"
                                                             [disabled]="isAdmin()">
@@ -481,7 +481,7 @@
                                                             [items]="principalPromoterItems"
                                                             [allowClear]="true" 
                                                             [multiple]="true" 
-                                                            [disabled]="umbrellaEditForm.controls['principlePromoterID'].disabled"
+                                                            [isDisabled]="umbrellaEditForm.controls['principlePromoterID'].disabled"
                                                             [placeholder]="translate.translate('Select')" 
                                                             [formControl]="umbrellaEditForm.controls['principlePromoterID']"
                                                             [disabled]="isAdmin()">
