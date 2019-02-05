@@ -112,7 +112,6 @@ export const FundShareTest = {
         'isRestrictedToSeparateFeeArrangement': false,
         'bloombergUnderlyingIndexCode': '',
         'terminationDateExplanation': '',
-        'assetClass': null,
         'bloombergCode': '',
         'cusip': '',
         'dormantEndDate': '',
