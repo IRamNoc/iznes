@@ -194,7 +194,7 @@ export class FundComponent implements OnInit, OnDestroy {
         this.UcitsVersionItems = this.fundItems.UCITSVersionItems;
         this.legalFormItems = this.fundItems.fundLegalFormItems;
         this.portfolioCurrencyHedgeItems = this.fundItems.portfolioCurrencyHedgeItems;
-        this.classificationItems = this.fundItems.classification;
+        this.classificationItems = this.fundItems.classificationItems;
         this.auditorItems = this.fundItems.auditorItems;
         this.taxAuditorItems = this.fundItems.taxAuditorItems;
         this.legalAdvisorItems = this.fundItems.legalAdvisorItems;
@@ -305,7 +305,7 @@ export class FundComponent implements OnInit, OnDestroy {
             centralizingAgentID: [[]],
             isDedicatedFund: [null],
             portfolioCurrencyHedge: [[], this.validators.ngSelectRequired],
-            classificaiton: [[], this.validators.ngSelectRequired],
+            classification: [[], this.validators.ngSelectRequired],
             globalItermediaryIdentification: [null, this.validators.giin],
             delegatedManagementCompany: [[]],
             investmentAdvisorID: [null],
@@ -769,6 +769,7 @@ export class FundComponent implements OnInit, OnDestroy {
             homeCountryLegalType: _.get(this.fundForm.controls['homeCountryLegalType'].value, ['0', 'id'], null),
             fundCurrency: _.get(this.fundForm.controls['fundCurrency'].value, ['0', 'id'], null),
             portfolioCurrencyHedge: _.get(this.fundForm.controls['portfolioCurrencyHedge'].value, ['0', 'id'], null),
+            classification: _.get(this.fundForm.controls['classification'].value, ['0', 'id'], null),
             auditorID: _.get(this.fundForm.controls['auditorID'].value, ['0', 'id'], null),
             taxAuditorID: _.get(this.fundForm.controls['taxAuditorID'].value, ['0', 'id'], null),
             legalAdvisorID: _.get(this.fundForm.controls['legalAdvisorID'].value, ['0', 'id'], null),
@@ -1074,7 +1075,6 @@ export class FundComponent implements OnInit, OnDestroy {
             useDefaultHolidayMgmt: fund.useDefaultHolidayMgmt.toString(),
             hasEmbeddedDirective: !_.isNull(fund.hasEmbeddedDirective) ? fund.hasEmbeddedDirective.toString() : null,
             hasCapitalPreservation: !_.isNull(fund.hasCapitalPreservation) ? fund.hasCapitalPreservation.toString() : null,
-            classification: !_.isNull(fund.classification) ? fund.classification.toString() : null,
             hasCppi: !_.isNull(fund.hasCppi) ? fund.hasCppi.toString() : null,
             hasHedgeFundStrategy: !_.isNull(fund.hasHedgeFundStrategy) ? fund.hasHedgeFundStrategy.toString() : null,
             isLeveraged: !_.isNull(fund.isLeveraged) ? fund.isLeveraged.toString() : null,
