@@ -95,6 +95,7 @@ export class FundComponent implements OnInit, OnDestroy {
     homeCountryLegalTypeItems = [];
     fundCurrencyItems = [];
     portfolioCurrencyHedgeItems = [];
+    classificationItems = [];
     auditorItems = [];
     taxAuditorItems = [];
     legalAdvisorItems = [];
@@ -193,6 +194,7 @@ export class FundComponent implements OnInit, OnDestroy {
         this.UcitsVersionItems = this.fundItems.UCITSVersionItems;
         this.legalFormItems = this.fundItems.fundLegalFormItems;
         this.portfolioCurrencyHedgeItems = this.fundItems.portfolioCurrencyHedgeItems;
+        this.classificationItems = this.fundItems.classification;
         this.auditorItems = this.fundItems.auditorItems;
         this.taxAuditorItems = this.fundItems.taxAuditorItems;
         this.legalAdvisorItems = this.fundItems.legalAdvisorItems;
@@ -303,7 +305,7 @@ export class FundComponent implements OnInit, OnDestroy {
             centralizingAgentID: [[]],
             isDedicatedFund: [null],
             portfolioCurrencyHedge: [[], this.validators.ngSelectRequired],
-
+            classificaiton: [[], this.validators.ngSelectRequired],
             globalItermediaryIdentification: [null, this.validators.giin],
             delegatedManagementCompany: [[]],
             investmentAdvisorID: [null],
@@ -1001,6 +1003,10 @@ export class FundComponent implements OnInit, OnDestroy {
                     fund.portfolioCurrencyHedge,
                     this.portfolioCurrencyHedgeItems,
                 ),
+                classification: FundComponent.getListItem(
+                    fund.classification,
+                    this.classificationItems,
+                ),
                 investmentAdvisorID: fund.investmentAdvisorID,
                 auditorID: FundComponent.getListItem(fund.auditorID, this.auditorItems),
                 taxAuditorID: FundComponent.getListItem(fund.taxAuditorID, this.taxAuditorItems),
@@ -1068,6 +1074,7 @@ export class FundComponent implements OnInit, OnDestroy {
             useDefaultHolidayMgmt: fund.useDefaultHolidayMgmt.toString(),
             hasEmbeddedDirective: !_.isNull(fund.hasEmbeddedDirective) ? fund.hasEmbeddedDirective.toString() : null,
             hasCapitalPreservation: !_.isNull(fund.hasCapitalPreservation) ? fund.hasCapitalPreservation.toString() : null,
+            classification: !_.isNull(fund.classification) ? fund.classification.toString() : null,
             hasCppi: !_.isNull(fund.hasCppi) ? fund.hasCppi.toString() : null,
             hasHedgeFundStrategy: !_.isNull(fund.hasHedgeFundStrategy) ? fund.hasHedgeFundStrategy.toString() : null,
             isLeveraged: !_.isNull(fund.isLeveraged) ? fund.isLeveraged.toString() : null,
