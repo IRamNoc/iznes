@@ -57,6 +57,7 @@ import { SearchFilters, ISearchFilters } from './search-filters';
 import { labelForOrder } from '../order.model';
 import { orderStatuses, orderTypes, dateTypes } from './lists';
 import { DatagridParams } from './datagrid-params';
+import { fundClassifications } from '../../ofi-product/productConfig';
 
 /* Types. */
 interface SelectedItem {
@@ -94,6 +95,9 @@ export class ManageOrdersComponent implements OnInit, AfterViewInit, OnDestroy {
     public orderTypes: any = [];
     public orderStatuses: any = [];
     public dateTypes: any = [];
+
+    fundClassificationId: number;
+    fundClassifications: object;
 
     // Locale
     language = 'en';
@@ -210,10 +214,10 @@ export class ManageOrdersComponent implements OnInit, AfterViewInit, OnDestroy {
                 private location: Location,
                 private searchFilters: SearchFilters,
     ) {
-
         this.isAmConfirmModalDisplayed = false;
         this.cancelModalMessage = '';
         this.ofiCurrenciesService.getCurrencyList();
+        this.fundClassifications = fundClassifications;
     }
 
     get isInvestorUser() {
@@ -512,6 +516,8 @@ export class ManageOrdersComponent implements OnInit, AfterViewInit, OnDestroy {
 
     updateCurrentFundShare() {
         this.logService.log('there', this.fundShareList);
+
+        this.fundClassificationId = this.fundShareList[this.fundShareID].classification;
 
         const currentFundShare = this.fundShareList[this.fundShareID];
         if (typeof currentFundShare.keyFactOptionalData === 'string') {

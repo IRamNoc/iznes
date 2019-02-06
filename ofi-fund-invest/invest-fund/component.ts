@@ -908,6 +908,7 @@ export class InvestFundComponent implements OnInit, OnDestroy {
             orderBy: this.actionBy,
             orderValue: this.orderValue,
             comment: this.form.controls.comment.value,
+            classificationFee: this.numberConverterService.toBlockchain(this.fundClassifications[this.fundClassificationId].fee),
         };
     }
 
