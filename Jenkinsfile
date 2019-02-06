@@ -1,16 +1,16 @@
 node() {
     timestamps {
         stage('Check Out Tests') {
-            checkout([$class: 'GitSCM', branches: [[name: '*/master']],
+            checkout([$class                           : 'GitSCM', branches: [[name: '*/master']],
                       doGenerateSubmoduleConfigurations: false, extensions: [],
-                      submoduleCfg: [], userRemoteConfigs: [[credentialsId: 'd2b5fbd5-eb0f-4619-a094-d7d6f7fa249c',
-                                                             url: 'git@si-nexus01.dev.setl.io:opencsd-rewrite/opencsd-frontend-clarity.git']]])
+                      submoduleCfg                     : [], userRemoteConfigs: [[credentialsId: 'd2b5fbd5-eb0f-4619-a094-d7d6f7fa249c',
+                                                                                  url          : 'git@si-nexus01.dev.setl.io:opencsd-rewrite/opencsd-frontend-clarity.git']]])
         }
 
         try {
-        stage('Build & Unit Test') {
+            stage('Build & Unit Test') {
 
-            sh '''rm -f yarn.lock &&
+                sh '''rm -f yarn.lock &&
                         yarn install &&
                         yarn upgrade &&
                         yarn test &&
@@ -18,10 +18,10 @@ node() {
                         sass styles.scss:styles.css &&
                         cd ../ '''
 
-            junit allowEmptyResults: true, keepLongStdio: true,
-                testResults: '/TESTS-Headless**'
-        }
-        }catch (e) {
+                junit allowEmptyResults: true, keepLongStdio: true,
+                    testResults: '/TESTS-Headless**'
+            }
+        } catch (e) {
             currentBuild.result = "FAILED"
 
             emailext attachLog: true,
@@ -42,7 +42,7 @@ node() {
             stage('Build Prod') {
                 sh 'yarn build-prod '
             }
-        }catch (e) {
+        } catch (e) {
             currentBuild.result = "FAILED"
 
             emailext attachLog: true,
@@ -72,6 +72,9 @@ node() {
 
                 sh 'gulp sonar --project New_OpenCSD_FrontEnd '
             }
+        }
+        stage('Clean Up') {
+            deleteDir()
         }
     }
 }
