@@ -41,7 +41,13 @@ node {
                 junit allowEmptyResults: true, keepLongStdio: true,
                     testResults: '**/build/test-results/test/TEST-com**'
             }
-        }
 
+        }
+        stage('Clean Up'){
+            deleteDir()
+        }
     }
+
 }
+
+
