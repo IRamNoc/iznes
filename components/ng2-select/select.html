@@ -9,11 +9,14 @@
         <span tabindex="-1"
               class="btn btn-default btn-secondary form-control ui-select-toggle"
               (click)="matchClick($event)"
-              style="outline: 0;"
-        >
+              style="outline: 0;">
+              
             <span *ngIf="inlineLabel !== ''" class="pull-left">
                 {{this.translate.getTranslation(inlineLabelMlTag) || inlineLabel}}:
             </span>
+
+            <clr-icon *ngIf="inlineIcon !== ''" class="icon" [attr.shape]="inlineIcon"></clr-icon>
+
             <span *ngIf="active.length <= 0" class="ui-select-placeholder text-muted">
                 <ng-template [ngIf]="itemObjects.length >= 1000">
                     <span _ngcontent-c10="" class="fa fa-search"></span>
@@ -23,11 +26,12 @@
             <span *ngIf="active.length > 0" class="ui-select-match-text pull-left"
                   [ngClass]="{'ui-select-allow-clear': allowClear && active.length > 0}"
                   [innerHTML]="sanitize(active[0].text)" style="padding: 2px; margin:-2px 2px !important"></span>
-            <i class="dropdown-toggle pull-right"></i>
-            <i [ngClass]="{'caret': !inputMode, 'caret-up': inputMode}" class="pull-right special"></i>
-            <a *ngIf="allowClear && active.length>0" class="btn btn-xs btn-link pull-right"
-               style="margin-right: 10px; padding: 0;" (click)="removeClick(active[0], $event)">
-               <i class="glyphicon glyphicon-remove"></i>
+            <!-- <i class="dropdown-toggle pull-right"></i> -->
+            <clr-icon *ngIf="(allowClear && !active.length>0 || inputMode) || !allowClear" class="arrow" [attr.shape]="inputMode ? 'caret up' : 'caret down'"></clr-icon>
+            <!-- <i [ngClass]="{'caret': !inputMode, 'caret-up': inputMode}" class="pull-right special"></i> -->
+            <a *ngIf="allowClear && active.length>0 && !inputMode" class="btn btn-xs btn-link pull-right clear" (click)="removeClick(active[0], $event)">
+               <!-- <i class="glyphicon glyphicon-remove"></i> -->
+               <clr-icon shape="times-circle"></clr-icon>
             </a>
         </span>
     </div>
@@ -53,6 +57,7 @@
                 <li *ngFor="let o of options" role="menuitem">
                     <div class="ui-select-choices-row"
                          [class.active]="isActive(o)"
+                         [class.selected]="active[0].text === o.text"
                          (mouseenter)="selectActive(o)"
                          (click)="selectMatch(o, $event)">
                         <a href="javascript:void(0)" class="dropdown-item">

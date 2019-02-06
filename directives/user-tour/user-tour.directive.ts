@@ -168,7 +168,8 @@ export class UserTourDirective implements AfterViewInit, OnDestroy{
         const offset = stageEl.getBoundingClientRect();
         const right = (document.documentElement.clientWidth - stageEl.offsetWidth) - offset.left;
         const bottom = (document.documentElement.clientHeight - stageEl.offsetHeight) - offset.top;
-        const sidebarWidth = document.querySelector('nav.sidenav').clientWidth;
+        // const sidebarWidth = document.querySelector('nav.sidenav').clientWidth;
+        const sidebarWidth = document.querySelector('app-navigation-sidebar').clientWidth;
         const topbarHeight = document.querySelector('app-navigation-topbar').clientHeight;
         const signpostHeight = signpostEl.offsetHeight;
         const signpostWidth = signpostEl.offsetWidth;

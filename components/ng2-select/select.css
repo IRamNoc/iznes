@@ -56,10 +56,10 @@
   white-space: nowrap; }
 
 .ui-select-choices-row.active > a {
-  color: #fff;
+  color: #565656;
   text-decoration: none;
   outline: 0;
-  background-color: #428bca; }
+  background-color: #d9e4ea; }
 
 .ui-select-multiple {
   height: auto;

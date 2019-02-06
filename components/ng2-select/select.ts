@@ -36,6 +36,7 @@ export class SelectComponent implements OnInit, ControlValueAccessor {
     @Input() public multiple = false;
     @Input() public inlineLabel = '';
     @Input() public inlineLabelMlTag = '';
+    @Input() public inlineIcon = '';
     @Input() public captureKeys = true;
     @Input() public containerWidth = '360px';
 

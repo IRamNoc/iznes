@@ -1,4 +1,4 @@
-import { Component, OnInit, OnDestroy, ChangeDetectorRef } from '@angular/core';
+import { Component, OnInit, OnDestroy, ChangeDetectorRef, Input, ElementRef, HostListener } from '@angular/core';
 import { select } from '@angular-redux/store';
 import { Subscription } from 'rxjs/Subscription';
 import { ClrDatagridSortOrder } from '@clr/angular';
@@ -12,6 +12,7 @@ import { isEmpty } from 'lodash';
 
 export class BlockchainStatusTracker implements OnInit, OnDestroy {
 
+    @Input() display: string = 'modal';
     @select(['walletNode', 'transactionStatus']) transactionStatus;
 
     public failUpdate: Boolean = false;
@@ -20,7 +21,7 @@ export class BlockchainStatusTracker implements OnInit, OnDestroy {
     public pendingCount: number = 0;
     public successCount: number = 0;
     public failCount: number = 0;
-    public showStatusModal: boolean = false;
+    public showStatusView: boolean = false;
     public maxTransactions: boolean = false;
     public txList: {}[];
     public descSort = ClrDatagridSortOrder.DESC;
@@ -34,6 +35,7 @@ export class BlockchainStatusTracker implements OnInit, OnDestroy {
 
     constructor(
         private changeDetectorRef: ChangeDetectorRef,
+        private el: ElementRef,
     ) {
     }
 
@@ -110,6 +112,13 @@ export class BlockchainStatusTracker implements OnInit, OnDestroy {
                 }
             },
         ));
+    }
+
+    @HostListener('document:click', ['$event']) clickOutside(event) {
+        if (this.display === 'dropdown') {
+            if (this.el.nativeElement.contains(event.target)) return this.showStatusView = true;
+            this.showStatusView = false;
+        }
     }
 
     formatText(text) {
