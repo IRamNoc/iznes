@@ -28,14 +28,14 @@ $setlHover: darken($setl, 2%);
     background: red;
 }
 
-app-navigation-topbar {
-    height: 75px;
-    position: fixed;
-    width: 100%;
-    top: 0;
-    z-index: 3;
-    transition: top 0.3s linear;
-}
+// app-navigation-topbar {
+//     height: 75px;
+//     position: fixed;
+//     width: 100%;
+//     top: 0;
+//     z-index: 3;
+//     transition: top 0.3s linear;
+// }
 
 .table {
     margin-top: 0;
@@ -65,18 +65,18 @@ td > .btn-group {
 }
 
 .btn.btn-secondary:hover, .btn.btn-info:hover, .btn.btn-outline:hover, .btn.btn-primary-outline:hover, .btn.btn-secondary-outline:hover, .btn.btn-outline-primary:hover, .btn.btn-outline-secondary:hover, .btn.btn-info-outline:hover, .btn-secondary .btn:hover, .btn-info .btn:hover, .btn-outline .btn:hover, .btn-primary-outline .btn:hover, .btn-secondary-outline .btn:hover, .btn-outline-primary .btn:hover, .btn-outline-secondary .btn:hover, .btn-info-outline .btn:hover {
-    border: 1px solid #a4c4fa !important;
+    border: 1px solid #a4c4fa;
     background: white;
 }
 
 .btn.btn-secondary:active, .btn.btn-info:active, .btn.btn-outline:active, .btn.btn-primary-outline:active, .btn.btn-secondary-outline:active, .btn.btn-outline-primary:active, .btn.btn-outline-secondary:active, .btn.btn-info-outline:active, .btn-secondary .btn:active, .btn-info .btn:active, .btn-outline .btn:active, .btn-primary-outline .btn:active, .btn-secondary-outline .btn:active, .btn-outline-primary .btn:active, .btn-outline-secondary .btn:active, .btn-info-outline .btn:active {
     box-shadow: 0 0 0 0 #0094d2 inset;
 }
-
-.ui-select-toggle {
+ng-select .btn.btn-secondary.ui-select-toggle {
     height: 40px;
     line-height: 40px;
-    border: 1px solid #dadada !important;
+    border: 1px solid #dadada;
+    border-color: #dadada;
 }
 
 .btn.btn-primary, .btn-primary .btn {
@@ -86,13 +86,13 @@ td > .btn-group {
 }
 
 .dropdown-menu .btn, .dropdown-menu .dropdown-item {
-    line-height: 24px !important;
+    line-height: 24px;
 }
 
-.main-container .content-container .content-area {
-    padding: 0 0 20px 0;
-    margin-bottom: -20px;
-}
+// .main-container .content-container .content-area {
+//     padding: 0 0 20px 0;
+//     margin-bottom: -20px;
+// }
 
 /* Style when highlighting a search. */
 .ui-select-highlight {
@@ -341,10 +341,10 @@ body > .ui-select-bootstrap.open {
 }
 
 .ui-select-bootstrap .ui-select-choices-row.active > a {
-    color: #fff;
+    color: #565656;
     text-decoration: none;
     outline: 0;
-    background-color: #428bca;
+    background-color: #d9e4ea;
 }
 
 .ui-select-bootstrap .ui-select-choices-row.disabled > a,

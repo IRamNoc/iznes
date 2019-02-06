@@ -1,3 +1,59 @@
+<header class="header-1">
+    <div class="branding">
+        <a href="#/home" class="nav-link">
+            <img src="{{topbarLogoUrl}}" alt="Logo">
+        </a>
+    </div>
+
+    <div class="wallet">
+        <div class="decalWallet">
+            <ng-select
+                [allowClear]="false" 
+                [items]="walletSelectItems"
+                (selected)="selected($event)"
+                (removed)="removed($event)"
+                [placeholder]="translate.translate('No wallet selected')"
+                [formControl]="selectedWalletId"
+                [multiple]="false"
+                [inlineIcon]="'wallet'"
+                [class.extended]="appConfig.platform === 'OpenCSD'">
+            </ng-select>
+        </div>
+
+        <blockchain-status-tracker *ngIf="appConfig.platform === 'OpenCSD'" [display]="'dropdown'"></blockchain-status-tracker>
+    </div>
+
+    <div class="header-actions">
+        <a *ngIf="!appConfig.production" (click)="getMissingTranslations()" id="translation-report-button" class="nav-link nav-icon blink_me">
+            <clr-icon shape="warning-standard" class="text-warning"></clr-icon>
+        </a>
+
+        <a [routerLink]="['/messages']" class="nav-link nav-icon messages-icon">
+            <clr-icon shape="email"><span *ngIf="unreadMessageCount > 0">{{unreadMessageCount}}</span></clr-icon>
+        </a>
+
+        <clr-dropdown id="dropdown-user">
+            <button class="nav-icon" clrDropdownTrigger>
+                <clr-icon shape="user"></clr-icon>
+                <clr-icon shape="caret down"></clr-icon>
+            </button>
+            <clr-dropdown-menu *clrIfOpen clrPosition="bottom-right">
+                <div class="username">{{username}}</div>
+                <a *ngFor="let item of profileMenu" [routerLink]="[item.router_link]" [id]="item.element_id" clrDropdownItem [attr.mltag]="item.label_txt">{{item.label}}</a>
+                <a [routerLink]="['/logout']" clrDropdownItem id="logout">Logout</a>
+            </clr-dropdown-menu>
+        </clr-dropdown>
+
+        <a (click)="toggleSidebar.emit($event)" class="nav-link nav-icon" id="dropdown-settings">
+            <clr-icon shape="cog"></clr-icon>
+        </a>
+    </div>
+</header>
+
+
+
+
+<!-- 
 <header class="header-6">
 
     <div class="branding">
@@ -7,9 +63,6 @@
         </a>
     </div>
     <form class="search" [formGroup]="searchForm" style="background-color: transparent !important">
-        <!--<label for="search_input">-->
-        <!--<input id="search_input" type="text" placeholder="{{ 'Search for keywords...' | translate }}'">-->
-        <!--</label>-->
     </form>
     <div class="header-actions">
 
@@ -48,7 +101,6 @@
             <div id="translation-report-button" appHighlight class="dropdown" *ngIf="!appConfig.production">
                 <a (click)="getMissingTranslations()" class="nav-button dropdown-toggle messages-icon blink_me">
                     <clr-icon shape="warning-standard" class="icon text-warning"></clr-icon>
-                    <!--style="stroke: orange"-->
                     <p class="text-warning">{{ 'Translations' | translate }}</p>
                 </a>
             </div>
@@ -79,7 +131,6 @@
                 </a>
                 <div class="dropdown-menu" style="margin-right: -19px">
                     <a clrDropdownItem (click)="toggleSidebar.emit($event)" id="dropdown-btn-lang">{{ 'Language' | translate }}</a>
-                    <!--<a [routerLink]="['/logout']" clrDropdownItem id="dropdown-btn-logout">{{ 'Log out' | translate }}</a>-->
                 </div>
             </clr-dropdown>
 
@@ -95,7 +146,7 @@
 
         </button>
     </div>
-</header>
+</header> -->
 
 <clr-modal [(clrModalOpen)]="showCountdownModal" [clrModalClosable]="false">
     <div class="modal-title">

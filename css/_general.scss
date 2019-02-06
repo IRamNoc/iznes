@@ -787,16 +787,17 @@ dp-date-picker div {
 
 .messages-icon span {
     z-index: 1001;
-    background: #e43212;
+    background: #007cbb;
     position: absolute;
     font-size: 10px;
-    border-radius: 20px;
+    border-radius: 100%;
     color: white;
     height: 20px;
     line-height: 20px;
-    padding-left: 5px;
-    padding-right: 5px;
-    min-width: 20px;
+    width: 20px;
+    text-align: center;
+    top: -8px;
+    right: -8px;
 }
 
 .blink_me {

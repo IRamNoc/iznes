@@ -1,24 +1,24 @@
-.content-area:not(.pure-scroll) {
-    scroll-behavior: smooth;
-}
+// .content-area:not(.pure-scroll) {
+//     scroll-behavior: smooth;
+// }
 
-.backToTop {
-    position: fixed;
-    right: 40px;
-    bottom: 80px;
-    opacity: 0;
-    cursor: pointer;
-    -webkit-transition: opacity 0.2s ease-out;
-    -moz-transition: opacity 0.2s ease-out;
-    -ms-transition: opacity 0.2s ease-out;
-    -o-transition: opacity 0.2s ease-out;
-    transition: opacity 0.2s ease-out;
-}
+// .backToTop {
+//     position: fixed;
+//     right: 40px;
+//     bottom: 80px;
+//     opacity: 0;
+//     cursor: pointer;
+//     -webkit-transition: opacity 0.2s ease-out;
+//     -moz-transition: opacity 0.2s ease-out;
+//     -ms-transition: opacity 0.2s ease-out;
+//     -o-transition: opacity 0.2s ease-out;
+//     transition: opacity 0.2s ease-out;
+// }
 
-.backToTop i {
-    font-size: 6.5em;
-    color: rgba(0, 0, 0, 0.5);
-}
+// .backToTop i {
+//     font-size: 6.5em;
+//     color: rgba(0, 0, 0, 0.5);
+// }
 
 .version {
     position: absolute;
@@ -26,49 +26,49 @@
     right: 10px;
 }
 
-.sidenav.fixed {
-    position: fixed !important;
-    height: 100%;
-    top: 75px;
-    transition: top 0.3s linear;
-}
+// .sidenav.fixed {
+//     position: fixed !important;
+//     height: 100%;
+//     top: 75px;
+//     transition: top 0.3s linear;
+// }
 
-.sidenav.fixed-bottom {
-    position: fixed !important;
-    bottom: 0;
-}
+// .sidenav.fixed-bottom {
+//     position: fixed !important;
+//     bottom: 0;
+// }
 
-.sidebar-wrapper {
-    flex-wrap: wrap;
-    display: flex;
-}
+// .sidebar-wrapper {
+//     flex-wrap: wrap;
+//     display: flex;
+// }
 
-:host /deep/ .ng-sidebar__content {
-    overflow: visible !important;
-}
+// :host /deep/ .ng-sidebar__content {
+//     overflow: visible !important;
+// }
 
-ng-sidebar-container {
-    overflow-y: auto !important;
-    overflow-x: hidden !important;
-    margin-top: 75px;
-}
+// ng-sidebar-container {
+//     // overflow-y: auto !important;
+//     // overflow-x: hidden !important;
+//     // margin-top: 75px;
+// }
 
-:host {
-    /deep/ {
-        .main-container {
-            transition: height 0.3s linear;
-            height: 100%;
-            position: fixed;
-            width: 100%;
-            &.connection-alert {
-                height: calc(100% - 90px);
-                app-navigation-topbar {
-                    top: 90px;
-                }
-                .sidenav.fixed {
-                    top: 165px;
-                }
-            }
-        }
-    }
-}
+// :host {
+//     /deep/ {
+//         .main-container {
+//             transition: height 0.3s linear;
+//             height: 100%;
+//             position: fixed;
+//             width: 100%;
+//             &.connection-alert {
+//                 height: calc(100% - 90px);
+//                 app-navigation-topbar {
+//                     top: 90px;
+//                 }
+//                 .sidenav.fixed {
+//                     top: 165px;
+//                 }
+//             }
+//         }
+//     }
+// }
