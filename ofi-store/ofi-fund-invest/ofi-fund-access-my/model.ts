@@ -31,6 +31,7 @@ export interface FundAccessDetail {
     fundProspectus: string;
     fundReport: string;
     fundSicavId: number;
+    classification: number;
 }
 
 export interface FundAccessList {

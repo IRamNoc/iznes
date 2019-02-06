@@ -50,8 +50,9 @@ import { SellBuyCalendar } from '../../ofi-product/fund-share/FundShareEnum';
 import { OfiFundShareService } from '@ofi/ofi-main/ofi-req-services/ofi-product/fund-share/service';
 import { DomSanitizer } from '@angular/platform-browser';
 import { FileDownloader } from '@setl/utils/services/file-downloader/service';
-import { OfiNavService } from "../../ofi-req-services/ofi-product/nav/service";
-import { validateKiid } from "../../ofi-store/ofi-fund-invest/ofi-fund-access-my";
+import { OfiNavService } from '../../ofi-req-services/ofi-product/nav/service';
+import { validateKiid } from '../../ofi-store/ofi-fund-invest/ofi-fund-access-my';
+import { fundClassifications } from '../../ofi-product/productConfig';
 
 interface DateChangeEvent {
     type: string;
@@ -104,6 +105,9 @@ export class InvestFundComponent implements OnInit, OnDestroy {
     requestedWalletAddress: boolean;
 
     platformFee = 1;
+
+    fundClassificationId: number;
+    fundClassifications: object;
 
     // s: subscription, r: redemption
     _actionBy: string;
@@ -470,12 +474,14 @@ export class InvestFundComponent implements OnInit, OnDestroy {
         mifiidTransactionCosts: number;
         mifiidServicesCosts: number;
         mifiidIncidentalCosts: number;
+        classificationFee: number;
     } {
         const mifiidChargesOneOff = this.numberConverterService.toFrontEnd(this.shareData.mifiidChargesOneOff);
         const mifiidChargesOngoing = this.numberConverterService.toFrontEnd(this.shareData.mifiidChargesOngoing);
         const mifiidTransactionCosts = this.numberConverterService.toFrontEnd(this.shareData.mifiidTransactionCosts);
         const mifiidServicesCosts = this.numberConverterService.toFrontEnd(this.shareData.mifiidServicesCosts);
         const mifiidIncidentalCosts = this.numberConverterService.toFrontEnd(this.shareData.mifiidIncidentalCosts);
+        const classificationFee = this.fundClassifications[this.fundClassificationId].fee;
 
         return {
             mifiidChargesOneOff,
@@ -483,6 +489,7 @@ export class InvestFundComponent implements OnInit, OnDestroy {
             mifiidTransactionCosts,
             mifiidServicesCosts,
             mifiidIncidentalCosts,
+            classificationFee,
         };
     }
 
@@ -507,6 +514,7 @@ export class InvestFundComponent implements OnInit, OnDestroy {
         private shareService: OfiFundShareService,
         private ofiNavService: OfiNavService,
     ) {
+        this.fundClassifications = fundClassifications;
     }
 
     ngOnDestroy() {
@@ -575,6 +583,10 @@ export class InvestFundComponent implements OnInit, OnDestroy {
             )
             .subscribe((shareData) => {
                 this.shareData = immutableHelper.get(shareData, String(this.shareId), {});
+
+                // Fallback to `Other` classification when Fund classification is not set
+                this.fundClassificationId = this.shareData.classification || 6;
+
                 this.calenderHelper = new CalendarHelper(this.shareData);
 
                 this.orderHelper = new OrderHelper(this.shareData, this.buildFakeOrderRequestToBackend());
@@ -1638,8 +1650,9 @@ export class InvestFundComponent implements OnInit, OnDestroy {
      */
     show80PercentNoActiveOrderError() {
         this.alertsService
-            .create('error', `
-                <table class="table grid">
+            .create(
+                'error',
+                `<table class="table grid">
                     <tbody>
                         <tr>
                             <td class="text-center text-danger">
@@ -1653,9 +1666,10 @@ export class InvestFundComponent implements OnInit, OnDestroy {
                         </tr>
                     </tbody>
                 </table>
-            `,
+                `,
                 {},
-                this.translate.getTranslationByString('Order above 80% of your position'));
+                this.translate.getTranslationByString('Order above 80% of your position'),
+            );
     }
 
     /**
@@ -1663,8 +1677,9 @@ export class InvestFundComponent implements OnInit, OnDestroy {
      */
     show80PercentHasActiveOrderError() {
         this.alertsService
-            .create('error', `
-                <table class="table grid">
+            .create(
+                'error',
+                `<table class="table grid">
                     <tbody>
                         <tr>
                             <td class="text-center text-danger">
@@ -1678,9 +1693,10 @@ export class InvestFundComponent implements OnInit, OnDestroy {
                         </tr>
                     </tbody>
                 </table>
-            `,
+                `,
                 {},
-                this.translate.getTranslationByString('Order above 80% of your position'));
+                this.translate.getTranslationByString('Order above 80% of your position'),
+            );
     }
 
     validateKiid() {
@@ -1740,13 +1756,12 @@ export class InvestFundComponent implements OnInit, OnDestroy {
         }
         this.ofiNavService.requestLatestNav({
             isin: this.shareData.isin,
-            navdate: this.valuationDate.value
+            navdate: this.valuationDate.value,
         }).then((response) => {
             this.valuationNav = response;
         }).catch(e => console.error(e));
 
     }
-
 }
 
 /**

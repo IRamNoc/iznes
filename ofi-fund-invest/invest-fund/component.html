@@ -328,6 +328,22 @@
                                 <div class="col-sm-6">
                                     <div class="form-group">
                                         <label class="control-label">
+                                            {{ 'IZNES Fee - Investor: Percentage of the average annual outstandings kept in the register' | translate }}
+                                        </label>
+                                        <div>
+                                            <input type="text" 
+                                                    class="form-control" 
+                                                    [value]="moneyValuePipe.transform(feeFrontend.classificationFee, fundClassifications[fundClassificationId].dp) + '%'"
+                                                    [readonly]="true">
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            
+                            <div class="row">
+                                <div class="col-sm-6">
+                                    <div class="form-group">
+                                        <label class="control-label">
                                             {{metadata.feeLabel}}
                                         </label>
                                         <div>
@@ -416,7 +432,22 @@
                         </div>
                     </div>
                 </div>
+
                 <div class="row">
+                    <div class="col-sm-6">
+                        <div class="form-group">
+                            <label class="control-label">
+                                {{ 'Classification' | translate }}
+                            </label>
+                            <div>
+                                <input type="text" 
+                                        class="form-control" 
+                                        [value]="fundClassifications[fundClassificationId].text" 
+                                        [readonly]="true">
+                            </div>
+                        </div>
+                    </div>
+
                     <div class="col-sm-6">
                         <div class="form-group">
                             <label class="control-label">
@@ -430,6 +461,9 @@
                             </div>
                         </div>
                     </div>
+                   
+                </div>
+                <div class="row">
                     <div class="col-sm-6">
                         <div class="form-group">
                             <label class="control-label">
@@ -443,8 +477,7 @@
                             </div>
                         </div>
                     </div>
-                </div>
-                <div class="row">
+
                     <div class="col-sm-6">
                         <div class="form-group">
                             <label class="control-label">
@@ -458,21 +491,20 @@
                             </div>
                         </div>
                     </div>
+                   
+                </div>
+                <div class="row">
                     <div class="col-sm-6">
                         <div class="form-group">
                             <label class="control-label">
                                 {{ 'Share Currency' | translate }}
                             </label>
                             <div>
-                                <input type="text" 
-                                        class="form-control" 
-                                        [value]="currency" 
-                                        [readonly]="true">
+                                <input type="text" class="form-control" [value]="currency" [readonly]="true">
                             </div>
                         </div>
                     </div>
-                </div>
-                <div class="row">
+
                     <div class="col-sm-6">
                         <div class="form-group">
                             <label class="control-label">
