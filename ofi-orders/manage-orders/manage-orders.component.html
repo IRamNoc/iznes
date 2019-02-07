@@ -619,6 +619,14 @@
                     </div>
                     <div class="row mb-1">
                         <div class="form-group col-sm-6">
+                            <label>{{ 'IZNES Fee - Investor: Percentage of the average annual outstandings kept in the register' | translate }}</label>
+                            <div>
+                                <span class="readonly-field">{{ transformedOrderClassificationFee }}%</span>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="row mb-1">
+                        <div class="form-group col-sm-6">
                             <label>{{ '(Entry/Exit) Fees' | translate }}</label>
                             <div>
                                 <span class="readonly-field">{{ orderData.feePercentage | moneyValue : 2 }}%</span>
