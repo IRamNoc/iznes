@@ -1,7 +1,19 @@
-<div id="blockchain-status-tracker" [class.active]="showStatusView" (click)="showStatusView = !showStatusView">
+<div *ngIf="!alternate" id="blockchain-status-tracker" [class.active]="showStatusView" (click)="showStatusView = !showStatusView">
     <div class="fail" [class.update]="failUpdate">{{ failCount }}</div>
     <div class="pending" [class.update]="pendingUpdate">{{ pendingCount }}</div>
     <div class="success" [class.update]="successUpdate">{{ successCount }}</div>
+</div>
+
+<div *ngIf="alternate" id="blockchain-status-tracker" class="alternate" [class.active]="showStatusView" (click)="showStatusView = !showStatusView">
+    <div class="fail" [class.update]="failUpdate">
+        Failed <span>{{ failCount }}</span>
+    </div>
+    <div class="pending" [class.update]="pendingUpdate">
+        Pending <span>{{ pendingCount }}</span>
+    </div>
+    <div class="success" [class.update]="successUpdate">
+        Complete <span>{{ successCount }}</span>
+    </div>
 </div>
 
 <clr-modal *ngIf="display === 'modal'" [(clrModalOpen)]="showStatusView" [clrModalSize]="'lg'">
@@ -26,7 +38,7 @@
     </div>
 </clr-modal>
 
-<div *ngIf="display === 'dropdown'" class="dropdown" [class.active]="showStatusView">
+<div *ngIf="display === 'dropdown'" class="dropdown" [class.active]="showStatusView" [class.alternate]="alternate">
     <ng-container *ngTemplateOutlet="transactionsDatagrid"></ng-container>
     <div class="footer">
         <button class="btn btn-link">VIEW ALL</button>

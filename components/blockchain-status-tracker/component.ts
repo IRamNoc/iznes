@@ -2,7 +2,6 @@ import { Component, OnInit, OnDestroy, ChangeDetectorRef, Input, ElementRef, Hos
 import { select } from '@angular-redux/store';
 import { Subscription } from 'rxjs/Subscription';
 import { ClrDatagridSortOrder } from '@clr/angular';
-import { isEmpty } from 'lodash';
 
 @Component({
     styleUrls: ['./component.scss'],
@@ -13,6 +12,7 @@ import { isEmpty } from 'lodash';
 export class BlockchainStatusTracker implements OnInit, OnDestroy {
 
     @Input() display: string = 'modal';
+    @Input() alternate: boolean = false;
     @select(['walletNode', 'transactionStatus']) transactionStatus;
 
     public failUpdate: Boolean = false;

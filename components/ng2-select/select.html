@@ -48,6 +48,7 @@
                    placeholder="{{active.length <= 0 ? placeholder : ''}}">
 
             <span class="fa fa-search"></span>
+            <clr-icon *ngIf="inlineIcon !== ''" class="clear-search" shape="times-circle"></clr-icon>
         </div>
 
         <ng-template [ngIf]="options.length < 1000">
@@ -57,7 +58,7 @@
                 <li *ngFor="let o of options" role="menuitem">
                     <div class="ui-select-choices-row"
                          [class.active]="isActive(o)"
-                         [class.selected]="active[0].text === o.text"
+                         [class.selected]="(active[0] || {}).text === o.text"
                          (mouseenter)="selectActive(o)"
                          (click)="selectMatch(o, $event)">
                         <a href="javascript:void(0)" class="dropdown-item">
