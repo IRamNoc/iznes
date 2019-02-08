@@ -1,82 +1,113 @@
-<connection-status-alerts (activeAlert)="activeAlert=$event"></connection-status-alerts>
+<clr-main-container>
+    <connection-status-alerts (activeAlert)="activeAlert=$event"></connection-status-alerts>
 
-<div class="main-container {{ currentLanguage }}" [class.connection-alert]="activeAlert">
+    <div class="main-container {{ currentLanguage }}" [class.connection-alert]="activeAlert">
 
-    <ng-sidebar-container (scroll)="handleSidebarFixingOnScroll($event)" [scrollTop]="scrollTopPosition">
+        <ng-sidebar-container>
 
-        <ng-sidebar [(opened)]="opened" [mode]="_MODES[modeNum]" [keyClose]="keyClose" [position]="POSITIONS[positionNum]" [dock]="dock" [dockedSize]="'50px'" [autoCollapseHeight]="autoCollapseHeight" [autoCollapseWidth]="autoCollapseWidth" [closeOnClickOutside]="closeOnClickOutside" [closeOnClickBackdrop]="closeOnClickBackdrop" [showBackdrop]="showBackdrop" [animate]="animate" [trapFocus]="trapFocus" [autoFocus]="autoFocus" [sidebarClass]="'demo-sidebar'" [ariaLabel]="'My sidebar'">
+            <ng-sidebar [(opened)]="opened" [mode]="_MODES[modeNum]" [keyClose]="keyClose" [position]="POSITIONS[positionNum]" [dock]="dock" [dockedSize]="'50px'" [autoCollapseHeight]="autoCollapseHeight" [autoCollapseWidth]="autoCollapseWidth" [closeOnClickOutside]="closeOnClickOutside" [closeOnClickBackdrop]="closeOnClickBackdrop" [showBackdrop]="showBackdrop" [animate]="animate" [trapFocus]="trapFocus" [autoFocus]="autoFocus" [sidebarClass]="'demo-sidebar'" [ariaLabel]="'My sidebar'">
 
-            <div class="ng-sidebar-header">
-                <div class="ng-sidebar-header-left">
-                    <button class="btn btn-outline btn-sm mr-1" (click)="toggleSidebar()">{{ 'Close' | translate }}</button>
-                </div>
-                <div class="ng-sidebar-header-middle title_text">
-                    <i class="fa fa-cogs"></i>{{ 'Settings' | translate }}
-                </div>
-                <div class="ng-sidebar-header-right">
-
-                </div>
-            </div>
-            <div class="ng-sidebar-body">
-
-                <div class="ng-sidebar-section-header">
-                    <div class="title_text">
-                        <i class="fa fa-language"></i> {{ 'Language' | translate }}
+                <div class="ng-sidebar-header">
+                    <div class="ng-sidebar-header-left">
+                        <button class="btn btn-outline btn-sm mr-1" (click)="toggleSidebar()">{{ 'Close' | translate }}</button>
                     </div>
-                    {{ 'Choose your language.' | translate }}
+                    <div class="ng-sidebar-header-middle title_text">
+                        <i class="fa fa-cogs"></i>{{ 'Settings' | translate }}
+                    </div>
+                    <div class="ng-sidebar-header-right">
 
+                    </div>
                 </div>
-                <div class="ng-sidebar-section-body">
+                <div class="ng-sidebar-body">
 
-                    <section class="form-block">
-                        <div class="form-group">
-                            <div class="radio" (click)="changeLanguage('fr-Latn')">
-                                <input type="radio" name="gridRadios1" id="lang_fra" [checked]="isCurrentLanguage('fr-Latn')">
-                                <label for="lang_fra">{{ 'Français' | translate }}</label>
+                    <div class="ng-sidebar-section-header">
+                        <div class="title_text">
+                            <i class="fa fa-language"></i> {{ 'Language' | translate }}
+                        </div>
+                        {{ 'Choose your language.' | translate }}
+
+                    </div>
+                    <div class="ng-sidebar-section-body">
+
+                        <section class="form-block">
+                            <div class="form-group">
+                                <div class="radio" (click)="changeLanguage('fr-Latn')">
+                                    <input type="radio" name="gridRadios1" id="lang_fra" [checked]="isCurrentLanguage('fr-Latn')">
+                                    <label for="lang_fra">{{ 'Français' | translate }}</label>
+                                </div>
+                                <div class="radio" (click)="changeLanguage('en-Latn')">
+                                    <input type="radio" name="gridRadios1" id="lang_eng" [checked]="isCurrentLanguage('en-Latn')">
+                                    <label for="lang_eng">{{ 'English' | translate }}</label>
+                                </div>
                             </div>
-                            <div class="radio" (click)="changeLanguage('en-Latn')">
-                                <input type="radio" name="gridRadios1" id="lang_eng" [checked]="isCurrentLanguage('en-Latn')">
-                                <label for="lang_eng">{{ 'English' | translate }}</label>
+                        </section>
+
+                        <p *ngIf="currentVersion" class="version">Version: {{ currentVersion }}</p>
+
+                    </div>
+                </div>
+
+                <button class="header-overflow-trigger" type="button">
+
+                </button>
+
+
+            </ng-sidebar>
+
+            <div ng-sidebar-content class="main-container-sidebar-content" [ngClass]="{'menuHideNav': menuShown === 0}">
+
+                <clr-header>
+                    <app-navigation-topbar (toggleSidebar)="toggleSidebar()"></app-navigation-topbar>
+                </clr-header>
+
+                <div class="content-container">
+                    
+                    <app-navigation-sidebar></app-navigation-sidebar>
+
+                    <main #main class="content-area" [ngClass]="{'menuHideContent': menuShown === 0}"
+                        [@routerTransition]="currentParentUrl">
+
+                        <div class="router-container">
+                            <div class="fade-slide-right">
+                                <router-outlet #o="outlet" (deactivate)="onDeactivate()"></router-outlet>
                             </div>
                         </div>
-                    </section>
-
-                    <p *ngIf="currentVersion" class="version">Version: {{ currentVersion }}</p>
-
+                    </main>
                 </div>
+
             </div>
+        </ng-sidebar-container>
+    </div>
+</clr-main-container>
 
-            <button class="header-overflow-trigger" type="button">
 
-            </button>
-
-
-        </ng-sidebar>
-
-        <div ng-sidebar-content class="main-container-sidebar-content" [ngClass]="{'menuHideNav': menuShown === 0}">
-
-            <!-- Navigation Topbar. -->
-            <app-navigation-topbar (toggleSidebar)="toggleSidebar()"></app-navigation-topbar>
-
-            <div class="content-container">
-
-                <app-navigation-sidebar></app-navigation-sidebar>
-
-                <main #main class="content-area" appBackToTop [ngClass]="{'menuHideContent': menuShown === 0}"
-                      [@routerTransition]="currentParentUrl" [ngStyle]="{'min-height.px' : sidebarHeight}">
-                    <!--
-                        Basic Layout.
-                        This layout wraps the navbar and the top bar around content.
-                    -->
-                    <div class="router-container">
-                        <div class="fade-slide-right">
-                            <router-outlet #o="outlet" (deactivate)="onDeactivate()"></router-outlet>
-                        </div>
-                    </div>
-
-                </main>
-            </div>
-
+<!-- <clr-main-container>
+    <clr-header>
+        <app-navigation-topbar (toggleSidebar)="toggleSidebar()"></app-navigation-topbar>
+    </clr-header>
+    <div class="content-container">
+        <app-navigation-sidebar></app-navigation-sidebar>
+        <div class="content-area">
+            <router-outlet></router-outlet>
         </div>
-    </ng-sidebar-container>
-</div>
+
+        <nav class="sidenav" [clr-nav-level]="2">
+            <h3>Language</h3>
+            <p>Choose your language:</p>
+            <section class="form-block">
+                <div class="form-group">
+                    <div class="radio" (click)="changeLanguage('fr-Latn')">
+                        <input type="radio" clrRadio name="gridRadios1" id="lang_fra" [checked]="isCurrentLanguage('fr-Latn')">
+                        <label for="lang_fra">{{ 'Français' | translate }}</label>
+                    </div>
+                    <div class="radio" (click)="changeLanguage('en-Latn')">
+                        <input type="radio" clrRadio name="gridRadios1" id="lang_eng" [checked]="isCurrentLanguage('en-Latn')">
+                        <label for="lang_eng">{{ 'English' | translate }}</label>
+                    </div>
+                </div>
+            </section>
+        </nav>
+
+    </div>
+</clr-main-container> -->
+    

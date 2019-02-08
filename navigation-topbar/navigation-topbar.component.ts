@@ -8,6 +8,8 @@ import {
     OnDestroy,
     OnInit,
     Output,
+    HostListener,
+    ElementRef,
 } from '@angular/core';
 import { APP_CONFIG, AppConfig, MenuItem, SagaHelper, LogService } from '@setl/utils';
 import { NgRedux, select } from '@angular-redux/store';
@@ -86,6 +88,7 @@ export class NavigationTopbarComponent implements OnInit, AfterViewInit, OnDestr
     nbMaxTranslationsToProcess = 60;
 
     isSaving = false;
+    public showOverlay:boolean = false;
 
     @Output() toggleSidebar: EventEmitter<any> = new EventEmitter();
 
@@ -111,6 +114,7 @@ export class NavigationTopbarComponent implements OnInit, AfterViewInit, OnDestr
                 private initialisationService: InitialisationService,
                 private logService: LogService,
                 private nodeAlertsService: NodeAlertsService,
+                private el: ElementRef,
                 @Inject(APP_CONFIG) appConfig: AppConfig) {
 
         // Search form
@@ -127,6 +131,30 @@ export class NavigationTopbarComponent implements OnInit, AfterViewInit, OnDestr
         this.updateState();
 
         this.walletNodeDead = this.nodeAlertsService.dead;
+    }
+
+    /**
+     * Handle displaying the overlay for wallet select and blockchain status tracker
+     *
+     * @param event
+     */
+    @HostListener('document:click', ['$event']) clickOutside(event) {
+        const isSmall = !!this.el.nativeElement.querySelector('.wallet-select-small').offsetHeight;
+        const walletEl = isSmall ? this.el.nativeElement.querySelector('.wallet-select-small')
+            : this.el.nativeElement.querySelector('.wallet-picker');
+        const walletBarEl = isSmall ? this.el.nativeElement.querySelector('.wallet-select-small .ui-select-match')
+            : this.el.nativeElement.querySelector('.ui-select-match');
+        const openStatusTrackerEl = this.el.nativeElement.querySelector('blockchain-status-tracker .dropdown.active');
+        const statusTrackerEl = this.el.nativeElement.querySelector('blockchain-status-tracker');
+
+        if (this.showOverlay && !openStatusTrackerEl &&
+            walletBarEl.contains(event.target)) return this.showOverlay = false;
+
+        if (walletEl.contains(event.target)) return this.showOverlay = true;
+
+        if (statusTrackerEl && statusTrackerEl.contains(event.target)) return this.showOverlay = true;
+
+        this.showOverlay = false;
     }
 
     updateState() {

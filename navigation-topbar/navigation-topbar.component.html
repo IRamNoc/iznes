@@ -1,6 +1,7 @@
 <header class="header-1">
     <div class="branding">
         <a href="#/home" class="nav-link">
+            <span class="title">SETL</span>
             <img src="{{topbarLogoUrl}}" alt="Logo">
         </a>
     </div>
@@ -10,23 +11,39 @@
             <ng-select
                 [allowClear]="false" 
                 [items]="walletSelectItems"
-                (selected)="selected($event)"
+                (selected)="selected($event); showOverlay=false"
                 (removed)="removed($event)"
                 [placeholder]="translate.translate('No wallet selected')"
                 [formControl]="selectedWalletId"
                 [multiple]="false"
                 [inlineIcon]="'wallet'"
-                [class.extended]="appConfig.platform === 'OpenCSD'">
+                [class.extended]="appConfig.platform === 'OpenCSD'"
+                [class.alternate]="false"
+                class="wallet-picker">
             </ng-select>
         </div>
 
-        <blockchain-status-tracker *ngIf="appConfig.platform === 'OpenCSD'" [display]="'dropdown'"></blockchain-status-tracker>
+        <blockchain-status-tracker *ngIf="appConfig.platform === 'OpenCSD'" [display]="'dropdown'" [alternate]="false"></blockchain-status-tracker>
     </div>
 
     <div class="header-actions">
         <a *ngIf="!appConfig.production" (click)="getMissingTranslations()" id="translation-report-button" class="nav-link nav-icon blink_me">
             <clr-icon shape="warning-standard" class="text-warning"></clr-icon>
         </a>
+
+        <div class="wallet-select-small wallet-picker">
+            <ng-select
+                [allowClear]="false" 
+                [items]="walletSelectItems"
+                (selected)="selected($event); showOverlay=false"
+                (removed)="removed($event)"
+                [placeholder]="translate.translate('No wallet selected')"
+                [formControl]="selectedWalletId"
+                [multiple]="false"
+                [inlineIcon]="'wallet'"
+                [class.alternate]="false">
+            </ng-select>
+        </div>
 
         <a [routerLink]="['/messages']" class="nav-link nav-icon messages-icon">
             <clr-icon shape="email"><span *ngIf="unreadMessageCount > 0">{{unreadMessageCount}}</span></clr-icon>
@@ -44,109 +61,13 @@
             </clr-dropdown-menu>
         </clr-dropdown>
 
-        <a (click)="toggleSidebar.emit($event)" class="nav-link nav-icon" id="dropdown-settings">
+        <!-- <a (click)="toggleSidebar.emit($event)" class="nav-link nav-icon" id="dropdown-settings">
             <clr-icon shape="cog"></clr-icon>
-        </a>
+        </a> -->
     </div>
+
+    <div *ngIf="showOverlay" class="overlay" (click)="showOverlay=false"></div>
 </header>
-
-
-
-
-<!-- 
-<header class="header-6">
-
-    <div class="branding">
-        <button (click)="controlMenu()"><i class="fa fa-bars" aria-hidden="true"></i></button>
-        <a href="#/home" class="nav-link">
-            <img src="{{topbarLogoUrl}}" style="height: 50%;" alt="Topbar logo">
-        </a>
-    </div>
-    <form class="search" [formGroup]="searchForm" style="background-color: transparent !important">
-    </form>
-    <div class="header-actions">
-
-        <div class="user iznes" id="topBarMenu" appHighlight *ngIf="appConfig.platform === 'IZNES'">
-            <img src="assets/images/male.png">
-            <p>{{username}}</p>
-            <div class="last-login">
-                {{ 'Last' | translate }}: {{lastLogin}}
-            </div>
-        </div>
-
-        <clr-dropdown class="user-profile" id="topBarMenu" appClicked *ngIf="appConfig.platform !== 'IZNES'">
-            <div class="user" clrDropdownToggle>
-                <img src="assets/images/male.png">
-                <p>{{username}} <i class="fa fa-angle-down"></i></p>
-                <div class="last-login">
-                    {{ 'Last' | translate }}:&nbsp;{{lastLogin | datex: 'MMMM DD YYYY HH:mm'}}
-                </div>
-            </div>
-
-            <div class="dropdown-menu">
-                <a [routerLink]="['/account/my-account/detail']" id="topBarMyAccount" clrDropdownItem>{{ 'My Account' | translate }}</a>
-            </div>
-        </clr-dropdown>
-
-        <blockchain-status-tracker *ngIf="appConfig.platform === 'OpenCSD'"></blockchain-status-tracker>
-
-        <div class="wallet">
-            <div class="decalWallet">
-                <ng-select [allowClear]="false" [items]="walletSelectItems" (selected)="selected($event)" (removed)="removed($event)" [placeholder]="translate.translate('No wallet selected')" [formControl]="selectedWalletId" [multiple]="false" inlineLabel="Wallet" inlineLabelMlTag="txt_wallet">
-                </ng-select>
-            </div>
-        </div>
-
-        <div class="right-buttons">
-            <div id="translation-report-button" appHighlight class="dropdown" *ngIf="!appConfig.production">
-                <a (click)="getMissingTranslations()" class="nav-button dropdown-toggle messages-icon blink_me">
-                    <clr-icon shape="warning-standard" class="icon text-warning"></clr-icon>
-                    <p class="text-warning">{{ 'Translations' | translate }}</p>
-                </a>
-            </div>
-            <div class="dropdown" appActiveHeaderButton [url]="'/messages/inbox'">
-                <a [routerLink]="['/messages']" class="nav-button dropdown-toggle messages-icon">
-                    <clr-icon shape="email" class="icon" [ngClass]="hasMail"></clr-icon>
-                    <p>{{ 'Messages' | translate }}</p>
-
-                    <span *ngIf="unreadMessageCount > 0">{{unreadMessageCount}}</span>
-                </a>
-            </div>
-
-            <clr-dropdown id="dropdown-user" appClicked appHighlight appActiveHeaderButton [url]="'/profile/my-information'">
-                <div class="nav-button" clrDropdownToggle>
-                    <clr-icon shape="user" class="icon"></clr-icon>
-                    <p>{{ 'Profile' | translate }}</p>
-                </div>
-
-                <div class="dropdown-menu">
-                    <a *ngFor="let item of profileMenu" [routerLink]="[item.router_link]" [id]="item.element_id" clrDropdownItem [attr.mltag]="item.label_txt">{{item.label}}</a>
-                </div>
-            </clr-dropdown>
-
-            <clr-dropdown class="bottom-right" appClicked>
-                <a class="nav-button" clrDropdownToggle id="dropdown-settings">
-                    <clr-icon shape="cog" class="icon"></clr-icon>
-                    <p>{{ 'Settings' | translate }}</p>
-                </a>
-                <div class="dropdown-menu" style="margin-right: -19px">
-                    <a clrDropdownItem (click)="toggleSidebar.emit($event)" id="dropdown-btn-lang">{{ 'Language' | translate }}</a>
-                </div>
-            </clr-dropdown>
-
-            <div class="dropdown">
-                <a [routerLink]="['/logout']" id="logout" class="nav-button dropdown-toggle messages-icon">
-                    <clr-icon shape="logout" class="icon"></clr-icon>
-                    <p>{{ 'Log out' | translate }}</p>
-                </a>
-            </div>
-        </div>
-
-        <button class="header-overflow-trigger" type="button">
-
-        </button>
-    </div>
-</header> -->
 
 <clr-modal [(clrModalOpen)]="showCountdownModal" [clrModalClosable]="false">
     <div class="modal-title">
