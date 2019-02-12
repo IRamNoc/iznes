@@ -1,5 +1,6 @@
 export class MessageMTConfig {
     type: string;
+    mtType: string;
     adminName?: string;
     amFirstName?: string;
     amCompanyName?: string;
