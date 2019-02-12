@@ -15,7 +15,7 @@ import { FileDownloader } from '@setl/utils';
         }`,
     ],
 })
-export class SetlMessageKycComponent implements OnInit {
+export class SetlMessageMTComponent implements OnInit {
     @Input() config: MessageMTConfig;
     messageBody: Object;
 
@@ -69,9 +69,9 @@ export class SetlMessageKycComponent implements OnInit {
         const body = {
             method: 'getIznMTFile',
             mtType: data.mtType,
-            token: this.socketToken,
+            // token: this.socketToken,
             orderId: data.orderID,
-            userId: this.userId,
+            // userId: this.userId,
         };
 
         if (data.mtType == 'MT101') body['messageType'] = data.messageType;

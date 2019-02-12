@@ -3,6 +3,7 @@ export class MessageMTConfig {
     adminName?: string;
     amFirstName?: string;
     amCompanyName?: string;
+    orderID?: string;
     link?: string;
     lang: string;
 }

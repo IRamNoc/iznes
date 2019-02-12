@@ -1,7 +1,7 @@
 <ng-container *ngIf="config">
     <div [ngSwitch]="config.type">
         <!-- MT900 Admin -->
-        <div *ngSwitchCase="'900-Admin'">
+        <div *ngSwitchCase="'MT900Admin'">
             <p class="padding"><span>{{ 'Hello' | translate }}</span> {{config.adminName}},</p>
 
             <p class="padding">
@@ -17,11 +17,11 @@
         </div>
 
         <!-- MT900 AM -->
-        <div *ngSwitchCase="'900-AM'">
-            <p class="padding">{{config.greeting}}</p>
+        <div *ngSwitchCase="'MT900AM'">
+            <!-- <p class="padding">{{config.greeting}}</p>
             <p class="padding">{{config.line1}}</p>
             <p class="padding">{{config.line2}}</p>
-            <p class="padding">{{config.line3}}</p>
+            <p class="padding">{{config.line3}}</p> -->
 
             <!-- Download MT File -->
             <button class="btn btn-primary" (click)="downloadTxtFile(config.action);">{{ 'Download File' | translate }}
