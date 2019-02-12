@@ -27,6 +27,7 @@ import {
     immutableHelper,
     LogService,
     SagaHelper,
+    MoneyValuePipe,
 } from '@setl/utils';
 
 import { get, isEmpty, isEqual, find, isUndefined } from 'lodash';
@@ -57,6 +58,7 @@ import { SearchFilters, ISearchFilters } from './search-filters';
 import { labelForOrder } from '../order.model';
 import { orderStatuses, orderTypes, dateTypes } from './lists';
 import { DatagridParams } from './datagrid-params';
+import { fundClassifications } from '../../ofi-product/productConfig';
 
 /* Types. */
 interface SelectedItem {
@@ -94,6 +96,11 @@ export class ManageOrdersComponent implements OnInit, AfterViewInit, OnDestroy {
     public orderTypes: any = [];
     public orderStatuses: any = [];
     public dateTypes: any = [];
+
+    fundClassifications: object;
+    fundClassificationId: number;
+    orderClassificationFee: number;
+    transformedOrderClassificationFee: number;
 
     // Locale
     language = 'en';
@@ -201,6 +208,7 @@ export class ManageOrdersComponent implements OnInit, AfterViewInit, OnDestroy {
                 private fundInvestService: OfiFundInvestService,
                 private logService: LogService,
                 private fileDownloader: FileDownloader,
+                public moneyValuePipe: MoneyValuePipe,
                 public numberConverter: NumberConverterService,
                 private messagesService: MessagesService,
                 private toasterService: ToasterService,
@@ -210,10 +218,10 @@ export class ManageOrdersComponent implements OnInit, AfterViewInit, OnDestroy {
                 private location: Location,
                 private searchFilters: SearchFilters,
     ) {
-
         this.isAmConfirmModalDisplayed = false;
         this.cancelModalMessage = '';
         this.ofiCurrenciesService.getCurrencyList();
+        this.fundClassifications = fundClassifications;
     }
 
     get isInvestorUser() {
@@ -378,6 +386,10 @@ export class ManageOrdersComponent implements OnInit, AfterViewInit, OnDestroy {
                 },
             );
         }
+
+        // Update the classification fee
+        this.orderClassificationFee = order.classificationFee;
+
         this.setTabActive(order.orderID);
         this.updateCurrentFundShare();
     }
@@ -512,6 +524,12 @@ export class ManageOrdersComponent implements OnInit, AfterViewInit, OnDestroy {
 
     updateCurrentFundShare() {
         this.logService.log('there', this.fundShareList);
+
+        this.fundClassificationId = this.fundShareList[this.fundShareID].classification;
+        this.transformedOrderClassificationFee = this.moneyValuePipe.transform(
+            this.numberConverter.toFrontEnd(this.orderClassificationFee),
+            fundClassifications[this.fundClassificationId].dp,
+        );
 
         const currentFundShare = this.fundShareList[this.fundShareID];
         if (typeof currentFundShare.keyFactOptionalData === 'string') {

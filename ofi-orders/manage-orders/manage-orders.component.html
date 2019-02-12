@@ -619,6 +619,14 @@
                     </div>
                     <div class="row mb-1">
                         <div class="form-group col-sm-6">
+                            <label>{{ 'IZNES Fee - Investor: Percentage of the average annual outstandings kept in the register' | translate }}</label>
+                            <div>
+                                <span class="readonly-field">{{ transformedOrderClassificationFee }}%</span>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="row mb-1">
+                        <div class="form-group col-sm-6">
                             <label>{{ '(Entry/Exit) Fees' | translate }}</label>
                             <div>
                                 <span class="readonly-field">{{ orderData.feePercentage | moneyValue : 2 }}%</span>
@@ -720,47 +728,54 @@
                     </div>
                     <div class="row mb-1">
                         <div class="form-group col-sm-6">
+                            <label>{{ 'Classification' | translate }}</label>
+                            <div>
+                                <span class="readonly-field">{{fundClassifications[fundClassificationId].text}}</span>
+                            </div>
+                        </div>
+                        <div class="form-group col-sm-6">
                             <label>{{ 'Asset Class' | translate }}</label>
                             <div>
                                 <span class="readonly-field">{{fundShare.shareClassCode}}</span>
                             </div>
-                        </div>
+                        </div>                        
+                    </div>
+                    <div class="row mb-1">
                         <div class="form-group col-sm-6">
                             <label>{{ 'SRRI' | translate }}</label>
                             <div>
                                 <span class="readonly-field">{{fundShare.keyFactOptionalData.srri}}</span>
                             </div>
                         </div>
-                    </div>
-                    <div class="row mb-1">
                         <div class="form-group col-sm-6">
                             <label>{{ 'SRI' | translate }}</label>
                             <div>
                                 <span class="readonly-field">{{fundShare.keyFactOptionalData.sri}}</span>
                             </div>
                         </div>
+                    </div>
+                    <div class="row mb-1">
                         <div class="form-group col-sm-6">
                             <label>{{ 'Share Currency' | translate }}</label>
                             <div>
                                 <span class="readonly-field">{{showCurrency(orderData)}}</span>
                             </div>
                         </div>
-                    </div>
-                    <div class="row mb-1">
                         <div class="form-group col-sm-6">
                             <label>{{ 'NAV' | translate }}</label>
                             <div>
                                 <span class="readonly-field {{getPriceStatusCss(orderData)}}">{{ orderData.price | moneyValue: 2 }}</span>
                             </div>
                         </div>
+                        
+                    </div>
+                    <div class="row mb-1">
                         <div class="form-group col-sm-6">
                             <label>{{ 'NAV Date' | translate }}</label>
                             <div>
                                 <span class="readonly-field">{{getOnlyDate(orderData.valuationDate)}}</span>
                             </div>
                         </div>
-                    </div>
-                    <div class="row mb-1">
                         <div class="form-group col-sm-6">
                             <label>{{ 'Decimalization' | translate }}</label>
                             <div>
