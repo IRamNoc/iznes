@@ -57,6 +57,7 @@ export interface IznesFundDetail {
     centralizingAgentID: string;
     isDedicatedFund: string;
     portfolioCurrencyHedge: string;
+    classification: string;
     globalItermediaryIdentification: string;
     delegatedManagementCompany: string;
     investmentAdvisorID: string[];

@@ -138,6 +138,7 @@ export class OfiFundService {
             investmentAdvisorID: JSON.stringify(payload.investmentAdvisorID),
             payingAgentID: JSON.stringify(payload.payingAgentID),
         };
+
         return this.buildRequest({
             taskPipe: createMemberNodeSagaRequest(this.memberSocketService, messageBody),
         });

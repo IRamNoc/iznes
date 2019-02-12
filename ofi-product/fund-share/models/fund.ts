@@ -167,6 +167,13 @@ export class ShareFund extends DynamicFormsValidator {
         disabled: true,
         listItems: PC.fundItems.portfolioCurrencyHedgeItems,
     };
+    classification: FormItem = {
+        type: FormItemType.list,
+        label: 'Classification',
+        required: true,
+        disabled: true,
+        listItems: PC.fundItems.classificationItems,
+    };
     investmentObjective: FormItem = {
         type: FormItemType.text,
         label: 'Investment Objective',

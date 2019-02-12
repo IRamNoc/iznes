@@ -57,6 +57,7 @@ export interface Fund {
     centralizingAgentID: number;
     isDedicatedFund: isDedicatedFund;
     portfolioCurrencyHedge: number; // number enum
+    classification: number; // number enum
     globalItermediaryIdentification: string;
     delegatedManagementCompany: string;
     investmentAdvisorID: string | string[];
