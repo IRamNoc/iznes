@@ -236,23 +236,6 @@ export class ShareKeyFactsOptional {
             return (this.terminationDate.value() as string).length === 0;
         },
     };
-    assetClass: FormItem = {
-        type: FormItemType.list,
-        label: 'Asset Class',
-        required: false,
-        listItems: [
-            { id: E.AssetClassEnum.Alternatives, text: 'Alternatives' },
-            { id: E.AssetClassEnum.Bonds, text: 'Bonds' },
-            { id: E.AssetClassEnum.Commodities, text: 'Commodities' },
-            { id: E.AssetClassEnum.Convertibles, text: 'Convertibles' },
-            { id: E.AssetClassEnum.Diversified, text: 'Diversified' },
-            { id: E.AssetClassEnum.Equities, text: 'Equities' },
-            { id: E.AssetClassEnum.MoneyMarket, text: 'Money Market' },
-            { id: E.AssetClassEnum.Options, text: 'Options' },
-            { id: E.AssetClassEnum.PrivateEquity, text: 'Private Equity' },
-            { id: E.AssetClassEnum.RealEstate, text: 'Real Estate' },
-        ],
-    };
     geographicalArea: FormItem = {
         type: FormItemType.list,
         label: 'Geographical Area',

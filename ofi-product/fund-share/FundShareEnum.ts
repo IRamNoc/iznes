@@ -125,18 +125,6 @@ export enum YearlyDealingDaysEnum {
     November,
     December,
 }
-export enum AssetClassEnum {
-    Alternatives,
-    Bonds,
-    Commodities,
-    Convertibles,
-    Diversified,
-    Equities,
-    MoneyMarket,
-    Options,
-    PrivateEquity,
-    RealEstate,
-}
 export enum GeographicalAreaEnum {
     Asia,
     AsiaExJapan,
