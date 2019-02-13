@@ -412,7 +412,9 @@ const beneficiaryFormPaths = {
 export function buildBeneficiaryObject(responseData) {
     const beneficiary = {};
 
-    const data = pickBy(responseData);
+    // Remove null value
+    const data = pickBy(responseData, v => v !== null);
+
     forEach(data, (value, key) => {
         let path = getValue(beneficiaryFormPaths, key, '');
         path = path ? [path, key].join('.') : key;
