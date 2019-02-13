@@ -129,15 +129,11 @@
                 <setl-message-cancel-order [config]="currentMessage.action"></setl-message-cancel-order>
             </p>
 
-            <!-- 
             <p *ngIf="currentMessage.action && currentMessage.action.type === 'mtMessage'">
+                <button *ngIf="currentMessage.action.link" class="btn btn-primary" (click)="handleRedirectButtonClick(currentMessage.action.link);">{{ currentMessage.action.linkLabel | translate }}</button>
+                <br *ngIf="currentMessage.action.link"/>
                 <button class="btn btn-primary" (click)="downloadTxtFile(currentMessage.action);">{{ 'Download File' | translate }}</button>
             </p> 
-            -->
-
-            <p *ngIf="currentMessage.action && currentMessage.action.type === 'mtMessage'">
-                <setl-message-mt [config]="currentMessage.action"></setl-message-mt>
-            </p>
 
             <p *ngIf="currentMessage.action && currentMessage.action.type === 'sendAssetManagementBookEntryCertification'">
                 <button class="btn btn-primary" (click)="handleDownloadBookEntryCertification(currentMessage.action.assetManagementCompanyId, currentMessage.action.settlementDate, currentMessage.action.assetManagementBIC);">

@@ -25,7 +25,6 @@ import { SetlMessageWorkflowComponent2 } from './messages/message-components/mes
 import { SetlMessageConnectionComponent } from './messages/message-components/message-connection/message-connection.component';
 import { SetlMessageConnectionService } from './messages/message-components/message-connection/message-connection.service';
 import { SetlMessageKycComponent } from './messages/message-components/message-kyc/message-kyc.component';
-import { SetlMessageMTComponent } from './messages/message-components/message-mt/message-mt.component';
 import { SetlMessageAmCancelOrderComponent } from './messages/message-components/message-cancel-order/message-cancel-order.component';
 import { SetlMessageWithLinksComponent } from './messages/message-components/message-with-links/message-with-links.component';
 import { SetlMessageDownloadComponent } from './messages/message-components/message-download/component';
@@ -57,7 +56,6 @@ import { RouterModule } from '@angular/router';
         SetlMessageAttachmentComponent,
         SetlMessageConnectionComponent,
         SetlMessageKycComponent,
-        SetlMessageMTComponent,
         SetlMessageAmCancelOrderComponent,
         SetlIssueAssetActionComponent,
         SetlMessageWithLinksComponent,
@@ -71,7 +69,6 @@ import { RouterModule } from '@angular/router';
         SetlMessageAttachmentComponent,
         SetlMessageConnectionComponent,
         SetlMessageKycComponent,
-        SetlMessageMTComponent,
         SetlMessageAmCancelOrderComponent,
     ],
     providers: [

@@ -653,6 +653,10 @@ export class SetlMessagesComponent implements OnDestroy, OnInit {
         this.router.navigateByUrl('/messages/compose');
     }
 
+    handleRedirectButtonClick(route) {
+        this.router.navigateByUrl(route);
+    }
+
     downloadTxtFile(data) {
         let body = {
             method: 'getIznMTFile',
