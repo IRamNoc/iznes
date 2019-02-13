@@ -1,25 +1,22 @@
-import { debounceTime, take, switchMap, filter, takeUntil, bufferTime } from 'rxjs/operators';
+import { debounceTime, switchMap, filter, bufferTime } from 'rxjs/operators';
 import { Observable, combineLatest as observableCombineLatest, Subscription, zip } from 'rxjs';
 /* Core/Angular imports. */
 import {
     AfterViewInit,
-    ChangeDetectionStrategy,
     ChangeDetectorRef,
     Component,
-    Inject,
     OnDestroy,
     Input,
     OnInit,
     ViewChild,
 } from '@angular/core';
 
-import { FormBuilder, FormGroup } from '@angular/forms';
+import { FormGroup } from '@angular/forms';
 import { ActivatedRoute, Router } from '@angular/router';
 import { Location } from '@angular/common';
 
 import { MemberSocketService } from '@setl/websocket-service';
 import { NgRedux, select } from '@angular-redux/store';
-import { Unsubscribe } from 'redux';
 import {
     commonHelper,
     ConfirmationService,
@@ -34,15 +31,11 @@ import { get, isEmpty, isEqual, find, isUndefined } from 'lodash';
 import * as moment from 'moment-timezone';
 import { ToasterService } from 'angular2-toaster';
 /* Services. */
-import { WalletNodeRequestService } from '@setl/core-req-services';
 import { ManageOrdersService } from './manage-orders.service';
 import { OfiOrdersService } from '../../ofi-req-services/ofi-orders/service';
-import { OfiCorpActionService } from '../../ofi-req-services/ofi-corp-actions/service';
-import { OfiManagementCompanyService } from '@ofi/ofi-main/ofi-req-services/ofi-product/management-company/management-company.service';
 import { OfiFundShareService } from '@ofi/ofi-main/ofi-req-services/ofi-product/fund-share/service';
 import { NumberConverterService } from '@setl/utils/services/number-converter/service';
 /* Alerts and confirms. */
-import { AlertsService } from '@setl/jaspero-ng2-alerts';
 /* Ofi Store stuff. */
 import { ofiManageOrderActions } from '../../ofi-store';
 /* Clarity */
@@ -88,7 +81,6 @@ export class ManageOrdersComponent implements OnInit, AfterViewInit, OnDestroy {
     total: number;
     readonly itemPerPage = 10;
     private datagridParams: DatagridParams;
-    filtersFromRedux: any = {};
     lastPage: number;
     loading = true;
     userType: number;
@@ -166,7 +158,6 @@ export class ManageOrdersComponent implements OnInit, AfterViewInit, OnDestroy {
     };
     fundShareID = 0;
     fundShareList = {};
-    userAssetList: any[] = [];
     isAmConfirmModalDisplayed: boolean;
     amConfirmModal: any = {};
     cancelModalMessage: string;
@@ -193,7 +184,6 @@ export class ManageOrdersComponent implements OnInit, AfterViewInit, OnDestroy {
     @select(['ofi', 'ofiCurrencies', 'currencies']) readonly currencies$;
 
     private myDetails: any = {};
-    private myWallets: any = [];
     private walletDirectory: any = [];
     private connectedWalletId: any = 0;
 
@@ -236,6 +226,14 @@ export class ManageOrdersComponent implements OnInit, AfterViewInit, OnDestroy {
             });
         }
         return iznesAdmin;
+    }
+
+    get fundClassificationsText(): string {
+        try {
+            return fundClassifications[this.fundClassificationId].text
+        } catch(e) {
+            return '';
+        }
     }
 
     appSubscribe<T>(
@@ -526,9 +524,11 @@ export class ManageOrdersComponent implements OnInit, AfterViewInit, OnDestroy {
         this.logService.log('there', this.fundShareList);
 
         this.fundClassificationId = this.fundShareList[this.fundShareID].classification;
+        // classification number decimal point.
+        const classificationDp = get(fundClassifications, [this.fundClassificationId, 'dp'], 2);
         this.transformedOrderClassificationFee = this.moneyValuePipe.transform(
             this.numberConverter.toFrontEnd(this.orderClassificationFee),
-            fundClassifications[this.fundClassificationId].dp,
+            classificationDp,
         );
 
         const currentFundShare = this.fundShareList[this.fundShareID];
