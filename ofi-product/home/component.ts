@@ -413,16 +413,13 @@ export class ProductHomeComponent implements OnInit, OnDestroy {
                 if (ans.resolved) {
                     this.draftList.splice(this.draftList.findIndex(draft => draft.draftID === id && draft.draftType === dataType), 1);
                     if (String(dataType) === 'Umbrella Fund') {
-                        this.ofiUmbrellaFundService.iznDeleteUmbrellaDraft(this.ofiUmbrellaFundService, this.ngRedux, id);
-                        this.ofiUmbrellaFundService.fetchUmbrellaList();
+                        this.ofiUmbrellaFundService.deleteUmbrellaDraft(id).then(this.ofiUmbrellaFundService.fetchUmbrellaList.bind(this.ofiUmbrellaFundService));
                     }
                     if (String(dataType) === 'Fund') {
-                        this.ofiFundService.iznDeleteFundDraft(this.ofiFundService, this.ngRedux, id);
-                        this.ofiFundService.fetchFundList();
+                        this.ofiFundService.deleteFundDraft(id).then(this.ofiFundService.fetchFundList.bind(this.ofiFundService));
                     }
                     if (String(dataType) === 'Share') {
-                        this.ofiFundShareService.iznDeleteShareDraft(this.ofiFundShareService, this.ngRedux, id);
-                        OfiFundShareService.defaultRequestIznesShareList(this.ofiFundShareService, this.ngRedux);
+                        this.ofiFundShareService.deleteShareDraft(id).then(() => OfiFundShareService.defaultRequestIznesShareList(this.ofiFundShareService, this.ngRedux));
                     }
                 }
             });
