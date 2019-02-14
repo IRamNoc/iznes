@@ -26,26 +26,34 @@ export class FileDownloader {
     }
 
     downLoaderFile(body: any, secure = false) {
-        this.http.request('POST', this.getFileDownloadBaseUrl(secure), {
-            body,
-            responseType: 'blob',
-            observe: 'response',
-        }).subscribe((response) => {
-            // generate temporary link to down file.
-            const downloadUrl = window.URL.createObjectURL(response.body);
-            const a = document.createElement('a');
-            const fileName = response.headers.get('content-filename');
+        return new Promise((resolve, reject) => {
+            this.http.request('POST', this.getFileDownloadBaseUrl(secure), {
+                body,
+                responseType: 'blob',
+                observe: 'response',
+            }).subscribe(
+                (response) => {
+                    // generate temporary link to down file.
+                    const downloadUrl = window.URL.createObjectURL(response.body);
+                    const a = document.createElement('a');
+                    const fileName = response.headers.get('content-filename');
 
-            document.body.appendChild(a);
-            a.setAttribute('style', 'display: none');
-            a.href = downloadUrl;
-            a.download = fileName;
-            a.click();
+                    document.body.appendChild(a);
+                    a.setAttribute('style', 'display: none');
+                    a.href = downloadUrl;
+                    a.download = fileName;
+                    a.click();
 
-            window.URL.revokeObjectURL(downloadUrl);
-            console.log(downloadUrl);
-            a.remove(); // remove the element
-        },           (err) => {
+                    window.URL.revokeObjectURL(downloadUrl);
+                    console.log(downloadUrl);
+                    a.remove(); // remove the element
+
+                    resolve('File download complete');
+                },
+                (err) => {
+                    reject(err);
+                },
+            );
         });
     }
 
