@@ -13,6 +13,8 @@ import { MultilingualModule } from '@setl/multilingual';
 /* Components. */
 import { OfiSubPortfolioComponent } from './sub-portfolio/component';
 import { SetlLayoutModule } from '@setl/core-layout';
+import { FileDropModule } from '@setl/core-filedrop';
+import { FileViewerModule } from '@setl/core-fileviewer';
 
 import { OfiFundInvestModule } from '@ofi/ofi-main/ofi-fund-invest/module';
 import { OfiOrdersModule } from '@ofi/ofi-main/ofi-orders/ofi-orders.module';
@@ -40,6 +42,8 @@ import { OfiOrdersModule } from '@ofi/ofi-main/ofi-orders/ofi-orders.module';
         SetlLayoutModule,
         OfiFundInvestModule,
         OfiOrdersModule,
+        FileDropModule,
+        FileViewerModule,
     ],
     providers: [],
 })

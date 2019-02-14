@@ -1,6 +1,8 @@
-import { Injectable } from '@angular/core';
+import { Injectable, ChangeDetectorRef } from '@angular/core';
 import { NgRedux, select } from '@angular-redux/store';
 import { combineLatest, Subscription, Subject } from 'rxjs';
+import * as _ from 'lodash';
+import { ToasterService } from 'angular2-toaster';
 import {
     SET_SUB_PORTFOLIO_BANKING_DETAILS_REQUESTED,
     resetSubPortfolioBankingDetailsRequested,
@@ -9,6 +11,7 @@ import {
 import { clearRequestedWalletLabel, setRequestedWalletAddresses } from '@setl/core-store';
 import * as SagaHelper from '@setl/utils/sagaHelper';
 import { OfiSubPortfolioReqService } from '@ofi/ofi-main/ofi-req-services/ofi-sub-portfolio/service';
+import { FileService } from '@setl/core-req-services/file/file.service';
 import { WalletNodeRequestService, MyWalletsService, InitialisationService } from '@setl/core-req-services';
 
 @Injectable()
@@ -35,6 +38,8 @@ export class OfiSubPortfolioService {
         private myWalletsService: MyWalletsService,
         private ofiSubPortfolioReqService: OfiSubPortfolioReqService,
         private myWalletService: MyWalletsService,
+        private toaster: ToasterService,
+        private fileService: FileService,
     ) {
         this.initSubscriptions();
     }
@@ -141,5 +146,76 @@ export class OfiSubPortfolioService {
         for (const subscription of this.subscriptions) {
             subscription.unsubscribe();
         }
+    }
+
+    getSubPortfolioFormValue(values, bankIdentificationStatement) {
+        return {
+            ..._.omit(values, ['hashIdentifierCode']),
+            walletId: this.connectedWalletId,
+            country: _.get(values, 'country[0].id', values.country),
+            accountCurrency: _.get(values.accountCurrency, [0, 'id'], values.accountCurrency),
+            ownerCountry: _.get(values.ownerCountry, [0, 'id'], values.ownerCountry),
+            bankIdentificationStatement: JSON.stringify(bankIdentificationStatement),
+        };
+    }
+
+    uploadFile(event, modelItem, changeDetectorRef: ChangeDetectorRef): void {
+        const asyncTaskPipe = this.fileService.addFile({
+            files: _.filter(event.files, (file) => {
+                return file.status !== 'uploaded-file';
+            }),
+        });
+
+        this.ngRedux.dispatch(SagaHelper.runAsyncCallback(
+            asyncTaskPipe,
+            (data) => {
+                if (data[1] && data[1].Data) {
+                    let errorMessage;
+
+                    _.each(data[1].Data, (file) => {
+                        if (file.error) {
+                            errorMessage = file.error;
+                            event.target.updateFileStatus(file.id, 'file-error');
+                        } else {
+                            event.target.updateFileStatus(file[0].id, 'uploaded-file');
+                            modelItem.control.patchValue(file[0].fileID);
+                            modelItem.fileData = {
+                                fileID: file[0].fileID,
+                                hash: file[0].fileHash,
+                                name: file[0].fileTitle,
+                            };
+                        }
+                    });
+
+                    if (errorMessage) {
+                        this.toaster.pop('error', errorMessage);
+                    }
+
+                    if (data[1].Data.length === 0) {
+                        modelItem.control.patchValue(null);
+                        modelItem.fileData = null;
+                    }
+
+                    changeDetectorRef.markForCheck();
+                    changeDetectorRef.detectChanges();
+                }
+            },
+            (data) => {
+                let errorMessage;
+
+                _.each(data[1].Data, (file) => {
+                    if (file.error) {
+                        errorMessage += file.error + '<br/>';
+                        event.target.updateFileStatus(file.id, 'file-error');
+                    }
+                });
+
+                if (errorMessage) {
+                    if (errorMessage) {
+                        this.toaster.pop('error', errorMessage);
+                    }
+                }
+            }),
+        );
     }
 }

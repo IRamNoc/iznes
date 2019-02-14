@@ -25,3 +25,35 @@
 .clickable {
     cursor: pointer;
 }
+
+.filedrop-wrapper {
+    display: flex;
+
+    /deep/ .drop-file-wrapper { padding: 0; }
+
+    setl-file-drop {
+        display: block;
+        flex: 1 1 auto;
+        z-index: 0;
+    }
+
+    setl-file-viewer {
+        flex: 0 0 100px;
+        z-index: 1;
+    }
+
+    setl-file-viewer /deep/ > div > .btn {
+        border-bottom-left-radius: 0;
+        border-top-left-radius: 0;
+        height: 40px;
+        margin-bottom: 0;
+        margin-left: -4px;
+        margin-top: 0;
+        z-index: 1;
+    }
+}
+
+textarea#subportfolio-textarea {
+    min-height: 40px;
+    width: 100%;
+}
