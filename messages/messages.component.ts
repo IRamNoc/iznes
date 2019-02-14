@@ -654,21 +654,15 @@ export class SetlMessagesComponent implements OnDestroy, OnInit {
     }
 
     downloadTxtFile(data) {
-        let body = {
+        const body = {
             method: 'getIznMTFile',
-            mtType: data.mtType,
             token: this.socketToken,
-            orderId: data.orderID,
+            mtId: data.mtId,
             userId: this.userId,
         };
 
-        if (data.mtType == 'MT101') body['messageType'] = data.messageType;
-        if (data.mtType == 'MT502') {
-            body['MT502ID'] = data.MT502ID;
-            body['type'] = data.orderType;
-        }
-
-        this.fileDownloader.downLoaderFile(body);
+        this.fileDownloader.downLoaderFile(body)
+            .catch(() => this.toaster.pop('error', 'Failed to download file'));
     }
 
     handleDownloadBookEntryCertification(assetManagementCompanyId, settlementDate, assetManagementBIC) {
