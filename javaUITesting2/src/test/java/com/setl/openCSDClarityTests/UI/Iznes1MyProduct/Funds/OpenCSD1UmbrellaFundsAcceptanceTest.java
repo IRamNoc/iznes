@@ -600,7 +600,7 @@ public class OpenCSD1UmbrellaFundsAcceptanceTest {
         String legalAdvisor = driver.findElement(By.xpath("//*[@id=\"uf_legalAdvisor\"]/div/div[2]/span/span")).getText();
         String directors = driver.findElement(By.id("uf_directors")).getAttribute("value");
         String internalReference = driver.findElement(By.id("uf_internalReference")).getAttribute("value");
-        String additionalNotes = driver.findElement(By.id("uf_additionnalNotes")).getAttribute("value");
+        String additionalNotes = driver.findElement(By.id("uf_additionalNotes")).getAttribute("value");
         submitUmbrellaFund();
         assertPopupNextFundNo("Fund");
         searchUmbrellaTable(uFundDetails);
