@@ -33,7 +33,7 @@ export interface SaveUmbrellaFundRequestBody extends MemberNodeMessageBody {
     legalAdvisorID: string;
     directors: string;
     internalReference: string;
-    additionnalNotes: string;
+    additionalNotes: string;
 }
 
 export interface UpdateUmbrellaFundRequestBody extends MemberNodeMessageBody {
@@ -66,7 +66,7 @@ export interface UpdateUmbrellaFundRequestBody extends MemberNodeMessageBody {
     legalAdvisorID: string;
     directors: string;
     internalReference: string;
-    additionnalNotes: string;
+    additionalNotes: string;
 }
 
 export interface IznDeleteUmbrellaDraftRequestBody extends MemberNodeMessageBody {

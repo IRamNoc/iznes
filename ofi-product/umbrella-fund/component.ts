@@ -271,9 +271,9 @@ export class UmbrellaFundComponent implements OnInit, AfterViewInit, OnDestroy {
                 '',
                 productConfig.internalReference,
             ],
-            additionnalNotes: [
+            additionalNotes: [
                 '',
-                productConfig.additionnalNotes,
+                productConfig.additionalNotes,
             ],
         });
 
@@ -551,7 +551,7 @@ export class UmbrellaFundComponent implements OnInit, AfterViewInit, OnDestroy {
                 legalAdvisorID: UmbrellaFundComponent.getListItem(u.legalAdvisorID, this.legalAdvisorOptions),
                 directors: u.directors || '',
                 internalReference: u.internalReference || '',
-                additionnalNotes: u.additionnalNotes || '',
+                additionalNotes: u.additionalNotes || '',
             };
         });
     }
@@ -688,7 +688,7 @@ export class UmbrellaFundComponent implements OnInit, AfterViewInit, OnDestroy {
             legalAdvisorID: (formValues.legalAdvisorID.length > 0) ? formValues.legalAdvisorID[0].id : null,
             directors: formValues.directors,
             internalReference: formValues.internalReference,
-            additionnalNotes: formValues.additionnalNotes,
+            additionalNotes: formValues.additionalNotes,
         };
     }
 

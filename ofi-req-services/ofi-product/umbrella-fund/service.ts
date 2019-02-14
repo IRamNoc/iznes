@@ -123,7 +123,7 @@ export class OfiUmbrellaFundService {
             legalAdvisorID: ufData.legalAdvisorID,
             directors: ufData.directors,
             internalReference: ufData.internalReference,
-            additionnalNotes: ufData.additionnalNotes,
+            additionalNotes: ufData.additionalNotes,
         };
 
         return createMemberNodeSagaRequest(this.memberSocketService, messageBody);
@@ -161,7 +161,7 @@ export class OfiUmbrellaFundService {
             legalAdvisorID: ufData.legalAdvisorID,
             directors: ufData.directors,
             internalReference: ufData.internalReference,
-            additionnalNotes: ufData.additionnalNotes,
+            additionalNotes: ufData.additionalNotes,
         };
 
         return createMemberNodeSagaRequest(this.memberSocketService, messageBody);

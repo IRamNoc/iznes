@@ -74,7 +74,7 @@ function formatUmbrellaFundDataResponse(rawUmbrellaFundData: Array<any>): Array<
                 legalAdvisorID: item.get('legalAdvisorID'),
                 directors: item.get('directors'),
                 internalReference: item.get('internalReference'),
-                additionnalNotes: item.get('additionnalNotes'),
+                additionalNotes: item.get('additionalNotes'),
             };
 
             if (!!result[item.get('umbrellaFundID')].umbrellaFundCreationDate) {
