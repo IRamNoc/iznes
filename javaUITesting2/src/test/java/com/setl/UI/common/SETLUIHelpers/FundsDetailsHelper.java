@@ -217,10 +217,10 @@ public class FundsDetailsHelper extends LoginAndNavigationHelper {
         wait.until(elementToBeClickable(By.id("uf_internalReference")));
         driver.findElement(By.id("uf_internalReference")).sendKeys("Internal Reference - Michael");
         //Additional Notes
-        scrollElementIntoViewById("uf_additionnalNotes");
-        wait.until(visibilityOfElementLocated(By.id("uf_additionnalNotes")));
-        wait.until(elementToBeClickable(By.id("uf_additionnalNotes")));
-        driver.findElement(By.id("uf_additionnalNotes")).sendKeys("This test was created to allow the optional information to be filled in automatically");
+        scrollElementIntoViewById("uf_additionalNotes");
+        wait.until(visibilityOfElementLocated(By.id("uf_additionalNotes")));
+        wait.until(elementToBeClickable(By.id("uf_additionalNotes")));
+        driver.findElement(By.id("uf_additionalNotes")).sendKeys("This test was created to allow the optional information to be filled in automatically");
 
     }
 
@@ -682,7 +682,7 @@ public class FundsDetailsHelper extends LoginAndNavigationHelper {
         wait.until(visibilityOfElementLocated(By.id("uf_legalAdvisor")));
         wait.until(visibilityOfElementLocated(By.id("uf_directors")));
         wait.until(visibilityOfElementLocated(By.id("uf_internalReference")));
-        wait.until(visibilityOfElementLocated(By.id("uf_additionnalNotes")));
+        wait.until(visibilityOfElementLocated(By.id("uf_additionalNotes")));
         optInfo.click();
 
 
@@ -694,7 +694,7 @@ public class FundsDetailsHelper extends LoginAndNavigationHelper {
         wait.until(invisibilityOfElementLocated(By.id("uf_legalAdvisor")));
         wait.until(invisibilityOfElementLocated(By.id("uf_directors")));
         wait.until(invisibilityOfElementLocated(By.id("uf_internalReference")));
-        wait.until(invisibilityOfElementLocated(By.id("uf_additionnalNotes")));
+        wait.until(invisibilityOfElementLocated(By.id("uf_additionalNotes")));
 
     }
 
@@ -754,7 +754,7 @@ public class FundsDetailsHelper extends LoginAndNavigationHelper {
         wait.until(visibilityOfElementLocated(By.id("legalForm")));
         wait.until(visibilityOfElementLocated(By.id("nationalNomenclatureOfLegalForm")));
         wait.until(visibilityOfElementLocated(By.id("fundCreationDate")));
-        wait.until(visibilityOfElementLocated(By.id("fundLaunchate")));
+        wait.until(visibilityOfElementLocated(By.id("fundLaunchDate")));
         wait.until(visibilityOfElementLocated(By.id("fundCurrency")));
 
         assertTrue(isElementPresent(By.id("openOrCloseEnded1")));
@@ -785,7 +785,7 @@ public class FundsDetailsHelper extends LoginAndNavigationHelper {
         wait.until(invisibilityOfElementLocated(By.id("legalForm")));
         wait.until(invisibilityOfElementLocated(By.id("nationalNomenclatureOfLegalForm")));
         wait.until(invisibilityOfElementLocated(By.id("fundCreationDate")));
-        wait.until(invisibilityOfElementLocated(By.id("fundLaunchate")));
+        wait.until(invisibilityOfElementLocated(By.id("fundLaunchDate")));
         wait.until(invisibilityOfElementLocated(By.id("fundCurrency")));
 
         wait.until(invisibilityOfElementLocated(By.id("fiscalYearEnd")));

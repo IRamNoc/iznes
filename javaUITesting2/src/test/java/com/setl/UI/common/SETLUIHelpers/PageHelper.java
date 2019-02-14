@@ -114,7 +114,7 @@ public class PageHelper extends LoginAndNavigationHelper {
         wait.until(visibilityOfElementLocated(By.id("uf_legalAdvisor")));
         wait.until(visibilityOfElementLocated(By.id("uf_directors")));
         wait.until(visibilityOfElementLocated(By.id("uf_internalReference")));
-        wait.until(visibilityOfElementLocated(By.id("uf_additionnalNotes")));
+        wait.until(visibilityOfElementLocated(By.id("uf_additionalNotes")));
         optInfo.click();
 
         wait.until(invisibilityOfElementLocated(By.id("uf_giin")));
@@ -125,7 +125,7 @@ public class PageHelper extends LoginAndNavigationHelper {
         wait.until(invisibilityOfElementLocated(By.id("uf_legalAdvisor")));
         wait.until(invisibilityOfElementLocated(By.id("uf_directors")));
         wait.until(invisibilityOfElementLocated(By.id("uf_internalReference")));
-        wait.until(invisibilityOfElementLocated(By.id("uf_additionnalNotes")));
+        wait.until(invisibilityOfElementLocated(By.id("uf_additionalNotes")));
     }
 
     public static void verifyFundOptInfoPageContents() {
@@ -144,7 +144,7 @@ public class PageHelper extends LoginAndNavigationHelper {
 
         WebElement optInfo = driver.findElement(By.xpath("//*[@id=\"clr-tab-content-2\"]/form/div[2]/div[2]/div/div/div[2]/div[1]/div/a/h2"));
         optInfo.click();
-        wait.until(visibilityOfElementLocated(By.id("globalItermediaryIdentification")));
+        wait.until(visibilityOfElementLocated(By.id("globalIntermediaryIdentification")));
         wait.until(visibilityOfElementLocated(By.id("delegatedManagementCompany")));
         wait.until(visibilityOfElementLocated(By.id("investmentAdvisor")));
         wait.until(visibilityOfElementLocated(By.id("auditor")));
@@ -152,11 +152,11 @@ public class PageHelper extends LoginAndNavigationHelper {
         wait.until(visibilityOfElementLocated(By.id("legalAdvisor")));
         wait.until(visibilityOfElementLocated(By.id("directors")));
         wait.until(visibilityOfElementLocated(By.id("internalReference")));
-        wait.until(visibilityOfElementLocated(By.id("additionnalNotes")));
+        wait.until(visibilityOfElementLocated(By.id("additionalNotes")));
         optInfo.click();
 
 
-        wait.until(invisibilityOfElementLocated(By.id("globalItermediaryIdentification")));
+        wait.until(invisibilityOfElementLocated(By.id("globalIntermediaryIdentification")));
         wait.until(invisibilityOfElementLocated(By.id("delegatedManagementCompany")));
         wait.until(invisibilityOfElementLocated(By.id("investmentAdvisor")));
         wait.until(invisibilityOfElementLocated(By.id("auditor")));
@@ -164,7 +164,7 @@ public class PageHelper extends LoginAndNavigationHelper {
         wait.until(invisibilityOfElementLocated(By.id("legalAdvisor")));
         wait.until(invisibilityOfElementLocated(By.id("directors")));
         wait.until(invisibilityOfElementLocated(By.id("internalReference")));
-        wait.until(invisibilityOfElementLocated(By.id("additionnalNotes")));
+        wait.until(invisibilityOfElementLocated(By.id("additionalNotes")));
 
     }
 
