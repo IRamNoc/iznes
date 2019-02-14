@@ -1,5 +1,5 @@
 import { Action } from 'redux';
-import * as _ from 'lodash';
+import { get, omit } from 'lodash';
 import { SubPortfolioBankingDetailsState } from './model';
 import {
     SET_SUB_PORTFOLIO_BANKING_DETAILS_LIST,
@@ -7,7 +7,6 @@ import {
     SET_SUB_PORTFOLIO_BANKING_DETAILS_REQUESTED,
     DELETE_SUB_PORTFOLIO_BANKING_DETAIL,
 } from './actions';
-import { get, merge } from 'lodash';
 
 const initialState: SubPortfolioBankingDetailsState = {
     requested: false,
@@ -49,14 +48,16 @@ function ofiSetSubPortfolioBankingDetailsState(state: SubPortfolioBankingDetails
     const subPortfolioBankingDetailsList: any = {};
 
     bankingDetails.forEach((detail) => {
+        const bankIdentificationStatement = detail.bankIdentificationStatement
+            ? JSON.parse(detail.bankIdentificationStatement)
+            : {
+                fileID: null,
+                hash: null,
+                name: null,
+            };
         subPortfolioBankingDetailsList[detail.option] = {
-            establishmentName: detail.establishmentName,
-            bic: detail.bic,
-            addressLine1: detail.addressLine1,
-            addressLine2: detail.addressLine2,
-            zipCode: detail.zipCode,
-            city: detail.city,
-            country: detail.country,
+            ...omit(detail, ['option']),
+            bankIdentificationStatement,
         };
     });
 
@@ -72,7 +73,7 @@ function ofiSetSubPortfolioBankingDetailsState(state: SubPortfolioBankingDetails
  */
 function ofiDeleteSubPortfolioBankingDetailState(state: SubPortfolioBankingDetailsState, action: Action) {
 
-    const deletedAddress = _.get(action, 'payload[1].Data.response[0].DeletedAddress', '');
+    const deletedAddress = get(action, 'payload[1].Data.response[0].DeletedAddress', '');
     const newList = JSON.parse(JSON.stringify(state.bankingDetails));
 
     Object.keys(newList).find((key) => {

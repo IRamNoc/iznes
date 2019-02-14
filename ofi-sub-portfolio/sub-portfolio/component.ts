@@ -1,22 +1,23 @@
 // Vendor
-import { Component, OnDestroy } from '@angular/core';
+import { Component, OnDestroy, ChangeDetectorRef } from '@angular/core';
 import { FormGroup, FormControl, Validators } from '@angular/forms';
 import { select, NgRedux } from '@angular-redux/store';
-import { Subscription } from 'rxjs';
+import { Subject } from 'rxjs/Subject';
+import { takeUntil } from 'rxjs/operators';
 import * as _ from 'lodash';
 
 // Internal
-import { MyWalletsService, WalletNodeRequestService } from '@setl/core-req-services';
-import { clearRequestedWalletLabel, DELETE_WALLET_LABEL } from '@setl/core-store';
+import { DELETE_WALLET_LABEL } from '@setl/core-store';
 import { DELETE_SUB_PORTFOLIO_BANKING_DETAIL } from '@ofi/ofi-main/ofi-store';
 import { OfiSubPortfolioService } from './service';
 import { AlertsService } from '@setl/jaspero-ng2-alerts';
-import { SagaHelper,  ConfirmationService } from '@setl/utils';
+import { SagaHelper, ConfirmationService } from '@setl/utils';
 import { CustomValidators } from '@setl/utils/helper';
 import { OfiSubPortfolioReqService } from '@ofi/ofi-main/ofi-req-services/ofi-sub-portfolio/service';
 import { MultilingualService } from '@setl/multilingual';
 import { MyUserService } from '@setl/core-req-services/my-user/my-user.service';
 import { fundItems } from '@ofi/ofi-main/ofi-product/productConfig';
+import { OfiCurrenciesService } from '@ofi/ofi-main/ofi-req-services/ofi-currencies/service';
 
 @Component({
     selector: 'ofi-sub-portfolio',
@@ -26,7 +27,6 @@ import { fundItems } from '@ofi/ofi-main/ofi-product/productConfig';
 })
 
 export class OfiSubPortfolioComponent implements OnDestroy {
-    private subscriptionsArray: Array<Subscription> = [];
     private connectedWalletId: number = 0;
     public addressList: Array<any>;
     public tabDetail: Array<object>;
@@ -35,20 +35,34 @@ export class OfiSubPortfolioComponent implements OnDestroy {
     public currentAddress: string;
     public editForm: boolean = false;
     public countries: any[] = this.translate.translate(fundItems.domicileItems);
+    currenciesItems = [];
+    file = {
+        control: null,
+        fileData: {
+            fileID: null,
+            hash: null,
+            name: null,
+        },
+    };
+
+    unSubscribe: Subject<any> = new Subject();
 
     @select(['user', 'siteSettings', 'language']) languageOb;
     @select(['user', 'connected', 'connectedWallet']) connectedWalletOb;
+    @select(['ofi', 'ofiCurrencies', 'currencies']) currencyList$;
 
-    constructor(private ngRedux: NgRedux<any>,
-                private alertsService: AlertsService,
-                private myWalletService: MyWalletsService,
-                private walletNodeRequestService: WalletNodeRequestService,
-                private ofiSubPortfolioReqService: OfiSubPortfolioReqService,
-                private ofiSubPortfolioService: OfiSubPortfolioService,
-                private confirmationService: ConfirmationService,
-                private myUserService: MyUserService,
-                public translate: MultilingualService,
+    constructor(
+        private ngRedux: NgRedux<any>,
+        private alertsService: AlertsService,
+        private ofiSubPortfolioReqService: OfiSubPortfolioReqService,
+        private ofiSubPortfolioService: OfiSubPortfolioService,
+        private confirmationService: ConfirmationService,
+        private myUserService: MyUserService,
+        public translate: MultilingualService,
+        private ofiCurrenciesService: OfiCurrenciesService,
+        private changeDetectorRef: ChangeDetectorRef,
     ) {
+        this.ofiCurrenciesService.getCurrencyList();
         this.tabDetail = [{
             title: {
                 text: this.translate.translate('Manage Sub-portfolio'),
@@ -59,52 +73,88 @@ export class OfiSubPortfolioComponent implements OnDestroy {
         this.setupFormGroup();
     }
 
-    /**
-     * Initialise Subscriptions
-     * @return void
-     */
+    ngOnDestroy() {
+        this.unSubscribe.next();
+        this.unSubscribe.complete();
+    }
+
     initSubscriptions() {
-        this.subscriptionsArray.push(this.ofiSubPortfolioService.getSubPortfolioData().subscribe((data) => {
-            this.addressList = data;
-        }));
+        this.ofiSubPortfolioService.getSubPortfolioData()
+            .pipe(
+                takeUntil(this.unSubscribe),
+            )
+            .subscribe((data) => {
+                this.addressList = data;
+            });
 
         this.ofiSubPortfolioService.updateSubPortfolioObservable();
 
-        this.subscriptionsArray.push(this.connectedWalletOb.subscribe((connected: number) => {
-            this.connectedWalletId = connected;
-        }));
+        this.connectedWalletOb
+            .pipe(
+                takeUntil(this.unSubscribe),
+            )
+            .subscribe((connected: number) => {
+                this.connectedWalletId = connected;
+            });
 
-        this.subscriptionsArray.push(this.languageOb.subscribe(() => {
-            this.tabDetail[0]['title'].text = this.translate.translate('Manage Sub-portfolio');
-            this.countries = this.translate.translate(fundItems.domicileItems);
-        }));
+        this.languageOb
+            .pipe(
+                takeUntil(this.unSubscribe),
+            )
+            .subscribe(() => {
+                this.tabDetail[0]['title'].text = this.translate.translate('Manage Sub-portfolio');
+                this.countries = this.translate.translate(fundItems.domicileItems);
+            });
+
+        this.currencyList$
+            .pipe(
+                takeUntil(this.unSubscribe),
+            )
+            .subscribe((d) => {
+                const data = d.toJS();
+
+                if (!data.length) {
+                    return [];
+                }
+
+                this.currenciesItems = data;
+            });
     }
 
-    /**
-     * Setup FormGroup
-     * @return void
-     */
     setupFormGroup() {
+        const bankIdentificationStatement = new FormControl('', [Validators.required]);
         this.tabDetail[0]['formControl'] = new FormGroup(
             {
-                label: new FormControl('', [Validators.required, this.duplicatedLabel.bind(this)]),
-                establishmentName: new FormControl('', [Validators.required]),
-                addressLine1: new FormControl('', [Validators.required]),
-                addressLine2: new FormControl(''),
-                zipCode: new FormControl('', [Validators.required]),
-                city: new FormControl('', [Validators.required]),
+                hashIdentifierCode: new FormControl({ value: '', disabled: true }),
+                investorReference: new FormControl('', [Validators.maxLength(255)]),
+                accountLabel: new FormControl('', [Validators.required, Validators.maxLength(255)]),
+                accountCurrency: new FormControl('', [Validators.required]),
+                label: new FormControl('', [Validators.required, this.duplicatedLabel.bind(this), Validators.maxLength(200)]),
+                establishmentName: new FormControl('', [Validators.required, Validators.maxLength(45)]),
+                addressLine1: new FormControl('', [Validators.required, Validators.maxLength(255)]),
+                addressLine2: new FormControl('', [Validators.maxLength(255)]),
+                zipCode: new FormControl('', [Validators.required, Validators.maxLength(10)]),
+                city: new FormControl('', [Validators.required, Validators.maxLength(45)]),
                 country: new FormControl('', [Validators.required]),
+                accountOwner: new FormControl('', [Validators.required, Validators.maxLength(255)]),
+                ownerAddressLine1: new FormControl('', [Validators.required, Validators.maxLength(255)]),
+                ownerAddressLine2: new FormControl('', [Validators.maxLength(255)]),
+                ownerZipCode: new FormControl('', [Validators.required, Validators.maxLength(10)]),
+                ownerCity: new FormControl('', [Validators.required, Validators.maxLength(45)]),
+                ownerCountry: new FormControl('', [Validators.required]),
                 iban: new FormControl('', [Validators.required, CustomValidators.ibanValidator]),
                 bic: new FormControl('', [Validators.required, CustomValidators.bicValidator]),
+                notes: new FormControl('', [Validators.maxLength(500)]),
+                bankIdentificationStatement,
             },
         );
+        this.file.control = bankIdentificationStatement;
     }
 
-    /**
-     * Handle edit button click
-     * @param address
-     * @return void
-     */
+    onDropFile(event) {
+        this.ofiSubPortfolioService.uploadFile(event, this.file, this.changeDetectorRef);
+    }
+
     handleEdit(address): void {
         this.setupFormGroup();
         const subPortfolio = this.addressList.find((subPortfolio) => {
@@ -116,6 +166,11 @@ export class OfiSubPortfolioComponent implements OnDestroy {
                 this.tabDetail[0]['formControl'].controls[item].patchValue(subPortfolio[item]);
             }
         });
+        this.tabDetail[0]['formControl'].controls.hashIdentifierCode.patchValue(address);
+        this.tabDetail[0]['formControl'].controls.accountCurrency.patchValue([_.find(this.currenciesItems, { id: subPortfolio.accountCurrency })]);
+        this.file.fileData = subPortfolio.bankIdentificationStatement;
+        this.file.control.patchValue(subPortfolio.bankIdentificationStatement.fileID);
+
         this.currentAddress = address;
         this.editForm = true;
         this.showFormModal = true;
@@ -126,9 +181,22 @@ export class OfiSubPortfolioComponent implements OnDestroy {
      * @return void
      */
     toggleFormModal() {
+        this.file = {
+            control: null,
+            fileData: {
+                fileID: null,
+                hash: null,
+                name: null,
+            },
+        };
         this.setupFormGroup();
         this.editForm = false;
         this.showFormModal = !this.showFormModal;
+    }
+
+    getSubPortfolioFormValue() {
+        const values = this.tabDetail[0]['formControl'].value;
+        return this.ofiSubPortfolioService.getSubPortfolioFormValue(values, this.file.fileData);
     }
 
     /**
@@ -136,20 +204,8 @@ export class OfiSubPortfolioComponent implements OnDestroy {
      * @return void
      */
     saveSubPortfolio() {
-        const values = this.tabDetail[0]['formControl'].value;
-
-        const asyncTaskPipe = this.ofiSubPortfolioReqService.saveNewSubPortfolio({
-            walletId: this.connectedWalletId,
-            label: values.label,
-            establishmentName: values.establishmentName,
-            addressLine1: values.addressLine1,
-            addressLine2: values.addressLine2,
-            zipCode: values.zipCode,
-            city: values.city,
-            country: _.get(values, 'country[0].id', values.country),
-            iban: values.iban,
-            bic: values.bic,
-        });
+        const payload = this.getSubPortfolioFormValue();
+        const asyncTaskPipe = this.ofiSubPortfolioReqService.saveNewSubPortfolio(payload);
 
         this.ngRedux.dispatch(SagaHelper.runAsyncCallback(
             asyncTaskPipe,
@@ -181,20 +237,11 @@ export class OfiSubPortfolioComponent implements OnDestroy {
      * @return void
      */
     updateSubPortfolio() {
-        const values = this.tabDetail[0]['formControl'].value;
-        const asyncTaskPipe = this.ofiSubPortfolioReqService.updateSubPortfolio({
-            walletId: this.connectedWalletId,
+        const payload = {
+            ...this.getSubPortfolioFormValue(),
             option: this.currentAddress,
-            label: values.label,
-            establishmentName: values.establishmentName,
-            addressLine1: values.addressLine1,
-            addressLine2: values.addressLine2,
-            zipCode: values.zipCode,
-            city: values.city,
-            country: _.get(values, 'country[0].id', values.country),
-            iban: values.iban,
-            bic: values.bic,
-        });
+        };
+        const asyncTaskPipe = this.ofiSubPortfolioReqService.updateSubPortfolio(payload);
 
         this.ngRedux.dispatch(SagaHelper.runAsyncCallback(
             asyncTaskPipe,
@@ -304,7 +351,7 @@ export class OfiSubPortfolioComponent implements OnDestroy {
 
             if (formControl.touched && !formControl.valid) {
                 switch (Object.keys(formControl.errors)[0]) {
-                    case 'required' :
+                    case 'required':
                         return this.translate.translate('Field is required');
                     case 'iban':
                         return this.translate.translate('IBAN must be 14 to 34 characters long with 2 letters at the beginning');
@@ -312,7 +359,7 @@ export class OfiSubPortfolioComponent implements OnDestroy {
                         return this.translate.translate('BIC must be 11 characters, ISO 9362, if 9 to 11 are empty then put "XXX"');
                     case 'duplicatedLabel':
                         return this.translate.translate('This sub-portfolio name is already used. Please choose another one');
-                    default :
+                    default:
                         return this.translate.translate('Invalid field');
                 }
             }
@@ -340,11 +387,5 @@ export class OfiSubPortfolioComponent implements OnDestroy {
             return null;
         }
         return null;
-    }
-
-    ngOnDestroy() {
-        for (const subscription of this.subscriptionsArray) {
-            subscription.unsubscribe();
-        }
     }
 }
