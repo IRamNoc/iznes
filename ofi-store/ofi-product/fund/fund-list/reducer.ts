@@ -65,7 +65,7 @@ function handleGetIznesFunds(state: FundListState, action: Action): any {
             const fundData: IznesFundDetail = {
                 ..._.omit(fund, ['Status']),
                 fundCreationDate: fund.fundCreationDate !== null ? fund.fundCreationDate.substr(0, 10) : null,
-                fundLaunchate: fund.fundLaunchate !== null ? fund.fundLaunchate.substr(0, 10) : null,
+                fundLaunchDate: fund.fundLaunchDate !== null ? fund.fundLaunchDate.substr(0, 10) : null,
                 capitalisationDate: fund.capitalisationDate !== null ? fund.capitalisationDate.substr(0, 10) : null,
                 fiscalYearEnd,
                 principlePromoterID,

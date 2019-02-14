@@ -23,7 +23,7 @@ export const validators = {
     lei: Validators.pattern(/^\w{18}\d{2}$|n\/a/i),
     giin: Validators.pattern(/^[A-Z0-9]{6}.[A-Z0-9]{5}.[A-Z]{2}.[0-9]{3}$/),
     internalReference: Validators.maxLength(50),
-    additionnalNotes: Validators.maxLength(500),
+    additionalNotes: Validators.maxLength(500),
     ngSelectRequired: (control: AbstractControl): { [key: string]: any } | null => {
         if (!control.value || !control.value['length']) {
             return {
@@ -110,7 +110,7 @@ export enum isPassiveFund {
     YES,
 }
 
-export enum hasSecurityiesLending {
+export enum hasSecurityLending {
     NO,
     YES,
 }
@@ -146,7 +146,7 @@ export const enums = {
     isFundTargetingEos,
     isFundTargetingSri,
     isPassiveFund,
-    hasSecurityiesLending,
+    hasSecurityLending,
     hasSwap,
     hasDurationHedge,
     useDefaultHolidayMgmt,

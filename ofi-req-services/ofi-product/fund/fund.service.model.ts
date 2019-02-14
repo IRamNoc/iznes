@@ -15,7 +15,7 @@ import {
     isFundTargetingEos,
     isFundTargetingSri,
     isPassiveFund,
-    hasSecurityiesLending,
+    hasSecurityLending,
     hasSwap,
     hasDurationHedge,
 } from '@ofi/ofi-main/ofi-product/productConfig';
@@ -41,7 +41,7 @@ export interface Fund {
     nationalNomenclatureOfLegalForm: number;
     homeCountryLegalType: number;
     fundCreationDate: string; // date
-    fundLaunchate: string; // date
+    fundLaunchDate: string; // date
     fundCurrency: number; // number enum
     openOrCloseEnded: openOrCloseEnded;
     fiscalYearEnd: string; // date
@@ -58,7 +58,7 @@ export interface Fund {
     isDedicatedFund: isDedicatedFund;
     portfolioCurrencyHedge: number; // number enum
     classification: number; // number enum
-    globalItermediaryIdentification: string;
+    globalIntermediaryIdentification: string;
     delegatedManagementCompany: string;
     investmentAdvisorID: string | string[];
     auditorID: number;
@@ -78,12 +78,12 @@ export interface Fund {
     isFundTargetingEos: isFundTargetingEos;
     isFundTargetingSri: isFundTargetingSri;
     isPassiveFund: isPassiveFund;
-    hasSecurityiesLending: hasSecurityiesLending;
+    hasSecurityLending: hasSecurityLending;
     hasSwap: hasSwap;
     hasDurationHedge: hasDurationHedge;
     investmentObjective: string;
     internalReference: string;
-    additionnalNotes: string;
+    additionalNotes: string;
 }
 
 export interface IznesCreateFundRequestBody extends MemberNodeMessageBody, Fund {

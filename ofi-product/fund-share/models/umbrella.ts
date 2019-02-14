@@ -160,7 +160,7 @@ export class ShareUmbrellaFundOptionnal extends DynamicFormsValidator {
         required: false,
         disabled: true,
     };
-    additionnalNotes: FormItem = {
+    additionalNotes: FormItem = {
         type: FormItemType.text,
         label: 'Additional Notes',
         required: false,
