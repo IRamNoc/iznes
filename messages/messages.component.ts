@@ -658,6 +658,7 @@ export class SetlMessagesComponent implements OnDestroy, OnInit {
             method: 'getIznMTFile',
             token: this.socketToken,
             mtId: data.mtId,
+            mtTemplate: data.mtTemplate || null,
             userId: this.userId,
         };
 
