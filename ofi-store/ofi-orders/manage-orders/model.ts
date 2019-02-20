@@ -51,6 +51,7 @@ export interface ManageOrderDetails {
     totalResult: any;
     valuationDate: any;
     maximumNumDecimal: number;
+    paymentMsgStatus: string;
 }
 
 export interface ManageOrders {

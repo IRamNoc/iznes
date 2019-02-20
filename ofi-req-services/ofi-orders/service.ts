@@ -235,6 +235,16 @@ export class OfiOrdersService {
         return createMemberNodeSagaRequest(this.memberSocketService, messageBody);
     }
 
+    requestMarkOrderReadyForPayment(data: {orderIds: number[]}): any {
+        const messageBody: OfiAmOrdersRequestBody = {
+            RequestName: 'iznmarkorderreadyforpayment',
+            token: this.memberSocketService.token,
+            ...data
+        };
+
+        return createMemberNodeRequest(this.memberSocketService, messageBody);
+    }
+
     /**
      * Build Request
      * -------------

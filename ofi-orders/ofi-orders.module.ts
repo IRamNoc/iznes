@@ -22,12 +22,14 @@ import { SearchFilters, IFilterStore } from './manage-orders/search-filters';
 /* Multilingual module. */
 import { MultilingualModule } from '@setl/multilingual';
 import { ManageOrdersService } from './manage-orders/manage-orders.service';
+import { PaymentMsgComfirmationModal } from "./manage-orders/components/payment-msg-comfirmation-modal";
 
 /* Decorator. */
 @NgModule({
     declarations: [
         ManageOrdersComponent,
         PlaceOrdersComponent,
+        PaymentMsgComfirmationModal,
     ],
     exports: [
         ManageOrdersComponent,

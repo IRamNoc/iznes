@@ -237,6 +237,11 @@
                     </div>
                 </div>
 
+                <clr-dg-action-bar *ngIf="showSendPaymentMsgBtn">
+                    <div class="btn-group">
+                        <button type="button" class="btn btn-sm btn-secondary" (click)="showPaymentMsgConfirmationModal = true"><clr-icon shape="envelope"></clr-icon> Send Payment Message</button>
+                    </div>
+                </clr-dg-action-bar>
                 <clr-datagrid (clrDgRefresh)="refresh($event)" [clrDgLoading]="loading" clrDgSortIcon #ordersDataGrid>
                     <clr-dg-column [clrDgField]="'orderRef'" clrDgSortIcon clrDgSortNoSearch id="Order-REF">
                         <ng-container *clrDgHideableColumn="{hidden: false}">{{ 'Order Reference' | translate }}
@@ -328,6 +333,9 @@
                             <span class="column-label"></span>
                         </ng-container>
                     </clr-dg-column>
+                    <clr-dg-column *ngIf="!isIznesAdmin" class="right">
+                        <span class="text-center">{{ 'Payment' | translate }}</span>
+                    </clr-dg-column>
                     <!-- ACTIONS -->
                     <clr-dg-column *ngIf="!isIznesAdmin" id="Order-Action" class="right">
                         <span class="text-center">{{ 'Actions' | translate }}</span>
@@ -336,11 +344,11 @@
                     <clr-dg-row *ngFor="let order of ordersList; let i = index" clrDgRowClickable>
                         <clr-dg-cell (click)="buildLink(order, $event)">
                             <!-- orderRef -->
-                            {{ getOrderRef(order.orderID) }}
+                            {{ order.orderRef }}
                         </clr-dg-cell>
                         <clr-dg-cell (click)="buildLink(order, $event)">
                             <!-- orderType -->
-                            <span>{{ getOrderTypeString(order) }}</span>
+                            <span>{{ order.orderTypeStr }}</span>
                         </clr-dg-cell>
                         <clr-dg-cell (click)="buildLink(order, $event)">
                             <!-- investor {{showInvestor(order)}} -->
@@ -433,6 +441,11 @@
                             <span *ngIf="order.orderStatus == 0" class="label label-error">{{ 'Cancelled' | translate }}
                             </span>
                         </clr-dg-cell>
+                        <clr-dg-cell *ngIf="!isIznesAdmin" class="right" [ngSwitch]="order.paymentMsgStatus">
+                            <span *ngSwitchCase="'sent'" class="label label-success">{{ 'Sent' | translate }}</span>
+                            <span *ngSwitchCase="'ready'" class="label label-success">{{ 'Sent' | translate }}</span>
+                            <clr-checkbox *ngSwitchCase="'pending'" [formControl]="order.markedForPayment" [clrDisabled]="!order.readyForPayment"></clr-checkbox>
+                        </clr-dg-cell>
                         <clr-dg-cell *ngIf="!isIznesAdmin" [ngSwitch]="order.orderStatus" class="right">
                             <!--&lt;!&ndash; Actions &ndash;&gt;-->
                             <!--<button type="button" *ngIf="order.orderStatus == 1; else cancelDisabled" (click)="cancelOrder(i)" class="btn btn-sm btn-danger">{{ 'Cancel' | translate }}</button>-->
@@ -520,6 +533,7 @@
                                 </button>
                             </clr-dg-column-toggle-button>
                         </clr-dg-column-toggle>
+
                         <!--{{pagination.firstItem + 1}} - {{pagination.lastItem + 1}}-->
                         <clr-dg-pagination #pagination [clrDgPageSize]="itemPerPage" [clrDgLastPage]="lastPage"></clr-dg-pagination>
                     </clr-dg-footer>
@@ -956,3 +970,6 @@
         </button>
     </div>
 </clr-modal>
+
+<!--payment message sending confirmation modal-->
+<payment-msg-confirmation [(opened)]="showPaymentMsgConfirmationModal" [ordersList]="ordersList" (confirmToSend)="sendPaymentMsg($event)"></payment-msg-confirmation>
