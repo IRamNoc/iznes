@@ -339,6 +339,7 @@ export class SocketClusterWrapper {
         this.messageQueue = [];
         this.hasConnected = false;
         this.channels = [];
+        this.connectTries = 0;
     }
 
     showTryCatchError(error) {
