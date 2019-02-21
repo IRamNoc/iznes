@@ -59,7 +59,7 @@ export class NodeAlertsService {
 
             // If this connection is connected, let backend know about it, by sending the backend a request(in the case,
             // extend session call would do here).
-            this.myUserService.defaultRefreshToken(this.ngRedux);
+            this.myUserService.defaultRefreshToken();
         };
     }
 
