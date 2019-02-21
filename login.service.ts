@@ -22,6 +22,8 @@ export class LoginService {
                 [],
                 asyncTaskPipes, {},
             ));
+            this.myUserService.loginInit();
+            this.myUserService.startSessionTimeoutWatcher();
         }
     }
 }
