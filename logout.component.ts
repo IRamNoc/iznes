@@ -1,7 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { Router } from '@angular/router';
 import { NgRedux } from '@angular-redux/store';
-import { WalletNodeSocketService } from '@setl/websocket-service';
+import {MemberSocketService, WalletNodeSocketService} from '@setl/websocket-service';
 
 @Component({
     selector: 'app-logout',
@@ -13,6 +13,7 @@ export class SetlLogoutComponent implements OnInit {
         private ngRedux: NgRedux<any>,
         private router: Router,
         private walletSocket: WalletNodeSocketService,
+        private memberSocketService: MemberSocketService,
     ) {
     }
 
@@ -20,5 +21,6 @@ export class SetlLogoutComponent implements OnInit {
         this.ngRedux.dispatch({ type: 'USER_LOGOUT' });
         this.router.navigate(['login']);
         this.walletSocket.clearConnection();
+        this.memberSocketService.clearConnection();
     }
 }
