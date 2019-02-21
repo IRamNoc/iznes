@@ -27,6 +27,10 @@ export class MemberSocketService {
         this.connect();
     }
 
+    clearConnection() {
+        this.socket.closeWebSocket();
+    }
+
     connect() {
         if (this.socket) {
             try {

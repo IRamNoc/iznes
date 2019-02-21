@@ -169,7 +169,9 @@ export class WalletNodeSocketService {
         // Close the current connection if any.
         if (this.websocket && this.websocket.webSocketConn) {
             try {
-                this.websocket.webSocketConn.onclose = () => true;
+                this.websocket.webSocketConn.onclose = () => {
+                    console.warn("walletnode websocket disconnected.")
+                };
                 this.websocket.webSocketConn.close();
             } catch (e) {
                 console.error('Fail to close websocket (walletnode).');
