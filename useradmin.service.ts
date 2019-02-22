@@ -767,6 +767,20 @@ export class UserAdminService {
     }
 
     /**
+     * Creates a default wallet for a user
+     *
+     * @param {Object} data - User data
+     *
+     * @return {Promise}
+     */
+    public createDefaultWallet(data): Promise<any> {
+        return this.adminUsersService.buildRequest({
+            ngRedux: this.ngRedux,
+            taskPipe: this.adminUsersService.createDefaultWallet(data),
+        });
+    }
+
+    /**
      * ===========================
      * Getters for hardcoded data.
      * ===========================

@@ -697,6 +697,27 @@ export class AdminUsersComponent implements OnInit, AfterViewInit, OnDestroy {
         this.userAdminService.createNewUser(newUser).then((response) => {
             /* Now we've edited the user, we need to send any changes to the groups, wallet access and chain access. */
             const userId = response[1].Data[0].userID.toString();
+            const accountID = response[1].Data[0].accountID;
+            const walletType = 3;
+            const walletName = response[1].Data[0].emailAddress.toString();
+
+            /* Create default wallet if option has been checked */
+            if (thisTab.formControl.controls.createDefaultWallet.value) {
+                this.userAdminService.createDefaultWallet({
+                    userID: Number(userId),
+                    accountID,
+                    walletType,
+                    walletName,
+                }).then((response) => {
+                    /* Stub. */
+                }).catch((error) => {
+                    /* Handle Error. */
+                    this.alertsService.generate(
+                        'error',
+                        this.translate.translate('Failed to create default wallet for user.'),
+                    );
+                });
+            }
 
             /* Save admin group access. */
             this.userAdminService.updateUserGroups({
@@ -1621,6 +1642,7 @@ export class AdminUsersComponent implements OnInit, AfterViewInit, OnDestroy {
                     '((\\[[0-9]{1,3}\\.[0-9]{1,3}\\.[0-9]{1,3}\\.[0-9]{1,3}])|(([a-zA-Z\\-0-9]+\\.)+[a-zA-Z]{2,}))$')]),
                 accountType: new FormControl('', [Validators.required]),
                 userType: new FormControl('', [Validators.required]),
+                createDefaultWallet: new FormControl(1),
                 userLocked: new FormControl(0),
                 password: new FormControl('', [Validators.required]),
                 passwordConfirm: new FormControl('', [Validators.required]),
@@ -1669,7 +1691,7 @@ export class AdminUsersComponent implements OnInit, AfterViewInit, OnDestroy {
             this.confirmationService.create(
                 `<span>${this.translate.translate('Reset Password')}</span>`,
                 `<span class="text-warning">${this.translate.translate(
-                    'Are you sure you want to send a reset password email to @email@?', 
+                    'Are you sure you want to send a reset password email to @email@?',
                     { email: emailControl.value })}</span>`,
             ).subscribe((ans) => {
                 if (ans.resolved) {
