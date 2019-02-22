@@ -12,7 +12,7 @@ export const environment = {
         path: 'db',
     },
     numberDivider: 100000,
-    reportingNodeUrl: 'http://10.0.1.106:13544/sapi',
+    reportingNodeUrl: '',
     messagesMenu: [
         {
             name: 'Inbox',
