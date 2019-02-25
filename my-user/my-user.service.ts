@@ -1,7 +1,7 @@
 
-import { timer as observableTimer, Observable, Subscription } from 'rxjs';
+import {timer as observableTimer, Observable, Subscription, Subject, interval} from 'rxjs';
 import { Injectable, OnDestroy, OnInit } from '@angular/core';
-import { MemberSocketService } from '@setl/websocket-service';
+import {MemberSocketService, WalletNodeSocketService} from '@setl/websocket-service';
 import { SagaHelper, Common } from '@setl/utils';
 import { createMemberNodeRequest, createMemberNodeSagaRequest } from '@setl/utils/common';
 import {
@@ -32,6 +32,9 @@ import {
     setMembernodeSessionManager,
     resetMembernodeSessionManager,
 } from '@setl/core-store';
+import {takeUntil} from "rxjs/operators";
+import { throttle } from 'rxjs/operators';
+import {Router} from "@angular/router";
 
 interface LoginRequestData {
     username: string;
@@ -113,15 +116,49 @@ export class MyUserService implements OnDestroy {
     private subscriptionsArray: Subscription[] = [];
     private TIMEOUT_COUNTDOWN: number = 60; // Modal countdown seconds
     private TIMEOUT: number; // Milliseconds until modal displayed
+    private cleanTimer$: Subject<boolean> =  new Subject();
+    private logout$: Subject<boolean> =  new Subject();
+    private userActive$: Observable<Event>;
+    private counterStarted = false;
 
-    constructor(private memberSocketService: MemberSocketService) {
+    constructor(
+        private memberSocketService: MemberSocketService,
+        private ngRedux: NgRedux<any>,
+        private router: Router,
+        private walletSocket: WalletNodeSocketService,
+    ) {
         // TIMEOUT + TIMEOUT_COUNTDOWN must be <= session timeout
         this.subscriptionsArray.push(this.sessionTimeoutSecsOb.subscribe((sessionTimeoutSecs) => {
             this.TIMEOUT = sessionTimeoutSecs ? (sessionTimeoutSecs - this.TIMEOUT_COUNTDOWN) * 1000 : 0;
         }));
     }
 
-    defaultRefreshToken(ngRedux: NgRedux<any>): any {
+    /**
+     * Do thing after logged in.
+     */
+    loginInit() {
+        // auto extend session if user is active
+        this.watchIfUserActive();
+    }
+
+    /**
+     * Monitor user mouse movement, to check if user active.
+     * if user active, we extend the toke automatically.
+     */
+    watchIfUserActive() {
+        this.userActive$ = Observable.fromEvent(window, "mousemove");
+        this.userActive$.pipe(
+            takeUntil(this.logout$),
+            // throttle the mouse movement for "timeout" (timeout is number of millisecond for section timeout - 1 minute)
+            throttle(val => interval(this.TIMEOUT / 2)),
+        ).subscribe(() => {
+            if (!this.counterStarted) {
+                this.defaultRefreshToken();
+            }
+        });
+    }
+
+    defaultRefreshToken(): any {
         let asyncTask;
 
         try {
@@ -130,27 +167,36 @@ export class MyUserService implements OnDestroy {
             return false;
         }
 
-        ngRedux.dispatch(SagaHelper.runAsyncCallback(
+        this.ngRedux.dispatch(SagaHelper.runAsyncCallback(
             asyncTask,
             (data) => {
-                // clear timer
-                this.ngOnDestroy();
-
-                ngRedux.dispatch(resetMembernodeSessionManager());
-
-                const timer = observableTimer(this.TIMEOUT, 1000);
-                // subscribing to a observable returns a subscription object
-                this.subscriptionsArray.push(timer.subscribe((t) => {
-                    if (t > this.TIMEOUT_COUNTDOWN) {
-                        this.ngOnDestroy();
-                    } else {
-                        ngRedux.dispatch(setMembernodeSessionManager(t));
-                    }
-                }));
+                this.startSessionTimeoutWatcher()
             },
             (data) => {
                 console.error('Fail to refresh session token: ', data);
             }));
+    }
+
+    startSessionTimeoutWatcher() {
+        // clear timer
+        this.cleanTimer$.next(true);
+        this.counterStarted = false;
+
+        this.ngRedux.dispatch(resetMembernodeSessionManager());
+
+        const timer = observableTimer(this.TIMEOUT, 1000);
+        // subscribing to a observable returns a subscription object
+        timer.pipe(
+            takeUntil(this.cleanTimer$)
+        ).subscribe((t) => {
+            this.counterStarted = true;
+            if (t > this.TIMEOUT_COUNTDOWN) {
+                this.cleanTimer$.next(true);
+            } else {
+                this.ngRedux.dispatch(setMembernodeSessionManager(t));
+            }
+        });
+
     }
 
     isReady() {
@@ -385,5 +431,17 @@ export class MyUserService implements OnDestroy {
         };
 
         return createMemberNodeSagaRequest(this.memberSocketService, messageBody);
+    }
+
+    logout(): any {
+        this.walletSocket.clearConnection();
+
+        this.memberSocketService.clearConnection();
+        this.memberSocketService.connect();
+
+        this.logout$.next(true);
+
+        this.ngRedux.dispatch({ type: 'USER_LOGOUT' });
+        this.router.navigate(['login']);
     }
 }
