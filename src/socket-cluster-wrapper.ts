@@ -110,10 +110,6 @@ export class SocketClusterWrapper {
 
                         this.hasConnected = true;
 
-                        // On connection:
-                        this.connectCallback();
-                        console.log('connected');
-
                         // Generate my public-private key pair.
                         this.encryption.mySecret = sodium.randombytes_buf(sodium.crypto_box_SECRETKEYBYTES);
                         this.encryption.myPublicKey = sodium.crypto_scalarmult_base(this.encryption.mySecret, 'hex');
@@ -136,6 +132,10 @@ export class SocketClusterWrapper {
                                 this.encryption.shareKey = sha256(sodium.to_hex(shared));
 
                                 this.initialising = false;
+
+                                // On connection:
+                                this.connectCallback();
+                                console.log('connected');
 
                                 while (this.messageQueue.length > 0) {
                                     this.sendRequest(this.messageQueue.shift());
@@ -162,12 +162,12 @@ export class SocketClusterWrapper {
 
                         this.closeWebSocket();
 
-                        const reconnecteInterval = setInterval(() => {
+                        const reconnectInterval = setInterval(() => {
                             if (!this.hasConnected) {
                                 this.openWebSocket();
                                 console.log('error: reconnect');
                             } else {
-                                clearInterval(reconnecteInterval);
+                                clearInterval(reconnectInterval);
                             }
                         }, 2000);
                     });
@@ -188,12 +188,12 @@ export class SocketClusterWrapper {
 
                         this.closeWebSocket();
 
-                        const reconnecteInterval = setInterval(() => {
+                        const reconnectInterval = setInterval(() => {
                             if (!this.hasConnected) {
                                 this.openWebSocket();
                                 console.log('disconnect: reconnect');
                             } else {
-                                clearInterval(reconnecteInterval);
+                                clearInterval(reconnectInterval);
                             }
                         }, 2000);
                     });
