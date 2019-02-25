@@ -6,6 +6,7 @@ import { mapTo } from 'rxjs/operators';
 import { Observable } from 'rxjs/Observable';
 import { Subscription } from 'rxjs/Subscription';
 import { NodeAlertsService } from '@setl/core-req-services';
+import {combineLatest} from "rxjs";
 
 @Component({
     styleUrls: ['./component.scss'],
@@ -22,8 +23,6 @@ export class ConnectionStatusAlerts implements OnInit, OnDestroy {
     public onlineOb;
     private timerSecs = 7;
     public connectionStatus: any = {};
-
-    public walletNodeDeadModal: Observable<boolean>;
 
     private subscriptions: Subscription[] = [];
 
@@ -42,28 +41,32 @@ export class ConnectionStatusAlerts implements OnInit, OnDestroy {
             Observable.fromEvent(window, 'offline').pipe(mapTo(false)),
         );
 
-        this.walletNodeDeadModal = this.nodeAlertsService.dead;
     }
 
     ngOnInit() {
-        const walletNodeTimerString = this.translate.translate(
+        const nodeTimerString = this.translate.translate(
             "You've been disconnected from our servers, you should be reconnected in @timerSecs@ sec",
             { timerSecs: this.timerSecs },
         );
 
         this.connectionStatus = {
-            walletNodeDead: false,
-            walletNodeReconnected: false,
-            walletNodeTimer: this.timerSecs,
-            walletNodeTimerString,
+            nodeDead: false,
+            nodeReconnected: false,
+            nodeTimer: this.timerSecs,
+            nodeTimerString,
             loading: false,
             internetDead: false,
             internetReconnected: false,
         };
 
         /* Connection subscriptions */
-        this.subscriptions.push(this.nodeAlertsService.disconnected.subscribe((disconnected) => {
-            disconnected ? this.walletNodeDead() : this.walletNodeAlive();
+        this.subscriptions.push(
+            combineLatest(
+                this.nodeAlertsService.walletNodeDead$,
+                this.nodeAlertsService.memberNodeDead$,
+            )
+            .subscribe(([walletDodeDisconnected, memberDodeDisconnected]) => {
+                (walletDodeDisconnected || memberDodeDisconnected) ? this.nodeDead() : this.nodeAlive();
         }));
         this.subscriptions.push(this.onlineOb.subscribe(status => this.internetDead(status)));
     }
@@ -91,39 +94,39 @@ export class ConnectionStatusAlerts implements OnInit, OnDestroy {
     }
 
     /**
-     * Handles displaying the wallet node reconnected alert
+     * Handles displaying the wallet/member node reconnected alert
      * ----------------------------------------------------
      */
-    walletNodeAlive() {
-        if (this.connectionStatus.walletNodeDead) {
-            this.connectionStatus.walletNodeReconnected = true;
+    nodeAlive() {
+        if (this.connectionStatus.nodeDead) {
+            this.connectionStatus.nodeReconnected = true;
             setTimeout(
                 () => {
-                    this.connectionStatus.walletNodeReconnected = false;
+                    this.connectionStatus.nodeReconnected = false;
                     this.isActiveConnectionAlert();
                     this.changeDetectorRef.detectChanges();
                 },
                 3000,
             );
         }
-        this.connectionStatus.walletNodeDead = false;
+        this.connectionStatus.nodeDead = false;
         this.isActiveConnectionAlert();
         this.changeDetectorRef.detectChanges();
     }
 
     /**
-     * Handles displaying the wallet node disconnection alert
+     * Handles displaying the wallet/member node disconnection alert
      * -----------------------------------------------------
      */
-    walletNodeDead() {
-        if (!this.connectionStatus.walletNodeDead) {
+    nodeDead() {
+        if (!this.connectionStatus.nodeDead) {
             const timer = setInterval(
                 () => {
-                    this.connectionStatus.walletNodeTimer -= 1;
-                    this.connectionStatus.walletNodeTimerString =
+                    this.connectionStatus.nodeTimer -= 1;
+                    this.connectionStatus.nodeTimerString =
                         this.translate.translate(
                             'You\'ve been disconnected from our servers, you should be reconnected in @timer@ sec',
-                            { timer: this.connectionStatus.walletNodeTimer },
+                            { timer: this.connectionStatus.nodeTimer },
                         );
                     this.connectionStatus.loading = false;
                     this.changeDetectorRef.detectChanges();
@@ -133,16 +136,16 @@ export class ConnectionStatusAlerts implements OnInit, OnDestroy {
             setTimeout(
                 () => {
                     clearInterval(timer);
-                    this.connectionStatus.walletNodeTimerString = this.translate.translate(
+                    this.connectionStatus.nodeTimerString = this.translate.translate(
                         'You\'ve been disconnected from our servers, you should be reconnected soon');
                     this.connectionStatus.loading = true;
-                    this.connectionStatus.walletNodeTimer = this.timerSecs;
+                    this.connectionStatus.nodeTimer = this.timerSecs;
                     this.changeDetectorRef.detectChanges();
                 },
                 1000 * this.timerSecs,
             );
-            this.connectionStatus.walletNodeDead = true;
-            this.connectionStatus.walletNodeReconnected = false;
+            this.connectionStatus.nodeDead = true;
+            this.connectionStatus.nodeReconnected = false;
             this.isActiveConnectionAlert();
             this.changeDetectorRef.detectChanges();
         }
@@ -153,8 +156,8 @@ export class ConnectionStatusAlerts implements OnInit, OnDestroy {
      * ----------------------------------------------------------------------
      */
     isActiveConnectionAlert() {
-        this.activeAlert.emit(this.connectionStatus.walletNodeDead || this.connectionStatus.internetDead ||
-            this.connectionStatus.walletNodeReconnected || this.connectionStatus.internetReconnected);
+        this.activeAlert.emit(this.connectionStatus.nodeDead || this.connectionStatus.internetDead ||
+            this.connectionStatus.nodeReconnected || this.connectionStatus.internetReconnected);
     }
 
     ngOnDestroy() {
