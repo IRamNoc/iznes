@@ -15,6 +15,7 @@ export class MemberSocketService {
     private port = 9788;
     private path = 'db';
     private reconnectSubject = new Subject<boolean>();
+    public disconnectSubject: Subject<boolean> = new Subject<boolean>();
 
     constructor() {
     }
@@ -48,7 +49,7 @@ export class MemberSocketService {
         );
 
         this.socket.disconnectCallback = () => {
-            this.disconnectCallback();
+            this.disconnectSubject.next(true);
             return true;
         };
 
@@ -60,10 +61,9 @@ export class MemberSocketService {
         };
 
         this.socket.connectCallback = () => {
-            if (this.socket.connectTries > 1) {
-                this.reconnectCallback();
-                this.reconnectSubject.next(true);
-            }
+
+           this.reconnectSubject.next(true);
+
             return true;
         };
 
@@ -88,6 +88,10 @@ export class MemberSocketService {
 
     getReconnectStatus() {
         return this.reconnectSubject.asObservable();
+    }
+
+    disconnect$() {
+        return this.disconnectSubject.asObservable();
     }
 
 }
