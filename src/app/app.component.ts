@@ -49,8 +49,7 @@ export class AppComponent implements AfterViewInit, OnInit {
                 private ofiMemberNodeChannelService: OfiMemberNodeChannelService,
                 private ofiPostTxService: OfiPostTxService,
                 private _myUserService: MyUserService,
-                private _ofiWalletnodeChannelService: OfiWalletnodeChannelService,
-                private nodeAlerts: NodeAlertsService) {
+                private _ofiWalletnodeChannelService: OfiWalletnodeChannelService) {
     }
 
     ngOnInit() {
@@ -62,14 +61,8 @@ export class AppComponent implements AfterViewInit, OnInit {
          * @param userData
          */
         this.walletNodeSocketService.walletnodeUpdateCallback = (id, message, userData) => {
-            this.walletnodeChannelService.resolveChannelMessage(id, message, userData);
             this._ofiWalletnodeChannelService.resolveChannelMessage(id, message, userData);
         };
-
-        this.walletNodeSocketService.closeSubject.pipe(throttleTime(2000)).subscribe((message) => {
-            // commented out as the wallet connection close when no activities to walletnode for 2 minutes.
-            // this.toasterService.pop('warning', 'Wallet node connection is closed');
-        });
 
         this.initialisationService.channelUpdateCallbacks.push((data) => {
             this.ofiMemberNodeChannelService.resolveChannelUpdate(data);
