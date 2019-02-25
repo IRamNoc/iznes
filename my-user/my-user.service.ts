@@ -434,10 +434,14 @@ export class MyUserService implements OnDestroy {
     }
 
     logout(): any {
+        this.walletSocket.clearConnection();
+
+        this.memberSocketService.clearConnection();
+        this.memberSocketService.connect();
+
+        this.logout$.next(true);
+
         this.ngRedux.dispatch({ type: 'USER_LOGOUT' });
         this.router.navigate(['login']);
-        this.walletSocket.clearConnection();
-        this.memberSocketService.clearConnection();
-        this.logout$.next(true);
     }
 }
