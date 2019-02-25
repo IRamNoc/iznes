@@ -80,6 +80,9 @@ export class AdminUsersComponent implements OnInit, AfterViewInit, OnDestroy {
     public search: string = '';
     private searchedUsersList: any = [];
 
+    /* Default wallet */
+    public hasDefaultWallet: boolean = false;
+
     /* Redux observables */
     @select(['userAdmin', 'chains', 'chainList']) chainListObservable;
     @select(['userAdmin', 'chain', 'requestedChainList']) requestedChainListOb;
@@ -709,7 +712,8 @@ export class AdminUsersComponent implements OnInit, AfterViewInit, OnDestroy {
                     walletType,
                     walletName,
                 }).then((response) => {
-                    /* Stub. */
+                    /* Default wallet successfully created for the user */
+                    this.hasDefaultWallet = true;
                 }).catch((error) => {
                     /* Handle Error. */
                     this.alertsService.generate(
@@ -843,7 +847,7 @@ export class AdminUsersComponent implements OnInit, AfterViewInit, OnDestroy {
      * ----------------
      * Handles saving an edited user.
      *
-     * @param {tabid} number - The formcontrol obbject that relates
+     * @param {tabid} number - The form control object that relates
      * to this edit form tab.
      * @return {void}
      */
@@ -865,6 +869,32 @@ export class AdminUsersComponent implements OnInit, AfterViewInit, OnDestroy {
 
         /* Let's send the edit request. */
         this.userAdminService.editUser(dataToSend).then((response) => {
+            /* Create default wallet if option has been checked */
+            if (!this.hasDefaultWallet && thisTab.formControl.controls.createDefaultWallet.value) {
+                const userData = response[1].Data[0];
+
+                const userId = userData.userID;
+                const accountID = userData.accountID;
+                const walletType = 3;
+                const walletName = userData.emailAddress.toString();
+
+                this.userAdminService.createDefaultWallet({
+                    userID: Number(userId),
+                    accountID,
+                    walletType,
+                    walletName,
+                }).then((res) => {
+                    /* Default wallet successfully created for the user */
+                    this.hasDefaultWallet = true;
+                }).catch((error) => {
+                    /* Handle Error. */
+                    this.alertsService.generate(
+                        'error',
+                        this.translate.translate('Failed to create default wallet for user.'),
+                    );
+                });
+            }
+
             /* Now we've edited the user, we need to send any changes to the groups. */
             const adminGroupChanges = this.diffUserGroups(thisTab.oldAdminGroups, this.arrayToGroups(
                 formData.adminGroups));
@@ -1279,6 +1309,9 @@ export class AdminUsersComponent implements OnInit, AfterViewInit, OnDestroy {
         const user = this.usersList[userIndex];
         const accountType = this.userAdminService.resolveAccountType({ text: user.accountName });
         const userType = this.userAdminService.resolveUserType({ id: user.userType });
+
+        /* If the user doesn't have a default wallet, show toggle to create a default wallet. */
+        this.hasDefaultWallet = !!user.defaultWalletID;
 
         /* And push the tab into it's place. */
         this.tabsControl.push({
