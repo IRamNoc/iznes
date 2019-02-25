@@ -421,8 +421,7 @@ export class NavigationTopbarComponent implements OnInit, AfterViewInit, OnDestr
     }
 
     logout() {
-        this.ngRedux.dispatch({ type: 'USER_LOGOUT' });
-        console.log('Disconnected from wallet node');
+        this.myUserService.logout();
     }
 
     controlMenu() {
@@ -461,7 +460,7 @@ export class NavigationTopbarComponent implements OnInit, AfterViewInit, OnDestr
     }
 
     handleExtendSession() {
-        this.myUserService.defaultRefreshToken(this.ngRedux);
+        this.myUserService.defaultRefreshToken();
     }
 }
 
