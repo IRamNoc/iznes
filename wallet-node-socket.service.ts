@@ -9,6 +9,9 @@ export class WalletNodeSocketService {
     public closeSubject: Subject<string> = new Subject<string>();
     public openSubject: Subject<string> = new Subject<string>();
 
+    public freshConnectionSubject: Subject<boolean> = new Subject<boolean>();
+    public waiveConnectionSubject: Subject<boolean> = new Subject<boolean>();
+
     private websocket: SetlWebSocket;
     private callBackRegister: SetlCallbackRegister;
     private walletNodeToken: string;
@@ -17,7 +20,7 @@ export class WalletNodeSocketService {
     // Default to nothing now.
     public walletnodeUpdateCallback: any = () => true;
 
-    constructor(private toasterService: ToasterService) {
+    constructor() {
     }
 
     get open() {
@@ -26,6 +29,16 @@ export class WalletNodeSocketService {
 
     get close() {
         return this.closeSubject.asObservable();
+    }
+
+    // if connection is drop purpose. such as logout
+    get waiveConnection() {
+        return this.waiveConnectionSubject.asObservable();
+    }
+
+    // if connection is fresh new one. such as connect to walletnode after login
+    get freshConnection() {
+        return this.freshConnectionSubject.asObservable();
     }
 
     /**
@@ -61,6 +74,8 @@ export class WalletNodeSocketService {
             this.websocket = new SetlWebSocket(protocol + ':', hostName, port, nodePath, this.callBackRegister, true, ['authenticate']);
 
             this.websocket.openWebSocket();
+
+            this.freshConnectionSubject.next(true);
 
             // Do authentication.
             this.callBackRegister.addHandler('OnOpen',
@@ -169,12 +184,16 @@ export class WalletNodeSocketService {
         // Close the current connection if any.
         if (this.websocket && this.websocket.webSocketConn) {
             try {
-                this.websocket.webSocketConn.onclose = () => true;
+                this.websocket.webSocketConn.onclose = () => {
+                    console.warn("walletnode websocket disconnected.")
+                };
                 this.websocket.webSocketConn.close();
             } catch (e) {
                 console.error('Fail to close websocket (walletnode).');
             }
         }
+
+        this.waiveConnectionSubject.next(true);
 
         // Clear the callback register.
         this.callBackRegister = undefined;
