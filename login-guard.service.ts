@@ -31,8 +31,7 @@ export class LoginGuardService implements CanActivate {
                 @Inject(APP_CONFIG) public appConfig: AppConfig,
                 private toasterService: ToasterService,
                 private router: Router,
-                private menuSpecService: MenuSpecService,
-                private myUserService: MyUserService) {
+                private menuSpecService: MenuSpecService) {
         this.isLogin = false;
 
         this.subscriptionsArray.push(this.isLoginOb.subscribe((isLogin) => {
@@ -61,9 +60,6 @@ export class LoginGuardService implements CanActivate {
             return new Promise((resolve) => {
                 this.menuSpecService.getMenuSpec().pipe(first()).subscribe((menuSpec) => {
                     this.menuSpec = menuSpec;
-
-                    // refresh token.
-                    this.myUserService.defaultRefreshToken(this.ngRedux);
 
                     if (this.isMenuDisabled(state['url'])) {
                         // 01/09/2018 commented out, as using the disable status to disable the menu in rendering.
