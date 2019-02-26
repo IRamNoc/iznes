@@ -78,7 +78,6 @@ export class NavigationTopbarComponent implements OnInit, AfterViewInit, OnDestr
     public lastLogin;
     public menuState;
 
-    public walletNodeDead: Observable<boolean>;
     public missingTranslations = [];
     public responsesService = <any>[];
     showMissingTranslations = false;
@@ -126,7 +125,6 @@ export class NavigationTopbarComponent implements OnInit, AfterViewInit, OnDestr
         ngRedux.subscribe(() => this.updateState());
         this.updateState();
 
-        this.walletNodeDead = this.nodeAlertsService.dead;
     }
 
     updateState() {
