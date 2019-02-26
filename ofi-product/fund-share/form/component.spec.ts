@@ -208,7 +208,7 @@ const fakeFund = {
         nationalNomenclatureOfLegalForm: 0,
         homeCountryLegalType: null,
         fundCreationDate: null,
-        fundLaunchate: null,
+        fundLaunchDate: null,
         fundCurrency: 0,
         openOrCloseEnded: 1,
         fiscalYearEnd: '2018-04',
@@ -224,7 +224,7 @@ const fakeFund = {
         centralizingAgentID: null,
         isDedicatedFund: 0,
         portfolioCurrencyHedge: 1,
-        globalItermediaryIdentification: null,
+        globalIntermediaryIdentification: null,
         delegatedManagementCompany: null,
         investmentAdvisorID: null,
         auditorID: null,
@@ -243,14 +243,14 @@ const fakeFund = {
         isFundTargetingEos: null,
         isFundTargetingSri: null,
         isPassiveFund: null,
-        hasSecurityiesLending: null,
+        hasSecurityLending: null,
         hasSwap: null,
         hasDurationHedge: null,
         useDefaultHolidayMgmt: null,
         holidayMgmtConfig: null,
         investmentObjective: null,
         internalReference: '',
-        additionnalNotes: '',
+        additionalNotes: '',
     },
 };
 const fakeUmbrella = {
@@ -282,7 +282,7 @@ const fakeUmbrella = {
         legalAdvisorID: null,
         directors: '',
         internalReference: '',
-        additionnalNotes: '',
+        additionalNotes: '',
     },
 };
 const activatedRouteStub = {

@@ -95,6 +95,7 @@ export class FundComponent implements OnInit, OnDestroy {
     homeCountryLegalTypeItems = [];
     fundCurrencyItems = [];
     portfolioCurrencyHedgeItems = [];
+    classificationItems = [];
     auditorItems = [];
     taxAuditorItems = [];
     legalAdvisorItems = [];
@@ -193,6 +194,7 @@ export class FundComponent implements OnInit, OnDestroy {
         this.UcitsVersionItems = this.fundItems.UCITSVersionItems;
         this.legalFormItems = this.fundItems.fundLegalFormItems;
         this.portfolioCurrencyHedgeItems = this.fundItems.portfolioCurrencyHedgeItems;
+        this.classificationItems = this.fundItems.classificationItems;
         this.auditorItems = this.fundItems.auditorItems;
         this.taxAuditorItems = this.fundItems.taxAuditorItems;
         this.legalAdvisorItems = this.fundItems.legalAdvisorItems;
@@ -265,7 +267,7 @@ export class FundComponent implements OnInit, OnDestroy {
             umbrellaFundID: { value: '', disabled: true },
             umbrellaFundName: { value: '', disabled: true },
             internalReference: { value: '', disabled: true },
-            additionnalNotes: { value: '', disabled: true },
+            additionalNotes: { value: '', disabled: true },
         });
 
         this.fundForm = fb.group({
@@ -287,7 +289,7 @@ export class FundComponent implements OnInit, OnDestroy {
             nationalNomenclatureOfLegalForm: [[], this.validators.ngSelectRequired],
             homeCountryLegalType: [[]],
             fundCreationDate: [null, this.validators.date.day],
-            fundLaunchate: [null, this.validators.date.day],
+            fundLaunchDate: [null, this.validators.date.day],
             fundCurrency: [[], this.validators.ngSelectRequired],
             openOrCloseEnded: [null, Validators.required],
             fiscalYearEnd: [null, this.validators.date.monthday],
@@ -303,8 +305,8 @@ export class FundComponent implements OnInit, OnDestroy {
             centralizingAgentID: [[]],
             isDedicatedFund: [null],
             portfolioCurrencyHedge: [[], this.validators.ngSelectRequired],
-
-            globalItermediaryIdentification: [null, this.validators.giin],
+            classification: [[], this.validators.ngSelectRequired],
+            globalIntermediaryIdentification: [null, this.validators.giin],
             delegatedManagementCompany: [[]],
             investmentAdvisorID: [null],
             auditorID: [[]],
@@ -327,14 +329,14 @@ export class FundComponent implements OnInit, OnDestroy {
             isFundTargetingEos: [null],
             isFundTargetingSri: [null],
             isPassiveFund: [null],
-            hasSecurityiesLending: [null],
+            hasSecurityLending: [null],
             hasSwap: [null],
             hasDurationHedge: [null],
             useDefaultHolidayMgmt: [null],
             holidayMgmtConfig: [null],
             investmentObjective: [null],
             internalReference: ['', this.validators.internalReference],
-            additionnalNotes: ['', this.validators.additionnalNotes],
+            additionalNotes: ['', this.validators.additionalNotes],
         });
 
         this.umbrellaForm.addControl('umbrellaFund', this.umbrellaControl);
@@ -427,8 +429,8 @@ export class FundComponent implements OnInit, OnDestroy {
                 .setValue(newUmbrella.umbrellaFundName);
                 this.umbrellaEditForm.controls['internalReference']
                 .setValue(newUmbrella.internalReference);
-                this.umbrellaEditForm.controls['additionnalNotes']
-                .setValue(newUmbrella.additionnalNotes);
+                this.umbrellaEditForm.controls['additionalNotes']
+                .setValue(newUmbrella.additionalNotes);
 
                 this.fundForm.controls['isFundStructure'].setValue(this.enums.isFundStructure.UMBRELLA.toString());
 
@@ -748,8 +750,8 @@ export class FundComponent implements OnInit, OnDestroy {
             isPassiveFund: !_.isNull(this.fundForm.controls.isPassiveFund.value)
                 ? Number(this.fundForm.controls.isPassiveFund.value)
                 : null,
-            hasSecurityiesLending: !_.isNull(this.fundForm.controls.hasSecurityiesLending.value)
-                ? Number(this.fundForm.controls.hasSecurityiesLending.value)
+            hasSecurityLending: !_.isNull(this.fundForm.controls.hasSecurityLending.value)
+                ? Number(this.fundForm.controls.hasSecurityLending.value)
                 : null,
             hasSwap: !_.isNull(this.fundForm.controls.hasSwap.value)
                 ? Number(this.fundForm.controls.hasSwap.value)
@@ -767,6 +769,7 @@ export class FundComponent implements OnInit, OnDestroy {
             homeCountryLegalType: _.get(this.fundForm.controls['homeCountryLegalType'].value, ['0', 'id'], null),
             fundCurrency: _.get(this.fundForm.controls['fundCurrency'].value, ['0', 'id'], null),
             portfolioCurrencyHedge: _.get(this.fundForm.controls['portfolioCurrencyHedge'].value, ['0', 'id'], null),
+            classification: _.get(this.fundForm.controls['classification'].value, ['0', 'id'], null),
             auditorID: _.get(this.fundForm.controls['auditorID'].value, ['0', 'id'], null),
             taxAuditorID: _.get(this.fundForm.controls['taxAuditorID'].value, ['0', 'id'], null),
             legalAdvisorID: _.get(this.fundForm.controls['legalAdvisorID'].value, ['0', 'id'], null),
@@ -788,7 +791,7 @@ export class FundComponent implements OnInit, OnDestroy {
             holidayMgmtConfig: this.getHolidayMgmtConfig(),
             legalEntityIdentifier: this.isLeiVisible ? this.fundForm.controls['legalEntityIdentifier'].value : null,
             fundCreationDate: this.fundForm.controls['fundCreationDate'].value || null,
-            fundLaunchate: this.fundForm.controls['fundLaunchate'].value || null,
+            fundLaunchDate: this.fundForm.controls['fundLaunchDate'].value || null,
             fiscalYearEnd: this.fundForm.controls['fiscalYearEnd'].value || null,
             capitalisationDate: this.fundForm.controls['capitalisationDate'].value || null,
         };
@@ -1001,6 +1004,10 @@ export class FundComponent implements OnInit, OnDestroy {
                     fund.portfolioCurrencyHedge,
                     this.portfolioCurrencyHedgeItems,
                 ),
+                classification: FundComponent.getListItem(
+                    fund.classification,
+                    this.classificationItems,
+                ),
                 investmentAdvisorID: fund.investmentAdvisorID,
                 auditorID: FundComponent.getListItem(fund.auditorID, this.auditorItems),
                 taxAuditorID: FundComponent.getListItem(fund.taxAuditorID, this.taxAuditorItems),
@@ -1075,7 +1082,7 @@ export class FundComponent implements OnInit, OnDestroy {
             isFundTargetingEos: !_.isNull(fund.isFundTargetingEos) ? fund.isFundTargetingEos.toString() : null,
             isFundTargetingSri: !_.isNull(fund.isFundTargetingSri) ? fund.isFundTargetingSri.toString() : null,
             isPassiveFund: !_.isNull(fund.isPassiveFund) ? fund.isPassiveFund.toString() : null,
-            hasSecurityiesLending: !_.isNull(fund.hasSecurityiesLending) ? fund.hasSecurityiesLending.toString() : null,
+            hasSecurityLending: !_.isNull(fund.hasSecurityLending) ? fund.hasSecurityLending.toString() : null,
             hasSwap: !_.isNull(fund.hasSwap) ? fund.hasSwap.toString() : null,
             hasDurationHedge: !_.isNull(fund.hasDurationHedge) ? fund.hasDurationHedge.toString() : null,
         });

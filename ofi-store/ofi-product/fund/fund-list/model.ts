@@ -40,7 +40,7 @@ export interface IznesFundDetail {
     nationalNomenclatureOfLegalForm: string;
     homeCountryLegalType: string;
     fundCreationDate: string;
-    fundLaunchate: string;
+    fundLaunchDate: string;
     fundCurrency: string;
     openOrCloseEnded: string;
     fiscalYearEnd: string;
@@ -57,7 +57,8 @@ export interface IznesFundDetail {
     centralizingAgentID: string;
     isDedicatedFund: string;
     portfolioCurrencyHedge: string;
-    globalItermediaryIdentification: string;
+    classification: string;
+    globalIntermediaryIdentification: string;
     delegatedManagementCompany: string;
     investmentAdvisorID: string[];
     auditorID: string;
@@ -77,10 +78,10 @@ export interface IznesFundDetail {
     isFundTargetingEos: string;
     isFundTargetingSri: string;
     isPassiveFund: string;
-    hasSecurityiesLending: string;
+    hasSecurityLending: string;
     hasSwap: string;
     hasDurationHedge: string;
     investmentObjective: string;
     internalReference: string;
-    additionnalNotes: string;
+    additionalNotes: string;
 }

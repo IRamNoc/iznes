@@ -487,20 +487,14 @@ export class OfiFundShareService {
         return request;
     }
 
-    iznDeleteShareDraft(ofiFundShareService: OfiFundShareService, ngRedux: NgRedux<any>, id: string) {
-        // Request the list.
-        const asyncTaskPipe = ofiFundShareService.deleteShareDraft(id);
-        ngRedux.dispatch(SagaHelper.runAsyncCallback(asyncTaskPipe));
-    }
-
-    deleteShareDraft(id: string): any {
+    deleteShareDraft(id: string): Promise<any> {
         const messageBody: IznDeleteShareDraftRequestBody = {
             RequestName: 'izndeleteShareDraft',
             token: this.memberSocketService.token,
             id,
         };
 
-        return createMemberNodeSagaRequest(this.memberSocketService, messageBody);
+        return createMemberNodeRequest(this.memberSocketService, messageBody);
     }
 
     validateKiid(walletID: number, shareID: number) {

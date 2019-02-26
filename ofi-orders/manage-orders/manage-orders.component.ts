@@ -1,25 +1,22 @@
-import { debounceTime, take, switchMap, filter, takeUntil, bufferTime } from 'rxjs/operators';
+import { debounceTime, switchMap, filter, bufferTime } from 'rxjs/operators';
 import { Observable, combineLatest as observableCombineLatest, Subscription, zip } from 'rxjs';
 /* Core/Angular imports. */
 import {
     AfterViewInit,
-    ChangeDetectionStrategy,
     ChangeDetectorRef,
     Component,
-    Inject,
     OnDestroy,
     Input,
     OnInit,
     ViewChild,
 } from '@angular/core';
 
-import { FormBuilder, FormGroup } from '@angular/forms';
+import {FormControl, FormGroup} from '@angular/forms';
 import { ActivatedRoute, Router } from '@angular/router';
 import { Location } from '@angular/common';
 
 import { MemberSocketService } from '@setl/websocket-service';
 import { NgRedux, select } from '@angular-redux/store';
-import { Unsubscribe } from 'redux';
 import {
     commonHelper,
     ConfirmationService,
@@ -27,21 +24,18 @@ import {
     immutableHelper,
     LogService,
     SagaHelper,
+    MoneyValuePipe,
 } from '@setl/utils';
 
 import { get, isEmpty, isEqual, find, isUndefined } from 'lodash';
 import * as moment from 'moment-timezone';
 import { ToasterService } from 'angular2-toaster';
 /* Services. */
-import { WalletNodeRequestService } from '@setl/core-req-services';
 import { ManageOrdersService } from './manage-orders.service';
 import { OfiOrdersService } from '../../ofi-req-services/ofi-orders/service';
-import { OfiCorpActionService } from '../../ofi-req-services/ofi-corp-actions/service';
-import { OfiManagementCompanyService } from '@ofi/ofi-main/ofi-req-services/ofi-product/management-company/management-company.service';
 import { OfiFundShareService } from '@ofi/ofi-main/ofi-req-services/ofi-product/fund-share/service';
 import { NumberConverterService } from '@setl/utils/services/number-converter/service';
 /* Alerts and confirms. */
-import { AlertsService } from '@setl/jaspero-ng2-alerts';
 /* Ofi Store stuff. */
 import { ofiManageOrderActions } from '../../ofi-store';
 /* Clarity */
@@ -57,6 +51,7 @@ import { SearchFilters, ISearchFilters } from './search-filters';
 import { labelForOrder } from '../order.model';
 import { orderStatuses, orderTypes, dateTypes } from './lists';
 import { DatagridParams } from './datagrid-params';
+import { fundClassifications } from '../../ofi-product/productConfig';
 
 /* Types. */
 interface SelectedItem {
@@ -86,7 +81,6 @@ export class ManageOrdersComponent implements OnInit, AfterViewInit, OnDestroy {
     total: number;
     readonly itemPerPage = 10;
     private datagridParams: DatagridParams;
-    filtersFromRedux: any = {};
     lastPage: number;
     loading = true;
     userType: number;
@@ -94,6 +88,13 @@ export class ManageOrdersComponent implements OnInit, AfterViewInit, OnDestroy {
     public orderTypes: any = [];
     public orderStatuses: any = [];
     public dateTypes: any = [];
+
+    fundClassifications: object;
+    fundClassificationId: number;
+    orderClassificationFee: number;
+    transformedOrderClassificationFee: number;
+
+    showPaymentMsgConfirmationModal: boolean;
 
     // Locale
     language = 'en';
@@ -159,7 +160,6 @@ export class ManageOrdersComponent implements OnInit, AfterViewInit, OnDestroy {
     };
     fundShareID = 0;
     fundShareList = {};
-    userAssetList: any[] = [];
     isAmConfirmModalDisplayed: boolean;
     amConfirmModal: any = {};
     cancelModalMessage: string;
@@ -186,7 +186,6 @@ export class ManageOrdersComponent implements OnInit, AfterViewInit, OnDestroy {
     @select(['ofi', 'ofiCurrencies', 'currencies']) readonly currencies$;
 
     private myDetails: any = {};
-    private myWallets: any = [];
     private walletDirectory: any = [];
     private connectedWalletId: any = 0;
 
@@ -201,6 +200,7 @@ export class ManageOrdersComponent implements OnInit, AfterViewInit, OnDestroy {
                 private fundInvestService: OfiFundInvestService,
                 private logService: LogService,
                 private fileDownloader: FileDownloader,
+                public moneyValuePipe: MoneyValuePipe,
                 public numberConverter: NumberConverterService,
                 private messagesService: MessagesService,
                 private toasterService: ToasterService,
@@ -210,10 +210,10 @@ export class ManageOrdersComponent implements OnInit, AfterViewInit, OnDestroy {
                 private location: Location,
                 private searchFilters: SearchFilters,
     ) {
-
         this.isAmConfirmModalDisplayed = false;
         this.cancelModalMessage = '';
         this.ofiCurrenciesService.getCurrencyList();
+        this.fundClassifications = fundClassifications;
     }
 
     get isInvestorUser() {
@@ -228,6 +228,24 @@ export class ManageOrdersComponent implements OnInit, AfterViewInit, OnDestroy {
             });
         }
         return iznesAdmin;
+    }
+
+    get isAssetManger() {
+        return !this.isInvestorUser && !this.isIznesAdmin;
+    }
+
+    get fundClassificationsText(): string {
+        try {
+            return fundClassifications[this.fundClassificationId].text
+        } catch(e) {
+            return '';
+        }
+    }
+
+    get showSendPaymentMsgBtn(): boolean {
+        // number of order marked for payment messages.
+       const nPMsg = this.ordersList.filter((o) => o.markedForPayment.value).length;
+       return this.isAssetManger && nPMsg > 0;
     }
 
     appSubscribe<T>(
@@ -378,6 +396,10 @@ export class ManageOrdersComponent implements OnInit, AfterViewInit, OnDestroy {
                 },
             );
         }
+
+        // Update the classification fee
+        this.orderClassificationFee = order.classificationFee;
+
         this.setTabActive(order.orderID);
         this.updateCurrentFundShare();
     }
@@ -496,6 +518,11 @@ export class ManageOrdersComponent implements OnInit, AfterViewInit, OnDestroy {
             const quantity = this.subEstimated(order, 'quantity', 'estimatedQuantity');
             const fee = amountWithCost - amount;
             const feePercentage = this.numberConverter.toFrontEnd(order.feePercentage) * 100;
+            const readyForPayment = (order.price > 0 && order.paymentMsgStatus === 'pending' );
+            const markedForPayment = new FormControl(false);
+            const orderRef = this.getOrderRef(orderId);
+            const orderTypeStr = this.getOrderTypeString(order);
+
             return {
                 ...list[orderId],
                 price,
@@ -504,7 +531,11 @@ export class ManageOrdersComponent implements OnInit, AfterViewInit, OnDestroy {
                 quantity,
                 feePercentage,
                 fee,
+                orderRef,
+                orderTypeStr,
                 knownNav: order.price > 0,
+                markedForPayment,
+                readyForPayment,
                 orderUnpaid: this.orderUnpaid(list[orderId]),
             };
         });
@@ -512,6 +543,14 @@ export class ManageOrdersComponent implements OnInit, AfterViewInit, OnDestroy {
 
     updateCurrentFundShare() {
         this.logService.log('there', this.fundShareList);
+
+        this.fundClassificationId = this.fundShareList[this.fundShareID].classification;
+        // classification number decimal point.
+        const classificationDp = get(fundClassifications, [this.fundClassificationId, 'dp'], 2);
+        this.transformedOrderClassificationFee = this.moneyValuePipe.transform(
+            this.numberConverter.toFrontEnd(this.orderClassificationFee),
+            classificationDp,
+        );
 
         const currentFundShare = this.fundShareList[this.fundShareID];
         if (typeof currentFundShare.keyFactOptionalData === 'string') {
@@ -948,6 +987,23 @@ export class ManageOrdersComponent implements OnInit, AfterViewInit, OnDestroy {
      */
     getPriceStatusCss(order: { knownNav: boolean }): 'text-warning' | 'text-success' {
         return order.knownNav ? 'text-success' : 'text-warning';
+    }
+
+    sendPaymentMsg($event) {
+        this.ofiOrdersService.requestMarkOrderReadyForPayment({orderIds: $event}).then((r) => {
+            const detailResps = get(r, '[1].Data[0].responses', []);
+            const failedResps = detailResps.filter(dr => (get(dr, '[0].Status', 'Fail') !== 'OK'));
+            if (failedResps.length > 0) {
+                throw new Error(this.translate.translate('fail send payment messages'));
+            }
+        }).then(() => {
+           this.toasterService.pop('success', this.translate.translate('Successfully sent payment messages'));
+        }).catch((e) => {
+           this.toasterService.pop('error', e.message);
+        }).then(() => {
+           this.showPaymentMsgConfirmationModal = false;
+           this.changeDetectorRef.markForCheck();
+        });
     }
 
     ngOnDestroy(): void {

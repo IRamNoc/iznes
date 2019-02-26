@@ -104,6 +104,7 @@ export class OfiOrdersService {
         orderBy: string;
         orderValue: number;
         comment: string;
+        classificationFee: number;
     }): any {
         const messageBody: IznesNewOrderRequestBody = {
             RequestName: 'iznesneworder',
@@ -117,6 +118,7 @@ export class OfiOrdersService {
             orderby: requestData.orderBy,
             ordervalue: requestData.orderValue,
             comment: requestData.comment,
+            classificationFee: requestData.classificationFee,
         };
 
         return createMemberNodeRequest(this.memberSocketService, messageBody);
@@ -231,6 +233,16 @@ export class OfiOrdersService {
         };
 
         return createMemberNodeSagaRequest(this.memberSocketService, messageBody);
+    }
+
+    requestMarkOrderReadyForPayment(data: {orderIds: number[]}): any {
+        const messageBody: OfiAmOrdersRequestBody = {
+            RequestName: 'iznmarkorderreadyforpayment',
+            token: this.memberSocketService.token,
+            ...data
+        };
+
+        return createMemberNodeRequest(this.memberSocketService, messageBody);
     }
 
     /**

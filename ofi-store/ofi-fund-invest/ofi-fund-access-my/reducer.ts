@@ -138,6 +138,7 @@ function handleSetFundAccessMy(state: OfiFundAccessMyState, action: Action): Ofi
             entryFee: item.get('entryFee', 0),
             exitFee: item.get('exitFee', 0),
             fundName: item.get('fundName', ''),
+            classification: item.get('classification', 0),
             price: item.get('price', 0),
             priceDate: item.get('priceDate', ''),
             priceStatus: item.get('priceStatus', ''),

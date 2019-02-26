@@ -2,7 +2,7 @@ import { Injectable } from '@angular/core';
 import { MemberSocketService } from '@setl/websocket-service';
 import { SagaHelper, Common } from '@setl/utils';
 import { NgRedux, select } from '@angular-redux/store';
-import { createMemberNodeSagaRequest } from '@setl/utils/common';
+import {createMemberNodeRequest, createMemberNodeSagaRequest} from '@setl/utils/common';
 import { Subject } from 'rxjs/Subject';
 import { takeUntil } from 'rxjs/operators';
 
@@ -138,6 +138,7 @@ export class OfiFundService {
             investmentAdvisorID: JSON.stringify(payload.investmentAdvisorID),
             payingAgentID: JSON.stringify(payload.payingAgentID),
         };
+
         return this.buildRequest({
             taskPipe: createMemberNodeSagaRequest(this.memberSocketService, messageBody),
         });
@@ -179,20 +180,14 @@ export class OfiFundService {
         });
     }
 
-    iznDeleteFundDraft(ofiFundService: OfiFundService, ngRedux: NgRedux<any>, id: string) {
-        // Request the list.
-        const asyncTaskPipe = ofiFundService.deleteFundDraft(id);
-        ngRedux.dispatch(SagaHelper.runAsyncCallback(asyncTaskPipe));
-    }
-
-    deleteFundDraft(id: string): any {
+    deleteFundDraft(id: string): Promise<any> {
         const messageBody: IznDeleteFundDraftRequestBody = {
             RequestName: 'izndeleteFundDraft',
             token: this.memberSocketService.token,
             id,
         };
 
-        return createMemberNodeSagaRequest(this.memberSocketService, messageBody);
+        return createMemberNodeRequest(this.memberSocketService, messageBody);
     }
 
     fetchFundAuditByFundID(fundID: number) {

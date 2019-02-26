@@ -2,7 +2,7 @@ import { Injectable } from '@angular/core';
 import { MemberSocketService } from '@setl/websocket-service';
 import { SagaHelper, Common } from '@setl/utils';
 import { NgRedux, select } from '@angular-redux/store';
-import { createMemberNodeSagaRequest } from '@setl/utils/common';
+import {createMemberNodeRequest, createMemberNodeSagaRequest} from '@setl/utils/common';
 
 import {
     UmbrellaFundRequestMessageBody,
@@ -123,7 +123,7 @@ export class OfiUmbrellaFundService {
             legalAdvisorID: ufData.legalAdvisorID,
             directors: ufData.directors,
             internalReference: ufData.internalReference,
-            additionnalNotes: ufData.additionnalNotes,
+            additionalNotes: ufData.additionalNotes,
         };
 
         return createMemberNodeSagaRequest(this.memberSocketService, messageBody);
@@ -161,26 +161,20 @@ export class OfiUmbrellaFundService {
             legalAdvisorID: ufData.legalAdvisorID,
             directors: ufData.directors,
             internalReference: ufData.internalReference,
-            additionnalNotes: ufData.additionnalNotes,
+            additionalNotes: ufData.additionalNotes,
         };
 
         return createMemberNodeSagaRequest(this.memberSocketService, messageBody);
     }
 
-    iznDeleteUmbrellaDraft(ofiUmbrellaFundService: OfiUmbrellaFundService, ngRedux: NgRedux<any>, id: string) {
-        // Request the list.
-        const asyncTaskPipe = ofiUmbrellaFundService.deleteUmbrellaDraft(id);
-        ngRedux.dispatch(SagaHelper.runAsyncCallback(asyncTaskPipe));
-    }
-
-    deleteUmbrellaDraft(id: string): any {
+    deleteUmbrellaDraft(id: string): Promise<any> {
         const messageBody: IznDeleteUmbrellaDraftRequestBody = {
             RequestName: 'izndeleteumbrelladraft',
             token: this.memberSocketService.token,
             id,
         };
 
-        return createMemberNodeSagaRequest(this.memberSocketService, messageBody);
+        return createMemberNodeRequest(this.memberSocketService, messageBody);
     }
 
     fetchUmbrellaAuditByUmbrellaID(umbrellaFundID: number) {

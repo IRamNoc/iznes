@@ -167,6 +167,13 @@ export class ShareFund extends DynamicFormsValidator {
         disabled: true,
         listItems: PC.fundItems.portfolioCurrencyHedgeItems,
     };
+    classification: FormItem = {
+        type: FormItemType.list,
+        label: 'Classification',
+        required: true,
+        disabled: true,
+        listItems: PC.fundItems.classificationItems,
+    };
     investmentObjective: FormItem = {
         type: FormItemType.text,
         label: 'Investment Objective',
@@ -200,7 +207,7 @@ export class ShareFundHolidayManagement extends DynamicFormsValidator {
 }
 
 export class ShareFundOptionnal extends DynamicFormsValidator {
-    globalItermediaryIdentification: FormItem = {
+    globalIntermediaryIdentification: FormItem = {
         type: FormItemType.text,
         label: 'Global Intermediary Identification Number (GIIN)',
         required: false,
@@ -331,7 +338,7 @@ export class ShareFundOptionnal extends DynamicFormsValidator {
         required: false,
         disabled: true,
     };
-    hasSecurityiesLending: FormItem = {
+    hasSecurityLending: FormItem = {
         type: FormItemType.boolean,
         label: 'Has Security Lending',
         required: false,
@@ -355,7 +362,7 @@ export class ShareFundOptionnal extends DynamicFormsValidator {
         required: false,
         disabled: true,
     };
-    additionnalNotes: FormItem = {
+    additionalNotes: FormItem = {
         type: FormItemType.textarea,
         label: 'Additional Notes',
         required: false,

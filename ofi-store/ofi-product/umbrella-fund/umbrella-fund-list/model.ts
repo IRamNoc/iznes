@@ -29,7 +29,7 @@ export interface UmbrellaFundDetail {
     legalAdvisorID: string;
     directors: string;
     internalReference: string;
-    additionnalNotes: string;
+    additionalNotes: string;
 }
 
 export interface UmbrellaFundListState {

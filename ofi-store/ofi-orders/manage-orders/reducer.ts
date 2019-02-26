@@ -41,6 +41,11 @@ const patchOrder = (state, orderId, patch) => {
     };
     return merge({}, state, update);
 };
+
+const patchOrders = (state, orderIds, patch) => {
+    return orderIds.reduce((acc, orderId) => patchOrder(acc, orderId, patch), state);
+};
+
 const patchOrderCallback = (state, orderId, callback: (order: ManageOrderDetails) => any) => {
     const existingOrder = get(state.orderList, orderId, null);
     if (!existingOrder) {
@@ -98,6 +103,8 @@ export const OfiManageOrderListReducer = function (
             return patchOrder(state, action.payload.orderID, { orderStatus: 3 });
         case 'complete':
             return patchOrder(state, action.payload.orderID, { orderStatus: 4 });
+        case 'readyforpayment':
+            return patchOrders(state, action.payload.orders, { paymentMsgStatus: 'ready' });
         case 'settled':
             return patchOrder(state, action.payload.order.orderID, { orderStatus: -1 });
         case 'updatenav':
@@ -236,11 +243,13 @@ function formatManageOrderDataResponse(rawData: any[]): ManageOrderDetails[] {
                 orderType: item.get('orderType'),
                 sellBuyLinkOrderID: item.get('sellBuyLinkOrderID'),
                 platFormFee: item.get('platFormFee'),
+                classificationFee: item.get('classificationFee'),
                 price: item.get('price'),
                 quantity: item.get('quantity'),
                 settlementDate: item.get('settlementDate'),
                 totalResult: item.get('totalResult'),
                 valuationDate: item.get('valuationDate'),
+                paymentMsgStatus: item.get('paymentMsgStatus'),
             };
 
             if (order.price > 0) {

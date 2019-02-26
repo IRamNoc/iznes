@@ -34,7 +34,7 @@
                                 [allowClear]="true"
                                 [placeholder]="translate.translate('Duplicate from an existing Fund')" 
                                 [formControl]="fundControl"
-                                [disabled]="isAdmin()">
+                                [isDisabled]="isAdmin()">
                     </ng-select>
                 </div>
             </div>
@@ -53,7 +53,7 @@
                                             [allowClear]="false" 
                                             [placeholder]="translate.translate('Select or type an Umbrella Fund name')"
                                             [formControl]="umbrellaControl"
-                                            [disabled]="isAdmin()">
+                                            [isDisabled]="isAdmin()">
                                 </ng-select>
                             </div>
 
@@ -114,7 +114,7 @@
                                             [allowClear]="true" 
                                             [placeholder]="translate.translate('Duplicate from an existing Fund')"
                                             [formControl]="fundControl"
-                                            [disabled]="isAdmin()">
+                                            [isDisabled]="isAdmin()">
                                 </ng-select>
                             </div>
                         </div>
@@ -199,7 +199,7 @@
                                                             [allowClear]="false" 
                                                             [placeholder]="translate.translate('Select or type an Umbrella Fund')"
                                                             [formControl]="umbrellaControl"
-                                                            [disabled]="isAdmin()">
+                                                            [isDisabled]="isAdmin()">
                                                 </ng-select>
                                             </div>
                                         </div>
@@ -384,10 +384,9 @@
                                                             [items]="payingAgentItems" 
                                                             [allowClear]="true"
                                                             [multiple]="true" 
-                                                            [isDisabled]="umbrellaEditForm.controls['payingAgentID']"
+                                                            [isDisabled]="umbrellaEditForm.controls['payingAgentID'] || isAdmin()"
                                                             [placeholder]="translate.translate('Select')" 
-                                                            [formControl]="umbrellaEditForm.controls['payingAgentID']"
-                                                            [disabled]="isAdmin()">
+                                                            [formControl]="umbrellaEditForm.controls['payingAgentID']">
                                                 </ng-select>
                                             </div>
                                         </div>
@@ -481,10 +480,9 @@
                                                             [items]="principalPromoterItems"
                                                             [allowClear]="true" 
                                                             [multiple]="true" 
-                                                            [isDisabled]="umbrellaEditForm.controls['principlePromoterID'].disabled"
+                                                            [isDisabled]="umbrellaEditForm.controls['principlePromoterID'].disabled || isAdmin()"
                                                             [placeholder]="translate.translate('Select')" 
-                                                            [formControl]="umbrellaEditForm.controls['principlePromoterID']"
-                                                            [disabled]="isAdmin()">
+                                                            [formControl]="umbrellaEditForm.controls['principlePromoterID']">
                                                 </ng-select>
                                             </div>
                                         </div>
@@ -521,9 +519,9 @@
                                     </div>
                                     <div class="row">
                                         <div class="form-group col-sm-6">
-                                            <label class="control-label" for="uf_additionnalNotes">{{ 'Additional Notes' | translate }}</label>
-                                            <textarea id="uf_additionnalNotes" 
-                                                        formControlName="additionnalNotes"
+                                            <label class="control-label" for="uf_additionalNotes">{{ 'Additional Notes' | translate }}</label>
+                                            <textarea id="uf_additionalNotes"
+                                                        formControlName="additionalNotes"
                                                         maxlength="500"
                                                         [disabled]="isAdmin()">
                                             </textarea>
@@ -692,7 +690,7 @@
                                                                 [allowClear]="true" 
                                                                 [placeholder]="translate.translate('Select')"
                                                                 [formControl]="fundForm.controls['registerOfficeAddressCountry']"
-                                                                [disabled]="isAdmin()">
+                                                                [isDisabled]="isAdmin()">
                                                     </ng-select>
                                                 </div>
                                             </div>
@@ -707,7 +705,7 @@
                                                                 [allowClear]="true"
                                                                 [placeholder]="translate.translate('Select')" 
                                                                 [formControl]="fundForm.controls['domicile']"
-                                                                [disabled]="isAdmin()">
+                                                                [isDisabled]="isAdmin()">
                                                     </ng-select>
                                                     <span class="field-error" *ngIf="fundForm.controls['domicile'].hasError('required') && fundForm.controls['domicile'].touched">{{ 'Field
                                                         is required' | translate }}</span>
@@ -734,7 +732,7 @@
                                                                 [allowClear]="true" 
                                                                 [placeholder]="translate.translate('Select')"
                                                                 [formControl]="fundForm.controls['homeCountryLegalType']"
-                                                                [disabled]="isAdmin()">
+                                                                [isDisabled]="isAdmin()">
                                                     </ng-select>
                                                 </div>
                                             </div>
@@ -771,7 +769,7 @@
                                                                 [allowClear]="true" 
                                                                 [placeholder]="translate.translate('Select')"
                                                                 [formControl]="fundForm.controls['typeOfEuDirective']"
-                                                                [disabled]="isAdmin()">
+                                                                [isDisabled]="isAdmin()">
                                                     </ng-select>
                                                     <span class="field-error" *ngIf="fundForm.controls['typeOfEuDirective'].hasError('required') && fundForm.controls['typeOfEuDirective'].touched">{{ 'Field is required' | translate }}</span>
                                                 </div>
@@ -785,7 +783,7 @@
                                                                 [allowClear]="true" 
                                                                 [placeholder]="translate.translate('Select')"
                                                                 [formControl]="fundForm.controls['UcitsVersion']"
-                                                                [disabled]="isAdmin()">
+                                                                [isDisabled]="isAdmin()">
                                                     </ng-select>
                                                     <span class="field-error" *ngIf="fundForm.controls['UcitsVersion'].hasError('required') && fundForm.controls['UcitsVersion'].touched">
                                                         {{ 'Field is required' | translate }}</span>
@@ -802,7 +800,7 @@
                                                                 [allowClear]="true"
                                                                 [placeholder]="translate.translate('Select')" 
                                                                 [formControl]="fundForm.controls['legalForm']"
-                                                                [disabled]="isAdmin()">
+                                                                [isDisabled]="isAdmin()">
                                                     </ng-select>
                                                     <span class="field-error" *ngIf="fundForm.controls['legalForm'].hasError('required') && fundForm.controls['legalForm'].touched">{{ 'Field
                                                         is required' | translate }}</span>
@@ -818,7 +816,7 @@
                                                                 [allowClear]="true" 
                                                                 [placeholder]="translate.translate('Select')"
                                                                 [formControl]="fundForm.controls['nationalNomenclatureOfLegalForm']"
-                                                                [disabled]="isAdmin()">
+                                                                [isDisabled]="isAdmin()">
                                                     </ng-select>
                                                     <span class="field-error" *ngIf="fundForm.controls['nationalNomenclatureOfLegalForm'].hasError('required') && fundForm.controls['nationalNomenclatureOfLegalForm'].touched">{{ 'Field is required' | translate }}</span>
                                                 </div>
@@ -842,18 +840,18 @@
                                             </div>
 
                                             <div class="form-group col-sm-6">
-                                                <label class="control-label" for="fundLaunchate">{{ 'Fund Launch Date (YYYY-MM-DD)' | translate }}</label>
+                                                <label class="control-label" for="fundLaunchDate">{{ 'Fund Launch Date (YYYY-MM-DD)' | translate }}</label>
                                                 <div class="input-group">
                                                     <span class="fa fa-calendar" aria-hidden="true"></span>
-                                                    <input id="fundLaunchate" 
-                                                            formControlName="fundLaunchate"
+                                                    <input id="fundLaunchDate"
+                                                            formControlName="fundLaunchDate"
                                                             [dpDayPicker]="configDate" 
                                                             [placeholder]="translate.translate('Choose a date')"
                                                             mode="day" 
                                                             theme="dp-material"
                                                             [disabled]="isAdmin()">
                                                 </div>
-                                                <span *ngIf="fundForm.controls['fundLaunchate'].touched && fundForm.controls['fundLaunchate'].hasError('pattern')"
+                                                <span *ngIf="fundForm.controls['fundLaunchDate'].touched && fundForm.controls['fundLaunchDate'].hasError('pattern')"
                                                     class="field-error">{{ 'Incorrect Date' | translate }}</span>
                                             </div>
 
@@ -865,7 +863,7 @@
                                                                 [allowClear]="true" 
                                                                 [placeholder]="translate.translate('Select')"
                                                                 [formControl]="fundForm.controls['fundCurrency']"
-                                                                [disabled]="isAdmin()">
+                                                                [isDisabled]="isAdmin()">
                                                     </ng-select>
                                                     <span class="field-error" *ngIf="fundForm.controls['fundCurrency'].hasError('required') && fundForm.controls['fundCurrency'].touched">
                                                         {{ 'Field is required' | translate }}</span>
@@ -932,7 +930,7 @@
                                                                 [allowClear]="true" 
                                                                 [placeholder]="translate.translate('Select')"
                                                                 [formControl]="fundForm.controls['managementCompanyID']"
-                                                                [disabled]="isAdmin()">
+                                                                [isDisabled]="isAdmin()">
                                                     </ng-select>
                                                     <span class="field-error" *ngIf="fundForm.controls['managementCompanyID'].hasError('required') && fundForm.controls['managementCompanyID'].touched">{{ 'Field is required' | translate }}</span>
                                                 </div>
@@ -946,7 +944,7 @@
                                                                 [allowClear]="true" 
                                                                 [placeholder]="translate.translate('Select')"
                                                                 [formControl]="fundForm.controls['fundAdministratorID']"
-                                                                [disabled]="isAdmin()">
+                                                                [isDisabled]="isAdmin()">
                                                     </ng-select>
                                                     <span class="field-error" *ngIf="fundForm.controls['fundAdministratorID'].hasError('required') && fundForm.controls['fundAdministratorID'].touched">{{ 'Field is required' | translate }}</span>
                                                 </div>
@@ -960,7 +958,7 @@
                                                                 [allowClear]="true" 
                                                                 [placeholder]="translate.translate('Select')"
                                                                 [formControl]="fundForm.controls['custodianBankID']"
-                                                                [disabled]="isAdmin()">
+                                                                [isDisabled]="isAdmin()">
                                                     </ng-select>
                                                     <span class="field-error" *ngIf="fundForm.controls['custodianBankID'].hasError('required') && fundForm.controls['custodianBankID'].touched">
                                                         {{ 'Field is required' | translate }}</span>
@@ -974,7 +972,7 @@
                                                             [allowClear]="true" 
                                                             [placeholder]="translate.translate('Select')"
                                                             [formControl]="fundForm.controls['investmentManagerID']"
-                                                            [disabled]="isAdmin()">
+                                                            [isDisabled]="isAdmin()">
                                                 </ng-select>
                                             </div>
 
@@ -986,7 +984,7 @@
                                                             [multiple]="true" 
                                                             [placeholder]="translate.translate('Select')"
                                                             [formControl]="fundForm.controls['principlePromoterID']"
-                                                            [disabled]="isAdmin()">
+                                                            [isDisabled]="isAdmin()">
                                                 </ng-select>
                                             </div>
 
@@ -998,7 +996,7 @@
                                                             [multiple]="true" 
                                                             [placeholder]="translate.translate('Select')"
                                                             [formControl]="fundForm.controls['payingAgentID']"
-                                                            [disabled]="isAdmin()">
+                                                            [isDisabled]="isAdmin()">
                                                 </ng-select>
                                             </div>
 
@@ -1021,7 +1019,7 @@
                                                                 [allowClear]="true" 
                                                                 [placeholder]="translate.translate('Select')"
                                                                 [formControl]="fundForm.controls['transferAgentID']"
-                                                                [disabled]="isAdmin()">
+                                                                [isDisabled]="isAdmin()">
                                                     </ng-select>
                                                 </div>
                                             </div>
@@ -1034,7 +1032,7 @@
                                                                 [allowClear]="true" 
                                                                 [placeholder]="translate.translate('Select')"
                                                                 [formControl]="fundForm.controls['centralizingAgentID']"
-                                                                [disabled]="isAdmin()">
+                                                                [isDisabled]="isAdmin()">
                                                     </ng-select>
                                                 </div>
                                             </div>
@@ -1069,9 +1067,23 @@
                                                                 [allowClear]="true" 
                                                                 [placeholder]="translate.translate('Select')"
                                                                 [formControl]="fundForm.controls['portfolioCurrencyHedge']"
-                                                                [disabled]="isAdmin()">
+                                                                [isDisabled]="isAdmin()">
                                                     </ng-select>
                                                     <span class="field-error" *ngIf="fundForm.controls['portfolioCurrencyHedge'].hasError('required') && fundForm.controls['portfolioCurrencyHedge'].touched">{{ 'Field is required' | translate }}</span>
+                                                </div>
+                                            </div>
+
+                                            <div class="form-group required-field col-sm-6">
+                                                <div>
+                                                    <label class="control-label" for="classification">{{ 'Classification' | translate }}</label>
+                                                    <ng-select id="classification" 
+                                                                [items]="classificationItems" 
+                                                                [allowClear]="true" 
+                                                                [placeholder]="translate.translate('Select a classification')"
+                                                                [formControl]="fundForm.controls['classification']" 
+                                                                [isDisabled]="isAdmin()">
+                                                    </ng-select>
+                                                    <span class="field-error" *ngIf="fundForm.controls['classification'].hasError('required') && fundForm.controls['classification'].touched">{{'Field is required' | translate }}</span>
                                                 </div>
                                             </div>
 
@@ -1147,14 +1159,13 @@
                                     <div class="panel-body" [class.hidden]="!panels[1][2].open">
                                         <div class="row">
                                             <div class="form-group col-sm-6">
-                                                <label class="control-label" for="globalItermediaryIdentification">{{ 'Global Intermediary Identification Number (GIIN)' | translate }}</label>
+                                                <label class="control-label" for="globalIntermediaryIdentification">{{ 'Global Intermediary Identification Number (GIIN)' | translate }}</label>
                                                 <input type="text" 
-                                                        name="globalItermediaryIdentification" id="globalItermediaryIdentification"
-                                                        formControlName="globalItermediaryIdentification" 
+                                                        name="globalIntermediaryIdentification" id="globalIntermediaryIdentification"
+                                                        formControlName="globalIntermediaryIdentification" 
                                                         maxlength="19"
                                                         [disabled]="isAdmin()">
-                                                <span *ngIf="fundForm.controls['globalItermediaryIdentification'].touched && fundForm.controls['globalItermediaryIdentification'].hasError('pattern')"
-                                                    class="field-error">{{ 'Accepted format: [6x A-Z0-9].[5x A-Z0-9].[2x
+                                                <span *ngIf="fundForm.controls['globalIntermediaryIdentification'].touched && fundForm.controls['globalIntermediaryIdentification'].hasError('pattern')" class="field-error">{{ 'Accepted format: [6x A-Z0-9].[5x A-Z0-9].[2x
                                                     A-Z].[3x 0-9]' | translate }}</span>
                                             </div>
 
@@ -1165,7 +1176,7 @@
                                                             [allowClear]="true" 
                                                             [placeholder]="translate.translate('Select')"                   
                                                             [formControl]="fundForm.controls['delegatedManagementCompany']"
-                                                            [disabled]="isAdmin()">
+                                                            [isDisabled]="isAdmin()">
                                                 </ng-select>
                                             </div>
 
@@ -1187,7 +1198,7 @@
                                                             [allowClear]="true"
                                                             [placeholder]="translate.translate('Select')" 
                                                             [formControl]="fundForm.controls['auditorID']"
-                                                            [disabled]="isAdmin()">
+                                                            [isDisabled]="isAdmin()">
                                                 </ng-select>
                                             </div>
 
@@ -1209,7 +1220,7 @@
                                                             [allowClear]="true"
                                                             [placeholder]="translate.translate('Select')" 
                                                             [formControl]="fundForm.controls['legalAdvisorID']"
-                                                            [disabled]="isAdmin()">
+                                                            [isDisabled]="isAdmin()">
                                                 </ng-select>
                                             </div>
 
@@ -1284,7 +1295,7 @@
                                                             [allowClear]="true" 
                                                             [placeholder]="translate.translate('Select')"
                                                             [formControl]="fundForm.controls['capitalPreservationPeriod']"
-                                                            [disabled]="isAdmin()">
+                                                            [isDisabled]="isAdmin()">
                                                 </ng-select>
                                             </div>
                                         </div>
@@ -1476,21 +1487,21 @@
                                                 <label class="control-label">{{ 'Has Security Lending' | translate }}</label>
                                                 <div class="radio-inline">
                                                     <input type="radio" 
-                                                            name="hasSecurityiesLending" 
-                                                            id="hasSecurityiesLending1"
-                                                            formControlName="hasSecurityiesLending" 
-                                                            value="{{enums.hasSecurityiesLending.YES}}"
+                                                            name="hasSecurityLending"
+                                                            id="hasSecurityLending1"
+                                                            formControlName="hasSecurityLending"
+                                                            value="{{enums.hasSecurityLending.YES}}"
                                                             [disabled]="isAdmin()">
-                                                    <label for="hasSecurityiesLending1">{{ 'Yes' | translate }}</label>
+                                                    <label for="hasSecurityLending1">{{ 'Yes' | translate }}</label>
                                                 </div>
                                                 <div class="radio-inline">
-                                                    <input type="radio" 
-                                                            name="hasSecurityiesLending" 
-                                                            id="hasSecurityiesLending2"
-                                                            formControlName="hasSecurityiesLending" 
-                                                            value="{{enums.hasSecurityiesLending.NO}}"
+                                                    <input type="radio"
+                                                            name="hasSecurityLending"
+                                                            id="hasSecurityLending2"
+                                                            formControlName="hasSecurityLending"
+                                                            value="{{enums.hasSecurityLending.NO}}"
                                                             [disabled]="isAdmin()">
-                                                    <label for="hasSecurityiesLending2">{{ 'No' | translate }}</label>
+                                                    <label for="hasSecurityLending2">{{ 'No' | translate }}</label>
                                                 </div>
                                             </div>
 
@@ -1551,11 +1562,11 @@
 
                                         <div class="row">
                                             <div class="form-group col-sm-6">
-                                                <label class="control-label" for="additionnalNotes">{{ 'Additional Notes' | translate }}</label>
-                                                <textarea name="additionnalNotes" 
-                                                            id="additionnalNotes" 
+                                                <label class="control-label" for="additionalNotes">{{ 'Additional Notes' | translate }}</label>
+                                                <textarea name="additionalNotes"
+                                                            id="additionalNotes"
                                                             class="form-control"
-                                                            formControlName="additionnalNotes" 
+                                                            formControlName="additionalNotes"
                                                             maxlength="500"
                                                             [disabled]="isAdmin()">
                                                 </textarea>

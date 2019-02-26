@@ -23,7 +23,7 @@ export const validators = {
     lei: Validators.pattern(/^\w{18}\d{2}$|n\/a/i),
     giin: Validators.pattern(/^[A-Z0-9]{6}.[A-Z0-9]{5}.[A-Z]{2}.[0-9]{3}$/),
     internalReference: Validators.maxLength(50),
-    additionnalNotes: Validators.maxLength(500),
+    additionalNotes: Validators.maxLength(500),
     ngSelectRequired: (control: AbstractControl): { [key: string]: any } | null => {
         if (!control.value || !control.value['length']) {
             return {
@@ -110,7 +110,7 @@ export enum isPassiveFund {
     YES,
 }
 
-export enum hasSecurityiesLending {
+export enum hasSecurityLending {
     NO,
     YES,
 }
@@ -146,7 +146,7 @@ export const enums = {
     isFundTargetingEos,
     isFundTargetingSri,
     isPassiveFund,
-    hasSecurityiesLending,
+    hasSecurityLending,
     hasSwap,
     hasDurationHedge,
     useDefaultHolidayMgmt,
@@ -649,6 +649,14 @@ export const fundItems = {
         { id: 3, text: 'Currency overlay' },
         { id: 4, text: 'Partial Hedge' },
     ],
+    classificationItems: [
+        { id: 1, text: 'Equity' },
+        { id: 2, text: 'Bond' },
+        { id: 3, text: 'Multi-Asset' },
+        { id: 4, text: 'Money Market or Cash Equivalent' },
+        { id: 5, text: 'Absolute Return Innovative Strategies - ARIS' },
+        { id: 6, text: 'Other' },
+    ],
     fundAdministratorItems: [
         { id: 1, text: 'Société Générale Securities Services France' },
         { id: 2, text: 'Société Générale Securities Services Luxembourg' },
@@ -659,7 +667,6 @@ export const fundItems = {
         { id: 7, text: 'JPMORGAN Bank Luxembourg' },
         { id: 8, text: 'State Street Bank Luxembourg' },
         { id: 9, text: 'State Street Global Services France' },
-
     ],
     custodianBankItems: [
         { id: 1, text: 'Société Générale Securities Services France' },
@@ -798,4 +805,13 @@ export default {
     enums,
     fundItems,
     validators,
+};
+
+export const fundClassifications = {
+    1: { text: 'Equity', fee: 0.003, dp: 3 },
+    2: { text: 'Bond', fee: 0.003, dp: 3 },
+    3: { text: 'Multi-Asset', fee: 0.003, dp: 3 },
+    4: { text: 'Money Market or Cash Equivalent', fee: 0.00, dp: 2 },
+    5: { text: 'Absolute Return Innovative Strategies - ARIS', fee: 0.003, dp: 3 },
+    6: { text: 'Other', fee: 0.003, dp: 3 },
 };

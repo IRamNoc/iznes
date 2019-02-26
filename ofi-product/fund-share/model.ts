@@ -537,7 +537,7 @@ export class FundShare {
         this.fund.nationalNomenclature.listItems = PC.fundItems.nationalNomenclatureOfLegalFormItems[fund.legalForm];
         this.setListItemPreset(this.fund.nationalNomenclature, fund.nationalNomenclatureOfLegalForm);
         this.fund.creationDate.preset = fund.fundCreationDate;
-        this.fund.launchDate.preset = fund.fundLaunchate;
+        this.fund.launchDate.preset = fund.fundLaunchDate;
         this.setListItemPreset(this.fund.currency, fund.fundCurrency);
         this.fund.openOrCloseEnded.preset = fund.openOrCloseEnded;
         this.fund.fiscalYearEnd.preset = fund.fiscalYearEnd;
@@ -555,7 +555,7 @@ export class FundShare {
         this.fundHoliday.useDefaultHolidayMgmt.preset = fund.useDefaultHolidayMgmt;
         this.fundHoliday.holidayMgmtConfig.preset = JSON.parse(fund.holidayMgmtConfig);
 
-        this.fundOptionnal.globalItermediaryIdentification.preset = fund.globalItermediaryIdentification;
+        this.fundOptionnal.globalIntermediaryIdentification.preset = fund.globalIntermediaryIdentification;
         this.setListItemPreset(this.fundOptionnal.delegatedManagementCompany, fund.delegatedManagementCompany);
         this.setListItemPresetMultiple(this.fundOptionnal.investmentAdvisor, fund.investmentAdvisor);
         this.setListItemPreset(this.fundOptionnal.auditor, fund.auditor);
@@ -574,11 +574,11 @@ export class FundShare {
         this.fundOptionnal.isFundTargetingEos.preset = fund.isFundTargetingEos;
         this.fundOptionnal.isFundTargetingSri.preset = fund.isFundTargetingSri;
         this.fundOptionnal.isPassiveFund.preset = fund.isPassiveFund;
-        this.fundOptionnal.hasSecurityiesLending.preset = fund.hasSecurityiesLending;
+        this.fundOptionnal.hasSecurityLending.preset = fund.hasSecurityLending;
         this.fundOptionnal.hasSwap.preset = fund.hasSwap;
         this.fundOptionnal.hasDurationHedge.preset = fund.hasDurationHedge;
         this.fundOptionnal.internalReference.preset = fund.internalReference;
-        this.fundOptionnal.additionnalNotes.preset = fund.additionnalNotes;
+        this.fundOptionnal.additionalNotes.preset = fund.additionalNotes;
     }
 
     updateFund(fund: any, umbrella: any = false): void {
@@ -597,7 +597,7 @@ export class FundShare {
         this.fund.nationalNomenclature.listItems = PC.fundItems.nationalNomenclatureOfLegalFormItems[fund.legalForm];
         this.setListItemValue(this.fund.nationalNomenclature, fund.nationalNomenclatureOfLegalForm);
         this.fund.creationDate.control.setValue(fund.fundCreationDate);
-        this.fund.launchDate.control.setValue(fund.fundLaunchate);
+        this.fund.launchDate.control.setValue(fund.fundLaunchDate);
         this.setListItemValue(this.fund.currency, fund.fundCurrency);
         this.fund.openOrCloseEnded.control.setValue(fund.openOrCloseEnded);
         this.fund.fiscalYearEnd.control.setValue(fund.fiscalYearEnd);
@@ -615,7 +615,7 @@ export class FundShare {
         this.fundHoliday.useDefaultHolidayMgmt.control.setValue(fund.useDefaultHolidayMgmt === '1');
         this.fundHoliday.holidayMgmtConfig.control.setValue(JSON.parse(fund.holidayMgmtConfig));
 
-        this.fundOptionnal.globalItermediaryIdentification.control.setValue(fund.globalItermediaryIdentification);
+        this.fundOptionnal.globalIntermediaryIdentification.control.setValue(fund.globalIntermediaryIdentification);
         this.setListItemValue(this.fundOptionnal.delegatedManagementCompany, fund.delegatedManagementCompany);
         this.setListItemValueMultiple(this.fundOptionnal.investmentAdvisor, fund.investmentAdvisorID);
         this.setListItemValue(this.fundOptionnal.auditor, fund.auditorID);
@@ -634,11 +634,11 @@ export class FundShare {
         this.fundOptionnal.isFundTargetingEos.control.setValue(fund.isFundTargetingEos);
         this.fundOptionnal.isFundTargetingSri.control.setValue(fund.isFundTargetingSri);
         this.fundOptionnal.isPassiveFund.control.setValue(fund.isPassiveFund);
-        this.fundOptionnal.hasSecurityiesLending.control.setValue(fund.hasSecurityiesLending);
+        this.fundOptionnal.hasSecurityLending.control.setValue(fund.hasSecurityLending);
         this.fundOptionnal.hasSwap.control.setValue(fund.hasSwap);
         this.fundOptionnal.hasDurationHedge.control.setValue(fund.hasDurationHedge);
         this.fundOptionnal.internalReference.control.setValue(fund.internalReference);
-        this.fundOptionnal.additionnalNotes.control.setValue(fund.additionnalNotes);
+        this.fundOptionnal.additionalNotes.control.setValue(fund.additionalNotes);
 
         if (umbrella) {
             this.updateUmbrella(umbrella);
@@ -673,7 +673,7 @@ export class FundShare {
         this.setListItemPreset(this.umbrellaOptionnal.legalAdvisorID, umbrellaFund.legalAdvisorID);
         this.umbrellaOptionnal.directors.preset = umbrellaFund.directors;
         this.umbrellaOptionnal.internalReference.preset = umbrellaFund.internalReference;
-        this.umbrellaOptionnal.additionnalNotes.preset = umbrellaFund.additionnalNotes;
+        this.umbrellaOptionnal.additionalNotes.preset = umbrellaFund.additionalNotes;
     }
 
     updateUmbrella(umbrellaFund?: any) {
@@ -714,7 +714,7 @@ export class FundShare {
         this.setListItemValue(this.umbrellaOptionnal.legalAdvisorID, umbrellaFund.legalAdvisorID);
         this.umbrellaOptionnal.directors.control.setValue(umbrellaFund.directors);
         this.umbrellaOptionnal.internalReference.control.setValue(umbrellaFund.internalReference);
-        this.umbrellaOptionnal.additionnalNotes.control.setValue(umbrellaFund.additionnalNotes);
+        this.umbrellaOptionnal.additionalNotes.control.setValue(umbrellaFund.additionalNotes);
     }
 
     private setDocumentItem(formItem: FormItem, str: any): void {
