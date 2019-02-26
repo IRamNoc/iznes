@@ -185,8 +185,6 @@ export class AdminPermissionsComponent implements OnInit, AfterViewInit, OnDestr
         }
 
         this.tabsControl = openedTabs;
-        this.tabsControl[1].formControl =
-            this.persistService.watchForm('useradmin/newGroup', this.tabsControl[1].formControl);
     }
 
     ngAfterViewInit(): void {
@@ -210,7 +208,7 @@ export class AdminPermissionsComponent implements OnInit, AfterViewInit, OnDestr
 
         /* Return the form group and watch it using the persistService. */
         if (type === 'new') {
-            return this.persistService.watchForm('useradmin/newGroup', group);
+            return group;
         }
 
         return group;
@@ -629,8 +627,7 @@ export class AdminPermissionsComponent implements OnInit, AfterViewInit, OnDestr
         if (event) event.preventDefault();
 
         /* Let's set all the values in the form controls. */
-        this.tabsControl[tabId].formControl =
-            this.persistService.refreshState('useradmin/newGroup', this.newAddGroupFormgroup('clear'));
+        this.tabsControl[tabId].formControl = this.newAddGroupFormgroup('clear');
 
         /* Override the changes. */
         this.changeDetectorRef.detectChanges();
