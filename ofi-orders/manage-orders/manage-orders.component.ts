@@ -11,7 +11,7 @@ import {
     ViewChild,
 } from '@angular/core';
 
-import { FormGroup } from '@angular/forms';
+import {FormControl, FormGroup} from '@angular/forms';
 import { ActivatedRoute, Router } from '@angular/router';
 import { Location } from '@angular/common';
 
@@ -93,6 +93,8 @@ export class ManageOrdersComponent implements OnInit, AfterViewInit, OnDestroy {
     fundClassificationId: number;
     orderClassificationFee: number;
     transformedOrderClassificationFee: number;
+
+    showPaymentMsgConfirmationModal: boolean;
 
     // Locale
     language = 'en';
@@ -228,12 +230,22 @@ export class ManageOrdersComponent implements OnInit, AfterViewInit, OnDestroy {
         return iznesAdmin;
     }
 
+    get isAssetManger() {
+        return !this.isInvestorUser && !this.isIznesAdmin;
+    }
+
     get fundClassificationsText(): string {
         try {
             return fundClassifications[this.fundClassificationId].text
         } catch(e) {
             return '';
         }
+    }
+
+    get showSendPaymentMsgBtn(): boolean {
+        // number of order marked for payment messages.
+       const nPMsg = this.ordersList.filter((o) => o.markedForPayment.value).length;
+       return this.isAssetManger && nPMsg > 0;
     }
 
     appSubscribe<T>(
@@ -506,6 +518,11 @@ export class ManageOrdersComponent implements OnInit, AfterViewInit, OnDestroy {
             const quantity = this.subEstimated(order, 'quantity', 'estimatedQuantity');
             const fee = amountWithCost - amount;
             const feePercentage = this.numberConverter.toFrontEnd(order.feePercentage) * 100;
+            const readyForPayment = (order.price > 0 && order.paymentMsgStatus === 'pending' );
+            const markedForPayment = new FormControl(false);
+            const orderRef = this.getOrderRef(orderId);
+            const orderTypeStr = this.getOrderTypeString(order);
+
             return {
                 ...list[orderId],
                 price,
@@ -514,7 +531,11 @@ export class ManageOrdersComponent implements OnInit, AfterViewInit, OnDestroy {
                 quantity,
                 feePercentage,
                 fee,
+                orderRef,
+                orderTypeStr,
                 knownNav: order.price > 0,
+                markedForPayment,
+                readyForPayment,
                 orderUnpaid: this.orderUnpaid(list[orderId]),
             };
         });
@@ -966,6 +987,23 @@ export class ManageOrdersComponent implements OnInit, AfterViewInit, OnDestroy {
      */
     getPriceStatusCss(order: { knownNav: boolean }): 'text-warning' | 'text-success' {
         return order.knownNav ? 'text-success' : 'text-warning';
+    }
+
+    sendPaymentMsg($event) {
+        this.ofiOrdersService.requestMarkOrderReadyForPayment({orderIds: $event}).then((r) => {
+            const detailResps = get(r, '[1].Data[0].responses', []);
+            const failedResps = detailResps.filter(dr => (get(dr, '[0].Status', 'Fail') !== 'OK'));
+            if (failedResps.length > 0) {
+                throw new Error(this.translate.translate('fail send payment messages'));
+            }
+        }).then(() => {
+           this.toasterService.pop('success', this.translate.translate('Successfully sent payment messages'));
+        }).catch((e) => {
+           this.toasterService.pop('error', e.message);
+        }).then(() => {
+           this.showPaymentMsgConfirmationModal = false;
+           this.changeDetectorRef.markForCheck();
+        });
     }
 
     ngOnDestroy(): void {
