@@ -36,6 +36,7 @@ import {
     CreateNewWalletBody,
     UpdateWalletBody,
     DeleteWalletBody,
+    CreateDefaultWalletBody,
 
     /* Wallet node list */
     RequestWalletNodeListBody,
@@ -856,6 +857,21 @@ export class AdminUsersService {
         };
 
         this.logService.log('SENDING DW: ', messageBody);
+
+        /* Return the new member node saga request. */
+        return createMemberNodeSagaRequest(this.memberSocketService, messageBody);
+    }
+
+    public createDefaultWallet(data): any {
+        /* Setup the message body. */
+        const messageBody: CreateDefaultWalletBody = {
+            RequestName: 'createdefaultwallet',
+            token: this.memberSocketService.token,
+            userID: data.userID,
+            account: data.accountID,
+            walletType: data.walletType,
+            walletName: data.walletName,
+        };
 
         /* Return the new member node saga request. */
         return createMemberNodeSagaRequest(this.memberSocketService, messageBody);

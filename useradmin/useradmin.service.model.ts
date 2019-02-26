@@ -338,6 +338,14 @@ export interface DeleteWalletBody extends MemberNodeMessageBody {
     walletId: string;
 }
 
+export interface CreateDefaultWalletBody extends MemberNodeMessageBody {
+    token: string;
+    userID: number;
+    account: number;
+    walletType: number;
+    walletName: string;
+}
+
 export interface RequestUserAccountWalletPermission extends MemberNodeMessageBody {
     token: string;
     userId: string;
