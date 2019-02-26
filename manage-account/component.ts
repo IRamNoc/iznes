@@ -49,7 +49,7 @@ export class ManageAccountComponent implements OnInit, OnDestroy {
 
     // List of Redux observable.
     @select(['account', 'accountList', 'accountList']) accountListOb;
-    @select(['account', 'requestedAccountList']) requestedAccountListOb;
+    @select(['account', 'accountList', 'requestedAccountList']) requestedAccountListOb;
     @select(['member', 'manageMemberList', 'requestedManagedMemberList']) requestedManagedMemberListOb;
     @select(getManageMember) managedMemberOb;
     @select(['user', 'myDetail', 'admin']) isSymAdminOb;
@@ -117,6 +117,7 @@ export class ManageAccountComponent implements OnInit, OnDestroy {
             },
             [],
         );
+        this.changeDetectorRef.markForCheck();
     }
 
     /**
