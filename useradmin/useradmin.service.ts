@@ -873,8 +873,6 @@ export class AdminUsersService {
             walletName: data.walletName,
         };
 
-        this.logService.log('SENDING DW: ', messageBody);
-
         /* Return the new member node saga request. */
         return createMemberNodeSagaRequest(this.memberSocketService, messageBody);
     }
