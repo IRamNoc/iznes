@@ -51,6 +51,7 @@ export class SocketClusterWrapper {
             port: this.port,
             hostname: this.hostName,
             path: '/' + this.route,
+            autoReconnect: true,
             ackTimeout: 60000 // increased to 60 from 10 to allow for longer request times
         };
 
@@ -97,6 +98,7 @@ export class SocketClusterWrapper {
                 try {
 
                     try {
+                        this.resetConnectionData();
                         this.connectTries += 1;
 
                         this.webSocketConn = SocketCluster.connect(this.socketClusterOption);
@@ -124,6 +126,7 @@ export class SocketClusterWrapper {
                         const initialRequestText = JSON.stringify(initialRequest);
 
                         this.webSocketConn.emit('onMessage', initialRequestText, (errorCode, data) => {
+
                             // We should receive server's public key now.
                             if (data !== false) {
                                 this.encryption.serverPublicKey = data.Data;
@@ -153,23 +156,6 @@ export class SocketClusterWrapper {
 
                         console.error('socket error: ', error);
                         this.errorCallback();
-                        try {
-                            if (this.reconnecteInterval) {
-                                clearInterval(this.reconnecteInterval);
-                            }
-                        } catch (e) {
-                        }
-
-                        this.closeWebSocket();
-
-                        const reconnectInterval = setInterval(() => {
-                            if (!this.hasConnected) {
-                                this.openWebSocket();
-                                console.log('error: reconnect');
-                            } else {
-                                clearInterval(reconnectInterval);
-                            }
-                        }, 2000);
                     });
 
                     this.webSocketConn.on('disconnect', (error) => {
@@ -177,25 +163,8 @@ export class SocketClusterWrapper {
                          * Reconnect when error. Hopefully, the make the connection more stable.
                          */
                         console.error('socket disconnect: ', error);
+
                         this.disconnectCallback();
-
-                        try {
-                            if (this.reconnecteInterval) {
-                                clearInterval(this.reconnecteInterval);
-                            }
-                        } catch (e) {
-                        }
-
-                        this.closeWebSocket();
-
-                        const reconnectInterval = setInterval(() => {
-                            if (!this.hasConnected) {
-                                this.openWebSocket();
-                                console.log('disconnect: reconnect');
-                            } else {
-                                clearInterval(reconnectInterval);
-                            }
-                        }, 2000);
                     });
 
                     this.defaultOnOpen();
@@ -320,20 +289,23 @@ export class SocketClusterWrapper {
     }
 
     closeWebSocket() {
-        if (this.webSocketConn) {
-            // Deauthenticate this connection.
-            // It is seen that deauthenticate() can make sure the auth token is clear in local storage.
-            this.webSocketConn.deauthenticate(() => {
-                console.log('Connection deauthenticated.');
-            });
-
-            SocketCluster.destroy(this.socketClusterOption);
-            this.resetConnectionData();
-        }
+        return new Promise((resolve) => {
+            if (this.webSocketConn) {
+                // Deauthenticate this connection.
+                // It is seen that deauthenticate() can make sure the auth token is clear in local storage.
+                this.webSocketConn.deauthenticate(() => {
+                    console.log('Connection deauthenticated.');
+                    this.webSocketConn.disconnect(4100, 'logout');
+                    this.webSocketConn.destroy();
+                    this.resetConnectionData();
+                    resolve(true);
+                });
+            }
+            resolve(true);
+        });
     }
 
     resetConnectionData() {
-        this.webSocketConn = false;
         this.initialising = false;
         this.encryption = {};
         this.messageQueue = [];

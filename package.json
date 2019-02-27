@@ -18,7 +18,7 @@
         "path": "^0.12.7",
         "lodash": "^4.17.4",
         "sha256": "^0.2.0",
-        "socketcluster-client": "^6.3.0"
+        "socketcluster-client": "^14.2.1"
     },
     "devDependencies": {
         "babel-cli": "^6.24.1",
