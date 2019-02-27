@@ -433,15 +433,14 @@ export class MyUserService implements OnDestroy {
         return createMemberNodeSagaRequest(this.memberSocketService, messageBody);
     }
 
-    logout(): any {
+    async logout(): Promise<any> {
         this.walletSocket.clearConnection();
-
-        this.memberSocketService.clearConnection();
-        this.memberSocketService.connect();
-
         this.logout$.next(true);
 
         this.ngRedux.dispatch({ type: 'USER_LOGOUT' });
+
+        await this.memberSocketService.connect();
+
         this.router.navigate(['login']);
     }
 }
