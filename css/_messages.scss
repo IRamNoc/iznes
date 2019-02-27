@@ -486,6 +486,9 @@ pagination-controls {
     width: 25%;
     padding-top: 10px;
     padding-bottom: 10px;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
     cursor: pointer;
 }
 
@@ -494,6 +497,9 @@ pagination-controls {
     width: 50%;
     padding-top: 10px;
     padding-bottom: 10px;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
     cursor: pointer;
 }
 
