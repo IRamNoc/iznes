@@ -28,14 +28,14 @@ export class MemberSocketService {
         this.connect();
     }
 
-    clearConnection() {
-        this.socket.closeWebSocket();
+    async clearConnection() {
+        await this.socket.closeWebSocket();
     }
 
-    connect() {
+    async connect() {
         if (this.socket) {
             try {
-                this.socket.closeWebSocket();
+                await this.socket.closeWebSocket();
             } catch (err) {
                 throw new Error('Warning - Fail to close membernode websocket.');
             }
@@ -62,7 +62,7 @@ export class MemberSocketService {
 
         this.socket.connectCallback = () => {
 
-           this.reconnectSubject.next(true);
+            this.reconnectSubject.next(true);
 
             return true;
         };
