@@ -1,25 +1,13 @@
-<div [class.active]="connectionStatus.walletNodeDead" class="connection-banner red">
+<div [class.active]="connectionStatus.nodeDead" class="connection-banner red">
     <h2><i class="icon lost"></i>{{ 'It seems you got lost...' | translate }}</h2>
-    <p [class.loading]="connectionStatus.loading">{{ connectionStatus.walletNodeTimerString }}</p>
+    <p [class.loading]="connectionStatus.loading">{{ connectionStatus.nodeTimerString }}</p>
 </div>
-<div [class.active]="connectionStatus.internetDead && !connectionStatus.walletNodeDead" class="connection-banner red">
+<div [class.active]="connectionStatus.internetDead && !connectionStatus.nodeDead" class="connection-banner red">
     <h2><i class="icon lost"></i>{{ 'It seems you got lost...' | translate }}</h2>
     <p class="loading">{{ 'You\'ve been disconnected from the internet, please wait or try to refresh your browser' | translate }}</p>
 </div>
-<div [class.active]="(connectionStatus.walletNodeReconnected || connectionStatus.internetReconnected) && (!connectionStatus.internetDead && !connectionStatus.walletNodeDead)" class="connection-banner green">
+<div [class.active]="(connectionStatus.nodeReconnected || connectionStatus.internetReconnected) && (!connectionStatus.internetDead && !connectionStatus.nodeDead)" class="connection-banner green">
     <h2><i class="icon tick"></i>{{ 'Lucky you. You\'re back!' | translate }}</h2>
     <p>{{ 'You can now continue your journey on' | translate }} {{ appConfig.platform }}</p>
 </div>
 
-<clr-modal [clrModalOpen]="walletNodeDeadModal | async" [clrModalClosable]="false">
-    <div class="modal-title">
-        <i class="fa fa-exclamation-triangle modal-icon text-warning"></i>
-        <h4 class="modal-title-text"><i class="fa fa-plug"></i> {{ 'It seems you got lost...' | translate }}</h4>
-    </div>
-    <div class="modal-body tcenter">
-        <p>{{ 'Your connection to the system has been lost, please wait while we attempt to reconnect you. Alternatively, you could try refreshing your browser.' | translate }}</p>
-        <p>{{ 'If the problem persists please contact @platform@ support.' | translate: { platform: appConfig.platform } }}</p>
-    </div>
-    <div class="modal-footer">
-    </div>
-</clr-modal>
