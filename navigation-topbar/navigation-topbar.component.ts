@@ -80,7 +80,6 @@ export class NavigationTopbarComponent implements OnInit, AfterViewInit, OnDestr
     public lastLogin;
     public menuState;
 
-    public walletNodeDead: Observable<boolean>;
     public missingTranslations = [];
     public responsesService = <any>[];
     showMissingTranslations = false;
@@ -130,7 +129,6 @@ export class NavigationTopbarComponent implements OnInit, AfterViewInit, OnDestr
         ngRedux.subscribe(() => this.updateState());
         this.updateState();
 
-        this.walletNodeDead = this.nodeAlertsService.dead;
     }
 
     /**
@@ -449,8 +447,7 @@ export class NavigationTopbarComponent implements OnInit, AfterViewInit, OnDestr
     }
 
     logout() {
-        this.ngRedux.dispatch({ type: 'USER_LOGOUT' });
-        console.log('Disconnected from wallet node');
+        this.myUserService.logout();
     }
 
     controlMenu() {
@@ -489,7 +486,7 @@ export class NavigationTopbarComponent implements OnInit, AfterViewInit, OnDestr
     }
 
     handleExtendSession() {
-        this.myUserService.defaultRefreshToken(this.ngRedux);
+        this.myUserService.defaultRefreshToken();
     }
 }
 
