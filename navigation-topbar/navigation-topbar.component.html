@@ -2,7 +2,8 @@
     <div class="branding">
         <a href="#/home" class="nav-link">
             <span class="title">SETL</span>
-            <img src="{{topbarLogoUrl}}" alt="Logo">
+            <img src="{{topbarLogoUrl}}" class="logo-light" alt="Logo">
+            <img src="{{topbarLogoUrlDark}}" class="logo-dark" alt="Logo">
         </a>
     </div>
 
@@ -40,7 +41,7 @@
                 [placeholder]="translate.translate('No wallet selected')"
                 [formControl]="selectedWalletId"
                 [multiple]="false"
-                [inlineIcon]="'wallet'"
+                [inlineIcon]="'topNavWalletDropDown'"
                 [class.alternate]="false">
             </ng-select>
         </div>

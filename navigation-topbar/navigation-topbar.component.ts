@@ -67,6 +67,7 @@ export class NavigationTopbarComponent implements OnInit, AfterViewInit, OnDestr
 
     appConfig: AppConfig;
     topbarLogoUrl: string;
+    topbarLogoUrlDark: string;
     profileMenu: MenuItem[];
 
     // List of observable subscription
@@ -123,6 +124,7 @@ export class NavigationTopbarComponent implements OnInit, AfterViewInit, OnDestr
 
         this.appConfig = appConfig;
         this.topbarLogoUrl = this.appConfig.topbarLogoUrl;
+        this.topbarLogoUrlDark = this.appConfig.topbarLogoUrlDark || this.appConfig.topbarLogoUrl;
         this.showCountdownModal = false;
         this.unreadMessageCount = 0;
 

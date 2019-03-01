@@ -64,15 +64,15 @@
                     
                     <app-navigation-sidebar></app-navigation-sidebar>
 
-                    <main #main class="content-area" [ngClass]="{'menuHideContent': menuShown === 0}"
-                        [@routerTransition]="currentParentUrl">
-
-                        <div class="router-container">
+                    <main #main class="content-area" [ngClass]="{'menuHideContent': menuShown === 0}" [@routerTransition]="currentParentUrl">
+                        <div class="router-container clearfix">
                             <div class="fade-slide-right">
                                 <router-outlet #o="outlet" (deactivate)="onDeactivate()"></router-outlet>
                             </div>
                         </div>
+                        <navigation-footer></navigation-footer>
                     </main>
+                    
                 </div>
 
             </div>

@@ -8,6 +8,7 @@ import { BasicTileComponent } from './dashboard/tiles/basic-tile.component';
 /* Navigation Components. */
 import { NavigationSidebarComponent } from './navigation-sidebar/navigation-sidebar.component';
 import { NavigationTopbarComponent } from './navigation-topbar/navigation-topbar.component';
+import { NavigationFooterComponent } from './navigation-footer/footer.component';
 
 import { HomeComponent } from './home/home.component';
 import { FormElementsComponent } from './ui-elements/form-elements.component';
@@ -92,6 +93,7 @@ import { FileViewerModule } from '@setl/core-fileviewer';
         BasicLayoutComponent,
         NavigationSidebarComponent,
         NavigationTopbarComponent,
+        NavigationFooterComponent,
         DashboardComponent,
         CounterTileComponent,
         BasicTileComponent,
@@ -129,6 +131,7 @@ import { FileViewerModule } from '@setl/core-fileviewer';
         BasicLayoutComponent,
         NavigationSidebarComponent,
         NavigationTopbarComponent,
+        NavigationFooterComponent,
         DashboardComponent,
         CounterTileComponent,
         HomeComponent,

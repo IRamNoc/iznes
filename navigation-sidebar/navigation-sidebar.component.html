@@ -1,7 +1,8 @@
 <clr-vertical-nav [clrVerticalNavCollapsible]="true" [(clrVerticalNavCollapsed)]="collapsed" class="nav-trigger--bottom" [clr-nav-level]="1">
     <ng-container *ngFor="let level1 of menuJson">
-        <span [tooltip]="{ text: level1.label, size: medium, allowClick: false }" [disable]="!collapsed">
+        <span role="tooltip" aria-haspopup="true" class="tooltip tooltip-sm tooltip-right">
             <ng-container *ngTemplateOutlet="menuItem; context: {'childMenuJson': level1}"></ng-container>
+            <span class="tooltip-content">{{ level1.label }}</span>
         </span>
     </ng-container>
 
@@ -9,7 +10,7 @@
         <a *ngIf="!childMenuJson.children && !isMenuDisabled(childMenuJson.router_link)" clrVerticalNavLink [attr.id]="childMenuJson.element_id" [routerLink]="[childMenuJson.router_link]" routerLinkActive="active">
             <clr-icon [attr.shape]="childMenuJson.icon_class" clrVerticalNavIcon></clr-icon>
             <span [attr.mltag]="childMenuJson.label_txt">{{childMenuJson.label}}</span>
-            <span *ngIf="childMenuJson.router_link == '/messages' && this.unreadMessages > 0" class="label label-success">{{this.unreadMessages}}</span>
+            <span *ngIf="childMenuJson.router_link == '/messages' && this.unreadMessages > 0" class="label">{{this.unreadMessages}}</span>
         </a>
     
         <span *ngIf="isMenuDisabled(childMenuJson.router_link)" clrVerticalNavLink class="disable">

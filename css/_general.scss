@@ -1222,53 +1222,53 @@ dp-date-picker div {
     border: #9a9a9a solid 1px;
 }
 
-.tooltip.left {
-    width: initial;
-    display: flex;
-    align-items: baseline;
-    .tooltip-content {
-        left: 0;
-        margin-bottom: 5px !important;
-    }
-    label {
-        line-height: 20px;
-        margin: 0;
-        font-size: 12px;
-    }
-}
+// .tooltip.left {
+//     width: initial;
+//     display: flex;
+//     align-items: baseline;
+//     .tooltip-content {
+//         left: 0;
+//         margin-bottom: 5px !important;
+//     }
+//     label {
+//         line-height: 20px;
+//         margin: 0;
+//         font-size: 12px;
+//     }
+// }
 
-.tooltip .tooltip-content {
-    color: #545454;
-    border: #9a9a9a solid 1px;
-    background: #ffffff;
-    visibility: hidden;
-    opacity: 0;
-    transition: opacity .3s linear;
-    white-space: normal;
-    z-index: 1070;
-    &::after {
-        bottom: -9px;
-        left: 0;
-        content: '';
-        position: absolute;
-        border-left: .25rem solid #ffffff;
-        border-top: .208333rem solid #ffffff;
-        border-right: .25rem solid transparent;
-        border-bottom: .208333rem solid transparent;
-    }
-    &::before {
-        border-left: .25rem solid #9a9a9a;
-        border-top: .208333rem solid #9a9a9a;
-        left: -1px;
-        bottom: -11px;
-    }
-}
+// .tooltip .tooltip-content {
+//     color: #545454;
+//     border: #9a9a9a solid 1px;
+//     background: #ffffff;
+//     visibility: hidden;
+//     opacity: 0;
+//     transition: opacity .3s linear;
+//     white-space: normal;
+//     z-index: 1070;
+//     &::after {
+//         bottom: -9px;
+//         left: 0;
+//         content: '';
+//         position: absolute;
+//         border-left: .25rem solid #ffffff;
+//         border-top: .208333rem solid #ffffff;
+//         border-right: .25rem solid transparent;
+//         border-bottom: .208333rem solid transparent;
+//     }
+//     &::before {
+//         border-left: .25rem solid #9a9a9a;
+//         border-top: .208333rem solid #9a9a9a;
+//         left: -1px;
+//         bottom: -11px;
+//     }
+// }
 
-.tooltip:focus .tooltip-content,
-.tooltip:hover .tooltip-content {
-    visibility: visible;
-    opacity: 1;
-}
+// .tooltip:focus .tooltip-content,
+// .tooltip:hover .tooltip-content {
+//     visibility: visible;
+//     opacity: 1;
+// }
 
 /* UI - FORM STEPS */
 .fs-container {

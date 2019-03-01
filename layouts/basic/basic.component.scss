@@ -4,9 +4,15 @@
     right: 10px;
 }
 
+.main-container .content-container .content-area {
+    padding: 1rem 1rem 0 1rem;
+    .router-container {
+        min-height: calc(100% - 1rem - 37px);
+    }
+}
+
 :host /deep/ clr-main-container.open-hamburger-menu .branding {
-    img {
-        filter: brightness(0%);
+    .logo-dark {
         display: block!important;
     }
     .title {

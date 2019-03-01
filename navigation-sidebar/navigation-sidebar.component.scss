@@ -1,8 +1,29 @@
 :host {
     border-right: solid 1px #cfcfcf;
+    /deep/ .clr-vertical-nav .nav-content {
+        overflow: visible;
+    }
 }
 
 .disable {
     opacity: 0.5;
     cursor: not-allowed;
+}
+
+clr-vertical-nav {
+    &.is-collapsed {
+        .tooltip-content {
+            display: block;
+        }
+    }
+    .tooltip-content {
+        display: none;
+    }
+    .label {
+        float: right;
+        margin: 8px 0 0 0;
+        background: #007dc1;
+        color: white;
+        border: none;
+    }
 }

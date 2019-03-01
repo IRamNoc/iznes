@@ -3,15 +3,20 @@ header {
     .branding {
         .title {
             display: none;
-            @media screen and (max-width: 768px) {
-                display: block;
-            }
         }
-        img {
+        .logo-light, .logo-dark {
             height: 55%;
             margin-left: 20px;
-            @media screen and (max-width: 768px) {
+        }
+        .logo-dark {
+            display: none;
+        }
+        @media screen and (max-width: 768px) {
+            .logo-light {
                 display: none;
+            }
+            .title {
+                display: block;
             }
         }
     }
@@ -191,6 +196,7 @@ header {
                 margin-top: 10px;
 /*                 box-shadow: 0 2px 5px #cccccc; */
                 padding: 0;
+                border: none;
                 .select-search {
                     padding: 10px;
                     .ui-select-search {
@@ -238,9 +244,13 @@ header {
                         display: none;
                     }
                     .icon {
-                        margin: 20px 0 0 11px;
+                        margin: 20px 0 0 5px;
                         width: 1rem;
                         height: 1rem;
+                        &.chev {
+                            margin: 21px 0 0 4px;
+                            width: .416667rem;
+                        }
                     }
                     .option-wrapper.ui-select-choices.dropdown-menu {
                         width: 300px;
@@ -248,6 +258,15 @@ header {
                         margin-top: 0;
                         border: none;
                     }
+                }
+            }
+            @media screen and (max-width: 420px) {
+                ng-select .option-wrapper.ui-select-choices.dropdown-menu {
+                    position: fixed;
+                    top: 60px;
+                    left: 0;
+                    width: 100%;
+                    margin: 0;
                 }
             }
         }
