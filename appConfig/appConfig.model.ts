@@ -44,6 +44,7 @@ export interface AppConfig {
     platform: string;
     platformLegal?: string;
     topbarLogoUrl: string;
+    topbarLogoUrlDark: string;
     applyRestrictUrl?: boolean;
     internalMessageSender?: string;
 }

@@ -15,7 +15,8 @@
                 {{this.translate.getTranslation(inlineLabelMlTag) || inlineLabel}}:
             </span>
 
-            <clr-icon *ngIf="inlineIcon !== ''" class="icon" [attr.shape]="inlineIcon"></clr-icon>
+            <clr-icon *ngIf="inlineIcon !== ''" class="icon" [attr.shape]="inlineIcon === 'topNavWalletDropDown' ? 'wallet' : inlineIcon"></clr-icon>
+            <clr-icon *ngIf="inlineIcon === 'topNavWalletDropDown'" class="icon chev" [attr.shape]="'caret down'"></clr-icon>
 
             <span *ngIf="active.length <= 0" class="ui-select-placeholder text-muted">
                 <ng-template [ngIf]="itemObjects.length >= 1000">
@@ -48,7 +49,7 @@
                    placeholder="{{active.length <= 0 ? placeholder : ''}}">
 
             <span class="fa fa-search"></span>
-            <clr-icon *ngIf="inlineIcon !== ''" class="clear-search" shape="times-circle"></clr-icon>
+            <clr-icon *ngIf="inlineIcon !== ''" class="clear-search" shape="times-circle" (click)="singleDDInput.nativeElement.value=''; open(); inputValue=''"></clr-icon>
         </div>
 
         <ng-template [ngIf]="options.length < 1000">
