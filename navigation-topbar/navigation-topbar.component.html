@@ -1,7 +1,7 @@
 <header class="header-1">
     <div class="branding">
         <a href="#/home" class="nav-link">
-            <span class="title">SETL</span>
+            <span class="title">{{appConfig.platform}}</span>
             <img src="{{topbarLogoUrl}}" class="logo-light" alt="Logo">
             <img src="{{topbarLogoUrlDark}}" class="logo-dark" alt="Logo">
         </a>
@@ -57,7 +57,7 @@
             </button>
             <clr-dropdown-menu *clrIfOpen clrPosition="bottom-right">
                 <div class="username">{{username}}</div>
-                <a *ngFor="let item of profileMenu" [routerLink]="[item.router_link]" [id]="item.element_id" clrDropdownItem [attr.mltag]="item.label_txt">{{item.label}}</a>
+                <a *ngFor="let item of profileMenu" [routerLink]="[item.router_link]" [id]="item.element_id" clrDropdownItem>{{item.label | translate}}</a>
                 <a [routerLink]="['/logout']" clrDropdownItem id="logout">Logout</a>
             </clr-dropdown-menu>
         </clr-dropdown>

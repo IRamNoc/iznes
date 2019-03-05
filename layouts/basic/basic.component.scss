@@ -7,7 +7,8 @@
 .main-container .content-container .content-area {
     padding: 1rem 1rem 0 1rem;
     .router-container {
-        min-height: calc(100% - 1rem - 37px);
+        min-height: 100%;
+        padding-bottom: 57px;
     }
 }
 
