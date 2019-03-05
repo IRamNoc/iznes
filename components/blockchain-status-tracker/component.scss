@@ -5,23 +5,8 @@
 
     clr-datagrid {
         max-height: 64vh;
-        .additionalInfos {
-            .item {
-                float: left;
-                width: 30%;
-                margin: 0 3% 0 0;
-                overflow: hidden;
-                b {
-                    width: 38%;
-                    float: left;
-                    overflow: hidden;
-                }
-                span {
-                    float: right;
-                    width: 60%
-                }
-            }
-        }
+        width: 95%;
+        margin: 0 auto;
     }
 
     /deep/ .dropdown {

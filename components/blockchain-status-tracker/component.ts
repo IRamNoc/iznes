@@ -1,7 +1,9 @@
-import { Component, OnInit, OnDestroy, ChangeDetectorRef, Input, ElementRef, HostListener } from '@angular/core';
+import { Component, OnInit, OnDestroy, ChangeDetectorRef, Input, Output, ElementRef, HostListener,
+    EventEmitter } from '@angular/core';
 import { select } from '@angular-redux/store';
 import { Subscription } from 'rxjs/Subscription';
 import { ClrDatagridSortOrder } from '@clr/angular';
+import { Router } from '@angular/router';
 
 @Component({
     styleUrls: ['./component.scss'],
@@ -13,6 +15,7 @@ export class BlockchainStatusTracker implements OnInit, OnDestroy {
 
     @Input() display: string = 'modal';
     @Input() alternate: boolean = false;
+    @Output() dropdownClosed = new EventEmitter<boolean>();
     @select(['walletNode', 'transactionStatus']) transactionStatus;
 
     public failUpdate: Boolean = false;
@@ -36,6 +39,7 @@ export class BlockchainStatusTracker implements OnInit, OnDestroy {
     constructor(
         private changeDetectorRef: ChangeDetectorRef,
         private el: ElementRef,
+        public router: Router,
     ) {
     }
 
@@ -121,16 +125,16 @@ export class BlockchainStatusTracker implements OnInit, OnDestroy {
         }
     }
 
-    formatText(text) {
-        const string = String(text);
-        if (String(text).length > 18) {
-            return `${string.substring(0, 15)}...`;
-        }
-        return string;
-    }
+    navigateToReport() {
+        setTimeout(
+            () => {
+                this.showStatusView = false;
+                this.dropdownClosed.emit(false);
+                this.changeDetectorRef.detectChanges();
+            },
+            50);
 
-    validItem(item) {
-        return item !== '' && typeof item !== 'object';
+        this.router.navigateByUrl('/reports/transaction-status');
     }
 
     ngOnDestroy() {
