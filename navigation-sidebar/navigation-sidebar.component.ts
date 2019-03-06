@@ -1,7 +1,6 @@
-import { AfterViewInit, ChangeDetectorRef, Component, Inject, OnInit } from '@angular/core';
-import { Router } from '@angular/router';
+import { AfterViewInit, Component, Inject, OnInit, OnDestroy } from '@angular/core';
 import { NgRedux, select } from '@angular-redux/store';
-import { APP_CONFIG, AppConfig, immutableHelper, LogService } from '@setl/utils';
+import { APP_CONFIG, AppConfig, immutableHelper } from '@setl/utils';
 import { getMyDetail } from '@setl/core-store';
 import { MultilingualService } from '@setl/multilingual/multilingual.service';
 import { MenuSpecService } from '@setl/utils/services/menuSpec/service';
@@ -11,29 +10,20 @@ import { MenuSpecService } from '@setl/utils/services/menuSpec/service';
     templateUrl: './navigation-sidebar.component.html',
     styleUrls: ['./navigation-sidebar.component.scss'],
 })
-export class NavigationSidebarComponent implements OnInit, AfterViewInit {
+export class NavigationSidebarComponent implements OnInit, AfterViewInit, OnDestroy {
     public unreadMessages;
-    menuJson: any;
-    menuParent = [];
-    menuParentOpen: string;
-    // all the menu that need to disabled.
+    public menuJson: any;
+    public menuParent = [];
     private disabledMenus: string[] = [];
-    collapsed: boolean = false;
-
     private subscription: any;
 
     @select(['message', 'myMessages', 'counts', 'inboxUnread']) inboxUnread;
     @select(['user', 'authentication', 'defaultHomePage']) defaultHomePage;
 
-    constructor(private router: Router,
-                @Inject(APP_CONFIG) public appConfig: AppConfig,
-                private changeDetectorRef: ChangeDetectorRef,
-                private logService: LogService,
+    constructor(@Inject(APP_CONFIG) public appConfig: AppConfig,
                 private menuSpecService: MenuSpecService,
                 private ngRedux: NgRedux<any>,
-                public translate: MultilingualService,
-    ) {
-    }
+                public translate: MultilingualService) {}
 
     ngOnInit() {
         /* Subscribe for language change. */
@@ -141,37 +131,9 @@ export class NavigationSidebarComponent implements OnInit, AfterViewInit {
         );
     }
 
-    /**
-     * Active Route
-     * Returns true if the route tested is matching the url
-     * Takes account of route params / children routes
-     * @param  {string}  route - the route being tested
-     * @return {boolean} active - true if the route tested is matching the url
-     */
-    public activeRoute(route: string): boolean {
-        const routeRegex = new RegExp(`^${route}(\/\S+)?`);
-        return routeRegex.test(this.router.url);
-    }
-
-    public activeChildRoute(children) {
-        const routerUrl = this.router.url;
-        let active = false;
-
-        children.forEach((child) => {
-            const route = child.router_link;
-            const routeRegex = new RegExp(`^${route}(\/\S+)?`);
-
-            active = active || routeRegex.test(routerUrl);
-        });
-
-        return active;
-    }
-
-    public menuSelected(id) {
-        if (this.menuParentOpen == id) {
-            this.menuParentOpen = '';
-        } else if (this.menuParent.indexOf(id) !== -1) {
-            this.menuParentOpen = id;
+    ngOnDestroy() {
+        for (const subscription of this.subscription) {
+            subscription.unsubscribe();
         }
     }
 }

@@ -4,6 +4,6 @@
         <a href="#">Privacy Policy</a>
     </div>
     <div class="right-content">
-        Copyright &copy; SETL {{ year }}. All rights reserved. <span *ngIf="currentVersion"> v{{ currentVersion }}</span>
+        Copyright &copy; {{ platform }} {{ year }}. All rights reserved. <ng-container *ngIf="currentVersion"> v{{ currentVersion }}</ng-container>
     </div>
 </footer>

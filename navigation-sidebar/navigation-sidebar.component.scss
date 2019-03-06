@@ -11,6 +11,10 @@ clr-vertical-nav {
     &.is-collapsed {
         .tooltip-content {
             display: block;
+            position: fixed;
+            left: 45px;
+            top: auto;
+            margin-top: -20px;
         }
     }
     .tooltip-content {
@@ -22,5 +26,8 @@ clr-vertical-nav {
         background: #007dc1;
         color: white;
         border: none;
+    }
+    .nav-content {
+        overflow: visible; 
     }
 }

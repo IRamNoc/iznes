@@ -24,7 +24,7 @@
             </ng-select>
         </div>
 
-        <blockchain-status-tracker *ngIf="appConfig.platform === 'OpenCSD'" [display]="'dropdown'" [alternate]="false"></blockchain-status-tracker>
+        <blockchain-status-tracker *ngIf="appConfig.platform === 'OpenCSD'" [display]="'dropdown'" [alternate]="false" (dropdownClosed)="showOverlay=false"></blockchain-status-tracker>
     </div>
 
     <div class="header-actions">

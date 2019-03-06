@@ -16,6 +16,7 @@ export class NavigationFooterComponent implements OnDestroy {
     public year: number = new Date().getFullYear();
     private subscriptionsArray: Subscription[] = [];
     public currentVersion: string;
+    public platform: string;
 
     @select(['user', 'siteSettings', 'version']) requestVersionObj;
 
@@ -27,7 +28,6 @@ export class NavigationFooterComponent implements OnDestroy {
     ) {
         /* If on production build, request current version and save to Redux */
         this.subscriptionsArray.push(this.requestVersionObj.subscribe(version => this.currentVersion = version));
-        console.log('+++ appConfig', appConfig);
         if (!this.currentVersion && appConfig.production) {
             this.subscriptionsArray.push(
                 this.http.get('/VERSION', { responseType: 'text' }).subscribe(
@@ -36,6 +36,8 @@ export class NavigationFooterComponent implements OnDestroy {
                 ),
             );
         }
+
+        this.platform = appConfig.platform;
     }
 
     ngOnDestroy() {
