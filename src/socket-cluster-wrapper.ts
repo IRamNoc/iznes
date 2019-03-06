@@ -184,7 +184,7 @@ export class SocketClusterWrapper {
              * 2. Required authentication and has not authenticated and the request message type is not
              *      this.authMessageTypes: ['authentication']
              */
-            if (this.initialising || this.encryption.shareKey === false) {
+            if (this.initialising || !this.encryption.shareKey) {
                 this.messageQueue.push([request, callback]);
             } else {
 
@@ -199,7 +199,7 @@ export class SocketClusterWrapper {
 
                 let requestText = JSON.stringify(request);
 
-                if (this.encryption.shareKey !== false) {
+                if (this.encryption.shareKey) {
                     requestText = GibberishAES.enc(requestText, this.encryption.shareKey);
                 }
 
