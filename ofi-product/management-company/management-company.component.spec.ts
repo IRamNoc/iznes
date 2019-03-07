@@ -116,7 +116,7 @@ describe('OfiManagementCompanyComponent', () => {
         operationalContact: 'operationalContact',
         directorContact: 'directorContact',
         lei: '12345678901234567890',
-        bic: 'bic',
+        bic: 'ASDFGAAAXXX',
         giinCode: '',
         websiteUrl: 'websiteUrl',
         phoneNumberPrefix: '+355',
