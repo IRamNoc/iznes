@@ -1026,9 +1026,13 @@ export class OrderHelper {
             ];
 
         } else if (this.orderBy === OrderByType.Amount) {
-            const maxNumDecimal = Number(this.fundShare.maximumNumDecimal) || 0;
-
-            let amountStr = 'round(' + this.orderValue + ' / nav' + ',' +  maxNumDecimal  + ' ) * ' + NumberMultiplier;
+            // by amount
+            const decimalDivider = Math.pow(10, Number(this.fundShare.maximumNumDecimal));
+            // the formula before apply maximum number decimal.
+            let amountStr = `(${this.orderValue} / nav) * ${NumberMultiplier}`;
+            // apply maximum number decimal.
+            // tslint:disable-next-line:max-line-length
+            amountStr = `round(${amountStr}/${NumberMultiplier} * ${decimalDivider}) / ${decimalDivider} * ${NumberMultiplier}`;
 
             actionData = [
                 {
@@ -1138,9 +1142,13 @@ export class OrderHelper {
             ];
 
         } else if (this.orderBy === OrderByType.Amount) {
-            const maxNumDecimal = Number(this.fundShare.maximumNumDecimal) || 0;
-
-            let amountStr = 'round(' + this.orderValue + ' / nav' + ',' +  maxNumDecimal  + ' ) * ' + NumberMultiplier;
+            // by amount
+            const decimalDivider = Math.pow(10, Number(this.fundShare.maximumNumDecimal));
+            // the formula before apply maximum number decimal.
+            let amountStr = `(${this.orderValue} / nav) * ${NumberMultiplier}`;
+            // apply maximum number decimal.
+            // tslint:disable-next-line:max-line-length
+            amountStr = `round(${amountStr}/${NumberMultiplier} * ${decimalDivider}) / ${decimalDivider} * ${NumberMultiplier}`;
 
             actionData = [
                 {
