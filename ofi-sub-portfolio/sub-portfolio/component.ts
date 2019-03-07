@@ -127,7 +127,7 @@ export class OfiSubPortfolioComponent implements OnDestroy {
             {
                 hashIdentifierCode: new FormControl({ value: '', disabled: true }),
                 investorReference: new FormControl('', [Validators.maxLength(255)]),
-                accountLabel: new FormControl('', [Validators.required, Validators.maxLength(255)]),
+                accountLabel: new FormControl('', [Validators.required, CustomValidators.swiftNameAddressValidator]),
                 accountCurrency: new FormControl('', [Validators.required]),
                 label: new FormControl('', [Validators.required, this.duplicatedLabel.bind(this), Validators.maxLength(200)]),
                 establishmentName: new FormControl('', [Validators.required, Validators.maxLength(45)]),
@@ -137,10 +137,10 @@ export class OfiSubPortfolioComponent implements OnDestroy {
                 city: new FormControl('', [Validators.required, Validators.maxLength(45)]),
                 country: new FormControl('', [Validators.required]),
                 accountOwner: new FormControl('', [Validators.required, Validators.maxLength(255)]),
-                ownerAddressLine1: new FormControl('', [Validators.required, Validators.maxLength(255)]),
-                ownerAddressLine2: new FormControl('', [Validators.maxLength(255)]),
-                ownerZipCode: new FormControl('', [Validators.required, Validators.maxLength(10)]),
-                ownerCity: new FormControl('', [Validators.required, Validators.maxLength(45)]),
+                ownerAddressLine1: new FormControl('', [Validators.required, CustomValidators.swiftNameAddressValidator]),
+                ownerAddressLine2: new FormControl('', [CustomValidators.swiftNameAddressValidator]),
+                ownerZipCode: new FormControl('', [Validators.required, Validators.maxLength(10), CustomValidators.swiftNameAddressValidator]),
+                ownerCity: new FormControl('', [Validators.required, Validators.maxLength(45), CustomValidators.swiftNameAddressValidator]),
                 ownerCountry: new FormControl('', [Validators.required]),
                 iban: new FormControl('', [Validators.required, CustomValidators.ibanValidator]),
                 bic: new FormControl('', [Validators.required, CustomValidators.bicValidator]),
@@ -362,6 +362,8 @@ export class OfiSubPortfolioComponent implements OnDestroy {
                         return this.translate.translate('BIC must be 11 characters, ISO 9362, if 9 to 11 are empty then put "XXX"');
                     case 'duplicatedLabel':
                         return this.translate.translate('This sub-portfolio name is already used. Please choose another one');
+                    case 'swiftNameAddress':
+                        return this.translate.translate('Should be within 35 characters: number, letter or -?:()');
                     default:
                         return this.translate.translate('Invalid field');
                 }
