@@ -22,6 +22,7 @@ import {
 import { OfiCurrenciesService } from '@ofi/ofi-main/ofi-req-services/ofi-currencies/service';
 import { MultilingualService } from '@setl/multilingual';
 import { LeiService } from '@ofi/ofi-main/ofi-req-services/ofi-product/lei/lei.service';
+import * as CustomValidators from "@setl/utils/helper/validators";
 
 interface UmbrellaList {
     [key: string]: UmbrellaFundDetail;
@@ -274,11 +275,11 @@ export class FundComponent implements OnInit, OnDestroy {
             isFundStructure: { value: '', disabled: true },
             fundName: ['', Validators.compose([Validators.required])],
             legalEntityIdentifier: [null, this.validators.lei],
-            registerOffice: [null],
-            registerOfficeAddress: [null],
-            registerOfficeAddressLine2: [null],
-            registerOfficeAddressZipCode: [null],
-            registerOfficeAddressCity: [null],
+            registerOffice: [null, CustomValidators.swiftNameAddressValidator],
+            registerOfficeAddress: [null, CustomValidators.swiftNameAddressValidator],
+            registerOfficeAddressLine2: [null, CustomValidators.swiftNameAddressValidator],
+            registerOfficeAddressZipCode: [null, CustomValidators.swiftNameAddressValidator],
+            registerOfficeAddressCity: [null, CustomValidators.swiftNameAddressValidator],
             registerOfficeAddressCountry: [[]],
             domicile: [[], this.validators.ngSelectRequired],
             tradingAccount: [],
