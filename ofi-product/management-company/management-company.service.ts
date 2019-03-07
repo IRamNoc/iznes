@@ -3,6 +3,7 @@ import { Injectable, Inject } from '@angular/core';
 import { FormGroup, FormBuilder, Validators, FormControl, ValidatorFn, AbstractControl } from '@angular/forms';
 import { FileService } from '@setl/core-req-services';
 import { SagaHelper } from '@setl/utils';
+import { CustomValidators } from '@setl/utils/helper';
 
 @Injectable({
     providedIn: 'root',
@@ -110,7 +111,7 @@ export class ManagagementCompanyService {
             ],
             bic: [
                 '',
-                Validators.required,
+                [Validators.required, CustomValidators.bicValidator],
             ],
             giinCode: [
                 '',

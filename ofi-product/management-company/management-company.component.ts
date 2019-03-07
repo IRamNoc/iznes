@@ -303,4 +303,6 @@ export class OfiManagementCompanyComponent implements OnInit, OnDestroy {
             </table>`,
         );
     }
+
+
 }
