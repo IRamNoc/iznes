@@ -159,6 +159,8 @@
                             <input type="text" id="bic" class="form-control" formControlName="bic" placeholder="{{ 'Please fill in the BIC code of the management company' | translate }}">
                             <span *ngIf="managementCompanyForm.controls.bic.hasError('required') && managementCompanyForm.controls.bic.touched"
                                 class="field-error">{{ 'Field is required' | translate }}</span>
+                            <span *ngIf="managementCompanyForm.controls.bic.hasError('bic') && managementCompanyForm.controls.bic.touched"
+                                  class="field-error">{{ 'BIC must be 11 characters, ISO 9362, if 9 to 11 are empty then put "XXX"' | translate }}</span>
                         </div>
                         <div class="form-group col-sm-6">
                             <label class="control-label" for="giin">

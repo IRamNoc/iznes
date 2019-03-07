@@ -1,6 +1,7 @@
 import { FormControl, Validators } from '@angular/forms';
 import { FormItem, FormItemType, FormItemStyle, DynamicFormsValidator } from '@setl/utils';
 import * as E from '../FundShareEnum';
+import {ibanValidator} from "@setl/utils/helper/validators";
 
 export class ShareKeyFactsStatus extends DynamicFormsValidator {
     shareClassInvestmentStatus: FormItem = {
@@ -486,9 +487,8 @@ function validateISIN(c: FormControl) {
 }
 
 function validateIBAN(c: FormControl) {
-    const IBAN_REGEXP = new RegExp(/\b^[A-Za-z]{2}[A-Za-z0-9]{12,32}\b/);
 
-    return IBAN_REGEXP.test(c.value) ? null : {
-        'IBAN must be between 14 to 34 characters and start with 2 letters.': c.value,
+    return ibanValidator(c) === null ? null : {
+        'IBAN must be 14 to 34 characters long with 2 letters at the beginning': c.value,
     };
 }
