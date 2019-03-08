@@ -53,7 +53,7 @@ describe('toNormalScale', () => {
 
         const result = toNormalScale(number, 2);
 
-        expect(result).toBe(123.47);
+        expect(result).toBe(123.46);
     });
 });
 
