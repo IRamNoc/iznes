@@ -22,7 +22,7 @@ textarea {
         content: '';
       }
   }
-  div:last-child {
+  > div:last-child {
       width: 85%;
   }
   .slider {
