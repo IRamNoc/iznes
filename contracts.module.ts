@@ -22,7 +22,7 @@ import { BilateralTransferService } from './bilateral-transfer/bilateral-transfe
         SelectModule,
         FormsModule,
         ReactiveFormsModule,
-        ClarityModule.forRoot(),
+        ClarityModule,
         SetlPipesModule,
         SetlComponentsModule,
         SetlDirectivesModule,
