@@ -5,7 +5,6 @@ $setlHover: darken($setl, 2%);
 
 @import 'general';
 @import 'grid';
-@import 'navbar';
 @import 'sidebar';
 @import 'forms';
 @import 'tabs';
@@ -27,15 +26,6 @@ $setlHover: darken($setl, 2%);
     border-radius: 4px;
     background: red;
 }
-
-// app-navigation-topbar {
-//     height: 75px;
-//     position: fixed;
-//     width: 100%;
-//     top: 0;
-//     z-index: 3;
-//     transition: top 0.3s linear;
-// }
 
 .table {
     margin-top: 0;
@@ -88,11 +78,6 @@ ng-select .btn.btn-secondary.ui-select-toggle {
 .dropdown-menu .btn, .dropdown-menu .dropdown-item {
     line-height: 24px!important;
 }
-
-// .main-container .content-container .content-area {
-//     padding: 0 0 20px 0;
-//     margin-bottom: -20px;
-// }
 
 /* Style when highlighting a search. */
 .ui-select-highlight {
