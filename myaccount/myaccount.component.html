@@ -232,7 +232,30 @@
             </clr-tab-content>
         </clr-tab>
         <clr-tab>
-            <button clrTabLink clrTabLinkId="link3">
+            <button clrTabLink clrTabLinkId="link3" [routerLink]="['/account/my-account/language']">
+                <i class="fa fa-language"></i>{{ 'Language' | translate }}</button>
+            <clr-tab-content *clrIfActive="tabStates.language">
+                <section class="form-block">
+                    <div class="form-group col-sm-12">
+                        <section class="form-block">
+                            <div class="form-group">
+                                <p>{{ 'Choose your language' | translate }}</p>
+                                <div class="radio" (click)="changeLanguage('fr-Latn')">
+                                    <input type="radio" name="gridRadios1" id="lang_fra" [checked]="language === 'fr-Latn'">
+                                    <label for="lang_fra">{{ 'Français' | translate }}</label>
+                                </div>
+                                <div class="radio" (click)="changeLanguage('en-Latn')">
+                                    <input type="radio" name="gridRadios1" id="lang_eng" [checked]="language === 'en-Latn'">
+                                    <label for="lang_eng">{{ 'English' | translate }}</label>
+                                </div>
+                            </div>
+                        </section>
+                    </div>
+                </section>
+            </clr-tab-content>
+        </clr-tab>
+        <clr-tab>
+            <button clrTabLink clrTabLinkId="link4">
                 <i class="fa fa-lock"></i> {{ 'Two-Factor Authentication' | translate }}
             </button>
             <clr-tab-content *clrIfActive="tabStates.tfa">
@@ -240,7 +263,7 @@
             </clr-tab-content>
         </clr-tab>
         <clr-tab>
-            <button clrTabLink clrTabLinkId="link4">
+            <button clrTabLink clrTabLinkId="link5">
                 <i class="fa fa-terminal"></i> {{ 'API' | translate }}</button>
             <clr-tab-content *clrIfActive="tabStates.api">
                 <form class="form-vertical">
@@ -280,7 +303,7 @@
             </clr-tab-content>
         </clr-tab>
         <clr-tab *ngIf="externalNotificationsAvailable">
-            <button clrTabLink clrTabLinkId="link4">
+            <button clrTabLink clrTabLinkId="link6">
                 <i class="fa fa-commenting"></i> {{ 'External Notifications' | translate }}
             </button>
             <clr-tab-content *clrIfActive="tabStates.externalNotifications">
