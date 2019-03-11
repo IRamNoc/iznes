@@ -164,6 +164,10 @@ export class ManageOrdersComponent implements OnInit, AfterViewInit, OnDestroy {
     amConfirmModal: any = {};
     cancelModalMessage: string;
 
+    // a record of orders that payment checkbox is ticked.
+    // array of orderID
+    orderCheckedForPayment = [];
+
     menuSpec = {};
 
     private isinParam: string;
@@ -519,7 +523,7 @@ export class ManageOrdersComponent implements OnInit, AfterViewInit, OnDestroy {
             const fee = amountWithCost - amount;
             const feePercentage = this.numberConverter.toFrontEnd(order.feePercentage) * 100;
             const readyForPayment = (order.price > 0 && order.paymentMsgStatus === 'pending' );
-            const markedForPayment = new FormControl(false);
+            const markedForPayment = new FormControl(this.orderCheckedForPayment.includes(orderId));
             const orderRef = this.getOrderRef(orderId);
             const orderTypeStr = this.getOrderTypeString(order);
 
@@ -989,6 +993,10 @@ export class ManageOrdersComponent implements OnInit, AfterViewInit, OnDestroy {
         return order.knownNav ? 'text-success' : 'text-warning';
     }
 
+    /**
+     * Send request to mark payment message for ready to be sent.
+     * @param $event
+     */
     sendPaymentMsg($event) {
         this.ofiOrdersService.requestMarkOrderReadyForPayment({orderIds: $event}).then((r) => {
             const detailResps = get(r, '[1].Data[0].responses', []);
@@ -1004,6 +1012,19 @@ export class ManageOrdersComponent implements OnInit, AfterViewInit, OnDestroy {
            this.showPaymentMsgConfirmationModal = false;
            this.changeDetectorRef.markForCheck();
         });
+    }
+
+    /**
+     * Add/remove to/from the checked for payment array: orderCheckedForPayment
+     * @param orderId
+     * @param $event
+     */
+    updatePaymentCheckBoxState(orderId: number, $event: boolean): void {
+       if ($event) {
+           this.orderCheckedForPayment.push(orderId);
+       } else {
+           this.orderCheckedForPayment.filter(v => v !== orderId);
+       }
     }
 
     ngOnDestroy(): void {
