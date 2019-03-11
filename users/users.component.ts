@@ -300,10 +300,12 @@ export class AdminUsersComponent implements OnInit, AfterViewInit, OnDestroy {
      * @param dataGridState
      */
     datagridRefresh(dataGridState: ClrDatagridStateInterface) {
-        this.dgPageFrom = dataGridState.page.from;
-        this.dgPageSize = dataGridState.page.size;
-        this.requestPaginatedUsersList();
-        this.setPaginatedUsersList();
+        if (dataGridState.page) {
+            this.dgPageFrom = dataGridState.page.from;
+            this.dgPageSize = dataGridState.page.size;
+            this.requestPaginatedUsersList();
+            this.setPaginatedUsersList();
+        }
     }
 
     /**
