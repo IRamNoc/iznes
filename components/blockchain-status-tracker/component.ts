@@ -14,7 +14,6 @@ import { Router } from '@angular/router';
 export class BlockchainStatusTracker implements OnInit, OnDestroy {
 
     @Input() display: string = 'modal';
-    @Input() alternate: boolean = false;
     @Output() dropdownClosed = new EventEmitter<boolean>();
     @select(['walletNode', 'transactionStatus']) transactionStatus;
 
