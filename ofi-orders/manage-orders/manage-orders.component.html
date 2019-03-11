@@ -333,7 +333,7 @@
                             <span class="column-label"></span>
                         </ng-container>
                     </clr-dg-column>
-                    <clr-dg-column *ngIf="!isIznesAdmin" class="right">
+                    <clr-dg-column *ngIf="isAssetManger" class="right">
                         <span class="text-center">{{ 'Payment' | translate }}</span>
                     </clr-dg-column>
                     <!-- ACTIONS -->
@@ -441,10 +441,10 @@
                             <span *ngIf="order.orderStatus == 0" class="label label-error">{{ 'Cancelled' | translate }}
                             </span>
                         </clr-dg-cell>
-                        <clr-dg-cell *ngIf="!isIznesAdmin" class="right" [ngSwitch]="order.paymentMsgStatus">
+                        <clr-dg-cell *ngIf="isAssetManger" class="right" [ngSwitch]="order.paymentMsgStatus">
                             <span *ngSwitchCase="'sent'" class="label label-success">{{ 'Sent' | translate }}</span>
                             <span *ngSwitchCase="'ready'" class="label label-success">{{ 'Sent' | translate }}</span>
-                            <clr-checkbox *ngSwitchCase="'pending'" [formControl]="order.markedForPayment" [clrDisabled]="!order.readyForPayment"></clr-checkbox>
+                            <clr-checkbox *ngSwitchCase="'pending'" [formControl]="order.markedForPayment" (clrCheckedChange)="updatePaymentCheckBoxState(order.orderID, $event)"  [clrDisabled]="!order.readyForPayment"></clr-checkbox>
                         </clr-dg-cell>
                         <clr-dg-cell *ngIf="!isIznesAdmin" [ngSwitch]="order.orderStatus" class="right">
                             <!--&lt;!&ndash; Actions &ndash;&gt;-->
