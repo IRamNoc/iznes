@@ -90,9 +90,9 @@
                                                 maxlength="20"
                                                 [disabled]="isAdmin()">
                                         <div *ngIf="umbrellaFundForm.controls['legalEntityIdentifier'].touched && umbrellaFundForm.controls['legalEntityIdentifier'].errors" class="field-error">
-                                            <span *ngIf="umbrellaFundForm.controls['legalEntityIdentifier'].hasError('required')">{{ 'Field is required' | translate }}</span>
-                                            <span *ngIf="umbrellaFundForm.controls['legalEntityIdentifier'].hasError('pattern')">{{ 'LEI must meet ISO 17442 format.' | translate }}</span>
-                                            <span *ngIf="umbrellaFundForm.controls['legalEntityIdentifier'].hasError('isAlreadyExisting')">{{ 'LEI already exists' | translate }}</span>
+                                            <ng-container *ngIf="umbrellaFundForm.controls['legalEntityIdentifier'].hasError('required')">{{ 'Field is required' | translate }}</ng-container>
+                                            <ng-container *ngIf="umbrellaFundForm.controls['legalEntityIdentifier'].hasError('pattern')">{{ 'LEI must meet ISO 17442 format.' | translate }}</ng-container>
+                                            <ng-container *ngIf="umbrellaFundForm.controls['legalEntityIdentifier'].hasError('isAlreadyExisting')">{{ 'LEI already exists' | translate }}</ng-container>
                                         </div>
                                     </div>
                                 </div>
