@@ -22,7 +22,7 @@ header {
     }
 
     .header-actions {
-        @media screen and (min-width: 1082px) {
+        @media screen and (min-width: 1083px) {
             flex: 0 0 auto;
         }
     }
@@ -39,7 +39,7 @@ header {
 
     .overlay {
         position: absolute;
-        z-index: 10;
+        z-index: 501;
         top: 60px;
         left: 0;
         width: 100%;
@@ -113,10 +113,6 @@ header {
         ng-select {
             &.extended .option-wrapper.ui-select-choices.dropdown-menu {
                 width: 635px;
-            }
-
-            &.extended.alternate .option-wrapper.ui-select-choices.dropdown-menu {
-                width: 954px;
             }
 
             .ui-select-container {

@@ -19,12 +19,11 @@
                 [multiple]="false"
                 [inlineIcon]="'wallet'"
                 [class.extended]="appConfig.platform === 'OpenCSD'"
-                [class.alternate]="false"
                 class="wallet-picker">
             </ng-select>
         </div>
 
-        <blockchain-status-tracker *ngIf="appConfig.platform === 'OpenCSD'" [display]="'dropdown'" [alternate]="false" (dropdownClosed)="showOverlay=false"></blockchain-status-tracker>
+        <blockchain-status-tracker *ngIf="appConfig.platform === 'OpenCSD'" [display]="'dropdown'" (dropdownClosed)="showOverlay=false"></blockchain-status-tracker>
     </div>
 
     <div class="header-actions">
@@ -41,8 +40,7 @@
                 [placeholder]="translate.translate('No wallet selected')"
                 [formControl]="selectedWalletId"
                 [multiple]="false"
-                [inlineIcon]="'topNavWalletDropDown'"
-                [class.alternate]="false">
+                [inlineIcon]="'topNavWalletDropDown'">
             </ng-select>
         </div>
 

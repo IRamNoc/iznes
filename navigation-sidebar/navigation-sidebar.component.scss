@@ -8,6 +8,9 @@
 }
 
 clr-vertical-nav {
+    .tooltip {
+        margin: 3px 0;
+    }
     &.is-collapsed {
         .tooltip-content {
             display: block;
