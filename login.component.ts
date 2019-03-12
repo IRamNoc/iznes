@@ -79,6 +79,7 @@ export class SetlLoginComponent implements OnDestroy, OnInit, AfterViewInit, Log
 
     changePasswordForm: FormGroup;
     showPasswords = {
+        login: false,
         change1: false,
         change2: false,
         resetold: false,
