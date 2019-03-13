@@ -254,8 +254,6 @@ export class SetlLoginComponent implements OnDestroy, OnInit, AfterViewInit, Log
         const subscription = combined$.subscribe(([params, data]) => {
             const loggedIn = data['loggedIn'];
             this.resetToken = params['token'];
-            console.log('+++ appConfig.backgroundImage', this.appConfig.backgroundImage);
-            console.log('+++ appConfig', this.appConfig);
 
             if (params['twofactortoken']) {
                 this.resetTwoFactorToken = params['twofactortoken'];
@@ -522,7 +520,6 @@ export class SetlLoginComponent implements OnDestroy, OnInit, AfterViewInit, Log
                         () => {
                             this.changePassword = true;
                             this.showModal = true;
-                            console.log('+++ should show reset password modal');
                         },
                         1500,
                     );
