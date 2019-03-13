@@ -9,6 +9,7 @@ import {
     ViewChild,
     ChangeDetectorRef,
 } from '@angular/core';
+import { style, state, animate, transition, trigger } from '@angular/animations';
 import { ActivatedRoute, Router } from '@angular/router';
 import { AbstractControl, FormControl, FormGroup, Validators } from '@angular/forms';
 import { NgRedux, select } from '@angular-redux/store';
@@ -47,7 +48,7 @@ import { passwordValidator } from '@setl/utils/helper/validators/password.direct
 import { LoginService } from './login.service';
 
 export interface LoginRedirect {
-   loginedRedirect(redirect: string, urlParams: any): void;
+    loginedRedirect(redirect: string, urlParams: any): void;
 }
 
 /* Dectorator. */
@@ -55,6 +56,15 @@ export interface LoginRedirect {
     selector: 'app-login',
     templateUrl: 'login.component.html',
     styleUrls: ['login.component.scss'],
+    animations: [
+        trigger('fadeIn', [
+            transition(':enter', [
+                style({ opacity: 0 }),
+                animate(500, style({ opacity: 1 })),
+            ]),
+            state('*', style({ opacity: 1 })),
+        ]),
+    ],
 })
 
 /* Class. */
@@ -244,6 +254,8 @@ export class SetlLoginComponent implements OnDestroy, OnInit, AfterViewInit, Log
         const subscription = combined$.subscribe(([params, data]) => {
             const loggedIn = data['loggedIn'];
             this.resetToken = params['token'];
+            console.log('+++ appConfig.backgroundImage', this.appConfig.backgroundImage);
+            console.log('+++ appConfig', this.appConfig);
 
             if (params['twofactortoken']) {
                 this.resetTwoFactorToken = params['twofactortoken'];
@@ -510,6 +522,7 @@ export class SetlLoginComponent implements OnDestroy, OnInit, AfterViewInit, Log
                         () => {
                             this.changePassword = true;
                             this.showModal = true;
+                            console.log('+++ should show reset password modal');
                         },
                         1500,
                     );

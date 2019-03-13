@@ -1,5 +1,5 @@
 import { Component, OnInit, ChangeDetectorRef, OnDestroy, Inject, Input, EventEmitter, Output } from '@angular/core';
-import { SagaHelper } from '@setl/utils';
+import { SagaHelper, APP_CONFIG, AppConfig } from '@setl/utils';
 import { NgRedux, select } from '@angular-redux/store';
 import { AlertsService } from '@setl/jaspero-ng2-alerts';
 import { FormGroup, FormControl, Validators } from '@angular/forms';
@@ -8,20 +8,32 @@ import { UPDATE_TWO_FACTOR } from '@setl/core-store';
 import { MyUserService } from '@setl/core-req-services';
 import { MultilingualService } from '@setl/multilingual';
 import { LoginService } from '../../login.service';
+import { style, state, animate, transition, trigger } from '@angular/animations';
 
 @Component({
     selector: 'app-authenticate',
     templateUrl: './authenticate.component.html',
     styleUrls: ['./authenticate.component.scss'],
+    animations: [
+        trigger('fadeIn', [
+            transition(':enter', [
+                style({ opacity: 0 }),
+                animate(500, style({ opacity: 1 })),
+            ]),
+            state('*', style({ opacity: 1 })),
+        ]),
+    ],
 })
 export class AuthenticateComponent implements OnDestroy, OnInit {
     @Input() qrCode: string = '';
     @Input() showSuccessAlert: boolean = false;
     @Input() resetToken: string = '';
+    @Input() displayAsModals: boolean = true;
     @Output() modalCancelled: EventEmitter<any> = new EventEmitter();
     @Output() verifiedToken: EventEmitter<any> = new EventEmitter();
     @Output() clearToken: EventEmitter<any> = new EventEmitter();
 
+    appConfig: AppConfig;
     connectedWalletId: number;
     username: string;
     userId: number;
@@ -49,7 +61,9 @@ export class AuthenticateComponent implements OnDestroy, OnInit {
         private myUserService: MyUserService,
         public translate: MultilingualService,
         private loginService: LoginService,
-    ) {
+        @Inject(APP_CONFIG) appConfig: AppConfig,
+        ) {
+        this.appConfig = appConfig;
 
         this.authenticateQRForm = new FormGroup(
             {
