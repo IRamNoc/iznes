@@ -2,7 +2,8 @@
     <!-- Breadcrumbs. -->
     <div class="header-breadcrumbs">
         <h1 id="portfolio-managers-detail"><i class="fa fa-users"></i>
-            {{ 'Portfolio Manager' | translate }} - {{pm.emailAddress}}
+            <ng-template *ngIf="pm.type === 'PM'">{{ 'Portfolio Manager' | translate }} - {{pm.emailAddress}}</ng-template>
+            <ng-template *ngIf="pm.type === 'WM'">{{ 'Wealth Manager' | translate }} - {{pm.emailAddress}}</ng-template>
         </h1>
     </div>
 
@@ -11,7 +12,12 @@
             <button clrTabLink>
                 <i class="fa fa-users"></i> {{pm.emailAddress}}
             </button>
-            <clr-tab-content>
+
+            <clr-tab-content *ngIf="pm.type === 'WM'">
+                <app-mandate-investor-grid [pm]="pm" (toggle)="handleInvestorChange($event)" (manageAccess)="handleManageShareAccess($event)"></app-mandate-investor-grid>
+            </clr-tab-content>
+
+            <clr-tab-content *ngIf="pm.type === 'PM'">
                 <div class="row">
                     <div class="col-sm-6">
                         {{ 'Please find below the authorisation of @emailAddress@ regarding your fund.' | translate: { 'emailAddress': pm.emailAddress } }}
@@ -30,16 +36,16 @@
                                 <clr-dg-cell id="access_slider_row_{{i}}">
                                     <div class="switch-container">
                                         <label class="switch">
-                                            <input type="checkbox" 
-                                                    id="access_slider_{{i}}" 
-                                                    [formControl]="item.statusFormControl" 
+                                            <input type="checkbox"
+                                                    id="access_slider_{{i}}"
+                                                    [formControl]="item.statusFormControl"
                                                     (change)="handleAccessChange($event)">
                                             <span class="slider round"></span>
                                         </label>
                                     </div>
                                 </clr-dg-cell>
                                 <clr-dg-cell id="action_row_{{i}}">
-                                    <button class="btn btn-success btn-sm" style="margin: 0px;" [disabled]="!fundAccessHasKyc(item)" (click)="handleManagerShareAccess(item)">
+                                    <button class="btn btn-success btn-sm" style="margin: 0px;" [disabled]="!fundAccessHasKyc(item)" (click)="handleManageShareAccess(item)">
                                         <i class="fa fa-align-left"></i> {{ 'Manage Shares Authorisation' | translate }}
                                     </button>
                                 </clr-dg-cell>

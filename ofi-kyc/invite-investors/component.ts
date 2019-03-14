@@ -3,7 +3,6 @@ import { FormArray, FormBuilder, FormControl, FormGroup, Validators } from '@ang
 import { Location } from '@angular/common';
 import { OfiKycService } from '../../ofi-req-services/ofi-kyc/service';
 import { OfiKycObservablesService } from '../../ofi-req-services/ofi-kyc/kyc-observable';
-import { immutableHelper } from '@setl/utils';
 import { NgRedux, select } from '@angular-redux/store';
 import { Subject } from 'rxjs';
 import { AlertsService } from '@setl/jaspero-ng2-alerts';
@@ -30,8 +29,6 @@ export class OfiInviteInvestorsComponent implements OnInit, OnDestroy {
     languages = this.translate.translate([
         { id: 'fr', text: 'Français' },
         { id: 'en', text: 'English' },
-        // {id: 'tch', text: '繁體中文'},
-        // {id: 'sch', text: '中文'}
     ]);
 
     subscriptions: Array<any> = [];
@@ -59,7 +56,6 @@ export class OfiInviteInvestorsComponent implements OnInit, OnDestroy {
                 private ofiKycObservablesService: OfiKycObservablesService,
                 @Inject('kycEnums') kycEnums,
                 private ofiFundDataService: OfiFundDataService,
-                private redux: NgRedux<any>,
                 public translate: MultilingualService) {
 
         this.enums.status = kycEnums.status;
@@ -120,20 +116,17 @@ export class OfiInviteInvestorsComponent implements OnInit, OnDestroy {
         this.initInvestorTypes();
 
         (<any>this).appSubscribe(this.ofiKycObservablesService.getInvitationData(), (d: investorInvitation[]) => {
-            this.inviteItems = d;
-            if (this.inviteItems.length) {
-                this.inviteItems = this.inviteItems.map((invite) => {
-                    const tokenUsedAt = invite.tokenUsedAt ? moment(invite.tokenUsedAt).local().format('YYYY-MM-DD HH:mm:ss') : null;
-                    const kycStarted = invite.kycStarted ? moment(invite.kycStarted).local().format('YYYY-MM-DD HH:mm:ss') : '';
-                    return {
-                        ...invite,
-                        invitationLink: `${window.location.origin}/#/redirect/${invite.lang}/${invite.invitationToken}`,
-                        inviteSent: moment(invite.inviteSent).local().format('YYYY-MM-DD HH:mm:ss'),
-                        tokenUsedAt,
-                        kycStarted,
-                    };
-                });
-            }
+            this.inviteItems = d.filter(inv => inv.investorType < 40).map((invite) => {
+                const tokenUsedAt = invite.tokenUsedAt ? moment(invite.tokenUsedAt).local().format('YYYY-MM-DD HH:mm:ss') : null;
+                const kycStarted = invite.kycStarted ? moment(invite.kycStarted).local().format('YYYY-MM-DD HH:mm:ss') : '';
+                return {
+                    ...invite,
+                    invitationLink: `${window.location.origin}/#/redirect/${invite.lang}/${invite.invitationToken}`,
+                    inviteSent: moment(invite.inviteSent).local().format('YYYY-MM-DD HH:mm:ss'),
+                    tokenUsedAt,
+                    kycStarted,
+                };
+            });
             this.markForCheck();
         });
 
@@ -155,7 +148,6 @@ export class OfiInviteInvestorsComponent implements OnInit, OnDestroy {
     initInvestorTypes() {
         this.investorTypes = this.translate.translate([
             { id: 10, text: 'Institutional Investor' },
-            { id: 20, text: 'Portfolio Manager' },
             { id: 30, text: 'Retail Investor' },
         ]);
     }
@@ -230,6 +222,9 @@ export class OfiInviteInvestorsComponent implements OnInit, OnDestroy {
     save(formValues): void {
         const requestData = constructInvitationRequest(formValues);
 
+        // Handle mandate investors seperately.
+
+        // Standard investor flow.
         this.ofiKycService.sendInvestInvitations(requestData).then((response) => {
             const emailAddressList = response[1].Data[0].existingEmailAddresses;
             const alreadyInitiatedList = response[1].Data[0].alreadyInitiatedEmailAddresses;
@@ -359,8 +354,8 @@ function constructInvitationRequest(formValue) {
         (result, item) => {
             const investorType = _.get(item, ['investorType', 0], {}).id;
             // check the investor type
-            if (investorType !== 10 && investorType !== 20) {
-                throw new Error('We should only allow investor type 10 or 20');
+            if (investorType !== 10) {
+                throw new Error('Only institutional investors are allowed');
             }
 
             // get the fundList in array of fundId

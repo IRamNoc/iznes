@@ -18,6 +18,8 @@ import { PortfolioManagerListComponent } from './portfolio-manager-list/portfoli
 import { PortfolioManagerDetailComponent } from './portfolio-manager-detail/portfolio-manager-detail.component';
 import { OfiPortfolioManagerDataService } from '../ofi-data-service/portfolio-manager/ofi-portfolio-manager-data.service';
 import { OfiPortfolioMangerService } from '../ofi-req-services/ofi-portfolio-manager/service';
+import { OfiMandateInvestorModule } from '../ofi-mandate-investor/mandate-investor.module';
+import { PortfolioManagerInviteComponent } from './portfolio-manager-invite/pm-invite.component';
 
 /* Decorator. */
 @NgModule({
@@ -25,6 +27,7 @@ import { OfiPortfolioMangerService } from '../ofi-req-services/ofi-portfolio-man
         CircleStatusIndicator,
         PortfolioManagerListComponent,
         PortfolioManagerDetailComponent,
+        PortfolioManagerInviteComponent,
     ],
     exports: [
         PortfolioManagerListComponent,
@@ -43,6 +46,7 @@ import { OfiPortfolioMangerService } from '../ofi-req-services/ofi-portfolio-man
         SetlComponentsModule,
         SetlDirectivesModule,
         SetlLayoutModule,
+        OfiMandateInvestorModule,
     ],
     providers: [
         OfiPortfolioMangerService,

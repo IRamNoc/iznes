@@ -1,0 +1,180 @@
+<!-- Breadcrumbs. -->
+<div class="header-breadcrumbs">
+    <h1 id="ofi-kyc-invite-investors">
+    <i class="fa fa-user-plus"></i> {{ 'Invite Porfolio Managers' | translate }}</h1>
+</div>
+
+<!-- Main content. -->
+<div class="wrapper wrapper-content">
+    <div class="row">
+        <div class="col-sm-12">
+            <!-- Description -->
+        </div>
+    </div>
+
+    <form [formGroup]="inviteForm" novalidate>
+        <section class="form-block" formArrayName="portfolioManagers">
+            <div class="investorBlock" *ngFor="let investor of f; let i = index">
+                <div [formGroup]="investor">
+
+                    <!-- Email + Language -->
+                    <div class="row">
+                        <div class="form-group col-sm-6">
+                            <label class="required-field" for="kyc_email_{{i}}">{{ 'Email Address' | translate }}</label>
+                            <div>
+                                <input type="text"
+                                        id="kyc_email_{{i}}"
+                                        class="form-control"
+                                        formControlName="email"
+                                        maxlength="70">
+                            </div>
+                            <div *ngIf="investor.get('email').touched && investor.get('email').hasError('email')" class="field-error">
+                                {{ 'Invalid email' | translate }}
+                            </div>
+                        </div>
+
+                        <div class="form-group col-sm-6">
+                            <label class="required-field" for="kyc_language_{{i}}">{{ 'Language' | translate }}</label>
+
+                            <div>
+                                <ng-select
+                                    id="kyc_language_{{i}}"
+                                    class="form-control"
+                                    [items]="languages"
+                                    [allowClear]="true"
+                                    placeholder="{{ 'Select' | translate }}"
+                                    formControlName="language"
+                                    [ngStyle]="{'padding':'6px 0'}"
+                                    [containerWidth]="'95%'">
+                                </ng-select>
+
+                                <div *ngIf="investor.get('language').hasError('required') && investor.get('language').touched" class="field-error">
+                                    {{ 'Field is required' | translate }}
+                                </div>
+                            </div>
+
+                            <i
+                                class="fa fa-times-circle text-warning"
+                                *ngIf="i > 0" id="btnKycRemoveInvestor_{{i}}"
+                                (click)="removeInvestor(i)"
+                                [ngStyle]="{'cursor':'pointer','margin-left':'14px','font-size':'18px','position':'absolute','right':'0'}">
+                            </i>
+                        </div>
+                    </div>
+
+                    <!-- Firstname + Lastname -->
+                    <div class="row">
+                        <div class="form-group col-sm-6">
+                            <label class="required-field" for="kyc_firstName_{{i}}">{{ 'First Name' | translate }}</label>
+                            <div>
+                                <input type="text" id="kyc_firstName_{{i}}" class="form-control" formControlName="firstName">
+                            </div>
+                            <div *ngIf="investor.get('firstName').touched && investor.get('firstName').hasError('required')" class="field-error">
+                                {{ 'Field is required' | translate }}
+                            </div>
+                        </div>
+
+                        <div class="form-group col-sm-6">
+                            <label class="required-field" for="kyc_lastName_{{i}}">{{ 'Last Name' | translate }}</label>
+                            <div>
+                                <input type="text" id="kyc_lastName_{{i}}" class="form-control" formControlName="lastName">
+                            </div>
+                            <div *ngIf="investor.get('lastName').touched && investor.get('lastName').hasError('required')" class="field-error">
+                                {{ 'Field is required' | translate }}
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- investorType + Ref -->
+                    <div class="row">
+                        <div class="form-group col-sm-12">
+                            <label class='required-field' for="kyc_investorType_{{i}}">
+                                {{ 'Investor Type' | translate }}
+                            </label>
+
+                            <div>
+                                <ng-select
+                                    id="kyc_investorType_{{i}}"
+                                    class="form-control"
+                                    [items]="investorTypes$ | async"
+                                    [allowClear]="true"
+                                    placeholder="{{ 'Select' | translate }}"
+                                    formControlName="investorType"
+                                    [ngStyle]="{'padding':'6px 0'}"
+                                    [containerWidth]="'95%'">
+                                </ng-select>
+
+                                <div *ngIf="investor.get('investorType').hasError('required') && investor.get('investorType').touched" class="field-error">
+                                    {{ 'Field is required' | translate }}
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Fund List for Wealth Managers -->
+                    <div class="row" *ngIf="isFundOfFundsManager(investor.value)">
+                        <div class="form-group col-sm-12">
+                            <label class="required-field" for="pm_funds_{{i}}">{{ 'List of funds managed by the Portfolio Manager' | translate }}</label>
+                            <div>
+                                <ng-select
+                                    id="pm_funds_{{i}}"
+                                    class="form-control"
+                                    [items]="fundSelectList$ | async"
+                                    [multiple]="true"
+                                    placeholder="{{ 'Select funds' | translate }}"
+                                    formControlName="fundList"
+                                    [ngStyle]="{'padding':'6px 0'}"
+                                    [containerWidth]="'95%'">
+                                </ng-select>
+
+                                <div *ngIf="investor.get('fundList').hasError('required') && investor.get('fundList').touched" class="field-error">
+                                    {{ 'Field is required' | translate }}
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Investor List for Discretionary Managers -->
+                    <div class="row" *ngIf="isDiscretionaryManager(investor.value)">
+                        <div class="form-group col-sm-12">
+                            <label class="required-field" for="pm_investors_{{i}}">{{ 'List of investors managed by the Portfolio Manager' | translate }}</label>
+                            <div>
+                                <pre>{{ investorSelectList$ | async | json }}</pre>
+                                <ng-select
+                                    id="pm_investors_{{i}}"
+                                    class="form-control"
+                                    [items]="investorSelectList$ | async"
+                                    [multiple]="true"
+                                    placeholder="{{ 'Select mandate investors' | translate }}"
+                                    formControlName="investorList"
+                                    [ngStyle]="{'padding':'6px 0'}"
+                                    [containerWidth]="'95%'">
+                                </ng-select>
+
+                                <div *ngIf="investor.get('investorList').hasError('required') && investor.get('investorList').touched" class="field-error">
+                                    {{ 'Field is required' | translate }}
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="row">
+                <div class="form-group col-sm-12">
+                    <button id="btnKycAddInvestor" type="button" class="btn btn-success" (click)="addInvestor()">
+                        <i class="fa fa-plus"></i> {{ 'Add Another Investor' | translate }}
+                    </button>
+                </div>
+            </div>
+            <div class="text-center">
+                <button id="btnKycClose" type="button" class="btn btn-info" (click)="goBack()">{{ 'Close' | translate }}</button>
+
+                <button id="btnKycSubmit" type="button" (click)="save()" class="btn btn-primary" [disabled]="!inviteForm.valid">
+                    <i class="fa fa-save"></i>
+                    <span>{{ 'Create Mandate PortfolioManagers' | translate }}</span>
+                </button>
+            </div>
+        </section>
+    </form>
+</div>

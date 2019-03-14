@@ -16,6 +16,11 @@
                     <div class="col-sm-6">
                         {{ 'Please find below the list of your portfolio managers.' | translate }}
                     </div>
+                    <div class="col-sm-6" align="right">
+                        <button id="invite-investors-btn" class="btn" style="margin-left: 10px;" (click)="handleInvite();">
+                            {{'Invite a Portfolio Manager' | translate }}
+                        </button>
+                    </div>
                 </div>
 
                 <div class="row">
@@ -25,11 +30,13 @@
                             <clr-dg-column [clrDgField]="'emailAddress'">{{ 'Email Address' | translate }}</clr-dg-column>
                             <clr-dg-column [clrDgField]="'firstName'">{{ 'First Name' | translate }}</clr-dg-column>
                             <clr-dg-column [clrDgField]="'lastName'">{{ 'LastName' | translate }}</clr-dg-column>
+                            <clr-dg-column [clrDgField]="'type'">{{ 'Type' | translate }}</clr-dg-column>
 
                             <clr-dg-row *clrDgItems="let item of portfolioMangerList" style="cursor: pointer;" (click)="handleClick(item)">
                                 <clr-dg-cell><circle-status-indicator [statusClass]="getStatusClass(item.pmActive)" [statusLabel]="'Inactive'"></circle-status-indicator> {{item.emailAddress}}</clr-dg-cell>
                                 <clr-dg-cell>{{item.firstName}}</clr-dg-cell>
                                 <clr-dg-cell>{{item.lastName}}</clr-dg-cell>
+                                <clr-dg-cell>{{(item.type === 'WM') ? 'Wealth Manager' : 'Portfolio Manager'}}</clr-dg-cell>
                             </clr-dg-row>
 
                             <clr-dg-footer>{{pagination.firstItem + 1}} - {{pagination.lastItem + 1}}

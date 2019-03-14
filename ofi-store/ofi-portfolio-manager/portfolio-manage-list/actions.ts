@@ -31,6 +31,19 @@ export function ofiUpdatePmDetail(pmDetail: {pmId: number; fundId: number; walle
     };
 }
 
+export const OFI_SET_WM_DETAIL = `${name}/OFI_SET_WM_DETAIL`;
+
+/**
+ * Update mandate investors of a particular wm.
+ */
+export const OFI_UPDATE_WM_DETAIL = `${name}/OFI_UPDATE_PM_DETAIL`;
+export function ofiUpdateWmDetail(pmDetail: {pmId: number; investorID: number; walletId: number; kycId: number}) {
+    return {
+        type: OFI_UPDATE_WM_DETAIL,
+        pmDetail,
+    };
+}
+
 /**
  * New pm.
  */

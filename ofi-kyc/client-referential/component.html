@@ -18,8 +18,9 @@
                         {{ 'Please find below the list of your clients' | translate }}
                     </div>
                     <div class="col-sm-6" align="right">
-                        {{ 'From here you will also be able to invite more investors to join IZNES' | translate }}
-                        <button id="invite-investors-btn" class="btn" style="margin-left: 10px;" (click)="gotoInvite();">{{
+                        <button id="create-mandate-inv-btn" class="btn" style="margin-left: 10px;" (click)="inviteMandateInvestors()">{{
+                            'Create Investor under Mandate' | translate }}</button>
+                        <button id="invite-investors-btn" class="btn" style="margin-left: 10px;" (click)="gotoInvite()">{{
                             'Invite Investors' | translate }}</button>
                     </div>
                 </div>
@@ -31,10 +32,10 @@
                                     {{ 'Investor Type' | translate }}
                                 </label>
 
-                                <ng-select id="investor-type-select" 
-                                            class="form-control" 
+                                <ng-select id="investor-type-select"
+                                            class="form-control"
                                             [items]="investorTypes"
-                                            [allowClear]="true" 
+                                            [allowClear]="true"
                                             [placeholder]="translate.translate('Select investor type')" formControlName="investorType">
                                 </ng-select>
                             </div>
@@ -60,20 +61,17 @@
                             <clr-dg-column [clrDgField]="'clientReference'">{{ 'Client Reference' | translate }}</clr-dg-column>
                             <clr-dg-column [clrDgField]="'walletName'">{{ 'IZNES Reference' | translate }}</clr-dg-column>
                             <clr-dg-column [clrDgField]="'companyName'">{{ 'Company' | translate }}</clr-dg-column>
-                            <clr-dg-column [clrDgField]="'leiCode'">{{ 'LEI' | translate }}</clr-dg-column>
-                            <clr-dg-column [clrDgField]="'legalForm'">{{ 'Legal Form' | translate }}</clr-dg-column>
-                            <clr-dg-column [clrDgField]="'sectorActivity'">{{ 'Primary Sector of Activity' | translate
-                                }}</clr-dg-column>
                             <clr-dg-column [clrDgField]="'email'">{{ 'Email' | translate }}</clr-dg-column>
+                            <clr-dg-column [clrDgField]="'investorType'">{{ 'Investor Type' | translate }}</clr-dg-column>
+                            <clr-dg-column [clrDgField]="'investmentMethod'">{{ 'Investment Method' | translate }}</clr-dg-column>
 
                             <clr-dg-row *clrDgItems="let item of clientReferential" style="cursor: pointer;" (click)="viewClient(item.kycID);">
                                 <clr-dg-cell>{{item.clientReference}}</clr-dg-cell>
                                 <clr-dg-cell>{{item.walletName}}</clr-dg-cell>
                                 <clr-dg-cell>{{item.companyName}}</clr-dg-cell>
-                                <clr-dg-cell>{{item.leiCode}}</clr-dg-cell>
-                                <clr-dg-cell>{{item.legalForm}}</clr-dg-cell>
-                                <clr-dg-cell>{{item.sectorActivity}}</clr-dg-cell>
                                 <clr-dg-cell>{{item.email}}</clr-dg-cell>
+                                <clr-dg-cell>{{item.investorType}}</clr-dg-cell>
+                                <clr-dg-cell>{{item.investmentMethod}}</clr-dg-cell>
                             </clr-dg-row>
 
                             <clr-dg-footer>{{pagination.firstItem + 1}} - {{pagination.lastItem + 1}}
@@ -258,10 +256,10 @@
                         <div class="form-group col-sm-3">
                             <label for="audit-search-investor">{{ 'Search an Investor' | translate }}</label>
                             <div class="input-button-group">
-                                <input id="audit-search-investor" 
+                                <input id="audit-search-investor"
                                         [formControl]="searchForm.controls['searchInvestor']"
-                                        name="search-sharename" 
-                                        type="text" 
+                                        name="search-sharename"
+                                        type="text"
                                         [placeholder]="translate.translate('Investor name or reference')"
                                     style="width: 100% !important">
                             </div>
@@ -270,12 +268,12 @@
                             <label for="orders-search-from-date">{{ 'From Date' | translate }}</label>
                             <div class="input-group date-pick-wrapper">
                                 <span class="fa fa-calendar" aria-hidden="true"></span>
-                                <input id="orders-search-from-date" 
+                                <input id="orders-search-from-date"
                                         [formControl]="searchForm.controls['searchFrom']"
-                                        autocomplete="off" 
-                                        [dpDayPicker]="fromConfigDate" 
+                                        autocomplete="off"
+                                        [dpDayPicker]="fromConfigDate"
                                         [placeholder]="translate.translate('Choose a date')"
-                                        mode="day" 
+                                        mode="day"
                                         theme="dp-material">
                             </div>
                         </div>
@@ -283,12 +281,12 @@
                             <label for="orders-search-to-date">{{ 'To Date' | translate }}</label>
                             <div class="input-group date-pick-wrapper">
                                 <span class="fa fa-calendar" aria-hidden="true"></span>
-                                <input id="orders-search-to-date" 
+                                <input id="orders-search-to-date"
                                         [formControl]="searchForm.controls['searchTo']"
-                                        autocomplete="off" 
-                                        [dpDayPicker]="toConfigDate" 
+                                        autocomplete="off"
+                                        [dpDayPicker]="toConfigDate"
                                         [placeholder]="translate.translate('Choose a date')"
-                                        mode="day" 
+                                        mode="day"
                                         theme="dp-material">
                             </div>
                         </div>

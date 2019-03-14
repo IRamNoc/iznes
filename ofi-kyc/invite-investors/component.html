@@ -24,20 +24,18 @@
                     <div class="row">
                         <div class="form-group col-sm-6">
                             <label class="required-field" for="kyc_email_{{i}}">{{ 'Email Address' | translate }}</label>
-                            <div>
-                                <input type="text"
-                                        id="kyc_email_{{i}}"
-                                        class="form-control"
-                                        formControlName="email"
-                                        maxlength="70">
-                            </div>
-                            <div *ngIf="investor.controls.email.touched && investor.controls.email.hasError('required')" class="field-error">
+                            <input type="text"
+                                id="kyc_email_{{i}}"
+                                class="form-control"
+                                formControlName="email"
+                                maxlength="70">
+                            <div *ngIf="investor.get('email').touched && investor.get('email').hasError('required')" class="field-error">
                                 {{ 'Field is required' | translate }}
                             </div>
-                            <div *ngIf="investor.controls.email.touched && investor.controls.email.hasError('pattern')" class="field-error">
+                            <div *ngIf="investor.get('email').touched && investor.get('email').hasError('pattern')" class="field-error">
                                 {{ 'Invalid email' | translate }}
                             </div>
-                            <div *ngIf="!investor.controls.email.hasError('pattern') && investor.controls.email.hasError('notUnique')" class="field-error">
+                            <div *ngIf="!investor.get('email').hasError('pattern') && investor.get('email').hasError('notUnique')" class="field-error">
                                 {{ 'Email already used for invitation' | translate }}
                             </div>
                         </div>
@@ -57,7 +55,7 @@
                                     [containerWidth]="'95%'">
                                 </ng-select>
 
-                                <div *ngIf="investor.controls['language'].hasError('required') && investor.controls['language'].touched" class="field-error">
+                                <div *ngIf="investor.get('language').hasError('required') && investor.get('language').touched" class="field-error">
                                     {{ 'Field is required' | translate }}
                                 </div>
                             </div>
@@ -74,13 +72,10 @@
                     <div class="row">
                         <div class="form-group col-sm-6">
                             <label for="kyc_clientReference_{{i}}">{{ 'Client Reference (optional)' | translate }}</label>
-
-                            <div>
-                                <input type="text"
-                                        id="kyc_clientReference_{{i}}"
-                                        class="form-control"
-                                        formControlName="clientReference">
-                            </div>
+                            <input type="text"
+                                id="kyc_clientReference_{{i}}"
+                                class="form-control"
+                                formControlName="clientReference">
                         </div>
 
                         <div class="form-group col-sm-6">
@@ -88,47 +83,23 @@
                                 {{ 'Investor Type' | translate }}
                             </label>
 
-                            <div>
-                                <ng-select
-                                    id="kyc_investorType_{{i}}"
-                                    class="form-control"
-                                    [items]="investorTypes"
-                                    [allowClear]="true"
-                                    [placeholder]="translate.translate('Select')"
-                                    formControlName="investorType"
-                                    [ngStyle]="{'padding':'6px 0'}"
-                                    [containerWidth]="'95%'">
-                                </ng-select>
+                            <ng-select
+                                id="kyc_investorType_{{i}}"
+                                class="form-control"
+                                [items]="investorTypes"
+                                [allowClear]="true"
+                                [placeholder]="translate.translate('Select')"
+                                formControlName="investorType"
+                                [ngStyle]="{'padding':'6px 0'}"
+                                [containerWidth]="'95%'">
+                            </ng-select>
 
-                                <div *ngIf="investor.controls['investorType'].hasError('required') && investor.controls['investorType'].touched" class="field-error">
-                                    {{ 'Field is required' | translate }}
-                                </div>
-
-                                <div *ngIf="isRetailInvestor(investor.controls['investorType']) && investor.controls['investorType'].touched" class="field-error">
-                                    {{ 'IZNES is not supporting retail investors for now' | translate }}
-                                </div>
+                            <div *ngIf="investor.get('investorType').hasError('required') && investor.get('investorType').touched" class="field-error">
+                                {{ 'Field is required' | translate }}
                             </div>
-                        </div>
-                    </div>
 
-                    <div class="row" *ngIf="isPortfolioManager(investor.controls['investorType'], investor.controls['fundList'])">
-                        <div class="form-group col-sm-6">
-                            <label class="required-field" for="pm_funds_{{i}}">{{ 'List of funds managed by the Portfolio Manager' | translate }}</label>
-                            <div>
-                                <ng-select
-                                    id="pm_funds_{{i}}"
-                                    class="form-control"
-                                    [items]="fundSelectList"
-                                    [multiple]="true"
-                                    [placeholder]="translate.translate('Select funds')"
-                                    formControlName="fundList"
-                                    [ngStyle]="{'padding':'6px 0'}"
-                                    [containerWidth]="'95%'">
-                                </ng-select>
-
-                                <div *ngIf="investor.controls['fundList'].hasError('required') && investor.controls['fundList'].touched" class="field-error">
-                                    {{ 'Field is required' | translate }}
-                                </div>
+                            <div *ngIf="isRetailInvestor(investor.get('investorType')) && investor.get('investorType').touched" class="field-error">
+                                {{ 'IZNES is not supporting retail investors for now' | translate }}
                             </div>
                         </div>
                     </div>
@@ -136,29 +107,23 @@
                     <div class="row">
                         <div class="form-group col-sm-6">
                             <label for="kyc_firstName_{{i}}">{{ 'First Name (optional)' | translate }}</label>
-                            <div>
-                                <input type="text" id="kyc_firstName_{{i}}" class="form-control" formControlName="firstName">
-                            </div>
+                            <input type="text" id="kyc_firstName_{{i}}" class="form-control" formControlName="firstName">
                         </div>
 
                         <div class="form-group col-sm-6">
                             <label for="kyc_lastName_{{i}}">{{ 'Last Name (optional)' | translate }}</label>
-                            <div>
-                                <input type="text" id="kyc_lastName_{{i}}" class="form-control" formControlName="lastName">
-                            </div>
+                            <input type="text" id="kyc_lastName_{{i}}" class="form-control" formControlName="lastName">
                         </div>
                     </div>
 
                     <div class="row">
                         <div class="form-group col-sm-12">
                             <label for="kyc_message_{{i}}">{{ 'Message (optional)' | translate }}</label>
-                            <div>
-                                <textarea type="text"
-                                            id="kyc_message_{{i}}"
-                                            class="form-control"
-                                            style="width:98%"
-                                            formControlName="message"></textarea>
-                            </div>
+                            <textarea type="text"
+                                id="kyc_message_{{i}}"
+                                class="form-control"
+                                style="width:98%"
+                                formControlName="message"></textarea>
                         </div>
                     </div>
                 </div>
