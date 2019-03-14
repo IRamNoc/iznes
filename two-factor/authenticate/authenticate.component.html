@@ -16,14 +16,14 @@
             </div>
     
             <div class="form-group">
-                <label class="required-field" for="two-factor-code">{{ 'Authentication Code' | translate }}</label>
+                <label for="two-factor-code">{{ 'Authentication Code' | translate }}</label>
                 <input type="text"
                         id="two-factor-code"
                         class="text-center form-control"
                         formControlName="qrCodeNumber"
                         maxlength="6"
                         minlength="6"
-                        placeholder="{{ 'Enter your six digit authentication code' | translate }}">
+                        placeholder="{{ 'Enter your six digit code' | translate }}">
 
                 <div *ngIf="authenticateQRForm.controls.qrCodeNumber.hasError('required') && authenticateQRForm.controls.qrCodeNumber.touched"
                         class="field-error">{{ 'Field is required' | translate }}
@@ -115,7 +115,7 @@
         </div>
         <form [formGroup]="forgottenTwoFactorForm" (ngSubmit)="sendForgottonTwoFactorEmail()">
             <div class="form-group">
-                <label class="required-field" for="forgot-two-factor-email">{{ 'Email Address' | translate }}</label>
+                <label for="forgot-two-factor-email">{{ 'Email Address' | translate }}</label>
                 <input id="forgot-two-factor-email"
                     type="text"
                     class="form-control"

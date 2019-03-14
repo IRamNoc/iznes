@@ -169,11 +169,11 @@
             {{ 'Change Password' | translate }}
         </section>
         <div class="login-group">
+            <ng-container *ngTemplateOutlet="passwordAlert"></ng-container>
             <form [formGroup]="changePasswordForm" (ngSubmit)="saveNewPassword()">
                 <div class="form-group">
                     <label for="change-password-new">
                         {{ 'New password' | translate }}
-                        <app-password-tooltip></app-password-tooltip>
                     </label>
                     <input id="change-password-new"
                             [type]="(showPasswords.change1 === true) ? 'text' : 'password'"
@@ -242,6 +242,9 @@
                 <div class="text-block">
                     <p class="no-margin">{{'Your password has expired and must be changed' | translate}}</p>
                 </div>
+
+                <ng-container *ngTemplateOutlet="passwordAlert"></ng-container>
+
                 <div class="form-group">
                     <label for="reset-password-current">
                         {{ 'Current password' | translate }}
@@ -262,7 +265,6 @@
                 <div class="form-group">
                     <label for="reset-password-new">
                         {{ 'New password' | translate }}
-                        <app-password-tooltip></app-password-tooltip>
                     </label>
                     <input
                         id="reset-password-new"
@@ -290,7 +292,7 @@
 
                 <div class="form-group">
                     <label for="reset-password-confirm">
-                        {{ 'Password confirmation' | translate }}
+                        {{ 'Confirm Password' | translate }}
                     </label>
                     <input class="form-control"
                             id="reset-password-confirm"
@@ -315,5 +317,25 @@
                 </button>
             </div>
         </form>
+    </div>
+</ng-template>
+
+<!--PASSWORD ALERT-->
+<ng-template #passwordAlert>
+    <div class="alert alert-info alert-sm" role="alert">
+        <div class="alert-items">
+            <div class="alert-item static">
+                <span class="alert-text">
+                    {{ 'The password must be at least 8 characters long and satisfy 3 of the following rules:' | translate }}
+                    <ul>
+                        <li>{{ 'One uppercase letter' | translate }}</li>
+                        <li>{{ 'One lowercase letter' | translate }}</li>
+                        <li>{{ 'One number' | translate }}</li>
+                        <li>{{ 'One symbol' | translate }}</li>
+                        <li>{{ 'One international character' | translate }}</li>
+                    </ul>
+                </span>
+            </div>
+        </div>
     </div>
 </ng-template>

@@ -29,7 +29,7 @@
                 label {
                     font-weight: 600 !important;
                     font-size: 13px;
-                    margin: 12px 0 0 0;
+                    margin: 10px 0 0 0;
                 }
                 input {
                     margin: 4px 0 0 0;
@@ -59,9 +59,15 @@
                 .no-margin, #qr-code .no-margin {
                     margin: 0;
                 }
+                .alert {
+                    margin-bottom: 12px;
+                    ul {
+                        margin-top: 16px;
+                    }
+                }
                 #qr-code {
                     img {
-                        width: 50%;
+                        width: 240px;
                         height: inherit;
                         border: solid 2px #cccccc;
                         padding: 2%;
@@ -69,6 +75,9 @@
                     }
                     section {
                         text-align: left;
+                    }
+                    + .form-group input {
+                        text-align: left!important;
                     }
                 }
                 /* Change Autocomplete styles in Chrome*/
