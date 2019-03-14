@@ -48,6 +48,7 @@ import {
     OfiClientReferentialComponent,
     UmbrellaAuditComponent,
     FundAuditComponent,
+    OfiInviteMandateInvestorsComponent,
     OfiManagementCompanyComponent,
 } from '@ofi/ofi-main';
 
@@ -119,12 +120,9 @@ import { OfiAccountSignUpComponent } from '@ofi/ofi-main/ofi-login/sign-up/accou
 /* Portfolio manager */
 import {
     PortfolioManagerListComponent,
-}
-    from '@ofi/ofi-main/ofi-portfolio-manager/portfolio-manager-list/portfolio-manager-list.component';
-import {
     PortfolioManagerDetailComponent,
-}
-    from '@ofi/ofi-main/ofi-portfolio-manager/portfolio-manager-detail/portfolio-manager-detail.component';
+    PortfolioManagerInviteComponent,
+} from '@ofi/ofi-main/ofi-portfolio-manager';
 
 export const ROUTES: Routes = [
     { path: '', redirectTo: 'login', pathMatch: 'full' },
@@ -213,6 +211,11 @@ export const ROUTES: Routes = [
                 canActivate: [LoginGuardService],
             },
             {
+                path: 'client-referential/invite-mandate-investors',
+                component: OfiInviteMandateInvestorsComponent,
+                canActivate: [LoginGuardService],
+            },
+            {
                 path: 'client-referential/:kycId',
                 component: OfiClientReferentialComponent,
                 canActivate: [LoginGuardService],
@@ -225,6 +228,11 @@ export const ROUTES: Routes = [
             {
                 path: 'portfolio-manager/detail',
                 component: PortfolioManagerDetailComponent,
+                canActivate: [LoginGuardService],
+            },
+            {
+                path: 'portfolio-manager/invite',
+                component: PortfolioManagerInviteComponent,
                 canActivate: [LoginGuardService],
             },
             {
