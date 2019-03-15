@@ -14,7 +14,7 @@ export const investorTypeList: InvestorTypeList = [
     { id: InvestorType.Retail, text: 'Retail Investor' },
     { id: InvestorType.Mandate, text: 'Investor by Mandate' },
     { id: InvestorType.DiscretionaryManager, text: 'Discretionary Manager' },
-]
+];
 
 export function buildInvestorTypeList(...types: InvestorType[]): InvestorTypeList {
     return investorTypeList.filter(type => types.includes(type.id));

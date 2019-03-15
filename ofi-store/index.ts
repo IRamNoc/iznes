@@ -211,7 +211,7 @@ export interface OfiState {
     ofiReports: OfiReportsState;
     ofiAmDashboard: OfiAmDashboardsState;
     ofiPortfolioManager: OfiPortfolioManagerState;
-    ofiMandateInvestor: OfiMandateInvestorState,
+    ofiMandateInvestor: OfiMandateInvestorState;
     ofiSubPortfolio: SubPortfolioBankingDetailsState;
 }
 

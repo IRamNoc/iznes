@@ -12,7 +12,7 @@ import { ConfirmationService } from '@setl/utils';
 
 @Component({
     selector: 'app-mandate-investor-grid',
-    templateUrl: 'mandate-investor-grid.component.html'
+    templateUrl: 'mandate-investor-grid.component.html',
 })
 export class MandateInvestorGridComponent implements OnInit {
 
@@ -48,7 +48,7 @@ export class MandateInvestorGridComponent implements OnInit {
                     return {
                         ...inv,
                         status,
-                        statusControl: new FormControl(status)
+                        statusControl: new FormControl(status),
                     };
                 });
                 this.list = list;
@@ -107,7 +107,7 @@ export class MandateInvestorGridComponent implements OnInit {
                 'success',
                 this.language.translate(
                     '@emailAddress@\'s fund authorisation has been successfully updated',
-                    { 'emailAddress': this.pm.emailAddress },
+                    { emailAddress: this.pm.emailAddress },
                 ),
             );
         });
