@@ -1,6 +1,6 @@
 import { Injectable } from '@angular/core';
 import { select } from '@angular-redux/store';
-import { BaseDataService } from '@setl/core-req-services';
+import { BaseDataService, MyUserService } from '@setl/core-req-services';
 import { Observable } from 'rxjs/Rx';
 import { OfiMandateInvestorService } from '../../ofi-req-services/ofi-mandate-investor/service';
 import { MandateInvestor } from '../../ofi-store/ofi-mandate-investor/mandate-investor-list/model';
@@ -11,15 +11,17 @@ export class MandateInvestorDataService extends BaseDataService<OfiMandateInvest
     @select(['ofi', 'ofiMandateInvestor', 'list', 'records']) list$;
     @select(['ofi', 'ofiMandateInvestor', 'list', 'requested']) listRequested$;
 
-    constructor(
-        private investorService: OfiMandateInvestorService,
-    ) {
-        super(investorService);
+    constructor(protected dataService: OfiMandateInvestorService, protected myUserService: MyUserService) {
+        super(dataService, myUserService);
+    }
+
+    onInit() {
         super.setupData(
             'mandateInvestorList',
             'defaultList',
             this.list$,
-            this.listRequested$);
+            this.listRequested$
+        );
     }
 
     list(): Observable<{ [id: number]: MandateInvestor }> {

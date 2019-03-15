@@ -5,7 +5,7 @@ export {
     OFI_SET_MANDATE_INVESTOR_LIST,
     OfiMandateInvestorListState,
     ofiMandateInvestorsRequested,
-    ofiRequestMandateInvestors
+    ofiNewMandateInvestor
 } from './mandate-investor-list';
 
 export interface OfiMandateInvestorState {

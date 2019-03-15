@@ -139,7 +139,6 @@
                         <div class="form-group col-sm-12">
                             <label class="required-field" for="pm_investors_{{i}}">{{ 'List of investors managed by the Portfolio Manager' | translate }}</label>
                             <div>
-                                <pre>{{ investorSelectList$ | async | json }}</pre>
                                 <ng-select
                                     id="pm_investors_{{i}}"
                                     class="form-control"

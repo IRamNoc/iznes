@@ -2,7 +2,7 @@ import { Action } from 'redux';
 import { OfiMandateInvestorListState } from './model';
 import {
     OFI_SET_MANDATE_INVESTOR_LIST,
-    OFI_REQUEST_MANDATE_INVESTORS,
+    OFI_NEW_MANDATE_INVESTOR,
     OFI_MANDATE_INVESTORS_REQUESTED
 } from './actions';
 
@@ -12,7 +12,7 @@ interface PayloadAction extends Action {
 
 const initialState: OfiMandateInvestorListState = {
     requested: false,
-    records: {},
+    records: [],
 }
 
 export const OfiMandateInvestorListReducer = function(
@@ -24,8 +24,23 @@ export const OfiMandateInvestorListReducer = function(
             return { ...state, records: action.payload[1].Data };
         case OFI_MANDATE_INVESTORS_REQUESTED:
             return { ...state, requested: true };
-        case OFI_REQUEST_MANDATE_INVESTORS:
-            return { ...state, requested: false };
+        case OFI_NEW_MANDATE_INVESTOR:
+            return {
+                ...state,
+                records: [
+                    ...state.records,
+                    {
+                        id: action.payload.id,
+                        walletId: action.payload.walletID,
+                        walletName: action.payload.walletName,
+                        kycID: action.payload.kycID,
+                        firstName: action.payload.firstName,
+                        lastName: action.payload.lastName,
+                        reference: action.payload.reference,
+                        companyName: action.payload.companyName,
+                    },
+                ]
+            };
         default:
             return state;
     }

@@ -13,7 +13,5 @@ export interface MandateInvestor {
 
 export interface OfiMandateInvestorListState {
     requested: boolean;
-    records: {
-        [id: number]: MandateInvestor;
-    }
+    records: MandateInvestor[],
 }

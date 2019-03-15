@@ -13,6 +13,7 @@ import {
     FundAccessMyActions,
 } from '../../ofi-store';
 import { clearRequestedIznesShares } from '../../ofi-store/ofi-product/fund-share-list/actions';
+import { ofiNewMandateInvestor } from '../../ofi-store/ofi-mandate-investor';
 import {
     clearRequestedPrecentraFundsList,
     clearRequestedPrecentraSharesList,
@@ -188,6 +189,10 @@ export class OfiMemberNodeChannelService {
             // handle new pm
             case 'iznespmactive':
                 this.ngRedux.dispatch(ofiPMActive(data.Data));
+                break;
+
+            case 'iznesnewmandateinv':
+                this.ngRedux.dispatch(ofiNewMandateInvestor(data.Data));
                 break;
         }
     }

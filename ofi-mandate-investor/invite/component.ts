@@ -3,9 +3,8 @@ import { FormBuilder, FormGroup, FormArray, Validators, ValidatorFn, AbstractCon
 import { OfiMandateInvestorService } from '../../ofi-req-services/ofi-mandate-investor/service';
 import { Location } from '@angular/common';
 import { ToasterService } from 'angular2-toaster';
-import { NgRedux, select } from '@angular-redux/store';
+import { select } from '@angular-redux/store';
 import { MultilingualService } from '@setl/multilingual';
-import { ofiRequestMandateInvestors } from '../../ofi-store/ofi-mandate-investor/mandate-investor-list/actions';
 import { AppObservableHandler } from '@setl/utils/decorators/app-observable-handler';
 import { get } from 'lodash';
 import { InvestorType, buildInvestorTypeList } from '../../shared/investor-types';
@@ -47,7 +46,6 @@ export class OfiInviteMandateInvestorsComponent implements OnInit {
         private service: OfiMandateInvestorService,
         private location: Location,
         private toaster: ToasterService,
-        private redux: NgRedux<any>,
         private language: MultilingualService,
         ) { }
 
@@ -71,7 +69,6 @@ export class OfiInviteMandateInvestorsComponent implements OnInit {
             return this.toaster.pop(msg[0], this.msg(msg[1], firstName, lastName));
         });
 
-        this.redux.dispatch(ofiRequestMandateInvestors());
         this.location.back();
     }
 
