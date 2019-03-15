@@ -34,6 +34,7 @@ import { SET_SITE_MENU } from '@setl//core-store';
 import {
     ofiAddNewPM, ofiPMActive,
     ofiUpdatePmDetail,
+    ofiUpdateWmDetail,
 } from '../../ofi-store/ofi-portfolio-manager/portfolio-manage-list/actions';
 
 /* Service class. */
@@ -193,6 +194,10 @@ export class OfiMemberNodeChannelService {
 
             case 'iznesnewmandateinv':
                 this.ngRedux.dispatch(ofiNewMandateInvestor(data.Data));
+                break;
+
+            case 'mandateinvestoraccess':
+                this.ngRedux.dispatch(ofiUpdateWmDetail(data.Data));
                 break;
         }
     }

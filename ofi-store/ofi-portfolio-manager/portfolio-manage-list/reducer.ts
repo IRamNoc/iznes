@@ -224,18 +224,14 @@ function ofiSetWmDetail(state: PortfolioManagerList, action: Action) {
 function ofiUpdateWmDetail(state: PortfolioManagerList, action: Action): PortfolioManagerList {
     const portfolioManagerList = immutableHelper.copy(state.portfolioManagerList);
     const pmDetailsPayLoad = get(action, 'pmDetail', {});
-    const pmId = pmDetailsPayLoad.pmId;
-    const investorId = pmDetailsPayLoad.investorId;
+    const { pmId, investorId } = pmDetailsPayLoad;
 
-    try {
-        portfolioManagerList[pmId].mandateInvestors[investorId] = {
-            investorId,
-            kycId: pmDetailsPayLoad.kycId,
-            walletId: pmDetailsPayLoad.walletId,
-            status: pmDetailsPayLoad.status === 1,
-        };
-    } catch (e) {
-    }
+    portfolioManagerList[pmId].mandateInvestors[investorId] = {
+        investorId,
+        kycId: pmDetailsPayLoad.kycId,
+        walletId: pmDetailsPayLoad.walletId,
+        status: pmDetailsPayLoad.status === 1,
+    };
 
-    return { ...state, ...portfolioManagerList };
+    return { ...state, ...{ portfolioManagerList } };
 }

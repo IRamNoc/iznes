@@ -48,6 +48,7 @@ export class MandateInvestorGridComponent implements OnInit {
                     return {
                         ...inv,
                         status,
+                        pmId: pm.pmId,
                         statusControl: new FormControl(status),
                     };
                 });
@@ -60,10 +61,9 @@ export class MandateInvestorGridComponent implements OnInit {
         this.pendingChanges = this.list
             .filter(investor => investor.status !== investor.statusControl.value)
             .map(investor => ({
-                investorId: investor.fundName,
+                investorId: investor.id,
                 firstName: investor.firstName,
                 lastName: investor.lastName,
-                fundId: investor.fundId,
                 pmId: investor.pmId,
                 status: investor.statusControl.value,
             }));
