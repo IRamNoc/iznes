@@ -17,6 +17,7 @@ import { ofiManageOrderActions } from '@ofi/ofi-main/ofi-store';
 import * as moment from 'moment';
 import { MultilingualService } from '@setl/multilingual';
 import { get } from 'lodash';
+import {debounceTime} from "rxjs-compat/operator/debounceTime";
 
 @Component({
     styleUrls: ['./component.scss'],
@@ -43,6 +44,7 @@ export class PrecentralisationReportComponent implements OnInit, OnDestroy {
         disableKeypress: true,
         locale: this.language,
         isDayDisabledCallback: (thisDate) => {
+            // make sure the dateFrom that greater than dateTo can not be selected
             if (!!thisDate && this.filtersForm.controls['dateTo'].value !== '') {
                 return (thisDate.diff(this.filtersForm.controls['dateTo'].value) > 0);
             }
@@ -56,6 +58,7 @@ export class PrecentralisationReportComponent implements OnInit, OnDestroy {
         disableKeypress: true,
         locale: this.language,
         isDayDisabledCallback: (thisDate) => {
+            // make sure the dateTo that less than dateFrom can not be selected
             if (!!thisDate && this.filtersForm.controls['dateFrom'].value !== '') {
                 return (thisDate.diff(this.filtersForm.controls['dateFrom'].value) < 0);
             }
@@ -444,7 +447,7 @@ export class PrecentralisationReportComponent implements OnInit, OnDestroy {
         this.filtersForm.get('specificDate').updateValueAndValidity();
         this.filtersForm.get('dateFrom').updateValueAndValidity();
         this.filtersForm.get('dateTo').updateValueAndValidity();
-        this.subscriptions.push(this.filtersForm.valueChanges.subscribe(form => this.requestSearch(form)));
+        this.subscriptions.push(this.filtersForm.valueChanges.debounceTime(1000).subscribe(form => this.requestSearch(form)));
         this.changeDetectorRef.markForCheck();
     }
 
