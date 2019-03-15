@@ -117,7 +117,7 @@ export class MyUserService implements OnDestroy {
     private TIMEOUT_COUNTDOWN: number = 60; // Modal countdown seconds
     private TIMEOUT: number; // Milliseconds until modal displayed
     private cleanTimer$: Subject<boolean> =  new Subject();
-    private logout$: Subject<boolean> =  new Subject();
+    public readonly logout$: Subject<boolean> =  new Subject();
     private userActive$: Observable<Event>;
     private counterStarted = false;
 
