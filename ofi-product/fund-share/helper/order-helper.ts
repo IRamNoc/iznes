@@ -1029,9 +1029,10 @@ export class OrderHelper {
             // by amount
             const decimalDivider = Math.pow(10, Number(this.fundShare.maximumNumDecimal));
             // the formula before apply maximum number decimal.
-            let amountStr = '(' + this.orderValue + ' / nav' + ') * ' + NumberMultiplier;
+            let amountStr = `(${this.orderValue} / nav) * ${NumberMultiplier}`;
             // apply maximum number decimal.
-            amountStr = 'floor((' + amountStr + '/' + NumberMultiplier + ' * ' + decimalDivider + ')) / ' + decimalDivider + ' * ' + NumberMultiplier;
+            // tslint:disable-next-line:max-line-length
+            amountStr = `round(${amountStr}/${NumberMultiplier} * ${decimalDivider}) / ${decimalDivider} * ${NumberMultiplier}`;
 
             actionData = [
                 {
@@ -1147,7 +1148,7 @@ export class OrderHelper {
             let amountStr = `(${this.orderValue} / nav) * ${NumberMultiplier}`;
             // apply maximum number decimal.
             // tslint:disable-next-line:max-line-length
-            amountStr = `floor(${amountStr}/${NumberMultiplier} * ${decimalDivider}) / ${decimalDivider} * ${NumberMultiplier}`;
+            amountStr = `round(${amountStr}/${NumberMultiplier} * ${decimalDivider}) / ${decimalDivider} * ${NumberMultiplier}`;
 
             actionData = [
                 {

@@ -48,12 +48,12 @@ describe('toNormalScale', () => {
 
         expect(result).toBe(123.45678);
     });
-    it('converts a chain number to normal - round down at decimalisation', () => {
+    it('converts a chain number to normal - normal round at decimalisation', () => {
         const number = 123_45678;
 
         const result = toNormalScale(number, 2);
 
-        expect(result).toBe(123.45);
+        expect(result).toBe(123.46);
     });
 });
 

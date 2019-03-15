@@ -1129,7 +1129,7 @@ export class InvestFundComponent implements OnInit, OnDestroy {
                 this.trueAmount = newValue;
 
                 const quantity = math.format(math.chain(newValue).divide(this.nav).done(), 14); // {notation: 'fixed', precision: this.shareData.maximumNumDecimal}
-                const newQuantity = this.roundDown(quantity, this.shareData.maximumNumDecimal).toString();
+                const newQuantity = this.round(quantity, this.shareData.maximumNumDecimal).toString();
                 const newQuantityStr = this.moneyValuePipe.transform(newQuantity, this.shareData.maximumNumDecimal);
                 beTriggered.patchValue(newQuantityStr, { onlySelf: true, emitEvent: false });
 
@@ -1149,7 +1149,7 @@ export class InvestFundComponent implements OnInit, OnDestroy {
         const quantityParsed = this.moneyValuePipe.parse(this.quantity.value, 5);
 
         // we have two scenario to handle in there.
-        // 1. if we working on known nav, as we always round the the amount down according to the quantity.
+        // 1. if we working on known nav, as we always round the the amount according to the quantity.
         // we use the quantity to work out the amount.
         // 2. if we working on unknown nav, as the nav is not known, we want to keep the amount as it is.
         let amount = 0;
@@ -1194,17 +1194,16 @@ export class InvestFundComponent implements OnInit, OnDestroy {
     }
 
     /**
-     * Round Down Numbers
-     * eg 0.15151 becomes 0.151
-     * eg 0.15250 becomes 0.152
+     * Round Numbers
+     * eg 0.15151 becomes 0.152
+     * eg 0.15250 becomes 0.153
      *
-     * @param number
-     * @param decimals
+     * @param num
+     * @param decimal
      * @returns {number}
      */
-    roundDown(number: any, decimals: any) {
-        const decimalsVal = decimals || 0;
-        return math.format((Math.floor(number * Math.pow(10, decimalsVal)) / Math.pow(10, decimalsVal)), 14);
+    round(num: number, decimal: number = 0) {
+        return math.format(math.round(num, decimal), 14);
     }
 
     isValidOrderValue() {

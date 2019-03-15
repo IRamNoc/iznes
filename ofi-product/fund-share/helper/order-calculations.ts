@@ -169,7 +169,7 @@ export function pad(num: number, width: number, fill: string): string {
 }
 
 export function toNormalScale(num: number, numDecimal: number): number {
-    return fixToDecimal((num / NumberMultiplier), numDecimal, 'floor');
+    return fixToDecimal((num / NumberMultiplier), numDecimal, 'normal');
 }
 export function convertToBlockChainNumber(num) {
     return fixToDecimal((num * NumberMultiplier), BlockchainNumberDecimal, 'floor');
