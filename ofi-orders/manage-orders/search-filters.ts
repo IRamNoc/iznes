@@ -4,6 +4,7 @@ import { get, isUndefined, isEmpty, find, isNumber, isEqual } from 'lodash';
 import { Subject, BehaviorSubject, Observable } from 'rxjs';
 import { orderStatuses, orderTypes, dateTypes } from './lists';
 import { ManageOrdersService } from './manage-orders.service';
+import {debounceTime} from "rxjs/operators";
 
 interface SelectedItem {
     id: any;
@@ -46,7 +47,7 @@ export class SearchFilters implements ISearchFilters {
 
     constructor(private formBuilder: FormBuilder, filterStore: IFilterStore) {
         this.getForm();
-        filterStore.getFilters().debounceTime(1000).subscribe((store) => {
+        filterStore.getFilters().pipe(debounceTime(1000)).subscribe((store) => {
             this.filterStore = store;
             this.apply();
         });
