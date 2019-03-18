@@ -46,7 +46,7 @@ export class SearchFilters implements ISearchFilters {
 
     constructor(private formBuilder: FormBuilder, filterStore: IFilterStore) {
         this.getForm();
-        filterStore.getFilters().subscribe((store) => {
+        filterStore.getFilters().debounceTime(1000).subscribe((store) => {
             this.filterStore = store;
             this.apply();
         });
