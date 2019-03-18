@@ -63,7 +63,13 @@ export class PortfolioManagerInviteComponent implements OnInit {
         });
         this.fundSelectList$ = this.ofiFundDataService.getFundSelectList();
         this.investorSelectList$ = this.mandateInvestorService.listArray().pipe(map((investors) => {
-            return investors.map(inv => ({ id: `${inv.id}`, text: `${inv.firstName} ${inv.lastName} (${inv.companyName})` }));
+            return investors.map((inv) => {
+                const companyName = (inv.investorType === 10) ? inv.companyName : 'Retail';
+                return {
+                    id: `${inv.id}`,
+                    text: `${inv.firstName} ${inv.lastName} (${companyName})`
+                };
+            });
         }));
         this.investorTypes$ = this.language$.flatMap(() => of(this.lang.translate(this.investorTypes)));
         this.addInvestor();

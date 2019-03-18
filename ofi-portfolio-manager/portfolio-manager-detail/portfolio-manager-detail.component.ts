@@ -65,6 +65,7 @@ export class PortfolioManagerDetailComponent implements OnInit, OnDestroy {
         private changeDetectorRef: ChangeDetectorRef,
         private toasterService: ToasterService,
         public translate: MultilingualService,
+        private changeDetector: ChangeDetectorRef,
     ) {
     }
 
@@ -78,6 +79,7 @@ export class PortfolioManagerDetailComponent implements OnInit, OnDestroy {
                 } else {
                     this.requestWmDetail(params.pmId);
                 }
+                this.changeDetector.markForCheck();
             });
 
         const $accessFundData = combineLatest(

@@ -36,7 +36,7 @@
                                 <clr-dg-cell><circle-status-indicator [statusClass]="getStatusClass(item.pmActive)" [statusLabel]="'Inactive'"></circle-status-indicator> {{item.emailAddress}}</clr-dg-cell>
                                 <clr-dg-cell>{{item.firstName}}</clr-dg-cell>
                                 <clr-dg-cell>{{item.lastName}}</clr-dg-cell>
-                                <clr-dg-cell>{{(item.type === 'WM') ? 'Wealth Manager' : 'Portfolio Manager'}}</clr-dg-cell>
+                                <clr-dg-cell>{{(item.type === 'WM') ? 'Discretionary Manager' : 'Fund of Funds Manager' | translate}}</clr-dg-cell>
                             </clr-dg-row>
 
                             <clr-dg-footer>{{pagination.firstItem + 1}} - {{pagination.lastItem + 1}}

@@ -168,6 +168,7 @@ function ofiAddNewPm(state: PortfolioManagerList, action: Action): PortfolioMana
         pmActive: false,
         fundAccess: {},
         mandateInvestors: {},
+        type: pm.type,
     };
 
     return Object.assign({}, state, {

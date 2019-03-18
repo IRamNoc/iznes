@@ -39,10 +39,6 @@
                                 <div *ngIf="investor.hasError('required', 'investorType') && investor.get('investorType').touched" class="field-error">
                                     {{ 'Field is required' | translate }}
                                 </div>
-
-                                <div *ngIf="isRetailInvestor(investor.get('investorType')) && investor.get('investorType').touched" class="field-error">
-                                    {{ 'IZNES is not supporting retail investors for now' | translate }}
-                                </div>
                             </div>
                         </div>
 

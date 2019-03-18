@@ -1,14 +1,18 @@
 <clr-datagrid #dataGrid>
-    <clr-dg-column [clrDgField]="'email'">{{ 'Email Address' | translate }}</clr-dg-column>
+    <clr-dg-column [clrDgField]="'email'">{{ 'Investor Type' | translate }}</clr-dg-column>
     <clr-dg-column [clrDgField]="'lastName'">{{ 'Last Name' | translate }}</clr-dg-column>
     <clr-dg-column [clrDgField]="'firstName'">{{ 'First Name' | translate }}</clr-dg-column>
+    <clr-dg-column [clrDgField]="'firstName'">{{ 'Company Name' | translate }}</clr-dg-column>
+    <clr-dg-column [clrDgField]="'firstName'">{{ 'Wallet Name' | translate }}</clr-dg-column>
     <clr-dg-column [clrDgField]="'firstName'">{{ 'Grant access to this investor?' | translate }}</clr-dg-column>
     <clr-dg-column [clrDgField]="'actions'">{{ 'Action' | translate }}</clr-dg-column>
 
     <clr-dg-row *clrDgItems="let item of list$ | async; let i = index">
-        <clr-dg-cell>{{item.email}}</clr-dg-cell>
+        <clr-dg-cell>{{(item.investorType === 10) ? 'Institutional' : 'Retail'}}</clr-dg-cell>
         <clr-dg-cell>{{item.lastName}}</clr-dg-cell>
         <clr-dg-cell>{{item.firstName}}</clr-dg-cell>
+        <clr-dg-cell>{{item.companyName}}</clr-dg-cell>
+        <clr-dg-cell>{{item.walletName}}</clr-dg-cell>
         <clr-dg-cell id="access_slider_row_{{i}}">
             <div class="switch-container">
                 <label class="switch">

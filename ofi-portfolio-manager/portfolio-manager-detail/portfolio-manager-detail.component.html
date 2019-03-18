@@ -2,8 +2,8 @@
     <!-- Breadcrumbs. -->
     <div class="header-breadcrumbs">
         <h1 id="portfolio-managers-detail"><i class="fa fa-users"></i>
-            <ng-template *ngIf="pm.type === 'PM'">{{ 'Portfolio Manager' | translate }} - {{pm.emailAddress}}</ng-template>
-            <ng-template *ngIf="pm.type === 'WM'">{{ 'Wealth Manager' | translate }} - {{pm.emailAddress}}</ng-template>
+            <span *ngIf="pm.type === 'PM'">{{ 'Fund of Funds Manager' | translate }} - {{pm.emailAddress}}</span>
+            <span *ngIf="pm.type === 'WM'">{{ 'Discretionary Manager' | translate }} - {{pm.emailAddress}}</span>
         </h1>
     </div>
 

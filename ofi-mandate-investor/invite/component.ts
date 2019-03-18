@@ -15,6 +15,7 @@ const companyNameValidator: ValidatorFn = (control: AbstractControl): Validation
         control.get('companyName').setErrors({ companyName: true });
         return { companyName: true }
     }
+    control.get('companyName').setErrors(null);
     return null;
 }
 
@@ -87,7 +88,6 @@ export class OfiInviteMandateInvestorsComponent implements OnInit {
     isRetailInvestor(investorType: FormControl): boolean {
         const userType = get(investorType.value, '0.id', 0);
         if (userType === InvestorType.Retail) {
-            investorType.setErrors({ investorType: true });
             return true;
         }
 
