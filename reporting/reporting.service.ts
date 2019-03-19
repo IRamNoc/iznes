@@ -29,7 +29,7 @@ export class ReportingService {
             before = {};
         }
         const messageBody: GetTransactionsMessageBody = {
-            RequestName: 'repgettxs',z
+            RequestName: 'repgettxs',
             token: this.memberSocketService.token,
             walletId,
             before,
