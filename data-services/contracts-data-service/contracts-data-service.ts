@@ -1,8 +1,8 @@
 import { Injectable } from '@angular/core';
 import { select } from '@angular-redux/store';
-import {BaseDataService, WalletNodeRequestService} from '@setl/core-req-services';
+import { BaseDataService, WalletNodeRequestService, MyUserService } from '@setl/core-req-services';
 import { Observable } from 'rxjs/Rx';
-import {mergeMap, map, filter} from 'rxjs/operators';
+import { mergeMap, map, filter } from 'rxjs/operators';
 
 @Injectable({
     providedIn: 'root',
@@ -12,24 +12,26 @@ export class ContractsDataService extends BaseDataService<WalletNodeRequestServi
     @select(['wallet', 'myWalletContract', 'contractList']) private getContractList$;
     @select(['wallet', 'myWalletContract', 'updatedContractList']) private updateContractList$;
 
-    constructor(
-        private walletNodeRequestService: WalletNodeRequestService,
-    ) {
-        super(walletNodeRequestService);
+    constructor(protected dataService: WalletNodeRequestService, protected myUserService: MyUserService) {
+        super(dataService, myUserService);
+    }
+
+    onInit() {
         super.setupData(
             'contractList',
             'defaultRequestContractsByWallet',
             this.getContractList$,
-            this.needUpdateContract());
+            this.needUpdateContract()
+        );
     }
 
     /**
      * return observable<boolean> to work out whether we need to update contracts.
      */
     needUpdateContract(): Observable<boolean> {
-       return (this.updateContractList$ as Observable<string[]>).pipe(
-          map(cs => cs.length > 0),
-       );
+        return (this.updateContractList$ as Observable<string[]>).pipe(
+            map(cs => cs.length > 0),
+        );
     }
 
     /**
