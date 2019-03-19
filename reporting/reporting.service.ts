@@ -24,15 +24,16 @@ export class ReportingService {
         return createMemberNodeSagaRequest(this.memberSocketService, messageBody);
     }
 
-    getTransactions(walletId: number, before: { timestamp: number, address: string, nonce: number } | {} = {} ): any {
+    getTransactions(walletId: number, before: { timestamp: number, address: string, nonce: number} | {} = {}, limit: number = 10): any {
         if (!before) {
             before = {};
         }
         const messageBody: GetTransactionsMessageBody = {
-            RequestName: 'repgettxs',
+            RequestName: 'repgettxs',z
             token: this.memberSocketService.token,
             walletId,
             before,
+            limit,
         };
 
         return createMemberNodeSagaRequest(this.memberSocketService, messageBody);
