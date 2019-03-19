@@ -83,7 +83,9 @@ describe('SearchFilters:', () => {
 
             subj.next({ orderID: 99 });
 
-            expect(expect(form.get('orderID').value).toBe(99));
+            setTimeout(() => {
+                expect(expect(form.get('orderID').value).toBe(99));
+            }, 1000)
         });
         it('orderID as string', () => {
             const form = obsFixtureFactory(subj.asObservable()).getForm();
@@ -91,7 +93,9 @@ describe('SearchFilters:', () => {
 
             subj.next({ orderID: '99' });
 
-            expect(expect(form.get('orderID').value).toBe('99'));
+            setTimeout(() => {
+                expect(expect(form.get('orderID').value).toBe('99'));
+            }, 1000)
         });
         it('isin', () => {
             const form = obsFixtureFactory(subj.asObservable()).getForm();
@@ -99,7 +103,9 @@ describe('SearchFilters:', () => {
 
             subj.next({ isin: 'IS001' });
 
-            expect(expect(form.get('isin').value).toBe('IS001'));
+            setTimeout(() => {
+                expect(expect(form.get('isin').value).toBe('IS001'));
+            }, 1000)
         });
         it('sharename', () => {
             const form = obsFixtureFactory(subj.asObservable()).getForm();
@@ -107,7 +113,9 @@ describe('SearchFilters:', () => {
 
             subj.next({ sharename: 'share1' });
 
-            expect(expect(form.get('sharename').value).toBe('share1'));
+            setTimeout(() => {
+                expect(expect(form.get('sharename').value).toBe('share1'));
+            }, 1000)
         });
         it('fundname', () => {
             const form = obsFixtureFactory(subj.asObservable()).getForm();
@@ -115,7 +123,9 @@ describe('SearchFilters:', () => {
 
             subj.next({ fundname: 'fund1' });
 
-            expect(expect(form.get('fundname').value).toBe('fund1'));
+            setTimeout(() => {
+                expect(expect(form.get('fundname').value).toBe('fund1'));
+            }, 1000)
         });
         it('fromDate', () => {
             const form = obsFixtureFactory(subj.asObservable()).getForm();
@@ -123,7 +133,9 @@ describe('SearchFilters:', () => {
 
             subj.next({ fromDate: '2018-01-01' });
 
-            expect(expect(form.get('fromDate').value).toBe('2018-01-01'));
+            setTimeout(() => {
+                expect(expect(form.get('fromDate').value).toBe('2018-01-01'));
+            }, 1000)
         });
         it('toDate', () => {
             const form = obsFixtureFactory(subj.asObservable()).getForm();
@@ -131,7 +143,9 @@ describe('SearchFilters:', () => {
 
             subj.next({ toDate: '2018-01-02' });
 
-            expect(expect(form.get('toDate').value).toBe('2018-01-02'));
+            setTimeout(() => {
+                expect(expect(form.get('toDate').value).toBe('2018-01-02'));
+            }, 1000)
         });
         it('status', () => {
             const form = obsFixtureFactory(subj.asObservable()).getForm();
@@ -139,7 +153,9 @@ describe('SearchFilters:', () => {
 
             subj.next({ status: [{ id: 4 }] });
 
-            expect(expect(form.get('status').value).toEqual([{ id: 4, text: 'Unpaid' }]));
+            setTimeout(() => {
+                expect(expect(form.get('status').value).toEqual([{ id: 4, text: 'Unpaid' }]));
+            }, 1000)
         });
         it('type', () => {
             const form = obsFixtureFactory(subj.asObservable()).getForm();
@@ -147,7 +163,9 @@ describe('SearchFilters:', () => {
 
             subj.next({ type: [{ id: 4 }] });
 
-            expect(expect(form.get('type').value).toEqual([{ id: 4, text: 'Redemption' }]));
+            setTimeout(() => {
+                expect(expect(form.get('type').value).toEqual([{ id: 4, text: 'Redemption' }]));
+            }, 1000)
         });
         it('dateType', () => {
             const form = obsFixtureFactory(subj.asObservable()).getForm();
@@ -155,7 +173,9 @@ describe('SearchFilters:', () => {
 
             subj.next({ dateType: [{ id: 'orderDate' }] });
 
-            expect(expect(form.get('dateType').value).toEqual([{ id: 'orderDate', text: 'Order Date' }]));
+            setTimeout(() => {
+                expect(expect(form.get('dateType').value).toEqual([{ id: 'orderDate', text: 'Order Date' }]));
+            }, 1000)
         });
     });
     it('Emits optionalFilters false when __NO__ optional filter is set', (done: DoneFn) => {
