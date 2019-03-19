@@ -184,7 +184,7 @@ export class SocketClusterWrapper {
              * 2. Required authentication and has not authenticated and the request message type is not
              *      this.authMessageTypes: ['authentication']
              */
-            if (this.initialising || !this.encryption.shareKey) {
+            if (this.initialising || !this.encryption.shareKey || this.webSocketConn.pendingReconnect) {
                 this.messageQueue.push([request, callback]);
             } else {
 
