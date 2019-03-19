@@ -1,6 +1,6 @@
 import { Injectable } from '@angular/core';
 import { select } from '@angular-redux/store';
-import { BaseDataService } from '@setl/core-req-services';
+import { BaseDataService, MyUserService } from '@setl/core-req-services';
 import { Observable } from 'rxjs/Rx';
 import { OfiPortfolioMangerService } from '../../ofi-req-services/ofi-portfolio-manager/service';
 import {
@@ -14,15 +14,17 @@ export class OfiPortfolioManagerDataService extends BaseDataService<OfiPortfolio
     @select(['ofi', 'ofiPortfolioManager', 'portfolioManagerList', 'portfolioManagerList']) portfolioManagerList$;
     @select(['ofi', 'ofiPortfolioManager', 'portfolioManagerList', 'requested']) portfolioManagerListRequested$;
 
-    constructor(
-        private _ofiPortfolioMangerService: OfiPortfolioMangerService,
-    ) {
-        super(_ofiPortfolioMangerService);
+    constructor(protected dataService: OfiPortfolioMangerService, protected myUserService: MyUserService) {
+        super(dataService, myUserService);
+    }
+
+    onInit() {
         super.setupData(
             'portfolioManagerList',
             'defaultRequestPortpolioManagerList',
             this.portfolioManagerList$,
-            this.portfolioManagerListRequested$);
+            this.portfolioManagerListRequested$
+        );
     }
 
     /**

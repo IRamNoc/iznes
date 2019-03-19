@@ -1,16 +1,14 @@
-import { ChangeDetectorRef, Component, OnDestroy, OnInit, Inject } from '@angular/core';
-import { FormArray, FormBuilder, FormControl, FormGroup, Validators } from '@angular/forms';
-import { Location } from '@angular/common';
+import { ChangeDetectorRef, Component, OnDestroy, OnInit } from '@angular/core';
+import { FormBuilder, FormControl, FormGroup } from '@angular/forms';
 import { OfiKycService } from '../../ofi-req-services/ofi-kyc/service';
 import { OfiKycObservablesService } from '../../ofi-req-services/ofi-kyc/kyc-observable';
-import { FileDownloader, SagaHelper, mDateHelper, immutableHelper } from '@setl/utils';
+import { FileDownloader, SagaHelper, mDateHelper } from '@setl/utils';
 import { NgRedux, select } from '@angular-redux/store';
 import { Observable } from 'rxjs/Rx';
 import { Subject } from 'rxjs/Subject';
 import { debounceTime } from 'rxjs/operators';
 import { combineLatest as observableCombineLatest } from 'rxjs';
 import { Router, ActivatedRoute } from '@angular/router';
-import { AlertsService } from '@setl/jaspero-ng2-alerts';
 import { ToasterService } from 'angular2-toaster';
 import * as _ from 'lodash';
 import { MultilingualService } from '@setl/multilingual';
@@ -106,12 +104,9 @@ export class OfiClientReferentialComponent implements OnInit, OnDestroy {
     /* Constructor. */
     constructor(private fb: FormBuilder,
                 private changeDetectorRef: ChangeDetectorRef,
-                private location: Location,
-                private alertsService: AlertsService,
                 private ofiKycService: OfiKycService,
                 private toasterService: ToasterService,
                 private ofiFundShareService: OfiFundShareService,
-                private ofiKycObservablesService: OfiKycObservablesService,
                 private ngRedux: NgRedux<any>,
                 private fileDownloader: FileDownloader,
                 private route: ActivatedRoute,
@@ -183,6 +178,22 @@ export class OfiClientReferentialComponent implements OnInit, OnDestroy {
             if (this.pageType == 'audit') this.requestAuditSearch();
         }));
 
+        const LANG_INSTITUTIONAL = this.translate.translate('Institutional');
+        const LANG_RETAIL = this.translate.translate('Retail');
+        const LANG_DIRECT = this.translate.translate('In Direct');
+        const LANG_MANDATE = this.translate.translate('By Mandate');
+
+        const typeMap = {
+            '10': LANG_INSTITUTIONAL,
+            '20': LANG_INSTITUTIONAL,
+            '30': LANG_RETAIL,
+            '50': LANG_INSTITUTIONAL,
+        };
+        const methodMap = {
+            'direct': LANG_DIRECT,
+            'mandate': LANG_MANDATE,
+        }
+
         this.subscriptions.push(
             observableCombineLatest(
                 this.clientReferentialOb,
@@ -192,7 +203,13 @@ export class OfiClientReferentialComponent implements OnInit, OnDestroy {
                 .subscribe(([clientReferential, amKycList, params]) => {
                     this.kycId = (!params.kycId ? '' : params.kycId);
 
-                    this.clientReferential = clientReferential;
+                    this.clientReferential = clientReferential.map((client) => {
+                        return {
+                            ...client,
+                            investorType: typeMap[client.investorType],
+                            investmentMethod: methodMap[client.investmentMethod],
+                        }
+                    });
 
                     clientReferential.forEach((client) => {
                         this.clients[client.kycID] = client;
@@ -246,8 +263,8 @@ export class OfiClientReferentialComponent implements OnInit, OnDestroy {
     initInvestorTypes() {
         this.investorTypes = this.translate.translate([
             { id: 0, text: 'All Investors' },
-            { id: 45, text: 'Institutional Investor' },
-            { id: 55, text: 'Retail Investor' },
+            { id: 10, text: 'Institutional Investor' },
+            { id: 30, text: 'Retail Investor' },
         ]);
     }
 
@@ -268,6 +285,10 @@ export class OfiClientReferentialComponent implements OnInit, OnDestroy {
 
     gotoInvite() {
         this.router.navigateByUrl('/client-referential/invite-investors');
+    }
+
+    inviteMandateInvestors() {
+        this.router.navigate(['client-referential', 'invite-mandate-investors']);
     }
 
     viewClient(id) {

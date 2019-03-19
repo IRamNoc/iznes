@@ -14,6 +14,7 @@ export { OfiInvMyDocumentsComponent } from './ofi-kyc/inv-my-documents/component
  * Invite Investors
  */
 export { OfiInviteInvestorsComponent } from './ofi-kyc/invite-investors/component';
+export { OfiInviteMandateInvestorsComponent } from './ofi-mandate-investor/invite/component';
 export { OfiSignUpComponent } from './ofi-kyc/signup/component';
 export { OfiDocumentsComponent } from './ofi-kyc/documents/component';
 export { OfiAmDocumentsComponent } from './ofi-kyc/am-documents/component';

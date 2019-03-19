@@ -1,4 +1,4 @@
-import { Component, OnDestroy, OnInit } from '@angular/core';
+import { Component, OnDestroy, OnInit, ChangeDetectorRef } from '@angular/core';
 import { AppObservableHandler } from '@setl/utils/decorators/app-observable-handler';
 import { ActivatedRoute, Router } from '@angular/router';
 import {
@@ -9,6 +9,7 @@ import { OfiFundDataService } from '../../ofi-data-service/product/fund/ofi-fund
 import { combineLatest } from 'rxjs';
 import { map } from 'rxjs/operators';
 import { OfiPortfolioMangerService } from '../../ofi-req-services/ofi-portfolio-manager/service';
+import { OfiKycObservablesService } from '../../ofi-req-services/ofi-kyc/kyc-observable';
 import { OfiPortfolioManagerDataService } from '../../ofi-data-service/portfolio-manager/ofi-portfolio-manager-data.service';
 import { IznesFundDetail } from '../../ofi-store/ofi-product/fund/fund-list/model';
 import { get } from 'lodash';
@@ -16,6 +17,8 @@ import { FormControl } from '@angular/forms';
 import { ConfirmationService } from '@setl/utils/index';
 import { ToasterService } from 'angular2-toaster';
 import { MultilingualService } from '@setl/multilingual';
+import * as moment from 'moment';
+import { investorInvitation } from '@ofi/ofi-main/ofi-store/ofi-kyc/invitationsByUserAmCompany';
 
 interface FundAccess {
     fundName: string;
@@ -27,9 +30,15 @@ interface FundAccess {
     statusFormControl: FormControl;
 }
 
-interface FundChnage {
+interface FundChange {
     fundName: string;
     fundId: number;
+    pmId: number;
+    status: number;
+}
+
+interface InvestorChange {
+    investorId: number;
     pmId: number;
     status: number;
 }
@@ -37,11 +46,13 @@ interface FundChnage {
 @AppObservableHandler
 @Component({
     templateUrl: './portfolio-manager-detail.component.html',
+    providers: [OfiKycObservablesService],
 })
 export class PortfolioManagerDetailComponent implements OnInit, OnDestroy {
     pm: PortfolioManagerDetail;
     fundAccessList: FundAccess[];
-    fundAccessChanges: FundChnage[];
+    fundAccessChanges: FundChange[];
+    inviteItems: investorInvitation[];
 
     constructor(
         private activeRoute: ActivatedRoute,
@@ -49,9 +60,12 @@ export class PortfolioManagerDetailComponent implements OnInit, OnDestroy {
         private ofiPortfolioMangerService: OfiPortfolioMangerService,
         private ofiPortfolioManagerDataService: OfiPortfolioManagerDataService,
         private confirmationService: ConfirmationService,
+        private ofiKycObservablesService: OfiKycObservablesService,
         private router: Router,
+        private changeDetectorRef: ChangeDetectorRef,
         private toasterService: ToasterService,
         public translate: MultilingualService,
+        private changeDetector: ChangeDetectorRef,
     ) {
     }
 
@@ -60,7 +74,12 @@ export class PortfolioManagerDetailComponent implements OnInit, OnDestroy {
             this.activeRoute.queryParams,
             (params: PortfolioManagerDetail) => {
                 this.pm = params;
-                this.requestPmDetail(params.pmId);
+                if (params.type === 'PM') {
+                    this.requestPmDetail(params.pmId);
+                } else {
+                    this.requestWmDetail(params.pmId);
+                }
+                this.changeDetector.markForCheck();
             });
 
         const $accessFundData = combineLatest(
@@ -72,9 +91,22 @@ export class PortfolioManagerDetailComponent implements OnInit, OnDestroy {
             }),
         );
 
-        (<any>this).appSubscribe(
-            $accessFundData,
-            fundAccesses => this.fundAccessList = fundAccesses);
+        (<any>this).appSubscribe($accessFundData, fundAccesses => this.fundAccessList = fundAccesses);
+
+        (<any>this).appSubscribe(this.ofiKycObservablesService.getInvitationData(), (d: investorInvitation[]) => {
+            this.inviteItems = d.filter(inv => inv.investorType === 40).map((invite) => {
+                const tokenUsedAt = invite.tokenUsedAt ? moment(invite.tokenUsedAt).local().format('YYYY-MM-DD HH:mm:ss') : null;
+                const kycStarted = invite.kycStarted ? moment(invite.kycStarted).local().format('YYYY-MM-DD HH:mm:ss') : '';
+                return {
+                    ...invite,
+                    invitationLink: `${window.location.origin}/#/redirect/${invite.lang}/${invite.invitationToken}`,
+                    inviteSent: moment(invite.inviteSent).local().format('YYYY-MM-DD HH:mm:ss'),
+                    tokenUsedAt,
+                    kycStarted,
+                };
+            });
+            this.changeDetectorRef.markForCheck();
+        });
     }
 
     ngOnDestroy() {
@@ -89,10 +121,18 @@ export class PortfolioManagerDetailComponent implements OnInit, OnDestroy {
     }
 
     /**
+     * Request PM detail for the pmId.
+     * @param {number} pmId
+     */
+    requestWmDetail(pmId: number) {
+        this.ofiPortfolioMangerService.defaultRequestWealthManagerDetail(pmId);
+    }
+
+    /**
      * Manager fund access
      * @param {FundAccess} fundAccess
      */
-    handleManagerShareAccess(fundAccess: FundAccess) {
+    handleManageShareAccess(fundAccess: FundAccess) {
         const kycId = fundAccess.kycId;
         // this.router.navigate(['client-referential'], { queryParams: { kycId } });
         this.router.navigateByUrl(`client-referential/${kycId}`);
@@ -101,7 +141,7 @@ export class PortfolioManagerDetailComponent implements OnInit, OnDestroy {
     /**
      * Check whether fund access has kycId link to.
      * if portfolio manager has access to the fund, it would have an kycId link to it.
-     * we check kycId here, because user can toggle the fund access to true, but the action is not save yet, we don't
+     * we check kycId here, because user can handleInvestorChange the fund access to true, but the action is not save yet, we don't
      * want to allow them to click the button.
      * @param {FundAccess} fundAccess
      * @return {boolean}
@@ -127,6 +167,10 @@ export class PortfolioManagerDetailComponent implements OnInit, OnDestroy {
             },
             [],
         );
+    }
+
+    handleInvestorChange(e) {
+        console.log('handleInvestorChange', e);
     }
 
     /**
@@ -172,13 +216,12 @@ export class PortfolioManagerDetailComponent implements OnInit, OnDestroy {
             this.toasterService.pop(
                 'success',
                 this.translate.translate(
-                    '@emailAddress@\'s fund authorisation has been successfully updated',
+                    '@emailAddress@\'s investor authorisation has been successfully updated',
                     { 'emailAddress': this.pm.emailAddress },
                 ),
             );
         });
     }
-
 }
 
 function buildFundAccessData(dataArr, pmId: number) {

@@ -1,6 +1,6 @@
 import { Injectable } from '@angular/core';
 import { select } from '@angular-redux/store';
-import { BaseDataService } from '@setl/core-req-services';
+import { BaseDataService, MyUserService } from '@setl/core-req-services';
 import { Observable } from 'rxjs/Rx';
 import { OfiFundService } from '../../../ofi-req-services/ofi-product/fund/fund.service';
 import { IznesFundDetail, IznesFundDetails } from '../../../ofi-store/ofi-product/fund/fund-list/model';
@@ -12,14 +12,19 @@ export class OfiFundDataService extends BaseDataService<OfiFundService> {
     @select(['ofi', 'ofiProduct', 'ofiFund', 'fundList', 'iznFundList']) fundList$;
 
     constructor(
-        private _ofiKycService: OfiFundService,
+        protected _ofiKycService: OfiFundService,
+        protected myUserService: MyUserService,
     ) {
-        super(_ofiKycService);
-        super.setupData(
+        super(_ofiKycService, myUserService);
+    }
+
+    onInit() {
+        this.setupData(
             'fundList',
             'fetchFundList',
             this.fundList$,
-            this.requestedIznesFund$);
+            this.requestedIznesFund$
+        );
     }
 
     /**
