@@ -18,6 +18,13 @@ $setlHover: darken($setl, 2%);
 @import 'components/components';
 @import 'user_tour';
 
+// remove :focus outline for mouse navigation only
+body:not(.tabbing) {
+    button:focus, input:focus, select:focus, textarea:focus {
+        outline: none;
+    }
+}
+
 .color-square {
     display: inline-block;
     vertical-align: text-bottom;
