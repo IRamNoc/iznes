@@ -100,32 +100,32 @@ table {
     }
 }
 
-.btn-sm {
-    .btn {
-        font-weight: normal;
-        letter-spacing: 0.2px;
-        text-transform: none;
-    }
-}
+// .btn-sm {
+//     .btn {
+//         font-weight: normal;
+//         letter-spacing: 0.2px;
+//         text-transform: none;
+//     }
+// }
 
-.btn {
-    font-weight: normal;
-    letter-spacing: 0.2px;
-    text-transform: none;
-    border-color: #57a5e3;
-    background-color: transparent;
-    color: #57a5e3;
-}
+// .btn {
+//     font-weight: normal;
+//     letter-spacing: 0.2px;
+//     text-transform: none;
+//     border-color: #57a5e3;
+//     background-color: transparent;
+//     color: #57a5e3;
+// }
 
-.btn:focus, button:focus {
-    outline: none;
-}
+// .btn:focus, button:focus {
+//     outline: none;
+// }
 
-.btn.btn-primary:hover, .btn-primary .btn:hover {
-    background-color: #3c739c;
-    color: #fff;
-    border-color: #3c739c;
-}
+// .btn.btn-primary:hover, .btn-primary .btn:hover {
+//     background-color: #3c739c;
+//     color: #fff;
+//     border-color: #3c739c;
+// }
 
 /* Style the list */
 ul.breadcrumb {
@@ -1546,5 +1546,3 @@ dp-date-picker div {
     z-index: 9999;
     display: none;
 }
-
-@import './_user_tour';

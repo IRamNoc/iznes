@@ -123,8 +123,8 @@ export class NavigationTopbarComponent implements OnInit, AfterViewInit, OnDestr
         this.connectedToWalletNode = false;
 
         this.appConfig = appConfig;
-        this.topbarLogoUrl = this.appConfig.topbarLogoUrl;
-        this.topbarLogoUrlDark = this.appConfig.topbarLogoUrlDark || this.appConfig.topbarLogoUrl;
+        this.topbarLogoUrl = this.appConfig.logoLightUrl || this.appConfig.logoUrl;
+        this.topbarLogoUrlDark = this.appConfig.logoUrl;
         this.showCountdownModal = false;
         this.unreadMessageCount = 0;
 

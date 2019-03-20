@@ -16,6 +16,7 @@ $setlHover: darken($setl, 2%);
 @import 'utils/icons';
 @import 'jaspero-ng2-alerts';
 @import 'components/components';
+@import 'user_tour';
 
 .color-square {
     display: inline-block;
@@ -54,14 +55,14 @@ td > .btn-group {
     background: #373A47;
 }
 
-.btn.btn-secondary:hover, .btn.btn-info:hover, .btn.btn-outline:hover, .btn.btn-primary-outline:hover, .btn.btn-secondary-outline:hover, .btn.btn-outline-primary:hover, .btn.btn-outline-secondary:hover, .btn.btn-info-outline:hover, .btn-secondary .btn:hover, .btn-info .btn:hover, .btn-outline .btn:hover, .btn-primary-outline .btn:hover, .btn-secondary-outline .btn:hover, .btn-outline-primary .btn:hover, .btn-outline-secondary .btn:hover, .btn-info-outline .btn:hover {
-    border: 1px solid #a4c4fa;
-    background: white;
-}
+// .btn.btn-secondary:hover, .btn.btn-info:hover, .btn.btn-outline:hover, .btn.btn-primary-outline:hover, .btn.btn-secondary-outline:hover, .btn.btn-outline-primary:hover, .btn.btn-outline-secondary:hover, .btn.btn-info-outline:hover, .btn-secondary .btn:hover, .btn-info .btn:hover, .btn-outline .btn:hover, .btn-primary-outline .btn:hover, .btn-secondary-outline .btn:hover, .btn-outline-primary .btn:hover, .btn-outline-secondary .btn:hover, .btn-info-outline .btn:hover {
+//     border: 1px solid #a4c4fa;
+//     background: white;
+// }
 
-.btn.btn-secondary:active, .btn.btn-info:active, .btn.btn-outline:active, .btn.btn-primary-outline:active, .btn.btn-secondary-outline:active, .btn.btn-outline-primary:active, .btn.btn-outline-secondary:active, .btn.btn-info-outline:active, .btn-secondary .btn:active, .btn-info .btn:active, .btn-outline .btn:active, .btn-primary-outline .btn:active, .btn-secondary-outline .btn:active, .btn-outline-primary .btn:active, .btn-outline-secondary .btn:active, .btn-info-outline .btn:active {
-    box-shadow: 0 0 0 0 #0094d2 inset;
-}
+// .btn.btn-secondary:active, .btn.btn-info:active, .btn.btn-outline:active, .btn.btn-primary-outline:active, .btn.btn-secondary-outline:active, .btn.btn-outline-primary:active, .btn.btn-outline-secondary:active, .btn.btn-info-outline:active, .btn-secondary .btn:active, .btn-info .btn:active, .btn-outline .btn:active, .btn-primary-outline .btn:active, .btn-secondary-outline .btn:active, .btn-outline-primary .btn:active, .btn-outline-secondary .btn:active, .btn-info-outline .btn:active {
+//     box-shadow: 0 0 0 0 #0094d2 inset;
+// }
 ng-select .btn.btn-secondary.ui-select-toggle {
     height: 40px;
     line-height: 40px;
@@ -69,11 +70,11 @@ ng-select .btn.btn-secondary.ui-select-toggle {
     border-color: #dadada;
 }
 
-.btn.btn-primary, .btn-primary .btn {
-    background-color: rgb(86, 164, 223);
-    color: #fff;
-    border-color: rgb(86, 164, 223);
-}
+// .btn.btn-primary, .btn-primary .btn {
+//     background-color: rgb(86, 164, 223);
+//     color: #fff;
+//     border-color: rgb(86, 164, 223);
+// }
 
 .dropdown-menu .btn, .dropdown-menu .dropdown-item {
     line-height: 24px!important;
