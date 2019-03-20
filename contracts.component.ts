@@ -13,6 +13,7 @@ import { ContractModel, PartyModel } from '@setl/core-contracts/models';
 import { SET_CONTRACT_LIST } from '@setl/core-store/wallet/my-wallet-contract/actions';
 import { Subject } from 'rxjs/Subject';
 import { takeUntil } from 'rxjs/operators';
+import { MultilingualService } from '@setl/multilingual';
 
 @Component({
     selector: 'setl-contracts',
@@ -47,13 +48,14 @@ export class ContractsComponent implements OnInit, OnDestroy {
         private walletNodeRequest: WalletNodeRequestService,
         private changeDetectorRef: ChangeDetectorRef,
         private ngRedux: NgRedux<any>,
+        public translate: MultilingualService,
         @Inject(APP_CONFIG) private appConfig: AppConfig,
     ) {
     }
 
     public ngOnInit() {
         this.tabControl = new TabControl({
-            title: 'Search',
+            title: this.translate.translate('Search'),
             icon: 'search',
             active: false,
             data: {
@@ -157,7 +159,10 @@ export class ContractsComponent implements OnInit, OnDestroy {
         .then((data) => {
             this.committing = [...this.committing, party.partyIdentifier];
             this.changeDetectorRef.markForCheck();
-            this.alertsService.generate('success', 'Committing to Contract.');
+            this.alertsService.generate(
+                'success',
+                this.translate.translate('Committing to Contract.'),
+            );
         })
         .catch(data => console.log('Bad commit', data));
     }
@@ -167,7 +172,10 @@ export class ContractsComponent implements OnInit, OnDestroy {
         .then(() => {
             this.committing = [...this.committing, contract.authorisations[index].publicKey];
             this.changeDetectorRef.markForCheck();
-            this.alertsService.generate('success', 'Committing to Contract.');
+            this.alertsService.generate(
+                'success',
+                this.translate.translate('Committing to Contract.'),
+            );
         })
         .catch(data => console.log('Bad commit', data));
     }
@@ -181,7 +189,6 @@ export class ContractsComponent implements OnInit, OnDestroy {
         const value = this.parameterValues[key];
 
         console.log(`Commit ${key} -> ${value}`);
-
     }
 
     /**
@@ -194,18 +201,18 @@ export class ContractsComponent implements OnInit, OnDestroy {
      */
     showCommitButton(type, contract, party): boolean {
         switch (type) {
-        case 'committed':
-            return party.signature || (contract.issuingaddress === party.sigAddress && !party.mustSign);
-        case 'notCommitted':
-            return !party.signature && party.sigAddress_label === party.sigAddress;
-        case 'commit':
-            return (!party.signature && party.sigAddress_label !== party.sigAddress &&
-                !this.committing.includes(party.partyIdentifier)) &&
-                ((contract.issuingaddress !== party.sigAddress && !party.mustSign) || party.mustSign);
-        case 'committing':
-            return !party.signature && this.committing.includes(party.partyIdentifier);
-        default:
-            return false;
+            case 'committed':
+                return party.signature || (contract.issuingaddress === party.sigAddress && !party.mustSign);
+            case 'notCommitted':
+                return !party.signature && party.sigAddress_label === party.sigAddress;
+            case 'commit':
+                return (!party.signature && party.sigAddress_label !== party.sigAddress &&
+                    !this.committing.includes(party.partyIdentifier)) &&
+                    ((contract.issuingaddress !== party.sigAddress && !party.mustSign) || party.mustSign);
+            case 'committing':
+                return !party.signature && this.committing.includes(party.partyIdentifier);
+            default:
+                return false;
         }
     }
 
