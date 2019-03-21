@@ -6,19 +6,20 @@ import {
     PortfolioManagerList,
 } from '../../ofi-store/ofi-portfolio-manager/portfolio-manage-list/model';
 import { OfiFundDataService } from '../../ofi-data-service/product/fund/ofi-fund-data-service';
-import { combineLatest } from 'rxjs';
-import { map } from 'rxjs/operators';
+import { combineLatest, of, Observable, Subject } from 'rxjs';
+import { map, flatMap, filter, tap, shareReplay, distinctUntilChanged, takeUntil } from 'rxjs/operators';
 import { OfiPortfolioMangerService } from '../../ofi-req-services/ofi-portfolio-manager/service';
 import { OfiKycObservablesService } from '../../ofi-req-services/ofi-kyc/kyc-observable';
 import { OfiPortfolioManagerDataService } from '../../ofi-data-service/portfolio-manager/ofi-portfolio-manager-data.service';
 import { IznesFundDetail } from '../../ofi-store/ofi-product/fund/fund-list/model';
-import { get } from 'lodash';
+import { get, isEqual, isUndefined, bind } from 'lodash';
 import { FormControl } from '@angular/forms';
 import { ConfirmationService } from '@setl/utils/index';
 import { ToasterService } from 'angular2-toaster';
 import { MultilingualService } from '@setl/multilingual';
 import * as moment from 'moment';
 import { investorInvitation } from '@ofi/ofi-main/ofi-store/ofi-kyc/invitationsByUserAmCompany';
+import { Location } from '@angular/common';
 
 interface FundAccess {
     fundName: string;
@@ -53,6 +54,9 @@ export class PortfolioManagerDetailComponent implements OnInit, OnDestroy {
     fundAccessList: FundAccess[];
     fundAccessChanges: FundChange[];
     inviteItems: investorInvitation[];
+    portfolioManager$: Observable<PortfolioManagerDetail>;
+    accessFundData$: Observable<any>;
+    unsubscribe = new Subject<boolean>();
 
     constructor(
         private activeRoute: ActivatedRoute,
@@ -66,32 +70,32 @@ export class PortfolioManagerDetailComponent implements OnInit, OnDestroy {
         private toasterService: ToasterService,
         public translate: MultilingualService,
         private changeDetector: ChangeDetectorRef,
+        private location: Location,
+        private toaster: ToasterService,
     ) {
     }
 
     ngOnInit() {
-        (<any>this).appSubscribe(
-            this.activeRoute.queryParams,
-            (params: PortfolioManagerDetail) => {
-                this.pm = params;
-                if (params.type === 'PM') {
-                    this.requestPmDetail(params.pmId);
-                } else {
-                    this.requestWmDetail(params.pmId);
-                }
-                this.changeDetector.markForCheck();
-            });
+        this.portfolioManager$ = combineLatest(
+                this.activeRoute.params,
+                this.ofiPortfolioManagerDataService.getPortfolioManagerArrayList()
+            ).pipe(
+                distinctUntilChanged(isEqual),
+                flatMap(this.findPortfolioManager),
+                tap(this.handleNotFound),
+                filter(this.filterOutUndefined),
+                tap(bind(this.requestDetail, this)),
+                takeUntil(this.unsubscribe),
+                shareReplay(1),
+            );
 
-        const $accessFundData = combineLatest(
+        this.accessFundData$ = combineLatest(
             this.ofiFundDataService.getFundArrayList(),
-            this.ofiPortfolioManagerDataService.getPortfolioManagerList(),
+            this.portfolioManager$,
         ).pipe(
-            map((dataArr) => {
-                return buildFundAccessData(dataArr, this.pm.pmId);
-            }),
+            map(([data, pm]) => buildFundAccessData(data, pm)),
+            tap((list) => this.fundAccessList = list)
         );
-
-        (<any>this).appSubscribe($accessFundData, fundAccesses => this.fundAccessList = fundAccesses);
 
         (<any>this).appSubscribe(this.ofiKycObservablesService.getInvitationData(), (d: investorInvitation[]) => {
             this.inviteItems = d.filter(inv => inv.investorType === 40).map((invite) => {
@@ -110,6 +114,51 @@ export class PortfolioManagerDetailComponent implements OnInit, OnDestroy {
     }
 
     ngOnDestroy() {
+        this.unsubscribe.next();
+    }
+
+    /**
+     * RxJS - If PM is undefined, it can't be found in the store (Can only happen if someone manually
+     * navigates to this page and gets the pmId wrong).  Pop a toast with a message and go back to previous page.
+     *
+     * @param {PortfolioManager | undefined} Portfolio Manager
+     */
+    handleNotFound(pm: PortfolioManagerDetail | undefined) {
+        if (isUndefined(pm)) {
+            this.toaster.pop('error', this.translate.translate('Portfolio Manager not found'));
+            this.location.back();
+        }
+    }
+
+    /**
+     * RxJS - Find the Portfolio Manager from redux using the params (pmId) and the pmList.
+     *
+     * @param {array}
+     */
+    findPortfolioManager([params, pmList]) {
+        return of(pmList.find(pm => pm.pmId === +params.pmId));
+    }
+
+    /**
+     * RxJS - Return false for undefined.
+     *
+     * @param {array}
+     */
+    filterOutUndefined(val: any | undefined) {
+        return !isUndefined(val);
+    }
+
+    /**
+     * RxJS - Request Pm or Wm detail depending on type.
+     *
+     * @param {array}
+     */
+    requestDetail(pm: PortfolioManagerDetail) {
+        if (pm.type === 'PM') {
+            this.requestPmDetail(pm.pmId);
+        } else {
+            this.requestWmDetail(pm.pmId);
+        }
     }
 
     /**
@@ -134,7 +183,6 @@ export class PortfolioManagerDetailComponent implements OnInit, OnDestroy {
      */
     handleManageShareAccess(fundAccess: FundAccess) {
         const kycId = fundAccess.kycId;
-        // this.router.navigate(['client-referential'], { queryParams: { kycId } });
         this.router.navigateByUrl(`client-referential/${kycId}`);
     }
 
@@ -224,17 +272,14 @@ export class PortfolioManagerDetailComponent implements OnInit, OnDestroy {
     }
 }
 
-function buildFundAccessData(dataArr, pmId: number) {
-    const fundData: IznesFundDetail[] = dataArr[0];
-    const accessData: {[pmId: string]: PortfolioManagerDetail} = dataArr[1];
-
+function buildFundAccessData(fundData, pm: PortfolioManagerDetail) {
     return fundData.map((fund: IznesFundDetail) => {
         const fundId = fund.fundID;
-        const thisFundAccess = get(accessData, [pmId, 'fundAccess', fundId], { status: false, fundId });
+        const thisFundAccess = get(pm, ['fundAccess', fundId], { status: false, fundId });
         return {
             fundName: fund.fundName,
             ...thisFundAccess,
-            pmId,
+            pmId: pm.pmId,
             statusFormControl: new FormControl(thisFundAccess.status),
         };
     });

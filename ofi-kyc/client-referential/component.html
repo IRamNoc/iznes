@@ -2,8 +2,10 @@
     <!-- Breadcrumbs. -->
     <div class="header-breadcrumbs">
         <h1 id="ofi-client-referential"><i class="fa fa-users"></i>
-            {{ 'Client Referential' | translate }}<span *ngIf="kycId == ''">: {{ 'All Clients' | translate }}</span>
+            {{ 'Client Referential' | translate }}
+            <span *ngIf="kycId == ''">: {{ 'All Clients' | translate }}</span>
             <span *ngIf="kycId != '' && !!clients[kycId]">{{ getClientReferentialDescriptionTitle() }}</span>
+            <span *ngIf="pmIdentifier">{{ pmIdentifier }}</span>
         </h1>
     </div>
 
@@ -60,17 +62,17 @@
                         <clr-datagrid #dataGrid>
                             <clr-dg-column [clrDgField]="'clientReference'">{{ 'Client Reference' | translate }}</clr-dg-column>
                             <clr-dg-column [clrDgField]="'walletName'">{{ 'IZNES Reference' | translate }}</clr-dg-column>
+                            <clr-dg-column [clrDgField]="'investorType'">{{ 'Investor Type' | translate }}</clr-dg-column>
                             <clr-dg-column [clrDgField]="'companyName'">{{ 'Company' | translate }}</clr-dg-column>
                             <clr-dg-column [clrDgField]="'email'">{{ 'Email' | translate }}</clr-dg-column>
-                            <clr-dg-column [clrDgField]="'investorType'">{{ 'Investor Type' | translate }}</clr-dg-column>
                             <clr-dg-column [clrDgField]="'investmentMethod'">{{ 'Investment Method' | translate }}</clr-dg-column>
 
                             <clr-dg-row *clrDgItems="let item of clientReferential" style="cursor: pointer;" (click)="viewClient(item.kycID);">
                                 <clr-dg-cell>{{item.clientReference}}</clr-dg-cell>
                                 <clr-dg-cell>{{item.walletName}}</clr-dg-cell>
+                                <clr-dg-cell>{{item.investorType}}</clr-dg-cell>
                                 <clr-dg-cell>{{item.companyName}}</clr-dg-cell>
                                 <clr-dg-cell>{{item.email}}</clr-dg-cell>
-                                <clr-dg-cell>{{item.investorType}}</clr-dg-cell>
                                 <clr-dg-cell>{{item.investmentMethod}}</clr-dg-cell>
                             </clr-dg-row>
 
@@ -167,14 +169,14 @@
                 <div class="row">
                     <div class="col-sm-6" style="margin-top: 0.5rem">
                         <p>{{ 'Please find below the authorisation of @companyName@ regarding your shares.' |
-                            translate: { 'companyName': companyName } }}</p>
+                            translate: { 'companyName': pmIdentifier } }}</p>
                     </div>
                     <div class="col-sm-6" align="right">
                         <button class="btn btn-primary" (click)="changePage('audit')">{{ 'View Previous Updates' |
                             translate }}</button>
                     </div>
                 </div>
-                <access-table [otherData]="otherData" [tableDataArr]="tableData" (back)="changePage('list')" style="width: 100%"></access-table>
+                <access-table [otherData]="otherData" [tableDataArr]="tableData" (back)="goBack()" style="width: 100%"></access-table>
             </clr-tab-content>
         </clr-tab>
         <clr-tab>

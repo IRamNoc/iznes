@@ -45,7 +45,7 @@ export class PortfolioManagerListComponent implements OnInit, OnDestroy {
      * @param {PortfolioManagerDetail} pmId
      */
     handleClick(pm: PortfolioManagerDetail): void {
-        this.router.navigate(['portfolio-manager', 'detail'], { queryParams: pm });
+        this.router.navigate(['portfolio-manager', pm.pmId]);
     }
 
     /**

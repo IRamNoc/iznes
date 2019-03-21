@@ -19,7 +19,7 @@ export class OfiPortfolioManagerDataService extends BaseDataService<OfiPortfolio
     }
 
     onInit() {
-        super.setupData(
+        this.setupData(
             'portfolioManagerList',
             'defaultRequestPortpolioManagerList',
             this.portfolioManagerList$,

@@ -17,6 +17,10 @@ import { OfiFundShareService } from '../../ofi-req-services/ofi-product/fund-sha
 import * as math from 'mathjs';
 import { OFI_SET_CLIENT_REFERENTIAL_AUDIT } from '@ofi/ofi-main/ofi-store';
 import * as moment from 'moment-timezone';
+import { Location } from '@angular/common';
+import { PortfolioManagerDetail } from '../../ofi-store/ofi-portfolio-manager/portfolio-manage-list/model';
+
+const values = (o: object) => Object.keys(o).map(i => o[i]);
 
 @AppObservableHandler
 @Component({
@@ -44,6 +48,7 @@ export class OfiClientReferentialComponent implements OnInit, OnDestroy {
     amKycList = [];
 
     companyName: string;
+    pmIdentifier = '';
 
     socketToken: string;
     userId: string;
@@ -96,6 +101,7 @@ export class OfiClientReferentialComponent implements OnInit, OnDestroy {
     @select(['ofi', 'ofiKyc', 'clientReferentialAudit', 'clientReferentialAudit']) clientReferentialAuditOb;
     @select(['ofi', 'ofiKyc', 'amKycList', 'requested']) requestedOfiKycListOb;
     @select(['ofi', 'ofiKyc', 'amKycList', 'amKycList']) amKycListObs;
+    @select(['ofi', 'ofiPortfolioManager', 'portfolioManagerList', 'portfolioManagerList']) portfolioManagers$: Observable<PortfolioManagerDetail[]>;
     @select(['ofi', 'ofiProduct', 'ofiFundShareList', 'iznShareList']) amAllFundShareListOb;
     @select(['user', 'authentication', 'token']) tokenOb;
     @select(['user', 'myDetail', 'userId']) userIdOb;
@@ -112,6 +118,7 @@ export class OfiClientReferentialComponent implements OnInit, OnDestroy {
                 private route: ActivatedRoute,
                 private router: Router,
                 public translate: MultilingualService,
+                private location: Location,
     ) {
 
         this.investorTypeForm = new FormGroup({
@@ -198,9 +205,10 @@ export class OfiClientReferentialComponent implements OnInit, OnDestroy {
             observableCombineLatest(
                 this.clientReferentialOb,
                 this.amKycListObs,
+                this.portfolioManagers$,
                 this.route.params,
             )
-                .subscribe(([clientReferential, amKycList, params]) => {
+                .subscribe(([clientReferential, amKycList, portfolioManagers, params]) => {
                     this.kycId = (!params.kycId ? '' : params.kycId);
 
                     this.clientReferential = clientReferential.map((client) => {
@@ -250,6 +258,18 @@ export class OfiClientReferentialComponent implements OnInit, OnDestroy {
                         }
                     } else {
                         if (this.isPortfolioManager()) {
+
+                            // Check for the PM investor
+                            const fundOfFundsManager = values(portfolioManagers)
+                                .find(pm => values(pm.fundAccess)
+                                .some(fa => fa.kycId === +this.kycId));
+                            const discretionaryManager = values(portfolioManagers)
+                                .find(pm => values(pm.fundAccess)
+                                .some(fa => fa.kycId === +this.kycId))
+
+                            if (fundOfFundsManager) this.pmIdentifier = fundOfFundsManager.emailAddress;
+                            if (discretionaryManager) this.pmIdentifier = fundOfFundsManager.emailAddress;
+
                             // force load share access data if portfolio manager.
                             this.loadTab(2);
                         }
@@ -495,6 +515,10 @@ export class OfiClientReferentialComponent implements OnInit, OnDestroy {
             userId: this.userId,
             kycId: this.kycId,
         });
+    }
+
+    goBack() {
+        this.location.back();
     }
 
     changePage(page) {

@@ -38,6 +38,7 @@ export const OfiMandateInvestorListReducer = function(
                         lastName: action.payload.lastName,
                         reference: action.payload.reference,
                         companyName: action.payload.companyName,
+                        investorType: action.payload.investorType,
                     },
                 ]
             };
