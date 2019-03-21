@@ -1,7 +1,7 @@
 <!-- Breadcrumbs. -->
 <div class="header-breadcrumbs">
     <h1 id="ofi-kyc-invite-investors">
-    <i class="fa fa-user-plus"></i> {{ 'Create Investor under Mandate' | translate }}</h1>
+    <i class="fa fa-user-plus"></i>{{ 'Client Referential' | translate }} {{ 'Create Investor under Mandate' | translate }}</h1>
 </div>
 
 <!-- Main content. -->
@@ -18,7 +18,7 @@
                 <div [formGroup]="investor">
 
                     <!-- Investor type + companyName -->
-                    <div class="row">
+                    <div class="row row-relative">
                         <div class="form-group col-sm-6">
                             <label class='required-field' for="kyc_investorType_{{i}}">
                                 {{ 'Investor Type' | translate }}
@@ -29,7 +29,7 @@
                                     id="kyc_investorType_{{i}}"
                                     class="form-control"
                                     [items]="investorTypes$ | async"
-                                    [allowClear]="true"
+                                    [allowClear]="false"
                                     placeholder="{{ 'Select' | translate }}"
                                     formControlName="investorType"
                                     [ngStyle]="{'padding':'6px 0'}"
@@ -45,10 +45,20 @@
                         <div class="form-group col-sm-6" *ngIf="!isRetailInvestor(investor.controls.investorType)">
                             <label class="required-field" for="kyc_companyName_{{i}}">{{ 'Company Name' | translate }}</label>
                             <input type="text" id="kyc_companyName_{{i}}" class="form-control" formControlName="companyName">
-                            <div *ngIf="investor.get('companyName').touched && investor.hasError('companyName')" class="field-error">
+                            <div *ngIf="investor.get('companyName').touched && investor.get('companyName').hasError('required')" class="field-error">
                                 {{ 'Field is required' | translate }}
                             </div>
+                            <div *ngIf="investor.get('companyName').touched && investor.get('companyName').hasError('maxlength')" class="field-error">
+                                {{ 'Max length is' | translate }} 100
+                            </div>
                         </div>
+
+                        <i
+                            class="fa fa-times-circle text-warning"
+                            *ngIf="i > 0" id="btnKycRemoveInvestor_{{i}}"
+                            (click)="removeInvestor(i)"
+                            [ngStyle]="{'cursor':'pointer','margin-left':'14px','font-size':'18px','position':'absolute','right':'0'}">
+                        </i>
                     </div>
 
                     <!-- firstName + lastName -->
@@ -59,6 +69,9 @@
                             <div *ngIf="investor.get('firstName').touched && investor.get('firstName').hasError('required')" class="field-error">
                                 {{ 'Field is required' | translate }}
                             </div>
+                            <div *ngIf="investor.get('firstName').touched && investor.get('firstName').hasError('maxlength')" class="field-error">
+                                {{ 'Max length is' | translate }} 100
+                            </div>
                         </div>
 
                         <div class="form-group col-sm-6">
@@ -66,6 +79,9 @@
                             <input type="text" id="kyc_lastName_{{i}}" class="form-control" formControlName="lastName">
                             <div *ngIf="investor.get('lastName').touched && investor.get('lastName').hasError('required')" class="field-error">
                                 {{ 'Field is required' | translate }}
+                            </div>
+                            <div *ngIf="investor.get('lastName').touched && investor.get('lastName').hasError('maxlength')" class="field-error">
+                                {{ 'Max length is' | translate }} 100
                             </div>
                         </div>
                     </div>

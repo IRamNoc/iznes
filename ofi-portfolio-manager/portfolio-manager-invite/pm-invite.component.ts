@@ -64,10 +64,9 @@ export class PortfolioManagerInviteComponent implements OnInit {
         this.fundSelectList$ = this.ofiFundDataService.getFundSelectList();
         this.investorSelectList$ = this.mandateInvestorService.listArray().pipe(map((investors) => {
             return investors.map((inv) => {
-                const companyName = (inv.investorType === 10) ? inv.companyName : 'Retail';
                 return {
                     id: `${inv.id}`,
-                    text: `${inv.firstName} ${inv.lastName} (${companyName})`
+                    text: `${inv.firstName} ${inv.lastName} (${inv.walletName})`
                 };
             });
         }));
@@ -99,9 +98,11 @@ export class PortfolioManagerInviteComponent implements OnInit {
             fundList.setValidators([]);
             investorList.setValidators([]);
             if (this.isFundOfFundsManager(portfolioManager)) {
+                investorList.setErrors(null);
                 fundList.setValidators(Validators.required);
             }
             if (this.isDiscretionaryManager(portfolioManager)) {
+                fundList.setErrors(null);
                 investorList.setValidators(Validators.required);
             }
         });
@@ -126,7 +127,12 @@ export class PortfolioManagerInviteComponent implements OnInit {
 
             // Email addresses which are not linked to a user account
             if (validEmailList.length > 0) {
-                this.displayInvitationSuccessModal(validEmailList);
+                this.displayInvitationSuccessModal(validEmailList).pipe(first()).subscribe(() => {
+                    // Everyone invited, redirect back
+                    if (this.inviteForm.get('portfolioManagers').value.length === validEmailList.length) {
+                        this.location.back();
+                    }
+                });
             }
 
             // Email addresses which are already linked to a user account
@@ -139,7 +145,7 @@ export class PortfolioManagerInviteComponent implements OnInit {
         });
     }
 
-    displayInvitationSuccessModal(emails: Array<string>): void {
+    displayInvitationSuccessModal(emails: Array<string>): Observable<any> {
         let message = '<p><b>';
 
         message += this.lang.translate('An invitation email to IZNES was sent to:');
@@ -150,7 +156,7 @@ export class PortfolioManagerInviteComponent implements OnInit {
         }
         message += '</tbody></table>';
 
-        this.alerts.create('success', message);
+        return this.alerts.create('success', message);
     }
 
     displayExistingEmailAddressToaster(invalidEmailAddressList: Array<string>) {

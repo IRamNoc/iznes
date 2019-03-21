@@ -41,11 +41,11 @@
                                     id="kyc_language_{{i}}"
                                     class="form-control"
                                     [items]="languages"
-                                    [allowClear]="true"
+                                    [allowClear]="false"
                                     placeholder="{{ 'Select' | translate }}"
                                     formControlName="language"
                                     [ngStyle]="{'padding':'6px 0'}"
-                                    [containerWidth]="'95%'">
+                                    containerWidth="95%">
                                 </ng-select>
 
                                 <div *ngIf="investor.get('language').hasError('required') && investor.get('language').touched" class="field-error">
@@ -89,19 +89,19 @@
                     <div class="row">
                         <div class="form-group col-sm-12">
                             <label class='required-field' for="kyc_investorType_{{i}}">
-                                {{ 'Investor Type' | translate }}
+                                {{ 'Portfolio Manager Type' | translate }}
                             </label>
 
-                            <div>
+                            <div style="width: 97.4%">
                                 <ng-select
                                     id="kyc_investorType_{{i}}"
                                     class="form-control"
                                     [items]="investorTypes$ | async"
-                                    [allowClear]="true"
+                                    [allowClear]="false"
                                     placeholder="{{ 'Select' | translate }}"
                                     formControlName="investorType"
                                     [ngStyle]="{'padding':'6px 0'}"
-                                    [containerWidth]="'95%'">
+                                    containerWidth="100%">
                                 </ng-select>
 
                                 <div *ngIf="investor.get('investorType').hasError('required') && investor.get('investorType').touched" class="field-error">
@@ -115,7 +115,7 @@
                     <div class="row" *ngIf="isFundOfFundsManager(investor.value)">
                         <div class="form-group col-sm-12">
                             <label class="required-field" for="pm_funds_{{i}}">{{ 'List of funds managed by the Portfolio Manager' | translate }}</label>
-                            <div>
+                            <div style="width: 97.4%">
                                 <ng-select
                                     id="pm_funds_{{i}}"
                                     class="form-control"
@@ -124,7 +124,7 @@
                                     placeholder="{{ 'Select funds' | translate }}"
                                     formControlName="fundList"
                                     [ngStyle]="{'padding':'6px 0'}"
-                                    [containerWidth]="'95%'">
+                                    containerWidth="100%">
                                 </ng-select>
 
                                 <div *ngIf="investor.get('fundList').hasError('required') && investor.get('fundList').touched" class="field-error">
@@ -138,7 +138,7 @@
                     <div class="row" *ngIf="isDiscretionaryManager(investor.value)">
                         <div class="form-group col-sm-12">
                             <label class="required-field" for="pm_investors_{{i}}">{{ 'List of investors managed by the Portfolio Manager' | translate }}</label>
-                            <div>
+                            <div style="width: 97.4%">
                                 <ng-select
                                     id="pm_investors_{{i}}"
                                     class="form-control"
@@ -147,7 +147,7 @@
                                     placeholder="{{ 'Select mandate investors' | translate }}"
                                     formControlName="investorList"
                                     [ngStyle]="{'padding':'6px 0'}"
-                                    [containerWidth]="'95%'">
+                                    [containerWidth]="'100%'">
                                 </ng-select>
 
                                 <div *ngIf="investor.get('investorList').hasError('required') && investor.get('investorList').touched" class="field-error">
