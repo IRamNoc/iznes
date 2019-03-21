@@ -1310,7 +1310,7 @@ export class InvestFundComponent implements OnInit, OnDestroy {
         const subPortfolioName = this.address.value[0]['text'];
         const amount = this.moneyValuePipe.parse(this.amount.value, 4);
         const quantity = this.moneyValuePipe.parse(this.quantity.value, this.shareData.maximumNumDecimal);
-        const amountStr = this.moneyValuePipe.transform(amount, 4);
+        const amountStr = this.moneyValuePipe.transform(amount, 2);
         const quantityStr = this.moneyValuePipe.transform(quantity, Number(this.shareData.maximumNumDecimal));
         const amountMessage = this.amountTooBig ? `<p class="mb-1"><span class="text-danger blink_me">${this.translate.translate('Order amount above 15 million')}</span></p>` : '';
 
