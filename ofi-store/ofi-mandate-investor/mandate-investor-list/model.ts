@@ -8,6 +8,7 @@ export interface MandateInvestor {
     lastName: string;
     reference: string;
     companyName: string;
+    walletName: string;
     investorType: InvestorType.Institutional | InvestorType.Retail;
 }
 
