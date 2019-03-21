@@ -226,13 +226,13 @@ export const ROUTES: Routes = [
                 canActivate: [LoginGuardService],
             },
             {
-                path: 'portfolio-manager/detail',
-                component: PortfolioManagerDetailComponent,
+                path: 'portfolio-manager/invite',
+                component: PortfolioManagerInviteComponent,
                 canActivate: [LoginGuardService],
             },
             {
-                path: 'portfolio-manager/invite',
-                component: PortfolioManagerInviteComponent,
+                path: 'portfolio-manager/:pmId',
+                component: PortfolioManagerDetailComponent,
                 canActivate: [LoginGuardService],
             },
             {
