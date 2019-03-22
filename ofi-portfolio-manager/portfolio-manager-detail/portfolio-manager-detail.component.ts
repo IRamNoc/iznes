@@ -1,10 +1,7 @@
 import { Component, OnDestroy, OnInit, ChangeDetectorRef } from '@angular/core';
 import { AppObservableHandler } from '@setl/utils/decorators/app-observable-handler';
 import { ActivatedRoute, Router } from '@angular/router';
-import {
-    PortfolioManagerDetail,
-    PortfolioManagerList,
-} from '../../ofi-store/ofi-portfolio-manager/portfolio-manage-list/model';
+import { PortfolioManagerDetail } from '../../ofi-store/ofi-portfolio-manager/portfolio-manage-list/model';
 import { OfiFundDataService } from '../../ofi-data-service/product/fund/ofi-fund-data-service';
 import { combineLatest, of, Observable, Subject } from 'rxjs';
 import { map, flatMap, filter, tap, shareReplay, distinctUntilChanged, takeUntil } from 'rxjs/operators';

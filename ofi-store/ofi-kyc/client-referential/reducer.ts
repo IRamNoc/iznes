@@ -5,7 +5,6 @@ import { Action } from 'redux';
 import { OfiClientReferentialState, ClientReferentialDetails } from './model';
 import * as ofiClientReferentialActions from './actions';
 import { immutableHelper } from '@setl/utils';
-import { fromJS, Map } from 'immutable';
 import * as _ from 'lodash';
 
 /* Initial state. */
@@ -48,6 +47,7 @@ function ofiSetList(state: OfiClientReferentialState, action: Action) {
                 companyName: item.get('companyName'),
                 email: item.get('emailAddress'),
                 investorType: item.get('investorType'),
+                kycID: item.get('kycID'),
                 investmentMethod: item.get('investmentMethod'),
             });
 
