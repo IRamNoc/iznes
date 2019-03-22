@@ -91,7 +91,7 @@ export class OfiInviteMandateInvestorsComponent implements OnInit {
                 companyName: [''],
                 firstName: ['', Validators.compose([Validators.required, Validators.maxLength(100)])],
                 lastName: ['', Validators.compose([Validators.required, Validators.maxLength(100)])],
-                reference: '',
+                reference: ['', Validators.maxLength(100)],
             }, { validator: companyNameValidator })
         )
     }
