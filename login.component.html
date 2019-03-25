@@ -21,16 +21,18 @@
         <ng-container *ngIf="(!showModal && !resetPassword && !showTwoFactorModal) || resetTwoFactorToken; then loginFormTemplate"></ng-container>
         <ng-container *ngIf="showModal && (!emailSent || isTokenExpired && !emailSent) && !changePassword; then resetPasswordRequestTemplate"></ng-container>
         <ng-container *ngIf="showModal && emailSent && !changePassword; then emailSentTemplate"></ng-container>
-        <ng-container *ngIf="showModal && changePassword; then changePasswordFormTemplate"></ng-container>
-        <ng-container *ngIf="resetPassword; then resetPasswordFormTemplate"></ng-container>
+        <ng-container *ngIf="showModal && changePassword && !changePasswordSuccess; then changePasswordFormTemplate"></ng-container>
+        <ng-container *ngIf="showModal && changePassword && changePasswordSuccess; then changePasswordSuccessTemplate"></ng-container>
+        <ng-container *ngIf="resetPassword && !resetPasswordSuccess; then resetPasswordFormTemplate"></ng-container>
+        <ng-container *ngIf="resetPassword && resetPasswordSuccess; then resetPasswordSuccessTemplate"></ng-container>
         <app-authenticate
             *ngIf="showTwoFactorModal && getPlatformName() !== 'OpenCSD Rooster'"
             [qrCode]="qrCode"
             [displayAsModals]="false"
-            (modalCancelled)="showTwoFactorModal=!$event"
+            (modalCancelled)="showTwoFactorModal=!$event; submitBtnState=loadingState.DEFAULT; showAlert('clear')"
             [resetToken]="resetTwoFactorToken"
             (verifiedToken)="resetTwoFactorToken=''"
-            (clearToken)="resetTwoFactorToken=''">
+            (clearToken)="resetTwoFactorToken=''; setTwoFactorResetFailed()">
         </app-authenticate>
 
         <p class="legal">{{ '@appConfig.platformLegal@ is a private environment subject to authorised access only.' | translate: {'appConfig.platformLegal': appConfig.platformLegal} }}</p>
@@ -45,6 +47,7 @@
                 {{ 'Login to' | translate }} {{appConfig.platform}}
             </section>
             <div class="login-group">
+                <ng-container *ngTemplateOutlet="alertTemplate"></ng-container>
                 <div class="form-group">
                     <label>Username</label>
                     <input
@@ -80,6 +83,7 @@
                 </div>
 
                 <button
+                    [clrLoading]="submitBtnState"
                     id="login-submit"
                     type="submit"
                     class="btn btn-primary"
@@ -101,10 +105,7 @@
             {{ 'Reset Password' | translate }}
         </section>
         <div class="login-group">
-            <div *ngIf="isTokenExpired" class="text-block">
-                <p class="no-margin"><strong>{{ 'This link has expired!' | translate }}</strong></p>
-                <p class="no-margin">{{ 'Please retype your email address to change your password.' | translate }}</p>
-            </div>
+            <ng-container *ngTemplateOutlet="alertTemplate"></ng-container>
             <div *ngIf="!isTokenExpired" class="text-block">
                 <p class="no-margin">{{ 'Fill in your email address and we will send you a link to reset your password' | translate }}</p>
             </div>
@@ -132,7 +133,8 @@
                         (click)="closeFPModal()">
                     {{ 'Cancel' | translate }}
                 </button>
-                <button id="forgotten-password-submit"
+                <button [clrLoading]="submitBtnState"
+                        id="forgotten-password-submit"
                         type="submit"
                         class="btn btn-primary btn-multi"
                         [disabled]="!forgottenPasswordForm.valid">
@@ -170,6 +172,7 @@
         </section>
         <div class="login-group">
             <ng-container *ngTemplateOutlet="passwordAlert"></ng-container>
+            <ng-container *ngTemplateOutlet="alertTemplate"></ng-container>
             <form [formGroup]="changePasswordForm" (ngSubmit)="saveNewPassword()">
                 <div class="form-group">
                     <label for="change-password-new">
@@ -220,13 +223,32 @@
                         (click)="closeFPModal()">
                     {{'Cancel' | translate}}
                 </button>
-                <button id="change-password-submit"
+                <button [clrLoading]="submitBtnState"
+                        id="change-password-submit"
                         type="submit"
                         class="btn btn-primary btn-multi"
                         [disabled]="!changePasswordForm.valid">
                     {{'Send' | translate}}
                 </button>
             </form>
+        </div>
+    </div>
+</ng-template>
+
+<!--CHANGE PASSWORD SUCCESS TEMPLATE-->
+<ng-template #changePasswordSuccessTemplate>
+    <div [@fadeIn]>
+        <section class="title capitalise">
+            {{ 'Change Password' | translate }}
+        </section>
+        <div class="login-group">
+            <div class="text-block flex-wrap">
+                <clr-icon class="success-icon" shape="success-standard"></clr-icon>
+                <p class="no-margin">{{ 'Your password has been changed successfully' | translate }}.</p>
+            </div>
+            <button id="back-to-login" class="btn btn-primary" type="button" (click)="closeFPModal()">
+                {{ 'Back to login' | translate }}
+            </button>
         </div>
     </div>
 </ng-template>
@@ -244,6 +266,7 @@
                 </div>
 
                 <ng-container *ngTemplateOutlet="passwordAlert"></ng-container>
+                <ng-container *ngTemplateOutlet="alertTemplate"></ng-container>
 
                 <div class="form-group">
                     <label for="reset-password-current">
@@ -309,7 +332,8 @@
                     <clr-icon class="showPassword" [attr.shape]="showPasswords.reset2 ? 'eye-hide' : 'eye'" (click)="showPasswords.reset2 = !showPasswords.reset2"></clr-icon>
                 </div>
 
-                <button id="reset-password-submit"
+                <button [clrLoading]="submitBtnState"
+                        id="reset-password-submit"
                         type="submit"
                         class="btn btn-primary"
                         [disabled]="!resetPasswordForm.valid">
@@ -317,6 +341,25 @@
                 </button>
             </div>
         </form>
+    </div>
+</ng-template>
+
+<!--RESET PASSWORD SUCCESS TEMPLATE-->
+<ng-template #resetPasswordSuccessTemplate>
+    <div [@fadeIn]>
+        <section class="title">
+            {{ 'Change Password' | translate }}
+        </section>
+        <div class="login-group">
+            <div class="text-block flex-wrap">
+                <clr-icon class="success-icon" shape="success-standard"></clr-icon>
+                <p class="no-margin">{{ 'Your password has been reset.' | translate }}<br>
+                    {{ 'A confirmation email will be sent to you.' | translate }}</p>
+            </div>
+            <button id="continue-to-platform" class="btn btn-primary" type="button" (click)="handleContinueAfterResetPassword()">
+                {{ 'Continue' | translate }}
+            </button>
+        </div>
     </div>
 </ng-template>
 
@@ -334,6 +377,22 @@
                         <li>{{ 'One symbol' | translate }}</li>
                         <li>{{ 'One international character' | translate }}</li>
                     </ul>
+                </span>
+            </div>
+        </div>
+    </div>
+</ng-template>
+
+<!--ALERT TEMPLATE-->
+<ng-template #alertTemplate>
+    <div *ngIf="alert.show" class="alert alert-sm {{alert.type}}" role="alert">
+        <div class="alert-items">
+            <div class="alert-item static">
+                <div class="alert-icon-wrapper">
+                    <clr-icon class="alert-icon" [attr.shape]="alert.icon"></clr-icon>
+                </div>
+                <span class="alert-text">
+                    {{ alert.content }}
                 </span>
             </div>
         </div>

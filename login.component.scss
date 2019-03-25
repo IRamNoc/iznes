@@ -2,7 +2,7 @@
     .login-wrapper {
         background-size: cover;
         background-repeat: no-repeat;
-        background-position: left; 
+        background-position: left;
         &::after {
             background-color: rgba(247, 247, 247, 0.15);
             position: fixed;
@@ -16,7 +16,7 @@
             img {
                 width: 100%;
             }
-        } 
+        }
         .login {
             z-index: 1;
             padding: 1rem 2.5rem !important;
@@ -70,19 +70,18 @@
                         width: 240px;
                         height: inherit;
                         border: solid 2px #cccccc;
-                        padding: 2%;
                         background: white;
                     }
                     section {
                         text-align: left;
                     }
-                    + .form-group input {
-                        text-align: left!important;
-                    }
+                }
+                #two-factor-code {
+                    text-align: left!important;
                 }
                 /* Change Autocomplete styles in Chrome*/
                 input:-webkit-autofill,
-                input:-webkit-autofill:hover, 
+                input:-webkit-autofill:hover,
                 input:-webkit-autofill:focus
                 textarea:-webkit-autofill,
                 textarea:-webkit-autofill:hover
@@ -167,7 +166,7 @@
                         border-bottom-right-radius: 0;
                         &:hover {
                             color: #000000;
-                            background-color: white; 
+                            background-color: white;
                         }
                     }
                     button {

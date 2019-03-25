@@ -5,7 +5,7 @@
         {{ 'Login to' | translate }} {{appConfig.platform}}
     </section>
     <div class="login-group">
-        <form [formGroup]="authenticateQRForm" (ngSubmit)="authenticateQRCode()">
+        <form [formGroup]="authenticateQRForm" (ngSubmit)="authenticate2FACode()">
             <div id="qr-code" *ngIf="qrCode">
                 <div class="text-block">
                     <p class="no-margin">{{ 'Scan the QR code using your Authenticator App' | translate }}</p>
@@ -14,7 +14,13 @@
                     <img src="{{ qrCode }}" alt="Two-Factor Authentication Code">
                 </section>
             </div>
-    
+
+            <div class="text-block" *ngIf="!qrCode">
+                <p class="no-margin">{{ 'Enter the six digit code from your Authenticator App' | translate }}</p>
+            </div>
+
+            <ng-container *ngTemplateOutlet="alertTemplate"></ng-container>
+
             <div class="form-group">
                 <label for="two-factor-code">{{ 'Authentication Code' | translate }}</label>
                 <input type="text"
@@ -33,7 +39,7 @@
             <button id="two-factor-cancel" class="btn btn-multi" type="button" (click)="modalCancelled.emit(true)">
                 {{ 'Cancel' | translate }}
             </button>
-            <button id="two-factor-submit" type="submit" class="btn btn-primary btn-multi" [disabled]="!authenticateQRForm.valid">
+            <button [clrLoading]="submitBtnState" id="two-factor-submit" type="submit" class="btn btn-primary btn-multi" [disabled]="!authenticateQRForm.valid">
                 Submit
             </button>
             <a *ngIf="!qrCode" id="forgotten-two-factor-link" class="signup" (click)="showForgottonTwoFactorModal()">
@@ -43,7 +49,7 @@
     </div>
 </div>
 <!-- --MODAL-->
-<form *ngIf="displayAsModals" [formGroup]="authenticateQRForm" (ngSubmit)="authenticateQRCode()">
+<form *ngIf="displayAsModals" [formGroup]="authenticateQRForm" (ngSubmit)="authenticate2FACode()">
     <clr-modal [(clrModalOpen)]="showModal" [clrModalSize]="'sm'" [clrModalClosable]="false">
         <h3 class=" modal-title">{{ 'Two-Factor Authentication' | translate }}</h3>
         <div class="modal-body ext-center">
@@ -64,6 +70,8 @@
                         <div *ngIf="!qrCode" class="text-center">
                             <i class="fa fa-unlock-alt fa-5x" aria-hidden="true"></i>
                         </div>
+
+                        <ng-container *ngTemplateOutlet="alertTemplate"></ng-container>
 
                         <input type="text"
                                id="qrCodeNumber"
@@ -86,7 +94,7 @@
             <button id="cancel-button" class="btn" type="button" (click)="modalCancelled.emit(true)">
                 {{ 'Cancel' | translate }}
             </button>
-            <button id="authenticate-qr-submit" type="submit" class="btn btn-primary" [disabled]="!authenticateQRForm.valid">
+            <button [clrLoading]="submitBtnState" id="authenticate-qr-submit" type="submit" class="btn btn-primary" [disabled]="!authenticateQRForm.valid">
                 <i class="fa fa-save"></i> {{ 'Submit' | translate}}
             </button>
 
@@ -115,6 +123,7 @@
         </div>
         <form [formGroup]="forgottenTwoFactorForm" (ngSubmit)="sendForgottonTwoFactorEmail()">
             <div class="form-group">
+                <ng-container *ngTemplateOutlet="alertTemplate"></ng-container>
                 <label for="forgot-two-factor-email">{{ 'Email Address' | translate }}</label>
                 <input id="forgot-two-factor-email"
                     type="text"
@@ -135,7 +144,7 @@
             <button id="forgot-two-factor-cancel" class="btn btn-multi" type="button" (click)="closeTwoFactorModal()">
                 {{ 'Cancel' | translate }}
             </button>
-            <button id="forgot-two-factor-submit" type="submit" class="btn btn-primary btn-multi" [disabled]="!forgottenTwoFactorForm.valid">
+            <button [clrLoading]="submitBtnState" id="forgot-two-factor-submit" type="submit" class="btn btn-primary btn-multi" [disabled]="!forgottenTwoFactorForm.valid">
                 {{ 'Send' | translate }}
             </button>
         </form>
@@ -151,6 +160,7 @@
         <div class="modal-body modal-form-body" *ngIf="!emailSent">
             <section class="form-block">
                 <div class="form-group text-center">
+                    <ng-container *ngTemplateOutlet="alertTemplate"></ng-container>
                     <div class="text-center">
                         <i class="fa fa-envelope fa-5x" aria-hidden="true"></i>
                     </div>
@@ -175,7 +185,7 @@
             <button id="cancel-sendemail-button" class="btn" type="button" (click)="closeTwoFactorModal()">
                 {{ 'Cancel' | translate }}
             </button>
-            <button id="submit-sendemail-button" type="submit" class="btn btn-primary" [disabled]="!forgottenTwoFactorForm.valid">
+            <button [clrLoading]="submitBtnState" id="submit-sendemail-button" type="submit" class="btn btn-primary" [disabled]="!forgottenTwoFactorForm.valid">
                 {{ 'Send' | translate }}
             </button>
         </div>
@@ -257,4 +267,20 @@
 <ng-template #stopViewChildErrors>
     <span #usernameInput></span>
     <span #passwordInput></span>
+</ng-template>
+
+<!--ALERT TEMPLATE-->
+<ng-template #alertTemplate>
+    <div *ngIf="alert.show" class="alert alert-sm {{alert.type}}" role="alert">
+        <div class="alert-items">
+            <div class="alert-item static">
+                <div class="alert-icon-wrapper">
+                    <clr-icon class="alert-icon" [attr.shape]="alert.icon"></clr-icon>
+                </div>
+                <span class="alert-text">
+                    {{ alert.content }}
+                </span>
+            </div>
+        </div>
+    </div>
 </ng-template>
