@@ -76,25 +76,25 @@ export class AccountAdminPermissionsServiceBase extends AccountAdminBaseService 
 
     /**
     * Update Team Permission
-    *
-    * @param state
+     *
     * @param userTeamId pass null to retrieve all teams
-    * @param permissionAreaID
+    * @param toAdd array of permissionId to add 
+    * @param toDelete array of permissionId to delete 
     * @param onSuccess
     * @param onError
     */
-    updateTeamPermission(state: boolean,
-                         userTeamID: number,
-                         permissionAreaID: number,
+    updateTeamPermission(userTeamId: number,
+                         toAdd: number[],
+                         toDelete: number[],
                          onSuccess: RequestCallback,
                          onError: RequestCallback): void {
 
         const request: UpdateTeamPermissionRequest = {
             RequestName: 'updateteampermission',
             token: this.memberSocketService.token,
-            state,
-            userTeamID,
-            permissionAreaID,
+            userTeamId,
+            toAdd,
+            toDelete,
         };
 
         const asyncTaskPipe = createMemberNodeSagaRequest(this.memberSocketService, request);
