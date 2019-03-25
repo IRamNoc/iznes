@@ -16,6 +16,7 @@ import { AccountAdminPermissionsServiceBase } from './service';
 import * as PermissionsModel from './model';
 import * as TeamsModel from '../../../teams/model';
 import { UserTeamsService } from '../../../teams/service';
+import {immutableHelper} from "@setl/utils";
 
 @Component({
     selector: 'app-core-admin-permissions',
@@ -29,11 +30,19 @@ export class AccountAdminPermissionsComponentBase implements OnInit, OnDestroy {
     @Input() isUser: boolean = false;
     @Input() showTeamSelect: boolean = true;
 
+    originalTeamPermissions: PermissionsModel.AccountAdminPermission[] = [];
     permissions: PermissionsModel.AccountAdminPermission[];
     teamsControl: FormControl = new FormControl();
     teamsList: any[];
     private leavePermissionsOpen: boolean = false;
     private subscriptions: Subscription[] = [];
+
+    // maintain what permission
+    private modificatePermissionCache = {
+        toAdd: [],
+        toDelete: [],
+    };
+
 
     @select(['accountAdmin', 'permissionAreas', 'permissionAreas']) permissionsOb;
     @select(['accountAdmin', 'permissionAreas', 'requested']) permissionsReqOb;
@@ -71,7 +80,8 @@ export class AccountAdminPermissionsComponentBase implements OnInit, OnDestroy {
         } else {
             permissionsSub = this.permissionsOb
                 .subscribe((permissions: PermissionsModel.AccountAdminPermission[]) => {
-                    this.processPermissions(permissions);
+                    this.originalTeamPermissions = permissions;
+                    this.processPermissions(immutableHelper.copy(permissions));
                 });
 
             permissionsReqSub = this.permissionsReqOb.subscribe((requested: boolean) => {
@@ -101,11 +111,7 @@ export class AccountAdminPermissionsComponentBase implements OnInit, OnDestroy {
     }
 
     private doUpdatePermissions(): void {
-        _.forEach(this.permissions, (permission: PermissionsModel.AccountAdminPermission) => {
-            if (!!permission.parentID && permission.touched) {
-                this.updateState(permission);
-            }
-        });
+        this.updateState();
     }
 
     private requestUserPermissions(requested: boolean): void {
@@ -127,7 +133,6 @@ export class AccountAdminPermissionsComponentBase implements OnInit, OnDestroy {
     private processPermissions(permissions: PermissionsModel.AccountAdminPermission[]): void {
         _.forEach(permissions, (permission: PermissionsModel.AccountAdminPermission) => {
             permission.hidden = true;
-            permission.touched = false;
         });
 
         this.permissions = permissions;
@@ -166,8 +171,22 @@ export class AccountAdminPermissionsComponentBase implements OnInit, OnDestroy {
         }
     }
 
-    updatePermission(permission: PermissionsModel.AccountAdminPermission): void {
-        permission.touched = true;
+    updatePermission(): void {
+        // Build modificatePermissionCache.
+       this.modificatePermissionCache =
+           this.permissions.filter(v => v.parentID !== null).reduce((acc, val) => {
+            const permMatchedArr = this.originalTeamPermissions.filter(v => v.permissionAreaID === val.permissionAreaID);
+            const permData = (permMatchedArr[0] || {}) as PermissionsModel.AccountAdminPermission;
+
+            if (Boolean(val.state) !== Boolean(permData.state)) {
+               if (Boolean(val.state)) {
+                   acc.toAdd.push(val.permissionAreaID);
+               } else {
+                   acc.toDelete.push(val.permissionAreaID);
+               }
+            }
+            return acc;
+        }, {toAdd: [], toDelete: []});
     }
 
     isProcessing(): boolean {
@@ -192,21 +211,19 @@ export class AccountAdminPermissionsComponentBase implements OnInit, OnDestroy {
         }
     }
 
-    updateState(permission: PermissionsModel.AccountAdminPermission): void {
+    updateState(): void {
         this.service.updateTeamPermission(
-            permission.state,
             this.entityId,
-            permission.permissionAreaID,
+            this.modificatePermissionCache.toAdd,
+            this.modificatePermissionCache.toDelete,
             () => {},
-            () => this.onUpdateStateError(permission),
+            () => this.onUpdateStateError(),
         );
     }
 
-    private onUpdateStateError(permission: PermissionsModel.AccountAdminPermission): void {
-        permission.state = !permission.state;
-
+    private onUpdateStateError(): void {
         this.alerts.create('error', this.translate.translate(
-            'An error occured when adding @permissionName@ permission', { 'permissionName': permission.name }));
+            'An error occured when updating permission'));
     }
 
     ngOnDestroy() {

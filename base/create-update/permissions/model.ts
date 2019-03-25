@@ -23,7 +23,7 @@ export interface ReadUserPermissionAreasRequest extends MemberNodeMessageBody {
 
 export interface UpdateTeamPermissionRequest extends MemberNodeMessageBody {
     token: string;
-    state: boolean;
-    userTeamID: number;
-    permissionAreaID: number;
+    userTeamId: number
+    toAdd: number[],
+    toDelete: number[],
 }
