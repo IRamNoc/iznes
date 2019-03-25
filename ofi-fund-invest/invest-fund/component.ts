@@ -582,7 +582,15 @@ export class InvestFundComponent implements OnInit, OnDestroy {
                 takeUntil(this.unSubscribe),
             )
             .subscribe((shareData) => {
+                if (_.isEmpty(shareData[this.shareId])) {
+                    this.changeDetectorRef.detach();
+                    this.toaster.pop('error', this.translate.translate('Wallet has no permisson on this share'));
+                    this.handleClose();
+                    return;
+                }
+
                 this.shareData = immutableHelper.get(shareData, String(this.shareId), {});
+
 
                 // Fallback to `Other` classification when Fund classification is not set
                 this.fundClassificationId = this.shareData.classification || 6;
