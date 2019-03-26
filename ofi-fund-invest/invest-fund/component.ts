@@ -33,6 +33,7 @@ import {
     MyWalletsService,
     WalletNodeRequestService,
     FileService,
+    RemoteLoggerService,
 } from '@setl/core-req-services';
 import { setRequestedWalletAddresses } from '@setl/core-store';
 import { OfiOrdersService } from '../../ofi-req-services/ofi-orders/service';
@@ -513,6 +514,7 @@ export class InvestFundComponent implements OnInit, OnDestroy {
         private fileService: FileService,
         private shareService: OfiFundShareService,
         private ofiNavService: OfiNavService,
+        private remoteLoggerService: RemoteLoggerService,
     ) {
         this.fundClassifications = fundClassifications;
     }
@@ -1000,6 +1002,9 @@ export class InvestFundComponent implements OnInit, OnDestroy {
                 `, { showCloseButton: false, overlayClickToClose: false });
 
                 this.ofiOrdersService.addNewOrder(request).then((data) => {
+                    // log to remote server about order is placed
+                    this.logService.log('info', 'an order has been placed');
+
                     let orderSuccessMsg = '';
 
                     if (this.type === 'sellbuy') {
