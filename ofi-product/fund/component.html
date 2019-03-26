@@ -2,10 +2,7 @@
     <h1>
         <i class="fa fa-bars"></i>
         <span *ngIf="!param">{{ 'Add New Fund' | translate }}</span>
-        <span *ngIf="param">{{ 'Fund: @fundForm.controls[\'fundName\'].value@' | translate:
-            { 'fundForm.controls[\'fundName\'].value': fundForm.controls['fundName'].value }
-            }}
-        </span>
+        <span *ngIf="param">{{ 'Fund' | translate }}: {{ fundForm.controls['fundName'].value }}</span>
     </h1>
 </div>
 
