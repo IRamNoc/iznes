@@ -8,8 +8,6 @@ import { SetlLoginModule, LoginGuardService } from '@setl/core-login';
 import { HttpClientModule } from '@angular/common/http';
 import { SidebarModule } from 'ng-sidebar';
 
-import { GlobalErrorHandler } from '../error_handler';
-
 import {
     APP_CONFIG,
     SelectModule,
@@ -17,6 +15,7 @@ import {
     SetlDirectivesModule,
     SetlPipesModule,
     SetlServicesModule,
+    GlobalErrorHandler,
 } from '@setl/utils';
 
 import { NgxPaginationModule } from 'ngx-pagination';
@@ -39,6 +38,7 @@ import {
     WalletNodeRequestService,
     WalletnodeTxService,
     NodeAlertsService,
+    RemoteLoggerService,
 } from '@setl/core-req-services';
 /* Routes. */
 import { ROUTES } from './app.routes';
@@ -134,10 +134,7 @@ export function memberSocketServiceFactory() {
         SetlLayoutModule,
     ],
     providers: [
-        {
-            provide: ErrorHandler,
-            useClass: GlobalErrorHandler,
-        },
+        {provide: ErrorHandler, useClass: GlobalErrorHandler},
         { provide: LocationStrategy, useClass: HashLocationStrategy },
 
         {
@@ -169,6 +166,7 @@ export function memberSocketServiceFactory() {
         PdfService,
         LoginGuardService,
         LogService,
+        RemoteLoggerService,
     ],
     bootstrap: [AppComponent],
 })
