@@ -67,7 +67,7 @@ export class DropHandler implements AfterViewInit {
     private silentEncodedFiles: any = [];
     private processInterval: any;
     private removingFile = false;
-    private maxFileSize = 2048576; // 10 MB
+    private maxFileSize = 204857600; // 200 MB
 
     /* Constructor */
     public constructor(
