@@ -3,35 +3,35 @@ import { MenuSpec } from '@setl/utils';
 const home = {
     label: 'Home',
     label_txt: 'txt_home',
-    icon_class: 'fa fa-home',
+    icon_class: 'home',
     element_id: 'menu-home',
     router_link: '/home',
 };
 const dashboard = {
     label: 'My Dashboard',
     label_txt: 'txt_mydashboard',
-    icon_class: 'fa fa-bar-chart',
+    icon_class: 'dashboard',
     element_id: 'menu-my-dashboard',
     router_link: '/asset-management/my-dashboard',
 };
 const subPortfolio = {
     label: 'Sub-portfolio',
     label_txt: 'txt_subportfolio',
-    icon_class: 'fa fa-id-badge',
+    icon_class: 'wallet',
     element_id: 'menu-sub-portfolio',
     router_link: '/user-administration/subportfolio',
 };
 const messages = {
     label: 'Messages',
     label_txt: 'txt_messages',
-    icon_class: 'fa fa-envelope',
+    icon_class: 'envelope',
     element_id: 'menu-messages',
     router_link: '/messages',
 };
 const listOfFunds = {
     label: 'Place Order',
     label_txt: 'txt_placeorder',
-    icon_class: 'fa fa-university',
+    icon_class: 'bank',
     element_id: 'menu-list-of-fund',
     router_link: '/list-of-funds/0',
     dynamic_link: '/list-of-funds/[^\/]*',
@@ -39,14 +39,14 @@ const listOfFunds = {
 const orderBook = {
     label: 'Order Book',
     label_txt: 'txt_orderbook',
-    icon_class: 'fa fa-university',
+    icon_class: 'book',
     element_id: 'menu-order-module',
     children: [
         listOfFunds,
         {
             label: 'My Orders',
             label_txt: 'txt_myorders',
-            icon_class: 'fa fa-book',
+            icon_class: 'book',
             element_id: 'menu-my-orders',
             router_link: '/order-book/my-orders',
             dynamic_link: '/order-book/my-orders/[^\/]*',
@@ -56,14 +56,14 @@ const orderBook = {
 const myHoldings = {
     label: 'My Holdings',
     label_txt: 'txt_myholdings',
-    icon_class: 'fa fa-sitemap',
+    icon_class: 'tree-view',
     element_id: 'menu-investor-my-holdings',
     router_link: '/my-holdings',
 };
 const fundHoldings = {
     label: 'Fund Holdings',
     label_txt: 'txt_fundholdings',
-    icon_class: 'fa fa-bar-chart',
+    icon_class: 'dashboard',
     element_id: 'menu-asset-manager-dashboard',
     router_link: '/asset-management/fund-holdings',
     dynamic_link: '/asset-management/fund-holdings/[^\/]*',
@@ -71,7 +71,7 @@ const fundHoldings = {
 const manageOrders = {
     label: 'Order Book',
     label_txt: 'txt_orderbook',
-    icon_class: 'fa fa-list-ul',
+    icon_class: 'book',
     element_id: 'menu-manage-orders',
     router_link: '/manage-orders',
     dynamic_link: '\/manage-orders\/[^\/]*',
@@ -79,7 +79,7 @@ const manageOrders = {
 const reportsCollectsArchives = {
     label: 'Recordkeeping',
     label_txt: 'txt_recordkeeping',
-    icon_class: 'fa fa-book',
+    icon_class: 'book',
     element_id: 'holders-list',
     router_link: '/reports/holders-list',
     dynamic_link: '/reports/holders-list/[^\/]*',
@@ -87,7 +87,7 @@ const reportsCollectsArchives = {
 const reportsPrecentralisation = {
     label: 'Precentralisation',
     label_txt: 'txt_precentralisation',
-    icon_class: 'fa fa-book',
+    icon_class: 'book',
     element_id: 'menu-report-centralisation',
     router_link: '/reports/precentralisation',
     dynamic_link: '/reports/precentralisation/[^/]*',
@@ -95,7 +95,7 @@ const reportsPrecentralisation = {
 const reportsCentralisation = {
     label: 'Centralisation',
     label_txt: 'txt_centralisation',
-    icon_class: 'fa fa-book',
+    icon_class: 'book',
     element_id: 'menu-report-centralisation-select',
     router_link: '/reports/centralisation',
     dynamic_link: '/reports/centralisation/[^/]*',
@@ -103,55 +103,55 @@ const reportsCentralisation = {
 // const reportsHistoricalOrders = {
 //     label: 'Holders Lists',
 //     label_txt: 'txt_holders_list',
-//     icon_class: 'fa fa-book',
+//     icon_class: 'book',
 //     element_id: 'menu-am-reports-section-historical-orders',
 //     router_link: '/reports-section/csv'
 // };
 const reportsTaxReport = {
     label: 'Tax Report',
     label_txt: 'txt_taxreport',
-    icon_class: 'fa fa-eur',
+    icon_class: 'euro',
     element_id: 'menu-reports-section-tax',
     router_link: '/reports-section/tax',
 };
 const reportsPL = {
     label: 'P&L',
     label_txt: 'txt_pl',
-    icon_class: 'fa fa-list-alt',
+    icon_class: 'list',
     element_id: 'menu-reports-section-pnl',
     router_link: '/reports-section/pnl',
 };
 const reportsBalances = {
     label: 'Balances Reports',
     label_txt: 'txt_balancesreports',
-    icon_class: 'fa fa-th-list',
+    icon_class: 'balance',
     element_id: 'menu-report-balance-report',
     router_link: '/reports/balances',
 };
 const reportsIssues = {
     label: 'Issue Reports',
     label_txt: 'txt_issuereports',
-    icon_class: 'fa fa-money',
+    icon_class: 'dollar-bill',
     element_id: 'menu-report-issue',
     router_link: '/reports/issue',
 };
 const reportsTransactions = {
     label: 'Transactions Reports',
     label_txt: 'txt_transactionsreports',
-    icon_class: 'fa fa-key',
+    icon_class: 'key',
     element_id: 'menu-report-transaction',
     router_link: '/reports/transactions',
 };
 const chainAdmin = {
     label: 'Chain Administration',
     label_txt: 'txt_chainadministration',
-    icon_class: 'fa fa-chain',
+    icon_class: 'link',
     element_id: 'menu-chain-administration',
     children: [
         {
             label: 'Chains',
             label_txt: 'txt_chains',
-            icon_class: 'fa fa-chain',
+            icon_class: 'link',
             element_id: 'chain-administration-chains',
             router_link: '/chain-admin/manage-chains',
             dynamic_link: '/chain-admin/manage-chains/[^\/]*',
@@ -159,7 +159,7 @@ const chainAdmin = {
         {
             label: 'Wallet Nodes',
             label_txt: 'txt_walletnodes',
-            icon_class: 'fa fa-code-fork',
+            icon_class: 'tree-view',
             element_id: 'chain-administration-wallet-nodes',
             router_link: '/chain-admin/manage-wallet-nodes',
             dynamic_link: '/chain-admin/manage-wallet-nodes/[^\/]*',
@@ -167,7 +167,7 @@ const chainAdmin = {
         {
             label: 'Member',
             label_txt: 'txt_member',
-            icon_class: 'fa fa-address-card',
+            icon_class: 'assign-user',
             element_id: 'chain-administration-member',
             router_link: '/chain-admin/manage-member',
             dynamic_link: '/chain-admin/manage-member/[^\/]*',
@@ -175,7 +175,7 @@ const chainAdmin = {
         {
             label: 'Groups',
             label_txt: 'txt_groups',
-            icon_class: 'fa fa-user-o',
+            icon_class: 'users',
             element_id: 'chain-administration-groups',
             router_link: '/chain-admin/manage-groups',
             dynamic_link: '/chain-admin/manage-groups/[^\/]*',
@@ -183,7 +183,7 @@ const chainAdmin = {
         {
             label: 'Chain Membership',
             label_txt: 'txt_chainmembership',
-            icon_class: 'fa fa-handshake-o',
+            icon_class: 'plus',
             element_id: 'chain-administration-membership',
             router_link: '/chain-admin/chain-membership',
             dynamic_link: '/chain-admin/chain-membership/[^\/]*',
@@ -193,7 +193,7 @@ const chainAdmin = {
 const corpCouponPayment = {
     label: 'Coupon Payment',
     label_txt: 'txt_couponpayment',
-    icon_class: 'fa fa-briefcase',
+    icon_class: 'briefcase',
     element_id: 'menu-coupon',
     router_link: '/corporate-actions/coupon-payment/0',
     dynamic_link: '/corporate-actions/coupon-payment/[^\/]*',
@@ -202,7 +202,7 @@ const corpCouponPayment = {
 const userAdminUsers = {
     label: 'Users',
     label_txt: 'txt_users',
-    icon_class: 'fa fa-user',
+    icon_class: 'user',
     element_id: 'menu-user-admin-users',
     router_link: '/user-administration/users/0',
     dynamic_link: '/user-administration/users/[^\/]*',
@@ -210,7 +210,7 @@ const userAdminUsers = {
 const userAdminWallets = {
     label: 'Wallets',
     label_txt: 'txt_wallets',
-    icon_class: 'fa fa-briefcase',
+    icon_class: 'briefcase',
     element_id: 'menu-user-admin-wallets',
     router_link: '/user-administration/wallets/0',
     dynamic_link: '/user-administration/wallets/[^\/]*',
@@ -218,7 +218,7 @@ const userAdminWallets = {
 const userAdminPermissions = {
     label: 'Permissions',
     label_txt: 'txt_permissions',
-    icon_class: 'fa fa-key',
+    icon_class: 'key',
     element_id: 'menu-user-admin-permissions',
     router_link: '/user-administration/permissions/0',
     dynamic_link: '/user-administration/permissions/[^\/]*',
@@ -226,13 +226,13 @@ const userAdminPermissions = {
 const financing = {
     label: 'Financing',
     label_txt: 'txt_financing',
-    icon_class: 'fa fa-money',
+    icon_class: 'dollar-bill',
     element_id: 'menu-financing',
     children: [
         {
             label: 'Encumber Assets',
             label_txt: 'txt_encumberassets',
-            icon_class: 'fa fa-money',
+            icon_class: 'dollar-bill',
             element_id: 'financing-encumber-assets',
             router_link: '/financing/encumber-assets',
             dynamic_link: '/financing/encumber-assets/[^\/]*',
@@ -242,41 +242,41 @@ const financing = {
 const assetServicing = {
     label: 'Asset Servicing',
     label_txt: 'txt_assetservicing',
-    icon_class: 'fa fa-archive',
+    icon_class: 'archive',
     element_id: 'menu-asset-servicing',
     children: [
         {
             label: 'Register Issuer',
             label_txt: 'txt_registerissuer',
-            icon_class: 'fa fa-user-plus',
+            icon_class: 'assign-user',
             element_id: 'menu-asset-servicing-register-issuer',
             router_link: '/asset-servicing/register-issuer',
         },
         {
             label: 'Register Asset',
             label_txt: 'txt_registerasset',
-            icon_class: 'fa fa-plus-circle',
+            icon_class: 'plus-circle',
             element_id: 'menu-asset-servicing-register-asset',
             router_link: '/asset-servicing/register-asset',
         },
         {
             label: 'Issue Asset',
             label_txt: 'txt_issueasset',
-            icon_class: 'fa fa-paper-plane',
+            icon_class: 'deploy',
             element_id: 'menu-asset-servicing-issue-asset',
             router_link: '/asset-servicing/issue-asset',
         },
         {
             label: 'Send Asset',
             label_txt: 'txt_sendasset',
-            icon_class: 'fa fa-share-square-o',
+            icon_class: 'child-arrow',
             element_id: 'menu-asset-servicing-send-asset',
             router_link: '/asset-servicing/send-asset',
         },
         {
             label: 'Request Asset',
             label_txt: 'txt_requestasset',
-            icon_class: 'fa fa-exchange',
+            icon_class: 'switch',
             element_id: 'menu-asset-servicing-request-asset',
             router_link: '/asset-servicing/request-asset',
         },
@@ -285,7 +285,7 @@ const assetServicing = {
 const ofiProductHome = {
     label: 'Shares / Funds / Umbrella Funds',
     label_txt: 'txt_sharesfundsumbrellafunds',
-    icon_class: 'fa fa-bar-chart',
+    icon_class: 'dashboard',
     element_id: 'menu-product-home',
     router_link: '/product-module/product',
     dynamic_link: '/product-module/product/[^\/]*',
@@ -293,7 +293,7 @@ const ofiProductHome = {
 const productsSicav = {
     label: 'SICAV',
     label_txt: 'txt_sicav',
-    icon_class: 'fa fa-user',
+    icon_class: 'user',
     element_id: 'menu-sicav',
     router_link: '/product-module/sicav',
     dynamic_link: '/product-module/sicav/[^\/]*',
@@ -301,7 +301,7 @@ const productsSicav = {
 const productsFund = {
     label: 'Fund',
     label_txt: 'txt_fund',
-    icon_class: 'fa fa-area-chart',
+    icon_class: 'line-chart',
     element_id: 'menu-product-fund',
     router_link: '/product-module/fund',
     dynamic_link: '/product-module/fund/[^\/]*',
@@ -309,7 +309,7 @@ const productsFund = {
 const productsNav = {
     label: 'Net Asset Value',
     label_txt: 'txt_netassetvalue',
-    icon_class: 'fa fa-ellipsis-h',
+    icon_class: 'ellipsis-horizontal',
     element_id: 'menu-nav',
     router_link: '/product-module/net-asset-value',
     dynamic_link: '/product-module/net-asset-value/[^/]*',
@@ -327,13 +327,13 @@ const profileMyInfo = {
 const kycDocuments = {
     label: 'My Clients',
     label_txt: 'txt_myclients',
-    icon_class: 'fa fa-align-left',
+    icon_class: 'align-left-text',
     element_id: 'top-menu-my-clients',
     children: [
         {
             label: 'On-boarding Management',
             label_txt: 'txt_onboardingmanagement',
-            icon_class: 'fa fa-align-left',
+            icon_class: 'align-left-text',
             element_id: 'top-menu-onboarding-management',
             router_link: '/on-boarding/management',
             dynamic_link: '/on-boarding/[^\/]*',
@@ -341,7 +341,7 @@ const kycDocuments = {
         {
             label: 'Client Referential',
             label_txt: 'txt_clientreferential',
-            icon_class: 'fa fa-users',
+            icon_class: 'users',
             element_id: 'top-menu-client-referential',
             router_link: '/client-referential',
             dynamic_link: '/client-referential/[^\/]*',
@@ -349,7 +349,7 @@ const kycDocuments = {
         {
             label: 'Portfolio Managers',
             label_txt: 'txt_portfoliomanager',
-            icon_class: 'fa fa-users',
+            icon_class: 'users',
             element_id: 'side-portfolio-manager',
             router_link: '/portfolio-manager',
             dynamic_link: '/portfolio-manager/[^\/]*',
@@ -360,21 +360,21 @@ const kycDocuments = {
 const myAssetManagers = {
     label: 'My Asset Managers',
     label_txt: 'txt_myassetmanagers',
-    icon_class: 'fa fa-users',
+    icon_class: 'users',
     element_id: 'top-menu-my-asset-managers',
     always_displayed: true,
     children: [
         {
             label: 'My Documents',
             label_txt: 'txt_mydocuments',
-            icon_class: 'fa fa-copy',
+            icon_class: 'copy',
             element_id: 'top-menu-my-documents',
             router_link: '/my-asset-managers/my-documents',
         },
         {
             label: 'My Requests',
             label_txt: 'txt_myrequests',
-            icon_class: 'fa fa-file-text',
+            icon_class: 'file',
             element_id: 'top-menu-my-requests',
             router_link: '/my-requests/list',
             dynamic_link: '/my-requests/[^\/]*',
@@ -385,7 +385,7 @@ const myAssetManagers = {
 const productConfiguration = {
     label: 'Configuration',
     label_txt: 'txt_productconfig',
-    icon_class: 'fa fa-cog',
+    icon_class: 'cog',
     element_id: 'menu-product-config',
     router_link: '/product-module/configuration',
 };
@@ -393,13 +393,13 @@ const productConfiguration = {
 const accountAdmin = {
     label: 'Administration',
     label_txt: 'txt_administration',
-    icon_class: 'fa fa-align-left',
+    icon_class: 'assign-user',
     element_id: 'menu-administration',
     children: [
         {
             label: 'Users',
             label_txt: 'txt_administrationusers',
-            icon_class: 'fa fa-users',
+            icon_class: 'users',
             element_id: 'menu-administration-users',
             router_link: '/account-admin/users',
             dynamic_link: '/account-admin/users/[^\/]*',
@@ -407,7 +407,7 @@ const accountAdmin = {
         {
             label: 'Teams',
             label_txt: 'txt_administrationteams',
-            icon_class: 'fa fa-address-book-o',
+            icon_class: 'users',
             element_id: 'menu-administration-teams',
             router_link: '/account-admin/teams',
             dynamic_link: '/account-admin/teams/[^\/]*',
@@ -418,7 +418,7 @@ const accountAdmin = {
 const managementCompany = {
     label: 'Management Companies',
     label_txt: 'txt_managementcompanies',
-    icon_class: 'fa fa-users',
+    icon_class: 'bank',
     element_id: 'menu-management-companies',
     router_link: '/management-company',
 };
@@ -470,7 +470,7 @@ export const menuSpec: MenuSpec = {
             // {
             //     label: 'Reports',
             //     label_txt: 'txt_reports',
-            //     icon_class: 'fa fa-book',
+            //     icon_class: 'book',
             //     element_id: 'menu-report-section',
             //     children: [
             //         reportsTaxReport,
@@ -484,7 +484,7 @@ export const menuSpec: MenuSpec = {
             {
                 label: 'My Reports',
                 label_txt: 'txt_myreports',
-                icon_class: 'fa fa-book',
+                icon_class: 'flag',
                 element_id: 'menu-am-report-section',
                 children: [
                     reportsCollectsArchives,
@@ -496,7 +496,7 @@ export const menuSpec: MenuSpec = {
             {
                 label: 'My Products',
                 label_txt: 'txt_myproducts',
-                icon_class: 'fa fa-industry',
+                icon_class: 'building',
                 element_id: 'menu-my-products',
                 children: [
                     ofiProductHome,
@@ -513,7 +513,7 @@ export const menuSpec: MenuSpec = {
             {
                 label: 'My Products',
                 label_txt: 'txt_myproducts',
-                icon_class: 'fa fa-industry',
+                icon_class: 'building',
                 element_id: 'menu-my-products',
                 children: [
                     productsNav,
@@ -523,7 +523,7 @@ export const menuSpec: MenuSpec = {
             {
                 label: 'Reports',
                 label_txt: 'txt_reports',
-                icon_class: 'fa fa-book',
+                icon_class: 'book',
                 element_id: 'menu-am-report-section',
                 children: [
                     reportsCollectsArchives,
@@ -549,7 +549,7 @@ export const menuSpec: MenuSpec = {
             {
                 label: 'My Products',
                 label_txt: 'txt_myproducts',
-                icon_class: 'fa fa-industry',
+                icon_class: 'building',
                 element_id: 'menu-my-products',
                 children: [
                     productsSicav,
@@ -563,7 +563,7 @@ export const menuSpec: MenuSpec = {
             {
                 label: 'Reports',
                 label_txt: 'txt_reports',
-                icon_class: 'fa fa-book',
+                icon_class: 'book',
                 element_id: 'menu-report-section',
                 children: [
                     reportsTaxReport,
@@ -573,7 +573,7 @@ export const menuSpec: MenuSpec = {
             {
                 label: 'Reports',
                 label_txt: 'txt_reports',
-                icon_class: 'fa fa-book',
+                icon_class: 'book',
                 element_id: 'menu-am-report-section',
                 children: [
                     reportsCollectsArchives,
@@ -585,7 +585,7 @@ export const menuSpec: MenuSpec = {
             {
                 label: 'Corporate Actions',
                 label_txt: 'txt_corporateactions',
-                icon_class: 'fa fa-university',
+                icon_class: 'bank',
                 element_id: 'menu-corporate-actions',
                 children: [
                     corpCouponPayment,
@@ -594,7 +594,7 @@ export const menuSpec: MenuSpec = {
             {
                 label: 'User Administration',
                 label_txt: 'txt_useradministration',
-                icon_class: 'fa fa-cubes',
+                icon_class: 'blocks-group',
                 element_id: 'menu-user-administration',
                 children: [
                     userAdminUsers,
@@ -609,7 +609,7 @@ export const menuSpec: MenuSpec = {
             {
                 label: 'Report',
                 label_txt: 'txt_reports',
-                icon_class: 'fa fa-flag',
+                icon_class: 'flag',
                 element_id: 'menu-reports',
                 children: [
                     reportsBalances,
@@ -623,7 +623,7 @@ export const menuSpec: MenuSpec = {
             {
                 label: 'Corporate Actions',
                 label_txt: 'txt_corporateactions',
-                icon_class: 'fa fa-university',
+                icon_class: 'bank',
                 element_id: 'menu-corporate-actions',
                 children: [
                     corpCouponPayment,
@@ -632,7 +632,7 @@ export const menuSpec: MenuSpec = {
             {
                 label: 'User Administration',
                 label_txt: 'txt_useradministration',
-                icon_class: 'fa fa-cubes',
+                icon_class: 'blocks-group',
                 element_id: 'menu-user-administration',
                 children: [
                     userAdminUsers,
@@ -646,7 +646,7 @@ export const menuSpec: MenuSpec = {
             {
                 label: 'Report',
                 label_txt: 'txt_reports',
-                icon_class: 'fa fa-flag',
+                icon_class: 'flag',
                 element_id: 'menu-asset-servicing',
                 children: [
                     reportsBalances,
@@ -660,7 +660,7 @@ export const menuSpec: MenuSpec = {
             {
                 label: 'Corporate Actions',
                 label_txt: 'txt_corporateactions',
-                icon_class: 'fa fa-university',
+                icon_class: 'bank',
                 element_id: 'menu-corporate-actions',
                 children: [
                     corpCouponPayment,
@@ -669,7 +669,7 @@ export const menuSpec: MenuSpec = {
             {
                 label: 'User Administration',
                 label_txt: 'txt_useradministration',
-                icon_class: 'fa fa-cubes',
+                icon_class: 'blocks-group',
                 element_id: 'menu-user-administration',
                 children: [
                     userAdminUsers,
@@ -682,7 +682,7 @@ export const menuSpec: MenuSpec = {
             {
                 label: 'Report',
                 label_txt: 'txt_reports',
-                icon_class: 'fa fa-flag',
+                icon_class: 'flag',
                 element_id: 'menu-asset-servicing',
                 children: [
                     reportsBalances,
@@ -698,7 +698,7 @@ export const menuSpec: MenuSpec = {
             {
                 label: 'Report',
                 label_txt: 'txt_reports',
-                icon_class: 'fa fa-flag',
+                icon_class: 'flag',
                 element_id: 'menu-asset-servicing',
                 children: [
                     reportsBalances,
