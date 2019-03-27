@@ -14,6 +14,7 @@ import { ToasterService } from 'angular2-toaster';
 import { OfiKycService } from '@ofi/ofi-main/ofi-req-services/ofi-kyc/service';
 import { MessagesService } from '@setl/core-messages/index';
 import { MultilingualService } from '@setl/multilingual';
+import {Router} from "@angular/router";
 
 const DIVIDER_NUMBER = 100000;
 
@@ -68,6 +69,7 @@ export class OfiFundAccessTable {
                 private changeDetectorRef: ChangeDetectorRef,
                 private translate: MultilingualService,
                 private fileService: FileService,
+                private router: Router,
     ) {
     }
 
@@ -273,7 +275,7 @@ export class OfiFundAccessTable {
 
                 this.messagesService.sendMessage(recipientsArr, subjectStr, bodyStr, action as any);
 
-                this.backBtn();
+                this.router.navigate(['/client-referential']);
             }, () => {
                 // fail call back
                 // todo
