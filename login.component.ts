@@ -435,9 +435,7 @@ export class SetlLoginComponent implements OnDestroy, OnInit, AfterViewInit, Log
     displayError() {
         setTimeout(
             () => {
-                this.toasterService.pop(
-                    'error',
-                    this.translate.translate('This link is no longer valid. Please try to login again.'));
+                this.showAlert('error', 'This link is no longer valid. Please try to login again.');
             },
             0,
         );
@@ -508,11 +506,7 @@ export class SetlLoginComponent implements OnDestroy, OnInit, AfterViewInit, Log
                     }
                 },
                 (data) => {
-                    this.showAlert(
-                        'error',
-                        `${this.translate.translate('Sorry, something went wrong.')}
-                         ${this.translate.translate('Please try again later.')}`,
-                    );
+                    this.showAlert('error', 'Sorry, something went wrong. Please try again later.');
                     this.closeFPModal();
                 }),
             );
@@ -550,8 +544,8 @@ export class SetlLoginComponent implements OnDestroy, OnInit, AfterViewInit, Log
                     () => {
                         this.isTokenExpired = true;
                         this.showModal = true;
-                        this.showAlert('error', this.translate.translate('Sorry, the link has expired. ' +
-                        'Please fill in your email address and we will send you a new link.'));
+                        this.showAlert('error', 'Sorry, the link has expired. ' +
+                        'Please fill in your email address and we will send you a new link.');
                     },
                     1500,
                 );
@@ -585,14 +579,14 @@ export class SetlLoginComponent implements OnDestroy, OnInit, AfterViewInit, Log
                     if (_.get(data, '[1].Data[0].Message', '') === 'Password complexity not met') {
                         this.showAlert(
                             'error',
-                            this.translate.translate('Sorry, your password does not meet the requirements.'),
+                            'Sorry, your password does not meet the requirements.',
                         );
                         this.submitBtnState = ClrLoadingState.DEFAULT;
                     } else {
                         this.closeFPModal();
                         this.showAlert(
                             'error',
-                            this.translate.translate('Sorry, something went wrong. Please try again later.'),
+                            'Sorry, something went wrong. Please try again later.',
                         );
                     }
                 }),
@@ -626,11 +620,11 @@ export class SetlLoginComponent implements OnDestroy, OnInit, AfterViewInit, Log
                     if (_.get(data, '[1].Data[0].Message', '') === 'Password complexity not met') {
                         this.showAlert(
                             'error',
-                            this.translate.translate('Sorry, your password does not meet the requirements.'),
+                            'Sorry, your password does not meet the requirements.',
                         );
                     } else {
-                        this.showAlert('error', this.translate.translate('Please make sure you have entered ' +
-                        'your current password correctly.'));
+                        this.showAlert('error', 'Please make sure you have entered ' +
+                        'your current password correctly.');
                     }
                 },
             );
@@ -671,22 +665,19 @@ export class SetlLoginComponent implements OnDestroy, OnInit, AfterViewInit, Log
             case 'fail':
                 this.showAlert(
                     'error',
-                    `${this.translate.translate(
-                        'Invalid email address or password.')}`,
+                    'Invalid email address or password.',
                 );
                 break;
             case 'locked':
                 this.showAlert(
                     'error',
-                    `${this.translate.translate(
-                        'Sorry, your account has been locked. Please contact your Administrator.')}`,
+                    'Sorry, your account has been locked. Please contact your Administrator.',
                 );
                 break;
             default:
                 this.showAlert(
                     'error',
-                    `${this.translate.translate(
-                        'Sorry, there was a problem logging in, please try again.')}`,
+                    'Sorry, there was a problem logging in, please try again.',
                 );
                 break;
         }
@@ -722,9 +713,8 @@ export class SetlLoginComponent implements OnDestroy, OnInit, AfterViewInit, Log
     setTwoFactorResetFailed() {
         this.showAlert(
             'error',
-            this.translate.translate(
-                'Sorry, your Two-Factor reset link has expired. Please try again by logging in and clicking ' +
-                "'Lost access to your code?'."),
+            'Sorry, your Two-Factor reset link has expired. Please try again by logging in and clicking ' +
+            "'Lost access to your code?'.",
         );
     }
 

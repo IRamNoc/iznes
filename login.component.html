@@ -37,6 +37,13 @@
 
         <p class="legal">{{ '@appConfig.platformLegal@ is a private environment subject to authorised access only.' | translate: {'appConfig.platformLegal': appConfig.platformLegal} }}</p>
     </div>
+    <div *ngIf="appConfig.loginContent" class="text-content">
+        <div class="container">
+            <h1 *ngIf="appConfig.loginContent.title">{{ appConfig.loginContent.title | translate }}</h1>
+            <p *ngIf="appConfig.loginContent.description">{{ appConfig.loginContent.description | translate }}</p>
+            <a *ngIf="appConfig.loginContent.btn" href="{{ language === 'en-Latn' ? appConfig.loginContent.btn.urlEN : appConfig.loginContent.btn.urlFR }}" class="btn">{{ appConfig.loginContent.btn.text | translate }}</a>
+        </div>
+    </div>
 </div>
 
 <!--LOGIN FORM TEMPLATE-->
@@ -49,7 +56,7 @@
             <div class="login-group">
                 <ng-container *ngTemplateOutlet="alertTemplate"></ng-container>
                 <div class="form-group">
-                    <label>Username</label>
+                    <label>{{ 'Username' | translate }}</label>
                     <input
                         id="username-field"
                         type="text"
@@ -66,7 +73,7 @@
                 </div>
 
                 <div class="form-group">
-                    <label>Password</label>
+                    <label>{{ 'Password' | translate }}</label>
                     <input
                         id="password-field"
                         name="password"
@@ -392,7 +399,7 @@
                     <clr-icon class="alert-icon" [attr.shape]="alert.icon"></clr-icon>
                 </div>
                 <span class="alert-text">
-                    {{ alert.content }}
+                    {{ alert.content | translate }}
                 </span>
             </div>
         </div>
