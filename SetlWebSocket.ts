@@ -1,9 +1,9 @@
 import * as _ from 'lodash';
 import * as sha256 from 'sha256';
 import * as _sodium from 'libsodium-wrappers';
+import * as pako from 'pako';
 
 const GibberishAES = (<any>window).GibberishAES;
-const JXG = (<any>window).JXG;
 
 export class SetlWebSocket {
     protocol: string;
@@ -106,9 +106,8 @@ export class SetlWebSocket {
 
         if (this.encryption.serverPublicKey === false) {
             if (e.data.substr(0, 3) === 'LZ_') {
-                message = JSON.parse(JXG.Util.UTF8.decode(
-                    JXG.decompress(e.data.substr(3))
-                ));
+                const decompress = pako.inflate(atob(decoded.substr(3)));
+                message = JSON.parse(String.fromCharCode.apply(null, decompress));
             } else {
                 message = JSON.parse(e.data);
             }
@@ -118,9 +117,8 @@ export class SetlWebSocket {
             isEncrypted = true;
 
             if (decoded.substr(0, 3) === 'LZ_') {
-                message = JSON.parse(JXG.Util.UTF8.decode(
-                    JXG.decompress(decoded.substr(3))
-                ));
+                const decompress = pako.inflate(atob(decoded.substr(3)));
+                message = JSON.parse(String.fromCharCode.apply(null, decompress));
             } else {
                 message = JSON.parse(decoded);
             }
