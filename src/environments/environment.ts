@@ -55,6 +55,17 @@ export const environment = {
     logoID: 'logo-iznes',
     platform: 'IZNES',
     platformLegal: 'IZNES',
-    topbarLogoUrl: 'assets/images/logo-iznes-only.png',
-    internalMessageSender: 'IZNES'
+    internalMessageSender: 'IZNES',
+    backgroundImage: 'assets/images/iznes-login-bg.jpg',
+    topNavBarColour: '#002538',
+    loginContent: {
+        title: 'Investing in funds has never been so easy!',
+        description: 'The pan-European platform for investment in UCITS units and recordkeeping in Blockchain ' +
+        'compatible with the various distribution channels',
+        btn: {
+            text: 'Learn more',
+            urlEN: 'https://www.iznes.io/en',
+            urlFR: 'https://www.iznes.io/',
+        },
+    },
 };
