@@ -3,7 +3,7 @@
         background-size: cover;
         background-repeat: no-repeat;
         background-position: left;
-        &::after {
+        &.overlay::after {
             background-color: rgba(247, 247, 247, 0.15);
             position: fixed;
             width: 100%;
@@ -19,7 +19,7 @@
         }
         .login {
             z-index: 1;
-            padding: 1rem 2.5rem !important;
+            padding: 1rem 72px !important;
             justify-content: normal;
             .capitalise {
                 text-transform: capitalize;
@@ -141,9 +141,13 @@
             z-index: 1;
             text-align: center;
             width: calc(100% - 21rem);
+            position: relative;
             .container {
                 width: 76%;
-                margin: 96px 13% 0 13%;
+                margin: 0 13% 0 13%;
+                position: absolute;
+                top: 50%;
+                transform: translateY(-50%);
             }
             h1 {
                 color: #ffffff;
@@ -159,7 +163,6 @@
                 font-size: 12px;
                 border-color: #ffffff;
                 margin-top: 32px;
-                border-radius: 16px;
                 padding-left: 24px;
                 padding-right: 24px;
                 &:hover {

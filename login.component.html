@@ -1,4 +1,4 @@
-<div class="login-wrapper" [style.backgroundImage]="'url('+ appConfig.backgroundImage +')'">
+<div class="login-wrapper" [class.overlay]="appConfig.loginOverlay" [style.backgroundImage]="'url('+ appConfig.backgroundImage +')'">
     <div class="login">
         <div class="language">
             <clr-dropdown>
@@ -51,7 +51,7 @@
     <div [@fadeIn]>
         <form [formGroup]="loginForm" (ngSubmit)="login(loginForm.value)">
             <section class="title">
-                {{ 'Login to' | translate }} {{appConfig.platform}}
+                {{ 'Login to' | translate }} {{appConfig.platformLabel ? appConfig.platformLabel : appConfig.platform}}
             </section>
             <div class="login-group">
                 <ng-container *ngTemplateOutlet="alertTemplate"></ng-container>
