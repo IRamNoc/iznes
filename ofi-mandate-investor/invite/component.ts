@@ -23,6 +23,22 @@ const companyNameValidator: ValidatorFn = (control: AbstractControl): Validation
     return null;
 }
 
+const nameValidator: ValidatorFn = (control: AbstractControl): ValidationErrors | null => {
+    if (control.value.investorType[0].id === InvestorType.Retail) {
+        if (!control.value.firstName) {
+            control.get('firstName').setErrors({ required: true });
+            return { firstName: true }
+        }
+        if (!control.value.lastName) {
+            control.get('lastName').setErrors({ required: true });
+            return { lastName: true }
+        }
+    }
+    control.get('firstName').setErrors(null);
+    control.get('lastName').setErrors(null);
+    return null;
+}
+
 interface ListItem {
     id: number;
     text: string;
@@ -89,10 +105,10 @@ export class OfiInviteMandateInvestorsComponent implements OnInit {
             this.fb.group({
                 investorType: [[this.investorTypes[0]], Validators.required],
                 companyName: [''],
-                firstName: ['', Validators.compose([Validators.required, Validators.maxLength(100)])],
-                lastName: ['', Validators.compose([Validators.required, Validators.maxLength(100)])],
+                firstName: ['', Validators.maxLength(100)],
+                lastName: ['', Validators.maxLength(100)],
                 reference: ['', Validators.maxLength(100)],
-            }, { validator: companyNameValidator })
+            }, { validator: Validators.compose([companyNameValidator, nameValidator]) })
         )
     }
 

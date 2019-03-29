@@ -64,7 +64,7 @@
                     </div>
 
                     <!-- firstName + lastName -->
-                    <div class="row">
+                    <div class="row" *ngIf="isRetailInvestor(investor.controls.investorType)">
                         <div class="form-group col-sm-6">
                             <label class="required-field" for="kyc_firstName_{{i}}">{{ 'First Name' | translate }}</label>
                             <input type="text" id="kyc_firstName_{{i}}" class="form-control" formControlName="firstName">
