@@ -6,6 +6,14 @@
 /* Fix for filter pop-ups not overflowing datagrid. Clarity v1.1.1 */
 .datagrid {
     overflow: visible;
+    // vertical center align datagrid content
+    .datagrid-cell {
+        align-self: center;
+    }
+    // shade alternate grid rows
+    clr-dg-row:nth-child(even) {
+        background: #f9f9f9;
+    }
 }
 
 /* Styling RowsPerPage directive to Clarity UI */

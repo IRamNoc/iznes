@@ -91,14 +91,18 @@ body {
     background: #f9f9f9;
 }
 
-table {
-    tr:nth-child(even) {
-        background: #f9f9f9;
-    }
-    tr:nth-child(odd) {
-        background: #FFF;
-    }
+.additionalInfos {
+    width: 100%;
 }
+
+// table {
+//     tr:nth-child(even) {
+//         background: #f9f9f9;
+//     }
+//     tr:nth-child(odd) {
+//         background: #FFF;
+//     }
+// }
 
 // .btn-sm {
 //     .btn {
@@ -759,10 +763,10 @@ dp-date-picker div {
     width: auto !important;
 }
 
-#iznes .nav-link img {
-    height: 30px !important;
-    margin-top: -7px !important;
-}
+// #iznes .nav-link img {
+//     height: 30px !important;
+//     margin-top: -7px !important;
+// }
 
 .messages-icon span {
     z-index: 1001;

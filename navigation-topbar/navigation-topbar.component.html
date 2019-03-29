@@ -1,131 +1,133 @@
-<header class="header-1">
-    <div class="branding">
-        <a href="#/home" class="nav-link">
-            <span class="title">{{appConfig.platform}}</span>
-            <img src="{{topbarLogoUrl}}" class="logo-light" alt="Logo">
-            <img src="{{topbarLogoUrlDark}}" class="logo-dark" alt="Logo">
-        </a>
-    </div>
-
-    <div class="wallet">
-        <div class="decalWallet">
-            <ng-select
-                [allowClear]="false" 
-                [items]="walletSelectItems"
-                (selected)="selected($event); showOverlay=false"
-                (removed)="removed($event)"
-                [placeholder]="translate.translate('No wallet selected')"
-                [formControl]="selectedWalletId"
-                [multiple]="false"
-                [inlineIcon]="'wallet'"
-                [class.extended]="appConfig.platform === 'OpenCSD'"
-                class="wallet-picker">
-            </ng-select>
+<clr-header [style.background-color]="appConfig.topNavBarColour ? appConfig.topNavBarColour : '#313131'">
+    <header class="header">
+        <div class="branding">
+            <a href="#/home" class="nav-link">
+                <span class="title">{{appConfig.platformLabel ? appConfig.platformLabel : appConfig.platform}}</span>
+                <img src="{{topbarLogoUrl}}" class="logo-light" alt="Logo">
+                <img src="{{topbarLogoUrlDark}}" class="logo-dark" alt="Logo">
+            </a>
         </div>
 
-        <blockchain-status-tracker *ngIf="appConfig.platform === 'OpenCSD'" [display]="'dropdown'" (dropdownClosed)="showOverlay=false"></blockchain-status-tracker>
-    </div>
+        <div class="wallet">
+            <div class="decalWallet">
+                <ng-select
+                    [allowClear]="false"
+                    [items]="walletSelectItems"
+                    (selected)="selected($event); showOverlay=false"
+                    (removed)="removed($event)"
+                    [placeholder]="translate.translate('No wallet selected')"
+                    [formControl]="selectedWalletId"
+                    [multiple]="false"
+                    [inlineIcon]="'wallet'"
+                    [class.extended]="appConfig.platform === 'OpenCSD'"
+                    class="wallet-picker">
+                </ng-select>
+            </div>
 
-    <div class="header-actions">
-        <a *ngIf="!appConfig.production" (click)="getMissingTranslations()" id="translation-report-button" class="nav-link nav-icon blink_me">
-            <clr-icon shape="warning-standard" class="text-warning"></clr-icon>
-        </a>
-
-        <div class="wallet-select-small wallet-picker">
-            <ng-select
-                [allowClear]="false" 
-                [items]="walletSelectItems"
-                (selected)="selected($event); showOverlay=false"
-                (removed)="removed($event)"
-                [placeholder]="translate.translate('No wallet selected')"
-                [formControl]="selectedWalletId"
-                [multiple]="false"
-                [inlineIcon]="'topNavWalletDropDown'">
-            </ng-select>
+            <blockchain-status-tracker *ngIf="appConfig.platform === 'OpenCSD'" [display]="'dropdown'" (dropdownClosed)="showOverlay=false"></blockchain-status-tracker>
         </div>
 
-        <a [routerLink]="['/messages']" class="nav-link nav-icon messages-icon">
-            <clr-icon shape="email"><span *ngIf="unreadMessageCount > 0">{{unreadMessageCount}}</span></clr-icon>
-        </a>
+        <div class="header-actions">
+            <a *ngIf="!appConfig.production" (click)="getMissingTranslations()" id="translation-report-button" class="nav-link nav-icon blink_me">
+                <clr-icon shape="warning-standard" class="text-warning"></clr-icon>
+            </a>
 
-        <clr-dropdown id="dropdown-user">
-            <button class="nav-icon" clrDropdownTrigger>
-                <clr-icon shape="user"></clr-icon>
-                <clr-icon shape="caret down"></clr-icon>
+            <div class="wallet-select-small wallet-picker">
+                <ng-select
+                    [allowClear]="false"
+                    [items]="walletSelectItems"
+                    (selected)="selected($event); showOverlay=false"
+                    (removed)="removed($event)"
+                    [placeholder]="translate.translate('No wallet selected')"
+                    [formControl]="selectedWalletId"
+                    [multiple]="false"
+                    [inlineIcon]="'topNavWalletDropDown'">
+                </ng-select>
+            </div>
+
+            <a [routerLink]="['/messages']" class="nav-link nav-icon messages-icon">
+                <clr-icon shape="email"><span *ngIf="unreadMessageCount > 0">{{unreadMessageCount}}</span></clr-icon>
+            </a>
+
+            <clr-dropdown id="dropdown-user">
+                <button class="nav-icon" clrDropdownTrigger>
+                    <clr-icon shape="user"></clr-icon>
+                    <clr-icon shape="caret down"></clr-icon>
+                </button>
+                <clr-dropdown-menu *clrIfOpen clrPosition="bottom-right">
+                    <div class="username">{{username}}</div>
+                    <a *ngFor="let item of profileMenu" [routerLink]="[item.router_link]" [id]="item.element_id" clrDropdownItem>{{item.label | translate}}</a>
+                    <a [routerLink]="['/logout']" clrDropdownItem id="logout">Logout</a>
+                </clr-dropdown-menu>
+            </clr-dropdown>
+
+            <!-- <a (click)="toggleSidebar.emit($event)" class="nav-link nav-icon" id="dropdown-settings">
+                <clr-icon shape="cog"></clr-icon>
+            </a> -->
+        </div>
+
+        <div *ngIf="showOverlay" class="overlay" (click)="showOverlay=false"></div>
+    </header>
+
+    <clr-modal [(clrModalOpen)]="showCountdownModal" [clrModalClosable]="false">
+        <div class="modal-title">
+            <i class="fa fa-exclamation-triangle modal-icon text-warning"></i>
+            <h4 class="modal-title-text">
+                <span >{{ 'Session expiring soon' | translate }}</span></h4>
+        </div>
+        <div class="modal-body">
+            <p>{{ 'Your session will expire in' | translate }}
+                <span class="text-warning">{{remainingSecond && remainingSecond}}</span> {{ 'seconds.' | translate }}
+
+            </p>
+            <p>{{ 'Press' | translate }}
+                <span class="text-primary font-weight-bold">{{ 'continue' | translate}}</span> {{ 'to continue using this site.' | translate }}
+
+            </p>
+        </div>
+        <div class="modal-footer">
+            <button type="button" class="btn btn-primary" (click)="handleExtendSession()">
+                <span>{{ 'Continue' | translate }}</span>
             </button>
-            <clr-dropdown-menu *clrIfOpen clrPosition="bottom-right">
-                <div class="username">{{username}}</div>
-                <a *ngFor="let item of profileMenu" [routerLink]="[item.router_link]" [id]="item.element_id" clrDropdownItem>{{item.label | translate}}</a>
-                <a [routerLink]="['/logout']" clrDropdownItem id="logout">Logout</a>
-            </clr-dropdown-menu>
-        </clr-dropdown>
-
-        <!-- <a (click)="toggleSidebar.emit($event)" class="nav-link nav-icon" id="dropdown-settings">
-            <clr-icon shape="cog"></clr-icon>
-        </a> -->
-    </div>
-
-    <div *ngIf="showOverlay" class="overlay" (click)="showOverlay=false"></div>
-</header>
-
-<clr-modal [(clrModalOpen)]="showCountdownModal" [clrModalClosable]="false">
-    <div class="modal-title">
-        <i class="fa fa-exclamation-triangle modal-icon text-warning"></i>
-        <h4 class="modal-title-text">
-            <span >{{ 'Session expiring soon' | translate }}</span></h4>
-    </div>
-    <div class="modal-body">
-        <p>{{ 'Your session will expire in' | translate }}
-            <span class="text-warning">{{remainingSecond && remainingSecond}}</span> {{ 'seconds.' | translate }}
-
-        </p>
-        <p>{{ 'Press' | translate }}
-            <span class="text-primary font-weight-bold">{{ 'continue' | translate}}</span> {{ 'to continue using this site.' | translate }}
-
-        </p>
-    </div>
-    <div class="modal-footer">
-        <button type="button" class="btn btn-primary" (click)="handleExtendSession()">
-            <span>{{ 'Continue' | translate }}</span>
-        </button>
-    </div>
-</clr-modal>
-
-<clr-modal [(clrModalOpen)]="showMissingTranslations" [clrModalSize]="'lg'">
-    <h3 class="modal-title">{{ 'Translations' | translate }}</h3>
-    <div class="modal-body" style="overflow: auto; padding: 30px 50px;">
-        <div class="switch-container">
-            {{ 'Highlight' | translate }}:
-            <label class="switch">
-                <input type="checkbox" id="showHighlightTranslations" [(ngModel)]="showHighlightTranslations" (change)="doHighlight()">
-                <span class="slider round"></span>
-            </label>
         </div>
-        <div *ngIf="missingTranslations.length > 0; else noNeedTranslation">
-            <h3 class="text-center mb-1">{{ 'Need to translate' | translate }}</h3>
-            <div *ngFor="let item of missingTranslations; let i = index">
-                <a [routerLink]="item.from" (click)="showMissingTranslations = false">{{i + 1}}. {{item.translation}}</a>
+    </clr-modal>
+
+    <clr-modal [(clrModalOpen)]="showMissingTranslations" [clrModalSize]="'lg'">
+        <h3 class="modal-title">{{ 'Translations' | translate }}</h3>
+        <div class="modal-body" style="overflow: auto; padding: 30px 50px;">
+            <div class="switch-container">
+                {{ 'Highlight' | translate }}:
+                <label class="switch">
+                    <input type="checkbox" id="showHighlightTranslations" [(ngModel)]="showHighlightTranslations" (change)="doHighlight()">
+                    <span class="slider round"></span>
+                </label>
+            </div>
+            <div *ngIf="missingTranslations.length > 0; else noNeedTranslation">
+                <h3 class="text-center mb-1">{{ 'Need to translate' | translate }}</h3>
+                <div *ngFor="let item of missingTranslations; let i = index">
+                    <a [routerLink]="item.from" (click)="showMissingTranslations = false">{{i + 1}}. {{item.translation}}</a>
+                </div>
+            </div>
+            <ng-template #noNeedTranslation>
+                <h3 class="text-center mb-1">{{ 'Need to translate' | translate }}</h3> - {{ 'Nothing' | translate }}
+
+            </ng-template>
+            <div *ngIf="responsesService.length > 0">
+                <div *ngIf="missingTranslations.length > 0" class="hr-line-dashed"></div>
+                <h3 class="text-center mb-1" [ngClass]="{'mt-1': missingTranslations.length > 0}">{{ 'Translations report' | translate }}</h3>
+                <div *ngFor="let item of responsesService; let i = index">
+                    <span [ngClass]="item.response.ok ? 'text-success' : 'text-danger'">{{ '@i + 1@.' | translate: {'i + 1': i + 1} }}
+                        <span *ngIf="item.response.ok" style="font-weight: bold;">({{ 'OK' | translate }}) - </span>
+                        <span *ngIf="!item.response.ok" style="font-weight: bold;">({{ 'FAILED' | translate }}  - {{item.response.statusText}}) - </span>{{item.translation.translation}}
+                    </span>
+                </div>
             </div>
         </div>
-        <ng-template #noNeedTranslation>
-            <h3 class="text-center mb-1">{{ 'Need to translate' | translate }}</h3> - {{ 'Nothing' | translate }}
+        <div class="modal-footer">
+            <button *ngIf="missingTranslations.length > 0" type="button" class="btn btn-success" [disabled]="isSaving" (click)="isSaving = true; generateTranslations()">{{ 'Generate translations (max @nbMaxTranslationsToProcess@ per click)' | translate: {'nbMaxTranslationsToProcess': nbMaxTranslationsToProcess} }}
 
-        </ng-template>
-        <div *ngIf="responsesService.length > 0">
-            <div *ngIf="missingTranslations.length > 0" class="hr-line-dashed"></div>
-            <h3 class="text-center mb-1" [ngClass]="{'mt-1': missingTranslations.length > 0}">{{ 'Translations report' | translate }}</h3>
-            <div *ngFor="let item of responsesService; let i = index">
-                <span [ngClass]="item.response.ok ? 'text-success' : 'text-danger'">{{ '@i + 1@.' | translate: {'i + 1': i + 1} }}
-                    <span *ngIf="item.response.ok" style="font-weight: bold;">({{ 'OK' | translate }}) - </span>
-                    <span *ngIf="!item.response.ok" style="font-weight: bold;">({{ 'FAILED' | translate }}  - {{item.response.statusText}}) - </span>{{item.translation.translation}}
-                </span>
-            </div>
+            </button>
+            <button type="button" class="btn btn-primary" (click)="showMissingTranslations = false">{{ 'Close' | translate }}</button>
         </div>
-    </div>
-    <div class="modal-footer">
-        <button *ngIf="missingTranslations.length > 0" type="button" class="btn btn-success" [disabled]="isSaving" (click)="isSaving = true; generateTranslations()">{{ 'Generate translations (max @nbMaxTranslationsToProcess@ per click)' | translate: {'nbMaxTranslationsToProcess': nbMaxTranslationsToProcess} }}
-
-        </button>
-        <button type="button" class="btn btn-primary" (click)="showMissingTranslations = false">{{ 'Close' | translate }}</button>
-    </div>
-</clr-modal>
+    </clr-modal>
+</clr-header>

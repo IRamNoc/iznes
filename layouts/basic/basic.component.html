@@ -3,12 +3,10 @@
 
     <div class="main-container {{ currentLanguage }}" [class.connection-alert]="activeAlert">
 
-        <clr-header>
-            <app-navigation-topbar></app-navigation-topbar>
-        </clr-header>
+        <app-navigation-topbar></app-navigation-topbar>
 
         <div class="content-container">
-            
+
             <app-navigation-sidebar></app-navigation-sidebar>
 
             <main #main class="content-area" [@routerTransition]="currentParentUrl">

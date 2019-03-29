@@ -18,7 +18,7 @@ $setlHover: darken($setl, 2%);
 @import 'components/components';
 @import 'user_tour';
 
-// remove :focus outline for mouse navigation only
+// remove :focus outline for all but keyboard navigation
 body:not(.tabbing) {
     button:focus, input:focus, select:focus, textarea:focus {
         outline: none;
