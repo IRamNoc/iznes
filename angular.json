@@ -33,8 +33,7 @@
               "node_modules/@webcomponents/custom-elements/custom-elements.min.js",
               "node_modules/@clr/icons/clr-icons.min.js",
               "node_modules/web-animations-js/web-animations.min.js",
-              "src/assets/js/gibberish-aes-1.0.0.min.js",
-              "src/assets/js/jsxcompressor/jsxcompressor.min.js"
+              "src/assets/js/gibberish-aes-1.0.0.min.js"
             ]
           },
           "configurations": {
@@ -90,8 +89,7 @@
               "node_modules/@webcomponents/custom-elements/custom-elements.min.js",
               "node_modules/@clr/icons/clr-icons.min.js",
               "node_modules/web-animations-js/web-animations.min.js",
-              "src/assets/js/gibberish-aes-1.0.0.min.js",
-              "src/assets/js/jsxcompressor/jsxcompressor.min.js"
+              "src/assets/js/gibberish-aes-1.0.0.min.js"
             ],
             "styles": [
               "node_modules/@clr/icons/clr-icons.min.css",
