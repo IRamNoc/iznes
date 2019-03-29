@@ -54,45 +54,17 @@ export class AccountSignUpComponent implements OnInit, OnDestroy {
         };
     }
 
-    private signupCallback(): Promise<void> {
+    private signupCallback(): Promise<string> {
         return new Promise((resolve, reject) => {
             const signupData = this.signupData();
 
             this.service.completeUserSignup(
                 signupData.invitationToken,
                 signupData.password,
-                () => this.onSignupSuccess(resolve),
-                () => this.onSignupError(reject),
+                () => resolve('Account successfully activated.'),
+                () => reject('Could not process invitation. Please try again later.'),
             );
         });
-    }
-
-    private onSignupSuccess(resolve): void {
-        this.confirmationService.create(
-            'Success',
-            `<p><b>${this.translate.translate('Account successfully activated.')}</b></p>`,
-            {
-                confirmText: this.translate.translate(
-                    'Continue to @appConfig.platform@', { 'appConfig.platform': this.appConfig.platform }),
-                declineText: '',
-                btnClass: 'success',
-            },
-        ).subscribe(() => {
-            resolve();
-        });
-    }
-
-    private onSignupError(reject): void {
-        this.alertsService.create(
-            'error',
-            `<span class="text-warning">
-            ${this.translate.translate('Could not process invitation.')}
-            <br>
-            ${this.translate.translate('Please try again later.')}
-            </span>`,
-        );
-
-        reject();
     }
 
     private validateSignupData(): void {
