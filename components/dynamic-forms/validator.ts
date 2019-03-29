@@ -6,7 +6,7 @@ export class DynamicFormsValidator {
         let valid = true;
 
         _.forEach(this, (item: FormItem) => {
-            if ((!item.isValid) || !item.isValid()) valid = false;
+            if ((typeof item.isValid !== 'undefined') && !item.isValid()) valid = false;
         });
 
         return valid;
