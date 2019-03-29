@@ -278,7 +278,7 @@ export class AuthenticateComponent implements OnDestroy, OnInit {
         this.changeDetectorRef.markForCheck();
     }
 
-    showAlert(type: 'success' | 'warning' | 'info' | 'error', content: string) {
+    showAlert(type: 'success' | 'warning' | 'info' | 'error' | 'clear', content: string = '') {
         const alertMapping = {
             success: { type: 'alert-success', icon: 'check-circle' },
             warning: { type: 'alert-warning', icon: 'exclamation-triangle' },
@@ -286,7 +286,11 @@ export class AuthenticateComponent implements OnDestroy, OnInit {
             error: { type: 'alert-danger', icon: 'exclamation-circle' },
         };
 
-        if (!content || !alertMapping[type]) return this.alert.show = false;
+        if (!content || !alertMapping[type]) {
+            this.alert.show = false;
+            this.changeDetectorRef.detectChanges();
+            return;
+        }
 
         setTimeout(
             () => {

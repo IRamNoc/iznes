@@ -534,7 +534,7 @@ export class SetlLoginComponent implements OnDestroy, OnInit, AfterViewInit, Log
                 } else {
                     this.showAlert(
                         'error',
-                        data[1].Data[0].Message, // empty string, replace
+                        data[1].Data[0].Message,
                     );
                 }
             },

@@ -255,7 +255,6 @@ export class SignupComponent implements OnDestroy, OnInit {
                 this.signupSuccessText = typeof successText === 'string'
                     ? successText : 'Your account was created successfully.';
                 this.signupSuccess = true;
-                // this.loginAfterSignup();
             }
         })
         .catch((e) => {
