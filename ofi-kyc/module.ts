@@ -37,7 +37,6 @@ import { KycInformationAuditTrailComponent } from './audit-trail/information-aud
 import { OfiRedirectTokenComponent } from './invitation-token/redirect-token.component';
 import { OfiClientReferentialComponent } from './client-referential/component';
 import { OfiFundAccessTable } from './client-referential/access-table/component';
-import { OfiLoginModule } from '../ofi-login/module' ;
 
 import { KycRequestsModule } from './my-requests/requests.module';
 
@@ -104,7 +103,6 @@ import { OfiFundDataService } from '../ofi-data-service/product/fund/ofi-fund-da
         DpDatePickerModule,
         KycRequestsModule,
         SetlLoginModule,
-        OfiLoginModule,
     ],
     providers: [
         MockKYCDocumentsService,
