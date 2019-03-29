@@ -57,6 +57,7 @@ export const environment = {
     platformLegal: 'IZNES',
     internalMessageSender: 'IZNES',
     backgroundImage: 'assets/images/iznes-login-bg.jpg',
+    loginOverlay: false,
     topNavBarColour: '#002538',
     loginContent: {
         title: 'Investing in funds has never been so easy!',

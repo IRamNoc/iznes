@@ -54,6 +54,7 @@ export const environment = {
     topbarLogoUrl: 'assets/images/logo-iznes-only.png',
     internalMessageSender: 'IZNES',
     backgroundImage: 'assets/images/iznes-login-bg.jpg',
+    loginOverlay: false,
     topNavBarColour: '#002538',
     loginContent: {
         title: 'Investing in funds has never been so easy!',
