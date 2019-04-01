@@ -13,7 +13,7 @@ footer {
             font-size: 12px;
             &:last-child {
                 border: none
-            } 
+            }
         }
     }
 
@@ -24,6 +24,8 @@ footer {
     }
 
     @media screen and (max-width: 860px) {
+        height: 70px;
+        margin: -70px 0 0 0;
         .links a {
             padding: 3px 15px;
             &:first-child {
