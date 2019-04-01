@@ -1,3 +1,5 @@
+import {RemoteLoggerService} from "@setl/core-req-services/index";
+
 export { CommonRequestService } from './common-request/service';
 export { WalletNodeRequestService } from './walletnode-request/walletnode-request.service';
 export { WalletnodeTxService } from './walletnode-tx/walletnode-tx.service';
@@ -24,3 +26,4 @@ export { UserPreferenceService } from './user-preference/service';
 export { ReportingService } from './reporting/reporting.service';
 export { PermissionsRequestService } from './permissions/permissions-request.service';
 export { BaseDataService } from './data-services/base-data-service/base-data.service';
+export { RemoteLoggerService } from './remote-logger/remote-logger.service';

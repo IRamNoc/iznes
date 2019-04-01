@@ -50,8 +50,7 @@ interface RequestEncumbranceDetails {
 export class WalletNodeRequestService {
     constructor(private walletNodeSocketService: WalletNodeSocketService,
                 private http: HttpClient,
-                private ngRedux: NgRedux<any>,
-                @Inject(APP_CONFIG) public appConfig: AppConfig) {
+                private ngRedux: NgRedux<any>) {
     }
 
     walletAddressRequest(requestData: RequestWalletAddress): any {
