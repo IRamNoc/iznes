@@ -38,7 +38,7 @@ node {
 
         stage('Deploy Message Builder to Staging Environment') {
 
-            sh 'php /var/lib/jenkins/build/tools/deploy-code.php staging.iznes.io iznes-message-builder release'
+            sh 'php /var/lib/jenkins/build/tools/deploy-code.php staging.iznes.io iznes-message-builder latest'
         }
 
 	    stage('Deploy SETL Connect to Staging Environment') {
