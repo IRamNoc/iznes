@@ -48,7 +48,7 @@ export class MandateInvestorGridComponent implements OnInit {
                     }
                     return {
                         ...inv,
-                        investorName: (inv.investorType === InvestorType.Retail) ? `${inv.firstName} ${inv.lastName}` : inv.companyName,
+                        investorName: (inv.investorType === InvestorType.RetailMandate) ? `${inv.firstName} ${inv.lastName}` : inv.companyName,
                         status,
                         pmId: pm.pmId,
                         statusControl: new FormControl(status),

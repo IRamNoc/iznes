@@ -64,7 +64,7 @@ export class PortfolioManagerInviteComponent implements OnInit {
         this.fundSelectList$ = this.ofiFundDataService.getFundSelectList();
         this.investorSelectList$ = this.mandateInvestorService.listArray().pipe(map((investors) => {
             return investors.map((inv) => {
-                const displayName = (inv.investorType === InvestorType.Retail) ? `${inv.firstName} ${inv.lastName}` : inv.companyName;
+                const displayName = (inv.investorType === InvestorType.RetailMandate) ? `${inv.firstName} ${inv.lastName}` : inv.companyName;
                 return {
                     id: `${inv.id}`,
                     text: `${displayName} (${inv.walletName})`
