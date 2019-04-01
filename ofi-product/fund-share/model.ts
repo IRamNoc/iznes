@@ -897,7 +897,6 @@ export class FundShare {
         });
 
         Object.keys(this.calendarSubscription.mandatory).forEach((field) => {
-            this.calendarSubscription.mandatory[field].control.disable();
             if(typeof this.calendarSubscription.mandatory[field].control !== 'undefined') {
                 this.calendarSubscription.mandatory[field].control.disable();
                 this.calendarSubscription.mandatory[field].required = false;
