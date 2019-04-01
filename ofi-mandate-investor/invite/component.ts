@@ -11,7 +11,7 @@ import { InvestorType, buildInvestorTypeList } from '../../shared/investor-types
 import { Observable, of } from 'rxjs';
 
 const companyNameValidator: ValidatorFn = (control: AbstractControl): ValidationErrors | null => {
-    if (control.value.investorType[0].id === InvestorType.Institutional && !control.value.companyName) {
+    if (control.value.investorType[0].id === InvestorType.InstitutionalMandate && !control.value.companyName) {
         control.get('companyName').setErrors({ required: true });
         return { companyName: true }
     }
@@ -20,6 +20,22 @@ const companyNameValidator: ValidatorFn = (control: AbstractControl): Validation
         return { companyName: true }
     }
     control.get('companyName').setErrors(null);
+    return null;
+}
+
+const nameValidator: ValidatorFn = (control: AbstractControl): ValidationErrors | null => {
+    if (control.value.investorType[0].id === InvestorType.RetailMandate) {
+        if (!control.value.firstName) {
+            control.get('firstName').setErrors({ required: true });
+            return { firstName: true }
+        }
+        if (!control.value.lastName) {
+            control.get('lastName').setErrors({ required: true });
+            return { lastName: true }
+        }
+    }
+    control.get('firstName').setErrors(null);
+    control.get('lastName').setErrors(null);
     return null;
 }
 
@@ -37,7 +53,7 @@ interface ListItem {
 export class OfiInviteMandateInvestorsComponent implements OnInit {
 
     inviteForm: FormGroup;
-    investorTypes = buildInvestorTypeList(InvestorType.Institutional, InvestorType.Retail);
+    investorTypes = buildInvestorTypeList(InvestorType.InstitutionalMandate, InvestorType.RetailMandate);
     investorTypes$: Observable<ListItem[]>;
 
     get f() {
@@ -89,20 +105,17 @@ export class OfiInviteMandateInvestorsComponent implements OnInit {
             this.fb.group({
                 investorType: [[this.investorTypes[0]], Validators.required],
                 companyName: [''],
-                firstName: ['', Validators.compose([Validators.required, Validators.maxLength(100)])],
-                lastName: ['', Validators.compose([Validators.required, Validators.maxLength(100)])],
+                firstName: ['', Validators.maxLength(100)],
+                lastName: ['', Validators.maxLength(100)],
                 reference: ['', Validators.maxLength(100)],
-            }, { validator: companyNameValidator })
+            }, { validator: Validators.compose([companyNameValidator, nameValidator]) })
         )
     }
 
     isRetailInvestor(investorType: FormControl): boolean {
         const userType = get(investorType.value, '0.id', 0);
-        if (userType === InvestorType.Retail) {
-            return true;
-        }
 
-        return false;
+        return userType === InvestorType.RetailMandate;
     }
 
     goBack() {

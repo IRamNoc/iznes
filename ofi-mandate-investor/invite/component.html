@@ -9,6 +9,8 @@
     <div class="row">
         <div class="col-sm-12">
             <!-- Description -->
+            <p>{{ 'The customers created here will not have direct access to the IZNES platform to invest by themselves.' | translate }}<br>
+            {{ 'On the other hand, they will be eligible for the mandate. This will allow you to create a portfolio manager who will invest on their behalf.' | translate }}</p>
         </div>
     </div>
 
@@ -62,7 +64,7 @@
                     </div>
 
                     <!-- firstName + lastName -->
-                    <div class="row">
+                    <div class="row" *ngIf="isRetailInvestor(investor.controls.investorType)">
                         <div class="form-group col-sm-6">
                             <label class="required-field" for="kyc_firstName_{{i}}">{{ 'First Name' | translate }}</label>
                             <input type="text" id="kyc_firstName_{{i}}" class="form-control" formControlName="firstName">
