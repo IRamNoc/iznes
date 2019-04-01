@@ -38,12 +38,12 @@ node {
 
         stage('Deploy Message Builder to Staging Environment') {
 
-            sh 'php /var/lib/jenkins/build/tools/deploy-code.php rstaging.iznes.io iznes-message-builder release'
+            sh 'php /var/lib/jenkins/build/tools/deploy-code.php staging.iznes.io iznes-message-builder release'
         }
 
 	    stage('Deploy SETL Connect to Staging Environment') {
 
-            sh 'php /var/lib/jenkins/build/tools/deploy-code.php staging.iznes.iosetlconnectiznes release'
+            sh 'php /var/lib/jenkins/build/tools/deploy-code.php staging.iznes.io setlconnectiznes release'
         }
 
 	    stage('Deploy SFTP NAV Daemon to Staging Environment') {
