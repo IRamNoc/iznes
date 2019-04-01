@@ -2,12 +2,8 @@ node {
     timestamps {
 
         stage('Deploy Membership-db to Test Environment') {
-
-                        sh 'php /var/lib/jenkins/build/tools/deploy-code.php staging.iznes.io membership-db release'
-                        sh 'ssh -t root@172.104.147.135 \'cd /var/membership-db/deploy/ && ./updatedb iznes\''
-
-            }
-
+            sh 'php /var/lib/jenkins/build/tools/deploy-code.php staging.iznes.io membership-db release'
+        }
 
         stage('Deploy Frontend to Staging Environment') {
 
@@ -32,7 +28,7 @@ node {
                             php /var/lib/jenkins/build/tools/deploy-code.php staging.iznes.io daemonnode release'''
             }
 
-        stage('Deploy Blockchain jars to Test Environment') {
+        stage('Deploy Blockchain jars to Staging Environment') {
 
                 sh '''
                         php /var/lib/jenkins/build/tools/deploy-code.php staging.iznes.io blockchain 1.0.47
@@ -40,12 +36,23 @@ node {
 
             }
 
+        stage('Deploy Message Builder to Staging Environment') {
 
-        stage('Restart Node Server') {
-            sh 'ssh -t root@172.104.147.135 \'cd /var/phpapps ; bash && supervisorctl restart node_server\''
+            sh 'php /var/lib/jenkins/build/tools/deploy-code.php rstaging.iznes.io iznes-message-builder release'
+        }
+
+	    stage('Deploy SETL Connect to Staging Environment') {
+
+            sh 'php /var/lib/jenkins/build/tools/deploy-code.php staging.iznes.iosetlconnectiznes release'
+        }
+
+	    stage('Deploy SFTP NAV Daemon to Staging Environment') {
+
+            sh 'php /var/lib/jenkins/build/tools/deploy-code.php staging.iznes.io sftpnav release'
         }
 
         stage('Check node server is running') {
+            sh 'ssh -t root@172.104.147.135 \'cd /var/membership-db/deploy/ && ./updatedb iznes\''
             sh 'ssh -t root@172.104.147.135 \'cd /var/phpapps/backend/ ; bash && node checkServer.js\''
         }
     }
