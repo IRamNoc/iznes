@@ -44,7 +44,6 @@ export class PortfolioManagerInviteComponent implements OnInit {
         private fb: FormBuilder,
         private lang: MultilingualService,
         private location: Location,
-        private service: OfiMandateInvestorService,
         private toaster: ToasterService,
         private ofiFundDataService: OfiFundDataService,
         private ofiKycService: OfiKycService,
@@ -81,7 +80,7 @@ export class PortfolioManagerInviteComponent implements OnInit {
                 '',
                 Validators.compose([
                     Validators.required,
-                    Validators.email,
+                    Validators.pattern(emailRegex),
                 ])
             ],
             language: ['', Validators.required],
