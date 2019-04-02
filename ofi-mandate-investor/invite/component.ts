@@ -9,7 +9,6 @@ import { AppObservableHandler } from '@setl/utils/decorators/app-observable-hand
 import { get } from 'lodash';
 import { InvestorType, buildInvestorTypeList, isInstitutional } from '../../shared/investor-types';
 import { Observable, of } from 'rxjs';
-import { getTypeNameForDebugging } from '@angular/core/src/change_detection/differs/iterable_differs';
 
 const companyNameValidator: ValidatorFn = (control: AbstractControl): ValidationErrors | null => {
     if (control.value.investorType[0].id === InvestorType.InstitutionalMandate && !control.value.companyName) {
