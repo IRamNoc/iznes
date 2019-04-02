@@ -21,15 +21,16 @@
                     <div class="row">
                         <div class="form-group col-sm-6">
                             <label class="required-field" for="kyc_email_{{i}}">{{ 'Email Address' | translate }}</label>
-                            <div>
-                                <input type="text"
-                                        id="kyc_email_{{i}}"
-                                        class="form-control"
-                                        formControlName="email"
-                                        maxlength="70">
-                            </div>
-                            <div *ngIf="investor.get('email').touched && investor.get('email').hasError('email')" class="field-error">
+                            <input type="text"
+                                    id="kyc_email_{{i}}"
+                                    class="form-control"
+                                    formControlName="email"
+                                    maxlength="70">
+                            <div *ngIf="investor.get('email').touched && investor.get('email').hasError('pattern')" class="field-error">
                                 {{ 'Invalid email' | translate }}
+                            </div>
+                            <div *ngIf="investor.get('email').hasError('required') && investor.get('email').touched" class="field-error">
+                                {{ 'Field is required' | translate }}
                             </div>
                         </div>
 
@@ -66,9 +67,7 @@
                     <div class="row">
                         <div class="form-group col-sm-6">
                             <label class="required-field" for="kyc_firstName_{{i}}">{{ 'First Name' | translate }}</label>
-                            <div>
-                                <input type="text" id="kyc_firstName_{{i}}" class="form-control" formControlName="firstName">
-                            </div>
+                            <input type="text" id="kyc_firstName_{{i}}" class="form-control" formControlName="firstName">
                             <div *ngIf="investor.get('firstName').touched && investor.get('firstName').hasError('required')" class="field-error">
                                 {{ 'Field is required' | translate }}
                             </div>
@@ -76,9 +75,7 @@
 
                         <div class="form-group col-sm-6">
                             <label class="required-field" for="kyc_lastName_{{i}}">{{ 'Last Name' | translate }}</label>
-                            <div>
-                                <input type="text" id="kyc_lastName_{{i}}" class="form-control" formControlName="lastName">
-                            </div>
+                            <input type="text" id="kyc_lastName_{{i}}" class="form-control" formControlName="lastName">
                             <div *ngIf="investor.get('lastName').touched && investor.get('lastName').hasError('required')" class="field-error">
                                 {{ 'Field is required' | translate }}
                             </div>
