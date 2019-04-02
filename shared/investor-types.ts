@@ -27,7 +27,7 @@ export function isRetail(type: InvestorType): boolean {
 }
 
 export function isInstitutional(type: InvestorType): boolean {
-    return [InvestorType.RetailDirect, InvestorType.RetailMandate].includes(type);
+    return [InvestorType.InstitutionalDirect, InvestorType.InstitutionalMandate].includes(type);
 }
 
 export function isPortfolioManager(type: InvestorType): boolean {
