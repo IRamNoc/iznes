@@ -7,7 +7,7 @@ import { select } from '@angular-redux/store';
 import { MultilingualService } from '@setl/multilingual';
 import { AppObservableHandler } from '@setl/utils/decorators/app-observable-handler';
 import { get } from 'lodash';
-import { InvestorType, buildInvestorTypeList } from '../../shared/investor-types';
+import { InvestorType, buildInvestorTypeList, isInstitutional } from '../../shared/investor-types';
 import { Observable, of } from 'rxjs';
 
 const companyNameValidator: ValidatorFn = (control: AbstractControl): ValidationErrors | null => {
@@ -86,18 +86,32 @@ export class OfiInviteMandateInvestorsComponent implements OnInit {
                 return await this.service.createInvestor(investorType[0].id, firstName, lastName, reference, companyName);
             } catch (err) {
                 if (get(err, '1.Status') === 'Fail') {
-                    err[1].Data = { ...err[1].Data, firstName, lastName };
+                    err[1].Data = { ...err[1].Data, firstName, lastName, companyName, investorType };
                     return err;
                 }
             }
         }))).forEach((result) => {
-            const { Status, firstName, lastName } = result[1].Data;
+            const { Status, firstName, lastName, companyName, investorType } = result[1].Data;
             const msg =  (Status === 'OK') ? ['success', 'Successfully created'] : ['error', 'Failed to create'];
 
-            return this.toaster.pop(msg[0], this.msg(msg[1], firstName, lastName));
+            return this.toaster.pop(msg[0], this.msg(msg[1], firstName, lastName, companyName, investorType));
         });
 
         this.location.back();
+    }
+
+    /**
+     * Get name bsased on investorType
+     *
+     * @param {string} firstName
+     * @param {string} lastName
+     * @param {string} companyName
+     * @param {InvestorType} investorType
+     *
+     * @returns string
+     */
+    getName(firstName: string, lastName: string, companyName: string, investorType: InvestorType): string {
+        return isInstitutional(investorType) ? companyName : `${firstName} ${lastName}`;
     }
 
     addInvestor() {
@@ -122,8 +136,11 @@ export class OfiInviteMandateInvestorsComponent implements OnInit {
         this.location.back();
     }
 
-    msg(message, firstName, lastName) {
-        return this.language.translate( `${message} @firstName@ @lastName@`, { firstName, lastName } );
+    msg(message, firstName, lastName, companyName, investorType) {
+        return this.language.translate(
+            `${message} @name@`,
+            { name: this.getName(firstName, lastName, companyName, investorType) }
+        );
     }
 
     removeInvestor(i: number) {
