@@ -134,6 +134,10 @@ export class OfiMemberNodeChannelService {
                 this.refetchMenu();
                 break;
 
+            case 'kyclistam':
+                this.ngRedux.dispatch({ ...setamkyclist(), payload: [null, data] });
+                break;
+
             case 'iznprekycupdate':
                 this.ngRedux.dispatch(setInvestorInvitationListReset());
                 break;
