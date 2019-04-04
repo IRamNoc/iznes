@@ -31,6 +31,7 @@ export interface IznShareDetailWithNav extends IznesShareDetail {
     exitFee: number;
     hasShareAccess: number;
     platFormFee: number;
+    fundClassificationId: number;
     investorHoling: number;
     holidayMgmtConfig: string;
     investorTotalHolding: number;
@@ -89,6 +90,7 @@ export interface OrderRequestBody {
     estimatedAmountWithCost: number;
     feePercentage: number;
     platFormFee: number;
+    classificationFee: number;
     cutoffDate: any;
     valuationDate: any;
     settlementDate: any;
@@ -204,3 +206,12 @@ export interface NavData {
     date: string;
     status: NavStatus;
 }
+
+export const fundClassifications = {
+    1: { fee: 0.003 },
+    2: { fee: 0.003 },
+    3: { fee: 0.003 },
+    4: { fee: 0.00 },
+    5: { fee: 0.003 },
+    6: { fee: 0.003 },
+};
