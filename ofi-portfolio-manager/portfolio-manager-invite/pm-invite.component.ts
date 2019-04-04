@@ -44,7 +44,6 @@ export class PortfolioManagerInviteComponent implements OnInit {
         private fb: FormBuilder,
         private lang: MultilingualService,
         private location: Location,
-        private service: OfiMandateInvestorService,
         private toaster: ToasterService,
         private ofiFundDataService: OfiFundDataService,
         private ofiKycService: OfiKycService,
@@ -64,9 +63,10 @@ export class PortfolioManagerInviteComponent implements OnInit {
         this.fundSelectList$ = this.ofiFundDataService.getFundSelectList();
         this.investorSelectList$ = this.mandateInvestorService.listArray().pipe(map((investors) => {
             return investors.map((inv) => {
+                const displayName = (inv.investorType === InvestorType.RetailMandate) ? `${inv.firstName} ${inv.lastName}` : inv.companyName;
                 return {
                     id: `${inv.id}`,
-                    text: `${inv.firstName} ${inv.lastName} (${inv.walletName})`
+                    text: `${displayName} (${inv.walletName})`
                 };
             });
         }));
@@ -80,7 +80,7 @@ export class PortfolioManagerInviteComponent implements OnInit {
                 '',
                 Validators.compose([
                     Validators.required,
-                    Validators.email,
+                    Validators.pattern(emailRegex),
                 ])
             ],
             language: ['', Validators.required],

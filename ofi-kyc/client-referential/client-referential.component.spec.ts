@@ -125,43 +125,6 @@ describe('OfiClientReferentialComponent', () => {
         fileDownloaderStub.downLoaderFile.calls.reset();
     });
 
-    describe('getClientReferentialDescriptionTitle', () => {
-
-        const fakeKycID = '99';
-        const expectedCompanyName = 'expectedCompanyName';
-        const expectedClientReference = 'expectedClientReference';
-
-        it('should return an empty string', () => {
-            expect(comp.getClientReferentialDescriptionTitle()).toEqual('');
-        });
-
-        it('should return a string with only the company name', () => {
-
-            comp.kycId = fakeKycID;
-            comp.clients = {
-                [fakeKycID]: {
-                    companyName: expectedCompanyName,
-                },
-            };
-
-            expect(comp.getClientReferentialDescriptionTitle()).toContain(expectedCompanyName);
-        });
-
-        it('should return a string with company name and client referential', () => {
-
-            comp.kycId = fakeKycID;
-            comp.clients = {
-                [fakeKycID]: {
-                    companyName: expectedCompanyName,
-                    clientReference: expectedClientReference,
-                },
-            };
-
-            expect(comp.getClientReferentialDescriptionTitle()).toContain(expectedCompanyName);
-            expect(comp.getClientReferentialDescriptionTitle()).toContain(expectedClientReference);
-        });
-    });
-
     describe('downloadReferentialAuditCSVFile', () => {
         it('should call the call the downLoaderFile method of FileDownloader with an timezone key in the payload', () => {
             comp.downloadReferentialAuditCSVFile();

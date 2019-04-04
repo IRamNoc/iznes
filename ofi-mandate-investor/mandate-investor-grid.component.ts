@@ -9,6 +9,7 @@ import { ToasterService } from 'angular2-toaster';
 import { OfiPortfolioMangerService } from '../ofi-req-services/ofi-portfolio-manager/service';
 import { MultilingualService } from '@setl/multilingual';
 import { ConfirmationService } from '@setl/utils';
+import { InvestorType } from '../shared/investor-types';
 
 @Component({
     selector: 'app-mandate-investor-grid',
@@ -47,6 +48,8 @@ export class MandateInvestorGridComponent implements OnInit {
                     }
                     return {
                         ...inv,
+                        investorTypeText: (inv.investorType === InvestorType.RetailMandate) ? this.language.translate('Retail') : this.language.translate('Institutional'),
+                        investorName: (inv.investorType === InvestorType.RetailMandate) ? `${inv.firstName} ${inv.lastName}` : inv.companyName,
                         status,
                         pmId: pm.pmId,
                         statusControl: new FormControl(status),
@@ -64,6 +67,7 @@ export class MandateInvestorGridComponent implements OnInit {
                 investorId: investor.id,
                 firstName: investor.firstName,
                 lastName: investor.lastName,
+                investorName: investor.investorName,
                 pmId: investor.pmId,
                 status: investor.statusControl.value,
             }));

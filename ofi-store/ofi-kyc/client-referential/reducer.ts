@@ -45,6 +45,8 @@ function ofiSetList(state: OfiClientReferentialState, action: Action) {
                 clientReference: item.get('clientReference'),
                 walletName: item.get('walletName'),
                 companyName: item.get('companyName'),
+                firstName: item.get('firstName'),
+                lastName: item.get('lastName'),
                 email: item.get('emailAddress'),
                 investorType: item.get('investorType'),
                 kycID: item.get('kycID'),

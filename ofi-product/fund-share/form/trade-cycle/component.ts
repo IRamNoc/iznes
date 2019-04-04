@@ -18,6 +18,9 @@ export class FundShareTradeCycleComponent implements OnInit, OnDestroy {
         this.typeLowercase = this.getTypeFormatted(0);
         this.typeCapitilised = this.getTypeFormatted(1);
     }
+
+    @Input() model: FundShareTradeCycleModel;
+
     get type(): string {
         return this._tradeType;
     }
@@ -25,12 +28,10 @@ export class FundShareTradeCycleComponent implements OnInit, OnDestroy {
 
     typeLowercase: string;
     typeCapitilised: string;
-    model: FundShareTradeCycleModel;
 
     constructor(private changeDetectorRef: ChangeDetectorRef) {}
 
     ngOnInit() {
-        this.model = new FundShareTradeCycleModel();
         this.model.addMonthlyDealingDays();
         this.model.addYearlyDealingDays();
 

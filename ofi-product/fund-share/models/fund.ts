@@ -7,19 +7,6 @@ export class ShareFund extends DynamicFormsValidator {
         label: 'Fund name',
         required: false,
         disabled: true,
-        style: [FormItemStyle.BreakOnAfter],
-    };
-    aumFund: FormItem = {
-        type: FormItemType.text,
-        label: 'AuM Fund',
-        required: false,
-        disabled: true,
-    };
-    aumFundDate: FormItem = {
-        type: FormItemType.text,
-        label: 'AuM Fund Date',
-        required: false,
-        disabled: true,
     };
     LEI: FormItem = {
         type: FormItemType.text,
@@ -220,23 +207,24 @@ export class ShareFundOptionnal extends DynamicFormsValidator {
         disabled: true,
     };
     investmentAdvisor: FormItem = {
-        type: FormItemType.list,
+        type: FormItemType.text,
         label: 'Investment Advisor',
         required: false,
         disabled: true,
-        listItems: PC.fundItems.investmentAdvisorItems,
     };
     auditor: FormItem = {
         type: FormItemType.list,
         label: 'Auditor',
         required: false,
         disabled: true,
+        listItems: PC.fundItems.auditorItems,
     };
     taxAuditor: FormItem = {
         type: FormItemType.list,
         label: 'Tax Auditor',
         required: false,
         disabled: true,
+        listItems: PC.fundItems.taxAuditorItems,
     };
     legalAdvisor: FormItem = {
         type: FormItemType.list,

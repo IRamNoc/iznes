@@ -9,7 +9,7 @@ export interface MandateInvestor {
     reference: string;
     companyName: string;
     walletName: string;
-    investorType: InvestorType.Institutional | InvestorType.Retail;
+    investorType: InvestorType.InstitutionalMandate | InvestorType.RetailMandate;
 }
 
 export interface OfiMandateInvestorListState {

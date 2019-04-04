@@ -1,11 +1,8 @@
-<ng-container *ngIf="pageType != 'audit'">
+<ng-container *ngIf="pageType != 'audit' && !loading">
     <!-- Breadcrumbs. -->
     <div class="header-breadcrumbs">
         <h1 id="ofi-client-referential"><i class="fa fa-users"></i>
-            {{ 'Client Referential' | translate }}
-            <span *ngIf="kycId == ''">: {{ 'All Clients' | translate }}</span>
-            <span *ngIf="kycId != '' && !!clients[kycId]">{{ getClientReferentialDescriptionTitle() }}</span>
-            <span *ngIf="pmIdentifier">{{ pmIdentifier }}</span>
+            {{ 'Client Referential' | translate }} {{ getClientReferentialDescriptionTitle() }}
         </h1>
     </div>
 
@@ -63,7 +60,7 @@
                             <clr-dg-column [clrDgField]="'clientReference'">{{ 'Client Reference' | translate }}</clr-dg-column>
                             <clr-dg-column [clrDgField]="'walletName'">{{ 'IZNES Reference' | translate }}</clr-dg-column>
                             <clr-dg-column [clrDgField]="'investorType'">{{ 'Investor Type' | translate }}</clr-dg-column>
-                            <clr-dg-column [clrDgField]="'companyName'">{{ 'Company' | translate }}</clr-dg-column>
+                            <clr-dg-column [clrDgField]="'investorName'">{{ 'Investor Name' | translate }}</clr-dg-column>
                             <clr-dg-column [clrDgField]="'email'">{{ 'Email' | translate }}</clr-dg-column>
                             <clr-dg-column [clrDgField]="'investmentMethod'">{{ 'Investment Method' | translate }}</clr-dg-column>
 
@@ -71,7 +68,7 @@
                                 <clr-dg-cell>{{item.clientReference}}</clr-dg-cell>
                                 <clr-dg-cell>{{item.walletName}}</clr-dg-cell>
                                 <clr-dg-cell>{{item.investorType}}</clr-dg-cell>
-                                <clr-dg-cell>{{item.companyName}}</clr-dg-cell>
+                                <clr-dg-cell>{{item.investorName}}</clr-dg-cell>
                                 <clr-dg-cell>{{item.email}}</clr-dg-cell>
                                 <clr-dg-cell>{{item.investmentMethod}}</clr-dg-cell>
                             </clr-dg-row>
@@ -92,71 +89,112 @@
             <button clrTabLink>{{ 'KYC Information' | translate }}</button>
             <clr-tab-content *clrIfActive="true">
 
-                <h2>{{ 'Professional Investor Details' | translate }}</h2>
-                <form [formGroup]="investorForm" (ngSubmit)="saveClientReference()">
-                    <div class="row">
-                        <div class="form-group col-sm-6">
-                            <label for="companyName">{{ 'Company Name' | translate }}</label>
-                            <div>
-                                <input type="text" id="companyName" class="form-control" formControlName="companyName">
+                <div *ngIf="isMandateInvestor()">
+                    <h2>{{ 'Professional Investor Details' | translate }}</h2>
+                    <form [formGroup]="investorForm" (ngSubmit)="saveClientReference()">
+                        <div class="row">
+                            <div class="form-group col-sm-6">
+                                <label for="clientReference">{{ 'Client Reference' | translate }}</label>
+                                <div>
+                                    <input type="text" id="clientReference" class="form-control" formControlName="clientReference">
+                                </div>
+                            </div>
+                            <div class="form-group col-sm-6" *ngIf="!isRetail()">
+                                <label for="companyName">{{ 'Company Name' | translate }}</label>
+                                <div>
+                                    <input type="text" id="companyName" class="form-control" formControlName="companyName">
+                                </div>
+                            </div>
+                            <div class="form-group col-sm-6" *ngIf="isRetail()">
+                                <label for="firstName">{{ 'First Name' | translate }}</label>
+                                <div>
+                                    <input type="text" id="firstName" class="form-control" formControlName="firstName">
+                                </div>
+                            </div>
+                            <div class="form-group col-sm-6" *ngIf="isRetail()">
+                                <label for="lastName">{{ 'Last Name' | translate }}</label>
+                                <div>
+                                    <input type="text" id="lastName" class="form-control" formControlName="lastName">
+                                </div>
                             </div>
                         </div>
-                        <div class="form-group col-sm-6">
-                            <label for="clientReference">{{ 'Client Reference' | translate }}</label>
-                            <div>
-                                <input type="text" id="clientReference" class="form-control" formControlName="clientReference">
+                        <div class="row">
+                            <div class="form-group col-sm-12 submit-container">
+                                <button id="investorForm-btn-submit" type="submit" class="btn btn-primary" [disabled]="!investorForm.dirty">{{
+                                    'Save' | translate }}</button>
                             </div>
                         </div>
-                        <div class="form-group col-sm-6">
-                            <label for="firstName">{{ 'First Name' | translate }}</label>
-                            <div>
-                                <input type="text" id="firstName" class="form-control" formControlName="firstName">
+                    </form>
+                </div>
+                <div *ngIf="!isMandateInvestor()">
+                    <h2>{{ 'Professional Investor Details' | translate }}</h2>
+                    <form [formGroup]="investorForm" (ngSubmit)="saveClientReference()">
+                        <div class="row">
+                            <div class="form-group col-sm-6">
+                                <label for="companyName">{{ 'Company Name' | translate }}</label>
+                                <div>
+                                    <input type="text" id="companyName" class="form-control" formControlName="companyName">
+                                </div>
+                            </div>
+                            <div class="form-group col-sm-6">
+                                <label for="clientReference">{{ 'Client Reference' | translate }}</label>
+                                <div>
+                                    <input type="text" id="clientReference" class="form-control" formControlName="clientReference">
+                                </div>
+                            </div>
+                            <div class="form-group col-sm-6">
+                                <label for="firstName">{{ 'First Name' | translate }}</label>
+                                <div>
+                                    <input type="text" id="firstName" class="form-control" formControlName="firstName">
+                                </div>
+                            </div>
+                            <div class="form-group col-sm-6">
+                                <label for="lastName">{{ 'Last Name' | translate }}</label>
+                                <div>
+                                    <input type="text" id="lastName" class="form-control" formControlName="lastName">
+                                </div>
+                            </div>
+                            <div class="form-group col-sm-6">
+                                <label for="email">{{ 'Email Address' | translate }}</label>
+                                <div>
+                                    <input type="text" id="email" class="form-control" formControlName="email">
+                                </div>
+                            </div>
+                            <div class="form-group col-sm-6">
+                                <label for="phoneNumber">{{ 'Phone Number' | translate }}</label>
+                                <div>
+                                    <input type="text" id="phoneNumber" class="form-control" formControlName="phoneNumber">
+                                </div>
+                            </div>
+                            <div class="form-group col-sm-6">
+                                <label for="approvalDateRequest">{{ 'Date of Approval Request' | translate }}</label>
+                                <div>
+                                    <input type="text" id="approvalDateRequest" class="form-control" formControlName="approvalDateRequest">
+                                </div>
                             </div>
                         </div>
-                        <div class="form-group col-sm-6">
-                            <label for="lastName">{{ 'Last Name' | translate }}</label>
-                            <div>
-                                <input type="text" id="lastName" class="form-control" formControlName="lastName">
+                        <div class="row">
+                            <div class="form-group col-sm-12 submit-container">
+                                <button id="investorForm-btn-submit" type="submit" class="btn btn-primary" [disabled]="!investorForm.dirty">{{
+                                    'Save' | translate }}</button>
                             </div>
                         </div>
-                        <div class="form-group col-sm-6">
-                            <label for="email">{{ 'Email Address' | translate }}</label>
-                            <div>
-                                <input type="text" id="email" class="form-control" formControlName="email">
-                            </div>
-                        </div>
-                        <div class="form-group col-sm-6">
-                            <label for="phoneNumber">{{ 'Phone Number' | translate }}</label>
-                            <div>
-                                <input type="text" id="phoneNumber" class="form-control" formControlName="phoneNumber">
-                            </div>
-                        </div>
-                        <div class="form-group col-sm-6">
-                            <label for="approvalDateRequest">{{ 'Date of Approval Request' | translate }}</label>
-                            <div>
-                                <input type="text" id="approvalDateRequest" class="form-control" formControlName="approvalDateRequest">
-                            </div>
-                        </div>
-                    </div>
-                    <div class="row">
-                        <div class="form-group col-sm-12 submit-container">
-                            <button id="investorForm-btn-submit" type="submit" class="btn btn-primary" [disabled]="!investorForm.dirty">{{
-                                'Save' | translate }}</button>
-                        </div>
-                    </div>
-                </form>
+                    </form>
 
-                <ng-container>
-                    <div class="hr-line-dashed"></div>
+                    <ng-container>
+                        <div class="hr-line-dashed"></div>
 
-                    <div class="row" *ngIf="showInfo">
-                        <div class="col-sm-12" style="margin-top: 0.5rem">
-                            <p>{{ 'Please find below the information and documents provided by @companyName@ during the
-                                KYC application to your company.' | translate: { 'companyName': companyName} }}</p>
+                        <div class="row" *ngIf="showInfo">
+                            <div class="col-sm-12" style="margin-top: 0.5rem">
+                                <p>{{ 'Please find below the information and documents provided by @companyName@ during the
+                                    KYC application to your company.' | translate: { 'companyName': companyName} }}</p>
+                            </div>
                         </div>
-                    </div>
-                    <kyc-details [kycID]="kycId"></kyc-details>
-                </ng-container>
+                        <kyc-details [kycID]="kycId"></kyc-details>
+                    </ng-container>
+                </div>
+
+
 
                 <div align="middle" style="margin-top: 20px;">
                     <button class="btn btn-info" (click)="changePage('list')">{{ 'Back' | translate }}</button>
@@ -169,7 +207,7 @@
                 <div class="row">
                     <div class="col-sm-6" style="margin-top: 0.5rem">
                         <p>{{ 'Please find below the authorisation of @companyName@ regarding your shares.' |
-                            translate: { 'companyName': pmIdentifier } }}</p>
+                            translate: { 'companyName': companyName } }}</p>
                     </div>
                     <div class="col-sm-6" align="right">
                         <button class="btn btn-primary" (click)="changePage('audit')">{{ 'View Previous Updates' |
