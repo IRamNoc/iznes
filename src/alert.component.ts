@@ -86,7 +86,7 @@ import { animate, state, style, transition, trigger } from '@angular/animations'
                 <div class="jaspero__dialog-content" [innerHTML]="incomingData.message">
                 </div>
                 <div class="jaspero__dialog-actions">
-                    <button type="button" class="default" *ngIf="incomingData.showCloseButton" (click)="closeSelf()">
+                    <button type="button" class="btn" *ngIf="incomingData.showCloseButton" (click)="closeSelf()">
                         {{incomingData.buttonMessage}}
                     </button>
                 </div>
@@ -192,7 +192,7 @@ import { animate, state, style, transition, trigger } from '@angular/animations'
             border-top: 1px solid #d5d6d6;
             background: #f8fafb;
             min-height: 60px;
-            padding: 0;
+            padding: 5px 0 0 0;
             -ms-flex-align: center;
             align-items: center;
             -ms-flex-pack: end;
@@ -201,39 +201,13 @@ import { animate, state, style, transition, trigger } from '@angular/animations'
             text-align: center;
         }
 
-        .jaspero__dialog-actions button {
-            margin-top: 11px;
-            border: 1px solid #afafaf;
-            color: #8c8c8c !important;
-            height: 36px;
-            border-radius: 3px;
-            line-height: 34px;
-            font-size: 12px;
-            padding-left: 35px;
-            padding-right: 35px;
-            cursor: pointer;
-            background: #ffffff;
+        .btn {
+            color: #8c8c8c;
+            border-color: #8c8c8c;
         }
 
-        .jaspero__dialog-actions button.default {
-            color: inherit;
-        }
-
-        .jaspero__dialog-actions button.default:hover {
+        .btn:hover {
             background-color: rgba(141, 150, 165, 0.1);
-        }
-
-        .jaspero__dialog-actions button.primary {
-            background-color: #ec4a1d;
-            color: white;
-        }
-
-        .jaspero__dialog-actions button.primary:hover {
-            background-color: #1e88e5;
-        }
-
-        .jaspero__dialog-actions button.raised {
-            box-shadow: 0 1px 5px rgba(0, 0, 0, .2), 0 2px 2px rgba(0, 0, 0, .14), 0 3px 1px -2px rgba(0, 0, 0, .12);
         }
 
         .fixedHeight {
