@@ -93,8 +93,8 @@
 
 </div>
 
-<div (click)="focusedWithClick=true"
-    (focus)="handleOnFocus()"
+<div (focus)="handleOnFocus()"
+    (mousedown)="focusedWithClick=true"
     tabindex="0"
      *ngIf="multiple === true"
      offClick
