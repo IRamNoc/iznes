@@ -6,7 +6,7 @@
     <clr-dg-column [clrDgField]="'actions'">{{ 'Action' | translate }}</clr-dg-column>
 
     <clr-dg-row *clrDgItems="let item of list$ | async; let i = index">
-        <clr-dg-cell>{{(item.investorType === 10) ? 'Institutional' : 'Retail'}}</clr-dg-cell>
+        <clr-dg-cell>{{item.investorTypeText}}</clr-dg-cell>
         <clr-dg-cell>{{item.investorName}}</clr-dg-cell>
         <clr-dg-cell>{{item.walletName}}</clr-dg-cell>
         <clr-dg-cell id="access_slider_row_{{i}}">
