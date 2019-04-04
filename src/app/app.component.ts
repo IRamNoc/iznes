@@ -13,6 +13,7 @@ import { NgRedux } from '@angular-redux/store';
 
 
 import { setLanguage, setMenuShown } from '@setl/core-store';
+import { WalletSwitchService } from '@ofi/ofi-main/ofi-product/fund-share/service/wallet-switch.service';
 
 @Component({
     selector: 'app-root',
@@ -40,17 +41,19 @@ export class AppComponent implements AfterViewInit, OnInit {
         declineText: 'No'
     };
 
-    constructor(private ngRedux: NgRedux<any>,
-                private memberSocketService: MemberSocketService,
-                private walletnodeChannelService: WalletnodeChannelService,
-                private walletNodeSocketService: WalletNodeSocketService,
-                private  toasterService: ToasterService,
-                private initialisationService: InitialisationService,
-                private ofiMemberNodeChannelService: OfiMemberNodeChannelService,
-                private ofiPostTxService: OfiPostTxService,
-                private _myUserService: MyUserService,
-                private _ofiWalletnodeChannelService: OfiWalletnodeChannelService) {
-    }
+    constructor(
+        private ngRedux: NgRedux<any>,
+        private memberSocketService: MemberSocketService,
+        private walletnodeChannelService: WalletnodeChannelService,
+        private walletNodeSocketService: WalletNodeSocketService,
+        private  toasterService: ToasterService,
+        private initialisationService: InitialisationService,
+        private ofiMemberNodeChannelService: OfiMemberNodeChannelService,
+        private ofiPostTxService: OfiPostTxService,
+        private _myUserService: MyUserService,
+        private _ofiWalletnodeChannelService: OfiWalletnodeChannelService,
+        private walletSwitchService: WalletSwitchService,
+    ) { }
 
     ngOnInit() {
 
