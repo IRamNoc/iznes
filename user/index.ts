@@ -99,7 +99,18 @@ export {
     SET_FORCE_TWO_FACTOR,
 };
 
+import {
+    AlertState,
+    SET_ALERTS,
+    alertReducer,
+} from './alerts';
+
+export {
+    SET_ALERTS,
+}
+
 export interface UserState {
+    alerts: AlertState,
     myDetail: MyDetailState;
     authentication: AuthenticationState;
     connected: ConnectedState;
@@ -108,6 +119,7 @@ export interface UserState {
 }
 
 export const userReducer: Reducer<UserState> = combineReducers<UserState>({
+    alerts: alertReducer,
     myDetail: MyDetailReducer,
     authentication: AuthenticationReducer,
     connected: ConnectedReducer,

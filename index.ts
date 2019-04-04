@@ -43,6 +43,9 @@ export {
     SET_PERMISSIONS_LIST,
     SET_PERMISSIONS_REQUESTED,
     RESET_PERMISSIONS_REQUESTED,
+
+    // alerts
+    SET_ALERTS,
 } from './user';
 
 export {
