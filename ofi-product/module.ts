@@ -55,6 +55,7 @@ import {
 import { LeiService } from '@ofi/ofi-main/ofi-req-services/ofi-product/lei/lei.service';
 import productConfig from './productConfig';
 import { phoneCodeList } from '../shared/phone-codes.values';
+import { WalletSwitchService } from './fund-share/service/wallet-switch.service';
 
 /* Am Dashboard service. */
 @NgModule({
@@ -114,6 +115,7 @@ import { phoneCodeList } from '../shared/phone-codes.values';
         OfiFundShareFormService,
         LeiService,
         ManagagementCompanyService,
+        WalletSwitchService,
         { provide: 'product-config', useValue: productConfig },
         { provide: 'phoneCodeList', useValue: phoneCodeList },
     ],
