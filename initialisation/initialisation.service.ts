@@ -35,6 +35,7 @@ import {
     SET_LANGUAGE,
     addWalletNodeSnapshot,
     updateWalletnodeTxStatus,
+    SET_ALERTS,
 } from '@setl/core-store';
 import * as _ from 'lodash';
 
@@ -182,6 +183,9 @@ export class InitialisationService {
         // Request my chain access
         this.requestMyChainAccess(ngRedux, chainService);
 
+        // Request my alerts
+        this.requestAlerts(ngRedux, myUserService);
+
         // Subscribe to my connection channel, target for my userId.
         this.subscribe(memberSocketService, channelService, initialisationService);
 
@@ -210,6 +214,29 @@ export class InitialisationService {
                 }
             },
         ));
+
+        return true;
+
+    }
+
+    static requestAlerts(ngRedux: NgRedux<any>,
+        myUserService: MyUserService) {
+
+        // Create a saga pipe.
+        const asyncTaskPipes = myUserService.getAlerts();
+
+        // Send a saga action.
+        // Actions to dispatch, when request success:  LOGIN_SUCCESS.
+        // Actions to dispatch, when request fail:  RESET_LOGIN_DETAIL.
+        // saga pipe function descriptor.
+        // Saga pipe function arguments.
+        ngRedux.dispatch(SagaHelper.runAsync(
+            [SET_ALERTS],
+            [],
+            asyncTaskPipes, {},
+            () => {
+                // console.log('language set!');
+            }));
 
         return true;
 
