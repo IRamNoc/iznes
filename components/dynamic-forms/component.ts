@@ -18,6 +18,18 @@ export class DynamicFormComponent implements OnInit {
         this.generateForm();
     }
 
+    @Input() set presetFormModel(fm) {
+        this.formModel = fm;
+    }
+
+    @Input() set presetForm(f) {
+        this.form = f;
+    }
+
+    @Input() set presetFormKeys(fm) {
+        this.formKeys = fm;
+    }
+
     get model() {
         return this.formModel;
     }
@@ -38,9 +50,6 @@ export class DynamicFormComponent implements OnInit {
         this.form = this.service.generateForm(this.formModel);
         this.formKeys = this.service.getFormKeys(this.formModel);
         this.service.updateModel(this.formModel, this.form);
-
-        this.changeDetectorRef.markForCheck();
-        this.changeDetectorRef.detectChanges();
     }
 
     // this is to enforce proper re-render for fund holidays management in the share form component
