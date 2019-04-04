@@ -1,4 +1,5 @@
-<div tabindex="0"
+<div (focus)="handleOnFocus()"
+    tabindex="0"
      *ngIf="multiple === false"
      offClick
      (clickOutside)="clickedOutside()"
@@ -10,7 +11,7 @@
               class="btn btn-default btn-secondary form-control ui-select-toggle"
               (click)="matchClick($event)"
               style="outline: 0;">
-              
+
             <span *ngIf="inlineLabel !== ''" class="pull-left">
                 {{this.translate.getTranslation(inlineLabelMlTag) || inlineLabel}}:
             </span>
@@ -54,14 +55,14 @@
 
         <ng-template [ngIf]="options.length < 1000">
 
-            <ul class="" role="menu" *ngIf="!firstItemHasChildren">
+            <ul class="ui-select-choices-content" role="menu" *ngIf="!firstItemHasChildren">
 
                 <li *ngFor="let o of options" role="menuitem">
                     <div class="ui-select-choices-row"
                          [class.active]="isActive(o)"
                          [class.selected]="(active[0] || {}).text === o.text"
                          (mouseenter)="selectActive(o)"
-                         (click)="selectMatch(o, $event)">
+                         (click)="selectMatch(o, $event); focusedWithClick=true">
                         <a href="javascript:void(0)" class="dropdown-item">
                             <div [innerHtml]="sanitize(o.text | highlight:inputValue)"></div>
                         </a>
@@ -69,7 +70,7 @@
                 </li>
             </ul>
 
-            <ul *ngIf="firstItemHasChildren" role="menu">
+            <ul class="ui-select-choices-content" *ngIf="firstItemHasChildren" role="menu">
 
                 <li *ngFor="let c of options; let index=index" role="menuitem">
                     <div class="divider dropdown-divider" *ngIf="index > 0"></div>
@@ -79,7 +80,7 @@
                          class="ui-select-choices-row"
                          [class.active]="isActive(o)"
                          (mouseenter)="selectActive(o)"
-                         (click)="selectMatch(o, $event)"
+                         (click)="selectMatch(o, $event); focusedWithClick=true"
                          [ngClass]="{'active': isActive(o)}">
                         <a href="javascript:void(0)" class="dropdown-item">
                             <div [innerHtml]="sanitize(o.text | highlight:inputValue)"></div>
@@ -92,7 +93,9 @@
 
 </div>
 
-<div tabindex="0"
+<div (click)="focusedWithClick=true"
+    (focus)="handleOnFocus()"
+    tabindex="0"
      *ngIf="multiple === true"
      offClick
      (clickOutside)="clickedOutside()"
@@ -133,13 +136,13 @@
             <span class="fa fa-search"></span>
         </div>
 
-        <ul class="" role="menu" *ngIf="!firstItemHasChildren">
+        <ul class="ui-select-choices-content" role="menu" *ngIf="!firstItemHasChildren">
 
             <li *ngFor="let o of options" role="menuitem">
                 <div class="ui-select-choices-row"
                      [class.active]="isActive(o)"
                      (mouseenter)="selectActive(o)"
-                     (click)="selectMatch(o, $event)">
+                     (click)="selectMatch(o, $event); focusedWithClick=true">
                     <a href="javascript:void(0)" class="dropdown-item">
                         <div [innerHtml]="sanitize(o.text | highlight:inputValue)"></div>
                     </a>
@@ -147,7 +150,7 @@
             </li>
         </ul>
 
-        <ul *ngIf="firstItemHasChildren" role="menu">
+        <ul class="ui-select-choices-content" *ngIf="firstItemHasChildren" role="menu">
 
             <li *ngFor="let c of options; let index=index" role="menuitem">
                 <div class="divider dropdown-divider" *ngIf="index > 0"></div>
@@ -157,7 +160,7 @@
                      class="ui-select-choices-row"
                      [class.active]="isActive(o)"
                      (mouseenter)="selectActive(o)"
-                     (click)="selectMatch(o, $event)"
+                     (click)="selectMatch(o, $event); focusedWithClick=true"
                      [ngClass]="{'active': isActive(o)}">
                     <a href="javascript:void(0)" class="dropdown-item">
                         <div [innerHtml]="sanitize(o.text | highlight:inputValue)"></div>

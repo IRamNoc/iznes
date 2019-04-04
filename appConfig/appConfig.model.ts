@@ -49,6 +49,7 @@ export interface AppConfig {
     internalMessageSender?: string;
     backgroundImage: string;
     loginOverlay?: boolean;
+    loginOverlayColour?: string;
     loginContent?: {
         title?: string,
         description?: string,

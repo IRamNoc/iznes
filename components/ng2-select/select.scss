@@ -206,6 +206,7 @@
 .dropdown-menu ul {
     overflow-y: auto;
     max-height: 145px;
+    position: relative;
 }
 
 .ui-select-container:hover {
@@ -287,6 +288,11 @@
     .dropdown-item {
         height: auto;
     }
+}
+
+.dropdown-item div {
+    overflow: hidden;
+    text-overflow: ellipsis;
 }
 
 .icon {
