@@ -1,11 +1,11 @@
 /* Fix for expanding datagrids not pushing content down page. Clarity v1.1.1 */
 .datagrid-host {
     height: auto!important;
+    padding-top: .5rem;
 }
 
 /* Fix for filter pop-ups not overflowing datagrid. Clarity v1.1.1 */
 .datagrid {
-    overflow: visible;
     // vertical center align datagrid content
     .datagrid-cell {
         align-self: center;
@@ -34,9 +34,37 @@
             }
         }
     }
+}
 
-    /* Styling RowsPerPage directive to Clarity UI */
+/* Styling RowsPerPage directive to Clarity UI */
+clr-datagrid {
+    .datagrid-footer-description {
+        display: flex;
+        flex: inherit;
+    }
+
+    /* Temporary width override to account for multiple inline action buttons */
+    .actions {
+        width: 230px!important;
+    }
+
+    .datagrid-footer {
+        .btn-sm {
+            margin-top: 5px;
+        }
+    }
+
     .page-size {
+        margin-right: 0.5rem;
+        // &::before {
+        //     content: '';
+        //     display: inline-block;
+        //     height: 1rem;
+        //     width: .04166667rem;
+        //     background-color: #ddd;
+        //     margin: 0 .5rem;
+        //     vertical-align: middle;
+        // }
         select {
             &:hover {
                 border-color: rgba(221,221,221,.5);

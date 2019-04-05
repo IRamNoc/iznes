@@ -52,8 +52,12 @@ clr-header {
         }
 
         @keyframes fadein {
-            from { opacity: 0; }
-            to   { opacity: 1; }
+            from {
+                opacity: 0;
+            }
+            to {
+                opacity: 1;
+            }
         }
 
 
@@ -64,15 +68,15 @@ clr-header {
         #dropdown-user {
             clr-dropdown-menu {
                 padding-top: 0;
+                margin-top: 0;
             }
             .username {
                 background: #cccccc;
                 font-size: 16px;
                 color: #000000;
                 font-weight: 600;
-                padding: 10px 15px;
+                padding: 10px 1rem;
                 margin-bottom: 10px;
-                text-align: center;
             }
         }
 
@@ -219,6 +223,7 @@ clr-header {
             }
             ul {
                 margin-top: 0;
+                margin-bottom: 10px;
             }
         }
     }
@@ -269,4 +274,11 @@ clr-header {
             }
         }
     }
+}
+
+.switch-container {
+    position: absolute;
+    right: 15px;
+    top: 80px;
+    color: #565656;
 }

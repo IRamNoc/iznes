@@ -37,7 +37,7 @@ export class NavigationFooterComponent implements OnDestroy {
             );
         }
 
-        this.platform = appConfig.platform;
+        this.platform = appConfig.platformLegal || appConfig.platformLabel || appConfig.platform;
     }
 
     ngOnDestroy() {
