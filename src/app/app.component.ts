@@ -5,7 +5,8 @@ import {
     InitialisationService,
     MyUserService,
     WalletnodeChannelService,
-    NodeAlertsService
+    NodeAlertsService,
+    RemoteLoggerService
 } from '@setl/core-req-services';
 import { OfiMemberNodeChannelService, OfiPostTxService, OfiWalletnodeChannelService } from '@ofi/ofi-main';
 import { ToasterService, ToasterConfig } from 'angular2-toaster';
@@ -53,6 +54,7 @@ export class AppComponent implements AfterViewInit, OnInit {
         private _myUserService: MyUserService,
         private _ofiWalletnodeChannelService: OfiWalletnodeChannelService,
         private walletSwitchService: WalletSwitchService,
+        private remoteLoggerService: RemoteLoggerService,
     ) { }
 
     ngOnInit() {
