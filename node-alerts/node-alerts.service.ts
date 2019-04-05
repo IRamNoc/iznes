@@ -19,7 +19,7 @@ export class NodeAlertsService {
     private walletNodeTTL = 30000;
     private walletNodeDeathSubject: BehaviorSubject<boolean> = new BehaviorSubject<boolean>(false);
 
-    private memberNodeTTL = 10000;
+    private memberNodeTTL = 30000;
     private memberNodeDeathSubject: BehaviorSubject<boolean> = new BehaviorSubject<boolean>(false);
 
     constructor(
