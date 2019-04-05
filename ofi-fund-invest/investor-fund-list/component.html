@@ -73,7 +73,7 @@
                     </clr-dg-column>
                     <clr-dg-column [clrDgField]="'totalPosition'" clrDgSortIcon class="right">{{ 'Total Position' | translate }}
                     </clr-dg-column>
-                    <clr-dg-column class="right" style="min-width: 190px;">{{ 'Actions' | translate }}</clr-dg-column>
+                    <clr-dg-column class="right action-width">{{ 'Actions' | translate }}</clr-dg-column>
 
                     <clr-dg-row *clrDgItems="let fund of fundList; let i = index">
                         <clr-dg-cell>
@@ -96,8 +96,8 @@
                         <clr-dg-cell>{{fund['nextRedCutOff']}}</clr-dg-cell>
                         <clr-dg-cell class="right">{{fund['position']}}</clr-dg-cell>
                         <clr-dg-cell class="right">{{fund['totalPosition']}}</clr-dg-cell>
-                        <clr-dg-cell *ngIf="fund['hasNoNav']">{{ 'No NAV Exist' | translate }}</clr-dg-cell>
-                        <clr-dg-cell *ngIf="!fund['hasNoNav']" class="actions right">
+                        <clr-dg-cell *ngIf="fund['hasNoNav']" class="action-width">{{ 'No NAV Exist' | translate }}</clr-dg-cell>
+                        <clr-dg-cell *ngIf="!fund['hasNoNav']" class="actions right action-width">
                             <div class="btn-group btn-sm">
                                 <button class="btn btn-success btn-sm" style="margin: 0px;" (click)="handleSubscribe(fund.id)">
                                     <i class="fa fa-sign-in"></i> {{ 'Subscribe' | translate }}

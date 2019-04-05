@@ -444,7 +444,7 @@
                         <clr-dg-cell *ngIf="isAssetManger" class="right" [ngSwitch]="order.paymentMsgStatus">
                             <span *ngSwitchCase="'sent'" class="label label-success">{{ 'Sent' | translate }}</span>
                             <span *ngSwitchCase="'ready'" class="label label-success">{{ 'Sent' | translate }}</span>
-                            <clr-checkbox *ngSwitchCase="'pending'" [formControl]="order.markedForPayment" (clrCheckedChange)="updatePaymentCheckBoxState(order.orderID, $event)"  [clrDisabled]="!order.readyForPayment"></clr-checkbox>
+                            <input type="checkbox" clrCheckbox *ngSwitchCase="'pending'" [formControl]="order.markedForPayment" (change)="updatePaymentCheckBoxState(order.orderID, $event)"  [disabled]="!order.readyForPayment">
                         </clr-dg-cell>
                         <clr-dg-cell *ngIf="!isIznesAdmin" [ngSwitch]="order.orderStatus" class="right">
                             <!--&lt;!&ndash; Actions &ndash;&gt;-->
@@ -752,7 +752,7 @@
                             <div>
                                 <span class="readonly-field">{{fundShare.shareClassCode}}</span>
                             </div>
-                        </div>                        
+                        </div>
                     </div>
                     <div class="row mb-1">
                         <div class="form-group col-sm-6">
@@ -781,7 +781,7 @@
                                 <span class="readonly-field {{getPriceStatusCss(orderData)}}">{{ orderData.price | moneyValue: 2 }}</span>
                             </div>
                         </div>
-                        
+
                     </div>
                     <div class="row mb-1">
                         <div class="form-group col-sm-6">

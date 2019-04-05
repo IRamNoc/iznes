@@ -20,27 +20,20 @@
             </div>
         </clr-dg-cell>
 
-        <ng-container *ngIf="!row['access']">
-            <clr-dg-cell id="entry_fee_row_{{i}}">
-                {{row['entry']}}
-            </clr-dg-cell>
-            <clr-dg-cell id="exit_fee_row_{{i}}">
-                {{row['exit']}}
-            </clr-dg-cell>
-            <clr-dg-cell id="min_invest_amount_row_{{i}}">
-                {{row['minInvestment']}}
-            </clr-dg-cell>
-        </ng-container>
+        <clr-dg-cell id="{{ row['access'] ? 'extry_fee_field_row_' + i : 'entry_fee_row_' + i }}" [class.thin-cell]="row['access']">
+            <ng-container *ngIf="!row['access']">{{row['entry']}}</ng-container>
+            <input *ngIf="row['access']" class="small-input" style="height: 30px;" name="entry{{row['id']}}" [(ngModel)]="row['entry']" (change)="checkFee(row['id'],'entry');">
+        </clr-dg-cell>
 
-        <ng-container *ngIf="row['access']">
-            <clr-dg-cell id="extry_fee_field_row_{{i}}" class="thin-cell">
-                <input class="small-input" style="height: 30px;" name="entry{{row['id']}}" [(ngModel)]="row['entry']" (change)="checkFee(row['id'],'entry');">
-            </clr-dg-cell>
-            <clr-dg-cell id="exit_fee_field_row_{{i}}" class="thin-cell">
-                <input class="small-input" style="height: 30px;" name="exit{{row['id']}}" [(ngModel)]="row['exit']" (change)="checkFee(row['id'],'exit');">
-            </clr-dg-cell>
-            <clr-dg-cell id="min_invest_amount_btn_row_{{i}}">
-                {{(row['override'] ? row['overrideAmount'] : row['minInvestment'])}}
+        <clr-dg-cell id="{{ row['access'] ? 'exit_fee_field_row_' + i : 'exit_fee_row_' + i }}" [class.thin-cell]="row['access']">
+            <ng-container *ngIf="!row['access']">{{row['exit']}}</ng-container>
+            <input *ngIf="row['access']" class="small-input" style="height: 30px;" name="exit{{row['id']}}" [(ngModel)]="row['exit']" (change)="checkFee(row['id'],'exit');">
+        </clr-dg-cell>
+
+        <clr-dg-cell id="{{ row['access'] ? 'min_invest_amount_btn_row_' + i : 'min_invest_amount_row_' + i }}" [class.thin-cell]="row['access']">
+            <ng-container *ngIf="!row['access']">{{row['minInvestment']}}</ng-container>
+            <ng-container *ngIf="row['access']">
+            {{(row['override'] ? row['overrideAmount'] : row['minInvestment'])}}
                 <ng-container *ngIf="row['override']">
                     <span id="override_txt_row_{{i}}" class="override-text">[{{ 'Override' | translate }}]</span>
                     <ng-container *ngIf="row['overrideDocumentTitle'] != '' && row['overrideDocumentTitle'] != null">
@@ -49,8 +42,8 @@
                     </ng-container>
                 </ng-container>
                 <button id="override_row_{{i}}" class="btn btn-sm btn-primary override-button" (click)="openOverrideModal(i)">{{ 'Override' | translate }}</button>
-            </clr-dg-cell>
-        </ng-container>
+            </ng-container>
+        </clr-dg-cell>
     </clr-dg-row>
     <clr-dg-footer>{{pagination.firstItem + 1}} - {{pagination.lastItem + 1}}
         <clr-dg-pagination #pagination [clrDgPageSize]="15"></clr-dg-pagination>

@@ -39,7 +39,7 @@ import { NumberConverterService } from '@setl/utils/services/number-converter/se
 /* Ofi Store stuff. */
 import { ofiManageOrderActions } from '../../ofi-store';
 /* Clarity */
-import { ClrDatagridStateInterface, Datagrid } from '@clr/angular';
+import { ClrDatagridStateInterface } from '@clr/angular';
 /* helper */
 import { getOrderFigures, getOrderTypeString } from '../../ofi-product/fund-share/helper/order-view-helper';
 import { OfiFundInvestService } from '../../ofi-req-services/ofi-fund-invest/service';
@@ -141,7 +141,7 @@ export class ManageOrdersComponent implements OnInit, AfterViewInit, OnDestroy {
 
     currencyList = [];
 
-    @ViewChild('ordersDataGrid') orderDatagrid: Datagrid;
+    @ViewChild('ordersDataGrid') orderDatagrid: any;
     /* Public Properties */
     public connectedWalletName = '';
     ordersList: any[] = [];
