@@ -208,10 +208,10 @@ export interface NavData {
 }
 
 export const fundClassifications = {
-    1: { fee: 0.003 },
-    2: { fee: 0.003 },
-    3: { fee: 0.003 },
-    4: { fee: 0.00 },
-    5: { fee: 0.003 },
-    6: { fee: 0.003 },
+    1: { fee: 0.00003 },
+    2: { fee: 0.00003 },
+    3: { fee: 0.00003 },
+    4: { fee: 0.0000 },
+    5: { fee: 0.00003 },
+    6: { fee: 0.00003 },
 };

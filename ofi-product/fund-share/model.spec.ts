@@ -3,6 +3,7 @@ import {FileService} from "@setl/core-req-services";
 import {ToasterService} from "angular2-toaster";
 import {NgRedux} from "@angular-redux/store";
 import {DynamicFormService} from "@setl/utils/components/dynamic-forms";
+import {AppConfig, NumberConverterService} from "@setl/utils";
 
 describe('FundShareModel', () => {
 
@@ -11,7 +12,8 @@ describe('FundShareModel', () => {
     beforeEach(() => {
 
         const fakeDyamicFormService = new DynamicFormService({} as FileService, {} as ToasterService, {} as NgRedux<any>);
-        fundShareModel = new FundShare(fakeDyamicFormService);
+        const numberConverterService = new NumberConverterService({} as AppConfig);
+        fundShareModel = new FundShare(fakeDyamicFormService, numberConverterService);
     });
 
     describe('disableAllShareFields', () => {

@@ -56,20 +56,20 @@ function handleSetFundShare(state: OfiFundShareState, action: Action): OfiFundSh
     fundShareData.forEach((share) => {
         shareNewData[share.fundShareID] = {
             ...share,
-            minInitialSubscriptionInShare: convertBlockchainNumber(share.minInitialSubscriptionInShare),
-            minInitialSubscriptionInAmount: convertBlockchainNumber(share.minInitialSubscriptionInAmount),
-            minSubsequentSubscriptionInShare: convertBlockchainNumber(share.minSubsequentSubscriptionInShare),
-            minSubsequentSubscriptionInAmount: convertBlockchainNumber(share.minSubsequentSubscriptionInAmount),
-            minSubsequentRedemptionInShare: convertBlockchainNumber(share.minSubsequentRedemptionInShare),
-            minSubsequentRedemptionInAmount: convertBlockchainNumber(share.minSubsequentRedemptionInAmount),
-            maxManagementFee: convertBlockchainNumber(share.maxManagementFee),
-            maxSubscriptionFee: convertBlockchainNumber(share.maxSubscriptionFee),
-            maxRedemptionFee: convertBlockchainNumber(share.maxRedemptionFee),
-            mifiidChargesOngoing: convertBlockchainNumber(share.mifiidChargesOngoing),
-            mifiidChargesOneOff: convertBlockchainNumber(share.mifiidChargesOneOff),
-            mifiidTransactionCosts: convertBlockchainNumber(share.mifiidTransactionCosts),
-            mifiidServicesCosts: convertBlockchainNumber(share.mifiidServicesCosts),
-            mifiidIncidentalCosts: convertBlockchainNumber(share.mifiidIncidentalCosts),
+            minInitialSubscriptionInShare: share.minInitialSubscriptionInShare,
+            minInitialSubscriptionInAmount: share.minInitialSubscriptionInAmount,
+            minSubsequentSubscriptionInShare: share.minSubsequentSubscriptionInShare,
+            minSubsequentSubscriptionInAmount: share.minSubsequentSubscriptionInAmount,
+            minSubsequentRedemptionInShare: share.minSubsequentRedemptionInShare,
+            minSubsequentRedemptionInAmount: share.minSubsequentRedemptionInAmount,
+            maxManagementFee: share.maxManagementFee,
+            maxSubscriptionFee: share.maxSubscriptionFee,
+            maxRedemptionFee: share.maxRedemptionFee,
+            mifiidChargesOngoing: share.mifiidChargesOngoing,
+            mifiidChargesOneOff: share.mifiidChargesOneOff,
+            mifiidTransactionCosts: share.mifiidTransactionCosts,
+            mifiidServicesCosts: share.mifiidServicesCosts,
+            mifiidIncidentalCosts: share.mifiidIncidentalCosts,
         };
     });
 
@@ -105,10 +105,4 @@ function handleSetCurrentRequest(state: OfiFundShareState, action: Action): OfiF
     return Object.assign({}, state, {
         currentRequest
     });
-}
-
-function convertBlockchainNumber(number: any): number {
-    // TODO:    we need a better way of getting the divisible number,
-    //          could not think of one at time of writing. pz.
-    return parseInt(number) / 100000;
 }
