@@ -328,7 +328,7 @@ export class SelectComponent implements OnInit, ControlValueAccessor {
                 this.focusToInput();
                 this.open();
             },
-            0,
+            5,
         );
     }
 
