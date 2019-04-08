@@ -1,6 +1,6 @@
 import * as _ from 'lodash';
 
-import { FormItem, FormItemDropdown, FormItemType } from '@setl/utils';
+import {FormItem, FormItemDropdown, FormItemType, NumberConverterService} from '@setl/utils';
 import { OfiFundShare, OfiFundShareDocuments } from '@ofi/ofi-main';
 import * as FundShareEnum from './FundShareEnum';
 import { ShareCharacteristicMandatory } from './models/characteristic';
@@ -81,6 +81,7 @@ export class FundShare {
 
     constructor(
         private dynamicFormService: DynamicFormService,
+        private numberConverter: NumberConverterService,
     ) {
     }
 
@@ -263,17 +264,17 @@ export class FundShare {
         this.characteristic.mandatory.maximumNumDecimal.preset = fundShare.maximumNumDecimal;
         this.setListItemPreset(this.characteristic.mandatory.subscriptionCategory, fundShare.subscriptionCategory);
         this.setListItemPreset(this.characteristic.mandatory.subscriptionCurrency, fundShare.subscriptionCurrency);
-        this.characteristic.mandatory.minInitialSubscriptionInShare.preset = fundShare.minInitialSubscriptionInShare;
-        this.characteristic.mandatory.minInitialSubscriptionInAmount.preset = fundShare.minInitialSubscriptionInAmount;
+        this.characteristic.mandatory.minInitialSubscriptionInShare.preset = this.numberConverter.toFrontEnd(fundShare.minInitialSubscriptionInShare);
+        this.characteristic.mandatory.minInitialSubscriptionInAmount.preset = this.numberConverter.toFrontEnd(fundShare.minInitialSubscriptionInAmount);
         this.characteristic.mandatory.minSubsequentSubscriptionInShare.preset =
-            fundShare.minSubsequentRedemptionInShare;
+            this.numberConverter.toFrontEnd(fundShare.minSubsequentRedemptionInShare);
         this.characteristic.mandatory.minSubsequentSubscriptionInAmount.preset =
-            fundShare.minSubsequentSubscriptionInAmount;
+            this.numberConverter.toFrontEnd(fundShare.minSubsequentSubscriptionInAmount);
         this.setListItemPreset(this.characteristic.mandatory.redemptionCategory, fundShare.redemptionCategory);
         this.setListItemPreset(this.characteristic.mandatory.redemptionCurrency, fundShare.redemptionCurrency);
-        this.characteristic.mandatory.minSubsequentRedemptionInShare.preset = fundShare.minSubsequentRedemptionInShare;
+        this.characteristic.mandatory.minSubsequentRedemptionInShare.preset = this.numberConverter.toFrontEnd(fundShare.minSubsequentRedemptionInShare);
         this.characteristic.mandatory.minSubsequentRedemptionInAmount.preset =
-            fundShare.minSubsequentRedemptionInAmount;
+            this.numberConverter.toFrontEnd(fundShare.minSubsequentRedemptionInAmount);
         this.setListItemPreset(this.keyFacts.mandatory.sharePortfolioCurrencyHedge, fundShare.portfolioCurrencyHedge);
         this.calendarSubscription.mandatory.subscriptionCutOffTime.preset = fundShare.subscriptionCutOffTime; // AC
         this.setListItemPreset(
@@ -305,15 +306,15 @@ export class FundShare {
 
         // removed by PZ 28/06/2018
         // this.calendar.mandatory.subscriptionRedemptionCalendar.preset = fundShare.subscriptionRedemptionCalendar;
-        this.fees.mandatory.maxManagementFee.preset = fundShare.maxManagementFee;
-        this.fees.mandatory.maxSubscriptionFee.preset = fundShare.maxSubscriptionFee;
-        this.fees.mandatory.maxRedemptionFee.preset = fundShare.maxRedemptionFee;
+        this.fees.mandatory.maxManagementFee.preset = this.numberConverter.toFrontEnd(fundShare.maxManagementFee);
+        this.fees.mandatory.maxSubscriptionFee.preset = this.numberConverter.toFrontEnd(fundShare.maxSubscriptionFee);
+        this.fees.mandatory.maxRedemptionFee.preset = this.numberConverter.toFrontEnd(fundShare.maxRedemptionFee);
         this.setListItemPreset(this.profile.mandatory.investorProfile, fundShare.investorProfile);
-        this.fees.mandatory.mifiidChargesOngoing.preset = fundShare.mifiidChargesOngoing;
-        this.fees.mandatory.mifiidChargesOneOff.preset = fundShare.mifiidChargesOneOff;
-        this.fees.mandatory.mifiidTransactionCosts.preset = fundShare.mifiidTransactionCosts;
-        this.fees.mandatory.mifiidServicesCosts.preset = fundShare.mifiidServicesCosts;
-        this.fees.mandatory.mifiidIncidentalCosts.preset = fundShare.mifiidIncidentalCosts;
+        this.fees.mandatory.mifiidChargesOngoing.preset = this.numberConverter.toFrontEnd(fundShare.mifiidChargesOngoing);
+        this.fees.mandatory.mifiidChargesOneOff.preset = this.numberConverter.toFrontEnd(fundShare.mifiidChargesOneOff);
+        this.fees.mandatory.mifiidTransactionCosts.preset = this.numberConverter.toFrontEnd(fundShare.mifiidTransactionCosts);
+        this.fees.mandatory.mifiidServicesCosts.preset = this.numberConverter.toFrontEnd(fundShare.mifiidServicesCosts);
+        this.fees.mandatory.mifiidIncidentalCosts.preset = this.numberConverter.toFrontEnd(fundShare.mifiidIncidentalCosts);
 
         this.applyOptionalData((this.keyFacts.optional as any), JSON.parse(fundShare.keyFactOptionalData));
         this.applyOptionalData((this.profile.optional as any), JSON.parse(fundShare.profileOptionalData));
@@ -351,14 +352,14 @@ export class FundShare {
         this.characteristic.mandatory.maximumNumDecimal.control.setValue(fundShare.maximumNumDecimal);
         this.setListItemValue(this.characteristic.mandatory.subscriptionCategory, fundShare.subscriptionCategory);
         this.setListItemValue(this.characteristic.mandatory.subscriptionCurrency, fundShare.subscriptionCurrency);
-        this.characteristic.mandatory.minInitialSubscriptionInShare.control.setValue(fundShare.minInitialSubscriptionInShare);
-        this.characteristic.mandatory.minInitialSubscriptionInAmount.control.setValue(fundShare.minInitialSubscriptionInAmount);
-        this.characteristic.mandatory.minSubsequentSubscriptionInShare.control.setValue(fundShare.minSubsequentRedemptionInShare);
-        this.characteristic.mandatory.minSubsequentSubscriptionInAmount.control.setValue(fundShare.minSubsequentSubscriptionInAmount);
+        this.characteristic.mandatory.minInitialSubscriptionInShare.control.setValue(this.numberConverter.toFrontEnd(fundShare.minInitialSubscriptionInShare));
+        this.characteristic.mandatory.minInitialSubscriptionInAmount.control.setValue(this.numberConverter.toFrontEnd(fundShare.minInitialSubscriptionInAmount));
+        this.characteristic.mandatory.minSubsequentSubscriptionInShare.control.setValue(this.numberConverter.toFrontEnd(fundShare.minSubsequentRedemptionInShare));
+        this.characteristic.mandatory.minSubsequentSubscriptionInAmount.control.setValue(this.numberConverter.toFrontEnd(fundShare.minSubsequentSubscriptionInAmount));
         this.setListItemValue(this.characteristic.mandatory.redemptionCategory, fundShare.redemptionCategory);
         this.setListItemValue(this.characteristic.mandatory.redemptionCurrency, fundShare.redemptionCurrency);
-        this.characteristic.mandatory.minSubsequentRedemptionInShare.control.setValue(fundShare.minSubsequentRedemptionInShare);
-        this.characteristic.mandatory.minSubsequentRedemptionInAmount.control.setValue(fundShare.minSubsequentRedemptionInAmount);
+        this.characteristic.mandatory.minSubsequentRedemptionInShare.control.setValue(this.numberConverter.toFrontEnd(fundShare.minSubsequentRedemptionInShare));
+        this.characteristic.mandatory.minSubsequentRedemptionInAmount.control.setValue(this.numberConverter.toFrontEnd(fundShare.minSubsequentRedemptionInAmount));
         this.setListItemValue(this.keyFacts.mandatory.sharePortfolioCurrencyHedge, fundShare.portfolioCurrencyHedge);
         this.calendarSubscription.mandatory.subscriptionCutOffTime.control.setValue(fundShare.subscriptionCutOffTime);
         this.setListItemValue(
@@ -389,15 +390,15 @@ export class FundShare {
 
         // removed by PZ 28/06/2018
         // this.calendar.mandatory.subscriptionRedemptionCalendar.control.setValue(fundShare.subscriptionRedemptionCalendar);
-        this.fees.mandatory.maxManagementFee.control.setValue(fundShare.maxManagementFee);
-        this.fees.mandatory.maxSubscriptionFee.control.setValue(fundShare.maxSubscriptionFee);
-        this.fees.mandatory.maxRedemptionFee.control.setValue(fundShare.maxRedemptionFee);
+        this.fees.mandatory.maxManagementFee.control.setValue(this.numberConverter.toFrontEnd(fundShare.maxManagementFee));
+        this.fees.mandatory.maxSubscriptionFee.control.setValue(this.numberConverter.toFrontEnd(fundShare.maxSubscriptionFee));
+        this.fees.mandatory.maxRedemptionFee.control.setValue(this.numberConverter.toFrontEnd(fundShare.maxRedemptionFee));
         this.setListItemValue(this.profile.mandatory.investorProfile, fundShare.investorProfile);
-        this.fees.mandatory.mifiidChargesOngoing.control.setValue(fundShare.mifiidChargesOngoing);
-        this.fees.mandatory.mifiidChargesOneOff.control.setValue(fundShare.mifiidChargesOneOff);
-        this.fees.mandatory.mifiidTransactionCosts.control.setValue(fundShare.mifiidTransactionCosts);
-        this.fees.mandatory.mifiidServicesCosts.control.setValue(fundShare.mifiidServicesCosts);
-        this.fees.mandatory.mifiidIncidentalCosts.control.setValue(fundShare.mifiidIncidentalCosts);
+        this.fees.mandatory.mifiidChargesOngoing.control.setValue(this.numberConverter.toFrontEnd(fundShare.mifiidChargesOngoing));
+        this.fees.mandatory.mifiidChargesOneOff.control.setValue(this.numberConverter.toFrontEnd(fundShare.mifiidChargesOneOff));
+        this.fees.mandatory.mifiidTransactionCosts.control.setValue(this.numberConverter.toFrontEnd(fundShare.mifiidTransactionCosts));
+        this.fees.mandatory.mifiidServicesCosts.control.setValue(this.numberConverter.toFrontEnd(fundShare.mifiidServicesCosts));
+        this.fees.mandatory.mifiidIncidentalCosts.control.setValue(this.numberConverter.toFrontEnd(fundShare.mifiidIncidentalCosts));
 
         this.applyOptionalData((this.keyFacts.optional as any), JSON.parse(fundShare.keyFactOptionalData));
         this.applyOptionalData((this.profile.optional as any), JSON.parse(fundShare.profileOptionalData));

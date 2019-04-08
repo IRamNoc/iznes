@@ -16,7 +16,7 @@ import * as _ from 'lodash';
 import { AlertsService } from '@setl/jaspero-ng2-alerts';
 import { ToasterService } from 'angular2-toaster';
 import { ClrTabs } from '@clr/angular';
-import { ConfirmationService, ClrTabsHelper } from '@setl/utils';
+import {ConfirmationService, ClrTabsHelper, NumberConverterService} from '@setl/utils';
 import {DynamicFormComponent, DynamicFormService} from '@setl/utils/components/dynamic-forms/';
 import { Location } from '@angular/common';
 
@@ -124,6 +124,7 @@ export class FundShareComponent implements OnInit, OnDestroy {
         public translate: MultilingualService,
         private location: Location,
         private dynamicFormService: DynamicFormService,
+        private numberConverter: NumberConverterService,
         @Inject('product-config') productConfig,
     ) {
         this.countriesEnum = productConfig.fundItems.domicileItems;
@@ -139,7 +140,7 @@ export class FundShareComponent implements OnInit, OnDestroy {
     }
 
     ngOnInit() {
-        this.model = new FundShare(this.dynamicFormService);
+        this.model = new FundShare(this.dynamicFormService, this.numberConverter);
         this.initSubscriptions();
 
         this.redux.dispatch(clearRequestedFundShare());

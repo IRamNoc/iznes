@@ -51,7 +51,7 @@ import { SearchFilters, ISearchFilters } from './search-filters';
 import { labelForOrder } from '../order.model';
 import { orderStatuses, orderTypes, dateTypes } from './lists';
 import { DatagridParams } from './datagrid-params';
-import { fundClassifications } from '../../ofi-product/productConfig';
+import { fundClassifications } from '../../ofi-product/fund-share/helper/models';
 
 /* Types. */
 interface SelectedItem {

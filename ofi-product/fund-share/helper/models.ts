@@ -208,10 +208,11 @@ export interface NavData {
 }
 
 export const fundClassifications = {
-    1: { fee: 0.003 },
-    2: { fee: 0.003 },
-    3: { fee: 0.003 },
-    4: { fee: 0.00 },
-    5: { fee: 0.003 },
-    6: { fee: 0.003 },
+    1: { text: 'Equity', fee: 0.00003, dp: 3 },
+    2: { text: 'Bond', fee: 0.00003, dp: 3 },
+    3: { text: 'Multi-Asset', fee: 0.00003, dp: 3 },
+    4: { text: 'Money Market or Cash Equivalent', fee: 0.0000, dp: 2 },
+    5: { text: 'Absolute Return Innovative Strategies - ARIS', fee: 0.00003, dp: 3 },
+    6: { text: 'Other', fee: 0.00003, dp: 3 },
 };
+

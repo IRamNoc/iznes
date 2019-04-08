@@ -53,7 +53,7 @@ import { DomSanitizer } from '@angular/platform-browser';
 import { FileDownloader } from '@setl/utils/services/file-downloader/service';
 import { OfiNavService } from '../../ofi-req-services/ofi-product/nav/service';
 import { validateKiid } from '../../ofi-store/ofi-fund-invest/ofi-fund-access-my';
-import { fundClassifications } from '../../ofi-product/productConfig';
+import { fundClassifications } from '../../ofi-product/fund-share/helper/models';
 
 interface DateChangeEvent {
     type: string;

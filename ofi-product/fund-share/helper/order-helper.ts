@@ -646,7 +646,7 @@ export class OrderHelper {
         const price = orderFigure.validatedPrice;
         const feePercentage = this.feePercentage;
         const platFormFee = this.fundShare.platFormFee || 0;
-        const classificationFee = getFundClassificationFee(this.fundShare.fundClassificationId || 0);
+        const classificationFee = getFundClassificationFee((this.fundShare.fundClassificationId ) || 1);
 
         let orderDates = this.getOrderDates();
         if (!OrderHelper.isResponseGood(orderDates as VerifyResponse)) {
