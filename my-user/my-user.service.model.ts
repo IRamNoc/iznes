@@ -119,3 +119,12 @@ export interface RemoveNotificationsMessageBody extends MemberNodeMessageBody {
 export interface TestNotificationsMessageBody extends MemberNodeMessageBody {
     token: string;
 }
+
+export interface GetAlertsRequestBody extends MemberNodeMessageBody {
+    token: string;
+}
+
+export interface MarkAlertAsReadRequestBody extends MemberNodeMessageBody {
+    token: string;
+    alertID: number;
+}

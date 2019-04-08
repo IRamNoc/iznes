@@ -23,6 +23,7 @@ import {
     SET_WALLET_DIRECTORY_WALLET_DELETED,
     SET_OWN_WALLETS,
     SET_WALLET_LABEL_UPDATED,
+    SET_ALERTS,
 
     /* My details. */
     SET_USER_DETAILS,
@@ -43,6 +44,7 @@ import {
 import { MyWalletsService } from '@setl/core-req-services/my-wallets/my-wallets.service';
 import { ChainService } from '@setl/core-req-services/chain/service';
 import { addToOwnWallets, deleteFromOwnWallets } from '@setl/core-store/wallet/my-wallets/actions';
+import { MyUserService } from '@setl/core-req-services/my-user/my-user.service';
 
 @Injectable()
 export class ChannelService {
@@ -54,6 +56,7 @@ export class ChannelService {
         private ngRedux: NgRedux<any>,
         private toasterService: ToasterService,
         private myWalletsService: MyWalletsService,
+        private myUserService: MyUserService,
         private logService: LogService,
         private chainService: ChainService) {
     }
@@ -331,6 +334,17 @@ export class ChannelService {
 
         case 'addwalletaccess':
             this.ngRedux.dispatch(addToOwnWallets(get(data, 'Data', {})));
+            break;
+
+        case 'refreshalerts':
+            const asyncTaskPipesAlerts = this.myUserService.getAlerts();
+            
+            this.ngRedux.dispatch(SagaHelper.runAsync(
+                [SET_ALERTS],
+                [],
+                asyncTaskPipesAlerts,
+                {},
+            ));
             break;
 
         default:

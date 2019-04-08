@@ -26,6 +26,8 @@ import {
     TruncateNotificationsMessageBody,
     RemoveNotificationsMessageBody,
     TestNotificationsMessageBody,
+    GetAlertsRequestBody,
+    MarkAlertAsReadRequestBody,
 } from './my-user.service.model';
 import { NgRedux, select } from '@angular-redux/store';
 import {
@@ -431,6 +433,25 @@ export class MyUserService implements OnDestroy {
         };
 
         return createMemberNodeSagaRequest(this.memberSocketService, messageBody);
+    }
+
+    getAlerts(): any {
+        const messageBody: GetAlertsRequestBody = {
+            RequestName: 'getAlerts',
+            token: this.memberSocketService.token,
+        };
+
+        return createMemberNodeSagaRequest(this.memberSocketService, messageBody);
+    }
+
+    markAlertAsRead(alertID: number): any {
+        const messageBody: MarkAlertAsReadRequestBody = {
+            RequestName: 'markAlertAsRead',
+            token: this.memberSocketService.token,
+            alertID: alertID,
+        };
+        
+        return createMemberNodeRequest(this.memberSocketService, messageBody);
     }
 
     async logout(): Promise<any> {
