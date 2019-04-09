@@ -63,6 +63,8 @@ import { MockFundService } from './layouts/ui-form/components/layout2/fund.mock.
 import { FileDropModule } from '@setl/core-filedrop';
 import { FileViewerModule } from '@setl/core-fileviewer';
 
+import {AlertsComponent} from './alerts/alerts.component';
+
 @NgModule({
     imports: [
         RouterModule,
@@ -119,6 +121,7 @@ import { FileViewerModule } from '@setl/core-fileviewer';
         UiTextComponent,
         UiExpandableComponent,
         UiDatagridExpandComponent,
+        AlertsComponent,
     ],
     exports: [
         /* Directives. */
