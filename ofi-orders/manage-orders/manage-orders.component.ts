@@ -552,7 +552,8 @@ export class ManageOrdersComponent implements OnInit, AfterViewInit, OnDestroy {
         // classification number decimal point.
         const classificationDp = get(fundClassifications, [this.fundClassificationId, 'dp'], 2);
         this.transformedOrderClassificationFee = this.moneyValuePipe.transform(
-            this.numberConverter.toFrontEnd(this.orderClassificationFee),
+            // * 100 because we displaying it as percentage
+            this.numberConverter.toFrontEnd(this.orderClassificationFee) * 100,
             classificationDp,
         );
 
