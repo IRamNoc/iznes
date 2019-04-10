@@ -180,7 +180,7 @@ export class PortfolioManagerDetailComponent implements OnInit, OnDestroy {
      */
     handleManageShareAccess(fundAccess: FundAccess) {
         const kycId = fundAccess.kycId;
-        this.router.navigateByUrl(`client-referential/${kycId}`);
+        this.router.navigateByUrl(`client-referential/${kycId}?tab=2`);
     }
 
     /**
