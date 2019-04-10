@@ -192,6 +192,7 @@ function handleGetIznesShareList(state: OfiFundShareListState, action: Action) {
             subscriptionEnableNonWorkingDay: share.subscriptionEnableNonWorkingDay,
             navPeriodForRedemption: share.navPeriodForRedemption,
             redemptionEnableNonWorkingDay: share.redemptionEnableNonWorkingDay,
+            classification: share.classification,
         };
 
         iznShareList = iznShareList.set(share.fundShareID, shareData);
