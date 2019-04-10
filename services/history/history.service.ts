@@ -20,7 +20,20 @@ export class HistoryService {
             });
     }
 
+    /**
+     * Get the previous URL
+     */
     previousUrl() {
         return this._previousUrl;
+    }
+
+    /**
+     * Check if we came from given path
+     *
+     * @params {RegExp} regex
+     * @returns boolean
+     */
+    cameFrom(regex) {
+        return this.previousUrl().match(regex) !== null;
     }
 }
