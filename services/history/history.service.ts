@@ -14,7 +14,7 @@ export class HistoryService {
         router
             .events
             .filter(event => event instanceof NavigationEnd)
-            .subscribe(e => {
+            .subscribe((e: NavigationEnd) => {
                 this._previousUrl = this.currentUrl;
                 this.currentUrl = e.url;
             });
