@@ -277,7 +277,7 @@ export class OfiFundAccessTable {
 
                 this.messagesService.sendMessage(recipientsArr, subjectStr, bodyStr, action as any);
 
-                if (this.history.previousUrl().match(/on-boarding/) !== null) {
+                if (this.history.cameFrom(/on-boarding/)) {
                     this.router.navigate(['/client-referential']);
                 } else {
                     this.location.back();
