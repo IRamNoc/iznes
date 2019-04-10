@@ -29,6 +29,7 @@ export { LogServiceMock } from './services/log/service-mock';
 export { MemberNodeService } from './services/membernode.service';
 export { PermissionsService } from './services/permissions';
 export { GlobalErrorHandler } from './services/log/global-error-handler';
+export { HistoryService } from './services/history/history.service';
 
 export {
     walletHelper,
