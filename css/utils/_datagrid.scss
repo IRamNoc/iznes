@@ -34,13 +34,32 @@
             }
         }
     }
+    clr-dg-column.right, clr-dg-cell.right {
+        text-align: right;
+        .datagrid-column-title {
+            text-align: right;
+        }
+    }
 }
 
-/* Styling RowsPerPage directive to Clarity UI */
+
 clr-datagrid {
-    .datagrid-footer-description {
-        display: flex;
-        flex: inherit;
+    // Support for existing dg-footer set-ups
+    clr-dg-footer:not(.full-options){
+        .datagrid-footer-description {
+            display: flex;
+            flex: inherit;
+        }
+
+        .page-size {
+            padding-right: 0.5rem;
+            margin-right: 0.5rem;
+            border-right: solid 1px #dddddd;
+            height: 1rem;
+            vertical-align: middle;
+            display: inline-block;
+            line-height: 0;
+        }
     }
 
     /* Temporary width override to account for multiple inline action buttons */
@@ -52,61 +71,72 @@ clr-datagrid {
         .btn-sm {
             margin-top: 5px;
         }
+        .export-btns {
+            display: inline-block;
+            .btn-sm {
+                margin-top: 0;
+            }
+        }
     }
 
-    .page-size {
-        margin-right: 0.5rem;
-        // &::before {
-        //     content: '';
-        //     display: inline-block;
-        //     height: 1rem;
-        //     width: .04166667rem;
-        //     background-color: #ddd;
-        //     margin: 0 .5rem;
-        //     vertical-align: middle;
-        // }
-        select {
-            &:hover {
-                border-color: rgba(221,221,221,.5);
-                background: rgba(221,221,221,.5);
+    clr-dg-pagination.separator .pagination-description::before {
+        content: '';
+        display: inline-block;
+        height: 1rem;
+        width: .04166667rem;
+        background-color: #ddd;
+        margin: 0 .5rem;
+        vertical-align: middle;
+    }
+
+    /* Styling RowsPerPage directive to Clarity UI */
+    div[rowsPerPage] {
+        display: inline-block;
+        .page-size {
+            // margin-right: 0.5rem;
+            select {
+                &:hover {
+                    border-color: rgba(221,221,221,.5);
+                    background: rgba(221,221,221,.5);
+                }
+                &:focus {
+                    border-bottom: 1px solid #0095d3;
+                    background-size: 100% 100%;
+                }
+                -webkit-appearance: none;
+                -moz-appearance: none;
+                -ms-appearance: none;
+                -o-appearance: none;
+                margin-left: .5rem;
+                height: 1rem;
+                line-height: 1rem;
+                padding: 0 .7rem 0 .25rem;
+                border: none;
+                border-radius: 0;
+                box-shadow: none;
+                background: 0 0;
+                color: #000;
+                display: inline-block;
+                border-bottom: 1px solid #9a9a9a;
+                background: linear-gradient(to bottom,transparent 95%,#0095d3 95%) no-repeat;
+                background-size: 0 100%;
+                transition: background-size .2s ease;
+                position: relative;
+                cursor: pointer;
+                font-size: 100%;
+                z-index: 2;
             }
-            &:focus {
-                border-bottom: 1px solid #0095d3;
-                background-size: 100% 100%;
+            &::after {
+                display: inline-block;
+                content: '';
+                height: .416667rem;
+                width: .416667rem;
+                background-image: url('data:image/svg+xml;charset=utf8,<svg%20xmlns%3D"http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg"%20viewBox%3D"0%200%2012%2012">%0A%20%20%20%20<defs>%0A%20%20%20%20%20%20%20%20<style>.cls-1%7Bfill%3A%239a9a9a%3B%7D<%2Fstyle>%0A%20%20%20%20<%2Fdefs>%0A%20%20%20%20<title>Caret<%2Ftitle>%0A%20%20%20%20<path%20class%3D"cls-1"%20d%3D"M6%2C9L1.2%2C4.2a0.68%2C0.68%2C0%2C0%2C1%2C1-1L6%2C7.08%2C9.84%2C3.24a0.68%2C0.68%2C0%2C1%2C1%2C1%2C1Z"%2F>%0A<%2Fsvg>%0A');
+                background-repeat: no-repeat;
+                background-size: contain;
+                vertical-align: middle;
+                margin-left: -16px;
             }
-            -webkit-appearance: none;
-            -moz-appearance: none;
-            -ms-appearance: none;
-            -o-appearance: none;
-            margin-left: .5rem;
-            height: 1rem;
-            line-height: 1rem;
-            padding: 0 .7rem 0 .25rem;
-            border: none;
-            border-radius: 0;
-            box-shadow: none;
-            background: 0 0;
-            color: #000;
-            display: inline-block;
-            border-bottom: 1px solid #9a9a9a;
-            background: linear-gradient(to bottom,transparent 95%,#0095d3 95%) no-repeat;
-            background-size: 0 100%;
-            transition: background-size .2s ease;
-            position: relative;
-            cursor: pointer;
-            font-size: 100%;
-            z-index: 2;
-        }
-        &::after {
-            display: inline-block;
-            content: '';
-            height: .416667rem;
-            width: .416667rem;
-            background-image: url('data:image/svg+xml;charset=utf8,<svg%20xmlns%3D"http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg"%20viewBox%3D"0%200%2012%2012">%0A%20%20%20%20<defs>%0A%20%20%20%20%20%20%20%20<style>.cls-1%7Bfill%3A%239a9a9a%3B%7D<%2Fstyle>%0A%20%20%20%20<%2Fdefs>%0A%20%20%20%20<title>Caret<%2Ftitle>%0A%20%20%20%20<path%20class%3D"cls-1"%20d%3D"M6%2C9L1.2%2C4.2a0.68%2C0.68%2C0%2C0%2C1%2C1-1L6%2C7.08%2C9.84%2C3.24a0.68%2C0.68%2C0%2C1%2C1%2C1%2C1Z"%2F>%0A<%2Fsvg>%0A');
-            background-repeat: no-repeat;
-            background-size: contain;
-            vertical-align: middle;
-            margin-left: -16px;
         }
     }
 }
