@@ -93,6 +93,7 @@ export interface IznesShareDetail {
     redemptionEnableNonWorkingDay: number;
     isProduction?: string;
     amUserId?: number;
+    classification: number;
 }
 
 export interface OfiFundShareListState {
