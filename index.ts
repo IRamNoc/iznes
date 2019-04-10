@@ -6,8 +6,8 @@ export {
     SagaHelper,
 };
 
-export { TranslatePipe } from './pipes';
-export { MoneyValuePipe } from './pipes';
+export { TranslatePipe } from './pipes/translate.pipe';
+export { MoneyValuePipe } from './pipes/money-value.pipe';
 export { SetlPipesModule } from './pipes';
 
 export { SetlComponentsModule } from './components';
