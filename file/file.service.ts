@@ -14,7 +14,7 @@ import { select } from '@angular-redux/store';
 import * as _ from 'lodash';
 
 interface AddFileRequest {
-    files: string;
+    files: {}[];
     secure?: boolean;
     path?: string;
 }
