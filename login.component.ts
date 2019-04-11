@@ -318,16 +318,6 @@ export class SetlLoginComponent implements OnDestroy, OnInit, AfterViewInit, Log
 
         this.submitBtnState = ClrLoadingState.LOADING;
 
-        // if the alert popup exists.
-        // if (document.getElementsByClassName('jaspero__dialog-icon').length > 0) {
-        //     // remove the popup and return false.
-        //     const elements = document.getElementsByClassName('error');
-        //     if (elements.length > 0) {
-        //         elements[0].parentNode.removeChild(elements[0]);
-        //     }
-        //     return false;
-        // }
-
         // Dispatch a login request action.
         // this.ngRedux.dispatch({type: 'my-detail/LOGIN_REQUEST'});
         const loginRequestAction = loginRequestAC();
@@ -427,18 +417,9 @@ export class SetlLoginComponent implements OnDestroy, OnInit, AfterViewInit, Log
                 this.loginValue = params.email;
             }
             if (params.error) {
-                this.displayError();
+                this.showAlert('error', 'This link is no longer valid. Please try to login again.');
             }
         });
-    }
-
-    displayError() {
-        setTimeout(
-            () => {
-                this.showAlert('error', 'This link is no longer valid. Please try to login again.');
-            },
-            0,
-        );
     }
 
     passwordValidator(g: FormGroup) {
@@ -732,6 +713,7 @@ export class SetlLoginComponent implements OnDestroy, OnInit, AfterViewInit, Log
             return;
         }
 
+        // timeout to account for other view changes
         setTimeout(
             () => {
                 this.alert = {

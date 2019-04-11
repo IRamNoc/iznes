@@ -1,4 +1,4 @@
-<div class="login-wrapper" [class.overlay]="appConfig.loginOverlay" [style.backgroundImage]="'url('+ appConfig.backgroundImage +')'">
+<div class="login-wrapper" [style.backgroundImage]="'url('+ appConfig.backgroundImage +')'">
     <div class="login">
         <div class="language">
             <clr-dropdown>
@@ -37,6 +37,9 @@
 
         <p class="legal">{{ '@appConfig.platformLegal@ is a private environment subject to authorised access only.' | translate: {'appConfig.platformLegal': appConfig.platformLegal} }}</p>
     </div>
+
+    <div *ngIf="appConfig.loginOverlay" class="loginOverlay" [style.backgroundColor]="appConfig.loginOverlayColour"></div>
+
     <div *ngIf="appConfig.loginContent" class="text-content">
         <div class="container">
             <h1 *ngIf="appConfig.loginContent.title">{{ appConfig.loginContent.title | translate }}</h1>
