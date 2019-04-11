@@ -185,7 +185,8 @@ export class OfiSubPortfolioComponent implements OnDestroy {
      * @return void
      */
     toggleFormModal() {
-        this.fileDropRef.dropHandlerRef.encodedFiles.forEach((item, i) => fileDrop.clearFiles(i));
+        const fileDrop = this.fileDropRef.dropHandlerRef;
+        fileDrop.encodedFiles.forEach((item, i) => fileDrop.clearFiles(i));
         this.file = {
             control: null,
             fileData: {
