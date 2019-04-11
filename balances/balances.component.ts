@@ -394,6 +394,7 @@ export class SetlBalancesComponent implements AfterViewInit, OnInit, OnDestroy {
         this.alertsService.create('loading');
 
         const metadata = this.formatExportPDFData();
+        console.log('+++ metadata', metadata);
         const asyncTaskPipe = this.pdfService.createPdfMetadata({ type: null, metadata });
 
         this.ngRedux.dispatch(SagaHelper.runAsyncCallback(

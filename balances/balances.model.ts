@@ -1,4 +1,5 @@
 import { DatagridListActionModel } from '@setl/utils/components/datagrid-list/models/datagrid-list-action.model';
+import * as moment from 'moment';
 
 export const overviewFieldsModel: {} = {
     asset: {
@@ -86,10 +87,19 @@ export const breakdownExportOptions: {} = {
     pdfOptions: {
         file: 'report',
         title: 'Balances Report',
-        subtitle: 'Balances Report',
         walletName: 'walletname',
         text: 'This is an auto-generated balances report with data correct as of the date above.',
-        rightAlign: [],
-        date: 'YYYY-MM-DD',
+        rightAlign: ['free', 'balance', 'encumbrance'],
+        date: moment().format('YYYY-MM-DD H:mm:ss'),
+        orientation: 'portrait',
+        border: { top: '15mm', right: '15mm', bottom: '0', left: '15mm' },
+        footer: {
+            height: '20mm',
+            contents: `
+            <div class="footer">
+                <p class="left">Balances Report | {{page}} of {{pages}}</p>
+                <p class="right">${moment().format('YYYY-MM-DD H:mm:ss')}</p>
+            </div>`,
+        },
     },
 };
