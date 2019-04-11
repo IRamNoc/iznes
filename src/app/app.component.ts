@@ -11,7 +11,7 @@ import {
 import { OfiMemberNodeChannelService, OfiPostTxService, OfiWalletnodeChannelService } from '@ofi/ofi-main';
 import { ToasterService, ToasterConfig } from 'angular2-toaster';
 import { NgRedux } from '@angular-redux/store';
-
+import { HistoryService } from '@setl/utils';
 
 import { setLanguage, setMenuShown } from '@setl/core-store';
 import { WalletSwitchService } from '@ofi/ofi-main/ofi-product/fund-share/service/wallet-switch.service';
@@ -55,6 +55,7 @@ export class AppComponent implements AfterViewInit, OnInit {
         private _ofiWalletnodeChannelService: OfiWalletnodeChannelService,
         private walletSwitchService: WalletSwitchService,
         private remoteLoggerService: RemoteLoggerService,
+        private historyService: HistoryService,
     ) { }
 
     ngOnInit() {
