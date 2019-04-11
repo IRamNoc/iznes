@@ -2,7 +2,7 @@
 
 <div class="main-container {{ currentLanguage }}" [class.connection-alert]="activeAlert">
 
-    <ng-sidebar-container (scroll)="handleSidebarFixingOnScroll($event)" [scrollTop]="scrollTopPosition">
+    <ng-sidebar-container (scroll)="handleSidebarFixingOnScroll($event)" [scrollTop]="scrollTopPosition" [ngClass]="{'alert-margin-top' : alerts}">
 
         <ng-sidebar [(opened)]="opened" [mode]="_MODES[modeNum]" [keyClose]="keyClose" [position]="POSITIONS[positionNum]" [dock]="dock" [dockedSize]="'50px'" [autoCollapseHeight]="autoCollapseHeight" [autoCollapseWidth]="autoCollapseWidth" [closeOnClickOutside]="closeOnClickOutside" [closeOnClickBackdrop]="closeOnClickBackdrop" [showBackdrop]="showBackdrop" [animate]="animate" [trapFocus]="trapFocus" [autoFocus]="autoFocus" [sidebarClass]="'demo-sidebar'" [ariaLabel]="'My sidebar'">
 
@@ -59,12 +59,9 @@
             <app-navigation-topbar (toggleSidebar)="toggleSidebar()"></app-navigation-topbar>
 
             <div class="content-container">
-                <!-- alerts -->
-                <alerts></alerts>
-
                 <!-- Navigation Sidebar. -->
                 <nav class="sidenav" (wheel)="sidebarScroll($event)" (click)="handleSidebarFixingOnClick()"
-                     [ngClass]="{'fixed' : fixSidebar, 'fixed-bottom' : fixSidebarBottom}">
+                     [ngClass]="{'fixed' : fixSidebar, 'fixed-bottom' : fixSidebarBottom, 'alert' : alerts, 'alert-no-transition' : alertsNoTransition}">
                     <div #sidebar class="sidebar-wrapper">
                         <app-navigation-sidebar></app-navigation-sidebar>
                     </div>
