@@ -5,6 +5,7 @@ import { select, NgRedux } from '@angular-redux/store';
 import { ActivatedRoute, Params, Router } from '@angular/router';
 import * as _ from 'lodash';
 import { MultilingualService } from '@setl/multilingual';
+import { DatagridListActionModel } from '@setl/utils/components/datagrid-list/models/datagrid-list-action.model';
 
 import {
     MyWalletsService,
@@ -39,8 +40,20 @@ export class ManageSubPortfolioComponent implements OnInit, OnDestroy {
     connectedWalletId: number;
     requestedWalletAddress: boolean;
 
-    /* Rows Per Page datagrid size */
-    public pageSize: number;
+    /* Datagrid  */
+    public datagridModel = {
+        label: { label: 'Sub-portfolio' },
+        iban: { label: 'IBAN' },
+        address: { label: 'Blockchain Address Identifier' },
+    };
+    public datagridActions: {}[] = [
+        new DatagridListActionModel({
+            label: 'Edit',
+            class: 'btn btn-sm btn-success',
+            icon: 'fa-edit',
+            onClick: 'editSubportfolio',
+        }),
+    ];
 
     /* List of Redux observables. */
     @select(['wallet', 'myWalletAddress', 'addressList']) addressListOb;
@@ -294,6 +307,17 @@ export class ManageSubPortfolioComponent implements OnInit, OnDestroy {
         );
 
         return formGroup;
+    }
+
+    /**
+     * Handles clicks from action btns on the datagrid
+     *
+     * @param action
+     */
+    onAction(action) {
+        if (action.type === 'editSubportfolio') {
+            this.createEditTab(action.data.label, action.data.iban, action.data.address);
+        }
     }
 
     /**

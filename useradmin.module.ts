@@ -31,6 +31,7 @@ import {
     SelectModule,
 } from '@setl/utils';
 import { UserAdminService } from '@setl/core-useradmin/useradmin.service';
+import { DatagridListModule } from '@setl/utils/components/datagrid-list';
 
 /* User admin service. */
 @NgModule({
@@ -80,6 +81,7 @@ import { UserAdminService } from '@setl/core-useradmin/useradmin.service';
         DatePickerExtendedModule,
         DpDatePickerModule,
         SetlPipesModule,
+        DatagridListModule,
     ],
     providers: [AdminUsersService, UserAdminService],
 })
