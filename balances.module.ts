@@ -12,6 +12,7 @@ import { ClarityModule } from '@clr/angular';
 import { SetlPipesModule, SetlComponentsModule, SetlDirectivesModule } from '@setl/utils';
 import { MultilingualModule } from '@setl/multilingual';
 import { FileViewerModule } from '@setl/core-fileviewer';
+import { DatagridListModule } from '@setl/utils/components/datagrid-list/datagrid-list-module';
 
 @NgModule({
     imports: [
@@ -22,6 +23,7 @@ import { FileViewerModule } from '@setl/core-fileviewer';
         MultilingualModule,
         FileViewerModule,
         SetlDirectivesModule,
+        DatagridListModule,
     ],
     declarations: [
         SetlBalancesComponent,

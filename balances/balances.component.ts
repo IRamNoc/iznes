@@ -16,6 +16,8 @@ import { Subscription } from 'rxjs/Subscription';
 import { MultilingualService } from '@setl/multilingual';
 import { AlertsService } from '@setl/jaspero-ng2-alerts';
 import * as moment from 'moment';
+import { overviewFieldsModel, overviewListActions, breakdownFieldsModel,
+    breakdownExportOptions } from './balances.model';
 
 @Component({
     selector: 'setl-balances',
@@ -40,6 +42,10 @@ export class SetlBalancesComponent implements AfterViewInit, OnInit, OnDestroy {
     public exportFileHash: string = '';
     private viewingAsset: string;
     /* Datagrid properties */
+    public overviewFieldsModel = overviewFieldsModel;
+    public overviewListActions = overviewListActions;
+    public breakdownFieldsModel = breakdownFieldsModel;
+    public breakdownExportOptions = breakdownExportOptions;
     public pageSize: number;
     public pageCurrent: number;
     private editTab: boolean = false;
@@ -127,7 +133,7 @@ export class SetlBalancesComponent implements AfterViewInit, OnInit, OnDestroy {
      * @return {void}
      */
     public ngAfterViewInit() {
-        this.myDataGrid.resize();
+        // this.myDataGrid.resize();
     }
 
     /**
@@ -163,6 +169,16 @@ export class SetlBalancesComponent implements AfterViewInit, OnInit, OnDestroy {
                 resolve(assets.find(asset => asset.hash === hash));
             });
         });
+    }
+
+    /**
+     * Handle clicks on datagrid action btns
+     *
+     * @param asset
+     */
+    onAction(action) {
+        if (action.type === 'viewBreakdown') this.handleViewBreakdown(action.data);
+        if (action.type === 'viewHistory') this.handleViewHistory(action.data.asset);
     }
 
     /**
@@ -322,50 +338,50 @@ export class SetlBalancesComponent implements AfterViewInit, OnInit, OnDestroy {
      *
      * @return {void}
      */
-    public exportCSV() {
-        this.alertsService.create('loading');
+    // public exportCSV() {
+    //     this.alertsService.create('loading');
 
-        const csvData = this.formatExportCSVData();
-        if (csvData.length === 0) {
-            this.alertsService.generate('error', this.translate.translate('There are no records to export'));
-            return;
-        }
+    //     const csvData = this.formatExportCSVData();
+    //     if (csvData.length === 0) {
+    //         this.alertsService.generate('error', this.translate.translate('There are no records to export'));
+    //         return;
+    //     }
 
-        const encodedCsv = Buffer.from(json2csv.parse(csvData, {})).toString('base64');
+    //     const encodedCsv = Buffer.from(json2csv.parse(csvData, {})).toString('base64');
 
-        const fileData = {
-            name: 'Balance-Export.csv',
-            data: encodedCsv,
-            status: '',
-            filePermission: 1,
-        };
+    //     const fileData = {
+    //         name: 'Balance-Export.csv',
+    //         data: encodedCsv,
+    //         status: '',
+    //         filePermission: 1,
+    //     };
 
-        const asyncTaskPipe = this.fileService.addFile({
-            files: filter([fileData], (file) => {
-                return file.status !== 'uploaded-file';
-            }),
-        });
+    //     const asyncTaskPipe = this.fileService.addFile({
+    //         files: filter([fileData], (file) => {
+    //             return file.status !== 'uploaded-file';
+    //         }),
+    //     });
 
-        this.ngRedux.dispatch(SagaHelper.runAsyncCallback(
-            asyncTaskPipe,
-            (successResponse) => {
-                const data = get(successResponse, '[1].Data[0][0]', {});
-                if (data.fileHash) {
-                    this.exportFileHash = data.fileHash;
-                    this.showExportModal('CSV');
-                    this.alertsService.create('clear');
-                    return;
-                }
-                this.alertsService.generate(
-                    'error', this.translate.translate('Something has gone wrong. Please try again later'));
-            },
-            (failResponse) => {
-                const data = get(failResponse, '[1].Data[0]', {});
-                const errorText = data.error ? data.error : 'Something has gone wrong. Please try again later';
-                this.alertsService.generate('error', this.translate.translate(errorText));
-            }),
-        );
-    }
+    //     this.ngRedux.dispatch(SagaHelper.runAsyncCallback(
+    //         asyncTaskPipe,
+    //         (successResponse) => {
+    //             const data = get(successResponse, '[1].Data[0][0]', {});
+    //             if (data.fileHash) {
+    //                 this.exportFileHash = data.fileHash;
+    //                 this.showExportModal('CSV');
+    //                 this.alertsService.create('clear');
+    //                 return;
+    //             }
+    //             this.alertsService.generate(
+    //                 'error', this.translate.translate('Something has gone wrong. Please try again later'));
+    //         },
+    //         (failResponse) => {
+    //             const data = get(failResponse, '[1].Data[0]', {});
+    //             const errorText = data.error ? data.error : 'Something has gone wrong. Please try again later';
+    //             this.alertsService.generate('error', this.translate.translate(errorText));
+    //         }),
+    //     );
+    // }
 
     /**
      * Export PDF
@@ -472,15 +488,15 @@ export class SetlBalancesComponent implements AfterViewInit, OnInit, OnDestroy {
      *
      * @returns {array} exportData
      */
-    formatExportCSVData() {
-        const rawData = JSON.parse(JSON.stringify(this.myDataGrid.items['_filtered']));
+    // formatExportCSVData() {
+    //     const rawData = JSON.parse(JSON.stringify(this.myDataGrid.items['_filtered']));
 
-        return rawData.map((item) => {
-            delete item.breakdown;
-            delete item.deleted;
-            return item;
-        });
-    }
+    //     return rawData.map((item) => {
+    //         delete item.breakdown;
+    //         delete item.deleted;
+    //         return item;
+    //     });
+    // }
 
     /**
      * Show Export Modal
@@ -520,7 +536,7 @@ export class SetlBalancesComponent implements AfterViewInit, OnInit, OnDestroy {
      * @returns {boolean}
      */
     disableExportBtn() {
-        return Boolean(!get(this.myDataGrid, "items['_filtered'].length", true));
+        // return Boolean(!get(this.myDataGrid, "items['_filtered'].length", true));
     }
 
     /**

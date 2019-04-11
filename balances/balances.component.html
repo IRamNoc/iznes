@@ -40,7 +40,14 @@
 
 <ng-template #staticBalanceList>
     <div class="panel-body">
-        <clr-datagrid #myDataGrid>
+        <datagrid-list
+            [fieldsModel]="overviewFieldsModel"
+            [listData]="balances$ | async"
+            [listActions]="overviewListActions"
+            (action)="onAction($event)">
+        </datagrid-list>
+
+        <!-- <clr-datagrid #myDataGrid>
             <clr-dg-column [clrDgField]="'asset'" clrDgSortIcon style="min-width: 170px;">{{ 'Asset' | translate }}</clr-dg-column>
             <clr-dg-column [clrDgField]="'total'" clrDgSortIcon class="right" style="min-width: 170px;">{{ 'Total' | translate }}</clr-dg-column>
             <clr-dg-column [clrDgField]="'totalencumbered'" clrDgSortIcon class="right">{{ 'Encumbered' | translate }}</clr-dg-column>
@@ -77,7 +84,7 @@
                 <clr-dg-pagination #pagination [clrDgPageSize]="pageSize" [clrDgPage]="pageCurrent"
                                     (clrDgPageChange)="setCurrentPage($event)"></clr-dg-pagination>
             </clr-dg-footer>
-        </clr-datagrid>
+        </clr-datagrid> -->
     </div>
 </ng-template>
 
@@ -91,6 +98,12 @@
             <div class="form-group tx-view-header">
                 <h2>{{ 'Breakdown' | translate }}</h2>
             </div>
+
+            <!-- <datagrid-list
+                [fieldsModel]="breakdownFieldsModel"
+                [listData]="asset.breakdown"
+                [exportOptions]="breakdownExportOptions">
+            </datagrid-list> -->
 
             <clr-datagrid #myDataGrid>
                 <clr-dg-column [clrDgField]="'label'" clrDgSortIcon>{{ 'Address Label' | translate }}</clr-dg-column>
@@ -217,4 +230,3 @@
         </div>
     </div>
 </ng-template>
-    
