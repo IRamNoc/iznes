@@ -278,7 +278,7 @@
                     <label class="control-label required-field">
                         {{ 'Bank Identification Statement' | translate}}
                     </label>
-                    <setl-file-drop [inline]="true" [formControl]="file.control" [preset]="file.fileData"
+                    <setl-file-drop #fileDrop [inline]="true" [formControl]="file.control" [preset]="file.fileData"
                         (onDrop)="onDropFile($event)" ngDefaultControl></setl-file-drop>
                     <setl-file-viewer *ngIf="file.fileData && file.fileData.hash" [fileHash]="file.fileData.hash"></setl-file-viewer>
                     <span class="field-error">{{ getFormError('bankIdentificationStatement') }}</span>
