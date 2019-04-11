@@ -1,11 +1,12 @@
 /* Core imports. */
-import { Component, Input, Output, EventEmitter, OnInit } from '@angular/core';
+import { Component, Input, Output, EventEmitter, OnInit, ViewChild } from '@angular/core';
 
 /* Form Group. */
 import { FormControl } from '@angular/forms';
 
 /* DropHandler Component */
 import { FileDropItem, FileDropEvent, FilePermission, ImageConstraint, AllowFileType } from './FileDrop';
+import { DropHandler } from './drophandler/drophandler.component';
 
 @Component({
     selector: 'setl-file-drop',
@@ -35,6 +36,8 @@ export class FileDropComponent implements OnInit {
         console.warn('[core-filedrop] Input "disabled" has will be deprecated. Due to Angular warning. Please use "isDisabled" instead.');
         this.disabledFlag = v;
     }
+
+    @ViewChild('dropHandler') dropHandlerRef: DropHandler;
 
     public get disabled(): boolean {
         return this.disabledFlag;
