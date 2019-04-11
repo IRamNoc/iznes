@@ -53,15 +53,15 @@
 
             <!-- EXPORT BUTTONS -->
             <div class="export-btns">
-                <button *ngIf="export['csv'] && dataGrid.items['_filtered']" class="btn btn-sm" (click)="exportList('csv')">{{ 'Export CSV'  | translate }}</button>
-                <button *ngIf="export['pdf'] && dataGrid.items['_filtered']" class="btn btn-sm" (click)="exportList('pdf')">{{ 'Export PDF'  | translate }}</button>
+                <button *ngIf="export['csv'] && dataGrid.items['_filtered']" [clrLoading]="csvBtnState" class="btn btn-sm" (click)="exportCSV()">{{ 'Export CSV' | translate }}</button>
+                <button *ngIf="export['pdf'] && dataGrid.items['_filtered']" [clrLoading]="pdfBtnState" class="btn btn-sm" (click)="exportPDF()">{{ 'Export PDF' | translate }}</button>
             </div>
 
             <!-- ROWS PER PAGE -->
             <div rowsPerPage (rowsUpdate)="listRecordsPerPage=$event; rowsUpdate.emit($event)"></div>
 
             <!-- PAGINATION-->
-            <clr-dg-pagination #pagination [clrDgPageSize]="listRecordsPerPage" [clrDgPage]="currentPage" (clrDgPageChange)="currentPageChange.emit($event)" [clrDgTotalItems]="totalItems" class="separator">
+            <clr-dg-pagination #pagination [clrDgPageSize]="listRecordsPerPage" [clrDgPage]="currentPage" (clrDgPageChange)="currentPageChange.emit($event)" [clrDgTotalItems]="totalItems" class="clr-foooter separator">
                 {{pagination.firstItem + 1}} - {{pagination.lastItem + 1}} of {{pagination.totalItems}}
             </clr-dg-pagination>
         </clr-dg-footer>
@@ -95,6 +95,6 @@
     </div>
     <div class="modal-footer">
         <setl-file-viewer [fileHash]="exportFileHash" [viewType]="2"></setl-file-viewer>
-        <button type="button" class="btn btn-primary" (click)="hideExportModal()">{{ 'Cancel' | translate }}</button>
+        <button type="button" class="btn btn-primary" (click)="exportModalDisplay = false">{{ 'Cancel' | translate }}</button>
     </div>
 </clr-modal>
