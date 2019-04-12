@@ -60,6 +60,8 @@ export class BasicLayoutComponent implements OnInit, OnDestroy, AfterViewInit {
     public sidebarHeight: number;
     public scrollTopPosition: number;
     public topBarHeight: number = 75; // default topbar height
+    public alerts: boolean = false;
+    public alertsNoTransition: boolean = false;
 
     /* Redux observables. */
     public _MODES: string[] = ['over', 'push', 'slide'];
@@ -69,6 +71,7 @@ export class BasicLayoutComponent implements OnInit, OnDestroy, AfterViewInit {
     @select(['user', 'siteSettings', 'menuShown']) menuShowOb;
     @select(['user', 'siteSettings', 'version']) requestVersionObj;
     @select(['user', 'siteSettings', 'language']) requestLanguageObj;
+    @select(['user', 'alerts', 'alerts']) getAlert$;
 
     public menuShown: number;
     public production: boolean;
@@ -122,6 +125,18 @@ export class BasicLayoutComponent implements OnInit, OnDestroy, AfterViewInit {
                 console.log(this.currentParentUrl);
             }
         }));
+        // subscribe to alerts
+        this.subscriptionsArray.push(this.getAlert$.subscribe(
+            (data) => {
+                if (this.alerts !== Object.keys(data).length > 0) {
+                    this.alertsNoTransition = true;
+                    setTimeout(() => {
+                        this.alertsNoTransition = false;
+                    }, 500);
+                }
+                this.alerts = Object.keys(data).length > 0;
+            },
+        ));
     }
 
     /**

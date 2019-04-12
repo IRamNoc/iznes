@@ -19,17 +19,26 @@
         </div>
     </div>
     
-    <div class="alert-items" [ngClass]="paddingClass">
+    <div class="alert-items">
         <div class="alert-item static">
-            <div class="alert-icon-wrapper">
+            <div *ngIf="alerts[currentAlert]['class'] == 'alert-info'" class="alert-icon-wrapper">
                 <clr-icon class="alert-icon" shape="info-circle"></clr-icon>
+            </div>
+            <div *ngIf="alerts[currentAlert]['class'] == 'alert-warning'" class="alert-icon-wrapper">
+                <clr-icon class="alert-icon" shape="exclamation-triangle"></clr-icon>
+            </div>
+            <div *ngIf="alerts[currentAlert]['class'] == 'alert-danger'" class="alert-icon-wrapper">
+                <clr-icon class="alert-icon" shape="exclamation-circle"></clr-icon>
             </div>
             <div class="alert-text">
                 {{alerts[currentAlert]['text']}}
             </div>
-            <div class="alert-actions">
+            <div *ngIf="alerts[currentAlert]['buttonText']" class="alert-actions">
                 <button class="btn alert-action" (click)="buttonClick()">{{alerts[currentAlert]['buttonText']}}</button>
             </div>
         </div>
     </div>
+    <button *ngIf="alerts[currentAlert]['close']" type="button" class="close" aria-label="Close" (click)="closeButtonClick()">
+        <clr-icon aria-hidden="true" shape="close"></clr-icon>
+    </button>
 </div>

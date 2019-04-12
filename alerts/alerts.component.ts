@@ -17,16 +17,13 @@ export class AlertsComponent implements AfterViewInit, OnDestroy {
     public appConfig: AppConfig;
     public showAlert: boolean = false;
     public alerts = [];
-    public menuShow: boolean = true;
     public totalAlerts: number = 0;
     public currentAlert: number = 0;
     public mainClass = [];
-    public paddingClass = [];
 
     private subscriptions: Subscription[] = [];
 
     @select(['user', 'alerts', 'alerts']) getAlert$;
-    @select(['user', 'siteSettings', 'menuShown']) menuShowOb;
 
     constructor(public changeDetectorRef: ChangeDetectorRef,
                 private router: Router,
@@ -49,36 +46,26 @@ export class AlertsComponent implements AfterViewInit, OnDestroy {
                 this.changeClasses();
             },
         ));
-   
-        /* Subscribe to the menu shown value in redux. */
-        this.subscriptions.push(this.menuShowOb.subscribe(
-            (menuState) => {
-                this.menuShow = menuState;
-                this.changeClasses();
-            },
-        ));
     }
 
-    buttonClick(){
-        if (this.alerts[this.currentAlert]['buttonPath'] === 'markAsRead'){
+    buttonClick() {
+        if (this.alerts[this.currentAlert]['buttonPath'] === 'markAsRead') {
             this.userService.markAlertAsRead(this.alerts[this.currentAlert]['alertID']);
-        }else{
+        } else {
             this.router.navigateByUrl(this.alerts[this.currentAlert]['buttonPath']);
         }
     }
 
-    changeClasses(){
-        this.mainClass = [];
-        this.mainClass.push((this.menuShow ? 'menuShow' : 'menuHide'));
-        if (this.alerts.length > 0){
-            this.mainClass.push(this.alerts[this.currentAlert]['class']);
-        }
-
-        this.paddingClass = [];
-        this.paddingClass.push((this.menuShow ? 'menuShowPadding' : 'menuHidePadding'));
+    closeButtonClick() {
+        this.userService.markAlertAsRead(this.alerts[this.currentAlert]['alertID']);
     }
 
-    changeAlert(dir){
+    changeClasses() {
+        this.mainClass = [];
+        if (this.alerts.length > 0) this.mainClass.push(this.alerts[this.currentAlert]['class']);
+    }
+
+    changeAlert(dir) {
         this.currentAlert = this.currentAlert + (dir === 'up' ? 1 : -1);
         if (this.currentAlert < 0) this.currentAlert = this.alerts.length - 1;
         if (this.currentAlert >= this.alerts.length) this.currentAlert = 0;
