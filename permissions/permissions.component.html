@@ -42,34 +42,14 @@
     <ng-template #staticGroupList>
         <div class="panel-body">
 
-            <clr-datagrid #usersDataGrid>
-                <clr-dg-column>{{ 'Group Name' | translate }}</clr-dg-column>
-                <clr-dg-column>
-                    {{ 'Group Type' | translate }}
-                    <clr-dg-string-filter [clrDgStringFilter]="typeFilter">
-                    </clr-dg-string-filter>
-                </clr-dg-column>
-                <clr-dg-column class="right">{{ 'Actions' | translate }}</clr-dg-column>
+            <datagrid-list
+                [fieldsModel]="permissionsListFieldsModel"
+                [listData]="allGroupList"
+                [listActions]="permissionsListActionsModel"
+                [filters]="datagridFilters"
+                (action)="onAction($event)">
+            </datagrid-list>
 
-                <clr-dg-row *clrDgItems="let group of allGroupList">
-                    <clr-dg-cell>{{group.groupName}}</clr-dg-cell>
-                    <clr-dg-cell>{{group.category[0].text}}</clr-dg-cell>
-                    <clr-dg-cell class="right">
-                        <button (click)="handleEdit(group.index)" class="btn btn-success btn-sm">
-                            <i class="fa fa-pencil-square-o"></i> {{ 'Edit' | translate}}
-                        </button>
-                        <button (click)="handleDelete(group.index)" class="btn btn-danger btn-sm">
-                            <i class="fa fa-trash-o"></i> {{ 'Delete' | translate}}
-                        </button>
-                    </clr-dg-cell>
-                </clr-dg-row>
-
-                <clr-dg-footer>
-                    <div rowsPerPage="10" (rowsUpdate)="pageSize = $event"></div>
-                    {{pagination.firstItem + 1}} - {{pagination.lastItem + 1}}
-                    <clr-dg-pagination #pagination [clrDgPageSize]="pageSize"></clr-dg-pagination>
-                </clr-dg-footer>
-            </clr-datagrid>
         </div>
     </ng-template>
 
@@ -81,9 +61,9 @@
                     <div class="row">
                         <div class="form-group col-sm-6">
                             <label class="control-label required-field">{{ 'Group Name' | translate }}</label>
-                            <input id="group-name" 
-                                    type="text" 
-                                    formControlName="name" 
+                            <input id="group-name"
+                                    type="text"
+                                    formControlName="name"
                                     placeholder="{{ 'Group Name' | translate }}"
                                     class="form-control groupname mlp_translated">
                             <div *ngIf="formControl.controls.name.hasError('required') && formControl.controls.name.touched"
@@ -95,8 +75,8 @@
                     <div class="row">
                         <div class="form-group col-sm-6">
                             <label class="control-label required-field">{{ 'Group Description' | translate }}</label>
-                            <input id="group-description" type="text" 
-                                    formControlName="description" 
+                            <input id="group-description" type="text"
+                                    formControlName="description"
                                     name="description"
                                     placeholder="{{ 'Group Description' | translate }}"
                                     class="form-control groupdescription mlp_translated">
@@ -158,9 +138,9 @@
                                 [disabled]="!formControl.valid">
                             <i class="fa fa-save"></i> {{ 'Save' | translate }}
                         </button>
-                       
-                        <button id="group-clear-btn" 
-                                (click)="clearNewGroup(tabid, $event)" 
+
+                        <button id="group-clear-btn"
+                                (click)="clearNewGroup(tabid, $event)"
                                 class="btn btn-secondary">{{ 'Clear' | translate }}
                         </button>
                     </div>
@@ -178,9 +158,9 @@
                     <div class="row">
                         <div class="form-group col-sm-6">
                             <label class="control-label required-field">{{ 'Group Name' | translate }}</label>
-                            <input id="group-name" 
-                                    type="text" 
-                                    formControlName="name" 
+                            <input id="group-name"
+                                    type="text"
+                                    formControlName="name"
                                     placeholder="{{ 'Group Name' | translate }}"
                                     class="form-control groupname mlp_translated">
                             <div *ngIf="formControl.controls.name.hasError('required') && formControl.controls.name.touched"
@@ -192,9 +172,9 @@
                     <div class="row">
                         <div class="form-group col-sm-6">
                             <label class="control-label required-field">{{ 'Group Description' | translate }}</label>
-                            <input id="group-description" 
-                                    type="text" 
-                                    formControlName="description" 
+                            <input id="group-description"
+                                    type="text"
+                                    formControlName="description"
                                     name="description"
                                     placeholder="{{ 'Group Description' | translate }}"
                                     class="form-control groupdescription mlp_translated">
@@ -214,7 +194,7 @@
                                        [items]="groupTypes"
                                        [allowClear]="true"
                                        placeholder="{{ 'Choose Group Tag' | translate }}"
-                                       [disabled]="true" 
+                                       [disabled]="true"
                                        [formControl]="formControl.controls['type']">
                             </ng-select>
                         </div>
@@ -396,7 +376,7 @@
                             <option value="1">{{ 'Group 1' | translate }}</option>
                             <option value="2">{{ 'Group 2' | translate }}</option>
                         </select>
-                        
+
                         2
                         <select>
                             <option value="">{{ 'Select an option' | translate }}</option>
