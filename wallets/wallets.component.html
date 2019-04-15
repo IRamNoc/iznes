@@ -35,7 +35,14 @@
     <ng-template #staticWalletListTab>
         <div class="panel-body">
 
-            <clr-datagrid #walletDataGrid>
+            <datagrid-list
+                [fieldsModel]="walletFieldsModel"
+                [listData]="walletList"
+                [listActions]="walletListActions"
+                (action)="onAction($event)">
+            </datagrid-list>
+
+            <!-- <clr-datagrid #walletDataGrid>
                 <clr-dg-column>{{ 'Wallet Name' | translate }}</clr-dg-column>
                 <clr-dg-column>{{ 'Account' | translate }}</clr-dg-column>
                 <clr-dg-column>{{ 'Wallet Type' | translate }}</clr-dg-column>
@@ -69,7 +76,7 @@
                     {{pagination.firstItem + 1}} - {{pagination.lastItem + 1}}
                     <clr-dg-pagination #pagination [clrDgPageSize]="pageSize"></clr-dg-pagination>
                 </clr-dg-footer>
-            </clr-datagrid>
+            </clr-datagrid> -->
         </div>
     </ng-template>
 
@@ -81,10 +88,10 @@
                     <div class="row">
                         <div class="form-group col-sm-6">
                             <label class="control-label required-field">{{ 'Wallet Name' | translate }}</label>
-                            <input id="new-wallet-name" 
-                                    type="text" 
+                            <input id="new-wallet-name"
+                                    type="text"
                                     formControlName="walletName"
-                                    placeholder="{{ 'Wallet Name' | translate }}" 
+                                    placeholder="{{ 'Wallet Name' | translate }}"
                                     class="form-control walletname">
                             <div *ngIf="formControl.controls.walletName.hasError('required') && formControl.controls.walletName.touched"
                                  class="field-error">{{ 'Field is required' | translate }}
@@ -157,10 +164,10 @@
                     <div class="row">
                         <div class="form-group col-sm-6">
                             <label class="control-label required-field">{{ 'Wallet Name' | translate }}</label>
-                            <input id="new-wallet-name" 
-                                    type="text" 
+                            <input id="new-wallet-name"
+                                    type="text"
                                     formControlName="walletName"
-                                    placeholder="{{ 'Wallet Name' | translate }}" 
+                                    placeholder="{{ 'Wallet Name' | translate }}"
                                     class="form-control walletname">
                             <div *ngIf="formControl.controls.walletName.hasError('required') && formControl.controls.walletName.touched"
                                  class="field-error">{{ 'Field is required' | translate }}
@@ -416,7 +423,7 @@
         <clr-tabs>
             <clr-tab>
                 <a clrTabLink>
-                    <i class="fa fa-users"></i> 
+                    <i class="fa fa-users"></i>
                     {{ 'Basic' | translate }}
                 </a>
                 <clr-tab-content *clrIfActive="true">
@@ -615,7 +622,7 @@
 
                                 <div class="form-group col-sm-12">
                                     <label class="control-label">
-                                        {{ 'City or Town' | translate}} 
+                                        {{ 'City or Town' | translate}}
                                     </label>
                                     <div>
                                         <input id="new-wallet-ca-address3" type="text"

@@ -22,6 +22,7 @@ import {
 
 import { AlertsService } from '@setl/jaspero-ng2-alerts';
 import { SagaHelper, immutableHelper, LogService } from '@setl/utils';
+import { DataGridDropdownFilter } from '@setl/utils/components/datagrid-list/filters/dropdown.filter';
 
 @Component({
     selector: 'app-manage-sub-portfolio',
@@ -54,6 +55,11 @@ export class ManageSubPortfolioComponent implements OnInit, OnDestroy {
             onClick: 'editSubportfolio',
         }),
     ];
+    public datagridFilters: {} = {
+        label: new DataGridDropdownFilter('label'),
+        iban: new DataGridDropdownFilter('iban'),
+        address: new DataGridDropdownFilter('address'),
+    };
 
     /* List of Redux observables. */
     @select(['wallet', 'myWalletAddress', 'addressList']) addressListOb;

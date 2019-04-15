@@ -14,6 +14,7 @@ import * as _ from 'lodash';
 import * as moment from 'moment';
 import { managedWalletsActions } from '@setl/core-store';
 import { MultilingualService } from '@setl/multilingual';
+import { walletFieldsModel, walletListActions } from './wallets.model';
 
 /* Decorator. */
 @Component({
@@ -39,8 +40,9 @@ export class AdminWalletsComponent implements OnInit, AfterViewInit, OnDestroy {
     private walletTypes: any;
     private countriesList: any;
 
-    /* Rows Per Page datagrid size */
-    public pageSize: number;
+    /*  Datagrid */
+    public walletFieldsModel = walletFieldsModel;
+    public walletListActions = walletListActions;
 
     /* Subscriptions from service observables. */
     private subscriptions: { [key: string]: any } = {};
@@ -300,6 +302,15 @@ export class AdminWalletsComponent implements OnInit, AfterViewInit, OnDestroy {
 
         /* Clear new wallet form. */
         this.clearNewWallet(1, false);
+    }
+
+    /**
+     * Handles clicks on datagrid action buttons
+     * @param tabId
+     */
+    onAction(action) {
+        if (action.type === 'editWallet') this.handleEdit(action.data.index);
+        if (action.type === 'deleteWallet') this.handleDelete(action.data.index);
     }
 
     /**
