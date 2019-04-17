@@ -20,6 +20,8 @@ import { SagaHelper } from '@setl/utils/index';
 import { ConfirmationService } from '@setl/utils';
 import { MessageConnectionConfig, MessagesService } from '@setl/core-messages';
 import { MultilingualService } from '@setl/multilingual';
+import { connectionsFieldsModel, connectionsListActions, connectionsFilters,
+    pendingFieldsModel, pendingListActions, pendingFilters } from './model';
 
 @Component({
     selector: 'app-my-connections',
@@ -51,8 +53,13 @@ export class ConnectionComponent implements OnInit, OnDestroy {
     isAcceptModalDisplayed: boolean;
     isEditTabClosed: boolean;
     connectionToBind: any;
-    /* Rows Per Page datagrid size */
-    public pageSize: number;
+    /* Datagrid */
+    public connectionsFieldsModel = connectionsFieldsModel;
+    public connectionsListActions = connectionsListActions;
+    public connectionsFilters = connectionsFilters;
+    public pendingFieldsModel = pendingFieldsModel;
+    public pendingListActions = pendingListActions;
+    public pendingFilters = pendingFilters;
     // List of observable subscription
     subscriptionsArray: Subscription[] = [];
     // List of Redux observable.
@@ -353,6 +360,20 @@ export class ConnectionComponent implements OnInit, OnDestroy {
 
         this.resetForm();
         this.isAcceptedTabDisplayed = true;
+    }
+
+    /**
+     * Handles clicks on datagrid action buttons
+     * @param action
+     */
+    onAction(action) {
+        if (action.type === 'editConnection') return this.handleEditButtonClick(action.data);
+        if (action.type === 'deleteConnection') return this.handleDeleteButtonClick(action.data);
+        if (action.type === 'cancelPending') {
+            return this.handleRejectButtonClick(action.data, 'This connection request has been cancelled');
+        }
+        if (action.type === 'rejectPending') return this.handleRejectButtonClick(action.data);
+        if (action.type === 'acceptPending') return this.handleAcceptButtonClick(action.data);
     }
 
     handleEditButtonClick(connection) {
