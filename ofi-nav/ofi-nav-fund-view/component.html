@@ -67,12 +67,12 @@
 
                     <div class="form-group col-sm-2">
                         <label class="control-label" for="numberofshare">{{ 'Number of Shares' | translate }}</label>
-                        <input type="text" id="numberofshare" name="numberofshare" value="" readonly>
+                        <input type="text" id="numberofshare" name="numberofshare" value="{{ navToFrontEndString(navFund.numberOfShares) }}" readonly>
                     </div>
 
                     <div class="form-group col-sm-2">
                         <label class="control-label" for="aum">{{ 'AUM' | translate }}</label>
-                        <input type="text" id="aum" name="aum" value="" readonly>
+                        <input type="text" id="aum" name="aum" value="{{ navToFrontEndString(navFund.shareAum) }}" readonly>
                     </div>
                 </div>
             </form>
@@ -148,12 +148,9 @@
                         <span [hidden]="isNavNull(item.nav)">{{navToFrontEndString(item.nav)}}</span>
                         <span [hidden]="!isNavNull(item.nav)" class="label label-warning">{{ 'Pending' | translate }}</span>
                     </clr-dg-cell>
-                    <clr-dg-cell>
-                    </clr-dg-cell>
-                    <clr-dg-cell>
-                    </clr-dg-cell>
-                    <clr-dg-cell>
-                    </clr-dg-cell>
+                    <clr-dg-cell id="{{'nav-history-row'+i+'-col-number-of-shares'}}">{{ navToFrontEndString(item.shares) }}</clr-dg-cell>
+                    <clr-dg-cell id="{{'nav-history-row'+i+'-share-aum'}}">{{ navToFrontEndString(item.shareAum) }}</clr-dg-cell>
+                    <clr-dg-cell id="{{'nav-history-row'+i+'-coupons'}}"></clr-dg-cell>
                     <clr-dg-cell class="col-status">
                         <span [ngSwitch]="item.status">
                             <span *ngSwitchCase="-1">
