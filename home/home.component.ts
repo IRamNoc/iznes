@@ -6,6 +6,7 @@ import { tap, map, filter } from 'rxjs/operators';
  */
 import { get } from 'lodash';
 import { Component, OnInit, ChangeDetectorRef, OnDestroy } from '@angular/core';
+import { Router } from '@angular/router';
 import { NgRedux, select } from '@angular-redux/store';
 import { Observable } from 'rxjs/Observable';
 import { Subscription } from 'rxjs/Subscription';
@@ -14,6 +15,8 @@ import { setRequestedFromConnections } from '@setl/core-store';
 import { ReportingService } from '@setl/core-balances';
 import { MultilingualService } from '@setl/multilingual';
 import { Transaction } from '@setl/core-store/wallet/transactions/model';
+import { balancesListFieldsModel, balancesListActionsModel, transactionsFieldsModel, transactionsListActionsModel }
+from './home.model';
 
 interface Asset {
     total: number;
@@ -35,8 +38,11 @@ export class HomeComponent implements OnInit, OnDestroy {
     holdingByAsset: any;
     transactions: Transaction[] = [];
 
-    // Rows Per Page datagrid size
-    pageSize: any;
+    // Datagrids
+    public balancesListFieldsModel = balancesListFieldsModel;
+    public balancesListActionsModel = balancesListActionsModel;
+    public transactionsFieldsModel = transactionsFieldsModel;
+    public transactionsListActionsModel = transactionsListActionsModel;
 
     // List of observable subscription
     subscriptions: Subscription[] = [];
@@ -60,6 +66,7 @@ export class HomeComponent implements OnInit, OnDestroy {
         private connectionService: ConnectionService,
         public translate: MultilingualService,
         private changeDetectorRef: ChangeDetectorRef,
+        private router: Router,
     ) {
         this.assetTiles = [
             { total: 0, asset: '' },
@@ -91,7 +98,7 @@ export class HomeComponent implements OnInit, OnDestroy {
             if (!page) {
                 return;
             }
-            this.transactions = page.transactions;
+            this.transactions = page.transactions.map(tx => ({ ...tx, assetName: `${tx.issuer} | ${tx.instrument}` }));
         });
 
         this.holdingByAsset$ = this.reportingService.getBalances();
@@ -113,6 +120,22 @@ export class HomeComponent implements OnInit, OnDestroy {
 
             ConnectionService.requestFromConnectionList(
                 this.connectionService, this.ngRedux, this.connectedWalletId.toString());
+        }
+    }
+
+    /**
+     * Handles clicks on datagrid action buttons
+     * @param action
+     */
+    onAction(action) {
+        if (action.type === 'viewBreakdown') {
+            return this.router.navigateByUrl(`/reports/balances/${action.data.hash}/breakdown`);
+        }
+        if (action.type === 'viewHistory') {
+            return this.router.navigateByUrl(`/reports/balances/${action.data.hash}/history`);
+        }
+        if (action.type === 'viewTransaction') {
+            return this.router.navigateByUrl(`/reports/transactions/${action.data.hash}`);
         }
     }
 
