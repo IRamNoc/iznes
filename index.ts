@@ -333,6 +333,21 @@ export {
 } from './wallet-nodes/';
 
 export {
+    /* Models. */
+    JourneyState,
+
+    /* Reducers. */
+    journeyReducer,
+
+    /* Actions. */
+    SET_JOURNEY,
+    END_JOURNEY,
+
+    /* Models. */
+    Journey,
+} from './journeys';
+
+export {
     // users
     SET_ACCOUNT_ADMIN_USERS,
     setRequestedAccountAdminUsers,
