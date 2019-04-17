@@ -41,6 +41,7 @@ export class OfiClientReferentialComponent implements OnInit, OnDestroy {
     tableData = [];
     otherData = {};
     loading = true;
+    currentTab = 1;
 
     public subscriptions: Array<any> = [];
 
@@ -210,8 +211,9 @@ export class OfiClientReferentialComponent implements OnInit, OnDestroy {
                 this.amKycListObs,
                 this.portfolioManagers$,
                 this.route.params,
+                this.route.queryParams,
             )
-                .subscribe(([clientReferential, amKycList, portfolioManagers, params]) => {
+                .subscribe(([clientReferential, amKycList, portfolioManagers, params, query]) => {
                     this.kycId = (!params.kycId ? '' : params.kycId);
 
                     if (!this.kycId) this.companyName = this.translate.translate('All Clients');
@@ -296,6 +298,9 @@ export class OfiClientReferentialComponent implements OnInit, OnDestroy {
                             }
                         break;
                     }
+                    if (query.tab) {
+                        this.loadTab(+query.tab);
+                    }
                     this.loading = false;
                     this.changeDetectorRef.markForCheck();
                 }),
@@ -333,6 +338,7 @@ export class OfiClientReferentialComponent implements OnInit, OnDestroy {
     }
 
     loadTab(tab) {
+        this.currentTab = tab;
         if (tab == 2) {
             const tempOtherData = {};
             if (this.amKycList.length > 0 && this.amKycList.findIndex(kyc => kyc.kycID == this.kycId) != -1) {

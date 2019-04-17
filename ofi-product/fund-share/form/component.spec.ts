@@ -1,5 +1,5 @@
 import { ComponentFixture, TestBed, fakeAsync, tick } from '@angular/core/testing';
-import { DebugElement, Pipe, PipeTransform } from '@angular/core';
+import {DebugElement, Inject, Pipe, PipeTransform} from '@angular/core';
 import { By } from '@angular/platform-browser';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { ClarityModule } from '@clr/angular';
@@ -21,6 +21,7 @@ import {
     DynamicFormsModule,
     ConfirmationService,
     APP_CONFIG,
+    NumberConverterService, AppConfig,
 } from '@setl/utils';
 import { OfiFundShareService } from '@ofi/ofi-main/ofi-req-services/ofi-product/fund-share/service';
 import { OfiUmbrellaFundService } from '@ofi/ofi-main/ofi-req-services/ofi-product/umbrella-fund/service';
@@ -314,6 +315,8 @@ describe('FundShareComponent', () => {
     let setFundSpy;
     let setUmbrellaFundSpy;
 
+    const numberConverterService = new NumberConverterService({} as AppConfig);
+
     beforeAll(done => (async () => {
         TestBed.resetTestingModule();
         TestBed.configureTestingModule({
@@ -350,6 +353,7 @@ describe('FundShareComponent', () => {
                 { provide: APP_CONFIG, useValue: { MEMBER_NODE_CONNECTION: { port: 1234 } } },
                 { provide: Location, useValue: locationSpy },
                 { provide: 'product-config', useValue: productConfig },
+                { provide: NumberConverterService, useValue: numberConverterService}
             ],
         });
         await TestBed.compileComponents();

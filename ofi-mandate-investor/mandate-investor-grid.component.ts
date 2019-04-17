@@ -48,6 +48,7 @@ export class MandateInvestorGridComponent implements OnInit {
                     }
                     return {
                         ...inv,
+                        investorTypeText: (inv.investorType === InvestorType.RetailMandate) ? this.language.translate('Retail') : this.language.translate('Institutional'),
                         investorName: (inv.investorType === InvestorType.RetailMandate) ? `${inv.firstName} ${inv.lastName}` : inv.companyName,
                         status,
                         pmId: pm.pmId,

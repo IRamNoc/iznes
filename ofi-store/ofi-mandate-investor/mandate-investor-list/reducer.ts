@@ -33,7 +33,7 @@ export const OfiMandateInvestorListReducer = function(
                         id: action.payload.id,
                         walletId: action.payload.walletID,
                         walletName: action.payload.walletName,
-                        kycID: action.payload.kycID,
+                        kycId: action.payload.kycID,
                         firstName: action.payload.firstName,
                         lastName: action.payload.lastName,
                         reference: action.payload.reference,

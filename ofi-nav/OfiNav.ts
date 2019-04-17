@@ -21,8 +21,9 @@ export class NavModel {
     navDate: string;
     navPubDate: string;
     status: string;
-    aum?: number;
     units?: number;
+    shareAum: number;
+    numberOfShares: number;
 }
 
 export class NavLatestModel {

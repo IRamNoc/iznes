@@ -472,7 +472,7 @@ export class OfiNavFundView implements OnInit, OnDestroy {
         this.changeDetectorRef.markForCheck();
     }
 
-    private navToFrontEndString(nav: number): string {
+    navToFrontEndString(nav: number): string {
         return this.moneyPipe.transform(this.numberConverterService.toFrontEnd(nav));
     }
 

@@ -1,5 +1,5 @@
 // Vendor
-import { Component, OnDestroy, ChangeDetectorRef } from '@angular/core';
+import { Component, OnDestroy, ChangeDetectorRef, ViewChild } from '@angular/core';
 import { FormGroup, FormControl, Validators } from '@angular/forms';
 import { select, NgRedux } from '@angular-redux/store';
 import { Subject } from 'rxjs/Subject';
@@ -18,6 +18,7 @@ import { MultilingualService } from '@setl/multilingual';
 import { MyUserService } from '@setl/core-req-services/my-user/my-user.service';
 import { fundItems } from '@ofi/ofi-main/ofi-product/productConfig';
 import { OfiCurrenciesService } from '@ofi/ofi-main/ofi-req-services/ofi-currencies/service';
+import { FileDropComponent } from '@setl/core-filedrop';
 
 @Component({
     selector: 'ofi-sub-portfolio',
@@ -44,6 +45,7 @@ export class OfiSubPortfolioComponent implements OnDestroy {
             name: null,
         },
     };
+    @ViewChild('fileDrop') fileDropRef: FileDropComponent;
 
     unSubscribe: Subject<any> = new Subject();
 
@@ -183,6 +185,8 @@ export class OfiSubPortfolioComponent implements OnDestroy {
      * @return void
      */
     toggleFormModal() {
+        const fileDrop = this.fileDropRef.dropHandlerRef;
+        fileDrop.encodedFiles.forEach((item, i) => fileDrop.clearFiles(i));
         this.file = {
             control: null,
             fileData: {

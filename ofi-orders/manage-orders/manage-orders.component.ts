@@ -51,7 +51,7 @@ import { SearchFilters, ISearchFilters } from './search-filters';
 import { labelForOrder } from '../order.model';
 import { orderStatuses, orderTypes, dateTypes } from './lists';
 import { DatagridParams } from './datagrid-params';
-import { fundClassifications } from '../../ofi-product/productConfig';
+import { fundClassifications } from '../../ofi-product/fund-share/helper/models';
 
 /* Types. */
 interface SelectedItem {
@@ -552,7 +552,8 @@ export class ManageOrdersComponent implements OnInit, AfterViewInit, OnDestroy {
         // classification number decimal point.
         const classificationDp = get(fundClassifications, [this.fundClassificationId, 'dp'], 2);
         this.transformedOrderClassificationFee = this.moneyValuePipe.transform(
-            this.numberConverter.toFrontEnd(this.orderClassificationFee),
+            // * 100 because we displaying it as percentage
+            this.numberConverter.toFrontEnd(this.orderClassificationFee) * 100,
             classificationDp,
         );
 

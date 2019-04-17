@@ -333,7 +333,7 @@
                                         <div>
                                             <input type="text" 
                                                     class="form-control" 
-                                                    [value]="moneyValuePipe.transform(feeFrontend.classificationFee, fundClassifications[fundClassificationId].dp) + '%'"
+                                                    [value]="moneyValuePipe.transform((feeFrontend.classificationFee * 100), fundClassifications[fundClassificationId].dp) + '%'"
                                                     [readonly]="true">
                                         </div>
                                     </div>
