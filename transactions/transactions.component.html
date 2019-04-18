@@ -26,6 +26,13 @@
 
 <ng-template #staticTransactionsList>
     <div class="panel-body">
+        <datagrid-list
+            [fieldsModel]=""
+            [listData]="transactions"
+            [listActions]=""
+            (action)="onAction($event)">
+        </datagrid-list>
+
         <clr-datagrid #myDataGrid [clrDgLoading]="dataLoading">
             <clr-dg-column class="col-actions">{{ 'Actions' | translate }}</clr-dg-column>
             <clr-dg-column class="col-txid">{{ 'Tx ID' | translate }}</clr-dg-column>
@@ -94,9 +101,9 @@
                             <span>{{ field.displayName | translate }}</span>
                         </label>
                         <div class="col-sm-9">
-                            <input type="text" 
-                                    class="form-control" 
-                                    readonly="" 
+                            <input type="text"
+                                    class="form-control"
+                                    readonly=""
                                     value="{{transaction[field.field]}}">
                         </div>
                     </div>

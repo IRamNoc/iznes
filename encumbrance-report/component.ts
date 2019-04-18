@@ -12,6 +12,8 @@ import * as moment from 'moment';
 import * as json2csv from 'json2csv';
 import { AlertsService } from '@setl/jaspero-ng2-alerts';
 import { FileService, PdfService } from '@setl/core-req-services';
+import { encumbrancesFieldsModel, encumbrancesListActions,
+    breakdownFieldsModel, breakdownExportOptions } from './model';
 
 @Component({
     selector: 'encumbrance-report',
@@ -39,6 +41,10 @@ export class EncumbranceReportComponent implements OnInit, OnDestroy {
     public exportModalDisplay: string = '';
     public viewingAddress: string = '';
     private addressList: any;
+    public encumbrancesFieldsModel = encumbrancesFieldsModel;
+    public encumbrancesListActions = encumbrancesListActions;
+    public breakdownFieldsModel = breakdownFieldsModel;
+    public breakdownExportOptions = breakdownExportOptions;
 
     public constructor(private changeDetector: ChangeDetectorRef,
                        private ngRedux: NgRedux<any>,
@@ -157,6 +163,14 @@ export class EncumbranceReportComponent implements OnInit, OnDestroy {
             });
             this.changeDetector.detectChanges;
         }
+    }
+
+    /**
+     * Handles clicks on datagrid action buttons
+     * @param action
+     */
+    onAction(action) {
+        if (action.type === 'viewEncumbrance') this.handleViewBreakdown(action.data);
     }
 
     /**

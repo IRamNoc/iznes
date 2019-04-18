@@ -6,6 +6,8 @@ import { select } from '@angular-redux/store';
 import { TabControl, Tab } from '../tabs';
 import { MultilingualService } from '@setl/multilingual';
 
+import { statusFieldsModel, statusListActions } from './model';
+
 @Component({
     selector: 'transaction-status-report',
     templateUrl: './component.html',
@@ -18,7 +20,10 @@ export class TransactionsStatusComponent implements OnInit, OnDestroy {
     transactions: {}[] = [];
     public pageSize: number;
     public currentPage: number;
-    public objectKeys = Object.keys;
+    public statusFieldsModel = statusFieldsModel;
+    public statusListActions = statusListActions;
+    public showModal: boolean = false;
+    public modalJson: {};
 
     @select(['walletNode', 'transactionStatus']) transactionsOb;
 
@@ -56,6 +61,15 @@ export class TransactionsStatusComponent implements OnInit, OnDestroy {
                 });
             }
         }));
+    }
+
+    onAction(action) {
+        if (action.type === 'viewTx') this.handleShowModal(action.data.request);
+    }
+
+    handleShowModal(json) {
+        this.modalJson = json;
+        this.showModal = true;
     }
 
     formatText(text) {

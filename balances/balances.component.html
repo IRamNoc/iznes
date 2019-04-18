@@ -44,7 +44,10 @@
             [fieldsModel]="overviewFieldsModel"
             [listData]="balances$ | async"
             [listActions]="overviewListActions"
-            (action)="onAction($event)">
+            [exportOptions]="breakdownExportOptions"
+            [currentPage]="pageCurrent"
+            (action)="onAction($event)"
+            (currentPageChange)="setCurrentPage($event)">
         </datagrid-list>
 
         <!-- <clr-datagrid #myDataGrid>

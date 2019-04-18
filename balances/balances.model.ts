@@ -5,13 +5,13 @@ export const overviewFieldsModel: {} = {
     asset: {
         label: 'Asset',
         options: {
-            pipe: 'asset',
+            pipe: { name: 'asset' },
         },
     },
     total: {
         label: 'Total',
         options: {
-            pipe: 'moneyValue',
+            pipe: { name: 'moneyValue' },
             rightAlign: true,
             flashCellOnCondition: 'totalChange',
         },
@@ -19,7 +19,7 @@ export const overviewFieldsModel: {} = {
     totalencumbered: {
         label: 'Encumbered',
         options: {
-            pipe: 'moneyValue',
+            pipe: { name: 'moneyValue' },
             rightAlign: true,
             flashOnCondition: 'encumberChange',
         },
@@ -27,7 +27,7 @@ export const overviewFieldsModel: {} = {
     free: {
         label: 'Free',
         options: {
-            pipe: 'moneyValue',
+            pipe: { name: 'moneyValue' },
             rightAlign: true,
             flashCellOnCondition: 'freeChange',
         },
@@ -59,21 +59,21 @@ export const breakdownFieldsModel: {} = {
     balance: {
         label: 'Total',
         options: {
-            pipe: 'moneyValue',
+            pipe: { name: 'moneyValue' },
             rightAlign: true,
         },
     },
     encumbrance: {
         label: 'Encumbered',
         options: {
-            pipe: 'moneyValue',
+            pipe: { name: 'moneyValue' },
             rightAlign: true,
         },
     },
     free: {
         label: 'Free',
         options: {
-            pipe: 'moneyValue',
+            pipe: { name: 'moneyValue' },
             rightAlign: true,
         },
     },
@@ -87,9 +87,9 @@ export const breakdownExportOptions: {} = {
     pdfOptions: {
         file: 'report',
         title: 'Balances Report',
-        walletName: 'walletname',
+        walletName: '', // set in component
         text: 'This is an auto-generated balances report with data correct as of the date above.',
-        rightAlign: ['free', 'balance', 'encumbrance'],
+        rightAlign: ['free', 'balance', 'encumbrance', 'totalencumbered', 'total'],
         date: moment().format('YYYY-MM-DD H:mm:ss'),
         orientation: 'portrait',
         border: { top: '15mm', right: '15mm', bottom: '0', left: '15mm' },

@@ -25,120 +25,30 @@
         </clr-tab>
     </clr-tabs>
 
-    <clr-modal [(clrModalOpen)]="!!exportModalDisplay" [clrModalClosable]="false">
-        <div class="modal-title">
-            <i class="fa fa-check-circle modal-icon text-success"></i>
-            <h4 class="modal-title-text">{{ '@type@ Export Complete' | translate: { type: exportModalDisplay } }}</h4>
-        </div>
-        <div class="modal-body">
-            <span style="text-align:center">{{ 'Issue Export @type@ file is now ready for download' | translate: { type: exportModalDisplay } }}</span>
-        </div>
-        <div class="modal-footer">
-            <setl-file-viewer [fileHash]="exportFileHash" [viewType]="2"></setl-file-viewer>
-            <button type="button" class="btn btn-primary" (click)="hideExportModal()">{{ 'Cancel' | translate }}</button>
-        </div>
-    </clr-modal>
-
     <ng-template #staticBalanceList>
         <div class="panel-body">
-            <clr-datagrid #myDataGrid>
-                <clr-dg-column [clrDgField]="'asset'" clrDgSortIcon>
-                    {{ 'Asset' | translate }}
-                    <span class="column-label"></span>
-                </clr-dg-column>
-                <clr-dg-column [clrDgField]="'addressLabel'" clrDgSortIcon>
-                    {{ 'Issuer Address Label' | translate }}
-                    <span class="column-label"></span>
-                </clr-dg-column>
-                <clr-dg-column [clrDgField]="'address'" clrDgSortIcon>
-                    {{ 'Issuer Address' | translate }}
-                    <span class="column-label"></span>
-                </clr-dg-column>
-                <clr-dg-column [clrDgField]="'total'" clrDgSortIcon>
-                    {{ 'Total' | translate }}
-                    <span class="column-label"></span>
-                </clr-dg-column>
-                <clr-dg-column class="right">
-                    {{ 'Actions' | translate }}
-                </clr-dg-column>
-
-                <clr-dg-row *clrDgItems="let issuer of issuers$ | async">
-                    <clr-dg-cell>{{issuer.asset | truncate:10}}</clr-dg-cell>
-                    <clr-dg-cell>{{issuer.addressLabel}}</clr-dg-cell>
-                    <clr-dg-cell>{{issuer.address}}</clr-dg-cell>
-                    <clr-dg-cell class="right">{{issuer.total | moneyValue}}</clr-dg-cell>
-                    <clr-dg-cell class="right">
-                        <div class="btn-group btn-sm">
-                            <button (click)="handleViewBreakdown(issuer)" class="btn btn-orange">
-                                <i class="fa fa-search"></i>{{ 'View' | translate }}
-                            </button>
-                        </div>
-                    </clr-dg-cell>
-                </clr-dg-row>
-
-                <clr-dg-footer>
-                    <div rowsPerPage="10" (rowsUpdate)="pageSize = $event"></div>
-                    <button [disabled]="disableExportBtn()" class="btn btn-sm btn-success-outline" (click)="exportCSV()">{{ 'Export CSV' | translate }}</button>
-                    <button [disabled]="disableExportBtn()" class="btn btn-sm btn-danger-outline" (click)="exportPDF()">{{ 'Export PDF' | translate }}</button>
-                    {{pagination.firstItem + 1}} - {{pagination.lastItem + 1}}
-                    <clr-dg-pagination #pagination [clrDgPageSize]="pageSize" [clrDgPage]="pageCurrent"
-                                       (clrDgPageChange)="setCurrentPage($event)"></clr-dg-pagination>
-                </clr-dg-footer>
-            </clr-datagrid>
+            <datagrid-list
+                [fieldsModel]="issueListFields"
+                [listData]="issuers$ | async"
+                [listActions]="issueListActions"
+                [filters]="issueFilters"
+                [exportOptions]="exportOptions"
+                [currentPage]="pageCurrent"
+                (action)="onAction($event)"
+                (currentPageChange)="setCurrentPage($event)">
+            </datagrid-list>
         </div>
     </ng-template>
 
     <!-- Asset Detail Report -->
     <ng-template #dynamicViewTab let-formControl="formControl" let-id="id" let-asset="asset" let-holdings="holdings">
         <div class="user-tab-panel-body panel-body">
-            <clr-datagrid #myDataGrid>
-                <clr-dg-column [clrDgField]="'walletName'" clrDgSortIcon>
-                    {{ 'Wallet' | translate }}
-                    <span class="column-label"></span>
-                </clr-dg-column>
-                <clr-dg-column [clrDgField]="'addrLabel'" clrDgSortIcon>
-                    {{ 'Address Label' | translate }}
-                    <span class="column-label"></span>
-                </clr-dg-column>
-                <clr-dg-column [clrDgField]="'addr'" clrDgSortIcon>
-                    {{ 'Address' | translate }}
-                    <span class="column-label"></span>
-                </clr-dg-column>
-                <clr-dg-column [clrDgField]="'percentage'" clrDgSortIcon>
-                    {{ 'Percentage of Holding' | translate }}
-                    <span class="column-label"></span>
-                </clr-dg-column>
-                <clr-dg-column [clrDgField]="'balance'" clrDgSortIcon>
-                    {{ 'Total' | translate }}
-                    <span class="column-label"></span>
-                </clr-dg-column>
-                <clr-dg-column [clrDgField]="'encumbered'" clrDgSortIcon>
-                    {{ 'Encumbered' | translate }}
-                    <span class="column-label"></span>
-                </clr-dg-column>
-                <clr-dg-column [clrDgField]="'free'" clrDgSortIcon>
-                    {{ 'Free' | translate }}
-                    <span class="column-label"></span>
-                </clr-dg-column>
-
-                <clr-dg-row *clrDgItems="let holder of holdings">
-                    <clr-dg-cell>{{holder.walletName}}</clr-dg-cell>
-                    <clr-dg-cell>{{holder.addrLabel}}</clr-dg-cell>
-                    <clr-dg-cell>{{holder.addr}}</clr-dg-cell>
-                    <clr-dg-cell class="right">{{holder.percentage | percentage}}</clr-dg-cell>
-                    <clr-dg-cell class="right">{{holder.balance | moneyValue}}</clr-dg-cell>
-                    <clr-dg-cell class="right">{{holder.encumbered | moneyValue}}</clr-dg-cell>
-                    <clr-dg-cell class="right">{{holder.free | moneyValue}}</clr-dg-cell>
-                </clr-dg-row>
-
-                <clr-dg-footer>
-                    <div rowsPerPage="10" (rowsUpdate)="pageSize = $event"></div>
-                    <button [disabled]="disableExportBtn()" class="btn btn-sm btn-success-outline" (click)="exportCSV()">{{ 'Export CSV' | translate }}</button>
-                    <button [disabled]="disableExportBtn()" class="btn btn-sm btn-danger-outline" (click)="exportPDF()">{{ 'Export PDF' | translate }}</button>
-                    {{pagination.firstItem + 1}} - {{pagination.lastItem + 1}}
-                    <clr-dg-pagination #pagination [clrDgPageSize]="pageSize"></clr-dg-pagination>
-                </clr-dg-footer>
-            </clr-datagrid>
+            <datagrid-list
+                [fieldsModel]="detailFieldsModel"
+                [listData]="holdings"
+                [filters]="detailFilters"
+                [exportOptions]="exportOptions">
+            </datagrid-list>
             <div class="form-block tx-view-header">
                 <button type="button" class="btn btn-primary" (click)="tabControl.close(id)">{{ 'Close' | translate }}</button>
             </div>
