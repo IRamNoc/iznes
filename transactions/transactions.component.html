@@ -26,13 +26,6 @@
 
 <ng-template #staticTransactionsList>
     <div class="panel-body">
-        <datagrid-list
-            [fieldsModel]=""
-            [listData]="transactions"
-            [listActions]=""
-            (action)="onAction($event)">
-        </datagrid-list>
-
         <clr-datagrid #myDataGrid [clrDgLoading]="dataLoading">
             <clr-dg-column class="col-actions">{{ 'Actions' | translate }}</clr-dg-column>
             <clr-dg-column class="col-txid">{{ 'Tx ID' | translate }}</clr-dg-column>
