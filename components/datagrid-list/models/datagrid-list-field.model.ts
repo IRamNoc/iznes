@@ -3,7 +3,7 @@
  */
 export class DatagridListFieldModel {
     public label: string = null;
-    public type: 'text'|'number'|'currency'|'percentage'|'date'|'label'|'icon' = 'text';
+    public type: 'text'|'number'|'label'|'icon' = 'text';
     public options: {} = {};
     public name: string = null;
     public hidden: any = null;

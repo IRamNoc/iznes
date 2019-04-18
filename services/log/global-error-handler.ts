@@ -10,18 +10,18 @@ export class GlobalErrorHandler implements ErrorHandler {
     }
 
     handleError(err: any): void {
-        // console.error(err + getStackTrace());
-        // this.logger.log('error', err.message + getStackTrace());
+        console.error(err + getStackTrace());
+        this.logger.log('error', err.message + getStackTrace());
     }
 
 }
 
 const getStackTrace = function() {
-    // try {
-    //     const obj = {stack: ''};
-    //     Error.captureStackTrace(obj, getStackTrace);
-    //     return obj.stack;
-    // } catch(e) {
-    //    return  'not available';
-    // }
+    try {
+        const obj = {stack: ''};
+        Error.captureStackTrace(obj, getStackTrace);
+        return obj.stack;
+    } catch(e) {
+       return  'not available';
+    }
 };
