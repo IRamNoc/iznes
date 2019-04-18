@@ -11,7 +11,7 @@ import { combineLatest } from 'rxjs/observable/combineLatest';
 import { Subscription } from 'rxjs/Subscription';
 import { MultilingualService } from '@setl/multilingual';
 import { overviewFieldsModel, overviewListActions, breakdownFieldsModel,
-    breakdownExportOptions } from './balances.model';
+    breakdownExportOptions, overviewListFilters, breakdownListFilters } from './balances.model';
 
 @Component({
     selector: 'setl-balances',
@@ -37,6 +37,8 @@ export class SetlBalancesComponent implements OnInit, OnDestroy {
     public overviewListActions = overviewListActions;
     public breakdownFieldsModel = breakdownFieldsModel;
     public breakdownExportOptions: any = breakdownExportOptions;
+    public overviewListFilters = overviewListFilters;
+    public breakdownListFilters = breakdownListFilters;
     public pageCurrent: number;
     private editTab: boolean = false;
 
