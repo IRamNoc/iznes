@@ -9,7 +9,7 @@
             <ng-container *clrDgHideableColumn="{hidden: field.hidden}">
                 {{ field.label | dynamic : 'translate' }}
             </ng-container>
-            <clr-dg-string-filter *ngIf="filters[field.name]" #dataGridFilter [clrDgStringFilter]="getFilter(field.name)" [clrFilterValue]="filterValue(field.name)"></clr-dg-string-filter>
+            <clr-dg-string-filter *ngIf="filters[field.name]" #dataGridFilter [clrDgStringFilter]="filters[field.name]" [clrFilterValue]="filterValue(field.name)"></clr-dg-string-filter>
         </clr-dg-column>
 
         <clr-dg-column class="right" *ngIf="listActions">{{ 'Actions'  | translate }}</clr-dg-column>
@@ -31,7 +31,7 @@
 
         <!-- LAZY LOADED ROWS -->
         <ng-container *ngIf="lazyLoaded">
-            <clr-dg-row *ngFor="let record of listData" [ngStyle]="{'background-color':record.status === 'Removed' ? '#D53939' : record.status === 'Cancelled' ? '#AAAAAA' : ''}">
+            <clr-dg-row *ngFor="let record of listData">
                 <ng-container *ngIf="record !== undefined">
                     <clr-dg-cell *ngFor="let field of listFields">
                         <datagrid-field [value]="record[field.name]" [type]="field.type" [options]="field.options"></datagrid-field>

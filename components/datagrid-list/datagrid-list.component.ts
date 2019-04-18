@@ -6,7 +6,6 @@ import {
     EventEmitter,
     ViewChild,
     ViewChildren,
-    AfterViewInit,
     ElementRef,
     QueryList,
     OnInit,
@@ -42,7 +41,7 @@ import { MultilingualService } from '@setl/multilingual';
 
 @Injectable()
 
-export class DatagridListComponent implements OnInit, AfterViewInit {
+export class DatagridListComponent implements OnInit {
     @ViewChild('searchDynamicForm') public searchDynamicForm: DynamicFormComponent;
     @ViewChild('dataGrid') public dataGrid: ClrDatagrid;
     @ViewChildren('dataGridFilter', { read: ElementRef }) public dataGridFilter: QueryList<ElementRef>;
@@ -119,12 +118,6 @@ export class DatagridListComponent implements OnInit, AfterViewInit {
         }
     }
 
-    public ngAfterViewInit() {
-        // this.dataGridFilter.forEach((filter) => {
-        //     filter.nativeElement.children[0].removeChild(filter.nativeElement.children[0].children[0]);
-        // });
-    }
-
     /**
      * Handles clicks on action buttons
      *
@@ -179,19 +172,6 @@ export class DatagridListComponent implements OnInit, AfterViewInit {
         }
 
         return this.searchDynamicForm.form.value[field].toString();
-    }
-
-    /**
-     * Get Filter
-     *
-     * @param field
-     * @returns {any}
-     */
-    public getFilter(field) {
-        // if (!this.filters[field]) {
-        //     this.filters[field] = new DataGridStringFilter(field);
-        // }
-        return this.filters[field];
     }
 
     /**
