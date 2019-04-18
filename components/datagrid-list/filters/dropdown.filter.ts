@@ -36,7 +36,7 @@ export class DataGridDropdownFilter implements ClrDatagridStringFilterInterface<
                 return true;
             }
         }
-        return false;
-        // return item[this.idField].toString().toLowerCase() === search;
+        // return false;
+        return item[this.idField].toString().toLowerCase().includes(search);
     }
 }

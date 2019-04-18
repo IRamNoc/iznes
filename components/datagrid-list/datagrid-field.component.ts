@@ -6,7 +6,7 @@ import { MultilingualService } from '@setl/multilingual';
     template: `
         <!-- Value with pipe -->
         <ng-container *ngIf="fieldOptions.pipe">
-            <div [innerHtml]="value | dynamic: fieldOptions.pipe"></div>
+            <div [innerHtml]="value | dynamic: fieldOptions.pipe.name: fieldOptions.pipe.params"></div>
         </ng-container>
 
         <!-- Label -->
@@ -37,6 +37,11 @@ export class DatagridFieldComponent implements OnInit {
     }
 
     setupFieldType() {
+        // Handle empty pipes, default to translate
+        if (typeof this.fieldOptions.pipe === 'object' && !this.fieldOptions.pipe.name) {
+            this.fieldOptions.pipe.name = 'translate';
+        }
+
         // Handle empty values
         if (typeof this.value === 'undefined') return this.setEmptyField();
 
@@ -55,7 +60,7 @@ export class DatagridFieldComponent implements OnInit {
 
     setEmptyField() {
         this.value === 'N/A';
-        this.fieldOptions.pipe = 'translate';
+        this.fieldOptions.pipe = { name: 'translate' };
         return;
     }
 }

@@ -1,27 +1,25 @@
 <div>
-    <h1 *ngIf="listTitle" #updateClick><i class="fa {{listIcon}}"></i> {{listTitle}}</h1>
-
     <!-- SEARCH FILTERS -->
-    <app-dynamic-form *ngIf="searchEnabled" #searchDynamicForm [model]="searchForm"></app-dynamic-form>
+    <app-dynamic-form *ngIf="searchForm" #searchDynamicForm [model]="searchForm"></app-dynamic-form>
 
     <clr-datagrid #dataGrid (clrDgRefresh)="handleRefresh($event)" [clrDgLoading]="listData === [] || (lazyLoaded && !totalItems)">
         <!-- COLUMNS -->
-        <clr-dg-column [clrDgField]="field.name" [clrDgSortOrder]="field.sortBy ? defaultSortOrder : 0"
+        <clr-dg-column [clrDgSortOrder]="field.sortBy ? defaultSortOrder : 0"
             [clrFilterValue]="filterValue(field.name)" *ngFor="let field of listFields" [class.right]="field.options.rightAlign">
             <ng-container *clrDgHideableColumn="{hidden: field.hidden}">
                 {{ field.label | dynamic : 'translate' }}
             </ng-container>
-            <clr-dg-string-filter #dataGridFilter [clrDgStringFilter]="getFilter(field.name)" [clrFilterValue]="filterValue(field.name)"></clr-dg-string-filter>
+            <clr-dg-string-filter *ngIf="filters[field.name]" #dataGridFilter [clrDgStringFilter]="getFilter(field.name)" [clrFilterValue]="filterValue(field.name)"></clr-dg-string-filter>
         </clr-dg-column>
 
         <clr-dg-column class="right" *ngIf="listActions">{{ 'Actions'  | translate }}</clr-dg-column>
 
         <!-- STANDARD ROWS -->
         <ng-container *ngIf="!lazyLoaded">
-            <clr-dg-row *clrDgItems="let record of listData" [ngStyle]="{'background-color':record.status === 'Removed' ? '#D53939' : record.status === 'Cancelled' ? '#AAAAAA' : ''}">
+            <clr-dg-row *clrDgItems="let record of listData">
                 <ng-container *ngIf="record !== undefined">
                     <clr-dg-cell *ngFor="let field of listFields" [ngClass]="{ 'right': field.options.rightAlign, 'flash': record[field.options.flashOnCondition] }">
-                        <ng-container *ngTemplateOutlet="datagridRows; context: {'record': record, 'field': field }"></ng-container>
+                        <datagrid-field [value]="record[field.name]" [type]="field.type" [options]="field.options"></datagrid-field>
                     </clr-dg-cell>
 
                     <clr-dg-cell class="right" *ngIf="listActions">
@@ -36,7 +34,7 @@
             <clr-dg-row *ngFor="let record of listData" [ngStyle]="{'background-color':record.status === 'Removed' ? '#D53939' : record.status === 'Cancelled' ? '#AAAAAA' : ''}">
                 <ng-container *ngIf="record !== undefined">
                     <clr-dg-cell *ngFor="let field of listFields">
-                        <ng-container *ngTemplateOutlet="datagridRows; context: {'record': record, 'field': field }"></ng-container>
+                        <datagrid-field [value]="record[field.name]" [type]="field.type" [options]="field.options"></datagrid-field>
                     </clr-dg-cell>
 
                     <clr-dg-cell class="right" *ngIf="listActions">
@@ -51,14 +49,14 @@
             <!-- SHOW/HIDE COLUMNS (ngIf doesn't work, so using display:none) -->
             <clr-dg-column-toggle [ngStyle]="{ display: showHideColumns ? '' : 'none' }"></clr-dg-column-toggle>
 
+            <!-- ROWS PER PAGE -->
+            <div rowsPerPage (rowsUpdate)="listRecordsPerPage=$event; rowsUpdate.emit($event)"></div>
+
             <!-- EXPORT BUTTONS -->
             <div class="export-btns">
                 <button *ngIf="export['csv'] && dataGrid.items['_filtered']" [clrLoading]="csvBtnState" class="btn btn-sm" (click)="exportCSV()">{{ 'Export CSV' | translate }}</button>
                 <button *ngIf="export['pdf'] && dataGrid.items['_filtered']" [clrLoading]="pdfBtnState" class="btn btn-sm" (click)="exportPDF()">{{ 'Export PDF' | translate }}</button>
             </div>
-
-            <!-- ROWS PER PAGE -->
-            <div rowsPerPage (rowsUpdate)="listRecordsPerPage=$event; rowsUpdate.emit($event)"></div>
 
             <!-- PAGINATION-->
             <clr-dg-pagination #pagination [clrDgPageSize]="listRecordsPerPage" [clrDgPage]="currentPage" (clrDgPageChange)="currentPageChange.emit($event)" [clrDgTotalItems]="totalItems" class="clr-foooter separator">
@@ -67,11 +65,6 @@
         </clr-dg-footer>
     </clr-datagrid>
 </div>
-
-<!-- DATAGRID ROWS TEMPLATE-->
-<ng-template #datagridRows let-record="record" let-field="field">
-    <datagrid-field [value]="record[field.name]" [type]="field.type" [options]="field.options"></datagrid-field>
-</ng-template>
 
 <!-- DATAGRID ACTIONS TEMPLATE-->
 <ng-template #datagridActions let-listActions="listActions" let-record="record">

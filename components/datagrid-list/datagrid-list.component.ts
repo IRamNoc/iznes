@@ -51,9 +51,8 @@ export class DatagridListComponent implements OnInit, AfterViewInit {
     @Input() listData: DatagridListData[] = [];
     @Input() listActions: DatagridListActionModel[];
     @Input() filters: any = {};
-    @Input() searchEnabled: boolean = false;
     @Input() searchForm: DatagridSearchForm;
-    @Input() currentPage: number;
+    @Input() currentPage: number = 1;
     @Input() totalItems: number = 0;
     @Input() lazyLoaded: boolean = false;
     @Input() showHideColumns: boolean = false;
@@ -66,6 +65,7 @@ export class DatagridListComponent implements OnInit, AfterViewInit {
 
     public listFields: DatagridListFieldModel[] = [];
     public defaultSortOrder = ClrDatagridSortOrder.DESC;
+    public listRecordsPerPage: number = 5;
     public exportFileHash: string = '';
     public exportModalDisplay: boolean = false;
     public export: ExportOptionsInterface = {
@@ -74,6 +74,7 @@ export class DatagridListComponent implements OnInit, AfterViewInit {
     };
     public csvBtnState: ClrLoadingState = ClrLoadingState.DEFAULT;
     public pdfBtnState: ClrLoadingState = ClrLoadingState.DEFAULT;
+    public objectKeys = Object.keys;
 
     public constructor(
         public ngRedux: NgRedux<any>,
@@ -119,9 +120,9 @@ export class DatagridListComponent implements OnInit, AfterViewInit {
     }
 
     public ngAfterViewInit() {
-        this.dataGridFilter.forEach((filter) => {
-            filter.nativeElement.children[0].removeChild(filter.nativeElement.children[0].children[0]);
-        });
+        // this.dataGridFilter.forEach((filter) => {
+        //     filter.nativeElement.children[0].removeChild(filter.nativeElement.children[0].children[0]);
+        // });
     }
 
     /**
@@ -187,9 +188,9 @@ export class DatagridListComponent implements OnInit, AfterViewInit {
      * @returns {any}
      */
     public getFilter(field) {
-        if (!this.filters[field]) {
-            this.filters[field] = new DataGridStringFilter(field);
-        }
+        // if (!this.filters[field]) {
+        //     this.filters[field] = new DataGridStringFilter(field);
+        // }
         return this.filters[field];
     }
 

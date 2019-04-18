@@ -3,9 +3,13 @@ import { FormItem } from '@setl/utils/index';
 export interface DatagridFieldsInterface {
     [propertyName: string]: {
         label: string,
-        type: 'text'|'number'|'label'|'icon',
+        type?: 'text'|'number'|'label'|'icon',
         options?: {
-            pipe?: string,
+            pipe?: {
+                name: string,
+                params: any,
+            },
+            rightAlign: boolean,
             dateFormat?: string,
             icon?: string,
             labelMap?: {
