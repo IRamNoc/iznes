@@ -25,10 +25,10 @@ export class DataGridDateRangeFilter implements ClrDatagridStringFilterInterface
         this.includes = !!params.includes;
 
         if (this.fromField === '' || this.fromField === this.dateField) {
-            this.fromField = this.dateField + '_from';
+            this.fromField = `${this.dateField}_from`;
         }
         if (this.toField === '' || this.fromField === this.dateField) {
-            this.toField = this.dateField + '_to';
+            this.toField = `${this.dateField}_to`;
         }
     }
     /**
@@ -40,8 +40,6 @@ export class DataGridDateRangeFilter implements ClrDatagridStringFilterInterface
      * @returns {boolean}
      */
     accepts(item: any, search: string): boolean {
-        console.log('++ item', item);
-        console.log('++ search', search);
         /* Break down the search string into our dates. */
         const itemDate = item[this.dateField];
 

@@ -1,5 +1,5 @@
 # Dynamic Datagrid Component
-A configurable component for datagrids that can handle displaying, filtering, searching and exporting list data. Having a central component will help acheive a consistency across datagrids, making them easier to maintain and update, as well as helping to remove boilerplate code from local components.
+A configurable component for datagrids that can handle displaying, filtering, searching and exporting list data. Having a central component will help achieve a consistency across datagrids, making them easier to maintain and update, as well as helping to remove boilerplate code from local components.
 
 
 # Usage:
