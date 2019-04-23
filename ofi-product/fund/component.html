@@ -2,10 +2,7 @@
     <h1>
         <i class="fa fa-bars"></i>
         <span *ngIf="!param">{{ 'Add New Fund' | translate }}</span>
-        <span *ngIf="param">{{ 'Fund: @fundForm.controls[\'fundName\'].value@' | translate:
-            { 'fundForm.controls[\'fundName\'].value': fundForm.controls['fundName'].value }
-            }}
-        </span>
+        <span *ngIf="param">{{ 'Fund' | translate }}: {{ fundForm.controls['fundName'].value }}</span>
     </h1>
 </div>
 
@@ -644,8 +641,8 @@
                                                             class="form-control" 
                                                             formControlName="registerOffice"
                                                             [disabled]="isAdmin()">
-                                                    <span *ngIf="fundForm.controls['registerOffice'].touched && fundForm.controls['registerOffice'].hasError('pattern')"
-                                                        class="field-error">{{ 'Incorrect Name' | translate }}</span>
+                                                    <span *ngIf="fundForm.controls['registerOffice'].touched && fundForm.controls['registerOffice'].hasError('swiftNameAddress')"
+                                                        class="field-error">{{ 'Should be within 35 characters: number, letter or -?:()' | translate }}</span>
                                                 </div>
                                             </div>
                                         
@@ -659,14 +656,16 @@
                                                             class="form-control" 
                                                             formControlName="registerOfficeAddress"
                                                             [disabled]="isAdmin()">
-                                                    <span *ngIf="fundForm.controls['registerOfficeAddress'].touched && fundForm.controls['registerOfficeAddress'].hasError('pattern')"
-                                                        class="field-error">{{ 'Incorrect address' | translate }}</span>
+                                                    <span *ngIf="fundForm.controls['registerOfficeAddress'].touched && fundForm.controls['registerOfficeAddress'].hasError('swiftNameAddress')"
+                                                        class="field-error">{{ 'Should be within 35 characters: number, letter or -?:()' | translate }}</span>
                                                 </div>
                                             </div>
                                             <div class="form-group col-sm-6">
                                                 <label for="registerOfficeAddressLine2">{{ 'Address Line 2' | translate }}</label>
                                                 <div>
                                                     <input type="text" id="registerOfficeAddressLine2" class="form-control" formControlName="registerOfficeAddressLine2" [disabled]="isAdmin()">
+                                                    <span *ngIf="fundForm.controls['registerOfficeAddressLine2'].touched && fundForm.controls['registerOfficeAddressLine2'].hasError('swiftNameAddress')"
+                                                          class="field-error">{{ 'Should be within 35 characters: number, letter or -?:()' | translate }}</span>
                                                 </div>
                                             </div>
                                         
@@ -674,12 +673,16 @@
                                                 <label for="registerOfficeAddressZipCode">{{ 'ZIP Code' | translate }}</label>
                                                 <div>
                                                     <input type="text" id="registerOfficeAddressZipCode" class="form-control" formControlName="registerOfficeAddressZipCode" [disabled]="isAdmin()">
+                                                    <span *ngIf="fundForm.controls['registerOfficeAddressZipCode'].touched && fundForm.controls['registerOfficeAddressZipCode'].hasError('swiftNameAddress')"
+                                                          class="field-error">{{ 'Should be within 35 characters: number, letter or -?:()' | translate }}</span>
                                                 </div>
                                             </div>
                                             <div class="form-group col-sm-4">
                                                 <label for="registerOfficeAddressCity">{{ 'City' | translate }}</label>
                                                 <div>
                                                     <input type="text" id="registerOfficeAddressCity" class="form-control" formControlName="registerOfficeAddressCity" [disabled]="isAdmin()">
+                                                    <span *ngIf="fundForm.controls['registerOfficeAddressCity'].touched && fundForm.controls['registerOfficeAddressCity'].hasError('swiftNameAddress')"
+                                                          class="field-error">{{ 'Should be within 35 characters: number, letter or -?:()' | translate }}</span>
                                                 </div>
                                             </div>
                                             <div class="form-group col-sm-4">

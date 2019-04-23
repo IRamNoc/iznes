@@ -16,3 +16,15 @@ export interface OfiPortfolioManagerUpdateRequestBody extends MemberNodeMessageB
     pmid: number;
     status: number;
 }
+
+export interface OfiWealthManagerDetailrequestBody extends MemberNodeMessageBody {
+    token: string;
+    pmid: number;
+}
+
+export interface OfiWealthManagerUpdateRequestBody extends MemberNodeMessageBody {
+    token: string;
+    investorid: number;
+    pmid: number;
+    status: number;
+}

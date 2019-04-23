@@ -9,7 +9,7 @@ import {
     toNormalScale,
     calNetAmount,
     getAmountTwoDecimal,
-    calculateFigures,
+    calculateFigures, convertToBlockChainNumber,
 } from './order-calculations';
 
 // ** please don't remove this below commented import please,
@@ -55,7 +55,7 @@ import {
     orderTypeToString,
     OrderByNumber,
     InvestorBalances,
-    ShareRegistrationCertificateEmailPayload, NavData,
+    ShareRegistrationCertificateEmailPayload, NavData, fundClassifications,
 } from './models';
 import {NavStatus} from "../../../ofi-req-services/ofi-product/nav/model";
 
@@ -646,6 +646,7 @@ export class OrderHelper {
         const price = orderFigure.validatedPrice;
         const feePercentage = this.feePercentage;
         const platFormFee = this.fundShare.platFormFee || 0;
+        const classificationFee = getFundClassificationFee((this.fundShare.fundClassificationId ) || 1);
 
         let orderDates = this.getOrderDates();
         if (!OrderHelper.isResponseGood(orderDates as VerifyResponse)) {
@@ -686,6 +687,7 @@ export class OrderHelper {
             estimatedAmountWithCost,
             feePercentage,
             platFormFee,
+            classificationFee,
             cutoffDate,
             valuationDate,
             settlementDate,
@@ -1029,9 +1031,10 @@ export class OrderHelper {
             // by amount
             const decimalDivider = Math.pow(10, Number(this.fundShare.maximumNumDecimal));
             // the formula before apply maximum number decimal.
-            let amountStr = '(' + this.orderValue + ' / nav' + ') * ' + NumberMultiplier;
+            let amountStr = `(${this.orderValue} / nav) * ${NumberMultiplier}`;
             // apply maximum number decimal.
-            amountStr = 'floor((' + amountStr + '/' + NumberMultiplier + ' * ' + decimalDivider + ')) / ' + decimalDivider + ' * ' + NumberMultiplier;
+            // tslint:disable-next-line:max-line-length
+            amountStr = `round(${amountStr}/${NumberMultiplier} * ${decimalDivider}) / ${decimalDivider} * ${NumberMultiplier}`;
 
             actionData = [
                 {
@@ -1147,7 +1150,7 @@ export class OrderHelper {
             let amountStr = `(${this.orderValue} / nav) * ${NumberMultiplier}`;
             // apply maximum number decimal.
             // tslint:disable-next-line:max-line-length
-            amountStr = `floor(${amountStr}/${NumberMultiplier} * ${decimalDivider}) / ${decimalDivider} * ${NumberMultiplier}`;
+            amountStr = `round(${amountStr}/${NumberMultiplier} * ${decimalDivider}) / ${decimalDivider} * ${NumberMultiplier}`;
 
             actionData = [
                 {
@@ -1368,4 +1371,8 @@ export class OrderHelper {
         return true;
     }
 
+}
+
+function getFundClassificationFee(fundClassificationId): number {
+    return convertToBlockChainNumber(fundClassifications[fundClassificationId].fee);
 }

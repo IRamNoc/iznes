@@ -1,24 +1,27 @@
-import { ChangeDetectorRef, Component, OnDestroy, OnInit, Inject } from '@angular/core';
-import { FormArray, FormBuilder, FormControl, FormGroup, Validators } from '@angular/forms';
-import { Location } from '@angular/common';
+import { ChangeDetectorRef, Component, OnDestroy, OnInit } from '@angular/core';
+import { FormBuilder, FormControl, FormGroup } from '@angular/forms';
 import { OfiKycService } from '../../ofi-req-services/ofi-kyc/service';
 import { OfiKycObservablesService } from '../../ofi-req-services/ofi-kyc/kyc-observable';
-import { FileDownloader, SagaHelper, mDateHelper, immutableHelper } from '@setl/utils';
+import { FileDownloader, SagaHelper, mDateHelper } from '@setl/utils';
 import { NgRedux, select } from '@angular-redux/store';
 import { Observable } from 'rxjs/Rx';
 import { Subject } from 'rxjs/Subject';
 import { debounceTime } from 'rxjs/operators';
 import { combineLatest as observableCombineLatest } from 'rxjs';
 import { Router, ActivatedRoute } from '@angular/router';
-import { AlertsService } from '@setl/jaspero-ng2-alerts';
 import { ToasterService } from 'angular2-toaster';
-import * as _ from 'lodash';
+import { get, isEmpty } from 'lodash';
 import { MultilingualService } from '@setl/multilingual';
 import { AppObservableHandler } from '@setl/utils/decorators/app-observable-handler';
 import { OfiFundShareService } from '../../ofi-req-services/ofi-product/fund-share/service';
 import * as math from 'mathjs';
 import { OFI_SET_CLIENT_REFERENTIAL_AUDIT } from '@ofi/ofi-main/ofi-store';
 import * as moment from 'moment-timezone';
+import { Location } from '@angular/common';
+import { PortfolioManagerDetail } from '../../ofi-store/ofi-portfolio-manager/portfolio-manage-list/model';
+import { InvestorType, isRetail, isMandate, isPortfolioManager } from '../../shared/investor-types';
+
+const values = (o: object) => Object.keys(o).map(i => o[i]);
 
 @AppObservableHandler
 @Component({
@@ -37,6 +40,8 @@ export class OfiClientReferentialComponent implements OnInit, OnDestroy {
     kycId: string = '';
     tableData = [];
     otherData = {};
+    loading = true;
+    currentTab = 1;
 
     public subscriptions: Array<any> = [];
 
@@ -46,6 +51,7 @@ export class OfiClientReferentialComponent implements OnInit, OnDestroy {
     amKycList = [];
 
     companyName: string;
+    pmIdentifier = '';
 
     socketToken: string;
     userId: string;
@@ -98,6 +104,7 @@ export class OfiClientReferentialComponent implements OnInit, OnDestroy {
     @select(['ofi', 'ofiKyc', 'clientReferentialAudit', 'clientReferentialAudit']) clientReferentialAuditOb;
     @select(['ofi', 'ofiKyc', 'amKycList', 'requested']) requestedOfiKycListOb;
     @select(['ofi', 'ofiKyc', 'amKycList', 'amKycList']) amKycListObs;
+    @select(['ofi', 'ofiPortfolioManager', 'portfolioManagerList', 'portfolioManagerList']) portfolioManagers$: Observable<PortfolioManagerDetail[]>;
     @select(['ofi', 'ofiProduct', 'ofiFundShareList', 'iznShareList']) amAllFundShareListOb;
     @select(['user', 'authentication', 'token']) tokenOb;
     @select(['user', 'myDetail', 'userId']) userIdOb;
@@ -106,19 +113,18 @@ export class OfiClientReferentialComponent implements OnInit, OnDestroy {
     /* Constructor. */
     constructor(private fb: FormBuilder,
                 private changeDetectorRef: ChangeDetectorRef,
-                private location: Location,
-                private alertsService: AlertsService,
                 private ofiKycService: OfiKycService,
                 private toasterService: ToasterService,
                 private ofiFundShareService: OfiFundShareService,
-                private ofiKycObservablesService: OfiKycObservablesService,
                 private ngRedux: NgRedux<any>,
                 private fileDownloader: FileDownloader,
                 private route: ActivatedRoute,
                 private router: Router,
                 public translate: MultilingualService,
-    ) {
+                private location: Location,
+    ) { }
 
+    ngOnInit(): void {
         this.investorTypeForm = new FormGroup({
             investorType: new FormControl(''),
         });
@@ -138,9 +144,7 @@ export class OfiClientReferentialComponent implements OnInit, OnDestroy {
             phoneNumber: { value: '', disabled: true },
             approvalDateRequest: { value: '', disabled: true },
         });
-    }
 
-    ngOnInit(): void {
         this.ofiKycService.setRequestedClientReferential(false);
 
         this.initInvestorTypes();
@@ -183,16 +187,45 @@ export class OfiClientReferentialComponent implements OnInit, OnDestroy {
             if (this.pageType == 'audit') this.requestAuditSearch();
         }));
 
+        const LANG_INSTITUTIONAL = this.translate.translate('Institutional');
+        const LANG_RETAIL = this.translate.translate('Retail');
+        const LANG_DIRECT = this.translate.translate('In Direct');
+        const LANG_MANDATE = this.translate.translate('By Mandate');
+
+        const typeMap = {
+            '10': LANG_INSTITUTIONAL,
+            // '20': LANG_INSTITUTIONAL,
+            '30': LANG_RETAIL,
+            '40': LANG_INSTITUTIONAL,
+            // '50': LANG_INSTITUTIONAL,
+            '60': LANG_RETAIL,
+        };
+        const methodMap = {
+            'direct': LANG_DIRECT,
+            'mandate': LANG_MANDATE,
+        }
+
         this.subscriptions.push(
             observableCombineLatest(
                 this.clientReferentialOb,
                 this.amKycListObs,
+                this.portfolioManagers$,
                 this.route.params,
+                this.route.queryParams,
             )
-                .subscribe(([clientReferential, amKycList, params]) => {
+                .subscribe(([clientReferential, amKycList, portfolioManagers, params, query]) => {
                     this.kycId = (!params.kycId ? '' : params.kycId);
 
-                    this.clientReferential = clientReferential;
+                    if (!this.kycId) this.companyName = this.translate.translate('All Clients');
+
+                    this.clientReferential = clientReferential.map((client) => {
+                        return {
+                            ...client,
+                            investorName: (isRetail(client.investorType)) ? `${client.firstName} ${client.lastName}` : client.companyName,
+                            investorType: typeMap[client.investorType],
+                            investmentMethod: methodMap[client.investmentMethod],
+                        }
+                    });
 
                     clientReferential.forEach((client) => {
                         this.clients[client.kycID] = client;
@@ -214,30 +247,61 @@ export class OfiClientReferentialComponent implements OnInit, OnDestroy {
                         if (amKycList[key].kycID == this.kycId) this.currentInvestor = amKycList[key];
                     });
 
-                    if (!this.isPortfolioManager() && !_.isEmpty(this.currentInvestor)) {
-                        this.companyName = _.get(this.currentInvestor, 'investorCompanyName', '');
-
-                        if (this.kycId != '') {
-                            const phoneNumber = (this.currentInvestor.investorPhoneCode && this.currentInvestor.investorPhoneNumber) ? `${this.currentInvestor.investorPhoneCode} ${this.currentInvestor.investorPhoneNumber}` : '';
-                            const approvalDateRequestTs = mDateHelper.dateStrToUnixTimestamp(this.currentInvestor.lastUpdated, 'YYYY-MM-DD HH:mm:ss');
-                            const approvalDateRequest = mDateHelper.unixTimestampToDateStr(approvalDateRequestTs, 'DD / MM / YYYY');
-                            this.investorForm.setValue({
-                                companyName: this.currentInvestor.investorCompanyName,
-                                clientReference: this.currentInvestor.clientReference,
-                                firstName: this.currentInvestor.investorFirstName,
-                                lastName: this.currentInvestor.investorLastName,
-                                email: this.currentInvestor.investorEmail,
-                                phoneNumber,
-                                approvalDateRequest,
-                            });
-                        }
-                    } else {
-                        if (this.isPortfolioManager()) {
-                            // force load share access data if portfolio manager.
+                    switch (this.currentInvestor.investorType) {
+                        case InvestorType.FundOfFundsManager:
+                            this.companyName = this.currentInvestor.fundName;
                             this.loadTab(2);
-                        }
+                        break;
+                        case InvestorType.DiscretionaryManager:
+                            console.log('Discretionary manager');
+                        break;
+                        case InvestorType.InstitutionalMandate:
+                            this.companyName = this.currentInvestor.investorCompanyName;
+                            this.investorForm.patchValue({
+                                companyName: this.currentInvestor.investorCompanyName || '',
+                                clientReference: this.currentInvestor.clientReference,
+                            });
+                        break;
+                        case InvestorType.RetailMandate:
+                            this.companyName = `${this.currentInvestor.investorFirstName} ${this.currentInvestor.investorLastName}`;
+                            this.investorForm.patchValue({
+                                firstName: this.currentInvestor.investorFirstName || '',
+                                lastName: this.currentInvestor.investorLastName || '',
+                                clientReference: this.currentInvestor.clientReference,
+                            });
+                        break;
+                        default:
+                            if (isEmpty(this.currentInvestor)) {
+                                break;
+                            }
+                            if (isRetail(this.currentInvestor.investorType)) {
+                                this.companyName = `${this.currentInvestor.investorFirstName} ${this.currentInvestor.investorLastName}`;
+                            } else {
+                                this.companyName = get(this.currentInvestor, 'investorCompanyName', '');
+                            }
+                            if (!this.companyName) {
+                                this.companyName = get(this.currentInvestor, 'investorEmail', '');
+                            }
+                            if (this.kycId != '') {
+                                const phoneNumber = (this.currentInvestor.investorPhoneCode && this.currentInvestor.investorPhoneNumber) ? `${this.currentInvestor.investorPhoneCode} ${this.currentInvestor.investorPhoneNumber}` : '';
+                                const approvalDateRequestTs = mDateHelper.dateStrToUnixTimestamp(this.currentInvestor.lastUpdated, 'YYYY-MM-DD HH:mm:ss');
+                                const approvalDateRequest = mDateHelper.unixTimestampToDateStr(approvalDateRequestTs, 'DD / MM / YYYY');
+                                this.investorForm.setValue({
+                                    companyName: this.currentInvestor.investorCompanyName || '',
+                                    clientReference: this.currentInvestor.clientReference,
+                                    firstName: this.currentInvestor.investorFirstName || '',
+                                    lastName: this.currentInvestor.investorLastName || '',
+                                    email: this.currentInvestor.investorEmail,
+                                    phoneNumber,
+                                    approvalDateRequest,
+                                });
+                            }
+                        break;
                     }
-
+                    if (query.tab) {
+                        this.loadTab(+query.tab);
+                    }
+                    this.loading = false;
                     this.changeDetectorRef.markForCheck();
                 }),
         );
@@ -246,19 +310,14 @@ export class OfiClientReferentialComponent implements OnInit, OnDestroy {
     initInvestorTypes() {
         this.investorTypes = this.translate.translate([
             { id: 0, text: 'All Investors' },
-            { id: 45, text: 'Institutional Investor' },
-            { id: 55, text: 'Retail Investor' },
+            { id: 10, text: 'Institutional Investor' },
+            { id: 30, text: 'Retail Investor' },
         ]);
     }
 
     getClientReferentialDescriptionTitle(): string {
-        if (!this.kycId) {
-            return '';
-        }
-
-        const clientRef = this.clients[this.kycId];
-
-        return `: ${clientRef.companyName}${clientRef.clientReference ? ` - ${clientRef.clientReference}` : ''}`;
+        const reference = get(this.clients, [this.kycId, 'clientReference'], '') || '';
+        return `: ${this.companyName}${reference}`;
     }
 
     requestSearch() {
@@ -270,17 +329,20 @@ export class OfiClientReferentialComponent implements OnInit, OnDestroy {
         this.router.navigateByUrl('/client-referential/invite-investors');
     }
 
+    inviteMandateInvestors() {
+        this.router.navigate(['client-referential', 'invite-mandate-investors']);
+    }
+
     viewClient(id) {
         this.router.navigateByUrl((id == 'list' ? '/client-referential' : '/client-referential/' + id));
     }
 
     loadTab(tab) {
+        this.currentTab = tab;
         if (tab == 2) {
             const tempOtherData = {};
             if (this.amKycList.length > 0 && this.amKycList.findIndex(kyc => kyc.kycID == this.kycId) != -1) {
                 const kyc = this.amKycList.filter(kyc => kyc.kycID == this.kycId)[0];
-
-                this.companyName = kyc.investorCompanyName;
 
                 tempOtherData['amCompany'] = kyc.companyName;
                 tempOtherData['investorData'] = {
@@ -295,7 +357,7 @@ export class OfiClientReferentialComponent implements OnInit, OnDestroy {
 
                 // Get the fund access for investor walletID and render it.
                 this.ofiFundShareService.requestInvestorFundAccess({ investorWalletId: kyc.investorWalletID }).then((data) => {
-                    _.get(data, '[1].Data', []).forEach((row) => {
+                    get(data, '[1].Data', []).forEach((row) => {
                         investorWalletData[row['shareID']] = row;
                     });
 
@@ -329,12 +391,6 @@ export class OfiClientReferentialComponent implements OnInit, OnDestroy {
                 });
             }
         } else if (tab == 3) {
-            if (this.amKycList.length > 0 && this.amKycList.findIndex(kyc => kyc.kycID == this.kycId) !== -1) {
-                const kyc = this.amKycList.filter(kyc => kyc.kycID == this.kycId)[0];
-
-                this.companyName = kyc.investorCompanyName;
-            }
-
             this.ofiFundShareService.requestInvestorHoldings(this.kycId).then((data) => {
                 this.holdingsTable = [];
                 if (data[1].Data.length > 0) {
@@ -476,6 +532,10 @@ export class OfiClientReferentialComponent implements OnInit, OnDestroy {
         });
     }
 
+    goBack() {
+        this.location.back();
+    }
+
     changePage(page) {
         if (page == this.pageType) {
             this.viewClient('list');
@@ -514,9 +574,44 @@ export class OfiClientReferentialComponent implements OnInit, OnDestroy {
       * @return boolean
      */
     isPortfolioManager(): boolean {
-        return this.currentInvestor.investorUserID == null;
+        return isPortfolioManager(this.currentInvestor.investorType);
     }
 
+    /**
+     * Is the investor a discretionary portfolio manager?
+     * @return boolean
+     */
+    isDiscretionaryManager(): boolean {
+        return this.currentInvestor.investorType === InvestorType.DiscretionaryManager;
+    }
+
+    /**
+     * Is the investor a fund of funds portfolio manager?
+     * @return boolean
+     */
+    isFundOfFundsManager(): boolean {
+        return this.currentInvestor.investorType === InvestorType.FundOfFundsManager;
+    }
+
+    /**
+     * Is the investor a mandate investor?
+     * @return boolean
+     */
+    isMandateInvestor(): boolean {
+        return isMandate(this.currentInvestor.investorType);
+    }
+
+    /**
+     * Is the investor a retail investor?
+     * @return boolean
+     */
+    isRetail(): boolean {
+        return isRetail(this.currentInvestor.investorType);
+    }
+
+    /**
+     * Tear down subscriptions + cleanup
+     */
     ngOnDestroy() {
         for (const key of this.subscriptions) {
             key.unsubscribe();

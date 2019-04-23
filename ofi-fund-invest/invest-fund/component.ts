@@ -33,6 +33,7 @@ import {
     MyWalletsService,
     WalletNodeRequestService,
     FileService,
+    RemoteLoggerService,
 } from '@setl/core-req-services';
 import { setRequestedWalletAddresses } from '@setl/core-store';
 import { OfiOrdersService } from '../../ofi-req-services/ofi-orders/service';
@@ -52,7 +53,7 @@ import { DomSanitizer } from '@angular/platform-browser';
 import { FileDownloader } from '@setl/utils/services/file-downloader/service';
 import { OfiNavService } from '../../ofi-req-services/ofi-product/nav/service';
 import { validateKiid } from '../../ofi-store/ofi-fund-invest/ofi-fund-access-my';
-import { fundClassifications } from '../../ofi-product/productConfig';
+import { fundClassifications } from '../../ofi-product/fund-share/helper/models';
 
 interface DateChangeEvent {
     type: string;
@@ -513,6 +514,7 @@ export class InvestFundComponent implements OnInit, OnDestroy {
         private fileService: FileService,
         private shareService: OfiFundShareService,
         private ofiNavService: OfiNavService,
+        private remoteLoggerService: RemoteLoggerService,
     ) {
         this.fundClassifications = fundClassifications;
     }
@@ -582,7 +584,15 @@ export class InvestFundComponent implements OnInit, OnDestroy {
                 takeUntil(this.unSubscribe),
             )
             .subscribe((shareData) => {
+                if (_.isEmpty(shareData[this.shareId])) {
+                    this.changeDetectorRef.detach();
+                    this.toaster.pop('error', this.translate.translate('Wallet has no permisson on this share'));
+                    this.handleClose();
+                    return;
+                }
+
                 this.shareData = immutableHelper.get(shareData, String(this.shareId), {});
+
 
                 // Fallback to `Other` classification when Fund classification is not set
                 this.fundClassificationId = this.shareData.classification || 6;
@@ -908,7 +918,6 @@ export class InvestFundComponent implements OnInit, OnDestroy {
             orderBy: this.actionBy,
             orderValue: this.orderValue,
             comment: this.form.controls.comment.value,
-            classificationFee: this.numberConverterService.toBlockchain(this.fundClassifications[this.fundClassificationId].fee),
         };
     }
 
@@ -992,6 +1001,9 @@ export class InvestFundComponent implements OnInit, OnDestroy {
                 `, { showCloseButton: false, overlayClickToClose: false });
 
                 this.ofiOrdersService.addNewOrder(request).then((data) => {
+                    // log to remote server about order is placed
+                    this.logService.log('info', 'an order has been placed');
+
                     let orderSuccessMsg = '';
 
                     if (this.type === 'sellbuy') {
@@ -1129,7 +1141,7 @@ export class InvestFundComponent implements OnInit, OnDestroy {
                 this.trueAmount = newValue;
 
                 const quantity = math.format(math.chain(newValue).divide(this.nav).done(), 14); // {notation: 'fixed', precision: this.shareData.maximumNumDecimal}
-                const newQuantity = this.roundDown(quantity, this.shareData.maximumNumDecimal).toString();
+                const newQuantity = this.round(quantity, this.shareData.maximumNumDecimal).toString();
                 const newQuantityStr = this.moneyValuePipe.transform(newQuantity, this.shareData.maximumNumDecimal);
                 beTriggered.patchValue(newQuantityStr, { onlySelf: true, emitEvent: false });
 
@@ -1149,7 +1161,7 @@ export class InvestFundComponent implements OnInit, OnDestroy {
         const quantityParsed = this.moneyValuePipe.parse(this.quantity.value, 5);
 
         // we have two scenario to handle in there.
-        // 1. if we working on known nav, as we always round the the amount down according to the quantity.
+        // 1. if we working on known nav, as we always round the the amount according to the quantity.
         // we use the quantity to work out the amount.
         // 2. if we working on unknown nav, as the nav is not known, we want to keep the amount as it is.
         let amount = 0;
@@ -1194,17 +1206,16 @@ export class InvestFundComponent implements OnInit, OnDestroy {
     }
 
     /**
-     * Round Down Numbers
-     * eg 0.15151 becomes 0.151
-     * eg 0.15250 becomes 0.152
+     * Round Numbers
+     * eg 0.15151 becomes 0.152
+     * eg 0.15250 becomes 0.153
      *
-     * @param number
-     * @param decimals
+     * @param num
+     * @param decimal
      * @returns {number}
      */
-    roundDown(number: any, decimals: any) {
-        const decimalsVal = decimals || 0;
-        return math.format((Math.floor(number * Math.pow(10, decimalsVal)) / Math.pow(10, decimalsVal)), 14);
+    round(num: number, decimal: number = 0) {
+        return math.format(math.round(num, decimal), 14);
     }
 
     isValidOrderValue() {
@@ -1311,7 +1322,7 @@ export class InvestFundComponent implements OnInit, OnDestroy {
         const subPortfolioName = this.address.value[0]['text'];
         const amount = this.moneyValuePipe.parse(this.amount.value, 4);
         const quantity = this.moneyValuePipe.parse(this.quantity.value, this.shareData.maximumNumDecimal);
-        const amountStr = this.moneyValuePipe.transform(amount, 4);
+        const amountStr = this.moneyValuePipe.transform(amount, 2);
         const quantityStr = this.moneyValuePipe.transform(quantity, Number(this.shareData.maximumNumDecimal));
         const amountMessage = this.amountTooBig ? `<p class="mb-1"><span class="text-danger blink_me">${this.translate.translate('Order amount above 15 million')}</span></p>` : '';
 

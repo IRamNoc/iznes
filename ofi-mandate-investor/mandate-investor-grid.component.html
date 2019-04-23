@@ -1,0 +1,55 @@
+<clr-datagrid #dataGrid>
+    <clr-dg-column [clrDgField]="'email'">{{ 'Investor Type' | translate }}</clr-dg-column>
+    <clr-dg-column [clrDgField]="'lastName'">{{ 'Investor Name' | translate }}</clr-dg-column>
+    <clr-dg-column [clrDgField]="'firstName'">{{ 'Wallet Name' | translate }}</clr-dg-column>
+    <clr-dg-column [clrDgField]="'firstName'">{{ 'Grant access to this investor?' | translate }}</clr-dg-column>
+    <clr-dg-column [clrDgField]="'actions'">{{ 'Action' | translate }}</clr-dg-column>
+
+    <clr-dg-row *clrDgItems="let item of list$ | async; let i = index">
+        <clr-dg-cell>{{item.investorTypeText}}</clr-dg-cell>
+        <clr-dg-cell>{{item.investorName}}</clr-dg-cell>
+        <clr-dg-cell>{{item.walletName}}</clr-dg-cell>
+        <clr-dg-cell id="access_slider_row_{{i}}">
+            <div class="switch-container">
+                <label class="switch">
+                    <input type="checkbox"
+                            id="access_slider_{{i}}"
+                            [formControl]="item.statusControl"
+                            (change)="handleChange(item)">
+                    <span class="slider round"></span>
+                </label>
+            </div>
+        </clr-dg-cell>
+        <clr-dg-cell id="action_row_{{i}}">
+            <button class="btn btn-success btn-sm" style="margin: 0px;" (click)="handleManageAccess(item)">
+                <i class="fa fa-align-left"></i> {{ 'Manage Shares Authorisation' | translate }}
+            </button>
+        </clr-dg-cell>
+    </clr-dg-row>
+
+    <clr-dg-footer>{{pagination.firstItem + 1}} - {{pagination.lastItem + 1}}
+        <clr-dg-pagination #pagination [clrDgPageSize]="10"></clr-dg-pagination>
+    </clr-dg-footer>
+</clr-datagrid>
+
+
+<clr-datagrid #otherDatagrid>
+    <clr-dg-column [clrDgField]="'fundName'" id="changed_data_fund_name">{{ 'Investor Name' | translate }}</clr-dg-column>
+    <clr-dg-column [clrDgField]="'changes'" id="changed_data_changes">{{ 'Status' | translate }}</clr-dg-column>
+    <clr-dg-row *clrDgItems="let row of pendingChanges; let i = idx">
+        <clr-dg-cell id="changed_data_fund_name_row_{{i}}">{{row.firstName}} {{row.lastName}}</clr-dg-cell>
+        <clr-dg-cell id="changed_data_changes_row_{{i}}">
+            <span *ngIf="row.status">{{' Permission Granted' | translate }}</span>
+            <span *ngIf="!row.status">{{ 'Permission Removed' | translate }}</span>
+        </clr-dg-cell>
+    </clr-dg-row>
+    <clr-dg-footer>{{otherPagination.firstItem + 1}} - {{otherPagination.lastItem + 1}}
+        <clr-dg-pagination #otherPagination [clrDgPageSize]="10"></clr-dg-pagination>
+    </clr-dg-footer>
+</clr-datagrid>
+
+
+<div align="middle">
+    <button id="btn_back_to_pm_list" class="btn btn-info" (click)="backToPmList();">{{ 'Back' | translate }}</button>
+    <button id="btn_validate" class="btn btn-primary" (click)="confirmSave();">{{ 'Validate' | translate }}</button>
+</div>

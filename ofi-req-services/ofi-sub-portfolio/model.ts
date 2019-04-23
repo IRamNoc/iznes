@@ -25,6 +25,8 @@ export interface Subportfolio {
     bic: string;
     notes: string;
     bankIdentificationStatement: string;
+    securityAccount: string;
+    cashAccount: string;
 }
 
 export interface OfiUpdateSubPortfolioRequestBody extends OfiMemberNodeBody {

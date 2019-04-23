@@ -2,19 +2,25 @@
     <!-- Breadcrumbs. -->
     <div class="header-breadcrumbs">
         <h1 id="portfolio-managers-detail"><i class="fa fa-users"></i>
-            {{ 'Portfolio Manager' | translate }} - {{pm.emailAddress}}
+            <span *ngIf="(portfolioManager$ | async)?.type === 'PM'">{{ 'Fund of Funds Manager' | translate }} - {{(portfolioManager$ | async)?.emailAddress}}</span>
+            <span *ngIf="(portfolioManager$ | async)?.type === 'WM'">{{ 'Discretionary Manager' | translate }} - {{(portfolioManager$ | async)?.emailAddress}}</span>
         </h1>
     </div>
 
     <clr-tabs>
         <clr-tab>
             <button clrTabLink>
-                <i class="fa fa-users"></i> {{pm.emailAddress}}
+                <i class="fa fa-users"></i> {{(portfolioManager$ | async)?.emailAddress}}
             </button>
-            <clr-tab-content>
+
+            <clr-tab-content *ngIf="(portfolioManager$ | async)?.type === 'WM'">
+                <app-mandate-investor-grid [pm]="portfolioManager$ | async" (toggle)="handleInvestorChange($event)" (manageAccess)="handleManageShareAccess($event)"></app-mandate-investor-grid>
+            </clr-tab-content>
+
+            <clr-tab-content *ngIf="(portfolioManager$ | async)?.type === 'PM'">
                 <div class="row">
                     <div class="col-sm-6">
-                        {{ 'Please find below the authorisation of @emailAddress@ regarding your fund.' | translate: { 'emailAddress': pm.emailAddress } }}
+                        {{ 'Please find below the authorisation of @emailAddress@ regarding your fund.' | translate: { 'emailAddress': (portfolioManager$ | async)?.emailAddress } }}
                     </div>
                 </div>
 
@@ -25,21 +31,21 @@
                             <clr-dg-column>{{ 'Grant access to this fund?' | translate }}</clr-dg-column>
                             <clr-dg-column>{{ 'Action' | translate }}</clr-dg-column>
 
-                            <clr-dg-row *clrDgItems="let item of fundAccessList; let i = index" style="cursor: pointer;">
+                            <clr-dg-row *clrDgItems="let item of accessFundData$ | async; let i = index" style="cursor: pointer;">
                                 <clr-dg-cell id="fund_name_row_{{i}}">{{item.fundName}}</clr-dg-cell>
                                 <clr-dg-cell id="access_slider_row_{{i}}">
                                     <div class="switch-container">
                                         <label class="switch">
-                                            <input type="checkbox" 
-                                                    id="access_slider_{{i}}" 
-                                                    [formControl]="item.statusFormControl" 
+                                            <input type="checkbox"
+                                                    id="access_slider_{{i}}"
+                                                    [formControl]="item.statusFormControl"
                                                     (change)="handleAccessChange($event)">
                                             <span class="slider round"></span>
                                         </label>
                                     </div>
                                 </clr-dg-cell>
                                 <clr-dg-cell id="action_row_{{i}}">
-                                    <button class="btn btn-success btn-sm" style="margin: 0px;" [disabled]="!fundAccessHasKyc(item)" (click)="handleManagerShareAccess(item)">
+                                    <button class="btn btn-success btn-sm" style="margin: 0px;" [disabled]="!fundAccessHasKyc(item)" (click)="handleManageShareAccess(item)">
                                         <i class="fa fa-align-left"></i> {{ 'Manage Shares Authorisation' | translate }}
                                     </button>
                                 </clr-dg-cell>
@@ -55,7 +61,7 @@
 
                 <div class="row" style="margin-top:20px">
                     <div class="col-sm-6">
-                        {{ 'Here is a recap of the updates you are making regarding @emailAddress@\'s authorisation:' | translate: { 'emailAddress': pm.emailAddress } }}
+                        {{ 'Here is a recap of the updates you are making regarding @emailAddress@\'s authorisation:' | translate: { 'emailAddress': (portfolioManager$ | async)?.emailAddress } }}
                     </div>
                 </div>
 

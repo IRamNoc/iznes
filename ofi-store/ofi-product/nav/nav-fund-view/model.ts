@@ -9,6 +9,8 @@ export interface NavDetail {
     navPubDate: string;
     status: number;
     asm: string;
+    numberOfShares: number;
+    shareAum: number;
 }
 
 export interface CurrentRequest {

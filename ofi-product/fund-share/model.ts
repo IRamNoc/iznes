@@ -1,6 +1,6 @@
 import * as _ from 'lodash';
 
-import { FormItem, FormItemDropdown, FormItemType } from '@setl/utils';
+import {FormItem, FormItemDropdown, FormItemType, NumberConverterService} from '@setl/utils';
 import { OfiFundShare, OfiFundShareDocuments } from '@ofi/ofi-main';
 import * as FundShareEnum from './FundShareEnum';
 import { ShareCharacteristicMandatory } from './models/characteristic';
@@ -18,6 +18,7 @@ import { ShareUmbrellaFund, ShareUmbrellaFundOptionnal } from './models/umbrella
 import { ShareDocumentsMandatory, ShareDocumentsOptional } from './models/documents';
 import { FundShareTradeCycleModel } from './form/trade-cycle/model';
 import * as PC from '../productConfig';
+import {DynamicFormService} from "@setl/utils/components/dynamic-forms";
 
 export { PanelData } from './models/panelData';
 
@@ -28,57 +29,60 @@ export class FundShare {
     accountId: number;
     isProduction: boolean;
 
-    fund = new ShareFund();
-    fundHoliday = new ShareFundHolidayManagement();
-    fundOptionnal = new ShareFundOptionnal();
-    umbrella = new ShareUmbrellaFund();
-    umbrellaOptionnal = new ShareUmbrellaFundOptionnal();
+    fund = this.attchDynamicFormProperties(new ShareFund());
+    fundHoliday = this.attchDynamicFormProperties(new ShareFundHolidayManagement());
+    fundOptionnal = this.attchDynamicFormProperties(new ShareFundOptionnal());
+    umbrella = this.attchDynamicFormProperties(new ShareUmbrellaFund());
+    umbrellaOptionnal = this.attchDynamicFormProperties(new ShareUmbrellaFundOptionnal());
 
     calendarSubscription = {
-        mandatory: new ShareCalendarSubscriptionMandatory(),
-        subscriptionTradeCycle: null,
+        mandatory: this.attchDynamicFormProperties(new ShareCalendarSubscriptionMandatory()),
+        subscriptionTradeCycle: new FundShareTradeCycleModel(),
     };
     calendarRedemption = {
-        mandatory: new ShareCalendarRedemptionMandatory(),
-        redemptionTradeCycle: null,
+        mandatory: this.attchDynamicFormProperties(new ShareCalendarRedemptionMandatory()),
+        redemptionTradeCycle: new FundShareTradeCycleModel(),
     };
     characteristic = {
-        mandatory: new ShareCharacteristicMandatory(),
+        mandatory: this.attchDynamicFormProperties(new ShareCharacteristicMandatory()),
     };
     fees = {
-        mandatory: new ShareFeesMandatory(),
-        optional: new ShareFeesOptional(),
+        mandatory: this.attchDynamicFormProperties(new ShareFeesMandatory()),
+        optional: this.attchDynamicFormProperties(new ShareFeesOptional()),
     };
     keyFacts = {
-        status: new ShareKeyFactsStatus(),
-        mandatory: new ShareKeyFactsMandatory(),
-        optional: new ShareKeyFactsOptional(),
+        status: this.attchDynamicFormProperties(new ShareKeyFactsStatus()),
+        mandatory: this.attchDynamicFormProperties(new ShareKeyFactsMandatory()),
+        optional: this.attchDynamicFormProperties(new ShareKeyFactsOptional()),
     };
     listing = {
-        optional: new ShareListingOptional(),
+        optional: this.attchDynamicFormProperties(new ShareListingOptional()),
     };
     priip = {
-        optional: new SharePRIIPOptional(),
+        optional: this.attchDynamicFormProperties(new SharePRIIPOptional()),
     };
     profile = {
-        mandatory: new ShareProfileMandatory(),
-        optional: new ShareProfileOptional(),
+        mandatory: this.attchDynamicFormProperties(new ShareProfileMandatory()),
+        optional: this.attchDynamicFormProperties(new ShareProfileOptional()),
     };
     representation = {
-        optional: new ShareRepresentationOptional(),
+        optional: this.attchDynamicFormProperties(new ShareRepresentationOptional()),
     };
     solvency = {
-        optional: new ShareSolvencyOptional(),
+        optional: this.attchDynamicFormProperties(new ShareSolvencyOptional()),
     };
     taxation = {
-        optional: new ShareTaxationOptional(),
+        optional: this.attchDynamicFormProperties(new ShareTaxationOptional()),
     };
     documents = {
-        mandatory: new ShareDocumentsMandatory(),
-        optional: new ShareDocumentsOptional(),
+        mandatory: this.attchDynamicFormProperties(new ShareDocumentsMandatory()),
+        optional: this.attchDynamicFormProperties(new ShareDocumentsOptional()),
     };
 
-    constructor() {
+    constructor(
+        private dynamicFormService: DynamicFormService,
+        private numberConverter: NumberConverterService,
+    ) {
     }
 
     isValid(): boolean {
@@ -260,17 +264,17 @@ export class FundShare {
         this.characteristic.mandatory.maximumNumDecimal.preset = fundShare.maximumNumDecimal;
         this.setListItemPreset(this.characteristic.mandatory.subscriptionCategory, fundShare.subscriptionCategory);
         this.setListItemPreset(this.characteristic.mandatory.subscriptionCurrency, fundShare.subscriptionCurrency);
-        this.characteristic.mandatory.minInitialSubscriptionInShare.preset = fundShare.minInitialSubscriptionInShare;
-        this.characteristic.mandatory.minInitialSubscriptionInAmount.preset = fundShare.minInitialSubscriptionInAmount;
+        this.characteristic.mandatory.minInitialSubscriptionInShare.preset = this.numberConverter.toFrontEnd(fundShare.minInitialSubscriptionInShare);
+        this.characteristic.mandatory.minInitialSubscriptionInAmount.preset = this.numberConverter.toFrontEnd(fundShare.minInitialSubscriptionInAmount);
         this.characteristic.mandatory.minSubsequentSubscriptionInShare.preset =
-            fundShare.minSubsequentRedemptionInShare;
+            this.numberConverter.toFrontEnd(fundShare.minSubsequentRedemptionInShare);
         this.characteristic.mandatory.minSubsequentSubscriptionInAmount.preset =
-            fundShare.minSubsequentSubscriptionInAmount;
+            this.numberConverter.toFrontEnd(fundShare.minSubsequentSubscriptionInAmount);
         this.setListItemPreset(this.characteristic.mandatory.redemptionCategory, fundShare.redemptionCategory);
         this.setListItemPreset(this.characteristic.mandatory.redemptionCurrency, fundShare.redemptionCurrency);
-        this.characteristic.mandatory.minSubsequentRedemptionInShare.preset = fundShare.minSubsequentRedemptionInShare;
+        this.characteristic.mandatory.minSubsequentRedemptionInShare.preset = this.numberConverter.toFrontEnd(fundShare.minSubsequentRedemptionInShare);
         this.characteristic.mandatory.minSubsequentRedemptionInAmount.preset =
-            fundShare.minSubsequentRedemptionInAmount;
+            this.numberConverter.toFrontEnd(fundShare.minSubsequentRedemptionInAmount);
         this.setListItemPreset(this.keyFacts.mandatory.sharePortfolioCurrencyHedge, fundShare.portfolioCurrencyHedge);
         this.calendarSubscription.mandatory.subscriptionCutOffTime.preset = fundShare.subscriptionCutOffTime; // AC
         this.setListItemPreset(
@@ -302,15 +306,15 @@ export class FundShare {
 
         // removed by PZ 28/06/2018
         // this.calendar.mandatory.subscriptionRedemptionCalendar.preset = fundShare.subscriptionRedemptionCalendar;
-        this.fees.mandatory.maxManagementFee.preset = fundShare.maxManagementFee;
-        this.fees.mandatory.maxSubscriptionFee.preset = fundShare.maxSubscriptionFee;
-        this.fees.mandatory.maxRedemptionFee.preset = fundShare.maxRedemptionFee;
+        this.fees.mandatory.maxManagementFee.preset = this.numberConverter.toFrontEnd(fundShare.maxManagementFee);
+        this.fees.mandatory.maxSubscriptionFee.preset = this.numberConverter.toFrontEnd(fundShare.maxSubscriptionFee);
+        this.fees.mandatory.maxRedemptionFee.preset = this.numberConverter.toFrontEnd(fundShare.maxRedemptionFee);
         this.setListItemPreset(this.profile.mandatory.investorProfile, fundShare.investorProfile);
-        this.fees.mandatory.mifiidChargesOngoing.preset = fundShare.mifiidChargesOngoing;
-        this.fees.mandatory.mifiidChargesOneOff.preset = fundShare.mifiidChargesOneOff;
-        this.fees.mandatory.mifiidTransactionCosts.preset = fundShare.mifiidTransactionCosts;
-        this.fees.mandatory.mifiidServicesCosts.preset = fundShare.mifiidServicesCosts;
-        this.fees.mandatory.mifiidIncidentalCosts.preset = fundShare.mifiidIncidentalCosts;
+        this.fees.mandatory.mifiidChargesOngoing.preset = this.numberConverter.toFrontEnd(fundShare.mifiidChargesOngoing);
+        this.fees.mandatory.mifiidChargesOneOff.preset = this.numberConverter.toFrontEnd(fundShare.mifiidChargesOneOff);
+        this.fees.mandatory.mifiidTransactionCosts.preset = this.numberConverter.toFrontEnd(fundShare.mifiidTransactionCosts);
+        this.fees.mandatory.mifiidServicesCosts.preset = this.numberConverter.toFrontEnd(fundShare.mifiidServicesCosts);
+        this.fees.mandatory.mifiidIncidentalCosts.preset = this.numberConverter.toFrontEnd(fundShare.mifiidIncidentalCosts);
 
         this.applyOptionalData((this.keyFacts.optional as any), JSON.parse(fundShare.keyFactOptionalData));
         this.applyOptionalData((this.profile.optional as any), JSON.parse(fundShare.profileOptionalData));
@@ -348,14 +352,14 @@ export class FundShare {
         this.characteristic.mandatory.maximumNumDecimal.control.setValue(fundShare.maximumNumDecimal);
         this.setListItemValue(this.characteristic.mandatory.subscriptionCategory, fundShare.subscriptionCategory);
         this.setListItemValue(this.characteristic.mandatory.subscriptionCurrency, fundShare.subscriptionCurrency);
-        this.characteristic.mandatory.minInitialSubscriptionInShare.control.setValue(fundShare.minInitialSubscriptionInShare);
-        this.characteristic.mandatory.minInitialSubscriptionInAmount.control.setValue(fundShare.minInitialSubscriptionInAmount);
-        this.characteristic.mandatory.minSubsequentSubscriptionInShare.control.setValue(fundShare.minSubsequentRedemptionInShare);
-        this.characteristic.mandatory.minSubsequentSubscriptionInAmount.control.setValue(fundShare.minSubsequentSubscriptionInAmount);
+        this.characteristic.mandatory.minInitialSubscriptionInShare.control.setValue(this.numberConverter.toFrontEnd(fundShare.minInitialSubscriptionInShare));
+        this.characteristic.mandatory.minInitialSubscriptionInAmount.control.setValue(this.numberConverter.toFrontEnd(fundShare.minInitialSubscriptionInAmount));
+        this.characteristic.mandatory.minSubsequentSubscriptionInShare.control.setValue(this.numberConverter.toFrontEnd(fundShare.minSubsequentRedemptionInShare));
+        this.characteristic.mandatory.minSubsequentSubscriptionInAmount.control.setValue(this.numberConverter.toFrontEnd(fundShare.minSubsequentSubscriptionInAmount));
         this.setListItemValue(this.characteristic.mandatory.redemptionCategory, fundShare.redemptionCategory);
         this.setListItemValue(this.characteristic.mandatory.redemptionCurrency, fundShare.redemptionCurrency);
-        this.characteristic.mandatory.minSubsequentRedemptionInShare.control.setValue(fundShare.minSubsequentRedemptionInShare);
-        this.characteristic.mandatory.minSubsequentRedemptionInAmount.control.setValue(fundShare.minSubsequentRedemptionInAmount);
+        this.characteristic.mandatory.minSubsequentRedemptionInShare.control.setValue(this.numberConverter.toFrontEnd(fundShare.minSubsequentRedemptionInShare));
+        this.characteristic.mandatory.minSubsequentRedemptionInAmount.control.setValue(this.numberConverter.toFrontEnd(fundShare.minSubsequentRedemptionInAmount));
         this.setListItemValue(this.keyFacts.mandatory.sharePortfolioCurrencyHedge, fundShare.portfolioCurrencyHedge);
         this.calendarSubscription.mandatory.subscriptionCutOffTime.control.setValue(fundShare.subscriptionCutOffTime);
         this.setListItemValue(
@@ -386,15 +390,15 @@ export class FundShare {
 
         // removed by PZ 28/06/2018
         // this.calendar.mandatory.subscriptionRedemptionCalendar.control.setValue(fundShare.subscriptionRedemptionCalendar);
-        this.fees.mandatory.maxManagementFee.control.setValue(fundShare.maxManagementFee);
-        this.fees.mandatory.maxSubscriptionFee.control.setValue(fundShare.maxSubscriptionFee);
-        this.fees.mandatory.maxRedemptionFee.control.setValue(fundShare.maxRedemptionFee);
+        this.fees.mandatory.maxManagementFee.control.setValue(this.numberConverter.toFrontEnd(fundShare.maxManagementFee));
+        this.fees.mandatory.maxSubscriptionFee.control.setValue(this.numberConverter.toFrontEnd(fundShare.maxSubscriptionFee));
+        this.fees.mandatory.maxRedemptionFee.control.setValue(this.numberConverter.toFrontEnd(fundShare.maxRedemptionFee));
         this.setListItemValue(this.profile.mandatory.investorProfile, fundShare.investorProfile);
-        this.fees.mandatory.mifiidChargesOngoing.control.setValue(fundShare.mifiidChargesOngoing);
-        this.fees.mandatory.mifiidChargesOneOff.control.setValue(fundShare.mifiidChargesOneOff);
-        this.fees.mandatory.mifiidTransactionCosts.control.setValue(fundShare.mifiidTransactionCosts);
-        this.fees.mandatory.mifiidServicesCosts.control.setValue(fundShare.mifiidServicesCosts);
-        this.fees.mandatory.mifiidIncidentalCosts.control.setValue(fundShare.mifiidIncidentalCosts);
+        this.fees.mandatory.mifiidChargesOngoing.control.setValue(this.numberConverter.toFrontEnd(fundShare.mifiidChargesOngoing));
+        this.fees.mandatory.mifiidChargesOneOff.control.setValue(this.numberConverter.toFrontEnd(fundShare.mifiidChargesOneOff));
+        this.fees.mandatory.mifiidTransactionCosts.control.setValue(this.numberConverter.toFrontEnd(fundShare.mifiidTransactionCosts));
+        this.fees.mandatory.mifiidServicesCosts.control.setValue(this.numberConverter.toFrontEnd(fundShare.mifiidServicesCosts));
+        this.fees.mandatory.mifiidIncidentalCosts.control.setValue(this.numberConverter.toFrontEnd(fundShare.mifiidIncidentalCosts));
 
         this.applyOptionalData((this.keyFacts.optional as any), JSON.parse(fundShare.keyFactOptionalData));
         this.applyOptionalData((this.profile.optional as any), JSON.parse(fundShare.profileOptionalData));
@@ -526,8 +530,6 @@ export class FundShare {
         this.fundID = fund.fundID;
 
         this.fund.name.preset = fund.fundName;
-        this.fund.aumFund.preset = fund.fundName;
-        this.fund.aumFundDate.preset = fund.fundName;
         this.fund.LEI.preset = fund.legalEntityIdentifier;
         this.fund.fundRegisteredOfficeName.preset = fund.registerOffice;
         this.fund.fundRegisteredOfficeAddress.preset = fund.registerOfficeAddress;
@@ -557,7 +559,7 @@ export class FundShare {
 
         this.fundOptionnal.globalIntermediaryIdentification.preset = fund.globalIntermediaryIdentification;
         this.setListItemPreset(this.fundOptionnal.delegatedManagementCompany, fund.delegatedManagementCompany);
-        this.setListItemPresetMultiple(this.fundOptionnal.investmentAdvisor, fund.investmentAdvisor);
+        this.fundOptionnal.investmentAdvisor.preset = fund.investmentAdvisor;
         this.setListItemPreset(this.fundOptionnal.auditor, fund.auditor);
         this.setListItemPreset(this.fundOptionnal.taxAuditor, fund.taxAuditor);
         this.setListItemPreset(this.fundOptionnal.legalAdvisor, fund.legalAdvisor);
@@ -586,8 +588,6 @@ export class FundShare {
         this.fundID = fund.fundID;
 
         this.fund.name.control.setValue(fund.fundName);
-        this.fund.aumFund.control.setValue(fund.fundName);
-        this.fund.aumFundDate.control.setValue(fund.fundName);
         this.fund.LEI.control.setValue(fund.legalEntityIdentifier);
         this.fund.fundRegisteredOfficeName.control.setValue(fund.registerOffice);
         this.fund.fundRegisteredOfficeAddress.control.setValue(fund.registerOfficeAddress);
@@ -617,7 +617,7 @@ export class FundShare {
 
         this.fundOptionnal.globalIntermediaryIdentification.control.setValue(fund.globalIntermediaryIdentification);
         this.setListItemValue(this.fundOptionnal.delegatedManagementCompany, fund.delegatedManagementCompany);
-        this.setListItemValueMultiple(this.fundOptionnal.investmentAdvisor, fund.investmentAdvisorID);
+        this.fundOptionnal.investmentAdvisor.control.setValue(fund.investmentAdvisorID);
         this.setListItemValue(this.fundOptionnal.auditor, fund.auditorID);
         this.setListItemValue(this.fundOptionnal.taxAuditor, fund.taxAuditorID);
         this.setListItemValue(this.fundOptionnal.legalAdvisor, fund.legalAdvisorID);
@@ -751,7 +751,9 @@ export class FundShare {
         const json = {};
 
         _.forEach(model, (item: FormItem, index: string) => {
-            json[index] = item.value();
+            if (typeof item.value === 'function'){
+                json[index] = item.value();
+            }
         });
 
         return JSON.stringify(json);
@@ -887,25 +889,44 @@ export class FundShare {
         shareKeys.forEach((shareKey) => {
             Object.keys(shareKey).forEach((subKey) => {
                 Object.keys(shareKey[subKey]).forEach((field) => {
-                    shareKey[subKey][field].disabled = true;
-                    shareKey[subKey][field].required = false;
+                    if(typeof shareKey[subKey][field].control !== 'undefined') {
+                        shareKey[subKey][field].control.disable();
+                        shareKey[subKey][field].required = false;
+                    }
                 });
             });
         });
 
         Object.keys(this.calendarSubscription.mandatory).forEach((field) => {
-            this.calendarSubscription.mandatory[field].disabled = true;
-            this.calendarSubscription.mandatory[field].required = false;
+            if(typeof this.calendarSubscription.mandatory[field].control !== 'undefined') {
+                this.calendarSubscription.mandatory[field].control.disable();
+                this.calendarSubscription.mandatory[field].required = false;
+            }
         });
 
         Object.keys(this.calendarRedemption.mandatory).forEach((field) => {
-            this.calendarRedemption.mandatory[field].disabled = true;
-            this.calendarRedemption.mandatory[field].required = false;
+            if(typeof this.calendarRedemption.mandatory[field].control !== 'undefined') {
+                this.calendarRedemption.mandatory[field].control.disable();
+                this.calendarRedemption.mandatory[field].required = false;
+            }
         });
     }
 
     isReady() {
         return !!_.get(this.keyFacts.mandatory.isin, ['control', 'setValue'], false);
+    }
+
+    /**
+     * Attach dynamic form properties form and formKeys
+     * be aware, we mute the dynamicModel here and passing object around by reference.
+     */
+    attchDynamicFormProperties(dynamicModel) {
+        const form = this.dynamicFormService.generateForm(dynamicModel);
+        const formKeys = this.dynamicFormService.getFormKeys(dynamicModel);
+        this.dynamicFormService.updateModel(dynamicModel, form);
+        dynamicModel.formObj = form;
+        dynamicModel.formKeysObj = formKeys;
+        return dynamicModel;
     }
 }
 
@@ -920,3 +941,4 @@ export enum userTypeEnum {
     AM = 36,
     ADMIN = 35,
 }
+

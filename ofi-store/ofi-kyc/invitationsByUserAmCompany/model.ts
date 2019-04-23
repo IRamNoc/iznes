@@ -11,4 +11,5 @@ export interface investorInvitation {
     invitationLink?: string;
     lang?: string;
     status: number;
+    investorType: number;
 }

@@ -33,10 +33,10 @@ export const productCharacteristicsReducer = (state = initialState, action) => {
         const data = action.payload[1].Data[0];
         const newProduct = state.product.set(data.isin, Map({
             ...data,
-            distributionPolicy: JSON.parse(data.distributionPolicy),
-            srri: JSON.parse(data.srri),
-            sri: JSON.parse(data.sri),
-            recommendedHoldingPeriod: JSON.parse(data.recommendedHoldingPeriod),
+            distributionPolicy: data.distributionPolicy,
+            srri: data.srri,
+            sri: data.sri,
+            recommendedHoldingPeriod: data.recommendedHoldingPeriod,
         }));
 
         return {

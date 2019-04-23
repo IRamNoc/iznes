@@ -5,7 +5,6 @@ import { Action } from 'redux';
 import { OfiClientReferentialState, ClientReferentialDetails } from './model';
 import * as ofiClientReferentialActions from './actions';
 import { immutableHelper } from '@setl/utils';
-import { fromJS, Map } from 'immutable';
 import * as _ from 'lodash';
 
 /* Initial state. */
@@ -39,18 +38,19 @@ function ofiSetList(state: OfiClientReferentialState, action: Action) {
     const data = _.get(action, 'payload[1].Data', []);    // use [] not {} for list and Data not Data[0]
 
     let clientReferential: OfiClientReferentialState[] = [];
+
     try {
         clientReferential = immutableHelper.reduce(data, (result, item) => {
             result.push({
-                kycID: item.get('kycID'),
                 clientReference: item.get('clientReference'),
                 walletName: item.get('walletName'),
                 companyName: item.get('companyName'),
-                leiCode: item.get('leiCode'),
-                legalForm: item.get('legalForm'),
-                sectorActivity: item.get('sectorActivity'),
+                firstName: item.get('firstName'),
+                lastName: item.get('lastName'),
                 email: item.get('emailAddress'),
-                alreadyCompleted: item.get('alreadyCompleted'),
+                investorType: item.get('investorType'),
+                kycID: item.get('kycID'),
+                investmentMethod: item.get('investmentMethod'),
             });
 
             return result;

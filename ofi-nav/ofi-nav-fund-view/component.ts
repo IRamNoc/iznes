@@ -30,7 +30,7 @@ import { MultilingualService } from '@setl/multilingual';
 import { AlertsService } from '@setl/jaspero-ng2-alerts/src/alerts.service';
 import { OfiCurrenciesService } from '@ofi/ofi-main/ofi-req-services/ofi-currencies/service';
 
-const ADMIN_USER_URL = '/net-asset-value/';
+const ADMIN_USER_URL = '/net-asset-value';
 
 @Component({
     selector: 'app-nav-fund-view',
@@ -472,7 +472,7 @@ export class OfiNavFundView implements OnInit, OnDestroy {
         this.changeDetectorRef.markForCheck();
     }
 
-    private navToFrontEndString(nav: number): string {
+    navToFrontEndString(nav: number): string {
         return this.moneyPipe.transform(this.numberConverterService.toFrontEnd(nav));
     }
 

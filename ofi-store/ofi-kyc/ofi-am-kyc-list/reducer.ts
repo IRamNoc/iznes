@@ -56,6 +56,8 @@ function handleSetAmKycList(state: AmKycListState, action: Action): AmKycListSta
                 isInvited: item.get('isInvited', 0),
                 invitedID: item.get('invitedID', 0),
                 status: item.get('kycStatus', 0),
+                investorType: item.get('investorType', 0),
+                fundName: item.get('fundName', 0),
                 dateEntered: mDateHelper.convertUtcStrToLocalStr(item.get('dateEntered', 0), 'YYYY-MM-DD HH:mm'),
                 clientReference: item.get('clientReference', 0),
                 alreadyCompleted: item.get('alreadyCompleted', 0)

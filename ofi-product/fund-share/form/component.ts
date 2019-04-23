@@ -1,7 +1,3 @@
-import {
-    forkJoin,
-    Subscription,
-} from 'rxjs';
 import { Subject } from 'rxjs/Subject';
 import { take, takeUntil, filter, map, switchMap } from 'rxjs/operators';
 import {
@@ -12,7 +8,6 @@ import {
     OnInit,
     ViewChild,
     Inject,
-    AfterViewInit,
 } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
 import { NgRedux, select } from '@angular-redux/store';
@@ -21,8 +16,8 @@ import * as _ from 'lodash';
 import { AlertsService } from '@setl/jaspero-ng2-alerts';
 import { ToasterService } from 'angular2-toaster';
 import { ClrTabs } from '@clr/angular';
-import { ConfirmationService, ClrTabsHelper } from '@setl/utils';
-import { DynamicFormComponent } from '@setl/utils/components/dynamic-forms/';
+import {ConfirmationService, ClrTabsHelper, NumberConverterService} from '@setl/utils';
+import {DynamicFormComponent, DynamicFormService} from '@setl/utils/components/dynamic-forms/';
 import { Location } from '@angular/common';
 
 import { setRequestedIznesFunds } from '@ofi/ofi-main/ofi-store/ofi-product/fund';
@@ -63,7 +58,7 @@ const ADMIN_USER_URL = '/admin-product-module/';
     templateUrl: './component.html',
     changeDetection: ChangeDetectionStrategy.OnPush,
 })
-export class FundShareComponent implements OnInit, AfterViewInit, OnDestroy {
+export class FundShareComponent implements OnInit, OnDestroy {
     private fundShareData: OfiFundShare;
     private fundShareDocsData: OfiFundShareDocuments;
     isReady: boolean = false;
@@ -71,7 +66,7 @@ export class FundShareComponent implements OnInit, AfterViewInit, OnDestroy {
     mode: FundShareMode = FundShareMode.Create;
 
     // ID of the share to hydrate the model with
-    prefill: number;
+    prefill: number = null;
     userType: userTypeEnum;
     private fundList;
     fundListItems = [];
@@ -91,11 +86,6 @@ export class FundShareComponent implements OnInit, AfterViewInit, OnDestroy {
     currDraft: number;
 
     unSubscribe: Subject<any> = new Subject();
-
-    private isSubscribedToCalendarFormChanges: boolean = false;
-
-    @ViewChild('calendarSubscriptionForm') private calendarSubscriptionForm: DynamicFormComponent;
-    @ViewChild('calendarRedemptionForm') private calendarRedemptionForm: DynamicFormComponent;
 
     @ViewChild('tabsRef') tabsRef: ClrTabs;
     @ViewChild('fundHolidayInput') fundHolidayInput;
@@ -133,6 +123,8 @@ export class FundShareComponent implements OnInit, AfterViewInit, OnDestroy {
         private fb: FormBuilder,
         public translate: MultilingualService,
         private location: Location,
+        private dynamicFormService: DynamicFormService,
+        private numberConverter: NumberConverterService,
         @Inject('product-config') productConfig,
     ) {
         this.countriesEnum = productConfig.fundItems.domicileItems;
@@ -148,44 +140,11 @@ export class FundShareComponent implements OnInit, AfterViewInit, OnDestroy {
     }
 
     ngOnInit() {
-        this.model = new FundShare();
+        this.model = new FundShare(this.dynamicFormService, this.numberConverter);
         this.initSubscriptions();
 
         this.redux.dispatch(clearRequestedFundShare());
         this.redux.dispatch(clearRequestedFundShareDocs());
-    }
-
-    ngAfterViewInit() {
-        /* The Subscription and Redemption Cut-off Time Zones must always be the same */
-        if (this.calendarSubscriptionForm && this.calendarRedemptionForm && !this.isSubscribedToCalendarFormChanges) {
-            this.isSubscribedToCalendarFormChanges = true;
-
-            this.calendarSubscriptionForm.form.controls['subscriptionCutOffTimeZone'].valueChanges
-            .pipe(
-                takeUntil(this.unSubscribe),
-            )
-            .subscribe((subscriptionCutOffTimeZone) => {
-                const subCutOffTimeZone = _.cloneDeep(subscriptionCutOffTimeZone);
-                const redemptionCutOff = _.get(this.calendarRedemptionForm, 'form.controls[\'redemptionCutOffTimeZone\'].value[0].text', null);
-
-                if (redemptionCutOff !== subscriptionCutOffTimeZone[0].text) {
-                    this.calendarRedemptionForm.form.controls['redemptionCutOffTimeZone'].patchValue(subCutOffTimeZone);
-                }
-            });
-
-            this.calendarRedemptionForm.form.controls['redemptionCutOffTimeZone'].valueChanges
-            .pipe(
-                takeUntil(this.unSubscribe),
-            )
-            .subscribe((redemptionCutOffTimeZone) => {
-                const redCutOffTimeZone = _.cloneDeep(redemptionCutOffTimeZone);
-                const subscriptionCutOff = _.get(this.calendarSubscriptionForm, 'form.controls[\'subscriptionCutOffTimeZone\'].value[0].text', null);
-
-                if (subscriptionCutOff !== redemptionCutOffTimeZone[0].text) {
-                    this.calendarSubscriptionForm.form.controls['subscriptionCutOffTimeZone'].patchValue(redCutOffTimeZone);
-                }
-            });
-        }
     }
 
     get fund() {
@@ -206,6 +165,14 @@ export class FundShareComponent implements OnInit, AfterViewInit, OnDestroy {
         return this.model.umbrellaFundID ? _.find(this.umbrellaFundList, (umbrellaItem) => {
             return umbrellaItem.umbrellaFundID === this.model.umbrellaFundID;
         }) : null;
+    }
+
+    get umbrellaFundName() {
+        return _.get(this.umbrellaFund, 'umbrellaFundName', '');
+    }
+
+    get fundName() {
+        return _.get(this.fund, 'fundName', '');
     }
 
     private initSubscriptions(): void {
@@ -256,9 +223,9 @@ export class FundShareComponent implements OnInit, AfterViewInit, OnDestroy {
             if (this.userType === userTypeEnum.AM && this.fundShareId) {
                 this.model.fundShareId = parseInt(fundShareId, 10);
                 this.mode = FundShareMode.Update;
-                if (this.currDraft !== 1) {
-                    this.model.keyFacts.mandatory.fundShareName.disabled = true;
-                    this.model.keyFacts.mandatory.isin.disabled = true;
+                if (this.currDraft === 0 && this.prefill === null) {
+                    this.model.keyFacts.mandatory.fundShareName.control.disable();
+                    this.model.keyFacts.mandatory.isin.control.disable();
                 }
             }
 
@@ -482,7 +449,8 @@ export class FundShareComponent implements OnInit, AfterViewInit, OnDestroy {
                 { emitEvent: false },
             );
 
-            this.isCreate() && !this.prefill || !this.model.isReady()
+            const isReady = this.model.isReady();
+            (this.isCreate() && !this.prefill || !isReady)
                 ? this.model.setFund(this.fund)
                 : this.model.updateFund(fund[this.model.fundID], null);
 
@@ -560,11 +528,41 @@ export class FundShareComponent implements OnInit, AfterViewInit, OnDestroy {
             this.alerts.updateView('info', this.getSaveShareText(message, stepNo));
         });
 
+        this.linkCutoffTimezone();
+
         this.isReady = true;
 
         this.changeDetectorRef.markForCheck();
         this.changeDetectorRef.detectChanges();
         return;
+    }
+
+    linkCutoffTimezone() {
+        this.model.calendarSubscription.mandatory.subscriptionCutOffTimeZone.control.valueChanges
+            .pipe(
+                takeUntil(this.unSubscribe),
+            )
+            .subscribe((subscriptionCutOffTimeZone) => {
+                const subCutOffTimeZone = _.cloneDeep(subscriptionCutOffTimeZone);
+                const redemptionCutOff = _.get(this.model.calendarRedemption.mandatory.redemptionCutOffTimeZone.control.value, '[0].text', null);
+
+                if (redemptionCutOff !== subscriptionCutOffTimeZone[0].text) {
+                    this.model.calendarRedemption.mandatory.redemptionCutOffTimeZone.control.patchValue(subCutOffTimeZone);
+                }
+            });
+
+        this.model.calendarRedemption.mandatory.redemptionCutOffTimeZone.control.valueChanges
+            .pipe(
+                takeUntil(this.unSubscribe),
+            )
+            .subscribe((redemptionCutOffTimeZone) => {
+                const redCutOffTimeZone = _.cloneDeep(redemptionCutOffTimeZone);
+                const subscriptionCutOff = _.get(this.model.calendarSubscription.mandatory.subscriptionCutOffTimeZone.control.value, '[0].text', null);
+
+                if (subscriptionCutOff !== redemptionCutOffTimeZone[0].text) {
+                    this.model.calendarSubscription.mandatory.subscriptionCutOffTimeZone.control.patchValue(redCutOffTimeZone);
+                }
+            });
     }
 
     private getCurrencyList(data): void {
@@ -610,8 +608,7 @@ export class FundShareComponent implements OnInit, AfterViewInit, OnDestroy {
         return this.model.umbrellaFundID > 0;
     }
 
-    calendarSubscriptionModelEvent(model: FundShareTradeCycleModel): void {
-        this.model.calendarSubscription.subscriptionTradeCycle = model;
+    calendarSubscriptionModelEvent(): void {
         if (this.isRead()) {
             this.model.calendarSubscription.subscriptionTradeCycle.disable();
             this.model.calendarSubscription.subscriptionTradeCycle.clearAllValidators();
@@ -619,8 +616,7 @@ export class FundShareComponent implements OnInit, AfterViewInit, OnDestroy {
         if (this.fundShareData) this.model.setSubscriptionTradeCycleData(this.fundShareData);
     }
 
-    calendarRedemptionModelEvent(model: FundShareTradeCycleModel): void {
-        this.model.calendarRedemption.redemptionTradeCycle = model;
+    calendarRedemptionModelEvent(): void {
         if (this.isRead()) {
             this.model.calendarRedemption.redemptionTradeCycle.disable();
             this.model.calendarRedemption.redemptionTradeCycle.clearAllValidators();
@@ -683,12 +679,10 @@ export class FundShareComponent implements OnInit, AfterViewInit, OnDestroy {
 
         this.fundShareData = fundShare;
 
-        if (this.currDraft == 1) {
-            this.model.keyFacts.mandatory.fundShareName.disabled = false;
-            this.model.keyFacts.mandatory.isin.disabled = false;
+        if (this.currDraft === 0 && this.prefill === null) {
+            this.model.keyFacts.mandatory.fundShareName.control.disable();
+            this.model.keyFacts.mandatory.isin.control.disable();
         }
-
-        this.changeDetectorRef.detectChanges();
     }
 
     /**
@@ -703,15 +697,9 @@ export class FundShareComponent implements OnInit, AfterViewInit, OnDestroy {
 
         if (this.isReady) {
             this.model.setFundShareDocsValue(fundShareDocs);
-
-            this.documentsMandatory.markForCheck();
-            this.documentsOptional.markForCheck();
         } else {
             this.model.setFundShareDocs(fundShareDocs);
         }
-
-        this.changeDetectorRef.markForCheck();
-        this.changeDetectorRef.detectChanges();
     }
 
     /**
@@ -743,7 +731,7 @@ export class FundShareComponent implements OnInit, AfterViewInit, OnDestroy {
      */
     saveFundShare(): void {
         const request = this.model.getRequest(0);
-        if (this.isCreate() || this.currDraft == 1) {
+        if (this.isCreate() || this.currDraft === 1) {
 
             if (this.isCreate()) request.fundShareID = null;
 

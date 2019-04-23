@@ -13,6 +13,7 @@ import {
     FundAccessMyActions,
 } from '../../ofi-store';
 import { clearRequestedIznesShares } from '../../ofi-store/ofi-product/fund-share-list/actions';
+import { ofiNewMandateInvestor } from '../../ofi-store/ofi-mandate-investor';
 import {
     clearRequestedPrecentraFundsList,
     clearRequestedPrecentraSharesList,
@@ -33,6 +34,7 @@ import { SET_SITE_MENU } from '@setl//core-store';
 import {
     ofiAddNewPM, ofiPMActive,
     ofiUpdatePmDetail,
+    ofiUpdateWmDetail,
 } from '../../ofi-store/ofi-portfolio-manager/portfolio-manage-list/actions';
 
 /* Service class. */
@@ -132,6 +134,10 @@ export class OfiMemberNodeChannelService {
                 this.refetchMenu();
                 break;
 
+            case 'kyclistam':
+                this.ngRedux.dispatch({ ...setamkyclist(), payload: [null, data] });
+                break;
+
             case 'iznprekycupdate':
                 this.ngRedux.dispatch(setInvestorInvitationListReset());
                 break;
@@ -188,6 +194,14 @@ export class OfiMemberNodeChannelService {
             // handle new pm
             case 'iznespmactive':
                 this.ngRedux.dispatch(ofiPMActive(data.Data));
+                break;
+
+            case 'iznesnewmandateinv':
+                this.ngRedux.dispatch(ofiNewMandateInvestor(data.Data));
+                break;
+
+            case 'mandateinvestoraccess':
+                this.ngRedux.dispatch(ofiUpdateWmDetail(data.Data));
                 break;
         }
     }

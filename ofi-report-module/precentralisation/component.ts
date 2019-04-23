@@ -2,14 +2,12 @@ import { ChangeDetectionStrategy, ChangeDetectorRef, Component, Inject, OnDestro
 import { FormBuilder, FormGroup } from '@angular/forms';
 import { MemberSocketService } from '@setl/websocket-service';
 import { NgRedux, select } from '@angular-redux/store';
-import { Unsubscribe } from 'redux';
 import { fromJS } from 'immutable';
 /* Utils. */
 import { ConfirmationService, NumberConverterService, mDateHelper } from '@setl/utils';
 import { APP_CONFIG, AppConfig, FileDownloader } from '@setl/utils/index';
 /* Alerts and confirms. */
 import { AlertsService } from '@setl/jaspero-ng2-alerts';
-import { Subject } from 'rxjs';
 import { ActivatedRoute, Router } from '@angular/router';
 /* Clarity */
 /* services */
@@ -20,27 +18,16 @@ import * as moment from 'moment';
 import { MultilingualService } from '@setl/multilingual';
 import { get } from 'lodash';
 
-/* Types. */
-interface SelectedItem {
-    id: any;
-    text: number | string;
-}
-
 @Component({
     styleUrls: ['./component.scss'],
     templateUrl: './component.html',
     changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class PrecentralisationReportComponent implements OnInit, OnDestroy {
-    unknownValue = '???';
-
     filtersForm: FormGroup;
 
     fundsUrl = '/reports/precentralisation/funds';
     sharesUrl = '/reports/precentralisation/shares';
-
-    centralisationReportsFundsList: Array<any> = [];
-    centralisationReportsSharesList: Array<any> = [];
 
     // Locale
     language = 'en';
@@ -56,6 +43,7 @@ export class PrecentralisationReportComponent implements OnInit, OnDestroy {
         disableKeypress: true,
         locale: this.language,
         isDayDisabledCallback: (thisDate) => {
+            // make sure the dateFrom that greater than dateTo can not be selected
             if (!!thisDate && this.filtersForm.controls['dateTo'].value !== '') {
                 return (thisDate.diff(this.filtersForm.controls['dateTo'].value) > 0);
             }
@@ -69,29 +57,13 @@ export class PrecentralisationReportComponent implements OnInit, OnDestroy {
         disableKeypress: true,
         locale: this.language,
         isDayDisabledCallback: (thisDate) => {
+            // make sure the dateTo that less than dateFrom can not be selected
             if (!!thisDate && this.filtersForm.controls['dateFrom'].value !== '') {
                 return (thisDate.diff(this.filtersForm.controls['dateFrom'].value) < 0);
             }
             return false;
         },
     };
-
-    currencyList = [
-        { id: 0, text: 'EUR' },
-        { id: 1, text: 'USD' },
-        { id: 2, text: 'GBP' },
-        { id: 3, text: 'CHF' },
-        { id: 4, text: 'JPY' },
-        { id: 5, text: 'AUD' },
-        { id: 6, text: 'NOK' },
-        { id: 7, text: 'SEK' },
-        { id: 8, text: 'ZAR' },
-        { id: 9, text: 'RUB' },
-        { id: 10, text: 'SGD' },
-        { id: 11, text: 'AED' },
-        { id: 12, text: 'CNY' },
-        { id: 13, text: 'PLN' },
-    ];
 
     fundSpecificDates = [];
     isPeriod = true;
@@ -424,11 +396,6 @@ export class PrecentralisationReportComponent implements OnInit, OnDestroy {
         this.changeDetectorRef.markForCheck();
     }
 
-    buildLink(id) {
-        const dest = 'am-reports-section/centralisation/' + id;
-        this.router.navigateByUrl(dest);
-    }
-
     updateFiltersForm() {
         const yesterday = moment().subtract(1, 'day').format('YYYY-MM-DD');
         const nextWeek = moment().add(1, 'week').format('YYYY-MM-DD');
@@ -479,7 +446,7 @@ export class PrecentralisationReportComponent implements OnInit, OnDestroy {
         this.filtersForm.get('specificDate').updateValueAndValidity();
         this.filtersForm.get('dateFrom').updateValueAndValidity();
         this.filtersForm.get('dateTo').updateValueAndValidity();
-        this.subscriptions.push(this.filtersForm.valueChanges.subscribe(form => this.requestSearch(form)));
+        this.subscriptions.push(this.filtersForm.valueChanges.debounceTime(1000).subscribe(form => this.requestSearch(form)));
         this.changeDetectorRef.markForCheck();
     }
 

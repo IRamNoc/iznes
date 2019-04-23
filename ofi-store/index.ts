@@ -49,6 +49,7 @@ import {
     RESET_SUB_PORTFOLIO_BANKING_DETAILS_REQUESTED,
     DELETE_SUB_PORTFOLIO_BANKING_DETAIL,
 } from './ofi-sub-portfolio';
+import { OfiMandateInvestorReducer, OfiMandateInvestorState } from './ofi-mandate-investor';
 
 export {
     SET_FUND_ACCESS_MY,
@@ -210,6 +211,7 @@ export interface OfiState {
     ofiReports: OfiReportsState;
     ofiAmDashboard: OfiAmDashboardsState;
     ofiPortfolioManager: OfiPortfolioManagerState;
+    ofiMandateInvestor: OfiMandateInvestorState;
     ofiSubPortfolio: SubPortfolioBankingDetailsState;
 }
 
@@ -224,5 +226,6 @@ export const OfiReducer: Reducer<OfiState> = combineReducers<OfiState>({
     ofiReports: OfiReportsReducer,
     ofiAmDashboard: OfiAmDashboardsReducer,
     ofiPortfolioManager: OfiPortfolioMangerReducer,
+    ofiMandateInvestor: OfiMandateInvestorReducer,
     ofiSubPortfolio: OfiSubPortfolioBankingDetailsReducer,
 });

@@ -10,11 +10,14 @@ import {
     OFI_SET_PM_DETAIL,
     OFI_SET_PM_LIST,
     ofiSetRequestedPmList,
+    OFI_SET_WM_DETAIL,
 } from '../../ofi-store/ofi-portfolio-manager/portfolio-manage-list/actions';
 import {
     OfiPortfolioManagerDetailrequestBody,
     OfiPortfolioManagerListRequestBody,
     OfiPortfolioManagerUpdateRequestBody,
+    OfiWealthManagerDetailrequestBody,
+    OfiWealthManagerUpdateRequestBody,
 } from './model';
 
 @Injectable()
@@ -90,6 +93,36 @@ export class OfiPortfolioMangerService {
     }
 
     /**
+     * Get portfolio manager detail with default action.
+     * @param: {number} pmId
+     */
+    defaultRequestWealthManagerDetail(pmId: number) {
+        // Request the list.
+        const asyncTaskPipe = this.requestWealthManagerDetail(pmId);
+
+        this.ngRedux.dispatch(SagaHelper.runAsync(
+            [OFI_SET_WM_DETAIL],
+            [],
+            asyncTaskPipe,
+            {},
+        ));
+    }
+
+    /**
+     * Get wealth manager detail.
+     * @param: {number} pmId
+     */
+    requestWealthManagerDetail(pmId: number): any {
+        const messageBody: OfiWealthManagerDetailrequestBody = {
+            RequestName: 'iznwealthmanagerlist',
+            token: this.memberSocketService.token,
+            pmid: pmId,
+        };
+
+        return createMemberNodeSagaRequest(this.memberSocketService, messageBody);
+    }
+
+    /**
      * Update portfolio manager fund access.
      * @param: {{pmId: number; fundId: number; status: number}} pmId
      */
@@ -99,6 +132,22 @@ export class OfiPortfolioMangerService {
             token: this.memberSocketService.token,
             fundid: requestData.fundId,
             pmid: requestData.pmId,
+            status: requestData.status,
+        };
+
+        return createMemberNodeRequest(this.memberSocketService, messageBody);
+    }
+
+    /**
+     * Update portfolio manager fund access.
+     * @param: {{pmId: number; fundId: number; status: number}} pmId
+     */
+    updateWealthManagerInvestorAccess(requestData: {pmId: number; investorId: number; status: number}): any {
+        const messageBody: OfiWealthManagerUpdateRequestBody = {
+            RequestName: 'izneswealthmanagerupdateinvestors',
+            token: this.memberSocketService.token,
+            pmid: requestData.pmId,
+            investorid: requestData.investorId,
             status: requestData.status,
         };
 

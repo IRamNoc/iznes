@@ -11,13 +11,14 @@ import { MultilingualService } from '@setl/multilingual';
 
 /* Ofi orders request service. */
 import { clearAppliedHighlight, SET_HIGHLIGHT_LIST, setAppliedHighlight } from '@setl/core-store/index';
-import { setInformations, KycMyInformations } from '@ofi/ofi-main/ofi-store/ofi-kyc/my-informations';
+import { KycMyInformations } from '@ofi/ofi-main/ofi-store/ofi-kyc/my-informations';
 import { Observable } from 'rxjs/Observable';
 import { Router, ActivatedRoute } from '@angular/router';
 import { OfiKycService } from '@ofi/ofi-main/ofi-req-services/ofi-kyc/service';
 import { MyUserService } from '@setl/core-req-services';
 import { SagaHelper } from '@setl/utils/index';
 import { Endpoints } from '../config';
+import { InvestorType } from '../../shared/investor-types';
 
 @Component({
     styleUrls: ['./component.scss'],
@@ -188,10 +189,7 @@ export class OfiKycHomeComponent implements AfterViewInit, OnDestroy {
      * @return {string}
      */
     getHomePageToSet(): string {
-        if (this.isPortfolioManagerType()) {
-            return '/home';
-        }
-        return this.endpointsConfig.myRequests; // @todo When superadmin role is developed, check the role here
+        return (this.isPortfolioManagerType()) ? '/home' : this.endpointsConfig.myRequests
     }
 
     /**
@@ -199,7 +197,7 @@ export class OfiKycHomeComponent implements AfterViewInit, OnDestroy {
      * @return {boolean}
      */
     isPortfolioManagerType(): boolean {
-        return this.investorType === 20;
+        return [InvestorType.DiscretionaryManager, InvestorType.FundOfFundsManager].includes(this.investorType);
     }
 
     /**

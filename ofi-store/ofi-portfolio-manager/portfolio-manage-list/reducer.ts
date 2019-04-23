@@ -5,7 +5,7 @@ import { Action } from 'redux';
 import { PortfolioManagerList } from './model';
 import {
     OFI_SET_PM_LIST, OFI_SET_REQUESTED_PM_LIST, OFI_SET_PM_DETAIL, OFI_UPDATE_PM_DETAIL,
-    OFI_ADD_NEW_PM, OFI_PM_ACTIVE
+    OFI_ADD_NEW_PM, OFI_PM_ACTIVE, OFI_UPDATE_WM_DETAIL, OFI_SET_WM_DETAIL
 } from './actions';
 import { immutableHelper } from '@setl/utils';
 import { get, merge } from 'lodash';
@@ -39,6 +39,12 @@ export const OfiPortfolioManagerListReducer = function (state: PortfolioManagerL
     case OFI_PM_ACTIVE:
         return ofiPmActive(state, action);
 
+    case OFI_SET_WM_DETAIL:
+        return ofiSetWmDetail(state, action);
+
+    case OFI_UPDATE_WM_DETAIL:
+        return ofiUpdateWmDetail(state, action);
+
     default:
         return state;
     }
@@ -59,6 +65,7 @@ function ofiSetPortfolioManagerList(state: PortfolioManagerList, action: Action)
     const portfolioManagerList = data.reduce((accu, pm) => {
         accu[pm.pmID] = {
             pmId: pm.pmID,
+            type: pm.type,
             emailAddress: pm.emailAddress,
             userId: pm.userID,
             inviteId: pm.inviteID,
@@ -66,6 +73,7 @@ function ofiSetPortfolioManagerList(state: PortfolioManagerList, action: Action)
             lastName: pm.lastName,
             pmActive: pm.userID !== null,
             fundAccess: {},
+            mandateInvestors: {},
         };
         return accu;
     }, {});
@@ -159,6 +167,8 @@ function ofiAddNewPm(state: PortfolioManagerList, action: Action): PortfolioMana
         lastName: pm.lastName,
         pmActive: false,
         fundAccess: {},
+        mandateInvestors: {},
+        type: pm.type,
     };
 
     return Object.assign({}, state, {
@@ -183,4 +193,46 @@ function ofiPmActive(state: PortfolioManagerList, action: Action): PortfolioMana
         portfolioManagerList,
     });
 
+}
+
+/**
+ * Set portfolio manager detail
+ * @param {PortfolioManagerList} state
+ * @param {Action} action
+ * @return { PortfolioManagerList }
+ */
+function ofiSetWmDetail(state: PortfolioManagerList, action: Action) {
+    const portfolioManagerList = immutableHelper.copy(state.portfolioManagerList);
+    const pmDetailsPayLoad = get(action, 'payload[1].Data', []);
+    const pmId = get(action, 'payload[1].Data[0].pmID', 0);
+
+    portfolioManagerList[pmId].mandateInvestors = pmDetailsPayLoad.reduce((accu, pm) => {
+        accu[pm.investorID] = {
+            investorId: pm.investorID,
+            kycId: pm.kycID,
+            walletId: pm.walletID,
+            status: pm.fundStatus === 1,
+        };
+        return accu;
+    }, {});
+
+    return Object.assign({}, state, {
+        portfolioManagerList,
+    });
+
+}
+
+function ofiUpdateWmDetail(state: PortfolioManagerList, action: Action): PortfolioManagerList {
+    const portfolioManagerList = immutableHelper.copy(state.portfolioManagerList);
+    const pmDetailsPayLoad = get(action, 'pmDetail', {});
+    const { pmId, investorId } = pmDetailsPayLoad;
+
+    portfolioManagerList[pmId].mandateInvestors[investorId] = {
+        investorId,
+        kycId: pmDetailsPayLoad.kycId,
+        walletId: pmDetailsPayLoad.walletId,
+        status: pmDetailsPayLoad.status === 1,
+    };
+
+    return { ...state, ...{ portfolioManagerList } };
 }
