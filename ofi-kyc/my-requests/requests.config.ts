@@ -1703,3 +1703,15 @@ export const controlToList = {
     countryTaxResidence: 'countries',
     country: 'countries',
 };
+
+// Conditionally remove fields from kyc data grids
+export const omitConditionalFields = {
+    otherIdentificationNumberType: {
+        condition: 'other',
+        fields: ['otherIdentificationNumberTypeSpecify'],
+    },
+    commercialDomiciliation: {
+        condition: 0,
+        fields: ['commercialAddressLine1', 'commercialAddressLine2', 'commercialZipCode', 'commercialCity', 'commercialCountry'],
+    },
+};
