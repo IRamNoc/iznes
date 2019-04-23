@@ -24,20 +24,6 @@
     </clr-tab>
 </clr-tabs>
 
-<clr-modal [(clrModalOpen)]="!!exportModalDisplay" [clrModalClosable]="false">
-    <div class="modal-title">
-        <i class="fa fa-check-circle modal-icon text-success"></i>
-        <h4 class="modal-title-text">{{ '@type@ Export Complete' | translate: { type: exportModalDisplay } }}</h4>
-    </div>
-    <div class="modal-body">
-        <span style="text-align:center">{{ 'Balances Export @type@ file is now ready for download' | translate: { type: exportModalDisplay } }}</span>
-    </div>
-    <div class="modal-footer">
-        <setl-file-viewer [fileHash]="exportFileHash" [viewType]="2"></setl-file-viewer>
-        <button type="button" class="btn btn-primary" (click)="hideExportModal()">{{ 'Cancel' | translate }}</button>
-    </div>
-</clr-modal>
-
 <ng-template #staticBalanceList>
     <div class="panel-body">
         <datagrid-list

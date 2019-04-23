@@ -1,5 +1,5 @@
 import { DatagridListActionModel } from '@setl/utils/components/datagrid-list/models/datagrid-list-action.model';
-import { DataGridDropdownFilter } from '@setl/utils/components/datagrid-list/filters/dropdown.filter';
+import { DataGridStringFilter } from '@setl/utils/components/datagrid-list/filters/string.filter';
 import * as moment from 'moment';
 
 export const issueListFields = {
@@ -34,10 +34,10 @@ export const issueListActions: {}[] = [
 ];
 
 export const issueFilters: {} = {
-    asset: new DataGridDropdownFilter('asset'),
-    addressLabel: new DataGridDropdownFilter('addressLabel'),
-    address: new DataGridDropdownFilter('address'),
-    total: new DataGridDropdownFilter('total'),
+    asset: new DataGridStringFilter('asset'),
+    addressLabel: new DataGridStringFilter('addressLabel'),
+    address: new DataGridStringFilter('address'),
+    total: new DataGridStringFilter('total'),
 };
 
 export const detailFieldsModel = {
@@ -81,13 +81,13 @@ export const detailFieldsModel = {
 };
 
 export const detailFilters: {} = {
-    walletName: new DataGridDropdownFilter('walletName'),
-    addrLabel: new DataGridDropdownFilter('addrLabel'),
-    addr: new DataGridDropdownFilter('addr'),
-    percentage: new DataGridDropdownFilter('percentage'),
-    balance: new DataGridDropdownFilter('balance'),
-    encumbered: new DataGridDropdownFilter('encumbered'),
-    free: new DataGridDropdownFilter('free'),
+    walletName: new DataGridStringFilter('walletName'),
+    addrLabel: new DataGridStringFilter('addrLabel'),
+    addr: new DataGridStringFilter('addr'),
+    percentage: new DataGridStringFilter('percentage'),
+    balance: new DataGridStringFilter('balance'),
+    encumbered: new DataGridStringFilter('encumbered'),
+    free: new DataGridStringFilter('free'),
 };
 
 export const exportOptions: {} = {

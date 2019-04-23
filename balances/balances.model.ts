@@ -1,5 +1,6 @@
 import { DatagridListActionModel } from '@setl/utils/components/datagrid-list/models/datagrid-list-action.model';
 import { DataGridStringFilter } from '@setl/utils/components/datagrid-list/filters/string.filter';
+import { DataGridNumberFilter } from '@setl/utils/components/datagrid-list/filters/number.filter';
 import * as moment from 'moment';
 
 export const overviewFieldsModel: {} = {
@@ -52,9 +53,9 @@ export const overviewListActions: {}[] = [
 
 export const overviewListFilters = {
     asset: new DataGridStringFilter('asset'),
-    total: new DataGridStringFilter('total'),
-    totalencumbered: new DataGridStringFilter('totalencumbered'),
-    free: new DataGridStringFilter('free'),
+    total: new DataGridNumberFilter('total'),
+    totalencumbered: new DataGridNumberFilter('totalencumbered'),
+    free: new DataGridNumberFilter('free'),
 };
 
 export const breakdownFieldsModel: {} = {
@@ -90,9 +91,9 @@ export const breakdownFieldsModel: {} = {
 export const breakdownListFilters = {
     label: new DataGridStringFilter('label'),
     addr: new DataGridStringFilter('addr'),
-    balance: new DataGridStringFilter('balance'),
-    encumbrance: new DataGridStringFilter('encumbrance'),
-    free: new DataGridStringFilter('free'),
+    balance: new DataGridNumberFilter('balance'),
+    encumbrance: new DataGridNumberFilter('encumbrance'),
+    free: new DataGridNumberFilter('free'),
 };
 
 export const breakdownExportOptions: {} = {

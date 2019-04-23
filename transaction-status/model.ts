@@ -6,9 +6,9 @@ export const statusFieldsModel = {
         type: 'label',
         options: {
             labelMap: {
-                Success: { text: 'Success', type: 'label-success' },
-                Pending: { text: 'Pending', type: 'label-warning' },
-                Fail: { text: 'Fail', type: 'label-danger' },
+                Success: { text: 'Success', class: 'label-success' },
+                Pending: { text: 'Pending', class: 'label-warning' },
+                Fail: { text: 'Fail', class: 'label-danger' },
             },
         },
     },
