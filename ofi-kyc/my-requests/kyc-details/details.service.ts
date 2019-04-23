@@ -1,6 +1,6 @@
 import { Injectable } from '@angular/core';
 import { NgRedux } from '@angular-redux/store';
-import { get as getValue, toPairs, map, chain, value, omit, pickBy, pick, find, parseInt, isNil, toString, sortBy, isEmpty, isNull, thru } from 'lodash';
+import { get as getValue, toPairs, map, chain, value, omit, pickBy, pick, find, parseInt, isNil, toString, sortBy, isEmpty, isNull } from 'lodash';
 
 import { FileDownloader } from '@setl/utils';
 import { MemberSocketService } from '@setl/websocket-service';
