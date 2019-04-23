@@ -1,5 +1,5 @@
 import { DatagridListActionModel } from '@setl/utils/components/datagrid-list/models/datagrid-list-action.model';
-import { DataGridDropdownFilter } from '@setl/utils/components/datagrid-list/filters/dropdown.filter';
+import { DataGridStringFilter } from '@setl/utils/components/datagrid-list/filters/string.filter';
 
 export const connectionsFieldsModel = {
     connection: {
@@ -26,8 +26,8 @@ export const connectionsListActions: {}[] = [
 ];
 
 export const connectionsFilters = {
-    connection: new DataGridDropdownFilter('connection'),
-    subPortfolio: new DataGridDropdownFilter('subPortfolio'),
+    connection: new DataGridStringFilter('connection'),
+    subPortfolio: new DataGridStringFilter('subPortfolio'),
 };
 
 export const pendingFieldsModel = {
@@ -64,6 +64,6 @@ export const pendingListActions: {}[] = [
 ];
 
 export const pendingFilters = {
-    connection: new DataGridDropdownFilter('connection'),
-    info: new DataGridDropdownFilter('info'),
+    connection: new DataGridStringFilter('connection'),
+    info: new DataGridStringFilter('info'),
 };
