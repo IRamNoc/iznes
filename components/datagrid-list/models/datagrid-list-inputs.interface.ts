@@ -10,11 +10,16 @@ export interface DatagridFieldsInterface {
                 params: any,
             },
             rightAlign: boolean,
-            dateFormat?: string,
-            icon?: string,
+            iconMap?: {
+                [value: string]: {
+                    shape: string,
+                    text: string,
+                    class: string,
+                },
+            }
             labelMap?: {
                 [value: string]: {
-                    type: string,
+                    class: string,
                     text: string,
                 },
             };

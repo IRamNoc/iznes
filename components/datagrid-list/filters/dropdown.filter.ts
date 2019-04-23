@@ -6,8 +6,6 @@ import { ClrDatagridStringFilterInterface } from '@clr/angular';
 export class DataGridDropdownFilter implements ClrDatagridStringFilterInterface<any> {
     public idField: string = '';
     public filterType: string = 'DataGridDropdownFilter';
-    fromField;
-    toField;
 
     /**
      * Constructor
@@ -27,7 +25,7 @@ export class DataGridDropdownFilter implements ClrDatagridStringFilterInterface<
      * @returns {boolean}
      */
     accepts(item: any, search: string): boolean {
-        if (item[this.idField] === null) {
+        if (item[this.idField] === null || item[this.idField] === undefined) {
             return false;
         }
         const searchArray = search.toString().toLowerCase().split('||');
@@ -36,7 +34,6 @@ export class DataGridDropdownFilter implements ClrDatagridStringFilterInterface<
                 return true;
             }
         }
-        // return false;
-        return item[this.idField].toString().toLowerCase().includes(search);
+        return false;
     }
 }

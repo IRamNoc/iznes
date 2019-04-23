@@ -14,8 +14,13 @@ import { MultilingualService } from '@setl/multilingual';
             <span class="label {{ fieldOptions.class }}">{{ value | translate }}</span>
         </ng-container>
 
+        <!-- Icon -->
+        <ng-container *ngIf="!fieldOptions.pipe && type === 'icon'">
+            <clr-icon [attr.shape]="fieldOptions.icon" class="icon {{ fieldOptions.class }}"></clr-icon> {{ value }}
+        </ng-container>
+
         <!-- Value -->
-        <ng-container *ngIf="!fieldOptions.pipe && type !== 'label'">
+        <ng-container *ngIf="!fieldOptions.pipe && type !== 'label' && type !== 'icon'">
             {{ value }}
         </ng-container>`,
 })
@@ -48,9 +53,22 @@ export class DatagridFieldComponent implements OnInit {
         // Handle labels
         if (this.type === 'label') {
             const map = (this.fieldOptions.labelMap || {})[String(this.value)];
-            if (map && map.type && map.text) {
-                this.value = map.text;
-                this.fieldOptions.class = map.type;
+            if (map && map.class && map.text) {
+                this.value = map.text || '';
+                this.fieldOptions.class = map.class;
+                this.fieldOptions.pipe = false;
+                return;
+            }
+            return this.setEmptyField();
+        }
+
+        // Handle icons
+        if (this.type === 'icon') {
+            const map = (this.fieldOptions.iconMap || {})[String(this.value)];
+            if (map && map.shape) {
+                this.value = map.text || '';
+                this.fieldOptions.icon = map.shape;
+                this.fieldOptions.class = map.class;
                 this.fieldOptions.pipe = false;
                 return;
             }

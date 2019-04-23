@@ -11,27 +11,21 @@ import {
     OnInit,
     ChangeDetectorRef,
 } from '@angular/core';
-import { ClrDatagrid, ClrDatagridSortOrder, ClrDatagridStateInterface, ClrLoadingState } from '@clr/angular';
 import { NgRedux } from '@angular-redux/store';
+import { ClrDatagrid, ClrDatagridSortOrder, ClrDatagridStateInterface, ClrLoadingState } from '@clr/angular';
 import { DatagridListFieldModel } from './models/datagrid-list-field.model';
 import { DatagridListActionModel } from './models/datagrid-list-action.model';
-import {
-    DatagridFieldsInterface,
-    DatagridListData,
-    DatagridSearchForm,
-    ExportOptionsInterface,
-} from './models/datagrid-list-inputs.interface';
-import { DataGridStringFilter } from './filters/string.filter';
-import { PermissionsService } from '@setl/utils';
+import { DatagridFieldsInterface, DatagridListData, DatagridSearchForm, ExportOptionsInterface }
+from './models/datagrid-list-inputs.interface';
 import { FormItemType } from '@setl/utils/components/dynamic-forms';
-import { FileService, PdfService } from '@setl/core-req-services';
 import * as SagaHelper from '@setl/utils/sagaHelper/index';
 import { DynamicFormComponent } from '@setl/utils/components/dynamic-forms/component';
 import { AlertsService } from '@setl/jaspero-ng2-alerts/src/alerts.service';
-import { cloneDeep, get } from 'lodash';
-import { Buffer } from 'buffer';
-import * as json2csv from 'json2csv';
 import { MultilingualService } from '@setl/multilingual';
+import { FileService, PdfService } from '@setl/core-req-services';
+import { cloneDeep, get } from 'lodash';
+import * as json2csv from 'json2csv';
+import { Buffer } from 'buffer';
 
 @Component({
     selector: 'datagrid-list',
@@ -73,20 +67,25 @@ export class DatagridListComponent implements OnInit {
     };
     public csvBtnState: ClrLoadingState = ClrLoadingState.DEFAULT;
     public pdfBtnState: ClrLoadingState = ClrLoadingState.DEFAULT;
-    public objectKeys = Object.keys;
 
     public constructor(
         public ngRedux: NgRedux<any>,
         public fileService: FileService,
         public changeDetectorRef: ChangeDetectorRef,
-        public permissionsService: PermissionsService,
         public pdfService: PdfService,
         private alertsService: AlertsService,
-        private multilingual: MultilingualService,
-    ) {}
+        private multilingual: MultilingualService) {}
 
     public ngOnInit() {
-        // Prepare list fields
+        this.prepareListFields();
+        this.prepareSearchForm();
+    }
+
+    /**
+     * Prepares list fields for use
+     * @returns {void}
+     */
+    prepareListFields() {
         if (this.fieldsModel) {
             for (const propName in this.fieldsModel) {
                 this.listFields.push(
@@ -99,8 +98,13 @@ export class DatagridListComponent implements OnInit {
                 );
             }
         }
+    }
 
-        // Prepare search form
+    /**
+     * Sets up the search form
+     * @returns {void}
+     */
+    prepareSearchForm() {
         if (typeof this.searchForm !== 'undefined') {
             Object.keys(this.searchForm).map((field) => {
                 // setup date range fields
@@ -120,7 +124,6 @@ export class DatagridListComponent implements OnInit {
 
     /**
      * Handles clicks on action buttons
-     *
      * @param action
      * @param data
      */
@@ -138,39 +141,41 @@ export class DatagridListComponent implements OnInit {
     }
 
     /**
-     * Filter Value
-     *
+     * Gets the passed in field's filter value from the search form
      * @param field
      * @returns {any}
      */
     public filterValue(field) {
+        // Date range filter
         if (typeof (this.filters[field]) !== 'undefined' &&
             typeof (this.searchDynamicForm) !== 'undefined' &&
             typeof (this.searchDynamicForm.form) !== 'undefined' &&
             this.filters[field].filterType === 'DataGridDateRangeFilter'
         ) {
+            console.log('++ Date range', field);
             const dateRangeFilter = this.filters[field];
             let dateRange = `${this.searchDynamicForm.form.value[dateRangeFilter.fromField]}
             <>${this.searchDynamicForm.form.value[dateRangeFilter.toField]}`;
-            if (dateRange === '<>') {
-                dateRange = '';
-            }
+            if (dateRange === '<>') dateRange = '';
             const newValue = {};
             newValue[field] = dateRange;
             this.searchDynamicForm.form.patchValue(newValue);
         }
-        if (typeof this.searchDynamicForm === 'undefined' ||
-            this.searchDynamicForm.form.value[field] === null ||
-            typeof this.searchDynamicForm.form.value[field] === 'undefined'
-        ) {
+
+        // Return if searchForm empty or undefined
+        if (typeof this.searchDynamicForm === 'undefined' || this.searchDynamicForm.form.value[field] === null ||
+            typeof this.searchDynamicForm.form.value[field] === 'undefined') {
             return '';
         }
+
+        // Get ngSelect values
         if (Array.isArray(this.searchDynamicForm.form.value[field])) {
             return this.searchDynamicForm.form.value[field].map((selectedOption) => {
                 return selectedOption.id.toString();
             }).join('||');
         }
 
+        // Text inputs
         return this.searchDynamicForm.form.value[field].toString();
     }
 
