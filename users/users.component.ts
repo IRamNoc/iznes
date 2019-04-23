@@ -332,7 +332,6 @@ export class AdminUsersComponent implements OnInit, AfterViewInit, OnDestroy {
         } else {
             this.paginatedUsersList = this.usersList.slice(this.dgPageFrom, this.dgPageFrom + this.dgPageSize);
         }
-        console.log('this.paginatedUsersList', this.paginatedUsersList);
         this.changeDetectorRef.detectChanges();
     }
 
