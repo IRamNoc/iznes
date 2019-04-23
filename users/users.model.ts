@@ -15,8 +15,8 @@ export const usersListFields = {
         type: 'label',
         options: {
             labelMap: {
-                0: { type: 'label-success', text: 'Enabled' },
-                1: { type: 'label-danger', text: 'Locked' },
+                0: { class: 'label-success', text: 'Enabled' },
+                1: { class: 'label-danger', text: 'Locked' },
             },
         },
     },

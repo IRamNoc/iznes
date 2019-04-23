@@ -15,8 +15,8 @@ export const walletFieldsModel = {
         type: 'label',
         options: {
             labelMap: {
-                0: { text: 'Unlocked', type: 'label-success' },
-                1: { text: 'Locked', type: 'label-danger' },
+                0: { text: 'Unlocked', class: 'label-success' },
+                1: { text: 'Locked', class: 'label-danger' },
             },
         },
     },

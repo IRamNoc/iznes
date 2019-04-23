@@ -22,7 +22,7 @@ import {
 
 import { AlertsService } from '@setl/jaspero-ng2-alerts';
 import { SagaHelper, immutableHelper, LogService } from '@setl/utils';
-import { DataGridDropdownFilter } from '@setl/utils/components/datagrid-list/filters/dropdown.filter';
+import { datagridModel, datagridActions, datagridFilters } from './model';
 
 @Component({
     selector: 'app-manage-sub-portfolio',
@@ -42,24 +42,9 @@ export class ManageSubPortfolioComponent implements OnInit, OnDestroy {
     requestedWalletAddress: boolean;
 
     /* Datagrid  */
-    public datagridModel = {
-        label: { label: 'Sub-portfolio' },
-        iban: { label: 'IBAN' },
-        address: { label: 'Blockchain Address Identifier' },
-    };
-    public datagridActions: {}[] = [
-        new DatagridListActionModel({
-            label: 'Edit',
-            class: 'btn btn-sm btn-success',
-            icon: 'fa-edit',
-            onClick: 'editSubportfolio',
-        }),
-    ];
-    public datagridFilters: {} = {
-        label: new DataGridDropdownFilter('label'),
-        iban: new DataGridDropdownFilter('iban'),
-        address: new DataGridDropdownFilter('address'),
-    };
+    public datagridModel = datagridModel;
+    public datagridActions = datagridActions;
+    public datagridFilters = datagridFilters;
 
     /* List of Redux observables. */
     @select(['wallet', 'myWalletAddress', 'addressList']) addressListOb;

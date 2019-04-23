@@ -1,5 +1,5 @@
 import { DatagridListActionModel } from '@setl/utils/components/datagrid-list/models/datagrid-list-action.model';
-import { DataGridDropdownFilter } from '@setl/utils/components/datagrid-list/filters/dropdown.filter';
+import { DataGridStringFilter } from '@setl/utils/components/datagrid-list/filters/string.filter';
 
 export const permissionsListFieldsModel = {
     groupName: {
@@ -26,5 +26,5 @@ export const permissionsListActionsModel: {}[] = [
 ];
 
 export const filters: any = {
-    groupType: new DataGridDropdownFilter('groupType'),
+    groupType: new DataGridStringFilter('groupType'),
 };
