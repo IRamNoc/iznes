@@ -81,31 +81,6 @@
                     [listActions]="transactionsListActionsModel"
                     (action)="onAction($event)">
                 </datagrid-list>
-
-                <!-- <clr-datagrid #myDataGrid>
-                    <clr-dg-column style="min-width: 160px;">{{ 'Actions' | translate }}</clr-dg-column>
-                    <clr-dg-column style="min-width: 150px;">{{ 'Tx ID' | translate }}</clr-dg-column>
-                    <clr-dg-column style="min-width: 170px;">{{ 'Asset' | translate }}</clr-dg-column>
-                    <clr-dg-column style="min-width: 170px;">{{ 'Time (UTC)' | translate }}</clr-dg-column>
-                    <clr-dg-column>{{'Type' | translate}}</clr-dg-column>
-
-
-                    <clr-dg-row *clrDgItems="let transaction of transactions">
-                        <clr-dg-cell class="col-actions">
-                            <div class="btn-group btn-sm">
-                                <a class="btn" routerLink="/reports/transactions/{{transaction.hash}}">
-                                    <i class="fa fa-search"></i>{{ 'View' | translate }}
-                                </a>
-                            </div>
-                        </clr-dg-cell>
-                        <clr-dg-cell class="col-txid">{{transaction.hash | truncate:8}}</clr-dg-cell>
-                        <clr-dg-cell class="col-asset">{{transaction.issuer}} | {{transaction.instrument}}</clr-dg-cell>
-                        <clr-dg-cell class="col-utc">{{transaction.utc}}</clr-dg-cell>
-                        <clr-dg-cell class="col-type">
-                            <span class="label label-success">{{transaction.txType}}</span>
-                        </clr-dg-cell>
-                    </clr-dg-row>
-                </clr-datagrid> -->
             </div>
         </clr-tab-content>
     </clr-tab>
