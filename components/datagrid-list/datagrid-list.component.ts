@@ -152,7 +152,6 @@ export class DatagridListComponent implements OnInit {
             typeof (this.searchDynamicForm.form) !== 'undefined' &&
             this.filters[field].filterType === 'DataGridDateRangeFilter'
         ) {
-            console.log('++ Date range', field);
             const dateRangeFilter = this.filters[field];
             let dateRange = `${this.searchDynamicForm.form.value[dateRangeFilter.fromField]}
             <>${this.searchDynamicForm.form.value[dateRangeFilter.toField]}`;
