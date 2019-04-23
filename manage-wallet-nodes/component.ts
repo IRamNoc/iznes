@@ -12,6 +12,7 @@ import { ConfirmationService } from '@setl/utils';
 
 // Internal
 import { Subscription } from 'rxjs/Subscription';
+import { walletNodesFieldsModel, walletNodesListActions, walletNodesListFilters } from './model';
 
 // Services
 import { AdminUsersService } from '@setl/core-req-services/useradmin/useradmin.service';
@@ -39,8 +40,10 @@ export class ManageWalletNodesComponent implements OnInit, OnDestroy {
     walletNodesList = [];
     chainsListOptions = [];
 
-    // Rows Per Page datagrid size
-    public pageSize: number;
+    // Datagrid
+    public walletNodesFieldsModel = walletNodesFieldsModel;
+    public walletNodesListActions = walletNodesListActions;
+    public walletNodesListFilters = walletNodesListFilters;
 
     // Default Node Address and Port
     private defaultNodeAddress = location.protocol !== 'https:' ? null : 'localhost';
@@ -136,6 +139,7 @@ export class ManageWalletNodesComponent implements OnInit, OnDestroy {
                     nodeAddress: item.get('nodeAddress', ''),
                     nodePath: item.get('nodePath', ''),
                     nodePort: item.get('nodePort', 0),
+                    index: result.length,
                 });
 
                 return result;
@@ -372,6 +376,15 @@ export class ManageWalletNodesComponent implements OnInit, OnDestroy {
                 ));
             }
         });
+    }
+
+    /**
+     * Handles clicks on datagrid action buttons
+     * @param action
+     */
+    onAction(action) {
+        if (action.type === 'editWalletNode') this.handleEdit(action.data.index);
+        if (action.type === 'deleteWalletNode') this.handleDelete(action.data);
     }
 
     /**

@@ -1,31 +1,24 @@
 import { DatagridListActionModel } from '@setl/utils/components/datagrid-list/models/datagrid-list-action.model';
 
-export class ChainModel {
-    constructor(private chainId?: any,
-                private chainName?: any) {
-    }
-}
-
-export const chainsFieldsModel = {
-    chainId: {
-        label: 'Chain Identification',
-    },
-    chainName: {
-        label: 'Chain Name',
+export const memberFieldsModel = {
+    memberName: {
+        label: 'Member Name',
     },
 };
 
-export const chainsListActions: {}[] = [
+export const memberListActions: {}[] = [
     new DatagridListActionModel({
         label: 'Edit',
         class: 'btn btn-sm btn-success',
         icon: 'fa fa-edit',
-        onClick: 'editChain',
+        onClick: 'editMember',
+        isVisible: data => data.isSymAdmin,
     }),
     new DatagridListActionModel({
         label: 'Delete',
         class: 'btn btn-sm btn-danger',
         icon: 'fa fa-trash-o',
-        onClick: 'deleteChain',
+        onClick: 'deleteMember',
+        isVisible: data => data.isSymAdmin,
     }),
 ];

@@ -34,28 +34,12 @@
     <!-- Account Data Table. -->
     <ng-template #accountListTab>
         <div class="panel-body">
-            <clr-datagrid>
-                <clr-dg-column>{{ 'Account Name' | translate }}</clr-dg-column>
-                <clr-dg-column>{{ 'Description' | translate }}</clr-dg-column>
-                <clr-dg-column class="right">{{ 'Actions' | translate }}</clr-dg-column>
-
-                <clr-dg-row *clrDgItems="let account of accountList;">
-                    <clr-dg-cell>{{account.accountName}}</clr-dg-cell>
-                    <clr-dg-cell>{{account.description}}</clr-dg-cell>
-                    <clr-dg-cell class="right">
-                        <button (click)="handleEdit(account.index)" class="btn btn-sm btn-success">
-                            <i class="fa fa-edit"></i> {{ 'Edit' | translate }}</button>
-                        <button (click)="handleDelete(account.index)" class="btn btn-sm btn-danger">
-                            <i class="fa fa-trash-o"></i> {{ 'Delete' | translate }}</button>
-                    </clr-dg-cell>
-                </clr-dg-row>
-
-                <clr-dg-footer>
-                    <div rowsPerPage="10" (rowsUpdate)="pageSize = $event"></div>
-                    {{pagination.firstItem + 1}} - {{pagination.lastItem + 1}}
-                    <clr-dg-pagination #pagination [clrDgPageSize]="pageSize"></clr-dg-pagination>
-                </clr-dg-footer>
-            </clr-datagrid>
+            <datagrid-list
+                [fieldsModel]="accountFieldsModel"
+                [listData]="accountList"
+                [listActions]="accountListActions"
+                (action)="onAction($event)">
+            </datagrid-list>
         </div>
     </ng-template>
 
@@ -70,9 +54,9 @@
                                 {{ 'Account Name' | translate }}
                             </label>
 
-                            <input id="accountName" 
-                                    type="text" 
-                                    formControlName="accountName" 
+                            <input id="accountName"
+                                    type="text"
+                                    formControlName="accountName"
                                     placeholder="{{ 'Account Name' | translate }}"
                                     class="form-control username"/>
 
@@ -87,10 +71,10 @@
                                 {{ 'Account Description' | translate }}
                             </label>
 
-                            <input id="accountDescription" 
-                                    type="text" 
+                            <input id="accountDescription"
+                                    type="text"
                                     formControlName="accountDescription"
-                                    placeholder="{{ 'Account Description' | translate }}" 
+                                    placeholder="{{ 'Account Description' | translate }}"
                                     class="form-control username"/>
 
                             <div *ngIf="formControl.controls.accountDescription.hasError('required') && formControl.controls.accountDescription.touched" class="field-error">{{ 'Field is required' | translate }}</div>
@@ -136,8 +120,8 @@
                                 {{ 'Account Name' | translate }}
                             </label>
                             <div>
-                                <input type="text" 
-                                        formControlName="accountName" 
+                                <input type="text"
+                                        formControlName="accountName"
                                         placeholder="{{ 'Account Name' | translate }}"
                                         class="form-control mlp_translated"/>
                             </div>
@@ -152,9 +136,9 @@
                                 {{ 'Account Description' | translate }}
                             </label>
                             <div>
-                                <input type="text" 
+                                <input type="text"
                                         formControlName="accountDescription"
-                                        placeholder="{{ 'Account Description' | translate }}" 
+                                        placeholder="{{ 'Account Description' | translate }}"
                                         class="form-control mlp_translated"/>
                             </div>
                         </div>
@@ -168,8 +152,8 @@
                                 {{ 'Member' | translate }}
                             </label>
                             <div>
-                                <input type="text" 
-                                        [readonly]="true" 
+                                <input type="text"
+                                        [readonly]="true"
                                         formControlName="memberName"
                                         class="form-control"/>
                             </div>

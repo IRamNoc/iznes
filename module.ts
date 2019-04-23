@@ -12,6 +12,7 @@ import { ManageMemberComponent } from './manage-member/component';
 import { ManageChainsComponent } from './manage-chains/chains.component';
 import { ManageWalletNodesComponent } from './manage-wallet-nodes/component';
 import { MultilingualModule } from '@setl/multilingual';
+import { DatagridListModule } from '@setl/utils/components/datagrid-list/datagrid-list-module';
 
 @NgModule({
     imports: [
@@ -24,6 +25,7 @@ import { MultilingualModule } from '@setl/multilingual';
         MultilingualModule,
         SetlPipesModule,
         SetlDirectivesModule,
+        DatagridListModule,
     ],
     exports: [],
     declarations: [

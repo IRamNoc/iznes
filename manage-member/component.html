@@ -34,28 +34,12 @@
     <!-- Member Data Table. -->
     <ng-template #staticMemberListTab>
         <div class="panel-body">
-
-            <clr-datagrid #membersDataGrid>
-                <clr-dg-column>{{ 'Member Name' | translate }}</clr-dg-column>
-                <clr-dg-column class="right" *ngIf="isSymAdmin">{{ 'Actions' | translate }}</clr-dg-column>
-                <clr-dg-row *clrDgItems="let member of manageMembersList; let id = index">
-                    <clr-dg-cell id="member-name-{{id}}">{{member.memberName}}</clr-dg-cell>
-                    <clr-dg-cell class="right" *ngIf="isSymAdmin">
-                        <button (click)="handleEdit(member.index)" class="btn btn-sm btn-success"
-                                id="edit-member-{{id}}">
-                            <i class="fa fa-edit"></i> {{ 'Edit' | translate }}</button>
-                        <button (click)="handleDelete(member.index)" class="btn btn-sm btn-danger">
-                            <i class="fa fa-trash-o"></i> <span id="delete-member-{{id}}">{{ 'Delete' | translate}}</span>
-                        </button>
-                    </clr-dg-cell>
-                </clr-dg-row>
-
-                <clr-dg-footer>
-                    <div rowsPerPage="10" (rowsUpdate)="pageSize = $event"></div>
-                    {{pagination.firstItem + 1}} - {{pagination.lastItem + 1}}
-                    <clr-dg-pagination #pagination [clrDgPageSize]="pageSize"></clr-dg-pagination>
-                </clr-dg-footer>
-            </clr-datagrid>
+            <datagrid-list
+                [fieldsModel]="memberFieldsModel"
+                [listData]="manageMembersList"
+                [listActions]="memberListActions"
+                (action)="onAction($event)">
+            </datagrid-list>
         </div>
     </ng-template>
 
@@ -71,10 +55,10 @@
                                     {{ 'Member Name' | translate }}
                                 </label>
 
-                                <input type="text" 
-                                        formControlName="memberName" 
+                                <input type="text"
+                                        formControlName="memberName"
                                         placeholder="{{ 'Member Name' | translate }}"
-                                        id="new-member-name" 
+                                        id="new-member-name"
                                         class="form-control"
                                         maxlength="100"/>
 
@@ -89,11 +73,11 @@
                                     {{ 'Admin Email' | translate }}
                                 </label>
 
-                                <input type="email" 
-                                        formControlName="email" 
-                                        name="email" 
-                                        placeholder="{{ 'Email' | translate }}" 
-                                        class="form-control email" 
+                                <input type="email"
+                                        formControlName="email"
+                                        name="email"
+                                        placeholder="{{ 'Email' | translate }}"
+                                        class="form-control email"
                                         id="new-member-email"/>
 
                                 <div *ngIf="formControl.controls.email.hasError('required') && formControl.controls.email.touched" class="field-error">{{ 'Field is required' | translate }}</div>
@@ -122,8 +106,8 @@
                                 {{ 'Member Name' | translate }}
                             </label>
                             <div>
-                                <input type="text" 
-                                    formControlName="memberName" 
+                                <input type="text"
+                                    formControlName="memberName"
                                     placeholder="{{ 'Username' | translate }}"
                                     class="form-control username"/>
                             </div>
