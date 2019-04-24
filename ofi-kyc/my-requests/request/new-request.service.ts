@@ -243,6 +243,7 @@ export class NewRequestService {
                 this.getLengthValidator(255),
             ],
             otherSectorActivity: [''],
+            corporatePurpose: ['', Validators.required],
             activities: ['', Validators.required],
             ownAccountinvestor: [
                 { value: '', disabled: true },
