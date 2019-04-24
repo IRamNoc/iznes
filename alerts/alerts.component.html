@@ -1,0 +1,44 @@
+<div *ngIf="alerts.length > 0" class="alert alert-app-level" [ngClass]="mainClass">
+    <div *ngIf="alerts.length > 1" class="alerts-pager">
+        <div class="alerts-pager-control">
+            <div class="alerts-page-down">
+                <button class="alerts-pager-button" (click)="changeAlert('down')">
+                    <clr-icon shape="caret left" title="Previous" aria-labelledby="_clr_icon_141">
+                        <span class="is-off-screen" id="_clr_icon_141">Previous</span>
+                    </clr-icon>
+                </button>
+            </div>
+            <div class="alerts-pager-text"> {{currentAlert + 1}} / {{alerts.length}} </div>
+            <div class="alerts-page-up">
+                <button class="alerts-pager-button" (click)="changeAlert('up')">
+                    <clr-icon shape="caret right" title="Next" aria-labelledby="_clr_icon_142">
+                        <span class="is-off-screen" id="_clr_icon_142">Next</span>
+                    </clr-icon>
+                </button>
+            </div>
+        </div>
+    </div>
+    
+    <div class="alert-items">
+        <div class="alert-item static">
+            <div *ngIf="alerts[currentAlert]['class'] == 'alert-info'" class="alert-icon-wrapper">
+                <clr-icon class="alert-icon" shape="info-circle"></clr-icon>
+            </div>
+            <div *ngIf="alerts[currentAlert]['class'] == 'alert-warning'" class="alert-icon-wrapper">
+                <clr-icon class="alert-icon" shape="exclamation-triangle"></clr-icon>
+            </div>
+            <div *ngIf="alerts[currentAlert]['class'] == 'alert-danger'" class="alert-icon-wrapper">
+                <clr-icon class="alert-icon" shape="exclamation-circle"></clr-icon>
+            </div>
+            <div class="alert-text">
+                {{alerts[currentAlert]['text']}}
+            </div>
+            <div *ngIf="alerts[currentAlert]['buttonText']" class="alert-actions">
+                <button class="btn alert-action" (click)="buttonClick()">{{alerts[currentAlert]['buttonText']}}</button>
+            </div>
+        </div>
+    </div>
+    <button *ngIf="alerts[currentAlert]['close']" type="button" class="close" aria-label="Close" (click)="closeButtonClick()">
+        <clr-icon aria-hidden="true" shape="close"></clr-icon>
+    </button>
+</div>

@@ -35,3 +35,5 @@ export {UiExpandableComponent} from './layouts/ui-form/components/expandable/exp
 export {UiDatagridExpandComponent} from './layouts/ui-form/components/datagrid-expand/component';
 
 export {DashboardComponent} from './dashboard/dashboard.component';
+
+export {AlertsComponent} from './alerts/alerts.component';

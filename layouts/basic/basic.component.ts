@@ -19,6 +19,7 @@ export class BasicLayoutComponent implements OnDestroy {
     public currentParentUrl: string;
     public activeAlert: boolean = false;
     public currentLanguage: string;
+
     private subscriptionsArray: Subscription[] = [];
 
     @select(['user', 'siteSettings', 'language']) requestLanguageObj;
