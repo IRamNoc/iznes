@@ -3,7 +3,6 @@ import { FormGroup, FormArray } from '@angular/forms';
 import { get as getValue, set as setValue, filter, isEmpty, castArray, find } from 'lodash';
 import { select, NgRedux } from '@angular-redux/store';
 import { Subject } from 'rxjs';
-import * as _ from 'lodash';
 import { filter as rxFilter, map, take, takeUntil } from 'rxjs/operators';
 import { FormPercentDirective } from '@setl/utils/directives/form-percent/formpercent';
 import { IdentificationService, buildBeneficiaryObject } from '../identification.service';
@@ -32,6 +31,8 @@ export class CompanyInformationComponent implements OnInit, OnDestroy {
     regulatoryStatusList;
     regulatoryStatusInsurerTypeList;
     sectorActivityList;
+    otherSectorActivityList;
+    cachedOtherSectorActivityList;
     companyActivitiesList;
     ownAccountInvestorList;
     investorOnBehalfList;
@@ -77,6 +78,7 @@ export class CompanyInformationComponent implements OnInit, OnDestroy {
             const sectorActivityValue = getValue(data, [0, 'id']);
 
             this.formCheckSectorActivity(sectorActivityValue);
+            this.formFilterOtherSectorActivity(sectorActivityValue);
         });
 
         this.form.get('activities').valueChanges
@@ -118,7 +120,7 @@ export class CompanyInformationComponent implements OnInit, OnDestroy {
         .subscribe((data) => {
             const control = this.form.get('geographicalOrigin2');
 
-            if(!control) return;
+            if (!control) return;
 
             control.setValue('');
 
@@ -141,6 +143,8 @@ export class CompanyInformationComponent implements OnInit, OnDestroy {
             this.newRequestService.regulatoryStatusInsurerTypeList);
         this.regulatoryStatusList = this.translate.translate(this.newRequestService.regulatoryStatusList);
         this.sectorActivityList = this.translate.translate(this.newRequestService.sectorActivityList);
+        this.otherSectorActivityList = this.translate.translate(this.newRequestService.sectorActivityList);
+        this.cachedOtherSectorActivityList = this.translate.translate(this.newRequestService.sectorActivityList);
         this.companyActivitiesList = this.translate.translate(this.newRequestService.companyActivitiesList);
         this.ownAccountInvestorList = this.translate.translate(this.newRequestService.ownAccountInvestorList);
         this.investorOnBehalfList = this.translate.translate(this.newRequestService.investorOnBehalfList);
@@ -170,6 +174,30 @@ export class CompanyInformationComponent implements OnInit, OnDestroy {
         }
 
         this.formPercent.refreshFormPercent();
+    }
+
+    formFilterOtherSectorActivity(value) {
+        // Reset the otherSectorActivityList
+        this.otherSectorActivityList = [...this.cachedOtherSectorActivityList];
+
+        // If value is in the otherSectorActivity list, remove it
+        this.otherSectorActivityList.forEach((item, index) => {
+            if (item.id === value) {
+                delete this.otherSectorActivityList[index];
+            }
+        });
+
+        // Get the otherSectorActivity form control values
+        const otherSectorActivityFormValues = this.form.get('otherSectorActivity').value;
+
+        // If value is in otherSectorActivityFormValues, reset the form control
+        if (otherSectorActivityFormValues && otherSectorActivityFormValues[0] !== null) {
+            otherSectorActivityFormValues.forEach((item) => {
+                if (item.id === value) {
+                    this.form.get('otherSectorActivity').reset();
+                }
+            });
+        }
     }
 
     formCheckActivity(value) {
@@ -381,7 +409,6 @@ export class CompanyInformationComponent implements OnInit, OnDestroy {
                     this.formPercent.refreshFormPercent();
                 }
             });
-            ;
         });
     }
 

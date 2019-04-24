@@ -1535,6 +1535,7 @@ export const controlToName = {
     // Company
     sectorActivity: 'Primary sector of activity',
     sectorActivityText: 'Primary sector of activity specification',
+    otherSectorActivity: 'Other(s) sector(s) of activity',
     activities: 'Management in behalf of',
     ownAccountinvestor: 'Own-account for',
     investorOnBehalfThirdParties: 'Third parties type',
