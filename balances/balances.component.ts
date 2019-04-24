@@ -322,15 +322,6 @@ export class SetlBalancesComponent implements OnInit, OnDestroy {
     }
 
     /**
-     * Checks if the datagrid export buttons should be disabled
-     *
-     * @returns {boolean}
-     */
-    disableExportBtn() {
-        // return Boolean(!get(this.myDataGrid, "items['_filtered'].length", true));
-    }
-
-    /**
      * Ng On Destroy
      *
      * @return {void}
