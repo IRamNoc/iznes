@@ -227,7 +227,6 @@ export class ManageChainsComponent implements OnInit, AfterViewInit, OnDestroy {
      * @param action
      */
     onAction(action) {
-        console.log('+++ action', action);
         if (action.type === 'editChain') this.handleEdit(action.data.index);
         if (action.type === 'deleteChain') this.handleDelete(action.data);
     }
