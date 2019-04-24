@@ -276,6 +276,7 @@ export const controlOrder = [
     // Company
     'sectorActivity',
     'sectorActivityText',
+    'otherSectorActivity',
     'geographicalAreaOfActivity',
     'geographicalAreaOfActivitySpecification',
     'activityRegulated',
