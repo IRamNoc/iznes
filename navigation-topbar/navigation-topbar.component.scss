@@ -60,7 +60,6 @@ clr-header {
             }
         }
 
-
         blockchain-status-tracker {
             margin-left: 30px;
         }
@@ -71,7 +70,7 @@ clr-header {
                 margin-top: 0;
             }
             .username {
-                background: #cccccc;
+                background: #eeeeee;
                 font-size: 16px;
                 color: #000000;
                 font-weight: 600;
@@ -80,11 +79,11 @@ clr-header {
             }
         }
 
-        .nav-link:after, clr-dropdown:after, .wallet-select-small:after {
+        .nav-link:after, clr-dropdown:after, .wallet-select-small:after, .wallet-picker-right:after {
             content: '';
             width: 1px;
             height: 60%;
-            margin-top: 20%;
+            margin-top: 12px;
             background: rgba(255, 255, 255, 0.15);
             position: absolute;
             right: 0;
@@ -116,6 +115,15 @@ clr-header {
     }
 }
 
+// Translation Modal
+.switch-container {
+    position: absolute;
+    right: 15px;
+    top: 80px;
+    color: #565656;
+}
+
+// Wallet Pickers
 :host /deep/ {
     ng-select {
         &.extended .option-wrapper.ui-select-choices.dropdown-menu {
@@ -226,6 +234,55 @@ clr-header {
                 margin-bottom: 10px;
             }
         }
+
+        .ui-select-choices-content {
+            max-height: 360px!important;
+        }
+    }
+
+    .wallet-picker-right {
+        @media screen and (max-width: 1082px) {
+            display: none;
+        }
+        position: relative;
+        ng-select {
+            .ui-select-toggle {
+                border: none!important;
+                box-shadow: none;
+            }
+            .ui-select-container {
+                width: auto !important;
+                max-width: 484px;
+            }
+            .ui-select-match-text {
+                margin: -2px 22px -2px 2px !important;
+                text-overflow: ellipsis;
+                width: calc(100% - 55px);
+                overflow: hidden;
+            }
+            .ui-select-match.arrow {
+                right: 10px;
+            }
+            clr-icon[shape=wallet] {
+                margin-left: 5px;
+            }
+            clr-icon.arrow {
+                top: 50% !important;
+                -webkit-transform: translateY(-50%);
+                transform: translateY(-50%);
+                height: .416667rem;
+                width: .416667rem;
+            }
+            .ui-select-match.open .btn.btn-secondary, .btn.btn-secondary:hover {
+                background: none;
+            }
+            .ui-select-choices {
+                width: 560px;
+                right: 0;
+                left: auto;
+                max-height: 432px;
+            }
+        }
     }
 
     .wallet-select-small {
@@ -274,11 +331,4 @@ clr-header {
             }
         }
     }
-}
-
-.switch-container {
-    position: absolute;
-    right: 15px;
-    top: 80px;
-    color: #565656;
 }

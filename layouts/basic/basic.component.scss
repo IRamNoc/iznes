@@ -1,8 +1,11 @@
-.main-container .content-container .content-area {
-    padding: 0;
-    .router-container {
-        min-height: 100%;
-        padding-bottom: 57px;
+.main-container {
+    position: relative;
+    .content-container .content-area {
+        padding: 0;
+        .router-container {
+            min-height: 100%;
+            padding-bottom: 57px;
+        }
     }
 }
 

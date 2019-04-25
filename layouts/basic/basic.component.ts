@@ -1,4 +1,4 @@
-import { ChangeDetectionStrategy, Component, OnDestroy } from '@angular/core';
+import { ChangeDetectionStrategy, Component, OnDestroy, ChangeDetectorRef } from '@angular/core';
 import { FadeSlideRight } from '../../animations/fade-slide-right';
 import { MultilingualService } from '@setl/multilingual';
 import { ActivationStart, Router } from '@angular/router';
@@ -11,7 +11,6 @@ import { select } from '@angular-redux/store';
     selector: 'app-basic-layout',
     templateUrl: './basic.component.html',
     styleUrls: ['./basic.component.scss'],
-    changeDetection: ChangeDetectionStrategy.OnPush,
     animations: [FadeSlideRight],
 })
 
@@ -25,7 +24,8 @@ export class BasicLayoutComponent implements OnDestroy {
     @select(['user', 'siteSettings', 'language']) requestLanguageObj;
 
     constructor(public translate: MultilingualService,
-                private router: Router) {
+                private router: Router,
+                private changeDetector: ChangeDetectorRef) {
 
         /* Get language flag in redux. */
         this.subscriptionsArray.push(this.requestLanguageObj.subscribe(language => this.currentLanguage = language));
@@ -38,6 +38,11 @@ export class BasicLayoutComponent implements OnDestroy {
                 console.log(this.currentParentUrl);
             }
         }));
+    }
+
+    setActiveAlert(status: boolean) {
+        this.activeAlert = status;
+        this.changeDetector.detectChanges();
     }
 
     ngOnDestroy() {

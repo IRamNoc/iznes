@@ -1,18 +1,18 @@
-<alerts></alerts>
-
 <clr-header [style.background-color]="appConfig.topNavBarColour ? appConfig.topNavBarColour : '#313131'">
     <header class="header">
         <div class="branding">
             <a href="#/home" class="nav-link">
                 <span class="title">{{appConfig.platformLabel ? appConfig.platformLabel : appConfig.platform}}</span>
-                <img src="{{topbarLogoUrl}}" class="logo-light" alt="Logo">
-                <img src="{{topbarLogoUrlDark}}" class="logo-dark" alt="Logo">
+                <img src="{{topbarLogoUrlLight}}" class="logo-light" alt="Logo">
+                <img src="{{appConfig.logoUrl}}" class="logo-dark" alt="Logo">
             </a>
         </div>
 
         <div class="wallet">
-            <div class="decalWallet">
+            <!-- Central wallet picker -->
+            <div class="decalWallet" *ngIf="!appConfig.walletPickerRight">
                 <ng-select
+                    #walletSelectCenter
                     [allowClear]="false"
                     [items]="walletSelectItems"
                     (selected)="selected($event); showOverlay=false"
@@ -26,15 +26,18 @@
                 </ng-select>
             </div>
 
-            <blockchain-status-tracker *ngIf="appConfig.platform === 'OpenCSD'" [display]="'dropdown'" (dropdownClosed)="showOverlay=false"></blockchain-status-tracker>
+            <!-- Blockchain Status Tracker-->
+            <blockchain-status-tracker #blockchainStatusTracker *ngIf="appConfig.platform === 'OpenCSD'" [display]="'dropdown'" (dropdownClosed)="showOverlay=false"></blockchain-status-tracker>
         </div>
 
         <div class="header-actions">
+            <!-- Translations button -->
             <a *ngIf="!appConfig.production" (click)="getMissingTranslations()" id="translation-report-button" class="nav-link nav-icon blink_me">
                 <clr-icon shape="warning-standard" class="text-warning"></clr-icon>
             </a>
 
-            <div class="wallet-select-small wallet-picker">
+            <!-- Mobile wallet picker -->
+            <div class="wallet-select-small wallet-picker" #walletSelectSmall>
                 <ng-select
                     [allowClear]="false"
                     [items]="walletSelectItems"
@@ -47,10 +50,27 @@
                 </ng-select>
             </div>
 
+            <!-- Right aligned wallet picker -->
+            <div *ngIf="appConfig.walletPickerRight" class="wallet wallet-picker-right">
+                <ng-select
+                    #walletSelectRight
+                    [allowClear]="false"
+                    [items]="walletSelectItems"
+                    (selected)="selected($event); showOverlay=false"
+                    (removed)="removed($event)"
+                    [placeholder]="translate.translate('No wallet selected')"
+                    [formControl]="selectedWalletId"
+                    [multiple]="false"
+                    [inlineIcon]="'wallet'">
+                </ng-select>
+            </div>
+
+            <!-- Mail -->
             <a [routerLink]="['/messages']" class="nav-link nav-icon messages-icon">
                 <clr-icon shape="email"><span *ngIf="unreadMessageCount > 0">{{unreadMessageCount}}</span></clr-icon>
             </a>
 
+            <!-- User Dropdown -->
             <clr-dropdown id="dropdown-user">
                 <button class="nav-icon" clrDropdownTrigger>
                     <clr-icon shape="user"></clr-icon>
@@ -62,38 +82,13 @@
                     <a [routerLink]="['/logout']" clrDropdownItem id="logout">Logout</a>
                 </clr-dropdown-menu>
             </clr-dropdown>
-
-            <!-- <a (click)="toggleSidebar.emit($event)" class="nav-link nav-icon" id="dropdown-settings">
-                <clr-icon shape="cog"></clr-icon>
-            </a> -->
         </div>
 
+        <!-- Overlay -->
         <div *ngIf="showOverlay" class="overlay" (click)="showOverlay=false"></div>
     </header>
 
-    <clr-modal [(clrModalOpen)]="showCountdownModal" [clrModalClosable]="false">
-        <div class="modal-title">
-            <i class="fa fa-exclamation-triangle modal-icon text-warning"></i>
-            <h4 class="modal-title-text">
-                <span >{{ 'Session expiring soon' | translate }}</span></h4>
-        </div>
-        <div class="modal-body">
-            <p>{{ 'Your session will expire in' | translate }}
-                <span class="text-warning">{{remainingSecond && remainingSecond}}</span> {{ 'seconds.' | translate }}
-
-            </p>
-            <p>{{ 'Press' | translate }}
-                <span class="text-primary font-weight-bold">{{ 'continue' | translate}}</span> {{ 'to continue using this site.' | translate }}
-
-            </p>
-        </div>
-        <div class="modal-footer">
-            <button type="button" class="btn btn-primary" (click)="handleExtendSession()">
-                <span>{{ 'Continue' | translate }}</span>
-            </button>
-        </div>
-    </clr-modal>
-
+    <!-- Translations Modal -->
     <clr-modal [(clrModalOpen)]="showMissingTranslations" [clrModalSize]="'lg'">
         <h3 class="modal-title">{{ 'Translations' | translate }}</h3>
         <div class="modal-body" style="overflow: auto; padding: 30px 50px;">
