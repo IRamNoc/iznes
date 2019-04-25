@@ -66,4 +66,5 @@ export const environment = {
             urlFR: 'https://www.iznes.io/',
         },
     },
+    walletPickerRight: true,
 };
