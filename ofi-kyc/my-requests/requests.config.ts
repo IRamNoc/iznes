@@ -170,7 +170,7 @@ export const financialRatingList = [
 export const regulatorSupervisoryAuthoritiesList = [
     {
         id: 'austriaFinanzmarktaufsicht',
-        text: 'Austria - Finanzmarktaufsicht(FMA)',
+        text: 'Austria - Finanzmarktaufsicht (FMA)',
     },
     {
         id: 'belgiumGinancialServicesAndMarketsAuthority',

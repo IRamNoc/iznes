@@ -93,21 +93,13 @@
             <div *ngIf="!isDisabled('regulator')">
 
                  <div class="row">
-                    <!-- <div class="form-group required-field col-sm-4">
-                        <label>{{ 'Regulator / Supervisory Authority' | translate }}</label>
-                        <input type="text"
-                                id="regulator"
-                                formControlName="regulator"
-                                placeholder="{{ 'Fill in a regulator or a supervisory authority' | translate }}">
-                        <span class="field-error" *ngIf="hasError('regulator')">{{ 'Field is required' | translate }}</span>
-                    </div> -->
                     <div class="form-group required-field col-sm-4">
                         <label>{{ 'Regulator / Supervisory Authority' | translate }}</label>
                         <ng-select class="multiline"
                                     [items]="regulatorSupervisoryAuthoritiesList"
                                     [multiple]=true
-                                    id="regulatorSupervisoryAuthorities"
-                                    formControlName="regulatorSupervisoryAuthorities"
+                                    id="regulator"
+                                    formControlName="regulator"
                                     placeholder="{{ 'Select one or multiple regulators/supervisory authority' | translate }}"></ng-select>
                     </div>
                     <div class="form-group required-field col-sm-4">
