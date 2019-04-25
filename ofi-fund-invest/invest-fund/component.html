@@ -331,9 +331,15 @@
                                             {{ 'IZNES Fee - Investor: Percentage of the average annual outstandings kept in the register' | translate }}
                                         </label>
                                         <div>
+<<<<<<< HEAD
                                             <input type="text"
                                                     class="form-control"
                                                     [value]="moneyValuePipe.transform(feeFrontend.classificationFee, fundClassifications[fundClassificationId].dp) + '%'"
+=======
+                                            <input type="text" 
+                                                    class="form-control" 
+                                                    [value]="moneyValuePipe.transform((feeFrontend.classificationFee * 100), fundClassifications[fundClassificationId].dp) + '%'"
+>>>>>>> 674ec394bfecfc8b61002175b1b635821add8e4d
                                                     [readonly]="true">
                                         </div>
                                     </div>

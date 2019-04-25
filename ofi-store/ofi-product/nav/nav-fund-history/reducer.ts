@@ -74,6 +74,8 @@ function handleSetOfiNavFundHistory(state: OfiNavFundHistoryState, action: Actio
                 navPubDate: (navPubDate !== null) ? moment(navPubDate).format('YYYY-MM-DD') : 'N/A',
                 status: item.get('navStatus', 0),
                 navUsed: (item.get('navUsed',0) > 0 ? 1 : 0),
+                shareAum: item.get('shareAum', null),
+                shares: item.get('shares', null),
             });
             return result;
         }, []);

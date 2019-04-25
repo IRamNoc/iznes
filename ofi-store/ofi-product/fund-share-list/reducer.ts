@@ -139,14 +139,14 @@ function handleGetIznesShareList(state: OfiFundShareListState, action: Action) {
             maximumNumDecimal: share.maximumNumDecimal,
             subscriptionCategory: share.subscriptionCategory,
             subscriptionCurrency: share.subscriptionCurrency,
-            minInitialSubscriptionInShare: convertBlockchainNumber(share.minInitialSubscriptionInShare),
-            minInitialSubscriptionInAmount: convertBlockchainNumber(share.minInitialSubscriptionInAmount),
-            minSubsequentSubscriptionInShare: convertBlockchainNumber(share.minSubsequentSubscriptionInShare),
-            minSubsequentSubscriptionInAmount: convertBlockchainNumber(share.minSubsequentSubscriptionInAmount),
+            minInitialSubscriptionInShare: share.minInitialSubscriptionInShare,
+            minInitialSubscriptionInAmount: share.minInitialSubscriptionInAmount,
+            minSubsequentSubscriptionInShare: share.minSubsequentSubscriptionInShare,
+            minSubsequentSubscriptionInAmount: share.minSubsequentSubscriptionInAmount,
             redemptionCategory: share.redemptionCategory,
             redemptionCurrency: share.redemptionCurrency,
-            minSubsequentRedemptionInShare: convertBlockchainNumber(share.minSubsequentRedemptionInShare),
-            minSubsequentRedemptionInAmount: convertBlockchainNumber(share.minSubsequentRedemptionInAmount),
+            minSubsequentRedemptionInShare: share.minSubsequentRedemptionInShare,
+            minSubsequentRedemptionInAmount: share.minSubsequentRedemptionInAmount,
             portfolioCurrencyHedge: share.portfolioCurrencyHedge,
             subscriptionCutOffTime: share.subscriptionCutOffTime,
             subscriptionCutOffTimeZone: share.subscriptionCutOffTimeZone,
@@ -155,9 +155,9 @@ function handleGetIznesShareList(state: OfiFundShareListState, action: Action) {
             redemptionCutOffTimeZone: share.redemptionCutOffTimeZone,
             redemptionSettlementPeriod: share.redemptionSettlementPeriod,
             subscriptionRedemptionCalendar: share.subscriptionRedemptionCalendar,
-            maxManagementFee: convertBlockchainNumber(share.maxManagementFee),
-            maxSubscriptionFee: convertBlockchainNumber(share.maxSubscriptionFee),
-            maxRedemptionFee: convertBlockchainNumber(share.maxRedemptionFee),
+            maxManagementFee: share.maxManagementFee,
+            maxSubscriptionFee: share.maxSubscriptionFee,
+            maxRedemptionFee: share.maxRedemptionFee,
             investorProfile: share.investorProfile,
             keyFactOptionalData: share.keyFactOptionalData,
             profileOptionalData: share.profileOptionalData,
@@ -173,11 +173,11 @@ function handleGetIznesShareList(state: OfiFundShareListState, action: Action) {
             subscriptionStartDate: share.subscriptionStartDate,
             launchDate: share.launchDate,
             fundShareStatus: share.fundShareStatus,
-            mifiidChargesOngoing: convertBlockchainNumber(share.mifiidChargesOngoing),
-            mifiidChargesOneOff: convertBlockchainNumber(share.mifiidChargesOneOff),
-            mifiidTransactionCosts: convertBlockchainNumber(share.mifiidTransactionCosts),
-            mifiidServicesCosts: convertBlockchainNumber(share.mifiidServicesCosts),
-            mifiidIncidentalCosts: convertBlockchainNumber(share.mifiidIncidentalCosts),
+            mifiidChargesOngoing: share.mifiidChargesOngoing,
+            mifiidChargesOneOff: share.mifiidChargesOneOff,
+            mifiidTransactionCosts: share.mifiidTransactionCosts,
+            mifiidServicesCosts: share.mifiidServicesCosts,
+            mifiidIncidentalCosts: share.mifiidIncidentalCosts,
             subscriptionTradeCyclePeriod: share.subscriptionTradeCyclePeriod,
             numberOfPossibleSubscriptionsWithinPeriod: share.numberOfPossibleSubscriptionsWithinPeriod,
             weeklySubscriptionDealingDays: share.weeklySubscriptionDealingDays,
@@ -192,6 +192,7 @@ function handleGetIznesShareList(state: OfiFundShareListState, action: Action) {
             subscriptionEnableNonWorkingDay: share.subscriptionEnableNonWorkingDay,
             navPeriodForRedemption: share.navPeriodForRedemption,
             redemptionEnableNonWorkingDay: share.redemptionEnableNonWorkingDay,
+            classification: share.classification,
         };
 
         iznShareList = iznShareList.set(share.fundShareID, shareData);
@@ -200,10 +201,4 @@ function handleGetIznesShareList(state: OfiFundShareListState, action: Action) {
     return Object.assign({}, state, {
         iznShareList: iznShareList.toJS()
     });
-}
-
-function convertBlockchainNumber(number: any): number {
-    // TODO:    we need a better way of getting the divisible number,
-    //          could not think of one at time of writing. pz.
-    return parseInt(number) / 100000;
 }
