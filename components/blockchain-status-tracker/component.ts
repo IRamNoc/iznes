@@ -1,9 +1,10 @@
 import { Component, OnInit, OnDestroy, ChangeDetectorRef, Input, Output, ElementRef, HostListener,
-    EventEmitter } from '@angular/core';
+    EventEmitter, Inject } from '@angular/core';
 import { select } from '@angular-redux/store';
 import { Subscription } from 'rxjs/Subscription';
 import { ClrDatagridSortOrder } from '@clr/angular';
 import { Router } from '@angular/router';
+import { APP_CONFIG, AppConfig } from '@setl/utils';
 
 @Component({
     styleUrls: ['./component.scss'],
@@ -29,6 +30,7 @@ export class BlockchainStatusTracker implements OnInit, OnDestroy {
     public descSort = ClrDatagridSortOrder.DESC;
     public objectKeys = Object.keys;
     public pageSize: number = 5;
+    public appConfig: AppConfig;
 
     private subscriptions: Subscription[] = [];
     private pendingTimeout: any;
@@ -39,7 +41,9 @@ export class BlockchainStatusTracker implements OnInit, OnDestroy {
         private changeDetectorRef: ChangeDetectorRef,
         private el: ElementRef,
         public router: Router,
+        @Inject(APP_CONFIG) appConfig: AppConfig,
     ) {
+        this.appConfig = appConfig;
     }
 
     ngOnInit() {

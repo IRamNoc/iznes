@@ -60,6 +60,7 @@ export interface AppConfig {
         },
     };
     topNavBarColour?: string;
+    walletPickerRight?: boolean;
 }
 
 export interface MessagesMenuItem {

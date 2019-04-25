@@ -18,19 +18,32 @@
         border-radius: 0 0 .125rem .125rem;
         z-index: 1000;
         background: #ffffff;
+        &.solo {
+            margin-left: 0;
+            width: 560px;
+        }
         &.active {
             display: block;
         }
         clr-datagrid {
             .datagrid {
                 border: none;
-                margin-top: 10px;
+                margin-top: 0;
                 overflow: hidden;
+                clr-dg-placeholder {
+                    border: none;
+                }
+                .datagrid-row {
+                    border-bottom: none;
+                }
                 .datagrid-column {
                     background: none;
                 }
                 .datagrid-header .datagrid-row {
                     background: none;
+                }
+                clr-dg-column-separator {
+                    display: none;
                 }
             }
             clr-dg-cell {

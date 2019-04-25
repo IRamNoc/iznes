@@ -5,8 +5,12 @@ import { AppConfig } from '@setl/utils/appConfig/appConfig.model';
 import { mapTo } from 'rxjs/operators';
 import { Observable } from 'rxjs/Observable';
 import { Subscription } from 'rxjs/Subscription';
-import { NodeAlertsService } from '@setl/core-req-services';
-import {combineLatest} from "rxjs";
+import { NodeAlertsService, MyUserService } from '@setl/core-req-services';
+import { combineLatest } from 'rxjs/observable/combineLatest';
+import { ToasterService } from 'angular2-toaster';
+import { select } from '@angular-redux/store';
+import { Router } from '@angular/router';
+import { get } from 'lodash';
 
 @Component({
     styleUrls: ['./component.scss'],
@@ -19,18 +23,23 @@ export class ConnectionStatusAlerts implements OnInit, OnDestroy {
     @Output() activeAlert: EventEmitter<any> = new EventEmitter();
 
     public appConfig: AppConfig;
-
     public onlineOb;
-    private timerSecs = 7;
     public connectionStatus: any = {};
+    public showCountdownModal: boolean;
+    public remainingSecond: number;
 
     private subscriptions: Subscription[] = [];
+
+    @select(['user', 'connected', 'memberNodeSessionManager']) memberNodeSessionManagerOb;
 
     constructor(public translate: MultilingualService,
                 public changeDetectorRef: ChangeDetectorRef,
                 private nodeAlertsService: NodeAlertsService,
-                @Inject(APP_CONFIG) appConfig: AppConfig) {
-
+                @Inject(APP_CONFIG) appConfig: AppConfig,
+                private toaster: ToasterService,
+                private router: Router,
+                private myUserService: MyUserService,
+    ) {
         this.appConfig = appConfig;
         this.appConfig.platform = !this.appConfig.platform ? 'OpenCSD' : this.appConfig.platform;
 
@@ -40,52 +49,54 @@ export class ConnectionStatusAlerts implements OnInit, OnDestroy {
             Observable.fromEvent(window, 'online').pipe(mapTo(true)),
             Observable.fromEvent(window, 'offline').pipe(mapTo(false)),
         );
-
     }
 
     ngOnInit() {
-        const nodeTimerString = this.translate.translate(
-            "You've been disconnected from our servers, you should be reconnected in @timerSecs@ sec",
-            { timerSecs: this.timerSecs },
-        );
-
         this.connectionStatus = {
             nodeDead: false,
-            nodeReconnected: false,
-            nodeTimer: this.timerSecs,
-            nodeTimerString,
-            loading: false,
             internetDead: false,
-            internetReconnected: false,
         };
 
-        /* Connection subscriptions */
+        // Wallet/Member Node Connection subscriptions
         this.subscriptions.push(
             combineLatest(
                 this.nodeAlertsService.walletNodeDead$,
                 this.nodeAlertsService.memberNodeDead$,
             )
-            .subscribe(([walletDodeDisconnected, memberDodeDisconnected]) => {
-                (walletDodeDisconnected || memberDodeDisconnected) ? this.nodeDead() : this.nodeAlive();
-        }));
+            .subscribe(([walletNodeDisconnected, memberNodeDisconnected]) => {
+                (walletNodeDisconnected || memberNodeDisconnected) ? this.nodeDead() : this.nodeAlive();
+            }));
+
+        // Internet Connection Subscription
         this.subscriptions.push(this.onlineOb.subscribe(status => this.internetDead(status)));
+
+        // Session Timeout Subscription
+        this.subscriptions.push(this.memberNodeSessionManagerOb.subscribe(
+            (memberNodeSessionManager) => {
+                this.showCountdownModal = get(memberNodeSessionManager, 'startCountDown', 0);
+
+                const remainingSecond = get(memberNodeSessionManager, 'remainingSecond', 0);
+                this.remainingSecond = remainingSecond;
+
+                if (remainingSecond <= 0) {
+                    this.router.navigateByUrl('');
+                    this.myUserService.logout();
+                }
+
+            },
+        ));
     }
 
     /**
      * Handles the users internet disconnected and reconnected alerts
-     * --------------------------------------------------------------
      * @param status - users internet connected boolean
      */
     internetDead(status) {
         if (this.connectionStatus.internetDead && status) {
-            this.connectionStatus.internetReconnected = true;
-            setTimeout(
-                () => {
-                    this.connectionStatus.internetReconnected = false;
-                    this.isActiveConnectionAlert();
-                    this.changeDetectorRef.detectChanges();
-                },
-                3000,
+            this.toaster.pop(
+                'success',
+                this.translate.translate('Reconnected'),
+                this.translate.translate('You\'re reconnected to the internet'),
             );
         }
         this.connectionStatus.internetDead = !status;
@@ -95,18 +106,13 @@ export class ConnectionStatusAlerts implements OnInit, OnDestroy {
 
     /**
      * Handles displaying the wallet/member node reconnected alert
-     * ----------------------------------------------------
      */
     nodeAlive() {
         if (this.connectionStatus.nodeDead) {
-            this.connectionStatus.nodeReconnected = true;
-            setTimeout(
-                () => {
-                    this.connectionStatus.nodeReconnected = false;
-                    this.isActiveConnectionAlert();
-                    this.changeDetectorRef.detectChanges();
-                },
-                3000,
+            this.toaster.pop(
+                'success',
+                this.translate.translate('Reconnected'),
+                this.translate.translate('You\'re reconnected to our servers'),
             );
         }
         this.connectionStatus.nodeDead = false;
@@ -116,36 +122,10 @@ export class ConnectionStatusAlerts implements OnInit, OnDestroy {
 
     /**
      * Handles displaying the wallet/member node disconnection alert
-     * -----------------------------------------------------
      */
     nodeDead() {
         if (!this.connectionStatus.nodeDead) {
-            const timer = setInterval(
-                () => {
-                    this.connectionStatus.nodeTimer -= 1;
-                    this.connectionStatus.nodeTimerString =
-                        this.translate.translate(
-                            'You\'ve been disconnected from our servers, you should be reconnected in @timer@ sec',
-                            { timer: this.connectionStatus.nodeTimer },
-                        );
-                    this.connectionStatus.loading = false;
-                    this.changeDetectorRef.detectChanges();
-                },
-                1000,
-            );
-            setTimeout(
-                () => {
-                    clearInterval(timer);
-                    this.connectionStatus.nodeTimerString = this.translate.translate(
-                        'You\'ve been disconnected from our servers, you should be reconnected soon');
-                    this.connectionStatus.loading = true;
-                    this.connectionStatus.nodeTimer = this.timerSecs;
-                    this.changeDetectorRef.detectChanges();
-                },
-                1000 * this.timerSecs,
-            );
             this.connectionStatus.nodeDead = true;
-            this.connectionStatus.nodeReconnected = false;
             this.isActiveConnectionAlert();
             this.changeDetectorRef.detectChanges();
         }
@@ -153,11 +133,16 @@ export class ConnectionStatusAlerts implements OnInit, OnDestroy {
 
     /**
      * Emits boolean to activeAlert based on if a connection alert is visible
-     * ----------------------------------------------------------------------
      */
     isActiveConnectionAlert() {
-        this.activeAlert.emit(this.connectionStatus.nodeDead || this.connectionStatus.internetDead ||
-            this.connectionStatus.nodeReconnected || this.connectionStatus.internetReconnected);
+        this.activeAlert.emit(this.connectionStatus.nodeDead || this.connectionStatus.internetDead);
+    }
+
+    /**
+     * Makes a call to extend the users session
+     */
+    handleExtendSession() {
+        this.myUserService.defaultRefreshToken();
     }
 
     ngOnDestroy() {
