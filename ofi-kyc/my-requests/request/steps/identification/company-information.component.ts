@@ -28,6 +28,7 @@ export class CompanyInformationComponent implements OnInit, OnDestroy {
     unsubscribe: Subject<any> = new Subject();
     open: boolean = false;
     countries = countries;
+    regulatorSupervisoryAuthoritiesList;
     regulatoryStatusList;
     regulatoryStatusInsurerTypeList;
     sectorActivityList;
@@ -139,6 +140,7 @@ export class CompanyInformationComponent implements OnInit, OnDestroy {
     }
 
     initLists() {
+        this.regulatorSupervisoryAuthoritiesList = this.translate.translate(this.newRequestService.regulatorSupervisoryAuthoritiesList);
         this.regulatoryStatusInsurerTypeList = this.translate.translate(
             this.newRequestService.regulatoryStatusInsurerTypeList);
         this.regulatoryStatusList = this.translate.translate(this.newRequestService.regulatoryStatusList);

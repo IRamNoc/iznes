@@ -167,6 +167,205 @@ export const financialRatingList = [
     },
 ];
 
+export const regulatorSupervisoryAuthoritiesList = [
+    {
+        id: 'austriaFinanzmarktaufsicht',
+        text: 'Austria - Finanzmarktaufsicht(FMA)',
+    },
+    {
+        id: 'belgiumGinancialServicesAndMarketsAuthority',
+        text: 'Belgium - Financial Services and Markets Authority (FSMA)',
+    },
+    {
+        id: 'bulgariaFinancialSupervisionCommission',
+        text: 'Bulgaria - Комисията за финансов надзор / Financial Supervision Commission (FSC)',
+    },
+    {
+        id: 'croatianFinancialServicesSupervisoryAgency',
+        text: 'Croatia - Hrvatska agencija za nadzor financijskih usluga / Croatian Financial Services Supervisory Agency (HANFA)',
+    },
+    {
+        id: 'cyprusSecuritiesAndExchangeCommission',
+        text: 'Cyprus - Cyprus Securities and Exchange Commission (CySEC)',
+    },
+    {
+        id: 'cyprusCentralBankOfCyprus',
+        text: 'Cyprus - Central Bank of Cyprus (CBC)',
+    },
+    {
+        id: 'czechNationalBank',
+        text: 'Czech Republic - Česká národní banka / Czech National Bank (CNB)',
+    },
+    {
+        id: 'denmarkFinanstilsynet',
+        text: 'Denmark - Finanstilsynet (Danish FSA)',
+    },
+    {
+        id: 'estoniaFinantsinspektsioon',
+        text: 'Estonia - Finantsinspektsioon (FSA)',
+    },
+    {
+        id: 'finlandFinancialSupervisoryAuthority',
+        text: 'Finland - Finanssivalvonta / Financial Supervisory Authority (FIN - FSA)',
+    },
+    {
+        id: 'finlandMinistryOfFinance',
+        text: 'Finland - Ministry of Finance',
+    },
+    {
+        id: 'franceMinistryOfEconomyAndFinance',
+        text: 'France - Ministry of Economy and Finance',
+    },
+    {
+        id: 'franceACPR',
+        text: 'France - ACPR',
+    },
+    {
+        id: 'franceAutoriteDesMarchesFinanciers',
+        text: 'France - Autorité des Marchés Financiers (AMF)',
+    },
+    {
+        id: 'germanyBavarianMinistryOfEconomicAffairsEnergyAndTechnology',
+        text: 'Germany - Bavarian Ministry of Economic Affairs, Energy and Technology',
+    },
+    {
+        id: 'germanyBundesanstaltFurFinanzdienstleistungsaufsicht',
+        text: 'Germany - Bundesanstalt für Finanzdienstleistungsaufsicht (BaFIN)',
+    },
+    {
+        id: 'germanyExchangeSupervisoryAuthorityBerlin',
+        text: 'Germany - Exchange Supervisory Authority Berlin (Senate Department for Economics, Energy and Public Enterprises)',
+    },
+    {
+        id: 'germanyExchangeSupervisoryAuthorityOfTheSaxonState',
+        text: 'Germany - Exchange Supervisory Authority of the Saxon State (Ministry for Economic Affairs, Labor and Transport)',
+    },
+    {
+        id: 'germanyFinancialAdministrationOfTheCityOfHamburg',
+        text: 'Germany - Financial Administration of the City of Hamburg',
+    },
+    {
+        id: 'germanyMinistryOfEconomicAffairsLabourAndHousingBadenWuerttemberg',
+        text: 'Germany - Ministry of Economic Affairs, Labour and Housing Baden - Wuerttemberg',
+    },
+    {
+        id: 'germanyMinistryOfEconomicAffairsEmploymentTransportAndDigitalisationOfLowerSaxony',
+        text: 'Germany - Ministry of Economic Affairs, Employment, Transport and Digitalisation of Lower Saxony',
+    },
+    {
+        id: 'germanyMinistryOfEconomicsEnergyTransportAndRegionalDevelopmentStateOfHesse',
+        text: 'Germany - Ministry of Economics, Energy, Transport and Regional Development, State of Hesse',
+    },
+    {
+        id: 'germanyMinistryOfFinanceOfTheStateOfNorthRhineWestphalia',
+        text: 'Germany - Ministry of Finance of the State of North Rhine - Westphalia',
+    },
+    {
+        id: 'greeceHellenicCapitalMarketCommission',
+        text: 'Greece - Ελληνική Επιτροπή Κεφαλαιαγοράς / Hellenic Capital Market Commission (HCMC)',
+    },
+    {
+        id: 'greeceBankOfGreece',
+        text: 'Greece - Τράπεζα Ελλάδος / Bank of Greece',
+    },
+    {
+        id: 'hungaryMagyarNemzetiBank',
+        text: 'Hungary - Magyar Nemzeti Bank (MNB)',
+    },
+    {
+        id: 'irelandCentralBankOfIreland',
+        text: 'Ireland - Central Bank of Ireland',
+    },
+    {
+        id: 'italyCommissioneNazionalePerLeSocietaELaBorsa',
+        text: 'Italy - Commissione Nazionale per le Società e la Borsa (Consob)',
+    },
+    {
+        id: 'italyBankOfItaly',
+        text: 'Italy - Banca d’Italia / Bank of Italy',
+    },
+    {
+        id: 'latviaFinancialAndCapitalMarketCommission',
+        text: 'Latvia - Finansu un Kapitala Tirgus Komisija / Financial and Capital Market Commission (FKTK)',
+    },
+    {
+        id: 'lithuaniaBankOfLithuania',
+        text: 'Lithuania - Lietuvos Bankas / Bank of Lithuania',
+    },
+    {
+        id: 'luxembourgCommissionDeSurveillanceDuSecteurFinancier',
+        text: 'Luxembourg - Commission de Surveillance du Secteur Financier (CSSF)',
+    },
+    {
+        id: 'maltaMaltaFinancialServicesAuthority',
+        text: 'Malta - Malta Financial Services Authority (MFSA)',
+    },
+    {
+        id: 'netherlandsAutoriteitFinancieleMarkten',
+        text: 'Netherlands - Autoriteit Financiele Markten (AFM)',
+    },
+    {
+        id: 'polandPolishFinancialSupervisionAuthority',
+        text: 'Poland - Komisja Nadzoru Finansowego / Polish Financial Supervision Authority (KNF)',
+    },
+    {
+        id: 'portugalComissaoDoMercadoDeVa',
+        text: 'Portugal - Comissão do Mercado de Va - lores Mobiliários (CMVM)',
+    },
+    {
+        id: 'portugalBancoDePortugal',
+        text: 'Portugal - Banco de Portugal',
+    },
+    {
+        id: 'portugalMinistryOfFinance',
+        text: 'Portugal - Ministry of Finance',
+    },
+    {
+        id: 'romaniaFinancialSupervisoryAuthority',
+        text: 'Romania - Autoritatea de Supraveghere Financiară - Financial Supervisory Authority (ASF)',
+    },
+    {
+        id: 'romaniaNationalBankOfRomania',
+        text: 'Romania - Banca Naţională a României - National Bank of Romania (BNR)',
+    },
+    {
+        id: 'slovakiaNationalBankOfSlovakia',
+        text: 'Slovakia - Národná Banka Slovenska / National Bank of Slovakia (NBS)',
+    },
+    {
+        id: 'sloveniaSecuritiesMarketAgency',
+        text: 'Slovenia - Agencija za trg Vrednostnih Papirjev / Securities Market Agency',
+    },
+    {
+        id: 'spainComisionNacionalDelMercadoDeValores',
+        text: 'Spain - Comisión Nacional del Mercado de Valores (CNMV)',
+    },
+    {
+        id: 'swedenFinansinspektionen',
+        text: 'Sweden - Finansinspektionen (FI)',
+    },
+    {
+        id: 'swedenTheSwedishCompaniesRegistrationOffice',
+        text: 'Sweden - Bolagsverket / The Swedish Companies Registration Office',
+    },
+    {
+        id: 'unitedKingdomFinancialConductAuthority',
+        text: 'United Kingdom - Financial Conduct Authority (FCA)',
+    },
+    {
+        id: 'unitedKingdomPrudentialRegulationAuthority',
+        text: 'United Kingdom - Prudential Regulation Authority (PRA)',
+    },
+    {
+        id: 'unitedKingdomBankOfEngland',
+        text: 'United Kingdom - Bank of England',
+    },
+    {
+        id: 'unitedKingdomGibraltarFinancialServicesCommission',
+        text: 'United Kingdom - Gibraltar Financial Services Commission (GFSC)',
+    },
+];
+
 export const booleanControls = [
     'commercialDomiciliation',
     'activitiesBenefitFromExperience',
@@ -1659,6 +1858,7 @@ export const controlToList = {
     registeredCompanyCountry: 'countries',
     financialRating: 'financialRatingList',
     sectorActivity: 'sectorActivityList',
+    regulatorSupervisoryAuthorities: 'regulatorSupervisoryAuthoritiesList',
     regulatoryStatus: 'regulatoryStatusList',
     regulatoryStatusInsurerType: 'regulatoryStatusInsurerTypeList',
     otherIdentificationNumberType: 'identificationNumberTypeList',
