@@ -1,3 +1,4 @@
+<!-- Single Select -->
 <div (focus)="handleOnFocus()"
     tabindex="0"
      *ngIf="multiple === false"
@@ -28,11 +29,8 @@
             <span *ngIf="active.length > 0" class="ui-select-match-text pull-left"
                   [ngClass]="{'ui-select-allow-clear': allowClear && active.length > 0}"
                   [innerHTML]="sanitize(active[0].text)" style="padding: 2px; margin:-2px 2px"></span>
-            <!-- <i class="dropdown-toggle pull-right"></i> -->
             <clr-icon *ngIf="(allowClear && !active.length>0 || inputMode) || !allowClear" class="arrow" [attr.shape]="inputMode ? 'caret up' : 'caret down'"></clr-icon>
-            <!-- <i [ngClass]="{'caret': !inputMode, 'caret-up': inputMode}" class="pull-right special"></i> -->
             <a *ngIf="allowClear && active.length>0 && !inputMode" class="btn btn-xs btn-link pull-right clear" (click)="removeClick(active[0], $event)">
-               <!-- <i class="glyphicon glyphicon-remove"></i> -->
                <clr-icon shape="times-circle"></clr-icon>
             </a>
         </span>
@@ -93,6 +91,7 @@
 
 </div>
 
+<!-- Multi Select -->
 <div (focus)="handleOnFocus()"
     (mousedown)="focusedWithClick=true"
     tabindex="0"
@@ -102,9 +101,7 @@
      [style.width]="containerWidth"
      class="ui-select-container ui-select-multiple dropdown form-control" [ngClass]="{open: inputMode}">
     <div [ngClass]="{'ui-disabled': disabled}"></div>
-    <span class="ui-select-match"
-          (click)="matchClick($event)"
-    >
+    <span class="ui-select-match" (click)="matchClick($event)">
         <span *ngIf="!active.length" class="ui-select-placeholder text-muted">{{placeholder}}</span>
         <ng-container *ngIf="active.length">
             <span *ngFor="let a of active">
@@ -119,7 +116,8 @@
                 </span>
             </span>
         </ng-container>
-        <i *ngIf="!active.length" [ngClass]="{'caret': !inputMode, 'caret-up': inputMode}" class="pull-right special"></i>
+
+        <clr-icon *ngIf="!active.length" class="arrow" [attr.shape]="inputMode ? 'caret up' : 'caret down'"></clr-icon>
     </span>
 
     <div class="option-wrapper ui-select-choices dropdown-menu {{(active.length == 0 ? 'no-active-top' : '')}}" *ngIf="optionsOpened && inputMode">
