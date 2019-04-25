@@ -168,8 +168,6 @@ export class NavigationTopbarComponent implements OnInit, AfterViewInit, OnDestr
                 this.triggerUnreadMessages(unreadMessages);
             },
         ));
-
-        this.logService.log(window.innerWidth);
     }
 
     /**
@@ -245,7 +243,7 @@ export class NavigationTopbarComponent implements OnInit, AfterViewInit, OnDestr
                         emitModelToViewChange: true,
                         emitViewToModelChange: true,
                     });
-                    this.logService.log(this.walletSelectItems[0]);
+
                     this.selected(this.walletSelectItems[0]);
 
                     /* set the chain id as the connected one in redux store */
@@ -270,9 +268,6 @@ export class NavigationTopbarComponent implements OnInit, AfterViewInit, OnDestr
      * @param value
      */
     public selected(value: any): void {
-        this.logService.log('Selected value is: ', value);
-        this.logService.log(this.selectedWalletId);
-
         // Set connected wallet in redux state.
         this.ngRedux.dispatch(setConnectedWallet(value.id));
 

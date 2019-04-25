@@ -156,6 +156,9 @@ clr-header {
             padding: 2px 8px!important;
             font-size: 16px;
             color: #b4b4b4;
+            text-overflow: ellipsis;
+            overflow: hidden;
+            width: 415px;
         }
 
         .btn.btn-secondary {

@@ -1,9 +1,9 @@
 <clr-main-container>
-    <connection-status-alerts (activeAlert)="setActiveAlert($event)"></connection-status-alerts>
-
-    <alerts *ngIf="!activeAlert"></alerts>
 
     <div class="main-container {{ currentLanguage }}" [class.connection-alert]="activeAlert">
+        <connection-status-alerts (activeAlert)="setActiveAlert($event)"></connection-status-alerts>
+
+        <alerts *ngIf="!activeAlert"></alerts>
 
         <app-navigation-topbar></app-navigation-topbar>
 
