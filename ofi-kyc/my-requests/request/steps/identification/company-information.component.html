@@ -92,8 +92,8 @@
 
             <div *ngIf="!isDisabled('regulator')">
 
-                 <div class="row">
-                    <div class="form-group required-field col-sm-4">
+                <div class="row">
+                    <div class="form-group required-field col-sm-6">
                         <label>{{ 'Regulator / Supervisory Authority' | translate }}</label>
                         <ng-select class="multiline"
                                     [items]="regulatorSupervisoryAuthoritiesList"
@@ -102,7 +102,10 @@
                                     formControlName="regulator"
                                     placeholder="{{ 'Select one or multiple regulators/supervisory authority' | translate }}"></ng-select>
                     </div>
-                    <div class="form-group required-field col-sm-4">
+                </div>
+
+                <div class="row">
+                    <div class="form-group required-field col-sm-6">
                         <label>{{ 'Approval Number' | translate }}</label>
                         <input type="text"
                                 id="approvalNumber"
@@ -111,10 +114,8 @@
                         <span class="field-error" *ngIf="hasError('approvalNumber', ['required'])">{{ 'Field is required' | translate }}</span>
                         <span class="field-error" *ngIf="hasError('approvalNumber', ['maxlength'])">{{ 'Field is too long' | translate }}</span>
                     </div>
-                </div>
 
-                <div class="row">
-                    <div class="form-group required-field col-md-4">
+                    <div class="form-group required-field col-md-6">
                         <label class="control-label" for="regulatoryStatus">{{ 'Regulatory Status' | translate }}</label>
                         <ng-select class="large-select multiline"
                                     [items]="regulatoryStatusList"
@@ -125,7 +126,9 @@
                         <span class="field-error" *ngIf="hasError('regulatoryStatus')">{{ 'Field is required' | translate }}</span>
                     </div>
 
-                    <div *ngIf="!isDisabled('regulatoryStatusInsurerType')" class="form-group required-field col-md-4">
+                </div>
+                <div class="row">
+                    <div *ngIf="!isDisabled('regulatoryStatusInsurerType')" class="form-group required-field col-md-6">
                         <label class="control-label" for="regulatoryStatusInsurerType">{{ 'Insurer Type' | translate }}</label>
                         <ng-select class="large-select"
                                     [items]="regulatoryStatusInsurerTypeList"
@@ -136,7 +139,7 @@
                         <span class="field-error" *ngIf="hasError('regulatoryStatusInsurerType')">{{ 'Field is required' | translate }}</span>
                     </div>
 
-                    <div *ngIf="!isDisabled('regulatoryStatusListingOther')" class="form-group required-field col-md-4">
+                    <div *ngIf="!isDisabled('regulatoryStatusListingOther')" class="form-group required-field col-md-6">
                         <label class="control-label" for="regulatoryStatusListingOther">{{ 'Please fill in the regulatory status of your company' | translate }}</label>
                         <input type="text"
                                 id="regulatoryStatusListingOther"
@@ -159,7 +162,7 @@
             </div>
 
             <div class="row" *ngIf="!isDisabled('listingMarkets')">
-                <div class="form-group required-field col-sm-4">
+                <div class="form-group required-field col-sm-6">
                     <label class="control-label" for="listingMarkets">{{ 'Listing Market(s)' | translate }}</label>
                     <ng-select class="large-select"
                                 [multiple]="true"
@@ -170,6 +173,19 @@
                     </ng-select>
                     <span class="field-error" *ngIf="hasError('listingMarkets')">{{ 'Field is required' | translate }}</span>
                 </div>
+
+                <div class="form-group required-field col-sm-6" *ngIf="!isDisabled('otherListingMarkets')">
+                    <label class="control-label" for="otherListingMarkets">&nbsp;</label>
+                    <input type="text"
+                            id="otherListingMarkets"
+                            formControlName="otherListingMarkets"
+                            placeholder="{{ 'Please specify' | translate }}">
+                    <span class="field-error" *ngIf="hasError('otherListingMarkets', ['required'])">{{ 'Field is required' | translate }}</span>
+                    <span class="field-error" *ngIf="otherListingMarketError">{{ 'Market must not already exist in the Listing Markets list' | translate }}</span>
+                </div>
+            </div>
+
+            <div class="row" *ngIf="!isDisabled('listingMarkets')">
                 <div class="form-group required-field col-sm-4">
                     <label class="control-label" for="bloombergCode">{{ 'Bloomberg Code' | translate }}</label>
                     <input type="text"

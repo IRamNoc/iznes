@@ -42,6 +42,7 @@ export class CompanyInformationComponent implements OnInit, OnDestroy {
     geographicalAreaList;
     custodianHolderAccountList;
     listingMarketsList;
+    otherListingMarketError = false;
 
     constructor(
         private newRequestService: NewRequestService,
@@ -74,69 +75,93 @@ export class CompanyInformationComponent implements OnInit, OnDestroy {
 
     initFormCheck() {
         this.form.get('sectorActivity').valueChanges
-        .pipe(takeUntil(this.unsubscribe))
-        .subscribe((data) => {
-            const sectorActivityValue = getValue(data, [0, 'id']);
+            .pipe(takeUntil(this.unsubscribe))
+            .subscribe((data) => {
+                const sectorActivityValue = getValue(data, [0, 'id']);
 
-            this.formCheckSectorActivity(sectorActivityValue);
-            this.formFilterOtherSectorActivity(sectorActivityValue);
-        });
+                // Enable sectorActivityTextControl if sectorActivityValue is 'other', else disable
+                this.formCheckSectorActivity(sectorActivityValue);
+
+                if (sectorActivityValue !== 'other') {
+                    // Remove sectorActivityValue from the otherSectorActivityList
+                    this.formFilterOtherSectorActivity(sectorActivityValue);
+                }
+            });
 
         this.form.get('activities').valueChanges
-        .pipe(takeUntil(this.unsubscribe))
-        .subscribe((data) => {
-            const activitiesValue = getValue(data, [0, 'id']);
+            .pipe(takeUntil(this.unsubscribe))
+            .subscribe((data) => {
+                const activitiesValue = getValue(data, [0, 'id']);
 
-            this.formCheckActivity(activitiesValue);
-        });
+                this.formCheckActivity(activitiesValue);
+            });
 
         this.form.get('geographicalAreaOfActivity').valueChanges
-        .pipe(takeUntil(this.unsubscribe))
-        .subscribe((data) => {
-            const activityGeographicalAreaValue = getValue(data, [0, 'id']);
+            .pipe(takeUntil(this.unsubscribe))
+            .subscribe((data) => {
+                const activityGeographicalAreaValue = getValue(data, [0, 'id']);
 
-            this.formCheckActivityGeographicalArea(activityGeographicalAreaValue);
-        });
+                this.formCheckActivityGeographicalArea(activityGeographicalAreaValue);
+            });
 
         this.form.get('activityRegulated').valueChanges
-        .pipe(takeUntil(this.unsubscribe))
-        .subscribe((isActivityRegulatedValue) => {
-            this.formCheckActivityRegulated(isActivityRegulatedValue);
-        });
+            .pipe(takeUntil(this.unsubscribe))
+            .subscribe((isActivityRegulatedValue) => {
+                this.formCheckActivityRegulated(isActivityRegulatedValue);
+            });
 
         this.form.get('companyListed').valueChanges
-        .pipe(takeUntil(this.unsubscribe))
-        .subscribe((isCompanyListedValue) => {
-            this.formCheckCompanyListed(isCompanyListedValue);
-        });
+            .pipe(takeUntil(this.unsubscribe))
+            .subscribe((isCompanyListedValue) => {
+                this.formCheckCompanyListed(isCompanyListedValue);
+            });
+
+        this.form.get('listingMarkets').valueChanges
+            .pipe(takeUntil(this.unsubscribe))
+            .subscribe((data) => {
+                if (data) {
+                    this.formCheckListingMarkets(data);
+                    this.formFilterOtherListingMarkets();
+                }
+            });
+
+        this.form.get('otherListingMarkets').valueChanges
+            .pipe(takeUntil(this.unsubscribe))
+            .subscribe((data) => {
+                this.otherListingMarketError = false;
+
+                if (data) {
+                    this.formFilterOtherListingMarkets();
+                }
+            });
 
         this.form.get('capitalNature.others').valueChanges
-        .pipe(takeUntil(this.unsubscribe))
-        .subscribe((data) => {
-            this.formCheckNatureAndOrigin(data);
-        });
+            .pipe(takeUntil(this.unsubscribe))
+            .subscribe((data) => {
+                this.formCheckNatureAndOrigin(data);
+            });
 
         this.form.get('geographicalOrigin1').valueChanges
-        .pipe(takeUntil(this.unsubscribe))
-        .subscribe((data) => {
-            const control = this.form.get('geographicalOrigin2');
+            .pipe(takeUntil(this.unsubscribe))
+            .subscribe((data) => {
+                const control = this.form.get('geographicalOrigin2');
 
-            if (!control) return;
+                if (!control) return;
 
-            control.setValue('');
+                control.setValue('');
 
-            const geographicalOriginTypeValue = getValue(data, [0, 'id']);
+                const geographicalOriginTypeValue = getValue(data, [0, 'id']);
 
-            this.formCheckGeographicalOrigin(geographicalOriginTypeValue);
-        });
+                this.formCheckGeographicalOrigin(geographicalOriginTypeValue);
+            });
 
         this.form.get('regulatoryStatus').valueChanges
-        .pipe(takeUntil(this.unsubscribe))
-        .subscribe((data) => {
-            const regulatoryStatusValue = getValue(data, [0, 'id']);
+            .pipe(takeUntil(this.unsubscribe))
+            .subscribe((data) => {
+                const regulatoryStatusValue = getValue(data, [0, 'id']);
 
-            this.formCheckRegulatoryStatus(regulatoryStatusValue);
-        });
+                this.formCheckRegulatoryStatus(regulatoryStatusValue);
+            });
     }
 
     initLists() {
@@ -189,14 +214,16 @@ export class CompanyInformationComponent implements OnInit, OnDestroy {
             }
         });
 
+        const control = this.form.get('otherSectorActivity');
+
         // Get the otherSectorActivity form control values
-        const otherSectorActivityFormValues = this.form.get('otherSectorActivity').value;
+        const otherSectorActivityFormValues = control.value;
 
         // If value is in otherSectorActivityFormValues, reset the form control
         if (otherSectorActivityFormValues && otherSectorActivityFormValues[0] !== null) {
             otherSectorActivityFormValues.forEach((item) => {
                 if (item.id === value) {
-                    this.form.get('otherSectorActivity').reset();
+                    control.reset();
                 }
             });
         }
@@ -316,6 +343,45 @@ export class CompanyInformationComponent implements OnInit, OnDestroy {
         }
 
         this.formPercent.refreshFormPercent();
+    }
+
+    formCheckListingMarkets(selectedMarkets) {
+        const form = this.form;
+        const control = form.get('otherListingMarkets');
+
+        let otherSelected = false;
+
+        otherSelected = selectedMarkets.find((market) => {
+            return market.id === 'other';
+        });
+
+        if (otherSelected) {
+            control.enable();
+        } else {
+            control.disable();
+        }
+
+        this.formPercent.refreshFormPercent();
+    }
+
+    formFilterOtherListingMarkets() {
+        const control = this.form.get('otherListingMarkets');
+        const otherListingMarketsFormValue = control.value;
+
+        if (otherListingMarketsFormValue) {
+            let duplicateMarket = false;
+
+            duplicateMarket = this.listingMarketsList.find((market) => {
+                return otherListingMarketsFormValue.toLowerCase().replace(/\s+/g, '') === market.text.toLowerCase().replace(/\s+/g, '');
+            });
+
+            if (duplicateMarket) {
+                this.otherListingMarketError = true;
+                control.setErrors({ otherListingMarkets: true });
+            } else {
+                control.setErrors(null);
+            }
+        }
     }
 
     hasError(control, error = []) {

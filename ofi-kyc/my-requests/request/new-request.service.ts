@@ -285,6 +285,10 @@ export class NewRequestService {
                 { value: '', disabled: true },
                 Validators.required,
             ],
+            otherListingMarkets: [
+                { value: '', disabled: true },
+                Validators.required,
+            ],
             bloombergCode: [
                 { value: '', disabled: true },
                 this.getLengthValidator(),

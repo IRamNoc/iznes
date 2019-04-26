@@ -793,18 +793,6 @@ export const sectorActivityList = [
     },
 ];
 
-/* export const listingMarketsList = [
-    { id: 'londonstockexchange', text: 'London Stock Exchange' },
-    { id: 'borsefrankfurter', text: 'Börse Frankfurter' },
-    { id: 'nyse', text: 'NYSE Euronext' },
-    { id: 'deutscheborse', text: 'Deutsche Börse' },
-    { id: 'borseberlin', text: 'Börse Berlin' },
-    { id: 'batseurope', text: 'Bats Europe' },
-    { id: 'chix', text: 'Chi-X' },
-    { id: 'turquoise', text: 'Turquoise' },
-    { id: 'tradegate', text: 'Tradegate' },
-]; */
-
 export const listingMarketsList = [
     {
         id: 'fishPoolAsa',
@@ -875,11 +863,11 @@ export const listingMarketsList = [
         text: 'Bolsa de Barcelona',
     },
     {
-        id: 'nasdaqCopenhagen',
+        id: 'nasdaqCopenhagenAs',
         text: 'Nasdaq Copenhagen A/S',
     },
     {
-        id: 'nasdaqCopenhagenNordicMid',
+        id: 'nasdaqCopenhagenAsNordicMid',
         text: 'Nasdaq Copenhagen A/S - Nordic@MID',
     },
     {
@@ -911,11 +899,11 @@ export const listingMarketsList = [
         text: 'MTS S.p.A. (Italy)',
     },
     {
-        id: 'burzaCennychPapiruPraha',
+        id: 'burzaCennychPapiruPrahaAs',
         text: 'Burza cenných papírů Praha, A.S.',
     },
     {
-        id: 'rmSYSTEMCeskaBurzaCennychPapiru',
+        id: 'rmSYSTEMCeskaBurzaCennychPapiruAs',
         text: 'RM - SYSTÉM, česká burza cenných papírů A.S.',
     },
     {
@@ -995,7 +983,7 @@ export const listingMarketsList = [
         text: 'Eurex Deutschland',
     },
     {
-        id: 'zagrebackaBurza',
+        id: 'zagrebackaBurzaDd',
         text: 'Zagrebačka burza d.d.',
     },
     {
@@ -1019,7 +1007,7 @@ export const listingMarketsList = [
         text: 'Cyprus Stock Exchange',
     },
     {
-        id: 'nasdaqIceland',
+        id: 'nasdaqIcelandHf',
         text: 'Nasdaq Iceland hf.',
     },
     {
@@ -1151,7 +1139,7 @@ export const listingMarketsList = [
         text: 'Nordic Growth Market NGM AB',
     },
     {
-        id: 'cboeEuropeEquitiesRegulatedMarketIntegrated Book Segment',
+        id: 'cboeEuropeEquitiesRegulatedMarketIntegratedBookSegment',
         text: 'Cboe Europe Equities Regulated Market – Integrated Book Segment',
     },
     {
@@ -1243,7 +1231,7 @@ export const listingMarketsList = [
         text: 'Euronext COM, Commodities Futures and Options',
     },
     {
-        id: 'burzaCennychPapierovVBratislave',
+        id: 'burzaCennychPapierovVBratislaveAs',
         text: 'Burza cenných papierov v Bratislave, a.s.',
     },
     {
