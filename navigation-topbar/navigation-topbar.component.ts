@@ -174,21 +174,16 @@ export class NavigationTopbarComponent implements OnInit, AfterViewInit, OnDestr
      * Handle displaying the overlay for wallet select and blockchain status tracker
      * @param event
      */
-    @HostListener('document:click', ['$event']) clickOutside(event) {
+    @HostListener('document:click', ['$event']) clickOutside(e) {
         const isSmall = !!this.walletSelectSmall.nativeElement.offsetHeight;
         const walletEl = isSmall ? this.walletSelectSmall.nativeElement : this.walletSelectEl;
         const walletBarEl = walletEl.querySelector('.ui-select-match');
-        const statusTrackerEl = this.blockchainStatusTracker ? this.blockchainStatusTracker.el.nativeElement : false;
-        const openStatusTrackerEl = statusTrackerEl ? statusTrackerEl.querySelector('.dropdown.active') : false;
+        const statusEl = this.blockchainStatusTracker ? this.blockchainStatusTracker.el.nativeElement : false;
+        const openStatusEl = statusEl ? statusEl.querySelector('.dropdown.active') : false;
 
-        if (this.showOverlay && !openStatusTrackerEl &&
-            walletBarEl.contains(event.target)) return this.showOverlay = false;
-
-        if (walletEl.contains(event.target)) return this.showOverlay = true;
-
-        if (statusTrackerEl && statusTrackerEl.contains(event.target)) return this.showOverlay = true;
-
-        this.showOverlay = false;
+        // Show for click on status tracker or wallet picker, but not if in wallet bar while status tracker is closed
+        this.showOverlay = (statusEl && statusEl.contains(e.target)) || (walletEl.contains(e.target)
+        && !(this.showOverlay && !openStatusEl && walletBarEl.contains(e.target)));
     }
 
     /**

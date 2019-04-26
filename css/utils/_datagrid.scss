@@ -1,18 +1,15 @@
-/* Fix for expanding datagrids not pushing content down page. Clarity v1.1.1 */
+/* Fix for expanding datagrids not pushing content down page. Clarity v1.1.3 */
 .datagrid-host {
     height: auto!important;
     padding-top: .5rem;
 }
 
-/* Fix for filter pop-ups not overflowing datagrid. Clarity v1.1.1 */
+/* Fix for filter pop-ups not overflowing datagrid. Clarity v1.1.3 */
 .datagrid {
-    overflow: visible;
+    min-height: 224px;
     // vertical center align datagrid content
     .datagrid-cell {
         align-self: center;
-        text-overflow: ellipsis;
-        overflow: hidden;
-        white-space: nowrap;
     }
     // shade alternate grid rows
     clr-dg-row:nth-child(even) {
@@ -41,6 +38,7 @@
             }
         }
     }
+    // Right align column content
     clr-dg-column.right, clr-dg-cell.right {
         text-align: right;
         .datagrid-column-title {
