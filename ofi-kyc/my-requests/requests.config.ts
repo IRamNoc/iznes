@@ -793,7 +793,7 @@ export const sectorActivityList = [
     },
 ];
 
-export const listingMarketsList = [
+/* export const listingMarketsList = [
     { id: 'londonstockexchange', text: 'London Stock Exchange' },
     { id: 'borsefrankfurter', text: 'Börse Frankfurter' },
     { id: 'nyse', text: 'NYSE Euronext' },
@@ -803,6 +803,453 @@ export const listingMarketsList = [
     { id: 'chix', text: 'Chi-X' },
     { id: 'turquoise', text: 'Turquoise' },
     { id: 'tradegate', text: 'Tradegate' },
+]; */
+
+export const listingMarketsList = [
+    {
+        id: 'fishPoolAsa',
+        text: 'Fish Pool ASA',
+    },
+    {
+        id: 'nasdaqOsloAsa',
+        text: 'Nasdaq Oslo ASA',
+    },
+    {
+        id: 'monep',
+        text: 'MONEP',
+    },
+    {
+        id: 'osloAxess',
+        text: 'Oslo Axess',
+    },
+    {
+        id: 'norexecoAsa',
+        text: 'NOREXECO ASA',
+    },
+    {
+        id: 'powernextSas',
+        text: 'Powernext SAS',
+    },
+    {
+        id: 'osloBorsAsa',
+        text: 'Oslo Børs ASA',
+    },
+    {
+        id: 'euronextParisSa',
+        text: 'Euronext Paris S.A.',
+    },
+    {
+        id: 'matif',
+        text: 'MATIF',
+    },
+    {
+        id: 'mercadoDeRentaFijaAiaf',
+        text: 'Mercado de Renta Fija, AIAF',
+    },
+    {
+        id: 'mercadoElectronicoDeRentaFijaMerf',
+        text: 'Mercado Electrónico de Renta Fija, MERF',
+    },
+    {
+        id: 'bolsaDeBarcelona',
+        text: 'Bolsa de Barcelona',
+    },
+    {
+        id: 'meff',
+        text: 'MEFF',
+    },
+    {
+        id: 'bolsaDeBilbao',
+        text: 'Bolsa de Bilbao',
+    },
+    {
+        id: 'bolsaDeValencia',
+        text: 'Bolsa de Valencia',
+    },
+    {
+        id: 'bolsaDeMadrid',
+        text: 'Bolsa de Madrid',
+    },
+    {
+        id: 'bolsaDeBarcelona',
+        text: 'Bolsa de Barcelona',
+    },
+    {
+        id: 'nasdaqCopenhagen',
+        text: 'Nasdaq Copenhagen A/S',
+    },
+    {
+        id: 'nasdaqCopenhagenNordicMid',
+        text: 'Nasdaq Copenhagen A/S - Nordic@MID',
+    },
+    {
+        id: 'nasdaqCopenhagenAuctionOnDemand',
+        text: 'Nasdaq Copenhagen - Auction on Demand',
+    },
+    {
+        id: 'borsaItalianaSpaEtfPlus',
+        text: 'Borsa Italiana S.p.A. - ETFplus',
+    },
+    {
+        id: 'borsaItalianaSpaMercatoTelematicoAzionario',
+        text: 'Borsa Italiana S.p.A. - Mercato Telematico Azionario',
+    },
+    {
+        id: 'borsaItalianaSpaMot',
+        text: 'Borsa Italiana S.p.A. - MOT',
+    },
+    {
+        id: 'borsaItalianaSpaMiv',
+        text: 'Borsa Italiana S.p.A. - MIV',
+    },
+    {
+        id: 'borsaItalianaSpaIdem',
+        text: 'Borsa Italiana S.p.A. - IDEM',
+    },
+    {
+        id: 'mtsSpaItaly',
+        text: 'MTS S.p.A. (Italy)',
+    },
+    {
+        id: 'burzaCennychPapiruPraha',
+        text: 'Burza cenných papírů Praha, A.S.',
+    },
+    {
+        id: 'rmSYSTEMCeskaBurzaCennychPapiru',
+        text: 'RM - SYSTÉM, česká burza cenných papírů A.S.',
+    },
+    {
+        id: 'bourseDeLuxembourg',
+        text: 'Bourse de Luxembourg',
+    },
+    {
+        id: 'nasdaqHelsinkiOy',
+        text: 'Nasdaq Helsinki Oy',
+    },
+    {
+        id: 'borseDuesseldorfRegulatedMarket',
+        text: 'Börse Duesseldorf (Regulated Market)',
+    },
+    {
+        id: 'boerseBerlinRegulierterMarkt',
+        text: 'Börse Berlin (Regulated Market)',
+    },
+    {
+        id: 'borseBerlinBerlinSecondRegulatedMarket',
+        text: 'Börse Berlin (Berlin Second Regulated Market)',
+    },
+    {
+        id: 'badenWuerttembergischeWertpapierboerseRegulierterMarkt',
+        text: 'Baden-Württembergische Wertpapierbörse (Regulierter Markt)',
+    },
+    {
+        id: 'boerseHamburgLangAndSchwarzExchangeRegulierterMarkt',
+        text: 'Boerse Hamburg Lang and Schwarz Exchange (Regulierter Markt)',
+    },
+    {
+        id: 'hanseatischeWertpapierboerseHamburgRegulierterMarkt',
+        text: 'Hanseatischen Wertpapierbörse Hamburg (Regulierter Markt)',
+    },
+    {
+        id: 'boerseDuesseldorfQuotrixRegulierterMarkt',
+        text: 'Boerse Duesseldorf Quotrix (Regulierter Markt)',
+    },
+    {
+        id: 'niedersaechsicheBoerseZuHannoverRegulierterMarkt',
+        text: 'Niedersächsische Börse zu Hannover (Regulierter Markt)',
+    },
+    {
+        id: 'boerseMuenchenGettexRegulierterMarkt',
+        text: 'Boerse Muenchen Gettex (Regulierter Markt)',
+    },
+    {
+        id: 'europeanEnergyExchangeRegulierterMarkt',
+        text: 'European Energy Exchange (Regulierter Markt)',
+    },
+    {
+        id: 'boerseMuenchenRegulierterMarkt',
+        text: 'BBoerse Muenchen (Regulierter Markt)',
+    },
+    {
+        id: 'tradegateExchangeRegulierterMarkt',
+        text: 'Tradegate Exchange (Regulierter Markt)',
+    },
+    {
+        id: 'boerseBerlinEquiductTradingBerlinSecondRegulatedMarket',
+        text: 'Boerse Berlin Equiduct Trading (Berlin Second Regulated Market)',
+    },
+    {
+        id: 'boerseBerlinEquiductTradingRegulierterMarkt',
+        text: 'Boerse Berlin Equiduct Trading (Regulierter Markt)',
+    },
+    {
+        id: 'frankfurterWertpapierboerseRegulierterMarkt',
+        text: 'Frankfurter Wertpapierbörse (Regulierter Markt)',
+    },
+    {
+        id: 'xetraRegulierterMarkt',
+        text: 'Xetra (Regulierter Markt)',
+    },
+    {
+        id: 'eurexDeutschland',
+        text: 'Eurex Deutschland',
+    },
+    {
+        id: 'zagrebackaBurza',
+        text: 'Zagrebačka burza d.d.',
+    },
+    {
+        id: 'euronextBrusselsDerivatives',
+        text: 'Euronext Brussels Derivatives',
+    },
+    {
+        id: 'euronextBrussels',
+        text: 'Euronext Brussels',
+    },
+    {
+        id: 'wienerBorseAg',
+        text: 'Wiener Börse AG',
+    },
+    {
+        id: 'ljubljanaStockExchangeInc',
+        text: 'Ljubljana Stock Exchange Inc.',
+    },
+    {
+        id: 'cyprusStockExchange',
+        text: 'Cyprus Stock Exchange',
+    },
+    {
+        id: 'nasdaqIceland',
+        text: 'Nasdaq Iceland hf.',
+    },
+    {
+        id: 'nasdaqTallinnAktsiaselts',
+        text: 'Nasdaq Tallinn Aktsiaselts',
+    },
+    {
+        id: 'nxchangeBv',
+        text: 'Nxchange B.V.',
+    },
+    {
+        id: 'euronextAmsterdamNv',
+        text: 'Euronext Amsterdam N.V.',
+    },
+    {
+        id: 'maltaStockExchange',
+        text: 'Malta Stock Exchange',
+    },
+    {
+        id: 'iceEndexMarketsBv',
+        text: 'ICE Endex Markets B.V.',
+    },
+    {
+        id: 'institutionalFinancialSecuritiesMarket',
+        text: 'Institutional Financial Securities Market',
+    },
+    {
+        id: 'hudexEnergiatozsdeZrt',
+        text: 'HUDEX Energiatőzsde Zrt.',
+    },
+    {
+        id: 'nasdaqVilniusAb',
+        text: 'Nasdaq Vilnius, AB',
+    },
+    {
+        id: 'europeanWholesaleSecuritiesMarket',
+        text: 'European Wholesale Securities Market',
+    },
+    {
+        id: 'nasdaqRigaAs',
+        text: 'Nasdaq Riga AS',
+    },
+    {
+        id: 'gieldaPapierowWartosciowychWWarszawieSa',
+        text: 'Giełda Papierów Wartościowych w Warszawie S.A.',
+    },
+    {
+        id: 'towarowaGieldaEnergiiSa',
+        text: 'Towarowa Giełda Energii S.A.',
+    },
+    {
+        id: 'bondSpotSa',
+        text: 'BondSpot S.A.',
+    },
+    {
+        id: 'theIrishStockExchangePlc',
+        text: 'The Irish Stock Exchange plc',
+    },
+    {
+        id: 'euronextMercadoDeFuturosEopcoes',
+        text: 'Euronext - Mercado de Futuros e Opções',
+    },
+    {
+        id: 'omipPoloPortuguesSGMRSa',
+        text: 'OMIP - Pólo Português, S.G.M.R., S.A.',
+    },
+    {
+        id: 'euronextLisbonSociedadeGestoraDeMercadosRegulamentadosSa',
+        text: 'Euronext Lisbon - Sociedade Gestora de Mercados Regulamentados, S.A.',
+    },
+    {
+        id: 'nasdaqStockholmAbEurWbEqDerivatives',
+        text: 'Nasdaq Stockholm AB - EUR WB EQ Derivatives',
+    },
+    {
+        id: 'nasdaqStockholmAbFinnishEqDerivatives',
+        text: 'Nasdaq Stockholm AB - Finnish EQ Derivatives',
+    },
+    {
+        id: 'nasdaqStockholmAb',
+        text: 'Nasdaq Stockholm AB',
+    },
+    {
+        id: 'nasdaqStockholmAbDanishEqDerivatives',
+        text: 'Nasdaq Stockholm AB - Danish EQ Derivatives',
+    },
+    {
+        id: 'nasdaqStockholmAbEurFiDerivatives',
+        text: 'Nasdaq Stockholm AB - EUR FI Derivatives',
+    },
+    {
+        id: 'nasdaqStockholmAbCommodities',
+        text: 'Nasdaq Stockholm AB - Commodities',
+    },
+    {
+        id: 'nasdaqStockholmAbPanNordicEqDerivatives',
+        text: 'Nasdaq Stockholm AB - Pan Nordic EQ Derivatives',
+    },
+    {
+        id: 'nasdaqStockholmAbUsdWbEqDerivatives',
+        text: 'Nasdaq Stockholm AB - USD WB EQ Derivatives',
+    },
+    {
+        id: 'nasdaqStockholmAbNorwegianFiDerivatives',
+        text: 'Nasdaq Stockholm AB - Norwegian FI Derivatives',
+    },
+    {
+        id: 'nasdaqStockholmAbDanishFiDerivatives',
+        text: 'Nasdaq Stockholm AB - Danish FI Derivatives',
+    },
+    {
+        id: 'nasdaqStockholmAbNordicMid',
+        text: 'Nasdaq Stockholm AB - Nordic@Mid',
+    },
+    {
+        id: 'nasdaqStockholmAbNorwegianEqDerivatives',
+        text: 'Nasdaq Stockholm AB - Norwegian EQ Derivatives',
+    },
+    {
+        id: 'nasdaqStockholmAbAuctionOnDemand',
+        text: 'Nasdaq Stockholm AB - Auction on Demand',
+    },
+    {
+        id: 'nasdaqStockholmAbSwedishEqDerivatives',
+        text: 'Nasdaq Stockholm AB - Swedish EQ Derivatives',
+    },
+    {
+        id: 'nordicGrowthMarketNgmAb',
+        text: 'Nordic Growth Market NGM AB',
+    },
+    {
+        id: 'cboeEuropeEquitiesRegulatedMarketIntegrated Book Segment',
+        text: 'Cboe Europe Equities Regulated Market – Integrated Book Segment',
+    },
+    {
+        id: 'cboeEuropeEquitiesRegulatedMarketReferencePriceBookSegment',
+        text: 'Cboe Europe Equities Regulated Market – Reference Price Book Segment',
+    },
+    {
+        id: 'cboeEuropeEquitiesRegulatedMarketOffBookSegment',
+        text: 'Cboe Europe Equities Regulated Market – Off-Book Segment',
+    },
+    {
+        id: 'londonMetalExchange',
+        text: 'London Metal Exchange',
+    },
+    {
+        id: 'londonStockExchangeRegulatedMarket',
+        text: 'London Stock Exchange Regulated Market',
+    },
+    {
+        id: 'londonStockExchangeRegulatedMarketDerivatives',
+        text: 'London Stock Exchange Regulated Market (Derivatives)',
+    },
+    {
+        id: 'nexExchangeMainBoardEquity',
+        text: 'NEX Exchange Main Board (Equity)',
+    },
+    {
+        id: 'nexExchangeMainBoardNonEquity',
+        text: 'NEX Exchange Main Board (Non-Equity)',
+    },
+    {
+        id: 'euronextLondonRegulatedMarket',
+        text: 'Euronext London Regulated Market',
+    },
+    {
+        id: 'bursaDeValoriBucurestiSa',
+        text: 'Bursa de Valori Bucuresti S.A.',
+    },
+    {
+        id: 'budapestiErtektozsdeZrtBudapestStockExchange',
+        text: 'Budapesti Értéktőzsde Zrt. (Budapest Stock Exchange)',
+    },
+    {
+        id: 'nasdaqHelsinkiOyAuctionOnDemand',
+        text: 'Nasdaq Helsinki Oy - Auction on Demand',
+    },
+    {
+        id: 'nasdaqHelsinkiOyNordicMid',
+        text: 'Nasdaq Helsinki Oy - Nordic@Mid',
+    },
+    {
+        id: 'hellenicExchangesAthensStockExchangeSa',
+        text: 'Hellenic Exchanges - Athens Stock Exchange S.A.',
+    },
+    {
+        id: 'electronicSecondarySecuritiesMarket',
+        text: 'Electronic Secondary Securities Market (HDAT)',
+    },
+    {
+        id: 'iceFuturesEurope',
+        text: 'ICE Futures Europe',
+    },
+    {
+        id: 'iceFuturesEuropeAgriculturalProductsDivision',
+        text: 'ICE Futures Europe - Agricultural Products Division',
+    },
+    {
+        id: 'iceFuturesEuropeFinancialProductsDivision',
+        text: 'ICE Futures Europe - Financial Products Division',
+    },
+    {
+        id: 'iceFuturesEuropeEquityProductsDivision',
+        text: 'ICE Futures Europe - Equity Products Division',
+    },
+    {
+        id: 'nasdaqStockholmAbNorwayEtf',
+        text: 'Nasdaq Stockholm AB - Norway ETF',
+    },
+    {
+        id: 'bulgarianStockExchange',
+        text: 'Bulgarian Stock Exchange',
+    },
+    {
+        id: 'euronextEqfEquitiesAndIndicesDerivatives',
+        text: 'Euronext EQF, Equities and Indices Derivatives',
+    },
+    {
+        id: 'euronextComCommoditiesFuturesAndOptions',
+        text: 'Euronext COM, Commodities Futures and Options',
+    },
+    {
+        id: 'burzaCennychPapierovVBratislave',
+        text: 'Burza cenných papierov v Bratislave, a.s.',
+    },
+    {
+        id: 'other',
+        text: 'Other',
+    },
 ];
 
 export const regulatoryStatusList = [
