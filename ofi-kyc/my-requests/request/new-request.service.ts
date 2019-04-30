@@ -245,7 +245,11 @@ export class NewRequestService {
                 { value: '', disabled: true },
                 this.getLengthValidator(255),
             ],
-            otherSectorActivity: [''],
+            // otherSectorActivity: [''],
+            otherSectorActivity: [
+                { value: '', disabled: true },
+                Validators.required,
+            ],
             corporatePurpose: ['', Validators.required],
             activities: ['', Validators.required],
             ownAccountinvestor: [
@@ -262,7 +266,14 @@ export class NewRequestService {
                 this.getLengthValidator(255),
             ],
             activityRegulated: 0,
-            regulatorSupervisoryAuthorities: [''],
+            regulator: [
+                { value: '', disabled: true },
+                Validators.required,
+            ],
+            otherRegulator: [
+                { value: '', disabled: true },
+                Validators.required,
+            ],
             regulatoryStatus: [{ value: '', disabled: true }, Validators.required],
             regulatoryStatusInsurerType: [
                 { value: '', disabled: true },
@@ -271,10 +282,6 @@ export class NewRequestService {
             regulatoryStatusListingOther: [
                 { value: '', disabled: true },
                 Validators.required,
-            ],
-            regulator: [
-                { value: '', disabled: true },
-                this.getLengthValidator(255),
             ],
             approvalNumber: [
                 { value: '', disabled: true },

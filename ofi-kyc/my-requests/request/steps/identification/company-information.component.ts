@@ -82,7 +82,7 @@ export class CompanyInformationComponent implements OnInit, OnDestroy {
                 // Enable sectorActivityTextControl if sectorActivityValue is 'other', else disable
                 this.formCheckSectorActivity(sectorActivityValue);
 
-                if (sectorActivityValue !== 'other') {
+                if (sectorActivityValue && sectorActivityValue !== 'other') {
                     // Remove sectorActivityValue from the otherSectorActivityList
                     this.formFilterOtherSectorActivity(sectorActivityValue);
                 }
@@ -119,10 +119,8 @@ export class CompanyInformationComponent implements OnInit, OnDestroy {
         this.form.get('listingMarkets').valueChanges
             .pipe(takeUntil(this.unsubscribe))
             .subscribe((data) => {
-                if (data) {
-                    this.formCheckListingMarkets(data);
-                    this.formFilterOtherListingMarkets();
-                }
+                this.formCheckListingMarkets(data);
+                this.formFilterOtherListingMarkets();
             });
 
         this.form.get('otherListingMarkets').valueChanges
@@ -162,6 +160,12 @@ export class CompanyInformationComponent implements OnInit, OnDestroy {
 
                 this.formCheckRegulatoryStatus(regulatoryStatusValue);
             });
+
+        this.form.get('regulator').valueChanges
+            .pipe(takeUntil(this.unsubscribe))
+            .subscribe((data) => {
+                this.formCheckRegulator(data);
+            });
     }
 
     initLists() {
@@ -191,13 +195,12 @@ export class CompanyInformationComponent implements OnInit, OnDestroy {
     }
 
     formCheckSectorActivity(value) {
-        const form = this.form;
-        const sectorActivityTextControl = form.get('sectorActivityText');
+        const control = this.form.get('sectorActivityText');
 
         if (value === 'other') {
-            sectorActivityTextControl.enable();
+            control.enable();
         } else {
-            sectorActivityTextControl.disable();
+            control.disable();
         }
 
         this.formPercent.refreshFormPercent();
@@ -250,24 +253,24 @@ export class CompanyInformationComponent implements OnInit, OnDestroy {
     }
 
     formCheckNatureAndOrigin(value) {
-        const natureAndOriginOfTheCapitalOthersControl = this.form.get('capitalNature.othersText');
+        const control = this.form.get('capitalNature.othersText');
 
         if (value) {
-            natureAndOriginOfTheCapitalOthersControl.enable();
+            control.enable();
         } else {
-            natureAndOriginOfTheCapitalOthersControl.disable();
+            control.disable();
         }
 
         this.formPercent.refreshFormPercent();
     }
 
     formCheckGeographicalOrigin(value) {
-        const geographicalOriginControl = this.form.get('geographicalOrigin2');
+        const control = this.form.get('geographicalOrigin2');
 
         if (!value) {
-            geographicalOriginControl.disable();
+            control.disable();
         } else {
-            geographicalOriginControl.enable();
+            control.enable();
         }
 
         this.formPercent.refreshFormPercent();
@@ -346,14 +349,15 @@ export class CompanyInformationComponent implements OnInit, OnDestroy {
     }
 
     formCheckListingMarkets(selectedMarkets) {
-        const form = this.form;
-        const control = form.get('otherListingMarkets');
+        const control = this.form.get('otherListingMarkets');
 
         let otherSelected = false;
 
-        otherSelected = selectedMarkets.find((market) => {
-            return market.id === 'other';
-        });
+        if (selectedMarkets.length) {
+            otherSelected = selectedMarkets.find((market) => {
+                return market.id === 'other';
+            });
+        }
 
         if (otherSelected) {
             control.enable();
@@ -382,6 +386,26 @@ export class CompanyInformationComponent implements OnInit, OnDestroy {
                 control.setErrors(null);
             }
         }
+    }
+
+    formCheckRegulator(selectedRegulators) {
+        const control = this.form.get('otherRegulator');
+
+        let otherSelected = false;
+
+        if (selectedRegulators.length) {
+            otherSelected = selectedRegulators.find((regulator) => {
+                return regulator.id === 'other';
+            });
+        }
+
+        if (otherSelected) {
+            control.enable();
+        } else {
+            control.disable();
+        }
+
+        this.formPercent.refreshFormPercent();
     }
 
     hasError(control, error = []) {
