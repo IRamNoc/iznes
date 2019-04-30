@@ -18,6 +18,10 @@
             background-color: #eee;
         }
     }
+    // action dropdowns to break outside datagrid and not cause scroll bars
+    .datagrid-table {
+        position: initial;
+    }
     // expanding rows additional content
     .additionalInfos {
         width: 100%;

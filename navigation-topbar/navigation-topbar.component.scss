@@ -41,9 +41,9 @@ clr-header {
         }
 
         .overlay {
-            position: absolute;
+            position: fixed;
             z-index: 501;
-            top: 60px;
+            margin-top: 60px;
             left: 0;
             width: 100%;
             height: calc(100% - 60px);
@@ -150,6 +150,7 @@ clr-header {
 
         .ui-select-toggle {
             padding: 0 8px;
+            box-shadow: none!important;
         }
 
         .ui-select-match-text {
@@ -251,7 +252,6 @@ clr-header {
         ng-select {
             .ui-select-toggle {
                 border: none!important;
-                box-shadow: none;
             }
             .ui-select-container {
                 width: auto !important;
