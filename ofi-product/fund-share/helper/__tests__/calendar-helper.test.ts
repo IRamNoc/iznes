@@ -2,6 +2,9 @@ import { CalendarHelper } from "../calendar-helper";
 import {IznShareDetailWithNav} from "../models";
 import * as moment from 'moment-business-days';
 
+const now = new Date('2019');
+Date.now = jest.fn().mockReturnValue(now)
+
 describe('Valuation day: outside working day is not allowed, cutoff period daily', () => {
     it('valuation offset: D-1', () => {
         const ch = new CalendarHelper(({
