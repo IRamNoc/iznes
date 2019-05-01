@@ -184,7 +184,7 @@ function handleValidatedOrder(state: ManageOrders, action: PayloadAction): Manag
     const filter = o =>
         o.orderID === orderID
         && (o.orderStatus === OrderStatus.Initiated || o.orderStatus === OrderStatus.WaitingNAV)
-        && o.valuationDate.substring(0, 10) === valuationDate;
+        && o.valuationDate.substring(0, 10) === valuationDate.substring(0, 10);
 
     Object.keys(state.orderList)
         .map(k => state.orderList[k])
