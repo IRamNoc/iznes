@@ -13,6 +13,7 @@ export interface FormItem {
     type: FormItemType;
     validator?: ValidatorFn;
     value?: () => any;
+    default?: () => any;
     maxLength?: number;
     disabled?: boolean;
     hidden?: () => boolean;
