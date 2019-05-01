@@ -23,6 +23,7 @@ import {
     SelectModule,
     DpDatePickerModule,
     SetlPipesModule,
+    NumberConverterService, APP_CONFIG,
 } from '@setl/utils';
 import { AlertsService } from '@setl/jaspero-ng2-alerts';
 import { RouterMock } from '@setl/core-test-util';
@@ -101,6 +102,8 @@ describe('OfiClientReferentialComponent', () => {
                 { provide: ActivatedRoute, useValue: {} },
                 { provide: Router, useValue: RouterMock },
                 { provide: MultilingualService, useValue: multilingualServiceStub },
+                { provide: APP_CONFIG, useValue: { numberDivider: 5 } },
+                NumberConverterService,
             ],
         });
         await TestBed.compileComponents();

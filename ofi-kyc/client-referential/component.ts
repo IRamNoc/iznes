@@ -2,7 +2,7 @@ import { ChangeDetectorRef, Component, OnDestroy, OnInit } from '@angular/core';
 import { FormBuilder, FormControl, FormGroup } from '@angular/forms';
 import { OfiKycService } from '../../ofi-req-services/ofi-kyc/service';
 import { OfiKycObservablesService } from '../../ofi-req-services/ofi-kyc/kyc-observable';
-import { FileDownloader, SagaHelper, mDateHelper } from '@setl/utils';
+import { FileDownloader, SagaHelper, mDateHelper, NumberConverterService } from '@setl/utils';
 import { NgRedux, select } from '@angular-redux/store';
 import { Observable } from 'rxjs/Rx';
 import { Subject } from 'rxjs/Subject';
@@ -122,6 +122,7 @@ export class OfiClientReferentialComponent implements OnInit, OnDestroy {
                 private router: Router,
                 public translate: MultilingualService,
                 private location: Location,
+                private numberConverterService: NumberConverterService,
     ) { }
 
     ngOnInit(): void {
@@ -373,7 +374,7 @@ export class OfiClientReferentialComponent implements OnInit, OnDestroy {
                                 shareName: this.shareData[key]['fundShareName'],
                                 isin: this.shareData[key]['isin'],
                                 max: ((1 + Math.min(this.shareData[key]['maxRedemptionFee'], this.shareData[key]['maxSubscriptionFee'])) * 100 - 100).toFixed(5),
-                                minInvestment: this.shareData[key]['minSubsequentSubscriptionInAmount'],
+                                minInvestment: this.numberConverterService.toFrontEnd(this.shareData[key]['minSubsequentSubscriptionInAmount']),
                                 access: !!investorWalletData[this.shareData[key]['fundShareID']],
                                 entry: this.toFrontEndPercent((!!investorWalletData[this.shareData[key]['fundShareID']] ? investorWalletData[this.shareData[key]['fundShareID']]['entryFee'] : 0)),
                                 exit: this.toFrontEndPercent((!!investorWalletData[this.shareData[key]['fundShareID']] ? investorWalletData[this.shareData[key]['fundShareID']]['exitFee'] : 0)),
