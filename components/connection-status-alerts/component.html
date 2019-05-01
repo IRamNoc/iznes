@@ -9,9 +9,9 @@
                 <div *ngIf="connectionStatus.nodeDead" class="loading">
                     {{ 'You\'ve been disconnected from our servers, you should be reconnected soon' | translate }}
                 </div>
-                <ng-container *ngIf="connectionStatus.internetDead">
+                <div *ngIf="connectionStatus.internetDead && !connectionStatus.nodeDead" class="loading">
                     {{ 'You\'ve been disconnected from the internet, please wait or try to refresh your browser' | translate }}
-                </ng-container>
+                </div>
             </div>
         </div>
     </div>
