@@ -28,6 +28,7 @@ import {
     legalFormList,
     financialRatingList,
     sectorActivityList,
+    otherSectorActivityList,
     regulatorSupervisoryAuthoritiesList,
     regulatoryStatusList,
     regulatoryStatusInsurerTypeList,
@@ -62,6 +63,7 @@ export class NewRequestService {
     legalFormList;
     financialRatingList;
     sectorActivityList;
+    otherSectorActivityList;
     regulatorSupervisoryAuthoritiesList;
     regulatoryStatusList;
     regulatoryStatusInsurerTypeList;
@@ -109,6 +111,7 @@ export class NewRequestService {
         this.legalFormList = legalFormList;
         this.financialRatingList = financialRatingList;
         this.sectorActivityList = sectorActivityList;
+        this.otherSectorActivityList = otherSectorActivityList;
         this.regulatorSupervisoryAuthoritiesList = regulatorSupervisoryAuthoritiesList;
         this.regulatoryStatusList = regulatoryStatusList;
         this.regulatoryStatusInsurerTypeList = regulatoryStatusInsurerTypeList;
@@ -245,11 +248,7 @@ export class NewRequestService {
                 { value: '', disabled: true },
                 this.getLengthValidator(255),
             ],
-            // otherSectorActivity: [''],
-            otherSectorActivity: [
-                { value: '', disabled: true },
-                Validators.required,
-            ],
+            otherSectorActivity: [''],
             corporatePurpose: ['', Validators.required],
             activities: ['', Validators.required],
             ownAccountinvestor: [

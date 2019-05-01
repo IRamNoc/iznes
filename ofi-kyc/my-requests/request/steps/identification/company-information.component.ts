@@ -82,7 +82,7 @@ export class CompanyInformationComponent implements OnInit, OnDestroy {
                 // Enable sectorActivityTextControl if sectorActivityValue is 'other', else disable
                 this.formCheckSectorActivity(sectorActivityValue);
 
-                if (sectorActivityValue && sectorActivityValue !== 'other') {
+                if (sectorActivityValue) {
                     // Remove sectorActivityValue from the otherSectorActivityList
                     this.formFilterOtherSectorActivity(sectorActivityValue);
                 }
@@ -174,8 +174,8 @@ export class CompanyInformationComponent implements OnInit, OnDestroy {
             this.newRequestService.regulatoryStatusInsurerTypeList);
         this.regulatoryStatusList = this.translate.translate(this.newRequestService.regulatoryStatusList);
         this.sectorActivityList = this.translate.translate(this.newRequestService.sectorActivityList);
-        this.otherSectorActivityList = this.translate.translate(this.newRequestService.sectorActivityList);
-        this.cachedOtherSectorActivityList = this.translate.translate(this.newRequestService.sectorActivityList);
+        this.otherSectorActivityList = this.translate.translate(this.newRequestService.otherSectorActivityList);
+        this.cachedOtherSectorActivityList = this.translate.translate(this.newRequestService.otherSectorActivityList);
         this.companyActivitiesList = this.translate.translate(this.newRequestService.companyActivitiesList);
         this.ownAccountInvestorList = this.translate.translate(this.newRequestService.ownAccountInvestorList);
         this.investorOnBehalfList = this.translate.translate(this.newRequestService.investorOnBehalfList);
@@ -197,7 +197,7 @@ export class CompanyInformationComponent implements OnInit, OnDestroy {
     formCheckSectorActivity(value) {
         const control = this.form.get('sectorActivityText');
 
-        if (value === 'other') {
+        if (value === 'Other') {
             control.enable();
         } else {
             control.disable();
