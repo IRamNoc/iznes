@@ -319,6 +319,8 @@ export class SelectComponent implements OnInit, ControlValueAccessor {
      * Opens the ngSelect when user tabs to it, ignores when focus triggered by click
      */
     public handleOnFocus() {
+        if (this.disabled) return;
+
         // timeout to account for setting of focusedWithClick property elsewhere
         setTimeout(
             () => {
