@@ -54,6 +54,7 @@ import {
     holdingTypesList,
     identificationNumberList,
     listingMarketsList,
+    multilateralTradingFacilitiesList,
 } from '../requests.config';
 
 @Injectable()
@@ -89,6 +90,7 @@ export class NewRequestService {
     holdingTypesList;
     identificationNumberTypeList;
     listingMarketsList;
+    multilateralTradingFacilitiesList;
     saveContext = '';
 
     /* Private Properties. */
@@ -137,6 +139,7 @@ export class NewRequestService {
         this.holdingTypesList = holdingTypesList;
         this.identificationNumberTypeList = identificationNumberList;
         this.listingMarketsList = listingMarketsList;
+        this.multilateralTradingFacilitiesList = multilateralTradingFacilitiesList;
     }
 
     set context(value) {
@@ -292,6 +295,14 @@ export class NewRequestService {
                 Validators.required,
             ],
             otherListingMarkets: [
+                { value: '', disabled: true },
+                Validators.required,
+            ],
+            multilateralTradingFacilities: [
+                { value: '', disabled: true },
+                Validators.required,
+            ],
+            otherMultilateralTradingFacilities: [
                 { value: '', disabled: true },
                 Validators.required,
             ],

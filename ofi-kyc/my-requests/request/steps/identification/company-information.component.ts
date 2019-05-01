@@ -42,7 +42,9 @@ export class CompanyInformationComponent implements OnInit, OnDestroy {
     geographicalAreaList;
     custodianHolderAccountList;
     listingMarketsList;
+    multilateralTradingFacilitiesList;
     otherListingMarketError = false;
+    otherMultilateralTradingFacilitiesError = false;
 
     constructor(
         private newRequestService: NewRequestService,
@@ -133,6 +135,23 @@ export class CompanyInformationComponent implements OnInit, OnDestroy {
                 }
             });
 
+        this.form.get('multilateralTradingFacilities').valueChanges
+            .pipe(takeUntil(this.unsubscribe))
+            .subscribe((data) => {
+                this.formCheckMultilateralTradingFacilities(data);
+                this.formFilterOtherMultilateralTradingFacilities();
+            });
+
+        this.form.get('otherMultilateralTradingFacilities').valueChanges
+            .pipe(takeUntil(this.unsubscribe))
+            .subscribe((data) => {
+                this.otherListingMarketError = false;
+
+                if (data) {
+                    this.formFilterOtherMultilateralTradingFacilities();
+                }
+            });
+
         this.form.get('capitalNature.others').valueChanges
             .pipe(takeUntil(this.unsubscribe))
             .subscribe((data) => {
@@ -184,6 +203,7 @@ export class CompanyInformationComponent implements OnInit, OnDestroy {
         this.geographicalAreaList = this.translate.translate(this.newRequestService.geographicalAreaList);
         this.custodianHolderAccountList = this.translate.translate(this.newRequestService.custodianHolderAccountList);
         this.listingMarketsList = this.translate.translate(this.newRequestService.listingMarketsList);
+        this.multilateralTradingFacilitiesList = this.translate.translate(this.newRequestService.multilateralTradingFacilitiesList);
     }
 
     get beneficiaries() {
@@ -328,18 +348,27 @@ export class CompanyInformationComponent implements OnInit, OnDestroy {
     }
 
     formCheckCompanyListed(value) {
-        const companyListingMarketsControl = this.form.get('listingMarkets');
+        const listingMarketsControl = this.form.get('listingMarkets');
+        const otherListingMarketsControl = this.form.get('otherListingMarkets');
+        const multilateralTradingFacilitiesControl = this.form.get('multilateralTradingFacilities');
+        const otherMultilateralTradingFacilitiesControl = this.form.get('multilateralTradingFacilities');
         const bloombergCodesControl = this.form.get('bloombergCode');
         const listedShareISINControl = this.form.get('isinCode');
         const floatableSharesControl = this.form.get('floatableShares');
 
         if (value) {
-            companyListingMarketsControl.enable();
+            listingMarketsControl.enable();
+            otherListingMarketsControl.enable();
+            multilateralTradingFacilitiesControl.enable();
+            otherMultilateralTradingFacilitiesControl.enable();
             listedShareISINControl.enable();
             bloombergCodesControl.enable();
             floatableSharesControl.enable();
         } else {
-            companyListingMarketsControl.disable();
+            listingMarketsControl.disable();
+            otherListingMarketsControl.disable();
+            multilateralTradingFacilitiesControl.disable();
+            otherMultilateralTradingFacilitiesControl.disable();
             listedShareISINControl.disable();
             bloombergCodesControl.disable();
             floatableSharesControl.disable();
@@ -353,7 +382,7 @@ export class CompanyInformationComponent implements OnInit, OnDestroy {
 
         let otherSelected = false;
 
-        if (selectedMarkets.length) {
+        if (selectedMarkets && selectedMarkets.length) {
             otherSelected = selectedMarkets.find((market) => {
                 return market.id === 'other';
             });
@@ -382,6 +411,46 @@ export class CompanyInformationComponent implements OnInit, OnDestroy {
             if (duplicateMarket) {
                 this.otherListingMarketError = true;
                 control.setErrors({ otherListingMarkets: true });
+            } else {
+                control.setErrors(null);
+            }
+        }
+    }
+
+    formCheckMultilateralTradingFacilities(selectedFacilities) {
+        const control = this.form.get('otherMultilateralTradingFacilities');
+
+        let otherSelected = false;
+
+        if (selectedFacilities && selectedFacilities.length) {
+            otherSelected = selectedFacilities.find((market) => {
+                return market.id === 'other';
+            });
+        }
+
+        if (otherSelected) {
+            control.enable();
+        } else {
+            control.disable();
+        }
+
+        this.formPercent.refreshFormPercent();
+    }
+
+    formFilterOtherMultilateralTradingFacilities() {
+        const control = this.form.get('otherMultilateralTradingFacilities');
+        const otherMultilateralTradingFacilityFormValue = control.value;
+
+        if (otherMultilateralTradingFacilityFormValue) {
+            let duplicateFacility = false;
+
+            duplicateFacility = this.multilateralTradingFacilitiesList.find((market) => {
+                return otherMultilateralTradingFacilityFormValue.toLowerCase().replace(/\s+/g, '') === market.text.toLowerCase().replace(/\s+/g, '');
+            });
+
+            if (duplicateFacility) {
+                this.otherMultilateralTradingFacilitiesError = true;
+                control.setErrors({ otherMultilateralTradingFacility: true });
             } else {
                 control.setErrors(null);
             }

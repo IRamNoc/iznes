@@ -195,8 +195,32 @@
                 </div>
             </div>
 
-            <div class="row" *ngIf="!isDisabled('listingMarkets')">
-                <div class="form-group required-field col-sm-4">
+            <div class="row" *ngIf="!isDisabled('multilateralTradingFacilities')">
+                <div class="form-group required-field col-sm-6">
+                    <label class="control-label" for="multilateralTradingFacilities">{{ 'Multilateral Trading Facility' | translate }}</label>
+                    <ng-select class="large-select"
+                                [multiple]="true"
+                                [items]="multilateralTradingFacilitiesList"
+                                id="multilateralTradingFacilities"
+                                formControlName="multilateralTradingFacilities"
+                                placeholder="{{ 'Fill in multilateral trading facilities (MTF)' | translate }}">
+                    </ng-select>
+                    <span class="field-error" *ngIf="hasError('multilateralTradingFacilities')">{{ 'Field is required' | translate }}</span>
+                </div>
+
+                <div class="form-group required-field col-sm-6" *ngIf="!isDisabled('otherMultilateralTradingFacilities')">
+                    <label class="control-label" for="otherMultilateralTradingFacilities">&nbsp;</label>
+                    <input type="text"
+                            id="otherMultilateralTradingFacilities"
+                            formControlName="otherMultilateralTradingFacilities"
+                            placeholder="{{ 'Fill in the listing market(s)' | translate }}">
+                    <span class="field-error" *ngIf="hasError('otherMultilateralTradingFacilities', ['required'])">{{ 'Field is required' | translate }}</span>
+                    <span class="field-error" *ngIf="otherMultilateralTradingFacilitiesError">{{ 'Trading Facility must not already exist in the Multilateral Trading Facilities list' | translate }}</span>
+                </div>
+            </div>
+
+            <div class="row">
+                <div class="form-group required-field col-sm-4" *ngIf="!isDisabled('bloombergCode')">
                     <label class="control-label" for="bloombergCode">{{ 'Bloomberg Code' | translate }}</label>
                     <input type="text"
                             id="bloombergCode"
@@ -205,7 +229,7 @@
                     <span class="field-error" *ngIf="hasError('bloombergCode', ['required'])">{{ 'Field is required' | translate }}</span>
                     <span class="field-error" *ngIf="hasError('bloombergCode', ['maxlength'])">{{ 'Field is too long' | translate }}</span>
                 </div>
-                <div class="form-group required-field col-sm-4">
+                <div class="form-group required-field col-sm-4" *ngIf="!isDisabled('isinCode')">
                     <label class="control-label" for="isinCode">{{ 'ISIN' | translate }}</label>
                     <input type="text"
                             id="isinCode"
@@ -215,7 +239,7 @@
                     <span class="field-error" *ngIf="hasError('isinCode', ['pattern'])">{{ 'ISIN must have two letters and ten digits' | translate }}</span>
                     <span class="field-error" *ngIf="hasError('isinCode', ['maxlength'])">{{ 'Field is too long' | translate }}</span>
                 </div>
-                <div class="form-group required-field col-sm-4">
+                <div class="form-group required-field col-sm-4" *ngIf="!isDisabled('floatableShares')">
                     <label class="control-label" for="floatableShares">{{ 'Percentage of Floatable Shares' | translate }}</label>
                     <input type="number"
                             id="floatableShares"
