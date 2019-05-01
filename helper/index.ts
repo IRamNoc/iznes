@@ -7,7 +7,6 @@ import * as commonHelper from './common';
 import * as ShortHash from './common/shorthash';
 import * as CustomValidators from './validators';
 import * as formHelper from './forms';
-import * as journeyService from './journey-service/journey.service';
 
 export {
     walletHelper,
@@ -19,5 +18,4 @@ export {
     ShortHash,
     CustomValidators,
     formHelper,
-    journeyService,
 };
