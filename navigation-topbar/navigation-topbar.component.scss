@@ -257,6 +257,9 @@ clr-header {
                 width: auto !important;
                 max-width: 484px;
             }
+            .ui-select-placeholder {
+                margin-right: 15px;
+            }
             .ui-select-match-text {
                 margin: -2px 22px -2px 2px !important;
                 text-overflow: ellipsis;
