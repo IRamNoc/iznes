@@ -10,6 +10,7 @@ import { JourneyService } from '@setl/utils/services/journey-service/journey.ser
     styleUrls: ['./alerts.component.scss'],
     selector: 'alerts',
     templateUrl: './alerts.component.html',
+    providers: [JourneyService],
 })
 
 export class AlertsComponent implements AfterViewInit, OnDestroy {
