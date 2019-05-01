@@ -5,7 +5,7 @@ import { Subscription } from 'rxjs/Subscription';
 import { select } from '@angular-redux/store';
 import { Router } from '@angular/router';
 import { MyUserService } from '@setl/core-req-services/my-user/my-user.service';
-import { JourneyService } from '@setl/utils/helper/journey-service/journey.service';
+import { JourneyService } from '@setl/utils/services/journey-service/journey.service';
 @Component({
     styleUrls: ['./alerts.component.scss'],
     selector: 'alerts',
