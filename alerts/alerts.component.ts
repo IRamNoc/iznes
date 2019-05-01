@@ -5,7 +5,7 @@ import { Subscription } from 'rxjs/Subscription';
 import { select } from '@angular-redux/store';
 import { Router } from '@angular/router';
 import { MyUserService } from '@setl/core-req-services/my-user/my-user.service';
-
+import { JourneyService } from '@setl/utils/helper/journey-service/journey.service';
 @Component({
     styleUrls: ['./alerts.component.scss'],
     selector: 'alerts',
@@ -28,6 +28,7 @@ export class AlertsComponent implements AfterViewInit, OnDestroy {
     constructor(public changeDetectorRef: ChangeDetectorRef,
                 private router: Router,
                 private userService: MyUserService,
+                private journeyService: JourneyService,
                 @Inject(APP_CONFIG) appConfig: AppConfig) {
 
         this.appConfig = appConfig;
@@ -52,6 +53,15 @@ export class AlertsComponent implements AfterViewInit, OnDestroy {
         if (this.alerts[this.currentAlert]['buttonPath'] === 'markAsRead') {
             this.userService.markAlertAsRead(this.alerts[this.currentAlert]['alertID']);
         } else {
+
+            /* Start a journey... */
+            if (!!this.alerts[this.currentAlert]['journeyMeta']) {
+                this.journeyService.startJourney(
+                    'alertJourney',
+                    this.alerts[this.currentAlert]['journeyMeta'],
+                );
+            }
+
             this.router.navigateByUrl(this.alerts[this.currentAlert]['buttonPath']);
         }
     }
