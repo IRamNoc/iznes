@@ -11,6 +11,8 @@ import { CapitalizePipe } from './capitalise.pipe';
 import { PaddingPipe } from './padding.pipe';
 import { DateXPipe } from './datex.pipe';
 
+export { TranslatePipe } from './translate.pipe';
+export { DateXPipe } from './datex.pipe';
 export { MoneyValuePipe } from './money-value.pipe';
 export { NumberConvertPipe } from './numberConvert.pipe';
 
