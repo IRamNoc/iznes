@@ -46,19 +46,20 @@ export class NodeAlertsService {
 
     setMemberNodeCallbacks() {
         merge(
-            this.memberSocketService.getReconnectStatus().pipe(mapTo('reconnect')),  // 1.  Listen to reconnect and emit "reconnect"
-            this.memberSocketService.disconnect$().pipe(mapTo('disconnect')) // 2.  Listen to disconnect and emit "disconnect"
+            this.memberSocketService.getReconnectStatus()
+                .pipe(mapTo('reconnect')),                          // 1.  Listen to reconnect and emit "reconnect"
+            this.memberSocketService.disconnect$()
+                .pipe(mapTo('disconnect')),                         // 2.  Listen to disconnect and emit "disconnect"
         ).pipe(                                                     // 3.  Merge them in to single stream
             distinctUntilChanged(),                                 // 4.  Only emit if it has changed
             switchMap((ob) => {                                     // 5.  Create inner observable for each event
                 return of(ob).pipe(                                 // 6.  Create duplicate observable
-                    map(x => timer(this.memberNodeTTL).map(t => x)),            // 7.  Start timer
+                    map(x => timer(x === 'reconnect' ? 0 : this.memberNodeTTL)
+                        .map(t => x)),                              // 7.  Start timer, but set to 0 if "reconnect"
                     switchAll(),                                    // 8.  Reset timer each time we get an event
-                );                                                  //
-            })                                                      //
-        ).subscribe(x => {
-            this.memberNodeDeathSubject.next(x === 'disconnect')
-        });
+                );
+            }),
+        ).subscribe(x => this.memberNodeDeathSubject.next(x === 'disconnect')); // 9. Emit to deathSubject
     }
 
     setWalletNodeCallbacks() {
@@ -72,20 +73,21 @@ export class NodeAlertsService {
 
         merge(
             this.walletNodeSocketService.open.pipe(mapTo('open')),  // 1.  Listen to open and emit "open"
-            this.walletNodeSocketService.close.pipe(mapTo('close')) // 2.  Listen to close and emit "close"
+            this.walletNodeSocketService.close.pipe(mapTo('close')), // 2.  Listen to close and emit "close"
         ).pipe(                                                     // 3.  Merge them in to single stream
             distinctUntilChanged(),                                 // 4.  Only emit if it has changed
             switchMap((ob) => {                                     // 5.  Create inner observable for each event
                 return of(ob).pipe(                                 // 6.  Create duplicate observable
-                    map(x => timer(this.walletNodeTTL).map(t => x)),            // 7.  Start timer
+                    map(x => timer(x === 'open' ? 0 : this.walletNodeTTL)
+                        .map(t => x)),                              // 7.  Start timer, but set to 0 if "open"
                     switchAll(),                                    // 8.  Reset timer each time we get an event
-                );                                                  //
-            })                                                      //
+                );
+            }),
         ).pipe(
             takeUntil(this.walletNodeSocketService.waiveConnection),
-        ).subscribe(x => this.walletNodeDeathSubject.next(x === 'close'));             // 9. Emit true to deathSubject
-        // The switchMap above causes the inner observable (ob) to complete each time a new event is received. This means
-        // if the connection has closed, and then re-opens, the timer is stopped and will not emit that it is dead.
+        ).subscribe(x => this.walletNodeDeathSubject.next(x === 'close')); // 9. Emit to deathSubject
+        // The switchMap above causes the inner observable (ob) to complete each time a new event is received. This
+        // means if the connection has closed, and then re-opens, the timer is stopped and will not emit that it is dead
     }
 
 }
