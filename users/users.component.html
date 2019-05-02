@@ -66,42 +66,18 @@
     <!-- User Data Table. -->
     <ng-template #staticUserListTab>
         <div class="panel-body">
-
-            <clr-datagrid #usersDataGrid (clrDgRefresh)="datagridRefresh($event)">
-                <clr-dg-column>{{ 'Username' | translate }}</clr-dg-column>
-                <clr-dg-column>{{ 'Email' | translate }}</clr-dg-column>
-                <clr-dg-column>{{ 'Account' | translate }}</clr-dg-column>
-                <clr-dg-column>{{ 'Status' | translate }}</clr-dg-column>
-                <clr-dg-column class="right">{{ 'Actions' | translate }}</clr-dg-column>
-
-                <clr-dg-row *ngFor="let user of paginatedUsersList; let i = index">
-                    <clr-dg-cell><span id="username-{{user.index}}">{{user.userName}}</span></clr-dg-cell>
-                    <clr-dg-cell>{{user.emailAddress}}</clr-dg-cell>
-                    <clr-dg-cell>{{user.accountName}}</clr-dg-cell>
-                    <clr-dg-cell>
-                        <span *ngIf="user.accountLocked == 0" class="label label-success">{{ 'Enabled' | translate }}</span>
-                        <span *ngIf="user.accountLocked != 0" class="label label-warning">{{ 'Disabled' | translate }}</span>
-                    </clr-dg-cell>
-                    <clr-dg-cell class="right">
-                        <button id="edit-{{user.userID}}" (click)="handleEdit(user.userID)"
-                                class="btn btn-success btn-sm">
-                            <i class="fa fa-pencil-square-o"></i>
-                            {{ 'Edit' | translate }}
-                        </button>
-                        <button id="delete-{{user.userID}}" (click)="handleDelete(user.userID)"
-                                class="btn btn-danger btn-sm">
-                            <i class="fa fa-trash-o"></i>
-                            {{ 'Delete' | translate }}
-                        </button>
-                    </clr-dg-cell>
-                </clr-dg-row>
-
-                <clr-dg-footer>
-                    <div rowsPerPage="10" (rowsUpdate)="dgPageSize = $event; dgPageFrom = 0; setPaginatedUsersList(); requestPaginatedUsersList(); currentPage = 1;"></div>
-                    {{pagination.firstItem + 1}} - {{pagination.lastItem + 1}}
-                    <clr-dg-pagination #pagination [clrDgPageSize]="dgPageSize" [(clrDgPage)]="currentPage" [clrDgTotalItems]="dgTotalItems"></clr-dg-pagination>
-                </clr-dg-footer>
-            </clr-datagrid>
+            <datagrid-list
+                (action)="onAction($event)"
+                (refresh)="datagridRefresh($event)"
+                (rowsUpdate)="dgPageSize=$event; dgPageFrom=0; setPaginatedUsersList(); requestPaginatedUsersList(); currentPage=1;"
+                [(currentPage)]="currentPage"
+                [listData]="paginatedUsersList"
+                [listActions]="usersListActions"
+                [fieldsModel]="usersListModel"
+                [lazyLoaded]="true"
+                [totalItems]="dgTotalItems"
+                [showHideColumns]="true">
+            </datagrid-list>
         </div>
     </ng-template>
 

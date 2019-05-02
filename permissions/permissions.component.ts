@@ -11,6 +11,7 @@ import { ActivatedRoute, Params, Router } from '@angular/router';
 import { ConfirmationService, immutableHelper, LogService } from '@setl/utils';
 import * as _ from 'lodash';
 import { MultilingualService } from '@setl/multilingual';
+import { permissionsListFieldsModel, permissionsListActionsModel, filters } from './permissions.model';
 
 /* Internal. */
 import { permissionGroupActions } from '@setl/core-store';
@@ -71,8 +72,10 @@ export class AdminPermissionsComponent implements OnInit, AfterViewInit, OnDestr
     public currentTab = '';
     public new = false;
 
-    /* Rows Per Page datagrid size */
-    public pageSize: number;
+    /* Datagrid */
+    public permissionsListFieldsModel = permissionsListFieldsModel;
+    public permissionsListActionsModel = permissionsListActionsModel;
+    public datagridFilters = filters;
 
     /* Constructor. */
     constructor(private userAdminService: UserAdminService,
@@ -284,6 +287,9 @@ export class AdminPermissionsComponent implements OnInit, AfterViewInit, OnDestr
             if (!newArray[index].category.length) {
                 newArray[index].category = [{ text: 'No group.' }];
             }
+
+            /* Set groupType prop for datagrid list */
+            newArray[index].groupType = newArray[index].category[0].text;
         }
 
         return newArray;
@@ -338,6 +344,15 @@ export class AdminPermissionsComponent implements OnInit, AfterViewInit, OnDestr
         }
 
         return;
+    }
+
+    /**
+     * Handles clicks on action buttons on the datagrid
+     * @param action
+     */
+    onAction(action) {
+        if (action.type === 'editPermission') this.handleEdit(action.data.index);
+        if (action.type === 'deletePermission') this.handleDelete(action.data.index);
     }
 
     /**

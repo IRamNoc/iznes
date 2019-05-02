@@ -19,6 +19,8 @@ import { AdminUsersService } from '@setl/core-req-services';
 import { LogService } from '@setl/utils';
 import { ClrDatagridStateInterface } from '@clr/angular';
 import { MyUserService } from '@setl/core-req-services';
+import { usersListActions, usersListFields } from './users.model';
+import { actionChannel } from 'redux-saga/effects';
 
 /* Decorator. */
 @Component({
@@ -72,6 +74,8 @@ export class AdminUsersComponent implements OnInit, AfterViewInit, OnDestroy {
     public dgPageFrom: number = 0;
     public dgPageSize: number = 10;
     public currentPage: number = 1;
+    public usersListModel: {} = usersListFields;
+    public usersListActions: {}[] = usersListActions;
 
     /* User list cache */
     private totalRecords: number = 0;
@@ -109,6 +113,11 @@ export class AdminUsersComponent implements OnInit, AfterViewInit, OnDestroy {
         this.subscriptions['language'] = this.requestLanguageOb.subscribe((lang) => {
             if (lang) this.language = lang;
         });
+    }
+
+    onAction(action) {
+        if (action.type === 'editUser') this.handleEdit(action.data.userID);
+        if (action.type === 'deleteUser') this.handleDelete(action.data.userID);
     }
 
     setInitialTabs() {
@@ -155,6 +164,7 @@ export class AdminUsersComponent implements OnInit, AfterViewInit, OnDestroy {
         this.subscriptions['totalRecords'] = this.totalRecordsOb.subscribe((totalRecords) => {
             this.totalRecords = totalRecords;
             this.dgTotalItems = totalRecords;
+            this.changeDetectorRef.detectChanges();
             this.requestPaginatedUsersList();
         });
 
@@ -166,7 +176,7 @@ export class AdminUsersComponent implements OnInit, AfterViewInit, OnDestroy {
 
         /* Subscribe to the admin user list observable. */
         this.subscriptions['userListSubscription'] = this.usersListOb.subscribe((list) => {
-            this.usersList = this.convertToArray(list);
+            this.usersList = this.convertUsersListToArray(list);
 
             this.setPaginatedUsersList();
 
@@ -598,7 +608,7 @@ export class AdminUsersComponent implements OnInit, AfterViewInit, OnDestroy {
      *
      * @return {void}
      */
-    public convertToArray(obj): any[] {
+    public convertUsersListToArray(obj): any[] {
         const i = 1;
         const newArray = [];
         for (const key in obj) {
