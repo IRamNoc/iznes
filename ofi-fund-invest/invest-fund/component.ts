@@ -100,6 +100,12 @@ export class InvestFundComponent implements OnInit, OnDestroy {
 
     toastTimer;
     timerToast: Toast;
+    toasterConfig: any = {
+        type: 'warning',
+        title: '',
+        timeout: 0,
+        tapToDismiss: false,
+    };
     unSubscribe: Subject<any> = new Subject();
 
     connectedWalletId: number;
@@ -520,9 +526,9 @@ export class InvestFundComponent implements OnInit, OnDestroy {
     }
 
     ngOnDestroy() {
-        if (this.toastTimer) {
-            clearInterval(this.toastTimer);
-        }
+        this.clearTimerToast();
+        if (this.toastTimer) clearInterval(this.toastTimer);
+
         this.kiidModal.isOpen = false;
 
         this.unSubscribe.next();
@@ -662,10 +668,7 @@ export class InvestFundComponent implements OnInit, OnDestroy {
                 if (this.toastTimer) {
                     clearInterval(this.toastTimer);
                 }
-                if (this.timerToast) {
-                    this.toaster.clear(this.timerToast.toastId);
-                    this.timerToast = null;
-                }
+                this.clearTimerToast();
                 if (!v) {
                     return;
                 }
@@ -714,17 +717,20 @@ export class InvestFundComponent implements OnInit, OnDestroy {
     }
 
     updateToastTimer(unixtime: number) {
-        if (this.timerToast) {
-            this.toaster.clear(this.timerToast.toastId);
-            this.timerToast = null;
-        }
-        this.timerToast = this.toaster.pop(
-            'warning',
-            this.translate.translate(
-                'Time left before the next cut-off: @time@',
-                { 'time': this.getFormattedUnixTime(unixtime) },
-            ),
+        // Kill toaster if time is in the past
+        if (unixtime <= 0) return this.clearTimerToast();
+
+        // Update toaster title with time
+        this.toasterConfig.title = this.translate.translate(
+            'Time left before the next cut-off: @time@',
+            { time: this.getFormattedUnixTime(unixtime) },
         );
+
+        // Create toaster if it doesn't exist
+        if (!this.timerToast) {
+            this.toasterConfig.onHideCallback = () => this.timerToast = null;
+            this.timerToast = this.toaster.pop(this.toasterConfig);
+        }
     }
 
     setToastTimer() {
@@ -742,16 +748,20 @@ export class InvestFundComponent implements OnInit, OnDestroy {
                 if (remainingTime > 0) {
                     this.updateToastTimer(remainingTime);
                 } else {
-                    if (this.timerToast) {
-                        this.toaster.clear(this.timerToast.toastId);
-                        this.timerToast = null;
-                    }
+                    this.clearTimerToast();
                     this.showAlertCutOffError();
                     clearInterval(this.toastTimer);
                 }
             },
             1000,
         );
+    }
+
+    clearTimerToast() {
+        if (this.timerToast) {
+            this.toaster.clear(this.timerToast.toastId);
+            this.timerToast = null;
+        }
     }
 
     getFormattedUnixTime(value: number): string {
