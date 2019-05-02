@@ -1,0 +1,17 @@
+.additionalInfos {
+    .item {
+        float: left;
+        width: 30%;
+        margin: 0 3% 0 0;
+        overflow: hidden;
+        b {
+            width: 20%;
+            float: left;
+            overflow: hidden;
+        }
+        span {
+            float: right;
+            width: 80%
+        }
+    }
+}

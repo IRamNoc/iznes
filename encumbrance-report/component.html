@@ -10,7 +10,7 @@
             <!-- Top Level Datagrid -->
             <ng-container *ngIf="id === 0">
                 <ng-container *ngTemplateOutlet="topLevelDatagrid"></ng-container>
-            </ng-container> 
+            </ng-container>
 
             <!-- Breakdown Datagrid -->
             <ng-container *ngIf="id >= 1">
@@ -20,45 +20,15 @@
     </clr-tab>
 </clr-tabs>
 
-<clr-modal [(clrModalOpen)]="!!exportModalDisplay" [clrModalClosable]="false">
-    <div class="modal-title">
-        <i class="fa fa-check-circle modal-icon text-success"></i>
-        <h4 class="modal-title-text">{{ '@type@ Export Complete' | translate: { type: exportModalDisplay } }}</h4>
-    </div>
-    <div class="modal-body">
-        <span style="text-align:center">{{ 'Encumbrance Export @type@ file is now ready for download' | translate: { type: exportModalDisplay } }}</span>
-    </div>
-    <div class="modal-footer">
-        <setl-file-viewer [fileHash]="exportFileHash" [viewType]="2"></setl-file-viewer>
-        <button type="button" class="btn btn-primary" (click)="hideExportModal()">{{ 'Cancel' | translate }}</button>
-    </div>
-</clr-modal>
-
 <!-- Top Level Datagrid -->
 <ng-template #topLevelDatagrid>
     <div class="panel-body">
-        <clr-datagrid #myDataGrid>
-            <clr-dg-column [clrDgField]="'label'" clrDgSortIcon>{{ 'Address Label' | translate }}</clr-dg-column>
-            <clr-dg-column [clrDgField]="'address'" clrDgSortIcon>{{ 'Address' | translate }}</clr-dg-column>
-            <clr-dg-column class="right" style="min-width: 160px;">{{ 'Actions' | translate }}</clr-dg-column>
-
-            <clr-dg-row *clrDgItems="let encumberance of encumbrances">
-                <clr-dg-cell>{{ encumberance.label }}</clr-dg-cell>
-                <clr-dg-cell>{{ encumberance.address }}</clr-dg-cell>
-                <clr-dg-cell class="right">
-                    <button (click)="handleViewBreakdown(encumberance)" class="btn btn-orange btn-sm">
-                        <i class="fa fa-search"></i>{{ 'View' | translate }}
-                    </button>
-                </clr-dg-cell>
-            </clr-dg-row>
-
-            <clr-dg-footer>
-                <div rowsPerPage="10" (rowsUpdate)="pageSize = $event"></div>
-                &nbsp;
-                {{pagination.firstItem + 1}} - {{pagination.lastItem + 1}}
-                <clr-dg-pagination #pagination [clrDgPageSize]="pageSize"></clr-dg-pagination>
-            </clr-dg-footer>
-        </clr-datagrid>
+        <datagrid-list
+            [fieldsModel]="encumbrancesFieldsModel"
+            [listData]="encumbrances"
+            [listActions]="encumbrancesListActions"
+            (action)="onAction($event)">
+        </datagrid-list>
     </div>
 </ng-template>
 
@@ -69,31 +39,11 @@
             <h2>{{ encumbrance.label }} ({{ encumbrance.address }})</h2>
         </div>
 
-        <clr-datagrid #myDataGrid>
-            <clr-dg-column [clrDgField]="'reference'" clrDgSortIcon>{{ 'Reference' | translate }}</clr-dg-column>
-            <clr-dg-column [clrDgField]="'asset'" clrDgSortIcon>{{ 'Asset' | translate }}</clr-dg-column>
-            <clr-dg-column [clrDgField]="'beneficiary'" clrDgSortIcon>{{ 'Beneficiary Address' | translate }}</clr-dg-column>
-            <clr-dg-column [clrDgField]="'amount'" clrDgSortIcon>{{ 'Amount Encumbered' | translate }}</clr-dg-column>
-            <clr-dg-column [clrDgField]="'end'" clrDgSortIcon>{{ 'Start Time' | translate }}</clr-dg-column>
-            <clr-dg-column [clrDgField]="'start'" clrDgSortIcon>{{ 'End Time' | translate }}</clr-dg-column>
-
-            <clr-dg-row *clrDgItems="let detail of encumbrance.details">
-                <clr-dg-cell>{{ detail.reference }}</clr-dg-cell>
-                <clr-dg-cell>{{ detail.asset }}</clr-dg-cell>
-                <clr-dg-cell>{{ detail.beneficiary }}</clr-dg-cell>
-                <clr-dg-cell>{{ detail.amount }}</clr-dg-cell>
-                <clr-dg-cell>{{ detail.start }}</clr-dg-cell>
-                <clr-dg-cell>{{ detail.end }}</clr-dg-cell>
-            </clr-dg-row>
-
-            <clr-dg-footer>
-                <div rowsPerPage="10" (rowsUpdate)="pageSize = $event"></div>
-                <button [disabled]="disableExportBtn()" class="btn btn-sm btn-success-outline" (click)="exportCSV()">{{ 'Export CSV' | translate }}</button>
-                <button [disabled]="disableExportBtn()" class="btn btn-sm btn-danger-outline" (click)="exportPDF()">{{ 'Export PDF' | translate }}</button>
-                {{pagination.firstItem + 1}} - {{pagination.lastItem + 1}}
-                <clr-dg-pagination #pagination [clrDgPageSize]="pageSize"></clr-dg-pagination>
-            </clr-dg-footer>
-        </clr-datagrid>
+        <datagrid-list
+            [fieldsModel]="breakdownFieldsModel"
+            [listData]="encumbrance.details"
+            [exportOptions]="breakdownExportOptions">
+        </datagrid-list>
 
         <div class="form-block">
             <button type="button" class="btn btn-primary" (click)="handleClose(id)">{{ 'Close' | translate }}</button>

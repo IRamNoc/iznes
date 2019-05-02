@@ -12,6 +12,8 @@ import * as moment from 'moment';
 import * as json2csv from 'json2csv';
 import { AlertsService } from '@setl/jaspero-ng2-alerts';
 import { FileService, PdfService } from '@setl/core-req-services';
+import { encumbrancesFieldsModel, encumbrancesListActions,
+    breakdownFieldsModel, breakdownExportOptions } from './model';
 
 @Component({
     selector: 'encumbrance-report',
@@ -39,6 +41,10 @@ export class EncumbranceReportComponent implements OnInit, OnDestroy {
     public exportModalDisplay: string = '';
     public viewingAddress: string = '';
     private addressList: any;
+    public encumbrancesFieldsModel = encumbrancesFieldsModel;
+    public encumbrancesListActions = encumbrancesListActions;
+    public breakdownFieldsModel = breakdownFieldsModel;
+    public breakdownExportOptions = breakdownExportOptions;
 
     public constructor(private changeDetector: ChangeDetectorRef,
                        private ngRedux: NgRedux<any>,
@@ -160,6 +166,14 @@ export class EncumbranceReportComponent implements OnInit, OnDestroy {
     }
 
     /**
+     * Handles clicks on datagrid action buttons
+     * @param action
+     */
+    onAction(action) {
+        if (action.type === 'viewEncumbrance') this.handleViewBreakdown(action.data);
+    }
+
+    /**
      * Open breakdown tab for the given address
      *
      * @param {object} encumbrance
@@ -209,165 +223,6 @@ export class EncumbranceReportComponent implements OnInit, OnDestroy {
      */
     setViewingAddress(address) {
         this.viewingAddress = get(this.addressList, `${address}.label`, address);
-    }
-
-    /**
-     * Export List
-     *
-     * Exports current dataGrid List to CSV format
-     *
-     * @return {void}
-     */
-    public exportCSV() {
-        this.alertsService.create('loading');
-
-        const csvData = this.myDataGrid.items['_filtered'];
-
-        if (csvData.length === 0) {
-            this.alertsService.generate('error', this.translate.translate('There are no records to export'));
-            return;
-        }
-
-        const encodedCsv = Buffer.from(json2csv.parse(csvData, {})).toString('base64');
-
-        const fileData = {
-            name: 'Encumbrance-Export.csv',
-            data: encodedCsv,
-            status: '',
-            filePermission: 1,
-        };
-
-        const asyncTaskPipe = this.fileService.addFile({
-            files: filter([fileData], (file) => {
-                return file.status !== 'uploaded-file';
-            }),
-        });
-
-        this.ngRedux.dispatch(SagaHelper.runAsyncCallback(
-            asyncTaskPipe,
-            (successResponse) => {
-                const data = get(successResponse, '[1].Data[0][0]', {});
-                if (data.fileHash) {
-                    this.exportFileHash = data.fileHash;
-                    this.showExportModal('CSV');
-                    this.alertsService.create('clear');
-                    return;
-                }
-                this.alertsService.generate(
-                    'error', this.translate.translate('Something has gone wrong. Please try again later'));
-            },
-            (failResponse) => {
-                const data = get(failResponse, '[1].Data[0]', {});
-                const errorText = data.error ? data.error : 'Something has gone wrong. Please try again later';
-                this.alertsService.generate('error', this.translate.translate(errorText));
-            }),
-        );
-    }
-
-    /**
-     * Export PDF
-     *
-     * Exports current dataGrid List to PDF format
-     *
-     * @returns {void}
-     */
-    public exportPDF() {
-        this.alertsService.create('loading');
-
-        const metadata = this.formatExportPDFData();
-        const asyncTaskPipe = this.pdfService.createPdfMetadata({ type: null, metadata });
-
-        this.ngRedux.dispatch(SagaHelper.runAsyncCallback(
-            asyncTaskPipe,
-            (successResponse) => {
-                const pdfID = get(successResponse, '[1].Data[0].pdfID', 0);
-
-                if (!pdfID) {
-                    return this.alertsService.generate(
-                        'error', this.translate.translate('Something has gone wrong. Please try again later'));
-                }
-
-                const pdfOptions = {
-                    orientation: 'portrait',
-                    border: { top: '15mm', right: '15mm', bottom: '0', left: '15mm' },
-                    footer: {
-                        height: '20mm',
-                        contents: `
-                        <div class="footer">
-                            <p class="left">${metadata.title} | {{page}} of {{pages}}</p>
-                            <p class="right">${metadata.date}</p>
-                        </div>`,
-                    },
-                };
-
-                this.pdfService.getPdf(pdfID, 'report', pdfOptions).then((response) => {
-                    this.exportFileHash = response;
-                    this.showExportModal('PDF');
-                    this.alertsService.create('clear');
-                }).catch((e) => {
-                    console.error(e);
-                    this.alertsService.generate(
-                        'error', this.translate.translate('Something has gone wrong. Please try again later'));
-                });
-            },
-            (e) => {
-                console.error(e);
-                this.alertsService.generate(
-                    'error', this.translate.translate('Something has gone wrong. Please try again later'));
-            }),
-        );
-    }
-
-    /**
-     * Format Export Data
-     *
-     * Formats the current filtered datagrid data for PDF exports
-     *
-     * @returns {array} exportData
-     */
-    private formatExportPDFData() {
-        const data = this.myDataGrid.items['_filtered'].map((item) => {
-            return {
-                [this.translate.translate('Reference')]: item.reference,
-                [this.translate.translate('Asset')]: item.asset,
-                [this.translate.translate('Beneficiary Address')]: item.beneficiary,
-                [this.translate.translate('Encumbered')]: item.amount,
-                [this.translate.translate('Start')]: item.start,
-                [this.translate.translate('End')]: item.end,
-            };
-        });
-
-        return {
-            title: this.translate.translate('Encumbrance Report'),
-            subtitle: this.translate
-                .translate('Breakdown for @viewingAddress@', { viewingAddress: this.viewingAddress }),
-            text: this.translate
-                .translate('This is an auto-generated encumbrance report with data correct as of the date above.'),
-            data,
-            rightAlign: [this.translate.translate('Encumbered')],
-            walletName: this.walletName,
-            date: moment().format('YYYY-MM-DD H:mm:ss'),
-        };
-    }
-
-    /**
-     * Show Export Modal
-     *
-     * @return {void}
-     */
-    public showExportModal(type) {
-        this.exportModalDisplay = type;
-        this.changeDetector.detectChanges();
-    }
-
-    /**
-     * Hide Export Modal
-     *
-     * @return {void}
-     */
-    public hideExportModal() {
-        this.exportModalDisplay = '';
-        this.changeDetector.detectChanges();
     }
 
     /**

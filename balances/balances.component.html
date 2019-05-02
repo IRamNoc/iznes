@@ -24,60 +24,18 @@
     </clr-tab>
 </clr-tabs>
 
-<clr-modal [(clrModalOpen)]="!!exportModalDisplay" [clrModalClosable]="false">
-    <div class="modal-title">
-        <i class="fa fa-check-circle modal-icon text-success"></i>
-        <h4 class="modal-title-text">{{ '@type@ Export Complete' | translate: { type: exportModalDisplay } }}</h4>
-    </div>
-    <div class="modal-body">
-        <span style="text-align:center">{{ 'Balances Export @type@ file is now ready for download' | translate: { type: exportModalDisplay } }}</span>
-    </div>
-    <div class="modal-footer">
-        <setl-file-viewer [fileHash]="exportFileHash" [viewType]="2"></setl-file-viewer>
-        <button type="button" class="btn btn-primary" (click)="hideExportModal()">{{ 'Cancel' | translate }}</button>
-    </div>
-</clr-modal>
-
 <ng-template #staticBalanceList>
     <div class="panel-body">
-        <clr-datagrid #myDataGrid>
-            <clr-dg-column [clrDgField]="'asset'" clrDgSortIcon style="min-width: 170px;">{{ 'Asset' | translate }}</clr-dg-column>
-            <clr-dg-column [clrDgField]="'total'" clrDgSortIcon class="right" style="min-width: 170px;">{{ 'Total' | translate }}</clr-dg-column>
-            <clr-dg-column [clrDgField]="'totalencumbered'" clrDgSortIcon class="right">{{ 'Encumbered' | translate }}</clr-dg-column>
-            <clr-dg-column [clrDgField]="'free'" clrDgSortIcon class="right">{{ 'Free' | translate }}</clr-dg-column>
-            <clr-dg-column class="right" style="min-width: 160px;">{{ 'Actions' | translate }}</clr-dg-column>
-
-            <clr-dg-row *clrDgItems="let asset of balances$ | async" [class.flash]="asset.isNew">
-                <clr-dg-cell [innerHtml]="asset.asset | asset"></clr-dg-cell>
-                <clr-dg-cell class="right" [class.flash]="asset.totalChange">
-                    {{asset.total | moneyValue}}
-                </clr-dg-cell>
-                <clr-dg-cell class="right" [class.flash]="asset.encumberChange">
-                    {{asset.totalencumbered | moneyValue}}
-                </clr-dg-cell>
-                <clr-dg-cell class="right" [class.flash]="asset.freeChange">
-                    {{asset.free | moneyValue}}
-                </clr-dg-cell>
-                <clr-dg-cell class="right">
-                    <button (click)="handleViewBreakdown(asset)" class="btn btn-orange btn-sm">
-                        <i class="fa fa-search"></i>{{ 'View' | translate }}
-                    </button>
-                    <button (click)="handleViewHistory(asset)" class="btn btn-primary btn-sm">
-                        <i class="fa fa-history"></i>{{ 'History' | translate }}
-                    </button>
-                </clr-dg-cell>
-            </clr-dg-row>
-
-            <clr-dg-footer>
-                <div rowsPerPage="10" (rowsUpdate)="pageSize = $event"></div>
-                <button [disabled]="disableExportBtn()" class="btn btn-sm btn-success-outline" (click)="exportCSV()">{{ 'Export CSV' | translate }}</button>
-                <button [disabled]="disableExportBtn()" class="btn btn-sm btn-danger-outline" (click)="exportPDF()">{{ 'Export PDF' | translate }}</button>
-                &nbsp;
-                {{pagination.firstItem + 1}} - {{pagination.lastItem + 1}}
-                <clr-dg-pagination #pagination [clrDgPageSize]="pageSize" [clrDgPage]="pageCurrent"
-                                    (clrDgPageChange)="setCurrentPage($event)"></clr-dg-pagination>
-            </clr-dg-footer>
-        </clr-datagrid>
+        <datagrid-list
+            [fieldsModel]="overviewFieldsModel"
+            [listData]="balances$ | async"
+            [listActions]="overviewListActions"
+            [exportOptions]="breakdownExportOptions"
+            [currentPage]="pageCurrent"
+            [filters]="overviewListFilters"
+            (action)="onAction($event)"
+            (currentPageChange)="setCurrentPage($event)">
+        </datagrid-list>
     </div>
 </ng-template>
 
@@ -92,30 +50,12 @@
                 <h2>{{ 'Breakdown' | translate }}</h2>
             </div>
 
-            <clr-datagrid #myDataGrid>
-                <clr-dg-column [clrDgField]="'label'" clrDgSortIcon>{{ 'Address Label' | translate }}</clr-dg-column>
-                <clr-dg-column [clrDgField]="'addr'" clrDgSortIcon>{{ 'Address' | translate }}</clr-dg-column>
-                <clr-dg-column [clrDgField]="'balance'" clrDgSortIcon class="right">{{ 'Total' | translate }}</clr-dg-column>
-                <clr-dg-column [clrDgField]="'encumbrance'" clrDgSortIcon class="right">{{ 'Encumbered' | translate }}</clr-dg-column>
-                <clr-dg-column [clrDgField]="'free'" clrDgSortIcon class="right">{{ 'Free' | translate }}</clr-dg-column>
-
-                <clr-dg-row *clrDgItems="let breakdown of asset.breakdown">
-                    <clr-dg-cell>{{breakdown.label}}</clr-dg-cell>
-                    <clr-dg-cell>{{breakdown.addr}}</clr-dg-cell>
-                    <clr-dg-cell class="right">{{breakdown.balance | moneyValue}}</clr-dg-cell>
-                    <clr-dg-cell class="right">{{breakdown.encumbrance | moneyValue}}</clr-dg-cell>
-                    <clr-dg-cell class="right">{{breakdown.free | moneyValue}}</clr-dg-cell>
-                </clr-dg-row>
-
-                <clr-dg-footer>
-                    <div rowsPerPage="10" (rowsUpdate)="pageSize = $event"></div>
-                    <button [disabled]="!myDataGrid.items['_filtered'].length" class="btn btn-sm btn-success-outline" (click)="exportCSV()">{{ 'Export CSV' | translate }}</button>
-                    <button [disabled]="!myDataGrid.items['_filtered'].length" class="btn btn-sm btn-danger-outline" (click)="exportPDF()">{{ 'Export PDF' | translate }}</button>
-                    &nbsp;
-                    {{pagination.firstItem + 1}} - {{pagination.lastItem + 1}}
-                    <clr-dg-pagination #pagination [clrDgPageSize]="pageSize"></clr-dg-pagination>
-                </clr-dg-footer>
-            </clr-datagrid>
+            <datagrid-list
+                [fieldsModel]="breakdownFieldsModel"
+                [listData]="asset.breakdown"
+                [exportOptions]="breakdownExportOptions"
+                [filters]="breakdownListFilters">
+            </datagrid-list>
         </div>
 
         <!-- History view -->
@@ -217,4 +157,3 @@
         </div>
     </div>
 </ng-template>
-    
