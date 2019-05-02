@@ -56,48 +56,12 @@
         <clr-tab-content *clrIfActive>
             <!-- Balances -->
             <div class="balances-grid">
-                <clr-datagrid #myDataGrid>
-                    <!--<clr-dg-column style="min-width: 150px;">{{ 'Identifier' | translate }}</clr-dg-column>-->
-                    <clr-dg-column style="min-width: 170px;">{{ 'Asset' | translate }}</clr-dg-column>
-                    <clr-dg-column style="min-width: 170px;" class="right">{{ 'Total' | translate }}</clr-dg-column>
-                    <clr-dg-column class="right">{{ 'Encumbered' | translate }}
-                    </clr-dg-column>
-                    <clr-dg-column class="right">Free</clr-dg-column>
-                    <clr-dg-column style="min-width: 160px;" class="right">{{ 'Actions' | translate }}</clr-dg-column>
-
-                    <clr-dg-row *clrDgItems="let asset of holdingByAsset$ | async" [class.flash]="asset.isNew">
-                        <!--<clr-dg-cell>{{asset.identifier}}</clr-dg-cell>-->
-                        <clr-dg-cell [innerHtml]="asset.asset | asset"></clr-dg-cell>
-                        <clr-dg-cell class="right" [class.flash]="asset.totalChange">{{asset.total | moneyValue}}
-                        </clr-dg-cell>
-
-                        <clr-dg-cell class="right" [class.flash]="asset.encumberChange">{{asset.totalencumbered | moneyValue}}
-                        </clr-dg-cell>
-
-                        <clr-dg-cell class="right" [class.flash]="asset.freeChange">{{asset.free | moneyValue}}
-                        </clr-dg-cell>
-
-                        <clr-dg-cell class="right">
-                            <div class="right">
-                                <a class="btn btn-orange btn-sm" [routerLink]="'/reports/balances/'+asset.hash+'/breakdown'">
-                                    <i class="fa fa-search"></i>
-                                    <span>{{ 'View' | translate }}
-                                    </span>
-                                </a>
-                                <a class="btn btn-primary btn-sm" [routerLink]="'/reports/balances/'+asset.hash+'/history'">
-                                    <i class="fa fa-history"></i>
-                                    <span>{{ 'History' | translate }}</span>
-                                </a>
-                            </div>
-                        </clr-dg-cell>
-
-                    </clr-dg-row>
-                    <clr-dg-footer>
-                        <div rowsPerPage="10" (rowsUpdate)="pageSize = $event"></div>
-                        {{pagination.firstItem + 1}} - {{pagination.lastItem + 1}}
-                        <clr-dg-pagination #pagination [clrDgPageSize]="pageSize"></clr-dg-pagination>
-                    </clr-dg-footer>
-                </clr-datagrid>
+                <datagrid-list
+                    [fieldsModel]="balancesListFieldsModel"
+                    [listData]="holdingByAsset$ | async"
+                    [listActions]="balancesListActionsModel"
+                    (action)="onAction($event)">
+                </datagrid-list>
             </div>
         </clr-tab-content>
     </clr-tab>
@@ -111,32 +75,12 @@
         <clr-tab-content *clrIfActive>
             <!-- Transactions -->
             <div class="transactions-grid">
-                <clr-datagrid #myDataGrid>
-                    <clr-dg-column style="min-width: 160px;">{{ 'Actions' | translate }}</clr-dg-column>
-                    <clr-dg-column style="min-width: 150px;">{{ 'Tx ID' | translate }}</clr-dg-column>
-                    <!--<clr-dg-column style="min-width: 150px;">{{ 'Identifier' | translate }}</clr-dg-column>-->
-                    <clr-dg-column style="min-width: 170px;">{{ 'Asset' | translate }}</clr-dg-column>
-                    <clr-dg-column style="min-width: 170px;">{{ 'Time (UTC)' | translate }}</clr-dg-column>
-                    <clr-dg-column>{{'Type' | translate}}</clr-dg-column>
-
-
-                    <clr-dg-row *clrDgItems="let transaction of transactions">
-                        <clr-dg-cell class="col-actions">
-                            <div class="btn-group btn-sm">
-                                <a class="btn" routerLink="/reports/transactions/{{transaction.hash}}">
-                                    <i class="fa fa-search"></i>{{ 'View' | translate }}
-                                </a>
-                            </div>
-                        </clr-dg-cell>
-                        <clr-dg-cell class="col-txid">{{transaction.hash | truncate:8}}</clr-dg-cell>
-                        <!--<clr-dg-cell class="col-identifier"></clr-dg-cell>-->
-                        <clr-dg-cell class="col-asset">{{transaction.issuer}} | {{transaction.instrument}}</clr-dg-cell>
-                        <clr-dg-cell class="col-utc">{{transaction.utc}}</clr-dg-cell>
-                        <clr-dg-cell class="col-type">
-                            <span class="label label-success">{{transaction.txType}}</span>
-                        </clr-dg-cell>
-                    </clr-dg-row>
-                </clr-datagrid>
+                <datagrid-list
+                    [fieldsModel]="transactionsFieldsModel"
+                    [listData]="transactions"
+                    [listActions]="transactionsListActionsModel"
+                    (action)="onAction($event)">
+                </datagrid-list>
             </div>
         </clr-tab-content>
     </clr-tab>
