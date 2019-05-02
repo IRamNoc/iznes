@@ -14,6 +14,8 @@ import { ConnectionComponent } from './connections/component';
 
 import { ConnectionService } from '@setl/core-req-services';
 
+import { DatagridListModule } from '@setl/utils/components/datagrid-list/datagrid-list-module';
+
 @NgModule({
     declarations: [
         ConnectionComponent,
@@ -30,6 +32,7 @@ import { ConnectionService } from '@setl/core-req-services';
         SelectModule,
         SetlPipesModule,
         MultilingualModule,
+        DatagridListModule,
     ],
     providers: [
         ConnectionService,
