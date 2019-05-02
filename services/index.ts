@@ -9,6 +9,7 @@ import {MenuSpecService} from './menuSpec/service';
 import { PermissionsService } from './permissions';
 import { PermissionsRequestService } from '@setl/core-req-services/permissions/permissions-request.service';
 import { HistoryService } from './history/history.service';
+import { JourneyService } from './journey-service/journey.service';
 
 @NgModule({
     declarations: [],
@@ -25,6 +26,7 @@ import { HistoryService } from './history/history.service';
         PermissionsService,
         PermissionsRequestService,
         HistoryService,
+        JourneyService,
     ],
 })
 

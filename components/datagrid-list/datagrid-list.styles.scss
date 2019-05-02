@@ -1,0 +1,10 @@
+// for existing UI - Clarity v0.12.1 - can be removed when v1.1.1 merged
+:host /deep/ {
+    .clr-foooter {
+        color: black;
+    }
+    .datagrid-foot .pagination-description {
+        width: auto;
+        margin: 0 20px;
+    }
+}
