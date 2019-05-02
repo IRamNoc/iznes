@@ -11,6 +11,7 @@ import { AlertsService } from '@setl/jaspero-ng2-alerts';
 import { clearRequestedManageMemberList, SET_MANAGE_MEMBER_LIST, setRequestedManageMemberList } from '@setl/core-store';
 import { ConfirmationService, SagaHelper } from '@setl/utils';
 import { MultilingualService } from '@setl/multilingual';
+import { memberFieldsModel, memberListActions } from './model';
 
 interface NewMemberUserDetail {
     memberName: string;
@@ -32,8 +33,8 @@ export class ManageMemberComponent implements OnInit, OnDestroy {
     isSymAdmin: boolean;
     allowedToSave: boolean[];
 
-    // Rows Per Page datagrid size
-    public pageSize: number;
+    public memberFieldsModel = memberFieldsModel;
+    public memberListActions = memberListActions;
 
     // List of observable subscription
     subscriptionsArray: Subscription[] = [];
@@ -109,7 +110,7 @@ export class ManageMemberComponent implements OnInit, OnDestroy {
             (result, thisMember) => {
                 const index = result.length;
                 const newThisMember = thisMember.set('index', index);
-                result.push(newThisMember.toJS());
+                result.push({ ...newThisMember.toJS(), isSymAdmin: this.isSymAdmin });
                 return result;
             },
             [],
@@ -225,7 +226,7 @@ export class ManageMemberComponent implements OnInit, OnDestroy {
                 asyncTaskPipe,
                 () => {
                     this.alertsService.generate(
-                        'success', 
+                        'success',
                         this.translate.translate('Member is updated.'),
                     );
                 },
@@ -235,6 +236,15 @@ export class ManageMemberComponent implements OnInit, OnDestroy {
                 },
             ));
         }
+    }
+
+    /**
+     * Handles clicks on datagrid action buttons
+     * @param action
+     */
+    onAction(action) {
+        if (action.type === 'editMember') this.handleEdit(action.data.index);
+        if (action.type === 'deleteMember') this.handleDelete(action.data.index);
     }
 
     /**
@@ -316,7 +326,7 @@ export class ManageMemberComponent implements OnInit, OnDestroy {
                     asyncTaskPipe,
                     () => {
                         this.alertsService.generate(
-                            'success', 
+                            'success',
                             this.translate.translate('Member is deleted.'),
                         );
                     },

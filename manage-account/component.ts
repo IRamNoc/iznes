@@ -12,6 +12,7 @@ import { AlertsService } from '@setl/jaspero-ng2-alerts';
 import { SagaHelper, LogService, ConfirmationService } from '@setl/utils';
 import * as _ from 'lodash';
 import { MultilingualService } from '@setl/multilingual';
+import { accountFieldsModel, accountListActions } from './model';
 
 export function getManageMember(state) {
     const myMemberId = state.user.myDetail.memberId;
@@ -41,8 +42,8 @@ export class ManageAccountComponent implements OnInit, OnDestroy {
     managedWalletList: any[];
     isSymAdmin: boolean;
 
-    /* Rows Per Page datagrid size */
-    public pageSize: number;
+    public accountFieldsModel = accountFieldsModel;
+    public accountListActions = accountListActions;
 
     // List of observable subscription
     subscriptionsArray: Subscription[] = [];
@@ -265,6 +266,15 @@ export class ManageAccountComponent implements OnInit, OnDestroy {
                 },
             ));
         }
+    }
+
+    /**
+     * Handles clicks on datagrid actions
+     * @param action
+     */
+    onAction(action) {
+        if (action.type === 'editAccount') this.handleEdit(action.data.index);
+        if (action.type === 'deleteAccount') this.handleDelete(action.data.index);
     }
 
     /**

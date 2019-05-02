@@ -8,6 +8,7 @@ import * as _ from 'lodash';
 import { MultilingualService } from '@setl/multilingual';
 import { AlertsService } from '@setl/jaspero-ng2-alerts';
 import { ChainService } from '@setl/core-req-services/chain/service';
+import { chainsFieldsModel, chainsListActions } from './chains.model';
 
 @Component({
     selector: 'app-manage-chains',
@@ -21,8 +22,8 @@ export class ManageChainsComponent implements OnInit, AfterViewInit, OnDestroy {
     language = 'en';
     chainsList = [];
 
-    /* Rows Per Page datagrid size */
-    public pageSize: number;
+    public chainsFieldsModel = chainsFieldsModel;
+    public chainsListActions = chainsListActions;
 
     // List of observable subscription
     subscriptionsArray: Subscription[] = [];
@@ -87,12 +88,15 @@ export class ManageChainsComponent implements OnInit, AfterViewInit, OnDestroy {
     getChainsListFromRedux(chainsList) {
         const listImu = fromJS(chainsList);
 
+        let index = 0;
         this.chainsList = listImu.reduce(
             (result, item) => {
                 result.push({
                     chainId: item.get('chainId', 0),
                     chainName: item.get('chainName', ''),
+                    index,
                 });
+                index += 1;
                 return result;
             },
             [],
@@ -200,7 +204,7 @@ export class ManageChainsComponent implements OnInit, AfterViewInit, OnDestroy {
                 (data) => {
                     ChainService.setRequested(false, this.ngRedux);
                     this.alertsService.generate(
-                        'success', 
+                        'success',
                         this.translate.translate('Chain updated successfully.'),
                     );
 
@@ -216,6 +220,15 @@ export class ManageChainsComponent implements OnInit, AfterViewInit, OnDestroy {
                 },
             ));
         }
+    }
+
+    /**
+     * Handles clicks on datagrid action buttons
+     * @param action
+     */
+    onAction(action) {
+        if (action.type === 'editChain') this.handleEdit(action.data.index);
+        if (action.type === 'deleteChain') this.handleDelete(action.data);
     }
 
     /**
