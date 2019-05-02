@@ -63,7 +63,8 @@ import { MockFundService } from './layouts/ui-form/components/layout2/fund.mock.
 import { FileDropModule } from '@setl/core-filedrop';
 import { FileViewerModule } from '@setl/core-fileviewer';
 
-import {AlertsComponent} from './alerts/alerts.component';
+import { AlertsComponent } from './alerts/alerts.component';
+import { DatagridListModule } from '@setl/utils/components/datagrid-list/datagrid-list-module';
 
 @NgModule({
     imports: [
@@ -84,6 +85,7 @@ import {AlertsComponent} from './alerts/alerts.component';
         FileViewerModule,
         BlockchainStatusTrackerModule,
         ConnectionStatusAlertsModule,
+        DatagridListModule,
     ],
     declarations: [
         /* Directives. */
