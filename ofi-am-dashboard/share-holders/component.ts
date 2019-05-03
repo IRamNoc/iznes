@@ -327,6 +327,7 @@ export class ShareHoldersComponent implements OnInit, OnDestroy {
             if (this.selectedTopHolders !== 0) {
                 payload.selectedFilter = this.selectedTopHolders;
             }
+
             OfiAmDashboardService.defaultRequestGetFundWithHolders(this.ofiAmDashboardService, this.ngRedux, payload);
         }
     }
@@ -340,7 +341,7 @@ export class ShareHoldersComponent implements OnInit, OnDestroy {
 
         if (list.length > 0) {
             if (!!list[0].Message) {
-                const id = this.fundList.findIndex((r) => r.id == this.selectedFundId)
+                const id = this.fundList.findIndex((r) => r.id == this.selectedFundId);
                 this.tabTitle = (id > -1 ? this.fundList[id].text : '');
             } else {
                 const listImu = fromJS(list);
