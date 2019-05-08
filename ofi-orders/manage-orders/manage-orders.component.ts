@@ -1029,6 +1029,8 @@ export class ManageOrdersComponent implements OnInit, AfterViewInit, OnDestroy {
             }
         }).then(() => {
            this.toasterService.pop('success', this.translate.translate('Successfully sent payment messages'));
+           this.ordersList.forEach(o => o.markedForPayment.setValue(false));
+           this.orderCheckedForPayment = [];
         }).catch((e) => {
            this.toasterService.pop('error', e.message);
         }).then(() => {
