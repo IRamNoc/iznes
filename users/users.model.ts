@@ -24,12 +24,14 @@ export const usersListFields = {
 
 export const usersListActions: {}[] = [
     new DatagridListActionModel({
+        id: { text: 'edit-', data: 'userID' },
         label: 'Edit',
         class: 'btn btn-sm btn-success',
         icon: 'fa-pencil-square-o',
         onClick: 'editUser',
     }),
     new DatagridListActionModel({
+        id: { text: 'delete-', data: 'userID' },
         label: 'Delete',
         class: 'btn btn-sm btn-danger',
         icon: 'fa-trash-o',
