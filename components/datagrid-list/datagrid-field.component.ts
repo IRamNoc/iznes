@@ -4,6 +4,9 @@ import { MultilingualService } from '@setl/multilingual';
 @Component({
     selector: 'datagrid-field',
     template: `
+        <!-- Spacer, REMOVED AFTER VIEW INIT-->
+        <div *ngIf="showColumnSpacer" class="column-spacer">{{getColumnSpaceText(value)}}</div>
+
         <!-- Value with pipe -->
         <ng-container *ngIf="fieldOptions.pipe">
             <div [innerHtml]="value | dynamic: fieldOptions.pipe.name: fieldOptions.pipe.params"></div>
@@ -29,6 +32,7 @@ export class DatagridFieldComponent implements OnInit {
 
     @Input() value: string;
     @Input() type: string;
+    @Input() showColumnSpacer: boolean = true;
     @Input() set options(options) { this.fieldOptions = { ...options }; }
 
     public fieldOptions: any;
@@ -39,6 +43,15 @@ export class DatagridFieldComponent implements OnInit {
 
     ngOnInit() {
         this.setupFieldType();
+    }
+
+    /**
+     * Returns a single line of text to space the datagrid column correctly
+     * Strips all non-alphanumeric characters and replaces them with '_'
+     * @param text
+     */
+    public getColumnSpaceText(text: string) {
+        return typeof text === 'string' ? text.replace(/[\W_]+/g, '_') : text;
     }
 
     setupFieldType() {

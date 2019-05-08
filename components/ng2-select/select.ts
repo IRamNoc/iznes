@@ -230,6 +230,7 @@ export class SelectComponent implements OnInit, ControlValueAccessor {
             }
             e.preventDefault();
         }
+        /* Remove custom left and right arrow key behavior for now so search input can be navigated with arrows keys
         // left
         if (!isUpMode && e.keyCode === 37 && this.itemsList.length > 0) {
             this.behavior.first();
@@ -242,6 +243,7 @@ export class SelectComponent implements OnInit, ControlValueAccessor {
             e.preventDefault();
             return;
         }
+        */
         // up
         if (!isUpMode && e.keyCode === 38) {
             this.behavior.prev();

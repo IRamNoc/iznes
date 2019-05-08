@@ -9,6 +9,7 @@ import {
     ElementRef,
     QueryList,
     OnInit,
+    AfterViewInit,
     ChangeDetectorRef,
 } from '@angular/core';
 import { NgRedux } from '@angular-redux/store';
@@ -35,10 +36,11 @@ import { Buffer } from 'buffer';
 
 @Injectable()
 
-export class DatagridListComponent implements OnInit {
+export class DatagridListComponent implements OnInit, AfterViewInit {
     @ViewChild('searchDynamicForm') public searchDynamicForm: DynamicFormComponent;
     @ViewChild('dataGrid') public dataGrid: ClrDatagrid;
     @ViewChildren('dataGridFilter', { read: ElementRef }) public dataGridFilter: QueryList<ElementRef>;
+    @ViewChildren('dataGridSpacer', { read: ElementRef }) public dataGridSpacer: QueryList<ElementRef>;
 
     @Input() fieldsModel: DatagridFieldsInterface;
     @Input() listData: DatagridListData[] = [];
@@ -67,6 +69,7 @@ export class DatagridListComponent implements OnInit {
     };
     public csvBtnState: ClrLoadingState = ClrLoadingState.DEFAULT;
     public pdfBtnState: ClrLoadingState = ClrLoadingState.DEFAULT;
+    public showColumnSpacer: boolean = true;
 
     public constructor(
         public ngRedux: NgRedux<any>,
@@ -79,6 +82,25 @@ export class DatagridListComponent implements OnInit {
     public ngOnInit() {
         this.prepareListFields();
         this.prepareSearchForm();
+    }
+
+    ngAfterViewInit() {
+        this.resizeDatagrid();
+    }
+
+    /**
+     * Resizes the datagrid and removes the spacer elements
+     * The column space elements are a bit of a hack to get the Datagrid to correctly set the cell size
+     * hopefully this will be fixed in a Clarity update soon...
+     */
+    public resizeDatagrid() {
+        setTimeout(
+            () => {
+                this.dataGrid.resize();
+                this.showColumnSpacer = false;
+            },
+            200,
+        );
     }
 
     /**
