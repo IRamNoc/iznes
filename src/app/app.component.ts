@@ -25,10 +25,7 @@ import { WalletSwitchService } from '@ofi/ofi-main/ofi-product/fund-share/servic
 export class AppComponent implements AfterViewInit, OnInit {
     title = 'app';
     users: Array<object>;
-    public toasterconfig: any = new ToasterConfig({
-        positionClass: 'toast-bottom-right',
-        animation: 'flyRight',
-    });
+    public toasterconfig: any = new ToasterConfig({ animation: 'flyRight' });
     jasperoAlertoptions: any = {
         overlay: true,
         overlayClickToClose: true,
