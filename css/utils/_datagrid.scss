@@ -10,6 +10,14 @@
     // vertical center align datagrid content
     .datagrid-cell {
         align-self: center;
+        min-width: 3rem;
+        overflow: hidden;
+        text-overflow: ellipsis;
+        white-space: nowrap;
+        .column-spacer {
+            opacity: 0;
+            line-height: 0;
+        }
     }
     // shade alternate grid rows
     clr-dg-row:nth-child(even) {
@@ -49,6 +57,11 @@
             text-align: right;
         }
     }
+    // Move first column filter pop-up to the right so not to get cut-off
+    clr-dg-column:first-child .datagrid-filter {
+        transform: translateX(0) translateY(24px)!important;
+        z-index: 1;
+    }
 }
 
 
@@ -71,11 +84,6 @@ clr-datagrid {
         }
     }
 
-    /* Temporary width override to account for multiple inline action buttons */
-    .actions {
-        width: 230px!important;
-    }
-
     .datagrid-footer {
         .btn-sm {
             margin-top: 5px;
@@ -84,6 +92,15 @@ clr-datagrid {
             display: inline-block;
             .btn-sm {
                 margin-top: 0;
+            }
+            &::before {
+                content: '';
+                display: inline-block;
+                height: 1rem;
+                width: .04166667rem;
+                background-color: #ddd;
+                margin: 0 .5rem;
+                vertical-align: middle;
             }
         }
     }

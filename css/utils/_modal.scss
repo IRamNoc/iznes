@@ -72,6 +72,12 @@
     display: block;
     border-bottom-left-radius: 3px;
     border-bottom-right-radius: 3px;
+    .form-group {
+        padding: 0 20px;
+        clr-checkbox-wrapper label {
+            margin: 0;
+        }
+    }
 }
 
 clr-modal.large .modal-dialog {
