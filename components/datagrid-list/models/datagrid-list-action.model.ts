@@ -2,6 +2,7 @@
  * Datagrid List Action Model
  */
 export class DatagridListActionModel {
+    public id: {} = { text: '', data: '' };
     public class: string = 'btn btn-sm';
     public icon: string = 'fa-search';
     public label:string = 'Action';
