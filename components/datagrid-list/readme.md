@@ -72,6 +72,7 @@ import { DatagridListActionModel } from '@setl/utils/components/datagrid-list/mo
 public listActions: {}[] = [
     new DatagridListActionModel({
         label: 'View', // button label
+        id: { text: 'view-', data: 'listID' }, // button ID formed from concatenating id.text and data, where data is a property in the listData array
         class: 'btn btn-orange btn-sm', // button classes
         icon: 'fa fa-search', // icon classes
         onClick: 'viewBreakdown', // Pass in a string which is emitted on action or a callback function

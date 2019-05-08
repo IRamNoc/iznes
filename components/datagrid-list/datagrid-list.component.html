@@ -68,12 +68,18 @@
 
 <!-- DATAGRID ACTIONS TEMPLATE-->
 <ng-template #datagridActions let-listActions="listActions" let-record="record">
-    <span *ngFor="let listAction of listActions">
-        <button *ngIf="listAction.isVisible(record)" class="{{listAction.class}}" (click)="handleOnClick(listAction.onClick, record)">
-            <i class="fa {{listAction.icon}}"></i>
-            {{ listAction.label | translate }}
-        </button>
-    </span>
+    <div class="btn-group">
+        <ng-container *ngFor="let listAction of listActions">
+            <button
+                *ngIf="listAction.isVisible(record)"
+                [attr.id]="listAction.id.text && record[listAction.id.data] ? listAction.id.text + record[listAction.id.data] : null"
+                class="{{listAction.class}}"
+                (click)="handleOnClick(listAction.onClick, record)">
+                <i class="fa {{listAction.icon}}"></i>
+                {{ listAction.label | translate }}
+            </button>
+        </ng-container>
+    </div>
 </ng-template>
 
 <!-- EXPORT DATA MODAL-->
