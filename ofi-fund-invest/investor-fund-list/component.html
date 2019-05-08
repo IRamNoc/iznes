@@ -39,7 +39,7 @@
     <ng-template #listOfFundsTab>
         <div class="panel-body">
             <div>
-                <clr-datagrid>
+                <clr-datagrid #dataGrid>
                     <clr-dg-column [clrDgField]="'isin'" clrDgSortIcon>{{ 'ISIN' | translate }}
                         <span class="column-label"></span>
                     </clr-dg-column>
@@ -80,22 +80,24 @@
                             <button class="btn btn-link btn-sm" [routerLink]="['/' + getLinkRoute() + '/product-characteristic', fund['isin']]">
                                 {{fund['isin']}}
                             </button>
+                            <div *ngIf="showColumnSpacer" class="column-spacer">{{getColumnSpaceText(fund['isin'])}}</div>
                         </clr-dg-cell>
                         <clr-dg-cell>
                             <button class="btn btn-link btn-sm" [routerLink]="['/' + getLinkRoute() + '/product-characteristic', fund['isin']]">
                                 {{fund['shareName']}}
                             </button>
+                            <div *ngIf="showColumnSpacer" class="column-spacer">{{getColumnSpaceText(fund['shareName'])}}</div>
                         </clr-dg-cell>
-                        <clr-dg-cell>{{fund['assetClass']}}</clr-dg-cell>
-                        <clr-dg-cell>{{fund['assetManager']}}</clr-dg-cell>
-                        <clr-dg-cell>{{fund['srri']}}</clr-dg-cell>
-                        <clr-dg-cell>{{fund['sri']}}</clr-dg-cell>
-                        <clr-dg-cell>{{fund['currency']}}</clr-dg-cell>
-                        <clr-dg-cell class="right">{{fund['nav'] | moneyValue}}</clr-dg-cell>
-                        <clr-dg-cell>{{fund['nextSubCutOff']}}</clr-dg-cell>
-                        <clr-dg-cell>{{fund['nextRedCutOff']}}</clr-dg-cell>
-                        <clr-dg-cell class="right">{{fund['position']}}</clr-dg-cell>
-                        <clr-dg-cell class="right">{{fund['totalPosition']}}</clr-dg-cell>
+                        <clr-dg-cell>{{fund['assetClass']}}<div *ngIf="showColumnSpacer" class="column-spacer">{{getColumnSpaceText(fund['assetClass'])}}</div></clr-dg-cell>
+                        <clr-dg-cell>{{fund['assetManager']}}<div *ngIf="showColumnSpacer" class="column-spacer">{{getColumnSpaceText(fund['assetManager'])}}</div></clr-dg-cell>
+                        <clr-dg-cell>{{fund['srri']}}<div *ngIf="showColumnSpacer" class="column-spacer">{{getColumnSpaceText(fund['srri'])}}</div></clr-dg-cell>
+                        <clr-dg-cell>{{fund['sri']}}<div *ngIf="showColumnSpacer" class="column-spacer">{{getColumnSpaceText(fund['sri'])}}</div></clr-dg-cell>
+                        <clr-dg-cell>{{fund['currency']}}<div *ngIf="showColumnSpacer" class="column-spacer">{{getColumnSpaceText(fund['currency'])}}</div></clr-dg-cell>
+                        <clr-dg-cell class="right">{{fund['nav'] | moneyValue}}<div *ngIf="showColumnSpacer" class="column-spacer">{{getColumnSpaceText(fund['nav'])}}</div></clr-dg-cell>
+                        <clr-dg-cell>{{fund['nextSubCutOff']}}<div *ngIf="showColumnSpacer" class="column-spacer">{{getColumnSpaceText(fund['nextSubCutOff'])}}</div></clr-dg-cell>
+                        <clr-dg-cell>{{fund['nextRedCutOff']}}<div *ngIf="showColumnSpacer" class="column-spacer">{{getColumnSpaceText(fund['nextRedCutOff'])}}</div></clr-dg-cell>
+                        <clr-dg-cell class="right">{{fund['position']}}<div *ngIf="showColumnSpacer" class="column-spacer">{{getColumnSpaceText(fund['position'])}}</div></clr-dg-cell>
+                        <clr-dg-cell class="right">{{fund['totalPosition']}}<div *ngIf="showColumnSpacer" class="column-spacer">{{getColumnSpaceText(fund['totalPosition'])}}</div></clr-dg-cell>
                         <clr-dg-cell *ngIf="fund['hasNoNav']" class="action-width">{{ 'No NAV Exist' | translate }}</clr-dg-cell>
                         <clr-dg-cell *ngIf="!fund['hasNoNav']" class="actions right action-width">
                             <div class="btn-group btn-sm">

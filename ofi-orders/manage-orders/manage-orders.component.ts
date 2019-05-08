@@ -172,6 +172,8 @@ export class ManageOrdersComponent implements OnInit, AfterViewInit, OnDestroy {
 
     private isinParam: string;
 
+    public showColumnSpacer: boolean = true;
+
     /* Observables. */
     @select(['user', 'myDetail', 'userType']) readonly userType$: Observable<number>;
     @select(['user', 'siteSettings', 'language']) readonly requestedLanguage$;
@@ -370,8 +372,33 @@ export class ManageOrdersComponent implements OnInit, AfterViewInit, OnDestroy {
     }
 
     ngAfterViewInit() {
-        this.resizeDataGrid();
         this.isIznesAdmin;
+    }
+
+    /**
+     * Resizes the datagrid and removes the spacer elements
+     * The column space elements are a bit of a hack to get the Datagrid to correctly set the cell size
+     * hopefully this will be fixed in a Clarity update soon...
+     */
+    public resizeDatagridRemoveSpacers() {
+        if (this.orderDatagrid) {
+            setTimeout(
+                () => {
+                    this.orderDatagrid.resize();
+                    this.showColumnSpacer = false;
+                },
+                1000,
+            );
+        }
+    }
+
+    /**
+     * Returns a single line of text to space the datagrid column correctly
+     * Strips all non-alphanumeric characters and replaces them with '_'
+     * @param text
+     */
+    public getColumnSpaceText(text: string) {
+        return typeof text === 'string' ? text.replace(/[\W_]+/g, '_') : text;
     }
 
     routeUpdate(params) {
@@ -420,18 +447,11 @@ export class ManageOrdersComponent implements OnInit, AfterViewInit, OnDestroy {
         return order;
     }
 
-    resizeDataGrid() {
-        if (this.orderDatagrid) {
-            this.orderDatagrid.resize();
-        }
-    }
-
     detectChanges(detect = false) {
         this.changeDetectorRef.markForCheck();
         if (detect) {
             this.changeDetectorRef.detectChanges();
         }
-        this.resizeDataGrid();
     }
 
     translateSelectMenus() {
@@ -504,7 +524,9 @@ export class ManageOrdersComponent implements OnInit, AfterViewInit, OnDestroy {
         }
 
         this.loading = false;
+        this.showColumnSpacer = true;
         this.detectChanges(true);
+        this.resizeDatagridRemoveSpacers();
     }
 
     subEstimated(order, field: string, estimatedField: string): number {
