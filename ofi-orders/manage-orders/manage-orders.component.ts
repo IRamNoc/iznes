@@ -11,7 +11,7 @@ import {
     ViewChild,
 } from '@angular/core';
 
-import {FormControl, FormGroup} from '@angular/forms';
+import { FormControl, FormGroup } from '@angular/forms';
 import { ActivatedRoute, Router } from '@angular/router';
 import { Location } from '@angular/common';
 
@@ -52,6 +52,7 @@ import { labelForOrder } from '../order.model';
 import { orderStatuses, orderTypes, dateTypes } from './lists';
 import { DatagridParams } from './datagrid-params';
 import { fundClassifications } from '../../ofi-product/fund-share/helper/models';
+import { PermissionsService } from '@setl/utils/services/permissions';
 
 /* Types. */
 interface SelectedItem {
@@ -95,6 +96,8 @@ export class ManageOrdersComponent implements OnInit, AfterViewInit, OnDestroy {
     transformedOrderClassificationFee: number;
 
     showPaymentMsgConfirmationModal: boolean;
+
+    public hasPermissionView: boolean = false;
 
     // Locale
     language = 'en';
@@ -213,6 +216,7 @@ export class ManageOrdersComponent implements OnInit, AfterViewInit, OnDestroy {
                 private manageOrdersService: ManageOrdersService,
                 private location: Location,
                 private searchFilters: SearchFilters,
+                public permissionsService: PermissionsService,
     ) {
         this.isAmConfirmModalDisplayed = false;
         this.cancelModalMessage = '';
@@ -248,8 +252,8 @@ export class ManageOrdersComponent implements OnInit, AfterViewInit, OnDestroy {
 
     get showSendPaymentMsgBtn(): boolean {
         // number of order marked for payment messages.
-       const nPMsg = this.ordersList.filter((o) => o.markedForPayment.value).length;
-       return this.isAssetManger && nPMsg > 0;
+        const nPMsg = this.ordersList.filter((o) => o.markedForPayment.value).length;
+        return this.isAssetManger && nPMsg > 0;
     }
 
     appSubscribe<T>(
@@ -365,6 +369,12 @@ export class ManageOrdersComponent implements OnInit, AfterViewInit, OnDestroy {
             _ => this.manageOrdersService.setFilters(this.searchFilters.get()),
         );
         this.appSubscribe(this.currencies$, c => this.getCurrencyList(c));
+
+        this.permissionsService.hasPermission('viewAllOrder', 'canRead').then(
+            (hasPermission) => {
+                this.hasPermissionView = hasPermission;
+            },
+        );
 
         this.detectChanges();
     }
@@ -622,7 +632,11 @@ export class ManageOrdersComponent implements OnInit, AfterViewInit, OnDestroy {
             this.amConfirmModal = {
                 targetedOrder: this.ordersList[index],
                 title: `${this.translate.translate('Cancel')} - ${message}`,
-                body: `${this.translate.translate('Are you sure you want to cancel the @message@?', { 'message': message })}`,placeholder: `${this.translate.translate('Please add a message to justify this cancellation. An internal IZNES message will be sent to the investor to notify them.')}`,
+                body: `${this.translate.translate(
+                    'Are you sure you want to cancel the @message@?', { 'message': message })}`,
+                placeholder: `${this.translate.translate(
+                    'Please add a message to justify this cancellation. An internal IZNES message will be sent to the investor to notify them.',
+                )}`,
             };
         }
     }
@@ -914,9 +928,15 @@ export class ManageOrdersComponent implements OnInit, AfterViewInit, OnDestroy {
 
         const toasterMessages = {
             success:
-                this.translate.translate('The message has been successfully sent to @targetedOrder.firstName@ @targetedOrder.lastName@.', { 'targetedOrder.firstName': targetedOrder.firstName, 'targetedOrder.lastName': targetedOrder.lastName }),
+                this.translate.translate(
+                    'The message has been successfully sent to @targetedOrder.firstName@ @targetedOrder.lastName@.',
+                    { 'targetedOrder.firstName': targetedOrder.firstName, 'targetedOrder.lastName': targetedOrder.lastName },
+                ),
             fail:
-                this.translate.translate('The message has failed to be sent to @targetedOrder.firstName@ @targetedOrder.lastName@.', { 'targetedOrder.firstName': targetedOrder.firstName, 'targetedOrder.lastName': targetedOrder.lastName }),
+                this.translate.translate(
+                    'The message has failed to be sent to @targetedOrder.firstName@ @targetedOrder.lastName@.',
+                    { 'targetedOrder.firstName': targetedOrder.firstName, 'targetedOrder.lastName': targetedOrder.lastName },
+                ),
         };
 
         orderType = (targetedOrder.orderType === 3) ?
@@ -1006,14 +1026,14 @@ export class ManageOrdersComponent implements OnInit, AfterViewInit, OnDestroy {
                 throw new Error(this.translate.translate('fail send payment messages'));
             }
         }).then(() => {
-           this.toasterService.pop('success', this.translate.translate('Successfully sent payment messages'));
-           this.ordersList.forEach(o => o.markedForPayment.setValue(false));
-           this.orderCheckedForPayment = [];
+            this.toasterService.pop('success', this.translate.translate('Successfully sent payment messages'));
+            this.ordersList.forEach(o => o.markedForPayment.setValue(false));
+            this.orderCheckedForPayment = [];
         }).catch((e) => {
-           this.toasterService.pop('error', e.message);
+            this.toasterService.pop('error', e.message);
         }).then(() => {
-           this.showPaymentMsgConfirmationModal = false;
-           this.changeDetectorRef.markForCheck();
+            this.showPaymentMsgConfirmationModal = false;
+            this.changeDetectorRef.markForCheck();
         });
     }
 
@@ -1023,11 +1043,20 @@ export class ManageOrdersComponent implements OnInit, AfterViewInit, OnDestroy {
      * @param $event
      */
     updatePaymentCheckBoxState(orderId: number, $event: boolean): void {
-       if ($event) {
-           this.orderCheckedForPayment.push(orderId);
-       } else {
-           this.orderCheckedForPayment.filter(v => v !== orderId);
-       }
+        if ($event) {
+            this.orderCheckedForPayment.push(orderId);
+        } else {
+            this.orderCheckedForPayment.filter(v => v !== orderId);
+        }
+    }
+
+    /**
+     * Has Permission?
+     *
+     * @return {boolean}
+     */
+    hasPermission() {
+        return this.hasPermissionView;
     }
 
     ngOnDestroy(): void {

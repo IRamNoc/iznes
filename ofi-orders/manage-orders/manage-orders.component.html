@@ -124,7 +124,7 @@
                                             <button class="btn" style="margin-right: 10px;" (click)="searchFilters.clear()">
                                                 <i class="fa fa-trash"></i> {{ 'Clear Filters' | translate }}
                                             </button>
-                                            <button class="btn btn-success nomargin" (click)="exportOrders()">
+                                            <button *ngIf="hasPermission()" class="btn btn-success nomargin" (click)="exportOrders()">
                                                 <i class="fa fa-download"></i> {{ 'Export Orders CSV' | translate }}
                                             </button>
                                         </div>
@@ -752,7 +752,7 @@
                             <div>
                                 <span class="readonly-field">{{fundShare.shareClassCode}}</span>
                             </div>
-                        </div>                        
+                        </div>
                     </div>
                     <div class="row mb-1">
                         <div class="form-group col-sm-6">
@@ -781,7 +781,7 @@
                                 <span class="readonly-field {{getPriceStatusCss(orderData)}}">{{ orderData.price | moneyValue: 2 }}</span>
                             </div>
                         </div>
-                        
+
                     </div>
                     <div class="row mb-1">
                         <div class="form-group col-sm-6">

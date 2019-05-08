@@ -24,4 +24,6 @@
     <app-investor-fund-list [isImported]="true" [linkRoute]="'home'"></app-investor-fund-list>
 </div>
 
-<app-manage-orders [isImported]="true" [linkRoute]="'home'"></app-manage-orders>
+<div *ngIf="hasPermission()">
+    <app-manage-orders [isImported]="true" [linkRoute]="'home'"></app-manage-orders>
+</div>

@@ -16,6 +16,7 @@ import { MultilingualService } from '@setl/multilingual';
 import { APP_CONFIG, AppConfig, MoneyValuePipe, NumberConverterService, LogService } from '@setl/utils';
 /* Ofi orders request service. */
 import { OfiOrdersService } from '@ofi/ofi-main/ofi-req-services/ofi-orders/service';
+import { PermissionsService } from '@setl/utils/services/permissions';
 
 // recordkeeping
 import { MemberSocketService } from '@setl/websocket-service';
@@ -41,6 +42,7 @@ export class OfiHomeComponent implements AfterViewInit, OnInit, OnDestroy {
     /* Public properties. */
     public myDetails: any = {};
     public connectedWalletName = '';
+    public hasPermissionView: boolean = false;
 
     /* Private properties. */
     private subscriptions: any[] = [];
@@ -76,6 +78,7 @@ export class OfiHomeComponent implements AfterViewInit, OnInit, OnDestroy {
         private walletNodeRequestService: WalletNodeRequestService,
         private ofiOrdersService: OfiOrdersService,
         private ofiReportsService: OfiReportsService,
+        public permissionsService: PermissionsService,
         @Inject(APP_CONFIG) appConfig: AppConfig,
     ) {
         this.appConfig = appConfig;
@@ -107,6 +110,13 @@ export class OfiHomeComponent implements AfterViewInit, OnInit, OnDestroy {
             this.language = language;
             this.changeDetectorRef.detectChanges();
         });
+
+        this.permissionsService.hasPermission('viewAllOrder', 'canRead').then(
+            (hasPermission) => {
+                this.hasPermissionView = hasPermission;
+                this.changeDetectorRef.detectChanges();
+            },
+        );
     }
 
     ngAfterViewInit() {
@@ -188,6 +198,15 @@ export class OfiHomeComponent implements AfterViewInit, OnInit, OnDestroy {
 
         /* Return. */
         return;
+    }
+
+    /**
+     * Has Permission?
+     *
+     * @return {boolean}
+     */
+    hasPermission() {
+        return this.hasPermissionView;
     }
 
     /* On Destroy. */
