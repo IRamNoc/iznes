@@ -25,12 +25,14 @@ export const walletFieldsModel = {
 export const walletListActions: {}[] = [
     new DatagridListActionModel({
         label: 'Edit',
+        id: { text: 'edit-', data: 'walletId' },
         class: 'btn btn-sm btn-success',
         icon: 'fa-pencil-square-o',
         onClick: 'editWallet',
     }),
     new DatagridListActionModel({
         label: 'Delete',
+        id: { text: 'delete-', data: 'walletId' },
         class: 'btn btn-sm btn-danger',
         icon: 'fa-trash-o',
         onClick: 'deleteWallet',
