@@ -112,6 +112,10 @@
                     <button *ngIf="isFundsPayloadOK" id="precentra-funds-export-btn" type="button" class="btn btn-success" style="max-width: none !important" (click)="exportPrecentralisationReport()">{{ 'Export Precentralisation' | translate }}</button>
                 </div>
 
+                <div *ngIf="!hasPermission()">
+                    <ng-container *ngTemplateOutlet="permissionAlert"></ng-container>
+                </div>
+
                 <clr-datagrid>
                     <clr-dg-column *ngIf="isSettlementSelected" [clrDgField]="'settlementDate'" clrDgSortIcon>
                         <ng-container *clrDgHideableColumn="{hidden: false}">{{ 'Settlement Date' | translate }}
@@ -308,6 +312,10 @@
                     <button *ngIf="isSharesPayloadOK" id="precentra-shares-export-btn" type="button" class="btn btn-success" style="max-width: none !important" (click)="exportPrecentralisationReport()">{{ 'Export Precentralisation' | translate }}</button>
                 </div>
 
+                <div *ngIf="!hasPermission()">
+                    <ng-container *ngTemplateOutlet="permissionAlert"></ng-container>
+                </div>
+
                 <clr-datagrid class="expandable">
                     <clr-dg-column *ngIf="isSettlementSelected" [clrDgField]="'subscriptionSettlementDate'" clrDgSortIcon>
                         <ng-container *clrDgHideableColumn="{hidden: false}">{{ 'Settlement Date' | translate }}
@@ -433,3 +441,19 @@
         </clr-tab-content>
     </clr-tab>
 </clr-tabs>
+
+<ng-template #permissionAlert>
+    <div class="alert alert-warning">
+        <div class="alert-items">
+            <div class="alert-item static">
+                <div class="alert-icon-wrapper">
+                    <clr-icon class="alert-icon" shape="exclamation-triangle"></clr-icon>
+                </div>
+                <span class="alert-text">
+                    {{ 'Please contact the administrator to request permission to view order details.' | translate }}
+                    <br />
+                </span>
+            </div>
+        </div>
+    </div>
+</ng-template>
