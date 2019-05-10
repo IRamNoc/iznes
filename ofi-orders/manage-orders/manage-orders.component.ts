@@ -370,7 +370,7 @@ export class ManageOrdersComponent implements OnInit, AfterViewInit, OnDestroy {
         );
         this.appSubscribe(this.currencies$, c => this.getCurrencyList(c));
 
-        this.permissionsService.hasPermission('viewAllOrder', 'canRead').then(
+        this.permissionsService.hasPermission('manageOrder', 'canRead').then(
             (hasPermission) => {
                 this.hasPermissionView = hasPermission;
             },

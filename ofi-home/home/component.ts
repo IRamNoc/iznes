@@ -111,7 +111,7 @@ export class OfiHomeComponent implements AfterViewInit, OnInit, OnDestroy {
             this.changeDetectorRef.detectChanges();
         });
 
-        this.permissionsService.hasPermission('viewAllOrder', 'canRead').then(
+        this.permissionsService.hasPermission('manageOrder', 'canRead').then(
             (hasPermission) => {
                 this.hasPermissionView = hasPermission;
                 this.changeDetectorRef.detectChanges();
@@ -167,7 +167,7 @@ export class OfiHomeComponent implements AfterViewInit, OnInit, OnDestroy {
         .replace('hh', this.numPad(dateObj.getHours()))
         .replace('hH', this.numPad(dateObj.getHours() > 12 ? dateObj.getHours() - 12 : dateObj.getHours()))
         .replace('mm', this.numPad(dateObj.getMinutes()))
-        .replace('ss', this.numPad(dateObj.getSeconds()))
+        .replace('ss', this.numPad(dateObj.getSeconds()));
     }
 
     private numPad(num) {

@@ -1096,7 +1096,7 @@ export class InvestFundComponent implements OnInit, OnDestroy {
                         link: `/#/manage-orders/${params.orderID}`,
                         anchorCss: 'btn btn-secondary',
                         anchorText: this.translate.translate('View Order'),
-                        permissionName: 'viewAllOrder',
+                        permissionName: 'manageOrder',
                         permissionType: 'canRead',
                     },
                 ],

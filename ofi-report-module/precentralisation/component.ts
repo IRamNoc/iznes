@@ -316,7 +316,7 @@ export class PrecentralisationReportComponent implements OnInit, OnDestroy {
             },
         ];
 
-        this.permissionsService.hasPermission('viewAllOrder', 'canRead').then(
+        this.permissionsService.hasPermission('manageOrder', 'canRead').then(
             (hasPermission) => {
                 this.hasPermissionView = hasPermission;
             },
