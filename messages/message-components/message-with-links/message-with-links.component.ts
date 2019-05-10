@@ -1,7 +1,6 @@
 import { Component, Input, OnInit, SecurityContext } from '@angular/core';
 import { DomSanitizer } from '@angular/platform-browser';
 import { LinkConfig } from './message-with-links.model';
-
 import { PermissionsService } from '@setl/utils/services/permissions';
 
 @Component({
