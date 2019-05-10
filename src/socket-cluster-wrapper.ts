@@ -98,7 +98,6 @@ export class SocketClusterWrapper {
                 try {
 
                     try {
-                        this.resetConnectionData();
                         this.connectTries += 1;
 
                         this.webSocketConn = SocketCluster.connect(this.socketClusterOption);
@@ -166,6 +165,13 @@ export class SocketClusterWrapper {
 
                         this.disconnectCallback();
                     });
+
+                    // membernode emmit 'deautheniticate' event when aes is missing
+                    this.webSocketConn.on('deauthenticate', () => {
+                        this.closeWebSocket();
+                        this.webSocketConn = false;
+                        this.openWebSocket();
+                    })
 
                     this.defaultOnOpen();
 
