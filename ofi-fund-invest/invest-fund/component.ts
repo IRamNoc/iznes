@@ -1072,7 +1072,7 @@ export class InvestFundComponent implements OnInit, OnDestroy {
 
         const subjectStr = this.translate.translate(
             'Warning - Soft Limit amount exceeded on @orderTypeLabel@ order @orderRef@',
-            { 'orderTypeLabel': params.orderTypeLabel, 'orderRef': params.orderRef },
+            { orderTypeLabel: params.orderTypeLabel, orderRef: params.orderRef },
         );
 
         const bodyStr = `
@@ -1080,12 +1080,12 @@ export class InvestFundComponent implements OnInit, OnDestroy {
             ${this.translate.translate('Hello')}
             <br /><br />
             ${this.translate.translate(
-            'Please be aware that the @orderTypeLabel@ order @orderRef has exceeded the limit of 15 million.',
-            { 'orderTypeLabel': params.orderTypeLabel, 'orderRef': params.orderRef },
+            'Please be aware that the @orderTypeLabel@ order @orderRef@ has exceeded the limit of 15 million.',
+            { orderTypeLabel: params.orderTypeLabel, orderRef: params.orderRef },
         )}
             <br />%@link@%<br /><br />
             ${this.translate.translate('The IZNES Team')}
-            .</p>
+            </p>
         `;
 
         const action = {
@@ -1093,9 +1093,11 @@ export class InvestFundComponent implements OnInit, OnDestroy {
             data: {
                 links: [
                     {
-                        link: `/#/manage-orders?orderID=${params.orderID}`,
+                        link: `/#/manage-orders/${params.orderID}`,
                         anchorCss: 'btn btn-secondary',
-                        anchorText: this.translate.translate('Go to this order'),
+                        anchorText: this.translate.translate('View Order'),
+                        permissionName: 'viewAllOrder',
+                        permissionType: 'canRead',
                     },
                 ],
             },
