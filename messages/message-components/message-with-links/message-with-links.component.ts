@@ -2,6 +2,8 @@ import { Component, Input, OnInit, SecurityContext } from '@angular/core';
 import { DomSanitizer } from '@angular/platform-browser';
 import { LinkConfig } from './message-with-links.model';
 
+import { PermissionsService } from '@setl/utils/services/permissions';
+
 @Component({
     selector: 'setl-message-with-links',
     templateUrl: './message-with-links.component.html',
@@ -15,22 +17,28 @@ export class SetlMessageWithLinksComponent implements OnInit{
 
     safeHtml: string;
 
-    constructor(private sanitizer: DomSanitizer) {}
+    constructor(
+        private sanitizer: DomSanitizer,
+        public permissionsService: PermissionsService,
+    ) {
+    }
 
     ngOnInit() {
-        this.safeHtml = this.buildSafeHtml(this.content, this.data);
+        this.buildSafeHtml(this.content, this.data).then((safeHtml) => {
+            this.safeHtml = safeHtml;
+        });
     }
 
     /**
      * Build safe html with links from unsafe html and unsafe links
      * 1. sanitize all the links
-     * 2. replace all the links with with anchor tags.
+     * 2. replace all the links with with anchor tags (depending on permission)
      *
      * @param {string} unsafeContent
-     * @param {LinkConfig[]}} data
-     * @return {string}
+     * @param {LinkConfig[]} data
+     * @return {Promise}
      */
-    buildSafeHtml(unsafeContent: string, data: {links: LinkConfig[]}): string {
+    async buildSafeHtml(unsafeContent: string, data: { links: LinkConfig[] }): Promise<string> {
         if (!unsafeContent || !data) {
             return '';
         }
@@ -39,13 +47,31 @@ export class SetlMessageWithLinksComponent implements OnInit{
             return Object.assign({}, link, { link: this.sanitizer.sanitize(SecurityContext.URL, link.link) });
         });
 
-        // replace the link links with anchor tag.
-        sanitiseLinks.forEach((link: LinkConfig) => {
-            const linkHtml = `<a class="${link.anchorCss}" href="${link.link}">${link.anchorText}</a>`;
-            unsafeContent = unsafeContent.replace('%@link@%', linkHtml);
-        });
-
-        return this.sanitizer.sanitize(SecurityContext.HTML, unsafeContent);
+        // replace the link links with anchor tags (depending on permission)
+        return await this.processContentLinks(unsafeContent, sanitiseLinks);
     }
 
+    /**
+     * Process the links within the content depending on permission
+     *
+     * @param {string} content
+     * @param {object} links array
+     * @return {Promise}
+     */
+    async processContentLinks(content: string, links: any): Promise<string> {
+        await Promise.all(links.map(async (link) => {
+            const linkHtml = `<a class="${link.anchorCss}" href="${link.link}">${link.anchorText}</a>`;
+
+            if (!link.permissionName) {
+                content = content.replace('%@link@%', linkHtml);
+            } else {
+                await this.permissionsService.hasPermission('link.permissionName', 'link.permissionType')
+                .then((hasPermission) => {
+                    content = content.replace('%@link@%', (hasPermission) ? linkHtml : '&nbsp;');
+                });
+            }
+        }));
+
+        return content;
+    }
 }
