@@ -16,7 +16,7 @@ import { AccountAdminPermissionsServiceBase } from './service';
 import * as PermissionsModel from './model';
 import * as TeamsModel from '../../../teams/model';
 import { UserTeamsService } from '../../../teams/service';
-import {immutableHelper} from "@setl/utils";
+import { immutableHelper } from '@setl/utils';
 
 @Component({
     selector: 'app-core-admin-permissions',
@@ -43,7 +43,6 @@ export class AccountAdminPermissionsComponentBase implements OnInit, OnDestroy {
         toDelete: [],
     };
 
-
     @select(['accountAdmin', 'permissionAreas', 'permissionAreas']) permissionsOb;
     @select(['accountAdmin', 'permissionAreas', 'requested']) permissionsReqOb;
     @select(['accountAdmin', 'userPermissionAreas', 'permissionAreas']) userPermissionsOb;
@@ -55,7 +54,9 @@ export class AccountAdminPermissionsComponentBase implements OnInit, OnDestroy {
                 private redux: NgRedux<any>,
                 private alerts: AlertsService,
                 private teamsService: UserTeamsService,
-                private translate: MultilingualService) {}
+                private translate: MultilingualService,
+    ) {
+    }
 
     ngOnInit() {
         this.initSubscriptions();
@@ -173,20 +174,41 @@ export class AccountAdminPermissionsComponentBase implements OnInit, OnDestroy {
 
     updatePermission(): void {
         // Build modificatePermissionCache.
-       this.modificatePermissionCache =
-           this.permissions.filter(v => v.parentID !== null).reduce((acc, val) => {
-            const permMatchedArr = this.originalTeamPermissions.filter(v => v.permissionAreaID === val.permissionAreaID);
-            const permData = (permMatchedArr[0] || {}) as PermissionsModel.AccountAdminPermission;
+        this.modificatePermissionCache =
+            this.permissions.filter(v => v.parentID !== null).reduce(
+                (acc, val) => {
+                    const permMatchedArr = this.originalTeamPermissions.filter(
+                        v => v.permissionAreaID === val.permissionAreaID,
+                    );
+                    const permData = (permMatchedArr[0] || {}) as PermissionsModel.AccountAdminPermission;
 
-            if (Boolean(val.state) !== Boolean(permData.state)) {
-               if (Boolean(val.state)) {
-                   acc.toAdd.push(val.permissionAreaID);
-               } else {
-                   acc.toDelete.push(val.permissionAreaID);
-               }
-            }
-            return acc;
-        }, {toAdd: [], toDelete: []});
+                    if (Boolean(val.state) !== Boolean(permData.state)) {
+                        if (Boolean(val.state)) {
+                            acc.toAdd.push(val.permissionAreaID);
+                        } else {
+                            acc.toDelete.push(val.permissionAreaID);
+                        }
+                    }
+                    // If 'Action on Orders' is true, then 'View Orders' must be set to true
+                    if (val.name === 'Action on Orders' && Boolean(val.state) === true) {
+                        this.permissions.forEach((p, index) => {
+                            if (p.name === 'View Orders') {
+                                // Toggle the 'View Orders' permission to `ON`
+                                this.permissions[index].state = true;
+                                // Add the 'View Orders' permission to the add queue
+                                acc.toAdd.push(p.permissionAreaID);
+                                // Remove the 'View Orders' permission from the delete queue
+                                acc.toDelete.forEach((d, index) => {
+                                    if (d === p.permissionAreaID) delete acc.toDelete[index];
+                                });
+                            }
+                        });
+                    }
+
+                    return acc;
+                },
+                { toAdd: [], toDelete: [] },
+            );
     }
 
     isProcessing(): boolean {

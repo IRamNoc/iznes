@@ -1,5 +1,5 @@
 <div class="header-breadcrumbs">
-    <h1><i class="fa fa-address-book-o"></i> 
+    <h1><i class="fa fa-address-book-o"></i>
         <ng-container *ngIf="isCreateMode()">
             {{ ['Create', noun].join(' ') | translate }}
         </ng-container>
@@ -22,13 +22,13 @@
             <h3>{{ [noun, 'Details'].join(' ') | translate }}</h3>
 
             <app-dynamic-form [model]="form"></app-dynamic-form>
-            
+
             <div class="row actions bottom">
                 <div class="col-sm-12">
                     <h3>{{ 'User Memberships' | translate }}</h3>
                 </div>
             </div>
-            
+
             <div class="row">
                 <div class="col-sm-12">
                     <app-core-admin-teams-user-mgmt
@@ -39,7 +39,7 @@
                     </app-core-admin-teams-user-mgmt>
                 </div>
             </div>
-            
+
             <div class="row actions bottom">
                 <div class="col-sm-12">
                     <h3>{{ (isTeamsPage() ? 'Team Permissions' : 'User Permissions') | translate }}</h3>
@@ -61,11 +61,11 @@
                 <div class="col">
                     <a [routerLink]="getBackUrl()" class="btn">{{ 'Cancel' | translate }}</a>
                 </div>
-                
+
                 <div class="col">
                     <button class="btn btn-primary" (click)="save()" [disabled]="!isValid()">
                         <ng-container *ngIf="isCreateMode()">
-                           {{ ['Create', noun].join(' ') | translate }} 
+                           {{ ['Create', noun].join(' ') | translate }}
                         </ng-container>
                         <ng-container *ngIf="!isCreateMode()">
                             {{ ['Update', noun].join(' ') | translate }}
@@ -81,4 +81,4 @@
             </div>
         </clr-tab-content>
     </clr-tab>
-</clr-tabs>    
+</clr-tabs>

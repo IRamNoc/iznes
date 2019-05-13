@@ -149,7 +149,7 @@ export class AccountAdminCreateUpdateBase<Type> implements OnInit, OnDestroy {
             message = this.translate.translate('@entityName@ failed to be updated', { entityName });
         }
 
-        message += `.<br /><i>${errorMessage}</i>`;
+        message += `.<br /><i>${this.translate.translate(errorMessage)}</i>`;
 
         this.alerts.create('error', message);
     }
@@ -179,13 +179,15 @@ export class AccountAdminCreateUpdateBase<Type> implements OnInit, OnDestroy {
 
     protected onDeleteError(entityName: string, error: AccountAdminErrorResponse): void {
         let message = this.translate.translate('Failed to delete @entityName@', { entityName });
-        message += `<br /><i>${error[1].Data[0].Message}</i>`;
+        const errorMsg = error[1].Data[0].Message;
+
+        message += `<br /><i>${this.translate.translate(errorMsg)}</i>`;
 
         this.alerts.create('error', message);
     }
 
     protected onReadEntityError(): void {
-        const message = this.translate.translate(`Failed to read ${this.noun}`);
+        const message = this.translate.translate('Failed to read @noun@', { 'noun': this.noun });
         this.toaster.pop('error', message);
 
         this.router.navigateByUrl(this.getBackUrl());
