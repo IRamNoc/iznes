@@ -124,7 +124,7 @@
                                             <button class="btn" style="margin-right: 10px;" (click)="searchFilters.clear()">
                                                 <i class="fa fa-trash"></i> {{ 'Clear Filters' | translate }}
                                             </button>
-                                            <button *ngIf="hasPermission()" class="btn btn-success nomargin" (click)="exportOrders()">
+                                            <button *ngIf="hasPermissionManageOrder()" class="btn btn-success nomargin" (click)="exportOrders()">
                                                 <i class="fa fa-download"></i> {{ 'Export Orders CSV' | translate }}
                                             </button>
                                         </div>
@@ -237,6 +237,11 @@
                     </div>
                 </div>
 
+                <div *ngIf="!hasPermissionActionOnOrders()">
+                    <ng-container *ngTemplateOutlet="permissionAlert; context: {action: 'cancel'}"></ng-container>
+                    <ng-container *ngTemplateOutlet="permissionAlert; context: {action: 'payment'}"></ng-container>
+                </div>
+
                 <clr-dg-action-bar *ngIf="showSendPaymentMsgBtn">
                     <div class="btn-group">
                         <button type="button" class="btn btn-sm btn-secondary" (click)="showPaymentMsgConfirmationModal = true"><clr-icon shape="envelope"></clr-icon> Send Payment Message</button>
@@ -337,7 +342,7 @@
                         <span class="text-center">{{ 'Payment' | translate }}</span>
                     </clr-dg-column>
                     <!-- ACTIONS -->
-                    <clr-dg-column *ngIf="!isIznesAdmin" id="Order-Action" class="right">
+                    <clr-dg-column *ngIf="!isIznesAdmin && hasPermissionActionOnOrders()" id="Order-Action" class="right">
                         <span class="text-center">{{ 'Actions' | translate }}</span>
                     </clr-dg-column>
 
@@ -446,7 +451,7 @@
                             <span *ngSwitchCase="'ready'" class="label label-success">{{ 'Sent' | translate }}</span>
                             <clr-checkbox *ngSwitchCase="'pending'" [formControl]="order.markedForPayment" (clrCheckedChange)="updatePaymentCheckBoxState(order.orderID, $event)"  [clrDisabled]="!order.readyForPayment"></clr-checkbox>
                         </clr-dg-cell>
-                        <clr-dg-cell *ngIf="!isIznesAdmin" [ngSwitch]="order.orderStatus" class="right">
+                        <clr-dg-cell *ngIf="!isIznesAdmin && hasPermissionActionOnOrders()" [ngSwitch]="order.orderStatus" class="right">
                             <!--&lt;!&ndash; Actions &ndash;&gt;-->
                             <!--<button type="button" *ngIf="order.orderStatus == 1; else cancelDisabled" (click)="cancelOrder(i)" class="btn btn-sm btn-danger">{{ 'Cancel' | translate }}</button>-->
                             <!--<ng-template #cancelDisabled>-->
@@ -973,3 +978,24 @@
 
 <!--payment message sending confirmation modal-->
 <payment-msg-confirmation [(opened)]="showPaymentMsgConfirmationModal" [ordersList]="ordersList" (confirmToSend)="sendPaymentMsg($event)"></payment-msg-confirmation>
+
+<ng-template #permissionAlert let-action="action">
+    <div class="alert alert-warning">
+        <div class="alert-items">
+            <div class="alert-item static">
+                <div class="alert-icon-wrapper">
+                    <clr-icon class="alert-icon" shape="exclamation-triangle"></clr-icon>
+                </div>
+                <span class="alert-text">
+                    <ng-container *ngIf="action === 'cancel'">
+                        {{ 'Please contact the administrator to request permission to cancel an order.' | translate }}
+                    </ng-container>
+                    <ng-container *ngIf="action === 'payment'">
+                        {{ 'Please contact the administrator to request permission to send payment messages.' | translate }}
+                    </ng-container>
+                    <br />
+                </span>
+            </div>
+        </div>
+    </div>
+</ng-template>

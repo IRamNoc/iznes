@@ -97,7 +97,8 @@ export class ManageOrdersComponent implements OnInit, AfterViewInit, OnDestroy {
 
     showPaymentMsgConfirmationModal: boolean;
 
-    public hasPermissionView: boolean = false;
+    public hasPermissionManage: boolean = false;
+    public hasPermissionAction: boolean = false;
 
     // Locale
     language = 'en';
@@ -244,16 +245,16 @@ export class ManageOrdersComponent implements OnInit, AfterViewInit, OnDestroy {
 
     get fundClassificationsText(): string {
         try {
-            return fundClassifications[this.fundClassificationId].text
-        } catch(e) {
+            return fundClassifications[this.fundClassificationId].text;
+        } catch (e) {
             return '';
         }
     }
 
     get showSendPaymentMsgBtn(): boolean {
         // number of order marked for payment messages.
-        const nPMsg = this.ordersList.filter((o) => o.markedForPayment.value).length;
-        return this.isAssetManger && nPMsg > 0;
+        const nPMsg = this.ordersList.filter(o => o.markedForPayment.value).length;
+        return this.hasPermissionActionOnOrders() && this.isAssetManger && nPMsg > 0;
     }
 
     appSubscribe<T>(
@@ -372,7 +373,13 @@ export class ManageOrdersComponent implements OnInit, AfterViewInit, OnDestroy {
 
         this.permissionsService.hasPermission('manageOrder', 'canRead').then(
             (hasPermission) => {
-                this.hasPermissionView = hasPermission;
+                this.hasPermissionManage = hasPermission;
+            },
+        );
+
+        this.permissionsService.hasPermission('actionOnOrders', 'canRead').then(
+            (hasPermission) => {
+                this.hasPermissionAction = hasPermission;
             },
         );
 
@@ -532,7 +539,7 @@ export class ManageOrdersComponent implements OnInit, AfterViewInit, OnDestroy {
             const quantity = this.subEstimated(order, 'quantity', 'estimatedQuantity');
             const fee = amountWithCost - amount;
             const feePercentage = this.numberConverter.toFrontEnd(order.feePercentage) * 100;
-            const readyForPayment = (order.price > 0 && order.paymentMsgStatus === 'pending' );
+            const readyForPayment = (order.price > 0 && order.paymentMsgStatus === 'pending');
             const markedForPayment = new FormControl(this.orderCheckedForPayment.includes(orderId));
             const orderRef = this.getOrderRef(orderId);
             const orderTypeStr = this.getOrderTypeString(order);
@@ -1019,7 +1026,7 @@ export class ManageOrdersComponent implements OnInit, AfterViewInit, OnDestroy {
      * @param $event
      */
     sendPaymentMsg($event) {
-        this.ofiOrdersService.requestMarkOrderReadyForPayment({orderIds: $event}).then((r) => {
+        this.ofiOrdersService.requestMarkOrderReadyForPayment({ orderIds: $event }).then((r) => {
             const detailResps = get(r, '[1].Data[0].responses', []);
             const failedResps = detailResps.filter(dr => (get(dr, '[0].Status', 'Fail') !== 'OK'));
             if (failedResps.length > 0) {
@@ -1051,12 +1058,21 @@ export class ManageOrdersComponent implements OnInit, AfterViewInit, OnDestroy {
     }
 
     /**
-     * Has Permission?
+     * Has manageOrder permission ?
      *
      * @return {boolean}
      */
-    hasPermission() {
-        return this.hasPermissionView;
+    hasPermissionManageOrder() {
+        return this.hasPermissionManage;
+    }
+
+    /**
+     * Has actionOnOrder permission ?
+     *
+     * @return {boolean}
+     */
+    hasPermissionActionOnOrders() {
+        return this.hasPermissionAction;
     }
 
     ngOnDestroy(): void {

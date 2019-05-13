@@ -42,7 +42,7 @@ export class OfiHomeComponent implements AfterViewInit, OnInit, OnDestroy {
     /* Public properties. */
     public myDetails: any = {};
     public connectedWalletName = '';
-    public hasPermissionView: boolean = false;
+    public hasPermissionManage: boolean = false;
 
     /* Private properties. */
     private subscriptions: any[] = [];
@@ -113,7 +113,7 @@ export class OfiHomeComponent implements AfterViewInit, OnInit, OnDestroy {
 
         this.permissionsService.hasPermission('manageOrder', 'canRead').then(
             (hasPermission) => {
-                this.hasPermissionView = hasPermission;
+                this.hasPermissionManage = hasPermission;
                 this.changeDetectorRef.detectChanges();
             },
         );
@@ -206,7 +206,7 @@ export class OfiHomeComponent implements AfterViewInit, OnInit, OnDestroy {
      * @return {boolean}
      */
     hasPermission() {
-        return this.hasPermissionView;
+        return this.hasPermissionManage;
     }
 
     /* On Destroy. */
