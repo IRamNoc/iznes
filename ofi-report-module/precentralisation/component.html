@@ -112,7 +112,7 @@
                     <button *ngIf="isFundsPayloadOK" id="precentra-funds-export-btn" type="button" class="btn btn-success" style="max-width: none !important" (click)="exportPrecentralisationReport()">{{ 'Export Precentralisation' | translate }}</button>
                 </div>
 
-                <div *ngIf="!hasPermission()">
+                <div *ngIf="!hasPermissionManageOrders()">
                     <ng-container *ngTemplateOutlet="permissionAlert"></ng-container>
                 </div>
 
@@ -157,7 +157,7 @@
                         <ng-container *clrDgHideableColumn="{hidden: false}">{{ 'Net Amount (% AUI)' | translate }}
                         </ng-container>
                     </clr-dg-column>
-                    <clr-dg-column *ngIf="hasPermission()" class="right">{{ 'View Orders' | translate }}</clr-dg-column>
+                    <clr-dg-column *ngIf="hasPermissionManageOrders()" class="right">{{ 'View Orders' | translate }}</clr-dg-column>
 
                     <clr-dg-row *clrDgItems="let data of fundsDetails.funds; let id = index" [clrDgItem]="data">
                         <clr-dg-cell *ngIf="isSettlementSelected">{{data.settlementDate}}</clr-dg-cell>
@@ -174,7 +174,7 @@
                         </clr-dg-cell>
                         <clr-dg-cell class="right">{{data.netAmount | moneyValue:2}}</clr-dg-cell>
                         <clr-dg-cell class="right">{{data.netAmountRatio | moneyValue:2}}</clr-dg-cell>
-                        <ng-container *ngIf="hasPermission()">
+                        <ng-container *ngIf="hasPermissionManageOrders()">
                             <clr-dg-cell class="right">
                                 <button (click)="onClickViewCorrespondingOrders(id)" class="btn btn-info btn-sm">View</button>
                             </clr-dg-cell>
@@ -312,7 +312,7 @@
                     <button *ngIf="isSharesPayloadOK" id="precentra-shares-export-btn" type="button" class="btn btn-success" style="max-width: none !important" (click)="exportPrecentralisationReport()">{{ 'Export Precentralisation' | translate }}</button>
                 </div>
 
-                <div *ngIf="!hasPermission()">
+                <div *ngIf="!hasPermissionManageOrders()">
                     <ng-container *ngTemplateOutlet="permissionAlert"></ng-container>
                 </div>
 
@@ -357,7 +357,7 @@
                         <ng-container *clrDgHideableColumn="{hidden: false}">{{ 'Net Amout (% AUI)' | translate }}
                         </ng-container>
                     </clr-dg-column>
-                    <clr-dg-column *ngIf="hasPermission()" class="right">{{ 'View Orders' | translate }}</clr-dg-column>
+                    <clr-dg-column *ngIf="hasPermissionManageOrders()" class="right">{{ 'View Orders' | translate }}</clr-dg-column>
 
                     <clr-dg-row *clrDgItems="let data of sharesDetails.shares; let id = index" [clrDgItem]="data">
                         <clr-dg-cell *ngIf="isSettlementSelected">{{data.subscriptionSettlementDate}}</clr-dg-cell>
@@ -370,13 +370,13 @@
                         <clr-dg-cell class="right">{{data.shareAum | moneyValue:2}}</clr-dg-cell>
                         <clr-dg-cell class="right">{{data.netAmount | moneyValue:2}}</clr-dg-cell>
                         <clr-dg-cell class="right">{{data.netAmountRatio | moneyValue:2}}</clr-dg-cell>
-                        <ng-container *ngIf="hasPermission()">
+                        <ng-container *ngIf="hasPermissionManageOrders()">
                             <clr-dg-cell class="right">
                                 <button (click)="onClickViewCorrespondingOrders(id)" class="btn btn-info btn-sm">View</button>
                             </clr-dg-cell>
                         </ng-container>
 
-                        <ng-container ngProjectAs="clr-dg-row-detail" *ngIf="hasPermission()">
+                        <ng-container ngProjectAs="clr-dg-row-detail" *ngIf="hasPermissionManageOrders()">
                             <clr-dg-row-detail *clrIfExpanded>
                                 <div class="additionalInfos">
                                     <div class="row">

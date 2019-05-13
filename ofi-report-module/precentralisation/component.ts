@@ -73,7 +73,7 @@ export class PrecentralisationReportComponent implements OnInit, OnDestroy {
     private myDetails: any = {};
     private appConfig: any = {};
     private subscriptions: Array<any> = [];
-    public hasPermissionView: boolean = false;
+    public hasPermissionManage: boolean = false;
 
     fundsList: Array<any> = [];
     selectedFund = 0;
@@ -318,7 +318,7 @@ export class PrecentralisationReportComponent implements OnInit, OnDestroy {
 
         this.permissionsService.hasPermission('manageOrder', 'canRead').then(
             (hasPermission) => {
-                this.hasPermissionView = hasPermission;
+                this.hasPermissionManage = hasPermission;
             },
         );
     }
@@ -648,12 +648,12 @@ export class PrecentralisationReportComponent implements OnInit, OnDestroy {
     }
 
     /**
-     * Has Permission?
+     * Has manageOrders permission?
      *
      * @return {boolean}
      */
-    hasPermission() {
-        return this.hasPermissionView;
+    hasPermissionManageOrders() {
+        return this.hasPermissionManage;
     }
 
     ngOnDestroy() {

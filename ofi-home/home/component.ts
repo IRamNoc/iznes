@@ -201,11 +201,11 @@ export class OfiHomeComponent implements AfterViewInit, OnInit, OnDestroy {
     }
 
     /**
-     * Has Permission?
+     * Has manageOrders permission?
      *
      * @return {boolean}
      */
-    hasPermission() {
+    hasPermissionManageOrders() {
         return this.hasPermissionManage;
     }
 
