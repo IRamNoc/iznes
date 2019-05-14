@@ -97,8 +97,8 @@ export class ManageOrdersComponent implements OnInit, AfterViewInit, OnDestroy {
 
     showPaymentMsgConfirmationModal: boolean;
 
-    public hasPermissionManage: boolean = false;
-    public hasPermissionAction: boolean = false;
+    public hasPermissionManageOrders: boolean = false;
+    public hasPermissionActionOnOrders: boolean = false;
 
     // Locale
     language = 'en';
@@ -254,7 +254,7 @@ export class ManageOrdersComponent implements OnInit, AfterViewInit, OnDestroy {
     get showSendPaymentMsgBtn(): boolean {
         // number of order marked for payment messages.
         const nPMsg = this.ordersList.filter(o => o.markedForPayment.value).length;
-        return this.hasPermissionActionOnOrders() && this.isAssetManger && nPMsg > 0;
+        return this.isAssetManger && nPMsg > 0;
     }
 
     appSubscribe<T>(
@@ -373,13 +373,13 @@ export class ManageOrdersComponent implements OnInit, AfterViewInit, OnDestroy {
 
         this.permissionsService.hasPermission('manageOrder', 'canRead').then(
             (hasPermission) => {
-                this.hasPermissionManage = hasPermission;
+                this.hasPermissionManageOrders = hasPermission;
             },
         );
 
         this.permissionsService.hasPermission('actionOnOrders', 'canRead').then(
             (hasPermission) => {
-                this.hasPermissionAction = hasPermission;
+                this.hasPermissionActionOnOrders = hasPermission;
             },
         );
 
@@ -1055,24 +1055,6 @@ export class ManageOrdersComponent implements OnInit, AfterViewInit, OnDestroy {
         } else {
             this.orderCheckedForPayment.filter(v => v !== orderId);
         }
-    }
-
-    /**
-     * Has manageOrder permission ?
-     *
-     * @return {boolean}
-     */
-    hasPermissionManageOrder() {
-        return this.hasPermissionManage;
-    }
-
-    /**
-     * Has actionOnOrder permission ?
-     *
-     * @return {boolean}
-     */
-    hasPermissionActionOnOrders() {
-        return this.hasPermissionAction;
     }
 
     ngOnDestroy(): void {

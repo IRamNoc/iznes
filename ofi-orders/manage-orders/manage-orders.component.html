@@ -124,7 +124,7 @@
                                             <button class="btn" style="margin-right: 10px;" (click)="searchFilters.clear()">
                                                 <i class="fa fa-trash"></i> {{ 'Clear Filters' | translate }}
                                             </button>
-                                            <button *ngIf="hasPermissionManageOrder()" class="btn btn-success nomargin" (click)="exportOrders()">
+                                            <button *ngIf="hasPermissionManageOrders" class="btn btn-success nomargin" (click)="exportOrders()">
                                                 <i class="fa fa-download"></i> {{ 'Export Orders CSV' | translate }}
                                             </button>
                                         </div>
@@ -237,16 +237,23 @@
                     </div>
                 </div>
 
-                <div *ngIf="!hasPermissionActionOnOrders()">
+                <div class="form-group col-sm-12" *ngIf="!hasPermissionActionOnOrders">
                     <ng-container *ngTemplateOutlet="permissionAlert; context: {action: 'cancel'}"></ng-container>
+                    <ng-container *ngTemplateOutlet="permissionAlert; context: {action: 'settle'}"></ng-container>
                     <ng-container *ngTemplateOutlet="permissionAlert; context: {action: 'payment'}"></ng-container>
                 </div>
 
                 <clr-dg-action-bar *ngIf="showSendPaymentMsgBtn">
                     <div class="btn-group">
-                        <button type="button" class="btn btn-sm btn-secondary" (click)="showPaymentMsgConfirmationModal = true"><clr-icon shape="envelope"></clr-icon> Send Payment Message</button>
+                        <ng-container *ngIf="!hasPermissionActionOnOrders">
+                            <button type="button" class="btn btn-sm btn-secondary" disabled><clr-icon shape="envelope"></clr-icon> Send Payment Message</button>
+                        </ng-container>
+                        <ng-container *ngIf="hasPermissionActionOnOrders">
+                            <button type="button" class="btn btn-sm btn-secondary" (click)="showPaymentMsgConfirmationModal = true"><clr-icon shape="envelope"></clr-icon> Send Payment Message</button>
+                        </ng-container>
                     </div>
                 </clr-dg-action-bar>
+
                 <clr-datagrid (clrDgRefresh)="refresh($event)" [clrDgLoading]="loading" clrDgSortIcon #ordersDataGrid>
                     <clr-dg-column [clrDgField]="'orderRef'" clrDgSortIcon clrDgSortNoSearch id="Order-REF">
                         <ng-container *clrDgHideableColumn="{hidden: false}">{{ 'Order Reference' | translate }}
@@ -342,7 +349,7 @@
                         <span class="text-center">{{ 'Payment' | translate }}</span>
                     </clr-dg-column>
                     <!-- ACTIONS -->
-                    <clr-dg-column *ngIf="!isIznesAdmin && hasPermissionActionOnOrders()" id="Order-Action" class="right">
+                    <clr-dg-column *ngIf="!isIznesAdmin" id="Order-Action" class="right">
                         <span class="text-center">{{ 'Actions' | translate }}</span>
                     </clr-dg-column>
 
@@ -451,17 +458,23 @@
                             <span *ngSwitchCase="'ready'" class="label label-success">{{ 'Sent' | translate }}</span>
                             <clr-checkbox *ngSwitchCase="'pending'" [formControl]="order.markedForPayment" (clrCheckedChange)="updatePaymentCheckBoxState(order.orderID, $event)"  [clrDisabled]="!order.readyForPayment"></clr-checkbox>
                         </clr-dg-cell>
-                        <clr-dg-cell *ngIf="!isIznesAdmin && hasPermissionActionOnOrders()" [ngSwitch]="order.orderStatus" class="right">
+                        <clr-dg-cell *ngIf="!isIznesAdmin" [ngSwitch]="order.orderStatus" class="right">
                             <!--&lt;!&ndash; Actions &ndash;&gt;-->
                             <!--<button type="button" *ngIf="order.orderStatus == 1; else cancelDisabled" (click)="cancelOrder(i)" class="btn btn-sm btn-danger">{{ 'Cancel' | translate }}</button>-->
                             <!--<ng-template #cancelDisabled>-->
                             <!--<button type="button" class="btn btn-sm btn-info" disabled>{{ 'Cancel' | translate }}</button>-->
                             <!--</ng-template>-->
 
-                            <button type="button" class="btn btn-sm btn-danger" (click)="cancelOrder(i)" *ngSwitchCase="1">{{ 'Cancel' | translate }}</button>
+                            <ng-container *ngSwitchCase="1">
+                                <button type="button" class="btn btn-sm btn-danger" (click)="cancelOrder(i)" *ngIf="!hasPermissionActionOnOrders" disabled>{{ 'Cancel' | translate }}</button>
+                                <button type="button" class="btn btn-sm btn-danger" (click)="cancelOrder(i)" *ngIf="hasPermissionActionOnOrders">{{ 'Cancel' | translate }}</button>
+                            </ng-container>
+
+                            <!-- <button type="button" class="btn btn-sm btn-danger" (click)="cancelOrder(i)" *ngSwitchCase="1">{{ 'Cancel' | translate }}</button> -->
                             <ng-container *ngSwitchCase="4">
                                 <button type="button" *ngIf="isInvestorUser" class="btn btn-sm btn-info" disabled>{{ 'Cancel' | translate }}</button>
-                                <button type="button" *ngIf="!isInvestorUser" class="btn btn-sm btn-primary" (click)="settleOrder(i)">{{ 'Settle' | translate }}</button>
+                                <button type="button" *ngIf="!isInvestorUser && hasPermissionActionOnOrders" class="btn btn-sm btn-primary" (click)="settleOrder(i)">{{ 'Settle' | translate }}</button>
+                                <button type="button" *ngIf="!isInvestorUser && !hasPermissionActionOnOrders" class="btn btn-sm btn-primary" disabled>{{ 'Settle' | translate }}</button>
                             </ng-container>
                             <button type="button" class="btn btn-sm btn-info" disabled *ngSwitchDefault> {{ 'Cancel' | translate }}</button>
 
@@ -988,10 +1001,13 @@
                 </div>
                 <span class="alert-text">
                     <ng-container *ngIf="action === 'cancel'">
-                        {{ 'Please contact the administrator to request permission to cancel an order.' | translate }}
+                        {{ 'Please contact the administrator to request permission to cancel an order' | translate }}
+                    </ng-container>
+                    <ng-container *ngIf="action === 'settle'">
+                        {{ 'Please contact the administrator to request permission to settle an order' | translate }}
                     </ng-container>
                     <ng-container *ngIf="action === 'payment'">
-                        {{ 'Please contact the administrator to request permission to send payment messages.' | translate }}
+                        {{ 'Please contact the administrator to request permission to send payment messages' | translate }}
                     </ng-container>
                     <br />
                 </span>
