@@ -41,7 +41,7 @@ import { AlertsService } from '@setl/jaspero-ng2-alerts';
 import * as FundShareValue from '../../ofi-product/fund-share/fundShareValue';
 import { CalendarHelper } from '../../ofi-product/fund-share/helper/calendar-helper';
 import { OrderHelper } from '../../ofi-product/fund-share/helper/order-helper';
-import { OrderRequest } from '../../ofi-product/fund-share/helper/models';
+import { OrderRequest, fundClassifications } from '../../ofi-product/fund-share/helper/models';
 import { OrderByType, OrderType } from '../../ofi-orders/order.model';
 import { ToasterService, Toast } from 'angular2-toaster';
 import { Router } from '@angular/router';
@@ -53,7 +53,6 @@ import { DomSanitizer } from '@angular/platform-browser';
 import { FileDownloader } from '@setl/utils/services/file-downloader/service';
 import { OfiNavService } from '../../ofi-req-services/ofi-product/nav/service';
 import { validateKiid } from '../../ofi-store/ofi-fund-invest/ofi-fund-access-my';
-import { fundClassifications } from '../../ofi-product/fund-share/helper/models';
 
 interface DateChangeEvent {
     type: string;
@@ -593,7 +592,6 @@ export class InvestFundComponent implements OnInit, OnDestroy {
 
                 this.shareData = immutableHelper.get(shareData, String(this.shareId), {});
 
-
                 // Fallback to `Other` classification when Fund classification is not set
                 this.fundClassificationId = this.shareData.classification || 6;
 
@@ -990,7 +988,8 @@ export class InvestFundComponent implements OnInit, OnDestroy {
                 }
 
                 // show waiting pop up until create order response come back.
-                this.alertsService.create('info', `
+                this.alertsService.create(
+                    'info', `
                         <table class="table grid">
                             <tbody>
                                 <tr>
@@ -998,7 +997,9 @@ export class InvestFundComponent implements OnInit, OnDestroy {
                                 </tr>
                             </tbody>
                         </table>
-                `, { showCloseButton: false, overlayClickToClose: false });
+                    `,
+                    { showCloseButton: false, overlayClickToClose: false },
+                );
 
                 this.ofiOrdersService.addNewOrder(request).then((data) => {
                     // log to remote server about order is placed
@@ -1331,7 +1332,9 @@ export class InvestFundComponent implements OnInit, OnDestroy {
         let conditionalMessage;
         if (this.type === 'redeem') {
             const quantityBlockchain = this.numberConverterService.toBlockchain(quantity);
-            conditionalMessage = (quantityBlockchain === this.subPortfolioBalance) ? `<p class="mb-1"><span class="text-danger blink_me">${this.translate.translate('All your position for this portfolio will be redeemed')}</span></p>` : '';
+            conditionalMessage = (quantityBlockchain === this.subPortfolioBalance)
+            ? `<p class="mb-1"><span class="text-danger blink_me">${this.translate.translate('All your position for this portfolio will be redeemed')}</span></p>`
+            : '';
         }
 
         let orderValueHtml = '';
@@ -1697,12 +1700,16 @@ export class InvestFundComponent implements OnInit, OnDestroy {
                     <tbody>
                         <tr>
                             <td class="text-center text-danger">
-                                ${this.translate.getTranslationByString('You may not place this redemption order because on the basis of your already made redemption orders you will sell more than 80% of your positions.')}
+                                ${this.translate.getTranslationByString(
+                                    'You may not place this redemption order because on the basis of your already made redemption orders you will sell more than 80% of your positions.',
+                                )}
                             </td>
                         </tr>
                         <tr>
                             <td class="text-center text-danger">
-                                ${this.translate.getTranslationByString('If you wish to redeem more than 80% of your position, you can cancel previous redeem orders and place an order in quantity.')}
+                                ${this.translate.getTranslationByString(
+                                    'If you wish to redeem more than 80% of your position, you can cancel previous redeem orders and place an order in quantity.',
+                                )}
                             </td>
                         </tr>
                     </tbody>
@@ -1774,7 +1781,6 @@ export class InvestFundComponent implements OnInit, OnDestroy {
         }).then((response) => {
             this.valuationNav = response;
         }).catch(e => console.error(e));
-
     }
 }
 
