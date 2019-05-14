@@ -1,7 +1,6 @@
 /* Core/Angular imports. */
 import {
     AfterViewInit,
-    ChangeDetectionStrategy,
     ChangeDetectorRef,
     Component,
     Inject,
@@ -42,7 +41,8 @@ export class OfiHomeComponent implements AfterViewInit, OnInit, OnDestroy {
     /* Public properties. */
     public myDetails: any = {};
     public connectedWalletName = '';
-    public hasPermissionManage: boolean = false;
+    public hasPermissionManageOrders: boolean = false;
+    public hasPermissionViewRecordkeeping: boolean = false;
 
     /* Private properties. */
     private subscriptions: any[] = [];
@@ -113,7 +113,14 @@ export class OfiHomeComponent implements AfterViewInit, OnInit, OnDestroy {
 
         this.permissionsService.hasPermission('manageOrder', 'canRead').then(
             (hasPermission) => {
-                this.hasPermissionManage = hasPermission;
+                this.hasPermissionManageOrders = hasPermission;
+                this.changeDetectorRef.detectChanges();
+            },
+        );
+
+        this.permissionsService.hasPermission('viewRecordkeeping', 'canRead').then(
+            (hasPermission) => {
+                this.hasPermissionViewRecordkeeping = hasPermission;
                 this.changeDetectorRef.detectChanges();
             },
         );
@@ -198,15 +205,6 @@ export class OfiHomeComponent implements AfterViewInit, OnInit, OnDestroy {
 
         /* Return. */
         return;
-    }
-
-    /**
-     * Has manageOrders permission?
-     *
-     * @return {boolean}
-     */
-    hasPermissionManageOrders() {
-        return this.hasPermissionManage;
     }
 
     /* On Destroy. */
