@@ -237,7 +237,7 @@
                     </div>
                 </div>
 
-                <div class="form-group col-sm-12" *ngIf="!hasPermissionActionOnOrders">
+                <div class="form-group col-sm-12" *ngIf="!hasPermissionActionOnOrders && ordersList.length">
                     <ng-container *ngTemplateOutlet="permissionAlert; context: {action: 'cancel'}"></ng-container>
                     <ng-container *ngTemplateOutlet="permissionAlert; context: {action: 'settle'}"></ng-container>
                     <ng-container *ngTemplateOutlet="permissionAlert; context: {action: 'payment'}"></ng-container>
