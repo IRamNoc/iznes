@@ -1,4 +1,4 @@
-import { Component, OnInit, OnDestroy, Input, Output, EventEmitter } from '@angular/core';
+import { Component, OnInit, OnDestroy, Input, Output, EventEmitter, Inject } from '@angular/core';
 import { FormControl } from '@angular/forms';
 import { Subject } from 'rxjs/Subject';
 import { Subscription } from 'rxjs/Subscription';
@@ -16,7 +16,7 @@ import { AccountAdminPermissionsServiceBase } from './service';
 import * as PermissionsModel from './model';
 import * as TeamsModel from '../../../teams/model';
 import { UserTeamsService } from '../../../teams/service';
-import { immutableHelper } from '@setl/utils';
+import { immutableHelper, APP_CONFIG, AppConfig } from '@setl/utils';
 
 @Component({
     selector: 'app-core-admin-permissions',
@@ -30,6 +30,7 @@ export class AccountAdminPermissionsComponentBase implements OnInit, OnDestroy {
     @Input() isUser: boolean = false;
     @Input() showTeamSelect: boolean = true;
 
+    appConfig: AppConfig;
     originalTeamPermissions: PermissionsModel.AccountAdminPermission[] = [];
     permissions: PermissionsModel.AccountAdminPermission[];
     teamsControl: FormControl = new FormControl();
@@ -55,7 +56,9 @@ export class AccountAdminPermissionsComponentBase implements OnInit, OnDestroy {
                 private alerts: AlertsService,
                 private teamsService: UserTeamsService,
                 private translate: MultilingualService,
+                @Inject(APP_CONFIG) appConfig: AppConfig,
     ) {
+        this.appConfig = appConfig;
     }
 
     ngOnInit() {
@@ -189,26 +192,35 @@ export class AccountAdminPermissionsComponentBase implements OnInit, OnDestroy {
                             acc.toDelete.push(val.permissionAreaID);
                         }
                     }
-                    // If 'Action on Orders' is true, then 'View Orders' must be set to true
-                    if (val.name === 'Action on Orders' && Boolean(val.state) === true) {
-                        this.permissions.forEach((p, index) => {
-                            if (p.name === 'View Orders') {
-                                // Toggle the 'View Orders' permission to `ON`
-                                this.permissions[index].state = true;
-                                // Add the 'View Orders' permission to the add queue
-                                acc.toAdd.push(p.permissionAreaID);
-                                // Remove the 'View Orders' permission from the delete queue
-                                acc.toDelete.forEach((d, index) => {
-                                    if (d === p.permissionAreaID) delete acc.toDelete[index];
-                                });
-                            }
-                        });
+
+                    if (this.appConfig.platform === 'IZNES') {
+                        acc = this.setPermissionRelationships(val, acc);
                     }
 
                     return acc;
                 },
                 { toAdd: [], toDelete: [] },
             );
+    }
+
+    setPermissionRelationships(permission, accumulator): any {
+        // If 'Action on Orders' is true, then 'View Orders' must be set to true
+        if (permission.name === 'Action on Orders' && Boolean(permission.state) === true) {
+            this.permissions.forEach((p, index) => {
+                if (p.name === 'View Orders') {
+                    // Toggle the 'View Orders' permission to `ON`
+                    this.permissions[index].state = true;
+                    // Add the 'View Orders' permission to the add queue
+                    accumulator.toAdd.push(p.permissionAreaID);
+                    // Remove the 'View Orders' permission from the delete queue
+                    accumulator.toDelete.forEach((d, index) => {
+                        if (d === p.permissionAreaID) delete accumulator.toDelete[index];
+                    });
+                }
+            });
+        }
+
+        return accumulator;
     }
 
     isProcessing(): boolean {
