@@ -212,6 +212,9 @@ export class AccountAdminPermissionsComponentBase implements OnInit, OnDestroy {
             'Update KYC Requests': {
                 relatedPermission: 'View KYC Requests',
             },
+            'View Client Referentials': {
+                relatedPermission: 'View Portfolio Manager',
+            },
         };
 
         if (permissionRelationships[permission.name]) {
