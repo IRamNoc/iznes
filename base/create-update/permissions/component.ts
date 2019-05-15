@@ -176,7 +176,7 @@ export class AccountAdminPermissionsComponentBase implements OnInit, OnDestroy {
     }
 
     updatePermission(): void {
-        // Build modificatePermissionCache.
+        // Build modificatePermissionCache
         this.modificatePermissionCache =
             this.permissions.filter(v => v.parentID !== null).reduce(
                 (acc, val) => {
@@ -204,20 +204,31 @@ export class AccountAdminPermissionsComponentBase implements OnInit, OnDestroy {
     }
 
     setPermissionRelationships(permission, accumulator): any {
-        // If 'Action on Orders' is true, then 'View Orders' must be set to true
-        if (permission.name === 'Action on Orders' && Boolean(permission.state) === true) {
-            this.permissions.forEach((p, index) => {
-                if (p.name === 'View Orders') {
-                    // Toggle the 'View Orders' permission to `ON`
-                    this.permissions[index].state = true;
-                    // Add the 'View Orders' permission to the add queue
-                    accumulator.toAdd.push(p.permissionAreaID);
-                    // Remove the 'View Orders' permission from the delete queue
-                    accumulator.toDelete.forEach((d, index) => {
-                        if (d === p.permissionAreaID) delete accumulator.toDelete[index];
-                    });
-                }
-            });
+        // If key permission is enabled, then relatedPermission must be enabled
+        const permissionRelationships = {
+            'Action on Orders': {
+                relatedPermission: 'View Orders',
+            },
+            'Update KYC Requests': {
+                relatedPermission: 'View KYC Requests',
+            },
+        };
+
+        if (permissionRelationships[permission.name]) {
+            if (Boolean(permission.state) === true) {
+                this.permissions.forEach((p, index) => {
+                    if (p.name === permissionRelationships[permission.name].relatedPermission) {
+                        // Enable the relatedPermission
+                        this.permissions[index].state = true;
+                        // Add the relatedPermission to the add queue
+                        accumulator.toAdd.push(p.permissionAreaID);
+                        // Remove the relatedPermission from the delete queue
+                        accumulator.toDelete.forEach((d, index) => {
+                            if (d === p.permissionAreaID) delete accumulator.toDelete[index];
+                        });
+                    }
+                });
+            }
         }
 
         return accumulator;
