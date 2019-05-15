@@ -19,6 +19,7 @@ import { mDateHelper, SagaHelper, ConfirmationService, LogService } from '@setl/
 import { InvestorModel } from './model';
 import { ToasterService } from 'angular2-toaster';
 import { InitialisationService, MyWalletsService } from '@setl/core-req-services';
+import { PermissionsService } from '@setl/utils/services/permissions';
 import { CLEAR_REQUESTED } from '@ofi/ofi-main/ofi-store/ofi-kyc/ofi-am-kyc-list';
 import { MultilingualService } from '@setl/multilingual';
 import { investorStatusList } from '@ofi/ofi-main/ofi-kyc/my-requests/requests.config';
@@ -57,6 +58,8 @@ export class OfiWaitingApprovalComponent implements OnInit, OnDestroy {
     investorID;
     isProOpen = true;
     message;
+
+    public hasPermissionUpdateKycRequests: boolean = false;
 
     approveKycModal;
     investorStatusList;
@@ -103,6 +106,7 @@ export class OfiWaitingApprovalComponent implements OnInit, OnDestroy {
                 private walletsService: MyWalletsService,
                 private logService: LogService,
                 public translate: MultilingualService,
+                public permissionsService: PermissionsService,
                 private messagesService: MessagesService,
                 private domSanitizer: DomSanitizer,
     ) {
@@ -129,12 +133,18 @@ export class OfiWaitingApprovalComponent implements OnInit, OnDestroy {
     }
 
     ngOnInit(): void {
-        this.subscriptions.push(this.requestLanguageObs.subscribe((language) => this.getLanguage(language)));
-        this.subscriptions.push(this.userDetailObs.subscribe((userDetail) => this.getUserDetail(userDetail)));
-        this.subscriptions.push(this.requestedAmKycListObs.subscribe((requested) => this.setAmKycListRequested(requested)));
-        this.subscriptions.push(this.amKycListObs.subscribe((amKycList) => this.getAmKycList(amKycList)));
+        this.subscriptions.push(this.requestLanguageObs.subscribe(language => this.getLanguage(language)));
+        this.subscriptions.push(this.userDetailObs.subscribe(userDetail => this.getUserDetail(userDetail)));
+        this.subscriptions.push(this.requestedAmKycListObs.subscribe(requested => this.setAmKycListRequested(requested)));
+        this.subscriptions.push(this.amKycListObs.subscribe(amKycList => this.getAmKycList(amKycList)));
 
         this.getClassification();
+
+        this.permissionsService.hasPermission('updateKycRequests', 'canRead').then(
+            (hasPermission) => {
+                this.hasPermissionUpdateKycRequests = hasPermission;
+            },
+        );
     }
 
     ngOnDestroy(): void {
@@ -308,7 +318,7 @@ export class OfiWaitingApprovalComponent implements OnInit, OnDestroy {
         let additionalText = this.waitingApprovalFormGroup.controls['additionalText'].value.trim();
         additionalText = this.domSanitizer.sanitize(SecurityContext.HTML, additionalText);
 
-        const translatedAdditionalText = this.translate.translate('@additionalText@', { 'additionalText': additionalText });
+        const translatedAdditionalText = this.translate.translate('@additionalText@', { additionalText });
 
         const message = `${this.translate.translate('Are you sure you want to reject this client\'s application?')}<br>
         ${this.translate.translate('Here is the message that will be sent to the investor')}:<br /><textarea style="margin-top:15px;" disabled>${translatedAdditionalText}</textarea><br /> ${this.translate.translate('You can also ask for more information to this client in the previous page')}.`;
@@ -334,10 +344,10 @@ export class OfiWaitingApprovalComponent implements OnInit, OnDestroy {
         let additionalText = this.waitingApprovalFormGroup.controls['additionalText'].value.trim();
         additionalText = this.domSanitizer.sanitize(SecurityContext.HTML, additionalText);
 
-        const translatedAdditionalText = this.translate.translate('@additionalText@', { 'additionalText': additionalText });
+        const translatedAdditionalText = this.translate.translate('@additionalText@', { additionalText });
 
         const message = `${this.translate.translate('Are you sure you want to ask for more information?')}<br>${this.translate.translate('Here is the message that will be sent to the investor')}:<br /><textarea style="margin-top:15px;" disabled>${translatedAdditionalText}</textarea>`;
-        
+
         const safeMessage = this.domSanitizer.bypassSecurityTrustHtml(message);
         this.confirmationService.create(
             this.translate.translate('Ask for more information'),
@@ -377,7 +387,7 @@ export class OfiWaitingApprovalComponent implements OnInit, OnDestroy {
                 'success',
                 this.translate.translate(
                     'An email has been sent to @companyName@ in order to ask for more information.',
-                    { 'companyName': this.investor.companyName.value },
+                    { companyName: this.investor.companyName.value },
                 ),
             );
             this.setAmKycListRequested(true);
@@ -486,10 +496,10 @@ export class OfiWaitingApprovalComponent implements OnInit, OnDestroy {
     sendActionMessageToInvestor(investorWalletId: number) {
         const subject = (this.language === 'fr-Latn')
             ? this.translate.translate(
-                'Documents KYC: @amCompanyName@ a approuvé vos documents KYC', { 'amCompanyName': this.amCompanyName },
+                'Documents KYC: @amCompanyName@ a approuvé vos documents KYC', { amCompanyName: this.amCompanyName },
             )
             : this.translate.translate(
-                'KYC Documents: @amCompanyName@ approved your KYC documents', { 'amCompanyName': this.amCompanyName },
+                'KYC Documents: @amCompanyName@ approved your KYC documents', { amCompanyName: this.amCompanyName },
             );
 
         const actionConfig = new MessageKycConfig();
