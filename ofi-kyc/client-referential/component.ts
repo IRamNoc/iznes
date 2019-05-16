@@ -45,6 +45,7 @@ export class OfiClientReferentialComponent implements OnInit, OnDestroy {
     currentTab = 1;
 
     public hasPermissionClientReferentialUpdate: boolean = false;
+    public hasPermissionInvestorInvitation: boolean = false;
 
     public subscriptions: Array<any> = [];
 
@@ -133,6 +134,12 @@ export class OfiClientReferentialComponent implements OnInit, OnDestroy {
         this.permissionsService.hasPermission('manageClientReferential', 'canUpdate').then(
             (hasPermission) => {
                 this.hasPermissionClientReferentialUpdate = hasPermission;
+            },
+        );
+
+        this.permissionsService.hasPermission('investorInvitation', 'canRead').then(
+            (hasPermission) => {
+                this.hasPermissionInvestorInvitation = hasPermission;
             },
         );
 
@@ -329,7 +336,7 @@ export class OfiClientReferentialComponent implements OnInit, OnDestroy {
     getClientReferentialDescriptionTitle(): string {
         const companyName = this.companyName || '';
         const reference = get(this.clients, [this.kycId, 'clientReference'], '') || '';
-        return `: ${companyName}: ${reference}`;
+        return (reference && companyName) ? `: ${companyName}: ${reference}` : (!reference) ? `: ${companyName}` : `: ${reference}`;
     }
 
     requestSearch() {
