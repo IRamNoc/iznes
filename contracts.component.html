@@ -136,10 +136,10 @@
                     <ul class="list-group list-group-flush">
                         <li class="list-group-item list-group-header">
                             <div class="row">
-                                <div class="col-xs-2">
+                                <div class="col-xs-1">
                                     {{ 'Direction' | translate }}
                                 </div>
-                                <div class="col-xs-1 text-right">
+                                <div class="col-xs-3 text-right">
                                     {{ 'Amount' | translate }}
                                 </div>
                                 <div class="col-xs-3">
@@ -148,17 +148,17 @@
                                 <div class="col-xs-1">
                                     {{ 'Issuance' | translate }}
                                 </div>
-                                <div class="col-xs-1">
+                                <div class="col-xs-3">
                                     {{ 'Metadata' | translate }}
                                 </div>
                             </div>
                         </li>
                         <li class="list-group-item" *ngFor="let item of party.payList">
                             <div class="row">
-                                <div class="col-xs-2">
+                                <div class="col-xs-1">
                                     <span class="label label-success"><i class="fa fa-arrow-up" style="margin-right: 5px"></i> {{ 'send' | translate }}</span>
                                 </div>
-                                <div class="col-xs-1 text-right">
+                                <div class="col-xs-3 text-right">
                                     <span style="font-family: monospace">{{item.quantity|moneyValue}}</span>
                                 </div>
                                 <div class="col-xs-3">
@@ -168,17 +168,17 @@
                                     <span class="label label-success" *ngIf="item.issuance"><i class="fa fa-check" style="margin-right: 5px"></i> {{ 'yes' | translate }}</span>
                                     <span class="label label-danger" *ngIf="!item.issuance"><i class="fa fa-times" style="margin-right: 5px"></i> {{ 'no' | translate }}</span>
                                 </div>
-                                <div class="col-xs-5">
+                                <div class="col-xs-3">
                                     <textarea class="metadata" *ngIf="item.metadata">{{item.metadata}}</textarea>
                                 </div>
                             </div>
                         </li>
                         <li class="list-group-item" *ngFor="let item of party.receiveList">
                             <div class="row">
-                                <div class="col-xs-2">
+                                <div class="col-xs-1">
                                     <span class="label label-danger"><i class="fa fa-arrow-down" style="margin-right: 5px"></i> {{ 'receive' | translate }}</span>
                                 </div>
-                                <div class="col-xs-1 text-right">
+                                <div class="col-xs-3 text-right">
                                     <span style="font-family: monospace">{{item.quantity|moneyValue}}</span>
                                 </div>
                                 <div class="col-xs-3">
@@ -188,7 +188,7 @@
                                     <span class="label label-success" *ngIf="item.issuance"><i class="fa fa-check" style="margin-right: 5px"></i> {{ 'yes' | translate }}</span>
                                     <span class="label label-danger" *ngIf="!item.issuance"><i class="fa fa-times" style="margin-right: 5px"></i> {{ 'no' | translate }}</span>
                                 </div>
-                                <div class="col-xs-5">
+                                <div class="col-xs-3">
                                     <textarea class="metadata" *ngIf="item.metadata">{{item.metadata}}</textarea>
                                 </div>
                             </div>
