@@ -28,6 +28,7 @@ const DIVIDER_NUMBER = 100000;
 export class OfiFundAccessTable {
     tableData: any;
     oldTableData: any;
+    hasPermission: boolean;
 
     @Input() set tableDataArr(tableData) {
         this.tableData = tableData;
@@ -40,6 +41,10 @@ export class OfiFundAccessTable {
     @Input() set otherData(data) {
         this.investorData = data['investorData'];
         this.amCompany = data['amCompany'];
+    }
+
+    @Input() set hasPermissionUpdate(permission) {
+        this.hasPermission = permission;
     }
 
     @Output() back: EventEmitter<any> = new EventEmitter();
