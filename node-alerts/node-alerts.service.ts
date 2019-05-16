@@ -63,13 +63,15 @@ export class NodeAlertsService {
     }
 
     setWalletNodeCallbacks() {
-        this.walletNodeSocketService.walletnodeUpdateCallback = (id, message, userData) => {
+        this.walletNodeSocketService.updateTopic.pipe(
+            takeUntil(this.walletNodeSocketService.waiveConnection),
+        ).subscribe(({id, message, userData}) => {
             this.walletNodeChannelService.resolveChannelMessage(
                 id,
                 message,
                 userData,
             );
-        };
+        });
 
         merge(
             this.walletNodeSocketService.open.pipe(mapTo('open')),  // 1.  Listen to open and emit "open"
