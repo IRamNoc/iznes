@@ -31,12 +31,12 @@
             <clr-dg-row *clrDgItems="let contract of contracts; let i = index">
                 <clr-dg-cell><span id="contract-{{contract.index}}"><span>{{ 'Contract' | translate }}</span> {{contract.name}}</span>
                 </clr-dg-cell>
-                <clr-dg-cell>{{contract.issuingaddress_label}}</clr-dg-cell>
+                <clr-dg-cell>{{contract.issuingaddress_label}} {{contract.__canceltime}}</clr-dg-cell>
                 <clr-dg-cell>{{contract.expiry * 1000 | datex:'DD MMM YYYY HH:mm:ss'}}</clr-dg-cell>
                 <clr-dg-cell>
-                    <span *ngIf="contract.__completed == -1" class="label label-success">{{ 'Complete' | translate }}</span>
+                    <span *ngIf="contract.__completed == -1 && !contract.__canceltime" class="label label-success">{{ 'Complete' | translate }}</span>
                     <span *ngIf="contract.__completed !== -1" class="label label-warning">{{ 'Incomplete' | translate }}</span>
-                    <span *ngIf="contract.__completed == -1 && (contract.__canceltime && contract.__canceltime > 1)" class="label label-error">{{ 'Cancelled' | translate }}</span>
+                    <span *ngIf="contract.__completed == -1 && (contract.__canceltime && contract.__canceltime > 1)" class="label label-danger">{{ 'Cancelled' | translate }}</span>
                 </clr-dg-cell>
                 <clr-dg-cell class="right">
                     <button id="edit-{{contract.address}}" (click)="handleView(contract)" class="btn btn-sm">
@@ -61,8 +61,9 @@
             </div>
             <div class="col-xs-6">
                 <div class="form-group tx-view-header" style="float:right">
-                    <span *ngIf="contract.__completed === -1" class="label label-success" style="font-size:16px">{{ 'Complete' | translate }}</span>
-                    <span *ngIf="contract.__completed !== -1" class="label label-warning" style="font-size:16px">{{ 'Incomplete' | translate }}</span>
+                    <span *ngIf="contract.__completed === -1 && !contract.__canceltime" class="label label-success" style="font-size:16px; padding: 20px; border-radius: 20px;">{{ 'Complete' | translate }}</span>
+                    <span *ngIf="contract.__completed !== -1" class="label label-warning" style="font-size:16px; padding: 20px; border-radius: 20px;">{{ 'Incomplete' | translate }}</span>
+                    <span *ngIf="contract.__completed !== -1 && (contract.__canceltime && contract.__canceltime > 1)" class="label label-danger" style="font-size:16px; padding: 20px; border-radius: 20px;">{{ 'Cancelled' | translate }}</span>
                 </div>
             </div>
         </div>
@@ -116,7 +117,7 @@
                     <div class="card-block">
                         <div class="row">
                             <div class="col-sm-6">
-                                <h4 class="card-title"><i class="fa fa-user"></i> {{party.partyIdentifier}}</h4>
+                                <h4 class="card-title"><i class="fa fa-user"></i>Party {{party.partyIdentifier}}</h4>
                                 <p class="card-text">
                                     <span class="label">{{party.sigAddress}}<span *ngIf="party.sigAddress_label != party.sigAddress">&nbsp;| {{party.sigAddress_label}}</span></span>
                                 </p>
@@ -125,9 +126,8 @@
                                 <div class="pull-right">
                                     <span *ngIf="showCommitButton('committed', contract, party)" class="label label-success"><i class="fa fa-check"></i>{{ 'Committed' | translate }}</span>
                                     <span *ngIf="showCommitButton('notCommitted', contract, party)" class="label label-info"><i class="fa fa-clock-o"></i>{{ 'Not Committed' | translate }}</span>
-                                    <span *ngIf="showCommitButton('commit', contract, party)" id="edit-{{i}}" (click)="commitParty(party, contract)" class="label label-commit">
-                                            <i class="fa fa-check"></i>{{ 'Commit' | translate }}
-                                        </span>
+                                    <button *ngIf="showCommitButton('commit', contract, party)" id="edit-{{i}}" type="button" class="btn btn-primary" (click)="commitParty(party, contract)"><i class="fa fa-check"></i>&nbsp;{{ 'Commit' | translate }}
+                                    </button>
                                     <span *ngIf="showCommitButton('committing', contract, party)" class="label label-committing"><i class="fa fa-spinner fa-spin"></i>{{ 'Committing...' | translate }}</span>
                                 </div>
                             </div>
@@ -313,7 +313,7 @@
         </div>
 
         <div class="form-group tx-view-header">
-            <button type="button" class="btn btn-primary" (click)="closeTab(id)"><i class="fa fa-times"></i>&nbsp;{{ 'Close' | translate }}
+            <button type="button" class="btn btn-secondary" (click)="closeTab(id)"><i class="fa fa-times"></i>&nbsp;{{ 'Close' | translate }}
             </button>
         </div>
     </div>
