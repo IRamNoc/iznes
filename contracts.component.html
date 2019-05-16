@@ -31,7 +31,7 @@
             <clr-dg-row *clrDgItems="let contract of contracts; let i = index">
                 <clr-dg-cell><span id="contract-{{contract.index}}"><span>{{ 'Contract' | translate }}</span> {{contract.name}}</span>
                 </clr-dg-cell>
-                <clr-dg-cell>{{contract.issuingaddress_label}} {{contract.__canceltime}}</clr-dg-cell>
+                <clr-dg-cell>{{contract.issuingaddress_label}}</clr-dg-cell>
                 <clr-dg-cell>{{contract.expiry * 1000 | datex:'DD MMM YYYY HH:mm:ss'}}</clr-dg-cell>
                 <clr-dg-cell>
                     <span *ngIf="contract.__completed == -1 && !contract.__canceltime" class="label label-success">{{ 'Complete' | translate }}</span>
@@ -75,11 +75,11 @@
                     <section class="form-block">
                         <div class="form-group row">
                             <div class="col-sm-6">
-                                <label for="expiryDate">{{ 'Address' | translate }}</label>
+                                <label for="expiryDate">{{ 'Contract Address' | translate }}</label>
                                 <input type="text" id="address" size="45" disabled [value]="contract.__address">
                             </div>
                             <div class="col-sm-6">
-                                <label for="issuer">{{ 'Issuer' | translate }}</label>
+                                <label for="issuer">{{ 'Contract Creator' | translate }}</label>
                                 <input type="text" id="issuer" size="45" disabled [value]="contract.issuingaddress">
                             </div>
                         </div>
@@ -105,7 +105,7 @@
                             </div>
                             <div class="col-sm-6">
                                 <label for="useEncumbrance">{{ 'Metadata' | translate }}</label>
-                                <div><code class="metadata" *ngIf="contract.metadata">{{contract.metadata}}</code></div>
+                                <div><textarea class="metadata" *ngIf="contract.metadata">{{contract.metadata}}</textarea></div>
                             </div>
                         </div>
                     </section>
@@ -117,9 +117,9 @@
                     <div class="card-block">
                         <div class="row">
                             <div class="col-sm-6">
-                                <h4 class="card-title"><i class="fa fa-user"></i>Party {{party.partyIdentifier}}</h4>
+                                <h4 class="card-title"><i class="fa fa-user"></i>Party {{party.partyIdentifier}} - <span>{{party.sigAddress}}</span></h4>
                                 <p class="card-text">
-                                    <span class="label">{{party.sigAddress}}<span *ngIf="party.sigAddress_label != party.sigAddress">&nbsp;| {{party.sigAddress_label}}</span></span>
+                                    <span class="label" *ngIf="party.sigAddress_label != party.sigAddress"><span>{{party.sigAddress_label}}</span></span>
                                 </p>
                             </div>
                             <div class="col-sm-6">
@@ -169,7 +169,7 @@
                                     <span class="label label-danger" *ngIf="!item.issuance"><i class="fa fa-times" style="margin-right: 5px"></i> {{ 'no' | translate }}</span>
                                 </div>
                                 <div class="col-xs-5">
-                                    <code class="metadata" *ngIf="item.metadata">{{item.metadata}}</code>
+                                    <textarea class="metadata" *ngIf="item.metadata">{{item.metadata}}</textarea>
                                 </div>
                             </div>
                         </li>
@@ -189,7 +189,7 @@
                                     <span class="label label-danger" *ngIf="!item.issuance"><i class="fa fa-times" style="margin-right: 5px"></i> {{ 'no' | translate }}</span>
                                 </div>
                                 <div class="col-xs-5">
-                                    <code class="metadata" *ngIf="item.metadata">{{item.metadata}}</code>
+                                    <textarea class="metadata" *ngIf="item.metadata">{{item.metadata}}</textarea>
                                 </div>
                             </div>
                         </li>

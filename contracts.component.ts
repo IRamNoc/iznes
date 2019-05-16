@@ -204,7 +204,7 @@ export class ContractsComponent implements OnInit, OnDestroy {
             case 'committed':
                 return party.signature || (contract.issuingaddress === party.sigAddress && !party.mustSign);
             case 'notCommitted':
-                return !party.signature && party.sigAddress_label === party.sigAddress;
+                return !party.signature && party.sigAddress_label === party.sigAddress && party.payList.length > 0;
             case 'commit':
                 return (!party.signature && party.sigAddress_label !== party.sigAddress &&
                     !this.committing.includes(party.partyIdentifier)) &&

@@ -53,6 +53,11 @@ code.metadata {
     background: #d5d6da;
     color: #656880;
 }
+
+textarea.metadata {
+    min-height: 130px;
+}
+
 .label-commit {
     border-color: #ccc;
     color: #ccc;
