@@ -11,14 +11,14 @@ export class WalletNodeSocketService {
 
     public freshConnectionSubject: Subject<boolean> = new Subject<boolean>();
     public waiveConnectionSubject: Subject<boolean> = new Subject<boolean>();
+    public updateTopicSubject: Subject<any> = new Subject<any>();
 
     private websocket: SetlWebSocket;
     private callBackRegister: SetlCallbackRegister;
     private walletNodeToken: string;
 
-    // Expose on update callback.
-    // Default to nothing now.
-    public walletnodeUpdateCallback: any = () => true;
+    // on update callback.
+    private walletnodeUpdateCallback: any = (id, message, userData) => this.updateTopicSubject.next({id, message, userData});
 
     constructor() {
     }
@@ -39,6 +39,10 @@ export class WalletNodeSocketService {
     // if connection is fresh new one. such as connect to walletnode after login
     get freshConnection() {
         return this.freshConnectionSubject.asObservable();
+    }
+
+    get updateTopic() {
+        return this.updateTopicSubject.asObservable();
     }
 
     /**
@@ -199,4 +203,3 @@ export class WalletNodeSocketService {
         this.callBackRegister = undefined;
     }
 }
-
