@@ -23,13 +23,13 @@
 <ng-template #contractsListTab>
     <div class="panel-body">
         <clr-datagrid #contractsDataGrid>
-            <clr-dg-column clrDgSortIcon>{{ 'Contract Name' | translate }}</clr-dg-column>
-            <clr-dg-column clrDgSortIcon>{{ 'Creator' | translate }}</clr-dg-column>
-            <clr-dg-column clrDgSortIcon>{{ 'Expiry' | translate }}</clr-dg-column>
-            <clr-dg-column clrDgSortIcon>{{ 'Status' | translate }}</clr-dg-column>
+            <clr-dg-column [clrDgField]="'name'" clrDgSortIcon>{{ 'Contract Address' | translate }}</clr-dg-column>
+            <clr-dg-column [clrDgField]="'creator'" clrDgSortIcon>{{ 'Creator' | translate }}</clr-dg-column>
+            <clr-dg-column [clrDgField]="'expiry'" clrDgSortIcon>{{ 'Expiry' | translate }}</clr-dg-column>
+            <clr-dg-column [clrDgField]="'status'" clrDgSortIcon>{{ 'Status' | translate }}</clr-dg-column>
             <clr-dg-column class="right" clrDgSortIcon>{{ 'Actions' | translate }}</clr-dg-column>
             <clr-dg-row *clrDgItems="let contract of contracts; let i = index">
-                <clr-dg-cell><span id="contract-{{contract.index}}"><span>{{ 'Contract' | translate }}</span> {{contract.name}}</span>
+                <clr-dg-cell><span id="contract-{{contract.index}}">{{contract.name}}</span>
                 </clr-dg-cell>
                 <clr-dg-cell>{{contract.issuingaddress_label}}</clr-dg-cell>
                 <clr-dg-cell>{{contract.expiry * 1000 | datex:'DD MMM YYYY HH:mm:ss'}}</clr-dg-cell>
