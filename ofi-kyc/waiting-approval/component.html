@@ -69,22 +69,40 @@
             <!-- Waiting for approval form -->
             <div>
                 <h2>{{ 'KYC Documents Confirmation' | translate }}</h2>
+
                 <form [formGroup]="waitingApprovalFormGroup" (ngSubmit)="handleSubmitButtonClick()">
                     <section class="form-block">
                         <p>
                             <strong>{{ 'Please confirm that you validate your client\'s KYC documents' | translate }} </strong>
                         </p>
 
+                        <div *ngIf="!hasPermissionUpdateKycRequests">
+                            <div class="alert alert-warning">
+                                <div class="alert-items">
+                                    <div class="alert-item static">
+                                        <div class="alert-icon-wrapper">
+                                            <clr-icon class="alert-icon" shape="exclamation-triangle"></clr-icon>
+                                        </div>
+                                        <span class="alert-text">
+                                            {{ 'Please contact the administrator to request permission to validate KYC documents' | translate }}
+                                            <br />
+                                        </span>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
                         <!-- Radio buttons -->
                         <div class="statuses col-sm-12">
                             <div class="status col-sm-2" *ngFor="let status of statuses">
                                 <span class="statusRadio">
-                                    <input id="{{status.id}}" 
-                                            type="radio" 
-                                            formControlName="status" 
-                                            [value]="status.value" 
-                                            [checked]="status.value === statusId" 
-                                            (change)="handleStatusChange()">
+                                    <input id="{{status.id}}"
+                                            type="radio"
+                                            formControlName="status"
+                                            [value]="status.value"
+                                            [checked]="status.value === statusId"
+                                            (change)="handleStatusChange()"
+                                            [attr.disabled]="!hasPermissionUpdateKycRequests ? 'true' : null">
                                 </span>
 
                                 <span class="statusLabel">
@@ -97,11 +115,12 @@
                         <div class="form-group col-sm-12">
                             <div class="form-check" *ngIf="waitingApprovalFormGroup.controls['status'].value === APPROVED_STATUS">
 
-                                <input id="checkbox" 
-                                        class="form-check-input" 
-                                        type="checkbox" 
-                                        formControlName="isKycAccepted" 
-                                        value="false">&nbsp;
+                                <input id="checkbox"
+                                        class="form-check-input"
+                                        type="checkbox"
+                                        formControlName="isKycAccepted"
+                                        value="false"
+                                        [attr.disabled]="!hasPermissionUpdateKycRequests ? 'true' : null">&nbsp;
                                 <label class="form-check-label" for="checkbox">{{ 'We hereby validate that this client has fully completed the KYC documents with us, and is authorised to trade with us.' | translate }}</label>
                             </div>
                         </div>
@@ -112,10 +131,12 @@
                             <textarea *ngIf="waitingApprovalFormGroup.controls['status'].value === REJECTED_STATUS && initialStatusId != -2"
                                     id="rejectText"
                                     class="form-control"
-                                    [placeholder]="translate.translate('Please indicate here why you would like to reject this application. This will be sent as a message to your client on the IZNES platform.')" formControlName="additionalText">
+                                    [placeholder]="translate.translate('Please indicate here why you would like to reject this application. This will be sent as a message to your client on the IZNES platform.')"
+                                    formControlName="additionalText">
                             </textarea>
                             <!-- Ask for more info -->
-                            <textarea *ngIf="waitingApprovalFormGroup.controls['status'].value === ASK_FOR_MORE_INFO_STATUS"                 id="askMoreInfoText"
+                            <textarea *ngIf="waitingApprovalFormGroup.controls['status'].value === ASK_FOR_MORE_INFO_STATUS"
+                                        id="askMoreInfoText"
                                         class="form-control"
                                         [placeholder]="translate.translate('Please ask for more information here. This will be sent as a message to your client on the IZNES platform.')" formControlName="additionalText">
                             </textarea>

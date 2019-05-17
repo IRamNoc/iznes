@@ -1,7 +1,6 @@
 /* Core/Angular imports. */
 import {
     AfterViewInit,
-    ChangeDetectionStrategy,
     ChangeDetectorRef,
     Component,
     Inject,
@@ -16,6 +15,7 @@ import { MultilingualService } from '@setl/multilingual';
 import { APP_CONFIG, AppConfig, MoneyValuePipe, NumberConverterService, LogService } from '@setl/utils';
 /* Ofi orders request service. */
 import { OfiOrdersService } from '@ofi/ofi-main/ofi-req-services/ofi-orders/service';
+import { PermissionsService } from '@setl/utils/services/permissions';
 
 // recordkeeping
 import { MemberSocketService } from '@setl/websocket-service';
@@ -41,6 +41,9 @@ export class OfiHomeComponent implements AfterViewInit, OnInit, OnDestroy {
     /* Public properties. */
     public myDetails: any = {};
     public connectedWalletName = '';
+    public hasPermissionManageOrders: boolean = false;
+    public hasPermissionViewRecordkeeping: boolean = false;
+    public hasPermissionViewPrecentralisation: boolean = false;
 
     /* Private properties. */
     private subscriptions: any[] = [];
@@ -76,6 +79,7 @@ export class OfiHomeComponent implements AfterViewInit, OnInit, OnDestroy {
         private walletNodeRequestService: WalletNodeRequestService,
         private ofiOrdersService: OfiOrdersService,
         private ofiReportsService: OfiReportsService,
+        public permissionsService: PermissionsService,
         @Inject(APP_CONFIG) appConfig: AppConfig,
     ) {
         this.appConfig = appConfig;
@@ -107,6 +111,27 @@ export class OfiHomeComponent implements AfterViewInit, OnInit, OnDestroy {
             this.language = language;
             this.changeDetectorRef.detectChanges();
         });
+
+        this.permissionsService.hasPermission('manageOrder', 'canRead').then(
+            (hasPermission) => {
+                this.hasPermissionManageOrders = hasPermission;
+                this.changeDetectorRef.detectChanges();
+            },
+        );
+
+        this.permissionsService.hasPermission('viewRecordkeeping', 'canRead').then(
+            (hasPermission) => {
+                this.hasPermissionViewRecordkeeping = hasPermission;
+                this.changeDetectorRef.detectChanges();
+            },
+        );
+
+        this.permissionsService.hasPermission('viewPrecentralisation', 'canRead').then(
+            (hasPermission) => {
+                this.hasPermissionViewPrecentralisation = hasPermission;
+                this.changeDetectorRef.detectChanges();
+            },
+        );
     }
 
     ngAfterViewInit() {
@@ -157,7 +182,7 @@ export class OfiHomeComponent implements AfterViewInit, OnInit, OnDestroy {
         .replace('hh', this.numPad(dateObj.getHours()))
         .replace('hH', this.numPad(dateObj.getHours() > 12 ? dateObj.getHours() - 12 : dateObj.getHours()))
         .replace('mm', this.numPad(dateObj.getMinutes()))
-        .replace('ss', this.numPad(dateObj.getSeconds()))
+        .replace('ss', this.numPad(dateObj.getSeconds()));
     }
 
     private numPad(num) {

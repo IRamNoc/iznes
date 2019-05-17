@@ -9,9 +9,10 @@ import { ConfirmationService, NumberConverterService, mDateHelper } from '@setl/
 import { AlertsService } from '@setl/jaspero-ng2-alerts';
 import { ActivatedRoute, Router } from '@angular/router';
 /* Clarity */
-/* services */
+/* Services */
 import { OfiReportsService } from '../../ofi-req-services/ofi-reports/service';
-/* store */
+import { PermissionsService } from '@setl/utils/services/permissions';
+/* Store */
 import { ofiManageOrderActions } from '@ofi/ofi-main/ofi-store';
 import { APP_CONFIG, AppConfig, FileDownloader } from '@setl/utils/index';
 import * as moment from 'moment';
@@ -72,6 +73,7 @@ export class CentralisationReportComponent implements OnInit, OnDestroy {
     private myDetails: any = {};
     private appConfig: any = {};
     private subscriptions: Array<any> = [];
+    public hasPermissionManage: boolean = false;
 
     fundsList: Array<any> = [];
     sharesList: Array<any> = [];
@@ -151,6 +153,7 @@ export class CentralisationReportComponent implements OnInit, OnDestroy {
                 private numberConverterService: NumberConverterService,
                 private fileDownloader: FileDownloader,
                 private translate: MultilingualService,
+                public permissionsService: PermissionsService,
                 @Inject(APP_CONFIG) appConfig: AppConfig) {
         // reset datagrid
         this.fundsDetails = [];
@@ -320,6 +323,12 @@ export class CentralisationReportComponent implements OnInit, OnDestroy {
                 value: 0,
             },
         ];
+
+        this.permissionsService.hasPermission('manageOrder', 'canRead').then(
+            (hasPermission) => {
+                this.hasPermissionManage = hasPermission;
+            },
+        );
     }
 
     public ngOnInit() {
@@ -614,6 +623,15 @@ export class CentralisationReportComponent implements OnInit, OnDestroy {
         }
 
         return 'settlementDate';
+    }
+
+    /**
+     * Has manageOrders permission?
+     *
+     * @return {boolean}
+     */
+    hasPermissionManageOrders() {
+        return this.hasPermissionManage;
     }
 
     ngOnDestroy() {

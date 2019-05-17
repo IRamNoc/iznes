@@ -14,13 +14,43 @@
             </button>
 
             <clr-tab-content *ngIf="(portfolioManager$ | async)?.type === 'WM'">
-                <app-mandate-investor-grid [pm]="portfolioManager$ | async" (toggle)="handleInvestorChange($event)" (manageAccess)="handleManageShareAccess($event)"></app-mandate-investor-grid>
+
+                <div *ngIf="!hasPermissionPortfolioManagersUpdate && (portfolioManager$ | async)?.type === 'WM'" class="alert alert-warning">
+                    <div class="alert-items">
+                        <div class="alert-item static">
+                            <div class="alert-icon-wrapper">
+                                <clr-icon class="alert-icon" shape="exclamation-triangle"></clr-icon>
+                            </div>
+                            <span class="alert-text">
+                                {{ 'Please contact the administrator to request permission to grant access to this investor' | translate }}
+                                <br />
+                            </span>
+                        </div>
+                    </div>
+                </div>
+
+                <app-mandate-investor-grid [pm]="portfolioManager$ | async" [hasPermissionPortfolioManagersUpdate]="hasPermissionPortfolioManagersUpdate" (toggle)="handleInvestorChange($event)" (manageAccess)="handleManageShareAccess($event)"></app-mandate-investor-grid>
+
             </clr-tab-content>
 
             <clr-tab-content *ngIf="(portfolioManager$ | async)?.type === 'PM'">
                 <div class="row">
                     <div class="col-sm-6">
                         {{ 'Please find below the authorisation of @emailAddress@ regarding your fund.' | translate: { 'emailAddress': (portfolioManager$ | async)?.emailAddress } }}
+                    </div>
+                </div>
+
+                <div *ngIf="!hasPermissionPortfolioManagersUpdate && (portfolioManager$ | async)?.type === 'PM'" class="alert alert-warning">
+                    <div class="alert-items">
+                        <div class="alert-item static">
+                            <div class="alert-icon-wrapper">
+                                <clr-icon class="alert-icon" shape="exclamation-triangle"></clr-icon>
+                            </div>
+                            <span class="alert-text">
+                                {{ 'Please contact the administrator to request permission to grant access to this fund' | translate }}
+                                <br />
+                            </span>
+                        </div>
                     </div>
                 </div>
 
@@ -39,7 +69,8 @@
                                             <input type="checkbox"
                                                     id="access_slider_{{i}}"
                                                     [formControl]="item.statusFormControl"
-                                                    (change)="handleAccessChange($event)">
+                                                    (change)="handleAccessChange($event)"
+                                                    [attr.disabled]="!hasPermissionPortfolioManagersUpdate ? '' : null">
                                             <span class="slider round"></span>
                                         </label>
                                     </div>

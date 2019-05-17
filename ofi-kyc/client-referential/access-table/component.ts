@@ -28,6 +28,7 @@ const DIVIDER_NUMBER = 100000;
 export class OfiFundAccessTable {
     tableData: any;
     oldTableData: any;
+    hasPermission: boolean;
 
     @Input() set tableDataArr(tableData) {
         this.tableData = tableData;
@@ -40,6 +41,10 @@ export class OfiFundAccessTable {
     @Input() set otherData(data) {
         this.investorData = data['investorData'];
         this.amCompany = data['amCompany'];
+    }
+
+    @Input() set hasPermissionUpdate(permission) {
+        this.hasPermission = permission;
     }
 
     @Output() back: EventEmitter<any> = new EventEmitter();
@@ -236,56 +241,60 @@ export class OfiFundAccessTable {
 
             this.ofiKycService.saveFundAccess({
                 access: changedData,
-            }).then(() => {
-                // success call back
-                this.toasterService.pop(
-                    'success',
-                    this.translate.translate(
-                        '@investorName@\'s shares authorisation has been successfully updated',
-                        { 'investorName': this.getInvestorCompanyName() },
-                    ),
-                );
+            }).then(
+                () => {
+                    // success call back
+                    this.toasterService.pop(
+                        'success',
+                        this.translate.translate(
+                            '@investorName@\'s shares authorisation has been successfully updated',
+                            { investorName: this.getInvestorCompanyName() },
+                        ),
+                    );
 
-                const recipientsArr = [this.investorData['investorWalletID']];
-                const subjectStr = this.translate.translate(
-                    '@amCompany@ has updated your access',
-                    { 'amCompany': this.amCompany },
-                );
+                    const recipientsArr = [this.investorData['investorWalletID']];
+                    const subjectStr = this.translate.translate(
+                        '@amCompany@ has updated your access',
+                        { amCompany: this.amCompany },
+                    );
 
-                const bodyStr = `
-                    ${this.translate.translate(
-                        'Hello @investorFirstName@, @amCompany@ has made updates on your access list', { 'investorFirstName': this.getInvestorFirstName(), 'amCompany': this.amCompany })}.
-                        <br><br>
-                        ${this.translate.translate('Click on the button below to go to the Funds shares page to see all changes and begin trading on IZNES')}.
-                        <br><br>%@link@%<br><br>
-                        ${this.translate.translate('Thank you')},
-                        <br><br>${this.translate.translate('The IZNES team')}
-                `;
+                    const bodyStr = `
+                        ${this.translate.translate(
+                            'Hello @investorFirstName@, @amCompany@ has made updates on your access list', { investorFirstName: this.getInvestorFirstName(), 'amCompany': this.amCompany })}.
+                            <br><br>
+                            ${this.translate.translate('Click on the button below to go to the Funds shares page to see all changes and begin trading on IZNES')}.
+                            <br><br>%@link@%<br><br>
+                            ${this.translate.translate('Thank you')},
+                            <br><br>${this.translate.translate('The IZNES team')}
+                    `;
 
-                const action = {
-                    type: 'messageWithLink',
-                    data: {
-                        links: [
-                            {
-                                link: '/#/list-of-funds/0',
-                                anchorCss: 'btn',
-                                anchorText: this.translate.translate('Start Trading'),
-                            },
-                        ],
-                    },
-                };
+                    const action = {
+                        type: 'messageWithLink',
+                        data: {
+                            links: [
+                                {
+                                    link: '/#/list-of-funds/0',
+                                    anchorCss: 'btn',
+                                    anchorText: this.translate.translate('Start Trading'),
+                                    permissionName: 'viewKycRequests',
+                                    permissionType: 'canRead',
+                                },
+                            ],
+                        },
+                    };
 
-                this.messagesService.sendMessage(recipientsArr, subjectStr, bodyStr, action as any);
+                    this.messagesService.sendMessage(recipientsArr, subjectStr, bodyStr, action as any);
 
-                if (this.history.cameFrom(/on-boarding/)) {
-                    this.router.navigate(['/client-referential']);
-                } else {
-                    this.location.back();
-                }
-            }, () => {
-                // fail call back
-                // todo
-            });
+                    if (this.history.cameFrom(/on-boarding/)) {
+                        this.router.navigate(['/client-referential']);
+                    } else {
+                        this.location.back();
+                    }
+                },
+                () => {
+                    // fail call back
+                    // todo
+                });
         });
     }
 

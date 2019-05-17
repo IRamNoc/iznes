@@ -23,7 +23,21 @@
                     </div>
                 </div>
 
-                <div class="row">
+                <div *ngIf="!hasPermissionPortfolioManagersView" class="alert alert-warning">
+                    <div class="alert-items">
+                        <div class="alert-item static">
+                            <div class="alert-icon-wrapper">
+                                <clr-icon class="alert-icon" shape="exclamation-triangle"></clr-icon>
+                            </div>
+                            <span class="alert-text">
+                                {{ 'Please contact the administrator to request permission to view portfolio managers' | translate }}
+                                <br />
+                            </span>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="row" *ngIf="hasPermissionPortfolioManagersView">
                     <div class="col-sm-12">
 
                         <clr-datagrid #dataGrid>
