@@ -19,7 +19,9 @@ import { OfiKycService } from '../../ofi-req-services/ofi-kyc/service';
 import { OfiFundShareService } from '@ofi/ofi-main/ofi-req-services/ofi-product/fund-share/service';
 import { FileDownloader } from '@setl/utils/services/file-downloader/service';
 
-import { PermissionsRequestService } from '@setl/utils/services/permissions/permissions.service';
+import { PermissionsService } from '@setl/utils/services/permissions/permissions.service';
+import { PermissionsRequestService } from '@setl/core-req-services/permissions/permissions-request.service';
+
 
 import {
     SelectModule,
@@ -84,6 +86,7 @@ describe('OfiClientReferentialComponent', () => {
                 KycDetailsGridComponent,
                 KycDetailsStakeholdersComponent,
                 KycDetailsStakeholdersModalComponent,
+                PermissionsService,
                 PermissionsRequestService
             ],
             imports: [
