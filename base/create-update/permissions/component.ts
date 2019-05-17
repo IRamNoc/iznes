@@ -203,34 +203,88 @@ export class AccountAdminPermissionsComponentBase implements OnInit, OnDestroy {
             );
     }
 
+    /**
+     * IZNES: Set Permission Relationships
+     * When a permission is enabled, then its related permission must be enabled
+     *
+     * @param {object} permission
+     * @param {object} accumulator
+     *
+     * @returns {object} accumulator
+     */
     setPermissionRelationships(permission, accumulator): any {
-        // If key permission is enabled, then relatedPermission must be enabled
         const permissionRelationships = {
             'Action on Orders': {
-                relatedPermission: 'View Orders',
+                related: 'View Orders',
             },
             'Update KYC Requests': {
-                relatedPermission: 'View KYC Requests',
+                related: 'View KYC Requests',
             },
             'View Client Referentials': {
-                relatedPermission: 'View Portfolio Manager',
+                related: 'View Portfolio Manager',
+            },
+            'Update Client Referentials': {
+                related: 'View Client Referentials',
+            },
+            'Invite Investors': {
+                related: 'View Client Referentials',
+            },
+            'Update Portfolio Manager': {
+                related: 'View Portfolio Manager',
+            },
+            'Invite Portfolio Manager': {
+                related: 'View Portfolio Manager',
+            },
+            'Create Product': {
+                related: 'View Product',
+            },
+            'Update Product': {
+                related: 'View Product',
+            },
+            'Create NAV': {
+                related: 'View NAV',
+            },
+            'Update NAV': {
+                related: 'View NAV',
+            },
+            'Cancel NAV': {
+                related: 'View NAV',
             },
         };
 
+        let relatedPermission = null;
+
+        // Check permissionRelationships for the permission
         if (permissionRelationships[permission.name]) {
+            relatedPermission = permissionRelationships[permission.name].related;
+            // If the permission has been enabled...
             if (Boolean(permission.state) === true) {
+                // Find the related permission object in the permissions list
                 this.permissions.forEach((p, index) => {
-                    if (p.name === permissionRelationships[permission.name].relatedPermission) {
-                        // Enable the relatedPermission
+                    if (p.name === relatedPermission) {
+                        // Enable the related permission
                         this.permissions[index].state = true;
-                        // Add the relatedPermission to the add queue
+                        // Add the related permission to the add queue
                         accumulator.toAdd.push(p.permissionAreaID);
-                        // Remove the relatedPermission from the delete queue
+                        // Remove the related permission from the delete queue
                         accumulator.toDelete.forEach((d, index) => {
                             if (d === p.permissionAreaID) delete accumulator.toDelete[index];
                         });
                     }
                 });
+            }
+
+            // Check permissionRelationships for relatedPermission
+            if (relatedPermission && permissionRelationships[relatedPermission]) {
+                // Get the relatedPermission object from the permissions list
+                const relatedPermissionObject = this.permissions.find((po) => {
+                    return po.name === relatedPermission;
+                });
+
+                if (relatedPermissionObject) {
+                    // Set the related permission for relatedPermission
+                    this.setPermissionRelationships(relatedPermissionObject, accumulator);
+                }
             }
         }
 
