@@ -38,8 +38,8 @@
         </clr-dg-cell>
         <clr-dg-cell id="permissionsCellActions{{idx}}" class="col-actions">
             <label class="switch" *ngIf="!isPermissionParent(permission)">
-                <input class="form-control" 
-                        id="{{'permissionsCellAction' + idx}}" 
+                <input class="form-control"
+                        id="{{'permissionsCellAction' + idx}}"
                         type="checkbox"
                         [disabled]="isProcessing() || isUser"
                         [(ngModel)]="permission.state"

@@ -1,4 +1,4 @@
-import { Component, OnInit, OnDestroy, Input, Output, EventEmitter } from '@angular/core';
+import { Component, OnInit, OnDestroy, Input, Output, EventEmitter, Inject } from '@angular/core';
 import { FormControl } from '@angular/forms';
 import { Subject } from 'rxjs/Subject';
 import { Subscription } from 'rxjs/Subscription';
@@ -16,7 +16,7 @@ import { AccountAdminPermissionsServiceBase } from './service';
 import * as PermissionsModel from './model';
 import * as TeamsModel from '../../../teams/model';
 import { UserTeamsService } from '../../../teams/service';
-import {immutableHelper} from "@setl/utils";
+import { immutableHelper, APP_CONFIG, AppConfig } from '@setl/utils';
 
 @Component({
     selector: 'app-core-admin-permissions',
@@ -30,6 +30,7 @@ export class AccountAdminPermissionsComponentBase implements OnInit, OnDestroy {
     @Input() isUser: boolean = false;
     @Input() showTeamSelect: boolean = true;
 
+    appConfig: AppConfig;
     originalTeamPermissions: PermissionsModel.AccountAdminPermission[] = [];
     permissions: PermissionsModel.AccountAdminPermission[];
     teamsControl: FormControl = new FormControl();
@@ -43,7 +44,6 @@ export class AccountAdminPermissionsComponentBase implements OnInit, OnDestroy {
         toDelete: [],
     };
 
-
     @select(['accountAdmin', 'permissionAreas', 'permissionAreas']) permissionsOb;
     @select(['accountAdmin', 'permissionAreas', 'requested']) permissionsReqOb;
     @select(['accountAdmin', 'userPermissionAreas', 'permissionAreas']) userPermissionsOb;
@@ -55,7 +55,11 @@ export class AccountAdminPermissionsComponentBase implements OnInit, OnDestroy {
                 private redux: NgRedux<any>,
                 private alerts: AlertsService,
                 private teamsService: UserTeamsService,
-                private translate: MultilingualService) {}
+                private translate: MultilingualService,
+                @Inject(APP_CONFIG) appConfig: AppConfig,
+    ) {
+        this.appConfig = appConfig;
+    }
 
     ngOnInit() {
         this.initSubscriptions();
@@ -172,21 +176,119 @@ export class AccountAdminPermissionsComponentBase implements OnInit, OnDestroy {
     }
 
     updatePermission(): void {
-        // Build modificatePermissionCache.
-       this.modificatePermissionCache =
-           this.permissions.filter(v => v.parentID !== null).reduce((acc, val) => {
-            const permMatchedArr = this.originalTeamPermissions.filter(v => v.permissionAreaID === val.permissionAreaID);
-            const permData = (permMatchedArr[0] || {}) as PermissionsModel.AccountAdminPermission;
+        // Build modificatePermissionCache
+        this.modificatePermissionCache =
+            this.permissions.filter(v => v.parentID !== null).reduce(
+                (acc, val) => {
+                    const permMatchedArr = this.originalTeamPermissions.filter(
+                        v => v.permissionAreaID === val.permissionAreaID,
+                    );
+                    const permData = (permMatchedArr[0] || {}) as PermissionsModel.AccountAdminPermission;
 
-            if (Boolean(val.state) !== Boolean(permData.state)) {
-               if (Boolean(val.state)) {
-                   acc.toAdd.push(val.permissionAreaID);
-               } else {
-                   acc.toDelete.push(val.permissionAreaID);
-               }
+                    if (Boolean(val.state) !== Boolean(permData.state)) {
+                        if (Boolean(val.state)) {
+                            acc.toAdd.push(val.permissionAreaID);
+                        } else {
+                            acc.toDelete.push(val.permissionAreaID);
+                        }
+                    }
+
+                    if (this.appConfig.platform === 'IZNES') {
+                        acc = this.setPermissionRelationships(val, acc);
+                    }
+
+                    return acc;
+                },
+                { toAdd: [], toDelete: [] },
+            );
+    }
+
+    /**
+     * IZNES: Set Permission Relationships
+     * When a permission is enabled, then its related permission must be enabled
+     *
+     * @param {object} permission
+     * @param {object} accumulator
+     *
+     * @returns {object} accumulator
+     */
+    setPermissionRelationships(permission, accumulator): any {
+        const permissionRelationships = {
+            'Action on Orders': {
+                related: 'View Orders',
+            },
+            'Update KYC Requests': {
+                related: 'View KYC Requests',
+            },
+            'View Client Referentials': {
+                related: 'View Portfolio Manager',
+            },
+            'Update Client Referentials': {
+                related: 'View Client Referentials',
+            },
+            'Invite Investors': {
+                related: 'View Client Referentials',
+            },
+            'Update Portfolio Manager': {
+                related: 'View Portfolio Manager',
+            },
+            'Invite Portfolio Manager': {
+                related: 'View Portfolio Manager',
+            },
+            'Create Product': {
+                related: 'View Product',
+            },
+            'Update Product': {
+                related: 'View Product',
+            },
+            'Create NAV': {
+                related: 'View NAV',
+            },
+            'Update NAV': {
+                related: 'View NAV',
+            },
+            'Cancel NAV': {
+                related: 'View NAV',
+            },
+        };
+
+        let relatedPermission = null;
+
+        // Check permissionRelationships for the permission
+        if (permissionRelationships[permission.name]) {
+            relatedPermission = permissionRelationships[permission.name].related;
+            // If the permission has been enabled...
+            if (Boolean(permission.state) === true) {
+                // Find the related permission object in the permissions list
+                this.permissions.forEach((p, index) => {
+                    if (p.name === relatedPermission) {
+                        // Enable the related permission
+                        this.permissions[index].state = true;
+                        // Add the related permission to the add queue
+                        accumulator.toAdd.push(p.permissionAreaID);
+                        // Remove the related permission from the delete queue
+                        accumulator.toDelete.forEach((d, index) => {
+                            if (d === p.permissionAreaID) delete accumulator.toDelete[index];
+                        });
+                    }
+                });
             }
-            return acc;
-        }, {toAdd: [], toDelete: []});
+
+            // Check permissionRelationships for relatedPermission
+            if (relatedPermission && permissionRelationships[relatedPermission]) {
+                // Get the relatedPermission object from the permissions list
+                const relatedPermissionObject = this.permissions.find((po) => {
+                    return po.name === relatedPermission;
+                });
+
+                if (relatedPermissionObject) {
+                    // Set the related permission for relatedPermission
+                    this.setPermissionRelationships(relatedPermissionObject, accumulator);
+                }
+            }
+        }
+
+        return accumulator;
     }
 
     isProcessing(): boolean {

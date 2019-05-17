@@ -138,7 +138,8 @@ export class AccountAdminUsersMgmtComponentBase<Type> implements OnInit, OnDestr
 
     protected onRequestError(e: AccountAdminErrorResponse, entity?: any): void {
         this.toaster.clear();
-        this.toaster.pop('error', e[1].Data[0].Message);
+        const message = this.translate.translate(e[1].Data[0].Message);
+        this.toaster.pop('error', message);
 
         if (entity) entity.isActivated = !entity.isActivated;
     }
