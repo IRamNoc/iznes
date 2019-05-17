@@ -18,7 +18,7 @@ export class WalletNodeSocketService {
     private walletNodeToken: string;
 
     // on update callback.
-    private walletnodeUpdateCallback: any = (id, message, userData) => this.updateTopicSubject.next({id, message, userData});
+    public walletnodeUpdateCallback: any = (id, message, userData) => this.updateTopicSubject.next({id, message, userData});
 
     constructor() {
     }
