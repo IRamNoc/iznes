@@ -336,7 +336,7 @@ export class OfiClientReferentialComponent implements OnInit, OnDestroy {
     getClientReferentialDescriptionTitle(): string {
         const companyName = this.companyName || '';
         const reference = get(this.clients, [this.kycId, 'clientReference'], '') || '';
-        return (reference && companyName) ? `: ${companyName}: ${reference}` : (!reference) ? `: ${companyName}` : `: ${reference}`;
+        return Boolean(reference) && Boolean(companyName) ? `: ${companyName}: ${reference}` : (!Boolean(reference)) ? ((Boolean(companyName)) ? `: ${companyName}` : '') : `: ${reference}`;
     }
 
     requestSearch() {
