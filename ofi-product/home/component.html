@@ -9,7 +9,7 @@
         <p>{{ 'Here are all the Shares / Funds and Umbrella Funds that were created by @amManagementCompany@.' | translate: {'amManagementCompany': amManagementCompany} }}
             <br>{{ 'You can also add a new Share, a new Fund or a new Umbrella Fund' | translate }}.
         </p>
-    </div>    
+    </div>
     <ng-template #iznesAdminTemplate>
         <p>{{ 'Here are all the Shares / Funds and Umbrella Funds that were created within IZNES.' | translate }}</p>
     </ng-template>
@@ -26,7 +26,11 @@
         </div>
 
         <div class="col-xs-6 text-right">
-            <button *ngIf="isAssetManager() && panel.action" id="{{panel.action.id}}" class="btn btn-primary action-button" (click)="addForm(panel.action.type)">
+            <button *ngIf="isAssetManager() && panel.action"
+                    id="{{panel.action.id}}"
+                    class="btn btn-primary action-button"
+                    [disabled]="!panel.action.disabled"
+                    (click)="addForm(panel.action.type)">
                 <i class="fa fa-{{panel.action.icon}}"></i> {{panel.action.title}}
             </button>
         </div>
@@ -38,10 +42,10 @@
             <div class="mb-1" *ngIf="panel.title === 'Shares'">{{ 'Display only active Shares' | translate }}
 
                 <label class="switch">
-                    <input type="checkbox" 
-                            class="form-control" 
-                            id="switchActiveShares" 
-                            [ngModel]="showOnlyActive" 
+                    <input type="checkbox"
+                            class="form-control"
+                            id="switchActiveShares"
+                            [ngModel]="showOnlyActive"
                             (click)="handleShareToggleClick()">
                     <span class="slider round"></span>
                 </label>
