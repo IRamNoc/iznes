@@ -769,6 +769,7 @@ export class ProductHomeComponent implements OnInit, OnDestroy {
                             iconClass: 'fa fa-remove',
                         },
                     ],
+                    context: 'drafts',
                 },
             ];
         }

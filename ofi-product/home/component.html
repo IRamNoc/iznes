@@ -34,6 +34,11 @@
                 <i class="fa fa-{{panel.action.icon}}"></i> {{panel.action.title}}
             </button>
         </div>
+
+        <ng-container *ngIf="!panel.context">
+            <ng-container *ngTemplateOutlet="permissionAlert; context: {action: panel.columnLink}"></ng-container>
+        </ng-container>
+
     </div>
 
     <!-- Panel body -->
@@ -50,6 +55,7 @@
                     <span class="slider round"></span>
                 </label>
             </div>
+
             <clr-datagrid #myDataGrid>
                 <clr-dg-column [clrDgField]="column.dataSource" *ngFor="let column of panel.columns">{{column.label}}</clr-dg-column>
                 <clr-dg-column *ngIf="panel.buttons">Actions</clr-dg-column>
@@ -91,3 +97,27 @@
         </div>
     </div>
 </div>
+
+<ng-template #permissionAlert let-action="action">
+    <div class="alert alert-warning">
+        <div class="alert-items">
+            <div class="alert-item static">
+                <div class="alert-icon-wrapper">
+                    <clr-icon class="alert-icon" shape="exclamation-triangle"></clr-icon>
+                </div>
+                <span class="alert-text">
+                    <ng-container *ngIf="action === 'umbrellaFundName'">
+                        {{ 'Please contact the administrator to request permission to add a new Umbrella Fund' | translate }}
+                    </ng-container>
+                    <ng-container *ngIf="action === 'fundName'">
+                        {{ 'Please contact the administrator to request permission to add a new Fund' | translate }}
+                    </ng-container>
+                    <ng-container *ngIf="action === 'shareName'">
+                        {{ 'Please contact the administrator to request permission add a new Fund Share' | translate }}
+                    </ng-container>
+                    <br />
+                </span>
+            </div>
+        </div>
+    </div>
+</ng-template>
