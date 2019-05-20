@@ -14,9 +14,26 @@
 
         <clr-tab-content *clrIfActive="true">
             <!-- Button container -->
+            <div *ngIf="!hasPermissionCreateNav" class="alert alert-warning">
+                <div class="alert-items">
+                    <div class="alert-item static">
+                        <div class="alert-icon-wrapper">
+                            <clr-icon class="alert-icon" shape="exclamation-triangle"></clr-icon>
+                        </div>
+                        <span class="alert-text">
+                            {{ 'Please contact the administrator to request permission to upload NAVs' | translate }}
+                        </span>
+                    </div>
+                </div>
+            </div>
+
             <div class="row">
                 <div class="form-group button-container">
-                    <button *ngIf="!isIznesAdmin" class="btn btn-primary" id="uploadDetailNavFileButton" (click)="isNavUploadModalDisplayed = true">
+                    <button *ngIf="!isIznesAdmin"
+                            class="btn btn-primary"
+                            id="uploadDetailNavFileButton"
+                            [disabled]="!hasPermissionCreateNav"
+                            (click)="isNavUploadModalDisplayed = true">
                         {{ 'Upload NAVs' | translate }}
                     </button>
 
@@ -80,6 +97,20 @@
             <div class="hr-line-dashed"></div>
             <span class="text-badge">{{ 'NAV History' | translate }}</span>
 
+            <div *ngIf="!hasPermissionCreateNav" class="alert alert-warning">
+                <div class="alert-items">
+                    <div class="alert-item static">
+                        <div class="alert-icon-wrapper">
+                            <clr-icon class="alert-icon" shape="exclamation-triangle"></clr-icon>
+                        </div>
+                        <span class="alert-text">
+                            {{ 'Please contact the administrator to request permission to add a new NAV' | translate }}
+                        </span>
+                    </div>
+                </div>
+            </div>
+            <br />
+
             <form [formGroup]="navHistoryForm" (keydown.enter)="$event.preventDefault()">
                 <div class="form-horizontal">
                     <div class="row">
@@ -115,10 +146,16 @@
 
                         <div class="form-group col-sm-4 add-new-nav">
                             <label class="control-label">&nbsp;</label>
-                            <button *ngIf="!isIznesAdmin" class="btn btn-primary" (click)="addNav()" id="Add-New-NAV">
-                                {{ 'Add New NAV' | translate }}</button>
-                            <button class="btn" (click)="goToAuditTrail()" id="NAV-Audit-Trail">
-                                {{ 'NAV Audit Trail' | translate }}
+                            <button *ngIf="!isIznesAdmin"
+                                    class="btn btn-primary"
+                                    [disabled]="!hasPermissionCreateNav"
+                                    (click)="addNav()"
+                                    id="Add-New-NAV">
+                                    {{ 'Add New NAV' | translate }}</button>
+                            <button class="btn"
+                                    (click)="goToAuditTrail()"
+                                    id="NAV-Audit-Trail">
+                                    {{ 'NAV Audit Trail' | translate }}
                             </button>
                         </div>
                     </div>

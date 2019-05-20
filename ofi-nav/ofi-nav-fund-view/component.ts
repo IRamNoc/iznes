@@ -29,6 +29,7 @@ import {
 import { MultilingualService } from '@setl/multilingual';
 import { AlertsService } from '@setl/jaspero-ng2-alerts/src/alerts.service';
 import { OfiCurrenciesService } from '@ofi/ofi-main/ofi-req-services/ofi-currencies/service';
+import { PermissionsService } from '@setl/utils/services/permissions';
 
 const ADMIN_USER_URL = '/net-asset-value';
 
@@ -71,6 +72,8 @@ export class OfiNavFundView implements OnInit, OnDestroy {
     hasResult: boolean;
     currencyList: any[];
 
+    public hasPermissionCreateNav: boolean = false;
+
     get isIznesAdmin():boolean {
         return this.router.url.startsWith(ADMIN_USER_URL);
     }
@@ -87,20 +90,21 @@ export class OfiNavFundView implements OnInit, OnDestroy {
 
     constructor(
         private redux: NgRedux<any>,
-                private router: Router,
-                private changeDetectorRef: ChangeDetectorRef,
-                private ofiCorpActionService: OfiCorpActionService,
-                private ofiNavService: OfiNavService,
-                private numberConverterService: NumberConverterService,
-                private moneyPipe: MoneyValuePipe,
-                private popupService: OfiManageNavPopupService,
-                private alertService: AlertsService,
-                private ofiCurrenciesService: OfiCurrenciesService,
-                private fileDownloader: FileDownloader,
-                public translate: MultilingualService,
-                private location: Location,
-                @Inject(APP_CONFIG) appConfig: AppConfig,
-                ) {
+        private router: Router,
+        private changeDetectorRef: ChangeDetectorRef,
+        private ofiCorpActionService: OfiCorpActionService,
+        private ofiNavService: OfiNavService,
+        private numberConverterService: NumberConverterService,
+        private moneyPipe: MoneyValuePipe,
+        private popupService: OfiManageNavPopupService,
+        private alertService: AlertsService,
+        private ofiCurrenciesService: OfiCurrenciesService,
+        private fileDownloader: FileDownloader,
+        private location: Location,
+        public permissionsService: PermissionsService,
+        public translate: MultilingualService,
+        @Inject(APP_CONFIG) appConfig: AppConfig,
+    ) {
         this.appConfig = appConfig;
         this.isNavUploadModalDisplayed = false;
         this.navCsvFile = null;
@@ -114,6 +118,11 @@ export class OfiNavFundView implements OnInit, OnDestroy {
         this.initSubscriptions();
 
         this.redux.dispatch(clearRequestedNavFundView());
+
+        this.permissionsService.hasPermission('manageNav', 'canInsert').then(
+            (hasPermission) => {
+                this.hasPermissionCreateNav = hasPermission;
+            });
     }
 
     /**
