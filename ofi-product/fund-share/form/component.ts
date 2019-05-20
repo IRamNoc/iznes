@@ -43,6 +43,7 @@ import { OfiFundShareFormService } from './service';
 import { FundShareTestData } from './TestData';
 import * as Enum from '../FundShareEnum';
 import { FundShareTradeCycleModel } from './trade-cycle/model';
+import { PermissionsService } from '@setl/utils/services/permissions';
 import { OfiCurrenciesService } from '@ofi/ofi-main/ofi-req-services/ofi-currencies/service';
 import { MultilingualService } from '@setl/multilingual';
 import {
@@ -80,6 +81,8 @@ export class FundShareComponent implements OnInit, OnDestroy {
     private panels: { [key: string]: any } = new PanelData();
     private iznShareList;
     private errorHelper: StepsHelper;
+
+    public hasPermissionUpdateFundShare: boolean = false;
 
     selectFundForm: FormGroup;
     shareControl = new FormControl([]);
@@ -121,10 +124,11 @@ export class FundShareComponent implements OnInit, OnDestroy {
         private ofiFundShareFormService: OfiFundShareFormService,
         private ofiCurrenciesService: OfiCurrenciesService,
         private fb: FormBuilder,
-        public translate: MultilingualService,
         private location: Location,
         private dynamicFormService: DynamicFormService,
         private numberConverter: NumberConverterService,
+        public permissionsService: PermissionsService,
+        public translate: MultilingualService,
         @Inject('product-config') productConfig,
     ) {
         this.countriesEnum = productConfig.fundItems.domicileItems;
@@ -145,6 +149,12 @@ export class FundShareComponent implements OnInit, OnDestroy {
 
         this.redux.dispatch(clearRequestedFundShare());
         this.redux.dispatch(clearRequestedFundShareDocs());
+
+        this.permissionsService.hasPermission('manageFundShare', 'canUpdate').then(
+            (hasPermission) => {
+                this.hasPermissionUpdateFundShare = hasPermission;
+            },
+        );
     }
 
     get fund() {

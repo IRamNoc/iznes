@@ -14,6 +14,7 @@ import { OfiProductConfigService } from '@ofi/ofi-main/ofi-req-services/ofi-prod
 import { OfiUmbrellaFundService } from '@ofi/ofi-main/ofi-req-services/ofi-product/umbrella-fund/service';
 import { Fund } from '@ofi/ofi-main/ofi-req-services/ofi-product/fund/fund.service.model';
 import { UmbrellaFundDetail } from '@ofi/ofi-main/ofi-store/ofi-product/umbrella-fund/umbrella-fund-list/model';
+import { PermissionsService } from '@setl/utils/services/permissions';
 
 import {
     OfiManagementCompanyService,
@@ -22,7 +23,7 @@ import {
 import { OfiCurrenciesService } from '@ofi/ofi-main/ofi-req-services/ofi-currencies/service';
 import { MultilingualService } from '@setl/multilingual';
 import { LeiService } from '@ofi/ofi-main/ofi-req-services/ofi-product/lei/lei.service';
-import * as CustomValidators from "@setl/utils/helper/validators";
+import * as CustomValidators from '@setl/utils/helper/validators';
 
 interface UmbrellaList {
     [key: string]: UmbrellaFundDetail;
@@ -112,6 +113,8 @@ export class FundComponent implements OnInit, OnDestroy {
 
     currentLei: string;
 
+    hasPermissionUpdateFund: boolean = false;
+
     // Locale
     language = 'en';
 
@@ -178,6 +181,7 @@ export class FundComponent implements OnInit, OnDestroy {
         private changeDetectorRef: ChangeDetectorRef,
         private confirmationService: ConfirmationService,
         private leiService: LeiService,
+        public permissionsService: PermissionsService,
         public translate: MultilingualService,
         @Inject('product-config') productConfig,
     ) {
@@ -707,7 +711,14 @@ export class FundComponent implements OnInit, OnDestroy {
                         isAlreadyExisting: true,
                     });
             });
+
         this.leiService.fetchLEIs();
+
+        this.permissionsService.hasPermission('manageFund', 'canUpdate').then(
+            (hasPermission) => {
+                this.hasPermissionUpdateFund = hasPermission;
+            },
+        );
     }
 
     ngOnDestroy() {

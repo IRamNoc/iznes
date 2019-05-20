@@ -7,9 +7,7 @@
 
 <clr-tabs *ngIf="loadUI()">
     <clr-tab>
-        <button clrTabLink id="tabFundShareButton">{{ 'Shares' | translate }}
-
-        </button>
+        <button clrTabLink id="tabFundShareButton">{{ 'Shares' | translate }}</button>
         <clr-tab-content class="outer">
             <div *ngIf="!isRead()" class="row tab-header-container">
                 <div class="col-sm-6">
@@ -19,10 +17,10 @@
                     <div class="form-group btn-container">
                         <button class="btn btn-default" (click)="goToAuditTrail()" *ngIf="!isCreate()">{{ 'Share Audit Trail' | translate }}</button>
                         <button class="btn btn-default" (click)="duplicateShare()" *ngIf="!isCreate()">{{ 'Duplicate Share' | translate }}</button>
-                        <ng-select *ngIf="isCreate()" 
-                                    id="share-prefill-select" 
-                                    [items]="shareListItems" 
-                                    [allowClear]="true" 
+                        <ng-select *ngIf="isCreate()"
+                                    id="share-prefill-select"
+                                    [items]="shareListItems"
+                                    [allowClear]="true"
                                     [placeholder]="translate.translate('Duplicate from an existing Share')"
                                     [formControl]="shareControl">
                         </ng-select>
@@ -114,10 +112,10 @@
                                     <div class="row">
                                         <div class="form-group col-sm-6">
                                             <label class="control-label" for="selectFund">{{ 'Click here to select another Fund for this Share' | translate }}</label>
-                                            <ng-select class="form-control" 
-                                                        id="selectFund" 
-                                                        [items]="fundListItems" 
-                                                        placeholder="" 
+                                            <ng-select class="form-control"
+                                                        id="selectFund"
+                                                        [items]="fundListItems"
+                                                        placeholder=""
                                                         [formControl]="selectFundForm.controls['fund']"
                                                         [required]="true">
                                             </ng-select>
@@ -264,7 +262,7 @@
                                     <div class="subscription-section">
                                         <p><strong>{{ 'Cut-off Date Settings' | translate }}</strong></p>
                                         <app-ofi-am-trade-cycle #tradeCycleSubscription [tradeType]="'Subscription'" [model]="model.calendarSubscription.subscriptionTradeCycle" (modelEmitter)="calendarSubscriptionModelEvent()"></app-ofi-am-trade-cycle>
-                                        
+
                                         <app-dynamic-form [presetForm]="model.calendarSubscription.mandatory.formObj" [presetFormKeys]="model.calendarSubscription.mandatory.formKeysObj"  [presetFormModel]="model.calendarSubscription.mandatory"></app-dynamic-form>
                                     </div>
                                 </div>
@@ -274,7 +272,7 @@
                                     <div class="redemption-section">
                                         <p><strong>{{ 'Cut-off Date Settings' | translate }}</strong></p>
                                         <app-ofi-am-trade-cycle #tradeCycleRedemption [tradeType]="'Redemption'" [model]="model.calendarRedemption.redemptionTradeCycle" (modelEmitter)="calendarRedemptionModelEvent()"></app-ofi-am-trade-cycle>
-                                        
+
                                         <app-dynamic-form [presetForm]="model.calendarRedemption.mandatory.formObj" [presetFormKeys]="model.calendarRedemption.mandatory.formKeysObj"  [presetFormModel]="model.calendarRedemption.mandatory"></app-dynamic-form>
                                     </div>
                                 </div>
@@ -487,22 +485,50 @@
                     </div>
                 </div>
             </clr-tabs>
-            <div class="form-group row actions bottom">
-                <div class="col-sm-12">
-                    <button (click)="cancelFundShare()" class="btn btn-default action-button cancel" id="cancelFundShareBottom">
-                        {{ isAdmin() ? 'Close' : isRead() ? 'Back' : 'Cancel' | translate }}
+
+            <section class="form-block col-sm-12">
+                <div *ngIf="!hasPermissionUpdateFundShare" class="alert alert-warning">
+                    <div class="alert-items">
+                        <div class="alert-item static">
+                            <div class="alert-icon-wrapper">
+                                <clr-icon class="alert-icon" shape="exclamation-triangle"></clr-icon>
+                            </div>
+                            <span class="alert-text">
+                                {{ 'Please contact the administrator to request permission to update a Share' | translate }}
+                            </span>
+                        </div>
+                    </div>
+                </div>
+                <br />
+
+                <div class="form-group">
+                    <button (click)="cancelFundShare()"
+                            class="btn btn-default action-button cancel"
+                            id="cancelFundShareBottom">
+                            {{ isAdmin() ? 'Close' : isRead() ? 'Back' : 'Cancel' | translate }}
                     </button>
 
-                    <button *ngIf="isCreate() || currDraft == 1" id="saveDraftFundShareBottom" type="button" class="btn btn-primary" (click)="saveDraft()">
-                        <i class="fa fa-save"></i> {{ (isCreate() ? 'Save Draft' : 'Update Draft') | translate }}
+                    <button *ngIf="isCreate() || currDraft == 1"
+                            id="saveDraftFundShareBottom"
+                            type="button"
+                            class="btn btn-primary"
+                            (click)="saveDraft()">
+                            <i class="fa fa-save"></i>
+                            {{ (isCreate() ? 'Save Draft' : 'Update Draft') | translate }}
                     </button>
 
-                    <button *ngIf="!isRead()" type="button" class="btn btn-primary action-button save" id="saveFundShareBottom" (click)="saveFundShare()" [disabled]="!model.isValid()">
-                        <i class="fa fa-save"></i>
-                        {{ (isCreate() || currDraft == 1 ? 'Create Share' : 'Update Share') | translate }}
+                    <button *ngIf="!isRead()"
+                            type="button"
+                            class="btn btn-primary action-button save"
+                            id="saveFundShareBottom"
+                            (click)="saveFundShare()"
+                            [disabled]="!model.isValid() || !hasPermissionUpdateFundShare">
+                            <i class="fa fa-save"></i>
+                            {{ (isCreate() || currDraft == 1 ? 'Create Share' : 'Update Share') | translate }}
                     </button>
                 </div>
-            </div>
+            </section>
+
         </clr-tab-content>
     </clr-tab>
 </clr-tabs>
