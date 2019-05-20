@@ -19,14 +19,12 @@ import { OfiKycService } from '../../ofi-req-services/ofi-kyc/service';
 import { OfiFundShareService } from '@ofi/ofi-main/ofi-req-services/ofi-product/fund-share/service';
 import { FileDownloader } from '@setl/utils/services/file-downloader/service';
 
-import { PermissionsRequestService } from '@setl/core-req-services/permissions/permissions-request.service';
-
 
 import {
     SelectModule,
     DpDatePickerModule,
     SetlPipesModule,
-    NumberConverterService, APP_CONFIG,
+    NumberConverterService, APP_CONFIG, PermissionsService,
 } from '@setl/utils';
 import { AlertsService } from '@setl/jaspero-ng2-alerts';
 import { RouterMock } from '@setl/core-test-util';
@@ -40,6 +38,10 @@ const ofiKycServiceStub = {
 
 const fileDownloaderStub = {
     downLoaderFile: jasmine.createSpy('downLoaderFile'),
+};
+
+const permissionsServiceStub = {
+    hasPermission: async (perm, action) => true,
 };
 
 @Pipe({ name: 'translate' })
@@ -85,7 +87,6 @@ describe('OfiClientReferentialComponent', () => {
                 KycDetailsGridComponent,
                 KycDetailsStakeholdersComponent,
                 KycDetailsStakeholdersModalComponent,
-                PermissionsRequestService
             ],
             imports: [
                 FormsModule,
@@ -108,6 +109,7 @@ describe('OfiClientReferentialComponent', () => {
                 { provide: MultilingualService, useValue: multilingualServiceStub },
                 { provide: APP_CONFIG, useValue: { numberDivider: 5 } },
                 NumberConverterService,
+                { provide: PermissionsService, useValue: permissionsServiceStub },
             ],
         });
         await TestBed.compileComponents();
