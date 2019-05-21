@@ -73,6 +73,8 @@ export class OfiNavFundView implements OnInit, OnDestroy {
     currencyList: any[];
 
     public hasPermissionCreateNav: boolean = false;
+    public hasPermissionUpdateNav: boolean = false;
+    public hasPermissionDeleteNav: boolean = false;
 
     get isIznesAdmin():boolean {
         return this.router.url.startsWith(ADMIN_USER_URL);
@@ -122,6 +124,16 @@ export class OfiNavFundView implements OnInit, OnDestroy {
         this.permissionsService.hasPermission('manageNav', 'canInsert').then(
             (hasPermission) => {
                 this.hasPermissionCreateNav = hasPermission;
+            });
+
+        this.permissionsService.hasPermission('manageNav', 'canUpdate').then(
+            (hasPermission) => {
+                this.hasPermissionUpdateNav = hasPermission;
+            });
+
+        this.permissionsService.hasPermission('manageNav', 'canDelete').then(
+            (hasPermission) => {
+                this.hasPermissionDeleteNav = hasPermission;
             });
     }
 

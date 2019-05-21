@@ -62,6 +62,8 @@ export class OfiNavFundsList implements OnInit, OnDestroy {
     currencyList: any[];
 
     public hasPermissionCreateNav: boolean = false;
+    public hasPermissionUpdateNav: boolean = false;
+    public hasPermissionDeleteNav: boolean = false;
 
     private cancelNavTitle: string;
     private cancelNavMessage: string;
@@ -113,6 +115,16 @@ export class OfiNavFundsList implements OnInit, OnDestroy {
         this.permissionsService.hasPermission('manageNav', 'canInsert').then(
             (hasPermission) => {
                 this.hasPermissionCreateNav = hasPermission;
+            });
+
+        this.permissionsService.hasPermission('manageNav', 'canUpdate').then(
+            (hasPermission) => {
+                this.hasPermissionUpdateNav = hasPermission;
+            });
+
+        this.permissionsService.hasPermission('manageNav', 'canDelete').then(
+            (hasPermission) => {
+                this.hasPermissionDeleteNav = hasPermission;
             });
     }
 

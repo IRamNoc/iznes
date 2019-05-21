@@ -20,7 +20,7 @@
 
         <clr-tab-content *clrIfActive="true">
             <!-- Button container -->
-            <div *ngIf="!hasPermissionCreateNav" class="alert alert-warning">
+            <div *ngIf="!hasPermissionCreateNav || !hasPermissionUpdateNav" class="alert alert-warning">
                 <div class="alert-items">
                     <div class="alert-item static">
                         <div class="alert-icon-wrapper">
@@ -39,7 +39,7 @@
                             class="btn btn-primary"
                             id="uploadNavFileButton"
                             (click)="isNavUploadModalDisplayed = true"
-                            [disabled]="!hasPermissionCreateNav">
+                            [disabled]="!(hasPermissionCreateNav && hasPermissionUpdateNav)">
                             {{ 'Upload NAVs' | translate }}
                     </button>
 
@@ -80,14 +80,40 @@
                 </div>
             </form>
 
-            <div *ngIf="!hasPermissionCreateNav" class="alert alert-warning">
+            <div *ngIf="!hasPermissionCreateNav && navListItems.length" class="alert alert-warning">
                 <div class="alert-items">
                     <div class="alert-item static">
                         <div class="alert-icon-wrapper">
                             <clr-icon class="alert-icon" shape="exclamation-triangle"></clr-icon>
                         </div>
                         <span class="alert-text">
-                            {{ 'Please contact the administrator to request permission to add a new NAV' | translate }}
+                            {{ 'Please contact the administrator to request permission to add a NAV' | translate }}
+                        </span>
+                    </div>
+                </div>
+            </div>
+
+            <div *ngIf="!hasPermissionUpdateNav && navListItems.length" class="alert alert-warning">
+                <div class="alert-items">
+                    <div class="alert-item static">
+                        <div class="alert-icon-wrapper">
+                            <clr-icon class="alert-icon" shape="exclamation-triangle"></clr-icon>
+                        </div>
+                        <span class="alert-text">
+                            {{ 'Please contact the administrator to request permission to edit a NAV' | translate }}
+                        </span>
+                    </div>
+                </div>
+            </div>
+
+            <div *ngIf="!hasPermissionDeleteNav && navListItems.length" class="alert alert-warning">
+                <div class="alert-items">
+                    <div class="alert-item static">
+                        <div class="alert-icon-wrapper">
+                            <clr-icon class="alert-icon" shape="exclamation-triangle"></clr-icon>
+                        </div>
+                        <span class="alert-text">
+                            {{ 'Please contact the administrator to request permission to cancel a NAV' | translate }}
                         </span>
                     </div>
                 </div>
@@ -199,13 +225,13 @@
                             <button id="{{'Btn-ModifyNAV-'+idx}}"
                                     class="btn btn-info btn-sm"
                                     (click)="modifyNav(item)"
-                                    [disabled]="item.status != -1">
+                                    [disabled]="!hasPermissionUpdateNav || (item.status != -1)">
                                     <i class="fa fa-edit"></i> {{ 'Edit' | translate }}
                             </button>
                             <button id="{{'Btn-CancelNAV-'+idx}}"
                                     class="btn btn-danger btn-sm"
                                     (click)="cancelNav(item)"
-                                    [disabled]="item.status != -1">
+                                    [disabled]="!hasPermissionDeleteNav || (item.status != -1)">
                                     <i class="fa fa-close"></i> {{ 'Cancel' | translate }}
                             </button>
                         </div>
