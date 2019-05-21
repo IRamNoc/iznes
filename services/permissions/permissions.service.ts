@@ -1,4 +1,5 @@
 import { take } from 'rxjs/operators';
+import { combineLatest } from "rxjs";
 import { select } from '@angular-redux/store';
 import { Injectable } from '@angular/core';
 import { PermissionsRequestService } from '@setl/core-req-services/permissions/permissions-request.service';
@@ -9,6 +10,8 @@ import { PermissionsRequestService } from '@setl/core-req-services/permissions/p
 export class PermissionsService {
     @select(['user', 'permissions', 'permissions']) public permissionsObservable: any;
     @select(['user', 'myDetail', 'userId']) public userIdObservable: any;
+    @select(['user', 'siteSettings', 'siteMenu', 'fetched']) public userMenuObservable: any;
+
     public permissions: any = null;
     public permissionTimeout = 10000; // 10 seconds
 
@@ -16,15 +19,27 @@ export class PermissionsService {
      * Constructor
      */
     public constructor(private permissionsRequestsService: PermissionsRequestService) {
-        this.userIdObservable.subscribe((userId) => {
+
+        combineLatest(
+            this.userIdObservable,
+            this.userMenuObservable,
+        )
+        .subscribe(([userId, menuRequested]) => {
+            // throw 'User is not logged in whilst trying to use the Permissions Service.';
             if (userId === 0) {
-                // throw 'User is not logged in whilst trying to use the Permissions Service.';
                 return;
             }
+
+            // menu has not loaded yet, login not ready
+            if (!menuRequested) {
+                return;
+            }
+
             if (!this.havePermissionsLoaded()) {
                 this.permissionsRequestsService.getUserAdminPermissions({ userID: userId });
             }
         });
+
         this.permissionsObservable.subscribe((permissions) => {
             this.permissions = permissions;
         });
