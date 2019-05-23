@@ -23,3 +23,8 @@ header .header-actions > .dropdown .dropdown-menu {
     margin-right: 0;
     top: 65px;
 }
+
+.header .header-actions .wallet .ui-select-toggle .ui-select-match-text {
+    width:250px;
+    overflow:hidden;
+}
