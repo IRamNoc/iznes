@@ -25,6 +25,7 @@ import {
 import { MultilingualService } from '@setl/multilingual';
 import { AlertsService } from '@setl/jaspero-ng2-alerts/src/alerts.service';
 import { OfiCurrenciesService } from '@ofi/ofi-main/ofi-req-services/ofi-currencies/service';
+import { PermissionsService } from '@setl/utils/services/permissions';
 
 const ADMIN_USER_URL = '/net-asset-value';
 
@@ -60,6 +61,10 @@ export class OfiNavFundsList implements OnInit, OnDestroy {
     appConfig: AppConfig;
     currencyList: any[];
 
+    public hasPermissionCreateNav: boolean = false;
+    public hasPermissionUpdateNav: boolean = false;
+    public hasPermissionDeleteNav: boolean = false;
+
     private cancelNavTitle: string;
     private cancelNavMessage: string;
     private cancelNavSuccessMessage: string;
@@ -78,7 +83,8 @@ export class OfiNavFundsList implements OnInit, OnDestroy {
 
     private subscriptionsArray: Subscription[] = [];
 
-    constructor(private router: Router,
+    constructor(
+        private router: Router,
         private redux: NgRedux<any>,
         private changeDetectorRef: ChangeDetectorRef,
         private ofiNavService: OfiNavService,
@@ -90,6 +96,7 @@ export class OfiNavFundsList implements OnInit, OnDestroy {
         private ofiCurrenciesService: OfiCurrenciesService,
         private fileDownloader: FileDownloader,
         private route: ActivatedRoute,
+        public permissionsService: PermissionsService,
         public translate: MultilingualService,
         @Inject(APP_CONFIG) appConfig: AppConfig) {
         this.appConfig = appConfig;
@@ -104,6 +111,21 @@ export class OfiNavFundsList implements OnInit, OnDestroy {
         this.initSearchForm();
         this.initSubscriptions();
         this.initTranslations();
+
+        this.permissionsService.hasPermission('manageNav', 'canInsert').then(
+            (hasPermission) => {
+                this.hasPermissionCreateNav = hasPermission;
+            });
+
+        this.permissionsService.hasPermission('manageNav', 'canUpdate').then(
+            (hasPermission) => {
+                this.hasPermissionUpdateNav = hasPermission;
+            });
+
+        this.permissionsService.hasPermission('manageNav', 'canDelete').then(
+            (hasPermission) => {
+                this.hasPermissionDeleteNav = hasPermission;
+            });
     }
 
     private initTranslations(): void {

@@ -44,6 +44,8 @@ export class OfiHomeComponent implements AfterViewInit, OnInit, OnDestroy {
     public hasPermissionManageOrders: boolean = false;
     public hasPermissionViewRecordkeeping: boolean = false;
     public hasPermissionViewPrecentralisation: boolean = false;
+    public hasPermissionViewFundShare: boolean = false;
+    public hasPermissionViewNav: boolean = false;
 
     /* Private properties. */
     private subscriptions: any[] = [];
@@ -115,23 +117,35 @@ export class OfiHomeComponent implements AfterViewInit, OnInit, OnDestroy {
         this.permissionsService.hasPermission('manageOrder', 'canRead').then(
             (hasPermission) => {
                 this.hasPermissionManageOrders = hasPermission;
-                this.changeDetectorRef.detectChanges();
             },
         );
 
         this.permissionsService.hasPermission('viewRecordkeeping', 'canRead').then(
             (hasPermission) => {
                 this.hasPermissionViewRecordkeeping = hasPermission;
-                this.changeDetectorRef.detectChanges();
             },
         );
 
         this.permissionsService.hasPermission('viewPrecentralisation', 'canRead').then(
             (hasPermission) => {
                 this.hasPermissionViewPrecentralisation = hasPermission;
-                this.changeDetectorRef.detectChanges();
             },
         );
+
+        this.permissionsService.hasPermission('manageFundShare', 'canRead').then(
+            (hasPermission) => {
+                this.hasPermissionViewFundShare = hasPermission;
+            },
+        );
+
+        this.permissionsService.hasPermission('manageNav', 'canRead').then(
+            (hasPermission) => {
+                this.hasPermissionViewNav = hasPermission;
+            },
+        );
+
+        this.changeDetectorRef.detectChanges();
+
     }
 
     ngAfterViewInit() {

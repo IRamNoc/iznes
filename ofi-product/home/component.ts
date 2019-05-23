@@ -8,6 +8,7 @@ import { ActivatedRoute, Router } from '@angular/router';
 import * as _ from 'lodash';
 /* Services */
 import { OfiUmbrellaFundService } from '@ofi/ofi-main/ofi-req-services/ofi-product/umbrella-fund/service';
+import { PermissionsService } from '@setl/utils/services/permissions';
 /* Alert service. */
 import { AlertsService } from '@setl/jaspero-ng2-alerts';
 /* Utils. */
@@ -50,6 +51,10 @@ export class ProductHomeComponent implements OnInit, OnDestroy {
     columns = {};
     panelDefs = [];
 
+    hasPermissionInsertUmbrellaFund: boolean = false;
+    hasPermissionInsertFund: boolean = false;
+    hasPermissionInsertFundShare: boolean = false;
+
     /* Private properties. */
     subscriptions: Array<Subscription> = [];
     private usertype: number;
@@ -89,6 +94,7 @@ export class ProductHomeComponent implements OnInit, OnDestroy {
                 private confirmationService: ConfirmationService,
                 @Inject('product-config') productConfig,
                 private ofiCurrenciesService: OfiCurrenciesService,
+                public permissionsService: PermissionsService,
                 public translate: MultilingualService,
     ) {
         this.countryItems = productConfig.fundItems.domicileItems;
@@ -97,6 +103,27 @@ export class ProductHomeComponent implements OnInit, OnDestroy {
     }
 
     ngOnInit() {
+        this.permissionsService.hasPermission('manageUmbrellaFund', 'canInsert').then(
+            (hasPermission) => {
+                this.hasPermissionInsertUmbrellaFund = hasPermission;
+                this.changeDetectorRef.detectChanges();
+            },
+        );
+
+        this.permissionsService.hasPermission('manageFund', 'canInsert').then(
+            (hasPermission) => {
+                this.hasPermissionInsertFund = hasPermission;
+                this.changeDetectorRef.detectChanges();
+            },
+        );
+
+        this.permissionsService.hasPermission('manageFundShare', 'canInsert').then(
+            (hasPermission) => {
+                this.hasPermissionInsertFundShare = hasPermission;
+                this.changeDetectorRef.detectChanges();
+            },
+        );
+
         this.initColumns();
         this.initPanelDefs();
 
@@ -656,6 +683,7 @@ export class ProductHomeComponent implements OnInit, OnDestroy {
                         title: this.translate.translate('Add New Umbrella Fund'),
                         icon: 'plus',
                         type: 'ufund',
+                        disabled: this.hasPermissionInsertUmbrellaFund,
                     },
                     link: '/product-module/product/umbrella-fund/',
                     linkIdent: 'umbrellaFundID',
@@ -680,6 +708,7 @@ export class ProductHomeComponent implements OnInit, OnDestroy {
                         title: this.translate.translate('Add New Fund'),
                         icon: 'plus',
                         type: 'fund',
+                        disabled: this.hasPermissionInsertFund,
                     },
                     link: '/product-module/product/fund/',
                     linkIdent: 'fundID',
@@ -705,6 +734,7 @@ export class ProductHomeComponent implements OnInit, OnDestroy {
                         title: this.translate.translate('Add New Share'),
                         icon: 'plus',
                         type: 'share',
+                        disabled: this.hasPermissionInsertFundShare,
                     },
                     link: '/product-module/product/fund-share/',
                     linkIdent: 'fundShareID',
@@ -739,6 +769,7 @@ export class ProductHomeComponent implements OnInit, OnDestroy {
                             iconClass: 'fa fa-remove',
                         },
                     ],
+                    context: 'drafts',
                 },
             ];
         }

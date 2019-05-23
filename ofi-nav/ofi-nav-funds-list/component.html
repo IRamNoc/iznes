@@ -6,8 +6,7 @@
 
     <section class="subtitle">
         <p>{{ 'Please select a date type and a date to access to the available NAVs.' | translate }}<br>{{ 'You will
-            have
-            access to the NAV\'s history of a specific share in clicking on the corresponding row.' | translate }}
+            have access to the NAV\'s history of a specific share in clicking on the corresponding row.' | translate }}
         </p>
     </section>
 </div>
@@ -21,14 +20,34 @@
 
         <clr-tab-content *clrIfActive="true">
             <!-- Button container -->
+            <div *ngIf="!hasPermissionCreateNav || !hasPermissionUpdateNav" class="alert alert-warning">
+                <div class="alert-items">
+                    <div class="alert-item static">
+                        <div class="alert-icon-wrapper">
+                            <clr-icon class="alert-icon" shape="exclamation-triangle"></clr-icon>
+                        </div>
+                        <span class="alert-text">
+                            {{ 'Please contact the administrator to request permission to upload NAVs' | translate }}
+                        </span>
+                    </div>
+                </div>
+            </div>
+
             <div class="row">
                 <div class="form-group button-container">
-                    <button *ngIf="!isIznesAdmin" class="btn btn-primary" id="uploadNavFileButton" (click)="isNavUploadModalDisplayed = true">
-                        {{ 'Upload NAVs' | translate }}
+                    <button *ngIf="!isIznesAdmin"
+                            class="btn btn-primary"
+                            id="uploadNavFileButton"
+                            (click)="isNavUploadModalDisplayed = true"
+                            [disabled]="!(hasPermissionCreateNav && hasPermissionUpdateNav)">
+                            {{ 'Upload NAVs' | translate }}
                     </button>
 
-                    <button class="btn btn-primary" id="NAV-Export-CSV" (click)="exportCSV()" [disabled]="(!navListItems) || navListItems.length === 0">
-                        {{ 'Export List as CSV' | translate }}
+                    <button class="btn btn-primary"
+                            id="NAV-Export-CSV"
+                            (click)="exportCSV()"
+                            [disabled]="(!navListItems) || navListItems.length === 0">
+                            {{ 'Export List as CSV' | translate }}
                     </button>
                 </div>
             </div>
@@ -60,6 +79,45 @@
                     </div>
                 </div>
             </form>
+
+            <div *ngIf="!hasPermissionCreateNav && navListItems.length" class="alert alert-warning">
+                <div class="alert-items">
+                    <div class="alert-item static">
+                        <div class="alert-icon-wrapper">
+                            <clr-icon class="alert-icon" shape="exclamation-triangle"></clr-icon>
+                        </div>
+                        <span class="alert-text">
+                            {{ 'Please contact the administrator to request permission to add a NAV' | translate }}
+                        </span>
+                    </div>
+                </div>
+            </div>
+
+            <div *ngIf="!hasPermissionUpdateNav && navListItems.length" class="alert alert-warning">
+                <div class="alert-items">
+                    <div class="alert-item static">
+                        <div class="alert-icon-wrapper">
+                            <clr-icon class="alert-icon" shape="exclamation-triangle"></clr-icon>
+                        </div>
+                        <span class="alert-text">
+                            {{ 'Please contact the administrator to request permission to edit a NAV' | translate }}
+                        </span>
+                    </div>
+                </div>
+            </div>
+
+            <div *ngIf="!hasPermissionDeleteNav && navListItems.length" class="alert alert-warning">
+                <div class="alert-items">
+                    <div class="alert-item static">
+                        <div class="alert-icon-wrapper">
+                            <clr-icon class="alert-icon" shape="exclamation-triangle"></clr-icon>
+                        </div>
+                        <span class="alert-text">
+                            {{ 'Please contact the administrator to request permission to cancel a NAV' | translate }}
+                        </span>
+                    </div>
+                </div>
+            </div>
 
             <clr-datagrid #dataGrid>
                 <clr-dg-column *ngIf="isIznesAdmin">
@@ -158,17 +216,23 @@
                     </clr-dg-cell>
                     <clr-dg-cell class="actions" *ngIf="!isIznesAdmin">
                         <div class="btn-group btn-sm">
-                            <button id="{{'Btn-AddNewNAV-'+idx}}" class="btn btn-success btn-sm" (click)="addNav(item)"
-                                [disabled]="isAddNavDisabled(item)">
-                                <i class="fa fa-plus"></i> {{ 'Add' | translate }}
+                            <button id="{{'Btn-AddNewNAV-'+idx}}"
+                                    class="btn btn-success btn-sm"
+                                    (click)="addNav(item)"
+                                    [disabled]="isAddNavDisabled(item) || !hasPermissionCreateNav">
+                                    <i class="fa fa-plus"></i> {{ 'Add' | translate }}
                             </button>
-                            <button id="{{'Btn-ModifyNAV-'+idx}}" class="btn btn-info btn-sm" (click)="modifyNav(item)"
-                                [disabled]="item.status != -1">
-                                <i class="fa fa-edit"></i> {{ 'Edit' | translate }}
+                            <button id="{{'Btn-ModifyNAV-'+idx}}"
+                                    class="btn btn-info btn-sm"
+                                    (click)="modifyNav(item)"
+                                    [disabled]="!hasPermissionUpdateNav || (item.status != -1)">
+                                    <i class="fa fa-edit"></i> {{ 'Edit' | translate }}
                             </button>
-                            <button id="{{'Btn-CancelNAV-'+idx}}" class="btn btn-danger btn-sm" (click)="cancelNav(item)"
-                                [disabled]="item.status != -1">
-                                <i class="fa fa-close"></i> {{ 'Cancel' | translate }}
+                            <button id="{{'Btn-CancelNAV-'+idx}}"
+                                    class="btn btn-danger btn-sm"
+                                    (click)="cancelNav(item)"
+                                    [disabled]="!hasPermissionDeleteNav || (item.status != -1)">
+                                    <i class="fa fa-close"></i> {{ 'Cancel' | translate }}
                             </button>
                         </div>
                     </clr-dg-cell>
