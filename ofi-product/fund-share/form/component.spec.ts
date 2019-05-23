@@ -22,6 +22,7 @@ import {
     ConfirmationService,
     APP_CONFIG,
     NumberConverterService, AppConfig,
+    PermissionsService,
 } from '@setl/utils';
 import { OfiFundShareService } from '@ofi/ofi-main/ofi-req-services/ofi-product/fund-share/service';
 import { OfiUmbrellaFundService } from '@ofi/ofi-main/ofi-req-services/ofi-product/umbrella-fund/service';
@@ -291,6 +292,10 @@ const activatedRouteStub = {
     queryParams: new Subject(),
 };
 
+const permissionsServiceStub = {
+    hasPermission: async (perm, action) => true,
+};
+
 // Stub for translate
 @Pipe({ name: 'translate' })
 export class TranslatePipe implements PipeTransform {
@@ -353,7 +358,8 @@ describe('FundShareComponent', () => {
                 { provide: APP_CONFIG, useValue: { MEMBER_NODE_CONNECTION: { port: 1234 } } },
                 { provide: Location, useValue: locationSpy },
                 { provide: 'product-config', useValue: productConfig },
-                { provide: NumberConverterService, useValue: numberConverterService}
+                { provide: NumberConverterService, useValue: numberConverterService},
+                { provide: PermissionsService, useValue: permissionsServiceStub },
             ],
         });
         await TestBed.compileComponents();
@@ -592,7 +598,7 @@ describe('FundShareComponent', () => {
         });
 
         it('should only render the back button with the label \'Back\'', () => {
-            const tabFooterEl = fixture.debugElement.queryAll(By.css('clr-tab-content > div.bottom button'));
+            const tabFooterEl = fixture.debugElement.queryAll(By.css('button.action-button.cancel'));
             expect(tabFooterEl.length).toEqual(1);
             expect(tabFooterEl[0].nativeElement.innerText).toEqual('Back');
         });
