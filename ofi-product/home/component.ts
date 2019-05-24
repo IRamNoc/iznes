@@ -102,27 +102,11 @@ export class ProductHomeComponent implements OnInit, OnDestroy {
         this.showOnlyActive = !this.showOnlyActive;
     }
 
-    ngOnInit() {
-        this.permissionsService.hasPermission('manageUmbrellaFund', 'canInsert').then(
-            (hasPermission) => {
-                this.hasPermissionInsertUmbrellaFund = hasPermission;
-                this.changeDetectorRef.detectChanges();
-            },
-        );
-
-        this.permissionsService.hasPermission('manageFund', 'canInsert').then(
-            (hasPermission) => {
-                this.hasPermissionInsertFund = hasPermission;
-                this.changeDetectorRef.detectChanges();
-            },
-        );
-
-        this.permissionsService.hasPermission('manageFundShare', 'canInsert').then(
-            (hasPermission) => {
-                this.hasPermissionInsertFundShare = hasPermission;
-                this.changeDetectorRef.detectChanges();
-            },
-        );
+    async ngOnInit() {
+        this.hasPermissionInsertUmbrellaFund = await this.permissionsService.hasPermission('manageUmbrellaFund', 'canInsert');
+        this.hasPermissionInsertFund = await this.permissionsService.hasPermission('manageFund', 'canInsert');
+        this.hasPermissionInsertFundShare = await this.permissionsService.hasPermission('manageFundShare', 'canInsert');
+        this.changeDetectorRef.detectChanges();
 
         this.initColumns();
         this.initPanelDefs();
@@ -754,7 +738,7 @@ export class ProductHomeComponent implements OnInit, OnDestroy {
                     open: true,
                     data: this.draftList,
                     count: this.draftList.length,
-                    columnLink: '',
+                    columnLink: 'drafts',
                     buttons: [
                         {
                             text: this.translate.translate('Edit Draft'),
