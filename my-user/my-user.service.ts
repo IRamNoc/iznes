@@ -458,6 +458,7 @@ export class MyUserService implements OnDestroy {
         this.walletSocket.clearConnection();
         this.logout$.next(true);
 
+        this.memberSocketService.token = '';
         this.ngRedux.dispatch({ type: 'USER_LOGOUT' });
 
         await this.memberSocketService.connect();
