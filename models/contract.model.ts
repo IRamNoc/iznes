@@ -41,6 +41,7 @@ export class ContractModel {
     public __timeevent: number = 0;
     public completed: boolean = false;
     public __completed: number = 0;
+    public __canceltime: number = 0;
     // Additional Fields
     public name: string = '';
     public payors: string[] = [];
