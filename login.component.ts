@@ -9,6 +9,7 @@ import {
     ViewChild,
     ChangeDetectorRef,
 } from '@angular/core';
+import { style, state, animate, transition, trigger } from '@angular/animations';
 import { ActivatedRoute, Router } from '@angular/router';
 import { AbstractControl, FormControl, FormGroup, Validators } from '@angular/forms';
 import { NgRedux, select } from '@angular-redux/store';
@@ -45,9 +46,10 @@ import { Subscription } from 'rxjs/Subscription';
 import { MultilingualService } from '@setl/multilingual';
 import { passwordValidator } from '@setl/utils/helper/validators/password.directive';
 import { LoginService } from './login.service';
+import { ClrLoadingState } from '@clr/angular';
 
 export interface LoginRedirect {
-   loginedRedirect(redirect: string, urlParams: any): void;
+    loginedRedirect(redirect: string, urlParams: any): void;
 }
 
 /* Dectorator. */
@@ -55,6 +57,15 @@ export interface LoginRedirect {
     selector: 'app-login',
     templateUrl: 'login.component.html',
     styleUrls: ['login.component.scss'],
+    animations: [
+        trigger('fadeIn', [
+            transition(':enter', [
+                style({ opacity: 0 }),
+                animate(500, style({ opacity: 1 })),
+            ]),
+            state('*', style({ opacity: 1 })),
+        ]),
+    ],
 })
 
 /* Class. */
@@ -79,6 +90,7 @@ export class SetlLoginComponent implements OnDestroy, OnInit, AfterViewInit, Log
 
     changePasswordForm: FormGroup;
     showPasswords = {
+        login: false,
         change1: false,
         change2: false,
         resetold: false,
@@ -88,6 +100,7 @@ export class SetlLoginComponent implements OnDestroy, OnInit, AfterViewInit, Log
 
     resetPasswordForm: FormGroup;
     resetPassword: boolean = false;
+    resetPasswordSuccess: boolean = false;
 
     changedPassword = false;
     changedPasswordContinue: boolean = false;
@@ -106,6 +119,12 @@ export class SetlLoginComponent implements OnDestroy, OnInit, AfterViewInit, Log
     resetToken = '';
     isTokenExpired = false;
     changePassword = false;
+    changePasswordSuccess = false;
+
+    loadingState = ClrLoadingState;
+    submitBtnState: ClrLoadingState = ClrLoadingState.DEFAULT;
+
+    alert: any = { show: false, type: '', content: '' };
 
     private userAuthenticationState: any;
 
@@ -297,15 +316,7 @@ export class SetlLoginComponent implements OnDestroy, OnInit, AfterViewInit, Log
             return false;
         }
 
-        // if the alert popup exists.
-        // if (document.getElementsByClassName('jaspero__dialog-icon').length > 0) {
-        //     // remove the popup and return false.
-        //     const elements = document.getElementsByClassName('error');
-        //     if (elements.length > 0) {
-        //         elements[0].parentNode.removeChild(elements[0]);
-        //     }
-        //     return false;
-        // }
+        this.submitBtnState = ClrLoadingState.LOADING;
 
         // Dispatch a login request action.
         // this.ngRedux.dispatch({type: 'my-detail/LOGIN_REQUEST'});
@@ -336,8 +347,8 @@ export class SetlLoginComponent implements OnDestroy, OnInit, AfterViewInit, Log
             },
             // Fail to login
             (data) => {
+                this.submitBtnState = ClrLoadingState.DEFAULT;
                 this.showTwoFactorModal = false;
-                this.changeDetectorRef.detectChanges();
                 this.handleLoginFailMessage(data);
             },
         ));
@@ -354,7 +365,9 @@ export class SetlLoginComponent implements OnDestroy, OnInit, AfterViewInit, Log
             this.memberSocketService.token = token;
 
             if (myAuthenData.mustChangePassword) {
+                this.submitBtnState = ClrLoadingState.DEFAULT;
                 this.resetPassword = true;
+                this.showAlert('clear');
                 return;
             }
 
@@ -404,20 +417,9 @@ export class SetlLoginComponent implements OnDestroy, OnInit, AfterViewInit, Log
                 this.loginValue = params.email;
             }
             if (params.error) {
-                this.displayError();
+                this.showAlert('error', 'This link is no longer valid. Please try to login again.');
             }
         });
-    }
-
-    displayError() {
-        setTimeout(
-            () => {
-                this.toasterService.pop(
-                    'error',
-                    this.translate.translate('This link is no longer valid. Please try to login again.'));
-            },
-            0,
-        );
     }
 
     passwordValidator(g: FormGroup) {
@@ -444,10 +446,14 @@ export class SetlLoginComponent implements OnDestroy, OnInit, AfterViewInit, Log
     showFPModal() {
         this.isTokenExpired = false;
         this.showModal = true;
+        this.showAlert('clear');
+        this.submitBtnState = ClrLoadingState.DEFAULT;
     }
 
     sendEmail() {
         if (this.forgottenPasswordForm.valid) {
+            this.submitBtnState = ClrLoadingState.LOADING;
+
             this.emailUser = this.forgottenPasswordForm.controls.email.value;
 
             const asyncTaskPipe = this.myUserService.forgotPassword(
@@ -476,18 +482,12 @@ export class SetlLoginComponent implements OnDestroy, OnInit, AfterViewInit, Log
                             10000,
                         );
                     } else {
-                        this.alertsService.generate(
-                            'error',
-                            data[1].Data[0].Message,
-                        );
+                        this.showAlert('error', data[1].Data[0].Message);
                         this.closeFPModal();
                     }
                 },
                 (data) => {
-                    this.alertsService.generate(
-                        'error',
-                        `${this.translate.translate('Sorry, something went wrong.')}<br>${this.translate.translate('Please try again later.')}`,
-                    );
+                    this.showAlert('error', 'Sorry, something went wrong. Please try again later.');
                     this.closeFPModal();
                 }),
             );
@@ -513,7 +513,7 @@ export class SetlLoginComponent implements OnDestroy, OnInit, AfterViewInit, Log
                         1500,
                     );
                 } else {
-                    this.alertsService.generate(
+                    this.showAlert(
                         'error',
                         data[1].Data[0].Message,
                     );
@@ -525,6 +525,8 @@ export class SetlLoginComponent implements OnDestroy, OnInit, AfterViewInit, Log
                     () => {
                         this.isTokenExpired = true;
                         this.showModal = true;
+                        this.showAlert('error', 'Sorry, the link has expired. ' +
+                        'Please fill in your email address and we will send you a new link.');
                     },
                     1500,
                 );
@@ -534,6 +536,8 @@ export class SetlLoginComponent implements OnDestroy, OnInit, AfterViewInit, Log
 
     saveNewPassword() {
         if (this.changePasswordForm.valid) {
+            this.submitBtnState = ClrLoadingState.LOADING;
+
             const asyncTaskPipe = this.myUserService.setNewPasswordFromToken(
                 {
                     token: this.resetToken,
@@ -546,23 +550,26 @@ export class SetlLoginComponent implements OnDestroy, OnInit, AfterViewInit, Log
                 (data) => {
                     if (data && data[1] && data[1].Data && data[1].Data[0].Status && data[1].Data[0].Status === 'OK') {
                         this.changedPassword = true;
-                        this.closeFPModal();
-
-                        this.toasterService.pop(
-                            'success',
-                            this.translate.translate('Your password has been changed!'));
+                        this.changePasswordSuccess = true;
                     } else {
-                        this.alertsService.generate(
-                            'error',
-                            data[1].Data[0].Message);
                         this.closeFPModal();
+                        this.showAlert('error', data[1].Data[0].Message);
                     }
                 },
                 (data) => {
-                    this.alertsService.generate(
-                        'error',
-                        this.translate.translate('Sorry, something went wrong.<br>Please try again later.'));
-                    this.closeFPModal();
+                    if (_.get(data, '[1].Data[0].Message', '') === 'Password complexity not met') {
+                        this.showAlert(
+                            'error',
+                            'Sorry, your password does not meet the requirements.',
+                        );
+                        this.submitBtnState = ClrLoadingState.DEFAULT;
+                    } else {
+                        this.closeFPModal();
+                        this.showAlert(
+                            'error',
+                            'Sorry, something went wrong. Please try again later.',
+                        );
+                    }
                 }),
             );
         }
@@ -571,6 +578,8 @@ export class SetlLoginComponent implements OnDestroy, OnInit, AfterViewInit, Log
     resetUserPassword($event: Event) {
         if (this.resetPasswordForm.valid) {
             $event.preventDefault();
+
+            this.submitBtnState = ClrLoadingState.LOADING;
 
             const asyncTaskPipe = this.myUserService.saveNewPassword({
                 oldPassword: this.resetPasswordForm.controls.oldPassword.value,
@@ -582,37 +591,35 @@ export class SetlLoginComponent implements OnDestroy, OnInit, AfterViewInit, Log
                 asyncTaskPipe,
                 {},
                 (data) => {
-                    const platformName = this.getPlatformName();
-
-                    this.resetPassword = false;
-                    this.subscriptionsArray.push(
-                        this.alertsService.generate(
-                            'success',
-                            `${this.translate.translate('Your password has been reset.')}<br><br>${this.translate.translate('A confirmation email will be sent to you.')}`,
-                            { buttonMessage: this.translate.translate('Continue to @platformName@', { platformName }) },
-                        ).subscribe(() => {
-                            if (!this.changedPasswordContinue) {
-                                this.changedPasswordContinue = true;
-                                this.resetPasswordForm.reset();
-                                // Update the state with the new token
-                                this.userAuthenticationState.token = data[1].Data[0].Token;
-                                // The user has completed mustChangePassword so set to false and...
-                                this.userAuthenticationState.mustChangePassword = false;
-                                // ...call updateState which will route the user to the homepage
-                                this.updateState(this.userAuthenticationState);
-                            }
-                        }),
-                    );
+                    // Update the state with the new token
+                    this.userAuthenticationState.token = data[1].Data[0].Token;
+                    this.resetPasswordSuccess = true;
                 },
-                () => {
-                    const message = this.translate.translate(
-                        'Please make sure you have entered your current password correctly.');
-                    this.alertsService.generate('error', message);
+                (data) => {
+                    this.submitBtnState = ClrLoadingState.DEFAULT;
+
+                    if (_.get(data, '[1].Data[0].Message', '') === 'Password complexity not met') {
+                        this.showAlert(
+                            'error',
+                            'Sorry, your password does not meet the requirements.',
+                        );
+                    } else {
+                        this.showAlert('error', 'Please make sure you have entered ' +
+                        'your current password correctly.');
+                    }
                 },
             );
 
             this.ngRedux.dispatch(saga);
         }
+    }
+
+    handleContinueAfterResetPassword() {
+        this.resetPasswordForm.reset();
+        // The user has completed mustChangePassword so set to false and...
+        this.userAuthenticationState.mustChangePassword = false;
+        // ...call updateState which will route the user to the homepage
+        this.updateState(this.userAuthenticationState);
     }
 
     closeFPModal() {
@@ -622,6 +629,8 @@ export class SetlLoginComponent implements OnDestroy, OnInit, AfterViewInit, Log
         this.showModal = false;
         this.emailSent = false;
         this.changePassword = false;
+        this.submitBtnState = ClrLoadingState.DEFAULT;
+        this.showAlert('clear');
     }
 
     ngOnDestroy() {
@@ -635,31 +644,24 @@ export class SetlLoginComponent implements OnDestroy, OnInit, AfterViewInit, Log
 
         switch (responseStatus) {
             case 'fail':
-                this.showLoginErrorMessage(
-                    'warning',
-                    `<span>${this.translate.translate(
-                        'Invalid email address or password.')}</span>`,
+                this.showAlert(
+                    'error',
+                    'Invalid email address or password.',
                 );
                 break;
             case 'locked':
-                this.showLoginErrorMessage(
-                    'info',
-                    `<span>${this.translate.translate(
-                        'Sorry, your account has been locked. Please contact your Administrator.')}</span>`,
+                this.showAlert(
+                    'error',
+                    'Sorry, your account has been locked. Please contact your Administrator.',
                 );
                 break;
             default:
-                this.showLoginErrorMessage(
+                this.showAlert(
                     'error',
-                    `<span>${this.translate.translate(
-                        'Sorry, there was a problem logging in, please try again.')}</span>`,
+                    'Sorry, there was a problem logging in, please try again.',
                 );
                 break;
         }
-    }
-
-    showLoginErrorMessage(type, msg) {
-        this.alertsService.generate(type, msg, { buttonMessage: this.translate.translate('Close') });
     }
 
     updateLang(lang: string) {
@@ -689,4 +691,39 @@ export class SetlLoginComponent implements OnDestroy, OnInit, AfterViewInit, Log
         this.router.navigateByUrl(redirect);
     }
 
+    setTwoFactorResetFailed() {
+        this.showAlert(
+            'error',
+            'Sorry, your Two-Factor reset link has expired. Please try again by logging in and clicking ' +
+            "'Lost access to your code?'.",
+        );
+    }
+
+    showAlert(type: 'success' | 'warning' | 'info' | 'error' | 'clear', content: string = '') {
+        const alertMapping = {
+            success: { type: 'alert-success', icon: 'check-circle' },
+            warning: { type: 'alert-warning', icon: 'exclamation-triangle' },
+            info: { type: 'alert-info', icon: 'info-circle' },
+            error: { type: 'alert-danger', icon: 'exclamation-circle' },
+        };
+
+        if (!content || !alertMapping[type]) {
+            this.alert.show = false;
+            this.changeDetectorRef.detectChanges();
+            return;
+        }
+
+        // timeout to account for other view changes
+        setTimeout(
+            () => {
+                this.alert = {
+                    show: true,
+                    type: alertMapping[type].type,
+                    icon: alertMapping[type].icon,
+                    content,
+                };
+            },
+            5,
+        );
+    }
 }

@@ -21,18 +21,28 @@ import {
 } from '@setl/core-store';
 import { MultilingualService } from '@setl/multilingual';
 import { SagaHelper, APP_CONFIG, AppConfig } from '@setl/utils';
-import { AlertsService } from '@setl/jaspero-ng2-alerts';
 import { passwordValidator } from '@setl/utils/helper/validators/password.directive';
 
 import * as Model from './model';
 import { MemberSocketService } from '@setl/websocket-service';
 import { LoginService } from '../login.service';
 import { combineLatest } from 'rxjs/observable/combineLatest';
+import { ClrLoadingState } from '@clr/angular';
+import { animate, state, style, transition, trigger } from '@angular/animations';
 
 @Component({
     selector: 'app-signup',
     templateUrl: 'component.html',
-    styleUrls: ['component.scss'],
+    styleUrls: ['../login.component.scss'],
+    animations: [
+        trigger('fadeIn', [
+            transition(':enter', [
+                style({ opacity: 0 }),
+                animate(500, style({ opacity: 1 })),
+            ]),
+            state('*', style({ opacity: 1 })),
+        ]),
+    ],
 })
 export class SignupComponent implements OnDestroy, OnInit {
     appConfig: AppConfig;
@@ -49,6 +59,10 @@ export class SignupComponent implements OnDestroy, OnInit {
 
     showTwoFactorModal = false;
     qrCode: string = '';
+    submitBtnState: ClrLoadingState = ClrLoadingState.DEFAULT;
+    alert: any = { show: false, type: '', content: '' };
+    signupSuccess: boolean = false;
+    signupSuccessText: string = '';
 
     private subscriptions: Subscription[] = [];
     private config: Model.ISignupConfiguration;
@@ -75,7 +89,6 @@ export class SignupComponent implements OnDestroy, OnInit {
                 private activatedRoute: ActivatedRoute,
                 private router: Router,
                 public translate: MultilingualService,
-                private alertsService: AlertsService,
                 private myUserService: MyUserService,
                 private myWalletsService: MyWalletsService,
                 private memberSocketService: MemberSocketService,
@@ -91,6 +104,8 @@ export class SignupComponent implements OnDestroy, OnInit {
     }
 
     ngOnInit() {
+        if (!this.appConfig.platformLegal) this.appConfig.platformLegal = this.appConfig.platform;
+
         this.initSignupForm();
         this.getQueryParams();
 
@@ -198,7 +213,7 @@ export class SignupComponent implements OnDestroy, OnInit {
     }
 
     get buttonText(): string {
-        return this.configuration ? this.configuration.buttonText : this.translate.translate('Create an account');
+        return this.configuration ? this.configuration.buttonText : 'Create an account';
     }
 
     private updateState(auth): void {
@@ -230,12 +245,27 @@ export class SignupComponent implements OnDestroy, OnInit {
     signup(form: Model.ISignupForm) {
         if (!this.configuration.signupCallback) return;
 
-        this.configuration.signupCallback(form).then(() => {
-            if (this.configuration.doLoginAfterCallback) this.loginAfterSignup();
+        this.submitBtnState = ClrLoadingState.LOADING;
+
+        this.configuration.signupCallback(form)
+        .then((successText: any) => {
+            this.submitBtnState = ClrLoadingState.DEFAULT;
+            if (this.configuration.doLoginAfterCallback) {
+                // show sign up successful screen with button
+                this.signupSuccessText = typeof successText === 'string'
+                    ? successText : 'Your account was created successfully.';
+                this.signupSuccess = true;
+            }
+        })
+        .catch((e) => {
+            this.submitBtnState = ClrLoadingState.DEFAULT;
+            this.showAlert('error', typeof e === 'string' ? e : 'Sorry, something went wrong. Please try again later.');
         });
     }
 
     private loginAfterSignup(): void {
+        this.submitBtnState = ClrLoadingState.LOADING;
+
         const loginRequestAction = loginRequestAC();
         this.redux.dispatch(loginRequestAction);
 
@@ -250,6 +280,7 @@ export class SignupComponent implements OnDestroy, OnInit {
             asyncTaskPipe,
             {},
             (data) => {
+                this.submitBtnState = ClrLoadingState.DEFAULT;
 
                 if (_.get(data, '[1].Data[0].qrCode', false)) {
                     this.qrCode = data[1].Data[0].qrCode;
@@ -258,6 +289,8 @@ export class SignupComponent implements OnDestroy, OnInit {
                 this.loginService.postLoginRequests();
             },
             (data) => {
+                this.submitBtnState = ClrLoadingState.DEFAULT;
+
                 this.handleLoginFailMessage(data);
             },
         ));
@@ -268,32 +301,24 @@ export class SignupComponent implements OnDestroy, OnInit {
 
         switch (responseStatus) {
             case 'fail':
-                this.showLoginErrorMessage(
-                    'warning',
-                    `<span class="text-warning">${this.translate.translate(
-                        'Invalid email address or password.')}</span>`,
+                this.showAlert(
+                    'error',
+                    'Invalid email address or password.',
                 );
                 break;
             case 'locked':
-                this.showLoginErrorMessage(
-                    'info',
-                    `<span class="text-warning">${this.translate.translate(
-                        'Sorry, your account has been locked. Please contact your Administrator.')}</span>`,
+                this.showAlert(
+                    'error',
+                    'Sorry, your account has been locked. Please contact your Administrator.',
                 );
                 break;
             default:
-                this.showLoginErrorMessage(
+                this.showAlert(
                     'error',
-                    `<span class="text-warning">${this.translate.translate(
-                        'Sorry, there was a problem logging in. Please try again.')}</span>`,
+                    'Sorry, there was a problem logging in. Please try again.',
                 );
                 break;
         }
-    }
-
-    private showLoginErrorMessage(type, msg) {
-        this.alertsService.create(type, msg, { buttonMessage: this.translate.translate(
-            'Please try logging in again') });
     }
 
     toggleShowPasswords(isConfirm: boolean = false) {
@@ -335,6 +360,32 @@ export class SignupComponent implements OnDestroy, OnInit {
 
     getLabel(lang: string): string {
         return this.langLabels[lang];
+    }
+
+    showAlert(type: 'success' | 'warning' | 'info' | 'error' | 'clear', content: string = '') {
+        const alertMapping = {
+            success: { type: 'alert-success', icon: 'check-circle' },
+            warning: { type: 'alert-warning', icon: 'exclamation-triangle' },
+            info: { type: 'alert-info', icon: 'info-circle' },
+            error: { type: 'alert-danger', icon: 'exclamation-circle' },
+        };
+
+        if (!content || !alertMapping[type]) {
+            this.alert.show = false;
+            return;
+        }
+
+        setTimeout(
+            () => {
+                this.alert = {
+                    show: true,
+                    type: alertMapping[type].type,
+                    icon: alertMapping[type].icon,
+                    content,
+                };
+            },
+            5,
+        );
     }
 
     ngOnDestroy() {
