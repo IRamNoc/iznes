@@ -18,6 +18,7 @@ import { MultilingualService } from '@setl/multilingual';
 // Internal
 import { Subscription } from 'rxjs/Subscription';
 import { MyUserService } from '@setl/core-req-services';
+import { SET_LANGUAGE } from '@setl/core-store/user/site-settings/actions';
 
 import {
     getConnectedWallet,
@@ -29,6 +30,7 @@ import { MemberSocketService } from '@setl/websocket-service';
 interface TabState {
     detail: boolean;
     password: boolean;
+    language: boolean;
     tfa: boolean;
     api: boolean;
     externalNotifications: boolean;
@@ -181,7 +183,7 @@ export class SetlMyAccountComponent implements OnDestroy, OnInit {
 
         this.updateState();
 
-        this.subscriptionsArray.push(this.requestLanguageObj.subscribe(requested => this.getLanguage(requested)));
+        this.subscriptionsArray.push(this.requestLanguageObj.subscribe(requested => this.language = requested));
         this.getUserDetails.subscribe(getUserDetails => this.myUserDetails(getUserDetails));
     }
 
@@ -193,6 +195,7 @@ export class SetlMyAccountComponent implements OnDestroy, OnInit {
         this.tabStates = {
             detail: true,
             password: false,
+            language: false,
             tfa: false,
             api: false,
             externalNotifications: false,
@@ -283,21 +286,30 @@ export class SetlMyAccountComponent implements OnDestroy, OnInit {
         ));
     }
 
-    getLanguage(requested): void {
-        console.log(`Language changed from ${this.language} to ${requested}`);
-        if (requested) {
-            switch (requested) {
-                case 'fra':
-                    this.language = 'fr';
-                    break;
-                case 'eng':
-                    this.language = 'en';
-                    break;
-                default:
-                    this.language = 'en';
-                    break;
-            }
-        }
+        /**
+     * Changes Language and Stores in Redux (site-settings)
+     *
+     * @param lang
+     */
+    public changeLanguage(lang) {
+        const validLocales = [
+            'en-Latn',
+            'fr-Latn',
+        ];
+
+        this.translate.updateLanguage(lang);
+
+        // save language in db
+        const asyncTaskPipe = this.myUserService.setLanguage({ lang });
+        this.ngRedux.dispatch(SagaHelper.runAsync(
+            [SET_LANGUAGE],
+            [],
+            asyncTaskPipe,
+            {},
+        ));
+
+        /* Detect changes. */
+        this.changeDetectorRef.detectChanges();
     }
 
     passwordCheck(g: FormGroup) {
