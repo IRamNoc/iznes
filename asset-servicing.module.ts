@@ -23,7 +23,7 @@ import { SetlPipesModule, DpDatePickerModule, SetlComponentsModule, SetlDirectiv
         SelectModule,
         FormsModule,
         ReactiveFormsModule,
-        ClarityModule.forRoot(),
+        ClarityModule,
         SetlPipesModule,
         DpDatePickerModule,
         SetlComponentsModule,
