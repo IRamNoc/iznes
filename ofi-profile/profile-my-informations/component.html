@@ -27,9 +27,9 @@
                         <div class="form-group required-field col-sm-6">
                             <label for="cpOldPassword">{{ 'Old Password' | translate }}</label>
                             <div class="password-container">
-                                <input [type]="(showPasswords[1] === true) ? 'text' : 'password'" 
-                                        id="cpOldPassword" 
-                                        [formControl]="oldPassword" 
+                                <input [type]="(showPasswords[1] === true) ? 'text' : 'password'"
+                                        id="cpOldPassword"
+                                        [formControl]="oldPassword"
                                         size="45">
                                 <span (click)="toggleShowPasswords(1)" title="Show/hide passwords"><i class="fa fa-eye-slash" aria-hidden="true"></i></span>
                             </div>
@@ -45,10 +45,10 @@
                                 <app-password-tooltip></app-password-tooltip>
                             </label>
                             <div class="password-container">
-                                <input [type]="(showPasswords[2] === true) ? 'text' : 'password'" 
-                                        id="cpPassword" 
-                                        [formControl]="password" 
-                                        size="45" 
+                                <input [type]="(showPasswords[2] === true) ? 'text' : 'password'"
+                                        id="cpPassword"
+                                        [formControl]="password"
+                                        size="45"
                                         (focus)="validation = 3">
                                 <span (click)="toggleShowPasswords(2)" title="Show/hide passwords"><i class="fa fa-eye-slash" aria-hidden="true"></i></span>
                             </div>
@@ -69,10 +69,10 @@
 
                             </label>
                             <div class="password-container">
-                                <input [type]="(showPasswords[3] === true) ? 'text' : 'password'" 
-                                        id="cpPasswordConfirm" 
-                                        [formControl]="passwordConfirm" 
-                                        size="45" 
+                                <input [type]="(showPasswords[3] === true) ? 'text' : 'password'"
+                                        id="cpPasswordConfirm"
+                                        [formControl]="passwordConfirm"
+                                        size="45"
                                         (focus)="validation = 3">
                                 <span (click)="toggleShowPasswords(3)" title="Show/hide passwords"><i class="fa fa-eye-slash" aria-hidden="true"></i></span>
                             </div>
@@ -88,13 +88,37 @@
                 </section>
             </form>
 
-            <div *ngIf="externalNotificationsAvailable"> 
+            <div *ngIf="externalNotificationsAvailable">
                 <div class="hr-line-dashed"></div>
 
                 <h2>{{ 'External Notifications' | translate }}</h2>
                 <app-external-notifications></app-external-notifications>
-            </div>    
+            </div>
 
+        </clr-tab-content>
+    </clr-tab>
+
+    <clr-tab>
+        <button clrTabLink>
+            <i class="fa fa-language"></i>{{ 'Language' | translate }}</button>
+        <clr-tab-content>
+            <section class="form-block">
+                <div class="form-group col-sm-12">
+                    <section class="form-block">
+                        <div class="form-group">
+                            <h2>{{ 'Choose your language' | translate }}</h2>
+                            <div class="radio" (click)="changeLanguage('fr-Latn')">
+                                <input type="radio" name="gridRadios1" id="lang_fra" [checked]="language === 'fr-Latn'">
+                                <label for="lang_fra">{{ 'Français' | translate }}</label>
+                            </div>
+                            <div class="radio" (click)="changeLanguage('en-Latn')">
+                                <input type="radio" name="gridRadios1" id="lang_eng" [checked]="language === 'en-Latn'">
+                                <label for="lang_eng">{{ 'English' | translate }}</label>
+                            </div>
+                        </div>
+                    </section>
+                </div>
+            </section>
         </clr-tab-content>
     </clr-tab>
 
@@ -139,7 +163,7 @@
                 </div>
             </form>
         </clr-tab-content>
-    </clr-tab>    
+    </clr-tab>
 </clr-tabs>
 
 <ng-template #apiInput>

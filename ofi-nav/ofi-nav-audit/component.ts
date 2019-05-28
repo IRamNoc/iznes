@@ -8,7 +8,6 @@ import * as moment from 'moment';
 import { fromJS } from 'immutable';
 import { Observable, Subscription } from 'rxjs';
 import { NumberConverterService, MoneyValuePipe, NavHelperService } from '@setl/utils';
-import { Datagrid } from '@clr/angular';
 import { OfiNavAuditService } from './service';
 import { OfiNavService } from '@ofi/ofi-main/ofi-req-services/ofi-product/nav/service';
 import {
@@ -45,7 +44,7 @@ export class OfiNavAuditComponent implements OnInit, OnDestroy {
     gridLastPage: number = 0;
     navFund: any;
 
-    @ViewChild('dataGrid') datagrid: Datagrid;
+    @ViewChild('dataGrid') datagrid: any;
 
     @select(['ofi', 'ofiProduct', 'ofiNavAudit', 'requestedNavAudit']) navAuditRequestedOb: Observable<any>;
     @select(['ofi', 'ofiProduct', 'ofiNavAudit', 'navAudit']) navAuditOb: Observable<any>;

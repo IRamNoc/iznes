@@ -66,14 +66,23 @@
                     <div class="col-sm-6" align="right">
                         <p>&nbsp;</p>
                         <button class="btn btn-primary" (click)="changePage('audit')">
-                            {{ 'View Shares Authorisation Audit Trail' | translate }}
+                            {{ 'View Audit Trail' | translate }}
                         </button>
-                        <button class="btn btn-primary" (click)="downloadAllHoldingsCSVFile()">
-                            {{ 'Export Clients Holdings' | translate }}
-                        </button>
-                        <button class="btn btn-primary" (click)="downloadReferentialCSVFile()">
-                            {{ 'Export Clients Referential' | translate }}
-                        </button>
+
+                        <clr-dropdown>
+                            <button type="button" class="btn btn-primary dropdown-toggle" clrDropdownTrigger>
+                                {{ 'Export' | translate }}
+                                <clr-icon shape="caret down"></clr-icon>
+                            </button>
+                            <clr-dropdown-menu clrPosition="bottom-right" *clrIfOpen>
+                                <button type="button" clrDropdownItem (click)="downloadAllHoldingsCSVFile()">
+                                    {{ 'Export Clients Holdings' | translate }}
+                                </button>
+                                <button type="button" clrDropdownItem (click)="downloadReferentialCSVFile()">
+                                    {{ 'Export Clients Referential' | translate }}
+                                </button>
+                            </clr-dropdown-menu>
+                        </clr-dropdown>
                     </div>
                 </div>
                 <div class="row">

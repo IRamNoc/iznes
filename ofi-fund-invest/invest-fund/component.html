@@ -27,10 +27,10 @@
                             <div class="input-group date-pick-wrapper">
                                 <span class="fa fa-calendar" aria-hidden="true"></span>
 
-                                <input [value]="today" 
-                                        [placeholder]="translate.translate('Choose a date')" 
-                                        mode="day" 
-                                        theme="dp-material" 
+                                <input [value]="today"
+                                        [placeholder]="translate.translate('Choose a date')"
+                                        mode="day"
+                                        theme="dp-material"
                                         [ngStyle]="{'width':'100%'}"
                                         disabled>
                             </div>
@@ -45,15 +45,15 @@
                             <div class="input-group date-pick-wrapper">
                                 <span class="fa fa-calendar" aria-hidden="true"></span>
 
-                                <input id="cutoffdate" 
-                                        formControlName="cutoffDate" 
-                                        autocomplete="off" 
-                                        [dpDayPicker]="configDateCutoff" 
+                                <input id="cutoffdate"
+                                        formControlName="cutoffDate"
+                                        autocomplete="off"
+                                        [dpDayPicker]="configDateCutoff"
                                         [placeholder]="translate.translate('Choose a date')"
-                                        mode="day" 
-                                        theme="dp-material" 
-                                        [ngStyle]="{'width':'100%'}" 
-                                        [readonly]="doValidate" 
+                                        mode="day"
+                                        theme="dp-material"
+                                        [ngStyle]="{'width':'100%'}"
+                                        [readonly]="doValidate"
                                         autocomplete="off"
                                         (dateChange)="newOrderChangeUpdateEvent('cutoff', $event)">
                             </div>
@@ -73,15 +73,15 @@
                             <div class="input-group date-pick-wrapper">
                                 <span class="fa fa-calendar" aria-hidden="true"></span>
 
-                                <input id="valuationdate" 
-                                        formControlName="valuationDate" 
-                                        autocomplete="off" 
-                                        [dpDayPicker]="configDateValuation" 
+                                <input id="valuationdate"
+                                        formControlName="valuationDate"
+                                        autocomplete="off"
+                                        [dpDayPicker]="configDateValuation"
                                         [placeholder]="translate.translate('Choose a date')"
-                                        mode="day" 
-                                        theme="dp-material" 
-                                        [ngStyle]="{'width':'100%'}" 
-                                        [readonly]="doValidate" 
+                                        mode="day"
+                                        theme="dp-material"
+                                        [ngStyle]="{'width':'100%'}"
+                                        [readonly]="doValidate"
                                         autocomplete="off"
                                         (dateChange)="newOrderChangeUpdateEvent('valuation', $event)">
                             </div>
@@ -97,15 +97,15 @@
                                 <div class="input-group date-pick-wrapper">
                                     <span class="fa fa-calendar" aria-hidden="true"></span>
 
-                                    <input id="settlementdate" 
-                                            formControlName="settlementDate" 
-                                            autocomplete="off" 
-                                            [dpDayPicker]="configDateSettlement" 
+                                    <input id="settlementdate"
+                                            formControlName="settlementDate"
+                                            autocomplete="off"
+                                            [dpDayPicker]="configDateSettlement"
                                             [placeholder]="translate.translate('Choose a date')"
-                                            mode="day" 
-                                            theme="dp-material" 
-                                            [ngStyle]="{'width':'100%'}" 
-                                            [readonly]="doValidate" 
+                                            mode="day"
+                                            theme="dp-material"
+                                            [ngStyle]="{'width':'100%'}"
+                                            [readonly]="doValidate"
                                             autocomplete="off"
                                             (dateChange)="newOrderChangeUpdateEvent('settlement', $event)">
                                 </div>
@@ -137,12 +137,12 @@
                                {{ 'Investment Portfolio' | translate }}
                             </label>
                             <div>
-                                <ng-select id="subportfolio" 
-                                            [class.error]="!form.controls['address'].valid && form.controls['address'].touched" 
+                                <ng-select id="subportfolio"
+                                            [class.error]="!form.controls['address'].valid && form.controls['address'].touched"
                                             [items]="addressList"
-                                            [allowClear]="false" 
+                                            [allowClear]="false"
                                             [placeholder]="translate.translate('Select an investment porfolio')"
-                                            formControlName="address" 
+                                            formControlName="address"
                                             (selected)="handleSelectedAddress($event)">
                                 </ng-select>
                             </div>
@@ -171,16 +171,16 @@
 
                         <div class="btn-group">
                             <div class="radio btn">
-                                <input type="radio" 
-                                        id="btn-radio-quantity" 
-                                        (click)="actionBy = 'q'" 
+                                <input type="radio"
+                                        id="btn-radio-quantity"
+                                        (click)="actionBy = 'q'"
                                         [checked]="actionBy === 'q'">
                                 <label for="btn-radio-quantity">{{ 'Quantity' | translate }}</label>
                             </div>
                             <div class="radio btn">
-                                <input type="radio" 
-                                        id="btn-radio-amount" 
-                                        (click)="actionBy = 'a'" 
+                                <input type="radio"
+                                        id="btn-radio-amount"
+                                        (click)="actionBy = 'a'"
                                         [checked]="actionBy === 'a'">
                                 <label for="btn-radio-amount">{{ 'Amount' | translate }}</label>
                             </div>
@@ -259,9 +259,9 @@
                                             {{ 'One-off Charges' | translate }}
                                         </label>
                                         <div>
-                                            <input type="text" 
-                                                    class="form-control" 
-                                                    [value]="moneyValuePipe.transform(feeFrontend.mifiidChargesOneOff, 2) + '%'" 
+                                            <input type="text"
+                                                    class="form-control"
+                                                    [value]="moneyValuePipe.transform(feeFrontend.mifiidChargesOneOff, 2) + '%'"
                                                     [readonly]="true">
                                         </div>
                                     </div>
@@ -272,9 +272,9 @@
                                             {{ 'On-going Charges' | translate }}
                                         </label>
                                         <div>
-                                            <input type="text" 
-                                                    class="form-control" 
-                                                    [value]="moneyValuePipe.transform(feeFrontend.mifiidChargesOngoing, 2) + '%'" 
+                                            <input type="text"
+                                                    class="form-control"
+                                                    [value]="moneyValuePipe.transform(feeFrontend.mifiidChargesOngoing, 2) + '%'"
                                                     [readonly]="true">
                                         </div>
                                     </div>
@@ -288,8 +288,8 @@
                                             {{ 'Costs related to transactions initiated' | translate }}
                                         </label>
                                         <div>
-                                            <input type="text" 
-                                                    class="form-control" 
+                                            <input type="text"
+                                                    class="form-control"
                                                     [value]="moneyValuePipe.transform(feeFrontend.mifiidTransactionCosts, 2) + '%'"
                                                     [readonly]="true">
                                         </div>
@@ -301,9 +301,9 @@
                                             {{ 'Charges related to ancillary services' | translate }}
                                         </label>
                                         <div>
-                                            <input type="text" 
-                                                    class="form-control" 
-                                                    [value]="moneyValuePipe.transform(feeFrontend.mifiidServicesCosts, 2) + '%'" 
+                                            <input type="text"
+                                                    class="form-control"
+                                                    [value]="moneyValuePipe.transform(feeFrontend.mifiidServicesCosts, 2) + '%'"
                                                     [readonly]="true">
                                         </div>
                                     </div>
@@ -317,9 +317,9 @@
                                             {{ 'Incidental Costs' | translate }}
                                         </label>
                                         <div>
-                                            <input type="text" 
-                                                    class="form-control" 
-                                                    [value]="moneyValuePipe.transform(feeFrontend.mifiidIncidentalCosts, 2) + '%'" 
+                                            <input type="text"
+                                                    class="form-control"
+                                                    [value]="moneyValuePipe.transform(feeFrontend.mifiidIncidentalCosts, 2) + '%'"
                                                     [readonly]="true">
                                         </div>
                                     </div>
@@ -331,15 +331,15 @@
                                             {{ 'IZNES Fee - Investor: Percentage of the average annual outstandings kept in the register' | translate }}
                                         </label>
                                         <div>
-                                            <input type="text" 
-                                                    class="form-control" 
+                                            <input type="text"
+                                                    class="form-control"
                                                     [value]="moneyValuePipe.transform((feeFrontend.classificationFee * 100), fundClassifications[fundClassificationId].dp) + '%'"
                                                     [readonly]="true">
                                         </div>
                                     </div>
                                 </div>
                             </div>
-                            
+
                             <div class="row">
                                 <div class="col-sm-6">
                                     <div class="form-group">
@@ -347,9 +347,9 @@
                                             {{metadata.feeLabel}}
                                         </label>
                                         <div>
-                                            <input type="text" 
-                                                    class="form-control" 
-                                                    formControlName="feeControl" 
+                                            <input type="text"
+                                                    class="form-control"
+                                                    formControlName="feeControl"
                                                     [value]="moneyValuePipe.transform((feePercentage * 100),2) + '%' "
                                                     [readonly]="true">
                                         </div>
@@ -382,9 +382,9 @@
                                 {{ 'NAV' | translate }}
                             </label>
                             <div>
-                                <input type="text" 
-                                        class="form-control" 
-                                        [value]="navStr" 
+                                <input type="text"
+                                        class="form-control"
+                                        [value]="navStr"
                                         [readonly]="true">
                             </div>
                         </div>
@@ -395,9 +395,9 @@
                                 {{ 'Last NAV Date' | translate }}
                             </label>
                             <div>
-                                <input type="text" 
-                                        class="form-control" 
-                                        [value]="this.latestNavDateFormated()" 
+                                <input type="text"
+                                        class="form-control"
+                                        [value]="this.latestNavDateFormated()"
                                         [readonly]="true">
                             </div>
                         </div>
@@ -411,8 +411,8 @@
                                 {{ 'ISIN' | translate }}
                             </label>
                             <div>
-                                <input type="text" 
-                                        class="form-control" 
+                                <input type="text"
+                                        class="form-control"
                                         [value]="shareData.isin"
                                         [readonly]="true">
                             </div>
@@ -424,9 +424,9 @@
                                 {{ 'Share Name' | translate }}
                             </label>
                             <div>
-                                <input type="text" 
-                                        class="form-control" 
-                                        [value]="shareData.fundShareName" 
+                                <input type="text"
+                                        class="form-control"
+                                        [value]="shareData.fundShareName"
                                         [readonly]="true">
                             </div>
                         </div>
@@ -440,9 +440,9 @@
                                 {{ 'Classification' | translate }}
                             </label>
                             <div>
-                                <input type="text" 
-                                        class="form-control" 
-                                        [value]="fundClassifications[fundClassificationId].text" 
+                                <input type="text"
+                                        class="form-control"
+                                        [value]="fundClassifications[fundClassificationId].text"
                                         [readonly]="true">
                             </div>
                         </div>
@@ -454,14 +454,14 @@
                                 {{ 'Asset Class' | translate }}
                             </label>
                             <div>
-                                <input type="text" 
-                                        class="form-control" 
-                                        [value]="shareData.shareClassCode" 
+                                <input type="text"
+                                        class="form-control"
+                                        [value]="shareData.shareClassCode"
                                         [readonly]="true">
                             </div>
                         </div>
                     </div>
-                   
+
                 </div>
                 <div class="row">
                     <div class="col-sm-6">
@@ -470,9 +470,9 @@
                                 {{ 'SRRI' | translate }}
                             </label>
                             <div>
-                                <input type="text" 
-                                        class="form-control" 
-                                        [value]="shareData.keyFactOptionalData.srri || '' " 
+                                <input type="text"
+                                        class="form-control"
+                                        [value]="shareData.keyFactOptionalData.srri || '' "
                                         [readonly]="true">
                             </div>
                         </div>
@@ -484,14 +484,14 @@
                                {{ 'SRI' | translate }}
                             </label>
                             <div>
-                                <input type="text" 
-                                        class="form-control" 
-                                        [value]="shareData.keyFactOptionalData.sri || '' " 
+                                <input type="text"
+                                        class="form-control"
+                                        [value]="shareData.keyFactOptionalData.sri || '' "
                                         [readonly]="true">
                             </div>
                         </div>
                     </div>
-                   
+
                 </div>
                 <div class="row">
                     <div class="col-sm-6">
@@ -511,9 +511,9 @@
                                 {{ 'Decimalization' | translate }}
                             </label>
                             <div>
-                                <input type="text" 
-                                        class="form-control" 
-                                        [value]="shareData.maximumNumDecimal" 
+                                <input type="text"
+                                        class="form-control"
+                                        [value]="shareData.maximumNumDecimal"
                                         [readonly]="true">
                             </div>
                         </div>
@@ -538,12 +538,13 @@
                 <div class="row">
                     <div class="col-sm-12">
                         <div class="form-group">
-                            <input id="checkbox" 
-                                    class="form-check-input" 
-                                    style="margin-top: 10px; margin-right: 10px;" 
-                                    type="checkbox" 
+                            <input id="checkbox"
+                                    clrCheckbox
+                                    class="form-check-input"
+                                    style="margin-top: 10px; margin-right: 10px;"
+                                    type="checkbox"
                                     formControlName="disclaimer"
-                                    [attr.disabled]="allowCheckDisclaimer" 
+                                    [attr.disabled]="allowCheckDisclaimer"
                                     value="false">
                             <label class="form-check-label" for="checkbox">{{ 'I confirm that I have read and understood the latest version of the Key Investor Information Document (KIID) for the fund share I am considering investing in.' | translate }}
                             </label>
@@ -600,15 +601,15 @@
                         {{ 'Quantity' | translate }}
                     </label>
                     <div [class]="orderType === 'redeem' ? 'quantity-group' : ''">
-                        <input #quantityInput [attr.disabled]="allowQuantity" 
-                                type="text" 
+                        <input #quantityInput [attr.disabled]="allowQuantity"
+                                type="text"
                                 id="quantity"
-                                class="form-control" 
+                                class="form-control"
                                 formControlName="quantity"
-                                (focus)="subscribeForChange('quantity')" 
+                                (focus)="subscribeForChange('quantity')"
                                 (blur)="unSubscribeForChange()"
-                                appNumberFormatter="{{shareData.maximumNumDecimal}}" 
-                                [fractionSize]="shareData.maximumNumDecimal" 
+                                appNumberFormatter="{{shareData.maximumNumDecimal}}"
+                                [fractionSize]="shareData.maximumNumDecimal"
                                 autocomplete="off">
                         <button *ngIf="orderType === 'redeem'" class="btn btn-primary" (click)="redeemAll($event)">
                             {{ 'Redeem All' | translate }}
@@ -627,15 +628,15 @@
                         {{ 'Amount' | translate }}
                     </label>
                     <div>
-                        <input [attr.disabled]="allowAmount" 
-                                id="amount" 
-                                type="text" 
+                        <input [attr.disabled]="allowAmount"
+                                id="amount"
+                                type="text"
                                 class="form-control"
-                                formControlName="amount" 
+                                formControlName="amount"
                                 (focus)="subscribeForChange('amount')"
-                                (blur)="roundAmount();" 
-                                appNumberFormatter="2" 
-                                [fractionSize]="2" 
+                                (blur)="roundAmount();"
+                                appNumberFormatter="2"
+                                [fractionSize]="2"
                                 autocomplete="off">
                     </div>
                     <span *ngIf="amountTooBig" class="field-error">{{ 'Warning: be aware the order amount exceeds 15 million' | translate }}</span>
@@ -653,9 +654,9 @@
                         {{ 'Fee Amount' | translate }}
                     </label>
                     <div>
-                        <input type="text" 
-                                class="form-control" 
-                                formControlName="feeAmount" 
+                        <input type="text"
+                                class="form-control"
+                                formControlName="feeAmount"
                                 readonly>
                     </div>
                 </div>
@@ -704,12 +705,11 @@
     <div class="modal-footer">
         <form class="form-block">
             <div class="form-group">
-                <clr-checkbox
+                <input type="checkbox" clrCheckbox
                     name="kiidCheckbox"
                     id="kiidCheckbox"
                     #kiidModalCheckbox>
-                    {{ 'I have read the document and want to place an order' | translate }}
-                </clr-checkbox>
+                    {{ 'I have read the document and want to place an order' | translate }}>
             </div>
         </form>
         <button type="button" class="btn btn-primary" [disabled]="!kiidModalCheckbox.checked" (click)="onValidateKiid()">{{type}}</button>
