@@ -1,27 +1,344 @@
+clr-header {
+    header {
+        background-color: transparent;
+        width: 100%;
+        flex: auto;
+        .branding {
+            .title {
+                display: none;
+            }
+            .logo-light, .logo-dark {
+                height: 55%;
+                margin-left: 20px;
+            }
+            .logo-dark {
+                display: none;
+            }
+            @media screen and (max-width: 768px) {
+                .logo-light {
+                    display: none;
+                }
+                .title {
+                    display: block;
+                }
+            }
+        }
+
+        .header-actions {
+            @media screen and (min-width: 1083px) {
+                flex: 0 0 auto;
+            }
+        }
+
+        .wallet {
+            display: flex;
+            flex: 1 0 auto;
+            align-items: center;
+            justify-content: center;
+            @media screen and (max-width: 1082px) {
+                display: none;
+            }
+        }
+
+        .overlay {
+            position: fixed;
+            z-index: 1000000;
+            margin-top: 60px;
+            left: 0;
+            width: 100%;
+            height: calc(100% - 60px);
+            background: rgba(154, 154, 154, 0.65);
+            animation: fadein 0.1s;
+        }
+
+        @keyframes fadein {
+            from {
+                opacity: 0;
+            }
+            to {
+                opacity: 1;
+            }
+        }
+
+        blockchain-status-tracker {
+            margin-left: 30px;
+        }
+
+        #dropdown-user {
+            clr-dropdown-menu {
+                padding-top: 0;
+                margin-top: 0;
+                z-index: 1000000;
+            }
+            .username {
+                background: #eeeeee;
+                font-size: 16px;
+                color: #000000;
+                font-weight: 600;
+                padding: 10px 1rem;
+                margin-bottom: 10px;
+            }
+        }
+
+        .nav-link:after, clr-dropdown:after, .wallet-select-small:after, .wallet-picker-right:after {
+            content: '';
+            width: 1px;
+            height: 60%;
+            margin-top: 12px;
+            background: rgba(255, 255, 255, 0.15);
+            position: absolute;
+            right: 0;
+            top: 0;
+        }
+
+        .nav-link:last-child:after, clr-dropdown:last-child:after {
+            content: none;
+        }
+
+        .nav-link {
+            cursor: pointer;
+            opacity: 1;
+            clr-icon {
+                color: rgba(255,255,255,.65);
+            }
+            &:hover clr-icon {
+                color: #ffffff;
+            }
+        }
+
+        clr-dropdown {
+            position: relative!important;
+            .dropdown-item {
+                line-height: 28px!important;
+                height: 1.25rem;
+            }
+        }
+    }
+}
+
+// Translation Modal
 .switch-container {
     position: absolute;
     right: 15px;
     top: 80px;
+    color: #565656;
 }
 
-.slider {
-    left: 0;
-}
+// Wallet Pickers
+:host /deep/ {
+    ng-select {
+        &.extended .option-wrapper.ui-select-choices.dropdown-menu {
+            width: 635px;
+        }
 
-.slider.round {
-    min-height: 24px;
-    margin-top: -6px;
-}
+        .ui-select-container {
+            width: 484px!important;
+        }
 
-.dropdown.open > .dropdown-menu {
-    margin-top: 9px !important;
-}
+        .icon {
+            color: #b4b4b4;
+        }
 
-header .header-actions > .dropdown .dropdown-menu {
-    left: auto;
-    right: 0;
-    margin-right: 0;
-    top: 65px;
+        .ui-select-match {
+            .arrow, .clear {
+                color: #ffffff!important;
+            }
+        }
+
+        .ui-select-placeholder {
+            padding: 0 8px;
+        }
+
+        .ui-select-toggle {
+            padding: 0 8px;
+            box-shadow: none!important;
+        }
+
+        .ui-select-match-text {
+            padding: 2px 8px!important;
+            font-size: 16px;
+            color: #b4b4b4;
+            text-overflow: ellipsis;
+            overflow: hidden;
+            width: 415px!important;
+        }
+
+        .btn.btn-secondary {
+            border: 1px solid #737373 !important;
+            border-radius: .125rem!important;
+            transition: all 0.2s linear;
+        }
+
+        .ui-select-match.open .btn.btn-secondary, .btn.btn-secondary:hover {
+            background: rgba(255, 255, 255, 0.15);
+            .ui-select-match-text {
+                color: #ffffff;
+            }
+            .icon {
+                color: #ffffff;
+            }
+        }
+
+        .ui-select-container:hover {
+            .dropdown-menu {
+                border-color: #dadada!important;
+            }
+            .ui-select-match.dropdown.open .btn.ui-select-toggle {
+                border-color: #737373;
+            }
+        }
+
+        .ui-select-choices-row {
+            & > a {
+                color: #565656!important;
+                padding: 6px 20px!important;
+                margin: 0!important;
+                line-height: inherit!important;
+                font-size: 14px;
+                height: auto;
+            }
+            &.selected > a, &.selected:hover > a, &.selected.active > a, , &.selected.active:hover > a  {
+                background-color: #d9e4ea!important;
+            }
+            &:hover > a, &.active:hover > a {
+                background-color: #eeeeee!important;
+            }
+            &.active > a {
+                background-color: #ffffff!important;
+            }
+        }
+
+        .option-wrapper.ui-select-choices.dropdown-menu {
+            margin-top: 10px;
+            padding: 0;
+            border: none;
+            z-index: 1000001;
+            .select-search {
+                padding: 10px;
+                .ui-select-search {
+                    border: solid 1px #eeeeee!important;
+                    border-radius: .125rem;
+                    font-size: 16px;
+                    padding: 20px 20px 20px 40px !important;
+                    background: #ffffff;
+                }
+                .fa-search {
+                    background: url(data:image/svg+xml;base64,PHN2ZyB2ZXJzaW9uPSIxLjEiIHdpZHRoPSIzNiIgaGVpZ2h0PSIzNiIgIHZpZXdCb3g9IjAgMCAzNiAzNiIgcHJlc2VydmVBc3BlY3RSYXRpbz0ieE1pZFlNaWQgbWVldCIgeG1sbnM9Imh0dHA6Ly93d3cudzMub3JnLzIwMDAvc3ZnIiB4bWxuczp4bGluaz0iaHR0cDovL3d3dy53My5vcmcvMTk5OS94bGluayI+ICAgIDx0aXRsZT5zZWFyY2gtbGluZTwvdGl0bGU+ICAgIDxwYXRoIGNsYXNzPSJjbHItaS1vdXRsaW5lIGNsci1pLW91dGxpbmUtcGF0aC0xIiBkPSJNMTYuMzMsNS4wNUExMC45NSwxMC45NSwwLDEsMSw1LjM5LDE2LDExLDExLDAsMCwxLDE2LjMzLDUuMDVtMC0yLjA1YTEzLDEzLDAsMSwwLDEzLDEzLDEzLDEzLDAsMCwwLTEzLTEzWiIgZmlsbD0iIzAwNzliOCI+PC9wYXRoPjxwYXRoIGNsYXNzPSJjbHItaS1vdXRsaW5lIGNsci1pLW91dGxpbmUtcGF0aC0yIiBkPSJNMzUsMzMuMjlsLTcuMzctNy40Mi0xLjQyLDEuNDEsNy4zNyw3LjQyQTEsMSwwLDEsMCwzNSwzMy4yOVoiIGZpbGw9IiMwMDc5YjgiPjwvcGF0aD4gICAgPHJlY3QgeD0iMCIgeT0iMCIgd2lkdGg9IjM2IiBoZWlnaHQ9IjM2IiBmaWxsLW9wYWNpdHk9IjAiIC8+PC9zdmc+) no-repeat;
+                    position: absolute;
+                    left: 18px;
+                    background-size: 23px;
+                    width: 23px;
+                    height: 23px;
+                    top: 18px;
+                    &:before {
+                        content: '';
+                    }
+                }
+            }
+            ul {
+                margin-top: 0;
+                margin-bottom: 10px;
+            }
+        }
+
+        .ui-select-choices-content {
+            max-height: 360px!important;
+        }
+    }
+
+    .wallet-picker-right {
+        @media screen and (max-width: 1082px) {
+            display: none;
+        }
+        position: relative;
+        ng-select {
+            .ui-select-toggle {
+                border: none!important;
+            }
+            .ui-select-container {
+                width: auto !important;
+                max-width: 484px;
+            }
+            .ui-select-placeholder {
+                margin-right: 15px;
+            }
+            .ui-select-match-text {
+                margin: -2px 22px -2px 2px !important;
+                text-overflow: ellipsis;
+                width: calc(100% - 55px) !important;
+                overflow: hidden;
+            }
+            .ui-select-match.arrow {
+                right: 10px;
+            }
+            clr-icon[shape=wallet] {
+                margin-left: 5px;
+            }
+            clr-icon.arrow {
+                top: 50% !important;
+                -webkit-transform: translateY(-50%);
+                transform: translateY(-50%);
+                height: .416667rem;
+                width: .416667rem;
+            }
+            .ui-select-match.open .btn.btn-secondary, .btn.btn-secondary:hover {
+                background: none;
+            }
+            .ui-select-choices {
+                width: 560px;
+                right: 0;
+                left: auto;
+                max-height: 432px;
+            }
+        }
+    }
+
+    .wallet-select-small {
+        display: none;
+        position: relative;
+        @media screen and (max-width: 1082px) {
+            display: block;
+            ng-select {
+                width: 2.5rem;
+                height: 2.5rem;
+                .ui-select-container {
+                    width: 2.5rem!important;
+                }
+                .btn.btn-secondary.ui-select-toggle {
+                    height: 60px!important;
+                    border: none!important;
+                    background: none;
+                }
+                .ui-select-match-text, .arrow {
+                    display: none;
+                }
+                .icon {
+                    margin: 20px 0 0 5px;
+                    width: 1rem;
+                    height: 1rem;
+                    &.chev {
+                        margin: 21px 0 0 4px;
+                        width: .416667rem;
+                    }
+                }
+                .option-wrapper.ui-select-choices.dropdown-menu {
+                    width: 300px;
+                    margin-left: -240px;
+                    margin-top: 0;
+                    border: none;
+                }
+            }
+        }
+        @media screen and (max-width: 420px) {
+            ng-select .option-wrapper.ui-select-choices.dropdown-menu {
+                position: fixed;
+                top: 60px;
+                left: 0;
+                width: 100%;
+                margin: 0;
+            }
+        }
+    }
 }
 
 .header .header-actions .wallet .ui-select-toggle .ui-select-match-text {

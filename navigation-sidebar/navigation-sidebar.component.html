@@ -1,254 +1,37 @@
-<section class="sidenav-content">
+<clr-vertical-nav [clrVerticalNavCollapsible]="true" class="nav-trigger--bottom" [clr-nav-level]="1">
     <ng-container *ngFor="let level1 of menuJson">
-        <ng-container *ngTemplateOutlet="menuItem; context: {'childMenuJson': level1}"></ng-container>
+        <span role="tooltip" aria-haspopup="true" class="tooltip tooltip-sm tooltip-right">
+            <ng-container *ngTemplateOutlet="menuItem; context: {'childMenuJson': level1}"></ng-container>
+            <span class="tooltip-content">{{ level1.label }}</span>
+        </span>
     </ng-container>
 
-</section>
-
-<ng-template #menuItem let-childMenuJson="childMenuJson">
-    <a *ngIf="!childMenuJson.children && !isMenuDisabled(childMenuJson.router_link)" [attr.id]="childMenuJson.element_id" class="nav-link" [routerLink]="[childMenuJson.router_link]" [ngClass]="{active: activeRoute(childMenuJson.router_link)}">
-        <i class="{{childMenuJson.icon_class}}"></i>
-        <span class="sidenav-label" [attr.mltag]="childMenuJson.label_txt">{{childMenuJson.label}}<span *ngIf="childMenuJson.router_link == '/messages' && this.unreadMessages > 0" class="label label-success">{{this.unreadMessages}}</span></span>
-    </a>
-    <span *ngIf="isMenuDisabled(childMenuJson.router_link)" class="fakeLink">
-        <i class="{{childMenuJson.icon_class}}" style="width:20px;"></i><span class="sidenav-label">{{childMenuJson.label}}</span>
-    </span>
-
-    <section *ngIf="childMenuJson.children" class="nav-group collapsible">
-        <label [attr.id]="childMenuJson.element_id" menu-dropdown appHighlight [class.menuParent]="menuParentOpen == childMenuJson.element_id" [ngClass]="{active: activeChildRoute(childMenuJson.children)}" (click)="menuSelected(childMenuJson.element_id)"><i class="{{childMenuJson.icon_class}}" aria-hidden="true"></i>
-            <span class="sidenav-label" [attr.mltag]="childMenuJson.label_txt">{{childMenuJson.label}}</span></label>
-        <ul class="nav-list">
-            <li *ngFor="let innerChild of childMenuJson.children">
-                <a *ngIf="!isMenuDisabled(innerChild.router_link)" [attr.id]="innerChild.element_id" [routerLink]="[innerChild.router_link]" [ngClass]="{active: activeRoute(innerChild.router_link)}" class="nav-link" appHighlight>
-                    <i class="{{innerChild.icon_class}}" aria-hidden="true"></i>
-                    <span [attr.mltag]="innerChild.label_txt">{{innerChild.label}}</span>
-                </a>
-                <span *ngIf="isMenuDisabled(innerChild.router_link)" [attr.id]="innerChild.element_id" [ngClass]="{active: activeRoute(innerChild.router_link)}" class="nav-link">
-                    <i class="{{innerChild.icon_class}}" aria-hidden="true"></i>
-                    <span [attr.mltag]="innerChild.label_txt">{{innerChild.label}}</span>
-                </span>
-            </li>
-        </ul>
-    </section>
-</ng-template>
-
-
-<!--<section class="sidenav-content">-->
-<!--<a class="nav-link" [routerLink]="['/home/']" [ngClass]="{active: activeRoute('home')}">-->
-<!--<i class="fa fa-home"></i> <span mltag="txt_home">Home</span></a>-->
-
-<!--<section class="nav-group collapsible">-->
-<!--<label id="menu-asset-managment" menu-dropdown><i class="fa fa-bar-chart"></i> <span mltag="txt_assetmanagerpanel">Asset Manager Panel</span></label>-->
-<!--<ul class="nav-list">-->
-<!--<li>-->
-<!--<a [routerLink]="['/asset-management/fund-holdings']" [ngClass]="{active: activeRoute('/asset-management/fund-holdings')}" class="nav-link"><i class="fa fa-user"></i> <span mltag="txt_fundholidings">Fund Holidings</span></a>-->
-<!--</li>-->
-<!--</ul>-->
-<!--</section>-->
-
-<!--<a class="nav-link" [routerLink]="['/wallets']" [ngClass]="{active: activeRoute('wallets')}">-->
-<!--<i class="fa fa-briefcase"></i> <span mltag="txt_wallets">Wallets</span></a>-->
-
-<!--<a class="nav-link" [routerLink]="['/messages']" [ngClass]="{active: activeRoute('/messages')}">-->
-<!--<i class="fa fa-envelope-o"></i> <span mltag="txt_messages">Messages</span><span *ngIf="this.unreadMessages > 0" class="label label-success">{{this.unreadMessages}}</span>-->
-<!--</a>-->
-
-<!--<section class="nav-group collapsible">-->
-<!--<label id="menu-account-module" menu-dropdown><i class="fa fa-user"></i> <span mltag="txt_accountmodule">Account Module</span></label>-->
-<!--<ul class="nav-list">-->
-<!--<li>-->
-<!--<a [routerLink]="['/account/my-account']" [ngClass]="{active: activeRoute('/account/my-account')}" class="nav-link">-->
-<!--<i class="fa fa-user"></i> <span mltag="txt_myaccount">My Account</span></a>-->
-<!--</li>-->
-<!--<li>-->
-<!--<a [routerLink]="['/account/relationships']" [ngClass]="{active: activeRoute('/account/relationships')}" class="nav-link">-->
-<!--<i class="fa fa-users"></i> <span mltag="txt_relationships">Relationships</span></a>-->
-<!--</li>-->
-<!--<li>-->
-<!--<a [routerLink]="['/account/documents']" [ngClass]="{active: activeRoute('/account/documents')}" class="nav-link">-->
-<!--<i class="fa fa-book"></i> <span mltag="txt_documents">Documents</span></a>-->
-<!--</li>-->
-<!--</ul>-->
-<!--</section>-->
-
-
-<!--<a class="nav-link" [routerLink]="['/kyc-admin']" [ngClass]="{active: activeRoute('kyc')}">-->
-<!--<i class="fa fa-users"></i> <span mltag="txt_kycadministration">KYC Administration</span></a>-->
-
-<!--<section class="nav-group collapsible">-->
-<!--<label id="menu-product-module" menu-dropdown><i class="fa fa-industry"></i> <span mltag="txt_productmodule">Product Module</span></label>-->
-<!--<ul class="nav-list">-->
-<!--<li>-->
-<!--<a [routerLink]="['/product-module/management-company']" [ngClass]="{active: activeRoute('/product-module/management-company')}" class="nav-link">-->
-<!--<i class="fa fa-university"></i> <span mltag="txt_managementcompany">Management Company</span></a>-->
-<!--</li>-->
-<!--<li>-->
-<!--<a [routerLink]="['/product-module/sicav']" [ngClass]="{active: activeRoute('/product-module/sicav')}" class="nav-link">-->
-<!--<i class="fa fa-users"></i> <span mltag="txt_sicav">SICAV</span></a>-->
-<!--</li>-->
-<!--<li>-->
-<!--<a [routerLink]="['/product-module/fund']" [ngClass]="{active: activeRoute('/product-module/fund')}" class="nav-link">-->
-<!--<i class="fa fa-area-chart"></i> <span mltag="txt_fund">Fund</span></a>-->
-<!--</li>-->
-<!--<li>-->
-<!--<a [routerLink]="['/product-module/net-asset-value']" [ngClass]="{active: activeRoute('/product-module/net-asset-value')}" class="nav-link">-->
-<!--<i class="fa fa-ellipsis-h"></i> <span mltag="txt_netassetvalue">Net Asset Value</span></a>-->
-<!--</li>-->
-<!--</ul>-->
-<!--</section>-->
-
-<!--<a class="nav-link" [routerLink]="['/manage-orders']" [ngClass]="{active: activeRoute('/manage-orders')}">-->
-<!--<i class="fa fa-pencil"></i> <span mltag="txt_manageorders">Manage Orders</span></a>-->
-
-<!--<section class="nav-group collapsible">-->
-<!--<label id="menu-chain-administration" menu-dropdown><i class="fa fa-pencil"></i> <span mltag="txt_orderbook">Order Book</span></label>-->
-<!--<ul class="nav-list">-->
-<!--<li>-->
-<!--<a [routerLink]="['/order-book/my-orders']" [ngClass]="{active: activeRoute('/order-book/my-orders')}" class="nav-link">-->
-<!--<i class="fa fa-book"></i> <span mltag="txt_myorders">My Orders</span></a>-->
-<!--</li>-->
-<!--</ul>-->
-<!--</section>-->
-
-<!--<section class="nav-group collapsible">-->
-<!--<label id="menu-corporate-actions" menu-dropdown><i class="fa fa-university"></i> <span mltag="txt_corporateactions">Corporate Actions</span></label>-->
-<!--<ul class="nav-list">-->
-<!--<li>-->
-<!--<a [routerLink]="['/corporate-actions/create-resolution']" [ngClass]="{active: activeRoute('/corporate-actions/create-resolution')}" class="nav-link">-->
-<!--<i class="fa fa-plus"></i> <span mltag="txt_createresolution">Create Resolution</span></a>-->
-<!--</li>-->
-<!--<li>-->
-<!--<a [routerLink]="['/corporate-actions/issue-resolution']" [ngClass]="{active: activeRoute('/corporate-actions/issue-resolution')}" class="nav-link">-->
-<!--<i class="fa fa-check"></i> <span mltag="txt_issueresolution">Issue Resolution</span></a>-->
-<!--</li>-->
-<!--<li>-->
-<!--<a [routerLink]="['/corporate-actions/distribution']" [ngClass]="{active: activeRoute('/corporate-actions/distribution')}" class="nav-link">-->
-<!--<i class="fa fa-ellipsis-h"></i> <span mltag="txt_distribution">Distribution</span></a>-->
-<!--</li>-->
-<!--<li>-->
-<!--<a [routerLink]="['/corporate-actions/merger-absorption']" [ngClass]="{active: activeRoute('/corporate-actions/merger-absorption')}" class="nav-link">-->
-<!--<i class="fa fa-compress"></i> <span mltag="txt_mergerabsorption">Merger/Absorption</span></a>-->
-<!--</li>-->
-<!--<li>-->
-<!--<a [routerLink]="['/corporate-actions/coupon-payment']" [ngClass]="{active: activeRoute('/corporate-actions/coupon-payment')}" class="nav-link">-->
-<!--<i class="fa fa-briefcase"></i> <span mltag="txt_couponpayment">Coupon Payment</span></a>-->
-<!--</li>-->
-<!--<li>-->
-<!--<a [routerLink]="['/corporate-actions/split']" [ngClass]="{active: activeRoute('/corporate-actions/split')}" class="nav-link">-->
-<!--<i class="fa fa-arrows-h"></i> <span mltag="txt_split">Split</span></a>-->
-<!--</li>-->
-<!--</ul>-->
-<!--</section>-->
-
-<!--<section class="nav-group collapsible">-->
-<!--<label id="menu-user-administration" menu-dropdown><i class="fa fa-cubes"></i> <span mltag="txt_useradministration">User Administration</span></label>-->
-<!--<ul class="nav-list">-->
-<!--<li>-->
-<!--<a [routerLink]="['/user-administration/users']" [ngClass]="{active: activeRoute('/user-administration/users')}" class="nav-link">-->
-<!--<i class="fa fa-user"></i> <span mltag="txt_users">Users</span></a>-->
-<!--</li>-->
-<!--<li>-->
-<!--<a [routerLink]="['/user-administration/wallets']" [ngClass]="{active: activeRoute('/user-administration/wallets')}" class="nav-link">-->
-<!--<i class="fa fa-briefcase"></i> <span mltag="txt_wallets">Wallets</span></a>-->
-<!--</li>-->
-<!--<li>-->
-<!--<a [routerLink]="['/user-administration/permissions']" [ngClass]="{active: activeRoute('/user-administration/permissions')}" class="nav-link">-->
-<!--<i class="fa fa-key"></i> <span mltag="txt_permissions">Permissions</span></a>-->
-<!--</li>-->
-<!--<li>-->
-<!--<a [routerLink]="['/user-administration/wizard']" [ngClass]="{active: activeRoute('/user-administration/wizard')}" class="nav-link">-->
-<!--<i class="fa fa-users"></i> <span mltag="txt_wizard">Wizard</span></a>-->
-<!--</li>-->
-
-<!--<li>-->
-<!--<a [routerLink]="['/user-administration/subportfolio']" [ngClass]="{active: activeRoute('/user-administration/subportfolio')}" class="nav-link">-->
-<!--<i class="fa fa-id-badge"></i> <span mltag="txt_subportfolio">Sub-portfolio</span></a>-->
-<!--</li>-->
-<!--</ul>-->
-<!--</section>-->
-
-<!--<section class="nav-group collapsible">-->
-<!--<label id="menu-asset-servicing" menu-dropdown><i class="fa fa-archive"></i> <span mltag="txt_assetservicing">Asset Servicing</span></label>-->
-<!--<ul class="nav-list">-->
-<!--<li>-->
-<!--<a [routerLink]="['/asset-servicing/register-issuer']" [ngClass]="{active: activeRoute('/asset-servicing/register-issuer')}" class="nav-link">-->
-<!--<i class="fa fa-user-plus"></i> <span mltag="txt_registerissuer">Register Issuer</span></a>-->
-<!--</li>-->
-<!--<li>-->
-<!--<a [routerLink]="['/asset-servicing/register-asset']" [ngClass]="{active: activeRoute('/asset-servicing/register-asset')}" class="nav-link">-->
-<!--<i class="fa fa-plus-circle"></i> <span mltag="txt_registerasset">Register Asset</span></a>-->
-<!--</li>-->
-<!--<li>-->
-<!--<a [routerLink]="['/asset-servicing/issue-asset']" [ngClass]="{active: activeRoute('/asset-servicing/issue-asset')}" class="nav-link">-->
-<!--<i class="fa fa-paper-plane"></i> <span mltag="txt_issueasset">Issue Asset</span></a>-->
-<!--</li>-->
-<!--</ul>-->
-<!--</section>-->
-
-<!--<section class="nav-group collapsible">-->
-<!--<label id="menu-reports" menu-dropdown><i class="fa fa-flag"></i> <span mltag="txt_reports">Reports</span></label>-->
-<!--<ul class="nav-list">-->
-<!--<li>-->
-<!--<a [routerLink]="['/reports/balances']" [ngClass]="{active: activeRoute('/reports/balances')}" class="nav-link">-->
-<!--<i class="fa fa-th-list"></i> <span mltag="txt_balancesreports">Balances Reports</span></a>-->
-<!--</li>-->
-<!--<li>-->
-<!--<a [routerLink]="['/reports/issue']" [ngClass]="{active: activeRoute('/reports/issue')}" class="nav-link">-->
-<!--<i class="fa fa-money"></i> <span mltag="txt_issuereports">Issue Reports</span></a>-->
-<!--</li>-->
-<!--<li>-->
-<!--<a [routerLink]="['/reports/transactions']" [ngClass]="{active: activeRoute('/reports/transactions')}" class="nav-link">-->
-<!--<i class="fa fa-key"></i> <span mltag="txt_transactionsreports">Transactions Reports</span></a>-->
-<!--</li>-->
-<!--</ul>-->
-<!--</section>-->
-
-<!--<section class="nav-group collapsible">-->
-<!--<label id="menu-chain-administration" menu-dropdown><i class="fa fa-chain"></i> <span mltag="txt_chainadministration">Chain Administration</span></label>-->
-<!--<ul class="nav-list">-->
-<!--<li>-->
-<!--<a [routerLink]="['/chain-admin/manage-member']" [ngClass]="{active: activeRoute('/chain-admin/manage-member')}" class="nav-link">-->
-<!--<i class="fa fa-address-card"></i> <span mltag="txt_member">Member</span></a>-->
-<!--</li>-->
-<!--<li>-->
-<!--<a [routerLink]="['/chain-admin/manage-groups']" [ngClass]="{active: activeRoute('/chain-admin/manage-groups')}" class="nav-link">-->
-<!--<i class="fa fa-user-o"></i> <span mltag="txt_groups">Groups</span></a>-->
-<!--</li>-->
-<!--<li>-->
-<!--<a [routerLink]="['/chain-admin/chain-membership']" [ngClass]="{active: activeRoute('/chain-admin/chain-membership')}" class="nav-link">-->
-<!--<i class="fa fa-handshake-o"></i> <span mltag="txt_chainmembership">Chain Membership</span></a>-->
-<!--</li>-->
-<!--</ul>-->
-<!--</section>-->
-
-<!--<a class="nav-link" [routerLink]="['/list-of-funds']" [ngClass]="{active: activeRoute('/list-of-funds')}">-->
-<!--<i class="fa fa-university"></i> <span mltag="txt_listoffunds">List of funds</span></a>-->
-
-<!--<section class="nav-group collapsible">-->
-<!--<label id="menu-report-section" menu-dropdown><i class="fa fa-book" aria-hidden="true"></i> <span mltag="txt_reports">Reports</span></label>-->
-<!--<ul class="nav-list">-->
-<!--<li>-->
-<!--<a [routerLink]="['/reports-section/tax']" [ngClass]="{active: activeRoute('/reports-section/tax')}" class="nav-link">-->
-<!--<i class="fa fa-eur" aria-hidden="true"></i> <span mltag="txt_taxreport">Tax Report</span></a>-->
-<!--</li>-->
-<!--<li>-->
-<!--<a [routerLink]="['/reports-section/pnl']" [ngClass]="{active: activeRoute('/reports-section/pnl')}" class="nav-link">-->
-<!--<i class="fa fa-list-alt"></i> <span mltag="txt_pl">P&L</span></a>-->
-<!--</li>-->
-<!--</ul>-->
-<!--</section>-->
-
-<!--&lt;!&ndash; <section class="nav-group">-->
-<!--<input id="tabexample2" type="checkbox">-->
-<!--<label for="tabexample2">Default Nav Element</label>-->
-<!--<ul class="nav-list">-->
-<!--<li><a class="nav-link">Link 1</a></li>-->
-<!--<li><a class="nav-link">Link 2</a></li>-->
-<!--<li><a class="nav-link active">Link 3</a></li>-->
-<!--<li><a class="nav-link">Link 4</a></li>-->
-<!--<li><a class="nav-link">Link 5</a></li>-->
-<!--<li><a class="nav-link">Link 6</a></li>-->
-<!--</ul>-->
-<!--</section> &ndash;&gt;-->
-
-<!--</section>-->
+    <ng-template #menuItem let-childMenuJson="childMenuJson">
+        <a *ngIf="!childMenuJson.children && !isMenuDisabled(childMenuJson.router_link)" clrVerticalNavLink [attr.id]="childMenuJson.element_id" [routerLink]="[childMenuJson.router_link]" routerLinkActive="active">
+            <clr-icon [attr.shape]="childMenuJson.icon_class" clrVerticalNavIcon></clr-icon>
+            <span [attr.mltag]="childMenuJson.label_txt">{{childMenuJson.label}}</span>
+            <span *ngIf="childMenuJson.router_link == '/messages' && this.unreadMessages > 0" class="label">{{this.unreadMessages}}</span>
+        </a>
+    
+        <span *ngIf="isMenuDisabled(childMenuJson.router_link)" clrVerticalNavLink class="disable">
+            <clr-icon [attr.shape]="childMenuJson.icon_class" clrVerticalNavIcon></clr-icon>
+            <span [attr.mltag]="childMenuJson.label_txt">{{childMenuJson.label}}</span>
+        </span>
+    
+        <clr-vertical-nav-group *ngIf="childMenuJson.children" [attr.id]="childMenuJson.element_id">
+            <clr-icon [attr.shape]="childMenuJson.icon_class" clrVerticalNavIcon></clr-icon>
+            {{childMenuJson.label}}
+            <clr-vertical-nav-group-children>
+                <ng-container *ngFor="let innerChild of childMenuJson.children">
+                    <a *ngIf="!isMenuDisabled(innerChild.router_link)" [attr.id]="innerChild.element_id" clrVerticalNavLink [routerLink]="[innerChild.router_link]" routerLinkActive="active">
+                        <span [attr.mltag]="innerChild.label_txt">{{innerChild.label}}</span>
+                    </a>
+                
+                    <span *ngIf="isMenuDisabled(innerChild.router_link)" clrVerticalNavLink [attr.id]="innerChild.element_id" class="disable">
+                        <span [attr.mltag]="innerChild.label_txt">{{innerChild.label}}</span>
+                    </span>
+                </ng-container>
+            </clr-vertical-nav-group-children>
+        </clr-vertical-nav-group>
+    </ng-template>
+</clr-vertical-nav>

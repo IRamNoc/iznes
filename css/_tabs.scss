@@ -82,9 +82,16 @@ clr-tab-content.active {
     display: block;
 }
 
-.panel-body clr-tabs ul {
-    padding-left: 0;
-    padding-right: 0;
+.panel-body clr-tabs {
+    ul {
+        padding-left: 0;
+        padding-right: 0;
+    }
+    section.active{
+        margin-left: 0; 
+        margin-right: 0;
+        width: 100%;
+    }
 }
 
 .panel-body .nav .nav-item.active > .nav-link {
