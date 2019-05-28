@@ -39,7 +39,7 @@ export class SetlBalancesComponent implements OnInit, OnDestroy {
     public breakdownExportOptions: any = breakdownExportOptions;
     public overviewListFilters = overviewListFilters;
     public breakdownListFilters = breakdownListFilters;
-    public pageCurrent: number;
+    public pageCurrent: number = 1;
     private editTab: boolean = false;
 
     /**
