@@ -237,7 +237,7 @@
                     </div>
                 </div>
 
-                <div class="form-group col-sm-12" *ngIf="isAssetManger && ordersList.length && !hasPermissionActionOnOrders">
+                <div class="form-group col-sm-12" *ngIf="isAssetManager && ordersList.length && !hasPermissionActionOnOrders">
                     <div class="alert alert-warning">
                         <div class="alert-items">
                             <div class="alert-item static">
@@ -355,7 +355,7 @@
                             <span class="column-label"></span>
                         </ng-container>
                     </clr-dg-column>
-                    <clr-dg-column *ngIf="isAssetManger" class="right">
+                    <clr-dg-column *ngIf="isAssetManager" class="right">
                         <span class="text-center">{{ 'Payment' | translate }}</span>
                     </clr-dg-column>
                     <!-- ACTIONS -->
@@ -463,7 +463,7 @@
                             <span *ngIf="order.orderStatus == 0" class="label label-error">{{ 'Cancelled' | translate }}
                             </span>
                         </clr-dg-cell>
-                        <clr-dg-cell *ngIf="isAssetManger" class="right" [ngSwitch]="order.paymentMsgStatus">
+                        <clr-dg-cell *ngIf="isAssetManager" class="right" [ngSwitch]="order.paymentMsgStatus">
                             <span *ngSwitchCase="'sent'" class="label label-success">{{ 'Sent' | translate }}</span>
                             <span *ngSwitchCase="'ready'" class="label label-success">{{ 'Sent' | translate }}</span>
                             <clr-checkbox *ngSwitchCase="'pending'" [formControl]="order.markedForPayment" (clrCheckedChange)="updatePaymentCheckBoxState(order.orderID, $event)"  [clrDisabled]="!order.readyForPayment"></clr-checkbox>
