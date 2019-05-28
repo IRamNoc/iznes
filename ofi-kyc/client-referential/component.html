@@ -2,7 +2,7 @@
     <!-- Breadcrumbs. -->
     <div class="header-breadcrumbs">
         <h1 id="ofi-client-referential"><i class="fa fa-users"></i>
-            {{ 'Client Referential' | translate }} {{ getClientReferentialDescriptionTitle() }}
+            {{ 'Client Referential' | translate }}{{ getClientReferentialDescriptionTitle() }}
         </h1>
     </div>
 
@@ -13,14 +13,37 @@
             </button>
             <clr-tab-content>
                 <div class="row">
+                    <div *ngIf="!hasPermissionInvestorInvitation" class="col-sm-12 alert alert-warning">
+                        <div class="alert-items">
+                            <div class="alert-item static">
+                                <div class="alert-icon-wrapper">
+                                    <clr-icon class="alert-icon" shape="exclamation-triangle"></clr-icon>
+                                </div>
+                                <span class="alert-text">
+                                    {{ 'Please contact the administrator to request permission to create or invite an investor' | translate }}
+                                </span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <br />
+
+                <div class="row">
                     <div class="col-sm-6">
                         {{ 'Please find below the list of your clients' | translate }}
                     </div>
+
                     <div class="col-sm-6" align="right">
-                        <button id="create-mandate-inv-btn" class="btn" style="margin-left: 10px;" (click)="inviteMandateInvestors()">{{
-                            'Create Investor under Mandate' | translate }}</button>
-                        <button id="invite-investors-btn" class="btn" style="margin-left: 10px;" (click)="gotoInvite()">{{
-                            'Invite Investors' | translate }}</button>
+                        <button id="create-mandate-inv-btn"
+                                class="btn"
+                                style="margin-left: 10px;"
+                                [disabled]="!hasPermissionInvestorInvitation"
+                                (click)="inviteMandateInvestors()">{{'Create Investor under Mandate' | translate }}</button>
+                        <button id="invite-investors-btn"
+                                class="btn"
+                                style="margin-left: 10px;"
+                                [disabled]="!hasPermissionInvestorInvitation"
+                                (click)="gotoInvite()">{{'Invite Investors' | translate }}</button>
                     </div>
                 </div>
                 <div class="row">
@@ -100,12 +123,34 @@
 
                 <div *ngIf="isMandateInvestor()">
                     <h2>{{ 'Professional Investor Details' | translate }}</h2>
+
                     <form [formGroup]="investorForm" (ngSubmit)="saveClientReference()">
+
+                        <div class="row">
+                            <div *ngIf="!hasPermissionClientReferentialUpdate" class="alert alert-warning">
+                                <div class="alert-items">
+                                    <div class="alert-item static">
+                                        <div class="alert-icon-wrapper">
+                                            <clr-icon class="alert-icon" shape="exclamation-triangle"></clr-icon>
+                                        </div>
+                                        <span class="alert-text">
+                                            {{ 'Please contact the administrator to request permission to update the client reference' | translate }}
+                                        </span>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <br />
+
                         <div class="row">
                             <div class="form-group col-sm-6">
                                 <label for="clientReference">{{ 'Client Reference' | translate }}</label>
                                 <div>
-                                    <input type="text" id="clientReference" class="form-control" formControlName="clientReference">
+                                    <input type="text"
+                                            id="clientReference"
+                                            class="form-control"
+                                            formControlName="clientReference"
+                                            [attr.disabled]="!hasPermissionClientReferentialUpdate ? 'true' : null">
                                 </div>
                             </div>
                             <div class="form-group col-sm-6" *ngIf="!isRetail()">
@@ -137,7 +182,25 @@
                 </div>
                 <div *ngIf="!isMandateInvestor()">
                     <h2>{{ 'Professional Investor Details' | translate }}</h2>
+
                     <form [formGroup]="investorForm" (ngSubmit)="saveClientReference()">
+
+                        <div class="row">
+                            <div *ngIf="!hasPermissionClientReferentialUpdate" class="alert alert-warning">
+                                <div class="alert-items">
+                                    <div class="alert-item static">
+                                        <div class="alert-icon-wrapper">
+                                            <clr-icon class="alert-icon" shape="exclamation-triangle"></clr-icon>
+                                        </div>
+                                        <span class="alert-text">
+                                            {{ 'Please contact the administrator to request permission to update the client reference' | translate }}
+                                        </span>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <br />
+
                         <div class="row">
                             <div class="form-group col-sm-6">
                                 <label for="companyName">{{ 'Company Name' | translate }}</label>
@@ -148,7 +211,11 @@
                             <div class="form-group col-sm-6">
                                 <label for="clientReference">{{ 'Client Reference' | translate }}</label>
                                 <div>
-                                    <input type="text" id="clientReference" class="form-control" formControlName="clientReference">
+                                    <input type="text"
+                                            id="clientReference"
+                                            class="form-control"
+                                            formControlName="clientReference"
+                                            [attr.disabled]="!hasPermissionClientReferentialUpdate ? 'true' : null">
                                 </div>
                             </div>
                             <div class="form-group col-sm-6">
@@ -203,8 +270,6 @@
                     </ng-container>
                 </div>
 
-
-
                 <div align="middle" style="margin-top: 20px;">
                     <button class="btn btn-info" (click)="goBack()">{{ 'Back' | translate }}</button>
                 </div>
@@ -223,7 +288,23 @@
                             translate }}</button>
                     </div>
                 </div>
-                <access-table [otherData]="otherData" [tableDataArr]="tableData" (back)="goBack()" style="width: 100%"></access-table>
+
+                <div *ngIf="!hasPermissionClientReferentialUpdate && tableData.length" class="alert alert-warning">
+                    <div class="alert-items">
+                        <div class="alert-item static">
+                            <div class="alert-icon-wrapper">
+                                <clr-icon class="alert-icon" shape="exclamation-triangle"></clr-icon>
+                            </div>
+                            <span class="alert-text">
+                                {{ 'Please contact the administrator to request permission to access shares' | translate }}
+                                <br />
+                            </span>
+                        </div>
+                    </div>
+                </div>
+
+                <access-table [otherData]="otherData" [tableDataArr]="tableData" [hasPermissionUpdate]="hasPermissionClientReferentialUpdate" (back)="goBack()" style="width: 100%"></access-table>
+
             </clr-tab-content>
         </clr-tab>
         <clr-tab>

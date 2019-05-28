@@ -12,18 +12,47 @@
                 <i class="fa fa-users"></i> {{ 'All Portfolio Manager' | translate }}
             </button>
             <clr-tab-content>
+
                 <div class="row">
                     <div class="col-sm-6">
                         {{ 'Please find below the list of your portfolio managers.' | translate }}
                     </div>
                     <div class="col-sm-6" align="right">
-                        <button id="invite-investors-btn" class="btn" style="margin-left: 10px;" (click)="handleInvite();">
-                            {{'Invite a Portfolio Manager' | translate }}
+                        <button [disabled]="!hasPermissionInvitePortfolioManager" id="invite-pm-btn" class="btn" style="margin-left: 10px;" (click)="handleInvite();">
+                            {{ 'Invite a Portfolio Manager' | translate }}
                         </button>
                     </div>
                 </div>
 
-                <div class="row">
+                <div *ngIf="!hasPermissionInvitePortfolioManager" class="alert alert-warning">
+                    <div class="alert-items">
+                        <div class="alert-item static">
+                            <div class="alert-icon-wrapper">
+                                <clr-icon class="alert-icon" shape="exclamation-triangle"></clr-icon>
+                            </div>
+                            <span class="alert-text">
+                                {{ 'Please contact the administrator to request permission to invite a portfolio manager' | translate }}
+                                <br />
+                            </span>
+                        </div>
+                    </div>
+                </div>
+
+                <div *ngIf="!hasPermissionPortfolioManagersView" class="alert alert-warning">
+                    <div class="alert-items">
+                        <div class="alert-item static">
+                            <div class="alert-icon-wrapper">
+                                <clr-icon class="alert-icon" shape="exclamation-triangle"></clr-icon>
+                            </div>
+                            <span class="alert-text">
+                                {{ 'Please contact the administrator to request permission to view portfolio managers' | translate }}
+                                <br />
+                            </span>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="row" *ngIf="hasPermissionPortfolioManagersView">
                     <div class="col-sm-12">
 
                         <clr-datagrid #dataGrid>
