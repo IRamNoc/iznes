@@ -265,7 +265,7 @@ clr-header {
             .ui-select-match-text {
                 margin: -2px 22px -2px 2px !important;
                 text-overflow: ellipsis;
-                width: calc(100% - 55px);
+                width: calc(100% - 55px) !important;
                 overflow: hidden;
             }
             .ui-select-match.arrow {
