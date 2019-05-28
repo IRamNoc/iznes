@@ -1,12 +1,7 @@
 import { Routes } from '@angular/router';
 /* Layouts. */
 import { BasicLayoutComponent, BlankLayoutComponent, FormElementsComponent, HomeComponent } from '@setl/core-layout';
-import {
-    UiTranslationsComponent,
-    UiTooltipsComponent,
-    UiFormStepsComponent,
-    UiFormPercentComponent,
-} from '@setl/core-layout';
+
 /* Components. */
 import { SetlMyAccountComponent } from '@setl/core-account';
 /**
@@ -68,6 +63,7 @@ import {
     UserTeamsAuditComponent,
     UserTeamsCreateUpdateComponent,
     UserTeamsListComponent,
+    AccountSignUpComponent,
     AccountSignUpRedirectComponent,
 } from '@setl/core-account-admin';
 import {
@@ -113,9 +109,7 @@ import { SetlBalancesComponent, SetlIssueComponent, SetlTransactionsComponent } 
 import { ConnectionComponent } from '@setl/core-connections/connections/component';
 import { SetlMessagesComponent } from '@setl/core-messages';
 import { OfiWaitingApprovalComponent } from '@ofi/ofi-main/ofi-kyc/waiting-approval/component';
-import { SetlLoginComponent, SetlLogoutComponent } from '@setl/core-login';
-import { OfiLoginComponent } from '@ofi/ofi-main/ofi-login/login/component';
-import { OfiAccountSignUpComponent } from '@ofi/ofi-main/ofi-login/sign-up/account.component';
+import { SetlLoginComponent, SetlLogoutComponent, SignupComponent } from '@setl/core-login';
 
 /* Portfolio manager */
 import {
@@ -136,7 +130,7 @@ export const ROUTES: Routes = [
         children: [
             {
                 path: 'login',
-                component: OfiLoginComponent,
+                component: SetlLoginComponent,
             },
             {
                 path: 'logout',
@@ -144,11 +138,11 @@ export const ROUTES: Routes = [
             },
             {
                 path: 'reset/:token',
-                component: OfiLoginComponent,
+                component: SetlLoginComponent,
             },
             {
                 path: 'reset-two-factor/:twofactortoken',
-                component: OfiLoginComponent,
+                component: SetlLoginComponent,
             },
         ],
     },
@@ -168,7 +162,7 @@ export const ROUTES: Routes = [
     },
     {
         path: 'account-signup',
-        component: OfiAccountSignUpComponent,
+        component: AccountSignUpComponent,
     },
     {
         path: 'account-signup-redirect/:invitationToken',
