@@ -42,9 +42,7 @@ export class UserTourDirective implements AfterViewInit, OnDestroy{
                 const completedTour = _.get(response, '[1].Data[0].value', false);
                 if (!completedTour) {
                     setTimeout(
-                        () => {
-                            this.launchUserTour();
-                        },
+                        () => this.launchUserTour(),
                         200,
                     );
                 }
@@ -109,8 +107,9 @@ export class UserTourDirective implements AfterViewInit, OnDestroy{
         const stageEl = this.el.nativeElement.querySelector(`div #${stage}`);
 
         // Prevent scrolling
-        if (document.querySelector('ng-sidebar-container')) {
-            document.querySelector('ng-sidebar-container').setAttribute('style', 'overflow: hidden!important;');
+        if (document.querySelector('.content-container .content-area')) {
+            document.querySelector('.content-container .content-area')
+                .setAttribute('style', 'overflow: hidden!important;');
         }
 
         // Preserve width of child element
@@ -168,7 +167,8 @@ export class UserTourDirective implements AfterViewInit, OnDestroy{
         const offset = stageEl.getBoundingClientRect();
         const right = (document.documentElement.clientWidth - stageEl.offsetWidth) - offset.left;
         const bottom = (document.documentElement.clientHeight - stageEl.offsetHeight) - offset.top;
-        const sidebarWidth = document.querySelector('nav.sidenav').clientWidth;
+        // const sidebarWidth = document.querySelector('nav.sidenav').clientWidth;
+        const sidebarWidth = document.querySelector('app-navigation-sidebar').clientWidth;
         const topbarHeight = document.querySelector('app-navigation-topbar').clientHeight;
         const signpostHeight = signpostEl.offsetHeight;
         const signpostWidth = signpostEl.offsetWidth;
@@ -259,7 +259,9 @@ export class UserTourDirective implements AfterViewInit, OnDestroy{
         }
 
         // Remove overflow hidden override on layout container and datagrids
-        (document.querySelector('ng-sidebar-container') as HTMLElement).style.overflow = '';
+        if (document.querySelector('.content-container .content-area')) {
+            (document.querySelector('.content-container .content-area') as HTMLElement).style.overflow = '';
+        }
         this.el.nativeElement.querySelectorAll('.datagrid-overlay-wrapper').forEach((datagrid) => {
             datagrid.classList.remove('visible');
         });
@@ -289,5 +291,7 @@ export class UserTourDirective implements AfterViewInit, OnDestroy{
             .removeEventListener('click', () => this.launchUserTour());
 
         document.querySelector('.launch-user-tour').remove();
+
+        this.closeUserTour();
     }
 }

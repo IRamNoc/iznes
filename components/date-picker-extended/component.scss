@@ -21,11 +21,21 @@
     }
 
     /deep/  {
+        dp-day-calendar {
+            min-width: 362px;
+            dp-month-calendar {
+                width: 100%;
+                .dp-months-row {
+                    text-align: center;
+                }
+            }
+        }
+
         .dp-calendar-nav-container-left,
         .dp-calendar-nav-container-right {
             width: auto;
         }
-        
+
         .dp-material .dp-calendar-day {
             border-radius: 0;
             height: 50px;

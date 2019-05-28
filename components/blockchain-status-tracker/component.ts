@@ -1,8 +1,10 @@
-import { Component, OnInit, OnDestroy, ChangeDetectorRef } from '@angular/core';
+import { Component, OnInit, OnDestroy, ChangeDetectorRef, Input, Output, ElementRef, HostListener,
+    EventEmitter, Inject } from '@angular/core';
 import { select } from '@angular-redux/store';
 import { Subscription } from 'rxjs/Subscription';
 import { ClrDatagridSortOrder } from '@clr/angular';
-import { isEmpty } from 'lodash';
+import { Router } from '@angular/router';
+import { APP_CONFIG, AppConfig } from '@setl/utils';
 
 @Component({
     styleUrls: ['./component.scss'],
@@ -12,6 +14,8 @@ import { isEmpty } from 'lodash';
 
 export class BlockchainStatusTracker implements OnInit, OnDestroy {
 
+    @Input() display: string = 'modal';
+    @Output() dropdownClosed = new EventEmitter<boolean>();
     @select(['walletNode', 'transactionStatus']) transactionStatus;
 
     public failUpdate: Boolean = false;
@@ -20,12 +24,13 @@ export class BlockchainStatusTracker implements OnInit, OnDestroy {
     public pendingCount: number = 0;
     public successCount: number = 0;
     public failCount: number = 0;
-    public showStatusModal: boolean = false;
+    public showStatusView: boolean = false;
     public maxTransactions: boolean = false;
     public txList: {}[];
     public descSort = ClrDatagridSortOrder.DESC;
     public objectKeys = Object.keys;
     public pageSize: number = 5;
+    public appConfig: AppConfig;
 
     private subscriptions: Subscription[] = [];
     private pendingTimeout: any;
@@ -34,7 +39,11 @@ export class BlockchainStatusTracker implements OnInit, OnDestroy {
 
     constructor(
         private changeDetectorRef: ChangeDetectorRef,
+        private el: ElementRef,
+        public router: Router,
+        @Inject(APP_CONFIG) appConfig: AppConfig,
     ) {
+        this.appConfig = appConfig;
     }
 
     ngOnInit() {
@@ -112,16 +121,23 @@ export class BlockchainStatusTracker implements OnInit, OnDestroy {
         ));
     }
 
-    formatText(text) {
-        const string = String(text);
-        if (String(text).length > 18) {
-            return `${string.substring(0, 15)}...`;
+    @HostListener('document:click', ['$event']) clickOutside(event) {
+        if (this.display === 'dropdown') {
+            if (this.el.nativeElement.contains(event.target)) return this.showStatusView = true;
+            this.showStatusView = false;
         }
-        return string;
     }
 
-    validItem(item) {
-        return item !== '' && typeof item !== 'object';
+    navigateToReport() {
+        setTimeout(
+            () => {
+                this.showStatusView = false;
+                this.dropdownClosed.emit(false);
+                this.changeDetectorRef.detectChanges();
+            },
+            50);
+
+        this.router.navigateByUrl('/reports/transaction-status');
     }
 
     ngOnDestroy() {

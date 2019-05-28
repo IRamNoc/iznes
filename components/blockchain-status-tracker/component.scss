@@ -1,58 +1,86 @@
 :host {
-    /deep/ {
-        @media only screen and (min-width: 1700px) {
-            position: absolute;
-            left: 30%;
+    .sm-col {
+        max-width: 200px;
+    }
+
+    clr-datagrid {
+        max-height: 64vh;
+        width: 95%;
+        margin: 0 auto;
+    }
+
+    /deep/ .dropdown {
+        display: none;
+        position: absolute;
+        margin-top: 10px;
+        width: 635px;
+        margin-left: -514px;
+        border-radius: 0 0 .125rem .125rem;
+        z-index: 1000001;
+        background: #ffffff;
+        &.solo {
+            margin-left: 0;
+            width: 560px;
         }
-        .sm-col {
-            max-width: 200px;
+        &.active {
+            display: block;
         }
-        .modal-body clr-datagrid {
-            max-height: 64vh;
-            .additionalInfos {
-                .item {
-                    float: left;
-                    width: 30%;
-                    margin: 0 3% 0 0;
-                    overflow: hidden;
-                    b {
-                        width: 38%;
-                        float: left;
-                        overflow: hidden;
-                    }
-                    span {
-                        float: right;
-                        width: 60%
-                    }
+        clr-datagrid {
+            .datagrid {
+                border: none;
+                margin-top: 0;
+                overflow: hidden;
+                clr-dg-placeholder {
+                    border: none;
+                }
+                .datagrid-row {
+                    border-bottom: none;
+                }
+                .datagrid-column {
+                    background: none;
+                }
+                .datagrid-header .datagrid-row {
+                    background: none;
+                }
+                clr-dg-column-separator {
+                    display: none;
                 }
             }
+            clr-dg-cell {
+                overflow: hidden;
+                text-overflow: ellipsis;
+            }
+        }
+        .footer {
+            border-top: solid 1px #979797;
+            margin: 0 15px;
         }
     }
 }
 
 #blockchain-status-tracker {
     cursor: pointer;
+    overflow: hidden;
     .pending, .success, .fail {
-        background: #ffffff;
         box-sizing: border-box;
-        font-size: inherit;
-        font-weight: 600;
+        font-size: 12px;
+        font-weight: 400;
         position: relative;
         vertical-align: middle;
         display: flex;
         justify-content: center;
         flex-direction: column;
         text-align: center;
-        width: 45px;
-        height: 45px;
-        margin: 15px 0 0 -5px;
+        width: 40px;
+        height: 40px;
+        margin: 0 0 0 1px;
         padding: 0;
         border-radius: 100%;
         box-shadow: none;
         float: left;
-        transition: all 0.5s linear;
+        transition: all 0.2s linear;
+        color: #ffffff;
 
-        &::before,
         &::after {
             box-sizing: inherit;
             content: '';
@@ -64,56 +92,76 @@
             border-radius: 100%;
         }
 
-        &::before {
-            transition: border-top-color 0.15s linear,
-            border-right-color 0.15s linear 0.10s,
-            border-bottom-color 0.15s linear 0.20s;
-        }
         &.update::after {
             border: 0 solid transparent;
+            border-left-width: 5px;
+            border-right-width: 5px;
             animation-duration: 1s;
-            animation-name: spinRotate;
             animation-iteration-count: infinite;
             animation-direction: normal;
         }
     }
 
+    &:hover, &.active {
+        .fail {
+            border-color: #c92100;
+        }
+        .pending {
+            border-color: #ff8400;
+        }
+        .success {
+            border-color: #2f8400;
+        }
+    }
+
     .fail {
-        color: #ce553e;
-        border: solid 1px rgba(206, 85, 62, 0.4);
-        &::before {
-            border-top-color: #ce553e;
-            border-right-color: #ce553e;
-            border-bottom-color: #ce553e;
+        border: solid 2px #92242e;
+        &.update::after {
+            animation-name: spinRotateFail;
         }
     }
 
     .pending {
-        color: #e8a02e;
-        border: solid 1px rgba(232, 160, 46, 0.4);
-        &::before {
-            border-top-color: #e8a02e;
-            border-right-color: #e8a02e;
-            border-bottom-color: #e8a02e;
+        border: solid 2px #836300;
+        &.update::after {
+            animation-name: spinRotatePending;
         }
     }
 
     .success {
-        color: #49a45f;
-        border: solid 1px rgba(73, 164, 95, 0.4);
-        &::before {
-            border-top-color: #49a45f;
-            border-right-color: #49a45f;
-            border-bottom-color: #49a45f;
+        border: solid 2px #00551a;
+        &.update::after {
+            animation-name: spinRotateSuccess;
         }
     }
 
-    @keyframes spinRotate {
+    @keyframes spinRotateFail {
         0% {
-            border-top: 4px solid;
-            border-left-width: 5px;
-            border-right-width: 5px;
+            border-top: 4px solid #92242e;
             transform: rotate(360deg);
+        }
+        20% {
+            border-top: 4px solid #92242e;
+        }
+    }
+
+    @keyframes spinRotatePending {
+        0% {
+            border-top: 3px solid #836300;
+            transform: rotate(360deg);
+        }
+        20% {
+            border-top: 3px solid #836300;
+        }
+    }
+
+    @keyframes spinRotateSuccess {
+        0% {
+            border-top: 3px solid #00551a;
+            transform: rotate(360deg);
+        }
+        20% {
+            border-top: 3px solid #00551a;
         }
     }
 }

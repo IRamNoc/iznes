@@ -5,21 +5,21 @@ export interface MenuItem {
     element_id: string;
     router_link?: string;
     dynamic_link?: string;
-    children?: Array<MenuItem>;
+    children?: MenuItem[];
 }
 
 export interface MenuSpec {
     top: {
         profile: {
-            [userType: string]: Array<MenuItem>;
-        }
+            [userType: string]: MenuItem[];
+        },
     };
     side: {
-        [userType: string]: Array<MenuItem>;
+        [userType: string]: MenuItem[];
     };
-    disabled?: Array<string>;
+    disabled?: string[];
     hidden?: {
-        [userType: string]: Array<String>;
+        [userType: string]: String[];
     };
 }
 
@@ -38,14 +38,29 @@ export interface AppConfig {
     menuSpec: MenuSpec;
     nonMenuLink?: RegStr[];
     reportingNodeUrl: string;
-    messagesMenu: Array<MessagesMenuItem>;
+    messagesMenu: MessagesMenuItem[];
     logoUrl: string;
+    logoLightUrl: string;
     logoID: string;
     platform: string;
     platformLegal?: string;
-    topbarLogoUrl: string;
+    platformLabel?: string;
     applyRestrictUrl?: boolean;
     internalMessageSender?: string;
+    backgroundImage: string;
+    loginOverlay?: boolean;
+    loginOverlayColour?: string;
+    loginContent?: {
+        title?: string,
+        description?: string,
+        btn?: {
+            text: string,
+            urlEN: string,
+            urlFR: string,
+        },
+    };
+    topNavBarColour?: string;
+    walletPickerRight?: boolean;
 }
 
 export interface MessagesMenuItem {

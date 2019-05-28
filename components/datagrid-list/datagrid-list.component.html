@@ -18,8 +18,12 @@
         <ng-container *ngIf="!lazyLoaded">
             <clr-dg-row *clrDgItems="let record of listData">
                 <ng-container *ngIf="record !== undefined">
-                    <clr-dg-cell *ngFor="let field of listFields" [ngClass]="{ 'right': field.options.rightAlign, 'flash': record[field.options.flashOnCondition] }">
-                        <datagrid-field [value]="record[field.name]" [type]="field.type" [options]="field.options"></datagrid-field>
+                    <clr-dg-cell #dataGridSpacer *ngFor="let field of listFields" [ngClass]="{ 'right': field.options.rightAlign, 'flash': record[field.options.flashOnCondition] }">
+                        <datagrid-field
+                            [value]="record[field.name]"
+                            [type]="field.type"
+                            [showColumnSpacer]="showColumnSpacer"
+                            [options]="field.options"></datagrid-field>
                     </clr-dg-cell>
 
                     <clr-dg-cell class="right" *ngIf="listActions">
@@ -33,8 +37,12 @@
         <ng-container *ngIf="lazyLoaded">
             <clr-dg-row *ngFor="let record of listData">
                 <ng-container *ngIf="record !== undefined">
-                    <clr-dg-cell *ngFor="let field of listFields">
-                        <datagrid-field [value]="record[field.name]" [type]="field.type" [options]="field.options"></datagrid-field>
+                    <clr-dg-cell #dataGridSpacer *ngFor="let field of listFields">
+                        <datagrid-field
+                            [value]="record[field.name]"
+                            [type]="field.type"
+                            [showColumnSpacer]="showColumnSpacer"
+                            [options]="field.options"></datagrid-field>
                     </clr-dg-cell>
 
                     <clr-dg-cell class="right" *ngIf="listActions">
@@ -54,8 +62,8 @@
 
             <!-- EXPORT BUTTONS -->
             <div class="export-btns">
-                <button *ngIf="export['csv'] && dataGrid.items['_filtered']" [clrLoading]="csvBtnState" class="btn btn-sm" (click)="exportCSV()">{{ 'Export CSV' | translate }}</button>
-                <button *ngIf="export['pdf'] && dataGrid.items['_filtered']" [clrLoading]="pdfBtnState" class="btn btn-sm" (click)="exportPDF()">{{ 'Export PDF' | translate }}</button>
+                <button *ngIf="export.csv" [clrLoading]="csvBtnState" class="btn btn-sm" (click)="exportCSV()">{{ 'Export CSV' | translate }}</button>
+                <button *ngIf="export.pdf" [clrLoading]="pdfBtnState" class="btn btn-sm" (click)="exportPDF()">{{ 'Export PDF' | translate }}</button>
             </div>
 
             <!-- PAGINATION-->
@@ -70,11 +78,7 @@
 <ng-template #datagridActions let-listActions="listActions" let-record="record">
     <div class="btn-group">
         <ng-container *ngFor="let listAction of listActions">
-            <button
-                *ngIf="listAction.isVisible(record)"
-                [attr.id]="listAction.id.text && record[listAction.id.data] ? listAction.id.text + record[listAction.id.data] : null"
-                class="{{listAction.class}}"
-                (click)="handleOnClick(listAction.onClick, record)">
+            <button *ngIf="listAction.isVisible(record)" class="{{listAction.class}}" (click)="handleOnClick(listAction.onClick, record)">
                 <i class="fa {{listAction.icon}}"></i>
                 {{ listAction.label | translate }}
             </button>

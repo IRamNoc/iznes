@@ -36,6 +36,7 @@ export class SelectComponent implements OnInit, ControlValueAccessor {
     @Input() public multiple = false;
     @Input() public inlineLabel = '';
     @Input() public inlineLabelMlTag = '';
+    @Input() public inlineIcon = '';
     @Input() public captureKeys = true;
     @Input() public containerWidth = '360px';
 
@@ -162,13 +163,13 @@ export class SelectComponent implements OnInit, ControlValueAccessor {
     private disabledFlag = false;
     private activeFlag: SelectItem[] = [];
 
+    private focusedWithClick: boolean = false;
 
     public constructor(element: ElementRef,
                        private renderer2 : Renderer2,
                        private changeDetectorRef: ChangeDetectorRef, public translate: MultilingualService) {
         this.element = element;
         this.clickedOutside = this.clickedOutside.bind(this);
-
     }
 
     setDisabledState(isDisabled: boolean): void {
@@ -190,6 +191,7 @@ export class SelectComponent implements OnInit, ControlValueAccessor {
     }
 
     public inputEvent(e: any, isUpMode: boolean = false): void {
+
         if (!this.captureKeys) {
             e.preventDefault();
             return;
@@ -228,6 +230,7 @@ export class SelectComponent implements OnInit, ControlValueAccessor {
             }
             e.preventDefault();
         }
+        /* Remove custom left and right arrow key behavior for now so search input can be navigated with arrows keys
         // left
         if (!isUpMode && e.keyCode === 37 && this.itemsList.length > 0) {
             this.behavior.first();
@@ -240,6 +243,7 @@ export class SelectComponent implements OnInit, ControlValueAccessor {
             e.preventDefault();
             return;
         }
+        */
         // up
         if (!isUpMode && e.keyCode === 38) {
             this.behavior.prev();
@@ -257,6 +261,7 @@ export class SelectComponent implements OnInit, ControlValueAccessor {
             // if (this.active.indexOf(this.activeOption) === -1) {
             this.selectActiveMatch();
             this.behavior.next();
+            this.focusedWithClick = true;
             // }
             e.preventDefault();
             return;
@@ -308,7 +313,27 @@ export class SelectComponent implements OnInit, ControlValueAccessor {
     }
 
     public clickedOutside(): void {
+        this.focusedWithClick = false;
         this.hideOptions();
+    }
+
+    /**
+     * Opens the ngSelect when user tabs to it, ignores when focus triggered by click
+     */
+    public handleOnFocus() {
+        if (this.disabled) return;
+
+        // timeout to account for setting of focusedWithClick property elsewhere
+        setTimeout(
+            () => {
+                if (this.focusedWithClick) return this.focusedWithClick = false;
+
+                this.inputMode = true;
+                this.focusToInput();
+                this.open();
+            },
+            5,
+        );
     }
 
     public get firstItemHasChildren(): boolean {
@@ -512,9 +537,9 @@ export class Behavior {
         const posY: number = highlighted.offsetTop + highlighted.clientHeight - container.scrollTop;
         const height: number = container.offsetHeight;
         if (posY > height) {
-            container.scrollTop += posY - height;
-        } else if (posY < highlighted.clientHeight) {
-            container.scrollTop -= highlighted.clientHeight - posY;
+            container.scrollTop = highlighted.offsetTop + highlighted.clientHeight - height;
+        } else if (posY <= highlighted.clientHeight) {
+            container.scrollTop = highlighted.offsetTop;
         }
     }
 

@@ -49,8 +49,10 @@ import { ResolveEmit } from './interfaces/resolve-emit';
             <div class="jaspero__dialog-content" [innerHtml]="incomingData.message">
             </div>
             <div class="jaspero__dialog-actions">
-                <button #declineBtn *ngIf="incomingData.declineText != ''" class="default" (click)="resolve({resolved: false})">{{incomingData.declineText}}</button>
-                <button #confirmBtn class="{{incomingData.btnClass}}" (click)="resolve({resolved: true})">{{incomingData.confirmText}}</button>
+                <button #declineBtn *ngIf="incomingData.declineText != ''" class="btn default"
+                (click)="resolve({resolved: false})">{{incomingData.declineText}}</button>
+                <button #confirmBtn class="btn {{getBtnClass(incomingData.btnClass)}}"
+                (click)="resolve({resolved: true})">{{incomingData.confirmText}}</button>
             </div>
         </div>
     `,
@@ -153,74 +155,13 @@ import { ResolveEmit } from './interfaces/resolve-emit';
             border-top: 1px solid #d5d6d6;
             background: #f8fafb;
             min-height: 60px;
-            padding: 0;
+            padding: 5px 0 0 0;
             -ms-flex-align: center;
             align-items: center;
             -ms-flex-pack: end;
             justify-content: flex-end;
             position: relative;
             text-align: center;
-        }
-
-        .jaspero__dialog-actions button {
-            border: 1px solid #afafaf;
-            color: #8c8c8c !important;
-            height: 36px;
-            border-radius: 3px;
-            line-height: 34px;
-            font-size: 12px;
-            padding-left: 35px;
-            padding-right: 35px;
-            cursor: pointer;
-            margin-left: 5px;
-            margin-right: 5px;
-            margin-top: 12px;
-            background: #ffffff;
-        }
-
-        .jaspero__dialog-actions button.default {
-            color: inherit;
-        }
-
-        .jaspero__dialog-actions button.default:hover {
-            background-color: hsla(0, 0%, 60%, .2);
-        }
-
-        .jaspero__dialog-actions button.primary {
-            background-color: #56a4df;
-            border: 1px solid #56a4df;
-            color: white !important;
-        }
-
-        .jaspero__dialog-actions button.primary:hover {
-            background-color: #4092d0;
-            border: 1px solid #4092d0;
-        }
-
-        .jaspero__dialog-actions button.success {
-            background-color: #62a420;
-            border: 1px solid #62a420;
-            color: white !important;
-        }
-
-        .jaspero__dialog-actions button.success:hover {
-            background-color: #4b861f;
-            border: 1px solid #4b861f;
-        }
-
-        .jaspero__dialog-actions button.error {
-            background-color: #e62700;
-            border: 1px solid #e62700;
-            color: white !important;
-        }
-
-        .jaspero__dialog-actions button.error:hover {
-            background-color: #b82700;
-            border: 1px solid #b82700;
-        }
-
-        .jaspero__dialog-actions button.raised {
-            box-shadow: 0 1px 5px rgba(0, 0, 0, .2), 0 2px 2px rgba(0, 0, 0, .14), 0 3px 1px -2px rgba(0, 0, 0, .12);
         }
 
         :host(.success) .jaspero__dialog-icon {
@@ -339,5 +280,17 @@ export class ConfirmationComponent implements OnInit {
         }
 
     }
-}
 
+    /**
+     * Maps the passed in btn type string to a btn class - defaults to btn-primary if no match
+     *
+     * @param type Passed in btn type string
+     */
+    getBtnClass(type: string): string {
+        return {
+            primary: 'btn-primary',
+            success: 'btn-success',
+            error: 'btn-danger',
+        }[type] || 'btn-primary';
+    }
+}

@@ -6,6 +6,7 @@ import { Directive, ElementRef, HostListener, Input, OnInit, OnDestroy, Renderer
 export class TooltipDirective implements OnInit, OnDestroy {
 
     @Input('tooltip') config: any;
+    @Input('disable') disable: any = false;
     divTooltip: any;
     arrowSize = 10;
     scrollTop = 0;
@@ -25,23 +26,30 @@ export class TooltipDirective implements OnInit, OnDestroy {
     ngOnInit() {
         document.body.style.overflow = 'hidden'; // force overflow hidden to prevent scroll outside website
         this.config.toggleOn = !this.config.toggleOn ? false : this.config.toggleOn;
+        if (!this.config.hasOwnProperty('allowClick')) this.config.allowClick = true;
         this.buildTooltip();
     }
 
     @HostListener('click') onClick(): void {
         this.hideTooltip();
 
-        setTimeout(
-            () => {
-                this.config.toggleOn = true;
-                this.showTooltip();
-            },
-            350,
-        );
+        if (!this.disable && this.config.allowClick) {
+            setTimeout(
+                () => {
+                    this.config.toggleOn = true;
+                    this.showTooltip();
+                },
+                350,
+            );
+        }
     }
 
     @HostListener('mouseover') onMouseOver(): void {
-        this.showTooltip();
+        if (!this.disable) {
+            this.showTooltip();
+        } else {
+            this.hideTooltip();
+        }
     }
 
     @HostListener('mouseleave') onMouseLeave(): void {
@@ -51,7 +59,7 @@ export class TooltipDirective implements OnInit, OnDestroy {
     }
 
     @HostListener('window:resize') onWindowResize(): void {
-        this.moveTooltip();
+        if (!this.disable) this.moveTooltip();
     }
 
     buildTooltip() {

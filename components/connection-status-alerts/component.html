@@ -1,13 +1,37 @@
-<div [class.active]="connectionStatus.nodeDead" class="connection-banner red">
-    <h2><i class="icon lost"></i>{{ 'It seems you got lost...' | translate }}</h2>
-    <p [class.loading]="connectionStatus.loading">{{ connectionStatus.nodeTimerString }}</p>
-</div>
-<div [class.active]="connectionStatus.internetDead && !connectionStatus.nodeDead" class="connection-banner red">
-    <h2><i class="icon lost"></i>{{ 'It seems you got lost...' | translate }}</h2>
-    <p class="loading">{{ 'You\'ve been disconnected from the internet, please wait or try to refresh your browser' | translate }}</p>
-</div>
-<div [class.active]="(connectionStatus.nodeReconnected || connectionStatus.internetReconnected) && (!connectionStatus.internetDead && !connectionStatus.nodeDead)" class="connection-banner green">
-    <h2><i class="icon tick"></i>{{ 'Lucky you. You\'re back!' | translate }}</h2>
-    <p>{{ 'You can now continue your journey on' | translate }} {{ appConfig.platform }}</p>
+<!-- Disconnection App Alerts-->
+<div *ngIf="connectionStatus.nodeDead || connectionStatus.internetDead" class="alert alert-app-level alert-danger">
+    <div class="alert-items">
+        <div class="alert-item static">
+            <div class="alert-icon-wrapper">
+                <clr-icon class="alert-icon" shape="exclamation-circle"></clr-icon>
+            </div>
+            <div class="alert-text">
+                <div *ngIf="connectionStatus.nodeDead" class="loading">
+                    {{ 'You\'ve been disconnected from our servers, you should be reconnected soon' | translate }}
+                </div>
+                <div *ngIf="connectionStatus.internetDead && !connectionStatus.nodeDead" class="loading">
+                    {{ 'You\'ve been disconnected from the internet, please wait or try to refresh your browser' | translate }}
+                </div>
+            </div>
+        </div>
+    </div>
 </div>
 
+<!-- Session Expiring Modal-->
+<clr-modal [(clrModalOpen)]="showCountdownModal" [clrModalClosable]="false">
+    <div class="modal-title">
+        <i class="fa fa-exclamation-triangle modal-icon text-warning"></i>
+        <h4 class="modal-title-text">{{ 'Session expiring soon' | translate }}</h4>
+    </div>
+    <div class="modal-body">
+        <p>{{ 'Your session will expire in' | translate }}
+            <span class="text-warning">{{remainingSecond && remainingSecond}}</span> {{ 'seconds.' | translate }}
+        </p>
+        <p>{{ 'Press' | translate }}
+            <span class="text-primary font-weight-bold">{{ 'continue' | translate}}</span> {{ 'to continue using this site.' | translate }}
+        </p>
+    </div>
+    <div class="modal-footer">
+        <button type="button" class="btn btn-primary" (click)="handleExtendSession()">{{ 'Continue' | translate }}</button>
+    </div>
+</clr-modal>
