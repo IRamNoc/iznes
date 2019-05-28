@@ -28,7 +28,7 @@
             </span>
             <span *ngIf="active.length > 0" class="ui-select-match-text pull-left"
                   [ngClass]="{'ui-select-allow-clear': allowClear && active.length > 0}"
-                  [innerHTML]="sanitize(active[0].text)" style="padding: 2px; margin:-2px 2px"></span>
+                  [innerHTML]="sanitize(active[0].text)" style="padding: 2px; margin:-2px 2px; width: 250px; overflow: hidden"></span>
             <clr-icon *ngIf="(allowClear && !active.length>0 || inputMode) || !allowClear" class="arrow" [attr.shape]="inputMode ? 'caret up' : 'caret down'"></clr-icon>
             <a *ngIf="allowClear && active.length>0 && !inputMode" class="btn btn-xs btn-link pull-right clear" (click)="removeClick(active[0], $event)">
                <clr-icon shape="times-circle"></clr-icon>
