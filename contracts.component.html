@@ -36,6 +36,7 @@
                 <clr-dg-cell>
                     <span *ngIf="contract.__completed == -1" class="label label-success">{{ 'Complete' | translate }}</span>
                     <span *ngIf="contract.__completed !== -1" class="label label-warning">{{ 'Incomplete' | translate }}</span>
+                    <span *ngIf="contract.__completed == -1 && (contract.__canceltime && contract.__canceltime > 1)" class="label label-error">{{ 'Cancelled' | translate }}</span>
                 </clr-dg-cell>
                 <clr-dg-cell class="right">
                     <button id="edit-{{contract.address}}" (click)="handleView(contract)" class="btn btn-sm">
