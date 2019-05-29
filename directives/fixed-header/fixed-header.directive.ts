@@ -8,31 +8,36 @@ import 'rxjs/add/observable/fromEvent';
 
 /* Export directive class. */
 export class FixedHeaderDirective implements AfterViewInit, OnDestroy {
-    private dg: any;
     private dgHead: any;
     private dgWidth: number;
-    private dgHeadHeight: any;
     private distanceFromTop: number;
+    private topbarsHeight: number;
     private scrollEventOb;
+    private cssPosition: string;
 
     constructor(private el: ElementRef) {
     }
 
     ngAfterViewInit() {
-        // Set up references to the datagrid elements and grab the width and head height
-        this.dg = document.querySelector('.datagrid');
-        this.dgHead = document.querySelector('.datagrid-head');
-        this.dgWidth = this.el.nativeElement.offsetWidth;
-        this.dgHeadHeight = this.dgHead.offsetHeight;
+        this.dgHead = this.el.nativeElement.querySelector('.datagrid-header');
+
+        // Grab css position of dgHead so it can be restored
+        this.cssPosition = this.dgHead.style.position || 'initial';
 
         // Subscribe to scroll events on the page
         this.scrollEventOb = Observable.fromEvent(
-            this.el.nativeElement.closest('ng-sidebar-container'), 'scroll').subscribe(
+            document.querySelector('main.content-area'), 'scroll').subscribe(
             (e: any) => {
                 // Work out the datagrid distance from the top of the page
                 const scrollPosition = e.srcElement.scrollTop;
                 const dgHeight = this.el.nativeElement.offsetTop;
-                this.distanceFromTop = (dgHeight - scrollPosition) + 12; // +12px to account for padding on datagrid
+                const topbarHeight = document.querySelector('app-navigation-topbar')
+                    ? (document.querySelector('app-navigation-topbar') as HTMLElement).offsetHeight : 0;
+                const appAlertsHeight = document.querySelector('alerts')
+                    ? (document.querySelector('alerts') as HTMLElement).offsetHeight : 0;
+                this.topbarsHeight = topbarHeight + appAlertsHeight;
+
+                this.distanceFromTop = (dgHeight - scrollPosition) - this.topbarsHeight;
 
                 // Toggle the 'fixing' of the datagrid header
                 this.fixDatagridHeader();
@@ -43,11 +48,10 @@ export class FixedHeaderDirective implements AfterViewInit, OnDestroy {
     /**
      * Resize Datagrid Header
      * ---------------------
-     * Listen for window resize, update the dgWidth property and call fixDatagridHeader
+     * Listen for window resize and call fixDatagridHeader
      */
     @HostListener('window:resize', ['$event'])
     resizeDatagridHeader() {
-        this.dgWidth = this.el.nativeElement.offsetWidth;
         this.fixDatagridHeader();
     }
 
@@ -57,14 +61,16 @@ export class FixedHeaderDirective implements AfterViewInit, OnDestroy {
      * Toggle the 'fixing' of the datagrid header when the page is scrolled
      */
     fixDatagridHeader() {
+        this.dgWidth = this.el.nativeElement.offsetWidth;
+
         if (this.distanceFromTop <= 0) {
-            this.dgHead.classList.add('fixed');
-            this.dgHead.style.width = `${this.dgWidth}px`;
-            this.dg.style.marginTop = `${this.dgHeadHeight}px`;
+            this.dgHead.style.position = 'fixed';
+            this.dgHead.style.width = `${this.dgWidth - 2}px`;
+            this.dgHead.style.marginTop = `${this.topbarsHeight}px`;
         } else {
-            this.dgHead.classList.remove('fixed');
+            this.dgHead.style.position = this.cssPosition;
             this.dgHead.style.width = 'inherit';
-            this.dg.style.marginTop = '0';
+            this.dgHead.style.marginTop = '0';
         }
     }
 
