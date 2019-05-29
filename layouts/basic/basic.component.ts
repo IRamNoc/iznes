@@ -6,6 +6,8 @@ import { get } from 'lodash';
 import { Subscription } from 'rxjs/Subscription';
 import { debounceTime } from 'rxjs/operators';
 import { select } from '@angular-redux/store';
+import { AlertsService } from '@setl/jaspero-ng2-alerts';
+import { ConfirmationService } from '@setl/utils';
 
 @Component({
     selector: 'app-basic-layout',
@@ -25,7 +27,9 @@ export class BasicLayoutComponent implements OnDestroy {
 
     constructor(public translate: MultilingualService,
                 private router: Router,
-                private changeDetector: ChangeDetectorRef) {
+                private changeDetector: ChangeDetectorRef,
+                private alertsService: AlertsService,
+                private confirmationService: ConfirmationService) {
 
         /* Get language flag in redux. */
         this.subscriptionsArray.push(this.requestLanguageObj.subscribe(language => this.currentLanguage = language));
@@ -50,5 +54,9 @@ export class BasicLayoutComponent implements OnDestroy {
         for (const subscription of this.subscriptionsArray) {
             subscription.unsubscribe();
         }
+
+        // Kill any open jaspero or confirmation alerts on logout
+        this.alertsService.generate('clear');
+        this.confirmationService.close();
     }
 }
