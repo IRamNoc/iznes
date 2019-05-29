@@ -8,6 +8,7 @@ import { debounceTime } from 'rxjs/operators';
 import { select } from '@angular-redux/store';
 import { AlertsService } from '@setl/jaspero-ng2-alerts';
 import { ConfirmationService } from '@setl/utils';
+import { FileViewerPreviewService } from '@setl/core-fileviewer/preview-modal/service';
 
 @Component({
     selector: 'app-basic-layout',
@@ -29,7 +30,8 @@ export class BasicLayoutComponent implements OnDestroy {
                 private router: Router,
                 private changeDetector: ChangeDetectorRef,
                 private alertsService: AlertsService,
-                private confirmationService: ConfirmationService) {
+                private confirmationService: ConfirmationService,
+                private fileViewerService: FileViewerPreviewService) {
 
         /* Get language flag in redux. */
         this.subscriptionsArray.push(this.requestLanguageObj.subscribe(language => this.currentLanguage = language));
@@ -55,8 +57,9 @@ export class BasicLayoutComponent implements OnDestroy {
             subscription.unsubscribe();
         }
 
-        // Kill any open jaspero or confirmation alerts on logout
+        // Kill any open alerts or file preview modals on logout
         this.alertsService.generate('clear');
         this.confirmationService.close();
+        this.fileViewerService.close();
     }
 }
