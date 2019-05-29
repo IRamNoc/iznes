@@ -11,7 +11,8 @@ import {
   OnInit,
   Output,
   SimpleChanges,
-  ViewEncapsulation
+  ViewEncapsulation,
+  ChangeDetectionStrategy
 } from '@angular/core';
 import { DayCalendarService } from './day-calendar.service';
 import * as moment from 'moment';
@@ -48,7 +49,8 @@ import { IMonth } from '../month-calendar/month.model';
       useExisting: forwardRef(() => DayCalendarComponent),
       multi: true
     }
-  ]
+  ],
+  changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class DayCalendarComponent implements OnInit, OnChanges, ControlValueAccessor, Validator {
 
