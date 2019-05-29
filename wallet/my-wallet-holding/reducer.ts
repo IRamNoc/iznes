@@ -1,6 +1,11 @@
 import {AsyncTaskResponseAction} from '@setl/utils/sagaHelper/actions';
 import * as MyWalletHoldingActions from './actions';
-import {CLEAR_REQUESTED_WALLET_HOLDING, SET_REQUESTED_WALLET_HOLDING} from './actions';
+import {
+    CLEAR_REQUESTED_ALL_WALLET_HOLDING,
+    CLEAR_REQUESTED_WALLET_HOLDING,
+    SET_REQUESTED_ALL_WALLET_HOLDING,
+    SET_REQUESTED_WALLET_HOLDING
+} from './actions';
 import {MyWalletHoldingState} from './model';
 import * as _ from 'lodash';
 import {ShortHash} from '@setl/utils/helper/common/shorthash';
@@ -10,7 +15,8 @@ import {immutableHelper} from '@setl/utils';
 const initialState: MyWalletHoldingState = {
     holdingByAddress: {},
     holdingByAsset: {},
-    requested: false
+    requested: false,
+    requestedAll: false,
 };
 
 export const MyWalletHoldingReducer = function (state: MyWalletHoldingState = initialState,
@@ -27,6 +33,12 @@ export const MyWalletHoldingReducer = function (state: MyWalletHoldingState = in
 
         case SET_REQUESTED_WALLET_HOLDING:
             return handleSetRequestedWalletHolding(state);
+
+        case CLEAR_REQUESTED_ALL_WALLET_HOLDING:
+            return toggleRequestedAllWalletHolding(state, false);
+
+        case SET_REQUESTED_ALL_WALLET_HOLDING:
+            return toggleRequestedAllWalletHolding(state, true);
 
         default:
             return state;
@@ -155,5 +167,9 @@ function handleClearRequestedWalletHolding(state) {
     });
 }
 
+function toggleRequestedAllWalletHolding(state, requestedAll) {
 
-
+    return Object.assign({}, state, {
+        requestedAll,
+    });
+}
