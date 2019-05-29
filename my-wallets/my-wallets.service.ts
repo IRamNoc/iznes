@@ -18,6 +18,7 @@ import {
     setRequestedWalletLabel,
     SET_WALLET_LABEL,
 } from '@setl/core-store';
+import { SET_ALL_WALLET_ADDRESSES } from '@setl/core-store/wallet/all-wallet-addresses/actions';
 
 @Injectable()
 export class MyWalletsService {
@@ -149,6 +150,27 @@ export class MyWalletsService {
             option,
             label,
             iban,
+        };
+
+        return createMemberNodeSagaRequest(this.memberSocketService, messageBody);
+    }
+
+    setWalletAddresses(ngRedux: NgRedux<any>) {
+        ngRedux.dispatch(SagaHelper.runAsync(
+            [SET_ALL_WALLET_ADDRESSES],
+            [],
+            this.walletAddressesRequest(),
+        ));
+    }
+
+    /**
+     * Request wallet addresses from membernode.
+     * @return {any}
+     */
+    private walletAddressesRequest(): any {
+        const messageBody = {
+            RequestName: 'getmywalletaddresses',
+            token: this.memberSocketService.token,
         };
 
         return createMemberNodeSagaRequest(this.memberSocketService, messageBody);
