@@ -1,4 +1,4 @@
-import { ComponentFixture, TestBed, fakeAsync, tick } from '@angular/core/testing';
+import { ComponentFixture, TestBed, fakeAsync, tick, discardPeriodicTasks } from '@angular/core/testing';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { ClarityModule } from '@clr/angular';
 import { Directive, Input, Pipe, PipeTransform } from '@angular/core';
@@ -61,7 +61,7 @@ class SetlFileViewerStub {
     @Input('viewType') viewType;
 }
 
-describe('OfiInvestorFundListComponent', () => {
+fdescribe('OfiInvestorFundListComponent', () => {
     let comp: OfiInvestorFundListComponent;
     let fixture: ComponentFixture<OfiInvestorFundListComponent>;
 
@@ -110,8 +110,10 @@ describe('OfiInvestorFundListComponent', () => {
 
     beforeEach(fakeAsync(() => {
         fixture = TestBed.createComponent(OfiInvestorFundListComponent);
-
         comp = fixture.componentInstance;
+
+        spyOn(comp, 'resizeDatagrid').and.returnValue(undefined);
+
         MockNgRedux.reset();
 
         tick();
