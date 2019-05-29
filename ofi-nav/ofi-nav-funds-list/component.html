@@ -160,21 +160,33 @@
                     <span id="NAV-CN-Actions">{{ 'Actions' | translate }}</span>
                 </clr-dg-column>
 
-                <clr-dg-row *clrDgItems="let item of navListItems; let idx = index;" id="{{'product-nav-row' + idx}}"
-                    clrDgRowClickable>
+                <clr-dg-row *clrDgItems="let item of navListItems; let idx = index;" id="{{'product-nav-row' + idx}}" clrDgRowClickable>
                     <clr-dg-cell *ngIf="isIznesAdmin" id="{{'NAV-Management-company-'+idx}}" class="col-fundsharename"
-                        (click)="navigateToShare(item.shareId)" title="{{item.managementCompany}}">{{item.managementCompany}}</clr-dg-cell>
+                        (click)="navigateToShare(item.shareId)" title="{{item.managementCompany}}">{{item.managementCompany}}
+                        <div *ngIf="showColumnSpacer" class="column-spacer">{{getColumnSpaceText(item.managementCompany)}}</div>
+                    </clr-dg-cell>
                     <clr-dg-cell id="{{'NAV-Share-Name-'+idx}}" class="col-fundsharename" (click)="navigateToShare(item.shareId)"
-                        title="{{item.fundShareName}}">{{item.fundShareName}}</clr-dg-cell>
-                    <clr-dg-cell id="{{'NAV-ISIN-'+idx}}" (click)="navigateToShare(item.shareId)">{{item.isin}}</clr-dg-cell>
-                    <clr-dg-cell id="{{'NAV-NAV-Date-'+idx}}" class="col-date" (click)="navigateToShare(item.shareId)">{{item.navDate}}</clr-dg-cell>
-                    <clr-dg-cell id="{{'NAV-Pub-Date-'+idx}}" class="col-date" (click)="navigateToShare(item.shareId)">{{item.navPubDate}}</clr-dg-cell>
+                        title="{{item.fundShareName}}">{{item.fundShareName}}
+                        <div *ngIf="showColumnSpacer" class="column-spacer">{{getColumnSpaceText(item.fundShareName)}}</div>
+                    </clr-dg-cell>
+                    <clr-dg-cell id="{{'NAV-ISIN-'+idx}}" (click)="navigateToShare(item.shareId)">{{item.isin}}
+                        <div *ngIf="showColumnSpacer" class="column-spacer">{{getColumnSpaceText(item.isin)}}</div>
+                    </clr-dg-cell>
+                    <clr-dg-cell id="{{'NAV-NAV-Date-'+idx}}" class="col-date" (click)="navigateToShare(item.shareId)">{{item.navDate}}
+                        <div *ngIf="showColumnSpacer" class="column-spacer">{{getColumnSpaceText(item.navDate)}}</div>
+                    </clr-dg-cell>
+                    <clr-dg-cell id="{{'NAV-Pub-Date-'+idx}}" class="col-date" (click)="navigateToShare(item.shareId)">{{item.navPubDate}}
+                        <div *ngIf="showColumnSpacer" class="column-spacer">{{getColumnSpaceText(item.navPubDate)}}</div>
+                    </clr-dg-cell>
                     <clr-dg-cell id="{{'NAV-Val-Date'+idx}}" class="col-date" (click)="navigateToShare(item.shareId)"
-                        class="{{getNextValuationClass(item.nextValuationDate)}}">{{item.nextValuationDate}}</clr-dg-cell>
+                        class="{{getNextValuationClass(item.nextValuationDate)}}">{{item.nextValuationDate}}
+                        <div *ngIf="showColumnSpacer" class="column-spacer">{{getColumnSpaceText(item.nextValuationDate)}}</div>
+                    </clr-dg-cell>
                     <clr-dg-cell id="{{'NAV-CCY-'+ (item.currency==0?'EURO-':(item.currency==1?'USD-':'GBP-')) +idx}}"
                         class="col-currency" (click)="navigateToShare(item.shareId)">
                         {{'@getCurrencyString(item.currency)@' | translate: {'getCurrencyString(item.currency)':
                         getCurrencyString(item.currency)} }}
+                        <div *ngIf="showColumnSpacer" class="column-spacer">{{getColumnSpaceText(getCurrencyString(item.currency))}}</div>
                     </clr-dg-cell>
                     <clr-dg-cell (click)="navigateToShare(item.shareId)" class="right">
                         <span id="{{'NAV-Value-'+idx}}" [hidden]="isNavNull(item.nav)">{{
@@ -185,14 +197,20 @@
                     <clr-dg-cell id="{{'NAV-EstValue-'+idx}}" class="nav-status-price right" [class.not-set]="!item.navEstimated"
                         (click)="navigateToShare(item.shareId)">{{item.navEstimated ?
                         navToFrontEndString(item.navEstimated) : 'N/A'}}
+                        <div *ngIf="showColumnSpacer" class="column-spacer">{{getColumnSpaceText(item.navEstimated ?
+                            navToFrontEndString(item.navEstimated) : 'N/A')}}</div>
                     </clr-dg-cell>
                     <clr-dg-cell id="{{'NAV-Tech-Value-'+idx}}" class="nav-status-price right" [class.not-set]="!item.navTechnical"
                         (click)="navigateToShare(item.shareId)">{{item.navTechnical ?
                         navToFrontEndString(item.navTechnical) : 'N/A'}}
+                        <div *ngIf="showColumnSpacer" class="column-spacer">{{getColumnSpaceText(item.navTechnical ?
+                            navToFrontEndString(item.navTechnical) : 'N/A')}}</div>
                     </clr-dg-cell>
                     <clr-dg-cell id="{{'NAV-Val-Value-'+idx}}" class="nav-status-price right" [class.not-set]="!item.navValidated"
                         (click)="navigateToShare(item.shareId)">{{item.navValidated ?
                         navToFrontEndString(item.navValidated) : 'N/A'}}
+                        <div *ngIf="showColumnSpacer" class="column-spacer">{{getColumnSpaceText(item.navValidated ?
+                            navToFrontEndString(item.navValidated) : 'N/A')}}</div>
                     </clr-dg-cell>
                     <clr-dg-cell class="col-status" (click)="navigateToShare(item.shareId)">
                         <span [ngSwitch]="item.status">
@@ -214,7 +232,7 @@
                             </span>
                         </span>
                     </clr-dg-cell>
-                    <clr-dg-cell class="actions" *ngIf="!isIznesAdmin">
+                    <clr-dg-cell class="actions right" *ngIf="!isIznesAdmin">
                         <div class="btn-group btn-sm">
                             <button id="{{'Btn-AddNewNAV-'+idx}}"
                                     class="btn btn-success btn-sm"

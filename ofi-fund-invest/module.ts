@@ -12,6 +12,7 @@ import { FundViewComponent } from './fund-view/component';
 import { SelectModule, SetlPipesModule, SetlComponentsModule, SetlDirectivesModule, DpDatePickerModule } from '@setl/utils';
 import { CommonService } from './common-service/service';
 import { FileViewerModule } from '@setl/core-fileviewer';
+import { DatagridListModule } from '@setl/utils/components/datagrid-list/datagrid-list-module';
 
 @NgModule({
     imports: [
@@ -26,6 +27,7 @@ import { FileViewerModule } from '@setl/core-fileviewer';
         SetlDirectivesModule,
         FileViewerModule,
         RouterModule,
+        DatagridListModule,
     ],
     exports: [OfiInvestorFundListComponent],
     declarations: [

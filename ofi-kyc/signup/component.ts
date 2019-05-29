@@ -12,7 +12,7 @@ import { ConsumeTokenService } from '../invitation-token/consume-token.service';
 
 @Component({
     selector: 'app-ofi-kyc-signup',
-    template: '<ofi-sign-up [configuration]="configuration" (signupDataEmit)="setSignupData($event)"></ofi-sign-up>',
+    template: '<app-signup [configuration]="configuration" (signupDataEmit)="setSignupData($event)"></app-signup>',
 })
 export class OfiSignUpComponent implements OnInit, OnDestroy {
     configuration: ISignupConfiguration;
@@ -59,7 +59,7 @@ export class OfiSignUpComponent implements OnInit, OnDestroy {
         };
     }
 
-    private signupCallback(): Promise<void> {
+    private signupCallback(): Promise<any> {
         return new Promise((resolve, reject) => {
             const signupData = this.signupData();
 
@@ -71,33 +71,26 @@ export class OfiSignUpComponent implements OnInit, OnDestroy {
             }).then(() => {
                 this.consumeToken();
 
-                this.confirmationService.create(
-                    'Success',
-                    `<p><b>${this.translate.translate('Your account was created')}</b></p><p>${this.translate.translate('A confirmation email was sent to you')}.</p>`,
-                    {
-                        confirmText: this.translate.translate('Continue to @platform@', { 'platform': this.appConfig.platform }),
-                        declineText: '',
-                        btnClass: 'success',
-                        focusButton: 'confirm',
-                    },
-                ).subscribe(() => {
+                // this.confirmationService.create(
+                //     'Success',
+                //     `<p><b>${this.translate.translate('Your account was created')}</b></p><p>${this.translate.translate('A confirmation email was sent to you')}.</p>`,
+                //     {
+                //         confirmText: this.translate.translate('Continue to @platform@', { 'platform': this.appConfig.platform }),
+                //         declineText: '',
+                //         btnClass: 'success',
+                //         focusButton: 'confirm',
+                //     },
+                // ).subscribe(() => {
                     // Resolve so user gets logged in and has a token
-                    resolve();
+                resolve('Your account was created successfully. A confirmation email was sent to you.');
 
-                    this
-                    .authenticationOb
-                    .pipe(
-                        takeUntil(this.unsubscribe),
-                    )
-                    .subscribe((authentication) => {
+                this.authenticationOb.pipe(takeUntil(this.unsubscribe)).subscribe(
+                    (authentication) => {
                         this.updateState(authentication);
                     });
-                });
+                // });
             }).catch((e) => {
-                this.alertsService.create(
-                    'error',
-                    `<span class="text-warning">${this.translate.translate('Sorry, something went wrong.')}<br>${this.translate.translate('Please try again later.')}</span>`,
-                );
+                reject('Sorry, something went wrong. Please try again later.');
             });
         });
     }

@@ -39,7 +39,7 @@ import { NumberConverterService } from '@setl/utils/services/number-converter/se
 /* Ofi Store stuff. */
 import { ofiManageOrderActions } from '../../ofi-store';
 /* Clarity */
-import { ClrDatagridStateInterface, Datagrid } from '@clr/angular';
+import { ClrDatagridStateInterface } from '@clr/angular';
 /* helper */
 import { getOrderFigures, getOrderTypeString } from '../../ofi-product/fund-share/helper/order-view-helper';
 import { OfiFundInvestService } from '../../ofi-req-services/ofi-fund-invest/service';
@@ -145,7 +145,7 @@ export class ManageOrdersComponent implements OnInit, AfterViewInit, OnDestroy {
 
     currencyList = [];
 
-    @ViewChild('ordersDataGrid') orderDatagrid: Datagrid;
+    @ViewChild('ordersDataGrid') orderDatagrid: any;
     /* Public Properties */
     public connectedWalletName = '';
     ordersList: any[] = [];
@@ -175,6 +175,8 @@ export class ManageOrdersComponent implements OnInit, AfterViewInit, OnDestroy {
     menuSpec = {};
 
     private isinParam: string;
+
+    public showColumnSpacer: boolean = true;
 
     /* Observables. */
     @select(['user', 'myDetail', 'userType']) readonly userType$: Observable<number>;
@@ -387,8 +389,33 @@ export class ManageOrdersComponent implements OnInit, AfterViewInit, OnDestroy {
     }
 
     ngAfterViewInit() {
-        this.resizeDataGrid();
         this.isIznesAdmin;
+    }
+
+    /**
+     * Resizes the datagrid and removes the spacer elements
+     * The column space elements are a bit of a hack to get the Datagrid to correctly set the cell size
+     * hopefully this will be fixed in a Clarity update soon...
+     */
+    public resizeDatagridRemoveSpacers() {
+        if (this.orderDatagrid) {
+            setTimeout(
+                () => {
+                    this.orderDatagrid.resize();
+                    this.showColumnSpacer = false;
+                },
+                1000,
+            );
+        }
+    }
+
+    /**
+     * Returns a single line of text to space the datagrid column correctly
+     * Strips all non-alphanumeric characters and replaces them with '_'
+     * @param text
+     */
+    public getColumnSpaceText(text: string) {
+        return typeof text === 'string' ? text.replace(/[\W_]+/g, '_') : text;
     }
 
     routeUpdate(params) {
@@ -437,18 +464,11 @@ export class ManageOrdersComponent implements OnInit, AfterViewInit, OnDestroy {
         return order;
     }
 
-    resizeDataGrid() {
-        if (this.orderDatagrid) {
-            this.orderDatagrid.resize();
-        }
-    }
-
     detectChanges(detect = false) {
         this.changeDetectorRef.markForCheck();
         if (detect) {
             this.changeDetectorRef.detectChanges();
         }
-        this.resizeDataGrid();
     }
 
     translateSelectMenus() {
@@ -521,7 +541,9 @@ export class ManageOrdersComponent implements OnInit, AfterViewInit, OnDestroy {
         }
 
         this.loading = false;
+        this.showColumnSpacer = true;
         this.detectChanges(true);
+        this.resizeDatagridRemoveSpacers();
     }
 
     subEstimated(order, field: string, estimatedField: string): number {

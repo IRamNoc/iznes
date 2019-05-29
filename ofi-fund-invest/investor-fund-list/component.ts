@@ -1,5 +1,5 @@
 // Vendor
-import { Component, OnInit, Input, ChangeDetectorRef, ChangeDetectionStrategy, OnDestroy } from '@angular/core';
+import { Component, OnInit, AfterViewInit, OnDestroy, Input, ChangeDetectorRef, ViewChild, ViewChildren, ElementRef, QueryList } from '@angular/core';
 import { NgRedux, select } from '@angular-redux/store';
 import { fromJS } from 'immutable';
 import * as _ from 'lodash';
@@ -19,6 +19,7 @@ import { SellBuyCalendar } from '../../ofi-product/fund-share/FundShareEnum';
 import { setRequestedFundAccessMy } from '../../ofi-store/ofi-fund-invest';
 import { MultilingualService } from '@setl/multilingual';
 import { InitialisationService, WalletNodeRequestService } from '@setl/core-req-services';
+import { ClrDatagrid } from '@clr/angular';
 
 @Component({
     selector: 'app-investor-fund-list',
@@ -26,9 +27,11 @@ import { InitialisationService, WalletNodeRequestService } from '@setl/core-req-
     styleUrls: ['./component.scss'],
 })
 
-export class OfiInvestorFundListComponent implements OnInit, OnDestroy {
+export class OfiInvestorFundListComponent implements OnInit, AfterViewInit, OnDestroy {
     @Input() isImported: boolean;
     @Input() linkRoute: string;
+
+    @ViewChild('dataGrid') public dataGrid: ClrDatagrid;
 
     tabsControl: Array<any>;
     routeTabId: number;
@@ -46,6 +49,7 @@ export class OfiInvestorFundListComponent implements OnInit, OnDestroy {
     walletBalances: any;
 
     language = 'en';
+    public showColumnSpacer: boolean = true;
 
     // List of redux observable.
     @select(['user', 'connected', 'connectedWallet']) connectedWalletOb;
@@ -103,6 +107,34 @@ export class OfiInvestorFundListComponent implements OnInit, OnDestroy {
             this.language = language;
             this.setInitialTabs();
         }));
+    }
+
+    ngAfterViewInit() {
+        this.resizeDatagrid();
+    }
+
+    /**
+     * Resizes the datagrid and removes the spacer elements
+     * The column space elements are a bit of a hack to get the Datagrid to correctly set the cell size
+     * hopefully this will be fixed in a Clarity update soon...
+     */
+    public resizeDatagrid() {
+        setTimeout(
+            () => {
+                this.dataGrid.resize();
+                this.showColumnSpacer = false;
+            },
+            1000,
+        );
+    }
+
+    /**
+     * Returns a single line of text to space the datagrid column correctly
+     * Strips all non-alphanumeric characters and replaces them with '_'
+     * @param text
+     */
+    public getColumnSpaceText(text: string) {
+        return typeof text === 'string' ? text.replace(/[\W_]+/g, '_') : text;
     }
 
     setInitialTabs() {
@@ -205,6 +237,7 @@ export class OfiInvestorFundListComponent implements OnInit, OnDestroy {
                     position,
                     totalPosition,
                     allowSellBuy: item.get('allowSellBuy', 0),
+                    disableRedeem: this.disableRedeem(`${isin}|${shareName}`),
                 });
 
                 return result;

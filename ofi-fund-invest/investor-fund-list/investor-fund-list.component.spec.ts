@@ -110,8 +110,10 @@ describe('OfiInvestorFundListComponent', () => {
 
     beforeEach(fakeAsync(() => {
         fixture = TestBed.createComponent(OfiInvestorFundListComponent);
-
         comp = fixture.componentInstance;
+
+        spyOn(comp, 'resizeDatagrid').and.returnValue(undefined);
+
         MockNgRedux.reset();
 
         tick();
