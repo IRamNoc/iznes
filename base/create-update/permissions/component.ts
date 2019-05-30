@@ -187,12 +187,15 @@ export class AccountAdminPermissionsComponentBase implements OnInit, OnDestroy {
 
                     if (Boolean(val.state) !== Boolean(permData.state)) {
                         if (Boolean(val.state)) {
-                            acc.toAdd.push(val.permissionAreaID);
+                            if (!acc.toAdd.includes(val.permissionAreaID)) {
+                                acc.toAdd.push(val.permissionAreaID);
+                            }
                         } else {
                             acc.toDelete.push(val.permissionAreaID);
                         }
                     }
 
+                    // IZNES: Set Permission Relationships
                     if (this.appConfig.platform === 'IZNES') {
                         acc = this.setPermissionRelationships(val, acc);
                     }
@@ -201,11 +204,15 @@ export class AccountAdminPermissionsComponentBase implements OnInit, OnDestroy {
                 },
                 { toAdd: [], toDelete: [] },
             );
+
+        // console.log('+++ this.modificatePermissionCache: ', this.modificatePermissionCache);
+
+        console.log('+++ this.permissions: ', this.permissions);
     }
 
     /**
      * IZNES: Set Permission Relationships
-     * When a permission is enabled, then its related permission must be enabled
+     * When a permission is enabled, then its related permission must also be enabled
      *
      * @param {object} permission
      * @param {object} accumulator
@@ -214,80 +221,127 @@ export class AccountAdminPermissionsComponentBase implements OnInit, OnDestroy {
      */
     setPermissionRelationships(permission, accumulator): any {
         const permissionRelationships = {
-            'Action on Orders': {
+            'Action on Orders': { // Works
                 related: 'View Orders',
             },
-            'Update KYC Requests': {
+            'Update KYC Requests': { // Works
                 related: 'View KYC Requests',
             },
-            'View Client Referentials': {
+            'View Client Referentials': { // !Works
                 related: 'View Portfolio Manager',
             },
-            'Update Client Referentials': {
+            'Update Client Referentials': { // !Works
                 related: 'View Client Referentials',
             },
-            'Invite Investors': {
+            'Invite Investors': { // Works
                 related: 'View Client Referentials',
             },
-            'Update Portfolio Manager': {
+            'Update Portfolio Manager': { // !Works
                 related: 'View Portfolio Manager',
             },
-            'Invite Portfolio Manager': {
+            'Invite Portfolio Manager': { // Works
                 related: 'View Portfolio Manager',
             },
-            'Create Product': {
+            'Create Product': { // !Works
                 related: 'View Product',
             },
-            'Update Product': {
+            'Update Product': { // Works
                 related: 'View Product',
             },
-            'Create NAV': {
+            'Create NAV': { // !Works
                 related: 'View NAV',
             },
-            'Update NAV': {
+            'Update NAV': { // !Works
                 related: 'View NAV',
             },
-            'Cancel NAV': {
+            'Cancel NAV': { // Works
                 related: 'View NAV',
             },
         };
 
-        let relatedPermission = null;
+        // debugger;
 
         // Check permissionRelationships for the permission
         if (permissionRelationships[permission.name]) {
-            relatedPermission = permissionRelationships[permission.name].related;
-            // If the permission has been enabled...
+            if (permission.name === 'Create Product') {
+                console.log('+++ permission.name: ', permission.name);
+            }
+            let relatedPermission = null;
+            // const relatedPermission = permissionRelationships[permission.name].related;
+
+            // If the permission has been toggled ON...
             if (Boolean(permission.state) === true) {
                 // Find the related permission object in the permissions list
                 this.permissions.forEach((p, index) => {
                     if (p.name === relatedPermission) {
-                        // Enable the related permission
+                        // Cache the relatedPermissionObject
+                        relatedPermission = p;
+                        // Toggle ON the related permission
                         this.permissions[index].state = true;
-                        // Add the related permission to the add queue
-                        accumulator.toAdd.push(p.permissionAreaID);
+                        // Disable the toggle for the related permission
+                        this.permissions[index].disabled = true;
+                        // Set the relatedPermission property
+                        this.permissions[index].relatedPermission = permission.permissionAreaID;
+                        // Add the related permission to the add queue if not already included
+                        if (!accumulator.toAdd.includes(p.permissionAreaID)) {
+                            // console.log('+++ accumulator.toAdd 0: ', accumulator.toAdd);
+                            accumulator.toAdd.push(p.permissionAreaID);
+                            // console.log('+++ accumulator.toAdd 1: ', accumulator.toAdd);
+                        }
                         // Remove the related permission from the delete queue
                         accumulator.toDelete.forEach((d, index) => {
                             if (d === p.permissionAreaID) delete accumulator.toDelete[index];
                         });
                     }
                 });
+            // The permission has been toggled OFF...
+            } else {
+                // If there is a related permission...
+                if (relatedPermission) {
+                    if (permission.name === 'Create Product') {
+                        console.log('+++ toggled OFF... relatedPermission: ', relatedPermission.name);
+                    }
+                    // Find the related permission object in the permissions list
+                    this.permissions.forEach((p, index) => {
+                        if (p.name === relatedPermission.name) {
+                            if (permission.name === 'Create Product') {
+                                console.log('+++ this.permissions[index]: ', this.permissions[index]);
+                            }
+                            // ...re-enable/un-disable its toggle if disabled
+                            this.permissions[index].disabled = false;
+                        }
+                    });
+                }
             }
 
             // Check permissionRelationships for relatedPermission
             if (relatedPermission && permissionRelationships[relatedPermission]) {
-                // Get the relatedPermission object from the permissions list
-                const relatedPermissionObject = this.permissions.find((po) => {
-                    return po.name === relatedPermission;
+                // Find the index of the related permission in the permissions list
+                let permissionIndex = null;
+
+                permissionIndex = this.permissions.forEach((p, index) => {
+                    if (p.name === permission.name) {
+                        return index;
+                    }
                 });
 
-                if (relatedPermissionObject) {
-                    // Set the related permission for relatedPermission
-                    this.setPermissionRelationships(relatedPermissionObject, accumulator);
+                // Enable the related permission if not already enabled
+                if (permissionIndex && !this.permissions[permissionIndex].state) {
+                    // Get the relatedPermission object from the permissions list
+                    const relatedPermissionObject = this.permissions.find((po) => {
+                        return po.name === relatedPermission;
+                    });
+
+                    if (relatedPermissionObject) {
+                        // Set the related permission for relatedPermission
+                        relatedPermissionObject.state = true;
+                        this.setPermissionRelationships(relatedPermissionObject, accumulator);
+                    }
                 }
             }
-        }
 
+            console.log('+++ accumulator: ', accumulator);
+        }
         return accumulator;
     }
 
@@ -321,6 +375,8 @@ export class AccountAdminPermissionsComponentBase implements OnInit, OnDestroy {
             () => {},
             () => this.onUpdateStateError(),
         );
+
+        console.log('+++ updateState(): this.permissions: ', this.permissions);
     }
 
     private onUpdateStateError(): void {

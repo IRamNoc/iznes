@@ -41,7 +41,7 @@
                 <input class="form-control"
                         id="{{'permissionsCellAction' + idx}}"
                         type="checkbox"
-                        [disabled]="isProcessing() || isUser"
+                        [disabled]="isProcessing() || isUser || permission.disabled"
                         [(ngModel)]="permission.state"
                         (ngModelChange)="updatePermission()">
                 <span class="slider round"></span>
