@@ -162,6 +162,7 @@ export class OfiManagementCompanyService {
             signatureHash: mcData.signatureHash,
             logoTitle: mcData.logoTitle,
             logoHash: mcData.logoHash,
+            isNowCp: mcData.isNowCp ? 1 : 0,
         };
 
         return createMemberNodeSagaRequest(this.memberSocketService, messageBody);
