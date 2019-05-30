@@ -241,7 +241,7 @@ export class ManageOrdersComponent implements OnInit, AfterViewInit, OnDestroy {
         return iznesAdmin;
     }
 
-    get isAssetManger() {
+    get isAssetManager() {
         return !this.isInvestorUser && !this.isIznesAdmin;
     }
 
@@ -256,7 +256,7 @@ export class ManageOrdersComponent implements OnInit, AfterViewInit, OnDestroy {
     get showSendPaymentMsgBtn(): boolean {
         // number of order marked for payment messages.
         const nPMsg = this.ordersList.filter(o => o.markedForPayment.value).length;
-        return this.isAssetManger && nPMsg > 0;
+        return this.isAssetManager && nPMsg > 0;
     }
 
     appSubscribe<T>(

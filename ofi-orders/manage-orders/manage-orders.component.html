@@ -237,10 +237,20 @@
                     </div>
                 </div>
 
-                <div class="form-group col-sm-12" *ngIf="!hasPermissionActionOnOrders && ordersList.length">
-                    <ng-container *ngTemplateOutlet="permissionAlert; context: {action: 'cancel'}"></ng-container>
-                    <ng-container *ngTemplateOutlet="permissionAlert; context: {action: 'settle'}"></ng-container>
-                    <ng-container *ngTemplateOutlet="permissionAlert; context: {action: 'payment'}"></ng-container>
+                <div class="form-group col-sm-12" *ngIf="isAssetManager && ordersList.length && !hasPermissionActionOnOrders">
+                    <div class="alert alert-warning">
+                        <div class="alert-items">
+                            <div class="alert-item static">
+                                <div class="alert-icon-wrapper">
+                                    <clr-icon class="alert-icon" shape="exclamation-triangle"></clr-icon>
+                                </div>
+                                <span class="alert-text">
+                                    {{ 'Please contact the administrator to request permission to cancel an order, settle an order or send payment messages' | translate }}
+                                    <br />
+                                </span>
+                            </div>
+                        </div>
+                    </div>
                 </div>
 
                 <clr-dg-action-bar *ngIf="showSendPaymentMsgBtn">
@@ -345,7 +355,7 @@
                             <span class="column-label"></span>
                         </ng-container>
                     </clr-dg-column>
-                    <clr-dg-column *ngIf="isAssetManger" class="right">
+                    <clr-dg-column *ngIf="isAssetManager" class="right">
                         <span class="text-center">{{ 'Payment' | translate }}</span>
                     </clr-dg-column>
                     <!-- ACTIONS -->
@@ -471,7 +481,7 @@
                             <span *ngIf="order.orderStatus == 0" class="label label-error">{{ 'Cancelled' | translate }}
                             </span>
                         </clr-dg-cell>
-                        <clr-dg-cell *ngIf="isAssetManger" class="right" [ngSwitch]="order.paymentMsgStatus">
+                        <clr-dg-cell *ngIf="isAssetManager" class="right" [ngSwitch]="order.paymentMsgStatus">
                             <span *ngSwitchCase="'sent'" class="label label-success">{{ 'Sent' | translate }}</span>
                             <span *ngSwitchCase="'ready'" class="label label-success">{{ 'Sent' | translate }}</span>
                             <input type="checkbox" clrCheckbox *ngSwitchCase="'pending'" [formControl]="order.markedForPayment" (change)="updatePaymentCheckBoxState(order.orderID, $event)"  [disabled]="!order.readyForPayment">
@@ -1009,27 +1019,3 @@
 
 <!--payment message sending confirmation modal-->
 <payment-msg-confirmation [(opened)]="showPaymentMsgConfirmationModal" [ordersList]="ordersList" (confirmToSend)="sendPaymentMsg($event)"></payment-msg-confirmation>
-
-<ng-template #permissionAlert let-action="action">
-    <div class="alert alert-warning">
-        <div class="alert-items">
-            <div class="alert-item static">
-                <div class="alert-icon-wrapper">
-                    <clr-icon class="alert-icon" shape="exclamation-triangle"></clr-icon>
-                </div>
-                <span class="alert-text">
-                    <ng-container *ngIf="action === 'cancel'">
-                        {{ 'Please contact the administrator to request permission to cancel an order' | translate }}
-                    </ng-container>
-                    <ng-container *ngIf="action === 'settle'">
-                        {{ 'Please contact the administrator to request permission to settle an order' | translate }}
-                    </ng-container>
-                    <ng-container *ngIf="action === 'payment'">
-                        {{ 'Please contact the administrator to request permission to send payment messages' | translate }}
-                    </ng-container>
-                    <br />
-                </span>
-            </div>
-        </div>
-    </div>
-</ng-template>
