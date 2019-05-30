@@ -10,14 +10,17 @@ export class GlobalErrorHandler implements ErrorHandler {
     }
 
     handleError(err: any): void {
-        console.error(err + getStackTrace());
-        this.logger.log('error', err.message + getStackTrace());
+        console.error(err + getStackTrace(err));
+        this.logger.log('error', err.message + getStackTrace(err));
     }
 
 }
 
-const getStackTrace = function() {
+const getStackTrace = function(err) {
     try {
+        if(err.stack){
+            return err.stack;
+        }
         const obj = {stack: ''};
         Error.captureStackTrace(obj, getStackTrace);
         return obj.stack;
