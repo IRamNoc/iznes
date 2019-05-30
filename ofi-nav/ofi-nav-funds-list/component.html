@@ -20,7 +20,7 @@
 
         <clr-tab-content *clrIfActive="true">
             <!-- Button container -->
-            <div *ngIf="!hasPermissionCreateNav || !hasPermissionUpdateNav" class="alert alert-warning">
+            <div *ngIf="!(hasPermissionCreateNav && hasPermissionUpdateNav)" class="alert alert-warning">
                 <div class="alert-items">
                     <div class="alert-item static">
                         <div class="alert-icon-wrapper">
