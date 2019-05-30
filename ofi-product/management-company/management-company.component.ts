@@ -201,7 +201,7 @@ export class OfiManagementCompanyComponent implements OnInit, OnDestroy {
     resetForm(): void {
         this.editForm = false;
         this.showSearchTab = false;
-        this.managementCompanyForm.reset();
+        this.managementCompanyForm = this.service.generateForm();
         this.fileMetadata.reset();
     }
 
