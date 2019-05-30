@@ -784,6 +784,11 @@ export class ManageOrdersComponent implements OnInit, AfterViewInit, OnDestroy {
     }
 
     refresh(state: ClrDatagridStateInterface) {
+
+        if(!state.page) {
+            return;
+        }
+
         this.manageOrdersService.setOrderListPage(state.page.from / state.page.size + 1);
         this.datagridParams.applyState(state);
     }
