@@ -393,12 +393,15 @@ export class SetlLoginComponent implements OnDestroy, OnInit, AfterViewInit, Log
                 this.chainService,
                 this.initialisationService,
             );
-            window.onbeforeunload = (e) => {
-                const leaveMessage = this.translate.translate(
-                    'Changes that you made may not be saved if you leave this page.');
-                e.returnValue = leaveMessage;
-                return leaveMessage;
-            };
+            
+            if (this.appConfig.production) {
+                window.onbeforeunload = (e) => {
+                    const leaveMessage = this.translate.translate(
+                        'Changes that you made may not be saved if you leave this page.');
+                    e.returnValue = leaveMessage;
+                    return leaveMessage;
+                };
+            }
 
             const redirect: any = myAuthenData.defaultHomePage ? myAuthenData.defaultHomePage : '/home';
 
