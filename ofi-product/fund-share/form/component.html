@@ -486,49 +486,48 @@
                 </div>
             </clr-tabs>
 
-            <section class="form-block col-sm-12">
-                <div *ngIf="!hasPermissionUpdateFundShare" class="alert alert-warning">
-                    <div class="alert-items">
-                        <div class="alert-item static">
-                            <div class="alert-icon-wrapper">
-                                <clr-icon class="alert-icon" shape="exclamation-triangle"></clr-icon>
-                            </div>
-                            <span class="alert-text">
-                                {{ 'Please contact the administrator to request permission to update a Share' | translate }}
-                            </span>
+           
+            <div *ngIf="!hasPermissionUpdateFundShare" class="alert alert-warning">
+                <div class="alert-items">
+                    <div class="alert-item static">
+                        <div class="alert-icon-wrapper">
+                            <clr-icon class="alert-icon" shape="exclamation-triangle"></clr-icon>
                         </div>
+                        <span class="alert-text">
+                            {{ 'Please contact the administrator to request permission to update a Share' | translate }}
+                        </span>
                     </div>
                 </div>
-                <br />
+            </div>
+            <br />
 
-                <div class="form-group">
-                    <button (click)="cancelFundShare()"
-                            class="btn btn-default action-button cancel"
-                            id="cancelFundShareBottom">
-                            {{ isAdmin() ? 'Close' : isRead() ? 'Back' : 'Cancel' | translate }}
-                    </button>
+            <div class="form-group">
+                <button (click)="cancelFundShare()"
+                        class="btn btn-default action-button cancel"
+                        id="cancelFundShareBottom">
+                        {{ isAdmin() ? 'Close' : isRead() ? 'Back' : 'Cancel' | translate }}
+                </button>
 
-                    <button *ngIf="isCreate() || currDraft == 1"
-                            id="saveDraftFundShareBottom"
-                            type="button"
-                            class="btn btn-primary"
-                            (click)="saveDraft()">
-                            <i class="fa fa-save"></i>
-                            {{ (isCreate() ? 'Save Draft' : 'Update Draft') | translate }}
-                    </button>
+                <button *ngIf="isCreate() || currDraft == 1"
+                        id="saveDraftFundShareBottom"
+                        type="button"
+                        class="btn btn-primary"
+                        (click)="saveDraft()">
+                        <i class="fa fa-save"></i>
+                        {{ (isCreate() ? 'Save Draft' : 'Update Draft') | translate }}
+                </button>
 
-                    <button *ngIf="!isRead()"
-                            type="button"
-                            class="btn btn-primary action-button save"
-                            id="saveFundShareBottom"
-                            (click)="saveFundShare()"
-                            [disabled]="!model.isValid() || !hasPermissionUpdateFundShare">
-                            <i class="fa fa-save"></i>
-                            {{ (isCreate() || currDraft == 1 ? 'Create Share' : 'Update Share') | translate }}
-                    </button>
-                </div>
-            </section>
-
+                <button *ngIf="!isRead()"
+                        type="button"
+                        class="btn btn-primary action-button save"
+                        id="saveFundShareBottom"
+                        (click)="saveFundShare()"
+                        [disabled]="!model.isValid() || !hasPermissionUpdateFundShare">
+                        <i class="fa fa-save"></i>
+                        {{ (isCreate() || currDraft == 1 ? 'Create Share' : 'Update Share') | translate }}
+                </button>
+            </div>
+        
         </clr-tab-content>
     </clr-tab>
 </clr-tabs>
