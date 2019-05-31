@@ -69,6 +69,7 @@ export class UmbrellaFundComponent implements OnInit, AfterViewInit, OnDestroy {
     mainInformationOpen = true;
     optionalInformationOpen = false;
 
+    hasPermissionInsertUmbrellaFund: boolean = false;
     hasPermissionUpdateUmbrellaFund: boolean = false;
 
     // Locale
@@ -397,6 +398,12 @@ export class UmbrellaFundComponent implements OnInit, AfterViewInit, OnDestroy {
             });
 
         this.leiService.fetchLEIs();
+
+        this.permissionsService.hasPermission('manageUmbrellaFund', 'canInsert').then(
+            (hasPermission) => {
+                this.hasPermissionInsertUmbrellaFund = hasPermission;
+            },
+        );
 
         this.permissionsService.hasPermission('manageUmbrellaFund', 'canUpdate').then(
             (hasPermission) => {

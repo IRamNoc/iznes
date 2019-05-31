@@ -386,7 +386,7 @@
                     </div>
                     <br />
 
-                    <div *ngIf="!hasPermissionUpdateUmbrellaFund" class="alert alert-warning">
+                    <div *ngIf="!isAdmin() && isEditMode && !hasPermissionUpdateUmbrellaFund" class="alert alert-warning">
                         <div class="alert-items">
                             <div class="alert-item static">
                                 <div class="alert-icon-wrapper">
@@ -420,7 +420,7 @@
                                 id="mcBtnSubmitForm"
                                 type="submit"
                                 class="btn btn-primary"
-                                [disabled]="!umbrellaFundForm.valid || !hasPermissionUpdateUmbrellaFund">
+                                [disabled]="!umbrellaFundForm.valid || (isEditMode && !hasPermissionUpdateUmbrellaFund) || (!isEditMode && !hasPermissionInsertUmbrellaFund)">
                                 <i class="fa fa-save"></i> {{(!isEditMode || currDraft == 1 ? 'Save' : 'Update') | translate }}
                         </button>
                     </div>
