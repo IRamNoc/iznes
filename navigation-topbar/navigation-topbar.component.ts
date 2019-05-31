@@ -22,6 +22,7 @@ import {
     setConnectedChain,
     setConnectedWallet,
     setRequestedMailInitial,
+    setMenuCollapsed,
 } from '@setl/core-store';
 import { fromJS } from 'immutable';
 import { MultilingualService } from '@setl/multilingual/multilingual.service';
@@ -184,16 +185,6 @@ export class NavigationTopbarComponent implements OnInit, AfterViewInit, OnDestr
         // Show for click on status tracker or wallet picker, but not if in wallet bar while status tracker is closed
         this.showOverlay = (statusEl && statusEl.contains(e.target)) || (walletEl.contains(e.target)
         && !(this.showOverlay && !openStatusEl && walletBarEl.contains(e.target)));
-    }
-
-    /**
-     * Expand the Clarity vertical nav when viewport is below 768px to fix mobile nav bug
-     * @param event
-     */
-    @HostListener('window:resize', ['$event']) expandSideNav(event) {
-        if (event.srcElement.innerWidth <= 768) {
-            document.querySelector('clr-vertical-nav').classList.remove('is-collapsed');
-        }
     }
 
     /**

@@ -1,9 +1,10 @@
-import { AfterViewInit, Component, Inject, OnInit, OnDestroy } from '@angular/core';
+import { AfterViewInit, Component, Inject, OnInit, OnDestroy, HostListener } from '@angular/core';
 import { NgRedux, select } from '@angular-redux/store';
 import { APP_CONFIG, AppConfig, immutableHelper } from '@setl/utils';
-import { getMyDetail } from '@setl/core-store';
+import { getMyDetail, setMenuCollapsed } from '@setl/core-store';
 import { MultilingualService } from '@setl/multilingual/multilingual.service';
 import { MenuSpecService } from '@setl/utils/services/menuSpec/service';
+import { Subscription } from 'rxjs/Subscription';
 
 @Component({
     selector: 'app-navigation-sidebar',
@@ -14,11 +15,13 @@ export class NavigationSidebarComponent implements OnInit, AfterViewInit, OnDest
     public unreadMessages;
     public menuJson: any;
     public menuParent = [];
+    public collapsed: boolean = false;
     private disabledMenus: string[] = [];
-    private subscription: any;
+    private subscription: Subscription[] = [];
 
     @select(['message', 'myMessages', 'counts', 'inboxUnread']) inboxUnread;
     @select(['user', 'authentication', 'defaultHomePage']) defaultHomePage;
+    @select(['user', 'siteSettings', 'menuCollapsed']) menuCollapsed;
 
     constructor(@Inject(APP_CONFIG) public appConfig: AppConfig,
                 private menuSpecService: MenuSpecService,
@@ -27,7 +30,7 @@ export class NavigationSidebarComponent implements OnInit, AfterViewInit, OnDest
 
     ngOnInit() {
         /* Subscribe for language change. */
-        this.subscription = this.translate.getLanguage.subscribe((data) => {
+        this.subscription.push(this.translate.getLanguage.subscribe((data) => {
             /* Retrieve and declare data... */
             const currentState = this.ngRedux.getState();
             const currentUserDetails = getMyDetail(currentState);
@@ -81,7 +84,30 @@ export class NavigationSidebarComponent implements OnInit, AfterViewInit, OnDest
                     if (row['children'] != null) this.menuParent.push(row['element_id']);
                 });
             });
-        });
+        }));
+
+        // Subscribe to the menuCollapsed boolean and update the property passed to the menu
+        this.subscription.push(this.menuCollapsed.subscribe((collapsed) => {
+            this.collapsed = collapsed;
+        }));
+    }
+
+    /**
+     * Dispatch a redux action to update the state of the menuCollapsed boolean
+     * @param collapsed
+     */
+    updateCollapsed(collapsed) {
+        this.ngRedux.dispatch(setMenuCollapsed(collapsed));
+    }
+
+    /**
+     * Expand the Clarity vertical nav when viewport is below 768px to fix mobile nav bug
+     * @param event
+     */
+    @HostListener('window:resize', ['$event']) expandSideNav(event) {
+        if (event.srcElement.innerWidth <= 768) {
+            this.ngRedux.dispatch(setMenuCollapsed(false));
+        }
     }
 
     /**
