@@ -5,4 +5,5 @@ export interface SiteSettingsState {
     production: boolean;
     siteMenu: object;
     forceTwoFactor: boolean;
+    menuCollapsed: boolean;
 }

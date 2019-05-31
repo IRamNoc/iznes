@@ -6,21 +6,22 @@ import {
     SET_PRODUCTION,
     SET_SITE_MENU,
     SET_FORCE_TWO_FACTOR,
+    SET_MENU_COLLAPSED,
 } from './actions';
 import { SiteSettingsState } from './model';
 import * as _ from 'lodash';
 
 let defaultLanguage;
 switch (window.navigator.language) {
-case 'en-GB':
-    defaultLanguage = 'en-Latn';
-    break;
-case 'fr-FR':
-    defaultLanguage = 'fr-Latn';
-    break;
-default:
-    defaultLanguage = 'fr-Latn';
-    break;
+    case 'en-GB':
+        defaultLanguage = 'en-Latn';
+        break;
+    case 'fr-FR':
+        defaultLanguage = 'fr-Latn';
+        break;
+    default:
+        defaultLanguage = 'fr-Latn';
+        break;
 }
 
 const initialState: SiteSettingsState = {
@@ -32,24 +33,27 @@ const initialState: SiteSettingsState = {
         fetched: false,
     },
     forceTwoFactor: false,
+    menuCollapsed: false,
 };
 
 export const SiteSettingsReducer = function (state: SiteSettingsState = initialState, action: Action) {
     switch (action.type) {
-    case SET_VERSION:
-        return setVersion(SET_VERSION, action, state);
-    case SET_LANGUAGE:
-        return setLanguage(SET_LANGUAGE, action, state);
-    case SET_MENU_SHOWN:
-        return setMenuShown(SET_MENU_SHOWN, action, state);
-    case SET_PRODUCTION:
-        return setProduction(state, action);
-    case SET_FORCE_TWO_FACTOR:
-        return setTwoFactor(state, action);
-    case SET_SITE_MENU:
-        return setSiteMenu(SET_SITE_MENU, action, state);
-    default:
-        return state;
+        case SET_VERSION:
+            return setVersion(SET_VERSION, action, state);
+        case SET_LANGUAGE:
+            return setLanguage(SET_LANGUAGE, action, state);
+        case SET_MENU_SHOWN:
+            return setMenuShown(SET_MENU_SHOWN, action, state);
+        case SET_PRODUCTION:
+            return setProduction(state, action);
+        case SET_FORCE_TWO_FACTOR:
+            return setTwoFactor(state, action);
+        case SET_SITE_MENU:
+            return setSiteMenu(SET_SITE_MENU, action, state);
+        case SET_MENU_COLLAPSED:
+            return setMenuCollapsed(state, action);
+        default:
+            return state;
     }
 };
 
@@ -133,4 +137,8 @@ function setSiteMenu(actionType, action, state) {
     });
 
     return newState;
+}
+
+function setMenuCollapsed(state: SiteSettingsState, action: any): SiteSettingsState {
+    return Object.assign({}, state, { menuCollapsed: action.menuCollapsed });
 }
