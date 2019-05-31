@@ -22,7 +22,6 @@ import {
     setConnectedChain,
     setConnectedWallet,
     setRequestedMailInitial,
-    setMenuCollapsed,
 } from '@setl/core-store';
 import { fromJS } from 'immutable';
 import { MultilingualService } from '@setl/multilingual/multilingual.service';
