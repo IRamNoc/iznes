@@ -24,6 +24,6 @@
     <app-investor-fund-list [isImported]="true" [linkRoute]="'home'"></app-investor-fund-list>
 </div>
 
-<div *ngIf="hasPermissionManageOrders">
+<div *ngIf="hasPermissionManageOrders || hasPermissionviewAllOrder">
     <app-manage-orders [isImported]="true" [linkRoute]="'home'"></app-manage-orders>
 </div>

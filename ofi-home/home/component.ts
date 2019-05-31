@@ -46,6 +46,7 @@ export class OfiHomeComponent implements AfterViewInit, OnInit, OnDestroy {
     public hasPermissionViewPrecentralisation: boolean = false;
     public hasPermissionViewFundShare: boolean = false;
     public hasPermissionViewNav: boolean = false;
+    public hasPermissionviewAllOrder: boolean = false;
 
     /* Private properties. */
     private subscriptions: any[] = [];
@@ -141,6 +142,12 @@ export class OfiHomeComponent implements AfterViewInit, OnInit, OnDestroy {
         this.permissionsService.hasPermission('manageNav', 'canRead').then(
             (hasPermission) => {
                 this.hasPermissionViewNav = hasPermission;
+            },
+        );
+
+        this.permissionsService.hasPermission('viewAllOrder', 'canRead').then(
+            (hasPermission) => {
+                this.hasPermissionviewAllOrder = hasPermission;
             },
         );
 
