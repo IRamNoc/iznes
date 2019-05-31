@@ -11,6 +11,7 @@ export const SET_MENU_SHOWN = `${name}/SET_MENU_SHOWN`;
 export const SET_PRODUCTION = `${name}/SET_PRODUCTION`;
 export const SET_SITE_MENU = `${name}/SET_SITE_MENU`;
 export const SET_FORCE_TWO_FACTOR = `${name}/SET_FORCE_TWO_FACTOR`;
+export const SET_MENU_COLLAPSED = `${name}/SET_MENU_COLLAPSED`;
 
 export interface SetVersionAction extends Action {
     version: string;
@@ -22,6 +23,10 @@ export interface SetLanguageAction extends Action {
 
 export interface SetMenuShownAction extends Action {
     menuShown: boolean;
+}
+
+export interface SetMenuCollapsed extends Action {
+    menuCollapsed: boolean;
 }
 
 export const setVersion: ActionCreator<SetVersionAction> =
@@ -40,4 +45,10 @@ export const setMenuShown: ActionCreator<SetMenuShownAction> =
     menuShown => ({
         type: SET_MENU_SHOWN,
         menuShown,
+    });
+
+export const setMenuCollapsed: ActionCreator<SetMenuCollapsed> =
+    menuCollapsed => ({
+        type: SET_MENU_COLLAPSED,
+        menuCollapsed,
     });
