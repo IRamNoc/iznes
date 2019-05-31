@@ -13,8 +13,8 @@
                         <div class="row">
                             <div class="col-sm-6 form-group">
                                 <label for="udDisplayName" class="control-label required-field">{{ 'Display Name' | translate }}</label>
-                                <input type="text" id="udDisplayName" 
-                                        [formControl]="displayName" 
+                                <input type="text" id="udDisplayName"
+                                        [formControl]="displayName"
                                         size="45"
                                         class="udDisplayName">
                                 <div *ngIf="displayName.hasError('required')" class="field-error">{{ 'Field is required' | translate }}</div>
@@ -43,12 +43,12 @@
                             </div>
                             <div class="form-group col-sm-6">
                                 <label for="udAddressPrefix"> {{ 'Address Prefix' | translate }}</label>
-                                <input type="text" 
-                                        id="udAddressPrefix"                                        
-                                        placeholder="{{ 'Apartment or house' | translate }}"  
-                                        [formControl]="addressPrefix" 
+                                <input type="text"
+                                        id="udAddressPrefix"
+                                        placeholder="{{ 'Apartment or house' | translate }}"
+                                        [formControl]="addressPrefix"
                                         size="45">
-                            </div>                            
+                            </div>
                         </div>
                         <div class="row">
                             <div class="form-group col-sm-6">
@@ -85,10 +85,10 @@
                             <div class="form-group col-sm-6">
                                 <label class="control-label required-field" for="country-select">{{ 'Country' | translate }}</label>
                                 <div id="country">
-                                    <ng-select id="country-select" 
-                                               [items]="countries" 
+                                    <ng-select id="country-select"
+                                               [items]="countries"
                                                [allowClear]="true"
-                                               placeholder="{{ 'Select a country' | translate }}" 
+                                               placeholder="{{ 'Select a country' | translate }}"
                                                [formControl]="country"></ng-select>
                                     <div *ngIf="country.hasError('required')" class="field-error">{{ 'Field is required' | translate }}</div>
                                 </div>
@@ -182,7 +182,7 @@
                                             {{ 'Password does not satisfy security criteria' | translate}}
                                         </div>
 
-                                        <div *ngIf="changePassForm.controls.passwordConfirm.hasError('mismatch') && !password.hasError('rules') && !password.hasError('length') && !password.hasError('oldNew')"
+                                        <div *ngIf="changePassForm.controls.passwordConfirm.hasError('mismatch') && !password.hasError('rules') && !password.hasError('length') && !password.hasError('oldNew') && !password.hasError('required')"
                                              class="field-error force-display-error">
                                              {{ 'Passwords do not match' | translate }}
                                         </div>
@@ -210,7 +210,7 @@
                                             {{ 'Field is required' | translate}}
                                         </div>
 
-                                        <div *ngIf="passwordConfirm.hasError('mismatch')" class="field-error">{{ 'Passwords do not match' | translate }}
+                                        <div *ngIf="passwordConfirm.hasError('mismatch') && !passwordConfirm.hasError('required')" class="field-error">{{ 'Passwords do not match' | translate }}
                                         </div>
 
                                     </div>
@@ -308,7 +308,7 @@
             </button>
             <clr-tab-content *clrIfActive="tabStates.externalNotifications">
                 <app-external-notifications></app-external-notifications>
-            </clr-tab-content>            
+            </clr-tab-content>
         </clr-tab>
     </clr-tabs>
 
