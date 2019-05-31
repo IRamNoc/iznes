@@ -20,7 +20,7 @@
 
         <clr-tab-content *clrIfActive="true">
             <!-- Button container -->
-            <div *ngIf="!(hasPermissionCreateNav && hasPermissionUpdateNav)" class="alert alert-warning">
+            <div *ngIf="!(hasPermissionCreateNav && hasPermissionUpdateNav) && !isIznesAdmin" class="alert alert-warning">
                 <div class="alert-items">
                     <div class="alert-item static">
                         <div class="alert-icon-wrapper">
@@ -80,7 +80,7 @@
                 </div>
             </form>
 
-            <div *ngIf="!hasPermissionCreateNav && navListItems.length" class="alert alert-warning">
+            <div *ngIf="!hasPermissionCreateNav && navListItems.length && !isIznesAdmin" class="alert alert-warning">
                 <div class="alert-items">
                     <div class="alert-item static">
                         <div class="alert-icon-wrapper">
@@ -93,7 +93,7 @@
                 </div>
             </div>
 
-            <div *ngIf="!hasPermissionUpdateNav && navListItems.length" class="alert alert-warning">
+            <div *ngIf="!hasPermissionUpdateNav && navListItems.length && !isIznesAdmin" class="alert alert-warning">
                 <div class="alert-items">
                     <div class="alert-item static">
                         <div class="alert-icon-wrapper">
@@ -106,7 +106,7 @@
                 </div>
             </div>
 
-            <div *ngIf="!hasPermissionDeleteNav && navListItems.length" class="alert alert-warning">
+            <div *ngIf="!hasPermissionDeleteNav && navListItems.length && !isIznesAdmin" class="alert alert-warning">
                 <div class="alert-items">
                     <div class="alert-item static">
                         <div class="alert-icon-wrapper">
