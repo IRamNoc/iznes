@@ -35,7 +35,7 @@
             </button>
         </div>
 
-        <ng-container *ngIf="!panel?.action?.disabled && panel?.columnLink != 'drafts'">
+        <ng-container *ngIf="!panel?.action?.disabled && panel?.columnLink != 'drafts' && isAssetManager()">
             <ng-container *ngTemplateOutlet="permissionAlert; context: {action: panel.columnLink}"></ng-container>
         </ng-container>
 
