@@ -494,8 +494,6 @@ export class OfiNavFundsList implements OnInit, OnDestroy, AfterViewInit {
      */
     private updateNavList(navList: model.NavModel[]): void {
         this.navListItems = _.orderBy(this.processNavList(navList), ['shareId'], ['desc']);
-
-        console.log('+++ this.navListItems: ', this.navListItems);
         this.changeDetectorRef.markForCheck();
     }
 
