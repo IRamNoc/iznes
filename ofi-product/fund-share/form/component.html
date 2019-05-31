@@ -486,8 +486,8 @@
                 </div>
             </clr-tabs>
 
-           
-            <div *ngIf="!hasPermissionUpdateFundShare" class="alert alert-warning">
+
+            <div *ngIf="!(isCreate() || currDraft == 1) && !hasPermissionUpdateFundShare" class="alert alert-warning">
                 <div class="alert-items">
                     <div class="alert-item static">
                         <div class="alert-icon-wrapper">
@@ -522,12 +522,12 @@
                         class="btn btn-primary action-button save"
                         id="saveFundShareBottom"
                         (click)="saveFundShare()"
-                        [disabled]="!model.isValid() || !hasPermissionUpdateFundShare">
+                        [disabled]="!model.isValid() || (!(isCreate() || currDraft == 1) && !hasPermissionUpdateFundShare)">
                         <i class="fa fa-save"></i>
                         {{ (isCreate() || currDraft == 1 ? 'Create Share' : 'Update Share') | translate }}
                 </button>
             </div>
-        
+
         </clr-tab-content>
     </clr-tab>
 </clr-tabs>
