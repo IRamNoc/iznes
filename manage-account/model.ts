@@ -1,4 +1,5 @@
 import { DatagridListActionModel } from '@setl/utils/components/datagrid-list/models/datagrid-list-action.model';
+import { DataGridStringFilter } from '@setl/utils/components/datagrid-list/filters/string.filter';
 
 export const accountFieldsModel = {
     accountName: {
@@ -23,3 +24,8 @@ export const accountListActions: {}[] = [
         onClick: 'deleteAccount',
     }),
 ];
+
+export const accountListFilters: {} = {
+    accountName: new DataGridStringFilter('accountName'),
+    description: new DataGridStringFilter('description'),
+};
