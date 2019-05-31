@@ -148,7 +148,7 @@
                 </div>
             </form>
 
-            <div *ngIf="!hasPermissionCreateNav || !hasPermissionUpdateNav || !hasPermissionDeleteNav" class="alert alert-warning">
+            <div *ngIf="!isIznesAdmin && (!hasPermissionCreateNav || !hasPermissionUpdateNav || !hasPermissionDeleteNav)" class="alert alert-warning">
                 <div class="alert-items">
                     <div class="alert-item static">
                         <div class="alert-icon-wrapper">
