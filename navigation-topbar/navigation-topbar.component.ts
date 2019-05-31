@@ -187,16 +187,6 @@ export class NavigationTopbarComponent implements OnInit, AfterViewInit, OnDestr
     }
 
     /**
-     * Expand the Clarity vertical nav when viewport is below 768px to fix mobile nav bug
-     * @param event
-     */
-    @HostListener('window:resize', ['$event']) expandSideNav(event) {
-        if (event.srcElement.innerWidth <= 768) {
-            document.querySelector('clr-vertical-nav').classList.remove('is-collapsed');
-        }
-    }
-
-    /**
      * Updates the state
      */
     updateState() {
