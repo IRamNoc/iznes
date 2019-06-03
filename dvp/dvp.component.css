@@ -12,10 +12,6 @@
     width: auto;
 }
 
-:host various-address-select {
-    margin-bottom: -10px;
-}
-
 :host .form-block {
     margin-bottom: 1.5em;
 }
@@ -65,4 +61,8 @@
 
 :host /deep/ .contract-party-container .ui-select-container.dropdown {
     background: #FFF;
+}
+
+.time-picker {
+    width: 316px!important;
 }

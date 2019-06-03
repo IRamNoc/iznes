@@ -35,6 +35,7 @@ export class ContractsDvpComponent implements OnInit, OnDestroy {
     walletAddressSelectItems: any;
     walletDirectoryListRaw: any[];
     walletRelationships: any[];
+    language: string = 'en';
 
     /* Setup datepicker */
     public configDatePicker = {
@@ -43,7 +44,14 @@ export class ContractsDvpComponent implements OnInit, OnDestroy {
         closeOnSelect: true,
         disableKeypress: true,
         min: moment(),
-        locale: null,
+        locale: this.language,
+    };
+
+    public configTimePicker = {
+        closeOnSelect: true,
+        disableKeypress: true,
+        locale: this.language,
+        format: 'HH:mm',
     };
 
     @select(['user', 'connected', 'connectedWallet']) connectedWalletOb;
@@ -55,6 +63,7 @@ export class ContractsDvpComponent implements OnInit, OnDestroy {
     @select(['wallet', 'walletRelationship', 'requestedToRelationship']) requestedWalletRelationshipListOb;
     @select(['wallet', 'walletRelationship', 'toRelationshipList']) walletRelationshipListOb;
     @select(['wallet', 'walletDirectory', 'walletList']) walletDirectoryListOb;
+    @select(['user', 'siteSettings', 'language']) languageOb;
 
     constructor(private ngRedux: NgRedux<any>,
                 private changeDetectorRef: ChangeDetectorRef,
@@ -131,6 +140,7 @@ export class ContractsDvpComponent implements OnInit, OnDestroy {
                 this.changeDetectorRef.markForCheck();
             }),
         );
+        this.subscriptions.push(this.languageOb.subscribe(lang => this.language = lang === 'fr-Latn' ? 'fr' : 'en'));
     }
 
     private requestAllInstrument(requested: boolean): void {
@@ -200,10 +210,7 @@ export class ContractsDvpComponent implements OnInit, OnDestroy {
                 [Validators.pattern('^[0-9]{4}-(0[1-9]|1[012])-(0[1-9]|[12][0-9]|3[01])$'),
                     Validators.required],
             ),
-            expireTime: new FormControl(
-                currentDate.format('HH:mm'),
-                Validators.required,
-            ),
+            expireTime: new FormControl('', Validators.required),
         });
 
         this.addPartiesToForm();

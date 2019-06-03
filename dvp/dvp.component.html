@@ -45,7 +45,7 @@
                         <span *ngIf="createContractForm.controls['expireDate'].hasError('pattern') && createContractForm.controls['expireDate'].touched"
                               class="field-error">{{ 'Invalid date. Format must be YYYY-MM-DD.' | translate }}</span>
                         <span *ngIf="createContractForm.controls['expireDate'].hasError('required') && createContractForm.controls['expireDate'].touched"
-                              class="field-error">{{ 'Field is required' | translate }]</span>
+                              class="field-error">{{ 'Field is required' | translate }}</span>
                     </div>
 
                     <div class="form-group col-sm-4">
@@ -53,10 +53,12 @@
                             <span>{{ 'Expiry Time' | translate }}</span>
                         </label>
 
-                        <input type="time" formControlName="expireTime" name="contract_expiry_time" id="contract_expiry_time" placeholder="HH:MM" required/>
-
-                        <span *ngIf="createContractForm.controls['expireTime'].hasError('required') && createContractForm.controls['expireTime'].touched"
-                              class="field-error">{{ 'Field is required' | translate }}</span>
+                        <div class="input-group">
+                            <span class="fa fa-clock-o" aria-hidden="true"></span>
+                            <input type="text" autocomplete="off" id="contract_expiry_time" formControlName="expireTime" [dpDayPicker]="configTimePicker" mode="time" theme="dp-material" class="time-picker">
+                            <span *ngIf="createContractForm.controls['expireTime'].hasError('required') && createContractForm.controls['expireTime'].touched"
+                              class="field-error time-picker">{{ 'Field is required' | translate }}</span>
+                        </div>
                     </div>
                 </section>
 
@@ -70,11 +72,9 @@
                                     [formControl]="createContractForm.controls[party.id].controls['address']"
                                     [relationshipArray]="walletRelationships"
                                     [ownWalletAddressArray]="walletAddressSelectItems"
-                                    [class.error]="!createContractForm.controls[party.id].controls['address'].valid &&
-                                    createContractForm.controls[party.id].controls['address'].touched"
                                     [required]="true">
                                 </various-address-select>
-                                <span *ngIf="createContractForm.controls[party.id].controls['address'].hasError('required') && createContractForm.controls[party.id].controls['address'].touched" class="field-error">{{ 'Field is required' | translate }}</span>
+                                <div class="field-error">{{ 'Field is required' | translate }}</div>
                             </div>
 
                             <div class="form-group col-sm-10 toggle-asset" *ngIf="party.toggleAssetReturn">
