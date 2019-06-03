@@ -11,35 +11,39 @@
             <form [formGroup]="bilateralTransferForm" (ngSubmit)="createContract()">
                 <section class="form-block">
                     <div class="row">
-                        <div class="form-group col-sm-6">
-                            <label class="control-label required-field" for="asset">{{ 'Asset' | translate }}</label>
-                            <ng-select id="asset"
-                                       [items]="allInstrumentList"
-                                       [allowClear]="true"
-                                       placeholder="{{ 'Select Issuer' | translate }}"
-                                       [formControl]="bilateralTransferForm.controls['asset']">
-                            </ng-select>
+                        <div class="col-sm-6">
+                            <div class="form-group">
+                                <label class="control-label required-field" for="asset">{{ 'Asset' | translate }}</label>
+                                <ng-select id="asset"
+                                        [items]="allInstrumentList"
+                                        [allowClear]="true"
+                                        placeholder="{{ 'Select Issuer' | translate }}"
+                                        [formControl]="bilateralTransferForm.controls['asset']">
+                                </ng-select>
 
-                            <div *ngIf="bilateralTransferForm.controls['asset'].hasError('required')" class="field-error">
-                                {{ 'Field is required' | translate }}
+                                <div *ngIf="bilateralTransferForm.controls['asset'].hasError('required')" class="field-error">
+                                    {{ 'Field is required' | translate }}
+                                </div>
                             </div>
                         </div>
 
-                        <div class="form-group col-sm-6">
-                            <label class="control-label">{{ 'Offer Type' | translate }}</label>
-                            <div class="type-select btn-group">
-                            <span class="btn"
-                                  [ngClass]="{
-                                    'btn-outline': bilateralTransferForm.get('offerType').value !== 'buy',
-                                    'btn-success': bilateralTransferForm.get('offerType').value === 'buy'
-                                  }"
-                                  (click)="bilateralTransferForm.get('offerType').setValue('buy')">{{ 'Buy' | translate }}</span>
+                        <div class="col-sm-6">
+                            <div class="form-group">
+                                <label class="control-label">{{ 'Offer Type' | translate }}</label>
+                                <div class="type-select btn-group">
                                 <span class="btn"
-                                      [ngClass]="{
-                                    'btn-outline': bilateralTransferForm.get('offerType').value !== 'sell',
-                                    'btn-danger': bilateralTransferForm.get('offerType').value === 'sell'
-                                  }"
-                                      (click)="bilateralTransferForm.get('offerType').setValue('sell')">{{ 'Sell' | translate }}</span>
+                                    [ngClass]="{
+                                        'btn-outline': bilateralTransferForm.get('offerType').value !== 'buy',
+                                        'btn-success': bilateralTransferForm.get('offerType').value === 'buy'
+                                    }"
+                                    (click)="bilateralTransferForm.get('offerType').setValue('buy')">{{ 'Buy' | translate }}</span>
+                                    <span class="btn"
+                                        [ngClass]="{
+                                        'btn-outline': bilateralTransferForm.get('offerType').value !== 'sell',
+                                        'btn-danger': bilateralTransferForm.get('offerType').value === 'sell'
+                                    }"
+                                        (click)="bilateralTransferForm.get('offerType').setValue('sell')">{{ 'Sell' | translate }}</span>
+                                </div>
                             </div>
                         </div>
                     </div>
@@ -47,26 +51,26 @@
                     <div class="hr-line-dashed"></div>
 
                     <div class="row">
-                        <div class="form-group col-sm-6">
-                            <div class="row">
+                        <div class="col-sm-6">
+                            <div class="form-group">
                                 <label class="control-label required-field" for="asset">{{ 'Offer From Address' | translate }}</label>
                                 <ng-select id="assetAddress"
-                                           [items]="walletAddressSelectItems"
-                                           [allowClear]="true"
-                                           placeholder="{{ 'Asset Address' | translate }}"
-                                           [formControl]="bilateralTransferForm.controls['assetAddress']">
+                                            [items]="walletAddressSelectItems"
+                                            [allowClear]="true"
+                                            placeholder="{{ 'Asset Address' | translate }}"
+                                            [formControl]="bilateralTransferForm.controls['assetAddress']">
                                 </ng-select>
 
                                 <div *ngIf="bilateralTransferForm.controls['assetAddress'].hasError('required')" class="field-error">{{ 'Field is required' | translate }}</div>
                             </div>
 
-                            <div class="row">
+                            <div class="form-group">
                                 <div class="width360">
                                     <label class="control-label required-field" for="amount">{{ 'Amount' | translate }}</label>
                                     <input type="text"
-                                           id="amount"
-                                           placeholder="{{ 'Amount' | translate }}" size="45"
-                                           [formControl]="bilateralTransferForm.controls['amount']">
+                                            id="amount"
+                                            placeholder="{{ 'Amount' | translate }}" size="45"
+                                            [formControl]="bilateralTransferForm.controls['amount']">
 
                                     <div *ngIf="bilateralTransferForm.controls['amount'].hasError('required')" class="field-error">{{ 'Field is required' | translate }}</div>
                                     <div *ngIf="bilateralTransferForm.controls['amount'].hasError('pattern')" class="field-error">{{ 'Amount must be a number' | translate }}</div>
@@ -74,41 +78,47 @@
                             </div>
                         </div>
 
-                        <div class="form-group col-sm-6">
-                            <various-address-select
-                                [formControl]="bilateralTransferForm.controls['recipient']"
-                                [relationshipArray]="walletRelationships"
-                                [ownWalletAddressArray]="walletAddressSelectItems"
-                                [required]="true"></various-address-select>
+                        <div class="col-sm-6">
+                            <div class="form-group">
+                                <various-address-select
+                                    [formControl]="bilateralTransferForm.controls['recipient']"
+                                    [relationshipArray]="walletRelationships"
+                                    [ownWalletAddressArray]="walletAddressSelectItems"
+                                    [required]="true"></various-address-select>
 
-                            <div *ngIf="bilateralTransferForm.get('recipient').hasError('required')" class="field-error">{{ 'Field is required' | translate }}</div>
-                            <div *ngIf="bilateralTransferForm.get('recipient').hasError('pattern')" class="field-error">{{ 'Invalid address format' | translate }}</div>
-                            <div *ngIf="bilateralTransferForm.get('recipient').hasError('matchesAssetAddress')" class="field-error">{{ 'Matches send from address' | translate }}</div>
+                                <div *ngIf="bilateralTransferForm.get('recipient').hasError('required')" class="field-error">{{ 'Field is required' | translate }}</div>
+                                <div *ngIf="bilateralTransferForm.get('recipient').hasError('pattern')" class="field-error">{{ 'Invalid address format' | translate }}</div>
+                                <div *ngIf="bilateralTransferForm.get('recipient').hasError('matchesAssetAddress')" class="field-error">{{ 'Matches send from address' | translate }}</div>
+                            </div>
                         </div>
                     </div>
 
                     <div class="row">
-                        <div class="form-group col-sm-6">
-                            <label class="control-label" for="witness1">{{ 'Witness 1' | translate }}</label>
-                            <ng-select id="witness1"
-                                       [items]="walletAddressSelectItems"
-                                       [allowClear]="true"
-                                       placeholder="{{ 'Witness 1' | translate }}"
-                                       [formControl]="bilateralTransferForm.controls['witness1']">
-                            </ng-select>
-                            <div *ngIf="bilateralTransferForm.get('witness1').hasError('matchesParty')" class="field-error">{{ 'Matches another address' | translate }}</div>
+                        <div class="col-sm-6">
+                            <div class="form-group">
+                                <label class="control-label" for="witness1">{{ 'Witness 1' | translate }}</label>
+                                <ng-select id="witness1"
+                                        [items]="walletAddressSelectItems"
+                                        [allowClear]="true"
+                                        placeholder="{{ 'Witness 1' | translate }}"
+                                        [formControl]="bilateralTransferForm.controls['witness1']">
+                                </ng-select>
+                                <div *ngIf="bilateralTransferForm.get('witness1').hasError('matchesParty')" class="field-error">{{ 'Matches another address' | translate }}</div>
+                            </div>
                         </div>
 
-                        <div class="form-group col-sm-6">
-                            <label class="control-label" for="witness2">{{ 'Witness 2' | translate }}</label>
-                            <ng-select id="witness2"
-                                       [items]="walletAddressSelectItems"
-                                       [allowClear]="true"
-                                       placeholder="{{ 'Asset Address' | translate }}"
-                                       [formControl]="bilateralTransferForm.controls['witness2']">
-                            </ng-select>
-                            <div *ngIf="bilateralTransferForm.get('witness2').hasError('matchesParty')" class="field-error">{{ 'Matches another address' | translate }}</div>
-                            <div *ngIf="bilateralTransferForm.get('witness2').hasError('matchesWitness')" class="field-error">{{ 'Matches witness 1' | translate }}</div>
+                        <div class="col-sm-6">
+                            <div class="form-group">
+                                <label class="control-label" for="witness2">{{ 'Witness 2' | translate }}</label>
+                                <ng-select id="witness2"
+                                        [items]="walletAddressSelectItems"
+                                        [allowClear]="true"
+                                        placeholder="{{ 'Asset Address' | translate }}"
+                                        [formControl]="bilateralTransferForm.controls['witness2']">
+                                </ng-select>
+                                <div *ngIf="bilateralTransferForm.get('witness2').hasError('matchesParty')" class="field-error">{{ 'Matches another address' | translate }}</div>
+                                <div *ngIf="bilateralTransferForm.get('witness2').hasError('matchesWitness')" class="field-error">{{ 'Matches witness 1' | translate }}</div>
+                            </div>
                         </div>
                     </div>
 
