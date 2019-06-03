@@ -43,6 +43,7 @@ export class MyRequestsDetailsComponent implements OnInit, AfterViewInit, OnDest
     companyName: string = '';
 
     isKYCFull = true;
+    isClientFile;
 
     private subscriptions: any[] = [];
     unSubscribe: Subject<any> = new Subject();
@@ -98,6 +99,7 @@ export class MyRequestsDetailsComponent implements OnInit, AfterViewInit, OnDest
                 });
                 this.lastUpdate = convertUtcStrToLocalStr(kyc.lastUpdated, 'YYYY-MM-DD HH:mm:SS');
                 this.ofiKycService.fetchStatusAuditByKycID(this.kycID);
+                this.isClientFile = kyc.amManagementCompanyID === null;
             }
         });
 
@@ -133,9 +135,9 @@ export class MyRequestsDetailsComponent implements OnInit, AfterViewInit, OnDest
         });
     }
 
-    redirectToRelatedKycs(kycID) {
+    redirectToRelatedKycs(kycID, overrideCompleteStep: string) {
         const currentKyc = find(this.kycList, ['kycID', kycID]);
-        const completedStep = currentKyc.completedStep;
+        const completedStep = overrideCompleteStep || currentKyc.completedStep;
         let extras = {};
 
         const grouped = groupBy(this.kycList, 'currentGroup');
