@@ -212,7 +212,7 @@ export class EncumberAssetsComponent implements OnInit, OnDestroy {
                 Validators.required,
                 Validators.pattern('^[0-9]{4}-(0[1-9]|1[012])-(0[1-9]|[12][0-9]|3[01])$'),
             ]);
-            this.encumberAssetsForm.controls.toTimeUTC.setValidators(Validators.required);
+            this.encumberAssetsForm.controls.toTimeUTC.setValidators([Validators.required]);
         } else {
             this.encumberAssetsForm.controls.toDateUTC.clearValidators();
             this.encumberAssetsForm.controls.toTimeUTC.clearValidators();
