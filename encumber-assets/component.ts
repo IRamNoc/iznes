@@ -220,8 +220,6 @@ export class EncumberAssetsComponent implements OnInit, OnDestroy {
 
         this.encumberAssetsForm.controls.toDateUTC.updateValueAndValidity();
         this.encumberAssetsForm.controls.toTimeUTC.updateValueAndValidity();
-
-        console.log('+++ FORM GROUP', this.encumberAssetsForm);
     }
 
     /**
