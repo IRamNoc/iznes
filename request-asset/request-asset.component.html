@@ -31,14 +31,15 @@
 
                     <div class="form-group col-sm-6">
                         <label class="control-label required-field" for="amount">{{ 'Amount' | translate }}</label>
-                        <input type="text" 
-                                id="amount" 
-                                placeholder="{{ 'Amount' | translate }}" 
+                        <input type="text"
+                                id="amount"
+                                placeholder="{{ 'Amount' | translate }}"
                                 size="45"
                                 [formControl]="requestAssetForm.controls['amount']"
                                 [class.error]="!requestAssetForm.controls['amount'].valid && requestAssetForm.controls['amount'].touched"/>
-                        
+
                         <div *ngIf="requestAssetForm.controls['amount'].hasError('required') && requestAssetForm.controls['amount'].touched" class="field-error">{{ 'Field is required' | translate }}</div>
+                        <div *ngIf="requestAssetForm.controls['amount'].hasError('pattern')" class="field-error">{{ 'Amount must be a number' | translate }}</div>
                     </div>
 
                     <button type="submit" class="btn btn-primary" [disabled]="requestAssetForm.invalid"><i class="fa fa-save"></i> {{ 'Request Asset' | translate }}</button>
