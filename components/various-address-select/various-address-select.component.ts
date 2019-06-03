@@ -1,4 +1,4 @@
-import { Component, forwardRef, Input, OnChanges } from '@angular/core';
+import { Component, forwardRef, Input, OnChanges, AfterViewInit, ElementRef } from '@angular/core';
 import {
     FormControl,
     ControlValueAccessor,
@@ -22,7 +22,7 @@ const noop = () => {
         multi: true,
     }],
 })
-export class VariousAddressSelectComponent implements ControlValueAccessor {
+export class VariousAddressSelectComponent implements ControlValueAccessor, AfterViewInit {
     @Input() ownWalletAddressArray = this.translate.translate([
         { id: 1, text: '2 Connection' },
         { id: 2, text: 'Owned Address' },
@@ -49,12 +49,12 @@ export class VariousAddressSelectComponent implements ControlValueAccessor {
 
     otherAddressValidationTooltipText;
 
-    constructor(private translate: MultilingualService) {
+    constructor(private translate: MultilingualService, private el: ElementRef) {
         this.otherAddressValidationTooltipText =
         `${this.translate.translate('Address must be 34 characters and satisfy the following rules')}:
             <ul class="mt-1">
                 <li>${this.translate.translate('Start with an')} 'A'</li>
-                <li>${this.translate.translate('End with either an')} 
+                <li>${this.translate.translate('End with either an')}
                 'A', 'Q', 'g' ${this.translate.translate('or')} 'w'</li>
                 <li>${this.translate.translate('Be comprised of only')}:
                     <ul>
@@ -66,6 +66,18 @@ export class VariousAddressSelectComponent implements ControlValueAccessor {
                     </ul>
                 </li>
             </ul>`;
+    }
+
+    ngAfterViewInit() {
+        // Set required validator if required input is true
+        this.addressTypeSelect.setValidators(this.required ? Validators.required : []);
+    }
+
+    /**
+     * Set class ng-touched on host element to trigger display of any parent validation messages
+     */
+    setNgTouched() {
+        this.el.nativeElement.classList.add('ng-touched');
     }
 
     // The internal data model
