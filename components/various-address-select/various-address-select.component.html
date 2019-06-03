@@ -7,6 +7,7 @@
         [formControl]="addressTypeSelect"
         (selected)="setSelectedAddressType($event)">
     </ng-select>
+    <div class="field-error">{{ 'Field is required' | translate }}</div>
 </div>
 
 <div [ngSwitch]="selectedAddressType">
@@ -17,6 +18,7 @@
             [allowClear]="true"
             placeholder="{{ 'Select Connection' | translate }}"
             (selected)="writeValue($event.id); onBlur()"
+            (keydown)="setNgTouched()"
             (removed)="onClearValue()"
             [formControl]="relationshipSelect">
         </ng-select>
@@ -29,6 +31,7 @@
             [allowClear]="true"
             placeholder="{{ 'Select Owned Address' | translate }}"
             (selected)="writeValue($event.id); onBlur()"
+            (keydown)="setNgTouched()"
             (removed)="onClearValue()"
             (change)="writeValue($event.target.value)"
             [formControl]="ownedAddressSelect">
@@ -37,10 +40,10 @@
 
     <div class="form-group col-sm-6" *ngSwitchCase="3">
         <label class="control-label" [class.required-field]="required"><i class="fa fa-info-circle" [tooltip]="{text: otherAddressValidationTooltipText, size: 'medium'}"></i>{{ 'Other Address' | translate }}</label>
-        <input type="text" 
-                placeholder="{{ 'Enter Address' | translate }}" 
+        <input type="text"
+                placeholder="{{ 'Enter Address' | translate }}"
                 (change)="writeValue($event.target.value)"
-                (blur)="onBlur()"
-                [formControl]="otherAddress"/>
+                (blur)="onBlur(); setNgTouched()"
+                [formControl]="otherAddress">
     </div>
 </div>
