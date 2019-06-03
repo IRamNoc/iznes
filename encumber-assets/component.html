@@ -88,11 +88,9 @@
                             <various-address-select [formControl]="encumberAssetsForm.controls['recipient']"
                                                     [relationshipArray]="walletRelationships"
                                                     [ownWalletAddressArray]="walletAddressSelectItems"
-                                                    [class.error]="!encumberAssetsForm.controls['recipient'].valid && encumberAssetsForm.controls['recipient'].touched"
                                                     [required]="true">
                             </various-address-select>
-                            <div *ngIf="encumberAssetsForm.controls.recipient.hasError('required') && !encumberAssetsForm.controls.recipient.pristine"
-                                  class="field-error">{{ 'Field is required' | translate }}</div>
+                            <div class="field-error">{{ 'Field is required' | translate }}</div>
                         </div>
 
                         <div class="form-group col-sm-6">
@@ -112,9 +110,8 @@
                                 <label for="toTimeUTC" class="control-label required-field">{{ 'End Time UTC' | translate }}</label>
                                 <div class="input-group">
                                     <span class="fa fa-clock-o" aria-hidden="true"></span>
-                                    <input id="toTimeUTC" autocomplete="off" formControlName="toTimeUTC" [dpDayPicker]="configFiltersTime" mode="time" theme="dp-material"/>
-                                    <div *ngIf="encumberAssetsForm.controls.toTimeUTC.hasError('required') && encumberAssetsForm.controls.toTimeUTC.touched"
-                                          class="field-error">{{ 'Field is required' | translate }}</div>
+                                    <input type="text" id="toTimeUTC" autocomplete="off" formControlName="toTimeUTC" [dpDayPicker]="configFiltersTime" mode="time" theme="dp-material"/>
+                                    <div *ngIf="encumberAssetsForm.controls.toTimeUTC.hasError('required')" class="field-error">{{ 'Field is required' | translate }}</div>
                                 </div>
                             </div>
                         </div>
@@ -145,7 +142,7 @@
                     <div class="row">
                         <div class="form-group col-sm-6">
                             <button id="encumberAssetsBtnSubmitForm" type="submit" class="btn btn-primary" [disabled]="encumberAssetsForm.invalid">
-                                <i class="fa fa-save"></i> {{ 'Encumber Assets' | translate }}
+                                <i class="fa fa-save"></i> {{ 'Encumber Asset' | translate }}
                             </button>
                         </div>
                     </div>

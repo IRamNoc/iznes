@@ -54,11 +54,9 @@
                             <various-address-select [formControl]="unencumberAssetsForm.controls['recipient']"
                                                     [relationshipArray]="walletRelationships"
                                                     [ownWalletAddressArray]="walletAddressSelectItems"
-                                                    [class.error]="!unencumberAssetsForm.controls['recipient'].valid && unencumberAssetsForm.controls['recipient'].touched"
                                                     [required]="true">
                             </various-address-select>
-                            <div *ngIf="unencumberAssetsForm.controls.recipient.hasError('required') && !unencumberAssetsForm.controls.recipient.pristine"
-                                  class="field-error">{{ 'Field is required' | translate }}</div>
+                            <div class="field-error">{{ 'Field is required' | translate }}</div>
                         </div>
                     </div>
 
@@ -86,7 +84,7 @@
 
                     <div class="row">
                         <div class="form-group col-sm-6">
-                            <button id="unencumberAssetsBtnSubmitForm" type="submit" class="btn btn-primary" [disabled]="unencumberAssetsForm.invalid"><i class="fa fa-save"></i> {{ 'Unencumber Assets' | translate }}
+                            <button id="unencumberAssetsBtnSubmitForm" type="submit" class="btn btn-primary" [disabled]="unencumberAssetsForm.invalid"><i class="fa fa-save"></i> {{ 'Unencumber Asset' | translate }}
                             </button>
                         </div>
                     </div>
