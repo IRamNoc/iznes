@@ -12,7 +12,7 @@ import { AlertsService } from '@setl/jaspero-ng2-alerts';
 import { SagaHelper, LogService, ConfirmationService } from '@setl/utils';
 import * as _ from 'lodash';
 import { MultilingualService } from '@setl/multilingual';
-import { accountFieldsModel, accountListActions } from './model';
+import { accountFieldsModel, accountListActions, accountListFilters } from './model';
 
 export function getManageMember(state) {
     const myMemberId = state.user.myDetail.memberId;
@@ -44,6 +44,7 @@ export class ManageAccountComponent implements OnInit, OnDestroy {
 
     public accountFieldsModel = accountFieldsModel;
     public accountListActions = accountListActions;
+    public accountListFilters = accountListFilters;
 
     // List of observable subscription
     subscriptionsArray: Subscription[] = [];
