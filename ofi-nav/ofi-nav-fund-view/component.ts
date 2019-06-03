@@ -138,6 +138,41 @@ export class OfiNavFundView implements OnInit, OnDestroy {
     }
 
     /**
+     * Returns message detailing missing permissions
+     *
+     * @returns {string}
+     */
+    public getPermissionMessage(): string {
+        if (!this.hasPermissionCreateNav && !this.hasPermissionUpdateNav && !this.hasPermissionDeleteNav) {
+            return this.translate.translate('Please contact the administrator to request permission to add, edit or cancel a NAV.');
+        }
+
+        if (this.hasPermissionCreateNav && !this.hasPermissionUpdateNav && !this.hasPermissionDeleteNav) {
+            return this.translate.translate('Please contact the administrator to request permission to edit or cancel a NAV.');
+        }
+
+        if (this.hasPermissionCreateNav && this.hasPermissionUpdateNav && !this.hasPermissionDeleteNav) {
+            return this.translate.translate('Please contact the administrator to request permission to cancel a NAV.');
+        }
+
+        if (!this.hasPermissionCreateNav && this.hasPermissionUpdateNav && !this.hasPermissionDeleteNav) {
+            return this.translate.translate('Please contact the administrator to request permission to add or cancel a NAV.');
+        }
+
+        if (!this.hasPermissionCreateNav && this.hasPermissionUpdateNav && this.hasPermissionDeleteNav) {
+            return this.translate.translate('Please contact the administrator to request permission to add a NAV.');
+        }
+
+        if (!this.hasPermissionCreateNav && !this.hasPermissionUpdateNav && this.hasPermissionDeleteNav) {
+            return this.translate.translate('Please contact the administrator to request permission to add or edit a NAV.');
+        }
+
+        if (this.hasPermissionCreateNav && !this.hasPermissionUpdateNav && this.hasPermissionDeleteNav) {
+            return this.translate.translate('Please contact the administrator to request permission to edit a NAV.');
+        }
+    }
+
+    /**
      * Get the list of currencies from redux
      *
      * @param {Object[]} data
