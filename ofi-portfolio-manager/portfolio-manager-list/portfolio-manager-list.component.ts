@@ -13,7 +13,7 @@ export class PortfolioManagerListComponent implements OnInit, OnDestroy {
     portfolioMangerList = [];
 
     public hasPermissionPortfolioManagersView: boolean = false;
-    public hasPermissionInvitePortfolioManager: boolean = false;
+    public hasPermissionPortfolioManagersInsert: boolean = false;
 
     constructor(
         private ofiPortfolioManagerDataService: OfiPortfolioManagerDataService,
@@ -31,9 +31,9 @@ export class PortfolioManagerListComponent implements OnInit, OnDestroy {
             },
         );
 
-        this.permissionsService.hasPermission('invitePortfolioManager', 'canRead').then(
+        this.permissionsService.hasPermission('managePortfolioManager', 'canInsert').then(
             (hasPermission) => {
-                this.hasPermissionInvitePortfolioManager = hasPermission;
+                this.hasPermissionPortfolioManagersInsert = hasPermission;
             },
         );
     }
