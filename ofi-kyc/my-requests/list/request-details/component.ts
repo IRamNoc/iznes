@@ -164,7 +164,7 @@ export class MyRequestsDetailsComponent implements OnInit, AfterViewInit, OnDest
 
         this.newRequestService.storeCurrentKycs(kycIDs);
         this.ofiKycService.notifyAMKycContinuedFromAskMoreInfo(kycID);
-        this.router.navigate(['my-requests', 'new'], extras);
+        this.router.navigate(['onboarding-requests', 'new'], extras);
     }
 
     ngOnDestroy(): void {
