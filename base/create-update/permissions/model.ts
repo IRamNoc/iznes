@@ -9,6 +9,7 @@ export interface AccountAdminPermission {
     state?: boolean;
     hidden?: boolean;
     touched?: boolean;
+    disabled?: boolean;
 }
 
 export interface ReadTeamPermissionAreasRequest extends MemberNodeMessageBody {
@@ -23,7 +24,7 @@ export interface ReadUserPermissionAreasRequest extends MemberNodeMessageBody {
 
 export interface UpdateTeamPermissionRequest extends MemberNodeMessageBody {
     token: string;
-    userTeamId: number
-    toAdd: number[],
-    toDelete: number[],
+    userTeamId: number;
+    toAdd: number[];
+    toDelete: number[];
 }
