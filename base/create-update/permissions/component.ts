@@ -341,8 +341,6 @@ export class AccountAdminPermissionsComponentBase implements OnInit, OnDestroy {
             () => {},
             () => this.onUpdateStateError(),
         );
-
-        console.log('+++ updateState(): this.permissions: ', this.permissions);
     }
 
     private onUpdateStateError(): void {
