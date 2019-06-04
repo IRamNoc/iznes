@@ -173,6 +173,18 @@ export class MyRequestsComponent implements OnInit, OnDestroy {
         this.router.navigate(['../', 'new'], navigationExtras);
     }
 
+    duplicateFromClientFile(){
+        const navigationExtras: any = {
+            relativeTo: this.route,
+        };
+
+        navigationExtras.queryParams = {
+            duplicate: this.clientFileKyc.kycID,
+        };
+
+        this.router.navigate(['../', 'new'], navigationExtras);
+    }
+
     hasError() {
         const choice = this.choices.get('choice').value;
         const selectedControl = this.choices.get('selected');

@@ -114,7 +114,7 @@ export class MyRequestsGridComponent {
 
         this.newRequestService.storeCurrentKycs(kycIDs);
 
-        this.router.navigate(['my-requests', 'new'], extras);
+        this.router.navigate(['onboarding-requests', 'new'], extras);
     }
 
     getKycsRelatedToKycID(kycID) {
