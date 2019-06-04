@@ -33,6 +33,7 @@ export interface ManagementCompanyRequestData {
     signatureHash: string;
     logoTitle: any;
     logoHash: any;
+    isNowCp: boolean;
 }
 
 export interface SaveManagementCompanyRequestBody extends MemberNodeMessageBody {

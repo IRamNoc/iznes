@@ -60,6 +60,7 @@ export class OfiWaitingApprovalComponent implements OnInit, OnDestroy {
     message;
 
     public hasPermissionUpdateKycRequests: boolean = false;
+    hasPermissionCanManageAllClientFile = false;
 
     approveKycModal;
     investorStatusList;
@@ -80,6 +81,10 @@ export class OfiWaitingApprovalComponent implements OnInit, OnDestroy {
     @select(['ofi', 'ofiKyc', 'requested']) requestedAmKycListObs;
     @select(['ofi', 'ofiKyc', 'amKycList', 'amKycList']) amKycListObs;
     @select(['ofi', 'ofiKyc', 'kycDetails', 'kycDetailsClassification']) kycClassification$;
+
+    get canUpdateKyc(): boolean {
+        return this.hasPermissionUpdateKycRequests || this.hasPermissionCanManageAllClientFile;
+    }
 
     /**
      * Constructor
@@ -140,9 +145,14 @@ export class OfiWaitingApprovalComponent implements OnInit, OnDestroy {
 
         this.getClassification();
 
-        this.permissionsService.hasPermission('updateKycRequests', 'canRead').then(
+        this.permissionsService.hasPermission('updateKycRequests', 'canUpdate').then(
             (hasPermission) => {
                 this.hasPermissionUpdateKycRequests = hasPermission;
+            },
+        );
+        this.permissionsService.hasPermission('manageAllClientFile', 'canUpdate').then(
+            (hasPermission) => {
+                this.hasPermissionCanManageAllClientFile = hasPermission;
             },
         );
     }

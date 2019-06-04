@@ -26,6 +26,7 @@ export class MyRequestsComponent implements OnInit, OnDestroy {
 
     isListDisplayed;
     kycList: any[];
+    clientFileKyc: {kycID: number, companyName: string};
     invManagementCompanies: any[];
     subscriptions: Subscription[] = [];
     tabs: any[] = [];
@@ -69,7 +70,9 @@ export class MyRequestsComponent implements OnInit, OnDestroy {
             takeUntil(this.unsubscribe),
         )
         .subscribe((kycList) => {
-            this.kycList = kycList;
+            this.kycList = kycList.filter(kyc => kyc.amManagementCompanyID !== null);
+
+            this.clientFileKyc = kycList.filter(kyc => kyc.amManagementCompanyID === null)[0];
 
             if(kycList != undefined) this.getRequestedManagementCompanyIds();
 
@@ -139,6 +142,7 @@ export class MyRequestsComponent implements OnInit, OnDestroy {
                     kycID,
                     companyName: kyc.companyName,
                     displayed: true,
+                    isClientFile: kyc.amManagementCompanyID === null,
                 },
             );
             this.ngRedux.dispatch(action);

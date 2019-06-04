@@ -8,7 +8,7 @@ import { NgRedux, select } from '@angular-redux/store';
 import { Subpanel } from './models';
 import { fromJS } from 'immutable';
 import { ToasterService } from 'angular2-toaster';
-import { APP_CONFIG, AppConfig, immutableHelper } from '@setl/utils';
+import { APP_CONFIG, AppConfig, immutableHelper, PermissionsService } from '@setl/utils';
 
 /* Ofi orders request service. */
 import { clearAppliedHighlight, SET_HIGHLIGHT_LIST, setAppliedHighlight } from '@setl/core-store/index';
@@ -33,6 +33,8 @@ export class OfiAmDocumentsComponent implements OnDestroy, OnInit {
     public panelDefs = [];
     private subscriptions: any[] = [];
 
+    hasPermissionCanManageAllClientFile = false;
+
     /* Observables. */
     @select(['user', 'siteSettings', 'language']) requestLanguageOb;
     @select(['ofi', 'ofiKyc', 'amKycList', 'requested']) requestedOfiKycListOb;
@@ -46,6 +48,7 @@ export class OfiAmDocumentsComponent implements OnDestroy, OnInit {
                 private router: Router,
                 private translate: MultilingualService,
                 @Inject(APP_CONFIG) appConfig: AppConfig,
+                private permissionsService: PermissionsService,
     ) {
         this.appConfig = appConfig;
     }
@@ -54,10 +57,12 @@ export class OfiAmDocumentsComponent implements OnDestroy, OnInit {
         this.subscriptions.push(this.requestedOfiKycListOb.subscribe(
             requested => this.requestKycList(requested)));
         this.subscriptions.push(
-            observableCombineLatest(this.kycListOb, this.requestLanguageOb).subscribe(([amKycListData]) => {
+            observableCombineLatest(this.kycListOb, this.requestLanguageOb).subscribe(async ([amKycListData]) => {
+                this.hasPermissionCanManageAllClientFile = await this.permissionsService.hasPermission('manageAllClientFile', 'canUpdate');
                 this.updateTable(amKycListData);
             },
         ));
+
     }
 
     updateTable(tableData) {
@@ -211,21 +216,28 @@ export class OfiAmDocumentsComponent implements OnDestroy, OnInit {
                 open: true,
                 data: tables[-2],
             },
+        ];
+
+        // if the user is iznesAdmin which can manage all client file
+        if (!this.hasPermissionCanManageAllClientFile) {
+            const extraPanels = [
             {
                 id: 'StartedClients',
-                title: this.translate.translate('Started by your Clients'),
+                    title: this.translate.translate('Started by your Clients'),
                 columns: [columns[1], columns[2], columns[7], columns[4], columns[8]],
                 open: true,
                 data: tables['invited'],
             },
             {
                 id: 'AllClients',
-                title: this.translate.translate('All your KYC and Client Folders'),
+                    title: this.translate.translate('All your KYC and Client Folders'),
                 columns: [columns[1], columns[2], columns[11], columns[4], columns[8]],
                 open: true,
                 data: tables['all'],
-            },
-        ];
+            }];
+
+            this.panelDefs = [...this.panelDefs, ...extraPanels];
+        }
 
         this.changeDetectorRef.markForCheck();
     }
@@ -247,8 +259,8 @@ export class OfiAmDocumentsComponent implements OnDestroy, OnInit {
             !event.target.classList.contains('datagrid-expandable-caret-button') &&
             !event.target.classList.contains('datagrid-expandable-caret-icon')
         ) {
-            let ret = row.status === 'Accepted' ? '/client-referential/:kycID' : '/on-boarding/management/:kycID';
-            const link = row.status === -1 ? '/client-referential/:kycID' : '/on-boarding/management/:kycID';
+            let ret = this.getKycLinkTemplate(row.status);
+            const link = this.getKycLinkTemplate(row.status);
             link.match(/:\w+/g).forEach((match) => {
                 const key = match.substring(1);
                 const regex = new RegExp(match);
@@ -267,5 +279,23 @@ export class OfiAmDocumentsComponent implements OnDestroy, OnInit {
         for (const key of this.subscriptions) {
             key.unsubscribe();
         }
+    }
+
+    getKycLinkTemplate(status) {
+        if(!this.hasPermissionCanManageAllClientFile) {
+            if (status === -1 || status === 'Accepted') {
+                return  '/client-referential/:kycID'
+            } else {
+                return  '/on-boarding/management/:kycID'
+            }
+        }
+        else {
+            if (status === -1 || status === 'Accepted') {
+                return  '/client-referential/:kycID'
+            } else {
+                return  '/client-file/management/:kycID'
+            }
+        }
+
     }
 }

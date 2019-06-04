@@ -16,9 +16,14 @@
                         <p class="m-0">
                             {{ 'In this submodule, you can select the Asset Management Companies you want to work with and follow the status of your requests' | translate }}
                         </p>
-                        <button (click)="newRequestModal = true" [disabled]="!hasCompaniesToRequest()" class="btn btn-primary m-0" id="kyc-newRequestBtn">
-                            {{ 'Make New Request' | translate }}
-                        </button>
+                        <div>
+                            <button class="btn btn-primary m-1" id="kyc-myClientFileBtn" [disabled]="!clientFileKyc" (click)="selectedKyc(clientFileKyc)">
+                                {{ 'My Client File' | translate }}
+                            </button>
+                            <button (click)="newRequestModal = true" [disabled]="!hasCompaniesToRequest()" class="btn btn-primary m-0" id="kyc-newRequestBtn">
+                                {{ 'Make New Request' | translate }}
+                            </button>
+                        </div>
                     </div>
 
                     <my-requests-list [kycList]="kycList" (selectedKyc)="selectedKyc($event)"></my-requests-list>
@@ -28,7 +33,12 @@
 
         <clr-tab *ngFor="let tab of tabs; let index = index">
             <button clrTabLink>
-                {{ 'Detail' | translate }}: {{tab.companyName}}
+                <span *ngIf="!tab.isClientFile">
+                    {{ 'Detail' | translate }}: {{tab.companyName}}
+                </span>
+                <span *ngIf="tab.isClientFile">
+                    {{ 'My Client File' | translate }}
+                </span>
                 <i class="fa fa-times-circle text-warning" id="MyRequestsCloseBtn_{{index}}" (click)="closeTab(index)" [ngStyle]="{'margin-left': '14px', 'font-size':'18px'}"></i>
             </button>
 

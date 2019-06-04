@@ -139,11 +139,12 @@ export class NewKycSelectAmcComponent implements OnInit, OnDestroy {
             const foundKyc = find(this.kycList, ['kycID', kyc.kycID]);
             const managementCompany = find(this.managementCompanies, ['id', amcID]);
 
-            if (foundKyc) {
+            if (foundKyc && managementCompany) {
                 this.selectedAMCIDs.add(managementCompany.id)
                 managementCompany.registered = foundKyc.alreadyCompleted;
             }
         });
+
 
         this.copyToForm();
     }
