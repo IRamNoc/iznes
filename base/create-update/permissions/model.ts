@@ -10,7 +10,6 @@ export interface AccountAdminPermission {
     hidden?: boolean;
     touched?: boolean;
     disabled?: boolean;
-    relatedPermission?: number;
 }
 
 export interface ReadTeamPermissionAreasRequest extends MemberNodeMessageBody {

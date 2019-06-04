@@ -43,7 +43,7 @@
                         type="checkbox"
                         [disabled]="isProcessing() || isUser || permission.disabled"
                         [(ngModel)]="permission.state"
-                        (ngModelChange)="updatePermission()">
+                        (ngModelChange)="updatePermission(permission)">
                 <span class="slider round"></span>
             </label>
         </clr-dg-cell>

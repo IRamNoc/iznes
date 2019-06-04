@@ -33,6 +33,8 @@ export class AccountAdminPermissionsComponentBase implements OnInit, OnDestroy {
     appConfig: AppConfig;
     originalTeamPermissions: PermissionsModel.AccountAdminPermission[] = [];
     permissions: PermissionsModel.AccountAdminPermission[];
+    permissionRelationships: any = [];
+
     teamsControl: FormControl = new FormControl();
     teamsList: any[];
     private leavePermissionsOpen: boolean = false;
@@ -140,6 +142,11 @@ export class AccountAdminPermissionsComponentBase implements OnInit, OnDestroy {
         });
 
         this.permissions = permissions;
+
+        if (this.appConfig.platform === 'IZNES') {
+            this.initPermissionRelationships();
+        }
+
         this.entitiesFn.emit(this.permissions);
     }
 
@@ -175,7 +182,12 @@ export class AccountAdminPermissionsComponentBase implements OnInit, OnDestroy {
         }
     }
 
-    updatePermission(): void {
+    updatePermission(permission): void {
+        // Set permission relationships
+        if (this.appConfig.platform === 'IZNES') {
+            this.setPermissionRelationships(permission);
+        }
+
         // Build modificatePermissionCache
         this.modificatePermissionCache =
             this.permissions.filter(v => v.parentID !== null).reduce(
@@ -195,154 +207,108 @@ export class AccountAdminPermissionsComponentBase implements OnInit, OnDestroy {
                         }
                     }
 
-                    // IZNES: Set Permission Relationships
-                    if (this.appConfig.platform === 'IZNES') {
-                        acc = this.setPermissionRelationships(val, acc);
-                    }
-
                     return acc;
                 },
                 { toAdd: [], toDelete: [] },
             );
-
-        // console.log('+++ this.modificatePermissionCache: ', this.modificatePermissionCache);
-
-        console.log('+++ this.permissions: ', this.permissions);
     }
 
     /**
-     * IZNES: Set Permission Relationships
-     * When a permission is enabled, then its related permission must also be enabled
-     *
-     * @param {object} permission
-     * @param {object} accumulator
-     *
-     * @returns {object} accumulator
-     */
-    setPermissionRelationships(permission, accumulator): any {
-        const permissionRelationships = {
-            'Action on Orders': { // Works
+    * Initialise permission relationships
+    * 1. When a parent permission is enabled, then its related/child permission must also be enabled
+    * 2. The related/child permission can only be disabled if the parent permission is first disabled
+    */
+    initPermissionRelationships(): void {
+        this.permissionRelationships = {
+            'Action on Orders': {
                 related: 'View Orders',
             },
-            'Update KYC Requests': { // Works
+            'Update KYC Requests': {
                 related: 'View KYC Requests',
             },
-            'View Client Referentials': { // !Works
+            'View Client Referentials': {
                 related: 'View Portfolio Manager',
             },
-            'Update Client Referentials': { // !Works
+            'Update Client Referentials': {
                 related: 'View Client Referentials',
             },
-            'Invite Investors': { // Works
+            'Invite Investors': {
                 related: 'View Client Referentials',
             },
-            'Update Portfolio Manager': { // !Works
+            'Update Portfolio Manager': {
                 related: 'View Portfolio Manager',
             },
-            'Invite Portfolio Manager': { // Works
+            'Invite Portfolio Manager': {
                 related: 'View Portfolio Manager',
             },
-            'Create Product': { // !Works
+            'Create Product': {
                 related: 'View Product',
             },
-            'Update Product': { // Works
+            'Update Product': {
                 related: 'View Product',
             },
-            'Create NAV': { // !Works
+            'Create NAV': {
                 related: 'View NAV',
             },
-            'Update NAV': { // !Works
+            'Update NAV': {
                 related: 'View NAV',
             },
-            'Cancel NAV': { // Works
+            'Cancel NAV': {
                 related: 'View NAV',
             },
         };
 
-        // debugger;
+        const toBeDisabled = [];
 
-        // Check permissionRelationships for the permission
-        if (permissionRelationships[permission.name]) {
-            if (permission.name === 'Create Product') {
-                console.log('+++ permission.name: ', permission.name);
-            }
-            let relatedPermission = null;
-            // const relatedPermission = permissionRelationships[permission.name].related;
-
-            // If the permission has been toggled ON...
-            if (Boolean(permission.state) === true) {
-                // Find the related permission object in the permissions list
-                this.permissions.forEach((p, index) => {
-                    if (p.name === relatedPermission) {
-                        // Cache the relatedPermissionObject
-                        relatedPermission = p;
-                        // Toggle ON the related permission
-                        this.permissions[index].state = true;
-                        // Disable the toggle for the related permission
-                        this.permissions[index].disabled = true;
-                        // Set the relatedPermission property
-                        this.permissions[index].relatedPermission = permission.permissionAreaID;
-                        // Add the related permission to the add queue if not already included
-                        if (!accumulator.toAdd.includes(p.permissionAreaID)) {
-                            // console.log('+++ accumulator.toAdd 0: ', accumulator.toAdd);
-                            accumulator.toAdd.push(p.permissionAreaID);
-                            // console.log('+++ accumulator.toAdd 1: ', accumulator.toAdd);
-                        }
-                        // Remove the related permission from the delete queue
-                        accumulator.toDelete.forEach((d, index) => {
-                            if (d === p.permissionAreaID) delete accumulator.toDelete[index];
-                        });
-                    }
-                });
-            // The permission has been toggled OFF...
-            } else {
-                // If there is a related permission...
-                if (relatedPermission) {
-                    if (permission.name === 'Create Product') {
-                        console.log('+++ toggled OFF... relatedPermission: ', relatedPermission.name);
-                    }
-                    // Find the related permission object in the permissions list
-                    this.permissions.forEach((p, index) => {
-                        if (p.name === relatedPermission.name) {
-                            if (permission.name === 'Create Product') {
-                                console.log('+++ this.permissions[index]: ', this.permissions[index]);
-                            }
-                            // ...re-enable/un-disable its toggle if disabled
-                            this.permissions[index].disabled = false;
-                        }
-                    });
-                }
+        // Initialise permissionRelationships for use in setPermissionRelationships()
+        this.permissions.forEach((p, index) => {
+            if (!this.permissionRelationships.hasOwnProperty(p.name)) {
+                this.permissionRelationships[p.name] = { related: null };
             }
 
-            // Check permissionRelationships for relatedPermission
-            if (relatedPermission && permissionRelationships[relatedPermission]) {
-                // Find the index of the related permission in the permissions list
-                let permissionIndex = null;
+            const permissionObject = this.permissionRelationships[p.name];
+            permissionObject.permissionIndex = index;
+            permissionObject.permissionAreaID = p.permissionAreaID;
 
-                permissionIndex = this.permissions.forEach((p, index) => {
-                    if (p.name === permission.name) {
-                        return index;
-                    }
-                });
-
-                // Enable the related permission if not already enabled
-                if (permissionIndex && !this.permissions[permissionIndex].state) {
-                    // Get the relatedPermission object from the permissions list
-                    const relatedPermissionObject = this.permissions.find((po) => {
-                        return po.name === relatedPermission;
-                    });
-
-                    if (relatedPermissionObject) {
-                        // Set the related permission for relatedPermission
-                        relatedPermissionObject.state = true;
-                        this.setPermissionRelationships(relatedPermissionObject, accumulator);
-                    }
-                }
+            // If the permission is enabled and it has a related/child permission, push child's name into toBeDisabled
+            if (p.state && this.permissionRelationships[this.permissionRelationships[p.name].related]) {
+                toBeDisabled.push(this.permissionRelationships[p.name].related);
             }
+        });
 
-            console.log('+++ accumulator: ', accumulator);
+        if (toBeDisabled.length) {
+            // Disable the related/child permission's toggle so that it cannot be set to 'OFF'
+            toBeDisabled.forEach((p) => {
+                this.permissions[this.permissionRelationships[p].permissionIndex].disabled = true;
+            });
         }
-        return accumulator;
+    }
+
+    /**
+     * Set permission relationships
+     * 1. When a parent permission is enabled (state === true), then its related/child permission must also be enabled
+     * 2. The toggle for the related/child permission can only be set to 'OFF' if the parent permission is set to 'OFF'
+     */
+    setPermissionRelationships(permission): void {
+        // If the enabled permission has a related/child permission...
+        if (this.permissionRelationships[permission.name] && this.permissionRelationships[permission.name].related) {
+            const relatedPermission = this.permissionRelationships[permission.name].related;
+
+            if (this.permissionRelationships[relatedPermission]) {
+                const relatedPermissionObject = this.permissionRelationships[relatedPermission];
+
+                // 1: Enable the related/child permission
+                if (Boolean(permission.state)) {
+                    this.permissions[relatedPermissionObject.permissionIndex].state = true;
+                }
+
+                // 2: Disable/enable the child's toggle depending on its whether its parent is disabled/enabled
+                this.permissions[relatedPermissionObject.permissionIndex].disabled = Boolean(permission.state);
+
+                // Check if the related/child permission has its own related/child permission...
+                this.setPermissionRelationships(this.permissions[relatedPermissionObject.permissionIndex]);
+            }
+        }
     }
 
     isProcessing(): boolean {
