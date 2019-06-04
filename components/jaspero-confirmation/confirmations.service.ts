@@ -24,4 +24,8 @@ export class ConfirmationService {
 
         return resolve$;
     }
+
+    close() {
+        this.confirmation$.next({ close: true });
+    }
 }

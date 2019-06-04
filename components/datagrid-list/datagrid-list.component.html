@@ -12,7 +12,7 @@
             <clr-dg-string-filter *ngIf="filters[field.name]" #dataGridFilter [clrDgStringFilter]="filters[field.name]" [clrFilterValue]="filterValue(field.name)"></clr-dg-string-filter>
         </clr-dg-column>
 
-        <clr-dg-column class="right" *ngIf="listActions">{{ 'Actions'  | translate }}</clr-dg-column>
+        <clr-dg-column class="right" *ngIf="listActions">{{ listActions.length > 1 ? 'Actions' : 'Action' | translate }}</clr-dg-column>
 
         <!-- STANDARD ROWS -->
         <ng-container *ngIf="!lazyLoaded">
