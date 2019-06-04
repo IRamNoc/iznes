@@ -350,11 +350,11 @@ export class OfiClientReferentialComponent implements OnInit, OnDestroy {
     }
 
     gotoInvite() {
-        this.router.navigateByUrl('/client-referential/invite-investors');
+        if (!this.hasPermissionInvestorInvitation) this.router.navigateByUrl('/client-referential/invite-investors');
     }
 
     inviteMandateInvestors() {
-        this.router.navigate(['client-referential', 'invite-mandate-investors']);
+        if (!this.hasPermissionInvestorInvitation) this.router.navigate(['client-referential', 'invite-mandate-investors']);
     }
 
     viewClient(id) {
