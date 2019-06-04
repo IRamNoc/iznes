@@ -10,6 +10,7 @@ export class ProgressComponent {
     @Input() config;
 
     getWidth() {
-        return (100 / this.config.length + '%');
+        return 100;
+        //return (100 / this.config.length + '%');
     }
 }

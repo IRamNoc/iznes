@@ -1,12 +1,11 @@
-<div>
+<div class="steps-container">
+    {{_onboardingMode}}
+
     <form-steps-progress [config]="progress">
     </form-steps-progress>
-
-    <div class="steps-slider" [ngStyle]="{'marginLeft': margin}">
-        <ng-content></ng-content>
-    </div>
 </div>
-<div class="steps-buttons">
+
+<div class="header-container">
     <button *ngIf="!isBeginning()" class="btn btn-info" (click)="askPrevious()" [disabled]="disabled">
         {{'Previous' | translate}}
     </button>
@@ -22,4 +21,10 @@
             {{'Submit' | translate}}
         </span>
     </button>
+</div>
+
+<div class="form-container">
+    <div class="steps-slider" [ngStyle]="{'marginLeft': margin}">
+            <ng-content></ng-content>
+        </div>
 </div>

@@ -31,6 +31,10 @@ export class FormstepsComponent implements AfterContentInit {
         this._stepsConfig = stepsConfig;
     };
 
+    @Input() set onboarding(onboardingMode) {
+        this._onboardingMode = onboardingMode;
+    };
+
     get stepsConfig() {
         return this._stepsConfig;
     }
@@ -40,6 +44,7 @@ export class FormstepsComponent implements AfterContentInit {
     margin;
     _position;
     _stepsConfig;
+    _onboardingMode;
     progress = [];
     _disabled: boolean = false;
 
