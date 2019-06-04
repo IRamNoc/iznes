@@ -1583,7 +1583,7 @@
                 </div>
                 <br>
 
-                <div *ngIf="!hasPermissionUpdateFund" class="alert alert-warning">
+                <div *ngIf="param && !isAdmin() && !hasPermissionUpdateFund" class="alert alert-warning">
                     <div class="alert-items">
                         <div class="alert-item static">
                             <div class="alert-icon-wrapper">
@@ -1617,7 +1617,7 @@
                             id="fund-submitfund-btn"
                             type="submit"
                             class="btn btn-primary"
-                            [disabled]="!fundForm.valid || !hasPermissionUpdateFund">
+                            [disabled]="!fundForm.valid || (param && !hasPermissionUpdateFund)">
                             <i class="fa fa-save"></i> {{ !param || currDraft == 1 ? 'Save' : 'Update' }}
                     </button>
                 </div>

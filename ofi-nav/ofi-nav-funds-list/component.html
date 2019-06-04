@@ -20,14 +20,14 @@
 
         <clr-tab-content *clrIfActive="true">
             <!-- Button container -->
-            <div *ngIf="!hasPermissionCreateNav || !hasPermissionUpdateNav" class="alert alert-warning">
+            <div *ngIf="!(hasPermissionCreateNav && hasPermissionUpdateNav) && !isIznesAdmin" class="alert alert-warning">
                 <div class="alert-items">
                     <div class="alert-item static">
                         <div class="alert-icon-wrapper">
                             <clr-icon class="alert-icon" shape="exclamation-triangle"></clr-icon>
                         </div>
                         <span class="alert-text">
-                            {{ 'Please contact the administrator to request permission to upload NAVs' | translate }}
+                            {{ 'Please contact the administrator to request permission to upload NAVs.' | translate }}
                         </span>
                     </div>
                 </div>
@@ -80,40 +80,14 @@
                 </div>
             </form>
 
-            <div *ngIf="!hasPermissionCreateNav && navListItems.length" class="alert alert-warning">
+            <div *ngIf="navListItems.length && !isIznesAdmin && (!hasPermissionCreateNav || !hasPermissionUpdateNav || !hasPermissionDeleteNav)" class="alert alert-warning">
                 <div class="alert-items">
                     <div class="alert-item static">
                         <div class="alert-icon-wrapper">
                             <clr-icon class="alert-icon" shape="exclamation-triangle"></clr-icon>
                         </div>
                         <span class="alert-text">
-                            {{ 'Please contact the administrator to request permission to add a NAV' | translate }}
-                        </span>
-                    </div>
-                </div>
-            </div>
-
-            <div *ngIf="!hasPermissionUpdateNav && navListItems.length" class="alert alert-warning">
-                <div class="alert-items">
-                    <div class="alert-item static">
-                        <div class="alert-icon-wrapper">
-                            <clr-icon class="alert-icon" shape="exclamation-triangle"></clr-icon>
-                        </div>
-                        <span class="alert-text">
-                            {{ 'Please contact the administrator to request permission to edit a NAV' | translate }}
-                        </span>
-                    </div>
-                </div>
-            </div>
-
-            <div *ngIf="!hasPermissionDeleteNav && navListItems.length" class="alert alert-warning">
-                <div class="alert-items">
-                    <div class="alert-item static">
-                        <div class="alert-icon-wrapper">
-                            <clr-icon class="alert-icon" shape="exclamation-triangle"></clr-icon>
-                        </div>
-                        <span class="alert-text">
-                            {{ 'Please contact the administrator to request permission to cancel a NAV' | translate }}
+                            {{ getPermissionMessage() }}
                         </span>
                     </div>
                 </div>

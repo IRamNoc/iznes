@@ -138,7 +138,7 @@ export class OfiClientReferentialComponent implements OnInit, OnDestroy {
             },
         );
 
-        this.permissionsService.hasPermission('investorInvitation', 'canRead').then(
+        this.permissionsService.hasPermission('investorInvitation', 'canInsert').then(
             (hasPermission) => {
                 this.hasPermissionInvestorInvitation = hasPermission;
             },

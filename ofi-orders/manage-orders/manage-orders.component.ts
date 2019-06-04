@@ -379,7 +379,7 @@ export class ManageOrdersComponent implements OnInit, AfterViewInit, OnDestroy {
             },
         );
 
-        this.permissionsService.hasPermission('actionOnOrders', 'canRead').then(
+        this.permissionsService.hasPermission('manageOrder', 'canUpdate').then(
             (hasPermission) => {
                 this.hasPermissionActionOnOrders = hasPermission;
             },
