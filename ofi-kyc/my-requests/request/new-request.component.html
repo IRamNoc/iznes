@@ -1,12 +1,4 @@
-<div class="header-breadcrumbs">
-    <h1 class="text-overflow">
-        <i class="fa fa-plus"></i>
-        <span id="new-request-title">{{ 'Make New Request' | translate }}</span>
-        <span *ngIf="duplicateCompany"> {{'from already sent request to' | translate}} {{duplicateCompany}}</span>
-    </h1>
-</div>
-
-<div class="p-1">
+<!-- <div class="p-1">
     <clr-alert [clrAlertSizeSmall]="true" [clrAlertType]="'alert-danger'" [clrAlertClosable]="false">
         <div class="alert-item">
             <span class="alert-text">
@@ -14,9 +6,9 @@
             </span>
         </div>
     </clr-alert>
-</div>
+</div> -->
 
-<form-steps *ngIf="stepsConfig" [stepsConfig]="stepsConfig" (action)="handleAction($event)" [@toggle]="animating" (@toggle.done)="applyFullForm()">
+<form-steps *ngIf="stepsConfig" [onboarding]="onboardingMode" [stepsConfig]="stepsConfig" (action)="handleAction($event)" [@toggle]="animating" (@toggle.done)="applyFullForm()">
     <form-step>
         <kyc-step-select-amc #step [form]="forms.get('selection')" (registered)="registered($event)" [disabled]="currentCompletedStep" (submitEvent)="handleSubmit($event)" [duplicate]="duplicate"></kyc-step-select-amc>
     </form-step>
@@ -36,6 +28,15 @@
         <kyc-step-validation #step [form]="forms.get('validation')" (submitEvent)="handleSubmit($event)"></kyc-step-validation>
     </form-step>
 </form-steps>
+
+<div class="header-breadcrumbs">
+    <h1 class="text-overflow">
+        <i class="fa fa-plus"></i>
+        <span id="new-request-title">{{ 'Make New Request' | translate }}</span>
+        <span *ngIf="duplicateCompany"> {{'from already sent request to' | translate}} {{duplicateCompany}}</span>
+    </h1>
+</div>
+
 
 <div class="info" *ngIf="isBeginning()">
     <clr-icon shape="info-circle" class="is-info" size="24"></clr-icon>

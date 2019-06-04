@@ -4,7 +4,7 @@ import { takeUntil, filter as rxFilter, tap, map } from 'rxjs/operators';
 import { FormGroup } from '@angular/forms';
 import { select, NgRedux } from '@angular-redux/store';
 import { ActivatedRoute } from '@angular/router';
-import { isEmpty, isNil, keyBy, filter, reduce, find } from 'lodash';
+import { isEmpty, isNil, keyBy, filter, reduce, find, merge } from 'lodash';
 import { formHelper } from '@setl/utils/helper';
 
 import { ClearMyKycListRequested } from '@ofi/ofi-main/ofi-store/ofi-kyc';
@@ -52,11 +52,14 @@ export class NewKycSelectAmcComponent implements OnInit, OnDestroy {
     @select(['ofi', 'ofiProduct', 'ofiManagementCompany', 'investorManagementCompanyList', 'investorManagementCompanyList']) managementCompanyList$;
 
     get selectedManagementCompanies() {
-        const selected = filter(this.managementCompanies, company => this.selectedAMCIDs.has(company.id)).map(company => ({
+        let selected = filter(this.managementCompanies, company => this.selectedAMCIDs.has(company.id)).map(company => ({
             id: company.id,
             registered: company.registered,
             invitationToken: this.getInvitationToken(company.id),
         }));
+
+        selected.push({id:-1, registered:0, invitationToken:''});
+
         return selected;
     }
 

@@ -1,5 +1,12 @@
 import { fundItems } from '@ofi/ofi-main/ofi-product/productConfig';
 
+export const formStepsOnboarding = [
+    {
+        title: 'User Profile',
+        id: 'step-userprofile',
+    },
+];
+
 export const formStepsFull = [
     {
         title: 'Selection',

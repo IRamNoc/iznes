@@ -1,5 +1,5 @@
 /* Core/Angular imports. */
-import { AfterViewInit, ChangeDetectionStrategy, ChangeDetectorRef, Component, OnDestroy, Inject } from '@angular/core';
+import { AfterViewInit, ChangeDetectionStrategy, ChangeDetectorRef, Component, OnDestroy, Inject, ViewChild, ElementRef } from '@angular/core';
 /* Redux */
 import { NgRedux, select } from '@angular-redux/store';
 import { Subject } from 'rxjs/Subject';
@@ -26,13 +26,17 @@ import { InvestorType } from '../../shared/investor-types';
     changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class OfiKycHomeComponent implements AfterViewInit, OnDestroy {
+    @ViewChild('.nav-trigger') divClick: ElementRef;
+
     appConfig: AppConfig;
     endpointsConfig: Endpoints;
     hasFilledAdditionnalInfos = false;
     userType: number;
     investorType: number;
+    basic = true;
 
     /* Public properties. */
+    public investorTypeText = 'Onboard on IZNES';
     public showModal = false;
     public userInfo: KycMyInformations = {
         email: '',
@@ -89,6 +93,7 @@ export class OfiKycHomeComponent implements AfterViewInit, OnDestroy {
                 /* Assign list to a property. */
                 this.userInfo = d;
                 this.investorType = d.investorType;
+                this.renderSplash();
                 this.changeDetectorRef.markForCheck();
             });
 
@@ -98,6 +103,14 @@ export class OfiKycHomeComponent implements AfterViewInit, OnDestroy {
 
         /* fetch backend for existing data to pre fill the form */
         this.ofiKycService.fetchInvestor();
+    }
+
+    ngOnInit() {
+        console.log('hello ollie');
+        // hide menu on load
+        setTimeout(() => {
+            this.divClick.nativeElement.click();
+        }, 200);
     }
 
     openMyInformationsModal(userInformations: KycMyInformations) {
@@ -211,5 +224,14 @@ export class OfiKycHomeComponent implements AfterViewInit, OnDestroy {
     ngOnDestroy(): void {
         this.unSubscribe.next();
         this.unSubscribe.complete();
+    }
+
+    renderSplash() {
+        this.investorType;
+
+        // Now CP investor type, 70 = issuer, 80 == investor
+        if(this.investorType == 70 || this.investorType == 80) {
+            this.investorTypeText = "Onboard as NowCP Client";
+        }
     }
 }
