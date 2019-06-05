@@ -136,7 +136,7 @@ export class OfiNavAuditComponent implements OnInit, OnDestroy {
     }
 
     dataGridRefresh(state): void {
-        this.gridRowOffSet = (state.page.from / this.gridItemsPerPage);
+        if (Object.keys(state).length && state.page.from) this.gridRowOffSet = (state.page.from / this.gridItemsPerPage);
 
         this.redux.dispatch(clearRequestedNavAudit());
         this.changeDetectorRef.markForCheck();
@@ -182,6 +182,7 @@ export class OfiNavAuditComponent implements OnInit, OnDestroy {
         for (const subscription of this.subscriptionsArray) {
             subscription.unsubscribe();
         }
+        this.changeDetectorRef.detach();
     }
 
     onlyDate(dateTimeString: string): string {

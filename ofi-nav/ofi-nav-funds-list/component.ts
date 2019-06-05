@@ -74,7 +74,7 @@ export class OfiNavFundsList implements OnInit, OnDestroy, AfterViewInit {
     private cancelNavSuccessMessage: string;
     private cancelNavErrorMessage: string;
 
-    get isIznesAdmin():boolean {
+    get isIznesAdmin(): boolean {
         return this.router.url.startsWith(ADMIN_USER_URL);
     }
 
@@ -343,6 +343,7 @@ export class OfiNavFundsList implements OnInit, OnDestroy, AfterViewInit {
         for (const subscription of this.subscriptionsArray) {
             subscription.unsubscribe();
         }
+        this.changeDetectorRef.detach();
     }
 
     handleUploadNavSubmitClick() {
