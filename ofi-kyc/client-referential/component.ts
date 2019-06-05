@@ -111,6 +111,7 @@ export class OfiClientReferentialComponent implements OnInit, OnDestroy {
     @select(['ofi', 'ofiKyc', 'amKycList', 'amKycList']) amKycListObs;
     @select(['ofi', 'ofiPortfolioManager', 'portfolioManagerList', 'portfolioManagerList']) portfolioManagers$: Observable<PortfolioManagerDetail[]>;
     @select(['ofi', 'ofiProduct', 'ofiFundShareList', 'iznShareList']) amAllFundShareListOb;
+    @select(['ofi', 'ofiProduct', 'ofiFundShareList', 'requestedIznesShare']) requestedShareList$;
     @select(['user', 'authentication', 'token']) tokenOb;
     @select(['user', 'myDetail', 'userId']) userIdOb;
     @select(['user', 'siteSettings', 'language']) requestLanguageOb;
@@ -187,6 +188,10 @@ export class OfiClientReferentialComponent implements OnInit, OnDestroy {
 
         this.subscriptions.push(this.investorTypeForm.valueChanges.subscribe(() => {
             this.ofiKycService.setRequestedClientReferential(false);
+        }));
+
+        this.subscriptions.push(this.requestedShareList$.subscribe((requested) => {
+            this.requestShareList(requested);
         }));
 
         this.subscriptions.push(this.amAllFundShareListOb.subscribe((fundShareList) => {
@@ -352,11 +357,11 @@ export class OfiClientReferentialComponent implements OnInit, OnDestroy {
     }
 
     gotoInvite() {
-        this.router.navigateByUrl('/client-referential/invite-investors');
+        if (!this.hasPermissionInvestorInvitation) this.router.navigateByUrl('/client-referential/invite-investors');
     }
 
     inviteMandateInvestors() {
-        this.router.navigate(['client-referential', 'invite-mandate-investors']);
+        if (!this.hasPermissionInvestorInvitation) this.router.navigate(['client-referential', 'invite-mandate-investors']);
     }
 
     viewClient(id) {
@@ -633,6 +638,12 @@ export class OfiClientReferentialComponent implements OnInit, OnDestroy {
      */
     isRetail(): boolean {
         return isRetail(this.currentInvestor.investorType);
+    }
+
+    requestShareList(requested): void {
+        if (!requested) {
+            OfiFundShareService.defaultRequestIznesShareList(this.ofiFundShareService, this.ngRedux);
+        }
     }
 
     /**

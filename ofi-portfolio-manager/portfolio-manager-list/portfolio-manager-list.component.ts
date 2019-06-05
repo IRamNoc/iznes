@@ -10,17 +10,10 @@ import { PortfolioManagerDetail } from '../../ofi-store/ofi-portfolio-manager/po
     templateUrl: './portfolio-manager-list.component.html',
 })
 export class PortfolioManagerListComponent implements OnInit, OnDestroy {
-    portfolioMangerList = [
-        {
-            emailAddress: 'email@setl.io',
-            firstName: 'ming',
-            lastName: 'huang',
-            status: 'active',
-        },
-    ];
+    portfolioMangerList = [];
 
     public hasPermissionPortfolioManagersView: boolean = false;
-    public hasPermissionInvitePortfolioManager: boolean = false;
+    public hasPermissionPortfolioManagersInsert: boolean = false;
 
     constructor(
         private ofiPortfolioManagerDataService: OfiPortfolioManagerDataService,
@@ -38,9 +31,9 @@ export class PortfolioManagerListComponent implements OnInit, OnDestroy {
             },
         );
 
-        this.permissionsService.hasPermission('invitePortfolioManager', 'canRead').then(
+        this.permissionsService.hasPermission('managePortfolioManager', 'canInsert').then(
             (hasPermission) => {
-                this.hasPermissionInvitePortfolioManager = hasPermission;
+                this.hasPermissionPortfolioManagersInsert = hasPermission;
             },
         );
     }

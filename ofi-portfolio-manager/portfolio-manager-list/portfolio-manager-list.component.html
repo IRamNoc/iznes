@@ -18,13 +18,13 @@
                         {{ 'Please find below the list of your portfolio managers.' | translate }}
                     </div>
                     <div class="col-sm-6" align="right">
-                        <button [disabled]="!hasPermissionInvitePortfolioManager" id="invite-pm-btn" class="btn" style="margin-left: 10px;" (click)="handleInvite();">
+                        <button [disabled]="!hasPermissionPortfolioManagersInsert" id="invite-pm-btn" class="btn" style="margin-left: 10px;" (click)="handleInvite();">
                             {{ 'Invite a Portfolio Manager' | translate }}
                         </button>
                     </div>
                 </div>
 
-                <div *ngIf="!hasPermissionInvitePortfolioManager" class="alert alert-warning">
+                <div *ngIf="!hasPermissionPortfolioManagersInsert" class="alert alert-warning">
                     <div class="alert-items">
                         <div class="alert-item static">
                             <div class="alert-icon-wrapper">

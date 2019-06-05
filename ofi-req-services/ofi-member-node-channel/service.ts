@@ -110,7 +110,7 @@ export class OfiMemberNodeChannelService {
             case 'getfundaccessmy':
                 this.ngRedux.dispatch(clearRequestedNavFundsList());
                 this.ngRedux.dispatch(clearRequestedFundAccessMy());
-                this.fundInvestService.fetchFundAccessMy(this.connectedWalletID);
+                //this.fundInvestService.fetchFundAccessMy(this.connectedWalletID);
                 break;
 
             case 'iznesupdateorder':

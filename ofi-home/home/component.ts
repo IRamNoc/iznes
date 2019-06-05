@@ -44,7 +44,7 @@ export class OfiHomeComponent implements AfterViewInit, OnInit, OnDestroy {
     public hasPermissionManageOrders: boolean = false;
     public hasPermissionViewRecordkeeping: boolean = false;
     public hasPermissionViewPrecentralisation: boolean = false;
-    public hasPermissionViewFundShare: boolean = false;
+    public hasPermissionViewUmbrellaFund: boolean = false;
     public hasPermissionViewNav: boolean = false;
     public hasPermissionviewAllOrder: boolean = false;
 
@@ -133,9 +133,9 @@ export class OfiHomeComponent implements AfterViewInit, OnInit, OnDestroy {
             },
         );
 
-        this.permissionsService.hasPermission('manageFundShare', 'canRead').then(
+        this.permissionsService.hasPermission('manageUmbrellaFund', 'canRead').then(
             (hasPermission) => {
-                this.hasPermissionViewFundShare = hasPermission;
+                this.hasPermissionViewUmbrellaFund = hasPermission;
             },
         );
 
