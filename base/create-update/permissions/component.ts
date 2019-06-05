@@ -248,7 +248,7 @@ export class AccountAdminPermissionsComponentBase implements OnInit, OnDestroy {
                 related: ['View NAV'],
             },
             'Update NAV': {
-                related: ['View NAV'],
+                related: ['Create NAV'],
             },
             'Cancel NAV': {
                 related: ['View NAV'],
