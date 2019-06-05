@@ -79,8 +79,7 @@ export class ConnectionStatusAlerts implements OnInit, OnDestroy {
                 this.remainingSecond = remainingSecond;
 
                 if (remainingSecond <= 0) {
-                    this.router.navigateByUrl('');
-                    this.myUserService.logout();
+                    this.router.navigateByUrl('/logout');
                 }
 
             },
