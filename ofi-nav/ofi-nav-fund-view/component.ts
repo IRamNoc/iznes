@@ -76,8 +76,8 @@ export class OfiNavFundView implements OnInit, OnDestroy {
     public hasPermissionUpdateNav: boolean = false;
     public hasPermissionDeleteNav: boolean = false;
 
-    get isIznesAdmin():boolean {
-        return this.router.url.startsWith(ADMIN_USER_URL);
+    get isIznesAdmin(): boolean {
+        return this.router.url.startsWith(ADMIN_USER_URL) || this.router.url.split('/').includes(ADMIN_USER_URL.substr(1));
     }
 
     @ViewChild('detailNavCsvFile')
@@ -273,6 +273,7 @@ export class OfiNavFundView implements OnInit, OnDestroy {
         for (const subscription of this.subscriptionsArray) {
             subscription.unsubscribe();
         }
+        this.changeDetectorRef.detach();
     }
 
     handleUploadNavSubmitClick() {
