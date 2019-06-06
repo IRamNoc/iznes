@@ -146,6 +146,8 @@
                         <div class="form-group col-sm-12">
                             <button id="backButton" type="button" class="btn btn-light" (click)="handleBackButtonClick()">{{ 'Back' | translate }}</button>
 
+                            <button *ngIf="hasPermissionCanManageAllClientFile" type="button" class="btn btn-primary" (click)="downloadClientFile()">{{'Download Client File' | translate}}</button>
+
                             <button id="submitButton" type="submit" class="btn btn-primary" [disabled]="handleSubmitButtonDisabled()">{{ 'Validate' | translate }}
                             </button>
                         </div>
