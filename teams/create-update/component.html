@@ -15,11 +15,25 @@
         <clr-tab-content class="outer">
             <app-core-admin-user-teams-status *ngIf="isUpdateMode()"
                 [noun]="noun"
+                [hasPermissionUpdateTeams]="hasPermissionUpdateTeams"
                 [status]="status"
                 [entityId]="entityId">
             </app-core-admin-user-teams-status>
 
             <h3>{{ [noun, 'Details'].join(' ') | translate }}</h3>
+
+            <div *ngIf="!hasPermissionUpdateTeams" class="alert alert-warning">
+                <div class="alert-items">
+                    <div class="alert-item static">
+                        <div class="alert-icon-wrapper">
+                            <clr-icon class="alert-icon" shape="exclamation-triangle"></clr-icon>
+                        </div>
+                        <span class="alert-text">
+                            {{ 'Please contact the administrator to request permission to update teams' | translate }}
+                        </span>
+                    </div>
+                </div>
+            </div>
 
             <app-dynamic-form [model]="form"></app-dynamic-form>
 
@@ -29,11 +43,26 @@
                 </div>
             </div>
 
+            <div *ngIf="!hasPermissionViewUsers || !hasPermissionCreateUsers" class="alert alert-warning">
+                <div class="alert-items">
+                    <div class="alert-item static">
+                        <div class="alert-icon-wrapper">
+                            <clr-icon class="alert-icon" shape="exclamation-triangle"></clr-icon>
+                        </div>
+                        <span class="alert-text">
+                            {{ getPermissionMessage() }}
+                        </span>
+                    </div>
+                </div>
+            </div>
+            <br />
+
             <div class="row">
                 <div class="col-sm-12">
                     <app-core-admin-teams-user-mgmt
                         [entityId]="entityId"
                         [noun]="nouns.User"
+                        [hasPermissionCreateUsers]="hasPermissionCreateUsers"
                         [showOnlyActiveFilter]="isUpdateMode()"
                         [doUpdateOb]="doUserManagementUpdateOb">
                     </app-core-admin-teams-user-mgmt>
@@ -46,11 +75,26 @@
                 </div>
             </div>
 
+            <div *ngIf="!hasPermissionUpdateTeams" class="alert alert-warning">
+                <div class="alert-items">
+                    <div class="alert-item static">
+                        <div class="alert-icon-wrapper">
+                            <clr-icon class="alert-icon" shape="exclamation-triangle"></clr-icon>
+                        </div>
+                        <span class="alert-text">
+                            {{ 'Please contact the administrator to request permission to update teams' | translate }}
+                        </span>
+                    </div>
+                </div>
+            </div>
+            <br />
+
             <div class="row">
                 <div class="col-sm-12">
                     <app-core-admin-permissions
                         [showTeamSelect]="false"
                         [entityId]="entityId"
+                        [disableAll]="!hasPermissionUpdateTeams"
                         [doUpdateOb]="doPermissionsUpdateOb"
                         (entitiesFn)="getTeamPermissions($event)">
                     </app-core-admin-permissions>
@@ -63,18 +107,20 @@
                 </div>
 
                 <div class="col">
-                    <button class="btn btn-primary" (click)="save()" [disabled]="!isValid()">
-                        <ng-container *ngIf="isCreateMode()">
-                           {{ ['Create', noun].join(' ') | translate }}
-                        </ng-container>
-                        <ng-container *ngIf="!isCreateMode()">
+                    <ng-container *ngIf="isCreateMode()">
+                        <button class="btn btn-primary" (click)="save()" [disabled]="!hasPermissionCreateTeams || !isValid()">
+                            {{ ['Create', noun].join(' ') | translate }}
+                        </button>
+                    </ng-container>
+                    <ng-container *ngIf="!isCreateMode()">
+                        <button class="btn btn-primary" (click)="save()" [disabled]="!hasPermissionUpdateTeams || !isValid()">
                             {{ ['Update', noun].join(' ') | translate }}
-                        </ng-container>
-                    </button>
+                        </button>
+                    </ng-container>
                 </div>
 
                 <div class="col justify-end" *ngIf="isUpdateMode()">
-                    <button class="btn btn-danger" (click)="doDeleteTeam()">
+                    <button class="btn btn-danger" [disabled]="!hasPermissionDeleteTeams" (click)="doDeleteTeam()">
                         {{ ['Delete', noun].join(' ') | translate }}
                     </button>
                 </div>

@@ -6,6 +6,20 @@
     <clr-tab>
         <button clrTabLink id="tabAccountAdminTeamsButton">{{ 'List' | translate }}</button>
         <clr-tab-content class="outer">
+            <!-- Button container -->
+            <div *ngIf="!hasPermissionCreateTeams" class="alert alert-warning">
+                <div class="alert-items">
+                    <div class="alert-item static">
+                        <div class="alert-icon-wrapper">
+                            <clr-icon class="alert-icon" shape="exclamation-triangle"></clr-icon>
+                        </div>
+                        <span class="alert-text">
+                            {{ 'Please contact the administrator to request permission to create teams' | translate }}
+                        </span>
+                    </div>
+                </div>
+            </div>
+            <br />
             <div class="row buttons">
                 <div class="col">
                     <a [routerLink]="'/account-admin/teams/audit'" class="btn btn-primary">{{ 'Audit Trail' | translate }}</a>
@@ -14,7 +28,7 @@
                     <button class="btn btn-primary" (click)="exportCSV()">{{ 'Export Teams as CSV' | translate }}</button>
                 </div>
                 <div class="col">
-                    <a [routerLink]="'/account-admin/teams/new'" class="btn btn-primary">{{ 'Add New Team' | translate }}</a>
+                    <button class="btn btn-primary" [routerLink]="'/account-admin/teams/new'" [disabled]="!hasPermissionCreateTeams">{{ 'Add New Team' | translate }}</button>
                 </div>
             </div>
 

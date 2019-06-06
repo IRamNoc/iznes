@@ -17,16 +17,19 @@ export class AccountAdminTeamForm extends DynamicFormsValidator {
         label: 'Team Name',
         type: FormItemType.text,
         required: true,
+        disabled: false,
     };
     reference: FormItem = {
         label: 'Reference',
         type: FormItemType.text,
         required: true,
+        disabled: false,
     };
     description: FormItem = {
         label: 'Description',
         type: FormItemType.textarea,
         required: true,
+        disabled: false,
     };
 }
 

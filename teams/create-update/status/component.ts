@@ -12,6 +12,7 @@ import { Router } from '@angular/router';
     styleUrls: ['../../../base/create-update/status/component.scss'],
 })
 export class UserTeamsStatusComponent extends AccountAdminStatusComponentBase<null> {
+    @Input() hasPermissionUpdateTeams: boolean;
 
     constructor(toaster: ToasterService,
                 translate: MultilingualService,
@@ -22,6 +23,11 @@ export class UserTeamsStatusComponent extends AccountAdminStatusComponentBase<nu
 
         this.enableMessage = translate.translate('Are you sure you want to enable this team?');
         this.disableMessage = translate.translate('Are you sure you want to disable this team?');
+    }
+
+    ngOnInit() {
+        console.log('+++ this.noun: ', this.noun);
+        console.log('+++ hasPermissionUpdateTeams: ', this.hasPermissionUpdateTeams);
     }
 
     onUpdateStatus(): void {

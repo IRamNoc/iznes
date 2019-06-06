@@ -11,6 +11,7 @@ import { AccountAdminPermission } from '../../base/create-update/permissions/mod
 import { UserTeamsService } from '../service';
 import { AccountAdminCreateUpdateBase } from '../../base/create-update/component';
 import { AccountAdminErrorResponse, AccountAdminSuccessResponse, AccountAdminNouns } from '../../base/model';
+import { PermissionsService } from '@setl/utils/services/permissions';
 
 @Component({
     selector: 'app-core-admin-teams-crud',
@@ -25,12 +26,19 @@ export class UserTeamsCreateUpdateComponent
     private usersSelected: UsersModel.AccountAdminUser[];
     private permissionsSelected: AccountAdminPermission[];
 
+    public hasPermissionCreateTeams: boolean = false;
+    public hasPermissionUpdateTeams: boolean = false;
+    public hasPermissionDeleteTeams: boolean = false;
+    public hasPermissionViewUsers: boolean = false;
+    public hasPermissionCreateUsers: boolean = false;
+
     constructor(private service: UserTeamsService,
                 route: ActivatedRoute,
                 protected router: Router,
                 alerts: AlertsService,
                 toaster: ToasterService,
                 confirmations: ConfirmationService,
+                public permissionsService: PermissionsService,
                 protected translate: MultilingualService) {
         super(route, router, alerts, toaster, confirmations, translate);
         this.noun = AccountAdminNouns.Team;
@@ -39,11 +47,68 @@ export class UserTeamsCreateUpdateComponent
     ngOnInit() {
         super.ngOnInit();
 
+        this.permissionsService.hasPermission('accountAdminTeams', 'canInsert').then(
+            (hasPermission) => {
+                this.hasPermissionCreateTeams = hasPermission;
+            });
+
+        this.permissionsService.hasPermission('accountAdminTeams', 'canUpdate').then(
+            (hasPermission) => {
+                this.hasPermissionUpdateTeams = hasPermission;
+            });
+
+        this.permissionsService.hasPermission('accountAdminTeams', 'canDelete').then(
+            (hasPermission) => {
+                this.hasPermissionDeleteTeams = hasPermission;
+            });
+
+        this.permissionsService.hasPermission('accountAdminUsers', 'canRead').then(
+            (hasPermission) => {
+                this.hasPermissionViewUsers = hasPermission;
+            });
+
+        this.permissionsService.hasPermission('accountAdminUsers', 'canInsert').then(
+            (hasPermission) => {
+                this.hasPermissionCreateUsers = hasPermission;
+            });
+
+        // Disable 'Team Details' form controls
+        if (!this.hasPermissionUpdateTeams) {
+            Object.keys(this.form).forEach((index) => {
+                this.form[index].disabled = true;
+            });
+        }
+
         if (this.isUpdateMode()) {
             this.service.readUserTeams(this.entityId,
                                        null,
                                        (data: any) => this.onReadTeamSuccess(data),
                                        (e: any) => this.onReadEntityError());
+        }
+    }
+
+    /**
+    * Returns message detailing missing permissions
+    *
+    * @returns {string}
+    */
+    public getPermissionMessage(): string {
+        if (!this.hasPermissionViewUsers && !this.hasPermissionCreateUsers) {
+            return this.translate.translate(
+                'Please contact the administrator to request permission to view and create users.',
+            );
+        }
+
+        if (!this.hasPermissionViewUsers) {
+            return this.translate.translate(
+                'Please contact the administrator to request permission to view users.',
+            );
+        }
+
+        if (!this.hasPermissionCreateUsers) {
+            return this.translate.translate(
+                'Please contact the administrator to request permission to create users.',
+            );
         }
     }
 
@@ -74,10 +139,12 @@ export class UserTeamsCreateUpdateComponent
     }
 
     save(): void {
-        if (this.isCreateMode()) {
+        if (this.isCreateMode() && this.hasPermissionCreateTeams) {
             this.checkUserForNoPermissions(() => this.createTeam());
-        } else if (this.isUpdateMode()) {
+        } else if (this.isUpdateMode() && this.hasPermissionUpdateTeams) {
             this.checkUserForNoPermissions(() => this.updateTeam());
+        } else {
+            this.alerts.create('error', 'Permission denied.');
         }
     }
 

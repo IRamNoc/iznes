@@ -11,7 +11,7 @@
 
         <button class="btn btn-warning"
             (click)="updateStatus()"
-            [disabled]="isStatusPending()"
+            [disabled]="isStatusPending() || !hasPermissionUpdateTeams"
             [class.btn-success]="isStatusDisabled()"
             [class.btn-warning]="isStatusEnabled()">{{ status ? textDisable : textEnable  }}
         </button>
