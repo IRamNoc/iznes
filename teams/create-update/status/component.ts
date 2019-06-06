@@ -25,11 +25,6 @@ export class UserTeamsStatusComponent extends AccountAdminStatusComponentBase<nu
         this.disableMessage = translate.translate('Are you sure you want to disable this team?');
     }
 
-    ngOnInit() {
-        console.log('+++ this.noun: ', this.noun);
-        console.log('+++ hasPermissionUpdateTeams: ', this.hasPermissionUpdateTeams);
-    }
-
     onUpdateStatus(): void {
         this.service.updateUserTeamStatus(
             this.entityId,
