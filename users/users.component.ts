@@ -237,11 +237,15 @@ export class AdminUsersComponent implements OnInit, AfterViewInit, OnDestroy {
                 const accountType = this.tabsControl[tabId].formControl.value.accountType[0];
                 /* ...update the wallets available to the user using their account type. */
                 this.setFormAccountId(tabId, accountType);
+
+                // Set default wallet ID for user
+                if (this.tabsControl[tabId]) this.hasDefaultWallet = !!this.tabsControl[tabId].defaultWalletID;
             }
 
             /* If tab is 'Add User', set the chain Id on a tab object. */
             if (Number(tabId) === 1 && this.filteredChainList.length) {
                 this.setFormChainId(Number(tabId), this.filteredChainList[0]);
+                this.hasDefaultWallet = false;
             }
         });
     }
@@ -723,9 +727,6 @@ export class AdminUsersComponent implements OnInit, AfterViewInit, OnDestroy {
                     accountID,
                     walletType,
                     walletName,
-                }).then((response) => {
-                    /* Default wallet successfully created for the user */
-                    this.hasDefaultWallet = true;
                 }).catch((error) => {
                     /* Handle Error. */
                     this.alertsService.generate(
@@ -1322,9 +1323,6 @@ export class AdminUsersComponent implements OnInit, AfterViewInit, OnDestroy {
         const accountType = this.userAdminService.resolveAccountType({ text: user.accountName });
         const userType = this.userAdminService.resolveUserType({ id: user.userType });
 
-        /* If the user doesn't have a default wallet, show toggle to create a default wallet. */
-        this.hasDefaultWallet = !!user.defaultWalletID;
-
         /* And push the tab into it's place. */
         this.tabsControl.push({
             title: {
@@ -1332,6 +1330,7 @@ export class AdminUsersComponent implements OnInit, AfterViewInit, OnDestroy {
                 text: this.usersList[userIndex].userName,
             },
             userId: user.userID,
+            defaultWalletID: user.defaultWalletID,
             formControl: this.getNewUserFormGroup('edit'),
             oldAdminGroups: {},
             oldTxGroups: {},
