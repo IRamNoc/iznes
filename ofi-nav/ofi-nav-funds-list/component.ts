@@ -1,4 +1,4 @@
-import { ChangeDetectorRef, Component, Inject, OnDestroy, OnInit, ViewChild } from '@angular/core';
+import { ChangeDetectorRef, Component, Inject, OnDestroy, OnInit, AfterViewInit, ViewChild } from '@angular/core';
 import { FormControl, FormGroup } from '@angular/forms';
 import { Router, ActivatedRoute } from '@angular/router';
 import { NgRedux, select } from '@angular-redux/store';
@@ -25,6 +25,8 @@ import {
 import { MultilingualService } from '@setl/multilingual';
 import { AlertsService } from '@setl/jaspero-ng2-alerts/src/alerts.service';
 import { OfiCurrenciesService } from '@ofi/ofi-main/ofi-req-services/ofi-currencies/service';
+import { PermissionsService } from '@setl/utils/services/permissions';
+import { ClrDatagrid } from '@clr/angular';
 
 const ADMIN_USER_URL = '/net-asset-value';
 
@@ -33,7 +35,9 @@ const ADMIN_USER_URL = '/net-asset-value';
     templateUrl: './component.html',
     styleUrls: ['./component.scss'],
 })
-export class OfiNavFundsList implements OnInit, OnDestroy {
+export class OfiNavFundsList implements OnInit, OnDestroy, AfterViewInit {
+    @ViewChild('dataGrid') public dataGrid: ClrDatagrid;
+
     shareListItems: any[];
     navListItems: model.NavModel[];
     socketToken: string;
@@ -60,12 +64,17 @@ export class OfiNavFundsList implements OnInit, OnDestroy {
     appConfig: AppConfig;
     currencyList: any[];
 
+    public hasPermissionCreateNav: boolean = false;
+    public hasPermissionUpdateNav: boolean = false;
+    public hasPermissionDeleteNav: boolean = false;
+    public showColumnSpacer: boolean = true;
+
     private cancelNavTitle: string;
     private cancelNavMessage: string;
     private cancelNavSuccessMessage: string;
     private cancelNavErrorMessage: string;
 
-    get isIznesAdmin():boolean {
+    get isIznesAdmin(): boolean {
         return this.router.url.startsWith(ADMIN_USER_URL);
     }
 
@@ -78,7 +87,8 @@ export class OfiNavFundsList implements OnInit, OnDestroy {
 
     private subscriptionsArray: Subscription[] = [];
 
-    constructor(private router: Router,
+    constructor(
+        private router: Router,
         private redux: NgRedux<any>,
         private changeDetectorRef: ChangeDetectorRef,
         private ofiNavService: OfiNavService,
@@ -90,6 +100,7 @@ export class OfiNavFundsList implements OnInit, OnDestroy {
         private ofiCurrenciesService: OfiCurrenciesService,
         private fileDownloader: FileDownloader,
         private route: ActivatedRoute,
+        public permissionsService: PermissionsService,
         public translate: MultilingualService,
         @Inject(APP_CONFIG) appConfig: AppConfig) {
         this.appConfig = appConfig;
@@ -104,12 +115,90 @@ export class OfiNavFundsList implements OnInit, OnDestroy {
         this.initSearchForm();
         this.initSubscriptions();
         this.initTranslations();
+
+        this.permissionsService.hasPermission('manageNav', 'canInsert').then(
+            (hasPermission) => {
+                this.hasPermissionCreateNav = hasPermission;
+            });
+
+        this.permissionsService.hasPermission('manageNav', 'canUpdate').then(
+            (hasPermission) => {
+                this.hasPermissionUpdateNav = hasPermission;
+            });
+
+        this.permissionsService.hasPermission('manageNav', 'canDelete').then(
+            (hasPermission) => {
+                this.hasPermissionDeleteNav = hasPermission;
+            });
+    }
+
+    ngAfterViewInit() {
+        this.resizeDatagrid();
+    }
+
+    /**
+     * Resizes the datagrid and removes the spacer elements
+     * The column space elements are a bit of a hack to get the Datagrid to correctly set the cell size
+     * hopefully this will be fixed in a Clarity update soon...
+     */
+    public resizeDatagrid() {
+        setTimeout(
+            () => {
+                this.dataGrid.resize();
+                this.showColumnSpacer = false;
+            },
+            200,
+        );
+    }
+
+    /**
+     * Returns a single line of text to space the datagrid column correctly
+     * Strips all non-alphanumeric characters and replaces them with '_'
+     * @param text
+     */
+    public getColumnSpaceText(text: string) {
+        return typeof text === 'string' ? text.replace(/[\W_]+/g, '_') : text;
     }
 
     private initTranslations(): void {
         this.cancelNavTitle = this.translate.translate('Cancel NAV');
         this.cancelNavErrorMessage = this.translate.translate('Could not cancel NAV. Open orders may exist.');
         this.cancelNavSuccessMessage = this.translate.translate('NAV successfully cancelled.');
+    }
+
+    /**
+     * Returns message detailing missing permissions
+     *
+     * @returns {string}
+     */
+    public getPermissionMessage(): string {
+        if (!this.hasPermissionCreateNav && !this.hasPermissionUpdateNav && !this.hasPermissionDeleteNav) {
+            return this.translate.translate('Please contact the administrator to request permission to add, edit or cancel a NAV.');
+        }
+
+        if (this.hasPermissionCreateNav && !this.hasPermissionUpdateNav && !this.hasPermissionDeleteNav) {
+            return this.translate.translate('Please contact the administrator to request permission to edit or cancel a NAV.');
+        }
+
+        if (this.hasPermissionCreateNav && this.hasPermissionUpdateNav && !this.hasPermissionDeleteNav) {
+            return this.translate.translate('Please contact the administrator to request permission to cancel a NAV.');
+        }
+
+        if (!this.hasPermissionCreateNav && this.hasPermissionUpdateNav && !this.hasPermissionDeleteNav) {
+            return this.translate.translate('Please contact the administrator to request permission to add or cancel a NAV.');
+        }
+
+        if (!this.hasPermissionCreateNav && this.hasPermissionUpdateNav && this.hasPermissionDeleteNav) {
+            return this.translate.translate('Please contact the administrator to request permission to add a NAV.');
+        }
+
+        if (!this.hasPermissionCreateNav && !this.hasPermissionUpdateNav && this.hasPermissionDeleteNav) {
+            return this.translate.translate('Please contact the administrator to request permission to add or edit a NAV.');
+        }
+
+        if (this.hasPermissionCreateNav && !this.hasPermissionUpdateNav && this.hasPermissionDeleteNav) {
+            return this.translate.translate('Please contact the administrator to request permission to edit a NAV.');
+        }
     }
 
     /**
@@ -254,6 +343,7 @@ export class OfiNavFundsList implements OnInit, OnDestroy {
         for (const subscription of this.subscriptionsArray) {
             subscription.unsubscribe();
         }
+        this.changeDetectorRef.detach();
     }
 
     handleUploadNavSubmitClick() {

@@ -9,7 +9,7 @@
         <p>{{ 'Here are all the Shares / Funds and Umbrella Funds that were created by @amManagementCompany@.' | translate: {'amManagementCompany': amManagementCompany} }}
             <br>{{ 'You can also add a new Share, a new Fund or a new Umbrella Fund' | translate }}.
         </p>
-    </div>    
+    </div>
     <ng-template #iznesAdminTemplate>
         <p>{{ 'Here are all the Shares / Funds and Umbrella Funds that were created within IZNES.' | translate }}</p>
     </ng-template>
@@ -26,10 +26,19 @@
         </div>
 
         <div class="col-xs-6 text-right">
-            <button *ngIf="isAssetManager() && panel.action" id="{{panel.action.id}}" class="btn btn-primary action-button" (click)="addForm(panel.action.type)">
+            <button *ngIf="isAssetManager() && panel.action"
+                    id="{{panel.action.id}}"
+                    class="btn btn-primary action-button"
+                    [disabled]="!panel.action.disabled"
+                    (click)="addForm(panel.action.type)">
                 <i class="fa fa-{{panel.action.icon}}"></i> {{panel.action.title}}
             </button>
         </div>
+
+        <ng-container *ngIf="!panel?.action?.disabled && panel?.columnLink != 'drafts' && isAssetManager()">
+            <ng-container *ngTemplateOutlet="permissionAlert; context: {action: panel.columnLink}"></ng-container>
+        </ng-container>
+
     </div>
 
     <!-- Panel body -->
@@ -38,14 +47,15 @@
             <div class="mb-1" *ngIf="panel.title === 'Shares'">{{ 'Display only active Shares' | translate }}
 
                 <label class="switch">
-                    <input type="checkbox" 
-                            class="form-control" 
-                            id="switchActiveShares" 
-                            [ngModel]="showOnlyActive" 
+                    <input type="checkbox"
+                            class="form-control"
+                            id="switchActiveShares"
+                            [ngModel]="showOnlyActive"
                             (click)="handleShareToggleClick()">
                     <span class="slider round"></span>
                 </label>
             </div>
+
             <clr-datagrid #myDataGrid>
                 <clr-dg-column [clrDgField]="column.dataSource" *ngFor="let column of panel.columns">{{column.label}}</clr-dg-column>
                 <clr-dg-column *ngIf="panel.buttons">Actions</clr-dg-column>
@@ -87,3 +97,27 @@
         </div>
     </div>
 </div>
+
+<ng-template #permissionAlert let-action="action">
+    <div class="alert alert-warning">
+        <div class="alert-items">
+            <div class="alert-item static">
+                <div class="alert-icon-wrapper">
+                    <clr-icon class="alert-icon" shape="exclamation-triangle"></clr-icon>
+                </div>
+                <span class="alert-text">
+                    <ng-container *ngIf="action === 'umbrellaFundName'">
+                        {{ 'Please contact the administrator to request permission to add a new Umbrella Fund' | translate }}
+                    </ng-container>
+                    <ng-container *ngIf="action === 'fundName'">
+                        {{ 'Please contact the administrator to request permission to add a new Fund' | translate }}
+                    </ng-container>
+                    <ng-container *ngIf="action === 'shareName'">
+                        {{ 'Please contact the administrator to request permission add a new Fund Share' | translate }}
+                    </ng-container>
+                    <br />
+                </span>
+            </div>
+        </div>
+    </div>
+</ng-template>

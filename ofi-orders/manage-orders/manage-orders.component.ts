@@ -11,7 +11,7 @@ import {
     ViewChild,
 } from '@angular/core';
 
-import {FormControl, FormGroup} from '@angular/forms';
+import { FormControl, FormGroup } from '@angular/forms';
 import { ActivatedRoute, Router } from '@angular/router';
 import { Location } from '@angular/common';
 
@@ -39,7 +39,7 @@ import { NumberConverterService } from '@setl/utils/services/number-converter/se
 /* Ofi Store stuff. */
 import { ofiManageOrderActions } from '../../ofi-store';
 /* Clarity */
-import { ClrDatagridStateInterface, Datagrid } from '@clr/angular';
+import { ClrDatagridStateInterface } from '@clr/angular';
 /* helper */
 import { getOrderFigures, getOrderTypeString } from '../../ofi-product/fund-share/helper/order-view-helper';
 import { OfiFundInvestService } from '../../ofi-req-services/ofi-fund-invest/service';
@@ -52,6 +52,7 @@ import { labelForOrder } from '../order.model';
 import { orderStatuses, orderTypes, dateTypes } from './lists';
 import { DatagridParams } from './datagrid-params';
 import { fundClassifications } from '../../ofi-product/fund-share/helper/models';
+import { PermissionsService } from '@setl/utils/services/permissions';
 
 /* Types. */
 interface SelectedItem {
@@ -95,6 +96,9 @@ export class ManageOrdersComponent implements OnInit, AfterViewInit, OnDestroy {
     transformedOrderClassificationFee: number;
 
     showPaymentMsgConfirmationModal: boolean;
+
+    public hasPermissionManageOrders: boolean = false;
+    public hasPermissionActionOnOrders: boolean = false;
 
     // Locale
     language = 'en';
@@ -141,7 +145,7 @@ export class ManageOrdersComponent implements OnInit, AfterViewInit, OnDestroy {
 
     currencyList = [];
 
-    @ViewChild('ordersDataGrid') orderDatagrid: Datagrid;
+    @ViewChild('ordersDataGrid') orderDatagrid: any;
     /* Public Properties */
     public connectedWalletName = '';
     ordersList: any[] = [];
@@ -171,6 +175,8 @@ export class ManageOrdersComponent implements OnInit, AfterViewInit, OnDestroy {
     menuSpec = {};
 
     private isinParam: string;
+
+    public showColumnSpacer: boolean = true;
 
     /* Observables. */
     @select(['user', 'myDetail', 'userType']) readonly userType$: Observable<number>;
@@ -213,6 +219,7 @@ export class ManageOrdersComponent implements OnInit, AfterViewInit, OnDestroy {
                 private manageOrdersService: ManageOrdersService,
                 private location: Location,
                 private searchFilters: SearchFilters,
+                public permissionsService: PermissionsService,
     ) {
         this.isAmConfirmModalDisplayed = false;
         this.cancelModalMessage = '';
@@ -234,22 +241,22 @@ export class ManageOrdersComponent implements OnInit, AfterViewInit, OnDestroy {
         return iznesAdmin;
     }
 
-    get isAssetManger() {
+    get isAssetManager() {
         return !this.isInvestorUser && !this.isIznesAdmin;
     }
 
     get fundClassificationsText(): string {
         try {
-            return fundClassifications[this.fundClassificationId].text
-        } catch(e) {
+            return fundClassifications[this.fundClassificationId].text;
+        } catch (e) {
             return '';
         }
     }
 
     get showSendPaymentMsgBtn(): boolean {
         // number of order marked for payment messages.
-       const nPMsg = this.ordersList.filter((o) => o.markedForPayment.value).length;
-       return this.isAssetManger && nPMsg > 0;
+        const nPMsg = this.ordersList.filter(o => o.markedForPayment.value).length;
+        return this.isAssetManager && nPMsg > 0;
     }
 
     appSubscribe<T>(
@@ -366,12 +373,49 @@ export class ManageOrdersComponent implements OnInit, AfterViewInit, OnDestroy {
         );
         this.appSubscribe(this.currencies$, c => this.getCurrencyList(c));
 
+        this.permissionsService.hasPermission('manageOrder', 'canRead').then(
+            (hasPermission) => {
+                this.hasPermissionManageOrders = hasPermission;
+            },
+        );
+
+        this.permissionsService.hasPermission('manageOrder', 'canUpdate').then(
+            (hasPermission) => {
+                this.hasPermissionActionOnOrders = hasPermission;
+            },
+        );
+
         this.detectChanges();
     }
 
     ngAfterViewInit() {
-        this.resizeDataGrid();
         this.isIznesAdmin;
+    }
+
+    /**
+     * Resizes the datagrid and removes the spacer elements
+     * The column space elements are a bit of a hack to get the Datagrid to correctly set the cell size
+     * hopefully this will be fixed in a Clarity update soon...
+     */
+    public resizeDatagridRemoveSpacers() {
+        if (this.orderDatagrid) {
+            setTimeout(
+                () => {
+                    this.orderDatagrid.resize();
+                    this.showColumnSpacer = false;
+                },
+                1000,
+            );
+        }
+    }
+
+    /**
+     * Returns a single line of text to space the datagrid column correctly
+     * Strips all non-alphanumeric characters and replaces them with '_'
+     * @param text
+     */
+    public getColumnSpaceText(text: string) {
+        return typeof text === 'string' ? text.replace(/[\W_]+/g, '_') : text;
     }
 
     routeUpdate(params) {
@@ -420,18 +464,11 @@ export class ManageOrdersComponent implements OnInit, AfterViewInit, OnDestroy {
         return order;
     }
 
-    resizeDataGrid() {
-        if (this.orderDatagrid) {
-            this.orderDatagrid.resize();
-        }
-    }
-
     detectChanges(detect = false) {
         this.changeDetectorRef.markForCheck();
         if (detect) {
             this.changeDetectorRef.detectChanges();
         }
-        this.resizeDataGrid();
     }
 
     translateSelectMenus() {
@@ -504,7 +541,9 @@ export class ManageOrdersComponent implements OnInit, AfterViewInit, OnDestroy {
         }
 
         this.loading = false;
+        this.showColumnSpacer = true;
         this.detectChanges(true);
+        this.resizeDatagridRemoveSpacers();
     }
 
     subEstimated(order, field: string, estimatedField: string): number {
@@ -522,7 +561,7 @@ export class ManageOrdersComponent implements OnInit, AfterViewInit, OnDestroy {
             const quantity = this.subEstimated(order, 'quantity', 'estimatedQuantity');
             const fee = amountWithCost - amount;
             const feePercentage = this.numberConverter.toFrontEnd(order.feePercentage) * 100;
-            const readyForPayment = (order.price > 0 && order.paymentMsgStatus === 'pending' );
+            const readyForPayment = (order.price > 0 && order.paymentMsgStatus === 'pending');
             const markedForPayment = new FormControl(this.orderCheckedForPayment.includes(orderId));
             const orderRef = this.getOrderRef(orderId);
             const orderTypeStr = this.getOrderTypeString(order);
@@ -622,7 +661,11 @@ export class ManageOrdersComponent implements OnInit, AfterViewInit, OnDestroy {
             this.amConfirmModal = {
                 targetedOrder: this.ordersList[index],
                 title: `${this.translate.translate('Cancel')} - ${message}`,
-                body: `${this.translate.translate('Are you sure you want to cancel the @message@?', { 'message': message })}`,placeholder: `${this.translate.translate('Please add a message to justify this cancellation. An internal IZNES message will be sent to the investor to notify them.')}`,
+                body: `${this.translate.translate(
+                    'Are you sure you want to cancel the @message@?', { 'message': message })}`,
+                placeholder: `${this.translate.translate(
+                    'Please add a message to justify this cancellation. An internal IZNES message will be sent to the investor to notify them.',
+                )}`,
             };
         }
     }
@@ -741,6 +784,11 @@ export class ManageOrdersComponent implements OnInit, AfterViewInit, OnDestroy {
     }
 
     refresh(state: ClrDatagridStateInterface) {
+
+        if(!state.page) {
+            return;
+        }
+
         this.manageOrdersService.setOrderListPage(state.page.from / state.page.size + 1);
         this.datagridParams.applyState(state);
     }
@@ -914,9 +962,15 @@ export class ManageOrdersComponent implements OnInit, AfterViewInit, OnDestroy {
 
         const toasterMessages = {
             success:
-                this.translate.translate('The message has been successfully sent to @targetedOrder.firstName@ @targetedOrder.lastName@.', { 'targetedOrder.firstName': targetedOrder.firstName, 'targetedOrder.lastName': targetedOrder.lastName }),
+                this.translate.translate(
+                    'The message has been successfully sent to @targetedOrder.firstName@ @targetedOrder.lastName@.',
+                    { 'targetedOrder.firstName': targetedOrder.firstName, 'targetedOrder.lastName': targetedOrder.lastName },
+                ),
             fail:
-                this.translate.translate('The message has failed to be sent to @targetedOrder.firstName@ @targetedOrder.lastName@.', { 'targetedOrder.firstName': targetedOrder.firstName, 'targetedOrder.lastName': targetedOrder.lastName }),
+                this.translate.translate(
+                    'The message has failed to be sent to @targetedOrder.firstName@ @targetedOrder.lastName@.',
+                    { 'targetedOrder.firstName': targetedOrder.firstName, 'targetedOrder.lastName': targetedOrder.lastName },
+                ),
         };
 
         orderType = (targetedOrder.orderType === 3) ?
@@ -999,19 +1053,21 @@ export class ManageOrdersComponent implements OnInit, AfterViewInit, OnDestroy {
      * @param $event
      */
     sendPaymentMsg($event) {
-        this.ofiOrdersService.requestMarkOrderReadyForPayment({orderIds: $event}).then((r) => {
+        this.ofiOrdersService.requestMarkOrderReadyForPayment({ orderIds: $event }).then((r) => {
             const detailResps = get(r, '[1].Data[0].responses', []);
             const failedResps = detailResps.filter(dr => (get(dr, '[0].Status', 'Fail') !== 'OK'));
             if (failedResps.length > 0) {
                 throw new Error(this.translate.translate('fail send payment messages'));
             }
         }).then(() => {
-           this.toasterService.pop('success', this.translate.translate('Successfully sent payment messages'));
+            this.toasterService.pop('success', this.translate.translate('Successfully sent payment messages'));
+            this.ordersList.forEach(o => o.markedForPayment.setValue(false));
+            this.orderCheckedForPayment = [];
         }).catch((e) => {
-           this.toasterService.pop('error', e.message);
+            this.toasterService.pop('error', e.message);
         }).then(() => {
-           this.showPaymentMsgConfirmationModal = false;
-           this.changeDetectorRef.markForCheck();
+            this.showPaymentMsgConfirmationModal = false;
+            this.changeDetectorRef.markForCheck();
         });
     }
 
@@ -1021,11 +1077,11 @@ export class ManageOrdersComponent implements OnInit, AfterViewInit, OnDestroy {
      * @param $event
      */
     updatePaymentCheckBoxState(orderId: number, $event: boolean): void {
-       if ($event) {
-           this.orderCheckedForPayment.push(orderId);
-       } else {
-           this.orderCheckedForPayment.filter(v => v !== orderId);
-       }
+        if ($event) {
+            this.orderCheckedForPayment.push(orderId);
+        } else {
+            this.orderCheckedForPayment.filter(v => v !== orderId);
+        }
     }
 
     ngOnDestroy(): void {

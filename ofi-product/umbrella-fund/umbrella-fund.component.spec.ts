@@ -12,7 +12,7 @@ import {
     SetlComponentsModule,
     DpDatePickerModule,
     APP_CONFIG,
-    LogService,
+    LogService, PermissionsService,
 } from '@setl/utils';
 import productConfig from '../productConfig';
 import { ToasterService } from 'angular2-toaster';
@@ -38,6 +38,10 @@ const multilingualServiceSpy = {
 
 const leiServiceStub = {
     fetchLEIs: () => { },
+};
+
+const permissionsServiceStub = {
+    hasPermission: async (perm, action) => true,
 };
 
 // Stub for translate
@@ -80,6 +84,7 @@ describe('UmbrellaFundComponent', () => {
                 { provide: OfiManagementCompanyService, useValue: ofiManagementCompanyServiceSpy },
                 { provide: MultilingualService, useValue: multilingualServiceSpy },
                 { provide: LeiService, useValue: leiServiceStub },
+                { provide: PermissionsService, useValue: permissionsServiceStub },
             ],
         }).compileComponents();
         TestBed.resetTestingModule = () => TestBed;

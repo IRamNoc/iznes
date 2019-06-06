@@ -21,6 +21,7 @@ import { Subscription } from 'rxjs';
 /* Services */
 import { OfiUmbrellaFundService } from '@ofi/ofi-main/ofi-req-services/ofi-product/umbrella-fund/service';
 import { LeiService } from '@ofi/ofi-main/ofi-req-services/ofi-product/lei/lei.service';
+import { PermissionsService } from '@setl/utils/services/permissions';
 
 import {
     OfiManagementCompanyService,
@@ -67,6 +68,9 @@ export class UmbrellaFundComponent implements OnInit, AfterViewInit, OnDestroy {
     isLeiVisible = false;
     mainInformationOpen = true;
     optionalInformationOpen = false;
+
+    hasPermissionInsertUmbrellaFund: boolean = false;
+    hasPermissionUpdateUmbrellaFund: boolean = false;
 
     // Locale
     language = 'fr';
@@ -137,6 +141,7 @@ export class UmbrellaFundComponent implements OnInit, AfterViewInit, OnDestroy {
         private logService: LogService,
         private confirmationService: ConfirmationService,
         private leiService: LeiService,
+        public permissionsService: PermissionsService,
         public translate: MultilingualService,
         @Inject('product-config') productConfig,
     ) {
@@ -393,6 +398,18 @@ export class UmbrellaFundComponent implements OnInit, AfterViewInit, OnDestroy {
             });
 
         this.leiService.fetchLEIs();
+
+        this.permissionsService.hasPermission('manageUmbrellaFund', 'canInsert').then(
+            (hasPermission) => {
+                this.hasPermissionInsertUmbrellaFund = hasPermission;
+            },
+        );
+
+        this.permissionsService.hasPermission('manageUmbrellaFund', 'canUpdate').then(
+            (hasPermission) => {
+                this.hasPermissionUpdateUmbrellaFund = hasPermission;
+            },
+        );
     }
 
     ngAfterViewInit() {

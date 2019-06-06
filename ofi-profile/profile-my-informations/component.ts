@@ -14,6 +14,8 @@ import { MultilingualService } from '@setl/multilingual';
 import { OfiKycService } from '@ofi/ofi-main/ofi-req-services/ofi-kyc/service';
 import { get as getValue } from 'lodash';
 import { Subject } from 'rxjs/Subject';
+import { SET_LANGUAGE } from '@setl/core-store/user/site-settings/actions';
+import { takeUntil } from 'rxjs/operators';
 
 @Component({
     selector: 'app-profile-my-informations',
@@ -60,10 +62,13 @@ export class OfiProfileMyInformationsComponent implements OnInit, OnDestroy {
     externalNotificationsAvailable: boolean = false;
     unSubscribe: Subject<any> = new Subject();
 
+    language: string;
+
     @select(['user', 'myDetail']) myDetail: any;
     @select(['user', 'authentication']) authentication$;
     @select(['user', 'connected', 'connectedWallet']) connectedWalletId$;
     @select(['ofi', 'ofiKyc', 'myInformations']) myKyc: any;
+    @select(['user', 'siteSettings', 'language']) requestLanguageObj;
 
     constructor(
         private ngRedux: NgRedux<any>,
@@ -113,7 +118,7 @@ export class OfiProfileMyInformationsComponent implements OnInit, OnDestroy {
         this.getExternalNotificationsAvailable();
 
         this.ofiKycService.fetchInvestor();
-        this.myDetail.subscribe((d) => {
+        this.myDetail.pipe(takeUntil(this.unSubscribe)).subscribe((d) => {
             this.userInfo = {
                 firstName: d.firstName,
                 lastName: d.lastName,
@@ -132,19 +137,21 @@ export class OfiProfileMyInformationsComponent implements OnInit, OnDestroy {
             this.userId = d.userId;
         });
 
-        this.myKyc.subscribe((d) => {
+        this.myKyc.pipe(takeUntil(this.unSubscribe)).subscribe((d) => {
             this.userInfoExtended.amCompanyName = d.amCompanyName || 'IZNES';
         });
 
         this.setHomePage = this.activatedRoute.snapshot.paramMap.get('sethomepage') || '';
 
-        this.connectedWalletId$.subscribe((id) => {
+        this.connectedWalletId$.pipe(takeUntil(this.unSubscribe)).subscribe((id) => {
             this.connectedWalletId = id;
         });
 
-        this.authentication$.subscribe((auth) => {
+        this.authentication$.pipe(takeUntil(this.unSubscribe)).subscribe((auth) => {
             this.apiKey = auth.apiKey;
         });
+
+        this.requestLanguageObj.pipe(takeUntil(this.unSubscribe)).subscribe(requested => this.language = requested);
     }
 
     ngOnDestroy() {
@@ -336,5 +343,26 @@ export class OfiProfileMyInformationsComponent implements OnInit, OnDestroy {
             },
             500,
         );
+    }
+
+    /**
+     * Changes Language and Stores in Redux (site-settings)
+     *
+     * @param lang
+     */
+    public changeLanguage(lang) {
+        this.translate.updateLanguage(lang);
+
+        // save language in db
+        const asyncTaskPipe = this.myUserService.setLanguage({ lang });
+        this.ngRedux.dispatch(SagaHelper.runAsync(
+            [SET_LANGUAGE],
+            [],
+            asyncTaskPipe,
+            {},
+        ));
+
+        /* Detect changes. */
+        this.changeDetectorRef.detectChanges();
     }
 }

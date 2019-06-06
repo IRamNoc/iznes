@@ -5,10 +5,10 @@
 
     <!--AM-->
     <app-dashboard *ngIf="userType == 36">
-        <app-counter-tile name="actions" icon="sitemap" [count]="" color="red" route="product-module/product">{{ 'My Products' | translate }}</app-counter-tile>
-        <app-counter-tile name="connections" icon="line-chart" [count]="" color="green" route="product-module/net-asset-value">{{ 'Net Asset Value' | translate }}</app-counter-tile>
-        <app-counter-tile name="messages" icon="list-ul" [count]="" color="orange" route="reports/precentralisation/funds">{{ 'Precentralisation Report' | translate }}</app-counter-tile>
-        <app-counter-tile name="contracts" icon="book" [count]="" color="blue" route="reports/holders-list">{{ 'Recordkeeping' | translate }}</app-counter-tile>
+        <app-counter-tile *ngIf="hasPermissionViewUmbrellaFund" name="actions" icon="sitemap" [count]="" color="red" route="product-module/product">{{ 'My Products' | translate }}</app-counter-tile>
+        <app-counter-tile *ngIf="hasPermissionViewNav" name="connections" icon="line-chart" [count]="" color="green" route="product-module/net-asset-value">{{ 'Net Asset Value' | translate }}</app-counter-tile>
+        <app-counter-tile *ngIf="hasPermissionViewPrecentralisation" name="messages" icon="list-ul" [count]="" color="orange" route="reports/precentralisation/funds">{{ 'Precentralisation Report' | translate }}</app-counter-tile>
+        <app-counter-tile *ngIf="hasPermissionViewRecordkeeping" name="contracts" icon="book" [count]="" color="blue" route="reports/holders-list">{{ 'Recordkeeping' | translate }}</app-counter-tile>
     </app-dashboard>
 
     <!--INV-->
@@ -24,4 +24,6 @@
     <app-investor-fund-list [isImported]="true" [linkRoute]="'home'"></app-investor-fund-list>
 </div>
 
-<app-manage-orders [isImported]="true" [linkRoute]="'home'"></app-manage-orders>
+<div *ngIf="hasPermissionManageOrders || hasPermissionviewAllOrder">
+    <app-manage-orders [isImported]="true" [linkRoute]="'home'"></app-manage-orders>
+</div>

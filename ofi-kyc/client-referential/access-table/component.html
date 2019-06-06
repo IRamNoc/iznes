@@ -6,6 +6,7 @@
     <clr-dg-column [clrDgField]="'entry'" id="client_folder_entry_fee">{{ 'Non Acquired Entry Access %' | translate }}</clr-dg-column>
     <clr-dg-column [clrDgField]="'exit'" id="client_folder_exit_fee">{{ 'Non Acquired Exit Access %' | translate }}</clr-dg-column>
     <clr-dg-column [clrDgField]="'minInvestment'" id="client_folder_minimum_investment_amount">{{ 'Minimum Investment Amount' | translate }}</clr-dg-column>
+    <clr-dg-column class="right">{{ 'Actions' | translate }}</clr-dg-column>
 
     <clr-dg-row *clrDgItems="let row of tableData; let i = index">
         <clr-dg-cell id="isin_number_row_{{i}}">{{row['isin']}}</clr-dg-cell>
@@ -14,33 +15,30 @@
         <clr-dg-cell id="access_slider_row_{{i}}">
             <div class="switch-container">
                 <label class="switch">
-                    <input type="checkbox" id="access_slider_{{i}}" [checked]="row['access']" (click)="onClickAccess(row['id'])">
+                    <input type="checkbox"
+                            id="access_slider_{{i}}"
+                            [attr.disabled]="!hasPermission ? '' : null"
+                            [checked]="!hasPermission ? false : row['access']"
+                            (click)="onClickAccess(row['id'])">
                     <span class="slider round"></span>
                 </label>
             </div>
         </clr-dg-cell>
 
-        <ng-container *ngIf="!row['access']">
-            <clr-dg-cell id="entry_fee_row_{{i}}">
-                {{row['entry']}}
-            </clr-dg-cell>
-            <clr-dg-cell id="exit_fee_row_{{i}}">
-                {{row['exit']}}
-            </clr-dg-cell>
-            <clr-dg-cell id="min_invest_amount_row_{{i}}">
-                {{row['minInvestment']}}
-            </clr-dg-cell>
-        </ng-container>
+        <clr-dg-cell id="{{ row['access'] ? 'extry_fee_field_row_' + i : 'entry_fee_row_' + i }}" [class.thin-cell]="row['access']" class="right">
+            <ng-container *ngIf="!hasPermission || !row['access']">{{row['entry']}}</ng-container>
+            <input *ngIf="row['access']" class="small-input" style="height: 30px;" name="entry{{row['id']}}" [(ngModel)]="row['entry']" (change)="checkFee(row['id'],'entry');">
+        </clr-dg-cell>
 
-        <ng-container *ngIf="row['access']">
-            <clr-dg-cell id="extry_fee_field_row_{{i}}" class="thin-cell">
-                <input class="small-input" style="height: 30px;" name="entry{{row['id']}}" [(ngModel)]="row['entry']" (change)="checkFee(row['id'],'entry');">
-            </clr-dg-cell>
-            <clr-dg-cell id="exit_fee_field_row_{{i}}" class="thin-cell">
-                <input class="small-input" style="height: 30px;" name="exit{{row['id']}}" [(ngModel)]="row['exit']" (change)="checkFee(row['id'],'exit');">
-            </clr-dg-cell>
-            <clr-dg-cell id="min_invest_amount_btn_row_{{i}}">
-                {{(row['override'] ? row['overrideAmount'] : row['minInvestment'])}}
+        <clr-dg-cell id="{{ row['access'] ? 'exit_fee_field_row_' + i : 'exit_fee_row_' + i }}" [class.thin-cell]="row['access']" class="right">
+            <ng-container *ngIf="!hasPermission || !row['access']">{{row['exit']}}</ng-container>
+            <input *ngIf="!hasPermission || row['access']" class="small-input" style="height: 30px;" name="exit{{row['id']}}" [(ngModel)]="row['exit']" (change)="checkFee(row['id'],'exit');">
+        </clr-dg-cell>
+
+        <clr-dg-cell id="{{ row['access'] ? 'min_invest_amount_btn_row_' + i : 'min_invest_amount_row_' + i }}" [class.thin-cell]="row['access']" class="right">
+            <ng-container *ngIf="!hasPermission || !row['access']">{{row['minInvestment']}}</ng-container>
+            <ng-container *ngIf="row['access']">
+            {{(row['override'] ? row['overrideAmount'] : row['minInvestment'])}}
                 <ng-container *ngIf="row['override']">
                     <span id="override_txt_row_{{i}}" class="override-text">[{{ 'Override' | translate }}]</span>
                     <ng-container *ngIf="row['overrideDocumentTitle'] != '' && row['overrideDocumentTitle'] != null">
@@ -48,9 +46,11 @@
                         <setl-file-viewer id="override_row_file_viewer_{{i}}" *ngIf="!row['newOverride']" [fileHash]="row['overrideDocument']" [viewType]="1"></setl-file-viewer>
                     </ng-container>
                 </ng-container>
-                <button id="override_row_{{i}}" class="btn btn-sm btn-primary override-button" (click)="openOverrideModal(i)">{{ 'Override' | translate }}</button>
-            </clr-dg-cell>
-        </ng-container>
+            </ng-container>
+        </clr-dg-cell>
+        <clr-dg-cell>
+            <button id="override_row_{{i}}" class="btn btn-sm btn-primary override-button" [disabled]="!hasPermission || !row['access']" (click)="openOverrideModal(i)">{{ 'Override' | translate }}</button>
+        </clr-dg-cell>
     </clr-dg-row>
     <clr-dg-footer>{{pagination.firstItem + 1}} - {{pagination.lastItem + 1}}
         <clr-dg-pagination #pagination [clrDgPageSize]="15"></clr-dg-pagination>
@@ -76,7 +76,7 @@
 </clr-datagrid><br>
 <div align="middle">
     <button id="client_folder_back" class="btn btn-info" (click)="backBtn();">{{ 'Back' | translate }}</button>
-    <button id="client_folder_validate" class="btn btn-primary" (click)="confirmSave();">{{ 'Validate' | translate }}</button>
+    <button id="client_folder_validate" class="btn btn-primary" [disabled]="!hasPermission" (click)="confirmSave();">{{ 'Validate' | translate }}</button>
 </div>
 
 <clr-modal [(clrModalOpen)]="showOverrideModal">

@@ -1,6 +1,7 @@
 import { Component, OnDestroy, OnInit } from '@angular/core';
 import { AppObservableHandler } from '@setl/utils/decorators/app-observable-handler';
 import { OfiPortfolioManagerDataService } from '../../ofi-data-service/portfolio-manager/ofi-portfolio-manager-data.service';
+import { PermissionsService } from '@setl/utils/services/permissions';
 import { Router } from '@angular/router';
 import { PortfolioManagerDetail } from '../../ofi-store/ofi-portfolio-manager/portfolio-manage-list/model';
 
@@ -9,23 +10,32 @@ import { PortfolioManagerDetail } from '../../ofi-store/ofi-portfolio-manager/po
     templateUrl: './portfolio-manager-list.component.html',
 })
 export class PortfolioManagerListComponent implements OnInit, OnDestroy {
-    portfolioMangerList = [
-        {
-            emailAddress: 'email@setl.io',
-            firstName: 'ming',
-            lastName: 'huang',
-            status: 'active',
-        },
-    ];
+    portfolioMangerList = [];
+
+    public hasPermissionPortfolioManagersView: boolean = false;
+    public hasPermissionPortfolioManagersInsert: boolean = false;
 
     constructor(
         private ofiPortfolioManagerDataService: OfiPortfolioManagerDataService,
+        public permissionsService: PermissionsService,
         private router: Router,
     ) {
     }
 
     ngOnInit() {
         (<any>this).appSubscribe(this.ofiPortfolioManagerDataService.getPortfolioManagerArrayList(), pmList => this.portfolioMangerList = pmList);
+
+        this.permissionsService.hasPermission('managePortfolioManager', 'canRead').then(
+            (hasPermission) => {
+                this.hasPermissionPortfolioManagersView = hasPermission;
+            },
+        );
+
+        this.permissionsService.hasPermission('managePortfolioManager', 'canInsert').then(
+            (hasPermission) => {
+                this.hasPermissionPortfolioManagersInsert = hasPermission;
+            },
+        );
     }
 
     ngOnDestroy() {

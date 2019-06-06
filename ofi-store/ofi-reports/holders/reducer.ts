@@ -144,7 +144,7 @@ const handleGetShareHolderDetail = (state: OfiHolderState, action: Action): OfiH
             name: response.shareName,
             currency: response.shareCurrency,
             isin: response.shareIsin,
-            nav: response.latestNav,
+            nav: response.shareNav,
             unitNumber: response.shareUnitNumber,
             aum: response.shareAum,
             holderNumber: response.shareHolderNumber,

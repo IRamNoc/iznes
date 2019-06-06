@@ -20,6 +20,7 @@ import * as moment from 'moment-timezone';
 import { Location } from '@angular/common';
 import { PortfolioManagerDetail } from '../../ofi-store/ofi-portfolio-manager/portfolio-manage-list/model';
 import { InvestorType, isRetail, isMandate, isPortfolioManager } from '../../shared/investor-types';
+import { PermissionsService } from '@setl/utils/services/permissions';
 
 const values = (o: object) => Object.keys(o).map(i => o[i]);
 
@@ -42,6 +43,9 @@ export class OfiClientReferentialComponent implements OnInit, OnDestroy {
     otherData = {};
     loading = true;
     currentTab = 1;
+
+    public hasPermissionClientReferentialUpdate: boolean = false;
+    public hasPermissionInvestorInvitation: boolean = false;
 
     public subscriptions: Array<any> = [];
 
@@ -106,6 +110,7 @@ export class OfiClientReferentialComponent implements OnInit, OnDestroy {
     @select(['ofi', 'ofiKyc', 'amKycList', 'amKycList']) amKycListObs;
     @select(['ofi', 'ofiPortfolioManager', 'portfolioManagerList', 'portfolioManagerList']) portfolioManagers$: Observable<PortfolioManagerDetail[]>;
     @select(['ofi', 'ofiProduct', 'ofiFundShareList', 'iznShareList']) amAllFundShareListOb;
+    @select(['ofi', 'ofiProduct', 'ofiFundShareList', 'requestedIznesShare']) requestedShareList$;
     @select(['user', 'authentication', 'token']) tokenOb;
     @select(['user', 'myDetail', 'userId']) userIdOb;
     @select(['user', 'siteSettings', 'language']) requestLanguageOb;
@@ -123,9 +128,22 @@ export class OfiClientReferentialComponent implements OnInit, OnDestroy {
                 public translate: MultilingualService,
                 private location: Location,
                 private numberConverterService: NumberConverterService,
+                public permissionsService: PermissionsService,
     ) { }
 
     ngOnInit(): void {
+        this.permissionsService.hasPermission('manageClientReferential', 'canUpdate').then(
+            (hasPermission) => {
+                this.hasPermissionClientReferentialUpdate = hasPermission;
+            },
+        );
+
+        this.permissionsService.hasPermission('investorInvitation', 'canInsert').then(
+            (hasPermission) => {
+                this.hasPermissionInvestorInvitation = hasPermission;
+            },
+        );
+
         this.investorTypeForm = new FormGroup({
             investorType: new FormControl(''),
         });
@@ -163,6 +181,10 @@ export class OfiClientReferentialComponent implements OnInit, OnDestroy {
 
         this.subscriptions.push(this.investorTypeForm.valueChanges.subscribe(() => {
             this.ofiKycService.setRequestedClientReferential(false);
+        }));
+
+        this.subscriptions.push(this.requestedShareList$.subscribe((requested) => {
+            this.requestShareList(requested);
         }));
 
         this.subscriptions.push(this.amAllFundShareListOb.subscribe((fundShareList) => {
@@ -204,7 +226,7 @@ export class OfiClientReferentialComponent implements OnInit, OnDestroy {
         const methodMap = {
             'direct': LANG_DIRECT,
             'mandate': LANG_MANDATE,
-        }
+        };
 
         this.subscriptions.push(
             observableCombineLatest(
@@ -225,7 +247,7 @@ export class OfiClientReferentialComponent implements OnInit, OnDestroy {
                             investorName: (isRetail(client.investorType)) ? `${client.firstName} ${client.lastName}` : client.companyName,
                             investorType: typeMap[client.investorType],
                             investmentMethod: methodMap[client.investmentMethod],
-                        }
+                        };
                     });
 
                     clientReferential.forEach((client) => {
@@ -317,8 +339,9 @@ export class OfiClientReferentialComponent implements OnInit, OnDestroy {
     }
 
     getClientReferentialDescriptionTitle(): string {
+        const companyName = this.companyName || '';
         const reference = get(this.clients, [this.kycId, 'clientReference'], '') || '';
-        return `: ${this.companyName}${reference}`;
+        return Boolean(reference) && Boolean(companyName) ? `: ${companyName}: ${reference}` : (!Boolean(reference)) ? ((Boolean(companyName)) ? `: ${companyName}` : '') : `: ${reference}`;
     }
 
     requestSearch() {
@@ -327,11 +350,11 @@ export class OfiClientReferentialComponent implements OnInit, OnDestroy {
     }
 
     gotoInvite() {
-        this.router.navigateByUrl('/client-referential/invite-investors');
+        if (this.hasPermissionInvestorInvitation) this.router.navigateByUrl('/client-referential/invite-investors');
     }
 
     inviteMandateInvestors() {
-        this.router.navigate(['client-referential', 'invite-mandate-investors']);
+        if (this.hasPermissionInvestorInvitation) this.router.navigate(['client-referential', 'invite-mandate-investors']);
     }
 
     viewClient(id) {
@@ -608,6 +631,12 @@ export class OfiClientReferentialComponent implements OnInit, OnDestroy {
      */
     isRetail(): boolean {
         return isRetail(this.currentInvestor.investorType);
+    }
+
+    requestShareList(requested): void {
+        if (!requested) {
+            OfiFundShareService.defaultRequestIznesShareList(this.ofiFundShareService, this.ngRedux);
+        }
     }
 
     /**

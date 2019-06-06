@@ -14,9 +14,26 @@
 
         <clr-tab-content *clrIfActive="true">
             <!-- Button container -->
+            <div *ngIf="!(hasPermissionCreateNav && hasPermissionUpdateNav) && !isIznesAdmin" class="alert alert-warning">
+                <div class="alert-items">
+                    <div class="alert-item static">
+                        <div class="alert-icon-wrapper">
+                            <clr-icon class="alert-icon" shape="exclamation-triangle"></clr-icon>
+                        </div>
+                        <span class="alert-text">
+                            {{ 'Please contact the administrator to request permission to upload NAVs' | translate }}
+                        </span>
+                    </div>
+                </div>
+            </div>
+
             <div class="row">
                 <div class="form-group button-container">
-                    <button *ngIf="!isIznesAdmin" class="btn btn-primary" id="uploadDetailNavFileButton" (click)="isNavUploadModalDisplayed = true">
+                    <button *ngIf="!isIznesAdmin"
+                            class="btn btn-primary"
+                            id="uploadDetailNavFileButton"
+                            [disabled]="!(hasPermissionCreateNav && hasPermissionUpdateNav)"
+                            (click)="isNavUploadModalDisplayed = true">
                         {{ 'Upload NAVs' | translate }}
                     </button>
 
@@ -115,15 +132,34 @@
 
                         <div class="form-group col-sm-4 add-new-nav">
                             <label class="control-label">&nbsp;</label>
-                            <button *ngIf="!isIznesAdmin" class="btn btn-primary" (click)="addNav()" id="Add-New-NAV">
-                                {{ 'Add New NAV' | translate }}</button>
-                            <button class="btn" (click)="goToAuditTrail()" id="NAV-Audit-Trail">
-                                {{ 'NAV Audit Trail' | translate }}
+                            <button *ngIf="!isIznesAdmin"
+                                    class="btn btn-primary"
+                                    [disabled]="!hasPermissionCreateNav"
+                                    (click)="addNav()"
+                                    id="Add-New-NAV">
+                                    {{ 'Add New NAV' | translate }}</button>
+                            <button class="btn"
+                                    (click)="goToAuditTrail()"
+                                    id="NAV-Audit-Trail">
+                                    {{ 'NAV Audit Trail' | translate }}
                             </button>
                         </div>
                     </div>
                 </div>
             </form>
+
+            <div *ngIf="!isIznesAdmin && (!hasPermissionCreateNav || !hasPermissionUpdateNav || !hasPermissionDeleteNav)" class="alert alert-warning">
+                <div class="alert-items">
+                    <div class="alert-item static">
+                        <div class="alert-icon-wrapper">
+                            <clr-icon class="alert-icon" shape="exclamation-triangle"></clr-icon>
+                        </div>
+                        <span class="alert-text">
+                            {{ getPermissionMessage() }}
+                        </span>
+                    </div>
+                </div>
+            </div>
 
             <clr-datagrid #dataGrid>
                 <clr-dg-column class="col-date col-min-width" id="NAV-Date">{{ 'NAV Date' | translate }}</clr-dg-column>
@@ -131,12 +167,12 @@
                     }}
                 </clr-dg-column>
                 <clr-dg-column class="col-currency col-min-width" id="NAV-CCY">{{ 'NAV CCY' | translate }}</clr-dg-column>
-                <clr-dg-column class="col-min-width" id="NAV">{{ 'NAV' | translate }}</clr-dg-column>
-                <clr-dg-column class="col-min-width" id="Number-Of-Shares">{{ 'Number of Shares' | translate }}</clr-dg-column>
-                <clr-dg-column class="col-min-width" id="Share-AUM">{{ 'Share AUM' | translate }}</clr-dg-column>
+                <clr-dg-column class="col-min-width right" id="NAV">{{ 'NAV' | translate }}</clr-dg-column>
+                <clr-dg-column class="col-min-width right" id="Number-Of-Shares">{{ 'Number of Shares' | translate }}</clr-dg-column>
+                <clr-dg-column class="col-min-width right" id="Share-AUM">{{ 'Share AUM' | translate }}</clr-dg-column>
                 <clr-dg-column class="col-min-width" id="Coupons">{{ 'Coupons' | translate }}</clr-dg-column>
                 <clr-dg-column class="col-status col-min-width" id="Status">{{ 'Status' | translate }}</clr-dg-column>
-                <clr-dg-column *ngIf="!isIznesAdmin" class="actions col-min-width" id="Actions">{{ 'Actions' |
+                <clr-dg-column *ngIf="!isIznesAdmin" class="actions col-min-width right" id="Actions">{{ 'Actions' |
                     translate }}</clr-dg-column>
 
                 <clr-dg-row *clrDgItems="let item of navFundHistory; let i = index" id="{{'product-nav-history-row' + i}}">
@@ -144,12 +180,12 @@
                     <clr-dg-cell id="{{'nav-history-row'+i+'-col-pub-date'}}" class="col-date">{{item.navPubDate}}</clr-dg-cell>
                     <clr-dg-cell id="{{'nav-history-row'+i+'-col-currency'}}" class="col-currency">{{'@getCurrencyString(item.currency)@'
                         | translate: {'getCurrencyString(item.currency)': getCurrencyString(item.currency)} }}</clr-dg-cell>
-                    <clr-dg-cell>
+                    <clr-dg-cell class="right">
                         <span [hidden]="isNavNull(item.nav)">{{navToFrontEndString(item.nav)}}</span>
                         <span [hidden]="!isNavNull(item.nav)" class="label label-warning">{{ 'Pending' | translate }}</span>
                     </clr-dg-cell>
-                    <clr-dg-cell id="{{'nav-history-row'+i+'-col-number-of-shares'}}">{{ navToFrontEndString(item.shares) }}</clr-dg-cell>
-                    <clr-dg-cell id="{{'nav-history-row'+i+'-share-aum'}}">{{ navToFrontEndString(item.shareAum) }}</clr-dg-cell>
+                    <clr-dg-cell id="{{'nav-history-row'+i+'-col-number-of-shares'}}" class="right">{{ navToFrontEndString(item.shares) }}</clr-dg-cell>
+                    <clr-dg-cell id="{{'nav-history-row'+i+'-share-aum'}}" class="right">{{ navToFrontEndString(item.shareAum) }}</clr-dg-cell>
                     <clr-dg-cell id="{{'nav-history-row'+i+'-coupons'}}"></clr-dg-cell>
                     <clr-dg-cell class="col-status">
                         <span [ngSwitch]="item.status">
@@ -171,14 +207,19 @@
                             </span>
                         </span>
                     </clr-dg-cell>
-                    <clr-dg-cell *ngIf="!isIznesAdmin" class="actions">
+                    <clr-dg-cell *ngIf="!isIznesAdmin" class="actions right">
                         <div class="btn-group btn-sm">
-                            <button id="{{'Edit-NAV-' + i}}" class="btn btn-success btn-sm" style="margin-right: 0px;"
-                                (click)="editNav(item)" [disabled]="item.status == 3">
+                            <button id="{{'Edit-NAV-' + i}}"
+                                    class="btn btn-success btn-sm"
+                                    style="margin-right: 0px;"
+                                    (click)="editNav(item)"
+                                    [disabled]="!hasPermissionUpdateNav || (item.status == 3)">
                                 <i class="fa fa-edit"></i> {{ 'Edit NAV' | translate }}
                             </button>
-                            <button id="{{'Delete-NAV-' + i}}" class="btn btn-danger btn-sm" (click)="cancelNav(item)"
-                                [disabled]="(item.status == -1 && item.navUsed == 1) || item.status == 3">
+                            <button id="{{'Delete-NAV-' + i}}"
+                                    class="btn btn-danger btn-sm"
+                                    (click)="cancelNav(item)"
+                                    [disabled]="!hasPermissionDeleteNav || (item.status == -1 && item.navUsed == 1) || item.status == 3">
                                 <i class="fa fa-remove"></i> {{ 'Delete NAV' | translate }}
                             </button>
                         </div>

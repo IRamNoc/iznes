@@ -15,6 +15,7 @@
                     <input type="checkbox"
                             id="access_slider_{{i}}"
                             [formControl]="item.statusControl"
+                            [attr.disabled]="!hasPermissionPortfolioManagersUpdate ? '' : null"
                             (change)="handleChange(item)">
                     <span class="slider round"></span>
                 </label>

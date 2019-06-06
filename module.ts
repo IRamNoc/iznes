@@ -1,7 +1,6 @@
 /* Core/Angular imports. */
 import { NgModule } from '@angular/core';
 /* Custom Ofi imports. */
-import { OfiLoginModule } from './ofi-login/module';
 import { OfiHomeModule } from './ofi-home/module';
 import { OfiAmProductHomeModule } from './ofi-product/module';
 import { OfiMyInformationsModule } from './ofi-my-informations/module';
@@ -31,7 +30,6 @@ import { OfiMandateInvestorModule } from './ofi-mandate-investor/mandate-investo
 /* Decorator. */
 @NgModule({
     imports: [
-        OfiLoginModule,
         OfiHomeModule,
         OfiAmProductHomeModule,
         OfiMyInformationsModule,

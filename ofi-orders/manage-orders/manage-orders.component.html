@@ -124,7 +124,7 @@
                                             <button class="btn" style="margin-right: 10px;" (click)="searchFilters.clear()">
                                                 <i class="fa fa-trash"></i> {{ 'Clear Filters' | translate }}
                                             </button>
-                                            <button class="btn btn-success nomargin" (click)="exportOrders()">
+                                            <button *ngIf="hasPermissionManageOrders" class="btn btn-success nomargin" (click)="exportOrders()">
                                                 <i class="fa fa-download"></i> {{ 'Export Orders CSV' | translate }}
                                             </button>
                                         </div>
@@ -237,11 +237,33 @@
                     </div>
                 </div>
 
+                <div class="form-group col-sm-12" *ngIf="isAssetManager && ordersList.length && !hasPermissionActionOnOrders">
+                    <div class="alert alert-warning">
+                        <div class="alert-items">
+                            <div class="alert-item static">
+                                <div class="alert-icon-wrapper">
+                                    <clr-icon class="alert-icon" shape="exclamation-triangle"></clr-icon>
+                                </div>
+                                <span class="alert-text">
+                                    {{ 'Please contact the administrator to request permission to cancel an order, settle an order or send payment messages' | translate }}
+                                    <br />
+                                </span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
                 <clr-dg-action-bar *ngIf="showSendPaymentMsgBtn">
                     <div class="btn-group">
-                        <button type="button" class="btn btn-sm btn-secondary" (click)="showPaymentMsgConfirmationModal = true"><clr-icon shape="envelope"></clr-icon> Send Payment Message</button>
+                        <ng-container *ngIf="!hasPermissionActionOnOrders">
+                            <button type="button" class="btn btn-sm btn-secondary" disabled><clr-icon shape="envelope"></clr-icon> Send Payment Message</button>
+                        </ng-container>
+                        <ng-container *ngIf="hasPermissionActionOnOrders">
+                            <button type="button" class="btn btn-sm btn-secondary" (click)="showPaymentMsgConfirmationModal = true"><clr-icon shape="envelope"></clr-icon> Send Payment Message</button>
+                        </ng-container>
                     </div>
                 </clr-dg-action-bar>
+
                 <clr-datagrid (clrDgRefresh)="refresh($event)" [clrDgLoading]="loading" clrDgSortIcon #ordersDataGrid>
                     <clr-dg-column [clrDgField]="'orderRef'" clrDgSortIcon clrDgSortNoSearch id="Order-REF">
                         <ng-container *clrDgHideableColumn="{hidden: false}">{{ 'Order Reference' | translate }}
@@ -333,7 +355,7 @@
                             <span class="column-label"></span>
                         </ng-container>
                     </clr-dg-column>
-                    <clr-dg-column *ngIf="isAssetManger" class="right">
+                    <clr-dg-column *ngIf="isAssetManager" class="right">
                         <span class="text-center">{{ 'Payment' | translate }}</span>
                     </clr-dg-column>
                     <!-- ACTIONS -->
@@ -345,17 +367,21 @@
                         <clr-dg-cell (click)="buildLink(order, $event)">
                             <!-- orderRef -->
                             {{ order.orderRef }}
+                            <div *ngIf="showColumnSpacer" class="column-spacer">{{getColumnSpaceText(order.orderRef)}}</div>
                         </clr-dg-cell>
                         <clr-dg-cell (click)="buildLink(order, $event)">
                             <!-- orderType -->
                             <span>{{ order.orderTypeStr }}</span>
+                            <div *ngIf="showColumnSpacer" class="column-spacer">{{getColumnSpaceText(order.orderTypeStr)}}</div>
                         </clr-dg-cell>
                         <clr-dg-cell (click)="buildLink(order, $event)">
                             <!-- investor {{showInvestor(order)}} -->
                             {{order.investorCompanyName}}
+                            <div *ngIf="showColumnSpacer" class="column-spacer">{{getColumnSpaceText(order.investorCompanyName)}}</div>
                         </clr-dg-cell>
                         <clr-dg-cell *ngIf="isIznesAdmin" (click)="buildLink(order, $event)">
                             {{order.label}}
+                            <div *ngIf="showColumnSpacer" class="column-spacer">{{getColumnSpaceText(order.label)}}</div>
                         </clr-dg-cell>
                         <clr-dg-cell *ngIf="isInvestorUser">
                             <!-- isin -->
@@ -363,10 +389,13 @@
                                 class="btn btn-link btn-sm"
                                 [routerLink]="['/' + getLinkRoute() + '/product-characteristic', order.isin]">{{order.isin}}
                             </button>
+
+                            <div *ngIf="showColumnSpacer" class="column-spacer">{{getColumnSpaceText(order.isin)}}</div>
                         </clr-dg-cell>
                         <clr-dg-cell *ngIf="!isInvestorUser" (click)="buildLink(order, $event)">
                             <!-- isin -->
                             {{order.isin}}
+                            <div *ngIf="showColumnSpacer" class="column-spacer">{{getColumnSpaceText(order.isin)}}</div>
                         </clr-dg-cell>
                         <clr-dg-cell *ngIf="isInvestorUser">
                             <!-- shareName -->
@@ -379,15 +408,19 @@
                         <clr-dg-cell *ngIf="!isInvestorUser" (click)="buildLink(order, $event)">
                             <!-- shareName -->
                             {{order.fundShareName}}
+                            <div *ngIf="showColumnSpacer" class="column-spacer">{{getColumnSpaceText(order.fundShareName)}}</div>
                         </clr-dg-cell>
                         <clr-dg-cell (click)="buildLink(order, $event)">
                             <!-- assetManagementCompany -->{{order.amCompanyName}}
+                            <div *ngIf="showColumnSpacer" class="column-spacer">{{getColumnSpaceText(order.amCompanyName)}}</div>
                         </clr-dg-cell>
                         <clr-dg-cell (click)="buildLink(order, $event)">
                             <!-- shareCurrency -->{{ showCurrency(order) }}
+                            <div *ngIf="showColumnSpacer" class="column-spacer">{{getColumnSpaceText(showCurrency(order))}}</div>
                         </clr-dg-cell>
                         <clr-dg-cell class="right" (click)="buildLink(order, $event)">
                             <!-- quantity -->{{ order.quantity | moneyValue: 5 }}
+                            <div *ngIf="showColumnSpacer" class="column-spacer">{{getColumnSpaceText(order.quantity)}}</div>
                         </clr-dg-cell>
                         <clr-dg-cell (click)="buildLink(order, $event)">
                             <!-- byAmountOrQuantity -->
@@ -400,24 +433,31 @@
                         </clr-dg-cell>
                         <clr-dg-cell class="right" (click)="buildLink(order, $event)">
                             <!-- latestNAV -->{{ order.price | moneyValue: 4 }}
+                            <div *ngIf="showColumnSpacer" class="column-spacer">{{getColumnSpaceText(order.price)}}</div>
                         </clr-dg-cell>
                         <clr-dg-cell class="right" (click)="buildLink(order, $event)">
                             <!-- grossAmount -->{{ order.amountWithCost | moneyValue: 2 }}
+                            <div *ngIf="showColumnSpacer" class="column-spacer">{{getColumnSpaceText(order.amountWithCost)}}</div>
                         </clr-dg-cell>
                         <clr-dg-cell class="right" (click)="buildLink(order, $event)">
                             <!-- feesAmount -->{{ order.fee | moneyValue: 2 }}
+                            <div *ngIf="showColumnSpacer" class="column-spacer">{{getColumnSpaceText(order.fee)}}</div>
                         </clr-dg-cell>
                         <clr-dg-cell (click)="buildLink(order, $event)">
-                            <!-- orderDate -->{{ getDateTime(order.orderDate) }}
+                            <!-- orderDate -->
+                            <div style="min-width: 145px">{{ getDateTime(order.orderDate) }}</div>
                         </clr-dg-cell>
                         <clr-dg-cell (click)="buildLink(order, $event)">
-                            <!-- cutOffDate -->{{ getDateTime(order.cutoffDate) }}
+                            <!-- cutOffDate -->
+                            <div style="min-width: 145px">{{ getDateTime(order.cutoffDate) }}</div>
                         </clr-dg-cell>
                         <clr-dg-cell (click)="buildLink(order, $event)">
                             <!-- NAVDate -->{{ getOnlyDate(order.valuationDate) }}
+                            <div *ngIf="showColumnSpacer" class="column-spacer">{{getColumnSpaceText(getOnlyDate(order.valuationDate))}}</div>
                         </clr-dg-cell>
                         <clr-dg-cell (click)="buildLink(order, $event)">
                             <!-- settlementDate -->{{ getOnlyDate(order.settlementDate) }}
+                            <div *ngIf="showColumnSpacer" class="column-spacer">{{getColumnSpaceText(getOnlyDate(order.settlementDate))}}</div>
                         </clr-dg-cell>
                         <clr-dg-cell (click)="buildLink(order, $event)">
                             <span *ngIf="order.orderStatus == 1" class="label label-warning">{{ 'Initiated' | translate }}
@@ -441,10 +481,10 @@
                             <span *ngIf="order.orderStatus == 0" class="label label-error">{{ 'Cancelled' | translate }}
                             </span>
                         </clr-dg-cell>
-                        <clr-dg-cell *ngIf="isAssetManger" class="right" [ngSwitch]="order.paymentMsgStatus">
+                        <clr-dg-cell *ngIf="isAssetManager" class="right" [ngSwitch]="order.paymentMsgStatus">
                             <span *ngSwitchCase="'sent'" class="label label-success">{{ 'Sent' | translate }}</span>
                             <span *ngSwitchCase="'ready'" class="label label-success">{{ 'Sent' | translate }}</span>
-                            <clr-checkbox *ngSwitchCase="'pending'" [formControl]="order.markedForPayment" (clrCheckedChange)="updatePaymentCheckBoxState(order.orderID, $event)"  [clrDisabled]="!order.readyForPayment"></clr-checkbox>
+                            <input type="checkbox" clrCheckbox *ngSwitchCase="'pending'" [formControl]="order.markedForPayment" (change)="updatePaymentCheckBoxState(order.orderID, $event)"  [disabled]="!order.readyForPayment">
                         </clr-dg-cell>
                         <clr-dg-cell *ngIf="!isIznesAdmin" [ngSwitch]="order.orderStatus" class="right">
                             <!--&lt;!&ndash; Actions &ndash;&gt;-->
@@ -453,10 +493,16 @@
                             <!--<button type="button" class="btn btn-sm btn-info" disabled>{{ 'Cancel' | translate }}</button>-->
                             <!--</ng-template>-->
 
-                            <button type="button" class="btn btn-sm btn-danger" (click)="cancelOrder(i)" *ngSwitchCase="1">{{ 'Cancel' | translate }}</button>
+                            <ng-container *ngSwitchCase="1">
+                                <button type="button" class="btn btn-sm btn-danger" (click)="cancelOrder(i)" *ngIf="!hasPermissionActionOnOrders" disabled>{{ 'Cancel' | translate }}</button>
+                                <button type="button" class="btn btn-sm btn-danger" (click)="cancelOrder(i)" *ngIf="hasPermissionActionOnOrders">{{ 'Cancel' | translate }}</button>
+                            </ng-container>
+
+                            <!-- <button type="button" class="btn btn-sm btn-danger" (click)="cancelOrder(i)" *ngSwitchCase="1">{{ 'Cancel' | translate }}</button> -->
                             <ng-container *ngSwitchCase="4">
                                 <button type="button" *ngIf="isInvestorUser" class="btn btn-sm btn-info" disabled>{{ 'Cancel' | translate }}</button>
-                                <button type="button" *ngIf="!isInvestorUser" class="btn btn-sm btn-primary" (click)="settleOrder(i)">{{ 'Settle' | translate }}</button>
+                                <button type="button" *ngIf="!isInvestorUser && hasPermissionActionOnOrders" class="btn btn-sm btn-primary" (click)="settleOrder(i)">{{ 'Settle' | translate }}</button>
+                                <button type="button" *ngIf="!isInvestorUser && !hasPermissionActionOnOrders" class="btn btn-sm btn-primary" disabled>{{ 'Settle' | translate }}</button>
                             </ng-container>
                             <button type="button" class="btn btn-sm btn-info" disabled *ngSwitchDefault> {{ 'Cancel' | translate }}</button>
 
@@ -752,7 +798,7 @@
                             <div>
                                 <span class="readonly-field">{{fundShare.shareClassCode}}</span>
                             </div>
-                        </div>                        
+                        </div>
                     </div>
                     <div class="row mb-1">
                         <div class="form-group col-sm-6">
@@ -781,7 +827,7 @@
                                 <span class="readonly-field {{getPriceStatusCss(orderData)}}">{{ orderData.price | moneyValue: 2 }}</span>
                             </div>
                         </div>
-                        
+
                     </div>
                     <div class="row mb-1">
                         <div class="form-group col-sm-6">

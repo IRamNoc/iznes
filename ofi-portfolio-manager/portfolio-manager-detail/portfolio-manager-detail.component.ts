@@ -3,6 +3,7 @@ import { AppObservableHandler } from '@setl/utils/decorators/app-observable-hand
 import { ActivatedRoute, Router } from '@angular/router';
 import { PortfolioManagerDetail } from '../../ofi-store/ofi-portfolio-manager/portfolio-manage-list/model';
 import { OfiFundDataService } from '../../ofi-data-service/product/fund/ofi-fund-data-service';
+import { PermissionsService } from '@setl/utils/services/permissions';
 import { combineLatest, of, Observable, Subject } from 'rxjs';
 import { map, flatMap, filter, tap, shareReplay, distinctUntilChanged, takeUntil } from 'rxjs/operators';
 import { OfiPortfolioMangerService } from '../../ofi-req-services/ofi-portfolio-manager/service';
@@ -55,6 +56,8 @@ export class PortfolioManagerDetailComponent implements OnInit, OnDestroy {
     accessFundData$: Observable<any>;
     unsubscribe = new Subject<boolean>();
 
+    public hasPermissionPortfolioManagersUpdate: boolean = false;
+
     constructor(
         private activeRoute: ActivatedRoute,
         private ofiFundDataService: OfiFundDataService,
@@ -69,6 +72,7 @@ export class PortfolioManagerDetailComponent implements OnInit, OnDestroy {
         private changeDetector: ChangeDetectorRef,
         private location: Location,
         private toaster: ToasterService,
+        public permissionsService: PermissionsService,
     ) {
     }
 
@@ -108,6 +112,12 @@ export class PortfolioManagerDetailComponent implements OnInit, OnDestroy {
             });
             this.changeDetectorRef.markForCheck();
         });
+
+        this.permissionsService.hasPermission('managePortfolioManager', 'canUpdate').then(
+            (hasPermission) => {
+                this.hasPermissionPortfolioManagersUpdate = hasPermission;
+            },
+        );
     }
 
     ngOnDestroy() {

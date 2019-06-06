@@ -29,6 +29,7 @@ import {
 import { MultilingualService } from '@setl/multilingual';
 import { AlertsService } from '@setl/jaspero-ng2-alerts/src/alerts.service';
 import { OfiCurrenciesService } from '@ofi/ofi-main/ofi-req-services/ofi-currencies/service';
+import { PermissionsService } from '@setl/utils/services/permissions';
 
 const ADMIN_USER_URL = '/net-asset-value';
 
@@ -71,8 +72,12 @@ export class OfiNavFundView implements OnInit, OnDestroy {
     hasResult: boolean;
     currencyList: any[];
 
-    get isIznesAdmin():boolean {
-        return this.router.url.startsWith(ADMIN_USER_URL);
+    public hasPermissionCreateNav: boolean = false;
+    public hasPermissionUpdateNav: boolean = false;
+    public hasPermissionDeleteNav: boolean = false;
+
+    get isIznesAdmin(): boolean {
+        return this.router.url.startsWith(ADMIN_USER_URL) || this.router.url.split('/').includes(ADMIN_USER_URL.substr(1));
     }
 
     @ViewChild('detailNavCsvFile')
@@ -87,20 +92,21 @@ export class OfiNavFundView implements OnInit, OnDestroy {
 
     constructor(
         private redux: NgRedux<any>,
-                private router: Router,
-                private changeDetectorRef: ChangeDetectorRef,
-                private ofiCorpActionService: OfiCorpActionService,
-                private ofiNavService: OfiNavService,
-                private numberConverterService: NumberConverterService,
-                private moneyPipe: MoneyValuePipe,
-                private popupService: OfiManageNavPopupService,
-                private alertService: AlertsService,
-                private ofiCurrenciesService: OfiCurrenciesService,
-                private fileDownloader: FileDownloader,
-                public translate: MultilingualService,
-                private location: Location,
-                @Inject(APP_CONFIG) appConfig: AppConfig,
-                ) {
+        private router: Router,
+        private changeDetectorRef: ChangeDetectorRef,
+        private ofiCorpActionService: OfiCorpActionService,
+        private ofiNavService: OfiNavService,
+        private numberConverterService: NumberConverterService,
+        private moneyPipe: MoneyValuePipe,
+        private popupService: OfiManageNavPopupService,
+        private alertService: AlertsService,
+        private ofiCurrenciesService: OfiCurrenciesService,
+        private fileDownloader: FileDownloader,
+        private location: Location,
+        public permissionsService: PermissionsService,
+        public translate: MultilingualService,
+        @Inject(APP_CONFIG) appConfig: AppConfig,
+    ) {
         this.appConfig = appConfig;
         this.isNavUploadModalDisplayed = false;
         this.navCsvFile = null;
@@ -114,6 +120,56 @@ export class OfiNavFundView implements OnInit, OnDestroy {
         this.initSubscriptions();
 
         this.redux.dispatch(clearRequestedNavFundView());
+
+        this.permissionsService.hasPermission('manageNav', 'canInsert').then(
+            (hasPermission) => {
+                this.hasPermissionCreateNav = hasPermission;
+            });
+
+        this.permissionsService.hasPermission('manageNav', 'canUpdate').then(
+            (hasPermission) => {
+                this.hasPermissionUpdateNav = hasPermission;
+            });
+
+        this.permissionsService.hasPermission('manageNav', 'canDelete').then(
+            (hasPermission) => {
+                this.hasPermissionDeleteNav = hasPermission;
+            });
+    }
+
+    /**
+     * Returns message detailing missing permissions
+     *
+     * @returns {string}
+     */
+    public getPermissionMessage(): string {
+        if (!this.hasPermissionCreateNav && !this.hasPermissionUpdateNav && !this.hasPermissionDeleteNav) {
+            return this.translate.translate('Please contact the administrator to request permission to add, edit or cancel a NAV.');
+        }
+
+        if (this.hasPermissionCreateNav && !this.hasPermissionUpdateNav && !this.hasPermissionDeleteNav) {
+            return this.translate.translate('Please contact the administrator to request permission to edit or cancel a NAV.');
+        }
+
+        if (this.hasPermissionCreateNav && this.hasPermissionUpdateNav && !this.hasPermissionDeleteNav) {
+            return this.translate.translate('Please contact the administrator to request permission to cancel a NAV.');
+        }
+
+        if (!this.hasPermissionCreateNav && this.hasPermissionUpdateNav && !this.hasPermissionDeleteNav) {
+            return this.translate.translate('Please contact the administrator to request permission to add or cancel a NAV.');
+        }
+
+        if (!this.hasPermissionCreateNav && this.hasPermissionUpdateNav && this.hasPermissionDeleteNav) {
+            return this.translate.translate('Please contact the administrator to request permission to add a NAV.');
+        }
+
+        if (!this.hasPermissionCreateNav && !this.hasPermissionUpdateNav && this.hasPermissionDeleteNav) {
+            return this.translate.translate('Please contact the administrator to request permission to add or edit a NAV.');
+        }
+
+        if (this.hasPermissionCreateNav && !this.hasPermissionUpdateNav && this.hasPermissionDeleteNav) {
+            return this.translate.translate('Please contact the administrator to request permission to edit a NAV.');
+        }
     }
 
     /**
@@ -217,6 +273,7 @@ export class OfiNavFundView implements OnInit, OnDestroy {
         for (const subscription of this.subscriptionsArray) {
             subscription.unsubscribe();
         }
+        this.changeDetectorRef.detach();
     }
 
     handleUploadNavSubmitClick() {

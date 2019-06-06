@@ -22,6 +22,7 @@ export class MandateInvestorGridComponent implements OnInit {
     pendingChanges = [];
     list = [];
 
+    @Input('hasPermissionPortfolioManagersUpdate') hasPermissionPortfolioManagersUpdate;
     @Input('pm') pm;
     @Output('toggle') toggle = new EventEmitter();
     @Output('manageAccess') manageAccess = new EventEmitter();
@@ -93,8 +94,8 @@ export class MandateInvestorGridComponent implements OnInit {
         });
     }
 
-        /**
-     * make request to server to update fund accesses.
+    /**
+     * Make request to server to update fund accesses.
      */
     saveAccess() {
         const requests = this.pendingChanges.map((accessChange) => {

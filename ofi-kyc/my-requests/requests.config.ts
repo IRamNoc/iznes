@@ -1097,7 +1097,7 @@ export const listingMarketsList = [
     },
     {
         id: 'boerseMuenchenRegulierterMarkt',
-        text: 'BBoerse Muenchen (Regulierter Markt)',
+        text: 'Boerse Muenchen (Regulierter Markt)',
     },
     {
         id: 'tradegateExchangeRegulierterMarkt',
