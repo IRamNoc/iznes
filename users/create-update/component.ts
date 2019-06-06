@@ -361,9 +361,7 @@ export class UsersCreateUpdateComponent
             false,
         );
 
-        _.forEach(this.forms, (form: Model.AccountAdminUserForm) => {
-            if (invite) this.inviteUser(data[1].Data[0].userID, form, false);
-        });
+        if (invite) this.inviteUser(data[1].Data[0].userID, form, false);
 
         if (this.forms.length === index + 1) {
             this.router.navigateByUrl(this.getBackUrl());
