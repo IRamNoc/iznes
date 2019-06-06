@@ -102,253 +102,260 @@ export class ChannelService {
         this.logService.log(' | data: ', data);
 
         switch (data.Request) {
-        case 'nu': // new user
-        case 'udu': // update user
-            this.ngRedux.dispatch(
-                {
-                    type: UPDATE_ADMIN_USERLIST,
-                    payload: [null, data, null],
-                },
-            );
-            break;
-        case 'du': // delete user
-            this.ngRedux.dispatch(
-                {
-                    type: DELETE_FROM_ADMIN_USERLIST,
-                    payload: [null, data, null],
-                },
-            );
-            break;
+            case 'nu': // new user
+                this.ngRedux.dispatch(
+                    {
+                        type: SET_ADMIN_USERLIST,
+                        payload: [null, data, null],
+                    },
+                );
+                break;
+            case 'udu': // update user
+                this.ngRedux.dispatch(
+                    {
+                        type: UPDATE_ADMIN_USERLIST,
+                        payload: [null, data, null],
+                    },
+                );
+                break;
+            case 'du': // delete user
+                this.ngRedux.dispatch(
+                    {
+                        type: DELETE_FROM_ADMIN_USERLIST,
+                        payload: [null, data, null],
+                    },
+                );
+                break;
 
-        case 'ud': // update details
-            this.logService.log(' | UPDATE USERDETAILS: ', data);
+            case 'ud': // update details
+                this.logService.log(' | UPDATE USERDETAILS: ', data);
 
-            /* Let's now dispatch the append acion. */
-            this.ngRedux.dispatch(
-                {
-                    type: SET_USER_DETAILS,
-                    payload: [null, data, null],
-                },
-            );
-            break;
+                /* Let's now dispatch the append acion. */
+                this.ngRedux.dispatch(
+                    {
+                        type: SET_USER_DETAILS,
+                        payload: [null, data, null],
+                    },
+                );
+                break;
 
-        case 'setpassword':
-            this.logService.log(' | UPDATE USER PASSWORD: ', data);
+            case 'setpassword':
+                this.logService.log(' | UPDATE USER PASSWORD: ', data);
 
-            this.checkIfPasswordChanged();
+                this.checkIfPasswordChanged();
 
-            break;
+                break;
 
-        case 'updatetwofactor':
-            this.ngRedux.dispatch(
-                {
-                    type: UPDATE_TWO_FACTOR,
-                    payload: [null, data, null],
-                },
-            );
-            break;
+            case 'updatetwofactor':
+                this.ngRedux.dispatch(
+                    {
+                        type: UPDATE_TWO_FACTOR,
+                        payload: [null, data, null],
+                    },
+                );
+                break;
 
-        case 'ng': // new group
-        case 'upg': // update permissions group
-        case 'dpg': // delete permissions group
-            this.logService.log(' | UPDATE PERMISSION GROUPS: ', data);
+            case 'ng': // new group
+            case 'upg': // update permissions group
+            case 'dpg': // delete permissions group
+                this.logService.log(' | UPDATE PERMISSION GROUPS: ', data);
 
-            /* Let's now dispatch the admin action. */
-            this.ngRedux.dispatch(
-                {
-                    type: SET_ADMINISTRATIVE_PERMISSION_GROUP_LIST,
-                    payload: [null, data, null],
-                },
-            );
+                /* Let's now dispatch the admin action. */
+                this.ngRedux.dispatch(
+                    {
+                        type: SET_ADMINISTRATIVE_PERMISSION_GROUP_LIST,
+                        payload: [null, data, null],
+                    },
+                );
 
-            /* and the tx action. */
-            this.ngRedux.dispatch(
-                {
-                    type: SET_TRANSACTIONAL_PERMISSION_GROUP_LIST,
-                    payload: [null, data, null],
-                },
-            );
+                /* and the tx action. */
+                this.ngRedux.dispatch(
+                    {
+                        type: SET_TRANSACTIONAL_PERMISSION_GROUP_LIST,
+                        payload: [null, data, null],
+                    },
+                );
 
-            /* and the menu action. */
-            this.ngRedux.dispatch(
-                {
-                    type: SET_MENU_PERMISSION_GROUP_LIST,
-                    payload: [null, data, null],
-                },
-            );
-            break;
+                /* and the menu action. */
+                this.ngRedux.dispatch(
+                    {
+                        type: SET_MENU_PERMISSION_GROUP_LIST,
+                        payload: [null, data, null],
+                    },
+                );
+                break;
 
-        case 'nw': // new wallet
-            this.logService.log(' | NEW WALLET ADDED: ', data);
+            case 'nw': // new wallet
+                this.logService.log(' | NEW WALLET ADDED: ', data);
 
-            this.ngRedux.dispatch(
-                {
-                    type: SET_WALLET_ADDED,
-                    payload: [null, data, null],
-                },
-            );
+                this.ngRedux.dispatch(
+                    {
+                        type: SET_WALLET_ADDED,
+                        payload: [null, data, null],
+                    },
+                );
 
-            this.ngRedux.dispatch(
-                {
-                    type: SET_WALLET_DIRECTORY_WALLET_ADDED,
-                    payload: [null, data, null],
-                },
-            );
-            break;
-        case 'udw': // update wallet
-            this.logService.log(' | UPDATED WALLET: ', data);
+                this.ngRedux.dispatch(
+                    {
+                        type: SET_WALLET_DIRECTORY_WALLET_ADDED,
+                        payload: [null, data, null],
+                    },
+                );
+                break;
+            case 'udw': // update wallet
+                this.logService.log(' | UPDATED WALLET: ', data);
 
-            this.ngRedux.dispatch(
-                {
-                    type: SET_WALLET_UPDATED,
-                    payload: [null, data, null],
-                },
-            );
+                this.ngRedux.dispatch(
+                    {
+                        type: SET_WALLET_UPDATED,
+                        payload: [null, data, null],
+                    },
+                );
 
-            this.ngRedux.dispatch(
-                {
-                    type: SET_WALLET_DIRECTORY_WALLET_UPDATED,
-                    payload: [null, data, null],
-                },
-            );
-            break;
+                this.ngRedux.dispatch(
+                    {
+                        type: SET_WALLET_DIRECTORY_WALLET_UPDATED,
+                        payload: [null, data, null],
+                    },
+                );
+                break;
 
-        case 'dw': // delete wallet
-            this.logService.log(' | DELETED WALLET: ', data);
+            case 'dw': // delete wallet
+                this.logService.log(' | DELETED WALLET: ', data);
 
-            this.ngRedux.dispatch(
-                {
-                    type: SET_WALLET_DELETED,
-                    payload: [null, data, null],
-                },
-            );
+                this.ngRedux.dispatch(
+                    {
+                        type: SET_WALLET_DELETED,
+                        payload: [null, data, null],
+                    },
+                );
 
-            this.ngRedux.dispatch(
-                {
-                    type: SET_WALLET_DIRECTORY_WALLET_DELETED,
-                    payload: [null, data, null],
-                },
-            );
-            break;
+                this.ngRedux.dispatch(
+                    {
+                        type: SET_WALLET_DIRECTORY_WALLET_DELETED,
+                        payload: [null, data, null],
+                    },
+                );
+                break;
 
-        case 'nm': // new member
-        case 'udm': // update member
-        case 'dm': // delete member
-            this.logService.log(' | Update Manage Member list: ', data);
+            case 'nm': // new member
+            case 'udm': // update member
+            case 'dm': // delete member
+                this.logService.log(' | Update Manage Member list: ', data);
 
-            /* ...and dispatch the update action. */
-            this.ngRedux.dispatch(
-                {
-                    type: SET_MANAGE_MEMBER_LIST,
-                    payload: [null, data, null],
-                },
-            );
-            break;
+                /* ...and dispatch the update action. */
+                this.ngRedux.dispatch(
+                    {
+                        type: SET_MANAGE_MEMBER_LIST,
+                        payload: [null, data, null],
+                    },
+                );
+                break;
 
-        case 'na': // new account (group)
-        case 'uda': // update account (group)
-        case 'da': // delete account (group)
-            this.logService.log(' | Update Account (Group) list: ', data);
+            case 'na': // new account (group)
+            case 'uda': // update account (group)
+            case 'da': // delete account (group)
+                this.logService.log(' | Update Account (Group) list: ', data);
 
-            /* ...and dispatch the update action. */
-            this.ngRedux.dispatch(
-                {
-                    type: SET_ACCOUNT_LIST,
-                    payload: [null, data, null],
-                },
-            );
-            break;
+                /* ...and dispatch the update action. */
+                this.ngRedux.dispatch(
+                    {
+                        type: SET_ACCOUNT_LIST,
+                        payload: [null, data, null],
+                    },
+                );
+                break;
 
-        case 'uduwp': // update user wallet permissions
-            this.logService.log(' | UPDATE USER WALLET PERMISSION: ');
+            case 'uduwp': // update user wallet permissions
+                this.logService.log(' | UPDATE USER WALLET PERMISSION: ');
 
-            const asyncTaskPipesDirectory = this.myWalletsService.requestWalletDirectory();
+                const asyncTaskPipesDirectory = this.myWalletsService.requestWalletDirectory();
 
-            this.ngRedux.dispatch(SagaHelper.runAsync(
-                [SET_WALLET_DIRECTORY],
-                [],
-                asyncTaskPipesDirectory,
-                {},
-            ));
+                this.ngRedux.dispatch(SagaHelper.runAsync(
+                    [SET_WALLET_DIRECTORY],
+                    [],
+                    asyncTaskPipesDirectory,
+                    {},
+                ));
 
-            /* Retrieve wallets (as the admin does not know our wallet list). */
-            const asyncTaskPipesWallets = this.myWalletsService.requestOwnWallets();
+                /* Retrieve wallets (as the admin does not know our wallet list). */
+                const asyncTaskPipesWallets = this.myWalletsService.requestOwnWallets();
 
-            this.ngRedux.dispatch(SagaHelper.runAsync(
-                [SET_OWN_WALLETS],
-                [],
-                asyncTaskPipesWallets,
-                {},
-            ));
+                this.ngRedux.dispatch(SagaHelper.runAsync(
+                    [SET_OWN_WALLETS],
+                    [],
+                    asyncTaskPipesWallets,
+                    {},
+                ));
 
-            /* Set the state flag to true. so we do not request it again. /*
-            this.ngRedux.dispatch(setRequestedMyChainAccess());
+                /* Set the state flag to true. so we do not request it again. /*
+                this.ngRedux.dispatch(setRequestedMyChainAccess());
 
-            /* Request the list. */
-            const asyncTaskPipeAccess = this.chainService.requestMyChainAccess();
+                /* Request the list. */
+                const asyncTaskPipeAccess = this.chainService.requestMyChainAccess();
 
-            this.ngRedux.dispatch(SagaHelper.runAsync(
-                [SET_MY_CHAIN_ACCESS],
-                [],
-                asyncTaskPipeAccess,
-                {},
-            ));
+                this.ngRedux.dispatch(SagaHelper.runAsync(
+                    [SET_MY_CHAIN_ACCESS],
+                    [],
+                    asyncTaskPipeAccess,
+                    {},
+                ));
 
-            break;
+                break;
 
-        case 'email_send': // send email
-            /* Request new emails. */
-            this.ngRedux.dispatch(clearRequestedMailInitial());
-            this.ngRedux.dispatch(clearRequestedMailList());
+            case 'email_send': // send email
+                /* Request new emails. */
+                this.ngRedux.dispatch(clearRequestedMailInitial());
+                this.ngRedux.dispatch(clearRequestedMailList());
 
-            this.popNewMail();
-            break;
+                this.popNewMail();
+                break;
 
-        case 'email_mark_read': // email read
-        case 'email_mark_isdelete': // email deleted
-            this.ngRedux.dispatch(clearRequestedMailInitial());
+            case 'email_mark_read': // email read
+            case 'email_mark_isdelete': // email deleted
+                this.ngRedux.dispatch(clearRequestedMailInitial());
 
-            break;
+                break;
 
-        case 'uw': // update wallets
-            this.ngRedux.dispatch(
-                {
-                    type: SET_OWN_WALLETS,
-                    payload: [null, data, null],
-                },
-            );
-            break;
+            case 'uw': // update wallets
+                this.ngRedux.dispatch(
+                    {
+                        type: SET_OWN_WALLETS,
+                        payload: [null, data, null],
+                    },
+                );
+                break;
 
-        case 'updatewalletlabels':
-            this.ngRedux.dispatch(
-                {
-                    type: SET_WALLET_LABEL_UPDATED,
-                    payload: [null, data, null],
-                },
-            );
-            break;
+            case 'updatewalletlabels':
+                this.ngRedux.dispatch(
+                    {
+                        type: SET_WALLET_LABEL_UPDATED,
+                        payload: [null, data, null],
+                    },
+                );
+                break;
 
-        case 'deletewalletaccess':
-            this.ngRedux.dispatch(deleteFromOwnWallets(get(data, 'Data', [])));
-            break;
+            case 'deletewalletaccess':
+                this.ngRedux.dispatch(deleteFromOwnWallets(get(data, 'Data', [])));
+                break;
 
-        case 'addwalletaccess':
-            this.ngRedux.dispatch(addToOwnWallets(get(data, 'Data', {})));
-            break;
+            case 'addwalletaccess':
+                this.ngRedux.dispatch(addToOwnWallets(get(data, 'Data', {})));
+                break;
 
-        case 'refreshalerts':
-            const asyncTaskPipesAlerts = this.myUserService.getAlerts();
-            
-            this.ngRedux.dispatch(SagaHelper.runAsync(
-                [SET_ALERTS],
-                [],
-                asyncTaskPipesAlerts,
-                {},
-            ));
-            break;
+            case 'refreshalerts':
+                const asyncTaskPipesAlerts = this.myUserService.getAlerts();
 
-        default:
-            break;
+                this.ngRedux.dispatch(SagaHelper.runAsync(
+                    [SET_ALERTS],
+                    [],
+                    asyncTaskPipesAlerts,
+                    {},
+                ));
+                break;
+
+            default:
+                break;
         }
     }
 
