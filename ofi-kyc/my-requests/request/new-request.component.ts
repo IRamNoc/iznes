@@ -53,6 +53,7 @@ export class NewKycRequestComponent implements OnInit, AfterViewInit {
     };
 
     currentCompletedStep;
+    isBeginning: boolean = false;
     documentRules = {
         isListed: null,
         isFloatableHigh: null,
@@ -193,8 +194,6 @@ export class NewKycRequestComponent implements OnInit, AfterViewInit {
         } else {
             this.stepsConfig = formStepsLight;
         }
-
-        
     }
 
     goToStep(currentStep) {
@@ -230,10 +229,9 @@ export class NewKycRequestComponent implements OnInit, AfterViewInit {
         }
     }
 
-    isBeginning() {
-        if (this.formSteps) {
-            return this.formSteps.position === 0;
-        }
+    checkIsBeginning() {
+        // Fix changed after checked error
+        setTimeout(() => this.isBeginning = (this.formSteps || {}).position === 0);
     }
 
     handleSubmit(event) {
@@ -286,8 +284,10 @@ export class NewKycRequestComponent implements OnInit, AfterViewInit {
         this.unsubscribe.next();
         this.unsubscribe.complete();
     }
-    
+
     handleOnboarding() {
+        this.checkIsBeginning();
+
         // manage onboarding flow status
         combineLatest(this.inviteInfo$, this.defaultHomePage$)
         .subscribe(([inviteInfo, defaultHomePage]) => {

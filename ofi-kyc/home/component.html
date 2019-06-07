@@ -1,41 +1,49 @@
-<clr-modal [(clrModalOpen)]="basic">
-    <h3 class="modal-title">Onboarding splash</h3>
-    <div class="modal-body">
-        <p>{{ investorTypeText }}</p>
-    </div>
-    <div class="modal-footer">
-        <button type="button" class="btn btn-outline" (click)="basic = false">Cancel</button>
-        <button type="button" class="btn btn-primary" (click)="basic = false">Ok</button>
-    </div>
-</clr-modal>
-
-<div class="kyc-steps">
-    <div class="kyc-step">
-        User Information
-    </div>
-    <div class="kyc-step">
-        Selection
-    </div>
-    <div class="kyc-step">
-        Indentification
-    </div>
-    <div class="kyc-step">
-        Risk Profile
-    </div>
-    <div class="kyc-step">
-        Documents
-    </div>
-    <div class="kyc-step">
-        Validation
+<div class="full-screen-splash" *ngIf="showSplash" [style.backgroundImage]="'url(assets/images/iznes-login-bg.jpg)'">
+    <div class="content">
+        <img src="assets/images/logo-iznes-only.png" alt="IZNES">
+        <h2>Onboarding header</h2>
+        <button class="btn btn-primary" (click)="showSplash = false">Continue</button>
     </div>
 </div>
 
 <div class="kyc-header">
-Welcome to IZNES
+    Onboarding
+</div>
+
+<div class="kyc-steps">
+    <div class="kyc-step active">
+        <span>1</span> User Profile
+    </div>
+    <div class="kyc-step">
+        <span>2</span> Selection
+    </div>
+    <div class="kyc-step">
+        <span>3</span> Indentification
+    </div>
+    <div class="kyc-step">
+        <span>4</span> Risk Profile
+    </div>
+    <div class="kyc-step">
+        <span>5</span> Documents
+    </div>
+    <div class="kyc-step">
+        <span>6</span> Validation
+    </div>
 </div>
 
 <div class="kyc-container">
-    <h2>{{ 'Please provide information:' | translate }}</h2>
+    <h2>{{ 'User Profile' | translate }}</h2>
+    <div class="alert alert-no-bg" role="alert">
+        <div class="alert-items">
+            <div class="alert-item static">
+                <div class="alert-icon-wrapper">
+                    <clr-icon class="alert-icon" shape="info-circle"></clr-icon>
+                </div>
+                <span class="alert-text">{{ 'All fields are required unless marked optional' | translate }}</span>
+            </div>
+        </div>
+    </div>
+
     <div *ngIf="!hasFilledAdditionnalInfos">
         <app-my-informations [viewMode]="'PAGE'" [type]="userType" [userInfo]="userInfo" (onSubmit)="openMyInformationsModal($event)"></app-my-informations>
 

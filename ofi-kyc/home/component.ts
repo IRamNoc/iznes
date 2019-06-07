@@ -10,7 +10,7 @@ import { APP_CONFIG, AppConfig, ConfirmationService } from '@setl/utils';
 import { MultilingualService } from '@setl/multilingual';
 
 /* Ofi orders request service. */
-import { clearAppliedHighlight, SET_HIGHLIGHT_LIST, setAppliedHighlight } from '@setl/core-store/index';
+import { clearAppliedHighlight, SET_HIGHLIGHT_LIST, setAppliedHighlight, setMenuCollapsed } from '@setl/core-store/index';
 import { KycMyInformations } from '@ofi/ofi-main/ofi-store/ofi-kyc/my-informations';
 import { Observable } from 'rxjs/Observable';
 import { Router, ActivatedRoute } from '@angular/router';
@@ -26,14 +26,12 @@ import { InvestorType } from '../../shared/investor-types';
     changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class OfiKycHomeComponent implements AfterViewInit, OnDestroy {
-    @ViewChild('.nav-trigger') divClick: ElementRef;
-
     appConfig: AppConfig;
     endpointsConfig: Endpoints;
     hasFilledAdditionnalInfos = false;
     userType: number;
     investorType: number;
-    basic = true;
+    showSplash: boolean = true;
 
     /* Public properties. */
     public investorTypeText = 'Onboard on IZNES';
@@ -81,6 +79,9 @@ export class OfiKycHomeComponent implements AfterViewInit, OnDestroy {
     ) {
         this.appConfig = appConfig;
         this.endpointsConfig = endpoints;
+
+        // Collapse nav bar
+        this.ngRedux.dispatch(setMenuCollapsed(true));
     }
 
     ngAfterViewInit() {
@@ -106,11 +107,6 @@ export class OfiKycHomeComponent implements AfterViewInit, OnDestroy {
     }
 
     ngOnInit() {
-        console.log('hello ollie');
-        // hide menu on load
-        setTimeout(() => {
-            this.divClick.nativeElement.click();
-        }, 200);
     }
 
     openMyInformationsModal(userInformations: KycMyInformations) {
@@ -230,7 +226,7 @@ export class OfiKycHomeComponent implements AfterViewInit, OnDestroy {
         this.investorType;
 
         // Now CP investor type, 70 = issuer, 80 == investor
-        if(this.investorType == 70 || this.investorType == 80) {
+        if (this.investorType == 70 || this.investorType == 80) {
             this.investorTypeText = "Onboard as NowCP Client";
         }
     }

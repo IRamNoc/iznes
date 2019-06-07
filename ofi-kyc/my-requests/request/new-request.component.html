@@ -8,12 +8,19 @@
     </clr-alert>
 </div> -->
 
+<div class="kyc-header">
+    <ng-container *ngIf="onboardingMode">Onboarding</ng-container>
+    <ng-container *ngIf="!onboardingMode">Make New Request</ng-container>
+</div>
+
 <form-steps *ngIf="stepsConfig" [onboarding]="onboardingMode" [stepsConfig]="stepsConfig" (action)="handleAction($event)" [@toggle]="animating" (@toggle.done)="applyFullForm()">
     <form-step>
         <kyc-step-select-amc #step [form]="forms.get('selection')" (registered)="registered($event)" [disabled]="currentCompletedStep" (submitEvent)="handleSubmit($event)" [duplicate]="duplicate"></kyc-step-select-amc>
+        <ng-container *ngTemplateOutlet="firstStepInfo"></ng-container>
     </form-step>
     <form-step *ngIf="fullForm">
         <kyc-step-introduction #step (submitEvent)="handleSubmit($event)"></kyc-step-introduction>
+        <ng-container *ngTemplateOutlet="firstStepInfo"></ng-container>
     </form-step>
     <form-step *ngIf="fullForm">
         <kyc-step-identification #step [form]="forms.get('identification')" [investorType]="investorType" (submitEvent)="handleSubmit($event)"></kyc-step-identification>
@@ -29,18 +36,20 @@
     </form-step>
 </form-steps>
 
-<div class="header-breadcrumbs">
+<!-- <div class="header-breadcrumbs">
     <h1 class="text-overflow">
         <i class="fa fa-plus"></i>
         <span id="new-request-title">{{ 'Make New Request' | translate }}</span>
         <span *ngIf="duplicateCompany"> {{'from already sent request to' | translate}} {{duplicateCompany}}</span>
     </h1>
-</div>
+</div> -->
 
+<ng-template #firstStepInfo>
+    <div class="info" *ngIf="isBeginning">
+        <clr-icon shape="info-circle" class="is-info" size="24"></clr-icon>
+        <span>
+            {{ 'Be aware that once you click on "Next", this KYC will be saved as a Draft in the module "My Requests". You will then be able to finalise the request and send it to the counterparty later on.' | translate }}
+        </span>
+    </div>
+</ng-template>
 
-<div class="info" *ngIf="isBeginning()">
-    <clr-icon shape="info-circle" class="is-info" size="24"></clr-icon>
-    <span>
-        {{ 'Be aware that once you click on "Next", this KYC will be saved as a Draft in the module "My Requests". You will then be able to finalise the request and send it to the counterparty later on.' | translate }}
-    </span>
-</div>
