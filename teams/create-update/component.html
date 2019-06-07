@@ -20,7 +20,7 @@
                 [entityId]="entityId">
             </app-core-admin-user-teams-status>
 
-            <div class="row actions bottom">
+            <div class="row">
                 <div class="col-sm-12">
                     <h3>{{ [noun, 'Details'].join(' ') | translate }}</h3>
                 </div>
@@ -39,7 +39,7 @@
                 </div>
             </div>
 
-            <app-dynamic-form [model]="getForm()"></app-dynamic-form>
+            <app-dynamic-form [model]="getForm(hasPermissionUpdateTeams)"></app-dynamic-form>
 
             <div class="row actions bottom">
                 <div class="col-sm-12">

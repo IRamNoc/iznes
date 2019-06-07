@@ -26,15 +26,6 @@ export class UserTeamsCreateUpdateComponent
     private usersSelected: UsersModel.AccountAdminUser[];
     private permissionsSelected: AccountAdminPermission[];
 
-    public hasPermissionCreateTeams: boolean = false;
-    public hasPermissionUpdateTeams: boolean;
-    public hasPermissionDeleteTeams: boolean = false;
-    public hasPermissionViewUsers: boolean = false;
-    public hasPermissionCreateUsers: boolean = false;
-    public hasPermissionUpdateUsers: boolean = false;
-    public hasPermissionUpdateMembership: boolean = false;
-    public hasPermissionUpdatePermissions: boolean = false;
-
     constructor(private service: UserTeamsService,
                 route: ActivatedRoute,
                 protected router: Router,
@@ -43,70 +34,18 @@ export class UserTeamsCreateUpdateComponent
                 confirmations: ConfirmationService,
                 public permissionsService: PermissionsService,
                 protected translate: MultilingualService) {
-        super(route, router, alerts, toaster, confirmations, translate);
+        super(route, router, alerts, toaster, confirmations, translate, permissionsService);
         this.noun = AccountAdminNouns.Team;
     }
 
     ngOnInit() {
         super.ngOnInit();
 
-        this.permissionsService.hasPermission('accountAdminTeams', 'canInsert').then(
-            (hasPermission) => {
-                this.hasPermissionCreateTeams = hasPermission;
-            });
-
-        this.permissionsService.hasPermission('accountAdminTeams', 'canUpdate').then(
-            (hasPermission) => {
-                this.hasPermissionUpdateTeams = hasPermission;
-            });
-
-        this.permissionsService.hasPermission('accountAdminTeams', 'canDelete').then(
-            (hasPermission) => {
-                this.hasPermissionDeleteTeams = hasPermission;
-            });
-
-        this.permissionsService.hasPermission('accountAdminUsers', 'canRead').then(
-            (hasPermission) => {
-                this.hasPermissionViewUsers = hasPermission;
-            });
-
-        this.permissionsService.hasPermission('accountAdminUsers', 'canInsert').then(
-            (hasPermission) => {
-                this.hasPermissionCreateUsers = hasPermission;
-            });
-
-        this.permissionsService.hasPermission('accountAdminUsers', 'canUpdate').then(
-            (hasPermission) => {
-                this.hasPermissionUpdateUsers = hasPermission;
-            });
-
-        this.permissionsService.hasPermission('accountAdminManageMembership', 'canUpdate').then(
-            (hasPermission) => {
-                this.hasPermissionUpdateMembership = hasPermission;
-            });
-
-        this.permissionsService.hasPermission('accountAdminManagePermission', 'canUpdate').then(
-            (hasPermission) => {
-                this.hasPermissionUpdatePermissions = hasPermission;
-            });
-
         if (this.isUpdateMode()) {
             this.service.readUserTeams(this.entityId,
                                        null,
                                        (data: any) => this.onReadTeamSuccess(data),
                                        (e: any) => this.onReadEntityError());
-        }
-    }
-
-    getForm() {
-        if (this.hasPermissionUpdateTeams !== undefined) {
-            if (!this.hasPermissionUpdateTeams) {
-                Object.keys(this.form).forEach((index) => {
-                    this.form[index].disabled = true;
-                });
-            }
-
-            return this.form;
         }
     }
 
