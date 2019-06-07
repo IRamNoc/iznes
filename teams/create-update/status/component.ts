@@ -12,7 +12,7 @@ import { Router } from '@angular/router';
     styleUrls: ['../../../base/create-update/status/component.scss'],
 })
 export class UserTeamsStatusComponent extends AccountAdminStatusComponentBase<null> {
-    @Input() hasPermissionUpdateTeams: boolean;
+    @Input() hasPermissionUpdateTeams: boolean = false;
 
     constructor(toaster: ToasterService,
                 translate: MultilingualService,

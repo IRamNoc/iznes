@@ -20,7 +20,11 @@
                 [entityId]="entityId">
             </app-core-admin-user-teams-status>
 
-            <h3>{{ [noun, 'Details'].join(' ') | translate }}</h3>
+            <div class="row actions bottom">
+                <div class="col-sm-12">
+                    <h3>{{ [noun, 'Details'].join(' ') | translate }}</h3>
+                </div>
+            </div>
 
             <div *ngIf="!hasPermissionUpdateTeams" class="alert alert-warning">
                 <div class="alert-items">
@@ -29,13 +33,13 @@
                             <clr-icon class="alert-icon" shape="exclamation-triangle"></clr-icon>
                         </div>
                         <span class="alert-text">
-                            {{ 'Please contact the administrator to request permission to update teams' | translate }}
+                            {{ getPermissionMessage('teams') }}
                         </span>
                     </div>
                 </div>
             </div>
 
-            <app-dynamic-form [model]="form"></app-dynamic-form>
+            <app-dynamic-form [model]="getForm()"></app-dynamic-form>
 
             <div class="row actions bottom">
                 <div class="col-sm-12">
@@ -43,14 +47,14 @@
                 </div>
             </div>
 
-            <div *ngIf="!hasPermissionViewUsers || !hasPermissionCreateUsers" class="alert alert-warning">
+            <div *ngIf="!hasPermissionViewUsers || !hasPermissionCreateUsers || !hasPermissionUpdateUsers || !hasPermissionUpdateMembership" class="alert alert-warning">
                 <div class="alert-items">
                     <div class="alert-item static">
                         <div class="alert-icon-wrapper">
                             <clr-icon class="alert-icon" shape="exclamation-triangle"></clr-icon>
                         </div>
                         <span class="alert-text">
-                            {{ getPermissionMessage() }}
+                            {{ getPermissionMessage('users') }}
                         </span>
                     </div>
                 </div>
@@ -63,6 +67,7 @@
                         [entityId]="entityId"
                         [noun]="nouns.User"
                         [hasPermissionCreateUsers]="hasPermissionCreateUsers"
+                        [hasPermissionUpdateMembership]="hasPermissionUpdateMembership"
                         [showOnlyActiveFilter]="isUpdateMode()"
                         [doUpdateOb]="doUserManagementUpdateOb">
                     </app-core-admin-teams-user-mgmt>
@@ -75,14 +80,14 @@
                 </div>
             </div>
 
-            <div *ngIf="!hasPermissionUpdateTeams" class="alert alert-warning">
+            <div *ngIf="!hasPermissionUpdatePermissions || !hasPermissionUpdateTeams || !hasPermissionDeleteTeams" class="alert alert-warning">
                 <div class="alert-items">
                     <div class="alert-item static">
                         <div class="alert-icon-wrapper">
                             <clr-icon class="alert-icon" shape="exclamation-triangle"></clr-icon>
                         </div>
                         <span class="alert-text">
-                            {{ 'Please contact the administrator to request permission to update teams' | translate }}
+                            {{ getPermissionMessage('teams') }}
                         </span>
                     </div>
                 </div>
@@ -94,7 +99,7 @@
                     <app-core-admin-permissions
                         [showTeamSelect]="false"
                         [entityId]="entityId"
-                        [disableAll]="!hasPermissionUpdateTeams"
+                        [disableAll]="!hasPermissionUpdatePermissions"
                         [doUpdateOb]="doPermissionsUpdateOb"
                         (entitiesFn)="getTeamPermissions($event)">
                     </app-core-admin-permissions>

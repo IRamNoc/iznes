@@ -27,10 +27,13 @@ export class UserTeamsCreateUpdateComponent
     private permissionsSelected: AccountAdminPermission[];
 
     public hasPermissionCreateTeams: boolean = false;
-    public hasPermissionUpdateTeams: boolean = false;
+    public hasPermissionUpdateTeams: boolean;
     public hasPermissionDeleteTeams: boolean = false;
     public hasPermissionViewUsers: boolean = false;
     public hasPermissionCreateUsers: boolean = false;
+    public hasPermissionUpdateUsers: boolean = false;
+    public hasPermissionUpdateMembership: boolean = false;
+    public hasPermissionUpdatePermissions: boolean = false;
 
     constructor(private service: UserTeamsService,
                 route: ActivatedRoute,
@@ -72,12 +75,20 @@ export class UserTeamsCreateUpdateComponent
                 this.hasPermissionCreateUsers = hasPermission;
             });
 
-        // Disable 'Team Details' form controls
-        if (!this.hasPermissionUpdateTeams) {
-            Object.keys(this.form).forEach((index) => {
-                this.form[index].disabled = true;
+        this.permissionsService.hasPermission('accountAdminUsers', 'canUpdate').then(
+            (hasPermission) => {
+                this.hasPermissionUpdateUsers = hasPermission;
             });
-        }
+
+        this.permissionsService.hasPermission('accountAdminManageMembership', 'canUpdate').then(
+            (hasPermission) => {
+                this.hasPermissionUpdateMembership = hasPermission;
+            });
+
+        this.permissionsService.hasPermission('accountAdminManagePermission', 'canUpdate').then(
+            (hasPermission) => {
+                this.hasPermissionUpdatePermissions = hasPermission;
+            });
 
         if (this.isUpdateMode()) {
             this.service.readUserTeams(this.entityId,
@@ -87,28 +98,165 @@ export class UserTeamsCreateUpdateComponent
         }
     }
 
+    getForm() {
+        if (this.hasPermissionUpdateTeams !== undefined) {
+            if (!this.hasPermissionUpdateTeams) {
+                Object.keys(this.form).forEach((index) => {
+                    this.form[index].disabled = true;
+                });
+            }
+
+            return this.form;
+        }
+    }
+
     /**
-    * Returns message detailing missing permissions
-    *
-    * @returns {string}
-    */
-    public getPermissionMessage(): string {
-        if (!this.hasPermissionViewUsers && !this.hasPermissionCreateUsers) {
-            return this.translate.translate(
-                'Please contact the administrator to request permission to view and create users.',
-            );
+     * Return missing permissions message
+     *
+     * @returns {string}
+     */
+    public getPermissionMessage(type): string {
+        if (type === 'teams') {
+            if (!this.hasPermissionUpdateTeams &&
+                !this.hasPermissionDeleteTeams &&
+                !this.hasPermissionUpdatePermissions
+            ) {
+                return this.translate.translate(
+                    // tslint:disable-next-line:max-line-length
+                    'Please contact the administrator to request permission to update and delete teams, or to update team permissions.',
+                );
+            }
+
+            if (!this.hasPermissionDeleteTeams) {
+                return this.translate.translate(
+                    // tslint:disable-next-line:max-line-length
+                    'Please contact the administrator to request permission to delete teams, or to update team permissions.',
+                );
+            }
+
+            if (!this.hasPermissionUpdateTeams) {
+                return this.translate.translate(
+                    // tslint:disable-next-line:max-line-length
+                    'Please contact the administrator to request permission to update teams, or to update team permissions.',
+                );
+            }
+            if (!this.hasPermissionUpdateTeams && !this.hasPermissionDeleteTeams) {
+                return this.translate.translate(
+                    'Please contact the administrator to request permission to update and delete teams.',
+                );
+            }
+
+            if (!this.hasPermissionDeleteTeams) {
+                return this.translate.translate(
+                    'Please contact the administrator to request permission to delete teams.',
+                );
+            }
+
+            if (!this.hasPermissionUpdateTeams) {
+                return this.translate.translate(
+                    'Please contact the administrator to request permission to update teams.',
+                );
+            }
         }
 
-        if (!this.hasPermissionViewUsers) {
-            return this.translate.translate(
-                'Please contact the administrator to request permission to view users.',
-            );
-        }
+        if (type === 'users') {
+            if (!this.hasPermissionViewUsers &&
+                !this.hasPermissionCreateUsers &&
+                !this.hasPermissionUpdateUsers &&
+                !this.hasPermissionUpdateMembership
+            ) {
+                return this.translate.translate(
+                    // tslint:disable-next-line:max-line-length
+                    'Please contact the administrator to request permission to view, create and update users, or to update user memberships.',
+                );
+            }
 
-        if (!this.hasPermissionCreateUsers) {
-            return this.translate.translate(
-                'Please contact the administrator to request permission to create users.',
-            );
+            if (!this.hasPermissionViewUsers && !this.hasPermissionCreateUsers && !this.hasPermissionUpdateMembership) {
+                return this.translate.translate(
+                    // tslint:disable-next-line:max-line-length
+                    'Please contact the administrator to request permission to view and create users, or to update user memberships.',
+                );
+            }
+
+            if (!this.hasPermissionViewUsers && !this.hasPermissionUpdateUsers && !this.hasPermissionUpdateMembership) {
+                return this.translate.translate(
+                    // tslint:disable-next-line:max-line-length
+                    'Please contact the administrator to request permission to view and update users, or to update user memberships.',
+                );
+            }
+
+            if (!this.hasPermissionCreateUsers &&
+                !this.hasPermissionUpdateUsers &&
+                !this.hasPermissionUpdateMembership
+            ) {
+                return this.translate.translate(
+                    // tslint:disable-next-line:max-line-length
+                    'Please contact the administrator to request permission to create and update users, or to update user memberships.',
+                );
+            }
+
+            if (!this.hasPermissionViewUsers && !this.hasPermissionUpdateMembership) {
+                return this.translate.translate(
+                    // tslint:disable-next-line:max-line-length
+                    'Please contact the administrator to request permission to view users, or to update user memberships.',
+                );
+            }
+
+            if (!this.hasPermissionCreateUsers && !this.hasPermissionUpdateMembership) {
+                return this.translate.translate(
+                    // tslint:disable-next-line:max-line-length
+                    'Please contact the administrator to request permission to create users, or to update user memberships.',
+                );
+            }
+
+            if (!this.hasPermissionUpdateUsers && !this.hasPermissionUpdateMembership) {
+                return this.translate.translate(
+                    // tslint:disable-next-line:max-line-length
+                    'Please contact the administrator to request permission to update users, or to update user memberships.',
+                );
+            }
+
+            if (!this.hasPermissionViewUsers && !this.hasPermissionCreateUsers && !this.hasPermissionUpdateUsers) {
+                return this.translate.translate(
+                    'Please contact the administrator to request permission to view, create and update users.',
+                );
+            }
+
+            if (!this.hasPermissionViewUsers && !this.hasPermissionCreateUsers) {
+                return this.translate.translate(
+                    'Please contact the administrator to request permission to view and create users.',
+                );
+            }
+
+            if (!this.hasPermissionViewUsers && !this.hasPermissionUpdateUsers) {
+                return this.translate.translate(
+                    'Please contact the administrator to request permission to view and update users.',
+                );
+            }
+
+            if (!this.hasPermissionCreateUsers && !this.hasPermissionUpdateUsers) {
+                return this.translate.translate(
+                    'Please contact the administrator to request permission to create and update users.',
+                );
+            }
+
+            if (!this.hasPermissionViewUsers) {
+                return this.translate.translate(
+                    'Please contact the administrator to request permission to view users.',
+                );
+            }
+
+            if (!this.hasPermissionCreateUsers) {
+                return this.translate.translate(
+                    'Please contact the administrator to request permission to create users.',
+                );
+            }
+
+            if (!this.hasPermissionUpdateUsers) {
+                return this.translate.translate(
+                    'Please contact the administrator to request permission to update users.',
+                );
+            }
         }
     }
 

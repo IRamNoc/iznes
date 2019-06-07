@@ -54,7 +54,7 @@
                 <input class="form-control"
                         id="{{'userMgmtCellAction' + idx}}"
                         type="checkbox"
-                        [disabled]="isProcessing() || disabled"
+                        [disabled]="isProcessing() || !hasPermissionUpdateMembership"
                         [(ngModel)]="entity.isActivated">
                 <span class="slider round"></span>
             </label>
