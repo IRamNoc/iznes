@@ -31,7 +31,7 @@ import { AlertsService } from '@setl/jaspero-ng2-alerts/src/alerts.service';
 import { OfiCurrenciesService } from '@ofi/ofi-main/ofi-req-services/ofi-currencies/service';
 import { PermissionsService } from '@setl/utils/services/permissions';
 
-const ADMIN_USER_URL = '/net-asset-value';
+const ADMIN_USER_URL = '/net-asset-value/';
 
 @Component({
     selector: 'app-nav-fund-view',
@@ -77,7 +77,7 @@ export class OfiNavFundView implements OnInit, OnDestroy {
     public hasPermissionDeleteNav: boolean = false;
 
     get isIznesAdmin(): boolean {
-        return this.router.url.startsWith(ADMIN_USER_URL) || this.router.url.split('/').includes(ADMIN_USER_URL.substr(1));
+        return this.router.url.startsWith(ADMIN_USER_URL);
     }
 
     @ViewChild('detailNavCsvFile')
@@ -564,5 +564,13 @@ export class OfiNavFundView implements OnInit, OnDestroy {
             }
             this.usingDatePeriodToSearch = false;
         }
+    }
+
+    navigateToNavList() {
+       if(this.isIznesAdmin) {
+            this.router.navigateByUrl('/net-asset-value');
+       } else {
+           this.router.navigateByUrl('/product-module/net-asset-value');
+       }
     }
 }
