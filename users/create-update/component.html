@@ -39,7 +39,12 @@
             </ng-container>
 
             <ng-container *ngIf="isUpdateMode()">
-                <app-core-admin-users-status [noun]="noun" [status]="status" [entityId]="entityId"></app-core-admin-users-status>
+                <app-core-admin-users-status
+                    [noun]="noun"
+                    [hasPermission]="hasPermissionUpdateUsers"
+                    [status]="status"
+                    [entityId]="entityId">
+                </app-core-admin-users-status>
 
                 <h3>{{ 'User Details' | translate }}</h3>
 
@@ -69,7 +74,7 @@
                 </div>
             </div>
 
-            <div *ngIf="!hasPermissionUpdatePermissions || !hasPermissionUpdateUsers || !hasPermissionDeleteUsers"
+            <div *ngIf="!hasPermissionUpdateMembership || !hasPermissionCreateTeams"
                 class="alert alert-warning">
                 <div class="alert-items">
                     <div class="alert-item static">
