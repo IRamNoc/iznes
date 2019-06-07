@@ -1,30 +1,28 @@
 <div class="steps-container">
-    {{_onboardingMode}}
-
-    <form-steps-progress [config]="progress">
-    </form-steps-progress>
-</div>
-
-<div class="header-container">
-    <button *ngIf="!isBeginning()" class="btn btn-info" (click)="askPrevious()" [disabled]="disabled">
-        {{'Previous' | translate}}
-    </button>
-    <button class="btn btn-warning" (click)="askClose()" [disabled]="disabled">
-        <span *ngIf="!position">{{'Cancel' | translate}}</span>
-        <span *ngIf="position">{{'Close' | translate}}</span>
-    </button>
-    <button #submit class="btn btn-success" (click)="askNext()" [disabled]="disabled || !isStepValid()">
-        <span *ngIf="!isEnd()">
-            {{'Next' | translate}}
-        </span>
-        <span *ngIf="isEnd()">
-            {{'Submit' | translate}}
-        </span>
-    </button>
+    <div *ngIf="_onboardingMode" class="kyc-step complete">User Profile</div>
+    <form-steps-progress [config]="progress"></form-steps-progress>
 </div>
 
 <div class="form-container">
     <div class="steps-slider" [ngStyle]="{'marginLeft': margin}">
-            <ng-content></ng-content>
-        </div>
+        <ng-content></ng-content>
+    </div>
+
+    <div class="button-container">
+        <button *ngIf="!isBeginning()" class="btn" (click)="askPrevious()" [disabled]="disabled">
+            {{'Previous' | translate}}
+        </button>
+        <button class="btn" (click)="askClose()" [disabled]="disabled">
+            <span *ngIf="!position">{{'Cancel' | translate}}</span>
+            <span *ngIf="position">{{'Close' | translate}}</span>
+        </button>
+        <button #submit class="btn btn-primary" (click)="askNext()" [disabled]="disabled || !isStepValid()">
+            <span *ngIf="!isEnd()">
+                {{'Next' | translate}}
+            </span>
+            <span *ngIf="isEnd()">
+                {{'Submit' | translate}}
+            </span>
+        </button>
+    </div>
 </div>

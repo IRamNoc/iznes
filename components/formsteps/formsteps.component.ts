@@ -15,7 +15,7 @@ import { map, get as getValue } from 'lodash';
 
 @Component({
     selector: 'form-steps',
-    templateUrl: './formsteps.component.html'
+    templateUrl: './formsteps.component.html',
 })
 export class FormstepsComponent implements AfterContentInit {
 
@@ -23,17 +23,18 @@ export class FormstepsComponent implements AfterContentInit {
     @ContentChildren(FormstepComponent) stepComponents;
 
     @Input() set stepsConfig(stepsConfig) {
-        this.progress = map(stepsConfig, (step) => ({
+        this.progress = map(stepsConfig, step => ({
             title: step.title,
-            active: false
+            active: false,
+            complete: false,
         }));
 
         this._stepsConfig = stepsConfig;
-    };
+    }
 
     @Input() set onboarding(onboardingMode) {
         this._onboardingMode = onboardingMode;
-    };
+    }
 
     get stepsConfig() {
         return this._stepsConfig;
@@ -78,9 +79,10 @@ export class FormstepsComponent implements AfterContentInit {
 
     ngAfterContentInit() {
         this.position = 0;
+        this.progress[0].active = true;
     }
 
-    setSubmitID(id){
+    setSubmitID(id) {
 
         // Put the attribute setting on the message queue, otherwise the new form will automatically be submitted
         // as we are in a click event
@@ -98,7 +100,7 @@ export class FormstepsComponent implements AfterContentInit {
         });
     }
 
-    updateSubmitID(){
+    updateSubmitID() {
         this.setSubmitID(this.getForm());
     }
 
@@ -129,7 +131,7 @@ export class FormstepsComponent implements AfterContentInit {
             this.changeDetectorRef.detectChanges();
         }, 600);
     }
-    
+
     next() {
         this.disabled = true;
         this.go(1);
@@ -151,15 +153,19 @@ export class FormstepsComponent implements AfterContentInit {
     }
 
     setSubmittedPrevious(position) {
-        let subArray = this.progress.slice(0, position);
+        // let subArray = this.progress.slice(0, position);
 
-        subArray.forEach((step, idx) => {
-            this.setSubmitted(idx);
-        });
+        // subArray.forEach((step, idx) => {
+        //     this.setSubmitted(idx);
+        // });
+        this.setSubmitted(position);
     }
 
     setSubmitted(position) {
-        this.progress[position].active = true;
+        this.progress.forEach((step, index) => {
+            step.active = position === index;
+            step.complete = index < position;
+        });
     }
 
     setActive(position) {
@@ -185,9 +191,9 @@ export class FormstepsComponent implements AfterContentInit {
         const stepComponent = this.getActiveComponent();
 
         if ((!stepComponent) || !stepComponent.step) return true;
-        
+
         if (!stepComponent.step.isStepValid) return true;
-        
+
         return stepComponent.step.isStepValid();
     }
 
