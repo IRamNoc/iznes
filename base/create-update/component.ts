@@ -39,12 +39,14 @@ export class AccountAdminCreateUpdateBase<Type> implements OnInit, OnDestroy {
     @select(['user', 'myDetail', 'accountId']) accountIdOb;
     @select(['user', 'siteSettings', 'language']) requestLanguageOb;
 
+    public hasPermissionViewTeams: boolean;
     public hasPermissionCreateTeams: boolean;
     public hasPermissionUpdateTeams: boolean;
     public hasPermissionDeleteTeams: boolean;
     public hasPermissionViewUsers: boolean;
     public hasPermissionCreateUsers: boolean;
     public hasPermissionUpdateUsers: boolean;
+    public hasPermissionDeleteUsers: boolean;
     public hasPermissionUpdateMembership: boolean;
     public hasPermissionUpdatePermissions: boolean;
 
@@ -71,6 +73,11 @@ export class AccountAdminCreateUpdateBase<Type> implements OnInit, OnDestroy {
         this.initSubscriptions();
         this.initPermissions();
         this.initAlertMessages();
+
+        this.permissionsService.hasPermission('accountAdminTeams', 'canRead').then(
+            (hasPermission) => {
+                this.hasPermissionViewTeams = hasPermission;
+            });
 
         this.permissionsService.hasPermission('accountAdminTeams', 'canInsert').then(
             (hasPermission) => {
@@ -100,6 +107,11 @@ export class AccountAdminCreateUpdateBase<Type> implements OnInit, OnDestroy {
         this.permissionsService.hasPermission('accountAdminUsers', 'canUpdate').then(
             (hasPermission) => {
                 this.hasPermissionUpdateUsers = hasPermission;
+            });
+
+        this.permissionsService.hasPermission('accountAdminUsers', 'canDelete').then(
+            (hasPermission) => {
+                this.hasPermissionDeleteUsers = hasPermission;
             });
 
         this.permissionsService.hasPermission('accountAdminManageMembership', 'canUpdate').then(

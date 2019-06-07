@@ -43,8 +43,7 @@
 
                 <h3>{{ 'User Details' | translate }}</h3>
 
-                <div *ngIf="!hasPermissionUpdatePermissions || !hasPermissionUpdateUsers || !hasPermissionDeleteUsers"
-                    class="alert alert-warning">
+                <div *ngIf="!hasPermissionUpdateUsers" class="alert alert-warning">
                     <div class="alert-items">
                         <div class="alert-item static">
                             <div class="alert-icon-wrapper">
@@ -78,7 +77,7 @@
                             <clr-icon class="alert-icon" shape="exclamation-triangle"></clr-icon>
                         </div>
                         <span class="alert-text">
-                            {{ getPermissionMessage('users') }}
+                            {{ getPermissionMessage('teams') }}
                         </span>
                     </div>
                 </div>

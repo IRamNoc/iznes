@@ -86,152 +86,152 @@ export class UsersCreateUpdateComponent
      * @returns {string}
      */
     public getPermissionMessage(type): string {
-        if (type === 'teams') {
-            if (!this.hasPermissionUpdatePermissions
-            ) {
-                return this.translate.translate(
-                    // tslint:disable-next-line:max-line-length
-                    'Please contact the administrator to request permission to update user permissions.',
-                );
-            }
-        //     if (!this.hasPermissionUpdateTeams &&
-        //         !this.hasPermissionDeleteTeams &&
-        //         !this.hasPermissionUpdatePermissions
-        //     ) {
-        //         return this.translate.translate(
-        //             // tslint:disable-next-line:max-line-length
-        //             'Please contact the administrator to request permission to update and delete teams, or to update team permissions.',
-        //         );
-        //     }
-
-        //     if (!this.hasPermissionDeleteTeams) {
-        //         return this.translate.translate(
-        //             // tslint:disable-next-line:max-line-length
-        //             'Please contact the administrator to request permission to delete teams, or to update team permissions.',
-        //         );
-        //     }
-
-        //     if (!this.hasPermissionUpdateTeams) {
-        //         return this.translate.translate(
-        //             // tslint:disable-next-line:max-line-length
-        //             'Please contact the administrator to request permission to update teams, or to update team permissions.',
-        //         );
-        //     }
-        //     if (!this.hasPermissionUpdateTeams && !this.hasPermissionDeleteTeams) {
-        //         return this.translate.translate(
-        //             'Please contact the administrator to request permission to update and delete teams.',
-        //         );
-        //     }
-
-        //     if (!this.hasPermissionDeleteTeams) {
-        //         return this.translate.translate(
-        //             'Please contact the administrator to request permission to delete teams.',
-        //         );
-        //     }
-
-        //     if (!this.hasPermissionUpdateTeams) {
-        //         return this.translate.translate(
-        //             'Please contact the administrator to request permission to update teams.',
-        //         );
-        //     }
-        }
-
         if (type === 'users') {
-            if (!this.hasPermissionViewUsers &&
-                !this.hasPermissionCreateUsers &&
-                !this.hasPermissionUpdateUsers &&
-                !this.hasPermissionUpdateMembership
+            if (!this.hasPermissionUpdateUsers &&
+                !this.hasPermissionDeleteUsers &&
+                !this.hasPermissionUpdatePermissions
             ) {
                 return this.translate.translate(
                     // tslint:disable-next-line:max-line-length
-                    'Please contact the administrator to request permission to view, create and update users, or to update team memberships.',
+                    'Please contact the administrator to request permission to update and delete users, or to update user permissions.',
                 );
             }
 
-            if (!this.hasPermissionViewUsers && !this.hasPermissionCreateUsers && !this.hasPermissionUpdateMembership) {
+            if (!this.hasPermissionUpdateTeams && !this.hasPermissionDeleteUsers) {
+                return this.translate.translate(
+                    'Please contact the administrator to request permission to update and delete users.',
+                );
+            }
+
+            if (!this.hasPermissionUpdateUsers && !this.hasPermissionUpdatePermissions) {
                 return this.translate.translate(
                     // tslint:disable-next-line:max-line-length
-                    'Please contact the administrator to request permission to view and create users, or to update team memberships.',
+                    'Please contact the administrator to request permission to update users, or to update user permissions.',
                 );
             }
 
-            if (!this.hasPermissionViewUsers && !this.hasPermissionUpdateUsers && !this.hasPermissionUpdateMembership) {
+            if (!this.hasPermissionDeleteUsers && !this.hasPermissionUpdatePermissions) {
                 return this.translate.translate(
                     // tslint:disable-next-line:max-line-length
-                    'Please contact the administrator to request permission to view and update users, or to update team memberships.',
+                    'Please contact the administrator to request permission to delete users, or to update user permissions.',
                 );
             }
 
-            if (!this.hasPermissionCreateUsers &&
-                !this.hasPermissionUpdateUsers &&
-                !this.hasPermissionUpdateMembership
-            ) {
+            if (!this.hasPermissionDeleteUsers) {
                 return this.translate.translate(
-                    // tslint:disable-next-line:max-line-length
-                    'Please contact the administrator to request permission to create and update users, or to update team memberships.',
-                );
-            }
-
-            if (!this.hasPermissionViewUsers && !this.hasPermissionUpdateMembership) {
-                return this.translate.translate(
-                    // tslint:disable-next-line:max-line-length
-                    'Please contact the administrator to request permission to view users, or to update team memberships.',
-                );
-            }
-
-            if (!this.hasPermissionCreateUsers && !this.hasPermissionUpdateMembership) {
-                return this.translate.translate(
-                    // tslint:disable-next-line:max-line-length
-                    'Please contact the administrator to request permission to create users, or to update team memberships.',
-                );
-            }
-
-            if (!this.hasPermissionUpdateUsers && !this.hasPermissionUpdateMembership) {
-                return this.translate.translate(
-                    // tslint:disable-next-line:max-line-length
-                    'Please contact the administrator to request permission to update users, or to update team memberships.',
-                );
-            }
-
-            if (!this.hasPermissionViewUsers && !this.hasPermissionCreateUsers && !this.hasPermissionUpdateUsers) {
-                return this.translate.translate(
-                    'Please contact the administrator to request permission to view, create and update users.',
-                );
-            }
-
-            if (!this.hasPermissionViewUsers && !this.hasPermissionCreateUsers) {
-                return this.translate.translate(
-                    'Please contact the administrator to request permission to view and create users.',
-                );
-            }
-
-            if (!this.hasPermissionViewUsers && !this.hasPermissionUpdateUsers) {
-                return this.translate.translate(
-                    'Please contact the administrator to request permission to view and update users.',
-                );
-            }
-
-            if (!this.hasPermissionCreateUsers && !this.hasPermissionUpdateUsers) {
-                return this.translate.translate(
-                    'Please contact the administrator to request permission to create and update users.',
-                );
-            }
-
-            if (!this.hasPermissionViewUsers) {
-                return this.translate.translate(
-                    'Please contact the administrator to request permission to view users.',
-                );
-            }
-
-            if (!this.hasPermissionCreateUsers) {
-                return this.translate.translate(
-                    'Please contact the administrator to request permission to create users.',
+                    'Please contact the administrator to request permission to delete users.',
                 );
             }
 
             if (!this.hasPermissionUpdateUsers) {
                 return this.translate.translate(
                     'Please contact the administrator to request permission to update users.',
+                );
+            }
+
+            if (!this.hasPermissionUpdatePermissions) {
+                return this.translate.translate(
+                    'Please contact the administrator to request permission to update user permissions.',
+                );
+            }
+        }
+
+        if (type === 'teams') {
+            if (!this.hasPermissionViewTeams &&
+                !this.hasPermissionCreateTeams &&
+                !this.hasPermissionUpdateTeams &&
+                !this.hasPermissionUpdateMembership
+            ) {
+                return this.translate.translate(
+                    // tslint:disable-next-line:max-line-length
+                    'Please contact the administrator to request permission to view, create and update teams, or to update team memberships.',
+                );
+            }
+
+            if (!this.hasPermissionViewTeams && !this.hasPermissionCreateTeams && !this.hasPermissionUpdateMembership) {
+                return this.translate.translate(
+                    // tslint:disable-next-line:max-line-length
+                    'Please contact the administrator to request permission to view and create teams, or to update team memberships.',
+                );
+            }
+
+            if (!this.hasPermissionViewTeams && !this.hasPermissionUpdateTeams && !this.hasPermissionUpdateMembership) {
+                return this.translate.translate(
+                    // tslint:disable-next-line:max-line-length
+                    'Please contact the administrator to request permission to view and update teams, or to update team memberships.',
+                );
+            }
+
+            if (!this.hasPermissionCreateTeams &&
+                !this.hasPermissionUpdateTeams &&
+                !this.hasPermissionUpdateMembership
+            ) {
+                return this.translate.translate(
+                    // tslint:disable-next-line:max-line-length
+                    'Please contact the administrator to request permission to create and update teams, or to update team memberships.',
+                );
+            }
+
+            if (!this.hasPermissionViewTeams && !this.hasPermissionUpdateMembership) {
+                return this.translate.translate(
+                    // tslint:disable-next-line:max-line-length
+                    'Please contact the administrator to request permission to view teams, or to update team memberships.',
+                );
+            }
+
+            if (!this.hasPermissionCreateTeams && !this.hasPermissionUpdateMembership) {
+                return this.translate.translate(
+                    // tslint:disable-next-line:max-line-length
+                    'Please contact the administrator to request permission to create teams, or to update team memberships.',
+                );
+            }
+
+            if (!this.hasPermissionUpdateTeams && !this.hasPermissionUpdateMembership) {
+                return this.translate.translate(
+                    // tslint:disable-next-line:max-line-length
+                    'Please contact the administrator to request permission to update teams, or to update team memberships.',
+                );
+            }
+
+            if (!this.hasPermissionViewTeams && !this.hasPermissionCreateTeams && !this.hasPermissionUpdateTeams) {
+                return this.translate.translate(
+                    'Please contact the administrator to request permission to view, create and update teams.',
+                );
+            }
+
+            if (!this.hasPermissionViewTeams && !this.hasPermissionCreateTeams) {
+                return this.translate.translate(
+                    'Please contact the administrator to request permission to view and create teams.',
+                );
+            }
+
+            if (!this.hasPermissionViewTeams && !this.hasPermissionUpdateTeams) {
+                return this.translate.translate(
+                    'Please contact the administrator to request permission to view and update teams.',
+                );
+            }
+
+            if (!this.hasPermissionCreateTeams && !this.hasPermissionUpdateTeams) {
+                return this.translate.translate(
+                    'Please contact the administrator to request permission to create and update teams.',
+                );
+            }
+
+            if (!this.hasPermissionViewTeams) {
+                return this.translate.translate(
+                    'Please contact the administrator to request permission to view teams.',
+                );
+            }
+
+            if (!this.hasPermissionCreateTeams) {
+                return this.translate.translate(
+                    'Please contact the administrator to request permission to create teams.',
+                );
+            }
+
+            if (!this.hasPermissionUpdateTeams) {
+                return this.translate.translate(
+                    'Please contact the administrator to request permission to update teams.',
                 );
             }
         }
