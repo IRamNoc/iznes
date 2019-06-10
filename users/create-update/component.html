@@ -94,6 +94,8 @@
                     <app-core-admin-users-team-mgmt
                         [entityId]="entityId"
                         [noun]="nouns.Team"
+                        [hasPermissionCreate]="hasPermissionCreateTeams"
+                        [hasPermissionUpdateMembership]="hasPermissionUpdateMembership"
                         [doUpdateOb]="doUserManagementUpdateOb"
                         [showOnlyActiveFilter]="isUpdateMode()"
                         (entitiesFn)="getUserTeams($event)"
@@ -146,14 +148,14 @@
                 <div class="col">
                     <button class="btn btn-primary"
                             (click)="save()"
-                            [disabled]="!isValid() || (isCreateMode() && !hasPermissionCreateUsers) || (!isCreateMode() && !hasPermissionUpdateUsers)">
+                            [disabled]="!isValid() || (isCreateMode() && !hasPermissionCreateUsers) || (isUpdateMode() && !hasPermissionUpdateUsers)">
                         {{ (isCreateMode() ? 'Create User(s)' : 'Update User Details') | translate }}
                     </button>
 
                     <button [hidden]="isUpdateMode() && isUserInvitationComplete()"
                             class="btn btn-primary"
                             (click)="save(true)"
-                            [disabled]="!isValid() || (isCreateMode() && !hasPermissionCreateUsers) || (!isCreateMode() && !hasPermissionUpdateUsers)">
+                            [disabled]="!isValid() || (isCreateMode() && !hasPermissionCreateUsers) || (isUpdateMode() && !hasPermissionUpdateUsers)">
                     {{ (isCreateMode() ? 'Create &amp; Send Invitation(s)' : 'Update &amp; Send Invitation') | translate }}
                     </button>
 

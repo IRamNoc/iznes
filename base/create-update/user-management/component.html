@@ -20,7 +20,7 @@
         </div>
 
         <div class="col col-sm-4 justify-end">
-            <button [routerLink]="getCreateNewLink()" class="btn" [disabled]="!hasPermissionCreateUsers">
+            <button [routerLink]="getCreateNewLink()" class="btn" [disabled]="!hasPermissionCreate">
                 {{ ['Create New', noun].join(' ') | translate }}
             </button>
         </div>

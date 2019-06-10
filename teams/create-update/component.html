@@ -38,6 +38,7 @@
                     </div>
                 </div>
             </div>
+            <br />
 
             <app-dynamic-form [model]="getForm(hasPermissionUpdateTeams)"></app-dynamic-form>
 
@@ -66,7 +67,7 @@
                     <app-core-admin-teams-user-mgmt
                         [entityId]="entityId"
                         [noun]="nouns.User"
-                        [hasPermissionCreateUsers]="hasPermissionCreateUsers"
+                        [hasPermissionCreate]="hasPermissionCreateUsers"
                         [hasPermissionUpdateMembership]="hasPermissionUpdateMembership"
                         [showOnlyActiveFilter]="isUpdateMode()"
                         [doUpdateOb]="doUserManagementUpdateOb">

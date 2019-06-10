@@ -22,6 +22,9 @@ import { UserManagementServiceBase } from '../../../base/create-update/user-mana
 export class UserTeamsUsersMgmtUsersComponent
     extends AccountAdminUsersMgmtComponentBase<TeamModel.AccountAdminTeam> implements OnInit, OnDestroy {
 
+    @Input() hasPermissionCreate: boolean = false;
+    @Input() hasPermissionUpdateMembership: boolean = false;
+
     @select(['accountAdmin', 'teams', 'requested']) teamsReqOb;
     @select(['accountAdmin', 'teams', 'teams']) teamsOb;
 
