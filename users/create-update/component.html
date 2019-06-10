@@ -74,7 +74,7 @@
                 </div>
             </div>
 
-            <div *ngIf="!hasPermissionUpdateMembership || !hasPermissionCreateTeams"
+            <div *ngIf="!hasPermissionUpdateMembership || !hasPermissionUpdateUsers || !hasPermissionCreateTeams"
                 class="alert alert-warning">
                 <div class="alert-items">
                     <div class="alert-item static">
@@ -95,7 +95,7 @@
                         [entityId]="entityId"
                         [noun]="nouns.Team"
                         [hasPermissionCreate]="hasPermissionCreateTeams"
-                        [hasPermissionUpdateMembership]="hasPermissionUpdateMembership"
+                        [hasPermissionUpdateMembership]="hasPermissionUpdateUsers && hasPermissionUpdateMembership"
                         [doUpdateOb]="doUserManagementUpdateOb"
                         [showOnlyActiveFilter]="isUpdateMode()"
                         (entitiesFn)="getUserTeams($event)"
@@ -133,7 +133,7 @@
                         <app-core-admin-permissions
                             [isUser]="true"
                             [entityId]="entityId"
-                            [disableAll]="!hasPermissionUpdatePermissions"
+                            [disableAll]="!hasPermissionUpdateUsers"
                             [doUpdateOb]="doPermissionsUpdateOb">
                         </app-core-admin-permissions>
                     </div>

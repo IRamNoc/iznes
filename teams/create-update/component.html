@@ -68,7 +68,7 @@
                         [entityId]="entityId"
                         [noun]="nouns.User"
                         [hasPermissionCreate]="hasPermissionCreateUsers"
-                        [hasPermissionUpdateMembership]="hasPermissionUpdateMembership"
+                        [hasPermissionUpdateMembership]="hasPermissionUpdateUsers && hasPermissionUpdateMembership"
                         [showOnlyActiveFilter]="isUpdateMode()"
                         [doUpdateOb]="doUserManagementUpdateOb">
                     </app-core-admin-teams-user-mgmt>
@@ -100,7 +100,7 @@
                     <app-core-admin-permissions
                         [showTeamSelect]="false"
                         [entityId]="entityId"
-                        [disableAll]="!hasPermissionUpdatePermissions"
+                        [disableAll]="!hasPermissionUpdateTeams"
                         [doUpdateOb]="doPermissionsUpdateOb"
                         (entitiesFn)="getTeamPermissions($event)">
                     </app-core-admin-permissions>
