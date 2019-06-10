@@ -198,6 +198,30 @@ export class UsersCreateUpdateComponent
         }
 
         if (type === 'teams') {
+            if (!this.hasPermissionCreateTeams &&
+                !this.hasPermissionUpdateMembership &&
+                !this.hasPermissionUpdateUsers
+            ) {
+                return this.translate.translate(
+                    // tslint:disable-next-line:max-line-length
+                    'Please contact the administrator to request permission to create or update teams, or to update team memberships.',
+                );
+            }
+
+            if (!this.hasPermissionUpdateMembership && !this.hasPermissionUpdateUsers) {
+                return this.translate.translate(
+                    // tslint:disable-next-line:max-line-length
+                    'Please contact the administrator to request permission to update teams or to update team memberships.',
+                );
+            }
+
+            if (!this.hasPermissionCreateTeams && !this.hasPermissionUpdateUsers) {
+                return this.translate.translate(
+                    // tslint:disable-next-line:max-line-length
+                    'Please contact the administrator to request permission to create or update teams.',
+                );
+            }
+
             if (!this.hasPermissionCreateTeams && !this.hasPermissionUpdateMembership) {
                 return this.translate.translate(
                     // tslint:disable-next-line:max-line-length
@@ -208,6 +232,12 @@ export class UsersCreateUpdateComponent
             if (!this.hasPermissionCreateTeams) {
                 return this.translate.translate(
                     'Please contact the administrator to request permission to create teams.',
+                );
+            }
+
+            if (!this.hasPermissionUpdateUsers) {
+                return this.translate.translate(
+                    'Please contact the administrator to request permission to update teams.',
                 );
             }
 
