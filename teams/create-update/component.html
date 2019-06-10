@@ -68,7 +68,7 @@
                         [entityId]="entityId"
                         [noun]="nouns.User"
                         [hasPermissionCreate]="hasPermissionCreateUsers"
-                        [hasPermissionUpdateMembership]="hasPermissionUpdateUsers && hasPermissionUpdateMembership"
+                        [hasPermissionUpdateMembership]="hasPermissionUpdateTeams && hasPermissionUpdateMembership"
                         [showOnlyActiveFilter]="isUpdateMode()"
                         [doUpdateOb]="doUserManagementUpdateOb">
                     </app-core-admin-teams-user-mgmt>
