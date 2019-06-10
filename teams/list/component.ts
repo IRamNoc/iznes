@@ -11,6 +11,7 @@ import * as Model from '../model';
 import { UserTeamsService } from '../service';
 import { AccountAdminListBase } from '../../base/list/component';
 import { AccountAdminBaseService } from '../../base/service';
+import { PermissionsService } from '@setl/utils/services/permissions';
 
 @Component({
     selector: 'app-core-admin-teams-list',
@@ -20,6 +21,10 @@ import { AccountAdminBaseService } from '../../base/service';
 export class UserTeamsListComponent extends AccountAdminListBase implements OnInit, OnDestroy {
     teams: Model.AccountAdminTeam[];
 
+    public hasPermissionCreateTeams: boolean = false;
+    public hasPermissionUpdateTeams: boolean = false;
+    public hasPermissionDeleteTeams: boolean = false;
+
     @select(['accountAdmin', 'teams', 'requested']) teamsRequestedOb;
     @select(['accountAdmin', 'teams', 'teams']) teamsOb;
 
@@ -27,7 +32,8 @@ export class UserTeamsListComponent extends AccountAdminListBase implements OnIn
                 router: Router,
                 redux: NgRedux<any>,
                 protected fileDownloader: FileDownloader,
-                protected baseService: AccountAdminBaseService) {
+                protected baseService: AccountAdminBaseService,
+                public permissionsService: PermissionsService) {
         super(router, redux, fileDownloader, baseService);
         this.noun = 'Team';
         this.csvRequest = {
@@ -49,6 +55,21 @@ export class UserTeamsListComponent extends AccountAdminListBase implements OnIn
         }));
 
         this.redux.dispatch(clearRequestedAccountAdminTeams());
+
+        this.permissionsService.hasPermission('accountAdminTeams', 'canInsert').then(
+            (hasPermission) => {
+                this.hasPermissionCreateTeams = hasPermission;
+            });
+
+        this.permissionsService.hasPermission('accountAdminTeams', 'canUpdate').then(
+            (hasPermission) => {
+                this.hasPermissionUpdateTeams = hasPermission;
+            });
+
+        this.permissionsService.hasPermission('accountAdminTeams', 'canDelete').then(
+            (hasPermission) => {
+                this.hasPermissionDeleteTeams = hasPermission;
+            });
     }
 
     private requestTeams(requested: boolean): void {

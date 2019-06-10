@@ -52,7 +52,7 @@ export class AccountAdminCreateUpdateBase<Type> implements OnInit, OnDestroy {
                 protected toaster: ToasterService,
                 protected confirmations: ConfirmationService,
                 protected translate: MultilingualService,
-    ) {
+     ) {
     }
 
     ngOnInit() {
@@ -114,6 +114,24 @@ export class AccountAdminCreateUpdateBase<Type> implements OnInit, OnDestroy {
 
     getBackUrl(): string {
         return `/account-admin/${this.noun.toLowerCase()}s`;
+    }
+
+    /**
+     * Disable form controls if user does not have permission
+     *
+     * @param {boolean} hasPermission
+     * @returns {Object} form
+     */
+    getForm(hasPermission: boolean) {
+        if (this.form && hasPermission !== undefined) {
+            if (!hasPermission) {
+                Object.keys(this.form).forEach((index) => {
+                    this.form[index].disabled = true;
+                });
+            }
+
+            return this.form;
+        }
     }
 
     save(): void {

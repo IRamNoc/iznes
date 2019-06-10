@@ -11,6 +11,7 @@ import { AccountAdminPermission } from '../../base/create-update/permissions/mod
 import { UserTeamsService } from '../service';
 import { AccountAdminCreateUpdateBase } from '../../base/create-update/component';
 import { AccountAdminErrorResponse, AccountAdminSuccessResponse, AccountAdminNouns } from '../../base/model';
+import { PermissionsService } from '@setl/utils/services/permissions';
 
 @Component({
     selector: 'app-core-admin-teams-crud',
@@ -25,12 +26,24 @@ export class UserTeamsCreateUpdateComponent
     private usersSelected: UsersModel.AccountAdminUser[];
     private permissionsSelected: AccountAdminPermission[];
 
+    public hasPermissionViewTeams: boolean;
+    public hasPermissionCreateTeams: boolean;
+    public hasPermissionUpdateTeams: boolean;
+    public hasPermissionDeleteTeams: boolean;
+    public hasPermissionViewUsers: boolean;
+    public hasPermissionCreateUsers: boolean;
+    public hasPermissionUpdateUsers: boolean;
+    public hasPermissionDeleteUsers: boolean;
+    public hasPermissionUpdateMembership: boolean;
+    public hasPermissionUpdatePermissions: boolean;
+
     constructor(private service: UserTeamsService,
                 route: ActivatedRoute,
                 protected router: Router,
                 alerts: AlertsService,
                 toaster: ToasterService,
                 confirmations: ConfirmationService,
+                public permissionsService: PermissionsService,
                 protected translate: MultilingualService) {
         super(route, router, alerts, toaster, confirmations, translate);
         this.noun = AccountAdminNouns.Team;
@@ -44,6 +57,134 @@ export class UserTeamsCreateUpdateComponent
                                        null,
                                        (data: any) => this.onReadTeamSuccess(data),
                                        (e: any) => this.onReadEntityError());
+        }
+
+        this.permissionsService.hasPermission('accountAdminTeams', 'canRead').then(
+            (hasPermission) => {
+                this.hasPermissionViewTeams = hasPermission;
+            });
+
+        this.permissionsService.hasPermission('accountAdminTeams', 'canInsert').then(
+            (hasPermission) => {
+                this.hasPermissionCreateTeams = hasPermission;
+            });
+
+        this.permissionsService.hasPermission('accountAdminTeams', 'canUpdate').then(
+            (hasPermission) => {
+                this.hasPermissionUpdateTeams = hasPermission;
+            });
+
+        this.permissionsService.hasPermission('accountAdminTeams', 'canDelete').then(
+            (hasPermission) => {
+                this.hasPermissionDeleteTeams = hasPermission;
+            });
+
+        this.permissionsService.hasPermission('accountAdminUsers', 'canRead').then(
+            (hasPermission) => {
+                this.hasPermissionViewUsers = hasPermission;
+            });
+
+        this.permissionsService.hasPermission('accountAdminUsers', 'canInsert').then(
+            (hasPermission) => {
+                this.hasPermissionCreateUsers = hasPermission;
+            });
+
+        this.permissionsService.hasPermission('accountAdminUsers', 'canUpdate').then(
+            (hasPermission) => {
+                this.hasPermissionUpdateUsers = hasPermission;
+            });
+
+        this.permissionsService.hasPermission('accountAdminUsers', 'canDelete').then(
+            (hasPermission) => {
+                this.hasPermissionDeleteUsers = hasPermission;
+            });
+
+        this.permissionsService.hasPermission('accountAdminManageMembership', 'canUpdate').then(
+            (hasPermission) => {
+                this.hasPermissionUpdateMembership = hasPermission;
+            });
+
+        this.permissionsService.hasPermission('accountAdminManagePermission', 'canUpdate').then(
+            (hasPermission) => {
+                this.hasPermissionUpdatePermissions = hasPermission;
+            });
+    }
+
+    /**
+     * Return missing permissions message
+     *
+     * @returns {string}
+     */
+    public getPermissionMessage(type): string {
+        if (type === 'teams') {
+            if (!this.hasPermissionUpdateTeams &&
+                !this.hasPermissionDeleteTeams &&
+                !this.hasPermissionUpdatePermissions
+            ) {
+                return this.translate.translate(
+                    // tslint:disable-next-line:max-line-length
+                    'Please contact the administrator to request permission to update and delete teams, or to update team permissions.',
+                );
+            }
+
+            if (!this.hasPermissionUpdateTeams && !this.hasPermissionDeleteTeams) {
+                return this.translate.translate(
+                    'Please contact the administrator to request permission to update and delete teams.',
+                );
+            }
+
+            if (!this.hasPermissionDeleteTeams && !this.hasPermissionUpdatePermissions) {
+                return this.translate.translate(
+                    // tslint:disable-next-line:max-line-length
+                    'Please contact the administrator to request permission to delete teams, or to update team permissions.',
+                );
+            }
+
+            if (!this.hasPermissionUpdateTeams && !this.hasPermissionUpdatePermissions) {
+                return this.translate.translate(
+                    // tslint:disable-next-line:max-line-length
+                    'Please contact the administrator to request permission to update teams, or to update team permissions.',
+                );
+            }
+
+            if (!this.hasPermissionUpdateTeams) {
+                return this.translate.translate(
+                    'Please contact the administrator to request permission to update teams.',
+                );
+            }
+
+            if (!this.hasPermissionDeleteTeams) {
+                return this.translate.translate(
+                    'Please contact the administrator to request permission to delete teams.',
+                );
+            }
+
+            if (!this.hasPermissionUpdatePermissions) {
+                return this.translate.translate(
+                    'Please contact the administrator to request permission to update team permissions.',
+                );
+            }
+        }
+
+        if (type === 'users') {
+            if (!this.hasPermissionCreateUsers && !this.hasPermissionUpdateMembership) {
+                return this.translate.translate(
+                    // tslint:disable-next-line:max-line-length
+                    'Please contact the administrator to request permission to create users or to update user memberships.',
+                );
+            }
+
+            if (!this.hasPermissionCreateUsers) {
+                return this.translate.translate(
+                    'Please contact the administrator to request permission to create users.',
+                );
+            }
+
+            if (!this.hasPermissionUpdateMembership) {
+                return this.translate.translate(
+                    'Please contact the administrator to request permission to update user memberships.',
+                );
+            }
         }
     }
 
@@ -74,10 +215,12 @@ export class UserTeamsCreateUpdateComponent
     }
 
     save(): void {
-        if (this.isCreateMode()) {
+        if (this.isCreateMode() && this.hasPermissionCreateTeams) {
             this.checkUserForNoPermissions(() => this.createTeam());
-        } else if (this.isUpdateMode()) {
+        } else if (this.isUpdateMode() && this.hasPermissionUpdateTeams) {
             this.checkUserForNoPermissions(() => this.updateTeam());
+        } else {
+            this.alerts.create('error', 'Permission denied.');
         }
     }
 

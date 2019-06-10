@@ -22,6 +22,8 @@ import { UserManagementServiceBase } from '../../../base/create-update/user-mana
 export class UserTeamsUsersMgmtTeamsComponent
     extends AccountAdminUsersMgmtComponentBase<UserModel.AccountAdminUser> implements OnInit, OnDestroy {
 
+    @Input() hasPermissionCreate: boolean = false;
+    @Input() hasPermissionUpdateMembership: boolean = false;
     @Input() doUpdate: boolean = true;
     @Output() entitiesFn: EventEmitter<any[]> = new EventEmitter();
 

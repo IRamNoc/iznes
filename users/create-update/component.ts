@@ -6,6 +6,7 @@ import { AlertsService } from '@setl/jaspero-ng2-alerts';
 import { ConfirmationService } from '@setl/utils';
 import { ToasterService } from 'angular2-toaster';
 import { MultilingualService } from '@setl/multilingual';
+import { PermissionsService } from '@setl/utils/services/permissions';
 
 import {
     setRequestedUserTypes,
@@ -50,6 +51,17 @@ export class UsersCreateUpdateComponent
     private userTeamsSelected: TeamModel.AccountAdminTeam[];
     private userHasActiveTeam: () => boolean;
 
+    public hasPermissionViewTeams: boolean;
+    public hasPermissionCreateTeams: boolean;
+    public hasPermissionUpdateTeams: boolean;
+    public hasPermissionDeleteTeams: boolean;
+    public hasPermissionViewUsers: boolean;
+    public hasPermissionCreateUsers: boolean;
+    public hasPermissionUpdateUsers: boolean;
+    public hasPermissionDeleteUsers: boolean;
+    public hasPermissionUpdateMembership: boolean;
+    public hasPermissionUpdatePermissions: boolean;
+
     @select(['user', 'siteSettings', 'language']) requestLanguageOb;
     @select(['userAdmin', 'userTypes', 'userTypes']) userTypesOb;
     @select(['userAdmin', 'userTypes', 'requested']) userTypesReqOb;
@@ -64,6 +76,7 @@ export class UsersCreateUpdateComponent
                 protected toaster: ToasterService,
                 protected confirmations: ConfirmationService,
                 protected translate: MultilingualService,
+                public permissionsService: PermissionsService,
                 private changeDetectorRef: ChangeDetectorRef,
                 private userMgmtService: UserManagementServiceBase) {
         super(route, router, alerts, toaster, confirmations, translate);
@@ -76,6 +89,134 @@ export class UsersCreateUpdateComponent
         this.initUsersSubscriptions();
         this.initTooltips();
         this.initTranslations();
+
+        this.permissionsService.hasPermission('accountAdminTeams', 'canRead').then(
+            (hasPermission) => {
+                this.hasPermissionViewTeams = hasPermission;
+            });
+
+        this.permissionsService.hasPermission('accountAdminTeams', 'canInsert').then(
+            (hasPermission) => {
+                this.hasPermissionCreateTeams = hasPermission;
+            });
+
+        this.permissionsService.hasPermission('accountAdminTeams', 'canUpdate').then(
+            (hasPermission) => {
+                this.hasPermissionUpdateTeams = hasPermission;
+            });
+
+        this.permissionsService.hasPermission('accountAdminTeams', 'canDelete').then(
+            (hasPermission) => {
+                this.hasPermissionDeleteTeams = hasPermission;
+            });
+
+        this.permissionsService.hasPermission('accountAdminUsers', 'canRead').then(
+            (hasPermission) => {
+                this.hasPermissionViewUsers = hasPermission;
+            });
+
+        this.permissionsService.hasPermission('accountAdminUsers', 'canInsert').then(
+            (hasPermission) => {
+                this.hasPermissionCreateUsers = hasPermission;
+            });
+
+        this.permissionsService.hasPermission('accountAdminUsers', 'canUpdate').then(
+            (hasPermission) => {
+                this.hasPermissionUpdateUsers = hasPermission;
+            });
+
+        this.permissionsService.hasPermission('accountAdminUsers', 'canDelete').then(
+            (hasPermission) => {
+                this.hasPermissionDeleteUsers = hasPermission;
+            });
+
+        this.permissionsService.hasPermission('accountAdminManageMembership', 'canUpdate').then(
+            (hasPermission) => {
+                this.hasPermissionUpdateMembership = hasPermission;
+            });
+
+        this.permissionsService.hasPermission('accountAdminManagePermission', 'canUpdate').then(
+            (hasPermission) => {
+                this.hasPermissionUpdatePermissions = hasPermission;
+            });
+    }
+
+    /**
+     * Return missing permissions message
+     *
+     * @returns {string}
+     */
+    public getPermissionMessage(type): string {
+        if (type === 'users') {
+            if (!this.hasPermissionUpdateUsers &&
+                !this.hasPermissionDeleteUsers &&
+                !this.hasPermissionUpdatePermissions
+            ) {
+                return this.translate.translate(
+                    // tslint:disable-next-line:max-line-length
+                    'Please contact the administrator to request permission to update and delete users or to update user permissions.',
+                );
+            }
+
+            if (!this.hasPermissionUpdateUsers && !this.hasPermissionDeleteUsers) {
+                return this.translate.translate(
+                    'Please contact the administrator to request permission to update and delete users.',
+                );
+            }
+
+            if (!this.hasPermissionUpdateUsers && !this.hasPermissionUpdatePermissions) {
+                return this.translate.translate(
+                    // tslint:disable-next-line:max-line-length
+                    'Please contact the administrator to request permission to update users or to update user permissions.',
+                );
+            }
+
+            if (!this.hasPermissionDeleteUsers && !this.hasPermissionUpdatePermissions) {
+                return this.translate.translate(
+                    // tslint:disable-next-line:max-line-length
+                    'Please contact the administrator to request permission to delete users or to update user permissions.',
+                );
+            }
+
+            if (!this.hasPermissionDeleteUsers) {
+                return this.translate.translate(
+                    'Please contact the administrator to request permission to delete users.',
+                );
+            }
+
+            if (!this.hasPermissionUpdateUsers) {
+                return this.translate.translate(
+                    'Please contact the administrator to request permission to update users.',
+                );
+            }
+
+            if (!this.hasPermissionUpdatePermissions) {
+                return this.translate.translate(
+                    'Please contact the administrator to request permission to update user permissions.',
+                );
+            }
+        }
+
+        if (type === 'teams') {
+            if (!this.hasPermissionCreateTeams && !this.hasPermissionUpdateMembership) {
+                return this.translate.translate(
+                    // tslint:disable-next-line:max-line-length
+                    'Please contact the administrator to request permission to create teams or to update team memberships.',
+                );
+            }
+
+            if (!this.hasPermissionCreateTeams) {
+                return this.translate.translate(
+                    'Please contact the administrator to request permission to create teams.',
+                );
+            }
+
+            if (!this.hasPermissionUpdateMembership) {
+                return this.translate.translate(
+                    'Please contact the administrator to request permission to update team memberships.',
+                );
+            }
+        }
     }
 
     private initTooltips(): void {

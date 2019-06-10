@@ -1,8 +1,8 @@
 <form>
     <div class="row form-group">
         <div class="col col-sm-4 search-name">
-            <input type="text" 
-                name="nameSearch" 
+            <input type="text"
+                name="nameSearch"
                 id="nameSearch"
                 [(ngModel)]="nameSearch"
                 (ngModelChange)="searchByName()"
@@ -12,17 +12,17 @@
         <div class="col col-sm-4 show-active">
             <label class="control-label" *ngIf="showOnlyActiveFilter">
                 {{ 'Show Only Active' | translate }}
-                <input type="checkbox" 
-                        name="showOnlyActivated" 
+                <input type="checkbox"
+                        name="showOnlyActivated"
                         id="showOnlyActivated"
                         [(ngModel)]="showOnlyActivated">
             </label>
         </div>
 
         <div class="col col-sm-4 justify-end">
-            <a [routerLink]="getCreateNewLink()" class="btn">                
+            <button [routerLink]="getCreateNewLink()" class="btn" [disabled]="!hasPermissionCreate">
                 {{ ['Create New', noun].join(' ') | translate }}
-            </a>
+            </button>
         </div>
     </div>
 </form>
@@ -51,10 +51,10 @@
         </clr-dg-cell>
         <clr-dg-cell id="{{'userMgmtCellActions' + idx}}" class="col-actions">
             <label class="switch">
-                <input class="form-control" 
-                        id="{{'userMgmtCellAction' + idx}}" 
+                <input class="form-control"
+                        id="{{'userMgmtCellAction' + idx}}"
                         type="checkbox"
-                        [disabled]="isProcessing() || disabled"
+                        [disabled]="isProcessing() || !hasPermissionUpdateMembership"
                         [(ngModel)]="entity.isActivated">
                 <span class="slider round"></span>
             </label>

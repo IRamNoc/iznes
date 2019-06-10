@@ -6,6 +6,21 @@
     <clr-tab>
         <button clrTabLink id="tabAccountAdminUsersButton">{{ 'List' | translate }}</button>
         <clr-tab-content class="outer">
+            <!-- Button container -->
+            <div *ngIf="!hasPermissionCreateUsers" class="alert alert-warning">
+                <div class="alert-items">
+                    <div class="alert-item static">
+                        <div class="alert-icon-wrapper">
+                            <clr-icon class="alert-icon" shape="exclamation-triangle"></clr-icon>
+                        </div>
+                        <span class="alert-text">
+                            {{ 'Please contact the administrator to request permission to create users.' | translate }}
+                        </span>
+                    </div>
+                </div>
+            </div>
+            <br />
+
             <div class="row buttons">
                 <div class="col">
                     <a [routerLink]="'/account-admin/users/audit'" class="btn btn-primary">{{ 'Audit Trail' | translate }}</a>
@@ -14,7 +29,7 @@
                     <button class="btn btn-primary" (click)="exportCSV()">{{ 'Export Users as CSV' | translate }}</button>
                 </div>
                 <div class="col">
-                    <a [routerLink]="'/account-admin/users/new'" class="btn btn-primary">{{ 'Add New User' | translate }}</a>
+                    <button [routerLink]="'/account-admin/users/new'" [disabled]="!hasPermissionCreateUsers" class="btn btn-primary">{{ 'Add New User' | translate }}</button>
                 </div>
             </div>
 
@@ -76,4 +91,4 @@
             </clr-datagrid>
         </clr-tab-content>
     </clr-tab>
-</clr-tabs>    
+</clr-tabs>

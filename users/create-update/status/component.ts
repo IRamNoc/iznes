@@ -12,6 +12,7 @@ import { Router } from '@angular/router';
     styleUrls: ['../../../base/create-update/status/component.scss'],
 })
 export class UsersStatusComponent extends AccountAdminStatusComponentBase<null> implements OnInit, OnDestroy {
+    @Input() hasPermission: boolean = false;
 
     constructor(toaster: ToasterService,
                 translate: MultilingualService,

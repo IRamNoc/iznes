@@ -11,6 +11,7 @@ import * as Model from '../model';
 import { UsersService } from '../service';
 import { AccountAdminListBase } from '../../base/list/component';
 import { AccountAdminBaseService } from '../../base/service';
+import { PermissionsService } from '@setl/utils/services/permissions';
 
 @Component({
     selector: 'app-core-admin-users-list',
@@ -25,10 +26,15 @@ export class UsersListComponent extends AccountAdminListBase implements OnInit, 
     @select(['accountAdmin', 'users', 'requested']) usersRequestedOb;
     @select(['accountAdmin', 'users', 'users']) usersOb;
 
+    public hasPermissionViewUsers: boolean = false;
+    public hasPermissionCreateUsers: boolean = false;
+    public hasPermissionUpdateUsers: boolean = false;
+
     constructor(private service: UsersService,
                 router: Router,
                 redux: NgRedux<any>,
                 fileDownloader: FileDownloader,
+                public permissionsService: PermissionsService,
                 baseService: AccountAdminBaseService) {
 
         super(router, redux, fileDownloader, baseService);
@@ -37,6 +43,21 @@ export class UsersListComponent extends AccountAdminListBase implements OnInit, 
 
     ngOnInit() {
         super.ngOnInit();
+
+        this.permissionsService.hasPermission('accountAdminUsers', 'canRead').then(
+            (hasPermission) => {
+                this.hasPermissionViewUsers = hasPermission;
+            });
+
+        this.permissionsService.hasPermission('accountAdminUsers', 'canInsert').then(
+            (hasPermission) => {
+                this.hasPermissionCreateUsers = hasPermission;
+            });
+
+        this.permissionsService.hasPermission('accountAdminUsers', 'canUpdate').then(
+            (hasPermission) => {
+                this.hasPermissionUpdateUsers = hasPermission;
+            });
 
         this.subscriptions.push(this.accountIdOb.subscribe((accountId: number) => {
             this.accountId = accountId;

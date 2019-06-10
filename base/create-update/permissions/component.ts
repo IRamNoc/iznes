@@ -24,6 +24,7 @@ import { immutableHelper, APP_CONFIG, AppConfig } from '@setl/utils';
     styleUrls: ['component.scss'],
 })
 export class AccountAdminPermissionsComponentBase implements OnInit, OnDestroy {
+    @Input() disableAll: boolean = false;
     @Input() doUpdateOb: Subject<number>;
     @Input() entityId: number;
     @Output() entitiesFn: EventEmitter<PermissionsModel.AccountAdminPermission[]> = new EventEmitter();
@@ -253,12 +254,35 @@ export class AccountAdminPermissionsComponentBase implements OnInit, OnDestroy {
             'Cancel NAV': {
                 related: ['View NAV'],
             },
+            'Update Management Company': {
+                related: ['View Management Company'],
+            },
+            'Create Users': {
+                related: ['View Users'],
+            },
+            'Update Users': {
+                related: ['View Users'],
+            },
+            'Delete Users': {
+                related: ['Update Teams', 'Create Users'],
+            },
+            'Create Teams': {
+                related: ['View Teams'],
+            },
+            'Update Teams': {
+                related: ['View Teams'],
+            },
+            'Delete Teams': {
+                related: ['Update Teams', 'Create Teams'],
+            },
         };
 
         const toBeDisabled = [];
 
         // Initialise permissionRelationships for use in setPermissionRelationships()
         this.permissions.forEach((p, index) => {
+            if (this.disableAll) p.disabled = true;
+
             if (!this.permissionRelationships.hasOwnProperty(p.name)) {
                 this.permissionRelationships[p.name] = { related: [] };
             }
