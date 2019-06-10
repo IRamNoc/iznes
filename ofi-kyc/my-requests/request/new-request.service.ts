@@ -736,6 +736,8 @@ export class NewRequestService {
                     kycID,
                     amcID,
                 });
+            }).catch((err) => {
+                console.log('+++ CREATE DRAFT ERROR', err);
             });
         }
 
@@ -749,6 +751,7 @@ export class NewRequestService {
             investorWalletID: connectedWallet || 0,
             kycStatus: 0,
             alreadyCompleted: choice.registered ? 1 : 0,
+            clientFile: 0,
         });
     }
 

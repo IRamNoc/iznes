@@ -20,7 +20,6 @@
     </form-step>
     <form-step *ngIf="fullForm">
         <kyc-step-introduction #step (submitEvent)="handleSubmit($event)"></kyc-step-introduction>
-        <ng-container *ngTemplateOutlet="firstStepInfo"></ng-container>
     </form-step>
     <form-step *ngIf="fullForm">
         <kyc-step-identification #step [form]="forms.get('identification')" [investorType]="investorType" (submitEvent)="handleSubmit($event)"></kyc-step-identification>

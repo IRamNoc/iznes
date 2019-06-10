@@ -8,6 +8,7 @@
     padding: 24px;
     background-color: #fafafafa;
     height: calc(100vh - 2.5rem - 91px);
+    counter-reset: step;
     .kyc-step {
         height: 48px;
         font-size: 14px;
@@ -37,9 +38,11 @@
         &.complete {
             border-left: solid 4px #60b515;
         }
-        span {
+        span::before {
             width: 15px;
             display: inline-block;
+            counter-increment: step;
+            content: counter(step);
         }
     }
 }

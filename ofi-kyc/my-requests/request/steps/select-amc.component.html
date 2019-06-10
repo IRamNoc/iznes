@@ -1,8 +1,6 @@
-<div class="kyc-form-header">
-    <h3 class="text-center step-title">
-            {{ 'Select Counterparties' | translate }}
-    </h3>
-</div>
+<h4 class="step-title">
+    {{ 'Select Company' | translate }}
+</h4>
 
 <form [formGroup]="form" id="step-selection" (ngSubmit)="handleSubmit($event)" class="well p-1">
 
@@ -21,18 +19,28 @@
         </div>
     </div>
 
+    <div class="form-group search-companies">
+        <input type="text" placeholder="Search companies" [formControl]="searchCompanies">
+        <clr-icon *ngIf="(searchCompanies || {}).value" shape="times-circle" (click)="clearSearch()"></clr-icon>
+        <p *ngIf="(searchCompanies || {}).value"><small>
+            {{ 'Showing @filtered@ of @total@ companies' | translate: { filtered: filteredManagementCompanies.length, total: managementCompanies.length } }}
+        </small></p>
+    </div>
+
     <div>
 
         <div class="management-companies">
 
-            <div class="management-company-container" *ngFor="let managementCompany of managementCompanies">
+            <h6 *ngIf="filteredManagementCompanies.length === 0">{{ 'No matching results found' | translate }}</h6>
+
+            <div class="management-company-container" *ngFor="let managementCompany of filteredManagementCompanies">
 
                 <div class="link">
                     &nbsp;
                 </div>
 
                 <div class="management-company" [class.selected]="isAMCSelected(managementCompany.id)">
-                    <i class="fa fa-check fa-2x confirm-mark" *ngIf="isAMCSelected(managementCompany.id)"></i>
+                    <clr-icon shape="check" class="confirm-mark" *ngIf="isAMCSelected(managementCompany.id)"></clr-icon>
 
                     <div class="infos" (click)="toggleManagementCompany(managementCompany)">
                         <div class="logo">
@@ -44,7 +52,7 @@
                             </div>
                         </div>
                         <div class="name">
-                            <strong>{{managementCompany.text}}</strong>
+                            {{managementCompany.text}}
                         </div>
                     </div>
 

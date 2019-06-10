@@ -16,7 +16,13 @@
     <p>{{ 'En l’absence de réponses exhaustives, la société de gestion pourrait ne pas être en mesure de vérifier de fournir le service demandé. La non réponse pourrait entrainer l’obligation pour la SGP d’effectuer des déclarations aux autorités compétentes.' | translate }}</p>
 </div>
 
-<div class="px-1">
+<div class="checkbox-inline">
+    <input type="checkbox" id="confirm-read" [formControl]="readCheckbox">
+    <label for="confirm-read">
+        {{ 'I acknowledge that I have read the European Directive on Markets in Financial Instruments' | translate }}
+    </label>
+</div>
+<!-- <div class="px-1">
     <clr-alert [clrAlertClosable]="false" [clrAlertSizeSmall]="true">
         <div class="alert-item">
             <span class="alert-text">
@@ -24,4 +30,4 @@
             </span>
         </div>
     </clr-alert>
-</div>
+</div> -->

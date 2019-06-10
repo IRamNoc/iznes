@@ -1,4 +1,4 @@
-import { Component, OnInit, ViewChild, AfterViewInit } from '@angular/core';
+import { Component, OnInit, ViewChild, AfterViewInit, ChangeDetectionStrategy } from '@angular/core';
 import { trigger, state, style, transition, animate } from '@angular/animations';
 import { Location } from '@angular/common';
 import { FormBuilder } from '@angular/forms';
@@ -14,6 +14,7 @@ import { steps, formStepsLight, formStepsFull, formStepsOnboarding } from '../re
 import { NewRequestService } from './new-request.service';
 
 import { FormstepsComponent } from '@setl/utils/components/formsteps/formsteps.component';
+import { setMenuCollapsed } from '@setl/core-store';
 
 @Component({
     templateUrl: './new-request.component.html',
@@ -29,6 +30,7 @@ import { FormstepsComponent } from '@setl/utils/components/formsteps/formsteps.c
             transition('* => *', animate(250)),
         ]),
     ],
+    changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class NewKycRequestComponent implements OnInit, AfterViewInit {
 
@@ -71,6 +73,7 @@ export class NewKycRequestComponent implements OnInit, AfterViewInit {
         private ngRedux: NgRedux<any>,
         private location: Location,
     ) {
+        this.ngRedux.dispatch(setMenuCollapsed(true));
     }
 
     get documents() {
@@ -227,6 +230,8 @@ export class NewKycRequestComponent implements OnInit, AfterViewInit {
         if (type === 'close') {
             this.router.navigateByUrl('/onboarding-requests/list');
         }
+
+        this.checkIsBeginning();
     }
 
     checkIsBeginning() {
