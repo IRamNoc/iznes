@@ -211,7 +211,7 @@ export class UsersCreateUpdateComponent
             if (!this.hasPermissionUpdateMembership && !this.hasPermissionUpdateUsers) {
                 return this.translate.translate(
                     // tslint:disable-next-line:max-line-length
-                    'Please contact the administrator to request permission to update team or to update team memberships.',
+                    'Please contact the administrator to request permission to update teams or to update team memberships.',
                 );
             }
 
@@ -225,7 +225,7 @@ export class UsersCreateUpdateComponent
             if (!this.hasPermissionCreateTeams && !this.hasPermissionUpdateMembership) {
                 return this.translate.translate(
                     // tslint:disable-next-line:max-line-length
-                    'Please contact the administrator to request permission to create or to update team memberships.',
+                    'Please contact the administrator to request permission to create teams or to update team memberships.',
                 );
             }
 
