@@ -13,6 +13,7 @@ export class AccountAdminStatusComponentBase<Type> implements OnInit, OnDestroy 
     @Input() noun: string;
     @Input() entityId: number;
     @Input() status: number = 0;
+    @Input() hasPermission: boolean = false;
 
     textEnable: string = '';
     textDisable: string = '';
