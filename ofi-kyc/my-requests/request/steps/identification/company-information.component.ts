@@ -369,12 +369,12 @@ export class CompanyInformationComponent implements OnInit, OnDestroy {
         this.formPercent.refreshFormPercent();
     }
 
-    formCheckListingMarkets(selectedMarkets) {
+    formCheckListingMarkets(selectedMarkets: any) {
         const control = this.form.get('otherListingMarkets');
 
         let otherSelected = false;
 
-        if (selectedMarkets && selectedMarkets.length) {
+        if (Array.isArray(selectedMarkets)) {
             otherSelected = selectedMarkets.find((market) => {
                 return market.id === 'other';
             });
@@ -409,12 +409,12 @@ export class CompanyInformationComponent implements OnInit, OnDestroy {
         }
     }
 
-    formCheckMultilateralTradingFacilities(selectedFacilities) {
+    formCheckMultilateralTradingFacilities(selectedFacilities: any) {
         const control = this.form.get('otherMultilateralTradingFacilities');
 
         let otherSelected = false;
 
-        if (selectedFacilities && selectedFacilities.length) {
+        if (Array.isArray(selectedFacilities)) {
             otherSelected = selectedFacilities.find((market) => {
                 return market.id === 'other';
             });
@@ -449,12 +449,12 @@ export class CompanyInformationComponent implements OnInit, OnDestroy {
         }
     }
 
-    formCheckRegulator(selectedRegulators) {
+    formCheckRegulator(selectedRegulators: any) {
         const control = this.form.get('otherRegulator');
 
         let otherSelected = false;
 
-        if (selectedRegulators && selectedRegulators.length) {
+        if (Array.isArray(selectedRegulators)) {
             otherSelected = selectedRegulators.find((regulator) => {
                 return regulator.id === 'other';
             });
