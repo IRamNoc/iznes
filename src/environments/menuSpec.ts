@@ -376,8 +376,8 @@ const myAssetManagers = {
             label_txt: 'txt_myrequests',
             icon_class: 'file',
             element_id: 'top-menu-my-requests',
-            router_link: '/my-requests/list',
-            dynamic_link: '/my-requests/[^\/]*',
+            router_link: '/onboarding-requests/list',
+            dynamic_link: '/onboarding-requests/[^\/]*',
         },
     ],
 };
