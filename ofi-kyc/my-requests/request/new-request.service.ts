@@ -692,6 +692,7 @@ export class NewRequestService {
     createHolder() {
         return this.formBuilder.group({
             custodianID: '',
+            accountName: ['', this.getLengthValidator()],
             establishmentName: ['', this.getLengthValidator()],
             iban: ['', this.getLengthValidator().concat([CustomValidators.ibanValidator])],
             bic: ['', this.getLengthValidator().concat([CustomValidators.bicValidator])],

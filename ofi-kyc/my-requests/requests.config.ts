@@ -2983,6 +2983,7 @@ export const controlToName = {
     legalName: 'Legal Name',
 
     // Custodian
+    accountName: 'Account Name',
     establishmentName: 'Establishment Name',
     iban: 'IBAN',
     bic: 'BIC',
