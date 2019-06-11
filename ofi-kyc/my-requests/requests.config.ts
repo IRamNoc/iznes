@@ -3212,11 +3212,11 @@ export const controlToList = {
 // Conditionally remove fields from kyc datagrids
 export const omitConditionalFields = {
     otherIdentificationNumberType: {
-        condition: 'other',
+        condition: ['siren', 'siret'],
         fields: ['otherIdentificationNumberTypeSpecify'],
     },
     commercialDomiciliation: {
-        condition: 0,
+        condition: [0],
         fields: ['commercialAddressLine1', 'commercialAddressLine2', 'commercialZipCode', 'commercialCity', 'commercialCountry'],
     },
 };

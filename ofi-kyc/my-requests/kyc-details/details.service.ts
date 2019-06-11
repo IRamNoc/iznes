@@ -105,14 +105,20 @@ export class KycDetailsService {
         return array;
     }
 
-    // Conditionally remove fields from kyc data grids
+    /**
+     * Conditionally remove fields from kyc data grids
+     *
+     * @param {Object} data
+     *
+     * @return {Object} omitFields
+     */
     omitConditionalFields(data) {
         let omitFields = [];
 
-        Object.keys(data).forEach((omitKey) => {
-            if (Object.keys(requestsConfig.omitConditionalFields).indexOf(omitKey) !== -1) {
-                if (data[omitKey] === requestsConfig.omitConditionalFields[omitKey].condition) {
-                    omitFields = [...omitFields, ...requestsConfig.omitConditionalFields[omitKey].fields];
+        Object.keys(data).forEach((field) => {
+            if (Object.keys(requestsConfig.omitConditionalFields).indexOf(field) !== -1) {
+                if (requestsConfig.omitConditionalFields[field].condition.includes(data[field])) {
+                    omitFields = [...omitFields, ...requestsConfig.omitConditionalFields[field].fields];
                 }
             }
         });
