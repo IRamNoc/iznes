@@ -7,7 +7,7 @@ import * as _ from 'lodash';
 import * as moment from 'moment';
 import { fromJS } from 'immutable';
 import { Observable, Subscription } from 'rxjs';
-import { NumberConverterService, MoneyValuePipe, NavHelperService } from '@setl/utils';
+import { NumberConverterService, MoneyValuePipe, NavHelperService, HistoryService } from '@setl/utils';
 import { OfiNavAuditService } from './service';
 import { OfiNavService } from '@ofi/ofi-main/ofi-req-services/ofi-product/nav/service';
 import {
@@ -58,6 +58,7 @@ export class OfiNavAuditComponent implements OnInit, OnDestroy {
                 private numberConverterService: NumberConverterService,
                 private moneyPipe: MoneyValuePipe,
                 public translate: MultilingualService,
+                private historyService: HistoryService,
                 private ofiNavService: OfiNavService) {
     }
 
@@ -159,7 +160,7 @@ export class OfiNavAuditComponent implements OnInit, OnDestroy {
     }
 
     returnToNav(): void {
-        this.router.navigateByUrl('product-module/net-asset-value/fund-view');
+        this.router.navigateByUrl(this.historyService.previousUrl());
     }
 
     isLogTypeCancel(item: NavAuditDetail): boolean {
