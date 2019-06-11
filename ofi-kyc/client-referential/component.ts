@@ -46,6 +46,7 @@ export class OfiClientReferentialComponent implements OnInit, OnDestroy {
 
     public hasPermissionClientReferentialUpdate: boolean = false;
     public hasPermissionInvestorInvitation: boolean = false;
+    public isNowCpAm: boolean = false;
 
     public subscriptions: Array<any> = [];
 
@@ -141,6 +142,12 @@ export class OfiClientReferentialComponent implements OnInit, OnDestroy {
         this.permissionsService.hasPermission('investorInvitation', 'canInsert').then(
             (hasPermission) => {
                 this.hasPermissionInvestorInvitation = hasPermission;
+            },
+        );
+
+        this.permissionsService.hasPermission('nowCpAM', 'canRead').then(
+            (hasPermission) => {
+                this.isNowCpAm = hasPermission;
             },
         );
 

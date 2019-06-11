@@ -76,7 +76,7 @@
                             <strong>{{ 'Please confirm that you validate your client\'s KYC documents' | translate }} </strong>
                         </p>
 
-                        <div *ngIf="!hasPermissionUpdateKycRequests">
+                        <div *ngIf="!canUpdateKyc">
                             <div class="alert alert-warning">
                                 <div class="alert-items">
                                     <div class="alert-item static">
@@ -102,7 +102,7 @@
                                             [value]="status.value"
                                             [checked]="status.value === statusId"
                                             (change)="handleStatusChange()"
-                                            [attr.disabled]="!hasPermissionUpdateKycRequests ? 'true' : null">
+                                            [attr.disabled]="!canUpdateKyc ? 'true' : null">
                                 </span>
 
                                 <span class="statusLabel">
@@ -120,7 +120,7 @@
                                         type="checkbox"
                                         formControlName="isKycAccepted"
                                         value="false"
-                                        [attr.disabled]="!hasPermissionUpdateKycRequests ? 'true' : null">&nbsp;
+                                        [attr.disabled]="!canUpdateKyc ? 'true' : null">&nbsp;
                                 <label class="form-check-label" for="checkbox">{{ 'We hereby validate that this client has fully completed the KYC documents with us, and is authorised to trade with us.' | translate }}</label>
                             </div>
                         </div>
@@ -145,6 +145,8 @@
                         <!-- Back and submit buttons -->
                         <div class="form-group col-sm-12">
                             <button id="backButton" type="button" class="btn btn-light" (click)="handleBackButtonClick()">{{ 'Back' | translate }}</button>
+
+                            <button *ngIf="hasPermissionCanManageAllClientFile" type="button" class="btn btn-primary" (click)="downloadClientFile()">{{'Download Client File' | translate}}</button>
 
                             <button id="submitButton" type="submit" class="btn btn-primary" [disabled]="handleSubmitButtonDisabled()">{{ 'Validate' | translate }}
                             </button>

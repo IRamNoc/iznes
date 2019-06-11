@@ -18,15 +18,16 @@
         </tr>
         <tr style="background-color: transparent">
             <td colspan="2" class="text-right">
-                <button type="button" class="btn btn-primary" style="margin: 0;" [routerLink]="['/my-requests/list/kyc-audit-trail', kycID]">{{ 'View Previous Updates' | translate }}</button>
-                <br *ngIf="requestDetailStatus === 'WaitingForMoreInfo'">
+                <button type="button" class="btn btn-primary" style="margin: 0;" [routerLink]="['/onboarding-requests/list/kyc-audit-trail', kycID]">{{ 'View Previous Updates' | translate }}</button>
+                <br *ngIf="requestDetailStatus === 'WaitingForMoreInfo' || (requestDetailStatus === 'Approved' && isClientFile)">
                 <button type="button" class="btn btn-success" (click)="redirectToRelatedKycs(kycID)" *ngIf="requestDetailStatus === 'WaitingForMoreInfo'" style="margin-right: 4px;">{{ 'Update Your Request' | translate }}</button>
+                <button type="button" class="btn btn-success" (click)="redirectToRelatedKycs(kycID, 'introduction')" *ngIf="requestDetailStatus === 'Approved' && isClientFile" style="margin-right: 4px;">{{ 'Update Your Request' | translate }}</button>
             </td>
         </tr>
     </table>
 </div>
 
-<div class="wrapper wrapper-content">
+<div *ngIf="!isClientFile" class="wrapper wrapper-content">
     <form [formGroup]="disabledForm">
         <ng-container *ngIf="requestDetailStatus === 'Rejected'">
             <h1 class="mt-1">{{ 'Rejection\'s Cause' | translate }}</h1>
@@ -76,7 +77,7 @@
 
 <!-- Main content. -->
 <ng-container>
-    <div class="wrapper wrapper-content">
+    <div *ngIf="!isClientFile" class="wrapper wrapper-content">
         <div class="hr-line-dashed"></div>
         <p *ngIf="isKYCFull">{{'Please find below the information and documents you provided during the application for @companyName@.' | translate: {'companyName': companyName} }}</p>
     </div>

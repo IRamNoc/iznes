@@ -54,7 +54,7 @@ export class ConsumeTokenService {
 
         // If not redirecting to the information page, redirect to my-requests because we have a token
         if (destination.indexOf('new-investor') === -1) {
-            destination = ['my-requests', 'new'];
+            destination = ['onboarding-requests', 'new'];
         }
 
         destination = castArray(destination);

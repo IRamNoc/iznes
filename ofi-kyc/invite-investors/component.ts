@@ -13,6 +13,8 @@ import { investorInvitation } from '@ofi/ofi-main/ofi-store/ofi-kyc/invitationsB
 import { MultilingualService } from '@setl/multilingual';
 import { AppObservableHandler } from '@setl/utils/decorators/app-observable-handler';
 import { OfiFundDataService } from '../../ofi-data-service/product/fund/ofi-fund-data-service';
+import { PermissionsService } from '@setl/utils/services/permissions/permissions.service';
+import { InvestorType } from '../../shared/investor-types';
 
 const emailRegex = /^(((\([A-z0-9]+\))?[^<>()\[\]\\.,;:\s@"]+(\.[^<>()\[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/;
 
@@ -44,6 +46,8 @@ export class OfiInviteInvestorsComponent implements OnInit, OnDestroy {
     fundSelectList: {id: string, text: string}[];
     unSubscribe: Subject<any> = new Subject();
 
+    isNowCpAm = false;
+
     @select(['user', 'siteSettings', 'language']) requestLanguageOb;
 
     /* Constructor. */
@@ -56,6 +60,7 @@ export class OfiInviteInvestorsComponent implements OnInit, OnDestroy {
                 private ofiKycObservablesService: OfiKycObservablesService,
                 @Inject('kycEnums') kycEnums,
                 private ofiFundDataService: OfiFundDataService,
+                public permissionsService: PermissionsService,
                 public translate: MultilingualService) {
 
         this.enums.status = kycEnums.status;
@@ -98,6 +103,7 @@ export class OfiInviteInvestorsComponent implements OnInit, OnDestroy {
                 }),
             ]),
         });
+
     }
 
     /**
@@ -115,8 +121,11 @@ export class OfiInviteInvestorsComponent implements OnInit, OnDestroy {
         this.initPanel();
         this.initInvestorTypes();
 
+        const investorTypeToShow = [InvestorType.InstitutionalDirect, InvestorType.FundOfFundsManager,
+            InvestorType.RetailDirect, InvestorType.NowCPKycIssuer, InvestorType.NowCPKycInvestor];
+
         (<any>this).appSubscribe(this.ofiKycObservablesService.getInvitationData(), (d: investorInvitation[]) => {
-            this.inviteItems = d.filter(inv => inv.investorType < 40).map((invite) => {
+            this.inviteItems = d.filter(inv => (investorTypeToShow.includes(inv.investorType))).map((invite) => {
                 const tokenUsedAt = invite.tokenUsedAt ? moment(invite.tokenUsedAt).local().format('YYYY-MM-DD HH:mm:ss') : null;
                 const kycStarted = invite.kycStarted ? moment(invite.kycStarted).local().format('YYYY-MM-DD HH:mm:ss') : '';
                 return {
@@ -145,11 +154,23 @@ export class OfiInviteInvestorsComponent implements OnInit, OnDestroy {
         };
     }
 
-    initInvestorTypes() {
-        this.investorTypes = this.translate.translate([
-            { id: 10, text: 'Institutional Investor' },
-            { id: 30, text: 'Retail Investor' },
-        ]);
+    async initInvestorTypes() {
+        await this.permissionsService.hasPermission('nowCpAM', 'canRead').then(
+            (hasPermission) => {
+                this.isNowCpAm = hasPermission;
+            },
+        );
+        if (this.isNowCpAm) {
+            this.investorTypes = this.translate.translate([
+                { id: 70, text: 'NowCP Issuer' },
+                { id: 80, text: 'NowCP Investor' },
+            ]);
+        } else {
+            this.investorTypes = this.translate.translate([
+                { id: 10, text: 'Institutional Investor' },
+                { id: 30, text: 'Retail Investor' },
+            ]);
+        }
     }
 
     getControls(frmGrp: FormGroup, key: string) {
@@ -354,7 +375,10 @@ function constructInvitationRequest(formValue) {
         (result, item) => {
             const investorType = _.get(item, ['investorType', 0], {}).id;
             // check the investor type
-            if (investorType !== 10) {
+            if (investorType !== InvestorType.InstitutionalDirect &&
+                investorType !== InvestorType.NowCPKycIssuer &&
+                investorType !== InvestorType.NowCPKycInvestor
+            ) {
                 throw new Error('Only institutional investors are allowed');
             }
 
