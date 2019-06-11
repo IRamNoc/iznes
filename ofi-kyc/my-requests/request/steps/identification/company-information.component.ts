@@ -28,9 +28,12 @@ export class CompanyInformationComponent implements OnInit, OnDestroy {
     unsubscribe: Subject<any> = new Subject();
     open: boolean = false;
     countries = countries;
+    regulatorSupervisoryAuthoritiesList;
     regulatoryStatusList;
     regulatoryStatusInsurerTypeList;
     sectorActivityList;
+    otherSectorActivityList;
+    cachedOtherSectorActivityList;
     companyActivitiesList;
     ownAccountInvestorList;
     investorOnBehalfList;
@@ -39,6 +42,9 @@ export class CompanyInformationComponent implements OnInit, OnDestroy {
     geographicalAreaList;
     custodianHolderAccountList;
     listingMarketsList;
+    multilateralTradingFacilitiesList;
+    otherListingMarketError = false;
+    otherMultilateralTradingFacilitiesError = false;
 
     constructor(
         private newRequestService: NewRequestService,
@@ -71,75 +77,124 @@ export class CompanyInformationComponent implements OnInit, OnDestroy {
 
     initFormCheck() {
         this.form.get('sectorActivity').valueChanges
-        .pipe(takeUntil(this.unsubscribe))
-        .subscribe((data) => {
-            const sectorActivityValue = getValue(data, [0, 'id']);
+            .pipe(takeUntil(this.unsubscribe))
+            .subscribe((data) => {
+                const sectorActivityValue = getValue(data, [0, 'id']);
 
-            this.formCheckSectorActivity(sectorActivityValue);
-        });
+                // Enable sectorActivityTextControl if sectorActivityValue is 'other', else disable
+                this.formCheckSectorActivity(sectorActivityValue);
+
+                if (sectorActivityValue) {
+                    // Remove sectorActivityValue from the otherSectorActivityList
+                    this.formFilterOtherSectorActivity(sectorActivityValue);
+                }
+            });
 
         this.form.get('activities').valueChanges
-        .pipe(takeUntil(this.unsubscribe))
-        .subscribe((data) => {
-            const activitiesValue = getValue(data, [0, 'id']);
+            .pipe(takeUntil(this.unsubscribe))
+            .subscribe((data) => {
+                const activitiesValue = getValue(data, [0, 'id']);
 
-            this.formCheckActivity(activitiesValue);
-        });
+                this.formCheckActivity(activitiesValue);
+            });
 
         this.form.get('geographicalAreaOfActivity').valueChanges
-        .pipe(takeUntil(this.unsubscribe))
-        .subscribe((data) => {
-            const activityGeographicalAreaValue = getValue(data, [0, 'id']);
+            .pipe(takeUntil(this.unsubscribe))
+            .subscribe((data) => {
+                const activityGeographicalAreaValue = getValue(data, [0, 'id']);
 
-            this.formCheckActivityGeographicalArea(activityGeographicalAreaValue);
-        });
+                this.formCheckActivityGeographicalArea(activityGeographicalAreaValue);
+            });
 
         this.form.get('activityRegulated').valueChanges
-        .pipe(takeUntil(this.unsubscribe))
-        .subscribe((isActivityRegulatedValue) => {
-            this.formCheckActivityRegulated(isActivityRegulatedValue);
-        });
+            .pipe(takeUntil(this.unsubscribe))
+            .subscribe((isActivityRegulatedValue) => {
+                this.formCheckActivityRegulated(isActivityRegulatedValue);
+            });
 
         this.form.get('companyListed').valueChanges
-        .pipe(takeUntil(this.unsubscribe))
-        .subscribe((isCompanyListedValue) => {
-            this.formCheckCompanyListed(isCompanyListedValue);
-        });
+            .pipe(takeUntil(this.unsubscribe))
+            .subscribe((isCompanyListedValue) => {
+                this.formCheckCompanyListed(isCompanyListedValue);
+            });
+
+        this.form.get('listingMarkets').valueChanges
+            .pipe(takeUntil(this.unsubscribe))
+            .subscribe((data) => {
+                this.formCheckListingMarkets(data);
+                this.formFilterOtherListingMarkets();
+            });
+
+        this.form.get('otherListingMarkets').valueChanges
+            .pipe(takeUntil(this.unsubscribe))
+            .subscribe((data) => {
+                this.otherListingMarketError = false;
+
+                if (data) {
+                    this.formFilterOtherListingMarkets();
+                }
+            });
+
+        this.form.get('multilateralTradingFacilities').valueChanges
+            .pipe(takeUntil(this.unsubscribe))
+            .subscribe((data) => {
+                this.formCheckMultilateralTradingFacilities(data);
+                this.formFilterOtherMultilateralTradingFacilities();
+            });
+
+        this.form.get('otherMultilateralTradingFacilities').valueChanges
+            .pipe(takeUntil(this.unsubscribe))
+            .subscribe((data) => {
+                this.otherListingMarketError = false;
+
+                if (data) {
+                    this.formFilterOtherMultilateralTradingFacilities();
+                }
+            });
 
         this.form.get('capitalNature.others').valueChanges
-        .pipe(takeUntil(this.unsubscribe))
-        .subscribe((data) => {
-            this.formCheckNatureAndOrigin(data);
-        });
+            .pipe(takeUntil(this.unsubscribe))
+            .subscribe((data) => {
+                this.formCheckNatureAndOrigin(data);
+            });
 
         this.form.get('geographicalOrigin1').valueChanges
-        .pipe(takeUntil(this.unsubscribe))
-        .subscribe((data) => {
-            const control = this.form.get('geographicalOrigin2');
+            .pipe(takeUntil(this.unsubscribe))
+            .subscribe((data) => {
+                const control = this.form.get('geographicalOrigin2');
 
-            if (!control) return;
+                if (!control) return;
 
-            control.setValue('');
+                control.setValue('');
 
-            const geographicalOriginTypeValue = getValue(data, [0, 'id']);
+                const geographicalOriginTypeValue = getValue(data, [0, 'id']);
 
-            this.formCheckGeographicalOrigin(geographicalOriginTypeValue);
-        });
+                this.formCheckGeographicalOrigin(geographicalOriginTypeValue);
+            });
 
         this.form.get('regulatoryStatus').valueChanges
-        .pipe(takeUntil(this.unsubscribe))
-        .subscribe((data) => {
-            const regulatoryStatusValue = getValue(data, [0, 'id']);
+            .pipe(takeUntil(this.unsubscribe))
+            .subscribe((data) => {
+                const regulatoryStatusValue = getValue(data, [0, 'id']);
 
-            this.formCheckRegulatoryStatus(regulatoryStatusValue);
-        });
+                this.formCheckRegulatoryStatus(regulatoryStatusValue);
+            });
+
+        this.form.get('regulator').valueChanges
+            .pipe(takeUntil(this.unsubscribe))
+            .subscribe((data) => {
+                this.formCheckRegulator(data);
+            });
     }
 
     initLists() {
+        this.regulatorSupervisoryAuthoritiesList = this.translate.translate(this.newRequestService.regulatorSupervisoryAuthoritiesList);
         this.regulatoryStatusInsurerTypeList = this.translate.translate(
             this.newRequestService.regulatoryStatusInsurerTypeList);
         this.regulatoryStatusList = this.translate.translate(this.newRequestService.regulatoryStatusList);
         this.sectorActivityList = this.translate.translate(this.newRequestService.sectorActivityList);
+        this.otherSectorActivityList = this.translate.translate(this.newRequestService.otherSectorActivityList);
+        this.cachedOtherSectorActivityList = this.translate.translate(this.newRequestService.otherSectorActivityList);
         this.companyActivitiesList = this.translate.translate(this.newRequestService.companyActivitiesList);
         this.ownAccountInvestorList = this.translate.translate(this.newRequestService.ownAccountInvestorList);
         this.investorOnBehalfList = this.translate.translate(this.newRequestService.investorOnBehalfList);
@@ -148,6 +203,7 @@ export class CompanyInformationComponent implements OnInit, OnDestroy {
         this.geographicalAreaList = this.translate.translate(this.newRequestService.geographicalAreaList);
         this.custodianHolderAccountList = this.translate.translate(this.newRequestService.custodianHolderAccountList);
         this.listingMarketsList = this.translate.translate(this.newRequestService.listingMarketsList);
+        this.multilateralTradingFacilitiesList = this.translate.translate(this.newRequestService.multilateralTradingFacilitiesList);
     }
 
     get beneficiaries() {
@@ -159,16 +215,41 @@ export class CompanyInformationComponent implements OnInit, OnDestroy {
     }
 
     formCheckSectorActivity(value) {
-        const form = this.form;
-        const sectorActivityTextControl = form.get('sectorActivityText');
+        const control = this.form.get('sectorActivityText');
 
-        if (value === 'other') {
-            sectorActivityTextControl.enable();
+        if (value === 'Other') {
+            control.enable();
         } else {
-            sectorActivityTextControl.disable();
+            control.disable();
         }
 
         this.formPercent.refreshFormPercent();
+    }
+
+    formFilterOtherSectorActivity(value) {
+        // Reset the otherSectorActivityList
+        this.otherSectorActivityList = [...this.cachedOtherSectorActivityList];
+
+        // If value is in the otherSectorActivity list, remove it
+        this.otherSectorActivityList.forEach((item, index) => {
+            if (item.id === value) {
+                delete this.otherSectorActivityList[index];
+            }
+        });
+
+        const control = this.form.get('otherSectorActivity');
+
+        // Get the otherSectorActivity form control values
+        const otherSectorActivityFormValues = control.value;
+
+        // If value is in otherSectorActivityFormValues, reset the form control
+        if (otherSectorActivityFormValues && otherSectorActivityFormValues[0] !== null) {
+            otherSectorActivityFormValues.forEach((item) => {
+                if (item.id === value) {
+                    control.reset();
+                }
+            });
+        }
     }
 
     formCheckActivity(value) {
@@ -192,24 +273,24 @@ export class CompanyInformationComponent implements OnInit, OnDestroy {
     }
 
     formCheckNatureAndOrigin(value) {
-        const natureAndOriginOfTheCapitalOthersControl = this.form.get('capitalNature.othersText');
+        const control = this.form.get('capitalNature.othersText');
 
         if (value) {
-            natureAndOriginOfTheCapitalOthersControl.enable();
+            control.enable();
         } else {
-            natureAndOriginOfTheCapitalOthersControl.disable();
+            control.disable();
         }
 
         this.formPercent.refreshFormPercent();
     }
 
     formCheckGeographicalOrigin(value) {
-        const geographicalOriginControl = this.form.get('geographicalOrigin2');
+        const control = this.form.get('geographicalOrigin2');
 
         if (!value) {
-            geographicalOriginControl.disable();
+            control.disable();
         } else {
-            geographicalOriginControl.enable();
+            control.enable();
         }
 
         this.formPercent.refreshFormPercent();
@@ -267,21 +348,130 @@ export class CompanyInformationComponent implements OnInit, OnDestroy {
     }
 
     formCheckCompanyListed(value) {
-        const companyListingMarketsControl = this.form.get('listingMarkets');
+        const listingMarketsControl = this.form.get('listingMarkets');
+        const otherListingMarketsControl = this.form.get('otherListingMarkets');
+        const multilateralTradingFacilitiesControl = this.form.get('multilateralTradingFacilities');
+        const otherMultilateralTradingFacilitiesControl = this.form.get('multilateralTradingFacilities');
         const bloombergCodesControl = this.form.get('bloombergCode');
         const listedShareISINControl = this.form.get('isinCode');
         const floatableSharesControl = this.form.get('floatableShares');
 
         if (value) {
-            companyListingMarketsControl.enable();
+            listingMarketsControl.enable();
+            otherListingMarketsControl.enable();
+            multilateralTradingFacilitiesControl.enable();
+            otherMultilateralTradingFacilitiesControl.enable();
             listedShareISINControl.enable();
             bloombergCodesControl.enable();
             floatableSharesControl.enable();
         } else {
-            companyListingMarketsControl.disable();
+            listingMarketsControl.disable();
+            otherListingMarketsControl.disable();
+            multilateralTradingFacilitiesControl.disable();
+            otherMultilateralTradingFacilitiesControl.disable();
             listedShareISINControl.disable();
             bloombergCodesControl.disable();
             floatableSharesControl.disable();
+        }
+
+        this.formPercent.refreshFormPercent();
+    }
+
+    formCheckListingMarkets(selectedMarkets) {
+        const control = this.form.get('otherListingMarkets');
+
+        let otherSelected = false;
+
+        if (selectedMarkets && selectedMarkets.length) {
+            otherSelected = selectedMarkets.find((market) => {
+                return market.id === 'other';
+            });
+        }
+
+        if (otherSelected) {
+            control.enable();
+        } else {
+            control.disable();
+        }
+
+        this.formPercent.refreshFormPercent();
+    }
+
+    formFilterOtherListingMarkets() {
+        const control = this.form.get('otherListingMarkets');
+        const otherListingMarketsFormValue = control.value;
+
+        if (otherListingMarketsFormValue) {
+            let duplicateMarket = false;
+
+            duplicateMarket = this.listingMarketsList.find((market) => {
+                return otherListingMarketsFormValue.toLowerCase().replace(/\s+/g, '') === market.text.toLowerCase().replace(/\s+/g, '');
+            });
+
+            if (duplicateMarket) {
+                this.otherListingMarketError = true;
+                control.setErrors({ otherListingMarkets: true });
+            } else {
+                control.setErrors(null);
+            }
+        }
+    }
+
+    formCheckMultilateralTradingFacilities(selectedFacilities) {
+        const control = this.form.get('otherMultilateralTradingFacilities');
+
+        let otherSelected = false;
+
+        if (selectedFacilities && selectedFacilities.length) {
+            otherSelected = selectedFacilities.find((market) => {
+                return market.id === 'other';
+            });
+        }
+
+        if (otherSelected) {
+            control.enable();
+        } else {
+            control.disable();
+        }
+
+        this.formPercent.refreshFormPercent();
+    }
+
+    formFilterOtherMultilateralTradingFacilities() {
+        const control = this.form.get('otherMultilateralTradingFacilities');
+        const otherMultilateralTradingFacilityFormValue = control.value;
+
+        if (otherMultilateralTradingFacilityFormValue) {
+            let duplicateFacility = false;
+
+            duplicateFacility = this.multilateralTradingFacilitiesList.find((market) => {
+                return otherMultilateralTradingFacilityFormValue.toLowerCase().replace(/\s+/g, '') === market.text.toLowerCase().replace(/\s+/g, '');
+            });
+
+            if (duplicateFacility) {
+                this.otherMultilateralTradingFacilitiesError = true;
+                control.setErrors({ otherMultilateralTradingFacility: true });
+            } else {
+                control.setErrors(null);
+            }
+        }
+    }
+
+    formCheckRegulator(selectedRegulators) {
+        const control = this.form.get('otherRegulator');
+
+        let otherSelected = false;
+
+        if (selectedRegulators.length) {
+            otherSelected = selectedRegulators.find((regulator) => {
+                return regulator.id === 'other';
+            });
+        }
+
+        if (otherSelected) {
+            control.enable();
+        } else {
+            control.disable();
         }
 
         this.formPercent.refreshFormPercent();

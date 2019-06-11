@@ -114,7 +114,7 @@
             <div class="form-group required-field col-sm-6">
                 <label class="control-label" for="nationalIdNumber-benef-{{index}}">{{ 'National Identification Number' | translate }}</label>
                 <ng-select id="nationalIdNumber-benef-{{index}}"
-                           [items]="identificationNumberList"
+                           [items]="identificationNumberTypeList"
                            formControlName="nationalIdNumber"
                            placeholder="{{ 'Select identification number type' | translate }}"></ng-select>
                 <span class="field-error" *ngIf="hasError(['legalPerson', 'nationalIdNumber'], ['required'])">{{ 'Field is required' | translate }}</span>
