@@ -440,6 +440,11 @@ export const ROUTES: Routes = [
                 canActivate: [LoginGuardService],
             },
             {
+                path: 'net-asset-value/fund-view/:shareId/audit',
+                component: OfiNavAuditComponent,
+                canActivate: [LoginGuardService],
+            },
+            {
                 path: 'management-company',
                 component: OfiManagementCompanyComponent,
                 canActivate: [LoginGuardService],
