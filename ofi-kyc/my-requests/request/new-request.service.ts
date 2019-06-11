@@ -251,10 +251,6 @@ export class NewRequestService {
             otherSectorActivity: [''],
             corporatePurpose: ['', Validators.required],
             activities: ['', Validators.required],
-            // ownAccountinvestor: [
-            //     { value: '', disabled: true },
-            //     Validators.required,
-            // ],
             investorOnBehalfThirdParties: [
                 { value: '', disabled: true },
                 Validators.required,
