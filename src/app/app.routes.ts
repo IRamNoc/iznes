@@ -782,13 +782,28 @@ export const ROUTES: Routes = [
                 ],
             },
             {
-                path: 'my-requests',
+                path: 'onboarding-requests',
                 children: requestsRoute,
             },
             {
-                path: 'my-requests/list/kyc-audit-trail/:kycID',
+                path: 'onboarding-requests/list/kyc-audit-trail/:kycID',
                 component: KycAuditTrailComponent,
                 canActivate: [LoginGuardService],
+            },
+            {
+                path: 'client-file',
+                canActivate: [LoginGuardService],
+
+                children: [
+                    {
+                        path: 'management',
+                        component: OfiAmDocumentsComponent,
+                    },
+                    {
+                        path: 'management/:kycId',
+                        component: OfiWaitingApprovalComponent,
+                    },
+                ],
             },
             {
                 path: 'account-admin',
