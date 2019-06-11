@@ -95,6 +95,8 @@ export class GeneralInformationComponent implements OnInit, OnDestroy {
 
         if (value) {
             otherIdentificationNumberTextControl.enable();
+            otherIdentificationNumberTextControl.clearValidators();
+            otherIdentificationNumberTypeSpecifyControl.clearValidators();
 
             if (value === 'siren') {
                 otherIdentificationNumberTextControl.setValidators([sirenValidator, Validators.required]);
