@@ -258,7 +258,7 @@ export class AccountAdminPermissionsComponentBase implements OnInit, OnDestroy {
                 related: ['View Management Company'],
             },
             'Create Users': {
-                related: ['View Users'],
+                related: ['View Users', 'View Teams'],
             },
             'Update Users': {
                 related: ['View Users', 'Manage Team Memberships', 'Manage Team Permissions'],
@@ -267,7 +267,7 @@ export class AccountAdminPermissionsComponentBase implements OnInit, OnDestroy {
                 related: ['Update Teams', 'Create Users'],
             },
             'Create Teams': {
-                related: ['View Teams'],
+                related: ['View Teams', 'View Users'],
             },
             'Update Teams': {
                 related: ['View Teams', 'Manage Team Memberships', 'Manage Team Permissions'],
