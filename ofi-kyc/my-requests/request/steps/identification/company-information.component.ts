@@ -35,7 +35,6 @@ export class CompanyInformationComponent implements OnInit, OnDestroy {
     otherSectorActivityList;
     cachedOtherSectorActivityList;
     companyActivitiesList;
-    ownAccountInvestorList;
     investorOnBehalfList;
     geographicalOriginTypeList;
     financialAssetsInvestedList;
@@ -189,14 +188,12 @@ export class CompanyInformationComponent implements OnInit, OnDestroy {
 
     initLists() {
         this.regulatorSupervisoryAuthoritiesList = this.translate.translate(this.newRequestService.regulatorSupervisoryAuthoritiesList);
-        this.regulatoryStatusInsurerTypeList = this.translate.translate(
-            this.newRequestService.regulatoryStatusInsurerTypeList);
+        this.regulatoryStatusInsurerTypeList = this.translate.translate(this.newRequestService.regulatoryStatusInsurerTypeList);
         this.regulatoryStatusList = this.translate.translate(this.newRequestService.regulatoryStatusList);
         this.sectorActivityList = this.translate.translate(this.newRequestService.sectorActivityList);
         this.otherSectorActivityList = this.translate.translate(this.newRequestService.otherSectorActivityList);
         this.cachedOtherSectorActivityList = this.translate.translate(this.newRequestService.otherSectorActivityList);
         this.companyActivitiesList = this.translate.translate(this.newRequestService.companyActivitiesList);
-        this.ownAccountInvestorList = this.translate.translate(this.newRequestService.ownAccountInvestorList);
         this.investorOnBehalfList = this.translate.translate(this.newRequestService.investorOnBehalfList);
         this.geographicalOriginTypeList = this.translate.translate(this.newRequestService.geographicalOriginTypeList);
         this.financialAssetsInvestedList = this.translate.translate(this.newRequestService.financialAssetsInvestedList);
@@ -254,16 +251,11 @@ export class CompanyInformationComponent implements OnInit, OnDestroy {
 
     formCheckActivity(value) {
         const form = this.form;
-        const ownAccountControl = form.get('ownAccountinvestor');
         const investorOnBehalfControl = form.get('investorOnBehalfThirdParties');
 
-        ownAccountControl.disable();
         investorOnBehalfControl.disable();
 
         switch (value) {
-            case 'ownAccount':
-                ownAccountControl.enable();
-                break;
             case 'onBehalfOfThirdParties':
                 investorOnBehalfControl.enable();
                 break;
@@ -462,7 +454,7 @@ export class CompanyInformationComponent implements OnInit, OnDestroy {
 
         let otherSelected = false;
 
-        if (selectedRegulators.length) {
+        if (selectedRegulators && selectedRegulators.length) {
             otherSelected = selectedRegulators.find((regulator) => {
                 return regulator.id === 'other';
             });

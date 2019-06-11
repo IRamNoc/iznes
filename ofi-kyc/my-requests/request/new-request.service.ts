@@ -34,7 +34,6 @@ import {
     regulatoryStatusInsurerTypeList,
     publicEstablishmentList,
     companyActivitiesList,
-    ownAccountInvestorList,
     investorOnBehalfList,
     geographicalAreaList,
     geographicalOriginTypeList,
@@ -71,7 +70,6 @@ export class NewRequestService {
     publicEstablishmentList;
     geographicalAreaList;
     companyActivitiesList;
-    ownAccountInvestorList;
     investorOnBehalfList;
     geographicalOriginTypeList;
     financialAssetsInvestedList;
@@ -120,7 +118,6 @@ export class NewRequestService {
         this.publicEstablishmentList = publicEstablishmentList;
         this.geographicalAreaList = geographicalAreaList;
         this.companyActivitiesList = companyActivitiesList;
-        this.ownAccountInvestorList = ownAccountInvestorList;
         this.investorOnBehalfList = investorOnBehalfList;
         this.geographicalOriginTypeList = geographicalOriginTypeList;
         this.financialAssetsInvestedList = financialAssetsInvestedList;
@@ -254,10 +251,10 @@ export class NewRequestService {
             otherSectorActivity: [''],
             corporatePurpose: ['', Validators.required],
             activities: ['', Validators.required],
-            ownAccountinvestor: [
-                { value: '', disabled: true },
-                Validators.required,
-            ],
+            // ownAccountinvestor: [
+            //     { value: '', disabled: true },
+            //     Validators.required,
+            // ],
             investorOnBehalfThirdParties: [
                 { value: '', disabled: true },
                 Validators.required,
@@ -657,22 +654,20 @@ export class NewRequestService {
                 country: ['', Validators.required],
                 countryTaxResidence: ['', Validators.required],
                 holdingPercentage: ['', [
-                        Validators.required,
-                        Validators.min(0),
-                        Validators.max(100),
-                        Validators.pattern(/^\d+$/i)
-                    ],
-                ],
+                    Validators.required,
+                    Validators.min(0),
+                    Validators.max(100),
+                    Validators.pattern(/^\d+$/i),
+                ]],
                 holdingType: ['', Validators.required],
                 nationality: ['', Validators.required],
 
                 votingPercentage: ['', [
-                        Validators.required,
-                        Validators.min(0),
-                        Validators.max(100),
-                        Validators.pattern(/^\d+$/i)
-                    ],
-                ],
+                    Validators.required,
+                    Validators.min(0),
+                    Validators.max(100),
+                    Validators.pattern(/^\d+$/i),
+                ]],
                 exerciseControl: [0, Validators.required],
                 document: this.createDocumentFormGroup('kycbeneficiarydoc', !this.isProduction),
             }),
