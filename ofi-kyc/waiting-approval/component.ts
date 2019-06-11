@@ -15,7 +15,7 @@ import { ActivatedRoute, Router } from '@angular/router';
 import { OfiKycService } from '@ofi/ofi-main/ofi-req-services/ofi-kyc/service';
 import { AlertsService } from '@setl/jaspero-ng2-alerts';
 import { MessageKycConfig, MessagesService } from '@setl/core-messages';
-import { mDateHelper, SagaHelper, ConfirmationService, LogService } from '@setl/utils';
+import { mDateHelper, SagaHelper, ConfirmationService, LogService, FileDownloader } from '@setl/utils';
 import { InvestorModel } from './model';
 import { ToasterService } from 'angular2-toaster';
 import { InitialisationService, MyWalletsService } from '@setl/core-req-services';
@@ -25,6 +25,7 @@ import { MultilingualService } from '@setl/multilingual';
 import { investorStatusList } from '@ofi/ofi-main/ofi-kyc/my-requests/requests.config';
 import { isEmpty } from 'lodash';
 import { filter as rxFilter, take } from 'rxjs/operators';
+import { MemberSocketService } from '@setl/websocket-service/member-socket.service';
 
 enum Statuses {
     waitingApproval = 1,
@@ -60,6 +61,7 @@ export class OfiWaitingApprovalComponent implements OnInit, OnDestroy {
     message;
 
     public hasPermissionUpdateKycRequests: boolean = false;
+    hasPermissionCanManageAllClientFile = false;
 
     approveKycModal;
     investorStatusList;
@@ -80,6 +82,10 @@ export class OfiWaitingApprovalComponent implements OnInit, OnDestroy {
     @select(['ofi', 'ofiKyc', 'requested']) requestedAmKycListObs;
     @select(['ofi', 'ofiKyc', 'amKycList', 'amKycList']) amKycListObs;
     @select(['ofi', 'ofiKyc', 'kycDetails', 'kycDetailsClassification']) kycClassification$;
+
+    get canUpdateKyc(): boolean {
+        return this.hasPermissionUpdateKycRequests || this.hasPermissionCanManageAllClientFile;
+    }
 
     /**
      * Constructor
@@ -109,6 +115,8 @@ export class OfiWaitingApprovalComponent implements OnInit, OnDestroy {
                 public permissionsService: PermissionsService,
                 private messagesService: MessagesService,
                 private domSanitizer: DomSanitizer,
+                private memberSocketService: MemberSocketService,
+                private fileDownloader: FileDownloader,
     ) {
 
         this.isRejectModalDisplayed = false;
@@ -140,9 +148,15 @@ export class OfiWaitingApprovalComponent implements OnInit, OnDestroy {
 
         this.getClassification();
 
-        this.permissionsService.hasPermission('updateKycRequests', 'canRead').then(
+        this.permissionsService.hasPermission('updateKycRequests', 'canUpdate').then(
             (hasPermission) => {
                 this.hasPermissionUpdateKycRequests = hasPermission;
+            },
+        );
+        this.permissionsService.hasPermission('manageAllClientFile', 'canUpdate').then(
+            (hasPermission) => {
+                console.log('result is: ', hasPermission);
+                this.hasPermissionCanManageAllClientFile = hasPermission;
             },
         );
     }
@@ -575,5 +589,16 @@ export class OfiWaitingApprovalComponent implements OnInit, OnDestroy {
                 </tbody>
             </table>
         `);
+    }
+
+    downloadClientFile() {
+        const config = {
+            method: 'downloadKycClientFileZip',
+            token: this.memberSocketService.token,
+            kycID: this.kycId,
+            userId: this.userDetail.userId,
+        };
+
+        this.fileDownloader.downLoaderFile(config);
     }
 }

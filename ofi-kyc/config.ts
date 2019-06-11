@@ -9,7 +9,7 @@ export default {
     alreadyDoneWaitingForApproval: '/new-investor/already-done/waiting-for-validation',
     alreadyDoneConfirmation: '/new-investor/already-done/confirmation',
     home: '/home',
-    myRequests: '/my-requests/list',
+    myRequests: '/onboarding-requests/list',
 };
 
 export const kycEnums = {

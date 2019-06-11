@@ -158,6 +158,7 @@ export class ManagagementCompanyService {
             logo: [
                 '',
             ],
+            isNowCp: [false]
         });
     }
 

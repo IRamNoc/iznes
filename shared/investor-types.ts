@@ -5,6 +5,8 @@ export enum InvestorType {
     InstitutionalMandate = 40,
     DiscretionaryManager = 50,
     RetailMandate = 60,
+    NowCPKycIssuer = 70,
+    NowCPKycInvestor = 80,
 }
 
 export type InvestorTypeList = { id: InvestorType, text: string }[];

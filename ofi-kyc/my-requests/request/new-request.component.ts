@@ -217,7 +217,7 @@ export class NewKycRequestComponent implements OnInit, AfterViewInit {
         }
 
         if (type === 'close') {
-            this.router.navigateByUrl('/my-requests/list');
+            this.router.navigateByUrl('/onboarding-requests/list');
         }
     }
 
@@ -255,7 +255,9 @@ export class NewKycRequestComponent implements OnInit, AfterViewInit {
         .subscribe(([kycs, managementCompanies]) => {
             const kyc = find(kycs, ['kycID', this.duplicate]);
             const managementCompany = find(managementCompanies, ['companyID', kyc.amManagementCompanyID]);
-            this.duplicateCompany = managementCompany.companyName;
+            if (managementCompany) {
+                this.duplicateCompany = managementCompany.companyName;
+            }
         });
     }
 

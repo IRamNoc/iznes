@@ -171,14 +171,14 @@ export class OfiKycHomeComponent implements AfterViewInit, OnDestroy {
                 this.portfolioManagerAction();
             } else {
                 if (queryParams.invitationToken) {
-                    this.router.navigate(['my-requests', 'new'], {
+                    this.router.navigate(['onboarding-requests', 'new'], {
                         queryParams: {
                             invitationToken: queryParams.invitationToken,
                             amcID: queryParams.amcID,
                         },
                     });
                 } else {
-                    this.router.navigate(['my-requests', 'list']);
+                    this.router.navigate(['onboarding-requests', 'list']);
                 }
             }
         });

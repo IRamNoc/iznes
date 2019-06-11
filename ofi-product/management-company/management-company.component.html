@@ -57,6 +57,18 @@
             <!-- MANAGEMENT COMPANY FORMS -->
             <form [formGroup]="managementCompanyForm" novalidate (ngSubmit)="save()">
                 <section class="form-block">
+                    <div *ngIf="!editForm;" class="row">
+                        <div class="form-group col-sm-6">
+                            <label class="control-label">{{ 'Is NowCP' | translate }}</label>
+                            <label class="switch">
+                                <input type="checkbox"
+                                       class="form-control"
+                                       formControlName="isNowCp"
+                                       id="isNowCp">
+                                <span class="slider round"></span>
+                            </label>
+                        </div>
+                    </div>
                     <div class="row">
                         <div class="form-group required-field col-sm-6">
                             <label class="control-label" for="companyName">
@@ -313,7 +325,7 @@
                     </div>
                     <div class="row">
                         <div class="form-group col-sm-12">
-                            <button id="mcBtnSubmitForm" type="submit" class="btn btn-primary" [disabled]="!isFormValid">
+                            <button id="mcBtnSubmitForm" type="submit" class="btn btn-primary">
                                 <div *ngIf="!editForm; else editMcFBtSubmit">
                                     <i class="fa fa-save"></i> {{ 'Save' | translate }}
                                 </div>
