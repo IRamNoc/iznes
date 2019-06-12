@@ -289,7 +289,6 @@ export class NewKycRequestComponent implements OnInit, AfterViewInit {
         this.unsubscribe.next();
         this.unsubscribe.complete();
     }
-<<<<<<< HEAD
 
     handleOnboarding() {
         this.checkIsBeginning();
@@ -305,6 +304,4 @@ export class NewKycRequestComponent implements OnInit, AfterViewInit {
             }
         });
     }
-=======
->>>>>>> 4483404cc70ea13f9643b6db97322805b7fdbec3
 }
