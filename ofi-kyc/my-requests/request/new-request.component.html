@@ -22,10 +22,36 @@
         <kyc-step-introduction #step (submitEvent)="handleSubmit($event)"></kyc-step-introduction>
     </form-step>
     <form-step *ngIf="fullForm">
-        <kyc-step-identification #step [form]="forms.get('identification')" [investorType]="investorType" (submitEvent)="handleSubmit($event)"></kyc-step-identification>
+        <!--PARENT STEP-->
+        <!-- <kyc-step-identification #step [form]="forms.get('identification')" [investorType]="investorType" (submitEvent)="handleSubmit($event)"></kyc-step-identification> -->
     </form-step>
     <form-step *ngIf="fullForm">
-        <kyc-step-risk-profile #step [form]="forms.get('riskProfile')" (submitEvent)="handleSubmit($event)"></kyc-step-risk-profile>
+            <p (click)="handleSubmit({completed: true})">General INFO</p>
+    </form-step>
+    <form-step *ngIf="fullForm">
+            <p (click)="handleSubmit({completed: true})">Company INFO</p>
+    </form-step>
+    <form-step *ngIf="fullForm">
+            <p (click)="handleSubmit({completed: true})">Stakeholders</p>
+    </form-step>
+    <form-step *ngIf="fullForm">
+            <p (click)="handleSubmit({completed: true})">Bank Accounts</p>
+    </form-step>
+    <form-step *ngIf="fullForm">
+            <p (click)="handleSubmit({completed: true})">Classification</p>
+    </form-step>
+    <form-step *ngIf="fullForm">
+        <!-- <kyc-step-risk-profile #step [form]="forms.get('riskProfile')" (submitEvent)="handleSubmit($event)"></kyc-step-risk-profile> -->
+        <!--PARENT STEP-->
+    </form-step>
+    <form-step *ngIf="fullForm">
+            <p (click)="handleSubmit({completed: true})">Investment Details</p>
+    </form-step>
+    <form-step *ngIf="fullForm">
+            <p (click)="handleSubmit({completed: true})">Investment Objectives</p>
+    </form-step>
+    <form-step *ngIf="fullForm">
+            <p (click)="handleSubmit({completed: true})">Investment Contraints</p>
     </form-step>
     <form-step *ngIf="fullForm">
         <kyc-step-documents #step [form]="forms.get('documents')" [documents]="documents" (submitEvent)="handleSubmit($event)"></kyc-step-documents>
@@ -35,7 +61,6 @@
     </form-step>
 </form-steps>
 
-<<<<<<< HEAD
 <!-- <div class="header-breadcrumbs">
     <h1 class="text-overflow">
         <i class="fa fa-plus"></i>
@@ -53,11 +78,3 @@
     </div>
 </ng-template>
 
-=======
-<div class="info" *ngIf="isBeginning()">
-    <clr-icon shape="info-circle" class="is-info" size="24"></clr-icon>
-    <span>
-        {{ 'Be aware that once you click on "Next", this KYC will be saved as a Draft in the module "My Requests". You will then be able to finalise the request and send it to the counterparty later on.' | translate }}
-    </span>
-</div>
->>>>>>> 4483404cc70ea13f9643b6db97322805b7fdbec3

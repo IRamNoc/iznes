@@ -18,10 +18,52 @@ export const formStepsFull = [
     {
         title: 'Identification',
         id: 'step-identification',
+        children: ['General Information', 'Company Information', 'Stakeholders', 'Bank Accounts', 'Classification'],
     },
     {
-        title: 'Risk profile',
+        title: 'General Information',
+        id: 'step-general-information',
+        parentStep: 'Identification',
+    },
+    {
+        title: 'Company Information',
+        id: 'step-company-information',
+        parentStep: 'Identification',
+    },
+    {
+        title: 'Stakeholders',
+        id: 'step-company-information',
+        parentStep: 'Identification',
+    },
+    {
+        title: 'Bank Accounts',
+        id: 'step-bank-accounts',
+        parentStep: 'Identification',
+    },
+    {
+        title: 'Classification',
+        id: 'step-classification',
+        parentStep: 'Identification',
+    },
+    {
+        title: 'Risk Profile',
         id: 'step-risk-profile',
+        children: ['Investment Details', 'Investment Objectives', 'Investment Constraints'],
+    },
+    {
+        title: 'Investment Details',
+        id: 'step-investment-details',
+        parentStep: 'Risk Profile',
+    },
+    {
+        title: 'Investment Objectives',
+        id: 'step-investment-objectives',
+        parentStep: 'Risk Profile',
+    },
+    {
+        title: 'Investment Constraints',
+        id: 'step-investment-constraints',
+        parentStep: 'Risk Profile',
     },
     {
         title: 'Documents',

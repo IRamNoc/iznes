@@ -70,11 +70,6 @@ export class MyRequestsComponent implements OnInit, OnDestroy {
         )
         .subscribe((kycList) => {
             this.kycList = kycList.filter(kyc => kyc.amManagementCompanyID !== null);
-<<<<<<< HEAD
-
-            this.clientFileKyc = kycList.filter(kyc => kyc.amManagementCompanyID === null)[0];
-=======
->>>>>>> 4483404cc70ea13f9643b6db97322805b7fdbec3
 
             this.clientFileKyc = kycList.filter(kyc => kyc.amManagementCompanyID === null)[0];
 
