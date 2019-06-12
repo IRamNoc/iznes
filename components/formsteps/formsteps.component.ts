@@ -1,6 +1,5 @@
 import {
     Component,
-    HostBinding,
     Input,
     Output,
     EventEmitter,
@@ -11,7 +10,7 @@ import {
     ChangeDetectorRef,
 } from '@angular/core';
 import { FormstepComponent } from './formstep.component';
-import { map, get as getValue } from 'lodash';
+import { get as getValue } from 'lodash';
 
 @Component({
     selector: 'form-steps',
@@ -23,11 +22,18 @@ export class FormstepsComponent implements AfterContentInit {
     @ContentChildren(FormstepComponent) stepComponents;
 
     @Input() set stepsConfig(stepsConfig) {
-        this.progress = map(stepsConfig, step => ({
-            title: step.title,
-            active: false,
-            complete: false,
-        }));
+        stepsConfig.forEach((step, index) => {
+            this.progress.push({
+                title: step.title,
+                active: false,
+                complete: false,
+                parentStep: step.parentStep || false,
+                children: step.children || [],
+                hide: true,
+            });
+
+            this.stepsMap[step.title] = index;
+        });
 
         this._stepsConfig = stepsConfig;
     }
@@ -48,6 +54,7 @@ export class FormstepsComponent implements AfterContentInit {
     _onboardingMode;
     progress = [];
     _disabled: boolean = false;
+    stepsMap: {} = {};
 
     get steps() {
         return this.stepComponents.reduce((acc, cur) => acc.concat([cur.step]), []);
@@ -56,10 +63,11 @@ export class FormstepsComponent implements AfterContentInit {
     get position() {
         return this._position;
     }
+
     set position(position) {
         this._position = position;
         this.setActive(position);
-        this.setSubmittedPrevious(this.position);
+        this.setSubmitted(this.position);
         this.move();
         this.updateSubmitID();
     }
@@ -90,10 +98,10 @@ export class FormstepsComponent implements AfterContentInit {
         setTimeout(() => {
             const button: HTMLElement = (this.button as ElementRef).nativeElement;
 
-            if(id){
+            if (id) {
                 button.setAttribute('form', id);
                 button.removeAttribute('type');
-            } else{
+            } else {
                 button.setAttribute('type', 'button');
                 button.removeAttribute('form');
             }
@@ -106,19 +114,19 @@ export class FormstepsComponent implements AfterContentInit {
 
     askPrevious() {
         this.action.emit({
-            type: 'previous'
+            type: 'previous',
         });
     }
 
-    askClose(){
+    askClose() {
         this.action.emit({
-            type: 'close'
+            type: 'close',
         });
     }
 
     askNext() {
         this.action.emit({
-            type: 'next'
+            type: 'next',
         });
     }
 
@@ -126,23 +134,35 @@ export class FormstepsComponent implements AfterContentInit {
         this.disabled = true;
         this.go(-1);
 
-        setTimeout(() => {
-            this.disabled = false;
-            this.changeDetectorRef.detectChanges();
-        }, 600);
+        setTimeout(
+            () => {
+                this.disabled = false;
+                this.changeDetectorRef.detectChanges();
+            },
+            600,
+        );
     }
 
     next() {
         this.disabled = true;
         this.go(1);
 
-        setTimeout(() => {
-            this.disabled = false;
-            this.changeDetectorRef.detectChanges();
-        }, 600);
+        setTimeout(
+            () => {
+                this.disabled = false;
+                this.changeDetectorRef.detectChanges();
+            },
+            600,
+        );
     }
 
     go(offset) {
+        // Skip past parent steps
+        if (getValue(this.progress, `[${this.position + offset}].children.length`, false)) {
+            this.handleSubSteps(this.progress[this.position + offset], this.position);
+            offset *= 2;
+        }
+
         this.position += offset;
     }
 
@@ -152,20 +172,35 @@ export class FormstepsComponent implements AfterContentInit {
         this.element.nativeElement.scrollTop = 0;
     }
 
-    setSubmittedPrevious(position) {
-        // let subArray = this.progress.slice(0, position);
-
-        // subArray.forEach((step, idx) => {
-        //     this.setSubmitted(idx);
-        // });
-        this.setSubmitted(position);
-    }
-
     setSubmitted(position) {
         this.progress.forEach((step, index) => {
-            step.active = position === index;
+            const isCurrentStep = position === index;
+
             step.complete = index < position;
+            step.active = isCurrentStep;
+
+            if (isCurrentStep) this.handleSubSteps(step, index);
         });
+    }
+
+    handleSubSteps(step, index) {
+        // Show sub-steps
+        if (step.parentStep) {
+            this.progress[this.stepsMap[step.parentStep]].children
+            .forEach(child => this.progress[this.stepsMap[child]].hide = false);
+
+            // Set parent step to active
+            this.progress[this.stepsMap[step.parentStep]].active = true;
+            this.progress[this.stepsMap[step.parentStep]].complete = false;
+        } else {
+        // Hide sub-steps
+            const prev = (this.progress[index - 1] || {}).parentStep;
+            const next = (this.progress[index + 1] || {}).parentStep;
+            if (prev || next) {
+                this.progress[this.stepsMap[prev || next]].children
+                .forEach(child => this.progress[this.stepsMap[child]].hide = true);
+            }
+        }
     }
 
     setActive(position) {
@@ -183,7 +218,7 @@ export class FormstepsComponent implements AfterContentInit {
     }
 
     getForm() {
-        let id = getValue(this.stepsConfig, [this.position, 'id']);
+        const id = getValue(this.stepsConfig, [this.position, 'id']);
         return id || null;
     }
 

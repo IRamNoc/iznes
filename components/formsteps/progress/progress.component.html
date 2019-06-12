@@ -1,3 +1,8 @@
-<div *ngFor="let step of config" class="kyc-step" [class.active]="step.active" [class.complete]="step.complete" [style.width]="getWidth()">
-    {{step.title}}
-</div>
+<ng-container *ngFor="let step of config">
+    <div class="kyc-step" [ngClass]="{ 'active': step.active, 'complete': step.complete, 'sub-step': step.parentStep, 'hide': step.hide }">
+        <span></span>
+        {{step.title}}
+    </div>
+</ng-container>
+
+
