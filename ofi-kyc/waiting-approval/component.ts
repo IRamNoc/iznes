@@ -59,6 +59,7 @@ export class OfiWaitingApprovalComponent implements OnInit, OnDestroy {
     investorID;
     isProOpen = true;
     message;
+    readyToUpdate = false;
 
     public hasPermissionUpdateKycRequests: boolean = false;
     hasPermissionCanManageAllClientFile = false;
@@ -194,37 +195,65 @@ export class OfiWaitingApprovalComponent implements OnInit, OnDestroy {
                 },
             ];
         } else if (this.initialStatusId === -2) {
-            this.statuses = [
-                {
-                    id: 'askForMoreInfo',
-                    label: this.translate.translate('Ask For More Info'),
-                    value: Statuses.askMoreInfo,
-                },
-                {
-                    id: 'accept',
-                    label: this.translate.translate('Accept'),
-                    value: Statuses.approved,
-                },
-            ];
+            if (this.hasPermissionCanManageAllClientFile) {
+                this.statuses = [
+                    {
+                        id: 'askForMoreInfo',
+                        label: this.translate.translate('Ask For More Info'),
+                        value: Statuses.askMoreInfo,
+                    },
+                    {
+                        id: 'accept',
+                        label: this.translate.translate('Accept'),
+                        value: Statuses.approved,
+                    },
+                ];
+            } else {
+                this.statuses = [
+                    {
+                        id: 'accept',
+                        label: this.translate.translate('Accept'),
+                        value: Statuses.approved,
+                    },
+                ];
+            }
         } else {
-            this.statuses = [
-                {
-                    id: 'reject',
-                    label: this.translate.translate('Reject'),
-                    value: Statuses.rejected,
-                },
-                {
-                    id: 'askForMoreInfo',
-                    label: this.translate.translate('Ask For More Info'),
-                    value: Statuses.askMoreInfo,
-                },
-                {
-                    id: 'accept',
-                    label: this.translate.translate('Accept'),
-                    value: Statuses.approved,
-                },
-            ];
+            if (this.hasPermissionCanManageAllClientFile) {
+                this.statuses = [
+                    {
+                        id: 'reject',
+                        label: this.translate.translate('Reject'),
+                        value: Statuses.rejected,
+                    },
+                    {
+                        id: 'askForMoreInfo',
+                        label: this.translate.translate('Ask For More Info'),
+                        value: Statuses.askMoreInfo,
+                    },
+                    {
+                        id: 'accept',
+                        label: this.translate.translate('Accept'),
+                        value: Statuses.approved,
+                    },
+                ];
+            } else {
+                this.statuses = [
+                    {
+                        id: 'reject',
+                        label: this.translate.translate('Reject'),
+                        value: Statuses.rejected,
+                    },
+                    {
+                        id: 'accept',
+                        label: this.translate.translate('Accept'),
+                        value: Statuses.approved,
+                    },
+                ];
+            }
         }
+
+        // disable update actions when kyc status is pending client file (status 3).
+        this.readyToUpdate = Boolean(this.initialStatusId !== 3);
     }
 
     getLanguage(language: string): void {
@@ -306,7 +335,8 @@ export class OfiWaitingApprovalComponent implements OnInit, OnDestroy {
 
         return status === Statuses.approved && !isChecked
             || status === Statuses.rejected && additionalText.length === 0
-            || status === Statuses.askMoreInfo && additionalText.length === 0;
+            || status === Statuses.askMoreInfo && additionalText.length === 0
+            || this.readyToUpdate === false;
     }
 
     handleSubmitButtonClick(): void {
