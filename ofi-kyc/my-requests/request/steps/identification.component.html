@@ -5,7 +5,7 @@
 <form [formGroup]="form" id="step-identification" (ngSubmit)="handleSubmit($event)">
     <general-information [form]="form.get('generalInformation')"></general-information>
     <company-information [form]="form.get('companyInformation')"></company-information>
-    <banking-information [form]="form.get('bankingInformation')" [companyName]="form.get(['generalInformation', 'registeredCompanyName']).value"></banking-information>
+    <banking-information [form]="form.get('bankingInformation')"></banking-information>
     <classification-information [form]="form.get('classificationInformation')" [investorType]="investorType" [enabled]="checkCompletion()"></classification-information>
 
     <input type="submit" class="hidden" />

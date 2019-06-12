@@ -1723,8 +1723,8 @@ export const multilateralTradingFacilitiesList = [
         text: 'LMAX FX',
     },
     {
-        id: 'blockMatch',
-        text: 'BlockMatch',
+        id: 'blockMatchRequestForQuote',
+        text: 'BlockMatch Request for Quote (RFQ)',
     },
     {
         id: 'blockMatchNegotiatedTradeFunctionality',
@@ -2177,105 +2177,6 @@ export const companyActivitiesList = [
     {
         id: 'onBehalfOfThirdParties',
         text: 'Third Parties',
-    },
-];
-
-export const ownAccountInvestorList = [
-    {
-        id: 'EmbassiesandConsulates',
-        text: 'Embassies and Consulates',
-    },
-    {
-        id: 'UnionsPoliticalParties',
-        text: 'Unions/Political Parties',
-    },
-    {
-        id: 'cultsReligiousAssociations',
-        text: 'Cults and religious associations presenting a specific risk (radical, etc.)',
-    },
-    {
-        id: 'Nationalsportsassociationsandsportsagents',
-        text: 'National Sports Associations and Sports Agents',
-    },
-    {
-        id: 'Tradingretailingofpreciousmetals',
-        text: 'Trading & Retailing of precious metals',
-    },
-    {
-        id: 'Artmarketantiques',
-        text: 'Art Market / Antiques',
-    },
-    {
-        id: 'Building',
-        text: 'Building',
-    },
-    {
-        id: 'Computertelephonytelecommunication',
-        text: 'Computer / Telephony / Telecommunication',
-    },
-    {
-        id: 'Guardingandsecurity',
-        text: 'Guarding and Security',
-    },
-    {
-        id: 'Packaging',
-        text: 'Packaging',
-    },
-    {
-        id: 'Ironworkers',
-        text: 'Ironworkers',
-    },
-    {
-        id: 'GoldpannersFrenchGuiana',
-        text: 'Gold Panners (French Guiana)',
-    },
-    {
-        id: 'Wastetreatment',
-        text: 'Waste Treatment',
-    },
-    {
-        id: 'Usedvehicletrading',
-        text: 'Used Vehicle Trading',
-    },
-    {
-        id: 'Renewableenergies',
-        text: 'Renewable Energies',
-    },
-    {
-        id: 'TrainingActivityInterim',
-        text: 'Training Activity / Interim',
-    },
-    {
-        id: 'MedicalParamedical',
-        text: 'Medical / Paramedical',
-    },
-    {
-        id: 'Restoration',
-        text: 'Restoration',
-    },
-    {
-        id: 'Vitiviniculture',
-        text: 'Vitiviniculture',
-    },
-    {
-        id: 'Realestateagencies',
-        text: 'Real Estate Agencies',
-    },
-    {
-        id: 'Onlinegamingcompanies',
-        text: 'Online Gaming Companies',
-    },
-    {
-        id: 'LogisticsTransport',
-        text: 'Logistics / Transport',
-    },
-    {
-        id: 'Cleaning',
-        text: 'Cleaning',
-    },
-    {
-        id: 'ManagementCompanyInvestmentserviceprovider',
-        text: 'Management Company / Investment Service Provider',
     },
 ];
 
@@ -3082,6 +2983,7 @@ export const controlToName = {
     legalName: 'Legal Name',
 
     // Custodian
+    accountName: 'Account Name',
     establishmentName: 'Establishment Name',
     iban: 'IBAN',
     bic: 'BIC',

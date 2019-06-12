@@ -13,20 +13,23 @@
 
     <div class="row panel-body" [class.hidden]="!open">
         <div class="col-xs-12">
-            <div class="row">
-                <div class="form-group col-xs-4">
-                    <label class="control-label">{{ 'Registered Company Name or Legal Name' | translate }}</label>
-                    <input type="text" [readonly]="true" value="{{companyName}}" />
-                </div>
-            </div>
             <div class="holders">
                 <div class="holder my-1 pl-1" *ngFor="let holder of holders; let i = index" [formGroup]="holder">
                     <a *ngIf="i > 0" class="close text-warning" (click)="removeHolder(i)"><i class="fa fa-times-circle"></i></a>
 
                     <div class="row">
                         <div class="form-group required-field col-xs-4">
-                            <label class="control-label" for="{{'establishmentName-' + i }}">{{ 'Establishment Name'
-                                | translate }}</label>
+                            <label class="control-label" for="{{'accountName-' + i }}">{{ 'Account name' | translate }}</label>
+                            <input type="text" id="{{'accountName-' + i }}" formControlName="accountName"
+                                placeholder="{{ 'Fill in your account name' | translate }}">
+                            <span class="field-error"
+                                *ngIf="hasError([i,'accountName'], ['required'])">{{ 'Field is required' | translate }}</span>
+                            <span class="field-error"
+                                *ngIf="hasError([i,'accountName'], ['maxlength'])">{{ 'Name is too long' | translate }}</span>
+                        </div>
+
+                        <div class="form-group required-field col-xs-4">
+                            <label class="control-label" for="{{'establishmentName-' + i }}">{{ 'Establishment Name' | translate }}</label>
                             <input type="text"
                                     id="{{'establishmentName-' + i }}"
                                     formControlName="establishmentName"
