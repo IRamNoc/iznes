@@ -150,10 +150,10 @@ export class ClassificationInformationComponent implements OnInit, OnDestroy {
             (this.form.get('nonPro') as FormGroup).disable();
             (this.form.get('nonPro.activitiesBenefitFromExperienceSpecification') as FormControl).disable();
             (this.form.get('nonPro.trainingKnowledgeSkillsSpecification') as FormControl).disable();
+            (this.form.get('nonPro.knowledgeUCI') as FormControl).disable();
             (this.form.get('nonPro.knowledgeFundsAndRisksSpecification') as FormControl).disable();
             (this.form.get('nonPro.prospectusKIIDUnderstandingSpecification') as FormControl).disable();
             (this.form.get('nonPro.knowledgeSkillsPlaceUCIOrdersSpecification') as FormControl).disable();
-            (this.form.get('nonPro.knowledgeUCI') as FormControl).disable();
             (this.form.get('nonPro.financialInstrumentsSpecification') as FormControl).disable();
         }
     }
