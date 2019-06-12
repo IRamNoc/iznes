@@ -346,6 +346,9 @@ export class CompanyInformationComponent implements OnInit, OnDestroy {
         const bloombergCodesControl = this.form.get('bloombergCode');
         const listedShareISINControl = this.form.get('isinCode');
         const floatableSharesControl = this.form.get('floatableShares');
+        const balanceSheetTotalControl = this.form.get('balanceSheetTotal');
+        const netRevenuesNetIncomeControl = this.form.get('netRevenuesNetIncome');
+        const shareholderEquityControl = this.form.get('shareholderEquity');
 
         if (value) {
             listingMarketsControl.enable();
@@ -354,6 +357,11 @@ export class CompanyInformationComponent implements OnInit, OnDestroy {
             listedShareISINControl.enable();
             bloombergCodesControl.enable();
             floatableSharesControl.enable();
+
+            balanceSheetTotalControl.disable();
+            netRevenuesNetIncomeControl.disable();
+            shareholderEquityControl.disable();
+
         } else {
             listingMarketsControl.disable();
             multilateralTradingFacilitiesControl.disable();
@@ -361,6 +369,10 @@ export class CompanyInformationComponent implements OnInit, OnDestroy {
             listedShareISINControl.disable();
             bloombergCodesControl.disable();
             floatableSharesControl.disable();
+
+            balanceSheetTotalControl.enable();
+            netRevenuesNetIncomeControl.enable();
+            shareholderEquityControl.enable();
         }
 
         this.formPercent.refreshFormPercent();
