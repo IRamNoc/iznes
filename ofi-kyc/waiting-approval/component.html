@@ -102,7 +102,7 @@
                                             [value]="status.value"
                                             [checked]="status.value === statusId"
                                             (change)="handleStatusChange()"
-                                            [attr.disabled]="!canUpdateKyc ? 'true' : null">
+                                            [attr.disabled]="(!canUpdateKyc || !readyToUpdate) ? 'true' : null">
                                 </span>
 
                                 <span class="statusLabel">
