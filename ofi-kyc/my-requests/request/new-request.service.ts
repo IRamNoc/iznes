@@ -378,6 +378,31 @@ export class NewRequestService {
                     { value: '', disabled: true },
                     Validators.required,
                 ],
+                trainingKnowledgeSkills: 0,
+                trainingKnowledgeSkillsSpecification: [
+                    { value: '', disabled: true },
+                    Validators.required,
+                ],
+                knowledgeUCI: 0,
+                knowledgeUCISpecification: [
+                    { value: '', disabled: true },
+                    Validators.required,
+                ],
+                knowledgeFundsAndRisks: 0,
+                knowledgeFundsAndRisksSpecification: [
+                    { value: '', disabled: true },
+                    Validators.required,
+                ],
+                prospectusKIIDUnderstanding: 0,
+                prospectusKIIDUnderstandingSpecification: [
+                    { value: '', disabled: true },
+                    Validators.required,
+                ],
+                knowledgeSkillsPlaceUCIOrders: 0,
+                knowledgeSkillsPlaceUCIOrdersSpecification: [
+                    { value: '', disabled: true },
+                    Validators.required,
+                ],
             }),
         });
 
