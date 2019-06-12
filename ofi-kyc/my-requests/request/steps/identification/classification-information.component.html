@@ -216,8 +216,129 @@
                         <span class="field-error" *ngIf="hasError('nonPro.activitiesBenefitFromExperienceSpecification', ['maxlength'])">{{ 'Value is too long' | translate }}</span>
                     </div>
                 </div>
-            </div>
+                <div class="row mt-1">
+                    <div class="form-group required-field col-sm-6 flex-items-xs-middle">
+                        <div class="checkbox-inline">
+                            <input type="checkbox" id="trainingKnowledgeSkills"
+                                formControlName="trainingKnowledgeSkills">
+                            <label for="trainingKnowledgeSkills">
+                                {{ 'Does your training provide you with knowledge and skills in the financial field?' | translate }}
+                            </label>
+                        </div>
 
+                        <span class="field-error"
+                            *ngIf="hasError(['nonPro', 'trainingKnowledgeSkills'])">{{ 'Field is required' | translate }}</span>
+                    </div>
+
+                    <div class="form-group field-required col-sm-6"
+                        *ngIf="!isDisabled(['nonPro', 'trainingKnowledgeSkillsSpecification'])">
+                        <input type="text" formControlName="trainingKnowledgeSkillsSpecification"
+                            placeholder="{{ 'Provide an explanation regarding the previous answer' | translate }}">
+                        <span class="field-error"
+                            *ngIf="hasError('nonPro.trainingKnowledgeSkillsSpecification', ['required'])">{{ 'Field is required' | translate }}</span>
+                        <span class="field-error"
+                            *ngIf="hasError('nonPro.trainingKnowledgeSkillsSpecification', ['maxlength'])">{{ 'Value is too long' | translate }}</span>
+                    </div>
+                </div>
+                <div class="row mt-1">
+                    <div class="form-group required-field col-sm-6 flex-items-xs-middle">
+                        <div class="checkbox-inline">
+                            <input type="checkbox" id="knowledgeUCI" formControlName="knowledgeUCI">
+                            <label for="knowledgeUCI">
+                                {{ 'Do you have a good knowledge of Collective Investment Schemes (UCIs)?' | translate }}
+                            </label>
+                        </div>
+
+                        <span class="field-error"
+                            *ngIf="hasError(['nonPro', 'knowledgeUCI'])">{{ 'Field is required' | translate }}</span>
+                    </div>
+
+                    <div class="form-group field-required col-sm-6"
+                        *ngIf="!isDisabled(['nonPro', 'knowledgeUCISpecification'])">
+                        <input type="text" formControlName="knowledgeUCISpecification"
+                            placeholder="{{ 'Provide an explanation regarding the previous answer' | translate }}">
+                        <span class="field-error"
+                            *ngIf="hasError('nonPro.knowledgeUCISpecification', ['required'])">{{ 'Field is required' | translate }}</span>
+                        <span class="field-error"
+                            *ngIf="hasError('nonPro.knowledgeUCISpecification', ['maxlength'])">{{ 'Value is too long' | translate }}</span>
+                    </div>
+                </div>
+
+                <div class="row mt-1">
+                    <div class="form-group required-field col-sm-6 flex-items-xs-middle">
+                        <div class="checkbox-inline">
+                            <input type="checkbox" id="knowledgeFundsAndRisks" formControlName="knowledgeFundsAndRisks">
+                            <label for="knowledgeFundsAndRisks">
+                                {{ 'Do you have a good knowledge of the different types of existing funds (UCITS, AIFs, ETFs, structured funds, money market
+                                funds, OPCIs, etc.) and the risks inherent in each of them?' | translate }}
+                            </label>
+                        </div>
+
+                        <span class="field-error"
+                            *ngIf="hasError(['nonPro', 'knowledgeFundsAndRisks'])">{{ 'Field is required' | translate }}</span>
+                    </div>
+
+                    <div class="form-group field-required col-sm-6"
+                        *ngIf="!isDisabled(['nonPro', 'knowledgeFundsAndRisksSpecification'])">
+                        <input type="text" formControlName="knowledgeFundsAndRisksSpecification"
+                            placeholder="{{ 'Provide an explanation regarding the previous answer' | translate }}">
+                        <span class="field-error"
+                            *ngIf="hasError('nonPro.knowledgeFundsAndRisksSpecification', ['required'])">{{ 'Field is required' | translate }}</span>
+                        <span class="field-error"
+                            *ngIf="hasError('nonPro.knowledgeFundsAndRisksSpecification', ['maxlength'])">{{ 'Value is too long' | translate }}</span>
+                    </div>
+                </div>
+
+                <div class="row mt-1">
+                    <div class="form-group required-field col-sm-6 flex-items-xs-middle">
+                        <div class="checkbox-inline">
+                            <input type="checkbox" id="prospectusKIIDUnderstanding" formControlName="prospectusKIIDUnderstanding">
+                            <label for="prospectusKIIDUnderstanding">
+                                {{ 'Do you know what a financial prospectus and a KIID (Key Information Document for Investors) is and are you able to read
+                                and understand them?' | translate }}
+                            </label>
+                        </div>
+
+                        <span class="field-error"
+                            *ngIf="hasError(['nonPro', 'prospectusKIIDUnderstanding'])">{{ 'Field is required' | translate }}</span>
+                    </div>
+
+                    <div class="form-group field-required col-sm-6"
+                        *ngIf="!isDisabled(['nonPro', 'prospectusKIIDUnderstandingSpecification'])">
+                        <input type="text" formControlName="prospectusKIIDUnderstandingSpecification"
+                            placeholder="{{ 'Provide an explanation regarding the previous answer' | translate }}">
+                        <span class="field-error"
+                            *ngIf="hasError('nonPro.prospectusKIIDUnderstandingSpecification', ['required'])">{{ 'Field is required' | translate }}</span>
+                        <span class="field-error"
+                            *ngIf="hasError('nonPro.prospectusKIIDUnderstandingSpecification', ['maxlength'])">{{ 'Value is too long' | translate }}</span>
+                    </div>
+                </div>
+
+                <div class="row mt-1">
+                    <div class="form-group required-field col-sm-6 flex-items-xs-middle">
+                        <div class="checkbox-inline">
+                            <input type="checkbox" id="knowledgeSkillsPlaceUCIOrders" formControlName="knowledgeSkillsPlaceUCIOrders">
+                            <label for="knowledgeSkillsPlaceUCIOrders">
+                                {{ 'Do you have the knowledge and skills to place subscription and redemption orders for units of collective investment
+                                undertakings (UCIs) directly with management companies?' | translate }}
+                            </label>
+                        </div>
+
+                        <span class="field-error"
+                            *ngIf="hasError(['nonPro', 'knowledgeSkillsPlaceUCIOrders'])">{{ 'Field is required' | translate }}</span>
+                    </div>
+
+                    <div class="form-group field-required col-sm-6"
+                        *ngIf="!isDisabled(['nonPro', 'knowledgeSkillsPlaceUCIOrdersSpecification'])">
+                        <input type="text" formControlName="knowledgeSkillsPlaceUCIOrdersSpecification"
+                            placeholder="{{ 'Provide an explanation regarding the previous answer' | translate }}">
+                        <span class="field-error"
+                            *ngIf="hasError('nonPro.knowledgeSkillsPlaceUCIOrdersSpecification', ['required'])">{{ 'Field is required' | translate }}</span>
+                        <span class="field-error"
+                            *ngIf="hasError('nonPro.knowledgeSkillsPlaceUCIOrdersSpecification', ['maxlength'])">{{ 'Value is too long' | translate }}</span>
+                    </div>
+                </div>
+            </div>
         </div>
     </div>
 </div>
