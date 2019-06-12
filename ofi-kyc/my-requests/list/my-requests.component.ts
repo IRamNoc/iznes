@@ -5,7 +5,6 @@ import { Subscription, Subject } from 'rxjs';
 import * as _ from 'lodash';
 import { takeUntil } from 'rxjs/operators';
 import { NgRedux, select } from '@angular-redux/store';
-import { findIndex } from 'lodash';
 import { clearMyKycRequestedIds } from '@ofi/ofi-main/ofi-store/ofi-kyc/kyc-request/actions';
 import { OfiManagementCompanyService } from '@ofi/ofi-main/ofi-req-services/ofi-product/management-company/management-company.service';
 import {
@@ -71,10 +70,15 @@ export class MyRequestsComponent implements OnInit, OnDestroy {
         )
         .subscribe((kycList) => {
             this.kycList = kycList.filter(kyc => kyc.amManagementCompanyID !== null);
+<<<<<<< HEAD
+
+            this.clientFileKyc = kycList.filter(kyc => kyc.amManagementCompanyID === null)[0];
+=======
+>>>>>>> 4483404cc70ea13f9643b6db97322805b7fdbec3
 
             this.clientFileKyc = kycList.filter(kyc => kyc.amManagementCompanyID === null)[0];
 
-            if(kycList != undefined) this.getRequestedManagementCompanyIds();
+            if (kycList != undefined) this.getRequestedManagementCompanyIds();
 
             this.kycListSelect = kycList.filter(kyc => kyc.status && !kyc.alreadyCompleted).map(kyc => ({
                 id: kyc.kycID,
@@ -98,8 +102,8 @@ export class MyRequestsComponent implements OnInit, OnDestroy {
         .subscribe((companies) => {
             this.invManagementCompanies = companies.investorManagementCompanyList;
 
-            if(companies != undefined) this.getInvManagementCompanyIds();
-        });            
+            if (companies != undefined) this.getInvManagementCompanyIds();
+        });
     }
 
     private getInvManagementCompanyIds(): void {
@@ -130,7 +134,7 @@ export class MyRequestsComponent implements OnInit, OnDestroy {
 
     selectedKyc(kyc) {
         const kycID = kyc.kycID;
-        const index = findIndex(this.tabs, ['kycID', kycID]);
+        const index = _.findIndex(this.tabs, ['kycID', kycID]);
         let action;
 
         if (index !== -1) {

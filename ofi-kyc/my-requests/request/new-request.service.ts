@@ -26,12 +26,14 @@ import { RequestsService } from '../requests.service';
 import {
     booleanControls,
     legalFormList,
+    financialRatingList,
     sectorActivityList,
+    otherSectorActivityList,
+    regulatorSupervisoryAuthoritiesList,
     regulatoryStatusList,
     regulatoryStatusInsurerTypeList,
     publicEstablishmentList,
     companyActivitiesList,
-    ownAccountInvestorList,
     investorOnBehalfList,
     geographicalAreaList,
     geographicalOriginTypeList,
@@ -51,6 +53,7 @@ import {
     holdingTypesList,
     identificationNumberList,
     listingMarketsList,
+    multilateralTradingFacilitiesList,
 } from '../requests.config';
 
 @Injectable()
@@ -58,13 +61,15 @@ export class NewRequestService {
     isProduction = false;
 
     legalFormList;
+    financialRatingList;
     sectorActivityList;
+    otherSectorActivityList;
+    regulatorSupervisoryAuthoritiesList;
     regulatoryStatusList;
     regulatoryStatusInsurerTypeList;
     publicEstablishmentList;
     geographicalAreaList;
     companyActivitiesList;
-    ownAccountInvestorList;
     investorOnBehalfList;
     geographicalOriginTypeList;
     financialAssetsInvestedList;
@@ -81,8 +86,9 @@ export class NewRequestService {
     riskAcceptanceList;
     beneficiaryTypesList;
     holdingTypesList;
-    identificationNumberList;
+    identificationNumberTypeList;
     listingMarketsList;
+    multilateralTradingFacilitiesList;
     saveContext = '';
 
     /* Private Properties. */
@@ -96,20 +102,22 @@ export class NewRequestService {
         private requestsService: RequestsService,
         private ngRedux: NgRedux<any>,
         private ofiKycService: OfiKycService,
-        private toasterService: ToasterService
+        private toasterService: ToasterService,
     ) {
         this.subscriptions.push(this.productionOb.subscribe((production) => {
             this.isProduction = production;
         }));
 
         this.legalFormList = legalFormList;
+        this.financialRatingList = financialRatingList;
         this.sectorActivityList = sectorActivityList;
+        this.otherSectorActivityList = otherSectorActivityList;
+        this.regulatorSupervisoryAuthoritiesList = regulatorSupervisoryAuthoritiesList;
         this.regulatoryStatusList = regulatoryStatusList;
         this.regulatoryStatusInsurerTypeList = regulatoryStatusInsurerTypeList;
         this.publicEstablishmentList = publicEstablishmentList;
         this.geographicalAreaList = geographicalAreaList;
         this.companyActivitiesList = companyActivitiesList;
-        this.ownAccountInvestorList = ownAccountInvestorList;
         this.investorOnBehalfList = investorOnBehalfList;
         this.geographicalOriginTypeList = geographicalOriginTypeList;
         this.financialAssetsInvestedList = financialAssetsInvestedList;
@@ -126,8 +134,9 @@ export class NewRequestService {
         this.riskAcceptanceList = riskAcceptanceList;
         this.beneficiaryTypesList = beneficiaryTypesList;
         this.holdingTypesList = holdingTypesList;
-        this.identificationNumberList = identificationNumberList;
+        this.identificationNumberTypeList = identificationNumberList;
         this.listingMarketsList = listingMarketsList;
+        this.multilateralTradingFacilitiesList = multilateralTradingFacilitiesList;
     }
 
     set context(value) {
@@ -204,13 +213,20 @@ export class NewRequestService {
         const generalInformation = fb.group({
             kycID: '',
             registeredCompanyName: ['', this.getLengthValidator(255)],
+            commercialName: [''],
             legalForm: ['', Validators.required],
             leiCode: ['', [
                 Validators.required,
                 Validators.pattern(/^\w{18}\d{2}$|n\/a/i),
             ]],
-            otherIdentificationNumber: [null, this.getLengthValidator(255)],
+            otherIdentificationNumberType: [null, this.getLengthValidator(255)],
+            otherIdentificationNumberTypeSpecify: [{ value: '', disabled: true }],
             otherIdentificationNumberText: [{ value: '', disabled: true }, Validators.required],
+            shareCapital: ['', [
+                Validators.required,
+                Validators.min(0),
+            ]],
+            financialRating: [''],
             registeredCompanyAddressLine1: ['', this.getLengthValidator(255)],
             registeredCompanyAddressLine2: ['', Validators.maxLength(255)],
             registeredCompanyZipCode: ['', this.getLengthValidator(10)],
@@ -223,6 +239,7 @@ export class NewRequestService {
             commercialCity: [{ value: '', disabled: true }, Validators.required],
             commercialCountry: [{ value: '', disabled: true }, Validators.required],
             countryTaxResidence: ['', Validators.required],
+            countryRegistration: ['', Validators.required],
         });
         const companyInformation = fb.group({
             kycID: '',
@@ -231,11 +248,9 @@ export class NewRequestService {
                 { value: '', disabled: true },
                 this.getLengthValidator(255),
             ],
+            otherSectorActivity: [''],
+            corporatePurpose: ['', Validators.required],
             activities: ['', Validators.required],
-            ownAccountinvestor: [
-                { value: '', disabled: true },
-                Validators.required,
-            ],
             investorOnBehalfThirdParties: [
                 { value: '', disabled: true },
                 Validators.required,
@@ -246,6 +261,14 @@ export class NewRequestService {
                 this.getLengthValidator(255),
             ],
             activityRegulated: 0,
+            regulator: [
+                { value: '', disabled: true },
+                Validators.required,
+            ],
+            otherRegulator: [
+                { value: '', disabled: true },
+                Validators.required,
+            ],
             regulatoryStatus: [{ value: '', disabled: true }, Validators.required],
             regulatoryStatusInsurerType: [
                 { value: '', disabled: true },
@@ -255,16 +278,24 @@ export class NewRequestService {
                 { value: '', disabled: true },
                 Validators.required,
             ],
-            regulator: [
-                { value: '', disabled: true },
-                this.getLengthValidator(255),
-            ],
             approvalNumber: [
                 { value: '', disabled: true },
                 this.getLengthValidator(),
             ],
             companyListed: 0,
             listingMarkets: [
+                { value: '', disabled: true },
+                Validators.required,
+            ],
+            otherListingMarkets: [
+                { value: '', disabled: true },
+                Validators.required,
+            ],
+            multilateralTradingFacilities: [
+                { value: '', disabled: true },
+                Validators.required,
+            ],
+            otherMultilateralTradingFacilities: [
                 { value: '', disabled: true },
                 Validators.required,
             ],
@@ -619,22 +650,20 @@ export class NewRequestService {
                 country: ['', Validators.required],
                 countryTaxResidence: ['', Validators.required],
                 holdingPercentage: ['', [
-                        Validators.required,
-                        Validators.min(0),
-                        Validators.max(100),
-                        Validators.pattern(/^\d+$/i)
-                    ],
-                ],
+                    Validators.required,
+                    Validators.min(0),
+                    Validators.max(100),
+                    Validators.pattern(/^\d+$/i),
+                ]],
                 holdingType: ['', Validators.required],
                 nationality: ['', Validators.required],
 
                 votingPercentage: ['', [
-                        Validators.required,
-                        Validators.min(0),
-                        Validators.max(100),
-                        Validators.pattern(/^\d+$/i)
-                    ],
-                ],
+                    Validators.required,
+                    Validators.min(0),
+                    Validators.max(100),
+                    Validators.pattern(/^\d+$/i),
+                ]],
                 exerciseControl: [0, Validators.required],
                 document: this.createDocumentFormGroup('kycbeneficiarydoc', !this.isProduction),
             }),
@@ -663,6 +692,7 @@ export class NewRequestService {
     createHolder() {
         return this.formBuilder.group({
             custodianID: '',
+            accountName: ['', this.getLengthValidator()],
             establishmentName: ['', this.getLengthValidator()],
             iban: ['', this.getLengthValidator().concat([CustomValidators.ibanValidator])],
             bic: ['', this.getLengthValidator().concat([CustomValidators.bicValidator])],

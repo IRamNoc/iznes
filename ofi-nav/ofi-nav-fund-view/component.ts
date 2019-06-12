@@ -31,8 +31,6 @@ import { AlertsService } from '@setl/jaspero-ng2-alerts/src/alerts.service';
 import { OfiCurrenciesService } from '@ofi/ofi-main/ofi-req-services/ofi-currencies/service';
 import { PermissionsService } from '@setl/utils/services/permissions';
 
-const ADMIN_USER_URL = '/net-asset-value/';
-
 @Component({
     selector: 'app-nav-fund-view',
     templateUrl: './component.html',
@@ -75,9 +73,10 @@ export class OfiNavFundView implements OnInit, OnDestroy {
     public hasPermissionCreateNav: boolean = false;
     public hasPermissionUpdateNav: boolean = false;
     public hasPermissionDeleteNav: boolean = false;
+    public hasPermissionViewAllNav: boolean = false;
 
     get isIznesAdmin(): boolean {
-        return this.router.url.startsWith(ADMIN_USER_URL);
+        return this.hasPermissionViewAllNav;
     }
 
     @ViewChild('detailNavCsvFile')
@@ -134,6 +133,11 @@ export class OfiNavFundView implements OnInit, OnDestroy {
         this.permissionsService.hasPermission('manageNav', 'canDelete').then(
             (hasPermission) => {
                 this.hasPermissionDeleteNav = hasPermission;
+            });
+
+        this.permissionsService.hasPermission('viewAllNAV', 'canRead').then(
+            (hasPermission) => {
+                this.hasPermissionViewAllNav = hasPermission;
             });
     }
 
@@ -235,7 +239,11 @@ export class OfiNavFundView implements OnInit, OnDestroy {
     }
 
     goToAuditTrail(): void {
-        this.router.navigateByUrl(`product-module/net-asset-value/fund-view/${this.navFund.shareId}/audit`);
+        if (this.isIznesAdmin) {
+            this.router.navigateByUrl(`/net-asset-value/fund-view/${this.navFund.shareId}/audit`);
+        } else {
+            this.router.navigateByUrl(`/product-module/net-asset-value/fund-view/${this.navFund.shareId}/audit`);
+        }
     }
 
     editNav(nav: model.NavInfoModel): void {
@@ -566,11 +574,11 @@ export class OfiNavFundView implements OnInit, OnDestroy {
         }
     }
 
-    navigateToNavList() {
-       if(this.isIznesAdmin) {
+    public navigateToNavList() {
+        if (this.isIznesAdmin && this.router.url.startsWith('/net-asset-value/')) {
             this.router.navigateByUrl('/net-asset-value');
-       } else {
-           this.router.navigateByUrl('/product-module/net-asset-value');
-       }
+        } else {
+            this.router.navigateByUrl('/product-module/net-asset-value');
+        }
     }
 }

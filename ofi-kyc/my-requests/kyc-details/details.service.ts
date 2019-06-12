@@ -65,7 +65,7 @@ export class KycDetailsService {
     }
 
     toArray(data) {
-        // handle formatting for kyc classification
+        // Handle formatting for kyc classification
         if (!isNull(data.optFor)) {
             if (data.investorStatus === requestsConfig.investorStatusList.nonPro) {
                 data.optForPro = data.optFor;
@@ -88,7 +88,7 @@ export class KycDetailsService {
                 'companyBeneficiariesID',
                 'custodianID',
             ])
-            .omitBy(isNil)
+            .omit(this.omitConditionalFields(data))
             .toPairs()
             .map(([controlName, controlValue]) => ({
                 originalId: controlName,
@@ -103,6 +103,27 @@ export class KycDetailsService {
             .value();
 
         return array;
+    }
+
+    /**
+     * Conditionally remove fields from kyc data grids
+     *
+     * @param {Object} data
+     *
+     * @return {Object} omitFields
+     */
+    omitConditionalFields(data) {
+        let omitFields = [];
+
+        Object.keys(data).forEach((field) => {
+            if (Object.keys(requestsConfig.omitConditionalFields).indexOf(field) !== -1) {
+                if (requestsConfig.omitConditionalFields[field].condition.includes(data[field])) {
+                    omitFields = [...omitFields, ...requestsConfig.omitConditionalFields[field].fields];
+                }
+            }
+        });
+
+        return omitFields;
     }
 
     order(data) {
