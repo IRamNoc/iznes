@@ -157,6 +157,7 @@ export class OfiAmDocumentsComponent implements OnDestroy, OnInit {
             '-1': [],
             '2': [],
             '-2': [],
+            '3': [],
             'invited': [],
             'all': [],
         };
@@ -166,6 +167,7 @@ export class OfiAmDocumentsComponent implements OnDestroy, OnInit {
             '-1': this.translate.translate('Accepted'),
             '2': this.translate.translate('Waiting For More Info'),
             '-2': this.translate.translate('Rejected'),
+            '3': this.translate.translate('Pending Client File'),
         };
 
         let id = 0;
@@ -221,6 +223,13 @@ export class OfiAmDocumentsComponent implements OnDestroy, OnInit {
         // if the user is iznesAdmin which can manage all client file
         if (!this.hasPermissionCanManageAllClientFile) {
             const extraPanels = [
+            {
+                id: 'PendingClientFile',
+                title: this.translate.translate('Waiting For Client File Validation'),
+                columns: [columns[1], columns[2], columns[5], columns[4]],
+                open: true,
+                data: tables[3],
+            },
             {
                 id: 'StartedClients',
                     title: this.translate.translate('Started by your Clients'),

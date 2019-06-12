@@ -185,6 +185,10 @@ export class OfiManagementCompanyComponent implements OnInit, OnDestroy {
             phoneNumberPrefix: [_.find(this.phoneNumbersCountryCodes, { id: company.phoneNumberPrefix })],
             signature: null,
             logo: null,
+            // todo
+            // need better approach
+            // it always false at the moment (because we do not need to update the type of management company now), put it in just to satisfy the form group.
+            isNowCp: false,
         });
         this.fileMetadata.setProperties({
             signatureTitle: company.signatureTitle,

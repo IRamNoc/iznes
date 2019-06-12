@@ -341,29 +341,38 @@ export class CompanyInformationComponent implements OnInit, OnDestroy {
 
     formCheckCompanyListed(value) {
         const listingMarketsControl = this.form.get('listingMarkets');
-        const otherListingMarketsControl = this.form.get('otherListingMarkets');
         const multilateralTradingFacilitiesControl = this.form.get('multilateralTradingFacilities');
         const otherMultilateralTradingFacilitiesControl = this.form.get('multilateralTradingFacilities');
         const bloombergCodesControl = this.form.get('bloombergCode');
         const listedShareISINControl = this.form.get('isinCode');
         const floatableSharesControl = this.form.get('floatableShares');
+        const balanceSheetTotalControl = this.form.get('balanceSheetTotal');
+        const netRevenuesNetIncomeControl = this.form.get('netRevenuesNetIncome');
+        const shareholderEquityControl = this.form.get('shareholderEquity');
 
         if (value) {
             listingMarketsControl.enable();
-            otherListingMarketsControl.enable();
             multilateralTradingFacilitiesControl.enable();
             otherMultilateralTradingFacilitiesControl.enable();
             listedShareISINControl.enable();
             bloombergCodesControl.enable();
             floatableSharesControl.enable();
+
+            balanceSheetTotalControl.disable();
+            netRevenuesNetIncomeControl.disable();
+            shareholderEquityControl.disable();
+
         } else {
             listingMarketsControl.disable();
-            otherListingMarketsControl.disable();
             multilateralTradingFacilitiesControl.disable();
             otherMultilateralTradingFacilitiesControl.disable();
             listedShareISINControl.disable();
             bloombergCodesControl.disable();
             floatableSharesControl.disable();
+
+            balanceSheetTotalControl.enable();
+            netRevenuesNetIncomeControl.enable();
+            shareholderEquityControl.enable();
         }
 
         this.formPercent.refreshFormPercent();

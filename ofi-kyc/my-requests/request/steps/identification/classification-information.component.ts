@@ -140,10 +140,20 @@ export class ClassificationInformationComponent implements OnInit, OnDestroy {
         if (action === 'enable') {
             (this.form.get('nonPro') as FormGroup).enable();
             (this.form.get('nonPro.activitiesBenefitFromExperience') as FormControl).updateValueAndValidity();
+            (this.form.get('nonPro.trainingKnowledgeSkills') as FormControl).updateValueAndValidity();
+            (this.form.get('nonPro.knowledgeUCI') as FormControl).updateValueAndValidity();
+            (this.form.get('nonPro.knowledgeFundsAndRisks') as FormControl).updateValueAndValidity();
+            (this.form.get('nonPro.prospectusKIIDUnderstanding') as FormControl).updateValueAndValidity();
+            (this.form.get('nonPro.knowledgeSkillsPlaceUCIOrders') as FormControl).updateValueAndValidity();
             (this.form.get('nonPro.financialInstruments') as FormControl).updateValueAndValidity();
         } else {
             (this.form.get('nonPro') as FormGroup).disable();
             (this.form.get('nonPro.activitiesBenefitFromExperienceSpecification') as FormControl).disable();
+            (this.form.get('nonPro.trainingKnowledgeSkillsSpecification') as FormControl).disable();
+            (this.form.get('nonPro.knowledgeUCI') as FormControl).disable();
+            (this.form.get('nonPro.knowledgeFundsAndRisksSpecification') as FormControl).disable();
+            (this.form.get('nonPro.prospectusKIIDUnderstandingSpecification') as FormControl).disable();
+            (this.form.get('nonPro.knowledgeSkillsPlaceUCIOrdersSpecification') as FormControl).disable();
             (this.form.get('nonPro.financialInstrumentsSpecification') as FormControl).disable();
         }
     }
@@ -159,6 +169,41 @@ export class ClassificationInformationComponent implements OnInit, OnDestroy {
         .pipe(takeUntil(this.unsubscribe))
         .subscribe((experienceFinancialFieldValue) => {
             this.formCheckExperienceFinancialField(experienceFinancialFieldValue);
+        })
+        ;
+
+        this.form.get('nonPro.trainingKnowledgeSkills').valueChanges
+        .pipe(takeUntil(this.unsubscribe))
+        .subscribe((trainingKnowledgeSkillsFieldValue) => {
+            this.formCheckTrainingKnowledgeSkillsField(trainingKnowledgeSkillsFieldValue);
+        })
+        ;
+
+        this.form.get('nonPro.knowledgeUCI').valueChanges
+        .pipe(takeUntil(this.unsubscribe))
+        .subscribe((knowledgeUCIFieldValue) => {
+            this.formCheckKnowledgeUCIField(knowledgeUCIFieldValue);
+        })
+        ;
+
+        this.form.get('nonPro.knowledgeFundsAndRisks').valueChanges
+        .pipe(takeUntil(this.unsubscribe))
+        .subscribe((knowledgeFundsAndRisksFieldValue) => {
+            this.formCheckKnowledgeFundsAndRisksField(knowledgeFundsAndRisksFieldValue);
+        })
+        ;
+
+        this.form.get('nonPro.prospectusKIIDUnderstanding').valueChanges
+        .pipe(takeUntil(this.unsubscribe))
+        .subscribe((prospectusKIIDUnderstandingFieldValue) => {
+            this.formCheckProspectusKIIDUnderstandingField(prospectusKIIDUnderstandingFieldValue);
+        })
+        ;
+
+        this.form.get('nonPro.knowledgeSkillsPlaceUCIOrders').valueChanges
+        .pipe(takeUntil(this.unsubscribe))
+        .subscribe((knowledgeSkillsPlaceUCIOrdersFieldValue) => {
+            this.formCheckKnowledgeSkillsPlaceUCIOrdersField(knowledgeSkillsPlaceUCIOrdersFieldValue);
         })
         ;
 
@@ -191,6 +236,56 @@ export class ClassificationInformationComponent implements OnInit, OnDestroy {
             experienceFinancialFieldTextControl.enable();
         } else {
             experienceFinancialFieldTextControl.disable();
+        }
+    }
+
+    formCheckTrainingKnowledgeSkillsField(value) {
+        const trainingKnowledgeSkillsFieldTextControl: FormGroup = this.form.get('nonPro.trainingKnowledgeSkillsSpecification');
+
+        if (value) {
+            trainingKnowledgeSkillsFieldTextControl.enable();
+        } else {
+            trainingKnowledgeSkillsFieldTextControl.disable();
+        }
+    }
+
+    formCheckKnowledgeUCIField(value) {
+        const knowledgeUCIFieldTextControl: FormGroup = this.form.get('nonPro.knowledgeUCISpecification');
+
+        if (value) {
+            knowledgeUCIFieldTextControl.enable();
+        } else {
+            knowledgeUCIFieldTextControl.disable();
+        }
+    }
+
+    formCheckKnowledgeFundsAndRisksField(value) {
+        const knowledgeFundsAndRisksFieldTextControl: FormGroup = this.form.get('nonPro.knowledgeFundsAndRisksSpecification');
+
+        if (value) {
+            knowledgeFundsAndRisksFieldTextControl.enable();
+        } else {
+            knowledgeFundsAndRisksFieldTextControl.disable();
+        }
+    }
+
+    formCheckProspectusKIIDUnderstandingField(value) {
+        const prospectusKIIDUnderstandingFieldTextControl: FormGroup = this.form.get('nonPro.prospectusKIIDUnderstandingSpecification');
+
+        if (value) {
+            prospectusKIIDUnderstandingFieldTextControl.enable();
+        } else {
+            prospectusKIIDUnderstandingFieldTextControl.disable();
+        }
+    }
+
+    formCheckKnowledgeSkillsPlaceUCIOrdersField(value) {
+        const knowledgeSkillsPlaceUCIOrdersFieldTextControl: FormGroup = this.form.get('nonPro.knowledgeSkillsPlaceUCIOrdersSpecification');
+
+        if (value) {
+            knowledgeSkillsPlaceUCIOrdersFieldTextControl.enable();
+        } else {
+            knowledgeSkillsPlaceUCIOrdersFieldTextControl.disable();
         }
     }
 

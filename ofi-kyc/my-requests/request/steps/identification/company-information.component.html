@@ -277,7 +277,7 @@
             </div>
 
             <div class="row">
-                <div class="form-group required-field col-sm-6">
+                <div class="form-group required-field col-sm-6" *ngIf="!isDisabled('balanceSheetTotal')">
                     <label class="control-label" for="balanceSheetTotal">{{ 'Balance Sheet Total' | translate }}</label>
                     <input type="number"
                             id="balanceSheetTotal"
@@ -288,7 +288,7 @@
             </div>
 
             <div class="row">
-                <div class="form-group required-field col-sm-6">
+                <div class="form-group required-field col-sm-6" *ngIf="!isDisabled('netRevenuesNetIncome')">
                     <label class="control-label" for="netRevenuesNetIncome">{{ 'Net Revenues or Net Income' | translate }}</label>
                     <input type="number"
                             id="netRevenuesNetIncome"
@@ -297,7 +297,7 @@
                     <span class="field-error" *ngIf="hasError('netRevenuesNetIncome', ['required'])">{{ 'Field is required' | translate }}</span>
                     <span class="field-error" *ngIf="hasError('netRevenuesNetIncome', ['min'])">{{ 'Number should not be negative' | translate }}</span>
                 </div>
-                <div class="form-group required-field col-sm-6">
+                <div class="form-group required-field col-sm-6" *ngIf="!isDisabled('shareholderEquity')">
                     <label class="control-label" for="shareholderEquity">{{ 'Shareholders\' Equity' | translate }}</label>
                     <input type="number"
                             id="shareholderEquity"
