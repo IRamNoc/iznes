@@ -341,7 +341,6 @@ export class CompanyInformationComponent implements OnInit, OnDestroy {
 
     formCheckCompanyListed(value) {
         const listingMarketsControl = this.form.get('listingMarkets');
-        const otherListingMarketsControl = this.form.get('otherListingMarkets');
         const multilateralTradingFacilitiesControl = this.form.get('multilateralTradingFacilities');
         const otherMultilateralTradingFacilitiesControl = this.form.get('multilateralTradingFacilities');
         const bloombergCodesControl = this.form.get('bloombergCode');
@@ -350,7 +349,6 @@ export class CompanyInformationComponent implements OnInit, OnDestroy {
 
         if (value) {
             listingMarketsControl.enable();
-            otherListingMarketsControl.enable();
             multilateralTradingFacilitiesControl.enable();
             otherMultilateralTradingFacilitiesControl.enable();
             listedShareISINControl.enable();
@@ -358,7 +356,6 @@ export class CompanyInformationComponent implements OnInit, OnDestroy {
             floatableSharesControl.enable();
         } else {
             listingMarketsControl.disable();
-            otherListingMarketsControl.disable();
             multilateralTradingFacilitiesControl.disable();
             otherMultilateralTradingFacilitiesControl.disable();
             listedShareISINControl.disable();
