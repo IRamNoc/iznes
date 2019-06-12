@@ -67,7 +67,7 @@
             </div>
 
             <!-- Waiting for approval form -->
-            <div>
+            <div *ngIf="initialStatusId !== -1">
                 <h2>{{ 'KYC Documents Confirmation' | translate }}</h2>
 
                 <form [formGroup]="waitingApprovalFormGroup" (ngSubmit)="handleSubmitButtonClick()">
@@ -153,6 +153,10 @@
                         </div>
                     </section>
                 </form>
+            </div>
+
+            <div *ngIf="initialStatusId === -1" class="form-group col-sm-12">
+                <button id="backButton" type="button" class="btn btn-light" (click)="handleBackButtonClick()">{{ 'Back' | translate }}</button>
             </div>
         </clr-tab-content>
     </clr-tab>

@@ -297,14 +297,8 @@ export class OfiAmDocumentsComponent implements OnDestroy, OnInit {
             } else {
                 return  '/on-boarding/management/:kycID'
             }
+        } else {
+            return '/client-file/management/:kycID'
         }
-        else {
-            if (status === -1 || status === 'Accepted') {
-                return  '/client-referential/:kycID'
-            } else {
-                return  '/client-file/management/:kycID'
-            }
-        }
-
     }
 }
