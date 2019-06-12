@@ -388,6 +388,7 @@ export const booleanControls = [
     'optForNonPro',
     'exerciseControl',
     'isLegalRepresentative',
+    'isPoliticallyExposed',
 ];
 
 export const currencyControls = [
@@ -451,6 +452,7 @@ export const selectControls = [
     'regulatoryStatusInsurerType',
     'riskProfile',
     'nationalIdNumber',
+    'relationType',
     'holdingType',
     'parent',
     'country',
@@ -2893,6 +2895,33 @@ export const beneficiaryTypesList = [
     },
 ];
 
+export const relationTypesList = [
+    {
+        id: 'ubo',
+        text: 'UBO',
+    },
+    {
+        id: 'director',
+        text: 'Director',
+    },
+    {
+        id: 'signatory',
+        text: 'Signatory',
+    },
+    {
+        id: 'shareholder',
+        text: 'Shareholder',
+    },
+    {
+        id: 'executiveBoardMember',
+        text: 'Executive Board Member',
+    },
+    {
+        id: 'supervisoryBoardMemberOrEquivalent',
+        text: 'Supervisory Board Member or equivalent',
+    },
+];
+
 export const holdingTypesList = [
     {
         id: 'directHolding',
@@ -2992,6 +3021,7 @@ export const controlToName = {
     countryOfBirth: 'Country of Birth',
     documentID: 'Document',
     holdingPercentage: 'Holding Percentage',
+    relationType: 'Relation Type',
     holdingType: 'Holding Type',
     nationalIdNumber: 'National Identification Number',
     nationalIdNumberText: 'National ID Number Specification',
@@ -3107,6 +3137,7 @@ export const controlToList = {
     totalFinancialAssetsAlreadyInvested: 'financialAssetsInvestedList',
     countryOfBirth: 'countries',
     beneficiaryType: 'beneficiaryTypesList',
+    relationType: 'relationTypesList',
     holdingType: 'holdingTypesList',
     nationalIdNumber: 'identificationNumberList',
     otherSectorActivity: 'otherSectorActivity',

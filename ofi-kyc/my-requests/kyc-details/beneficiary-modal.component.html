@@ -232,6 +232,15 @@
                         </div>
                     </div>
                 </div>
+                <div class="row">
+                    <div class="form-group col-sm-6">
+                        <label>{{'Is the stakeholder a politically exposed person?' | translate}}</label>
+                        <div class="toggle-switch">
+                            <input type="checkbox" disabled [checked]="stakeholder.isPoliticallyExposed">
+                            <label></label>
+                        </div>
+                    </div>
+                </div>
             </div>
         </form>
     </div>

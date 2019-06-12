@@ -37,6 +37,7 @@ export class BeneficiaryComponent implements OnInit, OnDestroy {
     unsubscribe: Subject<any> = new Subject<any>();
     configDate;
     beneficiaryTypesList;
+    relationTypesList;
     holdingTypesList;
     identificationNumberTypeList;
     countries;
@@ -52,7 +53,8 @@ export class BeneficiaryComponent implements OnInit, OnDestroy {
 
         this.beneficiaryTypesList = this.newRequestService.beneficiaryTypesList;
         this.translate.translate(this.beneficiaryTypesList);
-
+        this.relationTypesList = this.newRequestService.relationTypesList;
+        this.translate.translate(this.relationTypesList);
         this.holdingTypesList = this.newRequestService.holdingTypesList;
         this.translate.translate(this.holdingTypesList);
         this.identificationNumberTypeList = this.newRequestService.identificationNumberTypeList;
@@ -115,7 +117,7 @@ export class BeneficiaryComponent implements OnInit, OnDestroy {
     }
 
     uploadFile($event) {
-        if($event.files.length === 0) return;
+        if ($event.files.length === 0) return;
 
         const formControl = this.form.get('common.document');
 
