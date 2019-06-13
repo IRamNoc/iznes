@@ -116,3 +116,24 @@
         </form>
     </div>
 </div>
+
+<div class="full-screen-splash" *ngIf="showKYCComplete" [style.backgroundImage]="'url(assets/images/iznes-login-bg.jpg)'">
+    <div class="content">
+        <img [attr.src]="isNowCP ? 'assets/images/nowcp-logo.png' : 'assets/images/logo-iznes-only.png'" [attr.alt]="isNowCP ? 'NowCP' : 'IZNES'">
+        <h2>{{ 'Congratulations' | translate }}<ng-container *ngIf="firstName"> {{ firstName }}</ng-container>!</h2>
+        <p class="text-center">{{ "We just need to run a few checks, then you will be granted full access to the IZNES platform. We'll let you know when this happens." | translate }}</p>
+
+        <ng-container *ngIf="isNowCP">
+            <h2>{{ 'In the meantime' | translate }}...</h2>
+            <p class="text-center">{{ 'If you wish, you can complete your information in order to benefit from all IZNES services.' | translate }}</p>
+            <div class="btns">
+                <button class="btn btn-primary" (click)="handleConfirm(true, true)">{{ 'Go to IZNES' | translate }}</button>
+                <button class="btn" (click)="handleConfirm(true)">{{ 'No thanks' | translate }}</button>
+            </div>
+        </ng-container>
+
+        <ng-container *ngIf="!isNowCP">
+            <button class="btn btn-primary" (click)="handleConfirm(true)">{{ 'Finish' | translate }}</button>
+        </ng-container>
+    </div>
+</div>

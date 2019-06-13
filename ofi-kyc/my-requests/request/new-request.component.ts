@@ -243,6 +243,12 @@ export class NewKycRequestComponent implements OnInit, AfterViewInit {
         if (event.completed) {
             this.formSteps.next();
         }
+
+        if (event.reset) {
+            this.goToStep('amcSelection');
+            console.log('+++ this.forms', this.forms);
+            this.forms.reset();
+        }
     }
 
     submitCurrentStepComponent() {

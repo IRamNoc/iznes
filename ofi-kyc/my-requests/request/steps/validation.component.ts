@@ -16,6 +16,9 @@ import { DocumentsService } from './documents.service';
 import { steps } from '../../requests.config';
 import { ClearMyKycListRequested } from '@ofi/ofi-main/ofi-store/ofi-kyc';
 import { MultilingualService } from '@setl/multilingual';
+import { KycMyInformations } from '@ofi/ofi-main/ofi-store/ofi-kyc/my-informations';
+import { Observable } from 'rxjs/Observable';
+import { OfiKycService } from '@ofi/ofi-main/ofi-req-services/ofi-kyc/service';
 
 @Component({
     selector: 'kyc-step-validation',
@@ -27,6 +30,7 @@ export class NewKycValidationComponent implements OnInit, OnDestroy {
     @Output() submitEvent: EventEmitter<any> = new EventEmitter<any>();
 
     @select(['ofi', 'ofiKyc', 'myKycRequested', 'kycs']) requests$;
+    @select(['ofi', 'ofiKyc', 'myInformations']) kycMyInformations: Observable<KycMyInformations>;
     @select(['ofi', 'ofiProduct', 'ofiManagementCompany', 'investorManagementCompanyList', 'investorManagementCompanyList']) managementCompanyList$;
     @select(['user', 'connected', 'connectedWallet']) connectedWallet$;
 
@@ -35,6 +39,9 @@ export class NewKycValidationComponent implements OnInit, OnDestroy {
     configDate;
     connectedWallet;
     open = true;
+    showKYCComplete: boolean = false;
+    isNowCP: boolean = false;
+    firstName: string;
 
     constructor(
         private requestsService: RequestsService,
@@ -46,6 +53,7 @@ export class NewKycValidationComponent implements OnInit, OnDestroy {
         private documentsService: DocumentsService,
         private ngRedux: NgRedux<any>,
         public translate: MultilingualService,
+        public ofiKycService: OfiKycService,
     ) {
     }
 
@@ -64,14 +72,22 @@ export class NewKycValidationComponent implements OnInit, OnDestroy {
             takeUntil(this.unsubscribe),
             map(kycs => kycs[0]),
             rxFilter((kyc: any) => {
-                    return kyc && kyc.amcID;
-                }),
+                return kyc && kyc.amcID;
+            }),
             )
             .subscribe((kyc) => {
                 if (this.shouldPersist(kyc)) {
-                this.persistForm();
-            }
+                    this.persistForm();
+                }
             });
+
+        /* Subscribe for this user's connected info. */
+        this.kycMyInformations.takeUntil(this.unsubscribe)
+        .subscribe((d) => {
+            if (!d.investorType) return this.ofiKycService.fetchInvestor();
+            this.isNowCP = d.investorType === 70 || d.investorType === 80;
+            this.firstName = d.firstName;
+        });
     }
 
     shouldPersist(kyc) {
@@ -140,38 +156,17 @@ export class NewKycValidationComponent implements OnInit, OnDestroy {
         });
     }
 
-    handleConfirm() {
-        let bodyMessage;
+    handleConfirm(closed = false, startAgain = false) {
+        this.showKYCComplete = !closed;
 
-        if (this.amcs.length === 1) {
-            const companyName = getValue(this.amcs, ['0', 'companyName']);
-            bodyMessage = `<p>${this.translate.translate('<p>Your request has been successfully sent to @companyName@. Once they have validated your request, you will be able to start trading on IZNES using @companyName@\'s products.', { companyName })}</p>`;
-        } else {
-            const companies = ['<ul>'];
-            this.amcs.forEach((amc) => {
-                const companyText = `<li>${amc.companyName}</li>`;
-                companies.push(companyText);
-            });
-            companies.push('</ul>');
-
-            bodyMessage = `<p>${this.translate.translate('Your request has been successfully sent to the following asset management companies')}:</p> ${companies.join('')} <p>${this.translate.translate('Once they have validated your request, you will be able to start trading on IZNES these asset management companies\' products.')}</p>`;
-        }
-
-        this.alerts.create('success', `
-            <table class="table grid">
-                <tbody>
-                    <tr>
-                        <td class="text-center text-success">${bodyMessage}</td>
-                    </tr>
-                </tbody>
-            </table>`,
-        ).pipe(
-            take(1),
-        ).subscribe(() => {
-            this.router.navigate(['onboarding-requests', 'list']).then(() => {
+        if (closed) {
+            this.router.navigate(['onboarding-requests', 'list'])
+            .then(() => {
                 this.ngRedux.dispatch(ClearMyKycListRequested());
+                // Maybe find a better way to do this if we have time
+                if (startAgain) setTimeout(() => this.router.navigate(['onboarding-requests', 'new']), 200);
             });
-        });
+        }
     }
 
     handleSubmit(e) {

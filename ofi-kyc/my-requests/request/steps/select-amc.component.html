@@ -22,16 +22,15 @@
     <div class="form-group search-companies">
         <input type="text" placeholder="Search companies" [formControl]="searchCompanies">
         <clr-icon *ngIf="(searchCompanies || {}).value" shape="times-circle" (click)="clearSearch()"></clr-icon>
-        <p *ngIf="(searchCompanies || {}).value"><small>
-            {{ 'Showing @filtered@ of @total@ companies' | translate: { filtered: filteredManagementCompanies.length, total: managementCompanies.length } }}
-        </small></p>
     </div>
 
     <div>
 
         <div class="management-companies">
 
-            <h6 *ngIf="filteredManagementCompanies.length === 0">{{ 'No matching results found' | translate }}</h6>
+            <div id="no-results" *ngIf="filteredManagementCompanies.length === 0">
+                <p>{{ 'No companies found, please try again.' | translate }}</p>
+            </div>
 
             <div class="management-company-container" *ngFor="let managementCompany of filteredManagementCompanies">
 
@@ -57,22 +56,16 @@
                     </div>
 
                     <div class="actions" *ngIf="!duplicate" [hidden]="!isAMCSelected(managementCompany.id)">
-                        <div class="done">
-                            <span>
-                                {{'KYC Completed?' | translate}}
-                            </span>
-
-                            <label class="switch small" *ngIf="managementCompany.id">
-                                <input [attr.disabled]="submitted ? 'true' : null"
-                                       type="checkbox"
-                                       id="registered_{{managementCompany.id}}"
-                                       name="registered"
-                                       class="form-control"
-                                       [(ngModel)]="managementCompany.registered"
-                                       [ngModelOptions]="{standalone: true}"
-                                       (ngModelChange)="onRegisteredChange()">
-                                <span class="slider round" data-yes="YES" data-no="NO"></span>
-                            </label>
+                        <div *ngIf="managementCompany.id" class="checkbox-inline" [class.disabled]="submitted">
+                            <input [attr.disabled]="submitted ? 'true' : null"
+                                    type="checkbox"
+                                    id="registered_{{managementCompany.id}}"
+                                    name="registered"
+                                    class="form-control"
+                                    [(ngModel)]="managementCompany.registered"
+                                    [ngModelOptions]="{standalone: true}"
+                                    (ngModelChange)="onRegisteredChange()">
+                            <label for="registered_{{managementCompany.id}}">{{ 'KYC Completed?' | translate }}</label>
                         </div>
                     </div>
                 </div>
@@ -80,6 +73,10 @@
             </div>
 
         </div>
+
+        <p id="filtered-count">
+            {{ 'Showing @filtered@ of @total@ companies' | translate: { filtered: filteredManagementCompanies.length, total: managementCompanies.length } }}
+        </p>
 
     </div>
 

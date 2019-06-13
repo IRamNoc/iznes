@@ -6,27 +6,27 @@
             </div>
             <div class="row panel-body">
                 <div class="row col-sm-12">
-                        <div class="form-group required-field col-sm-4">
-                            <label for="kyc_additionnal_firstName">{{ 'First Name' | translate }}</label>
-                            <div>
-                                <input type="text"
-                                        id="kyc_additionnal_firstName"
-                                        class="form-control"
-                                        formControlName="firstName">
-                                <div *ngIf="additionnalForm.controls['firstName'].hasError('required') && additionnalForm.controls['firstName'].touched" class="field-error">{{'Field is required' | translate }}</div>
-                            </div>
-                        </div>
-                        <div class="form-group required-field col-sm-4">
-                            <label for="kyc_additionnal_lastName">{{ 'Last Name' | translate }}</label>
-                            <div>
-                                <input type="text"
-                                        id="kyc_additionnal_lastName"
-                                        class="form-control"
-                                        formControlName="lastName">
-                                <div *ngIf="additionnalForm.controls['lastName'].hasError('required') && additionnalForm.controls['lastName'].touched" class="field-error">{{ 'Field is required' | translate}}</div>
-                            </div>
+                    <div class="form-group required-field col-sm-4">
+                        <label for="kyc_additionnal_firstName">{{ 'First Name' | translate }}</label>
+                        <div>
+                            <input type="text"
+                                    id="kyc_additionnal_firstName"
+                                    class="form-control"
+                                    formControlName="firstName">
+                            <div *ngIf="additionnalForm.controls['firstName'].hasError('required') && additionnalForm.controls['firstName'].touched" class="field-error">{{'Field is required' | translate }}</div>
                         </div>
                     </div>
+                    <div class="form-group required-field col-sm-4">
+                        <label for="kyc_additionnal_lastName">{{ 'Last Name' | translate }}</label>
+                        <div>
+                            <input type="text"
+                                    id="kyc_additionnal_lastName"
+                                    class="form-control"
+                                    formControlName="lastName">
+                            <div *ngIf="additionnalForm.controls['lastName'].hasError('required') && additionnalForm.controls['lastName'].touched" class="field-error">{{ 'Field is required' | translate}}</div>
+                        </div>
+                    </div>
+                </div>
                 <div class="row col-sm-12">
                     <div class="form-group required-field col-sm-4">
                         <label for="kyc_additionnal_email">{{ 'Email Address' | translate }}</label>
@@ -51,56 +51,57 @@
                         </div>
                     </div>
                 </div>
+            </div>
 
-                <ng-container *ngIf="type != 46">
-                    <div class="well">
-                        <div class="row panel-header">
-                            <h5>Company Details</h5>
-                        </div>
-                        <div class="row panel-body">
-                            <div class="row col-sm-12">
-                                <div class="form-group required-field col-sm-4" [ngStyle]="{'height':'35px'}">
-                                    <label for="kyc_additionnal_companyName">{{ 'Company Name' | translate }}</label>
-                                    <div>
-                                        <input type="text"
-                                                id="kyc_additionnal_companyName"
-                                                class="form-control"
-                                                formControlName="companyName">
-                                        <div *ngIf="additionnalForm.controls['companyName'].hasError('required') && additionnalForm.controls['companyName'].touched" class="field-error">{{ 'Field is required' | translate }}</div>
-                                    </div>
+            <ng-container *ngIf="type != 46">
+                <div class="well">
+                    <div class="row panel-header">
+                        <h5>Company Details</h5>
+                    </div>
+                    <div class="row panel-body">
+                        <div class="row col-sm-12">
+                            <div class="form-group required-field col-sm-4">
+                                <label for="kyc_additionnal_companyName">{{ 'Company Name' | translate }}</label>
+                                <div>
+                                    <input type="text"
+                                            id="kyc_additionnal_companyName"
+                                            class="form-control"
+                                            formControlName="companyName">
+                                    <div *ngIf="additionnalForm.controls['companyName'].hasError('required') && additionnalForm.controls['companyName'].touched" class="field-error">{{ 'Field is required' | translate }}</div>
                                 </div>
                             </div>
-                            <div class="row">
-                                <div class="form-group required-field col-sm-4">
-                                    <label>{{ 'Work Phone Number' | translate }}</label>
+                        </div>
 
-                                    <div class="form-group phone-input-container">
-                                        <div>
-                                            <ng-select id="kyc_additionnal_phoneCode"
-                                                        [items]="phoneNumbersCountryCodes"
-                                                        [allowClear]="true"
-                                                        [placeholder]="translate.translate('Select')"
-                                                        formControlName="phoneCode"
-                                                        [ngStyle]="{'padding':'6px 0'}"
-                                                        [containerWidth]="'100%'">
-                                            </ng-select>
-                                            <div *ngIf="additionnalForm.controls['phoneCode'].hasError('required') && additionnalForm.controls['phoneCode'].touched" class="field-error">{{ 'Field is required' | translate }}</div>
-                                        </div>
+                        <div class="row col-sm-12">
+                            <div class="form-group required-field col-sm-4">
+                                <label>{{ 'Work Phone Number' | translate }}</label>
 
-                                        <div>
-                                            <input type="text"
-                                                    id="kyc_additionnal_phoneNumber"
-                                                    class="form-control"
-                                                    formControlName="phoneNumber">
-                                            <div *ngIf="additionnalForm.controls['phoneNumber'].hasError('required') && additionnalForm.controls['phoneNumber'].touched" class="field-error">{{ 'Field is required' | translate }}</div>
-                                        </div>
+                                <div class="form-group phone-input-container">
+                                    <div>
+                                        <ng-select id="kyc_additionnal_phoneCode"
+                                                    [items]="phoneNumbersCountryCodes"
+                                                    [allowClear]="true"
+                                                    [placeholder]="translate.translate('Select')"
+                                                    formControlName="phoneCode"
+                                                    [ngStyle]="{'padding':'6px 0'}"
+                                                    [containerWidth]="'100%'">
+                                        </ng-select>
+                                        <div *ngIf="additionnalForm.controls['phoneCode'].hasError('required') && additionnalForm.controls['phoneCode'].touched" class="field-error">{{ 'Field is required' | translate }}</div>
+                                    </div>
+
+                                    <div>
+                                        <input type="text"
+                                                id="kyc_additionnal_phoneNumber"
+                                                class="form-control"
+                                                formControlName="phoneNumber">
+                                        <div *ngIf="additionnalForm.controls['phoneNumber'].hasError('required') && additionnalForm.controls['phoneNumber'].touched" class="field-error">{{ 'Field is required' | translate }}</div>
                                     </div>
                                 </div>
                             </div>
                         </div>
                     </div>
-                </ng-container>
-            </div>
+                </div>
+            </ng-container>
         </div>
 
         <ng-container *ngIf="type == 46">
@@ -121,6 +122,7 @@
                             </div>
                         </div>
                     </div>
+
                     <div class="row col-sm-12">
                         <div class="form-group required-field col-sm-4">
                             <label>{{ 'Work Phone Number' | translate }}</label>

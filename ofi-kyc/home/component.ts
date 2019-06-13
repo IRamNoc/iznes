@@ -32,9 +32,9 @@ export class OfiKycHomeComponent implements AfterViewInit, OnDestroy {
     userType: number;
     investorType: number;
     showSplash: boolean = true;
+    isNowCP: boolean = false;
 
     /* Public properties. */
-    public investorTypeText = 'Onboard on IZNES';
     public showModal = false;
     public userInfo: KycMyInformations = {
         email: '',
@@ -223,11 +223,9 @@ export class OfiKycHomeComponent implements AfterViewInit, OnDestroy {
     }
 
     renderSplash() {
-        this.investorType;
-
         // Now CP investor type, 70 = issuer, 80 == investor
-        if (this.investorType == 70 || this.investorType == 80) {
-            this.investorTypeText = "Onboard as NowCP Client";
+        if (this.investorType === 70 || this.investorType === 80) {
+            this.isNowCP = true;
         }
     }
 }
