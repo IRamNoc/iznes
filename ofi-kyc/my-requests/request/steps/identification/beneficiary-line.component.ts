@@ -47,6 +47,10 @@ export class BeneficiaryLineComponent {
         return getValue(this.stakeholderValue, 'common.holdingType[0].text');
     }
 
+    get relationType() {
+        return getValue(this.stakeholderValue, 'common.relationType[0].text');
+    }
+
     get votingPercentage() {
         return getValue(this.stakeholderValue, 'common.votingPercentage');
     }

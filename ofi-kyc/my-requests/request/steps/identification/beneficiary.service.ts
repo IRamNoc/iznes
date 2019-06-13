@@ -5,7 +5,7 @@ import { get as getValue, find, isNumber } from 'lodash';
 
 import { MultilingualService } from '@setl/multilingual';
 import { sirenValidator, siretValidator } from '@setl/utils/helper/validators';
-import { countries, holdingTypesList, beneficiaryTypesList } from '../../../requests.config';
+import { countries, relationTypesList, holdingTypesList, beneficiaryTypesList } from '../../../requests.config';
 import has = Reflect.has;
 
 @Injectable({
@@ -90,6 +90,7 @@ export class BeneficiaryService {
             const nationalityControl = stakeholder.get('common.nationality');
             const countryTaxResidenceControl = stakeholder.get('common.countryTaxResidence');
             const parentControl = stakeholder.get('common.parent');
+            const relationTypeControl = stakeholder.get('common.relationType');
             const holdingTypeControl = stakeholder.get('common.holdingType');
 
             const nationalityValue = nationalityControl.value;
@@ -116,6 +117,14 @@ export class BeneficiaryService {
                 parentControl.patchValue([parent]);
             }
 
+            const relationTypeValue = relationTypeControl.value;
+            const relationTypeId = getValue(relationTypeValue, '[0].id');
+            const relationType = find(relationTypesList, ['id', relationTypeId]);
+
+            if (relationType) {
+                relationTypeControl.patchValue([relationType]);
+            }
+
             const holdingTypeValue = holdingTypeControl.value;
             const holdingTypeId = getValue(holdingTypeValue, '[0].id');
             const holdingType = find(holdingTypesList, ['id', holdingTypeId]);
@@ -123,7 +132,6 @@ export class BeneficiaryService {
             if (holdingType) {
                 holdingTypeControl.patchValue([holdingType]);
             }
-
         });
     }
 
@@ -150,6 +158,7 @@ export class BeneficiaryService {
     formCheckBeneficiaryType(form, value) {
         const legalPersonControl: AbstractControl = form.get('legalPerson');
         const naturalPersonControl: AbstractControl = form.get('naturalPerson');
+        const relationTypeControl: AbstractControl = form.get('relationType');
 
         if (value === 'legalPerson') {
             legalPersonControl.enable();
