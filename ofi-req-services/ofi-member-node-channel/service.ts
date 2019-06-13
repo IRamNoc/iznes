@@ -128,11 +128,11 @@ export class OfiMemberNodeChannelService {
                 this.ngRedux.dispatch(setamkyclist());
                 this.ngRedux.dispatch(setInvestorInvitationListReset());
                 this.ngRedux.dispatch(setStatusAuditTrailReset());
+                this.ngRedux.dispatch(ClearMyKycListRequested());
                 break;
 
             case 'kycaccepted': // enable menu
                 this.ngRedux.dispatch(resetHomepage());
-                this.ngRedux.dispatch(ClearMyKycListRequested());
                 this.refetchMenu();
                 break;
 
