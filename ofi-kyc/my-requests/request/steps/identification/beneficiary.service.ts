@@ -168,8 +168,6 @@ export class BeneficiaryService {
             naturalPersonControl.enable();
             legalPersonControl.disable({ emitEvent: false });
         }
-
-        // relationTypeControl.enable(); TODO
     }
 
     updateStakeholdersValidity(form: FormArray) {
