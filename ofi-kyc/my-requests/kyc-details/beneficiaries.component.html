@@ -9,6 +9,7 @@
     <tr>
         <th>{{'Type' | translate}}</th>
         <th>{{'Name' | translate}}</th>
+        <th>{{'Relation Type' | translate}}</th>
         <th>{{'Parent' | translate}}</th>
         <th>{{'Country Tax of Residence' | translate}}</th>
         <th>{{'Nationality' | translate}}</th>
@@ -23,6 +24,7 @@
     <tr *ngFor="let stakeholder of stakeholderReadableList">
         <td>{{stakeholder.beneficiaryType}}</td>
         <td>{{stakeholder.name}}</td>
+        <td>{{stakeholder.relationType}}</td>
         <td>{{stakeholder.parent}}</td>
         <td>{{stakeholder.countryTaxResidence}}</td>
         <td>{{stakeholder.nationality}}</td>
