@@ -50,6 +50,7 @@ import {
     riskProfileList,
     riskAcceptanceList,
     beneficiaryTypesList,
+    relationTypesList,
     holdingTypesList,
     identificationNumberList,
     listingMarketsList,
@@ -85,6 +86,7 @@ export class NewRequestService {
     riskProfileList;
     riskAcceptanceList;
     beneficiaryTypesList;
+    relationTypesList;
     holdingTypesList;
     identificationNumberTypeList;
     listingMarketsList;
@@ -133,6 +135,7 @@ export class NewRequestService {
         this.riskProfileList = riskProfileList;
         this.riskAcceptanceList = riskAcceptanceList;
         this.beneficiaryTypesList = beneficiaryTypesList;
+        this.relationTypesList = relationTypesList;
         this.holdingTypesList = holdingTypesList;
         this.identificationNumberTypeList = identificationNumberList;
         this.listingMarketsList = listingMarketsList;
@@ -384,25 +387,9 @@ export class NewRequestService {
                     Validators.required,
                 ],
                 knowledgeUCI: 0,
-                knowledgeUCISpecification: [
-                    { value: '', disabled: true },
-                    Validators.required,
-                ],
                 knowledgeFundsAndRisks: 0,
-                knowledgeFundsAndRisksSpecification: [
-                    { value: '', disabled: true },
-                    Validators.required,
-                ],
                 prospectusKIIDUnderstanding: 0,
-                prospectusKIIDUnderstandingSpecification: [
-                    { value: '', disabled: true },
-                    Validators.required,
-                ],
                 knowledgeSkillsPlaceUCIOrders: 0,
-                knowledgeSkillsPlaceUCIOrdersSpecification: [
-                    { value: '', disabled: true },
-                    Validators.required,
-                ],
             }),
         });
 
@@ -668,6 +655,7 @@ export class NewRequestService {
 
             common: this.formBuilder.group({
                 parent: [-1, Validators.required],
+                relationType: ['', Validators.required],
                 address: ['', Validators.required],
                 address2: '',
                 zipCode: ['', this.getLengthValidator(10)],
@@ -709,6 +697,7 @@ export class NewRequestService {
                 cityOfBirth: ['', this.getLengthValidator()],
                 countryOfBirth: ['', Validators.required],
                 isLegalRepresentative: [0, Validators.required],
+                isPoliticallyExposed: [0, Validators.required],
             }),
             delete: 0,
         });

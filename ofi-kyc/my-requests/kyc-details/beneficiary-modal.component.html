@@ -22,6 +22,13 @@
 
             <div class="row">
                 <div class="form-group col-sm-6">
+                    <label class="control-label">{{'Relation Type' | translate}}</label>
+                    <input type="text" disabled [value]="stakeholder.relationType">
+                </div>
+            </div>
+
+            <div class="row">
+                <div class="form-group col-sm-6">
                     <label class="control-label">{{'Parent' | translate}}</label>
 
                     <input *ngIf="stakeholder.parent !== -1" type="text" disabled [value]="stakeholder.parent">
@@ -228,6 +235,15 @@
                         <label>{{'Is the stakeholder a legal representative?' | translate}}</label>
                         <div class="toggle-switch">
                             <input type="checkbox" disabled [checked]="stakeholder.isLegalRepresentative">
+                            <label></label>
+                        </div>
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="form-group col-sm-6">
+                        <label>{{'Is the stakeholder a politically exposed person?' | translate}}</label>
+                        <div class="toggle-switch">
+                            <input type="checkbox" disabled [checked]="stakeholder.isPoliticallyExposed">
                             <label></label>
                         </div>
                     </div>

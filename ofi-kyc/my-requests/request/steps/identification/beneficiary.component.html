@@ -19,17 +19,44 @@
 
     <div class="row">
         <div class="form-group required-field col-sm-6">
-            <label class="control-label" for="parent-benef">{{'Parent' | translate}}</label>
+            <label class="required-field">{{'Relation Type' | translate}} </label>
+
+            <div class="form-group required-field col-sm-6">
+                <ng-select id="relationType-benef"
+                            [items]="relationTypesList"
+                            [formControl]="form.get('common.relationType')"
+                            placeholder="{{'Select a relation type' | translate}}"
+                            [isDisabled]="false">
+                </ng-select>
+            </div>
+        </div>
+        <div class="form-group required-field col-sm-6">
+            <label class="control-label" for="parent-benef">{{'Linked Entity' | translate}}</label>
 
             <input *ngIf="!index" type="text" disabled placeholder="{{'No parent' | translate}}">
-            <ng-select *ngIf="index" id="holdingType-benef" [items]="parents" [formControl]="form.get('common.parent')" placeholder="{{'Select stakeholder\'s parent ' | translate}}" [disabled]="disabled"></ng-select>
+            <ng-select *ngIf="index"
+                        id="holdingType-benef"
+                        [items]="parents"
+                        [formControl]="form.get('common.parent')"
+                        placeholder="{{'Select stakeholder\'s parent ' | translate}}"
+                        [isDisabled]="disabled">
+            </ng-select>
 
-            <span class="field-error" *ngIf="hasError(['common', 'parent'], ['required'])">{{'Field is required' | translate}}</span>
+            <span class="field-error"
+                *ngIf="hasError(['common', 'parent'], ['required'])">{{'Field is required' | translate}}</span>
         </div>
+    </div>
 
+    <div class="row">
         <div class="form-group required-field col-sm-6">
             <label class="control-label" for="holdingType-benef">{{'Holding type' | translate}}</label>
-            <ng-select id="holdingType-benef" [items]="holdingTypesList" [formControl]="form.get('common.holdingType')" placeholder="{{'Type' | translate}}" [disabled]="true"></ng-select>
+            <ng-select id="holdingType-benef"
+                        [items]="holdingTypesList"
+                        [items]="holdingTypesList"
+                        [formControl]="form.get('common.holdingType')"
+                        placeholder="{{'Type' | translate}}"
+                        [isDisabled]="true">
+            </ng-select>
         </div>
     </div>
 
@@ -92,12 +119,22 @@
         <div class="row">
             <div class="form-group required-field col-sm-6">
                 <label class="control-label" for="country-benef">{{'Country' | translate}}</label>
-                <ng-select id="country-benef" [items]="countries" [formControl]="form.get('common.country')" placeholder="{{'Select a country' | translate}}" [disabled]="disabled"></ng-select>
+                <ng-select id="country-benef"
+                            [items]="countries"
+                            [formControl]="form.get('common.country')"
+                            placeholder="{{'Select a country' | translate}}"
+                            [isDisabled]="disabled">
+                </ng-select>
                 <span class="field-error" *ngIf="hasError(['common', 'country'])">{{'Field is required' | translate}}</span>
             </div>
             <div class="form-group required-field col-sm-6">
                 <label class="control-label" for="country-tax-benef">{{'Country of tax residence' | translate}}</label>
-                <ng-select id="country-tax-benef" [items]="countries" [formControl]="form.get('common.countryTaxResidence')" placeholder="{{'Select a country' | translate}}" [disabled]="disabled"></ng-select>
+                <ng-select id="country-tax-benef"
+                            [items]="countries"
+                            [formControl]="form.get('common.countryTaxResidence')"
+                            placeholder="{{'Select a country' | translate}}"
+                            [isDisabled]="disabled">
+                </ng-select>
                 <span class="field-error" *ngIf="hasError(['common', 'countryTaxResidence'])">{{'Field is required' | translate}}</span>
             </div>
         </div>
@@ -105,7 +142,12 @@
         <div class="row">
             <div class="form-group required-field col-sm-6">
                 <label class="control-label" for="nationality-benef">{{'Nationality' | translate}}</label>
-                <ng-select id="nationality-benef" [items]="countries" [formControl]="form.get('common.nationality')" placeholder="{{'Select a country' | translate}}" [disabled]="disabled"></ng-select>
+                <ng-select id="nationality-benef"
+                            [items]="countries"
+                            [formControl]="form.get('common.nationality')"
+                            placeholder="{{'Select a country' | translate}}"
+                            [isDisabled]="disabled">
+                </ng-select>
                 <span class="field-error" *ngIf="hasError(['common', 'nationality'])">{{'Field is required' | translate}}</span>
             </div>
         </div>
@@ -116,7 +158,8 @@
                 <ng-select id="nationalIdNumber-benef-{{index}}"
                            [items]="identificationNumberTypeList"
                            formControlName="nationalIdNumber"
-                           placeholder="{{ 'Select identification number type' | translate }}"></ng-select>
+                           placeholder="{{ 'Select identification number type' | translate }}">
+                </ng-select>
                 <span class="field-error" *ngIf="hasError(['legalPerson', 'nationalIdNumber'], ['required'])">{{ 'Field is required' | translate }}</span>
             </div>
 
@@ -221,12 +264,22 @@
         <div class="row">
             <div class="form-group required-field col-sm-6">
                 <label class="control-label" for="country-benef">{{'Country' | translate}}</label>
-                <ng-select id="country-benef" [items]="countries" [formControl]="form.get('common.country')" placeholder="{{'Select a country' | translate}}" [disabled]="disabled"></ng-select>
+                <ng-select id="country-benef"
+                            [items]="countries"
+                            [formControl]="form.get('common.country')"
+                            placeholder="{{'Select a country' | translate}}"
+                            [isDisabled]="disabled">
+                </ng-select>
                 <span class="field-error" *ngIf="hasError(['common', 'country'])">{{'Field is required' | translate}}</span>
             </div>
             <div class="form-group required-field col-sm-6">
                 <label class="control-label" for="country-tax-benef">{{'Country of tax residence' | translate}}</label>
-                <ng-select id="country-tax-benef" [items]="countries" [formControl]="form.get('common.countryTaxResidence')" placeholder="{{'Select a country' | translate}}" [disabled]="disabled"></ng-select>
+                <ng-select id="country-tax-benef"
+                            [items]="countries"
+                            [formControl]="form.get('common.countryTaxResidence')"
+                            placeholder="{{'Select a country' | translate}}"
+                            [isDisabled]="disabled">
+                </ng-select>
                 <span class="field-error" *ngIf="hasError(['common', 'countryTaxResidence'])">{{'Field is required' | translate}}</span>
             </div>
         </div>
@@ -234,7 +287,12 @@
         <div class="row">
             <div class="form-group required-field col-sm-6">
                 <label class="control-label" for="nationality-benef">{{'Nationality' | translate}}</label>
-                <ng-select id="nationality-benef" [items]="countries" [formControl]="form.get('common.nationality')" placeholder="{{'Select a country' | translate}}" [disabled]="disabled"></ng-select>
+                <ng-select id="nationality-benef"
+                            [items]="countries"
+                            [formControl]="form.get('common.nationality')"
+                            placeholder="{{'Select a country' | translate}}"
+                            [isDisabled]="disabled">
+                </ng-select>
                 <span class="field-error" *ngIf="hasError(['common', 'nationality'])">{{'Field is required' | translate}}</span>
             </div>
         </div>
@@ -264,7 +322,12 @@
         <div class="row">
             <div class="form-group required-field col-sm-6">
                 <label class="control-label" for="countryOfBirth-benef">{{'Country of birth' | translate}}</label>
-                <ng-select id="countryOfBirth-benef" [items]="countries" formControlName="countryOfBirth" placeholder="{{'Select a country' | translate}}" [disabled]="disabled"></ng-select>
+                <ng-select id="countryOfBirth-benef"
+                            [items]="countries"
+                            formControlName="countryOfBirth"
+                            placeholder="{{'Select a country' | translate}}"
+                            [isDisabled]="disabled">
+                </ng-select>
                 <span class="field-error" *ngIf="hasError(['naturalPerson', 'countryOfBirth'])">{{'Field is required' | translate}}</span>
             </div>
 
@@ -275,7 +338,7 @@
                                     (onDrop)="uploadFile($event)"
                                     [preset]="form.get('common.document').value"
                                     ngDefaultControl
-                                    [disabled]="disabled"
+                                    [isDisabled]="disabled"
                                     [inline]="true"
                     ></setl-file-drop>
                 </div>
@@ -295,7 +358,11 @@
 
             <div class="form-group required-field col-sm-6">
                 <label for="votingPercentage-benef">{{'Voting percentage' | translate}}</label>
-                <input id="votingPercentage-benef" type="number" [formControl]="form.get('common.votingPercentage')" placeholder="{{ 'Define a value @valueType@' | translate: { valueType: '(%)' } }}" [attr.disabled]="disabled">
+                <input id="votingPercentage-benef"
+                        type="number"
+                        [formControl]="form.get('common.votingPercentage')"
+                        placeholder="{{ 'Define a value @valueType@' | translate: { valueType: '(%)' } }}"
+                        [attr.disabled]="disabled">
                 <span class="field-error" *ngIf="hasError(['common', 'votingPercentage'], ['required'])">{{'Field is required' | translate}}</span>
                 <span class="field-error" *ngIf="hasError(['common', 'votingPercentage'], ['min', 'max'])">{{'Value must be between 0 and 100' | translate}}</span>
             </div>
@@ -314,6 +381,13 @@
                 <div class="toggle-switch">
                     <input type="checkbox" id="isLegalRepresentative" formControlName="isLegalRepresentative" [attr.disabled]="disabled">
                     <label for="isLegalRepresentative"></label>
+                </div>
+            </div>
+            <div class="form-group col-sm-6">
+                <label for="isPoliticallyExposed">{{'Is the stakeholder a politically exposed person?' | translate}}</label>
+                <div class="toggle-switch">
+                    <input type="checkbox" id="isPoliticallyExposed" formControlName="isPoliticallyExposed" [attr.disabled]="disabled">
+                    <label for="isPoliticallyExposed"></label>
                 </div>
             </div>
         </div>

@@ -227,15 +227,12 @@
                             </label>
                         </div>
 
-                        <span class="field-error"
-                            *ngIf="hasError(['nonPro', 'trainingKnowledgeSkills'])">{{ 'Field is required' | translate }}</span>
+                        <span class="field-error" *ngIf="hasError(['nonPro', 'trainingKnowledgeSkills'])">{{ 'Field is required' | translate }}</span>
                     </div>
 
-                    <div class="form-group field-required col-sm-6"
-                        *ngIf="!isDisabled(['nonPro', 'trainingKnowledgeSkillsSpecification'])">
-                        <input type="text"
-                                formControlName="trainingKnowledgeSkillsSpecification"
-                                placeholder="{{ 'Provide an explanation regarding the previous answer' | translate }}">
+                    <div class="form-group field-required col-sm-6" *ngIf="!isDisabled(['nonPro', 'trainingKnowledgeSkillsSpecification'])">
+                        <input type="text" formControlName="trainingKnowledgeSkillsSpecification"
+                            placeholder="{{ 'Provide an explanation regarding the previous answer' | translate }}">
                         <span class="field-error" *ngIf="hasError('nonPro.trainingKnowledgeSkillsSpecification', ['required'])">{{ 'Field is required' | translate }}</span>
                         <span class="field-error" *ngIf="hasError('nonPro.trainingKnowledgeSkillsSpecification', ['maxlength'])">{{ 'Value is too long' | translate }}</span>
                     </div>
@@ -251,17 +248,7 @@
                             </label>
                         </div>
 
-                        <span class="field-error"
-                            *ngIf="hasError(['nonPro', 'knowledgeUCI'])">{{ 'Field is required' | translate }}</span>
-                    </div>
-
-                    <div class="form-group field-required col-sm-6"
-                        *ngIf="!isDisabled(['nonPro', 'knowledgeUCISpecification'])">
-                        <input type="text"
-                                formControlName="knowledgeUCISpecification"
-                                placeholder="{{ 'Provide an explanation regarding the previous answer' | translate }}">
-                        <span class="field-error" *ngIf="hasError('nonPro.knowledgeUCISpecification', ['required'])">{{ 'Field is required' | translate }}</span>
-                        <span class="field-error" *ngIf="hasError('nonPro.knowledgeUCISpecification', ['maxlength'])">{{ 'Value is too long' | translate }}</span>
+                        <span class="field-error" *ngIf="hasError(['nonPro', 'knowledgeUCI'])">{{ 'Field is required' | translate }}</span>
                     </div>
                 </div>
 
@@ -277,17 +264,7 @@
                             </label>
                         </div>
 
-                        <span class="field-error"
-                            *ngIf="hasError(['nonPro', 'knowledgeFundsAndRisks'])">{{ 'Field is required' | translate }}</span>
-                    </div>
-
-                    <div class="form-group field-required col-sm-6"
-                        *ngIf="!isDisabled(['nonPro', 'knowledgeFundsAndRisksSpecification'])">
-                        <input type="text"
-                                formControlName="knowledgeFundsAndRisksSpecification"
-                                placeholder="{{ 'Provide an explanation regarding the previous answer' | translate }}">
-                        <span class="field-error" *ngIf="hasError('nonPro.knowledgeFundsAndRisksSpecification', ['required'])">{{ 'Field is required' | translate }}</span>
-                        <span class="field-error" *ngIf="hasError('nonPro.knowledgeFundsAndRisksSpecification', ['maxlength'])">{{ 'Value is too long' | translate }}</span>
+                        <span class="field-error" *ngIf="hasError(['nonPro', 'knowledgeFundsAndRisks'])">{{ 'Field is required' | translate }}</span>
                     </div>
                 </div>
 
@@ -303,17 +280,7 @@
                             </label>
                         </div>
 
-                        <span class="field-error"
-                            *ngIf="hasError(['nonPro', 'prospectusKIIDUnderstanding'])">{{ 'Field is required' | translate }}</span>
-                    </div>
-
-                    <div class="form-group field-required col-sm-6"
-                        *ngIf="!isDisabled(['nonPro', 'prospectusKIIDUnderstandingSpecification'])">
-                        <input type="text"
-                                formControlName="prospectusKIIDUnderstandingSpecification"
-                                placeholder="{{ 'Provide an explanation regarding the previous answer' | translate }}">
-                        <span class="field-error" *ngIf="hasError('nonPro.prospectusKIIDUnderstandingSpecification', ['required'])">{{ 'Field is required' | translate }}</span>
-                        <span class="field-error" *ngIf="hasError('nonPro.prospectusKIIDUnderstandingSpecification', ['maxlength'])">{{ 'Value is too long' | translate }}</span>
+                        <span class="field-error" *ngIf="hasError(['nonPro', 'prospectusKIIDUnderstanding'])">{{ 'Field is required' | translate }}</span>
                     </div>
                 </div>
 
@@ -329,17 +296,7 @@
                             </label>
                         </div>
 
-                        <span class="field-error"
-                            *ngIf="hasError(['nonPro', 'knowledgeSkillsPlaceUCIOrders'])">{{ 'Field is required' | translate }}</span>
-                    </div>
-
-                    <div class="form-group field-required col-sm-6"
-                        *ngIf="!isDisabled(['nonPro', 'knowledgeSkillsPlaceUCIOrdersSpecification'])">
-                        <input type="text"
-                                formControlName="knowledgeSkillsPlaceUCIOrdersSpecification"
-                                placeholder="{{ 'Provide an explanation regarding the previous answer' | translate }}">
-                        <span class="field-error" *ngIf="hasError('nonPro.knowledgeSkillsPlaceUCIOrdersSpecification', ['required'])">{{ 'Field is required' | translate }}</span>
-                        <span class="field-error" *ngIf="hasError('nonPro.knowledgeSkillsPlaceUCIOrdersSpecification', ['maxlength'])">{{ 'Value is too long' | translate }}</span>
+                        <span class="field-error" *ngIf="hasError(['nonPro', 'knowledgeSkillsPlaceUCIOrders'])">{{ 'Field is required' | translate }}</span>
                     </div>
                 </div>
             </div>
