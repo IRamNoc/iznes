@@ -36,6 +36,7 @@ import {
     ofiUpdatePmDetail,
     ofiUpdateWmDetail,
 } from '../../ofi-store/ofi-portfolio-manager/portfolio-manage-list/actions';
+import { ClearMyKycListRequested } from '../../ofi-store/ofi-kyc/kyc-list';
 
 /* Service class. */
 @Injectable()
@@ -131,6 +132,7 @@ export class OfiMemberNodeChannelService {
 
             case 'kycaccepted': // enable menu
                 this.ngRedux.dispatch(resetHomepage());
+                this.ngRedux.dispatch(ClearMyKycListRequested());
                 this.refetchMenu();
                 break;
 
