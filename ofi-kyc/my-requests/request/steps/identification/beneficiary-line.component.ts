@@ -27,6 +27,7 @@ export class BeneficiaryLineComponent {
 
     get parentText() {
         if (this.parent) {
+            console.log('+++ this.parent: ', this.parent);
             return this.parent.text;
         }
     }

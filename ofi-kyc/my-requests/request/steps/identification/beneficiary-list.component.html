@@ -63,7 +63,7 @@
         {{getTitle()}}
     </h3>
 
-    <div class="modal-body" beneficiary [form]="selectedStakeholder" [index]="selectedStakeholderIndex" [parents]="parents" [disabled]="mode === 'view' ? true : null" (refresh)="askRefresh()">
+    <div class="modal-body" beneficiary [form]="selectedStakeholder" [index]="selectedStakeholderIndex" [parents]="parents" [registeredCompanyName]="registeredCompanyName" [disabled]="mode === 'view' ? true : null" (refresh)="askRefresh()">
     </div>
 
     <div class="modal-footer">

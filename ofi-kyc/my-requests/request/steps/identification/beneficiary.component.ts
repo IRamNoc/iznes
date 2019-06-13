@@ -19,13 +19,15 @@ export class BeneficiaryComponent implements OnInit, OnDestroy {
         return !this.form.get('legalPerson').disabled || !this.form.get('naturalPerson').disabled;
     }
     @Input() form;
+    @Input() registeredCompanyName: string;
     @Input() set parents(parents: any[]) {
         this.parentsFiltered = parents.filter((parent, i) => i !== this.index);
         this.parentsFiltered.unshift({
             id: -1,
-            text: this.translate.translate('No parent'),
+            text: this.registeredCompanyName,
         });
     }
+
     get parents() {
         return this.parentsFiltered;
     }

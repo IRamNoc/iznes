@@ -45,6 +45,8 @@ export class CompanyInformationComponent implements OnInit, OnDestroy {
     otherListingMarketError = false;
     otherMultilateralTradingFacilitiesError = false;
 
+    registeredCompanyName: string = '';
+
     constructor(
         private newRequestService: NewRequestService,
         private identificationService: IdentificationService,
@@ -572,6 +574,19 @@ export class CompanyInformationComponent implements OnInit, OnDestroy {
                 }
             });
         });
+
+        requests$.pipe(
+            map(requests => requests[0]),
+            rxFilter(request => !!request),
+            takeUntil(this.unsubscribe),
+        )
+            .subscribe((request) => {
+                this.identificationService.getCurrentFormGeneralData(request.kycID).then((formData) => {
+                    if (formData) {
+                        this.registeredCompanyName = formData.registeredCompanyName;
+                    }
+                });
+            });
     }
 
     refresh() {
