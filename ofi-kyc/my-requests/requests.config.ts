@@ -534,13 +534,9 @@ export const controlOrder = [
     'trainingKnowledgeSkills',
     'trainingKnowledgeSkillSpecification',
     'knowledgeUCI',
-    'knowledgeUCISpecification',
     'knowledgeFundsAndRisks',
-    'knowledgeFundsAndRisksSpecification',
     'prospectusKIIDUnderstanding',
-    'prospectusKIIDUnderstandingSpecification',
     'knowledgeSkillsPlaceUCIOrders',
-    'knowledgeSkillsPlaceUCIOrdersSpecification',
 ];
 
 export const steps = {
@@ -3057,16 +3053,12 @@ export const controlToName = {
     trainingKnowledgeSkills: 'Does your training provide you with knowledge and skills in the financial field?',
     trainingKnowledgeSkillsSpecification: 'Training Specification',
     knowledgeUCI: 'Do you have a good knowledge of Collective Investment Schemes (UCIs)?',
-    knowledgeUCISpecification: 'Knowledge UCIs Specification',
     knowledgeFundsAndRisks:
     'Do you have a good knowledge of the different types of existing funds (UCITS, AIFs, ETFs, structured funds, money market funds, OPCIs, etc.) and the risks inherent in each of them?',
-    knowledgeFundsAndRisksSpecification: 'Knowledge Funds and Risks Specification',
     prospectusKIIDUnderstanding:
     'Do you know what a financial prospectus and a KIID (Key Information Document for Investors) is and are you able to read and understand them?',
-    prospectusKIIDUnderstandingSpecification: 'Prospectus KIID Understanding Specification',
-    knowledgeSkillsPlaceUCIOrders:
-    'Do you have the knowledge and skills to place subscription and redemption orders for units of collective investment undertakings (UCIs) directly with management companies?',
-    knowledgeSkillsPlaceUCIOrdersSpecification: 'Knowledge Skills Place UCI Orders',
+    // tslint:disable-next-line:max-line-length
+    knowledgeSkillsPlaceUCIOrders: 'Do you have the knowledge and skills to place subscription and redemption orders for units of collective investment undertakings (UCIs) directly with management companies?',
 
     // Risk nature
     financialAssetManagementMethod: 'Financial asset management method',
