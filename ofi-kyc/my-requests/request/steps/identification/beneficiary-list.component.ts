@@ -68,7 +68,6 @@ export class BeneficiaryListComponent implements OnInit, OnDestroy {
         if (!this.sortedStakeholders.length && this.stakeholders.length) {
             this.sortStakeholders();
         }
-
         return this.sortedStakeholders;
     }
 

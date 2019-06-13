@@ -158,7 +158,6 @@ export class BeneficiaryService {
     formCheckBeneficiaryType(form, value) {
         const legalPersonControl: AbstractControl = form.get('legalPerson');
         const naturalPersonControl: AbstractControl = form.get('naturalPerson');
-        const relationTypeControl: AbstractControl = form.get('relationType');
 
         if (value === 'legalPerson') {
             legalPersonControl.enable();
@@ -209,6 +208,7 @@ export class HierarchySort {
 
         controls.forEach((control) => {
             const parent = getValue(control.get('common.parent').value, [0, 'id'], this.noParent);
+
             if (!this.hashObject[parent]) {
                 this.hashObject[parent] = [];
             }
@@ -216,6 +216,7 @@ export class HierarchySort {
         });
 
         const result = this.hierarchySort(this.hashObject, this.noParent, []);
+
         return result;
     }
 
