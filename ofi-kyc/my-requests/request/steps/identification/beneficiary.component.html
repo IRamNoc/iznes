@@ -18,7 +18,7 @@
     </div>
 
     <div class="row">
-        <div class="form-group col-sm-4">
+        <div class="form-group required-field col-sm-6">
             <label class="required-field">{{'Relation Type' | translate}} </label>
 
             <div class="form-group required-field col-sm-6">
@@ -30,11 +30,8 @@
                 </ng-select>
             </div>
         </div>
-    </div>
-
-    <div class="row">
         <div class="form-group required-field col-sm-6">
-            <label class="control-label" for="parent-benef">{{'Parent' | translate}}</label>
+            <label class="control-label" for="parent-benef">{{'Linked Entity' | translate}}</label>
 
             <input *ngIf="!index" type="text" disabled placeholder="{{'No parent' | translate}}">
             <ng-select *ngIf="index"
@@ -45,9 +42,12 @@
                         [isDisabled]="disabled">
             </ng-select>
 
-            <span class="field-error" *ngIf="hasError(['common', 'parent'], ['required'])">{{'Field is required' | translate}}</span>
+            <span class="field-error"
+                *ngIf="hasError(['common', 'parent'], ['required'])">{{'Field is required' | translate}}</span>
         </div>
+    </div>
 
+    <div class="row">
         <div class="form-group required-field col-sm-6">
             <label class="control-label" for="holdingType-benef">{{'Holding type' | translate}}</label>
             <ng-select id="holdingType-benef"
