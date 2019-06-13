@@ -25,7 +25,7 @@ export class MyRequestsComponent implements OnInit, OnDestroy {
 
     isListDisplayed;
     kycList: any[];
-    clientFileKyc: {kycID: number, companyName: string};
+    clientFileKyc: {kycID: number; companyName: string; status: number};
     invManagementCompanies: any[];
     subscriptions: Subscription[] = [];
     tabs: any[] = [];
@@ -37,6 +37,10 @@ export class MyRequestsComponent implements OnInit, OnDestroy {
     private unsubscribe: Subject<any> = new Subject();
     private companyRequestedIds: number[];
     private companyIds: number[];
+
+    get clientFileValidated() {
+        return this.clientFileKyc.status === -1;
+    }
 
     constructor(
         private ngRedux: NgRedux<any>,

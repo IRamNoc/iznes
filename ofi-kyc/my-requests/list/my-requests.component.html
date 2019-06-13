@@ -23,7 +23,7 @@
                             <button *ngIf="!clientFileKyc" (click)="newRequestModal = true" [disabled]="!hasCompaniesToRequest()" class="btn btn-primary m-0" id="kyc-newRequestBtn">
                                 {{ 'Make New Request' | translate }}
                             </button>
-                            <button *ngIf="clientFileKyc" (click)="duplicateFromClientFile()" class="btn btn-primary m-0" id="kyc-newRequestBtn">
+                            <button *ngIf="clientFileKyc" (click)="duplicateFromClientFile()" [disabled]="!clientFileValidated" class="btn btn-primary m-0" id="kyc-newRequestBtn">
                                 {{ 'Make New Request' | translate }}
                             </button>
                         </div>

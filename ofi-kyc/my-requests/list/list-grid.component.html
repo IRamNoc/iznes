@@ -12,6 +12,7 @@
             <span class="label label-info" *ngSwitchCase="statusList.Draft">{{ 'Draft' | translate }}</span>
             <span class="label label-warning" *ngSwitchCase="statusList.WaitingForApproval">{{ 'Waiting Approval' | translate }}</span>
             <span class="label label-warning" *ngSwitchCase="statusList.WaitingForMoreInfo">{{ 'Waiting Information' | translate }}</span>
+            <span class="label label-warning" *ngSwitchCase="statusList.PendingClientFile">{{ 'Pending Client File' | translate }}</span>
         </clr-dg-cell>
 
         <clr-dg-cell id="lastUpdated_cell_{{i}}">{{convertDate(kyc.lastUpdated)}}</clr-dg-cell>
