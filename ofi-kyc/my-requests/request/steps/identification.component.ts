@@ -19,6 +19,7 @@ import { BeneficiaryService } from './identification/beneficiary.service';
 export class NewKycIdentificationComponent implements OnInit {
     @Input() form;
     @Input() investorType;
+    @Input() isFormReadonly = false;
 
     @Output() submitEvent: EventEmitter<any> = new EventEmitter<any>();
 

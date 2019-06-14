@@ -18,6 +18,7 @@ import { MultilingualService } from '@setl/multilingual';
 export class GeneralInformationComponent implements OnInit, OnDestroy {
     @ViewChild(FormPercentDirective) formPercent: FormPercentDirective;
     @Input() form: FormGroup;
+    @Input() isFormReadonly = false;
     @select(['ofi', 'ofiKyc', 'myKycRequested', 'kycs']) requests$;
     @select(['user', 'siteSettings', 'language']) requestLanguageObj;
 
@@ -150,6 +151,9 @@ export class GeneralInformationComponent implements OnInit, OnDestroy {
                     this.identificationService.getCurrentFormGeneralData(request.kycID).then((formData) => {
                         if (formData) {
                             this.form.patchValue(formData);
+                            if (this.isFormReadonly) {
+                                this.form.disable();
+                            }
                         }
                     });
                 });
