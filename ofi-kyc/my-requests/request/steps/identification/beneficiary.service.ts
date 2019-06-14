@@ -163,7 +163,7 @@ export class BeneficiaryService {
         if (value === 'legalPerson') {
             legalPersonControl.enable();
             naturalPersonControl.disable();
-            (form.get('legalPerson.nationalIdNumber') as FormControl).updateValueAndValidity();
+            (form.get('legalPerson.nationalIdNumberType') as FormControl).updateValueAndValidity();
         } else if (value === 'naturalPerson') {
             naturalPersonControl.enable();
             legalPersonControl.disable({ emitEvent: false });
