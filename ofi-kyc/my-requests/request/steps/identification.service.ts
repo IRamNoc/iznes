@@ -396,12 +396,16 @@ const beneficiaryFormPaths = {
     holdingType: 'common',
     nationality: 'common',
     votingPercentage: 'common',
+    relationType: 'common',
+    exerciseControl: 'common',
 
     firstName: 'naturalPerson',
     lastName: 'naturalPerson',
     dateOfBirth: 'naturalPerson',
     cityOfBirth: 'naturalPerson',
     countryOfBirth: 'naturalPerson',
+    isLegalRepresentative: 'naturalPerson',
+    isPoliticallyExposed: 'naturalPerson',
 
     legalName: 'legalPerson',
     nationalIdNumber: 'legalPerson',
