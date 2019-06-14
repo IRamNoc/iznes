@@ -183,6 +183,7 @@ export class MyRequestsComponent implements OnInit, OnDestroy {
 
         navigationExtras.queryParams = {
             duplicate: this.clientFileKyc.kycID,
+            isclientfile: true,
         };
 
         this.router.navigate(['../', 'new'], navigationExtras);

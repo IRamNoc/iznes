@@ -24,7 +24,7 @@
         <kyc-step-introduction #step (submitEvent)="handleSubmit($event)"></kyc-step-introduction>
     </form-step>
     <form-step *ngIf="fullForm">
-        <kyc-step-identification #step [form]="forms.get('identification')" [investorType]="investorType" (submitEvent)="handleSubmit($event)"></kyc-step-identification>
+        <kyc-step-identification #step [form]="forms.get('identification')" [investorType]="investorType" (submitEvent)="handleSubmit($event)" [isFormReadonly]="isFormReadonly"></kyc-step-identification>
     </form-step>
     <form-step *ngIf="fullForm">
         <kyc-step-risk-profile #step [form]="forms.get('riskProfile')" (submitEvent)="handleSubmit($event)"></kyc-step-risk-profile>
