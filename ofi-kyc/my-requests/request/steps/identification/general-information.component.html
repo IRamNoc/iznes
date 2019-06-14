@@ -42,6 +42,7 @@
                                 id="legalForm"
                                 [items]="legalFormList"
                                 [formControl]="form.get('legalForm')"
+                                [isDisabled]="isFormReadonly"
                                 placeholder="{{ 'Select a legal form' | translate }}">
                     </ng-select>
                     <span class="field-error" *ngIf="hasError('legalForm')">{{ 'Field is required' | translate }}</span>
@@ -61,7 +62,9 @@
             <div class="row">
                 <div class="form-group required-field col-sm-6">
                     <label class="control-label" for="otherIdentificationNumberType">{{'Other Identification Number Type' | translate}}</label>
-                    <ng-select id="otherIdentificationNumberType" [items]="identificationNumberTypeList" formControlName="otherIdentificationNumberType" placeholder="{{'Type' | translate}}"></ng-select>
+                    <ng-select id="otherIdentificationNumberType" [items]="identificationNumberTypeList" formControlName="otherIdentificationNumberType" placeholder="{{'Type' | translate}}"
+                               [isDisabled]="isFormReadonly"
+                    ></ng-select>
                     <span class="field-error" *ngIf="hasError(['otherIdentificationNumberType'], ['required'])">{{'Field is required' | translate}}</span>
                 </div>
 
@@ -97,6 +100,7 @@
                     <ng-select id="financialRating"
                                 [items]="financialRatingList"
                                 formControlName="financialRating"
+                                [isDisabled]="isFormReadonly"
                                 placeholder="{{ 'Select your financial rating' | translate }}">
                     </ng-select>
                 </div>
@@ -146,7 +150,8 @@
                     <label>{{ 'Country' | translate }}</label>
                     <ng-select [items]="countries"
                                 formControlName="registeredCompanyCountry"
-                                placeholder="{{ 'Select a country' | translate }}">
+                                [isDisabled]="isFormReadonly"
+                               placeholder="{{ 'Select a country' | translate }}">
                     </ng-select>
                     <span class="field-error" *ngIf="hasError('registeredCompanyCountry')">{{ 'Field is required' | translate }}</span>
                 </div>
@@ -208,6 +213,7 @@
                     <label>{{ 'Country' | translate }}</label>
                     <ng-select [items]="countries"
                                 formControlName="commercialCountry"
+                                [isDisabled]="isFormReadonly"
                                 placeholder="{{ 'Select a country' | translate }}">
                     </ng-select>
                     <span class="field-error" *ngIf="hasError('commercialCountry', ['required'])">{{ 'Field is required' | translate }}</span>
@@ -220,6 +226,7 @@
                     <ng-select id="countryTaxResidence"
                                 [items]="countries"
                                 formControlName="countryTaxResidence"
+                                [isDisabled]="isFormReadonly"
                                 placeholder="{{' Select a tax residence country' | translate}}">
                     </ng-select>
                     <span class="field-error" *ngIf="hasError('countryTaxResidence')">{{ 'Field is required' | translate }}</span>
@@ -230,6 +237,7 @@
                     <ng-select id="countryRegistration"
                                 [items]="countries"
                                 formControlName="countryRegistration"
+                                [isDisabled]="isFormReadonly"
                                 placeholder="{{' Select a country' | translate}}">
                     </ng-select>
                     <span class="field-error" *ngIf="hasError('countryRegistration')">{{ 'Field is required' | translate }}</span>
