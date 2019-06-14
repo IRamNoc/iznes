@@ -409,6 +409,7 @@ const beneficiaryFormPaths = {
 
     legalName: 'legalPerson',
     nationalIdNumberType: 'legalPerson',
+    otherNationalIdNumberType: 'legalPerson',
     nationalIdNumberText: 'legalPerson',
     leiCode: 'legalPerson',
 };
