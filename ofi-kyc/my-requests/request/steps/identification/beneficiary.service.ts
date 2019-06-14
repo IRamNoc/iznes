@@ -140,13 +140,14 @@ export class BeneficiaryService {
 
             if (value === 'siren') {
                 nationalIdNumberTextControl.setValidators([sirenValidator, Validators.required]);
+                otherNationalIdNumberTypeTextControl.disable();
             } else if (value === 'siret') {
                 nationalIdNumberTextControl.setValidators([siretValidator, Validators.required]);
+                otherNationalIdNumberTypeTextControl.disable();
             } else {
                 otherNationalIdNumberTypeTextControl.enable();
                 otherNationalIdNumberTypeTextControl.setValidators([Validators.required]);
                 nationalIdNumberTextControl.setValidators([Validators.required]);
-
             }
         } else {
             otherNationalIdNumberTypeTextControl.disable();
