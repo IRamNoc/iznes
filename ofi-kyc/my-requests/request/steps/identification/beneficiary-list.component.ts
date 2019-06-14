@@ -97,9 +97,7 @@ export class BeneficiaryListComponent implements OnInit, OnDestroy {
             return;
         }
         this.sortedStakeholders = this.hierarchySort.sort(this.stakeholders.controls);
-
         this.updateParents();
-
     }
 
     getHighestID() {
@@ -220,6 +218,7 @@ export class BeneficiaryListComponent implements OnInit, OnDestroy {
             const parent = stakeholder.get('common.parent').value;
             const parentID = getValue(parent, [0, 'id']);
 
+            // Prevents display of all stakeholders:
             // if (parentID && parentID !== -1) {
                 // return find(this.parents, ['id', parentID]);
             // }
