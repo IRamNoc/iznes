@@ -100,12 +100,19 @@
 
                 <div class="row">
                     <div class="form-group col-sm-6">
-                        <label class="control-label">{{'National Identification Number' | translate}}</label>
-                        <input type="text" disabled [value]="stakeholder.nationalIdNumber">
+                        <label class="control-label">{{'National Identification Number Type' | translate}}</label>
+                        <input type="text" disabled [value]="stakeholder.nationalIdNumberType">
                     </div>
 
                     <div class="form-group col-sm-6">
-                        <label class="control-label">&nbsp;</label>
+                        <label class="control-label">{{'Your Number Type' | translate}}</label>
+                        <input type="text" disabled [value]="stakeholder.otherNationalIdNumberType">
+                    </div>
+                </div>
+
+                <div class="row">
+                    <div class="form-group col-sm-6">
+                        <label class="control-label">{{'National Identification Number' | translate}}</label>
                         <input type="text" disabled [value]="stakeholder.nationalIdNumberText">
                     </div>
                 </div>

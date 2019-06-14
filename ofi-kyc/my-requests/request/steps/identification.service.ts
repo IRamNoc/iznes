@@ -408,7 +408,7 @@ const beneficiaryFormPaths = {
     isPoliticallyExposed: 'naturalPerson',
 
     legalName: 'legalPerson',
-    nationalIdNumber: 'legalPerson',
+    nationalIdNumberType: 'legalPerson',
     nationalIdNumberText: 'legalPerson',
     leiCode: 'legalPerson',
 };

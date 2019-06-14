@@ -163,13 +163,13 @@
                 <span class="field-error" *ngIf="hasError(['legalPerson', 'nationalIdNumber'], ['required'])">{{ 'Field is required' | translate }}</span>
             </div>
 
-            <div *ngIf="!isDisabled(['legalPerson', 'otherNumberType'])" class="form-group required-field col-sm-6">
-                <label class="control-label" for="otherNumberType-benef">{{ 'Your Number Type' | translate }}</label>
+            <div *ngIf="!isDisabled(['legalPerson', 'otherNationalIdNumberType'])" class="form-group required-field col-sm-6">
+                <label class="control-label" for="otherNationalIdNumberType-benef">{{ 'Your Number Type' | translate }}</label>
                 <input type="text"
-                        formControlName="otherNumberType"
+                        formControlName="otherNationalIdNumberType"
                         placeholder="{{'Specify your identification number type' | translate}}"
                         [attr.disabled]="disabled">
-                <span class="field-error" *ngIf="hasError(['legalPerson', 'otherNumberType'], ['required'])">{{'Field is required' | translate}}</span>
+                <span class="field-error" *ngIf="hasError(['legalPerson', 'otherNationalIdNumberType'], ['required'])">{{'Field is required' | translate}}</span>
             </div>
 
         </div>

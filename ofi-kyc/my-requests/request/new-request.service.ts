@@ -687,8 +687,8 @@ export class NewRequestService {
                     Validators.pattern(/^\w{18}\d{2}$|n\/a/i),
                 ]],
 
-                nationalIdNumber: ['', Validators.required],
-                otherNumberType: [{ value: '', disabled: true }, Validators.required],
+                nationalIdNumberType: ['', Validators.required],
+                otherNationalIdNumberType: [{ value: '', disabled: true }, Validators.required],
                 nationalIdNumberText: [{ value: '', disabled: true }, Validators.required],
             }),
             naturalPerson: this.formBuilder.group({
