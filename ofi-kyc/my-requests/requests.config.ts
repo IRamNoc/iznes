@@ -3019,7 +3019,8 @@ export const controlToName = {
     holdingPercentage: 'Holding Percentage',
     relationType: 'Relation Type',
     holdingType: 'Holding Type',
-    nationalIdNumber: 'National Identification Number',
+    nationalIdNumber: 'National Identification Number Type',
+    otherNumberType: 'Your Number Type',
     nationalIdNumberText: 'National ID Number Specification',
     legalName: 'Legal Name',
 

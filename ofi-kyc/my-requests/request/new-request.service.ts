@@ -688,6 +688,7 @@ export class NewRequestService {
                 ]],
 
                 nationalIdNumber: ['', Validators.required],
+                otherNumberType: [{ value: '', disabled: true }, Validators.required],
                 nationalIdNumberText: [{ value: '', disabled: true }, Validators.required],
             }),
             naturalPerson: this.formBuilder.group({
