@@ -4,6 +4,7 @@ import { NewRequestService } from '../new-request.service';
 import { merge, get as getValue, values, isEmpty, filter } from 'lodash';
 
 export const documentFormPaths = {
+    kycribdoc: 'common',
     kycstatuscertifieddoc: 'common',
     kyckbisdoc: 'common',
     kycannualreportdoc: 'common',

@@ -453,6 +453,7 @@ export class NewRequestService {
 
         return fb.group({
             common: fb.group({
+                kycribdoc: this.createDocumentFormGroup('kycribdoc', !this.isProduction),
                 kycstatuscertifieddoc: this.createDocumentFormGroup('kycstatuscertifieddoc', !this.isProduction),
                 kyckbisdoc: this.createDocumentFormGroup('kyckbisdoc', !this.isProduction),
                 kycannualreportdoc: this.createDocumentFormGroup('kycannualreportdoc', !this.isProduction),
