@@ -186,18 +186,20 @@ export class NewKycValidationComponent implements OnInit, OnDestroy {
         .pipe(
                 take(1),
         )
-        .subscribe((requests) => {
-            this.validationService.sendRequest(this.form, requests, this.connectedWallet)
-                .then(() => {
-                    this.handleConfirm();
-                    this.submitEvent.emit({
-                        completed: true,
-                    });
-                })
-                .catch(() => {
-                    this.newRequestService.errorPop();
-                })
-            ;
+        .subscribe(async (requests) => {
+            // Send requests one after another.
+            try {
+                for (const req of requests) {
+                    await this.validationService.sendRequest(this.form, req, this.connectedWallet);
+                }
+
+                this.handleConfirm();
+                this.submitEvent.emit({
+                    completed: true,
+                });
+            } catch(e) {
+                this.newRequestService.errorPop();
+            }
         });
     }
 
