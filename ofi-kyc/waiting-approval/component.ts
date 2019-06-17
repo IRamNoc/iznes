@@ -440,7 +440,7 @@ export class OfiWaitingApprovalComponent implements OnInit, OnDestroy {
             const data = error[1].Data[0];
 
             if (data.Status === 'Fail') {
-                this.showErrorAlert(this.translate.translate('The KYC request has already been updated. The request requires the investor\'s attention now'));
+                this.showErrorAlert(this.translate.translate('Fail to update the KYC request.'));
             }
         });
     }
