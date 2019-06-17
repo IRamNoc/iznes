@@ -198,40 +198,6 @@
                         </tr>
                     </table>
                 </div>
-
-                <div class="col-xl-6">
-                    <div class="title">
-                        <strong>{{ 'Wolfsberg Questionnaire or equivalent' | translate }}</strong>
-                        <small [@fade]="'in'" class="saved" *ngIf="changed.kycwolfsbergdoc">{{'Changes have been saved' | translate}}<i class="fa fa-check"></i></small>
-                    </div>
-                    <table class="tableUpload">
-                        <tr>
-                            <td>
-                                <setl-file-drop [formControl]="uploadMyDocumentsForm.controls['upload6']" (onDrop)="getUpload($event, 'kycwolfsbergdoc')" [inline]="true" [preset]="(allUploadsFiles['kycwolfsbergdoc'].preset.name !== '') ? allUploadsFiles['kycwolfsbergdoc'].preset : ''" ngDefaultControl></setl-file-drop>
-                            </td>
-                            <td>
-                                <div class="switch-container">
-                                    <label class="switch">
-                                        <input type="checkbox"
-                                               id="shareUpload6"
-                                               formControlName="shareUpload6"
-                                               [(ngModel)]="allUploadsFiles['kycwolfsbergdoc'].common"
-                                               (change)="checkToggles('kycwolfsbergdoc', uploadMyDocumentsForm.controls['shareUpload6'].value)">
-                                        <span class="slider round"></span>
-                                    </label>
-                                </div>
-                            </td>
-                        </tr>
-                        <tr>
-                            <td colspan="2">
-                                <setl-file-viewer [secure]="true" [securePath]="kycDocPath" *ngIf="allUploadsFiles['kycwolfsbergdoc'].fileID !== 0" [fileHash]="allUploadsFiles['kycwolfsbergdoc'].hash"></setl-file-viewer>
-                            </td>
-                        </tr>
-                    </table>
-                </div>
-            </div>
-
-            <div class="row">
                 <div class="col-xl-6">
                     <div class="title">
                         <strong>{{ 'Tax self-certification form (CRS)' | translate }}</strong>
@@ -267,7 +233,9 @@
                         </tr>
                     </table>
                 </div>
+            </div>
 
+            <div class="row">
                 <div class="col-xl-6">
                     <div class="title">
                         <strong>{{ 'Form W-8BEN-E (FACTA)' | translate }}</strong>
@@ -430,6 +398,43 @@
                         <tr>
                             <td colspan="2">
                                 <setl-file-viewer [secure]="true" [securePath]="kycDocPath" *ngIf="allUploadsFiles['kycproofregulationdoc'].fileID !== 0" [fileHash]="allUploadsFiles['kycproofregulationdoc'].hash"></setl-file-viewer>
+                            </td>
+                        </tr>
+                    </table>
+                </div>
+            </div>
+
+            <div class="row">
+                <div class="col-xl-6">
+                    <div class="title">
+                        <strong>{{ 'Wolfsberg Questionnaire or equivalent' | translate }}</strong>
+                        <small [@fade]="'in'" class="saved" *ngIf="changed.kycwolfsbergdoc">{{'Changes have been saved' | translate}}<i
+                                class="fa fa-check"></i></small>
+                    </div>
+                    <table class="tableUpload">
+                        <tr>
+                            <td>
+                                <setl-file-drop [formControl]="uploadMyDocumentsForm.controls['upload6']"
+                                    (onDrop)="getUpload($event, 'kycwolfsbergdoc')" [inline]="true"
+                                    [preset]="(allUploadsFiles['kycwolfsbergdoc'].preset.name !== '') ? allUploadsFiles['kycwolfsbergdoc'].preset : ''"
+                                    ngDefaultControl></setl-file-drop>
+                            </td>
+                            <td>
+                                <div class="switch-container">
+                                    <label class="switch">
+                                        <input type="checkbox" id="shareUpload6" formControlName="shareUpload6"
+                                            [(ngModel)]="allUploadsFiles['kycwolfsbergdoc'].common"
+                                            (change)="checkToggles('kycwolfsbergdoc', uploadMyDocumentsForm.controls['shareUpload6'].value)">
+                                        <span class="slider round"></span>
+                                    </label>
+                                </div>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td colspan="2">
+                                <setl-file-viewer [secure]="true" [securePath]="kycDocPath"
+                                    *ngIf="allUploadsFiles['kycwolfsbergdoc'].fileID !== 0"
+                                    [fileHash]="allUploadsFiles['kycwolfsbergdoc'].hash"></setl-file-viewer>
                             </td>
                         </tr>
                     </table>
