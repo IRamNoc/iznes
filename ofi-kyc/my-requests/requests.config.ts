@@ -451,7 +451,7 @@ export const selectControls = [
     'regulatoryStatus',
     'regulatoryStatusInsurerType',
     'riskProfile',
-    'nationalIdNumber',
+    'nationalIdNumberType',
     'relationType',
     'holdingType',
     'parent',
@@ -3019,7 +3019,8 @@ export const controlToName = {
     holdingPercentage: 'Holding Percentage',
     relationType: 'Relation Type',
     holdingType: 'Holding Type',
-    nationalIdNumber: 'National Identification Number',
+    nationalIdNumberType: 'National Identification Number Type',
+    otherNationalIdNumberType: 'Your Number Type',
     nationalIdNumberText: 'National ID Number Specification',
     legalName: 'Legal Name',
 
@@ -3131,7 +3132,7 @@ export const controlToList = {
     beneficiaryType: 'beneficiaryTypesList',
     relationType: 'relationTypesList',
     holdingType: 'holdingTypesList',
-    nationalIdNumber: 'identificationNumberList',
+    nationalIdNumberType: 'identificationNumberList',
     otherSectorActivity: 'otherSectorActivity',
 
     // Banking
