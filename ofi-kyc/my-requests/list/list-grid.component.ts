@@ -25,6 +25,8 @@ export class MyRequestsGridComponent {
         return this.groupedKycList;
     }
 
+    @Input() clientFileRejected = false;
+
     @Output() selectedKyc = new EventEmitter<number>();
 
     statusList;

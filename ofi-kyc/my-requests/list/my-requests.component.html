@@ -29,7 +29,7 @@
                         </div>
                     </div>
 
-                    <my-requests-list [kycList]="kycList" (selectedKyc)="selectedKyc($event)"></my-requests-list>
+                    <my-requests-list [kycList]="kycList" (selectedKyc)="selectedKyc($event)" [clientFileRejected]="clientFileRejected"></my-requests-list>
                 </clr-tab-content>
             </ng-template>
         </clr-tab>
