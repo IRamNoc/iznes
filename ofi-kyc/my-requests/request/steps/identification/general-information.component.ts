@@ -1,15 +1,19 @@
-import { Component, Input, OnInit, OnDestroy, ViewChild } from '@angular/core';
+import { Component, Input, Output, OnInit, OnDestroy, ViewChild, ElementRef, EventEmitter } from '@angular/core';
 import { FormGroup, AbstractControl, Validators  } from '@angular/forms';
 import { get as getValue, isEmpty, castArray } from 'lodash';
-import { select } from '@angular-redux/store';
+import { select, NgRedux } from '@angular-redux/store';
 import { Subject } from 'rxjs';
-import { filter, map, takeUntil } from 'rxjs/operators';
+import { filter, take, map, takeUntil } from 'rxjs/operators';
 import { sirenValidator, siretValidator } from '@setl/utils/helper/validators';
 import { FormPercentDirective } from '@setl/utils/directives/form-percent/formpercent';
 import { countries } from '../../../requests.config';
 import { NewRequestService } from '../../new-request.service';
 import { IdentificationService } from '../identification.service';
 import { MultilingualService } from '@setl/multilingual';
+import { formHelper } from '@setl/utils/helper';
+import { PersistRequestService } from '@setl/core-req-services';
+import { PersistService } from '@setl/core-persist';
+import { setMyKycRequestedPersist } from '@ofi/ofi-main/ofi-store/ofi-kyc';
 
 @Component({
     selector: 'general-information',
@@ -19,6 +23,7 @@ export class GeneralInformationComponent implements OnInit, OnDestroy {
     @ViewChild(FormPercentDirective) formPercent: FormPercentDirective;
     @Input() form: FormGroup;
     @Input() isFormReadonly = false;
+    @Output() submitEvent: EventEmitter<any> = new EventEmitter<any>();
     @select(['ofi', 'ofiKyc', 'myKycRequested', 'kycs']) requests$;
     @select(['user', 'siteSettings', 'language']) requestLanguageObj;
 
@@ -35,6 +40,10 @@ export class GeneralInformationComponent implements OnInit, OnDestroy {
         private newRequestService: NewRequestService,
         private identificationService: IdentificationService,
         public translate: MultilingualService,
+        private element: ElementRef,
+        private persistRequestService: PersistRequestService,
+        private persistService: PersistService,
+        private ngRedux: NgRedux<any>,
     ) {
     }
 
@@ -155,9 +164,60 @@ export class GeneralInformationComponent implements OnInit, OnDestroy {
                                 this.form.disable();
                             }
                         }
+                    }).catch((err) => {
+                        console.log('Failed on get form data', err);
                     });
                 });
             });
+    }
+
+    persistForm() {
+        this.persistService.watchForm(
+            'newkycrequest/identification/general',
+            this.form,
+            this.newRequestService.context,
+            {
+                reset : false,
+                returnPromise: true,
+            },
+        ).then(() => {
+            this.ngRedux.dispatch(setMyKycRequestedPersist('identification'));
+        });
+    }
+
+    clearPersistForm() {
+        this.persistService.refreshState(
+            'newkycrequest/identification/general',
+            this.newRequestService.createIdentificationFormGroup(),
+            this.newRequestService.context,
+        );
+    }
+
+    handleSubmit(e) {
+        e.preventDefault();
+        if (!this.form.valid) {
+            formHelper.dirty(this.form);
+            formHelper.scrollToFirstError(this.element.nativeElement);
+            return;
+        }
+
+        this.requests$
+        .pipe(take(1))
+        .subscribe((requests) => {
+            this
+            .identificationService
+            .sendRequestGeneralInformation(this.form, requests)
+            .then(() => {
+                this.submitEvent.emit({
+                    completed: true,
+                });
+                this.clearPersistForm();
+            })
+            .catch(() => {
+                this.newRequestService.errorPop();
+            })
+            ;
+        });
     }
 
     ngOnDestroy() {

@@ -108,6 +108,22 @@ export class IdentificationService {
         });
     }
 
+    sendRequestGeneralInformation(form, requests) {
+        const promises = [];
+
+        requests.forEach((request, index) => {
+
+            const kycID = request.kycID;
+
+            const formGroupGeneral = form.get('generalInformation');
+            formGroupGeneral.get('kycID').setValue(kycID);
+            const generalPromise = this.sendRequestGeneral(formGroupGeneral);
+            promises.push(generalPromise);
+        });
+
+        return Promise.all(promises);
+    }
+
     handleBeneficiaries(formGroupBeneficiaries, kycID, connectedWallet, kycIndex) {
         const beneficiaryValues = formGroupBeneficiaries.value;
         const promises = this.sendRequestBeneficiaries(beneficiaryValues, kycID, connectedWallet).then((responses) => {
