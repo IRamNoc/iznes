@@ -221,6 +221,8 @@ export class OfiClientReferentialComponent implements OnInit, OnDestroy {
         const LANG_RETAIL = this.translate.translate('Retail');
         const LANG_DIRECT = this.translate.translate('In Direct');
         const LANG_MANDATE = this.translate.translate('By Mandate');
+        const LANG_NOWCP_ISSUER = this.translate.translate('Issuer');
+        const LANG_NOWCP_INVESTOR = this.translate.translate('Investor');
 
         const typeMap = {
             '10': LANG_INSTITUTIONAL,
@@ -229,6 +231,8 @@ export class OfiClientReferentialComponent implements OnInit, OnDestroy {
             '40': LANG_INSTITUTIONAL,
             // '50': LANG_INSTITUTIONAL,
             '60': LANG_RETAIL,
+            '70': LANG_NOWCP_ISSUER,
+            '80': LANG_NOWCP_INVESTOR,
         };
         const methodMap = {
             'direct': LANG_DIRECT,
