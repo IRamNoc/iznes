@@ -22,6 +22,7 @@ import get = Reflect.get;
 })
 export class BeneficiaryListComponent implements OnInit, OnDestroy {
     @Input() stakeholders: FormArray;
+    @Input() registeredCompanyName: string;
 
     @Output() refresh: EventEmitter<any> = new EventEmitter<any>();
     @select(['ofi', 'ofiKyc', 'myKycRequested', 'stakeholderRelations']) stakeholderRelations$;
@@ -64,11 +65,12 @@ export class BeneficiaryListComponent implements OnInit, OnDestroy {
     }
 
     get listStakeholders() {
-        if (!this.sortedStakeholders.length && this.stakeholders.length) {
-            this.sortStakeholders();
+        if (this.sortedStakeholders) {
+            if (!this.sortedStakeholders.length && this.stakeholders.length) {
+                this.sortStakeholders();
+            }
+            return this.sortedStakeholders;
         }
-
-        return this.sortedStakeholders;
     }
 
     constructor(
@@ -105,8 +107,11 @@ export class BeneficiaryListComponent implements OnInit, OnDestroy {
         const highest = stakeholders.controls.reduce(
             (highest, stakeholder) => {
                 let currentID = stakeholder.get('companyBeneficiariesID').value;
-                currentID = currentID.replace('temp', '');
-                currentID = Number(currentID);
+
+                if (typeof currentID === 'string') {
+                    currentID = currentID.replace('temp', '');
+                    currentID = Number(currentID);
+                }
 
                 return Math.max(highest, currentID);
             },

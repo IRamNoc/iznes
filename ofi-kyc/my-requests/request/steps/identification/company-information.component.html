@@ -413,7 +413,7 @@
             </div>
 
             <!-- Beneficiaries-->
-            <beneficiary-list [stakeholders]="form.get('beneficiaries')" (refresh)="refresh()"></beneficiary-list>
+            <beneficiary-list [stakeholders]="form.get('beneficiaries')" [registeredCompanyName]="registeredCompanyName" (refresh)="refresh()"></beneficiary-list>
         </div>
     </div>
 </form>

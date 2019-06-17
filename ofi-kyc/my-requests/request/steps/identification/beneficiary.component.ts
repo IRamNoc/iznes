@@ -19,13 +19,15 @@ export class BeneficiaryComponent implements OnInit, OnDestroy {
         return !this.form.get('legalPerson').disabled || !this.form.get('naturalPerson').disabled;
     }
     @Input() form;
+    @Input() registeredCompanyName: string;
     @Input() set parents(parents: any[]) {
         this.parentsFiltered = parents.filter((parent, i) => i !== this.index);
         this.parentsFiltered.unshift({
             id: -1,
-            text: this.translate.translate('No parent'),
+            text: this.registeredCompanyName,
         });
     }
+
     get parents() {
         return this.parentsFiltered;
     }
@@ -98,11 +100,13 @@ export class BeneficiaryComponent implements OnInit, OnDestroy {
                 const id = getValue(parent, [0, 'id']);
                 const stakeholder = this.form;
 
-                if (id === '-1') {
-                    this.beneficiaryService.setStakeholderIndirectHolding(stakeholder);
-                } else {
+                if (String(id) === '-1') { // Linked Entity is the registered company
                     this.beneficiaryService.setStakeholderDirectHolding(stakeholder);
+                } else {
+                    this.beneficiaryService.setStakeholderIndirectHolding(stakeholder);
                 }
+
+                (this.form.get('common.holdingType') as FormControl).updateValueAndValidity();
             });
     }
 

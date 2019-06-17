@@ -22,6 +22,7 @@
         <kyc-step-introduction #step (submitEvent)="handleSubmit($event)"></kyc-step-introduction>
     </form-step>
     <form-step *ngIf="fullForm">
+<<<<<<< HEAD
         <!--PARENT STEP-->
         <!-- <kyc-step-identification #step [form]="forms.get('identification')" [investorType]="investorType" (submitEvent)="handleSubmit($event)"></kyc-step-identification> -->
     </form-step>
@@ -36,6 +37,9 @@
     </form-step>
     <form-step *ngIf="fullForm">
             <p (click)="handleSubmit({completed: true})">Bank Accounts</p>
+=======
+        <kyc-step-identification #step [form]="forms.get('identification')" [investorType]="investorType" (submitEvent)="handleSubmit($event)" [isFormReadonly]="isFormReadonly"></kyc-step-identification>
+>>>>>>> a2f05853e2989bdef0452a2196a6331c23d5a01a
     </form-step>
     <form-step *ngIf="fullForm">
             <p (click)="handleSubmit({completed: true})">Classification</p>

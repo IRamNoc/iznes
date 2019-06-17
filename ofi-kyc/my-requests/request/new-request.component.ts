@@ -47,6 +47,8 @@ export class NewKycRequestComponent implements OnInit, AfterViewInit {
     unsubscribe: Subject<any> = new Subject();
     stepsConfig: any;
     forms: any = {};
+    isDuplicateFromClientFile = false;
+    clientFileId: number;
 
     animating: Boolean;
     fullForm = true;
@@ -130,6 +132,17 @@ export class NewKycRequestComponent implements OnInit, AfterViewInit {
         return 'nonPro';
     }
 
+    get isFormReadonly():boolean {
+       if (this.isDuplicateFromClientFile) {
+           return true;
+       }
+       // if we have client file, and now we are not editing client, the form should be readonly
+       if (typeof this.clientFileId !== 'undefined' && this.clientFileId !== Number(this.newRequestService.context))  {
+          return true;
+       }
+       return false;
+    }
+
     ngOnInit() {
         this.ngRedux.dispatch(clearMyKycRequestedPersist());
 
@@ -175,6 +188,10 @@ export class NewKycRequestComponent implements OnInit, AfterViewInit {
                 this.getDuplicatedCompany();
             }
 
+            if (params.get('isclientfile') === 'true') {
+                this.isDuplicateFromClientFile = true;
+            }
+
             this.fullForm = !(completed === 'true');
 
             this.initFormSteps(step);
@@ -183,6 +200,15 @@ export class NewKycRequestComponent implements OnInit, AfterViewInit {
         this.language$.pipe(takeUntil(this.unsubscribe)).subscribe(() => {
             this.initFormSteps(this.currentCompletedStep);
         });
+
+        this.myKycList$.pipe(
+            rxMap((kycs) => {
+               const list = Object.keys(kycs).map(k => kycs[k])
+                   .filter(kyc => kyc.amManagementCompanyID === null);
+               return getValue(list, '[0].kycID', undefined);
+            }),
+            takeUntil(this.unsubscribe),
+        ).subscribe(clientFileId => this.clientFileId = clientFileId);
     }
 
     initForm() {
