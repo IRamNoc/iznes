@@ -76,6 +76,18 @@
         }
     }
 
+    @media screen and (min-width: 1800px) {
+        .management-company-container {
+            width: calc(16.6666666666% - 17px);
+            &:nth-child(4n+1) {
+                margin-left: 20px;
+            }
+            &:first-child, &:nth-child(6n+1) {
+                margin-left: 0;
+            }
+        }
+    }
+
     .link,
     .actions {
         font-size: 13px;
@@ -123,6 +135,9 @@
                     border: $border-size solid $blue;
                     border-bottom: 0;
                     padding: 0 0 $border-size;
+                    .img-container .img img {
+                        filter: none;
+                    }
                 }
 
                 .name {
@@ -178,6 +193,7 @@
                         top: 50%;
                         transform: translate(-50%, -50%);
                         width: auto;
+                        filter: grayscale(1);
                     }
 
                     i{

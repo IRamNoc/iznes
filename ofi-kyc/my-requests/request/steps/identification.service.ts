@@ -115,7 +115,7 @@ export class IdentificationService {
 
             const kycID = request.kycID;
 
-            const formGroupGeneral = form.get('generalInformation');
+            const formGroupGeneral = form;
             formGroupGeneral.get('kycID').setValue(kycID);
             const generalPromise = this.sendRequestGeneral(formGroupGeneral);
             promises.push(generalPromise);

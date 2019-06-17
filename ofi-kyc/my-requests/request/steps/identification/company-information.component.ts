@@ -1,4 +1,4 @@
-import { Component, Input, OnInit, OnDestroy, ViewChild } from '@angular/core';
+import { Component, Input, Output, OnInit, OnDestroy, ViewChild, EventEmitter, ElementRef } from '@angular/core';
 import { FormGroup, FormArray } from '@angular/forms';
 import { get as getValue, set as setValue, filter, isEmpty, castArray, find } from 'lodash';
 import { select, NgRedux } from '@angular-redux/store';
@@ -12,6 +12,10 @@ import { BeneficiaryService } from './beneficiary.service';
 import { countries } from '../../../requests.config';
 import { setMyKycStakeholderRelations } from '@ofi/ofi-main/ofi-store/ofi-kyc/kyc-request';
 import { MultilingualService } from '@setl/multilingual';
+import { formHelper } from '@setl/utils/helper';
+import { PersistRequestService } from '@setl/core-req-services';
+import { PersistService } from '@setl/core-persist';
+import { setMyKycRequestedPersist } from '@ofi/ofi-main/ofi-store/ofi-kyc';
 
 @Component({
     selector: 'company-information',
@@ -21,6 +25,7 @@ import { MultilingualService } from '@setl/multilingual';
 export class CompanyInformationComponent implements OnInit, OnDestroy {
     @ViewChild(FormPercentDirective) formPercent: FormPercentDirective;
     @Input() form: FormGroup;
+    @Output() submitEvent: EventEmitter<any> = new EventEmitter<any>();
     @select(['ofi', 'ofiKyc', 'myKycRequested', 'kycs']) requests$;
     @select(['ofi', 'ofiKyc', 'myKycRequested', 'formPersist']) persistedForms$;
     @select(['user', 'siteSettings', 'language']) requestLanguageObj;
@@ -54,6 +59,9 @@ export class CompanyInformationComponent implements OnInit, OnDestroy {
         private beneficiaryService: BeneficiaryService,
         private ngRedux: NgRedux<any>,
         public translate: MultilingualService,
+        private element: ElementRef,
+        private persistRequestService: PersistRequestService,
+        private persistService: PersistService,
     ) {
     }
 
@@ -591,6 +599,59 @@ export class CompanyInformationComponent implements OnInit, OnDestroy {
 
     refresh() {
         this.formPercent.refreshFormPercent();
+    }
+
+    persistForm() {
+        this.persistService.watchForm(
+            'newkycrequest/identification/companyinformation',
+            this.form,
+            this.newRequestService.context,
+            {
+                reset : false,
+                returnPromise: true,
+            },
+        ).then(() => {
+            this.ngRedux.dispatch(setMyKycRequestedPersist('identification/companyinformation'));
+        });
+    }
+
+    clearPersistForm() {
+        this.persistService.refreshState(
+            'newkycrequest/identification/companyinformation',
+            this.newRequestService.createIdentificationFormGroup(),
+            this.newRequestService.context,
+        );
+    }
+
+    handleSubmit(e) {
+        e.preventDefault();
+        if (!this.form.valid) {
+            formHelper.dirty(this.form);
+            formHelper.scrollToFirstError(this.element.nativeElement);
+            return;
+        }
+
+        this.requests$
+        .pipe(take(1))
+        .subscribe((requests) => {
+            this
+            .identificationService
+            .sendRequestGeneralInformation(this.form, requests)
+            .then(() => {
+                this.submitEvent.emit({
+                    completed: true,
+                });
+                this.clearPersistForm();
+            })
+            .catch(() => {
+                this.newRequestService.errorPop();
+            })
+            ;
+        });
+    }
+
+    isStepValid() {
+        return this.form.valid;
     }
 
     ngOnDestroy() {

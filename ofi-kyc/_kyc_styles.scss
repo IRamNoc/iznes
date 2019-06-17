@@ -84,17 +84,24 @@
     line-height: 55px;
     padding-left: 20px;
     font-size: 20px;
+    .btn {
+        float: right;
+        margin: 15px 20px;
+    }
 }
 
 .kyc-container {
     float: left;
-    width: calc(100% - 280px);
+    width: 100%;
     height: calc(100vh - 2.5rem - 91px);
     margin-bottom: -20px;
     padding: 20px;
     background: #ffffff;
     display: table;
-    border-left: 1px solid #dddddd;
+    &.width-adjust {
+        width: calc(100% - 280px);
+        border-left: 1px solid #dddddd;
+    }
     h2 {
         font-weight: normal;
     }
@@ -108,6 +115,46 @@
                 margin-top: 0;
             }
         }
+        .row.panel-body {
+            padding: 14px 10px!important;
+            label {
+                font-size: 13px;
+                font-weight: 500!important;
+                color: #444444;
+                margin-top: 8px!important;
+                margin-bottom: 3px!important;
+            }
+            input[type] {
+                height: 30px;
+                font-size:13px;
+            }
+            ng-select {
+                .ui-select-toggle {
+                    height: 30px!important;
+                }
+                .ui-select-placeholder {
+                    line-height: 30px!important;
+                }
+                .ui-select-match .arrow {
+                    top: 16px;
+                }
+                .ui-select-match-text {
+                    margin: 0!important;
+                    padding: 0!important;
+                    line-height: 30px !important;
+                }
+                .btn clr-icon {
+                    margin-top: -8px;
+                }
+                .ui-select-container {
+                    width: 95%!important;
+                }
+            }
+            clr-radio-container {
+                margin-top: 0;
+            }
+        }
+
     }
     .alert-no-bg {
         background: none;
@@ -141,6 +188,9 @@ form-steps {
         .button-container {
             text-align: right;
             margin: 24px 0;
+            .btn {
+                width: 130px;
+            }
         }
     }
 }

@@ -140,18 +140,10 @@ export class OfiKycHomeComponent implements AfterViewInit, OnDestroy {
         this.ngRedux.dispatch(setAppliedHighlight());
         // this.showModal = true;
 
-        this.confirmationService.create(
-            this.translate.translate('My Information'),
-            this.translate.translate('My information can be changed later in "Profile" at the top of the page.'),
-            { confirmText: this.translate.translate('OK, I understand'), declineText: '' },
-        ).subscribe((ans) => {
-            if (ans.resolved) {
-                this.closeModal();
-            }
-        });
+        this.saveMyUserDetails();
     }
 
-    closeModal() {
+    saveMyUserDetails() {
         const user = {
             firstName: this.userInfo.firstName,
             lastName: this.userInfo.lastName,
@@ -163,9 +155,7 @@ export class OfiKycHomeComponent implements AfterViewInit, OnDestroy {
         const asyncTaskPipe = this.myUserService.saveMyUserDetails(user);
         this.ngRedux.dispatch(SagaHelper.runAsyncCallback(
             asyncTaskPipe,
-            () => {
-                this.toasterService.pop('success', this.translate.translate('Your form has been saved successfully!'));
-            },
+            () => {},
             () => {
                 this.toasterService.pop('error', this.translate.translate('Failed to save your information.'));
                 return;

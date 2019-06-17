@@ -157,8 +157,11 @@
             <button id="btnKycClose" type="button" class="btn btn-default" *ngIf="isPopUpMode()" (click)="onClickCloseButton()">
                 <i class="fa fa-close"></i> {{ 'Close' | translate }}
             </button>
-            <button id="btnKycSubmit" type="submit" class="btn btn-primary" [disabled]="!additionnalForm.valid">
+            <button id="btnKycSubmit" type="submit" class="btn btn-primary" *ngIf="isPopUpMode()" [disabled]="!additionnalForm.valid">
                 <i class="fa fa-save"></i> {{ 'Save' | translate }}
+            </button>
+            <button id="btnKycSubmit" type="submit" class="btn btn-primary btn-right" *ngIf="!isPopUpMode()" [disabled]="!additionnalForm.valid">
+                {{ 'Continue' | translate }}
             </button>
         </div>
     </section>

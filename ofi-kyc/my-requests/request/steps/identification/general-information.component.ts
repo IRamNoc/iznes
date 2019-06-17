@@ -68,6 +68,8 @@ export class GeneralInformationComponent implements OnInit, OnDestroy {
                 this.formCheckOtherIdentificationNumberType(otherIdentificationNumberTypeValue);
             });
 
+        this.form.get('commercialDomiciliation').setValue('');
+
         this.form.get('commercialDomiciliation').valueChanges
             .pipe(takeUntil(this.unsubscribe))
             .subscribe((value) => {
@@ -76,6 +78,7 @@ export class GeneralInformationComponent implements OnInit, OnDestroy {
     }
 
     formCheckCommercialDomiciliation(value) {
+        console.log('+++ value', value);
         const commercialDomiciliationControls: AbstractControl[] = [
             this.form.get('commercialAddressLine1'),
             this.form.get('commercialAddressLine2'),
@@ -218,6 +221,10 @@ export class GeneralInformationComponent implements OnInit, OnDestroy {
             })
             ;
         });
+    }
+
+    isStepValid() {
+        return this.form.valid;
     }
 
     ngOnDestroy() {
