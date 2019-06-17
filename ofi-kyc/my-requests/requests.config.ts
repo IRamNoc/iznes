@@ -2837,6 +2837,10 @@ export const capitalNatureList = [
 
 export const documentTypesList = [
     {
+        id: 'kycribdoc',
+        text: 'RIB',
+    },
+    {
         id: 'kycstatuscertifieddoc',
         text: 'Statuses "certified" by the duly authorized representative of the client',
     },

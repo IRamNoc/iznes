@@ -28,22 +28,58 @@
             <div class="row">
                 <div class="col-xl-6">
                     <div class="title">
+                        <strong>{{ 'RIB' | translate }}</strong>
+                        <small [@fade]="'in'" class="saved"
+                            *ngIf="changed.kycribdoc">{{'Changes have been saved' | translate}}<i
+                                class="fa fa-check"></i></small>
+                    </div>
+                    <table class="tableUpload">
+                        <tr>
+                            <td>
+                                <setl-file-drop [formControl]="uploadMyDocumentsForm.controls['upload1']"
+                                    (onDrop)="getUpload($event, 'kycribdoc')" [inline]="true"
+                                    [preset]="(allUploadsFiles['kycribdoc'].preset.name !== '') ? allUploadsFiles['kycribdoc'].preset : ''"
+                                    ngDefaultControl></setl-file-drop>
+                            </td>
+                            <td>
+                                <div class="switch-container">
+                                    <label class="switch">
+                                        <input type="checkbox" id="shareUpload1" formControlName="shareUpload1"
+                                            [(ngModel)]="allUploadsFiles['kycribdoc'].common"
+                                            (change)="checkToggles('kycribdoc', uploadMyDocumentsForm.controls['shareUpload1'].value)">
+                                        <span class="slider round"></span>
+                                    </label>
+                                </div>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td colspan="2">
+                                <setl-file-viewer [secure]="true" [securePath]="kycDocPath"
+                                    *ngIf="allUploadsFiles['kycribdoc'].fileID !== 0"
+                                    [fileHash]="allUploadsFiles['kycribdoc'].hash"></setl-file-viewer>
+                            </td>
+                        </tr>
+                    </table>
+                </div>
+
+                <div class="col-xl-6">
+                    <div class="title">
                         <strong>{{ 'Statuses "certified" by the duly authorized representative of the client' | translate }}</strong>
                         <small [@fade]="'in'" class="saved" *ngIf="changed.kycstatuscertifieddoc">{{'Changes have been saved' | translate}}<i class="fa fa-check"></i></small>
                     </div>
                     <table class="tableUpload">
                         <tr>
                             <td>
-                                <setl-file-drop [formControl]="uploadMyDocumentsForm.controls['upload1']" (onDrop)="getUpload($event, 'kycstatuscertifieddoc')" [inline]="true" [preset]="(allUploadsFiles['kycstatuscertifieddoc'].preset.name !== '') ? allUploadsFiles['kycstatuscertifieddoc'].preset : ''" ngDefaultControl></setl-file-drop>
+                                <setl-file-drop [formControl]="uploadMyDocumentsForm.controls['upload2']" (onDrop)="getUpload($event, 'kycstatuscertifieddoc')" [inline]="true" [preset]="(allUploadsFiles['kycstatuscertifieddoc'].preset.name !== '') ? allUploadsFiles['kycstatuscertifieddoc'].preset : ''" ngDefaultControl></setl-file-drop>
                             </td>
                             <td>
                                 <div class="switch-container">
                                     <label class="switch">
                                         <input type="checkbox"
-                                               id="shareUpload1"
-                                               formControlName="shareUpload1"
+                                               id="shareUpload2"
+                                               formControlName="shareUpload2"
                                                [(ngModel)]="allUploadsFiles['kycstatuscertifieddoc'].common"
-                                               (change)="checkToggles('kycstatuscertifieddoc', uploadMyDocumentsForm.controls['shareUpload1'].value)">
+                                               (change)="checkToggles('kycstatuscertifieddoc', uploadMyDocumentsForm.controls['shareUpload2'].value)">
                                         <span class="slider round"></span>
                                     </label>
                                 </div>
@@ -56,24 +92,29 @@
                         </tr>
                     </table>
                 </div>
+            </div>
+
+            <div class="row">
                 <div class="col-xl-6">
                     <div class="title">
                         <strong>{{ 'Kbis extract (or equivalent) less than 3 months old' | translate }}</strong>
-                        <small [@fade]="'in'" class="saved" *ngIf="changed.kyckbisdoc">{{'Changes have been saved' | translate}}<i class="fa fa-check"></i></small>
+                        <small [@fade]="'in'" class="saved" *ngIf="changed.kyckbisdoc">{{'Changes have been saved' | translate}}<i
+                                class="fa fa-check"></i></small>
                     </div>
                     <table class="tableUpload">
                         <tr>
                             <td>
-                                <setl-file-drop [formControl]="uploadMyDocumentsForm.controls['upload2']" (onDrop)="getUpload($event, 'kyckbisdoc')" [inline]="true" [preset]="(allUploadsFiles['kyckbisdoc'].preset.name !== '') ? allUploadsFiles['kyckbisdoc'].preset : ''" ngDefaultControl></setl-file-drop>
+                                <setl-file-drop [formControl]="uploadMyDocumentsForm.controls['upload3']"
+                                    (onDrop)="getUpload($event, 'kyckbisdoc')" [inline]="true"
+                                    [preset]="(allUploadsFiles['kyckbisdoc'].preset.name !== '') ? allUploadsFiles['kyckbisdoc'].preset : ''"
+                                    ngDefaultControl></setl-file-drop>
                             </td>
                             <td>
                                 <div class="switch-container">
                                     <label class="switch">
-                                        <input type="checkbox"
-                                               id="shareUpload2"
-                                               formControlName="shareUpload2"
-                                               [(ngModel)]="allUploadsFiles['kyckbisdoc'].common"
-                                               (change)="checkToggles('kyckbisdoc', uploadMyDocumentsForm.controls['shareUpload2'].value)">
+                                        <input type="checkbox" id="shareUpload3" formControlName="shareUpload3"
+                                            [(ngModel)]="allUploadsFiles['kyckbisdoc'].common"
+                                            (change)="checkToggles('kyckbisdoc', uploadMyDocumentsForm.controls['shareUpload3'].value)">
                                         <span class="slider round"></span>
                                     </label>
                                 </div>
@@ -81,14 +122,14 @@
                         </tr>
                         <tr>
                             <td colspan="2">
-                                <setl-file-viewer [secure]="true" [securePath]="kycDocPath" *ngIf="allUploadsFiles['kyckbisdoc'].fileID !== 0" [fileHash]="allUploadsFiles['kyckbisdoc'].hash"></setl-file-viewer>
+                                <setl-file-viewer [secure]="true" [securePath]="kycDocPath"
+                                    *ngIf="allUploadsFiles['kyckbisdoc'].fileID !== 0" [fileHash]="allUploadsFiles['kyckbisdoc'].hash">
+                                </setl-file-viewer>
                             </td>
                         </tr>
                     </table>
                 </div>
-            </div>
 
-            <div class="row">
                 <div class="col-xl-6">
                     <div class="title">
                         <strong>{{ 'Latest audited annual report' | translate }}</strong>
@@ -97,16 +138,16 @@
                     <table class="tableUpload">
                         <tr>
                             <td>
-                                <setl-file-drop [formControl]="uploadMyDocumentsForm.controls['upload3']" (onDrop)="getUpload($event, 'kycannualreportdoc')" [inline]="true" [preset]="(allUploadsFiles['kycannualreportdoc'].preset.name !== '') ? allUploadsFiles['kycannualreportdoc'].preset : ''" ngDefaultControl></setl-file-drop>
+                                <setl-file-drop [formControl]="uploadMyDocumentsForm.controls['upload4']" (onDrop)="getUpload($event, 'kycannualreportdoc')" [inline]="true" [preset]="(allUploadsFiles['kycannualreportdoc'].preset.name !== '') ? allUploadsFiles['kycannualreportdoc'].preset : ''" ngDefaultControl></setl-file-drop>
                             </td>
                             <td>
                                 <div class="switch-container">
                                     <label class="switch">
                                         <input type="checkbox"
-                                               id="shareUpload3"
-                                               formControlName="shareUpload3"
+                                               id="shareUpload4"
+                                               formControlName="shareUpload4"
                                                [(ngModel)]="allUploadsFiles['kycannualreportdoc'].common"
-                                               (change)="checkToggles('kycannualreportdoc', uploadMyDocumentsForm.controls['shareUpload3'].value)">
+                                               (change)="checkToggles('kycannualreportdoc', uploadMyDocumentsForm.controls['shareUpload4'].value)">
                                         <span class="slider round"></span>
                                     </label>
                                 </div>
@@ -119,24 +160,30 @@
                         </tr>
                     </table>
                 </div>
+            </div>
+
+            <div class="row">
                 <div class="col-xl-6">
                     <div class="title">
                         <strong>{{ 'National identity card or valid passport or residence card of the signatory with photograph' | translate }}</strong>
-                        <small [@fade]="'in'" class="saved" *ngIf="changed.kycidorpassportdoc">{{'Changes have been saved' | translate}}<i class="fa fa-check"></i></small>
+                        <small [@fade]="'in'" class="saved"
+                            *ngIf="changed.kycidorpassportdoc">{{'Changes have been saved' | translate}}<i
+                                class="fa fa-check"></i></small>
                     </div>
                     <table class="tableUpload">
                         <tr>
                             <td>
-                                <setl-file-drop [formControl]="uploadMyDocumentsForm.controls['upload4']" (onDrop)="getUpload($event, 'kycidorpassportdoc')" [inline]="true" [preset]="(allUploadsFiles['kycidorpassportdoc'].preset.name !== '') ? allUploadsFiles['kycidorpassportdoc'].preset : ''" ngDefaultControl></setl-file-drop>
+                                <setl-file-drop [formControl]="uploadMyDocumentsForm.controls['upload5']"
+                                    (onDrop)="getUpload($event, 'kycidorpassportdoc')" [inline]="true"
+                                    [preset]="(allUploadsFiles['kycidorpassportdoc'].preset.name !== '') ? allUploadsFiles['kycidorpassportdoc'].preset : ''"
+                                    ngDefaultControl></setl-file-drop>
                             </td>
                             <td>
                                 <div class="switch-container">
                                     <label class="switch">
-                                        <input type="checkbox"
-                                               id="shareUpload4"
-                                               formControlName="shareUpload4"
-                                               [(ngModel)]="allUploadsFiles['kycidorpassportdoc'].common"
-                                               (change)="checkToggles('kycidorpassportdoc', uploadMyDocumentsForm.controls['shareUpload4'].value)">
+                                        <input type="checkbox" id="shareUpload5" formControlName="shareUpload5"
+                                            [(ngModel)]="allUploadsFiles['kycidorpassportdoc'].common"
+                                            (change)="checkToggles('kycidorpassportdoc', uploadMyDocumentsForm.controls['shareUpload5'].value)">
                                         <span class="slider round"></span>
                                     </label>
                                 </div>
@@ -144,14 +191,14 @@
                         </tr>
                         <tr>
                             <td colspan="2">
-                                <setl-file-viewer [secure]="true" [securePath]="kycDocPath" *ngIf="allUploadsFiles['kycidorpassportdoc'].fileID !== 0" [fileHash]="allUploadsFiles['kycidorpassportdoc'].hash"></setl-file-viewer>
+                                <setl-file-viewer [secure]="true" [securePath]="kycDocPath"
+                                    *ngIf="allUploadsFiles['kycidorpassportdoc'].fileID !== 0"
+                                    [fileHash]="allUploadsFiles['kycidorpassportdoc'].hash"></setl-file-viewer>
                             </td>
                         </tr>
                     </table>
                 </div>
-            </div>
 
-            <div class="row">
                 <div class="col-xl-6">
                     <div class="title">
                         <strong>{{ 'Wolfsberg Questionnaire or equivalent' | translate }}</strong>
@@ -160,16 +207,16 @@
                     <table class="tableUpload">
                         <tr>
                             <td>
-                                <setl-file-drop [formControl]="uploadMyDocumentsForm.controls['upload5']" (onDrop)="getUpload($event, 'kycwolfsbergdoc')" [inline]="true" [preset]="(allUploadsFiles['kycwolfsbergdoc'].preset.name !== '') ? allUploadsFiles['kycwolfsbergdoc'].preset : ''" ngDefaultControl></setl-file-drop>
+                                <setl-file-drop [formControl]="uploadMyDocumentsForm.controls['upload6']" (onDrop)="getUpload($event, 'kycwolfsbergdoc')" [inline]="true" [preset]="(allUploadsFiles['kycwolfsbergdoc'].preset.name !== '') ? allUploadsFiles['kycwolfsbergdoc'].preset : ''" ngDefaultControl></setl-file-drop>
                             </td>
                             <td>
                                 <div class="switch-container">
                                     <label class="switch">
                                         <input type="checkbox"
-                                               id="shareUpload5"
-                                               formControlName="shareUpload5"
+                                               id="shareUpload6"
+                                               formControlName="shareUpload6"
                                                [(ngModel)]="allUploadsFiles['kycwolfsbergdoc'].common"
-                                               (change)="checkToggles('kycwolfsbergdoc', uploadMyDocumentsForm.controls['shareUpload5'].value)">
+                                               (change)="checkToggles('kycwolfsbergdoc', uploadMyDocumentsForm.controls['shareUpload6'].value)">
                                         <span class="slider round"></span>
                                     </label>
                                 </div>
@@ -182,24 +229,30 @@
                         </tr>
                     </table>
                 </div>
+            </div>
+
+            <div class="row">
                 <div class="col-xl-6">
                     <div class="title">
                         <strong>{{ 'Tax self-certification form (CRS)' | translate }}</strong>
-                        <small [@fade]="'in'" class="saved" *ngIf="changed.kyctaxcertificationdoc">{{'Changes have been saved' | translate}}<i class="fa fa-check"></i></small>
+                        <small [@fade]="'in'" class="saved"
+                            *ngIf="changed.kyctaxcertificationdoc">{{'Changes have been saved' | translate}}<i
+                                class="fa fa-check"></i></small>
                     </div>
                     <table class="tableUpload">
                         <tr>
                             <td>
-                                <setl-file-drop [formControl]="uploadMyDocumentsForm.controls['upload6']" (onDrop)="getUpload($event, 'kyctaxcertificationdoc')" [inline]="true" [preset]="(allUploadsFiles['kyctaxcertificationdoc'].preset.name !== '') ? allUploadsFiles['kyctaxcertificationdoc'].preset : ''" ngDefaultControl></setl-file-drop>
+                                <setl-file-drop [formControl]="uploadMyDocumentsForm.controls['upload7']"
+                                    (onDrop)="getUpload($event, 'kyctaxcertificationdoc')" [inline]="true"
+                                    [preset]="(allUploadsFiles['kyctaxcertificationdoc'].preset.name !== '') ? allUploadsFiles['kyctaxcertificationdoc'].preset : ''"
+                                    ngDefaultControl></setl-file-drop>
                             </td>
                             <td>
                                 <div class="switch-container">
                                     <label class="switch">
-                                        <input type="checkbox"
-                                               id="shareUpload6"
-                                               formControlName="shareUpload6"
-                                               [(ngModel)]="allUploadsFiles['kyctaxcertificationdoc'].common"
-                                               (change)="checkToggles('kyctaxcertificationdoc', uploadMyDocumentsForm.controls['shareUpload6'].value)">
+                                        <input type="checkbox" id="shareUpload7" formControlName="shareUpload7"
+                                            [(ngModel)]="allUploadsFiles['kyctaxcertificationdoc'].common"
+                                            (change)="checkToggles('kyctaxcertificationdoc', uploadMyDocumentsForm.controls['shareUpload7'].value)">
                                         <span class="slider round"></span>
                                     </label>
                                 </div>
@@ -207,14 +260,14 @@
                         </tr>
                         <tr>
                             <td colspan="2">
-                                <setl-file-viewer [secure]="true" [securePath]="kycDocPath" *ngIf="allUploadsFiles['kyctaxcertificationdoc'].fileID !== 0" [fileHash]="allUploadsFiles['kyctaxcertificationdoc'].hash"></setl-file-viewer>
+                                <setl-file-viewer [secure]="true" [securePath]="kycDocPath"
+                                    *ngIf="allUploadsFiles['kyctaxcertificationdoc'].fileID !== 0"
+                                    [fileHash]="allUploadsFiles['kyctaxcertificationdoc'].hash"></setl-file-viewer>
                             </td>
                         </tr>
                     </table>
                 </div>
-            </div>
 
-            <div class="row">
                 <div class="col-xl-6">
                     <div class="title">
                         <strong>{{ 'Form W-8BEN-E (FACTA)' | translate }}</strong>
@@ -223,16 +276,16 @@
                     <table class="tableUpload">
                         <tr>
                             <td>
-                                <setl-file-drop [formControl]="uploadMyDocumentsForm.controls['upload7']" (onDrop)="getUpload($event, 'kycw8benefatcadoc')" [inline]="true" [preset]="(allUploadsFiles['kycw8benefatcadoc'].preset.name !== '') ? allUploadsFiles['kycw8benefatcadoc'].preset : ''" ngDefaultControl></setl-file-drop>
+                                <setl-file-drop [formControl]="uploadMyDocumentsForm.controls['upload8']" (onDrop)="getUpload($event, 'kycw8benefatcadoc')" [inline]="true" [preset]="(allUploadsFiles['kycw8benefatcadoc'].preset.name !== '') ? allUploadsFiles['kycw8benefatcadoc'].preset : ''" ngDefaultControl></setl-file-drop>
                             </td>
                             <td>
                                 <div class="switch-container">
                                     <label class="switch">
                                         <input type="checkbox"
-                                               id="shareUpload7"
-                                               formControlName="shareUpload7"
+                                               id="shareUpload8"
+                                               formControlName="shareUpload8"
                                                [(ngModel)]="allUploadsFiles['kycw8benefatcadoc'].common"
-                                               (change)="checkToggles('kycw8benefatcadoc', uploadMyDocumentsForm.controls['shareUpload7'].value)">
+                                               (change)="checkToggles('kycw8benefatcadoc', uploadMyDocumentsForm.controls['shareUpload8'].value)">
                                         <span class="slider round"></span>
                                     </label>
                                 </div>
@@ -260,16 +313,16 @@
                     <table class="tableUpload">
                         <tr>
                             <td>
-                                <setl-file-drop [formControl]="uploadMyDocumentsForm.controls['upload8']" (onDrop)="getUpload($event, 'kycisincodedoc')" [inline]="true" [preset]="(allUploadsFiles['kycisincodedoc'].preset.name !== '') ? allUploadsFiles['kycisincodedoc'].preset : ''" ngDefaultControl></setl-file-drop>
+                                <setl-file-drop [formControl]="uploadMyDocumentsForm.controls['upload9']" (onDrop)="getUpload($event, 'kycisincodedoc')" [inline]="true" [preset]="(allUploadsFiles['kycisincodedoc'].preset.name !== '') ? allUploadsFiles['kycisincodedoc'].preset : ''" ngDefaultControl></setl-file-drop>
                             </td>
                             <td>
                                 <div class="switch-container">
                                     <label class="switch">
                                         <input type="checkbox"
-                                               id="shareUpload8"
-                                               formControlName="shareUpload8"
+                                               id="shareUpload9"
+                                               formControlName="shareUpload9"
                                                [(ngModel)]="allUploadsFiles['kycisincodedoc'].common"
-                                               (change)="checkToggles('kycisincodedoc', uploadMyDocumentsForm.controls['shareUpload8'].value)">
+                                               (change)="checkToggles('kycisincodedoc', uploadMyDocumentsForm.controls['shareUpload9'].value)">
                                         <span class="slider round"></span>
                                     </label>
                                 </div>
@@ -282,6 +335,7 @@
                         </tr>
                     </table>
                 </div>
+
                 <div class="col-xl-6">
                     <div class="title">
                         <strong>{{ 'Evidence of stocklisting and confirmation that 75% of the company\'s shares are floatable and tradable on the market' | translate }}</strong>
@@ -290,16 +344,16 @@
                     <table class="tableUpload">
                         <tr>
                             <td>
-                                <setl-file-drop [formControl]="uploadMyDocumentsForm.controls['upload9']" (onDrop)="getUpload($event, 'kycevidencefloatable')" [inline]="true" [preset]="(allUploadsFiles['kycevidencefloatable'].preset.name !== '') ? allUploadsFiles['kycevidencefloatable'].preset : ''" ngDefaultControl></setl-file-drop>
+                                <setl-file-drop [formControl]="uploadMyDocumentsForm.controls['upload10']" (onDrop)="getUpload($event, 'kycevidencefloatable')" [inline]="true" [preset]="(allUploadsFiles['kycevidencefloatable'].preset.name !== '') ? allUploadsFiles['kycevidencefloatable'].preset : ''" ngDefaultControl></setl-file-drop>
                             </td>
                             <td>
                                 <div class="switch-container">
                                     <label class="switch">
                                         <input type="checkbox"
-                                               id="shareUpload9"
-                                               formControlName="shareUpload9"
+                                               id="shareUpload10"
+                                               formControlName="shareUpload10"
                                                [(ngModel)]="allUploadsFiles['kycevidencefloatable'].common"
-                                               (change)="checkToggles('kycevidencefloatable', uploadMyDocumentsForm.controls['shareUpload9'].value)">
+                                               (change)="checkToggles('kycevidencefloatable', uploadMyDocumentsForm.controls['shareUpload10'].value)">
                                         <span class="slider round"></span>
                                     </label>
                                 </div>
@@ -314,7 +368,6 @@
                 </div>
             </div>
 
-
             <div class="hr-line-dashed"></div>
 
             <h3 class="mb-1">{{ 'If your activity is regulated' | translate }}:</h3>
@@ -328,16 +381,16 @@
                     <table class="tableUpload">
                         <tr>
                             <td>
-                                <setl-file-drop [formControl]="uploadMyDocumentsForm.controls['upload10']" (onDrop)="getUpload($event, 'kycproofofapprovaldoc')" [inline]="true" [preset]="(allUploadsFiles['kycproofofapprovaldoc'].preset.name !== '') ? allUploadsFiles['kycproofofapprovaldoc'].preset : ''" ngDefaultControl></setl-file-drop>
+                                <setl-file-drop [formControl]="uploadMyDocumentsForm.controls['upload11']" (onDrop)="getUpload($event, 'kycproofofapprovaldoc')" [inline]="true" [preset]="(allUploadsFiles['kycproofofapprovaldoc'].preset.name !== '') ? allUploadsFiles['kycproofofapprovaldoc'].preset : ''" ngDefaultControl></setl-file-drop>
                             </td>
                             <td>
                                 <div class="switch-container">
                                     <label class="switch">
                                         <input type="checkbox"
                                                id="shareUpload10"
-                                               formControlName="shareUpload10"
+                                               formControlName="shareUpload11"
                                                [(ngModel)]="allUploadsFiles['kycproofofapprovaldoc'].common"
-                                               (change)="checkToggles('kycproofofapprovaldoc', uploadMyDocumentsForm.controls['shareUpload10'].value)">
+                                               (change)="checkToggles('kycproofofapprovaldoc', uploadMyDocumentsForm.controls['shareUpload11'].value)">
                                         <span class="slider round"></span>
                                     </label>
                                 </div>
@@ -350,6 +403,7 @@
                         </tr>
                     </table>
                 </div>
+
                 <div class="col-xl-6">
                     <div class="title">
                         <strong>{{ 'Proof of regulation/supervision from the regulator\'s website' | translate }}</strong>
@@ -358,16 +412,16 @@
                     <table class="tableUpload">
                         <tr>
                             <td>
-                                <setl-file-drop [formControl]="uploadMyDocumentsForm.controls['upload11']" (onDrop)="getUpload($event, 'kycproofregulationdoc')" [inline]="true" [preset]="(allUploadsFiles['kycproofregulationdoc'].preset.name !== '') ? allUploadsFiles['kycproofregulationdoc'].preset : ''" ngDefaultControl></setl-file-drop>
+                                <setl-file-drop [formControl]="uploadMyDocumentsForm.controls['upload12']" (onDrop)="getUpload($event, 'kycproofregulationdoc')" [inline]="true" [preset]="(allUploadsFiles['kycproofregulationdoc'].preset.name !== '') ? allUploadsFiles['kycproofregulationdoc'].preset : ''" ngDefaultControl></setl-file-drop>
                             </td>
                             <td>
                                 <div class="switch-container">
                                     <label class="switch">
                                         <input type="checkbox"
-                                               id="shareUpload11"
-                                               formControlName="shareUpload11"
+                                               id="shareUpload12"
+                                               formControlName="shareUpload12"
                                                [(ngModel)]="allUploadsFiles['kycproofregulationdoc'].common"
-                                               (change)="checkToggles('kycproofregulationdoc', uploadMyDocumentsForm.controls['shareUpload11'].value)">
+                                               (change)="checkToggles('kycproofregulationdoc', uploadMyDocumentsForm.controls['shareUpload12'].value)">
                                         <span class="slider round"></span>
                                     </label>
                                 </div>
