@@ -29,10 +29,10 @@
 
             <div class="row">
                 <div class="form-group col-sm-6">
-                    <label class="control-label">{{'Parent' | translate}}</label>
+                    <label class="control-label">{{'Linked Entity' | translate}}</label>
 
                     <input *ngIf="stakeholder.parent !== -1" type="text" disabled [value]="stakeholder.parent">
-                    <input *ngIf="stakeholder.parent === -1" type="text" disabled placeholder="{{'No parent' | translate}}">
+                    <input *ngIf="stakeholder.parent === -1" type="text" disabled placeholder="{{'No linked entity' | translate}}">
                 </div>
 
                 <div class="form-group col-sm-6">
@@ -104,7 +104,7 @@
                         <input type="text" disabled [value]="stakeholder.nationalIdNumberType">
                     </div>
 
-                    <div class="form-group col-sm-6">
+                    <div *ngIf="stakeholder.nationalIdNumberType === 'Other'" class="form-group col-sm-6">
                         <label class="control-label">{{'Your Number Type' | translate}}</label>
                         <input type="text" disabled [value]="stakeholder.otherNationalIdNumberType">
                     </div>
@@ -260,7 +260,7 @@
     </div>
 
     <div class="modal-footer">
-        <button (click)="closeModal()">
+        <button class="btn" (click)="closeModal()">
             {{'Close' | translate}}
         </button>
     </div>

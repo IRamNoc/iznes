@@ -129,7 +129,7 @@ export class KycDetailsStakeholdersComponent implements OnInit {
             return parentName;
         }
 
-        return this.translateService.translate('No parent');
+        return this.translateService.translate('No linked entity');
     }
 
     getName(stakeholder) {
