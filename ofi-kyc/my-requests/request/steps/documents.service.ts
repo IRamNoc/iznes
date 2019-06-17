@@ -9,7 +9,6 @@ export const documentFormPaths = {
     kyckbisdoc: 'common',
     kycannualreportdoc: 'common',
     kycidorpassportdoc: 'common',
-    kycwolfsbergdoc: 'common',
     kyctaxcertificationdoc: 'common',
     kycw8benefatcadoc: 'common',
 
@@ -18,6 +17,7 @@ export const documentFormPaths = {
 
     kycproofofapprovaldoc: 'regulated',
     kycproofregulationdoc: 'regulated',
+    kycwolfsbergdoc: 'regulated',
 };
 
 @Injectable()

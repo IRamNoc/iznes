@@ -458,7 +458,6 @@ export class NewRequestService {
                 kyckbisdoc: this.createDocumentFormGroup('kyckbisdoc', !this.isProduction),
                 kycannualreportdoc: this.createDocumentFormGroup('kycannualreportdoc', !this.isProduction),
                 kycidorpassportdoc: this.createDocumentFormGroup('kycidorpassportdoc', !this.isProduction),
-                kycwolfsbergdoc: this.createDocumentFormGroup('kycwolfsbergdoc', !this.isProduction),
                 kyctaxcertificationdoc: this.createDocumentFormGroup('kyctaxcertificationdoc', !this.isProduction),
                 kycw8benefatcadoc: this.createDocumentFormGroup('kycw8benefatcadoc', !this.isProduction),
             }),
@@ -469,6 +468,7 @@ export class NewRequestService {
             regulated: fb.group({
                 kycproofofapprovaldoc: this.createDocumentFormGroup('kycproofofapprovaldoc', !this.isProduction),
                 kycproofregulationdoc: this.createDocumentFormGroup('kycproofregulationdoc', !this.isProduction),
+                kycwolfsbergdoc: this.createDocumentFormGroup('kycwolfsbergdoc', !this.isProduction),
             }),
         });
     }
