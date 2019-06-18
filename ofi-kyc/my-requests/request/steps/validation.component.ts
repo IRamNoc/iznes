@@ -85,7 +85,10 @@ export class NewKycValidationComponent implements OnInit, OnDestroy {
         /* Subscribe for this user's connected info. */
         this.kycMyInformations.takeUntil(this.unsubscribe)
         .subscribe((d) => {
-            if (!this.investorInformationRequested) return this.ofiKycService.fetchInvestor();
+            if (!this.investorInformationRequested) {
+                this.investorInformationRequested = true;
+                return this.ofiKycService.fetchInvestor();
+            }
             this.isNowCP = d.investorType === 70 || d.investorType === 80;
             this.firstName = d.firstName;
         });

@@ -636,7 +636,7 @@ export class CompanyInformationComponent implements OnInit, OnDestroy {
         .subscribe((requests) => {
             this
             .identificationService
-            .sendRequestGeneralInformation(this.form, requests)
+            .sendRequestCompanyInformation(this.form, requests)
             .then(() => {
                 this.submitEvent.emit({
                     completed: true,
