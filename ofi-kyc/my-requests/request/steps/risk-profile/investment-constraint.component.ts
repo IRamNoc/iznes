@@ -123,25 +123,25 @@ export class InvestmentConstraintComponent implements OnInit, OnDestroy {
     }
 
     persistForm() {
-        // this.persistService.watchForm(
-        //     'newkycrequest/riskProfile/investmentConstraint',
-        //     this.form,
-        //     this.newRequestService.context,
-        //     {
-        //         reset: false,
-        //         returnPromise: true,
-        //     },
-        // ).then(() => {
-        //     this.formWatch.next(true);
-        // });
+        this.persistService.watchForm(
+            'newkycrequest/riskProfile/investmentConstraint',
+            this.form,
+            this.newRequestService.context,
+            {
+                reset: false,
+                returnPromise: true,
+            },
+        ).then(() => {
+            this.formWatch.next(true);
+        });
     }
 
     clearPersistForm() {
-        // this.persistService.refreshState(
-        //     'newkycrequest/riskProfile/investmentConstraint',
-        //     this.newRequestService.createRiskProfileFormGroup(),
-        //     this.newRequestService.context,
-        // );
+        this.persistService.refreshState(
+            'newkycrequest/riskProfile/investmentConstraint',
+            this.newRequestService.createRiskProfileFormGroup(),
+            this.newRequestService.context,
+        );
     }
 
     isDisabled(path) {

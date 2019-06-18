@@ -20,6 +20,7 @@ export class RiskProfileService {
     ) {
     }
 
+    // TODO: Remove when finished refactor of formSteps
     sendRequest(form, requests) {
         this.requests = requests;
 
