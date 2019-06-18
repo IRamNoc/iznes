@@ -411,9 +411,6 @@
                     <span class="field-error" *ngIf="hasError('totalFinancialAssetsAlreadyInvested')">{{ 'Field is required' | translate }}</span>
                 </div>
             </div>
-
-            <!-- Beneficiaries-->
-            <beneficiary-list [stakeholders]="form.get('beneficiaries')" [registeredCompanyName]="registeredCompanyName" (refresh)="refresh()"></beneficiary-list>
         </div>
     </div>
 </form>

@@ -23,7 +23,7 @@ import get = Reflect.get;
 export class BeneficiaryListComponent implements OnInit, OnDestroy {
     @Input() stakeholders: FormArray;
     @Input() registeredCompanyName: string;
-
+    @Output() submitEvent: EventEmitter<any> = new EventEmitter<any>();
     @Output() refresh: EventEmitter<any> = new EventEmitter<any>();
     @select(['ofi', 'ofiKyc', 'myKycRequested', 'stakeholderRelations']) stakeholderRelations$;
 

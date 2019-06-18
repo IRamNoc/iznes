@@ -213,7 +213,7 @@ export class NewRequestService {
     createIdentificationFormGroup() {
         const fb = this.formBuilder;
 
-        const generalInformation = fb.group({
+        const entity = fb.group({
             kycID: '',
             registeredCompanyName: ['', this.getLengthValidator(255)],
             commercialName: [''],
@@ -230,6 +230,8 @@ export class NewRequestService {
                 Validators.min(0),
             ]],
             financialRating: [''],
+        });
+        const location = fb.group({
             registeredCompanyAddressLine1: ['', this.getLengthValidator(255)],
             registeredCompanyAddressLine2: ['', Validators.maxLength(255)],
             registeredCompanyZipCode: ['', this.getLengthValidator(10)],
@@ -244,6 +246,38 @@ export class NewRequestService {
             countryTaxResidence: ['', Validators.required],
             countryRegistration: ['', Validators.required],
         });
+        const generalInformation = fb.group({ entity, location });
+        // const generalInformation = fb.group({
+        //     kycID: '',
+        //     registeredCompanyName: ['', this.getLengthValidator(255)],
+        //     commercialName: [''],
+        //     legalForm: ['', Validators.required],
+        //     leiCode: ['', [
+        //         Validators.required,
+        //         Validators.pattern(/^\w{18}\d{2}$|n\/a/i),
+        //     ]],
+        //     otherIdentificationNumberType: [null, this.getLengthValidator(255)],
+        //     otherIdentificationNumberTypeSpecify: [{ value: '', disabled: true }],
+        //     otherIdentificationNumberText: [{ value: '', disabled: true }, Validators.required],
+        //     shareCapital: ['', [
+        //         Validators.required,
+        //         Validators.min(0),
+        //     ]],
+        //     financialRating: [''],
+        //     registeredCompanyAddressLine1: ['', this.getLengthValidator(255)],
+        //     registeredCompanyAddressLine2: ['', Validators.maxLength(255)],
+        //     registeredCompanyZipCode: ['', this.getLengthValidator(10)],
+        //     registeredCompanyCity: ['', this.getLengthValidator()],
+        //     registeredCompanyCountry: ['', Validators.required],
+        //     commercialDomiciliation: 0,
+        //     commercialAddressLine1: [{ value: '', disabled: true }, Validators.required],
+        //     commercialAddressLine2: [{ value: '', disabled: true }],
+        //     commercialZipCode: [{ value: '', disabled: true }, Validators.required],
+        //     commercialCity: [{ value: '', disabled: true }, Validators.required],
+        //     commercialCountry: [{ value: '', disabled: true }, Validators.required],
+        //     countryTaxResidence: ['', Validators.required],
+        //     countryRegistration: ['', Validators.required],
+        // });
         const companyInformation = fb.group({
             kycID: '',
             sectorActivity: ['', Validators.required],

@@ -1,5 +1,5 @@
 import { Component, Input, Output, OnInit, OnDestroy, ViewChild, ElementRef, EventEmitter } from '@angular/core';
-import { FormGroup, AbstractControl, Validators  } from '@angular/forms';
+import { FormGroup, AbstractControl, Validators, FormBuilder, FormControl } from '@angular/forms';
 import { get as getValue, isEmpty, castArray } from 'lodash';
 import { select, NgRedux } from '@angular-redux/store';
 import { Subject } from 'rxjs';
@@ -21,12 +21,13 @@ import { setMyKycRequestedPersist } from '@ofi/ofi-main/ofi-store/ofi-kyc';
 })
 export class GeneralInformationComponent implements OnInit, OnDestroy {
     @ViewChild(FormPercentDirective) formPercent: FormPercentDirective;
-    @Input() form: FormGroup;
+    @Input() parentForm: any;
     @Input() isFormReadonly = false;
     @Output() submitEvent: EventEmitter<any> = new EventEmitter<any>();
     @select(['ofi', 'ofiKyc', 'myKycRequested', 'kycs']) requests$;
     @select(['user', 'siteSettings', 'language']) requestLanguageObj;
 
+    form: FormGroup;
     unsubscribe: Subject<any> = new Subject();
     open: boolean = false;
     countries;
@@ -44,10 +45,17 @@ export class GeneralInformationComponent implements OnInit, OnDestroy {
         private persistRequestService: PersistRequestService,
         private persistService: PersistService,
         private ngRedux: NgRedux<any>,
+        private formBuilder: FormBuilder,
     ) {
     }
 
     ngOnInit() {
+        this.form = this.formBuilder.group({
+            ...this.parentForm.get('entity').controls,
+            ...this.parentForm.get('location').controls,
+        });
+
+
         this.countries = this.translate.translate(countries);
 
         this.initFormCheck();
@@ -78,7 +86,6 @@ export class GeneralInformationComponent implements OnInit, OnDestroy {
     }
 
     formCheckCommercialDomiciliation(value) {
-        console.log('+++ value', value);
         const commercialDomiciliationControls: AbstractControl[] = [
             this.form.get('commercialAddressLine1'),
             this.form.get('commercialAddressLine2'),
@@ -184,7 +191,7 @@ export class GeneralInformationComponent implements OnInit, OnDestroy {
                 returnPromise: true,
             },
         ).then(() => {
-            this.ngRedux.dispatch(setMyKycRequestedPersist('identification'));
+            this.ngRedux.dispatch(setMyKycRequestedPersist('identification/general'));
         });
     }
 

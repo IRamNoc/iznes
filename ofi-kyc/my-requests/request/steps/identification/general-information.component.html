@@ -9,7 +9,7 @@
                     <h5>Entity Details</h5>
                 </div>
                 <div class="col-sm-3 text-right">
-                    <div class="pgContainer" [formpercent]="{form: form, animated : false, stripes: false}"></div>
+                    <div class="pgContainer" [formpercent]="{form: form, subform: parentForm.get('entity'), animated : false, stripes: false}"></div>
                 </div>
             </div>
 
@@ -104,7 +104,12 @@
 
         <div class="well">
             <div class="row panel-header">
-                <h5>Location</h5>
+                <div class="col-sm-9">
+                    <h5>Location</h5>
+                </div>
+                <div class="col-sm-3 text-right">
+                    <div class="pgContainer" [formpercent]="{form: form, subform: parentForm.get('location'), animated : false, stripes: false}"></div>
+                </div>
             </div>
             <div class="row panel-body">
                 <div class="row col-sm-12">
