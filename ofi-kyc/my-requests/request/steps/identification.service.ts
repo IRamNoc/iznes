@@ -116,9 +116,8 @@ export class IdentificationService {
 
             const kycID = request.kycID;
 
-            const formGroupGeneral = form;
-            formGroupGeneral.get('kycID').setValue(kycID);
-            const generalPromise = this.sendRequestGeneral(formGroupGeneral);
+            form.get('kycID').setValue(kycID);
+            const generalPromise = this.sendRequestGeneral(form);
             promises.push(generalPromise);
 
             const updateStepPromise = this.sendRequestUpdateCurrentStep(kycID, 'generalInformation', context);
@@ -126,6 +125,27 @@ export class IdentificationService {
         });
 
         return Promise.all(promises);
+    }
+
+    sendRequestCompanyInformation(form, requests) {
+        const promises = [];
+        const context = this.newRequestService.context;
+
+        requests.forEach((request) => {
+
+            const kycID = request.kycID;
+
+            form.get('kycID').setValue(kycID);
+            const companyPromise = this.sendRequestCompany(form);
+            promises.push(companyPromise);
+
+            const updateStepPromise = this.sendRequestUpdateCurrentStep(kycID, 'companyInformation', context);
+            promises.push(updateStepPromise);
+        });
+
+        return Promise.all(promises).then(() => {
+            this.ngRedux.dispatch(setMyKycStakeholderRelations(this.stakeholdersRelationTable));
+        });
     }
 
     handleBeneficiaries(formGroupBeneficiaries, kycID, connectedWallet, kycIndex) {
