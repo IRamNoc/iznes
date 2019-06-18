@@ -42,6 +42,7 @@ export class NewKycValidationComponent implements OnInit, OnDestroy {
     showKYCComplete: boolean = false;
     isNowCP: boolean = false;
     firstName: string;
+    investorInformationRequested: boolean = false;
 
     constructor(
         private requestsService: RequestsService,
@@ -84,7 +85,7 @@ export class NewKycValidationComponent implements OnInit, OnDestroy {
         /* Subscribe for this user's connected info. */
         this.kycMyInformations.takeUntil(this.unsubscribe)
         .subscribe((d) => {
-            if (!d.investorType) return this.ofiKycService.fetchInvestor();
+            if (!this.investorInformationRequested) return this.ofiKycService.fetchInvestor();
             this.isNowCP = d.investorType === 70 || d.investorType === 80;
             this.firstName = d.firstName;
         });
