@@ -32,7 +32,7 @@ export const formStepsFull = [
     },
     {
         title: 'Stakeholders',
-        id: 'step-company-information',
+        id: 'step-stakeholder-information',
         parentStep: 'Identification',
     },
     {

@@ -82,11 +82,17 @@
 
                 <div class="row col-sm-12">
                     <div class="form-group col-sm-4">
-                        <label for="activityRegulated">{{ 'Is the activity regulated?' | translate }}</label>
-                        <div class="toggle-switch">
-                            <input type="checkbox" id="activityRegulated" formControlName="activityRegulated">
-                            <label for="activityRegulated"></label>
-                        </div>
+                        <clr-radio-container clrInline>
+                            <label>{{ 'Is the activity regulated?' | translate }}</label>
+                            <clr-radio-wrapper>
+                                <input type="radio" clrRadio name="activityRegulated" [value]="0" checked="checked" formControlName="activityRegulated" />
+                                <label>{{ 'No' | translate }}</label>
+                            </clr-radio-wrapper>
+                            <clr-radio-wrapper>
+                                <input type="radio" clrRadio name="activityRegulated" [value]="1" formControlName="activityRegulated" />
+                                <label>{{ 'Yes' | translate }}</label>
+                            </clr-radio-wrapper>
+                        </clr-radio-container>
                     </div>
                 </div>
 
@@ -165,11 +171,17 @@
 
                 <div class="row col-sm-12">
                     <div class="form-group col-sm-4">
-                        <label for="companyListed">{{ 'Is the company listed?' | translate }}</label>
-                        <div class="toggle-switch">
-                            <input type="checkbox" id="companyListed" formControlName="companyListed">
-                            <label for="companyListed"></label>
-                        </div>
+                        <clr-radio-container clrInline>
+                            <label>{{ 'Is the company listed?' | translate }}</label>
+                            <clr-radio-wrapper>
+                                <input type="radio" clrRadio name="companyListed" [value]="0" checked="checked" formControlName="companyListed" />
+                                <label>{{ 'No' | translate }}</label>
+                            </clr-radio-wrapper>
+                            <clr-radio-wrapper>
+                                <input type="radio" clrRadio name="companyListed" [value]="1" formControlName="companyListed" />
+                                <label>{{ 'Yes' | translate }}</label>
+                            </clr-radio-wrapper>
+                        </clr-radio-container>
                     </div>
                 </div>
 
@@ -231,6 +243,9 @@
                         <span class="field-error" *ngIf="hasError('bloombergCode', ['required'])">{{ 'Field is required' | translate }}</span>
                         <span class="field-error" *ngIf="hasError('bloombergCode', ['maxlength'])">{{ 'Field is too long' | translate }}</span>
                     </div>
+                </div>
+
+                <div class="row col-sm-12">
                     <div class="form-group required-field col-sm-4" *ngIf="!isDisabled('isinCode')">
                         <label class="control-label" for="isinCode">{{ 'ISIN' | translate }}</label>
                         <input type="text"
@@ -241,6 +256,9 @@
                         <span class="field-error" *ngIf="hasError('isinCode', ['pattern'])">{{ 'ISIN must have two letters and ten digits' | translate }}</span>
                         <span class="field-error" *ngIf="hasError('isinCode', ['maxlength'])">{{ 'Field is too long' | translate }}</span>
                     </div>
+                </div>
+
+                <div class="row col-sm-12">
                     <div class="form-group required-field col-sm-4" *ngIf="!isDisabled('floatableShares')">
                         <label class="control-label" for="floatableShares">{{ 'Percentage of Floatable Shares' | translate }}</label>
                         <input type="number"
@@ -279,7 +297,7 @@
                 </div>
 
                 <div class="row col-sm-12">
-                    <div class="form-group required-field col-sm-6" *ngIf="!isDisabled('balanceSheetTotal')">
+                    <div class="form-group required-field col-sm-4" *ngIf="!isDisabled('balanceSheetTotal')">
                         <label class="control-label" for="balanceSheetTotal">{{ 'Balance Sheet Total' | translate }}</label>
                         <input type="number"
                                 id="balanceSheetTotal"
@@ -290,7 +308,7 @@
                 </div>
 
                 <div class="row col-sm-12">
-                    <div class="form-group required-field col-sm-6" *ngIf="!isDisabled('netRevenuesNetIncome')">
+                    <div class="form-group required-field col-sm-4" *ngIf="!isDisabled('netRevenuesNetIncome')">
                         <label class="control-label" for="netRevenuesNetIncome">{{ 'Net Revenues or Net Income' | translate }}</label>
                         <input type="number"
                                 id="netRevenuesNetIncome"
@@ -299,7 +317,10 @@
                         <span class="field-error" *ngIf="hasError('netRevenuesNetIncome', ['required'])">{{ 'Field is required' | translate }}</span>
                         <span class="field-error" *ngIf="hasError('netRevenuesNetIncome', ['min'])">{{ 'Number should not be negative' | translate }}</span>
                     </div>
-                    <div class="form-group required-field col-sm-6" *ngIf="!isDisabled('shareholderEquity')">
+                </div>
+
+                <div class="row col-sm-12">
+                    <div class="form-group required-field col-sm-4" *ngIf="!isDisabled('shareholderEquity')">
                         <label class="control-label" for="shareholderEquity">{{ 'Shareholders\' Equity' | translate }}</label>
                         <input type="number"
                                 id="shareholderEquity"
@@ -310,70 +331,98 @@
                     </div>
                 </div>
 
-                <div class="mb-2" formGroupName="capitalNature">
-                    <div>
-                        <label class="required-field">{{ 'Nature and origin of the capital invested by the legal entity: (several possible choices)' | translate }}</label>
+                <div class="checkbox-group" formGroupName="capitalNature">
+                    <div class="row col-sm-12">
+                        <div class="form-group required-field col-sm-4">
+                            <label class="required-field">{{ 'Nature and origin of the capital invested by the legal entity: (several possible choices)' | translate }}</label>
+                        </div>
                     </div>
 
-                    <span class="checkbox-inline pr-1 pt-1">
-                        <input type="checkbox" id="equityAndReserves" formControlName="equityAndReserves">
-                        <label for="equityAndReserves">
-                            {{ 'Equity & Reserves' | translate }}
-                        </label>
-                    </span>
-
-                    <span class="checkbox-inline pr-1 pt-1">
-                        <input type="checkbox" id="generalAssets" formControlName="generalAssets">
-                        <label for="generalAssets">
-                            {{ 'General Assets (Insurance Contracts)' | translate }}
-                        </label>
-                    </span>
-
-                    <span class="checkbox-inline pr-1 pt-1">
-                        <input type="checkbox" id="premiumsAndContributions" formControlName="premiumsAndContributions">
-                        <label for="premiumsAndContributions">
-                            {{ 'Premiums & Contributions' | translate }}
-                        </label>
-                    </span>
-
-                    <span class="checkbox-inline pr-1 pt-1">
-                        <input type="checkbox" id="saleGoodsServices" formControlName="saleGoodsServices">
-                        <label for="saleGoodsServices">
-                            {{ 'Sale of Goods and Services' | translate }}
-                        </label>
-                    </span>
-
-                    <span class="checkbox-inline pr-1 pt-1">
-                        <input type="checkbox" id="exceptionalEvents" formControlName="exceptionalEvents">
-                        <label for="exceptionalEvents">
-                            {{ 'Exceptional Events' | translate }}
-                        </label>
-                    </span>
-
-                    <span class="checkbox-inline pr-1 pt-1">
-                        <input type="checkbox" id="treasury" formControlName="treasury">
-                        <label for="treasury">
-                            {{ 'Treasury' | translate }}
-                        </label>
-                    </span>
-                    <span>
-                        <div class="checkbox-inline pr-1">
-                            <input type="checkbox" id="others" formControlName="others">
-                            <label for="others">{{ 'Others' | translate }}</label>
+                    <div class="row col-sm-12 form-group">
+                        <div class="col-sm-3">
+                            <div class="checkbox-inline">
+                                <input type="checkbox" id="equityAndReserves" formControlName="equityAndReserves">
+                                <label for="equityAndReserves">
+                                    {{ 'Equity & Reserves' | translate }}
+                                </label>
+                            </div>
                         </div>
-                        <input *ngIf="!isDisabled(['capitalNature', 'othersText'])"
-                                id="othersText"
-                                type="text"
-                                formControlName="othersText"
-                                placeholder="{{ 'Please specify' | translate }}">
-                    </span>
+                        <div class="col-sm-5">
+                            <div class="checkbox-inline">
+                                <input type="checkbox" id="generalAssets" formControlName="generalAssets">
+                                <label for="generalAssets">
+                                    {{ 'General Assets (Insurance Contracts)' | translate }}
+                                </label>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="row col-sm-12 form-group">
+                        <div class="col-sm-3">
+                            <div class="checkbox-inline">
+                                <input type="checkbox" id="premiumsAndContributions" formControlName="premiumsAndContributions">
+                                <label for="premiumsAndContributions">
+                                    {{ 'Premiums & Contributions' | translate }}
+                                </label>
+                            </div>
+                        </div>
+                        <div class="col-sm-3">
+                            <div class="checkbox-inline">
+                                <input type="checkbox" id="saleGoodsServices" formControlName="saleGoodsServices">
+                                <label for="saleGoodsServices">
+                                    {{ 'Sale of Goods and Services' | translate }}
+                                </label>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="row col-sm-12 form-group">
+                        <div class="col-sm-3">
+                            <div class="checkbox-inline">
+                                <input type="checkbox" id="exceptionalEvents" formControlName="exceptionalEvents">
+                                <label for="exceptionalEvents">
+                                    {{ 'Exceptional Events' | translate }}
+                                </label>
+                            </div>
+                        </div>
+                        <div class="col-sm-3">
+                            <div class="checkbox-inline">
+                                <input type="checkbox" id="treasury" formControlName="treasury">
+                                <label for="treasury">
+                                    {{ 'Treasury' | translate }}
+                                </label>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="row col-sm-12 form-group">
+                        <div class="col-sm-3">
+                            <div class="checkbox-inline">
+                                <input type="checkbox" id="exceptionalEvents" formControlName="exceptionalEvents">
+                                <label for="exceptionalEvents">
+                                    {{ 'Exceptional Events' | translate }}
+                                </label>
+                            </div>
+                        </div>
+                        <div class="col-sm-6">
+                            <div class="checkbox-inline">
+                                <input type="checkbox" id="others" formControlName="others">
+                                <label for="others">{{ 'Others' | translate }}</label>
+                            </div>
+                            <input *ngIf="!isDisabled(['capitalNature', 'othersText'])"
+                                    id="othersText"
+                                    type="text"
+                                    formControlName="othersText"
+                                    placeholder="{{ 'Please specify' | translate }}">
+                        </div>
+                    </div>
 
                     <p class="txtRed" *ngIf="hasError('capitalNature')">{{ 'Select at least one' | translate }}</p>
 
                 </div>
 
-                <div class="row">
-                    <div class="form-group required-field col-md-6 col-xl-3">
+                <div class="row col-sm-12 form-group">
+                    <div class="required-field col-md-4">
                         <label for="geographicalOrigin1">{{ 'Geographical Origin (specify by area or country)' | translate }}</label>
                         <ng-select class="large-select multiline"
                                     id="geographicalOrigin1"
@@ -382,7 +431,7 @@
                                     placeholder="{{ 'Select a type of geographical origin' | translate }}">
                         </ng-select>
                     </div>
-                    <div class="form-group required-field col-md-6 col-xl-3" [hidden]="geographicalOrigin !== 'country'">
+                    <div class="form-group required-field col-md-4" [hidden]="geographicalOrigin !== 'country'">
                         <label for="geographicalOriginCountry">{{ 'Country' | translate }}</label>
                         <ng-select class="large-select"
                                     id="geographicalOriginCountry"
@@ -391,7 +440,7 @@
                                     placeholder="{{ 'Select a country' | translate }}">
                         </ng-select>
                     </div>
-                    <div class="form-group required-field col-md-6 col-xl-3" [hidden]="geographicalOrigin !== 'area'">
+                    <div class="form-group required-field col-md-4" [hidden]="geographicalOrigin !== 'area'">
                         <label for="geographicalOriginArea">{{ 'Area' | translate }}</label>
                         <ng-select class="large-select"
                                     id="geographicalOriginArea"
@@ -402,8 +451,8 @@
                     </div>
                 </div>
 
-                <div class="row">
-                    <div class="form-group required-field col-sm-6">
+                <div class="row col-sm-12">
+                    <div class="form-group required-field col-sm-4">
                         <label for="totalFinancialAssetsAlreadyInvested">{{ 'Total Financial Assets already invested' | translate }}</label>
                         <ng-select [items]="financialAssetsInvestedList"
                                     id="totalFinancialAssetsAlreadyInvested"

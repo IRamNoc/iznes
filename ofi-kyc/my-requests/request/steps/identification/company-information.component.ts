@@ -314,7 +314,7 @@ export class CompanyInformationComponent implements OnInit, OnDestroy {
         const activityAuthorityControl = this.form.get('regulator');
         const activityApprovalNumberControl = this.form.get('approvalNumber');
         const regulatoryStatusControl = this.form.get('regulatoryStatus');
-
+        console.log('+++ value', value, typeof value);
         if (value) {
             activityAuthorityControl.enable();
             activityApprovalNumberControl.enable();
@@ -504,70 +504,70 @@ export class CompanyInformationComponent implements OnInit, OnDestroy {
             rxFilter(requests => !isEmpty(requests)),
         );
 
-        requests$.pipe(
-            takeUntil(this.unsubscribe),
-        ).subscribe((requests) => {
-            const promises = [];
-            const stakeholdersRelationTable = [];
+        // requests$.pipe(
+        //     takeUntil(this.unsubscribe),
+        // ).subscribe((requests) => {
+        //     const promises = [];
+        //     const stakeholdersRelationTable = [];
 
-            requests.forEach((request, index) => {
+        //     requests.forEach((request, index) => {
 
-                const promise = this.identificationService.getCurrentFormCompanyBeneficiariesData(request.kycID).then((formData) => {
-                    if (!isEmpty(formData)) {
-                        const relation = {
-                            kycID: request.kycID,
-                            stakeholderIDs: formData.map(stakeholder => stakeholder.companyBeneficiariesID),
-                        };
+        //         const promise = this.identificationService.getCurrentFormCompanyBeneficiariesData(request.kycID).then((formData) => {
+        //             if (!isEmpty(formData)) {
+        //                 const relation = {
+        //                     kycID: request.kycID,
+        //                     stakeholderIDs: formData.map(stakeholder => stakeholder.companyBeneficiariesID),
+        //                 };
 
-                        stakeholdersRelationTable.push(relation);
+        //                 stakeholdersRelationTable.push(relation);
 
-                        if (index === 0) {
-                            const beneficiaries: FormArray = this.form.get('beneficiaries') as FormArray;
+        //                 if (index === 0) {
+        //                     const beneficiaries: FormArray = this.form.get('beneficiaries') as FormArray;
 
-                            while (beneficiaries.length) {
-                                beneficiaries.removeAt(0);
-                            }
+        //                     while (beneficiaries.length) {
+        //                         beneficiaries.removeAt(0);
+        //                     }
 
-                            const promises = formData.map((controlValue) => {
-                                const control = this.newRequestService.createBeneficiary();
-                                const documentID = controlValue.documentID;
+        //                     const promises = formData.map((controlValue) => {
+        //                         const control = this.newRequestService.createBeneficiary();
+        //                         const documentID = controlValue.documentID;
 
-                                controlValue = buildBeneficiaryObject(controlValue);
+        //                         controlValue = buildBeneficiaryObject(controlValue);
 
-                                if (documentID) {
-                                    return this.documentsService.getDocument(documentID).then((document) => {
-                                        if (document) {
-                                            setValue(controlValue, ['common', 'document'], {
-                                                name: document.name,
-                                                hash: document.hash,
-                                                kycDocumentID: document.kycDocumentID,
-                                            });
-                                        }
-                                        control.patchValue(controlValue);
-                                        beneficiaries.push(control);
-                                    });
-                                }
+        //                         if (documentID) {
+        //                             return this.documentsService.getDocument(documentID).then((document) => {
+        //                                 if (document) {
+        //                                     setValue(controlValue, ['common', 'document'], {
+        //                                         name: document.name,
+        //                                         hash: document.hash,
+        //                                         kycDocumentID: document.kycDocumentID,
+        //                                     });
+        //                                 }
+        //                                 control.patchValue(controlValue);
+        //                                 beneficiaries.push(control);
+        //                             });
+        //                         }
 
-                                control.patchValue(controlValue);
-                                beneficiaries.push(control);
-                            });
+        //                         control.patchValue(controlValue);
+        //                         beneficiaries.push(control);
+        //                     });
 
-                            Promise.all(promises).then(() => {
-                                this.beneficiaryService.fillInStakeholderSelects(this.form.get('beneficiaries'));
-                                this.beneficiaryService.updateStakeholdersValidity(this.form.get('beneficiaries') as FormArray);
-                                this.formPercent.refreshFormPercent();
-                            });
-                        }
-                    }
-                });
+        //                     Promise.all(promises).then(() => {
+        //                         this.beneficiaryService.fillInStakeholderSelects(this.form.get('beneficiaries'));
+        //                         this.beneficiaryService.updateStakeholdersValidity(this.form.get('beneficiaries') as FormArray);
+        //                         this.formPercent.refreshFormPercent();
+        //                     });
+        //                 }
+        //             }
+        //         });
 
-                promises.push(promise);
-            });
+        //         promises.push(promise);
+        //     });
 
-            Promise.all(promises).then(() => {
-                this.ngRedux.dispatch(setMyKycStakeholderRelations(stakeholdersRelationTable));
-            });
-        });
+        //     Promise.all(promises).then(() => {
+        //         this.ngRedux.dispatch(setMyKycStakeholderRelations(stakeholdersRelationTable));
+        //     });
+        // });
 
         requests$.pipe(
             map(requests => requests[0]),
@@ -583,18 +583,18 @@ export class CompanyInformationComponent implements OnInit, OnDestroy {
             });
         });
 
-        requests$.pipe(
-            map(requests => requests[0]),
-            rxFilter(request => !!request),
-            takeUntil(this.unsubscribe),
-        )
-            .subscribe((request) => {
-                this.identificationService.getCurrentFormGeneralData(request.kycID).then((formData) => {
-                    if (formData) {
-                        this.registeredCompanyName = formData.registeredCompanyName;
-                    }
-                });
-            });
+        // requests$.pipe(
+        //     map(requests => requests[0]),
+        //     rxFilter(request => !!request),
+        //     takeUntil(this.unsubscribe),
+        // )
+        //     .subscribe((request) => {
+        //         this.identificationService.getCurrentFormGeneralData(request.kycID).then((formData) => {
+        //             if (formData) {
+        //                 this.registeredCompanyName = formData.registeredCompanyName;
+        //             }
+        //         });
+        //     });
     }
 
     refresh() {

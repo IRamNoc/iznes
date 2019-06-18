@@ -148,6 +148,32 @@ export class IdentificationService {
         });
     }
 
+    sendRequestBeneficiaryList(form, requests, connectedWallet) {
+        this.getPreviousRelations();
+        this.stakeholdersRelationTable = [];
+
+        const promises = [];
+        const context = this.newRequestService.context;
+        requests.forEach((request, index) => {
+
+            const kycID = request.kycID;
+
+            const formGroupBeneficiaries = form;
+
+            this.stakeholdersRelationTable.push({ kycID, stakeholderIDs: [] });
+            const beneficiariesPromises = this.handleBeneficiaries(formGroupBeneficiaries, kycID, connectedWallet, index);
+
+            promises.push(beneficiariesPromises);
+
+            const updateStepPromise = this.sendRequestUpdateCurrentStep(kycID, 'stakeholders', context);
+            promises.push(updateStepPromise);
+        });
+
+        return Promise.all(promises).then(() => {
+            this.ngRedux.dispatch(setMyKycStakeholderRelations(this.stakeholdersRelationTable));
+        });
+    }
+
     handleBeneficiaries(formGroupBeneficiaries, kycID, connectedWallet, kycIndex) {
         const beneficiaryValues = formGroupBeneficiaries.value;
         const promises = this.sendRequestBeneficiaries(beneficiaryValues, kycID, connectedWallet).then((responses) => {

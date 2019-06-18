@@ -120,6 +120,16 @@
             .form-group {
                 align-content: baseline;
             }
+            .checkbox-group {
+                width: 100%;
+                margin-bottom: 16px;
+                .form-group {
+                    margin: 0;
+                    .checkbox-inline label {
+                        font-weight: 400!important;
+                    }
+                }
+            }
             label {
                 font-size: 13px;
                 font-weight: 500!important;
@@ -132,6 +142,15 @@
                 font-size:13px;
             }
             ng-select {
+                .ui-select-multiple {
+                    .ui-select-match {
+                        min-height: 30px!important;
+                    }
+                    clr-icon {
+                        margin-top: -8px;
+                        color: #0079b8;
+                    }
+                }
                 .ui-select-toggle {
                     height: 30px!important;
                 }
