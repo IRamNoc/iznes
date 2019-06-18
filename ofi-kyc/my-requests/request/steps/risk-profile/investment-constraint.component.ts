@@ -1,12 +1,13 @@
-import { Component, OnInit, OnDestroy, Input, ViewChild } from '@angular/core';
-import { Subject } from 'rxjs';
-import { select } from '@angular-redux/store';
-import { FormControl } from '@angular/forms';
+import { Component, OnInit, Input, Output, ViewChild, EventEmitter, ElementRef, OnDestroy } from '@angular/core';
 import { isEmpty, values, map, toNumber } from 'lodash';
-import { filter, takeUntil } from 'rxjs/operators';
+import { select } from '@angular-redux/store';
+import { formHelper } from '@setl/utils/helper';
+import { Subject } from 'rxjs';
+import { filter, takeUntil, take } from 'rxjs/operators';
 import { FormPercentDirective } from '@setl/utils/directives/form-percent/formpercent';
-import { NewRequestService } from '../../new-request.service';
 import { RiskProfileService } from '../risk-profile.service';
+import { NewRequestService } from '../../new-request.service';
+import { PersistService } from '@setl/core-persist';
 
 @Component({
     selector: 'investment-constraint',
@@ -15,26 +16,31 @@ import { RiskProfileService } from '../risk-profile.service';
 export class InvestmentConstraintComponent implements OnInit, OnDestroy {
     @ViewChild(FormPercentDirective) formPercent: FormPercentDirective;
     @Input() form;
-    @Input() formWatch: Subject<boolean>;
+    @Input() formObjective;
+    @Output() submitEvent: EventEmitter<any> = new EventEmitter<any>();
     @select(['ofi', 'ofiKyc', 'myKycRequested', 'kycs']) currentlyRequestedKycs$;
+    @select(['ofi', 'ofiKyc', 'myKycRequested', 'kycs']) requests$;
 
-    open: boolean = false;
     unsubscribe: Subject<any> = new Subject();
+    open: boolean = false;
     amcs;
-
-    get constraintControls() {
-        return this.form.get('constraints').controls;
-    }
+    formWatch: Subject<boolean> = new Subject<boolean>();
 
     constructor(
+        private persistService: PersistService,
+        private element: ElementRef,
         private newRequestService: NewRequestService,
         private riskProfileService: RiskProfileService,
     ) {
     }
 
+    get constraintControls() {
+        return this.form.get('constraints').controls;
+    }
+
     ngOnInit() {
-        this.initFormCheck();
         this.initData();
+        this.initFormCheck();
         this.getCurrentFormData();
         this.updateCrossAM();
     }
@@ -75,7 +81,6 @@ export class InvestmentConstraintComponent implements OnInit, OnDestroy {
 
     updateCrossAM() {
         const value = this.form.get('constraintsSameInvestmentCrossAm').value;
-
         this.formCheckSameInvestmentCrossAm(value);
     }
 
@@ -117,10 +122,60 @@ export class InvestmentConstraintComponent implements OnInit, OnDestroy {
         return this.newRequestService.hasError(this.form, control, error);
     }
 
+    persistForm() {
+        this.persistService.watchForm(
+            'newkycrequest/riskProfile/investmentConstraint',
+            this.form,
+            this.newRequestService.context,
+            {
+                reset: false,
+                returnPromise: true,
+            },
+        ).then(() => {
+            this.formWatch.next(true);
+        });
+    }
+
+    clearPersistForm() {
+        this.persistService.refreshState(
+            'newkycrequest/riskProfile/investmentConstraint',
+            this.newRequestService.createRiskProfileFormGroup(),
+            this.newRequestService.context,
+        );
+    }
+
     isDisabled(path) {
         const control = this.form.get(path);
 
         return control.disabled;
+    }
+
+    handleSubmit(e) {
+        e.preventDefault();
+
+        if (!this.form.valid) {
+            formHelper.dirty(this.form);
+            formHelper.scrollToFirstError(this.element.nativeElement);
+            return;
+        }
+
+        this.requests$
+            .pipe(
+                take(1),
+            )
+            .subscribe((requests) => {
+                this.riskProfileService.sendRequestInvestmentObjective(this.formObjective, this.form, requests)
+                    .then(() => {
+                        this.clearPersistForm();
+                        this.submitEvent.emit({
+                            completed: true,
+                        });
+                    })
+                    .catch(() => {
+                        this.newRequestService.errorPop();
+                    })
+                    ;
+            });
     }
 
     ngOnDestroy() {

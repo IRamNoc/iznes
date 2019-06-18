@@ -1,37 +1,39 @@
-<div [formGroup]="form" class="well">
-    <div class="row panel-header clr-align-items-center">
-        <div class="col-sm-9">
-            <a href="#" (click)="open = !open; $event.preventDefault();">
-                <i class="fa fa-chevron-right" [class.rotate]="open"></i>
-                <h2>{{ 'Investments\' Nature' | translate }}</h2>
-            </a>
+<form [formGroup]="form" id="step-investment-details" (ngSubmit)="handleSubmit($event)">
+    <div class="well">
+        <div class="row panel-header clr-align-items-center">
+            <div class="col-sm-9">
+                <a href="#" (click)="open = !open; $event.preventDefault();">
+                    <i class="fa fa-chevron-right" [class.rotate]="open"></i>
+                    <h2>{{ 'Investments\' Nature' | translate }}</h2>
+                </a>
+            </div>
+            <div class="col-sm-3 text-right">
+                <div class="pgContainer" [formpercent]="{form: form, animated : false, stripes : false}"></div>
+            </div>
         </div>
-        <div class="col-sm-3 text-right">
-            <div class="pgContainer" [formpercent]="{form: form, animated : false, stripes : false}"></div>
-        </div>
-    </div>
 
-    <div class="row panel-body" [class.hidden]="!open">
-        <div class="col-xs-12">
-            <div class="row" *ngIf="amcs?.length > 1">
-                <div class="form-group col-sm-12">
-                    <p>
-                        {{ 'The following information can be completed for all counterparties or for each of them depending on your investment objectives' | translate }}
-                    </p>
+        <div class="row panel-body" [class.hidden]="!open">
+            <div class="col-xs-12">
+                <div class="row" *ngIf="amcs?.length > 1">
+                    <div class="form-group col-sm-12">
+                        <p>
+                            {{ 'The following information can be completed for all counterparties or for each of them depending on your investment objectives' | translate }}
+                        </p>
 
-                    <div class="checkbox-inline">
-                        <input type="checkbox" 
-                                id="naturesSameInvestmentCrossAm" 
-                                formControlName="naturesSameInvestmentCrossAm">
-                        <label for="naturesSameInvestmentCrossAm">
-                            {{ 'I would like to have the same investment nature for all counterparties' | translate }}
-                        </label>
+                        <div class="checkbox-inline">
+                            <input type="checkbox"
+                                    id="naturesSameInvestmentCrossAm"
+                                    formControlName="naturesSameInvestmentCrossAm">
+                            <label for="naturesSameInvestmentCrossAm">
+                                {{ 'I would like to have the same investment nature for all counterparties' | translate }}
+                            </label>
+                        </div>
                     </div>
                 </div>
+
+                <investment-nature-form *ngFor="let nature of natureControls; let i = index" [form]="nature" [multiple]="natureControls?.length > 1" [index]="i" (refreshForm)="refreshForm()"></investment-nature-form>
+
             </div>
-
-            <investment-nature-form *ngFor="let nature of natureControls; let i = index" [form]="nature" [multiple]="natureControls.length > 1" [index]="i" (refreshForm)="refreshForm()"></investment-nature-form>
-
         </div>
     </div>
-</div>
+</form>

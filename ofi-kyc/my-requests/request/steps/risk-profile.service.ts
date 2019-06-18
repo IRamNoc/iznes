@@ -20,6 +20,7 @@ export class RiskProfileService {
     ) {
     }
 
+    // TODO: Remove when finished refactor of formSteps
     sendRequest(form, requests) {
         this.requests = requests;
 
@@ -42,6 +43,28 @@ export class RiskProfileService {
             formGroupConstraint.get('kycID').setValue(kycID);
             const objectivePromises = this.sendRequestObjective(formGroupObjective, formGroupConstraint);
             promises = promises.concat(objectivePromises);
+
+            // Update step
+            const updateStepPromise = this.sendRequestUpdateCurrentStep(kycID, context);
+            promises.push(updateStepPromise);
+        });
+
+        return Promise.all(promises);
+    }
+
+    sendRequestInvestmentNature(form, requests) {
+        this.requests = requests;
+
+        let promises = [];
+        const context = this.newRequestService.context;
+
+        this.requests.forEach((request) => {
+            const kycID = request.kycID;
+
+            // Nature
+            form.get('kycID').setValue(kycID);
+            const naturePromises = this.sendRequestNature(form);
+            promises = promises.concat(naturePromises);
 
             // Update step
             const updateStepPromise = this.sendRequestUpdateCurrentStep(kycID, context);
@@ -89,15 +112,29 @@ export class RiskProfileService {
         return promises;
     }
 
-    sendRequestUpdateCurrentStep(kycID, context) {
-        const messageBody = {
-            RequestName: 'iznesupdatecurrentstep',
-            kycID,
-            completedStep: 'riskProfile',
-            currentGroup: context,
-        };
+    sendRequestInvestmentObjective(formObjective, formConstraint, requests) {
+        this.requests = requests;
 
-        return this.requestsService.sendRequest(messageBody);
+        let promises = [];
+        const context = this.newRequestService.context;
+
+        this.requests.forEach((request) => {
+            const kycID = request.kycID;
+
+            // Objective
+            const formGroupObjective = formObjective;
+            const formGroupConstraint = formConstraint;
+            formGroupObjective.get('kycID').setValue(kycID);
+            formGroupConstraint.get('kycID').setValue(kycID);
+            const objectivePromises = this.sendRequestObjective(formGroupObjective, formGroupConstraint);
+            promises = promises.concat(objectivePromises);
+
+            // Update step
+            const updateStepPromise = this.sendRequestUpdateCurrentStep(kycID, context);
+            promises.push(updateStepPromise);
+        });
+
+        return Promise.all(promises);
     }
 
     sendRequestObjective(formGroupObjective, formGroupConstraint) {
@@ -148,7 +185,6 @@ export class RiskProfileService {
         };
 
         return this.requestsService.sendRequest(messageBody);
-
     }
 
     getCurrentFormNatureData(kycID) {
@@ -161,5 +197,16 @@ export class RiskProfileService {
         return this.requestsService.getKycObjective(kycID).then((formData) => {
             this.currentServerData.riskobjective.next(formData);
         });
+    }
+
+    sendRequestUpdateCurrentStep(kycID, context) {
+        const messageBody = {
+            RequestName: 'iznesupdatecurrentstep',
+            kycID,
+            completedStep: 'riskProfile',
+            currentGroup: context,
+        };
+
+        return this.requestsService.sendRequest(messageBody);
     }
 }
