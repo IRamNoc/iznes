@@ -141,6 +141,10 @@ export class GeneralInformationComponent implements OnInit, OnDestroy {
         this.formPercent.refreshFormPercent();
     }
 
+    checkIdentificationNumberType(value) {
+        return getValue(this.form.get('otherIdentificationNumberText'), ['errors', value], '');
+    }
+
     initLists() {
         this.legalFormList = this.translate.translate(this.newRequestService.legalFormList);
         this.financialRatingList = this.newRequestService.financialRatingList;
@@ -228,6 +232,11 @@ export class GeneralInformationComponent implements OnInit, OnDestroy {
             })
             ;
         });
+    }
+
+    showHelperText(control, errors) {
+        const hasError = errors.filter(error => this.hasError([control], [error]));
+        return this.form.get(control).invalid && !hasError.length;
     }
 
     isStepValid() {

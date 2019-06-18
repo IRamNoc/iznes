@@ -55,6 +55,7 @@
                                 placeholder="{{ 'If non applicable please fill in the value &quot;N/A&quot; here' | translate }}">
                         <span class="field-error" *ngIf="hasError('leiCode', ['required'])">{{ 'Field is required' | translate }}</span>
                         <span class="field-error" *ngIf="hasError('leiCode', ['pattern'])">{{ 'LEI must be 20 characters long' | translate }}</span>
+                        <span class="helper-text" *ngIf="showHelperText('leiCode', ['required', 'pattern'])">{{ 'Must be 20 characters long' | translate }}</span>
                     </div>
                 </div>
 
@@ -79,6 +80,8 @@
                         <span class="field-error" *ngIf="hasError(['otherIdentificationNumberText'], ['required'])">{{ 'Field is required' | translate }}</span>
                         <span class="field-error" *ngIf="hasError(['otherIdentificationNumberText'], ['validSiren'])">{{ 'SIREN must be 9 digits long' | translate }}</span>
                         <span class="field-error" *ngIf="hasError(['otherIdentificationNumberText'], ['validSiret'])">{{ 'SIRET must be 14 digits long' | translate }}</span>
+                        <span class="helper-text" *ngIf="showHelperText('otherIdentificationNumberText', ['required', 'validSiren']) && checkIdentificationNumberType('validSiren')">{{ 'Must be 9 digits long' | translate }}</span>
+                        <span class="helper-text" *ngIf="showHelperText('otherIdentificationNumberText', ['required', 'validSiret']) && checkIdentificationNumberType('validSiret')">{{ 'Must be 14 digits long' | translate }}</span>
                     </div>
                 </div>
                 <div class="row col-sm-12">

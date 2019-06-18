@@ -110,8 +110,9 @@ export class IdentificationService {
 
     sendRequestGeneralInformation(form, requests) {
         const promises = [];
+        const context = this.newRequestService.context;
 
-        requests.forEach((request, index) => {
+        requests.forEach((request) => {
 
             const kycID = request.kycID;
 
@@ -119,6 +120,9 @@ export class IdentificationService {
             formGroupGeneral.get('kycID').setValue(kycID);
             const generalPromise = this.sendRequestGeneral(formGroupGeneral);
             promises.push(generalPromise);
+
+            const updateStepPromise = this.sendRequestUpdateCurrentStep(kycID, context);
+            promises.push(updateStepPromise);
         });
 
         return Promise.all(promises);
