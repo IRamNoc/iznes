@@ -200,13 +200,11 @@ export class NewKycDocumentsComponent implements OnInit, OnDestroy {
                                 control.patchValue(value);
                             }
                         });
-
                     });
 
                     this.form.updateValueAndValidity();
                     this.changeDetectorRef.markForCheck();
                     this.formPercent.refreshFormPercent();
-                    
                     this.initSubscriptions();
                 });
             });

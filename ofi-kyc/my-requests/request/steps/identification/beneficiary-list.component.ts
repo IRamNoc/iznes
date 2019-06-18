@@ -65,12 +65,10 @@ export class BeneficiaryListComponent implements OnInit, OnDestroy {
     }
 
     get listStakeholders() {
-        if (this.sortedStakeholders) {
-            if (!this.sortedStakeholders.length && this.stakeholders.length) {
-                this.sortStakeholders();
-            }
-            return this.sortedStakeholders;
+        if (this.stakeholders.length) {
+            this.sortStakeholders();
         }
+        return this.sortedStakeholders;
     }
 
     constructor(
@@ -220,9 +218,13 @@ export class BeneficiaryListComponent implements OnInit, OnDestroy {
             const parent = stakeholder.get('common.parent').value;
             const parentID = getValue(parent, [0, 'id']);
 
-            if (parentID && parentID !== -1) {
-                return find(this.parents, ['id', parentID]);
-            }
+            // Prevents display of all stakeholders:
+            // if (parentID && parentID !== -1) {
+                // return find(this.parents, ['id', parentID]);
+            // }
+
+            // Return all stakeholders
+            return find(this.parents, ['id', parentID]);
         }
     }
 

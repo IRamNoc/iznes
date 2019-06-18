@@ -13,37 +13,35 @@ export class ValidationService {
     ) {
     }
 
-    sendRequest(formGroupValidation, requests, connectedWallet) {
+    sendRequest(formGroupValidation, request, connectedWallet) {
         const promises = [];
         const context = this.newRequestService.context;
 
-        requests.forEach((request) => {
-            const kycID = request.kycID;
+        const kycID = request.kycID;
 
-            formGroupValidation.get('kycID').setValue(kycID);
+        formGroupValidation.get('kycID').setValue(kycID);
 
-            let promise;
-            const kycDocumentID = formGroupValidation.get('electronicSignatureDocument.kycDocumentID').value;
-            if (kycDocumentID) {
-                promise = this.sendRequestValidation(formGroupValidation, kycDocumentID, kycID);
+        let promise;
+        const kycDocumentID = formGroupValidation.get('electronicSignatureDocument.kycDocumentID').value;
+        if (kycDocumentID) {
+            promise = this.sendRequestValidation(formGroupValidation, kycDocumentID, kycID);
+        } else {
+            const documentValue = formGroupValidation.get('electronicSignatureDocument').value;
+            if (documentValue.name && documentValue.hash) {
+                promise = this.documentsService.sendRequestDocumentControl(documentValue, connectedWallet).then((data) => {
+                    const kycDocumentID = getValue(data, 'kycDocumentID');
+
+                    return this.sendRequestValidation(formGroupValidation, kycDocumentID, kycID);
+                });
             } else {
-                const documentValue = formGroupValidation.get('electronicSignatureDocument').value;
-                if (documentValue.name && documentValue.hash) {
-                    promise = this.documentsService.sendRequestDocumentControl(documentValue, connectedWallet).then((data) => {
-                        const kycDocumentID = getValue(data, 'kycDocumentID');
-
-                        return this.sendRequestValidation(formGroupValidation, kycDocumentID, kycID);
-                    });
-                } else {
-                    promise = this.sendRequestValidation(formGroupValidation, 0, kycID);
-                }
+                promise = this.sendRequestValidation(formGroupValidation, 0, kycID);
             }
+        }
 
-            promises.push(promise);
+        promises.push(promise);
 
-            const updateStepPromise = this.sendRequestUpdateCurrentStep(kycID, context);
-            promises.push(updateStepPromise);
-        });
+        const updateStepPromise = this.sendRequestUpdateCurrentStep(kycID, context);
+        promises.push(updateStepPromise);
 
         return Promise.all(promises);
     }

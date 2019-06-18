@@ -154,21 +154,38 @@
 
         <div class="row">
             <div class="form-group required-field col-sm-6">
-                <label class="control-label" for="nationalIdNumber-benef-{{index}}">{{ 'National Identification Number' | translate }}</label>
-                <ng-select id="nationalIdNumber-benef-{{index}}"
+                <label class="control-label" for="nationalIdNumberType-benef-{{index}}">{{ 'National Identification Number Type' | translate }}</label>
+                <ng-select id="nationalIdNumberType-benef-{{index}}"
                            [items]="identificationNumberTypeList"
-                           formControlName="nationalIdNumber"
+                           formControlName="nationalIdNumberType"
                            placeholder="{{ 'Select identification number type' | translate }}">
                 </ng-select>
-                <span class="field-error" *ngIf="hasError(['legalPerson', 'nationalIdNumber'], ['required'])">{{ 'Field is required' | translate }}</span>
+                <span class="field-error" *ngIf="hasError(['legalPerson', 'nationalIdNumberType'], ['required'])">{{ 'Field is required' | translate }}</span>
             </div>
 
+            <div *ngIf="!isDisabled(['legalPerson', 'otherNationalIdNumberType'])" class="form-group required-field col-sm-6">
+                <label class="control-label" for="otherNationalIdNumberType-benef">{{ 'Your Number Type' | translate }}</label>
+                <input type="text"
+                        formControlName="otherNationalIdNumberType"
+                        placeholder="{{'Specify an identification number type' | translate}}"
+                        [attr.disabled]="disabled">
+                <span class="field-error" *ngIf="hasError(['legalPerson', 'otherNationalIdNumberType'], ['required'])">{{'Field is required' | translate}}</span>
+            </div>
+        </div>
+
+        <div class="row">
             <div *ngIf="!isDisabled(['legalPerson', 'nationalIdNumberText'])" class="form-group required-field col-sm-6">
-                <label class="control-label" for="nationalIdNumberText-benef">&nbsp;</label>
-                <input type="text" formControlName="nationalIdNumberText" placeholder="{{'Fill in an identification number' | translate}}" [attr.disabled]="disabled">
-                <span class="field-error" *ngIf="hasError(['legalPerson', 'nationalIdNumberText'], ['required'])">{{'Field is required' | translate}}</span>
-                <span class="field-error" *ngIf="hasError(['legalPerson', 'nationalIdNumberText'], ['validSiren'])">{{'SIREN must be 9 digits long' | translate}}</span>
-                <span class="field-error" *ngIf="hasError(['legalPerson', 'nationalIdNumberText'], ['validSiret'])">{{'SIRET must be 14 digits long' | translate}}</span>
+                <label class="control-label" for="nationalIdNumberText-benef">{{ 'National Identification Number' | translate }}</label>
+                <input type="text"
+                        formControlName="nationalIdNumberText"
+                        placeholder="{{'Fill in an identification number' | translate}}"
+                        [attr.disabled]="disabled">
+                <span class="field-error"
+                    *ngIf="hasError(['legalPerson', 'nationalIdNumberText'], ['required'])">{{'Field is required' | translate}}</span>
+                <span class="field-error"
+                    *ngIf="hasError(['legalPerson', 'nationalIdNumberText'], ['validSiren'])">{{'SIREN must be 9 digits long' | translate}}</span>
+                <span class="field-error"
+                    *ngIf="hasError(['legalPerson', 'nationalIdNumberText'], ['validSiret'])">{{'SIRET must be 14 digits long' | translate}}</span>
             </div>
         </div>
 

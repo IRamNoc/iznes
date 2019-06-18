@@ -4,11 +4,11 @@ import { NewRequestService } from '../new-request.service';
 import { merge, get as getValue, values, isEmpty, filter } from 'lodash';
 
 export const documentFormPaths = {
+    kycribdoc: 'common',
     kycstatuscertifieddoc: 'common',
     kyckbisdoc: 'common',
     kycannualreportdoc: 'common',
     kycidorpassportdoc: 'common',
-    kycwolfsbergdoc: 'common',
     kyctaxcertificationdoc: 'common',
     kycw8benefatcadoc: 'common',
 
@@ -17,6 +17,7 @@ export const documentFormPaths = {
 
     kycproofofapprovaldoc: 'regulated',
     kycproofregulationdoc: 'regulated',
+    kycwolfsbergdoc: 'regulated',
 };
 
 @Injectable()

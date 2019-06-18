@@ -42,6 +42,14 @@ export class MyRequestsComponent implements OnInit, OnDestroy {
         return this.clientFileKyc.status === -1;
     }
 
+    get  clientFileRejected() {
+        if (this.clientFileKyc) {
+            return this.clientFileKyc.status === -2;
+        } else {
+            return false;
+        }
+    }
+
     constructor(
         private ngRedux: NgRedux<any>,
         private router: Router,
