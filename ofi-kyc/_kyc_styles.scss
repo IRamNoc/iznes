@@ -117,6 +117,9 @@
         }
         .row.panel-body {
             padding: 14px 10px!important;
+            .form-group {
+                align-content: baseline;
+            }
             label {
                 font-size: 13px;
                 font-weight: 500!important;

@@ -595,9 +595,17 @@ export const steps = {
     amcSelection: 0,
     introduction: 1,
     identification: 2,
-    riskProfile: 3,
-    documents: 4,
-    validation: 5,
+    generalInformation: 3,
+    companyInformation: 4,
+    stakeholders: 5,
+    bankAccounts: 6,
+    classification: 7,
+    riskProfile: 8,
+    investmentDetails: 9,
+    investmentObjectives: 10,
+    investmentConstraints: 11,
+    documents: 12,
+    validation: 13,
 };
 
 export const countries = fundItems.domicileItems;
