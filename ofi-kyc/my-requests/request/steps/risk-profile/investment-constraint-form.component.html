@@ -56,10 +56,10 @@
             </div>
 
             <textarea class="form-control"
-                      placeholder="{{ 'Please provide any useful details (name of the committee, composition, frequency, function of the members, etc.)' | translate }}"
-                      *ngIf="!isDisabled('investmentDecisionsAdHocCommitteeSpecification')"
-                      id="investmentDecisionsAdHocCommitteeSpecification"
-                      formControlName="investmentDecisionsAdHocCommitteeSpecification"></textarea>
+                    placeholder="{{ 'Please provide any useful details (name of the committee, composition, frequency, function of the members, etc.)' | translate }}"
+                    *ngIf="!isDisabled('investmentDecisionsAdHocCommitteeSpecification')"
+                    id="investmentDecisionsAdHocCommitteeSpecification"
+                    formControlName="investmentDecisionsAdHocCommitteeSpecification"></textarea>
             <span class="field-error" *ngIf="hasError('investmentDecisionsAdHocCommitteeSpecification', ['maxlength'])">{{ 'Value is too long' | translate }}</span>
         </div>
     </div>
@@ -74,5 +74,4 @@
             <span class="field-error" *ngIf="hasError('otherPersonsAuthorised', ['maxlength'])">{{ 'Value is too long' | translate }}</span>
         </div>
     </div>
-
 </div>

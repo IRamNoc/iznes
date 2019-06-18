@@ -133,14 +133,14 @@ export class NewKycRequestComponent implements OnInit, AfterViewInit {
     }
 
     get isFormReadonly():boolean {
-       if (this.isDuplicateFromClientFile) {
-           return true;
-       }
-       // if we have client file, and now we are not editing client, the form should be readonly
-       if (typeof this.clientFileId !== 'undefined' && this.clientFileId !== Number(this.newRequestService.context))  {
-          return true;
-       }
-       return false;
+        if (this.isDuplicateFromClientFile) {
+            return true;
+        }
+        // if we have client file, and now we are not editing client, the form should be readonly
+        if (typeof this.clientFileId !== 'undefined' && this.clientFileId !== Number(this.newRequestService.context))  {
+            return true;
+        }
+        return false;
     }
 
     ngOnInit() {
@@ -203,9 +203,9 @@ export class NewKycRequestComponent implements OnInit, AfterViewInit {
 
         this.myKycList$.pipe(
             rxMap((kycs) => {
-               const list = Object.keys(kycs).map(k => kycs[k])
+                const list = Object.keys(kycs).map(k => kycs[k])
                    .filter(kyc => kyc.amManagementCompanyID === null);
-               return getValue(list, '[0].kycID', undefined);
+                return getValue(list, '[0].kycID', undefined);
             }),
             takeUntil(this.unsubscribe),
         ).subscribe(clientFileId => this.clientFileId = clientFileId);
@@ -323,7 +323,7 @@ export class NewKycRequestComponent implements OnInit, AfterViewInit {
         combineLatest(this.inviteInfo$, this.defaultHomePage$)
         .subscribe(([inviteInfo, defaultHomePage]) => {
             // in onboarding flow
-            if(defaultHomePage == "/new-investor/informations"){
+            if (defaultHomePage == "/new-investor/informations") {
                 this.onboardingMode = true;
                 this.goToStep('introduction');
                 this.initFormSteps(this.currentCompletedStep);

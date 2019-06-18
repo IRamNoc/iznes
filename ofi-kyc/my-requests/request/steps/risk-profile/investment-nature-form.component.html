@@ -19,8 +19,8 @@
 
             <div class="mt-1">
                 <span class="checkbox-inline pr-1 pb-1">
-                    <input type="checkbox" 
-                            id="internalManagement-{{index}}" 
+                    <input type="checkbox"
+                            id="internalManagement-{{index}}"
                             formControlName="internalManagement">
                     <label for="internalManagement-{{index}}">
                         {{ 'Internal Management' | translate }}
@@ -28,7 +28,7 @@
                 </span>
 
                 <span class="checkbox-inline pr-1 pb-1">
-                    <input type="checkbox" 
+                    <input type="checkbox"
                             id="withAdviceOfAuthorisedThirdPartyInstitution-{{index}}" formControlName="withAdviceOfAuthorisedThirdPartyInstitution">
                     <label for="withAdviceOfAuthorisedThirdPartyInstitution-{{index}}">
                         {{ 'With the advice of an authorised third party institution' | translate }}
@@ -36,8 +36,8 @@
                 </span>
 
                 <span class="checkbox-inline pr-1 pb-1">
-                    <input type="checkbox" 
-                            id="mandateEntrustedToManagers-{{index}}" 
+                    <input type="checkbox"
+                            id="mandateEntrustedToManagers-{{index}}"
                             formControlName="mandateEntrustedToManagers">
                     <label for="mandateEntrustedToManagers-{{index}}">
                         {{ 'By mandate(s) entrusted to a manager(s)' | translate }}
@@ -55,8 +55,8 @@
 
             <div class="mt-1">
                 <span class="checkbox-inline pr-1 pb-1" *ngFor="let frequency of frequencyList">
-                    <input type="checkbox" 
-                            id="{{frequency.id}}-{{index}}" 
+                    <input type="checkbox"
+                            id="{{frequency.id}}-{{index}}"
                             formControlName="{{frequency.id}}">
                     <label for="{{frequency.id}}-{{index}}">
                         {{frequency.text | translate}}
@@ -67,7 +67,6 @@
             <p class="txtRed" *ngIf="hasError('frequencyFinancialTransactions')">{{ 'Select at least one' | translate }}</p>
 
         </div>
-
     </div>
 
     <div class="row">
@@ -79,16 +78,16 @@
             <div class="mt-1">
                 <span class="checkbox-inline pr-1 pb-1" *ngFor="let vehicle of investmentVehicleList" [class.inline]="vehicle.id === 'other'">
                     <span formGroupName="investmentvehiclesAlreadyUsed">
-                        <input type="checkbox" 
-                                id="{{vehicle.id}}-{{index}}" 
+                        <input type="checkbox"
+                                id="{{vehicle.id}}-{{index}}"
                                 formControlName="{{vehicle.id}}">
                         <label class="required-field" for="{{vehicle.id}}-{{index}}">
                             {{vehicle.text | translate}}
                         </label>
                     </span>
-                    <input formControlName="investmentvehiclesAlreadyUsedSpecification" 
-                            class="pl-1" 
-                            type="text" 
+                    <input formControlName="investmentvehiclesAlreadyUsedSpecification"
+                            class="pl-1"
+                            type="text"
                             *ngIf="vehicle.id === 'other' && !isDisabled('investmentvehiclesAlreadyUsedSpecification')" placeholder="{{'Please specify' | translate}}">
                 </span>
 

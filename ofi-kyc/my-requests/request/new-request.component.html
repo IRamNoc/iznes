@@ -29,7 +29,7 @@
             <!-- <kyc-step-identification #step [form]="forms.get('identification')" [investorType]="investorType" (submitEvent)="handleSubmit($event)"></kyc-step-identification> -->
         </form-step>
         <form-step *ngIf="fullForm">
-            <company-information #step [form]="forms.get('identification').get('companyInformation')" (submitEvent)="handleSubmit($event)"></company-information>
+            <company-information #step [form]="forms.get('identification').get('companyInformation')" (submitEvent)="handleSubmit($event)" (click)="handleSubmit({completed: true})"></company-information>
         </form-step>
         <form-step *ngIf="fullForm">
             <beneficiary-list #step [stakeholders]="forms.get('identification').get('beneficiaries')" [registeredCompanyName]="'NEED TO GET THIS'" (submitEvent)="handleSubmit($event)"></beneficiary-list>
@@ -45,13 +45,16 @@
         <!--PARENT STEP-->
     </form-step>
         <form-step *ngIf="fullForm">
-                <p (click)="handleSubmit({completed: true})">Investment Details</p>
+                <!-- <p (click)="handleSubmit({completed: true})">Investment Details</p> -->
+                <investment-nature #step [form]="forms.get('riskProfile').get('investmentNature')" (submitEvent)="handleSubmit($event)"></investment-nature>
         </form-step>
         <form-step *ngIf="fullForm">
-                <p (click)="handleSubmit({completed: true})">Investment Objectives</p>
+                <!-- <p (click)="handleSubmit({completed: true})">Investment Objectives</p> -->
+                <investment-objective #step [form]="forms.get('riskProfile').get('investmentObjective')" [formConstraint]="forms.get('riskProfile').get('investmentConstraint')" (submitEvent)="handleSubmit($event)"></investment-objective>
         </form-step>
         <form-step *ngIf="fullForm">
-                <p (click)="handleSubmit({completed: true})">Investment Contraints</p>
+                <!-- <p (click)="handleSubmit({completed: true})">Investment Contraints</p> -->
+                <investment-constraint #step [form]="forms.get('riskProfile').get('investmentConstraint')" [formObjective]="forms.get('riskProfile').get('investmentObjective')" (submitEvent)="handleSubmit($event)"></investment-constraint>
         </form-step>
     <form-step *ngIf="fullForm">
         <kyc-step-documents #step [form]="forms.get('documents')" [documents]="documents" (submitEvent)="handleSubmit($event)"></kyc-step-documents>

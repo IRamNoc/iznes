@@ -1,12 +1,13 @@
-import { Component, OnInit, Input, OnDestroy, ViewChild } from '@angular/core';
+import { Component, OnInit, Input, Output, ViewChild, EventEmitter, ElementRef, OnDestroy } from '@angular/core';
+import { isEmpty, values, map, toNumber } from 'lodash';
 import { select } from '@angular-redux/store';
-import { FormControl } from '@angular/forms';
+import { formHelper } from '@setl/utils/helper';
 import { Subject } from 'rxjs';
 import { filter, take, takeUntil } from 'rxjs/operators';
-import { isEmpty, values, map, toNumber } from 'lodash';
 import { FormPercentDirective } from '@setl/utils/directives/form-percent/formpercent';
-import { NewRequestService } from '../../new-request.service';
 import { RiskProfileService } from '../risk-profile.service';
+import { NewRequestService } from '../../new-request.service';
+import { PersistService } from '@setl/core-persist';
 
 @Component({
     selector: 'investment-objective',
@@ -15,13 +16,19 @@ import { RiskProfileService } from '../risk-profile.service';
 export class InvestmentObjectiveComponent implements OnInit, OnDestroy {
     @ViewChild(FormPercentDirective) formPercent: FormPercentDirective;
     @Input() form;
+    @Input() formConstraint;
+    @Output() submitEvent: EventEmitter<any> = new EventEmitter<any>();
     @select(['ofi', 'ofiKyc', 'myKycRequested', 'kycs']) currentlyRequestedKycs$;
+    @select(['ofi', 'ofiKyc', 'myKycRequested', 'kycs']) requests$;
 
     unsubscribe: Subject<any> = new Subject();
     open: boolean = false;
     amcs;
+    formWatch: Subject<boolean> = new Subject<boolean>();
 
     constructor(
+        private persistService: PersistService,
+        private element: ElementRef,
         private newRequestService: NewRequestService,
         private riskProfileService: RiskProfileService,
     ) {
@@ -32,8 +39,8 @@ export class InvestmentObjectiveComponent implements OnInit, OnDestroy {
     }
 
     ngOnInit() {
-        this.initFormCheck();
         this.initData();
+        this.initFormCheck();
         this.getCurrentFormData();
         this.updateCrossAM();
     }
@@ -64,7 +71,6 @@ export class InvestmentObjectiveComponent implements OnInit, OnDestroy {
 
     updateCrossAM() {
         const value = this.form.get('objectivesSameInvestmentCrossAm').value;
-
         this.formCheckSameInvestmentCrossAm(value);
     }
 
@@ -103,6 +109,56 @@ export class InvestmentObjectiveComponent implements OnInit, OnDestroy {
 
     refreshForm() {
         this.formPercent.refreshFormPercent();
+    }
+
+    persistForm() {
+        // this.persistService.watchForm(
+        //     'newkycrequest/riskProfile/investmentObjective',
+        //     this.form,
+        //     this.newRequestService.context,
+        //     {
+        //         reset: false,
+        //         returnPromise: true,
+        //     },
+        // ).then(() => {
+        //     this.formWatch.next(true);
+        // });
+    }
+
+    clearPersistForm() {
+        // this.persistService.refreshState(
+        //     'newkycrequest/riskProfile/investmentObjective',
+        //     this.newRequestService.createRiskProfileFormGroup(),
+        //     this.newRequestService.context,
+        // );
+    }
+
+    handleSubmit(e) {
+        e.preventDefault();
+
+        if (!this.form.valid) {
+            formHelper.dirty(this.form);
+            formHelper.scrollToFirstError(this.element.nativeElement);
+            return;
+        }
+
+        this.requests$
+            .pipe(
+                take(1),
+            )
+            .subscribe((requests) => {
+                this.riskProfileService.sendRequestInvestmentObjective(this.form, this.formConstraint, requests)
+                    .then(() => {
+                        // this.clearPersistForm();
+                        this.submitEvent.emit({
+                            completed: true,
+                        });
+                    })
+                    .catch(() => {
+                        this.newRequestService.errorPop();
+                    })
+                    ;
+            });
     }
 
     ngOnDestroy() {
