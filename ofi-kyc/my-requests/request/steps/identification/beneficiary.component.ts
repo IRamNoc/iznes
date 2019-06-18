@@ -70,28 +70,28 @@ export class BeneficiaryComponent implements OnInit, OnDestroy {
         this.initFormCheck();
 
         (this.form.get('beneficiaryType') as FormControl).updateValueAndValidity();
-        (this.form.get('legalPerson.nationalIdNumber') as FormControl).updateValueAndValidity();
+        (this.form.get('legalPerson.nationalIdNumberType') as FormControl).updateValueAndValidity();
         this.refresh.emit();
     }
 
     initFormCheck() {
         this.form
-        .get('beneficiaryType')
-        .valueChanges
-        .pipe(takeUntil(this.unsubscribe))
-        .subscribe((beneficiaryTypeValue) => {
-            this.formCheckBeneficiaryType(beneficiaryTypeValue);
-        });
+            .get('beneficiaryType')
+            .valueChanges
+            .pipe(takeUntil(this.unsubscribe))
+            .subscribe((beneficiaryTypeValue) => {
+                this.formCheckBeneficiaryType(beneficiaryTypeValue);
+            });
 
         this.form
-        .get('legalPerson.nationalIdNumber')
-        .valueChanges
-        .pipe(takeUntil(this.unsubscribe))
-        .subscribe((data) => {
-            const nationalIdNumberValue = getValue(data, [0, 'id']);
+            .get('legalPerson.nationalIdNumberType')
+            .valueChanges
+            .pipe(takeUntil(this.unsubscribe))
+            .subscribe((data) => {
+                const nationalIdNumberTypeValue = getValue(data, [0, 'id']);
 
-            this.formCheckNationalIdNumber(nationalIdNumberValue);
-        });
+                this.formCheckNationalIdNumberType(nationalIdNumberTypeValue);
+            });
 
         this.form.get('common.parent')
             .valueChanges
@@ -100,7 +100,7 @@ export class BeneficiaryComponent implements OnInit, OnDestroy {
                 const id = getValue(parent, [0, 'id']);
                 const stakeholder = this.form;
 
-                if (String(id) === '-1') { // Linked Entity is the registered company
+                if (String(id) === '-1') { // Parent/'Linked Entity' is the registered company
                     this.beneficiaryService.setStakeholderDirectHolding(stakeholder);
                 } else {
                     this.beneficiaryService.setStakeholderIndirectHolding(stakeholder);
@@ -110,9 +110,8 @@ export class BeneficiaryComponent implements OnInit, OnDestroy {
             });
     }
 
-    formCheckNationalIdNumber(value) {
-        this.beneficiaryService.formCheckNationalIdNumber(this.form, value);
-
+    formCheckNationalIdNumberType(value) {
+        this.beneficiaryService.formCheckNationalIdNumberType(this.form, value);
         this.refresh.emit();
     }
 

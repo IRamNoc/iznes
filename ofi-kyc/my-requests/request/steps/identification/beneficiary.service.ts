@@ -1,9 +1,6 @@
 import { Injectable } from '@angular/core';
 import { AbstractControl, Validators, FormControl, FormArray } from '@angular/forms';
-
 import { get as getValue, find, isNumber } from 'lodash';
-
-import { MultilingualService } from '@setl/multilingual';
 import { sirenValidator, siretValidator } from '@setl/utils/helper/validators';
 import { countries, relationTypesList, holdingTypesList, beneficiaryTypesList } from '../../../requests.config';
 import has = Reflect.has;
@@ -13,9 +10,8 @@ import has = Reflect.has;
 })
 export class BeneficiaryService {
 
-    constructor(
-        private translate: MultilingualService,
-    ) {}
+    constructor() {
+    }
 
     getStakeholderType(stakeholder) {
         const type = stakeholder.get('beneficiaryType').value;
@@ -135,7 +131,8 @@ export class BeneficiaryService {
         });
     }
 
-    formCheckNationalIdNumber(form, value) {
+    formCheckNationalIdNumberType(form, value) {
+        const otherNationalIdNumberTypeTextControl: AbstractControl = form.get('legalPerson.otherNationalIdNumberType');
         const nationalIdNumberTextControl: AbstractControl = form.get('legalPerson.nationalIdNumberText');
 
         if (value) {
@@ -143,12 +140,17 @@ export class BeneficiaryService {
 
             if (value === 'siren') {
                 nationalIdNumberTextControl.setValidators([sirenValidator, Validators.required]);
+                otherNationalIdNumberTypeTextControl.disable();
             } else if (value === 'siret') {
                 nationalIdNumberTextControl.setValidators([siretValidator, Validators.required]);
+                otherNationalIdNumberTypeTextControl.disable();
             } else {
+                otherNationalIdNumberTypeTextControl.enable();
+                otherNationalIdNumberTypeTextControl.setValidators([Validators.required]);
                 nationalIdNumberTextControl.setValidators([Validators.required]);
             }
         } else {
+            otherNationalIdNumberTypeTextControl.disable();
             nationalIdNumberTextControl.disable();
         }
 
@@ -162,7 +164,7 @@ export class BeneficiaryService {
         if (value === 'legalPerson') {
             legalPersonControl.enable();
             naturalPersonControl.disable();
-            (form.get('legalPerson.nationalIdNumber') as FormControl).updateValueAndValidity();
+            (form.get('legalPerson.nationalIdNumberType') as FormControl).updateValueAndValidity();
         } else if (value === 'naturalPerson') {
             naturalPersonControl.enable();
             legalPersonControl.disable({ emitEvent: false });
@@ -174,8 +176,8 @@ export class BeneficiaryService {
             const beneficiaryType = stakeholder.get('beneficiaryType').value;
             this.formCheckBeneficiaryType(stakeholder, beneficiaryType);
 
-            const nationalIdNumber = stakeholder.get('legalPerson.nationalIdNumber').value;
-            this.formCheckNationalIdNumber(stakeholder, nationalIdNumber);
+            const nationalIdNumber = stakeholder.get('legalPerson.nationalIdNumberType').value;
+            this.formCheckNationalIdNumberType(stakeholder, nationalIdNumber);
         });
     }
 }
@@ -184,7 +186,6 @@ export class BeneficiaryService {
     providedIn: 'root',
 })
 export class HierarchySort {
-
     private hashObject = {};
     private noParent = -1;
 
@@ -219,5 +220,4 @@ export class HierarchySort {
 
         return result;
     }
-
 }

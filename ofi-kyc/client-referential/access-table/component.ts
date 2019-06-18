@@ -276,8 +276,6 @@ export class OfiFundAccessTable {
                                     link: '/#/list-of-funds/0',
                                     anchorCss: 'btn',
                                     anchorText: this.translate.translate('Start Trading'),
-                                    permissionName: 'viewKycRequests',
-                                    permissionType: 'canRead',
                                 },
                             ],
                         },
