@@ -99,7 +99,7 @@ export class IdentificationService {
             const classificationPromises = this.prepareRequestClassification(formGroupClassification);
             promises.concat(classificationPromises);
 
-            const updateStepPromise = this.sendRequestUpdateCurrentStep(kycID, context);
+            const updateStepPromise = this.sendRequestUpdateCurrentStep(kycID, 'identification', context);
             promises.push(updateStepPromise);
         });
 
@@ -121,7 +121,7 @@ export class IdentificationService {
             const generalPromise = this.sendRequestGeneral(formGroupGeneral);
             promises.push(generalPromise);
 
-            const updateStepPromise = this.sendRequestUpdateCurrentStep(kycID, context);
+            const updateStepPromise = this.sendRequestUpdateCurrentStep(kycID, 'generalInformation', context);
             promises.push(updateStepPromise);
         });
 
@@ -193,11 +193,11 @@ export class IdentificationService {
         return this.requestsService.sendRequest(messageBody);
     }
 
-    sendRequestUpdateCurrentStep(kycID, context) {
+    sendRequestUpdateCurrentStep(kycID, completedStep, context) {
         const messageBody = {
             RequestName: 'iznesupdatecurrentstep',
             kycID,
-            completedStep: 'identification',
+            completedStep,
             currentGroup: context,
         };
 
