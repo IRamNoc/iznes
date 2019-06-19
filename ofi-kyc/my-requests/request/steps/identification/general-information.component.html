@@ -171,11 +171,11 @@
                         <clr-radio-container clrInline>
                             <label>{{ 'Does the client have a commercial address?' | translate }}</label>
                             <clr-radio-wrapper>
-                                <input type="radio" clrRadio name="commercialDomiciliation" value="" checked="checked" formControlName="commercialDomiciliation" />
+                                <input type="radio" clrRadio name="commercialDomiciliation" [value]="0" checked="checked" formControlName="commercialDomiciliation" />
                                 <label>{{ 'No' | translate }}</label>
                             </clr-radio-wrapper>
                             <clr-radio-wrapper>
-                                <input type="radio" clrRadio name="commercialDomiciliation" value="yes" formControlName="commercialDomiciliation" />
+                                <input type="radio" clrRadio name="commercialDomiciliation" [value]="1" formControlName="commercialDomiciliation" />
                                 <label>{{ 'Yes' | translate }}</label>
                             </clr-radio-wrapper>
                         </clr-radio-container>

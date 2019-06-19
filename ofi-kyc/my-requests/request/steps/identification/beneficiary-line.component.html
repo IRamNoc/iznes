@@ -5,15 +5,13 @@
 <td>{{countryTaxResidence | translate}}</td>
 <td>{{nationality | translate}}</td>
 <td>{{holdingPercentage}} %</td>
-<td class="no-hover">{{holdingType}}</td>
-<td class="no-hover">{{votingPercentage}} %</td>
-<td class="hover" (click)="handleActionsClick($event)" colspan="2">
-    <div class="actions">
-        <button class="btn btn-primary btn-sm" (click)="addChild()"><i class="fa fa-plus"></i> {{'Add child' | translate}}</button>
-        <button class="btn btn-sm" (click)="editStakeholder()">{{'Edit' | translate}}</button>
-        <button class="btn btn-sm" (click)="removeStakeholder()">
-            <i class="fa fa-trash"></i>
-            {{'Delete' | translate}}
-        </button>
+<td>{{holdingType}}</td>
+<td>{{votingPercentage}} %</td>
+<td class="datagrid-row" (click)="showActions=!showActions; $event.stopPropagation()">
+    <clr-icon shape="ellipsis-vertical"></clr-icon>
+    <div class="datagrid-action-overflow" *ngIf="showActions">
+        <button class="action-item" (click)="addChild()">{{'Add child' | translate}}</button>
+        <button class="action-item" (click)="editStakeholder()">{{'Edit' | translate}}</button>
+        <button class="action-item" (click)="removeStakeholder()">{{'Delete' | translate}}</button>
     </div>
 </td>

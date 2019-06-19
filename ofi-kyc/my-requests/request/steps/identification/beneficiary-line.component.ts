@@ -1,4 +1,4 @@
-import { Component, Input, Output, EventEmitter, HostListener } from '@angular/core';
+import { Component, Input, Output, EventEmitter, HostListener, ElementRef } from '@angular/core';
 import { get as getValue, find } from 'lodash';
 
 import { BeneficiaryService } from './beneficiary.service';
@@ -12,6 +12,7 @@ export class BeneficiaryLineComponent {
     @Input() stakeholder;
     @Input() parent;
     @Output() action: EventEmitter<any> = new EventEmitter<any>();
+    showActions: boolean = false;
 
     get stakeholderValue() {
         return this.stakeholder.value;
@@ -57,11 +58,17 @@ export class BeneficiaryLineComponent {
 
     constructor(
         private beneficiaryService: BeneficiaryService,
+        private element: ElementRef,
     ) {
     }
 
-    handleActionsClick($event: Event) {
-        $event.stopPropagation();
+    /**
+     * Handle displaying the actions list
+     * @param event
+     */
+    @HostListener('document:click', ['$event']) clickOutside(e) {
+        const actionIcon = this.element.nativeElement.querySelector('.datagrid-row');
+        this.showActions = actionIcon.contains(e.target);
     }
 
     addChild() {

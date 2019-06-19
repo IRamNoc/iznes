@@ -1,13 +1,14 @@
-import { Component, OnInit, Input, OnDestroy, ViewChild } from '@angular/core';
+import { Component, OnInit, Input, Output, OnDestroy, ViewChild, EventEmitter, ElementRef } from '@angular/core';
 import { FormArray, FormControl } from '@angular/forms';
 import { get as getValue, isEmpty, castArray } from 'lodash';
 import { Subject } from 'rxjs';
-import { filter, map, takeUntil } from 'rxjs/operators';
+import { filter, map, takeUntil, take } from 'rxjs/operators';
 import { select } from '@angular-redux/store';
 import { FormPercentDirective } from '@setl/utils/directives/form-percent/formpercent';
 import { IdentificationService } from '../identification.service';
 import { NewRequestService } from '../../new-request.service';
 import { countries } from '../../../requests.config';
+import { formHelper } from '@setl/utils/helper';
 
 @Component({
     selector: 'banking-information',
@@ -17,6 +18,7 @@ import { countries } from '../../../requests.config';
 export class BankingInformationComponent implements OnInit, OnDestroy {
     @ViewChild(FormPercentDirective) formPercent: FormPercentDirective;
     @Input() form;
+    @Output() submitEvent: EventEmitter<any> = new EventEmitter<any>();
     @select(['ofi', 'ofiKyc', 'myKycRequested', 'kycs']) requests$;
 
     unsubscribe: Subject<any> = new Subject();
@@ -26,6 +28,7 @@ export class BankingInformationComponent implements OnInit, OnDestroy {
     constructor(
         private newRequestService: NewRequestService,
         private identificationService: IdentificationService,
+        private element: ElementRef,
     ) {
     }
 
@@ -88,6 +91,33 @@ export class BankingInformationComponent implements OnInit, OnDestroy {
                     }
                 });
             });
+        });
+    }
+
+    handleSubmit(e) {
+        e.preventDefault();
+        if (!this.form.valid) {
+            formHelper.dirty(this.form);
+            formHelper.scrollToFirstError(this.element.nativeElement);
+            return;
+        }
+
+        this.requests$
+        .pipe(take(1))
+        .subscribe((requests) => {
+            this
+            .identificationService
+            .sendRequestBankingInformation(this.form, requests)
+            .then(() => {
+                this.submitEvent.emit({
+                    completed: true,
+                });
+                // this.clearPersistForm();
+            })
+            .catch(() => {
+                this.newRequestService.errorPop();
+            })
+            ;
         });
     }
 

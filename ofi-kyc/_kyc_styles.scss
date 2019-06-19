@@ -76,7 +76,9 @@
         }
     }
 }
-
+.modal-body .kyc-container  {
+    float: none;
+}
 .kyc-header {
     background: #fafafa;
     border-bottom: 1px solid #dddddd;
@@ -93,17 +95,25 @@
 .kyc-container {
     float: left;
     width: 100%;
-    height: calc(100vh - 2.5rem - 91px);
     margin-bottom: -20px;
     padding: 20px;
     background: #ffffff;
     display: table;
+    &:not(.sm) {
+        height: calc(100vh - 2.5rem - 91px);
+    }
     &.width-adjust {
         width: calc(100% - 280px);
         border-left: 1px solid #dddddd;
     }
     h2 {
         font-weight: normal;
+    }
+    .text-container {
+        margin: 12px 0;
+        p {
+            font-size: 14px;
+        }
     }
     .well {
         margin: 12px 0;
@@ -130,54 +140,58 @@
                     }
                 }
             }
-            label {
-                font-size: 13px;
-                font-weight: 500!important;
-                color: #444444;
-                margin-top: 8px!important;
-                margin-bottom: 3px!important;
-            }
-            input[type] {
-                height: 30px;
-                font-size:13px;
-            }
-            ng-select {
-                .ui-select-multiple {
-                    .ui-select-match {
-                        min-height: 30px!important;
-                    }
-                    clr-icon {
-                        margin-top: -8px;
-                        color: #0079b8;
-                    }
+        }
+    }
+
+    .well .row-panel-body, .form-group {
+        label {
+            font-size: 13px!important;
+            font-weight: 500!important;
+            color: #444444;
+            margin-top: 8px!important;
+            margin-bottom: 3px!important;
+        }
+        input[type] {
+            height: 30px;
+            font-size:13px;
+        }
+        ng-select {
+            .ui-select-multiple {
+                .ui-select-match {
+                    min-height: 30px!important;
                 }
-                .ui-select-toggle {
-                    height: 30px!important;
-                }
-                .ui-select-placeholder {
-                    line-height: 30px!important;
-                }
-                .ui-select-match .arrow {
-                    top: 16px;
-                }
-                .ui-select-match-text {
-                    margin: 0!important;
-                    padding: 0!important;
-                    line-height: 30px !important;
-                }
-                .btn clr-icon {
+                clr-icon {
                     margin-top: -8px;
-                }
-                .ui-select-container {
-                    width: 95%!important;
+                    color: #0079b8;
                 }
             }
-            clr-radio-container {
-                margin-top: 0;
+            .ui-select-toggle {
+                height: 30px!important;
+            }
+            .ui-select-placeholder {
+                line-height: 30px!important;
+            }
+            .ui-select-match .arrow {
+                top: 16px;
+            }
+            .ui-select-match-text {
+                margin: 0!important;
+                padding: 0!important;
+                line-height: 30px !important;
+            }
+            .btn clr-icon {
+                margin-top: -8px;
+            }
+            .ui-select-container {
+                width: 95%!important;
             }
         }
-
+        clr-radio-container {
+            margin-top: 0;
+        }
     }
+
+
     .alert-no-bg {
         background: none;
         border: none;

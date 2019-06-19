@@ -26,22 +26,20 @@
     </form-step>
         <form-step *ngIf="fullForm">
             <general-information #step [parentForm]="forms.get('identification').get('generalInformation')" (submitEvent)="handleSubmit($event)"></general-information>
-            <!-- <kyc-step-identification #step [form]="forms.get('identification')" [investorType]="investorType" (submitEvent)="handleSubmit($event)"></kyc-step-identification> -->
         </form-step>
         <form-step *ngIf="fullForm">
-            <company-information #step [form]="forms.get('identification').get('companyInformation')" (submitEvent)="handleSubmit($event)" (click)="handleSubmit({completed: true})"></company-information>
+            <company-information #step [form]="forms.get('identification').get('companyInformation')" (submitEvent)="handleSubmit($event)"></company-information>
         </form-step>
         <form-step *ngIf="fullForm">
             <beneficiary-list #step [form]="forms.get('identification').get('beneficiaries').get('beneficiaries')" (submitEvent)="handleSubmit($event)"></beneficiary-list>
         </form-step>
         <form-step *ngIf="fullForm">
-                <p (click)="handleSubmit({completed: true})">Bank Accounts</p>
+            <banking-information #step [form]="forms.get('identification').get('bankingInformation')" (submitEvent)="handleSubmit($event)"></banking-information>
         </form-step>
         <form-step *ngIf="fullForm">
-                <p (click)="handleSubmit({completed: true})">Classification</p>
+            <classification-information [form]="forms.get('identification').get('classificationInformation')" [enabled]="checkCompletion()" [investorType]="investorType" (submitEvent)="handleSubmit($event)"></classification-information>
         </form-step>
     <form-step *ngIf="fullForm">
-        <!-- <kyc-step-risk-profile #step [form]="forms.get('riskProfile')" (submitEvent)="handleSubmit($event)"></kyc-step-risk-profile> -->
         <!--PARENT STEP-->
     </form-step>
         <form-step *ngIf="fullForm">

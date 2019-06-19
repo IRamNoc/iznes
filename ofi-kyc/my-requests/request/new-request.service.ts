@@ -462,7 +462,6 @@ export class NewRequestService {
 
         return fb.group({
             common: fb.group({
-                kycribdoc: this.createDocumentFormGroup('kycribdoc', !this.isProduction),
                 kycstatuscertifieddoc: this.createDocumentFormGroup('kycstatuscertifieddoc', !this.isProduction),
                 kyckbisdoc: this.createDocumentFormGroup('kyckbisdoc', !this.isProduction),
                 kycannualreportdoc: this.createDocumentFormGroup('kycannualreportdoc', !this.isProduction),
@@ -478,6 +477,11 @@ export class NewRequestService {
                 kycproofofapprovaldoc: this.createDocumentFormGroup('kycproofofapprovaldoc', !this.isProduction),
                 kycproofregulationdoc: this.createDocumentFormGroup('kycproofregulationdoc', !this.isProduction),
                 kycwolfsbergdoc: this.createDocumentFormGroup('kycwolfsbergdoc', !this.isProduction),
+            }),
+            nowcp: fb.group({
+                kycribdoc: this.createDocumentFormGroup('kycribdoc', !this.isProduction),
+                kycinfomemorandumbdfdoc: this.createDocumentFormGroup('kycinfomemorandumbdfdoc', !this.isProduction),
+                kycorgchartdoc: this.createDocumentFormGroup('kycorgchartdoc', !this.isProduction),
             }),
         });
     }
