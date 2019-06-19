@@ -573,7 +573,11 @@ export class NewRequestService {
                     return CustomValidators.multipleCheckboxValidator(formGroup);
                 },
             }),
-            investmentHorizonWantedSpecificPeriod: [{ value: '', disabled: true }, Validators.required],
+            investmentHorizonWantedSpecificPeriod: [
+                { value: '', disabled: true }, Validators.compose([
+                    Validators.required,
+                    Validators.pattern(/^(19[5-9][0-9]|20[0-9]{2})-(0[1-9]|1[0-2])-(0[1-9]|[1-2][0-9]|3[01])$/),
+                ])],
             riskProfile: ['', Validators.required],
             riskProfileCapital: [{ value: '', disabled: true }, Validators.required],
             riskAcceptance: this.formBuilder.group(

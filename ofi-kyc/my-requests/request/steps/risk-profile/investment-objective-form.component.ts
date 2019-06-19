@@ -30,7 +30,7 @@ export class InvestmentObjectiveFormComponent implements OnInit, OnDestroy {
     riskProfileList;
     riskAcceptanceList;
     performanceProfileList;
-    clientNeeds;
+    clientNeedsList;
     amc = {
         companyID: '',
         companyName: '',
@@ -132,7 +132,7 @@ export class InvestmentObjectiveFormComponent implements OnInit, OnDestroy {
         this.investmentHorizonList = this.translate.translate(this.newRequestService.investmentHorizonList);
         this.riskProfileList = this.translate.translate(this.newRequestService.riskProfileList);
         this.performanceProfileList = this.translate.translate(this.newRequestService.performanceProfileList);
-        this.clientNeeds = this.translate.translate(this.newRequestService.clientNeedsList);
+        this.clientNeedsList = this.translate.translate(this.newRequestService.clientNeedsList);
     }
 
     formCheckInvestmentHorizonWanted(value) {
