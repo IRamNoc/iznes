@@ -1,15 +1,16 @@
-import { Component, Input, OnInit, OnDestroy, ViewChild } from '@angular/core';
+import { Component, Input, Output, OnInit, OnDestroy, ViewChild, EventEmitter, ElementRef } from '@angular/core';
 import { FormGroup, FormControl } from '@angular/forms';
 import { isEmpty, castArray, find, pick, omit, values, map, assign, findIndex, get as getValue } from 'lodash';
 import { select } from '@angular-redux/store';
 import { Subject, combineLatest } from 'rxjs';
-import { filter, map as rxMap, takeUntil } from 'rxjs/operators';
+import { filter, map as rxMap, takeUntil, take } from 'rxjs/operators';
 
 import { IdentificationService } from '../identification.service';
 import { NewRequestService } from '../../new-request.service';
 import { countries, investorStatusList } from '../../../requests.config';
 import { FormPercentDirective } from '@setl/utils/directives/form-percent/formpercent';
 import { MultilingualService } from '@setl/multilingual';
+import { formHelper } from '@setl/utils/helper';
 
 @Component({
     selector: 'classification-information',
@@ -21,9 +22,11 @@ export class ClassificationInformationComponent implements OnInit, OnDestroy {
     @Input() form;
     @Input() enabled;
     @Input() investorType;
+    @Output() submitEvent: EventEmitter<any> = new EventEmitter<any>();
     @select(['ofi', 'ofiKyc', 'myKycRequested', 'kycs']) currentlyRequestedKycs$;
     @select(['ofi', 'ofiProduct', 'ofiManagementCompany', 'investorManagementCompanyList', 'investorManagementCompanyList']) managementCompanyList$;
     @select(['ofi', 'ofiKyc', 'myKycRequested', 'formPersist']) persistedForms$;
+    @select(['ofi', 'ofiKyc', 'myKycRequested', 'kycs']) requests$;
 
     unsubscribe: Subject<any> = new Subject();
     open: boolean = false;
@@ -39,7 +42,12 @@ export class ClassificationInformationComponent implements OnInit, OnDestroy {
         private newRequestService: NewRequestService,
         private identificationService: IdentificationService,
         public translate: MultilingualService,
+        public element: ElementRef,
     ) {
+    }
+
+    log() {
+        console.log('+++ LOG', this.form.get(['nonPro', 'financialInstruments']).value);
     }
 
     openPanel($e) {
@@ -305,6 +313,33 @@ export class ClassificationInformationComponent implements OnInit, OnDestroy {
             });
         })
         ;
+    }
+
+    handleSubmit(e) {
+        e.preventDefault();
+        if (!this.form.valid) {
+            formHelper.dirty(this.form);
+            formHelper.scrollToFirstError(this.element.nativeElement);
+            return;
+        }
+
+        this.requests$
+        .pipe(take(1))
+        .subscribe((requests) => {
+            this
+            .identificationService
+            .sendRequestClassificationInformation(this.form, requests)
+            .then(() => {
+                this.submitEvent.emit({
+                    completed: true,
+                });
+                // this.clearPersistForm();
+            })
+            .catch(() => {
+                this.newRequestService.errorPop();
+            })
+            ;
+        });
     }
 
     ngOnDestroy() {

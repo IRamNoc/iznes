@@ -314,7 +314,7 @@ export class CompanyInformationComponent implements OnInit, OnDestroy {
         const activityAuthorityControl = this.form.get('regulator');
         const activityApprovalNumberControl = this.form.get('approvalNumber');
         const regulatoryStatusControl = this.form.get('regulatoryStatus');
-        console.log('+++ value', value, typeof value);
+
         if (value) {
             activityAuthorityControl.enable();
             activityApprovalNumberControl.enable();

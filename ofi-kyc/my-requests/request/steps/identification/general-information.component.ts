@@ -55,7 +55,6 @@ export class GeneralInformationComponent implements OnInit, OnDestroy {
             ...this.parentForm.get('location').controls,
         });
 
-
         this.countries = this.translate.translate(countries);
 
         this.initFormCheck();
@@ -174,6 +173,7 @@ export class GeneralInformationComponent implements OnInit, OnDestroy {
                     this.identificationService.getCurrentFormGeneralData(request.kycID).then((formData) => {
                         if (formData) {
                             this.form.patchValue(formData);
+                            this.updateParentForm();
                             if (this.isFormReadonly) {
                                 this.form.disable();
                             }
@@ -222,6 +222,7 @@ export class GeneralInformationComponent implements OnInit, OnDestroy {
             .identificationService
             .sendRequestGeneralInformation(this.form, requests)
             .then(() => {
+                this.updateParentForm();
                 this.submitEvent.emit({
                     completed: true,
                 });
@@ -232,6 +233,15 @@ export class GeneralInformationComponent implements OnInit, OnDestroy {
             })
             ;
         });
+    }
+
+    updateParentForm() {
+        const newData = {};
+        Object.keys(this.form.controls).forEach((key) => {
+            newData[key] = this.form.get(key).value;
+        });
+        this.parentForm.get('entity').patchValue(newData);
+        this.parentForm.get('location').patchValue(newData);
     }
 
     showHelperText(control, errors) {

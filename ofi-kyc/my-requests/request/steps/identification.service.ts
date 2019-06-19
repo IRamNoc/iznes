@@ -174,6 +174,56 @@ export class IdentificationService {
         });
     }
 
+    sendRequestBankingInformation(form, requests) {
+        const promises = [];
+        const context = this.newRequestService.context;
+        requests.forEach((request, index) => {
+
+            const kycID = request.kycID;
+
+            form.get('kycID').setValue(kycID);
+
+            const formGroupBankingHolders = form.get('custodianHolders');
+            const formGroupBankingHoldersValue = formGroupBankingHolders.value;
+            formGroupBankingHoldersValue.forEach((singleHolderValue, key) => {
+                let data = pickBy(singleHolderValue);
+                data = Object.assign({}, data, { kycID });
+
+                const bankingPromise = this.sendRequestBanking(data).then((data) => {
+                    (formGroupBankingHolders as FormArray).at(key).get('custodianID').patchValue(data.custodianID);
+                });
+                promises.push(bankingPromise);
+            });
+
+            const updateStepPromise = this.sendRequestUpdateCurrentStep(kycID, 'bankAccounts', context);
+            promises.push(updateStepPromise);
+        });
+
+        return Promise.all(promises).then(() => {
+            this.ngRedux.dispatch(setMyKycStakeholderRelations(this.stakeholdersRelationTable));
+        });
+    }
+
+    sendRequestClassificationInformation(form, requests) {
+        const promises = [];
+        const context = this.newRequestService.context;
+        requests.forEach((request, index) => {
+
+            const kycID = request.kycID;
+
+            form.get('kycID').setValue(kycID);
+            const classificationPromises = this.prepareRequestClassification(form);
+            promises.concat(classificationPromises);
+
+            const updateStepPromise = this.sendRequestUpdateCurrentStep(kycID, 'classification', context);
+            promises.push(updateStepPromise);
+        });
+
+        return Promise.all(promises).then(() => {
+            this.ngRedux.dispatch(setMyKycStakeholderRelations(this.stakeholdersRelationTable));
+        });
+    }
+
     handleBeneficiaries(formGroupBeneficiaries, kycID, connectedWallet, kycIndex) {
         const beneficiaryValues = formGroupBeneficiaries.value;
         const promises = this.sendRequestBeneficiaries(beneficiaryValues, kycID, connectedWallet).then((responses) => {

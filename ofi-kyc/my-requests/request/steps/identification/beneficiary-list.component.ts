@@ -1,4 +1,4 @@
-import { Component, Input, AfterViewInit, Output, EventEmitter, OnDestroy, ViewChild, ElementRef } from '@angular/core';
+import { Component, Input, OnInit, Output, EventEmitter, OnDestroy, ViewChild, ElementRef } from '@angular/core';
 import { FormArray, FormGroup } from '@angular/forms';
 import { select, NgRedux } from '@angular-redux/store';
 import { Subject } from 'rxjs';
@@ -24,7 +24,7 @@ import { formHelper } from '@setl/utils/helper';
     templateUrl: './beneficiary-list.component.html',
     styleUrls: ['./beneficiary-list.component.scss'],
 })
-export class BeneficiaryListComponent implements AfterViewInit, OnDestroy {
+export class BeneficiaryListComponent implements OnInit, OnDestroy {
     @Input() form: FormArray;
     @Output() submitEvent: EventEmitter<any> = new EventEmitter<any>();
     @Output() refresh: EventEmitter<any> = new EventEmitter<any>();
@@ -97,7 +97,7 @@ export class BeneficiaryListComponent implements AfterViewInit, OnDestroy {
     ) {
     }
 
-    ngAfterViewInit() {
+    ngOnInit() {
         this.initSubscriptions();
         this.getFormData();
     }

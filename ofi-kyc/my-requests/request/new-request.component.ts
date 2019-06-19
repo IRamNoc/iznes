@@ -274,7 +274,7 @@ export class NewKycRequestComponent implements OnInit, AfterViewInit {
     submitCurrentStepComponent() {
         const position = this.formSteps.position;
         const component = this.formSteps.steps[position];
-        console.log('+++ component', component);
+
         if (!component.handleSubmit) {
             return true;
         }
@@ -309,6 +309,14 @@ export class NewKycRequestComponent implements OnInit, AfterViewInit {
 
         this.fullForm = fullFormValue;
         this.initFormSteps(this.currentCompletedStep);
+    }
+
+    checkCompletion() {
+        const general = this.forms.get('identification').get('generalInformation');
+        const company = this.forms.get('identification').get('companyInformation');
+        const banking = this.forms.get('identification').get('bankingInformation');
+
+        return general.valid && company.valid && banking.valid;
     }
 
     ngOnDestroy() {
