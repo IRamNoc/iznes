@@ -99,7 +99,123 @@ export class IdentificationService {
             const classificationPromises = this.prepareRequestClassification(formGroupClassification);
             promises.concat(classificationPromises);
 
-            const updateStepPromise = this.sendRequestUpdateCurrentStep(kycID, context);
+            const updateStepPromise = this.sendRequestUpdateCurrentStep(kycID, 'identification', context);
+            promises.push(updateStepPromise);
+        });
+
+        return Promise.all(promises).then(() => {
+            this.ngRedux.dispatch(setMyKycStakeholderRelations(this.stakeholdersRelationTable));
+        });
+    }
+
+    sendRequestGeneralInformation(form, requests) {
+        const promises = [];
+        const context = this.newRequestService.context;
+
+        requests.forEach((request) => {
+
+            const kycID = request.kycID;
+
+            form.get('kycID').setValue(kycID);
+            const generalPromise = this.sendRequestGeneral(form);
+            promises.push(generalPromise);
+
+            const updateStepPromise = this.sendRequestUpdateCurrentStep(kycID, 'generalInformation', context);
+            promises.push(updateStepPromise);
+        });
+
+        return Promise.all(promises);
+    }
+
+    sendRequestCompanyInformation(form, requests) {
+        const promises = [];
+        const context = this.newRequestService.context;
+
+        requests.forEach((request) => {
+
+            const kycID = request.kycID;
+
+            form.get('kycID').setValue(kycID);
+            const companyPromise = this.sendRequestCompany(form);
+            promises.push(companyPromise);
+
+            const updateStepPromise = this.sendRequestUpdateCurrentStep(kycID, 'companyInformation', context);
+            promises.push(updateStepPromise);
+        });
+
+        return Promise.all(promises).then(() => {
+            this.ngRedux.dispatch(setMyKycStakeholderRelations(this.stakeholdersRelationTable));
+        });
+    }
+
+    sendRequestBeneficiaryList(form, requests, connectedWallet) {
+        this.getPreviousRelations();
+        this.stakeholdersRelationTable = [];
+
+        const promises = [];
+        const context = this.newRequestService.context;
+        requests.forEach((request, index) => {
+
+            const kycID = request.kycID;
+
+            const formGroupBeneficiaries = form;
+
+            this.stakeholdersRelationTable.push({ kycID, stakeholderIDs: [] });
+            const beneficiariesPromises = this.handleBeneficiaries(formGroupBeneficiaries, kycID, connectedWallet, index);
+
+            promises.push(beneficiariesPromises);
+
+            const updateStepPromise = this.sendRequestUpdateCurrentStep(kycID, 'stakeholders', context);
+            promises.push(updateStepPromise);
+        });
+
+        return Promise.all(promises).then(() => {
+            this.ngRedux.dispatch(setMyKycStakeholderRelations(this.stakeholdersRelationTable));
+        });
+    }
+
+    sendRequestBankingInformation(form, requests) {
+        const promises = [];
+        const context = this.newRequestService.context;
+        requests.forEach((request, index) => {
+
+            const kycID = request.kycID;
+
+            form.get('kycID').setValue(kycID);
+
+            const formGroupBankingHolders = form.get('custodianHolders');
+            const formGroupBankingHoldersValue = formGroupBankingHolders.value;
+            formGroupBankingHoldersValue.forEach((singleHolderValue, key) => {
+                let data = pickBy(singleHolderValue);
+                data = Object.assign({}, data, { kycID });
+
+                const bankingPromise = this.sendRequestBanking(data).then((data) => {
+                    (formGroupBankingHolders as FormArray).at(key).get('custodianID').patchValue(data.custodianID);
+                });
+                promises.push(bankingPromise);
+            });
+
+            const updateStepPromise = this.sendRequestUpdateCurrentStep(kycID, 'bankAccounts', context);
+            promises.push(updateStepPromise);
+        });
+
+        return Promise.all(promises).then(() => {
+            this.ngRedux.dispatch(setMyKycStakeholderRelations(this.stakeholdersRelationTable));
+        });
+    }
+
+    sendRequestClassificationInformation(form, requests) {
+        const promises = [];
+        const context = this.newRequestService.context;
+        requests.forEach((request, index) => {
+
+            const kycID = request.kycID;
+
+            form.get('kycID').setValue(kycID);
+            const classificationPromises = this.prepareRequestClassification(form);
+            promises.concat(classificationPromises);
+
+            const updateStepPromise = this.sendRequestUpdateCurrentStep(kycID, 'classification', context);
             promises.push(updateStepPromise);
         });
 
@@ -173,11 +289,11 @@ export class IdentificationService {
         return this.requestsService.sendRequest(messageBody);
     }
 
-    sendRequestUpdateCurrentStep(kycID, context) {
+    sendRequestUpdateCurrentStep(kycID, completedStep, context) {
         const messageBody = {
             RequestName: 'iznesupdatecurrentstep',
             kycID,
-            completedStep: 'identification',
+            completedStep,
             currentGroup: context,
         };
 

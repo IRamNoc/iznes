@@ -1,10 +1,10 @@
 import { Component, OnInit, Input, OnDestroy, Output, EventEmitter, ChangeDetectorRef } from '@angular/core';
 import { combineLatest, Subject } from 'rxjs';
 import { takeUntil, filter as rxFilter, tap, map } from 'rxjs/operators';
-import { FormGroup } from '@angular/forms';
+import { FormGroup, FormControl } from '@angular/forms';
 import { select, NgRedux } from '@angular-redux/store';
 import { ActivatedRoute } from '@angular/router';
-import { isEmpty, isNil, keyBy, filter, reduce, find } from 'lodash';
+import { isEmpty, isNil, keyBy, filter, reduce, find, merge } from 'lodash';
 import { formHelper } from '@setl/utils/helper';
 
 import { ClearMyKycListRequested } from '@ofi/ofi-main/ofi-store/ofi-kyc';
@@ -24,14 +24,18 @@ export class NewKycSelectAmcComponent implements OnInit, OnDestroy {
     private kycList;
 
     managementCompanies;
+    filteredManagementCompanies;
     rawManagementCompanies: any[] = [];
     connectedWallet;
 
     submitted = false;
     alreadyRegistered = false;
-    preSelectedAm: {amcId: number, invitationToken}
+    preSelectedAm: { amcId: number, invitationToken };
 
     selectedAMCIDs = new Set();
+
+    searchCompanies: FormControl = new FormControl();
+    timeout: any;
 
     @Input() duplicate;
     @Input() form: FormGroup;
@@ -52,11 +56,14 @@ export class NewKycSelectAmcComponent implements OnInit, OnDestroy {
     @select(['ofi', 'ofiProduct', 'ofiManagementCompany', 'investorManagementCompanyList', 'investorManagementCompanyList']) managementCompanyList$;
 
     get selectedManagementCompanies() {
-        const selected = filter(this.managementCompanies, company => this.selectedAMCIDs.has(company.id)).map(company => ({
+        let selected = filter(this.managementCompanies, company => this.selectedAMCIDs.has(company.id)).map(company => ({
             id: company.id,
             registered: company.registered,
             invitationToken: this.getInvitationToken(company.id),
         }));
+
+        selected.push({id:-1, registered:0, invitationToken:''});
+
         return selected;
     }
 
@@ -109,6 +116,8 @@ export class NewKycSelectAmcComponent implements OnInit, OnDestroy {
 
             this.managementCompanies = this.requestsService
             .extractManagementCompanyData(managementCompanyList, kycList, requestedKycs);
+            if (!this.filteredManagementCompanies) this.filteredManagementCompanies = this.managementCompanies;
+
         });
 
         combineLatest(companyCombination$, this.requestedKycList$)
@@ -128,6 +137,34 @@ export class NewKycSelectAmcComponent implements OnInit, OnDestroy {
         .subscribe((connectedWallet) => {
             this.connectedWallet = connectedWallet;
         });
+
+        this.searchCompanies.valueChanges.pipe(takeUntil(this.unsubscribe)).subscribe(term => this.filterAMCompanies(term));
+    }
+
+    filterAMCompanies(term: string) {
+        // Debounce: clear any set timers as user has typed again
+        clearTimeout(this.timeout);
+
+        // Reset filter if search input cleared
+        if (term.length === 0) {
+            this.filteredManagementCompanies = this.managementCompanies;
+            this.changeDetectorRef.detectChanges();
+            return;
+        }
+
+        // Filter companies after delay to allow user to finish typing
+        this.timeout = setTimeout(
+            () => {
+                this.filteredManagementCompanies = this.managementCompanies.filter(co => co.text.toLowerCase().includes(term.toLowerCase()));
+                this.changeDetectorRef.detectChanges();
+            },
+            400,
+        );
+    }
+
+    clearSearch() {
+        this.filterAMCompanies('');
+        this.searchCompanies.setValue('');
     }
 
     populateForm(kycs) {
@@ -229,6 +266,7 @@ export class NewKycSelectAmcComponent implements OnInit, OnDestroy {
         }
 
         let ids;
+
         if (this.duplicate) {
             ids = await this.selectAmcService.duplicate(this.selectedManagementCompanies, this.duplicate, this.connectedWallet);
         } else {

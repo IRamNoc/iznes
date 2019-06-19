@@ -1,9 +1,9 @@
-import { Component, Input, OnInit, Output, EventEmitter, OnDestroy } from '@angular/core';
+import { Component, Input, OnInit, Output, EventEmitter, OnDestroy, ViewChild, ElementRef } from '@angular/core';
 import { FormArray, FormGroup } from '@angular/forms';
-import { select } from '@angular-redux/store';
+import { select, NgRedux } from '@angular-redux/store';
 import { Subject } from 'rxjs';
-import { takeUntil } from 'rxjs/operators';
-import { get as getValue, isNil, find, isEmpty, isNumber, values, some, filter } from 'lodash';
+import { filter as rxFilter, map, takeUntil, take } from 'rxjs/operators';
+import { get as getValue, isNil, find, isEmpty, isNumber, values, some, filter, set as setValue } from 'lodash';
 
 import { ConfirmationService } from '@setl/utils';
 import { ToasterService } from 'angular2-toaster';
@@ -11,9 +11,13 @@ import { AlertsService } from '@setl/jaspero-ng2-alerts';
 
 import { MultilingualService } from '@setl/multilingual';
 import { BeneficiaryService, HierarchySort } from './beneficiary.service';
-import { IdentificationService } from '../identification.service';
+import { IdentificationService, buildBeneficiaryObject } from '../identification.service';
 import { NewRequestService } from '../../new-request.service';
 import get = Reflect.get;
+import { DocumentsService } from '../documents.service';
+import { FormPercentDirective } from '@setl/utils/directives/form-percent/formpercent';
+import { setMyKycStakeholderRelations } from '@ofi/ofi-main/ofi-store/ofi-kyc/kyc-request';
+import { formHelper } from '@setl/utils/helper';
 
 @Component({
     selector: 'beneficiary-list',
@@ -21,12 +25,16 @@ import get = Reflect.get;
     styleUrls: ['./beneficiary-list.component.scss'],
 })
 export class BeneficiaryListComponent implements OnInit, OnDestroy {
-    @Input() stakeholders: FormArray;
-    @Input() registeredCompanyName: string;
-
+    @Input() form: FormArray;
+    @Output() submitEvent: EventEmitter<any> = new EventEmitter<any>();
     @Output() refresh: EventEmitter<any> = new EventEmitter<any>();
     @select(['ofi', 'ofiKyc', 'myKycRequested', 'stakeholderRelations']) stakeholderRelations$;
+    @select(['ofi', 'ofiKyc', 'myKycRequested', 'kycs']) requests$;
+    @select(['user', 'connected', 'connectedWallet']) connectedWallet$;
+    @ViewChild(FormPercentDirective) formPercent: FormPercentDirective;
 
+    registeredCompanyName: string;
+    // stakeholders: FormArray;
     selectedStakeholderIndex = null;
     sortedStakeholders = [];
     stakeholderBackup = null;
@@ -35,6 +43,7 @@ export class BeneficiaryListComponent implements OnInit, OnDestroy {
     unsubscribe: Subject<void> = new Subject();
     relations;
     parents;
+    connectedWallet;
 
     get nextId() {
         return this.getHighestID() + 1;
@@ -61,14 +70,16 @@ export class BeneficiaryListComponent implements OnInit, OnDestroy {
             return null;
         }
 
-        return this.stakeholders.at(this.selectedStakeholderIndex);
+        return this.form.at(this.selectedStakeholderIndex);
     }
 
     get listStakeholders() {
-        if (this.stakeholders.length) {
-            this.sortStakeholders();
+        if (this.sortedStakeholders) {
+            if (!this.sortedStakeholders.length && this.form.length) {
+                this.sortStakeholders();
+            }
+            return this.sortedStakeholders;
         }
-        return this.sortedStakeholders;
     }
 
     constructor(
@@ -80,28 +91,117 @@ export class BeneficiaryListComponent implements OnInit, OnDestroy {
         private toasterService: ToasterService,
         private alertsService: AlertsService,
         private hierarchySort: HierarchySort,
+        private documentsService: DocumentsService,
+        private ngRedux: NgRedux<any>,
+        private element: ElementRef,
     ) {
     }
 
     ngOnInit() {
         this.initSubscriptions();
+        this.getFormData();
+    }
+
+    getFormData() {
+        const requests$ = this.requests$
+        .pipe(
+            rxFilter(requests => !isEmpty(requests)),
+        );
+
+        requests$.pipe(
+                takeUntil(this.unsubscribe),
+            ).subscribe((requests) => {
+                const promises = [];
+                const stakeholdersRelationTable = [];
+
+                requests.forEach((request, index) => {
+
+                    const promise = this.identificationService.getCurrentFormCompanyBeneficiariesData(request.kycID).then((formData) => {
+                        if (!isEmpty(formData)) {
+                            const relation = {
+                                kycID: request.kycID,
+                                stakeholderIDs: formData.map(stakeholder => stakeholder.companyBeneficiariesID),
+                            };
+
+                            stakeholdersRelationTable.push(relation);
+
+                            if (index === 0) {
+                                const beneficiaries: FormArray = this.form as FormArray;
+
+                                while (beneficiaries.length) {
+                                    beneficiaries.removeAt(0);
+                                }
+
+                                const promises = formData.map((controlValue) => {
+                                    const control = this.newRequestService.createBeneficiary();
+                                    const documentID = controlValue.documentID;
+
+                                    const newControlValue = buildBeneficiaryObject(controlValue);
+
+                                    if (documentID) {
+                                        return this.documentsService.getDocument(documentID).then((document) => {
+                                            if (document) {
+                                                setValue(newControlValue, ['common', 'document'], {
+                                                    name: document.name,
+                                                    hash: document.hash,
+                                                    kycDocumentID: document.kycDocumentID,
+                                                });
+                                            }
+                                            control.patchValue(newControlValue);
+                                            beneficiaries.push(control);
+                                        });
+                                    }
+
+                                    control.patchValue(newControlValue);
+                                    beneficiaries.push(control);
+                                });
+
+                                Promise.all(promises).then(() => {
+                                    this.beneficiaryService.fillInStakeholderSelects(this.form.get('beneficiaries'));
+                                    this.beneficiaryService.updateStakeholdersValidity(this.form.get('beneficiaries') as FormArray);
+                                    if (this.formPercent) this.formPercent.refreshFormPercent();
+                                });
+                            }
+                        }
+                    });
+
+                    promises.push(promise);
+                });
+
+                Promise.all(promises).then(() => {
+                    this.ngRedux.dispatch(setMyKycStakeholderRelations(stakeholdersRelationTable));
+                });
+            });
+
+        requests$.pipe(
+            map(requests => requests[0]),
+            rxFilter(request => !!request),
+            takeUntil(this.unsubscribe),
+        )
+            .subscribe((request) => {
+                this.identificationService.getCurrentFormGeneralData(request.kycID).then((formData) => {
+                    if (formData) {
+                        this.registeredCompanyName = formData.registeredCompanyName;
+                    }
+                });
+            });
     }
 
     updateParents() {
-        this.parents = this.beneficiaryService.parents(this.stakeholders);
+        this.parents = this.beneficiaryService.parents(this.form);
     }
 
     sortStakeholders() {
-        if (!this.stakeholders.length) {
+        if (!this.form.length) {
             this.sortedStakeholders = [];
             return;
         }
-        this.sortedStakeholders = this.hierarchySort.sort(this.stakeholders.controls);
+        this.sortedStakeholders = this.hierarchySort.sort(this.form.controls);
         this.updateParents();
     }
 
     getHighestID() {
-        const stakeholders = this.stakeholders;
+        const stakeholders = this.form;
         const highest = stakeholders.controls.reduce(
             (highest, stakeholder) => {
                 let currentID = stakeholder.get('companyBeneficiariesID').value;
@@ -125,10 +225,18 @@ export class BeneficiaryListComponent implements OnInit, OnDestroy {
         ).subscribe((relations) => {
             this.relations = relations;
         });
+
+        this.connectedWallet$
+            .pipe(
+                takeUntil(this.unsubscribe),
+            )
+            .subscribe((connectedWallet) => {
+                this.connectedWallet = connectedWallet;
+            });
     }
 
     closeModal(cancel?) {
-        const stakeholder = this.stakeholders.at(this.selectedStakeholderIndex);
+        const stakeholder = this.form.at(this.selectedStakeholderIndex);
 
         if (cancel && this.mode === 'add') {
             this.removeStakeholder(this.selectedStakeholderIndex);
@@ -176,7 +284,7 @@ export class BeneficiaryListComponent implements OnInit, OnDestroy {
     }
 
     canDoUpdate(): boolean {
-        const stakeholder = this.stakeholders.at(this.selectedStakeholderIndex);
+        const stakeholder = this.form.at(this.selectedStakeholderIndex);
 
         return this.isValidUpdate(stakeholder);
     }
@@ -212,26 +320,22 @@ export class BeneficiaryListComponent implements OnInit, OnDestroy {
 
     getParent(index) {
         const realIndex = this.getRealIndex(index);
-        const stakeholder = this.stakeholders.at(realIndex);
+        const stakeholder = this.form.at(realIndex);
 
         if (stakeholder) {
             const parent = stakeholder.get('common.parent').value;
             const parentID = getValue(parent, [0, 'id']);
 
-            // Prevents display of all stakeholders:
-            // if (parentID && parentID !== -1) {
-                // return find(this.parents, ['id', parentID]);
-            // }
-
-            // Return all stakeholders
-            return find(this.parents, ['id', parentID]);
+            if (parentID && parentID !== -1) {
+                return find(this.parents, ['id', parentID]);
+            }
         }
     }
 
     getRealIndex(index) {
         const stakeholderInList = this.sortedStakeholders[index];
 
-        return this.stakeholders.controls.indexOf(stakeholderInList);
+        return this.form.controls.indexOf(stakeholderInList);
     }
 
     addStakeholder(parentIndex?) {
@@ -239,9 +343,9 @@ export class BeneficiaryListComponent implements OnInit, OnDestroy {
         this.openModal = true;
 
         const stakeholder = this.newRequestService.createBeneficiary();
-        this.stakeholders.push(stakeholder);
+        this.form.push(stakeholder);
 
-        this.selectedStakeholderIndex = this.stakeholders.controls.length - 1;
+        this.selectedStakeholderIndex = this.form.controls.length - 1;
 
         stakeholder.get('companyBeneficiariesID').setValue(`temp${this.nextId}`);
 
@@ -258,8 +362,8 @@ export class BeneficiaryListComponent implements OnInit, OnDestroy {
     }
 
     addStakeholderChild(parentIndex, childIndex) {
-        const childControl = this.stakeholders.at(childIndex);
-        const parentControl = this.stakeholders.at(parentIndex);
+        const childControl = this.form.at(childIndex);
+        const parentControl = this.form.at(parentIndex);
         const parent = find(this.parents, ['id', parentControl.get('companyBeneficiariesID').value]);
 
         childControl.get('common.parent').setValue([parent]);
@@ -270,7 +374,7 @@ export class BeneficiaryListComponent implements OnInit, OnDestroy {
         this.openModal = true;
         this.mode = 'edit';
         this.selectedStakeholderIndex = i;
-        this.stakeholderBackup = this.stakeholders.at(this.selectedStakeholderIndex).value;
+        this.stakeholderBackup = this.form.at(this.selectedStakeholderIndex).value;
     }
 
     viewStakeholder(i) {
@@ -280,8 +384,8 @@ export class BeneficiaryListComponent implements OnInit, OnDestroy {
     }
 
     checkRemove(i) {
-        const currentID = this.stakeholders.at(i).get('companyBeneficiariesID').value;
-        const existsAsParent = some(this.stakeholders.controls, (stakeholder) => {
+        const currentID = this.form.at(i).get('companyBeneficiariesID').value;
+        const existsAsParent = some(this.form.controls, (stakeholder) => {
             const parent = getValue(stakeholder.get('common.parent').value, [0, 'id']);
             return parent === currentID;
         });
@@ -301,7 +405,7 @@ export class BeneficiaryListComponent implements OnInit, OnDestroy {
     }
 
     modalRemove(i) {
-        const stakeholder = this.stakeholders.at(i);
+        const stakeholder = this.form.at(i);
         let title = this.translateService.translate('Delete stakeholder');
         const message = this.translateService.translate('Are you sure you want to delete this stakeholder?');
         const name = this.beneficiaryService.getDisplayName(stakeholder);
@@ -322,7 +426,7 @@ export class BeneficiaryListComponent implements OnInit, OnDestroy {
     }
 
     removeStakeholder(i) {
-        const stakeholders = this.stakeholders;
+        const stakeholders = this.form;
         const companyBeneficiariesID = stakeholders.at(i).value.companyBeneficiariesID;
 
         this.removeStakeholderRemote(i);
@@ -340,7 +444,7 @@ export class BeneficiaryListComponent implements OnInit, OnDestroy {
     }
 
     removeStakeholderRemote(index) {
-        const stakeholderToRemove = this.stakeholders.at(index);
+        const stakeholderToRemove = this.form.at(index);
         const companyBeneficiariesID = stakeholderToRemove.value.companyBeneficiariesID;
 
         if (this.shouldRemoveStakeholder(companyBeneficiariesID)) {
@@ -369,7 +473,7 @@ export class BeneficiaryListComponent implements OnInit, OnDestroy {
     }
 
     getTitle() {
-        const currentStakeholder = this.stakeholders.at(this.selectedStakeholderIndex);
+        const currentStakeholder = this.form.at(this.selectedStakeholderIndex);
 
         if (this.mode === 'add') {
             return this.translateService.translate('Add stakeholder');
@@ -385,7 +489,7 @@ export class BeneficiaryListComponent implements OnInit, OnDestroy {
     }
 
     getIcon() {
-        const currentStakeholder = this.stakeholders.at(this.selectedStakeholderIndex);
+        const currentStakeholder = this.form.at(this.selectedStakeholderIndex);
         const type = currentStakeholder.get('beneficiaryType').value;
 
         if (this.isLegalPerson(type)) {
@@ -404,7 +508,7 @@ export class BeneficiaryListComponent implements OnInit, OnDestroy {
     }
 
     removeParentFromStakeholders(removedParent) {
-        this.stakeholders.controls.forEach((stakeholder) => {
+        this.form.controls.forEach((stakeholder) => {
             const parent = stakeholder.get('common.parent');
 
             const parentId = getValue(parent.value, '[0].id');
@@ -429,15 +533,15 @@ export class BeneficiaryListComponent implements OnInit, OnDestroy {
     }
 
     hasError(type) {
-        if (this.openModal || !this.stakeholders.dirty) {
+        if (this.openModal || !this.form.dirty) {
             return;
         }
 
         if (type === 'length') {
-            return !this.stakeholders.length;
+            return !this.form.length;
         }
 
-        return this.stakeholders.length && this.stakeholders.invalid;
+        return this.form.length && this.form.invalid;
     }
 
     private isLegalPerson(type: string): boolean {
@@ -446,6 +550,33 @@ export class BeneficiaryListComponent implements OnInit, OnDestroy {
 
     private isNaturalPerson(type: string): boolean {
         return type === 'naturalPerson';
+    }
+
+    handleSubmit(e) {
+        e.preventDefault();
+        if (!this.form.valid) {
+            formHelper.dirty(this.form);
+            formHelper.scrollToFirstError(this.element.nativeElement);
+            return;
+        }
+
+        this.requests$
+        .pipe(take(1))
+        .subscribe((requests) => {
+            this
+            .identificationService
+            .sendRequestBeneficiaryList(this.form, requests, this.connectedWallet)
+            .then(() => {
+                this.submitEvent.emit({
+                    completed: true,
+                });
+                // this.clearPersistForm();
+            })
+            .catch(() => {
+                this.newRequestService.errorPop();
+            })
+            ;
+        });
     }
 
     ngOnDestroy() {

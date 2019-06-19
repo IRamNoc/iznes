@@ -1,26 +1,33 @@
-import { Component, OnInit, Input, ViewChild } from '@angular/core';
+import { Component, OnInit, Input, Output, ViewChild, EventEmitter, ElementRef, OnDestroy } from '@angular/core';
 import { isEmpty, castArray, values, map, toNumber } from 'lodash';
 import { select } from '@angular-redux/store';
+import { formHelper } from '@setl/utils/helper';
 import { Subject } from 'rxjs';
-import { filter, map as rxMap, takeUntil } from 'rxjs/operators';
+import { filter, map as rxMap, takeUntil, take } from 'rxjs/operators';
 import { FormPercentDirective } from '@setl/utils/directives/form-percent/formpercent';
 import { RiskProfileService } from '../risk-profile.service';
 import { NewRequestService } from '../../new-request.service';
+import { PersistService } from '@setl/core-persist';
 
 @Component({
     selector: 'investment-nature',
     templateUrl: './investment-nature.component.html',
 })
-export class InvestmentNatureComponent implements OnInit {
+export class InvestmentNatureComponent implements OnInit, OnDestroy {
     @ViewChild(FormPercentDirective) formPercent: FormPercentDirective;
     @Input() form;
+    @Output() submitEvent: EventEmitter<any> = new EventEmitter<any>();
     @select(['ofi', 'ofiKyc', 'myKycRequested', 'kycs']) currentlyRequestedKycs$;
+    @select(['ofi', 'ofiKyc', 'myKycRequested', 'kycs']) requests$;
 
     unsubscribe: Subject<any> = new Subject();
     open: boolean = false;
     amcs;
+    formWatch: Subject<boolean> = new Subject<boolean>();
 
     constructor(
+        private persistService: PersistService,
+        private element: ElementRef,
         private newRequestService: NewRequestService,
         private riskProfileService: RiskProfileService,
     ) {
@@ -103,6 +110,56 @@ export class InvestmentNatureComponent implements OnInit {
 
     refreshForm() {
         this.formPercent.refreshFormPercent();
+    }
+
+    persistForm() {
+        this.persistService.watchForm(
+            'newkycrequest/riskProfile/investmentNature',
+            this.form,
+            this.newRequestService.context,
+            {
+                reset: false,
+                returnPromise: true,
+            },
+        ).then(() => {
+            this.formWatch.next(true);
+        });
+    }
+
+    clearPersistForm() {
+        this.persistService.refreshState(
+            'newkycrequest/riskProfile/investmentNature',
+            this.newRequestService.createRiskProfileFormGroup(),
+            this.newRequestService.context,
+        );
+    }
+
+    handleSubmit(e) {
+        e.preventDefault();
+
+        if (!this.form.valid) {
+            formHelper.dirty(this.form);
+            formHelper.scrollToFirstError(this.element.nativeElement);
+            return;
+        }
+
+        this.requests$
+            .pipe(
+                take(1),
+            )
+            .subscribe((requests) => {
+                this.riskProfileService.sendRequestInvestmentNature(this.form, requests)
+                    .then(() => {
+                        this.clearPersistForm();
+                        this.submitEvent.emit({
+                            completed: true,
+                        });
+                    })
+                    .catch(() => {
+                        this.newRequestService.errorPop();
+                    })
+                    ;
+            });
     }
 
     ngOnDestroy() {

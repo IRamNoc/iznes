@@ -190,6 +190,7 @@ export interface createKYCDraftRequestData {
     investorWalletID: number;
     kycStatus: number;
     alreadyCompleted: number;
+    clientFile: number;
 }
 
 export interface createKYCDraftMessageBody extends MemberNodeMessageBody {

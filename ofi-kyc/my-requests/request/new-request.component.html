@@ -1,12 +1,4 @@
-<div class="header-breadcrumbs">
-    <h1 class="text-overflow">
-        <i class="fa fa-plus"></i>
-        <span id="new-request-title">{{ 'Make New Request' | translate }}</span>
-        <span *ngIf="duplicateCompany"> {{'from already sent request to' | translate}} {{duplicateCompany}}</span>
-    </h1>
-</div>
-
-<div class="p-1">
+<!-- <div class="p-1">
     <clr-alert [clrAlertSizeSmall]="true" [clrAlertType]="'alert-danger'" [clrAlertClosable]="false">
         <div class="alert-item">
             <span class="alert-text">
@@ -14,9 +6,15 @@
             </span>
         </div>
     </clr-alert>
+</div> -->
+
+<div class="kyc-header">
+    <ng-container *ngIf="onboardingMode">Onboarding</ng-container>
+    <ng-container *ngIf="!onboardingMode">Make New Request</ng-container>
+    <button class="btn btn-sm" (click)="handleAction({ type: 'close' })">Save and Exit</button>
 </div>
 
-<form-steps *ngIf="stepsConfig" [stepsConfig]="stepsConfig" (action)="handleAction($event)" [@toggle]="animating" (@toggle.done)="applyFullForm()">
+<form-steps *ngIf="stepsConfig" [onboarding]="onboardingMode" [stepsConfig]="stepsConfig" (action)="handleAction($event)" [@toggle]="animating" (@toggle.done)="applyFullForm()">
     <form-step>
         <kyc-step-select-amc #step [form]="forms.get('selection')" (registered)="registered($event)" [disabled]="currentCompletedStep" (submitEvent)="handleSubmit($event)" [duplicate]="duplicate"></kyc-step-select-amc>
     </form-step>
@@ -24,11 +22,35 @@
         <kyc-step-introduction #step (submitEvent)="handleSubmit($event)"></kyc-step-introduction>
     </form-step>
     <form-step *ngIf="fullForm">
-        <kyc-step-identification #step [form]="forms.get('identification')" [investorType]="investorType" (submitEvent)="handleSubmit($event)" [isFormReadonly]="isFormReadonly"></kyc-step-identification>
+        <!--PARENT STEP-->
     </form-step>
+        <form-step *ngIf="fullForm">
+            <general-information #step [parentForm]="forms.get('identification').get('generalInformation')" (submitEvent)="handleSubmit($event)"></general-information>
+        </form-step>
+        <form-step *ngIf="fullForm">
+            <company-information #step [form]="forms.get('identification').get('companyInformation')" (submitEvent)="handleSubmit($event)"></company-information>
+        </form-step>
+        <form-step *ngIf="fullForm">
+            <beneficiary-list #step [form]="forms.get('identification').get('beneficiaries').get('beneficiaries')" (submitEvent)="handleSubmit($event)"></beneficiary-list>
+        </form-step>
+        <form-step *ngIf="fullForm">
+            <banking-information #step [form]="forms.get('identification').get('bankingInformation')" (submitEvent)="handleSubmit($event)"></banking-information>
+        </form-step>
+        <form-step *ngIf="fullForm">
+            <classification-information [form]="forms.get('identification').get('classificationInformation')" [enabled]="checkCompletion()" [investorType]="investorType" (submitEvent)="handleSubmit($event)"></classification-information>
+        </form-step>
     <form-step *ngIf="fullForm">
-        <kyc-step-risk-profile #step [form]="forms.get('riskProfile')" (submitEvent)="handleSubmit($event)"></kyc-step-risk-profile>
+        <!--PARENT STEP-->
     </form-step>
+        <form-step *ngIf="fullForm">
+            <investment-nature #step [form]="forms.get('riskProfile').get('investmentNature')" (submitEvent)="handleSubmit($event)"></investment-nature>
+        </form-step>
+        <form-step *ngIf="fullForm">
+            <investment-objective #step [form]="forms.get('riskProfile').get('investmentObjective')" [formConstraint]="forms.get('riskProfile').get('investmentConstraint')" (submitEvent)="handleSubmit($event)"></investment-objective>
+        </form-step>
+        <form-step *ngIf="fullForm">
+            <investment-constraint #step [form]="forms.get('riskProfile').get('investmentConstraint')" [formObjective]="forms.get('riskProfile').get('investmentObjective')" (submitEvent)="handleSubmit($event)"></investment-constraint>
+        </form-step>
     <form-step *ngIf="fullForm">
         <kyc-step-documents #step [form]="forms.get('documents')" [documents]="documents" (submitEvent)="handleSubmit($event)"></kyc-step-documents>
     </form-step>
@@ -36,10 +58,3 @@
         <kyc-step-validation #step [form]="forms.get('validation')" (submitEvent)="handleSubmit($event)"></kyc-step-validation>
     </form-step>
 </form-steps>
-
-<div class="info" *ngIf="isBeginning()">
-    <clr-icon shape="info-circle" class="is-info" size="24"></clr-icon>
-    <span>
-        {{ 'Be aware that once you click on "Next", this KYC will be saved as a Draft. You will then be able to finalise the request and send it to the counterparty later on.' | translate }}
-    </span>
-</div>

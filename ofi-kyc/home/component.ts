@@ -1,5 +1,5 @@
 /* Core/Angular imports. */
-import { AfterViewInit, ChangeDetectionStrategy, ChangeDetectorRef, Component, OnDestroy, Inject } from '@angular/core';
+import { AfterViewInit, ChangeDetectionStrategy, ChangeDetectorRef, Component, OnDestroy, Inject, ViewChild, ElementRef } from '@angular/core';
 /* Redux */
 import { NgRedux, select } from '@angular-redux/store';
 import { Subject } from 'rxjs/Subject';
@@ -10,7 +10,7 @@ import { APP_CONFIG, AppConfig, ConfirmationService } from '@setl/utils';
 import { MultilingualService } from '@setl/multilingual';
 
 /* Ofi orders request service. */
-import { clearAppliedHighlight, SET_HIGHLIGHT_LIST, setAppliedHighlight } from '@setl/core-store/index';
+import { clearAppliedHighlight, SET_HIGHLIGHT_LIST, setAppliedHighlight, setMenuCollapsed } from '@setl/core-store/index';
 import { KycMyInformations } from '@ofi/ofi-main/ofi-store/ofi-kyc/my-informations';
 import { Observable } from 'rxjs/Observable';
 import { Router, ActivatedRoute } from '@angular/router';
@@ -31,6 +31,8 @@ export class OfiKycHomeComponent implements AfterViewInit, OnDestroy {
     hasFilledAdditionnalInfos = false;
     userType: number;
     investorType: number;
+    showSplash: boolean = true;
+    isNowCP: boolean = false;
 
     /* Public properties. */
     public showModal = false;
@@ -77,6 +79,9 @@ export class OfiKycHomeComponent implements AfterViewInit, OnDestroy {
     ) {
         this.appConfig = appConfig;
         this.endpointsConfig = endpoints;
+
+        // Collapse nav bar
+        this.ngRedux.dispatch(setMenuCollapsed(true));
     }
 
     ngAfterViewInit() {
@@ -89,6 +94,7 @@ export class OfiKycHomeComponent implements AfterViewInit, OnDestroy {
                 /* Assign list to a property. */
                 this.userInfo = d;
                 this.investorType = d.investorType;
+                this.renderSplash();
                 this.changeDetectorRef.markForCheck();
             });
 
@@ -98,6 +104,9 @@ export class OfiKycHomeComponent implements AfterViewInit, OnDestroy {
 
         /* fetch backend for existing data to pre fill the form */
         this.ofiKycService.fetchInvestor();
+    }
+
+    ngOnInit() {
     }
 
     openMyInformationsModal(userInformations: KycMyInformations) {
@@ -131,18 +140,10 @@ export class OfiKycHomeComponent implements AfterViewInit, OnDestroy {
         this.ngRedux.dispatch(setAppliedHighlight());
         // this.showModal = true;
 
-        this.confirmationService.create(
-            this.translate.translate('My Information'),
-            this.translate.translate('My information can be changed later in "Profile" at the top of the page.'),
-            { confirmText: this.translate.translate('OK, I understand'), declineText: '' },
-        ).subscribe((ans) => {
-            if (ans.resolved) {
-                this.closeModal();
-            }
-        });
+        this.saveMyUserDetails();
     }
 
-    closeModal() {
+    saveMyUserDetails() {
         const user = {
             firstName: this.userInfo.firstName,
             lastName: this.userInfo.lastName,
@@ -154,9 +155,7 @@ export class OfiKycHomeComponent implements AfterViewInit, OnDestroy {
         const asyncTaskPipe = this.myUserService.saveMyUserDetails(user);
         this.ngRedux.dispatch(SagaHelper.runAsyncCallback(
             asyncTaskPipe,
-            () => {
-                this.toasterService.pop('success', this.translate.translate('Your form has been saved successfully!'));
-            },
+            () => {},
             () => {
                 this.toasterService.pop('error', this.translate.translate('Failed to save your information.'));
                 return;
@@ -211,5 +210,12 @@ export class OfiKycHomeComponent implements AfterViewInit, OnDestroy {
     ngOnDestroy(): void {
         this.unSubscribe.next();
         this.unSubscribe.complete();
+    }
+
+    renderSplash() {
+        // Now CP investor type, 70 = issuer, 80 == investor
+        if (this.investorType === 70 || this.investorType === 80) {
+            this.isNowCP = true;
+        }
     }
 }

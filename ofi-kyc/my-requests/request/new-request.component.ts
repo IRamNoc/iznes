@@ -1,20 +1,21 @@
-import { Component, OnInit, ViewChild, AfterViewInit } from '@angular/core';
+import { Component, OnInit, ViewChild, AfterViewInit, ChangeDetectionStrategy } from '@angular/core';
 import { trigger, state, style, transition, animate } from '@angular/animations';
 import { Location } from '@angular/common';
 import { FormBuilder } from '@angular/forms';
 import { ActivatedRoute, Router } from '@angular/router';
 import { select, NgRedux } from '@angular-redux/store';
-import { get as getValue, map, sort, remove, partial, invert, find } from 'lodash';
+import { get as getValue, map, sort, remove, partial, invert, find, merge } from 'lodash';
 import { Subject, combineLatest } from 'rxjs';
 import { takeUntil, take, filter as rxFilter, map as rxMap } from 'rxjs/operators';
 
 import { clearMyKycRequestedPersist } from '@ofi/ofi-main/ofi-store/ofi-kyc';
 import { MultilingualService } from '@setl/multilingual';
-import { steps, formStepsLight, formStepsFull } from '../requests.config';
+import { steps, formStepsLight, formStepsFull, formStepsOnboarding } from '../requests.config';
 import { NewRequestService } from './new-request.service';
 
 import { FormstepsComponent } from '@setl/utils/components/formsteps/formsteps.component';
 import { OfiKycService } from '../../../ofi-req-services/ofi-kyc/service';
+import { setMenuCollapsed } from '@setl/core-store';
 
 @Component({
     templateUrl: './new-request.component.html',
@@ -30,6 +31,7 @@ import { OfiKycService } from '../../../ofi-req-services/ofi-kyc/service';
             transition('* => *', animate(250)),
         ]),
     ],
+    changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class NewKycRequestComponent implements OnInit, AfterViewInit {
 
@@ -41,6 +43,9 @@ export class NewKycRequestComponent implements OnInit, AfterViewInit {
     @select(['user', 'siteSettings', 'language']) language$;
     @select(['ofi', 'ofiKyc', 'myInformations', 'investorType']) kycInvestorType$;
 
+    @select(['ofi', 'ofiKyc', 'myInformations']) inviteInfo$;
+    @select(['user', 'authentication', 'defaultHomePage']) defaultHomePage$;
+
     unsubscribe: Subject<any> = new Subject();
     stepsConfig: any;
     forms: any = {};
@@ -49,10 +54,13 @@ export class NewKycRequestComponent implements OnInit, AfterViewInit {
 
     animating: Boolean;
     fullForm = true;
+    onboardingMode = false;
     applyFullForm = () => {
     }
 
     currentCompletedStep;
+
+    isBeginning: boolean = false;
     duplicate;
     duplicateCompany = '';
     // this is the investor decide when asset manager/nowcp send invitation
@@ -68,6 +76,7 @@ export class NewKycRequestComponent implements OnInit, AfterViewInit {
         private location: Location,
         private ofiKycService: OfiKycService,
     ) {
+        this.ngRedux.dispatch(setMenuCollapsed(true));
     }
 
     get documents() {
@@ -108,14 +117,14 @@ export class NewKycRequestComponent implements OnInit, AfterViewInit {
     }
 
     get isFormReadonly():boolean {
-       if (this.isDuplicateFromClientFile) {
-           return true;
-       }
-       // if we have client file, and now we are not editing client, the form should be readonly
-       if (typeof this.clientFileId !== 'undefined' && this.clientFileId !== Number(this.newRequestService.context))  {
-          return true;
-       }
-       return false;
+        if (this.isDuplicateFromClientFile) {
+            return true;
+        }
+        // if we have client file, and now we are not editing client, the form should be readonly
+        if (typeof this.clientFileId !== 'undefined' && this.clientFileId !== Number(this.newRequestService.context))  {
+            return true;
+        }
+        return false;
     }
 
     ngOnInit() {
@@ -131,7 +140,10 @@ export class NewKycRequestComponent implements OnInit, AfterViewInit {
             const nextStep = this.getNextStep(this.currentCompletedStep);
             this.goToStep(nextStep);
         }
+
+        this.handleOnboarding();
     }
+
     removeQueryParams() {
         const newUrl = this.router.createUrlTree([], {
             queryParams: {
@@ -176,9 +188,9 @@ export class NewKycRequestComponent implements OnInit, AfterViewInit {
 
         this.myKycList$.pipe(
             rxMap((kycs) => {
-               const list = Object.keys(kycs).map(k => kycs[k])
+                const list = Object.keys(kycs).map(k => kycs[k])
                    .filter(kyc => kyc.amManagementCompanyID === null);
-               return getValue(list, '[0].kycID', undefined);
+                return getValue(list, '[0].kycID', undefined);
             }),
             takeUntil(this.unsubscribe),
         ).subscribe(clientFileId => this.clientFileId = clientFileId);
@@ -233,12 +245,13 @@ export class NewKycRequestComponent implements OnInit, AfterViewInit {
         if (type === 'close') {
             this.router.navigateByUrl('/onboarding-requests/list');
         }
+
+        this.checkIsBeginning();
     }
 
-    isBeginning() {
-        if (this.formSteps) {
-            return this.formSteps.position === 0;
-        }
+    checkIsBeginning() {
+        // Fix changed after checked error
+        setTimeout(() => this.isBeginning = (this.formSteps || {}).position === 0);
     }
 
     handleSubmit(event) {
@@ -249,6 +262,8 @@ export class NewKycRequestComponent implements OnInit, AfterViewInit {
 
     submitCurrentStepComponent() {
         const position = this.formSteps.position;
+        console.log('+++ position', position);
+
         const component = this.formSteps.steps[position];
 
         if (!component.handleSubmit) {
@@ -287,8 +302,31 @@ export class NewKycRequestComponent implements OnInit, AfterViewInit {
         this.initFormSteps(this.currentCompletedStep);
     }
 
+    checkCompletion() {
+        const general = this.forms.get('identification').get('generalInformation');
+        const company = this.forms.get('identification').get('companyInformation');
+        const banking = this.forms.get('identification').get('bankingInformation');
+
+        return general.valid && company.valid && banking.valid;
+    }
+
     ngOnDestroy() {
         this.unsubscribe.next();
         this.unsubscribe.complete();
+    }
+
+    handleOnboarding() {
+        this.checkIsBeginning();
+
+        // manage onboarding flow status
+        combineLatest(this.inviteInfo$, this.defaultHomePage$)
+        .subscribe(([inviteInfo, defaultHomePage]) => {
+            // in onboarding flow
+            if (defaultHomePage == "/new-investor/informations") {
+                this.onboardingMode = true;
+                this.goToStep('introduction');
+                this.initFormSteps(this.currentCompletedStep);
+            }
+        });
     }
 }

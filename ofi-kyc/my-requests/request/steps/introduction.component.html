@@ -1,8 +1,8 @@
-<h3 class="text-center step-title">
+<h4 class="step-title">
     {{ 'Introduction' | translate }}
-</h3>
+</h4>
 
-<div class="well p-1">
+<div class="well p-1 introduction-text">
     <p>{{ 'The European Directive 2014/65/EU known as "Markets in Financial Instruments (MiFID II)", which entered into force on the 3rd of January 2018, requires, in the continuity of the Directive 2004/39/EC known as "Markets in Financial Instruments Directive (MiFID)", in particular asset management companies and investment firms to categorise their clients and ensure that the products offered match the characteristics of the targeted clients by complying with the provisions applicable to the product governance.' | translate }}</p>
 
     <p>{{ 'The current European Directive on the Fight against Money Laundering and Terrorist Financing requires asset management companies to know the identity of the client, the origin of the funds and information on the beneficial owners of legal entities.' | translate }}</p>
@@ -15,7 +15,13 @@
     out in the interest of the client and aims to provide a suitable or appropriate service or advice. The truthfulness, accuracy and updating of the answers to this questionnaire will determine the provision of an appropriate and quality service or advice. In the absence of exhaustive answers, the asset management company may not be able to verify that it is providing the requested service. Failure to respond could result in the obligation for the AMF to report it to the competent authorities.' | translate }}</p>
 </div>
 
-<div class="px-1">
+<div class="checkbox-inline">
+    <input type="checkbox" id="confirm-read" [formControl]="readCheckbox">
+    <label for="confirm-read">
+        {{ 'I acknowledge that I have read the European Directive on Markets in Financial Instruments' | translate }}
+    </label>
+</div>
+<!-- <div class="px-1">
     <clr-alert [clrAlertClosable]="false" [clrAlertSizeSmall]="true">
         <div class="alert-item">
             <span class="alert-text">
@@ -23,4 +29,4 @@
             </span>
         </div>
     </clr-alert>
-</div>
+</div> -->
