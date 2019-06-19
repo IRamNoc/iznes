@@ -1,4 +1,5 @@
 import { Component, OnInit, Input, Output, EventEmitter } from '@angular/core';
+import { AbstractControl } from '@angular/forms';
 import { isEmpty, castArray, find, pick } from 'lodash';
 import { select } from '@angular-redux/store';
 import { Subject } from 'rxjs';
@@ -71,12 +72,12 @@ export class InvestmentNatureFormComponent implements OnInit {
     }
 
     formCheckInvestmentVehicles(value) {
-        const investmentvehiclesAlreadyUsedSpecificationControl = this.form.get('investmentvehiclesAlreadyUsedSpecification');
+        const control: AbstractControl = this.form.get('investmentvehiclesAlreadyUsedSpecification');
 
         if (value.other) {
-            investmentvehiclesAlreadyUsedSpecificationControl.enable();
+            control.enable();
         } else {
-            investmentvehiclesAlreadyUsedSpecificationControl.disable();
+            control.disable();
         }
 
         this.refreshForm.emit();
@@ -105,7 +106,6 @@ export class InvestmentNatureFormComponent implements OnInit {
 
     isDisabled(path) {
         const control = this.form.get(path);
-
         return control.disabled;
     }
 
