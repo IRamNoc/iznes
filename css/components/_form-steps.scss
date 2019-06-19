@@ -4,9 +4,11 @@ $form-steps-active-color: #3aac5d;
 $form-steps-counter-dimension: 50px;
 $form-steps-counter-border: 4px;
 
-form-steps{
+form-steps {
+    background: #fafafa;
     display: block;
     overflow: hidden;
+    margin-bottom: -20px;
 
     .steps-slider {
         width: 100%;
@@ -26,83 +28,83 @@ form-steps{
         }
     }
 
-    .steps-progress {
-            counter-reset: step;
-            position: relative;
-            display: block;
+    // .steps-progress {
+    //         counter-reset: step;
+    //         position: relative;
+    //         display: block;
 
-            .steps {
-                position: relative;
-                z-index: 1;
+    //         .steps {
+    //             position: relative;
+    //             z-index: 1;
 
-                .step {
-                    float: left;
-                    position : relative;
-                    font-size: 1.1em;
-                    font-weight: bolder;
-                    text-align: center;
+    //             .step {
+    //                 float: left;
+    //                 position : relative;
+    //                 font-size: 1.1em;
+    //                 font-weight: bolder;
+    //                 text-align: center;
 
-                    p{
-                        margin: 0;
-                    }
+    //                 p{
+    //                     margin: 0;
+    //                 }
 
-                    &::before {
-                        counter-increment: step;
-                        content: counter(step);
+    //                 &::before {
+    //                     counter-increment: step;
+    //                     content: counter(step);
 
-                        border-radius: 50%;
-                        color: $form-steps-color;
-                        font-weight: bolder;
-                        font-size: 1.4em;
-                        background-color: white;
-                        margin-bottom: 10px;
+    //                     border-radius: 50%;
+    //                     color: $form-steps-color;
+    //                     font-weight: bolder;
+    //                     font-size: 1.4em;
+    //                     background-color: white;
+    //                     margin-bottom: 10px;
 
-                        width: $form-steps-counter-dimension;
-                        height: $form-steps-counter-dimension;
-                        border: $form-steps-counter-border solid $form-steps-color;
+    //                     width: $form-steps-counter-dimension;
+    //                     height: $form-steps-counter-dimension;
+    //                     border: $form-steps-counter-border solid $form-steps-color;
 
-                        display: inline-block;
+    //                     display: inline-block;
 
-                        text-align: center;
-                        line-height: $form-steps-counter-dimension - $form-steps-counter-border * 2;
+    //                     text-align: center;
+    //                     line-height: $form-steps-counter-dimension - $form-steps-counter-border * 2;
 
-                    }
+    //                 }
 
-                    &::after{
-                        content: '';
-                        position: absolute;
-                        top: $form-steps-counter-dimension / 2;
-                        left: -50%;
-                        transform: translateY(-50%);
-                        z-index: -1;
-                        width: 100%;
-                        height: 6px;
-                        background: #979797;
-                    }
+    //                 &::after{
+    //                     content: '';
+    //                     position: absolute;
+    //                     top: $form-steps-counter-dimension / 2;
+    //                     left: -50%;
+    //                     transform: translateY(-50%);
+    //                     z-index: -1;
+    //                     width: 100%;
+    //                     height: 6px;
+    //                     background: #979797;
+    //                 }
 
-                    &:first-child::after{
-                        content : none;
-                    }
+    //                 &:first-child::after{
+    //                     content : none;
+    //                 }
 
-                    &.active{
-                        color : $form-steps-active-color;
+    //                 &.active{
+    //                     color : $form-steps-active-color;
 
-                        &::before{
-                            border-color : $form-steps-active-color;
-                            background-color: $form-steps-active-color;
-                            color: white;
-                            content: "\2714";
-                        }
+    //                     &::before{
+    //                         border-color : $form-steps-active-color;
+    //                         background-color: $form-steps-active-color;
+    //                         color: white;
+    //                         content: "\2714";
+    //                     }
 
-                        & + .step::after{
-                            background: $form-steps-active-color;
-                        }
-                    }
-                }
-            }
-        }
+    //                     & + .step::after{
+    //                         background: $form-steps-active-color;
+    //                     }
+    //                 }
+    //             }
+    //         }
+    //     }
 
-    .hidden{
+    .hidden {
         display: none;
     }
 }
