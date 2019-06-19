@@ -10,8 +10,6 @@
 </div>
 
 <div class="panel-body" [class.hidden]="!open" [ngClass]="{'objective pl-1': multiple}" [formGroup]="form">
-
-    <!-- <div class="checkbox-group" formGroupName="financialAssetManagementMethod"> -->
     <div class="checkbox-group">
         <div class="row col-sm-12">
             <div class="form-group required-field col-sm-12">
@@ -105,11 +103,6 @@
                             theme="dp-material">
                 </div>
                 <span class="field-error" *ngIf="hasError('investmentHorizonWantedSpecificPeriod')">{{ 'Incorrect date format' | translate }}</span>
-
-                <!-- <span *ngIf="navForm.controls['navPubDate'].touched && navForm.controls['navPubDate'].hasError('pattern')"
-                    class="field-error">
-                    {{ 'Incorrect date format' | translate }}
-                </span> -->
             </div>
         </div>
 
