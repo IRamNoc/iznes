@@ -131,11 +131,22 @@ export class BeneficiaryComponent implements OnInit, OnDestroy {
                 isDefault: formControl.get('isDefault').value,
                 kycDocumentID: '',
                 name: file.fileTitle,
-                type: formControl.get('common').value,
+                type: this.getDocumentTypeStr(),
             };
 
             formControl.setValue(newFormGroup);
         });
+    }
+
+    /**
+     * get beneficiary document type string:  kyckbbisdoc or kycbeneiddoc
+     */
+    getDocumentTypeStr() {
+        const beneficiaryType = this.form.get('beneficiaryType').value;
+        if (beneficiaryType == 'legalPerson') {
+            return 'kyckbbisdoc';
+        }
+        return 'kycbeneiddoc';
     }
 
     isDisabled(path) {
