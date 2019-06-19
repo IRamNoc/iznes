@@ -952,1170 +952,1258 @@ export const otherSectorActivityList = [
 
 export const listingMarketsList = [
     {
-        id: 'fishPoolAsa',
-        text: 'Fish Pool ASA',
+        id: 'lm001',
+        text: 'FISH POOL ASA',
     },
     {
-        id: 'nasdaqOsloAsa',
-        text: 'Nasdaq Oslo ASA',
+        id: 'lm002',
+        text: 'NASDAQ OSLO ASA',
     },
     {
-        id: 'monep',
+        id: 'lm003',
         text: 'MONEP',
     },
     {
-        id: 'osloAxess',
-        text: 'Oslo Axess',
+        id: 'lm004',
+        text: 'OSLO AXESS',
     },
     {
-        id: 'norexecoAsa',
+        id: 'lm005',
         text: 'NOREXECO ASA',
     },
     {
-        id: 'powernextSas',
+        id: 'lm006',
         text: 'Powernext SAS',
     },
     {
-        id: 'osloBorsAsa',
-        text: 'Oslo Børs ASA',
+        id: 'lm007',
+        text: 'OSLO BØRS ASA',
     },
     {
-        id: 'euronextParisSa',
-        text: 'Euronext Paris S.A.',
+        id: 'lm008',
+        text: 'Euronext Paris SA',
     },
     {
-        id: 'matif',
+        id: 'lm009',
         text: 'MATIF',
     },
     {
-        id: 'mercadoDeRentaFijaAiaf',
+        id: 'lm010',
         text: 'Mercado de Renta Fija, AIAF',
     },
     {
-        id: 'mercadoElectronicoDeRentaFijaMerf',
+        id: 'lm011',
         text: 'Mercado Electrónico de Renta Fija, MERF',
     },
     {
-        id: 'bolsaDeBarcelona',
+        id: 'lm012',
         text: 'Bolsa de Barcelona',
     },
     {
-        id: 'meff',
+        id: 'lm013',
+        text: 'NASDAQ COPENHAGEN A/S',
+    },
+    {
+        id: 'lm014',
         text: 'MEFF',
     },
     {
-        id: 'bolsaDeBilbao',
+        id: 'lm015',
         text: 'Bolsa de Bilbao',
     },
     {
-        id: 'bolsaDeValencia',
+        id: 'lm016',
+        text: 'Mercado de Renta Fija,AIAF',
+    },
+    {
+        id: 'lm017',
         text: 'Bolsa de Valencia',
     },
     {
-        id: 'bolsaDeMadrid',
+        id: 'lm018',
         text: 'Bolsa de Madrid',
     },
     {
-        id: 'bolsaDeBarcelona',
-        text: 'Bolsa de Barcelona',
-    },
-    {
-        id: 'nasdaqCopenhagenAs',
+        id: 'lm019',
         text: 'Nasdaq Copenhagen A/S',
     },
     {
-        id: 'nasdaqCopenhagenAsNordicMid',
-        text: 'Nasdaq Copenhagen A/S - Nordic@MID',
-    },
-    {
-        id: 'nasdaqCopenhagenAuctionOnDemand',
+        id: 'lm020',
         text: 'Nasdaq Copenhagen - Auction on Demand',
     },
     {
-        id: 'borsaItalianaSpaEtfPlus',
-        text: 'Borsa Italiana S.p.A. - ETFplus',
+        id: 'lm021',
+        text: 'Borsa Italiana S.P.A. - ETFPlus',
     },
     {
-        id: 'borsaItalianaSpaMercatoTelematicoAzionario',
-        text: 'Borsa Italiana S.p.A. - Mercato Telematico Azionario',
+        id: 'lm022',
+        text: 'Borsa Italiana S.P.A. - Mercato Telematico Azionario',
     },
     {
-        id: 'borsaItalianaSpaMot',
-        text: 'Borsa Italiana S.p.A. - MOT',
+        id: 'lm023',
+        text: 'Borsa Italiana S.P.A. - MOT',
     },
     {
-        id: 'borsaItalianaSpaMiv',
-        text: 'Borsa Italiana S.p.A. - MIV',
+        id: 'lm024',
+        text: 'Borsa Italiana S.P.A. - MIV',
     },
     {
-        id: 'borsaItalianaSpaIdem',
-        text: 'Borsa Italiana S.p.A. - IDEM',
+        id: 'lm025',
+        text: 'Borsa Italiana S.P.A. - IDEM',
     },
     {
-        id: 'mtsSpaItaly',
-        text: 'MTS S.p.A. (Italy)',
+        id: 'lm026',
+        text: 'MTS S.P.A. - MTS Italia',
     },
     {
-        id: 'burzaCennychPapiruPrahaAs',
-        text: 'Burza cenných papírů Praha, A.S.',
+        id: 'lm027',
+        text: 'Burza cenných papírů Praha, a.s.',
     },
     {
-        id: 'rmSYSTEMCeskaBurzaCennychPapiruAs',
-        text: 'RM - SYSTÉM, česká burza cenných papírů A.S.',
+        id: 'lm028',
+        text: 'RM-SYSTÉM, česká burza cenných papírů',
     },
     {
-        id: 'bourseDeLuxembourg',
+        id: 'lm029',
         text: 'Bourse de Luxembourg',
     },
     {
-        id: 'nasdaqHelsinkiOy',
+        id: 'lm030',
         text: 'Nasdaq Helsinki Oy',
     },
     {
-        id: 'borseDuesseldorfRegulatedMarket',
-        text: 'Börse Duesseldorf (Regulated Market)',
+        id: 'lm031',
+        text: 'DUESSELDORFER BOERSE (REGULIERTER MARKT)',
     },
     {
-        id: 'boerseBerlinRegulierterMarkt',
-        text: 'Börse Berlin (Regulated Market)',
+        id: 'lm032',
+        text: '"BOERSE BERLIN (REGULIERTER',
     },
     {
-        id: 'borseBerlinBerlinSecondRegulatedMarket',
-        text: 'Börse Berlin (Berlin Second Regulated Market)',
+        id: 'MARKT)',
+        text: '"',
     },
     {
-        id: 'badenWuerttembergischeWertpapierboerseRegulierterMarkt',
-        text: 'Baden-Württembergische Wertpapierbörse (Regulierter Markt)',
+        id: 'lm033',
+        text: '"Börse Berlin (Berlin Second Regulated',
     },
     {
-        id: 'boerseHamburgLangAndSchwarzExchangeRegulierterMarkt',
+        id: 'Market)',
+        text: '"',
+    },
+    {
+        id: 'lm034',
+        text: '"BADEN-  WUERTTEMBERGISCHE',
+    },
+    {
+        id: 'WERTPAPIERBOERSE',
+        text: '(REGULIERTER MARKT - TECHNICAL PLATFORM 2)"',
+    },
+    {
+        id: 'lm035',
+        text: '"BADEN-WUERTTEMBERGISCHE',
+    },
+    {
+        id: 'WERTPAPIERBOERSE',
+        text: '(REGULIERTER MARKT)"',
+    },
+    {
+        id: 'lm036',
         text: 'Boerse Hamburg Lang and Schwarz Exchange (Regulierter Markt)',
     },
     {
-        id: 'hanseatischeWertpapierboerseHamburgRegulierterMarkt',
-        text: 'Hanseatischen Wertpapierbörse Hamburg (Regulierter Markt)',
+        id: 'lm037',
+        text: '"HANSEATISCHE WERTPAPIERBOERSE',
     },
     {
-        id: 'boerseDuesseldorfQuotrixRegulierterMarkt',
-        text: 'Boerse Duesseldorf Quotrix (Regulierter Markt)',
+        id: 'HAMBURG',
+        text: '(REGULIERTER MARKT)"',
     },
     {
-        id: 'niedersaechsicheBoerseZuHannoverRegulierterMarkt',
-        text: 'Niedersächsische Börse zu Hannover (Regulierter Markt)',
+        id: 'lm038',
+        text: '"DUESSELDORFER BOERSE QUOTRIX',
     },
     {
-        id: 'boerseMuenchenGettexRegulierterMarkt',
-        text: 'Boerse Muenchen Gettex (Regulierter Markt)',
+        id: '(REGULIERTER',
+        text: 'MARKT)"',
     },
     {
-        id: 'europeanEnergyExchangeRegulierterMarkt',
-        text: 'European Energy Exchange (Regulierter Markt)',
+        id: 'lm039',
+        text: '"NIEDERSAECHSICHE BOERSE ZU',
     },
     {
-        id: 'boerseMuenchenRegulierterMarkt',
-        text: 'Boerse Muenchen (Regulierter Markt)',
+        id: 'HANNOVER',
+        text: '(REGULIERTER MARKT)"',
     },
     {
-        id: 'tradegateExchangeRegulierterMarkt',
-        text: 'Tradegate Exchange (Regulierter Markt)',
+        id: 'lm040',
+        text: '"BOERSE MUENCHEN - GETTEX -',
     },
     {
-        id: 'boerseBerlinEquiductTradingBerlinSecondRegulatedMarket',
-        text: 'Boerse Berlin Equiduct Trading (Berlin Second Regulated Market)',
+        id: 'REGULIERTER',
+        text: 'MARKT"',
     },
     {
-        id: 'boerseBerlinEquiductTradingRegulierterMarkt',
-        text: 'Boerse Berlin Equiduct Trading (Regulierter Markt)',
+        id: 'lm041',
+        text: '"EUROPEAN ENERGY EXCHANGE',
     },
     {
-        id: 'frankfurterWertpapierboerseRegulierterMarkt',
-        text: 'Frankfurter Wertpapierbörse (Regulierter Markt)',
+        id: '(REGULIERTER',
+        text: 'MARKT)"',
     },
     {
-        id: 'xetraRegulierterMarkt',
-        text: 'Xetra (Regulierter Markt)',
+        id: 'lm042',
+        text: 'BOERSE MUENCHEN  (REGULIERTER MARKT)',
     },
     {
-        id: 'eurexDeutschland',
-        text: 'Eurex Deutschland',
+        id: 'lm043',
+        text: '"TRADEGATE EXCHANGE',
     },
     {
-        id: 'zagrebackaBurzaDd',
+        id: '(REGULIERTER',
+        text: 'MARKT)"',
+    },
+    {
+        id: 'lm044',
+        text: '"BOERSE BERLIN EQUIDUCT TRADING',
+    },
+    {
+        id: '(BERLIN',
+        text: 'SECOND REGULATED MARKET)"',
+    },
+    {
+        id: 'lm045',
+        text: '"BOERSE BERLIN EQUIDUCT TRADING',
+    },
+    {
+        id: '(REGULIERTER',
+        text: 'MARKT)"',
+    },
+    {
+        id: 'lm046',
+        text: 'FRANKFURTER WERTPAPIERBOERSE (REGULIERTER MARKT)',
+    },
+    {
+        id: 'lm047',
+        text: 'XETRA (REGULIERTER MARKT)',
+    },
+    {
+        id: 'lm048',
+        text: 'EUREX DEUTSCHLAND',
+    },
+    {
+        id: 'lm049',
         text: 'Zagrebačka burza d.d.',
     },
     {
-        id: 'euronextBrusselsDerivatives',
+        id: 'lm050',
         text: 'Euronext Brussels Derivatives',
     },
     {
-        id: 'euronextBrussels',
+        id: 'lm051',
         text: 'Euronext Brussels',
     },
     {
-        id: 'wienerBorseAg',
+        id: 'lm052',
         text: 'Wiener Börse AG',
     },
     {
-        id: 'ljubljanaStockExchangeInc',
+        id: 'lm053',
         text: 'Ljubljana Stock Exchange Inc.',
     },
     {
-        id: 'cyprusStockExchange',
-        text: 'Cyprus Stock Exchange',
+        id: 'lm054',
+        text: 'CYPRUS STOCK EXCHANGE',
     },
     {
-        id: 'nasdaqIcelandHf',
+        id: 'lm055',
         text: 'Nasdaq Iceland hf.',
     },
     {
-        id: 'nasdaqTallinnAktsiaselts',
-        text: 'Nasdaq Tallinn Aktsiaselts',
+        id: 'lm056',
+        text: 'NASDAQ Tallinn Aktsiaselts',
     },
     {
-        id: 'nxchangeBv',
+        id: 'lm057',
         text: 'Nxchange B.V.',
     },
     {
-        id: 'euronextAmsterdamNv',
+        id: 'lm058',
         text: 'Euronext Amsterdam N.V.',
     },
     {
-        id: 'maltaStockExchange',
+        id: 'lm059',
         text: 'Malta Stock Exchange',
     },
     {
-        id: 'iceEndexMarketsBv',
+        id: 'lm060',
         text: 'ICE Endex Markets B.V.',
     },
     {
-        id: 'institutionalFinancialSecuritiesMarket',
+        id: 'lm061',
         text: 'Institutional Financial Securities Market',
     },
     {
-        id: 'hudexEnergiatozsdeZrt',
+        id: 'lm062',
         text: 'HUDEX Energiatőzsde Zrt.',
     },
     {
-        id: 'nasdaqVilniusAb',
+        id: 'lm063',
         text: 'Nasdaq Vilnius, AB',
     },
     {
-        id: 'europeanWholesaleSecuritiesMarket',
+        id: 'lm064',
         text: 'European Wholesale Securities Market',
     },
     {
-        id: 'nasdaqRigaAs',
+        id: 'lm065',
         text: 'Nasdaq Riga AS',
     },
     {
-        id: 'gieldaPapierowWartosciowychWWarszawieSa',
+        id: 'lm066',
         text: 'Giełda Papierów Wartościowych w Warszawie S.A.',
     },
     {
-        id: 'towarowaGieldaEnergiiSa',
+        id: 'lm067',
         text: 'Towarowa Giełda Energii S.A.',
     },
     {
-        id: 'bondSpotSa',
+        id: 'lm068',
+        text: 'Giełda Papierów Wartościowych w Warszawie S.A.',
+    },
+    {
+        id: 'lm069',
         text: 'BondSpot S.A.',
     },
     {
-        id: 'theIrishStockExchangePlc',
+        id: 'lm070',
         text: 'The Irish Stock Exchange plc',
     },
     {
-        id: 'euronextMercadoDeFuturosEopcoes',
-        text: 'Euronext - Mercado de Futuros e Opções',
+        id: 'lm071',
+        text: 'EURONEXT - MERCADO DE FUTUROS E OPÇÕES',
     },
     {
-        id: 'omipPoloPortuguesSGMRSa',
-        text: 'OMIP - Pólo Português, S.G.M.R., S.A.',
+        id: 'lm072',
+        text: 'OMIP - Pólo Português, S.G.M.R., SA',
     },
     {
-        id: 'euronextLisbonSociedadeGestoraDeMercadosRegulamentadosSa',
-        text: 'Euronext Lisbon - Sociedade Gestora de Mercados Regulamentados, S.A.',
+        id: 'lm073',
+        text: 'Euronext Lisbon - Sociedade Gestora de Mercados Regulamentados, SA',
     },
     {
-        id: 'nasdaqStockholmAbEurWbEqDerivatives',
+        id: 'lm074',
         text: 'Nasdaq Stockholm AB - EUR WB EQ Derivatives',
     },
     {
-        id: 'nasdaqStockholmAbFinnishEqDerivatives',
+        id: 'lm075',
         text: 'Nasdaq Stockholm AB - Finnish EQ Derivatives',
     },
     {
-        id: 'nasdaqStockholmAb',
+        id: 'lm076',
         text: 'Nasdaq Stockholm AB',
     },
     {
-        id: 'nasdaqStockholmAbDanishEqDerivatives',
+        id: 'lm077',
         text: 'Nasdaq Stockholm AB - Danish EQ Derivatives',
     },
     {
-        id: 'nasdaqStockholmAbEurFiDerivatives',
-        text: 'Nasdaq Stockholm AB - EUR FI Derivatives',
+        id: 'lm078',
+        text: 'Nasdaq Stockholm AB - EUR FI Derivated',
     },
     {
-        id: 'nasdaqStockholmAbCommodities',
+        id: 'lm079',
         text: 'Nasdaq Stockholm AB - Commodities',
     },
     {
-        id: 'nasdaqStockholmAbPanNordicEqDerivatives',
+        id: 'lm080',
         text: 'Nasdaq Stockholm AB - Pan Nordic EQ Derivatives',
     },
     {
-        id: 'nasdaqStockholmAbUsdWbEqDerivatives',
+        id: 'lm081',
         text: 'Nasdaq Stockholm AB - USD WB EQ Derivatives',
     },
     {
-        id: 'nasdaqStockholmAbNorwegianFiDerivatives',
+        id: 'lm082',
         text: 'Nasdaq Stockholm AB - Norwegian FI Derivatives',
     },
     {
-        id: 'nasdaqStockholmAbDanishFiDerivatives',
+        id: 'lm083',
         text: 'Nasdaq Stockholm AB - Danish FI Derivatives',
     },
     {
-        id: 'nasdaqStockholmAbNordicMid',
+        id: 'lm084',
         text: 'Nasdaq Stockholm AB - Nordic@Mid',
     },
     {
-        id: 'nasdaqStockholmAbNorwegianEqDerivatives',
+        id: 'lm085',
         text: 'Nasdaq Stockholm AB - Norwegian EQ Derivatives',
     },
     {
-        id: 'nasdaqStockholmAbAuctionOnDemand',
+        id: 'lm086',
         text: 'Nasdaq Stockholm AB - Auction on Demand',
     },
     {
-        id: 'nasdaqStockholmAbSwedishEqDerivatives',
+        id: 'lm087',
         text: 'Nasdaq Stockholm AB - Swedish EQ Derivatives',
     },
     {
-        id: 'nordicGrowthMarketNgmAb',
+        id: 'lm088',
         text: 'Nordic Growth Market NGM AB',
     },
     {
-        id: 'cboeEuropeEquitiesRegulatedMarketIntegratedBookSegment',
+        id: 'lm089',
         text: 'Cboe Europe Equities Regulated Market – Integrated Book Segment',
     },
     {
-        id: 'cboeEuropeEquitiesRegulatedMarketReferencePriceBookSegment',
-        text: 'Cboe Europe Equities Regulated Market – Reference Price Book Segment',
-    },
-    {
-        id: 'cboeEuropeEquitiesRegulatedMarketOffBookSegment',
-        text: 'Cboe Europe Equities Regulated Market – Off-Book Segment',
-    },
-    {
-        id: 'londonMetalExchange',
+        id: 'lm090',
         text: 'London Metal Exchange',
     },
     {
-        id: 'londonStockExchangeRegulatedMarket',
+        id: 'lm091',
+        text: 'Cboe Europe Equities Regulated Market – Reference Price Book Segment',
+    },
+    {
+        id: 'lm092',
+        text: 'Cboe Europe Equities Regulated Market – Off-Book Segment',
+    },
+    {
+        id: 'lm093',
+        text: 'London Stock Exchange Regulated Market (derivatives)',
+    },
+    {
+        id: 'lm094',
+        text: 'NEX Exchange Main Board (non-equity)',
+    },
+    {
+        id: 'lm095',
         text: 'London Stock Exchange Regulated Market',
     },
     {
-        id: 'londonStockExchangeRegulatedMarketDerivatives',
-        text: 'London Stock Exchange Regulated Market (Derivatives)',
+        id: 'lm096',
+        text: 'NEX Exchange Main Board (equity)',
     },
     {
-        id: 'nexExchangeMainBoardEquity',
-        text: 'NEX Exchange Main Board (Equity)',
-    },
-    {
-        id: 'nexExchangeMainBoardNonEquity',
-        text: 'NEX Exchange Main Board (Non-Equity)',
-    },
-    {
-        id: 'euronextLondonRegulatedMarket',
+        id: 'lm097',
         text: 'Euronext London Regulated Market',
     },
     {
-        id: 'bursaDeValoriBucurestiSa',
-        text: 'Bursa de Valori Bucuresti S.A.',
+        id: 'lm098',
+        text: 'Bursa de Valori Bucuresti SA',
     },
     {
-        id: 'budapestiErtektozsdeZrtBudapestStockExchange',
+        id: 'lm099',
         text: 'Budapesti Értéktőzsde Zrt. (Budapest Stock Exchange)',
     },
     {
-        id: 'nasdaqHelsinkiOyAuctionOnDemand',
+        id: 'lm100',
         text: 'Nasdaq Helsinki Oy - Auction on Demand',
     },
     {
-        id: 'nasdaqHelsinkiOyNordicMid',
+        id: 'lm101',
         text: 'Nasdaq Helsinki Oy - Nordic@Mid',
     },
     {
-        id: 'hellenicExchangesAthensStockExchangeSa',
-        text: 'Hellenic Exchanges - Athens Stock Exchange S.A.',
+        id: 'lm102',
+        text: 'Hellenic Exchanges - Athens Stock Exchange SA',
     },
     {
-        id: 'electronicSecondarySecuritiesMarket',
-        text: 'Electronic Secondary Securities Market (HDAT)',
+        id: 'lm103',
+        text: 'Hellenic Exchanges - Athens Stock Exchange SA',
     },
     {
-        id: 'iceFuturesEurope',
-        text: 'ICE Futures Europe',
+        id: 'lm104',
+        text: 'ELECTRONIC SECONDARY SECURITIES MARKET',
     },
     {
-        id: 'iceFuturesEuropeAgriculturalProductsDivision',
-        text: 'ICE Futures Europe - Agricultural Products Division',
+        id: 'lm105',
+        text: 'Giełda Papierów Wartościowych w Warszawie S.A.',
     },
     {
-        id: 'iceFuturesEuropeFinancialProductsDivision',
-        text: 'ICE Futures Europe - Financial Products Division',
+        id: 'lm106',
+        text: 'ICE FUTURES EUROPE',
     },
     {
-        id: 'iceFuturesEuropeEquityProductsDivision',
-        text: 'ICE Futures Europe - Equity Products Division',
+        id: 'lm107',
+        text: 'ICE FUTURES EUROPE - AGRICULTURAL PRODUCTS DIVISION',
     },
     {
-        id: 'nasdaqStockholmAbNorwayEtf',
+        id: 'lm108',
+        text: 'ICE FUTURES EUROPE - FINANCIAL PRODUCTS DIVISION',
+    },
+    {
+        id: 'lm109',
+        text: 'ICE FUTURES EUROPE - EQUITY PRODUCTS DIVISION',
+    },
+    {
+        id: 'lm110',
         text: 'Nasdaq Stockholm AB - Norway ETF',
     },
     {
-        id: 'bulgarianStockExchange',
-        text: 'Bulgarian Stock Exchange',
+        id: 'lm111',
+        text: 'BULGARIAN STOCK EXCHANGE',
     },
     {
-        id: 'euronextEqfEquitiesAndIndicesDerivatives',
-        text: 'Euronext EQF, Equities and Indices Derivatives',
+        id: 'lm112',
+        text: 'EURONEXT EQF, EQUITIES AND INDICES DERIVATIVES',
     },
     {
-        id: 'euronextComCommoditiesFuturesAndOptions',
-        text: 'Euronext COM, Commodities Futures and Options',
+        id: 'lm113',
+        text: 'EURONEXT COM, COMMODITIES FUTURES AND OPTIONS',
     },
     {
-        id: 'burzaCennychPapierovVBratislaveAs',
+        id: 'lm114',
         text: 'Burza cenných papierov v Bratislave, a.s.',
     },
     {
-        id: 'other',
+        id: 'lmXXX',
         text: 'Other',
     },
 ];
 
 export const multilateralTradingFacilitiesList = [
     {
-        id: 'mTSFranceSAS',
-        text: 'MTS France S.A.S.',
+        id: 'mtf001',
+        text: 'MTS France SAS',
     },
     {
-        id: 'alternextParis',
+        id: 'mtf002',
         text: 'Alternext Paris',
     },
     {
-        id: 'marcheLibreParis',
+        id: 'mtf003',
+        text: 'MERKUR MARKET',
+    },
+    {
+        id: 'mtf004',
+        text: 'OSLO CONNECT',
+    },
+    {
+        id: 'mtf005',
         text: 'Marché Libre Paris',
     },
     {
-        id: 'merkurMarket',
-        text: 'Merkur Market',
-    },
-    {
-        id: 'osloConnect',
-        text: 'Oslo Connect',
-    },
-    {
-        id: 'mercadoAlternativoDeRentaFijaMARF',
+        id: 'mtf006',
         text: 'Mercado Alternativo de Renta Fija (MARF)',
     },
     {
-        id: 'sistemaElectronicoDeNegociacionDeActivosFinancierosSENAF',
+        id: 'mtf007',
         text: 'Sistema Electrónico de Negociación de Activos Financieros (SENAF)',
     },
     {
-        id: 'mercadoAlternativoBursatilMABSMN',
+        id: 'mtf008',
         text: 'Mercado Alternativo Bursátil (MAB SMN)',
     },
     {
-        id: 'mercadoDeValoresLatinoamericanosLatibexSMN',
+        id: 'mtf009',
         text: 'Mercado de Valores Latinoamericanos (Latibex SMN)',
     },
     {
-        id: 'firstNorthDenmarkNordicMid',
-        text: 'First North Denmark - Nordic@Mid',
+        id: 'mtf010',
+        text: 'First North Denmark - Nordic@MID',
     },
     {
-        id: 'firstNorthDenmarkAuctionAtDemand',
-        text: 'First North Denmark - Auction at Demand',
+        id: 'mtf011',
+        text: 'First North Denamrk - Auction at Demand',
     },
     {
-        id: 'firstNorthDenmark',
-        text: 'First North Denmark',
+        id: 'mtf012',
+        text: 'EUROTLX SIM S.P.A. - EuroTLX',
     },
     {
-        id: 'euroTLXSIMSpA',
-        text: 'EuroTLX SIM S.p.A.',
+        id: 'mtf013',
+        text: 'Hi-MTF SIM S.P.A. - HI-MTF',
     },
     {
-        id: 'hiMTFSimSpA',
-        text: 'Hi-MTF Sim S.p.A.',
+        id: 'mtf014',
+        text: 'Borsa Italiana S.P.A. - ExtraMOT',
     },
     {
-        id: 'borsaItalianaSpAExtraMOT',
-        text: 'Borsa Italiana S.p.A. - ExtraMOT',
+        id: 'mtf015',
+        text: 'Borsa Italiana S.P.A. - Mercato Borsa Italiana Equity MTF',
     },
     {
-        id: 'borsaItalianaSpAMercatoBorsaItalianaEquityMTF',
-        text: 'Borsa Italiana S.p.A. - Mercato Borsa Italiana Equity MTF',
+        id: 'mtf016',
+        text: 'E-MID SIM S.p.A. - E- MIDER',
     },
     {
-        id: 'borsaItalianaSpASeDeX',
-        text: 'Borsa Italiana S.p.A. - SeDeX',
+        id: 'mtf017',
+        text: 'HI-MTF SIM S.P.A. -  HI-MTF RFQ',
     },
     {
-        id: 'borsaItalianaSpAAIMItaliaMercatoAlternativoDelCapitale',
-        text: 'Borsa Italiana S.p.A. - AIM Italia/Mercato Alternativo del Capitale',
+        id: 'mtf018',
+        text: 'E-MID SIM S.p.A. - E-MID REPO',
     },
     {
-        id: 'eMIDSimSpAeMIDER',
-        text: 'e-MID Sim S.p.A. - e-MIDER',
+        id: 'mtf019',
+        text: 'Borsa Italiana S.P.A. -SeDeX',
     },
     {
-        id: 'eMIDSimSpAeMIDReop',
-        text: 'e-MID Sim S.p.A. - e-MID Reop',
+        id: 'mtf020',
+        text: 'MTS S.P.A. - Bond ITALY Vision Europe',
     },
     {
-        id: 'hiMtfSimSpAHiMtfRFQ',
-        text: 'Hi-Mtf Sim S.p.A. - Hi-Mtf RFQ',
+        id: 'mtf021',
+        text: 'HI-MTF SIM S.P.A. - ITALY HI-MTF Order Driven',
     },
     {
-        id: 'hiMtfSimSpAHiMtfOrderDriven',
-        text: 'Hi-Mtf Sim S.p.A. - Hi-Mtf Order Driven',
+        id: 'mtf022',
+        text: 'Borsa Italiana S.P.A. - AIM Italia/Mercato',
     },
     {
-        id: 'mTSBondVisionEuropeSpA',
-        text: 'MTS BondVision Europe S.p.A.',
-    },
-    {
-        id: 'aTFundMTF',
-        text: 'ATFund MTF',
-    },
-    {
-        id: 'euroMTF',
+        id: 'mtf023',
         text: 'Euro MTF',
     },
     {
-        id: 'firstNorthFinland',
+        id: 'mtf024',
         text: 'First North Finland',
     },
     {
-        id: 'mTSFinland',
+        id: 'mtf025',
+        text: 'BOERSE MUENCHEN - GETTEX - FREIVERKEHR',
+    },
+    {
+        id: 'mtf026',
+        text: 'BOERSE MUENCHEN (FREIVERKEHR)',
+    },
+    {
+        id: 'mtf027',
+        text: 'HANSEATISCHE WERTPAPIERBOERSE HAMBURG (FREIVERKEHR)',
+    },
+    {
+        id: 'mtf028',
+        text: 'BADEN- WUERTTEMBERGISCHE WERTPAPIERBOERSE (FREIVERKEHR - TECHNICAL PLATFORM 2)',
+    },
+    {
+        id: 'mtf029',
+        text: 'DUESSELDORFER BOERSE (FREIVERKEHR)',
+    },
+    {
+        id: 'mtf030',
+        text: '"NIEDERSAECHSICHE BOERSE ZU',
+    },
+    {
+        id: 'HANNOVE',
+        text: 'R',
+    },
+    {
+        id: '(FREIVERKEHR)',
+        text: '"',
+    },
+    {
+        id: 'mtf031',
+        text: 'BADEN- WUERTTEMBERGISCHE WERTPAPIERBOERSE (FREIVERKEHR)',
+    },
+    {
+        id: 'mtf032',
+        text: 'TRADEGATE EXCHANGE (FREIVERKEHR)',
+    },
+    {
+        id: 'mtf033',
+        text: 'Boerse Hamburg Lang and Schwarz Exchange (Freiverkehr)',
+    },
+    {
+        id: 'mtf034',
+        text: 'DUESSELDORFER BOERSE QUOTRIX (FREIVERKEHR)',
+    },
+    {
+        id: 'mtf035',
+        text: 'BOERSE BERLIN (FREIVERKEHR)',
+    },
+    {
+        id: 'mtf036',
+        text: 'BOERSE BERLIN EQUIDUCT TRADING (FREIVERKEHR)',
+    },
+    {
+        id: 'mtf037',
+        text: 'FRANKFURTER WERTPAPIERBOERSE (FREIVERKEHR)',
+    },
+    {
+        id: 'mtf038',
+        text: 'FRANKFURTER WERTPAPIERBOERSE XETRA (FREIVERKEHR)',
+    },
+    {
+        id: 'mtf039',
         text: 'MTS Finland',
     },
     {
-        id: 'borseMuenchenGettexFreiverkehr',
-        text: 'Börse Muenchen – Gettex (Freiverkehr)',
+        id: 'mtf040',
+        text: 'Trading Facility',
     },
     {
-        id: 'borseMuenchenFreiverkehr',
-        text: 'Börse Muenchen (Freiverkehr)',
+        id: 'mtf041',
+        text: 'Ventes Publiques (Expert Market)',
     },
     {
-        id: 'hanseatischenWertpapierborseHamburgFreiverkehr',
-        text: 'Hanseatischen Wertpapierbörse Hamburg (Freiverkehr)',
+        id: 'mtf042',
+        text: 'Euronext Growth Brussels (Alternext)',
     },
     {
-        id: 'badenWuerttembergischeWertpapierboerseFreiverkehrTechnicalPlatform2',
-        text: 'Baden-Wuerttembergische Wertpapierboerse (Freiverkehr - Technical Platform 2)',
-    },
-    {
-        id: 'badenWuerttembergischeWertpapierboerseFreiverkehr',
-        text: 'Baden-Wuerttembergische Wertpapierboerse (Freiverkehr)',
-    },
-    {
-        id: 'borseDusseldorfAGFreiverkehr',
-        text: 'Börse Düsseldorf AG (Freiverkehr)',
-    },
-    {
-        id: 'borseHannoverFreiverkehr',
-        text: 'Börse Hannover (Freiverkehr)',
-    },
-    {
-        id: 'borseHamburgLangAndSchwarzExchangeFreiverkehr',
-        text: 'Börse Hamburg Lang and Schwarz Exchange (Freiverkehr)',
-    },
-    {
-        id: 'borseDusseldorfQuotrixFreiverkehr',
-        text: 'Börse Düsseldorf Quotrix (Freiverkehr)',
-    },
-    {
-        id: 'borseBerlinAGFreiverkehr',
-        text: 'Börse Berlin AG (Freiverkehr)',
-    },
-    {
-        id: 'borseBerlinAGEquiductFreiverkehr',
-        text: 'Börse Berlin AG Equiduct (Freiverkehr)',
-    },
-    {
-        id: 'frankfurterWertpapierborseFreiverkehr',
-        text: 'Frankfurter Wertpapierbörse (Freiverkehr)',
-    },
-    {
-        id: 'frankfurterWertpapierborseXetraFreiverkehr',
-        text: 'Frankfurter Wertpapierbörse Xetra (Freiverkehr)',
-    },
-    {
-        id: 'tradegateExchangeFreiverkehr',
-        text: 'Tradegate Exchange (Freiverkehr)',
-    },
-    {
-        id: 'eurexRepoGmbH',
-        text: 'Eurex Repo GmbH',
-    },
-    {
-        id: '360TreasurySystemsAG',
-        text: '360 Treasury Systems AG',
-    },
-    {
-        id: 'euronextExpertMarketVentesPubliques',
-        text: 'Euronext Expert Market (Ventes Publiques)',
-    },
-    {
-        id: 'euronextGrowthAlternextBrussels',
-        text: 'Euronext Growth (Alternext Brussels)',
-    },
-    {
-        id: 'euronextAccessEuronextBrussels',
-        text: 'Euronext Access (Euronext Brussels)',
-    },
-    {
-        id: 'mTSBelgium',
+        id: 'mtf043',
         text: 'MTS Belgium',
     },
     {
-        id: 'mTSDenmark',
+        id: 'mtf044',
         text: 'MTS Denmark',
     },
     {
-        id: 'nasdaqIcelandHf',
+        id: 'mtf045',
+        text: 'Euronext Access Brussels',
+    },
+    {
+        id: 'mtf046',
         text: 'Nasdaq Iceland hf.',
     },
     {
-        id: 'nasdaqOMXTallinnAktsiaselts',
-        text: 'Nasdaq OMX Tallinn Aktsiaselts',
+        id: 'mtf047',
+        text: 'NASDAQ OMX Tallinn Aktsiaselts',
     },
     {
-        id: 'cyprusExchangeMTF',
-        text: 'Cyprus Exchange MTF',
+        id: 'mtf048',
+        text: 'MTF - CYPRUS EXCHANGE',
     },
     {
-        id: 'captainBV',
-        text: 'Captain B.V.',
+        id: 'mtf049',
+        text: 'Nasdaq Iceland hf.',
     },
     {
-        id: 'prospectsMTFMalta',
-        text: 'Prospects MTF (Malta)',
+        id: 'mtf050',
+        text: 'Captin B.V.',
     },
     {
-        id: 'nasdaqRigaASFirstNorthLatvia',
+        id: 'mtf051',
+        text: 'Prospects',
+    },
+    {
+        id: 'mtf052',
         text: 'Nasdaq Riga AS (First North Latvia)',
     },
     {
-        id: 'wienerBorseAG',
+        id: 'mtf053',
         text: 'Wiener Börse AG',
     },
     {
-        id: 'euronextGrowthLisbonAlternextLisbon',
-        text: 'Euronext Growth Lisbon (Alternext Lisbon)',
+        id: 'mtf054',
+        text: '360 Treasury Systems AG',
     },
     {
-        id: 'euronextAccessLisbon',
-        text: 'Euronext Access Lisbon',
+        id: 'mtf055',
+        text: 'ALTERNEXT LISBON (EURONEXT GROWTH LISBON)',
     },
     {
-        id: 'nasdaqFirstNorthSwedenNorway',
+        id: 'mtf056',
+        text: 'EURONEXT ACCESS  LISBON',
+    },
+    {
+        id: 'mtf057',
         text: 'Nasdaq First North Sweden - Norway',
     },
     {
-        id: 'nasdaqFirstNorthSweden',
+        id: 'mtf058',
         text: 'Nasdaq First North Sweden',
     },
     {
-        id: 'nasdaqFirstNorthSwedenAuctionOnDemand',
-        text: 'Nasdaq First North Sweden - Auction on Demand',
-    },
-    {
-        id: 'nasdaqFirstNorthSwedenNordicMid',
-        text: 'Nasdaq First North Sweden - Nordic@Mid',
-    },
-    {
-        id: 'spotlightStockMarket',
-        text: 'Spotlight Stock Market',
-    },
-    {
-        id: 'nordicGrowthMarketNGMAB',
+        id: 'mtf059',
         text: 'Nordic Growth Market NGM AB',
     },
     {
-        id: 'sIEnterLjubljanskaBorza',
-        text: 'SI ENTER (Ljubljanska borza)',
+        id: 'mtf060',
+        text: 'Nasdaq First North Sweden - Nordic@Mid',
     },
     {
-        id: 'propertyPartnerExchange',
-        text: 'Property Partner Exchange',
+        id: 'mtf061',
+        text: 'SI ENTER',
     },
     {
-        id: 'cboeEuropeEquitiesMTFBXEPeriodicAuctionBookSegment',
+        id: 'mtf062',
         text: 'Cboe Europe Equities MTF – BXE Periodic Auction Book Segment',
     },
     {
-        id: 'cboeEuropeEquitiesMTFBXEReferencePriceBookSegment',
-        text: 'Cboe Europe Equities MTF – BXE Reference Price Book Segment',
+        id: 'mtf063',
+        text: 'Property Partner Exchange',
     },
     {
-        id: 'cboeEuropeEquitiesMTFCboeLargeInScaleService',
+        id: 'mtf064',
+        text: 'Cboe Europe Equities MTF – BXE Reference Price Book Segmen',
+    },
+    {
+        id: 'mtf065',
         text: 'Cboe Europe Equities MTF – Cboe Large in Scale Service',
     },
     {
-        id: 'cboeEuropeEquitiesMTFBXEIntegratedBookSegment',
-        text: 'Cboe Europe Equities MTF – BXE Integrated Book Segment',
-    },
-    {
-        id: 'cboeEuropeEquitiesMTFCXEIntegratedBookSegment',
-        text: 'Cboe Europe Equities MTF – CXE Integrated Book Segment',
-    },
-    {
-        id: 'cboeEuropeEquitiesMTFCXEReferencePriceBookSegment',
-        text: 'Cboe Europe Equities MTF – CXE Reference Price Book Segment',
-    },
-    {
-        id: 'cboeEuropeEquitiesMTFCXEOffBookSegment',
-        text: 'Cboe Europe Equities MTF – CXE Off - Book Segment',
-    },
-    {
-        id: 'cboeEuropeEquitiesMTFBXEOffBookSegment',
-        text: 'Cboe Europe Equities MTF – BXE Off - Book Segment',
-    },
-    {
-        id: 'euronextBlock',
+        id: 'mtf066',
         text: 'Euronext Block',
     },
     {
-        id: 'iCapWclkMtf',
+        id: 'mtf067',
         text: 'ICAP WCLK MTF',
     },
     {
-        id: 'nEXExchangeGrowthMarketNonEquity',
-        text: 'NEX Exchange Growth Market (Non-Equity)',
+        id: 'mtf068',
+        text: 'NEX Exchange Growth Market (non-equity)',
     },
     {
-        id: 'nEXExchangeGrowthMarketEquity',
-        text: 'NEX Exchange Growth Market (Equity)',
+        id: 'mtf069',
+        text: 'NEX Exchange Trading (non-equity)',
     },
     {
-        id: 'nEXExchangeTradingNonEquity',
-        text: 'NEX Exchange Trading (Non-Equity)',
-    },
-    {
-        id: 'nEXExchangeTradingEquity',
-        text: 'NEX Exchange Trading (Equity)',
-    },
-    {
-        id: 'integralMTF',
+        id: 'mtf070',
         text: 'Integral MTF',
     },
     {
-        id: 'eMBondsMTF',
+        id: 'mtf071',
         text: 'EM Bonds MTF',
     },
     {
-        id: 'londonStockExchangeAIMMTF',
+        id: 'mtf072',
         text: 'London Stock Exchange AIM MTF',
     },
     {
-        id: 'SIGMAXMTF',
+        id: 'mtf073',
         text: 'SIGMA X MTF',
     },
     {
-        id: 'dowgateMTF',
+        id: 'mtf074',
         text: 'Dowgate MTF',
     },
     {
-        id: 'LMAXFX',
-        text: 'LMAX FX',
+        id: 'mtf075',
+        text: 'Bursa de Valori Bucuresti SA',
     },
     {
-        id: 'blockMatchRequestForQuote',
-        text: 'BlockMatch Request for Quote (RFQ)',
+        id: 'mtf076',
+        text: 'Giełda Papierów Wartościowych  Warszawie S.A.',
     },
     {
-        id: 'blockMatchNegotiatedTradeFunctionality',
-        text: 'BlockMatch Negotiated Trade Functionality',
-    },
-    {
-        id: 'blockMatchDarkCentralLimitOrderBook',
-        text: 'BlockMatch Dark Central Limit Order Book',
-    },
-    {
-        id: 'turquoiseBlockAuctions',
-        text: 'Turquoise Block Auctions',
-    },
-    {
-        id: 'turquoiseCFD',
-        text: 'Turquoise CFD',
-    },
-    {
-        id: 'turquoisePlato',
-        text: 'Turquoise Plato',
-    },
-    {
-        id: 'turquoiseLit',
-        text: 'Turquoise Lit',
-    },
-    {
-        id: 'turquoiseLitAuctions',
-        text: 'Turquoise Lit Auctions',
-    },
-    {
-        id: 'turquoiseSwapMatch',
-        text: 'Turquoise SwapMatch',
-    },
-    {
-        id: 'iCapMtfGlobalDerivatives',
-        text: 'ICAP MTF - Global Derivatives',
-    },
-    {
-        id: 'iCapMtfCashEquity',
-        text: 'ICAP MTF - Cash Equity',
-    },
-    {
-        id: 'iCapMtfEquityDerivatives',
-        text: 'ICAP MTF - Equity Derivatives',
-    },
-    {
-        id: 'iCapMtfCorporateBondsSecuritisedDebt',
-        text: 'ICAP MTF - Corporate Bonds & Securitised Debt',
-    },
-    {
-        id: 'iCapMtfMoneyMarketInstruments',
-        text: 'ICAP MTF - Money Market Instruments',
-    },
-    {
-        id: 'iCapMtfGovernmentBondsExcludingGilts',
-        text: 'ICAP MTF - Government Bonds Excluding Gilts',
-    },
-    {
-        id: 'iCapMtfInterestRateDerivatives',
-        text: 'ICAP MTF - Interest Rate Derivatives',
-    },
-    {
-        id: 'iCapMtfFxDerivatives',
-        text: 'ICAP MTF - FX Derivatives',
-    },
-    {
-        id: 'iCapMtfGovernmentBondsUkGilts',
-        text: 'ICAP MTF - Government Bonds (UK Gilts)',
-    },
-    {
-        id: 'iCapMtfExchangeTradedFundsETFs',
-        text: 'ICAP MTF - Exchange Traded Funds (ETFs)',
-    },
-    {
-        id: 'tullettPrebonEuropeMtfFxDerivatives',
-        text: 'Tullett Prebon (Europe) MTF - FX Derivatives',
-    },
-    {
-        id: 'tullettPrebonEuropeMtfCorporateBondsSecuritisedDebt',
-        text: 'Tullett Prebon (Europe) MTF - Corporate Bonds & Securitised Debt',
-    },
-    {
-        id: 'tullettPrebonEuropeMtfGovernmentBondsExcludingUkGilts',
-        text: 'Tullett Prebon (Europe) MTF - Government Bonds Excluding UK Gilts',
-    },
-    {
-        id: 'tullettPrebonEuropeMtfMoneyMarkets',
-        text: 'Tullett Prebon (Europe) MTF - Money Markets',
-    },
-    {
-        id: 'tullettPrebonEuropeMtfRepos',
-        text: 'Tullett Prebon (Europe) MTF - Repos',
-    },
-    {
-        id: 'tullettPrebonEuropeMtfInterestRateDerivatives',
-        text: 'Tullett Prebon (Europe) MTF - Interest Rate Derivatives',
-    },
-    {
-        id: 'tullettPrebonEuropeMtfSecurities',
-        text: 'Tullett Prebon (Europe) MTF - Securities',
-    },
-    {
-        id: 'SIGMAXMTFSIGMAXAuctionBook',
-        text: 'SIGMA X MTF - SIGMA X Auction Book',
-    },
-    {
-        id: 'EBSMTFEBSMarket',
-        text: 'EBS MTF - EBS Market',
-    },
-    {
-        id: 'iSwapTradeRegistration',
-        text: 'I-Swap - Trade Registration',
-    },
-    {
-        id: 'iSwapOrderBook',
-        text: 'I-Swap - Order Book',
-    },
-    {
-        id: 'iSwapTargetedStreamingRFQ',
-        text: 'I-Swap Targeted Streaming/RFQ',
-    },
-    {
-        id: 'tradX',
-        text: 'Trad-X',
-    },
-    {
-        id: 'uBSMTFPeriodicAuctionOrderBook',
-        text: 'UBS MTF Periodic Auction Order Book',
-    },
-    {
-        id: 'uBSMTFDarkOrderBook',
-        text: 'UBS MTF Dark Order Book',
-    },
-    {
-        id: 'creditexBrokerageLLPMTF',
-        text: 'Creditex Brokerage LLP - MTF',
-    },
-    {
-        id: 'aquisMTF',
-        text: 'Aquis MTF',
-    },
-    {
-        id: 'euronextSynapse',
-        text: 'Euronext Synapse',
-    },
-    {
-        id: 'gFISecuritiesMTF',
-        text: 'GFI Securities - MTF',
-    },
-    {
-        id: 'gFIBrokersMTF',
-        text: 'GFI Brokers - MTF',
-    },
-    {
-        id: 'equiLend',
-        text: 'EquiLend',
-    },
-    {
-        id: 'eBSMTFEBSInstitutional',
-        text: 'EBS MTF – EBS Institutional',
-    },
-    {
-        id: 'eBSMTFNEXTreasury',
-        text: 'EBS MTF – NEX Treasury',
-    },
-    {
-        id: 'eBSMTFEBSDirect',
-        text: 'EBS MTF – EBS Direct',
-    },
-    {
-        id: 'eBSMTFReset',
-        text: 'EBS MTF - Reset',
-    },
-    {
-        id: 'brokerTecEUMTF',
-        text: 'BrokerTec EU MTF',
-    },
-    {
-        id: 'capmanAD',
-        text: 'Capman AD',
-    },
-    {
-        id: 'bulgarianStockExchange',
-        text: 'Bulgarian Stock Exchange',
-    },
-    {
-        id: '42FinancialServices',
-        text: '42 Financial Services',
-    },
-    {
-        id: 'zagrebackaBurzaDd',
-        text: 'Zagrebačka burza d.d.',
-    },
-    {
-        id: 'mTSCashDomesticMarketAustria',
-        text: 'MTS Cash Domestic Market - Austria',
-    },
-    {
-        id: 'mTSCashDomesticMarketCzechRepublic',
-        text: 'MTS Cash Domestic Market - Czech Republic',
-    },
-    {
-        id: 'mTSCashDomesticMarketGermany',
-        text: 'MTS Cash Domestic Market - Germany',
-    },
-    {
-        id: 'mTSCashDomesticMarketGreece',
-        text: 'MTS Cash Domestic Market - Greece',
-    },
-    {
-        id: 'mTSCashDomesticMarketHungary',
-        text: 'MTS Cash Domestic Market - Hungary',
-    },
-    {
-        id: 'mTSCashDomesticMarketIreland',
-        text: 'MTS Cash Domestic Market - Ireland',
-    },
-    {
-        id: 'mTSCashDomesticMarketIsrael',
-        text: 'MTS Cash Domestic Market - Israel',
-    },
-    {
-        id: 'mTSCashDomesticMarketNetherlands',
-        text: 'MTS Cash Domestic Market - Netherlands',
-    },
-    {
-        id: 'mTSCashDomesticMarketPortugal',
-        text: 'MTS Cash Domestic Market - Portugal',
-    },
-    {
-        id: 'mTSCashDomesticMarketSlovakia',
-        text: 'MTS Cash Domestic Market - Slovakia',
-    },
-    {
-        id: 'mTSCashDomesticMarketSlovenia',
-        text: 'MTS Cash Domestic Market - Slovenia',
-    },
-    {
-        id: 'mTSCashDomesticMarketSpain',
-        text: 'MTS Cash Domestic Market - Spain',
-    },
-    {
-        id: 'mTSCashDomesticMarketUnitedKingdom',
-        text: 'MTS Cash Domestic Market - United Kingdom',
-    },
-    {
-        id: 'liquidnetEuropeFixedIncome',
-        text: 'Liquidnet Europe Fixed Income',
-    },
-    {
-        id: 'liquidnetEuropeEquities',
-        text: 'Liquidnet Europe Equities',
-    },
-    {
-        id: 'marketAxessEuropeMTF',
-        text: 'MarketAxess Europe MTF',
-    },
-    {
-        id: 'LMAX',
-        text: 'LMAX',
-    },
-    {
-        id: 'EBM',
-        text: 'EBM',
-    },
-    {
-        id: 'tradewebEuropeMTF',
-        text: 'Tradeweb Europe MTF',
-    },
-    {
-        id: 'elixium',
-        text: 'Elixium',
-    },
-    {
-        id: 'nEXReset',
-        text: 'NEX Reset',
-    },
-    {
-        id: 'nEXSEF',
-        text: 'NEX SEF',
-    },
-    {
-        id: 'mTSBondVision',
-        text: 'MTS BondVision',
-    },
-    {
-        id: 'londonStockExchangeNonAIMMTF',
-        text: 'London Stock Exchange Non-AIM MTF',
-    },
-    {
-        id: 'bloombergMultilateralTradingFacility',
-        text: 'Bloomberg Multilateral Trading Facility',
-    },
-    {
-        id: 'bursaDeValoriBucurestiSA',
-        text: 'Bursa de Valori Bucuresti S.A.',
-    },
-    {
-        id: 'gieldaPapierowWartosciowychWWarszawieSA',
-        text: 'Giełda Papierów Wartościowych w Warszawie S.A.',
-    },
-    {
-        id: 'bondSpotSA',
+        id: 'mtf077',
         text: 'BondSpot S.A.',
     },
     {
-        id: 'nPEXBV',
+        id: 'mtf078',
         text: 'NPEX B.V.',
     },
     {
-        id: 'reutersTransactionServicesLimitedForwardsMatching',
-        text: 'Reuters Transaction Services Limited – Forwards Matching',
-    },
-    {
-        id: 'reutersTransactionServicesLimitedFXallRFQ',
-        text: 'Reuters Transaction Services Limited – FXall RFQ',
-    },
-    {
-        id: 'theIrishStockExchangePlcAtlanticSecuritiesMarket',
+        id: 'mtf079',
         text: 'The Irish Stock Exchange plc Atlantic Securities Market',
     },
     {
-        id: 'theIrishStockExchangePlcGlobalExchangeMarket',
+        id: 'mtf080',
         text: 'The Irish Stock Exchange plc Global Exchange Market',
     },
     {
-        id: 'bETaMarketHungary',
-        text: 'BETa Market (Hungary)',
+        id: 'mtf081',
+        text: 'BETA MARKET',
     },
     {
-        id: 'xtendHungary',
-        text: 'Xtend (Hungary)',
+        id: 'mtf082',
+        text: 'Xtend',
     },
     {
-        id: 'rMSYSTEMCeskaBurzaCennychPapiruAs',
+        id: 'mtf083',
         text: 'RM-SYSTÉM, česká burza cenných papírů a.s.',
     },
     {
-        id: 'burzaCennychPapiruPrahaAs',
+        id: 'mtf084',
         text: 'Burza cenných papírů Praha, a.s.',
     },
     {
-        id: 'nasdaqFirstNorthSwedenNorwayNordicMid',
+        id: 'mtf085',
         text: 'Nasdaq First North Sweden - Norway Nordic@Mid',
     },
     {
-        id: 'nasdaqFirstNorthSwedenNorwayAuctionOnDemand',
+        id: 'mtf086',
         text: 'Nasdaq First North Sweden - Norway Auction on Demand',
     },
     {
-        id: 'firstNorthFinlandNordicMid',
+        id: 'mtf087',
+        text: 'Eurex Repo GmbH',
+    },
+    {
+        id: 'mtf088',
+        text: 'BlockMatch Request for Quote Functionality',
+    },
+    {
+        id: 'mtf089',
+        text: 'LMAX FX',
+    },
+    {
+        id: 'mtf090',
+        text: 'Turquoise Block AuctionsTM',
+    },
+    {
+        id: 'mtf091',
         text: 'First North Finland - Nordic@Mid',
     },
     {
-        id: 'firstNorthFinlandAuctionOnDemand',
+        id: 'mtf092',
         text: 'First North Finland - Auction on Demand',
     },
     {
-        id: 'hellenicExchangesAthensStockExchangeFacilitySA',
-        text: 'Hellenic Exchanges - Athens Stock Exchange Facility S.A.',
+        id: 'mtf093',
+        text: 'Hellenic Exchanges - Athens Stock Exchange SA',
     },
     {
-        id: 'theIrishStockExchangePlcEnterpriseSecurityMarket',
+        id: 'mtf094',
         text: 'The Irish Stock Exchange plc Enterprise Security Market',
     },
     {
-        id: 'investmentTechnologyGroupLimitedPOSITMTFPeriodicAuctionSegment',
+        id: 'mtf095',
         text: 'Investment Technology Group Limited - POSIT MTF - Periodic Auction Segment',
     },
     {
-        id: 'investmentTechnologyGroupLimitedPOSITMTFDarkAlgorithm',
-        text: 'Investment Technology Group Limited – POSIT MTF - Dark Algorithm',
+        id: 'mtf096',
+        text: 'Investment Technology Group Limited – POSIT MTF - dark',
     },
     {
-        id: 'other',
+        id: 'mtf097',
+        text: 'ICAP Global Derivatives Limited',
+    },
+    {
+        id: 'mtf098',
+        text: 'BlockMatch Negotiated Trade Functionality',
+    },
+    {
+        id: 'mtf099',
+        text: 'BlockMatch Dark Central Limit Order Book',
+    },
+    {
+        id: 'mtf100',
+        text: 'ICAP MTF - CASH EQUITY',
+    },
+    {
+        id: 'mtf101',
+        text: 'ICAP MTF - EQUITY DERIVATIVES',
+    },
+    {
+        id: 'mtf102',
+        text: 'ICAP MTF -  CORPORATE BONDS AND SECURITIES DEBT',
+    },
+    {
+        id: 'mtf103',
+        text: 'ICAP MTF - MONEY MARKET INSTRUMENTS',
+    },
+    {
+        id: 'mtf104',
+        text: 'ICAP MTF - GOVERNMENT BONDS EXCLUDING GILTS',
+    },
+    {
+        id: 'mtf105',
+        text: 'ICAP MTF - INTEREST RATE DERIVATIVES',
+    },
+    {
+        id: 'mtf106',
+        text: 'ICAP MTF - FX DERIVATIVES',
+    },
+    {
+        id: 'mtf107',
+        text: 'ICAP MTF - GILTS',
+    },
+    {
+        id: 'mtf108',
+        text: 'ICAP MTF - ETFS',
+    },
+    {
+        id: 'mtf109',
+        text: 'SIGMA X MTF - SIGMA X Auction Book',
+    },
+    {
+        id: 'mtf110',
+        text: 'EBS MTF - EBS Market',
+    },
+    {
+        id: 'mtf111',
+        text: 'I-SWAP - TRADE REGISTRATION',
+    },
+    {
+        id: 'mtf112',
+        text: 'I-SWAP ORDER BOOK',
+    },
+    {
+        id: 'mtf113',
+        text: 'TULLETT PREBON EUROPE - MTF - FX DERIVATIVES',
+    },
+    {
+        id: 'mtf114',
+        text: 'ICAP GLOBAL DERIVATIVES LIMITED - ELECTRONIC',
+    },
+    {
+        id: 'mtf115',
+        text: 'ICAP GLOBAL DERIVATIVES LIMITED - VOICE',
+    },
+    {
+        id: 'mtf116',
+        text: 'MTS Cash Domestic Market - SLOVAKIA',
+    },
+    {
+        id: 'mtf117',
+        text: 'TULLETT PREBON EUROPE - MTF - CORPORATE BONDS AND SECURITISED DEBT',
+    },
+    {
+        id: 'mtf118',
+        text: 'TULLETT PREBON EUROPE - MTF - GOVERNMENT BONDS EXCLUDING UK GILTS',
+    },
+    {
+        id: 'mtf119',
+        text: 'TULLETT PREBON EUROPE - MTF - MONEY MARKETS',
+    },
+    {
+        id: 'mtf120',
+        text: 'TULLETT PREBON EUROPE - MTF - REPOS',
+    },
+    {
+        id: 'mtf121',
+        text: 'Turquoise CFD',
+    },
+    {
+        id: 'mtf122',
+        text: 'TULLETT PREBON SECURITIES - MTF - REPOS',
+    },
+    {
+        id: 'mtf123',
+        text: 'Spotlight Stock Market',
+    },
+    {
+        id: 'mtf124',
+        text: 'Nasdaq First North Sweden - Auction on Demand',
+    },
+    {
+        id: 'mtf125',
+        text: 'ATFUND MTF',
+    },
+    {
+        id: 'mtf126',
+        text: 'UBS MTF Periodic Auction',
+    },
+    {
+        id: 'mtf127',
+        text: 'UBS MTF',
+    },
+    {
+        id: 'mtf128',
+        text: 'Cboe Europe Equities MTF – BXE Integrated Book Segment',
+    },
+    {
+        id: 'mtf129',
+        text: 'Creditex Brokerage LLP - MTF',
+    },
+    {
+        id: 'mtf130',
+        text: 'Cboe Europe Equities MTF – CXE Integrated Book Segment',
+    },
+    {
+        id: 'mtf131',
+        text: 'MTS Cash Domestic Market-SLOVENIA',
+    },
+    {
+        id: 'mtf132',
+        text: 'TULLETT PREBON EUROPE - MTF - INTEREST RATE DERIVATIVES',
+    },
+    {
+        id: 'mtf133',
+        text: 'I-SWAP TARGETED STREAMING/RFQ',
+    },
+    {
+        id: 'mtf134',
+        text: 'MTS Cash Domestic Market-GERMANY',
+    },
+    {
+        id: 'mtf135',
+        text: 'Liquidnet Europe Fixed Income',
+    },
+    {
+        id: 'mtf136',
+        text: 'Liquidnet Europe Equities',
+    },
+    {
+        id: 'mtf137',
+        text: 'MTS Cash Domestic Market - NETHERLANDS',
+    },
+    {
+        id: 'mtf138',
+        text: 'MTS Cash Domestic Market-HUNGARY',
+    },
+    {
+        id: 'mtf139',
+        text: 'MarketAxess Europe MTF',
+    },
+    {
+        id: 'mtf140',
+        text: 'LMAX',
+    },
+    {
+        id: 'mtf141',
+        text: 'MTS Cash Domestic Market-CZECH REPUBLIC',
+    },
+    {
+        id: 'mtf142',
+        text: 'MTS Cash Domestic Market-UNITED KINGDOM',
+    },
+    {
+        id: 'mtf143',
+        text: 'MTS Cash Domestic Market-AUSTRIA',
+    },
+    {
+        id: 'mtf144',
+        text: 'MTS Cash Domestic Market-Portugal',
+    },
+    {
+        id: 'mtf145',
+        text: 'MTS Cash Domestic Market-Ireland',
+    },
+    {
+        id: 'mtf146',
+        text: 'MTS Cash Domestic Market-Greece',
+    },
+    {
+        id: 'mtf147',
+        text: 'MTS Cash Domestic Market-Israel',
+    },
+    {
+        id: 'mtf148',
+        text: 'MTS Cash Domestic Market-Spain',
+    },
+    {
+        id: 'mtf149',
+        text: 'EBM',
+    },
+    {
+        id: 'mtf150',
+        text: 'Turquoise Plato',
+    },
+    {
+        id: 'mtf151',
+        text: 'Turquoise Lit',
+    },
+    {
+        id: 'mtf152',
+        text: 'Tradeweb Europe Limited MTF',
+    },
+    {
+        id: 'mtf153',
+        text: 'Elixium',
+    },
+    {
+        id: 'mtf154',
+        text: 'Tullett Prebon Europe MTF',
+    },
+    {
+        id: 'mtf155',
+        text: 'Trad-X',
+    },
+    {
+        id: 'mtf156',
+        text: 'NEX SEF MTF - RESET',
+    },
+    {
+        id: 'mtf157',
+        text: 'NEX SEF MTF - EBS',
+    },
+    {
+        id: 'mtf158',
+        text: 'BONDVISION UK',
+    },
+    {
+        id: 'mtf159',
+        text: 'London Stock Exchange Non-AIM MTF',
+    },
+    {
+        id: 'mtf160',
+        text: 'Turquoise Lit Auctions',
+    },
+    {
+        id: 'mtf161',
+        text: 'Reuters Transaction Services Limited – Forwards Matching',
+    },
+    {
+        id: 'mtf162',
+        text: 'Reuters Transaction Services Limited – Fxall RFQ',
+    },
+    {
+        id: 'mtf163',
+        text: 'Turquoise SwapMatch',
+    },
+    {
+        id: 'mtf164',
+        text: 'Bloomberg Multilateral Trading Facility',
+    },
+    {
+        id: 'mtf165',
+        text: 'Cboe Europe Equities MTF – CXE Reference Price Book Segment',
+    },
+    {
+        id: 'mtf166',
+        text: 'Cboe Europe Equities MTF – CXE Off-Book Segment',
+    },
+    {
+        id: 'mtf167',
+        text: 'Cboe Europe Equities MTF – BXE Off-Book Segment',
+    },
+    {
+        id: 'mtf168',
+        text: 'NEX Exchange Growth Market (equity)',
+    },
+    {
+        id: 'mtf169',
+        text: 'Aquis MTF',
+    },
+    {
+        id: 'mtf170',
+        text: 'NEX Exchange Trading (equity)',
+    },
+    {
+        id: 'mtf171',
+        text: 'Euronext Synapse',
+    },
+    {
+        id: 'mtf172',
+        text: 'GFI SECURITIES - MTF',
+    },
+    {
+        id: 'mtf173',
+        text: 'GFI BROKERS - MTF',
+    },
+    {
+        id: 'mtf174',
+        text: 'EquiLend',
+    },
+    {
+        id: 'mtf175',
+        text: 'EBS MTF – EBS Institutional',
+    },
+    {
+        id: 'mtf176',
+        text: 'EBS MTF – NEX Treasury',
+    },
+    {
+        id: 'mtf177',
+        text: 'EBS MTF – EBS Direct',
+    },
+    {
+        id: 'mtf178',
+        text: 'EBS MTF - RESET',
+    },
+    {
+        id: 'mtf179',
+        text: 'BrokerTec EU MTF',
+    },
+    {
+        id: 'mtf180',
+        text: 'Capman AD',
+    },
+    {
+        id: 'mtf181',
+        text: 'BULGARIAN STOCK EXCHANGE',
+    },
+    {
+        id: 'mtf182',
+        text: '42 Financial Services',
+    },
+    {
+        id: 'mtf183',
+        text: 'Zagrebačka burza d.d.',
+    },
+    {
+        id: 'mtfXXX',
         text: 'Other',
     },
 ];
