@@ -29,10 +29,12 @@ export class NewKycDocumentsComponent implements OnInit, OnDestroy {
         const listedDocuments = this.form.get('listed');
         const floatableDocument = this.form.get('listed.kycevidencefloatable');
         const regulatedDocuments = this.form.get('regulated');
+        const nowcpDocuments = this.form.get('nowcp');
 
         floatableDocument.disable();
         listedDocuments.disable();
         regulatedDocuments.disable();
+        nowcpDocuments.disable();
 
         if (documents.isListed) {
             listedDocuments.enable();
@@ -46,6 +48,10 @@ export class NewKycDocumentsComponent implements OnInit, OnDestroy {
 
         if (documents.isRegulated) {
             regulatedDocuments.enable();
+        }
+
+        if (documents.isNowCp) {
+            nowcpDocuments.enable()
         }
 
         this.formPercent.refreshFormPercent();

@@ -14,6 +14,7 @@ import { steps, formStepsLight, formStepsFull } from '../requests.config';
 import { NewRequestService } from './new-request.service';
 
 import { FormstepsComponent } from '@setl/utils/components/formsteps/formsteps.component';
+import { OfiKycService } from '../../../ofi-req-services/ofi-kyc/service';
 
 @Component({
     templateUrl: './new-request.component.html',
@@ -38,6 +39,7 @@ export class NewKycRequestComponent implements OnInit, AfterViewInit {
     @select(['ofi', 'ofiKyc', 'myKycList', 'kycList']) myKycList$;
     @select(['ofi', 'ofiProduct', 'ofiManagementCompany', 'investorManagementCompanyList', 'investorManagementCompanyList']) managementCompanyList$;
     @select(['user', 'siteSettings', 'language']) language$;
+    @select(['ofi', 'ofiKyc', 'myInformations', 'investorType']) kycInvestorType$;
 
     unsubscribe: Subject<any> = new Subject();
     stepsConfig: any;
@@ -51,13 +53,10 @@ export class NewKycRequestComponent implements OnInit, AfterViewInit {
     }
 
     currentCompletedStep;
-    documentRules = {
-        isListed: null,
-        isFloatableHigh: null,
-        isRegulated: null,
-    };
     duplicate;
     duplicateCompany = '';
+    // this is the investor decide when asset manager/nowcp send invitation
+    kycInvestorType;
 
     constructor(
         private formBuilder: FormBuilder,
@@ -67,6 +66,7 @@ export class NewKycRequestComponent implements OnInit, AfterViewInit {
         public translate: MultilingualService,
         private ngRedux: NgRedux<any>,
         private location: Location,
+        private ofiKycService: OfiKycService,
     ) {
     }
 
@@ -74,29 +74,12 @@ export class NewKycRequestComponent implements OnInit, AfterViewInit {
         const isListed = this.forms.get('identification.companyInformation.companyListed').value;
         const isFloatableHigh = this.forms.get('identification.companyInformation.floatableShares').value >= 75;
         const isRegulated = this.forms.get('identification.companyInformation.activityRegulated').value;
-        let changed = false;
-
-        if (this.documentRules.isListed !== isListed) {
-            this.documentRules.isListed = isListed;
-            changed = true;
-        }
-        if (this.documentRules.isFloatableHigh !== isFloatableHigh) {
-            this.documentRules.isFloatableHigh = isFloatableHigh;
-            changed = true;
-        }
-        if (this.documentRules.isRegulated !== isRegulated) {
-            this.documentRules.isRegulated = isRegulated;
-            changed = true;
-        }
-
-        if (!changed) {
-            return this.documentRules;
-        }
 
         return {
-            isListed: this.documentRules.isListed,
-            isFloatableHigh: this.documentRules.isFloatableHigh,
-            isRegulated: this.documentRules.isRegulated,
+            isListed,
+            isFloatableHigh,
+            isRegulated,
+            isNowCp: this.kycInvestorType === 70 || this.kycInvestorType === 80,
         };
     }
 
@@ -137,6 +120,7 @@ export class NewKycRequestComponent implements OnInit, AfterViewInit {
 
     ngOnInit() {
         this.ngRedux.dispatch(clearMyKycRequestedPersist());
+        this.ofiKycService.fetchInvestor();
 
         this.initForm();
         this.initSubscriptions();
@@ -198,6 +182,10 @@ export class NewKycRequestComponent implements OnInit, AfterViewInit {
             }),
             takeUntil(this.unsubscribe),
         ).subscribe(clientFileId => this.clientFileId = clientFileId);
+
+        this.kycInvestorType$.pipe(
+            takeUntil(this.unsubscribe),
+        ).subscribe(t => this.kycInvestorType = t);
     }
 
     initForm() {
