@@ -1,4 +1,4 @@
-import { Component, Input, OnInit, OnDestroy, ViewChild } from '@angular/core';
+import { Component, Input, Output, OnInit, OnDestroy, ViewChild, EventEmitter, ElementRef } from '@angular/core';
 import { FormGroup, FormArray } from '@angular/forms';
 import { get as getValue, set as setValue, filter, isEmpty, castArray, find } from 'lodash';
 import { select, NgRedux } from '@angular-redux/store';
@@ -12,6 +12,10 @@ import { BeneficiaryService } from './beneficiary.service';
 import { countries } from '../../../requests.config';
 import { setMyKycStakeholderRelations } from '@ofi/ofi-main/ofi-store/ofi-kyc/kyc-request';
 import { MultilingualService } from '@setl/multilingual';
+import { formHelper } from '@setl/utils/helper';
+import { PersistRequestService } from '@setl/core-req-services';
+import { PersistService } from '@setl/core-persist';
+import { setMyKycRequestedPersist } from '@ofi/ofi-main/ofi-store/ofi-kyc';
 
 @Component({
     selector: 'company-information',
@@ -21,6 +25,7 @@ import { MultilingualService } from '@setl/multilingual';
 export class CompanyInformationComponent implements OnInit, OnDestroy {
     @ViewChild(FormPercentDirective) formPercent: FormPercentDirective;
     @Input() form: FormGroup;
+    @Output() submitEvent: EventEmitter<any> = new EventEmitter<any>();
     @select(['ofi', 'ofiKyc', 'myKycRequested', 'kycs']) requests$;
     @select(['ofi', 'ofiKyc', 'myKycRequested', 'formPersist']) persistedForms$;
     @select(['user', 'siteSettings', 'language']) requestLanguageObj;
@@ -54,6 +59,9 @@ export class CompanyInformationComponent implements OnInit, OnDestroy {
         private beneficiaryService: BeneficiaryService,
         private ngRedux: NgRedux<any>,
         public translate: MultilingualService,
+        private element: ElementRef,
+        private persistRequestService: PersistRequestService,
+        private persistService: PersistService,
     ) {
     }
 
@@ -496,70 +504,70 @@ export class CompanyInformationComponent implements OnInit, OnDestroy {
             rxFilter(requests => !isEmpty(requests)),
         );
 
-        requests$.pipe(
-            takeUntil(this.unsubscribe),
-        ).subscribe((requests) => {
-            const promises = [];
-            const stakeholdersRelationTable = [];
+        // requests$.pipe(
+        //     takeUntil(this.unsubscribe),
+        // ).subscribe((requests) => {
+        //     const promises = [];
+        //     const stakeholdersRelationTable = [];
 
-            requests.forEach((request, index) => {
+        //     requests.forEach((request, index) => {
 
-                const promise = this.identificationService.getCurrentFormCompanyBeneficiariesData(request.kycID).then((formData) => {
-                    if (!isEmpty(formData)) {
-                        const relation = {
-                            kycID: request.kycID,
-                            stakeholderIDs: formData.map(stakeholder => stakeholder.companyBeneficiariesID),
-                        };
+        //         const promise = this.identificationService.getCurrentFormCompanyBeneficiariesData(request.kycID).then((formData) => {
+        //             if (!isEmpty(formData)) {
+        //                 const relation = {
+        //                     kycID: request.kycID,
+        //                     stakeholderIDs: formData.map(stakeholder => stakeholder.companyBeneficiariesID),
+        //                 };
 
-                        stakeholdersRelationTable.push(relation);
+        //                 stakeholdersRelationTable.push(relation);
 
-                        if (index === 0) {
-                            const beneficiaries: FormArray = this.form.get('beneficiaries') as FormArray;
+        //                 if (index === 0) {
+        //                     const beneficiaries: FormArray = this.form.get('beneficiaries') as FormArray;
 
-                            while (beneficiaries.length) {
-                                beneficiaries.removeAt(0);
-                            }
+        //                     while (beneficiaries.length) {
+        //                         beneficiaries.removeAt(0);
+        //                     }
 
-                            const promises = formData.map((controlValue) => {
-                                const control = this.newRequestService.createBeneficiary();
-                                const documentID = controlValue.documentID;
+        //                     const promises = formData.map((controlValue) => {
+        //                         const control = this.newRequestService.createBeneficiary();
+        //                         const documentID = controlValue.documentID;
 
-                                controlValue = buildBeneficiaryObject(controlValue);
+        //                         controlValue = buildBeneficiaryObject(controlValue);
 
-                                if (documentID) {
-                                    return this.documentsService.getDocument(documentID).then((document) => {
-                                        if (document) {
-                                            setValue(controlValue, ['common', 'document'], {
-                                                name: document.name,
-                                                hash: document.hash,
-                                                kycDocumentID: document.kycDocumentID,
-                                            });
-                                        }
-                                        control.patchValue(controlValue);
-                                        beneficiaries.push(control);
-                                    });
-                                }
+        //                         if (documentID) {
+        //                             return this.documentsService.getDocument(documentID).then((document) => {
+        //                                 if (document) {
+        //                                     setValue(controlValue, ['common', 'document'], {
+        //                                         name: document.name,
+        //                                         hash: document.hash,
+        //                                         kycDocumentID: document.kycDocumentID,
+        //                                     });
+        //                                 }
+        //                                 control.patchValue(controlValue);
+        //                                 beneficiaries.push(control);
+        //                             });
+        //                         }
 
-                                control.patchValue(controlValue);
-                                beneficiaries.push(control);
-                            });
+        //                         control.patchValue(controlValue);
+        //                         beneficiaries.push(control);
+        //                     });
 
-                            Promise.all(promises).then(() => {
-                                this.beneficiaryService.fillInStakeholderSelects(this.form.get('beneficiaries'));
-                                this.beneficiaryService.updateStakeholdersValidity(this.form.get('beneficiaries') as FormArray);
-                                this.formPercent.refreshFormPercent();
-                            });
-                        }
-                    }
-                });
+        //                     Promise.all(promises).then(() => {
+        //                         this.beneficiaryService.fillInStakeholderSelects(this.form.get('beneficiaries'));
+        //                         this.beneficiaryService.updateStakeholdersValidity(this.form.get('beneficiaries') as FormArray);
+        //                         this.formPercent.refreshFormPercent();
+        //                     });
+        //                 }
+        //             }
+        //         });
 
-                promises.push(promise);
-            });
+        //         promises.push(promise);
+        //     });
 
-            Promise.all(promises).then(() => {
-                this.ngRedux.dispatch(setMyKycStakeholderRelations(stakeholdersRelationTable));
-            });
-        });
+        //     Promise.all(promises).then(() => {
+        //         this.ngRedux.dispatch(setMyKycStakeholderRelations(stakeholdersRelationTable));
+        //     });
+        // });
 
         requests$.pipe(
             map(requests => requests[0]),
@@ -575,22 +583,75 @@ export class CompanyInformationComponent implements OnInit, OnDestroy {
             });
         });
 
-        requests$.pipe(
-            map(requests => requests[0]),
-            rxFilter(request => !!request),
-            takeUntil(this.unsubscribe),
-        )
-            .subscribe((request) => {
-                this.identificationService.getCurrentFormGeneralData(request.kycID).then((formData) => {
-                    if (formData) {
-                        this.registeredCompanyName = formData.registeredCompanyName;
-                    }
-                });
-            });
+        // requests$.pipe(
+        //     map(requests => requests[0]),
+        //     rxFilter(request => !!request),
+        //     takeUntil(this.unsubscribe),
+        // )
+        //     .subscribe((request) => {
+        //         this.identificationService.getCurrentFormGeneralData(request.kycID).then((formData) => {
+        //             if (formData) {
+        //                 this.registeredCompanyName = formData.registeredCompanyName;
+        //             }
+        //         });
+        //     });
     }
 
     refresh() {
         this.formPercent.refreshFormPercent();
+    }
+
+    persistForm() {
+        this.persistService.watchForm(
+            'newkycrequest/identification/companyinformation',
+            this.form,
+            this.newRequestService.context,
+            {
+                reset : false,
+                returnPromise: true,
+            },
+        ).then(() => {
+            this.ngRedux.dispatch(setMyKycRequestedPersist('identification/companyinformation'));
+        });
+    }
+
+    clearPersistForm() {
+        this.persistService.refreshState(
+            'newkycrequest/identification/companyinformation',
+            this.newRequestService.createIdentificationFormGroup(),
+            this.newRequestService.context,
+        );
+    }
+
+    handleSubmit(e) {
+        e.preventDefault();
+        if (!this.form.valid) {
+            formHelper.dirty(this.form);
+            formHelper.scrollToFirstError(this.element.nativeElement);
+            return;
+        }
+
+        this.requests$
+        .pipe(take(1))
+        .subscribe((requests) => {
+            this
+            .identificationService
+            .sendRequestCompanyInformation(this.form, requests)
+            .then(() => {
+                this.submitEvent.emit({
+                    completed: true,
+                });
+                this.clearPersistForm();
+            })
+            .catch(() => {
+                this.newRequestService.errorPop();
+            })
+            ;
+        });
+    }
+
+    isStepValid() {
+        return this.form.valid;
     }
 
     ngOnDestroy() {

@@ -1,5 +1,12 @@
 import { fundItems } from '@ofi/ofi-main/ofi-product/productConfig';
 
+export const formStepsOnboarding = [
+    {
+        title: 'User Profile',
+        id: 'step-userprofile',
+    },
+];
+
 export const formStepsFull = [
     {
         title: 'Selection',
@@ -11,10 +18,52 @@ export const formStepsFull = [
     {
         title: 'Identification',
         id: 'step-identification',
+        children: ['General Information', 'Company Information', 'Stakeholders', 'Bank Accounts', 'Classification'],
     },
     {
-        title: 'Risk profile',
+        title: 'General Information',
+        id: 'step-general-information',
+        parentStep: 'Identification',
+    },
+    {
+        title: 'Company Information',
+        id: 'step-company-information',
+        parentStep: 'Identification',
+    },
+    {
+        title: 'Stakeholders',
+        id: 'step-stakeholder-information',
+        parentStep: 'Identification',
+    },
+    {
+        title: 'Bank Accounts',
+        id: 'step-bank-accounts',
+        parentStep: 'Identification',
+    },
+    {
+        title: 'Classification',
+        id: 'step-classification',
+        parentStep: 'Identification',
+    },
+    {
+        title: 'Risk Profile',
         id: 'step-risk-profile',
+        children: ['Investment Details', 'Investment Objectives', 'Investment Constraints'],
+    },
+    {
+        title: 'Investment Details',
+        id: 'step-investment-details',
+        parentStep: 'Risk Profile',
+    },
+    {
+        title: 'Investment Objectives',
+        id: 'step-investment-objectives',
+        parentStep: 'Risk Profile',
+    },
+    {
+        title: 'Investment Constraints',
+        id: 'step-investment-constraints',
+        parentStep: 'Risk Profile',
     },
     {
         title: 'Documents',
@@ -546,9 +595,17 @@ export const steps = {
     amcSelection: 0,
     introduction: 1,
     identification: 2,
-    riskProfile: 3,
-    documents: 4,
-    validation: 5,
+    generalInformation: 3,
+    companyInformation: 4,
+    stakeholders: 5,
+    bankAccounts: 6,
+    classification: 7,
+    riskProfile: 8,
+    investmentDetails: 9,
+    investmentObjectives: 10,
+    investmentConstraints: 11,
+    documents: 12,
+    validation: 13,
 };
 
 export const countries = fundItems.domicileItems;

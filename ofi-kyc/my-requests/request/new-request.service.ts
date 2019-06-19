@@ -213,7 +213,7 @@ export class NewRequestService {
     createIdentificationFormGroup() {
         const fb = this.formBuilder;
 
-        const generalInformation = fb.group({
+        const entity = fb.group({
             kycID: '',
             registeredCompanyName: ['', this.getLengthValidator(255)],
             commercialName: [''],
@@ -230,6 +230,9 @@ export class NewRequestService {
                 Validators.min(0),
             ]],
             financialRating: [''],
+        });
+
+        const location = fb.group({
             registeredCompanyAddressLine1: ['', this.getLengthValidator(255)],
             registeredCompanyAddressLine2: ['', Validators.maxLength(255)],
             registeredCompanyZipCode: ['', this.getLengthValidator(10)],
@@ -244,6 +247,9 @@ export class NewRequestService {
             countryTaxResidence: ['', Validators.required],
             countryRegistration: ['', Validators.required],
         });
+
+        const generalInformation = fb.group({ entity, location });
+
         const companyInformation = fb.group({
             kycID: '',
             sectorActivity: ['', Validators.required],
@@ -327,8 +333,6 @@ export class NewRequestService {
                 Validators.required,
                 Validators.min(0),
             ]],
-
-            beneficiaries: fb.array([], Validators.required),
             capitalNature: fb.group({
                 equityAndReserves: '',
                 generalAssets: '',
@@ -349,6 +353,10 @@ export class NewRequestService {
                 Validators.required,
             ],
             totalFinancialAssetsAlreadyInvested: ['', Validators.required],
+        });
+
+        const beneficiaries = fb.group({
+            beneficiaries: fb.array([], Validators.required),
         });
 
         const bankingInformation = fb.group({
@@ -396,6 +404,7 @@ export class NewRequestService {
         return fb.group({
             generalInformation,
             companyInformation,
+            beneficiaries,
             bankingInformation,
             classificationInformation,
         });
@@ -782,6 +791,8 @@ export class NewRequestService {
                     kycID,
                     amcID,
                 });
+            }).catch((err) => {
+                console.log('+++ CREATE DRAFT ERROR', err);
             });
         }
 
@@ -795,6 +806,7 @@ export class NewRequestService {
             investorWalletID: connectedWallet || 0,
             kycStatus: 0,
             alreadyCompleted: choice.registered ? 1 : 0,
+            clientFile: 0,
         });
     }
 

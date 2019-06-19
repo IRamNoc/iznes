@@ -1,15 +1,19 @@
-import { Component, Input, OnInit, OnDestroy, ViewChild } from '@angular/core';
-import { FormGroup, AbstractControl, Validators  } from '@angular/forms';
+import { Component, Input, Output, OnInit, OnDestroy, ViewChild, ElementRef, EventEmitter } from '@angular/core';
+import { FormGroup, AbstractControl, Validators, FormBuilder, FormControl } from '@angular/forms';
 import { get as getValue, isEmpty, castArray } from 'lodash';
-import { select } from '@angular-redux/store';
+import { select, NgRedux } from '@angular-redux/store';
 import { Subject } from 'rxjs';
-import { filter, map, takeUntil } from 'rxjs/operators';
+import { filter, take, map, takeUntil } from 'rxjs/operators';
 import { sirenValidator, siretValidator } from '@setl/utils/helper/validators';
 import { FormPercentDirective } from '@setl/utils/directives/form-percent/formpercent';
 import { countries } from '../../../requests.config';
 import { NewRequestService } from '../../new-request.service';
 import { IdentificationService } from '../identification.service';
 import { MultilingualService } from '@setl/multilingual';
+import { formHelper } from '@setl/utils/helper';
+import { PersistRequestService } from '@setl/core-req-services';
+import { PersistService } from '@setl/core-persist';
+import { setMyKycRequestedPersist } from '@ofi/ofi-main/ofi-store/ofi-kyc';
 
 @Component({
     selector: 'general-information',
@@ -17,11 +21,13 @@ import { MultilingualService } from '@setl/multilingual';
 })
 export class GeneralInformationComponent implements OnInit, OnDestroy {
     @ViewChild(FormPercentDirective) formPercent: FormPercentDirective;
-    @Input() form: FormGroup;
+    @Input() parentForm: any;
     @Input() isFormReadonly = false;
+    @Output() submitEvent: EventEmitter<any> = new EventEmitter<any>();
     @select(['ofi', 'ofiKyc', 'myKycRequested', 'kycs']) requests$;
     @select(['user', 'siteSettings', 'language']) requestLanguageObj;
 
+    form: FormGroup;
     unsubscribe: Subject<any> = new Subject();
     open: boolean = false;
     countries;
@@ -35,10 +41,20 @@ export class GeneralInformationComponent implements OnInit, OnDestroy {
         private newRequestService: NewRequestService,
         private identificationService: IdentificationService,
         public translate: MultilingualService,
+        private element: ElementRef,
+        private persistRequestService: PersistRequestService,
+        private persistService: PersistService,
+        private ngRedux: NgRedux<any>,
+        private formBuilder: FormBuilder,
     ) {
     }
 
     ngOnInit() {
+        this.form = this.formBuilder.group({
+            ...this.parentForm.get('entity').controls,
+            ...this.parentForm.get('location').controls,
+        });
+
         this.countries = this.translate.translate(countries);
 
         this.initFormCheck();
@@ -58,6 +74,8 @@ export class GeneralInformationComponent implements OnInit, OnDestroy {
 
                 this.formCheckOtherIdentificationNumberType(otherIdentificationNumberTypeValue);
             });
+
+        this.form.get('commercialDomiciliation').setValue('');
 
         this.form.get('commercialDomiciliation').valueChanges
             .pipe(takeUntil(this.unsubscribe))
@@ -122,6 +140,10 @@ export class GeneralInformationComponent implements OnInit, OnDestroy {
         this.formPercent.refreshFormPercent();
     }
 
+    checkIdentificationNumberType(value) {
+        return getValue(this.form.get('otherIdentificationNumberText'), ['errors', value], '');
+    }
+
     initLists() {
         this.legalFormList = this.translate.translate(this.newRequestService.legalFormList);
         this.financialRatingList = this.newRequestService.financialRatingList;
@@ -151,13 +173,84 @@ export class GeneralInformationComponent implements OnInit, OnDestroy {
                     this.identificationService.getCurrentFormGeneralData(request.kycID).then((formData) => {
                         if (formData) {
                             this.form.patchValue(formData);
+                            this.updateParentForm();
                             if (this.isFormReadonly) {
                                 this.form.disable();
                             }
                         }
+                    }).catch((err) => {
+                        console.log('Failed on get form data', err);
                     });
                 });
             });
+    }
+
+    persistForm() {
+        this.persistService.watchForm(
+            'newkycrequest/identification/general',
+            this.form,
+            this.newRequestService.context,
+            {
+                reset : false,
+                returnPromise: true,
+            },
+        ).then(() => {
+            this.ngRedux.dispatch(setMyKycRequestedPersist('identification/general'));
+        });
+    }
+
+    clearPersistForm() {
+        this.persistService.refreshState(
+            'newkycrequest/identification/general',
+            this.newRequestService.createIdentificationFormGroup(),
+            this.newRequestService.context,
+        );
+    }
+
+    handleSubmit(e) {
+        e.preventDefault();
+        if (!this.form.valid) {
+            formHelper.dirty(this.form);
+            formHelper.scrollToFirstError(this.element.nativeElement);
+            return;
+        }
+
+        this.requests$
+        .pipe(take(1))
+        .subscribe((requests) => {
+            this
+            .identificationService
+            .sendRequestGeneralInformation(this.form, requests)
+            .then(() => {
+                this.updateParentForm();
+                this.submitEvent.emit({
+                    completed: true,
+                });
+                this.clearPersistForm();
+            })
+            .catch(() => {
+                this.newRequestService.errorPop();
+            })
+            ;
+        });
+    }
+
+    updateParentForm() {
+        const newData = {};
+        Object.keys(this.form.controls).forEach((key) => {
+            newData[key] = this.form.get(key).value;
+        });
+        this.parentForm.get('entity').patchValue(newData);
+        this.parentForm.get('location').patchValue(newData);
+    }
+
+    showHelperText(control, errors) {
+        const hasError = errors.filter(error => this.hasError([control], [error]));
+        return this.form.get(control).invalid && !hasError.length;
+    }
+
+    isStepValid() {
+        return this.form.valid;
     }
 
     ngOnDestroy() {

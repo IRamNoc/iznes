@@ -1,4 +1,5 @@
 import { Component, Output, EventEmitter } from '@angular/core';
+import { FormControl } from '@angular/forms';
 import { select } from '@angular-redux/store';
 import { RequestsService } from '../../requests.service';
 import { NewRequestService } from '../new-request.service';
@@ -13,6 +14,7 @@ export class NewKycIntroductionComponent {
 
     @select(['ofi', 'ofiKyc', 'myKycRequested', 'kycs']) requests$;
     @Output() submitEvent: EventEmitter<any> = new EventEmitter<any>();
+    readCheckbox: FormControl = new FormControl();
 
     constructor(
         private requestsService: RequestsService,
@@ -49,6 +51,6 @@ export class NewKycIntroductionComponent {
      * - this gets run by the form-steps component to enable/disable the next button
      */
     isStepValid() {
-        return true;
+        return this.readCheckbox.value;
     }
 }

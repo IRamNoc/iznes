@@ -14,6 +14,8 @@ export class SelectAmcService {
     createMultipleDrafts(values, connectedWallet) {
         return this.newRequestService.createMultipleDrafts(values, connectedWallet).then((ids) => {
             return this.postDraftCreation(ids);
+        }).catch((err) => {
+            console.log('+++ THIS IS THE ERROR', err);
         });
     }
 

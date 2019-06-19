@@ -1,6 +1,6 @@
-<h3 class="text-center step-title">
-    {{ 'Select Counterparties' | translate }}
-</h3>
+<h4 class="step-title">
+    {{ 'Select Company' | translate }}
+</h4>
 
 <form [formGroup]="form" id="step-selection" (ngSubmit)="handleSubmit($event)" class="well p-1">
 
@@ -19,18 +19,27 @@
         </div>
     </div>
 
+    <div class="form-group search-companies">
+        <input type="text" placeholder="Search companies" [formControl]="searchCompanies">
+        <clr-icon *ngIf="(searchCompanies || {}).value" shape="times-circle" (click)="clearSearch()"></clr-icon>
+    </div>
+
     <div>
 
         <div class="management-companies">
 
-            <div class="management-company-container" *ngFor="let managementCompany of managementCompanies">
+            <div id="no-results" *ngIf="filteredManagementCompanies.length === 0">
+                <p>{{ 'No companies found, please try again.' | translate }}</p>
+            </div>
+
+            <div class="management-company-container" *ngFor="let managementCompany of filteredManagementCompanies">
 
                 <div class="link">
                     &nbsp;
                 </div>
 
                 <div class="management-company" [class.selected]="isAMCSelected(managementCompany.id)">
-                    <i class="fa fa-check fa-2x confirm-mark" *ngIf="isAMCSelected(managementCompany.id)"></i>
+                    <clr-icon shape="check" class="confirm-mark" *ngIf="isAMCSelected(managementCompany.id)"></clr-icon>
 
                     <div class="infos" (click)="toggleManagementCompany(managementCompany)">
                         <div class="logo">
@@ -42,27 +51,21 @@
                             </div>
                         </div>
                         <div class="name">
-                            <strong>{{managementCompany.text}}</strong>
+                            {{managementCompany.text}}
                         </div>
                     </div>
 
                     <div class="actions" *ngIf="!duplicate" [hidden]="!isAMCSelected(managementCompany.id)">
-                        <div class="done">
-                            <span>
-                                {{'KYC Completed?' | translate}}
-                            </span>
-
-                            <label class="switch small" *ngIf="managementCompany.id">
-                                <input [attr.disabled]="submitted ? 'true' : null"
-                                       type="checkbox"
-                                       id="registered_{{managementCompany.id}}"
-                                       name="registered"
-                                       class="form-control"
-                                       [(ngModel)]="managementCompany.registered"
-                                       [ngModelOptions]="{standalone: true}"
-                                       (ngModelChange)="onRegisteredChange()">
-                                <span class="slider round" data-yes="YES" data-no="NO"></span>
-                            </label>
+                        <div *ngIf="managementCompany.id" class="checkbox-inline" [class.disabled]="submitted">
+                            <input [attr.disabled]="submitted ? 'true' : null"
+                                    type="checkbox"
+                                    id="registered_{{managementCompany.id}}"
+                                    name="registered"
+                                    class="form-control"
+                                    [(ngModel)]="managementCompany.registered"
+                                    [ngModelOptions]="{standalone: true}"
+                                    (ngModelChange)="onRegisteredChange()">
+                            <label for="registered_{{managementCompany.id}}">{{ 'KYC Completed?' | translate }}</label>
                         </div>
                     </div>
                 </div>
@@ -70,6 +73,10 @@
             </div>
 
         </div>
+
+        <p id="filtered-count">
+            {{ 'Showing @filtered@ of @total@ companies' | translate: { filtered: filteredManagementCompanies.length, total: managementCompanies.length } }}
+        </p>
 
     </div>
 

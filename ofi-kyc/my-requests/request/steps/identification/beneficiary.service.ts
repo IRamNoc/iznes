@@ -22,8 +22,8 @@ export class BeneficiaryService {
         }
     }
 
-    getDisplayName(stakeholder) {
-        stakeholder = stakeholder.value;
+    getDisplayName(stakeholderIn) {
+        const stakeholder = stakeholderIn.value;
         const type = stakeholder.beneficiaryType;
 
         if (type === 'legalPerson') {
@@ -66,8 +66,10 @@ export class BeneficiaryService {
         return id.indexOf('temp') !== -1;
     }
 
-    parents(stakeholders) {
-        stakeholders = stakeholders.controls;
+    parents(stakeholdersIn) {
+        if (stakeholdersIn === null) return [];
+
+        const stakeholders = stakeholdersIn.controls;
 
         return stakeholders.map((stakeholder) => {
             const text = this.getDisplayName(stakeholder);
@@ -80,6 +82,8 @@ export class BeneficiaryService {
     }
 
     fillInStakeholderSelects(stakeholders) {
+        if (stakeholders === null) return;
+
         const parents = this.parents(stakeholders);
 
         stakeholders.controls.forEach((stakeholder) => {
@@ -172,6 +176,8 @@ export class BeneficiaryService {
     }
 
     updateStakeholdersValidity(form: FormArray) {
+        if (form === null) return;
+
         form.controls.forEach((stakeholder) => {
             const beneficiaryType = stakeholder.get('beneficiaryType').value;
             this.formCheckBeneficiaryType(stakeholder, beneficiaryType);

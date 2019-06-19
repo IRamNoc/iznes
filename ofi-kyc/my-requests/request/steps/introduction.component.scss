@@ -1,3 +1,16 @@
-.info{
+.info {
     padding-left : calc(1rem + 20px);
+}
+
+.introduction-text {
+    background: #fafafa;
+    border: none;
+    p {
+        font-size: 14px;
+    }
+}
+
+.checkbox-inline {
+    margin: 0 24px;
+    font-size: 13px;
 }
