@@ -37,6 +37,7 @@ export class ClassificationInformationComponent implements OnInit, OnDestroy {
     volumeOfTransactionsList;
     amcs = [];
     ready = false;
+    instrumentChecked: {} = {};
 
     constructor(
         private newRequestService: NewRequestService,
@@ -48,6 +49,7 @@ export class ClassificationInformationComponent implements OnInit, OnDestroy {
 
     log() {
         console.log('+++ LOG', this.form.get(['nonPro', 'financialInstruments']).value);
+        console.log('+++ this.instrumentChecked', this.instrumentChecked);
     }
 
     openPanel($e) {
@@ -65,6 +67,33 @@ export class ClassificationInformationComponent implements OnInit, OnDestroy {
         if (currentInvestorType !== previousInvestorType) {
             this.investorChanged(currentInvestorType);
         }
+    }
+
+    setFinancialInstruments(instrument, event) {
+        if (instrument.id === 'other') {
+            const otherInput = this.form.get(['nonPro', 'financialInstrumentsSpecification']);
+            event.srcElement.checked ? otherInput.enable() : otherInput.disable();
+            return;
+        }
+
+        const control = this.form.get(['nonPro', 'financialInstruments']);
+        const currentInstruments = control.value || [];
+
+        if (event.srcElement.checked && !currentInstruments.includes({ id: instrument.id })) {
+            currentInstruments.push({ id: instrument.id });
+            return control.setValue(currentInstruments);
+        }
+
+        const index = currentInstruments.indexOf(instrument);
+        if (index > -1) {
+            currentInstruments.splice(index, 1);
+        }
+    }
+
+    setInstrumentCheckboxes() {
+        (this.form.get(['nonPro', 'financialInstruments']).value || []).forEach((instrument) => {
+            this.instrumentChecked[instrument.id] = true;
+        });
     }
 
     investorChanged(investorType) {
@@ -141,7 +170,7 @@ export class ClassificationInformationComponent implements OnInit, OnDestroy {
             this.toggleNonPro('disable');
         }
 
-        this.formPercent.refreshFormPercent();
+        if (this.formPercent) this.formPercent.refreshFormPercent();
     }
 
     toggleNonPro(action) {
@@ -288,12 +317,14 @@ export class ClassificationInformationComponent implements OnInit, OnDestroy {
 
             requests.forEach((request, i) => {
                 const promise = this.identificationService.getCurrentFormClassificationData(request.kycID).then((formData) => {
+                    console.log('+++ formData', formData);
                     if (!isEmpty(formData) && i === 0) {
                         const common = pick(formData, ['kycID', 'investorStatus', 'excludeProducts']);
                         const nonPro = omit(formData, ['kycID', 'investorStatus', 'excludeProducts', 'optFor']);
                         this.form.patchValue(common);
 
                         this.form.get('nonPro').patchValue(nonPro);
+                        this.setInstrumentCheckboxes();
                     }
                     return formData;
                 });

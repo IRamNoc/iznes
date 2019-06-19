@@ -273,6 +273,8 @@ export class NewKycRequestComponent implements OnInit, AfterViewInit {
 
     submitCurrentStepComponent() {
         const position = this.formSteps.position;
+        console.log('+++ position', position);
+
         const component = this.formSteps.steps[position];
 
         if (!component.handleSubmit) {

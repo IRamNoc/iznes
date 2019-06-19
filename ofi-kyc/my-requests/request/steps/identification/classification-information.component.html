@@ -150,7 +150,7 @@
                             <span class="field-error" *ngIf="hasError(['nonPro', 'numberYearsCurrentPosition'])">{{ 'Field is required' | translate }}</span>
                         </div>
                     </div>
-                    <div class="row col-sm-12">
+                    <!-- <div class="row col-sm-12">
                         <div class="form-group required-field col-sm-4">
                             <label for="financialInstruments">
                                 {{ 'Financial instruments that have already been the subject of transactions by the said natural person in the professional environment: (multiple choice)' | translate }}
@@ -172,7 +172,40 @@
                                     placeholder="{{ 'Please specify' | translate }}">
                             <span class="field-error" *ngIf="hasError(['nonPro', 'financialInstrumentsSpecification'])">{{ 'Field is required' | translate }}</span>
                         </div>
+                    </div> -->
+
+                    <div class="checkbox-group">
+                        <div class="row col-sm-12">
+                            <div class="form-group required-field col-sm-12" (click)="log()">
+                                <label>{{ 'Financial instruments that have already been the subject of transactions by the said natural person in the professional environment: (multiple choice)' | translate }}</label>
+                            </div>
+                        </div>
+
+                        <div class="row col-sm-12 form-group" *ngFor="let instrument of financialInstrumentsList; let i = index">
+                            <div class="col-sm-3">
+                                <div class="checkbox-inline">
+                                    <input type="checkbox" id="{{ instrument.id }}" [(checked)]="instrumentChecked[instrument.id]" (change)="setFinancialInstruments(instrument, $event)">
+                                    <label for="{{ instrument.id }}">
+                                        {{ instrument.text | translate }}
+                                    </label>
+                                </div>
+                            </div>
+                        </div>
                     </div>
+
+                    <div class="row col-sm-12">
+                        <div class="form-group col-sm-6 flex-items-xs-bottom" *ngIf="!isDisabled(['nonPro', 'financialInstrumentsSpecification'])">
+                            <label>&nbsp;</label>
+                            <input id="financialInstrumentsSpecification"
+                                    type="text"
+                                    formControlName="financialInstrumentsSpecification"
+                                    placeholder="{{ 'Please specify' | translate }}">
+                            <span class="field-error" *ngIf="hasError(['nonPro', 'financialInstrumentsSpecification'])">{{ 'Field is required' | translate }}</span>
+                        </div>
+                    </div>
+
+
+
                     <div>
                         <div class="form-group required-field col-sm-4">
                             <label for="marketArea">

@@ -26,7 +26,6 @@
     </form-step>
         <form-step *ngIf="fullForm">
             <general-information #step [parentForm]="forms.get('identification').get('generalInformation')" (submitEvent)="handleSubmit($event)"></general-information>
-            <!-- <kyc-step-identification #step [form]="forms.get('identification')" [investorType]="investorType" (submitEvent)="handleSubmit($event)"></kyc-step-identification> -->
         </form-step>
         <form-step *ngIf="fullForm">
             <company-information #step [form]="forms.get('identification').get('companyInformation')" (submitEvent)="handleSubmit($event)"></company-information>
@@ -41,7 +40,6 @@
             <classification-information [form]="forms.get('identification').get('classificationInformation')" [enabled]="checkCompletion()" [investorType]="investorType" (submitEvent)="handleSubmit($event)"></classification-information>
         </form-step>
     <form-step *ngIf="fullForm">
-        <!-- <kyc-step-risk-profile #step [form]="forms.get('riskProfile')" (submitEvent)="handleSubmit($event)"></kyc-step-risk-profile> -->
         <!--PARENT STEP-->
     </form-step>
         <form-step *ngIf="fullForm">
