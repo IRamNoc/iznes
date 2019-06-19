@@ -160,7 +160,7 @@ export class FormstepsComponent implements AfterContentInit {
         // Skip past parent steps
         if (getValue(this.progress, `[${this.position + offset}].children.length`, false)) {
             this.handleSubSteps(this.progress[this.position + offset], this.position);
-            offset *= 2;
+            offset = this.position === 0 ? offset + 1 : offset * 2;
         }
 
         this.position += offset;
