@@ -14,7 +14,8 @@ import { PersistService } from '@setl/core-persist';
     templateUrl: './investment-constraint.component.html',
 })
 export class InvestmentConstraintComponent implements OnInit, OnDestroy {
-    @ViewChild(FormPercentDirective) formPercent: FormPercentDirective;
+    // Disabled because there no required fields for non- nowCP investorType
+    // @ViewChild(FormPercentDirective) formPercent: FormPercentDirective;
     @Input() form;
     @Input() formObjective;
     @Output() submitEvent: EventEmitter<any> = new EventEmitter<any>();
@@ -75,7 +76,8 @@ export class InvestmentConstraintComponent implements OnInit, OnDestroy {
                 takeUntil(this.unsubscribe),
             )
             .subscribe(() => {
-                this.refreshForm();
+                // Disabled because there no required fields for non- nowCP investorType
+                // this.refreshForm();
             });
     }
 
@@ -98,7 +100,8 @@ export class InvestmentConstraintComponent implements OnInit, OnDestroy {
             this.generateConstraints(map(this.amcs, 'amcID'));
         }
 
-        this.refreshForm();
+        // Disabled because there no required fields for non- nowCP investorType
+        // this.refreshForm();
     }
 
     generateConstraints(amcs = []) {
@@ -114,9 +117,10 @@ export class InvestmentConstraintComponent implements OnInit, OnDestroy {
         });
     }
 
-    refreshForm() {
+    // Disabled because there no required fields for non- nowCP investorType
+    /* refreshForm() {
         this.formPercent.refreshFormPercent();
-    }
+    } */
 
     hasError(control, error = []) {
         return this.newRequestService.hasError(this.form, control, error);
