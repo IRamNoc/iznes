@@ -650,6 +650,9 @@ export class NewRequestService {
                 disabled: true,
             }, this.getLengthValidator(255)],
             otherPersonsAuthorised: ['', Validators.maxLength(255)],
+            hasEverIssuedNeuCp: ['', Validators.required],
+            hasAlreadyInvestedNeuCp: ['', Validators.required],
+            hasExperienceTradingNeuCp: ['', Validators.required],
         });
     }
 

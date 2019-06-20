@@ -10,6 +10,7 @@
 </div>
 
 <div class="panel-body" [class.hidden]="!open" [ngClass]="{'objective pl-1': multiple}" [formGroup]="form">
+
     <div class="checkbox-group">
         <div class="row col-sm-12">
             <div class="form-group required-field col-sm-12">
@@ -63,9 +64,9 @@
     </div>
 
     <div class="row col-sm-12">
-        <div class="form-group col-sm-6">
+        <div class="form-group col-sm-12">
             <div>
-                <label>{{ 'Other Relevant Financial Information (Optional)' | translate }}</label>
+                <label>{{ 'Other Relevant Financial Information' | translate }}</label>
             </div>
 
             <textarea class="form-control" formControlName="otherFinancialInformation"></textarea>
@@ -100,9 +101,11 @@
                             [dpDayPicker]="configDate" id="investmentHorizonWantedSpecificPeriod-{{index}}" formControlName="investmentHorizonWantedSpecificPeriod"
                             placeholder="{{configDate.format}}"
                             mode="day"
-                            theme="dp-material">
+                            theme="dp-material"
+                            type="text">
+                    <span class="force-display-error field-error"
+                        *ngIf="hasError('investmentHorizonWantedSpecificPeriod')">{{ 'Incorrect date format' | translate }}</span>
                 </div>
-                <span class="field-error" *ngIf="hasError('investmentHorizonWantedSpecificPeriod')">{{ 'Incorrect date format' | translate }}</span>
             </div>
         </div>
 
@@ -119,7 +122,7 @@
                         placeholder="{{'Select a profile' | translate}}"></ng-select>
             <span class="field-error" *ngIf="hasError('riskProfile')">{{ 'Field is required' | translate }}</span>
         </div>
-        <div class="col-sm-6"></div>
+        <div class="col-sm-12"></div>
         <div *ngIf="!isDisabled('riskProfileCapital')" class="form-group required-field col-sm-6">
             <label for="capitalLoss-{{index}}">{{ 'Capital Loss Limited To' | translate }}</label>
             <input type="text"

@@ -25,6 +25,7 @@ export class InvestmentConstraintFormComponent implements OnInit, OnDestroy {
         companyID: '',
         companyName: '',
     };
+    isNowCP = false;
 
     constructor(
         private newRequestService: NewRequestService,
@@ -36,6 +37,8 @@ export class InvestmentConstraintFormComponent implements OnInit, OnDestroy {
         this.initData();
         this.initFormCheck();
         this.getCurrentFormData();
+
+        console.log('+++ isNowCP: ', this.isNowCP);
     }
 
     getCurrentFormData() {
