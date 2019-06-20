@@ -46,6 +46,17 @@ export class InvestmentObjectiveComponent implements OnInit, OnDestroy {
     }
 
     getCurrentFormData() {
+        this.requests$
+            .pipe(
+                filter(requests => !isEmpty(requests)),
+                takeUntil(this.unsubscribe),
+            )
+            .subscribe((requests) => {
+                requests.forEach((request) => {
+                    this.riskProfileService.getCurrentFormObjectiveData(request.kycID);
+                });
+            });
+
         this.riskProfileService.currentServerData.riskobjective
             .pipe(takeUntil(this.unsubscribe))
             .subscribe((data: any) => {

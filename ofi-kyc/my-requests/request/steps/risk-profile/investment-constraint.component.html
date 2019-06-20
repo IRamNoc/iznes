@@ -33,8 +33,9 @@
                         </div>
                     </div>
 
-                    <investment-constraint-form *ngFor="let constraint of constraintControls; let i = index" [form]="constraint" [multiple]="constraintControls?.length > 1" [index]="i" (refreshForm)="refreshForm()"></investment-constraint-form>
-
+                    <!-- Disabled because there no required fields for non- nowCP investorType -->
+                    <!-- <investment-constraint-form *ngFor="let constraint of constraintControls; let i = index" [form]="constraint" [multiple]="constraintControls?.length > 1" [index]="i" (refreshForm)="refreshForm()"></investment-constraint-form> -->
+                    <investment-constraint-form *ngFor="let constraint of constraintControls; let i = index" [form]="constraint" [multiple]="constraintControls?.length > 1" [index]="i"></investment-constraint-form>
                 </div>
             </div>
         </div>

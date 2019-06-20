@@ -45,16 +45,27 @@ export class InvestmentNatureComponent implements OnInit, OnDestroy {
     }
 
     getCurrentFormData() {
-        this.riskProfileService.currentServerData.risknature
-        .pipe(takeUntil(this.unsubscribe))
-        .subscribe((data: any) => {
-            const cross = toNumber(data.naturesSameInvestmentCrossAm);
+        this.requests$
+            .pipe(
+                filter(requests => !isEmpty(requests)),
+                takeUntil(this.unsubscribe),
+            )
+            .subscribe((requests) => {
+                requests.forEach((request) => {
+                    this.riskProfileService.getCurrentFormNatureData(request.kycID);
+                });
+            });
 
-            if (cross) {
-                this.form.get('naturesSameInvestmentCrossAm').patchValue(cross, { emitEvent: false });
-                this.formCheckSameNatureCrossAm(cross);
-            }
-        });
+        this.riskProfileService.currentServerData.risknature
+            .pipe(takeUntil(this.unsubscribe))
+            .subscribe((data: any) => {
+                const cross = toNumber(data.naturesSameInvestmentCrossAm);
+
+                if (cross) {
+                    this.form.get('naturesSameInvestmentCrossAm').patchValue(cross, { emitEvent: false });
+                    this.formCheckSameNatureCrossAm(cross);
+                }
+            });
     }
 
     initData() {
