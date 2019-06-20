@@ -51,7 +51,6 @@ export class NewKycDocumentsComponent implements OnInit, OnDestroy {
 
         if (documents.isNowCp) {
             nowcpDocuments.enable();
-            this.form.updateValueAndValidity();
         }
     }
 
