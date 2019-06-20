@@ -1,35 +1,33 @@
 <div class="kyc-container sm" [formGroup]="form" [class.disabled]="disabled">
 
-    <div class="row">
-        <div class="form-group col-sm-4">
-            <label class="required-field">
-                {{'Type' | translate}}
-            </label>
-
-            <div class="radio-inline opt-btn-element">
-                <input type="radio" id="opt-type-legal" value="legalPerson" formControlName="beneficiaryType" [attr.disabled]="disabled">
-                <label for="opt-type-legal">{{'Legal person' | translate}}</label>
-            </div>
-            <div class="radio-inline opt-btn-element">
-                <input type="radio" id="opt-type-natural" value="naturalPerson" formControlName="beneficiaryType" [attr.disabled]="disabled">
-                <label for="opt-type-natural">{{'Natural person' | translate}}</label>
-            </div>
+    <div class="row col-sm-12">
+        <div class="form-group col-sm-6">
+            <clr-radio-container clrInline>
+                <label class="required-field">{{ 'Type' | translate }}</label>
+                <clr-radio-wrapper>
+                    <input type="radio" clrRadio id="opt-type-legal" value="legalPerson" formControlName="beneficiaryType" [attr.disabled]="disabled" />
+                    <label>{{ 'Legal person' | translate }}</label>
+                </clr-radio-wrapper>
+                <clr-radio-wrapper>
+                    <input type="radio" clrRadio id="opt-type-natural" value="naturalPerson" formControlName="beneficiaryType" [attr.disabled]="disabled" />
+                    <label>{{ 'Natural person' | translate }}</label>
+                </clr-radio-wrapper>
+            </clr-radio-container>
         </div>
-    </div>
 
-    <div class="row">
         <div class="form-group required-field col-sm-6">
             <label class="required-field">{{'Relation Type' | translate}} </label>
 
-            <div class="form-group required-field col-sm-6">
-                <ng-select id="relationType-benef"
-                            [items]="relationTypesList"
-                            [formControl]="form.get('common.relationType')"
-                            placeholder="{{'Select a relation type' | translate}}"
-                            [isDisabled]="false">
-                </ng-select>
-            </div>
+            <ng-select id="relationType-benef"
+                        [items]="relationTypesList"
+                        [formControl]="form.get('common.relationType')"
+                        placeholder="{{'Select a relation type' | translate}}"
+                        [isDisabled]="false">
+            </ng-select>
         </div>
+    </div>
+
+    <div class="row col-sm-12">
         <div class="form-group required-field col-sm-6">
             <label class="control-label" for="parent-benef">{{'Linked Entity' | translate}}</label>
 
@@ -45,9 +43,7 @@
             <span class="field-error"
                 *ngIf="hasError(['common', 'parent'], ['required'])">{{'Field is required' | translate}}</span>
         </div>
-    </div>
 
-    <div class="row">
         <div class="form-group required-field col-sm-6">
             <label class="control-label" for="holdingType-benef">{{'Holding type' | translate}}</label>
             <ng-select id="holdingType-benef"
@@ -60,9 +56,9 @@
         </div>
     </div>
 
-    <div *ngIf="!isDisabled('legalPerson')" formGroupName="legalPerson">
+    <ng-container *ngIf="!isDisabled('legalPerson')" formGroupName="legalPerson">
 
-        <div class="row">
+        <div class="row col-sm-12">
             <div class="form-group required-field col-sm-6">
                 <label class="control-label" for="firstName-benef-{{index}}">{{ 'Registered Company Name or Legal Name' | translate }}</label>
                 <input type="text"
@@ -83,7 +79,7 @@
             </div>
         </div>
 
-        <div class="row">
+        <div class="row col-sm-12">
             <div class="form-group required-field col-sm-6">
                 <label class="control-label" for="address-benef-{{index}}">{{ 'Stakeholder Address' | translate }}</label>
                 <input type="text"
@@ -101,7 +97,7 @@
             </div>
         </div>
 
-        <div class="row">
+        <div class="row col-sm-12">
             <div class="form-group required-field col-sm-6">
                 <label class="control-label" for="zipCode-benef">{{'ZIP Code' | translate}}</label>
                 <input type="text" id="zipCode-benef" [formControl]="form.get('common.zipCode')" placeholder="{{'Fill in a ZIP Code'}}" [attr.disabled]="disabled">
@@ -116,7 +112,7 @@
             </div>
         </div>
 
-        <div class="row">
+        <div class="row col-sm-12">
             <div class="form-group required-field col-sm-6">
                 <label class="control-label" for="country-benef">{{'Country' | translate}}</label>
                 <ng-select id="country-benef"
@@ -139,7 +135,7 @@
             </div>
         </div>
 
-        <div class="row">
+        <div class="row col-sm-12">
             <div class="form-group required-field col-sm-6">
                 <label class="control-label" for="nationality-benef">{{'Nationality' | translate}}</label>
                 <ng-select id="nationality-benef"
@@ -152,7 +148,7 @@
             </div>
         </div>
 
-        <div class="row">
+        <div class="row col-sm-12">
             <div class="form-group required-field col-sm-6">
                 <label class="control-label" for="nationalIdNumberType-benef-{{index}}">{{ 'National Identification Number Type' | translate }}</label>
                 <ng-select id="nationalIdNumberType-benef-{{index}}"
@@ -173,7 +169,7 @@
             </div>
         </div>
 
-        <div class="row">
+        <div class="row col-sm-12">
             <div *ngIf="!isDisabled(['legalPerson', 'nationalIdNumberText'])" class="form-group required-field col-sm-6">
                 <label class="control-label" for="nationalIdNumberText-benef">{{ 'National Identification Number' | translate }}</label>
                 <input type="text"
@@ -189,7 +185,7 @@
             </div>
         </div>
 
-        <div class="row">
+        <div class="row col-sm-12">
             <div class="form-group required-field col-sm-6">
                 <label for="beneficiary-kbis-document-benef" class="control-label">{{'Kbis extract (or equivalent) less than 3 month old' | translate}}</label>
                 <div class="filedrop-wrapper">
@@ -204,7 +200,7 @@
             </div>
         </div>
 
-        <div class="row">
+        <div class="row col-sm-12">
             <div class="form-group required-field col-sm-6">
                 <label for="holdingPercentage-benef">{{'Holding percentage' | translate}}</label>
                 <input id="holdingPercentage-benef" type="number" [formControl]="form.get('common.holdingPercentage')" placeholder="{{ 'Define a value @valueType@' | translate: { valueType: '(%)' } }}" [attr.disabled]="disabled">
@@ -220,20 +216,33 @@
             </div>
         </div>
 
-        <div class="row">
-            <div class="form-group col-sm-6">
+        <div class="row col-sm-12">
+            <!-- <div class="form-group col-sm-6">
                 <label for="exerciseControl">{{'Does the stakeholder exercise control?' | translate}}</label>
                 <div class="toggle-switch">
                     <input type="checkbox" id="exerciseControl" [formControl]="form.get('common.exerciseControl')" [attr.disabled]="disabled">
                     <label for="exerciseControl"></label>
                 </div>
+            </div> -->
+            <div class="form-group col-sm-6">
+                <clr-radio-container clrInline>
+                    <label>{{ 'Does the stakeholder exercise control?' | translate }}</label>
+                    <clr-radio-wrapper>
+                        <input type="radio" [attr.disabled]="disabled" clrRadio name="exerciseControl" [value]="0" checked="checked" [formControl]="form.get('common.exerciseControl')" />
+                        <label>{{ 'No' | translate }}</label>
+                    </clr-radio-wrapper>
+                    <clr-radio-wrapper>
+                        <input type="radio" [attr.disabled]="disabled"  clrRadio name="exerciseControl" [value]="1" [formControl]="form.get('common.exerciseControl')" />
+                        <label>{{ 'Yes' | translate }}</label>
+                    </clr-radio-wrapper>
+                </clr-radio-container>
             </div>
         </div>
-    </div>
+    </ng-container>
 
-    <div *ngIf="!isDisabled('naturalPerson')" formGroupName="naturalPerson">
+    <ng-container *ngIf="!isDisabled('naturalPerson')" formGroupName="naturalPerson">
 
-        <div class="row">
+        <div class="row col-sm-12">
             <div class="form-group required-field col-sm-6">
                 <label class="control-label" for="firstName-benef">{{'First name' | translate}}</label>
                 <input type="text" id="firstName-benef" formControlName="firstName" placeholder="{{'Fill in first name' | translate}}" [attr.disabled]="disabled">
@@ -248,7 +257,7 @@
             </div>
         </div>
 
-        <div class="row">
+        <div class="row col-sm-12">
             <div class="form-group required-field col-sm-6">
                 <label class="control-label" for="address-benef">{{'Stakeholder Address' | translate}}</label>
                 <input type="text" id="address-benef" [formControl]="form.get('common.address')" placeholder="{{'Fill in an address' | translate}}" [attr.disabled]="disabled">
@@ -263,7 +272,7 @@
             </div>
         </div>
 
-        <div class="row">
+        <div class="row col-sm-12">
             <div class="form-group required-field col-sm-6">
                 <label class="control-label" for="zipCode-benef">{{'ZIP Code' | translate}}</label>
                 <input type="text" id="zipCode-benef" [formControl]="form.get('common.zipCode')" placeholder="{{'Fill in a ZIP Code' | translate}}" [attr.disabled]="disabled">
@@ -278,7 +287,7 @@
             </div>
         </div>
 
-        <div class="row">
+        <div class="row col-sm-12">
             <div class="form-group required-field col-sm-6">
                 <label class="control-label" for="country-benef">{{'Country' | translate}}</label>
                 <ng-select id="country-benef"
@@ -301,7 +310,7 @@
             </div>
         </div>
 
-        <div class="row">
+        <div class="row col-sm-12">
             <div class="form-group required-field col-sm-6">
                 <label class="control-label" for="nationality-benef">{{'Nationality' | translate}}</label>
                 <ng-select id="nationality-benef"
@@ -314,15 +323,13 @@
             </div>
         </div>
 
-        <div class="row">
-            <div class="form-group required-field col-sm-6">
+        <div class="row col-sm-12">
+            <div class="form-group required-field col-sm-6 date-picker">
                 <label for="dateOfBirth-benef" class="control-label">{{'Date of birth' | translate}}</label>
 
-                <div class="input-group date-pick-wrapper">
-                    <span class="fa fa-calendar" aria-hidden="true"></span>
-                    <input autocomplete="off" [dpDayPicker]="configDate" id="dateOfBirth-benef" formControlName="dateOfBirth" placeholder="{{configDate.format}}" mode="day" theme="dp-material" [disabled]="disabled">
-                </div>
+                <input type="text" autocomplete="off" [dpDayPicker]="configDate" id="dateOfBirth-benef" formControlName="dateOfBirth" placeholder="{{configDate.format}}" mode="day" theme="dp-material" [disabled]="disabled">
                 <span class="field-error" *ngIf="hasError(['naturalPerson', 'dateOfBirth'])">{{ 'Field is required' | translate }}</span>
+                <clr-icon shape="calendar"></clr-icon>
             </div>
 
             <div class="form-group required-field col-sm-6">
@@ -336,7 +343,7 @@
             </div>
         </div>
 
-        <div class="row">
+        <div class="row col-sm-12">
             <div class="form-group required-field col-sm-6">
                 <label class="control-label" for="countryOfBirth-benef">{{'Country of birth' | translate}}</label>
                 <ng-select id="countryOfBirth-benef"
@@ -362,7 +369,7 @@
             </div>
         </div>
 
-        <div class="row">
+        <div class="row col-sm-12">
             <div class="form-group required-field col-sm-6">
                 <label for="holdingPercentage-benef-{{index}}">{{ 'Holding Percentage' | translate }}</label>
                 <input id="holdingPercentage-benef-{{index}}"
@@ -385,28 +392,71 @@
             </div>
         </div>
 
-        <div class="row">
-            <div class="form-group col-sm-6">
+        <div class="row col-sm-12">
+            <!-- <div class="form-group col-sm-6">
                 <label for="exerciseControl">{{'Does the stakeholder exercise control?' | translate}}</label>
                 <div class="toggle-switch">
                     <input type="checkbox" id="exerciseControl" [formControl]="form.get('common.exerciseControl')" [attr.disabled]="disabled">
                     <label for="exerciseControl"></label>
                 </div>
-            </div>
+            </div> -->
             <div class="form-group col-sm-6">
+                <clr-radio-container clrInline>
+                    <label>{{ 'Does the stakeholder exercise control?' | translate }}</label>
+                    <clr-radio-wrapper>
+                        <input type="radio" [attr.disabled]="disabled" clrRadio name="exerciseControl" [value]="0" checked="checked" [formControl]="form.get('common.exerciseControl')" />
+                        <label>{{ 'No' | translate }}</label>
+                    </clr-radio-wrapper>
+                    <clr-radio-wrapper>
+                        <input type="radio" [attr.disabled]="disabled"  clrRadio name="exerciseControl" [value]="1" [formControl]="form.get('common.exerciseControl')" />
+                        <label>{{ 'Yes' | translate }}</label>
+                    </clr-radio-wrapper>
+                </clr-radio-container>
+            </div>
+
+            <!-- <div class="form-group col-sm-6">
                 <label for="isLegalRepresentative">{{'Is the stakeholder a legal representative?' | translate}}</label>
                 <div class="toggle-switch">
                     <input type="checkbox" id="isLegalRepresentative" formControlName="isLegalRepresentative" [attr.disabled]="disabled">
                     <label for="isLegalRepresentative"></label>
                 </div>
-            </div>
+            </div> -->
             <div class="form-group col-sm-6">
+                <clr-radio-container clrInline>
+                    <label>{{ 'Is the stakeholder a legal representative?' | translate }}</label>
+                    <clr-radio-wrapper>
+                        <input type="radio" [attr.disabled]="disabled" clrRadio name="isLegalRepresentative" [value]="0" checked="checked" formControlName="isLegalRepresentative" />
+                        <label>{{ 'No' | translate }}</label>
+                    </clr-radio-wrapper>
+                    <clr-radio-wrapper>
+                        <input type="radio" [attr.disabled]="disabled"  clrRadio name="isLegalRepresentative" [value]="1" formControlName="isLegalRepresentative" />
+                        <label>{{ 'Yes' | translate }}</label>
+                    </clr-radio-wrapper>
+                </clr-radio-container>
+            </div>
+        </div>
+
+        <div class="row col-sm-12">
+            <!-- <div class="form-group col-sm-6">
                 <label for="isPoliticallyExposed">{{'Is the stakeholder a politically exposed person?' | translate}}</label>
                 <div class="toggle-switch">
                     <input type="checkbox" id="isPoliticallyExposed" formControlName="isPoliticallyExposed" [attr.disabled]="disabled">
                     <label for="isPoliticallyExposed"></label>
                 </div>
+            </div> -->
+            <div class="form-group col-sm-6">
+                <clr-radio-container clrInline>
+                    <label>{{ 'Is the stakeholder a politically exposed person?' | translate }}</label>
+                    <clr-radio-wrapper>
+                        <input type="radio" [attr.disabled]="disabled" clrRadio name="isPoliticallyExposed" [value]="0" checked="checked" formControlName="isPoliticallyExposed" />
+                        <label>{{ 'No' | translate }}</label>
+                    </clr-radio-wrapper>
+                    <clr-radio-wrapper>
+                        <input type="radio" [attr.disabled]="disabled"  clrRadio name="isPoliticallyExposed" [value]="1" formControlName="isPoliticallyExposed" />
+                        <label>{{ 'Yes' | translate }}</label>
+                    </clr-radio-wrapper>
+                </clr-radio-container>
             </div>
         </div>
-    </div>
+    </ng-container>
 </div>
