@@ -3,12 +3,15 @@ import { FormArray, FormControl } from '@angular/forms';
 import { get as getValue, isEmpty, castArray } from 'lodash';
 import { Subject } from 'rxjs';
 import { filter, map, takeUntil, take } from 'rxjs/operators';
-import { select } from '@angular-redux/store';
+import { select, NgRedux } from '@angular-redux/store';
 import { FormPercentDirective } from '@setl/utils/directives/form-percent/formpercent';
 import { IdentificationService } from '../identification.service';
 import { NewRequestService } from '../../new-request.service';
 import { countries } from '../../../requests.config';
 import { formHelper } from '@setl/utils/helper';
+import { PersistRequestService } from '@setl/core-req-services';
+import { PersistService } from '@setl/core-persist';
+import { setMyKycRequestedPersist } from '@ofi/ofi-main/ofi-store/ofi-kyc';
 
 @Component({
     selector: 'banking-information',
@@ -29,6 +32,9 @@ export class BankingInformationComponent implements OnInit, OnDestroy {
         private newRequestService: NewRequestService,
         private identificationService: IdentificationService,
         private element: ElementRef,
+        private ngRedux: NgRedux<any>,
+        private persistRequestService: PersistRequestService,
+        private persistService: PersistService,
     ) {
     }
 
@@ -93,6 +99,28 @@ export class BankingInformationComponent implements OnInit, OnDestroy {
             });
         });
     }
+
+    // persistForm() {
+    //     this.persistService.watchForm(
+    //         'newkycrequest/identification/bankingInformation',
+    //         this.form,
+    //         this.newRequestService.context,
+    //         {
+    //             reset: false,
+    //             returnPromise: true,
+    //         },
+    //     ).then(() => {
+    //         this.ngRedux.dispatch(setMyKycRequestedPersist('identification/bankingInformation'));
+    //     });
+    // }
+
+    // clearPersistForm() {
+    //     this.persistService.refreshState(
+    //         'newkycrequest/identification/bankingInformation',
+    //         this.newRequestService.createIdentificationFormGroup(),
+    //         this.newRequestService.context,
+    //     );
+    // }
 
     handleSubmit(e) {
         e.preventDefault();

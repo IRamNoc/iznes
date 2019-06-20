@@ -122,27 +122,27 @@ export class InvestmentObjectiveComponent implements OnInit, OnDestroy {
         this.formPercent.refreshFormPercent();
     }
 
-    persistForm() {
-        this.persistService.watchForm(
-            'newkycrequest/riskProfile/investmentObjective',
-            this.form,
-            this.newRequestService.context,
-            {
-                reset: false,
-                returnPromise: true,
-            },
-        ).then(() => {
-            this.formWatch.next(true);
-        });
-    }
+    // persistForm() {
+    //     this.persistService.watchForm(
+    //         'newkycrequest/riskProfile/investmentObjective',
+    //         this.form,
+    //         this.newRequestService.context,
+    //         {
+    //             reset: false,
+    //             returnPromise: true,
+    //         },
+    //     ).then(() => {
+    //         this.formWatch.next(true);
+    //     });
+    // }
 
-    clearPersistForm() {
-        this.persistService.refreshState(
-            'newkycrequest/riskProfile/investmentObjective',
-            this.newRequestService.createRiskProfileFormGroup(),
-            this.newRequestService.context,
-        );
-    }
+    // clearPersistForm() {
+    //     this.persistService.refreshState(
+    //         'newkycrequest/riskProfile/investmentObjective',
+    //         this.newRequestService.createRiskProfileFormGroup(),
+    //         this.newRequestService.context,
+    //     );
+    // }
 
     handleSubmit(e) {
         e.preventDefault();
@@ -160,7 +160,7 @@ export class InvestmentObjectiveComponent implements OnInit, OnDestroy {
             .subscribe((requests) => {
                 this.riskProfileService.sendRequestInvestmentObjective(this.form, this.formConstraint, requests)
                     .then(() => {
-                        this.clearPersistForm();
+                        // this.clearPersistForm();
                         this.submitEvent.emit({
                             completed: true,
                         });

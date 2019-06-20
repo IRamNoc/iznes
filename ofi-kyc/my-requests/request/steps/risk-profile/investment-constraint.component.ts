@@ -137,27 +137,27 @@ export class InvestmentConstraintComponent implements OnInit, OnDestroy {
         return this.newRequestService.hasError(this.form, control, error);
     }
 
-    persistForm() {
-        this.persistService.watchForm(
-            'newkycrequest/riskProfile/investmentConstraint',
-            this.form,
-            this.newRequestService.context,
-            {
-                reset: false,
-                returnPromise: true,
-            },
-        ).then(() => {
-            this.formWatch.next(true);
-        });
-    }
+    // persistForm() {
+    //     this.persistService.watchForm(
+    //         'newkycrequest/riskProfile/investmentConstraint',
+    //         this.form,
+    //         this.newRequestService.context,
+    //         {
+    //             reset: false,
+    //             returnPromise: true,
+    //         },
+    //     ).then(() => {
+    //         this.formWatch.next(true);
+    //     });
+    // }
 
-    clearPersistForm() {
-        this.persistService.refreshState(
-            'newkycrequest/riskProfile/investmentConstraint',
-            this.newRequestService.createRiskProfileFormGroup(),
-            this.newRequestService.context,
-        );
-    }
+    // clearPersistForm() {
+    //     this.persistService.refreshState(
+    //         'newkycrequest/riskProfile/investmentConstraint',
+    //         this.newRequestService.createRiskProfileFormGroup(),
+    //         this.newRequestService.context,
+    //     );
+    // }
 
     isDisabled(path) {
         const control = this.form.get(path);
@@ -181,7 +181,7 @@ export class InvestmentConstraintComponent implements OnInit, OnDestroy {
             .subscribe((requests) => {
                 this.riskProfileService.sendRequestInvestmentObjective(this.formObjective, this.form, requests)
                     .then(() => {
-                        this.clearPersistForm();
+                        // this.clearPersistForm();
                         this.submitEvent.emit({
                             completed: true,
                         });

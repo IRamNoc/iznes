@@ -123,27 +123,27 @@ export class InvestmentNatureComponent implements OnInit, OnDestroy {
         this.formPercent.refreshFormPercent();
     }
 
-    persistForm() {
-        this.persistService.watchForm(
-            'newkycrequest/riskProfile/investmentNature',
-            this.form,
-            this.newRequestService.context,
-            {
-                reset: false,
-                returnPromise: true,
-            },
-        ).then(() => {
-            this.formWatch.next(true);
-        });
-    }
+    // persistForm() {
+    //     this.persistService.watchForm(
+    //         'newkycrequest/riskProfile/investmentNature',
+    //         this.form,
+    //         this.newRequestService.context,
+    //         {
+    //             reset: false,
+    //             returnPromise: true,
+    //         },
+    //     ).then(() => {
+    //         this.formWatch.next(true);
+    //     });
+    // }
 
-    clearPersistForm() {
-        this.persistService.refreshState(
-            'newkycrequest/riskProfile/investmentNature',
-            this.newRequestService.createRiskProfileFormGroup(),
-            this.newRequestService.context,
-        );
-    }
+    // clearPersistForm() {
+    //     this.persistService.refreshState(
+    //         'newkycrequest/riskProfile/investmentNature',
+    //         this.newRequestService.createRiskProfileFormGroup(),
+    //         this.newRequestService.context,
+    //     );
+    // }
 
     handleSubmit(e) {
         e.preventDefault();
@@ -161,7 +161,7 @@ export class InvestmentNatureComponent implements OnInit, OnDestroy {
             .subscribe((requests) => {
                 this.riskProfileService.sendRequestInvestmentNature(this.form, requests)
                     .then(() => {
-                        this.clearPersistForm();
+                        // this.clearPersistForm();
                         this.submitEvent.emit({
                             completed: true,
                         });

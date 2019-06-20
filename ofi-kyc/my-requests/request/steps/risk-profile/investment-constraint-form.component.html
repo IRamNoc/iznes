@@ -94,18 +94,12 @@
                 {{ 'Has your company ever issued Neu CP?' | translate }}
             </label>
             <div class="radio-inline opt-btn-element">
-                <input type="radio"
-                        id="opt-yes-{{index}}"
-                        value="yes"
-                        formControlName="hasEverIssuedNeuCp">
-                <label for="opt-yes-{{index}}">{{ 'Yes' | translate }}</label>
+                <input type="radio" id="hasEverIssuedNeuCp-opt-yes" [value]="1" formControlName="hasEverIssuedNeuCp">
+                <label for="hasEverIssuedNeuCp-opt-yes">{{ 'Yes' | translate }}</label>
             </div>
             <div class="radio-inline opt-btn-element">
-                <input type="radio"
-                        id="opt-no-{{index}}"
-                        value="no"
-                        formControlName="hasEverIssuedNeuCp">
-                <label for="opt-no-{{index}}">{{ 'No' | translate }}</label>
+                <input type="radio" id="hasEverIssuedNeuCp-opt-no" [value]="0" formControlName="hasEverIssuedNeuCp">
+                <label for="hasEverIssuedNeuCp-opt-no">{{ 'No' | translate }}</label>
             </div>
         </div>
     </div>
@@ -116,12 +110,12 @@
                 {{ 'Has your company already invested in Neu CP?' | translate }}
             </label>
             <div class="radio-inline opt-btn-element">
-                <input type="radio" id="opt-yes-{{index}}" value="yes" formControlName="hasAlreadyInvestedNeuCp">
-                <label for="opt-yes-{{index}}">{{ 'Yes' | translate }}</label>
+                <input type="radio" id="hasAlreadyInvestedNeuCp-opt-yes" [value]="1" formControlName="hasAlreadyInvestedNeuCp">
+                <label for="hasAlreadyInvestedNeuCp-opt-yes">{{ 'Yes' | translate }}</label>
             </div>
             <div class="radio-inline opt-btn-element">
-                <input type="radio" id="opt-no-{{index}}" value="no" formControlName="hasAlreadyInvestedNeuCp">
-                <label for="opt-no-{{index}}">{{ 'No' | translate }}</label>
+                <input type="radio" id="hasAlreadyInvestedNeuCp-opt-no" [value]="0" formControlName="hasAlreadyInvestedNeuCp">
+                <label for="hasAlreadyInvestedNeuCp-opt-no">{{ 'No' | translate }}</label>
             </div>
         </div>
     </div>
@@ -132,12 +126,12 @@
                 {{ 'Do your operators have experience trading in Neu CP?' | translate }}
             </label>
             <div class="radio-inline opt-btn-element">
-                <input type="radio" id="opt-yes-{{index}}" value="yes" formControlName="hasExperienceTradingNeuCp">
-                <label for="opt-yes-{{index}}">{{ 'Yes' | translate }}</label>
+                <input type="radio" id="hasExperienceTradingNeuCp-opt-yes" [value]="1" formControlName="hasExperienceTradingNeuCp">
+                <label for="hasExperienceTradingNeuCp-opt-yes">{{ 'Yes' | translate }}</label>
             </div>
             <div class="radio-inline opt-btn-element">
-                <input type="radio" id="opt-no-{{index}}" value="no" formControlName="hasExperienceTradingNeuCp">
-                <label for="opt-no-{{index}}">{{ 'No' | translate }}</label>
+                <input type="radio" id="hasExperienceTradingNeuCp-opt-no" [value]="0" formControlName="hasExperienceTradingNeuCp">
+                <label for="hasExperienceTradingNeuCp-opt-no">{{ 'No' | translate }}</label>
             </div>
         </div>
     </div>
