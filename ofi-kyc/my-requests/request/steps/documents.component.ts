@@ -18,7 +18,6 @@ import { steps } from '../../requests.config';
     templateUrl: './documents.component.html',
 })
 export class NewKycDocumentsComponent implements OnInit, OnDestroy {
-    @ViewChild(FormPercentDirective) formPercent: FormPercentDirective;
     @select(['user', 'connected', 'connectedWallet']) connectedWallet$;
     @select(['ofi', 'ofiKyc', 'myKycRequested', 'kycs']) requests$;
 
@@ -51,10 +50,9 @@ export class NewKycDocumentsComponent implements OnInit, OnDestroy {
         }
 
         if (documents.isNowCp) {
-            nowcpDocuments.enable()
+            nowcpDocuments.enable();
+            this.form.updateValueAndValidity();
         }
-
-        this.formPercent.refreshFormPercent();
     }
 
     open;
@@ -210,7 +208,6 @@ export class NewKycDocumentsComponent implements OnInit, OnDestroy {
 
                     this.form.updateValueAndValidity();
                     this.changeDetectorRef.markForCheck();
-                    this.formPercent.refreshFormPercent();
                     this.initSubscriptions();
                 });
             });
