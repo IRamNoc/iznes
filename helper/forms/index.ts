@@ -11,11 +11,14 @@ export function dirty(form) {
     }
 }
 
-export function scrollToFirstError(element){
-    const firstError: Element = element.querySelector('.ng-invalid:not(form)');
+export function scrollToFirstError(element) {
+    const firstError: HTMLElement = element.querySelector('.ng-invalid:not(form)');
 
-    if(firstError){
-        firstError.scrollIntoView();
+    if (firstError) {
+        // Reset scrollTop to get correct distance from top from getBoundingClientRect
+        document.querySelector('main.content-area').scrollTop = 0;
+        // Add 60 to account for top nav
+        document.querySelector('main.content-area').scrollTop = firstError.getBoundingClientRect().top - 100;
     }
 }
 

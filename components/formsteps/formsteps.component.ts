@@ -169,7 +169,7 @@ export class FormstepsComponent implements AfterContentInit {
     move() {
         // Not using translate because we can't have modals (using fixed) as child of translate
         this.margin = `-${this.position * 100}%`;
-        this.element.nativeElement.scrollTop = 0;
+        document.querySelector('main.content-area').scrollTop = 0;
     }
 
     setSubmitted(position) {
