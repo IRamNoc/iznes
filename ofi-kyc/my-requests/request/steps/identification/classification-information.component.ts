@@ -38,6 +38,7 @@ export class ClassificationInformationComponent implements OnInit, OnDestroy {
     amcs = [];
     ready = false;
     instrumentChecked: {} = {};
+    geographicalAreaChecked: {} = {};
 
     constructor(
         private newRequestService: NewRequestService,
@@ -45,11 +46,6 @@ export class ClassificationInformationComponent implements OnInit, OnDestroy {
         public translate: MultilingualService,
         public element: ElementRef,
     ) {
-    }
-
-    log() {
-        console.log('+++ LOG', this.form.get(['nonPro', 'financialInstruments']).value);
-        console.log('+++ this.instrumentChecked', this.instrumentChecked);
     }
 
     openPanel($e) {
@@ -78,22 +74,47 @@ export class ClassificationInformationComponent implements OnInit, OnDestroy {
 
         const control = this.form.get(['nonPro', 'financialInstruments']);
         const currentInstruments = control.value || [];
+        const matched = currentInstruments.find(ins => ins.id === instrument.id);
 
-        if (event.srcElement.checked && !currentInstruments.includes({ id: instrument.id })) {
+        if (event.srcElement.checked && !matched) {
             currentInstruments.push({ id: instrument.id });
-            return control.setValue(currentInstruments);
+        } else {
+            const index = currentInstruments.indexOf(matched);
+            if (index > -1) currentInstruments.splice(index, 1);
         }
 
-        const index = currentInstruments.indexOf(instrument);
-        if (index > -1) {
-            currentInstruments.splice(index, 1);
-        }
+        control.setValue(currentInstruments);
     }
 
     setInstrumentCheckboxes() {
         (this.form.get(['nonPro', 'financialInstruments']).value || []).forEach((instrument) => {
             this.instrumentChecked[instrument.id] = true;
         });
+    }
+
+    setGeographicalAreas(area, event) {
+        const control = this.form.get(['nonPro', 'marketArea']);
+        const currentAreas = control.value || [];
+        const matched = currentAreas.find(ins => ins.id === area.id);
+
+        if (event.srcElement.checked && !matched) {
+            currentAreas.push({ id: area.id });
+        } else {
+            const index = currentAreas.indexOf(matched);
+            if (index > -1) currentAreas.splice(index, 1);
+        }
+
+        control.setValue(currentAreas);
+    }
+
+    setGeograpgicalAreaCheckboxes() {
+        (this.form.get(['nonPro', 'marketArea']).value || []).forEach((area) => {
+            this.geographicalAreaChecked[area.id] = true;
+        });
+    }
+
+    isEven(n) {
+        return n % 2 === 0;
     }
 
     investorChanged(investorType) {
@@ -317,7 +338,6 @@ export class ClassificationInformationComponent implements OnInit, OnDestroy {
 
             requests.forEach((request, i) => {
                 const promise = this.identificationService.getCurrentFormClassificationData(request.kycID).then((formData) => {
-                    console.log('+++ formData', formData);
                     if (!isEmpty(formData) && i === 0) {
                         const common = pick(formData, ['kycID', 'investorStatus', 'excludeProducts']);
                         const nonPro = omit(formData, ['kycID', 'investorStatus', 'excludeProducts', 'optFor']);
@@ -325,6 +345,7 @@ export class ClassificationInformationComponent implements OnInit, OnDestroy {
 
                         this.form.get('nonPro').patchValue(nonPro);
                         this.setInstrumentCheckboxes();
+                        this.setGeograpgicalAreaCheckboxes();
                     }
                     return formData;
                 });
