@@ -4,11 +4,9 @@ import { select, NgRedux } from '@angular-redux/store';
 import { Subject } from 'rxjs';
 import { filter as rxFilter, map, takeUntil, take } from 'rxjs/operators';
 import { get as getValue, isNil, find, isEmpty, isNumber, values, some, filter, set as setValue } from 'lodash';
-
 import { ConfirmationService } from '@setl/utils';
 import { ToasterService } from 'angular2-toaster';
 import { AlertsService } from '@setl/jaspero-ng2-alerts';
-
 import { MultilingualService } from '@setl/multilingual';
 import { BeneficiaryService, HierarchySort } from './beneficiary.service';
 import { IdentificationService, buildBeneficiaryObject } from '../identification.service';
@@ -18,6 +16,9 @@ import { DocumentsService } from '../documents.service';
 import { FormPercentDirective } from '@setl/utils/directives/form-percent/formpercent';
 import { setMyKycStakeholderRelations } from '@ofi/ofi-main/ofi-store/ofi-kyc/kyc-request';
 import { formHelper } from '@setl/utils/helper';
+import { PersistRequestService } from '@setl/core-req-services';
+import { PersistService } from '@setl/core-persist';
+import { setMyKycRequestedPersist } from '@ofi/ofi-main/ofi-store/ofi-kyc';
 
 @Component({
     selector: 'beneficiary-list',
@@ -94,6 +95,8 @@ export class BeneficiaryListComponent implements OnInit, OnDestroy {
         private documentsService: DocumentsService,
         private ngRedux: NgRedux<any>,
         private element: ElementRef,
+        private persistRequestService: PersistRequestService,
+        private persistService: PersistService,
     ) {
     }
 
@@ -558,6 +561,29 @@ export class BeneficiaryListComponent implements OnInit, OnDestroy {
     private isNaturalPerson(type: string): boolean {
         return type === 'naturalPerson';
     }
+
+    // TODO:
+    // persistForm() {
+    //     this.persistService.watchForm(
+    //         'newkycrequest/identification/beneficiaryInformation',
+    //         this.form,
+    //         this.newRequestService.context,
+    //         {
+    //             reset: false,
+    //             returnPromise: true,
+    //         },
+    //     ).then(() => {
+    //         this.ngRedux.dispatch(setMyKycRequestedPersist('identification/beneficiaryInformation'));
+    //     });
+    // }
+
+    // clearPersistForm() {
+    //     this.persistService.refreshState(
+    //         'newkycrequest/identification/beneficiaryInformation',
+    //         this.newRequestService.createIdentificationFormGroup(),
+    //         this.newRequestService.context,
+    //     );
+    // }
 
     handleSubmit(e) {
         e.preventDefault();

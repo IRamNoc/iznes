@@ -185,27 +185,27 @@ export class GeneralInformationComponent implements OnInit, OnDestroy {
             });
     }
 
-    persistForm() {
-        this.persistService.watchForm(
-            'newkycrequest/identification/general',
-            this.form,
-            this.newRequestService.context,
-            {
-                reset : false,
-                returnPromise: true,
-            },
-        ).then(() => {
-            this.ngRedux.dispatch(setMyKycRequestedPersist('identification/general'));
-        });
-    }
+    // persistForm() {
+    //     this.persistService.watchForm(
+    //         'newkycrequest/identification/generalInformation',
+    //         this.form,
+    //         this.newRequestService.context,
+    //         {
+    //             reset : false,
+    //             returnPromise: true,
+    //         },
+    //     ).then(() => {
+    //         this.ngRedux.dispatch(setMyKycRequestedPersist('identification/generalInformation'));
+    //     });
+    // }
 
-    clearPersistForm() {
-        this.persistService.refreshState(
-            'newkycrequest/identification/general',
-            this.newRequestService.createIdentificationFormGroup(),
-            this.newRequestService.context,
-        );
-    }
+    // clearPersistForm() {
+    //     this.persistService.refreshState(
+    //         'newkycrequest/identification/generalInformation',
+    //         this.newRequestService.createIdentificationFormGroup(),
+    //         this.newRequestService.context,
+    //     );
+    // }
 
     handleSubmit(e) {
         e.preventDefault();
@@ -226,7 +226,7 @@ export class GeneralInformationComponent implements OnInit, OnDestroy {
                 this.submitEvent.emit({
                     completed: true,
                 });
-                this.clearPersistForm();
+                // this.clearPersistForm();
             })
             .catch(() => {
                 this.newRequestService.errorPop();

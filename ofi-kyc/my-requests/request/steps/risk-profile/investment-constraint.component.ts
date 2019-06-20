@@ -14,7 +14,8 @@ import { PersistService } from '@setl/core-persist';
     templateUrl: './investment-constraint.component.html',
 })
 export class InvestmentConstraintComponent implements OnInit, OnDestroy {
-    @ViewChild(FormPercentDirective) formPercent: FormPercentDirective;
+    // Disabled because there no required fields for non- nowCP investorType
+    // @ViewChild(FormPercentDirective) formPercent: FormPercentDirective;
     @Input() form;
     @Input() formObjective;
     @Output() submitEvent: EventEmitter<any> = new EventEmitter<any>();
@@ -46,6 +47,17 @@ export class InvestmentConstraintComponent implements OnInit, OnDestroy {
     }
 
     getCurrentFormData() {
+        this.requests$
+            .pipe(
+                filter(requests => !isEmpty(requests)),
+                takeUntil(this.unsubscribe),
+            )
+            .subscribe((requests) => {
+                requests.forEach((request) => {
+                    this.riskProfileService.getCurrentFormObjectiveData(request.kycID);
+                });
+            });
+
         this.riskProfileService.currentServerData.riskobjective
             .pipe(
                 takeUntil(this.unsubscribe),
@@ -75,7 +87,8 @@ export class InvestmentConstraintComponent implements OnInit, OnDestroy {
                 takeUntil(this.unsubscribe),
             )
             .subscribe(() => {
-                this.refreshForm();
+                // Disabled because there no required fields for non- nowCP investorType
+                // this.refreshForm();
             });
     }
 
@@ -98,7 +111,8 @@ export class InvestmentConstraintComponent implements OnInit, OnDestroy {
             this.generateConstraints(map(this.amcs, 'amcID'));
         }
 
-        this.refreshForm();
+        // Disabled because there no required fields for non- nowCP investorType
+        // this.refreshForm();
     }
 
     generateConstraints(amcs = []) {
@@ -114,35 +128,36 @@ export class InvestmentConstraintComponent implements OnInit, OnDestroy {
         });
     }
 
-    refreshForm() {
+    // Disabled because there no required fields for non- nowCP investorType
+    /* refreshForm() {
         this.formPercent.refreshFormPercent();
-    }
+    } */
 
     hasError(control, error = []) {
         return this.newRequestService.hasError(this.form, control, error);
     }
 
-    persistForm() {
-        this.persistService.watchForm(
-            'newkycrequest/riskProfile/investmentConstraint',
-            this.form,
-            this.newRequestService.context,
-            {
-                reset: false,
-                returnPromise: true,
-            },
-        ).then(() => {
-            this.formWatch.next(true);
-        });
-    }
+    // persistForm() {
+    //     this.persistService.watchForm(
+    //         'newkycrequest/riskProfile/investmentConstraint',
+    //         this.form,
+    //         this.newRequestService.context,
+    //         {
+    //             reset: false,
+    //             returnPromise: true,
+    //         },
+    //     ).then(() => {
+    //         this.formWatch.next(true);
+    //     });
+    // }
 
-    clearPersistForm() {
-        this.persistService.refreshState(
-            'newkycrequest/riskProfile/investmentConstraint',
-            this.newRequestService.createRiskProfileFormGroup(),
-            this.newRequestService.context,
-        );
-    }
+    // clearPersistForm() {
+    //     this.persistService.refreshState(
+    //         'newkycrequest/riskProfile/investmentConstraint',
+    //         this.newRequestService.createRiskProfileFormGroup(),
+    //         this.newRequestService.context,
+    //     );
+    // }
 
     isDisabled(path) {
         const control = this.form.get(path);
@@ -166,7 +181,7 @@ export class InvestmentConstraintComponent implements OnInit, OnDestroy {
             .subscribe((requests) => {
                 this.riskProfileService.sendRequestInvestmentObjective(this.formObjective, this.form, requests)
                     .then(() => {
-                        this.clearPersistForm();
+                        // this.clearPersistForm();
                         this.submitEvent.emit({
                             completed: true,
                         });

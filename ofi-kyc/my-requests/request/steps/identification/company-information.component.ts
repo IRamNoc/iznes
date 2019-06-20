@@ -601,27 +601,27 @@ export class CompanyInformationComponent implements OnInit, OnDestroy {
         this.formPercent.refreshFormPercent();
     }
 
-    persistForm() {
-        this.persistService.watchForm(
-            'newkycrequest/identification/companyinformation',
-            this.form,
-            this.newRequestService.context,
-            {
-                reset : false,
-                returnPromise: true,
-            },
-        ).then(() => {
-            this.ngRedux.dispatch(setMyKycRequestedPersist('identification/companyinformation'));
-        });
-    }
+    // persistForm() {
+    //     this.persistService.watchForm(
+    //         'newkycrequest/identification/companyInformation',
+    //         this.form,
+    //         this.newRequestService.context,
+    //         {
+    //             reset : false,
+    //             returnPromise: true,
+    //         },
+    //     ).then(() => {
+    //         this.ngRedux.dispatch(setMyKycRequestedPersist('identification/companyInformation'));
+    //     });
+    // }
 
-    clearPersistForm() {
-        this.persistService.refreshState(
-            'newkycrequest/identification/companyinformation',
-            this.newRequestService.createIdentificationFormGroup(),
-            this.newRequestService.context,
-        );
-    }
+    // clearPersistForm() {
+    //     this.persistService.refreshState(
+    //         'newkycrequest/identification/companyInformation',
+    //         this.newRequestService.createIdentificationFormGroup(),
+    //         this.newRequestService.context,
+    //     );
+    // }
 
     handleSubmit(e) {
         e.preventDefault();
@@ -641,7 +641,7 @@ export class CompanyInformationComponent implements OnInit, OnDestroy {
                 this.submitEvent.emit({
                     completed: true,
                 });
-                this.clearPersistForm();
+                // this.clearPersistForm();
             })
             .catch(() => {
                 this.newRequestService.errorPop();

@@ -94,9 +94,9 @@
                 </div>
             </div>
 
-            <input formControlName="investmentvehiclesAlreadyUsedSpecification"
+            <input *ngIf="vehicle.id === 'other' && !isDisabled('investmentvehiclesAlreadyUsedSpecification')"
                     type="text"
-                    *ngIf="vehicle.id === 'other' && !isDisabled('investmentvehiclesAlreadyUsedSpecification')"
+                    formControlName="investmentvehiclesAlreadyUsedSpecification"
                     placeholder="{{'Please specify' | translate}}">
 
             <p class="field-error" *ngIf="hasError('investmentvehiclesAlreadyUsed')">{{ 'Select at least one' | translate }}</p>
