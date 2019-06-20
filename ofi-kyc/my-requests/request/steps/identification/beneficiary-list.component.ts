@@ -141,6 +141,13 @@ export class BeneficiaryListComponent implements OnInit, OnDestroy {
 
                                     const newControlValue = buildBeneficiaryObject(controlValue);
 
+                                    // depend on beneficiaryType, disable part of the form.
+                                    if (newControlValue['beneficiaryType'] === 'legalPerson') {
+                                        control.get('naturalPerson').disable();
+                                    } else {
+                                        control.get('legalPerson').disable();
+                                    }
+
                                     if (documentID) {
                                         return this.documentsService.getDocument(documentID).then((document) => {
                                             if (document) {
