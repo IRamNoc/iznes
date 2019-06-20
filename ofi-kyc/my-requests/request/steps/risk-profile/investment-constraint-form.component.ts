@@ -18,6 +18,7 @@ export class InvestmentConstraintFormComponent implements OnInit, OnDestroy {
     @Input() multiple;
     @Input() index;
     @select(['ofi', 'ofiProduct', 'ofiManagementCompany', 'investorManagementCompanyList', 'investorManagementCompanyList']) managementCompanyList$;
+    @select(['ofi', 'ofiKyc', 'myInformations', 'investorType']) kycInvestorType$;
 
     unsubscribe: Subject<any> = new Subject();
     open: boolean = true;
@@ -25,7 +26,7 @@ export class InvestmentConstraintFormComponent implements OnInit, OnDestroy {
         companyID: '',
         companyName: '',
     };
-    isNowCP = false;
+    kycInvestorType;
 
     constructor(
         private newRequestService: NewRequestService,
@@ -37,8 +38,6 @@ export class InvestmentConstraintFormComponent implements OnInit, OnDestroy {
         this.initData();
         this.initFormCheck();
         this.getCurrentFormData();
-
-        console.log('+++ isNowCP: ', this.isNowCP);
     }
 
     getCurrentFormData() {
@@ -76,6 +75,10 @@ export class InvestmentConstraintFormComponent implements OnInit, OnDestroy {
                     }
                 }
             });
+
+        this.kycInvestorType$.pipe(
+            takeUntil(this.unsubscribe),
+        ).subscribe(t => this.kycInvestorType = t);
     }
 
     initFormCheck() {
@@ -93,6 +96,11 @@ export class InvestmentConstraintFormComponent implements OnInit, OnDestroy {
         }
 
         this.refreshForm.emit();
+    }
+
+    isNowCP() {
+        return true; // TODO: delete after testing
+        // return this.kycInvestorType === 70 || this.kycInvestorType === 80;
     }
 
     hasError(control, error = []) {

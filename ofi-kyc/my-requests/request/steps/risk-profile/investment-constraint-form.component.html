@@ -88,7 +88,7 @@
     </div>
 
     <!-- nowCP -->
-    <div *ngIf="isNowCP" class="row form-group col-sm-12">
+    <div *ngIf="isNowCP()" class="row form-group col-sm-12">
         <div class="col-sm-12">
             <label class="required-field">
                 {{ 'Has your company ever issued Neu CP?' | translate }}
@@ -110,7 +110,7 @@
         </div>
     </div>
 
-    <div *ngIf="isNowCP" class="row form-group col-sm-12">
+    <div *ngIf="isNowCP()" class="row form-group col-sm-12">
         <div class="col-sm-12">
             <label class="required-field">
                 {{ 'Has your company already invested in Neu CP?' | translate }}
@@ -126,7 +126,7 @@
         </div>
     </div>
 
-    <div *ngIf="isNowCP" class="row form-group col-sm-12">
+    <div *ngIf="isNowCP()" class="row form-group col-sm-12">
         <div class="col-sm-12">
             <label class="required-field">
                 {{ 'Do your operators have experience trading in Neu CP?' | translate }}

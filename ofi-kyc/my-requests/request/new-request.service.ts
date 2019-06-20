@@ -554,6 +554,8 @@ export class NewRequestService {
     createInvestmentObjective(id): FormGroup {
         return this.formBuilder.group({
             assetManagementCompanyID: id ? id : null,
+            investmentObjectives: ['', Validators.maxLength(5)],
+            investmentObjectivesDetails: ['', Validators.maxLength(1024)],
             performanceProfile: this.formBuilder.group(this.transformToForm(this.performanceProfileList), {
                 validator: (formGroup) => {
                     return CustomValidators.multipleCheckboxValidator(formGroup);
