@@ -3023,11 +3023,19 @@ export const documentTypesList = [
     },
     {
         id: 'kycproofofapprovaldoc',
-        text: 'Proof of approval or copy of order',
+        text: 'proof of approval or copy of order',
     },
     {
         id: 'kycproofregulationdoc',
-        text: 'Proof of regulation/supervision from the Regulator’s Website',
+        text: 'proof of regulation/supervision from the regulator’s website',
+    },
+    {
+        id: 'kycinfomemorandumbdfdoc',
+        text: 'Information memorandum approved by BDF',
+    },
+    {
+        id: 'kycorgchartdoc',
+        text: 'Org chart with key operational teams',
     },
 
 ];
