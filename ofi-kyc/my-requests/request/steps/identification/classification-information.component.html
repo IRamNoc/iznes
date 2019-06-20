@@ -105,7 +105,7 @@
 
             <div class="row panel-body">
 
-                <div formGroupName="nonPro">
+                <ng-container formGroupName="nonPro">
                     <div class="row col-sm-12">
                         <div class="form-group required-field col-sm-4">
                             <label for="firstName">{{ 'First Name' | translate }}</label>
@@ -150,78 +150,52 @@
                             <span class="field-error" *ngIf="hasError(['nonPro', 'numberYearsCurrentPosition'])">{{ 'Field is required' | translate }}</span>
                         </div>
                     </div>
-                    <!-- <div class="row col-sm-12">
-                        <div class="form-group required-field col-sm-4">
-                            <label for="financialInstruments">
-                                {{ 'Financial instruments that have already been the subject of transactions by the said natural person in the professional environment: (multiple choice)' | translate }}
-                            </label>
-                            <ng-select (click)="log()" class="multiple"
-                                        placeholder="{{ 'Select' | translate }}"
-                                        id="financialInstruments"
-                                        [items]="financialInstrumentsList"
-                                        [formControl]="form.get(['nonPro', 'financialInstruments'])"
-                                        [multiple]="true">
-                            </ng-select>
-                            <span class="field-error" *ngIf="hasError(['nonPro', 'financialInstruments'])">{{ 'Field is required' | translate }}</span>
-                        </div>
-                        <div class="form-group col-sm-6 flex-items-xs-bottom" *ngIf="!isDisabled(['nonPro', 'financialInstrumentsSpecification'])">
-                            <label>&nbsp;</label>
-                            <input id="financialInstrumentsSpecification"
-                                    type="text"
-                                    formControlName="financialInstrumentsSpecification"
-                                    placeholder="{{ 'Please specify' | translate }}">
-                            <span class="field-error" *ngIf="hasError(['nonPro', 'financialInstrumentsSpecification'])">{{ 'Field is required' | translate }}</span>
-                        </div>
-                    </div> -->
 
-                    <div class="checkbox-group">
+                    <div class="checkbox-group mt-1">
                         <div class="row col-sm-12">
-                            <div class="form-group required-field col-sm-12" (click)="log()">
+                            <div class="form-group required-field col-sm-12">
                                 <label>{{ 'Financial instruments that have already been the subject of transactions by the said natural person in the professional environment: (multiple choice)' | translate }}</label>
                             </div>
                         </div>
 
-                        <div class="row col-sm-12 form-group" *ngFor="let instrument of financialInstrumentsList; let i = index">
-                            <div class="col-sm-3">
+                        <ng-container *ngFor="let instrument of financialInstrumentsList; let i = index">
+                            <div class="row col-sm-12 form-group">
+                                <ng-container *ngTemplateOutlet="financialInstrumentsCheckbox; context: {'instrument': financialInstrumentsList[i * 2]}"></ng-container>
+                                <ng-container *ngTemplateOutlet="financialInstrumentsCheckbox; context: {'instrument': financialInstrumentsList[(i * 2) + 1]}"></ng-container>
+                            </div>
+                        </ng-container>
+                    </div>
+
+                    <div class="row col-sm-12">
+                        <div class="form-group col-sm-4" *ngIf="!isDisabled(['nonPro', 'financialInstrumentsSpecification'])">
+                            <input id="financialInstrumentsSpecification"
+                                    type="text"
+                                    formControlName="financialInstrumentsSpecification"
+                                    placeholder="{{ 'Please specify other financial instruments' | translate }}">
+                            <span class="field-error" *ngIf="hasError(['nonPro', 'financialInstrumentsSpecification'])">{{ 'Field is required' | translate }}</span>
+                        </div>
+                    </div>
+
+                    <div class="checkbox-group m-0">
+                        <div class="row col-sm-12">
+                            <div class="form-group required-field col-sm-12">
+                                <label>{{ 'Market area(s) which have been the subject of transactions (multiple choice)' | translate }}</label>
+                            </div>
+                        </div>
+
+                        <div class="row col-sm-12 form-group" *ngFor="let area of geographicalAreaList">
+                            <div class="col-sm-4">
                                 <div class="checkbox-inline">
-                                    <input type="checkbox" id="{{ instrument.id }}" [(checked)]="instrumentChecked[instrument.id]" (change)="setFinancialInstruments(instrument, $event)">
-                                    <label for="{{ instrument.id }}">
-                                        {{ instrument.text | translate }}
+                                    <input type="checkbox" id="{{ area.id }}" [(checked)]="geographicalAreaChecked[area.id]" (change)="setGeographicalAreas(area, $event)">
+                                    <label for="{{ area.id }}">
+                                        {{ area.text | translate }}
                                     </label>
                                 </div>
                             </div>
                         </div>
                     </div>
 
-                    <div class="row col-sm-12">
-                        <div class="form-group col-sm-6 flex-items-xs-bottom" *ngIf="!isDisabled(['nonPro', 'financialInstrumentsSpecification'])">
-                            <label>&nbsp;</label>
-                            <input id="financialInstrumentsSpecification"
-                                    type="text"
-                                    formControlName="financialInstrumentsSpecification"
-                                    placeholder="{{ 'Please specify' | translate }}">
-                            <span class="field-error" *ngIf="hasError(['nonPro', 'financialInstrumentsSpecification'])">{{ 'Field is required' | translate }}</span>
-                        </div>
-                    </div>
-
-
-
-                    <div>
-                        <div class="form-group required-field col-sm-4">
-                            <label for="marketArea">
-                                {{ 'Market area(s) which have been the subject of transactions (multiple choice)' | translate }}
-                            </label>
-                            <ng-select class="multiple"
-                                        id="marketArea"
-                                        placeholder="{{ 'Select' | translate }}"
-                                        [items]="geographicalAreaList"
-                                        [formControl]="form.get(['nonPro', 'marketArea'])"
-                                        [multiple]="true">
-                            </ng-select>
-                            <span class="field-error" *ngIf="hasError(['nonPro', 'marketArea'])">{{ 'Field is required' | translate }}</span>
-                        </div>
-                    </div>
-                    <div class="row col-sm-12">
+                    <div class="row col-sm-12 mt-1">
                         <div class="form-group required-field col-sm-4">
                             <label for="natureTransactionPerYear">
                                 {{ 'Nature of transactions per year (in €)' | translate }}
@@ -245,17 +219,23 @@
                             <span class="field-error" *ngIf="hasError(['nonPro', 'volumeTransactionPerYear'])">{{ 'Field is required' | translate }}</span>
                         </div>
                     </div>
-                    <div class="row col-sm-12">
-                        <div class="form-group required-field col-sm-6 flex-items-xs-middle">
-                            <div class="checkbox-inline">
-                                <input type="checkbox"
-                                        id="activitiesBenefitFromExperience"
-                                        formControlName="activitiesBenefitFromExperience">
-                                <label for="activitiesBenefitFromExperience">
-                                    {{ 'Do your activities/professions allow you to benefit from experience in the financial field?' | translate }}
-                                </label>
-                            </div>
 
+                    <div class="row col-sm-12 mt-1">
+                        <div class="form-group required-field col-sm-12 m-0">
+                            <label>{{ 'Do your activities/professions allow you to benefit from experience in the financial field?' | translate }}</label>
+                        </div>
+
+                        <div class="col-sm-6 form-group">
+                            <clr-radio-container clrInline>
+                                <clr-radio-wrapper>
+                                    <input type="radio" clrRadio name="activitiesBenefitFromExperience" [value]="0" checked="checked" formControlName="activitiesBenefitFromExperience" />
+                                    <label>{{ 'No' | translate }}</label>
+                                </clr-radio-wrapper>
+                                <clr-radio-wrapper>
+                                    <input type="radio" clrRadio name="activitiesBenefitFromExperience" [value]="1" formControlName="activitiesBenefitFromExperience" />
+                                    <label>{{ 'Yes' | translate }}</label>
+                                </clr-radio-wrapper>
+                            </clr-radio-container>
                             <span class="field-error" *ngIf="hasError(['nonPro', 'activitiesBenefitFromExperience'])">{{ 'Field is required' | translate }}</span>
                         </div>
 
@@ -267,17 +247,23 @@
                             <span class="field-error" *ngIf="hasError('nonPro.activitiesBenefitFromExperienceSpecification', ['maxlength'])">{{ 'Value is too long' | translate }}</span>
                         </div>
                     </div>
-                    <div class="row col-sm-12">
-                        <div class="form-group required-field col-sm-6 flex-items-xs-middle">
-                            <div class="checkbox-inline">
-                                <input type="checkbox"
-                                        id="trainingKnowledgeSkills"
-                                        formControlName="trainingKnowledgeSkills">
-                                <label for="trainingKnowledgeSkills">
-                                    {{ 'Does your training provide you with knowledge and skills in the financial field?' | translate }}
-                                </label>
-                            </div>
 
+                    <div class="row col-sm-12 mt-1">
+                        <div class="form-group required-field col-sm-12 m-0">
+                            <label>{{ 'Does your training provide you with knowledge and skills in the financial field?' | translate }}</label>
+                        </div>
+
+                        <div class="col-sm-6 form-group">
+                            <clr-radio-container clrInline>
+                                <clr-radio-wrapper>
+                                    <input type="radio" clrRadio name="trainingKnowledgeSkills" [value]="0" checked="checked" formControlName="trainingKnowledgeSkills" />
+                                    <label>{{ 'No' | translate }}</label>
+                                </clr-radio-wrapper>
+                                <clr-radio-wrapper>
+                                    <input type="radio" clrRadio name="trainingKnowledgeSkills" [value]="1" formControlName="trainingKnowledgeSkills" />
+                                    <label>{{ 'Yes' | translate }}</label>
+                                </clr-radio-wrapper>
+                            </clr-radio-container>
                             <span class="field-error" *ngIf="hasError(['nonPro', 'trainingKnowledgeSkills'])">{{ 'Field is required' | translate }}</span>
                         </div>
 
@@ -288,72 +274,104 @@
                             <span class="field-error" *ngIf="hasError('nonPro.trainingKnowledgeSkillsSpecification', ['maxlength'])">{{ 'Value is too long' | translate }}</span>
                         </div>
                     </div>
-                    <div class="row col-sm-12">
-                        <div class="form-group required-field col-sm-6 flex-items-xs-middle">
-                            <div class="checkbox-inline">
-                                <input type="checkbox"
-                                        id="knowledgeUCI"
-                                        formControlName="knowledgeUCI">
-                                <label for="knowledgeUCI">
-                                    {{ 'Do you have a good knowledge of Collective Investment Schemes (UCIs)?' | translate }}
-                                </label>
-                            </div>
 
+                    <div class="row col-sm-12 mt-1">
+                        <div class="form-group required-field col-sm-12 m-0">
+                            <label>{{ 'Do you have a good knowledge of Collective Investment Schemes (UCIs)?' | translate }}</label>
+                        </div>
+
+                        <div class="col-sm-6 form-group">
+                            <clr-radio-container clrInline>
+                                <clr-radio-wrapper>
+                                    <input type="radio" clrRadio name="knowledgeUCI" [value]="0" checked="checked" formControlName="knowledgeUCI" />
+                                    <label>{{ 'No' | translate }}</label>
+                                </clr-radio-wrapper>
+                                <clr-radio-wrapper>
+                                    <input type="radio" clrRadio name="knowledgeUCI" [value]="1" formControlName="knowledgeUCI" />
+                                    <label>{{ 'Yes' | translate }}</label>
+                                </clr-radio-wrapper>
+                            </clr-radio-container>
                             <span class="field-error" *ngIf="hasError(['nonPro', 'knowledgeUCI'])">{{ 'Field is required' | translate }}</span>
                         </div>
                     </div>
 
-                    <div class="row col-sm-12">
-                        <div class="form-group required-field col-sm-6 flex-items-xs-middle">
-                            <div class="checkbox-inline">
-                                <input type="checkbox"
-                                        id="knowledgeFundsAndRisks"
-                                        formControlName="knowledgeFundsAndRisks">
-                                <label for="knowledgeFundsAndRisks">
-                                    {{ 'Do you have a good knowledge of the different types of existing funds (UCITS, AIFs, ETFs, structured funds, money market
-                                    funds, OPCIs, etc.) and the risks inherent in each of them?' | translate }}
-                                </label>
-                            </div>
+                    <div class="row col-sm-12 mt-1">
+                        <div class="form-group required-field col-sm-12 m-0">
+                            <label>{{ 'Do you have a good knowledge of the different types of existing funds (UCITS, AIFs, ETFs, structured funds, money market
+                                    funds, OPCIs, etc.) and the risks inherent in each of them?' | translate }}</label>
+                        </div>
 
+                        <div class="col-sm-6 form-group">
+                            <clr-radio-container clrInline>
+                                <clr-radio-wrapper>
+                                    <input type="radio" clrRadio name="knowledgeFundsAndRisks" [value]="0" checked="checked" formControlName="knowledgeFundsAndRisks" />
+                                    <label>{{ 'No' | translate }}</label>
+                                </clr-radio-wrapper>
+                                <clr-radio-wrapper>
+                                    <input type="radio" clrRadio name="knowledgeFundsAndRisks" [value]="1" formControlName="knowledgeFundsAndRisks" />
+                                    <label>{{ 'Yes' | translate }}</label>
+                                </clr-radio-wrapper>
+                            </clr-radio-container>
                             <span class="field-error" *ngIf="hasError(['nonPro', 'knowledgeFundsAndRisks'])">{{ 'Field is required' | translate }}</span>
                         </div>
                     </div>
 
-                    <div class="row col-sm-12">
-                        <div class="form-group required-field col-sm-6 flex-items-xs-middle">
-                            <div class="checkbox-inline">
-                                <input type="checkbox"
-                                        id="prospectusKIIDUnderstanding"
-                                        formControlName="prospectusKIIDUnderstanding">
-                                <label for="prospectusKIIDUnderstanding">
-                                    {{ 'Do you know what a financial prospectus and a KIID (Key Information Document for Investors) is and are you able to read
-                                    and understand them?' | translate }}
-                                </label>
-                            </div>
+                    <div class="row col-sm-12 mt-1">
+                        <div class="form-group required-field col-sm-12 m-0">
+                            <label>{{ 'Do you know what a financial prospectus and a KIID (Key Information Document for Investors) is and are you able to read
+                                    and understand them?' | translate }}</label>
+                        </div>
 
+                        <div class="col-sm-6 form-group">
+                            <clr-radio-container clrInline>
+                                <clr-radio-wrapper>
+                                    <input type="radio" clrRadio name="prospectusKIIDUnderstanding" [value]="0" checked="checked" formControlName="prospectusKIIDUnderstanding" />
+                                    <label>{{ 'No' | translate }}</label>
+                                </clr-radio-wrapper>
+                                <clr-radio-wrapper>
+                                    <input type="radio" clrRadio name="prospectusKIIDUnderstanding" [value]="1" formControlName="prospectusKIIDUnderstanding" />
+                                    <label>{{ 'Yes' | translate }}</label>
+                                </clr-radio-wrapper>
+                            </clr-radio-container>
                             <span class="field-error" *ngIf="hasError(['nonPro', 'prospectusKIIDUnderstanding'])">{{ 'Field is required' | translate }}</span>
                         </div>
                     </div>
 
-                    <div class="row col-sm-12">
-                        <div class="form-group required-field col-sm-6 flex-items-xs-middle">
-                            <div class="checkbox-inline">
-                                <input type="checkbox"
-                                        id="knowledgeSkillsPlaceUCIOrders"
-                                        formControlName="knowledgeSkillsPlaceUCIOrders">
-                                <label for="knowledgeSkillsPlaceUCIOrders">
-                                    {{ 'Do you have the knowledge and skills to place subscription and redemption orders for units of collective investment
-                                    undertakings (UCIs) directly with management companies?' | translate }}
-                                </label>
+                    <div class="row col-sm-12 mt-1">
+                            <div class="form-group required-field col-sm-12 m-0">
+                                <label>{{ 'Do you have the knowledge and skills to place subscription and redemption orders for units of collective investment
+                                        undertakings (UCIs) directly with management companies?' | translate }}</label>
                             </div>
 
-                            <span class="field-error" *ngIf="hasError(['nonPro', 'knowledgeSkillsPlaceUCIOrders'])">{{ 'Field is required' | translate }}</span>
+                            <div class="col-sm-6 form-group">
+                                <clr-radio-container clrInline>
+                                    <clr-radio-wrapper>
+                                        <input type="radio" clrRadio name="knowledgeSkillsPlaceUCIOrders" [value]="0" checked="checked" formControlName="knowledgeSkillsPlaceUCIOrders" />
+                                        <label>{{ 'No' | translate }}</label>
+                                    </clr-radio-wrapper>
+                                    <clr-radio-wrapper>
+                                        <input type="radio" clrRadio name="knowledgeSkillsPlaceUCIOrders" [value]="1" formControlName="knowledgeSkillsPlaceUCIOrders" />
+                                        <label>{{ 'Yes' | translate }}</label>
+                                    </clr-radio-wrapper>
+                                </clr-radio-container>
+                                <span class="field-error" *ngIf="hasError(['nonPro', 'knowledgeSkillsPlaceUCIOrders'])">{{ 'Field is required' | translate }}</span>
+                            </div>
                         </div>
-                    </div>
-                </div>
+                </ng-container>
             </div>
         </div>
     </div>
 
     <input type="submit" class="hidden" />
 </form>
+
+<ng-template #financialInstrumentsCheckbox let-instrument="instrument">
+    <div class="col-sm-3" *ngIf="instrument">
+        <div class="checkbox-inline">
+            <input type="checkbox" id="{{ instrument.id }}" [(checked)]="instrumentChecked[instrument.id]" (change)="setFinancialInstruments(instrument, $event)">
+            <label for="{{ instrument.id }}">
+                {{ instrument.text | translate }}
+            </label>
+        </div>
+    </div>
+</ng-template>
