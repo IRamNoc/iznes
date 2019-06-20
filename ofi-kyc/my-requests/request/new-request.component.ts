@@ -66,6 +66,13 @@ export class NewKycRequestComponent implements OnInit, AfterViewInit {
     // this is the investor decide when asset manager/nowcp send invitation
     kycInvestorType;
 
+    documentRules = {
+        isListed: null,
+        isFloatableHigh: null,
+        isRegulated: null,
+        isNowCp: null
+    };
+
     constructor(
         private formBuilder: FormBuilder,
         private route: ActivatedRoute,
@@ -83,12 +90,36 @@ export class NewKycRequestComponent implements OnInit, AfterViewInit {
         const isListed = this.forms.get('identification.companyInformation.companyListed').value;
         const isFloatableHigh = this.forms.get('identification.companyInformation.floatableShares').value >= 75;
         const isRegulated = this.forms.get('identification.companyInformation.activityRegulated').value;
+        const isNowCp = (this.kycInvestorType === 70 || this.kycInvestorType === 80);
+        let changed = false;
+
+        if (this.documentRules.isListed !== isListed) {
+            this.documentRules.isListed = isListed;
+            changed = true;
+        }
+        if (this.documentRules.isFloatableHigh !== isFloatableHigh) {
+            this.documentRules.isFloatableHigh = isFloatableHigh;
+            changed = true;
+        }
+        if (this.documentRules.isRegulated !== isRegulated) {
+            this.documentRules.isRegulated = isRegulated;
+            changed = true;
+        }
+
+        if (this.documentRules.isNowCp !== isNowCp) {
+            this.documentRules.isNowCp = isNowCp;
+            changed = true;
+        }
+
+        if (!changed) {
+            return this.documentRules;
+        }
 
         return {
-            isListed,
-            isFloatableHigh,
-            isRegulated,
-            isNowCp: this.kycInvestorType === 70 || this.kycInvestorType === 80,
+            isListed: this.documentRules.isListed,
+            isFloatableHigh: this.documentRules.isFloatableHigh,
+            isRegulated: this.documentRules.isRegulated,
+            isNowCp: this.documentRules.isNowCp,
         };
     }
 
