@@ -2836,6 +2836,10 @@ export const frequencyList = [
 
 export const performanceProfileList = [
     {
+        id: 'Treasuryinvestment',
+        text: 'Treasury Investment',
+    },
+    {
         id: 'Capitalpreservation',
         text: 'Capital preservation',
     },
@@ -2854,6 +2858,10 @@ export const performanceProfileList = [
     {
         id: 'Leverageeffect',
         text: 'Leverage Effect',
+    },
+    {
+        id: 'Backingupaliability',
+        text: 'Backing up a liability(s)',
     },
     {
         id: 'others',

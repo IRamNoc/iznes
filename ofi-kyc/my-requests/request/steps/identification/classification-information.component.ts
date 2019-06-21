@@ -1,16 +1,18 @@
 import { Component, Input, Output, OnInit, OnDestroy, ViewChild, EventEmitter, ElementRef } from '@angular/core';
 import { FormGroup, FormControl } from '@angular/forms';
 import { isEmpty, castArray, find, pick, omit, values, map, assign, findIndex, get as getValue } from 'lodash';
-import { select } from '@angular-redux/store';
+import { select, NgRedux } from '@angular-redux/store';
 import { Subject, combineLatest } from 'rxjs';
 import { filter, map as rxMap, takeUntil, take } from 'rxjs/operators';
-
 import { IdentificationService } from '../identification.service';
 import { NewRequestService } from '../../new-request.service';
 import { countries, investorStatusList } from '../../../requests.config';
 import { FormPercentDirective } from '@setl/utils/directives/form-percent/formpercent';
 import { MultilingualService } from '@setl/multilingual';
 import { formHelper } from '@setl/utils/helper';
+import { PersistRequestService } from '@setl/core-req-services';
+import { PersistService } from '@setl/core-persist';
+import { setMyKycRequestedPersist } from '@ofi/ofi-main/ofi-store/ofi-kyc';
 
 @Component({
     selector: 'classification-information',
@@ -45,6 +47,8 @@ export class ClassificationInformationComponent implements OnInit, OnDestroy {
         private identificationService: IdentificationService,
         public translate: MultilingualService,
         public element: ElementRef,
+        private persistService: PersistService,
+        private ngRedux: NgRedux<any>,
     ) {
     }
 
@@ -366,6 +370,28 @@ export class ClassificationInformationComponent implements OnInit, OnDestroy {
         })
         ;
     }
+
+    // persistForm() {
+    //     this.persistService.watchForm(
+    //         'newkycrequest/identification/classificationInformation',
+    //         this.form,
+    //         this.newRequestService.context,
+    //         {
+    //             reset: false,
+    //             returnPromise: true,
+    //         },
+    //     ).then(() => {
+    //         this.ngRedux.dispatch(setMyKycRequestedPersist('identification/classificationInformation'));
+    //     });
+    // }
+
+    // clearPersistForm() {
+    //     this.persistService.refreshState(
+    //         'newkycrequest/identification/classificationInformation',
+    //         this.newRequestService.createIdentificationFormGroup(),
+    //         this.newRequestService.context,
+    //     );
+    // }
 
     handleSubmit(e) {
         e.preventDefault();
