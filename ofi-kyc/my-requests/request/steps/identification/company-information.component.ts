@@ -25,6 +25,7 @@ import { setMyKycRequestedPersist } from '@ofi/ofi-main/ofi-store/ofi-kyc';
 export class CompanyInformationComponent implements OnInit, OnDestroy {
     @ViewChild(FormPercentDirective) formPercent: FormPercentDirective;
     @Input() form: FormGroup;
+    @Input() isFormReadonly = false;
     @Output() submitEvent: EventEmitter<any> = new EventEmitter<any>();
     @select(['ofi', 'ofiKyc', 'myKycRequested', 'kycs']) requests$;
     @select(['ofi', 'ofiKyc', 'myKycRequested', 'formPersist']) persistedForms$;

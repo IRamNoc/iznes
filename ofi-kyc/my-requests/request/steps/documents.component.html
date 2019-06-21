@@ -30,6 +30,7 @@
                                         (onDrop)="uploadFile($event, form.get(['common', 'kycstatuscertifieddoc']))"
                                         [preset]="getDocumentPreset(['common', 'kycstatuscertifieddoc'])"
                                         [inline]="true"
+                                        [isDisabled]="isFormReadonly"
                                         ngDefaultControl>
                         </setl-file-drop>
                     </div>
@@ -46,6 +47,7 @@
                     <div class="filedrop-wrapper">
                         <setl-file-drop filePermission="0" class="form-control" id="kyckbisdoc"
                             (onDrop)="uploadFile($event, form.get(['common', 'kyckbisdoc']))"
+                            [isDisabled]="isFormReadonly"
                             [preset]="getDocumentPreset(['common', 'kyckbisdoc'])" [inline]="true" ngDefaultControl>
                         </setl-file-drop>
                     </div>
@@ -63,6 +65,7 @@
                                         (onDrop)="uploadFile($event, form.get(['common', 'kycannualreportdoc']))"
                                         [preset]="getDocumentPreset(['common', 'kycannualreportdoc'])"
                                         [inline]="true"
+                                        [isDisabled]="isFormReadonly"
                                         ngDefaultControl>
                         </setl-file-drop>
                     </div>
@@ -78,6 +81,7 @@
                     <div class="filedrop-wrapper">
                         <setl-file-drop filePermission="0" class="form-control" id="kycidorpassportdoc"
                             (onDrop)="uploadFile($event, form.get(['common', 'kycidorpassportdoc']))"
+                            [isDisabled]="isFormReadonly"
                             [preset]="getDocumentPreset(['common', 'kycidorpassportdoc'])" [inline]="true" ngDefaultControl>
                         </setl-file-drop>
                     </div>
@@ -94,6 +98,7 @@
                     <div class="filedrop-wrapper">
                         <setl-file-drop filePermission="0" class="form-control" id="kyctaxcertificationdoc"
                             (onDrop)="uploadFile($event, form.get(['common', 'kyctaxcertificationdoc']))"
+                            [isDisabled]="isFormReadonly"
                             [preset]="getDocumentPreset(['common', 'kyctaxcertificationdoc'])" [inline]="true" ngDefaultControl>
                         </setl-file-drop>
                     </div>
@@ -110,6 +115,7 @@
                         <setl-file-drop filePermission="0" class="form-control" id="kycw8benefatcadoc"
                                         (onDrop)="uploadFile($event, form.get(['common', 'kycw8benefatcadoc']))"
                                         [preset]="getDocumentPreset(['common', 'kycw8benefatcadoc'])"
+                                        [isDisabled]="isFormReadonly"
                                         [inline]="true"
                                         ngDefaultControl>
                         </setl-file-drop>
@@ -128,6 +134,7 @@
                         <setl-file-drop filePermission="0" class="form-control" id="kycisincodedoc"
                                         (onDrop)="uploadFile($event, form.get(['listed', 'kycisincodedoc']))"
                                         [preset]="getDocumentPreset(['listed', 'kycisincodedoc'])"
+                                        [isDisabled]="isFormReadonly"
                                         [inline]="true"
                                         ngDefaultControl>
                         </setl-file-drop>
@@ -146,6 +153,7 @@
                                         (onDrop)="uploadFile($event, form.get(['listed', 'kycevidencefloatable']))"
                                         [preset]="getDocumentPreset(['listed', 'kycevidencefloatable'])"
                                         [inline]="true"
+                                        [isDisabled]="isFormReadonly"
                                         ngDefaultControl>
                         </setl-file-drop>
                     </div>
@@ -164,6 +172,7 @@
                                         (onDrop)="uploadFile($event, form.get(['regulated', 'kycproofofapprovaldoc']))"
                                         [preset]="getDocumentPreset(['regulated', 'kycproofofapprovaldoc'])"
                                         [inline]="true"
+                                        [isDisabled]="isFormReadonly"
                                         ngDefaultControl>
                         </setl-file-drop>
                     </div>
@@ -181,6 +190,7 @@
                                         (onDrop)="uploadFile($event, form.get(['regulated', 'kycproofregulationdoc']))"
                                         [preset]="getDocumentPreset(['regulated', 'kycproofregulationdoc'])"
                                         [inline]="true"
+                                        [isDisabled]="isFormReadonly"
                                         ngDefaultControl>
                         </setl-file-drop>
                     </div>
@@ -196,6 +206,7 @@
                     <div class="filedrop-wrapper">
                         <setl-file-drop filePermission="0" class="form-control" id="kycwolfsbergdoc"
                             (onDrop)="uploadFile($event, form.get(['regulated', 'kycwolfsbergdoc']))"
+                            [isDisabled]="isFormReadonly"
                             [preset]="getDocumentPreset(['regulated', 'kycwolfsbergdoc'])" [inline]="true" ngDefaultControl>
                         </setl-file-drop>
                     </div>
@@ -214,6 +225,7 @@
                                         (onDrop)="uploadFile($event, form.get(['nowcp', 'kycribdoc']))"
                                         [preset]="getDocumentPreset(['nowcp', 'kycribdoc'])"
                                         [inline]="true"
+                                        [isDisabled]="isFormReadonly"
                                         ngDefaultControl>
                         </setl-file-drop>
                     </div>
@@ -231,6 +243,7 @@
                                         (onDrop)="uploadFile($event, form.get(['nowcp', 'kycinfomemorandumbdfdoc']))"
                                         [preset]="getDocumentPreset(['nowcp', 'kycinfomemorandumbdfdoc'])"
                                         [inline]="true"
+                                        [isDisabled]="isFormReadonly"
                                         ngDefaultControl>
                         </setl-file-drop>
                     </div>
@@ -249,6 +262,7 @@
                                         (onDrop)="uploadFile($event, form.get(['nowcp', 'kycorgchartdoc']))"
                                         [preset]="getDocumentPreset(['nowcp', 'kycorgchartdoc'])"
                                         [inline]="true"
+                                        [isDisabled]="isFormReadonly"
                                         ngDefaultControl>
                         </setl-file-drop>
                     </div>

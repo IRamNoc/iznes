@@ -27,6 +27,7 @@
                                 <div class="form-group required-field col-xs-4">
                                     <label class="control-label" for="{{'accountName-' + i }}">{{ 'Account name' | translate }}</label>
                                     <input type="text" id="{{'accountName-' + i }}" formControlName="accountName"
+                                           [readonly]="isFormReadonly"
                                         placeholder="{{ 'Fill in your account name' | translate }}">
                                     <span class="field-error"
                                         *ngIf="hasError([i,'accountName'], ['required'])">{{ 'Field is required' | translate }}</span>
@@ -39,6 +40,7 @@
                                     <input type="text"
                                             id="{{'establishmentName-' + i }}"
                                             formControlName="establishmentName"
+                                            [readonly]="isFormReadonly"
                                             placeholder="{{ 'Fill in the name of your bank establishment' | translate }}">
                                     <span class="field-error" *ngIf="hasError([i,'establishmentName'], ['required'])">{{ 'Field is required' | translate }}</span>
                                     <span class="field-error" *ngIf="hasError([i,'establishmentName'], ['maxlength'])">{{ 'Name is too long' | translate }}</span>
@@ -48,6 +50,7 @@
                                     <input type="text"
                                             id="{{'iban-' + i}}"
                                             formControlName="iban"
+                                            [readonly]="isFormReadonly"
                                             placeholder="{{ 'Fill in your cash account IBAN number' | translate }}">
                                     <span class="field-error" *ngIf="hasError([i,'iban'], ['required'])">{{ 'Field is required' | translate }}</span>
                                     <span class="field-error" *ngIf="hasError([i,'iban'], ['iban'])">{{ 'IBAN must be 14 to 34 characters long with 2 letters at the beginning.' | translate }}</span>
@@ -57,6 +60,7 @@
                                     <input type="text"
                                             id="{{'bic-' + i}}"
                                             formControlName="bic"
+                                            [readonly]="isFormReadonly"
                                             placeholder="{{ 'Fill in your cash account BIC number' | translate }}">
                                     <span class="field-error" *ngIf="hasError([i,'bic'], ['required'])">{{ 'Field is required' | translate }}</span>
                                     <span class="field-error" *ngIf="hasError([i,'bic'], ['bic'])">{{ 'BIC must be 11 characters, ISO 9362, if 9 to 11 are empty then put "XXX"' | translate }}</span>
@@ -68,6 +72,7 @@
                                     <input type="text"
                                             id="{{'establishmentAddress' + i}}"
                                             formControlName="addressLine1"
+                                            [readonly]="isFormReadonly"
                                             placeholder="{{ 'Fill in your establishment\'s address' | translate }}">
                                     <span class="field-error" *ngIf="hasError([i,'addressLine1'], ['required'])">{{ 'Field is required' | translate }}</span>
                                     <span class="field-error" *ngIf="hasError([i,'addressLine1'], ['maxlength'])">{{ 'Address too long' | translate }}</span>
@@ -77,7 +82,8 @@
                                             type="text"
                                             id="{{'addresssLine2-' + i}}"
                                             formControlName="addressLine2"
-                                            placeholder="{{ 'Address Line 2' | translate }}">
+                                            [readonly]="isFormReadonly"
+                                           placeholder="{{ 'Address Line 2' | translate }}">
                                     <span class="field-error" *ngIf="hasError([i,'addressLine2'], ['maxlength'])">{{ 'Address too long' | translate }}</span>
                                 </div>
                                 <div class="form-group required-field col-xs-4">
@@ -85,6 +91,7 @@
                                     <input type="text"
                                             id="{{'zipCode-' + i}}"
                                             formControlName="zipCode"
+                                            [readonly]="isFormReadonly"
                                             placeholder="{{ 'Fill in a ZIP code' | translate }}">
                                     <span class="field-error" *ngIf="hasError([i,'zipCode'], ['required'])">{{ 'Field is required' | translate }}</span>
                                     <span class="field-error" *ngIf="hasError([i,'zipCode'], ['maxlength'])">{{ 'ZIP is too long' | translate }}</span>
@@ -94,6 +101,7 @@
                                     <input type="text"
                                             id="{{'city-' + i}}"
                                             formControlName="city"
+                                            [readonly]="isFormReadonly"
                                             placeholder="{{ 'Fill in a city' | translate }}">
                                     <span class="field-error" *ngIf="hasError([i,'city'], ['required'])">{{ 'Field is required' | translate }}</span>
                                     <span class="field-error" *ngIf="hasError([i,'city'], ['maxlength'])">{{ 'City is too long' | translate }}</span>
@@ -103,6 +111,7 @@
                                     <ng-select [items]="countries"
                                                 id="{{'country' + i}}"
                                                 formControlName="country"
+                                                [isDisabled]="isFormReadonly"
                                                 placeholder="{{ 'Select a country' | translate }}"></ng-select>
                                     <span class="field-error" *ngIf="hasError([i,'country'])">{{ 'Field is required' | translate }}</span>
                                 </div>
@@ -110,7 +119,7 @@
                         </div>
 
                         <div class="form-group col-xs-12">
-                            <button class="btn btn-primary" (click)="addHolder()">
+                            <button class="btn btn-primary" (click)="addHolder()" [disabled]="isFormReadonly">
                                 {{ 'Add Another Account' | translate }}
                             </button>
                         </div>

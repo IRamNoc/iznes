@@ -62,8 +62,6 @@ export class NewKycSelectAmcComponent implements OnInit, OnDestroy {
             invitationToken: this.getInvitationToken(company.id),
         }));
 
-        selected.push({id:-1, registered:0, invitationToken:''});
-
         return selected;
     }
 

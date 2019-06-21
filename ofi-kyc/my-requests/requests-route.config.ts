@@ -15,5 +15,9 @@ export const requestsRoute: Routes = [{
             path: 'new',
             component: NewKycRequestComponent,
         },
+        {
+            path: 'onboard-iznes',
+            component: MyRequestsComponent,
+        },
     ],
 }];

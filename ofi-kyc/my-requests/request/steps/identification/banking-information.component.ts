@@ -21,6 +21,7 @@ import { setMyKycRequestedPersist } from '@ofi/ofi-main/ofi-store/ofi-kyc';
 export class BankingInformationComponent implements OnInit, OnDestroy {
     @ViewChild(FormPercentDirective) formPercent: FormPercentDirective;
     @Input() form;
+    @Input() isFormReadonly;
     @Output() submitEvent: EventEmitter<any> = new EventEmitter<any>();
     @select(['ofi', 'ofiKyc', 'myKycRequested', 'kycs']) requests$;
 

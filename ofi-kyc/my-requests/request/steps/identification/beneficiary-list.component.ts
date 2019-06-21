@@ -27,6 +27,7 @@ import { setMyKycRequestedPersist } from '@ofi/ofi-main/ofi-store/ofi-kyc';
 })
 export class BeneficiaryListComponent implements OnInit, OnDestroy {
     @Input() form: FormArray;
+    @Input() isFormReadonly = false;
     @Output() submitEvent: EventEmitter<any> = new EventEmitter<any>();
     @Output() refresh: EventEmitter<any> = new EventEmitter<any>();
     @select(['ofi', 'ofiKyc', 'myKycRequested', 'stakeholderRelations']) stakeholderRelations$;
@@ -313,6 +314,10 @@ export class BeneficiaryListComponent implements OnInit, OnDestroy {
     }
 
     handleAction(action, index) {
+        if (this.isFormReadonly) {
+            return;
+        }
+
         const realIndex = this.getRealIndex(index);
 
         switch (action) {

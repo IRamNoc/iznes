@@ -23,6 +23,7 @@ export class NewKycDocumentsComponent implements OnInit, OnDestroy {
 
     @Output() submitEvent: EventEmitter<any> = new EventEmitter<any>();
     @Input() form: FormGroup;
+    @Input() isFormReadonly = false;
 
     @Input() set documents(documents) {
         const listedDocuments = this.form.get('listed');
