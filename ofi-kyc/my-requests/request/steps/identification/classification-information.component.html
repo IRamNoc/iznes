@@ -42,7 +42,7 @@
                     <div class="row">
                         <div class="form-group col-sm-6">
                             <div class="checkbox-inline">
-                                <input type="checkbox" id="optFor" formControlName="optFor" [attr.disabled]="isFormReadonly">
+                                <input type="checkbox" id="optFor" formControlName="optFor" [attr.disabled]="isFormReadonly === true ? '' : null">
                                 <label for="optFor" *ngIf="investorType === 'nonPro'">
                                     {{'As a non professional customer, you can ask for professional status' | translate}}
                                 </label>
@@ -71,7 +71,7 @@
                                     <td *ngIf="investorType !== 'nonPro'">
                                         <span class="middle" [ngClass]="{bold: !getFormControl(amc.kycID).value}">{{'Professional Investor'}}</span>
                                         <label class="switch">
-                                            <input type="checkbox" class="form-control" [formControl]="getFormControl(amc.kycID)" [attr.disabled]="isFormReadonly">
+                                            <input type="checkbox" class="form-control" [formControl]="getFormControl(amc.kycID)" [attr.disabled]="isFormReadonly === true ? '' : null">
                                             <span class="slider round"></span>
                                         </label>
                                         <span class="middle" [ngClass]="{bold: getFormControl(amc.kycID).value}">{{'Non Professional Investor'}}</span>
@@ -79,7 +79,7 @@
                                     <td *ngIf="investorType === 'nonPro'">
                                         <span class="middle" [ngClass]="{bold: !getFormControl(amc.kycID).value}">{{'Non Professional Investor'}}</span>
                                         <label class="switch">
-                                            <input type="checkbox" class="form-control" [formControl]="getFormControl(amc.kycID)" [attr.disabled]="isFormReadonly">
+                                            <input type="checkbox" class="form-control" [formControl]="getFormControl(amc.kycID)" [attr.disabled]="isFormReadonly === true ? '' : null">
                                             <span class="slider round"></span>
                                         </label>
                                         <span class="middle" [ngClass]="{bold: getFormControl(amc.kycID).value}">{{'Professional Investor'}}</span>
@@ -233,11 +233,11 @@
                         <div class="col-sm-6 form-group">
                             <clr-radio-container clrInline>
                                 <clr-radio-wrapper>
-                                    <input type="radio" clrRadio name="activitiesBenefitFromExperience" [value]="0" checked="checked" formControlName="activitiesBenefitFromExperience" [attr.disabled]="isFormReadonly" />
+                                    <input type="radio" clrRadio name="activitiesBenefitFromExperience" [value]="0" checked="checked" formControlName="activitiesBenefitFromExperience" [attr.disabled]="isFormReadonly === true ? '' : null" />
                                     <label>{{ 'No' | translate }}</label>
                                 </clr-radio-wrapper>
                                 <clr-radio-wrapper>
-                                    <input type="radio" clrRadio name="activitiesBenefitFromExperience" [value]="1" formControlName="activitiesBenefitFromExperience"  [attr.disabled]="isFormReadonly"/>
+                                    <input type="radio" clrRadio name="activitiesBenefitFromExperience" [value]="1" formControlName="activitiesBenefitFromExperience"  [attr.disabled]="isFormReadonly === true ? '' : null"/>
                                     <label>{{ 'Yes' | translate }}</label>
                                 </clr-radio-wrapper>
                             </clr-radio-container>
@@ -262,11 +262,11 @@
                         <div class="col-sm-6 form-group">
                             <clr-radio-container clrInline>
                                 <clr-radio-wrapper>
-                                    <input type="radio" clrRadio name="trainingKnowledgeSkills" [value]="0" checked="checked" formControlName="trainingKnowledgeSkills" [attr.disabled]="isFormReadonly" />
+                                    <input type="radio" clrRadio name="trainingKnowledgeSkills" [value]="0" checked="checked" formControlName="trainingKnowledgeSkills" [attr.disabled]="isFormReadonly === true ? '' : null" />
                                     <label>{{ 'No' | translate }}</label>
                                 </clr-radio-wrapper>
                                 <clr-radio-wrapper>
-                                    <input type="radio" clrRadio name="trainingKnowledgeSkills" [value]="1" formControlName="trainingKnowledgeSkills" [attr.disabled]="isFormReadonly"/>
+                                    <input type="radio" clrRadio name="trainingKnowledgeSkills" [value]="1" formControlName="trainingKnowledgeSkills" [attr.disabled]="isFormReadonly === true ? '' : null"/>
                                     <label>{{ 'Yes' | translate }}</label>
                                 </clr-radio-wrapper>
                             </clr-radio-container>
@@ -290,11 +290,11 @@
                         <div class="col-sm-6 form-group">
                             <clr-radio-container clrInline>
                                 <clr-radio-wrapper>
-                                    <input type="radio" clrRadio name="knowledgeUCI" [value]="0" checked="checked" formControlName="knowledgeUCI" [attr.disabled]="isFormReadonly" />
+                                    <input type="radio" clrRadio name="knowledgeUCI" [value]="0" checked="checked" formControlName="knowledgeUCI" [attr.disabled]="isFormReadonly === true ? '' : null" />
                                     <label>{{ 'No' | translate }}</label>
                                 </clr-radio-wrapper>
                                 <clr-radio-wrapper>
-                                    <input type="radio" clrRadio name="knowledgeUCI" [value]="1" formControlName="knowledgeUCI" [attr.disabled]="isFormReadonly" />
+                                    <input type="radio" clrRadio name="knowledgeUCI" [value]="1" formControlName="knowledgeUCI" [attr.disabled]="isFormReadonly === true ? '' : null" />
                                     <label>{{ 'Yes' | translate }}</label>
                                 </clr-radio-wrapper>
                             </clr-radio-container>
@@ -311,11 +311,11 @@
                         <div class="col-sm-6 form-group">
                             <clr-radio-container clrInline>
                                 <clr-radio-wrapper>
-                                    <input type="radio" clrRadio name="knowledgeFundsAndRisks" [value]="0" checked="checked" formControlName="knowledgeFundsAndRisks" [attr.disabled]="isFormReadonly" />
+                                    <input type="radio" clrRadio name="knowledgeFundsAndRisks" [value]="0" checked="checked" formControlName="knowledgeFundsAndRisks" [attr.disabled]="isFormReadonly === true ? '' : null" />
                                     <label>{{ 'No' | translate }}</label>
                                 </clr-radio-wrapper>
                                 <clr-radio-wrapper>
-                                    <input type="radio" clrRadio name="knowledgeFundsAndRisks" [value]="1" formControlName="knowledgeFundsAndRisks" [attr.disabled]="isFormReadonly" />
+                                    <input type="radio" clrRadio name="knowledgeFundsAndRisks" [value]="1" formControlName="knowledgeFundsAndRisks" [attr.disabled]="isFormReadonly === true ? '' : null" />
                                     <label>{{ 'Yes' | translate }}</label>
                                 </clr-radio-wrapper>
                             </clr-radio-container>
@@ -332,11 +332,11 @@
                         <div class="col-sm-6 form-group">
                             <clr-radio-container clrInline>
                                 <clr-radio-wrapper>
-                                    <input type="radio" clrRadio name="prospectusKIIDUnderstanding" [value]="0" checked="checked" formControlName="prospectusKIIDUnderstanding" [attr.disabled]="isFormReadonly" />
+                                    <input type="radio" clrRadio name="prospectusKIIDUnderstanding" [value]="0" checked="checked" formControlName="prospectusKIIDUnderstanding" [attr.disabled]="isFormReadonly === true ? '' : null" />
                                     <label>{{ 'No' | translate }}</label>
                                 </clr-radio-wrapper>
                                 <clr-radio-wrapper>
-                                    <input type="radio" clrRadio name="prospectusKIIDUnderstanding" [value]="1" formControlName="prospectusKIIDUnderstanding" [attr.disabled]="isFormReadonly" />
+                                    <input type="radio" clrRadio name="prospectusKIIDUnderstanding" [value]="1" formControlName="prospectusKIIDUnderstanding" [attr.disabled]="isFormReadonly === true ? '' : null" />
                                     <label>{{ 'Yes' | translate }}</label>
                                 </clr-radio-wrapper>
                             </clr-radio-container>
@@ -353,11 +353,11 @@
                             <div class="col-sm-6 form-group">
                                 <clr-radio-container clrInline>
                                     <clr-radio-wrapper>
-                                        <input type="radio" clrRadio name="knowledgeSkillsPlaceUCIOrders" [value]="0" checked="checked" formControlName="knowledgeSkillsPlaceUCIOrders" [attr.disabled]="isFormReadonly" />
+                                        <input type="radio" clrRadio name="knowledgeSkillsPlaceUCIOrders" [value]="0" checked="checked" formControlName="knowledgeSkillsPlaceUCIOrders" [attr.disabled]="isFormReadonly === true ? '' : null" />
                                         <label>{{ 'No' | translate }}</label>
                                     </clr-radio-wrapper>
                                     <clr-radio-wrapper>
-                                        <input type="radio" clrRadio name="knowledgeSkillsPlaceUCIOrders" [value]="1" formControlName="knowledgeSkillsPlaceUCIOrders" [attr.disabled]="isFormReadonly" />
+                                        <input type="radio" clrRadio name="knowledgeSkillsPlaceUCIOrders" [value]="1" formControlName="knowledgeSkillsPlaceUCIOrders" [attr.disabled]="isFormReadonly === true ? '' : null" />
                                         <label>{{ 'Yes' | translate }}</label>
                                     </clr-radio-wrapper>
                                 </clr-radio-container>
@@ -375,7 +375,7 @@
 <ng-template #financialInstrumentsCheckbox let-instrument="instrument">
     <div class="col-sm-3" *ngIf="instrument">
         <div class="checkbox-inline">
-            <input type="checkbox" id="{{ instrument.id }}" [(checked)]="instrumentChecked[instrument.id]" (change)="setFinancialInstruments(instrument, $event)" [attr.disabled]="isFormReadonly">
+            <input type="checkbox" id="{{ instrument.id }}" [(checked)]="instrumentChecked[instrument.id]" (change)="setFinancialInstruments(instrument, $event)" [attr.disabled]="isFormReadonly === true ? '' : null">
             <label for="{{ instrument.id }}">
                 {{ instrument.text | translate }}
             </label>
