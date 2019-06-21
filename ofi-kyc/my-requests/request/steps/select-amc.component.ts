@@ -314,7 +314,15 @@ export class NewKycSelectAmcComponent implements OnInit, OnDestroy {
      */
     isStepValid() {
         return (this.selectedManagementCompanies.length && this.selectedManagementCompanies.length > 0) ||
-            this.submitted
+            this.submitted;
+    }
+
+    /**
+     * Stop enter key submitting Form Steps
+     */
+    stopSubmit(e) {
+        const key = e.charCode || e.keyCode || 0;
+        if (key === 13) e.preventDefault();
     }
 
     /**

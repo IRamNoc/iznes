@@ -119,7 +119,7 @@
                         </div>
 
                         <div class="form-group col-xs-12">
-                            <button class="btn btn-primary" (click)="addHolder()" [disabled]="isFormReadonly">
+                            <button class="btn btn-primary" (click)="addHolder(); $event.preventDefault()" [disabled]="isFormReadonly">
                                 {{ 'Add Another Account' | translate }}
                             </button>
                         </div>

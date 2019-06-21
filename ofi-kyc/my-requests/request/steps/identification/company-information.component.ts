@@ -396,7 +396,7 @@ export class CompanyInformationComponent implements OnInit, OnDestroy {
 
         if (Array.isArray(selectedMarkets)) {
             otherSelected = selectedMarkets.find((market) => {
-                return market.id === 'other';
+                return market.id === 'lmXXX'; // Other
             });
         }
 
@@ -495,7 +495,6 @@ export class CompanyInformationComponent implements OnInit, OnDestroy {
 
     isDisabled(path) {
         const control = this.form.get(path);
-
         return control.disabled;
     }
 
