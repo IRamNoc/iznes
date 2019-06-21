@@ -188,13 +188,13 @@
                             <label>{{ 'Does the client have a commercial address?' | translate }}</label>
                             <clr-radio-wrapper>
                                 <input type="radio" clrRadio name="commercialDomiciliation" [value]="0" checked="checked" formControlName="commercialDomiciliation"
-                                       [attr.disabled]="isFormReadonly === true"
+                                       [attr.disabled]="isFormReadonly === true ? '' : null"
                                 />
                                 <label>{{ 'No' | translate }}</label>
                             </clr-radio-wrapper>
                             <clr-radio-wrapper>
                                 <input type="radio" clrRadio name="commercialDomiciliation" [value]="1" formControlName="commercialDomiciliation"
-                                       [attr.disabled]="isFormReadonly === true"
+                                       [attr.disabled]="isFormReadonly === true ? '' : null"
                                 />
                                 <label>{{ 'Yes' | translate }}</label>
                             </clr-radio-wrapper>
