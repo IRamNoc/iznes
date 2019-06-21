@@ -176,7 +176,7 @@ export class KycDetailsService {
         const list = requestsConfig[listName];
 
         if (requestsConfig.percentageControls.indexOf(controlName) !== -1) {
-            return `${controlValue} %`;
+            return controlValue !== null ? `${controlValue} %` : controlValue;
         }
 
         if (requestsConfig.currencyControls.indexOf(controlName) !== -1) {
