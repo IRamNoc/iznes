@@ -103,13 +103,13 @@
                             <label>{{ 'Is the activity regulated?' | translate }}</label>
                             <clr-radio-wrapper>
                                 <input type="radio" clrRadio name="activityRegulated" [value]="0" checked="checked" formControlName="activityRegulated"
-                                       [attr.disabled]="isFormReadonly === true"
+                                       [attr.disabled]="isFormReadonly === true ? '' : null"
                                 />
                                 <label>{{ 'No' | translate }}</label>
                             </clr-radio-wrapper>
                             <clr-radio-wrapper>
                                 <input type="radio" clrRadio name="activityRegulated" [value]="1" formControlName="activityRegulated"
-                                       [attr.disabled]="isFormReadonly === true"
+                                       [attr.disabled]="isFormReadonly === true ? '' : null"
                                 />
                                 <label>{{ 'Yes' | translate }}</label>
                             </clr-radio-wrapper>
@@ -202,13 +202,13 @@
                             <label>{{ 'Is the company listed?' | translate }}</label>
                             <clr-radio-wrapper>
                                 <input type="radio" clrRadio name="companyListed" [value]="0" checked="checked" formControlName="companyListed"
-                                       [attr.disabled]="isFormReadonly === true"
+                                       [attr.disabled]="isFormReadonly === true ? '' : null"
                                 />
                                 <label>{{ 'No' | translate }}</label>
                             </clr-radio-wrapper>
                             <clr-radio-wrapper>
                                 <input type="radio" clrRadio name="companyListed" [value]="1" formControlName="companyListed"
-                                       [attr.disabled]="isFormReadonly === true"
+                                       [attr.disabled]="isFormReadonly === true ? '' : null"
                                 />
                                 <label>{{ 'Yes' | translate }}</label>
                             </clr-radio-wrapper>
@@ -396,7 +396,7 @@
                         <div class="col-sm-3">
                             <div class="checkbox-inline">
                                 <input type="checkbox" id="equityAndReserves" formControlName="equityAndReserves"
-                                       [attr.disabled]="isFormReadonly === true"
+                                       [attr.disabled]="isFormReadonly === true ? '' : null"
                                 >
                                 <label for="equityAndReserves">
                                     {{ 'Equity & Reserves' | translate }}
@@ -406,7 +406,7 @@
                         <div class="col-sm-5">
                             <div class="checkbox-inline">
                                 <input type="checkbox" id="generalAssets" formControlName="generalAssets"
-                                       [attr.disabled]="isFormReadonly === true"
+                                       [attr.disabled]="isFormReadonly === true ? '' : null"
                                 >
                                 <label for="generalAssets">
                                     {{ 'General Assets (Insurance Contracts)' | translate }}
@@ -419,7 +419,7 @@
                         <div class="col-sm-3">
                             <div class="checkbox-inline">
                                 <input type="checkbox" id="premiumsAndContributions" formControlName="premiumsAndContributions"
-                                       [attr.disabled]="isFormReadonly === true"
+                                       [attr.disabled]="isFormReadonly === true ? '' : null"
                                 >
                                 <label for="premiumsAndContributions">
                                     {{ 'Premiums & Contributions' | translate }}
@@ -429,7 +429,7 @@
                         <div class="col-sm-3">
                             <div class="checkbox-inline">
                                 <input type="checkbox" id="saleGoodsServices" formControlName="saleGoodsServices"
-                                       [attr.disabled]="isFormReadonly === true"
+                                       [attr.disabled]="isFormReadonly === true ? '' : null"
                                 >
                                 <label for="saleGoodsServices">
                                     {{ 'Sale of Goods and Services' | translate }}
@@ -442,7 +442,7 @@
                         <div class="col-sm-3">
                             <div class="checkbox-inline">
                                 <input type="checkbox" id="exceptionalEvents" formControlName="exceptionalEvents"
-                                       [attr.disabled]="isFormReadonly === true"
+                                       [attr.disabled]="isFormReadonly === true ? '' : null"
                                 >
                                 <label for="exceptionalEvents">
                                     {{ 'Exceptional Events' | translate }}
@@ -452,7 +452,7 @@
                         <div class="col-sm-3">
                             <div class="checkbox-inline">
                                 <input type="checkbox" id="treasury" formControlName="treasury"
-                                       [attr.disabled]="isFormReadonly === true"
+                                       [attr.disabled]="isFormReadonly === true ? '' : null"
                                 >
                                 <label for="treasury">
                                     {{ 'Treasury' | translate }}
@@ -465,7 +465,7 @@
                         <div class="col-sm-6">
                             <div class="checkbox-inline">
                                 <input type="checkbox" id="others" formControlName="others"
-                                       [attr.disabled]="isFormReadonly === true"
+                                       [attr.disabled]="isFormReadonly === true ? '' : null"
                                 >
                                 <label for="others">{{ 'Others' | translate }}</label>
                             </div>

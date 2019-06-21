@@ -5,11 +5,11 @@
             <clr-radio-container clrInline>
                 <label class="required-field">{{ 'Type' | translate }}</label>
                 <clr-radio-wrapper>
-                    <input type="radio" clrRadio id="opt-type-legal" value="legalPerson" formControlName="beneficiaryType" [attr.disabled]="disabled" />
+                    <input type="radio" clrRadio id="opt-type-legal" value="legalPerson" formControlName="beneficiaryType" [attr.disabled]="disabled === true ? '' : null" />
                     <label>{{ 'Legal person' | translate }}</label>
                 </clr-radio-wrapper>
                 <clr-radio-wrapper>
-                    <input type="radio" clrRadio id="opt-type-natural" value="naturalPerson" formControlName="beneficiaryType" [attr.disabled]="disabled" />
+                    <input type="radio" clrRadio id="opt-type-natural" value="naturalPerson" formControlName="beneficiaryType" [attr.disabled]="disabled === true ? '' : null" />
                     <label>{{ 'Natural person' | translate }}</label>
                 </clr-radio-wrapper>
             </clr-radio-container>
@@ -228,11 +228,11 @@
                 <clr-radio-container clrInline>
                     <label>{{ 'Does the stakeholder exercise control?' | translate }}</label>
                     <clr-radio-wrapper>
-                        <input type="radio" [attr.disabled]="disabled" clrRadio name="exerciseControl" [value]="0" checked="checked" [formControl]="form.get('common.exerciseControl')" />
+                        <input type="radio" [attr.disabled]="disabled === true ? '' : null" clrRadio name="exerciseControl" [value]="0" checked="checked" [formControl]="form.get('common.exerciseControl')" />
                         <label>{{ 'No' | translate }}</label>
                     </clr-radio-wrapper>
                     <clr-radio-wrapper>
-                        <input type="radio" [attr.disabled]="disabled"  clrRadio name="exerciseControl" [value]="1" [formControl]="form.get('common.exerciseControl')" />
+                        <input type="radio" [attr.disabled]="disabled === true ? '' : null"  clrRadio name="exerciseControl" [value]="1" [formControl]="form.get('common.exerciseControl')" />
                         <label>{{ 'Yes' | translate }}</label>
                     </clr-radio-wrapper>
                 </clr-radio-container>
@@ -399,11 +399,11 @@
                 <clr-radio-container clrInline>
                     <label>{{ 'Does the stakeholder exercise control?' | translate }}</label>
                     <clr-radio-wrapper>
-                        <input type="radio" [attr.disabled]="disabled" clrRadio name="exerciseControl" [value]="0" checked="checked" [formControl]="form.get('common.exerciseControl')" />
+                        <input type="radio" [attr.disabled]="disabled === true ? '' : null" clrRadio name="exerciseControl" [value]="0" checked="checked" [formControl]="form.get('common.exerciseControl')" />
                         <label>{{ 'No' | translate }}</label>
                     </clr-radio-wrapper>
                     <clr-radio-wrapper>
-                        <input type="radio" [attr.disabled]="disabled"  clrRadio name="exerciseControl" [value]="1" [formControl]="form.get('common.exerciseControl')" />
+                        <input type="radio" [attr.disabled]="disabled === true ? '' : null"  clrRadio name="exerciseControl" [value]="1" [formControl]="form.get('common.exerciseControl')" />
                         <label>{{ 'Yes' | translate }}</label>
                     </clr-radio-wrapper>
                 </clr-radio-container>
@@ -413,11 +413,11 @@
                 <clr-radio-container clrInline>
                     <label>{{ 'Is the stakeholder a legal representative?' | translate }}</label>
                     <clr-radio-wrapper>
-                        <input type="radio" [attr.disabled]="disabled" clrRadio name="isLegalRepresentative" [value]="0" checked="checked" formControlName="isLegalRepresentative" />
+                        <input type="radio" [attr.disabled]="disabled === true ? '' : null" clrRadio name="isLegalRepresentative" [value]="0" checked="checked" formControlName="isLegalRepresentative" />
                         <label>{{ 'No' | translate }}</label>
                     </clr-radio-wrapper>
                     <clr-radio-wrapper>
-                        <input type="radio" [attr.disabled]="disabled"  clrRadio name="isLegalRepresentative" [value]="1" formControlName="isLegalRepresentative" />
+                        <input type="radio" [attr.disabled]="disabled === true ? '' : null"  clrRadio name="isLegalRepresentative" [value]="1" formControlName="isLegalRepresentative" />
                         <label>{{ 'Yes' | translate }}</label>
                     </clr-radio-wrapper>
                 </clr-radio-container>
@@ -429,11 +429,11 @@
                 <clr-radio-container clrInline>
                     <label>{{ 'Is the stakeholder a politically exposed person?' | translate }}</label>
                     <clr-radio-wrapper>
-                        <input type="radio" [attr.disabled]="disabled" clrRadio name="isPoliticallyExposed" [value]="0" checked="checked" formControlName="isPoliticallyExposed" />
+                        <input type="radio" [attr.disabled]="disabled === true ? '' : null" clrRadio name="isPoliticallyExposed" [value]="0" checked="checked" formControlName="isPoliticallyExposed" />
                         <label>{{ 'No' | translate }}</label>
                     </clr-radio-wrapper>
                     <clr-radio-wrapper>
-                        <input type="radio" [attr.disabled]="disabled"  clrRadio name="isPoliticallyExposed" [value]="1" formControlName="isPoliticallyExposed" />
+                        <input type="radio" [attr.disabled]="disabled === true ? '' : null"  clrRadio name="isPoliticallyExposed" [value]="1" formControlName="isPoliticallyExposed" />
                         <label>{{ 'Yes' | translate }}</label>
                     </clr-radio-wrapper>
                 </clr-radio-container>
