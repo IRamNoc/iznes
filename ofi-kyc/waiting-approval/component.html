@@ -157,6 +157,7 @@
 
             <div *ngIf="initialStatusId === -1" class="form-group col-sm-12">
                 <button id="backButton" type="button" class="btn btn-light" (click)="handleBackButtonClick()">{{ 'Back' | translate }}</button>
+                <button *ngIf="hasPermissionCanManageAllClientFile" type="button" class="btn btn-primary" (click)="downloadClientFile()">{{'Download Client File' | translate}}</button>
             </div>
         </clr-tab-content>
     </clr-tab>
