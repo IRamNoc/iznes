@@ -7,7 +7,7 @@
             <p>{{"Please provide information about any legal entity or natural person, directly or indirectly, holding more than 10% of your company's shares or voting rights, as well as any legal entity or natural person exercising control or decision-making influence over the company (example: legal representatives)." | translate}}</p>
         </div>
 
-        <div class="alert alert-info" role="alert">
+        <div class="alert alert-info mt-1" role="alert">
             <div class="alert-items">
                 <div class="alert-item static">
                     <div class="alert-icon-wrapper">
@@ -19,7 +19,7 @@
         </div>
 
         <div class="my-1 right">
-            <button class="btn btn-primary m-0" (click)="addStakeholder()">
+            <button class="btn btn-primary m-0" (click)="addStakeholder(); $event.preventDefault()">
                 <clr-icon shape="plus-circle"></clr-icon>
                 {{'Add Stakeholder' | translate}}
             </button>
