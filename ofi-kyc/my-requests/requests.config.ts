@@ -1134,7 +1134,7 @@ export const listingMarketsList = [
     },
     {
         id: 'lm032',
-        text: '"BOERSE BERLIN (REGULIERTER MARKT)',
+        text: 'BOERSE BERLIN (REGULIERTER MARKT)',
     },
     {
         id: 'lm033',
