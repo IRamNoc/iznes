@@ -75,8 +75,6 @@ export class GeneralInformationComponent implements OnInit, OnDestroy {
                 this.formCheckOtherIdentificationNumberType(otherIdentificationNumberTypeValue);
             });
 
-        this.form.get('commercialDomiciliation').setValue('');
-
         this.form.get('commercialDomiciliation').valueChanges
             .pipe(takeUntil(this.unsubscribe))
             .subscribe((value) => {
