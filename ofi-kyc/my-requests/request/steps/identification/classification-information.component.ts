@@ -24,6 +24,7 @@ export class ClassificationInformationComponent implements OnInit, OnDestroy {
     @Input() form;
     @Input() enabled;
     @Input() investorType;
+    @Input() isFormReadonly;
     @Output() submitEvent: EventEmitter<any> = new EventEmitter<any>();
     @select(['ofi', 'ofiKyc', 'myKycRequested', 'kycs']) currentlyRequestedKycs$;
     @select(['ofi', 'ofiProduct', 'ofiManagementCompany', 'investorManagementCompanyList', 'investorManagementCompanyList']) managementCompanyList$;
@@ -365,6 +366,9 @@ export class ClassificationInformationComponent implements OnInit, OnDestroy {
                     this.form.get('optFor').patchValue(optFor);
 
                     this.formCheckOptFor(optFor);
+                }
+                if(this.isFormReadonly) {
+                   this.form.disabled();
                 }
             });
         })

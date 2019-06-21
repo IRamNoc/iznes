@@ -168,7 +168,7 @@ export class NewKycValidationComponent implements OnInit, OnDestroy {
             .then(() => {
                 this.ngRedux.dispatch(ClearMyKycListRequested());
                 // Maybe find a better way to do this if we have time
-                if (startAgain) setTimeout(() => this.router.navigate(['onboarding-requests', 'new']), 200);
+                if (startAgain) setTimeout(() => this.router.navigate(['onboarding-requests', 'onboard-iznes']), 200);
             });
         }
     }

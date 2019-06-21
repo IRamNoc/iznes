@@ -174,9 +174,6 @@ export class GeneralInformationComponent implements OnInit, OnDestroy {
                         if (formData) {
                             this.form.patchValue(formData);
                             this.updateParentForm();
-                            if (this.isFormReadonly) {
-                                this.form.disable();
-                            }
                         }
                     }).catch((err) => {
                         console.log('Failed on get form data', err);

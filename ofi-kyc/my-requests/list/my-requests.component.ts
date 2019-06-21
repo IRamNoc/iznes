@@ -92,6 +92,11 @@ export class MyRequestsComponent implements OnInit, OnDestroy {
                 text: kyc.companyName,
             }));
 
+            // if user come from finished nowcp onboard. create duplicate from client file programmatically.
+            if (this.isFromNowCpOnboard()) {
+               this.duplicateFromClientFile();
+            }
+
         });
 
         this.openTabs$
@@ -204,6 +209,10 @@ export class MyRequestsComponent implements OnInit, OnDestroy {
         if (choice === 'duplicate' && selectedControl.touched && !selectedControl.valid) {
             return true;
         }
+    }
+
+    isFromNowCpOnboard() {
+        return this.router.url.match('/onboarding-requests/onboard-iznes');
     }
 
     closeTab(index) {
