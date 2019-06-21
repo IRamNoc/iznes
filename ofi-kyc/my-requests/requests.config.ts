@@ -1134,35 +1134,19 @@ export const listingMarketsList = [
     },
     {
         id: 'lm032',
-        text: '"BOERSE BERLIN (REGULIERTER',
-    },
-    {
-        id: 'MARKT)',
-        text: '"',
+        text: 'BOERSE BERLIN (REGULIERTER MARKT)',
     },
     {
         id: 'lm033',
-        text: '"Börse Berlin (Berlin Second Regulated',
-    },
-    {
-        id: 'Market)',
-        text: '"',
+        text: 'Börse Berlin (Berlin Second Regulated Market)',
     },
     {
         id: 'lm034',
-        text: '"BADEN-  WUERTTEMBERGISCHE',
-    },
-    {
-        id: 'WERTPAPIERBOERSE',
-        text: '(REGULIERTER MARKT - TECHNICAL PLATFORM 2)"',
+        text: 'BADEN-WUERTTEMBERGISCHE WERTPAPIERBOERSE (REGULIERTER MARKT - TECHNICAL PLATFORM 2)',
     },
     {
         id: 'lm035',
-        text: '"BADEN-WUERTTEMBERGISCHE',
-    },
-    {
-        id: 'WERTPAPIERBOERSE',
-        text: '(REGULIERTER MARKT)"',
+        text: 'BADEN-WUERTTEMBERGISCHE WERTPAPIERBOERSE (REGULIERTER MARKT)',
     },
     {
         id: 'lm036',
@@ -1170,43 +1154,23 @@ export const listingMarketsList = [
     },
     {
         id: 'lm037',
-        text: '"HANSEATISCHE WERTPAPIERBOERSE',
-    },
-    {
-        id: 'HAMBURG',
-        text: '(REGULIERTER MARKT)"',
+        text: 'HANSEATISCHE WERTPAPIERBOERSE HAMBURG (REGULIERTER MARKT)',
     },
     {
         id: 'lm038',
-        text: '"DUESSELDORFER BOERSE QUOTRIX',
-    },
-    {
-        id: '(REGULIERTER',
-        text: 'MARKT)"',
+        text: 'DUESSELDORFER BOERSE QUOTRIX (REGULIERTER MARKT)',
     },
     {
         id: 'lm039',
-        text: '"NIEDERSAECHSICHE BOERSE ZU',
-    },
-    {
-        id: 'HANNOVER',
-        text: '(REGULIERTER MARKT)"',
+        text: 'NIEDERSAECHSICHE BOERSE ZU HANNOVER (REGULIERTER MARKT)',
     },
     {
         id: 'lm040',
-        text: '"BOERSE MUENCHEN - GETTEX -',
-    },
-    {
-        id: 'REGULIERTER',
-        text: 'MARKT"',
+        text: 'BOERSE MUENCHEN - GETTEX - REGULIERTER MARKT',
     },
     {
         id: 'lm041',
-        text: '"EUROPEAN ENERGY EXCHANGE',
-    },
-    {
-        id: '(REGULIERTER',
-        text: 'MARKT)"',
+        text: 'EUROPEAN ENERGY EXCHANGE (REGULIERTER MARKT)',
     },
     {
         id: 'lm042',
@@ -1214,27 +1178,15 @@ export const listingMarketsList = [
     },
     {
         id: 'lm043',
-        text: '"TRADEGATE EXCHANGE',
-    },
-    {
-        id: '(REGULIERTER',
-        text: 'MARKT)"',
+        text: 'TRADEGATE EXCHANGE (REGULIERTER MARKT)',
     },
     {
         id: 'lm044',
-        text: '"BOERSE BERLIN EQUIDUCT TRADING',
-    },
-    {
-        id: '(BERLIN',
-        text: 'SECOND REGULATED MARKET)"',
+        text: 'BOERSE BERLIN EQUIDUCT TRADING (BERLIN SECOND REGULATED MARKET)',
     },
     {
         id: 'lm045',
-        text: '"BOERSE BERLIN EQUIDUCT TRADING',
-    },
-    {
-        id: '(REGULIERTER',
-        text: 'MARKT)"',
+        text: 'BOERSE BERLIN EQUIDUCT TRADING (REGULIERTER MARKT)',
     },
     {
         id: 'lm046',
@@ -1637,15 +1589,7 @@ export const multilateralTradingFacilitiesList = [
     },
     {
         id: 'mtf030',
-        text: '"NIEDERSAECHSICHE BOERSE ZU',
-    },
-    {
-        id: 'HANNOVE',
-        text: 'R',
-    },
-    {
-        id: '(FREIVERKEHR)',
-        text: '"',
+        text: 'NIEDERSAECHSICHE BOERSE ZU HANNOVER (FREIVERKEHR)',
     },
     {
         id: 'mtf031',
@@ -2836,6 +2780,10 @@ export const frequencyList = [
 
 export const performanceProfileList = [
     {
+        id: 'Treasuryinvestment',
+        text: 'Treasury Investment',
+    },
+    {
         id: 'Capitalpreservation',
         text: 'Capital preservation',
     },
@@ -2854,6 +2802,10 @@ export const performanceProfileList = [
     {
         id: 'Leverageeffect',
         text: 'Leverage Effect',
+    },
+    {
+        id: 'Backingupaliability',
+        text: 'Backing up a liability(s)',
     },
     {
         id: 'others',
@@ -3023,11 +2975,19 @@ export const documentTypesList = [
     },
     {
         id: 'kycproofofapprovaldoc',
-        text: 'Proof of approval or copy of order',
+        text: 'proof of approval or copy of order',
     },
     {
         id: 'kycproofregulationdoc',
-        text: 'Proof of regulation/supervision from the Regulator’s Website',
+        text: 'proof of regulation/supervision from the regulator’s website',
+    },
+    {
+        id: 'kycinfomemorandumbdfdoc',
+        text: 'Information memorandum approved by BDF',
+    },
+    {
+        id: 'kycorgchartdoc',
+        text: 'Org chart with key operational teams',
     },
 
 ];

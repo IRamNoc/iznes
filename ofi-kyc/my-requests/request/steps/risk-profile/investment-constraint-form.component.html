@@ -11,47 +11,58 @@
 
 <div class="panel-body" [class.hidden]="!open" [ngClass]="{'constraint pl-1': multiple}" [formGroup]="form">
 
-    <div class="row">
-        <div class="form-group col-sm-6">
+    <div class="row form-group col-sm-12">
+        <div class="col-sm-12">
             <label for="statutoryConstraints-{{index}}">
-                {{ 'Statutory constraints/special rules concerning eligible assets (specify)' | translate }}:
+                {{ 'Statutory constraints/special rules concerning eligible assets' | translate }}
             </label>
-            <textarea class="form-control" id="statutoryConstraints-{{index}}" formControlName="statutoryConstraints"></textarea>
+            <textarea class="form-control"
+                        id="statutoryConstraints-{{index}}" formControlName="statutoryConstraints"></textarea>
             <span class="field-error" *ngIf="hasError('statutoryConstraints', ['maxlength'])">{{ 'Value is too long' | translate }}</span>
         </div>
     </div>
 
-    <div class="row">
-        <div class="form-group col-sm-6">
+    <div class="row form-group col-sm-12">
+        <div class="col-sm-12">
             <label for="taxConstraints-{{index}}">
-                {{ 'Tax constraints (specify tax obligations in terms of investment)' | translate }}:
+                {{ 'Tax constraints (specify tax obligations in terms of investment)' | translate }}
             </label>
-            <textarea class="form-control" id="taxConstraints-{{index}}" formControlName="taxConstraints"></textarea>
+            <textarea class="form-control"
+                        id="taxConstraints-{{index}}"
+                        formControlName="taxConstraints"></textarea>
             <span class="field-error" *ngIf="hasError('taxConstraints', ['maxlength'])">{{ 'Value is too long' | translate }}</span>
         </div>
     </div>
 
-    <div class="row">
-        <div class="form-group col-sm-6">
+    <div class="row form-group col-sm-12">
+        <div class="col-sm-12">
             <label for="otherConstraints-{{index}}">
-                {{ 'Others (including SRI, ESG, etc.) (specify)' | translate }}:
+                {{ 'Others (including SRI, ESG, etc.)' | translate }}
             </label>
-            <textarea class="form-control" id="otherConstraints-{{index}}" formControlName="otherConstraints"></textarea>
+            <textarea class="form-control"
+                        id="otherConstraints-{{index}}"
+                        formControlName="otherConstraints"></textarea>
             <span class="field-error" *ngIf="hasError('otherConstraints', ['maxlength'])">{{ 'Value is too long' | translate }}</span>
         </div>
     </div>
 
-    <div class="row">
-        <div class="form-group col-sm-12">
+    <div class="row form-group col-sm-12">
+        <div class="col-sm-12">
             <label>
-                {{ 'For your information, are investment decisions validated by an ad hoc committee? (optional)' | translate }}:
+                {{ 'Are investment decisions validated by an ad hoc committee?' | translate }}
             </label>
             <div class="radio-inline opt-btn-element">
-                <input type="radio" id="opt-yes-{{index}}" value="yes" formControlName="investmentDecisionsAdHocCommittee">
+                <input type="radio"
+                        id="opt-yes-{{index}}"
+                        value="yes"
+                        formControlName="investmentDecisionsAdHocCommittee">
                 <label for="opt-yes-{{index}}">{{ 'Yes' | translate }}</label>
             </div>
             <div class="radio-inline opt-btn-element">
-                <input type="radio" id="opt-no-{{index}}" value="no" formControlName="investmentDecisionsAdHocCommittee">
+                <input type="radio"
+                        id="opt-no-{{index}}"
+                        value="no"
+                        formControlName="investmentDecisionsAdHocCommittee">
                 <label for="opt-no-{{index}}">{{ 'No' | translate }}</label>
             </div>
 
@@ -64,14 +75,64 @@
         </div>
     </div>
 
-    <div class="row">
-        <div class="form-group col-sm-6">
+    <div class="row form-group col-sm-12">
+        <div class="col-sm-12">
             <label>
-                {{ 'Other persons authorised to take investment decisions and give instructions' | translate }}
+                {{ 'Other persons authorised to take investment decisions and give instructions (' | translate }}
             </label>
 
-            <textarea class="form-control" id="otherPersonsAuthorised-{{index}}" formControlName="otherPersonsAuthorised"></textarea>
+            <textarea class="form-control"
+                        id="otherPersonsAuthorised-{{index}}" formControlName="otherPersonsAuthorised"></textarea>
             <span class="field-error" *ngIf="hasError('otherPersonsAuthorised', ['maxlength'])">{{ 'Value is too long' | translate }}</span>
+        </div>
+    </div>
+
+    <!-- nowCP -->
+    <div *ngIf="isNowCP()" class="row form-group col-sm-12">
+        <div class="col-sm-12">
+            <label class="required-field">
+                {{ 'Has your company ever issued Neu CP?' | translate }}
+            </label>
+            <div class="radio-inline opt-btn-element">
+                <input type="radio" id="hasEverIssuedNeuCp-opt-yes" [value]="1" formControlName="hasEverIssuedNeuCp">
+                <label for="hasEverIssuedNeuCp-opt-yes">{{ 'Yes' | translate }}</label>
+            </div>
+            <div class="radio-inline opt-btn-element">
+                <input type="radio" id="hasEverIssuedNeuCp-opt-no" [value]="0" formControlName="hasEverIssuedNeuCp">
+                <label for="hasEverIssuedNeuCp-opt-no">{{ 'No' | translate }}</label>
+            </div>
+        </div>
+    </div>
+
+    <div *ngIf="isNowCP()" class="row form-group col-sm-12">
+        <div class="col-sm-12">
+            <label class="required-field">
+                {{ 'Has your company already invested in Neu CP?' | translate }}
+            </label>
+            <div class="radio-inline opt-btn-element">
+                <input type="radio" id="hasAlreadyInvestedNeuCp-opt-yes" [value]="1" formControlName="hasAlreadyInvestedNeuCp">
+                <label for="hasAlreadyInvestedNeuCp-opt-yes">{{ 'Yes' | translate }}</label>
+            </div>
+            <div class="radio-inline opt-btn-element">
+                <input type="radio" id="hasAlreadyInvestedNeuCp-opt-no" [value]="0" formControlName="hasAlreadyInvestedNeuCp">
+                <label for="hasAlreadyInvestedNeuCp-opt-no">{{ 'No' | translate }}</label>
+            </div>
+        </div>
+    </div>
+
+    <div *ngIf="isNowCP()" class="row form-group col-sm-12">
+        <div class="col-sm-12">
+            <label class="required-field">
+                {{ 'Do your operators have experience trading in Neu CP?' | translate }}
+            </label>
+            <div class="radio-inline opt-btn-element">
+                <input type="radio" id="hasExperienceTradingNeuCp-opt-yes" [value]="1" formControlName="hasExperienceTradingNeuCp">
+                <label for="hasExperienceTradingNeuCp-opt-yes">{{ 'Yes' | translate }}</label>
+            </div>
+            <div class="radio-inline opt-btn-element">
+                <input type="radio" id="hasExperienceTradingNeuCp-opt-no" [value]="0" formControlName="hasExperienceTradingNeuCp">
+                <label for="hasExperienceTradingNeuCp-opt-no">{{ 'No' | translate }}</label>
+            </div>
         </div>
     </div>
 </div>

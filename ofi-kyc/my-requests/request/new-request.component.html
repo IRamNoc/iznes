@@ -37,7 +37,7 @@
             <banking-information #step [form]="forms.get('identification').get('bankingInformation')" (submitEvent)="handleSubmit($event)"></banking-information>
         </form-step>
         <form-step *ngIf="fullForm">
-            <classification-information [form]="forms.get('identification').get('classificationInformation')" [enabled]="checkCompletion()" [investorType]="investorType" (submitEvent)="handleSubmit($event)"></classification-information>
+            <classification-information #step [form]="forms.get('identification').get('classificationInformation')" [enabled]="checkCompletion()" [investorType]="investorType" (submitEvent)="handleSubmit($event)"></classification-information>
         </form-step>
     <form-step *ngIf="fullForm">
         <!--PARENT STEP-->

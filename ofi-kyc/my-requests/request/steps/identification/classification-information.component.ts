@@ -1,16 +1,18 @@
 import { Component, Input, Output, OnInit, OnDestroy, ViewChild, EventEmitter, ElementRef } from '@angular/core';
 import { FormGroup, FormControl } from '@angular/forms';
 import { isEmpty, castArray, find, pick, omit, values, map, assign, findIndex, get as getValue } from 'lodash';
-import { select } from '@angular-redux/store';
+import { select, NgRedux } from '@angular-redux/store';
 import { Subject, combineLatest } from 'rxjs';
 import { filter, map as rxMap, takeUntil, take } from 'rxjs/operators';
-
 import { IdentificationService } from '../identification.service';
 import { NewRequestService } from '../../new-request.service';
 import { countries, investorStatusList } from '../../../requests.config';
 import { FormPercentDirective } from '@setl/utils/directives/form-percent/formpercent';
 import { MultilingualService } from '@setl/multilingual';
 import { formHelper } from '@setl/utils/helper';
+import { PersistRequestService } from '@setl/core-req-services';
+import { PersistService } from '@setl/core-persist';
+import { setMyKycRequestedPersist } from '@ofi/ofi-main/ofi-store/ofi-kyc';
 
 @Component({
     selector: 'classification-information',
@@ -38,18 +40,16 @@ export class ClassificationInformationComponent implements OnInit, OnDestroy {
     amcs = [];
     ready = false;
     instrumentChecked: {} = {};
+    geographicalAreaChecked: {} = {};
 
     constructor(
         private newRequestService: NewRequestService,
         private identificationService: IdentificationService,
         public translate: MultilingualService,
         public element: ElementRef,
+        private persistService: PersistService,
+        private ngRedux: NgRedux<any>,
     ) {
-    }
-
-    log() {
-        console.log('+++ LOG', this.form.get(['nonPro', 'financialInstruments']).value);
-        console.log('+++ this.instrumentChecked', this.instrumentChecked);
     }
 
     openPanel($e) {
@@ -78,22 +78,47 @@ export class ClassificationInformationComponent implements OnInit, OnDestroy {
 
         const control = this.form.get(['nonPro', 'financialInstruments']);
         const currentInstruments = control.value || [];
+        const matched = currentInstruments.find(ins => ins.id === instrument.id);
 
-        if (event.srcElement.checked && !currentInstruments.includes({ id: instrument.id })) {
+        if (event.srcElement.checked && !matched) {
             currentInstruments.push({ id: instrument.id });
-            return control.setValue(currentInstruments);
+        } else {
+            const index = currentInstruments.indexOf(matched);
+            if (index > -1) currentInstruments.splice(index, 1);
         }
 
-        const index = currentInstruments.indexOf(instrument);
-        if (index > -1) {
-            currentInstruments.splice(index, 1);
-        }
+        control.setValue(currentInstruments);
     }
 
     setInstrumentCheckboxes() {
         (this.form.get(['nonPro', 'financialInstruments']).value || []).forEach((instrument) => {
             this.instrumentChecked[instrument.id] = true;
         });
+    }
+
+    setGeographicalAreas(area, event) {
+        const control = this.form.get(['nonPro', 'marketArea']);
+        const currentAreas = control.value || [];
+        const matched = currentAreas.find(ins => ins.id === area.id);
+
+        if (event.srcElement.checked && !matched) {
+            currentAreas.push({ id: area.id });
+        } else {
+            const index = currentAreas.indexOf(matched);
+            if (index > -1) currentAreas.splice(index, 1);
+        }
+
+        control.setValue(currentAreas);
+    }
+
+    setGeograpgicalAreaCheckboxes() {
+        (this.form.get(['nonPro', 'marketArea']).value || []).forEach((area) => {
+            this.geographicalAreaChecked[area.id] = true;
+        });
+    }
+
+    isEven(n) {
+        return n % 2 === 0;
     }
 
     investorChanged(investorType) {
@@ -317,7 +342,6 @@ export class ClassificationInformationComponent implements OnInit, OnDestroy {
 
             requests.forEach((request, i) => {
                 const promise = this.identificationService.getCurrentFormClassificationData(request.kycID).then((formData) => {
-                    console.log('+++ formData', formData);
                     if (!isEmpty(formData) && i === 0) {
                         const common = pick(formData, ['kycID', 'investorStatus', 'excludeProducts']);
                         const nonPro = omit(formData, ['kycID', 'investorStatus', 'excludeProducts', 'optFor']);
@@ -325,6 +349,7 @@ export class ClassificationInformationComponent implements OnInit, OnDestroy {
 
                         this.form.get('nonPro').patchValue(nonPro);
                         this.setInstrumentCheckboxes();
+                        this.setGeograpgicalAreaCheckboxes();
                     }
                     return formData;
                 });
@@ -345,6 +370,28 @@ export class ClassificationInformationComponent implements OnInit, OnDestroy {
         })
         ;
     }
+
+    // persistForm() {
+    //     this.persistService.watchForm(
+    //         'newkycrequest/identification/classificationInformation',
+    //         this.form,
+    //         this.newRequestService.context,
+    //         {
+    //             reset: false,
+    //             returnPromise: true,
+    //         },
+    //     ).then(() => {
+    //         this.ngRedux.dispatch(setMyKycRequestedPersist('identification/classificationInformation'));
+    //     });
+    // }
+
+    // clearPersistForm() {
+    //     this.persistService.refreshState(
+    //         'newkycrequest/identification/classificationInformation',
+    //         this.newRequestService.createIdentificationFormGroup(),
+    //         this.newRequestService.context,
+    //     );
+    // }
 
     handleSubmit(e) {
         e.preventDefault();

@@ -110,7 +110,7 @@
                         </div>
 
                         <div class="form-group col-xs-12">
-                            <button class="btn btn-primary" (click)="addHolder()">
+                            <button class="btn btn-primary" (click)="addHolder(); $event.preventDefault()">
                                 {{ 'Add Another Account' | translate }}
                             </button>
                         </div>

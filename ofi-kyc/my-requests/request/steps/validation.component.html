@@ -1,56 +1,48 @@
-<h3 class="text-center step-title">
-    {{ 'Validate request' | translate }}
-</h3>
+<form [formGroup]="form" id="step-validation" (ngSubmit)="handleSubmit($event)">
+    <div class="kyc-container sm">
+        <h2>{{ 'Validation' | translate }}</h2>
+        <div class="well">
+            <div class="row panel-header">
+                <div class="col-sm-9">
+                    <h5>Statement</h5>
+                </div>
+            </div>
+            <div class="row panel-body">
 
-<div class="well">
+                <div class="row col-sm-12">
+                    <div class="highlight form-group">
+                        <p>
+                            {{ 'I, the undersigned,' | translate }}
+                            <input class="inline-input" type="text" formControlName="undersigned"/>
+                        </p>
+                        <p>
+                            {{ 'certify on my honour the accuracy of the information and documents provided, declare that I am acting on behalf of' | translate }}
+                            <input class="inline-input" type="text" formControlName="actingOnBehalfOf"/>
+                        </p>
+                        <p>
+                            <span *ngIf="amcs.length > 1">
+                                {{ 'the recipient of the services to be provided by the following asset management companies' | translate }}:
+                            </span>
+                            <span *ngIf="amcs.length === 1">
+                                {{ 'the recipient of the services to be provided by ' | translate }}
+                                {{amcs[0].companyName}}.
+                            </span>
+                        </p>
+                        <ul *ngIf="amcs.length > 1" class="ml-1 mb-1">
+                            <li *ngFor="let amc of amcs">
+                                {{amc.companyName}}
+                            </li>
+                        </ul>
+                        <p class="field-errors">
+                            <span class="error" *ngIf="hasError('undersigned', ['required']) || hasError('actingOnBehalfOf', ['required'])">{{ 'Fields are required' | translate }}</span><br />
+                            <span class="error" *ngIf="hasError('undersigned', ['maxlength']) || hasError('actingOnBehalfOf', ['maxlength']) && (!hasError('undersigned', ['maxlength']) && !hasError('actingOnBehalfOf', ['maxlength']))">{{ 'Values are too long' | translate }}</span>
+                        </p>
+                    </div>
 
-    <div class="row panel-header clr-align-items-center">
-        <div class="col-sm-9">
-            <a href="#" (click)="open = !open; $event.preventDefault();">
-                <i class="fa fa-chevron-right" [class.rotate]="open"></i>
-                <h2>
-                    {{ 'Validation of the Request' | translate }}
-                </h2>
-            </a>
-        </div>
-        <div class="col-sm-3 text-right">
-            <div class="pgContainer" [formpercent]="{form: form, animated : false, stripes: false}"></div>
-        </div>
-    </div>
-
-    <div class="row panel-body" [class.hidden]="!open">
-        <form [formGroup]="form" id="step-validation" (ngSubmit)="handleSubmit($event)" class="well p-1">
-
-            <div class="row">
-                <div class="col-sm-12">
-                    <p>
-                        {{ 'I, the undersigned,' | translate }}
-                        <input class="inline-input" type="text" formControlName="undersigned"/>
-                        {{ 'certify on my honour the accuracy of the information and documents provided, declare that I am acting on behalf of' | translate }}
-                        <input class="inline-input" type="text" formControlName="actingOnBehalfOf"/>
-                        <span *ngIf="amcs.length > 1">
-                            {{ 'the recipient of the services to be provided by the following asset management companies' | translate }}:
-                        </span>
-                        <span *ngIf="amcs.length === 1">
-                            {{ 'the recipient of the services to be provided by ' | translate }}
-                            {{amcs[0].companyName}}.
-                        </span>
-                    </p>
-                    <p class="txtRed">
-                        <span class="txtRed" *ngIf="hasError('undersigned', ['required']) || hasError('actingOnBehalfOf', ['required'])">{{ 'Fields are required' | translate }}</span><br />
-                        <span class="txtRed" *ngIf="hasError('undersigned', ['maxlength']) || hasError('actingOnBehalfOf', ['maxlength'])">{{ 'Values are too long' | translate }}</span>
-                    </p>
-
-                    <ul *ngIf="amcs.length > 1" class="ml-1 mb-1">
-                        <li *ngFor="let amc of amcs">
-                            {{amc.companyName}}
-                        </li>
-                    </ul>
-
-                    <div class="row">
-                        <div class="form-group required-field col-sm-6">
+                    <div class="row col-sm-12">
+                        <div class="form-group required-field col-sm-4">
                             <label for="doneAt">
-                                {{ 'Done At' | translate }}:
+                                {{ 'Completed at (location)' | translate }}:
                             </label>
                             <input type="text"
                                     id="doneAt"
@@ -60,29 +52,28 @@
                             <span class="field-error" *ngIf="hasError('doneAt', ['maxlength'])">{{ 'Value is too long' | translate }}</span>
                         </div>
 
-                        <div class="form-group required-field col-sm-6">
+                        <div class="form-group required-field col-sm-4 date-picker">
                             <label for="doneDate">
                                 {{ 'Date' | translate }}:
                             </label>
 
-                            <div class="input-group date-pick-wrapper">
-                                <span class="fa fa-calendar" aria-hidden="true"></span>
-                                <input disabled="true"
-                                        autocomplete="off"
-                                        [dpDayPicker]="configDate"
-                                        id="doneDate"
-                                        formControlName="doneDate"
-                                        placeholder="{{configDate.format}}"
-                                        mode="day"
-                                        theme="dp-material">
-                            </div>
+                            <input type="text"
+                                    autocomplete="off"
+                                    [dpDayPicker]="configDate"
+                                    id="doneDate"
+                                    formControlName="doneDate"
+                                    placeholder="{{configDate.format}}"
+                                    mode="day"
+                                    theme="dp-material">
 
                             <span class="field-error" *ngIf="hasError('doneDate')">{{ 'Field is required' | translate }}</span>
+
+                            <clr-icon shape="calendar"></clr-icon>
                         </div>
                     </div>
 
-                    <div class="row">
-                        <div class="form-group required-field col-sm-6">
+                    <div class="row col-sm-12">
+                        <div class="form-group required-field col-sm-4">
                             <label for="positionRepresentative">
                                 {{ 'Position of the Representative of the Legal Person' | translate }}:
                             </label>
@@ -93,7 +84,8 @@
                             <span class="field-error" *ngIf="hasError('positionRepresentative', ['required'])">{{ 'Field is required' | translate }}</span>
                             <span class="field-error" *ngIf="hasError('positionRepresentative', ['maxlength'])">{{ 'Value is too long' | translate }}</span>
                         </div>
-                        <div class="form-group required-field col-sm-6">
+
+                        <div class="form-group required-field col-sm-4">
                             <label for="electronicSignatureDocument">
                                 {{ 'As electronic signature, please upload here representative ID\'s card' | translate }}:
                             </label>
@@ -110,22 +102,31 @@
                     </div>
                 </div>
             </div>
-
-            <input type="submit" class="hidden" />
-
-        </form>
+        </div>
     </div>
-</div>
+
+<input type="submit" class="hidden" />
+
+</form>
 
 <div class="full-screen-splash" *ngIf="showKYCComplete" [style.backgroundImage]="'url(assets/images/iznes-login-bg.jpg)'">
     <div class="content">
         <img [attr.src]="isNowCP ? 'assets/images/nowcp-logo.png' : 'assets/images/logo-iznes-only.png'" [attr.alt]="isNowCP ? 'NowCP' : 'IZNES'">
-        <h2>{{ 'Congratulations' | translate }}<ng-container *ngIf="firstName"> {{ firstName }}</ng-container>!</h2>
+        <h2>{{ 'Congratulations' | translate }}<ng-container *ngIf="firstName"> {{ firstName }}</ng-container>! 👏</h2>
         <p class="text-center">{{ "We just need to run a few checks, then you will be granted full access to the IZNES platform. We'll let you know when this happens." | translate }}</p>
 
         <ng-container *ngIf="isNowCP">
-            <h2>{{ 'In the meantime' | translate }}...</h2>
-            <p class="text-center">{{ 'If you wish, you can complete your information in order to benefit from all IZNES services.' | translate }}</p>
+            <div class="highlight">
+                <h2>{{ 'One final thing' | translate }}...</h2>
+                <p>{{ 'If you wish you can complete your information to get the following benefits of the IZNES platform:' | translate }}</p>
+                <ul>
+                    <li>{{ 'Complete and up-to-date product referential' | translate }}</li>
+                    <li>{{ 'Real-time order management and placement' | translate }}</li>
+                    <li>{{ 'Real-time recordkeeping and certification' | translate }}</li>
+                    <li>{{ 'Payment through the traditional banking network' | translate }}</li>
+                    <li>{{ 'Secure messaging service' | translate }}</li>
+                </ul>
+            </div>
             <div class="btns">
                 <button class="btn btn-primary" (click)="handleConfirm(true, true)">{{ 'Go to IZNES' | translate }}</button>
                 <button class="btn" (click)="handleConfirm(true)">{{ 'No thanks' | translate }}</button>
