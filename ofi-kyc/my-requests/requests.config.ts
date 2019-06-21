@@ -1637,15 +1637,7 @@ export const multilateralTradingFacilitiesList = [
     },
     {
         id: 'mtf030',
-        text: '"NIEDERSAECHSICHE BOERSE ZU',
-    },
-    {
-        id: 'HANNOVE',
-        text: 'R',
-    },
-    {
-        id: '(FREIVERKEHR)',
-        text: '"',
+        text: '"NIEDERSAECHSICHE BOERSE ZU HANNOVER (FREIVERKEHR)',
     },
     {
         id: 'mtf031',
