@@ -20,7 +20,7 @@
     </div>
 
     <div class="form-group search-companies">
-        <input type="text" placeholder="Search companies" [formControl]="searchCompanies">
+        <input type="text" placeholder="Search companies" [formControl]="searchCompanies" (keydown)="stopSubmit($event)">
         <clr-icon *ngIf="(searchCompanies || {}).value" shape="times-circle" (click)="clearSearch()"></clr-icon>
     </div>
 
