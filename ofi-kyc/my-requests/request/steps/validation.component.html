@@ -64,7 +64,8 @@
                                     formControlName="doneDate"
                                     placeholder="{{configDate.format}}"
                                     mode="day"
-                                    theme="dp-material">
+                                    theme="dp-material"
+                                    [attr.disabled]="true">
 
                             <span class="field-error" *ngIf="hasError('doneDate')">{{ 'Field is required' | translate }}</span>
 
