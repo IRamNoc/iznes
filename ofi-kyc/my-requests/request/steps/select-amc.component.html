@@ -28,7 +28,7 @@
 
         <div class="management-companies">
 
-            <div id="no-results" *ngIf="filteredManagementCompanies.length === 0">
+            <div id="no-results" *ngIf="filteredManagementCompanies && filteredManagementCompanies.length === 0">
                 <p>{{ 'No companies found, please try again.' | translate }}</p>
             </div>
 
@@ -74,7 +74,7 @@
 
         </div>
 
-        <p id="filtered-count">
+        <p id="filtered-count" *ngIf="filteredManagementCompanies && managementCompanies">
             {{ 'Showing @filtered@ of @total@ companies' | translate: { filtered: filteredManagementCompanies.length, total: managementCompanies.length } }}
         </p>
 
