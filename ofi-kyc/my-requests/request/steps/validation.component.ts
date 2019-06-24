@@ -218,6 +218,7 @@ export class NewKycValidationComponent implements OnInit, OnDestroy {
             this.form.get('electronicSignatureDocument.hash').patchValue(file.fileHash);
             this.form.get('electronicSignatureDocument.name').patchValue(file.fileTitle);
             this.form.get('electronicSignatureDocument.kycDocumentID').patchValue('');
+            this.submitEvent.emit({ updateView: true });
         });
     }
 
