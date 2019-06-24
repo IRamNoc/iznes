@@ -36,7 +36,6 @@ export class BeneficiaryListComponent implements OnInit, OnDestroy {
     @ViewChild(FormPercentDirective) formPercent: FormPercentDirective;
 
     registeredCompanyName: string;
-    // stakeholders: FormArray;
     selectedStakeholderIndex = null;
     sortedStakeholders = [];
     stakeholderBackup = null;
@@ -171,6 +170,7 @@ export class BeneficiaryListComponent implements OnInit, OnDestroy {
                                     this.beneficiaryService.fillInStakeholderSelects(this.form.get('beneficiaries'));
                                     this.beneficiaryService.updateStakeholdersValidity(this.form.get('beneficiaries') as FormArray);
                                     if (this.formPercent) this.formPercent.refreshFormPercent();
+                                    this.prePersistForm();
                                 });
                             }
                         }
@@ -276,7 +276,6 @@ export class BeneficiaryListComponent implements OnInit, OnDestroy {
 
     private isValidUpdate(stakeholder): boolean {
         const type = stakeholder.get('beneficiaryType').value;
-
         if(this.isLegalPerson(type)) {
             return this.isLegalPersonValid(stakeholder);
         } else if(this.isNaturalPerson(type)) {
@@ -567,28 +566,64 @@ export class BeneficiaryListComponent implements OnInit, OnDestroy {
         return type === 'naturalPerson';
     }
 
-    // TODO:
-    // persistForm() {
-    //     this.persistService.watchForm(
-    //         'newkycrequest/identification/beneficiaryInformation',
-    //         this.form,
-    //         this.newRequestService.context,
-    //         {
-    //             reset: false,
-    //             returnPromise: true,
-    //         },
-    //     ).then(() => {
-    //         this.ngRedux.dispatch(setMyKycRequestedPersist('identification/beneficiaryInformation'));
-    //     });
-    // }
+    prePersistForm() {
+        this.persistRequestService
+        .loadFormState('newkycrequest/identification/beneficiaryInformation', this.newRequestService.context)
+        .then((responseData) => {
+            const data = getValue(responseData, [1, 'Data', 0, 'data']);
 
-    // clearPersistForm() {
-    //     this.persistService.refreshState(
-    //         'newkycrequest/identification/beneficiaryInformation',
-    //         this.newRequestService.createIdentificationFormGroup(),
-    //         this.newRequestService.context,
-    //     );
-    // }
+            if (!data) {
+                throw 'No data';
+            }
+
+            try {
+                const parsed = JSON.parse(data);
+                this.prepareArrayControls(parsed);
+                this.persistForm();
+            } catch (e) {
+                throw 'Error';
+            }
+
+        })
+        .catch((e) => {
+            this.persistForm();
+        });
+    }
+
+    prepareArrayControls(parsed) {
+        const beneficiaries = getValue(parsed, ['beneficiaries']);
+
+        const beneficiariesControl = this.form;
+        if (beneficiaries.length > 0) {
+            beneficiariesControl.controls.splice(0);
+
+            for (let i = 0; i < beneficiaries.length; i += 1) {
+                beneficiariesControl.push(this.newRequestService.createBeneficiary());
+            }
+        }
+    }
+
+    persistForm() {
+        this.persistService.watchForm(
+            'newkycrequest/identification/beneficiaryInformation',
+            this.form.parent as FormGroup,
+            this.newRequestService.context,
+            {
+                reset: false,
+                returnPromise: true,
+            },
+        ).then(() => {
+            this.ngRedux.dispatch(setMyKycRequestedPersist('identification/beneficiaryInformation'));
+        });
+    }
+
+    clearPersistForm() {
+        this.persistService.refreshState(
+            'newkycrequest/identification/beneficiaryInformation',
+            this.newRequestService.createIdentificationFormGroup(),
+            this.newRequestService.context,
+        );
+    }
 
     handleSubmit(e) {
         e.preventDefault();
@@ -608,7 +643,7 @@ export class BeneficiaryListComponent implements OnInit, OnDestroy {
                 this.submitEvent.emit({
                     completed: true,
                 });
-                // this.clearPersistForm();
+                this.clearPersistForm();
             })
             .catch(() => {
                 this.newRequestService.errorPop();

@@ -1,5 +1,7 @@
 import { Component, Input, Output, EventEmitter, HostListener, ElementRef } from '@angular/core';
 import { get as getValue, find } from 'lodash';
+import { NewRequestService } from '../../new-request.service';
+import { countries } from '../../../requests.config';
 
 import { BeneficiaryService } from './beneficiary.service';
 
@@ -33,11 +35,17 @@ export class BeneficiaryLineComponent {
     }
 
     get countryTaxResidence() {
-        return getValue(this.stakeholderValue, 'common.countryTaxResidence[0].text');
+        const countryTaxResidenceText = getValue(this.stakeholderValue, 'common.countryTaxResidence[0].text');
+        if (countryTaxResidenceText) return countryTaxResidenceText;
+
+        return this.getAndSetStakeholderTextValues(countries, 'common.countryTaxResidence');
     }
 
     get nationality() {
-        return getValue(this.stakeholderValue, 'common.nationality[0].text');
+        const nationalityText = getValue(this.stakeholderValue, 'common.nationality[0].text');
+        if (nationalityText) return nationalityText;
+
+        return this.getAndSetStakeholderTextValues(countries, 'common.nationality');
     }
 
     get holdingPercentage() {
@@ -45,11 +53,17 @@ export class BeneficiaryLineComponent {
     }
 
     get holdingType() {
-        return getValue(this.stakeholderValue, 'common.holdingType[0].text');
+        const holdingTypeText = getValue(this.stakeholderValue, 'common.holdingType[0].text');
+        if (holdingTypeText) return holdingTypeText;
+
+        return this.getAndSetStakeholderTextValues(this.newRequestService.holdingTypesList, 'common.holdingType');
     }
 
     get relationType() {
-        return getValue(this.stakeholderValue, 'common.relationType[0].text');
+        const relationText = getValue(this.stakeholderValue, 'common.relationType[0].text');
+        if (relationText) return relationText;
+
+        return this.getAndSetStakeholderTextValues(this.newRequestService.relationTypesList, 'common.relationType');
     }
 
     get votingPercentage() {
@@ -59,7 +73,16 @@ export class BeneficiaryLineComponent {
     constructor(
         private beneficiaryService: BeneficiaryService,
         private element: ElementRef,
+        private newRequestService: NewRequestService,
     ) {
+    }
+
+    getAndSetStakeholderTextValues(list, formControlPath) {
+        const controlValue = getValue(this.stakeholderValue, `${formControlPath}`, '');
+        const valueID = getValue(controlValue, '[0].id');
+        if (!valueID) return '';
+        controlValue[0].text = (list.find(item => item.id === valueID) || {}).text || '';
+        return controlValue[0].text;
     }
 
     /**
