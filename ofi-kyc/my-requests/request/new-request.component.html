@@ -55,6 +55,6 @@
         <kyc-step-documents #step [isFormReadonly]="isFormReadonly" [form]="forms.get('documents')" [documents]="documents" (submitEvent)="handleSubmit($event)"></kyc-step-documents>
     </form-step>
     <form-step>
-        <kyc-step-validation #step [form]="forms.get('validation')" (submitEvent)="handleSubmit($event)"></kyc-step-validation>
+        <kyc-step-validation #step [form]="forms.get('validation')" (submitEvent)="handleSubmit($event)" [hasClientFile]="hasClientFile"></kyc-step-validation>
     </form-step>
 </form-steps>

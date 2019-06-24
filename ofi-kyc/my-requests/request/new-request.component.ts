@@ -158,6 +158,10 @@ export class NewKycRequestComponent implements OnInit, AfterViewInit {
         return false;
     }
 
+    get hasClientFile(): boolean {
+        return Boolean(this.clientFileId);
+    }
+
     ngOnInit() {
         this.ngRedux.dispatch(clearMyKycRequestedPersist());
         this.ofiKycService.fetchInvestor();
