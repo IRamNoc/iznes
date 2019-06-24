@@ -24,7 +24,7 @@ export class BeneficiaryComponent implements OnInit, OnDestroy {
         this.parentsFiltered = parents.filter((parent, i) => i !== this.index);
         this.parentsFiltered.unshift({
             id: -1,
-            text: this.registeredCompanyName,
+            text: this.registeredCompanyName || 'No Linked Entity',
         });
     }
 
