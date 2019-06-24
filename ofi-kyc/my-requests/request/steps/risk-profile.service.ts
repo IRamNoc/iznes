@@ -45,7 +45,7 @@ export class RiskProfileService {
             promises = promises.concat(objectivePromises);
 
             // Update step
-            const updateStepPromise = this.sendRequestUpdateCurrentStep(kycID, context);
+            const updateStepPromise = this.sendRequestUpdateCurrentStep(kycID, '', context);
             promises.push(updateStepPromise);
         });
 
@@ -67,7 +67,7 @@ export class RiskProfileService {
             promises = promises.concat(naturePromises);
 
             // Update step
-            const updateStepPromise = this.sendRequestUpdateCurrentStep(kycID, context);
+            const updateStepPromise = this.sendRequestUpdateCurrentStep(kycID, 'investmentDetails', context);
             promises.push(updateStepPromise);
         });
 
@@ -112,7 +112,7 @@ export class RiskProfileService {
         return promises;
     }
 
-    sendRequestInvestmentObjective(formObjective, formConstraint, requests) {
+    sendRequestInvestmentObjective(formObjective, formConstraint, requests, completedStep) {
         this.requests = requests;
 
         let promises = [];
@@ -130,7 +130,7 @@ export class RiskProfileService {
             promises = promises.concat(objectivePromises);
 
             // Update step
-            const updateStepPromise = this.sendRequestUpdateCurrentStep(kycID, context);
+            const updateStepPromise = this.sendRequestUpdateCurrentStep(kycID, completedStep, context);
             promises.push(updateStepPromise);
         });
 
@@ -199,11 +199,11 @@ export class RiskProfileService {
         });
     }
 
-    sendRequestUpdateCurrentStep(kycID, context) {
+    sendRequestUpdateCurrentStep(kycID, completedStep, context) {
         const messageBody = {
             RequestName: 'iznesupdatecurrentstep',
             kycID,
-            completedStep: 'riskProfile',
+            completedStep,
             currentGroup: context,
         };
 

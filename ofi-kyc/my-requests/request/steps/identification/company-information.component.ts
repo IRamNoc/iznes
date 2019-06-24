@@ -9,7 +9,7 @@ import { IdentificationService, buildBeneficiaryObject } from '../identification
 import { DocumentsService } from '../documents.service';
 import { NewRequestService } from '../../new-request.service';
 import { BeneficiaryService } from './beneficiary.service';
-import { countries } from '../../../requests.config';
+import { countries, steps } from '../../../requests.config';
 import { setMyKycStakeholderRelations } from '@ofi/ofi-main/ofi-store/ofi-kyc/kyc-request';
 import { MultilingualService } from '@setl/multilingual';
 import { formHelper } from '@setl/utils/helper';
@@ -26,6 +26,7 @@ export class CompanyInformationComponent implements OnInit, OnDestroy {
     @ViewChild(FormPercentDirective) formPercent: FormPercentDirective;
     @Input() form: FormGroup;
     @Input() isFormReadonly = false;
+    @Input() completedStep: string;
     @Output() submitEvent: EventEmitter<any> = new EventEmitter<any>();
     @select(['ofi', 'ofiKyc', 'myKycRequested', 'kycs']) requests$;
     @select(['ofi', 'ofiKyc', 'myKycRequested', 'formPersist']) persistedForms$;
@@ -76,14 +77,20 @@ export class CompanyInformationComponent implements OnInit, OnDestroy {
             if (forms.identification) {
                 this.formPercent.refreshFormPercent();
             }
-        })
-        ;
+        });
+
         this.initLists();
-        this.persistForm();
 
         this.requestLanguageObj
         .pipe(takeUntil(this.unsubscribe))
         .subscribe(() => this.initLists());
+    }
+
+    /**
+     * Init Form Persist if the step has not been completed
+     */
+    initFormPersist() {
+        if (!this.completedStep || (steps[this.completedStep] < steps.companyInformation)) this.persistForm();
     }
 
     initFormCheck() {
@@ -516,6 +523,7 @@ export class CompanyInformationComponent implements OnInit, OnDestroy {
                     this.form.patchValue(formData);
                     this.formPercent.refreshFormPercent();
                 }
+                this.initFormPersist();
             });
         });
     }

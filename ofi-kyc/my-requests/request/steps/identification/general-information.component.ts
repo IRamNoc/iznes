@@ -6,7 +6,7 @@ import { Subject } from 'rxjs';
 import { filter, take, map, takeUntil } from 'rxjs/operators';
 import { sirenValidator, siretValidator } from '@setl/utils/helper/validators';
 import { FormPercentDirective } from '@setl/utils/directives/form-percent/formpercent';
-import { countries } from '../../../requests.config';
+import { countries, steps } from '../../../requests.config';
 import { NewRequestService } from '../../new-request.service';
 import { IdentificationService } from '../identification.service';
 import { MultilingualService } from '@setl/multilingual';
@@ -22,6 +22,7 @@ import { setMyKycRequestedPersist } from '@ofi/ofi-main/ofi-store/ofi-kyc';
 export class GeneralInformationComponent implements OnInit, OnDestroy {
     @ViewChild(FormPercentDirective) formPercent: FormPercentDirective;
     @Input() parentForm: any;
+    @Input() completedStep: string;
     @Input() isFormReadonly = false;
     @Output() submitEvent: EventEmitter<any> = new EventEmitter<any>();
     @select(['ofi', 'ofiKyc', 'myKycRequested', 'kycs']) requests$;
@@ -60,11 +61,17 @@ export class GeneralInformationComponent implements OnInit, OnDestroy {
         this.initFormCheck();
         this.getCurrentFormData();
         this.initLists();
-        this.persistForm();
 
         this.requestLanguageObj
         .pipe(takeUntil(this.unsubscribe))
         .subscribe(() => this.initLists());
+    }
+
+    /**
+     * Init Form Persist if the step has not been completed
+     */
+    initFormPersist() {
+        if (!this.completedStep || (steps[this.completedStep] < steps.generalInformation)) this.persistForm();
     }
 
     initFormCheck() {
@@ -174,8 +181,9 @@ export class GeneralInformationComponent implements OnInit, OnDestroy {
                             this.form.patchValue(formData);
                             this.updateParentForm();
                         }
+                        this.initFormPersist();
                     }).catch((err) => {
-                        console.log('Failed on get form data', err);
+                        this.initFormPersist();
                     });
                 });
             });
