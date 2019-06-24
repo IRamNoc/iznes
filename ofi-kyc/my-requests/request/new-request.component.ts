@@ -181,7 +181,7 @@ export class NewKycRequestComponent implements OnInit, AfterViewInit {
     ngAfterViewInit() {
         if (this.currentCompletedStep) {
             const nextStep = this.getNextStep(this.currentCompletedStep);
-            this.goToStep(nextStep);
+            this.go(nextStep);
         }
 
         this.handleOnboarding();
@@ -260,6 +260,11 @@ export class NewKycRequestComponent implements OnInit, AfterViewInit {
     goToStep(currentStep) {
         const stepLevel = steps[currentStep];
         this.formSteps.goToStep(stepLevel);
+    }
+
+    go(currentStep) {
+        const stepLevel = steps[currentStep];
+        this.formSteps.go(stepLevel);
     }
 
     getNextStep(step) {
