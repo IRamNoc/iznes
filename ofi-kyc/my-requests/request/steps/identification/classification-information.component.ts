@@ -368,9 +368,6 @@ export class ClassificationInformationComponent implements OnInit, OnDestroy {
 
                     this.formCheckOptFor(optFor);
                 }
-                if(this.isFormReadonly) {
-                   this.form.disabled();
-                }
 
                 this.initFormPersist();
             });
