@@ -135,6 +135,8 @@ export class BeneficiaryComponent implements OnInit, OnDestroy {
             };
 
             formControl.setValue(newFormGroup);
+
+            this.refresh.emit();
         });
     }
 

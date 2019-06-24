@@ -1,4 +1,4 @@
-import { Component, OnInit, ViewChild, AfterViewInit, ChangeDetectionStrategy } from '@angular/core';
+import { Component, OnInit, ViewChild, AfterViewInit, ChangeDetectionStrategy, ChangeDetectorRef } from '@angular/core';
 import { trigger, state, style, transition, animate } from '@angular/animations';
 import { Location } from '@angular/common';
 import { FormBuilder } from '@angular/forms';
@@ -82,6 +82,7 @@ export class NewKycRequestComponent implements OnInit, AfterViewInit {
         private ngRedux: NgRedux<any>,
         private location: Location,
         private ofiKycService: OfiKycService,
+        private changeDetectorRef: ChangeDetectorRef,
     ) {
         this.ngRedux.dispatch(setMenuCollapsed(true));
     }
@@ -180,7 +181,7 @@ export class NewKycRequestComponent implements OnInit, AfterViewInit {
     ngAfterViewInit() {
         if (this.currentCompletedStep) {
             const nextStep = this.getNextStep(this.currentCompletedStep);
-            this.goToStep(nextStep);
+            this.go(nextStep);
         }
 
         this.handleOnboarding();
@@ -261,6 +262,11 @@ export class NewKycRequestComponent implements OnInit, AfterViewInit {
         this.formSteps.goToStep(stepLevel);
     }
 
+    go(currentStep) {
+        const stepLevel = steps[currentStep];
+        this.formSteps.go(stepLevel);
+    }
+
     getNextStep(step) {
         const stepLevel = steps[step];
         const nextStep = invert(steps)[stepLevel + 1];
@@ -299,6 +305,10 @@ export class NewKycRequestComponent implements OnInit, AfterViewInit {
     handleSubmit(event) {
         if (event.completed) {
             this.formSteps.next();
+        }
+
+        if (event.updateView) {
+            this.changeDetectorRef.detectChanges();
         }
     }
 
@@ -370,7 +380,7 @@ export class NewKycRequestComponent implements OnInit, AfterViewInit {
             // in onboarding flow
             if (defaultHomePage == "/new-investor/informations") {
                 this.onboardingMode = true;
-            
+
                 this.goToStep('introduction');
                 this.initFormSteps(this.currentCompletedStep);
             }
