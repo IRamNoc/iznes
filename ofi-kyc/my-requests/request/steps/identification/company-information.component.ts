@@ -163,7 +163,7 @@ export class CompanyInformationComponent implements OnInit, OnDestroy {
                 }
             });
 
-        this.form.get('capitalNature.others').valueChanges
+        this.form.get('capitalNature').valueChanges
             .pipe(takeUntil(this.unsubscribe))
             .subscribe((data) => {
                 this.formCheckNatureAndOrigin(data);
@@ -277,9 +277,9 @@ export class CompanyInformationComponent implements OnInit, OnDestroy {
     }
 
     formCheckNatureAndOrigin(value) {
-        const control = this.form.get('capitalNature.othersText');
+        const control = this.form.get('otherCapitalNature');
 
-        if (value) {
+        if (value.others) {
             control.enable();
         } else {
             control.disable();
