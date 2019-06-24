@@ -157,7 +157,6 @@ export class BankingInformationComponent implements OnInit, OnDestroy {
                 returnPromise: true,
             },
         ).then(() => {
-            console.log('+++ FORM PERSIST SET UP');
             this.ngRedux.dispatch(setMyKycRequestedPersist('identification/bankingInformation'));
         });
     }

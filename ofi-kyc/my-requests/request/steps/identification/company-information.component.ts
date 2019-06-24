@@ -533,7 +533,6 @@ export class CompanyInformationComponent implements OnInit, OnDestroy {
     }
 
     persistForm() {
-        console.log('+++ PERSIST COMPANY');
         this.persistService.watchForm(
             'newkycrequest/identification/companyInformation',
             this.form,

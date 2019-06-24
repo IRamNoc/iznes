@@ -64,7 +64,6 @@ export class InvestmentNatureComponent implements OnInit, OnDestroy {
                 distinctUntilChanged(),
             )
             .subscribe((data: any) => {
-                console.log('+++ data', data);
                 const cross = toNumber(data.naturesSameInvestmentCrossAm);
 
                 if (cross) {
