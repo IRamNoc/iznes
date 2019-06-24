@@ -276,7 +276,6 @@ export class BeneficiaryListComponent implements OnInit, OnDestroy {
 
     private isValidUpdate(stakeholder): boolean {
         const type = stakeholder.get('beneficiaryType').value;
-        console.log('+++ type', type);
         if(this.isLegalPerson(type)) {
             return this.isLegalPersonValid(stakeholder);
         } else if(this.isNaturalPerson(type)) {
@@ -433,8 +432,6 @@ export class BeneficiaryListComponent implements OnInit, OnDestroy {
         ).subscribe((ans) => {
             if (ans.resolved) {
                 this.removeStakeholder(i);
-
-                stakeholder.updateValueAndValidity();
 
                 const confirmation = this.translateService.translate('The stakeholder has been successfully deleted!');
                 this.toasterService.pop('success', confirmation);

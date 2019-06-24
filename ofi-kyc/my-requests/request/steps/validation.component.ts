@@ -1,4 +1,4 @@
-import { Component, Input, OnInit, OnDestroy, Output, EventEmitter, ChangeDetectorRef } from '@angular/core';
+import { Component, Input, OnInit, OnDestroy, Output, EventEmitter } from '@angular/core';
 import { NgRedux, select } from '@angular-redux/store';
 import { Router } from '@angular/router';
 import { Subject, combineLatest } from 'rxjs';
@@ -55,7 +55,6 @@ export class NewKycValidationComponent implements OnInit, OnDestroy {
         private ngRedux: NgRedux<any>,
         public translate: MultilingualService,
         public ofiKycService: OfiKycService,
-        public changeDetectorRef: ChangeDetectorRef,
     ) {
     }
 
@@ -218,7 +217,6 @@ export class NewKycValidationComponent implements OnInit, OnDestroy {
             this.form.get('electronicSignatureDocument.hash').patchValue(file.fileHash);
             this.form.get('electronicSignatureDocument.name').patchValue(file.fileTitle);
             this.form.get('electronicSignatureDocument.kycDocumentID').patchValue('');
-            document.querySelector('body').click(); // force view to update
         });
     }
 

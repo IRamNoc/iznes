@@ -203,7 +203,6 @@ export class HierarchySort {
         const arr = hashObject[key];
 
         arr.forEach((single) => {
-            console.log('+++ pushing single', single);
             result.push(single);
             this.hierarchySort(hashObject, single.get('companyBeneficiariesID').value, result);
         });
@@ -212,7 +211,6 @@ export class HierarchySort {
     }
 
     sort(controls) {
-        console.log('+++ controls', controls);
         this.hashObject = {};
 
         controls.forEach((control) => {
