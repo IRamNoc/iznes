@@ -341,12 +341,12 @@ export class NewRequestService {
                 exceptionalEvents: '',
                 treasury: '',
                 others: '',
-                othersText: [{ value: '', disabled: true }, Validators.required],
             },                      {
                 validator: (formGroup) => {
                     return CustomValidators.multipleCheckboxValidator(formGroup);
                 },
             }),
+            otherCapitalNature: [{ value: '', disabled: true }, Validators.required],
             geographicalOrigin1: ['', Validators.required],
             geographicalOrigin2: [
                 { value: '', disabled: true },

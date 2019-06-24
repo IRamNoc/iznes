@@ -469,17 +469,23 @@
                                 >
                                 <label for="others">{{ 'Others' | translate }}</label>
                             </div>
-                            <input *ngIf="!isDisabled(['capitalNature', 'othersText'])"
-                                    id="othersText"
-                                    type="text"
-                                    formControlName="othersText"
-                                    [readonly]="isFormReadonly"
-                                    placeholder="{{ 'Please specify' | translate }}">
                         </div>
                     </div>
 
-                    <p class="txtRed" *ngIf="hasError('capitalNature')">{{ 'Select at least one' | translate }}</p>
+                    <p class="field-error" *ngIf="hasError('capitalNature')">{{ 'Select at least one' | translate }}</p>
 
+                </div>
+
+                <div *ngIf="!isDisabled(['otherCapitalNature'])" class="row col-sm-12" >
+                    <div class="form-group col-sm-6 required-field">
+                        <label class="control-label" for="otherCapitalNature">&nbsp;</label>
+                        <input type="text"
+                                formControlName="otherCapitalNature"
+                                [readonly]="isFormReadonly"
+                                placeholder="{{ 'Please specify' | translate }}">
+
+                        <span class="field-error" *ngIf="hasError('otherCapitalNature')">{{ 'Please specify' | translate }}</span>
+                    </div>
                 </div>
 
                 <div class="row col-sm-12 form-group">
