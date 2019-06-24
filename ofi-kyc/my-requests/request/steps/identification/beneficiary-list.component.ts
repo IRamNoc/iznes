@@ -31,7 +31,6 @@ export class BeneficiaryListComponent implements OnInit, OnDestroy {
     @Input() isFormReadonly = false;
     @Input() completedStep: string;
     @Output() submitEvent: EventEmitter<any> = new EventEmitter<any>();
-    @Output() refresh: EventEmitter<any> = new EventEmitter<any>();
     @select(['ofi', 'ofiKyc', 'myKycRequested', 'stakeholderRelations']) stakeholderRelations$;
     @select(['ofi', 'ofiKyc', 'myKycRequested', 'kycs']) requests$;
     @select(['user', 'connected', 'connectedWallet']) connectedWallet$;
@@ -558,7 +557,7 @@ export class BeneficiaryListComponent implements OnInit, OnDestroy {
     }
 
     askRefresh() {
-        this.refresh.emit();
+        this.submitEvent.emit({ updateView: true });
     }
 
     markFormGroupTouched(formGroup: FormGroup) {

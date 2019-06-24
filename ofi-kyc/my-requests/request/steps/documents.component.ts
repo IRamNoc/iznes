@@ -136,6 +136,7 @@ export class NewKycDocumentsComponent implements OnInit, OnDestroy {
             this.requestsService.uploadFile($event).then((file: any) => {
                 fControl.get('hash').patchValue(file.fileHash);
                 fControl.get('name').patchValue(file.fileTitle);
+                this.submitEvent.emit({ updateView: true }); // Update the view
             });
         }
     }
