@@ -471,7 +471,9 @@
                             </div>
                         </div>
                     </div>
-                    <span class="field-error" *ngIf="hasError('capitalNature')">{{ 'Select at least one' | translate }}</span>
+
+                    <p class="field-error" *ngIf="hasError('capitalNature')">{{ 'Select at least one' | translate }}</p>
+
                 </div>
 
                 <div *ngIf="!isDisabled(['otherCapitalNature'])" class="row col-sm-12" >
@@ -481,6 +483,7 @@
                                 formControlName="otherCapitalNature"
                                 [readonly]="isFormReadonly"
                                 placeholder="{{ 'Please specify' | translate }}">
+
                         <span class="field-error" *ngIf="hasError('otherCapitalNature')">{{ 'Please specify' | translate }}</span>
                     </div>
                 </div>
