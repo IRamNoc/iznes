@@ -3,11 +3,12 @@ import { isEmpty, values, map, toNumber } from 'lodash';
 import { select } from '@angular-redux/store';
 import { formHelper } from '@setl/utils/helper';
 import { Subject } from 'rxjs';
-import { filter, take, takeUntil } from 'rxjs/operators';
+import { filter, take, takeUntil, distinctUntilChanged } from 'rxjs/operators';
 import { FormPercentDirective } from '@setl/utils/directives/form-percent/formpercent';
 import { RiskProfileService } from '../risk-profile.service';
 import { NewRequestService } from '../../new-request.service';
 import { PersistService } from '@setl/core-persist';
+import { steps } from '../../../requests.config';
 
 @Component({
     selector: 'investment-objective',
@@ -17,6 +18,7 @@ export class InvestmentObjectiveComponent implements OnInit, OnDestroy {
     @ViewChild(FormPercentDirective) formPercent: FormPercentDirective;
     @Input() form;
     @Input() formConstraint;
+    @Input() completedStep: string;
     @Output() submitEvent: EventEmitter<any> = new EventEmitter<any>();
     @select(['ofi', 'ofiKyc', 'myKycRequested', 'kycs']) currentlyRequestedKycs$;
     @select(['ofi', 'ofiKyc', 'myKycRequested', 'kycs']) requests$;
@@ -58,13 +60,15 @@ export class InvestmentObjectiveComponent implements OnInit, OnDestroy {
             });
 
         this.riskProfileService.currentServerData.riskobjective
-            .pipe(takeUntil(this.unsubscribe))
+            .pipe(takeUntil(this.unsubscribe), distinctUntilChanged())
             .subscribe((data: any) => {
                 const cross = toNumber(data.objectivesSameInvestmentCrossAm);
                 if (cross) {
                     this.form.get('objectivesSameInvestmentCrossAm').patchValue(cross, { emitEvent: false });
                     this.formCheckSameInvestmentCrossAm(cross);
                 }
+
+                this.initFormPersist();
             });
     }
 
@@ -122,27 +126,38 @@ export class InvestmentObjectiveComponent implements OnInit, OnDestroy {
         this.formPercent.refreshFormPercent();
     }
 
-    // persistForm() {
-    //     this.persistService.watchForm(
-    //         'newkycrequest/riskProfile/investmentObjective',
-    //         this.form,
-    //         this.newRequestService.context,
-    //         {
-    //             reset: false,
-    //             returnPromise: true,
-    //         },
-    //     ).then(() => {
-    //         this.formWatch.next(true);
-    //     });
-    // }
+    /**
+     * Init Form Persist if the step has not been completed
+     */
+    initFormPersist() {
+        if (!this.completedStep || (steps[this.completedStep] < steps.investmentObjectives)) this.persistForm();
+    }
 
-    // clearPersistForm() {
-    //     this.persistService.refreshState(
-    //         'newkycrequest/riskProfile/investmentObjective',
-    //         this.newRequestService.createRiskProfileFormGroup(),
-    //         this.newRequestService.context,
-    //     );
-    // }
+    persistForm() {
+        this.persistService.watchForm(
+            'newkycrequest/riskProfile/investmentObjective',
+            this.form,
+            this.newRequestService.context,
+            {
+                reset: false,
+                returnPromise: true,
+            },
+        ).then(() => {
+            this.formWatch.next(true);
+        });
+    }
+
+    clearPersistForm() {
+        this.persistService.refreshState(
+            'newkycrequest/riskProfile/investmentObjective',
+            this.newRequestService.createRiskProfileFormGroup(),
+            this.newRequestService.context,
+        );
+    }
+
+    isStepValid() {
+        return this.form.valid;
+    }
 
     handleSubmit(e) {
         e.preventDefault();
@@ -158,9 +173,9 @@ export class InvestmentObjectiveComponent implements OnInit, OnDestroy {
                 take(1),
             )
             .subscribe((requests) => {
-                this.riskProfileService.sendRequestInvestmentObjective(this.form, this.formConstraint, requests)
+                this.riskProfileService.sendRequestInvestmentObjective(this.form, this.formConstraint, requests, 'investmentObjectives')
                     .then(() => {
-                        // this.clearPersistForm();
+                        this.clearPersistForm();
                         this.submitEvent.emit({
                             completed: true,
                         });
