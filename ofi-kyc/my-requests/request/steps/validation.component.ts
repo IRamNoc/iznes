@@ -27,6 +27,7 @@ import { OfiKycService } from '@ofi/ofi-main/ofi-req-services/ofi-kyc/service';
 })
 export class NewKycValidationComponent implements OnInit, OnDestroy {
     @Input() form;
+    @Input() hasClientFile = false;
     @Output() submitEvent: EventEmitter<any> = new EventEmitter<any>();
 
     @select(['ofi', 'ofiKyc', 'myKycRequested', 'kycs']) requests$;
@@ -192,7 +193,7 @@ export class NewKycValidationComponent implements OnInit, OnDestroy {
                     await this.validationService.sendRequest(this.form, req, this.connectedWallet);
                 }
 
-                this.handleConfirm();
+                this.handleConfirm(this.hasClientFile);
                 this.submitEvent.emit({
                     completed: true,
                 });
