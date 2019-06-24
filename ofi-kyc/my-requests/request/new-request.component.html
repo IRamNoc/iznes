@@ -25,31 +25,31 @@
         <!--PARENT STEP-->
     </form-step>
         <form-step *ngIf="fullForm">
-            <general-information #step [isFormReadonly]="isFormReadonly" [parentForm]="forms.get('identification').get('generalInformation')" (submitEvent)="handleSubmit($event)"></general-information>
+            <general-information #step [isFormReadonly]="isFormReadonly" [parentForm]="forms.get('identification').get('generalInformation')" [completedStep]="currentCompletedStep" (submitEvent)="handleSubmit($event)"></general-information>
         </form-step>
         <form-step *ngIf="fullForm">
-            <company-information #step [isFormReadonly]="isFormReadonly" [form]="forms.get('identification').get('companyInformation')" (submitEvent)="handleSubmit($event)"></company-information>
+            <company-information #step [isFormReadonly]="isFormReadonly" [form]="forms.get('identification').get('companyInformation')" [completedStep]="currentCompletedStep" (submitEvent)="handleSubmit($event)"></company-information>
         </form-step>
         <form-step *ngIf="fullForm">
-            <beneficiary-list #step [isFormReadonly]="isFormReadonly" [form]="forms.get('identification').get('beneficiaries').get('beneficiaries')" (submitEvent)="handleSubmit($event)"></beneficiary-list>
+            <beneficiary-list #step [isFormReadonly]="isFormReadonly" [form]="forms.get('identification').get('beneficiaries').get('beneficiaries')" [completedStep]="currentCompletedStep" (submitEvent)="handleSubmit($event)"></beneficiary-list>
         </form-step>
         <form-step *ngIf="fullForm">
-            <banking-information #step [isFormReadonly]="isFormReadonly" [form]="forms.get('identification').get('bankingInformation')" (submitEvent)="handleSubmit($event)"></banking-information>
+            <banking-information #step [isFormReadonly]="isFormReadonly" [form]="forms.get('identification').get('bankingInformation')" [completedStep]="currentCompletedStep" (submitEvent)="handleSubmit($event)"></banking-information>
         </form-step>
         <form-step *ngIf="fullForm">
-            <classification-information #step [isFormReadonly]="isFormReadonly" [form]="forms.get('identification').get('classificationInformation')" [enabled]="checkCompletion()" [investorType]="investorType" (submitEvent)="handleSubmit($event)"></classification-information>
+            <classification-information #step [isFormReadonly]="isFormReadonly" [form]="forms.get('identification').get('classificationInformation')" [completedStep]="currentCompletedStep" [enabled]="checkCompletion()" [investorType]="investorType" (submitEvent)="handleSubmit($event)"></classification-information>
         </form-step>
     <form-step *ngIf="fullForm">
         <!--PARENT STEP-->
     </form-step>
         <form-step *ngIf="fullForm">
-            <investment-nature #step [form]="forms.get('riskProfile').get('investmentNature')" (submitEvent)="handleSubmit($event)"></investment-nature>
+            <investment-nature #step [form]="forms.get('riskProfile').get('investmentNature')" [completedStep]="currentCompletedStep" (submitEvent)="handleSubmit($event)"></investment-nature>
         </form-step>
         <form-step *ngIf="fullForm">
-            <investment-objective #step [form]="forms.get('riskProfile').get('investmentObjective')" [formConstraint]="forms.get('riskProfile').get('investmentConstraint')" (submitEvent)="handleSubmit($event)"></investment-objective>
+            <investment-objective #step [form]="forms.get('riskProfile').get('investmentObjective')" [formConstraint]="forms.get('riskProfile').get('investmentConstraint')" [completedStep]="currentCompletedStep" (submitEvent)="handleSubmit($event)"></investment-objective>
         </form-step>
         <form-step *ngIf="fullForm">
-            <investment-constraint #step [form]="forms.get('riskProfile').get('investmentConstraint')" [formObjective]="forms.get('riskProfile').get('investmentObjective')" (submitEvent)="handleSubmit($event)"></investment-constraint>
+            <investment-constraint #step [form]="forms.get('riskProfile').get('investmentConstraint')" [formObjective]="forms.get('riskProfile').get('investmentObjective')" [completedStep]="currentCompletedStep" (submitEvent)="handleSubmit($event)"></investment-constraint>
         </form-step>
     <form-step *ngIf="fullForm">
         <kyc-step-documents #step [isFormReadonly]="isFormReadonly" [form]="forms.get('documents')" [documents]="documents" (submitEvent)="handleSubmit($event)"></kyc-step-documents>

@@ -78,8 +78,8 @@
                                     <span class="field-error" *ngIf="hasError([i,'addressLine1'], ['maxlength'])">{{ 'Address too long' | translate }}</span>
                                 </div>
                                 <div class="form-group col-xs-4">
-                                    <input style="margin-top: 20px"
-                                            type="text"
+                                    <label class="control-label" for="{{'addresssLine2-' + i}}">&nbsp;</label>
+                                    <input  type="text"
                                             id="{{'addresssLine2-' + i}}"
                                             formControlName="addressLine2"
                                             [readonly]="isFormReadonly"

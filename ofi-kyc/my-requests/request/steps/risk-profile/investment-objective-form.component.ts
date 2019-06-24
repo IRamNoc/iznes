@@ -5,7 +5,7 @@ import { NewRequestService, configDate } from '../../new-request.service';
 import { RiskProfileService } from '../risk-profile.service';
 import { get as getValue, find, pick, isEmpty } from 'lodash';
 import { Subject } from 'rxjs';
-import { filter as rxFilter, takeUntil, take } from 'rxjs/operators';
+import { filter as rxFilter, takeUntil, take, distinctUntilChanged } from 'rxjs/operators';
 import { List } from 'immutable';
 import { MultilingualService } from '@setl/multilingual';
 
@@ -61,6 +61,7 @@ export class InvestmentObjectiveFormComponent implements OnInit, OnDestroy {
                     return !this.multiple || (dataAMCId === currentAMCId);
                 }),
                 take(1),
+                distinctUntilChanged(),
             )
             .subscribe((data: any) => {
                 data.riskAcceptance = pick(data, ['riskAcceptanceLevel1', 'riskAcceptanceLevel2', 'riskAcceptanceLevel3', 'riskAcceptanceLevel4']);

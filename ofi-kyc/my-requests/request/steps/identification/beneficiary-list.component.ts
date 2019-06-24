@@ -19,6 +19,7 @@ import { formHelper } from '@setl/utils/helper';
 import { PersistRequestService } from '@setl/core-req-services';
 import { PersistService } from '@setl/core-persist';
 import { setMyKycRequestedPersist } from '@ofi/ofi-main/ofi-store/ofi-kyc';
+import { steps } from '../../../requests.config';
 
 @Component({
     selector: 'beneficiary-list',
@@ -28,6 +29,7 @@ import { setMyKycRequestedPersist } from '@ofi/ofi-main/ofi-store/ofi-kyc';
 export class BeneficiaryListComponent implements OnInit, OnDestroy {
     @Input() form: FormArray;
     @Input() isFormReadonly = false;
+    @Input() completedStep: string;
     @Output() submitEvent: EventEmitter<any> = new EventEmitter<any>();
     @Output() refresh: EventEmitter<any> = new EventEmitter<any>();
     @select(['ofi', 'ofiKyc', 'myKycRequested', 'stakeholderRelations']) stakeholderRelations$;
@@ -170,7 +172,6 @@ export class BeneficiaryListComponent implements OnInit, OnDestroy {
                                     this.beneficiaryService.fillInStakeholderSelects(this.form.get('beneficiaries'));
                                     this.beneficiaryService.updateStakeholdersValidity(this.form.get('beneficiaries') as FormArray);
                                     if (this.formPercent) this.formPercent.refreshFormPercent();
-                                    this.prePersistForm();
                                 });
                             }
                         }
@@ -181,6 +182,9 @@ export class BeneficiaryListComponent implements OnInit, OnDestroy {
 
                 Promise.all(promises).then(() => {
                     this.ngRedux.dispatch(setMyKycStakeholderRelations(stakeholdersRelationTable));
+                    this.initFormPersist();
+                }).catch(() => {
+                    this.initFormPersist();
                 });
             });
 
@@ -244,6 +248,27 @@ export class BeneficiaryListComponent implements OnInit, OnDestroy {
             .subscribe((connectedWallet) => {
                 this.connectedWallet = connectedWallet;
             });
+
+        this.requests$
+        .pipe(
+            takeUntil(this.unsubscribe),
+            map(kycs => kycs[0]),
+            rxFilter((kyc: any) => {
+                return kyc && kyc.amcID;
+            }),
+        )
+        .subscribe((kyc) => {
+            if (this.shouldPersist(kyc)) {
+                this.prePersistForm();
+            }
+        });
+    }
+
+    shouldPersist(kyc) {
+        if (kyc.context === 'done') {
+            return false;
+        }
+        return !kyc.completedStep || (steps[kyc.completedStep] < steps.stakeholders);
     }
 
     closeModal(cancel?) {
@@ -387,7 +412,7 @@ export class BeneficiaryListComponent implements OnInit, OnDestroy {
     editStakeholder(i) {
         this.openModal = true;
         this.mode = 'edit';
-        this.selectedStakeholderIndex = i;
+        this.selectedStakeholderIndex = i < 0 ? 0 : i;
         this.stakeholderBackup = this.form.at(this.selectedStakeholderIndex).value;
     }
 
@@ -566,6 +591,13 @@ export class BeneficiaryListComponent implements OnInit, OnDestroy {
         return type === 'naturalPerson';
     }
 
+    /**
+     * Init Form Persist if the step has not been completed
+     */
+    initFormPersist() {
+        if (!this.completedStep || (steps[this.completedStep] < steps.stakeholders)) this.prePersistForm();
+    }
+
     prePersistForm() {
         this.persistRequestService
         .loadFormState('newkycrequest/identification/beneficiaryInformation', this.newRequestService.context)
@@ -623,6 +655,10 @@ export class BeneficiaryListComponent implements OnInit, OnDestroy {
             this.newRequestService.createIdentificationFormGroup(),
             this.newRequestService.context,
         );
+    }
+
+    isStepValid() {
+        return this.form.valid;
     }
 
     handleSubmit(e) {
