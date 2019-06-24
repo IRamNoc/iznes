@@ -168,6 +168,13 @@ export class NewKycRequestComponent implements OnInit, AfterViewInit {
 
         this.initForm();
         this.initSubscriptions();
+
+        // check if onboading mode by default homepage route
+        combineLatest(this.defaultHomePage$).subscribe(([defaultHomePage]) => {
+            if (defaultHomePage == "/new-investor/informations") {
+                this.onboardingMode = true;
+            }
+        });
     }
 
     ngAfterViewInit() {
@@ -251,7 +258,7 @@ export class NewKycRequestComponent implements OnInit, AfterViewInit {
 
     goToStep(currentStep) {
         const stepLevel = steps[currentStep];
-        this.formSteps.go(stepLevel);
+        this.formSteps.goToStep(stepLevel);
     }
 
     getNextStep(step) {
@@ -353,11 +360,17 @@ export class NewKycRequestComponent implements OnInit, AfterViewInit {
         this.checkIsBeginning();
 
         // manage onboarding flow status
-        combineLatest(this.inviteInfo$, this.defaultHomePage$)
-        .subscribe(([inviteInfo, defaultHomePage]) => {
+        combineLatest(this.inviteInfo$, this.defaultHomePage$, this.managementCompanyList$)
+        .subscribe(([inviteInfo, defaultHomePage, managementCompanyList]) => {
+
+            if(managementCompanyList.length == 0){
+                return;
+            }
+
             // in onboarding flow
             if (defaultHomePage == "/new-investor/informations") {
                 this.onboardingMode = true;
+            
                 this.goToStep('introduction');
                 this.initFormSteps(this.currentCompletedStep);
             }

@@ -1,6 +1,6 @@
-import { Component, OnInit, Input, OnDestroy, Output, EventEmitter, ChangeDetectorRef } from '@angular/core';
+import { Component, OnInit, Input, OnDestroy, Output, EventEmitter, ChangeDetectorRef, AfterViewInit } from '@angular/core';
 import { combineLatest, Subject } from 'rxjs';
-import { takeUntil, filter as rxFilter, tap, map } from 'rxjs/operators';
+import { takeUntil, filter as rxFilter, tap, map, distinctUntilChanged } from 'rxjs/operators';
 import { FormGroup, FormControl } from '@angular/forms';
 import { select, NgRedux } from '@angular-redux/store';
 import { ActivatedRoute } from '@angular/router';
@@ -38,6 +38,7 @@ export class NewKycSelectAmcComponent implements OnInit, OnDestroy {
     timeout: any;
 
     @Input() duplicate;
+    @Input() onboarding;
     @Input() form: FormGroup;
 
     @Input() set disabled(isDisabled) {
@@ -80,6 +81,18 @@ export class NewKycSelectAmcComponent implements OnInit, OnDestroy {
     ngOnInit() {
         this.initSubscriptions();
         this.getQueryParams();
+    }
+
+    ngAfterViewInit() {
+        if(this.onboarding){
+            
+            combineLatest(
+                this.managementCompanyList$, 
+                this.myKycList$)
+            .subscribe(([managementCompanyList,myKycList]) => {
+                if(!this.submitted) this.handleSubmit();
+            });
+        }
     }
 
     initSubscriptions() {
@@ -251,8 +264,10 @@ export class NewKycSelectAmcComponent implements OnInit, OnDestroy {
         this.form.get('managementCompanies').patchValue(this.selectedManagementCompanies);
     }
 
-    async handleSubmit($event) {
-        $event.preventDefault();
+    async handleSubmit($event = null) {
+        if ($event) {
+            $event.preventDefault();
+        }
 
         if (this.submitted) {
             this.validSubmit();
