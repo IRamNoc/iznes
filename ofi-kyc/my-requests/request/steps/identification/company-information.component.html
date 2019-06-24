@@ -471,20 +471,19 @@
                             </div>
                         </div>
                     </div>
+                    <span class="field-error" *ngIf="hasError('capitalNature')">{{ 'Select at least one' | translate }}</span>
                 </div>
 
-                <div class="row col-sm-12 form-group">
-                    <div class="col-sm-6">
-                        <input *ngIf="!isDisabled(['otherCapitalNature'])"
-                                type="text"
+                <div *ngIf="!isDisabled(['otherCapitalNature'])" class="row col-sm-12" >
+                    <div class="form-group col-sm-6 required-field">
+                        <label class="control-label" for="otherCapitalNature">&nbsp;</label>
+                        <input type="text"
                                 formControlName="otherCapitalNature"
                                 [readonly]="isFormReadonly"
                                 placeholder="{{ 'Please specify' | translate }}">
+                        <span class="field-error" *ngIf="hasError('otherCapitalNature')">{{ 'Please specify' | translate }}</span>
                     </div>
                 </div>
-
-                <p class="field-error" *ngIf="hasError('capitalNature')">{{ 'Select at least one' | translate }}</p>
-                <p class="field-error" *ngIf="hasError('otherCapitalNature')">{{ 'Please specify' | translate }}</p>
 
                 <div class="row col-sm-12 form-group">
                     <div class="required-field col-md-4">
