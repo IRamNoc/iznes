@@ -33,9 +33,7 @@
         <div class="form-group required-field col-sm-6">
             <label class="control-label" for="parent-benef">{{'Linked Entity' | translate}}</label>
 
-            <input *ngIf="!index" type="text" disabled placeholder="{{registeredCompanyName}}">
-            <ng-select *ngIf="index"
-                        id="parent-benef"
+            <ng-select id="parent-benef"
                         [items]="parents"
                         [formControl]="form.get('common.parent')"
                         placeholder="{{'Select stakeholder\'s parent ' | translate}}"
@@ -51,8 +49,7 @@
             <ng-select id="holdingType-benef"
                         [items]="holdingTypesList"
                         [formControl]="form.get('common.holdingType')"
-                        placeholder="{{'Type' | translate}}"
-                        [isDisabled]="disabled">
+                        [isDisabled]="true">
             </ng-select>
         </div>
     </div>
