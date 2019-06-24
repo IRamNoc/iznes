@@ -88,6 +88,7 @@ export class KycDetailsService {
                 'companyBeneficiariesID',
                 'custodianID',
             ])
+            .omit(this.omitNonProfessionalFields(data.investorStatus))
             .omit(this.omitConditionalFields(data))
             .toPairs()
             .map(([controlName, controlValue]) => ({
@@ -103,6 +104,30 @@ export class KycDetailsService {
             .value();
 
         return array;
+    }
+
+    /**
+     * Remove fields for non-professional investors
+     *
+     * @param {integer} investorStatus
+     *
+     * @return {Object} array of fields to omit
+     */
+    omitNonProfessionalFields(investorStatus) {
+        if (investorStatus !== requestsConfig.investorStatusList.nonPro) {
+            return [
+                'activitiesBenefitFromExperience',
+                'activitiesBenefitFromExperienceSpecification',
+                'knowledgeFundsAndRisks',
+                'knowledgeSkillsPlaceUCIOrders',
+                'knowledgeUCI',
+                'prospectusKIIDUnderstanding',
+                'trainingKnowledgeSkills',
+                'trainingKnowledgeSkillsSpecification',
+            ];
+        }
+
+        return [];
     }
 
     /**
