@@ -10,10 +10,10 @@
                 <small>{{ 'Last Update' | translate }}: {{lastUpdate}}</small>
             </td>
             <td class="icon">
-                <i *ngIf="requestDetailStatus === 'Approved'" class="icon fa fa-check-circle text-success"></i>
-                <i *ngIf="requestDetailStatus === 'Rejected'" class="icon fa fa-times-circle text-red"></i>
-                <i *ngIf="requestDetailStatus === 'WaitingForApproval'" class="icon fa fa-hourglass-half text-warning"></i>
-                <i *ngIf="requestDetailStatus === 'WaitingForMoreInfo'" class="icon fa fa-question-circle text-warning"></i>
+                <clr-icon *ngIf="requestDetailStatus === 'Approved'" shape="success-standard" class="icon text-success"></clr-icon>
+                <clr-icon *ngIf="requestDetailStatus === 'Rejected'" shape="error-standard" class="icon text-red"></clr-icon>
+                <clr-icon *ngIf="requestDetailStatus === 'WaitingForApproval'" shape="clock" class="icon text-warning"></clr-icon>
+                <clr-icon *ngIf="requestDetailStatus === 'WaitingForMoreInfo'" shape="info-standard" class="icon text-warning"></clr-icon>
             </td>
         </tr>
         <tr style="background-color: transparent">
