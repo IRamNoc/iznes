@@ -382,9 +382,10 @@ export class DropHandler implements AfterViewInit {
         if (this.disabled) {
             return;
         }
-        /* If we're not mutliple, then just reset the form. */
+        /* If we're not mutliple, then reset the form value and clear preset text. */
         if (!this.multiple) {
-            this.formElem.nativeElement.reset();
+            this.fileInput.nativeElement.value = '';
+            this.preset = null;
         }
 
         /* Set removing file flag. */
