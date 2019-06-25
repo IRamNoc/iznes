@@ -806,7 +806,7 @@ export class NewRequestService {
                     amcID,
                 });
             }).catch((err) => {
-                console.log('+++ CREATE DRAFT ERROR', err);
+                console.error(err);
             });
         }
 
