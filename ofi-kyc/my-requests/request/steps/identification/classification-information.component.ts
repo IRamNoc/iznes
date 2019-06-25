@@ -1,4 +1,4 @@
-import { Component, Input, Output, OnInit, OnDestroy, ViewChild, EventEmitter, ElementRef } from '@angular/core';
+import { Component, Input, Output, OnInit, OnDestroy, ViewChildren, EventEmitter, ElementRef } from '@angular/core';
 import { FormGroup, FormControl } from '@angular/forms';
 import { isEmpty, castArray, find, pick, omit, values, map, assign, findIndex, get as getValue } from 'lodash';
 import { select, NgRedux } from '@angular-redux/store';
@@ -20,7 +20,7 @@ import { setMyKycRequestedPersist } from '@ofi/ofi-main/ofi-store/ofi-kyc';
     styleUrls: ['./classification-information.component.scss'],
 })
 export class ClassificationInformationComponent implements OnInit, OnDestroy {
-    @ViewChild(FormPercentDirective) formPercent: FormPercentDirective;
+    @ViewChildren(FormPercentDirective) formPercent: FormPercentDirective[] = [];
     @Input() form;
     @Input() enabled;
     @Input() investorType;
@@ -72,12 +72,6 @@ export class ClassificationInformationComponent implements OnInit, OnDestroy {
     }
 
     setFinancialInstruments(instrument, event) {
-        if (instrument.id === 'other') {
-            const otherInput = this.form.get(['nonPro', 'financialInstrumentsSpecification']);
-            event.srcElement.checked ? otherInput.enable() : otherInput.disable();
-            return;
-        }
-
         const control = this.form.get(['nonPro', 'financialInstruments']);
         const currentInstruments = control.value || [];
         const matched = currentInstruments.find(ins => ins.id === instrument.id);
@@ -90,12 +84,19 @@ export class ClassificationInformationComponent implements OnInit, OnDestroy {
         }
 
         control.setValue(currentInstruments);
+        this.updateFormPercent();
+    }
+
+    updateFormPercent() {
+        this.formPercent.forEach(child => child.refreshFormPercent());
     }
 
     setInstrumentCheckboxes() {
+        this.instrumentChecked = [];
         (this.form.get(['nonPro', 'financialInstruments']).value || []).forEach((instrument) => {
             this.instrumentChecked[instrument.id] = true;
         });
+        this.updateFormPercent();
     }
 
     setGeographicalAreas(area, event) {
@@ -197,7 +198,7 @@ export class ClassificationInformationComponent implements OnInit, OnDestroy {
             this.toggleNonPro('disable');
         }
 
-        if (this.formPercent) this.formPercent.refreshFormPercent();
+        this.updateFormPercent();
     }
 
     toggleNonPro(action) {
@@ -393,6 +394,7 @@ export class ClassificationInformationComponent implements OnInit, OnDestroy {
             },
         ).then(() => {
             this.ngRedux.dispatch(setMyKycRequestedPersist('identification/classificationInformation'));
+            this.setInstrumentCheckboxes();
         });
     }
 
