@@ -1,17 +1,7 @@
-<!-- <div class="p-1">
-    <clr-alert [clrAlertSizeSmall]="true" [clrAlertType]="'alert-danger'" [clrAlertClosable]="false">
-        <div class="alert-item">
-            <span class="alert-text">
-                {{ 'Please note that the information provided will remain strictly confidential and will only be shared with the counterparties you have selected.' | translate }}
-            </span>
-        </div>
-    </clr-alert>
-</div> -->
-
 <div class="kyc-header">
     <ng-container *ngIf="onboardingMode">Onboarding</ng-container>
     <ng-container *ngIf="!onboardingMode">Make New Request</ng-container>
-    <button class="btn btn-sm" (click)="handleAction({ type: 'close' })">Save and Exit</button>
+    <button *ngIf="formSteps && formSteps.position !== 0" class="btn btn-sm" (click)="handleAction({ type: 'close' })">Save and Exit</button>
 </div>
 
 <form-steps *ngIf="stepsConfig" [onboarding]="onboardingMode" [stepsConfig]="stepsConfig" (action)="handleAction($event)" [@toggle]="animating" (@toggle.done)="applyFullForm()">
