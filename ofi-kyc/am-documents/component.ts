@@ -189,6 +189,10 @@ export class OfiAmDocumentsComponent implements OnDestroy, OnInit {
             tables['all'].push(row);
         });
 
+        const acceptedPanelWording = !this.hasPermissionCanManageAllClientFile ?
+            this.translate.translate('Accepted - Funds Access Authorizations') :
+            this.translate.translate('Accepted');
+
         this.panelDefs = [
             {
                 id: 'Waiting',
@@ -199,7 +203,7 @@ export class OfiAmDocumentsComponent implements OnDestroy, OnInit {
             },
             {
                 id: 'Accepted',
-                title: this.translate.translate('Accepted - Funds Access Authorizations'),
+                title: acceptedPanelWording,
                 columns: [columns[1], columns[2], columns[5], columns[4], columns[6]],
                 open: true,
                 data: tables[-1],
