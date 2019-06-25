@@ -21,7 +21,7 @@
             <company-information #step [isFormReadonly]="isFormReadonly" [form]="forms.get('identification').get('companyInformation')" [completedStep]="currentCompletedStep" (submitEvent)="handleSubmit($event)"></company-information>
         </form-step>
         <form-step *ngIf="fullForm">
-            <beneficiary-list #step [isFormReadonly]="isFormReadonly" [form]="forms.get('identification').get('beneficiaries').get('beneficiaries')" [completedStep]="currentCompletedStep" (submitEvent)="handleSubmit($event)"></beneficiary-list>
+            <beneficiary-list #step [isFormReadonly]="isFormReadonly" [form]="forms.get('identification').get('beneficiaries').get('beneficiaries')" [generalInformationForm]="forms.get('identification').get('generalInformation')" [completedStep]="currentCompletedStep" (submitEvent)="handleSubmit($event)"></beneficiary-list>
         </form-step>
         <form-step *ngIf="fullForm">
             <banking-information #step [isFormReadonly]="isFormReadonly" [form]="forms.get('identification').get('bankingInformation')" [completedStep]="currentCompletedStep" (submitEvent)="handleSubmit($event)"></banking-information>

@@ -28,6 +28,7 @@ import { steps } from '../../../requests.config';
 })
 export class BeneficiaryListComponent implements OnInit, OnDestroy {
     @Input() form: FormArray;
+    @Input() generalInformationForm: FormGroup;
     @Input() isFormReadonly = false;
     @Input() completedStep: string;
     @Output() submitEvent: EventEmitter<any> = new EventEmitter<any>();
@@ -82,6 +83,17 @@ export class BeneficiaryListComponent implements OnInit, OnDestroy {
             }
             return this.sortedStakeholders;
         }
+    }
+
+    /**
+     * get value of this.registeredCompanyName. if this.registeredCompanyName is undefined. we
+     * fall back to identification -> generalInformation -> entity -> registeredCompanyName
+     */
+    get registeredCompanyNameStr(): string {
+        if (this.registeredCompanyName) {
+            return this.registeredCompanyName;
+        }
+        return this.generalInformationForm.get(['entity', 'registeredCompanyName']).value;
     }
 
     constructor(
