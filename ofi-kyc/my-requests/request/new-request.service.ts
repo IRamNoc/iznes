@@ -715,7 +715,10 @@ export class NewRequestService {
             naturalPerson: this.formBuilder.group({
                 firstName: ['', this.getLengthValidator()],
                 lastName: ['', this.getLengthValidator()],
-                dateOfBirth: ['', Validators.required],
+                dateOfBirth: ['', [
+                    Validators.pattern(/^(19[0-9][0-9]|20[0-9]{2})-(0[1-9]|1[0-2])-(0[1-9]|[1-2][0-9]|3[01])$/),
+                    Validators.required,
+                ]],
                 cityOfBirth: ['', this.getLengthValidator()],
                 countryOfBirth: ['', Validators.required],
                 isLegalRepresentative: [0, Validators.required],
