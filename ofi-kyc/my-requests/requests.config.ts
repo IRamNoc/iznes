@@ -3290,4 +3290,8 @@ export const omitConditionalFields = {
         condition: [0],
         fields: ['commercialAddressLine1', 'commercialAddressLine2', 'commercialZipCode', 'commercialCity', 'commercialCountry'],
     },
+    companyListed: {
+        condition: [1],
+        fields: ['balanceSheetTotal', 'netRevenuesNetIncome', 'shareholderEquity'],
+    },
 };
