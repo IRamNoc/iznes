@@ -364,9 +364,12 @@ export class BeneficiaryListComponent implements OnInit, OnDestroy {
             const parent = stakeholder.get('common.parent').value;
             const parentID = getValue(parent, [0, 'id']);
 
+            // If parent is not the default parent (-1/registeredCompanyName)
             if (parentID && parentID !== -1) {
                 return find(this.parents, ['id', parentID]);
             }
+
+            return { text: this.registeredCompanyName };
         }
     }
 
