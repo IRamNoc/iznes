@@ -110,6 +110,9 @@ form .form-group div.ui-select-container {
 
         span {
             width: auto !important;
+            max-width: 100%;
+            overflow: hidden;
+            text-overflow: ellipsis;
         }
     }
 
