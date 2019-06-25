@@ -50,6 +50,21 @@ export class MyRequestsComponent implements OnInit, OnDestroy {
         }
     }
 
+    get clientFileStatusIcon(): string {
+        const status = this.clientFileKyc && this.clientFileKyc.status;
+
+        if (!status) {
+            return '';
+        }
+
+        return {
+            '-1': 'success-standard',
+            '1': 'clock',
+            '2': 'info-standard',
+            '-2': 'error-standard',
+        }[status];
+    }
+
     constructor(
         private ngRedux: NgRedux<any>,
         private router: Router,

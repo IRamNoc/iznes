@@ -99,7 +99,7 @@
                     <h5>{{ 'Investor Details' | translate }}</h5>
                 </div>
                 <div class="col-sm-3 text-right">
-                    <div class="pgContainer" [formpercent]="{form: form.get('nonPro'), animated : false, stripes: false}"></div>
+                    <div class="pgContainer" [formpercent]="{form: form, animated : false, stripes: false}"></div>
                 </div>
             </div>
 
@@ -169,12 +169,12 @@
                     </div>
 
                     <div class="row col-sm-12">
-                        <div class="form-group col-sm-4" *ngIf="!isDisabled(['nonPro', 'financialInstrumentsSpecification'])">
+                        <div class="form-group col-sm-4 required-field" *ngIf="!isDisabled(['nonPro', 'financialInstrumentsSpecification'])">
+                            <label for="financialInstrumentsSpecification">{{ 'Please specify other financial instruments' | translate }}</label>
                             <input id="financialInstrumentsSpecification"
                                     type="text"
                                     formControlName="financialInstrumentsSpecification"
-                                    [readonly]="isFormReadonly"
-                                    placeholder="{{ 'Please specify other financial instruments' | translate }}">
+                                    [readonly]="isFormReadonly">
                             <span class="field-error" *ngIf="hasError(['nonPro', 'financialInstrumentsSpecification'])">{{ 'Field is required' | translate }}</span>
                         </div>
                     </div>
