@@ -24,7 +24,7 @@ export class BeneficiaryComponent implements OnInit, OnDestroy {
         this.parentsFiltered = parents.filter((parent, i) => i !== this.index);
         this.parentsFiltered.unshift({
             id: -1,
-            text: this.registeredCompanyName || 'No Linked Entity',
+            text: this.registeredCompanyName,
         });
     }
 
@@ -100,7 +100,7 @@ export class BeneficiaryComponent implements OnInit, OnDestroy {
                 const id = getValue(parent, [0, 'id']);
                 const stakeholder = this.form;
 
-                if (String(id) === '-1') { // Parent/'Linked Entity' is the registered company
+                if (String(id) === '-1') { // -1/Parent/'Linked Entity' is the registered company
                     this.beneficiaryService.setStakeholderDirectHolding(stakeholder);
                 } else {
                     this.beneficiaryService.setStakeholderIndirectHolding(stakeholder);
