@@ -52,62 +52,6 @@ export class IdentificationService {
             });
     }
 
-    sendRequest(form, requests, connectedWallet) {
-        this.getPreviousRelations();
-        this.stakeholdersRelationTable = [];
-
-        const promises = [];
-        const context = this.newRequestService.context;
-        requests.forEach((request, index) => {
-
-            const kycID = request.kycID;
-
-            const formGroupGeneral = form.get('generalInformation');
-            formGroupGeneral.get('kycID').setValue(kycID);
-            const generalPromise = this.sendRequestGeneral(formGroupGeneral);
-            promises.push(generalPromise);
-
-            const formGroupCompany = form.get('companyInformation');
-            const formGroupBeneficiaries = formGroupCompany.get('beneficiaries');
-
-            this.stakeholdersRelationTable.push({ kycID, stakeholderIDs: [] });
-            const beneficiariesPromises = this.handleBeneficiaries(formGroupBeneficiaries, kycID, connectedWallet, index);
-
-            promises.push(beneficiariesPromises);
-
-            formGroupCompany.get('kycID').setValue(kycID);
-            const companyPromise = this.sendRequestCompany(formGroupCompany);
-            promises.push(companyPromise);
-
-            const formGroupBanking = form.get('bankingInformation');
-            formGroupBanking.get('kycID').setValue(kycID);
-
-            const formGroupBankingHolders = formGroupBanking.get('custodianHolders');
-            const formGroupBankingHoldersValue = formGroupBankingHolders.value;
-            formGroupBankingHoldersValue.forEach((singleHolderValue, key) => {
-                let data = pickBy(singleHolderValue);
-                data = Object.assign({}, data, { kycID });
-
-                const bankingPromise = this.sendRequestBanking(data).then((data) => {
-                    (formGroupBankingHolders as FormArray).at(key).get('custodianID').patchValue(data.custodianID);
-                });
-                promises.push(bankingPromise);
-            });
-
-            const formGroupClassification = form.get('classificationInformation');
-            formGroupClassification.get('kycID').setValue(kycID);
-            const classificationPromises = this.prepareRequestClassification(formGroupClassification);
-            promises.concat(classificationPromises);
-
-            const updateStepPromise = this.sendRequestUpdateCurrentStep(kycID, 'identification', context);
-            promises.push(updateStepPromise);
-        });
-
-        return Promise.all(promises).then(() => {
-            this.ngRedux.dispatch(setMyKycStakeholderRelations(this.stakeholdersRelationTable));
-        });
-    }
-
     sendRequestGeneralInformation(form, requests) {
         const promises = [];
         const context = this.newRequestService.context;
