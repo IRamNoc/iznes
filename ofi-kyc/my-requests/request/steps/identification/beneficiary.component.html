@@ -324,8 +324,18 @@
             <div class="form-group required-field col-sm-6 date-picker">
                 <label for="dateOfBirth-benef" class="control-label">{{'Date of birth' | translate}}</label>
 
-                <input type="text" autocomplete="off" [dpDayPicker]="configDate" id="dateOfBirth-benef" formControlName="dateOfBirth" placeholder="{{configDate.format}}" mode="day" theme="dp-material" [attr.disabled]="disabled">
-                <span class="field-error" *ngIf="hasError(['naturalPerson', 'dateOfBirth'])">{{ 'Field is required' | translate }}</span>
+                <input type="text"
+                        autocomplete="off"
+                        [dpDayPicker]="configDate"
+                        id="dateOfBirth-benef"
+                        formControlName="dateOfBirth"
+                        placeholder="{{configDate.format}}"
+                        mode="day"
+                        theme="dp-material"
+                        [attr.disabled]="disabled">
+                <span class="field-error" *ngIf="hasError(['naturalPerson', 'dateOfBirth'], ['required'])">{{ 'Field is required' | translate }}</span>
+                <span class="field-error" *ngIf="hasError(['naturalPerson', 'dateOfBirth'], ['pattern'])">{{' Date format must be: YYYY-MM-DD' | translate}}</span>
+
                 <clr-icon shape="calendar"></clr-icon>
             </div>
 
