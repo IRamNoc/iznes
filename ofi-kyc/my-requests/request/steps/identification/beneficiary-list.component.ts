@@ -392,7 +392,6 @@ export class BeneficiaryListComponent implements OnInit, OnDestroy {
 
         if (this.selectedStakeholderIndex === 0) {
             this.beneficiaryService.setStakeholderDirectHolding(stakeholder);
-            this.beneficiaryService.setFirstStakeholderParent(stakeholder);
         }
 
         if (!isNil(parentIndex)) {
