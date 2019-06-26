@@ -288,6 +288,11 @@ export class NewKycSelectAmcComponent implements OnInit, OnDestroy {
 
         this.newRequestService.storeCurrentKycs(ids);
 
+        if (this.onboarding) {
+            const context = this.newRequestService.getContext(ids);
+            ids.forEach(entry => this.selectAmcService.sendRequestUpdateCurrentStep(entry.kycID, context, 'introduction'));
+        }
+
         this.ngRedux.dispatch(ClearMyKycListRequested());
         this.submitted = true;
         this.changeDetectorRef.markForCheck();

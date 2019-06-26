@@ -32,11 +32,11 @@ export class SelectAmcService {
         return Promise.all(promises).then(() => ids);
     }
 
-    sendRequestUpdateCurrentStep(kycID, context) {
+    sendRequestUpdateCurrentStep(kycID, context, override = 'amcSelection') {
         const messageBody = {
             RequestName: 'iznesupdatecurrentstep',
             kycID,
-            completedStep: 'amcSelection',
+            completedStep: override,
             currentGroup: context,
         };
 

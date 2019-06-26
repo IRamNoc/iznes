@@ -174,6 +174,7 @@ export class OfiKycHomeComponent implements AfterViewInit, OnDestroy {
                         queryParams: {
                             invitationToken: queryParams.invitationToken,
                             amcID: queryParams.amcID,
+                            onboardingMode: 'true',
                         },
                     });
                 } else {
