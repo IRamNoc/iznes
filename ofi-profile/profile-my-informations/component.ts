@@ -64,11 +64,15 @@ export class OfiProfileMyInformationsComponent implements OnInit, OnDestroy {
 
     language: string;
 
+    // first menu link in menu spec.
+    firstMenuLink: string;
+
     @select(['user', 'myDetail']) myDetail: any;
     @select(['user', 'authentication']) authentication$;
     @select(['user', 'connected', 'connectedWallet']) connectedWalletId$;
     @select(['ofi', 'ofiKyc', 'myInformations']) myKyc: any;
     @select(['user', 'siteSettings', 'language']) requestLanguageObj;
+    @select(['user', 'siteSettings', 'siteMenu']) menSpec$;
 
     constructor(
         private ngRedux: NgRedux<any>,
@@ -152,6 +156,8 @@ export class OfiProfileMyInformationsComponent implements OnInit, OnDestroy {
         });
 
         this.requestLanguageObj.pipe(takeUntil(this.unSubscribe)).subscribe(requested => this.language = requested);
+
+        this.menSpec$.pipe(takeUntil(this.unSubscribe)).subscribe(ms => this.firstMenuLink = getFirstMenuLink(ms));
     }
 
     ngOnDestroy() {
@@ -217,7 +223,7 @@ export class OfiProfileMyInformationsComponent implements OnInit, OnDestroy {
 
                         this.toasterService.pop(
                             'success', this.translate.translate('Your password has been successfully changed'));
-                        this.router.navigate(['home']);
+                        this.router.navigateByUrl(this.firstMenuLink);
                     },
                     (e) => {
                         this.alertsService.create('warning', this.translate.translate('Failed to change your password'));
@@ -292,7 +298,7 @@ export class OfiProfileMyInformationsComponent implements OnInit, OnDestroy {
      * @return {void}
      */
     closeUserInformations(): void {
-        this.router.navigate(['home']);
+        this.router.navigateByUrl(this.firstMenuLink);
     }
 
     /**
@@ -365,4 +371,31 @@ export class OfiProfileMyInformationsComponent implements OnInit, OnDestroy {
         /* Detect changes. */
         this.changeDetectorRef.detectChanges();
     }
+}
+
+/**
+ * Get the first menu item from menuspec that has a actual 'router_link'
+ * @param menuSpec
+ */
+function getFirstMenuLink(menuSpec: any) {
+    // if there is no menu spec. default to '/home'
+    if ( !menuSpec.side ) {
+       return '/home';
+    }
+
+    // try to get the first menu entry
+    const sideMenSpec = menuSpec.side;
+    let menuSpecForUserType = Object.keys(sideMenSpec).map(k => sideMenSpec[k])[0][0];
+    let firstItemWithLink;
+    let firstEntry = menuSpecForUserType;
+
+    while (!firstItemWithLink) {
+        if (firstEntry.router_link) {
+            firstItemWithLink = firstEntry.router_link
+        } else {
+            firstEntry = firstEntry['children'][0];
+        }
+    }
+
+    return firstItemWithLink;
 }
