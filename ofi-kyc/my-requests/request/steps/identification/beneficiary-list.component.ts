@@ -154,12 +154,7 @@ export class BeneficiaryListComponent implements OnInit, OnDestroy {
 
                                     const newControlValue = buildBeneficiaryObject(controlValue);
 
-                                    // depend on beneficiaryType, disable part of the form.
-                                    if (newControlValue['beneficiaryType'] === 'legalPerson') {
-                                        control.get('naturalPerson').disable();
-                                    } else {
-                                        control.get('legalPerson').disable();
-                                    }
+                                    this.disableBeneficiaryType(newControlValue, control);
 
                                     if (documentID) {
                                         return this.documentsService.getDocument(documentID).then((document) => {
@@ -176,6 +171,7 @@ export class BeneficiaryListComponent implements OnInit, OnDestroy {
                                     }
 
                                     control.patchValue(newControlValue);
+
                                     beneficiaries.push(control);
                                 });
 
@@ -183,8 +179,11 @@ export class BeneficiaryListComponent implements OnInit, OnDestroy {
                                     this.beneficiaryService.fillInStakeholderSelects(this.form.get('beneficiaries'));
                                     this.beneficiaryService.updateStakeholdersValidity(this.form.get('beneficiaries') as FormArray);
                                     if (this.formPercent) this.formPercent.refreshFormPercent();
+                                    this.initFormPersist();
                                 });
                             }
+                        } else {
+                            this.initFormPersist();
                         }
                     });
 
@@ -193,9 +192,8 @@ export class BeneficiaryListComponent implements OnInit, OnDestroy {
 
                 Promise.all(promises).then(() => {
                     this.ngRedux.dispatch(setMyKycStakeholderRelations(stakeholdersRelationTable));
-                    this.initFormPersist();
-                }).catch(() => {
-                    this.initFormPersist();
+                }).catch((err) => {
+                    console.error(err);
                 });
             });
 
@@ -211,6 +209,18 @@ export class BeneficiaryListComponent implements OnInit, OnDestroy {
                     }
                 });
             });
+    }
+
+    disableBeneficiaryType(values, formgroup) {
+        // depend on beneficiaryType, disable part of the form.
+        if (values['beneficiaryType'] === 'legalPerson') {
+            formgroup.get('naturalPerson').disable();
+            // enable nationalIdNumberText
+            const nationIdNumberType = getValue(values, 'legalPerson.nationalIdNumberType[0].id', '');
+            this.beneficiaryService.formCheckNationalIdNumberType(formgroup, nationIdNumberType);
+        } else {
+            formgroup.get('legalPerson').disable();
+        }
     }
 
     updateParents() {
@@ -659,6 +669,9 @@ export class BeneficiaryListComponent implements OnInit, OnDestroy {
             },
         ).then(() => {
             this.ngRedux.dispatch(setMyKycRequestedPersist('identification/beneficiaryInformation'));
+            this.form.value.forEach((value, index) => this.disableBeneficiaryType(value, this.form.controls[index]));
+            this.sortStakeholders();
+            this.askRefresh();
         });
     }
 
