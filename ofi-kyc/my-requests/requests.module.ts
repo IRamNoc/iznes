@@ -31,7 +31,6 @@ import { MyRequestsDetailsComponent } from './list/request-details/component';
 
 import { NewKycIntroductionComponent } from './request/steps/introduction.component';
 
-import { NewKycIdentificationComponent } from './request/steps/identification.component';
 import { GeneralInformationComponent } from './request/steps/identification/general-information.component';
 import { CompanyInformationComponent } from './request/steps/identification/company-information.component';
 import { BeneficiaryListComponent } from './request/steps/identification/beneficiary-list.component';
@@ -40,7 +39,6 @@ import { BeneficiaryComponent } from './request/steps/identification/beneficiary
 import { BankingInformationComponent } from './request/steps/identification/banking-information.component';
 import { ClassificationInformationComponent } from './request/steps/identification/classification-information.component';
 
-import { NewKycRiskProfileComponent } from './request/steps/risk-profile.component';
 import { InvestmentNatureComponent } from './request/steps/risk-profile/investment-nature.component';
 import { InvestmentNatureFormComponent } from './request/steps/risk-profile/investment-nature-form.component';
 import { InvestmentObjectiveComponent } from './request/steps/risk-profile/investment-objective.component';
@@ -72,7 +70,6 @@ import { ValidationService } from './request/steps/validation.service';
 
         NewKycIntroductionComponent,
 
-        NewKycIdentificationComponent,
         GeneralInformationComponent,
         CompanyInformationComponent,
         BeneficiaryListComponent,
@@ -81,7 +78,6 @@ import { ValidationService } from './request/steps/validation.service';
         BankingInformationComponent,
         ClassificationInformationComponent,
 
-        NewKycRiskProfileComponent,
         InvestmentNatureComponent,
         InvestmentNatureFormComponent,
         InvestmentObjectiveComponent,

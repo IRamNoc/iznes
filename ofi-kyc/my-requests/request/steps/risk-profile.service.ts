@@ -20,38 +20,6 @@ export class RiskProfileService {
     ) {
     }
 
-    // TODO: Remove when finished refactor of formSteps
-    sendRequest(form, requests) {
-        this.requests = requests;
-
-        let promises = [];
-        const context = this.newRequestService.context;
-
-        this.requests.forEach((request) => {
-            const kycID = request.kycID;
-
-            // Nature
-            const formGroupNature = form.get('investmentNature');
-            formGroupNature.get('kycID').setValue(kycID);
-            const naturePromises = this.sendRequestNature(formGroupNature);
-            promises = promises.concat(naturePromises);
-
-            // Objective
-            const formGroupObjective = form.get('investmentObjective');
-            const formGroupConstraint = form.get('investmentConstraint');
-            formGroupObjective.get('kycID').setValue(kycID);
-            formGroupConstraint.get('kycID').setValue(kycID);
-            const objectivePromises = this.sendRequestObjective(formGroupObjective, formGroupConstraint);
-            promises = promises.concat(objectivePromises);
-
-            // Update step
-            const updateStepPromise = this.sendRequestUpdateCurrentStep(kycID, '', context);
-            promises.push(updateStepPromise);
-        });
-
-        return Promise.all(promises);
-    }
-
     sendRequestInvestmentNature(form, requests) {
         this.requests = requests;
 
