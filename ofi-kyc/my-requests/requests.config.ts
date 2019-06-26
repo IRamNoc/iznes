@@ -439,9 +439,9 @@ export const booleanControls = [
     'isLegalRepresentative',
     'isPoliticallyExposed',
     'investmentDecisionsAdHocCommittee',
-    'HasAlreadyInvestedNeuCp',
-    'HasExperienceTradingNeuCp',
-    'HasEverIssuedNeuCp',
+    'hasAlreadyInvestedNeuCp',
+    'hasExperienceTradingNeuCp',
+    'hasEverIssuedNeuCp',
 ];
 
 export const currencyControls = [
@@ -3215,6 +3215,9 @@ export const controlToName = {
     investmentDecisionsAdHocCommitteeSpecification: 'Ad hoc committee specification',
     otherPersonsAuthorised: 'Other persons authorised to take investment decisions and give instructions',
     constraintsSameInvestmentCrossAm: 'I would like to have the same investment objectives for all management companies',
+    hasAlreadyInvestedNeuCp: 'Has your company ever issued Neu CPs?',
+    hasExperienceTradingNeuCp: 'Has your company already invested in Neu CPs?',
+    hasEverIssuedNeuCp: 'Has your company already invested in Neu CPs?',
 
     // Validation
     undersigned: 'Identity',
