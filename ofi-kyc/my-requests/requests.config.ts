@@ -438,6 +438,10 @@ export const booleanControls = [
     'exerciseControl',
     'isLegalRepresentative',
     'isPoliticallyExposed',
+    'investmentDecisionsAdHocCommittee',
+    'HasAlreadyInvestedNeuCp',
+    'HasExperienceTradingNeuCp',
+    'HasEverIssuedNeuCp',
 ];
 
 export const currencyControls = [
