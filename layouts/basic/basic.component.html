@@ -1,5 +1,5 @@
 <!-- <clr-main-container insertIDs> -->
-<clr-main-container>
+<clr-main-container (drop)="$event.preventDefault()" (dragover)="$event.preventDefault()">
 
     <div class="main-container {{ currentLanguage }}" [class.connection-alert]="activeAlert">
         <connection-status-alerts (activeAlert)="setActiveAlert($event)"></connection-status-alerts>
