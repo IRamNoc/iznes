@@ -33,6 +33,7 @@ export class OfiAmDocumentsComponent implements OnDestroy, OnInit {
     public panelDefs = [];
     private subscriptions: any[] = [];
 
+    hasPermissionCanManageAllClientFile$: Observable<boolean>;
     hasPermissionCanManageAllClientFile = false;
 
     /* Observables. */
@@ -54,15 +55,16 @@ export class OfiAmDocumentsComponent implements OnDestroy, OnInit {
     }
 
     ngOnInit() {
+        this.hasPermissionCanManageAllClientFile$ = Observable.fromPromise(this.permissionsService.hasPermission('manageAllClientFile', 'canUpdate'));
+
         this.subscriptions.push(this.requestedOfiKycListOb.subscribe(
             requested => this.requestKycList(requested)));
         this.subscriptions.push(
-            observableCombineLatest(this.kycListOb, this.requestLanguageOb).subscribe(async ([amKycListData]) => {
-                this.hasPermissionCanManageAllClientFile = await this.permissionsService.hasPermission('manageAllClientFile', 'canUpdate');
+            observableCombineLatest(this.kycListOb, this.requestLanguageOb, this.hasPermissionCanManageAllClientFile$).subscribe(async ([amKycListData, _, hasPermission]) => {
+                this.hasPermissionCanManageAllClientFile = hasPermission;
                 this.updateTable(amKycListData);
             },
         ));
-
     }
 
     updateTable(tableData) {
