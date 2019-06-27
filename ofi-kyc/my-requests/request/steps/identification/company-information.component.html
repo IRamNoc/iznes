@@ -39,7 +39,7 @@
 
                 <div class="row col-sm-12">
                     <div class="form-group col-sm-4">
-                        <label class="control-label" for="otherSectorActivity">{{ 'Other(s) sector(s) of activity' | translate }}</label>
+                        <label class="control-label" for="otherSectorActivity">{{ 'Other sector(s) of activity' | translate }}</label>
                         <ng-select class="multiline"
                                     [items]="otherSectorActivityList"
                                     [multiple]=true
@@ -129,6 +129,7 @@
                                         formControlName="regulator"
                                         [isDisabled]="isFormReadonly"
                                         placeholder="{{ 'Select one or multiple regulators/supervisory authority' | translate }}"></ng-select>
+                            <span class="field-error" *ngIf="hasError('regulator', ['required'])">{{ 'Field is required' | translate }}</span>
                         </div>
 
                         <div class="form-group required-field col-sm-4" *ngIf="!isDisabled('otherRegulator')">
@@ -292,6 +293,7 @@
                         <span class="field-error" *ngIf="hasError('isinCode', ['required'])">{{ 'Field is required' | translate }}</span>
                         <span class="field-error" *ngIf="hasError('isinCode', ['pattern'])">{{ 'ISIN must have two letters and ten digits' | translate }}</span>
                         <span class="field-error" *ngIf="hasError('isinCode', ['maxlength'])">{{ 'Field is too long' | translate }}</span>
+                        <span class="helper-text" *ngIf="showHelperText('isinCode', ['required', 'pattern', 'maxlength'])">{{ 'Must have two letters and ten digits' | translate }}</span>
                     </div>
                 </div>
 
@@ -320,7 +322,7 @@
             <div class="row panel-body">
 
                 <div class="row col-sm-12">
-                    <div class="form-group required-field col-md-6 col-xl-3">
+                    <div class="form-group required-field col-md-4">
                         <label class="control-label" for="activities">{{ 'Management on behalf of' | translate }}</label>
                         <ng-select class="large-select multiline"
                                     id="activities"
@@ -472,23 +474,23 @@
                         </div>
                     </div>
 
-                    <p class="field-error" *ngIf="hasError('capitalNature')">{{ 'Select at least one' | translate }}</p>
-
-                </div>
-
-                <div *ngIf="!isDisabled(['otherCapitalNature'])" class="row col-sm-12" >
-                    <div class="form-group col-sm-6 required-field">
-                        <label class="control-label" for="otherCapitalNature">&nbsp;</label>
-                        <input type="text"
-                                formControlName="otherCapitalNature"
-                                [readonly]="isFormReadonly"
-                                placeholder="{{ 'Please specify' | translate }}">
-
-                        <span class="field-error" *ngIf="hasError('otherCapitalNature')">{{ 'Please specify' | translate }}</span>
+                    <div *ngIf="hasError('capitalNature')" class="row form-group col-sm-5">
+                        <p class="field-error force-display-error">{{ 'Select at least one' | translate }}</p>
                     </div>
                 </div>
 
-                <div class="row col-sm-12 form-group">
+                <div *ngIf="!isDisabled(['otherCapitalNature'])" class="row col-sm-12" >
+                    <div class="form-group col-sm-4 required-field">
+                        <label class="control-label" for="otherCapitalNature">{{ 'Please specify' | translate }}</label>
+                        <input type="text"
+                                formControlName="otherCapitalNature"
+                                [readonly]="isFormReadonly">
+
+                        <span class="field-error" *ngIf="hasError('otherCapitalNature')">{{ 'Field is required' | translate }}</span>
+                    </div>
+                </div>
+
+                <div class="row col-sm-12">
                     <div class="form-group required-field col-md-4">
                         <label for="geographicalOrigin1">{{ 'Geographical Origin (specify by area or country)' | translate }}</label>
                         <ng-select class="large-select multiline"

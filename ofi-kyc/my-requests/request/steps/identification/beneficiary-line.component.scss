@@ -13,18 +13,23 @@ td{
     line-height: 26px;
 }
 
-.datagrid-row .datagrid-action-overflow {
-    margin: -56px 0 0 -140px;
-    &::after {
-        border-left: .20833333rem solid #fff;
-        border-right: none;
-        left: 100%;
-        right: auto;
+.datagrid-row {
+    &:hover {
+        background-color: inherit;
     }
-    &::before {
-        left: 100%;
-        right: auto;
-        border-left: .25rem solid #ccc;
-        border-right: none;
+    .datagrid-action-overflow {
+        margin: -56px 0 0 -140px;
+        &::after {
+            border-left: .20833333rem solid #fff;
+            border-right: none;
+            left: 100%;
+            right: auto;
+        }
+        &::before {
+            left: 100%;
+            right: auto;
+            border-left: .25rem solid #ccc;
+            border-right: none;
+        }
     }
 }

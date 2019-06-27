@@ -554,6 +554,11 @@ export class CompanyInformationComponent implements OnInit, OnDestroy {
         );
     }
 
+    showHelperText(control, errors) {
+        const hasError = errors.filter(error => this.hasError([control], [error]));
+        return this.form.get(control).invalid && !hasError.length;
+    }
+
     handleSubmit(e) {
         e.preventDefault();
         if (!this.form.valid) {

@@ -692,6 +692,8 @@ export class BeneficiaryListComponent implements OnInit, OnDestroy {
         if (!this.form.valid) {
             formHelper.dirty(this.form);
             formHelper.scrollToFirstError(this.element.nativeElement);
+            this.form.markAsTouched();
+            console.log('+++ this.form', this.form);
             return;
         }
 
