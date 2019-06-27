@@ -37,9 +37,11 @@ export class InvestmentNatureFormComponent implements OnInit {
     }
 
     ngOnInit() {
-        this.initFormCheck();
         this.initData();
+        this.initFormCheck();
         this.getCurrentFormData();
+
+        console.log('+++ form: investmentvehiclesAlreadyUsed: ', this.form.get('investmentvehiclesAlreadyUsed'));
     }
 
     initData() {
@@ -112,5 +114,9 @@ export class InvestmentNatureFormComponent implements OnInit {
     ngOnDestroy() {
         this.unsubscribe.next();
         this.unsubscribe.complete();
+    }
+
+    logForm() {
+        console.log('+++ logForm: form: ', this.form);
     }
 }
