@@ -58,23 +58,38 @@
     <div class="checkbox-group" formGroupName="frequencyFinancialTransactions">
         <div class="row col-sm-12">
             <div class="form-group required-field col-sm-12">
-                <label
-                    class="required-field">{{ 'What is the frequency of financial transactions?' | translate }}</label>
+                <label class="required-field">{{ 'What is the frequency of financial transactions?' | translate }}</label>
             </div>
         </div>
 
-        <div class="row col-sm-12 form-group" *ngFor="let frequency of frequencyList">
-            <div class="col-sm-12">
+        <ng-container *ngFor="let frequency of frequencyList; let i = index">
+            <div class="row col-sm-12 form-group required">
+                <ng-container *ngTemplateOutlet="checkboxGridFrequency; context: {'item': frequencyList[i * 2], 'index': i }">
+                </ng-container>
+                <ng-container *ngTemplateOutlet="checkboxGridFrequency; context: {'item': frequencyList[(i * 2) + 1], 'index': i }">
+                </ng-container>
+            </div>
+        </ng-container>
+
+        <div class="row col-sm-1 form-group" style="position:relative">
+            <span class="field-error force-display-error"
+                *ngIf="form.get('frequencyFinancialTransactions').touched && form.get('frequencyFinancialTransactions').status === 'INVALID'">{{ 'Select at least one' | translate }}</span>
+        </div>
+
+        <!-- Template is placed here because formControlName must be nested within formGroupName which in turn must be nested within formGroup -->
+        <ng-template #checkboxGridFrequency let-item="item" let-index="index">
+            <div class="col-sm-3" *ngIf="item">
                 <div class="checkbox-inline">
-                    <input type="checkbox" id="{{frequency.id}}-{{index}}" formControlName="{{frequency.id}}">
-                    <label for="{{frequency.id}}-{{index}}">
-                        {{frequency.text | translate}}
+                    <input type="checkbox"
+                            id="{{ item.id }}-{{ index }}"
+                            formControlName="{{ item.id }}"
+                            (click)="form.get(['frequencyFinancialTransactions', item.id]).markAsTouched()">
+                    <label for="{{ item.id }}-{{ index }}">
+                        {{ item.text | translate }}
                     </label>
                 </div>
             </div>
-        </div>
-
-        <p class="field-error" *ngIf="hasError('frequencyFinancialTransactions')">{{ 'Select at least one' | translate }}</p>
+        </ng-template>
     </div>
 
     <div class="checkbox-group" formGroupName="investmentvehiclesAlreadyUsed">
@@ -86,20 +101,20 @@
 
         <ng-container *ngFor="let item of investmentVehicleList; let i = index">
             <div class="row col-sm-12 form-group required">
-                <ng-container *ngTemplateOutlet="checkboxGrid; context: {'item': investmentVehicleList[i * 2], 'index': i }">
+                <ng-container *ngTemplateOutlet="checkboxGridVehicle; context: {'item': investmentVehicleList[i * 2], 'index': i }">
                 </ng-container>
-                <ng-container *ngTemplateOutlet="checkboxGrid; context: {'item': investmentVehicleList[(i * 2) + 1], 'index': i }">
+                <ng-container *ngTemplateOutlet="checkboxGridVehicle; context: {'item': investmentVehicleList[(i * 2) + 1], 'index': i }">
                 </ng-container>
             </div>
         </ng-container>
 
-        <div class="row col-sm-3 form-group" style="position:relative">
+        <div class="row col-sm-1 form-group" style="position:relative">
             <span class="field-error force-display-error"
                 *ngIf="form.get('investmentvehiclesAlreadyUsed').touched && form.get('investmentvehiclesAlreadyUsed').status === 'INVALID'">{{ 'Select at least one' | translate }}</span>
         </div>
 
         <!-- Template is placed here because formControlName must be nested within formGroupName which in turn must be nested within formGroup -->
-        <ng-template #checkboxGrid let-item="item" let-index="index">
+        <ng-template #checkboxGridVehicle let-item="item" let-index="index">
             <div class="col-sm-3" *ngIf="item">
                 <div class="checkbox-inline">
                     <input type="checkbox"
