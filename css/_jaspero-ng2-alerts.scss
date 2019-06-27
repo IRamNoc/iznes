@@ -17,32 +17,42 @@
 
 }
 
-.jaspero__dialog-content .progress-bar {
-    bottom: 0;
-    height: 5px;
-    left: 0;
-    position: absolute;
-    right: 0;
-    width: 100%;
-
-    > span {
-        background-color: #56a4df;
+.jaspero__dialog-content {
+    .table.scroll {
         display: block;
-        height: 100%;
-        position: relative;
-        overflow: hidden;
-        transition: width 0.2s ease;
-        width: 0%;
+        max-height: 200px;
+        overflow-y: auto;
+        tbody, tr, td {
+            display: block;
+        }
+    }
+    .progress-bar {
+        bottom: 0;
+        height: 5px;
+        left: 0;
+        position: absolute;
+        right: 0;
+        width: 100%;
 
-        &.progress-10 { width: 10% }
-        &.progress-20 { width: 20% }
-        &.progress-30 { width: 30% }
-        &.progress-40 { width: 40% }
-        &.progress-50 { width: 50% }
-        &.progress-60 { width: 60% }
-        &.progress-70 { width: 70% }
-        &.progress-80 { width: 80% }
-        &.progress-90 { width: 90% }
-        &.progress-100 { width: 100% }
+        > span {
+            background-color: #56a4df;
+            display: block;
+            height: 100%;
+            position: relative;
+            overflow: hidden;
+            transition: width 0.2s ease;
+            width: 0%;
+
+            &.progress-10 { width: 10% }
+            &.progress-20 { width: 20% }
+            &.progress-30 { width: 30% }
+            &.progress-40 { width: 40% }
+            &.progress-50 { width: 50% }
+            &.progress-60 { width: 60% }
+            &.progress-70 { width: 70% }
+            &.progress-80 { width: 80% }
+            &.progress-90 { width: 90% }
+            &.progress-100 { width: 100% }
+        }
     }
 }
