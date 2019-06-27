@@ -243,12 +243,15 @@
                             </clr-radio-container>
                             <span class="field-error" *ngIf="hasError(['nonPro', 'activitiesBenefitFromExperience'])">{{ 'Field is required' | translate }}</span>
                         </div>
+                    </div>
 
-                        <div class="form-group field-required col-sm-6" *ngIf="!isDisabled(['nonPro', 'activitiesBenefitFromExperienceSpecification'])">
+                    <div class="row col-sm-12 mt-1" *ngIf="!isDisabled(['nonPro', 'activitiesBenefitFromExperienceSpecification'])">
+                        <div class="form-group required-field col-sm-4">
+                            <label for="activitiesBenefitFromExperienceSpecification">{{ 'Provide an explanation regarding the previous answer' | translate }}</label>
                             <input type="text"
+                                    id="activitiesBenefitFromExperienceSpecification"
                                     formControlName="activitiesBenefitFromExperienceSpecification"
-                                    [readonly]="isFormReadonly"
-                                    placeholder="{{ 'Provide an explanation regarding the previous answer' | translate }}">
+                                    [readonly]="isFormReadonly">
                             <span class="field-error" *ngIf="hasError('nonPro.activitiesBenefitFromExperienceSpecification', ['required'])">{{ 'Field is required' | translate }}</span>
                             <span class="field-error" *ngIf="hasError('nonPro.activitiesBenefitFromExperienceSpecification', ['maxlength'])">{{ 'Value is too long' | translate }}</span>
                         </div>
@@ -272,11 +275,14 @@
                             </clr-radio-container>
                             <span class="field-error" *ngIf="hasError(['nonPro', 'trainingKnowledgeSkills'])">{{ 'Field is required' | translate }}</span>
                         </div>
+                    </div>
 
-                        <div class="form-group field-required col-sm-6" *ngIf="!isDisabled(['nonPro', 'trainingKnowledgeSkillsSpecification'])">
+                    <div class="row col-sm-12 mt-1" *ngIf="!isDisabled(['nonPro', 'trainingKnowledgeSkillsSpecification'])">
+                        <div class="form-group required-field col-sm-4">
+                            <label for="trainingKnowledgeSkillsSpecification">{{ 'Provide an explanation regarding the previous answer' | translate }}</label>
                             <input type="text" formControlName="trainingKnowledgeSkillsSpecification"
-                                [readonly]="isFormReadonly"
-                                placeholder="{{ 'Provide an explanation regarding the previous answer' | translate }}">
+                                id="trainingKnowledgeSkillsSpecification"
+                                [readonly]="isFormReadonly">
                             <span class="field-error" *ngIf="hasError('nonPro.trainingKnowledgeSkillsSpecification', ['required'])">{{ 'Field is required' | translate }}</span>
                             <span class="field-error" *ngIf="hasError('nonPro.trainingKnowledgeSkillsSpecification', ['maxlength'])">{{ 'Value is too long' | translate }}</span>
                         </div>

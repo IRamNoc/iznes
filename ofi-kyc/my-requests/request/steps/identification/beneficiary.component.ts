@@ -161,6 +161,14 @@ export class BeneficiaryComponent implements OnInit, OnDestroy {
         return this.newRequestService.hasError(this.form, control, error);
     }
 
+    showHelperText(control, errors) {
+        return this.form.get(control).invalid && !this.hasError(control, errors);
+    }
+
+    checkNationalIdNumberType(value) {
+        return getValue(this.form.get(['legalPerson', 'nationalIdNumberText']), ['errors', value], '');
+    }
+
     ngOnDestroy() {
         this.unsubscribe.next();
         this.unsubscribe.complete();

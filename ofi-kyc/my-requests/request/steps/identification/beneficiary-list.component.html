@@ -18,7 +18,7 @@
             </div>
         </div>
 
-        <div class="my-1 right">
+        <div class="my-1">
             <button type="button" class="btn btn-primary m-0" (click)="addStakeholder(); $event.preventDefault()" [disabled]="isFormReadonly">
                 <clr-icon shape="plus-circle"></clr-icon>
                 {{'Add Stakeholder' | translate}}
@@ -37,11 +37,11 @@
                 <th>{{'Holding percentage' | translate}}</th>
                 <th>{{'Holding type' | translate}}</th>
                 <th>{{'Voting percentage' | translate}}</th>
-                <th class="actions-header"></th>
+                <th *ngIf="!isFormReadonly" class="actions-header"></th>
             </tr>
             </thead>
             <tbody>
-            <tr beneficiary-line *ngFor="let stakeholder of listStakeholders; index as i" [stakeholder]="stakeholder" (action)="handleAction($event, i)" (click)="viewStakeholder(i)" [parent]="getParent(i)"></tr>
+            <tr beneficiary-line *ngFor="let stakeholder of listStakeholders; index as i" [stakeholder]="stakeholder" (action)="handleAction($event, i)" (click)="viewStakeholder(i)" [parent]="getParent(i)" [readOnly]="isFormReadonly"></tr>
             <tr class="empty" *ngIf="!form.controls.length">
                 <td colspan="8">
                     {{'No data for the moment, please add at least one stakeholder.' | translate}}
@@ -70,11 +70,11 @@
             <div class="modal-footer">
                 <div *ngIf="mode === 'add'">
                     <button type="button" class="btn btn-outline mr-1" (click)="closeModal(true)">{{'Cancel' | translate}}</button>
-                    <button type="button" class="btn btn-success" (click)="closeModal()" [disabled]="!canDoUpdate()">{{'Validate' | translate}}</button>
+                    <button type="button" class="btn btn-primary" (click)="closeModal()" [disabled]="!canDoUpdate()">{{'Add' | translate}}</button>
                 </div>
                 <div *ngIf="mode === 'edit'">
                     <button type="button" class="btn btn-outline mr-1" (click)="closeModal(true)">{{'Cancel' | translate}}</button>
-                    <button type="button" class="btn btn-success" (click)="closeModal()" [disabled]="!canDoUpdate()">{{'Update' | translate}}</button>
+                    <button type="button" class="btn btn-primary" (click)="closeModal()" [disabled]="!canDoUpdate()">{{'Update' | translate}}</button>
                 </div>
                 <div *ngIf="mode === 'view'">
                     <button type="button" class="btn btn-outline mr-1" (click)="closeModal(true)">{{'Close' | translate}}</button>

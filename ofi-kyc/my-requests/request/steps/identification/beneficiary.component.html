@@ -18,7 +18,7 @@
         <div class="form-group required-field col-sm-6">
             <label class="required-field">{{'Relation Type' | translate}} </label>
 
-            <div class="form-group required-field col-sm-6">
+            <div class="form-group required-field">
                 <ng-select id="relationType-benef"
                             [items]="relationTypesList"
                             [formControl]="form.get('common.relationType')"
@@ -76,6 +76,7 @@
                        placeholder="{{ 'Fill in company LEI code' | translate }}">
                 <span class="field-error" *ngIf="hasError(['legalPerson', 'leiCode'], ['required'])">{{ 'Field is required' | translate }}</span>
                 <span class="field-error" *ngIf="hasError(['legalPerson', 'leiCode'], ['pattern'])">{{ 'LEI must be 20 characters long' | translate }}</span>
+                <span class="helper-text" *ngIf="showHelperText(['legalPerson', 'leiCode'], ['required', 'pattern'])">{{ 'Must be 20 characters long' | translate }}</span>
             </div>
         </div>
 
@@ -186,6 +187,8 @@
                     *ngIf="hasError(['legalPerson', 'nationalIdNumberText'], ['validSiren'])">{{'SIREN must be 9 digits long' | translate}}</span>
                 <span class="field-error"
                     *ngIf="hasError(['legalPerson', 'nationalIdNumberText'], ['validSiret'])">{{'SIRET must be 14 digits long' | translate}}</span>
+                <span class="helper-text" *ngIf="showHelperText(['legalPerson', 'nationalIdNumberText'], ['required', 'validSiren']) && checkNationalIdNumberType('validSiren')">{{'Must be 9 digits long' | translate }}</span>
+                <span class="helper-text" *ngIf="showHelperText(['legalPerson', 'nationalIdNumberText'], ['required', 'validSiret']) && checkNationalIdNumberType('validSiret')">{{'Must be 14 digits long' | translate }}</span>
             </div>
         </div>
 
@@ -199,7 +202,9 @@
                                     ngDefaultControl
                                     [disabled]="disabled"
                                     [inline]="true"
+                                    [class.error]="form.get(['common', 'document']).touched && form.get(['common', 'document']).status === 'INVALID'"
                     ></setl-file-drop>
+                    <span class="field-error force-display-error w-100" *ngIf="form.get(['common', 'document']).touched && form.get(['common', 'document']).status === 'INVALID'">{{'Field is required' | translate}}</span>
                 </div>
             </div>
         </div>
@@ -372,7 +377,9 @@
                                     ngDefaultControl
                                     [isDisabled]="disabled"
                                     [inline]="true"
+                                    [class.error]="form.get(['common', 'document']).touched && form.get(['common', 'document']).status === 'INVALID'"
                     ></setl-file-drop>
+                    <span class="field-error force-display-error w-100" *ngIf="form.get(['common', 'document']).touched && form.get(['common', 'document']).status === 'INVALID'">{{'Field is required' | translate}}</span>
                 </div>
             </div>
         </div>

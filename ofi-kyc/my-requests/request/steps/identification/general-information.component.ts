@@ -249,8 +249,7 @@ export class GeneralInformationComponent implements OnInit, OnDestroy {
     }
 
     showHelperText(control, errors) {
-        const hasError = errors.filter(error => this.hasError([control], [error]));
-        return this.form.get(control).invalid && !hasError.length;
+        return this.form.get(control).invalid && !this.hasError(control, errors);
     }
 
     isStepValid() {
