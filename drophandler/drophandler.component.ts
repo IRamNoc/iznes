@@ -171,6 +171,17 @@ export class DropHandler implements AfterViewInit {
     }
 
     /**
+     * Handle Focus
+     * ------------
+     * Open file browse window if tab key used to focus to the input and there are no files already uploaded
+     * @param event
+     */
+    public handleFocus(e) {
+        const code = (e.keyCode ? e.keyCode : e.which);
+        if (code === 9 && !this.encodedFiles.length) this.handleClick(event);
+    }
+
+    /**
      * Handle Click
      * ------------
      * Handles click events on the dropzone.

@@ -6,7 +6,7 @@
 
     <!-- Custom UI. -->
     <div
-        class="drop-file-zone">
+        class="drop-file-zone" tabindex="0" (keyup)="stopPropagation($event);handleFocus($event)">
         <div
             class="drop-file-area"
             [ngClass]="{active: this.isHovering}"
@@ -46,7 +46,7 @@
             <input class="drop-file-input" #fileInput [multiple]="multiple" type="file" (change)="handleFileChange($event)" />
         </form>
 
-        <div class="drop-file-zone">
+        <div class="drop-file-zone" tabindex="0" (keyup)="stopPropagation($event);handleFocus($event)">
             <div class="drop-file-area"
                 [ngClass]="{active: this.isHovering}"
                 (drag)="stopPropagation($event)"
