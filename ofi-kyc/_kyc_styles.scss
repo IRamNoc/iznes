@@ -414,6 +414,9 @@
                     border: 1px solid #ccc;
                     height: 30px;
                     background: #ffffff;
+                    &:focus {
+                        border-color: #96c8f1;
+                    }
                     .drop-file-area::after {
                         content: 'BROWSE';
                         float: right;
