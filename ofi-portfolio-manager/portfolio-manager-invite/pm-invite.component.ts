@@ -149,7 +149,7 @@ export class PortfolioManagerInviteComponent implements OnInit {
         let message = '<p><b>';
 
         message += this.lang.translate('An invitation email to IZNES was sent to:');
-        message += '</b></p><table class="table grid" > <tbody>';
+        message += '</b></p><table class="table grid scroll" > <tbody>';
 
         for (const email of emails) {
             message += '<tr><td>' + email + '</td></tr>';
