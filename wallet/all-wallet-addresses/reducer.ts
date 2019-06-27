@@ -12,8 +12,7 @@ export const AllWalletAddressesReducer = function (state: AllWalletAddressesStat
 
     switch (action.type) {
         case SET_ALL_WALLET_ADDRESSES:
-            return Object.assign(state, { addresses: _.get(action, 'payload[1]', []) });
-
+            return Object.assign({}, state, { addresses: _.get(action, 'payload[1].Data', []) });
         default:
             return state;
     }
