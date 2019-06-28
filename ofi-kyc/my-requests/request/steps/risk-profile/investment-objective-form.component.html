@@ -27,9 +27,11 @@
             </div>
         </ng-container>
 
-        <div class="col-sm-6 text-left form-group required-field">
-            <div class="force-display-error field-error"
+        <div class="col-sm-6 form-group required-field">
+            <div class="col-sm-6">
+                <div class="force-display-error field-error text-left"
                 *ngIf="form.get('performanceProfile').touched && form.get('performanceProfile').status === 'INVALID'">{{ 'Select at least one' | translate }}</div>
+            </div>
         </div>
 
         <!-- Template is placed here because formControlName must be nested within formGroupName which in turn must be nested within formGroup -->
@@ -62,7 +64,7 @@
 
     <div class="checkbox-group">
         <div class="row col-sm-12">
-            <div class="form-group required-field col-sm-12">
+            <div class="form-group required-field col-sm-12 mt-1">
                 <label class="required-field">{{ 'Why does the client need the investment?' | translate }}</label>
             </div>
         </div>
@@ -97,7 +99,7 @@
 
     <div class="checkbox-group" formGroupName="investmentHorizonWanted">
         <div class="row col-sm-12">
-            <div class="form-group required-field col-sm-12">
+            <div class="form-group required-field col-sm-12 mt-1">
                 <label class="required-field">{{ 'Which investment horizons are required?' | translate }}</label>
             </div>
         </div>
@@ -114,9 +116,11 @@
             </div>
         </ng-container>
 
-        <div class="col-sm-6 text-left form-group required-field">
-            <div class="force-display-error field-error"
+        <div class="col-sm-6 form-group required-field">
+            <div class="col-sm-6">
+                <div class="force-display-error field-error text-left"
                 *ngIf="form.get('investmentHorizonWanted').touched && form.get('investmentHorizonWanted').status === 'INVALID'">{{ 'Select at least one' | translate }}</div>
+            </div>
         </div>
 
         <!-- Template is placed here because formControlName must be nested within formGroupName which in turn must be nested within formGroup -->
