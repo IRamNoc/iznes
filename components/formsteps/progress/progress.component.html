@@ -1,8 +1,6 @@
-<ng-container *ngFor="let step of config">
-    <div class="kyc-step" [ngClass]="{ 'active': step.active, 'complete': step.complete, 'sub-step': step.parentStep, 'hide': step.hide }">
+<ng-container *ngFor="let step of config; let i = index">
+    <div class="kyc-step" [ngClass]="{ 'active': step.active, 'complete': step.complete, 'allow-click': config[i - 1]?.complete, 'sub-step': step.parentStep, 'hide': step.hide, 'parent': step.children.length }" (click)="handleStepClick(i)">
         <span></span>
         {{step.title}}
     </div>
 </ng-container>
-
-

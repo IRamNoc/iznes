@@ -1,10 +1,6 @@
-<!-- <button id="save-exit" class="btn" (click)="askClose()" [disabled]="disabled">
-    {{'Save and Exit' | translate}}
-</button> -->
-
-<div class="steps-container">
+<div class="steps-container" [class.fixed]="fixStepsProgress" (wheel)="handleScroll($event)">
     <div *ngIf="_onboardingMode" class="kyc-step complete"><span></span> User Profile</div>
-    <form-steps-progress [config]="progress"></form-steps-progress>
+    <form-steps-progress [config]="progress" (jumpToStep)="goToStep($event)"></form-steps-progress>
 </div>
 
 <div class="form-container">

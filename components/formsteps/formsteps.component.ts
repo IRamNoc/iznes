@@ -6,6 +6,7 @@ import {
     ViewChild,
     ContentChildren,
     AfterContentInit,
+    OnDestroy,
     ElementRef,
     ChangeDetectorRef,
 } from '@angular/core';
@@ -16,7 +17,7 @@ import { get as getValue } from 'lodash';
     selector: 'form-steps',
     templateUrl: './formsteps.component.html',
 })
-export class FormstepsComponent implements AfterContentInit {
+export class FormstepsComponent implements AfterContentInit, OnDestroy {
 
     @ViewChild('submit', { read: ElementRef }) button;
     @ContentChildren(FormstepComponent) stepComponents;
@@ -55,6 +56,8 @@ export class FormstepsComponent implements AfterContentInit {
     progress = [];
     _disabled: boolean = false;
     stepsMap: {} = {};
+    mainContentEl: HTMLElement;
+    fixStepsProgress: boolean = false;
 
     get steps() {
         return this.stepComponents.reduce((acc, cur) => acc.concat([cur.step]), []);
@@ -88,6 +91,32 @@ export class FormstepsComponent implements AfterContentInit {
     ngAfterContentInit() {
         this.position = 0;
         this.progress[0].active = true;
+        this.mainContentEl = document.querySelector('main.content-area');
+        this.mainContentEl.addEventListener('scroll', e => this.handleFixStepsProgress(e));
+    }
+
+    /**
+     * Handle fixing the steps progress side bar on scroll
+     * @param e
+     */
+    handleFixStepsProgress(e) {
+        const distanceToFixAt = 58;
+        const distanceFromTop = getValue(e, 'target.scrollTop', 0);
+
+        // Don't call detect changes if we don't have to
+        if (this.fixStepsProgress && distanceFromTop >= distanceToFixAt) return;
+        if (!this.fixStepsProgress && distanceFromTop < distanceToFixAt) return;
+
+        this.fixStepsProgress = distanceFromTop >= distanceToFixAt;
+        this.changeDetectorRef.detectChanges();
+    }
+
+    /**
+     * Pass mousewheel scroll to main content element if steps progress fixed
+     * @param e
+     */
+    handleScroll(e) {
+        if (this.fixStepsProgress) this.mainContentEl.scrollTop += e.deltaY;
     }
 
     setSubmitID(id) {
@@ -177,14 +206,18 @@ export class FormstepsComponent implements AfterContentInit {
     }
 
     setSubmitted(position) {
+        let currentStep: any = {};
         this.progress.forEach((step, index) => {
-            const isCurrentStep = position === index;
+            if (position === index) currentStep = { step, index };
 
-            step.complete = index < position;
-            step.active = isCurrentStep;
+            if (index < position) step.complete = true;
+            step.active = position === index;
 
-            if (isCurrentStep) this.handleSubSteps(step, index);
+            // Reset all sub-steps to hidden
+            step.hide = true;
         });
+
+        this.handleSubSteps(currentStep.step, currentStep.index);
     }
 
     handleSubSteps(step, index) {
@@ -195,7 +228,6 @@ export class FormstepsComponent implements AfterContentInit {
 
             // Set parent step to active
             this.progress[this.stepsMap[step.parentStep]].active = true;
-            this.progress[this.stepsMap[step.parentStep]].complete = false;
         } else {
         // Hide sub-steps
             const prev = (this.progress[index - 1] || {}).parentStep;
@@ -240,4 +272,7 @@ export class FormstepsComponent implements AfterContentInit {
         return this.stepComponents.toArray()[this._position];
     }
 
+    ngOnDestroy() {
+        this.mainContentEl.removeEventListener('scroll', e => this.handleFixStepsProgress(e));
+    }
 }
