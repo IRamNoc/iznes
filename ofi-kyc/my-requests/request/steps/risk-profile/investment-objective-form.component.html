@@ -27,9 +27,9 @@
             </div>
         </ng-container>
 
-        <div class="row col-sm-1 form-group" style="position:relative">
-            <span class="force-display-error field-error"
-                *ngIf="form.get('performanceProfile').touched && form.get('performanceProfile').status === 'INVALID'">{{ 'Select at least one' | translate }}</span>
+        <div class="col-sm-6 text-left form-group required-field">
+            <div class="force-display-error field-error"
+                *ngIf="form.get('performanceProfile').touched && form.get('performanceProfile').status === 'INVALID'">{{ 'Select at least one' | translate }}</div>
         </div>
 
         <!-- Template is placed here because formControlName must be nested within formGroupName which in turn must be nested within formGroup -->
@@ -114,9 +114,9 @@
             </div>
         </ng-container>
 
-        <div class="row col-sm-1 form-group" style="position:relative">
-            <span class="force-display-error field-error"
-                *ngIf="form.get('investmentHorizonWanted').touched && form.get('investmentHorizonWanted').status === 'INVALID'">{{ 'Select at least one' | translate }}</span>
+        <div class="col-sm-6 text-left form-group required-field">
+            <div class="force-display-error field-error"
+                *ngIf="form.get('investmentHorizonWanted').touched && form.get('investmentHorizonWanted').status === 'INVALID'">{{ 'Select at least one' | translate }}</div>
         </div>
 
         <!-- Template is placed here because formControlName must be nested within formGroupName which in turn must be nested within formGroup -->
@@ -171,7 +171,7 @@
         </div>
     </div>
 
-    <div class="row col-sm-12">
+    <div class="row col-sm-12 mt-1">
         <div class="form-group required-field col-sm-12">
             <table class="table">
             <thead>
@@ -200,12 +200,12 @@
             </tbody>
             </table>
 
-            <p class="field-error" *ngIf="hasError('riskAcceptance', ['total']) && !hasError('riskAcceptance', ['unfilled'])">
+            <span class="force-display-error field-error w-100 m-0" *ngIf="hasError('riskAcceptance', ['total']) && !hasError('riskAcceptance', ['unfilled'])">
                 {{ 'Total of all risk acceptance fields must be equal to 100' | translate }}
-            </p>
-            <p class="field-error" *ngIf="hasError('riskAcceptance', ['required'])">
+            </span>
+            <span class="force-display-error field-error w-100 m-0" *ngIf="hasError('riskAcceptance', ['required'])">
                 {{ 'Please fill in all values' | translate }}
-            </p>
+            </span>
         </div>
     </div>
 </div>

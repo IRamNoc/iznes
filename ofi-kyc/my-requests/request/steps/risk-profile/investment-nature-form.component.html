@@ -9,12 +9,11 @@
     </div>
 </div>
 
-<div class="panel-body" [class.hidden]="!open" [ngClass]="{'nature pl-1': multiple}" [formGroup]="form">
-
+<div class="panel-body form" [class.hidden]="!open" [ngClass]="{'nature pl-1': multiple}" [formGroup]="form">
     <div class="checkbox-group" formGroupName="financialAssetManagementMethod">
         <div class="row col-sm-12">
             <div class="form-group required-field col-sm-12">
-                <label class="control-label">{{ 'How are your financial assets currently managed?' | translate }}</label>
+                <label (click)="logForm()" class="control-label">{{ 'How are your financial assets currently managed?' | translate }}</label>
             </div>
         </div>
 
@@ -52,12 +51,19 @@
             </div>
         </div>
 
-        <p class="field-error" *ngIf="hasError('financialAssetManagementMethod')">{{ 'Select at least one' | translate }}</p>
+        <div class="row col-sm-6 form-group required-field">
+            <div class="col-sm-6">
+                <div class="force-display-error field-error text-left"
+                    *ngIf="form.get('financialAssetManagementMethod').status === 'INVALID'">
+                    {{ 'Select at least one' | translate }}
+                </div>
+            </div>
+        </div>
     </div>
 
     <div class="checkbox-group" formGroupName="frequencyFinancialTransactions">
         <div class="row col-sm-12">
-            <div class="form-group required-field col-sm-12">
+            <div class="form-group required-field col-sm-12 mt-2">
                 <label class="required-field">{{ 'What is the frequency of financial transactions?' | translate }}</label>
             </div>
         </div>
@@ -71,9 +77,11 @@
             </div>
         </ng-container>
 
-        <div class="row col-sm-1 form-group" style="position:relative">
-            <span class="field-error force-display-error"
-                *ngIf="form.get('frequencyFinancialTransactions').touched && form.get('frequencyFinancialTransactions').status === 'INVALID'">{{ 'Select at least one' | translate }}</span>
+        <div class="row col-sm-6 form-group required-field">
+            <div class="col-sm-6">
+                <div class="force-display-error field-error text-left"
+                *ngIf="form.get('frequencyFinancialTransactions').touched && form.get('frequencyFinancialTransactions').status === 'INVALID'">{{ 'Select at least one' | translate }}</div>
+            </div>
         </div>
 
         <!-- Template is placed here because formControlName must be nested within formGroupName which in turn must be nested within formGroup -->
@@ -92,7 +100,7 @@
         </ng-template>
     </div>
 
-    <div class="checkbox-group" formGroupName="investmentvehiclesAlreadyUsed">
+    <div class="checkbox-group mt-2" formGroupName="investmentvehiclesAlreadyUsed">
         <div class="row col-sm-12">
             <div class="form-group required-field col-sm-12">
                 <label class="required-field" (click)="logForm()">{{ 'Which investment vehicles do you currently use?' | translate }}</label>
@@ -108,9 +116,11 @@
             </div>
         </ng-container>
 
-        <div class="row col-sm-1 form-group" style="position:relative">
-            <span class="field-error force-display-error"
-                *ngIf="form.get('investmentvehiclesAlreadyUsed').touched && form.get('investmentvehiclesAlreadyUsed').status === 'INVALID'">{{ 'Select at least one' | translate }}</span>
+        <div class="col-sm-6 form-group required-field">
+            <div class="col-sm-6">
+                <div class="force-display-error field-error text-left"
+                    *ngIf="form.get('investmentvehiclesAlreadyUsed').touched && form.get('investmentvehiclesAlreadyUsed').status === 'INVALID'">{{ 'Select at least one' | translate }}</div>
+                </div>
         </div>
 
         <!-- Template is placed here because formControlName must be nested within formGroupName which in turn must be nested within formGroup -->
@@ -134,7 +144,7 @@
             <div class="row col-sm-4 form-group required-field" *ngIf="!isDisabled('investmentvehiclesAlreadyUsedSpecification')">
                 <label for="investmentvehiclesAlreadyUsedSpecification">{{ 'Please specify' | translate }}</label>
                 <input type="text" formControlName="investmentvehiclesAlreadyUsedSpecification">
-                <p class="field-error" *ngIf="hasError('investmentvehiclesAlreadyUsedSpecification', ['required'])">{{ 'Field is required' | translate }}</p>
+                <span class="field-error" *ngIf="hasError('investmentvehiclesAlreadyUsedSpecification', ['required'])">{{ 'Field is required' | translate }}</span>
             </div>
         </div>
     </div>
