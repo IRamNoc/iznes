@@ -11,12 +11,12 @@
                 <div class="alert-icon-wrapper">
                     <clr-icon class="alert-icon" shape="info-circle"></clr-icon>
                 </div>
-                <span class="alert-text">{{ 'Formats accepted: PDF, DOC, JPG. Max size: 20mb' | translate }}</span>
+                <span class="alert-text">{{ 'Max file upload size: 20mb' | translate }}</span>
             </div>
         </div>
     </div>
 
-    <div class="col-sm-12 mt-1">
+    <div class="col-sm-12 mt-1 p-0">
         <form [formGroup]="form" id="step-documents" (ngSubmit)="handleSubmit($event)">
 
             <!-- Common documents -->

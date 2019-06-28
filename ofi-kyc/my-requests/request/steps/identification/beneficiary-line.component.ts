@@ -13,6 +13,7 @@ import { BeneficiaryService } from './beneficiary.service';
 export class BeneficiaryLineComponent {
     @Input() stakeholder;
     @Input() parent;
+    @Input() readOnly: boolean = false;
     @Output() action: EventEmitter<any> = new EventEmitter<any>();
     showActions: boolean = false;
 

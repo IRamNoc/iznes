@@ -7,7 +7,7 @@
 <td>{{holdingPercentage}} %</td>
 <td>{{holdingType}}</td>
 <td>{{votingPercentage}} %</td>
-<td class="datagrid-row" (click)="showActions=!showActions; $event.stopPropagation()">
+<td *ngIf="!readOnly" class="datagrid-row" (click)="showActions=!showActions; $event.stopPropagation()">
     <clr-icon shape="ellipsis-vertical"></clr-icon>
     <div class="datagrid-action-overflow" *ngIf="showActions">
         <button class="action-item" (click)="addChild()">{{'Add child' | translate}}</button>

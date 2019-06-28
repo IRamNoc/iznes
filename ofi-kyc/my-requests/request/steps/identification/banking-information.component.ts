@@ -200,6 +200,10 @@ export class BankingInformationComponent implements OnInit, OnDestroy {
         });
     }
 
+    showHelperText(control, errors) {
+        return this.form.get('custodianHolders').get(control).invalid && !this.hasError(control, errors);
+    }
+
     ngOnDestroy() {
         this.unsubscribe.next();
         this.unsubscribe.complete();
