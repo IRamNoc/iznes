@@ -132,7 +132,7 @@
     <div class="checkbox-group">
         <div class="row col-sm-12">
             <div class="row col-sm-4 form-group required-field" *ngIf="!isDisabled('investmentvehiclesAlreadyUsedSpecification')">
-                <label for="investmentvehiclesAlreadyUsedSpecification">{{ 'Please specify other investment vehicle' | translate }}</label>
+                <label for="investmentvehiclesAlreadyUsedSpecification">{{ 'Please specify' | translate }}</label>
                 <input type="text" formControlName="investmentvehiclesAlreadyUsedSpecification">
                 <p class="field-error" *ngIf="hasError('investmentvehiclesAlreadyUsedSpecification', ['required'])">{{ 'Field is required' | translate }}</p>
             </div>
