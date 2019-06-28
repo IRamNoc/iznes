@@ -50,6 +50,23 @@
         <div class="col-sm-12">
             <label>{{ 'Are investment decisions validated by an ad hoc committee?' | translate }}</label>
 
+                <!-- Old Layout -->
+                <div class="radio-inline opt-btn-element">
+                    <input type="radio"
+                            id="opt-yes-{{index}}"
+                            value="yes"
+                            formControlName="investmentDecisionsAdHocCommittee">
+                    <label for="opt-yes-{{index}}">{{ 'Yes' | translate }}</label>
+                </div>
+                <div class="radio-inline opt-btn-element">
+                    <input type="radio"
+                            id="opt-no-{{index}}"
+                            value="no"
+                            formControlName="investmentDecisionsAdHocCommittee">
+                    <label for="opt-no-{{index}}">{{ 'No' | translate }}</label>
+                </div>
+
+                <!-- Old Layout -->
                 <!-- <div class="radio-inline opt-btn-element">
                     <input type="radio"
                             id="opt-yes-{{index}}"
@@ -65,15 +82,7 @@
                     <label for="opt-no-{{index}}">{{ 'No' | translate }}</label>
                 </div> -->
 
-                <div class="radio-inline opt-btn-element">
-                    <input type="radio" id="opt-yes-{{index}}" value="yes" formControlName="investmentDecisionsAdHocCommittee">
-                    <label for="opt-yes-{{index}}">{{ 'Yes' | translate }}</label>
-                </div>
-                <div class="radio-inline opt-btn-element">
-                    <input type="radio" id="opt-no-{{index}}" value="no" formControlName="investmentDecisionsAdHocCommittee">
-                    <label for="opt-no-{{index}}">{{ 'No' | translate }}</label>
-                </div>
-
+            <!-- New Layout -->
             <!-- <clr-radio-container clrInline>
                 <label>{{ 'Are investment decisions validated by an ad hoc committee?' | translate }}</label>
                 <clr-radio-wrapper>
