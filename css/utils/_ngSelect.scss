@@ -157,6 +157,13 @@ form .form-group div.ui-select-container {
 
 ng-select {
     width: 100%;
+    &.ng-invalid.ng-touched {
+        .ui-select-container.ui-select-multiple {
+            .ui-select-match {
+                border: 1px solid red;
+            }
+        }
+    }
 }
 
 ng-select.fluid-width {
