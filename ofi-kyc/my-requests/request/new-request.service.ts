@@ -648,7 +648,7 @@ export class NewRequestService {
             investmentDecisionsAdHocCommitteeSpecification: [{
                 value: '',
                 disabled: true,
-            }, this.getLengthValidator(255)],
+            }],
             otherPersonsAuthorised: ['', Validators.maxLength(255)],
             hasEverIssuedNeuCp: [0, Validators.required],
             hasAlreadyInvestedNeuCp: [0, Validators.required],

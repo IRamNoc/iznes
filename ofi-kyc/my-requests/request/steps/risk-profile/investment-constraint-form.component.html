@@ -48,50 +48,62 @@
 
     <div class="row form-group col-sm-12">
         <div class="col-sm-12">
-            <!-- <label>
-                {{ 'Are investment decisions validated by an ad hoc committee?' | translate }}
-            </label> -->
-            <!-- <div class="radio-inline opt-btn-element">
-                <input type="radio"
-                        id="opt-yes-{{index}}"
-                        value="yes"
-                        formControlName="investmentDecisionsAdHocCommittee">
-                <label for="opt-yes-{{index}}">{{ 'Yes' | translate }}</label>
-            </div>
-            <div class="radio-inline opt-btn-element">
-                <input type="radio"
-                        id="opt-no-{{index}}"
-                        value="no"
-                        formControlName="investmentDecisionsAdHocCommittee">
-                <label for="opt-no-{{index}}">{{ 'No' | translate }}</label>
-            </div> -->
+            <label>{{ 'Are investment decisions validated by an ad hoc committee?' | translate }}</label>
 
-            <clr-radio-container clrInline>
+                <!-- <div class="radio-inline opt-btn-element">
+                    <input type="radio"
+                            id="opt-yes-{{index}}"
+                            [value]="1"
+                            formControlName="investmentDecisionsAdHocCommittee">
+                    <label for="opt-yes-{{index}}">{{ 'Yes' | translate }}</label>
+                </div>
+                <div class="radio-inline opt-btn-element">
+                    <input type="radio"
+                            id="opt-no-{{index}}"
+                            [value]="0"
+                            formControlName="investmentDecisionsAdHocCommittee">
+                    <label for="opt-no-{{index}}">{{ 'No' | translate }}</label>
+                </div> -->
+
+                <div class="radio-inline opt-btn-element">
+                    <input type="radio" id="opt-yes-{{index}}" value="yes" formControlName="investmentDecisionsAdHocCommittee">
+                    <label for="opt-yes-{{index}}">{{ 'Yes' | translate }}</label>
+                </div>
+                <div class="radio-inline opt-btn-element">
+                    <input type="radio" id="opt-no-{{index}}" value="no" formControlName="investmentDecisionsAdHocCommittee">
+                    <label for="opt-no-{{index}}">{{ 'No' | translate }}</label>
+                </div>
+
+            <!-- <clr-radio-container clrInline>
                 <label>{{ 'Are investment decisions validated by an ad hoc committee?' | translate }}</label>
                 <clr-radio-wrapper>
                     <input type="radio"
-                            clrRadio id="opt-inv-decision-yes"
-                            value="yes"
-                            formControlName="investmentDecisionsAdHocCommittee"
-                            [attr.disabled]="disabled === true ? '' : null" />
-                    <label>{{ 'Yes' | translate }}</label>
-                </clr-radio-wrapper>
-                <clr-radio-wrapper>
-                    <input type="radio"
-                            clrRadio id="opt-inv-decision-no"
+                            clrRadio id="opt-no-{{index}}"
                             value="no"
                             formControlName="investmentDecisionsAdHocCommittee"
                             [attr.disabled]="disabled === true ? '' : null" />
                     <label>{{ 'No' | translate }}</label>
                 </clr-radio-wrapper>
-            </clr-radio-container>
+                <clr-radio-wrapper>
+                    <input type="radio"
+                            clrRadio id="opt-yes-{{index}}"
+                            value="yes"
+                            formControlName="investmentDecisionsAdHocCommittee"
+                            [attr.disabled]="disabled === true ? '' : null" />
+                    <label>{{ 'Yes' | translate }}</label>
+                </clr-radio-wrapper>
+            </clr-radio-container> -->
 
-            <textarea class="form-control"
-                    placeholder="{{ 'Please provide any useful details (name of the committee, composition, frequency, function of the members, etc.)' | translate }}"
-                    *ngIf="!isDisabled('investmentDecisionsAdHocCommitteeSpecification')"
-                    id="investmentDecisionsAdHocCommitteeSpecification"
-                    formControlName="investmentDecisionsAdHocCommitteeSpecification"></textarea>
-            <span class="field-error" *ngIf="hasError('investmentDecisionsAdHocCommitteeSpecification', ['maxlength'])">{{ 'Value is too long' | translate }}</span>
+            <div *ngIf="!isDisabled('investmentDecisionsAdHocCommitteeSpecification')">
+                <label>{{ 'Please specify' | translate }}</label>
+                <textarea class="form-control"
+                            id="investmentDecisionsAdHocCommitteeSpecification"
+                            *ngIf="!isDisabled('investmentDecisionsAdHocCommitteeSpecification')"
+                            formControlName="investmentDecisionsAdHocCommitteeSpecification"
+                             maxlength="45"></textarea>
+                <span class="helper-text">{{ 'Please provide any useful details (name of the committee, composition, frequency, function of the members, etc.)' | translate }}</span>
+                <span class="field-error" *ngIf="hasError('investmentDecisionsAdHocCommitteeSpecification', ['maxlength'])">{{ 'Value is too long' | translate }}</span>
+            </div>
         </div>
     </div>
 
@@ -110,49 +122,55 @@
     <!-- nowCP -->
     <div *ngIf="isNowCP()" class="row form-group col-sm-12">
         <div class="col-sm-12">
-            <label class="required-field">
-                {{ 'Has your company ever issued Neu CP?' | translate }}
-            </label>
-            <div class="radio-inline opt-btn-element">
-                <input type="radio" id="hasEverIssuedNeuCp-opt-yes" [value]="1" formControlName="hasEverIssuedNeuCp">
-                <label for="hasEverIssuedNeuCp-opt-yes">{{ 'Yes' | translate }}</label>
-            </div>
-            <div class="radio-inline opt-btn-element">
-                <input type="radio" id="hasEverIssuedNeuCp-opt-no" [value]="0" formControlName="hasEverIssuedNeuCp">
-                <label for="hasEverIssuedNeuCp-opt-no">{{ 'No' | translate }}</label>
-            </div>
+            <clr-radio-container clrInline>
+                <label class="required-field">{{ 'Has your company ever issued Neu CP?' | translate }}</label>
+                <clr-radio-wrapper>
+                    <input type="radio" clrRadio id="hasEverIssuedNeuCp-opt-no" [value]="0" checked="checked"
+                        formControlName="hasEverIssuedNeuCp" [attr.disabled]="disabled === true ? '' : null" />
+                    <label>{{ 'No' | translate }}</label>
+                </clr-radio-wrapper>
+                <clr-radio-wrapper>
+                    <input type="radio" clrRadio id="hasEverIssuedNeuCp-opt-yes" [value]="1"
+                        formControlName="hasEverIssuedNeuCp" [attr.disabled]="disabled === true ? '' : null" />
+                    <label>{{ 'Yes' | translate }}</label>
+                </clr-radio-wrapper>
+            </clr-radio-container>
         </div>
     </div>
 
     <div *ngIf="isNowCP()" class="row form-group col-sm-12">
         <div class="col-sm-12">
-            <label class="required-field">
-                {{ 'Has your company already invested in Neu CP?' | translate }}
-            </label>
-            <div class="radio-inline opt-btn-element">
-                <input type="radio" id="hasAlreadyInvestedNeuCp-opt-yes" [value]="1" formControlName="hasAlreadyInvestedNeuCp">
-                <label for="hasAlreadyInvestedNeuCp-opt-yes">{{ 'Yes' | translate }}</label>
-            </div>
-            <div class="radio-inline opt-btn-element">
-                <input type="radio" id="hasAlreadyInvestedNeuCp-opt-no" [value]="0" formControlName="hasAlreadyInvestedNeuCp">
-                <label for="hasAlreadyInvestedNeuCp-opt-no">{{ 'No' | translate }}</label>
-            </div>
+              <clr-radio-container clrInline>
+                <label class="required-field">{{ 'Has your company already invested in Neu CP?' | translate }}</label>
+                <clr-radio-wrapper>
+                    <input type="radio" clrRadio id="hasAlreadyInvestedNeuCp-opt-no" [value]="0" checked="checked"
+                        formControlName="hasAlreadyInvestedNeuCp" [attr.disabled]="disabled === true ? '' : null" />
+                    <label>{{ 'No' | translate }}</label>
+                </clr-radio-wrapper>
+                <clr-radio-wrapper>
+                    <input type="radio" clrRadio id="hasAlreadyInvestedNeuCp-opt-yes" [value]="1" formControlName="hasAlreadyInvestedNeuCp"
+                        [attr.disabled]="disabled === true ? '' : null" />
+                    <label>{{ 'Yes' | translate }}</label>
+                </clr-radio-wrapper>
+            </clr-radio-container>
         </div>
     </div>
 
     <div *ngIf="isNowCP()" class="row form-group col-sm-12">
         <div class="col-sm-12">
-            <label class="required-field">
-                {{ 'Do your operators have experience trading in Neu CP?' | translate }}
-            </label>
-            <div class="radio-inline opt-btn-element">
-                <input type="radio" id="hasExperienceTradingNeuCp-opt-yes" [value]="1" formControlName="hasExperienceTradingNeuCp">
-                <label for="hasExperienceTradingNeuCp-opt-yes">{{ 'Yes' | translate }}</label>
-            </div>
-            <div class="radio-inline opt-btn-element">
-                <input type="radio" id="hasExperienceTradingNeuCp-opt-no" [value]="0" formControlName="hasExperienceTradingNeuCp">
-                <label for="hasExperienceTradingNeuCp-opt-no">{{ 'No' | translate }}</label>
-            </div>
+            <clr-radio-container clrInline>
+                <label class="required-field">{{ 'Do your operators have experience trading in Neu CP?' | translate }}</label>
+                <clr-radio-wrapper>
+                    <input type="radio" clrRadio id="hasExperienceTradingNeuCp-opt-no" [value]="0" checked="checked"
+                        formControlName="hasExperienceTradingNeuCp" [attr.disabled]="disabled === true ? '' : null" />
+                    <label>{{ 'No' | translate }}</label>
+                </clr-radio-wrapper>
+                <clr-radio-wrapper>
+                    <input type="radio" clrRadio id="hasExperienceTradingNeuCp-opt-yes" [value]="1"
+                        formControlName="hasExperienceTradingNeuCp" [attr.disabled]="disabled === true ? '' : null" />
+                    <label>{{ 'Yes' | translate }}</label>
+                </clr-radio-wrapper>
+            </clr-radio-container>
         </div>
     </div>
 </div>
