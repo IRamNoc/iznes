@@ -64,7 +64,7 @@
 
     <div class="checkbox-group">
         <div class="row col-sm-12">
-            <div class="form-group required-field col-sm-12 mt-1">
+            <div class="form-group required-field col-sm-12">
                 <label class="required-field">{{ 'Why does the client need the investment?' | translate }}</label>
             </div>
         </div>
@@ -80,13 +80,20 @@
                     </label>
                 </div>
             </div>
-
-            <p class="field-error" *ngIf="hasError('clientNeeds')">{{ 'Select at least one' | translate }}</p>
         </div>
+
+        <div class="col-sm-6 form-group required-field">
+            <div class="col-sm-6">
+                <div class="force-display-error field-error text-left"
+                    *ngIf="form.get('clientNeeds').status === 'INVALID'">
+                    {{ 'Select at least one' | translate }}</div>
+            </div>
+        </div>
+
     </div>
 
     <div class="row col-sm-12">
-        <div class="form-group col-sm-12">
+        <div class="form-group col-sm-12 mt-1">
             <div>
                 <label>{{ 'Other Relevant Financial Information' | translate }}</label>
             </div>
