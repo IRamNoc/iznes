@@ -18,7 +18,6 @@ export class FormPercentDirective implements OnInit, OnDestroy, AfterViewInit {
     }
 
     ngOnInit() {
-        console.log('+++ this.config.form', this.config.form);
         // count all field into form & formgroup
         this.iterateForm(this.config.form.controls, 'push', '');
         // listen to changes
