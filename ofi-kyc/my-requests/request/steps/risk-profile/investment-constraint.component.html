@@ -15,7 +15,7 @@
             </div>
 
             <div class="row panel-body">
-                <div class="row col-sm-12">
+                <div class="row col-sm-12 p-0">
                     <div class="row" *ngIf="amcs?.length > 1">
                         <div class="form-group col-sm-12">
                             <p>
@@ -33,7 +33,7 @@
                         </div>
                     </div>
 
-                    <!-- Disabled because there no required fields for non- nowCP investorType -->
+                    <!-- formPercent and refreshForm() is disabled because there no required fields for non- nowCP investorType -->
                     <!-- <investment-constraint-form *ngFor="let constraint of constraintControls; let i = index" [form]="constraint" [multiple]="constraintControls?.length > 1" [index]="i" (refreshForm)="refreshForm()"></investment-constraint-form> -->
                     <investment-constraint-form *ngFor="let constraint of constraintControls; let i = index" [form]="constraint" [multiple]="constraintControls?.length > 1" [index]="i"></investment-constraint-form>
                 </div>

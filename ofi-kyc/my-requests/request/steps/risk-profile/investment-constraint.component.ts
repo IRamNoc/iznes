@@ -15,7 +15,7 @@ import { steps } from '../../../requests.config';
     templateUrl: './investment-constraint.component.html',
 })
 export class InvestmentConstraintComponent implements OnInit, OnDestroy {
-    // Disabled because there no required fields for non- nowCP investorType
+    // formPercent is disabled because there are no required fields for non- nowCP investorType
     // @ViewChild(FormPercentDirective) formPercent: FormPercentDirective;
     @Input() form;
     @Input() formObjective;
@@ -91,7 +91,7 @@ export class InvestmentConstraintComponent implements OnInit, OnDestroy {
                 takeUntil(this.unsubscribe),
             )
             .subscribe(() => {
-                // Disabled because there no required fields for non- nowCP investorType
+                // formPercent is disabled because there are no required fields for non- nowCP investorType
                 // this.refreshForm();
             });
     }
@@ -115,7 +115,7 @@ export class InvestmentConstraintComponent implements OnInit, OnDestroy {
             this.generateConstraints(map(this.amcs, 'amcID'));
         }
 
-        // Disabled because there no required fields for non- nowCP investorType
+        // formPercent is disabled because there are no required fields for non- nowCP investorType
         // this.refreshForm();
     }
 
@@ -132,7 +132,7 @@ export class InvestmentConstraintComponent implements OnInit, OnDestroy {
         });
     }
 
-    // Disabled because there no required fields for non- nowCP investorType
+    // formPercent is disabled because there are no required fields for non- nowCP investorType
     /* refreshForm() {
         this.formPercent.refreshFormPercent();
     } */

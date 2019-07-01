@@ -11,32 +11,54 @@
 
 <div class="panel-body" [class.hidden]="!open" [ngClass]="{'objective pl-1': multiple}" [formGroup]="form">
 
-    <div class="checkbox-group">
+    <div class="checkbox-group" formGroupName="performanceProfile">
         <div class="row col-sm-12">
             <div class="form-group required-field col-sm-12">
                 <label class="required-field">{{ 'What performance do you require?' | translate }}</label>
             </div>
         </div>
 
-        <div class="row col-sm-12 form-group" *ngFor="let profile of performanceProfileList">
-            <div class="col-sm-12">
+        <ng-container *ngFor="let profile of performanceProfileList; let i = index">
+            <div class="row col-sm-12 form-group required">
+                <ng-container *ngTemplateOutlet="checkboxGridPerformance; context: {'item': performanceProfileList[i * 2], 'index': i }">
+                </ng-container>
+                <ng-container *ngTemplateOutlet="checkboxGridPerformance; context: {'item': performanceProfileList[(i * 2) + 1], 'index': i }">
+                </ng-container>
+            </div>
+        </ng-container>
+
+        <div class="col-sm-6 form-group required-field">
+            <div class="col-sm-6">
+                <div class="force-display-error field-error text-left"
+                *ngIf="form.get('performanceProfile').touched && form.get('performanceProfile').status === 'INVALID'">{{ 'Select at least one' | translate }}</div>
+            </div>
+        </div>
+
+        <!-- Template is placed here because formControlName must be nested within formGroupName which in turn must be nested within formGroup -->
+        <ng-template #checkboxGridPerformance let-item="item" let-index="index">
+            <div class="col-sm-3" *ngIf="item">
                 <div class="checkbox-inline">
                     <input type="checkbox"
-                            id="{{profile.id}}-{{index}}"
-                            [formControl]="form.get(['performanceProfile', profile.id])">
-                    <label for="{{profile.id}}-{{index}}">
-                        {{ profile.text | translate }}
+                            id="{{ item.id }}-{{ index }}"
+                            formControlName="{{ item.id }}"
+                            (click)="form.get(['performanceProfile', item.id]).markAsTouched()">
+                    <label for="{{ item.id }}-{{ index }}">
+                        {{ item.text | translate }}
                     </label>
                 </div>
             </div>
+        </ng-template>
+    </div>
 
-            <input *ngIf="profile.id === 'others' && !isDisabled('performanceProfileSpecification')"
-                    id="performanceProfileSpecification"
-                    type="text"
-                    formControlName="performanceProfileSpecification"
-                    placeholder="{{ 'Please specify' | translate }}">
-
-            <p class="field-error" *ngIf="hasError('performanceProfileSpecification')">{{ 'Field is required' | translate }}</p>
+    <div class="checkbox-group">
+        <div class="row col-sm-12">
+            <div class="row col-sm-4 form-group required-field"
+                *ngIf="!isDisabled('performanceProfileSpecification')">
+                <label for="performanceProfileSpecification">{{ 'Please specify' | translate }}</label>
+                <input type="text" formControlName="performanceProfileSpecification">
+                <p class="field-error" *ngIf="hasError('performanceProfileSpecification', ['required'])">
+                    {{ 'Field is required' | translate }}</p>
+            </div>
         </div>
     </div>
 
@@ -58,13 +80,20 @@
                     </label>
                 </div>
             </div>
-
-            <p class="field-error" *ngIf="hasError('clientNeeds')">{{ 'Select at least one' | translate }}</p>
         </div>
+
+        <div class="col-sm-6 form-group required-field">
+            <div class="col-sm-6">
+                <div class="force-display-error field-error text-left"
+                    *ngIf="form.get('clientNeeds').status === 'INVALID'">
+                    {{ 'Select at least one' | translate }}</div>
+            </div>
+        </div>
+
     </div>
 
     <div class="row col-sm-12">
-        <div class="form-group col-sm-12">
+        <div class="form-group col-sm-12 mt-1">
             <div>
                 <label>{{ 'Other Relevant Financial Information' | translate }}</label>
             </div>
@@ -75,41 +104,60 @@
         </div>
     </div>
 
-    <div class="checkbox-group">
+    <div class="checkbox-group" formGroupName="investmentHorizonWanted">
         <div class="row col-sm-12">
-            <div class="form-group required-field col-sm-12">
+            <div class="form-group required-field col-sm-12 mt-1">
                 <label class="required-field">{{ 'Which investment horizons are required?' | translate }}</label>
             </div>
         </div>
 
-        <div class="row col-sm-12 form-group" *ngFor="let horizon of investmentHorizonList">
-            <div class="col-sm-12">
+        <ng-container *ngFor="let horizon of investmentHorizonList; let i = index">
+            <div class="row col-sm-12 form-group required">
+                <ng-container
+                    *ngTemplateOutlet="checkboxGridHorizon; context: {'item': investmentHorizonList[i * 2], 'index': i }">
+                </ng-container>
+                <ng-container
+                    *ngTemplateOutlet="checkboxGridHorizon; context: {'item': investmentHorizonList[(i * 2) + 1], 'index': i }">
+                </ng-container>
+            </div>
+        </ng-container>
+
+        <div class="col-sm-6 form-group required-field">
+            <div class="col-sm-6">
+                <div class="force-display-error field-error text-left"
+                *ngIf="form.get('investmentHorizonWanted').touched && form.get('investmentHorizonWanted').status === 'INVALID'">{{ 'Select at least one' | translate }}</div>
+            </div>
+        </div>
+
+        <!-- Template is placed here because formControlName must be nested within formGroupName which in turn must be nested within formGroup -->
+        <ng-template #checkboxGridHorizon let-item="item" let-index="index">
+            <div class="col-sm-3" *ngIf="item">
                 <div class="checkbox-inline">
-                    <input type="checkbox"
-                            id="{{horizon.id}}-{{index}}"
-                            [formControl]="form.get(['investmentHorizonWanted', horizon.id])">
-                    <label for="{{horizon.id}}-{{index}}">
-                        {{ horizon.text | translate }}
+                    <input type="checkbox" id="{{ item.id }}-{{ index }}" formControlName="{{ item.id }}"
+                        (click)="form.get(['investmentHorizonWanted', item.id]).markAsTouched()">
+                    <label for="{{ item.id }}-{{ index }}">
+                        {{ item.text | translate }}
                     </label>
                 </div>
             </div>
+        </ng-template>
+    </div>
 
-            <div *ngIf="horizon.id === 'specific' && !isDisabled('investmentHorizonWantedSpecificPeriod')" class="col-sm-12">
+    <div class="checkbox-group">
+        <div class="row col-sm-12">
+            <div class="row col-sm-4 form-group required-field"
+                *ngIf="!isDisabled('investmentHorizonWantedSpecificPeriod')">
                 <div class="input-group date-pick-wrapper">
                     <span class="fa fa-calendar" aria-hidden="true"></span>
-                    <input autocomplete="off"
-                            [dpDayPicker]="configDate" id="investmentHorizonWantedSpecificPeriod-{{index}}" formControlName="investmentHorizonWantedSpecificPeriod"
-                            placeholder="{{configDate.format}}"
-                            mode="day"
-                            theme="dp-material"
-                            type="text">
+                    <input autocomplete="off" [dpDayPicker]="configDate"
+                        id="investmentHorizonWantedSpecificPeriod-{{index}}"
+                        formControlName="investmentHorizonWantedSpecificPeriod" placeholder="{{configDate.format}}"
+                        mode="day" theme="dp-material" type="text">
                     <span class="force-display-error field-error"
                         *ngIf="hasError('investmentHorizonWantedSpecificPeriod')">{{ 'Incorrect date format' | translate }}</span>
                 </div>
             </div>
         </div>
-
-        <p class="field-error" *ngIf="hasError('investmentHorizonWanted')">{{ 'Select at least one' | translate }}</p>
     </div>
 
     <div class="row col-sm-12">
@@ -133,8 +181,9 @@
         </div>
     </div>
 
-    <div class="row">
-        <table class="table">
+    <div class="row col-sm-12 mt-1">
+        <div class="form-group required-field col-sm-12">
+            <table class="table">
             <thead>
                 <tr>
                     <th class="left">{{ 'Your Preference' | translate }}</th>
@@ -159,13 +208,14 @@
                     <td>{{ riskAcceptance.sri }}</td>
                 </tr>
             </tbody>
-        </table>
+            </table>
 
-        <p class="field-error" *ngIf="hasError('riskAcceptance', ['total']) && !hasError('riskAcceptance', ['unfilled'])">
-            {{ 'Total of all risk acceptance fields must be equal to 100' | translate }}
-        </p>
-        <p class="field-error" *ngIf="hasError('riskAcceptance', ['required'])">
-            {{ 'Please fill in all values' | translate }}
-        </p>
+            <span class="force-display-error field-error w-100 m-0" *ngIf="hasError('riskAcceptance', ['total']) && !hasError('riskAcceptance', ['unfilled'])">
+                {{ 'Total of all risk acceptance fields must be equal to 100' | translate }}
+            </span>
+            <span class="force-display-error field-error w-100 m-0" *ngIf="hasError('riskAcceptance', ['required'])">
+                {{ 'Please fill in all values' | translate }}
+            </span>
+        </div>
     </div>
 </div>

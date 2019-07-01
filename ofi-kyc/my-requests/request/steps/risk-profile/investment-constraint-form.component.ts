@@ -89,6 +89,7 @@ export class InvestmentConstraintFormComponent implements OnInit, OnDestroy {
 
     formCheckInvestmentDecisionsAdHocCommittee(value) {
         const control = this.form.get('investmentDecisionsAdHocCommitteeSpecification');
+
         if (value === 'yes') {
             control.enable();
         } else {
@@ -99,8 +100,7 @@ export class InvestmentConstraintFormComponent implements OnInit, OnDestroy {
     }
 
     isNowCP() {
-        return true; // TODO: delete after testing
-        // return this.kycInvestorType === 70 || this.kycInvestorType === 80;
+        return this.kycInvestorType === 70 || this.kycInvestorType === 80;
     }
 
     hasError(control, error = []) {

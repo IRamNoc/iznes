@@ -438,7 +438,7 @@ export const booleanControls = [
     'exerciseControl',
     'isLegalRepresentative',
     'isPoliticallyExposed',
-    'investmentDecisionsAdHocCommittee',
+    // 'investmentDecisionsAdHocCommittee', /* investmentDecisionsAdHocCommittee is VARCHAR in tblIznKycRiskObjective */
     'hasAlreadyInvestedNeuCp',
     'hasExperienceTradingNeuCp',
     'hasEverIssuedNeuCp',

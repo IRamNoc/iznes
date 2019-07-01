@@ -37,8 +37,8 @@ export class InvestmentNatureFormComponent implements OnInit {
     }
 
     ngOnInit() {
-        this.initFormCheck();
         this.initData();
+        this.initFormCheck();
         this.getCurrentFormData();
     }
 
