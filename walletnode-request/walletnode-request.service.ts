@@ -16,6 +16,7 @@ import {
 import * as _ from 'lodash';
 import {NgRedux} from '@angular-redux/store';
 import {SET_CONTRACT_LIST} from '@setl/core-store/wallet/my-wallet-contract/actions';
+import { SET_ALL_INSTRUMENTS_LIST, setRequesteAllInstruments } from '@setl/core-store';
 
 interface RequestIssueHolding {
     walletId: number;
@@ -51,6 +52,26 @@ export class WalletNodeRequestService {
     constructor(private walletNodeSocketService: WalletNodeSocketService,
                 private http: HttpClient,
                 private ngRedux: NgRedux<any>) {
+    }
+
+    /**
+     * Get all instruments from chain.
+     */
+    getAllInstruments() {
+        this.ngRedux.dispatch(setRequesteAllInstruments());
+
+        // Create a saga pipe.
+        const asyncTaskPipes = this.walletInstrumentRequest({
+            walletId: null,
+        });
+
+        // Send a saga action.
+        this.ngRedux.dispatch(SagaHelper.runAsync(
+            [SET_ALL_INSTRUMENTS_LIST],
+            [],
+            asyncTaskPipes,
+            {},
+        ));
     }
 
     walletAddressRequest(requestData: RequestWalletAddress): any {
