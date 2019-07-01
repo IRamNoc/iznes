@@ -84,13 +84,14 @@ export class NewKycSelectAmcComponent implements OnInit, OnDestroy {
     }
 
     ngAfterViewInit() {
-        if(this.onboarding){
-            
+        if (this.onboarding) {
+
             combineLatest(
-                this.managementCompanyList$, 
+                this.managementCompanyList$,
                 this.myKycList$)
-            .subscribe(([managementCompanyList,myKycList]) => {
-                if(!this.submitted) this.handleSubmit();
+            .pipe(distinctUntilChanged())
+            .subscribe(([managementCompanyList, myKycList]) => {
+                if (!this.submitted) this.handleSubmit();
             });
         }
     }

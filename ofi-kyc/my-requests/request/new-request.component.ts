@@ -177,8 +177,6 @@ export class NewKycRequestComponent implements OnInit, AfterViewInit {
             const nextStep = this.getNextStep(this.currentCompletedStep);
             this.go(nextStep);
         }
-
-        this.handleOnboarding();
     }
 
     removeQueryParams() {
@@ -291,13 +289,6 @@ export class NewKycRequestComponent implements OnInit, AfterViewInit {
         if (type === 'close') {
             this.router.navigateByUrl('/onboarding-requests/list');
         }
-
-        this.checkIsBeginning();
-    }
-
-    checkIsBeginning() {
-        // Fix changed after checked error
-        setTimeout(() => this.isBeginning = (this.formSteps || {}).position === 0);
     }
 
     handleSubmit(event) {
@@ -362,15 +353,5 @@ export class NewKycRequestComponent implements OnInit, AfterViewInit {
     ngOnDestroy() {
         this.unsubscribe.next();
         this.unsubscribe.complete();
-    }
-
-    handleOnboarding() {
-        this.checkIsBeginning();
-
-        if (this.onboardingMode) {
-
-            this.goToStep('introduction');
-            this.initFormSteps(this.currentCompletedStep);
-        }
     }
 }
