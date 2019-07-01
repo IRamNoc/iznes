@@ -238,12 +238,13 @@ export class KycDetailsService {
         return requestsConfig.controlToName[controlName] || controlName;
     }
 
-    exportStakeholders(kycID, userID) {
+    exportStakeholders(kycID, userID, registeredCompanyName) {
         const config = {
             method: 'exportKYCBeneficiariesCSV',
             token: this.memberSocketService.token,
             kycID,
             userId: userID,
+            registeredCompanyName,
             timezoneoffset: new Date().getTimezoneOffset(),
         };
 
