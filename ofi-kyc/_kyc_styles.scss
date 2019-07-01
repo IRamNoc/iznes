@@ -14,9 +14,6 @@
         top: 78px;
         overflow: hidden auto;
         height: calc(100vh - 115px);
-        .kyc-step.sub-step.complete::after {
-            right: 6px;
-        }
     }
     .kyc-step {
         height: 48px;
@@ -62,14 +59,14 @@
                 width: 24px;
                 height: 24px;
                 position: absolute;
-                right: -18px;
+                right: 4px;
                 top: 13px;
                 background-size: 22px;
             }
             &.active::after {
                 background: #eeeeee url(data:image/svg+xml;base64,PHN2ZyB2ZXJzaW9uPSIxLjEiIHdpZHRoPSIzNiIgaGVpZ2h0PSIzNiIgIHZpZXdCb3g9IjAgMCAzNiAzNiIgcHJlc2VydmVBc3BlY3RSYXRpbz0ieE1pZFlNaWQgbWVldCIgeG1sbnM9Imh0dHA6Ly93d3cudzMub3JnLzIwMDAvc3ZnIiB4bWxuczp4bGluaz0iaHR0cDovL3d3dy53My5vcmcvMTk5OS94bGluayIgZmlsbD0iIzMxODcwMCI+ICAgIDx0aXRsZT5jaGVjay1jaXJjbGUtbGluZTwvdGl0bGU+ICAgIDxwYXRoIGNsYXNzPSJjbHItaS1vdXRsaW5lIGNsci1pLW91dGxpbmUtcGF0aC0xIiBkPSJNMTgsNkExMiwxMiwwLDEsMCwzMCwxOCwxMiwxMiwwLDAsMCwxOCw2Wm0wLDIyQTEwLDEwLDAsMSwxLDI4LDE4LDEwLDEwLDAsMCwxLDE4LDI4WiI+PC9wYXRoPjxwYXRoIGNsYXNzPSJjbHItaS1vdXRsaW5lIGNsci1pLW91dGxpbmUtcGF0aC0yIiBkPSJNMTYuMzQsMjMuNzRsLTUtNWExLDEsMCwwLDEsMS40MS0xLjQxbDMuNTksMy41OSw2Ljc4LTYuNzhhMSwxLDAsMCwxLDEuNDEsMS40MVoiPjwvcGF0aD4gICAgPHJlY3QgeD0iMCIgeT0iMCIgd2lkdGg9IjM2IiBoZWlnaHQ9IjM2IiBmaWxsLW9wYWNpdHk9IjAiLz48L3N2Zz4=) no-repeat;
                 width: 240px;
-                background-position: 210px 7px;
+                background-position: 212px 7px;
                 background-size: 22px;
                 margin: -42px 0 0 0px;
                 position: initial;
@@ -89,8 +86,14 @@
             &.hide {
                 display: none;
             }
+            white-space: nowrap;
             padding-left: 12px;
             position: relative;
+            text-overflow: ellipsis;
+            overflow: hidden;
+            margin-right: -24px;
+            padding-right: 24px;
+            width: 256px;
             span::before {
                 width: 26px;
                 display: inline-block;
@@ -272,6 +275,9 @@
                 clr-icon {
                     margin-top: -8px;
                     color: #0079b8;
+                }
+                .ui-select-placeholder {
+                    line-height: 38px !important;
                 }
             }
             .ui-select-toggle {
@@ -577,6 +583,15 @@ form-steps {
                 width: 130px;
             }
         }
+    }
+}
+
+.fr-Latn {
+    .pgContainer::before {
+        content: 'Emplacement';
+    }
+    .kyc-container .form-group .filedrop-wrapper setl-file-drop .inline-filedrop .drop-file-area::after {
+        content: 'FEUILLETER';
     }
 }
 

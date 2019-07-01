@@ -11,47 +11,37 @@
             <li>{{ 'Details of investments' | translate }}</li>
             <li>{{ 'Required documents' | translate }}</li>
         </ul>
-        <button class="btn btn-primary" (click)="showSplash = false">Start</button>
+        <button class="btn btn-primary" (click)="showSplash = false">{{ 'Start' | translate }}</button>
     </div>
 </div>
 
 <div class="kyc-header">
-    Onboarding
+    {{ 'Onboarding' | translate }}
 </div>
 
 <div class="kyc-steps">
     <div class="kyc-step active">
-        <span></span> User Profile
+        <span></span> {{ 'User Profile' | translate }}
     </div>
     <div class="kyc-step">
-        <span></span> Selection
+        <span></span> {{ 'Selection' | translate }}
     </div>
     <div class="kyc-step">
-        <span></span> Indentification
+        <span></span> {{ 'Indentification' | translate }}
     </div>
     <div class="kyc-step">
-        <span></span> Risk Profile
+        <span></span> {{ 'Risk Profile' | translate }}
     </div>
     <div class="kyc-step">
-        <span></span> Documents
+        <span></span> {{ 'Documents' | translate }}
     </div>
     <div class="kyc-step">
-        <span></span> Validation
+        <span></span> {{ 'Validation' | translate }}
     </div>
 </div>
 
 <div class="kyc-container width-adjust">
     <h2>{{ 'User Profile' | translate }}</h2>
-    <div class="alert alert-no-bg" role="alert">
-        <div class="alert-items">
-            <div class="alert-item static">
-                <div class="alert-icon-wrapper">
-                    <clr-icon class="alert-icon" shape="info-circle"></clr-icon>
-                </div>
-                <span class="alert-text">{{ 'All fields are required unless marked optional' | translate }}</span>
-            </div>
-        </div>
-    </div>
 
     <div *ngIf="!hasFilledAdditionnalInfos">
         <app-my-informations [viewMode]="'PAGE'" [type]="userType" [userInfo]="userInfo" (onSubmit)="openMyInformationsModal($event)"></app-my-informations>
