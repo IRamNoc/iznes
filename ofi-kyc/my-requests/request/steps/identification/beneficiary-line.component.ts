@@ -92,7 +92,7 @@ export class BeneficiaryLineComponent {
      */
     @HostListener('document:click', ['$event']) clickOutside(e) {
         const actionIcon = this.element.nativeElement.querySelector('.datagrid-row');
-        this.showActions = actionIcon.contains(e.target);
+        this.showActions = actionIcon ? actionIcon.contains(e.target) : false;
     }
 
     addChild() {
