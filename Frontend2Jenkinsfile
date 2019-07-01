@@ -13,6 +13,14 @@ node {
                         sh 'rsync -avhm --stats /var/lib/jenkins/Deploy/membership-db/* root@178.62.112.217:/var/membership-db'
                         sh 'ssh -t root@178.62.112.217 \'cd /var/membership-db/deploy/ ./updatedb iznes\''
 
+                        script {
+                                            def logz = currentBuild.rawBuild.getLog(10000);
+                                            def result = logz.find { it.contains('ERROR:') }
+                                            if (result) {
+                                                error ('Failing due to ' + result)
+                                            }
+                                    }
+
             }
 
         stage('Deploy Backend to Staging Environment') {
