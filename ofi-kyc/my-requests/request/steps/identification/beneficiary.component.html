@@ -94,7 +94,7 @@
             </div>
             <div class="form-group col-sm-6">
                 <label class="control-label" for="address2-benef">&nbsp;</label>
-                <input type="text" id="address2-benef" [formControl]="form.get('common.address2')" placeholder="{{'Address line 2'}}"
+                <input type="text" id="address2-benef" [formControl]="form.get('common.address2')" placeholder="{{'Address line 2' | translate }}"
                        [readonly]="disabled">
                 <span class="field-error" *ngIf="hasError(['common', 'address2'], ['required'])">{{'Field is required' | translate}}</span>
                 <span class="field-error" *ngIf="hasError(['common', 'address2'], ['maxlength'])">{{'Field is too long' | translate}}</span>
@@ -104,13 +104,13 @@
         <div class="row col-sm-12">
             <div class="form-group required-field col-sm-6">
                 <label class="control-label" for="zipCode-benef">{{'ZIP Code' | translate}}</label>
-                <input type="text" id="zipCode-benef" [formControl]="form.get('common.zipCode')" placeholder="{{'Fill in a ZIP Code'}}" [readonly]="disabled">
+                <input type="text" id="zipCode-benef" [formControl]="form.get('common.zipCode')" placeholder="{{'Fill in a ZIP Code' | translate}}" [readonly]="disabled">
                 <span class="field-error" *ngIf="hasError(['common', 'zipCode'], ['required'])">{{'Field is required' | translate}}</span>
                 <span class="field-error" *ngIf="hasError(['common', 'zipCode'], ['maxlength'])">{{'Field is too long' | translate}}</span>
             </div>
             <div class="form-group required-field col-sm-6">
                 <label class="control-label" for="city-benef">{{'City' | translate}}</label>
-                <input type="text" id="city-benef" [formControl]="form.get('common.city')" placeholder="{{'Fill in a city'}}" [readonly]="disabled">
+                <input type="text" id="city-benef" [formControl]="form.get('common.city')" placeholder="{{'Fill in a city' | translate}}" [readonly]="disabled">
                 <span class="field-error" *ngIf="hasError(['common', 'city'], ['required'])">{{'Field is required' | translate}}</span>
                 <span class="field-error" *ngIf="hasError(['common', 'city'], ['maxlength'])">{{'Field is too long' | translate}}</span>
             </div>

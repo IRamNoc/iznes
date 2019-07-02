@@ -707,6 +707,7 @@ export class BeneficiaryListComponent implements OnInit, OnDestroy {
                     completed: true,
                 });
                 this.clearPersistForm();
+                this.updateParents();
             })
             .catch(() => {
                 this.newRequestService.errorPop();
