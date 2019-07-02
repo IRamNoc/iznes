@@ -1,8 +1,8 @@
 import { Component, Input, OnInit } from '@angular/core';
 import { select } from '@angular-redux/store';
 import { KycDetailsService } from './details.service';
-import { mapValues, find, get as getValue } from 'lodash';
-import { filter, take } from 'rxjs/operators';
+import { isEmpty, mapValues, find, get as getValue } from 'lodash';
+import { filter, take, filter as rxFilter, map } from 'rxjs/operators';
 import { MultilingualService } from '@setl/multilingual';
 
 @Component({
@@ -11,11 +11,12 @@ import { MultilingualService } from '@setl/multilingual';
     styleUrls: ['./beneficiaries.component.scss'],
 })
 export class KycDetailsStakeholdersComponent implements OnInit {
-
     @select(['user', 'myDetail', 'userId']) user$;
+    @select(['ofi', 'ofiKyc', 'kycDetails', 'kycDetailsGeneral']) kycGeneral$;
 
     @Input() set stakeholders(stakeholders) {
         if (stakeholders) {
+            this.getRegisteredCompanyName();
             this.stakeholderList = stakeholders;
             this.parseStakeholders(stakeholders);
         }
@@ -31,6 +32,7 @@ export class KycDetailsStakeholdersComponent implements OnInit {
     stakeholderReadableList;
 
     userID;
+    registeredCompanyName;
 
     constructor(
         private detailsService: KycDetailsService,
@@ -51,6 +53,20 @@ export class KycDetailsStakeholdersComponent implements OnInit {
         });
     }
 
+    getRegisteredCompanyName() {
+        this.kycGeneral$
+            .pipe(
+                rxFilter(value => !isEmpty(value)),
+                map(data => this.detailsService.toArray(data)),
+                map(data => this.detailsService.order(data)),
+            )
+            .subscribe((data) => {
+                this.registeredCompanyName = data.filter((item) => {
+                    return item.originalId === 'registeredCompanyName';
+                })[0].value;
+            });
+    }
+
     selectStakeholder(stakeholder) {
         this.selectedStakeholder = stakeholder;
     }
@@ -63,7 +79,7 @@ export class KycDetailsStakeholdersComponent implements OnInit {
         const kycID = getValue(this.stakeholderList, [0, 'kycID']);
 
         if (kycID) {
-            this.detailsService.exportStakeholders(kycID, this.userID);
+            this.detailsService.exportStakeholders(kycID, this.userID, this.registeredCompanyName);
         }
     }
 
@@ -121,15 +137,17 @@ export class KycDetailsStakeholdersComponent implements OnInit {
     getParent(stakeholder) {
         const parent = stakeholder.parent;
 
-        const parentStakeholder = find(this.stakeholderList, ['companyBeneficiariesID', parent]);
-        if ((parent != undefined) && parent >= 0 && (typeof parentStakeholder !== 'undefined')) {
+        if (parent === -1) {
+            return this.registeredCompanyName;
+        }
 
+        const parentStakeholder = find(this.stakeholderList, ['companyBeneficiariesID', parent]);
+
+        if ((parent != undefined) && parent >= 0 && (typeof parentStakeholder !== 'undefined')) {
             const parentName = this.getName(parentStakeholder);
 
             return parentName;
         }
-
-        return this.translateService.translate('No linked entity');
     }
 
     getName(stakeholder) {
