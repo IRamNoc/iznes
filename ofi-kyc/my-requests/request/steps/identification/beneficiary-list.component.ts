@@ -212,10 +212,10 @@ export class BeneficiaryListComponent implements OnInit, OnDestroy {
     }
 
     disableBeneficiaryType(values, formgroup) {
-        // depend on beneficiaryType, disable part of the form.
         if (values['beneficiaryType'] === 'legalPerson') {
+            // Disable naturalPerson
             formgroup.get('naturalPerson').disable();
-            // enable nationalIdNumberText
+            // Enable nationalIdNumberText
             const nationIdNumberType = getValue(values, 'legalPerson.nationalIdNumberType[0].id', '');
             this.beneficiaryService.formCheckNationalIdNumberType(formgroup, nationIdNumberType);
         } else {
@@ -559,11 +559,13 @@ export class BeneficiaryListComponent implements OnInit, OnDestroy {
 
         if (this.isLegalPerson(type)) {
             return 'fa-building';
-        } else if (this.isNaturalPerson(type)) {
-            return 'fa-user';
-        } else {
-            return 'fa-users';
         }
+
+        if (this.isNaturalPerson(type)) {
+            return 'fa-user';
+        }
+
+        return 'fa-users';
     }
 
     shouldRemoveStakeholder(companyBeneficiariesID) {
@@ -690,6 +692,11 @@ export class BeneficiaryListComponent implements OnInit, OnDestroy {
         return this.form.valid;
     }
 
+    /**
+     * Submits the beneficiary form
+     * @param e Event Object (optional)
+     * @returns void
+     */
     handleSubmit(e = null) {
         if (e) e.preventDefault();
 
@@ -707,16 +714,18 @@ export class BeneficiaryListComponent implements OnInit, OnDestroy {
             .identificationService
             .sendRequestBeneficiaryList(this.form, requests, this.connectedWallet)
             .then(() => {
-                this.submitEvent.emit({
-                    completed: true,
-                });
+                // If event object, navigate to next step
+                if (e) {
+                    this.submitEvent.emit({
+                        completed: true,
+                    });
+                }
                 this.clearPersistForm();
                 this.updateParents();
             })
             .catch(() => {
                 this.newRequestService.errorPop();
-            })
-            ;
+            });
         });
     }
 
