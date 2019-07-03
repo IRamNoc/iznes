@@ -66,6 +66,7 @@ export class KycDetailsStakeholdersComponent implements OnInit {
                 this.registeredCompanyName = data.filter((item) => {
                     return item.originalId === 'registeredCompanyName';
                 })[0].value;
+
                 this.changeDetectorRef.markForCheck();
             });
     }

@@ -8,8 +8,8 @@ import { mapValues, find } from 'lodash';
     templateUrl: './beneficiary-modal.component.html',
 })
 export class KycDetailsStakeholdersModalComponent implements OnInit {
-
     @Input() stakeholder;
+    @Input() registeredCompanyName;
     @Output() close: EventEmitter<void> = new EventEmitter();
 
     set open(value) {

@@ -40,4 +40,4 @@
     </tbody>
 </table>
 
-<kyc-details-stakeholder-modal [stakeholder]="selectedStakeholder" *ngIf="selectedStakeholder" (close)="deselectStakeholder()"></kyc-details-stakeholder-modal>
+<kyc-details-stakeholder-modal [stakeholder]="selectedStakeholder" [registeredCompanyName]="registeredCompanyName" *ngIf="selectedStakeholder" (close)="deselectStakeholder()"></kyc-details-stakeholder-modal>
