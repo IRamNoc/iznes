@@ -305,6 +305,7 @@ export class BeneficiaryListComponent implements OnInit, OnDestroy {
         }
 
         if (!cancel && this.isValidUpdate(stakeholder)) {
+            this.handleSubmit();
             this.confirmClose(this.mode);
             this.sortStakeholders();
         }
@@ -322,9 +323,11 @@ export class BeneficiaryListComponent implements OnInit, OnDestroy {
 
     private isValidUpdate(stakeholder): boolean {
         const type = stakeholder.get('beneficiaryType').value;
-        if(this.isLegalPerson(type)) {
+        if (this.isLegalPerson(type)) {
             return this.isLegalPersonValid(stakeholder);
-        } else if(this.isNaturalPerson(type)) {
+        }
+
+        if (this.isNaturalPerson(type)) {
             return this.isNaturalPersonValid(stakeholder);
         }
     }
@@ -687,8 +690,9 @@ export class BeneficiaryListComponent implements OnInit, OnDestroy {
         return this.form.valid;
     }
 
-    handleSubmit(e) {
-        e.preventDefault();
+    handleSubmit(e = null) {
+        if (e) e.preventDefault();
+
         if (!this.form.valid) {
             formHelper.dirty(this.form);
             formHelper.scrollToFirstError(this.element.nativeElement);
