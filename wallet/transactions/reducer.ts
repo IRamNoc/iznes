@@ -12,6 +12,7 @@ const initialCollection = {
 const initialState: Transactions = {
     all: initialCollection,
     byAsset: {},
+    byAssetCrossWallets: {},
 };
 
 export const TransactionsReducer = (state: Transactions = initialState, action: AsyncTaskResponseAction) => {
@@ -22,6 +23,9 @@ export const TransactionsReducer = (state: Transactions = initialState, action: 
 
     case TransactionActions.SET_ASSET_TRANSACTIONS:
         return setAssetTransactions(action, state);
+
+    case TransactionActions.SET_ASSET_CROSS_WALLETS_TRANSACTIONS:
+        return setAssetCrossWalletsTransactions(action, state);
 
     case TransactionActions.INCREMENT_ALL_REQUESTED_PAGE:
         return {
@@ -54,6 +58,30 @@ export const TransactionsReducer = (state: Transactions = initialState, action: 
         };
 
     case TransactionActions.DECREMENT_ASSET_REQUESTED_PAGE:
+        return {
+            ...state,
+            byAsset: {
+                ...state.byAsset,
+                [action.payload.asset]: {
+                    ...state.byAsset[action.payload.asset],
+                    requestedPage: state.byAsset[action.payload.asset].requestedPage - 1,
+                },
+            },
+        };
+
+    case TransactionActions.INCREMENT_ASSET_CROSS_WALLETS_REQUESTED_PAGE:
+        return {
+            ...state,
+            byAsset: {
+                ...state.byAsset,
+                [action.payload.asset]: {
+                    ...state.byAsset[action.payload.asset],
+                    requestedPage: state.byAsset[action.payload.asset].requestedPage + 1,
+                },
+            },
+        };
+
+    case TransactionActions.DECREMENT_ASSET_CROSS_WALLETS_REQUESTED_PAGE:
         return {
             ...state,
             byAsset: {
@@ -107,6 +135,30 @@ export const TransactionsReducer = (state: Transactions = initialState, action: 
             },
         };
 
+    case TransactionActions.INCREMENT_ASSET_CROSS_WALLETS_CURRENT_PAGE:
+        return {
+            ...state,
+            byAssetCrossWallets: {
+                ...state.byAssetCrossWallets,
+                [action.payload.asset]: {
+                    ...state.byAssetCrossWallets[action.payload.asset],
+                    currentPage: state.byAssetCrossWallets[action.payload.asset].currentPage + 1,
+                },
+            },
+        };
+
+    case TransactionActions.DECREMENT_ASSET_CROSS_WALLETS_CURRENT_PAGE:
+        return {
+            ...state,
+            byAssetCrossWallets: {
+                ...state.byAssetCrossWallets,
+                [action.payload.asset]: {
+                    ...state.byAssetCrossWallets[action.payload.asset],
+                    currentPage: state.byAssetCrossWallets[action.payload.asset].currentPage - 1,
+                },
+            },
+        };
+
     case TransactionActions.RESET_ALL_TRANSACTIONS:
         return {
             ...state,
@@ -118,6 +170,15 @@ export const TransactionsReducer = (state: Transactions = initialState, action: 
             ...state,
             byAsset: {
                 ...state.byAsset,
+                [action.payload.asset]: initialCollection,
+            },
+        };
+
+    case TransactionActions.RESET_ASSET_CROSS_WALLETS_TRANSACTIONS:
+        return {
+            ...state,
+            byAssetCrossWallets: {
+                ...state.byAssetCrossWallets,
                 [action.payload.asset]: initialCollection,
             },
         };
@@ -138,6 +199,18 @@ export const TransactionsReducer = (state: Transactions = initialState, action: 
                 ...state.byAsset,
                 [action.payload.asset]: {
                     ...state.byAsset[action.payload.asset],
+                    loading: true,
+                },
+            },
+        };
+
+    case TransactionActions.SET_ASSET_CROSS_WALLETS_LOADING:
+        return {
+            ...state,
+            byAssetCrossWallets: {
+                ...state.byAssetCrossWallets,
+                [action.payload.asset]: {
+                    ...state.byAssetCrossWallets[action.payload.asset],
                     loading: true,
                 },
             },
@@ -198,6 +271,36 @@ export const TransactionsReducer = (state: Transactions = initialState, action: 
             ...state,
             byAsset: {
                 ...state.byAsset,
+                [asset]: {
+                    ...assetData,
+                    loading: false,
+                    currentPage: assetData.requestedPage,
+                    pages: [
+                        ...assetData.pages.slice(0, assetData.requestedPage),
+                        page,
+                        ...assetData.pages.slice(assetData.requestedPage + 1),
+                    ],
+                },
+            },
+        };
+    }
+
+    function setAssetCrossWalletsTransactions(action: AsyncTaskResponseAction, state: Transactions) {
+        const txs = get(action, 'payload.1.Data.tx', []);
+        const asset = action.payload[1].Data.asset;
+        const assetData = { ...get(state.byAsset, asset, initialCollection) };
+        const page = {
+            page: assetData.requestedPage,
+            transactions: txs.map(mapTransactions),
+            before: get(action, 'payload.1.Data.before', {}),
+            after: get(action, 'payload.1.Data.after', {}),
+            next: get(action, 'payload.1.Data.next', {}),
+        };
+
+        return {
+            ...state,
+            byAssetCrossWallets: {
+                ...state.byAssetCrossWallets,
                 [asset]: {
                     ...assetData,
                     loading: false,
