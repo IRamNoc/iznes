@@ -18,7 +18,6 @@ import { ToasterService } from 'angular2-toaster';
 export class MyRequestsGridComponent {
     @Input() set kycList(kycList) {
         this.rawKycList = kycList;
-
         this.groupedKycList = this.groupList(kycList);
     }
     get kycList() {
@@ -26,7 +25,6 @@ export class MyRequestsGridComponent {
     }
 
     @Input() clientFileRejected = false;
-
     @Output() selectedKyc = new EventEmitter<number>();
 
     statusList;

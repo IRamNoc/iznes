@@ -22,7 +22,8 @@
             </span>
         </clr-dg-cell>
 
-        <clr-dg-cell id="lastUpdated_cell_{{i}}">{{convertDate(kyc.lastUpdated)}}</clr-dg-cell>
+        <clr-dg-cell *ngIf="kyc.lastUpdated !== null" id="lastUpdated_cell_{{i}}">{{convertDate(kyc.lastUpdated)}}</clr-dg-cell>
+        <clr-dg-cell *ngIf="kyc.lastUpdated === null" id="lastUpdated_cell_{{i}}">{{ 'No updates ' | translate }}</clr-dg-cell>
         <clr-dg-cell id="action_cell_{{i}}" class="actions right">
             <div *ngIf="buttonToDisplay(kyc.status) === 'view'">
                 <button id="view_btn_{{i}}" class="btn btn-orange btn-sm" (click)="viewDetails(kyc)">
