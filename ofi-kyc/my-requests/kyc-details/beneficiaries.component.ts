@@ -42,6 +42,7 @@ export class KycDetailsStakeholdersComponent implements OnInit {
 
     ngOnInit() {
         this.getUserID();
+        this.getRegisteredCompanyName();
     }
 
     getUserID() {
