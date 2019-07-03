@@ -1,4 +1,4 @@
-import { Component, Input, OnInit } from '@angular/core';
+import { Component, Input, OnInit, ChangeDetectorRef } from '@angular/core';
 import { select } from '@angular-redux/store';
 import { KycDetailsService } from './details.service';
 import { isEmpty, mapValues, find, get as getValue } from 'lodash';
@@ -37,6 +37,7 @@ export class KycDetailsStakeholdersComponent implements OnInit {
     constructor(
         private detailsService: KycDetailsService,
         private translateService: MultilingualService,
+        private changeDetectorRef: ChangeDetectorRef,
     ) {
     }
 
@@ -65,6 +66,7 @@ export class KycDetailsStakeholdersComponent implements OnInit {
                 this.registeredCompanyName = data.filter((item) => {
                     return item.originalId === 'registeredCompanyName';
                 })[0].value;
+                this.changeDetectorRef.markForCheck();
             });
     }
 
