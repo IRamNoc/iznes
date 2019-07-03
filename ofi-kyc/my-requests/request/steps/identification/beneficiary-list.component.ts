@@ -305,6 +305,7 @@ export class BeneficiaryListComponent implements OnInit, OnDestroy {
         }
 
         if (!cancel && this.isValidUpdate(stakeholder)) {
+            // Save the added stakeholder
             this.handleSubmit();
             this.confirmClose(this.mode);
             this.sortStakeholders();
@@ -693,7 +694,7 @@ export class BeneficiaryListComponent implements OnInit, OnDestroy {
     }
 
     /**
-     * Submits the beneficiary form
+     * Submits the beneficiary (stakeholder) form
      * @param e Event Object (optional)
      * @returns void
      */
