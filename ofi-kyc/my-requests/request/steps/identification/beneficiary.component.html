@@ -212,14 +212,26 @@
         <div class="row col-sm-12">
             <div class="form-group required-field col-sm-6">
                 <label for="holdingPercentage-benef">{{'Holding percentage' | translate}}</label>
-                <input id="holdingPercentage-benef" type="number" [formControl]="form.get('common.holdingPercentage')" placeholder="{{ 'Define a value @valueType@' | translate: { valueType: '(%)' } }}" [readonly]="disabled">
+                <input id="holdingPercentage-benef"
+                        type="number"
+                        min="0"
+                        max="100"
+                        [formControl]="form.get('common.holdingPercentage')"
+                        placeholder="{{ 'Define a value @valueType@' | translate: { valueType: '(%)' } }}"
+                        [readonly]="disabled">
                 <span class="field-error" *ngIf="hasError(['common', 'holdingPercentage'], ['required'])">{{'Field is required' | translate}}</span>
                 <span class="field-error" *ngIf="hasError(['common', 'holdingPercentage'], ['min', 'max'])">{{'Value must be between 0 and 100' | translate}}</span>
             </div>
 
             <div class="form-group required-field col-sm-6">
                 <label for="votingPercentage-benef">{{'Voting percentage' | translate}}</label>
-                <input id="votingPercentage-benef" type="number" [formControl]="form.get('common.votingPercentage')" placeholder="{{ 'Define a value @valueType@' | translate: { valueType: '(%)' } }}" [readonly]="disabled">
+                <input id="votingPercentage-benef"
+                        type="number"
+                        min="0"
+                        max="100"
+                        [formControl]="form.get('common.votingPercentage')"
+                        placeholder="{{ 'Define a value @valueType@' | translate: { valueType: '(%)' } }}"
+                        [readonly]="disabled">
                 <span class="field-error" *ngIf="hasError(['common', 'votingPercentage'], ['required'])">{{'Field is required' | translate}}</span>
                 <span class="field-error" *ngIf="hasError(['common', 'votingPercentage'], ['min', 'max'])">{{'Value must be between 0 and 100' | translate}}</span>
             </div>
@@ -389,6 +401,8 @@
                 <label for="holdingPercentage-benef-{{index}}">{{ 'Holding Percentage' | translate }}</label>
                 <input id="holdingPercentage-benef-{{index}}"
                        type="number"
+                       min="0"
+                       max="100"
                        [formControl]="form.get('common.holdingPercentage')"
                        [readonly]="disabled"
                        placeholder="{{ 'Define a value @valueType@' | translate: { valueType: '(%)' } }}">
@@ -400,6 +414,8 @@
                 <label for="votingPercentage-benef">{{'Voting percentage' | translate}}</label>
                 <input id="votingPercentage-benef"
                         type="number"
+                        min="0"
+                        max="100"
                         [formControl]="form.get('common.votingPercentage')"
                         placeholder="{{ 'Define a value @valueType@' | translate: { valueType: '(%)' } }}"
                         [readonly]="disabled">

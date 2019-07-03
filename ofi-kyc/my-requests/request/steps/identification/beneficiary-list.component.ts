@@ -212,10 +212,10 @@ export class BeneficiaryListComponent implements OnInit, OnDestroy {
     }
 
     disableBeneficiaryType(values, formgroup) {
-        // depend on beneficiaryType, disable part of the form.
         if (values['beneficiaryType'] === 'legalPerson') {
+            // Disable naturalPerson
             formgroup.get('naturalPerson').disable();
-            // enable nationalIdNumberText
+            // Enable nationalIdNumberText
             const nationIdNumberType = getValue(values, 'legalPerson.nationalIdNumberType[0].id', '');
             this.beneficiaryService.formCheckNationalIdNumberType(formgroup, nationIdNumberType);
         } else {
@@ -305,6 +305,8 @@ export class BeneficiaryListComponent implements OnInit, OnDestroy {
         }
 
         if (!cancel && this.isValidUpdate(stakeholder)) {
+            // Save the added stakeholder
+            this.handleSubmit();
             this.confirmClose(this.mode);
             this.sortStakeholders();
         }
@@ -322,9 +324,11 @@ export class BeneficiaryListComponent implements OnInit, OnDestroy {
 
     private isValidUpdate(stakeholder): boolean {
         const type = stakeholder.get('beneficiaryType').value;
-        if(this.isLegalPerson(type)) {
+        if (this.isLegalPerson(type)) {
             return this.isLegalPersonValid(stakeholder);
-        } else if(this.isNaturalPerson(type)) {
+        }
+
+        if (this.isNaturalPerson(type)) {
             return this.isNaturalPersonValid(stakeholder);
         }
     }
@@ -556,11 +560,13 @@ export class BeneficiaryListComponent implements OnInit, OnDestroy {
 
         if (this.isLegalPerson(type)) {
             return 'fa-building';
-        } else if (this.isNaturalPerson(type)) {
-            return 'fa-user';
-        } else {
-            return 'fa-users';
         }
+
+        if (this.isNaturalPerson(type)) {
+            return 'fa-user';
+        }
+
+        return 'fa-users';
     }
 
     shouldRemoveStakeholder(companyBeneficiariesID) {
@@ -687,8 +693,14 @@ export class BeneficiaryListComponent implements OnInit, OnDestroy {
         return this.form.valid;
     }
 
-    handleSubmit(e) {
-        e.preventDefault();
+    /**
+     * Submits the beneficiary (stakeholder) form
+     * @param e Event Object (optional)
+     * @returns void
+     */
+    handleSubmit(e = null) {
+        if (e) e.preventDefault();
+
         if (!this.form.valid) {
             formHelper.dirty(this.form);
             formHelper.scrollToFirstError(this.element.nativeElement);
@@ -703,16 +715,18 @@ export class BeneficiaryListComponent implements OnInit, OnDestroy {
             .identificationService
             .sendRequestBeneficiaryList(this.form, requests, this.connectedWallet)
             .then(() => {
-                this.submitEvent.emit({
-                    completed: true,
-                });
+                // If event object, navigate to next step
+                if (e) {
+                    this.submitEvent.emit({
+                        completed: true,
+                    });
+                }
                 this.clearPersistForm();
                 this.updateParents();
             })
             .catch(() => {
                 this.newRequestService.errorPop();
-            })
-            ;
+            });
         });
     }
 
