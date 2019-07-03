@@ -39,6 +39,7 @@ describe('transactions reducer', () => {
                 pages: [],
             },
             byAsset: {},
+            byAssetCrossWallets: {},
         });
     });
     it('should handle SET_ALL_TRANSACTIONS', () => {
@@ -467,6 +468,7 @@ describe('transactions reducer', () => {
                         pages: [],
                     },
                 },
+                byAssetCrossWallets: {},
             },
             setAssetLoading('OLLIECORP|SHARE001'),
         );
