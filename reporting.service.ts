@@ -41,6 +41,12 @@ import {
     resetAssetTransactions,
     setAllLoading,
     setAssetLoading,
+    SET_ASSET_CROSS_WALLETS_TRANSACTIONS,
+    decrementAssetCrossWalletsCurrentPage,
+    decrementAssetCrossWalletsRequestedPage,
+    incrementAssetCrossWalletsRequestedPage,
+    setAssetCrossWalletsLoading,
+    incrementAssetCrossWalletsCurrentPage, resetAssetCrossWalletsTransactions,
 } from '@setl/core-store/wallet/transactions/actions';
 import { MemberSocketService } from '@setl/websocket-service';
 import { createMemberNodeSagaRequest } from '@setl/utils/common';
@@ -65,6 +71,7 @@ export class ReportingService {
     myChainAccess: any;
     private readonly allTransactions$: Observable<TransactionList>;
     private readonly transactionsByAsset$: Observable<TransactionListByAsset>;
+    private readonly transactionsByAssetCrossWallets$: Observable<TransactionListByAsset>;
     walletInfo = { walletName: '' };
     addressList = [];
     addressDirectory = [];
@@ -118,6 +125,7 @@ export class ReportingService {
 
         this.allTransactions$ = this.ngRedux.select(['wallet', 'transactions', 'all']);
         this.transactionsByAsset$ = this.ngRedux.select(['wallet', 'transactions', 'byAsset']);
+        this.transactionsByAssetCrossWallets$ = this.ngRedux.select(['wallet', 'transactions', 'byAssetCrossWallets']);
 
         const initialisedSubject = new BehaviorSubject<boolean>(false);
         this.holdingsByAssetSubject = new BehaviorSubject<HoldingByAsset>([]);
@@ -151,8 +159,8 @@ export class ReportingService {
             }));
 
         const dataStream$ = observableCombineLatest(idStream$, ...this.onLoad$, (ids, ...rest) => {
-                return [...ids, ...rest];
-            }).pipe(
+            return [...ids, ...rest];
+        }).pipe(
             filter(([a, b, c, d, e, addressList]) => !isEmpty(addressList)));
 
         dataStream$.subscribe(
@@ -172,7 +180,7 @@ export class ReportingService {
             this.addressesRequested$,
         ).pipe(
             filter(([ids, labelRequested, addressesRequested]) => labelRequested && addressesRequested))
-        .subscribe(() => initialisedSubject.next(true));
+            .subscribe(() => initialisedSubject.next(true));
 
         this.initialised$.pipe(
             filter(init => !!init),
@@ -219,19 +227,19 @@ export class ReportingService {
     private handleWalletIssuerDetail(walletIssuerDetail: WalletIssuerDetail, holdingsByAsset) {
         const issues = holdingsByAsset;
         const formatted = issues
-        .filter((issue) => {
-            return issue.asset.split('|')[0] === walletIssuerDetail.walletIssuer;
-        })
-        .map((issue) => {
-            return {
-                asset: issue.asset,
-                addressLabel: issue.breakdown[0].label,
-                address: issue.breakdown[0].addr,
-                total: -issue.breakdown[0].free,
-                encumbered: issue.totalencumbered,
-                free: issue.total - issue.totalencumbered,
-            };
-        });
+            .filter((issue) => {
+                return issue.asset.split('|')[0] === walletIssuerDetail.walletIssuer;
+            })
+            .map((issue) => {
+                return {
+                    asset: issue.asset,
+                    addressLabel: issue.breakdown[0].label,
+                    address: issue.breakdown[0].addr,
+                    total: -issue.breakdown[0].free,
+                    encumbered: issue.totalencumbered,
+                    free: issue.total - issue.totalencumbered,
+                };
+            });
 
         this.walletIssuerDetailSubject.next(formatted);
 
@@ -244,18 +252,18 @@ export class ReportingService {
         this.holdingByAddress = wallets.holdingByAddress;
         if (wallets.holdingByAsset.hasOwnProperty(this.connectedWalletId)) {
             const next = Object
-            .getOwnPropertyNames(wallets.holdingByAsset[this.connectedWalletId])
-            .map((key) => {
-                const asset = wallets.holdingByAsset[this.connectedWalletId][key];
+                .getOwnPropertyNames(wallets.holdingByAsset[this.connectedWalletId])
+                .map((key) => {
+                    const asset = wallets.holdingByAsset[this.connectedWalletId][key];
 
-                // Merge in address labels
-                asset.breakdown = asset.breakdown.map(breakdown => ({
-                    ...breakdown,
-                    ...addresses[breakdown.addr],
-                }));
+                    // Merge in address labels
+                    asset.breakdown = asset.breakdown.map(breakdown => ({
+                        ...breakdown,
+                        ...addresses[breakdown.addr],
+                    }));
 
-                return asset;
-            });
+                    return asset;
+                });
             this.holdingsByAssetSubject.next(next);
         }
     }
@@ -284,22 +292,22 @@ export class ReportingService {
         return new Promise((resolve, reject) => {
             const assetPieces = asset.split('|');
             this.requestWalletIssueHolding(assetPieces[0], assetPieces[1])
-            .then((holdings: any[]) => {
-                const total = holdings.filter(h => h.balance > 0).reduce((a, h) => a + h.balance, 0);
-                return resolve(holdings.map(
-                    (holding) => {
-                        // Request the holding wallet detail and save to Redux
-                        this.requestHoldingWalletAddressDetail(holding);
-                        return {
-                            ...holding,
-                            walletName: 'Updating wallet name..',
-                            addrLabel: holding.addr,
-                            percentage: (holding.balance > 0) ? (holding.balance / total) * 100 : null,
-                        };
-                    },
-                ));
-            })
-            .catch(() => reject(`Failed to get holdings for ${asset}`));
+                .then((holdings: any[]) => {
+                    const total = holdings.filter(h => h.balance > 0).reduce((a, h) => a + h.balance, 0);
+                    return resolve(holdings.map(
+                        (holding) => {
+                            // Request the holding wallet detail and save to Redux
+                            this.requestHoldingWalletAddressDetail(holding);
+                            return {
+                                ...holding,
+                                walletName: 'Updating wallet name..',
+                                addrLabel: holding.addr,
+                                percentage: (holding.balance > 0) ? (holding.balance / total) * 100 : null,
+                            };
+                        },
+                    ));
+                })
+                .catch(() => reject(`Failed to get holdings for ${asset}`));
         });
     }
 
@@ -406,22 +414,38 @@ export class ReportingService {
         });
     }
 
+    public getTransactionsForAssetCrossWallets(asset$): Observable<TransactionList> {
+        observableCombineLatest(this.initialised$, asset$).pipe(
+            filter(([init, asset]) => !!init && !!asset),
+            first(),
+        ).subscribe(([init, asset]) => this.getTransactionsFromReportingNode(asset, true));
+
+        return new Observable<TransactionList>((observer) => {
+            const sub = observableCombineLatest(this.transactionsByAssetCrossWallets$, asset$).subscribe(([txs, asset]) => {
+                if (txs.hasOwnProperty(asset)) {
+                    observer.next(txs[asset]);
+                }
+            });
+            return () => sub.unsubscribe();
+        });
+    }
+
     historyPaginationAll(direction: 'prev' | 'next'): void {
         switch (direction) {
-        case 'prev':
-            this.ngRedux.dispatch(decrementAllCurrentPage());
-            this.ngRedux.dispatch(decrementAllRequestedPage());
-            break;
-        case 'next':
-            this.ngRedux.dispatch(incrementAllRequestedPage());
-            const state = this.ngRedux.getState().wallet.transactions.all;
-            if (!(state.requestedPage in state.pages)) {
-                this.ngRedux.dispatch(setAllLoading());
-                this.reloadAllTransactionsFromReportingNode();
-            } else {
-                this.ngRedux.dispatch(incrementAllCurrentPage());
-            }
-            break;
+            case 'prev':
+                this.ngRedux.dispatch(decrementAllCurrentPage());
+                this.ngRedux.dispatch(decrementAllRequestedPage());
+                break;
+            case 'next':
+                this.ngRedux.dispatch(incrementAllRequestedPage());
+                const state = this.ngRedux.getState().wallet.transactions.all;
+                if (!(state.requestedPage in state.pages)) {
+                    this.ngRedux.dispatch(setAllLoading());
+                    this.reloadAllTransactionsFromReportingNode();
+                } else {
+                    this.ngRedux.dispatch(incrementAllCurrentPage());
+                }
+                break;
         }
     }
 
@@ -432,20 +456,20 @@ export class ReportingService {
 
     historyPaginationByAsset(asset: string, direction: 'prev' | 'next'): void {
         switch (direction) {
-        case 'prev':
-            this.ngRedux.dispatch(decrementAssetCurrentPage(asset));
-            this.ngRedux.dispatch(decrementAssetRequestedPage(asset));
-            break;
-        case 'next':
-            this.ngRedux.dispatch(incrementAssetRequestedPage(asset));
-            const state = this.ngRedux.getState().wallet.transactions.byAsset[asset];
-            if (!(state.requestedPage in state.pages)) {
-                this.ngRedux.dispatch(setAssetLoading(asset));
-                this.reloadTransactionsByAssetFromReportingNode(asset);
-            } else {
-                this.ngRedux.dispatch(incrementAssetCurrentPage(asset));
-            }
-            break;
+            case 'prev':
+                this.ngRedux.dispatch(decrementAssetCurrentPage(asset));
+                this.ngRedux.dispatch(decrementAssetRequestedPage(asset));
+                break;
+            case 'next':
+                this.ngRedux.dispatch(incrementAssetRequestedPage(asset));
+                const state = this.ngRedux.getState().wallet.transactions.byAsset[asset];
+                if (!(state.requestedPage in state.pages)) {
+                    this.ngRedux.dispatch(setAssetLoading(asset));
+                    this.reloadTransactionsByAssetFromReportingNode(asset);
+                } else {
+                    this.ngRedux.dispatch(incrementAssetCurrentPage(asset));
+                }
+                break;
         }
     }
 
@@ -454,25 +478,54 @@ export class ReportingService {
         this.reloadTransactionsByAssetFromReportingNode(asset);
     }
 
-    private getTransactionsFromReportingNode(asset?: string): void {
+    historyPaginationByAssetCrossWallets(asset: string, direction: 'prev' | 'next'): void {
+        switch (direction) {
+            case 'prev':
+                this.ngRedux.dispatch(decrementAssetCrossWalletsCurrentPage(asset));
+                this.ngRedux.dispatch(decrementAssetCrossWalletsRequestedPage(asset));
+                break;
+            case 'next':
+                this.ngRedux.dispatch(incrementAssetCrossWalletsRequestedPage(asset));
+                const state = this.ngRedux.getState().wallet.transactions.byAssetCrossWallets[asset];
+                if (!(state.requestedPage in state.pages)) {
+                    this.ngRedux.dispatch(setAssetCrossWalletsLoading(asset));
+                    this.reloadTransactionsByAssetFromReportingNode(asset, true);
+                } else {
+                    this.ngRedux.dispatch(incrementAssetCrossWalletsCurrentPage(asset));
+                }
+                break;
+        }
+    }
+
+    historyResetByAssetCrossWallets(asset: string) {
+        this.ngRedux.dispatch(resetAssetCrossWalletsTransactions(asset));
+        this.reloadTransactionsByAssetFromReportingNode(asset, true);
+    }
+
+    private getTransactionsFromReportingNode(asset?: string, crossWallet: boolean = false): void {
         if (asset) {
             console.warn('getTransactionFromReportingNode', asset);
-            return this.reloadTransactionsByAssetFromReportingNode(asset);
+            return this.reloadTransactionsByAssetFromReportingNode(asset, crossWallet);
         }
         return this.reloadAllTransactionsFromReportingNode();
     }
 
-    private reloadTransactionsByAssetFromReportingNode(asset: string): void {
+    private reloadTransactionsByAssetFromReportingNode(asset: string, crossWallet: boolean = false): void {
         const [namespace, classId] = asset.split('|');
         const state = get(this.ngRedux.getState().wallet.transactions.byAsset, asset, null);
         let before = null;
         if (state && state.requestedPage > 0) {
             before = state.pages[state.requestedPage - 1].next;
         }
+        // wallet to use, if crossWallet is true, we send in -1, indicate we want transation across wallets.
+        const walletId = crossWallet ? -1 : this.connectedWalletId;
+
+        const reduxActionToDispatch = crossWallet ? SET_ASSET_CROSS_WALLETS_TRANSACTIONS : SET_ASSET_TRANSACTIONS;
+
         this.ngRedux.dispatch(SagaHelper.runAsync(
-            [SET_ASSET_TRANSACTIONS],
+            [reduxActionToDispatch],
             [],
-            this.reportingService.getTransactionsByAsset(this.connectedWalletId, namespace, classId, before),
+            this.reportingService.getTransactionsByAsset(walletId, namespace, classId, before),
         ));
     }
 
