@@ -224,6 +224,7 @@ export class BeneficiaryListComponent implements OnInit, OnDestroy {
     }
 
     updateParents() {
+        console.log('+++ this.form: ', this.form);
         this.parents = this.beneficiaryService.parents(this.form);
     }
 
@@ -511,6 +512,7 @@ export class BeneficiaryListComponent implements OnInit, OnDestroy {
 
     removeStakeholderRemote(index) {
         const stakeholderToRemove = this.form.at(index);
+        console.log('+++ removeStakeholderRemote: stakeholderToRemove: ', stakeholderToRemove);
         const companyBeneficiariesID = stakeholderToRemove.value.companyBeneficiariesID;
 
         if (this.shouldRemoveStakeholder(companyBeneficiariesID)) {
@@ -519,9 +521,10 @@ export class BeneficiaryListComponent implements OnInit, OnDestroy {
     }
 
     getAllStakeholdersToRemove(stakeholderToRemove) {
+        console.log('+++ getAllStakeholdersToRemove: stakeholderToRemove: ', stakeholderToRemove);
         const kycID = stakeholderToRemove.value.kycID;
         const companyBeneficiariesID = stakeholderToRemove.value.companyBeneficiariesID;
-        const relation = find(this.relations, ['kycID', kycID]);
+        const relation = find(this.relations, ['kycID', kycID]); // kycID is missing
         const position = relation.stakeholderIDs.indexOf(companyBeneficiariesID);
 
         if (position !== -1) {
