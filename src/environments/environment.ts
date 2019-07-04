@@ -13,7 +13,7 @@ export const environment = {
     MEMBER_NODE_CONNECTION: {
         host: window.location.hostname,
         port: 9788,
-        path: 'db'
+        path: 'db',
     },
     numberDivider: 100000,
     reportingNodeUrl: '',
@@ -24,7 +24,7 @@ export const environment = {
             icon: 'fa-inbox',
             type: 'inbox',
             level: 1,
-            active: true
+            active: true,
         },
         {
             name: 'Action Messages',
@@ -32,7 +32,7 @@ export const environment = {
             icon: 'fa-rocket',
             type: 'action',
             level: 2,
-            active: false
+            active: false,
         },
         {
             name: 'Sent Messages',
@@ -40,7 +40,7 @@ export const environment = {
             icon: 'fa-envelope-o',
             type: 'sent',
             level: 1,
-            active: false
+            active: false,
         },
         {
             name: 'Deleted Messages',
@@ -48,7 +48,7 @@ export const environment = {
             icon: 'fa-trash-o',
             type: 'deleted',
             level: 1,
-            active: false
+            active: false,
         },
     ],
     logoUrl: 'assets/images/logo-iznes-only.png',
@@ -62,7 +62,7 @@ export const environment = {
     loginContent: {
         title: 'Investing in funds has never been so easy!',
         description: 'The pan-European platform for investment in UCITS units and recordkeeping in Blockchain ' +
-        'compatible with the various distribution channels',
+            'compatible with the various distribution channels',
         btn: {
             text: 'Learn more',
             urlEN: 'https://www.iznes.io/en',

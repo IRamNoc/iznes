@@ -8,10 +8,11 @@ import {
 
 import {
     AppState,
-    rootReducer
+    rootReducer,
 } from './app.reducer';
 
-import {SagaHelper} from '@setl/utils';
+import { SagaHelper } from '@setl/utils';
+/* tslint:disable */
 import createSagaMiddleware from 'redux-saga';
 
 // Dev extension for monitor redux in browser dev tool.
@@ -32,9 +33,9 @@ const composeMiddlewares = window['__REDUX_DEVTOOLS_EXTENSION__'] ? compose(
     devtools,
     applyMiddleware(SagaHelper.preSagaMiddleWare),
     applyMiddleware(sagaMiddleware),
-    applyMiddleware(SagaHelper.postSagaMiddleWare)
+    applyMiddleware(SagaHelper.postSagaMiddleWare),
 ) : compose(
-    applyMiddleware(sagaMiddleware)
+    applyMiddleware(sagaMiddleware),
 );
 
 /**
@@ -44,8 +45,8 @@ const composeMiddlewares = window['__REDUX_DEVTOOLS_EXTENSION__'] ? compose(
 export function createAppStore(): Store<any> {
     return createStore<any, any, any, any>(
         rootReducer,
-        composeMiddlewares
+        composeMiddlewares,
     );
 }
 
-export {appSaga, sagaMiddleware};
+export { appSaga, sagaMiddleware };

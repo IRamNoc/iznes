@@ -134,7 +134,7 @@ export function memberSocketServiceFactory() {
         SetlLayoutModule,
     ],
     providers: [
-        {provide: ErrorHandler, useClass: GlobalErrorHandler},
+        { provide: ErrorHandler, useClass: GlobalErrorHandler },
         { provide: LocationStrategy, useClass: HashLocationStrategy },
 
         {

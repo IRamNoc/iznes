@@ -1,0 +1,65 @@
+stages:
+    - lint
+    - test
+    - build
+
+some-lint-and-test:
+    stage: lint
+    image: node:8-jessie
+    before_script:
+        - eval $(ssh-agent -s)
+        - echo "$SSH_KEY" | base64 -d | ssh-add - > /dev/null
+        - mkdir -p ~/.ssh
+        - chmod 700 ~/.ssh
+        - ssh-keyscan si-nexus01.dev.setl.io >> ~/.ssh/known_hosts
+        - chmod 644 ~/.ssh/known_hosts
+        - npm install -g @angular/cli@6.0.0;
+        - npm install
+    script:
+        - ng lint
+
+some-test:
+    stage: test
+    image: node:8-jessie
+    before_script:
+        - eval $(ssh-agent -s)
+        - echo "$SSH_KEY" | base64 -d | ssh-add - > /dev/null
+        - mkdir -p ~/.ssh
+        - chmod 700 ~/.ssh
+        - ssh-keyscan si-nexus01.dev.setl.io >> ~/.ssh/known_hosts
+        - chmod 644 ~/.ssh/known_hosts
+        # install chrome headless browser
+        - wget -q -O - https://dl-ssl.google.com/linux/linux_signing_key.pub | apt-key add - > /dev/null
+        - sh -c 'echo "deb [arch=amd64] http://dl.google.com/linux/chrome/deb/ stable main" >> /etc/apt/sources.list.d/google.list' > /dev/null
+        - apt-get update && apt-get install -y google-chrome-stable > /dev/null
+        - npm install -g @angular/cli@6.0.0;
+        - npm install
+    script:
+        - ng test --code-coverage --progress false --watch false
+    artifacts:
+        expire_in: 1 day
+        paths:
+            - coverage/
+
+some-build:
+    image: docker:git
+    services:
+        - docker:dind
+    stage: build
+
+    before_script:
+        - eval $(ssh-agent -s)
+        - echo "$SSH_KEY" | base64 -d | ssh-add - > /dev/null
+        - mkdir -p ~/.ssh
+        - chmod 700 ~/.ssh
+        - ssh-keyscan si-nexus01.dev.setl.io >> ~/.ssh/known_hosts
+        - chmod 644 ~/.ssh/known_hosts
+    script:
+        - export DOCKER_BUILDKIT=1
+        - docker build --ssh default -t dreg.ad.setl.io/setl/opencsd-iznes:latest .
+        - mkdir images
+        - docker save dreg.ad.setl.io/setl/opencsd-iznes:latest > images/opencsd-iznes.tar
+    artifacts:
+        expire_in: 1 day
+        paths:
+            - images/
