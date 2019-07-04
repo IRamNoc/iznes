@@ -156,7 +156,6 @@ export class OfiWaitingApprovalComponent implements OnInit, OnDestroy {
         );
         this.permissionsService.hasPermission('manageAllClientFile', 'canUpdate').then(
             (hasPermission) => {
-                console.log('result is: ', hasPermission);
                 this.hasPermissionCanManageAllClientFile = hasPermission;
             },
         );
@@ -410,7 +409,12 @@ export class OfiWaitingApprovalComponent implements OnInit, OnDestroy {
                 ),
             );
             this.setAmKycListRequested(true);
-            this.router.navigateByUrl('/client-file/management');
+
+            if (this.hasPermissionCanManageAllClientFile) {
+                this.router.navigateByUrl('/client-file/management');
+            } else {
+                this.router.navigateByUrl('/on-boarding/management');
+            }
         }).catch((error) => {
             const data = error[1].Data[0];
 
@@ -493,7 +497,12 @@ export class OfiWaitingApprovalComponent implements OnInit, OnDestroy {
             this.redux.dispatch({
                 type: CLEAR_REQUESTED,
             });
-            this.router.navigateByUrl('/client-file/management');
+
+            if (this.hasPermissionCanManageAllClientFile) {
+                this.router.navigateByUrl('/client-file/management');
+            } else {
+                this.router.navigateByUrl('/on-boarding/management');
+            }
         });
     }
 
@@ -567,7 +576,12 @@ export class OfiWaitingApprovalComponent implements OnInit, OnDestroy {
         this.kycService.reject(payload).then(() => {
             this.toast.pop('success', this.translate.translate('The KYC request has been successfully rejected.'));
             this.setAmKycListRequested(true);
-            this.router.navigateByUrl('/client-file/management');
+
+            if (this.hasPermissionCanManageAllClientFile) {
+                this.router.navigateByUrl('/client-file/management');
+            } else {
+                this.router.navigateByUrl('/on-boarding/management');
+            }
         }).catch((error) => {
             const data = error[1].Data[0];
 
