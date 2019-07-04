@@ -109,7 +109,7 @@ export class MyRequestsComponent implements OnInit, OnDestroy {
 
             // if user come from finished nowcp onboard. create duplicate from client file programmatically.
             if (this.isFromNowCpOnboard()) {
-               this.duplicateFromClientFile();
+                this.duplicateFromClientFile();
             }
 
         });
