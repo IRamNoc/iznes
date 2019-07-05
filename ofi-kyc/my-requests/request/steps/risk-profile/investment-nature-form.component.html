@@ -54,7 +54,7 @@
         <div class="row col-sm-6 form-group required-field">
             <div class="col-sm-6">
                 <div class="force-display-error field-error text-left"
-                    *ngIf="form.get('financialAssetManagementMethod').status === 'INVALID'">
+                    *ngIf="form.get('financialAssetManagementMethod').touched && form.get('financialAssetManagementMethod').status === 'INVALID'">
                     {{ 'Select at least one' | translate }}
                 </div>
             </div>

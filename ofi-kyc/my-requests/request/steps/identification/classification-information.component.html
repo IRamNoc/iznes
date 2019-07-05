@@ -136,6 +136,7 @@
                                 {{ 'Number of years financial markets experience' | translate }}
                             </label>
                             <input type="number"
+                                    min="0"
                                     id="numberYearsExperienceRelatedFunction"
                                     [readonly]="isFormReadonly"
                                     formControlName="numberYearsExperienceRelatedFunction">
@@ -146,6 +147,7 @@
                                 {{ 'Number of years in current position' | translate }}
                             </label>
                             <input type="number"
+                                    min="0"
                                     id="numberYearsCurrentPosition"
                                     [readonly]="isFormReadonly"
                                     formControlName="numberYearsCurrentPosition">

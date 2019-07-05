@@ -85,7 +85,7 @@
         <div class="col-sm-6 form-group required-field">
             <div class="col-sm-6">
                 <div class="force-display-error field-error text-left"
-                    *ngIf="form.get('clientNeeds').status === 'INVALID'">
+                    *ngIf="form.get('clientNeeds').touched && form.get('clientNeeds').status === 'INVALID'">
                     {{ 'Select at least one' | translate }}</div>
             </div>
         </div>
