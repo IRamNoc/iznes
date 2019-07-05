@@ -84,6 +84,10 @@ clr-datagrid {
         }
     }
 
+    .btn-link, .btn-sm {
+        margin: 0!important;
+    }
+
     .datagrid-footer {
         .btn-sm {
             margin-top: 5px;
