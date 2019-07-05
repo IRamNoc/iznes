@@ -56,6 +56,7 @@ some-build:
         - chmod 644 ~/.ssh/known_hosts
     script:
         - export DOCKER_BUILDKIT=1
+        # pass shell into docker, for it to use.
         - docker build --ssh default -t dreg.ad.setl.io/setl/opencsd-iznes:latest .
         - mkdir images
         - docker save dreg.ad.setl.io/setl/opencsd-iznes:latest > images/opencsd-iznes.tar
