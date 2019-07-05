@@ -11,7 +11,7 @@
         <th>{{'Name' | translate}}</th>
         <th>{{'Relation Type' | translate}}</th>
         <th>{{'Linked Entity' | translate}}</th>
-        <th>{{'Country Tax of Residence' | translate}}</th>
+        <th>{{'Country of Tax Residence' | translate}}</th>
         <th>{{'Nationality' | translate}}</th>
         <th>{{'Holding percentage' | translate}}</th>
         <th>{{'Holding type' | translate}}</th>
@@ -22,14 +22,14 @@
 
     <tbody>
     <tr *ngFor="let stakeholder of stakeholderReadableList">
-        <td>{{stakeholder.beneficiaryType}}</td>
+        <td>{{stakeholder.beneficiaryType | translate}}</td>
         <td>{{stakeholder.name}}</td>
         <td>{{stakeholder.relationType}}</td>
         <td>{{stakeholder.parent}}</td>
         <td>{{stakeholder.countryTaxResidence}}</td>
         <td>{{stakeholder.nationality}}</td>
         <td>{{stakeholder.holdingPercentage}}</td>
-        <td>{{stakeholder.holdingType}}</td>
+        <td>{{stakeholder.holdingType | translate}}</td>
         <td>{{stakeholder.votingPercentage}}</td>
         <td class="action">
             <button class="btn btn-sm" (click)="selectStakeholder(stakeholder)">
