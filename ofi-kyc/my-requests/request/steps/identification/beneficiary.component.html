@@ -46,11 +46,10 @@
 
         <div class="form-group required-field col-sm-6">
             <label class="control-label" for="holdingType-benef">{{'Holding type' | translate}}</label>
-            <ng-select id="holdingType-benef"
-                        [items]="holdingTypesList"
-                        [formControl]="form.get('common.holdingType')"
-                        [isDisabled]="true">
-            </ng-select>
+            <input type="text"
+                    id="holdingType-benef"
+                    value="{{ holdingTypeText }}"
+                    [readonly]="true">
         </div>
     </div>
 

@@ -5,7 +5,7 @@
 <td>{{countryTaxResidence | translate}}</td>
 <td>{{nationality | translate}}</td>
 <td>{{holdingPercentage}} %</td>
-<td>{{holdingType}}</td>
+<td>{{holdingType | translate}}</td>
 <td>{{votingPercentage}} %</td>
 <td *ngIf="!readOnly" class="datagrid-row" (click)="showActions=!showActions; $event.stopPropagation()">
     <clr-icon shape="ellipsis-vertical"></clr-icon>
