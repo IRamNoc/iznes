@@ -26,12 +26,11 @@
                         <span class="field-error" *ngIf="hasError('sectorActivity')">{{ 'Field is required' | translate }}</span>
                     </div>
                     <div class="form-group required-field col-sm-4" *ngIf="!isDisabled('sectorActivityText')">
-                        <label class="control-label" for="sectorActivityText">&nbsp;</label>
+                        <label class="control-label" for="sectorActivityText">{{ 'Please specify' | translate }}</label>
                         <input type="text"
                                 id="sectorActivityText"
                                 formControlName="sectorActivityText"
-                                [disabled]="isFormReadonly"
-                                placeholder="{{ 'Please specify' | translate }}">
+                                [disabled]="isFormReadonly">
                         <span class="field-error" *ngIf="hasError('sectorActivityText', ['required'])">{{ 'Field is required' | translate }}</span>
                         <span class="field-error" *ngIf="hasError('sectorActivityText', ['maxlength'])">{{ 'Field is too long' | translate }}</span>
                     </div>

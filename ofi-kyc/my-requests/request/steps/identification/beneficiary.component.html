@@ -30,7 +30,17 @@
     </div>
 
     <div class="row col-sm-12">
-        <div class="form-group required-field col-sm-6">
+        <!-- First stakeholder -->
+        <div *ngIf="isFirstStakeholder()" class="form-group required-field col-sm-6">
+            <label class="control-label" for="parent-benef">{{'Linked Entity' | translate}}</label>
+            <input type="text"
+                    id="parent-benef"
+                    value="registeredCompanyName"
+                    [readonly]="true">
+        </div>
+
+        <!-- Subsequent stakeholders -->
+        <div *ngIf="!isFirstStakeholder()" class="form-group required-field col-sm-6">
             <label class="control-label" for="parent-benef">{{'Linked Entity' | translate}}</label>
 
             <ng-select id="parent-benef"

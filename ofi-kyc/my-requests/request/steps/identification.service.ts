@@ -175,6 +175,7 @@ export class IdentificationService {
                 if (kycIndex === 0) {
                     beneficiary.get('companyBeneficiariesID').setValue(responses[index]);
                 }
+                beneficiary.get('kycID').setValue(kycID);
                 beneficiaryValues[index].companyBeneficiariesID = responses[index];
             });
 
