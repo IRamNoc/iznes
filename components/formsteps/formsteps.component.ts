@@ -11,7 +11,7 @@ import {
     ChangeDetectorRef,
 } from '@angular/core';
 import { FormstepComponent } from './formstep.component';
-import { get as getValue } from 'lodash';
+import { get as getValue, debounce } from 'lodash';
 
 @Component({
     selector: 'form-steps',
@@ -58,6 +58,7 @@ export class FormstepsComponent implements AfterContentInit, OnDestroy {
     stepsMap: {} = {};
     mainContentEl: HTMLElement;
     fixStepsProgress: boolean = false;
+    debounceScroll = debounce(this.handleScroll.bind(this), 20);
 
     get steps() {
         return this.stepComponents.reduce((acc, cur) => acc.concat([cur.step]), []);
@@ -92,7 +93,7 @@ export class FormstepsComponent implements AfterContentInit, OnDestroy {
         this.position = 0;
         this.progress[0].active = true;
         this.mainContentEl = document.querySelector('main.content-area');
-        this.mainContentEl.addEventListener('scroll', e => this.handleFixStepsProgress(e));
+        this.mainContentEl.addEventListener('scroll', debounce(this.handleFixStepsProgress.bind(this), 20));
     }
 
     /**
@@ -100,6 +101,7 @@ export class FormstepsComponent implements AfterContentInit, OnDestroy {
      * @param e
      */
     handleFixStepsProgress(e) {
+        e.stopPropagation();
         const distanceToFixAt = 58;
         const distanceFromTop = getValue(e, 'target.scrollTop', 0);
 
@@ -108,7 +110,7 @@ export class FormstepsComponent implements AfterContentInit, OnDestroy {
         if (!this.fixStepsProgress && distanceFromTop < distanceToFixAt) return;
 
         this.fixStepsProgress = distanceFromTop >= distanceToFixAt;
-        this.changeDetectorRef.detectChanges();
+        if (this.changeDetectorRef) this.changeDetectorRef.detectChanges();
     }
 
     /**
@@ -117,6 +119,7 @@ export class FormstepsComponent implements AfterContentInit, OnDestroy {
      */
     handleScroll(e) {
         if (this.fixStepsProgress) this.mainContentEl.scrollTop += e.deltaY;
+
     }
 
     setSubmitID(id) {
@@ -242,6 +245,7 @@ export class FormstepsComponent implements AfterContentInit, OnDestroy {
     setActive(position) {
         this.stepComponents.toArray().forEach((component, idx) => {
             component.active = position === idx;
+            position === idx ? component.stopLastInputTabbing() : component.removeKeydownListeners();
         });
     }
 
@@ -274,5 +278,6 @@ export class FormstepsComponent implements AfterContentInit, OnDestroy {
 
     ngOnDestroy() {
         this.mainContentEl.removeEventListener('scroll', e => this.handleFixStepsProgress(e));
+        this.changeDetectorRef.detach();
     }
 }
