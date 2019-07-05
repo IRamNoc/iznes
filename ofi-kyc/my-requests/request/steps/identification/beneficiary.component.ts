@@ -150,7 +150,8 @@ export class BeneficiaryComponent implements OnInit, OnDestroy {
     }
 
     /**
-     * get beneficiary document type string:  kyckbbisdoc or kycbeneiddoc
+     * Get beneficiary document type
+     * @returns {string} kyckbbisdoc or kycbeneiddoc
      */
     getDocumentTypeStr() {
         const beneficiaryType = this.form.get('beneficiaryType').value;
@@ -164,6 +165,14 @@ export class BeneficiaryComponent implements OnInit, OnDestroy {
         const control = this.form.get(path);
 
         return control.disabled;
+    }
+
+    /**
+     * Check whether the first stakeholder has been saved
+     * @returns {boolean}
+     */
+    isFirstStakeholder() {
+        return this.parentsFiltered[1].id === 'temp1';
     }
 
     hasError(control, error = []) {
