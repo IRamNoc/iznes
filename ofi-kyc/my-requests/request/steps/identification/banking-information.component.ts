@@ -204,6 +204,11 @@ export class BankingInformationComponent implements OnInit, OnDestroy {
         return this.form.get('custodianHolders').get(control).invalid && !this.hasError(control, errors);
     }
 
+    stopTabbing(e) {
+        e.stopPropagation();
+        if (e.keyCode === 9) e.preventDefault();
+    }
+
     ngOnDestroy() {
         this.unsubscribe.next();
         this.unsubscribe.complete();

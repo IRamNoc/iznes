@@ -134,12 +134,12 @@
                 <label class="required-field">{{ 'Do your operators have experience trading in Neu CP?' | translate }}</label>
                 <clr-radio-wrapper>
                     <input type="radio" clrRadio id="hasExperienceTradingNeuCp-opt-no" [value]="0" checked="checked"
-                        formControlName="hasExperienceTradingNeuCp" [attr.disabled]="disabled === true ? '' : null" />
+                        formControlName="hasExperienceTradingNeuCp" name="hasExperienceTradingNeuCp" [attr.disabled]="disabled === true ? '' : null" />
                     <label>{{ 'No' | translate }}</label>
                 </clr-radio-wrapper>
                 <clr-radio-wrapper>
                     <input type="radio" clrRadio id="hasExperienceTradingNeuCp-opt-yes" [value]="1"
-                        formControlName="hasExperienceTradingNeuCp" [attr.disabled]="disabled === true ? '' : null" />
+                        formControlName="hasExperienceTradingNeuCp" name="hasExperienceTradingNeuCp" [attr.disabled]="disabled === true ? '' : null" />
                     <label>{{ 'Yes' | translate }}</label>
                 </clr-radio-wrapper>
             </clr-radio-container>

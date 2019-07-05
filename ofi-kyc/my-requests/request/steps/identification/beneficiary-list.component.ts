@@ -730,6 +730,10 @@ export class BeneficiaryListComponent implements OnInit, OnDestroy {
         });
     }
 
+    stopTabbing(e) {
+        if (e.keyCode === 9) e.preventDefault();
+    }
+
     ngOnDestroy() {
         this.unsubscribe.next();
         this.unsubscribe.complete();
