@@ -699,7 +699,9 @@ export class BeneficiaryListComponent implements OnInit, OnDestroy {
      * @returns void
      */
     handleSubmit(e = null) {
-        if (e) e.preventDefault();
+        if (e) {
+            e.preventDefault();
+        }
 
         if (!this.form.valid) {
             formHelper.dirty(this.form);
