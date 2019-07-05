@@ -299,6 +299,8 @@
                     <div class="form-group required-field col-sm-4" *ngIf="!isDisabled('floatableShares')">
                         <label class="control-label" for="floatableShares">{{ 'Percentage of Floatable Shares' | translate }}</label>
                         <input type="number"
+                                min="0"
+                                max="100"
                                 id="floatableShares"
                                 formControlName="floatableShares"
                                 [readonly]="isFormReadonly"
