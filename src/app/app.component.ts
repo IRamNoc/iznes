@@ -1,43 +1,41 @@
-import { throttleTime } from 'rxjs/operators';
 import { AfterViewInit, Component, HostListener, OnInit } from '@angular/core';
 import { MemberSocketService, WalletNodeSocketService } from '@setl/websocket-service';
 import {
     InitialisationService,
     MyUserService,
     WalletnodeChannelService,
-    NodeAlertsService,
-    RemoteLoggerService
+    RemoteLoggerService,
 } from '@setl/core-req-services';
 import { OfiMemberNodeChannelService, OfiPostTxService, OfiWalletnodeChannelService } from '@ofi/ofi-main';
 import { ToasterService, ToasterConfig } from 'angular2-toaster';
 import { NgRedux } from '@angular-redux/store';
 import { HistoryService } from '@setl/utils';
 
-import { setLanguage, setMenuShown } from '@setl/core-store';
+import { setMenuShown } from '@setl/core-store';
 import { WalletSwitchService } from '@ofi/ofi-main/ofi-product/fund-share/service/wallet-switch.service';
 
 @Component({
     selector: 'app-root',
     templateUrl: './app.component.html',
-    styleUrls: ['./app.component.css']
+    styleUrls: ['./app.component.css'],
 })
 
 export class AppComponent implements AfterViewInit, OnInit {
     title = 'app';
-    users: Array<object>;
+    users: object[];
     public toasterconfig: any = new ToasterConfig({ animation: 'flyRight' });
     jasperoAlertoptions: any = {
         overlay: true,
         overlayClickToClose: true,
         showCloseButton: true,
-        duration: 500000
+        duration: 500000,
     };
     jasperoConfirmaSetting: any = {
         overlay: true,
         overlayClickToClose: true,
         showCloseButton: true,
         confirmText: 'Yes',
-        declineText: 'No'
+        declineText: 'No',
     };
 
     constructor(
@@ -49,12 +47,13 @@ export class AppComponent implements AfterViewInit, OnInit {
         private initialisationService: InitialisationService,
         private ofiMemberNodeChannelService: OfiMemberNodeChannelService,
         private ofiPostTxService: OfiPostTxService,
-        private _myUserService: MyUserService,
-        private _ofiWalletnodeChannelService: OfiWalletnodeChannelService,
+        private myUserService: MyUserService,
+        private ofiWalletnodeChannelService: OfiWalletnodeChannelService,
         private walletSwitchService: WalletSwitchService,
         private remoteLoggerService: RemoteLoggerService,
         private historyService: HistoryService,
-    ) { }
+    ) {
+    }
 
     ngOnInit() {
 
@@ -65,7 +64,7 @@ export class AppComponent implements AfterViewInit, OnInit {
          * @param userData
          */
         this.walletNodeSocketService.walletnodeUpdateCallback = (id, message, userData) => {
-            this._ofiWalletnodeChannelService.resolveChannelMessage(id, message, userData);
+            this.ofiWalletnodeChannelService.resolveChannelMessage(id, message, userData);
         };
 
         this.initialisationService.channelUpdateCallbacks.push((data) => {
@@ -88,7 +87,5 @@ export class AppComponent implements AfterViewInit, OnInit {
     }
 
     ngAfterViewInit() {
-
     }
 }
-
