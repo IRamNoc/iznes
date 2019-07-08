@@ -11,6 +11,10 @@ setl-permission-grid {
     text-align: center;
 }
 
+:host /deep/ .permission-grid clr-dg-cell {
+    overflow: initial;
+}
+
 .permission-grid .option-box .fa {
     margin: 0;
 }
@@ -28,7 +32,8 @@ setl-permission-grid {
 
 :host /deep/ .datagrid .datagrid-body .datagrid-row .datagrid-cell,
 :host /deep/ .datagrid-overlay-wrapper,
-:host /deep/ .datagrid .datagrid-body {
+:host /deep/ .datagrid .datagrid-body,
+:host /deep/ .datagrid {
     overflow: visible;
 }
 
