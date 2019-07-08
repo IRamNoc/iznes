@@ -551,9 +551,8 @@ export class AdminWalletsComponent implements OnInit, AfterViewInit, OnDestroy {
         thisTab.formControl.controls['walletLocked'].patchValue(wallet.walletLocked === 0 ? false : true);
         thisTab.formControl.controls['walletType'].patchValue(walletType);
 
-        /* Set validator on legal type selected */
+        /* Set/remove validator on legal type selected */
         thisTab.formControl.controls['walletType'].valueChanges.subscribe((type) => {
-            console.log('+++ valchanges', type);
             const walletType = _.get(type, '[0].id', 0);
 
             if (walletType !== '1') {
