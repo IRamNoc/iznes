@@ -28,7 +28,9 @@ setl-permission-grid {
 
 :host /deep/ .datagrid .datagrid-body .datagrid-row .datagrid-cell,
 :host /deep/ .datagrid-overlay-wrapper,
-:host /deep/ .datagrid .datagrid-body {
+:host /deep/ .datagrid .datagrid-body,
+:host /deep/ .permission-grid clr-dg-cell,
+:host /deep/ .datagrid {
     overflow: visible;
 }
 
