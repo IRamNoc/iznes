@@ -25,7 +25,6 @@ export class DataGridStringFilter implements ClrDatagridStringFilterInterface<an
      * @returns {boolean}
      */
     accepts(item: any, search: string): boolean {
-        if (this.stringField === 'walletLocked') console.log('+++ item[this.stringField]', item[this.stringField]);
         if (!item[this.stringField]) return false;
         return item[this.stringField].toString().toLowerCase().indexOf(search) >= 0;
     }
