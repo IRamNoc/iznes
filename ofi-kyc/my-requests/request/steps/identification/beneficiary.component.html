@@ -3,7 +3,7 @@
     <div class="row col-sm-12">
         <div class="form-group col-sm-6">
             <clr-radio-container clrInline>
-                <label class="required-field">{{ 'Type' | translate }}</label>
+                <label class="required-field">{{ 'Stakeholder Type' | translate }}</label>
                 <clr-radio-wrapper>
                     <input type="radio" clrRadio id="opt-type-legal" value="legalPerson" formControlName="beneficiaryType" [attr.disabled]="disabled === true ? '' : null" />
                     <label>{{ 'Legal person' | translate }}</label>
@@ -56,11 +56,10 @@
 
         <div class="form-group required-field col-sm-6">
             <label class="control-label" for="holdingType-benef">{{'Holding type' | translate}}</label>
-            <ng-select id="holdingType-benef"
-                        [items]="holdingTypesList"
-                        [formControl]="form.get('common.holdingType')"
-                        [isDisabled]="true">
-            </ng-select>
+            <input type="text"
+                    id="holdingType-benef"
+                    value="{{ holdingTypeText }}"
+                    [readonly]="true">
         </div>
     </div>
 

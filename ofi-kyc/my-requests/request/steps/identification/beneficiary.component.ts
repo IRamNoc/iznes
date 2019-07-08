@@ -44,6 +44,7 @@ export class BeneficiaryComponent implements OnInit, OnDestroy {
     identificationNumberTypeList;
     countries;
     parentsFiltered;
+    holdingTypeText;
 
     constructor(
         private requestsService: RequestsService,
@@ -72,6 +73,8 @@ export class BeneficiaryComponent implements OnInit, OnDestroy {
         (this.form.get('beneficiaryType') as FormControl).updateValueAndValidity();
         (this.form.get('legalPerson.nationalIdNumberType') as FormControl).updateValueAndValidity();
         this.refresh.emit();
+
+        this.setHoldingTypeText();
     }
 
     initFormCheck() {
@@ -107,7 +110,13 @@ export class BeneficiaryComponent implements OnInit, OnDestroy {
                 }
 
                 (this.form.get('common.holdingType') as FormControl).updateValueAndValidity();
+
+                this.setHoldingTypeText();
             });
+    }
+
+    setHoldingTypeText() {
+        this.holdingTypeText = this.translate.translate(this.form.get('common.holdingType').value[0].text);
     }
 
     formCheckNationalIdNumberType(value) {

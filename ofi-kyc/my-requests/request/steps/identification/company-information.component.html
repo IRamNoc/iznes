@@ -74,12 +74,11 @@
                         <span class="field-error" *ngIf="hasError('geographicalAreaOfActivity')">{{ 'Field is required' | translate }}</span>
                     </div>
 
-                    <div class="form-group required-field col-sm-3 flex-items-xs-bottom" *ngIf="!isDisabled('geographicalAreaOfActivitySpecification')">
-                        <label>{{ 'Specify' | translate }}</label>
+                    <div class="form-group required-field col-sm-4 flex-items-xs-bottom" *ngIf="!isDisabled('geographicalAreaOfActivitySpecification')">
+                        <label>{{ 'Please specify' | translate }}</label>
                         <input type="text"
                                 [readonly]="isFormReadonly"
-                                id="geographicalAreaOfActivitySpecification" formControlName="geographicalAreaOfActivitySpecification"
-                                placeholder="{{ 'Please specify' | translate }}">
+                                id="geographicalAreaOfActivitySpecification" formControlName="geographicalAreaOfActivitySpecification">
                         <span class="field-error" *ngIf="hasError('geographicalAreaOfActivitySpecification', ['required'])">{{ 'Field is required' | translate }}</span>
                         <span class="field-error" *ngIf="hasError('geographicalAreaOfActivitySpecification', ['maxlength'])">{{ 'Value is too long' | translate }}</span>
                     </div>
@@ -231,7 +230,7 @@
                     </div>
 
                     <div class="form-group required-field col-sm-4" *ngIf="!isDisabled('otherListingMarkets')">
-                        <label class="control-label" for="otherListingMarkets">&nbsp;</label>
+                        <label class="control-label" for="otherListingMarkets">{{ 'Please specify' | translate }}</label>
                         <input type="text"
                                 id="otherListingMarkets"
                                 formControlName="otherListingMarkets"
@@ -300,6 +299,8 @@
                     <div class="form-group required-field col-sm-4" *ngIf="!isDisabled('floatableShares')">
                         <label class="control-label" for="floatableShares">{{ 'Percentage of Floatable Shares' | translate }}</label>
                         <input type="number"
+                                min="0"
+                                max="100"
                                 id="floatableShares"
                                 formControlName="floatableShares"
                                 [readonly]="isFormReadonly"
