@@ -18,7 +18,8 @@ td{
         background-color: inherit;
     }
     .datagrid-action-overflow {
-        margin: -56px 0 0 -140px;
+        margin: -56px 30px -30px -190px;
+        position: relative;
         &::after {
             border-left: .20833333rem solid #fff;
             border-right: none;

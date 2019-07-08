@@ -187,6 +187,10 @@ export class BeneficiaryComponent implements OnInit, OnDestroy {
         return getValue(this.form.get(['legalPerson', 'nationalIdNumberText']), ['errors', value], '');
     }
 
+    stopTabbing(e) {
+        if (e.keyCode === 9) e.preventDefault();
+    }
+
     ngOnDestroy() {
         this.unsubscribe.next();
         this.unsubscribe.complete();

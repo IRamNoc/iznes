@@ -251,11 +251,11 @@
                 <clr-radio-container clrInline>
                     <label>{{ 'Does the stakeholder exercise control?' | translate }}</label>
                     <clr-radio-wrapper>
-                        <input type="radio" [attr.disabled]="disabled === true ? '' : null" clrRadio name="exerciseControl" [value]="0" checked="checked" [formControl]="form.get('common.exerciseControl')" />
+                        <input type="radio" [attr.disabled]="disabled === true ? '' : null" clrRadio name="exerciseControl" [value]="0" checked="checked" [formControl]="form.get('common.exerciseControl')" (keydown)="stopTabbing($event)" />
                         <label>{{ 'No' | translate }}</label>
                     </clr-radio-wrapper>
                     <clr-radio-wrapper>
-                        <input type="radio" [attr.disabled]="disabled === true ? '' : null"  clrRadio name="exerciseControl" [value]="1" [formControl]="form.get('common.exerciseControl')" />
+                        <input type="radio" [attr.disabled]="disabled === true ? '' : null"  clrRadio name="exerciseControl" [value]="1" [formControl]="form.get('common.exerciseControl')" (keydown)="stopTabbing($event)" />
                         <label>{{ 'Yes' | translate }}</label>
                     </clr-radio-wrapper>
                 </clr-radio-container>
@@ -468,11 +468,11 @@
                 <clr-radio-container clrInline>
                     <label>{{ 'Is the stakeholder a politically exposed person?' | translate }}</label>
                     <clr-radio-wrapper>
-                        <input type="radio" [attr.disabled]="disabled === true ? '' : null" clrRadio name="isPoliticallyExposed" [value]="0" checked="checked" formControlName="isPoliticallyExposed" />
+                        <input type="radio" [attr.disabled]="disabled === true ? '' : null" clrRadio name="isPoliticallyExposed" [value]="0" checked="checked" formControlName="isPoliticallyExposed" (keydown)="stopTabbing($event)" />
                         <label>{{ 'No' | translate }}</label>
                     </clr-radio-wrapper>
                     <clr-radio-wrapper>
-                        <input type="radio" [attr.disabled]="disabled === true ? '' : null"  clrRadio name="isPoliticallyExposed" [value]="1" formControlName="isPoliticallyExposed" />
+                        <input type="radio" [attr.disabled]="disabled === true ? '' : null"  clrRadio name="isPoliticallyExposed" [value]="1" formControlName="isPoliticallyExposed" (keydown)="stopTabbing($event)" />
                         <label>{{ 'Yes' | translate }}</label>
                     </clr-radio-wrapper>
                 </clr-radio-container>

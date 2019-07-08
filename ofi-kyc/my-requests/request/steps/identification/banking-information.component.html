@@ -115,7 +115,8 @@
                                                 id="{{'country' + i}}"
                                                 formControlName="country"
                                                 [isDisabled]="isFormReadonly"
-                                                placeholder="{{ 'Select a country' | translate }}"></ng-select>
+                                                placeholder="{{ 'Select a country' | translate }}"
+                                                (keydown)="stopTabbing($event)"></ng-select>
                                     <span class="field-error" *ngIf="hasError([i,'country'])">{{ 'Field is required' | translate }}</span>
                                 </div>
                             </div>
