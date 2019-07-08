@@ -13,6 +13,7 @@ import { BeneficiaryService } from './beneficiary.service';
 export class BeneficiaryLineComponent {
     @Input() stakeholder;
     @Input() parent;
+    @Input() registeredCompanyName;
     @Input() readOnly: boolean = false;
     @Output() action: EventEmitter<any> = new EventEmitter<any>();
     showActions: boolean = false;
@@ -33,6 +34,8 @@ export class BeneficiaryLineComponent {
         if (this.parent) {
             return this.parent.text;
         }
+
+        return this.registeredCompanyName;
     }
 
     get countryTaxResidence() {

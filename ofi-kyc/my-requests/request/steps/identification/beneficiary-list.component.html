@@ -41,7 +41,7 @@
             </tr>
             </thead>
             <tbody>
-            <tr beneficiary-line *ngFor="let stakeholder of listStakeholders; index as i" [stakeholder]="stakeholder" (action)="handleAction($event, i)" (click)="viewStakeholder(i)" [parent]="getParent(i)" [readOnly]="isFormReadonly"></tr>
+            <tr beneficiary-line *ngFor="let stakeholder of listStakeholders; index as i" [stakeholder]="stakeholder" (action)="handleAction($event, i)" (click)="viewStakeholder(i)" [parent]="getParent(i)" [registeredCompanyName]="registeredCompanyNameStr" [readOnly]="isFormReadonly"></tr>
             <tr class="empty" *ngIf="!form.controls.length">
                 <td colspan="8">
                     {{'No data for the moment, please add at least one stakeholder.' | translate}}
@@ -50,10 +50,10 @@
             </tbody>
         </table>
 
-        <p class="txtRed" *ngIf="hasError('length')">
+        <p class="field-error" *ngIf="hasError('length')">
             {{'Please add at least one stakeholder' | translate}}
         </p>
-        <p class="txtRed" *ngIf="hasError('invalid')">
+        <p class="field-error" *ngIf="hasError('invalid')">
             {{'Please make sure all stakeholder information has been entered' | translate}}
         </p>
 
