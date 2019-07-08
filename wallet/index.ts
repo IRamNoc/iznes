@@ -100,6 +100,8 @@ import {
 } from './transactions';
 
 import { combineReducers, Reducer } from 'redux';
+import { AllWalletAddressesState } from './all-wallet-addresses/model';
+import { AllWalletAddressesReducer } from './all-wallet-addresses/reducer';
 
 export {
     SET_ADDRESS_DIRECTORY,
@@ -196,6 +198,7 @@ export interface WalletState {
     walletRelationship: WalletRelationshipState;
     myWalletContract: MyWalletContractState;
     transactions: Transactions;
+    allWalletAddresses: AllWalletAddressesState;
 }
 
 export const walletReducer: Reducer<WalletState> = combineReducers<WalletState>(
@@ -210,5 +213,6 @@ export const walletReducer: Reducer<WalletState> = combineReducers<WalletState>(
         walletRelationship: WalletRelationshipReducer,
         myWalletContract: MyWalletContractReducer,
         transactions: TransactionsReducer,
+        allWalletAddresses: AllWalletAddressesReducer,
     },
 );

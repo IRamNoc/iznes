@@ -43,4 +43,5 @@ export interface TransactionListByAsset {
 export interface Transactions {
     all: TransactionList;
     byAsset: TransactionListByAsset;
+    byAssetCrossWallets: TransactionListByAsset;
 }
