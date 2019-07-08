@@ -1,4 +1,11 @@
 import { DatagridListActionModel } from '@setl/utils/components/datagrid-list/models/datagrid-list-action.model';
+import { DataGridStringFilter } from '@setl/utils/components/datagrid-list/filters/string.filter';
+import { DataGridMappedValueFilter } from '@setl/utils/components/datagrid-list/filters/mapped-value.filter';
+
+const walletLockedValueMap = {
+    0: { text: 'Unlocked', class: 'label-success' },
+    1: { text: 'Locked', class: 'label-danger' },
+};
 
 export const walletFieldsModel = {
     walletName: {
@@ -14,10 +21,7 @@ export const walletFieldsModel = {
         label: 'Wallet Status',
         type: 'label',
         options: {
-            labelMap: {
-                0: { text: 'Unlocked', class: 'label-success' },
-                1: { text: 'Locked', class: 'label-danger' },
-            },
+            labelMap: walletLockedValueMap,
         },
     },
 };
@@ -38,3 +42,10 @@ export const walletListActions: {}[] = [
         onClick: 'deleteWallet',
     }),
 ];
+
+export const walletListFilters: {} = {
+    walletName: new DataGridStringFilter('walletName'),
+    accountName: new DataGridStringFilter('accountName'),
+    walletTypeName: new DataGridStringFilter('walletTypeName'),
+    walletLocked: new DataGridMappedValueFilter('walletLocked', walletLockedValueMap),
+};

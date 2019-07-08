@@ -14,7 +14,7 @@ import * as _ from 'lodash';
 import * as moment from 'moment';
 import { managedWalletsActions } from '@setl/core-store';
 import { MultilingualService } from '@setl/multilingual';
-import { walletFieldsModel, walletListActions } from './wallets.model';
+import { walletFieldsModel, walletListActions, walletListFilters } from './wallets.model';
 
 /* Decorator. */
 @Component({
@@ -43,6 +43,7 @@ export class AdminWalletsComponent implements OnInit, AfterViewInit, OnDestroy {
     /*  Datagrid */
     public walletFieldsModel = walletFieldsModel;
     public walletListActions = walletListActions;
+    public walletListFilters = walletListFilters;
 
     /* Subscriptions from service observables. */
     private subscriptions: { [key: string]: any } = {};
