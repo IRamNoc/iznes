@@ -76,7 +76,7 @@
     "ng2-gravatar-directive": "^2.1.0",
     "ngx-pagination": "3.0.1",
     "ngx-quill-editor": "^2.2.1",
-    "redux": "4.0.2",
+    "redux": "~4.0.1",
     "rxjs": "6.2.1",
     "rxjs-compat": "6.2.1",
     "sha256": "^0.2.0",
