@@ -551,6 +551,20 @@ export class AdminWalletsComponent implements OnInit, AfterViewInit, OnDestroy {
         thisTab.formControl.controls['walletLocked'].patchValue(wallet.walletLocked === 0 ? false : true);
         thisTab.formControl.controls['walletType'].patchValue(walletType);
 
+        /* Set/remove validator on legal type selected */
+        thisTab.formControl.controls['walletType'].valueChanges.subscribe((type) => {
+            const walletType = _.get(type, '[0].id', 0);
+
+            if (walletType !== '1') {
+                thisTab.formControl.controls['walletIncDate'].setErrors(null);
+            } else {
+                thisTab.formControl.controls['walletIncDate'].setValidators([
+                    Validators.required,
+                    Validators.pattern('^[0-9]{4}-(0[1-9]|1[012])-(0[1-9]|[12][0-9]|3[01])$'),
+                ]);
+            }
+        });
+
         /* Then figure out what type we are... then patch the values needed for the forms shown. */
 
         /* Wallet type legal. */
@@ -578,13 +592,6 @@ export class AdminWalletsComponent implements OnInit, AfterViewInit, OnDestroy {
                 Validators.required,
                 Validators.pattern('^[0-9]{4}-(0[1-9]|1[012])-(0[1-9]|[12][0-9]|3[01])$'),
             ]);
-            thisTab.formControl.controls['walletType'].valueChanges.subscribe((type) => {
-                const walletType = _.get(type, '[0].id', 0);
-
-                if (walletType !== '1') {
-                    thisTab.formControl.controls['walletIncDate'].setErrors(null);
-                }
-            });
 
             /* Wallet type individual */
         } else if (wallet.walletType === 2) {

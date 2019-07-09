@@ -185,7 +185,7 @@
                                 id="new-wallet-usertype-select"
                                 [items]="walletTypes"
                                 [allowClear]="true"
-                                placeholder="{{ 'Select Type' | translate }"
+                                placeholder="{{ 'Select Type' | translate }}"
                                 [formControl]="formControl.controls['walletType']">
                             </ng-select>
                             <div *ngIf="formControl.controls.walletType.hasError('required') && formControl.controls.walletType.touched"
