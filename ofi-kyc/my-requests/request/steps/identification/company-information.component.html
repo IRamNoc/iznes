@@ -100,7 +100,7 @@
                         <clr-radio-container clrInline>
                             <label>{{ 'Is the activity regulated?' | translate }}</label>
                             <clr-radio-wrapper>
-                                <input type="radio" clrRadio name="activityRegulated" [value]="0" checked="checked" formControlName="activityRegulated"
+                                <input type="radio" clrRadio name="activityRegulated" [value]="0" formControlName="activityRegulated"
                                        [attr.disabled]="isFormReadonly === true ? '' : null"
                                 />
                                 <label>{{ 'No' | translate }}</label>
@@ -200,7 +200,7 @@
                         <clr-radio-container clrInline>
                             <label>{{ 'Is the company listed?' | translate }}</label>
                             <clr-radio-wrapper>
-                                <input type="radio" clrRadio name="companyListed" [value]="0" checked="checked" formControlName="companyListed"
+                                <input type="radio" clrRadio name="companyListed" [value]="0" formControlName="companyListed"
                                        [attr.disabled]="isFormReadonly === true ? '' : null"
                                 />
                                 <label>{{ 'No' | translate }}</label>
