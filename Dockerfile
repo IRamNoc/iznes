@@ -1,6 +1,6 @@
 # syntax=docker/dockerfile:1.0.0-experimental
 # build
-FROM node:carbon as builder
+FROM node:10 as builder
 
 # set working directory
 RUN mkdir /app
