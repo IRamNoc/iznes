@@ -95,9 +95,9 @@
     "@types/node": "^6.0.113",
     "chromedriver": "~2.34",
     "codelyzer": "^4.4.2",
-    "gulp": "^3.9.1",
-    "gulp-nsp": "^3.0.1",
+    "gulp": "^4",
     "gulp-sonar": "^3.0.1",
+    "is-docker": "2.0.0",
     "jasmine-core": "^2.5.2",
     "jasmine-spec-reporter": "~4.1.0",
     "junit": "^1.4.9",
@@ -117,7 +117,6 @@
     "tslint-config-setl": "git+ssh://git@si-nexus01.dev.setl.io:common-components/tslint-config-setl.git",
     "typescript": "2.7.2",
     "yargs": "^11.0.0",
-    "yarn": "^1.14.0",
-    "is-docker": "2.0.0"
+    "yarn": "^1.14.0"
   }
 }
