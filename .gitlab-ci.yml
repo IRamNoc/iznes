@@ -3,7 +3,7 @@ stages:
     - test
     - build
 
-some-lint-and-test:
+lint:
     stage: lint
     image: node:10-jessie
     before_script:
@@ -18,7 +18,7 @@ some-lint-and-test:
     script:
         - ng lint
 
-some-test:
+test:
     stage: test
     image: node:10-jessie
     before_script:
@@ -41,7 +41,7 @@ some-test:
         paths:
             - coverage/
 
-some-build:
+build:
     image: docker:git
     services:
         - docker:dind
