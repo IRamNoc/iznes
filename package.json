@@ -4,8 +4,8 @@
     "description": "",
     "main": "index.js",
     "dependencies": {
-        "@setl/socketcluster-wrapper": "git+ssh://git@si-nexus01.dev.setl.io:SETL_Modules/Generic_modules/socketcluster-wrapper.git",
-        "@setl/vanilla-websocket-wrapper": "git+ssh://git@si-nexus01.dev.setl.io:SETL_Modules/Generic_modules/vanilla_websocket_wrapper.git",
+        "@setl/socketcluster-wrapper": "git+ssh://git@si-nexus01.dev.setl.io:SETL_Modules/Generic_modules/socketcluster-wrapper.git#feat/angular6",
+        "@setl/vanilla-websocket-wrapper": "git+ssh://git@si-nexus01.dev.setl.io:SETL_Modules/Generic_modules/vanilla_websocket_wrapper.git#feat/angular6",
         "lodash": "^4.17.4"
     },
     "devDependencies": {},
