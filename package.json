@@ -96,6 +96,7 @@
     "chromedriver": "~2.34",
     "codelyzer": "^4.4.2",
     "gulp": "3.9.1",
+    "gulp-nsp": "^2.4.2",
     "gulp-sonar": "^3.0.1",
     "is-docker": "2.0.0",
     "jasmine-core": "^2.5.2",
