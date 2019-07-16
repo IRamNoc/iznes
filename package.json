@@ -13,7 +13,8 @@
     "e2e": "ng e2e",
     "build-prod": "cd src; sass styles.scss:styles.css; cd ../; node --max_old_space_size=6144 ./node_modules/.bin/ng build --prod",
     "tar": "tar -cvzf opencsd-front-end-build.tgz dist",
-    "start-no-reload": "ng serve --live-reload false --sourcemap --extractCss"
+    "start-no-reload": "ng serve --live-reload false --sourcemap --extractCss",
+    "sonar": "sonar-scanner"
   },
   "private": true,
   "dependencies": {
@@ -118,6 +119,7 @@
     "tslint-config-setl": "git+ssh://git@si-nexus01.dev.setl.io:common-components/tslint-config-setl.git",
     "typescript": "2.7.2",
     "yargs": "^11.0.0",
-    "yarn": "^1.14.0"
+    "yarn": "^1.14.0",
+    "sonar-scanner": "^3.1.0"
   }
 }
