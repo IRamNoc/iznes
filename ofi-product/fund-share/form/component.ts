@@ -234,7 +234,6 @@ export class FundShareComponent implements OnInit, OnDestroy {
                 this.model.fundShareId = parseInt(fundShareId, 10);
                 this.mode = FundShareMode.Update;
                 if (this.currDraft === 0 && this.prefill === null) {
-                    //this.model.keyFacts.mandatory.fundShareName.control.disable();
                     this.model.keyFacts.mandatory.isin.control.disable();
                 }
             }
@@ -690,7 +689,6 @@ export class FundShareComponent implements OnInit, OnDestroy {
         this.fundShareData = fundShare;
 
         if (this.currDraft === 0 && this.prefill === null) {
-            //this.model.keyFacts.mandatory.fundShareName.control.disable();
             this.model.keyFacts.mandatory.isin.control.disable();
         }
     }
