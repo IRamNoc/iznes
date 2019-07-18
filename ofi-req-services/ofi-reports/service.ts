@@ -3,7 +3,7 @@ import { Injectable } from '@angular/core';
 import { NgRedux } from '@angular-redux/store';
 /* Membersocket and nodeSagaRequest import. */
 import { MemberSocketService } from '@setl/websocket-service';
-import { createMemberNodeSagaRequest } from '@setl/utils/common';
+import { createMemberNodeSagaRequest, createMemberNodeRequest } from '@setl/utils/common';
 import { SagaHelper } from '@setl/utils';
 /* Import actions. */
 import {
@@ -373,5 +373,15 @@ export class OfiReportsService {
         };
 
         return createMemberNodeSagaRequest(this.memberSocketService, messageBody);
+    }
+
+    requestMyHoldingDetail(requestData): any {
+        const messageBody = {
+            RequestName: 'izngetmyholdingdetail',
+            token: this.memberSocketService.token,
+            walletId: requestData.walletId,
+        };
+
+        return createMemberNodeRequest(this.memberSocketService, messageBody);
     }
 }
