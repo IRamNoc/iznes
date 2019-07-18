@@ -198,6 +198,7 @@ export class AdminUsersService {
             account: newData.account,
             userType: newData.userType,
             status: newData.status,
+            username: newData.username
         };
 
         /* Return the new member node saga request. */
