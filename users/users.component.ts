@@ -878,6 +878,7 @@ export class AdminUsersComponent implements OnInit, AfterViewInit, OnDestroy {
             userType: formData.userType.length ? formData.userType[0].id : 0,
             account: formData.accountType.length ? formData.accountType[0].id : 0,
             status: formData.userLocked,
+            username: formData.username
         };
 
         /* Let's send the edit request. */

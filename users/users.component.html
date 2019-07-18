@@ -264,8 +264,7 @@
                                     type="text"
                                     formControlName="username"
                                     placeholder="{{ 'Username' | translate }}"
-                                    class="form-control username"
-                                    readonly="readonly">
+                                    class="form-control username">
                             <div *ngIf="formControl.controls.username.hasError('required') && formControl.controls.username.touched"
                                     class="field-error">{{ 'Field is required' | translate }}
                             </div>
