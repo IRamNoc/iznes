@@ -42,11 +42,9 @@ export class FundShareAuditService {
 
             _.forEach(Object.keys(model), (key: string) => {
                 if (key.toLowerCase() === item.field.toLowerCase()) {
-                    item.mltag = model[item.field].mltag;
-                    item.field = model[item.field].label;
-
+                    //item.mltag = model[item.field].mltag;
+                    //item.field = model[item.field].label;
                     found = true;
-
                     return false;
                 }
             });

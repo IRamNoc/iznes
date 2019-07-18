@@ -194,7 +194,6 @@ export class InvestFundComponent implements OnInit, OnDestroy {
     addressListObj;
 
     amountLimit: number = 15000000;
-    subPortfolioRedemptionEncumberBalance: number;
 
     panels = {
         1: true,
@@ -430,7 +429,7 @@ export class InvestFundComponent implements OnInit, OnDestroy {
      */
     get subPortfolioEncumberedBalance(): number {
         const shareBalanceBreakDown = _.get(this.walletBalance, [this.shareAsset]);
-        return this.findPortFolioBalance(shareBalanceBreakDown, 'encumbrance');
+        return this.findPortFolioBalance(shareBalanceBreakDown, 'investorTotalEncumber');
     }
 
     /**
@@ -440,7 +439,7 @@ export class InvestFundComponent implements OnInit, OnDestroy {
      */
     get subPortfolioTotalBalance(): number {
         const shareBalanceBreakDown = _.get(this.walletBalance, [this.shareAsset]);
-        return this.findPortFolioBalance(shareBalanceBreakDown, 'balance');
+        return this.findPortFolioBalance(shareBalanceBreakDown, 'investorTotalHolding');
     }
 
     /**
@@ -449,7 +448,8 @@ export class InvestFundComponent implements OnInit, OnDestroy {
      * @return {number}
      */
     get subPortfolioRedemptionEncumBalance(): number {
-        return this.subPortfolioRedemptionEncumberBalance;
+        const shareBalanceBreakDown = _.get(this.walletBalance, [this.shareAsset]);
+        return this.findPortFolioBalance(shareBalanceBreakDown, 'investorRedemptionEncumber');
     }
 
     get isRedeemTooMuch(): boolean {
@@ -690,28 +690,6 @@ export class InvestFundComponent implements OnInit, OnDestroy {
             throttleTime(1000),
         ).subscribe(this.subscribeForChangeDate.bind(this));
 
-    }
-
-    getEncumbrance(): Promise<null> {
-        const subportfolio = _.get(this.address, ['value', '0', 'id'], '');
-        return new Promise((resolve, reject) => {
-            this.walletNodeRequestService.fetchEncumbranceDetails(
-                this.shareData.isin,
-                this.shareData.fundShareName,
-                this.connectedWalletId,
-                subportfolio,
-            )
-                .then((res) => {
-
-                    this.subPortfolioRedemptionEncumberBalance = OrderHelper.getInvestorRedemptionTotalEcumbrance(
-                        res,
-                        subportfolio,
-                        this.shareData.isin,
-                        this.shareData.fundShareName,
-                    );
-                    resolve();
-                });
-        });
     }
 
     updateToastTimer(unixtime: number) {
@@ -990,16 +968,13 @@ export class InvestFundComponent implements OnInit, OnDestroy {
             return false;
         }
 
-        this.getEncumbrance()
-            .then(() => {
+        if (!this.handleIsRedeemOver80Percent()) {
+            return false;
+        }
 
-                if (!this.handleIsRedeemOver80Percent()) {
-                    return false;
-                }
-
-                // show waiting pop up until create order response come back.
-                this.alertsService.create(
-                    'info', `
+        // show waiting pop up until create order response come back.
+        this.alertsService.create(
+            'info', `
                         <table class="table grid">
                             <tbody>
                                 <tr>
@@ -1008,74 +983,73 @@ export class InvestFundComponent implements OnInit, OnDestroy {
                             </tbody>
                         </table>
                     `,
-                    { showCloseButton: false, overlayClickToClose: false },
+            { showCloseButton: false, overlayClickToClose: false },
+        );
+
+        this.ofiOrdersService.addNewOrder(request).then((data) => {
+            // log to remote server about order is placed
+            this.logService.log('info', 'an order has been placed');
+
+            let orderSuccessMsg = '';
+
+            if (this.type === 'sellbuy') {
+                const orderSubId = _.get(data, ['1', 'Data', '0', 'linkedSubscriptionOrderId'], 0);
+                const orderSubRef = commonHelper.pad(orderSubId, 8, '0');
+
+                const orderRedeemId = _.get(data, ['1', 'Data', '0', 'linkedRedemptionOrderId'], 0);
+                const orderRedemRef = commonHelper.pad(orderRedeemId, 8, '0');
+
+                orderSuccessMsg = this.translate.translate(
+                    'Your order @orderRedemRef@ & @orderSubRef@ have been successfully placed and are now initiated.',
+                    { 'orderRedemRef': orderRedemRef, 'orderSubRef': orderSubRef },
                 );
 
-                this.ofiOrdersService.addNewOrder(request).then((data) => {
-                    // log to remote server about order is placed
-                    this.logService.log('info', 'an order has been placed');
+                if (this.amountTooBig) {
+                    this.sendMessageToAM({
+                        walletID: this.shareData.amDefaultWalletId,
+                        orderTypeLabel: this.orderTypeLabel,
+                        orderID: orderSubId,
+                        orderRef: orderSubRef,
+                    });
 
-                    let orderSuccessMsg = '';
+                    this.sendMessageToAM({
+                        walletID: this.shareData.amDefaultWalletId,
+                        orderTypeLabel: this.orderTypeLabel,
+                        orderID: orderRedeemId,
+                        orderRef: orderRedemRef,
+                    });
+                }
+            } else {
+                const orderId = _.get(data, ['1', 'Data', '0', 'orderID'], 0);
+                const orderRef = commonHelper.pad(orderId, 8, '0');
 
-                    if (this.type === 'sellbuy') {
-                        const orderSubId = _.get(data, ['1', 'Data', '0', 'linkedSubscriptionOrderId'], 0);
-                        const orderSubRef = commonHelper.pad(orderSubId, 8, '0');
+                orderSuccessMsg = this.translate.translate(
+                    'Your order @orderRef@ has been successfully placed and is now initiated.',
+                    { 'orderRef': orderRef },
+                );
 
-                        const orderRedeemId = _.get(data, ['1', 'Data', '0', 'linkedRedemptionOrderId'], 0);
-                        const orderRedemRef = commonHelper.pad(orderRedeemId, 8, '0');
+                if (this.amountTooBig) {
+                    this.sendMessageToAM({
+                        walletID: this.shareData.amDefaultWalletId,
+                        orderTypeLabel: this.orderTypeLabel,
+                        orderID: orderId,
+                        orderRef,
+                    });
+                }
+            }
 
-                        orderSuccessMsg = this.translate.translate(
-                            'Your order @orderRedemRef@ & @orderSubRef@ have been successfully placed and are now initiated.',
-                            { 'orderRedemRef': orderRedemRef, 'orderSubRef': orderSubRef },
-                        );
+            this.toaster.pop('success', orderSuccessMsg);
+            this.handleClose();
 
-                        if (this.amountTooBig) {
-                            this.sendMessageToAM({
-                                walletID: this.shareData.amDefaultWalletId,
-                                orderTypeLabel: this.orderTypeLabel,
-                                orderID: orderSubId,
-                                orderRef: orderSubRef,
-                            });
+            this.router.navigateByUrl('/order-book/my-orders/list');
+        }).catch((data) => {
+            let errorMessage = _.get(data, ['1', 'Data', '0', 'Message'], 'Could not place order');
+            errorMessage = this.translate.translate(errorMessage);
 
-                            this.sendMessageToAM({
-                                walletID: this.shareData.amDefaultWalletId,
-                                orderTypeLabel: this.orderTypeLabel,
-                                orderID: orderRedeemId,
-                                orderRef: orderRedemRef,
-                            });
-                        }
-                    } else {
-                        const orderId = _.get(data, ['1', 'Data', '0', 'orderID'], 0);
-                        const orderRef = commonHelper.pad(orderId, 8, '0');
+            this.toaster.pop('warning', errorMessage);
 
-                        orderSuccessMsg = this.translate.translate(
-                            'Your order @orderRef@ has been successfully placed and is now initiated.',
-                            { 'orderRef': orderRef },
-                        );
-
-                        if (this.amountTooBig) {
-                            this.sendMessageToAM({
-                                walletID: this.shareData.amDefaultWalletId,
-                                orderTypeLabel: this.orderTypeLabel,
-                                orderID: orderId,
-                                orderRef,
-                            });
-                        }
-                    }
-
-                    this.toaster.pop('success', orderSuccessMsg);
-                    this.handleClose();
-
-                    this.router.navigateByUrl('/order-book/my-orders/list');
-                }).catch((data) => {
-                    let errorMessage = _.get(data, ['1', 'Data', '0', 'Message'], 'Could not place order');
-                    errorMessage = this.translate.translate(errorMessage);
-
-                    this.toaster.pop('warning', errorMessage);
-
-                    this.alertsService.close();
-                });
-            });
+            this.alertsService.close();
+        });
     }
 
     sendMessageToAM(params) {
@@ -1466,12 +1440,12 @@ export class InvestFundComponent implements OnInit, OnDestroy {
         });
     }
 
-    findPortFolioBalance(balances, type: 'free' | 'balance' | 'encumbrance' = 'free') {
+    findPortFolioBalance(balances, type: 'investorHoling' | 'investorTotalHolding' | 'investorTotalEncumber' | 'investorRedemptionEncumber' = 'investorHoling') {
         const breakDown = _.get(balances, ['breakdown'], []);
 
         for (const balance of breakDown) {
             const addressValue = _.get(this.address.value, ['0', 'id'], '');
-            if (balance.addr === addressValue) {
+            if (balance.investorAddress === addressValue) {
                 return balance[type];
             }
         }

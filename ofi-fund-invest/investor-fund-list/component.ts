@@ -20,6 +20,25 @@ import { setRequestedFundAccessMy } from '../../ofi-store/ofi-fund-invest';
 import { MultilingualService } from '@setl/multilingual';
 import { InitialisationService, WalletNodeRequestService } from '@setl/core-req-services';
 import { ClrDatagrid } from '@clr/angular';
+import { OfiReportsService } from '../../ofi-req-services/ofi-reports/service';
+
+type WalletAddresseBalance = {
+    investorHoling: number;
+    investorTotalHolding: number;
+    investorTotalEncumber: number;
+    investorRedemptionEncumber: number;
+    fundShareID: number;
+    investorAddress: string;
+    assetName: string;
+};
+
+type WalletBalances = {
+    [fundShareName: string]: {
+        total: number;
+        free: number;
+        breakdown: WalletAddresseBalance[];
+    };
+};
 
 @Component({
     selector: 'app-investor-fund-list',
@@ -46,7 +65,7 @@ export class OfiInvestorFundListComponent implements OnInit, AfterViewInit, OnDe
     subscriptionsArray: Array<Subscription> = [];
 
     allowOrder = true;
-    walletBalances: any;
+    walletBalances: WalletBalances;
 
     language = 'en';
     public showColumnSpacer: boolean = true;
@@ -70,6 +89,7 @@ export class OfiInvestorFundListComponent implements OnInit, AfterViewInit, OnDe
         public translate: MultilingualService,
         private initialisationService: InitialisationService,
         private walletNodeRequestService: WalletNodeRequestService,
+        private ofiReportsService: OfiReportsService,
     ) {
     }
 
@@ -193,10 +213,12 @@ export class OfiInvestorFundListComponent implements OnInit, AfterViewInit, OnDe
      * Update fund list
      * @param fundList
      */
-    updateFundList(fundList, balances): void {
+    async updateFundList(fundList, balances): Promise<void> {
         this.fundListObj = fundList;
 
         const fundListImu = fromJS(fundList);
+
+        this.walletBalances = await this.getWalletAddressesBalance();
 
         this.fundList = fundListImu.reduce(
             (result, item) => {
@@ -210,8 +232,8 @@ export class OfiInvestorFundListComponent implements OnInit, AfterViewInit, OnDe
                 const isin = item.get('isin', '');
                 const shareName = item.get('fundShareName', '');
 
-                let position = _.get(balances, [this.connectedWalletId, `${isin}|${shareName}`, 'free'], 'N/A');
-                let totalPosition = _.get(balances, [this.connectedWalletId, `${isin}|${shareName}`, 'total'], 'N/A');
+                let position = _.get(this.walletBalances, [`${item.get('isin')}|${item.get('fundShareName')}`, 'free'], 'N/A');
+                let totalPosition = _.get(this.walletBalances, [`${item.get('isin')}|${item.get('fundShareName')}`, 'total'], 'N/A');
 
                 if (!isNaN(position)) {
                     position = this.numberConverterService.toFrontEnd(position);
@@ -471,16 +493,10 @@ export class OfiInvestorFundListComponent implements OnInit, AfterViewInit, OnDe
 
     // Get largest balance in any of the address
     hasShareBalanceInAnyAddress(assetName): boolean {
-        const breakDown = _.get(this.walletBalances, [assetName, 'breakdown'], 0);
-
-        for (const balance of breakDown) {
-            const free = balance.free;
-            if (free > 0) {
-                return true;
-            }
+        if (typeof this.walletBalances[assetName] === 'undefined') {
+            return false;
         }
-
-        return false;
+        return this.walletBalances[assetName].free > 0;
     }
 
     disableRedeem(assetName): string {
@@ -518,6 +534,19 @@ export class OfiInvestorFundListComponent implements OnInit, AfterViewInit, OnDe
         this.router.navigateByUrl(`/list-of-funds/${this.tabsControl.length - 1}`);
     }
 
+    async getWalletAddressesBalance() {
+        if (this.connectedWalletId == 0) {
+            return formatWalletBalances([]);
+        }
+
+        try {
+            const response = await this.ofiReportsService.requestMyHoldingDetail({walletId: this.connectedWalletId});
+            return formatWalletBalances(_.get(response, '[1].Data', []));
+        } catch(e) {
+            return formatWalletBalances([]);
+        }
+    }
+
     ngOnDestroy() {
         for (const subscription of this.subscriptionsArray) {
             subscription.unsubscribe();
@@ -533,4 +562,22 @@ export class OfiInvestorFundListComponent implements OnInit, AfterViewInit, OnDe
 
         this.ngRedux.dispatch(ofiListOfFundsComponentActions.setAllTabs(allTabs));
     }
+}
+
+function formatWalletBalances(walletAddressesBalances: WalletAddresseBalance[]): WalletBalances {
+    return walletAddressesBalances.reduce((accu, curr) => {
+        if (typeof accu[curr.assetName] === 'undefined'){
+           accu[curr.assetName] = {
+               total: 0,
+               free: 0,
+               breakdown: [],
+           };
+        }
+
+        accu[curr.assetName].total += curr.investorTotalHolding;
+        accu[curr.assetName].free += curr.investorHoling;
+        accu[curr.assetName].breakdown.push(curr);
+
+        return accu;
+    }, {});
 }
