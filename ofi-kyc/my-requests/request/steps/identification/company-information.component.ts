@@ -233,7 +233,7 @@ export class CompanyInformationComponent implements OnInit, OnDestroy {
     formCheckSectorActivity(value) {
         const control = this.form.get('sectorActivityText');
 
-        if (value === 'Other') {
+        if (value === 'other') {
             control.enable();
         } else {
             control.disable();
