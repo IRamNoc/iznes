@@ -380,7 +380,6 @@ export class CompanyInformationComponent implements OnInit, OnDestroy {
             balanceSheetTotalControl.disable();
             netRevenuesNetIncomeControl.disable();
             shareholderEquityControl.disable();
-
         } else {
             listingMarketsControl.disable();
             multilateralTradingFacilitiesControl.disable();
@@ -444,7 +443,7 @@ export class CompanyInformationComponent implements OnInit, OnDestroy {
 
         if (Array.isArray(selectedFacilities)) {
             otherSelected = selectedFacilities.find((market) => {
-                return market.id === 'other';
+                return market.id === 'mtfXXX';
             });
         }
 
