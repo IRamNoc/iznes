@@ -29,6 +29,7 @@ export class NewKycSelectAmcComponent implements OnInit, OnDestroy {
     connectedWallet;
 
     submitted = false;
+    onboardingSubmitted = false;
     alreadyRegistered = false;
     preSelectedAm: { amcId: number, invitationToken };
 
@@ -91,7 +92,10 @@ export class NewKycSelectAmcComponent implements OnInit, OnDestroy {
                 this.myKycList$)
             .pipe(distinctUntilChanged())
             .subscribe(([managementCompanyList, myKycList]) => {
-                if (!this.submitted) this.handleSubmit();
+                if (this.selectedManagementCompanies.length && !this.onboardingSubmitted) {
+                    this.handleSubmit();
+                    this.onboardingSubmitted = true;
+                }
             });
         }
     }
@@ -279,8 +283,6 @@ export class NewKycSelectAmcComponent implements OnInit, OnDestroy {
             return;
         }
 
-        this.submitted = true;
-
         let ids;
 
         if (this.duplicate) {
@@ -297,6 +299,7 @@ export class NewKycSelectAmcComponent implements OnInit, OnDestroy {
         }
 
         this.ngRedux.dispatch(ClearMyKycListRequested());
+        this.submitted = true;
         this.changeDetectorRef.markForCheck();
 
         this.validSubmit();
