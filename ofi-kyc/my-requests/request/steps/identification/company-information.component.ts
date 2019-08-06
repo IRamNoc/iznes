@@ -3,6 +3,7 @@ import { FormGroup, FormArray } from '@angular/forms';
 import { get as getValue, set as setValue, filter, isEmpty, castArray, find } from 'lodash';
 import { select, NgRedux } from '@angular-redux/store';
 import { Subject } from 'rxjs';
+import { Observable } from 'rxjs/Observable';
 import { filter as rxFilter, map, take, takeUntil } from 'rxjs/operators';
 import { FormPercentDirective } from '@setl/utils/directives/form-percent/formpercent';
 import { IdentificationService, buildBeneficiaryObject } from '../identification.service';
@@ -16,6 +17,7 @@ import { formHelper } from '@setl/utils/helper';
 import { PersistRequestService } from '@setl/core-req-services';
 import { PersistService } from '@setl/core-persist';
 import { setMyKycRequestedPersist } from '@ofi/ofi-main/ofi-store/ofi-kyc';
+import { KycMyInformations } from '@ofi/ofi-main/ofi-store/ofi-kyc/my-informations';
 
 @Component({
     selector: 'company-information',
@@ -31,6 +33,7 @@ export class CompanyInformationComponent implements OnInit, OnDestroy {
     @select(['ofi', 'ofiKyc', 'myKycRequested', 'kycs']) requests$;
     @select(['ofi', 'ofiKyc', 'myKycRequested', 'formPersist']) persistedForms$;
     @select(['user', 'siteSettings', 'language']) requestLanguageObj;
+    @select(['ofi', 'ofiKyc', 'myInformations']) kycMyInformations: Observable<KycMyInformations>;
 
     unsubscribe: Subject<any> = new Subject();
     open: boolean = false;
@@ -54,6 +57,9 @@ export class CompanyInformationComponent implements OnInit, OnDestroy {
 
     registeredCompanyName: string = '';
 
+    investorType: number;
+    isNowCP: boolean = false;
+
     constructor(
         private newRequestService: NewRequestService,
         private identificationService: IdentificationService,
@@ -72,8 +78,8 @@ export class CompanyInformationComponent implements OnInit, OnDestroy {
         this.getCurrentFormData();
 
         this.persistedForms$
-        .pipe(takeUntil(this.unsubscribe))
-        .subscribe((forms) => {
+            .pipe(takeUntil(this.unsubscribe))
+            .subscribe((forms) => {
             if (forms.identification) {
                 this.formPercent.refreshFormPercent();
             }
@@ -82,8 +88,18 @@ export class CompanyInformationComponent implements OnInit, OnDestroy {
         this.initLists();
 
         this.requestLanguageObj
-        .pipe(takeUntil(this.unsubscribe))
-        .subscribe(() => this.initLists());
+            .pipe(takeUntil(this.unsubscribe))
+            .subscribe(() => this.initLists());
+
+        this.kycMyInformations
+            .takeUntil(this.unsubscribe)
+            .subscribe((d) => {
+                this.investorType = d.investorType;
+
+                if (this.investorType === 70 || this.investorType === 80) {
+                    this.isNowCP = true;
+                }
+            });
     }
 
     /**
