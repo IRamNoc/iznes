@@ -1010,6 +1010,10 @@ export const otherSectorActivityList = [
         id: 'Catering',
         text: 'Catering',
     },
+    {
+        id: 'Other',
+        text: 'Other',
+    },
 ];
 
 export const listingMarketsList = [

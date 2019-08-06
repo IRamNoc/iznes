@@ -1,7 +1,11 @@
 <div class="kyc-container sm">
     <h2>{{ 'Documents' | translate }}</h2>
 
-    <div class="text-container">
+    <div *ngIf="!isNowCP" class="text-container">
+        <p>{{"Please upload the following documents, which are required to validate your investor status" | translate}}</p>
+    </div>
+
+    <div *ngIf="isNowCP" class="text-container">
         <p>{{'Please upload the following documents, which are required to validate your investor or issuer status' | translate}}</p>
     </div>
 

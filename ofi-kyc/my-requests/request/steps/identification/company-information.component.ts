@@ -99,10 +99,10 @@ export class CompanyInformationComponent implements OnInit, OnDestroy {
             .subscribe((data) => {
                 const sectorActivityValue = getValue(data, [0, 'id']);
 
-                // Enable sectorActivityTextControl if sectorActivityValue is 'other', else disable
+                // Enable sectorActivityTextControl if sectorActivityValue is 'Other', else disable
                 this.formCheckSectorActivity(sectorActivityValue);
 
-                if (sectorActivityValue) {
+                if (sectorActivityValue && sectorActivityValue !== 'Other') {
                     // Remove sectorActivityValue from the otherSectorActivityList
                     this.formFilterOtherSectorActivity(sectorActivityValue);
                 }
@@ -233,7 +233,7 @@ export class CompanyInformationComponent implements OnInit, OnDestroy {
     formCheckSectorActivity(value) {
         const control = this.form.get('sectorActivityText');
 
-        if (value === 'other') {
+        if (value === 'Other') {
             control.enable();
         } else {
             control.disable();
