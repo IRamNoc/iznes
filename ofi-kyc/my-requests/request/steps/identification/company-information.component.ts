@@ -108,6 +108,13 @@ export class CompanyInformationComponent implements OnInit, OnDestroy {
                 }
             });
 
+        this.form.get('otherSectorActivity').valueChanges
+            .pipe(takeUntil(this.unsubscribe))
+            .subscribe((otherSectorActivityValues) => {
+                // Enable otherSectorActivityTextControl if otherSectorActivityValues includes 'Other', else disable
+                this.formCheckOtherSectorActivity(otherSectorActivityValues);
+            });
+
         this.form.get('activities').valueChanges
             .pipe(takeUntil(this.unsubscribe))
             .subscribe((data) => {
@@ -238,6 +245,20 @@ export class CompanyInformationComponent implements OnInit, OnDestroy {
         } else {
             control.disable();
         }
+
+        this.formPercent.refreshFormPercent();
+    }
+
+    formCheckOtherSectorActivity(values) {
+        const control = this.form.get('otherSectorActivityText');
+
+        control.disable();
+
+        values.forEach((value) => {
+            if (value.id === 'Other') {
+                control.enable();
+            }
+        });
 
         this.formPercent.refreshFormPercent();
     }
