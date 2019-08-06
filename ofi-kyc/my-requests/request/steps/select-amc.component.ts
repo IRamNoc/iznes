@@ -279,6 +279,8 @@ export class NewKycSelectAmcComponent implements OnInit, OnDestroy {
             return;
         }
 
+        this.submitted = true;
+
         let ids;
 
         if (this.duplicate) {
@@ -295,7 +297,6 @@ export class NewKycSelectAmcComponent implements OnInit, OnDestroy {
         }
 
         this.ngRedux.dispatch(ClearMyKycListRequested());
-        this.submitted = true;
         this.changeDetectorRef.markForCheck();
 
         this.validSubmit();
