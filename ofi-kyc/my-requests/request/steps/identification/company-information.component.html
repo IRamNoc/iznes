@@ -30,7 +30,7 @@
                         <input type="text"
                                 id="sectorActivityText"
                                 formControlName="sectorActivityText"
-                                [disabled]="isFormReadonly">
+                                [readonly]="isFormReadonly">
                         <span class="field-error" *ngIf="hasError('sectorActivityText', ['required'])">{{ 'Field is required' | translate }}</span>
                         <span class="field-error" *ngIf="hasError('sectorActivityText', ['maxlength'])">{{ 'Field is too long' | translate }}</span>
                     </div>
