@@ -740,275 +740,455 @@ export const legalFormList = [
 
 export const sectorActivityList = [
     {
-        id: 'Cosmetics',
+        id: 'agriculture',
+        text: 'Agriculture',
+    },
+    {
+        id: 'seeds',
+        text: 'Seeds',
+    },
+    {
+        id: 'agribusiness',
+        text: 'Agribusiness',
+    },
+    {
+        id: 'drink',
+        text: 'Drink',
+    },
+    {
+        id: 'brewery',
+        text: 'Brewery',
+    },
+    {
+        id: 'confectionery',
+        text: 'Confectionery',
+    },
+    {
+        id: 'dairyproducts',
+        text: 'Dairy products',
+    },
+    {
+        id: 'distribution',
+        text: 'Distribution',
+    },
+    {
+        id: 'largedistribution',
+        text: 'Large distribution',
+    },
+    {
+        id: 'diy',
+        text: 'DIY',
+    },
+    {
+        id: 'entertainmentmedia',
+        text: 'Entertainment & Media',
+    },
+    {
+        id: 'entertainment',
+        text: 'Entertainment',
+    },
+    {
+        id: 'musicproductionmajors',
+        text: 'Music Production(Majors)',
+    },
+    {
+        id: 'energy',
+        text: 'Energy',
+    },
+    {
+        id: 'electricitycompanies',
+        text: 'Electricity companies',
+    },
+    {
+        id: 'oilcompanies',
+        text: 'Oil companies',
+    },
+    {
+        id: 'windturbinemanufacturers',
+        text: 'Wind turbine manufacturers',
+    },
+    {
+        id: 'finance',
+        text: 'Finance',
+    },
+    {
+        id: 'insurance',
+        text: 'Insurance',
+    },
+    {
+        id: 'bank',
+        text: 'Bank',
+    },
+    {
+        id: 'traders',
+        text: 'Traders',
+    },
+    {
+        id: 'consumerconsumption',
+        text: 'Consumer Consumption',
+    },
+    {
+        id: 'cosmetics',
         text: 'Cosmetics',
     },
     {
-        id: 'ConsumerElectronics',
+        id: 'consumerelectronics',
         text: 'Consumer Electronics',
     },
     {
-        id: 'Appliances',
+        id: 'appliances',
         text: 'Appliances',
     },
     {
-        id: 'Sportingequipmentmanufacturers',
+        id: 'sportingequipmentmanufacturers',
         text: 'Sporting equipment manufacturers',
     },
     {
-        id: 'Luxury',
+        id: 'luxury',
         text: 'Luxury',
     },
     {
-        id: 'Heavyindustryexcludingenergy',
-        text: 'Heavy industry (excluding energy)',
+        id: 'heavyindustryexcludingenergy',
+        text: 'Heavy industry(excluding energy)',
     },
     {
-        id: 'Industrialmachinery',
+        id: 'industrialmachinery',
         text: 'Industrial machinery',
     },
     {
-        id: 'Electricalequipment',
+        id: 'electricalequipment',
         text: 'Electrical equipment',
     },
     {
-        id: 'AeronauticsAerospaceandDefense',
+        id: 'aeronauticsaerospaceanddefense',
         text: 'Aeronautics, Aerospace and Defense',
     },
     {
-        id: 'Buildingconstructionandpublicworks',
+        id: 'buildingconstructionandpublicworks',
         text: 'Building, construction and public works',
     },
     {
-        id: 'Cement',
+        id: 'cement',
         text: 'Cement',
     },
     {
-        id: 'Chemistry',
+        id: 'chemistry',
         text: 'Chemistry',
     },
     {
-        id: 'AutomobileManufacturers',
+        id: 'automobilemanufacturers',
         text: 'Automobile Manufacturers',
     },
     {
-        id: 'Tires',
+        id: 'tires',
         text: 'Tires',
     },
     {
-        id: 'InformationandCommunicationTechnologies',
+        id: 'informationandcommunicationtechnologies',
         text: 'Information and Communication Technologies',
     },
     {
-        id: 'Telecommunicationsoperators',
+        id: 'telecommunicationsoperators',
         text: 'Telecommunications operators',
     },
     {
-        id: 'Advertising',
+        id: 'advertising',
         text: 'Advertising',
     },
     {
-        id: 'TelecommunicationNetworkEquipmentManufacturer',
+        id: 'telecommunicationandnetworkequipmentmanufacturers',
         text: 'Telecommunication and Network Equipment Manufacturers',
     },
     {
-        id: 'ProgrammingSoftware',
+        id: 'programmingsoftware',
         text: 'Programming & Software',
     },
     {
-        id: 'Mobilephones',
+        id: 'mobilephones',
         text: 'Mobile phones',
     },
     {
-        id: 'Computerequipment',
+        id: 'computerequipment',
         text: 'Computer equipment',
     },
     {
-        id: 'ITtechnologiesandservices',
+        id: 'ittechnologiesandservices',
         text: 'IT technologies and services',
     },
     {
-        id: 'Transportation',
+        id: 'transportation',
         text: 'Transportation',
     },
     {
-        id: 'Airlines',
+        id: 'airlines',
         text: 'Airlines',
     },
     {
-        id: 'Railtransport',
+        id: 'railtransport',
         text: 'Rail transport',
     },
     {
-        id: 'Shippingofgoods',
+        id: 'shippingofgoods',
         text: 'Shipping of goods',
     },
     {
-        id: 'Cruises',
+        id: 'cruises',
         text: 'Cruises',
     },
     {
-        id: 'Postmailanddeliveries',
+        id: 'postmailanddeliveries',
         text: 'Post, mail and deliveries',
     },
     {
-        id: 'Health',
+        id: 'health',
         text: 'Health',
     },
     {
-        id: 'Medicalequipmentandhealthproducts',
+        id: 'medicalequipmentandhealthproducts',
         text: 'Medical equipment and health products',
     },
     {
-        id: 'Pharmacy',
+        id: 'pharmacy',
         text: 'Pharmacy',
     },
     {
-        id: 'Tobacco',
+        id: 'tobacco',
         text: 'Tobacco',
     },
     {
-        id: 'Catering',
+        id: 'catering',
         text: 'Catering',
     },
     {
-        id: 'Other',
+        id: 'other',
         text: 'Other',
     },
 ];
 
 export const otherSectorActivityList = [
     {
-        id: 'Cosmetics',
+        id: 'agriculture',
+        text: 'Agriculture',
+    },
+    {
+        id: 'seeds',
+        text: 'Seeds',
+    },
+    {
+        id: 'agribusiness',
+        text: 'Agribusiness',
+    },
+    {
+        id: 'drink',
+        text: 'Drink',
+    },
+    {
+        id: 'brewery',
+        text: 'Brewery',
+    },
+    {
+        id: 'confectionery',
+        text: 'Confectionery',
+    },
+    {
+        id: 'dairyproducts',
+        text: 'Dairy products',
+    },
+    {
+        id: 'distribution',
+        text: 'Distribution',
+    },
+    {
+        id: 'largedistribution',
+        text: 'Large distribution',
+    },
+    {
+        id: 'diy',
+        text: 'DIY',
+    },
+    {
+        id: 'entertainmentmedia',
+        text: 'Entertainment & Media',
+    },
+    {
+        id: 'entertainment',
+        text: 'Entertainment',
+    },
+    {
+        id: 'musicproductionmajors',
+        text: 'Music Production(Majors)',
+    },
+    {
+        id: 'energy',
+        text: 'Energy',
+    },
+    {
+        id: 'electricitycompanies',
+        text: 'Electricity companies',
+    },
+    {
+        id: 'oilcompanies',
+        text: 'Oil companies',
+    },
+    {
+        id: 'windturbinemanufacturers',
+        text: 'Wind turbine manufacturers',
+    },
+    {
+        id: 'finance',
+        text: 'Finance',
+    },
+    {
+        id: 'insurance',
+        text: 'Insurance',
+    },
+    {
+        id: 'bank',
+        text: 'Bank',
+    },
+    {
+        id: 'traders',
+        text: 'Traders',
+    },
+    {
+        id: 'consumerconsumption',
+        text: 'Consumer Consumption',
+    },
+    {
+        id: 'cosmetics',
         text: 'Cosmetics',
     },
     {
-        id: 'ConsumerElectronics',
+        id: 'consumerelectronics',
         text: 'Consumer Electronics',
     },
     {
-        id: 'Appliances',
+        id: 'appliances',
         text: 'Appliances',
     },
     {
-        id: 'Sportingequipmentmanufacturers',
+        id: 'sportingequipmentmanufacturers',
         text: 'Sporting equipment manufacturers',
     },
     {
-        id: 'Luxury',
+        id: 'luxury',
         text: 'Luxury',
     },
     {
-        id: 'Heavyindustryexcludingenergy',
-        text: 'Heavy industry (excluding energy)',
+        id: 'heavyindustryexcludingenergy',
+        text: 'Heavy industry(excluding energy)',
     },
     {
-        id: 'Industrialmachinery',
+        id: 'industrialmachinery',
         text: 'Industrial machinery',
     },
     {
-        id: 'Electricalequipment',
+        id: 'electricalequipment',
         text: 'Electrical equipment',
     },
     {
-        id: 'AeronauticsAerospaceandDefense',
+        id: 'aeronauticsaerospaceanddefense',
         text: 'Aeronautics, Aerospace and Defense',
     },
     {
-        id: 'Buildingconstructionandpublicworks',
+        id: 'buildingconstructionandpublicworks',
         text: 'Building, construction and public works',
     },
     {
-        id: 'Cement',
+        id: 'cement',
         text: 'Cement',
     },
     {
-        id: 'Chemistry',
+        id: 'chemistry',
         text: 'Chemistry',
     },
     {
-        id: 'AutomobileManufacturers',
+        id: 'automobilemanufacturers',
         text: 'Automobile Manufacturers',
     },
     {
-        id: 'Tires',
+        id: 'tires',
         text: 'Tires',
     },
     {
-        id: 'InformationandCommunicationTechnologies',
+        id: 'informationandcommunicationtechnologies',
         text: 'Information and Communication Technologies',
     },
     {
-        id: 'Telecommunicationsoperators',
+        id: 'telecommunicationsoperators',
         text: 'Telecommunications operators',
     },
     {
-        id: 'Advertising',
+        id: 'advertising',
         text: 'Advertising',
     },
     {
-        id: 'TelecommunicationNetworkEquipmentManufacturer',
+        id: 'telecommunicationandnetworkequipmentmanufacturers',
         text: 'Telecommunication and Network Equipment Manufacturers',
     },
     {
-        id: 'ProgrammingSoftware',
+        id: 'programmingsoftware',
         text: 'Programming & Software',
     },
     {
-        id: 'Mobilephones',
+        id: 'mobilephones',
         text: 'Mobile phones',
     },
     {
-        id: 'Computerequipment',
+        id: 'computerequipment',
         text: 'Computer equipment',
     },
     {
-        id: 'ITtechnologiesandservices',
+        id: 'ittechnologiesandservices',
         text: 'IT technologies and services',
     },
     {
-        id: 'Transportation',
+        id: 'transportation',
         text: 'Transportation',
     },
     {
-        id: 'Airlines',
+        id: 'airlines',
         text: 'Airlines',
     },
     {
-        id: 'Railtransport',
+        id: 'railtransport',
         text: 'Rail transport',
     },
     {
-        id: 'Shippingofgoods',
+        id: 'shippingofgoods',
         text: 'Shipping of goods',
     },
     {
-        id: 'Cruises',
+        id: 'cruises',
         text: 'Cruises',
     },
     {
-        id: 'Postmailanddeliveries',
+        id: 'postmailanddeliveries',
         text: 'Post, mail and deliveries',
     },
     {
-        id: 'Health',
+        id: 'health',
         text: 'Health',
     },
     {
-        id: 'Medicalequipmentandhealthproducts',
+        id: 'medicalequipmentandhealthproducts',
         text: 'Medical equipment and health products',
     },
     {
-        id: 'Pharmacy',
+        id: 'pharmacy',
         text: 'Pharmacy',
     },
     {
-        id: 'Tobacco',
+        id: 'tobacco',
         text: 'Tobacco',
     },
     {
-        id: 'Catering',
+        id: 'catering',
         text: 'Catering',
+    },
+    {
+        id: 'other',
+        text: 'Other',
     },
 ];
 
