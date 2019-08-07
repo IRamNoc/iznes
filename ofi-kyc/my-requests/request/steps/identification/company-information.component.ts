@@ -3,6 +3,7 @@ import { FormGroup, FormArray } from '@angular/forms';
 import { get as getValue, set as setValue, filter, isEmpty, castArray, find } from 'lodash';
 import { select, NgRedux } from '@angular-redux/store';
 import { Subject } from 'rxjs';
+import { Observable } from 'rxjs/Observable';
 import { filter as rxFilter, map, take, takeUntil } from 'rxjs/operators';
 import { FormPercentDirective } from '@setl/utils/directives/form-percent/formpercent';
 import { IdentificationService, buildBeneficiaryObject } from '../identification.service';
@@ -16,6 +17,7 @@ import { formHelper } from '@setl/utils/helper';
 import { PersistRequestService } from '@setl/core-req-services';
 import { PersistService } from '@setl/core-persist';
 import { setMyKycRequestedPersist } from '@ofi/ofi-main/ofi-store/ofi-kyc';
+import { KycMyInformations } from '@ofi/ofi-main/ofi-store/ofi-kyc/my-informations';
 
 @Component({
     selector: 'company-information',
@@ -31,6 +33,7 @@ export class CompanyInformationComponent implements OnInit, OnDestroy {
     @select(['ofi', 'ofiKyc', 'myKycRequested', 'kycs']) requests$;
     @select(['ofi', 'ofiKyc', 'myKycRequested', 'formPersist']) persistedForms$;
     @select(['user', 'siteSettings', 'language']) requestLanguageObj;
+    @select(['ofi', 'ofiKyc', 'myInformations']) kycMyInformations: Observable<KycMyInformations>;
 
     unsubscribe: Subject<any> = new Subject();
     open: boolean = false;
@@ -54,6 +57,9 @@ export class CompanyInformationComponent implements OnInit, OnDestroy {
 
     registeredCompanyName: string = '';
 
+    investorType: number;
+    isNowCP: boolean = false;
+
     constructor(
         private newRequestService: NewRequestService,
         private identificationService: IdentificationService,
@@ -72,8 +78,8 @@ export class CompanyInformationComponent implements OnInit, OnDestroy {
         this.getCurrentFormData();
 
         this.persistedForms$
-        .pipe(takeUntil(this.unsubscribe))
-        .subscribe((forms) => {
+            .pipe(takeUntil(this.unsubscribe))
+            .subscribe((forms) => {
             if (forms.identification) {
                 this.formPercent.refreshFormPercent();
             }
@@ -82,8 +88,18 @@ export class CompanyInformationComponent implements OnInit, OnDestroy {
         this.initLists();
 
         this.requestLanguageObj
-        .pipe(takeUntil(this.unsubscribe))
-        .subscribe(() => this.initLists());
+            .pipe(takeUntil(this.unsubscribe))
+            .subscribe(() => this.initLists());
+
+        this.kycMyInformations
+            .takeUntil(this.unsubscribe)
+            .subscribe((d) => {
+                this.investorType = d.investorType;
+
+                if (this.investorType === 70 || this.investorType === 80) {
+                    this.isNowCP = true;
+                }
+            });
     }
 
     /**
@@ -99,13 +115,20 @@ export class CompanyInformationComponent implements OnInit, OnDestroy {
             .subscribe((data) => {
                 const sectorActivityValue = getValue(data, [0, 'id']);
 
-                // Enable sectorActivityTextControl if sectorActivityValue is 'other', else disable
+                // Enable sectorActivityTextControl if sectorActivityValue is 'Other', else disable
                 this.formCheckSectorActivity(sectorActivityValue);
 
-                if (sectorActivityValue) {
+                if (sectorActivityValue && sectorActivityValue !== 'Other') {
                     // Remove sectorActivityValue from the otherSectorActivityList
                     this.formFilterOtherSectorActivity(sectorActivityValue);
                 }
+            });
+
+        this.form.get('otherSectorActivity').valueChanges
+            .pipe(takeUntil(this.unsubscribe))
+            .subscribe((otherSectorActivityValues) => {
+                // Enable otherSectorActivityTextControl if otherSectorActivityValues includes 'Other', else disable
+                this.formCheckOtherSectorActivity(otherSectorActivityValues);
             });
 
         this.form.get('activities').valueChanges
@@ -236,6 +259,28 @@ export class CompanyInformationComponent implements OnInit, OnDestroy {
         if (value === 'Other') {
             control.enable();
         } else {
+            control.setValue(null);
+            control.disable();
+        }
+
+        this.formPercent.refreshFormPercent();
+    }
+
+    formCheckOtherSectorActivity(values) {
+        const control = this.form.get('otherSectorActivityText');
+
+        let isOtherSelected = false;
+
+        if (Array.isArray(values)) {
+            isOtherSelected = values.find((value) => {
+                return value.id === 'Other';
+            });
+        }
+
+        if (isOtherSelected) {
+            control.enable();
+        } else {
+            control.setValue(null);
             control.disable();
         }
 
@@ -289,6 +334,7 @@ export class CompanyInformationComponent implements OnInit, OnDestroy {
         if (value.others) {
             control.enable();
         } else {
+            control.setValue(null);
             control.disable();
         }
 
@@ -380,7 +426,6 @@ export class CompanyInformationComponent implements OnInit, OnDestroy {
             balanceSheetTotalControl.disable();
             netRevenuesNetIncomeControl.disable();
             shareholderEquityControl.disable();
-
         } else {
             listingMarketsControl.disable();
             multilateralTradingFacilitiesControl.disable();
@@ -400,17 +445,18 @@ export class CompanyInformationComponent implements OnInit, OnDestroy {
     formCheckListingMarkets(selectedMarkets: any) {
         const control = this.form.get('otherListingMarkets');
 
-        let otherSelected = false;
+        let isOtherSelected = false;
 
         if (Array.isArray(selectedMarkets)) {
-            otherSelected = selectedMarkets.find((market) => {
+            isOtherSelected = selectedMarkets.find((market) => {
                 return market.id === 'lmXXX'; // Other
             });
         }
 
-        if (otherSelected) {
+        if (isOtherSelected) {
             control.enable();
         } else {
+            control.setValue(null);
             control.disable();
         }
 
@@ -440,17 +486,18 @@ export class CompanyInformationComponent implements OnInit, OnDestroy {
     formCheckMultilateralTradingFacilities(selectedFacilities: any) {
         const control = this.form.get('otherMultilateralTradingFacilities');
 
-        let otherSelected = false;
+        let isOtherSelected = false;
 
         if (Array.isArray(selectedFacilities)) {
-            otherSelected = selectedFacilities.find((market) => {
-                return market.id === 'other';
+            isOtherSelected = selectedFacilities.find((market) => {
+                return market.id === 'mtfXXX'; // Other
             });
         }
 
-        if (otherSelected) {
+        if (isOtherSelected) {
             control.enable();
         } else {
+            control.setValue(null);
             control.disable();
         }
 
@@ -480,15 +527,15 @@ export class CompanyInformationComponent implements OnInit, OnDestroy {
     formCheckRegulator(selectedRegulators: any) {
         const control = this.form.get('otherRegulator');
 
-        let otherSelected = false;
+        let isOtherSelected = false;
 
         if (Array.isArray(selectedRegulators)) {
-            otherSelected = selectedRegulators.find((regulator) => {
+            isOtherSelected = selectedRegulators.find((regulator) => {
                 return regulator.id === 'other';
             });
         }
 
-        if (otherSelected) {
+        if (isOtherSelected) {
             control.enable();
         } else {
             control.disable();

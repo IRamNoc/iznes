@@ -3,6 +3,7 @@ import { FormArray, FormControl } from '@angular/forms';
 import { get as getValue, isEmpty, castArray } from 'lodash';
 import { Subject } from 'rxjs';
 import { filter, map, takeUntil, take } from 'rxjs/operators';
+import { Observable } from 'rxjs/Observable';
 import { select, NgRedux } from '@angular-redux/store';
 import { FormPercentDirective } from '@setl/utils/directives/form-percent/formpercent';
 import { IdentificationService } from '../identification.service';
@@ -12,6 +13,7 @@ import { formHelper } from '@setl/utils/helper';
 import { PersistRequestService } from '@setl/core-req-services';
 import { PersistService } from '@setl/core-persist';
 import { setMyKycRequestedPersist } from '@ofi/ofi-main/ofi-store/ofi-kyc';
+import { KycMyInformations } from '@ofi/ofi-main/ofi-store/ofi-kyc/my-informations';
 
 @Component({
     selector: 'banking-information',
@@ -24,11 +26,15 @@ export class BankingInformationComponent implements OnInit, OnDestroy {
     @Input() completedStep: string;
     @Input() isFormReadonly;
     @Output() submitEvent: EventEmitter<any> = new EventEmitter<any>();
+
     @select(['ofi', 'ofiKyc', 'myKycRequested', 'kycs']) requests$;
+    @select(['ofi', 'ofiKyc', 'myInformations']) kycMyInformations: Observable<KycMyInformations>;
 
     unsubscribe: Subject<any> = new Subject();
     open: boolean = false;
     countries = countries;
+    investorType: number;
+    isNowCP: boolean = false;
 
     constructor(
         private newRequestService: NewRequestService,
@@ -46,6 +52,16 @@ export class BankingInformationComponent implements OnInit, OnDestroy {
 
     ngOnInit() {
         this.getCurrentFormData();
+
+        this.kycMyInformations
+            .takeUntil(this.unsubscribe)
+            .subscribe((d) => {
+                this.investorType = d.investorType;
+
+                if (this.investorType === 70 || this.investorType === 80) {
+                    this.isNowCP = true;
+                }
+            });
     }
 
     hasError(control, error = []) {

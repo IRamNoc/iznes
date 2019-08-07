@@ -4,14 +4,15 @@ import { isEmpty, castArray } from 'lodash';
 import { select } from '@angular-redux/store';
 import { Subject } from 'rxjs';
 import { filter as rxFilter, map, take, takeUntil } from 'rxjs/operators';
+import { Observable } from 'rxjs/Observable';
 import { PersistService } from '@setl/core-persist';
 import { formHelper } from '@setl/utils/helper';
-
 import { FormPercentDirective } from '@setl/utils/directives/form-percent/formpercent';
 import { RequestsService } from '../../requests.service';
 import { NewRequestService } from '../new-request.service';
 import { DocumentsService, documentFormPaths } from './documents.service';
 import { steps } from '../../requests.config';
+import { KycMyInformations } from '@ofi/ofi-main/ofi-store/ofi-kyc/my-informations';
 
 @Component({
     selector: 'kyc-step-documents',
@@ -20,6 +21,7 @@ import { steps } from '../../requests.config';
 export class NewKycDocumentsComponent implements OnInit, OnDestroy {
     @select(['user', 'connected', 'connectedWallet']) connectedWallet$;
     @select(['ofi', 'ofiKyc', 'myKycRequested', 'kycs']) requests$;
+    @select(['ofi', 'ofiKyc', 'myInformations']) kycMyInformations: Observable<KycMyInformations>;
 
     @Output() submitEvent: EventEmitter<any> = new EventEmitter<any>();
     @Input() form: FormGroup;
@@ -58,6 +60,8 @@ export class NewKycDocumentsComponent implements OnInit, OnDestroy {
     open;
     unsubscribe: Subject<any> = new Subject();
     connectedWallet;
+    investorType: number;
+    isNowCP: boolean = false;
 
     constructor(
         private requestsService: RequestsService,
@@ -87,6 +91,16 @@ export class NewKycDocumentsComponent implements OnInit, OnDestroy {
                 this.persistForm();
             }
         });
+
+        this.kycMyInformations
+            .takeUntil(this.unsubscribe)
+            .subscribe((d) => {
+                this.investorType = d.investorType;
+
+                if (this.investorType === 70 || this.investorType === 80) {
+                    this.isNowCP = true;
+                }
+            });
     }
 
     shouldPersist(kyc) {
