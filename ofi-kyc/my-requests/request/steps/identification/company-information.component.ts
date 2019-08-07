@@ -259,6 +259,7 @@ export class CompanyInformationComponent implements OnInit, OnDestroy {
         if (value === 'Other') {
             control.enable();
         } else {
+            control.setValue(null);
             control.disable();
         }
 
@@ -268,13 +269,20 @@ export class CompanyInformationComponent implements OnInit, OnDestroy {
     formCheckOtherSectorActivity(values) {
         const control = this.form.get('otherSectorActivityText');
 
-        control.disable();
+        let isOtherSelected = false;
 
-        values.forEach((value) => {
-            if (value.id === 'Other') {
-                control.enable();
-            }
-        });
+        if (Array.isArray(values)) {
+            isOtherSelected = values.find((value) => {
+                return value.id === 'Other';
+            });
+        }
+
+        if (isOtherSelected) {
+            control.enable();
+        } else {
+            control.setValue(null);
+            control.disable();
+        }
 
         this.formPercent.refreshFormPercent();
     }
@@ -326,6 +334,7 @@ export class CompanyInformationComponent implements OnInit, OnDestroy {
         if (value.others) {
             control.enable();
         } else {
+            control.setValue(null);
             control.disable();
         }
 
@@ -436,17 +445,18 @@ export class CompanyInformationComponent implements OnInit, OnDestroy {
     formCheckListingMarkets(selectedMarkets: any) {
         const control = this.form.get('otherListingMarkets');
 
-        let otherSelected = false;
+        let isOtherSelected = false;
 
         if (Array.isArray(selectedMarkets)) {
-            otherSelected = selectedMarkets.find((market) => {
+            isOtherSelected = selectedMarkets.find((market) => {
                 return market.id === 'lmXXX'; // Other
             });
         }
 
-        if (otherSelected) {
+        if (isOtherSelected) {
             control.enable();
         } else {
+            control.setValue(null);
             control.disable();
         }
 
@@ -476,17 +486,18 @@ export class CompanyInformationComponent implements OnInit, OnDestroy {
     formCheckMultilateralTradingFacilities(selectedFacilities: any) {
         const control = this.form.get('otherMultilateralTradingFacilities');
 
-        let otherSelected = false;
+        let isOtherSelected = false;
 
         if (Array.isArray(selectedFacilities)) {
-            otherSelected = selectedFacilities.find((market) => {
-                return market.id === 'mtfXXX';
+            isOtherSelected = selectedFacilities.find((market) => {
+                return market.id === 'mtfXXX'; // Other
             });
         }
 
-        if (otherSelected) {
+        if (isOtherSelected) {
             control.enable();
         } else {
+            control.setValue(null);
             control.disable();
         }
 
@@ -516,15 +527,15 @@ export class CompanyInformationComponent implements OnInit, OnDestroy {
     formCheckRegulator(selectedRegulators: any) {
         const control = this.form.get('otherRegulator');
 
-        let otherSelected = false;
+        let isOtherSelected = false;
 
         if (Array.isArray(selectedRegulators)) {
-            otherSelected = selectedRegulators.find((regulator) => {
+            isOtherSelected = selectedRegulators.find((regulator) => {
                 return regulator.id === 'other';
             });
         }
 
-        if (otherSelected) {
+        if (isOtherSelected) {
             control.enable();
         } else {
             control.disable();
