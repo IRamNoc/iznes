@@ -3,6 +3,7 @@ import { FormArray, FormGroup } from '@angular/forms';
 import { select, NgRedux } from '@angular-redux/store';
 import { Subject } from 'rxjs';
 import { filter as rxFilter, map, takeUntil, take } from 'rxjs/operators';
+import { Observable } from 'rxjs/Observable';
 import { get as getValue, isNil, find, isEmpty, isNumber, values, some, filter, set as setValue } from 'lodash';
 import { ConfirmationService } from '@setl/utils';
 import { ToasterService } from 'angular2-toaster';
@@ -20,6 +21,7 @@ import { PersistRequestService } from '@setl/core-req-services';
 import { PersistService } from '@setl/core-persist';
 import { setMyKycRequestedPersist } from '@ofi/ofi-main/ofi-store/ofi-kyc';
 import { steps } from '../../../requests.config';
+import { KycMyInformations } from '@ofi/ofi-main/ofi-store/ofi-kyc/my-informations';
 
 @Component({
     selector: 'beneficiary-list',
@@ -35,6 +37,7 @@ export class BeneficiaryListComponent implements OnInit, OnDestroy {
     @select(['ofi', 'ofiKyc', 'myKycRequested', 'stakeholderRelations']) stakeholderRelations$;
     @select(['ofi', 'ofiKyc', 'myKycRequested', 'kycs']) requests$;
     @select(['user', 'connected', 'connectedWallet']) connectedWallet$;
+    @select(['ofi', 'ofiKyc', 'myInformations']) kycMyInformations: Observable<KycMyInformations>;
     @ViewChild(FormPercentDirective) formPercent: FormPercentDirective;
 
     registeredCompanyName: string;
@@ -47,6 +50,8 @@ export class BeneficiaryListComponent implements OnInit, OnDestroy {
     relations;
     parents;
     connectedWallet;
+    investorType: number;
+    isNowCP: boolean = false;
 
     get nextId() {
         return this.getHighestID() + 1;
@@ -283,6 +288,16 @@ export class BeneficiaryListComponent implements OnInit, OnDestroy {
                 this.prePersistForm();
             }
         });
+
+        this.kycMyInformations
+            .takeUntil(this.unsubscribe)
+            .subscribe((d) => {
+                this.investorType = d.investorType;
+
+                if (this.investorType === 70 || this.investorType === 80) {
+                    this.isNowCP = true;
+                }
+            });
     }
 
     shouldPersist(kyc) {

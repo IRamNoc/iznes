@@ -3,8 +3,13 @@
     <div class="kyc-container sm">
         <h2>{{ 'Bank Accounts' | translate }}</h2>
 
-        <div class="text-container">
-            <p>{{"Please provide your bank account information. This information will allow you to create your first investment porfolios. You can go into the ‘Subportfolio’ module at any time to modify this information or to add other portfolios." | translate}}</p>
+        <div *ngIf="!isNowCP" class="text-container">
+            <p>{{"Please provide your bank account information. This information will allow you to create your first investment porfolios. You can go into the ‘Subportfolio’ module at any time to modify this information or to add other portfolios." | translate}}
+            </p>
+        </div>
+
+        <div *ngIf="isNowCP"class="text-container">
+             <p>{{"Please provide your bank account information to check the origin of the capital and fund. This information will allow you to create your first investment porfolios in case you’re using IZNES afterwards. You can go into the ‘Subportfolio’ module at any time to modify this information or to add other portfolios." | translate}}</p>
         </div>
 
         <div class="well">

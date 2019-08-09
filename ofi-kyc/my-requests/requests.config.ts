@@ -542,6 +542,7 @@ export const controlOrder = [
     'sectorActivity',
     'sectorActivityText',
     'otherSectorActivity',
+    'otherSectorActivityText',
     'corporatePurpose',
     'geographicalAreaOfActivity',
     'geographicalAreaOfActivitySpecification',
@@ -1009,6 +1010,10 @@ export const otherSectorActivityList = [
     {
         id: 'Catering',
         text: 'Catering',
+    },
+    {
+        id: 'Other',
+        text: 'Other',
     },
 ];
 
@@ -3094,6 +3099,7 @@ export const controlToName = {
     sectorActivity: 'Primary sector of activity',
     sectorActivityText: 'Primary sector of activity specification',
     otherSectorActivity: 'Other(s) sector(s) of activity',
+    otherSectorActivityText: 'Other(s) sector(s) of activity specification',
     corporatePurpose: 'Corporate Purpose',
     activities: 'Management in behalf of',
     investorOnBehalfThirdParties: 'Third parties type',
