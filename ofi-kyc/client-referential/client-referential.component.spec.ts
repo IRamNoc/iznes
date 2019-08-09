@@ -57,6 +57,7 @@ export class TranslatePipe implements PipeTransform {
 class SetlFileDropStub {
     @Input('preset') preset;
     @Input('inline') inline;
+    @Input('allowFileTypes') allowFileTypes;
 }
 
 @Directive({
