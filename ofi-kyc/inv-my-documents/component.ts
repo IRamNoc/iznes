@@ -74,6 +74,8 @@ export class OfiInvMyDocumentsComponent implements OnDestroy, OnInit, AfterViewI
     changed: any = {};
 
     unSubscribe: Subject<any> = new Subject();
+    /** Allowed file types passed to FileDrop */
+    public allowedFileTypes: string[] = ['application/pdf'];
 
     @select(['user', 'connected', 'connectedWallet']) connectedWalletOb;
     @select(['ofi', 'ofiKyc', 'invMyDocuments', 'requested']) requestedOfiInvMyDocsOb;

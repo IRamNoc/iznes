@@ -63,7 +63,7 @@ export class NewKycDocumentsComponent implements OnInit, OnDestroy {
     investorType: number;
     isNowCP: boolean = false;
     /** Allowed file types passed to FileDrop */
-    public allowedFileTypes: string = 'application/pdf';
+    public allowedFileTypes: string[] = ['application/pdf'];
 
     constructor(
         private requestsService: RequestsService,

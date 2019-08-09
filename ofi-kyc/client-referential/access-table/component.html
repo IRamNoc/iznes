@@ -131,7 +131,7 @@
             <div class="row">
                 <div class="col-sm-12 fileDropDiv">
                     <div class="font-85">{{ 'Upload a file below to justify this change for the customer' | translate }}.</div>
-                    <setl-file-drop id="override_file_upload" name="override_file_upload" (onDrop)="onDropFiles($event)" [inline]="true" ngDefaultControl></setl-file-drop>
+                    <setl-file-drop id="override_file_upload" name="override_file_upload" (onDrop)="onDropFiles($event)" [inline]="true" [allowFileTypes]="['application/pdf']" ngDefaultControl></setl-file-drop>
                 </div>
             </div>
         </form>

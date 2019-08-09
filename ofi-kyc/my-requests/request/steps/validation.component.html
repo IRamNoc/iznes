@@ -95,6 +95,7 @@
                                                 (onDrop)="uploadFile($event)"
                                                 [preset]="form.get('electronicSignatureDocument').value"
                                                 [inline]="true"
+                                                [allowFileTypes]="['application/pdf']"
                                                 ngDefaultControl>
                                 </setl-file-drop>
                             </div>
