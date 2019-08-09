@@ -212,6 +212,7 @@
                                     [disabled]="disabled"
                                     [inline]="true"
                                     [class.error]="form.get(['common', 'document']).touched && form.get(['common', 'document']).status === 'INVALID'"
+                                    [allowFileTypes]="allowedFileTypes"
                     ></setl-file-drop>
                     <span class="field-error force-display-error w-100" *ngIf="form.get(['common', 'document']).touched && form.get(['common', 'document']).status === 'INVALID'">{{'Field is required' | translate}}</span>
                 </div>
@@ -399,6 +400,7 @@
                                     [isDisabled]="disabled"
                                     [inline]="true"
                                     [class.error]="form.get(['common', 'document']).touched && form.get(['common', 'document']).status === 'INVALID'"
+                                    [allowFileTypes]="allowedFileTypes"
                     ></setl-file-drop>
                     <span class="field-error force-display-error w-100" *ngIf="form.get(['common', 'document']).touched && form.get(['common', 'document']).status === 'INVALID'">{{'Field is required' | translate}}</span>
                 </div>

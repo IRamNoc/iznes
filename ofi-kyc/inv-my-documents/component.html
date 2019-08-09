@@ -39,6 +39,7 @@
                                 <setl-file-drop [formControl]="uploadMyDocumentsForm.controls['upload1']"
                                     (onDrop)="getUpload($event, 'kycribdoc')" [inline]="true"
                                     [preset]="(allUploadsFiles['kycribdoc'].preset.name !== '') ? allUploadsFiles['kycribdoc'].preset : ''"
+                                    [allowFileTypes]="allowedFileTypes"
                                     ngDefaultControl></setl-file-drop>
                             </td>
                             <td>
@@ -70,7 +71,13 @@
                     <table class="tableUpload">
                         <tr>
                             <td>
-                                <setl-file-drop [formControl]="uploadMyDocumentsForm.controls['upload2']" (onDrop)="getUpload($event, 'kycstatuscertifieddoc')" [inline]="true" [preset]="(allUploadsFiles['kycstatuscertifieddoc'].preset.name !== '') ? allUploadsFiles['kycstatuscertifieddoc'].preset : ''" ngDefaultControl></setl-file-drop>
+                                <setl-file-drop
+                                    [formControl]="uploadMyDocumentsForm.controls['upload2']"
+                                    (onDrop)="getUpload($event, 'kycstatuscertifieddoc')"
+                                    [inline]="true"
+                                    [preset]="(allUploadsFiles['kycstatuscertifieddoc'].preset.name !== '') ? allUploadsFiles['kycstatuscertifieddoc'].preset : ''"
+                                    [allowFileTypes]="allowedFileTypes"
+                                    ngDefaultControl></setl-file-drop>
                             </td>
                             <td>
                                 <div class="switch-container">
@@ -107,6 +114,7 @@
                                 <setl-file-drop [formControl]="uploadMyDocumentsForm.controls['upload3']"
                                     (onDrop)="getUpload($event, 'kyckbisdoc')" [inline]="true"
                                     [preset]="(allUploadsFiles['kyckbisdoc'].preset.name !== '') ? allUploadsFiles['kyckbisdoc'].preset : ''"
+                                    [allowFileTypes]="allowedFileTypes"
                                     ngDefaultControl></setl-file-drop>
                             </td>
                             <td>
@@ -138,7 +146,13 @@
                     <table class="tableUpload">
                         <tr>
                             <td>
-                                <setl-file-drop [formControl]="uploadMyDocumentsForm.controls['upload4']" (onDrop)="getUpload($event, 'kycannualreportdoc')" [inline]="true" [preset]="(allUploadsFiles['kycannualreportdoc'].preset.name !== '') ? allUploadsFiles['kycannualreportdoc'].preset : ''" ngDefaultControl></setl-file-drop>
+                                <setl-file-drop
+                                    [formControl]="uploadMyDocumentsForm.controls['upload4']"
+                                    (onDrop)="getUpload($event, 'kycannualreportdoc')"
+                                    [inline]="true"
+                                    [preset]="(allUploadsFiles['kycannualreportdoc'].preset.name !== '') ? allUploadsFiles['kycannualreportdoc'].preset : ''"
+                                    [allowFileTypes]="allowedFileTypes"
+                                    ngDefaultControl></setl-file-drop>
                             </td>
                             <td>
                                 <div class="switch-container">
@@ -176,6 +190,7 @@
                                 <setl-file-drop [formControl]="uploadMyDocumentsForm.controls['upload5']"
                                     (onDrop)="getUpload($event, 'kycidorpassportdoc')" [inline]="true"
                                     [preset]="(allUploadsFiles['kycidorpassportdoc'].preset.name !== '') ? allUploadsFiles['kycidorpassportdoc'].preset : ''"
+                                    [allowFileTypes]="allowedFileTypes"
                                     ngDefaultControl></setl-file-drop>
                             </td>
                             <td>
@@ -211,6 +226,7 @@
                                 <setl-file-drop [formControl]="uploadMyDocumentsForm.controls['upload7']"
                                     (onDrop)="getUpload($event, 'kyctaxcertificationdoc')" [inline]="true"
                                     [preset]="(allUploadsFiles['kyctaxcertificationdoc'].preset.name !== '') ? allUploadsFiles['kyctaxcertificationdoc'].preset : ''"
+                                    [allowFileTypes]="allowedFileTypes"
                                     ngDefaultControl></setl-file-drop>
                             </td>
                             <td>
@@ -244,7 +260,13 @@
                     <table class="tableUpload">
                         <tr>
                             <td>
-                                <setl-file-drop [formControl]="uploadMyDocumentsForm.controls['upload8']" (onDrop)="getUpload($event, 'kycw8benefatcadoc')" [inline]="true" [preset]="(allUploadsFiles['kycw8benefatcadoc'].preset.name !== '') ? allUploadsFiles['kycw8benefatcadoc'].preset : ''" ngDefaultControl></setl-file-drop>
+                                <setl-file-drop
+                                    [formControl]="uploadMyDocumentsForm.controls['upload8']"
+                                    (onDrop)="getUpload($event, 'kycw8benefatcadoc')"
+                                    [inline]="true"
+                                    [preset]="(allUploadsFiles['kycw8benefatcadoc'].preset.name !== '') ? allUploadsFiles['kycw8benefatcadoc'].preset : ''"
+                                    [allowFileTypes]="allowedFileTypes"
+                                    ngDefaultControl></setl-file-drop>
                             </td>
                             <td>
                                 <div class="switch-container">
@@ -281,7 +303,13 @@
                     <table class="tableUpload">
                         <tr>
                             <td>
-                                <setl-file-drop [formControl]="uploadMyDocumentsForm.controls['upload9']" (onDrop)="getUpload($event, 'kycisincodedoc')" [inline]="true" [preset]="(allUploadsFiles['kycisincodedoc'].preset.name !== '') ? allUploadsFiles['kycisincodedoc'].preset : ''" ngDefaultControl></setl-file-drop>
+                                <setl-file-drop
+                                    [formControl]="uploadMyDocumentsForm.controls['upload9']"
+                                    (onDrop)="getUpload($event, 'kycisincodedoc')"
+                                    [inline]="true"
+                                    [preset]="(allUploadsFiles['kycisincodedoc'].preset.name !== '') ? allUploadsFiles['kycisincodedoc'].preset : ''"
+                                    [allowFileTypes]="allowedFileTypes"
+                                    ngDefaultControl></setl-file-drop>
                             </td>
                             <td>
                                 <div class="switch-container">
@@ -312,7 +340,13 @@
                     <table class="tableUpload">
                         <tr>
                             <td>
-                                <setl-file-drop [formControl]="uploadMyDocumentsForm.controls['upload10']" (onDrop)="getUpload($event, 'kycevidencefloatable')" [inline]="true" [preset]="(allUploadsFiles['kycevidencefloatable'].preset.name !== '') ? allUploadsFiles['kycevidencefloatable'].preset : ''" ngDefaultControl></setl-file-drop>
+                                <setl-file-drop
+                                    [formControl]="uploadMyDocumentsForm.controls['upload10']"
+                                    (onDrop)="getUpload($event, 'kycevidencefloatable')"
+                                    [inline]="true"
+                                    [preset]="(allUploadsFiles['kycevidencefloatable'].preset.name !== '') ? allUploadsFiles['kycevidencefloatable'].preset : ''"
+                                    [allowFileTypes]="allowedFileTypes"
+                                    ngDefaultControl></setl-file-drop>
                             </td>
                             <td>
                                 <div class="switch-container">
@@ -349,7 +383,13 @@
                     <table class="tableUpload">
                         <tr>
                             <td>
-                                <setl-file-drop [formControl]="uploadMyDocumentsForm.controls['upload11']" (onDrop)="getUpload($event, 'kycproofofapprovaldoc')" [inline]="true" [preset]="(allUploadsFiles['kycproofofapprovaldoc'].preset.name !== '') ? allUploadsFiles['kycproofofapprovaldoc'].preset : ''" ngDefaultControl></setl-file-drop>
+                                <setl-file-drop
+                                    [formControl]="uploadMyDocumentsForm.controls['upload11']"
+                                    (onDrop)="getUpload($event, 'kycproofofapprovaldoc')"
+                                    [inline]="true"
+                                    [preset]="(allUploadsFiles['kycproofofapprovaldoc'].preset.name !== '') ? allUploadsFiles['kycproofofapprovaldoc'].preset : ''"
+                                    [allowFileTypes]="allowedFileTypes"
+                                    ngDefaultControl></setl-file-drop>
                             </td>
                             <td>
                                 <div class="switch-container">
@@ -380,7 +420,13 @@
                     <table class="tableUpload">
                         <tr>
                             <td>
-                                <setl-file-drop [formControl]="uploadMyDocumentsForm.controls['upload12']" (onDrop)="getUpload($event, 'kycproofregulationdoc')" [inline]="true" [preset]="(allUploadsFiles['kycproofregulationdoc'].preset.name !== '') ? allUploadsFiles['kycproofregulationdoc'].preset : ''" ngDefaultControl></setl-file-drop>
+                                <setl-file-drop
+                                    [formControl]="uploadMyDocumentsForm.controls['upload12']"
+                                    (onDrop)="getUpload($event, 'kycproofregulationdoc')"
+                                    [inline]="true"
+                                    [preset]="(allUploadsFiles['kycproofregulationdoc'].preset.name !== '') ? allUploadsFiles['kycproofregulationdoc'].preset : ''"
+                                    [allowFileTypes]="allowedFileTypes"
+                                    ngDefaultControl></setl-file-drop>
                             </td>
                             <td>
                                 <div class="switch-container">
@@ -414,9 +460,12 @@
                     <table class="tableUpload">
                         <tr>
                             <td>
-                                <setl-file-drop [formControl]="uploadMyDocumentsForm.controls['upload6']"
-                                    (onDrop)="getUpload($event, 'kycwolfsbergdoc')" [inline]="true"
+                                <setl-file-drop
+                                    [formControl]="uploadMyDocumentsForm.controls['upload6']"
+                                    (onDrop)="getUpload($event, 'kycwolfsbergdoc')"
+                                    [inline]="true"
                                     [preset]="(allUploadsFiles['kycwolfsbergdoc'].preset.name !== '') ? allUploadsFiles['kycwolfsbergdoc'].preset : ''"
+                                    [allowFileTypes]="allowedFileTypes"
                                     ngDefaultControl></setl-file-drop>
                             </td>
                             <td>

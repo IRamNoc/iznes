@@ -45,6 +45,8 @@ export class BeneficiaryComponent implements OnInit, OnDestroy {
     countries;
     parentsFiltered;
     holdingTypeText;
+    /** Allowed file types passed to FileDrop */
+    public allowedFileTypes: string[] = ['application/pdf'];
 
     constructor(
         private requestsService: RequestsService,
