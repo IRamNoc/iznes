@@ -31,6 +31,7 @@
                                         [preset]="getDocumentPreset(['common', 'kycstatuscertifieddoc'])"
                                         [inline]="true"
                                         [isDisabled]="isFormReadonly"
+                                        [allowFileTypes]="allowedFileTypes"
                                         ngDefaultControl>
                         </setl-file-drop>
                     </div>
@@ -48,7 +49,10 @@
                         <setl-file-drop filePermission="0" class="form-control" id="kyckbisdoc"
                             (onDrop)="uploadFile($event, form.get(['common', 'kyckbisdoc']))"
                             [isDisabled]="isFormReadonly"
-                            [preset]="getDocumentPreset(['common', 'kyckbisdoc'])" [inline]="true" ngDefaultControl>
+                            [preset]="getDocumentPreset(['common', 'kyckbisdoc'])"
+                            [inline]="true"
+                            [allowFileTypes]="allowedFileTypes"
+                            ngDefaultControl>
                         </setl-file-drop>
                     </div>
                     <span class="field-error">{{ 'File is required' | translate }}</span>
@@ -66,6 +70,7 @@
                                         [preset]="getDocumentPreset(['common', 'kycannualreportdoc'])"
                                         [inline]="true"
                                         [isDisabled]="isFormReadonly"
+                                        [allowFileTypes]="allowedFileTypes"
                                         ngDefaultControl>
                         </setl-file-drop>
                     </div>
@@ -82,7 +87,10 @@
                         <setl-file-drop filePermission="0" class="form-control" id="kycidorpassportdoc"
                             (onDrop)="uploadFile($event, form.get(['common', 'kycidorpassportdoc']))"
                             [isDisabled]="isFormReadonly"
-                            [preset]="getDocumentPreset(['common', 'kycidorpassportdoc'])" [inline]="true" ngDefaultControl>
+                            [preset]="getDocumentPreset(['common', 'kycidorpassportdoc'])"
+                            [inline]="true"
+                            [allowFileTypes]="allowedFileTypes"
+                            ngDefaultControl>
                         </setl-file-drop>
                     </div>
                     <span class="field-error">{{ 'File is required' | translate }}</span>
@@ -99,7 +107,10 @@
                         <setl-file-drop filePermission="0" class="form-control" id="kyctaxcertificationdoc"
                             (onDrop)="uploadFile($event, form.get(['common', 'kyctaxcertificationdoc']))"
                             [isDisabled]="isFormReadonly"
-                            [preset]="getDocumentPreset(['common', 'kyctaxcertificationdoc'])" [inline]="true" ngDefaultControl>
+                            [preset]="getDocumentPreset(['common', 'kyctaxcertificationdoc'])"
+                            [inline]="true"
+                            [allowFileTypes]="allowedFileTypes"
+                            ngDefaultControl>
                         </setl-file-drop>
                     </div>
                     <span class="field-error">{{ 'File is required' | translate }}</span>
@@ -117,6 +128,7 @@
                                         [preset]="getDocumentPreset(['common', 'kycw8benefatcadoc'])"
                                         [isDisabled]="isFormReadonly"
                                         [inline]="true"
+                                        [allowFileTypes]="allowedFileTypes"
                                         ngDefaultControl>
                         </setl-file-drop>
                     </div>
@@ -136,6 +148,7 @@
                                         [preset]="getDocumentPreset(['listed', 'kycisincodedoc'])"
                                         [isDisabled]="isFormReadonly"
                                         [inline]="true"
+                                        [allowFileTypes]="allowedFileTypes"
                                         ngDefaultControl>
                         </setl-file-drop>
                     </div>
@@ -154,6 +167,7 @@
                                         [preset]="getDocumentPreset(['listed', 'kycevidencefloatable'])"
                                         [inline]="true"
                                         [isDisabled]="isFormReadonly"
+                                        [allowFileTypes]="allowedFileTypes"
                                         ngDefaultControl>
                         </setl-file-drop>
                     </div>
@@ -173,6 +187,7 @@
                                         [preset]="getDocumentPreset(['regulated', 'kycproofofapprovaldoc'])"
                                         [inline]="true"
                                         [isDisabled]="isFormReadonly"
+                                        [allowFileTypes]="allowedFileTypes"
                                         ngDefaultControl>
                         </setl-file-drop>
                     </div>
@@ -191,6 +206,7 @@
                                         [preset]="getDocumentPreset(['regulated', 'kycproofregulationdoc'])"
                                         [inline]="true"
                                         [isDisabled]="isFormReadonly"
+                                        [allowFileTypes]="allowedFileTypes"
                                         ngDefaultControl>
                         </setl-file-drop>
                     </div>
@@ -207,7 +223,10 @@
                         <setl-file-drop filePermission="0" class="form-control" id="kycwolfsbergdoc"
                             (onDrop)="uploadFile($event, form.get(['regulated', 'kycwolfsbergdoc']))"
                             [isDisabled]="isFormReadonly"
-                            [preset]="getDocumentPreset(['regulated', 'kycwolfsbergdoc'])" [inline]="true" ngDefaultControl>
+                            [preset]="getDocumentPreset(['regulated', 'kycwolfsbergdoc'])"
+                            [inline]="true"
+                            [allowFileTypes]="allowedFileTypes"
+                            ngDefaultControl>
                         </setl-file-drop>
                     </div>
                     <span class="field-error">{{ 'File is required' | translate }}</span>
@@ -226,6 +245,7 @@
                                         [preset]="getDocumentPreset(['nowcp', 'kycribdoc'])"
                                         [inline]="true"
                                         [isDisabled]="isFormReadonly"
+                                        [allowFileTypes]="allowedFileTypes"
                                         ngDefaultControl>
                         </setl-file-drop>
                     </div>
@@ -244,6 +264,7 @@
                                         [preset]="getDocumentPreset(['nowcp', 'kycinfomemorandumbdfdoc'])"
                                         [inline]="true"
                                         [isDisabled]="isFormReadonly"
+                                        [allowFileTypes]="allowedFileTypes"
                                         ngDefaultControl>
                         </setl-file-drop>
                     </div>
@@ -263,6 +284,7 @@
                                         [preset]="getDocumentPreset(['nowcp', 'kycorgchartdoc'])"
                                         [inline]="true"
                                         [isDisabled]="isFormReadonly"
+                                        [allowFileTypes]="allowedFileTypes"
                                         ngDefaultControl>
                         </setl-file-drop>
                     </div>

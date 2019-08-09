@@ -58,6 +58,8 @@ export class NewKycDocumentsComponent implements OnInit, OnDestroy {
     open;
     unsubscribe: Subject<any> = new Subject();
     connectedWallet;
+    /** Allowed file types passed to FileDrop */
+    public allowedFileTypes: string = 'application/pdf';
 
     constructor(
         private requestsService: RequestsService,
