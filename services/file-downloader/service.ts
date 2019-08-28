@@ -3,25 +3,28 @@ import { Inject, Injectable } from '@angular/core';
 import { Subject } from 'rxjs';
 import { AppConfig } from '../../appConfig/appConfig.model';
 import { APP_CONFIG } from '../../appConfig/appConfig';
+import { MemberSocketService } from '@setl/websocket-service';
+import { select } from '@angular-redux/store';
+import { createMemberNodeRequest } from '@setl/utils/common';
 
 @Injectable()
 export class FileDownloader {
 
+    @select(['user', 'connected', 'connectedWallet']) walletId$;
+    private walletId: number;
     private appConfig: AppConfig;
 
-    constructor(private http: HttpClient, @Inject(APP_CONFIG) appConfig: AppConfig) {
+    constructor(
+        private http: HttpClient,
+        @Inject(APP_CONFIG) appConfig: AppConfig,
+        private memberSocketService: MemberSocketService,
+    ) {
         this.appConfig = appConfig;
+        this.walletId$.subscribe(id => this.walletId = id);
     }
 
     getFileDownloadBaseUrl(secure: boolean): string {
-        const isProduction = this.appConfig.production;
-
-        if (secure) {
-            return isProduction ? `https://${window.location.hostname}/mn/aws` :
-                `http://${window.location.hostname}:9788/aws`;
-        }
-
-        return isProduction ? `https://${window.location.hostname}/mn/file` :
+        return this.appConfig.production ? `https://${window.location.hostname}/mn/file` :
             `http://${window.location.hostname}:9788/file`;
     }
 
@@ -55,6 +58,19 @@ export class FileDownloader {
                 },
             );
         });
+    }
+
+    validateFile(fileId: number, hash: string, secure: boolean = false, path = '') {
+        const messageBody: any = {
+            RequestName: 'validateFile',
+            token: this.memberSocketService.token,
+            walletId: `${this.walletId}`,
+            fileHash: hash,
+            fileId,
+            secure,
+            path,
+        };
+        return createMemberNodeRequest(this.memberSocketService, messageBody);
     }
 
     getDownLoaderUrl(body: any, secure = false) {
