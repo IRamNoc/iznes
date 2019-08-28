@@ -113,30 +113,25 @@ export class FileViewerComponent implements OnInit, OnChanges, OnDestroy {
     }
 
     public validateFileExists() {
-        const messageBody: ValidateFileMessageBody = {
-            RequestName: 'validateFile',
-            token: this.memberSocketService.token,
-            walletId: this.walletId,
-            fileHash: this.fileHash,
-            fileId: this.fileId,
-            secure: this.secure,
-            path: this.securePath,
-        };
-
-        createMemberNodeRequest(this.memberSocketService, messageBody).then((result) => {
+        this.fileDownloader.validateFile(
+            Number(this.fileId),
+            this.fileHash,
+            this.secure,
+            this.securePath,
+        ).then((result: any) => {
             const data = result[1].Data;
             if (data.error) {
                 this.previewModalService.close();
                 this.showAlert(this.translate.translate('Unable to view file'), 'error');
             } else {
-                const fileName = data.filename;
-                const downloadId = data.downloadId;
+                const { fileName, downloadId } = data;
                 const request = this.secure ?
-                    this.getSecureFileRequest() :
+                    this.getSecureFileRequest(downloadId) :
                 {
                     method: 'retrieve',
                     walletId: this.walletId,
                     downloadId,
+                    secure: false,
                 };
 
                 this.fileDownloader.getDownLoaderUrl(
@@ -154,24 +149,20 @@ export class FileViewerComponent implements OnInit, OnChanges, OnDestroy {
     }
 
     public downloadFile() {
-        if (this.secure) {
-            this.downloadSecureFile();
-            return;
-        }
-
-        const messageBody: ValidateFileMessageBody = {
-            RequestName: 'validateFile',
-            token: this.memberSocketService.token,
-            walletId: this.walletId,
-            fileHash: this.fileHash,
-            fileId: this.fileId,
-        };
-
-        createMemberNodeRequest(this.memberSocketService, messageBody).then((result) => {
+        this.fileDownloader.validateFile(
+            Number(this.fileId),
+            this.fileHash,
+            this.secure,
+            this.securePath,
+        ).then((result: any) => {
             const data = result[1].Data;
             if (data.error) {
                 this.showAlert(this.translate.translate('Unable to download file'), 'error');
             } else {
+                if (this.secure) {
+                    this.downloadSecureFile(data.downloadId);
+                    return;
+                }
                 this.fileDownloader.downLoaderFile({
                     method: 'retrieve',
                     walletId: this.walletId,
@@ -182,19 +173,19 @@ export class FileViewerComponent implements OnInit, OnChanges, OnDestroy {
         });
     }
 
-    public downloadSecureFile() {
-        this.fileDownloader.downLoaderFile(
-            this.getSecureFileRequest(),
-            true,
-        );
+    public downloadSecureFile(downloadId: string) {
+        this.fileDownloader.downLoaderFile(this.getSecureFileRequest(downloadId));
     }
 
-    private getSecureFileRequest() {
+    private getSecureFileRequest(downloadId: string) {
         return {
+            method: 'retrieve',
+            downloadId,
             token: this.memberSocketService.token,
             walletId: this.walletId,
             fileHash: this.fileHash,
             path: '/iznes/kyc-inv-docs',
+            secure: true,
         };
     }
 
