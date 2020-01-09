@@ -1,0 +1,95 @@
+<div class="header-breadcrumbs">
+    <h1>{{ 'Unencumber Asset' | translate }}</h1>
+</div>
+
+<clr-tabs>
+    <clr-tab>
+        <button id="unencumberAssetsTab" clrTabLink><i class="fa fa-plus-circle"></i> {{ 'Unencumber Asset' | translate }}</button>
+
+        <clr-tab-content *clrIfActive="">
+            <form [formGroup]="unencumberAssetsForm" novalidate (ngSubmit)="unencumberAsset(unencumberAssetsForm.value)">
+                <section class="form-block">
+                    <div class="row">
+                        <div class="form-group col-sm-6">
+
+                            <div class="alert alert-warning" *ngIf="noInstrumentsAlert">
+                                <div class="alert-items">
+                                    <div class="alert-item static">
+                                        <div class="alert-icon-wrapper">
+                                            <clr-icon class="alert-icon" shape="exclamation-triangle"></clr-icon>
+                                        </div>
+                                        <span class="alert-text">{{ 'There are no assets with available balance in this wallet' | translate }}</span>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <label class="control-label required-field" for="asset">{{ 'Asset' | translate }}</label>
+                            <ng-select id="asset"
+                                       [items]="assetListOption"
+                                       [allowClear]="true"
+                                       formControlName="asset"
+                                       placeholder="{{ 'Select' | translate }}"
+                                       [disabled]="disableAssetSelect">
+                            </ng-select>
+                            <div *ngIf="unencumberAssetsForm.controls.asset.hasError('required') && unencumberAssetsForm.controls.asset.touched"
+                                  class="field-error">{{ 'Field is required' | translate }}</div>
+                        </div>
+                    </div>
+
+                    <div class="row">
+                        <div class="form-group col-sm-6">
+                            <label class="control-label required-field" for="fromAddress">{{ 'From Address' | translate }}</label>
+                            <ng-select id="fromAddress"
+                                       [items]="walletAddressSelectItems"
+                                       [allowClear]="true"
+                                       formControlName="fromAddress"
+                                       placeholder="{{ 'Select' | translate }}">
+                            </ng-select>
+                            <div *ngIf="unencumberAssetsForm.controls.fromAddress.hasError('required') && unencumberAssetsForm.controls.fromAddress.touched" class="field-error">{{ 'Field is required' | translate }}</div>
+                        </div>
+                    </div>
+
+                    <div class="row">
+                        <div class="form-group">
+                            <various-address-select [formControl]="unencumberAssetsForm.controls['recipient']"
+                                                    [relationshipArray]="walletRelationships"
+                                                    [ownWalletAddressArray]="walletAddressSelectItems"
+                                                    [required]="true">
+                            </various-address-select>
+                            <div class="field-error">{{ 'Field is required' | translate }}</div>
+                        </div>
+                    </div>
+
+                    <div class="row">
+                        <div class="form-group col-sm-6">
+                            <label class="control-label required-field" for="amount">{{ 'Amount' | translate }}</label>
+                            <input type="number"
+                                   id="amount"
+                                   class="form-control"
+                                   formControlName="amount"
+                                   placeholder="{{ 'Amount' | translate }}">
+                            <div *ngIf="unencumberAssetsForm.controls.amount.hasError('required') && unencumberAssetsForm.controls.amount.touched" class="field-error">{{ 'Field is required' | translate }}</div>
+                        </div>
+                    </div>
+
+                    <div class="row">
+                        <div class="form-group col-sm-6">
+                            <label for="reference">{{ 'Reference' | translate }}</label>
+                            <input type="text" id="reference"
+                                   class="form-control"
+                                   formControlName="reference"
+                                   placeholder="{{ 'Reference' | translate }}"/>
+                        </div>
+                    </div>
+
+                    <div class="row">
+                        <div class="form-group col-sm-6">
+                            <button id="unencumberAssetsBtnSubmitForm" type="submit" class="btn btn-primary" [disabled]="unencumberAssetsForm.invalid"><i class="fa fa-save"></i> {{ 'Unencumber Asset' | translate }}
+                            </button>
+                        </div>
+                    </div>
+                </section>
+            </form>
+        </clr-tab-content>
+    </clr-tab>
+</clr-tabs>

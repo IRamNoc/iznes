@@ -1,0 +1,40 @@
+<div class="header-breadcrumbs">
+    <h1><i class="fa fa-plus-circle"></i> {{ 'Register Asset' | translate }}</h1>
+</div>
+
+<clr-tabs>
+    <clr-tab>
+        <button clrTabLink><i class="fa fa-plus-circle"></i> {{ 'New Asset' | translate }}</button>
+        <clr-tab-content *clrIfActive>
+            <form [formGroup]="registerAssetForm" (ngSubmit)="registerAsset()">
+                <section class="form-block">
+                    <div class="form-group col-sm-6">
+                        <label class="control-label required-field" for="issuer-identifier">{{ 'Issuer Identifier' | translate }}</label>
+                        <input type="text" 
+                                id="issuer-identifier" 
+                                placeholder="{{ 'Issuer Identifier' | translate }}" 
+                                size="45" 
+                                [formControl]="registerAssetForm.controls['issuerIdentifier']"
+                                [class.error]="!registerAssetForm.controls['issuerIdentifier'].valid &&
+                                           registerAssetForm.controls['issuerIdentifier'].touched" [readonly]="true"/>
+
+                        <div *ngIf="!registerAssetForm.controls['issuerIdentifier'].valid && registerAssetForm.controls['issuerIdentifier'].touched"  class="field-error">{{ 'Field is required' | translate }}</div>
+
+                        <label class="control-label required-field" for="instrument-identifier">{{ 'Instrument' | translate }}</label>
+                        <input type="text" 
+                                id="instrument-identifier" 
+                                placeholder="{{ 'Instrument Identifier' | translate }}" 
+                                size="45"
+                                [formControl]="registerAssetForm.controls['instrumentIdentifier']"
+                                [class.error]="!registerAssetForm.controls['instrumentIdentifier'].valid &&
+                   registerAssetForm.controls['instrumentIdentifier'].touched"/>
+
+                        <div *ngIf="registerAssetForm.controls['instrumentIdentifier'].hasError('required') && registerAssetForm.controls['instrumentIdentifier'].touched" class="field-error">{{ 'Field is required' | translate }}</div>
+                    </div>
+
+                    <button type="submit" class="btn btn-primary" [disabled]="registerAssetForm.invalid"><i class="fa fa-save"></i> {{ 'Register Asset' | translate }}</button>
+                </section>
+            </form>
+        </clr-tab-content>
+    </clr-tab>
+</clr-tabs>

@@ -1,0 +1,8 @@
+{
+  "name": "@setl/asset-servicing",
+  "version": "1.0.1",
+  "main": "index.ts",
+  "repository": "http://si-nexus01.dev.setl.io/SETL_Modules/Angular-Module.git",
+  "author": "SETL.io",
+  "license": "UNLICENCED"
+}

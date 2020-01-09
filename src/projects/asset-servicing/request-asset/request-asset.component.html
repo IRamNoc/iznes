@@ -1,0 +1,50 @@
+<div class="header-breadcrumbs">
+    <h1><i class="fa fa-exchange"></i> {{ 'Request Asset' | translate }}</h1>
+</div>
+
+<clr-tabs>
+    <clr-tab>
+        <button clrTabLink><i class="fa fa-plus-circle"></i> {{ 'Request Asset' | translate }}</button>
+        <clr-tab-content *clrIfActive>
+            <form [formGroup]="requestAssetForm" (ngSubmit)="requestAsset()">
+                <section class="form-block">
+                    <div class="form-group col-sm-6">
+                        <label class="control-label required-field" for="asset">{{ 'Asset' | translate }}</label>
+                        <ng-select id="asset"
+                                [items]="allInstrumentList"
+                                [allowClear]="true"
+                                placeholder="{{ 'Select Issuer' | translate }}"
+                                [formControl]="requestAssetForm.controls['asset']">
+                        </ng-select>
+
+                        <div *ngIf="requestAssetForm.controls['asset'].hasError('required') && requestAssetForm.controls['asset'].touched" class="field-error">{{ 'Field is required' | translate }}</div>
+                    </div>
+
+                    <div class="form-group">
+                        <app-request-type-select
+                            (requestType)="requestTypeOb($event)"
+                            (fromRelationship)="fromRelationshipOb($event)"
+                            (walletFrom)="walletFromOb($event)"
+                            (addressTo)="addressToOb($event)">
+                        </app-request-type-select>
+                    </div>
+
+                    <div class="form-group col-sm-6">
+                        <label class="control-label required-field" for="amount">{{ 'Amount' | translate }}</label>
+                        <input type="text"
+                                id="amount"
+                                placeholder="{{ 'Amount' | translate }}"
+                                size="45"
+                                [formControl]="requestAssetForm.controls['amount']"
+                                [class.error]="!requestAssetForm.controls['amount'].valid && requestAssetForm.controls['amount'].touched"/>
+
+                        <div *ngIf="requestAssetForm.controls['amount'].hasError('required') && requestAssetForm.controls['amount'].touched" class="field-error">{{ 'Field is required' | translate }}</div>
+                        <div *ngIf="requestAssetForm.controls['amount'].hasError('pattern')" class="field-error">{{ 'Amount must be a number' | translate }}</div>
+                    </div>
+
+                    <button type="submit" class="btn btn-primary" [disabled]="requestAssetForm.invalid"><i class="fa fa-save"></i> {{ 'Request Asset' | translate }}</button>
+                </section>
+            </form>
+        </clr-tab-content>
+    </clr-tab>
+</clr-tabs>
