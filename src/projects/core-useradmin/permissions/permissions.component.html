@@ -1,0 +1,406 @@
+<div class="header-breadcrumbs">
+    <h1 id="manage-groups"><i class="fa fa-users"></i> {{ 'Manage Groups' | translate }}</h1>
+</div>
+
+<div class="wrapper wrapper-content">
+
+    <clr-tabs *ngIf="tabsControl.length">
+        <clr-tab *ngFor="let tabdata of tabsControl; let id = index">
+            <button *ngIf="tabdata.groupId < 0" clrTabLink id="group-tab-{{id}}"
+                    [routerLink]="['/user-administration/permissions', id]"><i class="fa {{tabdata.title.icon}}"></i>
+                {{tabdata.title.text}}
+            </button>
+            <button *ngIf="tabdata.groupId >= 0" clrTabLink id="group-tab-{id}}"
+                    (click)="handleEdit(tabdata.groupIndex)"><i class="fa {{tabdata.title.icon}}"></i>
+                {{tabdata.title.text}}
+            </button>
+            <clr-tab-content *clrIfActive="tabdata.active">
+                <!-- Group list tab. -->
+                <ng-container *ngIf="id === 0">
+                    <ng-container *ngTemplateOutlet="staticGroupList">
+                    </ng-container>
+                </ng-container>
+
+                <!-- Group add tab. -->
+                <ng-container *ngIf="id === 1">
+                    <ng-container
+                        *ngTemplateOutlet="staticGroupAddTab; context: {'formControl': tabdata.formControl, 'tabid': id}">
+                    </ng-container>
+                </ng-container>
+
+                <!-- Group edit tabs. -->
+                <ng-container *ngIf="id >= 2">
+                    <ng-container
+                        *ngTemplateOutlet="dynamicGroupEditTab; context: {'formControl': tabdata.formControl, 'tabid': id, 'permissionsEmitter': tabdata.permissionsEmitter}">
+                    </ng-container>
+                </ng-container>
+            </clr-tab-content>
+        </clr-tab>
+    </clr-tabs>
+
+    <!-- Group List Table. -->
+    <ng-template #staticGroupList>
+        <div class="panel-body">
+
+            <datagrid-list
+                [fieldsModel]="permissionsListFieldsModel"
+                [listData]="allGroupList"
+                [listActions]="permissionsListActionsModel"
+                [filters]="datagridFilters"
+                [showHideColumns]="true"
+                (action)="onAction($event)">
+            </datagrid-list>
+
+        </div>
+    </ng-template>
+
+    <!-- Group Add Form. -->
+    <ng-template #staticGroupAddTab let-formControl="formControl" let-tabid="tabid">
+        <div class="user-tab-panel-body panel-body">
+            <form (ngSubmit)="handleNewGroup(tabid)" [formGroup]="formControl">
+                <div class="form-horizontal">
+                    <div class="row">
+                        <div class="form-group col-sm-6">
+                            <label class="control-label required-field">{{ 'Group Name' | translate }}</label>
+                            <input id="group-name"
+                                    type="text"
+                                    formControlName="name"
+                                    placeholder="{{ 'Group Name' | translate }}"
+                                    class="form-control groupname mlp_translated">
+                            <div *ngIf="formControl.controls.name.hasError('required') && formControl.controls.name.touched"
+                                 class="field-error">{{ 'Field is required' | translate }}
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="row">
+                        <div class="form-group col-sm-6">
+                            <label class="control-label required-field">{{ 'Group Description' | translate }}</label>
+                            <input id="group-description" type="text"
+                                    formControlName="description"
+                                    name="description"
+                                    placeholder="{{ 'Group Description' | translate }}"
+                                    class="form-control groupdescription mlp_translated">
+                            <div *ngIf="formControl.controls.description.hasError('required') && formControl.controls.description.touched"
+                                 class="field-error">{{ 'Field is required' | translate }}
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="row">
+                        <div class="form-group col-sm-6">
+                            <label class="control-label required-field">{{ 'Group Type' | translate }}</label>
+                            <ng-select id="group-type"
+                                       [items]="groupTypes"
+                                       [allowClear]="true"
+                                       placeholder="{{ 'Choose Group Tag' | translate }}"
+                                       [formControl]="formControl.controls['type']">
+                            </ng-select>
+                            <div *ngIf="formControl.controls.type.hasError('required') && formControl.controls.type.touched"
+                                 class="field-error">{{ 'Field is required' | translate }}
+                            </div>
+                        </div>
+                    </div>
+
+                    <!--
+                        Permissions grids,
+                        0 - group.
+                        1 - transactional.
+                        2 - menu.
+                    -->
+
+                    <div *ngIf="formControl.value.type[0]" [ngSwitch]="formControl.value.type[0].id">
+
+                        <setl-permission-grid
+                            *ngSwitchCase="'0'"
+                            [permissionAreas]="filteredAdminAreaList"
+                            [permissionLevels]="permissionLevelsList"
+                            (updateEvent)="formControl.controls['permissions'].patchValue($event)">
+                        </setl-permission-grid>
+
+                        <setl-permission-grid
+                            *ngSwitchCase="'1'"
+                            [permissionAreas]="filteredTxAreaList"
+                            [permissionLevels]="permissionTxLevelsList"
+                            (updateEvent)="formControl.controls['permissions'].patchValue($event)">
+                        </setl-permission-grid>
+
+                        <setl-menu-permission-grid
+                            *ngSwitchCase="'2'"
+                            [permissionAreas]="filteredMenuAreaList"
+                            [permissionLevels]="menuPermissionLevelsList"
+                            (updateEvent)="formControl.controls['permissions'].patchValue($event)">
+                        </setl-menu-permission-grid>
+
+                    </div>
+
+                    <div class="form-group button-group">
+                        <button id="group-submit-btn" type="submit" class="btn btn-primary"
+                                [disabled]="!formControl.valid">
+                            <i class="fa fa-save"></i> {{ 'Save' | translate }}
+                        </button>
+
+                        <button id="group-clear-btn"
+                                (click)="clearNewGroup(tabid, $event)"
+                                class="btn btn-secondary">{{ 'Clear' | translate }}
+                        </button>
+                    </div>
+                </div>
+            </form>
+        </div>
+    </ng-template>
+
+    <!-- User Edit Form. -->
+    <ng-template #dynamicGroupEditTab let-formControl="formControl" let-tabid="tabid"
+                 let-permissionsEmitter="permissionsEmitter">
+        <div class="user-tab-panel-body panel-body">
+            <form (ngSubmit)="handleEditGroup(tabid)" [formGroup]="formControl">
+                <div class="form-horizontal">
+                    <div class="row">
+                        <div class="form-group col-sm-6">
+                            <label class="control-label required-field">{{ 'Group Name' | translate }}</label>
+                            <input id="group-name"
+                                    type="text"
+                                    formControlName="name"
+                                    placeholder="{{ 'Group Name' | translate }}"
+                                    class="form-control groupname mlp_translated">
+                            <div *ngIf="formControl.controls.name.hasError('required') && formControl.controls.name.touched"
+                                 class="field-error">{{ 'Field is required' | translate }}
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="row">
+                        <div class="form-group col-sm-6">
+                            <label class="control-label required-field">{{ 'Group Description' | translate }}</label>
+                            <input id="group-description"
+                                    type="text"
+                                    formControlName="description"
+                                    name="description"
+                                    placeholder="{{ 'Group Description' | translate }}"
+                                    class="form-control groupdescription mlp_translated">
+                            <div *ngIf="formControl.controls.description.hasError('required') && formControl.controls.description.touched" class="field-error">{{ 'Field is required' | translate }}
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="row">
+                        <div class="form-group col-sm-6">
+                            <label class="control-label">{{ 'Group Type' | translate }}</label>
+                            <!--
+                                Disabled is added to this select by it's form
+                                control in the handleEdit function.
+                            -->
+                            <ng-select id="group-type"
+                                       [items]="groupTypes"
+                                       [allowClear]="true"
+                                       placeholder="{{ 'Choose Group Tag' | translate }}"
+                                       [disabled]="true"
+                                       [formControl]="formControl.controls['type']">
+                            </ng-select>
+                        </div>
+                    </div>
+
+                    <!--
+                        Permissions grids,
+                        0 - group
+                        1 - transactional.
+                        2 - menu
+                    -->
+
+                    <div *ngIf="formControl.value.type[0]" [ngSwitch]="formControl.value.type[0].id">
+
+                        <setl-permission-grid
+                            *ngSwitchCase="'0'"
+                            [initData]="permissionsEmitter"
+                            [permissionAreas]="filteredAdminAreaList"
+                            [permissionLevels]="permissionLevelsList"
+                            (updateEvent)="formControl.controls['permissions'].patchValue($event)">
+                        </setl-permission-grid>
+
+                        <setl-permission-grid
+                            *ngSwitchCase="'1'"
+                            [initData]="permissionsEmitter"
+                            [permissionAreas]="filteredTxAreaList"
+                            [permissionLevels]="permissionTxLevelsList"
+                            (updateEvent)="formControl.controls['permissions'].patchValue($event)">
+                        </setl-permission-grid>
+
+                        <setl-menu-permission-grid
+                            *ngSwitchCase="'2'"
+                            [initData]="permissionsEmitter"
+                            [permissionAreas]="filteredMenuAreaList"
+                            [permissionLevels]="menuPermissionLevelsList"
+                            (updateEvent)="formControl.controls['permissions'].patchValue($event)">
+                        </setl-menu-permission-grid>
+
+                    </div>
+
+                    <div class="form-group button-group">
+                        <button id="group-submit-btn" type="submit" class="btn btn-primary"
+                                [disabled]="!formControl.valid">
+                            <i class="fa fa-save"></i> {{ 'Save' | translate }}
+                        </button>
+                        <button id="group-cancel-btn" (click)="closeTab(tabid)" class="btn btn-secondary">{{ 'Cancel' | translate }}
+                        </button>
+                    </div>
+                </div>
+            </form>
+        </div>
+    </ng-template>
+
+    <!-- This nested tab set cannot be directly inside the main one :( -->
+    <ng-template #accessAdminTabs>
+        <clr-tabs>
+            <clr-tab>
+                <button clrTabLink><i class="fa fa-users"></i> {{ 'Administrative' | translate }}
+                </button>
+                <clr-tab-content *clrIfActive="true">
+                    <div class="panel-body">{{ 'Administrative' | translate }}
+                        <ng-container *ngTemplateOutlet="accessAdminSubTabs"></ng-container>
+                    </div>
+                </clr-tab-content>
+            </clr-tab>
+
+            <clr-tab>
+                <button clrTabLink><i class="fa fa-user"></i> {{ 'Transactional' | translate }}</button>
+                <clr-tab-content *clrIfActive>
+                    <div class="panel-body">{{ 'Transactional' | translate }}
+                        <ng-container *ngTemplateOutlet="accessTransactionSubTabs"></ng-container>
+                    </div>
+                </clr-tab-content>
+            </clr-tab>
+
+            <clr-tab>
+                <button clrTabLink><i class="fa fa-user"></i> {{ 'Menu' | translate }}</button>
+                <clr-tab-content *clrIfActive>
+                    <div class="panel-body">{{ 'Menu' | translate }}
+                        <ng-container *ngTemplateOutlet="accessMenuSubTabs"></ng-container>
+                    </div>
+                </clr-tab-content>
+            </clr-tab>
+
+            <clr-tab>
+                <button clrTabLink><i class="fa fa-briefcase"></i> {{ 'Wallets' | translate }}</button>
+                <clr-tab-content *clrIfActive>
+                    <div class="panel-body">{{ 'Wallets' | translate }}</div>
+                </clr-tab-content>
+            </clr-tab>
+
+            <clr-tab>
+                <button clrTabLink><i class="fa fa-chain"></i> {{ 'Chains' | translate }}</button>
+                <clr-tab-content *clrIfActive>
+                    <div class="panel-body">{{ 'Chains' | translate }}</div>
+                </clr-tab-content>
+            </clr-tab>
+        </clr-tabs>
+    </ng-template>
+
+    <!-- Same goes for this nested tabset. -->
+    <ng-template #accessAdminSubTabs>
+        <clr-tabs>
+            <clr-tab>
+                <button clrTabLink><i class="fa fa-users"></i> {{ 'Groups' | translate}}</button>
+                <clr-tab-content *clrIfActive="true">
+                    <div class="panel-body">
+                        <select>
+                            <option value="">{{ 'Select an option' | translate }}</option>
+                            <option value="1">{{ 'Group 1' | translate }}</option>
+                            <option value="2">{{ 'Group 2' | translate }}</option>
+                        </select>
+                    </div>
+                </clr-tab-content>
+            </clr-tab>
+
+            <clr-tab>
+                <button clrTabLink><i class="fa fa-user"></i> {{ 'Individual' | translate }}</button>
+                <clr-tab-content *clrIfActive>
+                    <div class="panel-body">
+                        <!--big grid thing needs to be here...-->
+                    </div>
+                </clr-tab-content>
+            </clr-tab>
+        </clr-tabs>
+    </ng-template>
+
+    <!-- Same goes for this nested tabset. -->
+    <ng-template #accessTransactionSubTabs>
+        <clr-tabs>
+            <clr-tab>
+                <button clrTabLink><i class="fa fa-users"></i> {{ 'Groups' | translate }}</button>
+                <clr-tab-content *clrIfActive="true">
+                    <div class="panel-body">
+                        1
+
+                        <select>
+                            <option value="">{{ 'Select an option' | translate }}</option>
+                            <option value="1">{{ 'Group 1' | translate }}</option>
+                            <option value="2">{{ 'Group 2' | translate }}</option>
+                        </select>
+                        2
+
+                        <select>
+                            <option value="">{{ 'Select an option' | translate }}</option>
+                            <option value="1">{{ 'Group 1' | translate }}</option>
+                            <option value="2">{{ 'Group 2' | translate }}</option>
+                        </select>
+                    </div>
+                </clr-tab-content>
+            </clr-tab>
+
+            <clr-tab>
+                <button clrTabLink><i class="fa fa-user"></i> {{ 'Individual' }} | translate }}</button>
+                <clr-tab-content *clrIfActive>
+                    <div class="panel-body">
+                        <select>
+                            <option value="">{{ 'Select an option' | translate }}</option>
+                            <option value="1">{{ 'Group 1' | translate }}</option>
+                            <option value="2">{{ 'Group 2' | translate }}</option>
+                        </select>
+                        <!--big grid thing again...-->
+                    </div>
+                </clr-tab-content>
+            </clr-tab>
+        </clr-tabs>
+    </ng-template>
+
+    <!-- Same goes for this nested tabset. -->
+    <ng-template #accessMenuSubTabs>
+        <clr-tabs>
+            <clr-tab>
+                <button clrTabLink><i class="fa fa-users"></i> {{ 'Groups' | translate }}</button>
+                <clr-tab-content *clrIfActive="true">
+                    <div class="panel-body">
+                        1
+                        <select>
+                            <option value="">{{ 'Select an option' | translate }}</option>
+                            <option value="1">{{ 'Group 1' | translate }}</option>
+                            <option value="2">{{ 'Group 2' | translate }}</option>
+                        </select>
+
+                        2
+                        <select>
+                            <option value="">{{ 'Select an option' | translate }}</option>
+                            <option value="1">{{ 'Group 1' | translate }}</option>
+                            <option value="2">{{ 'Group 2' | translate }}</option>
+                        </select>
+                    </div>
+                </clr-tab-content>
+            </clr-tab>
+
+            <clr-tab>
+                <button clrTabLink><i class="fa fa-user"></i> {{ 'Individual' | translate }}</button>
+                <clr-tab-content *clrIfActive>
+                    <div class="panel-body">
+                        <select>
+                            <option value="">{{ 'Select an option' | translate }}</option>
+                            <option value="1">{{ 'Group 1' | translate }}</option>
+                            <option value="2">{{ 'Group 2' | translate }}</option>
+                        </select>
+                        <!--big grid thing again...-->
+                    </div>
+                </clr-tab-content>
+            </clr-tab>
+        </clr-tabs>
+    </ng-template>
+</div>

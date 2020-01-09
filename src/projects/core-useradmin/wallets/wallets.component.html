@@ -1,0 +1,796 @@
+<div class="header-breadcrumbs">
+    <h1 id="manage-wallets"><i class="fa fa-briefcase"></i> {{ 'Manage Wallets' | translate }}</h1>
+</div>
+
+<div class="wrapper wrapper-content">
+
+    <clr-tabs *ngIf="tabsControl.length">
+        <clr-tab *ngFor="let tabdata of tabsControl; let id = index">
+            <button clrTabLink id="wallet-tab-{{id}}" [routerLink]="['/user-administration/wallets', id]"><i
+                class="fa {{tabdata.title.icon}}"></i> {{tabdata.title.text}}
+            </button>
+            <clr-tab-content *clrIfActive="tabdata.active">
+                <!-- Wallet list tab. -->
+                <ng-container *ngIf="id === 0">
+                    <ng-container *ngTemplateOutlet="staticWalletListTab">
+                    </ng-container>
+                </ng-container>
+
+                <!-- Wallet add tab. -->
+                <ng-container *ngIf="id === 1">
+                    <ng-container *ngTemplateOutlet="staticWalletAddTab; context: {'formControl': tabdata.formControl, 'tabid': id}">
+                    </ng-container>
+                </ng-container>
+
+                <!-- Wallet edit tabs. -->
+                <ng-container *ngIf="id >= 2">
+                    <ng-container *ngTemplateOutlet="dynamicEditTab; context: {'formControl': tabdata.formControl, 'tabid': id}">
+                    </ng-container>
+                </ng-container>
+            </clr-tab-content>
+        </clr-tab>
+    </clr-tabs>
+
+    <!-- Wallet Data Table. -->
+    <ng-template #staticWalletListTab>
+        <div class="panel-body">
+            <datagrid-list
+                [fieldsModel]="walletFieldsModel"
+                [listData]="walletList"
+                [listActions]="walletListActions"
+                [filters]="walletListFilters"
+                [showHideColumns]="true"
+                (action)="onAction($event)">
+            </datagrid-list>
+        </div>
+    </ng-template>
+
+    <!-- Wallet Add Form. -->
+    <ng-template #staticWalletAddTab let-formControl="formControl" let-tabid="tabid">
+        <div class="user-tab-panel-body panel-body">
+            <form id="new-wallet-form" (ngSubmit)="handleNewWallet(tabid)" [formGroup]="formControl">
+                <div class="form-horizontal">
+                    <div class="row">
+                        <div class="form-group col-sm-6">
+                            <label class="control-label required-field">{{ 'Wallet Name' | translate }}</label>
+                            <input id="new-wallet-name"
+                                    type="text"
+                                    formControlName="walletName"
+                                    placeholder="{{ 'Wallet Name' | translate }}"
+                                    class="form-control walletname">
+                            <div *ngIf="formControl.controls.walletName.hasError('required') && formControl.controls.walletName.touched"
+                                 class="field-error">{{ 'Field is required' | translate }}
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="row">
+                        <div class="form-group col-sm-6">
+                            <label class="control-label required-field">{{ 'Account' | translate }}</label>
+                            <ng-select
+                                id="new-wallet-account-select"
+                                [items]="accountTypes"
+                                [allowClear]="true"
+                                placeholder="{{ 'Select Type' | translate }}"
+                                [formControl]="formControl.controls['walletAccount']">
+                            </ng-select>
+                            <div *ngIf="formControl.controls.walletAccount.hasError('required') && formControl.controls.walletAccount.touched"
+                                 class="field-error">{{ 'Field is required' | translate }}
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="row">
+                        <div class="form-group col-sm-6">
+                            <label class="control-label required-field">{{ 'Account Type' | translate }}</label>
+                            <ng-select
+                                id="new-wallet-usertype-select"
+                                [items]="walletTypes"
+                                [allowClear]="true"
+                                placeholder="{{ 'Select Type' | translate }}"
+                                [formControl]="formControl.controls['walletType']">
+                            </ng-select>
+                            <div *ngIf="formControl.controls.walletType.hasError('required') && formControl.controls.walletType.touched"
+                                 class="field-error">{{ 'Field is required' | translate }}
+                            </div>
+                        </div>
+
+                        <div class="form-group col-sm-12" *ngIf="formControl.controls.walletType.value && formControl.controls.walletType.value.length">
+                            <div [ngSwitch]="formControl.value.walletType[0].id">
+                                <ng-container *ngSwitchCase="'1'">
+                                    <ng-container
+                                        *ngTemplateOutlet="walletMetaLegal; context: {'formControl': formControl, 'tabid': tabid}"></ng-container>
+                                </ng-container>
+
+                                <ng-container *ngSwitchCase="'2'">
+                                    <ng-container
+                                        *ngTemplateOutlet="walletMetaIndividual; context: {'formControl': formControl, 'tabid': tabid}"></ng-container>
+                                </ng-container>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="form-group button-group">
+                        <button id="new-wallet-submit" type="submit" class="btn btn-primary"
+                                [disabled]="!formControl.valid">
+                            <i class="fa fa-save"></i> {{ 'Save' | translate }}
+                        </button>
+                    </div>
+                </div>
+            </form>
+        </div>
+    </ng-template>
+
+    <!-- Wallet Edit Form. -->
+    <ng-template #dynamicEditTab let-formControl="formControl" let-tabid="tabid">
+        <div class="user-tab-panel-body panel-body">
+            <form id="edit-user{{tabid}}-form" (ngSubmit)="handleEditWallet(tabid)" [formGroup]="formControl">
+                <div class="form-horizontal">
+                    <div class="row">
+                        <div class="form-group col-sm-6">
+                            <label class="control-label required-field">{{ 'Wallet Name' | translate }}</label>
+                            <input id="new-wallet-name"
+                                    type="text"
+                                    formControlName="walletName"
+                                    placeholder="{{ 'Wallet Name' | translate }}"
+                                    class="form-control walletname">
+                            <div *ngIf="formControl.controls.walletName.hasError('required') && formControl.controls.walletName.touched"
+                                 class="field-error">{{ 'Field is required' | translate }}
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="row">
+                        <div class="form-group col-sm-6">
+                            <label class="control-label required-field">{{ 'Account' | translate }}</label>
+                            <ng-select
+                                id="new-wallet-account-select"
+                                [items]="accountTypes"
+                                [allowClear]="true"
+                                placeholder="{{ 'Select Type' | translate }}"
+                                [formControl]="formControl.controls['walletAccount']">
+                            </ng-select>
+                            <div *ngIf="formControl.controls.walletAccount.hasError('required') && formControl.controls.walletAccount.touched"
+                                 class="field-error">{{ 'Field is required' | translate }}
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="row">
+                        <div class="form-group col-sm-6">
+                            <label class="control-label">{{ 'Wallet Status' | translate }}</label>
+                            <div class="locked-toggle">
+                                <span *ngIf="!formControl.value.walletLocked" (click)="formControl.controls.walletLocked.setValue(1)">
+                                    <i class="fa fa-unlock"></i>
+                                </span>
+                                <span *ngIf="formControl.value.walletLocked" (click)="formControl.controls.walletLocked.setValue(0)">
+                                    <i class="fa fa-lock"></i>
+                                </span>
+
+                                <div class="toggle-switch">
+                                    <input [formControl]="formControl.controls['walletLocked']"
+                                           id="edit-wallet-status-toggle"
+                                           type="checkbox"
+                                           [checked]="formControl.value.walletLocked">
+                                    <label for="edit-wallet-status-toggle"></label>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="row">
+                        <div class="form-group col-sm-6">
+                            <label class="control-label required-field">{{ 'Wallet Type' | translate }}</label>
+                            <ng-select
+                                id="new-wallet-usertype-select"
+                                [items]="walletTypes"
+                                [allowClear]="true"
+                                placeholder="{{ 'Select Type' | translate }}"
+                                [formControl]="formControl.controls['walletType']">
+                            </ng-select>
+                            <div *ngIf="formControl.controls.walletType.hasError('required') && formControl.controls.walletType.touched"
+                                 class="field-error">{{ 'Field is required' | translate }}
+                            </div>
+                        </div>
+
+                        <div class="form-group col-sm-12" *ngIf="formControl.controls.walletType.value && formControl.controls.walletType.value.length">
+                            <div [ngSwitch]="formControl.value.walletType[0].id">
+                                <ng-container *ngSwitchCase="'1'">
+                                    <ng-container
+                                        *ngTemplateOutlet="walletMetaLegal; context: {'formControl': formControl, 'tabid': tabid}"></ng-container>
+                                </ng-container>
+
+                                <ng-container *ngSwitchCase="'2'">
+                                    <ng-container
+                                        *ngTemplateOutlet="walletMetaIndividual; context: {'formControl': formControl, 'tabid': tabid}"></ng-container>
+                                </ng-container>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="form-group button-group">
+                        <button id="new-wallet-submit" type="submit" class="btn btn-primary"
+                                [disabled]="!formControl.valid">
+                            <i class="fa fa-save"></i> {{ 'Save' | translate }}
+                        </button>
+
+                        <a (click)="closeTab(tabid)" class="btn btn-secondary">{{ 'Close' | translate }}       </a>
+                    </div>
+                </div>
+            </form>
+        </div>
+    </ng-template>
+
+    <!-- This nested tab set cannot be directly inside the main one :( -->
+    <ng-template #walletMetaLegal let-formControl="formControl" let-tabid="tabid">
+        <clr-tabs>
+            <clr-tab>
+                <a clrTabLink><i class="fa fa-users"></i> {{ 'Basic' | translate }}</a>
+                <clr-tab-content *clrIfActive="true">
+                    <div class="panel-body">
+                        <div class="form-horizontal">
+                            <div class="row">
+                                <div class="form-group col-sm-12">
+                                    <label class="control-label">
+                                        {{ 'LEI' | translate }}
+                                    </label>
+                                    <div>
+                                        <input id="new-wallet-lei" type="text"
+                                               [formControl]="formControl.controls['walletLei']"
+                                               placeholder="{{ 'LEI' | translate }}"
+                                               class="form-control wallet-lei">
+                                    </div>
+                                </div>
+                                <div class="form-group col-sm-12">
+                                    <label class="control-label">
+                                        {{ 'Unique Identifier' | translate }}
+                                    </label>
+                                    <div>
+                                        <input id="new-wallet-uid" type="text"
+                                               [formControl]="formControl.controls['walletUid']"
+                                               placeholder="{{ 'UID' | translate }}"
+                                               class="form-control wallet-uid">
+                                    </div>
+                                </div>
+                                <div class="form-group col-sm-12">
+                                    <label class="control-label">
+                                        {{ 'Website URL' | translate }}
+                                    </label>
+                                    <div>
+                                        <input id="new-wallet-weburl" type="text"
+                                               [formControl]="formControl.controls['walletWebUrl']"
+                                               placeholder="{{ 'Website URL' | translate }}"
+                                               class="form-control wallet-weburl">
+                                    </div>
+                                </div>
+                                <div class="form-group col-sm-12">
+                                    <label class="control-label required-field">
+                                        {{ 'Incorporation Date' | translate }}
+                                    </label>
+                                    <div class="input-group">
+                                        <span class="fa fa-calendar" aria-hidden="true"></span>
+                                        <input type="text" id="new-wallet-incdate" autocomplete="off"
+                                               [formControl]="formControl.controls['walletIncDate']"
+                                               [dpDayPicker]="configFiltersDate"
+                                               placeholder="{{ 'Incorporation Date' | translate }}"
+                                               mode="day"
+                                               theme="dp-material"/>
+                                        <div *ngIf="formControl.controls.walletIncDate.hasError('pattern') && formControl.controls.walletIncDate.touched"
+                                             class="field-error">{{ 'Invalid date. Format must be YYYY-MM-DD.' | translate }}
+                                        </div>
+                                        <div *ngIf="formControl.controls.walletIncDate.hasError('required') && formControl.controls.walletIncDate.touched"
+                                             class="field-error">{{ 'Field is required' | translate }}
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </clr-tab-content>
+            </clr-tab>
+
+            <clr-tab>
+                <a clrTabLink><i class="fa fa-users"></i>
+                    {{ 'Correspondence Address' | translate }}
+                </a>
+                <clr-tab-content *clrIfActive>
+                    <div class="panel-body">
+                        <div class="form-horizontal">
+                            <div class="row">
+                                <div class="form-group col-sm-12">
+                                    <label class="control-label">
+                                        {{ 'Country' | translate }}
+                                    </label>
+                                    <div>
+                                        <ng-select
+                                            [items]="countriesList"
+                                            [allowClear]="true"
+                                            [formControl]="formControl.controls['walletAddrCountry']">
+                                        </ng-select>
+                                    </div>
+                                </div>
+
+                                <div class="form-group col-sm-12">
+                                    <label class="control-label">
+                                        {{ 'Address Prefix' | translate }}
+                                    </label>
+                                    <div>
+                                        <input id="new-wallet-address-prefix" type="text"
+                                               [formControl]="formControl.controls['walletAddrPrefix']"
+                                               placeholder="{{ 'Address Prefix' | translate }}"
+                                               class="form-control wallet-addr-prefix">
+                                    </div>
+                                </div>
+
+                                <div class="form-group col-sm-12">
+                                    <label class="control-label">
+                                        {{ 'Postal Address' | translate }}
+                                    </label>
+                                    <div>
+                                        <input id="new-wallet-address1" type="text"
+                                               [formControl]="formControl.controls['walletAddr1']"
+                                               placeholder="{{ 'Line 1' | translate }}"
+                                               class="form-control wallet-addr1">
+                                    </div>
+                                    <div>
+                                        <input id="new-wallet-address2" type="text"
+                                               [formControl]="formControl.controls['walletAddr2']"
+                                               placeholder="{{ 'Line 2' | translate }}"
+                                               class="form-control wallet-addr2">
+                                    </div>
+                                </div>
+
+                                <div class="form-group col-sm-12">
+                                    <label class="control-label">
+                                        {{ 'City or Town' | translate }}
+                                    </label>
+                                    <div>
+                                        <input id="new-wallet-address3" type="text"
+                                               [formControl]="formControl.controls['walletAddr3']"
+                                               placeholder="{{ 'City or Town' | translate }}"
+                                               class="form-control wallet-addr3">
+                                    </div>
+                                </div>
+
+                                <div class="form-group col-sm-12">
+                                    <label class="control-label">
+                                        {{ 'State or Area' | translate }}
+                                    </label>
+                                    <div>
+                                        <input id="new-wallet-address4" type="text"
+                                               [formControl]="formControl.controls['walletAddr4']"
+                                               placeholder="{{ 'State or Area' | translate }}"
+                                               class="form-control wallet-addr4">
+                                    </div>
+                                </div>
+
+                                <div class="form-group col-sm-12">
+                                    <label class="control-label">
+                                        {{ 'Postcode' | translate }}
+                                    </label>
+                                    <div>
+                                        <input id="new-wallet-postcode" type="text"
+                                               [formControl]="formControl.controls['walletAddrPostcode']"
+                                               placeholder="{{ 'Postcode' | translate }}"
+                                               class="form-control wallet-postcode">
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </clr-tab-content>
+            </clr-tab>
+        </clr-tabs>
+    </ng-template>
+
+    <!-- This nested tab set cannot be directly inside the main one :( -->
+    <ng-template #walletMetaIndividual let-formControl="formControl" let-tabid="tabid">
+        <clr-tabs>
+            <clr-tab>
+                <a clrTabLink>
+                    <i class="fa fa-users"></i>
+                    {{ 'Basic' | translate }}
+                </a>
+                <clr-tab-content *clrIfActive="true">
+                    <div class="panel-body">
+                        <div class="form-group col-sm-12">
+                            <label class="control-label">
+                                {{ 'Aliases' | translate }}
+                            </label>
+                            <div>
+                                <input id="new-wallet-aliases" type="text"
+                                       [formControl]="formControl.controls['aliases']"
+                                       placeholder="{{ 'Aliases' | translate }}"
+                                       class="form-control wallet-aliases">
+                            </div>
+                        </div>
+
+                        <div class="form-group col-sm-12">
+                            <label class="control-label">
+                                {{ 'Former Name' | translate }}
+                            </label>
+                            <div>
+                                <input id="new-wallet-formerName" type="text"
+                                       [formControl]="formControl.controls['formerName']"
+                                       placeholder="{{ 'Former Name' | translate }}"
+                                       class="form-control wallet-formername">
+                            </div>
+                        </div>
+
+                        <div class="form-group col-sm-12">
+                            <label class="control-label">
+                                {{ 'ID Card Number' | translate }}
+                            </label>
+                            <div>
+                                <input id="new-wallet-idCardNum" type="text"
+                                       [formControl]="formControl.controls['idCardNum']"
+                                       placeholder="{{ 'ID Card Number' | translate }}"
+                                       class="form-control wallet-idcardnum">
+                            </div>
+                        </div>
+                    </div>
+                </clr-tab-content>
+            </clr-tab>
+
+            <clr-tab>
+                <a clrTabLink>
+                    <i class="fa fa-map-marker"></i>
+                    {{ 'Residential Address' | translate }}
+                </a>
+                <clr-tab-content *clrIfActive>
+                    <div class="panel-body">
+                        <div class="form-horizontal">
+                            <div class="row">
+                                <div class="form-group col-sm-12">
+                                    <label class="control-label">
+                                        {{ 'Country' | translate }}
+                                    </label>
+                                    <div>
+                                        <ng-select
+                                            [items]="countriesList"
+                                            [allowClear]="true"
+                                            [formControl]="formControl.controls['rdaAddrCountry']">
+                                        </ng-select>
+                                    </div>
+                                </div>
+
+                                <div class="form-group col-sm-12">
+                                    <label class="control-label">
+                                        {{ 'Address Prefix' | translate }}
+                                    </label>
+                                    <div>
+                                        <input id="new-wallet-rda-address-prefix" type="text"
+                                               [formControl]="formControl.controls['rdaAddrPrefix']"
+                                               placeholder="{{ 'Address Prefix' | translate }}"
+                                               class="form-control rda-addr-prefix">
+                                    </div>
+                                </div>
+
+                                <div class="form-group col-sm-12">
+                                    <label class="control-label">
+                                        {{ 'Postal Address' | translate }}
+                                    </label>
+                                    <div>
+                                        <input id="new-wallet-rda-address1" type="text"
+                                               [formControl]="formControl.controls['rdaAddr1']"
+                                               placeholder="{{ 'Line 1' | translate }}"
+                                               class="form-control rda-addr1">
+                                    </div>
+                                    <div>
+                                        <input id="new-wallet-rda-address2" type="text"
+                                               [formControl]="formControl.controls['rdaAddr2']"
+                                               placeholder="{{ 'Line 2' | translate }}"
+                                               class="form-control rda-addr2">
+                                    </div>
+                                </div>
+
+                                <div class="form-group col-sm-12">
+                                    <label class="control-label">
+                                        {{ 'City or Town' | translate }}
+                                    </label>
+                                    <div>
+                                        <input id="new-wallet-rda-address3" type="text"
+                                               [formControl]="formControl.controls['rdaAddr3']"
+                                               placeholder="{{ 'City or Town' | translate }}"
+                                               class="form-control rda-addr3">
+                                    </div>
+                                </div>
+
+                                <div class="form-group col-sm-12">
+                                    <label class="control-label">
+                                        {{ 'State or Area' | translate }}
+                                    </label>
+                                    <div>
+                                        <input id="new-wallet-rda-address4" type="text"
+                                               [formControl]="formControl.controls['rdaAddr4']"
+                                               placeholder="{{ 'State or Area' | translate }}"
+                                               class="form-control rda-addr4">
+                                    </div>
+                                </div>
+
+                                <div class="form-group col-sm-12">
+                                    <label class="control-label">
+                                        {{ 'Postcode' | translate }}
+                                    </label>
+                                    <div>
+                                        <input id="new-wallet-rda-postcode" type="text"
+                                               [formControl]="formControl.controls['rdaAddrPostcode']"
+                                               placeholder="{{ 'Postcode' | translate }}"
+                                               class="form-control rda-addr-postcode">
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </clr-tab-content>
+            </clr-tab>
+
+            <clr-tab>
+                <a clrTabLink>
+                    <i class="fa fa-map-marker"></i>
+                    {{ 'Correspondence Address' | translate }}
+                </a>
+                <clr-tab-content *clrIfActive>
+                    <div class="panel-body">
+                        <div class="form-horizontal">
+                            <div class="row">
+                                <div *ngIf="tabsControl[tabid].walletId == -1" class="form-group col-sm-12">
+                                    <label>
+                                        {{ 'Same as Residential Address' | translate }}
+                                        <input type="checkbox" [formControl]="formControl.controls['caSame']">
+                                    </label>
+                                </div>
+                            </div>
+                            <div class="row" [ngClass]="{'disabled-row': formControl.value.caSame}">
+                                <div class="form-group col-sm-12">
+                                    <label class="control-label">
+                                        {{ 'Country' | translate }}
+                                    </label>
+                                    <div>
+                                        <ng-select
+                                            [items]="countriesList"
+                                            [allowClear]="true"
+                                            [formControl]="formControl.controls['caAddrCountry']">
+                                        </ng-select>
+                                    </div>
+                                </div>
+
+                                <div class="form-group col-sm-12">
+                                    <label class="control-label">
+                                        {{ 'Address Prefix' | translate }}
+                                    </label>
+                                    <div>
+                                        <input id="new-wallet-ca-address-prefix" type="text"
+                                               [formControl]="formControl.controls['caAddrPrefix']"
+                                               placeholder="{{ 'Address Prefix' | translate }}"
+                                               class="form-control ca-addr-prefix">
+                                    </div>
+                                </div>
+
+                                <div class="form-group col-sm-12">
+                                    <label class="control-label">
+                                        {{ 'Postal Address' | translate }}
+                                    </label>
+                                    <div>
+                                        <input id="new-wallet-ca-address1" type="text"
+                                               [formControl]="formControl.controls['caAddr1']"
+                                               placeholder="{{ 'Line 1' | translate }}"
+                                               class="form-control ca-addr1">
+                                    </div>
+                                    <div>
+                                        <input id="new-wallet-ca-address2" type="text"
+                                               [formControl]="formControl.controls['caAddr2']"
+                                               placeholder="{{ 'Line 2' | translate }}"
+                                               class="form-control ca-addr2">
+                                    </div>
+                                </div>
+
+                                <div class="form-group col-sm-12">
+                                    <label class="control-label">
+                                        {{ 'City or Town' | translate}}
+                                    </label>
+                                    <div>
+                                        <input id="new-wallet-ca-address3" type="text"
+                                               [formControl]="formControl.controls['caAddr3']"
+                                               placeholder="{{ 'City or Town' | translate }}"
+                                               class="form-control ca-addr3">
+                                    </div>
+                                </div>
+
+                                <div class="form-group col-sm-12">
+                                    <label class="control-label">
+                                        {{ 'State or Area' | translate }}
+                                    </label>
+                                    <div>
+                                        <input id="new-wallet-ca-address4" type="text"
+                                               [formControl]="formControl.controls['caAddr4']"
+                                               placeholder="{{ 'State or Area' | translate }}"
+                                               class="form-control ca-addr4">
+                                    </div>
+                                </div>
+
+                                <div class="form-group col-sm-12">
+                                    <label class="control-label">
+                                        {{ 'Postcode' | translate }}
+                                    </label>
+                                    <div>
+                                        <input id="new-wallet-ca-postcode" type="text"
+                                               [formControl]="formControl.controls['caAddrPostcode']"
+                                               placeholder="{{ 'Postcode' | translate }}"
+                                               class="form-control ca-addr-postcode">
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </clr-tab-content>
+            </clr-tab>
+
+            <clr-tab>
+                <a clrTabLink>
+                    <i class="fa fa-chain"></i>
+                    {{ 'Settlement Detail' | translate }}</a>
+                <clr-tab-content *clrIfActive>
+                    <div class="panel-body">
+                        <div class="form-horizontal">
+                            <div class="row">
+                                <div class="form-group col-sm-12">
+                                    <label class="control-label">
+                                        {{ 'Bank Wallet' | translate }}
+                                    </label>
+                                    <div>
+                                        <ng-select
+                                            [items]="filteredWalletList"
+                                            [allowClear]="true"
+                                            [formControl]="formControl.controls['bankWalletId']">
+                                        </ng-select>
+                                        <!-- <input id="new-wallet-bank-wallet-id" type="text" [formControl]="formControl.controls['bankWalletId']" placeholder="{{ 'Bank Wallet' | translate }}" class="form-control wallet-bank-wallet-id"> -->
+                                    </div>
+                                </div>
+
+                                <div class="form-group col-sm-12">
+                                    <label class="control-label">
+                                        {{ 'Bank Name' | translate }}
+                                    </label>
+                                    <div>
+                                        <input id="new-wallet-bank-name" type="text"
+                                               [formControl]="formControl.controls['bankName']"
+                                               placeholder="{{ 'Bank Name' | translate }}"
+                                               class="form-control wallet-bank-name">
+                                    </div>
+                                </div>
+
+                                <div class="form-group col-sm-12">
+                                    <label class="control-label">
+                                        {{ 'IBAN' | translate }}
+                                    </label>
+                                    <div>
+                                        <input id="new-wallet-bank-iban" type="text"
+                                               [formControl]="formControl.controls['bankIBAN']"
+                                               placeholder="{{ 'IBAN' | translate }}"
+                                               class="form-control wallet-bank-iban">
+                                    </div>
+                                </div>
+
+                                <div class="form-group col-sm-12">
+                                    <label class="control-label">
+                                        {{ 'Bank BIC Code' | translate }}
+                                    </label>
+                                    <div>
+                                        <input id="new-wallet-bank-bic-code" type="text"
+                                               [formControl]="formControl.controls['bankBICcode']"
+                                               placeholder="{{ 'BIC Code' | translate }}"
+                                               class="form-control wallet-bank-bic-code">
+                                    </div>
+                                </div>
+
+                                <div class="form-group col-sm-12">
+                                    <label class="control-label">
+                                        {{ 'Bank Account Name' | translate }}
+                                    </label>
+                                    <div>
+                                        <input id="new-wallet-bank-account-name" type="text"
+                                               [formControl]="formControl.controls['bankAccountName']"
+                                               placeholder="{{ 'Bank Account Name' | translate }}"
+                                               class="form-control wallet-bank-account-name">
+                                    </div>
+                                </div>
+
+                                <div class="form-group col-sm-12">
+                                    <label class="control-label">
+                                        {{ 'Bank Account Number' | translate }}
+                                    </label>
+                                    <div>
+                                        <input id="new-wallet-bank-account-num" type="text"
+                                               [formControl]="formControl.controls['bankAccountNum']"
+                                               placeholder="{{ 'Bank Account Number' | translate }}"
+                                               class="form-control wallet-bank-account-num">
+                                    </div>
+                                </div>
+
+                                <div class="form-group col-sm-12">
+                                    <label class="control-label">
+                                        {{ 'Country' | translate }}
+                                    </label>
+                                    <div>
+                                        <ng-select
+                                            [items]="countriesList"
+                                            [allowClear]="true"
+                                            [formControl]="formControl.controls['bdAddrCountry']">
+                                        </ng-select>
+                                    </div>
+                                </div>
+
+                                <div class="form-group col-sm-12">
+                                    <label class="control-label">
+                                        {{ 'Address Prefix' | translate }}
+                                    </label>
+                                    <div>
+                                        <input id="new-wallet-bd-address-prefix" type="text"
+                                               [formControl]="formControl.controls['bdAddrPrefix']"
+                                               placeholder="{{ 'Address Prefix' | translate }}"
+                                               class="form-control bd-addr-prefix">
+                                    </div>
+                                </div>
+
+                                <div class="form-group col-sm-12">
+                                    <label class="control-label">
+                                        {{ 'Postal Address' | translate }}
+                                    </label>
+                                    <div>
+                                        <input id="new-wallet-bd-address1" type="text"
+                                               [formControl]="formControl.controls['bdAddr1']"
+                                               placeholder="{{ 'Line 1' | translate }}"
+                                               class="form-control bd-addr1">
+                                    </div>
+                                    <div>
+                                        <input id="new-wallet-bd-address2" type="text"
+                                               [formControl]="formControl.controls['bdAddr2']"
+                                               placeholder="{{ 'Line 2' | translate }}"
+                                               class="form-control bd-addr2">
+                                    </div>
+                                </div>
+
+                                <div class="form-group col-sm-12">
+                                    <label class="control-label">
+                                        {{ 'City or Town' | translate }}
+                                    </label>
+                                    <div>
+                                        <input id="new-wallet-bd-address3" type="text"
+                                               [formControl]="formControl.controls['bdAddr3']"
+                                               placeholder="{{ 'City or Town' | translate }}"
+                                               class="form-control bd-addr3">
+                                    </div>
+                                </div>
+
+                                <div class="form-group col-sm-12">
+                                    <label class="control-label">
+                                        {{ 'State or Area' | translate }}
+                                    </label>
+                                    <div>
+                                        <input id="new-wallet-bd-address4" type="text"
+                                               [formControl]="formControl.controls['bdAddr4']"
+                                               placeholder="{{ 'State or Area' | translate }}"
+                                               class="form-control bd-addr4">
+                                    </div>
+                                </div>
+
+                                <div class="form-group col-sm-12">
+                                    <label class="control-label">
+                                        {{ 'Postcode' | translate }}
+                                    </label>
+                                    <div>
+                                        <input id="new-wallet-bd-postcode" type="text"
+                                               [formControl]="formControl.controls['bdAddrPostcode']"
+                                               placeholder="{{ 'Postcode' | translate }}"
+                                               class="form-control bd-addr-postcode">
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </clr-tab-content>
+            </clr-tab>
+        </clr-tabs>
+    </ng-template>
+</div>

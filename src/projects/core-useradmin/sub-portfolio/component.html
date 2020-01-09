@@ -1,0 +1,120 @@
+<div class="header-breadcrumbs">
+    <h1 id="sub-portfolio"><i class="fa fa-id-badge"></i> {{ 'Sub-portfolio' | translate }}</h1>
+</div>
+
+<div class="wrapper wrapper-content">
+
+    <clr-tabs *ngIf="tabsControl.length">
+        <clr-tab *ngFor="let tabdata of tabsControl; let id = index">
+            <button clrTabLink id="subportfolio-tab-{{id}}" [routerLink]="['/user-administration/subportfolio', id]">
+                <i class="fa {{tabdata.title.icon}}"></i>{{tabdata.title.text}}</button>
+
+            <clr-tab-content *clrIfActive="tabdata.active">
+                <!-- Sub-portfolio list tab. -->
+                <ng-container *ngIf="id === 0">
+                    <ng-container *ngTemplateOutlet="staticSubPortfolioList">
+                    </ng-container>
+                </ng-container>
+
+                <!-- Add Sub-portfolio tab. -->
+                <ng-container *ngIf="id === 1">
+                    <ng-container *ngTemplateOutlet="staticSubPortfolioAddTab; context: {'formControl': tabdata.formControl, 'tabid': id}">
+                    </ng-container>
+                </ng-container>
+
+                <!-- Edit Sub-portfolio tab. -->
+                <ng-container *ngIf="id >= 2">
+                    <ng-container *ngTemplateOutlet="dynamicSubPortfolioEditTab; context: {'formControl': tabdata.formControl, 'tabid': id}">
+                    </ng-container>
+                </ng-container>
+            </clr-tab-content>
+
+        </clr-tab>
+    </clr-tabs>
+
+    <!-- Sub-portfolio Data Table. -->
+    <ng-template #staticSubPortfolioList>
+        <div class="panel-body">
+            <datagrid-list
+                [fieldsModel]="datagridModel"
+                [listData]="addressList"
+                [listActions]="datagridActions"
+                (action)="onAction($event)"
+                [filters]="datagridFilters"
+                [showHideColumns]="true">
+            </datagrid-list>
+        </div>
+    </ng-template>
+
+    <!-- Add Sub-portfolioForm. -->
+    <ng-template #staticSubPortfolioAddTab let-formControl="formControl" let-tabid="tabid">
+        <div class="user-tab-panel-body panel-body">
+            <form (submit)="addSubPortfolio(tabid)" [formGroup]="formControl">
+                <section class="form-block">
+                    <div class="form-group col-sm-6">
+                        <label class="control-label required-field">{{ 'Sub-portfolio Name' | translate }}</label>
+                        <input type="text" #portfolioName
+                                            placeholder="{{ 'Sub-portfolio Name' | translate }}"
+                                            class="form-control mlp_translated"
+                                            formControlName="name">
+                        <div *ngIf="!formControl.controls['name'].valid && formControl.controls['name'].touched" class="field-error">{{ 'Field is required' | translate }}</div>
+                    </div>
+
+                    <div class="form-group col-sm-6">
+                        <label class="control-label required-field">{{ 'Sub-portfolio IBAN' | translate }}</label>
+                        <input type="text" #portfolioIban
+                                            placeholder="{{ 'Sub-portfolio IBAN' | translate }}"
+                                            class="form-control mlp_translated"
+                                            formControlName="iban"
+                                            maxlength="34">
+                        <div *ngIf="formControl.controls['iban'].hasError('required') && formControl.controls['iban'].touched" class="field-error">{{ 'Field is required' | translate }}</div>
+                        <div *ngIf="formControl.controls['iban'].hasError('minlength') && formControl.controls['iban'].touched" class="field-error">{{ 'IBAN must be at least 14 characters long' | translate }}</div>
+                    </div>
+
+                    <button type="submit" class="btn btn-primary" [disabled]="!formControl.valid"><i class="fa fa-save"></i> {{ 'Save' | translate }}</button>
+
+                </section>
+            </form>
+        </div>
+    </ng-template>
+
+    <!-- Edit Sub-portfolio Form. -->
+    <ng-template #dynamicSubPortfolioEditTab let-formControl="formControl" let-tabid="tabid">
+        <div class="user-tab-panel-body panel-body">
+            <form (ngSubmit)="updateSubPortfolio(tabid)" [formGroup]="formControl">
+                <section class="form-block">
+                    <div class="form-group col-sm-6">
+                        <label class="control-label required-field">{{ 'Sub-portfolio Name' | translate }}</label>
+                        <input type="text" #portfolioName
+                                placeholder="{{ 'Sub-portfolio Name' | translate }}"
+                                class="form-control mlp_translated"
+                                formControlName="name">
+                        <div *ngIf="!formControl.controls['name'].valid && formControl.controls['name'].touched" class="field-error">{{ 'Field is required' | translate }}
+                        </div>
+                    </div>
+
+                    <div class="form-group col-sm-6">
+                        <label class="control-label required-field">{{ 'Sub-portfolio IBAN' | translate }}</label>
+                        <input type="text" #portfolioIban
+                                placeholder="{{ 'Sub-portfolio IBAN' | translate }}"
+                                class="form-control mlp_translated"
+                                formControlName="iban"
+                                maxlength="34">
+                        <div *ngIf="formControl.controls['iban'].hasError('required') && formControl.controls['iban'].touched" class="field-error">{{ 'Field is required' | translate }}
+                        </div>
+                        <div *ngIf="formControl.controls['iban'].hasError('minlength') && formControl.controls['iban'].touched" class="field-error">{{ 'IBAN must be at least 14 characters long' | translate }}</div>
+                    </div>
+
+                    <div class="row">
+                        <button type="submit" class="btn btn-primary" [disabled]="!formControl.valid"><i class="fa fa-save"></i> {{ 'Save' | translate }}</button>
+
+                        <button (click)="closeTab(tabid)" class="btn btn-secondary">
+                            <i class="fa fa-cancel"></i> {{ 'Cancel' | translate }}
+                        </button>
+                    </div>
+
+                </section>
+            </form>
+        </div>
+    </ng-template>
+</div>
